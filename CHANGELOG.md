@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.12 | Metheney | 299 | 1.12.333 |
+| 1.12 | Metheney | 301 | 1.12.335 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
 | 1.9 | Krall | 235 | 1.9.234 |
@@ -29,6 +29,14 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.12 - Metheney (current)
 
+- **1.12.335** `CHANGE` `MEDIUM EFF` `raised by: Claude-JG` `resolved by: Claude-JG` ANCF thin plate: one sign of curvature and moment, thickness gradients along the node slopes, SurfaceMap, the builder removed (#2864)
+  - description: The maintainer's decisions of 2026-10-05 on RG4.20.4: CurvatureLocal and TorqueLocal with one sign (the negated first component was wrong); ShellMesh projects the global thickness gradient onto the unit node slopes; default integration mode 0 everywhere; the maps as static methods of SurfaceMap without the Map prefix, no aliases; SymSin/SymCos removed (exu.symbolic.sin/cos take floats); ANCFThinPlateBuilder removed without deprecation - it was public only in development versions since 2026-10-05 - and ShellMesh takes a surfaceMap instead.
+  - **notes:** ObjectANCFThinPlate: CurvatureLocal and TorqueLocal with one sign, positive where the surface bends towards its normal; exudyn.shells: ShellMesh(surfaceMap=...) with the maps of SurfaceMap (Cylinder, ConeFrustum, HemisphericalShell, ToroidalPanel, ...), thickness function gradients along the node slopes.
+  - date resolved: **2026-10-05 15:35**, date raised: 2026-10-05
+- **1.12.334** `EXTENSION` `MEDIUM EFF` `raised by: Claude-JG` `resolved by: Claude-JG` ANCF thin plate visualization of the working copy 2026: normal offset, postprocessed contour, contour layer (#2859)
+  - description: From the same working copy: visualizationSettings.bodies.shells drawNormal, drawNormalFactor, drawNormalColor, drawNormalLines, usePostprocessedContour (node-averaged contour) and contourZeta; finer tiling; the storage of the postprocessed values in VisualizationSystem. Not the setting integrationMode (port note 2).
+  - **notes:** ObjectANCFThinPlate drawing: visualizationSettings.bodies.shells.contourZeta (thickness coordinate of the contour), reducedInterpolation (strain-type contours interpolated bilinearly from the element corners) and drawNormal, drawNormalFactor, drawNormalColor, drawNormalLines (the contour value along the surface normal); bodies.beams.axialTiling quads per direction.
+  - date resolved: **2026-10-05 15:35**, date raised: 2026-10-05
 - **1.12.333** `EXTENSION` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` visualization settings dialog: a button that shows the current model view as code (#2862)
   - description: The maintainer, 2026-10-05: an additional button in the visualization dialog exports the important parts of the current render state - center point, zoom, model rotation, window size - so that they can be set in the code and the model view is the same on every rerun.
   - **notes:** The visualization settings dialog has a button 'view as code': it shows and copies the lines that give a script the current model view of the render window - window size, center point, zoom, model rotation - so that every run starts with this view.

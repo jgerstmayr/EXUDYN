@@ -5,10 +5,9 @@
 #           F L^3/(3 EI), the material curvature measure, large-rotation pure bending, the first
 #           eigenfrequency, the mass, gravity, variable thickness (4 and 12 values), Kelvin-Voigt
 #           damping (no damping of a rigid motion, the rule of the bending damping), the output
-#           variables, ANCFThinPlateBuilder and the geometry maps. Small meshes and linear or
-#           few-step static solutions; damping is checked with the linearized system. Each test prints
-#           the measured and the reference value. The test marked expectedFailure documents an open
-#           decision: the sign of the first component of CurvatureLocal and TorqueLocal.
+#           variables, ShellMesh with a surface map and a thickness function, and the visualization
+#           settings of shells. Small meshes and linear or few-step static solutions; damping is checked
+#           with the linearized system. Each test prints the measured and the reference value.
 #           The result is the number of tests that passed.
 #
 # Author:   Michael Pieber, Johannes Gerstmayr
@@ -24,7 +23,8 @@ import numpy as np
 import exudyn as exu
 from exudyn.utilities import (MarkerNodePosition, LoadForceVector, MarkerNodeCoordinate, NodePointGround,
                               CoordinateConstraint)
-from exudyn.shells import ANCFThinPlateBuilder, AddNodeConstraints, MapHemisphericalShell
+from exudyn.shells import ShellMesh, SurfaceMap, AddNodeConstraints
+from exudyn.utilities import MarkerBodyMass, LoadMassProportional
 
 #material and strip geometry (Poisson ratio 0: plate strip = Euler-Bernoulli beam)
 youngsModulus = 2.1e11
@@ -57,26 +57,39 @@ def StaticSettings(numberOfLoadSteps=numberOfTipLoadSteps):
     return simulationSettings
 
 
-def CreateStrip(numberOfElements=4, integrationMode=0, alongY=False, clamp=True, **builderOptions):
-    """Create a plate strip (stripLength x stripWidth, one element across the width), optionally clamped
-    at the edge at the origin.
+def CreateStrip(numberOfElements=4, integrationMode=0, alongY=False, clamp=True, thicknessField=None,
+                massProportionalLoad=None, stiffnessProportionalDamping=0.):
+    """Create a plate strip (stripLength x stripWidth, one element across the width) with ShellMesh, optionally
+    clamped at the edge at the origin.
     @param numberOfElements: number of elements along the strip
     @param integrationMode: useReducedOrderIntegration of the elements
     @param alongY: True: strip axis along global y, False: along global x
     @param clamp: True: all 9 coordinates of the nodes at the origin edge are fixed
-    @param builderOptions: further keyword arguments of ANCFThinPlateBuilder
-    @return: (system container, mbs, dictionary of ANCFThinPlateBuilder.build, list of tip node numbers)"""
+    @param thicknessField: function f(x, y) of the thickness, evaluated at the nodes (4 values per element)
+    @param massProportionalLoad: a load per mass, e.g. gravity, on every element
+    @param stiffnessProportionalDamping: Kelvin-Voigt damping coefficient of ShellMesh
+    @return: (system container, mbs, dictionary of nodes, elements, edgeNodeNumbers and nodeId, list of tip node numbers)"""
     systemContainer = exu.SystemContainer()
     mbs = systemContainer.AddSystem()
+    (lengthX, lengthY, nx, ny) = ((stripWidth, stripLength, 1, numberOfElements) if alongY
+                                  else (stripLength, stripWidth, numberOfElements, 1))
+    plate = ShellMesh(vertices=[[0, 0, 0], [lengthX, 0, 0], [lengthX, lengthY, 0], [0, lengthY, 0]],
+                      numberOfElementsX=nx, numberOfElementsY=ny, youngsModulus=youngsModulus,
+                      poissonsRatio=poissonRatio, density=density, thickness=stripThickness,
+                      stiffnessProportionalDamping=stiffnessProportionalDamping)
+    if thicknessField is not None:
+        plate.thicknessAtNodes = [thicknessField(ix * lengthX / nx, iy * lengthY / ny)
+                                  for iy in range(ny + 1) for ix in range(nx + 1)]
+    plate.CreateANCFThinPlateElements(mbs, useReducedOrderIntegration=integrationMode)
+    if massProportionalLoad is not None:
+        for elementNumber in plate.elementNumbers:
+            mbs.AddLoad(LoadMassProportional(markerNumber=mbs.AddMarker(MarkerBodyMass(bodyNumber=elementNumber)),
+                                             loadVector=massProportionalLoad))
+    built = {'nodes': plate.nodeNumbers, 'elements': plate.elementNumbers,
+             'edgeNodeNumbers': plate.boundaryNodeNumbers, 'nodeId': lambda iy, ix: iy * (nx + 1) + ix}
     if alongY:
-        built = ANCFThinPlateBuilder(origin=(0, 0, 0), Lx=stripWidth, Ly=stripLength, nx=1, ny=numberOfElements,
-                                     E=youngsModulus, nu=poissonRatio, rho=density, thickness=stripThickness,
-                                     useReducedOrderIntegration=integrationMode, **builderOptions).Build(mbs)
         clampNodes, tipNodes = built['edgeNodeNumbers']['bottom'], built['edgeNodeNumbers']['top']
     else:
-        built = ANCFThinPlateBuilder(origin=(0, 0, 0), Lx=stripLength, Ly=stripWidth, nx=numberOfElements, ny=1,
-                                     E=youngsModulus, nu=poissonRatio, rho=density, thickness=stripThickness,
-                                     useReducedOrderIntegration=integrationMode, **builderOptions).Build(mbs)
         clampNodes, tipNodes = built['edgeNodeNumbers']['left'], built['edgeNodeNumbers']['right']
     if clamp:
         for nodeNumber in clampNodes:
@@ -245,7 +258,7 @@ class TestANCFThinPlateElement(unittest.TestCase):
         self.assertAlmostEqual(translationZ @ massMatrix @ translationZ / reference, 1., delta=1e-10)
 
     def testGravityTipDeflection(self):
-        """Self-weight (massProportionalLoad of the builder): tip deflection q L^4/(8 EI)."""
+        """Self-weight (LoadMassProportional on each element): tip deflection q L^4/(8 EI)."""
         systemContainer, mbs, built, tipNodes = CreateStrip(numberOfElements=4, massProportionalLoad=[0, 0, -gravity])
         mbs.Assemble()
         mbs.SolveStatic(StaticSettings())
@@ -411,11 +424,9 @@ class TestANCFThinPlateOutputs(unittest.TestCase):
                             plateBendingStiffness)
             self.assertAlmostEqual(moment[component] / curvature[component] / plateBendingStiffness, 1., delta=1e-8)
 
-    @unittest.expectedFailure
     def testCurvatureSignSameInBothDirections(self):
-        """Report note 4: for the same concave-down bending, CurvatureLocal component 0 (strip along x) and
-        component 1 (strip along y) should have the same sign; currently only component 0 is negated.
-        Expected to fail until one sign convention is chosen."""
+        """For the same concave-down bending, CurvatureLocal component 0 (strip along x) and component 1 (strip
+        along y) have the same sign, the sign of ObjectANCFCable2D: negative (#2864)."""
         curvatures = []
         for alongY in [False, True]:
             mbs, built = self.SolvedTipLoadStrip(alongY)
@@ -423,42 +434,46 @@ class TestANCFThinPlateOutputs(unittest.TestCase):
             curvatures.append(curvature[1 if alongY else 0])
         print(f'\n    curvature along x: {curvatures[0]:+.4e}, along y: {curvatures[1]:+.4e}', end='')
         self.assertEqual(np.sign(curvatures[0]), np.sign(curvatures[1]))
+        self.assertLess(curvatures[0], 0.)
 
 
 class TestShellsModule(unittest.TestCase):
-    """exudyn.shells: ANCFThinPlateBuilder and geometry maps."""
+    """exudyn.shells: ShellMesh, surface maps and thickness functions."""
 
-    def testBuilderTopology(self):
+    def testShellMeshTopology(self):
         """3 x 2 elements: 12 nodes, 6 elements, edge node lists, node positions on the grid."""
         systemContainer = exu.SystemContainer()
         mbs = systemContainer.AddSystem()
         numberOfElementsX, numberOfElementsY, lengthX, lengthY = 3, 2, 0.6, 0.4
         origin = np.array([0.1, -0.2, 0.3])
-        built = ANCFThinPlateBuilder(origin=tuple(origin), Lx=lengthX, Ly=lengthY, nx=numberOfElementsX, ny=numberOfElementsY,
-                                     E=youngsModulus, nu=0.3, rho=density, thickness=stripThickness).Build(mbs)
-        print(f'\n    nodes {len(built["nodes"])}, elements {len(built["elements"])}, edge nodes '
-              f'{ {key: len(value) for key, value in built["edgeNodeNumbers"].items()} }', end='')
-        self.assertEqual(len(built['nodes']), (numberOfElementsX + 1) * (numberOfElementsY + 1))
-        self.assertEqual(len(built['elements']), numberOfElementsX * numberOfElementsY)
-        self.assertEqual(len(built['edgeNodeNumbers']['left']), numberOfElementsY + 1)
-        self.assertEqual(len(built['edgeNodeNumbers']['bottom']), numberOfElementsX + 1)
+        plate = ShellMesh(vertices=[origin, origin + [lengthX, 0, 0], origin + [lengthX, lengthY, 0], origin + [0, lengthY, 0]],
+                          numberOfElementsX=numberOfElementsX, numberOfElementsY=numberOfElementsY,
+                          youngsModulus=youngsModulus, poissonsRatio=0.3, density=density, thickness=stripThickness)
+        plate.CreateANCFThinPlateElements(mbs)
+        print(f'\n    nodes {len(plate.nodeNumbers)}, elements {len(plate.elementNumbers)}, edge nodes '
+              f'{ {key: len(value) for key, value in plate.boundaryNodeNumbers.items()} }', end='')
+        self.assertEqual(len(plate.nodeNumbers), (numberOfElementsX + 1) * (numberOfElementsY + 1))
+        self.assertEqual(len(plate.elementNumbers), numberOfElementsX * numberOfElementsY)
+        self.assertEqual(len(plate.boundaryNodeNumbers['left']), numberOfElementsY + 1)
+        self.assertEqual(len(plate.boundaryNodeNumbers['bottom']), numberOfElementsX + 1)
         for indexY in range(numberOfElementsY + 1):
             for indexX in range(numberOfElementsX + 1):
-                nodeNumber = built['nodes'][built['nodeId'](indexY, indexX)]
+                nodeNumber = plate.nodeNumbers[indexY * (numberOfElementsX + 1) + indexX]
                 position = np.array(mbs.GetNodeParameter(nodeNumber, 'referenceCoordinates'))[0:3]
                 expected = origin + [indexX * lengthX / numberOfElementsX, indexY * lengthY / numberOfElementsY, 0]
                 self.assertLess(np.linalg.norm(position - expected), 1e-12)
 
     def testHemisphericalMapNodesOnSphere(self):
-        """MapHemisphericalShell: all nodes on the sphere of radius R, both slope vectors tangent to it."""
+        """SurfaceMap.HemisphericalShell: all nodes on the sphere of radius R, both slope vectors tangent to it."""
         systemContainer = exu.SystemContainer()
         mbs = systemContainer.AddSystem()
         radius = 2.0
-        built = ANCFThinPlateBuilder(origin=(0, 0, 0), Lx=1., Ly=1., nx=4, ny=4, E=youngsModulus, nu=0.3, rho=density,
-                                     thickness=stripThickness,
-                                     mapLocalPosition=MapHemisphericalShell(1., 1., radius, np.pi / 3)).Build(mbs)
+        plate = ShellMesh(vertices=[[0, 0, 0], [1, 0, 0], [1, 1, 0], [0, 1, 0]], numberOfElementsX=4, numberOfElementsY=4,
+                          youngsModulus=youngsModulus, poissonsRatio=0.3, density=density, thickness=stripThickness,
+                          surfaceMap=SurfaceMap.HemisphericalShell(1., 1., radius, np.pi / 3))
+        plate.CreateANCFThinPlateElements(mbs)
         radiusError, normalSlopeComponent = 0., 0.
-        for nodeNumber in built['nodes']:
+        for nodeNumber in plate.nodeNumbers:
             referenceCoordinates = np.array(mbs.GetNodeParameter(nodeNumber, 'referenceCoordinates'))
             position = referenceCoordinates[0:3]
             radiusError = max(radiusError, abs(np.linalg.norm(position) - radius))
@@ -469,13 +484,58 @@ class TestShellsModule(unittest.TestCase):
         self.assertLess(radiusError, 1e-12)
         self.assertLess(normalSlopeComponent, 1e-12)
 
+    def testThicknessFunctionOfARotatedStrip(self):
+        """A strip turned by 30 degrees in the x-y plane with the thickness h0 (1 - s/(2L)) along its axis s, given as a
+        function of the global x and y: the gradients along the node slopes give 12 thickness values per element, and
+        the tip deflection is the one of the tapered cantilever (#2864)."""
+        angle = np.pi / 6
+        axis, across = np.array([np.cos(angle), np.sin(angle), 0.]), np.array([-np.sin(angle), np.cos(angle), 0.])
+        def ThicknessFunction(x, y):
+            return stripThickness * (1 - 0.5 * (x * axis[0] + y * axis[1]) / stripLength)
+        systemContainer = exu.SystemContainer()
+        mbs = systemContainer.AddSystem()
+        plate = ShellMesh(vertices=[[0, 0, 0], stripLength * axis, stripLength * axis + stripWidth * across, stripWidth * across],
+                          numberOfElementsX=8, numberOfElementsY=1, youngsModulus=youngsModulus, poissonsRatio=poissonRatio,
+                          density=density, thickness=stripThickness, thicknessFunction=ThicknessFunction)
+        plate.CreateANCFThinPlateElements(mbs)
+        self.assertEqual(len(mbs.GetObjectParameter(plate.elementNumbers[0], 'thickness')), 12)
+        for nodeNumber in plate.boundaryNodeNumbers['left']:
+            AddNodeConstraints(mbs, nodeNumber, dofs=list(range(numberOfPlateDOFsPerNode)))
+        tipNodes = plate.boundaryNodeNumbers['right']
+        for nodeNumber in tipNodes:
+            mbs.AddLoad(LoadForceVector(markerNumber=mbs.AddMarker(MarkerNodePosition(nodeNumber=nodeNumber)),
+                                        loadVector=[0, 0, -tipForce / len(tipNodes)]))
+        mbs.Assemble()
+        mbs.SolveStatic(StaticSettings())
+        positions = np.linspace(0, stripLength, 20001)
+        thickness = stripThickness * (1 - 0.5 * positions / stripLength)
+        integrand = tipForce * (stripLength - positions)**2 / (youngsModulus * stripWidth * thickness**3 / 12)
+        reference = np.sum(0.5 * (integrand[1:] + integrand[:-1]) * np.diff(positions))   #trapezoidal rule
+        PrintComparison('tip deflection, thickness function of a rotated strip', TipDeflection(mbs, tipNodes), reference)
+        self.assertAlmostEqual(TipDeflection(mbs, tipNodes) / reference, 1., delta=1e-3)
+
+
+class TestVisualizationSettings(unittest.TestCase):
+    """The settings of visualizationSettings.bodies.shells and their defaults."""
+
+    def testShellVisualizationDefaults(self):
+        """contourZeta, reducedInterpolation, drawNormal, drawNormalFactor, drawNormalColor, drawNormalLines."""
+        shellSettings = exu.SystemContainer().visualizationSettings.bodies.shells
+        self.assertEqual(shellSettings.contourZeta, 1.)
+        self.assertTrue(shellSettings.reducedInterpolation)
+        self.assertFalse(shellSettings.drawNormal)
+        self.assertEqual(shellSettings.drawNormalFactor, 1.)
+        self.assertTrue(np.allclose(list(shellSettings.drawNormalColor), [0.2, 0.2, 0.2, 1.]))
+        self.assertTrue(shellSettings.drawNormalLines)
+
 
 #run all tests; the result is the number of tests that passed
 testIsActive = exu.sys.get('testIsActive', False)
 result = unittest.TextTestRunner(verbosity=2 if not testIsActive else 0,
                                  stream=io.StringIO() if testIsActive else None).run(
     unittest.TestSuite(unittest.defaultTestLoader.loadTestsFromTestCase(testCase) for testCase in
-                       [TestANCFThinPlateElement, TestANCFThinPlateDamping, TestANCFThinPlateOutputs, TestShellsModule]))
+                       [TestANCFThinPlateElement, TestANCFThinPlateDamping, TestANCFThinPlateOutputs, TestShellsModule,
+                        TestVisualizationSettings]))
 for (test, trace) in result.failures + result.errors:
     exu.Print('FAILED: ' + str(test) + '\n' + trace)
 testResult = result.testsRun - len(result.failures) - len(result.errors) - len(result.unexpectedSuccesses)

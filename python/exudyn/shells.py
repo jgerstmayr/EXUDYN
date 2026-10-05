@@ -37,9 +37,7 @@ from exudyn.basicUtilities import Normalize
 
 #public API of this module; kept complete by tools/checkAll.py (#2444)
 __all__ = [
-    'ShellMesh', 'SymSin', 'SymCos', 'MapSkewParallelogram', 'MapTrapezoid', 'MapCurvedEdge',
-    'MapOutOfPlaneWarp', 'MapBezierStrip', 'MapConeFrustum', 'MapCylinder', 'MapHemisphericalShell',
-    'MapToroidalPanel', 'ANCFThinPlateBuilder', 'AddNodeConstraints', 'AddSphericalJointToGround',
+    'ShellMesh', 'SurfaceMap', 'AddNodeConstraints', 'AddSphericalJointToGround',
     'AddClampToGround', 'AddSlopeConformityConstraints', 'AddDistributedClampToEdge',
     'ApplyEdgeLoad', 'AddRotationalSpringDamper', 'AddEdgeSpringDamper',
     ]
@@ -59,7 +57,8 @@ class ShellMesh:
                  massProportionalDamping=0.,
                  thicknessAtNodes=None,
                  thicknessFunction=None,
-                 stiffnessProportionalDamping=0.):
+                 stiffnessProportionalDamping=0.,
+                 surfaceMap=None):
         """initialize rectangular shell mesh with geometry, discretization and physics parameters
 
         Args:
@@ -74,9 +73,12 @@ class ShellMesh:
             massProportionalDamping: damping parameter which introduces damping proportional to distributed mass
             thicknessAtNodes: optional thickness at each node, in the order of the nodes; interpolated bilinearly in each element
             thicknessFunction: optional function f(x, y) of the thickness at the global x and y of a point, which must accept
-                               exu.symbolic.Real; its value and gradients at the nodes give 12 thickness values per element;
-                               correct for rectangular elements parallel to the x-y plane only
+                               exu.symbolic.Real; its value and its gradients along the slopes of each node give 12
+                               thickness values per element
             stiffnessProportionalDamping: Kelvin-Voigt damping coefficient [s] of the membrane and the bending stiffness
+            surfaceMap: optional function f(x, y) -> [X, Y, Z] that maps the positions (x, y) of the nodes in the rectangle
+                        of the vertices onto a surface, e.g. SurfaceMap.Cylinder(...); the slopes of the nodes follow
+                        from its derivatives
 
         Note:
             x-axis is aligned with bottom (y=min) and top (y=max); y-axis is aligned with left (x=min) and right (x=max)
@@ -102,6 +104,7 @@ class ShellMesh:
         # [h, dh/dx, dh/dy] at each of the 4 corner nodes, computed via symbolic differentiation.
         # Takes priority over thicknessAtNodes and thickness if set.
         self.thicknessFunction = thicknessFunction
+        self.surfaceMap = surfaceMap
 
         # constitutive matrices, filled in CreateANCFThinPlateElements
         self.Dstrain = None     #computed when mesh is generated
@@ -112,6 +115,10 @@ class ShellMesh:
         # can compute the tangent slopes dr/dx and dr/dy analytically.
         # ANCFThinPlatePrecurved.py has the same attribute but without this note.
         self.vertexMapping = None       #function F([x0,y0,z0]) -> [x1,y1,z1] transforming vertices; must accept exu.symbolic.Real
+        if surfaceMap is not None:      #the map of (x, y) as a vertex mapping
+            def MapOfPosition(position):
+                return surfaceMap(position[0], position[1])
+            self.vertexMapping = MapOfPosition
 
         # reserved for a future homogeneous-transformation feature (not yet implemented)
         self.vertexTransformation = None #homogeneous transformation (reserved for future use)
@@ -249,14 +256,14 @@ class ShellMesh:
 
     @docmeta(public=False)
     def ComputeNodalThicknessGradients(self):
-        """Compute thickness and its physical x/y gradients at each node via symbolic differentiation.
+        """Compute thickness and its gradients along the node slopes at each node via symbolic differentiation.
         Requires self.thicknessFunction to be set to a callable f(x, y) that accepts
         exu.symbolic.Real values and returns the scalar thickness at position (x, y).
         The node's first two reference-position components (pos[0], pos[1]) are used as x and y.
         Populates self.thicknessGradientAtNodes as a numpy array of shape (nNodes, 3):
           column 0 = h        -- thickness value [m]
-          column 1 = dh/dx    -- thickness gradient in local x-direction [m/m]
-          column 2 = dh/dy    -- thickness gradient in local y-direction [m/m]
+          column 1 = dh/ds    -- thickness gradient along the unit slope x of the node [m/m]
+          column 2 = dh/ds    -- thickness gradient along the unit slope y of the node [m/m]
         These 3 values per node form the 12-component thickness vector per element that
         enables ANCF-consistent cubic thickness interpolation in ComputeThicknessAtPoint.
         """
@@ -285,9 +292,15 @@ class ShellMesh:
             hSymbolic = self.thicknessFunction(xSymbolic, ySymbolic)
 
             # extract thickness value and gradients from the symbolic result
+            # the element reads the gradients along the slopes of the node (#2864): the global gradient
+            # projected onto the unit slopes, dh/ds = dh/dX*slope[0] + dh/dY*slope[1]
+            dhdX = _diff(hSymbolic, xSymbolic)
+            dhdY = _diff(hSymbolic, ySymbolic)
+            slopeX = self.nodeSlopesX[i]
+            slopeY = self.nodeSlopesY[i]
             self.thicknessGradientAtNodes[i, 0] = _eval(hSymbolic)   # h(x, y)
-            self.thicknessGradientAtNodes[i, 1] = _diff(hSymbolic, xSymbolic)  # dh/dx
-            self.thicknessGradientAtNodes[i, 2] = _diff(hSymbolic, ySymbolic)  # dh/dy
+            self.thicknessGradientAtNodes[i, 1] = dhdX * slopeX[0] + dhdY * slopeX[1]  # dh/ds along slope x
+            self.thicknessGradientAtNodes[i, 2] = dhdX * slopeY[0] + dhdY * slopeY[1]  # dh/ds along slope y
 
     @docmeta(public=False)
     def CreateANCFThinPlateElements(self, mbs, VthicknessFactor=1.0, useReducedOrderIntegration=0):
@@ -492,445 +505,222 @@ def _UnitVector(v):
     return v / n
 
 
-def _RotAxisAngle(axis, angle):
-    """Rodrigues rotation matrix: rotate by `angle` (radians) around `axis`."""
-    a = _UnitVector(axis)
-    x, y, z = float(a[0]), float(a[1]), float(a[2])
-    c = float(np.cos(angle))
-    s = float(np.sin(angle))
-    C = 1.0 - c
-    return np.array([
-        [c + x*x*C,     x*y*C - z*s,  x*z*C + y*s],
-        [y*x*C + z*s,   c + y*y*C,    y*z*C - x*s],
-        [z*x*C - y*s,   z*y*C + x*s,  c + z*z*C  ],
-    ], dtype=float)
+# ── surface maps ──────────────────────────────────────────────────────────────
 
+class SurfaceMap:
+    """Maps of a rectangle onto a surface, for ShellMesh(surfaceMap=...): each static method returns a function
+    f(x, y) -> [X, Y, Z] of the position (x, y) in the rectangle of the vertices of the mesh.
 
-def _RotZ(angle):
-    """3x3 rotation matrix about the global z-axis."""
-    c = float(np.cos(angle))
-    s = float(np.sin(angle))
-    return np.array([[c, -s, 0.0], [s, c, 0.0], [0.0, 0.0, 1.0]], dtype=float)
-
-
-# ── symbolic math helpers ─────────────────────────────────────────────────────
-# These allow mapping functions to work both numerically and with exu.symbolic.Real,
-# which is required by ShellMesh.ApplyVertexMapping for automatic differentiation.
-
-def SymSin(x):
-    """sin() compatible with both plain float and exu.symbolic.Real."""
-    if hasattr(x, 'Diff'):
-        return exu.symbolic.sin(x)
-    return np.sin(float(x))
-
-
-def SymCos(x):
-    """cos() compatible with both plain float and exu.symbolic.Real."""
-    if hasattr(x, 'Diff'):
-        return exu.symbolic.cos(x)
-    return np.cos(float(x))
-
-
-# ── geometry mapping helpers ──────────────────────────────────────────────────
-# Each function returns a mapLocalPosition(x, y) callable for use with ANCFThinPlateBuilder.
-# All mappings must accept exu.symbolic.Real arguments (use SymSin/SymCos, not np.sin/cos).
-
-def MapSkewParallelogram(skewY=0.0, skewX=0.0):
-    """Skew a rectangle into a parallelogram.
-    skewY: adds x += skewY*y  (shear x with y).
-    skewX: adds y += skewX*x  (shear y with x)."""
-    def f(x, y):
-        return [x + skewY * y, y + skewX * x, 0.0]
-    return f
-
-
-def MapTrapezoid(Lx, Ly, topScale=1.0, aboutMidline=True):
-    """Trapezoid by scaling x-span linearly with y.
-    topScale<1: narrower at top; topScale>1: wider at top.
-    aboutMidline=True keeps the plate centreline fixed."""
-    Lx = float(Lx); Ly = float(Ly)
-    if Ly <= 0:
-        raise ValueError("Ly must be > 0")
-    topScale = float(topScale)
-    def f(x, y):
-        s  = 1.0 + (topScale - 1.0) * (y / Ly)
-        x2 = s * x
-        if aboutMidline:
-            x2 += 0.5 * Lx * (1.0 - s)
-        return [x2, y, 0.0]
-    return f
-
-
-def MapCurvedEdge(Lx, Ly, amp=0.0, mode='top', shape='sin', aboutMidline=True):
-    """Curve one edge by an x-shift that varies with y (and x).
-    mode:  'top' or 'bottom' — where the curvature reaches full amplitude.
-    shape: 'sin' (sinusoidal in x) or 'parabola'.
-    amp:   maximum x-shift [m]."""
-    Lx = float(Lx); Ly = float(Ly); amp = float(amp)
-    if Ly <= 0:
-        raise ValueError("Ly must be > 0")
-    def waviness(x):
-        if shape == 'sin':
-            return SymSin(np.pi * x / Lx)
-        if shape == 'parabola':
-            xi = x / Lx
-            return 4.0 * xi * (1.0 - xi)
-        raise ValueError("shape must be 'sin' or 'parabola'")
-    def f(x, y):
-        g  = (y / Ly) if mode == 'top' else (1.0 - y / Ly)
-        dx = amp * g * waviness(x)
-        x2 = x + dx
-        if aboutMidline:
-            x2 -= 0.5 * amp * g * (2.0 / np.pi)
-        return [x2, y, 0.0]
-    return f
-
-
-def MapOutOfPlaneWarp(Lx, Ly, amp=0.0):
-    """Initial out-of-plane warp vanishing at all four boundaries:
-    z = amp * sin(pi*x/Lx) * sin(pi*y/Ly)."""
-    Lx = float(Lx); Ly = float(Ly); amp = float(amp)
-    if Lx <= 0 or Ly <= 0:
-        raise ValueError("Lx and Ly must be > 0")
-    def f(x, y):
-        z = amp * SymSin(np.pi * x / Lx) * SymSin(np.pi * y / Ly)
-        return [x, y, z]
-    return f
-
-
-def MapBezierStrip(P0, P1, P2, P3, Lx, Ly, up=(0, 0, 1), useArcLength=True, nArc=400):
-    """Map a plate onto a cubic Bezier centerline strip.
-    x in [0, Lx] follows the curve (optionally by arc-length).
-    y in [0, Ly] offsets across the strip width."""
-    P0 = np.array(P0, dtype=float).reshape(3)
-    P1 = np.array(P1, dtype=float).reshape(3)
-    P2 = np.array(P2, dtype=float).reshape(3)
-    P3 = np.array(P3, dtype=float).reshape(3)
-    Lx = float(Lx); Ly = float(Ly)
-    if Lx <= 0 or Ly <= 0:
-        raise ValueError("Lx and Ly must be > 0")
-    up = _UnitVector(up)
-
-    def C(t):
-        u = 1.0 - t
-        return (u**3)*P0 + 3.0*(u**2)*t*P1 + 3.0*u*(t**2)*P2 + (t**3)*P3
-
-    def dCdT(t):
-        u = 1.0 - t
-        return 3.0*(u**2)*(P1-P0) + 6.0*u*t*(P2-P1) + 3.0*(t**2)*(P3-P2)
-
-    if useArcLength:
-        ts = np.linspace(0.0, 1.0, int(nArc))
-        v  = np.array([np.linalg.norm(dCdT(t)) for t in ts], dtype=float)
-        s  = np.zeros_like(ts)
-        for i in range(1, len(ts)):
-            s[i] = s[i-1] + 0.5*(ts[i]-ts[i-1])*(v[i]+v[i-1])
-        sTot = float(s[-1])
-        if sTot <= _zeroTol:
-            raise ValueError("Bezier curve arc-length is ~0 (degenerate control points)")
-        def tOfX(x):
-            sTarget = (float(x) / Lx) * sTot
-            if sTarget <= 0: return 0.0
-            if sTarget >= sTot: return 1.0
-            j  = max(1, min(int(np.searchsorted(s, sTarget)), len(ts)-1))
-            s0, s1 = float(s[j-1]), float(s[j])
-            t0, t1 = float(ts[j-1]), float(ts[j])
-            a = 0.0 if abs(s1-s0) < _zeroTol else (sTarget-s0)/(s1-s0)
-            return t0 + a*(t1-t0)
-    else:
-        def tOfX(x):
-            return float(x) / Lx
-
-    def f(x, y):
-        t  = tOfX(x)
-        p  = C(t)
-        T  = dCdT(t)
-        nT = float(np.linalg.norm(T))
-        if nT < _zeroTol:
-            t2 = min(1.0, max(0.0, t+1e-6)); T = dCdT(t2); nT = float(np.linalg.norm(T))
-        if nT < _zeroTol:
-            T = np.array([1.0, 0.0, 0.0]); nT = 1.0
-        T  = T / nT
-        N  = np.cross(up, T); nN = float(np.linalg.norm(N))
-        if nN < _zeroTol:
-            N = np.cross(np.array([0.0,1.0,0.0]), T); nN = float(np.linalg.norm(N))
-        if nN < _zeroTol:
-            N = np.array([0.0,1.0,0.0]); nN = 1.0
-        N  = N / nN
-        yc = float(y) - 0.5*Ly
-        return (p + yc*N).tolist()
-    return f
-
-
-def MapConeFrustum(Lx, Ly, r0, r1, phiDeg=20.0, thetaCenterDeg=0.0,
-                   centered=True, yMode="arclength"):
-    """Map a rectangle onto a conical frustum mantle.
-    x in [0,Lx] along the axis; y in [0,Ly] around the circumference.
-    r0, r1: radii at x=0 and x=Lx. phiDeg: angular extent [deg]."""
-    Lx=float(Lx); Ly=float(Ly); r0=float(r0); r1=float(r1)
-    if Lx<=0 or Ly<=0: raise ValueError("Lx and Ly must be > 0")
-    if r0<=0 or r1<=0: raise ValueError("r0 and r1 must be > 0")
-    phi         = float(np.deg2rad(phiDeg))
-    thetaCenter = float(np.deg2rad(thetaCenterDeg))
-    if abs(phi) < _zeroTol: raise ValueError("phiDeg must be non-zero")
-    yMode = str(yMode).lower()
-    if yMode not in ("angle","arclength"): raise ValueError("yMode must be 'angle' or 'arclength'")
-    def rOfX(x):
-        return r0 + (r1-r0)*(float(x)/Lx)
-    def thetaOfXy(x, y):
-        if yMode == "angle":
-            return thetaCenter + ((float(y)/Ly - 0.5)*phi if centered else (float(y)/Ly)*phi)
-        rx = rOfX(x); yc = 0.5*Ly if centered else 0.0
-        return thetaCenter + (float(y)-yc)/rx
-    def f(x, y):
-        r  = rOfX(x); th = thetaOfXy(x,y)
-        return [float(x), float(r*np.cos(th)), float(r*np.sin(th))]
-    return f
-
-
-def MapCylinder(Lx, Ly, R, phiDeg=90.0, thetaCenterDeg=0.0, centered=False, yMode='arclength'):
-    """Map a rectangle onto a cylindrical mantle (special case of MapConeFrustum with r0=r1=R)."""
-    return MapConeFrustum(Lx=Lx, Ly=Ly, r0=R, r1=R,
-                          phiDeg=phiDeg, thetaCenterDeg=thetaCenterDeg,
-                          centered=centered, yMode=yMode)
-
-
-def MapHemisphericalShell(Lx, Ly, R, alpha, center=(0.0,0.0,0.0), thetaOffset=0.0,
-                           thetaRange=None):
-    """Map a rectangle onto a hemispherical shell with a circular apex cutout.
-    R: radius. alpha: cutout angle from +z axis [rad].
-    x maps to azimuthal angle; y maps from cutout edge (y=0) to equator (y=Ly)."""
-    Lx=float(Lx); Ly=float(Ly); R=float(R); alpha=float(alpha)
-    thetaOffset=float(thetaOffset)
-    center=np.array(center,dtype=float).reshape(3)
-    if thetaRange is None: thetaRange=2.0*np.pi
-    thetaRange=float(thetaRange)
-    if Lx<=0 or Ly<=0: raise ValueError("Lx and Ly must be > 0")
-    if R<=0:            raise ValueError("R must be > 0")
-    if alpha<0 or alpha>=np.pi/2: raise ValueError("alpha must be in [0, pi/2)")
-    phiBase=np.pi/2.0; phiCutout=alpha
-    def f(x, y):
-        theta = thetaOffset + (thetaRange/Lx)*x
-        phi   = phiCutout + ((phiBase-phiCutout)/Ly)*y
-        X = R*SymSin(phi)*SymCos(theta)
-        Y = R*SymSin(phi)*SymSin(theta)
-        Z = R*SymCos(phi)
-        return [center[0]+X, center[1]+Y, center[2]+Z]
-    return f
-
-
-def MapToroidalPanel(Lx, Ly, r1=1.5, r2=0.5):
-    """Map a rectangle onto a toroidal panel.
-    x -> meridional angle q1 in [-pi/2, pi/2]; y -> azimuthal angle q2 in [0, pi/2]."""
-    Lx=float(Lx); Ly=float(Ly); r1=float(r1); r2=float(r2)
-    q1Min=-np.pi/2.0; q1Range=np.pi; q2Min=0.0; q2Range=np.pi/2.0
-    def f(x, y):
-        q1  = q1Min + (q1Range/Lx)*x
-        q2  = q2Min + (q2Range/Ly)*y
-        rho = r1 + r2*SymCos(q1)
-        return [rho*SymCos(q2), -rho*SymSin(q2), r2*SymSin(q1)]
-    return f
-
-
-# ── main builder class ────────────────────────────────────────────────────────
-
-class ANCFThinPlateBuilder:
-    """Build an ANCF thin plate mesh from a high-level geometric description.
-
-    Wraps ShellMesh with rotation, placement, and optional curved-geometry support.
-    All geometry is described in local plate coordinates (x: length, y: width, z: thickness).
-
-    Rotation: provide ONE of rotationMatrix, rotationAxis+rotationAngle, or rotationZ.
-    Curved geometry: set mapLocalPosition(x, y) -> [x', y', z'] in local coordinates;
-                     must accept exu.symbolic.Real arguments (use SymSin/SymCos).
-    Variable thickness: set thicknessField(x, y) -> float (local coordinates).
-
-    Returns from Build(): dict with keys nodes, elements, nodeRefs9, nodeId,
-                          edgeNodes, edgeNodeNumbers, elementThicknesses.
+    A map written by the user has the same form. It is called with exu.symbolic.Real values for x and y, so that the
+    slopes of the nodes follow exactly from its derivatives: use exu.symbolic.sin, exu.symbolic.cos and the other
+    functions of exu.symbolic, which take floats as well; a map that computes with numpy (BezierStrip, ConeFrustum,
+    Cylinder) gets its slopes by central differences.
     """
 
-    def __init__(self,
-                 mbs=None,
-                 origin=(0.0, 0.0, 0.0),
-                 Lx=1.0, Ly=1.0,
-                 nx=1, ny=1,
-                 rotationMatrix=None,
-                 rotationAxis=None,
-                 rotationAngle=0.0,
-                 rotationZ=0.0,
-                 mapLocalPosition=None,
-                 validateMapping=True,
-                 thicknessField=None,
-                 E=2.1e11, nu=0.3, rho=7800,
-                 thickness=1e-3,
-                 massProportionalDamping=0.0,
-                 stiffnessProportionalDamping=0.0,
-                 massProportionalLoad=[0, 0, 0],
-                 useReducedOrderIntegration=1):
-        self.origin = np.array(origin, dtype=float).reshape(3)
-        self.Lx = float(Lx); self.Ly = float(Ly)
-        self.nx = int(nx);   self.ny = int(ny)
-        self.rotationMatrix = rotationMatrix
-        self.rotationAxis   = rotationAxis
-        self.rotationAngle  = float(rotationAngle)
-        self.rotationZ      = float(rotationZ)
-        self.mapLocalPosition      = mapLocalPosition
-        self.validateMapping       = bool(validateMapping)
-        self.thicknessField        = thicknessField
-        self.E   = float(E); self.nu = float(nu); self.rho = float(rho)
-        self.thickness             = float(thickness)
-        self.thicknessAtNodes      = None
-        self.massProportionalDamping      = float(massProportionalDamping)
-        self.stiffnessProportionalDamping = float(stiffnessProportionalDamping)
-        self.massProportionalLoad         = list(massProportionalLoad)
-        self.useReducedOrderIntegration = int(useReducedOrderIntegration)
-        if self.Lx <= 0 or self.Ly <= 0:
+    @staticmethod
+    def SkewParallelogram(skewY=0.0, skewX=0.0):
+        """Skew a rectangle into a parallelogram.
+        skewY: adds x += skewY*y  (shear x with y).
+        skewX: adds y += skewX*x  (shear y with x)."""
+        def f(x, y):
+            return [x + skewY * y, y + skewX * x, 0.0]
+        return f
+
+
+    @staticmethod
+    def Trapezoid(Lx, Ly, topScale=1.0, aboutMidline=True):
+        """Trapezoid by scaling x-span linearly with y.
+        topScale<1: narrower at top; topScale>1: wider at top.
+        aboutMidline=True keeps the plate centreline fixed."""
+        Lx = float(Lx); Ly = float(Ly)
+        if Ly <= 0:
+            raise ValueError("Ly must be > 0")
+        topScale = float(topScale)
+        def f(x, y):
+            s  = 1.0 + (topScale - 1.0) * (y / Ly)
+            x2 = s * x
+            if aboutMidline:
+                x2 += 0.5 * Lx * (1.0 - s)
+            return [x2, y, 0.0]
+        return f
+
+
+    @staticmethod
+    def CurvedEdge(Lx, Ly, amp=0.0, mode='top', shape='sin', aboutMidline=True):
+        """Curve one edge by an x-shift that varies with y (and x).
+        mode:  'top' or 'bottom' — where the curvature reaches full amplitude.
+        shape: 'sin' (sinusoidal in x) or 'parabola'.
+        amp:   maximum x-shift [m]."""
+        Lx = float(Lx); Ly = float(Ly); amp = float(amp)
+        if Ly <= 0:
+            raise ValueError("Ly must be > 0")
+        def waviness(x):
+            if shape == 'sin':
+                return exu.symbolic.sin(np.pi * x / Lx)
+            if shape == 'parabola':
+                xi = x / Lx
+                return 4.0 * xi * (1.0 - xi)
+            raise ValueError("shape must be 'sin' or 'parabola'")
+        def f(x, y):
+            g  = (y / Ly) if mode == 'top' else (1.0 - y / Ly)
+            dx = amp * g * waviness(x)
+            x2 = x + dx
+            if aboutMidline:
+                x2 -= 0.5 * amp * g * (2.0 / np.pi)
+            return [x2, y, 0.0]
+        return f
+
+
+    @staticmethod
+    def OutOfPlaneWarp(Lx, Ly, amp=0.0):
+        """Initial out-of-plane warp vanishing at all four boundaries:
+        z = amp * sin(pi*x/Lx) * sin(pi*y/Ly)."""
+        Lx = float(Lx); Ly = float(Ly); amp = float(amp)
+        if Lx <= 0 or Ly <= 0:
             raise ValueError("Lx and Ly must be > 0")
-        if self.nx < 1 or self.ny < 1:
-            raise ValueError("nx and ny must be >= 1")
-        # auto-build if mbs is provided — mirrors GenerateStraightLineANCFCable2D API
-        self.built = self.Build(mbs) if mbs is not None else None
+        def f(x, y):
+            z = amp * exu.symbolic.sin(np.pi * x / Lx) * exu.symbolic.sin(np.pi * y / Ly)
+            return [x, y, z]
+        return f
 
-    def Rotation(self):
-        """Return 3x3 rotation matrix from whichever rotation spec was provided."""
-        if self.rotationMatrix is not None:
-            R = np.array(self.rotationMatrix, dtype=float)
-            if R.shape != (3,3): raise ValueError("rotationMatrix must be 3x3")
-            return R
-        if self.rotationAxis is not None:
-            return _RotAxisAngle(self.rotationAxis, self.rotationAngle)
-        return _RotZ(self.rotationZ)
 
-    def SetVisualizationThicknessFactor(self, mbs, builtOrElements, VthicknessFactor=1.0):
-        """Set VthicknessFactor on all plate elements (accepts Build() dict or element list)."""
-        tf = float(VthicknessFactor)
-        if tf < 0.0: raise ValueError("VthicknessFactor must be >= 0")
-        elements = builtOrElements['elements'] if isinstance(builtOrElements, dict) else builtOrElements
-        for elem in elements:
-            mbs.SetObjectParameter(elem, 'VthicknessFactor', tf)
+    @staticmethod
+    def BezierStrip(P0, P1, P2, P3, Lx, Ly, up=(0, 0, 1), useArcLength=True, nArc=400):
+        """Map a plate onto a cubic Bezier centerline strip.
+        x in [0, Lx] follows the curve (optionally by arc-length).
+        y in [0, Ly] offsets across the strip width."""
+        P0 = np.array(P0, dtype=float).reshape(3)
+        P1 = np.array(P1, dtype=float).reshape(3)
+        P2 = np.array(P2, dtype=float).reshape(3)
+        P3 = np.array(P3, dtype=float).reshape(3)
+        Lx = float(Lx); Ly = float(Ly)
+        if Lx <= 0 or Ly <= 0:
+            raise ValueError("Lx and Ly must be > 0")
+        up = _UnitVector(up)
 
-    def Build(self, mbs):
-        """Build nodes and ObjectANCFThinPlate elements and add them to mbs.
+        def C(t):
+            u = 1.0 - t
+            return (u**3)*P0 + 3.0*(u**2)*t*P1 + 3.0*u*(t**2)*P2 + (t**3)*P3
 
-        Returns dict:
-          nodes, elements, nodeRefs9, nodeRefs12 (None),
-          nodeId(iy,ix), edgeNodes, edgeNodeNumbers, elementThicknesses.
-        """
-        R  = self.Rotation()
-        p0 = self.origin
+        def dCdT(t):
+            u = 1.0 - t
+            return 3.0*(u**2)*(P1-P0) + 6.0*u*t*(P2-P1) + 3.0*(t**2)*(P3-P2)
 
-        if self.mapLocalPosition is None:
-            # flat plate: rotate corners directly
-            vertices = [
-                p0.tolist(),
-                (p0 + R @ np.array([self.Lx, 0.0, 0.0])).tolist(),
-                (p0 + R @ np.array([self.Lx, self.Ly, 0.0])).tolist(),
-                (p0 + R @ np.array([0.0, self.Ly, 0.0])).tolist(),
-            ]
-            vertexMapping = None
+        if useArcLength:
+            ts = np.linspace(0.0, 1.0, int(nArc))
+            v  = np.array([np.linalg.norm(dCdT(t)) for t in ts], dtype=float)
+            s  = np.zeros_like(ts)
+            for i in range(1, len(ts)):
+                s[i] = s[i-1] + 0.5*(ts[i]-ts[i-1])*(v[i]+v[i-1])
+            sTot = float(s[-1])
+            if sTot <= _zeroTol:
+                raise ValueError("Bezier curve arc-length is ~0 (degenerate control points)")
+            def tOfX(x):
+                sTarget = (float(x) / Lx) * sTot
+                if sTarget <= 0: return 0.0
+                if sTarget >= sTot: return 1.0
+                j  = max(1, min(int(np.searchsorted(s, sTarget)), len(ts)-1))
+                s0, s1 = float(s[j-1]), float(s[j])
+                t0, t1 = float(ts[j-1]), float(ts[j])
+                a = 0.0 if abs(s1-s0) < _zeroTol else (sTarget-s0)/(s1-s0)
+                return t0 + a*(t1-t0)
         else:
-            vertices = [[0.0,0.0,0.0],[self.Lx,0.0,0.0],
-                        [self.Lx,self.Ly,0.0],[0.0,self.Ly,0.0]]
-            _mapLocal = self.mapLocalPosition
-            _p0 = p0.copy(); _R = R.copy()
-            def vertexMapping(v):
-                x, y = v[0], v[1]    #the mapping of the builder depends on x and y only
-                local = _mapLocal(x, y)
-                return [
-                    _p0[0] + _R[0,0]*local[0] + _R[0,1]*local[1] + _R[0,2]*local[2],
-                    _p0[1] + _R[1,0]*local[0] + _R[1,1]*local[1] + _R[1,2]*local[2],
-                    _p0[2] + _R[2,0]*local[0] + _R[2,1]*local[1] + _R[2,2]*local[2],
-                ]
+            def tOfX(x):
+                return float(x) / Lx
 
-        self.shellMesh = ShellMesh(
-            vertices=vertices,
-            numberOfElementsX=self.nx,
-            numberOfElementsY=self.ny,
-            youngsModulus=self.E,
-            poissonsRatio=self.nu,
-            density=self.rho,
-            thickness=self.thickness,
-            massProportionalDamping=self.massProportionalDamping,
-            stiffnessProportionalDamping=self.stiffnessProportionalDamping,
-        )
-        self.shellMesh.vertexMapping = vertexMapping
+        def f(x, y):
+            t  = tOfX(x)
+            p  = C(t)
+            T  = dCdT(t)
+            nT = float(np.linalg.norm(T))
+            if nT < _zeroTol:
+                t2 = min(1.0, max(0.0, t+1e-6)); T = dCdT(t2); nT = float(np.linalg.norm(T))
+            if nT < _zeroTol:
+                T = np.array([1.0, 0.0, 0.0]); nT = 1.0
+            T  = T / nT
+            N  = np.cross(up, T); nN = float(np.linalg.norm(N))
+            if nN < _zeroTol:
+                N = np.cross(np.array([0.0,1.0,0.0]), T); nN = float(np.linalg.norm(N))
+            if nN < _zeroTol:
+                N = np.array([0.0,1.0,0.0]); nN = 1.0
+            N  = N / nN
+            yc = float(y) - 0.5*Ly
+            return (p + yc*N).tolist()
+        return f
 
-        if self.thicknessField is not None:
-            # evaluate thicknessField at each node's parametric position
-            thicknessAtNodes = np.zeros((self.ny+1)*(self.nx+1), dtype=float)
-            for iy in range(self.ny+1):
-                for ix in range(self.nx+1):
-                    thicknessAtNodes[iy*(self.nx+1)+ix] = float(
-                        self.thicknessField(ix/self.nx*self.Lx, iy/self.ny*self.Ly))
-            self.shellMesh.thicknessAtNodes = thicknessAtNodes
 
-        self.shellMesh.CreateANCFThinPlateElements(
-            mbs, useReducedOrderIntegration=self.useReducedOrderIntegration)
+    @staticmethod
+    def ConeFrustum(Lx, Ly, r0, r1, phiDeg=20.0, thetaCenterDeg=0.0,
+                       centered=True, yMode="arclength"):
+        """Map a rectangle onto a conical frustum mantle.
+        x in [0,Lx] along the axis; y in [0,Ly] around the circumference.
+        r0, r1: radii at x=0 and x=Lx. phiDeg: angular extent [deg]."""
+        Lx=float(Lx); Ly=float(Ly); r0=float(r0); r1=float(r1)
+        if Lx<=0 or Ly<=0: raise ValueError("Lx and Ly must be > 0")
+        if r0<=0 or r1<=0: raise ValueError("r0 and r1 must be > 0")
+        phi         = float(np.deg2rad(phiDeg))
+        thetaCenter = float(np.deg2rad(thetaCenterDeg))
+        if abs(phi) < _zeroTol: raise ValueError("phiDeg must be non-zero")
+        yMode = str(yMode).lower()
+        if yMode not in ("angle","arclength"): raise ValueError("yMode must be 'angle' or 'arclength'")
+        def rOfX(x):
+            return r0 + (r1-r0)*(float(x)/Lx)
+        def thetaOfXy(x, y):
+            if yMode == "angle":
+                return thetaCenter + ((float(y)/Ly - 0.5)*phi if centered else (float(y)/Ly)*phi)
+            rx = rOfX(x); yc = 0.5*Ly if centered else 0.0
+            return thetaCenter + (float(y)-yc)/rx
+        def f(x, y):
+            r  = rOfX(x); th = thetaOfXy(x,y)
+            return [float(x), float(r*np.cos(th)), float(r*np.sin(th))]
+        return f
 
-        nodes    = self.shellMesh.nodeNumbers
-        elements = self.shellMesh.elementNumbers
 
-        if self.thicknessField is not None:
-            nt = self.shellMesh.thicknessAtNodes
-            elementThicknesses = []
-            for iy in range(self.ny):
-                for ix in range(self.nx):
-                    i0 = iy*(self.nx+1)+ix;   i1 = iy*(self.nx+1)+(ix+1)
-                    i2 = (iy+1)*(self.nx+1)+(ix+1); i3 = (iy+1)*(self.nx+1)+ix
-                    elementThicknesses.append(float(nt[i0]+nt[i1]+nt[i2]+nt[i3])/4.0)
-        else:
-            elementThicknesses = [self.thickness]*len(elements)
+    @staticmethod
+    def Cylinder(Lx, Ly, R, phiDeg=90.0, thetaCenterDeg=0.0, centered=False, yMode='arclength'):
+        """Map a rectangle onto a cylindrical mantle (special case of ConeFrustum with r0=r1=R)."""
+        return SurfaceMap.ConeFrustum(Lx=Lx, Ly=Ly, r0=R, r1=R,
+                              phiDeg=phiDeg, thetaCenterDeg=thetaCenterDeg,
+                              centered=centered, yMode=yMode)
 
-        nodeRefs9 = np.array([
-            np.hstack([self.shellMesh.nodeReferencePositions[k],
-                       self.shellMesh.nodeSlopesX[k],
-                       self.shellMesh.nodeSlopesY[k]])
-            for k in range(len(nodes))
-        ], dtype=float)
 
-        def nodeId(iy, ix):
-            return iy*(self.nx+1)+ix
+    @staticmethod
+    def HemisphericalShell(Lx, Ly, R, alpha, center=(0.0,0.0,0.0), thetaOffset=0.0,
+                               thetaRange=None):
+        """Map a rectangle onto a hemispherical shell with a circular apex cutout.
+        R: radius. alpha: cutout angle from +z axis [rad].
+        x maps to azimuthal angle; y maps from cutout edge (y=0) to equator (y=Ly)."""
+        Lx=float(Lx); Ly=float(Ly); R=float(R); alpha=float(alpha)
+        thetaOffset=float(thetaOffset)
+        center=np.array(center,dtype=float).reshape(3)
+        if thetaRange is None: thetaRange=2.0*np.pi
+        thetaRange=float(thetaRange)
+        if Lx<=0 or Ly<=0: raise ValueError("Lx and Ly must be > 0")
+        if R<=0:            raise ValueError("R must be > 0")
+        if alpha<0 or alpha>=np.pi/2: raise ValueError("alpha must be in [0, pi/2)")
+        phiBase=np.pi/2.0; phiCutout=alpha
+        def f(x, y):
+            theta = thetaOffset + (thetaRange/Lx)*x
+            phi   = phiCutout + ((phiBase-phiCutout)/Ly)*y
+            X = R*exu.symbolic.sin(phi)*exu.symbolic.cos(theta)
+            Y = R*exu.symbolic.sin(phi)*exu.symbolic.sin(theta)
+            Z = R*exu.symbolic.cos(phi)
+            return [center[0]+X, center[1]+Y, center[2]+Z]
+        return f
 
-        if self.validateMapping:
-            areas = [float(np.linalg.norm(np.cross(nodeRefs9[k,3:6], nodeRefs9[k,6:9])))
-                     for k in range(nodeRefs9.shape[0])]
-            aMin = float(np.min(areas)) if areas else 0.0
-            aMax = float(np.max(areas)) if areas else 0.0
-            flips = sum(1 for a in areas if a < _degenTol)
-            if flips > 0 or (aMax > 0 and aMin/aMax < _aspectTol):
-                print(f"WARNING(ANCFThinPlateBuilder): distorted reference mapping "
-                      f"min|sx x sy|={aMin:.3e}, max={aMax:.3e}, nearZeroCount={flips}")
 
-        edgeNodes = {
-            'left':   [nodeId(iy, 0)        for iy in range(self.ny+1)],
-            'right':  [nodeId(iy, self.nx)  for iy in range(self.ny+1)],
-            'bottom': [nodeId(0,  ix)        for ix in range(self.nx+1)],
-            'top':    [nodeId(self.ny, ix)   for ix in range(self.nx+1)],
-        }
-        edgeNodeNumbers = {k: [nodes[i] for i in v] for k,v in edgeNodes.items()}
-
-        # distributed body force (e.g. gravity): same pattern as GenerateStraightBeam
-        gravityLoads = []
-        if np.linalg.norm(self.massProportionalLoad) != 0:
-            for elem in elements:
-                mMass = mbs.AddMarker(eii.MarkerBodyMass(bodyNumber=elem))
-                lGrav = mbs.AddLoad(eii.Gravity(
-                    markerNumber=mMass,
-                    loadVector=self.massProportionalLoad,
-                ))
-                gravityLoads.append(lGrav)
-
-        return {
-            'nodes':              nodes,
-            'elements':           elements,
-            'nodeRefs9':          nodeRefs9,
-            'nodeRefs12':         None,
-            'nodeId':             nodeId,
-            'edgeNodes':          edgeNodes,
-            'edgeNodeNumbers':    edgeNodeNumbers,
-            'elementThicknesses': elementThicknesses,
-            'gravityLoads':       gravityLoads,
-        }
+    @staticmethod
+    def ToroidalPanel(Lx, Ly, r1=1.5, r2=0.5):
+        """Map a rectangle onto a toroidal panel.
+        x -> meridional angle q1 in [-pi/2, pi/2]; y -> azimuthal angle q2 in [0, pi/2]."""
+        Lx=float(Lx); Ly=float(Ly); r1=float(r1); r2=float(r2)
+        q1Min=-np.pi/2.0; q1Range=np.pi; q2Min=0.0; q2Range=np.pi/2.0
+        def f(x, y):
+            q1  = q1Min + (q1Range/Lx)*x
+            q2  = q2Min + (q2Range/Ly)*y
+            rho = r1 + r2*exu.symbolic.cos(q1)
+            return [rho*exu.symbolic.cos(q2), -rho*exu.symbolic.sin(q2), r2*exu.symbolic.sin(q1)]
+        return f
 
 
 # ── joint / constraint helpers ────────────────────────────────────────────────

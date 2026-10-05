@@ -3918,7 +3918,7 @@ class ObjectANCFThinPlate:
     Args:
         name: objects's unique name; type: str
 
-        thickness: [SI:m] thickness of the plate: one value for a constant thickness; 4 values, the thicknesses at the nodes in their order, interpolated bilinearly; or 12 values :math:`[h_0,\, h_{,s,0},\, h_{,t,0},\, \ldots,\, h_3,\, h_{,s,3},\, h_{,t,3}]`, the thickness and its gradients along the element edges at each node, interpolated with the 12 shape functions of the position; with 4 or 12 values, the stiffness is computed from the local thickness, see strainCoefficients; type: array_like
+        thickness: [SI:m] thickness of the plate: one value for a constant thickness; 4 values, the thicknesses at the nodes in their order, interpolated bilinearly; or 12 values :math:`[h_0,\, h_{,s,0},\, h_{,t,0},\, \ldots,\, h_3,\, h_{,s,3},\, h_{,t,3}]`, the thickness and its gradients along the slopes of each node, interpolated with the 12 shape functions of the position; with 4 or 12 values, the stiffness is computed from the local thickness, see strainCoefficients; type: array_like
 
         density: [SI:kg/m:math:`^3`] density of the plate, possibly averaged over thickness; type: float
 

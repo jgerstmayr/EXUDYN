@@ -869,15 +869,14 @@ The steps are numbered in the order they were raised and stand here in the order
     - **RG4.20.2** **DONE 2026-10-05** — [log](exudynRevisionLog2026b.md#rg4-20) (#2858) `exudyn.shells`:
       `ANCFThinPlateBuilder`, the geometry maps, the constraint, load and hinge functions, ShellMesh with damping and a
       thickness function; the names in UpperCamelCase.
-    - **RG4.20.3** *(open)* (#2859) the visualization: `drawNormal`, the postprocessed contour, `contourZeta`, the
-      finer tiling.
-    - **RG4.20.4** *(decisions, the port notes of the colleague)*: (a) note 4 - the first component of
-      `CurvatureLocal` and `TorqueLocal` is negated, so that a plate strip along x has the sign of `ObjectANCFCable2D`
-      but the opposite sign of a strip along y: one convention for all components? (b) note 10b - the thickness
-      function of `ShellMesh` differentiates with respect to global x and y, the element reads the 12 values as
-      gradients along its edges: convert, or keep the restriction to rectangular elements in the x-y plane (it is
-      documented); (c) note 11 - the default integration mode is 0 for the element and `ShellMesh`, 1 for
-      `ANCFThinPlateBuilder`; (d) notes 6, 7, 8 belong to RG4.20.3.
+    - **RG4.20.3** **DONE 2026-10-05** — [log](exudynRevisionLog2026b.md#rg4-20-3) (#2859) the visualization, as decided:
+      no averaging and no members in `VisualizationSystem`; the strain-type contours interpolated bilinearly from the
+      element corners (`shells.reducedInterpolation`, as `beams.reducedAxialInterploation`), each surface with its own
+      thickness coordinate (`shells.contourZeta`), `shells.drawNormal` along the normal $\nv_3$, the finer tiling.
+    - **RG4.20.4** **DONE 2026-10-05** — [log](exudynRevisionLog2026b.md#rg4-20-3) (#2864) the decisions: one sign of
+      `CurvatureLocal` and `TorqueLocal`; the thickness gradients of `ShellMesh` projected onto the node slopes; default
+      integration mode 0; the maps as `SurfaceMap.Cylinder(...)` and the others, `ShellMesh(surfaceMap=...)`;
+      `SymSin`/`SymCos` and `ANCFThinPlateBuilder` removed.
 
 ## RG5 — Performance
 
@@ -1962,7 +1961,6 @@ issue and a short title only. The open issues that are not steps are in the trac
 | RG12.40 | #2863 | Create functions: itemNumbers instead of bodyNumbers - a proposal for decision |
 | RG12.39 | #2850 | a restart from the restart file: how it works with a model script, then a proposal |
 | RG3.36 | #2856 | the PDF checked with the documentation |
-| RG4.20 | #2859 | ANCF thin plate of a colleague: the visualization (RG4.20.3) and four decisions (RG4.20.4) |
 | RG4.19 | #692, #1290, #1337, #2851 | the open bugs and checks, evaluated: options and decisions (RG4.19.1-.9) |
 | RG5.1 | - | a maintained micro-benchmark of the linear algebra, inside Exudyn (from #2397); RG5.1.1 the no-rotation flag of the HT |
 | RG5.2 | - | make the hot linear algebra vectorizable |

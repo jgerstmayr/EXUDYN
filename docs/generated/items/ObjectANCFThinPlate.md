@@ -23,7 +23,7 @@ The parameters of the item; in a dictionary, its type is 'ANCFThinPlate':
 | name | type | size | default | description |
 |---|---|---|---|---|
 | **name** | String |  | '' | objects's unique name |
-| **thickness** | NumpyVector |  | [] | (symbol: $h$) [SI:m] thickness of the plate: one value for a constant thickness; 4 values, the thicknesses at the nodes in their order, interpolated bilinearly; or 12 values $[h_0,\, h_{,s,0},\, h_{,t,0},\, \ldots,\, h_3,\, h_{,s,3},\, h_{,t,3}]$, the thickness and its gradients along the element edges at each node, interpolated with the 12 shape functions of the position; with 4 or 12 values, the stiffness is computed from the local thickness, see strainCoefficients |
+| **thickness** | NumpyVector |  | [] | (symbol: $h$) [SI:m] thickness of the plate: one value for a constant thickness; 4 values, the thicknesses at the nodes in their order, interpolated bilinearly; or 12 values $[h_0,\, h_{,s,0},\, h_{,t,0},\, \ldots,\, h_3,\, h_{,s,3},\, h_{,t,3}]$, the thickness and its gradients along the slopes of each node, interpolated with the 12 shape functions of the position; with 4 or 12 values, the stiffness is computed from the local thickness, see strainCoefficients |
 | **density** | UReal |  | 0. | (symbol: $\rho$) [SI:kg/m$^3$] density of the plate, possibly averaged over thickness |
 | **massProportionalDamping** | Real |  | 0. | mass-proportional damping coefficient $\alpha$ [SI:1/s]; adds massmatrix proportional damping forces $\fv_d = \alpha \Mm \dot{\qv}$ |
 | **stiffnessProportionalDamping** | Real |  | 0. | membrane stiffness-proportional damping coefficient $\beta_\varepsilon$ [SI:s]: Kelvin-Voigt damping $\beta_\varepsilon\, \Dm_\varepsilon\, \dot\teps$ added to the membrane forces, in the current configuration; it does not damp a rigid-body motion |
@@ -51,9 +51,9 @@ The parameters of `VObjectANCFThinPlate`, given as `visualization`:
 
 ## Drawing
 
-Drawn as [all finite elements](#sec-drawing-objectsfiniteelement); the mid surface, or with `bodies.shells.drawSolid` both surfaces and the edges at `bodies.shells.thicknessFactor` times the thickness, as n x n quads per element, n = `bodies.beams.axialTiling`/2; the outline of the element as lines with `view0.scene.showMeshEdges`.
+Drawn as [all finite elements](#sec-drawing-objectsfiniteelement); the mid surface, or with `bodies.shells.drawSolid` both surfaces and the edges at `bodies.shells.thicknessFactor` times the thickness, as n x n quads per element, n = `bodies.beams.axialTiling`, at least 2; the outline of the element as lines with `view0.scene.showMeshEdges`. The contour at the thickness coordinate `bodies.shells.contourZeta` on the top, its negative on the bottom; with `bodies.shells.reducedInterpolation` the strain-type outputs interpolated bilinearly from the corners of the element; with `bodies.shells.drawNormal` the contour value along the normal of the mid surface as lines.
 
-Settings beyond those of all finite elements: [`bodies.beams.axialTiling`](#sec-vsettingsbeams), [`bodies.shells.drawSolid`](#sec-vsettingsshells), [`bodies.shells.thicknessFactor`](#sec-vsettingsshells), [`contour.nodesColored`](#sec-vsettingscontour), [`openGL.faceEdgesColor`](#sec-vsettingsopengl), [`view0.scene.showMeshEdges`](#sec-vsettingsscene).
+Settings beyond those of all finite elements: [`bodies.beams.axialTiling`](#sec-vsettingsbeams), [`bodies.shells.contourZeta`](#sec-vsettingsshells), [`bodies.shells.drawNormal`](#sec-vsettingsshells), [`bodies.shells.drawNormalColor`](#sec-vsettingsshells), [`bodies.shells.drawNormalFactor`](#sec-vsettingsshells), [`bodies.shells.drawNormalLines`](#sec-vsettingsshells), [`bodies.shells.drawSolid`](#sec-vsettingsshells), [`bodies.shells.reducedInterpolation`](#sec-vsettingsshells), [`bodies.shells.thicknessFactor`](#sec-vsettingsshells), [`contour.nodesColored`](#sec-vsettingscontour), [`openGL.faceEdgesColor`](#sec-vsettingsopengl), [`view0.scene.showMeshEdges`](#sec-vsettingsscene).
 
 ## Output variables
 
@@ -70,9 +70,9 @@ Available as `OutputVariableType` in sensors, `Get...Output()` and other functio
 | Director1 | $\rv_x(x,y,z)$ | (axial) slope vector of local position (at $z$=0) |
 | Director2 | $\rv_y(x,y,z)$ | (axial) slope vector of local position (at $z$=0) |
 | StrainLocal | $[\varepsilon_{11},\, \varepsilon_{22},\, 0,\, 0,\, 0,\, \gamma_{12}]\tp$ | strains at the thickness coordinate $\zeta$ of the local position, $\teps - \zeta\,\frac{h}{2}\,\tkappa$, relative to the reference configuration |
-| CurvatureLocal | $[-\kappa_{xx},\, \kappa_{yy},\, \kappa_{xy}]\tp$ | curvatures of the mid-surface relative to the reference configuration; the first component with the sign of ObjectANCFCable2D |
+| CurvatureLocal | $[\kappa_{xx},\, \kappa_{yy},\, \kappa_{xy}]\tp$ | curvatures of the mid-surface relative to the reference configuration, positive where the surface bends towards its normal |
 | ForceLocal | $[N_{xx},\, N_{yy},\, N_{xy}]\tp$ | membrane force resultants per length in the local frame, from the membrane strains relative to the reference configuration |
-| TorqueLocal | $[-M_{xx},\, M_{yy},\, M_{xy}]\tp$ | bending moment resultants per length in the local frame, from the curvatures relative to the reference configuration; the first component with the sign of ObjectANCFCable2D |
+| TorqueLocal | $[M_{xx},\, M_{yy},\, M_{xy}]\tp$ | bending moment resultants per length in the local frame, $\mathbf{M} = \Dm_\kappa \tkappa$, from the curvatures relative to the reference configuration |
 | StressLocal | $[\sigma_{11},\, \sigma_{22},\, 0,\, 0,\, 0,\, \sigma_{12}]\tp$ | stresses at the thickness coordinate $\zeta$ of the local position, $\mathbf{N}/h - \zeta\, 6\mathbf{M}/h^2$; without damping |
 | Acceleration | $\LU{0}{\av(x,y,z)} = \LU{0}{\ddot \rv(x,y,z)}$ | global acceleration vector of local position |
 | KineticEnergy | $T = \frac{1}{2} \dot\qv\tp \Mm\, \dot\qv$ | kinetic energy from the mass matrix of the current state and the velocities of the nodes; current configuration only; localPosition must be $[0,0,0]$ |
@@ -129,15 +129,16 @@ the damping, the velocities.
 
 At $\zeta \in [-1,1]$: `StrainLocal` $= \teps - \zeta\,\frac{h}{2}\,\tkappa$ and `StressLocal`
 $= \mathbf{N}/h - \zeta\, 6\mathbf{M}/h^2$, both as 6 components $[\cdot_{11},\, \cdot_{22},\, 0,\, 0,\, 0,\, \cdot_{12}]$;
-`ForceLocal` $= [N_{11},\, N_{22},\, N_{12}]$ per length, `TorqueLocal` $= [-M_{11},\, M_{22},\, M_{12}]$ and
-`CurvatureLocal` $= [-\kappa_{xx},\, \kappa_{yy},\, \kappa_{xy}]$ - the first component with the sign of
-`ObjectANCFCable2D`.
+`ForceLocal` $= [N_{11},\, N_{22},\, N_{12}]$ per length, `TorqueLocal` $= [M_{11},\, M_{22},\, M_{12}]$ and
+`CurvatureLocal` $= [\kappa_{xx},\, \kappa_{yy},\, \kappa_{xy}]$. A curvature is positive where the surface bends
+towards its normal $\nv_3$, and $\zeta = 1$ is the side of the normal: for a strip whose normal points in $+z$ the
+signs of `ObjectANCFCable2D`, $\kappa = w''$ and $\varepsilon = \varepsilon_m - y\,\kappa$.
 
 ### Limitations
 
-Under construction; for output variables, the local position is given in $[-1,1]^3$. The 12 thickness values are
-gradients per unit length along the element edges, equal to $\partial h/\partial x$ and $\partial h/\partial y$ only for
-rectangular elements.
+Under construction; for output variables, the local position is given in $[-1,1]^3$. The gradients of the 12
+thickness values are per unit length along the slopes of the nodes; the thickness function of `ShellMesh` gives
+them so.
 
 (miniexample-objectancfthinplate)=
 ## Mini example

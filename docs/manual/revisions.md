@@ -34,8 +34,9 @@ release that carries it**.
 the curvature of `ObjectANCFCable2D` -, its integration rules changed (`useReducedOrderIntegration` 0: Gauss
 5 x 5; 1 and 2: Lobatto 3 x 3 for the membrane, Gauss 2 x 2 for the bending), and a variable thickness gives
 the stiffness from the local thickness. Results change slightly; the outputs change in form: `StrainLocal`
-has 6 components through the thickness instead of the 3 membrane strains, `CurvatureLocal` is
-$[-\kappa_{xx},\, \kappa_{yy},\, \kappa_{xy}]$, and `StressLocal` has the opposite sign of its bending part (#2857).
+has 6 components through the thickness instead of the 3 membrane strains, `CurvatureLocal` and `TorqueLocal`
+are in the order $xx,\, yy,\, xy$ with one sign - positive where the surface bends towards its normal -, and
+`StressLocal` has the opposite sign of its bending part (#2857, #2864).
 
 **Visualization parameters of items that draw nothing are gone**: `show` of `Node1D`, the generic nodes,
 `ObjectGenericODE1`, the coordinate markers, `LoadCoordinate` and `SensorUserFunction`, `show` and `color` of
@@ -198,13 +199,16 @@ item lists it (#2589).
 its table, not only on its axis; `ObjectANCFBeam` takes `MarkerBodyRigid`, so torques and joints with
 rotations act on its cross sections (#2775).
 
-**ANCF thin plates: damping, thickness and a mesh builder.** `ObjectANCFThinPlate` has Kelvin-Voigt damping of
+**ANCF thin plates: damping, thickness and surface maps.** `ObjectANCFThinPlate` has Kelvin-Voigt damping of
 the membrane and the bending stiffness (`stiffnessProportionalDamping`, `bendingStiffnessProportionalDamping`),
 which does not damp a rigid motion, and takes 12 thickness values - a thickness and its two gradients per
-node. `exudyn.shells` has `ANCFThinPlateBuilder`, which builds a plate mesh on a rectangle mapped by a function -
-`MapCylinder`, `MapConeFrustum`, `MapHemisphericalShell`, `MapToroidalPanel`, ... -, and functions for
+node, which `ShellMesh` computes from a `thicknessFunction`. `ShellMesh(surfaceMap=...)` maps the mesh onto a
+surface, with the maps of `exudyn.shells.SurfaceMap` - `SurfaceMap.Cylinder`, `ConeFrustum`,
+`HemisphericalShell`, `ToroidalPanel`, ... - or a map of one's own; `exudyn.shells` has functions for
 constraints, edge loads and hinges of plate nodes (`AddNodeConstraints`, `AddClampToGround`, `ApplyEdgeLoad`,
-`AddEdgeSpringDamper`, ...) (#2857, #2858).
+`AddEdgeSpringDamper`, ...). `visualizationSettings.bodies.shells` draws the contour at a thickness coordinate
+(`contourZeta`), interpolated from the corners of the elements (`reducedInterpolation`), and along the normal
+(`drawNormal`) (#2857, #2858, #2859, #2864).
 
 **`GeneralContact` can keep a contact while the bodies penetrate.** With
 `keepContactWhilePenetrating = True` a sphere-sphere or sphere-triangle contact acts as long as the

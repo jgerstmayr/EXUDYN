@@ -1,0 +1,16 @@
+{
+  "number": 2864,
+  "title": "ANCF thin plate: one sign of curvature and moment, thickness gradients along the node slopes, SurfaceMap, the builder removed",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "CHANGE",
+  "effort": "MEDIUM",
+  "description": "The maintainer's decisions of 2026-10-05 on RG4.20.4: CurvatureLocal and TorqueLocal with one sign (the negated first component was wrong); ShellMesh projects the global thickness gradient onto the unit node slopes; default integration mode 0 everywhere; the maps as static methods of SurfaceMap without the Map prefix, no aliases; SymSin/SymCos removed (exu.symbolic.sin/cos take floats); ANCFThinPlateBuilder removed without deprecation - it was public only in development versions since 2026-10-05 - and ShellMesh takes a surfaceMap instead.",
+  "dateRaised": "2026-10-05",
+  "deadline": "2027-04-03",
+  "dateResolved": "2026-10-05 15:35",
+  "resolvedAuthor": "Claude-JG",
+  "file": "python/exudyn/shells.py",
+  "releaseNotes": "ObjectANCFThinPlate: CurvatureLocal and TorqueLocal with one sign, positive where the surface bends towards its normal; exudyn.shells: ShellMesh(surfaceMap=...) with the maps of SurfaceMap (Cylinder, ConeFrustum, HemisphericalShell, ToroidalPanel, ...), thickness function gradients along the node slopes.",
+  "resolvedInVersion": "1.12.335"
+}

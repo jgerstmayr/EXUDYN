@@ -1451,7 +1451,9 @@ void CObjectANCFThinPlate::GetOutputVariableBody(OutputVariableType variableType
     {
         SlimVectorBase<Real, 3> eps_mid, kappa;
         ComputeKinematics(xi, eta, qANCFref, qANCFtotal, eps_mid, kappa);
-        value.SetVector({ -kappa[0], kappa[1], kappa[2] }); //[0]=-kappa_xx: sign matches Cable2D (kappa<0 for downward bending, M=EI*kappa<0), [1]=kappa_yy, [2]=kappa_xy
+        //one sign for all components: positive where the surface bends towards its normal r_x x r_y; for a strip with the
+        //normal in +z the sign of ObjectANCFCable2D, kappa = w'' (#2864)
+        value.SetVector({ kappa[0], kappa[1], kappa[2] });
         break;
     }
     case OutputVariableType::Position:
@@ -1530,15 +1532,14 @@ void CObjectANCFThinPlate::GetOutputVariableBody(OutputVariableType variableType
         // Bending moment resultants M = [M11, M22, M12]  [N*m/m = N]
         // M = D_kappa * Delta_kappa  (bending stiffness times curvature change).
         // Comparable to Cable2D TorqueLocal (bending moment [N*m]) after multiplying by plate width.
-        // Sign convention: M[0] negated to match Cable2D (M<0 for downward bending),
-        // consistent with CurvatureLocal[0] = -kappa[0].  MP, 2026-05-26
+        // the sign of CurvatureLocal: M = D_kappa * kappa for all components (#2864)
         SlimVectorBase<Real, 3> eps_mid, kappa;
         ComputeKinematics(xi, eta, qANCFref, qANCFtotal, eps_mid, kappa);
         SlimVectorBase<Real, 3> M;
         Matrix3D Deps, Dkappa;
         StiffnessAtPoint(*this, xi, eta, Deps, Dkappa);
         EXUmath::MultMatrixVectorTemplate(Dkappa, kappa, M);
-        value.SetVector({ -M[0], M[1], M[2] }); // -M[0]: sign matches Cable2D TorqueLocal convention
+        value.SetVector({ M[0], M[1], M[2] });
         break;
     }
     case OutputVariableType::PotentialEnergy: {
@@ -2052,50 +2053,72 @@ void CObjectANCFThinPlate::ComputeJacobianODE2_ODE2(EXUmath::MatrixContainer& ja
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 //! Update visualizationSystem -> graphicsData for item
+//! the plate as quads on its mid surface, or with bodies.shells.drawSolid on both surfaces and the four edges; the contour
+//! at the thickness coordinate +|contourZeta| on the top (and the mid surface), -|contourZeta| on the bottom; with
+//! shells.reducedInterpolation the strain-type outputs are interpolated bilinearly from the four corners of the element, as
+//! beams.reducedAxialInterploation does along a beam; with shells.drawNormal the contour value is drawn along the normal
+//! r_x x r_y as lines (#2859)
 void VisualizationObjectANCFThinPlate::UpdateGraphics(const VisualizationSettings& visualizationSettings, VisualizationSystem* vSystem, Index itemNumber)
 {
-	// CHANGED: extended to draw solid plate (top + bottom + 4 edges) when thickness > 0 (MP/JG, 2026)
-	// Uses GetPosition(localPos) with localPos[2]=+/-1 for top/bottom surfaces,
-	// which correctly applies the through-thickness Z-offset (resolved TODO).
 	Index itemID = Index2ItemID(itemNumber, ItemType::Object, vSystem->GetSystemID());
 	Float4 currentColor = visualizationSettings.bodies.defaultColor;
-	Float4 plateColor = currentColor; //also used for contour
+	if (color[0] != -1.f) { currentColor = color; }
+	const Float4 plateColor = currentColor; //also used where there is no contour
 
 	CObjectANCFThinPlate* cObject = (CObjectANCFThinPlate*)vSystem->systemData->GetCObjects()[itemNumber];
 
-	Index tiling = EXUstd::Maximum(2, visualizationSettings.bodies.beams.axialTiling / 2);
-
-	GLLine item;
-	item.itemID = itemID;
-	if (color[0] != -1.f) { currentColor = color; plateColor = currentColor; }
-
+	Index tiling = EXUstd::Maximum(2, visualizationSettings.bodies.beams.axialTiling);
 	const Float4& edgeColor = visualizationSettings.openGL.faceEdgesColor;
 
-	Real dXi  = 2. / (Real)tiling;
+	Real dXi = 2. / (Real)tiling;
 	Real dEta = 2. / (Real)tiling;
 	std::array<Vector3D, 4> points;
 	std::array<Vector3D, 4> normals;
-	std::array<Float4,   4> colors;
+	std::array<Float4, 4> colors;
 
 	const bool drawSolid = visualizationSettings.bodies.shells.drawSolid;
-
 	const Real zetaTop = drawSolid ? visualizationSettings.bodies.shells.thicknessFactor : 0.0;
 	const Real zetaBot = -visualizationSettings.bodies.shells.thicknessFactor; //zeta = +/- 1 returns the correct thickness, otherwise it is scaled.
 
-	// Helper: get contour color at local position (xi, eta, zeta)
-	// zeta in [-1,1]: -1=bottom surface, 0=mid-plane, +1=top surface
-	// For StressLocal, pass zeta=+/-1 to get the physical surface stress (not mid-plane).
-	auto getColor = [&](Real xi, Real eta, Real zeta = 0.) -> Float4 {
+	//+++++++++++++++++++++++++++++++++++++++++++++++++
+	//the contour: the value at a local position and a thickness coordinate, with ComputeContourColor as everywhere
+	const OutputVariableType contourVariable = visualizationSettings.contour.outputVariable;
+	const bool hasContour = EXUstd::IsOfTypeAndNotNone(cObject->GetOutputVariableTypes(), contourVariable)
+		&& visualizationSettings.contour.nodesColored;
+	const Real zetaContour = fabs(visualizationSettings.bodies.shells.contourZeta); //+|zeta| on the top and the mid surface, -|zeta| on the bottom
+	auto ContourDirect = [&](Real xi, Real eta, Real zeta) -> Float4 {
 		Float4 col = plateColor;
-		if (EXUstd::IsOfTypeAndNotNone(cObject->GetOutputVariableTypes(), visualizationSettings.contour.outputVariable)
-			&& visualizationSettings.contour.nodesColored)
+		Vector& value = vSystem->tempVector;
+		cObject->GetOutputVariableBody(contourVariable, Vector3D({ xi, eta, zeta }), ConfigurationType::Visualization, value, itemNumber);
+		EXUvis::ComputeContourColor<Vector>(value, contourVariable, visualizationSettings.contour.outputVariableComponent, col);
+		return col;
+	};
+	//the strain-type outputs are interpolated bilinearly from the corners of the element, on each surface for itself
+	const bool interpolated = hasContour && visualizationSettings.bodies.shells.reducedInterpolation &&
+		(contourVariable == OutputVariableType::StrainLocal || contourVariable == OutputVariableType::StressLocal ||
+		 contourVariable == OutputVariableType::CurvatureLocal || contourVariable == OutputVariableType::ForceLocal ||
+		 contourVariable == OutputVariableType::TorqueLocal);
+	const Real cornerXi[4] = { -1., 1., 1., -1. };
+	const Real cornerEta[4] = { -1., -1., 1., 1. };
+	std::array<Float4, 4> cornersTop, cornersBottom;
+	if (interpolated)
+	{
+		for (Index k = 0; k < 4; k++)
 		{
-			Vector& value = vSystem->tempVector;
-			cObject->GetOutputVariableBody(visualizationSettings.contour.outputVariable,
-				Vector3D({ xi, eta, zeta }), ConfigurationType::Visualization, value, itemNumber);
-			EXUvis::ComputeContourColor<Vector>(value, visualizationSettings.contour.outputVariable,
-				visualizationSettings.contour.outputVariableComponent, col);
+			cornersTop[k] = ContourDirect(cornerXi[k], cornerEta[k], zetaContour);
+			cornersBottom[k] = ContourDirect(cornerXi[k], cornerEta[k], -zetaContour);
 		}
+	}
+	auto GetColor = [&](Real xi, Real eta, Real zeta) -> Float4 {
+		if (!hasContour) { return plateColor; }
+		if (!interpolated) { return ContourDirect(xi, eta, zeta); }
+		const std::array<Float4, 4>& corners = (zeta >= 0.) ? cornersTop : cornersBottom;
+		if (corners[0][3] != VisualizationSystem::GetContourPlotFlag()) { return plateColor; } //no value for this component
+		Real shape[4] = { 0.25 * (1. - xi) * (1. - eta), 0.25 * (1. + xi) * (1. - eta),
+						  0.25 * (1. + xi) * (1. + eta), 0.25 * (1. - xi) * (1. + eta) };
+		Float4 col = corners[0];
+		col[0] = 0.f;
+		for (Index k = 0; k < 4; k++) { col[0] += (float)shape[k] * corners[k][0]; }
 		return col;
 	};
 
@@ -2106,41 +2129,38 @@ void VisualizationObjectANCFThinPlate::UpdateGraphics(const VisualizationSetting
 		return (len > 0.) ? n * (Real(1.) / len) : Vector3D({ 0., 0., 1. });
 	};
 
-	// === TOP SURFACE (zeta=zetaTop) ===
+	// === TOP SURFACE (zeta=zetaTop), the mid surface without drawSolid ===
 	for (Index j = 0; j < tiling; j++)
 	{
 		for (Index i = 0; i < tiling; i++)
 		{
-			Real xi  = 2. * (Real)i / (Real)tiling - 1.;
+			Real xi = 2. * (Real)i / (Real)tiling - 1.;
 			Real eta = 2. * (Real)j / (Real)tiling - 1.;
 
-			// Quad corners at top surface
 			Vector3D lp[4] = {
-				{ xi,       eta,       zetaTop },
-				{ xi + dXi, eta,       zetaTop },
+				{ xi,       eta,        zetaTop },
+				{ xi + dXi, eta,        zetaTop },
 				{ xi + dXi, eta + dEta, zetaTop },
 				{ xi,       eta + dEta, zetaTop }
 			};
 			for (Index k = 0; k < 4; k++)
 			{
-				points[k]  = cObject->GetPosition(lp[k], ConfigurationType::Visualization);
-				// Normal from mid-plane (zeta=0); top surface normal points outward (+n)
+				points[k] = cObject->GetPosition(lp[k], ConfigurationType::Visualization);
 				normals[k] = cObject->GetNormal(Vector3D({ lp[k][0], lp[k][1], 0. }), ConfigurationType::Visualization);
-				colors[k]  = getColor(lp[k][0], lp[k][1], 1.);  // physical top surface (zeta=+1)
+				colors[k] = GetColor(lp[k][0], lp[k][1], zetaContour);
 			}
 			vSystem->graphicsData.AddQuad(points, normals, colors, itemID);
 
 			if (visualizationSettings.view0.scene.showMeshEdges)
 			{
-				if (i == 0)          { vSystem->graphicsData.AddLine(points[0], points[3], edgeColor, edgeColor, itemID); }
+				if (i == 0) { vSystem->graphicsData.AddLine(points[0], points[3], edgeColor, edgeColor, itemID); }
 				if (i == tiling - 1) { vSystem->graphicsData.AddLine(points[1], points[2], edgeColor, edgeColor, itemID); }
-				if (j == 0)          { vSystem->graphicsData.AddLine(points[0], points[1], edgeColor, edgeColor, itemID); }
+				if (j == 0) { vSystem->graphicsData.AddLine(points[0], points[1], edgeColor, edgeColor, itemID); }
 				if (j == tiling - 1) { vSystem->graphicsData.AddLine(points[2], points[3], edgeColor, edgeColor, itemID); }
 			}
 		}
 	}
 
-	// ADDED: bottom face + 4 edge strips for solid thickness (MP/JG, 2026)
 	if (drawSolid)
 	{
 		// === BOTTOM SURFACE (zeta=zetaBot), reversed winding => normals point downward ===
@@ -2148,10 +2168,9 @@ void VisualizationObjectANCFThinPlate::UpdateGraphics(const VisualizationSetting
 		{
 			for (Index i = 0; i < tiling; i++)
 			{
-				Real xi  = 2. * (Real)i / (Real)tiling - 1.;
+				Real xi = 2. * (Real)i / (Real)tiling - 1.;
 				Real eta = 2. * (Real)j / (Real)tiling - 1.;
 
-				// Reversed winding (swap i and i+1) so normal faces outward (downward)
 				Vector3D lp[4] = {
 					{ xi + dXi, eta,        zetaBot },
 					{ xi,       eta,        zetaBot },
@@ -2161,39 +2180,35 @@ void VisualizationObjectANCFThinPlate::UpdateGraphics(const VisualizationSetting
 				for (Index k = 0; k < 4; k++)
 				{
 					points[k] = cObject->GetPosition(lp[k], ConfigurationType::Visualization);
-					// Flip mid-plane normal for bottom face
 					Vector3D n = cObject->GetNormal(Vector3D({ lp[k][0], lp[k][1], 0. }), ConfigurationType::Visualization);
 					n *= -1.;
 					normals[k] = n;
-					colors[k]  = getColor(lp[k][0], lp[k][1], -1.);  // physical bottom surface (zeta=-1)
+					colors[k] = GetColor(lp[k][0], lp[k][1], -zetaContour);
 				}
 				vSystem->graphicsData.AddQuad(points, normals, colors, itemID);
 
-				// ADDED: mesh edge lines on bottom face too (MP/JG, 2026)
 				if (visualizationSettings.view0.scene.showMeshEdges)
 				{
-					if (i == 0)          { vSystem->graphicsData.AddLine(points[1], points[2], edgeColor, edgeColor, itemID); }
+					if (i == 0) { vSystem->graphicsData.AddLine(points[1], points[2], edgeColor, edgeColor, itemID); }
 					if (i == tiling - 1) { vSystem->graphicsData.AddLine(points[0], points[3], edgeColor, edgeColor, itemID); }
-					if (j == 0)          { vSystem->graphicsData.AddLine(points[0], points[1], edgeColor, edgeColor, itemID); }
+					if (j == 0) { vSystem->graphicsData.AddLine(points[0], points[1], edgeColor, edgeColor, itemID); }
 					if (j == tiling - 1) { vSystem->graphicsData.AddLine(points[2], points[3], edgeColor, edgeColor, itemID); }
 				}
 			}
 		}
 
-		// === 4 EDGE STRIPS connecting top and bottom surfaces ===
-		// CHANGED: edge strips now use contour colors and draw edge lines (MP/JG, 2026)
+		// === 4 EDGE STRIPS connecting top and bottom surfaces, colored with the values of the two surfaces ===
 		for (Index i = 0; i < tiling; i++)
 		{
-			Real t0 = 2. * (Real)i       / (Real)tiling - 1.;
+			Real t0 = 2. * (Real)i / (Real)tiling - 1.;
 			Real t1 = 2. * (Real)(i + 1) / (Real)tiling - 1.;
 
-			// Helper: assign contour colors to edge quad; bottom and top corners share same (xi,eta) color
 			// colors[0]=bottom@t0, [1]=bottom@t1, [2]=top@t1, [3]=top@t0
 			auto setEdgeColors = [&](Real xi0, Real eta0, Real xi1, Real eta1) {
-				colors[0] = getColor(xi0, eta0, -1.);  // bottom@t0
-				colors[1] = getColor(xi1, eta1, -1.);  // bottom@t1
-				colors[2] = getColor(xi1, eta1, +1.);  // top@t1
-				colors[3] = getColor(xi0, eta0, +1.);  // top@t0
+				colors[0] = GetColor(xi0, eta0, -zetaContour);
+				colors[1] = GetColor(xi1, eta1, -zetaContour);
+				colors[2] = GetColor(xi1, eta1, zetaContour);
+				colors[3] = GetColor(xi0, eta0, zetaContour);
 			};
 
 			// Left edge: xi = -1, eta = t0..t1
@@ -2204,15 +2219,13 @@ void VisualizationObjectANCFThinPlate::UpdateGraphics(const VisualizationSetting
 			{ Vector3D n = faceNormal(points); for (auto& nk : normals) nk = n; }
 			setEdgeColors(-1., t0, -1., t1);
 			vSystem->graphicsData.AddQuad(points, normals, colors, itemID);
-			// CHANGED: draw corner lines at both ends; forward winding: start=[0]->[3], end=[1]->[2] (MP/JG, 2026)
 			if (visualizationSettings.view0.scene.showMeshEdges)
 			{
-				if (i == 0)          { vSystem->graphicsData.AddLine(points[0], points[3], edgeColor, edgeColor, itemID); }
+				if (i == 0) { vSystem->graphicsData.AddLine(points[0], points[3], edgeColor, edgeColor, itemID); }
 				if (i == tiling - 1) { vSystem->graphicsData.AddLine(points[1], points[2], edgeColor, edgeColor, itemID); }
 			}
 
 			// Right edge: xi = +1, reversed winding for outward normal
-			// points: [0]=bot@t1, [1]=bot@t0, [2]=top@t0, [3]=top@t1
 			points[0] = cObject->GetPosition({ 1., t1, zetaBot }, ConfigurationType::Visualization);
 			points[1] = cObject->GetPosition({ 1., t0, zetaBot }, ConfigurationType::Visualization);
 			points[2] = cObject->GetPosition({ 1., t0, zetaTop }, ConfigurationType::Visualization);
@@ -2220,15 +2233,13 @@ void VisualizationObjectANCFThinPlate::UpdateGraphics(const VisualizationSetting
 			{ Vector3D n = faceNormal(points); for (auto& nk : normals) nk = n; }
 			setEdgeColors(1., t1, 1., t0);
 			vSystem->graphicsData.AddQuad(points, normals, colors, itemID);
-			// CHANGED: reversed winding: start corner at t0=[1]->[2], end corner at t1=[0]->[3] (MP/JG, 2026)
 			if (visualizationSettings.view0.scene.showMeshEdges)
 			{
-				if (i == 0)          { vSystem->graphicsData.AddLine(points[1], points[2], edgeColor, edgeColor, itemID); }
+				if (i == 0) { vSystem->graphicsData.AddLine(points[1], points[2], edgeColor, edgeColor, itemID); }
 				if (i == tiling - 1) { vSystem->graphicsData.AddLine(points[0], points[3], edgeColor, edgeColor, itemID); }
 			}
 
 			// Front edge: eta = -1, xi = t1..t0 (reversed winding)
-			// points: [0]=bot@t1, [1]=bot@t0, [2]=top@t0, [3]=top@t1
 			points[0] = cObject->GetPosition({ t1, -1., zetaBot }, ConfigurationType::Visualization);
 			points[1] = cObject->GetPosition({ t0, -1., zetaBot }, ConfigurationType::Visualization);
 			points[2] = cObject->GetPosition({ t0, -1., zetaTop }, ConfigurationType::Visualization);
@@ -2236,15 +2247,13 @@ void VisualizationObjectANCFThinPlate::UpdateGraphics(const VisualizationSetting
 			{ Vector3D n = faceNormal(points); for (auto& nk : normals) nk = n; }
 			setEdgeColors(t1, -1., t0, -1.);
 			vSystem->graphicsData.AddQuad(points, normals, colors, itemID);
-			// CHANGED: reversed winding: start corner at t0=[1]->[2], end corner at t1=[0]->[3] (MP/JG, 2026)
 			if (visualizationSettings.view0.scene.showMeshEdges)
 			{
-				if (i == 0)          { vSystem->graphicsData.AddLine(points[1], points[2], edgeColor, edgeColor, itemID); }
+				if (i == 0) { vSystem->graphicsData.AddLine(points[1], points[2], edgeColor, edgeColor, itemID); }
 				if (i == tiling - 1) { vSystem->graphicsData.AddLine(points[0], points[3], edgeColor, edgeColor, itemID); }
 			}
 
 			// Back edge: eta = +1, xi = t0..t1
-			// points: [0]=bot@t0, [1]=bot@t1, [2]=top@t1, [3]=top@t0
 			points[0] = cObject->GetPosition({ t0, 1., zetaBot }, ConfigurationType::Visualization);
 			points[1] = cObject->GetPosition({ t1, 1., zetaBot }, ConfigurationType::Visualization);
 			points[2] = cObject->GetPosition({ t1, 1., zetaTop }, ConfigurationType::Visualization);
@@ -2252,14 +2261,48 @@ void VisualizationObjectANCFThinPlate::UpdateGraphics(const VisualizationSetting
 			{ Vector3D n = faceNormal(points); for (auto& nk : normals) nk = n; }
 			setEdgeColors(t0, 1., t1, 1.);
 			vSystem->graphicsData.AddQuad(points, normals, colors, itemID);
-			// CHANGED: forward winding: start corner at t0=[0]->[3], end corner at t1=[1]->[2] (MP/JG, 2026)
 			if (visualizationSettings.view0.scene.showMeshEdges)
 			{
-				if (i == 0)          { vSystem->graphicsData.AddLine(points[0], points[3], edgeColor, edgeColor, itemID); }
+				if (i == 0) { vSystem->graphicsData.AddLine(points[0], points[3], edgeColor, edgeColor, itemID); }
 				if (i == tiling - 1) { vSystem->graphicsData.AddLine(points[1], points[2], edgeColor, edgeColor, itemID); }
 			}
 		}
-	} // END ADDED: solid plate visualization
+	}
+
+	//+++++++++++++++++++++++++++++++++++++++++++++++++
+	//the contour value along the normal n = r_x x r_y / |r_x x r_y| of the mid surface, as lines: the tip of a point p
+	//is p + drawNormalFactor * value * n, positive values on the side of the normal; the tips form an envelope, with
+	//drawNormalLines also the lines from the mid surface to them (#2859)
+	if (visualizationSettings.bodies.shells.drawNormal && hasContour)
+	{
+		const Float4& normalColor = visualizationSettings.bodies.shells.drawNormalColor;
+		const Index nPoints = tiling + 1;
+		std::vector<Vector3D> midPoints(nPoints * nPoints), tips(nPoints * nPoints);
+		for (Index j = 0; j < nPoints; j++)
+		{
+			for (Index i = 0; i < nPoints; i++)
+			{
+				Real xi = 2. * (Real)i / (Real)tiling - 1.;
+				Real eta = 2. * (Real)j / (Real)tiling - 1.;
+				Float4 col = GetColor(xi, eta, visualizationSettings.bodies.shells.contourZeta);
+				Real value = (col[3] == VisualizationSystem::GetContourPlotFlag()) ? (Real)col[0] : 0.;
+				Vector3D p = cObject->GetPosition(Vector3D({ xi, eta, 0. }), ConfigurationType::Visualization);
+				Vector3D n = cObject->GetNormal(Vector3D({ xi, eta, 0. }), ConfigurationType::Visualization);
+				midPoints[i + j * nPoints] = p;
+				tips[i + j * nPoints] = p + (visualizationSettings.bodies.shells.drawNormalFactor * value) * n;
+			}
+		}
+		for (Index j = 0; j < nPoints; j++)
+		{
+			for (Index i = 0; i < nPoints; i++)
+			{
+				const Vector3D& tip = tips[i + j * nPoints];
+				if (i + 1 < nPoints) { vSystem->graphicsData.AddLine(tip, tips[i + 1 + j * nPoints], normalColor, normalColor, itemID); }
+				if (j + 1 < nPoints) { vSystem->graphicsData.AddLine(tip, tips[i + (j + 1) * nPoints], normalColor, normalColor, itemID); }
+				if (visualizationSettings.bodies.shells.drawNormalLines) { vSystem->graphicsData.AddLine(midPoints[i + j * nPoints], tip, normalColor, normalColor, itemID); }
+			}
+		}
+	}
 
 	Vector3D pos3D = cObject->GetPosition(Vector3D({ 0.,0.,0. }), ConfigurationType::Visualization);
 	if (visualizationSettings.bodies.showNumbers) { EXUvis::DrawItemNumber(pos3D, vSystem, itemID, "", currentColor); }

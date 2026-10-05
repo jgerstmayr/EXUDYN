@@ -2632,11 +2632,59 @@ inline py::dict GetDictionaryWithTypeInfo(const VSettingsShells& data) {
     structureDict["structureDescription"] = "Visualization settings for plate/shell finite elements.";
     d = py::dict(); //reset local dict
     d["itemIdentifier"] = std::string(""); //identifier for item
+    d["value"] = data.contourZeta;
+    d["type"] = "float";
+    d["size"] = std::vector<int>{1};
+    d["description"] = "thickness coordinate in [-1,1] at which the contour is evaluated: the top surface (and the mid surface without drawSolid) at +|contourZeta|, the bottom surface at -|contourZeta|; 0 is the mid surface, 1 the outer fibre";
+    structureDict["contourZeta"] = d;
+
+    d = py::dict(); //reset local dict
+    d["itemIdentifier"] = std::string(""); //identifier for item
+    d["value"] = data.drawNormal;
+    d["type"] = "bool";
+    d["size"] = std::vector<int>{1};
+    d["description"] = "if True, the contour value is drawn along the normal of the mid surface, n = r_x x r_y normalized, as lines: an envelope through the points p + drawNormalFactor * value * n, positive values on the side of the normal; contour.outputVariable must be set";
+    structureDict["drawNormal"] = d;
+
+    d = py::dict(); //reset local dict
+    d["itemIdentifier"] = std::string(""); //identifier for item
+    d["value"] = EPyUtils::ToPythonMember(data.drawNormalColor);
+    d["type"] = "VectorFloat";
+    d["size"] = std::vector<int>{4};
+    d["description"] = "color of the lines drawn with drawNormal";
+    structureDict["drawNormalColor"] = d;
+
+    d = py::dict(); //reset local dict
+    d["itemIdentifier"] = std::string(""); //identifier for item
+    d["value"] = data.drawNormalFactor;
+    d["type"] = "UFloat";
+    d["size"] = std::vector<int>{1};
+    d["description"] = "factor of the contour value drawn along the normal with drawNormal";
+    structureDict["drawNormalFactor"] = d;
+
+    d = py::dict(); //reset local dict
+    d["itemIdentifier"] = std::string(""); //identifier for item
+    d["value"] = data.drawNormalLines;
+    d["type"] = "bool";
+    d["size"] = std::vector<int>{1};
+    d["description"] = "with drawNormal, also draw the lines from the mid surface to the envelope";
+    structureDict["drawNormalLines"] = d;
+
+    d = py::dict(); //reset local dict
+    d["itemIdentifier"] = std::string(""); //identifier for item
     d["value"] = data.drawSolid;
     d["type"] = "bool";
     d["size"] = std::vector<int>{1};
     d["description"] = "if true: to draw plates/shells as 3D objects; false: only the element surface is drawn; equivalent to crossSectionFilled in beams";
     structureDict["drawSolid"] = d;
+
+    d = py::dict(); //reset local dict
+    d["itemIdentifier"] = std::string(""); //identifier for item
+    d["value"] = data.reducedInterpolation;
+    d["type"] = "bool";
+    d["size"] = std::vector<int>{1};
+    d["description"] = "if True, the contour of the strain-type outputs StrainLocal, StressLocal, CurvatureLocal, ForceLocal and TorqueLocal is interpolated bilinearly from the values at the four corners of each element, as beams.reducedAxialInterploation does along a beam; if False, it is evaluated at each point of the drawing";
+    structureDict["reducedInterpolation"] = d;
 
     d = py::dict(); //reset local dict
     d["itemIdentifier"] = std::string(""); //identifier for item
@@ -2652,14 +2700,26 @@ inline py::dict GetDictionaryWithTypeInfo(const VSettingsShells& data) {
 //! AUTO: read access to structure; converting into dictionary without type info
 inline py::dict GetDictionary(const VSettingsShells& data) {
     auto structureDict = py::dict();
+    structureDict["contourZeta"] = data.contourZeta;
+    structureDict["drawNormal"] = data.drawNormal;
+    structureDict["drawNormalColor"] = EPyUtils::ToPythonMember(data.drawNormalColor);
+    structureDict["drawNormalFactor"] = data.drawNormalFactor;
+    structureDict["drawNormalLines"] = data.drawNormalLines;
     structureDict["drawSolid"] = data.drawSolid;
+    structureDict["reducedInterpolation"] = data.reducedInterpolation;
     structureDict["thicknessFactor"] = data.thicknessFactor;
     return structureDict;
 }
 
 //! AUTO: write access to data structure; converting dictionary d into structure
 inline void SetDictionary(VSettingsShells& data, const py::dict& d) {
+    EPyUtils::FromPython(d["contourZeta"], data.contourZeta, "VSettingsShells.contourZeta");
+    EPyUtils::FromPython(d["drawNormal"], data.drawNormal, "VSettingsShells.drawNormal");
+    EPyUtils::FromPython(d["drawNormalColor"], data.drawNormalColor, "VSettingsShells.drawNormalColor");
+    EPyUtils::FromPython(d["drawNormalFactor"], data.drawNormalFactor, EPyUtils::RangeCheck::nonNegative, "VSettingsShells.drawNormalFactor");
+    EPyUtils::FromPython(d["drawNormalLines"], data.drawNormalLines, "VSettingsShells.drawNormalLines");
     EPyUtils::FromPython(d["drawSolid"], data.drawSolid, "VSettingsShells.drawSolid");
+    EPyUtils::FromPython(d["reducedInterpolation"], data.reducedInterpolation, "VSettingsShells.reducedInterpolation");
     EPyUtils::FromPython(d["thicknessFactor"], data.thicknessFactor, EPyUtils::RangeCheck::positive, "VSettingsShells.thicknessFactor");
 }
 

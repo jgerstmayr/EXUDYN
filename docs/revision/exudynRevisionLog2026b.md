@@ -15510,3 +15510,50 @@ The window size is a setting, which the window has when it opens; the view is se
 added to the four asked for, because the zoom and the depth of the view refer to it, and `autoFitScene` is switched
 off, which would otherwise fit the scene and replace the view. Nothing is written anywhere. Test
 `test_renderStateCodeLines` in `test_guiValues.py`; `docs/manual/GUI.md` describes the button.
+
+<a id="rg4-20-3"></a>
+### RG4.20.3-.4 — the ANCF thin plate: the decisions and the visualization (2026-10-05, #2859, #2864)
+
+*(Maintainer 2026-10-05, on the questions of RG4.20.4 and RG4.20.3: the sign "shall follow common shell convention; the
+negated curvature/torquelocal was definitely wrong"; the thickness function "convert ... project the global gradient onto
+the unit node slopes"; integration mode 0 everywhere; for the visualization "NO MEMBERS in VisualizationSystem ... No
+nodal averaging", the bilinear sampling "should follow the ANCFCable2D approach", "the exudyn normal convention" for
+drawNormal; "Keep the new names"; the maps into one class `SurfaceMap`, `SymSin`/`SymCos` deleted, and "The
+ANCFThinPlateBuilder should then be removed (no deprecation mechanism needed ...)".)*
+
+**The element.** `CurvatureLocal` $= [\kappa_{xx},\, \kappa_{yy},\, \kappa_{xy}]$ and `TorqueLocal`
+$= [M_{xx},\, M_{yy},\, M_{xy}]$ with one sign, the one the element computes: positive where the surface bends towards its
+normal $\nv_3 = \rv_{,x} \times \rv_{,y}$, so that a strip with its normal in $+z$ has the signs of `ObjectANCFCable2D`
+($\kappa = w''$, $\varepsilon = \varepsilon_m - y\,\kappa$); the strip of the colleague's comparison, along y, now has the
+sign of the one along x. The test of the sign in `ANCFThinPlateRevisionTest.py` passes and is no longer an expected
+failure.
+
+**`exudyn.shells`.** `ShellMesh.ComputeNodalThicknessGradients` projects the gradient of the thickness function onto the
+unit slopes of each node, $\partial h/\partial s = h_{,X}\, s_0 + h_{,Y}\, s_1$, which is what the element reads; a strip
+turned by 30 degrees in the x-y plane with a linear taper now gives the deflection of the tapered cantilever to 2e-5
+(new test). The maps are static methods of `SurfaceMap` (`SkewParallelogram`, `Trapezoid`, `CurvedEdge`,
+`OutOfPlaneWarp`, `BezierStrip`, `ConeFrustum`, `Cylinder`, `HemisphericalShell`, `ToroidalPanel`), each returning
+f(x, y) -> [X, Y, Z]; they use `exu.symbolic.sin`/`cos`, which take floats as well, and the docstring of `SurfaceMap` says
+so for maps of one's own. `ShellMesh(surfaceMap=...)` applies such a map to the positions of the nodes in the rectangle of
+the vertices. `ANCFThinPlateBuilder` is removed: it was public only in development versions since 2026-10-05; its
+placement and rotation are the vertices of `ShellMesh`, its thickness field `thicknessAtNodes` or `thicknessFunction`,
+its gravity a `LoadMassProportional` per element - which is how `ANCFThinPlateRevisionTest.py` builds its strips now.
+The default integration mode is 0 for the element and `ShellMesh`.
+
+**The visualization** (`UpdateGraphics` of the plate, in `CObjectANCFThinPlate.cpp`; the settings in
+`visualizationSettings.bodies.shells`). Without the colleague's averaging over the nodes - it smooths artificially and
+blurs jumps of the material - nothing is stored in `VisualizationSystem`:
+- `reducedInterpolation` (default True): the contour of `StrainLocal`, `StressLocal`, `CurvatureLocal`, `ForceLocal`
+  and `TorqueLocal` is interpolated bilinearly from the values at the four corners of the element, as
+  `beams.reducedAxialInterploation` does along a beam; the value at a corner is the one of `ComputeContourColor`, so the
+  component, the norm and the von Mises stress are as in the direct contour (note 7);
+- `contourZeta` (default 1): the top surface - and the mid surface without `drawSolid` - at $+|\zeta|$, the bottom
+  at $-|\zeta|$, the edge strips between the two; each surface interpolates its own corners (note 7);
+- `drawNormal`, `drawNormalFactor`, `drawNormalColor`, `drawNormalLines`: the contour value along the normal as lines,
+  the tip $\pv + f\, v\, \nv$ on the side of the normal for a positive value (note 8: the Exudyn convention; the
+  colleague's code drew $\pv - \nv f v$);
+- the tiling is `beams.axialTiling` quads per direction, at least 2 (before half of it).
+Checked with the graphics data (`SC.renderer.GetGraphicsData()`) of a clamped plate with a stress contour: all four
+combinations draw, `drawNormal` adds the envelope and the stems; the graphics references of the plate MiniExamples
+(`ObjectANCFThinPlate`, `NodePointSlope12`) are recorded again for the finer tiling; `test_itemDrawing` finds the six new
+settings declared for the drawing; `parameterConversionTest` has them.

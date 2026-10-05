@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-10-05  08:53:07 (last modified)
+* @date         2026-10-05  15:10:47 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -27,7 +27,7 @@
 class CObjectANCFThinPlateParameters // AUTO:
 {
 public: // AUTO:
-    Vector thickness;                             //!< AUTO:  [SI:m] thickness of the plate: one value for a constant thickness; 4 values, the thicknesses at the nodes in their order, interpolated bilinearly; or 12 values \f$[h_0,\, h_{,s,0},\, h_{,t,0},\, \ldots,\, h_3,\, h_{,s,3},\, h_{,t,3}]\f$, the thickness and its gradients along the element edges at each node, interpolated with the 12 shape functions of the position; with 4 or 12 values, the stiffness is computed from the local thickness, see strainCoefficients
+    Vector thickness;                             //!< AUTO:  [SI:m] thickness of the plate: one value for a constant thickness; 4 values, the thicknesses at the nodes in their order, interpolated bilinearly; or 12 values \f$[h_0,\, h_{,s,0},\, h_{,t,0},\, \ldots,\, h_3,\, h_{,s,3},\, h_{,t,3}]\f$, the thickness and its gradients along the slopes of each node, interpolated with the 12 shape functions of the position; with 4 or 12 values, the stiffness is computed from the local thickness, see strainCoefficients
     Real density;                                 //!< AUTO: must be >= 0;  [SI:kg/m\f$^3\f$] density of the plate, possibly averaged over thickness
     Real massProportionalDamping;                 //!< AUTO: mass-proportional damping coefficient \f$\alpha\f$ [SI:1/s]; adds massmatrix proportional damping forces \f$\fv_d = \alpha \Mm \dot{\qv}\f$
     Real stiffnessProportionalDamping;            //!< AUTO: membrane stiffness-proportional damping coefficient \f$\f[ta_\varepsilon\f$ [SI:s]: Kelvin-Voigt damping \f$\f[ta_\varepsilon\, \Dm_\varepsilon\, \dot\teps\f$ added to the membrane forces, in the current configuration; it does not damp a rigid-body motion

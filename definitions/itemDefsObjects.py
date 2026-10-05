@@ -5814,8 +5814,8 @@ definitions.append(ItemDefinition(
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 definitions.append(ItemDefinition(
     className='ObjectANCFThinPlate',
-    drawing=r'The mid surface, or with `bodies.shells.drawSolid` both surfaces and the edges at `bodies.shells.thicknessFactor` times the thickness, as n x n quads per element, n = `bodies.beams.axialTiling`/2; the outline of the element as lines with `view0.scene.showMeshEdges`.',
-    drawingSettings=['bodies.beams.axialTiling', 'bodies.shells.drawSolid', 'bodies.shells.thicknessFactor', 'contour.nodesColored', 'openGL.faceEdgesColor', 'view0.scene.showMeshEdges'],
+    drawing=r'The mid surface, or with `bodies.shells.drawSolid` both surfaces and the edges at `bodies.shells.thicknessFactor` times the thickness, as n x n quads per element, n = `bodies.beams.axialTiling`, at least 2; the outline of the element as lines with `view0.scene.showMeshEdges`. The contour at the thickness coordinate `bodies.shells.contourZeta` on the top, its negative on the bottom; with `bodies.shells.reducedInterpolation` the strain-type outputs interpolated bilinearly from the corners of the element; with `bodies.shells.drawNormal` the contour value along the normal of the mid surface as lines.',
+    drawingSettings=['bodies.beams.axialTiling', 'bodies.shells.contourZeta', 'bodies.shells.drawNormal', 'bodies.shells.drawNormalColor', 'bodies.shells.drawNormalFactor', 'bodies.shells.drawNormalLines', 'bodies.shells.drawSolid', 'bodies.shells.reducedInterpolation', 'bodies.shells.thicknessFactor', 'contour.nodesColored', 'openGL.faceEdgesColor', 'view0.scene.showMeshEdges'],
     image='itemImages/ObjectANCFThinPlate.png', #the representative image of the page (#2830)
     addProtectedC=r"""    static constexpr Index nODE2coordinates = 36; //!< fixed size of coordinates used e.g. for ConstSizeVectors
     mutable bool massMatrixComputed; //!< flag which shows that mass matrix has been computed; will be set to false at time when parameters are set
@@ -5876,15 +5876,16 @@ definitions.append(ItemDefinition(
 
     At $\zeta \in [-1,1]$: `StrainLocal` $= \teps - \zeta\,\frac{h}{2}\,\tkappa$ and `StressLocal`
     $= \mathbf{N}/h - \zeta\, 6\mathbf{M}/h^2$, both as 6 components $[\cdot_{11},\, \cdot_{22},\, 0,\, 0,\, 0,\, \cdot_{12}]$;
-    `ForceLocal` $= [N_{11},\, N_{22},\, N_{12}]$ per length, `TorqueLocal` $= [-M_{11},\, M_{22},\, M_{12}]$ and
-    `CurvatureLocal` $= [-\kappa_{xx},\, \kappa_{yy},\, \kappa_{xy}]$ - the first component with the sign of
-    `ObjectANCFCable2D`.
+    `ForceLocal` $= [N_{11},\, N_{22},\, N_{12}]$ per length, `TorqueLocal` $= [M_{11},\, M_{22},\, M_{12}]$ and
+    `CurvatureLocal` $= [\kappa_{xx},\, \kappa_{yy},\, \kappa_{xy}]$. A curvature is positive where the surface bends
+    towards its normal $\nv_3$, and $\zeta = 1$ is the side of the normal: for a strip whose normal points in $+z$ the
+    signs of `ObjectANCFCable2D`, $\kappa = w''$ and $\varepsilon = \varepsilon_m - y\,\kappa$.
 
     #### Limitations
 
-    Under construction; for output variables, the local position is given in $[-1,1]^3$. The 12 thickness values are
-    gradients per unit length along the element edges, equal to $\partial h/\partial x$ and $\partial h/\partial y$ only for
-    rectangular elements.
+    Under construction; for output variables, the local position is given in $[-1,1]^3$. The gradients of the 12
+    thickness values are per unit length along the slopes of the nodes; the thickness function of `ShellMesh` gives
+    them so.
     """,
     mainParentClass=MainParentClassMainObjectBody,
     miniExample=r"""    #a square plate of 2x2 ANCF thin plate elements, clamped at one edge, under its own weight
@@ -5916,9 +5917,9 @@ definitions.append(ItemDefinition(
         ItemOutputVariable(OVDirector1, r"""$\rv_x(x,y,z)$(axial) slope vector of local position (at $z$=0)"""),
         ItemOutputVariable(OVDirector2, r"""$\rv_y(x,y,z)$(axial) slope vector of local position (at $z$=0)"""),
         ItemOutputVariable(OVStrainLocal, r"""$[\varepsilon_{11},\, \varepsilon_{22},\, 0,\, 0,\, 0,\, \gamma_{12}]\tp$ strains at the thickness coordinate $\zeta$ of the local position, $\teps - \zeta\,\frac{h}{2}\,\tkappa$, relative to the reference configuration"""),
-        ItemOutputVariable(OVCurvatureLocal, r'$[-\kappa_{xx},\, \kappa_{yy},\, \kappa_{xy}]\tp$ curvatures of the mid-surface relative to the reference configuration; the first component with the sign of ObjectANCFCable2D'),
+        ItemOutputVariable(OVCurvatureLocal, r'$[\kappa_{xx},\, \kappa_{yy},\, \kappa_{xy}]\tp$ curvatures of the mid-surface relative to the reference configuration, positive where the surface bends towards its normal'),
         ItemOutputVariable(OVForceLocal, r"""$[N_{xx},\, N_{yy},\, N_{xy}]\tp$ membrane force resultants per length in the local frame, from the membrane strains relative to the reference configuration"""),
-        ItemOutputVariable(OVTorqueLocal, r"""$[-M_{xx},\, M_{yy},\, M_{xy}]\tp$ bending moment resultants per length in the local frame, from the curvatures relative to the reference configuration; the first component with the sign of ObjectANCFCable2D"""),
+        ItemOutputVariable(OVTorqueLocal, r'$[M_{xx},\, M_{yy},\, M_{xy}]\tp$ bending moment resultants per length in the local frame, $\mathbf{M} = \Dm_\kappa \tkappa$, from the curvatures relative to the reference configuration'),
         ItemOutputVariable(OVStressLocal, r"""$[\sigma_{11},\, \sigma_{22},\, 0,\, 0,\, 0,\, \sigma_{12}]\tp$ stresses at the thickness coordinate $\zeta$ of the local position, $\mathbf{N}/h - \zeta\, 6\mathbf{M}/h^2$; without damping"""),
         ItemOutputVariable(OVAcceleration, r"""$\LU{0}{\av(x,y,z)} = \LU{0}{\ddot \rv(x,y,z)}$global acceleration vector of local position"""),
         ItemOutputVariable(OVKineticEnergy, r"""$T = \frac{1}{2} \dot\qv\tp \Mm\, \dot\qv$kinetic energy from the mass matrix of the current state and the velocities of the nodes; current configuration only; localPosition must be $[0,0,0]$"""),
@@ -5933,7 +5934,7 @@ definitions.append(ItemDefinition(
         ItemParameter(type=TNumpyVector, destination=DestComp+DestParam,
             pythonName='thickness',
             defaultValue='Vector()',
-            description=r'$h$ [SI:m] thickness of the plate: one value for a constant thickness; 4 values, the thicknesses at the nodes in their order, interpolated bilinearly; or 12 values $[h_0,\, h_{,s,0},\, h_{,t,0},\, \ldots,\, h_3,\, h_{,s,3},\, h_{,t,3}]$, the thickness and its gradients along the element edges at each node, interpolated with the 12 shape functions of the position; with 4 or 12 values, the stiffness is computed from the local thickness, see strainCoefficients'),
+            description=r'$h$ [SI:m] thickness of the plate: one value for a constant thickness; 4 values, the thicknesses at the nodes in their order, interpolated bilinearly; or 12 values $[h_0,\, h_{,s,0},\, h_{,t,0},\, \ldots,\, h_3,\, h_{,s,3},\, h_{,t,3}]$, the thickness and its gradients along the slopes of each node, interpolated with the 12 shape functions of the position; with 4 or 12 values, the stiffness is computed from the local thickness, see strainCoefficients'),
         ItemParameter(type=TNumpyVector, destination=DestComp+DestParam,
             pythonName='physicsThickness',
             deprecated=Deprecated('1.12.258', 2031),

@@ -135,7 +135,7 @@ def TestExamplesReferenceSolution():
         'contactComparisonTest.py':4.773734739232028, #2026-10-05: GeneralContact with keepContactWhilePenetrating as a fifth case (#2848); before 4.561317500364976; #2026-10-04: GeneralContact as a fourth case and the sliding ball (#1848, #1947); before 1.200116276111891; #2026-09-30: step size recommended also where a contact ends (#2109); before 1.200040705928356; #deepest points and end heights, three contact objects, two laws (#2749, #2750)
         'generalContactTriangleMomentumTest.py':4.035299999516676, #new 2026-10-05: momentum conservation of the GeneralContact sphere-triangle contact (#2849)
         'inactiveConnectorForceTest.py':16204.677320386909, #new 2026-10-05: an inactive connector reports no force (#984)
-        'ANCFThinPlateRevisionTest.py':18, #new 2026-10-05: the tests of the ANCF thin plate of the working copy 2026, the number of tests that passed (#2857, #2858)
+        'ANCFThinPlateRevisionTest.py':20, #2026-10-05: ShellMesh instead of the builder, the thickness function, the visualization settings (#2859, #2864); before 18; #new 2026-10-05: the tests of the ANCF thin plate of the working copy 2026, the number of tests that passed (#2857, #2858)
         'kinematicTreePrismaticJacobianTest.py':1.249999999999995, #5 cases of 0.25 (#2740)
         'kinematicTreeTest.py':-1.3093839602164064,
         'kinematicTreeUserFunctionTest.py': 0.14522556021139263,      #new 2026-10-04: the forceUserFunction of ObjectKinematicTree gets the velocities (#2845)

@@ -177,7 +177,13 @@ VSettingsShells has the following items:
 
 | name | type | default | description |
 |---|---|---|---|
+| `contourZeta` | float | 1. | thickness coordinate in [-1,1] at which the contour is evaluated: the top surface (and the mid surface without drawSolid) at +\|contourZeta\|, the bottom surface at -\|contourZeta\|; 0 is the mid surface, 1 the outer fibre |
+| `drawNormal` | bool | False | if True, the contour value is drawn along the normal of the mid surface, n = r_x x r_y normalized, as lines: an envelope through the points p + drawNormalFactor * value * n, positive values on the side of the normal; contour.outputVariable must be set |
+| `drawNormalColor` | Float4 | [0.2,0.2,0.2,1.] | color of the lines drawn with drawNormal |
+| `drawNormalFactor` | UFloat | 1. | factor of the contour value drawn along the normal with drawNormal |
+| `drawNormalLines` | bool | True | with drawNormal, also draw the lines from the mid surface to the envelope |
 | `drawSolid` | bool | True | if true: to draw plates/shells as 3D objects; false: only the element surface is drawn; equivalent to crossSectionFilled in beams |
+| `reducedInterpolation` | bool | True | if True, the contour of the strain-type outputs StrainLocal, StressLocal, CurvatureLocal, ForceLocal and TorqueLocal is interpolated bilinearly from the values at the four corners of each element, as beams.reducedAxialInterploation does along a beam; if False, it is evaluated at each point of the drawing |
 | `thicknessFactor` | PFloat | 1. | a factor multiplied with the thickness of shells/plates only for visualization (e.g. to make some effects more visible) |
 
 
