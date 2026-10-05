@@ -8,7 +8,7 @@ Data structure for definition of 2D and 3D beam (cross) section geometrical prop
 
 BeamSectionGeometry has the following items:
 
-```{tabularcolumns} \Y{0.34}\Y{0.13}\Y{0.13}\Y{0.4}
+```{tabularcolumns} \Y{0.26}\Y{0.12}\Y{0.14}\Y{0.48}
 ```
 
 | name | type | default | description |

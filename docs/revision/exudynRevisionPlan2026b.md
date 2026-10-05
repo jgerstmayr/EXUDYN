@@ -541,6 +541,12 @@ content (the notation tables, the definitions of quantities, the parameter table
 lose the size column and get short headings and a wider name column; the acceleration row of the FFRF output
 variables is one row again; the items index lists every renamed and deprecated item parameter.
 
+<a id="rg3-37"></a>
+**RG3.37** **DONE 2026-10-05** (#2860) — [log](exudynRevisionLog2026b.md#rg3-37) *(group RG3; maintainer 2026-10-05: "put
+the available paths only into the general description of the substructure (as typewriter font), but put only the name of
+each parameter into the table")* **A settings table names each item by its name**; the paths that reach the structure
+are said once above the table, "Reached as `simulationSettings.timeIntegration.newton.numericalDifferentiation`, ...".
+
 <a id="rg3-36"></a>
 **RG3.36** *(group RG3; maintainer 2026-10-05: "add 'A PDF check in the docs gate' as a step")* **The PDF is checked
     with the documentation** (#2856). `exudev docs` builds the html; the PDF (`exudev docs --pdf`, about 2.5 min) is

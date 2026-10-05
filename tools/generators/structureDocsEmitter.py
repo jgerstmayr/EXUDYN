@@ -84,7 +84,12 @@ def StructureDocs(parseInfo, parameterList):
         if not descriptionStr.endswith('.'): 
             descriptionStr += '. '
         
-        writer.AddDocu(descriptionStr+
+        #where the structure is reached: once above the table, which names each item by its name only
+        pathsStr = ''
+        if any(path != '' for path in typicalPaths):
+            pathsStr = ('\n\nReached as ' + ', '.join('`' + path.rstrip('.') + '`' for path in typicalPaths if path != '')
+                        + '.')
+        writer.AddDocu(descriptionStr + pathsStr +
                     '\n\n\\noindent '+
                     parseInfo['class'] + ' has the following items:\n', 
                     section=parseInfo['class'], sectionLevel=3, 
@@ -140,7 +145,7 @@ def StructureDocs(parseInfo, parameterList):
 
                 writer.SystemStructuresWriteDefRow(pythonName, typeName, 
                                             sString+defaultValueStr+sString, paramDescriptionStr, 
-                                            typicalPaths=typicalPaths, isFunction=False)
+                                            isFunction=False)
                                 
 
             if (parameter['lineType'].find('F') != -1) and (parameter['cFlags'].find('P') != -1): #only if it is a function

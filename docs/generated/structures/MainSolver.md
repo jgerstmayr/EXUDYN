@@ -12,7 +12,7 @@ and hereafter you can access all data and functions via 'solver'.
 
 MainSolverStatic has the following items:
 
-```{tabularcolumns} \Y{0.34}\Y{0.13}\Y{0.13}\Y{0.4}
+```{tabularcolumns} \Y{0.26}\Y{0.12}\Y{0.14}\Y{0.48}
 ```
 
 | name | type / return type | default / arguments | description |
@@ -86,7 +86,7 @@ In this solver, user functions are possible to extend the solver at certain part
 
 MainSolverImplicitSecondOrder has the following items:
 
-```{tabularcolumns} \Y{0.34}\Y{0.13}\Y{0.13}\Y{0.4}
+```{tabularcolumns} \Y{0.26}\Y{0.12}\Y{0.14}\Y{0.48}
 ```
 
 | name | type / return type | default / arguments | description |
@@ -178,7 +178,7 @@ In this solver, no user functions are possible, but you can use SolverImplicitSe
 
 MainSolverExplicit has the following items:
 
-```{tabularcolumns} \Y{0.34}\Y{0.13}\Y{0.13}\Y{0.4}
+```{tabularcolumns} \Y{0.26}\Y{0.12}\Y{0.14}\Y{0.48}
 ```
 
 | name | type / return type | default / arguments | description |

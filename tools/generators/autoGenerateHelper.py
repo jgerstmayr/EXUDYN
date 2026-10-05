@@ -58,9 +58,9 @@ def FileNameLower(fileName):
 
 #************************************************
 #convert string to doxygen readable comment --> for formulas in comments and class descriptions
-#the columns of a settings table in the PDF: name - the short name above the full access path -, type, default,
+#the columns of a settings table in the PDF: name, type, default,
 #description
-settingsTableWidths = [0.34, 0.13, 0.13, 0.4]
+settingsTableWidths = [0.26, 0.12, 0.14, 0.48]
 
 
 def PdfColumnWidths(widths):
@@ -677,15 +677,11 @@ class DeclarationWriter:
     #for SystemStructures:
         
     #one row for definition of system structures
-    def SystemStructuresWriteDefRow(self, pythonName, typeName, sDefaultVal, description, typicalPaths = [], isFunction=False):
-        #the name cell carries the FULL access path where there is one -
-        #'SC.visualizationSettings.general.autoFitScene' is what a user types
+    def SystemStructuresWriteDefRow(self, pythonName, typeName, sDefaultVal, description, isFunction=False):
+        #the name cell is the name only; the paths that reach the structure are said once above its table
         markdownName = pythonName + ('(...)' if isFunction and sDefaultVal != ''
                                      else '()' if isFunction else '')
         nameCell = '`' + MarkdownCell(markdownName) + '`'
-        for path in typicalPaths:
-            separator = '.' if path != '' else ''
-            nameCell += '<br>`' + MarkdownCell(path + separator + pythonName) + '`'
         self.sMarkdown += ('| ' + nameCell + ' | ' + MarkdownCell(typeName) + ' | '
                            + (MarkdownCell(sDefaultVal) if sDefaultVal != '' else '')
                            + ' | ' + MarkdownCell(LatexText2Markdown(description)) + ' |\n')

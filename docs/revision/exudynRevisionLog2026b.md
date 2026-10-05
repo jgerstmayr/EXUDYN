@@ -15459,3 +15459,16 @@ model `ANCFThinPlateRevisionTest.py`: 18 pass; the one for 12 thickness values n
 (note 3); the one of the curvature sign stays an expected failure until RG4.20.4 (a); the one of the visualization
 settings comes with RG4.20.3. The plate MiniExamples move by 7.5e-7 (`ObjectANCFThinPlate.py`, `NodePointSlope12.py`),
 `parameterConversionTest` has the two new parameters.
+
+<a id="rg3-37"></a>
+### RG3.37 — the access paths once per structure, not per item (2026-10-05, #2860)
+
+*(Maintainer 2026-10-05: "The settings always include the 'typical' paths in the names ... put the available ... paths only
+into the general description of the substructure (as typewriter font), but put only the name of each parameter into the
+table. Otherwise it now becomes unreadable, both in PDF and online.")*
+
+`SystemStructuresWriteDefRow` writes the name only; `StructureDocs` (`structureDocsEmitter.py`) adds to the description of
+each structure "Reached as `path`, `path`." from its typical paths - `NumericalDifferentiationSettings` is reached as
+`simulationSettings.timeIntegration.newton.numericalDifferentiation` and
+`simulationSettings.staticSolver.newton.numericalDifferentiation`. The name column of the PDF is narrower (0.26 of the
+line instead of 0.34), the description wider (0.48).

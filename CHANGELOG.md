@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.12 | Metheney | 296 | 1.12.330 |
+| 1.12 | Metheney | 297 | 1.12.331 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
 | 1.9 | Krall | 235 | 1.9.234 |
@@ -29,6 +29,10 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.12 - Metheney (current)
 
+- **1.12.331** `DOCU` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` the settings tables repeat every access path in the name column (#2860)
+  - description: The maintainer, 2026-10-05: a settings item lists its name and each full path (simulationSettings.timeIntegration.newton.numericalDifferentiation.doSystemWideDifferentiation, ...staticSolver...), which makes the tables unreadable online and in the PDF; the paths belong once into the description of the structure, the table names the item only.
+  - **notes:** The tables of the simulation and visualization settings name each item by its name only; the description of each structure says once where it is reached, e.g. simulationSettings.timeIntegration.newton.numericalDifferentiation.
+  - date resolved: **2026-10-05 09:56**, date raised: 2026-10-05
 - **1.12.330** `EXTENSION` `MEDIUM EFF` `raised by: Claude-JG` `resolved by: Claude-JG` exudyn.shells: ANCFThinPlateBuilder, geometry maps and plate helpers of the working copy 2026, ported (#2858)
   - description: From the same working copy: ShellMesh with stiffness-proportional damping and a thickness function (12 thickness values), exact slopes of the bilinear corner map, ANCFThinPlateBuilder, geometry maps (cylinder, cone, hemisphere, torus, Bezier strip, ...), constraint, edge-load and hinge helpers; names in UpperCamelCase.
   - **notes:** exudyn.shells (revision by Michael Pieber): ANCFThinPlateBuilder for plate meshes on mapped rectangles, the maps MapCylinder, MapConeFrustum, MapHemisphericalShell, MapToroidalPanel, MapBezierStrip and others, functions for constraints, edge loads and hinges of plate nodes, and ShellMesh with stiffness-proportional damping and a thickness function.

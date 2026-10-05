@@ -14,7 +14,7 @@ Structure for timing in solver. Each Real variable is used to measure the CPU ti
 
 CSolverTimer has the following items:
 
-```{tabularcolumns} \Y{0.34}\Y{0.13}\Y{0.13}\Y{0.4}
+```{tabularcolumns} \Y{0.26}\Y{0.12}\Y{0.14}\Y{0.48}
 ```
 
 | name | type / return type | default / arguments | description |
@@ -56,7 +56,7 @@ Solver internal structure for counters, steps, step size, time, etc.; solution v
 
 SolverIterationData has the following items:
 
-```{tabularcolumns} \Y{0.34}\Y{0.13}\Y{0.13}\Y{0.4}
+```{tabularcolumns} \Y{0.26}\Y{0.12}\Y{0.14}\Y{0.48}
 ```
 
 | name | type / return type | default / arguments | description |
@@ -93,7 +93,7 @@ Solver internal structure for convergence information: residua, iteration loop e
 
 SolverConvergenceData has the following items:
 
-```{tabularcolumns} \Y{0.34}\Y{0.13}\Y{0.13}\Y{0.4}
+```{tabularcolumns} \Y{0.26}\Y{0.12}\Y{0.14}\Y{0.48}
 ```
 
 | name | type / return type | default / arguments | description |
@@ -123,7 +123,7 @@ Solver internal structure for output modes, output timers and counters.
 
 SolverOutputData has the following items:
 
-```{tabularcolumns} \Y{0.34}\Y{0.13}\Y{0.13}\Y{0.4}
+```{tabularcolumns} \Y{0.26}\Y{0.12}\Y{0.14}\Y{0.48}
 ```
 
 | name | type / return type | default / arguments | description |

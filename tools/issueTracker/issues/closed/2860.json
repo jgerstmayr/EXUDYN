@@ -1,0 +1,16 @@
+{
+  "number": 2860,
+  "title": "the settings tables repeat every access path in the name column",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "DOCU",
+  "effort": "LOW",
+  "description": "The maintainer, 2026-10-05: a settings item lists its name and each full path (simulationSettings.timeIntegration.newton.numericalDifferentiation.doSystemWideDifferentiation, ...staticSolver...), which makes the tables unreadable online and in the PDF; the paths belong once into the description of the structure, the table names the item only.",
+  "dateRaised": "2026-10-05",
+  "deadline": "2027-04-03",
+  "dateResolved": "2026-10-05 09:56",
+  "resolvedAuthor": "Claude-JG",
+  "file": "tools/generators/structureDocsEmitter.py",
+  "releaseNotes": "The tables of the simulation and visualization settings name each item by its name only; the description of each structure says once where it is reached, e.g. simulationSettings.timeIntegration.newton.numericalDifferentiation.",
+  "resolvedInVersion": "1.12.331"
+}
