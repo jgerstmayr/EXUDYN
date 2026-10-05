@@ -70,7 +70,7 @@ The settings: [`markers.show`](#sec-vsettingsmarkers), [`markers.defaultSize`](#
 
 ## All markers
 
-```{tabularcolumns} |\Y{0.3}|\Y{0.3}|\Y{0.2}|\Y{0.2}|
+```{tabularcolumns} \Y{0.3}\Y{0.3}\Y{0.2}\Y{0.2}
 ```
 | marker | attached to | provides | usable by |
 |---|---|---|---|

@@ -17,10 +17,7 @@ A penalty-based contact condition for one coordinate: a force upon penetration o
 
 The parameters of the item; in a dictionary, its type is 'ContactCoordinate':
 
-```{tabularcolumns} |\Y{0.2}|\Y{0.14}|\Y{0.06}|\Y{0.15}|\Y{0.45}|
-```
-
-| Name | type | size | default value | description |
+| name | type | size | default | description |
 |---|---|---|---|---|
 | **name** | String |  | '' | connector's unique name |
 | **markerNumbers** | ArrayMarkerIndex |  | [ invalid (-1), invalid (-1) ] | markers define contact gap |
@@ -39,10 +36,7 @@ The parameters of the item; in a dictionary, its type is 'ContactCoordinate':
 
 The parameters of `VObjectContactCoordinate`, given as `visualization`:
 
-```{tabularcolumns} |\Y{0.2}|\Y{0.14}|\Y{0.06}|\Y{0.15}|\Y{0.45}|
-```
-
-| Name | type | size | default value | description |
+| name | type | size | default | description |
 |---|---|---|---|---|
 | **show** | Bool |  | True | set true, if item is shown in visualization and false if it is not shown |
 | **drawSize** | float |  | -1. | drawing size = diameter of spring; size == -1.f means that default connector size is used |

@@ -25,7 +25,7 @@ import io                                                               # noqa: 
 
 from structureModel import *                                            # noqa: E402,F403
 from autoGenerateHelper import LatexText2Markdown                      # noqa: E402
-from autoGenerateHelper import PdfColumnWidths, parameterTableWidths   # noqa: E402
+from autoGenerateHelper import PdfColumnWidths, settingsTableWidths     # noqa: E402
 from latexToMarkdown import NormalizeHeadings                                    # noqa: E402
 
 
@@ -91,14 +91,19 @@ def StructureDocs(parseInfo, parameterList):
                     sectionLabel='sec:' + parseInfo['class'].replace(' ',''))
         #the table of the structure's items. The header is written
         #before the rows and the loop below can skip every parameter of a structure - all of them
-        #deprecated, or none with a pybind interface - which leaves a table with five headings and
+        #deprecated, or none with a pybind interface - which leaves a table with its headings and
         #nothing under them: an empty box in the HTML, and a hard failure of the LaTeX builder,
         #which looks for a tbody that is not there (#2592). So the
         #position is remembered and the header is taken back again if no row followed.
         tableStart = len(writer.sMarkdown)
-        writer.sMarkdown += '\n' + PdfColumnWidths(parameterTableWidths)
-        writer.sMarkdown += ('| Name | type / function return type | size | default value / function '
-                          'args | description |\n|---|---|---|---|---|\n')
+        #a function names its return type and its arguments in the columns of the type and the default; a
+        #structure without functions says only type and default, which keeps the two columns narrow
+        hasFunctions = any(parameter['lineType'].find('F') != -1 and parameter['cFlags'].find('P') != -1
+                           for parameter in parameterListSorted)
+        writer.sMarkdown += '\n' + PdfColumnWidths(settingsTableWidths)
+        writer.sMarkdown += ('| name | ' + ('type / return type' if hasFunctions else 'type') + ' | '
+                             + ('default / arguments' if hasFunctions else 'default')
+                             + ' | description |\n|---|---|---|---|\n')
         headerEnd = len(writer.sMarkdown)
 
         for parameter in parameterListSorted:
@@ -133,7 +138,7 @@ def StructureDocs(parseInfo, parameterList):
                 #was a workaround for the converter that is gone (#2682)
                 defaultValueStr = parameter['defaultValueDocument']
 
-                writer.SystemStructuresWriteDefRow(pythonName, typeName, parameter['size'], 
+                writer.SystemStructuresWriteDefRow(pythonName, typeName, 
                                             sString+defaultValueStr+sString, paramDescriptionStr, 
                                             typicalPaths=typicalPaths, isFunction=False)
                                 
@@ -157,7 +162,7 @@ def StructureDocs(parseInfo, parameterList):
                 # if (len(functionName)>28):  #done now in SystemStructuresWriteDefRow
                 #     functionType = '\\tabnewline ' + functionType
 
-                writer.SystemStructuresWriteDefRow(functionName, functionType, parameter['size'], argStr, 
+                writer.SystemStructuresWriteDefRow(functionName, functionType, argStr, 
                                             parameter['parameterDescription'], isFunction=True)
 
 

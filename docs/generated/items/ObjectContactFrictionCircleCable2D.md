@@ -16,10 +16,7 @@ A very specialized penalty-based contact/friction condition between a 2D circle 
 
 The parameters of the item; in a dictionary, its type is 'ContactFrictionCircleCable2D':
 
-```{tabularcolumns} |\Y{0.2}|\Y{0.14}|\Y{0.06}|\Y{0.15}|\Y{0.45}|
-```
-
-| Name | type | size | default value | description |
+| name | type | size | default | description |
 |---|---|---|---|---|
 | **name** | String |  | '' | connector's unique name |
 | **markerNumbers** | ArrayMarkerIndex |  | [ invalid (-1), invalid (-1) ] | (symbol: $[m0,m1]\tp$) a marker $m0$ with position and orientation and a marker $m1$ of type BodyCable2DShape; together defining the contact geometry |
@@ -39,10 +36,7 @@ The parameters of the item; in a dictionary, its type is 'ContactFrictionCircleC
 
 The parameters of `VObjectContactFrictionCircleCable2D`, given as `visualization`:
 
-```{tabularcolumns} |\Y{0.2}|\Y{0.14}|\Y{0.06}|\Y{0.15}|\Y{0.45}|
-```
-
-| Name | type | size | default value | description |
+| name | type | size | default | description |
 |---|---|---|---|---|
 | **show** | Bool |  | True | set True, if item is shown in visualization and false if it is not shown; note that only normal contact forces can be drawn, which are approximated by $k_c \cdot g$ (neglecting damping term) |
 | **showContactCircle** | Bool |  | True | if True and show=True, the underlying contact circle is shown; uses circleTiling*4 for tiling (from VisualizationSettings.general) |
@@ -59,7 +53,7 @@ Settings beyond those of all connectors: [`connectors.showContact`](#sec-vsettin
 
 Available as `OutputVariableType` in sensors, `Get...Output()` and other functions:
 
-```{tabularcolumns} |\Y{0.25}|\Y{0.25}|\Y{0.5}|
+```{tabularcolumns} \Y{0.25}\Y{0.25}\Y{0.5}
 ```
 
 | output variable | symbol | description |

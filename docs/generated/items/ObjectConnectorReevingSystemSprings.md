@@ -19,10 +19,7 @@ A rD reeving system defined by a list of torque-free and friction-free sheaves o
 
 The parameters of the item; in a dictionary, its type is 'ConnectorReevingSystemSprings':
 
-```{tabularcolumns} |\Y{0.2}|\Y{0.14}|\Y{0.06}|\Y{0.15}|\Y{0.45}|
-```
-
-| Name | type | size | default value | description |
+| name | type | size | default | description |
 |---|---|---|---|---|
 | **name** | String |  | '' | connector's unique name |
 | **markerNumbers** | ArrayMarkerIndex |  | [ invalid (-1), invalid (-1) ] | (symbol: $[m_0, \, m_1, \, \ldots, \, m_{nr-1},\, m_{c0}, \, m_{c1}]\tp$) list of position or rigid body markers used in reeving system and optional two coordinate markers ($m_{c0}, \, m_{c1}$); the first marker $m_0$ and the last rigid body marker $m_{nr-1}$ represent the ends of the rope and are directly connected to a position; the markers $m_1, \, \ldots, \, m_{nr-2}$ can be connected to sheaves, for which a radius and an axis can be prescribed. The coordinate markers are optional and represent prescribed length at the rope ends (marker $m_{c0}$ is added length at start, marker $m_{c1}$ is added length at end of the rope in the reeving system) |
@@ -43,10 +40,7 @@ The parameters of the item; in a dictionary, its type is 'ConnectorReevingSystem
 
 The parameters of `VObjectConnectorReevingSystemSprings`, given as `visualization`:
 
-```{tabularcolumns} |\Y{0.2}|\Y{0.14}|\Y{0.06}|\Y{0.15}|\Y{0.45}|
-```
-
-| Name | type | size | default value | description |
+| name | type | size | default | description |
 |---|---|---|---|---|
 | **show** | Bool |  | True | set true, if item is shown in visualization and false if it is not shown |
 | **ropeRadius** | float |  | 0.001 | radius of rope, drawn as one tube along the free spans and the arcs on the sheaves; visualizationSettings.general.cylinderTiling segments around it, connectors.curveTiling segments per full turn of an arc |
@@ -62,7 +56,7 @@ Settings beyond those of all connectors: [`connectors.curveTiling`](#sec-vsettin
 
 Available as `OutputVariableType` in sensors, `Get...Output()` and other functions:
 
-```{tabularcolumns} |\Y{0.25}|\Y{0.25}|\Y{0.5}|
+```{tabularcolumns} \Y{0.25}\Y{0.25}\Y{0.5}
 ```
 
 | output variable | symbol | description |

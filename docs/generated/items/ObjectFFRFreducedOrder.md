@@ -23,10 +23,7 @@ Authors: Gerstmayr Johannes, Zwölfer Andreas
 
 The parameters of the item; in a dictionary, its type is 'FFRFreducedOrder':
 
-```{tabularcolumns} |\Y{0.2}|\Y{0.14}|\Y{0.06}|\Y{0.15}|\Y{0.45}|
-```
-
-| Name | type | size | default value | description |
+| name | type | size | default | description |
 |---|---|---|---|---|
 | **name** | String |  | '' | objects's unique name |
 | **nodeNumbers** | ArrayNodeIndex |  | [] | (symbol: $\mathbf{n} = [n_0,\,n_1]\tp$) node numbers of rigid body node and NodeGenericODE2 for modal coordinates; the global nodal position needs to be reconstructed from the rigid-body motion of the reference frame, the modal coordinates and the mode basis |
@@ -61,10 +58,7 @@ Renamed parameters, still taken with a `DeprecationWarning`: `physicsMass` (depr
 
 The parameters of `VObjectFFRFreducedOrder`, given as `visualization`:
 
-```{tabularcolumns} |\Y{0.2}|\Y{0.14}|\Y{0.06}|\Y{0.15}|\Y{0.45}|
-```
-
-| Name | type | size | default value | description |
+| name | type | size | default | description |
 |---|---|---|---|---|
 | **show** | Bool |  | True | set true, if item is shown in visualization and false if it is not shown; use visualizationSettings.bodies.deformationScaleFactor to draw scaled (local) deformations; the reference frame node is shown with additional letters RF |
 | **color** | Float4 | 4 | [-1.,-1.,-1.,-1.] | RGBA color for object; 4th value is alpha-transparency; R=-1.f means, that default color is used |
@@ -81,7 +75,7 @@ Settings beyond those of all super elements: [`nodes.defaultSize`](#sec-vsetting
 
 Available as `OutputVariableType` in sensors, `Get...Output()` and other functions:
 
-```{tabularcolumns} |\Y{0.25}|\Y{0.25}|\Y{0.5}|
+```{tabularcolumns} \Y{0.25}\Y{0.25}\Y{0.5}
 ```
 
 | output variable | symbol | description |
@@ -110,11 +104,7 @@ Additionally, the contour drawing of the object can make use the `OutputVariable
 | Displacement (mesh node $(i)$) | $\LU{0}{\uv\cConfig^{(i)}} = \LU{0}{\qv_{\mathrm{t,config}}} + \LU{0b}{\Am_\mathrm{config}} \LU{b}{\pv_\mathrm{f,config}^{(i)}} - (\LU{0}{\qv_{\mathrm{t,ref}}} + \LU{0b}{\Am_{ref}} \LU{b}{\xv\cRef^{(i)}})$ | nodal mesh displacement in global coordinates |
 | Position (mesh node $(i)$) | $\LU{0}{\pv^{(i)}} = \LU{0}{\pRef} + \LU{0b}{\Am} \LU{b}{\pv\indf^{(i)}}$ | nodal mesh position in global coordinates |
 | Velocity (mesh node $(i)$) | $\LU{0}{\dot \uv^{(i)}} = \LU{0}{\dot \qv\indt} + \LU{0b}{\Am} (\LU{b}{\dot \uv\indf^{(i)}} + \LU{b}{\tilde \tomega} \LU{b}{\pv\indf^{(i)}})$ | nodal mesh velocity in global coordinates |
-| Acceleration (mesh node $(i)$) | $\LU{0}{\av^{(i)}} = \LU{0}{\ddot \qv\indt} +
-\LU{0b}{\Rot} \LU{b}{\ddot \uv\indf^{(i)}} +
-2\LU{0}{\tomega} \times \LU{0b}{\Rot} \LU{b}{\dot \uv\indf^{(i)}} +
-\LU{0}{\talpha} \times \LU{0}{\pv\indf^{(i)}} +
-\LU{0}{\tomega} \times (\LU{0}{\tomega} \times \LU{0}{\pv\indf^{(i)}})$ | global acceleration of mesh node $n_i$ including rigid body motion and flexible deformation; note that $\LU{0}{\xv}(n_i) = \LU{0b}{\Rot} \LU{b}{\xv}(n_i)$ |
+| Acceleration (mesh node $(i)$) | $\LU{0}{\av^{(i)}} = \LU{0}{\ddot \qv\indt} + \LU{0b}{\Rot} \LU{b}{\ddot \uv\indf^{(i)}} + 2\LU{0}{\tomega} \times \LU{0b}{\Rot} \LU{b}{\dot \uv\indf^{(i)}} + \LU{0}{\talpha} \times \LU{0}{\pv\indf^{(i)}} + \LU{0}{\tomega} \times (\LU{0}{\tomega} \times \LU{0}{\pv\indf^{(i)}})$ | global acceleration of mesh node $n_i$ including rigid body motion and flexible deformation; note that $\LU{0}{\xv}(n_i) = \LU{0b}{\Rot} \LU{b}{\xv}(n_i)$ |
 | StressLocal (mesh node $(i)$) | $\LU{b}{\tsigma^{(i)}} = (\LU{b}{\tPsi_{OV}} \tzeta)_{3\cdot i \ldots 3\cdot i+5}$ | linearized stress components of mesh node $(i)$ in reference frame; $\tsigma=[\sigma_{xx},\,\sigma_{yy},\,\sigma_{zz},\,\sigma_{yz},\,\sigma_{xz},\,\sigma_{xy}]\tp$; ONLY available, if $\LU{b}{\tPsi}_{OV}$ is provided and `outputVariableTypeModeBasis== exu.OutputVariableType.StressLocal` |
 | StrainLocal (mesh node $(i)$) | $\LU{b}{\teps^{(i)}} = (\LU{b}{\tPsi}_{OV} \tzeta)_{3\cdot i \ldots 3\cdot i+5}$ | linearized strain components of mesh node $(i)$ in reference frame; $\teps=[\varepsilon_{xx},\,\varepsilon_{yy},\,\varepsilon_{zz},\,\varepsilon_{yz},\,\varepsilon_{xz},\,\varepsilon_{xy}]\tp$; ONLY available, if $\LU{b}{\tPsi}_{OV}$ is provided and `outputVariableTypeModeBasis== exu.OutputVariableType.StrainLocal` |
 

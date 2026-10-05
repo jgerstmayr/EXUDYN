@@ -297,10 +297,14 @@ def WriteFile(parseInfo, parameterList):
                 deprecatedUse.append('`' + parameter['pythonName'] + '` (deprecated since ' + str(parameter['deprecated'].since)
                                      + ', removed in ' + str(parameter['deprecated'].expires) + '): '
                                      + parameter['deprecated'].advice)
+                parameterChanges.append((parseInfo['class'], ('visualization.' if parameter['destination'].find('V') != -1 else '') + parameter['pythonName'], 'deprecated',
+                                         parameter['deprecated']))
             if parameter.get('deprecated') is not None and parameter['deprecated'].advice is None and parameter['lineType'].find('V') != -1:
                 deprecatedNames.append('`' + parameter['pythonName'] + '` (deprecated since ' + str(parameter['deprecated'].since)
                                        + ', removed in ' + str(parameter['deprecated'].expires) + '): use `'
                                        + parameter['parameterDescription'] + '`')
+                parameterChanges.append((parseInfo['class'], ('visualization.' if parameter['destination'].find('V') != -1 else '') + parameter['pythonName'],
+                                         parameter['parameterDescription'], parameter['deprecated']))
             elif (parameter['lineType'].find('V') != -1) & (parameter['cFlags'].find('I') != -1): #also include parent class members!
                 sString = ''
                 if (parameter['type'] == 'String'):
@@ -500,6 +504,29 @@ kindPlural = {'Nodes': 'nodes', 'Objects (Body)': 'bodies', 'Objects (SuperEleme
               'Objects (Joint)': 'joints', 'Markers': 'markers', 'Loads': 'loads', 'Sensors': 'sensors'}
 
 
+#the renamed and deprecated parameters of all items, (class, parameter, new name or 'deprecated', the deprecation),
+#listed on the index page of the items as the settings pages list theirs (#2855)
+parameterChanges = []
+
+
+def ParameterChangesMarkdown():
+    """the section of the items index that lists every renamed and deprecated item parameter"""
+    if len(parameterChanges) == 0:
+        return ''
+    text = ('\n' + MarkdownHeading('Parameter changes', 1) + '\n\n'
+            + 'The item parameters that were renamed or are deprecated; each still works and gives a '
+            + '`DeprecationWarning`, and the page of the item lists it below its parameters:\n\n')
+    for (className, name, newName, deprecation) in sorted(parameterChanges, key=lambda change: change[:2]):
+        item = '[' + className + '](#sec-item-' + className.lower() + ')'
+        if newName == 'deprecated':
+            text += ('- ' + item + ': `' + name + '` is deprecated (since ' + str(deprecation.since)
+                     + ', removed in ' + str(deprecation.expires) + '): ' + deprecation.advice + '\n')
+        else:
+            text += ('- ' + item + ': `' + name + '` ' + chr(8594) + ' `' + newName + '` (changed in version '
+                     + str(deprecation.since) + ', removed in ' + str(deprecation.expires) + ')\n')
+    return text
+
+
 def WriteMarkdownPages(markdownItemList, folderDict, typeConversion, itemIntros, intro):
     markdownDir = os.path.join(paths.repositoryRoot, 'docs', 'generated', 'items')
     os.makedirs(markdownDir, exist_ok=True)
@@ -519,7 +546,7 @@ def WriteMarkdownPages(markdownItemList, folderDict, typeConversion, itemIntros,
                  '```{toctree}\n:maxdepth: 2\n\n')
     for key in folderDict:
         indexText += ItemTypeFileName(key) + '\n'
-    Write('itemsIndex.md', indexText + '```\n')
+    Write('itemsIndex.md', indexText + '```\n' + ParameterChangesMarkdown())
 
     written = 1
     for key in folderDict:

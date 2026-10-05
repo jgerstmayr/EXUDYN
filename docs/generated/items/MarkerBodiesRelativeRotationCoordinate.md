@@ -17,10 +17,7 @@ A coordinate-based Marker attached to two rigid bodies or beams which computes t
 
 The parameters of the item; in a dictionary, its type is 'BodiesRelativeRotationCoordinate':
 
-```{tabularcolumns} |\Y{0.2}|\Y{0.14}|\Y{0.06}|\Y{0.15}|\Y{0.45}|
-```
-
-| Name | type | size | default value | description |
+| name | type | size | default | description |
 |---|---|---|---|---|
 | **name** | String |  | '' | marker's unique name |
 | **bodyNumbers** | ArrayObjectIndex |  | [ invalid (-1), invalid (-1) ] | (symbol: $[b_0,b_1]\tp$) list of body numbers for which relative coordinate is computed |
@@ -35,10 +32,7 @@ The parameters of the item; in a dictionary, its type is 'BodiesRelativeRotation
 
 The parameters of `VMarkerBodiesRelativeRotationCoordinate`, given as `visualization`:
 
-```{tabularcolumns} |\Y{0.2}|\Y{0.14}|\Y{0.06}|\Y{0.15}|\Y{0.45}|
-```
-
-| Name | type | size | default value | description |
+| name | type | size | default | description |
 |---|---|---|---|---|
 | **show** | Bool |  | True | set true, if item is shown in visualization and false if it is not shown |
 

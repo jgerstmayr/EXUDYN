@@ -1,0 +1,16 @@
+{
+  "number": 2855,
+  "title": "the renamed and deprecated item parameters are listed only on each item's page",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "DOCU",
+  "effort": "LOW",
+  "description": "The maintainer, 2026-10-05: the settings changes are listed at the end of the settings pages, but where are the item parameter changes listed? Each item page lists its own under the parameter table; a list of all of them, like that of the settings, is missing.",
+  "dateRaised": "2026-10-05",
+  "deadline": "2027-04-03",
+  "dateResolved": "2026-10-05 02:07",
+  "resolvedAuthor": "Claude-JG",
+  "file": "tools/generators/itemDocsEmitter.py",
+  "releaseNotes": "The index page of the items reference manual lists every renamed and deprecated item parameter, with a link to its item, as the settings pages list theirs.",
+  "resolvedInVersion": "1.12.328"
+}

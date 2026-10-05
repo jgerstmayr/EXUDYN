@@ -12,10 +12,7 @@ A sensor attached to an object other than a body - a connector, a constraint, a 
 
 The parameters of the item; in a dictionary, its type is 'Object':
 
-```{tabularcolumns} |\Y{0.2}|\Y{0.14}|\Y{0.06}|\Y{0.15}|\Y{0.45}|
-```
-
-| Name | type | size | default value | description |
+| name | type | size | default | description |
 |---|---|---|---|---|
 | **name** | String |  | '' | sensor's unique name |
 | **objectNumber** | ObjectIndex |  | invalid (-1) | object (e.g. connector) number to which sensor is attached to |
@@ -29,10 +26,7 @@ The parameters of the item; in a dictionary, its type is 'Object':
 
 The parameters of `VSensorObject`, given as `visualization`:
 
-```{tabularcolumns} |\Y{0.2}|\Y{0.14}|\Y{0.06}|\Y{0.15}|\Y{0.45}|
-```
-
-| Name | type | size | default value | description |
+| name | type | size | default | description |
 |---|---|---|---|---|
 | **show** | Bool |  | True | set true, if item is shown in visualization and false if it is not shown; sensors can be shown at the position assiciated with the object - note that in some cases, there might be no such position (e.g. data object)! |
 

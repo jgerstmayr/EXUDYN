@@ -19,10 +19,7 @@ A 2D point/slope vector node for planar Bernoulli-Euler ANCF (absolute nodal coo
 
 The parameters of the item; in a dictionary, its type is 'Point2DSlope1':
 
-```{tabularcolumns} |\Y{0.2}|\Y{0.14}|\Y{0.06}|\Y{0.15}|\Y{0.45}|
-```
-
-| Name | type | size | default value | description |
+| name | type | size | default | description |
 |---|---|---|---|---|
 | **name** | String |  | '' | node's unique name |
 | **referenceCoordinates** | Vector4D | 4 | [0.,0.,1.,0.] | reference coordinates (x-pos,y-pos; x-slopex, y-slopex) of node; global position of node without displacement |
@@ -34,10 +31,7 @@ The parameters of the item; in a dictionary, its type is 'Point2DSlope1':
 
 The parameters of `VNodePoint2DSlope1`, given as `visualization`:
 
-```{tabularcolumns} |\Y{0.2}|\Y{0.14}|\Y{0.06}|\Y{0.15}|\Y{0.45}|
-```
-
-| Name | type | size | default value | description |
+| name | type | size | default | description |
 |---|---|---|---|---|
 | **show** | Bool |  | True | set true, if item is shown in visualization and false if it is not shown |
 | **drawSize** | float |  | -1. | drawing size (diameter, dimensions of underlying cube, etc.) for item; size == -1.f means that default size is used |
@@ -53,7 +47,7 @@ Settings beyond those of all nodes: [`nodes.showNodalSlopes`](#sec-vsettingsnode
 
 Available as `OutputVariableType` in sensors, `Get...Output()` and other functions:
 
-```{tabularcolumns} |\Y{0.25}|\Y{0.25}|\Y{0.5}|
+```{tabularcolumns} \Y{0.25}\Y{0.25}\Y{0.5}
 ```
 
 | output variable | symbol | description |

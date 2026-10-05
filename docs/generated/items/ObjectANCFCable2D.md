@@ -21,10 +21,7 @@ A 2D cable finite element using 2 nodes of type NodePoint2DSlope1. The localPosi
 
 The parameters of the item; in a dictionary, its type is 'ANCFCable2D':
 
-```{tabularcolumns} |\Y{0.2}|\Y{0.14}|\Y{0.06}|\Y{0.15}|\Y{0.45}|
-```
-
-| Name | type | size | default value | description |
+| name | type | size | default | description |
 |---|---|---|---|---|
 | **name** | String |  | '' | objects's unique name |
 | **length** | UReal |  | 0. | (symbol: $L$) [SI:m] reference length of beam; such that the total volume (e.g. for volume load) gives $\rho A L$; must be positive |
@@ -49,10 +46,7 @@ Renamed parameters, still taken with a `DeprecationWarning`: `physicsLength` (de
 
 The parameters of `VObjectANCFCable2D`, given as `visualization`:
 
-```{tabularcolumns} |\Y{0.2}|\Y{0.14}|\Y{0.06}|\Y{0.15}|\Y{0.45}|
-```
-
-| Name | type | size | default value | description |
+| name | type | size | default | description |
 |---|---|---|---|---|
 | **show** | Bool |  | True | set true, if item is shown in visualization and false if it is not shown |
 | **drawHeight** | float |  | 0. | if beam is drawn with rectangular shape, this is the drawing height |
@@ -68,7 +62,7 @@ Settings beyond those of all finite elements: [`bodies.beams.axialTiling`](#sec-
 
 Available as `OutputVariableType` in sensors, `Get...Output()` and other functions:
 
-```{tabularcolumns} |\Y{0.25}|\Y{0.25}|\Y{0.5}|
+```{tabularcolumns} \Y{0.25}\Y{0.25}\Y{0.5}
 ```
 
 | output variable | symbol | description |

@@ -15326,3 +15326,32 @@ grey and pulled up under the cell - `docs/_static/custom.css` for html, the envi
 The fragments of the manual pages (`notebookEmitter.py`, `python/Notebooks/snippets/`) still end with "(from the
 notebook ...)" each: a fragment is a file of its own, included by a page, so whether it is the first of its notebook
 on that page is not known where it is written.
+
+<a id="rg3-35"></a>
+### RG3.35 — the tables of the PDF (2026-10-05, #2853, #2854, #2855)
+
+*(Maintainer 2026-10-05, a list of issues in the PDF: narrow columns of the notation tables and of the definitions of
+quantities, tables running into the footer, the columns of the settings tables, the FFRF output variables, and "where
+the item parameter changes are listed".)*
+
+- **Page breaks and widths (#2853)**: Sphinx sets a table of up to 30 rows with `tabulary`, which does not break
+  across pages - the long settings tables ran into the footer - and which sizes its columns by a guess that formulas
+  spoil: the description column of the OutputVariable table of the notation chapter got one word per line. `conf.py`,
+  `TableWidths`, for the latex builder: every table that stands in a section (not in a box or a list, where a
+  longtable cannot stand) is a `longtable`, and a table without a `tabularcolumns` gets widths from its content - the
+  80th percentile of the lengths of its cells, at least the longest word of its heading, at most 50, plus 3 for the
+  space between the columns. The parameter tables of the items take these widths now instead of the fixed ones, so
+  that a short default column stays narrow.
+- **Settings tables (#2853)**: the size column is gone (mostly empty, -1 for a variable size is misleading); the
+  headings are `name`, `type`, `default` - `type / return type` and `default / arguments` only in a structure with
+  functions (`MainSolver...`); widths 0.34, 0.13, 0.13, 0.4, so that the full access path fits in the name column.
+  The item tables say `default` instead of `default value`. `PdfColumnWidths` writes no vertical rules.
+- **FFRF (#2854)**: the Acceleration rows of the output variables of `ObjectFFRF` and `ObjectFFRFreducedOrder` were
+  written over five lines; a Markdown table row is one line, so the table ended there and the rest of the formula was
+  text after it. One line each now, and `checkMathMacros --check` refuses a table row that does not end in `|`.
+- **Item parameter changes (#2855)**: each item page lists its renamed and deprecated parameters below its table; the
+  items index now also lists all of them, 76, with links to the items - as the settings pages list theirs.
+
+Checked in the PDF: the notation tables, `ObjectMass1D` (parameters, output variables, definition of quantities),
+`ObjectFFRF`, `SolutionFileSettings` (breaks over two pages with its heading repeated), the parameter changes; no
+overfull box in the LaTeX log.

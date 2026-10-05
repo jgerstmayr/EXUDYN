@@ -18,10 +18,7 @@ A rigid-body (position+orientation) node-marker attached to a rigid-body node. I
 
 The parameters of the item; in a dictionary, its type is 'NodeRigid':
 
-```{tabularcolumns} |\Y{0.2}|\Y{0.14}|\Y{0.06}|\Y{0.15}|\Y{0.45}|
-```
-
-| Name | type | size | default value | description |
+| name | type | size | default | description |
 |---|---|---|---|---|
 | **name** | String |  | '' | marker's unique name |
 | **nodeNumber** | NodeIndex |  | invalid (-1) | node number to which marker is attached to |
@@ -32,10 +29,7 @@ The parameters of the item; in a dictionary, its type is 'NodeRigid':
 
 The parameters of `VMarkerNodeRigid`, given as `visualization`:
 
-```{tabularcolumns} |\Y{0.2}|\Y{0.14}|\Y{0.06}|\Y{0.15}|\Y{0.45}|
-```
-
-| Name | type | size | default value | description |
+| name | type | size | default | description |
 |---|---|---|---|---|
 | **show** | Bool |  | True | set true, if item is shown in visualization and false if it is not shown |
 

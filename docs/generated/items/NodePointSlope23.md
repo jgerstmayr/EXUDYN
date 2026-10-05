@@ -18,10 +18,7 @@ A 3D point/slope vector node for spatial, shear and cross-section deformable ANC
 
 The parameters of the item; in a dictionary, its type is 'PointSlope23':
 
-```{tabularcolumns} |\Y{0.2}|\Y{0.14}|\Y{0.06}|\Y{0.15}|\Y{0.45}|
-```
-
-| Name | type | size | default value | description |
+| name | type | size | default | description |
 |---|---|---|---|---|
 | **name** | String |  | '' | node's unique name |
 | **referenceCoordinates** | Vector9D | 9 | [0.,0.,0.,0.,1.,0.,0.,0.,1.] | reference coordinates (x-pos,y-pos,z-pos; x-slopey, y-slopey, z-slopey; x-slopez, y-slopez, z-slopez) of node; global position of node without displacement |
@@ -33,10 +30,7 @@ The parameters of the item; in a dictionary, its type is 'PointSlope23':
 
 The parameters of `VNodePointSlope23`, given as `visualization`:
 
-```{tabularcolumns} |\Y{0.2}|\Y{0.14}|\Y{0.06}|\Y{0.15}|\Y{0.45}|
-```
-
-| Name | type | size | default value | description |
+| name | type | size | default | description |
 |---|---|---|---|---|
 | **show** | Bool |  | True | set true, if item is shown in visualization and false if it is not shown |
 | **drawSize** | float |  | -1. | drawing size (diameter, dimensions of underlying cube, etc.) for item; size == -1.f means that default size is used |
@@ -52,7 +46,7 @@ Settings beyond those of all nodes: [`nodes.showNodalSlopes`](#sec-vsettingsnode
 
 Available as `OutputVariableType` in sensors, `Get...Output()` and other functions:
 
-```{tabularcolumns} |\Y{0.25}|\Y{0.25}|\Y{0.5}|
+```{tabularcolumns} \Y{0.25}\Y{0.25}\Y{0.5}
 ```
 
 | output variable | symbol | description |

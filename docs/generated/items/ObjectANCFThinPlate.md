@@ -20,10 +20,7 @@ OBJECT UNDER CONSTRUCTION: A 3D thin Kirchhoff plate finite element based on the
 
 The parameters of the item; in a dictionary, its type is 'ANCFThinPlate':
 
-```{tabularcolumns} |\Y{0.2}|\Y{0.14}|\Y{0.06}|\Y{0.15}|\Y{0.45}|
-```
-
-| Name | type | size | default value | description |
+| name | type | size | default | description |
 |---|---|---|---|---|
 | **name** | String |  | '' | objects's unique name |
 | **thickness** | NumpyVector |  | [] | (symbol: $h$) [SI:m] thickness of plate either provided as scalar or as vector (4 values, same order as local element node numbers) values that are linearly interpolated from nodal values; dimensionality must agree between thickness, strainCoefficients and curvatureCoefficients |
@@ -45,10 +42,7 @@ Renamed parameters, still taken with a `DeprecationWarning`: `physicsThickness` 
 
 The parameters of `VObjectANCFThinPlate`, given as `visualization`:
 
-```{tabularcolumns} |\Y{0.2}|\Y{0.14}|\Y{0.06}|\Y{0.15}|\Y{0.45}|
-```
-
-| Name | type | size | default value | description |
+| name | type | size | default | description |
 |---|---|---|---|---|
 | **show** | Bool |  | True | set true, if item is shown in visualization and false if it is not shown; the plate is drawn as n x n quads per element, n = bodies.beams.axialTiling/2, at least 2, on its surfaces if it has a thickness; the outline of the element is drawn as lines if view0.scene.showMeshEdges is set when the graphics data is built (the curved surface is drawn as flat quads, so the renderer cannot find the element edges itself) |
 | **color** | Float4 | 4 | [-1.,-1.,-1.,-1.] | RGBA color of the object; if R==-1, use default color |
@@ -63,7 +57,7 @@ Settings beyond those of all finite elements: [`bodies.beams.axialTiling`](#sec-
 
 Available as `OutputVariableType` in sensors, `Get...Output()` and other functions:
 
-```{tabularcolumns} |\Y{0.25}|\Y{0.25}|\Y{0.5}|
+```{tabularcolumns} \Y{0.25}\Y{0.25}\Y{0.5}
 ```
 
 | output variable | symbol | description |

@@ -18,10 +18,7 @@ A 3D beam finite element based on the absolute nodal coordinate formulation, usi
 
 The parameters of the item; in a dictionary, its type is 'ANCFBeam':
 
-```{tabularcolumns} |\Y{0.2}|\Y{0.14}|\Y{0.06}|\Y{0.15}|\Y{0.45}|
-```
-
-| Name | type | size | default value | description |
+| name | type | size | default | description |
 |---|---|---|---|---|
 | **name** | String |  | '' | objects's unique name |
 | **nodeNumbers** | NodeIndex2 | 2 | [invalid (-1), invalid (-1)] | two node numbers for beam element |
@@ -38,10 +35,7 @@ Renamed parameters, still taken with a `DeprecationWarning`: `physicsLength` (de
 
 The parameters of `VObjectANCFBeam`, given as `visualization`:
 
-```{tabularcolumns} |\Y{0.2}|\Y{0.14}|\Y{0.06}|\Y{0.15}|\Y{0.45}|
-```
-
-| Name | type | size | default value | description |
+| name | type | size | default | description |
 |---|---|---|---|---|
 | **show** | Bool |  | True | set true, if item is shown in visualization and false if it is not shown; geometry is defined by sectionGeometry |
 | **sectionGeometry** | BeamSectionGeometry |  | BeamSectionGeometry() | defines cross section shape used for visualization and contact |
@@ -57,7 +51,7 @@ Settings beyond those of all finite elements: [`bodies.beams.axialTiling`](#sec-
 
 Available as `OutputVariableType` in sensors, `Get...Output()` and other functions:
 
-```{tabularcolumns} |\Y{0.25}|\Y{0.25}|\Y{0.5}|
+```{tabularcolumns} \Y{0.25}\Y{0.25}\Y{0.5}
 ```
 
 | output variable | symbol | description |

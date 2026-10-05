@@ -16,10 +16,7 @@ A system of $n$ {ref}`ODE1 <ODE1>`, having a system matrix, a rhs vector, but mo
 
 The parameters of the item; in a dictionary, its type is 'GenericODE1':
 
-```{tabularcolumns} |\Y{0.2}|\Y{0.14}|\Y{0.06}|\Y{0.15}|\Y{0.45}|
-```
-
-| Name | type | size | default value | description |
+| name | type | size | default | description |
 |---|---|---|---|---|
 | **name** | String |  | '' | objects's unique name |
 | **nodeNumbers** | ArrayNodeIndex |  | [] | (symbol: $\mathbf{n}_n = [n_0,\,\ldots,\,n_n]\tp$) node numbers which provide the coordinates for the object (consecutively as provided in this list) |
@@ -43,7 +40,7 @@ The item draws nothing.
 
 Available as `OutputVariableType` in sensors, `Get...Output()` and other functions:
 
-```{tabularcolumns} |\Y{0.25}|\Y{0.25}|\Y{0.5}|
+```{tabularcolumns} \Y{0.25}\Y{0.25}\Y{0.5}
 ```
 
 | output variable | symbol | description |

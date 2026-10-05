@@ -17,10 +17,7 @@ A node containing a number of data (history) variables. Use this node e.g. for c
 
 The parameters of the item; in a dictionary, its type is 'GenericData':
 
-```{tabularcolumns} |\Y{0.2}|\Y{0.14}|\Y{0.06}|\Y{0.15}|\Y{0.45}|
-```
-
-| Name | type | size | default value | description |
+| name | type | size | default | description |
 |---|---|---|---|---|
 | **name** | String |  | '' | node's unique name |
 | **initialCoordinates** | Vector |  | [] | (symbol: $\xv\cIni = [x_0,\,\ldots,\,x_{n_c}]\tp\cIni$) initial data coordinates |
@@ -39,7 +36,7 @@ The item draws nothing.
 
 Available as `OutputVariableType` in sensors, `Get...Output()` and other functions:
 
-```{tabularcolumns} |\Y{0.25}|\Y{0.25}|\Y{0.5}|
+```{tabularcolumns} \Y{0.25}\Y{0.25}\Y{0.5}
 ```
 
 | output variable | symbol | description |

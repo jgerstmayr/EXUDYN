@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.12 | Metheney | 291 | 1.12.325 |
+| 1.12 | Metheney | 294 | 1.12.328 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
 | 1.9 | Krall | 235 | 1.9.234 |
@@ -29,6 +29,18 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.12 - Metheney (current)
 
+- **1.12.328** `DOCU` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` the renamed and deprecated item parameters are listed only on each item's page (#2855)
+  - description: The maintainer, 2026-10-05: the settings changes are listed at the end of the settings pages, but where are the item parameter changes listed? Each item page lists its own under the parameter table; a list of all of them, like that of the settings, is missing.
+  - **notes:** The index page of the items reference manual lists every renamed and deprecated item parameter, with a link to its item, as the settings pages list theirs.
+  - date resolved: **2026-10-05 02:07**, date raised: 2026-10-05
+- **1.12.327** `FIX` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` ObjectFFRF and ObjectFFRFreducedOrder: the acceleration row of the output variables table is broken over several lines (#2854)
+  - description: A Markdown table row is one line; the formula of the Acceleration row was written over five lines, so the table ended there and the rest of the formula was printed as text after it (the maintainer, 2026-10-05, in the PDF).
+  - **notes:** The acceleration rows of the output variables of ObjectFFRF and ObjectFFRFreducedOrder are one table row again; the rest of the formula was printed as text after the table.
+  - date resolved: **2026-10-05 02:07**, date raised: 2026-10-05
+- **1.12.326** `DOCU` `MEDIUM EFF` `raised by: Claude-JG` `resolved by: Claude-JG` tables in the PDF: too narrow columns, and tables running into the footer (#2853)
+  - description: The maintainer, 2026-10-05: the notation tables (Symbols in item equations) and the 'Definition of quantities' of ObjectMass1D, ObjectRigidBody, ObjectFFRFreducedOrder, ObjectRotationalMass1D have columns of 20 % of the page; tables longer than the page overlap with the footer (e.g. SolutionFileSettings); the name column of the settings tables is too narrow, their size column mostly empty; headers 'type / function return type' and 'default value' are longer than their content.
+  - **notes:** In the PDF, every table in a section breaks across pages instead of running into the footer, and a table without widths of its own gets them from its content; the settings tables have no size column, short headings (name, type, default) and a wider name column; the item tables say default.
+  - date resolved: **2026-10-05 02:07**, date raised: 2026-10-05
 - **1.12.325** `DOCU` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` the reference pages name the notebook of an example after every code cell (#2852)
   - description: The maintainer, 2026-10-05: in the pages of the Python-C++ interface, '(from the notebook ...)' follows every code cell that comes from a notebook; it shall appear once per notebook and page, after its first code cell, smaller and directly under the cell, and only the file name.
   - **notes:** The pages of the Python-C++ interface name the notebook an example comes from once, after its first code cell on the page, as its file name, small and directly under the cell.

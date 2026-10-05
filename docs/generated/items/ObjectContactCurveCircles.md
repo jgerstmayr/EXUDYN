@@ -18,10 +18,7 @@ A contact model between a curve defined by piecewise segments and a set of circl
 
 The parameters of the item; in a dictionary, its type is 'ContactCurveCircles':
 
-```{tabularcolumns} |\Y{0.2}|\Y{0.14}|\Y{0.06}|\Y{0.15}|\Y{0.45}|
-```
-
-| Name | type | size | default value | description |
+| name | type | size | default | description |
 |---|---|---|---|---|
 | **name** | String |  | '' | constraints's unique name |
 | **markerNumbers** | ArrayMarkerIndex | 2 | [ invalid (-1), invalid (-1) ] | (symbol: $[m0,m_{c0},m_{c1},\ldots]\tp$) list of $n_c+1$ markers; marker $m0$ represents the marker carrying the curve; all other markers represent centers of $n_c$ circles, used in connector |
@@ -45,10 +42,7 @@ The parameters of the item; in a dictionary, its type is 'ContactCurveCircles':
 
 The parameters of `VObjectContactCurveCircles`, given as `visualization`:
 
-```{tabularcolumns} |\Y{0.2}|\Y{0.14}|\Y{0.06}|\Y{0.15}|\Y{0.45}|
-```
-
-| Name | type | size | default value | description |
+| name | type | size | default | description |
 |---|---|---|---|---|
 | **show** | Bool |  | True | set true, if item is shown in visualization and false if it is not shown; draws curve and circles with given radii; uses visualizationSettings circleTiling for circles and circleTiling/2 for tiling of non-straight segments |
 | **color** | Float4 | 4 | [-1.,-1.,-1.,-1.] | RGBA connector color; if R==-1, use default color |
@@ -63,7 +57,7 @@ Settings beyond those of all connectors: [`connectors.showContact`](#sec-vsettin
 
 Available as `OutputVariableType` in sensors, `Get...Output()` and other functions:
 
-```{tabularcolumns} |\Y{0.25}|\Y{0.25}|\Y{0.5}|
+```{tabularcolumns} \Y{0.25}\Y{0.25}\Y{0.5}
 ```
 
 | output variable | symbol | description |

@@ -19,10 +19,7 @@ A 2D point node for point masses or solid finite elements which has 2 displaceme
 
 The parameters of the item; in a dictionary, its type is 'Point2D':
 
-```{tabularcolumns} |\Y{0.2}|\Y{0.14}|\Y{0.06}|\Y{0.15}|\Y{0.45}|
-```
-
-| Name | type | size | default value | description |
+| name | type | size | default | description |
 |---|---|---|---|---|
 | **name** | String |  | '' | node's unique name |
 | **referenceCoordinates** | Vector2D | 2 | [0.,0.] | (symbol: $\qv\cRef = [q_0,\,q_1]\tp\cRef = \pv\cRef = [r_0,\,r_1]\tp$) reference coordinates of node ==> e.g. ref. coordinates for finite elements; global position of node without displacement |
@@ -34,10 +31,7 @@ The parameters of the item; in a dictionary, its type is 'Point2D':
 
 The parameters of `VNodePoint2D`, given as `visualization`:
 
-```{tabularcolumns} |\Y{0.2}|\Y{0.14}|\Y{0.06}|\Y{0.15}|\Y{0.45}|
-```
-
-| Name | type | size | default value | description |
+| name | type | size | default | description |
 |---|---|---|---|---|
 | **show** | Bool |  | True | set true, if item is shown in visualization and false if it is not shown |
 | **drawSize** | float |  | -1. | drawing size (diameter, dimensions of underlying cube, etc.) for item; size == -1.f means that default size is used |
@@ -51,7 +45,7 @@ Drawn as [all nodes](#sec-drawing-nodes).
 
 Available as `OutputVariableType` in sensors, `Get...Output()` and other functions:
 
-```{tabularcolumns} |\Y{0.25}|\Y{0.25}|\Y{0.5}|
+```{tabularcolumns} \Y{0.25}\Y{0.25}\Y{0.5}
 ```
 
 | output variable | symbol | description |

@@ -23,10 +23,7 @@ A generic joint in 3D; constrains components of the absolute position and rotati
 
 The parameters of the item; in a dictionary, its type is 'JointGeneric':
 
-```{tabularcolumns} |\Y{0.2}|\Y{0.14}|\Y{0.06}|\Y{0.15}|\Y{0.45}|
-```
-
-| Name | type | size | default value | description |
+| name | type | size | default | description |
 |---|---|---|---|---|
 | **name** | String |  | '' | constraints's unique name |
 | **markerNumbers** | ArrayMarkerIndex | 2 | [ invalid (-1), invalid (-1) ] | (symbol: $[m0,m1]\tp$) list of markers used in connector |
@@ -47,10 +44,7 @@ Deprecated parameters, which still work and give a `DeprecationWarning` when set
 
 The parameters of `VObjectJointGeneric`, given as `visualization`:
 
-```{tabularcolumns} |\Y{0.2}|\Y{0.14}|\Y{0.06}|\Y{0.15}|\Y{0.45}|
-```
-
-| Name | type | size | default value | description |
+| name | type | size | default | description |
 |---|---|---|---|---|
 | **show** | Bool |  | True | set true, if item is shown in visualization and false if it is not shown |
 | **axesRadius** | float |  | 0.1 | radius of joint axes to draw |
@@ -67,7 +61,7 @@ Settings beyond those of all joints: [`connectors.jointAxesLength`](#sec-vsettin
 
 Available as `OutputVariableType` in sensors, `Get...Output()` and other functions:
 
-```{tabularcolumns} |\Y{0.25}|\Y{0.25}|\Y{0.5}|
+```{tabularcolumns} \Y{0.25}\Y{0.25}\Y{0.5}
 ```
 
 | output variable | symbol | description |

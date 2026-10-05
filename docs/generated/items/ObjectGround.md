@@ -22,10 +22,7 @@ A ground object behaving like a rigid body, but having no degrees of freedom. Us
 
 The parameters of the item; in a dictionary, its type is 'Ground':
 
-```{tabularcolumns} |\Y{0.2}|\Y{0.14}|\Y{0.06}|\Y{0.15}|\Y{0.45}|
-```
-
-| Name | type | size | default value | description |
+| name | type | size | default | description |
 |---|---|---|---|---|
 | **name** | String |  | '' | objects's unique name |
 | **referencePosition** | Vector3D | 3 | None (zero) | (symbol: $\pRefG$) reference point = reference position for ground object; local position is added on top of reference position for a ground object; the translation of referenceHT |
@@ -37,10 +34,7 @@ The parameters of the item; in a dictionary, its type is 'Ground':
 
 The parameters of `VObjectGround`, given as `visualization`:
 
-```{tabularcolumns} |\Y{0.2}|\Y{0.14}|\Y{0.06}|\Y{0.15}|\Y{0.45}|
-```
-
-| Name | type | size | default value | description |
+| name | type | size | default | description |
 |---|---|---|---|---|
 | **show** | Bool |  | True | set true, if item is shown in visualization and false if it is not shown |
 | **graphicsDataUserFunction** | ObjectGroundGraphicsDataUserFunction |  | 0 | A Python function which returns a bodyGraphicsData object, which is a list of graphics data in a dictionary computed by the user function |
@@ -54,7 +48,7 @@ Drawn as [all bodies](#sec-drawing-objectsbody); its `graphicsData`, at its refe
 
 Available as `OutputVariableType` in sensors, `Get...Output()` and other functions:
 
-```{tabularcolumns} |\Y{0.25}|\Y{0.25}|\Y{0.5}|
+```{tabularcolumns} \Y{0.25}\Y{0.25}\Y{0.5}
 ```
 
 | output variable | symbol | description |

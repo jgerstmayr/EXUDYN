@@ -19,10 +19,7 @@ Authors: Gerstmayr Johannes, Zwölfer Andreas
 
 The parameters of the item; in a dictionary, its type is 'FFRF':
 
-```{tabularcolumns} |\Y{0.2}|\Y{0.14}|\Y{0.06}|\Y{0.15}|\Y{0.45}|
-```
-
-| Name | type | size | default value | description |
+| name | type | size | default | description |
 |---|---|---|---|---|
 | **name** | String |  | '' | objects's unique name |
 | **nodeNumbers** | ArrayNodeIndex |  | [] | (symbol: $\mathbf{n}\indf = [n_0,\,\ldots,\,n_{n_\mathrm{nf}}]\tp$) node numbers which provide the coordinates for the object (consecutively as provided in this list); the $(n_\mathrm{nf}+1)$ nodes represent the nodes of the FE mesh (except for node 0); the global nodal position needs to be reconstructed from the rigid-body motion of the reference frame |
@@ -51,10 +48,7 @@ The parameters of the item; in a dictionary, its type is 'FFRF':
 
 The parameters of `VObjectFFRF`, given as `visualization`:
 
-```{tabularcolumns} |\Y{0.2}|\Y{0.14}|\Y{0.06}|\Y{0.15}|\Y{0.45}|
-```
-
-| Name | type | size | default value | description |
+| name | type | size | default | description |
 |---|---|---|---|---|
 | **show** | Bool |  | True | set true, if item is shown in visualization and false if it is not shown; use visualizationSettings.bodies.deformationScaleFactor to draw scaled (local) deformations; the reference frame node is shown with additional letters RF |
 | **color** | Float4 | 4 | [-1.,-1.,-1.,-1.] | RGBA color for object; 4th value is alpha-transparency; R=-1.f means, that default color is used |
@@ -71,7 +65,7 @@ Settings beyond those of all super elements: [`nodes.defaultSize`](#sec-vsetting
 
 Available as `OutputVariableType` in sensors, `Get...Output()` and other functions:
 
-```{tabularcolumns} |\Y{0.25}|\Y{0.25}|\Y{0.5}|
+```{tabularcolumns} \Y{0.25}\Y{0.25}\Y{0.5}
 ```
 
 | output variable | symbol | description |
@@ -101,11 +95,7 @@ Additionally, the contour drawing of the object can make use the `OutputVariable
 | Position | $\LU{0}{\pv}\cConfig(n_i) = \LU{0}{\pRef\cConfig} + \LU{0b}{\Rot}\cConfig \LU{b}{\pv}\cConfig(n_i)$ | global position of mesh node $n_i$ including rigid body motion and flexible deformation |
 | Displacement | $\LU{0}{\cv}\cConfig(n_i) = \LU{0}{\pv\cConfig(n_i)} - \LU{0}{\pv\cRef(n_i)}$ | global displacement of mesh node $n_i$ including rigid body motion and flexible deformation |
 | Velocity | $\LU{0}{\vv}\cConfig(n_i) = \LU{0}{\dot \pRef\cConfig} + \LU{0b}{\Rot}\cConfig (\LU{b}{\dot \qv\indf}\cConfig(n_i) + \LU{b}{\tomega}\cConfig \times \LU{b}{\pv}\cConfig(n_i))$ | global velocity of mesh node $n_i$ including rigid body motion and flexible deformation |
-| Acceleration | $\begin{array}{l} \LU{0}{\av}\cConfig(n_i) = \LU{0}{\ddot \pRef\cConfig}\cConfig \\
-+ \LU{0b}{\Rot}\cConfig \LU{b}{\ddot \qv\indf}\cConfig(n_i) \\
-+ 2\LU{0}{\tomega}\cConfig \times \LU{0b}{\Rot}\cConfig \LU{b}{\dot \qv\indf}\cConfig(n_i) \\
-+ \LU{0}{\talpha}\cConfig \times \LU{0}{\pv}\cConfig(n_i) \\
-+ \LU{0}{\tomega}\cConfig \times (\LU{0}{\tomega}\cConfig \times \LU{0}{\pv}\cConfig(n_i)) \end{array}$ | global acceleration of mesh node $n_i$ including rigid body motion and flexible deformation; note that $\LU{0}{\pv}\cConfig(n_i) = \LU{0b}{\Rot} \LU{b}{\pv}\cConfig(n_i)$ |
+| Acceleration | $\begin{array}{l} \LU{0}{\av}\cConfig(n_i) = \LU{0}{\ddot \pRef\cConfig}\cConfig \\ + \LU{0b}{\Rot}\cConfig \LU{b}{\ddot \qv\indf}\cConfig(n_i) \\ + 2\LU{0}{\tomega}\cConfig \times \LU{0b}{\Rot}\cConfig \LU{b}{\dot \qv\indf}\cConfig(n_i) \\ + \LU{0}{\talpha}\cConfig \times \LU{0}{\pv}\cConfig(n_i) \\ + \LU{0}{\tomega}\cConfig \times (\LU{0}{\tomega}\cConfig \times \LU{0}{\pv}\cConfig(n_i)) \end{array}$ | global acceleration of mesh node $n_i$ including rigid body motion and flexible deformation; note that $\LU{0}{\pv}\cConfig(n_i) = \LU{0b}{\Rot} \LU{b}{\pv}\cConfig(n_i)$ |
 | DisplacementLocal | $\LU{b}{\dv}\cConfig(n_i) = \LU{b}{\pv}\cConfig(n_i) - \LU{b}{\xv}\cRef(n_i)$ | local displacement of mesh node $n_i$, representing the flexible deformation within the body frame; note that $\LU{0}{\uv}\cConfig \neq \LU{0b}{\Rot}\LU{b}{\dv}\cConfig$ ! |
 | VelocityLocal | $\LU{b}{\dot \qv\indf}\cConfig(n_i)$ | local velocity of mesh node $n_i$, representing the rate of flexible deformation within the body frame |
 

@@ -21,10 +21,7 @@ Author: Gerstmayr Johannes
 
 The parameters of the item; in a dictionary, its type is 'ContactSphereTriangle':
 
-```{tabularcolumns} |\Y{0.2}|\Y{0.14}|\Y{0.06}|\Y{0.15}|\Y{0.45}|
-```
-
-| Name | type | size | default value | description |
+| name | type | size | default | description |
 |---|---|---|---|---|
 | **name** | String |  | '' | constraints's unique name |
 | **markerNumbers** | ArrayMarkerIndex | 2 | [ invalid (-1), invalid (-1) ] | (symbol: $[m0,m1]\tp$) list of markers representing the center of the sphere (marker 0) and the reference point of the triangle (marker 1), where triangle nodal positions are defined in the local coordinates of marker 1. |
@@ -50,10 +47,7 @@ Renamed parameters, still taken with a `DeprecationWarning`: `radiusSphere` (dep
 
 The parameters of `VObjectContactSphereTriangle`, given as `visualization`:
 
-```{tabularcolumns} |\Y{0.2}|\Y{0.14}|\Y{0.06}|\Y{0.15}|\Y{0.45}|
-```
-
-| Name | type | size | default value | description |
+| name | type | size | default | description |
 |---|---|---|---|---|
 | **show** | Bool |  | False | set true, if item is shown in visualization and false if it is not shown; draws spheres by given radii |
 | **color** | Float4 | 4 | [0.7,0.7,0.7,1.] | RGBA connector color; if R==-1, use default color |
@@ -68,7 +62,7 @@ Settings beyond those of all connectors: [`contact.colorSpheres`](#sec-vsettings
 
 Available as `OutputVariableType` in sensors, `Get...Output()` and other functions:
 
-```{tabularcolumns} |\Y{0.25}|\Y{0.25}|\Y{0.5}|
+```{tabularcolumns} \Y{0.25}\Y{0.25}\Y{0.5}
 ```
 
 | output variable | symbol | description |

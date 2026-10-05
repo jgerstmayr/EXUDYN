@@ -23,10 +23,7 @@ A spherical joint, which constrains the relative translation between two positio
 
 The parameters of the item; in a dictionary, its type is 'JointSpherical':
 
-```{tabularcolumns} |\Y{0.2}|\Y{0.14}|\Y{0.06}|\Y{0.15}|\Y{0.45}|
-```
-
-| Name | type | size | default value | description |
+| name | type | size | default | description |
 |---|---|---|---|---|
 | **name** | String |  | '' | constraints's unique name |
 | **markerNumbers** | ArrayMarkerIndex | 2 | [ invalid (-1), invalid (-1) ] | (symbol: $[m0,m1]\tp$) list of markers used in connector; $m1$ is the moving coin rigid body and $m0$ is the marker for the ground body, which use the localPosition=[0,0,0] for this marker! |
@@ -38,10 +35,7 @@ The parameters of the item; in a dictionary, its type is 'JointSpherical':
 
 The parameters of `VObjectJointSpherical`, given as `visualization`:
 
-```{tabularcolumns} |\Y{0.2}|\Y{0.14}|\Y{0.06}|\Y{0.15}|\Y{0.45}|
-```
-
-| Name | type | size | default value | description |
+| name | type | size | default | description |
 |---|---|---|---|---|
 | **show** | Bool |  | True | set true, if item is shown in visualization and false if it is not shown |
 | **jointRadius** | float |  | 0.1 | radius of joint to draw |
@@ -57,7 +51,7 @@ Settings beyond those of all joints: [`general.cylinderTiling`](#sec-vsettingsge
 
 Available as `OutputVariableType` in sensors, `Get...Output()` and other functions:
 
-```{tabularcolumns} |\Y{0.25}|\Y{0.25}|\Y{0.5}|
+```{tabularcolumns} \Y{0.25}\Y{0.25}\Y{0.5}
 ```
 
 | output variable | symbol | description |

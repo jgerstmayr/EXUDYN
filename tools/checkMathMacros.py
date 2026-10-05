@@ -80,6 +80,19 @@ def BlankLinesInDisplayMath(paths):
     return found
 
 
+def BrokenTableRows(paths):
+    """the rows of a Markdown table that go on in the next line - a formula spread over several lines in a
+    cell: a table row is one line, so the table ends there and the rest of the formula is printed as text"""
+    found = []
+    for path in paths:
+        text = io.open(path, encoding='utf-8').read()
+        text = re.sub(r'(?m)^[ ]*```.*?^[ ]*```', '', text, flags=re.S)
+        for line in text.split('\n'):
+            if line.strip().startswith('| ') and not line.strip().endswith('|'):
+                found.append((path, line.strip()[:60]))
+    return found
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--check', action='store_true', help='exit 1 when a macro is missing')
@@ -99,6 +112,16 @@ def main():
     if blank:
         print('BLANK LINES inside display math - Sphinx splits the formula there; remove them:')
         for (path, start) in blank:
+            print('   ' + path + ': ' + start)
+        if args.check:
+            return 1
+
+    broken = BrokenTableRows(sorted(glob.glob('docs/manual/*.md') + glob.glob('docs/dev/*.md')
+                                    + glob.glob('docs/howTo/*.md')
+                                    + glob.glob('docs/generated/**/*.md', recursive=True)))
+    if broken:
+        print('TABLE ROWS over more than one line - the table ends there; write each row in one line:')
+        for (path, start) in broken:
             print('   ' + path + ': ' + start)
         if args.check:
             return 1

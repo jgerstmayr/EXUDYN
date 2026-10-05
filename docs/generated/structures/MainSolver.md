@@ -12,65 +12,65 @@ and hereafter you can access all data and functions via 'solver'.
 
 MainSolverStatic has the following items:
 
-```{tabularcolumns} |\Y{0.2}|\Y{0.14}|\Y{0.06}|\Y{0.15}|\Y{0.45}|
+```{tabularcolumns} \Y{0.34}\Y{0.13}\Y{0.13}\Y{0.4}
 ```
 
-| Name | type / function return type | size | default value / function args | description |
-|---|---|---|---|---|
-| `conv` | SolverConvergenceData |  |  | all information about tolerances, errors and residua |
-| `it` | SolverIterationData |  |  | all information about iterations (steps, discontinuous iteration, newton,...) |
-| `newton` | NewtonSettings |  |  | copy of newton settings from timeint or staticSolver |
-| `output` | SolverOutputData |  |  | output modes and timers for exporting solver information and solution |
-| `timer` | CSolverTimer |  |  | timer which measures the CPU time of solver sub functions |
-| `CheckInitialized(...)` | bool |  | mainSystem | check if MainSolver and MainSystem are correctly initialized ==> otherwise raise SysError |
-| `ComputeAlgebraicEquations(...)` | void |  | mainSystem, velocityLevel=False | compute the algebraic equations in systemResidual in range(nODE2+nODE1, nODE2+nODE1+nAE) |
-| `ComputeJacobianAE(...)` | void |  | mainSystem, scalarFactor_ODE2=1., scalarFactor_ODE2_t=0., scalarFactor_ODE1=1., velocityLevel=False | add jacobian of algebraic equations (multiplied with factor) to systemJacobian in cSolver; the scalarFactors are scaling the derivatives w.r.t. {ref}`ODE2 <ODE2>` coordinates, ODE2_t (velocity) coordinates and ODE1 coordinates; if velocityLevel == true, the constraints are evaluated at velocity level; the scalar factors scalarFactor_ODE2=0 and scalarFactor_ODE2 are used for the same ODE2 block in the jacobian |
-| `ComputeJacobianODE1RHS(...)` | void |  | mainSystem, scalarFactor_ODE2=1., scalarFactor_ODE2_t=0., scalarFactor_ODE1=1. | ADD jacobian of ODE1RHS (multiplied with factors for ODE2 and ODE1 coordinates) to the according rows (nODE2:nODE2+nODE1) of the exising systemJacobian in cSolver; it requires a prior call to ComputeJacobianODE2RHS(...); the scalar factors scalarFactor_ODE2=0 and scalarFactor_ODE2 are used for the same ODE2 block in the jacobian |
-| `ComputeJacobianODE2RHS(...)` | void |  | mainSystem, scalarFactor_ODE2=1., scalarFactor_ODE2_t=0., scalarFactor_ODE1=1., computeLoadsJacobian=0 | set systemJacobian to zero, size = (nODE2+nODE1+nAE) x (nODE2+nODE1+nAE), and add jacobian (multiplied with factors for ODE2 and ODE1 coordinates) of ODE2RHS to systemJacobian in cSolver; using (scalarFactor_ODE2=-1,scalarFactor_ODE2=0) gives the stiffness matrix (=derivatives of ODE2 coords) in the nODE2 x nODE2 part, while using (scalarFactor_ODE2=0,scalarFactor_ODE2=-1) gives the damping matrix (= derivatives of ODE2 velocity coordinates) in the same part; a superposition of these two parts makes sense for implicit solvers; if , Index computeLoadsJacobian=0, loads are not considered in the Jacobian computation; for , Index computeLoadsJacobian=1 the ODE2 and ODE1 derivatives of loads are included and for , Index computeLoadsJacobian=2, also the ODE2_t dependencies are added |
-| `ComputeLoadFactor(...)` | Real |  | simulationSettings | for static solver, this is a factor in interval [0,1]; MUST be overwritten |
-| `ComputeMassMatrix(...)` | void |  | mainSystem, scalarFactor=1. | compute systemMassMatrix (multiplied with factor) in cSolver and return mass nODE2 x nODE2 matrix |
-| `ComputeNewtonJacobian(...)` | void |  | mainSystem, simulationSettings | compute jacobian for newton method of given solver method; store result in systemJacobian |
-| `ComputeNewtonResidual(...)` | Real |  | mainSystem, simulationSettings | compute residual for Newton method (e.g. static or time step); store residual vector in systemResidual and return scalar residual (specific computation may depend on solver types) |
-| `ComputeNewtonUpdate(...)` | void |  | mainSystem, simulationSettings, initial=True | compute update for currentState from newtonSolution (decrement from residual and jacobian); if initial, this is for the initial update with newtonSolution=0 |
-| `ComputeODE2RHS(...)` | void |  | mainSystem | compute the RHS of {ref}`ODE2 <ODE2>` equations in systemResidual in range(0,nODE2) |
-| `DiscontinuousIteration(...)` | bool |  | mainSystem, simulationSettings | perform discontinuousIteration for static step / time step; CALLS ComputeNewtonResidual |
-| `FinalizeSolver(...)` | void |  | mainSystem, simulationSettings | write concluding information (timer statistics, messages) and close files |
-| `FinishStep(...)` | void |  | mainSystem, simulationSettings | finish static step / time step; write output of results to file |
-| `GetAEsize()` | Index |  |  | number of algebraic equations in solver |
-| `GetDataSize()` | Index |  |  | number of data (history) variables in solver |
-| `GetErrorString()` | std::string |  |  | return error string if solver has not been successful |
-| `GetNewtonSolution()` | NumpyVector |  |  | get locally stored / last computed solution (=increment) of Newton |
-| `GetODE1size()` | Index |  |  | number of {ref}`ODE1 <ODE1>` equations in solver (not yet implemented) |
-| `GetODE2size()` | Index |  |  | number of {ref}`ODE2 <ODE2>` equations in solver |
-| `GetSimulationEndTime(...)` | Real |  | simulationSettings | compute simulation end time (depends on static or time integration solver) |
-| `GetSolverName()` | std::string |  |  | get solver name - needed for output file header and visualization window |
-| `GetSystemJacobian()` | NumpyMatrix |  |  | get locally stored / last computed system jacobian of solver |
-| `GetSystemMassMatrix()` | NumpyMatrix |  |  | get locally stored / last computed mass matrix of solver |
-| `GetSystemResidual()` | NumpyVector |  |  | get locally stored / last computed system residual |
-| `HasAutomaticStepSizeControl(...)` | bool |  | mainSystem, simulationSettings | return true, if solver supports automatic stepsize control, otherwise false |
-| `IncreaseStepSize(...)` | void |  | mainSystem, simulationSettings | increase step size if convergence is good |
-| `InitializeSolver(...)` | bool |  | mainSystem, simulationSettings | initialize solverSpecific,data,it,conv; set/compute initial conditions (solver-specific!); initialize output files |
-| `InitializeSolverData(...)` | void |  | mainSystem, simulationSettings | initialize all data,it,conv; called from InitializeSolver() |
-| `InitializeSolverInitialConditions(...)` | void |  | mainSystem, simulationSettings | set/compute initial conditions (solver-specific!); called from InitializeSolver() |
-| `InitializeSolverOutput(...)` | void |  | mainSystem, simulationSettings | initialize output files; called from InitializeSolver() |
-| `InitializeSolverPreChecks(...)` | bool |  | mainSystem, simulationSettings | check if system is solvable; initialize dense/sparse computation modes |
-| `InitializeStep(...)` | void |  | mainSystem, simulationSettings | initialize static step / time step; Python-functions; do some outputs, checks, etc. |
-| `IsStaticSolver()` | bool |  |  | return true, if static solver; needs to be overwritten in derived class |
-| `IsVerboseCheck(...)` | bool |  | level | return true, if file or console output is at or above the given level |
-| `loadStepGeometricFactor` | Real |  |  | multiplicative load step factor; this factor is computed from loadStepGeometric parameters in SolveSystem(...) |
-| `Newton(...)` | bool |  | mainSystem, simulationSettings | perform Newton method for given solver method |
-| `PostInitializeSolverSpecific(...)` | void |  | mainSystem, simulationSettings | post-initialize for solver specific tasks; called at the end of InitializeSolver |
-| `PreInitializeSolverSpecific(...)` | void |  | mainSystem, simulationSettings | pre-initialize for solver specific tasks; called at beginning of InitializeSolver, right after Solver data reset |
-| `ReduceStepSize(...)` | bool |  | mainSystem, simulationSettings, severity | reduce step size (1..normal, 2..severe problems); return true, if reduction was successful |
-| `SetSystemJacobian(...)` | void |  | systemJacobian | set locally stored system jacobian of solver; must have size nODE2+nODE1+nAE |
-| `SetSystemMassMatrix(...)` | void |  | systemMassMatrix | set locally stored mass matrix of solver; must have size nODE2+nODE1+nAE |
-| `SetSystemResidual(...)` | void |  | systemResidual | set locally stored system residual; must have size nODE2+nODE1+nAE |
-| `SolveSteps(...)` | bool |  | mainSystem, simulationSettings | main solver part: calls multiple InitializeStep(...)/ DiscontinuousIteration(...)/ FinishStep(...); do step reduction if necessary; return true if success, false else |
-| `SolveSystem(...)` | bool |  | mainSystem, simulationSettings | solve System: InitializeSolver, SolveSteps, FinalizeSolver |
-| `UpdateCurrentTime(...)` | void |  | mainSystem, simulationSettings | update currentTime (and load factor); MUST be overwritten in special solver class |
-| `VerboseWrite(...)` | void |  | level, str | write to console and/or file in case of level |
-| `WriteCoordinatesToFile(...)` | void |  | mainSystem, simulationSettings | write unique coordinates solution file |
-| `WriteSolutionFileHeader(...)` | void |  | mainSystem, simulationSettings | write unique file header, depending on static/ dynamic simulation |
+| name | type / return type | default / arguments | description |
+|---|---|---|---|
+| `conv` | SolverConvergenceData |  | all information about tolerances, errors and residua |
+| `it` | SolverIterationData |  | all information about iterations (steps, discontinuous iteration, newton,...) |
+| `newton` | NewtonSettings |  | copy of newton settings from timeint or staticSolver |
+| `output` | SolverOutputData |  | output modes and timers for exporting solver information and solution |
+| `timer` | CSolverTimer |  | timer which measures the CPU time of solver sub functions |
+| `CheckInitialized(...)` | bool | mainSystem | check if MainSolver and MainSystem are correctly initialized ==> otherwise raise SysError |
+| `ComputeAlgebraicEquations(...)` | void | mainSystem, velocityLevel=False | compute the algebraic equations in systemResidual in range(nODE2+nODE1, nODE2+nODE1+nAE) |
+| `ComputeJacobianAE(...)` | void | mainSystem, scalarFactor_ODE2=1., scalarFactor_ODE2_t=0., scalarFactor_ODE1=1., velocityLevel=False | add jacobian of algebraic equations (multiplied with factor) to systemJacobian in cSolver; the scalarFactors are scaling the derivatives w.r.t. {ref}`ODE2 <ODE2>` coordinates, ODE2_t (velocity) coordinates and ODE1 coordinates; if velocityLevel == true, the constraints are evaluated at velocity level; the scalar factors scalarFactor_ODE2=0 and scalarFactor_ODE2 are used for the same ODE2 block in the jacobian |
+| `ComputeJacobianODE1RHS(...)` | void | mainSystem, scalarFactor_ODE2=1., scalarFactor_ODE2_t=0., scalarFactor_ODE1=1. | ADD jacobian of ODE1RHS (multiplied with factors for ODE2 and ODE1 coordinates) to the according rows (nODE2:nODE2+nODE1) of the exising systemJacobian in cSolver; it requires a prior call to ComputeJacobianODE2RHS(...); the scalar factors scalarFactor_ODE2=0 and scalarFactor_ODE2 are used for the same ODE2 block in the jacobian |
+| `ComputeJacobianODE2RHS(...)` | void | mainSystem, scalarFactor_ODE2=1., scalarFactor_ODE2_t=0., scalarFactor_ODE1=1., computeLoadsJacobian=0 | set systemJacobian to zero, size = (nODE2+nODE1+nAE) x (nODE2+nODE1+nAE), and add jacobian (multiplied with factors for ODE2 and ODE1 coordinates) of ODE2RHS to systemJacobian in cSolver; using (scalarFactor_ODE2=-1,scalarFactor_ODE2=0) gives the stiffness matrix (=derivatives of ODE2 coords) in the nODE2 x nODE2 part, while using (scalarFactor_ODE2=0,scalarFactor_ODE2=-1) gives the damping matrix (= derivatives of ODE2 velocity coordinates) in the same part; a superposition of these two parts makes sense for implicit solvers; if , Index computeLoadsJacobian=0, loads are not considered in the Jacobian computation; for , Index computeLoadsJacobian=1 the ODE2 and ODE1 derivatives of loads are included and for , Index computeLoadsJacobian=2, also the ODE2_t dependencies are added |
+| `ComputeLoadFactor(...)` | Real | simulationSettings | for static solver, this is a factor in interval [0,1]; MUST be overwritten |
+| `ComputeMassMatrix(...)` | void | mainSystem, scalarFactor=1. | compute systemMassMatrix (multiplied with factor) in cSolver and return mass nODE2 x nODE2 matrix |
+| `ComputeNewtonJacobian(...)` | void | mainSystem, simulationSettings | compute jacobian for newton method of given solver method; store result in systemJacobian |
+| `ComputeNewtonResidual(...)` | Real | mainSystem, simulationSettings | compute residual for Newton method (e.g. static or time step); store residual vector in systemResidual and return scalar residual (specific computation may depend on solver types) |
+| `ComputeNewtonUpdate(...)` | void | mainSystem, simulationSettings, initial=True | compute update for currentState from newtonSolution (decrement from residual and jacobian); if initial, this is for the initial update with newtonSolution=0 |
+| `ComputeODE2RHS(...)` | void | mainSystem | compute the RHS of {ref}`ODE2 <ODE2>` equations in systemResidual in range(0,nODE2) |
+| `DiscontinuousIteration(...)` | bool | mainSystem, simulationSettings | perform discontinuousIteration for static step / time step; CALLS ComputeNewtonResidual |
+| `FinalizeSolver(...)` | void | mainSystem, simulationSettings | write concluding information (timer statistics, messages) and close files |
+| `FinishStep(...)` | void | mainSystem, simulationSettings | finish static step / time step; write output of results to file |
+| `GetAEsize()` | Index |  | number of algebraic equations in solver |
+| `GetDataSize()` | Index |  | number of data (history) variables in solver |
+| `GetErrorString()` | std::string |  | return error string if solver has not been successful |
+| `GetNewtonSolution()` | NumpyVector |  | get locally stored / last computed solution (=increment) of Newton |
+| `GetODE1size()` | Index |  | number of {ref}`ODE1 <ODE1>` equations in solver (not yet implemented) |
+| `GetODE2size()` | Index |  | number of {ref}`ODE2 <ODE2>` equations in solver |
+| `GetSimulationEndTime(...)` | Real | simulationSettings | compute simulation end time (depends on static or time integration solver) |
+| `GetSolverName()` | std::string |  | get solver name - needed for output file header and visualization window |
+| `GetSystemJacobian()` | NumpyMatrix |  | get locally stored / last computed system jacobian of solver |
+| `GetSystemMassMatrix()` | NumpyMatrix |  | get locally stored / last computed mass matrix of solver |
+| `GetSystemResidual()` | NumpyVector |  | get locally stored / last computed system residual |
+| `HasAutomaticStepSizeControl(...)` | bool | mainSystem, simulationSettings | return true, if solver supports automatic stepsize control, otherwise false |
+| `IncreaseStepSize(...)` | void | mainSystem, simulationSettings | increase step size if convergence is good |
+| `InitializeSolver(...)` | bool | mainSystem, simulationSettings | initialize solverSpecific,data,it,conv; set/compute initial conditions (solver-specific!); initialize output files |
+| `InitializeSolverData(...)` | void | mainSystem, simulationSettings | initialize all data,it,conv; called from InitializeSolver() |
+| `InitializeSolverInitialConditions(...)` | void | mainSystem, simulationSettings | set/compute initial conditions (solver-specific!); called from InitializeSolver() |
+| `InitializeSolverOutput(...)` | void | mainSystem, simulationSettings | initialize output files; called from InitializeSolver() |
+| `InitializeSolverPreChecks(...)` | bool | mainSystem, simulationSettings | check if system is solvable; initialize dense/sparse computation modes |
+| `InitializeStep(...)` | void | mainSystem, simulationSettings | initialize static step / time step; Python-functions; do some outputs, checks, etc. |
+| `IsStaticSolver()` | bool |  | return true, if static solver; needs to be overwritten in derived class |
+| `IsVerboseCheck(...)` | bool | level | return true, if file or console output is at or above the given level |
+| `loadStepGeometricFactor` | Real |  | multiplicative load step factor; this factor is computed from loadStepGeometric parameters in SolveSystem(...) |
+| `Newton(...)` | bool | mainSystem, simulationSettings | perform Newton method for given solver method |
+| `PostInitializeSolverSpecific(...)` | void | mainSystem, simulationSettings | post-initialize for solver specific tasks; called at the end of InitializeSolver |
+| `PreInitializeSolverSpecific(...)` | void | mainSystem, simulationSettings | pre-initialize for solver specific tasks; called at beginning of InitializeSolver, right after Solver data reset |
+| `ReduceStepSize(...)` | bool | mainSystem, simulationSettings, severity | reduce step size (1..normal, 2..severe problems); return true, if reduction was successful |
+| `SetSystemJacobian(...)` | void | systemJacobian | set locally stored system jacobian of solver; must have size nODE2+nODE1+nAE |
+| `SetSystemMassMatrix(...)` | void | systemMassMatrix | set locally stored mass matrix of solver; must have size nODE2+nODE1+nAE |
+| `SetSystemResidual(...)` | void | systemResidual | set locally stored system residual; must have size nODE2+nODE1+nAE |
+| `SolveSteps(...)` | bool | mainSystem, simulationSettings | main solver part: calls multiple InitializeStep(...)/ DiscontinuousIteration(...)/ FinishStep(...); do step reduction if necessary; return true if success, false else |
+| `SolveSystem(...)` | bool | mainSystem, simulationSettings | solve System: InitializeSolver, SolveSteps, FinalizeSolver |
+| `UpdateCurrentTime(...)` | void | mainSystem, simulationSettings | update currentTime (and load factor); MUST be overwritten in special solver class |
+| `VerboseWrite(...)` | void | level, str | write to console and/or file in case of level |
+| `WriteCoordinatesToFile(...)` | void | mainSystem, simulationSettings | write unique coordinates solution file |
+| `WriteSolutionFileHeader(...)` | void | mainSystem, simulationSettings | write unique file header, depending on static/ dynamic simulation |
 
 
 
@@ -86,83 +86,83 @@ In this solver, user functions are possible to extend the solver at certain part
 
 MainSolverImplicitSecondOrder has the following items:
 
-```{tabularcolumns} |\Y{0.2}|\Y{0.14}|\Y{0.06}|\Y{0.15}|\Y{0.45}|
+```{tabularcolumns} \Y{0.34}\Y{0.13}\Y{0.13}\Y{0.4}
 ```
 
-| Name | type / function return type | size | default value / function args | description |
-|---|---|---|---|---|
-| `conv` | SolverConvergenceData |  |  | all information about tolerances, errors and residua |
-| `it` | SolverIterationData |  |  | all information about iterations (steps, discontinuous iteration, newton,...) |
-| `newton` | NewtonSettings |  |  | copy of newton settings from timeint or staticSolver |
-| `output` | SolverOutputData |  |  | output modes and timers for exporting solver information and solution |
-| `timer` | CSolverTimer |  |  | timer which measures the CPU time of solver sub functions; note that solver structures can only be written indirectly, e.g., timer=dynamicSolver.timer; timer.useTimer = False; dynamicSolver.timer=timer; however, dynamicSolver.timer.useTimer cannot be written. |
-| `alphaF` | Real |  |  | copy of parameter in timeIntegration.generalizedAlpha |
-| `alphaM` | Real |  |  | copy of parameter in timeIntegration.generalizedAlpha |
-| `CheckInitialized(...)` | bool |  | mainSystem | check if MainSolver and MainSystem are correctly initialized ==> otherwise raise SysError |
-| `ComputeAlgebraicEquations(...)` | void |  | mainSystem, velocityLevel=False | compute the algebraic equations in systemResidual in range(nODE2+nODE1, nODE2+nODE1+nAE) |
-| `ComputeJacobianAE(...)` | void |  | mainSystem, scalarFactor_ODE2=1., scalarFactor_ODE2_t=0., scalarFactor_ODE1=1., velocityLevel=False | add jacobian of algebraic equations (multiplied with factor) to systemJacobian in cSolver; the scalarFactors are scaling the derivatives w.r.t. {ref}`ODE2 <ODE2>` coordinates, ODE2_t (velocity) coordinates and ODE1 coordinates; if velocityLevel == true, the constraints are evaluated at velocity level; the scalar factors scalarFactor_ODE2=0 and scalarFactor_ODE2 are used for the same ODE2 block in the jacobian |
-| `ComputeJacobianODE1RHS(...)` | void |  | mainSystem, scalarFactor_ODE2=1., scalarFactor_ODE2_t=0., scalarFactor_ODE1=1. | ADD jacobian of ODE1RHS (multiplied with factors for ODE2 and ODE1 coordinates) to the according rows (nODE2:nODE2+nODE1) of the exising systemJacobian in cSolver; it requires a prior call to ComputeJacobianODE2RHS(...); the scalar factors scalarFactor_ODE2=0 and scalarFactor_ODE2 are used for the same ODE2 block in the jacobian |
-| `ComputeJacobianODE2RHS(...)` | void |  | mainSystem, scalarFactor_ODE2=1., scalarFactor_ODE2_t=0., scalarFactor_ODE1=1., computeLoadsJacobian=0 | set systemJacobian to zero, size = (nODE2+nODE1+nAE) x (nODE2+nODE1+nAE), and add jacobian (multiplied with factors for ODE2 and ODE1 coordinates) of ODE2RHS to systemJacobian in cSolver; using (scalarFactor_ODE2=-1,scalarFactor_ODE2=0) gives the stiffness matrix (=derivatives of ODE2 coords) in the nODE2 x nODE2 part, while using (scalarFactor_ODE2=0,scalarFactor_ODE2=-1) gives the damping matrix (= derivatives of ODE2 velocity coordinates) in the same part; a superposition of these two parts makes sense for implicit solvers; if , Index computeLoadsJacobian=0, loads are not considered in the Jacobian computation; for , Index computeLoadsJacobian=1 the ODE2 and ODE1 derivatives of loads are included and for , Index computeLoadsJacobian=2, also the ODE2_t dependencies are added |
-| `ComputeLoadFactor(...)` | Real |  | simulationSettings | for static solver, this is a factor in interval [0,1]; MUST be overwritten |
-| `ComputeMassMatrix(...)` | void |  | mainSystem, scalarFactor=1. | compute systemMassMatrix (multiplied with factor) in cSolver and return mass nODE2 x nODE2 matrix |
-| `ComputeNewtonJacobian(...)` | void |  | mainSystem, simulationSettings | compute jacobian for newton method of given solver method; store result in systemJacobian |
-| `ComputeNewtonResidual(...)` | Real |  | mainSystem, simulationSettings | compute residual for Newton method (e.g. static or time step); store residual vector in systemResidual and return scalar residual (specific computation may depend on solver types) |
-| `ComputeNewtonUpdate(...)` | void |  | mainSystem, simulationSettings, initial=True | compute update for currentState from newtonSolution (decrement from residual and jacobian); if initial, this is for the initial update with newtonSolution=0 |
-| `ComputeODE1RHS(...)` | void |  | mainSystem | compute the RHS of {ref}`ODE1 <ODE1>` equations in systemResidual in range(0,nODE1) |
-| `ComputeODE2RHS(...)` | void |  | mainSystem | compute the RHS of {ref}`ODE2 <ODE2>` equations in systemResidual in range(0,nODE2) |
-| `DiscontinuousIteration(...)` | bool |  | mainSystem, simulationSettings | perform discontinuousIteration for static step / time step; CALLS ComputeNewtonResidual |
-| `factJacAlgorithmic` | Real |  |  | locally computed parameter from generalizedAlpha parameters |
-| `FinalizeSolver(...)` | void |  | mainSystem, simulationSettings | write concluding information (timer statistics, messages) and close files |
-| `FinishStep(...)` | void |  | mainSystem, simulationSettings | finish static step / time step; write output of results to file |
-| `GetAAlgorithmic()` | NumpyVector |  |  | get locally stored / last computed algorithmic accelerations |
-| `GetAEsize()` | Index |  |  | number of algebraic equations in solver |
-| `GetDataSize()` | Index |  |  | number of data (history) variables in solver |
-| `GetErrorString()` | std::string |  |  | return error string if solver has not been successful |
-| `GetNewtonSolution()` | NumpyVector |  |  | get locally stored / last computed solution (=increment) of Newton |
-| `GetODE1size()` | Index |  |  | number of {ref}`ODE1 <ODE1>` equations in solver (not yet implemented) |
-| `GetODE2size()` | Index |  |  | number of {ref}`ODE2 <ODE2>` equations in solver |
-| `GetSimulationEndTime(...)` | Real |  | simulationSettings | compute simulation end time (depends on static or time integration solver) |
-| `GetSolverName()` | std::string |  |  | get solver name - needed for output file header and visualization window |
-| `GetStartOfStepStateAAlgorithmic()` | NumpyVector |  |  | get locally stored / last computed algorithmic accelerations at start of step |
-| `GetSystemJacobian()` | NumpyMatrix |  |  | get locally stored / last computed system jacobian of solver |
-| `GetSystemMassMatrix()` | NumpyMatrix |  |  | get locally stored / last computed mass matrix of solver |
-| `GetSystemResidual()` | NumpyVector |  |  | get locally stored / last computed system residual |
-| `HasAutomaticStepSizeControl(...)` | bool |  | mainSystem, simulationSettings | return true, if solver supports automatic stepsize control, otherwise false |
-| `IncreaseStepSize(...)` | void |  | mainSystem, simulationSettings | increase step size if convergence is good |
-| `InitializeSolver(...)` | bool |  | mainSystem, simulationSettings | initialize solverSpecific,data,it,conv; set/compute initial conditions (solver-specific!); initialize output files |
-| `InitializeSolverData(...)` | void |  | mainSystem, simulationSettings | initialize all data,it,conv; called from InitializeSolver() |
-| `InitializeSolverInitialConditions(...)` | void |  | mainSystem, simulationSettings | set/compute initial conditions (solver-specific!); called from InitializeSolver() |
-| `InitializeSolverOutput(...)` | void |  | mainSystem, simulationSettings | initialize output files; called from InitializeSolver() |
-| `InitializeSolverPreChecks(...)` | bool |  | mainSystem, simulationSettings | check if system is solvable; initialize dense/sparse computation modes |
-| `InitializeStep(...)` | void |  | mainSystem, simulationSettings | initialize static step / time step; Python-functions; do some outputs, checks, etc. |
-| `IsStaticSolver()` | bool |  |  | return true, if static solver; needs to be overwritten in derived class |
-| `IsVerboseCheck(...)` | bool |  | level | return true, if file or console output is at or above the given level |
-| `newmarkBeta` | Real |  |  | copy of parameter in timeIntegration.generalizedAlpha |
-| `newmarkGamma` | Real |  |  | copy of parameter in timeIntegration.generalizedAlpha |
-| `Newton(...)` | bool |  | mainSystem, simulationSettings | perform Newton method for given solver method |
-| `PostInitializeSolverSpecific(...)` | void |  | mainSystem, simulationSettings | post-initialize for solver specific tasks; called at the end of InitializeSolver |
-| `PostNewton(...)` | Real |  | mainSystem, simulationSettings | call PostNewton for all relevant objects (contact, friction, ... iterations); returns error for discontinuous iteration |
-| `PreInitializeSolverSpecific(...)` | void |  | mainSystem, simulationSettings | pre-initialize for solver specific tasks; called at beginning of InitializeSolver, right after Solver data reset |
-| `ReduceStepSize(...)` | bool |  | mainSystem, simulationSettings, severity | reduce step size (1..normal, 2..severe problems); return true, if reduction was successful |
-| `SetSystemJacobian(...)` | void |  | systemJacobian | set locally stored system jacobian of solver; must have size nODE2+nODE1+nAE |
-| `SetSystemMassMatrix(...)` | void |  | systemMassMatrix | set locally stored mass matrix of solver; must have size nODE2+nODE1+nAE |
-| `SetSystemResidual(...)` | void |  | systemResidual | set locally stored system residual; must have size nODE2+nODE1+nAE |
-| `SetUserFunctionComputeNewtonJacobian(...)` | void |  | mainSystem, userFunction | set user function |
-| `SetUserFunctionComputeNewtonResidual(...)` | void |  | mainSystem, userFunction | set user function |
-| `SetUserFunctionComputeNewtonUpdate(...)` | void |  | mainSystem, userFunction | set user function |
-| `SetUserFunctionDiscontinuousIteration(...)` | void |  | mainSystem, userFunction | set user function |
-| `SetUserFunctionFinishStep(...)` | void |  | mainSystem, userFunction | set user function |
-| `SetUserFunctionInitializeStep(...)` | void |  | mainSystem, userFunction | set user function |
-| `SetUserFunctionNewton(...)` | void |  | mainSystem, userFunction | set user function |
-| `SetUserFunctionPostNewton(...)` | void |  | mainSystem, userFunction | set user function |
-| `SetUserFunctionUpdateCurrentTime(...)` | void |  | mainSystem, userFunction | set user function |
-| `SolveSteps(...)` | bool |  | mainSystem, simulationSettings | main solver part: calls multiple InitializeStep(...)/ DiscontinuousIteration(...)/ FinishStep(...); do step reduction if necessary; return true if success, false else |
-| `SolveSystem(...)` | bool |  | mainSystem, simulationSettings | solve System: InitializeSolver, SolveSteps, FinalizeSolver |
-| `spectralRadius` | Real |  |  | copy of parameter in timeIntegration.generalizedAlpha |
-| `UpdateCurrentTime(...)` | void |  | mainSystem, simulationSettings | update currentTime (and load factor); MUST be overwritten in special solver class |
-| `VerboseWrite(...)` | void |  | level, str | write to console and/or file in case of level |
-| `WriteCoordinatesToFile(...)` | void |  | mainSystem, simulationSettings | write unique coordinates solution file |
-| `WriteSolutionFileHeader(...)` | void |  | mainSystem, simulationSettings | write unique file header, depending on static/ dynamic simulation |
+| name | type / return type | default / arguments | description |
+|---|---|---|---|
+| `conv` | SolverConvergenceData |  | all information about tolerances, errors and residua |
+| `it` | SolverIterationData |  | all information about iterations (steps, discontinuous iteration, newton,...) |
+| `newton` | NewtonSettings |  | copy of newton settings from timeint or staticSolver |
+| `output` | SolverOutputData |  | output modes and timers for exporting solver information and solution |
+| `timer` | CSolverTimer |  | timer which measures the CPU time of solver sub functions; note that solver structures can only be written indirectly, e.g., timer=dynamicSolver.timer; timer.useTimer = False; dynamicSolver.timer=timer; however, dynamicSolver.timer.useTimer cannot be written. |
+| `alphaF` | Real |  | copy of parameter in timeIntegration.generalizedAlpha |
+| `alphaM` | Real |  | copy of parameter in timeIntegration.generalizedAlpha |
+| `CheckInitialized(...)` | bool | mainSystem | check if MainSolver and MainSystem are correctly initialized ==> otherwise raise SysError |
+| `ComputeAlgebraicEquations(...)` | void | mainSystem, velocityLevel=False | compute the algebraic equations in systemResidual in range(nODE2+nODE1, nODE2+nODE1+nAE) |
+| `ComputeJacobianAE(...)` | void | mainSystem, scalarFactor_ODE2=1., scalarFactor_ODE2_t=0., scalarFactor_ODE1=1., velocityLevel=False | add jacobian of algebraic equations (multiplied with factor) to systemJacobian in cSolver; the scalarFactors are scaling the derivatives w.r.t. {ref}`ODE2 <ODE2>` coordinates, ODE2_t (velocity) coordinates and ODE1 coordinates; if velocityLevel == true, the constraints are evaluated at velocity level; the scalar factors scalarFactor_ODE2=0 and scalarFactor_ODE2 are used for the same ODE2 block in the jacobian |
+| `ComputeJacobianODE1RHS(...)` | void | mainSystem, scalarFactor_ODE2=1., scalarFactor_ODE2_t=0., scalarFactor_ODE1=1. | ADD jacobian of ODE1RHS (multiplied with factors for ODE2 and ODE1 coordinates) to the according rows (nODE2:nODE2+nODE1) of the exising systemJacobian in cSolver; it requires a prior call to ComputeJacobianODE2RHS(...); the scalar factors scalarFactor_ODE2=0 and scalarFactor_ODE2 are used for the same ODE2 block in the jacobian |
+| `ComputeJacobianODE2RHS(...)` | void | mainSystem, scalarFactor_ODE2=1., scalarFactor_ODE2_t=0., scalarFactor_ODE1=1., computeLoadsJacobian=0 | set systemJacobian to zero, size = (nODE2+nODE1+nAE) x (nODE2+nODE1+nAE), and add jacobian (multiplied with factors for ODE2 and ODE1 coordinates) of ODE2RHS to systemJacobian in cSolver; using (scalarFactor_ODE2=-1,scalarFactor_ODE2=0) gives the stiffness matrix (=derivatives of ODE2 coords) in the nODE2 x nODE2 part, while using (scalarFactor_ODE2=0,scalarFactor_ODE2=-1) gives the damping matrix (= derivatives of ODE2 velocity coordinates) in the same part; a superposition of these two parts makes sense for implicit solvers; if , Index computeLoadsJacobian=0, loads are not considered in the Jacobian computation; for , Index computeLoadsJacobian=1 the ODE2 and ODE1 derivatives of loads are included and for , Index computeLoadsJacobian=2, also the ODE2_t dependencies are added |
+| `ComputeLoadFactor(...)` | Real | simulationSettings | for static solver, this is a factor in interval [0,1]; MUST be overwritten |
+| `ComputeMassMatrix(...)` | void | mainSystem, scalarFactor=1. | compute systemMassMatrix (multiplied with factor) in cSolver and return mass nODE2 x nODE2 matrix |
+| `ComputeNewtonJacobian(...)` | void | mainSystem, simulationSettings | compute jacobian for newton method of given solver method; store result in systemJacobian |
+| `ComputeNewtonResidual(...)` | Real | mainSystem, simulationSettings | compute residual for Newton method (e.g. static or time step); store residual vector in systemResidual and return scalar residual (specific computation may depend on solver types) |
+| `ComputeNewtonUpdate(...)` | void | mainSystem, simulationSettings, initial=True | compute update for currentState from newtonSolution (decrement from residual and jacobian); if initial, this is for the initial update with newtonSolution=0 |
+| `ComputeODE1RHS(...)` | void | mainSystem | compute the RHS of {ref}`ODE1 <ODE1>` equations in systemResidual in range(0,nODE1) |
+| `ComputeODE2RHS(...)` | void | mainSystem | compute the RHS of {ref}`ODE2 <ODE2>` equations in systemResidual in range(0,nODE2) |
+| `DiscontinuousIteration(...)` | bool | mainSystem, simulationSettings | perform discontinuousIteration for static step / time step; CALLS ComputeNewtonResidual |
+| `factJacAlgorithmic` | Real |  | locally computed parameter from generalizedAlpha parameters |
+| `FinalizeSolver(...)` | void | mainSystem, simulationSettings | write concluding information (timer statistics, messages) and close files |
+| `FinishStep(...)` | void | mainSystem, simulationSettings | finish static step / time step; write output of results to file |
+| `GetAAlgorithmic()` | NumpyVector |  | get locally stored / last computed algorithmic accelerations |
+| `GetAEsize()` | Index |  | number of algebraic equations in solver |
+| `GetDataSize()` | Index |  | number of data (history) variables in solver |
+| `GetErrorString()` | std::string |  | return error string if solver has not been successful |
+| `GetNewtonSolution()` | NumpyVector |  | get locally stored / last computed solution (=increment) of Newton |
+| `GetODE1size()` | Index |  | number of {ref}`ODE1 <ODE1>` equations in solver (not yet implemented) |
+| `GetODE2size()` | Index |  | number of {ref}`ODE2 <ODE2>` equations in solver |
+| `GetSimulationEndTime(...)` | Real | simulationSettings | compute simulation end time (depends on static or time integration solver) |
+| `GetSolverName()` | std::string |  | get solver name - needed for output file header and visualization window |
+| `GetStartOfStepStateAAlgorithmic()` | NumpyVector |  | get locally stored / last computed algorithmic accelerations at start of step |
+| `GetSystemJacobian()` | NumpyMatrix |  | get locally stored / last computed system jacobian of solver |
+| `GetSystemMassMatrix()` | NumpyMatrix |  | get locally stored / last computed mass matrix of solver |
+| `GetSystemResidual()` | NumpyVector |  | get locally stored / last computed system residual |
+| `HasAutomaticStepSizeControl(...)` | bool | mainSystem, simulationSettings | return true, if solver supports automatic stepsize control, otherwise false |
+| `IncreaseStepSize(...)` | void | mainSystem, simulationSettings | increase step size if convergence is good |
+| `InitializeSolver(...)` | bool | mainSystem, simulationSettings | initialize solverSpecific,data,it,conv; set/compute initial conditions (solver-specific!); initialize output files |
+| `InitializeSolverData(...)` | void | mainSystem, simulationSettings | initialize all data,it,conv; called from InitializeSolver() |
+| `InitializeSolverInitialConditions(...)` | void | mainSystem, simulationSettings | set/compute initial conditions (solver-specific!); called from InitializeSolver() |
+| `InitializeSolverOutput(...)` | void | mainSystem, simulationSettings | initialize output files; called from InitializeSolver() |
+| `InitializeSolverPreChecks(...)` | bool | mainSystem, simulationSettings | check if system is solvable; initialize dense/sparse computation modes |
+| `InitializeStep(...)` | void | mainSystem, simulationSettings | initialize static step / time step; Python-functions; do some outputs, checks, etc. |
+| `IsStaticSolver()` | bool |  | return true, if static solver; needs to be overwritten in derived class |
+| `IsVerboseCheck(...)` | bool | level | return true, if file or console output is at or above the given level |
+| `newmarkBeta` | Real |  | copy of parameter in timeIntegration.generalizedAlpha |
+| `newmarkGamma` | Real |  | copy of parameter in timeIntegration.generalizedAlpha |
+| `Newton(...)` | bool | mainSystem, simulationSettings | perform Newton method for given solver method |
+| `PostInitializeSolverSpecific(...)` | void | mainSystem, simulationSettings | post-initialize for solver specific tasks; called at the end of InitializeSolver |
+| `PostNewton(...)` | Real | mainSystem, simulationSettings | call PostNewton for all relevant objects (contact, friction, ... iterations); returns error for discontinuous iteration |
+| `PreInitializeSolverSpecific(...)` | void | mainSystem, simulationSettings | pre-initialize for solver specific tasks; called at beginning of InitializeSolver, right after Solver data reset |
+| `ReduceStepSize(...)` | bool | mainSystem, simulationSettings, severity | reduce step size (1..normal, 2..severe problems); return true, if reduction was successful |
+| `SetSystemJacobian(...)` | void | systemJacobian | set locally stored system jacobian of solver; must have size nODE2+nODE1+nAE |
+| `SetSystemMassMatrix(...)` | void | systemMassMatrix | set locally stored mass matrix of solver; must have size nODE2+nODE1+nAE |
+| `SetSystemResidual(...)` | void | systemResidual | set locally stored system residual; must have size nODE2+nODE1+nAE |
+| `SetUserFunctionComputeNewtonJacobian(...)` | void | mainSystem, userFunction | set user function |
+| `SetUserFunctionComputeNewtonResidual(...)` | void | mainSystem, userFunction | set user function |
+| `SetUserFunctionComputeNewtonUpdate(...)` | void | mainSystem, userFunction | set user function |
+| `SetUserFunctionDiscontinuousIteration(...)` | void | mainSystem, userFunction | set user function |
+| `SetUserFunctionFinishStep(...)` | void | mainSystem, userFunction | set user function |
+| `SetUserFunctionInitializeStep(...)` | void | mainSystem, userFunction | set user function |
+| `SetUserFunctionNewton(...)` | void | mainSystem, userFunction | set user function |
+| `SetUserFunctionPostNewton(...)` | void | mainSystem, userFunction | set user function |
+| `SetUserFunctionUpdateCurrentTime(...)` | void | mainSystem, userFunction | set user function |
+| `SolveSteps(...)` | bool | mainSystem, simulationSettings | main solver part: calls multiple InitializeStep(...)/ DiscontinuousIteration(...)/ FinishStep(...); do step reduction if necessary; return true if success, false else |
+| `SolveSystem(...)` | bool | mainSystem, simulationSettings | solve System: InitializeSolver, SolveSteps, FinalizeSolver |
+| `spectralRadius` | Real |  | copy of parameter in timeIntegration.generalizedAlpha |
+| `UpdateCurrentTime(...)` | void | mainSystem, simulationSettings | update currentTime (and load factor); MUST be overwritten in special solver class |
+| `VerboseWrite(...)` | void | level, str | write to console and/or file in case of level |
+| `WriteCoordinatesToFile(...)` | void | mainSystem, simulationSettings | write unique coordinates solution file |
+| `WriteSolutionFileHeader(...)` | void | mainSystem, simulationSettings | write unique file header, depending on static/ dynamic simulation |
 
 
 
@@ -178,55 +178,55 @@ In this solver, no user functions are possible, but you can use SolverImplicitSe
 
 MainSolverExplicit has the following items:
 
-```{tabularcolumns} |\Y{0.2}|\Y{0.14}|\Y{0.06}|\Y{0.15}|\Y{0.45}|
+```{tabularcolumns} \Y{0.34}\Y{0.13}\Y{0.13}\Y{0.4}
 ```
 
-| Name | type / function return type | size | default value / function args | description |
-|---|---|---|---|---|
-| `conv` | SolverConvergenceData |  |  | all information about tolerances, errors and residua |
-| `it` | SolverIterationData |  |  | all information about iterations (steps, discontinuous iteration, newton,...) |
-| `output` | SolverOutputData |  |  | output modes and timers for exporting solver information and solution |
-| `timer` | CSolverTimer |  |  | timer which measures the CPU time of solver sub functions |
-| `ComputeLoadFactor(...)` | Real |  | simulationSettings | for static solver, this is a factor in interval [0,1]; MUST be overwritten |
-| `ComputeMassMatrix(...)` | void |  | mainSystem, scalarFactor=1. | compute systemMassMatrix (multiplied with factor) in cSolver and return mass matrix |
-| `ComputeNewtonJacobian(...)` | void |  | mainSystem, simulationSettings | compute jacobian for newton method of given solver method; store result in systemJacobian |
-| `ComputeNewtonResidual(...)` | Real |  | mainSystem, simulationSettings | compute residual for Newton method (e.g. static or time step); store residual vector in systemResidual and return scalar residual (specific computation may depend on solver types) |
-| `ComputeNewtonUpdate(...)` | void |  | mainSystem, simulationSettings, initial=True | compute update for currentState from newtonSolution (decrement from residual and jacobian); if initial, this is for the initial update with newtonSolution=0 |
-| `ComputeODE1RHS(...)` | void |  | mainSystem | compute the RHS of {ref}`ODE1 <ODE1>` equations in systemResidual in range(0,nODE1) |
-| `ComputeODE2RHS(...)` | void |  | mainSystem | compute the RHS of {ref}`ODE2 <ODE2>` equations in systemResidual in range(0,nODE2) |
-| `DiscontinuousIteration(...)` | bool |  | mainSystem, simulationSettings | perform discontinuousIteration for static step / time step; CALLS ComputeNewtonResidual |
-| `FinalizeSolver(...)` | void |  | mainSystem, simulationSettings | write concluding information (timer statistics, messages) and close files |
-| `FinishStep(...)` | void |  | mainSystem, simulationSettings | finish static step / time step; write output of results to file |
-| `GetAEsize()` | Index |  |  | number of algebraic equations in solver |
-| `GetDataSize()` | Index |  |  | number of data (history) variables in solver |
-| `GetErrorString()` | std::string |  |  | return error string if solver has not been successful |
-| `GetMethodOrder()` | Index |  |  | return order of method (higher value in methods with automatic step size, e.g., DOPRI5=5) |
-| `GetNumberOfStages()` | Index |  |  | return number of stages in current method |
-| `GetODE1size()` | Index |  |  | number of {ref}`ODE1 <ODE1>` equations in solver (not yet implemented) |
-| `GetODE2size()` | Index |  |  | number of {ref}`ODE2 <ODE2>` equations in solver |
-| `GetSimulationEndTime(...)` | Real |  | simulationSettings | compute simulation end time (depends on static or time integration solver) |
-| `GetSolverName()` | std::string |  |  | get solver name - needed for output file header and visualization window |
-| `GetSystemMassMatrix()` | NumpyMatrix |  |  | get locally stored / last computed mass matrix of solver |
-| `GetSystemResidual()` | NumpyVector |  |  | get locally stored / last computed system residual |
-| `HasAutomaticStepSizeControl(...)` | bool |  | mainSystem, simulationSettings | return true, if solver supports automatic stepsize control, otherwise false |
-| `IncreaseStepSize(...)` | void |  | mainSystem, simulationSettings | increase step size if convergence is good |
-| `InitializeSolver(...)` | bool |  | mainSystem, simulationSettings | initialize solverSpecific,data,it,conv; set/compute initial conditions (solver-specific!); initialize output files |
-| `InitializeSolverData(...)` | void |  | mainSystem, simulationSettings | initialize all data,it,conv; called from InitializeSolver() |
-| `InitializeSolverInitialConditions(...)` | void |  | mainSystem, simulationSettings | set/compute initial conditions (solver-specific!); called from InitializeSolver() |
-| `InitializeSolverOutput(...)` | void |  | mainSystem, simulationSettings | initialize output files; called from InitializeSolver() |
-| `InitializeSolverPreChecks(...)` | bool |  | mainSystem, simulationSettings | check if system is solvable; initialize dense/sparse computation modes |
-| `InitializeStep(...)` | void |  | mainSystem, simulationSettings | initialize static step / time step; Python-functions; do some outputs, checks, etc. |
-| `IsStaticSolver()` | bool |  |  | return true, if static solver; needs to be overwritten in derived class |
-| `IsVerboseCheck(...)` | bool |  | level | return true, if file or console output is at or above the given level |
-| `Newton(...)` | bool |  | mainSystem, simulationSettings | perform Newton method for given solver method |
-| `PostInitializeSolverSpecific(...)` | void |  | mainSystem, simulationSettings | post-initialize for solver specific tasks; called at the end of InitializeSolver |
-| `PreInitializeSolverSpecific(...)` | void |  | mainSystem, simulationSettings | pre-initialize for solver specific tasks; called at beginning of InitializeSolver, right after Solver data reset |
-| `ReduceStepSize(...)` | bool |  | mainSystem, simulationSettings, severity | reduce step size (1..normal, 2..severe problems); return true, if reduction was successful |
-| `SetSystemMassMatrix(...)` | void |  | systemMassMatrix | set locally stored mass matrix of solver; must have size nODE2+nODE1+nAE |
-| `SetSystemResidual(...)` | void |  | systemResidual | set locally stored system residual; must have size nODE2+nODE1+nAE |
-| `SolveSteps(...)` | bool |  | mainSystem, simulationSettings | main solver part: calls multiple InitializeStep(...)/ DiscontinuousIteration(...)/ FinishStep(...); do step reduction if necessary; return true if success, false else |
-| `SolveSystem(...)` | bool |  | mainSystem, simulationSettings | solve System: InitializeSolver, SolveSteps, FinalizeSolver |
-| `UpdateCurrentTime(...)` | void |  | mainSystem, simulationSettings | update currentTime (and load factor); MUST be overwritten in special solver class |
-| `VerboseWrite(...)` | void |  | level, str | write to console and/or file in case of level |
-| `WriteCoordinatesToFile(...)` | void |  | mainSystem, simulationSettings | write unique coordinates solution file |
-| `WriteSolutionFileHeader(...)` | void |  | mainSystem, simulationSettings | write unique file header, depending on static/ dynamic simulation |
+| name | type / return type | default / arguments | description |
+|---|---|---|---|
+| `conv` | SolverConvergenceData |  | all information about tolerances, errors and residua |
+| `it` | SolverIterationData |  | all information about iterations (steps, discontinuous iteration, newton,...) |
+| `output` | SolverOutputData |  | output modes and timers for exporting solver information and solution |
+| `timer` | CSolverTimer |  | timer which measures the CPU time of solver sub functions |
+| `ComputeLoadFactor(...)` | Real | simulationSettings | for static solver, this is a factor in interval [0,1]; MUST be overwritten |
+| `ComputeMassMatrix(...)` | void | mainSystem, scalarFactor=1. | compute systemMassMatrix (multiplied with factor) in cSolver and return mass matrix |
+| `ComputeNewtonJacobian(...)` | void | mainSystem, simulationSettings | compute jacobian for newton method of given solver method; store result in systemJacobian |
+| `ComputeNewtonResidual(...)` | Real | mainSystem, simulationSettings | compute residual for Newton method (e.g. static or time step); store residual vector in systemResidual and return scalar residual (specific computation may depend on solver types) |
+| `ComputeNewtonUpdate(...)` | void | mainSystem, simulationSettings, initial=True | compute update for currentState from newtonSolution (decrement from residual and jacobian); if initial, this is for the initial update with newtonSolution=0 |
+| `ComputeODE1RHS(...)` | void | mainSystem | compute the RHS of {ref}`ODE1 <ODE1>` equations in systemResidual in range(0,nODE1) |
+| `ComputeODE2RHS(...)` | void | mainSystem | compute the RHS of {ref}`ODE2 <ODE2>` equations in systemResidual in range(0,nODE2) |
+| `DiscontinuousIteration(...)` | bool | mainSystem, simulationSettings | perform discontinuousIteration for static step / time step; CALLS ComputeNewtonResidual |
+| `FinalizeSolver(...)` | void | mainSystem, simulationSettings | write concluding information (timer statistics, messages) and close files |
+| `FinishStep(...)` | void | mainSystem, simulationSettings | finish static step / time step; write output of results to file |
+| `GetAEsize()` | Index |  | number of algebraic equations in solver |
+| `GetDataSize()` | Index |  | number of data (history) variables in solver |
+| `GetErrorString()` | std::string |  | return error string if solver has not been successful |
+| `GetMethodOrder()` | Index |  | return order of method (higher value in methods with automatic step size, e.g., DOPRI5=5) |
+| `GetNumberOfStages()` | Index |  | return number of stages in current method |
+| `GetODE1size()` | Index |  | number of {ref}`ODE1 <ODE1>` equations in solver (not yet implemented) |
+| `GetODE2size()` | Index |  | number of {ref}`ODE2 <ODE2>` equations in solver |
+| `GetSimulationEndTime(...)` | Real | simulationSettings | compute simulation end time (depends on static or time integration solver) |
+| `GetSolverName()` | std::string |  | get solver name - needed for output file header and visualization window |
+| `GetSystemMassMatrix()` | NumpyMatrix |  | get locally stored / last computed mass matrix of solver |
+| `GetSystemResidual()` | NumpyVector |  | get locally stored / last computed system residual |
+| `HasAutomaticStepSizeControl(...)` | bool | mainSystem, simulationSettings | return true, if solver supports automatic stepsize control, otherwise false |
+| `IncreaseStepSize(...)` | void | mainSystem, simulationSettings | increase step size if convergence is good |
+| `InitializeSolver(...)` | bool | mainSystem, simulationSettings | initialize solverSpecific,data,it,conv; set/compute initial conditions (solver-specific!); initialize output files |
+| `InitializeSolverData(...)` | void | mainSystem, simulationSettings | initialize all data,it,conv; called from InitializeSolver() |
+| `InitializeSolverInitialConditions(...)` | void | mainSystem, simulationSettings | set/compute initial conditions (solver-specific!); called from InitializeSolver() |
+| `InitializeSolverOutput(...)` | void | mainSystem, simulationSettings | initialize output files; called from InitializeSolver() |
+| `InitializeSolverPreChecks(...)` | bool | mainSystem, simulationSettings | check if system is solvable; initialize dense/sparse computation modes |
+| `InitializeStep(...)` | void | mainSystem, simulationSettings | initialize static step / time step; Python-functions; do some outputs, checks, etc. |
+| `IsStaticSolver()` | bool |  | return true, if static solver; needs to be overwritten in derived class |
+| `IsVerboseCheck(...)` | bool | level | return true, if file or console output is at or above the given level |
+| `Newton(...)` | bool | mainSystem, simulationSettings | perform Newton method for given solver method |
+| `PostInitializeSolverSpecific(...)` | void | mainSystem, simulationSettings | post-initialize for solver specific tasks; called at the end of InitializeSolver |
+| `PreInitializeSolverSpecific(...)` | void | mainSystem, simulationSettings | pre-initialize for solver specific tasks; called at beginning of InitializeSolver, right after Solver data reset |
+| `ReduceStepSize(...)` | bool | mainSystem, simulationSettings, severity | reduce step size (1..normal, 2..severe problems); return true, if reduction was successful |
+| `SetSystemMassMatrix(...)` | void | systemMassMatrix | set locally stored mass matrix of solver; must have size nODE2+nODE1+nAE |
+| `SetSystemResidual(...)` | void | systemResidual | set locally stored system residual; must have size nODE2+nODE1+nAE |
+| `SolveSteps(...)` | bool | mainSystem, simulationSettings | main solver part: calls multiple InitializeStep(...)/ DiscontinuousIteration(...)/ FinishStep(...); do step reduction if necessary; return true if success, false else |
+| `SolveSystem(...)` | bool | mainSystem, simulationSettings | solve System: InitializeSolver, SolveSteps, FinalizeSolver |
+| `UpdateCurrentTime(...)` | void | mainSystem, simulationSettings | update currentTime (and load factor); MUST be overwritten in special solver class |
+| `VerboseWrite(...)` | void | level, str | write to console and/or file in case of level |
+| `WriteCoordinatesToFile(...)` | void | mainSystem, simulationSettings | write unique coordinates solution file |
+| `WriteSolutionFileHeader(...)` | void | mainSystem, simulationSettings | write unique file header, depending on static/ dynamic simulation |

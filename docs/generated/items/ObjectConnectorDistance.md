@@ -23,10 +23,7 @@ Connector which enforces constant or prescribed distance between two bodies/node
 
 The parameters of the item; in a dictionary, its type is 'ConnectorDistance':
 
-```{tabularcolumns} |\Y{0.2}|\Y{0.14}|\Y{0.06}|\Y{0.15}|\Y{0.45}|
-```
-
-| Name | type | size | default value | description |
+| name | type | size | default | description |
 |---|---|---|---|---|
 | **name** | String |  | '' | constraints's unique name |
 | **markerNumbers** | ArrayMarkerIndex |  | [ invalid (-1), invalid (-1) ] | (symbol: $[m0,m1]\tp$) list of markers used in connector |
@@ -38,10 +35,7 @@ The parameters of the item; in a dictionary, its type is 'ConnectorDistance':
 
 The parameters of `VObjectConnectorDistance`, given as `visualization`:
 
-```{tabularcolumns} |\Y{0.2}|\Y{0.14}|\Y{0.06}|\Y{0.15}|\Y{0.45}|
-```
-
-| Name | type | size | default value | description |
+| name | type | size | default | description |
 |---|---|---|---|---|
 | **show** | Bool |  | True | set true, if item is shown in visualization and false if it is not shown |
 | **drawSize** | float |  | -1. | the diameter of the rod drawn between the markers if visualizationSettings.connectors.drawSimplified is False; -1 means a tenth of connectors.defaultSize; with drawSimplified, the connector is a line |
@@ -57,7 +51,7 @@ Settings beyond those of all constraints: [`connectors.drawSimplified`](#sec-vse
 
 Available as `OutputVariableType` in sensors, `Get...Output()` and other functions:
 
-```{tabularcolumns} |\Y{0.25}|\Y{0.25}|\Y{0.5}|
+```{tabularcolumns} \Y{0.25}\Y{0.25}\Y{0.5}
 ```
 
 | output variable | symbol | description |

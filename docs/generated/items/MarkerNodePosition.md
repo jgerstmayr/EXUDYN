@@ -18,10 +18,7 @@ A node-Marker attached to a position-based node. It can be used for connectors, 
 
 The parameters of the item; in a dictionary, its type is 'NodePosition':
 
-```{tabularcolumns} |\Y{0.2}|\Y{0.14}|\Y{0.06}|\Y{0.15}|\Y{0.45}|
-```
-
-| Name | type | size | default value | description |
+| name | type | size | default | description |
 |---|---|---|---|---|
 | **name** | String |  | '' | marker's unique name |
 | **nodeNumber** | NodeIndex |  | invalid (-1) | node number to which marker is attached to |
@@ -31,10 +28,7 @@ The parameters of the item; in a dictionary, its type is 'NodePosition':
 
 The parameters of `VMarkerNodePosition`, given as `visualization`:
 
-```{tabularcolumns} |\Y{0.2}|\Y{0.14}|\Y{0.06}|\Y{0.15}|\Y{0.45}|
-```
-
-| Name | type | size | default value | description |
+| name | type | size | default | description |
 |---|---|---|---|---|
 | **show** | Bool |  | True | set true, if item is shown in visualization and false if it is not shown |
 

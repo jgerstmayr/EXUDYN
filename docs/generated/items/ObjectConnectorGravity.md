@@ -17,10 +17,7 @@ A connector for additing forces due to gravitational fields beween two bodies, w
 
 The parameters of the item; in a dictionary, its type is 'ConnectorGravity':
 
-```{tabularcolumns} |\Y{0.2}|\Y{0.14}|\Y{0.06}|\Y{0.15}|\Y{0.45}|
-```
-
-| Name | type | size | default value | description |
+| name | type | size | default | description |
 |---|---|---|---|---|
 | **name** | String |  | '' | connector's unique name |
 | **markerNumbers** | ArrayMarkerIndex |  | [ invalid (-1), invalid (-1) ] | (symbol: $[m0,m1]\tp$) list of markers used in connector |
@@ -35,10 +32,7 @@ The parameters of the item; in a dictionary, its type is 'ConnectorGravity':
 
 The parameters of `VObjectConnectorGravity`, given as `visualization`:
 
-```{tabularcolumns} |\Y{0.2}|\Y{0.14}|\Y{0.06}|\Y{0.15}|\Y{0.45}|
-```
-
-| Name | type | size | default value | description |
+| name | type | size | default | description |
 |---|---|---|---|---|
 | **show** | Bool |  | False | set true to draw a line between the two markers, e.g. to see which bodies attract each other |
 | **color** | Float4 | 4 | [-1.,-1.,-1.,-1.] | RGBA connector color; if R==-1, use default color |
@@ -51,7 +45,7 @@ Drawn as [all connectors](#sec-drawing-objectsconnector); if shown - `show` is F
 
 Available as `OutputVariableType` in sensors, `Get...Output()` and other functions:
 
-```{tabularcolumns} |\Y{0.25}|\Y{0.25}|\Y{0.5}|
+```{tabularcolumns} \Y{0.25}\Y{0.25}\Y{0.5}
 ```
 
 | output variable | symbol | description |

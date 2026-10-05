@@ -17,10 +17,7 @@ A node containing a number of {ref}`ODE2 <ODE2>` variables. Use this node e.g. f
 
 The parameters of the item; in a dictionary, its type is 'GenericODE2':
 
-```{tabularcolumns} |\Y{0.2}|\Y{0.14}|\Y{0.06}|\Y{0.15}|\Y{0.45}|
-```
-
-| Name | type | size | default value | description |
+| name | type | size | default | description |
 |---|---|---|---|---|
 | **name** | String |  | '' | node's unique name |
 | **referenceCoordinates** | Vector |  | [] | (symbol: $\qv\cRef = [q_0,\,\ldots,\,q_{nc}]\tp\cRef$) generic reference coordinates of node; must be consistent with numberOfODE2Coordinates |
@@ -41,7 +38,7 @@ The item draws nothing.
 
 Available as `OutputVariableType` in sensors, `Get...Output()` and other functions:
 
-```{tabularcolumns} |\Y{0.25}|\Y{0.25}|\Y{0.5}|
+```{tabularcolumns} \Y{0.25}\Y{0.25}\Y{0.5}
 ```
 
 | output variable | symbol | description |

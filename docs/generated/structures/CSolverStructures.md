@@ -14,38 +14,38 @@ Structure for timing in solver. Each Real variable is used to measure the CPU ti
 
 CSolverTimer has the following items:
 
-```{tabularcolumns} |\Y{0.2}|\Y{0.14}|\Y{0.06}|\Y{0.15}|\Y{0.45}|
+```{tabularcolumns} \Y{0.34}\Y{0.13}\Y{0.13}\Y{0.4}
 ```
 
-| Name | type / function return type | size | default value / function args | description |
-|---|---|---|---|---|
-| `AERHS` | Real |  | 0. | time for residual evaluation of algebraic equations right-hand-side |
-| `errorEstimator` | Real |  | 0. | for explicit solvers, additional evaluation |
-| `factorization` | Real |  | 0. | solve or inverse |
-| `integrationFormula` | Real |  | 0. | time spent for evaluation of integration formulas |
-| `jacobianAE` | Real |  | 0. | jacobian of algebraic equations (not counted in sum) |
-| `jacobianODE1` | Real |  | 0. | jacobian w.r.t. coordinates of {ref}`ODE1 <ODE1>` equations (not counted in sum) |
-| `jacobianODE2` | Real |  | 0. | jacobian w.r.t. coordinates of {ref}`ODE2 <ODE2>` equations (not counted in sum) |
-| `jacobianODE2_t` | Real |  | 0. | jacobian w.r.t. coordinates_t of {ref}`ODE2 <ODE2>` equations (not counted in sum) |
-| `massMatrix` | Real |  | 0. | mass matrix computation |
-| `newtonIncrement` | Real |  | 0. | Jac$^{-1}$ * RHS; backsubstitution |
-| `ODE1RHS` | Real |  | 0. | time for residual evaluation of {ref}`ODE1 <ODE1>` right-hand-side |
-| `ODE2RHS` | Real |  | 0. | time for residual evaluation of {ref}`ODE2 <ODE2>` right-hand-side |
-| `overhead` | Real |  | 0. | overhead, such as initialization, copying and some matrix-vector multiplication |
-| `postNewton` | Real |  | 0. | discontinuous iteration / PostNewtonStep |
-| `python` | Real |  | 0. | time spent for Python functions |
-| `reactionForces` | Real |  | 0. | CqT * lambda |
-| `realtimeIdleCPU` | Real |  | 0. | time waited for next frame to compute and draw if timeIntegration.realtime.active is True |
-| `Reset(...)` | void |  | useSolverTimer | reset solver timings to initial state by assigning default values; useSolverTimer sets the useTimer flag |
-| `StartTimer(...)` | void |  | value | start timer function for a given variable; subtracts current CPU time from value |
-| `StopTimer(...)` | void |  | value | stop timer function for a given variable; adds current CPU time to value |
-| `Sum()` | Real |  |  | compute sum of all timers (except for those counted multiple, e.g., jacobians |
-| `ToString()` | String |  |  | converts the current timings to a string |
-| `total` | Real |  | 0. | total time measured between start and end of computation (static/dynamics) |
-| `totalJacobian` | Real |  | 0. | time for all jacobian computations |
-| `useTimer` | bool |  | True | flag to decide, whether the timer is used (true) or not |
-| `visualization` | Real |  | 0. | time spent for visualization in computation thread |
-| `writeSolution` | Real |  | 0. | time for writing solution |
+| name | type / return type | default / arguments | description |
+|---|---|---|---|
+| `AERHS` | Real | 0. | time for residual evaluation of algebraic equations right-hand-side |
+| `errorEstimator` | Real | 0. | for explicit solvers, additional evaluation |
+| `factorization` | Real | 0. | solve or inverse |
+| `integrationFormula` | Real | 0. | time spent for evaluation of integration formulas |
+| `jacobianAE` | Real | 0. | jacobian of algebraic equations (not counted in sum) |
+| `jacobianODE1` | Real | 0. | jacobian w.r.t. coordinates of {ref}`ODE1 <ODE1>` equations (not counted in sum) |
+| `jacobianODE2` | Real | 0. | jacobian w.r.t. coordinates of {ref}`ODE2 <ODE2>` equations (not counted in sum) |
+| `jacobianODE2_t` | Real | 0. | jacobian w.r.t. coordinates_t of {ref}`ODE2 <ODE2>` equations (not counted in sum) |
+| `massMatrix` | Real | 0. | mass matrix computation |
+| `newtonIncrement` | Real | 0. | Jac$^{-1}$ * RHS; backsubstitution |
+| `ODE1RHS` | Real | 0. | time for residual evaluation of {ref}`ODE1 <ODE1>` right-hand-side |
+| `ODE2RHS` | Real | 0. | time for residual evaluation of {ref}`ODE2 <ODE2>` right-hand-side |
+| `overhead` | Real | 0. | overhead, such as initialization, copying and some matrix-vector multiplication |
+| `postNewton` | Real | 0. | discontinuous iteration / PostNewtonStep |
+| `python` | Real | 0. | time spent for Python functions |
+| `reactionForces` | Real | 0. | CqT * lambda |
+| `realtimeIdleCPU` | Real | 0. | time waited for next frame to compute and draw if timeIntegration.realtime.active is True |
+| `Reset(...)` | void | useSolverTimer | reset solver timings to initial state by assigning default values; useSolverTimer sets the useTimer flag |
+| `StartTimer(...)` | void | value | start timer function for a given variable; subtracts current CPU time from value |
+| `StopTimer(...)` | void | value | stop timer function for a given variable; adds current CPU time to value |
+| `Sum()` | Real |  | compute sum of all timers (except for those counted multiple, e.g., jacobians |
+| `ToString()` | String |  | converts the current timings to a string |
+| `total` | Real | 0. | total time measured between start and end of computation (static/dynamics) |
+| `totalJacobian` | Real | 0. | time for all jacobian computations |
+| `useTimer` | bool | True | flag to decide, whether the timer is used (true) or not |
+| `visualization` | Real | 0. | time spent for visualization in computation thread |
+| `writeSolution` | Real | 0. | time for writing solution |
 
 
 
@@ -56,33 +56,33 @@ Solver internal structure for counters, steps, step size, time, etc.; solution v
 
 SolverIterationData has the following items:
 
-```{tabularcolumns} |\Y{0.2}|\Y{0.14}|\Y{0.06}|\Y{0.15}|\Y{0.45}|
+```{tabularcolumns} \Y{0.34}\Y{0.13}\Y{0.13}\Y{0.4}
 ```
 
-| Name | type / function return type | size | default value / function args | description |
-|---|---|---|---|---|
-| `adaptiveStep` | bool |  | True | True: the step size may be reduced if step fails; no automatic stepsize control |
-| `automaticStepSize` | bool |  | True | True: if timeIntegration.automaticStepSize == True AND chosen integrators supports automatic step size control (e.g., DOPRI5); False: constant step size used (step may be reduced if adaptiveStep=True) |
-| `automaticStepSizeError` | Real |  | 0 | estimated error (relative to atol + rtol*solution) of last step; must be $\le 1$ for a step to be accepted |
-| `currentStepIndex` | Index |  | 0 | current step index; $i$ |
-| `currentStepSize` | Real |  | 0. | stepSize of current step |
-| `currentTime` | Real |  | 0. | holds the current simulation time, copy of state.current.time; interval is [startTime,tEnd]; in static solver, duration is loadStepDuration |
-| `discontinuousIteration` | Index |  | 0 | number of current discontinuous iteration |
-| `discontinuousIterationsCount` | Index |  | 0 | count total number of discontinuous iterations (min. 1 per step) |
-| `endTime` | Real |  | 0. | end time of static/dynamic solver |
-| `initialStepSize` | Real |  | 1e-6 | initial stepSize for dynamic solver; only used, if automaticStepSize is activated |
-| `lastStepSize` | Real |  | 0. | stepSize suggested from last step or by initial step size; only used, if automaticStepSize is activated |
-| `maxStepSize` | Real |  | 0. | constant or maximum stepSize |
-| `minStepSize` | Real |  | 0. | minimum stepSize for static/dynamic solver; only used, if automaticStepSize is activated |
-| `newtonJacobiCount` | Index |  | 0 | count total Newton jacobian computations |
-| `newtonSteps` | Index |  | 0 | number of current newton steps |
-| `newtonStepsCount` | Index |  | 0 | count total Newton steps |
-| `numberOfSteps` | Index |  | 0 | number of time steps (if fixed size); $n$ |
-| `recommendedStepSize` | Real |  | -1. | recommended step size $h_{recom}$ after PostNewton(...): $h_{recom} < 0$: no recommendation, $h_{recom}==0$: use minimum step size, $h_{recom}>0$: use specific step size, if no smaller size requested by other reason |
-| `rejectedAutomaticStepSizeSteps` | Index |  | 0 | count the number of rejected steps in case of automatic step size control (rejected steps are repeated with smaller step size) |
-| `rejectedModifiedNewtonSteps` | Index |  | 0 | count the number of rejected modified Newton steps (switch to full Newton) |
-| `startTime` | Real |  | 0. | time at beginning of time integration |
-| `ToString()` | String |  |  | convert iteration statistics to string; used for displayStatistics option |
+| name | type / return type | default / arguments | description |
+|---|---|---|---|
+| `adaptiveStep` | bool | True | True: the step size may be reduced if step fails; no automatic stepsize control |
+| `automaticStepSize` | bool | True | True: if timeIntegration.automaticStepSize == True AND chosen integrators supports automatic step size control (e.g., DOPRI5); False: constant step size used (step may be reduced if adaptiveStep=True) |
+| `automaticStepSizeError` | Real | 0 | estimated error (relative to atol + rtol*solution) of last step; must be $\le 1$ for a step to be accepted |
+| `currentStepIndex` | Index | 0 | current step index; $i$ |
+| `currentStepSize` | Real | 0. | stepSize of current step |
+| `currentTime` | Real | 0. | holds the current simulation time, copy of state.current.time; interval is [startTime,tEnd]; in static solver, duration is loadStepDuration |
+| `discontinuousIteration` | Index | 0 | number of current discontinuous iteration |
+| `discontinuousIterationsCount` | Index | 0 | count total number of discontinuous iterations (min. 1 per step) |
+| `endTime` | Real | 0. | end time of static/dynamic solver |
+| `initialStepSize` | Real | 1e-6 | initial stepSize for dynamic solver; only used, if automaticStepSize is activated |
+| `lastStepSize` | Real | 0. | stepSize suggested from last step or by initial step size; only used, if automaticStepSize is activated |
+| `maxStepSize` | Real | 0. | constant or maximum stepSize |
+| `minStepSize` | Real | 0. | minimum stepSize for static/dynamic solver; only used, if automaticStepSize is activated |
+| `newtonJacobiCount` | Index | 0 | count total Newton jacobian computations |
+| `newtonSteps` | Index | 0 | number of current newton steps |
+| `newtonStepsCount` | Index | 0 | count total Newton steps |
+| `numberOfSteps` | Index | 0 | number of time steps (if fixed size); $n$ |
+| `recommendedStepSize` | Real | -1. | recommended step size $h_{recom}$ after PostNewton(...): $h_{recom} < 0$: no recommendation, $h_{recom}==0$: use minimum step size, $h_{recom}>0$: use specific step size, if no smaller size requested by other reason |
+| `rejectedAutomaticStepSizeSteps` | Index | 0 | count the number of rejected steps in case of automatic step size control (rejected steps are repeated with smaller step size) |
+| `rejectedModifiedNewtonSteps` | Index | 0 | count the number of rejected modified Newton steps (switch to full Newton) |
+| `startTime` | Real | 0. | time at beginning of time integration |
+| `ToString()` | String |  | convert iteration statistics to string; used for displayStatistics option |
 
 
 
@@ -93,26 +93,26 @@ Solver internal structure for convergence information: residua, iteration loop e
 
 SolverConvergenceData has the following items:
 
-```{tabularcolumns} |\Y{0.2}|\Y{0.14}|\Y{0.06}|\Y{0.15}|\Y{0.45}|
+```{tabularcolumns} \Y{0.34}\Y{0.13}\Y{0.13}\Y{0.4}
 ```
 
-| Name | type / function return type | size | default value / function args | description |
-|---|---|---|---|---|
-| `contractivity` | Real |  | 0. | Newton contractivity = geometric decay of error in every step |
-| `discontinuousIterationError` | Real |  | 0. | error of discontinuous iterations (contact, friction, ...) outside of Newton iteration |
-| `discontinuousIterationSuccessful` | bool |  | True | true, if last discontinuous iteration had success (failure may be recovered by adaptive step) |
-| `errorCoordinateFactor` | Real |  | 1. | factor may include the number of system coordinates to reduce the residual |
-| `InitializeData()` | void |  |  | initialize SolverConvergenceData by assigning default values |
-| `jacobianUpdateRequested` | bool |  | True | true, if a jacobian update is requested in modified Newton (determined in previous step) |
-| `lastResidual` | Real |  | 0. | last Newton residual to determine contractivity |
-| `linearSolverCausingRow` | Index |  | -1 | -1 if successful, 0 ... n-1, the system equation (=coordinate) index which may have caused the problem, at which the linear solver failed |
-| `linearSolverFailed` | bool |  | False | true, if linear solver failed to factorize |
-| `massMatrixNotInvertible` | bool |  | False | true, if mass matrix is not invertable during initialization or solution (explicit solver) |
-| `newtonConverged` | bool |  | False | true, if Newton has (finally) converged |
-| `newtonSolutionDiverged` | bool |  | False | true, if Newton diverged (may be recovered) |
-| `residual` | Real |  | 0. | current Newton residual |
-| `stepReductionFailed` | bool |  | False | true, if iterations over time/static steps failed (finally, cannot be recovered) |
-| `stopNewton` | bool |  | False | set true by Newton, if Newton was stopped, e.g., because of exceeding iterations or linear solver failed |
+| name | type / return type | default / arguments | description |
+|---|---|---|---|
+| `contractivity` | Real | 0. | Newton contractivity = geometric decay of error in every step |
+| `discontinuousIterationError` | Real | 0. | error of discontinuous iterations (contact, friction, ...) outside of Newton iteration |
+| `discontinuousIterationSuccessful` | bool | True | true, if last discontinuous iteration had success (failure may be recovered by adaptive step) |
+| `errorCoordinateFactor` | Real | 1. | factor may include the number of system coordinates to reduce the residual |
+| `InitializeData()` | void |  | initialize SolverConvergenceData by assigning default values |
+| `jacobianUpdateRequested` | bool | True | true, if a jacobian update is requested in modified Newton (determined in previous step) |
+| `lastResidual` | Real | 0. | last Newton residual to determine contractivity |
+| `linearSolverCausingRow` | Index | -1 | -1 if successful, 0 ... n-1, the system equation (=coordinate) index which may have caused the problem, at which the linear solver failed |
+| `linearSolverFailed` | bool | False | true, if linear solver failed to factorize |
+| `massMatrixNotInvertible` | bool | False | true, if mass matrix is not invertable during initialization or solution (explicit solver) |
+| `newtonConverged` | bool | False | true, if Newton has (finally) converged |
+| `newtonSolutionDiverged` | bool | False | true, if Newton diverged (may be recovered) |
+| `residual` | Real | 0. | current Newton residual |
+| `stepReductionFailed` | bool | False | true, if iterations over time/static steps failed (finally, cannot be recovered) |
+| `stopNewton` | bool | False | set true by Newton, if Newton was stopped, e.g., because of exceeding iterations or linear solver failed |
 
 
 
@@ -123,31 +123,31 @@ Solver internal structure for output modes, output timers and counters.
 
 SolverOutputData has the following items:
 
-```{tabularcolumns} |\Y{0.2}|\Y{0.14}|\Y{0.06}|\Y{0.15}|\Y{0.45}|
+```{tabularcolumns} \Y{0.34}\Y{0.13}\Y{0.13}\Y{0.4}
 ```
 
-| Name | type / function return type | size | default value / function args | description |
-|---|---|---|---|---|
-| `cpuLastTimePrinted` | Real |  | 0. | CPU time when output has been printed last time |
-| `cpuSolverStartTime` | Real |  | 0. | CPU start time of main solver (not including initial conditions); cpuSolverStartTime-cpuStartTime gives time for initialization |
-| `cpuStartTime` | Real |  | 0. | CPU start time of computation (starts counting at computation of initial conditions) |
-| `finishedSuccessfully` | bool |  | False | flag is false until solver functions SolveSteps)...) or SolveSystem(...) finished successfully (can be used as external trigger) |
-| `initializationSuccessful` | bool |  | False | flag is set during call to InitializeSolver(...); reasons for failure are multiple, either inconsistent solver settings are used, files cannot be written (file locked), or initial conditions could not be computed |
-| `InitializeData()` | void |  |  | initialize SolverOutputData by assigning default values |
-| `lastDiscontinuousIterationsCount` | Index |  | 0 | discontinuous iterations count when written to console (or file) last time |
-| `lastImageRecorded` | Real |  | 0. | simulation time when last image has been recorded |
-| `lastNewtonJacobiCount` | Index |  | 0 | jacobian update count when written to console (or file) last time |
-| `lastNewtonStepsCount` | Index |  | 0 | newton steps count when written to console (or file) last time |
-| `lastSensorsWritten` | Real |  | 0. | simulation time when last sensors have been written |
-| `lastSolutionWritten` | Real |  | 0. | simulation time when last solution has been written |
-| `lastVerboseStepIndex` | Index |  | 0 | step index when last time written to console (or file) |
-| `multiThreadingMode` | Index |  | 0 | multithreading mode that has been used: 0=None (serial), 1=multithreading, 2=multithreading with load balancing; (modes new since 2025-06, V1.9.198) |
-| `numberOfThreadsUsed` | Index |  | 1 | number of threads that have been used in simulation |
-| `simulationStoppedByUser` | bool |  | False | flag (initialized false) is set true when user stops the simulation (press Q, Escape, etc.) |
-| `simulationStoppedByUserFunction` | bool |  | False | flag (initialized false) is set true when a user function (PreStep, PostNewton, etc.) sends termination signal |
-| `simulationTimeout` | bool |  | False | flag (initialized false) is set true when exudyn.special.solver.timeout is reached (and timeout is >= 0) |
-| `stepInformation` | Index |  | 0 | this is a copy of the solvers stepInformation used for console output |
-| `verboseMode` | Index |  | 0 | this is a copy of the solvers verboseMode used for console output |
-| `verboseModeFile` | Index |  | 0 | this is a copy of the solvers verboseModeFile used for file |
-| `writeToSolutionFile` | bool |  | False | if false, no solution file is generated and no file is written |
-| `writeToSolverFile` | bool |  | False | if false, no solver output file is generated and no file is written |
+| name | type / return type | default / arguments | description |
+|---|---|---|---|
+| `cpuLastTimePrinted` | Real | 0. | CPU time when output has been printed last time |
+| `cpuSolverStartTime` | Real | 0. | CPU start time of main solver (not including initial conditions); cpuSolverStartTime-cpuStartTime gives time for initialization |
+| `cpuStartTime` | Real | 0. | CPU start time of computation (starts counting at computation of initial conditions) |
+| `finishedSuccessfully` | bool | False | flag is false until solver functions SolveSteps)...) or SolveSystem(...) finished successfully (can be used as external trigger) |
+| `initializationSuccessful` | bool | False | flag is set during call to InitializeSolver(...); reasons for failure are multiple, either inconsistent solver settings are used, files cannot be written (file locked), or initial conditions could not be computed |
+| `InitializeData()` | void |  | initialize SolverOutputData by assigning default values |
+| `lastDiscontinuousIterationsCount` | Index | 0 | discontinuous iterations count when written to console (or file) last time |
+| `lastImageRecorded` | Real | 0. | simulation time when last image has been recorded |
+| `lastNewtonJacobiCount` | Index | 0 | jacobian update count when written to console (or file) last time |
+| `lastNewtonStepsCount` | Index | 0 | newton steps count when written to console (or file) last time |
+| `lastSensorsWritten` | Real | 0. | simulation time when last sensors have been written |
+| `lastSolutionWritten` | Real | 0. | simulation time when last solution has been written |
+| `lastVerboseStepIndex` | Index | 0 | step index when last time written to console (or file) |
+| `multiThreadingMode` | Index | 0 | multithreading mode that has been used: 0=None (serial), 1=multithreading, 2=multithreading with load balancing; (modes new since 2025-06, V1.9.198) |
+| `numberOfThreadsUsed` | Index | 1 | number of threads that have been used in simulation |
+| `simulationStoppedByUser` | bool | False | flag (initialized false) is set true when user stops the simulation (press Q, Escape, etc.) |
+| `simulationStoppedByUserFunction` | bool | False | flag (initialized false) is set true when a user function (PreStep, PostNewton, etc.) sends termination signal |
+| `simulationTimeout` | bool | False | flag (initialized false) is set true when exudyn.special.solver.timeout is reached (and timeout is >= 0) |
+| `stepInformation` | Index | 0 | this is a copy of the solvers stepInformation used for console output |
+| `verboseMode` | Index | 0 | this is a copy of the solvers verboseMode used for console output |
+| `verboseModeFile` | Index | 0 | this is a copy of the solvers verboseModeFile used for file |
+| `writeToSolutionFile` | bool | False | if false, no solution file is generated and no file is written |
+| `writeToSolverFile` | bool | False | if false, no solver output file is generated and no file is written |

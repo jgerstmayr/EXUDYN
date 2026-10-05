@@ -24,10 +24,7 @@ A 3D rigid body which is attached to a 3D rigid body node. The rotation parametr
 
 The parameters of the item; in a dictionary, its type is 'RigidBody':
 
-```{tabularcolumns} |\Y{0.2}|\Y{0.14}|\Y{0.06}|\Y{0.15}|\Y{0.45}|
-```
-
-| Name | type | size | default value | description |
+| name | type | size | default | description |
 |---|---|---|---|---|
 | **name** | String |  | '' | objects's unique name |
 | **mass** | UReal |  | 0. | (symbol: $m$) mass [SI:kg] of rigid body |
@@ -43,10 +40,7 @@ Renamed parameters, still taken with a `DeprecationWarning`: `physicsMass` (depr
 
 The parameters of `VObjectRigidBody`, given as `visualization`:
 
-```{tabularcolumns} |\Y{0.2}|\Y{0.14}|\Y{0.06}|\Y{0.15}|\Y{0.45}|
-```
-
-| Name | type | size | default value | description |
+| name | type | size | default | description |
 |---|---|---|---|---|
 | **show** | Bool |  | True | set true, if item is shown in visualization and false if it is not shown |
 | **graphicsDataUserFunction** | ObjectRigidBodyGraphicsDataUserFunction |  | 0 | A Python function which returns a bodyGraphicsData object, which is a list of graphics data in a dictionary computed by the user function; the graphics elements need to be defined in the local body coordinates and are transformed by mbs to global coordinates |
@@ -60,7 +54,7 @@ Drawn as [all bodies](#sec-drawing-objectsbody); its `graphicsData` in the body 
 
 Available as `OutputVariableType` in sensors, `Get...Output()` and other functions:
 
-```{tabularcolumns} |\Y{0.25}|\Y{0.25}|\Y{0.5}|
+```{tabularcolumns} \Y{0.25}\Y{0.25}\Y{0.5}
 ```
 
 | output variable | symbol | description |

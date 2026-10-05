@@ -12,12 +12,12 @@ Data structure for definition of 2D and 3D beam (cross) section mechanical prope
 
 PyBeamSection has the following items:
 
-```{tabularcolumns} |\Y{0.2}|\Y{0.14}|\Y{0.06}|\Y{0.15}|\Y{0.45}|
+```{tabularcolumns} \Y{0.34}\Y{0.13}\Y{0.13}\Y{0.4}
 ```
 
-| Name | type / function return type | size | default value / function args | description |
-|---|---|---|---|---|
-| `dampingMatrix` | Matrix6D | 36 | np.zeros((6,6)) | $\LU{c}{\Dm} \in \Rcal^{6 \times 6}\,$ [SI:Nsm$^2$, Nsm and Ns (mixed)] sectional linear damping matrix related to $\vp{\LU{c}{\nv}}{\LU{c}{\mv}} = \LU{c}{\Dm} \vp{\LU{c}{\tepsDot}}{\LU{c}{\tkappaDot}}$; note that this damping models is highly simplified and usually, it cannot be derived from material parameters; however, it can be used to adjust model damping to observed damping behavior. Set with list of lists or numpy array. |
-| `inertia` | Matrix3D | 9 | [[0,0,0], [0,0,0], [0,0,0]] | $\LU{c}{\Jm} \in \Rcal^{3 \times 3}\,$ [SI:kg$\,$m$^2$] sectional inertia for shear-deformable beams. Set with list of lists or numpy array. |
-| `massPerLength` | UReal |  | 0. | $\rho A\,$ [SI:kg/m] mass per unit length of the beam |
-| `stiffnessMatrix` | Matrix6D | 36 | np.zeros((6,6)) | $\LU{c}{\Cm} \in \Rcal^{6 \times 6}\,$ [SI:Nm$^2$, Nm and N (mixed)] sectional stiffness matrix related to $\vp{\LU{c}{\nv}}{\LU{c}{\mv}} = \LU{c}{\Cm} \vp{\LU{c}{\teps}}{\LU{c}{\tkappa}}$ with sectional normal force $\LU{c}{\nv}$, torque $\LU{c}{\mv}$, strain $\LU{c}{\teps}$ and curvature $\LU{c}{\tkappa}$, all quantities expressed in the cross section frame $c$. Set with list of lists or numpy array. |
+| name | type | default | description |
+|---|---|---|---|
+| `dampingMatrix` | Matrix6D | np.zeros((6,6)) | $\LU{c}{\Dm} \in \Rcal^{6 \times 6}\,$ [SI:Nsm$^2$, Nsm and Ns (mixed)] sectional linear damping matrix related to $\vp{\LU{c}{\nv}}{\LU{c}{\mv}} = \LU{c}{\Dm} \vp{\LU{c}{\tepsDot}}{\LU{c}{\tkappaDot}}$; note that this damping models is highly simplified and usually, it cannot be derived from material parameters; however, it can be used to adjust model damping to observed damping behavior. Set with list of lists or numpy array. |
+| `inertia` | Matrix3D | [[0,0,0], [0,0,0], [0,0,0]] | $\LU{c}{\Jm} \in \Rcal^{3 \times 3}\,$ [SI:kg$\,$m$^2$] sectional inertia for shear-deformable beams. Set with list of lists or numpy array. |
+| `massPerLength` | UReal | 0. | $\rho A\,$ [SI:kg/m] mass per unit length of the beam |
+| `stiffnessMatrix` | Matrix6D | np.zeros((6,6)) | $\LU{c}{\Cm} \in \Rcal^{6 \times 6}\,$ [SI:Nm$^2$, Nm and N (mixed)] sectional stiffness matrix related to $\vp{\LU{c}{\nv}}{\LU{c}{\mv}} = \LU{c}{\Cm} \vp{\LU{c}{\teps}}{\LU{c}{\tkappa}}$ with sectional normal force $\LU{c}{\nv}$, torque $\LU{c}{\mv}$, strain $\LU{c}{\teps}$ and curvature $\LU{c}{\tkappa}$, all quantities expressed in the cross section frame $c$. Set with list of lists or numpy array. |

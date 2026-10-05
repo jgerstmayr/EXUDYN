@@ -8,12 +8,12 @@ Data structure for definition of 2D and 3D beam (cross) section geometrical prop
 
 BeamSectionGeometry has the following items:
 
-```{tabularcolumns} |\Y{0.2}|\Y{0.14}|\Y{0.06}|\Y{0.15}|\Y{0.45}|
+```{tabularcolumns} \Y{0.34}\Y{0.13}\Y{0.13}\Y{0.4}
 ```
 
-| Name | type / function return type | size | default value / function args | description |
-|---|---|---|---|---|
-| `crossSectionRadiusY` | UReal |  | 0. | $c_Y\,$ [SI:m] $Y$ radius for circular cross section |
-| `crossSectionRadiusZ` | UReal |  | 0. | $c_Z\,$ [SI:m] $Z$ radius for circular cross section |
-| `crossSectionType` | CrossSectionType |  | CrossSectionType::Polygon | Type of cross section: Polygon, Circular, etc. |
-| `polygonalPoints` | Vector2DList |  |  | $\pv_{pg}\,$ [SI: (m,m) ] list of polygonal ($Y,Z$) points in local beam cross section coordinates, defined in positive rotation direction |
+| name | type | default | description |
+|---|---|---|---|
+| `crossSectionRadiusY` | UReal | 0. | $c_Y\,$ [SI:m] $Y$ radius for circular cross section |
+| `crossSectionRadiusZ` | UReal | 0. | $c_Z\,$ [SI:m] $Z$ radius for circular cross section |
+| `crossSectionType` | CrossSectionType | CrossSectionType::Polygon | Type of cross section: Polygon, Circular, etc. |
+| `polygonalPoints` | Vector2DList |  | $\pv_{pg}\,$ [SI: (m,m) ] list of polygonal ($Y,Z$) points in local beam cross section coordinates, defined in positive rotation direction |

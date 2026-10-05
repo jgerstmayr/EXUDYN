@@ -1,0 +1,16 @@
+{
+  "number": 2854,
+  "title": "ObjectFFRF and ObjectFFRFreducedOrder: the acceleration row of the output variables table is broken over several lines",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "FIX",
+  "effort": "LOW",
+  "description": "A Markdown table row is one line; the formula of the Acceleration row was written over five lines, so the table ended there and the rest of the formula was printed as text after it (the maintainer, 2026-10-05, in the PDF).",
+  "dateRaised": "2026-10-05",
+  "deadline": "2027-04-03",
+  "dateResolved": "2026-10-05 02:07",
+  "resolvedAuthor": "Claude-JG",
+  "file": "definitions/itemDefsObjects.py",
+  "releaseNotes": "The acceleration rows of the output variables of ObjectFFRF and ObjectFFRFreducedOrder are one table row again; the rest of the formula was printed as text after the table.",
+  "resolvedInVersion": "1.12.327"
+}

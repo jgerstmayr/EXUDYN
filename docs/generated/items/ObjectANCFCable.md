@@ -18,10 +18,7 @@ A 3D cable finite element using 2 nodes of type NodePointSlope1. The localPositi
 
 The parameters of the item; in a dictionary, its type is 'ANCFCable':
 
-```{tabularcolumns} |\Y{0.2}|\Y{0.14}|\Y{0.06}|\Y{0.15}|\Y{0.45}|
-```
-
-| Name | type | size | default value | description |
+| name | type | size | default | description |
 |---|---|---|---|---|
 | **name** | String |  | '' | objects's unique name |
 | **length** | UReal |  | 0. | (symbol: $L$) [SI:m] reference length of beam; such that the total volume (e.g. for volume load) gives $\rho A L$; must be positive |
@@ -43,10 +40,7 @@ Renamed parameters, still taken with a `DeprecationWarning`: `physicsLength` (de
 
 The parameters of `VObjectANCFCable`, given as `visualization`:
 
-```{tabularcolumns} |\Y{0.2}|\Y{0.14}|\Y{0.06}|\Y{0.15}|\Y{0.45}|
-```
-
-| Name | type | size | default value | description |
+| name | type | size | default | description |
 |---|---|---|---|---|
 | **show** | Bool |  | True | set true, if item is shown in visualization and false if it is not shown; note that all quantities are computed at the beam centerline, even if drawn on surface of cylinder of beam; this effects, e.g., Displacement or Velocity, which is drawn constant over cross section |
 | **radius** | float |  | 0. | if radius==0, only the centerline is drawn; else, a cylinder with radius is drawn; circumferential tiling follows general.cylinderTiling and beam axis tiling follows bodies.beams.axialTiling |
@@ -62,7 +56,7 @@ Settings beyond those of all finite elements: [`bodies.beams.axialTiling`](#sec-
 
 Available as `OutputVariableType` in sensors, `Get...Output()` and other functions:
 
-```{tabularcolumns} |\Y{0.25}|\Y{0.25}|\Y{0.5}|
+```{tabularcolumns} \Y{0.25}\Y{0.25}\Y{0.5}
 ```
 
 | output variable | symbol | description |

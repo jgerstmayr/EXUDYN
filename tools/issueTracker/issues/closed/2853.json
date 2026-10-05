@@ -1,0 +1,16 @@
+{
+  "number": 2853,
+  "title": "tables in the PDF: too narrow columns, and tables running into the footer",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "DOCU",
+  "effort": "MEDIUM",
+  "description": "The maintainer, 2026-10-05: the notation tables (Symbols in item equations) and the 'Definition of quantities' of ObjectMass1D, ObjectRigidBody, ObjectFFRFreducedOrder, ObjectRotationalMass1D have columns of 20 % of the page; tables longer than the page overlap with the footer (e.g. SolutionFileSettings); the name column of the settings tables is too narrow, their size column mostly empty; headers 'type / function return type' and 'default value' are longer than their content.",
+  "dateRaised": "2026-10-05",
+  "deadline": "2027-04-03",
+  "dateResolved": "2026-10-05 02:07",
+  "resolvedAuthor": "Claude-JG",
+  "file": "conf.py",
+  "releaseNotes": "In the PDF, every table in a section breaks across pages instead of running into the footer, and a table without widths of its own gets them from its content; the settings tables have no size column, short headings (name, type, default) and a wider name column; the item tables say default.",
+  "resolvedInVersion": "1.12.326"
+}

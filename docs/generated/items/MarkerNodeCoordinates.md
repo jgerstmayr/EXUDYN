@@ -17,10 +17,7 @@ A node-Marker attached to all {ref}`ODE2 <ODE2>` coordinates of a node. IN CONTR
 
 The parameters of the item; in a dictionary, its type is 'NodeCoordinates':
 
-```{tabularcolumns} |\Y{0.2}|\Y{0.14}|\Y{0.06}|\Y{0.15}|\Y{0.45}|
-```
-
-| Name | type | size | default value | description |
+| name | type | size | default | description |
 |---|---|---|---|---|
 | **name** | String |  | '' | marker's unique name |
 | **nodeNumber** | NodeIndex |  | invalid (-1) | node number to which marker is attached to |

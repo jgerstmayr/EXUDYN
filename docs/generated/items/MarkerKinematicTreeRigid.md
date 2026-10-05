@@ -18,10 +18,7 @@ A position and orientation (rigid-body) marker attached to a kinematic tree. The
 
 The parameters of the item; in a dictionary, its type is 'KinematicTreeRigid':
 
-```{tabularcolumns} |\Y{0.2}|\Y{0.14}|\Y{0.06}|\Y{0.15}|\Y{0.45}|
-```
-
-| Name | type | size | default value | description |
+| name | type | size | default | description |
 |---|---|---|---|---|
 | **name** | String |  | '' | marker's unique name |
 | **objectNumber** | ObjectIndex |  | invalid (-1) | (symbol: $n_b$) body number to which marker is attached to |
@@ -34,10 +31,7 @@ The parameters of the item; in a dictionary, its type is 'KinematicTreeRigid':
 
 The parameters of `VMarkerKinematicTreeRigid`, given as `visualization`:
 
-```{tabularcolumns} |\Y{0.2}|\Y{0.14}|\Y{0.06}|\Y{0.15}|\Y{0.45}|
-```
-
-| Name | type | size | default value | description |
+| name | type | size | default | description |
 |---|---|---|---|---|
 | **show** | Bool |  | True | set true, if item is shown in visualization and false if it is not shown |
 

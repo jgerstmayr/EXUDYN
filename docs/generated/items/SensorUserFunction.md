@@ -12,10 +12,7 @@ A sensor defined by a user function. The sensor is intended to collect sensor va
 
 The parameters of the item; in a dictionary, its type is 'UserFunction':
 
-```{tabularcolumns} |\Y{0.2}|\Y{0.14}|\Y{0.06}|\Y{0.15}|\Y{0.45}|
-```
-
-| Name | type | size | default value | description |
+| name | type | size | default | description |
 |---|---|---|---|---|
 | **name** | String |  | '' | sensor's unique name |
 | **sensorNumbers** | ArraySensorIndex |  | [] | (symbol: $\mathbf{n}_s = [s_0,\,\ldots,\,s_n]\tp$) optional list of $n$ sensor numbers for use in user function |

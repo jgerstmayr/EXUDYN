@@ -530,6 +530,14 @@ remark shall appear only once after the first code cell of a notebook ... smalle
 only show the filename")* **The pages of the Python-C++ interface name the notebook of an example once**: after its
 first code cell on the page, as its file name, small and close under the cell.
 
+<a id="rg3-35"></a>
+**RG3.35** **DONE 2026-10-05** (#2853, #2854, #2855) — [log](exudynRevisionLog2026b.md#rg3-35) *(group RG3; maintainer
+2026-10-05: "Several issues in the PDF docs, many related to tables")* **The tables of the PDF**: every table in a
+section breaks across pages instead of running into the footer, a table without widths of its own gets them from its
+content (the notation tables, the definitions of quantities, the parameter tables of the items); the settings tables
+lose the size column and get short headings and a wider name column; the acceleration row of the FFRF output
+variables is one row again; the items index lists every renamed and deprecated item parameter.
+
 
 ## RG4 — Implementation problems and bugs
 

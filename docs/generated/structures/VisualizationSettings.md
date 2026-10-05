@@ -13,44 +13,44 @@ General settings for visualization that influence all windows, default values, a
 
 VSettingsGeneral has the following items:
 
-```{tabularcolumns} |\Y{0.2}|\Y{0.14}|\Y{0.06}|\Y{0.15}|\Y{0.45}|
+```{tabularcolumns} \Y{0.34}\Y{0.13}\Y{0.13}\Y{0.4}
 ```
 
-| Name | type / function return type | size | default value / function args | description |
-|---|---|---|---|---|
-| `autoFitScene`<br>`SC.visualizationSettings.general.autoFitScene` | bool |  | True | automatically fit scene within startup after SC.renderer.Start() |
-| `axesTiling`<br>`SC.visualizationSettings.general.axesTiling` | PInt |  | 12 | global number of segments for drawing cylinders for axes and cones for arrows (reduce this number, e.g. to 4, if many axes are drawn) |
-| `backgroundColor`<br>`SC.visualizationSettings.general.backgroundColor` | Float4 | 4 | [1.0,1.0,1.0,1.0] | red, green, blue and alpha values for background color of render window (white=[1,1,1,1]; black = [0,0,0,1]) |
-| `backgroundColorBottom`<br>`SC.visualizationSettings.general.backgroundColorBottom` | Float4 | 4 | [0.8,0.8,1.0,1.0] | red, green, blue and alpha values for bottom background color in case that useGradientBackground = True |
-| `boundingBoxZoomAllFactor`<br>`SC.visualizationSettings.general.boundingBoxZoomAllFactor` | PFloat |  | 1.2 | factor on boundingBox for zoom all (without minimum offset) |
-| `boundingBoxZoomAllOffset`<br>`SC.visualizationSettings.general.boundingBoxZoomAllOffset` | UFloat |  | 0.01 | minimum offset to bounding box of scene in window - width or height, whatever is smaller; adjust for very small or large scenes; may be negative |
-| `circleTiling`<br>`SC.visualizationSettings.general.circleTiling` | PInt |  | 16 | global number of segments for circles; if smaller than 2, 2 segments are used (flat); the circles of the 2D cable contacts (ObjectContactCircleCable2D, ObjectContactFrictionCircleCable2D), large compared to the cable, take 4 times as many |
-| `coordinateSystemSize`<br>`SC.visualizationSettings.general.coordinateSystemSize` | PFloat |  | 5. | size of coordinate system relative to font size |
-| `cylinderTiling`<br>`SC.visualizationSettings.general.cylinderTiling` | PInt |  | 16 | global number of segments for cylinders; if smaller than 2, 2 segments are used (flat); also around the rope of a reeving system and the wire of a spring drawn as a tube; the disc of ObjectJointRollingDisc and ObjectConnectorRollingDiscPenalty, large compared to the joint, takes 4 times as many; space curves use connectors.curveTiling |
-| `graphicsUpdateInterval`<br>`SC.visualizationSettings.general.graphicsUpdateInterval` | UFloat |  | 0.1 | interval of graphics update during simulation in seconds; 0.1 = 10 frames per second; low numbers might slow down computation speed |
-| `limitWindowToScreenSize`<br>`SC.visualizationSettings.general.limitWindowToScreenSize` | bool |  | True | True: size for render window of respective view is limited to screen size; False: larger window sizes (e.g. for rendering) allowed according to renderWindowSize |
-| `linuxDisplayScaleFactor`<br>`SC.visualizationSettings.general.linuxDisplayScaleFactor` | PFloat |  | 1. | Scaling factor for linux, which cannot determined from system by now; adjust this value to scale dialog fonts and renderer fonts |
-| `minSceneSize`<br>`SC.visualizationSettings.general.minSceneSize` | PFloat |  | 0.1 | minimum scene size for initial scene size and for autoFitScene, to avoid division by zero; SET GREATER THAN ZERO |
-| `pointSize`<br>`SC.visualizationSettings.general.pointSize` | PFloat |  | 0.01 | global point size (absolute) |
-| `reallyQuitTimeLimit`<br>`SC.visualizationSettings.general.reallyQuitTimeLimit` | UReal |  | 900 | number of seconds after which user is asked a security question before stopping simulation and closing renderer; set to 0 in order to always get asked; set to 1e10 to (nearly) never get asked |
-| `rendererPrecision`<br>`SC.visualizationSettings.general.rendererPrecision` | PInt |  | 4 | precision of general floating point numbers shown in render window: total number of digits used (max. 16) |
-| `rendererStartupTimeout`<br>`SC.visualizationSettings.general.rendererStartupTimeout` | PInt |  | 2500 | OpenGL render windows startup timeout in ms (change might be necessary if CPU is very slow) |
-| `renderWindowString`<br>`SC.visualizationSettings.general.renderWindowString` | String |  | '' | string shown in render window (use this, e.g., for debugging, etc.; written below EXUDYN, similar to information in simulationSettings.solution.file) |
-| `showHelpOnStartup`<br>`SC.visualizationSettings.general.showHelpOnStartup` | UInt |  | 5 | seconds to show help message on startup (0=deactivate) |
-| `showSolutionInformation`<br>`SC.visualizationSettings.general.showSolutionInformation` | bool |  | True | true = show solution information (from simulationSettings.solution) |
-| `showSolverInformation`<br>`SC.visualizationSettings.general.showSolverInformation` | bool |  | True | true = solver name and further information shown in render window |
-| `showSolverTime`<br>`SC.visualizationSettings.general.showSolverTime` | bool |  | True | true = solver current time shown in render window |
-| `sphereTiling`<br>`SC.visualizationSettings.general.sphereTiling` | PInt |  | 6 | global number of segments for spheres; if smaller than 2, 2 segments are used (flat) |
-| `textAlwaysInFront`<br>`SC.visualizationSettings.general.textAlwaysInFront` | bool |  | True | if true, text for item numbers and other item-related text is drawn in front; this may be unwanted in case that you only with to see numbers of objects in front; currently does not work with perspective |
-| `textColor`<br>`SC.visualizationSettings.general.textColor` | Float4 | 4 | [0.,0.,0.,1.0] | general text color (default); used for system texts in render window |
-| `textHasBackground`<br>`SC.visualizationSettings.general.textHasBackground` | bool |  | False | if true, text for item numbers and other item-related text have a background (depending on text color), allowing for better visibility if many numbers are shown; the text itself is black; therefore, dark background colors are ignored and shown as white |
-| `textOffsetFactor`<br>`SC.visualizationSettings.general.textOffsetFactor` | UFloat |  | 0.005 | This is an additional out of plane offset for item texts (node number, etc.); the factor is relative to the maximum scene size and is only used, if textAlwaysInFront=False; this factor allows to draw text, e.g., in front of nodes |
-| `threadSafeGraphicsUpdate`<br>`SC.visualizationSettings.general.threadSafeGraphicsUpdate` | bool |  | True | true = updating of visualization is threadsafe, but slower for complicated models; deactivate this to speed up computation, but activate for generation of animations; may be improved in future by adding a safe visualizationUpdate state |
-| `useBitmapText`<br>`SC.visualizationSettings.general.useBitmapText` | bool |  | True | if true, texts are displayed using pre-defined bitmaps for the text; may increase the complexity of your scene, e.g., if many (>10000) node numbers shown |
-| `useGradientBackground`<br>`SC.visualizationSettings.general.useGradientBackground` | bool |  | False | true = use vertical gradient for background; |
-| `useMultiThreadedRendering`<br>`SC.visualizationSettings.general.useMultiThreadedRendering` | bool |  | True | true = rendering is done in separate thread; false = no separate thread, which may be more stable but has lagging interaction for large models (do not interact with models during simulation); you MUST set this parameter BEFORE call to SC.renderer.Start(); MAC OS: uses always false, because MAC OS does not support multi threaded GLFW |
-| `useWindowsDisplayScaleFactor`<br>`SC.visualizationSettings.general.useWindowsDisplayScaleFactor` | bool |  | True | the Windows display scaling (monitor scaling; content scaling) factor is used for increased visibility of texts on high resolution displays; based on GLFW glfwGetWindowContentScale; deactivated on linux compilation as it leads to crashes (adjust textSize manually!) |
-| `zoomAllUseBoundingBox`<br>`SC.visualizationSettings.general.zoomAllUseBoundingBox` | bool |  | True | if true, use exact scene bounding box (but not including texts) for zoom; does not include perspective effects! |
+| name | type | default | description |
+|---|---|---|---|
+| `autoFitScene`<br>`SC.visualizationSettings.general.autoFitScene` | bool | True | automatically fit scene within startup after SC.renderer.Start() |
+| `axesTiling`<br>`SC.visualizationSettings.general.axesTiling` | PInt | 12 | global number of segments for drawing cylinders for axes and cones for arrows (reduce this number, e.g. to 4, if many axes are drawn) |
+| `backgroundColor`<br>`SC.visualizationSettings.general.backgroundColor` | Float4 | [1.0,1.0,1.0,1.0] | red, green, blue and alpha values for background color of render window (white=[1,1,1,1]; black = [0,0,0,1]) |
+| `backgroundColorBottom`<br>`SC.visualizationSettings.general.backgroundColorBottom` | Float4 | [0.8,0.8,1.0,1.0] | red, green, blue and alpha values for bottom background color in case that useGradientBackground = True |
+| `boundingBoxZoomAllFactor`<br>`SC.visualizationSettings.general.boundingBoxZoomAllFactor` | PFloat | 1.2 | factor on boundingBox for zoom all (without minimum offset) |
+| `boundingBoxZoomAllOffset`<br>`SC.visualizationSettings.general.boundingBoxZoomAllOffset` | UFloat | 0.01 | minimum offset to bounding box of scene in window - width or height, whatever is smaller; adjust for very small or large scenes; may be negative |
+| `circleTiling`<br>`SC.visualizationSettings.general.circleTiling` | PInt | 16 | global number of segments for circles; if smaller than 2, 2 segments are used (flat); the circles of the 2D cable contacts (ObjectContactCircleCable2D, ObjectContactFrictionCircleCable2D), large compared to the cable, take 4 times as many |
+| `coordinateSystemSize`<br>`SC.visualizationSettings.general.coordinateSystemSize` | PFloat | 5. | size of coordinate system relative to font size |
+| `cylinderTiling`<br>`SC.visualizationSettings.general.cylinderTiling` | PInt | 16 | global number of segments for cylinders; if smaller than 2, 2 segments are used (flat); also around the rope of a reeving system and the wire of a spring drawn as a tube; the disc of ObjectJointRollingDisc and ObjectConnectorRollingDiscPenalty, large compared to the joint, takes 4 times as many; space curves use connectors.curveTiling |
+| `graphicsUpdateInterval`<br>`SC.visualizationSettings.general.graphicsUpdateInterval` | UFloat | 0.1 | interval of graphics update during simulation in seconds; 0.1 = 10 frames per second; low numbers might slow down computation speed |
+| `limitWindowToScreenSize`<br>`SC.visualizationSettings.general.limitWindowToScreenSize` | bool | True | True: size for render window of respective view is limited to screen size; False: larger window sizes (e.g. for rendering) allowed according to renderWindowSize |
+| `linuxDisplayScaleFactor`<br>`SC.visualizationSettings.general.linuxDisplayScaleFactor` | PFloat | 1. | Scaling factor for linux, which cannot determined from system by now; adjust this value to scale dialog fonts and renderer fonts |
+| `minSceneSize`<br>`SC.visualizationSettings.general.minSceneSize` | PFloat | 0.1 | minimum scene size for initial scene size and for autoFitScene, to avoid division by zero; SET GREATER THAN ZERO |
+| `pointSize`<br>`SC.visualizationSettings.general.pointSize` | PFloat | 0.01 | global point size (absolute) |
+| `reallyQuitTimeLimit`<br>`SC.visualizationSettings.general.reallyQuitTimeLimit` | UReal | 900 | number of seconds after which user is asked a security question before stopping simulation and closing renderer; set to 0 in order to always get asked; set to 1e10 to (nearly) never get asked |
+| `rendererPrecision`<br>`SC.visualizationSettings.general.rendererPrecision` | PInt | 4 | precision of general floating point numbers shown in render window: total number of digits used (max. 16) |
+| `rendererStartupTimeout`<br>`SC.visualizationSettings.general.rendererStartupTimeout` | PInt | 2500 | OpenGL render windows startup timeout in ms (change might be necessary if CPU is very slow) |
+| `renderWindowString`<br>`SC.visualizationSettings.general.renderWindowString` | String | '' | string shown in render window (use this, e.g., for debugging, etc.; written below EXUDYN, similar to information in simulationSettings.solution.file) |
+| `showHelpOnStartup`<br>`SC.visualizationSettings.general.showHelpOnStartup` | UInt | 5 | seconds to show help message on startup (0=deactivate) |
+| `showSolutionInformation`<br>`SC.visualizationSettings.general.showSolutionInformation` | bool | True | true = show solution information (from simulationSettings.solution) |
+| `showSolverInformation`<br>`SC.visualizationSettings.general.showSolverInformation` | bool | True | true = solver name and further information shown in render window |
+| `showSolverTime`<br>`SC.visualizationSettings.general.showSolverTime` | bool | True | true = solver current time shown in render window |
+| `sphereTiling`<br>`SC.visualizationSettings.general.sphereTiling` | PInt | 6 | global number of segments for spheres; if smaller than 2, 2 segments are used (flat) |
+| `textAlwaysInFront`<br>`SC.visualizationSettings.general.textAlwaysInFront` | bool | True | if true, text for item numbers and other item-related text is drawn in front; this may be unwanted in case that you only with to see numbers of objects in front; currently does not work with perspective |
+| `textColor`<br>`SC.visualizationSettings.general.textColor` | Float4 | [0.,0.,0.,1.0] | general text color (default); used for system texts in render window |
+| `textHasBackground`<br>`SC.visualizationSettings.general.textHasBackground` | bool | False | if true, text for item numbers and other item-related text have a background (depending on text color), allowing for better visibility if many numbers are shown; the text itself is black; therefore, dark background colors are ignored and shown as white |
+| `textOffsetFactor`<br>`SC.visualizationSettings.general.textOffsetFactor` | UFloat | 0.005 | This is an additional out of plane offset for item texts (node number, etc.); the factor is relative to the maximum scene size and is only used, if textAlwaysInFront=False; this factor allows to draw text, e.g., in front of nodes |
+| `threadSafeGraphicsUpdate`<br>`SC.visualizationSettings.general.threadSafeGraphicsUpdate` | bool | True | true = updating of visualization is threadsafe, but slower for complicated models; deactivate this to speed up computation, but activate for generation of animations; may be improved in future by adding a safe visualizationUpdate state |
+| `useBitmapText`<br>`SC.visualizationSettings.general.useBitmapText` | bool | True | if true, texts are displayed using pre-defined bitmaps for the text; may increase the complexity of your scene, e.g., if many (>10000) node numbers shown |
+| `useGradientBackground`<br>`SC.visualizationSettings.general.useGradientBackground` | bool | False | true = use vertical gradient for background; |
+| `useMultiThreadedRendering`<br>`SC.visualizationSettings.general.useMultiThreadedRendering` | bool | True | true = rendering is done in separate thread; false = no separate thread, which may be more stable but has lagging interaction for large models (do not interact with models during simulation); you MUST set this parameter BEFORE call to SC.renderer.Start(); MAC OS: uses always false, because MAC OS does not support multi threaded GLFW |
+| `useWindowsDisplayScaleFactor`<br>`SC.visualizationSettings.general.useWindowsDisplayScaleFactor` | bool | True | the Windows display scaling (monitor scaling; content scaling) factor is used for increased visibility of texts on high resolution displays; based on GLFW glfwGetWindowContentScale; deactivated on linux compilation as it leads to crashes (adjust textSize manually!) |
+| `zoomAllUseBoundingBox`<br>`SC.visualizationSettings.general.zoomAllUseBoundingBox` | bool | True | if true, use exact scene bounding box (but not including texts) for zoom; does not include perspective effects! |
 
 
 
@@ -61,21 +61,21 @@ Advanced settings for contour plots.
 
 VSettingsContourAdvanced has the following items:
 
-```{tabularcolumns} |\Y{0.2}|\Y{0.14}|\Y{0.06}|\Y{0.15}|\Y{0.45}|
+```{tabularcolumns} \Y{0.34}\Y{0.13}\Y{0.13}\Y{0.4}
 ```
 
-| Name | type / function return type | size | default value / function args | description |
-|---|---|---|---|---|
-| `colorBarPrecision`<br>`SC.visualizationSettings.contour.advanced.colorBarPrecision` | PInt |  | 4 | precision of floating point values shown in color bar; total number of digits used (max. 16) |
-| `colorBarTiling`<br>`SC.visualizationSettings.contour.advanced.colorBarTiling` | PInt |  | 12 | number of tiles (segements) shown in the colorbar for the contour plot |
-| `contourColor0`<br>`SC.visualizationSettings.contour.advanced.contourColor0` | Float4 | 4 | [0.1,0.1,0.9,1.] | RGBA color for relative value 0 used for contour plot; alpha is ignored |
-| `contourColor1`<br>`SC.visualizationSettings.contour.advanced.contourColor1` | Float4 | 4 | [0.1,0.9,0.9,1.] | RGBA color for relative value 0.25 used for contour plot; alpha is ignored |
-| `contourColor2`<br>`SC.visualizationSettings.contour.advanced.contourColor2` | Float4 | 4 | [0.1,0.9,0.1,1.] | RGBA color for relative value 0.25 used for contour plot; alpha is ignored |
-| `contourColor3`<br>`SC.visualizationSettings.contour.advanced.contourColor3` | Float4 | 4 | [0.9,0.9,0.1,1.] | RGBA color for relative value 0.25 used for contour plot; alpha is ignored |
-| `contourColor4`<br>`SC.visualizationSettings.contour.advanced.contourColor4` | Float4 | 4 | [0.9,0.1,0.1,1.] | RGBA color for relative value 0.25 used for contour plot; alpha is ignored |
-| `contourColorMax`<br>`SC.visualizationSettings.contour.advanced.contourColorMax` | Float4 | 4 | [0.9,0.9,0.9,1.] | RGBA color if relative value in contour plot is larger than 1 (if automaticRange=False); alpha is ignored |
-| `contourColorMin`<br>`SC.visualizationSettings.contour.advanced.contourColorMin` | Float4 | 4 | [0.1,0.1,0.1,1.] | RGBA color if relative value in contour plot is smaller than 0 (if automaticRange=False); alpha is ignored |
-| `showColorBar`<br>`SC.visualizationSettings.contour.advanced.showColorBar` | bool |  | True | show the colour bar with minimum and maximum values for the contour plot |
+| name | type | default | description |
+|---|---|---|---|
+| `colorBarPrecision`<br>`SC.visualizationSettings.contour.advanced.colorBarPrecision` | PInt | 4 | precision of floating point values shown in color bar; total number of digits used (max. 16) |
+| `colorBarTiling`<br>`SC.visualizationSettings.contour.advanced.colorBarTiling` | PInt | 12 | number of tiles (segements) shown in the colorbar for the contour plot |
+| `contourColor0`<br>`SC.visualizationSettings.contour.advanced.contourColor0` | Float4 | [0.1,0.1,0.9,1.] | RGBA color for relative value 0 used for contour plot; alpha is ignored |
+| `contourColor1`<br>`SC.visualizationSettings.contour.advanced.contourColor1` | Float4 | [0.1,0.9,0.9,1.] | RGBA color for relative value 0.25 used for contour plot; alpha is ignored |
+| `contourColor2`<br>`SC.visualizationSettings.contour.advanced.contourColor2` | Float4 | [0.1,0.9,0.1,1.] | RGBA color for relative value 0.25 used for contour plot; alpha is ignored |
+| `contourColor3`<br>`SC.visualizationSettings.contour.advanced.contourColor3` | Float4 | [0.9,0.9,0.1,1.] | RGBA color for relative value 0.25 used for contour plot; alpha is ignored |
+| `contourColor4`<br>`SC.visualizationSettings.contour.advanced.contourColor4` | Float4 | [0.9,0.1,0.1,1.] | RGBA color for relative value 0.25 used for contour plot; alpha is ignored |
+| `contourColorMax`<br>`SC.visualizationSettings.contour.advanced.contourColorMax` | Float4 | [0.9,0.9,0.9,1.] | RGBA color if relative value in contour plot is larger than 1 (if automaticRange=False); alpha is ignored |
+| `contourColorMin`<br>`SC.visualizationSettings.contour.advanced.contourColorMin` | Float4 | [0.1,0.1,0.1,1.] | RGBA color if relative value in contour plot is smaller than 0 (if automaticRange=False); alpha is ignored |
+| `showColorBar`<br>`SC.visualizationSettings.contour.advanced.showColorBar` | bool | True | show the colour bar with minimum and maximum values for the contour plot |
 
 
 
@@ -86,21 +86,21 @@ Settings for contour plots; use these options to visualize field data, such as d
 
 VSettingsContour has the following items:
 
-```{tabularcolumns} |\Y{0.2}|\Y{0.14}|\Y{0.06}|\Y{0.15}|\Y{0.45}|
+```{tabularcolumns} \Y{0.34}\Y{0.13}\Y{0.13}\Y{0.4}
 ```
 
-| Name | type / function return type | size | default value / function args | description |
-|---|---|---|---|---|
-| `advanced`<br>`SC.visualizationSettings.contour.advanced` | VSettingsContourAdvanced |  |  | advanced settings for contour |
-| `alphaTransparency`<br>`SC.visualizationSettings.contour.alphaTransparency` | float |  | 1 | default value for contour alpha transparency (RGB color computed from contour value) |
-| `automaticRange`<br>`SC.visualizationSettings.contour.automaticRange` | bool |  | True | if true, the contour plot value range is chosen automatically to the maximum range |
-| `maxValue`<br>`SC.visualizationSettings.contour.maxValue` | float |  | 1 | maximum value for contour plot; set manually, if automaticRange == False |
-| `minValue`<br>`SC.visualizationSettings.contour.minValue` | float |  | 0 | minimum value for contour plot; set manually, if automaticRange == False |
-| `nodesColored`<br>`SC.visualizationSettings.contour.nodesColored` | bool |  | True | if true, the contour color is also applied to nodes (except mesh nodes), otherwise node drawing is not influenced by contour settings |
-| `outputVariable`<br>`SC.visualizationSettings.contour.outputVariable` | OutputVariableType |  | OutputVariableType::_None | selected contour plot output variable type; select OutputVariableType._None to deactivate contour plotting. |
-| `outputVariableComponent`<br>`SC.visualizationSettings.contour.outputVariableComponent` | Int |  | 0 | select the component of the chosen output variable; e.g., for displacements, 3 components are available: 0 == x, 1 == y, 2 == z component; for stresses, 6 components are available, see OutputVariableType description; to draw the norm of a outputVariable, set component to -1; if a certain component is not available by certain objects or nodes, no value is drawn (using default color) |
-| `reduceRange`<br>`SC.visualizationSettings.contour.reduceRange` | bool |  | True | if true, the contour plot value range is also reduced; better for static computation; in dynamic computation set this option to false, it can reduce visualization artifacts; you should also set minVal to max(float) and maxVal to min(float) |
-| `rigidBodiesColored`<br>`SC.visualizationSettings.contour.rigidBodiesColored` | bool |  | True | if true, the contour color is also applied to triangular faces of rigid bodies and mass points, otherwise the rigid body drawing are not influenced by contour settings; for general rigid bodies (except for ObjectGround), Position, Displacement, DisplacementLocal(=0), Velocity, VelocityLocal, AngularVelocity, and AngularVelocityLocal are available; may slow down visualization! |
+| name | type | default | description |
+|---|---|---|---|
+| `advanced`<br>`SC.visualizationSettings.contour.advanced` | VSettingsContourAdvanced |  | advanced settings for contour |
+| `alphaTransparency`<br>`SC.visualizationSettings.contour.alphaTransparency` | float | 1 | default value for contour alpha transparency (RGB color computed from contour value) |
+| `automaticRange`<br>`SC.visualizationSettings.contour.automaticRange` | bool | True | if true, the contour plot value range is chosen automatically to the maximum range |
+| `maxValue`<br>`SC.visualizationSettings.contour.maxValue` | float | 1 | maximum value for contour plot; set manually, if automaticRange == False |
+| `minValue`<br>`SC.visualizationSettings.contour.minValue` | float | 0 | minimum value for contour plot; set manually, if automaticRange == False |
+| `nodesColored`<br>`SC.visualizationSettings.contour.nodesColored` | bool | True | if true, the contour color is also applied to nodes (except mesh nodes), otherwise node drawing is not influenced by contour settings |
+| `outputVariable`<br>`SC.visualizationSettings.contour.outputVariable` | OutputVariableType | OutputVariableType::_None | selected contour plot output variable type; select OutputVariableType._None to deactivate contour plotting. |
+| `outputVariableComponent`<br>`SC.visualizationSettings.contour.outputVariableComponent` | Int | 0 | select the component of the chosen output variable; e.g., for displacements, 3 components are available: 0 == x, 1 == y, 2 == z component; for stresses, 6 components are available, see OutputVariableType description; to draw the norm of a outputVariable, set component to -1; if a certain component is not available by certain objects or nodes, no value is drawn (using default color) |
+| `reduceRange`<br>`SC.visualizationSettings.contour.reduceRange` | bool | True | if true, the contour plot value range is also reduced; better for static computation; in dynamic computation set this option to false, it can reduce visualization artifacts; you should also set minVal to max(float) and maxVal to min(float) |
+| `rigidBodiesColored`<br>`SC.visualizationSettings.contour.rigidBodiesColored` | bool | True | if true, the contour color is also applied to triangular faces of rigid bodies and mass points, otherwise the rigid body drawing are not influenced by contour settings; for general rigid bodies (except for ObjectGround), Position, Displacement, DisplacementLocal(=0), Velocity, VelocityLocal, AngularVelocity, and AngularVelocityLocal are available; may slow down visualization! |
 
 
 
@@ -111,20 +111,20 @@ Visualization settings for nodes.
 
 VSettingsNodes has the following items:
 
-```{tabularcolumns} |\Y{0.2}|\Y{0.14}|\Y{0.06}|\Y{0.15}|\Y{0.45}|
+```{tabularcolumns} \Y{0.34}\Y{0.13}\Y{0.13}\Y{0.4}
 ```
 
-| Name | type / function return type | size | default value / function args | description |
-|---|---|---|---|---|
-| `basisSize`<br>`SC.visualizationSettings.nodes.basisSize` | float |  | 0.2 | size of basis for nodes |
-| `defaultColor`<br>`SC.visualizationSettings.nodes.defaultColor` | Float4 | 4 | [0.2,0.2,1.,1.] | default RGBA color for nodes; 4th value is alpha-transparency |
-| `defaultSize`<br>`SC.visualizationSettings.nodes.defaultSize` | float |  | -1. | global node size; if -1.f, node size is relative to openGL.initialMaxSceneSize |
-| `drawNodesAsPoint`<br>`SC.visualizationSettings.nodes.drawNodesAsPoint` | bool |  | True | simplified/faster drawing of nodes; uses general->pointSize as drawing size; if drawNodesAsPoint==True, the basis of the node will be drawn with lines |
-| `show`<br>`SC.visualizationSettings.nodes.show` | bool |  | True | flag to decide, whether the nodes are shown |
-| `showBasis`<br>`SC.visualizationSettings.nodes.showBasis` | bool |  | False | show basis (three axes) of coordinate system in 3D nodes |
-| `showNodalSlopes`<br>`SC.visualizationSettings.nodes.showNodalSlopes` | bool |  | False | draw nodal slope vectors, e.g. in ANCF beam finite elements |
-| `showNumbers`<br>`SC.visualizationSettings.nodes.showNumbers` | bool |  | False | flag to decide, whether the node number is shown |
-| `tiling`<br>`SC.visualizationSettings.nodes.tiling` | PInt |  | 4 | tiling for node if drawn as sphere; used to lower the amount of triangles to draw each node; if drawn as circle, this value is multiplied with 4 |
+| name | type | default | description |
+|---|---|---|---|
+| `basisSize`<br>`SC.visualizationSettings.nodes.basisSize` | float | 0.2 | size of basis for nodes |
+| `defaultColor`<br>`SC.visualizationSettings.nodes.defaultColor` | Float4 | [0.2,0.2,1.,1.] | default RGBA color for nodes; 4th value is alpha-transparency |
+| `defaultSize`<br>`SC.visualizationSettings.nodes.defaultSize` | float | -1. | global node size; if -1.f, node size is relative to openGL.initialMaxSceneSize |
+| `drawNodesAsPoint`<br>`SC.visualizationSettings.nodes.drawNodesAsPoint` | bool | True | simplified/faster drawing of nodes; uses general->pointSize as drawing size; if drawNodesAsPoint==True, the basis of the node will be drawn with lines |
+| `show`<br>`SC.visualizationSettings.nodes.show` | bool | True | flag to decide, whether the nodes are shown |
+| `showBasis`<br>`SC.visualizationSettings.nodes.showBasis` | bool | False | show basis (three axes) of coordinate system in 3D nodes |
+| `showNodalSlopes`<br>`SC.visualizationSettings.nodes.showNodalSlopes` | bool | False | draw nodal slope vectors, e.g. in ANCF beam finite elements |
+| `showNumbers`<br>`SC.visualizationSettings.nodes.showNumbers` | bool | False | flag to decide, whether the node number is shown |
+| `tiling`<br>`SC.visualizationSettings.nodes.tiling` | PInt | 4 | tiling for node if drawn as sphere; used to lower the amount of triangles to draw each node; if drawn as circle, this value is multiplied with 4 |
 
 
 
@@ -135,21 +135,21 @@ Visualization settings for beam finite elements.
 
 VSettingsBeams has the following items:
 
-```{tabularcolumns} |\Y{0.2}|\Y{0.14}|\Y{0.06}|\Y{0.15}|\Y{0.45}|
+```{tabularcolumns} \Y{0.34}\Y{0.13}\Y{0.13}\Y{0.4}
 ```
 
-| Name | type / function return type | size | default value / function args | description |
-|---|---|---|---|---|
-| `axialTiling`<br>`SC.visualizationSettings.bodies.beams.axialTiling` | PInt |  | 8 | number of segments to discretise the beams axis |
-| `crossSectionFilled`<br>`SC.visualizationSettings.bodies.beams.crossSectionFilled` | bool |  | True | if implemented for element, cross section is drawn as solid (filled) instead of wire-frame; NOTE: some quantities may not be interpolated correctly over cross section in visualization; equivalent to drawSolid of shells |
-| `crossSectionTiling`<br>`SC.visualizationSettings.bodies.beams.crossSectionTiling` | PInt |  | 4 | number of quads drawn over height of beam, if drawn as flat objects; leads to higher accuracy of components drawn over beam height or with, but also to larger CPU costs for drawing |
-| `drawVertical`<br>`SC.visualizationSettings.bodies.beams.drawVertical` | bool |  | False | draw contour plot outputVariables 'vertical' along beam height; contour.outputVariable must be set accordingly |
-| `drawVerticalColor`<br>`SC.visualizationSettings.bodies.beams.drawVerticalColor` | Float4 | 4 | [0.2,0.2,0.2,1.] | color for outputVariable to be drawn along cross section (vertically) |
-| `drawVerticalFactor`<br>`SC.visualizationSettings.bodies.beams.drawVerticalFactor` | UFloat |  | 1. | factor for outputVariable to be drawn along cross section (vertically) |
-| `drawVerticalLines`<br>`SC.visualizationSettings.bodies.beams.drawVerticalLines` | bool |  | True | draw additional vertical lines for better visibility |
-| `drawVerticalOffset`<br>`SC.visualizationSettings.bodies.beams.drawVerticalOffset` | float |  | 0. | offset for vertical drawn lines; offset is added before multiplication with drawVerticalFactor |
-| `drawVerticalValues`<br>`SC.visualizationSettings.bodies.beams.drawVerticalValues` | bool |  | False | show values at vertical lines; note that these numbers are interpolated values and may be different from values evaluated directly at this point! |
-| `reducedAxialInterploation`<br>`SC.visualizationSettings.bodies.beams.reducedAxialInterploation` | bool |  | True | if True, the interpolation along the beam axis may be lower than the beam element order; this may, however, show more consistent values than a full interpolation, e.g. for strains or forces |
+| name | type | default | description |
+|---|---|---|---|
+| `axialTiling`<br>`SC.visualizationSettings.bodies.beams.axialTiling` | PInt | 8 | number of segments to discretise the beams axis |
+| `crossSectionFilled`<br>`SC.visualizationSettings.bodies.beams.crossSectionFilled` | bool | True | if implemented for element, cross section is drawn as solid (filled) instead of wire-frame; NOTE: some quantities may not be interpolated correctly over cross section in visualization; equivalent to drawSolid of shells |
+| `crossSectionTiling`<br>`SC.visualizationSettings.bodies.beams.crossSectionTiling` | PInt | 4 | number of quads drawn over height of beam, if drawn as flat objects; leads to higher accuracy of components drawn over beam height or with, but also to larger CPU costs for drawing |
+| `drawVertical`<br>`SC.visualizationSettings.bodies.beams.drawVertical` | bool | False | draw contour plot outputVariables 'vertical' along beam height; contour.outputVariable must be set accordingly |
+| `drawVerticalColor`<br>`SC.visualizationSettings.bodies.beams.drawVerticalColor` | Float4 | [0.2,0.2,0.2,1.] | color for outputVariable to be drawn along cross section (vertically) |
+| `drawVerticalFactor`<br>`SC.visualizationSettings.bodies.beams.drawVerticalFactor` | UFloat | 1. | factor for outputVariable to be drawn along cross section (vertically) |
+| `drawVerticalLines`<br>`SC.visualizationSettings.bodies.beams.drawVerticalLines` | bool | True | draw additional vertical lines for better visibility |
+| `drawVerticalOffset`<br>`SC.visualizationSettings.bodies.beams.drawVerticalOffset` | float | 0. | offset for vertical drawn lines; offset is added before multiplication with drawVerticalFactor |
+| `drawVerticalValues`<br>`SC.visualizationSettings.bodies.beams.drawVerticalValues` | bool | False | show values at vertical lines; note that these numbers are interpolated values and may be different from values evaluated directly at this point! |
+| `reducedAxialInterploation`<br>`SC.visualizationSettings.bodies.beams.reducedAxialInterploation` | bool | True | if True, the interpolation along the beam axis may be lower than the beam element order; this may, however, show more consistent values than a full interpolation, e.g. for strains or forces |
 
 
 
@@ -160,13 +160,13 @@ Visualization settings for plate/shell finite elements.
 
 VSettingsShells has the following items:
 
-```{tabularcolumns} |\Y{0.2}|\Y{0.14}|\Y{0.06}|\Y{0.15}|\Y{0.45}|
+```{tabularcolumns} \Y{0.34}\Y{0.13}\Y{0.13}\Y{0.4}
 ```
 
-| Name | type / function return type | size | default value / function args | description |
-|---|---|---|---|---|
-| `drawSolid`<br>`SC.visualizationSettings.bodies.shells.drawSolid` | bool |  | True | if true: to draw plates/shells as 3D objects; false: only the element surface is drawn; equivalent to crossSectionFilled in beams |
-| `thicknessFactor`<br>`SC.visualizationSettings.bodies.shells.thicknessFactor` | PFloat |  | 1. | a factor multiplied with the thickness of shells/plates only for visualization (e.g. to make some effects more visible) |
+| name | type | default | description |
+|---|---|---|---|
+| `drawSolid`<br>`SC.visualizationSettings.bodies.shells.drawSolid` | bool | True | if true: to draw plates/shells as 3D objects; false: only the element surface is drawn; equivalent to crossSectionFilled in beams |
+| `thicknessFactor`<br>`SC.visualizationSettings.bodies.shells.thicknessFactor` | PFloat | 1. | a factor multiplied with the thickness of shells/plates only for visualization (e.g. to make some effects more visible) |
 
 
 
@@ -177,15 +177,15 @@ Visualization settings for kinematic trees.
 
 VSettingsKinematicTree has the following items:
 
-```{tabularcolumns} |\Y{0.2}|\Y{0.14}|\Y{0.06}|\Y{0.15}|\Y{0.45}|
+```{tabularcolumns} \Y{0.34}\Y{0.13}\Y{0.13}\Y{0.4}
 ```
 
-| Name | type / function return type | size | default value / function args | description |
-|---|---|---|---|---|
-| `frameSize`<br>`SC.visualizationSettings.bodies.kinematicTree.frameSize` | float |  | 0.2 | size of COM and joint frames |
-| `showCOMframes`<br>`SC.visualizationSettings.bodies.kinematicTree.showCOMframes` | bool |  | False | if True, a frame is attached to every center of mass |
-| `showFramesNumbers`<br>`SC.visualizationSettings.bodies.kinematicTree.showFramesNumbers` | bool |  | False | if True, numbers are drawn for joint frames (O[i]J[j]) and COM frames (O[i]COM[j]) for object [i] and local joint [j] |
-| `showJointFrames`<br>`SC.visualizationSettings.bodies.kinematicTree.showJointFrames` | bool |  | True | if True, a frame is attached to the origin of every joint frame |
+| name | type | default | description |
+|---|---|---|---|
+| `frameSize`<br>`SC.visualizationSettings.bodies.kinematicTree.frameSize` | float | 0.2 | size of COM and joint frames |
+| `showCOMframes`<br>`SC.visualizationSettings.bodies.kinematicTree.showCOMframes` | bool | False | if True, a frame is attached to every center of mass |
+| `showFramesNumbers`<br>`SC.visualizationSettings.bodies.kinematicTree.showFramesNumbers` | bool | False | if True, numbers are drawn for joint frames (O[i]J[j]) and COM frames (O[i]COM[j]) for object [i] and local joint [j] |
+| `showJointFrames`<br>`SC.visualizationSettings.bodies.kinematicTree.showJointFrames` | bool | True | if True, a frame is attached to the origin of every joint frame |
 
 
 
@@ -196,19 +196,19 @@ Visualization settings for bodies.
 
 VSettingsBodies has the following items:
 
-```{tabularcolumns} |\Y{0.2}|\Y{0.14}|\Y{0.06}|\Y{0.15}|\Y{0.45}|
+```{tabularcolumns} \Y{0.34}\Y{0.13}\Y{0.13}\Y{0.4}
 ```
 
-| Name | type / function return type | size | default value / function args | description |
-|---|---|---|---|---|
-| `beams`<br>`SC.visualizationSettings.bodies.beams` | VSettingsBeams |  |  | visualization settings for beams (e.g. ANCFCable or other beam elements) |
-| `kinematicTree`<br>`SC.visualizationSettings.bodies.kinematicTree` | VSettingsKinematicTree |  |  | visualization settings for kinematic tree |
-| `shells`<br>`SC.visualizationSettings.bodies.shells` | VSettingsShells |  |  | visualization settings for plates and shells |
-| `defaultColor`<br>`SC.visualizationSettings.bodies.defaultColor` | Float4 | 4 | [0.3,0.3,1.,1.] | default RGBA color for bodies; 4th value is alpha-transparency |
-| `defaultSize`<br>`SC.visualizationSettings.bodies.defaultSize` | Float3 | 3 | [1.,1.,1.] | global body size of xyz-cube |
-| `deformationScaleFactor`<br>`SC.visualizationSettings.bodies.deformationScaleFactor` | float |  | 1 | global deformation scale factor for the drawing of superelements (FFRF, FFRFreducedOrder, GenericODE2 with a mesh): their mesh nodes and the markers on them are drawn with the local deformation scaled by it (#1813) |
-| `show`<br>`SC.visualizationSettings.bodies.show` | bool |  | True | flag to decide, whether the bodies are shown |
-| `showNumbers`<br>`SC.visualizationSettings.bodies.showNumbers` | bool |  | False | flag to decide, whether the body(=object) number is shown |
+| name | type | default | description |
+|---|---|---|---|
+| `beams`<br>`SC.visualizationSettings.bodies.beams` | VSettingsBeams |  | visualization settings for beams (e.g. ANCFCable or other beam elements) |
+| `kinematicTree`<br>`SC.visualizationSettings.bodies.kinematicTree` | VSettingsKinematicTree |  | visualization settings for kinematic tree |
+| `shells`<br>`SC.visualizationSettings.bodies.shells` | VSettingsShells |  | visualization settings for plates and shells |
+| `defaultColor`<br>`SC.visualizationSettings.bodies.defaultColor` | Float4 | [0.3,0.3,1.,1.] | default RGBA color for bodies; 4th value is alpha-transparency |
+| `defaultSize`<br>`SC.visualizationSettings.bodies.defaultSize` | Float3 | [1.,1.,1.] | global body size of xyz-cube |
+| `deformationScaleFactor`<br>`SC.visualizationSettings.bodies.deformationScaleFactor` | float | 1 | global deformation scale factor for the drawing of superelements (FFRF, FFRFreducedOrder, GenericODE2 with a mesh): their mesh nodes and the markers on them are drawn with the local deformation scaled by it (#1813) |
+| `show`<br>`SC.visualizationSettings.bodies.show` | bool | True | flag to decide, whether the bodies are shown |
+| `showNumbers`<br>`SC.visualizationSettings.bodies.showNumbers` | bool | False | flag to decide, whether the body(=object) number is shown |
 
 
 
@@ -219,23 +219,23 @@ Visualization settings for connectors.
 
 VSettingsConnectors has the following items:
 
-```{tabularcolumns} |\Y{0.2}|\Y{0.14}|\Y{0.06}|\Y{0.15}|\Y{0.45}|
+```{tabularcolumns} \Y{0.34}\Y{0.13}\Y{0.13}\Y{0.4}
 ```
 
-| Name | type / function return type | size | default value / function args | description |
-|---|---|---|---|---|
-| `contactPointsDefaultSize`<br>`SC.visualizationSettings.connectors.contactPointsDefaultSize` | float |  | 0.02 | DEPRECATED: do not use! global contact points size; if -1.f, connector size is relative to maxSceneSize |
-| `curveTiling`<br>`SC.visualizationSettings.connectors.curveTiling` | PInt |  | 32 | number of segments of a full turn of a space curve drawn by a connector: a winding of a spring, the arc of a rope on a sheave (ObjectConnectorReevingSystemSprings); an arc gets the share of its angle, at least one segment; circles and cylinders take the tilings of general |
-| `defaultColor`<br>`SC.visualizationSettings.connectors.defaultColor` | Float4 | 4 | [0.2,0.2,1.,1.] | default RGBA color for connectors; 4th value is alpha-transparency |
-| `defaultSize`<br>`SC.visualizationSettings.connectors.defaultSize` | float |  | 0.1 | global connector size; if -1.f, connector size is relative to maxSceneSize |
-| `drawSimplified`<br>`SC.visualizationSettings.connectors.drawSimplified` | bool |  | True | draw connectors with lines: the windings of springs, ObjectConnectorDistance; False draws the windings as a tube with a tenth of the spring radius and the distance connector as a rod of its drawSize |
-| `jointAxesLength`<br>`SC.visualizationSettings.connectors.jointAxesLength` | float |  | 0.2 | global joint axes length |
-| `jointAxesRadius`<br>`SC.visualizationSettings.connectors.jointAxesRadius` | float |  | 0.02 | global joint axes radius |
-| `show`<br>`SC.visualizationSettings.connectors.show` | bool |  | True | flag to decide, whether the connectors are shown |
-| `showContact`<br>`SC.visualizationSettings.connectors.showContact` | bool |  | False | flag to decide, whether contact points, lines, etc. are shown for special cable-circle contacts; for spheres, triangles, tori, see visualizationSettings.contact |
-| `showJointAxes`<br>`SC.visualizationSettings.connectors.showJointAxes` | bool |  | False | flag to decide, whether contact joint axes of 3D joints are shown |
-| `showNumbers`<br>`SC.visualizationSettings.connectors.showNumbers` | bool |  | False | flag to decide, whether the connector(=object) number is shown |
-| `springNumberOfWindings`<br>`SC.visualizationSettings.connectors.springNumberOfWindings` | PInt |  | 8 | number of windings for springs drawn as helical spring |
+| name | type | default | description |
+|---|---|---|---|
+| `contactPointsDefaultSize`<br>`SC.visualizationSettings.connectors.contactPointsDefaultSize` | float | 0.02 | DEPRECATED: do not use! global contact points size; if -1.f, connector size is relative to maxSceneSize |
+| `curveTiling`<br>`SC.visualizationSettings.connectors.curveTiling` | PInt | 32 | number of segments of a full turn of a space curve drawn by a connector: a winding of a spring, the arc of a rope on a sheave (ObjectConnectorReevingSystemSprings); an arc gets the share of its angle, at least one segment; circles and cylinders take the tilings of general |
+| `defaultColor`<br>`SC.visualizationSettings.connectors.defaultColor` | Float4 | [0.2,0.2,1.,1.] | default RGBA color for connectors; 4th value is alpha-transparency |
+| `defaultSize`<br>`SC.visualizationSettings.connectors.defaultSize` | float | 0.1 | global connector size; if -1.f, connector size is relative to maxSceneSize |
+| `drawSimplified`<br>`SC.visualizationSettings.connectors.drawSimplified` | bool | True | draw connectors with lines: the windings of springs, ObjectConnectorDistance; False draws the windings as a tube with a tenth of the spring radius and the distance connector as a rod of its drawSize |
+| `jointAxesLength`<br>`SC.visualizationSettings.connectors.jointAxesLength` | float | 0.2 | global joint axes length |
+| `jointAxesRadius`<br>`SC.visualizationSettings.connectors.jointAxesRadius` | float | 0.02 | global joint axes radius |
+| `show`<br>`SC.visualizationSettings.connectors.show` | bool | True | flag to decide, whether the connectors are shown |
+| `showContact`<br>`SC.visualizationSettings.connectors.showContact` | bool | False | flag to decide, whether contact points, lines, etc. are shown for special cable-circle contacts; for spheres, triangles, tori, see visualizationSettings.contact |
+| `showJointAxes`<br>`SC.visualizationSettings.connectors.showJointAxes` | bool | False | flag to decide, whether contact joint axes of 3D joints are shown |
+| `showNumbers`<br>`SC.visualizationSettings.connectors.showNumbers` | bool | False | flag to decide, whether the connector(=object) number is shown |
+| `springNumberOfWindings`<br>`SC.visualizationSettings.connectors.springNumberOfWindings` | PInt | 8 | number of windings for springs drawn as helical spring |
 
 
 
@@ -246,18 +246,18 @@ Visualization settings for markers.
 
 VSettingsMarkers has the following items:
 
-```{tabularcolumns} |\Y{0.2}|\Y{0.14}|\Y{0.06}|\Y{0.15}|\Y{0.45}|
+```{tabularcolumns} \Y{0.34}\Y{0.13}\Y{0.13}\Y{0.4}
 ```
 
-| Name | type / function return type | size | default value / function args | description |
-|---|---|---|---|---|
-| `basisSize`<br>`SC.visualizationSettings.markers.basisSize` | float |  | 0.2 | size of the frame of the markers |
-| `defaultColor`<br>`SC.visualizationSettings.markers.defaultColor` | Float4 | 4 | [0.1,0.5,0.1,1.] | default RGBA color for markers; 4th value is alpha-transparency |
-| `defaultSize`<br>`SC.visualizationSettings.markers.defaultSize` | float |  | -1. | global marker size; if -1.f, marker size is relative to maxSceneSize |
-| `drawSimplified`<br>`SC.visualizationSettings.markers.drawSimplified` | bool |  | True | draw markers with simplified symbols |
-| `show`<br>`SC.visualizationSettings.markers.show` | bool |  | True | flag to decide, whether the markers are shown |
-| `showBasis`<br>`SC.visualizationSettings.markers.showBasis` | bool |  | False | show the frame (three axes) of the markers with position and orientation; with drawSimplified as three lines in red, green and blue, else as three arrows, whose heads are half as long as those of a node basis |
-| `showNumbers`<br>`SC.visualizationSettings.markers.showNumbers` | bool |  | False | flag to decide, whether the marker numbers are shown |
+| name | type | default | description |
+|---|---|---|---|
+| `basisSize`<br>`SC.visualizationSettings.markers.basisSize` | float | 0.2 | size of the frame of the markers |
+| `defaultColor`<br>`SC.visualizationSettings.markers.defaultColor` | Float4 | [0.1,0.5,0.1,1.] | default RGBA color for markers; 4th value is alpha-transparency |
+| `defaultSize`<br>`SC.visualizationSettings.markers.defaultSize` | float | -1. | global marker size; if -1.f, marker size is relative to maxSceneSize |
+| `drawSimplified`<br>`SC.visualizationSettings.markers.drawSimplified` | bool | True | draw markers with simplified symbols |
+| `show`<br>`SC.visualizationSettings.markers.show` | bool | True | flag to decide, whether the markers are shown |
+| `showBasis`<br>`SC.visualizationSettings.markers.showBasis` | bool | False | show the frame (three axes) of the markers with position and orientation; with drawSimplified as three lines in red, green and blue, else as three arrows, whose heads are half as long as those of a node basis |
+| `showNumbers`<br>`SC.visualizationSettings.markers.showNumbers` | bool | False | flag to decide, whether the marker numbers are shown |
 
 
 
@@ -268,20 +268,20 @@ Visualization settings for loads.
 
 VSettingsLoads has the following items:
 
-```{tabularcolumns} |\Y{0.2}|\Y{0.14}|\Y{0.06}|\Y{0.15}|\Y{0.45}|
+```{tabularcolumns} \Y{0.34}\Y{0.13}\Y{0.13}\Y{0.4}
 ```
 
-| Name | type / function return type | size | default value / function args | description |
-|---|---|---|---|---|
-| `defaultColor`<br>`SC.visualizationSettings.loads.defaultColor` | Float4 | 4 | [0.7,0.1,0.1,1.] | default RGBA color for loads; 4th value is alpha-transparency |
-| `defaultRadius`<br>`SC.visualizationSettings.loads.defaultRadius` | float |  | 0.005 | global radius of load axis if drawn in 3D |
-| `defaultSize`<br>`SC.visualizationSettings.loads.defaultSize` | float |  | 0.2 | global load size; if -1.f, load size is relative to maxSceneSize |
-| `drawSimplified`<br>`SC.visualizationSettings.loads.drawSimplified` | bool |  | True | draw loads with simplified symbols |
-| `drawWithUserFunction`<br>`SC.visualizationSettings.loads.drawWithUserFunction` | bool |  | True | draw loads with the value of their user function, time dependent; make sure that fixedLoadSize=false, while otherwise only the direction will change; a symbolic user function is always drawn so, a Python user function only with general.useMultiThreadedRendering=False, because the render thread cannot call Python; otherwise the load is drawn with its loadVector |
-| `fixedLoadSize`<br>`SC.visualizationSettings.loads.fixedLoadSize` | bool |  | True | if true, the load is drawn with a fixed vector length in direction of the load vector, independently of the load size |
-| `loadSizeFactor`<br>`SC.visualizationSettings.loads.loadSizeFactor` | float |  | 0.1 | if fixedLoadSize=false, then this scaling factor is used to draw the load vector |
-| `show`<br>`SC.visualizationSettings.loads.show` | bool |  | True | flag to decide, whether the loads are shown |
-| `showNumbers`<br>`SC.visualizationSettings.loads.showNumbers` | bool |  | False | flag to decide, whether the load numbers are shown |
+| name | type | default | description |
+|---|---|---|---|
+| `defaultColor`<br>`SC.visualizationSettings.loads.defaultColor` | Float4 | [0.7,0.1,0.1,1.] | default RGBA color for loads; 4th value is alpha-transparency |
+| `defaultRadius`<br>`SC.visualizationSettings.loads.defaultRadius` | float | 0.005 | global radius of load axis if drawn in 3D |
+| `defaultSize`<br>`SC.visualizationSettings.loads.defaultSize` | float | 0.2 | global load size; if -1.f, load size is relative to maxSceneSize |
+| `drawSimplified`<br>`SC.visualizationSettings.loads.drawSimplified` | bool | True | draw loads with simplified symbols |
+| `drawWithUserFunction`<br>`SC.visualizationSettings.loads.drawWithUserFunction` | bool | True | draw loads with the value of their user function, time dependent; make sure that fixedLoadSize=false, while otherwise only the direction will change; a symbolic user function is always drawn so, a Python user function only with general.useMultiThreadedRendering=False, because the render thread cannot call Python; otherwise the load is drawn with its loadVector |
+| `fixedLoadSize`<br>`SC.visualizationSettings.loads.fixedLoadSize` | bool | True | if true, the load is drawn with a fixed vector length in direction of the load vector, independently of the load size |
+| `loadSizeFactor`<br>`SC.visualizationSettings.loads.loadSizeFactor` | float | 0.1 | if fixedLoadSize=false, then this scaling factor is used to draw the load vector |
+| `show`<br>`SC.visualizationSettings.loads.show` | bool | True | flag to decide, whether the loads are shown |
+| `showNumbers`<br>`SC.visualizationSettings.loads.showNumbers` | bool | False | flag to decide, whether the load numbers are shown |
 
 
 
@@ -292,29 +292,29 @@ Visualization settings for traces of sensors. Note that a large number of time p
 
 VSettingsTraces has the following items:
 
-```{tabularcolumns} |\Y{0.2}|\Y{0.14}|\Y{0.06}|\Y{0.15}|\Y{0.45}|
+```{tabularcolumns} \Y{0.34}\Y{0.13}\Y{0.13}\Y{0.4}
 ```
 
-| Name | type / function return type | size | default value / function args | description |
-|---|---|---|---|---|
-| `lineWidth`<br>`SC.visualizationSettings.sensors.traces.lineWidth` | UFloat |  | 2. | line width for traces |
-| `listOfPositionSensors`<br>`SC.visualizationSettings.sensors.traces.listOfPositionSensors` | ArrayIndex | -1 | [] | list of position sensors which can be shown as trace inside render window if sensors have storeInternal=True; if this list is empty and showPositionTrace=True, then all available sensors are shown |
-| `listOfTriadSensors`<br>`SC.visualizationSettings.sensors.traces.listOfTriadSensors` | ArrayIndex | -1 | [] | list of sensors of with OutputVariableType RotationMatrix; this non-empty list needs to coincide in length with the listOfPositionSensors to be shown if showTriads=True; the triad is drawn at the related position |
-| `listOfVectorSensors`<br>`SC.visualizationSettings.sensors.traces.listOfVectorSensors` | ArrayIndex | -1 | [] | list of sensors with 3D vector quantities; this non-empty list needs to coincide in length with the listOfPositionSensors to be shown if showVectors=True; the vector quantity is drawn relative to the related position |
-| `positionsShowEvery`<br>`SC.visualizationSettings.sensors.traces.positionsShowEvery` | PInt |  | 1 | integer value i; out of available sensor data, show every i-th position |
-| `sensorsMbsNumber`<br>`SC.visualizationSettings.sensors.traces.sensorsMbsNumber` | Index |  | 0 | number of main system which is used to for sensor lists; if only 1 mbs is in the SystemContainer, use 0; if there are several mbs, it needs to specify the number |
-| `showCurrent`<br>`SC.visualizationSettings.sensors.traces.showCurrent` | bool |  | True | show current trace position (and especially vector quantity) related to current visualization state; this only works in solution viewer if sensor values are stored at time grid points of the solution file (up to a precision of 1e-10) and may therefore be temporarily unavailable |
-| `showFuture`<br>`SC.visualizationSettings.sensors.traces.showFuture` | bool |  | False | show trace future to current visualization state if already computed (e.g. in SolutionViewer) |
-| `showPast`<br>`SC.visualizationSettings.sensors.traces.showPast` | bool |  | True | show trace previous to current visualization state |
-| `showPositionTrace`<br>`SC.visualizationSettings.sensors.traces.showPositionTrace` | bool |  | False | show position trace of all position sensors if listOfPositionSensors=[] or of specified sensors; sensors need to activate storeInternal=True |
-| `showTriads`<br>`SC.visualizationSettings.sensors.traces.showTriads` | bool |  | False | if True, show basis vectors from rotation matrices provided by sensors |
-| `showVectors`<br>`SC.visualizationSettings.sensors.traces.showVectors` | bool |  | False | if True, show vector quantities according to description in showPositionTrace |
-| `timeSpan`<br>`SC.visualizationSettings.sensors.traces.timeSpan` | UReal |  | 0 | maximum trace time span of past or future trace; given in seconds of simulation time; if zero, it is unused |
-| `traceColors`<br>`SC.visualizationSettings.sensors.traces.traceColors` | ArrayFloat | -1 | [0.2,0.2,0.2,1., 0.8,0.2,0.2,1., 0.2,0.8,0.2,1., 0.2,0.2,0.8,1., 0.2,0.8,0.8,1., 0.8,0.2,0.8,1., 0.8,0.4,0.1,1.] | RGBA float values for traces in one array; using 6x4 values gives different colors for 6 traces; in case of triads, the 0/1/2-axes are drawn in red, green, and blue |
-| `triadSize`<br>`SC.visualizationSettings.sensors.traces.triadSize` | float |  | 0.1 | length of triad axes if shown |
-| `triadsShowEvery`<br>`SC.visualizationSettings.sensors.traces.triadsShowEvery` | PInt |  | 1 | integer value i; out of available sensor data, show every i-th triad |
-| `vectorScaling`<br>`SC.visualizationSettings.sensors.traces.vectorScaling` | float |  | 0.01 | scaling of vector quantities; if, e.g., loads, this factor has to be adjusted significantly |
-| `vectorsShowEvery`<br>`SC.visualizationSettings.sensors.traces.vectorsShowEvery` | PInt |  | 1 | integer value i; out of available sensor data, show every i-th vector |
+| name | type | default | description |
+|---|---|---|---|
+| `lineWidth`<br>`SC.visualizationSettings.sensors.traces.lineWidth` | UFloat | 2. | line width for traces |
+| `listOfPositionSensors`<br>`SC.visualizationSettings.sensors.traces.listOfPositionSensors` | ArrayIndex | [] | list of position sensors which can be shown as trace inside render window if sensors have storeInternal=True; if this list is empty and showPositionTrace=True, then all available sensors are shown |
+| `listOfTriadSensors`<br>`SC.visualizationSettings.sensors.traces.listOfTriadSensors` | ArrayIndex | [] | list of sensors of with OutputVariableType RotationMatrix; this non-empty list needs to coincide in length with the listOfPositionSensors to be shown if showTriads=True; the triad is drawn at the related position |
+| `listOfVectorSensors`<br>`SC.visualizationSettings.sensors.traces.listOfVectorSensors` | ArrayIndex | [] | list of sensors with 3D vector quantities; this non-empty list needs to coincide in length with the listOfPositionSensors to be shown if showVectors=True; the vector quantity is drawn relative to the related position |
+| `positionsShowEvery`<br>`SC.visualizationSettings.sensors.traces.positionsShowEvery` | PInt | 1 | integer value i; out of available sensor data, show every i-th position |
+| `sensorsMbsNumber`<br>`SC.visualizationSettings.sensors.traces.sensorsMbsNumber` | Index | 0 | number of main system which is used to for sensor lists; if only 1 mbs is in the SystemContainer, use 0; if there are several mbs, it needs to specify the number |
+| `showCurrent`<br>`SC.visualizationSettings.sensors.traces.showCurrent` | bool | True | show current trace position (and especially vector quantity) related to current visualization state; this only works in solution viewer if sensor values are stored at time grid points of the solution file (up to a precision of 1e-10) and may therefore be temporarily unavailable |
+| `showFuture`<br>`SC.visualizationSettings.sensors.traces.showFuture` | bool | False | show trace future to current visualization state if already computed (e.g. in SolutionViewer) |
+| `showPast`<br>`SC.visualizationSettings.sensors.traces.showPast` | bool | True | show trace previous to current visualization state |
+| `showPositionTrace`<br>`SC.visualizationSettings.sensors.traces.showPositionTrace` | bool | False | show position trace of all position sensors if listOfPositionSensors=[] or of specified sensors; sensors need to activate storeInternal=True |
+| `showTriads`<br>`SC.visualizationSettings.sensors.traces.showTriads` | bool | False | if True, show basis vectors from rotation matrices provided by sensors |
+| `showVectors`<br>`SC.visualizationSettings.sensors.traces.showVectors` | bool | False | if True, show vector quantities according to description in showPositionTrace |
+| `timeSpan`<br>`SC.visualizationSettings.sensors.traces.timeSpan` | UReal | 0 | maximum trace time span of past or future trace; given in seconds of simulation time; if zero, it is unused |
+| `traceColors`<br>`SC.visualizationSettings.sensors.traces.traceColors` | ArrayFloat | [0.2,0.2,0.2,1., 0.8,0.2,0.2,1., 0.2,0.8,0.2,1., 0.2,0.2,0.8,1., 0.2,0.8,0.8,1., 0.8,0.2,0.8,1., 0.8,0.4,0.1,1.] | RGBA float values for traces in one array; using 6x4 values gives different colors for 6 traces; in case of triads, the 0/1/2-axes are drawn in red, green, and blue |
+| `triadSize`<br>`SC.visualizationSettings.sensors.traces.triadSize` | float | 0.1 | length of triad axes if shown |
+| `triadsShowEvery`<br>`SC.visualizationSettings.sensors.traces.triadsShowEvery` | PInt | 1 | integer value i; out of available sensor data, show every i-th triad |
+| `vectorScaling`<br>`SC.visualizationSettings.sensors.traces.vectorScaling` | float | 0.01 | scaling of vector quantities; if, e.g., loads, this factor has to be adjusted significantly |
+| `vectorsShowEvery`<br>`SC.visualizationSettings.sensors.traces.vectorsShowEvery` | PInt | 1 | integer value i; out of available sensor data, show every i-th vector |
 
 
 
@@ -325,17 +325,17 @@ Visualization settings for sensors.
 
 VSettingsSensors has the following items:
 
-```{tabularcolumns} |\Y{0.2}|\Y{0.14}|\Y{0.06}|\Y{0.15}|\Y{0.45}|
+```{tabularcolumns} \Y{0.34}\Y{0.13}\Y{0.13}\Y{0.4}
 ```
 
-| Name | type / function return type | size | default value / function args | description |
-|---|---|---|---|---|
-| `traces`<br>`SC.visualizationSettings.sensors.traces` | VSettingsTraces |  |  | settings for showing (position/triad) sensor traces and vector plots in the render window |
-| `defaultColor`<br>`SC.visualizationSettings.sensors.defaultColor` | Float4 | 4 | [0.6,0.6,0.1,1.] | default RGBA color for sensors; 4th value is alpha-transparency |
-| `defaultSize`<br>`SC.visualizationSettings.sensors.defaultSize` | float |  | -1. | global sensor size; if -1.f, sensor size is relative to maxSceneSize |
-| `drawSimplified`<br>`SC.visualizationSettings.sensors.drawSimplified` | bool |  | True | draw sensors with simplified symbols |
-| `show`<br>`SC.visualizationSettings.sensors.show` | bool |  | True | flag to decide, whether the sensors are shown |
-| `showNumbers`<br>`SC.visualizationSettings.sensors.showNumbers` | bool |  | False | flag to decide, whether the sensor numbers are shown |
+| name | type | default | description |
+|---|---|---|---|
+| `traces`<br>`SC.visualizationSettings.sensors.traces` | VSettingsTraces |  | settings for showing (position/triad) sensor traces and vector plots in the render window |
+| `defaultColor`<br>`SC.visualizationSettings.sensors.defaultColor` | Float4 | [0.6,0.6,0.1,1.] | default RGBA color for sensors; 4th value is alpha-transparency |
+| `defaultSize`<br>`SC.visualizationSettings.sensors.defaultSize` | float | -1. | global sensor size; if -1.f, sensor size is relative to maxSceneSize |
+| `drawSimplified`<br>`SC.visualizationSettings.sensors.drawSimplified` | bool | True | draw sensors with simplified symbols |
+| `show`<br>`SC.visualizationSettings.sensors.show` | bool | True | flag to decide, whether the sensors are shown |
+| `showNumbers`<br>`SC.visualizationSettings.sensors.showNumbers` | bool | False | flag to decide, whether the sensor numbers are shown |
 
 
 
@@ -346,28 +346,28 @@ Global visualization settings for GeneralContact. This allows to easily switch o
 
 VSettingsContact has the following items:
 
-```{tabularcolumns} |\Y{0.2}|\Y{0.14}|\Y{0.06}|\Y{0.15}|\Y{0.45}|
+```{tabularcolumns} \Y{0.34}\Y{0.13}\Y{0.13}\Y{0.4}
 ```
 
-| Name | type / function return type | size | default value / function args | description |
-|---|---|---|---|---|
-| `colorBoundingBoxes`<br>`SC.visualizationSettings.contact.colorBoundingBoxes` | Float4 | 4 | [0.9,0.1,0.1,1.] | RGBA color for boudnding boxes, see showBoundingBoxes |
-| `colorSearchTree`<br>`SC.visualizationSettings.contact.colorSearchTree` | Float4 | 4 | [0.1,0.1,0.9,1.] | RGBA color for search tree, see showSearchTree |
-| `colorSpheres`<br>`SC.visualizationSettings.contact.colorSpheres` | Float4 | 4 | [0.8,0.5,0.2,1.] | RGBA color for contact spheres, see showSpheres |
-| `colorTori`<br>`SC.visualizationSettings.contact.colorTori` | Float4 | 4 | [0.8,0.2,0.8,1.] | RGBA color for contact tori, see showTori |
-| `colorTriangles`<br>`SC.visualizationSettings.contact.colorTriangles` | Float4 | 4 | [0.5,0.5,0.5,1.] | RGBA color for contact triangles, see showTriangles |
-| `contactForcesFactor`<br>`SC.visualizationSettings.contact.contactForcesFactor` | float |  | 0.001 | factor used for scaling of contact forces is showContactForces=True |
-| `contactPointsDefaultSize`<br>`SC.visualizationSettings.contact.contactPointsDefaultSize` | float |  | 0.001 | global contact points size; if -1.f, connector size is relative to maxSceneSize; used for some contacts, e.g., in ContactFrictionCircle |
-| `showBoundingBoxes`<br>`SC.visualizationSettings.contact.showBoundingBoxes` | bool |  | False | show computed bounding boxes of all GeneralContacts; Warning: avoid for large number of contact objects! |
-| `showContactForces`<br>`SC.visualizationSettings.contact.showContactForces` | bool |  | False | if True, contact forces are drawn for certain contact models |
-| `showContactForcesValues`<br>`SC.visualizationSettings.contact.showContactForcesValues` | bool |  | False | if True and showContactForces=True, numerical values for contact forces are shown at certain points |
-| `showSearchTree`<br>`SC.visualizationSettings.contact.showSearchTree` | bool |  | False | show outer box of search tree for all GeneralContacts |
-| `showSearchTreeCells`<br>`SC.visualizationSettings.contact.showSearchTreeCells` | bool |  | False | show all cells of search tree; empty cells have colorSearchTree, cells with contact objects have higher red value; Warning: avoid for large number of search tree cells! |
-| `showSpheres`<br>`SC.visualizationSettings.contact.showSpheres` | bool |  | False | show contact spheres (SpheresWithMarker, ...) |
-| `showTori`<br>`SC.visualizationSettings.contact.showTori` | bool |  | False | show each contact torus |
-| `showTriangles`<br>`SC.visualizationSettings.contact.showTriangles` | bool |  | False | show contact triangles (TrianglesRigidBodyBased, ...) |
-| `tilingCurves`<br>`SC.visualizationSettings.contact.tilingCurves` | PInt |  | 8 | tiling for nonlinear/polynomial curves; higher values give smoother curves |
-| `tilingSpheres`<br>`SC.visualizationSettings.contact.tilingSpheres` | PInt |  | 4 | tiling for spheres; higher values give smoother spheres, but may lead to lower frame rates |
+| name | type | default | description |
+|---|---|---|---|
+| `colorBoundingBoxes`<br>`SC.visualizationSettings.contact.colorBoundingBoxes` | Float4 | [0.9,0.1,0.1,1.] | RGBA color for boudnding boxes, see showBoundingBoxes |
+| `colorSearchTree`<br>`SC.visualizationSettings.contact.colorSearchTree` | Float4 | [0.1,0.1,0.9,1.] | RGBA color for search tree, see showSearchTree |
+| `colorSpheres`<br>`SC.visualizationSettings.contact.colorSpheres` | Float4 | [0.8,0.5,0.2,1.] | RGBA color for contact spheres, see showSpheres |
+| `colorTori`<br>`SC.visualizationSettings.contact.colorTori` | Float4 | [0.8,0.2,0.8,1.] | RGBA color for contact tori, see showTori |
+| `colorTriangles`<br>`SC.visualizationSettings.contact.colorTriangles` | Float4 | [0.5,0.5,0.5,1.] | RGBA color for contact triangles, see showTriangles |
+| `contactForcesFactor`<br>`SC.visualizationSettings.contact.contactForcesFactor` | float | 0.001 | factor used for scaling of contact forces is showContactForces=True |
+| `contactPointsDefaultSize`<br>`SC.visualizationSettings.contact.contactPointsDefaultSize` | float | 0.001 | global contact points size; if -1.f, connector size is relative to maxSceneSize; used for some contacts, e.g., in ContactFrictionCircle |
+| `showBoundingBoxes`<br>`SC.visualizationSettings.contact.showBoundingBoxes` | bool | False | show computed bounding boxes of all GeneralContacts; Warning: avoid for large number of contact objects! |
+| `showContactForces`<br>`SC.visualizationSettings.contact.showContactForces` | bool | False | if True, contact forces are drawn for certain contact models |
+| `showContactForcesValues`<br>`SC.visualizationSettings.contact.showContactForcesValues` | bool | False | if True and showContactForces=True, numerical values for contact forces are shown at certain points |
+| `showSearchTree`<br>`SC.visualizationSettings.contact.showSearchTree` | bool | False | show outer box of search tree for all GeneralContacts |
+| `showSearchTreeCells`<br>`SC.visualizationSettings.contact.showSearchTreeCells` | bool | False | show all cells of search tree; empty cells have colorSearchTree, cells with contact objects have higher red value; Warning: avoid for large number of search tree cells! |
+| `showSpheres`<br>`SC.visualizationSettings.contact.showSpheres` | bool | False | show contact spheres (SpheresWithMarker, ...) |
+| `showTori`<br>`SC.visualizationSettings.contact.showTori` | bool | False | show each contact torus |
+| `showTriangles`<br>`SC.visualizationSettings.contact.showTriangles` | bool | False | show contact triangles (TrianglesRigidBodyBased, ...) |
+| `tilingCurves`<br>`SC.visualizationSettings.contact.tilingCurves` | PInt | 8 | tiling for nonlinear/polynomial curves; higher values give smoother curves |
+| `tilingSpheres`<br>`SC.visualizationSettings.contact.tilingSpheres` | PInt | 4 | tiling for spheres; higher values give smoother spheres, but may lead to lower frame rates |
 
 
 
@@ -378,22 +378,22 @@ Settings for camera like perspective, marker tracking, clipping plane, etc. Note
 
 VSettingsCamera has the following items:
 
-```{tabularcolumns} |\Y{0.2}|\Y{0.14}|\Y{0.06}|\Y{0.15}|\Y{0.45}|
+```{tabularcolumns} \Y{0.34}\Y{0.13}\Y{0.13}\Y{0.4}
 ```
 
-| Name | type / function return type | size | default value / function args | description |
-|---|---|---|---|---|
-| `cameraPosition`<br>`SC.visualizationSettings.view0.camera.cameraPosition`<br>`SC.visualizationSettings.view1.camera.cameraPosition`<br>`SC.visualizationSettings.view2.camera.cameraPosition`<br>`SC.visualizationSettings.view3.camera.cameraPosition` | Float3 | 3 | [0.,0.,0.] | if modelCentricView=True: offset to camera position in model view (and, if used, relative to tracked marker - instead of a tracked marker position, you could also just change the camera position in camera-centric views); camera rotation follows modelRotation in renderState |
-| `clippingPlaneDistance`<br>`SC.visualizationSettings.view0.camera.clippingPlaneDistance`<br>`SC.visualizationSettings.view1.camera.clippingPlaneDistance`<br>`SC.visualizationSettings.view2.camera.clippingPlaneDistance`<br>`SC.visualizationSettings.view3.camera.clippingPlaneDistance` | float |  | 0. | distance of clipping plane on normal vector; see also clippingPlaneNormal and openGL.advanced.clippingPlaneColor |
-| `clippingPlaneNormal`<br>`SC.visualizationSettings.view0.camera.clippingPlaneNormal`<br>`SC.visualizationSettings.view1.camera.clippingPlaneNormal`<br>`SC.visualizationSettings.view2.camera.clippingPlaneNormal`<br>`SC.visualizationSettings.view3.camera.clippingPlaneNormal` | Float3 | 3 | [0.,0.,0.] | normal vector of clipping plane, e.g. [0,0,1] to set a xy-clipping plane; the clipped half-space is in direction of the normal; use [0,0,0] to deactivate clipping plane; Note that clipping is mainly made for triangles in order to visualize hidden objects and currently it only fully clips triangles, but does not exactly cut them; see also clippingPlaneDistance and openGL.advanced.clippingPlaneColor |
-| `modelCentricView`<br>`SC.visualizationSettings.view0.camera.modelCentricView`<br>`SC.visualizationSettings.view1.camera.modelCentricView`<br>`SC.visualizationSettings.view2.camera.modelCentricView`<br>`SC.visualizationSettings.view3.camera.modelCentricView` | bool |  | True | True: rotations and translations are applied to model, while camera stays far enough away from the model and always captures the whole model (everything is in front of camera plane); False: camera moves and rotates while model stays in physical space; only geometry in front of camera is visible; note that the behavior of trackMarker changes with modelCentricView and some features are not available in case of modelCentricView=False. |
-| `nearFarPlaneOffset`<br>`SC.visualizationSettings.view0.camera.nearFarPlaneOffset`<br>`SC.visualizationSettings.view1.camera.nearFarPlaneOffset`<br>`SC.visualizationSettings.view2.camera.nearFarPlaneOffset`<br>`SC.visualizationSettings.view3.camera.nearFarPlaneOffset` | Float3 | 3 | [0.,0.,0.] | the three values are [nearPlaneOffset, farPlaneOffset, flag]; if flag=0, the offsets are ignored and computed automatically, using x = 2 * maxSceneSize * zMaxSceneFactor, setting near plane to -x and far plane to +x in case of modelCentricView=True and setting near plane to 0.01 (minimal offset to eye point) and far plane to +x if modelCentricView=False; if flag=1, the near and far plane values are just overwritten; note that positive values for near plane make objects in front of the camera invisible while negative values make objects behind the camera plane visible; in case of camera-centric view, the eyepoint can be shifted backwards using cameraPosition accordingly. |
-| `perspective`<br>`SC.visualizationSettings.view0.camera.perspective`<br>`SC.visualizationSettings.view1.camera.perspective`<br>`SC.visualizationSettings.view2.camera.perspective`<br>`SC.visualizationSettings.view3.camera.perspective` | UFloat |  | 0. | parameter prescribes amount of perspective (0=no perspective=orthographic projection; positive values increase perspective; feasible values are 0.001 (little perspective) ... 1 (extreme: 5), where larger values are possible but should be used with care; NOTE that the relation to the common field of view (FOV) angle alpha, with alpha=90°, is given by perspective = tan(alpha/2) = 1; mouse coordinates (F3) can not be shown with perspective>0 |
-| `trackMarker`<br>`SC.visualizationSettings.view0.camera.trackMarker`<br>`SC.visualizationSettings.view1.camera.trackMarker`<br>`SC.visualizationSettings.view2.camera.trackMarker`<br>`SC.visualizationSettings.view3.camera.trackMarker` | Int |  | -1 | if valid marker index is provided and marker provides position (and orientation), the centerpoint of the scene follows the marker (and orientation); depends on trackMarkerPosition and trackMarkerOrientation; by default, only position is tracked |
-| `trackMarkerMbsNumber`<br>`SC.visualizationSettings.view0.camera.trackMarkerMbsNumber`<br>`SC.visualizationSettings.view1.camera.trackMarkerMbsNumber`<br>`SC.visualizationSettings.view2.camera.trackMarkerMbsNumber`<br>`SC.visualizationSettings.view3.camera.trackMarkerMbsNumber` | Index |  | 0 | number of main system which is used to track marker; if only 1 mbs is in the SystemContainer, use 0; if there are several mbs, it needs to specify the number |
-| `trackMarkerOrientation`<br>`SC.visualizationSettings.view0.camera.trackMarkerOrientation`<br>`SC.visualizationSettings.view1.camera.trackMarkerOrientation`<br>`SC.visualizationSettings.view2.camera.trackMarkerOrientation`<br>`SC.visualizationSettings.view3.camera.trackMarkerOrientation` | Float3 | 3 | [0.,0.,0.] | choose which orientation axes (x,y,z) are tracked; currently can only be all zero or all one |
-| `trackMarkerPosition`<br>`SC.visualizationSettings.view0.camera.trackMarkerPosition`<br>`SC.visualizationSettings.view1.camera.trackMarkerPosition`<br>`SC.visualizationSettings.view2.camera.trackMarkerPosition`<br>`SC.visualizationSettings.view3.camera.trackMarkerPosition` | Float3 | 3 | [1.,1.,1.] | choose which coordinates or marker are tracked (x,y,z) |
-| `useRaytracer`<br>`SC.visualizationSettings.view0.camera.useRaytracer`<br>`SC.visualizationSettings.view1.camera.useRaytracer`<br>`SC.visualizationSettings.view2.camera.useRaytracer`<br>`SC.visualizationSettings.view3.camera.useRaytracer` | bool |  | False | True: use (software) raytracer for this view; False: use standard OpenGL renderer |
+| name | type | default | description |
+|---|---|---|---|
+| `cameraPosition`<br>`SC.visualizationSettings.view0.camera.cameraPosition`<br>`SC.visualizationSettings.view1.camera.cameraPosition`<br>`SC.visualizationSettings.view2.camera.cameraPosition`<br>`SC.visualizationSettings.view3.camera.cameraPosition` | Float3 | [0.,0.,0.] | if modelCentricView=True: offset to camera position in model view (and, if used, relative to tracked marker - instead of a tracked marker position, you could also just change the camera position in camera-centric views); camera rotation follows modelRotation in renderState |
+| `clippingPlaneDistance`<br>`SC.visualizationSettings.view0.camera.clippingPlaneDistance`<br>`SC.visualizationSettings.view1.camera.clippingPlaneDistance`<br>`SC.visualizationSettings.view2.camera.clippingPlaneDistance`<br>`SC.visualizationSettings.view3.camera.clippingPlaneDistance` | float | 0. | distance of clipping plane on normal vector; see also clippingPlaneNormal and openGL.advanced.clippingPlaneColor |
+| `clippingPlaneNormal`<br>`SC.visualizationSettings.view0.camera.clippingPlaneNormal`<br>`SC.visualizationSettings.view1.camera.clippingPlaneNormal`<br>`SC.visualizationSettings.view2.camera.clippingPlaneNormal`<br>`SC.visualizationSettings.view3.camera.clippingPlaneNormal` | Float3 | [0.,0.,0.] | normal vector of clipping plane, e.g. [0,0,1] to set a xy-clipping plane; the clipped half-space is in direction of the normal; use [0,0,0] to deactivate clipping plane; Note that clipping is mainly made for triangles in order to visualize hidden objects and currently it only fully clips triangles, but does not exactly cut them; see also clippingPlaneDistance and openGL.advanced.clippingPlaneColor |
+| `modelCentricView`<br>`SC.visualizationSettings.view0.camera.modelCentricView`<br>`SC.visualizationSettings.view1.camera.modelCentricView`<br>`SC.visualizationSettings.view2.camera.modelCentricView`<br>`SC.visualizationSettings.view3.camera.modelCentricView` | bool | True | True: rotations and translations are applied to model, while camera stays far enough away from the model and always captures the whole model (everything is in front of camera plane); False: camera moves and rotates while model stays in physical space; only geometry in front of camera is visible; note that the behavior of trackMarker changes with modelCentricView and some features are not available in case of modelCentricView=False. |
+| `nearFarPlaneOffset`<br>`SC.visualizationSettings.view0.camera.nearFarPlaneOffset`<br>`SC.visualizationSettings.view1.camera.nearFarPlaneOffset`<br>`SC.visualizationSettings.view2.camera.nearFarPlaneOffset`<br>`SC.visualizationSettings.view3.camera.nearFarPlaneOffset` | Float3 | [0.,0.,0.] | the three values are [nearPlaneOffset, farPlaneOffset, flag]; if flag=0, the offsets are ignored and computed automatically, using x = 2 * maxSceneSize * zMaxSceneFactor, setting near plane to -x and far plane to +x in case of modelCentricView=True and setting near plane to 0.01 (minimal offset to eye point) and far plane to +x if modelCentricView=False; if flag=1, the near and far plane values are just overwritten; note that positive values for near plane make objects in front of the camera invisible while negative values make objects behind the camera plane visible; in case of camera-centric view, the eyepoint can be shifted backwards using cameraPosition accordingly. |
+| `perspective`<br>`SC.visualizationSettings.view0.camera.perspective`<br>`SC.visualizationSettings.view1.camera.perspective`<br>`SC.visualizationSettings.view2.camera.perspective`<br>`SC.visualizationSettings.view3.camera.perspective` | UFloat | 0. | parameter prescribes amount of perspective (0=no perspective=orthographic projection; positive values increase perspective; feasible values are 0.001 (little perspective) ... 1 (extreme: 5), where larger values are possible but should be used with care; NOTE that the relation to the common field of view (FOV) angle alpha, with alpha=90°, is given by perspective = tan(alpha/2) = 1; mouse coordinates (F3) can not be shown with perspective>0 |
+| `trackMarker`<br>`SC.visualizationSettings.view0.camera.trackMarker`<br>`SC.visualizationSettings.view1.camera.trackMarker`<br>`SC.visualizationSettings.view2.camera.trackMarker`<br>`SC.visualizationSettings.view3.camera.trackMarker` | Int | -1 | if valid marker index is provided and marker provides position (and orientation), the centerpoint of the scene follows the marker (and orientation); depends on trackMarkerPosition and trackMarkerOrientation; by default, only position is tracked |
+| `trackMarkerMbsNumber`<br>`SC.visualizationSettings.view0.camera.trackMarkerMbsNumber`<br>`SC.visualizationSettings.view1.camera.trackMarkerMbsNumber`<br>`SC.visualizationSettings.view2.camera.trackMarkerMbsNumber`<br>`SC.visualizationSettings.view3.camera.trackMarkerMbsNumber` | Index | 0 | number of main system which is used to track marker; if only 1 mbs is in the SystemContainer, use 0; if there are several mbs, it needs to specify the number |
+| `trackMarkerOrientation`<br>`SC.visualizationSettings.view0.camera.trackMarkerOrientation`<br>`SC.visualizationSettings.view1.camera.trackMarkerOrientation`<br>`SC.visualizationSettings.view2.camera.trackMarkerOrientation`<br>`SC.visualizationSettings.view3.camera.trackMarkerOrientation` | Float3 | [0.,0.,0.] | choose which orientation axes (x,y,z) are tracked; currently can only be all zero or all one |
+| `trackMarkerPosition`<br>`SC.visualizationSettings.view0.camera.trackMarkerPosition`<br>`SC.visualizationSettings.view1.camera.trackMarkerPosition`<br>`SC.visualizationSettings.view2.camera.trackMarkerPosition`<br>`SC.visualizationSettings.view3.camera.trackMarkerPosition` | Float3 | [1.,1.,1.] | choose which coordinates or marker are tracked (x,y,z) |
+| `useRaytracer`<br>`SC.visualizationSettings.view0.camera.useRaytracer`<br>`SC.visualizationSettings.view1.camera.useRaytracer`<br>`SC.visualizationSettings.view2.camera.useRaytracer`<br>`SC.visualizationSettings.view3.camera.useRaytracer` | bool | False | True: use (software) raytracer for this view; False: use standard OpenGL renderer |
 
 
 
@@ -404,20 +404,20 @@ Settings change scene representation (show edges, show faces, global transparenc
 
 VSettingsScene has the following items:
 
-```{tabularcolumns} |\Y{0.2}|\Y{0.14}|\Y{0.06}|\Y{0.15}|\Y{0.45}|
+```{tabularcolumns} \Y{0.34}\Y{0.13}\Y{0.13}\Y{0.4}
 ```
 
-| Name | type / function return type | size | default value / function args | description |
-|---|---|---|---|---|
-| `drawCoordinateSystem`<br>`SC.visualizationSettings.view0.scene.drawCoordinateSystem`<br>`SC.visualizationSettings.view1.scene.drawCoordinateSystem`<br>`SC.visualizationSettings.view2.scene.drawCoordinateSystem`<br>`SC.visualizationSettings.view3.scene.drawCoordinateSystem` | UInt |  | 2 | 0 = no coordinate system shown, 1 = draw lines with text, 2 = draw arrows, 3 = draw arrows with text |
-| `drawWorldBasis`<br>`SC.visualizationSettings.view0.scene.drawWorldBasis`<br>`SC.visualizationSettings.view1.scene.drawWorldBasis`<br>`SC.visualizationSettings.view2.scene.drawWorldBasis`<br>`SC.visualizationSettings.view3.scene.drawWorldBasis` | bool |  | False | true = draw world basis coordinate system at (0,0,0) |
-| `facesTransparent`<br>`SC.visualizationSettings.view0.scene.facesTransparent`<br>`SC.visualizationSettings.view1.scene.facesTransparent`<br>`SC.visualizationSettings.view2.scene.facesTransparent`<br>`SC.visualizationSettings.view3.scene.facesTransparent` | bool |  | False | True: show faces transparent independent of transparency (A)-value in color of objects; allow to show otherwise hidden node/marker/object numbers |
-| `showFaceEdges`<br>`SC.visualizationSettings.view0.scene.showFaceEdges`<br>`SC.visualizationSettings.view1.scene.showFaceEdges`<br>`SC.visualizationSettings.view2.scene.showFaceEdges`<br>`SC.visualizationSettings.view3.scene.showFaceEdges` | bool |  | False | True: show edges of triangles; using the options showFaces=false and showFaceEdges=true gives are wire frame representation |
-| `showFaces`<br>`SC.visualizationSettings.view0.scene.showFaces`<br>`SC.visualizationSettings.view1.scene.showFaces`<br>`SC.visualizationSettings.view2.scene.showFaces`<br>`SC.visualizationSettings.view3.scene.showFaces` | bool |  | True | True: show faces of triangles, etc.; using the options showFaces=false and showFaceEdges=true gives are wireframe representation |
-| `showLines`<br>`SC.visualizationSettings.view0.scene.showLines`<br>`SC.visualizationSettings.view1.scene.showLines`<br>`SC.visualizationSettings.view2.scene.showLines`<br>`SC.visualizationSettings.view3.scene.showLines` | bool |  | True | True: show lines (other lines than face and mesh edges) |
-| `showMeshEdges`<br>`SC.visualizationSettings.view0.scene.showMeshEdges`<br>`SC.visualizationSettings.view1.scene.showMeshEdges`<br>`SC.visualizationSettings.view2.scene.showMeshEdges`<br>`SC.visualizationSettings.view3.scene.showMeshEdges` | bool |  | True | True: show edges of finite elements; independent of showFaceEdges |
-| `showMeshFaces`<br>`SC.visualizationSettings.view0.scene.showMeshFaces`<br>`SC.visualizationSettings.view1.scene.showMeshFaces`<br>`SC.visualizationSettings.view2.scene.showMeshFaces`<br>`SC.visualizationSettings.view3.scene.showMeshFaces` | bool |  | True | True: show faces of finite elements; independent of showFaces |
-| `worldBasisSize`<br>`SC.visualizationSettings.view0.scene.worldBasisSize`<br>`SC.visualizationSettings.view1.scene.worldBasisSize`<br>`SC.visualizationSettings.view2.scene.worldBasisSize`<br>`SC.visualizationSettings.view3.scene.worldBasisSize` | PFloat |  | 1. | size of world basis coordinate system |
+| name | type | default | description |
+|---|---|---|---|
+| `drawCoordinateSystem`<br>`SC.visualizationSettings.view0.scene.drawCoordinateSystem`<br>`SC.visualizationSettings.view1.scene.drawCoordinateSystem`<br>`SC.visualizationSettings.view2.scene.drawCoordinateSystem`<br>`SC.visualizationSettings.view3.scene.drawCoordinateSystem` | UInt | 2 | 0 = no coordinate system shown, 1 = draw lines with text, 2 = draw arrows, 3 = draw arrows with text |
+| `drawWorldBasis`<br>`SC.visualizationSettings.view0.scene.drawWorldBasis`<br>`SC.visualizationSettings.view1.scene.drawWorldBasis`<br>`SC.visualizationSettings.view2.scene.drawWorldBasis`<br>`SC.visualizationSettings.view3.scene.drawWorldBasis` | bool | False | true = draw world basis coordinate system at (0,0,0) |
+| `facesTransparent`<br>`SC.visualizationSettings.view0.scene.facesTransparent`<br>`SC.visualizationSettings.view1.scene.facesTransparent`<br>`SC.visualizationSettings.view2.scene.facesTransparent`<br>`SC.visualizationSettings.view3.scene.facesTransparent` | bool | False | True: show faces transparent independent of transparency (A)-value in color of objects; allow to show otherwise hidden node/marker/object numbers |
+| `showFaceEdges`<br>`SC.visualizationSettings.view0.scene.showFaceEdges`<br>`SC.visualizationSettings.view1.scene.showFaceEdges`<br>`SC.visualizationSettings.view2.scene.showFaceEdges`<br>`SC.visualizationSettings.view3.scene.showFaceEdges` | bool | False | True: show edges of triangles; using the options showFaces=false and showFaceEdges=true gives are wire frame representation |
+| `showFaces`<br>`SC.visualizationSettings.view0.scene.showFaces`<br>`SC.visualizationSettings.view1.scene.showFaces`<br>`SC.visualizationSettings.view2.scene.showFaces`<br>`SC.visualizationSettings.view3.scene.showFaces` | bool | True | True: show faces of triangles, etc.; using the options showFaces=false and showFaceEdges=true gives are wireframe representation |
+| `showLines`<br>`SC.visualizationSettings.view0.scene.showLines`<br>`SC.visualizationSettings.view1.scene.showLines`<br>`SC.visualizationSettings.view2.scene.showLines`<br>`SC.visualizationSettings.view3.scene.showLines` | bool | True | True: show lines (other lines than face and mesh edges) |
+| `showMeshEdges`<br>`SC.visualizationSettings.view0.scene.showMeshEdges`<br>`SC.visualizationSettings.view1.scene.showMeshEdges`<br>`SC.visualizationSettings.view2.scene.showMeshEdges`<br>`SC.visualizationSettings.view3.scene.showMeshEdges` | bool | True | True: show edges of finite elements; independent of showFaceEdges |
+| `showMeshFaces`<br>`SC.visualizationSettings.view0.scene.showMeshFaces`<br>`SC.visualizationSettings.view1.scene.showMeshFaces`<br>`SC.visualizationSettings.view2.scene.showMeshFaces`<br>`SC.visualizationSettings.view3.scene.showMeshFaces` | bool | True | True: show faces of finite elements; independent of showFaces |
+| `worldBasisSize`<br>`SC.visualizationSettings.view0.scene.worldBasisSize`<br>`SC.visualizationSettings.view1.scene.worldBasisSize`<br>`SC.visualizationSettings.view2.scene.worldBasisSize`<br>`SC.visualizationSettings.view3.scene.worldBasisSize` | PFloat | 1. | size of world basis coordinate system |
 
 
 
@@ -428,22 +428,22 @@ Settings for window that are individual to each view; in particular initial size
 
 VSettingsWindow has the following items:
 
-```{tabularcolumns} |\Y{0.2}|\Y{0.14}|\Y{0.06}|\Y{0.15}|\Y{0.45}|
+```{tabularcolumns} \Y{0.34}\Y{0.13}\Y{0.13}\Y{0.4}
 ```
 
-| Name | type / function return type | size | default value / function args | description |
-|---|---|---|---|---|
-| `alwaysOnTop`<br>`SC.visualizationSettings.view0.window.alwaysOnTop`<br>`SC.visualizationSettings.view1.window.alwaysOnTop`<br>`SC.visualizationSettings.view2.window.alwaysOnTop`<br>`SC.visualizationSettings.view3.window.alwaysOnTop` | bool |  | False | True: render window of respective view will be always on top of all other windows |
-| `globalFontSize`<br>`SC.visualizationSettings.view0.window.globalFontSize`<br>`SC.visualizationSettings.view1.window.globalFontSize`<br>`SC.visualizationSettings.view2.window.globalFontSize`<br>`SC.visualizationSettings.view3.window.globalFontSize` | PFloat |  | 12. | general text font size (roughly measured in pixels); if useWindowsDisplayScaleFactor=True, the the textSize is multplied with the windows display scaling (monitor scaling; content scaling) factor for larger texts on on high resolution displays; for bitmap fonts, the maximum size of any font (standard/large/huge) is limited to 256 (which is not recommended, especially if you do not have a powerful graphics card) |
-| `lockModelView`<br>`SC.visualizationSettings.view0.window.lockModelView`<br>`SC.visualizationSettings.view1.window.lockModelView`<br>`SC.visualizationSettings.view2.window.lockModelView`<br>`SC.visualizationSettings.view3.window.lockModelView` | bool |  | False | True: all movements (with mouse/keys), rotations, zoom are disabled; the view is either based on initial values (or on the current state) ==> initial zoom, rotation and center point need to be adjusted, approx. 0.4*maxSceneSize is a good value |
-| `maximize`<br>`SC.visualizationSettings.view0.window.maximize`<br>`SC.visualizationSettings.view1.window.maximize`<br>`SC.visualizationSettings.view2.window.maximize`<br>`SC.visualizationSettings.view3.window.maximize` | bool |  | False | True: render window of respective view will be maximized at startup |
-| `renderWindowPosition`<br>`SC.visualizationSettings.view0.window.renderWindowPosition`<br>`SC.visualizationSettings.view1.window.renderWindowPosition`<br>`SC.visualizationSettings.view2.window.renderWindowPosition`<br>`SC.visualizationSettings.view3.window.renderWindowPosition` | Index2 | 2 | [-1,-1] | position of the top left corner of the render window of this view, in pixels; a NEGATIVE coordinate - which is the default - means that the window manager places the window, as it did before this setting existed. Set both to place the window, or store them in `~/.exudyn/config.json` to have every run start there, see Section [](#sec-usersettings). NOTE: this is the position of the OpenGL area, not of the title bar, so a small value hides part of the title bar and 0 hides it completely - which still leaves the escape key, and is a way to have a view without one. The position is only used while the window is created, and one that lies outside the screens you have now puts the window where you cannot reach it |
-| `renderWindowSize`<br>`SC.visualizationSettings.view0.window.renderWindowSize`<br>`SC.visualizationSettings.view1.window.renderWindowSize`<br>`SC.visualizationSettings.view2.window.renderWindowSize`<br>`SC.visualizationSettings.view3.window.renderWindowSize` | Index2 | 2 | [1024,768] | initial size of the render window of this view, in pixels |
-| `showComputationInfo`<br>`SC.visualizationSettings.view0.window.showComputationInfo`<br>`SC.visualizationSettings.view1.window.showComputationInfo`<br>`SC.visualizationSettings.view2.window.showComputationInfo`<br>`SC.visualizationSettings.view3.window.showComputationInfo` | bool |  | True | true = show (hide) all computation information including Exudyn and version |
-| `showMouseCoordinates`<br>`SC.visualizationSettings.view0.window.showMouseCoordinates`<br>`SC.visualizationSettings.view1.window.showMouseCoordinates`<br>`SC.visualizationSettings.view2.window.showMouseCoordinates`<br>`SC.visualizationSettings.view3.window.showMouseCoordinates` | bool |  | False | True: show OpenGL coordinates and distance to last left mouse button pressed position in renderer status message; switched on/off with key 'F3'; only works for axis-aligned ortho-projections |
-| `showRenderStateInfo`<br>`SC.visualizationSettings.view0.window.showRenderStateInfo`<br>`SC.visualizationSettings.view1.window.showRenderStateInfo`<br>`SC.visualizationSettings.view2.window.showRenderStateInfo`<br>`SC.visualizationSettings.view3.window.showRenderStateInfo` | bool |  | False | True: show renderer.state infos regarding zoom, offset and rotation in renderer status message; switched on/off with 'CTRL-F3' |
-| `showWindow`<br>`SC.visualizationSettings.view0.window.showWindow`<br>`SC.visualizationSettings.view1.window.showWindow`<br>`SC.visualizationSettings.view2.window.showWindow`<br>`SC.visualizationSettings.view3.window.showWindow` | bool |  | True | True: render window of respective view is shown when created; False: window will be iconified when created (e.g. if you are starting multiple computations automatically) |
-| `storeRenderWindowGeometry`<br>`SC.visualizationSettings.view0.window.storeRenderWindowGeometry`<br>`SC.visualizationSettings.view1.window.storeRenderWindowGeometry`<br>`SC.visualizationSettings.view2.window.storeRenderWindowGeometry`<br>`SC.visualizationSettings.view3.window.storeRenderWindowGeometry` | bool |  | False | True: when the render window of this view closes, where it was is written into `renderWindowSize` and `renderWindowPosition` - so that storing the settings keeps the window where you left it, see Section [](#sec-usersettings). False (default): the settings are only ever what you set, which is why *diff to default* does not report a window position after every run |
+| name | type | default | description |
+|---|---|---|---|
+| `alwaysOnTop`<br>`SC.visualizationSettings.view0.window.alwaysOnTop`<br>`SC.visualizationSettings.view1.window.alwaysOnTop`<br>`SC.visualizationSettings.view2.window.alwaysOnTop`<br>`SC.visualizationSettings.view3.window.alwaysOnTop` | bool | False | True: render window of respective view will be always on top of all other windows |
+| `globalFontSize`<br>`SC.visualizationSettings.view0.window.globalFontSize`<br>`SC.visualizationSettings.view1.window.globalFontSize`<br>`SC.visualizationSettings.view2.window.globalFontSize`<br>`SC.visualizationSettings.view3.window.globalFontSize` | PFloat | 12. | general text font size (roughly measured in pixels); if useWindowsDisplayScaleFactor=True, the the textSize is multplied with the windows display scaling (monitor scaling; content scaling) factor for larger texts on on high resolution displays; for bitmap fonts, the maximum size of any font (standard/large/huge) is limited to 256 (which is not recommended, especially if you do not have a powerful graphics card) |
+| `lockModelView`<br>`SC.visualizationSettings.view0.window.lockModelView`<br>`SC.visualizationSettings.view1.window.lockModelView`<br>`SC.visualizationSettings.view2.window.lockModelView`<br>`SC.visualizationSettings.view3.window.lockModelView` | bool | False | True: all movements (with mouse/keys), rotations, zoom are disabled; the view is either based on initial values (or on the current state) ==> initial zoom, rotation and center point need to be adjusted, approx. 0.4*maxSceneSize is a good value |
+| `maximize`<br>`SC.visualizationSettings.view0.window.maximize`<br>`SC.visualizationSettings.view1.window.maximize`<br>`SC.visualizationSettings.view2.window.maximize`<br>`SC.visualizationSettings.view3.window.maximize` | bool | False | True: render window of respective view will be maximized at startup |
+| `renderWindowPosition`<br>`SC.visualizationSettings.view0.window.renderWindowPosition`<br>`SC.visualizationSettings.view1.window.renderWindowPosition`<br>`SC.visualizationSettings.view2.window.renderWindowPosition`<br>`SC.visualizationSettings.view3.window.renderWindowPosition` | Index2 | [-1,-1] | position of the top left corner of the render window of this view, in pixels; a NEGATIVE coordinate - which is the default - means that the window manager places the window, as it did before this setting existed. Set both to place the window, or store them in `~/.exudyn/config.json` to have every run start there, see Section [](#sec-usersettings). NOTE: this is the position of the OpenGL area, not of the title bar, so a small value hides part of the title bar and 0 hides it completely - which still leaves the escape key, and is a way to have a view without one. The position is only used while the window is created, and one that lies outside the screens you have now puts the window where you cannot reach it |
+| `renderWindowSize`<br>`SC.visualizationSettings.view0.window.renderWindowSize`<br>`SC.visualizationSettings.view1.window.renderWindowSize`<br>`SC.visualizationSettings.view2.window.renderWindowSize`<br>`SC.visualizationSettings.view3.window.renderWindowSize` | Index2 | [1024,768] | initial size of the render window of this view, in pixels |
+| `showComputationInfo`<br>`SC.visualizationSettings.view0.window.showComputationInfo`<br>`SC.visualizationSettings.view1.window.showComputationInfo`<br>`SC.visualizationSettings.view2.window.showComputationInfo`<br>`SC.visualizationSettings.view3.window.showComputationInfo` | bool | True | true = show (hide) all computation information including Exudyn and version |
+| `showMouseCoordinates`<br>`SC.visualizationSettings.view0.window.showMouseCoordinates`<br>`SC.visualizationSettings.view1.window.showMouseCoordinates`<br>`SC.visualizationSettings.view2.window.showMouseCoordinates`<br>`SC.visualizationSettings.view3.window.showMouseCoordinates` | bool | False | True: show OpenGL coordinates and distance to last left mouse button pressed position in renderer status message; switched on/off with key 'F3'; only works for axis-aligned ortho-projections |
+| `showRenderStateInfo`<br>`SC.visualizationSettings.view0.window.showRenderStateInfo`<br>`SC.visualizationSettings.view1.window.showRenderStateInfo`<br>`SC.visualizationSettings.view2.window.showRenderStateInfo`<br>`SC.visualizationSettings.view3.window.showRenderStateInfo` | bool | False | True: show renderer.state infos regarding zoom, offset and rotation in renderer status message; switched on/off with 'CTRL-F3' |
+| `showWindow`<br>`SC.visualizationSettings.view0.window.showWindow`<br>`SC.visualizationSettings.view1.window.showWindow`<br>`SC.visualizationSettings.view2.window.showWindow`<br>`SC.visualizationSettings.view3.window.showWindow` | bool | True | True: render window of respective view is shown when created; False: window will be iconified when created (e.g. if you are starting multiple computations automatically) |
+| `storeRenderWindowGeometry`<br>`SC.visualizationSettings.view0.window.storeRenderWindowGeometry`<br>`SC.visualizationSettings.view1.window.storeRenderWindowGeometry`<br>`SC.visualizationSettings.view2.window.storeRenderWindowGeometry`<br>`SC.visualizationSettings.view3.window.storeRenderWindowGeometry` | bool | False | True: when the render window of this view closes, where it was is written into `renderWindowSize` and `renderWindowPosition` - so that storing the settings keeps the window where you left it, see Section [](#sec-usersettings). False (default): the settings are only ever what you set, which is why *diff to default* does not report a window position after every run |
 
 
 
@@ -454,14 +454,14 @@ Settings for view including camera, scene, window, and advanced options to setup
 
 VSettingsView has the following items:
 
-```{tabularcolumns} |\Y{0.2}|\Y{0.14}|\Y{0.06}|\Y{0.15}|\Y{0.45}|
+```{tabularcolumns} \Y{0.34}\Y{0.13}\Y{0.13}\Y{0.4}
 ```
 
-| Name | type / function return type | size | default value / function args | description |
-|---|---|---|---|---|
-| `camera`<br>`SC.visualizationSettings.view0.camera`<br>`SC.visualizationSettings.view1.camera`<br>`SC.visualizationSettings.view2.camera`<br>`SC.visualizationSettings.view3.camera` | VSettingsCamera |  |  | settings for camera like perspective, marker tracking or clipping plane |
-| `scene`<br>`SC.visualizationSettings.view0.scene`<br>`SC.visualizationSettings.view1.scene`<br>`SC.visualizationSettings.view2.scene`<br>`SC.visualizationSettings.view3.scene` | VSettingsScene |  |  | settings which change scene representation, showing edges, faces or world basis |
-| `window`<br>`SC.visualizationSettings.view0.window`<br>`SC.visualizationSettings.view1.window`<br>`SC.visualizationSettings.view2.window`<br>`SC.visualizationSettings.view3.window` | VSettingsWindow |  |  | visualization settings for window that are individual to each view |
+| name | type | default | description |
+|---|---|---|---|
+| `camera`<br>`SC.visualizationSettings.view0.camera`<br>`SC.visualizationSettings.view1.camera`<br>`SC.visualizationSettings.view2.camera`<br>`SC.visualizationSettings.view3.camera` | VSettingsCamera |  | settings for camera like perspective, marker tracking or clipping plane |
+| `scene`<br>`SC.visualizationSettings.view0.scene`<br>`SC.visualizationSettings.view1.scene`<br>`SC.visualizationSettings.view2.scene`<br>`SC.visualizationSettings.view3.scene` | VSettingsScene |  | settings which change scene representation, showing edges, faces or world basis |
+| `window`<br>`SC.visualizationSettings.view0.window`<br>`SC.visualizationSettings.view1.window`<br>`SC.visualizationSettings.view2.window`<br>`SC.visualizationSettings.view3.window` | VSettingsWindow |  | visualization settings for window that are individual to each view |
 
 
 
@@ -483,20 +483,20 @@ Settings related to dialogs (e.g., visualization settings dialog).
 
 VSettingsDialogs has the following items:
 
-```{tabularcolumns} |\Y{0.2}|\Y{0.14}|\Y{0.06}|\Y{0.15}|\Y{0.45}|
+```{tabularcolumns} \Y{0.34}\Y{0.13}\Y{0.13}\Y{0.4}
 ```
 
-| Name | type / function return type | size | default value / function args | description |
-|---|---|---|---|---|
-| `alphaTransparency`<br>`SC.visualizationSettings.dialogs.alphaTransparency` | UFloat |  | 0.94 | alpha-transparency of dialogs; recommended range 0.7 (very transparent) - 1 (not transparent at all) |
-| `alwaysTopmost`<br>`SC.visualizationSettings.dialogs.alwaysTopmost` | bool |  | True | True: dialogs are always topmost (otherwise, they are sometimes hidden) |
-| `columnWidthName`<br>`SC.visualizationSettings.dialogs.columnWidthName` | UFloat |  | 0.31 | width of the name column of a settings dialog, as a fraction of the width of the dialog; the description column takes what the three columns leave |
-| `columnWidthType`<br>`SC.visualizationSettings.dialogs.columnWidthType` | UFloat |  | 0.11 | width of the type column of a settings dialog, as a fraction of the width of the dialog |
-| `columnWidthValue`<br>`SC.visualizationSettings.dialogs.columnWidthValue` | UFloat |  | 0.18 | width of the value column of a settings dialog, as a fraction of the width of the dialog |
-| `fontScaling`<br>`SC.visualizationSettings.dialogs.fontScaling` | UFloat |  | 0. | scaling of the font in dialogs; 0 = automatic, which is the system display scaling on Windows and Linux and a fixed factor on MacOS. Any value > 0 sets the font scaling on EVERY platform, which is the way to make the dialogs readable on a Linux desktop |
-| `multiThreadedDialogs`<br>`SC.visualizationSettings.dialogs.multiThreadedDialogs` | bool |  | True | True: During dialogs, the OpenGL render windows will still get updates of changes in dialogs, etc., which may cause problems on some platforms or for some (complicated) models; False: changes of dialogs will take effect when dialogs are closed |
-| `openTreeView`<br>`SC.visualizationSettings.dialogs.openTreeView` | bool |  | False | True: all sub-trees of the visusalization dialog are opened when opening the dialog; False: only some sub-trees are opened |
-| `storeDialogPositions`<br>`SC.visualizationSettings.dialogs.storeDialogPositions` | bool |  | False | True: a dialog stores its size and position in `~/.exudyn/config.json` when it closes, so that the next dialog of the same kind starts with them. A geometry that IS stored - by this flag, by the store button of the settings dialog, or by a script - is used whenever such a dialog opens, whatever this flag says: the size always, the position only if the window would still be reachable on the current screen. See Section [](#sec-usersettings) |
+| name | type | default | description |
+|---|---|---|---|
+| `alphaTransparency`<br>`SC.visualizationSettings.dialogs.alphaTransparency` | UFloat | 0.94 | alpha-transparency of dialogs; recommended range 0.7 (very transparent) - 1 (not transparent at all) |
+| `alwaysTopmost`<br>`SC.visualizationSettings.dialogs.alwaysTopmost` | bool | True | True: dialogs are always topmost (otherwise, they are sometimes hidden) |
+| `columnWidthName`<br>`SC.visualizationSettings.dialogs.columnWidthName` | UFloat | 0.31 | width of the name column of a settings dialog, as a fraction of the width of the dialog; the description column takes what the three columns leave |
+| `columnWidthType`<br>`SC.visualizationSettings.dialogs.columnWidthType` | UFloat | 0.11 | width of the type column of a settings dialog, as a fraction of the width of the dialog |
+| `columnWidthValue`<br>`SC.visualizationSettings.dialogs.columnWidthValue` | UFloat | 0.18 | width of the value column of a settings dialog, as a fraction of the width of the dialog |
+| `fontScaling`<br>`SC.visualizationSettings.dialogs.fontScaling` | UFloat | 0. | scaling of the font in dialogs; 0 = automatic, which is the system display scaling on Windows and Linux and a fixed factor on MacOS. Any value > 0 sets the font scaling on EVERY platform, which is the way to make the dialogs readable on a Linux desktop |
+| `multiThreadedDialogs`<br>`SC.visualizationSettings.dialogs.multiThreadedDialogs` | bool | True | True: During dialogs, the OpenGL render windows will still get updates of changes in dialogs, etc., which may cause problems on some platforms or for some (complicated) models; False: changes of dialogs will take effect when dialogs are closed |
+| `openTreeView`<br>`SC.visualizationSettings.dialogs.openTreeView` | bool | False | True: all sub-trees of the visusalization dialog are opened when opening the dialog; False: only some sub-trees are opened |
+| `storeDialogPositions`<br>`SC.visualizationSettings.dialogs.storeDialogPositions` | bool | False | True: a dialog stores its size and position in `~/.exudyn/config.json` when it closes, so that the next dialog of the same kind starts with them. A geometry that IS stored - by this flag, by the store button of the settings dialog, or by a script - is used whenever such a dialog opens, whatever this flag says: the size always, the position only if the window would still be reachable on the current screen. See Section [](#sec-usersettings) |
 
 
 
@@ -507,19 +507,19 @@ Settings for rendering materials, in particular for the Raytracer (may be availa
 
 VSettingsMaterial has the following items:
 
-```{tabularcolumns} |\Y{0.2}|\Y{0.14}|\Y{0.06}|\Y{0.15}|\Y{0.45}|
+```{tabularcolumns} \Y{0.34}\Y{0.13}\Y{0.13}\Y{0.4}
 ```
 
-| Name | type / function return type | size | default value / function args | description |
-|---|---|---|---|---|
-| `alpha`<br>`SC.visualizationSettings.raytracer.material.alpha` | UFloat |  | 1. | alpha-transparency, same as in alpha channel in RGBA colors; 1=opaque, 0=fully transparent; leads to extra rendering costs per transparent pixel |
-| `baseColor`<br>`SC.visualizationSettings.raytracer.material.baseColor` | Float3 | 3 | [0.5,0.5,0.5] | RGB default material color if face color has R-color channel -1 |
-| `emission`<br>`SC.visualizationSettings.raytracer.material.emission` | Float3 | 3 | [0.,0.,0.] | RGB emissive material color (enlightened material) |
-| `ior`<br>`SC.visualizationSettings.raytracer.material.ior` | UFloat |  | 1. | index of refraction for transparent materials (1=no refraction), >1 represents refraction |
-| `name`<br>`SC.visualizationSettings.raytracer.material.name` | String |  | 'undefined' | material name for easier handling |
-| `reflectivity`<br>`SC.visualizationSettings.raytracer.material.reflectivity` | UFloat |  | 0. | controls reflectivity of material; 0=no reflections (rough, e.g. rubber), 1=fully reflective (mirror); this leads to large extra rendering costs per visible reflective pixel |
-| `shininess`<br>`SC.visualizationSettings.raytracer.material.shininess` | UFloat |  | 32. | controls shininess of specular component of lights; values < 5 is not very shiny, while > 50 is very shiny |
-| `specular`<br>`SC.visualizationSettings.raytracer.material.specular` | Float3 | 3 | [0.5,0.5,0.5] | RGB specular material color |
+| name | type | default | description |
+|---|---|---|---|
+| `alpha`<br>`SC.visualizationSettings.raytracer.material.alpha` | UFloat | 1. | alpha-transparency, same as in alpha channel in RGBA colors; 1=opaque, 0=fully transparent; leads to extra rendering costs per transparent pixel |
+| `baseColor`<br>`SC.visualizationSettings.raytracer.material.baseColor` | Float3 | [0.5,0.5,0.5] | RGB default material color if face color has R-color channel -1 |
+| `emission`<br>`SC.visualizationSettings.raytracer.material.emission` | Float3 | [0.,0.,0.] | RGB emissive material color (enlightened material) |
+| `ior`<br>`SC.visualizationSettings.raytracer.material.ior` | UFloat | 1. | index of refraction for transparent materials (1=no refraction), >1 represents refraction |
+| `name`<br>`SC.visualizationSettings.raytracer.material.name` | String | 'undefined' | material name for easier handling |
+| `reflectivity`<br>`SC.visualizationSettings.raytracer.material.reflectivity` | UFloat | 0. | controls reflectivity of material; 0=no reflections (rough, e.g. rubber), 1=fully reflective (mirror); this leads to large extra rendering costs per visible reflective pixel |
+| `shininess`<br>`SC.visualizationSettings.raytracer.material.shininess` | UFloat | 32. | controls shininess of specular component of lights; values < 5 is not very shiny, while > 50 is very shiny |
+| `specular`<br>`SC.visualizationSettings.raytracer.material.specular` | Float3 | [0.5,0.5,0.5] | RGB specular material color |
 
 
 
@@ -530,18 +530,18 @@ Advanced settings for raytracer.
 
 VSettingsRaytracerAdvanced has the following items:
 
-```{tabularcolumns} |\Y{0.2}|\Y{0.14}|\Y{0.06}|\Y{0.15}|\Y{0.45}|
+```{tabularcolumns} \Y{0.34}\Y{0.13}\Y{0.13}\Y{0.4}
 ```
 
-| Name | type / function return type | size | default value / function args | description |
-|---|---|---|---|---|
-| `backgroundColorReflections`<br>`SC.visualizationSettings.raytracer.advanced.backgroundColorReflections` | Float4 | 4 | [0.4,0.4,0.4,1.] | scene RGBA color for background that is hit by reflection material; while openGL.backgroundColor is used for rays that do not hit an object, this background may - if black or white - not be a suitable color for computing reflections; this is generally needed, as our scenes are usually not inside a closed geometry (like inside a room); this color is also used if maxReflectionDepth is reached |
-| `searchTreeFactor`<br>`SC.visualizationSettings.raytracer.advanced.searchTreeFactor` | PInt |  | 1 | This factor can be used to increase the number of search tree bins, which can improve performance in case of inequilibrated scense; range=1..128 |
-| `shadowScalingFactor`<br>`SC.visualizationSettings.raytracer.advanced.shadowScalingFactor` | UInt |  | 3 | if lightRadiusVariations>1, this defines the downscaling factor of the shadow map, where 2 means that the resolution is 2 times smaller than the image resolution; additionally, multisampling is not used for shadow map computation if shadowScalingFactor>0, thus reducing the computational effort for shadow computation also in case of 1; range=0..16; larger values cause significant artifacts at shadow boundaries |
-| `shadowSmoothingSteps`<br>`SC.visualizationSettings.raytracer.advanced.shadowSmoothingSteps` | UInt |  | 3 | if lightRadiusVariations>1, this defines the number of smoothing steps at the low-resolution shadow map; smoothing reduces shadow artifacts caused by smaller values of lightRadiusVariations; range=0..32; smoothing steps may cause artifacts at shadow boundaries; only works for lights with a position (the 4th component of the light position should be 1) |
-| `showText`<br>`SC.visualizationSettings.raytracer.advanced.showText` | bool |  | True | True: show any kind of status text, node numbers, object numbers, etc. (depending on settings); False: do not show any text in raytracer, independently of settings |
-| `tilesPerThread`<br>`SC.visualizationSettings.raytracer.advanced.tilesPerThread` | PInt |  | 12 | Total number of sub-tiles per thread, used to evenly distribute rendering load to threads |
-| `zBiasLines`<br>`SC.visualizationSettings.raytracer.advanced.zBiasLines` | float |  | 0.001 | offset for lines to draw in front of faces; relative to scene radius |
+| name | type | default | description |
+|---|---|---|---|
+| `backgroundColorReflections`<br>`SC.visualizationSettings.raytracer.advanced.backgroundColorReflections` | Float4 | [0.4,0.4,0.4,1.] | scene RGBA color for background that is hit by reflection material; while openGL.backgroundColor is used for rays that do not hit an object, this background may - if black or white - not be a suitable color for computing reflections; this is generally needed, as our scenes are usually not inside a closed geometry (like inside a room); this color is also used if maxReflectionDepth is reached |
+| `searchTreeFactor`<br>`SC.visualizationSettings.raytracer.advanced.searchTreeFactor` | PInt | 1 | This factor can be used to increase the number of search tree bins, which can improve performance in case of inequilibrated scense; range=1..128 |
+| `shadowScalingFactor`<br>`SC.visualizationSettings.raytracer.advanced.shadowScalingFactor` | UInt | 3 | if lightRadiusVariations>1, this defines the downscaling factor of the shadow map, where 2 means that the resolution is 2 times smaller than the image resolution; additionally, multisampling is not used for shadow map computation if shadowScalingFactor>0, thus reducing the computational effort for shadow computation also in case of 1; range=0..16; larger values cause significant artifacts at shadow boundaries |
+| `shadowSmoothingSteps`<br>`SC.visualizationSettings.raytracer.advanced.shadowSmoothingSteps` | UInt | 3 | if lightRadiusVariations>1, this defines the number of smoothing steps at the low-resolution shadow map; smoothing reduces shadow artifacts caused by smaller values of lightRadiusVariations; range=0..32; smoothing steps may cause artifacts at shadow boundaries; only works for lights with a position (the 4th component of the light position should be 1) |
+| `showText`<br>`SC.visualizationSettings.raytracer.advanced.showText` | bool | True | True: show any kind of status text, node numbers, object numbers, etc. (depending on settings); False: do not show any text in raytracer, independently of settings |
+| `tilesPerThread`<br>`SC.visualizationSettings.raytracer.advanced.tilesPerThread` | PInt | 12 | Total number of sub-tiles per thread, used to evenly distribute rendering load to threads |
+| `zBiasLines`<br>`SC.visualizationSettings.raytracer.advanced.zBiasLines` | float | 0.001 | offset for lines to draw in front of faces; relative to scene radius |
 
 
 
@@ -552,32 +552,32 @@ Settings for raytracer (software renderer) which can be used as alternative to c
 
 VSettingsRaytracer has the following items:
 
-```{tabularcolumns} |\Y{0.2}|\Y{0.14}|\Y{0.06}|\Y{0.15}|\Y{0.45}|
+```{tabularcolumns} \Y{0.34}\Y{0.13}\Y{0.13}\Y{0.4}
 ```
 
-| Name | type / function return type | size | default value / function args | description |
-|---|---|---|---|---|
-| `advanced`<br>`SC.visualizationSettings.raytracer.advanced` | VSettingsRaytracerAdvanced |  |  | advanced settings for raytracer |
-| `material0`<br>`SC.visualizationSettings.raytracer.material0` | VSettingsMaterial |  |  | settings for material0; starts from name='default', baseColor=[0.4, 0.4, 0.9], specular=[0.6, 0.6, 0.6]; every other value is the default of the type |
-| `material1`<br>`SC.visualizationSettings.raytracer.material1` | VSettingsMaterial |  |  | settings for material1; starts from name='matt', baseColor=[0., 1., 0.], specular=[0.3, 0.3, 0.3], shininess=5.0; every other value is the default of the type |
-| `material2`<br>`SC.visualizationSettings.raytracer.material2` | VSettingsMaterial |  |  | settings for material2; starts from name='steel', baseColor=[0.6, 0.6, 0.6], specular=[0.3, 0.33, 0.4], shininess=25.0, reflectivity=0.1; every other value is the default of the type |
-| `material3`<br>`SC.visualizationSettings.raytracer.material3` | VSettingsMaterial |  |  | settings for material3; starts from name='plastic', baseColor=[1., 0., 0.], specular=[0.4, 0.45, 0.45], shininess=20.0, reflectivity=0.1; every other value is the default of the type |
-| `material4`<br>`SC.visualizationSettings.raytracer.material4` | VSettingsMaterial |  |  | settings for material4; starts from name='chrome', baseColor=[0.75, 0.75, 0.75], specular=[0.6, 0.62, 0.67], shininess=60.0, reflectivity=0.25; every other value is the default of the type |
-| `material5`<br>`SC.visualizationSettings.raytracer.material5` | VSettingsMaterial |  |  | settings for material5; starts from name='shiny', baseColor=[1., 0.5, 0.], specular=[0.7, 0.65, 0.7], shininess=100.0, reflectivity=0.5; every other value is the default of the type |
-| `material6`<br>`SC.visualizationSettings.raytracer.material6` | VSettingsMaterial |  |  | settings for material6; starts from name='transparent', baseColor=[0.75, 0.75, 0.75], specular=[0.4, 0.4, 0.45], shininess=20.0, ior=1.05, alpha=0.3; every other value is the default of the type |
-| `material7`<br>`SC.visualizationSettings.raytracer.material7` | VSettingsMaterial |  |  | settings for material7; starts from name='glass', baseColor=[0.8, 0.8, 0.8], specular=[0.6, 0.68, 0.63], shininess=50.0, reflectivity=0.6, ior=1.5, alpha=0.15; every other value is the default of the type |
-| `material8`<br>`SC.visualizationSettings.raytracer.material8` | VSettingsMaterial |  |  | settings for material8; starts from name='mirror', baseColor=[0.8, 0.8, 0.8], specular=[0.4, 0.4, 0.4], shininess=50.0, reflectivity=0.8; every other value is the default of the type |
-| `material9`<br>`SC.visualizationSettings.raytracer.material9` | VSettingsMaterial |  |  | settings for material9; starts from name='emission', baseColor=[0.85, 0.85, 0.7], specular=[0.6, 0.6, 0.6], shininess=20.0, emission=[0.8, 0.8, 0.7]; every other value is the default of the type |
-| `globalFogColor`<br>`SC.visualizationSettings.raytracer.globalFogColor` | Float4 | 4 | [0.5,0.5,0.5,1.] | scene RGBA fog color |
-| `globalFogDensity`<br>`SC.visualizationSettings.raytracer.globalFogDensity` | UFloat |  | 0. | global fog density; fog is deactivated if fogDensity=0, otherwise it is a density relative to scene max size; as it is relative, the factor has to be relatively high to be visible (usually >1) |
-| `imageSizeFactor`<br>`SC.visualizationSettings.raytracer.imageSizeFactor` | PInt |  | 1 | Special size factor (1-16) to allow drawing with smaller resolution (faster); use this for long rendering times for adjustments, etc. |
-| `keepWindowActive`<br>`SC.visualizationSettings.raytracer.keepWindowActive` | bool |  | False | Special flag, handle with care; True: sends some glfw functions to keep window reactive for long render times (>2 seconds); otherwise, the rendering may not finish due to timeout |
-| `lightRadiusVariations`<br>`SC.visualizationSettings.raytracer.lightRadiusVariations` | PInt |  | 1 | if lightRadiusVariations>1, this defines the number of positions that are used to compute the effect of distributed lights (larger is slower but better quality); range=1..256; avoid squares of integers; good values: 1 (hard shadow boundaries), 6, 13, 20, 31, 72, 130, 240; for lower values, use shadowSmoothingSteps=2..8 |
-| `maxReflectionDepth`<br>`SC.visualizationSettings.raytracer.maxReflectionDepth` | UInt |  | 2 | Maximum number of reflections computed for one ray (note that for each transparent face passed, the reflection depth is reduced by 1); maximum is 32 (but should not be more than 2-4 usually!) |
-| `maxTransparencyDepth`<br>`SC.visualizationSettings.raytracer.maxTransparencyDepth` | UInt |  | 2 | Maximum number of transparent faces that can be passed (note that for each reflection, the transparency depth is reduced by 1); maximum is 32 (but should not be more than 2-4 usually!) |
-| `multiSampling`<br>`SC.visualizationSettings.raytracer.multiSampling` | PInt |  | 1 | Multi-sampling used for rendering of faces, lines and text; increases image quality along edges (lines, etc.) but INCREASES rendering costs dramatically (multiSampling=3 => 3x3=9 times slower); also used for shadow if shadowScalingFactor=0; values only accepted in range [1..4] |
-| `numberOfThreads`<br>`SC.visualizationSettings.raytracer.numberOfThreads` | PInt |  | 8 | Number of CPU-threads (max: 256) used for software rendering (should be approx. the number of available threads) |
-| `verbose`<br>`SC.visualizationSettings.raytracer.verbose` | Index |  | 0 | 1: print out some debug information on rendering, in particular rendering timings and counter; 2 and higher: advanced debug information |
+| name | type | default | description |
+|---|---|---|---|
+| `advanced`<br>`SC.visualizationSettings.raytracer.advanced` | VSettingsRaytracerAdvanced |  | advanced settings for raytracer |
+| `material0`<br>`SC.visualizationSettings.raytracer.material0` | VSettingsMaterial |  | settings for material0; starts from name='default', baseColor=[0.4, 0.4, 0.9], specular=[0.6, 0.6, 0.6]; every other value is the default of the type |
+| `material1`<br>`SC.visualizationSettings.raytracer.material1` | VSettingsMaterial |  | settings for material1; starts from name='matt', baseColor=[0., 1., 0.], specular=[0.3, 0.3, 0.3], shininess=5.0; every other value is the default of the type |
+| `material2`<br>`SC.visualizationSettings.raytracer.material2` | VSettingsMaterial |  | settings for material2; starts from name='steel', baseColor=[0.6, 0.6, 0.6], specular=[0.3, 0.33, 0.4], shininess=25.0, reflectivity=0.1; every other value is the default of the type |
+| `material3`<br>`SC.visualizationSettings.raytracer.material3` | VSettingsMaterial |  | settings for material3; starts from name='plastic', baseColor=[1., 0., 0.], specular=[0.4, 0.45, 0.45], shininess=20.0, reflectivity=0.1; every other value is the default of the type |
+| `material4`<br>`SC.visualizationSettings.raytracer.material4` | VSettingsMaterial |  | settings for material4; starts from name='chrome', baseColor=[0.75, 0.75, 0.75], specular=[0.6, 0.62, 0.67], shininess=60.0, reflectivity=0.25; every other value is the default of the type |
+| `material5`<br>`SC.visualizationSettings.raytracer.material5` | VSettingsMaterial |  | settings for material5; starts from name='shiny', baseColor=[1., 0.5, 0.], specular=[0.7, 0.65, 0.7], shininess=100.0, reflectivity=0.5; every other value is the default of the type |
+| `material6`<br>`SC.visualizationSettings.raytracer.material6` | VSettingsMaterial |  | settings for material6; starts from name='transparent', baseColor=[0.75, 0.75, 0.75], specular=[0.4, 0.4, 0.45], shininess=20.0, ior=1.05, alpha=0.3; every other value is the default of the type |
+| `material7`<br>`SC.visualizationSettings.raytracer.material7` | VSettingsMaterial |  | settings for material7; starts from name='glass', baseColor=[0.8, 0.8, 0.8], specular=[0.6, 0.68, 0.63], shininess=50.0, reflectivity=0.6, ior=1.5, alpha=0.15; every other value is the default of the type |
+| `material8`<br>`SC.visualizationSettings.raytracer.material8` | VSettingsMaterial |  | settings for material8; starts from name='mirror', baseColor=[0.8, 0.8, 0.8], specular=[0.4, 0.4, 0.4], shininess=50.0, reflectivity=0.8; every other value is the default of the type |
+| `material9`<br>`SC.visualizationSettings.raytracer.material9` | VSettingsMaterial |  | settings for material9; starts from name='emission', baseColor=[0.85, 0.85, 0.7], specular=[0.6, 0.6, 0.6], shininess=20.0, emission=[0.8, 0.8, 0.7]; every other value is the default of the type |
+| `globalFogColor`<br>`SC.visualizationSettings.raytracer.globalFogColor` | Float4 | [0.5,0.5,0.5,1.] | scene RGBA fog color |
+| `globalFogDensity`<br>`SC.visualizationSettings.raytracer.globalFogDensity` | UFloat | 0. | global fog density; fog is deactivated if fogDensity=0, otherwise it is a density relative to scene max size; as it is relative, the factor has to be relatively high to be visible (usually >1) |
+| `imageSizeFactor`<br>`SC.visualizationSettings.raytracer.imageSizeFactor` | PInt | 1 | Special size factor (1-16) to allow drawing with smaller resolution (faster); use this for long rendering times for adjustments, etc. |
+| `keepWindowActive`<br>`SC.visualizationSettings.raytracer.keepWindowActive` | bool | False | Special flag, handle with care; True: sends some glfw functions to keep window reactive for long render times (>2 seconds); otherwise, the rendering may not finish due to timeout |
+| `lightRadiusVariations`<br>`SC.visualizationSettings.raytracer.lightRadiusVariations` | PInt | 1 | if lightRadiusVariations>1, this defines the number of positions that are used to compute the effect of distributed lights (larger is slower but better quality); range=1..256; avoid squares of integers; good values: 1 (hard shadow boundaries), 6, 13, 20, 31, 72, 130, 240; for lower values, use shadowSmoothingSteps=2..8 |
+| `maxReflectionDepth`<br>`SC.visualizationSettings.raytracer.maxReflectionDepth` | UInt | 2 | Maximum number of reflections computed for one ray (note that for each transparent face passed, the reflection depth is reduced by 1); maximum is 32 (but should not be more than 2-4 usually!) |
+| `maxTransparencyDepth`<br>`SC.visualizationSettings.raytracer.maxTransparencyDepth` | UInt | 2 | Maximum number of transparent faces that can be passed (note that for each reflection, the transparency depth is reduced by 1); maximum is 32 (but should not be more than 2-4 usually!) |
+| `multiSampling`<br>`SC.visualizationSettings.raytracer.multiSampling` | PInt | 1 | Multi-sampling used for rendering of faces, lines and text; increases image quality along edges (lines, etc.) but INCREASES rendering costs dramatically (multiSampling=3 => 3x3=9 times slower); also used for shadow if shadowScalingFactor=0; values only accepted in range [1..4] |
+| `numberOfThreads`<br>`SC.visualizationSettings.raytracer.numberOfThreads` | PInt | 8 | Number of CPU-threads (max: 256) used for software rendering (should be approx. the number of available threads) |
+| `verbose`<br>`SC.visualizationSettings.raytracer.verbose` | Index | 0 | 1: print out some debug information on rendering, in particular rendering timings and counter; 2 and higher: advanced debug information |
 
 
 
@@ -588,31 +588,31 @@ Advanced settings for openGL.
 
 VSettingsOpenGLAdvanced has the following items:
 
-```{tabularcolumns} |\Y{0.2}|\Y{0.14}|\Y{0.06}|\Y{0.15}|\Y{0.45}|
+```{tabularcolumns} \Y{0.34}\Y{0.13}\Y{0.13}\Y{0.4}
 ```
 
-| Name | type / function return type | size | default value / function args | description |
-|---|---|---|---|---|
-| `clippingPlaneColor`<br>`SC.visualizationSettings.openGL.advanced.clippingPlaneColor` | Float4 | 4 | [0.7,0.5,0.5,0.] | RGBA color for clipping plane; if alpha-channel is 0, the cutting plane is not drawn; if alpha-channel is 1, the clippingPlaneColor is used; if alpha-channel is 2, the color of the object interior is used as clipping plane color (which may look strange in case of object-in-object); see also view.camera for clipping plane options |
-| `curvedTriangleMaxTiling`<br>`SC.visualizationSettings.openGL.advanced.curvedTriangleMaxTiling` | UInt |  | 8 | maximum number of subdivisions per edge of a 6-node (curved) triangle; see curvedTriangleTilingAngle |
-| `curvedTriangleTilingAngle`<br>`SC.visualizationSettings.openGL.advanced.curvedTriangleTilingAngle` | UFloat |  | 15. | 6-node (curved) triangles of a TriangleList (key triangles6) are drawn as flat triangles, split when they are drawn: each edge is subdivided until the angle between its end tangents, and between the given normals of its nodes, falls below this angle (in degrees), at most curvedTriangleMaxTiling times, and the inside follows its three edges - 15 degrees give 24 segments around a full cylinder, and a surface curved in one direction is not subdivided along the other; 0 draws each as 1 flat triangle; used by the raytracer as well |
-| `depthSorting`<br>`SC.visualizationSettings.openGL.advanced.depthSorting` | bool |  | False | True (slower): sort triangles by Z-depth to remove transparency artifacts: only works if triangles do not intersect or come close (you may like to refine triangle meshes); False: no depth-sort (faster) |
-| `enableLighting`<br>`SC.visualizationSettings.openGL.advanced.enableLighting` | bool |  | True | generally enable lighting (otherwise, colors of objects are used); OpenGL: glEnable(GL_LIGHTING) |
-| `faceNormalsColor`<br>`SC.visualizationSettings.openGL.advanced.faceNormalsColor` | Float4 | 4 | [0.8,0.2,0.2,1.] | global RGBA color for face normals |
-| `initialCenterPoint`<br>`SC.visualizationSettings.openGL.advanced.initialCenterPoint` | Float3 | 3 | [0.,0.,0.] | centerpoint of scene (3D) at renderer startup; overwritten if autoFitScene = True; only used in case that modelCentricView=True |
-| `initialMaxSceneSize`<br>`SC.visualizationSettings.openGL.advanced.initialMaxSceneSize` | PFloat |  | 1. | initial maximum scene size (auto: diagonal of cube with maximum scene coordinates); used for 'zoom all' functionality and for visibility of objects; overwritten if autoFitScene = True |
-| `initialModelRotation`<br>`SC.visualizationSettings.openGL.advanced.initialModelRotation` | StdArray33F | 3x3 | [[1.,0.,0.], [0.,1.,0.], [0.,0.,1.]] | initial model rotation matrix for OpenGl; in python use e.g.: initialModelRotation=[[1,0,0],[0,1,0],[0,0,1]]; only used in case that modelCentricView=True |
-| `initialZoom`<br>`SC.visualizationSettings.openGL.advanced.initialZoom` | UFloat |  | 1. | initial zoom of scene; overwritten/ignored if autoFitScene = True |
-| `lightModelLocalViewer`<br>`SC.visualizationSettings.openGL.advanced.lightModelLocalViewer` | bool |  | False | True: the camera origin is used to compute shininess effects (more realistic); maps to OpenGL glLightModeli(GL_LIGHT_MODEL_LOCAL_VIEWER,...) |
-| `lightModelTwoSide`<br>`SC.visualizationSettings.openGL.advanced.lightModelTwoSide` | bool |  | False | enlighten also backside of object; may cause problems on some graphics cards and lead to slower performance; maps to OpenGL glLightModeli(GL_LIGHT_MODEL_TWO_SIDE,...) |
-| `lineSmooth`<br>`SC.visualizationSettings.openGL.advanced.lineSmooth` | bool |  | True | draw lines smooth |
-| `polygonOffset`<br>`SC.visualizationSettings.openGL.advanced.polygonOffset` | float |  | 0.05 | general polygon offset for polygons, except for shadows; use this parameter to draw polygons behind lines to reduce artifacts for very large or small models |
-| `shadeModelSmooth`<br>`SC.visualizationSettings.openGL.advanced.shadeModelSmooth` | bool |  | True | True: turn on smoothing for shaders, which uses vertex normals to smooth surfaces |
-| `shadowPolygonOffset`<br>`SC.visualizationSettings.openGL.advanced.shadowPolygonOffset` | PFloat |  | 0.1 | some special drawing parameter for shadows which should be handled with care; defines some offset needed by openGL to avoid aritfacts for shadows and depends on maxSceneSize; this value may need to be reduced for larger models in order to achieve more accurate shadows, it may be needed to be increased for thin bodies |
-| `showBoundingBox`<br>`SC.visualizationSettings.openGL.advanced.showBoundingBox` | bool |  | False | show scene bounding box (red), as available in renderState.boundingBox; NOTE that the bounding box is only updated with ZoomAll or at startup; this is a debug flag and it may show reasongs for strange ZoomAll behavior, as ZoomAll should zoom to the bounding box; does only work for perspective=0 |
-| `textLineSmooth`<br>`SC.visualizationSettings.openGL.advanced.textLineSmooth` | bool |  | False | draw lines for representation of text smooth |
-| `textLineWidth`<br>`SC.visualizationSettings.openGL.advanced.textLineWidth` | UFloat |  | 1. | width of lines used for representation of text |
-| `vertexNormalsColor`<br>`SC.visualizationSettings.openGL.advanced.vertexNormalsColor` | Float4 | 4 | [0.8,0.2,0.2,1.] | global RGBA color for vertex normals |
+| name | type | default | description |
+|---|---|---|---|
+| `clippingPlaneColor`<br>`SC.visualizationSettings.openGL.advanced.clippingPlaneColor` | Float4 | [0.7,0.5,0.5,0.] | RGBA color for clipping plane; if alpha-channel is 0, the cutting plane is not drawn; if alpha-channel is 1, the clippingPlaneColor is used; if alpha-channel is 2, the color of the object interior is used as clipping plane color (which may look strange in case of object-in-object); see also view.camera for clipping plane options |
+| `curvedTriangleMaxTiling`<br>`SC.visualizationSettings.openGL.advanced.curvedTriangleMaxTiling` | UInt | 8 | maximum number of subdivisions per edge of a 6-node (curved) triangle; see curvedTriangleTilingAngle |
+| `curvedTriangleTilingAngle`<br>`SC.visualizationSettings.openGL.advanced.curvedTriangleTilingAngle` | UFloat | 15. | 6-node (curved) triangles of a TriangleList (key triangles6) are drawn as flat triangles, split when they are drawn: each edge is subdivided until the angle between its end tangents, and between the given normals of its nodes, falls below this angle (in degrees), at most curvedTriangleMaxTiling times, and the inside follows its three edges - 15 degrees give 24 segments around a full cylinder, and a surface curved in one direction is not subdivided along the other; 0 draws each as 1 flat triangle; used by the raytracer as well |
+| `depthSorting`<br>`SC.visualizationSettings.openGL.advanced.depthSorting` | bool | False | True (slower): sort triangles by Z-depth to remove transparency artifacts: only works if triangles do not intersect or come close (you may like to refine triangle meshes); False: no depth-sort (faster) |
+| `enableLighting`<br>`SC.visualizationSettings.openGL.advanced.enableLighting` | bool | True | generally enable lighting (otherwise, colors of objects are used); OpenGL: glEnable(GL_LIGHTING) |
+| `faceNormalsColor`<br>`SC.visualizationSettings.openGL.advanced.faceNormalsColor` | Float4 | [0.8,0.2,0.2,1.] | global RGBA color for face normals |
+| `initialCenterPoint`<br>`SC.visualizationSettings.openGL.advanced.initialCenterPoint` | Float3 | [0.,0.,0.] | centerpoint of scene (3D) at renderer startup; overwritten if autoFitScene = True; only used in case that modelCentricView=True |
+| `initialMaxSceneSize`<br>`SC.visualizationSettings.openGL.advanced.initialMaxSceneSize` | PFloat | 1. | initial maximum scene size (auto: diagonal of cube with maximum scene coordinates); used for 'zoom all' functionality and for visibility of objects; overwritten if autoFitScene = True |
+| `initialModelRotation`<br>`SC.visualizationSettings.openGL.advanced.initialModelRotation` | StdArray33F | [[1.,0.,0.], [0.,1.,0.], [0.,0.,1.]] | initial model rotation matrix for OpenGl; in python use e.g.: initialModelRotation=[[1,0,0],[0,1,0],[0,0,1]]; only used in case that modelCentricView=True |
+| `initialZoom`<br>`SC.visualizationSettings.openGL.advanced.initialZoom` | UFloat | 1. | initial zoom of scene; overwritten/ignored if autoFitScene = True |
+| `lightModelLocalViewer`<br>`SC.visualizationSettings.openGL.advanced.lightModelLocalViewer` | bool | False | True: the camera origin is used to compute shininess effects (more realistic); maps to OpenGL glLightModeli(GL_LIGHT_MODEL_LOCAL_VIEWER,...) |
+| `lightModelTwoSide`<br>`SC.visualizationSettings.openGL.advanced.lightModelTwoSide` | bool | False | enlighten also backside of object; may cause problems on some graphics cards and lead to slower performance; maps to OpenGL glLightModeli(GL_LIGHT_MODEL_TWO_SIDE,...) |
+| `lineSmooth`<br>`SC.visualizationSettings.openGL.advanced.lineSmooth` | bool | True | draw lines smooth |
+| `polygonOffset`<br>`SC.visualizationSettings.openGL.advanced.polygonOffset` | float | 0.05 | general polygon offset for polygons, except for shadows; use this parameter to draw polygons behind lines to reduce artifacts for very large or small models |
+| `shadeModelSmooth`<br>`SC.visualizationSettings.openGL.advanced.shadeModelSmooth` | bool | True | True: turn on smoothing for shaders, which uses vertex normals to smooth surfaces |
+| `shadowPolygonOffset`<br>`SC.visualizationSettings.openGL.advanced.shadowPolygonOffset` | PFloat | 0.1 | some special drawing parameter for shadows which should be handled with care; defines some offset needed by openGL to avoid aritfacts for shadows and depends on maxSceneSize; this value may need to be reduced for larger models in order to achieve more accurate shadows, it may be needed to be increased for thin bodies |
+| `showBoundingBox`<br>`SC.visualizationSettings.openGL.advanced.showBoundingBox` | bool | False | show scene bounding box (red), as available in renderState.boundingBox; NOTE that the bounding box is only updated with ZoomAll or at startup; this is a debug flag and it may show reasongs for strange ZoomAll behavior, as ZoomAll should zoom to the bounding box; does only work for perspective=0 |
+| `textLineSmooth`<br>`SC.visualizationSettings.openGL.advanced.textLineSmooth` | bool | False | draw lines for representation of text smooth |
+| `textLineWidth`<br>`SC.visualizationSettings.openGL.advanced.textLineWidth` | UFloat | 1. | width of lines used for representation of text |
+| `vertexNormalsColor`<br>`SC.visualizationSettings.openGL.advanced.vertexNormalsColor` | Float4 | [0.8,0.2,0.2,1.] | global RGBA color for vertex normals |
 
 
 
@@ -623,21 +623,21 @@ Settings for lights.
 
 VSettingsLight has the following items:
 
-```{tabularcolumns} |\Y{0.2}|\Y{0.14}|\Y{0.06}|\Y{0.15}|\Y{0.45}|
+```{tabularcolumns} \Y{0.34}\Y{0.13}\Y{0.13}\Y{0.4}
 ```
 
-| Name | type / function return type | size | default value / function args | description |
-|---|---|---|---|---|
-| `constantAttenuation`<br>`SC.visualizationSettings.openGL.light.constantAttenuation` | float |  | 1. | constant attenuation coefficient of this light, this is a constant factor that attenuates the light source; attenuation factor = 1/(kc +kl*d + kq*d*d); (kc,kl,kq)=(1,0,0) means no attenuation; only used for lights, where last component of light position is 1 |
-| `diffuse`<br>`SC.visualizationSettings.openGL.light.diffuse` | float |  | 0.5 | diffuse value of this light |
-| `enable`<br>`SC.visualizationSettings.openGL.light.enable` | bool |  | True | turn this light on or off; the four lights light0 to light3 of visualizationSettings.openGL are OpenGL GL_LIGHT0 to GL_LIGHT3, and each of them can cast a shadow - see shadow below |
-| `lightRadius`<br>`SC.visualizationSettings.openGL.light.lightRadius` | float |  | 0.1 | only used by raytracers: radius of light used to compute smooth shadows (approximated by raytracer.lightRadiusVariations); if lightRadiusVariations>1, this value defines the radius of the light, converting point lights into distributed lights (slower) |
-| `linearAttenuation`<br>`SC.visualizationSettings.openGL.light.linearAttenuation` | float |  | 0. | linear attenuation coefficient of this light, this is a linear factor for attenuation of the light source with distance |
-| `position`<br>`SC.visualizationSettings.openGL.light.position` | Float4 | 4 | [2.,2.,10.,0.] | 4D position vector of this light; the 4th value should be 0 for directional lights that are (almost) infinitely far away, like the sun, but 1 for position-based lights (and for the attenuation factor to be computed); if this light casts a shadow, its position decides where the shadow falls, so it has to be at a reasonable place for the scene; see opengl manuals |
-| `quadraticAttenuation`<br>`SC.visualizationSettings.openGL.light.quadraticAttenuation` | float |  | 0. | quadratic attenuation coefficient of this light, this is a quadratic factor for attenuation of the light source with distance |
-| `shadow`<br>`SC.visualizationSettings.openGL.light.shadow` | UFloat |  | 0. | in OpenGL renderer, the shadow parameter $\in [0 ... 1]$ prescribes the amount of shadow of this light that is added to the scene, using its position (or only its direction); every light can cast a shadow and the effects accumulate; if this parameter is different from 0, rendering of triangles becomes approx. 5 times more expensive, so take care in case of complex scenes; for complex object, such as spheres with fine resolution or for particle systems, the present approach has limitations and leads to artifacts and unrealistic shadows; for raytracer, shadow is included by a physics-based model for each light if shadow>0, accumulating effects of each light source; the openGL renderer computes shadows with shadow volumes and approximates a directional light by enlarging its direction to a multiple of maxSceneSize, while the raytracer uses the direction itself |
-| `specular`<br>`SC.visualizationSettings.openGL.light.specular` | float |  | 0.5 | specular value of this light |
-| `useCameraFrame`<br>`SC.visualizationSettings.openGL.light.useCameraFrame` | bool |  | False | set False to set light positions and directions relative to model frame; True: lights are in camera frame, not following the visual transformations; this was True up to Exudyn 1.9.174 |
+| name | type | default | description |
+|---|---|---|---|
+| `constantAttenuation`<br>`SC.visualizationSettings.openGL.light.constantAttenuation` | float | 1. | constant attenuation coefficient of this light, this is a constant factor that attenuates the light source; attenuation factor = 1/(kc +kl*d + kq*d*d); (kc,kl,kq)=(1,0,0) means no attenuation; only used for lights, where last component of light position is 1 |
+| `diffuse`<br>`SC.visualizationSettings.openGL.light.diffuse` | float | 0.5 | diffuse value of this light |
+| `enable`<br>`SC.visualizationSettings.openGL.light.enable` | bool | True | turn this light on or off; the four lights light0 to light3 of visualizationSettings.openGL are OpenGL GL_LIGHT0 to GL_LIGHT3, and each of them can cast a shadow - see shadow below |
+| `lightRadius`<br>`SC.visualizationSettings.openGL.light.lightRadius` | float | 0.1 | only used by raytracers: radius of light used to compute smooth shadows (approximated by raytracer.lightRadiusVariations); if lightRadiusVariations>1, this value defines the radius of the light, converting point lights into distributed lights (slower) |
+| `linearAttenuation`<br>`SC.visualizationSettings.openGL.light.linearAttenuation` | float | 0. | linear attenuation coefficient of this light, this is a linear factor for attenuation of the light source with distance |
+| `position`<br>`SC.visualizationSettings.openGL.light.position` | Float4 | [2.,2.,10.,0.] | 4D position vector of this light; the 4th value should be 0 for directional lights that are (almost) infinitely far away, like the sun, but 1 for position-based lights (and for the attenuation factor to be computed); if this light casts a shadow, its position decides where the shadow falls, so it has to be at a reasonable place for the scene; see opengl manuals |
+| `quadraticAttenuation`<br>`SC.visualizationSettings.openGL.light.quadraticAttenuation` | float | 0. | quadratic attenuation coefficient of this light, this is a quadratic factor for attenuation of the light source with distance |
+| `shadow`<br>`SC.visualizationSettings.openGL.light.shadow` | UFloat | 0. | in OpenGL renderer, the shadow parameter $\in [0 ... 1]$ prescribes the amount of shadow of this light that is added to the scene, using its position (or only its direction); every light can cast a shadow and the effects accumulate; if this parameter is different from 0, rendering of triangles becomes approx. 5 times more expensive, so take care in case of complex scenes; for complex object, such as spheres with fine resolution or for particle systems, the present approach has limitations and leads to artifacts and unrealistic shadows; for raytracer, shadow is included by a physics-based model for each light if shadow>0, accumulating effects of each light source; the openGL renderer computes shadows with shadow volumes and approximates a directional light by enlarging its direction to a multiple of maxSceneSize, while the raytracer uses the direction itself |
+| `specular`<br>`SC.visualizationSettings.openGL.light.specular` | float | 0.5 | specular value of this light |
+| `useCameraFrame`<br>`SC.visualizationSettings.openGL.light.useCameraFrame` | bool | False | set False to set light positions and directions relative to model frame; True: lights are in camera frame, not following the visual transformations; this was True up to Exudyn 1.9.174 |
 
 
 
@@ -648,27 +648,27 @@ OpenGL settings for 2D and 3D rendering - with many settings also used for raytr
 
 VSettingsOpenGL has the following items:
 
-```{tabularcolumns} |\Y{0.2}|\Y{0.14}|\Y{0.06}|\Y{0.15}|\Y{0.45}|
+```{tabularcolumns} \Y{0.34}\Y{0.13}\Y{0.13}\Y{0.4}
 ```
 
-| Name | type / function return type | size | default value / function args | description |
-|---|---|---|---|---|
-| `advanced`<br>`SC.visualizationSettings.openGL.advanced` | VSettingsOpenGLAdvanced |  |  | advanced settings for openGL |
-| `light0`<br>`SC.visualizationSettings.openGL.light0` | VSettingsLight |  |  | settings for light0 and shadow |
-| `light1`<br>`SC.visualizationSettings.openGL.light1` | VSettingsLight |  |  | settings for light1 and shadow; starts from diffuse=0.25, specular=0.25, position=[2., 2., -10., 0.]; every other value is the default of the type |
-| `light2`<br>`SC.visualizationSettings.openGL.light2` | VSettingsLight |  |  | settings for light2 and shadow; starts from diffuse=0.2, specular=0.2, enable=False; every other value is the default of the type |
-| `light3`<br>`SC.visualizationSettings.openGL.light3` | VSettingsLight |  |  | settings for light3 and shadow; starts from diffuse=0.2, specular=0.2, enable=False; every other value is the default of the type |
-| `drawFaceNormals`<br>`SC.visualizationSettings.openGL.drawFaceNormals` | bool |  | False | draws triangle normals, e.g. at center of triangles; used for debugging of faces |
-| `drawNormalsLength`<br>`SC.visualizationSettings.openGL.drawNormalsLength` | PFloat |  | 0.1 | length of normals; used for debugging |
-| `drawVertexNormals`<br>`SC.visualizationSettings.openGL.drawVertexNormals` | bool |  | False | draws vertex normals; used for debugging |
-| `faceEdgesColor`<br>`SC.visualizationSettings.openGL.faceEdgesColor` | Float4 | 4 | [0.2,0.2,0.2,1.] | global RGBA color for face edges |
-| `faceTransparencyGlobal`<br>`SC.visualizationSettings.openGL.faceTransparencyGlobal` | UFloat |  | 0.4 | in case that facesTransparent=True this represents the max alpha-transparency |
-| `lightModelAmbient`<br>`SC.visualizationSettings.openGL.lightModelAmbient` | Float4 | 4 | [0.4,0.4,0.4,1.] | global ambient light (needed for faces that are close to orthogonal to light or faces in shadow region); maps to OpenGL glLightModeli(GL_LIGHT_MODEL_AMBIENT,[r,g,b,a]); also used by raytracer |
-| `lineWidth`<br>`SC.visualizationSettings.openGL.lineWidth` | UFloat |  | 1. | width of lines used for representation of lines, circles, points, etc. |
-| `materialShininess`<br>`SC.visualizationSettings.openGL.materialShininess` | float |  | 32. | shininess of material |
-| `materialSpecular`<br>`SC.visualizationSettings.openGL.materialSpecular` | Float4 | 4 | [0.6,0.6,0.6,1.] | RGBA specular color of material |
-| `multiSampling`<br>`SC.visualizationSettings.openGL.multiSampling` | PInt |  | 1 | NOTE: this parameter must be set before starting renderer; later changes are not affecting visualization; multi sampling turned off (<=1) or turned on to given values (2, 3, 4, 8 or 16); increases the graphics buffers and might crash due to graphics card memory limitations; only works if supported by hardware; if it does not work, try to change 3D graphics hardware settings! |
-| `zMaxSceneFactor`<br>`SC.visualizationSettings.openGL.zMaxSceneFactor` | PFloat |  | 2. | factor multiplied with maxSceneSize to avoid clipping of modelview; larger values reduce clipping of near or far objects, but may lead to artifacts (so-called Z-fighting) |
+| name | type | default | description |
+|---|---|---|---|
+| `advanced`<br>`SC.visualizationSettings.openGL.advanced` | VSettingsOpenGLAdvanced |  | advanced settings for openGL |
+| `light0`<br>`SC.visualizationSettings.openGL.light0` | VSettingsLight |  | settings for light0 and shadow |
+| `light1`<br>`SC.visualizationSettings.openGL.light1` | VSettingsLight |  | settings for light1 and shadow; starts from diffuse=0.25, specular=0.25, position=[2., 2., -10., 0.]; every other value is the default of the type |
+| `light2`<br>`SC.visualizationSettings.openGL.light2` | VSettingsLight |  | settings for light2 and shadow; starts from diffuse=0.2, specular=0.2, enable=False; every other value is the default of the type |
+| `light3`<br>`SC.visualizationSettings.openGL.light3` | VSettingsLight |  | settings for light3 and shadow; starts from diffuse=0.2, specular=0.2, enable=False; every other value is the default of the type |
+| `drawFaceNormals`<br>`SC.visualizationSettings.openGL.drawFaceNormals` | bool | False | draws triangle normals, e.g. at center of triangles; used for debugging of faces |
+| `drawNormalsLength`<br>`SC.visualizationSettings.openGL.drawNormalsLength` | PFloat | 0.1 | length of normals; used for debugging |
+| `drawVertexNormals`<br>`SC.visualizationSettings.openGL.drawVertexNormals` | bool | False | draws vertex normals; used for debugging |
+| `faceEdgesColor`<br>`SC.visualizationSettings.openGL.faceEdgesColor` | Float4 | [0.2,0.2,0.2,1.] | global RGBA color for face edges |
+| `faceTransparencyGlobal`<br>`SC.visualizationSettings.openGL.faceTransparencyGlobal` | UFloat | 0.4 | in case that facesTransparent=True this represents the max alpha-transparency |
+| `lightModelAmbient`<br>`SC.visualizationSettings.openGL.lightModelAmbient` | Float4 | [0.4,0.4,0.4,1.] | global ambient light (needed for faces that are close to orthogonal to light or faces in shadow region); maps to OpenGL glLightModeli(GL_LIGHT_MODEL_AMBIENT,[r,g,b,a]); also used by raytracer |
+| `lineWidth`<br>`SC.visualizationSettings.openGL.lineWidth` | UFloat | 1. | width of lines used for representation of lines, circles, points, etc. |
+| `materialShininess`<br>`SC.visualizationSettings.openGL.materialShininess` | float | 32. | shininess of material |
+| `materialSpecular`<br>`SC.visualizationSettings.openGL.materialSpecular` | Float4 | [0.6,0.6,0.6,1.] | RGBA specular color of material |
+| `multiSampling`<br>`SC.visualizationSettings.openGL.multiSampling` | PInt | 1 | NOTE: this parameter must be set before starting renderer; later changes are not affecting visualization; multi sampling turned off (<=1) or turned on to given values (2, 3, 4, 8 or 16); increases the graphics buffers and might crash due to graphics card memory limitations; only works if supported by hardware; if it does not work, try to change 3D graphics hardware settings! |
+| `zMaxSceneFactor`<br>`SC.visualizationSettings.openGL.zMaxSceneFactor` | PFloat | 2. | factor multiplied with maxSceneSize to avoid clipping of modelview; larger values reduce clipping of near or far objects, but may lead to artifacts (so-called Z-fighting) |
 
 
 
@@ -679,18 +679,18 @@ Functionality to export images of view0 to files (PNG or TGA format) which can b
 
 VSettingsExportImages has the following items:
 
-```{tabularcolumns} |\Y{0.2}|\Y{0.14}|\Y{0.06}|\Y{0.15}|\Y{0.45}|
+```{tabularcolumns} \Y{0.34}\Y{0.13}\Y{0.13}\Y{0.4}
 ```
 
-| Name | type / function return type | size | default value / function args | description |
-|---|---|---|---|---|
-| `heightAlignment`<br>`SC.visualizationSettings.exportImages.heightAlignment` | PInt |  | 2 | alignment of exported image height; using a value of 2 helps to reduce problems with video conversion (additional horizontal lines are lost) |
-| `saveImageFileCounter`<br>`SC.visualizationSettings.exportImages.saveImageFileCounter` | UInt |  | 0 | current value of the counter which is used to consecutively save frames (images) with consecutive numbers |
-| `saveImageFileName`<br>`SC.visualizationSettings.exportImages.saveImageFileName` | FileName |  | 'images/frame' | filename (without extension!) and (relative) path for image file(s) with consecutive numbering (e.g., frame0000.png, frame0001.png,...); ; directory will be created if it does not exist |
-| `saveImageFormat`<br>`SC.visualizationSettings.exportImages.saveImageFormat` | String |  | 'PNG' | format of an exported image, `PNG` or `TGA`; `TGA` has the highest compatibility with all platforms. The drawing elements of a scene as data - lines, triangles, texts, each with the item that drew it - are `SC.renderer.GetGraphicsData()` |
-| `saveImageSingleFile`<br>`SC.visualizationSettings.exportImages.saveImageSingleFile` | bool |  | False | True: only save single files with given filename, not adding numbering; False: add numbering to files, see saveImageFileName |
-| `saveImageTimeOut`<br>`SC.visualizationSettings.exportImages.saveImageTimeOut` | PInt |  | 5000 | timeout in milliseconds for saving a frame as image to disk; this is the amount of time waited for redrawing; increase for very complex scenes |
-| `widthAlignment`<br>`SC.visualizationSettings.exportImages.widthAlignment` | PInt |  | 4 | alignment of exported image width; using a value of 4 helps to reduce problems with video conversion (additional vertical lines are lost) |
+| name | type | default | description |
+|---|---|---|---|
+| `heightAlignment`<br>`SC.visualizationSettings.exportImages.heightAlignment` | PInt | 2 | alignment of exported image height; using a value of 2 helps to reduce problems with video conversion (additional horizontal lines are lost) |
+| `saveImageFileCounter`<br>`SC.visualizationSettings.exportImages.saveImageFileCounter` | UInt | 0 | current value of the counter which is used to consecutively save frames (images) with consecutive numbers |
+| `saveImageFileName`<br>`SC.visualizationSettings.exportImages.saveImageFileName` | FileName | 'images/frame' | filename (without extension!) and (relative) path for image file(s) with consecutive numbering (e.g., frame0000.png, frame0001.png,...); ; directory will be created if it does not exist |
+| `saveImageFormat`<br>`SC.visualizationSettings.exportImages.saveImageFormat` | String | 'PNG' | format of an exported image, `PNG` or `TGA`; `TGA` has the highest compatibility with all platforms. The drawing elements of a scene as data - lines, triangles, texts, each with the item that drew it - are `SC.renderer.GetGraphicsData()` |
+| `saveImageSingleFile`<br>`SC.visualizationSettings.exportImages.saveImageSingleFile` | bool | False | True: only save single files with given filename, not adding numbering; False: add numbering to files, see saveImageFileName |
+| `saveImageTimeOut`<br>`SC.visualizationSettings.exportImages.saveImageTimeOut` | PInt | 5000 | timeout in milliseconds for saving a frame as image to disk; this is the amount of time waited for redrawing; increase for very complex scenes |
+| `widthAlignment`<br>`SC.visualizationSettings.exportImages.widthAlignment` | PInt | 4 | alignment of exported image width; using a value of 4 helps to reduce problems with video conversion (additional vertical lines are lost) |
 
 
 
@@ -701,25 +701,25 @@ Advanced settings for interactive.
 
 VSettingsInteractiveAdvanced has the following items:
 
-```{tabularcolumns} |\Y{0.2}|\Y{0.14}|\Y{0.06}|\Y{0.15}|\Y{0.45}|
+```{tabularcolumns} \Y{0.34}\Y{0.13}\Y{0.13}\Y{0.4}
 ```
 
-| Name | type / function return type | size | default value / function args | description |
-|---|---|---|---|---|
-| `highlightColor`<br>`SC.visualizationSettings.interactive.advanced.highlightColor` | Float4 | 4 | [0.8,0.05,0.05,0.75] | RGBA color for highlighted item; 4th value is alpha-transparency |
-| `highlightOtherColor`<br>`SC.visualizationSettings.interactive.advanced.highlightOtherColor` | Float4 | 4 | [0.5,0.5,0.5,0.4] | RGBA color for other items (which are not highlighted); 4th value is alpha-transparency |
-| `joystickScaleRotation`<br>`SC.visualizationSettings.interactive.advanced.joystickScaleRotation` | float |  | 200. | rotation scaling factor for joystick input |
-| `joystickScaleTranslation`<br>`SC.visualizationSettings.interactive.advanced.joystickScaleTranslation` | float |  | 6. | translation scaling factor for joystick input |
-| `keypressRotationStep`<br>`SC.visualizationSettings.interactive.advanced.keypressRotationStep` | float |  | 5. | rotation increment per keypress in degree (full rotation = 360 degree) |
-| `keypressTranslationStep`<br>`SC.visualizationSettings.interactive.advanced.keypressTranslationStep` | float |  | 0.1 | translation increment per keypress relative to window size |
-| `mouseMoveRotationFactor`<br>`SC.visualizationSettings.interactive.advanced.mouseMoveRotationFactor` | float |  | 1. | rotation increment per 1 pixel mouse movement in degree |
-| `pauseWithSpacebar`<br>`SC.visualizationSettings.interactive.advanced.pauseWithSpacebar` | bool |  | True | True: during simulation, space bar can be pressed to pause simulation |
-| `selectionHighlights`<br>`SC.visualizationSettings.interactive.advanced.selectionHighlights` | bool |  | True | True: enable mouse click to highlights item (default: red) |
-| `selectionLeftMouse`<br>`SC.visualizationSettings.interactive.advanced.selectionLeftMouse` | bool |  | True | True: enable left mouse click on items to show basic information |
-| `selectionLeftMouseItemTypes`<br>`SC.visualizationSettings.interactive.advanced.selectionLeftMouseItemTypes` | Index |  | 31 | binary flags (1,2,4,8,16) for (Node,Object,Marker,Load,Sensor) that are identified with left mouse click selection |
-| `selectionRightMouse`<br>`SC.visualizationSettings.interactive.advanced.selectionRightMouse` | bool |  | True | True: enable right mouse click on items to show dictionary (read only!) |
-| `selectionRightMouseGraphicsData`<br>`SC.visualizationSettings.interactive.advanced.selectionRightMouseGraphicsData` | bool |  | False | True: right mouse click on items also shows GraphicsData information for inspectation (may sometimes be very large and may not fit into dialog for large graphics objects!) |
-| `zoomStepFactor`<br>`SC.visualizationSettings.interactive.advanced.zoomStepFactor` | float |  | 1.15 | change of zoom per keypress (keypad +/-) or mouse wheel increment |
+| name | type | default | description |
+|---|---|---|---|
+| `highlightColor`<br>`SC.visualizationSettings.interactive.advanced.highlightColor` | Float4 | [0.8,0.05,0.05,0.75] | RGBA color for highlighted item; 4th value is alpha-transparency |
+| `highlightOtherColor`<br>`SC.visualizationSettings.interactive.advanced.highlightOtherColor` | Float4 | [0.5,0.5,0.5,0.4] | RGBA color for other items (which are not highlighted); 4th value is alpha-transparency |
+| `joystickScaleRotation`<br>`SC.visualizationSettings.interactive.advanced.joystickScaleRotation` | float | 200. | rotation scaling factor for joystick input |
+| `joystickScaleTranslation`<br>`SC.visualizationSettings.interactive.advanced.joystickScaleTranslation` | float | 6. | translation scaling factor for joystick input |
+| `keypressRotationStep`<br>`SC.visualizationSettings.interactive.advanced.keypressRotationStep` | float | 5. | rotation increment per keypress in degree (full rotation = 360 degree) |
+| `keypressTranslationStep`<br>`SC.visualizationSettings.interactive.advanced.keypressTranslationStep` | float | 0.1 | translation increment per keypress relative to window size |
+| `mouseMoveRotationFactor`<br>`SC.visualizationSettings.interactive.advanced.mouseMoveRotationFactor` | float | 1. | rotation increment per 1 pixel mouse movement in degree |
+| `pauseWithSpacebar`<br>`SC.visualizationSettings.interactive.advanced.pauseWithSpacebar` | bool | True | True: during simulation, space bar can be pressed to pause simulation |
+| `selectionHighlights`<br>`SC.visualizationSettings.interactive.advanced.selectionHighlights` | bool | True | True: enable mouse click to highlights item (default: red) |
+| `selectionLeftMouse`<br>`SC.visualizationSettings.interactive.advanced.selectionLeftMouse` | bool | True | True: enable left mouse click on items to show basic information |
+| `selectionLeftMouseItemTypes`<br>`SC.visualizationSettings.interactive.advanced.selectionLeftMouseItemTypes` | Index | 31 | binary flags (1,2,4,8,16) for (Node,Object,Marker,Load,Sensor) that are identified with left mouse click selection |
+| `selectionRightMouse`<br>`SC.visualizationSettings.interactive.advanced.selectionRightMouse` | bool | True | True: enable right mouse click on items to show dictionary (read only!) |
+| `selectionRightMouseGraphicsData`<br>`SC.visualizationSettings.interactive.advanced.selectionRightMouseGraphicsData` | bool | False | True: right mouse click on items also shows GraphicsData information for inspectation (may sometimes be very large and may not fit into dialog for large graphics objects!) |
+| `zoomStepFactor`<br>`SC.visualizationSettings.interactive.advanced.zoomStepFactor` | float | 1.15 | change of zoom per keypress (keypad +/-) or mouse wheel increment |
 
 
 
@@ -730,21 +730,21 @@ Functionality to interact with render window; includes special rotation and zoom
 
 VSettingsInteractive has the following items:
 
-```{tabularcolumns} |\Y{0.2}|\Y{0.14}|\Y{0.06}|\Y{0.15}|\Y{0.45}|
+```{tabularcolumns} \Y{0.34}\Y{0.13}\Y{0.13}\Y{0.4}
 ```
 
-| Name | type / function return type | size | default value / function args | description |
-|---|---|---|---|---|
-| `advanced`<br>`SC.visualizationSettings.interactive.advanced` | VSettingsInteractiveAdvanced |  |  | advanced interactive visualization settings |
-| `autoRotateModelView`<br>`SC.visualizationSettings.interactive.autoRotateModelView` | bool |  | False | True: rotate model view with autorotation |
-| `autoRotationVelocity`<br>`SC.visualizationSettings.interactive.autoRotationVelocity` | Float3 | 3 | [0.,0.,1.047198] | Angular velocity vector for auto-rotation of scene (only visualization view is rotated, not the model itself!) |
-| `highlightItemIndex`<br>`SC.visualizationSettings.interactive.highlightItemIndex` | Int |  | -1 | index of item that shall be highlighted (e.g., to find item which cauess problems); if set -1, no item is highlighted |
-| `highlightItemType`<br>`SC.visualizationSettings.interactive.highlightItemType` | ItemType |  | ItemType::_None | item type (Node, Object, ...) that shall be highlighted (e.g., to find item which cauess problems) |
-| `highlightMbsNumber`<br>`SC.visualizationSettings.interactive.highlightMbsNumber` | UInt |  | 0 | index of main system (mbs) for which the item shall be highlighted; number is related to the ID in SystemContainer (first mbs = 0, second = 1, ...) |
-| `ignoreKeys`<br>`SC.visualizationSettings.interactive.ignoreKeys` | bool |  | False | True: ignore keyboard input except escape and 'F2' keys; used for interactive mode, e.g., to perform kinematic analysis; This flag can be switched with key 'F2'; if ignoreKeys=True, then keyPressUserFunction can be used! |
-| `keyPressUserFunction`<br>`SC.visualizationSettings.interactive.keyPressUserFunction` | KeyPressUserFunction |  | 0 | add a Python function f(key, action, mods) here, which is called every time a key is pressed; set this parameter to 0 (int) in order to deactivate it; the user function is only called if interactive.ignoreKeys=True; function shall return true, if key has been processed; Example: `def f(key, action, mods): print('key=',key)`; use chr(key) to convert key codes [32 ...96] to ascii; special key codes (>256) are provided in the exudyn.KeyCode enumeration type; key action needs to be checked (0=released, 1=pressed, 2=repeated); mods provide information (binary) for SHIFT (1), CTRL (2), ALT (4), Super keys (8), CAPSLOCK (16) |
-| `logMouseCoordinates`<br>`SC.visualizationSettings.interactive.logMouseCoordinates` | bool |  | True | True: if showMouseCoordinates=True, also log mouse coordinates (transformed to model coordinates); only works for axis-aligned ortho-projections and shows the coordinates of the current plane |
-| `useJoystickInput`<br>`SC.visualizationSettings.interactive.useJoystickInput` | bool |  | True | True: read joystick input (use 6-axis joystick with lowest ID found when starting renderer window) and interpret as (x,y,z) position and (rotx, roty, rotz) rotation: as available from 3Dconnexion space mouse and maybe others as well; set to False, if external joystick makes problems ... |
+| name | type | default | description |
+|---|---|---|---|
+| `advanced`<br>`SC.visualizationSettings.interactive.advanced` | VSettingsInteractiveAdvanced |  | advanced interactive visualization settings |
+| `autoRotateModelView`<br>`SC.visualizationSettings.interactive.autoRotateModelView` | bool | False | True: rotate model view with autorotation |
+| `autoRotationVelocity`<br>`SC.visualizationSettings.interactive.autoRotationVelocity` | Float3 | [0.,0.,1.047198] | Angular velocity vector for auto-rotation of scene (only visualization view is rotated, not the model itself!) |
+| `highlightItemIndex`<br>`SC.visualizationSettings.interactive.highlightItemIndex` | Int | -1 | index of item that shall be highlighted (e.g., to find item which cauess problems); if set -1, no item is highlighted |
+| `highlightItemType`<br>`SC.visualizationSettings.interactive.highlightItemType` | ItemType | ItemType::_None | item type (Node, Object, ...) that shall be highlighted (e.g., to find item which cauess problems) |
+| `highlightMbsNumber`<br>`SC.visualizationSettings.interactive.highlightMbsNumber` | UInt | 0 | index of main system (mbs) for which the item shall be highlighted; number is related to the ID in SystemContainer (first mbs = 0, second = 1, ...) |
+| `ignoreKeys`<br>`SC.visualizationSettings.interactive.ignoreKeys` | bool | False | True: ignore keyboard input except escape and 'F2' keys; used for interactive mode, e.g., to perform kinematic analysis; This flag can be switched with key 'F2'; if ignoreKeys=True, then keyPressUserFunction can be used! |
+| `keyPressUserFunction`<br>`SC.visualizationSettings.interactive.keyPressUserFunction` | KeyPressUserFunction | 0 | add a Python function f(key, action, mods) here, which is called every time a key is pressed; set this parameter to 0 (int) in order to deactivate it; the user function is only called if interactive.ignoreKeys=True; function shall return true, if key has been processed; Example: `def f(key, action, mods): print('key=',key)`; use chr(key) to convert key codes [32 ...96] to ascii; special key codes (>256) are provided in the exudyn.KeyCode enumeration type; key action needs to be checked (0=released, 1=pressed, 2=repeated); mods provide information (binary) for SHIFT (1), CTRL (2), ALT (4), Super keys (8), CAPSLOCK (16) |
+| `logMouseCoordinates`<br>`SC.visualizationSettings.interactive.logMouseCoordinates` | bool | True | True: if showMouseCoordinates=True, also log mouse coordinates (transformed to model coordinates); only works for axis-aligned ortho-projections and shows the coordinates of the current plane |
+| `useJoystickInput`<br>`SC.visualizationSettings.interactive.useJoystickInput` | bool | True | True: read joystick input (use 6-axis joystick with lowest ID found when starting renderer window) and interpret as (x,y,z) position and (rotx, roty, rotz) rotation: as available from 3Dconnexion space mouse and maybe others as well; set to False, if external joystick makes problems ... |
 
 
 
@@ -755,29 +755,29 @@ Top structure for all visualization settings in Exudyn.
 
 VisualizationSettings has the following items:
 
-```{tabularcolumns} |\Y{0.2}|\Y{0.14}|\Y{0.06}|\Y{0.15}|\Y{0.45}|
+```{tabularcolumns} \Y{0.34}\Y{0.13}\Y{0.13}\Y{0.4}
 ```
 
-| Name | type / function return type | size | default value / function args | description |
-|---|---|---|---|---|
-| `bodies`<br>`SC.visualizationSettings.bodies` | VSettingsBodies |  |  | body visualization settings |
-| `connectors`<br>`SC.visualizationSettings.connectors` | VSettingsConnectors |  |  | connector visualization settings |
-| `contact`<br>`SC.visualizationSettings.contact` | VSettingsContact |  |  | contact visualization settings |
-| `contour`<br>`SC.visualizationSettings.contour` | VSettingsContour |  |  | contour plot visualization settings |
-| `dialogs`<br>`SC.visualizationSettings.dialogs` | VSettingsDialogs |  |  | dialogs settings |
-| `exportImages`<br>`SC.visualizationSettings.exportImages` | VSettingsExportImages |  |  | settings for exporting (saving) images to files in order to create animations |
-| `general`<br>`SC.visualizationSettings.general` | VSettingsGeneral |  |  | general visualization settings |
-| `interactive`<br>`SC.visualizationSettings.interactive` | VSettingsInteractive |  |  | Settings for interaction with renderer |
-| `loads`<br>`SC.visualizationSettings.loads` | VSettingsLoads |  |  | load visualization settings |
-| `markers`<br>`SC.visualizationSettings.markers` | VSettingsMarkers |  |  | marker visualization settings |
-| `nodes`<br>`SC.visualizationSettings.nodes` | VSettingsNodes |  |  | node visualization settings |
-| `openGL`<br>`SC.visualizationSettings.openGL` | VSettingsOpenGL |  |  | OpenGL rendering settings |
-| `raytracer`<br>`SC.visualizationSettings.raytracer` | VSettingsRaytracer |  |  | Raytracer settings (builds on OpenGL rendering settings) |
-| `sensors`<br>`SC.visualizationSettings.sensors` | VSettingsSensors |  |  | sensor visualization settings |
-| `view0`<br>`SC.visualizationSettings.view0` | VSettingsView |  |  | Settings for main view 0 |
-| `view1`<br>`SC.visualizationSettings.view1` | VSettingsView |  |  | Settings for sub-view 1 |
-| `view2`<br>`SC.visualizationSettings.view2` | VSettingsView |  |  | Settings for sub-view 2 |
-| `view3`<br>`SC.visualizationSettings.view3` | VSettingsView |  |  | Settings for sub-view 3 |
+| name | type | default | description |
+|---|---|---|---|
+| `bodies`<br>`SC.visualizationSettings.bodies` | VSettingsBodies |  | body visualization settings |
+| `connectors`<br>`SC.visualizationSettings.connectors` | VSettingsConnectors |  | connector visualization settings |
+| `contact`<br>`SC.visualizationSettings.contact` | VSettingsContact |  | contact visualization settings |
+| `contour`<br>`SC.visualizationSettings.contour` | VSettingsContour |  | contour plot visualization settings |
+| `dialogs`<br>`SC.visualizationSettings.dialogs` | VSettingsDialogs |  | dialogs settings |
+| `exportImages`<br>`SC.visualizationSettings.exportImages` | VSettingsExportImages |  | settings for exporting (saving) images to files in order to create animations |
+| `general`<br>`SC.visualizationSettings.general` | VSettingsGeneral |  | general visualization settings |
+| `interactive`<br>`SC.visualizationSettings.interactive` | VSettingsInteractive |  | Settings for interaction with renderer |
+| `loads`<br>`SC.visualizationSettings.loads` | VSettingsLoads |  | load visualization settings |
+| `markers`<br>`SC.visualizationSettings.markers` | VSettingsMarkers |  | marker visualization settings |
+| `nodes`<br>`SC.visualizationSettings.nodes` | VSettingsNodes |  | node visualization settings |
+| `openGL`<br>`SC.visualizationSettings.openGL` | VSettingsOpenGL |  | OpenGL rendering settings |
+| `raytracer`<br>`SC.visualizationSettings.raytracer` | VSettingsRaytracer |  | Raytracer settings (builds on OpenGL rendering settings) |
+| `sensors`<br>`SC.visualizationSettings.sensors` | VSettingsSensors |  | sensor visualization settings |
+| `view0`<br>`SC.visualizationSettings.view0` | VSettingsView |  | Settings for main view 0 |
+| `view1`<br>`SC.visualizationSettings.view1` | VSettingsView |  | Settings for sub-view 1 |
+| `view2`<br>`SC.visualizationSettings.view2` | VSettingsView |  | Settings for sub-view 2 |
+| `view3`<br>`SC.visualizationSettings.view3` | VSettingsView |  | Settings for sub-view 3 |
 
 
 The following parameter changes have been made:

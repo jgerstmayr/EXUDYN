@@ -16,10 +16,7 @@ A very specialized penalty-based contact condition between a 2D circle (=marker0
 
 The parameters of the item; in a dictionary, its type is 'ContactCircleCable2D':
 
-```{tabularcolumns} |\Y{0.2}|\Y{0.14}|\Y{0.06}|\Y{0.15}|\Y{0.45}|
-```
-
-| Name | type | size | default value | description |
+| name | type | size | default | description |
 |---|---|---|---|---|
 | **name** | String |  | '' | connector's unique name |
 | **markerNumbers** | ArrayMarkerIndex |  | [ invalid (-1), invalid (-1) ] | markers define contact gap |
@@ -36,10 +33,7 @@ The parameters of the item; in a dictionary, its type is 'ContactCircleCable2D':
 
 The parameters of `VObjectContactCircleCable2D`, given as `visualization`:
 
-```{tabularcolumns} |\Y{0.2}|\Y{0.14}|\Y{0.06}|\Y{0.15}|\Y{0.45}|
-```
-
-| Name | type | size | default value | description |
+| name | type | size | default | description |
 |---|---|---|---|---|
 | **show** | Bool |  | True | set true, if item is shown in visualization and false if it is not shown |
 | **showContactCircle** | Bool |  | True | if True and show=True, the underlying contact circle is shown; uses circleTiling*4 for tiling (from VisualizationSettings.general) |

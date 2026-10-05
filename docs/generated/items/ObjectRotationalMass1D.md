@@ -18,10 +18,7 @@ A 1D rotational inertia (mass) which is attached to Node1D.
 
 The parameters of the item; in a dictionary, its type is 'RotationalMass1D':
 
-```{tabularcolumns} |\Y{0.2}|\Y{0.14}|\Y{0.06}|\Y{0.15}|\Y{0.45}|
-```
-
-| Name | type | size | default value | description |
+| name | type | size | default | description |
 |---|---|---|---|---|
 | **name** | String |  | '' | objects's unique name |
 | **inertia** | UReal |  | 0. | (symbol: $J$) inertia components [SI:kgm$^2$] of rotor / rotational mass |
@@ -37,10 +34,7 @@ Renamed parameters, still taken with a `DeprecationWarning`: `physicsInertia` (d
 
 The parameters of `VObjectRotationalMass1D`, given as `visualization`:
 
-```{tabularcolumns} |\Y{0.2}|\Y{0.14}|\Y{0.06}|\Y{0.15}|\Y{0.45}|
-```
-
-| Name | type | size | default value | description |
+| name | type | size | default | description |
 |---|---|---|---|---|
 | **show** | Bool |  | True | set true, if item is shown in visualization and false if it is not shown |
 | **graphicsData** | BodyGraphicsData |  |  | Structure contains data for body visualization; data is defined in special list / dictionary structure |
@@ -53,7 +47,7 @@ Drawn as [all bodies](#sec-drawing-objectsbody); its `graphicsData`, rotated abo
 
 Available as `OutputVariableType` in sensors, `Get...Output()` and other functions:
 
-```{tabularcolumns} |\Y{0.25}|\Y{0.25}|\Y{0.5}|
+```{tabularcolumns} \Y{0.25}\Y{0.25}\Y{0.5}
 ```
 
 | output variable | symbol | description |

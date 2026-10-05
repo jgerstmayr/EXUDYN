@@ -58,15 +58,16 @@ def FileNameLower(fileName):
 
 #************************************************
 #convert string to doxygen readable comment --> for formulas in comments and class descriptions
-#the columns of a parameter table in the PDF: name, type, size, default value, description
-parameterTableWidths = [0.2, 0.14, 0.06, 0.15, 0.45]
+#the columns of a settings table in the PDF: name - the short name above the full access path -, type, default,
+#description
+settingsTableWidths = [0.34, 0.13, 0.13, 0.4]
 
 
 def PdfColumnWidths(widths):
     """the widths of the columns of the next table in the PDF, as fractions of the line; without it
     LaTeX sizes the columns by their content, and a long description squeezes the others to a few
-    letters (#2741). The HTML ignores it."""
-    return '```{tabularcolumns} |' + '|'.join('\\Y{' + str(w) + '}' for w in widths) + '|\n```\n\n'
+    letters (#2741). The HTML ignores it. No vertical rules: the tables of the PDF have none (#2853)."""
+    return '```{tabularcolumns} ' + ''.join('\\Y{' + str(w) + '}' for w in widths) + '\n```\n\n'
 
 
 def Str2Doxygen(s, isDefaultValue=False): #replace _ and other symbols to fit into latex code
@@ -385,10 +386,11 @@ class DeclarationWriter:
         self.sMarkdown += ('| ' + ' | '.join([MarkdownCell(h) for h in headers[:3]])
                            + ' |\n|---|---|---|\n')
 
-    #the parameter table of one item
+    #the parameter table of one item; its column widths in the PDF follow its content (conf.py, TableWidths), so
+    #that the column of the defaults stays narrow where they are short
     def DefItemStartTable(self, classStr=''):
-        self.sMarkdown += '\n' + PdfColumnWidths(parameterTableWidths)
-        self.sMarkdown += ('| Name | type | size | default value | description |\n'
+        self.sMarkdown += '\n'
+        self.sMarkdown += ('| name | type | size | default | description |\n'
                            + '|---|---|---|---|---|\n')
 
     def DefFinishTable(self):
@@ -675,7 +677,7 @@ class DeclarationWriter:
     #for SystemStructures:
         
     #one row for definition of system structures
-    def SystemStructuresWriteDefRow(self, pythonName, typeName, sSize, sDefaultVal, description, typicalPaths = [], isFunction=False):
+    def SystemStructuresWriteDefRow(self, pythonName, typeName, sDefaultVal, description, typicalPaths = [], isFunction=False):
         #the name cell carries the FULL access path where there is one -
         #'SC.visualizationSettings.general.autoFitScene' is what a user types
         markdownName = pythonName + ('(...)' if isFunction and sDefaultVal != ''
@@ -684,8 +686,7 @@ class DeclarationWriter:
         for path in typicalPaths:
             separator = '.' if path != '' else ''
             nameCell += '<br>`' + MarkdownCell(path + separator + pythonName) + '`'
-        self.sMarkdown += ('| ' + nameCell + ' | ' + MarkdownCell(typeName)
-                           + ' | ' + MarkdownCell(sSize) + ' | '
+        self.sMarkdown += ('| ' + nameCell + ' | ' + MarkdownCell(typeName) + ' | '
                            + (MarkdownCell(sDefaultVal) if sDefaultVal != '' else '')
                            + ' | ' + MarkdownCell(LatexText2Markdown(description)) + ' |\n')
 

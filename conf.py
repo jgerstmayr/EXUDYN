@@ -541,6 +541,57 @@ def BreakToNewline(app, doctree, docname):
             node.replace_self(nodes.raw("", "\\newline ", format="latex"))
 
 
+#%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#TABLES IN THE PDF (#2853)
+#Sphinx sets a table of up to 30 rows with tabulary, which cannot break across pages - a longer one ran into the
+#footer - and which sizes its columns by a guess that formulas spoil: a column of $\mr{...}$ matrices squeezed the
+#description of the notation tables to a single word per line. So, for the latex builder only: every table that
+#stands in a section is a longtable, and a table without a tabularcolumns of its own gets column widths from its
+#content - the typical length of its cells (the 80th percentile, so that one long default does not widen the
+#column), bounded, so that a short column stays narrow and a long text gets the room.
+def TableWidths(app, doctree, docname):
+    if app.builder.format != "latex":
+        return
+    from docutils import nodes                    # noqa: PLC0415 - only the latex build needs it
+    from sphinx import addnodes                   # noqa: PLC0415
+    for table in list(doctree.findall(nodes.table)):
+        parent = table.parent
+        inSection = True                          #a longtable cannot stand in a box, a list or another table
+        while parent is not None and not isinstance(parent, nodes.document):
+            if not isinstance(parent, nodes.section):
+                inSection = False
+                break
+            parent = parent.parent
+        if inSection:
+            table["classes"].append("longtable")
+        index = table.parent.index(table)
+        if index > 0 and isinstance(table.parent[index - 1], addnodes.tabular_col_spec):
+            continue                              #the widths are given
+        tgroup = table.next_node(nodes.tgroup)
+        colspecs = [child for child in tgroup.children if isinstance(child, nodes.colspec)]
+        lengths = [[] for _ in colspecs]
+        for row in tgroup.findall(nodes.row):
+            entries = [child for child in row.children if isinstance(child, nodes.entry)]
+            if len(entries) != len(colspecs):     #a cell that spans columns says nothing about one column
+                continue
+            for (column, entry) in enumerate(entries):
+                lengths[column].append(len(entry.astext()))
+        headerWords = [[] for _ in colspecs]      #a word of the heading is not broken
+        for row in tgroup.findall(nodes.row):
+            if isinstance(row.parent, nodes.thead):
+                entries = [child for child in row.children if isinstance(child, nodes.entry)]
+                if len(entries) == len(colspecs):
+                    for (column, entry) in enumerate(entries):
+                        headerWords[column] += [len(word) for word in entry.astext().split()]
+        for (colspec, columnLengths, words) in zip(colspecs, lengths, headerWords):
+            columnLengths = sorted(columnLengths)
+            typical = columnLengths[int(0.8 * (len(columnLengths) - 1))] if columnLengths else 10
+            #+3 for the space between the columns, which a short column would otherwise lose to its neighbours
+            colspec["colwidth"] = min(max(typical, max(words, default=4)), 50) + 3
+        table["classes"].append("colwidths-given")
+
+
 def setup(app):
     app.connect("source-read", AppendCitationDefinitions)
     app.connect("doctree-resolved", BreakToNewline)
+    app.connect("doctree-resolved", TableWidths)
