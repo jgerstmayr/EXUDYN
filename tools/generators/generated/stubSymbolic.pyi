@@ -14,7 +14,7 @@ class Real:
         """Set either internal float value or value of named expression; cannot change symbolic expressions.
         
         Examples:
-            b = SymReal(13)
+            b = esym.Real(13)
             b.SetValue(14) #now b is 14
             #b.SetValue(a+3.) #not possible!
         """
@@ -28,8 +28,8 @@ class Real:
         """(UNTESTED!) return derivative of stored expression with respect to given symbolic named variable; NOTE: when defining the expression of the variable which shall be differentiated, the variable may only be changed with the SetValue(...) method hereafter!.
         
         Examples:
-            x=SymReal('x',2)
-            f=3*x+x**2*sin(x)
+            x=esym.Real('x',2)
+            f=3*x+x**2*esym.sin(x)
             f.Diff(x) #evaluate derivative w.r.t. x
         """
         ...
@@ -160,9 +160,9 @@ def IfThenElse(condition: Real, ifTrue: Real, ifFalse: Real) -> Real:
     If the condition evaluates to True, the expression ifTrue is evaluated, while otherwise expression ifFalse is evaluated
     
     Examples:
-        x=SymReal(-1)
-        y=SymReal(2,'y')
-        a=SymReal.IfThenElse(x<0, y+1, y-1))
+        x=esym.Real(-1)
+        y=esym.Real('y',2)
+        a=esym.IfThenElse(x<0, y+1, y-1)
     """
     ...
 @overload
@@ -172,7 +172,7 @@ def SetRecording(flag: bool) -> None:
     By default, recording is on.
     
     Examples:
-        SymReal.SetRecording(True)
+        esym.SetRecording(True)
     """
     ...
 @overload
@@ -180,7 +180,7 @@ def GetRecording() -> bool:
     """Get current (global / module-wide) status of expression recording.
     
     Examples:
-        Real.GetRecording()
+        esym.GetRecording()
     """
     ...
 
@@ -220,7 +220,7 @@ class Vector:
         """Return (symbolic) L2-norm of vector.
         
         Examples:
-            v1 = SymVector([1,4,8])
+            v1 = esym.Vector([1,4,8])
             length = v1.NormL2() #gives 9.
         """
         ...
@@ -231,8 +231,8 @@ class Vector:
         This corresponds to the numpy multiplication using '*'.
         
         Examples:
-            v1 = SymVector([1,2,4])
-            v2 = SymVector([1,0.5,0.25])
+            v1 = esym.Vector([1,2,4])
+            v2 = esym.Vector([1,0.5,0.25])
             v3 = v1.MultComponents(v2)
         """
         ...

@@ -1,0 +1,11 @@
+{
+  "number": 2866,
+  "title": "the member functions an item must provide, checked at compile time",
+  "author": "Claude-JG",
+  "status": "RAISED",
+  "type": "CHECK",
+  "effort": "MEDIUM",
+  "description": "Successor of #2498, evaluated in RG9.6: an item must implement the functions its declarations require (access function types, output variables, node type, Jacobians); today the base classes provide ~110 defaults that throw 'illegal call' at run time and no pure virtual function. Plan: a table capability -> required functions, generated static_asserts per item header (decltype(&CItem::F) names the class that declares F), the runtime half (every declared output variable readable) as a test model.",
+  "dateRaised": "2026-10-05",
+  "deadline": "2027-04-03"
+}

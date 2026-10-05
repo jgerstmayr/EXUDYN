@@ -1284,7 +1284,7 @@ definitions.append(ItemDefinition(
     outputVariables=[
         ItemOutputVariable(OVPosition, r"""$\LU{0}{\pv}\cConfig = [p_0,\, p_1,\, p_2]\cConfig\tp$global 3D position vector of node (=displacement+reference position)"""),
         ItemOutputVariable(OVDisplacement, r"""$\LU{0}{\uv}\cConfig = [q_0,\, q_1,\, q_2]\cConfig\tp$global 3D displacement vector of node"""),
-        ItemOutputVariable(OVVelocity, r"""$\LU{0}{\av}\cConfig = [\dot q_0,\,\dot q_1,\,\dot q_2]\cConfig\tp$global 3D velocity vector of node"""),
+        ItemOutputVariable(OVVelocity, r"""$\LU{0}{\vv}\cConfig = [\dot q_0,\,\dot q_1,\,\dot q_2]\cConfig\tp$global 3D velocity vector of node"""),
         ItemOutputVariable(OVAcceleration, OVDAccelerationNode),
         ItemOutputVariable(OVCoordinatesTotal, OVDCoordinatesTotalNode),
         ItemOutputVariable(OVCoordinates, 'coordinates vector of node (3 displacement coordinates + 3 slope vector coordinates)'),
@@ -1409,6 +1409,18 @@ definitions.append(ItemDefinition(
     All nine coordinates are global (absolute nodal coordinates). The node is used by
     `ObjectANCFThinPlate`, whose element scales the slopes by `slopesScalingX` and `slopesScalingY`.
 
+    #### Rotation
+
+    `MarkerNodeRigid` and the output variables of the rotation take an orthonormal frame of the slopes:
+    $\rv_x$ normalized is its $x$-axis, $\rv_y$ orthogonalized against it and normalized its $y$-axis, and the
+    $z$-axis - the normal of the surface - is their cross product. The angular velocity $\tomega$ and the rotation
+    Jacobian are not the derivatives of this frame but the least-squares fit
+    $\tomega = \left(-\tilde\rv_x\tilde\rv_x - \tilde\rv_y\tilde\rv_y\right)^{-1}\left(\tilde\rv_x\dot\rv_x + \tilde\rv_y\dot\rv_y\right)$,
+    symmetric in the two slopes; the two agree for slopes that keep their lengths and their right angle (#2219).
+    The derivative of $\Jm_{rot}\tp\vv$ with respect to the coordinates is not implemented: a connector whose
+    Jacobian needs it, e.g. a `RigidBodySpringDamper` at the node with an implicit solver, raises an error; a torque
+    and a joint do not need it.
+
     #### Action on the equations of motion
 
     The nine coordinates lead to nine ABRV:ODE2 equations, which the element provides; a force at the
@@ -1418,7 +1430,7 @@ definitions.append(ItemDefinition(
     outputVariables=[
         ItemOutputVariable(OVPosition, r"""$\LU{0}{\pv}\cConfig = \LU{0}{[p_0,\, p_1,\, p_2]}\cConfig\tp$global 3D position vector of node (=displacement+reference position)"""),
         ItemOutputVariable(OVDisplacement, r"""$\LU{0}{\uv}\cConfig = \LU{0}{[q_0,\, q_1,\, q_2]}\cConfig\tp$global 3D displacement vector of node"""),
-        ItemOutputVariable(OVVelocity, r"""$\LU{0}{\av}\cConfig = \LU{0}{[\dot q_0,\,\dot q_1,\,\dot q_2]}\cConfig\tp$global 3D velocity vector of node"""),
+        ItemOutputVariable(OVVelocity, r"""$\LU{0}{\vv}\cConfig = \LU{0}{[\dot q_0,\,\dot q_1,\,\dot q_2]}\cConfig\tp$global 3D velocity vector of node"""),
         ItemOutputVariable(OVAcceleration, r"""$\LU{0}{\av}\cConfig = \LU{0}{[\ddot q_0,\,\ddot q_1,\,\ddot q_2]}\cConfig\tp$global 3D acceleration vector of node"""),
         ItemOutputVariable(OVCoordinatesTotal, OVDCoordinatesTotalNode),
         ItemOutputVariable(OVCoordinates, 'coordinate vector of node (relative to reference configuration)'),
@@ -1578,7 +1590,7 @@ definitions.append(ItemDefinition(
     outputVariables=[
         ItemOutputVariable(OVPosition, r"""$\LU{0}{\pv}\cConfig = \LU{0}{[p_0,\, p_1,\, p_2]}\cConfig\tp$global 3D position vector of node (=displacement+reference position)"""),
         ItemOutputVariable(OVDisplacement, r"""$\LU{0}{\uv}\cConfig = \LU{0}{[q_0,\, q_1,\, q_2]}\cConfig\tp$global 3D displacement vector of node"""),
-        ItemOutputVariable(OVVelocity, r"""$\LU{0}{\av}\cConfig = \LU{0}{[\dot q_0,\,\dot q_1,\,\dot q_2]}\cConfig\tp$global 3D velocity vector of node"""),
+        ItemOutputVariable(OVVelocity, r"""$\LU{0}{\vv}\cConfig = \LU{0}{[\dot q_0,\,\dot q_1,\,\dot q_2]}\cConfig\tp$global 3D velocity vector of node"""),
         ItemOutputVariable(OVAcceleration, r"""$\LU{0}{\av}\cConfig = \LU{0}{[\ddot q_0,\,\ddot q_1,\,\ddot q_2]}\cConfig\tp$global 3D acceleration vector of node"""),
         ItemOutputVariable(OVCoordinatesTotal, OVDCoordinatesTotalNode),
         ItemOutputVariable(OVCoordinates, 'coordinate vector of node (relative to reference configuration)'),

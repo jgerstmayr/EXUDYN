@@ -1,0 +1,15 @@
+{
+  "number": 777,
+  "title": "GenericODE2",
+  "author": "JG",
+  "status": "RESOLVED",
+  "type": "TESTING",
+  "effort": "MEDIUM",
+  "description": "add tests for dense and sparse mass and jacobian matrices, together with sparse/dense solvers",
+  "dateRaised": "2021-10-09",
+  "deadline": "2021-12-08",
+  "dateResolved": "2026-10-05 23:05",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "ObjectGenericODE2 with dense and sparse matrices, with the dense and the sparse solver, gives the same motion: test model genericODE2matrixFormatsTest.py (revision2026b step RG4.19.11)",
+  "resolvedInVersion": "1.12.347"
+}

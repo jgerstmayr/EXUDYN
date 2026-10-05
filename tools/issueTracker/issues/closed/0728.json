@@ -1,0 +1,15 @@
+{
+  "number": 728,
+  "title": "optimize CollectCurrentNodeMarkerData",
+  "author": "JG",
+  "status": "CLOSED",
+  "type": "IMPROVEMENT",
+  "effort": "MEDIUM",
+  "description": "optimize function for CNodeRigidBodyRotVecLG",
+  "dateRaised": "2021-07-31",
+  "deadline": "2021-09-29",
+  "dateResolved": "2026-10-05 23:05",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "superseded: taken up by revision2026b step RG5.1.3 (measure with the benchmark first)",
+  "resolvedInVersion": "1.12.346"
+}

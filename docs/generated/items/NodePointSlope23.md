@@ -53,7 +53,7 @@ Available as `OutputVariableType` in sensors, `Get...Output()` and other functio
 |---|---|---|
 | Position | $\LU{0}{\pv}\cConfig = \LU{0}{[p_0,\, p_1,\, p_2]}\cConfig\tp$ | global 3D position vector of node (=displacement+reference position) |
 | Displacement | $\LU{0}{\uv}\cConfig = \LU{0}{[q_0,\, q_1,\, q_2]}\cConfig\tp$ | global 3D displacement vector of node |
-| Velocity | $\LU{0}{\av}\cConfig = \LU{0}{[\dot q_0,\,\dot q_1,\,\dot q_2]}\cConfig\tp$ | global 3D velocity vector of node |
+| Velocity | $\LU{0}{\vv}\cConfig = \LU{0}{[\dot q_0,\,\dot q_1,\,\dot q_2]}\cConfig\tp$ | global 3D velocity vector of node |
 | Acceleration | $\LU{0}{\av}\cConfig = \LU{0}{[\ddot q_0,\,\ddot q_1,\,\ddot q_2]}\cConfig\tp$ | global 3D acceleration vector of node |
 | CoordinatesTotal |  | displacement plus reference coordinates of node |
 | Coordinates |  | coordinate vector of node (relative to reference configuration) |

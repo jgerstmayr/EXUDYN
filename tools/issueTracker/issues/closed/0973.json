@@ -1,0 +1,15 @@
+{
+  "number": 973,
+  "title": "ContactFrictionCircleCable2D",
+  "author": "JG",
+  "status": "CLOSED",
+  "type": "TESTING",
+  "effort": "MEDIUM",
+  "description": "adapt old tests and create new beltdrive test",
+  "dateRaised": "2022-03-09",
+  "deadline": "2022-05-08",
+  "dateResolved": "2026-10-05 23:05",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "obsolete: the tests of ObjectContactFrictionCircleCable2D exist (maintainer 2026-10-05; revision2026b step RG4.19.11)",
+  "resolvedInVersion": "1.12.348"
+}

@@ -1,0 +1,15 @@
+{
+  "number": 1954,
+  "title": "CreateLinearSpringDamper",
+  "author": "JG",
+  "status": "RESOLVED",
+  "type": "TESTING",
+  "effort": "LOW",
+  "description": "add test example",
+  "dateRaised": "2025-02-05",
+  "deadline": "2025-08-04",
+  "dateResolved": "2026-10-05 23:05",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "test model createLinearSpringDamperTest.py for mbs.CreateLinearSpringDamper (revision2026b step RG12.41)",
+  "resolvedInVersion": "1.12.354"
+}

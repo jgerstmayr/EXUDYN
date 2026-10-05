@@ -45,7 +45,7 @@ symbolicModule.AddDocu(r"""The symbolic Real type allows to replace Python's flo
 
 symbolicModule.AddDocuNotebook('python/Notebooks/reference/symbolic.ipynb', part='real')
 
-symbolicModule.AddDocu(r"""To create a symbolic Real, use `aa=symbolic.Real(1.23)` to build a Python object aa with value 1.23. In order to use a named value, use `pi=symbolic.Real('pi',3.14)`. Note that in the following, we use the abbreviation `SymReal=exudyn.symbolic.Real`. Member functions of `SymReal`, which are **not recorded**, are:""")
+symbolicModule.AddDocu(r"""To create a symbolic Real, use `aa=symbolic.Real(1.23)` to build a Python object aa with value 1.23. In order to use a named value, use `pi=symbolic.Real('pi',3.14)`. Note that in the following, we use the abbreviation `SymReal=exudyn.symbolic.Real`, and the examples `esym=exudyn.symbolic`. Member functions of `SymReal`, which are **not recorded**, are:""")
 
 symbolicModule.DefStartTable(pyClassStr)
 
@@ -66,7 +66,7 @@ symbolicModule.DefPyFunctionAccess(cClass=classStr, pyName='__init__', cName='',
 
 symbolicModule.DefPyFunctionAccess(cClass=classStr, pyName='SetValue', cName='', 
                         description="Set either internal float value or value of named expression; cannot change symbolic expressions.",
-                        example = r"""b = SymReal(13)\\b.SetValue(14) #now b is 14\\#b.SetValue(a+3.) #not possible!""",
+                        example = r"""b = esym.Real(13)\\b.SetValue(14) #now b is 14\\#b.SetValue(a+3.) #not possible!""",
                         argList=['valueInit'],
                         argTypes=['float'],
                         returnType='None',
@@ -79,7 +79,7 @@ symbolicModule.DefPyFunctionAccess(cClass=classStr, pyName='Evaluate', cName='',
 
 symbolicModule.DefPyFunctionAccess(cClass=classStr, pyName='Diff', cName='', 
                         description="(UNTESTED!) return derivative of stored expression with respect to given symbolic named variable; NOTE: when defining the expression of the variable which shall be differentiated, the variable may only be changed with the SetValue(...) method hereafter!",
-                        example = r"""x=SymReal('x',2)\\f=3*x+x**2*sin(x)\\f.Diff(x) #evaluate derivative w.r.t. x""",
+                        example = r"""x=esym.Real('x',2)\\f=3*x+x**2*esym.sin(x)\\f.Diff(x) #evaluate derivative w.r.t. x""",
                         returnType='float',
                         argList=['var'],
                         argTypes=['symbolic.Real'],
@@ -183,7 +183,7 @@ symbolicModule.DefPyFunctionAccess(cClass=classStr, pyName='pow', cName='',
 
 symbolicModule.DefPyFunctionAccess(cClass=classStr, pyName='IfThenElse', cName='', 
                         description="Symbolic function for conditional evaluation. If the condition evaluates to True, the expression ifTrue is evaluated, while otherwise expression ifFalse is evaluated",
-                        example = r"""x=SymReal(-1)\\y=SymReal(2,'y')\\a=SymReal.IfThenElse(x<0, y+1, y-1))""",
+                        example = r"""x=esym.Real(-1)\\y=esym.Real('y',2)\\a=esym.IfThenElse(x<0, y+1, y-1)""",
                         argList=['condition','ifTrue','ifFalse'],
                         argTypes=['symbolic.Real','symbolic.Real','symbolic.Real'],
                         returnType='symbolic.Real',
@@ -192,7 +192,7 @@ symbolicModule.DefPyFunctionAccess(cClass=classStr, pyName='IfThenElse', cName='
 #+++++++++++++++++++++++
 symbolicModule.DefPyFunctionAccess(cClass=classStr, pyName='SetRecording', cName='', 
                         description="Set current (global / module-wide) status of expression recording. By default, recording is on.",
-                        example = "SymReal.SetRecording(True)",
+                        example = "esym.SetRecording(True)",
                         argList=['flag'],
                         argTypes=['bool'],
                         returnType='None',
@@ -200,7 +200,7 @@ symbolicModule.DefPyFunctionAccess(cClass=classStr, pyName='SetRecording', cName
 
 symbolicModule.DefPyFunctionAccess(cClass=classStr, pyName='GetRecording', cName='', 
                         description="Get current (global / module-wide) status of expression recording.",
-                        example = "symbolic.Real.GetRecording()",
+                        example = "esym.GetRecording()",
                         returnType='bool',
                         )
 
@@ -219,7 +219,7 @@ symbolicModule.AddDocu(r"""A symbolic Vector type to replace Python's (1D) numpy
 
 symbolicModule.AddDocuNotebook('python/Notebooks/reference/symbolic.ipynb', part='vector')
 
-symbolicModule.AddDocu(r"""To create a symbolic Vector, use `aa=symbolic.Vector([3,4.2,5]` to build a Python object aa with values [3,4.2,5]. In order to use a named vector, use `v=symbolic.Vector('myVec',[3,4.2,5])`. Vectors can be also created from mixed symbolic expressions and numbers, such as `v=symbolic.Vector([x,x**2,3.14])`, however, this cannot become a named vector as it contains expressions. There is a significance difference to numpy, such that '*' represents the scalar vector multplication which gives a scalar. Furthermore, the comparison operator '==' gives only True, if all components are equal, and the operator '!=' gives True, if any component is unequal. Note that in the following, we use the abbreviation `SymVector=exudyn.symbolic.Vector`. Note that only functions are able to be recorded. Member functions of `SymVector` are:""")
+symbolicModule.AddDocu(r"""To create a symbolic Vector, use `aa=symbolic.Vector([3,4.2,5]` to build a Python object aa with values [3,4.2,5]. In order to use a named vector, use `v=symbolic.Vector('myVec',[3,4.2,5])`. Vectors can be also created from mixed symbolic expressions and numbers, such as `v=symbolic.Vector([x,x**2,3.14])`, however, this cannot become a named vector as it contains expressions. There is a significance difference to numpy, such that '*' represents the scalar vector multplication which gives a scalar. Furthermore, the comparison operator '==' gives only True, if all components are equal, and the operator '!=' gives True, if any component is unequal. Note that in the following, we use the abbreviation `SymVector=exudyn.symbolic.Vector`, and the examples `esym=exudyn.symbolic`. Note that only functions are able to be recorded. Member functions of `SymVector` are:""")
 
 symbolicModule.DefStartTable(pyClassStr)
 
@@ -256,7 +256,7 @@ symbolicModule.DefPyFunctionAccess(cClass=classStr, pyName='NumberOfItems', cNam
 
 # symbolicModule.DefPyFunctionAccess(cClass=classStr, pyName='__setitem__', cName='', 
 #                         description="bracket [] operator for setting a component of the vector. Only works, if SymVector contains no expression. (may lead to inconsistencies in recording)",
-#                         example = "v1 = SymVector([1,3,2])\\\\v1[2]=13.",
+#                         example = "v1 = esym.Vector([1,3,2])\\\\v1[2]=13.",
 #                         argList=['i'],
 #                         argTypes=['symbolic.Real'],
 #                         returnType='None',
@@ -271,13 +271,13 @@ symbolicModule.DefOperator(name='__setitem__',
 #recorded:
 symbolicModule.DefPyFunctionAccess(cClass=classStr, pyName='NormL2', cName='', 
                         description="return (symbolic) L2-norm of vector.",
-                        example = r"""v1 = SymVector([1,4,8])\\length = v1.NormL2() #gives 9.""",
+                        example = r"""v1 = esym.Vector([1,4,8])\\length = v1.NormL2() #gives 9.""",
                         returnType='symbolic.Real',
                         )
 
 symbolicModule.DefPyFunctionAccess(cClass=classStr, pyName='MultComponents', cName='', 
                         description="Perform component-wise multiplication of vector times other vector and return result. This corresponds to the numpy multiplication using '*'.",
-                        example = r"""v1 = SymVector([1,2,4])\\v2 = SymVector([1,0.5,0.25])\\v3 = v1.MultComponents(v2)""",
+                        example = r"""v1 = esym.Vector([1,2,4])\\v2 = esym.Vector([1,0.5,0.25])\\v3 = v1.MultComponents(v2)""",
                         argList=['other'],
                         argTypes=['symbolic.Vector'],
                         returnType='symbolic.Real',
@@ -318,7 +318,7 @@ symbolicModule.AddDocu(r"""A symbolic Matrix type to replace Python's (2D) numpy
 
 symbolicModule.AddDocuNotebook('python/Notebooks/reference/symbolic.ipynb', part='matrix')
 
-symbolicModule.AddDocu(r"""To create a symbolic Matrix, use `aa=symbolic.Matrix([[3,4.2],[3.3,1.2]]` to build a Python object aa. In order to use a named matrix, use `v=symbolic.Matrix('myMat',[3,4.2,5])`. Matrixs can be also created from mixed symbolic expressions and numbers, such as `v=symbolic.Matrix([x,x**2,3.14])`, however, this cannot become a named matrix as it contains expressions. There is a significance difference to numpy, such that '*' represents the matrix multplication (compute components from row times column operations). Note that in the following, we use the abbreviation `SymMatrix=exudyn.symbolic.Matrix`. Member functions of `SymMatrix` are:""")
+symbolicModule.AddDocu(r"""To create a symbolic Matrix, use `aa=symbolic.Matrix([[3,4.2],[3.3,1.2]]` to build a Python object aa. In order to use a named matrix, use `v=symbolic.Matrix('myMat',[3,4.2,5])`. Matrixs can be also created from mixed symbolic expressions and numbers, such as `v=symbolic.Matrix([x,x**2,3.14])`, however, this cannot become a named matrix as it contains expressions. There is a significance difference to numpy, such that '*' represents the matrix multplication (compute components from row times column operations). Note that in the following, we use the abbreviation `SymMatrix=exudyn.symbolic.Matrix`, and the examples `esym=exudyn.symbolic`. Member functions of `SymMatrix` are:""")
 
 symbolicModule.DefStartTable(pyClassStr)
 
@@ -368,13 +368,13 @@ symbolicModule.DefOperator(name='__setitem__',
 #recorded:
 # symbolicModule.DefPyFunctionAccess(cClass=classStr, pyName='NormL2', cName='', 
 #                         description="return (symbolic) L2-norm of Matrix.",
-#                         example = "v1 = SymMatrix([1,4,8])\\\\length = v1.NormL2() #gives 9.",
+#                         example = "v1 = esym.Matrix([1,4,8])\\\\length = v1.NormL2() #gives 9.",
 #                         returnType='symbolic.Real',
 #                         )
 
 # symbolicModule.DefPyFunctionAccess(cClass=classStr, pyName='MultComponents', cName='', 
 #                         description="Perform component-wise multiplication of Matrix times other Matrix and return result. This corresponds to the numpy multiplication using '*'.",
-#                         example = "v1 = SymMatrix([1,2,4])\\\\v2 = SymMatrix([1,0.5,0.25])\\\\v3 = v1.MultComponents(v2)",
+#                         example = "v1 = esym.Matrix([1,2,4])\\\\v2 = esym.Matrix([1,0.5,0.25])\\\\v3 = v1.MultComponents(v2)",
 #                         argList=['other'],
 #                         argTypes=['sym.Matrix'],
 #                         returnType='symbolic.Real',

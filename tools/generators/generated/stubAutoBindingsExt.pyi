@@ -6,6 +6,7 @@ from exudyn.misc.mainSystemExtensions import MainSystemCreateSpringDamper as _Ma
 from exudyn.misc.mainSystemExtensions import MainSystemCreateCartesianSpringDamper as _MainSystemCreateCartesianSpringDamper
 from exudyn.misc.mainSystemExtensions import MainSystemCreateRigidBodySpringDamper as _MainSystemCreateRigidBodySpringDamper
 from exudyn.misc.mainSystemExtensions import MainSystemCreateTorsionalSpringDamper as _MainSystemCreateTorsionalSpringDamper
+from exudyn.misc.mainSystemExtensions import MainSystemCreateLinearSpringDamper as _MainSystemCreateLinearSpringDamper
 from exudyn.misc.mainSystemExtensions import MainSystemCreateRevoluteJoint as _MainSystemCreateRevoluteJoint
 from exudyn.misc.mainSystemExtensions import MainSystemCreatePrismaticJoint as _MainSystemCreatePrismaticJoint
 from exudyn.misc.mainSystemExtensions import MainSystemCreateSphericalJoint as _MainSystemCreateSphericalJoint
@@ -40,6 +41,7 @@ class MainSystem:
     CreateCartesianSpringDamper = _MainSystemCreateCartesianSpringDamper
     CreateRigidBodySpringDamper = _MainSystemCreateRigidBodySpringDamper
     CreateTorsionalSpringDamper = _MainSystemCreateTorsionalSpringDamper
+    CreateLinearSpringDamper = _MainSystemCreateLinearSpringDamper
     CreateRevoluteJoint = _MainSystemCreateRevoluteJoint
     CreatePrismaticJoint = _MainSystemCreatePrismaticJoint
     CreateSphericalJoint = _MainSystemCreateSphericalJoint

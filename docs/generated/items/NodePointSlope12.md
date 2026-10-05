@@ -53,7 +53,7 @@ Available as `OutputVariableType` in sensors, `Get...Output()` and other functio
 |---|---|---|
 | Position | $\LU{0}{\pv}\cConfig = \LU{0}{[p_0,\, p_1,\, p_2]}\cConfig\tp$ | global 3D position vector of node (=displacement+reference position) |
 | Displacement | $\LU{0}{\uv}\cConfig = \LU{0}{[q_0,\, q_1,\, q_2]}\cConfig\tp$ | global 3D displacement vector of node |
-| Velocity | $\LU{0}{\av}\cConfig = \LU{0}{[\dot q_0,\,\dot q_1,\,\dot q_2]}\cConfig\tp$ | global 3D velocity vector of node |
+| Velocity | $\LU{0}{\vv}\cConfig = \LU{0}{[\dot q_0,\,\dot q_1,\,\dot q_2]}\cConfig\tp$ | global 3D velocity vector of node |
 | Acceleration | $\LU{0}{\av}\cConfig = \LU{0}{[\ddot q_0,\,\ddot q_1,\,\ddot q_2]}\cConfig\tp$ | global 3D acceleration vector of node |
 | CoordinatesTotal |  | displacement plus reference coordinates of node |
 | Coordinates |  | coordinate vector of node (relative to reference configuration) |
@@ -96,6 +96,18 @@ flat plate in the global $x$-$y$ plane; a model gives the reference coordinates 
 
 All nine coordinates are global (absolute nodal coordinates). The node is used by
 `ObjectANCFThinPlate`, whose element scales the slopes by `slopesScalingX` and `slopesScalingY`.
+
+### Rotation
+
+`MarkerNodeRigid` and the output variables of the rotation take an orthonormal frame of the slopes:
+$\rv_x$ normalized is its $x$-axis, $\rv_y$ orthogonalized against it and normalized its $y$-axis, and the
+$z$-axis - the normal of the surface - is their cross product. The angular velocity $\tomega$ and the rotation
+Jacobian are not the derivatives of this frame but the least-squares fit
+$\tomega = \left(-\tilde\rv_x\tilde\rv_x - \tilde\rv_y\tilde\rv_y\right)^{-1}\left(\tilde\rv_x\dot\rv_x + \tilde\rv_y\dot\rv_y\right)$,
+symmetric in the two slopes; the two agree for slopes that keep their lengths and their right angle (#2219).
+The derivative of $\Jm_{rot}\tp\vv$ with respect to the coordinates is not implemented: a connector whose
+Jacobian needs it, e.g. a `RigidBodySpringDamper` at the node with an implicit solver, raises an error; a torque
+and a joint do not need it.
 
 ### Action on the equations of motion
 

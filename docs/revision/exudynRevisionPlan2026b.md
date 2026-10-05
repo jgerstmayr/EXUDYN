@@ -114,7 +114,7 @@ Python versions and three platforms (revision2026 phase R5). This group is about
 NOT cover, and about the testing that no suite can do.
 
 <a id="rg2-1"></a>
-**RG2.1** *(group RG2, added 2026-09-20; revision2026 step R5.18.9)* **The drawing code is
+**RG2.1** **DONE 2026-10-05** — [log](exudynRevisionLog2026b.md#rg4-19-11) *(group RG2, added 2026-09-20; revision2026 step R5.18.9; done with RG2.3)* **The drawing code is
     exercised by exactly one test model** (#2562).
 
     **The step was written on a wrong premise and is corrected here** (maintainer, 2026-09-22):
@@ -162,7 +162,7 @@ matplotlib**: a test model that fails for a missing package of the `[tests]` ext
 `pip install exudyn[tests]`, `exudyn.misc.resultsMonitor` imports matplotlib only if it is there.
 
 <a id="rg2-3"></a>
-**RG2.3** *(group RG2; maintainer 2026-09-22)* **A graphics regression suite** (#2582). RG2.1
+**RG2.3** **DONE 2026-10-05** — [log](exudynRevisionLog2026b.md#rg4-19-11) *(group RG2; maintainer 2026-09-22; done as the maintainer said 2026-10-05: "there are all miniexamples now tested. Isn't that enough?")* **A graphics regression suite** (#2582). RG2.1
     leaves one model, one setting and one checksum. What is wanted: several models against
     several visualization settings - show and hide of nodes, markers, loads and sensors,
     different colours and text settings - compared as **low-resolution reference images** that a
@@ -855,6 +855,11 @@ The steps are numbered in the order they were raised and stand here in the order
     - **RG4.19.10** **DONE 2026-10-05** — [log](exudynRevisionLog2026b.md#rg4-19-4) (#2851) `AddSystem` kept its
       container alive already (`keep_alive<0, 1>`), `GetSystem` did not and left a system in a deleted container; now
       both; test model `systemContainerLifetimeTest.py`.
+    - **RG4.19.11** **DONE 2026-10-05** — [log](exudynRevisionLog2026b.md#rg4-19-11) *(maintainer 2026-10-05, a
+      second triage)* closed: #1845 (replaced by native C++ tests in Exudyn), #973 (the tests exist), #1167 and
+      #1247 (symbolic user functions remove the round trip, C++ user functions will), #707 and #728 (taken up by
+      RG5.1.2, RG5.1.3), #2498 (superseded by #2866, RG9.6); done: #777 (`genericODE2matrixFormatsTest.py`), #2235
+      (`initialAccelerationsTest.py`), #1740 (the examples of the symbolic page run); #1953, #1954 are RG12.41.
     - Not here, they need a Linux machine or a screen: #2204, #2205 (perspective), #2277, #2278 (GLFW on Linux) - RG6.8.
 
 <a id="rg4-20"></a>
@@ -917,6 +922,11 @@ maintained rather than written once, and the vectorization work it would guide.
       $\Hm^{-1}$ - with and without the flag of no rotation (`HasNoRotation`, set by construction and, since #2810, for
       a unit matrix given from Python): whether skipping the rotation is a measurable gain, or the branch costs more
       than it saves (`homogeneousTransformationUseIdentityFlag` switches it off).
+    - **RG5.1.2** *(from #707, closed into this step 2026-10-05)* `ResizableVector` merged into `Vector`,
+      `LinkedDataVector` a specialization of `Vector` without virtual calls - measured with the benchmark first,
+      changed only for a gain.
+    - **RG5.1.3** *(from #728, closed into this step 2026-10-05)* `CollectCurrentNodeMarkerData` for
+      `NodeRigidBodyRotVecLG`: the time it takes in a benchmark of rigid bodies, then the optimization.
 
 <a id="rg5-2"></a>
 **RG5.2** *(group RG5, after RG5.1; revision2026 step R11.3)* **Make the hot linear algebra vectorizable.** Revision2026 step R2.16 measured that the
@@ -1207,6 +1217,25 @@ revision (info document D15).
 
 <a id="rg9-5"></a>
 **RG9.5** **DONE 2026-10-03** (#2779) — [log](exudynRevisionLog2026b.md#rg9-5) · [plan text](exudynRevisionLog2026b.md#plan-rg9-5) — `mbs.ComputeItem`: the computation functions of an item from Python. (RG9.5.1 to RG9.5.6 done, RG9.5.7 decided to stay as it is)
+
+<a id="rg9-6"></a>
+**RG9.6** *(group RG9; maintainer 2026-10-05: "2498: would be solvable with ABCs in C++? Evaluate, what blocks that.
+    Then 2498 could be closed and ABC for items step added to plan")* **The member functions an item must provide,
+    checked when it compiles** (#2866, from #2498). **Evaluated** ([log](exudynRevisionLog2026b.md#rg9-6)): the item
+    base classes (`CNode`, `CObject`, `CObjectBody`, `CObjectConnector`, `CMarker`, `CLoad`, `CSensor`) declare no pure
+    virtual function and about 110 defaults that throw "illegal call" at run time. Abstract base classes do not fit as
+    they are: what an item must provide depends on what it declares - a body with orientation access needs
+    `GetRotationMatrix`, a mass point does not -, so one abstract class per kind would force functions on items that
+    cannot have them, and capability interfaces by multiple inheritance would move these functions out of
+    `CObjectBody`, which the markers call on hot paths through a `CObjectBody&`. What works without that: the
+    generated header of each item gets a `static_assert` per function its declarations require, with
+    `decltype(&CItem::F)`, which names the class that declares `F` - the base class if the item does not override it.
+    - **RG9.6.1** the table: declaration (access function types, node type, output variables, Jacobian flags) to the
+      functions it requires, from the checks of `CSystem.cpp` and the base classes;
+    - **RG9.6.2** `itemHeaderEmitter.py` writes the `static_assert`s; the first build shows the items that miss a
+      function they declare - each a finding, fixed or its declaration corrected;
+    - **RG9.6.3** the runtime half: a test model that reads every output variable an item declares, over the
+      MiniExamples (`mbs.Inspect` does it for a model already, #2768).
 
 ## RG10 — Tooling and process
 
@@ -1510,6 +1539,11 @@ docstrings; argument annotations only where they help a reader; a check that eve
 <a id="rg12-40"></a>
 **RG12.40** **DONE 2026-10-05** (#2863, #2337) — [log](exudynRevisionLog2026b.md#rg12-40) · [plan text](exudynRevisionLog2026b.md#plan-rg12-40) — The Create functions take bodies, nodes or markers in `itemNumbers`.
 
+<a id="rg12-41"></a>
+**RG12.41** **DONE 2026-10-05** (#1953, #1954) — [log](exudynRevisionLog2026b.md#rg4-19-11) *(maintainer 2026-10-05: "Do
+1954 ... now")* **`mbs.CreateLinearSpringDamper`**: a linear spring-damper along an axis between two rigid bodies or
+rigid markers, positioned as the joints; test model `createLinearSpringDamperTest.py`.
+
 <a id="rg12-39"></a>
 **RG12.39** **DONE 2026-10-05** (#2850) — [log](exudynRevisionLog2026b.md#rg12-39-done) · [plan text](exudynRevisionLog2026b.md#plan-rg12-39) — A dynamic simulation continues from its restart file: `solution.restart.write` and `solution.restart.continueIfAvailable`.
 
@@ -1547,6 +1581,11 @@ What depends on it: the graphics regression test takes every item through its Mi
     simple way to compute a new fingerprint after a change"* - the check reports the old and the new
     fingerprint, and after the description has been looked at again, the new one replaces the old
     one: one command, not a hand edit of a hash.
+    - **RG13.3.1** **DONE 2026-10-05** — [log](exudynRevisionLog2026b.md#rg13-3-1) the workflow -
+      `tools/checkDescriptions.py` (`--mark`, `--check` in `exudev generate --all-checks`),
+      `definitions/descriptionChecks.json` - and the first group: the 16 nodes, checked and recorded.
+    - **RG13.3.2** the 18 markers; **RG13.3.3** the 4 loads; **RG13.3.4** the 8 sensors; **RG13.3.5** the 51 objects, in
+      their groups (bodies, finite elements, joints, connectors, contacts, special).
 
 <a id="rg13-4"></a>
 **RG13.4** **DONE 2026-09-29** (#2721) — [log](exudynRevisionLog2026b.md#rg13-4) · [plan text](exudynRevisionLog2026b.md#plan-rg13-4) — The development documents per item type.
@@ -1910,17 +1949,15 @@ issue and a short title only. The open issues that are not steps are in the trac
 | RG1.2 | - | retroactive tags for the past releases whose commits can be identified |
 | RG1.3 | - | a second internal repository for development-only Python |
 | RG1.4 | - | **the 1.13 release** - the first public one after the revision |
-| RG2.1 | #2562 | test the drawing code, which one test model covers today |
 | RG2.2 | - | the integration round of the institute before 1.13 |
-| RG2.3 | #2582 | the graphics regression suite |
 | RG2.4 | - | the manual GUI check, once per release and platform (list and model done) |
 | RG4.1 | - | the Windows/Linux differences in contact and friction; RG4.1.2 the five macOS-only models, RG4.1.3 the math library |
-| RG4.15 | #2848, #2849 | the open bugs before 1.13: `GeneralContact`, the contact model of its implicit solver (decision) and the torque on triangle bodies |
 | RG5.1 | - | a maintained micro-benchmark of the linear algebra, inside Exudyn (from #2397); RG5.1.1 the no-rotation flag of the HT |
 | RG5.2 | - | make the hot linear algebra vectorizable |
 | RG6.8 | #2140, #2236, #2237, #2350 | the graphics fixes before 1.13: Linux (RG6.8.5) and macOS (RG6.8.6), which wait for those machines |
+| RG9.6 | #2866 | the member functions an item must provide, checked when it compiles (from #2498) |
 | RG8.1 to RG8.9 | - | the plugin ABI: registry, fingerprint, reference plugin, headers, discovery |
-| RG13.3 | #2717 | each description synchronized once with its implementation, recorded with a fingerprint |
+| RG13.3 | #2717 | each description synchronized once with its implementation, recorded with a fingerprint: nodes done, RG13.3.2-.5 open |
 | RG14.3 | #2745 | joints and their Jacobians on homogeneous transformations, after RG14.2.9 |
 | RG15 | #2746 | objects computing from coordinates passed in: the work after the evaluation of RG15.1, not planned yet |
 

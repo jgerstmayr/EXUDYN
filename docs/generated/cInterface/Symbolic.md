@@ -60,7 +60,7 @@ f= 1007.048934256198 , diff= 11.908573304574846
 `python/Notebooks/reference/symbolic.ipynb`
 ```
 
-To create a symbolic Real, use `aa=symbolic.Real(1.23)` to build a Python object aa with value 1.23. In order to use a named value, use `pi=symbolic.Real('pi',3.14)`. Note that in the following, we use the abbreviation `SymReal=exudyn.symbolic.Real`. Member functions of `SymReal`, which are **not recorded**, are:
+To create a symbolic Real, use `aa=symbolic.Real(1.23)` to build a Python object aa with value 1.23. In order to use a named value, use `pi=symbolic.Real('pi',3.14)`. Note that in the following, we use the abbreviation `SymReal=exudyn.symbolic.Real`, and the examples `esym=exudyn.symbolic`. Member functions of `SymReal`, which are **not recorded**, are:
 
 The class **symbolic.Real** has the following **functions and structures**:
 
@@ -71,7 +71,7 @@ The class **symbolic.Real** has the following **functions and structures**:
   *Example*:
 
   ```python
-  b = SymReal(13)
+  b = esym.Real(13)
   b.SetValue(14) #now b is 14
   #b.SetValue(a+3.) #not possible!
   ```
@@ -82,8 +82,8 @@ The class **symbolic.Real** has the following **functions and structures**:
   *Example*:
 
   ```python
-  x=SymReal('x',2)
-  f=3*x+x**2*sin(x)
+  x=esym.Real('x',2)
+  f=3*x+x**2*esym.sin(x)
   f.Diff(x) #evaluate derivative w.r.t. x
   ```
 
@@ -162,9 +162,9 @@ The class **symbolic** has the following **functions and structures**:
   *Example*:
 
   ```python
-  x=SymReal(-1)
-  y=SymReal(2,'y')
-  a=SymReal.IfThenElse(x<0, y+1, y-1))
+  x=esym.Real(-1)
+  y=esym.Real('y',2)
+  a=esym.IfThenElse(x<0, y+1, y-1)
   ```
 
 - **`SetRecording(flag)`**: Set current (global / module-wide) status of expression recording. By default, recording is on.
@@ -172,7 +172,7 @@ The class **symbolic** has the following **functions and structures**:
   *Example*:
 
   ```python
-  SymReal.SetRecording(True)
+  esym.SetRecording(True)
   ```
 
 - **`GetRecording()`**: Get current (global / module-wide) status of expression recording.
@@ -180,7 +180,7 @@ The class **symbolic** has the following **functions and structures**:
   *Example*:
 
   ```python
-  symbolic.Real.GetRecording()
+  esym.GetRecording()
   ```
 
 
@@ -232,7 +232,7 @@ v1*v2:  ([1,3,2] * [a,42,(a - (3 * 13))]) = 174.0
 v1[2]:  [1,3,2][2] = 2.0
 ```
 
-To create a symbolic Vector, use `aa=symbolic.Vector([3,4.2,5]` to build a Python object aa with values [3,4.2,5]. In order to use a named vector, use `v=symbolic.Vector('myVec',[3,4.2,5])`. Vectors can be also created from mixed symbolic expressions and numbers, such as `v=symbolic.Vector([x,x**2,3.14])`, however, this cannot become a named vector as it contains expressions. There is a significance difference to numpy, such that '*' represents the scalar vector multplication which gives a scalar. Furthermore, the comparison operator '==' gives only True, if all components are equal, and the operator '!=' gives True, if any component is unequal. Note that in the following, we use the abbreviation `SymVector=exudyn.symbolic.Vector`. Note that only functions are able to be recorded. Member functions of `SymVector` are:
+To create a symbolic Vector, use `aa=symbolic.Vector([3,4.2,5]` to build a Python object aa with values [3,4.2,5]. In order to use a named vector, use `v=symbolic.Vector('myVec',[3,4.2,5])`. Vectors can be also created from mixed symbolic expressions and numbers, such as `v=symbolic.Vector([x,x**2,3.14])`, however, this cannot become a named vector as it contains expressions. There is a significance difference to numpy, such that '*' represents the scalar vector multplication which gives a scalar. Furthermore, the comparison operator '==' gives only True, if all components are equal, and the operator '!=' gives True, if any component is unequal. Note that in the following, we use the abbreviation `SymVector=exudyn.symbolic.Vector`, and the examples `esym=exudyn.symbolic`. Note that only functions are able to be recorded. Member functions of `SymVector` are:
 
 The class **symbolic.Vector** has the following **functions and structures**:
 
@@ -247,7 +247,7 @@ The class **symbolic.Vector** has the following **functions and structures**:
   *Example*:
 
   ```python
-  v1 = SymVector([1,4,8])
+  v1 = esym.Vector([1,4,8])
   length = v1.NormL2() #gives 9.
   ```
 
@@ -256,8 +256,8 @@ The class **symbolic.Vector** has the following **functions and structures**:
   *Example*:
 
   ```python
-  v1 = SymVector([1,2,4])
-  v2 = SymVector([1,0.5,0.25])
+  v1 = esym.Vector([1,2,4])
+  v2 = esym.Vector([1,0.5,0.25])
   v3 = v1.MultComponents(v2)
   ```
 
@@ -326,7 +326,7 @@ m1:  ((3 * ([[1,3,2],[4,5,6]] + [[a,(3 * 13),2],
 m2:  [[0,1,1],[1,0,1],[1,1,0]]
 ```
 
-To create a symbolic Matrix, use `aa=symbolic.Matrix([[3,4.2],[3.3,1.2]]` to build a Python object aa. In order to use a named matrix, use `v=symbolic.Matrix('myMat',[3,4.2,5])`. Matrixs can be also created from mixed symbolic expressions and numbers, such as `v=symbolic.Matrix([x,x**2,3.14])`, however, this cannot become a named matrix as it contains expressions. There is a significance difference to numpy, such that '*' represents the matrix multplication (compute components from row times column operations). Note that in the following, we use the abbreviation `SymMatrix=exudyn.symbolic.Matrix`. Member functions of `SymMatrix` are:
+To create a symbolic Matrix, use `aa=symbolic.Matrix([[3,4.2],[3.3,1.2]]` to build a Python object aa. In order to use a named matrix, use `v=symbolic.Matrix('myMat',[3,4.2,5])`. Matrixs can be also created from mixed symbolic expressions and numbers, such as `v=symbolic.Matrix([x,x**2,3.14])`, however, this cannot become a named matrix as it contains expressions. There is a significance difference to numpy, such that '*' represents the matrix multplication (compute components from row times column operations). Note that in the following, we use the abbreviation `SymMatrix=exudyn.symbolic.Matrix`, and the examples `esym=exudyn.symbolic`. Member functions of `SymMatrix` are:
 
 The class **symbolic.Matrix** has the following **functions and structures**:
 

@@ -2,10 +2,14 @@
   "number": 707,
   "title": "LinkedDataVector,ResizableVector",
   "author": "JG",
-  "status": "RAISED",
+  "status": "CLOSED",
   "type": "IMPROVEMENT",
   "effort": "HIGH",
   "description": "consider removing ResizableVector(integrate into Vector), implement LinkedDataVector as templated spezialization of Vector, no virtual calls in Vector",
   "dateRaised": "2021-07-06",
-  "deadline": "2021-09-04"
+  "deadline": "2021-09-04",
+  "dateResolved": "2026-10-05 23:05",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "superseded: taken up by revision2026b step RG5.1.2 (measure with the benchmark first)",
+  "resolvedInVersion": "1.12.345"
 }

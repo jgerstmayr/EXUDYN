@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.12 | Metheney | 310 | 1.12.344 |
+| 1.12 | Metheney | 317 | 1.12.358 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
 | 1.9 | Krall | 235 | 1.9.234 |
@@ -29,6 +29,34 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.12 - Metheney (current)
 
+- **1.12.358** `TESTING` `NORMAL` `HIGH EFF` `raised by: Claude-JG` `resolved by: Claude-JG` a graphics regression suite: several models, several visualization settings (#2582)
+  - description: The drawing code is exercised by exactly one model (\#2562): raytracerNOGLFWtest.py, one set of visualization settings, one checksum. A checksum changes with any visualization change and does not say what changed, so it can only ever be "different" or "equal". What is wanted is a suite over several models and several settings - show/hide of nodes, markers, loads and sensors, different colours and text settings - comparing either low-resolution reference images that a human can also look at, or counts extracted from the graphics data (triangles, lines, texts per item), or both: the counts say WHAT changed, the images say whether it still looks right. Needs the extraction API of the issue filed beside this one.
+  - **notes:** the graphics regression suite: graphics data of every MiniExample, settings variants, user functions, raytracer image (revision2026b step RG2.3)
+  - date resolved: **2026-10-05 23:05**, date raised: 2026-09-22
+- **1.12.357** `TESTING` `NORMAL` `HIGH EFF` `raised by: Claude-JG` `resolved by: Claude-JG` the drawing code is exercised by exactly one test model (#2562)
+  - description: The UpdateGraphics of every node, object, marker, load and sensor - ~4000 lines of drawing code - is called only by VisualizationSystem when the renderer runs, and every runner sets EXUDYN\_SUPPRESS\_UI\_WINDOW\_OPEN, so no test ever executes one of them. Moving all 79 of them in step R11.4.4 could only be verified by the compiler and by comparing the text of the bodies before and after. What is missing is a headless path that builds the graphics data of a model and checks it - the data is in VisualizationSystemData, so a binding that updates and returns a summary (number of triangles, lines, texts per item) would make the drawing code testable without a window. See revision2026 step R5.18.9. \[2026-09-22, Claude-JG\]: CORRECTION (maintainer, 2026-09-22): the original premise was wrong. python/TestModels/raytracerNOGLFWtest.py runs in the test suite with a reference checksum (runTestSuiteRefSol.py: 0.28151013387134) and calls SC.renderer.RedrawAndGetImage(useRaytracer=True), which goes through MainRenderer::RedrawAndGetImage -\> VSC.UpdateGraphicsDataNow() and VSC.UpdateGraphicsData(), so the UpdateGraphics of every visible item IS executed and its result enters a compared number. What is true is narrower: exactly one model, one set of visualization settings, and a single checksum that changes with any visualization change without saying what changed. The broader work - a graphics regression suite over several models and settings, and the extraction API it needs - is filed separately.
+  - **notes:** the drawing of every item is checked through its graphics data over all MiniExamples and the regression models (revision2026b steps RG2.3, RG2.1)
+  - date resolved: **2026-10-05 23:05**, date raised: 2026-09-20
+- **1.12.355** `TESTING` `LOW EFF` `resolved by: Claude-JG` computeInitialAccelerations (#2235)
+  - description: add test for initial accelerations and velocities
+  - **notes:** test model initialAccelerationsTest.py: the initial accelerations of the generalized-alpha method with a constraint and an initial velocity (revision2026b step RG4.19.11)
+  - date resolved: **2026-10-05 23:05**, date raised: 2026-01-23
+- **1.12.354** `TESTING` `LOW EFF` `resolved by: Claude-JG` CreateLinearSpringDamper (#1954)
+  - description: add test example
+  - **notes:** test model createLinearSpringDamperTest.py for mbs.CreateLinearSpringDamper (revision2026b step RG12.41)
+  - date resolved: **2026-10-05 23:05**, date raised: 2025-02-05
+- **1.12.353** `EXTENSION` `LOW EFF` `resolved by: Claude-JG` CreateLinearSpringDamper (#1953)
+  - description: add create function to MainSystem
+  - **notes:** mbs.CreateLinearSpringDamper: a linear spring-damper along an axis between two rigid bodies or rigid markers, with the arguments of the joints (revision2026b step RG12.41)
+  - date resolved: **2026-10-05 23:05**, date raised: 2025-02-05
+- **1.12.351** `CHECK` `LOW EFF` `resolved by: Claude-JG` symbolic (#1740)
+  - description: check examples in Docu for consistency
+  - **notes:** The examples of the symbolic page run: they use esym = exudyn.symbolic, the module functions IfThenElse/SetRecording/GetRecording and Real('name', value) (revision2026b step RG4.19.11)
+  - date resolved: **2026-10-05 23:05**, date raised: 2023-12-19
+- **1.12.347** `TESTING` `MEDIUM EFF` `resolved by: Claude-JG` GenericODE2 (#777)
+  - description: add tests for dense and sparse mass and jacobian matrices, together with sparse/dense solvers
+  - **notes:** ObjectGenericODE2 with dense and sparse matrices, with the dense and the sparse solver, gives the same motion: test model genericODE2matrixFormatsTest.py (revision2026b step RG4.19.11)
+  - date resolved: **2026-10-05 23:05**, date raised: 2021-10-09
 - **1.12.344** `CHECK` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` a MainSystem does not keep its SystemContainer alive (#2851)
   - description: SC.AddSystem() returns the MainSystem with return\_value\_policy::reference: a script that keeps mbs but drops SC (del SC, or SC created inside a function that returns mbs) works on a system the container has deleted. GetGeneralContact keeps its system alive since \#1512 (reference\_internal); the same for AddSystem/GetSystem would tie mbs to SC. Check what else depends on the current behaviour (SC.Reset, the renderer) before changing it.
   - **notes:** SC.GetSystem(i) keeps its SystemContainer alive, as SC.AddSystem() does (revision2026b step RG4.19.10)

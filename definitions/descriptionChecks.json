@@ -1,0 +1,85 @@
+{
+ "generatedBy": "tools/checkDescriptions.py --mark - do not edit by hand (#2717)",
+ "items": {
+  "Node1D": {
+   "checked": "2026-10-05",
+   "by": "Claude-JG",
+   "fingerprint": "d079a22fa228"
+  },
+  "NodeGenericAE": {
+   "checked": "2026-10-05",
+   "by": "Claude-JG",
+   "fingerprint": "3e9f07c9a5f8"
+  },
+  "NodeGenericData": {
+   "checked": "2026-10-05",
+   "by": "Claude-JG",
+   "fingerprint": "26fc5b0f0c0e"
+  },
+  "NodeGenericODE1": {
+   "checked": "2026-10-05",
+   "by": "Claude-JG",
+   "fingerprint": "a16006effc6d"
+  },
+  "NodeGenericODE2": {
+   "checked": "2026-10-05",
+   "by": "Claude-JG",
+   "fingerprint": "52bc1d683bf6"
+  },
+  "NodePoint": {
+   "checked": "2026-10-05",
+   "by": "Claude-JG",
+   "fingerprint": "9db8c674db30"
+  },
+  "NodePoint2D": {
+   "checked": "2026-10-05",
+   "by": "Claude-JG",
+   "fingerprint": "9b3825661e01"
+  },
+  "NodePoint2DSlope1": {
+   "checked": "2026-10-05",
+   "by": "Claude-JG",
+   "fingerprint": "0787f5ac88a3"
+  },
+  "NodePointGround": {
+   "checked": "2026-10-05",
+   "by": "Claude-JG",
+   "fingerprint": "f20ccef14aea"
+  },
+  "NodePointSlope1": {
+   "checked": "2026-10-05",
+   "by": "Claude-JG",
+   "fingerprint": "6276379df8fe"
+  },
+  "NodePointSlope12": {
+   "checked": "2026-10-05",
+   "by": "Claude-JG",
+   "fingerprint": "a29fed6f9d7a"
+  },
+  "NodePointSlope23": {
+   "checked": "2026-10-05",
+   "by": "Claude-JG",
+   "fingerprint": "05a6a0a8a429"
+  },
+  "NodeRigidBody2D": {
+   "checked": "2026-10-05",
+   "by": "Claude-JG",
+   "fingerprint": "50b1d9de3bcd"
+  },
+  "NodeRigidBodyEP": {
+   "checked": "2026-10-05",
+   "by": "Claude-JG",
+   "fingerprint": "ca64a299d710"
+  },
+  "NodeRigidBodyRotVecLG": {
+   "checked": "2026-10-05",
+   "by": "Claude-JG",
+   "fingerprint": "643a1c5e9b17"
+  },
+  "NodeRigidBodyRxyz": {
+   "checked": "2026-10-05",
+   "by": "Claude-JG",
+   "fingerprint": "043f2b304f0f"
+  }
+ }
+}

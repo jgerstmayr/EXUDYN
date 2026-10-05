@@ -1,0 +1,15 @@
+{
+  "number": 1845,
+  "title": "ComputePostProcessingModes",
+  "author": "JG",
+  "status": "CLOSED",
+  "type": "FIX",
+  "effort": "MEDIUM",
+  "description": "numberOfThreads> 1 not working: conversion of vectorInput to np.array makes problems",
+  "dateRaised": "2024-05-29",
+  "deadline": "2024-11-25",
+  "dateResolved": "2026-10-05 23:05",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "superseded: replaced by native C++ tests in Exudyn (maintainer 2026-10-05; revision2026b step RG4.19.11)",
+  "resolvedInVersion": "1.12.352"
+}

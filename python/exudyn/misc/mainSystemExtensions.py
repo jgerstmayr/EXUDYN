@@ -49,7 +49,7 @@ import copy
 __all__ = [
     'MainSystemCreateGround', 'MainSystemCreateMassPoint', 'MainSystemCreateRigidBody',
     'MainSystemCreateSpringDamper', 'MainSystemCreateCartesianSpringDamper',
-    'MainSystemCreateRigidBodySpringDamper', 'MainSystemCreateTorsionalSpringDamper',
+    'MainSystemCreateRigidBodySpringDamper', 'MainSystemCreateTorsionalSpringDamper', 'MainSystemCreateLinearSpringDamper',
     'MainSystemCreateRevoluteJoint', 'MainSystemCreatePrismaticJoint',
     'MainSystemCreateSphericalJoint', 'MainSystemCreateGenericJoint',
     'MainSystemCreateDistanceConstraint', 'MainSystemCreateCoordinateConstraint',
@@ -1206,6 +1206,113 @@ def MainSystemCreateTorsionalSpringDamper(mbs,
                                                                       ))
 
     
+    return oConnector
+
+
+#%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+@extends(exudyn.MainSystem)
+def MainSystemCreateLinearSpringDamper(mbs,
+                                       name='',
+                                       itemNumbers=[None, None],
+                                       position = [0.,0.,0.],
+                                       axis = [1.,0.,0.],
+                                       stiffness = 0.,
+                                       damping = 0.,
+                                       offset = 0.,
+                                       velocityOffset = 0.,
+                                       force = 0.,
+                                       useGlobalFrame=True,
+                                       springForceUserFunction=0,
+                                       show=True, drawSize=-1, color=exudyn.graphics.color.default) -> exudyn.ObjectIndex:
+    """helper function to create a LinearSpringDamper connector, acting along an axis between two rigid bodies, using arguments from ObjectConnectorLinearSpringDamper, see there for the full documentation; usually used together with a prismatic joint
+
+    Args:
+        mbs: the MainSystem where items are created
+        name: name string for connector; markers get Marker0:name and Marker1:name
+        itemNumbers: a list of two items to be connected, each a rigid body or a ground object (ObjectIndex) or a rigid marker (MarkerIndex); with a marker, position is [], and the marker sets the position of the spring-damper
+        position: a 3D vector as list or np.array: if useGlobalFrame=True it describes the global position of the spring-damper in reference configuration; else: local position in body0
+        axis: a 3D vector as list or np.array containing the axis along which the spring acts, either in local body0 coordinates (useGlobalFrame=False), or in global reference configuration (useGlobalFrame=True); it is normalized
+        stiffness: scalar stiffness of spring
+        damping: scalar damping added to spring
+        offset: scalar offset of the displacement along the axis, at which the spring force is zero
+        velocityOffset: scalar velocity offset, which can be used to realize a D-controlled actuator
+        force: additional constant force added to spring-damper, acting between the two bodies along the axis
+        useGlobalFrame: if False, the position and axis vectors are defined in the local coordinate system of body0, otherwise in global (reference) coordinates
+        springForceUserFunction: a user function springForceUserFunction(mbs, t, itemNumber, displacement, velocity, stiffness, damping, offset)->float ; this function replaces the internal connector force computation
+        show: if True, connector visualization is drawn
+        drawSize: general drawing size of connector
+        color: color of connector
+
+    Returns:
+        :ObjectIndex: returns index of newly created object
+
+    Example:
+        import exudyn as exu
+        from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
+        import numpy as np
+        SC = exu.SystemContainer()
+        mbs = SC.AddSystem()
+        oGround = mbs.CreateGround()
+        b0 = mbs.CreateRigidBody(inertia = InertiaCuboid(density=1000, sideLengths=[0.2,0.1,0.1]),
+                                 referencePosition = [1,0,0], gravity = [-9.81,0,0])
+        mbs.CreatePrismaticJoint(itemNumbers=[oGround, b0], position=[1,0,0], axis=[1,0,0])
+        mbs.CreateLinearSpringDamper(itemNumbers=[oGround, b0], position=[1,0,0], axis=[1,0,0],
+                                     stiffness=1e3, damping=10)
+        mbs.Assemble()
+        simulationSettings = exu.SimulationSettings() #takes currently set values or default values
+        simulationSettings.timeIntegration.numberOfSteps = 1000
+        simulationSettings.timeIntegration.endTime = 2
+        mbs.SolveDynamic(simulationSettings = simulationSettings)
+    """
+    where='MainSystem.CreateLinearSpringDamper(...)'
+
+    if not exudyn.__useExudynFast:
+        if not isinstance(name, str):
+            RaiseTypeError(where=where, argumentName='name', received = name, expectedType = ExpectedType.String)
+        if not IsVector(axis, 3) or np.linalg.norm(axis) == 0:
+            RaiseTypeError(where=where, argumentName='axis', received = axis, expectedType = 'a vector of length 3, not zero')
+        if not IsValidURealInt(stiffness):
+            RaiseTypeError(where=where, argumentName='stiffness', received = stiffness, expectedType = ExpectedType.UReal)
+        if not IsValidURealInt(damping):
+            RaiseTypeError(where=where, argumentName='damping', received = damping, expectedType = ExpectedType.UReal)
+        if not IsValidRealInt(offset):
+            RaiseTypeError(where=where, argumentName='offset', received = offset, expectedType = ExpectedType.Real)
+        if not IsValidRealInt(velocityOffset):
+            RaiseTypeError(where=where, argumentName='velocityOffset', received = velocityOffset, expectedType = ExpectedType.Real)
+        if not IsValidRealInt(force):
+            RaiseTypeError(where=where, argumentName='force', received = force, expectedType = ExpectedType.Real)
+        if not IsValidRealInt(drawSize):
+            RaiseTypeError(where=where, argumentName='drawSize', received = drawSize, expectedType = ExpectedType.Real)
+        if not IsVector(color, 4):
+            RaiseTypeError(where=where, argumentName='color', received = color, expectedType = ExpectedType.Vector, dim=4)
+
+    #as the joints: a marker of each side at the position, the axis in the frame of marker 0 (#1953)
+    [p0, A0, p1, A1, mBody0, mBody1, pPosition] = JointPreCheckCalcBodyMarkers(where, mbs, name, itemNumbers, position, show, useGlobalFrame)
+
+    vAxis = np.array(axis, dtype=float) if useGlobalFrame else _MatVec3(A0, axis)
+    vAxis = vAxis / np.linalg.norm(vAxis)
+
+    mName0 = 'Marker0:'+name if name != '' else ''
+    mName1 = 'Marker1:'+name if name != '' else ''
+    if mBody0 is None:
+        mBody0 = mbs.AddMarker(eii.MarkerBodyRigid(name=mName0, bodyNumber=itemNumbers[0],
+                                                   localPosition=_MatVec3(A0.T, np.array(pPosition) - p0)))
+    if mBody1 is None:
+        mBody1 = mbs.AddMarker(eii.MarkerBodyRigid(name=mName1, bodyNumber=itemNumbers[1],
+                                                   localPosition=_MatVec3(A1.T, np.array(pPosition) - p1)))
+
+    oConnector = mbs.AddObject(eii.ObjectConnectorLinearSpringDamper(name=name,
+                                                                     markerNumbers = [mBody0,mBody1],
+                                                                     axisMarker0 = _MatVec3(A0.T, vAxis),
+                                                                     stiffness = stiffness,
+                                                                     damping = damping,
+                                                                     offset = offset,
+                                                                     velocityOffset = velocityOffset,
+                                                                     force = force,
+                                                                     springForceUserFunction=springForceUserFunction,
+                                                                     visualization=eii.VLinearSpringDamper(show=show,
+                                                                                   drawSize=drawSize, color=color)
+                                                                     ))
     return oConnector
 
 

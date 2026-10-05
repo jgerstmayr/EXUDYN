@@ -1,0 +1,15 @@
+{
+  "number": 1740,
+  "title": "symbolic",
+  "author": "JG",
+  "status": "RESOLVED",
+  "type": "CHECK",
+  "effort": "LOW",
+  "description": "check examples in Docu for consistency",
+  "dateRaised": "2023-12-19",
+  "deadline": "2024-06-16",
+  "dateResolved": "2026-10-05 23:05",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "The examples of the symbolic page run: they use esym = exudyn.symbolic, the module functions IfThenElse/SetRecording/GetRecording and Real('name', value) (revision2026b step RG4.19.11)",
+  "resolvedInVersion": "1.12.351"
+}

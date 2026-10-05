@@ -1,0 +1,15 @@
+{
+  "number": 2235,
+  "title": "computeInitialAccelerations",
+  "author": "JG",
+  "status": "RESOLVED",
+  "type": "TESTING",
+  "effort": "LOW",
+  "description": "add test for initial accelerations and velocities",
+  "dateRaised": "2026-01-23",
+  "deadline": "2026-07-22",
+  "dateResolved": "2026-10-05 23:05",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "test model initialAccelerationsTest.py: the initial accelerations of the generalized-alpha method with a constraint and an initial velocity (revision2026b step RG4.19.11)",
+  "resolvedInVersion": "1.12.355"
+}

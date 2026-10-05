@@ -199,6 +199,10 @@ The same holds for item parameters: a renamed one is still taken under its old n
 dictionary and by `mbs.GetObjectParameter`/`SetObjectParameter` - with a warning naming the new one; the page of the
 item lists it (#2589).
 
+**`mbs.CreateLinearSpringDamper`** creates a linear spring-damper along an axis between two rigid bodies or rigid
+markers, with the arguments of the joints - `itemNumbers`, `position`, `axis`, `useGlobalFrame` -, e.g. inside a
+prismatic joint (#1953).
+
 **A singular Jacobian with adaptive steps reduces the step.** With `adaptiveStep` (the default) or automatic step size,
 the static and the implicit dynamic solvers take a singular system Jacobian as a failed step and reduce the step size,
 instead of stopping at once; a singularity of the model still ends the run, at the minimum step size, with the

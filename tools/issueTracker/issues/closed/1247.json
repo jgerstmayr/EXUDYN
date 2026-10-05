@@ -2,10 +2,14 @@
   "number": 1247,
   "title": "UserFunctions",
   "author": "JG",
-  "status": "RAISED",
+  "status": "CLOSED",
   "type": "CHECK",
   "effort": "HIGH",
   "description": "check whether optimization of user functions with numba/JIT removes C->Python->C roundtrip overhead using pybind11 f.target approach from tests/test_callbacks.cpp; this would enable to retrieve the original c-function pointer",
   "dateRaised": "2022-09-02",
-  "deadline": "2022-11-01"
+  "deadline": "2022-11-01",
+  "dateResolved": "2026-10-05 23:05",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "won't fix: symbolic user functions remove the C++-Python round trip, C++ user functions will (maintainer 2026-10-05; revision2026b step RG4.19.11)",
+  "resolvedInVersion": "1.12.350"
 }

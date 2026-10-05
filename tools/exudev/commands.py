@@ -197,6 +197,7 @@ def Generate(options):
                   (['python', 'tools/checkEncoding.py', '--check'],          'checkEncoding'),
                   (['python', 'tools/checkMathMacros.py', '--check'],       'checkMathMacros'),
                   (['python', 'tools/checkDefinitions.py', '--check'],     'checkDefinitions'),
+                  (['python', 'tools/checkDescriptions.py', '--check'],    'checkDescriptions'),   #the checked descriptions of the items (#2717)
                   (['python', 'tools/checkHeadings.py', '--check'],       'checkHeadings'),
                   (['python', 'tools/checkTocs.py', '--check'],           'checkTocs'),
                   (['python', 'tools/checkIssues.py', '--check'],           'checkIssues'),

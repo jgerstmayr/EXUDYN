@@ -15797,3 +15797,83 @@ need the container stored in `mbs.variables`; not handled.
 the Mac not reproducible here - every variant runs on Windows. `tmp/MacOS/raytracerCheck.py` (not in the repository)
 runs the variants - threads, text, a solve before - each in its own process with the fault handler, and the test
 model, for the next run on the Mac.
+
+<a id="rg4-19-11"></a>
+### RG4.19.11, RG12.41, RG2.1/RG2.3 — the second triage of 2026-10-05 (#777, #973, #1167, #1247, #1740, #1845, #1953, #1954, #2235, #2498, #2562, #2582, #707, #728)
+
+*(Maintainer 2026-10-05, on the list of open issues: close #1845 ("will be replaced with native C++ tests in Exudyn"),
+#973 ("already exists"), #1247 and #1167 ("Symbolic user functions resolve that and C++ user functions will also
+resolve that in the future"); do #1954 and #2235; check #777; #1740 a quick check, then close; #2498 evaluate ABCs;
+#707, #728 into RG5.1; #2562, #2582: "there are all miniexamples now tested. Isn't that enough?")*
+
+- **#1954 needs #1953**: `CreateLinearSpringDamper` did not exist. It does now (`mainSystemExtensions.py`), with the
+  interface of the joints - `itemNumbers` of two rigid bodies or rigid markers, `position`, `axis`, `useGlobalFrame` -
+  and creates two `MarkerBodyRigid` at the position, the axis in the frame of marker 0. `createLinearSpringDamperTest.py`:
+  a body on an inclined prismatic joint against gravity, static deflection $m\,g_{axis}/k$ to 1e-10 with the axis
+  given globally, in the frame of a turned body 0, and between two markers; a dynamic run decays to it.
+- **#2235**: `initialAccelerationsTest.py` - a pendulum starting horizontally with velocity: the initial accelerations
+  of `computeInitialAccelerations` are $[-v^2/L,\, -g]$ exactly, including the term of the velocity through the
+  derivative of the constraint Jacobian, the multiplier is $m v^2/L$, the dense and the sparse solver agree; without the
+  flag they are zero.
+- **#777**: tests of `ObjectGenericODE2` existed for dense matrices with the dense solver and sparse matrices with the
+  sparse solver (`genericODE2test.py`, `linearFEMgenericODE2.py`), not for the other two combinations;
+  `genericODE2matrixFormatsTest.py` runs all four on a spring chain - identical to 3e-17 - and the static deflection.
+- **#1740**: the 15 code blocks of the generated page `Symbolic.md`, each run on its own: 9 failed - the examples used
+  `SymReal`, `SymVector`, `SymMatrix` without defining them, `SymReal.IfThenElse`/`SetRecording` and
+  `symbolic.Real.GetRecording`, which are functions of the module, `sin` without module, a parenthesis too many and
+  `Real(2,'y')` for `Real('y',2)`. `pybindSymbolic.py` writes them with `esym = exudyn.symbolic` now, as the other
+  examples of the page; all run, except three blocks that come from the reference notebook, which defines the
+  abbreviations in a cell before (and is run with the notebook tests).
+- **#2562, #2582**: the drawing of every item is checked through its graphics data in `test_graphicsMiniExamples.py`
+  (every MiniExample), the settings variants in `test_graphicsRegression.py`, the raytracer image and the user functions
+  - all sub-steps of RG2.3 are done. RG2.1 and RG2.3 are done.
+- Closed as decided: #973, #1167, #1247, #1845; #707 and #728 into RG5.1.2 and RG5.1.3; #2498 superseded by #2866.
+
+<a id="rg9-6"></a>
+### RG9.6 — the member functions of an item: abstract base classes evaluated (2026-10-05, #2498, #2866)
+
+The base classes of the items have no pure virtual function; `CObjectBody` alone has 26 defaults that throw ("illegal
+call to CObjectBody::GetRotationMatrix"), `CNode` 52, `CMarker` 17. An item that declares a capability and does not
+implement it is found only when a model calls the function. Making the bases abstract does not work as it stands:
+- what an item must implement depends on its declarations: `ObjectMassPoint` has no orientation and must not be forced
+  to implement `GetRotationMatrix`; one abstract base per kind cannot express that;
+- capability interfaces (an abstract `IOrientationAccess` that a body inherits from when it declares orientation)
+  would take these functions out of `CObjectBody` - the markers call them through `CObjectBody&` in the marker data of
+  every connector, and would need a cast per call - and add multiple inheritance to 51 objects;
+- a few defaults are meant: optional features (`PostNewtonStep`, the Jacobians an item does not provide) return
+  "nothing" by design.
+What works without changing the hierarchy is a compile-time assertion in each generated header: for an item `CX`
+derived from `CObjectBody`, `decltype(&CX::GetRotationMatrix)` is a pointer to a member of `CObjectBody` if `CX` does not
+declare the function itself, and of `CX` if it does - so
+`static_assert(std::is_same<decltype(&CX::GetRotationMatrix), Matrix3D (CX::*)(...) const>::value, "...")` fails the
+build for an item that declares orientation access and inherits the throwing default. The generator knows the
+declarations; RG9.6 is planned with the table, the emitter and the runtime half.
+
+<a id="rg13-3-1"></a>
+### RG13.3.1 — the description checked against the implementation, and the nodes (2026-10-05, #2717)
+
+**The workflow.** `tools/checkDescriptions.py` computes for every item a fingerprint - 12 hexadecimal digits of the
+SHA-256 - of its implementation: the hand-written `src/Impl<Kind>s/C<Item>.cpp`, or for the loads and sensors, whose
+functions are in `src/System/CLoad.cpp` and `CSensor.cpp`, the definitions `C<Item>::...` and
+`VisualizationC<Item>::...` found there; and the generated header `src/Autogenerated/<kind>/C<Item>.h`. Comments and
+white space are removed first: the generated header carries the descriptions as comments, so writing a description does
+not change the fingerprint, and a change of a parameter, a declaration or the code does. `--mark <items>` (or
+`--mark-kind nodes`) records who, when and the fingerprint in `definitions/descriptionChecks.json`, written by the tool
+only; `--check` - in `exudev generate --all-checks` - fails for a recorded item whose fingerprint changed, with the old
+and the new one and the command to record it again. `definitions/README.md` describes it; `test_checkDescriptions.py`
+tests the normalization, the extraction from a shared source and the cycle mark - change - report - mark.
+
+**The nodes**, written from the C++ in RG13.5.1 (2026-09-28) and changed since by #2763 and #2768, checked again:
+- the output variables each node declares against those its C++ computes - they agree for all 16; the outputs
+  `Position`/`Displacement`/`Velocity` of `Node1D` and `AngularAcceleration` of the slope nodes are commented out in the
+  C++ and not declared;
+- the numbers of coordinates of the C++ (`GetNumberOf...Coordinates`) against the coordinate tables; the Euler parameter
+  constraint (index 3 and 2) and `addConstraintEquation` against `CNodeRigidBodyEP::ComputeAlgebraicEquations`; the
+  angle of `NodePoint2DSlope1` (`atan2` of the slope) and its derivative; the frame of `NodePointSlope23` (#2763);
+- **corrected**: `NodePointSlope12` had no word on its rotation - it has a section *Rotation* now: the frame is the
+  slope $\rv_x$ normalized and $\rv_y$ orthogonalized against it, the angular velocity and the rotation Jacobian the
+  least-squares fit of both slopes, not the derivative of that frame (#2219, remark added), and the derivative of
+  $\Jm_{rot}\tp\vv$ is not implemented - measured: a `RigidBodySpringDamper` at the node with the implicit solver raises
+  `NotImplementedFeatureError`, a torque and a joint do not;
+- **corrected**: the velocity of the three 3D slope nodes was written $\av$, now $\vv$.
+The 16 nodes are recorded as checked.
