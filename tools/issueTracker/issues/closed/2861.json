@@ -1,0 +1,16 @@
+{
+  "number": 2861,
+  "title": "macOS (Apple clang 15): CObjectJointGeneric.cpp does not compile - missing 'template' before GetColumnVector",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "BUG",
+  "effort": "LOW",
+  "description": "Reported 2026-10-05 for 1.12.324.dev1 on arm64 macOS, Python 3.13: in ComputeConstraintEquationsTemplate, A0all is a ConstSizeMatrixBase<TReal, 9>, so A0all.GetColumnVector<3>(...) needs the template keyword (lines 156, 168, 184, the velocity level written by RG14.2.13 on 2026-10-02). MSVC accepts it, clang does not.",
+  "dateRaised": "2026-10-05",
+  "deadline": "2027-04-03",
+  "dateResolved": "2026-10-05 10:20",
+  "resolvedAuthor": "Claude-JG",
+  "file": "src/ImplObjects/CObjectJointGeneric.cpp",
+  "releaseNotes": "macOS (Apple clang): ObjectJointGeneric compiles again; three calls of GetColumnVector on a matrix of the template type had no template keyword.",
+  "resolvedInVersion": "1.12.332"
+}

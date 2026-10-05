@@ -15472,3 +15472,16 @@ each structure "Reached as `path`, `path`." from its typical paths - `NumericalD
 `simulationSettings.timeIntegration.newton.numericalDifferentiation` and
 `simulationSettings.staticSolver.newton.numericalDifferentiation`. The name column of the PDF is narrower (0.26 of the
 line instead of 0.34), the description wider (0.48).
+
+<a id="rg6-8-6-2"></a>
+### RG6.8.6.2 — the macOS build: a missing `template` keyword (2026-10-05, #2861)
+
+*(Reported by the maintainer 2026-10-05: macOS arm64, Python 3.13, Apple clang 15.0.0, 1.12.324.dev1: "error: missing
+'template' keyword prior to dependent template name 'GetColumnVector'" in `CObjectJointGeneric.cpp`.)*
+
+`ComputeConstraintEquationsTemplate` of `ObjectJointGeneric` holds `A0all` as `ConstSizeMatrixBase<TReal, 9>`, a type
+that depends on the template parameter; the velocity-level branch, written by RG14.2.13 (2026-10-02), called
+`A0all.GetColumnVector<3>(...)` three times without `.template`, which the standard requires and MSVC does not enforce.
+Fixed. All other calls of a member template with explicit arguments in `src/` (`.Name<N>(`) were checked: they are on
+`Matrix3D` and other types that do not depend on a template parameter. A compiler of the clang family is not available on
+this machine, so the macOS build is the check; a further file may still stop it.

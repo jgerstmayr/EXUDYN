@@ -1083,6 +1083,10 @@ the arc; the spring windings of the spring-dampers use `connectors.springNumberO
           that is destroyed stops only the threads it started: the garbage collector of a console that runs a
           script again destroyed the solver of the earlier run while the new one ran, and stopped its threads; the
           consistency flags of a system are initialized. Whether this was the crash is the check on macOS.
+        - **RG6.8.6.2** **DONE 2026-10-05** — [log](exudynRevisionLog2026b.md#rg6-8-6-2) (#2861) the build on macOS
+          (Apple clang 15) stopped in `CObjectJointGeneric.cpp`: `A0all.GetColumnVector<3>` on a matrix of the template
+          type needs `.template`, which MSVC does not ask for; the other explicit template calls of the sources were
+          checked.
     - **RG6.8.7** **DONE 2026-10-04** — [log](exudynRevisionLog2026b.md#rg6-8-7) *(maintainer 2026-10-04: "by
       converting them to lines, so only a small fix")* (#2844) the raytracer draws no `GraphicsData` of type `Circle` (and none of the circles the
       2D items draw), found by the `GraphicsData` example of RG17.5.

@@ -153,7 +153,7 @@ void CObjectJointGeneric::ComputeConstraintEquationsTemplate(const MarkerRigid<T
 				Matrix3D A1all_t = (A1 * RigidBodyMath::Vector2SkewMatrix(markers[1].angularVelocityLocal)) * parameters.rotationMarker1;
 				if (constrainedRotations == 3)
 				{
-					Vector3D vx0 = A0all.GetColumnVector<3>(0), vz0 = A0all.GetColumnVector<3>(2);
+					Vector3D vx0 = A0all.template GetColumnVector<3>(0), vz0 = A0all.template GetColumnVector<3>(2);
 					Vector3D vx1 = A1all.GetColumnVector<3>(0), vy1 = A1all.GetColumnVector<3>(1);
 					Vector3D vx0_t = A0all_t.GetColumnVector<3>(0), vz0_t = A0all_t.GetColumnVector<3>(2);
 					Vector3D vx1_t = A1all_t.GetColumnVector<3>(0), vy1_t = A1all_t.GetColumnVector<3>(1);
@@ -165,7 +165,7 @@ void CObjectJointGeneric::ComputeConstraintEquationsTemplate(const MarkerRigid<T
 				{
 					Index freeAxis, lockedAxis1, lockedAxis2;
 					CObjectJointGenericFreeRotAxis(parameters.constrainedAxes, freeAxis, lockedAxis1, lockedAxis2);
-					Vector3D vRot0 = A0all.GetColumnVector<3>(freeAxis);
+					Vector3D vRot0 = A0all.template GetColumnVector<3>(freeAxis);
 					Vector3D vLocked1 = A1all.GetColumnVector<3>(lockedAxis1);
 					Vector3D vLocked2 = A1all.GetColumnVector<3>(lockedAxis2);
 					Vector3D vRot0_t = A0all_t.GetColumnVector<3>(freeAxis);
@@ -181,7 +181,7 @@ void CObjectJointGeneric::ComputeConstraintEquationsTemplate(const MarkerRigid<T
 					CObjectJointGenericLockedRotAxis(parameters.constrainedAxes, lockedAxis, freeAxis1, freeAxis2);
 					equations[freeAxis1 + 3] = lambda[freeAxis1 + 3];
 					equations[freeAxis2 + 3] = lambda[freeAxis2 + 3];
-					Vector3D vFree1 = A0all.GetColumnVector<3>(freeAxis1);
+					Vector3D vFree1 = A0all.template GetColumnVector<3>(freeAxis1);
 					Vector3D vFree2 = A1all.GetColumnVector<3>(freeAxis2);
 					Vector3D vFree1_t = A0all_t.GetColumnVector<3>(freeAxis1);
 					Vector3D vFree2_t = A1all_t.GetColumnVector<3>(freeAxis2);

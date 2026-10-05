@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.12 | Metheney | 297 | 1.12.331 |
+| 1.12 | Metheney | 298 | 1.12.332 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
 | 1.9 | Krall | 235 | 1.9.234 |
@@ -29,6 +29,10 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.12 - Metheney (current)
 
+- **1.12.332** <span class="textred">`BUG`</span> `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` macOS (Apple clang 15): CObjectJointGeneric.cpp does not compile - missing 'template' before GetColumnVector (#2861)
+  - description: Reported 2026-10-05 for 1.12.324.dev1 on arm64 macOS, Python 3.13: in ComputeConstraintEquationsTemplate, A0all is a ConstSizeMatrixBase\<TReal, 9\>, so A0all.GetColumnVector\<3\>(...) needs the template keyword (lines 156, 168, 184, the velocity level written by RG14.2.13 on 2026-10-02). MSVC accepts it, clang does not.
+  - **notes:** macOS (Apple clang): ObjectJointGeneric compiles again; three calls of GetColumnVector on a matrix of the template type had no template keyword.
+  - date resolved: **2026-10-05 10:20**, date raised: 2026-10-05
 - **1.12.331** `DOCU` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` the settings tables repeat every access path in the name column (#2860)
   - description: The maintainer, 2026-10-05: a settings item lists its name and each full path (simulationSettings.timeIntegration.newton.numericalDifferentiation.doSystemWideDifferentiation, ...staticSolver...), which makes the tables unreadable online and in the PDF; the paths belong once into the description of the structure, the table names the item only.
   - **notes:** The tables of the simulation and visualization settings name each item by its name only; the description of each structure says once where it is reached, e.g. simulationSettings.timeIntegration.newton.numericalDifferentiation.
