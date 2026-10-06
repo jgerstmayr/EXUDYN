@@ -467,7 +467,7 @@ bool MainRenderer::Detach()
 
 //! generic function to wait for continue, stop or just process tasks
 //! if -1, it waits for continue/stop; otherwise wait milliseconds (0=no wait)
-bool MainRenderer::DoIdleTasks(Real waitSeconds, bool printPauseMessage)
+bool MainRenderer::DoIdleTasks(Real waitSeconds, bool printPauseMessage, bool pollEvents)
 {
 	//without a window there is nothing to idle for, and waitSeconds=-1 would wait forever (#2477)
 	if (pySpecial.userInterface.suppressRenderer) { PrintRendererSuppressedNotice(); return true; }
@@ -476,7 +476,7 @@ bool MainRenderer::DoIdleTasks(Real waitSeconds, bool printPauseMessage)
 	if (!IsActive()) { VSC.InitializeRenderState(true, true); } //if first call to inactive renderer->initialize RenderState
 
 	//DoIdleTasks do some things on postProcessData and settings that are needed; can be run safely without renderer //RendererInActiveError("DoIdleTasks");
-	return mainSystemContainer->GetVisualizationSystemContainer().DoIdleTasks(waitSeconds, printPauseMessage);
+	return mainSystemContainer->GetVisualizationSystemContainer().DoIdleTasks(waitSeconds, printPauseMessage, pollEvents);
 }; 
 
 //! renderer functionality, to allow user to reset the RenderState using visulizationSettings

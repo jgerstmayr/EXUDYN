@@ -273,6 +273,10 @@ public:
 	//! calls back into Python where the GIL bookkeeping of _tkinter no longer holds. Only
 	//! depth 1 pumps; a nested operation renders and returns.
 	static Index idleOperationDepth;
+	//! false while DoIdleTasks(pollEvents=False) runs: the idle operation renders and processes the queue, but leaves the
+	//! events to the event loop that called it - a tkinter mainloop on macOS, where glfwPollEvents() would dispatch the
+	//! dialog's own events inside its callback (#2878)
+	static bool pollEventsInIdleTasks;
 
 	GlfwRenderer();
 	~GlfwRenderer() 

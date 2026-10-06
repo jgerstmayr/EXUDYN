@@ -15,9 +15,14 @@ import numpy as np #LoadSolutionFile
 from math import sin, pi #for animation
 #import time        
 import copy           #copy numpy objects
+import sys
 import exudyn
 from exudyn.basicUtilities import UIWindowSuppressed #exudyn.special.userInterface (#2477)
 from exudyn.misc.extensionRegistry import extends
+
+#inside a tkinter callback on macOS the renderer must not pump the events: tkinter and GLFW share one Cocoa event loop,
+#and glfwPollEvents would run the dialog's own events (closing it, ...) nested in the callback, which aborts (#2878)
+_pollEventsInTkCallback = sys.platform != 'darwin'
 
 #%%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
@@ -479,7 +484,7 @@ class InteractiveDialog:
         """
         if not self.simulationStopped:
             self.ProcessWidgetStates()
-            self.SC.renderer.DoIdleTasks(0) #for MacOS, but also to open visualization dialog, etc.
+            self.SC.renderer.DoIdleTasks(0, pollEvents=_pollEventsInTkCallback) #for MacOS, but also to open visualization dialog, etc.
 
             if self.mbs.GetRenderEngineStopFlag() and self.checkRenderStop:
                 self.OnQuit()
@@ -820,7 +825,7 @@ def AnimateModes(systemContainer, mainSystem, nodeNumber, period = 0.04, stepsPe
 
         SC.renderer.SendRedrawSignal()
         if not SC.visualizationSettings.general.useMultiThreadedRendering:
-            SC.renderer.DoIdleTasks(0)
+            SC.renderer.DoIdleTasks(0, pollEvents=_pollEventsInTkCallback)
         if mbs.sys['modeShapeSaveImages'] == 0:
             SC.renderer.RedrawAndSaveImage() #create images for animation
         else:
@@ -982,7 +987,7 @@ def SolutionViewer(mainSystem, solution=None, rowIncrement = 1, timeout=0.04, ru
         SetSolutionState(mainSystem, mbs.sys['solutionViewerSolution'], i, exudyn.ConfigurationType.Visualization)
         
         SC.renderer.SendRedrawSignal()
-        SC.renderer.DoIdleTasks(0) #as there is no simulation, we must do this for singlethreaded renderer to draw graphicsDataUserFunctions
+        SC.renderer.DoIdleTasks(0, pollEvents=_pollEventsInTkCallback) #as there is no simulation, we must do this for singlethreaded renderer to draw graphicsDataUserFunctions
 
         dialog.period = mbs.sys['solutionViewerPeriod']
 

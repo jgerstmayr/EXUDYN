@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.12 | Metheney | 328 | 1.12.369 |
+| 1.12 | Metheney | 331 | 1.12.372 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
 | 1.9 | Krall | 235 | 1.9.234 |
@@ -29,6 +29,18 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.12 - Metheney (current)
 
+- **1.12.372** `CHANGE` `raised by: Claude-JG` `resolved by: Claude-JG` The default drawing size of nodes, markers and sensors is too small to see (#2880)
+  - description: GUI checks on macOS and Ubuntu (K1, 'some markers/sensors are too small to see'): defaultSize = -1 gives a radius of 0.001 \* openGL.advanced.initialMaxSceneSize (1 by default), 1 mm in a scene of 1 m, whatever the size of the scene. Proposal, for decision: relative to the scene the renderer computed (maxSceneSize), e.g. 1 %, or a larger factor.
+  - **notes:** The model of the manual GUI check draws markers and sensors larger and with thicker lines, and the check switches the simplified drawing styles.
+  - date resolved: **2026-10-06 23:36**, date raised: 2026-10-06
+- **1.12.371** `EXTENSION` `raised by: Claude-JG` `resolved by: Claude-JG` Shadows of GLSpheres in the OpenGL renderer (#2879)
+  - description: Maintainer, GUIcheckMacOS.txt: the spheres drawn as GLSphere (display lists; graphics.Sphere and, since \#2877, the spheres of connectors and joints) cast no shadow, because each may have many triangles. Proposal: a coarse shadow geometry, e.g. a cylinder or disc per sphere, with some artefacts that are acceptable.
+  - **notes:** Spheres drawn as spheres (graphics.Sphere, the spheres of joints and connectors) cast shadows in the OpenGL renderer.
+  - date resolved: **2026-10-06 23:36**, date raised: 2026-10-06
+- **1.12.370** <span class="textred">`BUG`</span> `MEDIUM EFF` `raised by: Claude-JG` `resolved by: Claude-JG` macOS: abort when a Tk dialog of the SolutionViewer is closed, and when matplotlib shows a window while the renderer runs (#2878)
+  - description: GUIcheckMacOS.txt: (1) closing the SolutionViewer dialog after demo 2 aborts in PyEval\_RestoreThread: the dialog's Tk after-callback calls SC.renderer.DoIdleTasks, whose glfwPollEvents dispatches the Tk close event (one NSApp event loop), so tkinter's PythonCmd runs nested inside a Python callback, with its saved thread state NULL. Proposal for the Mac session: inside a Tk mainloop on macOS, redraw without polling (Tk's loop already delivers the GLFW events), e.g. DoIdleTasks(pollEvents=False). (2) graphicsDataExample.py: plt.show() with the renderer still running aborts in matplotlib's macosx backend (PyEval\_RestoreThread, GIL released); the example now stops the renderer first; whether a GLFW callback touches Python without the GIL is to be checked on the Mac.
+  - **notes:** On macOS, the dialogs of SolutionViewer and AnimateModes no longer let the renderer pump the window events inside their tkinter callbacks, which aborted Python when a dialog was closed; SC.renderer.DoIdleTasks has the argument pollEvents for this.
+  - date resolved: **2026-10-06 23:36**, date raised: 2026-10-06
 - **1.12.369** <span class="textred">`BUG`</span> `MEDIUM EFF` `raised by: Claude-JG` `resolved by: Claude-JG` First manual GUI check on macOS and Ubuntu (1.12.368): the findings that can be fixed without a screen (#2877)
   - description: From tmp/MacOS/GUIcheckMacOS.txt (maintainer) and tmp/Ubuntu/exudynGuiCheckUbuntu.txt (M. Pieber), 2026-10-06: CTRL+keypad rotation did nothing (R9); F2 showed no message (K10); the selection highlight lasted 0.5 s (R5); sensor traces missing in the raytracer (K7); graphics.Sphere ignored general.sphereTiling (tiling fixed at creation) and the spheres of connectors were triangles with sphereTiling 6 (= 4 segments as display list); contour Displacement: spheres not colored, and bodies without rotation colored by their local position (A3); a failed PNG write was silent; ConvertImages2Video failed with an ffmpeg without libx264 (conda-forge on macOS); the check list and its model: demo 2, which model, V4/V5 on items the settings reach, V14 'store', S5, P1 (plot windows closed at the end of the script), marker/sensor sizes; the docs: ffmpeg on macOS, CTRL+F3 is a macOS system shortcut.
   - **notes:** Findings of the first manual GUI checks on macOS and Ubuntu: CTRL with the keypad rotates in small steps, F2 shows its message, sensor traces appear in the raytraced image, graphics.Sphere and graphics.Spheres follow visualizationSettings.general.sphereTiling (now 16), the spheres of joints and connectors are drawn smooth, the Displacement contour colors bodies without rotation and spheres correctly, ConvertImages2Video works with an ffmpeg without libx264 (macOS), and a failed image write is reported.

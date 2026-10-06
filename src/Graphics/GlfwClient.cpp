@@ -78,6 +78,7 @@ bool GlfwRenderer::rendererActive = false;
 bool GlfwRenderer::stopRenderer = false;
 bool GlfwRenderer::useMultiThreadedRendering = false;
 Index GlfwRenderer::idleOperationDepth = 0;
+bool GlfwRenderer::pollEventsInIdleTasks = true;
 Real GlfwRenderer::lastGraphicsUpdate = 0.;
 Real GlfwRenderer::lastEventUpdate = 0.;	
 Real GlfwRenderer::rendererStartTime = 0.;
@@ -2048,7 +2049,7 @@ void GlfwRenderer::DoRendererTasks(bool graphicsUpdateAndRender)
 		//settings dialog wants from it when dialogs.multiThreadedDialogs is set.
 		if (idleOperationDepth <= 1 && time >= lastEventUpdate + 0.01) //should be very responsive - 100Hz is ok
 		{
-			glfwPollEvents(); //do not wait, just do tasks if they are there
+			if (pollEventsInIdleTasks) { glfwPollEvents(); } //do not wait, just do tasks if they are there
 			lastEventUpdate = time;
 			PyProcessExecuteQueue(); //if still some elements open in queue; MAY ONLY BE DONE IN SINGLE-THREADED MODE
 			ProcessJoystick(); //done per view
@@ -3372,6 +3373,41 @@ void DrawShadowPlane(float shadow)
 #define GL_DEPTH_CLAMP 0x864F //OpenGL 3.2 / ARB_depth_clamp; not in every gl.h
 #endif
 
+//! the shadow geometry of the GLSpheres (#2879): per sphere a disc through its center, normal to the direction to the
+//! light, with its radius - the volume it casts is a cylinder, the shadow of the sphere up to a small artefact at its
+//! own back side; a few triangles instead of the many of a sphere
+void SphereShadowTriangles(const ResizableArray<GLSphere>& spheres, const Float3& lightPos, const VisualizationSettings& settings,
+	ResizableArray<GLTriangle>& triangles)
+{
+	const Index nSegments = 16;
+	triangles.SetNumberOfItems(0);
+	GLTriangle trig;
+	trig.itemID = -1;
+	trig.isFiniteElement = false;
+	for (const GLSphere& sphere : spheres)
+	{
+		if (sphere.radius <= 0.f || EXUvis::SphereResolution(sphere, settings) < 1) { continue; } //a point casts no shadow
+		Float3 toLight = lightPos - sphere.point;
+		float distance = toLight.GetL2Norm();
+		if (distance == 0.f) { continue; }
+		toLight *= 1.f / distance;
+		//two unit vectors normal to the light direction
+		Float3 a = fabs(toLight[0]) < 0.9f ? Float3({ 1.f, 0.f, 0.f }) : Float3({ 0.f, 1.f, 0.f });
+		Float3 u = a.CrossProduct(toLight);
+		u *= 1.f / u.GetL2Norm();
+		Float3 v = toLight.CrossProduct(u); //u, v, toLight right-handed: the triangles below face the light
+		for (Index i = 0; i < nSegments; i++)
+		{
+			float phi0 = 2.f * EXUstd::pi_f * (float)i / (float)nSegments;
+			float phi1 = 2.f * EXUstd::pi_f * (float)(i + 1) / (float)nSegments;
+			trig.points[0] = sphere.point;
+			trig.points[1] = sphere.point + sphere.radius * (cosf(phi0) * u + sinf(phi0) * v);
+			trig.points[2] = sphere.point + sphere.radius * (cosf(phi1) * u + sinf(phi1) * v);
+			triangles.Append(trig);
+		}
+	}
+}
+
 //! the shadows are stencil shadow volumes, counted with the z-fail method: correct only if no volume is clipped
 //! by the near or far plane, which the camera-centric view (camera inside the scene, far plane close) does;
 //! depth clamping keeps the clipped parts at the plane instead (#2308)
@@ -3435,10 +3471,15 @@ void GlfwRenderer::DrawTrianglesWithShadow(Index viewID, GraphicsData* data)
 			visSettings->openGL.advanced.polygonOffset * factOffset + 
 			visSettings->openGL.advanced.shadowPolygonOffset * state->maxSceneSize);
 
+		static ResizableArray<GLTriangle> sphereShadowTriangles; //the GLSpheres cast shadows too (#2879)
+		if (settingsView.scene.showFaces) { SphereShadowTriangles(data->glSpheres, lightPos, *visSettings, sphereShadowTriangles); }
+		else { sphereShadowTriangles.SetNumberOfItems(0); }
+
 		glCullFace(GL_FRONT);
 		glStencilFunc(GL_ALWAYS, 0x0, 0xff);
 		glStencilOp(GL_KEEP, GL_INCR_WRAP, GL_KEEP); //INCR_WRAP/DECR_WRAP works for > 255 triangles
 		
+		for (const GLTriangle& trig : sphereShadowTriangles) { RenderTriangleShadowVolume(trig, lightPos, maxDist, shadow); }
 		for (const ResizableArray<GLTriangle>* triangleList : { &data->glTriangles, &data->triangles6SplitCache }) //with the split 6-node triangles (#2709)
 		for (const GLTriangle& trig : *triangleList)
 		{ //draw faces
@@ -3451,6 +3492,7 @@ void GlfwRenderer::DrawTrianglesWithShadow(Index viewID, GraphicsData* data)
 		glCullFace(GL_BACK);
 		glStencilFunc(GL_ALWAYS, 0x0, 0xff);
 		glStencilOp(GL_KEEP, GL_DECR_WRAP, GL_KEEP);
+		for (const GLTriangle& trig : sphereShadowTriangles) { RenderTriangleShadowVolume(trig, lightPos, maxDist, shadow); }
 		for (const ResizableArray<GLTriangle>* triangleList : { &data->glTriangles, &data->triangles6SplitCache }) //with the split 6-node triangles (#2709)
 		for (const GLTriangle& trig : *triangleList)
 		{ //draw faces

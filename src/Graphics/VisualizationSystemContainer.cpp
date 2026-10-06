@@ -263,9 +263,16 @@ bool VisualizationSystemContainer::DoSingleIdleOperation()
 
 
 //! this function waits for the stop flag in the render engine; or for given time
-bool VisualizationSystemContainer::DoIdleTasks(Real waitSeconds, bool printPauseMessage)
+bool VisualizationSystemContainer::DoIdleTasks(Real waitSeconds, bool printPauseMessage, bool pollEvents)
 {
 #ifdef USE_GLFW_GRAPHICS
+	//the events are left to the calling event loop while this runs (#2878)
+	struct ScopedPollEvents
+	{
+		bool previous;
+		ScopedPollEvents(bool poll) : previous(GlfwRenderer::pollEventsInIdleTasks) { GlfwRenderer::pollEventsInIdleTasks = poll && previous; }
+		~ScopedPollEvents() { GlfwRenderer::pollEventsInIdleTasks = previous; }
+	} scopedPollEvents(pollEvents);
 	Real time = EXUstd::GetTimeInSeconds();
 	STDstring strSolver;
 	bool simulationPaused = false;

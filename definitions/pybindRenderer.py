@@ -83,11 +83,11 @@ pb.DefPyFunctionAccess(cClass=classStr, pyName='StopSimulation', cName='StopSimu
                         )
 
 pb.DefPyFunctionAccess(cClass=classStr, pyName='DoIdleTasks', cName='DoIdleTasks', 
-                        description="Interrupt further computation until user input (Space, 'Q', Escape-key), representing a PAUSE function; this command runs a loop in the background to have active response of the render window, e.g., to open the visualization dialog or use the right-mouse-button; replaces former SC.WaitForRenderEngineStopFlag() and mbs.WaitForUserToContinue(); call this function in order to interact with Renderer window; use waitSeconds in order to run this idle tasks while animating a model (e.g., waitSeconds=0.04), use waitSeconds=0 without waiting, or use waitSeconds=-1 (default) to wait until window is closed; NOTE: may also first initialize renderState from visualizationSettings (if renderer is inactive)",
+                        description="Interrupt further computation until user input (Space, 'Q', Escape-key), representing a PAUSE function; this command runs a loop in the background to have active response of the render window, e.g., to open the visualization dialog or use the right-mouse-button; replaces former SC.WaitForRenderEngineStopFlag() and mbs.WaitForUserToContinue(); call this function in order to interact with Renderer window; use waitSeconds in order to run this idle tasks while animating a model (e.g., waitSeconds=0.04), use waitSeconds=0 without waiting, or use waitSeconds=-1 (default) to wait until window is closed; pollEvents=False: the renderer draws and runs queued commands, but leaves the window events to the event loop that called it - a tkinter dialog calling this from its after-callback on macOS, where both share one event loop; NOTE: may also first initialize renderState from visualizationSettings (if renderer is inactive)",
                         example = 'SC.renderer.DoIdleTasks()',
-                        argList=['waitSeconds','printPauseMessage'],
-                        argTypes=['float','bool'],
-                        defaultArgs=['-1.','True'],
+                        argList=['waitSeconds','printPauseMessage','pollEvents'],
+                        argTypes=['float','bool','bool'],
+                        defaultArgs=['-1.','True','True'],
                         returnType='bool',
                         )
 

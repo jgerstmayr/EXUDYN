@@ -89,6 +89,7 @@ Still in phase 3 of the model (after K11), or start the model again.
 | V4 | `nodes.defaultSize`: type `0.25`, RETURN | the red mass (a node) grows in the render window |
 | V5 | `nodes.tiling`: type `2`, RETURN; `general.sphereTiling`: type `2`, RETURN | first the red mass, then the orange sphere and the joint spheres become visibly coarse; set both back with **undo** |
 | V6 | `connectors.showJointAxes` = `True`; `bodies.showNumbers` = `True` | joint axes drawn; body numbers shown |
+| V6a | `connectors.drawSimplified`, `markers.drawSimplified`, `loads.drawSimplified`, `sensors.drawSimplified` = `False` (default `True`), then back | the spring windings become a tube; markers, loads and sensors drawn with their full symbols; back to lines and simple symbols |
 | V7 | enter an invalid value, e.g. `abc` into `nodes.defaultSize`; then `-1` into `general.circleTiling` | value rejected with a message, old value kept, dialog survives |
 | V8 | enum: `contour.outputVariable` - pick `Displacement` from the list; `contour.outputVariableComponent` = `1` | combo box shows short names (no `OutputVariableType.` prefix); bodies get a contour color and a color bar appears; set back to `_None` |
 | V9 | hover over a row and over a folder (wait 0.5 s) | tooltip with the description (folder: its class description); tooltip is **in front** of the dialog |

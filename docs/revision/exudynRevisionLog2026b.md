@@ -16207,3 +16207,26 @@ crash report shows Tk's PythonCmd nested in a Python after-callback, so tkinter'
 #2879 (RG2.4.3, shadows of GLSpheres), #2880 (RG2.4.4, default sizes: 0.001 * initialMaxSceneSize), #2881 (RG2.4.5,
 Ubuntu K13 and S6 again). The checklist remark "4. The model continues with mbs.SolutionViewer()" referred to an older
 copy of the model; the current one has it.
+
+<a id="rg2-4-2"></a>
+### RG2.4.2-.4 — macOS dialogs without nested event pumping, sphere shadows, the check model (2026-10-06, #2878-#2880)
+
+*(Maintainer 2026-10-06: "#2878: ok, try that and we will check if it works sufficiently smooth. Also do #2879.
+#2880: I mean, just for the Manual GUI Check: increase the size x10 in the settings of the TEST, so it is visible for
+the checker. Also include switching the simplified style (if this test is not included yet) and use lineWidth=3")*
+
+- **#2878** `SC.renderer.DoIdleTasks(waitSeconds, printPauseMessage, pollEvents=True)`: with `pollEvents=False` the
+  idle operation renders, processes the queued Python and the user-function drawing, but does not call
+  `glfwPollEvents()` (`GlfwRenderer::pollEventsInIdleTasks`, set for the duration of the call, nested calls keep it
+  off). On macOS tkinter and GLFW share the Cocoa event loop: the Tk mainloop already delivers the GLFW window events,
+  and `glfwPollEvents()` inside a Tk after-callback ran the dialog's own close event nested, which aborted in
+  tkinter's `PythonCmd` (the crash report of the GUI check). The Tk callbacks of `interactive.py` (the dialog's Run
+  loop, AnimateModes, SolutionViewer) and the settings dialog's redraw pass `pollEvents=False` on macOS only; Windows
+  and Linux are unchanged. Not covered: `RedrawAndSaveImage` (Record frames) still pumps once on macOS - to be watched
+  in the check. Whether the window stays smooth is the Mac's to say.
+- **#2879** the OpenGL shadow volumes now include the GLSpheres: per sphere and light a disc of 16 triangles through
+  the center, normal to the direction to the light, radius of the sphere - its volume is a cylinder, the shadow of the
+  sphere, with a small artefact on the sphere's own back side (the maintainer's proposal). Only with faces shown and
+  for spheres drawn as spheres.
+- **#2880** only the check model: markers and sensors 0.2, loads 0.3, nodes 0.15, `openGL.lineWidth = 3`; the check
+  list has V6a, the `drawSimplified` switches of connectors, markers, loads and sensors (default True) off and on.

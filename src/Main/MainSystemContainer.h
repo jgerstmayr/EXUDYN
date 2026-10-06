@@ -129,7 +129,7 @@ public:
 	//functions that previously existed in MainSystemContainer
 	//! generic function to wait for continue, stop or just process tasks
 	//! if -1, it waits for continue/stop; otherwise wait milliseconds (0=no wait)
-	bool DoIdleTasks(Real waitSeconds = -1., bool printPauseMessage = true);
+	bool DoIdleTasks(Real waitSeconds = -1., bool printPauseMessage = true, bool pollEvents = true);
 
 	//! send zoom all request for next scene redraw:
 	void ZoomAll(bool computeMaxScene = true, Index viewID = VisualizationSystemContainer::mainViewID);

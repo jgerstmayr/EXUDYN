@@ -179,7 +179,7 @@ public:
 	bool DetachFromRenderEngine(VisualizationSystemContainer* detachingVisualizationSystemContainer, bool warnNoRenderer = false);
 
 	//! this function waits for the stop flag in the render engine; prints pause like in WaitForUserToContinue
-	bool DoIdleTasks(Real waitSeconds = -1., bool printPauseMessage=true);
+	bool DoIdleTasks(Real waitSeconds = -1., bool printPauseMessage=true, bool pollEvents=true);
 
 	//! check GLFW if renderer is running
 	bool RendererIsRunning() const;

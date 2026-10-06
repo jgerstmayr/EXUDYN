@@ -2,9 +2,13 @@
   "number": 2880,
   "title": "The default drawing size of nodes, markers and sensors is too small to see",
   "author": "Claude-JG",
-  "status": "RAISED",
+  "status": "RESOLVED",
   "type": "CHANGE",
   "description": "GUI checks on macOS and Ubuntu (K1, 'some markers/sensors are too small to see'): defaultSize = -1 gives a radius of 0.001 * openGL.advanced.initialMaxSceneSize (1 by default), 1 mm in a scene of 1 m, whatever the size of the scene. Proposal, for decision: relative to the scene the renderer computed (maxSceneSize), e.g. 1 %, or a larger factor.",
   "dateRaised": "2026-10-06",
-  "deadline": "2027-04-04"
+  "deadline": "2027-04-04",
+  "dateResolved": "2026-10-06 23:36",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "The model of the manual GUI check draws markers and sensors larger and with thicker lines, and the check switches the simplified drawing styles.",
+  "resolvedInVersion": "1.12.372"
 }

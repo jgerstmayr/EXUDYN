@@ -76,9 +76,11 @@ vs = SC.visualizationSettings
 vs.nodes.drawNodesAsPoint = False
 vs.nodes.defaultSize = 0.15
 vs.nodes.showBasis = True
-vs.markers.defaultSize = 0.1    #the markers sit inside the bodies: M shows them when B hides the bodies
-vs.sensors.defaultSize = 0.1
+#sizes well above the defaults, so that the checker sees each item kind (#2880)
+vs.markers.defaultSize = 0.2    #the markers sit inside the bodies: M shows them when B hides the bodies
+vs.sensors.defaultSize = 0.2
 vs.loads.defaultSize = 0.3
+vs.openGL.lineWidth = 3          #markers, sensors, traces and edges drawn as lines are easier to see
 vs.sensors.traces.showPositionTrace = True
 vs.sensors.traces.listOfPositionSensors = [sTip]
 vs.general.autoFitScene = True

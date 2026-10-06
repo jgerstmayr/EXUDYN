@@ -949,7 +949,7 @@ class TkinterEditDictionaryWithTypeInfo(tk.Frame):
         if guiSC is not None:
             if guiSC.visualizationSettings.dialogs.multiThreadedDialogs:
                 guiSC.renderer.SendRedrawSignal()
-                guiSC.renderer.DoIdleTasks(0) #do not wait
+                guiSC.renderer.DoIdleTasks(0, pollEvents=sys.platform != 'darwin') #do not wait; in a tkinter callback on macOS the events are tkinter's (#2878)
         #++++++++++++++++++++++++++++++++++++++++++++++++
 
     #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++        

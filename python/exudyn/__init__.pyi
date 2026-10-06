@@ -4036,8 +4036,8 @@ class Renderer:
         """
         ...
     @overload
-    def DoIdleTasks(self, waitSeconds: float=-1., printPauseMessage: bool=True) -> bool: 
-        """Interrupt further computation until user input (Space, 'Q', Escape-key), representing a PAUSE function; this command runs a loop in the background to have active response of the render window, e.g., to open the visualization dialog or use the right-mouse-button; replaces former SC.WaitForRenderEngineStopFlag() and mbs.WaitForUserToContinue(); call this function in order to interact with Renderer window; use waitSeconds in order to run this idle tasks while animating a model (e.g., waitSeconds=0.04), use waitSeconds=0 without waiting, or use waitSeconds=-1 (default) to wait until window is closed; NOTE: may also first initialize renderState from visualizationSettings (if renderer is inactive).
+    def DoIdleTasks(self, waitSeconds: float=-1., printPauseMessage: bool=True, pollEvents: bool=True) -> bool: 
+        """Interrupt further computation until user input (Space, 'Q', Escape-key), representing a PAUSE function; this command runs a loop in the background to have active response of the render window, e.g., to open the visualization dialog or use the right-mouse-button; replaces former SC.WaitForRenderEngineStopFlag() and mbs.WaitForUserToContinue(); call this function in order to interact with Renderer window; use waitSeconds in order to run this idle tasks while animating a model (e.g., waitSeconds=0.04), use waitSeconds=0 without waiting, or use waitSeconds=-1 (default) to wait until window is closed; pollEvents=False: the renderer draws and runs queued commands, but leaves the window events to the event loop that called it - a tkinter dialog calling this from its after-callback on macOS, where both share one event loop; NOTE: may also first initialize renderState from visualizationSettings (if renderer is inactive).
         
         Examples:
             SC.renderer.DoIdleTasks()
