@@ -92,7 +92,7 @@ elif nodeType == exu.NodeType.RotationRotationVector:
         nRB2 = mbs.AddNode(NodeRigidBodyRotVecLG(referenceCoordinates=p1+[0,0,0], initialCoordinates=[0,0,0]+rot0, initialVelocities=v0+list(rot_t0)))
 
 
-oGraphics = graphics.BrickXYZ(-r/2,-L/2,-r/2, r/2,L/2,r/2, [0.1,0.1,0.8,0.5])
+oGraphics = graphics.Brick(centerPoint=[0, 0, 0], size=[r, L, r], color=[0.1,0.1,0.8,0.5])
 oRB = mbs.AddObject(ObjectRigidBody(mass=m, inertia=[JFP[0][0], JFP[1][1], JFP[2][2], JFP[1][2], JFP[0][2], JFP[0][1]], 
                                     nodeNumber=nRB, visualization=VObjectRigidBody(graphicsData=[oGraphics])))
 
@@ -113,7 +113,7 @@ mbs.AddObject(CoordinateConstraint(markerNumbers=[mCground, mC2]))
 #++++++++++++++++++++++++++++++++++++
 
 if useBody2:
-    oGraphics2 = graphics.BrickXYZ(-r/2,-L/2,-r/2, r/2,L/2,r/2, [0.8,0.1,0.1,0.5])
+    oGraphics2 = graphics.Brick(centerPoint=[0, 0, 0], size=[r, L, r], color=[0.8,0.1,0.1,0.5])
     oRB2 = mbs.AddObject(ObjectRigidBody(mass=m, inertia=[JFP[0][0], JFP[1][1], JFP[2][2], JFP[1][2], JFP[0][2], JFP[0][1]], 
                                         nodeNumber=nRB2, visualization=VObjectRigidBody(graphicsData=[oGraphics2])))
     

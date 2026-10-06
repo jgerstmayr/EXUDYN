@@ -1424,7 +1424,7 @@ class InverseKinematicsNumerical():
         try: 
             if self.useRenderer: 
                 self.SC.renderer.Start() #the system container is a member, #2488
-                self.mbsIK.WaitForUserToContinue() #stop before simulating
+                self.SC.renderer.DoIdleTasks() #stop before simulating
 
             success = self.staticSolver.SolveSystem(self.mbsIK, self.simulationSettings)
             

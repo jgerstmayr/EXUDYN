@@ -68,8 +68,8 @@ p0 = [0,0,0]        #reference position / COM of crank
 v0 = [0,0,0]     #initial translational velocity
 
 color0= graphics.color.grey
-gGraphics0 = graphics.BrickXYZ(-0.5*L0,-a*0.9,-a*0.9,0.5*L0,a*0.9,a*0.9, color0)
-gGraphics0b = graphics.BrickXYZ(-0.5*L0,-a*0.9,-a*0.9+4*a,0.5*L0,a*0.9,a*0.9+4*a, color0)
+gGraphics0 = graphics.Brick(centerPoint=[0, 0, 0], size=[L0, 1.8*a, 1.8*a], color=color0)
+gGraphics0b = graphics.Brick(centerPoint=[0, 0, 4*a], size=[L0, 1.8*a, 1.8*a], color=color0)
 gGraphics0c = graphics.Cylinder([0.5*L0,0,-a],[0,0,6*a],a, graphics.color.darkgrey)
 gGraphics0d = graphics.Cylinder([-0.5*L0,0,3*a],[0,0,4*a],a, graphics.color.darkgrey)
 
@@ -140,7 +140,7 @@ for i in range(4):
         offZ = 4*a
     
     color1= graphics.color.grey
-    gGraphics1 = graphics.BrickXYZ(-0.5*L1,-a*0.9,-a*0.9,0.5*L1,a*0.9,a*0.9, color1)
+    gGraphics1 = graphics.Brick(centerPoint=[0, 0, 0], size=[L1, 1.8*a, 1.8*a], color=color1)
     omega1 = [0,0,0]    #initial angular velocity of bodies
 
     p1 = [0.5*L0+0.5*L1,0,2*a+offZ]        #reference position / COM of crank
@@ -205,9 +205,9 @@ inertiaDiscSmall = InertiaCylinder(density=rho, length=2*a, outerRadius=discSmal
 #print("Jzz=", inertiaDiscBig.GetInertia6D()[2], 0.5*rho*pi*discBig**4*(2*a))
 
 gGraphicsDiscBig0a = graphics.Cylinder([0,0,-a],[0,0,2*a], discBig, graphics.color.lightred, 64)
-gGraphicsDiscBig0b = graphics.BrickXYZ(0,-0.25*a,-a*1.01, discBig, 0.25*a, a*1.01, graphics.color.lightgrey) #add something to the cylinder to see rotation
+gGraphicsDiscBig0b = graphics.Brick(centerPoint=[0.5*discBig, 0, 0], size=[discBig, 0.5*a, 2.02*a], color=graphics.color.lightgrey) #add something to the cylinder to see rotation
 gGraphicsDiscSmall0a = graphics.Cylinder([0,0,-a],[0,0,2*a], discSmall, graphics.color.lightred, 32)
-gGraphicsDiscSmall0b = graphics.BrickXYZ(0,-0.25*a,-a*1.01, discSmall, 0.25*a, a*1.01, graphics.color.lightgrey) #add something to the cylinder to see rotation
+gGraphicsDiscSmall0b = graphics.Brick(centerPoint=[0.5*discSmall, 0, 0], size=[discSmall, 0.5*a, 2.02*a], color=graphics.color.lightgrey) #add something to the cylinder to see rotation
 
 #Gear0:
 nDT0 = mbs.AddNode(Node1D(referenceCoordinates = [0]))
@@ -263,7 +263,7 @@ mbs.AddObject(CoordinateConstraint(markerNumbers=[mDT2Coordinate,mDT3Coordinate]
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #flywheel, connected with MarkerNodeRotationCoordinate:
 gGraphicsDiscFlyWheel0a = graphics.Cylinder([0,0,-2*a],[0,0,2*a], discBig, [0.4,0.9,0.4,0.5], 64)
-gGraphicsDiscFlyWheel0b = graphics.BrickXYZ(0,-0.25*a,-a*2.01, discBig, 0.25*a, a*0.01, [0.7,0.7,0.7,0.5]) #add something to the cylinder to see rotation
+gGraphicsDiscFlyWheel0b = graphics.Brick(centerPoint=[0.5*discBig, 0, -a], size=[discBig, 0.5*a, 2.02*a], color=[0.7,0.7,0.7,0.5]) #add something to the cylinder to see rotation
 nDT4 = mbs.AddNode(Node1D(referenceCoordinates = [0]))
 oDT4 = mbs.AddObject(Rotor1D(nodeNumber = nDT4, 
                              inertia=5*inertiaDiscBig.GetInertia6D()[2],

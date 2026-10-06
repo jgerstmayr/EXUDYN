@@ -444,7 +444,7 @@ if True:
     
     objFFRFcrank = cmsCrank.AddObjectFFRFreducedOrderWithUserFunctions(exu, mbs, 
                                                 positionRef=[0,0,0], 
-                                                eulerParametersRef=eulerParameters0, 
+                                                rotationMatrixRef=np.eye(3), 
                                                 initialVelocity=[0,0,0], initialAngularVelocity=[0,0,1*fRotorStart*2*pi],
                                                 gravity = [0,-0*9.81,0],
                                                 color=[0.1,0.9,0.1,1.])
@@ -555,7 +555,6 @@ if True:
         #print("pC=",pC)
         #print("pP=",pP)
         
-        eulerParametersInit = RotationMatrix2EulerParameters(RotationMatrixZ(-alpha))
         #pRef = [lk+0.5*lc,0,zOffset+0.5*b1] #0-degree
         pRef = pC + [0,0,zOffset+0.5*b1]
         conrodsRotList.append(RotationMatrixZ(-alpha).tolist())
@@ -567,7 +566,7 @@ if True:
         cmsConrodList.append(cmsConrod)
         objFFRFconrod = cmsConrod.AddObjectFFRFreducedOrderWithUserFunctions(exu, mbs, 
                                                     positionRef=pRef, 
-                                                    eulerParametersRef=eulerParametersInit, 
+                                                    rotationMatrixRef=RotationMatrixZ(-alpha), 
                                                     initialVelocity=[0,0,0], 
                                                     initialAngularVelocity=[0,0,0*fRotorStart*2*pi],
                                                     gravity = [0,-0*9.81,0],
@@ -587,7 +586,7 @@ if True:
 
         objFFRFpiston = cmsPiston.AddObjectFFRFreducedOrderWithUserFunctions(exu, mbs, 
                                                     positionRef=pRefPiston, 
-                                                    eulerParametersRef=eulerParameters0, 
+                                                    rotationMatrixRef=np.eye(3), 
                                                     initialVelocity=[0,0,0], initialAngularVelocity=[0,0,0*fRotorStart*2*pi],
                                                     gravity = [0,-0*9.81,0],
                                                     color=[0.1,0.9,0.1,1.])

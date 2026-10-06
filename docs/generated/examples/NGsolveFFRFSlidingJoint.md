@@ -24,7 +24,7 @@ import exudyn as exu
 from exudyn.utilities import *
 import exudyn.graphics as graphics
 from exudyn.FEM import HCBstaticModeSelection, FEMinterface, ObjectFFRFreducedOrderInterface, KirchhoffMaterial
-from exudyn.beams import GenerateStraightLineANCFCable
+from exudyn.beams import GenerateBeamElementsAlongLine
 
 SC = exu.SystemContainer()
 mbs = SC.AddSystem()
@@ -299,20 +299,20 @@ for iy in [-1,1]:
                   visualization=VObjectANCFCable(radius = rCable),
                   )
 
-    ancf=GenerateStraightLineANCFCable(mbs=mbs,
-                  positionOfNode0=p0, positionOfNode1=p1,
+    ancf=GenerateBeamElementsAlongLine(mbs=mbs,
+                  positionStart=p0, positionEnd=p1,
                   numberOfElements=16, #converged to 4 digits
-                  cableTemplate=cable, #this defines the beam element properties
-                  massProportionalLoad = gravity,
+                  beamTemplate=cable, #this defines the beam element properties
+                  gravity = gravity,
                   #fixedConstraintsNode0 = [1,1,1, 0,1,1], #add constraints for pos and rot (r'_y,r'_z)
                   #fixedConstraintsNode1 = [1,1,1, 0,1,1], #add constraints for pos and rot (r'_y,r'_z)
                   )
     #ancf=[cableNodeList, cableObjectList, loadList, cableNodePositionList, cableCoordinateConstraintList]
     
     mBoxList = mFrameBox[0] if iy==-1 else mFrameBox[1]
-    nANCFnodes = len(ancf[0])
+    nANCFnodes = len(ancf['nodes'])
     for i, marker in enumerate(mBoxList):
-        nANCF = ancf[0][i*(nANCFnodes-1)//2]
+        nANCF = ancf['nodes'][i*(nANCFnodes-1)//2]
         mANCF = mbs.AddMarker(MarkerNodePosition(nodeNumber=nANCF))
         # mbs.CreateCartesianSpringDamper(itemNumbers=[marker, nANCF],
         #                                 stiffness=[1e5]*3,
@@ -333,7 +333,7 @@ addSlidingJoint = True
 if addSlidingJoint:
     for iANCF, markerList in enumerate([mCarrierSlidersRight,mCarrierSlidersLeft]):
         ancf = ancfList[iANCF]
-        lElem = mbs.GetObject(ancf[1][0])['length']
+        lElem = mbs.GetObject(ancf['elements'][0])['length']
 
         for i, mSlider in enumerate(markerList):
             pMarker = mbs.GetMarkerOutput(mSlider,exu.OutputVariableType.Position, 
@@ -356,7 +356,7 @@ if addSlidingJoint:
             cableMarkerList = []#list of MarkerBodyBeamShape
             offsetList = []     #list of offsets counted from first cable element; needed in sliding joint
             offset = 0          #first cable element has offset 0
-            for item in ancf[1]: #create markers for cable elements
+            for item in ancf['elements']: #create markers for cable elements
                 m = mbs.AddMarker(MarkerBodyBeamShape(bodyNumber = item))
                 cableMarkerList += [m]
                 offsetList += [offset]

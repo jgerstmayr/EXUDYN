@@ -111,8 +111,8 @@ inertiaList=[InertiaCuboid(density=density, sideLengths=[widthShaft,widthShaft,l
              iRodSum, iRodSum]
 
 ## set up graphics objects (blocks) for 4 bodies
-graphicsShaft  = graphics.BrickXYZ(-widthShaft/2,-widthShaft/2,-lengthShaft/2, widthShaft/2,widthShaft/2,lengthShaft/2, [0.1,0.1,0.8,1])
-graphicsSlider = graphics.BrickXYZ(-dimSlider/2,-dimSlider/2,-dimSlider/2, dimSlider/2,dimSlider/2,dimSlider/2, [0.1,0.1,0.8,1])
+graphicsShaft  = graphics.Brick(centerPoint=[0, 0, 0], size=[widthShaft, widthShaft, lengthShaft], color=[0.1,0.1,0.8,1])
+graphicsSlider = graphics.Brick(centerPoint=[0, 0, 0], size=[dimSlider, dimSlider, dimSlider], color=[0.1,0.1,0.8,1])
 graphicsRodAC  = graphics.Brick([0.5*lengthRod, 0, 0], [lengthRod,widthRod,widthRod], graphics.color.red)
 graphicsRodBD  = graphics.Brick([0.5*lengthRod, 0, 0], [lengthRod,widthRod,widthRod], graphics.color.dodgerblue)
 

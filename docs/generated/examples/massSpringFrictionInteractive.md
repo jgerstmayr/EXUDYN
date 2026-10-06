@@ -109,7 +109,7 @@ nMass=mbs.AddNode(Point(referenceCoordinates = [L,0,0], initialCoordinates = [u0
                      initialVelocities= [v0,0,0]))
 
 #add mass points and ground object:
-gCube = graphics.BrickXYZ(-tt, -tt, -tt, tt, tt, tt, graphics.color.steelblue)
+gCube = graphics.Brick(centerPoint=[0, 0, 0], size=[2*tt, 2*tt, 2*tt], color=graphics.color.steelblue)
 massPoint = mbs.AddObject(MassPoint(mass = mass, nodeNumber = nMass, 
                                     visualization=VObjectMassPoint(graphicsData=[gCube])))
 

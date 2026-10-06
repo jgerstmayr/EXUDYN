@@ -557,8 +557,7 @@ if sys_set == 1 or sys_set == 3:
     
     #visualization of slider
     c=0.025 #dimension of slider
-    graphics_slider = graphics.BrickXYZ(-c,-c,-c*2,c,c,0,
-                                            color=[0.2,0.2,0.2,0.9])
+    graphics_slider = graphics.Brick(centerPoint=[0, 0, -c], size=[2*c, 2*c, 2*c], color=[0.2,0.2,0.2,0.9])
     #node on center of gravity of slider
     nP2D_slider = mbs.AddNode(NodePoint2D(referenceCoordinates=[-(L_A+L_B),0]))
     #MassPoint2D slider
@@ -671,8 +670,7 @@ if sys_set == 2 or sys_set == 4:
     #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     #slider
     d = 0.07
-    graphics_slider = graphics.BrickXYZ(-d/2, -d/2, -d - h_B/2, d/2, d/2, -h_B/2, 
-                                        color=[0.2, 0.2, 0.2, 0.9])
+    graphics_slider = graphics.Brick(centerPoint=[0, 0, -0.5*(d + h_B)], size=[d, d, d], color=[0.2, 0.2, 0.2, 0.9])
     dictSlider = mbs.CreateRigidBody(
                    inertia=inertia_slider,
                    initialAngularVelocity=[0, 0, 0],

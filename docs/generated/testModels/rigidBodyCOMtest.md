@@ -85,9 +85,9 @@ for case in range(2):
         if case==0:
             color=[0.1,0.1,0.8,1]
 
-        oGraphics = graphics.BrickXYZ(-sx+com[0], -s+com[1], -s+com[2], sx+com[0], s+com[1], s+com[2], addFaces=False, addEdges=True, edgeColor=color)
+        oGraphics = graphics.Brick(centerPoint=[com[0], com[1], com[2]], size=[2*sx, 2*s, 2*s], addFaces=False, addEdges=True, edgeColor=color)
         d=0.02
-        oGraphicsCOM = graphics.BrickXYZ(-d+com[0], -d+com[1], -d+com[2], d+com[0], d+com[1], d+com[2], addFaces=False, addEdges=True, edgeColor=[0.1,0.8,0.1,1])
+        oGraphicsCOM = graphics.Brick(centerPoint=[com[0], com[1], com[2]], size=[2*d, 2*d, 2*d], addFaces=False, addEdges=True, edgeColor=[0.1,0.8,0.1,1])
 
         rDict = mbs.CreateRigidBody(inertia=RBinertia, 
                                   referencePosition=p0, 

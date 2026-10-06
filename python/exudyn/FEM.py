@@ -1304,7 +1304,8 @@ class ObjectFFRFreducedOrderInterface:
             self.nNodes = len(nodeArray)                #stored in nNodes x 3 np-array
             self.dim3D = len(nodeArray[0])              #dimension of position, assuming that one node exists ....
             
-            self.rigidBodyNodeType = rigidBodyNodeType
+            #the node type itself, also when given as string: the user functions compare it with exu.NodeType (#2873)
+            self.rigidBodyNodeType = StrNodeType2NodeType(rigidBodyNodeType) if isinstance(rigidBodyNodeType, str) else rigidBodyNodeType
             if str(self.rigidBodyNodeType) == 'NodeType.RotationEulerParameters':
                 self.nODE2rot = 4                       #Euler parameters
             else:

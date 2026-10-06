@@ -162,7 +162,7 @@ if useALE:
                                                 velocityLevel = False, 
                                                 visualization=VCoordinateConstraint(show=False)))
 
-cableTemplate = ANCFElementType(#length = L / nElements, #set in GenerateStraightLineANCFCable2D(...)
+cableTemplate = ANCFElementType(#length = L / nElements, #set in GenerateBeamElementsAlongLine(...)
                         nodeNumbers = nodesANCF,
                         massPerLength = rhoA,
                         bendingStiffness = EI,

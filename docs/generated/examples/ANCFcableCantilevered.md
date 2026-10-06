@@ -56,12 +56,12 @@ for i in range(nCables):
                   axialStiffness=EA, 
                   )
 
-    ancf=GenerateStraightLineANCFCable(mbs=mbs,
-                  positionOfNode0=p0, positionOfNode1=p1,
+    ancf=GenerateBeamElementsAlongLine(mbs=mbs,
+                  positionStart=p0, positionEnd=p1,
                   numberOfElements=12, #converged to 4 digits
-                  cableTemplate=cable, #this defines the beam element properties
-                  massProportionalLoad = [0,-9.81,0],
-                  fixedConstraintsNode0 = [1,1,1, 0,1,1], #add constraints for pos and rot (r'_y,r'_z)
+                  beamTemplate=cable, #this defines the beam element properties
+                  gravity = [0,-9.81,0],
+                  groundConstraintsStart = [1,1,1, 0,1,1], #add constraints for pos and rot (r'_y,r'_z)
                   )
 
 #assemble and solve system for default parameters

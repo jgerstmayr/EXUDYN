@@ -128,8 +128,7 @@ mGround = mbs.AddMarker(MarkerNodeCoordinate(nodeNumber=nGround, coordinate=0))
 
 vSlider = graphics.Cylinder([0.05,0,0], [-0.1,0,0],
                                0.05, [1,0,0,1], nTiles=32)
-vRod = graphics.BrickXYZ(-L_B/2, -h_B/2, -h_B/2, L_B/2,
-                             h_B/2, h_B/2, [0,1,0,1])
+vRod = graphics.Brick(centerPoint=[0, 0, 0], size=[L_B, h_B, h_B], color=[0,1,0,1])
 
 vCrank0 = graphics.Cylinder([0,0,-2*ba_1], [0,0,0.01],
                                r1+a/2,color=[0.3,0.3,0.9,1], nTiles=64)

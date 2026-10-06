@@ -80,14 +80,14 @@ preStretch=-0.002
 # nGround = mbs.AddNode(NodePointGround(referenceCoordinates=[0,0,0])) #ground node for coordinate constraint
 # mGround = mbs.AddMarker(MarkerNodeCoordinate(nodeNumber = nGround, coordinate=0)) #Ground node ==> no action
 
-cableTemplate = Cable2D(#length = L / nElements, #set in GenerateStraightLineANCFCable2D(...)
+cableTemplate = Cable2D(#length = L / nElements, #set in GenerateBeamElementsAlongLine(...)
                         massPerLength = rhoBeam*A,
                         bendingStiffness = E*I,
                         axialStiffness = E*A,
                         bendingDamping = dEI,
                         axialDamping = dEA,
                         referenceAxialStrain = preStretch, #prestretch
-                        #nodeNumbers = [0, 0], #will be filled in GenerateStraightLineANCFCable2D(...)
+                        #nodeNumbers = [0, 0], #will be filled in GenerateBeamElementsAlongLine(...)
                         visualization=VCable2D(drawHeight=2*h),
                         )
 exu.Print("pre-stretch force=", preStretch*E*A)
@@ -128,15 +128,16 @@ if True:
                                         #verboseMode=True
                                         )
     ancfList+=[ancf]
-    ancf=GenerateStraightLineANCFCable2D(mbs,
+    beamInfo=GenerateBeamElementsAlongLine(mbs,
                                          ancf[3][-1], wheelCenter1+rWheel1*yAxis,
                                          numberOfElements,
-                                         cableTemplate, #this defines the beam element properties
-                                         massProportionalLoad = [0,g,0], #optionally add gravity
-                                          # fixedConstraintsNode0 = [1,1,1,1], #add constraints for pos and rot (r'_y)
-                                          # fixedConstraintsNode1 = [1,1,1,1],
-                                         nodeNumber0=ancf[0][-1]
+                                         beamTemplate=cableTemplate, #this defines the beam element properties
+                                         gravity = [0,g,0], #optionally add gravity
+                                          # groundConstraintsStart = [1,1,1,1], #add constraints for pos and rot (r'_y)
+                                          # groundConstraintsEnd = [1,1,1,1],
+                                         nodeNumberStart=ancf[0][-1]
                                          )
+    ancf = [beamInfo['nodes'], beamInfo['elements'], beamInfo['loads'], beamInfo['nodePositions'], beamInfo['constraintObjects']] #as the list of GenerateCircularArcANCFCable2D
     ancfList+=[ancf]
 
     if True:
@@ -152,14 +153,15 @@ if True:
                                             nodeNumber0=ancf[0][-1]
                                             )
         ancfList+=[ancf]
-        ancf=GenerateStraightLineANCFCable2D(mbs,
+        beamInfo=GenerateBeamElementsAlongLine(mbs,
                                              ancf[3][-1], ancfList[0][3][0],
                                              numberOfElements,
-                                             cableTemplate, #this defines the beam element properties
-                                             massProportionalLoad = [0,g,0], #optionally add gravity
-                                             nodeNumber0=ancf[0][-1],
-                                             nodeNumber1=ancfList[0][0][0]
+                                             beamTemplate=cableTemplate, #this defines the beam element properties
+                                             gravity = [0,g,0], #optionally add gravity
+                                             nodeNumberStart=ancf[0][-1],
+                                             nodeNumberEnd=ancfList[0][0][0]
                                              )
+        ancf = [beamInfo['nodes'], beamInfo['elements'], beamInfo['loads'], beamInfo['nodePositions'], beamInfo['constraintObjects']] #as the list of GenerateCircularArcANCFCable2D
         ancfList+=[ancf]
 
 

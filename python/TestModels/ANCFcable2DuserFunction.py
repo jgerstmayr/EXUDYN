@@ -60,12 +60,12 @@ cable = ObjectANCFCable2D(massPerLength=rhoA,
                 )
 
 #create several cable elements
-ancf=GenerateStraightLineANCFCable(mbs=mbs,
-                positionOfNode0=[0,0,0], positionOfNode1=[2,0,0],
+ancf=GenerateBeamElementsAlongLine(mbs=mbs,
+                positionStart=[0,0,0], positionEnd=[2,0,0],
                 numberOfElements=16, #converged to 4 digits
-                cableTemplate=cable, #this defines the beam element properties
-                massProportionalLoad = [0,-9.81,0],
-                fixedConstraintsNode0 = [1,1, 0,1],
+                beamTemplate=cable, #this defines the beam element properties
+                gravity = [0,-9.81,0],
+                groundConstraintsStart = [1,1, 0,1],
                 )
 
 #assemble and solve system for default parameters
@@ -101,7 +101,7 @@ if not testIsActive:
     SC.renderer.Stop()               #safely close rendering window!
 
 #evaluate final (=current) output values
-node = ancf[0][-1]
+node = ancf['nodes'][-1]
 p = mbs.GetNodeOutput(node, exu.OutputVariableType.Position)
 exu.Print('ANCFcable2DuserFunction test tip pos=',p)
 

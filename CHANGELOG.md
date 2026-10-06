@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.12 | Metheney | 324 | 1.12.365 |
+| 1.12 | Metheney | 325 | 1.12.366 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
 | 1.9 | Krall | 235 | 1.9.234 |
@@ -29,6 +29,10 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.12 - Metheney (current)
 
+- **1.12.366** `CHANGE` `MEDIUM EFF` `raised by: Claude-JG` `resolved by: Claude-JG` Examples, test models and mini examples use the current item parameters, Create arguments and settings (#2873)
+  - description: The shipped scripts still use deprecated item parameters (physicsMass, rotationMarker0, ...), deprecated arguments of the Create functions (bodyNumbers, bodyNumber, ...) and renamed settings; users copy from them. The scripts are pre-run, the deprecation warnings name file and line, and the names are replaced there; deprecated functions with a different signature (BrickXYZ, GenerateStraightLineANCFCable2D, ...) are listed separately. Maintainer 2026-10-06.
+  - **notes:** The examples, test models and mini examples use no deprecated functions any more: graphics.Brick instead of BrickXYZ, beams.GenerateBeamElementsAlongLine instead of GenerateStraightLineANCFCable(2D) and GenerateStraightBeam, rotationMatrixRef instead of eulerParametersRef. ObjectFFRFreducedOrderInterface works with rotationMatrixRef also for its default rigidBodyNodeType given as string.
+  - date resolved: **2026-10-06 16:49**, date raised: 2026-10-06
 - **1.12.365** <span class="textred">`BUG`</span> `raised by: Claude-JG` `resolved by: Claude-JG` Linux test suite: the restart file of RK44 is not read back; two new platform differences (#2874)
   - description: The WSL run of 1.12.363.dev1 (cp310): restartFileTest fails with 'the restart file has a value that is not a number'. The explicit solver never initializes aAlgorithmic, so the restart file holds garbage (subnormal numbers, -nan); std::stod throws out\_of\_range for a subnormal number with glibc, not with MSVC. Fixed: aAlgorithmic set to zero, the restart numbers read with strtod. createSphereQuadContact.py (rel. 1.1e-7, since \#2109) and computeItemTest.py (rel. 2.3e-11) differ on Linux and go to UnresolvedOnLinux.
   - **notes:** A restart file written by an explicit solver could not be read back on Linux: it contained uninitialized values; they are zero now, and the numbers of a restart file are read the same way on every platform.

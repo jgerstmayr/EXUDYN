@@ -12,7 +12,7 @@
 
 import exudyn as exu
 from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
-from exudyn.beams import GenerateStraightLineANCFCable2D
+from exudyn.beams import GenerateBeamElementsAlongLine
 import exudyn.graphics as graphics
 
 testIsActive = exu.sys.get('testIsActive', False)
@@ -128,16 +128,16 @@ positionOfNode1 = [-L, 0, 0.] # end point of line
 numberOfElements = 4
 
 #alternative to mbs.AddObject(Cable2D(...)) with nodes:
-ancf=GenerateStraightLineANCFCable2D(mbs,
+ancf=GenerateBeamElementsAlongLine(mbs,
                 positionOfNode0, positionOfNode1,
                 numberOfElements,
-                cableTemplate, #this defines the beam element properties
-                massProportionalLoad = [0,-9.81,0], #optionally add gravity
-                fixedConstraintsNode0 = [1,1,0,1], #add constraints for pos and rot (r'_y)
-                fixedConstraintsNode1 = [0,0,0,0])
+                beamTemplate=cableTemplate, #this defines the beam element properties
+                gravity = [0,-9.81,0], #optionally add gravity
+                groundConstraintsStart = [1,1,0,1], #add constraints for pos and rot (r'_y)
+                groundConstraintsEnd = [0,0,0,0])
 
 # #add all cable elements to contact
-for oIndex in ancf[1]:
+for oIndex in ancf['elements']:
     gContact.AddANCFCable(objectIndex=oIndex, halfHeight=0.5*h, 
                           contactStiffness=1, contactDamping=0, frictionMaterialIndex=0)
 
@@ -177,7 +177,7 @@ sANCF = mbs.CreateDistanceSensor(ngc, positionOrMarker=[-L*1.5,0,0], dirSensor=[
 sANCFdist = mbs.CreateDistanceSensor(ngc, positionOrMarker=[-0.6061511314921351,0,0], dirSensor=[0,-0.1,0], minDistance=0, maxDistance=L, measureVelocity=True, 
                           storeInternal=True, addGraphicsObject=True)
 
-sANCFdisp = mbs.AddSensor(SensorNode(nodeNumber=ancf[0][-1], storeInternal=True, outputVariableType=exu.OutputVariableType.Displacement))
+sANCFdisp = mbs.AddSensor(SensorNode(nodeNumber=ancf['nodes'][-1], storeInternal=True, outputVariableType=exu.OutputVariableType.Displacement))
 
 sVelocitySphere = mbs.AddSensor(SensorMarker(markerNumber=mThis, storeInternal=True,
                                              outputVariableType=exu.OutputVariableType.Velocity))
@@ -229,7 +229,7 @@ if not testIsActive:
     SC.renderer.DoIdleTasks()
     SC.renderer.Stop() #safely close rendering window!
 
-x=mbs.GetNodeOutput(ancf[0][-1], variableType=exu.OutputVariableType.Position)
+x=mbs.GetNodeOutput(ancf['nodes'][-1], variableType=exu.OutputVariableType.Position)
 exu.Print('pLast=',list(x),'\n')
 #[-0.546983567323076, -0.19231209764430873, 0.0]
 

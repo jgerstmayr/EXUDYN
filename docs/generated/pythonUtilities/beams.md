@@ -37,9 +37,6 @@ Beam utility functions, e.g. for creation of sequences of straight or curved bea
 
 
 
-Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`ANCFALEtest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/ANCFALEtest.py) (Ex), [`ANCFcantileverTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/ANCFcantileverTest.py) (Ex), [`ANCFrotatingCable2D.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/ANCFrotatingCable2D.py) (Ex), [`beltDriveALE.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/beltDriveALE.py) (Ex), [`beltDriveReevingSystem.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/beltDriveReevingSystem.py) (Ex), [`ANCFbeltDrive.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/ANCFbeltDrive.py) (TM), [`ANCFCableBeamDampingTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/ANCFCableBeamDampingTest.py) (TM), [`ANCFgeneralContactCircle.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/ANCFgeneralContactCircle.py) (TM), ...
-
-
 (sec-beams-generatestraightlineancfcable)=
 ## Function: GenerateStraightLineANCFCable
 
@@ -67,9 +64,6 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`ANCFALEtest
 
 
 
-Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`ANCFcableCantilevered.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/ANCFcableCantilevered.py) (Ex), [`ANCFslidingJoint.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/ANCFslidingJoint.py) (Ex), [`NGsolveFFRFSlidingJoint.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/NGsolveFFRFSlidingJoint.py) (Ex), [`ANCFcable2DuserFunction.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/ANCFcable2DuserFunction.py) (TM)
-
-
 (sec-beams-generatebeamelementsalongline)=
 ## Function: GenerateBeamElementsAlongLine
 
@@ -88,6 +82,9 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`ANCFcableCa
   - `nodeNumberStart`: if not None, this node number defines the node that shall be used at positionStart; allow to connect with other beams
   - `nodeNumberEnd`: if not None, this node number defines the node that shall be used at positionEnd; allow to connect with other beams
 - **output**: returns a dict containing created items {'nodes', 'elements', 'nodePositions', constraintObjects', 'loads'}
+
+
+Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`ANCFALEtest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/ANCFALEtest.py) (Ex), [`ANCFcableCantilevered.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/ANCFcableCantilevered.py) (Ex), [`ANCFcantileverTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/ANCFcantileverTest.py) (Ex), [`ANCFrotatingCable2D.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/ANCFrotatingCable2D.py) (Ex), [`ANCFslidingJoint.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/ANCFslidingJoint.py) (Ex), [`ANCFbeltDrive.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/ANCFbeltDrive.py) (TM), [`ANCFcable2DuserFunction.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/ANCFcable2DuserFunction.py) (TM), [`ANCFCableBeamDampingTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/ANCFCableBeamDampingTest.py) (TM), ...
 
 
 (sec-beams-generatestraightbeam)=
@@ -131,9 +128,6 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`ANCFcableCa
   #Assemble and solve
 ```
 
-
-
-Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`pendulumGeomExactBeam2Dsimple.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/pendulumGeomExactBeam2Dsimple.py) (Ex)
 
 
 (sec-beams-generatecirculararcancfcable2d)=

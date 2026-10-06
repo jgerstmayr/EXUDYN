@@ -59,7 +59,7 @@ def UFmassFFRFreducedOrder(mbs, t, itemIndex, qReduced, qReduced_t):
 def UFforceFFRFreducedOrder(mbs, t, itemIndex, qReduced, qReduced_t):
     return cms.UFforceFFRFreducedOrder(exu, mbs, t, qReduced, qReduced_t)
 
-objFFRF = cms.AddObjectFFRFreducedOrderWithUserFunctions(exu, mbs, positionRef=[0,0,0], eulerParametersRef=eulerParameters0, 
+objFFRF = cms.AddObjectFFRFreducedOrderWithUserFunctions(exu, mbs, positionRef=[0,0,0], rotationMatrixRef=np.eye(3), 
                                               initialVelocity=[0,0,0], initialAngularVelocity=[0,0,0*50*2*pi],
                                               gravity = [0,-9.81,0],
                                               UFforce=UFforceFFRFreducedOrder, UFmassMatrix=UFmassFFRFreducedOrder,
@@ -72,7 +72,7 @@ def UFmassFFRFreducedOrder2(mbs, t, itemIndex, qReduced, qReduced_t):
 def UFforceFFRFreducedOrder2(mbs, t, itemIndex, qReduced, qReduced_t):
     return cms2.UFforceFFRFreducedOrder(exu, mbs, t, qReduced, qReduced_t)
 
-objFFRF2 = cms2.AddObjectFFRFreducedOrderWithUserFunctions(exu, mbs, positionRef=[0,0,0.5], eulerParametersRef=eulerParameters0, 
+objFFRF2 = cms2.AddObjectFFRFreducedOrderWithUserFunctions(exu, mbs, positionRef=[0,0,0.5], rotationMatrixRef=np.eye(3), 
                                               initialVelocity=[0,0,0], initialAngularVelocity=[0,0,0*50*2*pi],
                                               gravity = [0,-9.81,0],
                                               UFforce=UFforceFFRFreducedOrder2, UFmassMatrix=UFmassFFRFreducedOrder2,

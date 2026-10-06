@@ -13,7 +13,7 @@
 import exudyn as exu
 from exudyn.itemInterface import *
 from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
-from exudyn.beams import GenerateStraightLineANCFCable2D
+from exudyn.beams import GenerateBeamElementsAlongLine
 import exudyn.graphics as graphics
 
 SC = exu.SystemContainer()
@@ -81,11 +81,11 @@ if useANCF:
                               axialStiffness=EI*1e4, useReducedOrderIntegration=True,
                               visualization=VCable2D(drawHeight = a, color=graphics.color.steelblue))
     
-    ANCFcable = GenerateStraightLineANCFCable2D(mbs, positionOfNode0=[0,offY,0], positionOfNode1=[L,offY,0], 
-                                    numberOfElements=nSegments, cableTemplate=cable,
-                                    massProportionalLoad=[0,-g,0], fixedConstraintsNode0=[1,1,0,0], 
-                                    fixedConstraintsNode1=[0,0,0,0])
-    [cableNodeList, cableObjectList, loadList, cableNodePositionList, cableCoordinateConstraintList] = ANCFcable
+    ANCFcable = GenerateBeamElementsAlongLine(mbs, positionStart=[0,offY,0], positionEnd=[L,offY,0], 
+                                    numberOfElements=nSegments, beamTemplate=cable,
+                                    gravity=[0,-g,0], groundConstraintsStart=[1,1,0,0], 
+                                    groundConstraintsEnd=[0,0,0,0])
+    cableNodeList, cableObjectList, loadList, cableNodePositionList, cableCoordinateConstraintList = ANCFcable['nodes'], ANCFcable['elements'], ANCFcable['loads'], ANCFcable['nodePositions'], ANCFcable['constraintObjects']
     oTipCable = cableObjectList[-1] #last cable element
 
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++

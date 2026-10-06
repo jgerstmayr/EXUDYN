@@ -32,7 +32,7 @@ You can view and download this file on Github: [connectorOutputVariablesTest.py]
 
 import exudyn as exu
 from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
-from exudyn.beams import GenerateStraightLineANCFCable2D
+from exudyn.beams import GenerateBeamElementsAlongLine
 
 import numpy as np
 
@@ -122,9 +122,10 @@ except Exception as error:
 SC = exu.SystemContainer()
 mbs = SC.AddSystem()
 oGround = mbs.AddObject(ObjectGround())
-[nodes, elements, *_] = GenerateStraightLineANCFCable2D(mbs, positionOfNode0=[0, 0, 0], positionOfNode1=[1, 0, 0],
-                        numberOfElements=1, cableTemplate=ObjectANCFCable2D(massPerLength=1,
-                        bendingStiffness=1, axialStiffness=100), fixedConstraintsNode0=[1, 1, 1, 1])
+beamInfo = GenerateBeamElementsAlongLine(mbs, positionStart=[0, 0, 0], positionEnd=[1, 0, 0],
+                        numberOfElements=1, beamTemplate=ObjectANCFCable2D(massPerLength=1,
+                        bendingStiffness=1, axialStiffness=100), groundConstraintsStart=[1, 1, 1, 1])
+nodes, elements, *_ = beamInfo['nodes'], beamInfo['elements'], beamInfo['loads']
 mCircle = mbs.AddMarker(MarkerBodyPosition(bodyNumber=oGround, localPosition=[0.5, -1, 0]))
 mShape = mbs.AddMarker(MarkerBodyCable2DShape(bodyNumber=elements[0], numberOfSegments=2))
 nData = mbs.AddNode(NodeGenericData(numberOfDataCoordinates=2, initialCoordinates=[0.1, 0.1]))

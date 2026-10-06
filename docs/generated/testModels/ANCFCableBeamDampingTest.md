@@ -19,7 +19,7 @@ You can view and download this file on Github: [ANCFCableBeamDampingTest.py](htt
 import exudyn as exu
 import numpy as np
 from exudyn.utilities import *
-from exudyn.beams import GenerateStraightLineANCFCable2D
+from exudyn.beams import GenerateBeamElementsAlongLine
 import exudyn.graphics as graphics
 
 testIsActive = exu.sys.get('testIsActive', False)
@@ -115,11 +115,12 @@ for loadCase, loadVector in enumerate(loadVectorList):
                             axialDamping=betaAxial*EA,
                             useReducedOrderIntegration=0,
                             visualization=VCable2D(drawHeight=cableDiameter))
-    nCable2D, oCable2D, lCable2D, _, _ = GenerateStraightLineANCFCable2D(mbs, positionOfNode0=[0, 0, 0],
-                                                                         positionOfNode1=[l, 0, 0],
-                                                                         fixedConstraintsNode0=[1]*4,
+    beamInfo = GenerateBeamElementsAlongLine(mbs, positionStart=[0, 0, 0],
+                                                                         positionEnd=[l, 0, 0],
+                                                                         groundConstraintsStart=[1]*4,
                                                                          numberOfElements=nElementsANCF2D,
-                                                                         cableTemplate=cableTemplate)
+                                                                         beamTemplate=cableTemplate)
+    nCable2D, oCable2D, lCable2D, _, _ = beamInfo['nodes'], beamInfo['elements'], beamInfo['loads'], beamInfo['nodePositions'], beamInfo['constraintObjects']
     mCable2D = mbs.AddMarker(MarkerNodePosition(nodeNumber=nCable2D[-1]))
     # add load to last node
     mbs.AddLoad(LoadForceVector(markerNumber=mCable2D,

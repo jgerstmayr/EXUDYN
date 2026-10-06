@@ -132,7 +132,7 @@ dict1 = mbs.CreateRigidBody(referencePosition=pBC,
 
 ################ Body2: SLIDER
 d = 0.03
-graphicsSlider = graphics.BrickXYZ(-d/2,-d/2,-d/2, d/2,d/2, d/2, [0.5,0.5,0.5,0.5])
+graphicsSlider = graphics.Brick(centerPoint=[0, 0, 0], size=[d, d, d], color=[0.5,0.5,0.5,0.5])
 dict2 = mbs.CreateRigidBody(referencePosition=pC,  
                             initialVelocity=v2Init,  
                             inertia=inertiaSlider,  

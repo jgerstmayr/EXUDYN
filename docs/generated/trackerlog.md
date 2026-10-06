@@ -8,10 +8,10 @@ Every entry carries the **type** of the issue, then its **priority** and its **e
 
 General information on current version:
 
-- Exudyn version = 1.12.365.dev1
+- Exudyn version = 1.12.366.dev1
 - last change = 2026-10-06
-- Number of issues = 2875
-- Number of resolved issues = 2679 (365 in current version)
+- Number of issues = 2876
+- Number of resolved issues = 2680 (366 in current version)
 
 ## Resolved issues and resolved bugs before version 1.12
 
@@ -7568,8 +7568,8 @@ The following list contains the issues which have been **RESOLVED** in the accor
 
 ## Open issues
 
-- `CHANGE` `MEDIUM EFF` `raised by: Claude-JG` Examples, test models and mini examples use the current item parameters, Create arguments and settings (#2873)
-  - description: The shipped scripts still use deprecated item parameters (physicsMass, rotationMarker0, ...), deprecated arguments of the Create functions (bodyNumbers, bodyNumber, ...) and renamed settings; users copy from them. The scripts are pre-run, the deprecation warnings name file and line, and the names are replaced there; deprecated functions with a different signature (BrickXYZ, GenerateStraightLineANCFCable2D, ...) are listed separately. Maintainer 2026-10-06.
+- `TESTING` `raised by: Claude-JG` The test suite runs the test models in one namespace, which hides a missing name; two models fail when run alone (#2875)
+  - description: runTestSuite.py executes every test model with exec(..., globals()), so a name that a model uses without importing it is found if an earlier model imported it. Found with \#2873: 15 test models and mini examples called GenerateBeamElementsAlongLine without importing it and passed the suite; run alone they stop with NameError. Run alone (pre-run of \#2873), explicitLieGroupIntegratorPythonTest.py fails: SensorNode: OutputVariableType '\_None' is not available in node 0 (line 108); the example reevingSystem.py stops with an InternalError in SolveSteps. Proposal: a fresh namespace per model (a copy of the runner's globals), and the pre-run as a check.
   - date raised: 2026-10-06
 - `CHECK` `MEDIUM EFF` `raised by: Claude-JG` parameters and output variables that the C++ of an item does not use - found by RG13.3 (#2867)
   - description: Found by checking the descriptions against the implementation (RG13.3.2-.5); the descriptions say what IS now, the code is for a decision: ObjectContactCurveCircles - the output variables DisplacementLocal, VelocityLocal, ForceLocal are declared and give an empty vector, dynamicFriction and frictionProportionalZone are not used, polynomialData only bends the drawing; ObjectContactCircleCable2D - contactDamping is not used (commented out); ObjectConnectorCoordinateSpringDamperExt - velocityOffset only reaches the user function, the built-in law k(x-x0)+d\*v ignores it; ObjectANCFThinPlate - strainIsRelativeToReference has no effect since the port of RG4.20 (strains always relative to the reference). Options per item: implement, or remove the parameter (no deprecation needed for 1.12-new ones).

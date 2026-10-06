@@ -48,7 +48,7 @@ oGround = mbs.AddObject(ObjectGround(referencePosition = [0,0,0],
 
 graphicsSphere = graphics.Sphere(point=[L/2,0,0], radius=r, color=[1.,0.2,0.2,1], nTiles = 16)
 graphicsSphere2 = graphics.Sphere(point=[0,0,0], radius=r, color=graphics.color.steelblue, nTiles = 16)
-graphicsLink = graphics.BrickXYZ(-L/2,-d/2,-d/2, L/2,d/2, d/2, [0.5,0.5,0.5,0.5])
+graphicsLink = graphics.Brick(centerPoint=[0, 0, 0], size=[L, d, d], color=[0.5,0.5,0.5,0.5])
 
 inertia = InertiaCuboid(density=mass/(L*d*d), sideLengths=[L,d,d])
 exu.Print("mass=",inertia.mass)

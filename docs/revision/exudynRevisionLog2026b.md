@@ -16057,3 +16057,48 @@ Eight test models failed, five of them the known `UnresolvedOnLinux()` ones. The
 - `computeItemTest.py`: rel. 2.3e-11, the state after 100 steps of a double pendulum - added as well.
 
 Gates on Windows: build, all checks, suite PASSED, pytest 1224 passed. The Linux run is the maintainer's.
+
+<a id="rg12-43"></a>
+### RG12.43 — the shipped scripts without deprecated names (2026-10-06, #2873)
+
+*(Maintainer 2026-10-06: "the current examples / model scripts are still containing the outdated item parameters/args
+and outdated args for Create functions. Please add a step/issue and fix that now. I see that the warnings show the line
+of the scripts, so replacement is probably easy and safe with a pre-run of these scripts.")*
+
+**The pre-run.** Every script of `python/{TestModels,MiniExamples,Examples,PerformanceModels}` that imports exudyn (470)
+ran in its own process, without windows, with `exudyn.special.deprecations.warnOnce = False` - so that every use warns,
+not only the first of a name - and the DeprecationWarnings collected with file and line; 60 s per script, and the
+failed and timed-out ones once more with 120 s and their own output directory (a shared one let parallel runs read
+each other's files). `tools/checkUserScripts.py` gave the static view, which also sees code that a run does not reach.
+
+**What it found.** Deprecated item parameters and Create arguments are used only by the tests of the deprecations
+(`parameterConversionTest`, `libraryDeprecationTest`, `rotationMarkerDeprecationTest`,
+`homogeneousTransformationParameterTest`, `simulationSettingsDeprecationTest`, the bodyNumbers part of
+`createItemNumbersTest`), which keep them, and by one cable of `createItemNumbersTest` (`physicsLength`, written in
+RG12.40), now `length`. What the scripts did use were deprecated **functions**, and those were replaced:
+
+- `graphics.BrickXYZ(xMin, ..., zMax, ...)` -> `graphics.Brick(centerPoint, size, ...)`, 40 calls in 23 files. The
+  center and size are written from the six bounds and checked numerically against them with random values for the
+  names; the long ones simplified by hand and checked the same way (e.g. `centerPoint=[refRod[0], 0, 0]`).
+- `GenerateStraightLineANCFCable(2D)` and `GenerateStraightBeam` -> `GenerateBeamElementsAlongLine`, 35 calls in 31 files:
+  the keywords renamed (`positionStart`, `beamTemplate`, `gravity`, `groundConstraintsStart`, `nodeNumberStart`, ...),
+  and the result, a dict now, read by its keys (`['nodes']`, `['elements']`, ...); in `ANCFbeltDrive.py` and
+  `ANCFgeneralContactCircle.py`, which mix it with the list of `GenerateCircularArcANCFCable2D`, the dict is turned into
+  that list. An omitted `fixedConstraintsNode0` was `[0,0,0,0]` (a ground node without constraints) and is now None;
+  no test result changed.
+- `AddObjectFFRFreducedOrderWithUserFunctions(eulerParametersRef=...)` -> `rotationMatrixRef`, 11 calls. This showed a
+  bug: `ObjectFFRFreducedOrderInterface` kept a `rigidBodyNodeType` given as string (its default), which only the
+  Euler parameter branch converted; with `rotationMatrixRef` the mass user function then failed ("rotation
+  parameterization not implemented"). The interface now converts the string when it is created.
+- `CSRtoScipySparseCSR(fem.GetMassMatrix(sparse=True))` -> the matrix itself (it is a scipy csr_matrix);
+  `mbsIK.WaitForUserToContinue()` in `robotics/roboticsCore.py` -> `SC.renderer.DoIdleTasks()`.
+
+Left: three scripts define a function of their own named `MecanumXYphi2WheelVelocities`, which the static check
+mistakes for the deprecated one.
+
+**The second pre-run** of the 69 changed scripts: no deprecation warning, and every script ends as in the first one
+(the failures are files a script expects from an earlier run, missing packages, timeouts). It found what the suite had
+not: 15 scripts called `GenerateBeamElementsAlongLine` without importing it - their import line named the old function -
+and passed the suite, because `runTestSuite.py` executes all models in one namespace. The imports are corrected; the
+namespace, and `explicitLieGroupIntegratorPythonTest.py`, which fails when run alone, are #2875 (RG2.6). Gates: build,
+suite PASSED (no reference value changed), pytest.

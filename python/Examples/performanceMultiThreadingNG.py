@@ -34,7 +34,7 @@ for nBodies in nBodiesList:
     mbs.Reset()
 
     a=0.03
-    gBody = graphics.BrickXYZ(-a, -a, -a, a, a, a, color=graphics.color.steelblue)
+    gBody = graphics.Brick(centerPoint=[0, 0, 0], size=[2*a, 2*a, 2*a], color=graphics.color.steelblue)
 
     m = 1 #mass
     J=[1,2,3,0,0,0] #inertia

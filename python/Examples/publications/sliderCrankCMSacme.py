@@ -86,7 +86,7 @@ hC = 0.01   #depth of crank (z-direction)
 dBearing=0.01  #diameter of bearing
 
 if CMS:
-    oFFRFconrod = cms0.AddObjectFFRFreducedOrderWithUserFunctions(exu, mbs, positionRef=[0,dC,-hC], eulerParametersRef=eulerParameters0, 
+    oFFRFconrod = cms0.AddObjectFFRFreducedOrderWithUserFunctions(exu, mbs, positionRef=[0,dC,-hC], rotationMatrixRef=np.eye(3), 
                                                   initialVelocity=[0,0,0], initialAngularVelocity=[0,0,0],
                                                   gravity = [0,-0*9.81,0],
                                                   UFforce=UFforceFFRFreducedOrder0, 
@@ -145,7 +145,7 @@ if CMS:
     
     #crank represents the 0-reference of the system
     oFFRFcrank = cms1.AddObjectFFRFreducedOrderWithUserFunctions(exu, mbs, 
-                                                  positionRef=[0.,0,0], eulerParametersRef=eulerParameters0, 
+                                                  positionRef=[0.,0,0], rotationMatrixRef=np.eye(3), 
                                                   initialVelocity=[0,0,0], 
                                                   initialAngularVelocity=[0,0,initialAngVelCrank],
                                                   gravity = [0,-0*9.81,0],

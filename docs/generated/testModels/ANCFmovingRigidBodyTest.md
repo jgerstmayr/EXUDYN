@@ -21,7 +21,7 @@ You can view and download this file on Github: [ANCFmovingRigidBodyTest.py](http
 
 import exudyn as exu
 from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
-from exudyn.beams import GenerateStraightLineANCFCable2D
+from exudyn.beams import GenerateBeamElementsAlongLine
 import exudyn.graphics as graphics
 
 testIsActive = exu.sys.get('testIsActive', False)
@@ -58,8 +58,9 @@ suspensionCableTemplate=Cable2D(massPerLength=20.87,
                                 bendingStiffness=78878*complianceFactBend, 
                                 axialStiffness=398240000*complianceFactAxial)
 
-[suspensionCableNodeList, suspensionCableObjectList, suspensionLoadList, suspensionCableNodePositionList, dummy]=GenerateStraightLineANCFCable2D(mbs=mbs, positionOfNode0=[0,0,0], positionOfNode1=[L,0,0], numberOfElements=nEl, cableTemplate=suspensionCableTemplate,
-                                                                  massProportionalLoad=[0,-gravityFieldConstant,0], fixedConstraintsNode0=[1,1,0,fixANCFRotation], fixedConstraintsNode1=[1,1,0,fixANCFRotation])
+beamInfo=GenerateBeamElementsAlongLine(mbs=mbs, positionStart=[0,0,0], positionEnd=[L,0,0], numberOfElements=nEl, beamTemplate=suspensionCableTemplate,
+                                                                  gravity=[0,-gravityFieldConstant,0], groundConstraintsStart=[1,1,0,fixANCFRotation], groundConstraintsEnd=[1,1,0,fixANCFRotation])
+suspensionCableNodeList, suspensionCableObjectList, suspensionLoadList, suspensionCableNodePositionList, dummy = beamInfo['nodes'], beamInfo['elements'], beamInfo['loads'], beamInfo['nodePositions'], beamInfo['constraintObjects']
 ##################################################################################################################################################################
 
  
@@ -74,9 +75,10 @@ haulageCableTemplate=ALECable2D(massPerLength=6.96,
                                 addALEvariation=False) #for compatibility with test suite results
 haulageCableTemplate.nodeNumbers[2]=nALE #this will not be overwritten!
 
-[haulageCableNodeList, haulageCableObjectList, haulageLoadList, haulageCableNodePositionList, dummy]=GenerateStraightLineANCFCable2D(mbs=mbs, 
-                     positionOfNode0=[0,offset,0], positionOfNode1=[L,offset,0], numberOfElements=nEl, cableTemplate=haulageCableTemplate,
-                     massProportionalLoad=[0,-gravityFieldConstant,0], fixedConstraintsNode0=[1,1,0,fixANCFRotation], fixedConstraintsNode1=[1,1,0,fixANCFRotation])
+beamInfo=GenerateBeamElementsAlongLine(mbs=mbs, 
+                     positionStart=[0,offset,0], positionEnd=[L,offset,0], numberOfElements=nEl, beamTemplate=haulageCableTemplate,
+                     gravity=[0,-gravityFieldConstant,0], groundConstraintsStart=[1,1,0,fixANCFRotation], groundConstraintsEnd=[1,1,0,fixANCFRotation])
+haulageCableNodeList, haulageCableObjectList, haulageLoadList, haulageCableNodePositionList, dummy = beamInfo['nodes'], beamInfo['elements'], beamInfo['loads'], beamInfo['nodePositions'], beamInfo['constraintObjects']
 
 cAleConstraint=mbs.AddObject(CoordinateConstraint(markerNumbers=[mGlobalGround,mALE]))
 ##################################################################################################################################################################################################################################################

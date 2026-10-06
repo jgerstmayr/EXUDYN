@@ -17,7 +17,7 @@
 ## import libaries
 import exudyn as exu
 from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
-from exudyn.beams import GenerateStraightBeam
+from exudyn.beams import GenerateBeamElementsAlongLine
 import exudyn.graphics as graphics
 
 import numpy as np
@@ -48,9 +48,9 @@ beamTemplate = ObjectBeamGeometricallyExact2D(massPerLength=rho*A,
                                               visualization=VObjectBeamGeometricallyExact2D(drawHeight = h), )
 
 ## create straight beam with 10 elements, apply gravity and fix (x,y) position of node 0 (rotation left free)
-beamInfo = GenerateStraightBeam(mbs, positionOfNode0=[0,0,0], positionOfNode1=[L,0,0], 
+beamInfo = GenerateBeamElementsAlongLine(mbs, positionStart=[0,0,0], positionEnd=[L,0,0], 
                                 numberOfElements=10, beamTemplate=beamTemplate,
-                                gravity=[0,-9.81,0], fixedConstraintsNode0=[1,1,0],)
+                                gravity=[0,-9.81,0], groundConstraintsStart=[1,1,0],)
 #beamInfo contains [nodeList, beamList, ...]
 
 ## assemble system and define simulation settings

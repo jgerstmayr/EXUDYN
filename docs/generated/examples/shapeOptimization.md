@@ -132,7 +132,7 @@ def ParameterFunction(parameterSet):
         if verbose:
             print("nNodes=",fem.NumberOfNodes())
             nNodes = fem.NumberOfNodes()
-            M = CSRtoScipySparseCSR(fem.GetMassMatrix(sparse=True))
+            M = fem.GetMassMatrix(sparse=True) #a scipy csr_matrix
             Phit = np.kron(np.ones(nNodes),np.eye(3)).T
             totalMass = (Phit.T @ M @ Phit)[0,0]
     

@@ -161,6 +161,12 @@ test-suite needs matplotlib to be installed; otherwise, it fails. Should it be l
 matplotlib**: a test model that fails for a missing package of the `[tests]` extra is skipped and listed with
 `pip install exudyn[tests]`, `exudyn.misc.resultsMonitor` imports matplotlib only if it is there.
 
+**RG2.6** *open (group RG2; found with RG12.43, 2026-10-06)* **Each test model in a namespace of its own** (#2875).
+    `runTestSuite.py` executes every model with `exec(..., globals())`, so a name a model uses without importing it is
+    found when an earlier model imported it - 15 scripts passed the suite with a missing import (RG12.43). A fresh copy
+    of the runner's globals per model; `explicitLieGroupIntegratorPythonTest.py`, which fails when run alone (SensorNode
+    with OutputVariableType `_None`), and the example `reevingSystem.py` (InternalError in SolveSteps).
+
 <a id="rg2-3"></a>
 **RG2.3** **DONE 2026-10-05** — [log](exudynRevisionLog2026b.md#rg4-19-11) *(group RG2; maintainer 2026-09-22; done as the maintainer said 2026-10-05: "there are all miniexamples now tested. Isn't that enough?")* **A graphics regression suite** (#2582). RG2.1
     leaves one model, one setting and one checksum. What is wanted: several models against
@@ -1561,6 +1567,14 @@ docstrings; argument annotations only where they help a reader; a check that eve
 <a id="rg12-40"></a>
 **RG12.40** **DONE 2026-10-05** (#2863, #2337) — [log](exudynRevisionLog2026b.md#rg12-40) · [plan text](exudynRevisionLog2026b.md#plan-rg12-40) — The Create functions take bodies, nodes or markers in `itemNumbers`.
 
+<a id="rg12-43"></a>
+**RG12.43** **DONE 2026-10-06** (#2873) — [log](exudynRevisionLog2026b.md#rg12-43) *(group RG12; maintainer 2026-10-06: "the
+current examples / model scripts are still containing the outdated item parameters/args and outdated args for Create
+functions. Please add a step/issue and fix that now ... with a pre-run of these scripts")* **The shipped scripts without
+deprecated names**: the examples, test models and mini examples pre-run with every deprecated use reported at its line;
+`graphics.BrickXYZ` (40 calls), `GenerateStraightLineANCFCable(2D)` and `GenerateStraightBeam` (35) and
+`eulerParametersRef` of the reduced-order FFRF (11) replaced; only the tests of the deprecations themselves use them.
+
 <a id="rg12-42"></a>
 **RG12.42** **DONE 2026-10-06** (#2870) — [log](exudynRevisionLog2026b.md#rg12-42-1) · [plan text](exudynRevisionLog2026b.md#plan-rg12-42) — Joints and connectors with consistent output variables: `HomogeneousTransformation`, the new `HomogeneousTransformationLocal`, `Displacement`, and the outputs the 2D joints lacked.
 
@@ -1982,6 +1996,7 @@ issue and a short title only. The open issues that are not steps are in the trac
 | RG5.2 | - | make the hot linear algebra vectorizable |
 | RG6.8 | #2140, #2236, #2237, #2350 | the graphics fixes before 1.13: Linux (RG6.8.5) and macOS (RG6.8.6), which wait for those machines |
 | RG13.3 | #2867 | follow-up: parameters and output variables the C++ of four items does not use, for a decision |
+| RG2.6 | #2875 | each test model in a namespace of its own; two models fail when run alone |
 | RG9.6 | #2866 | the member functions an item must provide, checked when it compiles (from #2498) |
 | RG8.1 to RG8.9 | - | the plugin ABI: registry, fingerprint, reference plugin, headers, discovery |
 | RG14.3 | #2745 | joints and their Jacobians on homogeneous transformations, after RG14.2.9 |

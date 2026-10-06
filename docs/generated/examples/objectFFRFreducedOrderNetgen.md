@@ -92,7 +92,7 @@ if True: #now import mesh as mechanical model to EXUDYN
     def UFforceFFRFreducedOrder(mbs, t, itemIndex, qReduced, qReduced_t):
         return cms.UFforceFFRFreducedOrder(exu, mbs, t, qReduced, qReduced_t)
     
-    objFFRF = cms.AddObjectFFRFreducedOrderWithUserFunctions(exu, mbs, positionRef=[0,0,0], eulerParametersRef=eulerParameters0, 
+    objFFRF = cms.AddObjectFFRFreducedOrderWithUserFunctions(exu, mbs, positionRef=[0,0,0], rotationMatrixRef=np.eye(3), 
                                                   initialVelocity=[0,0,0], initialAngularVelocity=[0,0,0],
                                                   gravity = [0,-9.81,0],
                                                   UFforce=UFforceFFRFreducedOrder, UFmassMatrix=UFmassFFRFreducedOrder,

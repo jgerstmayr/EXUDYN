@@ -161,7 +161,7 @@ for cnt, circleList in enumerate(reevingSystems):
     
     #%%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     #create ANCF elements:
-    cableTemplate = Cable2D(#length = L / nElements, #set in GenerateStraightLineANCFCable2D(...)
+    cableTemplate = Cable2D(#length = L / nElements, #set in GenerateBeamElementsAlongLine(...)
                             massPerLength = rhoBeam*A,
                             bendingStiffness = E*I,
                             axialStiffness = E*A,

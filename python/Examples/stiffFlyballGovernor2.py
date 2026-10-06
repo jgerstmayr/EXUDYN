@@ -124,10 +124,10 @@ refAngularVelList = [omega0,     # shaft
                      omega0]    # rodBD
 
 ## create graphics objects for bodies
-graphicsRodAC  = graphics.BrickXYZ(-(lengthRod/2-refRod[0]),-widthRod/2,-widthRod/2, lengthRod/2+refRod[0],widthRod/2,widthRod/2, [0.1,0.1,0.8,1])
-graphicsRodBD  = graphics.BrickXYZ(-lengthRod/2-refRod[0],-widthRod/2,-widthRod/2, lengthRod/2-refRod[0],widthRod/2,widthRod/2, [0.1,0.1,0.8,1])
-graphicsSlider = graphics.BrickXYZ(-dimSlider/2,-dimSlider/2,-dimSlider/2, dimSlider/2,dimSlider/2,dimSlider/2, [0.1,0.1,0.8,1])
-graphicsShaft  = graphics.BrickXYZ(-widthShaft/2,-widthShaft/2,-lengthShaft/2, widthShaft/2,widthShaft/2,lengthShaft/2, [0.1,0.1,0.8,1])
+graphicsRodAC  = graphics.Brick(centerPoint=[refRod[0], 0, 0], size=[lengthRod, widthRod, widthRod], color=[0.1,0.1,0.8,1])
+graphicsRodBD  = graphics.Brick(centerPoint=[-refRod[0], 0, 0], size=[lengthRod, widthRod, widthRod], color=[0.1,0.1,0.8,1])
+graphicsSlider = graphics.Brick(centerPoint=[0, 0, 0], size=[dimSlider, dimSlider, dimSlider], color=[0.1,0.1,0.8,1])
+graphicsShaft  = graphics.Brick(centerPoint=[0, 0, 0], size=[widthShaft, widthShaft, lengthShaft], color=[0.1,0.1,0.8,1])
 
 #lists for 4 nodes/bodies: [shaft, slider, rodAC, rodBD]
 graphicsList=[graphicsShaft, graphicsSlider, graphicsRodAC, graphicsRodBD]

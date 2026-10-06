@@ -23,7 +23,7 @@ import sys
 sys.exudynFast = True
 import exudyn as exu
 from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
-from exudyn.beams import GenerateStraightLineANCFCable2D
+from exudyn.beams import GenerateBeamElementsAlongLine
 import exudyn
 import exudyn.graphics as graphics
 
@@ -80,17 +80,17 @@ cable = Cable2D(#length=L,
 
 #alternative to mbs.AddObject(ALECable2D(...)) with nodes:
 yOff = 0*0.5*hBeam
-ancf=GenerateStraightLineANCFCable2D(mbs=mbs,
-                positionOfNode0=[0,yOff,0], positionOfNode1=[L,yOff,0],
+ancf=GenerateBeamElementsAlongLine(mbs=mbs,
+                positionStart=[0,yOff,0], positionEnd=[L,yOff,0],
                 numberOfElements=nElements,
-                cableTemplate=cable, #this defines the beam element properties
-                massProportionalLoad = [0,-gravity,0], #add larger gravity for larger deformation
-                fixedConstraintsNode0 = [1,1,0,0], #hinged
+                beamTemplate=cable, #this defines the beam element properties
+                gravity = [0,-gravity,0], #add larger gravity for larger deformation
+                groundConstraintsStart = [1,1,0,0], #hinged
                 #fixedConstraintsNode1 = [0,0,0,0]) #free
                 )
 
-ancfNodes = ancf[0]
-ancfObjects = ancf[1]
+ancfNodes = ancf['nodes']
+ancfObjects = ancf['elements']
 
 oGround=mbs.AddObject(ObjectGround(referencePosition= [0,0,0],
                                 visualization=VObjectGround(graphicsData=[graphics.CheckerBoard(size=2)])))

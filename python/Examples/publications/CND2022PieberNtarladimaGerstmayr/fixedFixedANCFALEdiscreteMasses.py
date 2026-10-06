@@ -29,7 +29,7 @@ import os
 from exudyn.itemInterface import *
 from exudyn.FEM import *
 from exudyn.utilities import *
-from exudyn.beams import GenerateAleSlidingJoint, GenerateStraightLineANCFCable2D
+from exudyn.beams import GenerateAleSlidingJoint, GenerateBeamElementsAlongLine
 import exudyn.graphics as graphics
 
 import numpy as np
@@ -267,17 +267,17 @@ def BuildModel(parameterSet):
                         nodeNumbers=[0,0,nALE]
                         )
     
-    ancf=GenerateStraightLineANCFCable2D(mbs=mbs,
-                    positionOfNode0=[0,0,0], positionOfNode1=[L,0,0],
+    ancf=GenerateBeamElementsAlongLine(mbs=mbs,
+                    positionStart=[0,0,0], positionEnd=[L,0,0],
                     numberOfElements=nElements,
-                    cableTemplate=cable, #this defines the beam element properties
-                    massProportionalLoad = [0,-9.81*0,0], #optionally add gravity
-                    fixedConstraintsNode0 = [1,1,0,1], #fixed
-                    fixedConstraintsNode1 = [1,1,0,1]) #fixed
+                    beamTemplate=cable, #this defines the beam element properties
+                    gravity = [0,-9.81*0,0], #optionally add gravity
+                    groundConstraintsStart = [1,1,0,1], #fixed
+                    groundConstraintsEnd = [1,1,0,1]) #fixed
 
-    ancfNodes = ancf[0]
-    ancfObjects = ancf[1]
-    for oCC in ancf[4]:
+    ancfNodes = ancf['nodes']
+    ancfObjects = ancf['elements']
+    for oCC in ancf['constraintObjects']:
         mbs.SetObjectParameter(oCC,'VdrawSize',0.005)
     
 

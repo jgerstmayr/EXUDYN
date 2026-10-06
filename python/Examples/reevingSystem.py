@@ -102,7 +102,7 @@ dEA = 1e-2*E*A #axial strain proportional damping
 
 dimZ = b #z.dimension
 
-cableTemplate = Cable2D(#length = L / nElements, #set in GenerateStraightLineANCFCable2D(...)
+cableTemplate = Cable2D(#length = L / nElements, #set in GenerateBeamElementsAlongLine(...)
                         massPerLength = rhoBeam*A,
                         bendingStiffness = E*I,
                         axialStiffness = E*A,

@@ -22,7 +22,7 @@ You can view and download this file on Github: [solutionViewerMultipleSimulation
 import exudyn as exu
 from exudyn.itemInterface import *
 from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
-from exudyn.beams import GenerateStraightLineANCFCable2D
+from exudyn.beams import GenerateBeamElementsAlongLine
 import exudyn.graphics as graphics
 
 SC = exu.SystemContainer()
@@ -51,12 +51,12 @@ mGround = mbs.AddMarker(MarkerNodeCoordinate(nodeNumber = nGround, coordinate=0)
 
 #%%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #generate ANCF beams with utilities function
-cableTemplate = Cable2D(#length = L / nElements, #set in GenerateStraightLineANCFCable2D(...)
+cableTemplate = Cable2D(#length = L / nElements, #set in GenerateBeamElementsAlongLine(...)
                         massPerLength = rho*A,
                         bendingStiffness = E*I,
                         axialStiffness = E*A,
                         useReducedOrderIntegration = 1,
-                        #nodeNumbers = [0, 0], #will be filled in GenerateStraightLineANCFCable2D(...)
+                        #nodeNumbers = [0, 0], #will be filled in GenerateBeamElementsAlongLine(...)
                         )
 
 positionOfNode0 = [0, 0, 0] # starting point of line
@@ -64,14 +64,14 @@ positionOfNode1 = [L, 0, 0] # end point of line
 numberOfElements = 16
 
 #alternative to mbs.AddObject(Cable2D(...)) with nodes:
-ancf=GenerateStraightLineANCFCable2D(mbs,
+ancf=GenerateBeamElementsAlongLine(mbs,
                 positionOfNode0, positionOfNode1,
                 numberOfElements,
-                cableTemplate, #this defines the beam element properties
-                massProportionalLoad = [0,-9.81*0,0], #optionally add gravity
-                fixedConstraintsNode0 = [1,1,0,1], #add constraints for pos and rot (r'_y)
-                fixedConstraintsNode1 = [0,0,0,0])
-mANCFLast = mbs.AddMarker(MarkerNodePosition(nodeNumber=ancf[0][-1])) #ancf[0][-1] = last node
+                beamTemplate=cableTemplate, #this defines the beam element properties
+                gravity = [0,-9.81*0,0], #optionally add gravity
+                groundConstraintsStart = [1,1,0,1], #add constraints for pos and rot (r'_y)
+                groundConstraintsEnd = [0,0,0,0])
+mANCFLast = mbs.AddMarker(MarkerNodePosition(nodeNumber=ancf['nodes'][-1])) #ancf['nodes'][-1] = last node
 nLoad = mbs.AddLoad(Force(markerNumber = mANCFLast, loadVector = [f*0, -f, 0])) #will be changed in load steps
 
 

@@ -21,7 +21,7 @@ You can view and download this file on Github: [ANCFslidingAndALEjointTest.py](h
 
 import exudyn as exu
 from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
-from exudyn.beams import GenerateAleSlidingJoint, GenerateSlidingJoint, GenerateStraightLineANCFCable2D
+from exudyn.beams import GenerateAleSlidingJoint, GenerateSlidingJoint, GenerateBeamElementsAlongLine
 import exudyn.graphics as graphics
 
 testIsActive = exu.sys.get('testIsActive', False)
@@ -92,10 +92,11 @@ fixANCFRotation = 0
 #######################ROPE2 (Carrier rope)########################################################################################################################
 cable2Template=Cable2D(massPerLength=10, bendingStiffness=50000*complianceFactBend, axialStiffness=2e8*complianceFactAxial)
 
-[cable2NodeList, cable2ObjectList, suspensionLoadList, cable2NodePositionList, dummy]=GenerateStraightLineANCFCable2D(mbs=mbs, 
-                positionOfNode0=[0,0,0], positionOfNode1=[L,0,0], numberOfElements=nEl, 
-                cableTemplate=cable2Template, massProportionalLoad=[0,-gravityFieldConstant,0], 
-                fixedConstraintsNode0=[1,1,0,fixANCFRotation], fixedConstraintsNode1=[1,1,0,fixANCFRotation])
+beamInfo=GenerateBeamElementsAlongLine(mbs=mbs, 
+                positionStart=[0,0,0], positionEnd=[L,0,0], numberOfElements=nEl, 
+                beamTemplate=cable2Template, gravity=[0,-gravityFieldConstant,0], 
+                groundConstraintsStart=[1,1,0,fixANCFRotation], groundConstraintsEnd=[1,1,0,fixANCFRotation])
+cable2NodeList, cable2ObjectList, suspensionLoadList, cable2NodePositionList, dummy = beamInfo['nodes'], beamInfo['elements'], beamInfo['loads'], beamInfo['nodePositions'], beamInfo['constraintObjects']
 ##################################################################################################################################################################
 
  
@@ -109,10 +110,11 @@ cable1Template=ALECable2D(massPerLength=3, bendingStiffness=4000*complianceFactB
                           addALEvariation=False) #for compatibility with test suite results
 cable1Template.nodeNumbers[2]=nALE
 
-[cable1NodeList, cable1ObjectList, haulageLoadList, cable1NodePositionList, dummy]=GenerateStraightLineANCFCable2D(mbs=mbs, 
-            positionOfNode0=[0,-offset,0], positionOfNode1=[L,-offset,0], numberOfElements=nEl, 
-            cableTemplate=cable1Template, massProportionalLoad=[0,-gravityFieldConstant,0], 
-            fixedConstraintsNode0=[1,1,0,fixANCFRotation], fixedConstraintsNode1=[1,1,0,fixANCFRotation])
+beamInfo=GenerateBeamElementsAlongLine(mbs=mbs, 
+            positionStart=[0,-offset,0], positionEnd=[L,-offset,0], numberOfElements=nEl, 
+            beamTemplate=cable1Template, gravity=[0,-gravityFieldConstant,0], 
+            groundConstraintsStart=[1,1,0,fixANCFRotation], groundConstraintsEnd=[1,1,0,fixANCFRotation])
+cable1NodeList, cable1ObjectList, haulageLoadList, cable1NodePositionList, dummy = beamInfo['nodes'], beamInfo['elements'], beamInfo['loads'], beamInfo['nodePositions'], beamInfo['constraintObjects']
 
 cAleConstraint=mbs.AddObject(CoordinateConstraint(markerNumbers=[mGlobalGround,mALE]))
 ###################################################################################################################################################################

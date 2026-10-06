@@ -14,7 +14,7 @@ import exudyn as exu
 #a local run must not open a plot window when windows are suppressed (#2477)
 if exu.special.userInterface.suppressPlots: import matplotlib; matplotlib.use('Agg')
 from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
-from exudyn.beams import GenerateStraightLineANCFCable2D
+from exudyn.beams import GenerateBeamElementsAlongLine
 import exudyn
 import exudyn.graphics as graphics
 
@@ -103,18 +103,18 @@ cable = ALECable2D(#length=L,
 
 phi = 0.25*pi/2
 #alternative to mbs.AddObject(ALECable2D(...)) with nodes:
-ancf=GenerateStraightLineANCFCable2D(mbs=mbs,
-                positionOfNode0=[0,0,0], positionOfNode1=[L*cos(phi),L*sin(phi),0],
+ancf=GenerateBeamElementsAlongLine(mbs=mbs,
+                positionStart=[0,0,0], positionEnd=[L*cos(phi),L*sin(phi),0],
                 numberOfElements=nElements,
-                cableTemplate=cable, #this defines the beam element properties
-                massProportionalLoad = [0,-9.81,0], #add larger gravity for larger deformation
+                beamTemplate=cable, #this defines the beam element properties
+                gravity = [0,-9.81,0], #add larger gravity for larger deformation
                 # fixedConstraintsNode0 = [1,1,1,1], #fixed
-                fixedConstraintsNode0 = [1,1,1*0,1*0], #fixed
-                fixedConstraintsNode1 = [1,1,1*0,1*0]) #fixed
+                groundConstraintsStart = [1,1,1*0,1*0], #fixed
+                groundConstraintsEnd = [1,1,1*0,1*0]) #fixed
 
-ancfNodes = ancf[0]
-ancfObjects = ancf[1]
-for oCC in ancf[4]:
+ancfNodes = ancf['nodes']
+ancfObjects = ancf['elements']
+for oCC in ancf['constraintObjects']:
     mbs.SetObjectParameter(oCC,'VdrawSize',0.005)
 
 

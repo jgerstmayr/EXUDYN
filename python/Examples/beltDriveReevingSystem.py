@@ -157,7 +157,7 @@ mCoordinateGround = mbs.AddMarker(MarkerNodeCoordinate(nodeNumber=nGround, coord
 #create ANCF elements:
 dimZ = b #z.dimension
 
-cableTemplate = Cable2D(#length = L / nElements, #set in GenerateStraightLineANCFCable2D(...)
+cableTemplate = Cable2D(#length = L / nElements, #set in GenerateBeamElementsAlongLine(...)
                         massPerLength = rhoA,
                         bendingStiffness = EI,
                         axialStiffness = EA,

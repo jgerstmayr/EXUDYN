@@ -83,7 +83,7 @@ SC = exu.SystemContainer()
 mbs = SC.AddSystem()
 n0 = mbs.AddNode(NodePoint2DSlope1(referenceCoordinates=[0,0,1,0]))
 n1 = mbs.AddNode(NodePoint2DSlope1(referenceCoordinates=[1,0,1,0]))
-oCable = mbs.AddObject(ObjectANCFCable2D(nodeNumbers=[n0, n1], physicsLength=1, physicsMassPerLength=1,
+oCable = mbs.AddObject(ObjectANCFCable2D(nodeNumbers=[n0, n1], length=1, massPerLength=1,
                                          bendingStiffness=1, axialStiffness=100))
 oConstraint = mbs.CreateCoordinateConstraint(itemNumbers=[None, oCable], coordinates=[None, 5])
 marker = mbs.GetMarker(mbs.GetObject(oConstraint)['markerNumbers'][1])

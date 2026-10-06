@@ -53,7 +53,7 @@ for i in range(20):
 
     nRB = mbs.AddNode(NodeRigidBodyEP(referenceCoordinates=p0+ep0, 
                                       initialVelocities=v0+list(ep_t0)))
-    oGraphicsLines = graphics.BrickXYZ(-0.9*sx, -s, -s, 0.9*sx, s, s, addFaces=False, addEdges=True, edgeColor=graphics.color.black)
+    oGraphicsLines = graphics.Brick(centerPoint=[0, 0, 0], size=[1.8*sx, 2*s, 2*s], addFaces=False, addEdges=True, edgeColor=graphics.color.black)
     oGraphics = graphics.Brick(size=[1.8*sx, 2*s, 2*s], color= graphics.color.dodgerblue)
     oGraphicsJoint = graphics.Sphere(point=[-sx,0,cPosZ], radius = 0.6*s, color=graphics.color.darkgrey, nTiles=24)
     oRB = mbs.AddObject(ObjectRigidBody(mass=2, 

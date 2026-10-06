@@ -17,7 +17,7 @@
 ## import exudyn and utilities
 import exudyn as exu
 from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
-from exudyn.beams import GenerateStraightLineANCFCable2D
+from exudyn.beams import GenerateBeamElementsAlongLine
 import exudyn.graphics as graphics
 
 ## create container and main system to work with
@@ -45,12 +45,12 @@ print("load f="+str(f))
 
 #%%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 ## generate ANCFCable2D template containing beam parameters
-cableTemplate = Cable2D(#length = L / nElements, #set in GenerateStraightLineANCFCable2D(...)
+cableTemplate = Cable2D(#length = L / nElements, #set in GenerateBeamElementsAlongLine(...)
                         massPerLength = rho*A,
                         bendingStiffness = E*I,
                         axialStiffness = E*A,
                         useReducedOrderIntegration = 0,
-                        #nodeNumbers = [0, 0], #will be filled in GenerateStraightLineANCFCable2D(...)
+                        #nodeNumbers = [0, 0], #will be filled in GenerateBeamElementsAlongLine(...)
                         )
 
 ## define nodal positions of beam (3D vectors, while cable element is only 2D)
@@ -62,16 +62,16 @@ numberOfElements = 64
 
 ## use utility function to create set of straight cable elements between two positions with options for constraints at supports
 #alternative to mbs.AddObject(Cable2D(...)) with nodes:
-ancf=GenerateStraightLineANCFCable2D(mbs,
+ancf=GenerateBeamElementsAlongLine(mbs,
                 positionOfNode0, positionOfNode1,
                 numberOfElements,
-                cableTemplate, #this defines the beam element properties
-                massProportionalLoad = [0,-9.81*0,0], #optionally add gravity
-                fixedConstraintsNode0 = [1,1,0,1], #add constraints for pos and rot (r'_y)
-                fixedConstraintsNode1 = [0,0,0,0])
+                beamTemplate=cableTemplate, #this defines the beam element properties
+                gravity = [0,-9.81*0,0], #optionally add gravity
+                groundConstraintsStart = [1,1,0,1], #add constraints for pos and rot (r'_y)
+                groundConstraintsEnd = [0,0,0,0])
 
 ## add load vector on last node in y-direction
-mANCFLast = mbs.AddMarker(MarkerNodePosition(nodeNumber=ancf[0][-1])) #ancf[0][-1] = last node
+mANCFLast = mbs.AddMarker(MarkerNodePosition(nodeNumber=ancf['nodes'][-1])) #ancf['nodes'][-1] = last node
 mbs.AddLoad(Force(markerNumber = mANCFLast, loadVector = [0, -f, 0])) #will be changed in load steps
 
 

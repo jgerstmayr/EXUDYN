@@ -75,7 +75,7 @@ if mStr == '100HzGeneralRot':
     Ixx = 0.1
     Iyy = 0.4
 
-oGraphics = graphics.BrickXYZ(-sx,-s,-s, sx,s,s, [0.8,0.1,0.1,1])
+oGraphics = graphics.Brick(centerPoint=[0, 0, 0], size=[2*sx, 2*s, 2*s], color=[0.8,0.1,0.1,1])
 oGyro = mbs.AddObject(ObjectRigidBody(mass=mass, 
                                     inertia=[Ixx,Iyy,Izz,0,0,0], 
                                     nodeNumber=nGyro, 

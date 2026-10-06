@@ -49,7 +49,7 @@ fem.ComputeEigenmodes(nModes, excludeRigidBodyModes = 6, useSparseSolver = True)
 
 cms = ObjectFFRFreducedOrderInterface(fem)
 
-objFFRF = cms.AddObjectFFRFreducedOrderWithUserFunctions(exu, mbs, positionRef=[0,0,0], eulerParametersRef=eulerParameters0, 
+objFFRF = cms.AddObjectFFRFreducedOrderWithUserFunctions(exu, mbs, positionRef=[0,0,0], rotationMatrixRef=np.eye(3), 
                                               initialVelocity=[0,0,0], initialAngularVelocity=[0,0,50*2*pi],
                                               color=[0.1,0.9,0.1,1.])
 

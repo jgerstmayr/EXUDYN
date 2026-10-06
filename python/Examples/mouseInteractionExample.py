@@ -72,7 +72,7 @@ for i in range(nBodies):
 
     color=[1,0.1,0.1,1]
 
-    oGraphics = graphics.BrickXYZ(-sx*0.5,-sy*0.5,-sz*0.5, sx*0.5, sy*0.5, sz*0.5, color)
+    oGraphics = graphics.Brick(centerPoint=[0, 0, 0], size=[sx, sy, sz], color=color)
  
     dictRB = mbs.CreateRigidBody(
                   inertia=RBinertia, 

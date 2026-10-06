@@ -96,7 +96,7 @@ oRigid2 = mbs.AddObject(RigidBody2D(mass=m2,
 #++++++++++++++++++++++++++++++++
 #slider:
 c=0.025 #dimension of mass
-graphics3 = graphics.BrickXYZ(-c,-c,-c*2,c,c,0,graphics.color.grey)
+graphics3 = graphics.Brick(centerPoint=[0, 0, -c], size=[2*c, 2*c, 2*c], color=graphics.color.grey)
 
 nMass3 = mbs.AddNode(Point2D(referenceCoordinates=[L1+L2,0]))
 oMass3 = mbs.AddObject(MassPoint2D(mass=m3, nodeNumber=nMass3,visualization=VObjectRigidBody2D(graphicsData= [graphics3])))

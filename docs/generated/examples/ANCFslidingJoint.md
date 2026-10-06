@@ -23,7 +23,7 @@ import exudyn as exu
 from exudyn.utilities import ObjectANCFCable, VObjectANCFCable, InertiaCuboid, MarkerBodyRigid,\
                         NodeGenericData, ObjectJointSliding, MarkerBodyBeamShape
 import exudyn.graphics as graphics
-from exudyn.beams import GenerateStraightLineANCFCable
+from exudyn.beams import GenerateBeamElementsAlongLine
 
 import numpy as np
 
@@ -57,17 +57,17 @@ for i in range(nCables):
                   visualization=VObjectANCFCable(radius = rCable),
                   )
 
-    ancf=GenerateStraightLineANCFCable(mbs=mbs,
-                  positionOfNode0=p0, positionOfNode1=p1,
+    ancf=GenerateBeamElementsAlongLine(mbs=mbs,
+                  positionStart=p0, positionEnd=p1,
                   numberOfElements=48, #converged to 4 digits
-                  cableTemplate=cable, #this defines the beam element properties
-                  massProportionalLoad = [0,-9.81,0],
-                  fixedConstraintsNode0 = [1,1,1, 0,1,1], #add constraints for pos and rot (r'_y,r'_z)
-                  fixedConstraintsNode1 = [1,1,1, 0,1,1], #add constraints for pos and rot (r'_y,r'_z)
+                  beamTemplate=cable, #this defines the beam element properties
+                  gravity = [0,-9.81,0],
+                  groundConstraintsStart = [1,1,1, 0,1,1], #add constraints for pos and rot (r'_y,r'_z)
+                  groundConstraintsEnd = [1,1,1, 0,1,1], #add constraints for pos and rot (r'_y,r'_z)
                   )
     #ancf=[cableNodeList, cableObjectList, loadList, cableNodePositionList, cableCoordinateConstraintList]
 
-lElem = mbs.GetObject(ancf[1][0])['length']
+lElem = mbs.GetObject(ancf['elements'][0])['length']
 
 slidingCoordinateInit = 0.1*L
 initialLocalMarker = int(slidingCoordinateInit/lElem) #second element
@@ -90,7 +90,7 @@ if addSlidingJoint:
     cableMarkerList = []#list of MarkerBodyBeamShape
     offsetList = []     #list of offsets counted from first cable element; needed in sliding joint
     offset = 0          #first cable element has offset 0
-    for item in ancf[1]: #create markers for cable elements
+    for item in ancf['elements']: #create markers for cable elements
         m = mbs.AddMarker(MarkerBodyBeamShape(bodyNumber = item))
         cableMarkerList += [m]
         offsetList += [offset]

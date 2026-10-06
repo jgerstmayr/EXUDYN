@@ -61,7 +61,7 @@ for testCases in rangeTests:
     
     #graphics for floating frame:
     #gFloating = GraphicsDataRectangle(-0.25, -0.25, 0.8, 0.25, color=[0.7,0.4,0.4,1.]) 
-    gFloating = graphics.BrickXYZ(-0.25, -0.25, -0.1, 0.8, 0.25, -0.05, color=[0.3,0.3,0.3,1.]) 
+    gFloating = graphics.Brick(centerPoint=[0.275, 0, -0.075], size=[1.05, 0.5, 0.05], color=[0.3,0.3,0.3,1.]) 
     
     if constrainGroundBody:
         floatingRB = mbs.AddObject(ObjectGround(referencePosition=[0,0,0], visualization=VObjectGround(graphicsData=[gFloating])))    
@@ -132,7 +132,7 @@ for testCases in rangeTests:
     #++++++++++++++++++++++++++++++++
     #slider:
     c=0.025 #dimension of mass
-    graphics3 = graphics.BrickXYZ(-c,-c,-c*2,c,c,0,graphics.color.grey)
+    graphics3 = graphics.Brick(centerPoint=[0, 0, -c], size=[2*c, 2*c, 2*c], color=graphics.color.grey)
     
     #nMass = mbs.AddNode(Point2D(referenceCoordinates=[L1+L2,0]))
     #oMass = mbs.AddObject(MassPoint2D(mass=m3, nodeNumber=nMass,visualization=VObjectMassPoint2D(graphicsData= [graphics3])))
