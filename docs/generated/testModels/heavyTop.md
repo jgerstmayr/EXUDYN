@@ -172,7 +172,7 @@ exu.sys['testResult'] = u
 
 if not testIsActive:
     
-    fileRef = '../../../docs/verification/HeavyTopSolution/HeavyTop_TimeEulerParameter_RK4.txt'
+    fileRef = '../../docs/verification/HeavyTopSolution/HeavyTop_TimeEulerParameter_RK4.txt'
     mbs.PlotSensor(sCoords[0], components=[3,4,5,6], labels=['theta 0','theta 1','theta 2','theta 3'], 
                closeAll=True, offsets=[1.,0,0,0], yLabel='Euler parameters') #offsets for reference coords
     mbs.PlotSensor(fileRef, components=[0,1,2,3], labels=['theta 0 ref','theta 1 ref','theta 2 ref','theta 3 ref'], 

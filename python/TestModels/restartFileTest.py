@@ -135,7 +135,9 @@ RemoveRestartFiles()
 Check(mbs.sys['dynamicSolver'].output.restartTime == -1 and np.linalg.norm(q - qFull) == 0, 'without a restart file')
 
 exu.Print('restartFileTest: errors', errors)
-u += errors
+#what the test checks is the equality within one platform (errors); the final state itself differs between platforms
+#in the 10th digit through the contact (Linux, #2874), so it enters rounded
+u = round(u, 6) + errors
 exu.Print('solution of restartFileTest=', u)
 
 exu.sys['testResult'] = u

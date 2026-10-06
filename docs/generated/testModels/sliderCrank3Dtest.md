@@ -270,11 +270,11 @@ if not testIsActive:
     data1 = mbs.GetSensorStoredData(sCrankAngle)
     ax1.plot(data1[:,0], data1[:,1], 'b-', label='crank angle')  
     if False: #only if available ...
-        data1 = np.loadtxt('../../../docs/verification/Slidercrank3DiftommBenchmark/Spatial_rigid_slider-crank_mechanism_Masarati.txt', comments='#', delimiter=',')
+        data1 = np.loadtxt('../../docs/verification/Slidercrank3DiftommBenchmark/Spatial_rigid_slider-crank_mechanism_Masarati.txt', comments='#', delimiter=',')
         ax1.plot(data1[:,0], data1[:,2], 'r:', label='Ref Masarati: crank angle')  
-        data1 = np.loadtxt('../../../docs/verification/Slidercrank3DiftommBenchmark/Spatial_rigid_slider-crank_mechanism_Masoudi.txt', comments='#', delimiter='\t')
+        data1 = np.loadtxt('../../docs/verification/Slidercrank3DiftommBenchmark/Spatial_rigid_slider-crank_mechanism_Masoudi.txt', comments='#', delimiter='\t')
         ax1.plot(data1[:,0], data1[:,2], 'k:', label='Ref Masoudi: crank angle')  
-        data1 = np.loadtxt('../../../docs/verification/Slidercrank3DiftommBenchmark/Spatial_rigid_slider-crank_mechanism_Chaojie.txt', comments='#', delimiter=',')
+        data1 = np.loadtxt('../../docs/verification/Slidercrank3DiftommBenchmark/Spatial_rigid_slider-crank_mechanism_Chaojie.txt', comments='#', delimiter=',')
         ax1.plot(data1[:,0], data1[:,2], 'g:', label='Ref Chaojie: crank angle')  
     
 
@@ -287,11 +287,11 @@ if not testIsActive:
 #    ax2.plot(data2[:,0], data2[:,1], 'r-', label='slider velocity')  
     
     if False: #only if available ...
-        data2 = np.loadtxt('../../../docs/verification/Slidercrank3DiftommBenchmark/Spatial_rigid_slider-crank_mechanism_Masarati.txt', comments='#', delimiter=',')
+        data2 = np.loadtxt('../../docs/verification/Slidercrank3DiftommBenchmark/Spatial_rigid_slider-crank_mechanism_Masarati.txt', comments='#', delimiter=',')
         ax2.plot(data2[:,0], data2[:,1], 'r:', label='Ref Masarati: slider position')  
-        data2 = np.loadtxt('../../../docs/verification/Slidercrank3DiftommBenchmark/Spatial_rigid_slider-crank_mechanism_Masoudi.txt', comments='#', delimiter='\t')
+        data2 = np.loadtxt('../../docs/verification/Slidercrank3DiftommBenchmark/Spatial_rigid_slider-crank_mechanism_Masoudi.txt', comments='#', delimiter='\t')
         ax2.plot(data2[:,0], data2[:,1], 'k:', label='Ref Masoudi: slider position')  
-        data2 = np.loadtxt('../../../docs/verification/Slidercrank3DiftommBenchmark/Spatial_rigid_slider-crank_mechanism_Chaojie.txt', comments='#', delimiter=',')
+        data2 = np.loadtxt('../../docs/verification/Slidercrank3DiftommBenchmark/Spatial_rigid_slider-crank_mechanism_Chaojie.txt', comments='#', delimiter=',')
         ax2.plot(data2[:,0], data2[:,1], 'g:', label='Ref Chaojie: slider position')  
     
     

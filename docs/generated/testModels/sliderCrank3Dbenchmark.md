@@ -339,7 +339,7 @@ if not testIsActive:
     data1 = mbs.GetSensorStoredData(sCrankAngle)
     ax1.plot(data1[:,0], data1[:,1], 'b-', label='crank angle')  
     if True: #only if available ...
-        directory = '../../../docs/verification/'
+        directory = '../../docs/verification/'
         data1 = np.loadtxt(directory+'Slidercrank3DiftommBenchmark/Spatial_rigid_slider-crank_mechanism_Masarati.txt', comments='#', delimiter=',')
         ax1.plot(data1[:,0], data1[:,2], 'r:', label='Ref Masarati: crank angle')  
         data1 = np.loadtxt(directory+'Slidercrank3DiftommBenchmark/Spatial_rigid_slider-crank_mechanism_Masoudi.txt', comments='#', delimiter='\t')

@@ -94,7 +94,7 @@ mbs.AddObject(CoordinateConstraint(markerNumbers=[mCground, mC2]))
 
 if not testIsActive:
     #mbs.AddSensor(SensorNode(nodeNumber=nRB, storeInternal=True,#fileName='solution/sensorRotation.txt', outputVariableType=exu.OutputVariableType.Rotation))
-    sAngVelLoc=mbs.AddSensor(SensorNode(nodeNumber=nRB, storeInternal=True))#fileName='solution/sensorAngVelLocal.txt', outputVariableType=exu.OutputVariableType.AngularVelocityLocal
+    sAngVelLoc=mbs.AddSensor(SensorNode(nodeNumber=nRB, storeInternal=True, outputVariableType=exu.OutputVariableType.AngularVelocityLocal))
     #mbs.AddSensor(SensorNode(nodeNumber=nRB, fileName='solution/sensorAngVel.txt', outputVariableType=exu.OutputVariableType.AngularVelocity))
     
     sPos=mbs.AddSensor(SensorBody(bodyNumber=oRB, 
@@ -179,7 +179,7 @@ if not testIsActive:
 
     
 
-    fileVerif = '../../../docs/verification/HeavyTopSolution/HeavyTop_TimeBodyAngularVelocity_RK4.txt'
+    fileVerif = '../../docs/verification/HeavyTopSolution/HeavyTop_TimeBodyAngularVelocity_RK4.txt'
     
     mbs.PlotSensor(sensorNumbers=[sAngVelLoc]*3, labels=['omega X','omega Y','omega Z'],
                components=[0,1,2],yLabel='angular velocity (rad/s)', closeAll=True)

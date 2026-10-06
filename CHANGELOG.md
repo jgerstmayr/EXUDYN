@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.12 | Metheney | 325 | 1.12.366 |
+| 1.12 | Metheney | 326 | 1.12.367 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
 | 1.9 | Krall | 235 | 1.9.234 |
@@ -29,6 +29,10 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.12 - Metheney (current)
 
+- **1.12.367** `TESTING` `raised by: Claude-JG` `resolved by: Claude-JG` The test suite runs the test models in one namespace, which hides a missing name; two models fail when run alone (#2875)
+  - description: runTestSuite.py executes every test model with exec(..., globals()), so a name that a model uses without importing it is found if an earlier model imported it. Found with \#2873: 15 test models and mini examples called GenerateBeamElementsAlongLine without importing it and passed the suite; run alone they stop with NameError. Run alone (pre-run of \#2873), explicitLieGroupIntegratorPythonTest.py fails: SensorNode: OutputVariableType '\_None' is not available in node 0 (line 108); the example reevingSystem.py stops with an InternalError in SolveSteps. Proposal: a fresh namespace per model (a copy of the runner's globals), and the pre-run as a check.
+  - **notes:** The test suite runs each test model and mini example as if it ran alone, in a module of its own, so a missing import is found; restartFileTest passes on Linux.
+  - date resolved: **2026-10-06 17:57**, date raised: 2026-10-06
 - **1.12.366** `CHANGE` `MEDIUM EFF` `raised by: Claude-JG` `resolved by: Claude-JG` Examples, test models and mini examples use the current item parameters, Create arguments and settings (#2873)
   - description: The shipped scripts still use deprecated item parameters (physicsMass, rotationMarker0, ...), deprecated arguments of the Create functions (bodyNumbers, bodyNumber, ...) and renamed settings; users copy from them. The scripts are pre-run, the deprecation warnings name file and line, and the names are replaced there; deprecated functions with a different signature (BrickXYZ, GenerateStraightLineANCFCable2D, ...) are listed separately. Maintainer 2026-10-06.
   - **notes:** The examples, test models and mini examples use no deprecated functions any more: graphics.Brick instead of BrickXYZ, beams.GenerateBeamElementsAlongLine instead of GenerateStraightLineANCFCable(2D) and GenerateStraightBeam, rotationMatrixRef instead of eulerParametersRef. ObjectFFRFreducedOrderInterface works with rotationMatrixRef also for its default rigidBodyNodeType given as string.

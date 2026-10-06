@@ -942,7 +942,8 @@ exu.sys['testIsActive'] = True          #the channel between model and runner is
 exu.sys['testResult'] = {invalidResult!r}
 start = time.perf_counter()
 try:
-    exec(open({fileName!r}, encoding='utf8').read(), globals())
+    import testRunnerTools
+    testRunnerTools.ExecModel({fileName!r}) #as when it runs alone (#2875)
 finally:
     try: #models return numpy scalars; the parent parses plain text, so convert here
         _testResult = float(exu.sys.get('testResult', {invalidResult!r}))
@@ -952,6 +953,22 @@ finally:
     print({resultMarker!r}, repr(_testResult), repr(time.perf_counter()-start),
           repr(float(exu.sys.get('testTolerance', 0.))))
 """
+
+
+#%%******************************************************************************************************
+def ExecModel(fileName):
+    """execute a test model as when it runs alone (#2875): in a fresh module that is __main__ while it runs - so a name
+    the model uses without importing it raises instead of being found among the names of the runner or of an earlier
+    model, and pickle finds the model's functions in __main__"""
+    import types
+    module = types.ModuleType('__main__')
+    module.__file__ = fileName
+    previous = sys.modules.get('__main__')
+    sys.modules['__main__'] = module
+    try:
+        exec(open(fileName, encoding='utf8').read(), module.__dict__)
+    finally:
+        sys.modules['__main__'] = previous
 
 
 #%%******************************************************************************************************

@@ -126,7 +126,7 @@ def TestExamplesReferenceSolution():
         'createLinearSpringDamperTest.py':2.9930635558130834, #new 2026-10-05: mbs.CreateLinearSpringDamper, static deflection in three ways and a dynamic run (#1953, #1954)
         'initialAccelerationsTest.py':-2.587, #new 2026-10-05: the initial accelerations of the generalized-alpha method with a constraint and initial velocity (#2235)
         'genericODE2matrixFormatsTest.py':2.0892372406725492, #new 2026-10-05: ObjectGenericODE2 with dense and sparse matrices and solvers (#777)
-        'restartFileTest.py':-2.9317602918648324, #new 2026-10-05: a simulation continued from its restart file computes what the uninterrupted one computes, generalized-alpha and RK44 (#2850)
+        'restartFileTest.py':-2.93176, #2026-10-06: the final state rounded to 6 digits, it differs on Linux in the 10th (#2874), before -2.9317602918648324; new 2026-10-05: a simulation continued from its restart file computes what the uninterrupted one computes, generalized-alpha and RK44 (#2850)
         'createItemNumbersTest.py':10.51570788484358, #new 2026-10-05: the Create functions take bodies, nodes or markers in itemNumbers, bodyNumbers deprecated (#2863)
         'libraryDeprecationTest.py':4, #new 2026-10-03: a deprecated function and argument of the Python library warn once per session at the user's line and are counted (#2807)
         'homogeneousTransformationInterfaceTest.py':9.245684006275722, #new 2026-10-03: exu.HT with the node coordinates, Relative, the interpolations, angle and axis (#2810)

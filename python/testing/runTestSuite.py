@@ -372,7 +372,8 @@ if TSScope.runTestExamples:
                               + '") terminated with an error, see its output above')
                     TSScope.missingPackage = testRunnerTools.MissingTestsExtraPackage(TSScope.modelRun['output'])
             else:
-                exec(open(TSScope.file, encoding='utf8').read(), globals())
+                #a namespace of its own, as when the model runs alone: a name it does not import is an error (#2875)
+                testRunnerTools.ExecModel(TSScope.file)
         except Exception as e:
             TSScope.missingPackage = testRunnerTools.MissingTestsExtraPackage(repr(e) + str(e))
             exu.Print('TESTMODEL ' + str(TSScope.testExamplesCnt) + ' ("' + TSScope.file + '") raised exception:\n'+str(e))
@@ -490,7 +491,7 @@ if TSScope.runMiniExamples:
         fileDir = '../MiniExamples/'+file
         miniTimeStart = time.perf_counter()
         try:
-            exec(open(fileDir, encoding='utf8').read(), globals())
+            testRunnerTools.ExecModel(fileDir) #as when it runs alone (#2875)
         except Exception as e:
             exu.Print('MINI EXAMPLE ' + str(testExamplesCnt) + ' ("' + file + '") raised exception:\n'+str(e))
             print('MINI EXAMPLE ' + str(testExamplesCnt) + ' ("' + file + '") raised exception:\n'+str(e), flush=True)

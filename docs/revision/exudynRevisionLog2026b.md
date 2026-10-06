@@ -16102,3 +16102,26 @@ not: 15 scripts called `GenerateBeamElementsAlongLine` without importing it - th
 and passed the suite, because `runTestSuite.py` executes all models in one namespace. The imports are corrected; the
 namespace, and `explicitLieGroupIntegratorPythonTest.py`, which fails when run alone, are #2875 (RG2.6). Gates: build,
 suite PASSED (no reference value changed), pytest.
+
+<a id="rg2-6"></a>
+### RG2.6 — each test model in a namespace of its own; the Linux suite of 1.12.366 (2026-10-06, #2875, #2874)
+
+*(Maintainer 2026-10-06, on "give each model a fresh namespace. Shall I do that?": "yes"; and "I re-ran the 1.12.366
+version on linux with the testsuite - it still fails.")*
+
+- `testRunnerTools.ExecModel(fileName)` executes a test model or mini example in a fresh module, which is
+  `sys.modules['__main__']` while it runs - as when the model runs alone: a name it does not import raises, and
+  `pickle` finds the model's functions in `__main__` (`pickleCopyMbs.py` failed with a plain fresh dict: "Can't pickle
+  <function UFtorque>: attribute lookup on __main__ failed"). `runTestSuite.py` uses it for the models and the mini
+  examples, the worker of the parallel run (`runModelBootstrap`) as well. Serial and parallel suite PASSED: after the
+  imports corrected in RG12.43 no model relied on another one's names.
+- Run alone, three models stopped in the part the suite skips (`if not testIsActive`): `explicitLieGroupIntegratorPythonTest.py`
+  had the `outputVariableType` of a SensorNode inside a comment (so `_None`), and it, `heavyTop.py`,
+  `sliderCrank3Dbenchmark.py` and `sliderCrank3Dtest.py` read the reference solutions from `../../../docs/verification`, one
+  directory too high since the repository layout changed; both corrected, the four run alone. `reevingSystem.py`, which
+  stopped in the parallel pre-run, runs alone - the stop came from the load of that run.
+- The Linux log of 1.12.366: the restart file is now read (`restartFileTest: errors 0`), and the one failure left was the
+  test result itself: the final state, summed, differs from Windows in the 10th digit (rel. 5e-10, through the contact),
+  while what the test checks - the continued run equals the uninterrupted one on the same platform - holds. The state
+  enters the result rounded to 6 digits (reference -2.93176); `createSphereQuadContact.py` and `computeItemTest.py`
+  are reported as unresolved there, as intended (RG4.19.13).

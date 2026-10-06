@@ -161,7 +161,7 @@ test-suite needs matplotlib to be installed; otherwise, it fails. Should it be l
 matplotlib**: a test model that fails for a missing package of the `[tests]` extra is skipped and listed with
 `pip install exudyn[tests]`, `exudyn.misc.resultsMonitor` imports matplotlib only if it is there.
 
-**RG2.6** *open (group RG2; found with RG12.43, 2026-10-06)* **Each test model in a namespace of its own** (#2875).
+**RG2.6** **DONE 2026-10-06** — [log](exudynRevisionLog2026b.md#rg2-6) *(group RG2; found with RG12.43, 2026-10-06; maintainer: "yes")* **Each test model in a namespace of its own** (#2875).
     `runTestSuite.py` executes every model with `exec(..., globals())`, so a name a model uses without importing it is
     found when an earlier model imported it - 15 scripts passed the suite with a missing import (RG12.43). A fresh copy
     of the runner's globals per model; `explicitLieGroupIntegratorPythonTest.py`, which fails when run alone (SensorNode
@@ -1996,7 +1996,6 @@ issue and a short title only. The open issues that are not steps are in the trac
 | RG5.2 | - | make the hot linear algebra vectorizable |
 | RG6.8 | #2140, #2236, #2237, #2350 | the graphics fixes before 1.13: Linux (RG6.8.5) and macOS (RG6.8.6), which wait for those machines |
 | RG13.3 | #2867 | follow-up: parameters and output variables the C++ of four items does not use, for a decision |
-| RG2.6 | #2875 | each test model in a namespace of its own; two models fail when run alone |
 | RG9.6 | #2866 | the member functions an item must provide, checked when it compiles (from #2498) |
 | RG8.1 to RG8.9 | - | the plugin ABI: registry, fingerprint, reference plugin, headers, discovery |
 | RG14.3 | #2745 | joints and their Jacobians on homogeneous transformations, after RG14.2.9 |
