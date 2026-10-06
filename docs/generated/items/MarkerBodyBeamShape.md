@@ -57,11 +57,12 @@ The unit matrix of the element's coordinates: the joint computes the action on e
 
 ```python
 #the shape of 3D ANCF cable elements for a sliding joint: a mass point slides along a clamped, stiff cable
-from exudyn.beams import GenerateStraightLineANCFCable
+from exudyn.beams import GenerateBeamElementsAlongLine
 cable = ObjectANCFCable(massPerLength=1, bendingStiffness=1e4, axialStiffness=1e6)
-[nodes, elements, *_] = GenerateStraightLineANCFCable(mbs, positionOfNode0=[0,0,0], positionOfNode1=[2,0,0],
-                        numberOfElements=4, cableTemplate=cable,
-                        fixedConstraintsNode0=[1,1,1, 1,1,1], fixedConstraintsNode1=[1,1,1, 1,1,1])
+beamInfo = GenerateBeamElementsAlongLine(mbs, positionStart=[0,0,0], positionEnd=[2,0,0],
+                        numberOfElements=4, beamTemplate=cable,
+                        groundConstraintsStart=[1,1,1, 1,1,1], groundConstraintsEnd=[1,1,1, 1,1,1])
+nodes, elements = beamInfo['nodes'], beamInfo['elements']
 nMass = mbs.AddNode(NodePoint(referenceCoordinates=[0.6,0,0]))
 mbs.AddObject(ObjectMassPoint(nodeNumber=nMass, mass=1))
 mMass = mbs.AddMarker(MarkerNodePosition(nodeNumber=nMass))

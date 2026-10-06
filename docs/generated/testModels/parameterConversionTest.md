@@ -31,6 +31,7 @@ import contextlib
 import inspect
 import io
 import os
+import warnings
 
 recordReference = False #True: write the reference file instead of comparing
 
@@ -151,7 +152,9 @@ for className, itemClass in inspect.getmembers(itemInterface, inspect.isclass):
     members = [m for m in defaults if m != typeKey]
     fixes = {}
     for member in members:
-        with contextlib.redirect_stdout(io.StringIO()):
+        #every parameter, the deprecated names included: their warnings are expected and kept off the console (#2873)
+        with contextlib.redirect_stdout(io.StringIO()), warnings.catch_warnings():
+            warnings.simplefilter('ignore', DeprecationWarning)
             try:
                 getattr(mbs, 'Set' + kind + 'Parameter')(index, member, defaults[member])
             except Exception:

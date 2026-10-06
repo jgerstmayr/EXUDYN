@@ -104,15 +104,16 @@ the underlying beam element is identical to ObjectANCFCable2D.
 
 
 ```python
-from exudyn.beams import GenerateStraightLineANCFCable2D
+from exudyn.beams import GenerateBeamElementsAlongLine
 #an axially moving cable: the material slides through clamped nodes, described by one ALE coordinate
 nALE = mbs.AddNode(NodeGenericODE2(numberOfODE2Coordinates=1, referenceCoordinates=[0],
                                    initialCoordinates=[0], initialCoordinates_t=[0]))
 cable = ObjectALEANCFCable2D(massPerLength=1, bendingStiffness=10, axialStiffness=1e4)
 cable.nodeNumbers[2] = nALE #the ALE node of every element
-[nodes, elements, *_] = GenerateStraightLineANCFCable2D(mbs, positionOfNode0=[0,0,0], positionOfNode1=[2,0,0],
-                        numberOfElements=4, cableTemplate=cable,
-                        fixedConstraintsNode0=[1,1,1,1], fixedConstraintsNode1=[1,1,1,1])
+beamInfo = GenerateBeamElementsAlongLine(mbs, positionStart=[0,0,0], positionEnd=[2,0,0],
+                        numberOfElements=4, beamTemplate=cable,
+                        groundConstraintsStart=[1,1,1,1], groundConstraintsEnd=[1,1,1,1])
+nodes, elements = beamInfo['nodes'], beamInfo['elements']
 mALE = mbs.AddMarker(MarkerNodeCoordinate(nodeNumber=nALE, coordinate=0))
 mbs.AddLoad(LoadCoordinate(markerNumber=mALE, load=1)) #pulls the material along the cable
 

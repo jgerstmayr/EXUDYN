@@ -1,0 +1,14 @@
+{
+  "number": 2882,
+  "title": "Linux suite of 1.12.372: deprecation warnings on the console, energiesTest",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "BUG",
+  "description": "tmp/Ubuntu/ubuntuTestSuiteConsoleOutput.txt (maintainer, WSL, cp313): 73 DeprecationWarnings on the console. 69 are expected - parameterConversionTest sets every parameter, the deprecated names included, and homogeneousTransformationParameterTest compares rotationMarker0/1 with localHT - and are now kept off the console. 2 came from the mini examples ObjectANCFCable/ObjectANCFCable2D: the mini examples are generated from the miniExample texts in definitions/, so the conversion of #2873 in python/MiniExamples was undone by the next regeneration; the 11 texts are converted in definitions/. energiesTest.py differs by -5.9e-11 against 3e-11 (rel. 3.3e-12) and goes to UnresolvedOnLinux.",
+  "dateRaised": "2026-10-06",
+  "deadline": "2027-04-04",
+  "dateResolved": "2026-10-07 00:03",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "The test suite no longer prints the deprecation warnings that its deprecation tests trigger on purpose, and the mini examples of the cable elements use GenerateBeamElementsAlongLine.",
+  "resolvedInVersion": "1.12.373"
+}

@@ -3822,7 +3822,7 @@ definitions.append(ItemDefinition(
     No torsion and no orientation of the cross section; loads and constraints only on the axis.
     """,
     mainParentClass=MainParentClassMainObjectBody,
-    miniExample=r"""    from exudyn.beams import GenerateStraightLineANCFCable
+    miniExample=r"""    from exudyn.beams import GenerateBeamElementsAlongLine
     rhoA = 78.
     EA = 1000000.
     EI = 833.3333333333333
@@ -3831,14 +3831,14 @@ definitions.append(ItemDefinition(
                   axialStiffness=EA, 
                   )
 
-    ancf=GenerateStraightLineANCFCable(mbs=mbs,
-                  positionOfNode0=[0,0,0], positionOfNode1=[2,0,0],
+    ancf=GenerateBeamElementsAlongLine(mbs=mbs,
+                  positionStart=[0,0,0], positionEnd=[2,0,0],
                   numberOfElements=32, #converged to 4 digits
-                  cableTemplate=cable, #this defines the beam element properties
-                  massProportionalLoad = [0,-9.81,0],
-                  fixedConstraintsNode0 = [1,1,1, 0,1,1], #add constraints for pos and rot (r'_y,r'_z)
+                  beamTemplate=cable, #this defines the beam element properties
+                  gravity = [0,-9.81,0],
+                  groundConstraintsStart = [1,1,1, 0,1,1], #add constraints for pos and rot (r'_y,r'_z)
                   )
-    lastNode = ancf[0][-1]
+    lastNode = ancf['nodes'][-1]
 
     #assemble and solve system for default parameters
     mbs.Assemble()
@@ -4465,7 +4465,7 @@ class MainSystem; //AUTO; for std::function / userFunction; avoid including Main
 
 """,
     mainParentClass=MainParentClassMainObjectBody,
-    miniExample=r"""    from exudyn.beams import GenerateStraightLineANCFCable2D
+    miniExample=r"""    from exudyn.beams import GenerateBeamElementsAlongLine
     rhoA = 78.
     EA = 1000000.
     EI = 833.3333333333333
@@ -4474,14 +4474,14 @@ class MainSystem; //AUTO; for std::function / userFunction; avoid including Main
                     axialStiffness=EA, 
                     )
 
-    ancf=GenerateStraightLineANCFCable2D(mbs=mbs,
-                    positionOfNode0=[0,0,0], positionOfNode1=[2,0,0],
+    ancf=GenerateBeamElementsAlongLine(mbs=mbs,
+                    positionStart=[0,0,0], positionEnd=[2,0,0],
                     numberOfElements=32, #converged to 4 digits
-                    cableTemplate=cable, #this defines the beam element properties
-                    massProportionalLoad = [0,-9.81,0],
-                    fixedConstraintsNode0 = [1,1,0,1], #add constraints for pos and rot (r'_y)
+                    beamTemplate=cable, #this defines the beam element properties
+                    gravity = [0,-9.81,0],
+                    groundConstraintsStart = [1,1,0,1], #add constraints for pos and rot (r'_y)
                     )
-    lastNode = ancf[0][-1]
+    lastNode = ancf['nodes'][-1]
 
     #assemble and solve system for default parameters
     mbs.Assemble()
@@ -4644,7 +4644,7 @@ cable = ObjectANCFCable2D(massPerLength=rhoA,
                 bendingMomentUserFunction=bendingMomentUserFunction,
                 axialForceUserFunction=axialForceUserFunction,
                 )
-#use  cable with GenerateStraightLineANCFCable(...)
+#use  cable with GenerateBeamElementsAlongLine(...)
 '''),
         ItemFunctionDef('GetLength',
             implementation='return parameters.length;'),
@@ -4721,15 +4721,16 @@ definitions.append(ItemDefinition(
     cParentClass=ParentClassCObjectANCFCable2DBase,
     overallDescription=r"""A 2D cable finite element using 2 nodes of type NodePoint2DSlope1 and a axially moving coordinate of type NodeGenericODE2, which adds additional (redundant) motion in axial direction of the beam. This allows modeling pipes but also axially moving beams. The localPosition of the beam with length $L$=length and height $h$ ranges in $X$-direction in range $[0, L]$ and in $Y$-direction in range $[-h/2,h/2]$ (which is in fact not needed in the ABRV:EOM).""",
     classType=ClassTypeObject,
-    miniExample=r"""    from exudyn.beams import GenerateStraightLineANCFCable2D
+    miniExample=r"""    from exudyn.beams import GenerateBeamElementsAlongLine
     #an axially moving cable: the material slides through clamped nodes, described by one ALE coordinate
     nALE = mbs.AddNode(NodeGenericODE2(numberOfODE2Coordinates=1, referenceCoordinates=[0],
                                        initialCoordinates=[0], initialCoordinates_t=[0]))
     cable = ObjectALEANCFCable2D(massPerLength=1, bendingStiffness=10, axialStiffness=1e4)
     cable.nodeNumbers[2] = nALE #the ALE node of every element
-    [nodes, elements, *_] = GenerateStraightLineANCFCable2D(mbs, positionOfNode0=[0,0,0], positionOfNode1=[2,0,0],
-                            numberOfElements=4, cableTemplate=cable,
-                            fixedConstraintsNode0=[1,1,1,1], fixedConstraintsNode1=[1,1,1,1])
+    beamInfo = GenerateBeamElementsAlongLine(mbs, positionStart=[0,0,0], positionEnd=[2,0,0],
+                            numberOfElements=4, beamTemplate=cable,
+                            groundConstraintsStart=[1,1,1,1], groundConstraintsEnd=[1,1,1,1])
+    nodes, elements = beamInfo['nodes'], beamInfo['elements']
     mALE = mbs.AddMarker(MarkerNodeCoordinate(nodeNumber=nALE, coordinate=0))
     mbs.AddLoad(LoadCoordinate(markerNumber=mALE, load=1)) #pulls the material along the cable
 
@@ -10726,13 +10727,14 @@ definitions.append(ItemDefinition(
     cParentClass=ParentClassCObjectConnector,
     overallDescription=r"""A very specialized penalty-based contact condition between a 2D circle (=marker0, any Position-marker) on a body and an ANCFCable2DShape (=marker1, Marker: BodyCable2DShape), in xy-plane. A node NodeGenericData is required with the number of cordinates according to the number of contact segments; the contact gap $g$ is integrated (piecewise linear) along the cable and circle; the contact force $f_c$ is zero for $gap>0$ and otherwise computed from $f_c = g*contactStiffness + \dot g*contactDamping$; during Newton iterations, the contact force is actived only, if $dataCoordinate[0] <= 0$; dataCoordinate is set equal to gap in nonlinear iterations, but not modified in Newton iterations.""",
     classType=ClassTypeObject,
-    miniExample=r"""    from exudyn.beams import GenerateStraightLineANCFCable2D
+    miniExample=r"""    from exudyn.beams import GenerateBeamElementsAlongLine
     #the shape of an ANCF cable element as line segments, for contact: a cantilever falls onto a circle
     cable = ObjectANCFCable2D(massPerLength=1, bendingStiffness=10, axialStiffness=1e4,
                               bendingDamping=0.1)
-    [nodes, elements, *_] = GenerateStraightLineANCFCable2D(mbs, positionOfNode0=[0,0,0], positionOfNode1=[1,0,0],
-                            numberOfElements=4, cableTemplate=cable, massProportionalLoad=[0,-9.81,0],
-                            fixedConstraintsNode0=[1,1,0,1])
+    beamInfo = GenerateBeamElementsAlongLine(mbs, positionStart=[0,0,0], positionEnd=[1,0,0],
+                            numberOfElements=4, beamTemplate=cable, gravity=[0,-9.81,0],
+                            groundConstraintsStart=[1,1,0,1])
+    nodes, elements = beamInfo['nodes'], beamInfo['elements']
     mCircle = mbs.AddMarker(MarkerBodyPosition(bodyNumber=oGround, localPosition=[0.8,-0.2,0]))
     nSegments = 4
     for e in elements:
@@ -10896,13 +10898,14 @@ definitions.append(ItemDefinition(
     cParentClass=ParentClassCObjectConnector,
     overallDescription=r"""A very specialized penalty-based contact/friction condition between a 2D circle in the local x/y plane (=marker0, a RigidBody Marker, from node or object) on a body and an ANCFCable2DShape (=marker1, Marker: BodyCable2DShape), in xy-plane. A node NodeGenericData is required with 3$\times$(number of contact segments) -- containing per segment: [contact gap, stick/slip (stick=0, slip=+-1, undefined=-2), last friction position]. The connector works with Cable2D and ALECable2D, HOWEVER, due to conceptual differences the (tangential) frictionStiffness cannot be used with ALECable2D; if using, it gives wrong tangential stresses, even though it may work in general.""",
     classType=ClassTypeObject,
-    miniExample=r"""    from exudyn.beams import GenerateStraightLineANCFCable2D
+    miniExample=r"""    from exudyn.beams import GenerateBeamElementsAlongLine
     #contact with friction between a circle and an ANCF cable: a cantilever falls onto a circle
     cable = ObjectANCFCable2D(massPerLength=1, bendingStiffness=10, axialStiffness=1e4,
                               bendingDamping=0.1)
-    [nodes, elements, *_] = GenerateStraightLineANCFCable2D(mbs, positionOfNode0=[0,0,0], positionOfNode1=[1,0,0],
-                            numberOfElements=4, cableTemplate=cable, massProportionalLoad=[0,-9.81,0],
-                            fixedConstraintsNode0=[1,1,0,1])
+    beamInfo = GenerateBeamElementsAlongLine(mbs, positionStart=[0,0,0], positionEnd=[1,0,0],
+                            numberOfElements=4, beamTemplate=cable, gravity=[0,-9.81,0],
+                            groundConstraintsStart=[1,1,0,1])
+    nodes, elements = beamInfo['nodes'], beamInfo['elements']
     mCircle = mbs.AddMarker(MarkerBodyRigid(bodyNumber=oGround, localPosition=[0.8,-0.2,0]))
     nSegments = 4
     for e in elements:
@@ -14018,11 +14021,12 @@ definitions.append(ItemDefinition(
     overallDescription=r'A specialized 3D sliding joint between a list of beam elements (updated marker1) and a position-based marker (marker0); the data coordinate x[0] provides the current index in slidingMarkerNumbers, and x[1] the local position in the cable element at the beginning of the timestep.',
     classType=ClassTypeObject,
     miniExample=r"""    #the shape of 3D ANCF cable elements for a sliding joint: a mass point slides along a clamped, stiff cable
-    from exudyn.beams import GenerateStraightLineANCFCable
+    from exudyn.beams import GenerateBeamElementsAlongLine
     cable = ObjectANCFCable(massPerLength=1, bendingStiffness=1e4, axialStiffness=1e6)
-    [nodes, elements, *_] = GenerateStraightLineANCFCable(mbs, positionOfNode0=[0,0,0], positionOfNode1=[2,0,0],
-                            numberOfElements=4, cableTemplate=cable,
-                            fixedConstraintsNode0=[1,1,1, 1,1,1], fixedConstraintsNode1=[1,1,1, 1,1,1])
+    beamInfo = GenerateBeamElementsAlongLine(mbs, positionStart=[0,0,0], positionEnd=[2,0,0],
+                            numberOfElements=4, beamTemplate=cable,
+                            groundConstraintsStart=[1,1,1, 1,1,1], groundConstraintsEnd=[1,1,1, 1,1,1])
+    nodes, elements = beamInfo['nodes'], beamInfo['elements']
     nMass = mbs.AddNode(NodePoint(referenceCoordinates=[0.6,0,0]))
     mbs.AddObject(ObjectMassPoint(nodeNumber=nMass, mass=1))
     mMass = mbs.AddMarker(MarkerNodePosition(nodeNumber=nMass))
@@ -14334,12 +14338,13 @@ definitions.append(ItemDefinition(
     cParentClass=ParentClassCObjectConstraint,
     overallDescription=r'A specialized sliding joint (without rotation) in 2D between a Cable2D (marker1) and a position-based marker (marker0); the data coordinate x[0] provides the current index in slidingMarkerNumbers, and x[1] the local position in the cable element at the beginning of the timestep.',
     classType=ClassTypeObject,
-    miniExample=r"""    from exudyn.beams import GenerateStraightLineANCFCable2D
+    miniExample=r"""    from exudyn.beams import GenerateBeamElementsAlongLine
     #the coordinates of ANCF cable elements for a sliding joint: a mass point slides along a clamped, stiff cable
     cable = ObjectANCFCable2D(massPerLength=1, bendingStiffness=1e4, axialStiffness=1e6)
-    [nodes, elements, *_] = GenerateStraightLineANCFCable2D(mbs, positionOfNode0=[0,0,0], positionOfNode1=[2,0,0],
-                            numberOfElements=4, cableTemplate=cable,
-                            fixedConstraintsNode0=[1,1,1,1], fixedConstraintsNode1=[1,1,1,1])
+    beamInfo = GenerateBeamElementsAlongLine(mbs, positionStart=[0,0,0], positionEnd=[2,0,0],
+                            numberOfElements=4, beamTemplate=cable,
+                            groundConstraintsStart=[1,1,1,1], groundConstraintsEnd=[1,1,1,1])
+    nodes, elements = beamInfo['nodes'], beamInfo['elements']
     nMass = mbs.AddNode(NodePoint2D(referenceCoordinates=[0.6,0]))
     mbs.AddObject(ObjectMassPoint2D(nodeNumber=nMass, mass=1))
     mMass = mbs.AddMarker(MarkerNodePosition(nodeNumber=nMass))
@@ -14672,15 +14677,16 @@ definitions.append(ItemDefinition(
     cParentClass=ParentClassCObjectConstraint,
     overallDescription=r"""A specialized axially moving joint (without rotation) in 2D between a ALE Cable2D (marker1) and a position-based marker (marker0); ALE=Arbitrary Lagrangian Eulerian; the data coordinate x[0] provides the current index in slidingMarkerNumbers, and the ABRV:ODE2 coordinate q[0] provides the (given) moving coordinate in the cable element.""",
     classType=ClassTypeObject,
-    miniExample=r"""    from exudyn.beams import GenerateStraightLineANCFCable2D
+    miniExample=r"""    from exudyn.beams import GenerateBeamElementsAlongLine
     #a mass point carried by the material of an axially moving cable
     nALE = mbs.AddNode(NodeGenericODE2(numberOfODE2Coordinates=1, referenceCoordinates=[0],
                                        initialCoordinates=[0], initialCoordinates_t=[0]))
     cable = ObjectALEANCFCable2D(massPerLength=1, bendingStiffness=10, axialStiffness=1e4)
     cable.nodeNumbers[2] = nALE
-    [nodes, elements, *_] = GenerateStraightLineANCFCable2D(mbs, positionOfNode0=[0,0,0], positionOfNode1=[2,0,0],
-                            numberOfElements=4, cableTemplate=cable,
-                            fixedConstraintsNode0=[1,1,1,1], fixedConstraintsNode1=[1,1,1,1])
+    beamInfo = GenerateBeamElementsAlongLine(mbs, positionStart=[0,0,0], positionEnd=[2,0,0],
+                            numberOfElements=4, beamTemplate=cable,
+                            groundConstraintsStart=[1,1,1,1], groundConstraintsEnd=[1,1,1,1])
+    nodes, elements = beamInfo['nodes'], beamInfo['elements']
     mbs.AddLoad(LoadCoordinate(markerNumber=mbs.AddMarker(MarkerNodeCoordinate(nodeNumber=nALE, coordinate=0)), load=1))
 
     nMass = mbs.AddNode(NodePoint2D(referenceCoordinates=[0.6,0]))

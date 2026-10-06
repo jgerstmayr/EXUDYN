@@ -20,13 +20,14 @@ mbs = SC.AddSystem()
 oGround=mbs.AddObject(ObjectGround(referencePosition= [0,0,0]))
 nGround = mbs.AddNode(NodePointGround(referenceCoordinates=[0,0,0]))
 
-from exudyn.beams import GenerateStraightLineANCFCable2D
+from exudyn.beams import GenerateBeamElementsAlongLine
 #the shape of an ANCF cable element as line segments, for contact: a cantilever falls onto a circle
 cable = ObjectANCFCable2D(massPerLength=1, bendingStiffness=10, axialStiffness=1e4,
                           bendingDamping=0.1)
-[nodes, elements, *_] = GenerateStraightLineANCFCable2D(mbs, positionOfNode0=[0,0,0], positionOfNode1=[1,0,0],
-                        numberOfElements=4, cableTemplate=cable, massProportionalLoad=[0,-9.81,0],
-                        fixedConstraintsNode0=[1,1,0,1])
+beamInfo = GenerateBeamElementsAlongLine(mbs, positionStart=[0,0,0], positionEnd=[1,0,0],
+                        numberOfElements=4, beamTemplate=cable, gravity=[0,-9.81,0],
+                        groundConstraintsStart=[1,1,0,1])
+nodes, elements = beamInfo['nodes'], beamInfo['elements']
 mCircle = mbs.AddMarker(MarkerBodyPosition(bodyNumber=oGround, localPosition=[0.8,-0.2,0]))
 nSegments = 4
 for e in elements:

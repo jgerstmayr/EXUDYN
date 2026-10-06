@@ -20,15 +20,16 @@ mbs = SC.AddSystem()
 oGround=mbs.AddObject(ObjectGround(referencePosition= [0,0,0]))
 nGround = mbs.AddNode(NodePointGround(referenceCoordinates=[0,0,0]))
 
-from exudyn.beams import GenerateStraightLineANCFCable2D
+from exudyn.beams import GenerateBeamElementsAlongLine
 #a mass point carried by the material of an axially moving cable
 nALE = mbs.AddNode(NodeGenericODE2(numberOfODE2Coordinates=1, referenceCoordinates=[0],
                                    initialCoordinates=[0], initialCoordinates_t=[0]))
 cable = ObjectALEANCFCable2D(massPerLength=1, bendingStiffness=10, axialStiffness=1e4)
 cable.nodeNumbers[2] = nALE
-[nodes, elements, *_] = GenerateStraightLineANCFCable2D(mbs, positionOfNode0=[0,0,0], positionOfNode1=[2,0,0],
-                        numberOfElements=4, cableTemplate=cable,
-                        fixedConstraintsNode0=[1,1,1,1], fixedConstraintsNode1=[1,1,1,1])
+beamInfo = GenerateBeamElementsAlongLine(mbs, positionStart=[0,0,0], positionEnd=[2,0,0],
+                        numberOfElements=4, beamTemplate=cable,
+                        groundConstraintsStart=[1,1,1,1], groundConstraintsEnd=[1,1,1,1])
+nodes, elements = beamInfo['nodes'], beamInfo['elements']
 mbs.AddLoad(LoadCoordinate(markerNumber=mbs.AddMarker(MarkerNodeCoordinate(nodeNumber=nALE, coordinate=0)), load=1))
 
 nMass = mbs.AddNode(NodePoint2D(referenceCoordinates=[0.6,0]))

@@ -33,6 +33,7 @@ You can view and download this file on Github: [homogeneousTransformationParamet
 import exudyn as exu
 from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
 import numpy as np
+import warnings
 
 testIsActive = exu.sys.get('testIsActive', False)
 
@@ -178,9 +179,11 @@ def SwingingBody(useLocalHT, nodeMarker):
                                                    localPosition=None if useLocalHT else [-0.5, 0, 0]))
     if useLocalHT:
         mbsj.AddObject(ObjectJointGeneric(markerNumbers=[mGround, mPendulum], constrainedAxes=[1,1,1,1,1,0]))
-    else:
-        mbsj.AddObject(ObjectJointGeneric(markerNumbers=[mGround, mPendulum], constrainedAxes=[1,1,1,1,1,0],
-                                          rotationMarker0=Aaxis, rotationMarker1=Aaxis))
+    else: #the deprecated rotationMarker0/1, compared with localHT; their warning is expected (#2873)
+        with warnings.catch_warnings():
+            warnings.simplefilter('ignore', DeprecationWarning)
+            mbsj.AddObject(ObjectJointGeneric(markerNumbers=[mGround, mPendulum], constrainedAxes=[1,1,1,1,1,0],
+                                              rotationMarker0=Aaxis, rotationMarker1=Aaxis))
     mbsj.Assemble()
     simulationSettings = exu.SimulationSettings()
     simulationSettings.timeIntegration.newton.useModifiedNewton = False #Just for the test; modified Newton is usually faster

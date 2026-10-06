@@ -399,6 +399,9 @@ def UnresolvedOnLinux():
         #and ComputeItem evaluates the state of 100 steps of a double pendulum
         'createSphereQuadContact.py',           #rel. 1.1e-07
         'computeItemTest.py',                   #rel. 2.3e-11
+        #added 2026-10-07 from the WSL run of 1.12.372.dev1 (cp313): -5.9e-11 against 3e-11, the energies after a
+        #dynamic run of bodies and spring-dampers
+        'energiesTest.py',                      #rel. 3.3e-12
         ])
 
     return unresolved

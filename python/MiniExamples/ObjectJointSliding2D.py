@@ -20,12 +20,13 @@ mbs = SC.AddSystem()
 oGround=mbs.AddObject(ObjectGround(referencePosition= [0,0,0]))
 nGround = mbs.AddNode(NodePointGround(referenceCoordinates=[0,0,0]))
 
-from exudyn.beams import GenerateStraightLineANCFCable2D
+from exudyn.beams import GenerateBeamElementsAlongLine
 #the coordinates of ANCF cable elements for a sliding joint: a mass point slides along a clamped, stiff cable
 cable = ObjectANCFCable2D(massPerLength=1, bendingStiffness=1e4, axialStiffness=1e6)
-[nodes, elements, *_] = GenerateStraightLineANCFCable2D(mbs, positionOfNode0=[0,0,0], positionOfNode1=[2,0,0],
-                        numberOfElements=4, cableTemplate=cable,
-                        fixedConstraintsNode0=[1,1,1,1], fixedConstraintsNode1=[1,1,1,1])
+beamInfo = GenerateBeamElementsAlongLine(mbs, positionStart=[0,0,0], positionEnd=[2,0,0],
+                        numberOfElements=4, beamTemplate=cable,
+                        groundConstraintsStart=[1,1,1,1], groundConstraintsEnd=[1,1,1,1])
+nodes, elements = beamInfo['nodes'], beamInfo['elements']
 nMass = mbs.AddNode(NodePoint2D(referenceCoordinates=[0.6,0]))
 mbs.AddObject(ObjectMassPoint2D(nodeNumber=nMass, mass=1))
 mMass = mbs.AddMarker(MarkerNodePosition(nodeNumber=nMass))

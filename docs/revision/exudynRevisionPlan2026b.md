@@ -902,6 +902,10 @@ The steps are numbered in the order they were raised and stand here in the order
       *(maintainer 2026-10-06: "the recent wsl build works, the testsuite fails")* the restart file of an explicit
       solver held the never initialized `aAlgorithmic` (subnormal numbers, `-nan`), which glibc's `std::stod` refuses;
       `createSphereQuadContact.py` and `computeItemTest.py` added to `UnresolvedOnLinux()`.
+    - **RG4.19.14** **DONE 2026-10-07** — [log](exudynRevisionLog2026b.md#rg4-19-14) (#2882) *(maintainer: "I still see
+      many deprecation warnings during the last linux build"; the console output of the WSL suite of 1.12.372)* the
+      expected warnings of the deprecation tests kept off the console; the mini examples converted in `definitions/`,
+      where they are generated from (RG12.43 had changed the generated files); `energiesTest.py` unresolved on Linux.
     - Not here, they need a Linux machine or a screen: #2204, #2205 (perspective), #2277, #2278 (GLFW on Linux) - RG6.8.
 
 <a id="rg4-20"></a>

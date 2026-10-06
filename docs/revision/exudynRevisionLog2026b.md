@@ -16230,3 +16230,25 @@ the checker. Also include switching the simplified style (if this test is not in
   for spheres drawn as spheres.
 - **#2880** only the check model: markers and sensors 0.2, loads 0.3, nodes 0.15, `openGL.lineWidth = 3`; the check
   list has V6a, the `drawSimplified` switches of connectors, markers, loads and sensors (default True) off and on.
+
+<a id="rg4-19-14"></a>
+### RG4.19.14 — the Linux suite of 1.12.372: deprecation warnings on the console, energiesTest (2026-10-07, #2882)
+
+*(Maintainer 2026-10-06/07: "I still see many deprecation warnings during the last linux build - but I believe it is
+before running the test suite"; then "The linux output is now in tmp/Ubuntu/ubuntuTestSuiteConsoleOutput.txt")*
+
+The 73 DeprecationWarnings were printed by the suite itself, not by the build:
+
+- 69 are expected: `parameterConversionTest.py` sets every parameter of every item, the deprecated names included (66),
+  and `homogeneousTransformationParameterTest.py` compares the deprecated rotationMarker0/1 with localHT (2). Their
+  uses are now inside `warnings.catch_warnings()` with DeprecationWarning ignored; the results are unchanged.
+- 2 came from the mini examples `ObjectANCFCable.py` and `ObjectANCFCable2D.py`. **Correction to RG12.43**: the mini
+  examples are generated from the `miniExample` texts of `definitions/itemDefs*.py`, so the conversion RG12.43 made
+  in `python/MiniExamples/` was undone by the next regeneration and committed back with it. The 11 texts are now
+  converted in `definitions/` (`GenerateBeamElementsAlongLine`, the result read by its keys), and the general section
+  of the objects names it; `checkUserScripts.py` on python/MiniExamples finds nothing after the regeneration.
+- The one reproducible failure, `energiesTest.py` at -5.9e-11 against 3e-11 (rel. 3.3e-12), goes to
+  `UnresolvedOnLinux()`, as the other differences of the 10th to 12th digit.
+- Without the default ground node of the old functions (`fixedConstraintsNode1` omitted gave `[0,0,0,0]`, a ground node
+  without constraints) five mini examples have one node less; their graphics references are re-recorded, their
+  results are unchanged.

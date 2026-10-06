@@ -41,7 +41,7 @@ beams; `length` is the length of the element in its reference configuration.
 ## Meshes
 
 The elements share their nodes, and a beam is a chain of elements. `exudyn.beams` creates such
-chains, e.g. `GenerateStraightLineANCFCable2D` and `GenerateStraightLineANCFCable`, and the markers
+chains, e.g. `GenerateBeamElementsAlongLine`, and the markers
 on a node of the chain connect it to the rest of the model.
 
 (sec-drawing-objectsfiniteelement)=

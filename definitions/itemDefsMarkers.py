@@ -1783,13 +1783,14 @@ definitions.append(ItemDefinition(
     cParentClass=ParentClassCMarker,
     overallDescription=r'A special Marker attached to a 2D ANCF beam finite element with cubic interpolation and 8 coordinates.',
     classType=ClassTypeMarker,
-    miniExample=r"""    from exudyn.beams import GenerateStraightLineANCFCable2D
+    miniExample=r"""    from exudyn.beams import GenerateBeamElementsAlongLine
     #the shape of an ANCF cable element as line segments, for contact: a cantilever falls onto a circle
     cable = ObjectANCFCable2D(massPerLength=1, bendingStiffness=10, axialStiffness=1e4,
                               bendingDamping=0.1)
-    [nodes, elements, *_] = GenerateStraightLineANCFCable2D(mbs, positionOfNode0=[0,0,0], positionOfNode1=[1,0,0],
-                            numberOfElements=4, cableTemplate=cable, massProportionalLoad=[0,-9.81,0],
-                            fixedConstraintsNode0=[1,1,0,1])
+    beamInfo = GenerateBeamElementsAlongLine(mbs, positionStart=[0,0,0], positionEnd=[1,0,0],
+                            numberOfElements=4, beamTemplate=cable, gravity=[0,-9.81,0],
+                            groundConstraintsStart=[1,1,0,1])
+    nodes, elements = beamInfo['nodes'], beamInfo['elements']
     mCircle = mbs.AddMarker(MarkerBodyPosition(bodyNumber=oGround, localPosition=[0.8,-0.2,0]))
     nSegments = 4
     for e in elements:
@@ -1880,12 +1881,13 @@ definitions.append(ItemDefinition(
     cParentClass=ParentClassCMarker,
     overallDescription=r'A special Marker attached to the coordinates of a 2D ANCF beam finite element with cubic interpolation.',
     classType=ClassTypeMarker,
-    miniExample=r"""    from exudyn.beams import GenerateStraightLineANCFCable2D
+    miniExample=r"""    from exudyn.beams import GenerateBeamElementsAlongLine
     #the coordinates of ANCF cable elements for a sliding joint: a mass point slides along a clamped, stiff cable
     cable = ObjectANCFCable2D(massPerLength=1, bendingStiffness=1e4, axialStiffness=1e6)
-    [nodes, elements, *_] = GenerateStraightLineANCFCable2D(mbs, positionOfNode0=[0,0,0], positionOfNode1=[2,0,0],
-                            numberOfElements=4, cableTemplate=cable,
-                            fixedConstraintsNode0=[1,1,1,1], fixedConstraintsNode1=[1,1,1,1])
+    beamInfo = GenerateBeamElementsAlongLine(mbs, positionStart=[0,0,0], positionEnd=[2,0,0],
+                            numberOfElements=4, beamTemplate=cable,
+                            groundConstraintsStart=[1,1,1,1], groundConstraintsEnd=[1,1,1,1])
+    nodes, elements = beamInfo['nodes'], beamInfo['elements']
     nMass = mbs.AddNode(NodePoint2D(referenceCoordinates=[0.6,0]))
     mbs.AddObject(ObjectMassPoint2D(nodeNumber=nMass, mass=1))
     mMass = mbs.AddMarker(MarkerNodePosition(nodeNumber=nMass))
@@ -1968,11 +1970,12 @@ definitions.append(ItemDefinition(
     overallDescription=r'A special Marker attached to a 3D beam finite element which provides at least position and tangent to the beam axis.',
     classType=ClassTypeMarker,
     miniExample=r"""    #the shape of 3D ANCF cable elements for a sliding joint: a mass point slides along a clamped, stiff cable
-    from exudyn.beams import GenerateStraightLineANCFCable
+    from exudyn.beams import GenerateBeamElementsAlongLine
     cable = ObjectANCFCable(massPerLength=1, bendingStiffness=1e4, axialStiffness=1e6)
-    [nodes, elements, *_] = GenerateStraightLineANCFCable(mbs, positionOfNode0=[0,0,0], positionOfNode1=[2,0,0],
-                            numberOfElements=4, cableTemplate=cable,
-                            fixedConstraintsNode0=[1,1,1, 1,1,1], fixedConstraintsNode1=[1,1,1, 1,1,1])
+    beamInfo = GenerateBeamElementsAlongLine(mbs, positionStart=[0,0,0], positionEnd=[2,0,0],
+                            numberOfElements=4, beamTemplate=cable,
+                            groundConstraintsStart=[1,1,1, 1,1,1], groundConstraintsEnd=[1,1,1, 1,1,1])
+    nodes, elements = beamInfo['nodes'], beamInfo['elements']
     nMass = mbs.AddNode(NodePoint(referenceCoordinates=[0.6,0,0]))
     mbs.AddObject(ObjectMassPoint(nodeNumber=nMass, mass=1))
     mMass = mbs.AddMarker(MarkerNodePosition(nodeNumber=nMass))

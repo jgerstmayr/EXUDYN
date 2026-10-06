@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.12 | Metheney | 331 | 1.12.372 |
+| 1.12 | Metheney | 332 | 1.12.373 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
 | 1.9 | Krall | 235 | 1.9.234 |
@@ -29,6 +29,10 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.12 - Metheney (current)
 
+- **1.12.373** <span class="textred">`BUG`</span> `raised by: Claude-JG` `resolved by: Claude-JG` Linux suite of 1.12.372: deprecation warnings on the console, energiesTest (#2882)
+  - description: tmp/Ubuntu/ubuntuTestSuiteConsoleOutput.txt (maintainer, WSL, cp313): 73 DeprecationWarnings on the console. 69 are expected - parameterConversionTest sets every parameter, the deprecated names included, and homogeneousTransformationParameterTest compares rotationMarker0/1 with localHT - and are now kept off the console. 2 came from the mini examples ObjectANCFCable/ObjectANCFCable2D: the mini examples are generated from the miniExample texts in definitions/, so the conversion of \#2873 in python/MiniExamples was undone by the next regeneration; the 11 texts are converted in definitions/. energiesTest.py differs by -5.9e-11 against 3e-11 (rel. 3.3e-12) and goes to UnresolvedOnLinux.
+  - **notes:** The test suite no longer prints the deprecation warnings that its deprecation tests trigger on purpose, and the mini examples of the cable elements use GenerateBeamElementsAlongLine.
+  - date resolved: **2026-10-07 00:03**, date raised: 2026-10-06
 - **1.12.372** `CHANGE` `raised by: Claude-JG` `resolved by: Claude-JG` The default drawing size of nodes, markers and sensors is too small to see (#2880)
   - description: GUI checks on macOS and Ubuntu (K1, 'some markers/sensors are too small to see'): defaultSize = -1 gives a radius of 0.001 \* openGL.advanced.initialMaxSceneSize (1 by default), 1 mm in a scene of 1 m, whatever the size of the scene. Proposal, for decision: relative to the scene the renderer computed (maxSceneSize), e.g. 1 %, or a larger factor.
   - **notes:** The model of the manual GUI check draws markers and sensors larger and with thicker lines, and the check switches the simplified drawing styles.
