@@ -113,6 +113,24 @@ def testTheManylinuxContainerRunsThroughWslOnlyOnWindows(onPlatform, monkeypatch
     assert 'wsl' not in steps[0].note
 
 
+def testWslIsAskedForThePathWithoutItsShell(monkeypatch):
+    """#2868: 'wsl wslpath -a C:\\DATA\\...' goes through the login shell of WSL, which ate the backslashes"""
+    import subprocess
+    calls = []
+
+    class Completed:
+        returncode = 0
+        stdout = b'/mnt/c/DATA/repository\n'
+
+    def Run(argv, **arguments):
+        calls.append(argv)
+        return Completed()
+    monkeypatch.setattr(subprocess, 'run', Run)
+    monkeypatch.setattr(runner, 'RepositoryRoot', lambda: 'C:\\DATA\\repository')
+    assert commands.WslRepositoryRoot() == '/mnt/c/DATA/repository'
+    assert calls == [['wsl', '--exec', 'wslpath', '-a', 'C:/DATA/repository']]
+
+
 def testTheManylinuxWheelsAreRefusedOnMacOS(onPlatform):
     """the image is x86_64; an ARM Mac would emulate it, which is not what a release is built with"""
     onPlatform('darwin')

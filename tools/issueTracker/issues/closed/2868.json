@@ -1,0 +1,16 @@
+{
+  "number": 2868,
+  "title": "exudev linux: WSL is asked for the repository path through its shell, which eats the backslashes",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "BUG",
+  "effort": "LOW",
+  "description": "exudev linux --py 313 stopped with 'wslpath: C:DATAcppEXUDYN_git' / 'could not ask WSL for the repository path' (maintainer 2026-10-06): WslRepositoryRoot ran 'wsl wslpath -a C:\\DATA\\...', which current WSL (3.0) passes through the login shell; 'wsl --exec' and forward slashes fix it",
+  "dateRaised": "2026-10-06",
+  "deadline": "2027-04-04",
+  "dateResolved": "2026-10-06 07:56",
+  "resolvedAuthor": "Claude-JG",
+  "file": "tools/exudev/commands.py",
+  "releaseNotes": "exudev linux works again on Windows: it asks WSL for the repository path with wsl --exec and forward slashes, which the login shell of current WSL no longer garbles (revision2026b step RG10.17)",
+  "resolvedInVersion": "1.12.360"
+}

@@ -1312,6 +1312,11 @@ for `build --complete`, instead of stopping the command.
     with `AttributeError: 'Namespace' object has no attribute 'env'` - its subparser has no `--env`, which
     `commands.Notebooks` reads and its help names. It has `--py`/`--env` now, as `scripts` and `figures`.
 
+<a id="rg10-17"></a>
+**RG10.17** **DONE 2026-10-06** (#2868) — [log](exudynRevisionLog2026b.md#rg10-17) *(group RG10; maintainer 2026-10-06: "the
+linux build currently does not work")* **`exudev linux` asks WSL for the path without its shell**: `wsl --exec wslpath`
+with forward slashes; the login shell of current WSL removed the backslashes of the Windows path.
+
 ## RG11 — Misc
 
 What belongs to no group yet. Three of a kind here are a reason to propose a group of their own.

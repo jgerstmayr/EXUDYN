@@ -15916,3 +15916,14 @@ function; `ObjectANCFThinPlate` - `strainIsRelativeToReference` has no effect si
 item now (before only for the loads and sensors): the calls of the user functions in `evaluateUserFunctions.cpp`
 belong to the implementation of the connectors. All 97 items are recorded as checked in
 `definitions/descriptionChecks.json`; `checkDescriptions --check` reports none changed.
+
+<a id="rg10-17"></a>
+### RG10.17 — `exudev linux` and the path of the repository in WSL (2026-10-06, #2868)
+
+*(Maintainer 2026-10-06: `exudev linux --py 313` stopped with "wslpath: C:DATAcppEXUDYN_git" and "could not ask WSL
+for the repository path".)* `WslRepositoryRoot` ran `wsl wslpath -a C:\DATA\...`; WSL 3.0 passes such a command
+through the login shell, which takes the backslashes as escapes. Reproduced here with the same call (return code 1);
+`wsl --exec wslpath -a` runs the program without a shell and gave `/mnt/c/DATA/cpp/EXUDYN_git`, and the path is passed
+with forward slashes as well, which `wslpath` takes and no shell changes. The build steps themselves already ran with
+`wsl -e`. Test: `testWslIsAskedForThePathWithoutItsShell` (`test_exudev.py`), the argv of the call. The docker build itself
+was not run here.

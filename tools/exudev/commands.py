@@ -1122,7 +1122,9 @@ def LinuxBuildRoot():
 def WslRepositoryRoot():
     """The repository as WSL sees it, e.g. /mnt/c/DATA/cpp/EXUDYN_git."""
     import subprocess
-    completed = subprocess.run(['wsl', 'wslpath', '-a', runner.RepositoryRoot()],
+    #--exec runs wslpath without the login shell of WSL, which (WSL 2.x and later) would eat the backslashes of the
+    #Windows path: 'wslpath: C:DATAcppEXUDYN_git'; the forward slashes make it independent of that as well (#2868)
+    completed = subprocess.run(['wsl', '--exec', 'wslpath', '-a', runner.RepositoryRoot().replace(chr(92), '/')],
                                stdout=subprocess.PIPE)
     if completed.returncode != 0:
         raise SystemExit('exudev: could not ask WSL for the repository path')
@@ -1133,7 +1135,7 @@ def WslRepositoryRoot():
 #%%******************************************************************************************************
 def WslPathNote():
     """the second line of the note: where the wsl path in it comes from"""
-    return chr(10) + "the wsl path is asked from 'wsl wslpath -a' at run time"
+    return chr(10) + "the wsl path is asked from 'wsl --exec wslpath -a' at run time"
 
 
 def Linux(options):
