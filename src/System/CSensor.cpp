@@ -110,12 +110,7 @@ void CSensorObject::GetSensorValues(const CSystemData& cSystemData, Vector& valu
 		const bool computeJacobian = false; //not needed for OutputVariables
 		cSystemData.ComputeMarkerDataStructure(cConnector, computeJacobian, markerDataStructure);
 
-		if (parameters.outputVariableType == OutputVariableType::HomogeneousTransformation)
-		{
-			OutputVariableHomogeneousTransformation([this, cConnector, &markerDataStructure](OutputVariableType type, Vector& v)
-				{ cConnector->GetOutputVariableConnector(type, markerDataStructure, parameters.objectNumber, v); }, values);
-		}
-		else { cConnector->GetOutputVariableConnector(parameters.outputVariableType, markerDataStructure, parameters.objectNumber, values); }
+		GetConnectorOutputVariable(*cConnector, parameters.outputVariableType, markerDataStructure, parameters.objectNumber, values); //#2870
 
 	}
 }

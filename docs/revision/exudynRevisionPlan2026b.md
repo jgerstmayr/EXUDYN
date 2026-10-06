@@ -865,6 +865,10 @@ The steps are numbered in the order they were raised and stand here in the order
       #1247 (symbolic user functions remove the round trip, C++ user functions will), #707 and #728 (taken up by
       RG5.1.2, RG5.1.3), #2498 (superseded by #2866, RG9.6); done: #777 (`genericODE2matrixFormatsTest.py`), #2235
       (`initialAccelerationsTest.py`), #1740 (the examples of the symbolic page run); #1953, #1954 are RG12.41.
+    - **RG4.19.12** *open* (#2872, found with RG12.42) after a step, `SlidingCoordinate` of JointSliding and
+      JointSliding2D counts the last increment of the sliding coordinate twice: `PostNewtonStep` adds the algebraic
+      increment to the data coordinate, and the algebraic coordinate keeps it; `DisplacementLocal` of JointSliding2D
+      shows it as tangential drift.
     - Not here, they need a Linux machine or a screen: #2204, #2205 (perspective), #2277, #2278 (GLFW on Linux) - RG6.8.
 
 <a id="rg4-20"></a>
@@ -1553,22 +1557,7 @@ docstrings; argument annotations only where they help a reader; a check that eve
 **RG12.40** **DONE 2026-10-05** (#2863, #2337) — [log](exudynRevisionLog2026b.md#rg12-40) · [plan text](exudynRevisionLog2026b.md#plan-rg12-40) — The Create functions take bodies, nodes or markers in `itemNumbers`.
 
 <a id="rg12-42"></a>
-**RG12.42** *(group RG12; maintainer 2026-10-06: "the connectors and joints have inconsistent output variables ... add a
-    new step/issue (EXTENSION) and make a concept (don't implement anything before)")* **Joints and connectors with
-    consistent output variables** (#2870). Concept, table and decisions in `tmp/connectorOutputVariables.md` (not in
-    the repository) - [log](exudynRevisionLog2026b.md#rg12-42):
-    - the rules: `Position`/`Velocity` of marker m0 for every joint; `HomogeneousTransformation` the joint frame J0 for
-      the classical joints with rigid markers (`JointGeneric`, `JointRevoluteZ`, `JointPrismaticX`, `JointPrismatic2D`),
-      not the rolling joints; `DisplacementLocal` the drift or relative position in J0; the new
-      `HomogeneousTransformationLocal` the frame J1 relative to J0 - drift of a joint, marker difference of a
-      connector; `Displacement` the global relative position of connectors;
-    - **RG12.42.1** *(proposed)* the bit `HomogeneousTransformationLocal` (`HomogeneousTransformation` exists, #2780) and
-      one helper for both from the marker data;
-    - **RG12.42.2** *(proposed)* the items: HT for 4 joints, HT-local for 5-6 items, the definitely missing outputs of
-      4 items (`Position`, `Velocity`, `Force` of JointRevolute2D and JointPrismatic2D, `Displacement` of the
-      rigid-body and linear spring-dampers), `DisplacementLocal` for position markers if decided;
-    - **RG12.42.3** *(proposed)* a test model over the items, the general section of the connectors.
-    - Decisions: `DisplacementLocal` for items with position markers only; the 2D joints; the name; JointSliding.
+**RG12.42** **DONE 2026-10-06** (#2870) — [log](exudynRevisionLog2026b.md#rg12-42-1) · [plan text](exudynRevisionLog2026b.md#plan-rg12-42) — Joints and connectors with consistent output variables: `HomogeneousTransformation`, the new `HomogeneousTransformationLocal`, `Displacement`, and the outputs the 2D joints lacked.
 
 <a id="rg12-41"></a>
 **RG12.41** **DONE 2026-10-05** (#1953, #1954) — [log](exudynRevisionLog2026b.md#rg4-19-11) *(maintainer 2026-10-05: "Do
@@ -1988,7 +1977,7 @@ issue and a short title only. The open issues that are not steps are in the trac
 | RG5.2 | - | make the hot linear algebra vectorizable |
 | RG6.8 | #2140, #2236, #2237, #2350 | the graphics fixes before 1.13: Linux (RG6.8.5) and macOS (RG6.8.6), which wait for those machines |
 | RG13.3 | #2867 | follow-up: parameters and output variables the C++ of four items does not use, for a decision |
-| RG12.42 | #2870 | joints and connectors: consistent output variables - a concept for decision (tmp/connectorOutputVariables.md) |
+| RG4.19.12 | #2872 | JointSliding(2D): SlidingCoordinate counts the last increment twice after a step |
 | RG9.6 | #2866 | the member functions an item must provide, checked when it compiles (from #2498) |
 | RG8.1 to RG8.9 | - | the plugin ABI: registry, fingerprint, reference plugin, headers, discovery |
 | RG14.3 | #2745 | joints and their Jacobians on homogeneous transformations, after RG14.2.9 |

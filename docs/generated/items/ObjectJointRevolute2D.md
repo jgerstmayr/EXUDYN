@@ -51,6 +51,9 @@ Available as `OutputVariableType` in sensors, `Get...Output()` and other functio
 | output variable | symbol | description |
 |---|---|---|
 | Displacement | $\LU{0}{\pv}_{m1} - \LU{0}{\pv}_{m0}$ | global vector from marker m0 to marker m1, zero up to the drift of the position on the velocity level |
+| Position | $\LU{0}{\pv}_{m0}$ | current global position of position marker $m0$ |
+| Velocity | $\LU{0}{\vv}_{m0}$ | current global velocity of position marker $m0$ |
+| Force | $\LU{0}{\fv} = [\lambda_0,\,\lambda_1,\,0]\tp$ | global joint force; as for the other joints the force on marker m0 |
 
 (description-objectjointrevolute2d)=
 ## Detailed description

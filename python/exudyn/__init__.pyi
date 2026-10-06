@@ -288,6 +288,8 @@ class OutputVariableType(Enum):
     """measure potential (=elastic) energy of a body or connector, position independent"""
     HomogeneousTransformation = int
     """measure the homogeneous transformation of a node, body point or marker: its rotation matrix A and position p as the 4x4 matrix [A p; 0 1]; the Get...Output functions return it as exu.HT, a sensor stores its 16 components row by row; every item with Position and RotationMatrix provides it"""
+    HomogeneousTransformationLocal = int
+    """measure the homogeneous transformation of a frame relative to another, e.g., of joint frame J1 in joint frame J0: the 4x4 matrix [A p; 0 1] with the relative rotation matrix A and the relative position p in the first frame; returned and stored as HomogeneousTransformation"""
 
 
 class InspectType(Enum):

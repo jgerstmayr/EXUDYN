@@ -11392,6 +11392,30 @@ the `Create...`/FEM functions, two arguments of `GeneticOptimization`, `Generate
   take no node; (b) the rolling discs keep `bodyNumbers`; (c) `CreateForce`/`CreateTorque` take `itemNumber`,
   with nodes; `CreateCoordinateConstraint` and the sphere contacts are included.
 
+<a id="plan-rg12-42"></a>
+#### RG12.42
+
+**RG12.42** **DONE 2026-10-06** — [log](exudynRevisionLog2026b.md#rg12-42-1) *(group RG12; maintainer 2026-10-06: "the connectors and joints have inconsistent output variables ... add a
+    new step/issue (EXTENSION) and make a concept (don't implement anything before)")* **Joints and connectors with
+    consistent output variables** (#2870). Concept, table and decisions in `tmp/connectorOutputVariables.md` (not in
+    the repository) - [log](exudynRevisionLog2026b.md#rg12-42):
+    - the rules: `Position`/`Velocity` of marker m0 for every joint; `HomogeneousTransformation` the joint frame J0 for
+      the classical joints with rigid markers (`JointGeneric`, `JointRevoluteZ`, `JointPrismaticX`, `JointPrismatic2D`),
+      not the rolling joints; `DisplacementLocal` the drift or relative position in J0; the new
+      `HomogeneousTransformationLocal` the frame J1 relative to J0 - drift of a joint, marker difference of a
+      connector; `Displacement` the global relative position of connectors;
+    - **RG12.42.1** *(proposed)* the bit `HomogeneousTransformationLocal` (`HomogeneousTransformation` exists, #2780) and
+      one helper for both from the marker data;
+    - **RG12.42.2** *(proposed)* the items: HT for 4 joints, HT-local for 5-6 items, the definitely missing outputs of
+      4 items (`Position`, `Velocity`, `Force` of JointRevolute2D and JointPrismatic2D, `Displacement` of the
+      rigid-body and linear spring-dampers), `DisplacementLocal` for position markers if decided;
+    - **RG12.42.3** *(proposed)* a test model over the items, the general section of the connectors.
+    - Decisions: `DisplacementLocal` for items with position markers only; the 2D joints; the name; JointSliding.
+
+  *Decided by the maintainer (2026-10-06):* 1. no `DisplacementLocal` for the items with position markers only - they keep
+  `Displacement`; 2. the 2D joints get the frame outputs too, where they have rigid markers (JointPrismatic2D); 3. the
+  name `HomogeneousTransformationLocal`; 4. the drift of JointSliding as `DisplacementLocal`. RG12.42.1-.3 done.
+
 <a id="plan-rg13-2"></a>
 #### RG13.2
 
@@ -15965,3 +15989,38 @@ the rules give HT for 4 joints and HT-local for 5-6 items; independent of them, 
 (JointRevolute2D and JointPrismatic2D have no `Position`, `Velocity` and force, the rigid-body and linear
 spring-dampers no global `Displacement`). The contacts and the coordinate connectors are out of scope. Nothing is
 implemented.
+
+<a id="rg12-42-1"></a>
+### RG12.42.1-.3 — the output variables of joints and connectors, implemented (2026-10-06, #2870, #2872)
+
+*(Maintainer 2026-10-06, on the four decisions of the concept: "1) no 2) yes, frame outputs too, if rigid body markers
+3) HomogeneousTransformationLocal 4) yes.")*
+
+- **RG12.42.1** `definitions/outputVariableTypes.py`: `HomogeneousTransformationLocal`, bit 35. In
+  `System/CObjectConnector.h` two helpers, `ConnectorOutputVariableFrame` (16 values row by row, as
+  `HomogeneousTransformation`) and `ConnectorOutputVariableFrameLocal` ($\Hm_{J0}^{-1}\Hm_{J1}$), and
+  `GetConnectorOutputVariable`, which `MainObject` and `SensorObject` now call: `HomogeneousTransformation` is composed of
+  `Position` and `RotationMatrix` only where the connector has `RotationMatrix` (the rolling discs, as before, #2780),
+  else the connector gives it. `OutputVariableToPython` returns both as `exu.HT`.
+- **RG12.42.2** the items:
+  - JointGeneric, JointRevoluteZ, JointPrismaticX: `HomogeneousTransformation` (J0: marker 0 times rotationMarker0) and
+    `HomogeneousTransformationLocal`;
+  - JointPrismatic2D: `Position`, `Velocity`, `DisplacementLocal` ($\Am_0\tp(\pv_1-\pv_0)$), `ForceLocal`
+    ($\Am_0\tp\nv_1\lambda_0$), both frames - its joint frames are the marker frames;
+  - JointRevolute2D: `Position`, `Velocity`, `Force` $[\lambda_0,\lambda_1,0]$;
+  - JointSliding2D: `DisplacementLocal`, the sliding point relative to marker 0 along the unit tangent and normal of the
+    cable. JointSliding (3D) has no cable frame without torsion, so it gets none;
+  - ConnectorRigidBodySpringDamper (J1 in J0 in both formulations) and ConnectorLinearSpringDamper (marker frames):
+    `Displacement`, `HomogeneousTransformationLocal`.
+  - The forces of the 2D joints follow the sign of the other joints - measured: the spherical joint and JointRevoluteZ
+    give the force on marker 0 ($-mg$ upwards for a hanging body), not on marker 1 as the concept had assumed (R6).
+  - The general section of the connectors (`itemKindDefinitions.py`) states the rules. The nine changed items are
+    marked checked again (`checkDescriptions.py`).
+- **RG12.42.3** `connectorFrameOutputsTest.py`, 25 checks: $\Hm_{J0}\,\Hm_{local} = \Hm_{J1}$ against the marker frames
+  (`GetMarkerOutput` HT) times rotationMarker1 for the five items with rigid markers, the translation of the local frame
+  against `DisplacementLocal`, `Displacement`, the revolute joint's local rotation against `Rotation`, a `SensorObject`
+  storing the 16 values; the 2D joints at rest carry the weight; JointSliding2D's normal drift.
+- Found on the way, raised as **#2872** (RG4.19.12): after a step the algebraic coordinate of the sliding joints still
+  holds the last increment, which `PostNewtonStep` has already added to the data coordinate - `SlidingCoordinate` counts
+  it twice (setup of SlidingJoint2DTest, 50 steps: data 1.00137056, output 1.00142803, increment 5.75e-5), and the
+  tangential component of the new `DisplacementLocal` shows it; the test checks the normal component only.

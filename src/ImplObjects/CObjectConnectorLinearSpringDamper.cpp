@@ -110,6 +110,10 @@ void CObjectConnectorLinearSpringDamper::GetOutputVariableConnector(OutputVariab
 	switch (variableType)
 	{
 	case OutputVariableType::DisplacementLocal: value.CopyFrom(Vector1D(displacement)); break;
+	case OutputVariableType::Displacement: value.CopyFrom(markerData.GetMarkerData(1).position - markerData.GetMarkerData(0).position); break; //#2870
+	case OutputVariableType::HomogeneousTransformationLocal: //the frame of marker 1 in the frame of marker 0 (#2870)
+		ConnectorOutputVariableFrameLocal(markerData.GetMarkerData(0).orientation, markerData.GetMarkerData(0).position,
+			markerData.GetMarkerData(1).orientation, markerData.GetMarkerData(1).position, value); break;
 	case OutputVariableType::VelocityLocal: value.CopyFrom(Vector1D(velocity)); break;
 	case OutputVariableType::ForceLocal: value.CopyFrom(Vector1D(force)); break;
 	case OutputVariableType::PotentialEnergy: {

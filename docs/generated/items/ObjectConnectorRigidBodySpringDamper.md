@@ -71,6 +71,8 @@ Available as `OutputVariableType` in sensors, `Get...Output()` and other functio
 | output variable | symbol | description |
 |---|---|---|
 | DisplacementLocal | $\LU{J0}{\Delta\pv}$ | relative displacement in local joint0 coordinates |
+| Displacement | $\LU{0}{\pv}_{m1} - \LU{0}{\pv}_{m0}$ | global vector from marker m0 to marker m1 |
+| HomogeneousTransformationLocal | $\LU{J0}{\Hm}_{J1} = \LU{0}{\Hm}_{J0}^{-1}\,\LU{0}{\Hm}_{J1}$ | the joint frame $J1$ relative to the joint frame $J0$: the relative rotation matrix $\LU{0}{\Rot}_{J0}\tp\LU{0}{\Rot}_{J1}$ and the relative position $\LU{0}{\Rot}_{J0}\tp(\LU{0}{\pv}_{m1}-\LU{0}{\pv}_{m0})$; for a joint the identity up to its free axes and its drift; returned and stored as HomogeneousTransformation |
 | VelocityLocal | $\LU{J0}{\Delta\vv}$ | relative translational velocity in local joint0 coordinates |
 | Rotation | $\LU{J0}{\ttheta}= [\theta_0,\theta_1,\theta_2]\tp$ | relative rotation parameters (Tait Bryan Rxyz); these are the angles used for calculation of joint torques (e.g. if cX is the diagonal rotational stiffness, the moment for axis X reads mX=cX*phiX, etc.) |
 | AngularVelocityLocal | $\LU{J0}{\Delta\tomega}$ | relative angular velocity in local joint0 coordinates |

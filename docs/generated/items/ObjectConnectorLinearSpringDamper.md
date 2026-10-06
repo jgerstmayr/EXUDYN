@@ -58,6 +58,8 @@ Available as `OutputVariableType` in sensors, `Get...Output()` and other functio
 | output variable | symbol | description |
 |---|---|---|
 | DisplacementLocal | $\Delta x$ | (scalar) relative displacement of the spring-damper |
+| Displacement | $\LU{0}{\pv}_{m1} - \LU{0}{\pv}_{m0}$ | global vector from marker m0 to marker m1 |
+| HomogeneousTransformationLocal | $\LU{0}{\Hm}_{m0}^{-1}\,\LU{0}{\Hm}_{m1}$ | the frame of marker m1 relative to the frame of marker m0: the relative rotation matrix $\LU{0}{\Rot}_{m0}\tp\LU{0}{\Rot}_{m1}$ and the relative position in the frame of marker m0; returned and stored as HomogeneousTransformation |
 | VelocityLocal | $\Delta v$ | (scalar) relative velocity of spring-damper |
 | ForceLocal | $f_{SD}$ | (scalar) spring-damper force |
 | PotentialEnergy | $V = \frac{1}{2} k\, (u - u_\mathrm{off})^2 + f_c\, u$ | elastic energy of the spring and the potential of the constant force; zero if the connector is not active; raises for a springForceUserFunction |

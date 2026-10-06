@@ -1,0 +1,10 @@
+{
+  "number": 2872,
+  "title": "JointSliding/JointSliding2D: SlidingCoordinate counts the last increment twice after a step",
+  "author": "Claude-JG",
+  "status": "RAISED",
+  "type": "BUG",
+  "description": "After a step, PostNewtonStep has added the algebraic increment of the sliding coordinate to the data coordinate, but the algebraic coordinate keeps the increment; the output SlidingCoordinate (data + increment), and DisplacementLocal of JointSliding2D (#2870), add it a second time. Measured on the setup of SlidingJoint2DTest after 50 steps: data 1.00137056, SlidingCoordinate 1.00142803, increment 5.75e-5; DisplacementLocal shows the increment as tangential drift. The solver itself is not affected: the next Newton solves the increment against the updated data coordinate. Found with RG12.42.",
+  "dateRaised": "2026-10-06",
+  "deadline": "2027-04-04"
+}

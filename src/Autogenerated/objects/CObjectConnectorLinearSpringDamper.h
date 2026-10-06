@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-10-02  12:07:29 (last modified)
+* @date         2026-10-06  09:17:10 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -175,6 +175,8 @@ public: // AUTO:
     {
         return (OutputVariableType)(
             (Index64)OutputVariableType::DisplacementLocal +
+            (Index64)OutputVariableType::Displacement +
+            (Index64)OutputVariableType::HomogeneousTransformationLocal +
             (Index64)OutputVariableType::VelocityLocal +
             (Index64)OutputVariableType::ForceLocal +
             (Index64)OutputVariableType::PotentialEnergy );

@@ -66,12 +66,7 @@ py::object MainObject::GetOutputVariableConnector(OutputVariableType variableTyp
 		if ((Index)GetCObject()->GetType() & (Index)CObjectType::Connector)
 		{
 			const CObjectConnector* connector = (CObjectConnector*)GetCObject();
-			if (variableType == OutputVariableType::HomogeneousTransformation)
-			{
-				OutputVariableHomogeneousTransformation([connector, &markerData, objectNumber](OutputVariableType type, Vector& v)
-					{ connector->GetOutputVariableConnector(type, markerData, objectNumber, v); }, value);
-			}
-			else { connector->GetOutputVariableConnector(variableType, markerData, objectNumber, value); }
+			GetConnectorOutputVariable(*connector, variableType, markerData, objectNumber, value); //#2870
 
 			//now check if it is scalar or a vector-valued:
 			return OutputVariableToPython(variableType, value); //exu.HT for HomogeneousTransformation (#2789)

@@ -63,6 +63,7 @@ Available as `OutputVariableType` in sensors, `Get...Output()` and other functio
 | Velocity |  | velocity vector of joint given by marker0 |
 | SlidingCoordinate |  | global sliding coordinate along all elements; the maximum sliding coordinate is equivalent to the reference lengths of all sliding elements |
 | Force |  | joint force vector (3D) |
+| DisplacementLocal | $[\Delta\pv\tp\tv,\;\Delta\pv\tp\nv,\;0]\tp$ | position of the sliding point on the cable relative to marker m0, $\Delta\pv$, along the unit tangent $\tv$ and the unit normal $\nv$ of the cable there: the drift of the joint |
 
 (description-objectjointsliding2d)=
 ## Detailed description

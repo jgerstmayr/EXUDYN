@@ -428,7 +428,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`cartesianSp
 
 
 
-Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`bricardMechanism.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/bricardMechanism.py) (TM), [`createItemNumbersTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/createItemNumbersTest.py) (TM), [`rigidBodySpringDamperIntrinsic.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/rigidBodySpringDamperIntrinsic.py) (TM)
+Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`bricardMechanism.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/bricardMechanism.py) (TM), [`connectorFrameOutputsTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/connectorFrameOutputsTest.py) (TM), [`createItemNumbersTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/createItemNumbersTest.py) (TM), [`rigidBodySpringDamperIntrinsic.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/rigidBodySpringDamperIntrinsic.py) (TM)
 
 
 (sec-mainsystemextensions-createtorsionalspringdamper)=
@@ -516,7 +516,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`createFunct
 
 
 
-Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`createLinearSpringDamperTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/createLinearSpringDamperTest.py) (TM)
+Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`connectorFrameOutputsTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/connectorFrameOutputsTest.py) (TM), [`createLinearSpringDamperTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/createLinearSpringDamperTest.py) (TM)
 
 
 (sec-mainsystemextensions-createrevolutejoint)=
@@ -566,7 +566,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`createLinea
 
 
 
-Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`addRevoluteJoint.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/addRevoluteJoint.py) (Ex), [`bicycleIftommBenchmark.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/bicycleIftommBenchmark.py) (Ex), [`chatGPTupdate.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/chatGPTupdate.py) (Ex), [`chatGPTupdate2.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/chatGPTupdate2.py) (Ex), [`involuteGearGraphics.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/involuteGearGraphics.py) (Ex), [`bricardMechanism.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/bricardMechanism.py) (TM), [`computeItemTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/computeItemTest.py) (TM), [`createFunctionsTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/createFunctionsTest.py) (TM), ...
+Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`addRevoluteJoint.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/addRevoluteJoint.py) (Ex), [`bicycleIftommBenchmark.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/bicycleIftommBenchmark.py) (Ex), [`chatGPTupdate.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/chatGPTupdate.py) (Ex), [`chatGPTupdate2.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/chatGPTupdate2.py) (Ex), [`involuteGearGraphics.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/involuteGearGraphics.py) (Ex), [`bricardMechanism.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/bricardMechanism.py) (TM), [`computeItemTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/computeItemTest.py) (TM), [`connectorFrameOutputsTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/connectorFrameOutputsTest.py) (TM), ...
 
 
 (sec-mainsystemextensions-createprismaticjoint)=
@@ -617,7 +617,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`addRevolute
 
 
 
-Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`addPrismaticJoint.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/addPrismaticJoint.py) (Ex), [`chatGPTupdate.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/chatGPTupdate.py) (Ex), [`chatGPTupdate2.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/chatGPTupdate2.py) (Ex), [`involuteGearGraphics.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/involuteGearGraphics.py) (Ex), [`createFunctionsTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/createFunctionsTest.py) (TM), [`createItemNumbersTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/createItemNumbersTest.py) (TM), [`createLinearSpringDamperTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/createLinearSpringDamperTest.py) (TM), [`mainSystemExtensionsTests.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/mainSystemExtensionsTests.py) (TM), ...
+Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`addPrismaticJoint.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/addPrismaticJoint.py) (Ex), [`chatGPTupdate.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/chatGPTupdate.py) (Ex), [`chatGPTupdate2.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/chatGPTupdate2.py) (Ex), [`involuteGearGraphics.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/involuteGearGraphics.py) (Ex), [`connectorFrameOutputsTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/connectorFrameOutputsTest.py) (TM), [`createFunctionsTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/createFunctionsTest.py) (TM), [`createItemNumbersTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/createItemNumbersTest.py) (TM), [`createLinearSpringDamperTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/createLinearSpringDamperTest.py) (TM), ...
 
 
 (sec-mainsystemextensions-createsphericaljoint)=

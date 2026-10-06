@@ -99,6 +99,7 @@ binarySolutionFileTest
 rotationMarkerDeprecationTest
 contactFrictionCircleCable2DnoFrictionTest
 systemContainerLifetimeTest
+connectorFrameOutputsTest
 createLinearSpringDamperTest
 initialAccelerationsTest
 genericODE2matrixFormatsTest

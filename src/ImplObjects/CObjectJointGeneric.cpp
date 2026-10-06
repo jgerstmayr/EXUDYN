@@ -269,6 +269,10 @@ void CObjectJointGeneric::GetOutputVariableConnector(OutputVariableType variable
 	case OutputVariableType::Position: value.CopyFrom(markerData.GetMarkerData(0).position); break;
 	case OutputVariableType::Velocity: value.CopyFrom(markerData.GetMarkerData(0).velocity); break;
 	case OutputVariableType::DisplacementLocal: value.CopyFrom(vPosLocal); break;
+	case OutputVariableType::HomogeneousTransformation: //the joint frame J0 (#2870)
+		ConnectorOutputVariableFrame(A0all, markerData.GetMarkerData(0).position, value); break;
+	case OutputVariableType::HomogeneousTransformationLocal: //the joint frame J1 in J0 (#2870)
+		ConnectorOutputVariableFrameLocal(A0all, markerData.GetMarkerData(0).position, A1all, markerData.GetMarkerData(1).position, value); break;
 	case OutputVariableType::Rotation: value.CopyFrom(vLocRot); break;
 	case OutputVariableType::VelocityLocal: value.CopyFrom(vVelLocal); break;
 	case OutputVariableType::AngularVelocityLocal: value.CopyFrom(angVelLocal); break;

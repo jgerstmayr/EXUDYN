@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.12 | Metheney | 321 | 1.12.362 |
+| 1.12 | Metheney | 322 | 1.12.363 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
 | 1.9 | Krall | 235 | 1.9.234 |
@@ -29,6 +29,10 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.12 - Metheney (current)
 
+- **1.12.363** `EXTENSION` `MEDIUM EFF` `raised by: Claude-JG` `resolved by: Claude-JG` joints and connectors: consistent output variables - joint frame, drift and relative frame as HomogeneousTransformation(Local) (#2870)
+  - description: Maintainer 2026-10-06: the connectors and joints have inconsistent output variables; consistent: local drift in joints, joint position/orientation (marker 0), relative position of connectors, DisplacementLocal for items without rotation, a new HomogeneousTransformationLocal for the drift of joints and the marker difference of connectors, HomogeneousTransformation for the joint frame J0 of the classical joints (not the rolling joints). Concept first (RG12.42), table in tmp/connectorOutputVariables.md; nothing implemented before the decisions.
+  - **notes:** Joints and connectors give the same output variables for the same quantity: the new HomogeneousTransformationLocal (the joint frame J1 relative to J0, an exu.HT) for the joints and connectors on rigid markers, HomogeneousTransformation (the joint frame J0) for JointGeneric, JointRevoluteZ, JointPrismaticX and JointPrismatic2D, Position, Velocity and the force for JointRevolute2D and JointPrismatic2D, DisplacementLocal for JointPrismatic2D and JointSliding2D, Displacement for ConnectorRigidBodySpringDamper and ConnectorLinearSpringDamper.
+  - date resolved: **2026-10-06 09:32**, date raised: 2026-10-06
 - **1.12.362** `CHANGE` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` settings dialog: the button 'view as code' is 'store model view' and gives SetModelView as CTRL+F3; 'store positions' explains it stores all windows (#2871)
   - description: Maintainer 2026-10-06: the button should be called 'store model view' and give SC.renderer.Start() and SC.renderer.SetModelView(zoom=..., rotationVector=\[...\], centerPoint=\[...\]) like CTRL+F3; the hints of 'store positions' were misleading: it stores the positions of all windows, not only of the dialog.
   - **notes:** The visualization settings dialog has a button store model view, which gives SC.renderer.Start() and SC.renderer.SetModelView(zoom, rotationVector, centerPoint) as CTRL+F3 prints it; store positions describes that it stores the positions of all open windows (revision2026b step RG6.10.1)

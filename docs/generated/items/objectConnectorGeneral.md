@@ -40,6 +40,14 @@ the frame of the connector, or a scalar force; `Distance`, `Displacement` and `V
 kinematic quantities the force law uses. The page of each connector says which it has and in which
 frame.
 
+The joints and the connectors of two points name the same quantity the same way (#2870): `Position`
+and `Velocity` are those of marker 0; `Displacement` is the global vector from marker 0 to marker 1;
+`DisplacementLocal` is that vector in the joint frame $J0$ - for a joint its drift -, and it exists
+only where the markers have a frame; `HomogeneousTransformation` is the joint frame $J0$ of the
+classical joints, and `HomogeneousTransformationLocal` the frame $J1$ relative to $J0$, for the joints
+and connectors on rigid markers. Both give an `exu.HT` and are stored by a sensor as 16 values row by
+row.
+
 ## Contact connectors
 
 The contact connectors - `ObjectContact...`, `ObjectConnectorRollingDiscPenalty` - are penalty

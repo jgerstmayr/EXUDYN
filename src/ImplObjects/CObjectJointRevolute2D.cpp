@@ -63,6 +63,9 @@ void CObjectJointRevolute2D::GetOutputVariableConnector(OutputVariableType varia
 	switch (variableType)
 	{
 		case OutputVariableType::Displacement: value.CopyFrom(markerData.GetMarkerData(1).position - markerData.GetMarkerData(0).position); break;
+		case OutputVariableType::Position: value.CopyFrom(markerData.GetMarkerData(0).position); break; //#2870
+		case OutputVariableType::Velocity: value.CopyFrom(markerData.GetMarkerData(0).velocity); break;
+		case OutputVariableType::Force: value.SetVector({ GetCurrentAEcoordinate(0), GetCurrentAEcoordinate(1), 0. }); break; //global, the force on marker 0 as for the other joints
 		default:
 			SysError("CObjectJointRevolute2D::GetOutputVariable failed"); //error should not occur, because types are checked!
 	}

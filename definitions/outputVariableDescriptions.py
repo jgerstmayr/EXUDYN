@@ -57,4 +57,10 @@ OVDVelocityCoordinatesODE2 = r'all ABRV:ODE2 velocity coordinates'
 OVDGeneralizedForces = 'generalized forces for all coordinates (residual of all forces except mass*accleration; corresponds to ComputeODE2LHS)'
 
 #used by 4 items
+OVDHomogeneousTransformationJoint = r'$\LU{0}{\Hm}_{J0}$the joint frame $J0$ as homogeneous transformation: its rotation matrix and the position of marker $m0$, as 4x4 matrix $[\LU{0}{\Rot}_{J0}\;\LU{0}{\pv}_{m0};\;\Null\tp\;1]$; the Get...Output functions return it as exu.HT, a sensor stores its 16 values row by row'
+
+#used by 5 items
+OVDHomogeneousTransformationLocalJoint = r'$\LU{J0}{\Hm}_{J1} = \LU{0}{\Hm}_{J0}^{-1}\,\LU{0}{\Hm}_{J1}$the joint frame $J1$ relative to the joint frame $J0$: the relative rotation matrix $\LU{0}{\Rot}_{J0}\tp\LU{0}{\Rot}_{J1}$ and the relative position $\LU{0}{\Rot}_{J0}\tp(\LU{0}{\pv}_{m1}-\LU{0}{\pv}_{m0})$; for a joint the identity up to its free axes and its drift; returned and stored as HomogeneousTransformation'
+
+#used by 4 items
 OVDVelocityLocalJoint = r'$\LU{J0}{\Delta\vv}$relative translational velocity in local joint0 coordinates'

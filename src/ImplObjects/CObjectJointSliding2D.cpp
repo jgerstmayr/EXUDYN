@@ -298,6 +298,22 @@ void CObjectJointSliding2D::GetOutputVariableConnector(OutputVariableType variab
 	{
 	case OutputVariableType::Position: value.CopyFrom(markerData.GetMarkerData(0).position); break;
 	case OutputVariableType::Velocity: value.CopyFrom(markerData.GetMarkerData(0).velocity); break;
+	case OutputVariableType::DisplacementLocal: //the sliding position on the cable relative to marker 0, along the tangent and the normal (#2870)
+	{
+		const Index ns = 4;
+		LinkedDataVector qNode0(markerData.GetMarkerData(1).vectorValue, 0, ns);
+		LinkedDataVector qNode1(markerData.GetMarkerData(1).vectorValue, ns, ns);
+		Real L = markerData.GetMarkerData(1).GetHelper();
+		Real slidingCoordinate = ComputeLocalSlidingCoordinate();
+		Vector2D slidingPosition = CObjectANCFCable2D::MapCoordinates(CObjectANCFCable2D::ComputeShapeFunctions(slidingCoordinate, L), qNode0, qNode1);
+		Vector2D tangent = CObjectANCFCable2D::MapCoordinates(CObjectANCFCable2D::ComputeShapeFunctions_x(slidingCoordinate, L), qNode0, qNode1);
+		Real tangentLength = tangent.GetL2Norm();
+		CHECKandTHROW(tangentLength != 0., "ObjectJointSliding2D: the slope of the cable is zero at the sliding position");
+		tangent *= 1. / tangentLength;
+		Vector2D vPos({ slidingPosition[0] - markerData.GetMarkerData(0).position[0], slidingPosition[1] - markerData.GetMarkerData(0).position[1] });
+		value.SetVector({ vPos * tangent, vPos[1] * tangent[0] - vPos[0] * tangent[1], 0. });
+		break;
+	}
 	case OutputVariableType::Force: 
 	{
 		const Index forceXindex = 0;

@@ -372,4 +372,40 @@ void ConstraintJacobianCoordinateMarkers(const CSystemData& cSystemData, Tempora
 void ConstraintReactionForcesCoordinateMarkers(const CSystemData& cSystemData, TemporaryComputationData& temp, const CObjectConstraint& constraint,
 	Index objectNumber, const Vector& reactionForces, Vector& localODE2);
 
+//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+//the frame outputs of joints and connectors on rigid markers (#2870)
+
+//! the frame (A, p) as output variable: 16 values, the 4x4 matrix [A p; 0 1] row by row, as HomogeneousTransformation
+inline void ConnectorOutputVariableFrame(const Matrix3D& A, const Vector3D& p, Vector& value)
+{
+	value.SetNumberOfItems(16);
+	for (Index i = 0; i < 3; i++)
+	{
+		for (Index j = 0; j < 3; j++) { value[4 * i + j] = A(i, j); }
+		value[4 * i + 3] = p[i];
+	}
+	value[12] = 0.; value[13] = 0.; value[14] = 0.; value[15] = 1.;
+}
+
+//! HomogeneousTransformationLocal: the frame J1 (A1, p1) relative to the frame J0 (A0, p0), [A0^T A1, A0^T (p1-p0); 0 1]
+inline void ConnectorOutputVariableFrameLocal(const Matrix3D& A0, const Vector3D& p0, const Matrix3D& A1, const Vector3D& p1, Vector& value)
+{
+	Matrix3D A0T = A0.GetTransposed();
+	ConnectorOutputVariableFrame(A0T * A1, A0T * (p1 - p0), value);
+}
+
+//! an output variable of a connector, as Python and the sensors ask for it: HomogeneousTransformation is composed of Position
+//! and RotationMatrix if the connector has these (#2780), else the connector gives it as the frame J0 (#2870)
+inline void GetConnectorOutputVariable(const CObjectConnector& connector, OutputVariableType variableType,
+	const MarkerDataStructure& markerData, Index objectNumber, Vector& value)
+{
+	if (variableType == OutputVariableType::HomogeneousTransformation &&
+		((Index64)connector.GetOutputVariableTypes() & (Index64)OutputVariableType::RotationMatrix))
+	{
+		OutputVariableHomogeneousTransformation([&connector, &markerData, objectNumber](OutputVariableType type, Vector& v)
+			{ connector.GetOutputVariableConnector(type, markerData, objectNumber, v); }, value);
+	}
+	else { connector.GetOutputVariableConnector(variableType, markerData, objectNumber, value); }
+}
+
 #endif

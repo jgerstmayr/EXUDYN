@@ -497,11 +497,11 @@ namespace EPyUtils
 	}
 }
 
-//! an output variable as Python object (#2789): HomogeneousTransformation as exu.HT, from its 16 values row by row; a single
-//! value as float; else a numpy array
+//! an output variable as Python object (#2789): HomogeneousTransformation and HomogeneousTransformationLocal (#2870) as exu.HT,
+//! from its 16 values row by row; a single value as float; else a numpy array
 inline py::object OutputVariableToPython(OutputVariableType variableType, const Vector& value)
 {
-	if (variableType == OutputVariableType::HomogeneousTransformation)
+	if (variableType == OutputVariableType::HomogeneousTransformation || variableType == OutputVariableType::HomogeneousTransformationLocal)
 	{
 		ConstSizeMatrix<16> matrix44(4, 4);
 		for (Index i = 0; i < 16; i++) { matrix44.GetDataPointer()[i] = value[i]; }

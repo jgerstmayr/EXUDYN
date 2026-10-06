@@ -94,8 +94,22 @@ void CObjectJointPrismatic2D::GetOutputVariableConnector(OutputVariableType vari
 {
 	const Matrix3D& A0 = markerData.GetMarkerData(0).orientation;
 	const Matrix3D& A1 = markerData.GetMarkerData(1).orientation;
+	const Vector3D& p0 = markerData.GetMarkerData(0).position;
+	const Vector3D& p1 = markerData.GetMarkerData(1).position;
 	switch (variableType)
 	{
+		//the joint frames are the marker frames (#2870)
+		case OutputVariableType::Position: value.CopyFrom(p0); break;
+		case OutputVariableType::Velocity: value.CopyFrom(markerData.GetMarkerData(0).velocity); break;
+		case OutputVariableType::DisplacementLocal: value.CopyFrom(A0.GetTransposed() * (p1 - p0)); break;
+		case OutputVariableType::HomogeneousTransformation: ConnectorOutputVariableFrame(A0, p0, value); break;
+		case OutputVariableType::HomogeneousTransformationLocal: ConnectorOutputVariableFrameLocal(A0, p0, A1, p1, value); break;
+		case OutputVariableType::ForceLocal: //the force normal to the axis from the first multiplier, on marker 0 as for the other joints (#2870)
+		{
+			Vector3D n1 = A1 * parameters.normalMarker1;
+			value.CopyFrom(A0.GetTransposed() * (GetCurrentAEcoordinate(0) * n1));
+			break;
+		}
 		case OutputVariableType::Distance: //the position of marker 1 along the (normalized) prismatic axis (#2735)
 		{
 			Vector3D t0 = A0 * parameters.axisMarker0;

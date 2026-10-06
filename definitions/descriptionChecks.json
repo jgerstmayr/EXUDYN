@@ -269,7 +269,7 @@
   "ObjectConnectorLinearSpringDamper": {
    "checked": "2026-10-06",
    "by": "Claude-JG",
-   "fingerprint": "152b74223639"
+   "fingerprint": "a3bf9900d58d"
   },
   "ObjectConnectorReevingSystemSprings": {
    "checked": "2026-10-06",
@@ -279,7 +279,7 @@
   "ObjectConnectorRigidBodySpringDamper": {
    "checked": "2026-10-06",
    "by": "Claude-JG",
-   "fingerprint": "1b3968af9647"
+   "fingerprint": "cd2692b7c563"
   },
   "ObjectConnectorRollingDiscPenalty": {
    "checked": "2026-10-06",
@@ -369,27 +369,27 @@
   "ObjectJointGeneric": {
    "checked": "2026-10-06",
    "by": "Claude-JG",
-   "fingerprint": "c54b3279c70e"
+   "fingerprint": "b08871e21317"
   },
   "ObjectJointPrismatic2D": {
    "checked": "2026-10-06",
    "by": "Claude-JG",
-   "fingerprint": "e578f22f7b83"
+   "fingerprint": "d689b92fe850"
   },
   "ObjectJointPrismaticX": {
    "checked": "2026-10-06",
    "by": "Claude-JG",
-   "fingerprint": "aba4895859bc"
+   "fingerprint": "172752cf8a4a"
   },
   "ObjectJointRevolute2D": {
    "checked": "2026-10-06",
    "by": "Claude-JG",
-   "fingerprint": "be1dc809e493"
+   "fingerprint": "ea918dac7f1e"
   },
   "ObjectJointRevoluteZ": {
    "checked": "2026-10-06",
    "by": "Claude-JG",
-   "fingerprint": "906cb09f8e7f"
+   "fingerprint": "933640b26907"
   },
   "ObjectJointRollingDisc": {
    "checked": "2026-10-06",
@@ -404,7 +404,7 @@
   "ObjectJointSliding2D": {
    "checked": "2026-10-06",
    "by": "Claude-JG",
-   "fingerprint": "95f062cf8db0"
+   "fingerprint": "a76afe23076a"
   },
   "ObjectJointSpherical": {
    "checked": "2026-10-06",
@@ -474,7 +474,7 @@
   "SensorObject": {
    "checked": "2026-10-06",
    "by": "Claude-JG",
-   "fingerprint": "f45a790ece4a"
+   "fingerprint": "d4025f532547"
   },
   "SensorSuperElement": {
    "checked": "2026-10-06",

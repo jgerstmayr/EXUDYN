@@ -195,6 +195,10 @@ void CObjectConnectorRigidBodySpringDamper::GetOutputVariableConnector(OutputVar
 	switch (variableType)
 	{
 	case OutputVariableType::DisplacementLocal: value.CopyFrom(vLocPos); break;
+	case OutputVariableType::Displacement: value.CopyFrom(markers[1].frame.GetTranslation() - markers[0].frame.GetTranslation()); break; //#2870
+	case OutputVariableType::HomogeneousTransformationLocal: //the joint frame J1 in J0, in every formulation (#2870)
+		ConnectorOutputVariableFrameLocal(markerData.GetMarkerData(0).orientation * parameters.rotationMarker0, markerData.GetMarkerData(0).position,
+			markerData.GetMarkerData(1).orientation * parameters.rotationMarker1, markerData.GetMarkerData(1).position, value); break;
 	case OutputVariableType::VelocityLocal: value.CopyFrom(vLocVel); break;
 	case OutputVariableType::Rotation: value.CopyFrom(vLocRot); break;
 	case OutputVariableType::AngularVelocityLocal: value.CopyFrom(vLocAngVel); break;
