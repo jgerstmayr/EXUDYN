@@ -18,6 +18,8 @@
 
 #include <chrono> //#sleep_for
 #include <thread> //#sleep_for
+#include <cstdlib> //strtod (#2874)
+#include <stdexcept>
 
 #include <pybind11/pybind11.h> //for integrated python connectivity (==>put functionality into separate file ...!!!)
 #include <pybind11/eval.h>
@@ -551,6 +553,7 @@ void CSolverBase::InitializeSolverInitialConditions(CSystem& computationalSystem
 	{
 		//set according size of vectors, which are not initialized:
 		data.aAlgorithmic.SetNumberOfItems(data.nODE2);
+		data.aAlgorithmic.SetAll(0.); //an explicit solver does not use it, but the restart file stores it (#2874)
 		computationalSystem.GetSystemData().GetCData().currentState.ODE2Coords_tt.SetNumberOfItems(data.nODE2);
 		computationalSystem.GetSystemData().GetCData().currentState.ODE1Coords_t.SetNumberOfItems(data.nODE1);
 	}
@@ -1796,6 +1799,17 @@ void WriteRestartVector(std::ofstream& restartFile, const char* name, const TVec
 	restartFile << "\n";
 }
 
+//! a number of the restart file; std::stod throws out_of_range for a subnormal number with glibc (ERANGE), but not with
+//! MSVC, so it is read with strtod, which gives the subnormal number (#2874)
+Real ReadRestartReal(const STDstring& text)
+{
+	const char* begin = text.c_str();
+	char* end = nullptr;
+	Real value = std::strtod(begin, &end);
+	if (end == begin || *end != 0) { throw std::invalid_argument("not a number"); }
+	return value;
+}
+
 //! the values of "v0,v1,...", empty for ""
 std::vector<Real> ReadRestartValues(const STDstring& text)
 {
@@ -1805,7 +1819,7 @@ std::vector<Real> ReadRestartValues(const STDstring& text)
 	{
 		size_t end = text.find(',', start);
 		if (end == STDstring::npos) { end = text.size(); }
-		values.push_back(std::stod(text.substr(start, end - start)));
+		values.push_back(ReadRestartReal(text.substr(start, end - start)));
 		start = end + 1;
 	}
 	return values;
@@ -1945,14 +1959,14 @@ void CSolverBase::ReadRestartFile(const CSystem& computationalSystem, const Simu
 	try
 	{
 		restart.fileName = fileName;
-		restart.time = std::stod(values["time"]);
+		restart.time = ReadRestartReal(values["time"]);
 		restart.stepIndex = (Index)std::stoll(values["stepIndex"]);
-		restart.stepSize = std::stod(values["stepSize"]);
-		restart.nextStepSize = std::stod(values["nextStepSize"]);
+		restart.stepSize = ReadRestartReal(values["stepSize"]);
+		restart.nextStepSize = ReadRestartReal(values["nextStepSize"]);
 		restart.stepsSinceLastStepSizeReduction = (Index)std::stoll(values["stepsSinceLastStepSizeReduction"]);
-		restart.lastSolutionWritten = std::stod(values["lastSolutionWritten"]);
-		restart.lastSensorsWritten = std::stod(values["lastSensorsWritten"]);
-		restart.lastImageRecorded = std::stod(values["lastImageRecorded"]);
+		restart.lastSolutionWritten = ReadRestartReal(values["lastSolutionWritten"]);
+		restart.lastSensorsWritten = ReadRestartReal(values["lastSensorsWritten"]);
+		restart.lastImageRecorded = ReadRestartReal(values["lastImageRecorded"]);
 		restart.solutionFileSize = std::stoll(values["solutionFileSize"]);
 		for (Real size : ReadRestartValues(values["sensorFileSizes"])) { restart.sensorFileSizes.push_back((long long)size); }
 		restart.ODE2 = ReadRestartValues(values["ODE2"]);

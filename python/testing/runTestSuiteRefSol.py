@@ -397,6 +397,11 @@ def UnresolvedOnLinux():
         #through the Create* helpers whose setup arithmetic that issue is about. Resolve it with
         ##2502 before spending time on it as a Linux question.
         'createSphereTriangleContact.py',       #rel. 1.2e-11
+        #added 2026-10-06 from the WSL run of 1.12.363.dev1 (cp310, #2874): the contact model differs
+        #since the step size is recommended where a contact ends (#2109, 2026-09-30; before rel. 2.2e-12),
+        #and ComputeItem evaluates the state of 100 steps of a double pendulum
+        'createSphereQuadContact.py',           #rel. 1.1e-07
+        'computeItemTest.py',                   #rel. 2.3e-11
         ])
 
     return unresolved

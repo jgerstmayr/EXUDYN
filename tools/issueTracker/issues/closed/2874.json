@@ -1,0 +1,14 @@
+{
+  "number": 2874,
+  "title": "Linux test suite: the restart file of RK44 is not read back; two new platform differences",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "BUG",
+  "description": "The WSL run of 1.12.363.dev1 (cp310): restartFileTest fails with 'the restart file has a value that is not a number'. The explicit solver never initializes aAlgorithmic, so the restart file holds garbage (subnormal numbers, -nan); std::stod throws out_of_range for a subnormal number with glibc, not with MSVC. Fixed: aAlgorithmic set to zero, the restart numbers read with strtod. createSphereQuadContact.py (rel. 1.1e-7, since #2109) and computeItemTest.py (rel. 2.3e-11) differ on Linux and go to UnresolvedOnLinux.",
+  "dateRaised": "2026-10-06",
+  "deadline": "2027-04-04",
+  "dateResolved": "2026-10-06 15:34",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "A restart file written by an explicit solver could not be read back on Linux: it contained uninitialized values; they are zero now, and the numbers of a restart file are read the same way on every platform.",
+  "resolvedInVersion": "1.12.365"
+}

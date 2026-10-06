@@ -8,10 +8,10 @@ Every entry carries the **type** of the issue, then its **priority** and its **e
 
 General information on current version:
 
-- Exudyn version = 1.12.364.dev1
+- Exudyn version = 1.12.365.dev1
 - last change = 2026-10-06
-- Number of issues = 2873
-- Number of resolved issues = 2678 (364 in current version)
+- Number of issues = 2875
+- Number of resolved issues = 2679 (365 in current version)
 
 ## Resolved issues and resolved bugs before version 1.12
 
@@ -7568,6 +7568,9 @@ The following list contains the issues which have been **RESOLVED** in the accor
 
 ## Open issues
 
+- `CHANGE` `MEDIUM EFF` `raised by: Claude-JG` Examples, test models and mini examples use the current item parameters, Create arguments and settings (#2873)
+  - description: The shipped scripts still use deprecated item parameters (physicsMass, rotationMarker0, ...), deprecated arguments of the Create functions (bodyNumbers, bodyNumber, ...) and renamed settings; users copy from them. The scripts are pre-run, the deprecation warnings name file and line, and the names are replaced there; deprecated functions with a different signature (BrickXYZ, GenerateStraightLineANCFCable2D, ...) are listed separately. Maintainer 2026-10-06.
+  - date raised: 2026-10-06
 - `CHECK` `MEDIUM EFF` `raised by: Claude-JG` parameters and output variables that the C++ of an item does not use - found by RG13.3 (#2867)
   - description: Found by checking the descriptions against the implementation (RG13.3.2-.5); the descriptions say what IS now, the code is for a decision: ObjectContactCurveCircles - the output variables DisplacementLocal, VelocityLocal, ForceLocal are declared and give an empty vector, dynamicFriction and frictionProportionalZone are not used, polynomialData only bends the drawing; ObjectContactCircleCable2D - contactDamping is not used (commented out); ObjectConnectorCoordinateSpringDamperExt - velocityOffset only reaches the user function, the built-in law k(x-x0)+d\*v ignores it; ObjectANCFThinPlate - strainIsRelativeToReference has no effect since the port of RG4.20 (strains always relative to the reference). Options per item: implement, or remove the parameter (no deprecation needed for 1.12-new ones).
   - date raised: 2026-10-06

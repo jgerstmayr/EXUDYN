@@ -16036,3 +16036,24 @@ it, and the algebraic coordinate, which still holds that increment, is no longer
 in the Newton iteration the data coordinate is the start of the step and the algebraic coordinate the increment, as
 before. `connectorFrameOutputsTest.py` (26 checks) now checks the tangential drift (below 1e-8, before 5.7e-5) and
 `SlidingCoordinate` against the data coordinate; the suite is unchanged otherwise (no reference value depended on it).
+
+<a id="rg4-19-13"></a>
+### RG4.19.13 — the Linux suite of 1.12.363: the restart file of RK44, two platform differences (2026-10-06, #2874)
+
+*(Maintainer 2026-10-06: "the recent wsl build works, the testsuite fails, see
+testSuiteLog_V1.12.363.dev1_linux-x86-64bit-P3.10.txt.")*
+
+Eight test models failed, five of them the known `UnresolvedOnLinux()` ones. The other three:
+
+- `restartFileTest.py`: "the restart file ... has a value that is not a number", at the RK44 restart. The explicit
+  solvers never set `aAlgorithmic` - `SetNumberOfItems` without values -, and the restart file stores it: the file
+  of the Windows run held `2.1e-314, ..., -nan, ...`. MSVC's `std::stod` reads a subnormal number, glibc's throws
+  `out_of_range` (ERANGE). `aAlgorithmic` is now zero after its allocation (the implicit solver sets it anyway), and
+  the numbers of the restart file are read with `strtod` (`ReadRestartReal`), which gives a subnormal number on
+  both. The file now has `aAlgorithmic=0,...` for RK44.
+- `createSphereQuadContact.py`: rel. 1.1e-7 against the Windows reference, which changed with #2109 (2026-09-30,
+  the step size recommended where a contact ends); before, Linux agreed to 2.2e-12. A contact model, the family of
+  the other unresolved ones - added to `UnresolvedOnLinux()`.
+- `computeItemTest.py`: rel. 2.3e-11, the state after 100 steps of a double pendulum - added as well.
+
+Gates on Windows: build, all checks, suite PASSED, pytest 1224 passed. The Linux run is the maintainer's.

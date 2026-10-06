@@ -1,0 +1,11 @@
+{
+  "number": 2873,
+  "title": "Examples, test models and mini examples use the current item parameters, Create arguments and settings",
+  "author": "Claude-JG",
+  "status": "RAISED",
+  "type": "CHANGE",
+  "effort": "MEDIUM",
+  "description": "The shipped scripts still use deprecated item parameters (physicsMass, rotationMarker0, ...), deprecated arguments of the Create functions (bodyNumbers, bodyNumber, ...) and renamed settings; users copy from them. The scripts are pre-run, the deprecation warnings name file and line, and the names are replaced there; deprecated functions with a different signature (BrickXYZ, GenerateStraightLineANCFCable2D, ...) are listed separately. Maintainer 2026-10-06.",
+  "dateRaised": "2026-10-06",
+  "deadline": "2027-04-04"
+}

@@ -870,6 +870,10 @@ The steps are numbered in the order they were raised and stand here in the order
       increment to the data coordinate, and the algebraic coordinate keeps it; `DisplacementLocal` of JointSliding2D
       shows it as tangential drift. *(Maintainer 2026-10-06: "the output function should not add the coordinate a
       second time")* - the outputs read the data coordinate only.
+    - **RG4.19.13** **DONE 2026-10-06**, to be confirmed on Linux — [log](exudynRevisionLog2026b.md#rg4-19-13) (#2874)
+      *(maintainer 2026-10-06: "the recent wsl build works, the testsuite fails")* the restart file of an explicit
+      solver held the never initialized `aAlgorithmic` (subnormal numbers, `-nan`), which glibc's `std::stod` refuses;
+      `createSphereQuadContact.py` and `computeItemTest.py` added to `UnresolvedOnLinux()`.
     - Not here, they need a Linux machine or a screen: #2204, #2205 (perspective), #2277, #2278 (GLFW on Linux) - RG6.8.
 
 <a id="rg4-20"></a>
