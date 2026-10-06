@@ -160,7 +160,7 @@ NOT cover, and about the testing that no suite can do.
       screen: CTRL+keypad, F2 message, highlight time, sensor traces in the raytracer, `general.sphereTiling` for
       `graphics.Sphere` and the spheres of connectors, contour colors of spheres and of bodies without rotation, the
       ffmpeg encoder, the check list and its model, the docs (ffmpeg on macOS, CTRL+F3).
-    - **RG2.4.2** **DONE 2026-10-06**, to be checked on the Mac — [log](exudynRevisionLog2026b.md#rg2-4-2) (#2878)
+    - **RG2.4.2** **DONE 2026-10-06**, confirmed on the Mac 2026-10-07 — [log](exudynRevisionLog2026b.md#rg2-4-2) (#2878)
       macOS: abort when a Tk dialog (SolutionViewer) is closed - glfwPollEvents dispatches the Tk event inside a Tk
       callback; `SC.renderer.DoIdleTasks(pollEvents=False)`, used by the dialogs on macOS *(maintainer: "try that and we
       will check if it works sufficiently smooth")*.
@@ -668,7 +668,7 @@ The steps are numbered in the order they were raised and stand here in the order
       module - measured there: the models off the reference go from 8 to 3; `geometricallyExactBeamCurvedTest.py`
       with `staticSolver.newton.absoluteTolerance = 1e-6`, as the case P = 0 has no load to measure the residual
       against.
-    - **RG4.1.5** **DONE 2026-10-06**, to be confirmed on the Mac — [log](exudynRevisionLog2026b.md#rg4-1-5) (#2876)
+    - **RG4.1.5** **DONE 2026-10-06**, confirmed on the Mac 2026-10-07 — [log](exudynRevisionLog2026b.md#rg4-1-5) (#2876)
       *(maintainer 2026-10-06: "the causes for the raytracer and another heap corruption in the test suite are described
       in the two text files in tmp/MacOS. Implement the suggested changes")* the raytraced image of `RedrawAndGetImage`
       is no longer drawn into an OpenGL window that does not exist in the Python thread (segfault on macOS); a symbolic

@@ -16252,3 +16252,9 @@ The 73 DeprecationWarnings were printed by the suite itself, not by the build:
 - Without the default ground node of the old functions (`fixedConstraintsNode1` omitted gave `[0,0,0,0]`, a ground node
   without constraints) five mini examples have one node less; their graphics references are re-recorded, their
   results are unchanged.
+
+*Note 2026-10-07 to RG4.1.5 and RG2.4.1-.4 (maintainer, after re-installing on macOS: "Worked all perfectly. Also
+checked general visualization problems (contour, sphereTiling, shadow, larger markers/nodes/sensors, etc.) - fixed. I
+only need to re-check the ffmpeg conversion from solution viewer and image saving from terminal.")*: confirmed on the
+Mac; open there: Make mp4 of the SolutionViewer (the encoder fallback of #2877) and the images written when started
+from a terminal.
