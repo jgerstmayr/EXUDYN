@@ -1,0 +1,11 @@
+{
+  "number": 2870,
+  "title": "joints and connectors: consistent output variables - joint frame, drift and relative frame as HomogeneousTransformation(Local)",
+  "author": "Claude-JG",
+  "status": "RAISED",
+  "type": "EXTENSION",
+  "effort": "MEDIUM",
+  "description": "Maintainer 2026-10-06: the connectors and joints have inconsistent output variables; consistent: local drift in joints, joint position/orientation (marker 0), relative position of connectors, DisplacementLocal for items without rotation, a new HomogeneousTransformationLocal for the drift of joints and the marker difference of connectors, HomogeneousTransformation for the joint frame J0 of the classical joints (not the rolling joints). Concept first (RG12.42), table in tmp/connectorOutputVariables.md; nothing implemented before the decisions.",
+  "dateRaised": "2026-10-06",
+  "deadline": "2027-04-04"
+}

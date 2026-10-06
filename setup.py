@@ -555,6 +555,9 @@ class BuildExt(_build_ext):
          '-Wno-template-id-cdtor', #C++20 warnings for templates
  		 '-Wall',
          '-g0', #deactivate debug information (overrides default -g flags), decreases files size from 38MB to 2.6 MB in Python 3.6 version
+         '-ffp-contract=off', #no a*b+c fused into one FMA: on arm64 (Apple silicon, Linux aarch64) FMA is baseline and
+                              #clang/gcc contract by default, which moved results against Windows (MSVC does not contract);
+                              #measured on macOS: 8 models off the reference become 3 (#2869); no effect on x86-64 without -mfma
          #'-std=c++17', #==>chosen automatic
          #++++++++++++++++++++++++++++++
          #SPEEDUP OPTIONS; do not activate in standard:

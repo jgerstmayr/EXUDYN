@@ -1,0 +1,16 @@
+{
+  "number": 2869,
+  "title": "macOS: geometricallyExactBeamCurvedTest fails; FMA contraction of clang moves results",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "FIX",
+  "effort": "LOW",
+  "description": "Feedback from the macOS tests (maintainer 2026-10-06): geometricallyExactBeamCurvedTest needs staticSolver.newton.absoluteTolerance = 1e-6, in particular for P=0, which has no load to measure the residual against; -ffp-contract=off reduces the macOS differences from 8 models to 3 and should be the default: arm64 has FMA as baseline and clang/gcc contract a*b+c by default, MSVC does not.",
+  "dateRaised": "2026-10-06",
+  "deadline": "2027-04-04",
+  "dateResolved": "2026-10-06 08:55",
+  "resolvedAuthor": "Claude-JG",
+  "file": "setup.py",
+  "releaseNotes": "Builds on Linux and macOS no longer fuse a*b+c into one rounded operation (-ffp-contract=off), as Windows does not, which brings macOS results closer to the reference values; geometricallyExactBeamCurvedTest passes on macOS (revision2026b step RG4.1.4)",
+  "resolvedInVersion": "1.12.361"
+}

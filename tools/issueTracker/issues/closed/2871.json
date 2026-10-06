@@ -1,0 +1,16 @@
+{
+  "number": 2871,
+  "title": "settings dialog: the button 'view as code' is 'store model view' and gives SetModelView as CTRL+F3; 'store positions' explains it stores all windows",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "CHANGE",
+  "effort": "LOW",
+  "description": "Maintainer 2026-10-06: the button should be called 'store model view' and give SC.renderer.Start() and SC.renderer.SetModelView(zoom=..., rotationVector=[...], centerPoint=[...]) like CTRL+F3; the hints of 'store positions' were misleading: it stores the positions of all windows, not only of the dialog.",
+  "dateRaised": "2026-10-06",
+  "deadline": "2027-04-04",
+  "dateResolved": "2026-10-06 08:55",
+  "resolvedAuthor": "Claude-JG",
+  "file": "python/exudyn/misc/GUI.py",
+  "releaseNotes": "The visualization settings dialog has a button store model view, which gives SC.renderer.Start() and SC.renderer.SetModelView(zoom, rotationVector, centerPoint) as CTRL+F3 prints it; store positions describes that it stores the positions of all open windows (revision2026b step RG6.10.1)",
+  "resolvedInVersion": "1.12.362"
+}

@@ -8,10 +8,10 @@ Every entry carries the **type** of the issue, then its **priority** and its **e
 
 General information on current version:
 
-- Exudyn version = 1.12.360.dev1
+- Exudyn version = 1.12.362.dev1
 - last change = 2026-10-06
-- Number of issues = 2869
-- Number of resolved issues = 2674 (360 in current version)
+- Number of issues = 2872
+- Number of resolved issues = 2676 (362 in current version)
 
 ## Resolved issues and resolved bugs before version 1.12
 
@@ -7568,6 +7568,9 @@ The following list contains the issues which have been **RESOLVED** in the accor
 
 ## Open issues
 
+- `EXTENSION` `MEDIUM EFF` `raised by: Claude-JG` joints and connectors: consistent output variables - joint frame, drift and relative frame as HomogeneousTransformation(Local) (#2870)
+  - description: Maintainer 2026-10-06: the connectors and joints have inconsistent output variables; consistent: local drift in joints, joint position/orientation (marker 0), relative position of connectors, DisplacementLocal for items without rotation, a new HomogeneousTransformationLocal for the drift of joints and the marker difference of connectors, HomogeneousTransformation for the joint frame J0 of the classical joints (not the rolling joints). Concept first (RG12.42), table in tmp/connectorOutputVariables.md; nothing implemented before the decisions.
+  - date raised: 2026-10-06
 - `CHECK` `MEDIUM EFF` `raised by: Claude-JG` parameters and output variables that the C++ of an item does not use - found by RG13.3 (#2867)
   - description: Found by checking the descriptions against the implementation (RG13.3.2-.5); the descriptions say what IS now, the code is for a decision: ObjectContactCurveCircles - the output variables DisplacementLocal, VelocityLocal, ForceLocal are declared and give an empty vector, dynamicFriction and frictionProportionalZone are not used, polynomialData only bends the drawing; ObjectContactCircleCable2D - contactDamping is not used (commented out); ObjectConnectorCoordinateSpringDamperExt - velocityOffset only reaches the user function, the built-in law k(x-x0)+d\*v ignores it; ObjectANCFThinPlate - strainIsRelativeToReference has no effect since the port of RG4.20 (strains always relative to the reference). Options per item: implement, or remove the parameter (no deprecation needed for 1.12-new ones).
   - date raised: 2026-10-06

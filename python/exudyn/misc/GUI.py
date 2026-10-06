@@ -361,31 +361,28 @@ def SplitStoredFromChanged(changes, overriddenPaths, fileName):
     return (lines, len(stored))
 
 def RenderStateCodeLines(renderState, systemContainerName='SC'):
-    """The lines that give a script the current model view of the render window (#2862).
+    """The lines that give a script the current model view of the render window, as CTRL+F3 prints them (#2862).
 
     Args:
         renderState: the dictionary of SC.renderer.GetState()
         systemContainerName: the name of the SystemContainer in the script
 
     Returns:
-        [(key, line)]: the window size as a setting, which the window has when it opens, and the view - center
-        point, zoom, model rotation and the scene size the zoom refers to - set after the renderer started;
-        autoFitScene is switched off, which would otherwise fit the scene and replace the view
+        [(key, line)]: SC.renderer.Start() and SC.renderer.SetModelView with zoom, rotation vector and center point
     """
+    from exudyn.rigidBodyUtilities import RotationMatrix2RotationVector                      # noqa: PLC0415
     def Numbers(values):
-        return '[' + ', '.join(f'{float(value):.8g}' for value in values) + ']'
-    rotation = [list(row) for row in renderState['modelRotation']]
-    view = ("{'centerPoint': " + Numbers(renderState['centerPoint'])
-            + ", 'maxSceneSize': " + f"{float(renderState['maxSceneSize']):.8g}"
-            + ", 'zoom': " + f"{float(renderState['zoom']):.8g}" + ',\n'
-            + "     'modelRotation': [" + ', '.join(Numbers(row) for row in rotation) + ']}')
-    windowSize = [int(size) for size in renderState['currentWindowSize']]
+        return '[' + ','.join(f'{float(value):.7g}' for value in values) + ']'
+    rotation = np.array([list(row)[:3] for row in renderState['modelRotation']][:3], dtype=float)
+    #the model rotation is the transposed of the rotation of the rotation vector, as SetModelView sets it
+    rotationVector = RotationMatrix2RotationVector(rotation.T)
+    centerPoint = [float(renderState['centerPoint'][0]), float(renderState['centerPoint'][1]), 0.] #without z, as CTRL+F3
     sc = systemContainerName
-    return [('', '#the model view of the render window, as it is now'),
-            ('general.autoFitScene', sc + '.visualizationSettings.general.autoFitScene = False #keep the view below'),
-            ('view0.window.renderWindowSize', sc + '.visualizationSettings.view0.window.renderWindowSize = ' + str(windowSize)),
-            ('', sc + '.renderer.Start()'),
-            ('', sc + '.renderer.SetState(' + view + ')')]
+    indent = ' '*len(sc + '.renderer.SetModelView(')
+    return [('', sc + '.renderer.Start()'),
+            ('', sc + '.renderer.SetModelView(zoom=' + f"{float(renderState['zoom']):.7g}" + ',\n'
+             + indent + 'rotationVector=' + Numbers(rotationVector) + ',\n'
+             + indent + 'centerPoint=' + Numbers(centerPoint) + ')')]
 
 
 class Tooltip:
@@ -648,7 +645,7 @@ class TkinterEditDictionaryWithTypeInfo(tk.Frame):
         #the model view as code (#2862): only the visualization settings belong to a render window
         self.viewButton = None
         if CompiledSettingsClass(self.settingsStructure).__name__ == 'VisualizationSettings':
-            self.viewButton = tk.Button(self.buttonFrame, text='view as code', command=self.OnShowView)
+            self.viewButton = tk.Button(self.buttonFrame, text='store model view', command=self.OnShowView)
             self.viewButton.grid(row=0, column=4, padx=2, pady=(0, 4))
 
         self.resetButton = tk.Button(self.buttonFrame, text='reset', command=self.OnReset)
@@ -672,12 +669,13 @@ class TkinterEditDictionaryWithTypeInfo(tk.Frame):
                                    ' settings; nothing else is stored, not exudyn.config and not the'
                                    ' simulation settings, and you are shown what will be written'
                                    ' before anything is'),
-                (self.storePositionsButton, 'store where THIS dialog is, so that it opens here next'
-                                            ' time; nothing about the settings it shows, and you are'
-                                            ' shown what will be written before anything is'),
-                (self.viewButton, 'show the lines that set the current model view of the render window -'
-                                  ' center point, zoom, model rotation and window size - for a script, so that'
-                                  ' every run starts with this view'),
+                (self.storePositionsButton, 'store the size and position of every open window - this dialog,'
+                                            ' the other dialogs, the plot windows and the render window - so'
+                                            ' that each opens there next time; nothing about the settings, and'
+                                            ' you are shown what will be written before anything is'),
+                (self.viewButton, 'show the code that sets the current model view of the render window -'
+                                  ' SC.renderer.SetModelView with zoom, rotation vector and center point, as'
+                                  ' CTRL+F3 prints it - to paste into a script'),
                 (self.resetButton, 'reset to default'),
                 (self.revertButton, 'revert to state when dialog opened'),
                 (self.undoButton, 'undo the last change, a reset or a revert'),
@@ -1100,8 +1098,8 @@ class TkinterEditDictionaryWithTypeInfo(tk.Frame):
             self.ShowCodeLines('model view', [], 'no render window is open')
             return
         self.ShowCodeLines('model view', RenderStateCodeLines(guiSC.renderer.GetState()),
-                           'the current model view; paste the lines into the script instead of its own'
-                           ' renderer.Start()')
+                           'the current model view, as CTRL+F3 prints it; paste the lines into the script'
+                           ' instead of its own renderer.Start()')
 
     def SettingsFileName(self):
         """the override settings file, or a readable stand-in if it cannot be asked for"""
@@ -1159,7 +1157,7 @@ class TkinterEditDictionaryWithTypeInfo(tk.Frame):
                            confirm=('store', Store))
 
     def OnStorePositions(self):
-        """write the size and the position of this dialog to the override settings file
+        """write the size and the position of every open window to the override settings file
 
         The other half of #2693: where the window is, and nothing about what is in it. It stores
         whatever `dialogs.storeDialogPositions` says, because that flag is about a dialog remembering

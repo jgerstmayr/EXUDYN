@@ -870,20 +870,20 @@ def testANarrowDialogKeepsItsButtonColumns():
 
 
 def test_renderStateCodeLines():
-    """the model view as code (#2862): the lines set the window size and give SetState the view it had"""
-    import ast
+    """the model view as code (#2862): SC.renderer.SetModelView as CTRL+F3 prints it, which gives the renderer the
+    view back - zoom, model rotation and center point (without its z, as CTRL+F3)"""
     import numpy as np
+    from exudyn.rigidBodyUtilities import RotationVector2RotationMatrix
+    rotation = RotationVector2RotationMatrix([0.3, -0.2, 0.9])
     state = {'centerPoint': np.array([0.5, -1.25, 2.]), 'maxSceneSize': 3.5, 'zoom': 0.75,
-             'modelRotation': np.array([[0., -1., 0.], [1., 0., 0.], [0., 0., 1.]]),
-             'currentWindowSize': np.array([800, 600], dtype=np.int32), 'boundingBox': None}
+             'modelRotation': rotation, 'currentWindowSize': np.array([800, 600], dtype=np.int32)}
     lines = [line for (_, line) in gui.RenderStateCodeLines(state, 'SC')]
-    assert 'SC.visualizationSettings.general.autoFitScene = False #keep the view below' in lines
-    assert 'SC.visualizationSettings.view0.window.renderWindowSize = [800, 600]' in lines
-    assert lines.index('SC.renderer.Start()') < len(lines) - 1
-    setState = lines[-1]
-    assert setState.startswith('SC.renderer.SetState(') and setState.endswith(')')
-    view = ast.literal_eval(setState[len('SC.renderer.SetState('):-1])
-    assert set(view) == {'centerPoint', 'maxSceneSize', 'zoom', 'modelRotation'}
-    assert np.allclose(view['centerPoint'], state['centerPoint'])
-    assert np.allclose(view['modelRotation'], state['modelRotation'])
-    assert view['zoom'] == 0.75 and view['maxSceneSize'] == 3.5
+    assert lines[0] == 'SC.renderer.Start()'
+    assert lines[1].startswith('SC.renderer.SetModelView(zoom=0.75,')
+    SC = exudyn.SystemContainer()
+    SC.AddSystem()
+    exec(lines[1], {'SC': SC})
+    view = SC.renderer.GetState()
+    assert abs(view['zoom'] - 0.75) < 1e-6
+    assert np.allclose(view['centerPoint'], [0.5, -1.25, 0.], atol=1e-6)
+    assert np.allclose(np.array(view['modelRotation'])[:3, :3], rotation, atol=1e-6)

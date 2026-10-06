@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.12 | Metheney | 319 | 1.12.360 |
+| 1.12 | Metheney | 321 | 1.12.362 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
 | 1.9 | Krall | 235 | 1.9.234 |
@@ -29,6 +29,14 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.12 - Metheney (current)
 
+- **1.12.362** `CHANGE` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` settings dialog: the button 'view as code' is 'store model view' and gives SetModelView as CTRL+F3; 'store positions' explains it stores all windows (#2871)
+  - description: Maintainer 2026-10-06: the button should be called 'store model view' and give SC.renderer.Start() and SC.renderer.SetModelView(zoom=..., rotationVector=\[...\], centerPoint=\[...\]) like CTRL+F3; the hints of 'store positions' were misleading: it stores the positions of all windows, not only of the dialog.
+  - **notes:** The visualization settings dialog has a button store model view, which gives SC.renderer.Start() and SC.renderer.SetModelView(zoom, rotationVector, centerPoint) as CTRL+F3 prints it; store positions describes that it stores the positions of all open windows (revision2026b step RG6.10.1)
+  - date resolved: **2026-10-06 08:55**, date raised: 2026-10-06
+- **1.12.361** `FIX` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` macOS: geometricallyExactBeamCurvedTest fails; FMA contraction of clang moves results (#2869)
+  - description: Feedback from the macOS tests (maintainer 2026-10-06): geometricallyExactBeamCurvedTest needs staticSolver.newton.absoluteTolerance = 1e-6, in particular for P=0, which has no load to measure the residual against; -ffp-contract=off reduces the macOS differences from 8 models to 3 and should be the default: arm64 has FMA as baseline and clang/gcc contract a\*b+c by default, MSVC does not.
+  - **notes:** Builds on Linux and macOS no longer fuse a\*b+c into one rounded operation (-ffp-contract=off), as Windows does not, which brings macOS results closer to the reference values; geometricallyExactBeamCurvedTest passes on macOS (revision2026b step RG4.1.4)
+  - date resolved: **2026-10-06 08:55**, date raised: 2026-10-06
 - **1.12.360** <span class="textred">`BUG`</span> `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` exudev linux: WSL is asked for the repository path through its shell, which eats the backslashes (#2868)
   - description: exudev linux --py 313 stopped with 'wslpath: C:DATAcppEXUDYN\_git' / 'could not ask WSL for the repository path' (maintainer 2026-10-06): WslRepositoryRoot ran 'wsl wslpath -a C:\\DATA\\...', which current WSL (3.0) passes through the login shell; 'wsl --exec' and forward slashes fix it
   - **notes:** exudev linux works again on Windows: it asks WSL for the repository path with wsl --exec and forward slashes, which the login shell of current WSL no longer garbles (revision2026b step RG10.17)

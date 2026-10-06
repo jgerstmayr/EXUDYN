@@ -641,6 +641,11 @@ The steps are numbered in the order they were raised and stand here in the order
       four are ANCF contact/sliding and one is a gravity connector, and none of them appears on
       Linux at all. Worth one look at whether they share a mechanism before being folded into the
       general question.
+    - **RG4.1.4** **DONE 2026-10-06**, to be confirmed on the Mac — [log](exudynRevisionLog2026b.md#rg4-1-4) (#2869)
+      *(maintainer 2026-10-06, from the tests on macOS)* `-ffp-contract=off` for every unix build, not only the fast
+      module - measured there: the models off the reference go from 8 to 3; `geometricallyExactBeamCurvedTest.py`
+      with `staticSolver.newton.absoluteTolerance = 1e-6`, as the case P = 0 has no load to measure the residual
+      against.
     - **RG4.1.3** *open (maintainer 2026-10-01)* — **the math library and uninitialized values**, two candidate
       causes to test. What is known (IEEE 754-2008/2019, the glibc manual *Errors in Math Functions*, the MSVC `/fp`
       and GCC/clang `-ffp-contract` documentation; from the standard literature, not re-fetched here):
@@ -1110,6 +1115,9 @@ the arc; the spring windings of the spring-dampers use `connectors.springNumberO
 additional button to export important parts of the current render state ... CenterPoint, zoom, modelRotation,
 currentWindowSize")* **The model view as code**: the visualization settings dialog has a button **view as code** that
 shows, and copies, the lines that give a script the current view of the render window.
+- **RG6.10.1** **DONE 2026-10-06** — [log](exudynRevisionLog2026b.md#rg6-10-1) (#2871) *(maintainer 2026-10-06)* the button
+  is **store model view** and gives `SC.renderer.Start()` and `SC.renderer.SetModelView(zoom=..., rotationVector=[...],
+  centerPoint=[...])` as CTRL+F3 prints it; the hints of **store positions** say that it stores every open window.
 
 ## RG7 — Python user items
 
@@ -1544,6 +1552,24 @@ docstrings; argument annotations only where they help a reader; a check that eve
 <a id="rg12-40"></a>
 **RG12.40** **DONE 2026-10-05** (#2863, #2337) — [log](exudynRevisionLog2026b.md#rg12-40) · [plan text](exudynRevisionLog2026b.md#plan-rg12-40) — The Create functions take bodies, nodes or markers in `itemNumbers`.
 
+<a id="rg12-42"></a>
+**RG12.42** *(group RG12; maintainer 2026-10-06: "the connectors and joints have inconsistent output variables ... add a
+    new step/issue (EXTENSION) and make a concept (don't implement anything before)")* **Joints and connectors with
+    consistent output variables** (#2870). Concept, table and decisions in `tmp/connectorOutputVariables.md` (not in
+    the repository) - [log](exudynRevisionLog2026b.md#rg12-42):
+    - the rules: `Position`/`Velocity` of marker m0 for every joint; `HomogeneousTransformation` the joint frame J0 for
+      the classical joints with rigid markers (`JointGeneric`, `JointRevoluteZ`, `JointPrismaticX`, `JointPrismatic2D`),
+      not the rolling joints; `DisplacementLocal` the drift or relative position in J0; the new
+      `HomogeneousTransformationLocal` the frame J1 relative to J0 - drift of a joint, marker difference of a
+      connector; `Displacement` the global relative position of connectors;
+    - **RG12.42.1** *(proposed)* the bit `HomogeneousTransformationLocal` (`HomogeneousTransformation` exists, #2780) and
+      one helper for both from the marker data;
+    - **RG12.42.2** *(proposed)* the items: HT for 4 joints, HT-local for 5-6 items, the definitely missing outputs of
+      4 items (`Position`, `Velocity`, `Force` of JointRevolute2D and JointPrismatic2D, `Displacement` of the
+      rigid-body and linear spring-dampers), `DisplacementLocal` for position markers if decided;
+    - **RG12.42.3** *(proposed)* a test model over the items, the general section of the connectors.
+    - Decisions: `DisplacementLocal` for items with position markers only; the 2D joints; the name; JointSliding.
+
 <a id="rg12-41"></a>
 **RG12.41** **DONE 2026-10-05** (#1953, #1954) — [log](exudynRevisionLog2026b.md#rg4-19-11) *(maintainer 2026-10-05: "Do
 1954 ... now")* **`mbs.CreateLinearSpringDamper`**: a linear spring-damper along an axis between two rigid bodies or
@@ -1962,6 +1988,7 @@ issue and a short title only. The open issues that are not steps are in the trac
 | RG5.2 | - | make the hot linear algebra vectorizable |
 | RG6.8 | #2140, #2236, #2237, #2350 | the graphics fixes before 1.13: Linux (RG6.8.5) and macOS (RG6.8.6), which wait for those machines |
 | RG13.3 | #2867 | follow-up: parameters and output variables the C++ of four items does not use, for a decision |
+| RG12.42 | #2870 | joints and connectors: consistent output variables - a concept for decision (tmp/connectorOutputVariables.md) |
 | RG9.6 | #2866 | the member functions an item must provide, checked when it compiles (from #2498) |
 | RG8.1 to RG8.9 | - | the plugin ABI: registry, fingerprint, reference plugin, headers, discovery |
 | RG14.3 | #2745 | joints and their Jacobians on homogeneous transformations, after RG14.2.9 |

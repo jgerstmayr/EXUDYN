@@ -14,6 +14,11 @@
   },
   {
    "kind": "box too high",
+   "key": "\\PYG{n}{exudyn}\\PYG{o}{.}\\PYG{n}{misc}\\PYG{o}{.}\\PYG{n}{GUI}\\PYG{o}{.}\\PYG{n}{textHeightFactor} \\PYG",
+   "count": 1
+  },
+  {
+   "kind": "box too high",
    "key": "\\PYG{n}{exu}\\PYG{o}{.}\\PYG{n+nc}{OutputVariableType}\\PYG{o}{.}\\PYG{n}{Displacement}\\PYG{p}{)}\\PYG{p}",
    "count": 1
   },

@@ -54,6 +54,7 @@ def Bend(force):
     simulationSettings.linearSolver.solverType = exu.LinearSolverType.EigenSparse
     simulationSettings.staticSolver.numberOfLoadSteps = 20
     simulationSettings.staticSolver.newton.relativeTolerance = 1e-10
+    simulationSettings.staticSolver.newton.absoluteTolerance = 1e-6 #P = 0 has no load to measure the residual against: its round-off differs between platforms
     mbs.SolveStatic(simulationSettings)
     return mbs.GetNodeOutput(nodes[-1], exu.OutputVariableType.Position)
 

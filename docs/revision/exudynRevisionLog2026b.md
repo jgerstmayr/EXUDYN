@@ -15927,3 +15927,41 @@ through the login shell, which takes the backslashes as escapes. Reproduced here
 with forward slashes as well, which `wslpath` takes and no shell changes. The build steps themselves already ran with
 `wsl -e`. Test: `testWslIsAskedForThePathWithoutItsShell` (`test_exudev.py`), the argv of the call. The docker build itself
 was not run here.
+
+<a id="rg6-10-1"></a>
+### RG6.10.1 — store model view, store positions (2026-10-06, #2871)
+
+*(Maintainer 2026-10-06: the button "should be called 'store model view'. And, it should give the code for the model view
+as SC.renderer.Start() / SC.renderer.SetModelView(zoom=..., rotationVector=[...], centerPoint=[...]) similar as pressing
+CTRL+F3"; "the 'store positions' button has misleading hints. It stores all window positions.")*
+
+`RenderStateCodeLines` gives the two lines; the rotation vector is that of the transposed model rotation and the center
+point without its z - what `GetRotationVector` and `GetTranslationF` give CTRL+F3 -, seven significant digits as
+there. `test_guiValues.py` executes the generated `SetModelView` on a container and compares zoom, model rotation and
+center point with the state it came from. The tooltip and the docstring of **store positions** name every open window
+(this dialog, the other dialogs, the plot windows, the render window); `GUI.md` shows the code.
+
+<a id="rg4-1-4"></a>
+### RG4.1.4 — `-ffp-contract=off` for every unix build, and the curved beam on macOS (2026-10-06, #2869)
+
+*(Maintainer 2026-10-06, from the tests on macOS: `geometricallyExactBeamCurvedTest` "requires a larger absolute
+tolerance: simulationSettings.staticSolver.newton.absoluteTolerance = 1e-6 in particular for the P=0 case; this even
+occurs with -ffp-contract=off (which should be maybe the default?), which reduces the Mac differences from 8 to 3.")*
+
+- `setup.py`: `-ffp-contract=off` in the unix options of every module - before only for the fast module. On arm64
+  (Apple silicon, Linux aarch64) FMA is baseline and clang/gcc contract `a*b+c` by default, MSVC does not; on x86-64
+  without `-mfma` the flag changes nothing (RG4.1.3 named it the first thing to try). Not measured here: the Windows
+  build is unaffected; the macOS run with it is the maintainer's (8 -> 3).
+- `geometricallyExactBeamCurvedTest.py`: `absoluteTolerance = 1e-6`; the loaded cases end on the relative tolerance
+  as before - the result is unchanged on Windows (4.561491685469841).
+
+<a id="rg12-42"></a>
+### RG12.42 — the output variables of joints and connectors: the concept (2026-10-06, #2870)
+
+The declared output variables of all joints and connectors (from `itemDefsObjects.py`) were put side by side with the
+marker types they request; the concept, the full table and four decisions are in `tmp/connectorOutputVariables.md`.
+In short: `HomogeneousTransformation` exists already (#2780), only `HomogeneousTransformationLocal` is a new bit;
+the rules give HT for 4 joints and HT-local for 5-6 items; independent of them, 4 items lack what their kind has
+(JointRevolute2D and JointPrismatic2D have no `Position`, `Velocity` and force, the rigid-body and linear
+spring-dampers no global `Displacement`). The contacts and the coordinate connectors are out of scope. Nothing is
+implemented.
