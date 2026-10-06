@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-10-02  12:07:29 (last modified)
+* @date         2026-10-06  07:03:31 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -141,9 +141,6 @@ public: // AUTO:
     //! AUTO:  the derivative of the equation of a free rotation by its Lagrange multiplier (#2745)
     virtual void ComputeJacobianAE_AE(ResizableMatrix& jacobian_AE) const override;
 
-    //! AUTO:  Flags to determine, which output variables are available (displacment, velocity, stress, ...)
-    virtual OutputVariableType GetOutputVariableTypes() const override;
-
     //! AUTO:  provide according output variable in 'value'
     virtual void GetOutputVariableConnector(OutputVariableType variableType, const MarkerDataStructure& markerData, Index itemIndex, Vector& value) const override;
 
@@ -169,6 +166,13 @@ public: // AUTO:
     virtual bool IsActive() const override
     {
         return parameters.activeConnector;
+    }
+
+    virtual OutputVariableType GetOutputVariableTypes() const override
+    {
+        return (OutputVariableType)(
+            (Index64)OutputVariableType::Distance +
+            (Index64)OutputVariableType::Rotation );
     }
 
 };

@@ -89,12 +89,6 @@ JacobianType::Type CObjectJointPrismatic2D::GetAvailableJacobians() const
 }
 
 
-//! Flags to determine, which output variables are available (displacment, velocity, stress, ...)
-OutputVariableType CObjectJointPrismatic2D::GetOutputVariableTypes() const
-{
-	return (OutputVariableType)((Index64)OutputVariableType::Distance + (Index64)OutputVariableType::Rotation); //Distance contains movement along prismatic axis
-}
-
 //! provide according output variable in "value"
 void CObjectJointPrismatic2D::GetOutputVariableConnector(OutputVariableType variableType, const MarkerDataStructure& markerData, Index itemIndex, Vector& value) const
 {

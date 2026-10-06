@@ -69,7 +69,9 @@ Available as `OutputVariableType` in sensors, `Get...Output()` and other functio
 (description-objectcontactcurvecircles)=
 ## Detailed description
 
-**Further testing is required, and friction is not available yet**, as the class description says.
+**Further testing is required, and friction is not available yet**, as the class description says:
+`dynamicFriction` and `frictionProportionalZone` are not used. The output variables are not computed yet and
+give an empty vector (#2867).
 
 ### Definition of quantities
 
@@ -78,7 +80,7 @@ Available as `OutputVariableType` in sensors, `Get...Output()` and other functio
 | marker m0 position, orientation | $\LU{0}{\pv}_{m0}$, $\LU{0,m0}{\Rot}$ | the frame carrying the curve, which lies in its $x$-$y$ plane; a rotation of it is given to the marker as its `localHT` |
 | circle markers | $\LU{0}{\pv}_{c_i}$ | centers of the $n_c$ circles with radii `circlesRadii` |
 | segments | $\Dm$ | `segmentsData`: one straight segment per row, two planar points in the curve frame |
-| polynomials | $\Pm$ | `polynomialData`: optional coefficients that bend each segment |
+| polynomials | $\Pm$ | `polynomialData`: optional coefficients that bend each segment in the drawing; the contact uses the straight segments |
 | data coordinates | $\xv$ | per segment, the state of the last post Newton step |
 
 ### Geometric relations

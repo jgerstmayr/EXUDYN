@@ -57,13 +57,6 @@ JacobianType::Type CObjectJointRevolute2D::GetAvailableJacobians() const
 }
 
 
-//! Flags to determine, which output variables are available (displacment, velocity, stress, ...)
-OutputVariableType CObjectJointRevolute2D::GetOutputVariableTypes() const
-{
-	//Displacement represents drift in index2 case; no Rotation, as the markers provide positions only (#2735)
-	return OutputVariableType::Displacement;
-}
-
 //! provide according output variable in "value"
 void CObjectJointRevolute2D::GetOutputVariableConnector(OutputVariableType variableType, const MarkerDataStructure& markerData, Index itemIndex, Vector& value) const
 {

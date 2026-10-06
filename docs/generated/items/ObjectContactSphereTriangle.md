@@ -68,7 +68,8 @@ Available as `OutputVariableType` in sensors, `Get...Output()` and other functio
 | output variable | symbol | description |
 |---|---|---|
 | Position |  | contact center point (also given for positive gap, when no contact occurs) |
-| Displacement |  | global displacement vector between the two spheres midpoints |
+| Displacement |  | global vector from the sphere center (marker 0) to the closest point of the triangle |
+| Velocity |  | velocity of the closest point of the triangle, with the rotation of its body, relative to the sphere center |
 | DisplacementLocal |  | 1D Vector, containing only gap |
 | Director1 |  | normalized vector from sphere midpoint (marker 0) to triangle contact point |
 | Force |  | global contact force vector |

@@ -568,12 +568,12 @@ definitions.append(ItemDefinition(
 
     #### Measures
 
-    What the marker provides, which depends on its types, and only in the **current** configuration:
+    What the marker provides, which depends on its types; the coordinates only in the **current** configuration:
 
     | the marker provides | `outputVariableType` can be |
     |---|---|
     | a position (`MarkerBodyPosition`, `MarkerNodePosition`, ...) | `Position`, `Displacement`, `Velocity` |
-    | an orientation (`MarkerBodyRigid`, `MarkerNodeRigid`, ...) | in addition `RotationMatrix`, `Rotation`, `AngularVelocity`, `AngularVelocityLocal` |
+    | an orientation (`MarkerBodyRigid`, `MarkerNodeRigid`, ...) | in addition `RotationMatrix`, `Rotation`, `AngularVelocity`, `AngularVelocityLocal`, `HomogeneousTransformation` |
     | coordinates (`MarkerNodeCoordinate`, `MarkerNodeCoordinates`, ...) | `Coordinates`, `Coordinates_t` |
     | a relative coordinate of two bodies | `Coordinates`, `Coordinates_t` |
 

@@ -1,0 +1,11 @@
+{
+  "number": 2867,
+  "title": "parameters and output variables that the C++ of an item does not use - found by RG13.3",
+  "author": "Claude-JG",
+  "status": "RAISED",
+  "type": "CHECK",
+  "effort": "MEDIUM",
+  "description": "Found by checking the descriptions against the implementation (RG13.3.2-.5); the descriptions say what IS now, the code is for a decision: ObjectContactCurveCircles - the output variables DisplacementLocal, VelocityLocal, ForceLocal are declared and give an empty vector, dynamicFriction and frictionProportionalZone are not used, polynomialData only bends the drawing; ObjectContactCircleCable2D - contactDamping is not used (commented out); ObjectConnectorCoordinateSpringDamperExt - velocityOffset only reaches the user function, the built-in law k(x-x0)+d*v ignores it; ObjectANCFThinPlate - strainIsRelativeToReference has no effect since the port of RG4.20 (strains always relative to the reference). Options per item: implement, or remove the parameter (no deprecation needed for 1.12-new ones).",
+  "dateRaised": "2026-10-06",
+  "deadline": "2027-04-04"
+}

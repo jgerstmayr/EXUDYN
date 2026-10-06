@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-10-02  12:07:29 (last modified)
+* @date         2026-10-06  07:03:31 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -132,9 +132,6 @@ public: // AUTO:
     //! AUTO:  the equations of the constraint, for Real and AutoDiff (#2745)
     template<class TReal> void ComputeConstraintEquationsTemplate(const MarkerPosition<TReal>* markers, const LinkedDataVector& lambda, bool velocityLevel, ConstSizeVectorBase<TReal, maxConstraintEquations>& equations) const;
 
-    //! AUTO:  Flags to determine, which output variables are available (displacment, velocity, stress, ...)
-    virtual OutputVariableType GetOutputVariableTypes() const override;
-
     //! AUTO:  provide according output variable in 'value'
     virtual void GetOutputVariableConnector(OutputVariableType variableType, const MarkerDataStructure& markerData, Index itemIndex, Vector& value) const override;
 
@@ -160,6 +157,12 @@ public: // AUTO:
     virtual bool IsActive() const override
     {
         return parameters.activeConnector;
+    }
+
+    virtual OutputVariableType GetOutputVariableTypes() const override
+    {
+        return (OutputVariableType)(
+            (Index64)OutputVariableType::Displacement );
     }
 
 };

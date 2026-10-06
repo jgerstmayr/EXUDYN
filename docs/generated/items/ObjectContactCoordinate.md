@@ -47,6 +47,18 @@ The parameters of `VObjectContactCoordinate`, given as `visualization`:
 Drawn as [all connectors](#sec-drawing-objectsconnector); with `connectors.showContact`, a circle at each marker of diameter `drawSize` (or `contact.contactPointsDefaultSize`), red while in contact.
 
 Settings beyond those of all connectors: [`connectors.showContact`](#sec-vsettingsconnectors), [`contact.contactPointsDefaultSize`](#sec-vsettingscontact).
+
+## Output variables
+
+Available as `OutputVariableType` in sensors, `Get...Output()` and other functions:
+
+```{tabularcolumns} \Y{0.25}\Y{0.25}\Y{0.5}
+```
+
+| output variable | symbol | description |
+|---|---|---|
+| Distance | $g$ | the gap, coordinate of marker 1 minus coordinate of marker 0 minus offset; negative in contact |
+
 (description-objectcontactcoordinate)=
 ## Detailed description
 
@@ -92,7 +104,7 @@ Jacobians of the coordinate markers. The data coordinate is updated to the curre
 Newton step, and a change of the contact state repeats the step (active set strategy); the step size
 recommended for the next step is the time to reach $g = 0$ with the current gap velocity.
 
-With `activeConnector = False` the force is zero. The output variable `Distance` is the gap $g$.
+With `activeConnector = False` the force is zero.
 
 (miniexample-objectcontactcoordinate)=
 ## Mini example

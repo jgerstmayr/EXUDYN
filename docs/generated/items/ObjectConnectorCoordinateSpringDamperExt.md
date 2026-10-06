@@ -26,7 +26,7 @@ The parameters of the item; in a dictionary, its type is 'ConnectorCoordinateSpr
 | **stiffness** | Real |  | 0. | (symbol: $k$) stiffness [SI:N/m] of spring; acts against relative value of coordinates |
 | **damping** | Real |  | 0. | (symbol: $d$) damping [SI:N/(m s)] of damper; acts against relative velocity of coordinates |
 | **offset** | Real |  | 0. | (symbol: $x_\mathrm{off}$) offset between two coordinates (reference length of springs), see equation; it can be used to represent the pre-scribed drive coordinate |
-| **velocityOffset** | Real |  | 0. | (symbol: $v_\mathrm{off}$) offset between two coordinates; used to model D-control of a drive, where damping is not acting against prescribed velocity |
+| **velocityOffset** | Real |  | 0. | (symbol: $v_\mathrm{off}$) velocity offset, passed to springForceUserFunction; the force without user function does not use it (#2867) |
 | **factor0** | Real |  | 1. | (symbol: $f_0$) marker 0 coordinate is multiplied with factor0 |
 | **factor1** | Real |  | 1. | (symbol: $f_1$) marker 1 coordinate is multiplied with factor1 |
 | **dynamicFrictionForce** | UReal |  | 0. | (symbol: $f_{\mu,\mathrm{d}}$) dynamic (viscous) friction force [SI:N] against relative velocity when sliding; assuming a normal force $f_N$, the friction force can be interpreted as $f_\mu = \mu f_N$ |

@@ -4505,6 +4505,7 @@ class MainSystem; //AUTO; for std::function / userFunction; avoid including Main
         ItemOutputVariable(OVForceLocal, r"""$N$ (local) section normal force (scalar, including reference strains) (at $y$=0); note that strains are highly inaccurate when coupled to bending, thus consider useReducedOrderIntegration=2 and evaluate axial strain at nodes or at midpoint"""),
         ItemOutputVariable(OVTorqueLocal, r"""$M$ (local) bending moment (scalar) (at $y$=0)"""),
         ItemOutputVariable(OVAngularVelocity, r"""$\tomega = [0,\, ,0,\, \omega_2]$angular velocity of local axis position (at $y$=0)"""),
+        ItemOutputVariable(OVAngularVelocityLocal, r'$[0,\,0,\,\omega_z]\tp$ the angular velocity of the axis, the same as AngularVelocity in the plane'),
         ItemOutputVariable(OVAcceleration, r"""$\LU{0}{\av(x,y,0)} = \LU{0}{\ddot \rv(x)} - y \cdot \dot\omega_2 \cdot\LU{0}{\tv(x)}- y \cdot \omega_2 \cdot\LU{0}{\dot\tv(x)} $global acceleration vector of local position"""),
         ItemOutputVariable(OVAngularAcceleration, r"""$\talpha = [0,\, ,0,\, \dot\omega_2]$angular acceleration of local axis position"""),
         ItemOutputVariable(OVKineticEnergy, r"""$T = \frac{1}{2} \dot\qv\tp \Mm\, \dot\qv$kinetic energy from the mass matrix of the current state and the velocities of the nodes; current configuration only; localPosition must be $[0,0,0]$"""),
@@ -5987,7 +5988,7 @@ definitions.append(ItemDefinition(
         ItemParameter(type=TReal, destination=DestComp+DestParam,
             pythonName='strainIsRelativeToReference',
             defaultValue=1.,
-            description=r"""$f\cRef$ if set to 1., a pre-deformed reference configuration is considered as the stressless state; if set to 0., the straight configuration serves as a reference geometry; allows also values between 0. and 1. to perform a transition during static computation"""),
+            description=r"""$f\cRef$ not used: the strains and curvatures are always relative to the reference configuration, which is the stressless state (#2867)"""),
         ItemParameter(type=TVectorND(4), destination=DestComp+DestParam,
             pythonName='slopesScalingX',
             defaultValue='Vector4D({-1.,-1.,-1.,-1.})',
@@ -8081,7 +8082,7 @@ definitions.append(ItemDefinition(
         ItemParameter(type=TReal, destination=DestComp+DestParam,
             pythonName='velocityOffset',
             defaultValue=0.,
-            description=r"""$v_\mathrm{off}$offset between two coordinates; used to model D-control of a drive, where damping is not acting against prescribed velocity"""),
+            description=r"""$v_\mathrm{off}$velocity offset, passed to springForceUserFunction; the force without user function does not use it (#2867)"""),
         ItemParameter(type=TReal, destination=DestComp+DestParam,
             pythonName='factor0',
             defaultValue=1.,
@@ -10589,9 +10590,12 @@ definitions.append(ItemDefinition(
     Newton step, and a change of the contact state repeats the step (active set strategy); the step size
     recommended for the next step is the time to reach $g = 0$ with the current gap velocity.
 
-    With `activeConnector = False` the force is zero. The output variable `Distance` is the gap $g$.
+    With `activeConnector = False` the force is zero.
     """,
     mainParentClass=MainParentClassMainObjectConnector,
+    outputVariables=[
+        ItemOutputVariable(OVDistance, r'$g$ the gap, coordinate of marker 1 minus coordinate of marker 0 minus offset; negative in contact'),
+        ],
     objectType=ObjectTypeConnector,
     visuParentClass=VisuParentClassVisualizationObject,
     members=[
@@ -10677,7 +10681,6 @@ definitions.append(ItemDefinition(
         ItemFunctionDef('PostDiscontinuousIterationStep'),
         ItemFunctionDef('IsPenaltyConnector',
             implementation='return true;'),
-        ItemFunctionDef('GetOutputVariableTypes'),
         ItemFunctionDef('GetOutputVariableConnector'),
         ItemRequestedTypes('Marker', ['Coordinate']),
         ItemRequestedTypes('Node', ['GenericData']),
@@ -10790,7 +10793,7 @@ definitions.append(ItemDefinition(
         ItemParameter(type=TReal(minimum=0), destination=DestComp+DestParam,
             pythonName='contactDamping',
             defaultValue=0.,
-            description=r'contact damping [SI:N/(m s)/(contact segment)]; the damping is per contact segment; acts in contact normal direction only upon penetration'),
+            description=r'contact damping [SI:N/(m s)/(contact segment)]; not used: the contact force is the stiffness term only (#2867)'),
         ItemParameter(type=TReal(minimum=0), destination=DestComp+DestParam,
             pythonName='circleRadius',
             defaultValue=0.,
@@ -11956,11 +11959,12 @@ definitions.append(ItemDefinition(
     objectType=ObjectTypeConnector,
     outputVariables=[
         ItemOutputVariable(OVPosition, 'contact center point (also given for positive gap, when no contact occurs)'),
-        ItemOutputVariable(OVDisplacement, 'global displacement vector between the two spheres midpoints'),
+        ItemOutputVariable(OVDisplacement, 'global vector from marker 0 (sphere center) to marker 1 (torus center)'),
         ItemOutputVariable(OVDisplacementLocal, '1D Vector, containing only gap'),
         ItemOutputVariable(OVDirector1, 'normalized vector from marker 0 to marker 1'),
-        ItemOutputVariable(OVDirector2, 'the normalized vector from marker 0 to marker 1 projected into the plane of the torus major circle'),
-        ItemOutputVariable(OVDirector3, 'normalized vector from the projected point on the major circle (center of the minor circle) to marker 1, being in direction of the contact and normal to the surface'),
+        ItemOutputVariable(OVDirector2, 'normalized vector from marker 1 (torus center) to the projection of marker 0 into the plane of the major circle'),
+        ItemOutputVariable(OVDirector3, 'normalized vector from the center of the minor circle next to the sphere to the sphere center (marker 0): the contact normal'),
+        ItemOutputVariable(OVVelocity, 'velocity of the contact point on the torus relative to the one on the sphere, with the rotations of both'),
         ItemOutputVariable(OVForce, 'global contact force vector'),
         ItemOutputVariable(OVTorque, 'global torque due to friction on marker 0'),
         ],
@@ -12178,7 +12182,8 @@ definitions.append(ItemDefinition(
     objectType=ObjectTypeConnector,
     outputVariables=[
         ItemOutputVariable(OVPosition, 'contact center point (also given for positive gap, when no contact occurs)'),
-        ItemOutputVariable(OVDisplacement, 'global displacement vector between the two spheres midpoints'),
+        ItemOutputVariable(OVDisplacement, 'global vector from the sphere center (marker 0) to the closest point of the triangle'),
+        ItemOutputVariable(OVVelocity, 'velocity of the closest point of the triangle, with the rotation of its body, relative to the sphere center'),
         ItemOutputVariable(OVDisplacementLocal, '1D Vector, containing only gap'),
         ItemOutputVariable(OVDirector1, 'normalized vector from sphere midpoint (marker 0) to triangle contact point'),
         ItemOutputVariable(OVForce, 'global contact force vector'),
@@ -12351,7 +12356,9 @@ constexpr Index CObjectContactCurveCirclesMaxConstSize = 100; //maximum number o
     exu.sys['testResult'] = mbs.GetNodeOutput(node, exu.OutputVariableType.Position)[1] #0.099
     """,
     miniExamplePerformanceTest={'numberOfSteps': 514120},
-    detailedDescription=r"""    **Further testing is required, and friction is not available yet**, as the class description says.
+    detailedDescription=r"""    **Further testing is required, and friction is not available yet**, as the class description says:
+    `dynamicFriction` and `frictionProportionalZone` are not used. The output variables are not computed yet and
+    give an empty vector (#2867).
 
     #### Definition of quantities
 
@@ -12360,7 +12367,7 @@ constexpr Index CObjectContactCurveCirclesMaxConstSize = 100; //maximum number o
     | marker m0 position, orientation | $\LU{0}{\pv}_{m0}$, $\LU{0,m0}{\Rot}$ | the frame carrying the curve, which lies in its $x$-$y$ plane; a rotation of it is given to the marker as its `localHT` |
     | circle markers | $\LU{0}{\pv}_{c_i}$ | centers of the $n_c$ circles with radii `circlesRadii` |
     | segments | $\Dm$ | `segmentsData`: one straight segment per row, two planar points in the curve frame |
-    | polynomials | $\Pm$ | `polynomialData`: optional coefficients that bend each segment |
+    | polynomials | $\Pm$ | `polynomialData`: optional coefficients that bend each segment in the drawing; the contact uses the straight segments |
     | data coordinates | $\xv$ | per segment, the state of the last post Newton step |
 
     #### Geometric relations
@@ -13765,11 +13772,11 @@ definitions.append(ItemDefinition(
     and on the velocity level (index 2) the same with the velocities. The multipliers act on the markers
     with the $x$ and $y$ rows of the position Jacobians, $\pm\LU{0}{\Jm_{pos}}\tp\tlambda$. With
     `activeConnector = False` the equations become $\tlambda = \Null$.
-
-    The output variable `Displacement` is $\LU{0}{\pv}_{m1} - \LU{0}{\pv}_{m0}$, zero up to the drift of the
-    position on the velocity level.
     """,
     mainParentClass=MainParentClassMainObjectConnector,
+    outputVariables=[
+        ItemOutputVariable(OVDisplacement, r'$\LU{0}{\pv}_{m1} - \LU{0}{\pv}_{m0}$ global vector from marker m0 to marker m1, zero up to the drift of the position on the velocity level'),
+        ],
     objectType=ObjectTypeJoint,
     pythonShortName='RevoluteJoint2D',
     visuParentClass=VisuParentClassVisualizationObject,
@@ -13805,7 +13812,6 @@ definitions.append(ItemDefinition(
         ItemFunction(type='template<class TReal> void', destination=DestComp, cFlags=CFConst, isVirtual=False,
             pythonName='ComputeConstraintEquationsTemplate', args='const MarkerPosition<TReal>* markers, const LinkedDataVector& lambda, bool velocityLevel, ConstSizeVectorBase<TReal, maxConstraintEquations>& equations',
             description=r'the equations of the constraint, for Real and AutoDiff (#2745)'),
-        ItemFunctionDef('GetOutputVariableTypes'),
         ItemFunctionDef('GetOutputVariableConnector'),
         ItemRequestedTypes('Marker', ['Position']),
         ItemFunction(type=TCObjectType, destination=DestComp, cFlags=CFConst,
@@ -13891,12 +13897,12 @@ definitions.append(ItemDefinition(
     markers. With `constrainRotation = False` the second equation becomes $\lambda_1 = 0$ and the bodies
     may rotate relative to each other; with `activeConnector = False` both equations become
     $\lambda_i = 0$.
-
-    The output variable `Distance` is the position of marker m1 along the axis,
-    $(\pv_1-\pv_0)\tp \Am_0 \tv_0 / |\tv_0|$, and `Rotation` the angle of marker m1 relative to marker m0
-    about $z$, from $\Am_0\tp \Am_1$.
     """,
     mainParentClass=MainParentClassMainObjectConnector,
+    outputVariables=[
+        ItemOutputVariable(OVDistance, r'$(\pv_1-\pv_0)\tp \Am_0 \tv_0 / |\tv_0|$ position of marker m1 along the axis, measured from marker m0'),
+        ItemOutputVariable(OVRotation, r'the angle of marker m1 relative to marker m0 about $z$, from $\Am_0\tp \Am_1$'),
+        ],
     objectType=ObjectTypeJoint,
     pythonShortName='PrismaticJoint2D',
     visuParentClass=VisuParentClassVisualizationObject,
@@ -13947,7 +13953,6 @@ definitions.append(ItemDefinition(
         ItemFunction(type=Tvoid, destination=DestComp, cFlags=CFConst,
             pythonName='ComputeJacobianAE_AE', args='ResizableMatrix& jacobian_AE',
             description=r'the derivative of the equation of a free rotation by its Lagrange multiplier (#2745)'),
-        ItemFunctionDef('GetOutputVariableTypes'),
         ItemFunctionDef('GetOutputVariableConnector'),
         ItemRequestedTypes('Marker', ['Position', 'Orientation']),
         ItemFunction(type=TCObjectType, destination=DestComp, cFlags=CFConst,

@@ -15877,3 +15877,42 @@ tests the normalization, the extraction from a shared source and the cycle mark 
   `NotImplementedFeatureError`, a torque and a joint do not;
 - **corrected**: the velocity of the three 3D slope nodes was written $\av$, now $\vv$.
 The 16 nodes are recorded as checked.
+
+<a id="rg13-3-2"></a>
+### RG13.3.2-.5 — the markers, loads, sensors and objects checked against their implementation (2026-10-06, #2717, #2867)
+
+*(Maintainer 2026-10-06: "Do RR13.3.2-.5".)*
+
+**How.** The pages were written from the C++ in RG13.5 (2026-09-28); this check compared, for every item, what its
+definition declares with what its implementation does - a script over the definitions and the sources the fingerprint
+covers: the output variables declared against those the C++ computes, and every parameter against whether the C++ reads
+it (`parameters.<name>`); then each difference was read in the source. Most were none: a contour check that names an
+output, the generic homogeneous transformation of the sensors, the mesh-node outputs of the super elements (their own
+function), parameters that are parts of a homogeneous transformation or read in `evaluateUserFunctions.cpp`.
+
+**Corrected in the descriptions:**
+- `ObjectJointRevolute2D` (`Displacement`), `ObjectJointPrismatic2D` (`Distance`, `Rotation`) and `ObjectContactCoordinate`
+  (`Distance`) computed outputs their definitions did not declare - the C++ listed them in a hand-written
+  `GetOutputVariableTypes`, so their pages had no table of output variables. They are declared now, the hand-written
+  functions are gone (the generated ones list the same), and the sentences of the detailed descriptions that named them
+  moved into the tables.
+- `ObjectContactSphereTorus`: `Displacement` is from the sphere center to the torus center (the text said "between the
+  two spheres midpoints"), `Director2` points from the torus center to the projection of the sphere center (the text
+  had the opposite direction), `Director3` points to the sphere center (marker 0, not marker 1); `Velocity` was computed
+  and not declared - declared, the velocity of the contact point on the torus relative to the one on the sphere.
+- `ObjectContactSphereTriangle`: `Displacement` is from the sphere center to the closest point of the triangle;
+  `Velocity` declared.
+- `ObjectANCFCable2D`: `AngularVelocityLocal` was computed and not declared - declared.
+- `SensorMarker`: a marker with position and orientation also gives `HomogeneousTransformation`; only the coordinates
+  are restricted to the current configuration (the text restricted everything).
+
+**What the C++ does not use (#2867)**, said in the descriptions now, the code for a decision:
+`ObjectContactCurveCircles` - its three output variables give an empty vector, `dynamicFriction` and
+`frictionProportionalZone` are not used, `polynomialData` bends the drawing only; `ObjectContactCircleCable2D` -
+`contactDamping` is not used; `ObjectConnectorCoordinateSpringDamperExt` - `velocityOffset` reaches only the user
+function; `ObjectANCFThinPlate` - `strainIsRelativeToReference` has no effect since the port of RG4.20.
+
+**The fingerprint** covers, besides the source of the item and its header, its functions in the shared sources for every
+item now (before only for the loads and sensors): the calls of the user functions in `evaluateUserFunctions.cpp`
+belong to the implementation of the connectors. All 97 items are recorded as checked in
+`definitions/descriptionChecks.json`; `checkDescriptions --check` reports none changed.

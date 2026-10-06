@@ -40,6 +40,19 @@ The parameters of `VObjectJointPrismatic2D`, given as `visualization`:
 ## Drawing
 
 Drawn as [all joints](#sec-drawing-objectsjoint); a circle of diameter `drawSize` at each marker, the one of marker 0 red, and a line between them.
+
+## Output variables
+
+Available as `OutputVariableType` in sensors, `Get...Output()` and other functions:
+
+```{tabularcolumns} \Y{0.25}\Y{0.25}\Y{0.5}
+```
+
+| output variable | symbol | description |
+|---|---|---|
+| Distance | $(\pv_1-\pv_0)\tp \Am_0 \tv_0 / \|\tv_0\|$ | position of marker m1 along the axis, measured from marker m0 |
+| Rotation |  | the angle of marker m1 relative to marker m0 about $z$, from $\Am_0\tp \Am_1$ |
+
 (description-objectjointprismatic2d)=
 ## Detailed description
 
@@ -72,10 +85,6 @@ derivatives, with the time derivatives of the rotated vectors from the angular v
 markers. With `constrainRotation = False` the second equation becomes $\lambda_1 = 0$ and the bodies
 may rotate relative to each other; with `activeConnector = False` both equations become
 $\lambda_i = 0$.
-
-The output variable `Distance` is the position of marker m1 along the axis,
-$(\pv_1-\pv_0)\tp \Am_0 \tv_0 / |\tv_0|$, and `Rotation` the angle of marker m1 relative to marker m0
-about $z$, from $\Am_0\tp \Am_1$.
 
 (miniexample-objectjointprismatic2d)=
 ## Mini example

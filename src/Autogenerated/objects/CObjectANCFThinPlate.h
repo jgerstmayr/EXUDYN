@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-10-05  15:10:47 (last modified)
+* @date         2026-10-06  07:03:31 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -34,7 +34,7 @@ public: // AUTO:
     Real bendingStiffnessProportionalDamping;     //!< AUTO: bending stiffness-proportional damping coefficient \f$\f[ta_\kappa\f$ [SI:s]: Kelvin-Voigt damping \f$\f[ta_\kappa\, \Dm_\kappa\, \dot\tkappa\f$ added to the bending moments; if negative (default), \f$\f[ta_\varepsilon\f$ of stiffnessProportionalDamping is used, 0 switches it off
     Matrix3DList strainCoefficients;              //!< AUTO:  [SI:N/m] stiffness coefficients related to inplane normal and shear strains, integrated over height of the plate, as a list of 3D matrices; for a constant thickness one matrix; for 4 or 12 thickness values, the first matrix divided by thickness[0] is the material matrix of a homogeneous isotropic plate, \f$\Dm_\varepsilon = \Dm_b\, h\f$ and \f$\Dm_\kappa = \Dm_b\, h^3/12\f$ at each point, and further matrices are not used
     Matrix3DList curvatureCoefficients;           //!< AUTO:  [SI:Nm] stiffness coefficients related to curvatures, integrated over height of the plate, as a list of 3D matrices; used for a constant thickness (one matrix); for 4 or 12 thickness values \f$\Dm_\kappa\f$ follows from strainCoefficients and the local thickness
-    Real strainIsRelativeToReference;             //!< AUTO:  if set to 1., a pre-deformed reference configuration is considered as the stressless state; if set to 0., the straight configuration serves as a reference geometry; allows also values between 0. and 1. to perform a transition during static computation
+    Real strainIsRelativeToReference;             //!< AUTO:  not used: the strains and curvatures are always relative to the reference configuration, which is the stressless state (#2867)
     Vector4D slopesScalingX;                      //!< AUTO: scaling of x-slopes at each element node; flat elements: half of the side length of the element; curved: optimal values such that curved geometry is best approximated; if negative (default) values are used, length is computed from node distances.
     Vector4D slopesScalingY;                      //!< AUTO: scaling of y-slopes at each element node; flat elements: half of the side length of the element; curved: optimal values such that curved geometry is best approximated; if negative (default) values are used, length is computed from node distances.
     Index4 nodeNumbers;                           //!< AUTO: 4 NodePointSlope12 node numbers, with local (xi,eta) coordinates as [(-1,-1),(1,-1),(1,1),(-1,1)]

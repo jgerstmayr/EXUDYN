@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-09-15  19:35:47 (last modified)
+* @date         2026-10-06  07:03:31 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -32,7 +32,7 @@ public: // AUTO:
     Index nodeNumber;                             //!< AUTO: node number of a NodeGenericData for nSegments dataCoordinates (used for active set strategy ==> hold the gap of the last discontinuous iteration and the friction state)
     Index numberOfContactSegments;                //!< AUTO: number of linear contact segments to determine contact; each segment is a line and is associated to a data (history) variable; must be same as in according marker
     Real contactStiffness;                        //!< AUTO: must be >= 0; contact (penalty) stiffness [SI:N/m/(contact segment)]; the stiffness is per contact segment; specific contact forces (per length) \f$f_N\f$ act in contact normal direction only upon penetration
-    Real contactDamping;                          //!< AUTO: must be >= 0; contact damping [SI:N/(m s)/(contact segment)]; the damping is per contact segment; acts in contact normal direction only upon penetration
+    Real contactDamping;                          //!< AUTO: must be >= 0; contact damping [SI:N/(m s)/(contact segment)]; not used: the contact force is the stiffness term only (#2867)
     Real circleRadius;                            //!< AUTO: must be >= 0; radius [SI:m] of contact circle
     Real offset;                                  //!< AUTO: offset [SI:m] of contact, e.g. to include thickness of cable element
     bool activeConnector;                         //!< AUTO: flag, which determines, if the connector is active; used to deactivate (temporarily) a connector or constraint

@@ -40,6 +40,18 @@ The parameters of `VObjectJointRevolute2D`, given as `visualization`:
 ## Drawing
 
 Drawn as [all joints](#sec-drawing-objectsjoint); a circle of diameter `drawSize` at each marker, the one of marker 0 red.
+
+## Output variables
+
+Available as `OutputVariableType` in sensors, `Get...Output()` and other functions:
+
+```{tabularcolumns} \Y{0.25}\Y{0.25}\Y{0.5}
+```
+
+| output variable | symbol | description |
+|---|---|---|
+| Displacement | $\LU{0}{\pv}_{m1} - \LU{0}{\pv}_{m0}$ | global vector from marker m0 to marker m1, zero up to the drift of the position on the velocity level |
+
 (description-objectjointrevolute2d)=
 ## Detailed description
 
@@ -64,9 +76,6 @@ $$
 and on the velocity level (index 2) the same with the velocities. The multipliers act on the markers
 with the $x$ and $y$ rows of the position Jacobians, $\pm\LU{0}{\Jm_{pos}}\tp\tlambda$. With
 `activeConnector = False` the equations become $\tlambda = \Null$.
-
-The output variable `Displacement` is $\LU{0}{\pv}_{m1} - \LU{0}{\pv}_{m0}$, zero up to the drift of the
-position on the velocity level.
 
 (miniexample-objectjointrevolute2d)=
 ## Mini example

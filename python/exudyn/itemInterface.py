@@ -3932,7 +3932,7 @@ class ObjectANCFThinPlate:
 
         curvatureCoefficients: [SI:Nm] stiffness coefficients related to curvatures, integrated over height of the plate, as a list of 3D matrices; used for a constant thickness (one matrix); for 4 or 12 thickness values :math:`\Dm_\kappa` follows from strainCoefficients and the local thickness; type: Matrix3DList
 
-        strainIsRelativeToReference: if set to 1., a pre-deformed reference configuration is considered as the stressless state; if set to 0., the straight configuration serves as a reference geometry; allows also values between 0. and 1. to perform a transition during static computation; type: float
+        strainIsRelativeToReference: not used: the strains and curvatures are always relative to the reference configuration, which is the stressless state (#2867); type: float
 
         slopesScalingX: scaling of x-slopes at each element node; flat elements: half of the side length of the element; curved: optimal values such that curved geometry is best approximated; if negative (default) values are used, length is computed from node distances.; type: [float,float,float,float]
 
@@ -4616,7 +4616,7 @@ class ObjectConnectorCoordinateSpringDamperExt:
 
         offset: offset between two coordinates (reference length of springs), see equation; it can be used to represent the pre-scribed drive coordinate; type: float
 
-        velocityOffset: offset between two coordinates; used to model D-control of a drive, where damping is not acting against prescribed velocity; type: float
+        velocityOffset: velocity offset, passed to springForceUserFunction; the force without user function does not use it (#2867); type: float
 
         factor0: marker 0 coordinate is multiplied with factor0; type: float
 
@@ -5688,7 +5688,7 @@ class ObjectContactCircleCable2D:
 
         contactStiffness: contact (penalty) stiffness [SI:N/m/(contact segment)]; the stiffness is per contact segment; specific contact forces (per length) :math:`f_N` act in contact normal direction only upon penetration; type: float
 
-        contactDamping: contact damping [SI:N/(m s)/(contact segment)]; the damping is per contact segment; acts in contact normal direction only upon penetration; type: float
+        contactDamping: contact damping [SI:N/(m s)/(contact segment)]; not used: the contact force is the stiffness term only (#2867); type: float
 
         circleRadius: radius [SI:m] of contact circle; type: float
 

@@ -69,12 +69,6 @@ void CObjectContactCoordinate::ComputeConnectorForceCoordinate(const MarkerCoord
 	force = ComputeContactForce(markers[1].value - markers[0].value - parameters.offset, markers[1].value_t - markers[0].value_t);
 }
 
-//! Flags to determine, which output variables are available (displacment, velocity, stress, ...)
-OutputVariableType CObjectContactCoordinate::GetOutputVariableTypes() const
-{
-	return OutputVariableType::Distance;
-}
-
 //! provide according output variable in "value"
 void CObjectContactCoordinate::GetOutputVariableConnector(OutputVariableType variableType, const MarkerDataStructure& markerData, Index itemIndex, Vector& value) const
 {

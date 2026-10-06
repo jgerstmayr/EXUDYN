@@ -23,7 +23,7 @@ The parameters of the item; in a dictionary, its type is 'ContactCircleCable2D':
 | **nodeNumber** | NodeIndex |  | invalid (-1) | node number of a NodeGenericData for nSegments dataCoordinates (used for active set strategy ==> hold the gap of the last discontinuous iteration and the friction state) |
 | **numberOfContactSegments** | Index |  | 3 | number of linear contact segments to determine contact; each segment is a line and is associated to a data (history) variable; must be same as in according marker |
 | **contactStiffness** | UReal |  | 0. | contact (penalty) stiffness [SI:N/m/(contact segment)]; the stiffness is per contact segment; specific contact forces (per length) $f_N$ act in contact normal direction only upon penetration |
-| **contactDamping** | UReal |  | 0. | contact damping [SI:N/(m s)/(contact segment)]; the damping is per contact segment; acts in contact normal direction only upon penetration |
+| **contactDamping** | UReal |  | 0. | contact damping [SI:N/(m s)/(contact segment)]; not used: the contact force is the stiffness term only (#2867) |
 | **circleRadius** | UReal |  | 0. | radius [SI:m] of contact circle |
 | **offset** | Real |  | 0. | offset [SI:m] of contact, e.g. to include thickness of cable element |
 | **activeConnector** | Bool |  | True | flag, which determines, if the connector is active; used to deactivate (temporarily) a connector or constraint |

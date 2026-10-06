@@ -1565,7 +1565,7 @@ What depends on it: the graphics regression test takes every item through its Mi
 **RG13.2** **CLOSED 2026-09-28** — [log](exudynRevisionLog2026b.md#decisions-2026-09-29) · [plan text](exudynRevisionLog2026b.md#plan-rg13-2) — What the ideal documentation of an item contains.
 
 <a id="rg13-3"></a>
-**RG13.3** *(group RG13; maintainer 2026-09-27)* **Each description synchronized once with its
+**RG13.3** **DONE 2026-10-06** — [log](exudynRevisionLog2026b.md#rg13-3-2) *(group RG13; maintainer 2026-09-27)* **Each description synchronized once with its
     implementation, and the definition says so** (#2717). *"each item's description needs to be
     one-time manually synched with the implementation; then gets a checked in the definitions file
     (or any better way for that)."*
@@ -1584,8 +1584,9 @@ What depends on it: the graphics regression test takes every item through its Mi
     - **RG13.3.1** **DONE 2026-10-05** — [log](exudynRevisionLog2026b.md#rg13-3-1) the workflow -
       `tools/checkDescriptions.py` (`--mark`, `--check` in `exudev generate --all-checks`),
       `definitions/descriptionChecks.json` - and the first group: the 16 nodes, checked and recorded.
-    - **RG13.3.2** the 18 markers; **RG13.3.3** the 4 loads; **RG13.3.4** the 8 sensors; **RG13.3.5** the 51 objects, in
-      their groups (bodies, finite elements, joints, connectors, contacts, special).
+    - **RG13.3.2-.5** **DONE 2026-10-06** — [log](exudynRevisionLog2026b.md#rg13-3-2) *(maintainer 2026-10-06: "Do
+      RG13.3.2-.5")* the 18 markers, 4 loads, 8 sensors and 51 objects checked and recorded - all 97 items; what the
+      C++ does not use is #2867, for a decision.
 
 <a id="rg13-4"></a>
 **RG13.4** **DONE 2026-09-29** (#2721) — [log](exudynRevisionLog2026b.md#rg13-4) · [plan text](exudynRevisionLog2026b.md#plan-rg13-4) — The development documents per item type.
@@ -1955,9 +1956,9 @@ issue and a short title only. The open issues that are not steps are in the trac
 | RG5.1 | - | a maintained micro-benchmark of the linear algebra, inside Exudyn (from #2397); RG5.1.1 the no-rotation flag of the HT |
 | RG5.2 | - | make the hot linear algebra vectorizable |
 | RG6.8 | #2140, #2236, #2237, #2350 | the graphics fixes before 1.13: Linux (RG6.8.5) and macOS (RG6.8.6), which wait for those machines |
+| RG13.3 | #2867 | follow-up: parameters and output variables the C++ of four items does not use, for a decision |
 | RG9.6 | #2866 | the member functions an item must provide, checked when it compiles (from #2498) |
 | RG8.1 to RG8.9 | - | the plugin ABI: registry, fingerprint, reference plugin, headers, discovery |
-| RG13.3 | #2717 | each description synchronized once with its implementation, recorded with a fingerprint: nodes done, RG13.3.2-.5 open |
 | RG14.3 | #2745 | joints and their Jacobians on homogeneous transformations, after RG14.2.9 |
 | RG15 | #2746 | objects computing from coordinates passed in: the work after the evaluation of RG15.1, not planned yet |
 

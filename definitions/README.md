@@ -262,8 +262,9 @@ python tools/checkDescriptions.py --mark NodePoint     # record the check of an 
 python tools/checkDescriptions.py --check              # in exudev generate --all-checks
 ```
 
-The fingerprint covers the hand-written source of the item (`src/Impl<Kind>s/C<Item>.cpp`, or its functions in the
-shared `CLoad.cpp`, `CSensor.cpp`) and its generated header without comments, so a change of a description leaves
+The fingerprint covers the hand-written source of the item (`src/Impl<Kind>s/C<Item>.cpp`, and its functions in the
+shared sources, such as `CLoad.cpp`, `CSensor.cpp`, `evaluateUserFunctions.cpp`) and its generated header without
+comments, so a change of a description leaves
 it, and a change of the code does not: `--check` then names the item with the old and the new fingerprint, until
 its description has been looked at again and `--mark` records the new state (#2717).
 

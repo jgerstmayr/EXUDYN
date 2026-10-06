@@ -67,11 +67,12 @@ Available as `OutputVariableType` in sensors, `Get...Output()` and other functio
 | output variable | symbol | description |
 |---|---|---|
 | Position |  | contact center point (also given for positive gap, when no contact occurs) |
-| Displacement |  | global displacement vector between the two spheres midpoints |
+| Displacement |  | global vector from marker 0 (sphere center) to marker 1 (torus center) |
 | DisplacementLocal |  | 1D Vector, containing only gap |
 | Director1 |  | normalized vector from marker 0 to marker 1 |
-| Director2 |  | the normalized vector from marker 0 to marker 1 projected into the plane of the torus major circle |
-| Director3 |  | normalized vector from the projected point on the major circle (center of the minor circle) to marker 1, being in direction of the contact and normal to the surface |
+| Director2 |  | normalized vector from marker 1 (torus center) to the projection of marker 0 into the plane of the major circle |
+| Director3 |  | normalized vector from the center of the minor circle next to the sphere to the sphere center (marker 0): the contact normal |
+| Velocity |  | velocity of the contact point on the torus relative to the one on the sphere, with the rotations of both |
 | Force |  | global contact force vector |
 | Torque |  | global torque due to friction on marker 0 |
 
