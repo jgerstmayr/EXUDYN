@@ -6,7 +6,7 @@
 (sec-item-objectcontactcirclecable2d)=
 # ObjectContactCircleCable2D
 
-A very specialized penalty-based contact condition between a 2D circle (=marker0, any Position-marker) on a body and an ANCFCable2DShape (=marker1, Marker: BodyCable2DShape), in xy-plane. A node NodeGenericData is required with the number of cordinates according to the number of contact segments; the contact gap $g$ is integrated (piecewise linear) along the cable and circle; the contact force $f_c$ is zero for $gap>0$ and otherwise computed from $f_c = g*contactStiffness + \dot g*contactDamping$; during Newton iterations, the contact force is actived only, if $dataCoordinate[0] <= 0$; dataCoordinate is set equal to gap in nonlinear iterations, but not modified in Newton iterations.
+A very specialized penalty-based contact condition between a 2D circle (=marker0, any Position-marker) on a body and an ANCFCable2DShape (=marker1, Marker: BodyCable2DShape), in xy-plane. A node NodeGenericData is required with the number of cordinates according to the number of contact segments; the contact gap $g$ is integrated (piecewise linear) along the cable and circle; the contact force $f_c$ is zero for $gap>0$ and otherwise computed from $f_c = g*contactStiffness$, without damping; during Newton iterations, the contact force is actived only, if $dataCoordinate[0] <= 0$; dataCoordinate is set equal to gap in nonlinear iterations, but not modified in Newton iterations.
 
 ## Interface
 
@@ -23,7 +23,6 @@ The parameters of the item; in a dictionary, its type is 'ContactCircleCable2D':
 | **nodeNumber** | NodeIndex |  | invalid (-1) | node number of a NodeGenericData for nSegments dataCoordinates (used for active set strategy ==> hold the gap of the last discontinuous iteration and the friction state) |
 | **numberOfContactSegments** | Index |  | 3 | number of linear contact segments to determine contact; each segment is a line and is associated to a data (history) variable; must be same as in according marker |
 | **contactStiffness** | UReal |  | 0. | contact (penalty) stiffness [SI:N/m/(contact segment)]; the stiffness is per contact segment; specific contact forces (per length) $f_N$ act in contact normal direction only upon penetration |
-| **contactDamping** | UReal |  | 0. | contact damping [SI:N/(m s)/(contact segment)]; not used: the contact force is the stiffness term only (#2867) |
 | **circleRadius** | UReal |  | 0. | radius [SI:m] of contact circle |
 | **offset** | Real |  | 0. | offset [SI:m] of contact, e.g. to include thickness of cable element |
 | **activeConnector** | Bool |  | True | flag, which determines, if the connector is active; used to deactivate (temporarily) a connector or constraint |
@@ -62,8 +61,8 @@ marker; for each segment the gap is the distance of the circle center from the s
 
 ### Connector forces
 
-Per segment in contact, a force per length $f_N = k_c\, g + d_c\, \dot g$ in the normal direction of the
-contact, with `contactStiffness` and `contactDamping` per segment; the forces act on the cable through
+Per segment in contact, a force per length $f_N = k_c\, g$ in the normal direction of the contact, with
+`contactStiffness` per segment and without damping; the forces act on the cable through
 the shape functions of the marker and on the circle center. There is **no friction and no torque** on
 the circle: otherwise geometry and equations are those of `ObjectContactFrictionCircleCable2D`, see
 [](#sec-item-objectcontactfrictioncirclecable2d). The data coordinates, one per segment, hold the gap of

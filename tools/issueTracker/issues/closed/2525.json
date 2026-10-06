@@ -5,13 +5,13 @@
   "status": "RESOLVED",
   "type": "FIX",
   "priority": "NORMAL",
-  "description": "The docs generators build URLs as https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/<folder>/<file> (autoGenerateHelper.py:1783 and utilityDocsModel.py:528). That path no longer exists: the tree became python/ in revision2026 steps R3.1\\, R3.8 and R3.9\\, so every Relevant Examples and TestModels link in the item documentation and every source link of the utility documentation is dead. proposed as a new revision2026 step in phase R7; awaiting approval (found while adding the model of step R6.3.7).",
+  "description": "The docs generators build URLs as https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/<folder>/<file> (autoGenerateHelper.py:1783 and utilityDocsModel.py:528). That path no longer exists: the tree became python/ in revision2026 steps R3.1, R3.8 and R3.9, so every Relevant Examples and TestModels link in the item documentation and every source link of the utility documentation is dead. proposed as a new revision2026 step in phase R7; awaiting approval (found while adding the model of step R6.3.7).",
   "dateRaised": "2026-09-18",
   "deadline": "2027-03-17",
   "dateResolved": "2026-09-18 18:27",
   "resolvedAuthor": "Claude-JG",
   "file": "tools/generators/autoGenerateHelper.py",
   "line": "1783",
-  "releaseNotes": "the prefix lives in generatorPaths.githubSourceURL and the four generators that built it by hand read it: autoGenerateHelper.py\\, utilityDocsModel.py and doc2rst.py twice. 368 generated documentation files repaired. The URLs name master and the new layout\\, so they are right once this work reaches master - one string to change at the release instead of four generators. Five files kept the old links because their generator writes nothing at all\\, raised as #2526. revision2026 step R7.6.",
+  "releaseNotes": "the prefix lives in generatorPaths.githubSourceURL and the four generators that built it by hand read it: autoGenerateHelper.py, utilityDocsModel.py and doc2rst.py twice. 368 generated documentation files repaired. The URLs name master and the new layout, so they are right once this work reaches master - one string to change at the release instead of four generators. Five files kept the old links because their generator writes nothing at all, raised as #2526. revision2026 step R7.6.",
   "resolvedInVersion": "1.11.184"
 }

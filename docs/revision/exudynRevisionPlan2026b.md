@@ -563,6 +563,12 @@ content (the notation tables, the definitions of quantities, the parameter table
 lose the size column and get short headings and a wider name column; the acceleration row of the FFRF output
 variables is one row again; the items index lists every renamed and deprecated item parameter.
 
+<a id="rg3-38"></a>
+**RG3.38** **DONE 2026-10-07** (#2883) — [log](exudynRevisionLog2026b.md#rg3-38) *(group RG3; maintainer 2026-10-07:
+"there are a couple of stray \LU, \pv, \mathbf, etc. in the PDF ... there are many lost '\' in the PDF ... Please fix
+that")* **No LaTeX source in the text of the PDF**: figures referenced by number, pipes in table math as `\vert`, display
+math on lines of its own, no LaTeX line breaks and spaces in the Markdown; `tools/checkMathMacros.py --check` refuses them.
+
 <a id="rg3-37"></a>
 **RG3.37** **DONE 2026-10-05** (#2860) — [log](exudynRevisionLog2026b.md#rg3-37) *(group RG3; maintainer 2026-10-05: "put
 the available paths only into the general description of the substructure (as typewriter font), but put only the name of
@@ -1652,6 +1658,10 @@ What depends on it: the graphics regression test takes every item through its Mi
     - **RG13.3.2-.5** **DONE 2026-10-06** — [log](exudynRevisionLog2026b.md#rg13-3-2) *(maintainer 2026-10-06: "Do
       RG13.3.2-.5")* the 18 markers, 4 loads, 8 sensors and 51 objects checked and recorded - all 97 items; what the
       C++ does not use is #2867, for a decision.
+    - **RG13.3.6** **DONE 2026-10-07** — [log](exudynRevisionLog2026b.md#rg13-3-6) (#2867) the decisions carried out:
+      ObjectContactCurveCircles computes its output variables and has friction; ObjectContactCircleCable2D without
+      contactDamping and ObjectANCFThinPlate without strainIsRelativeToReference; the velocityOffset of
+      ObjectConnectorCoordinateSpringDamperExt in its damper force.
 
 <a id="rg13-4"></a>
 **RG13.4** **DONE 2026-09-29** (#2721) — [log](exudynRevisionLog2026b.md#rg13-4) · [plan text](exudynRevisionLog2026b.md#plan-rg13-4) — The development documents per item type.
@@ -2021,7 +2031,6 @@ issue and a short title only. The open issues that are not steps are in the trac
 | RG5.1 | - | a maintained micro-benchmark of the linear algebra, inside Exudyn (from #2397); RG5.1.1 the no-rotation flag of the HT |
 | RG5.2 | - | make the hot linear algebra vectorizable |
 | RG6.8 | #2140, #2236, #2237, #2350 | the graphics fixes before 1.13: Linux (RG6.8.5) and macOS (RG6.8.6), which wait for those machines |
-| RG13.3 | #2867 | follow-up: parameters and output variables the C++ of four items does not use, for a decision |
 | RG2.4.5 | #2881 | Ubuntu GUI check: curved tiling and recorded frames to be checked again |
 | RG9.6 | #2866 | the member functions an item must provide, checked when it compiles (from #2498) |
 | RG8.1 to RG8.9 | - | the plugin ABI: registry, fingerprint, reference plugin, headers, discovery |

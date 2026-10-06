@@ -74,7 +74,7 @@ Available as `OutputVariableType` in sensors, `Get...Output()` and other functio
 
 | output variable | symbol | description |
 |---|---|---|
-| Distance | $L = \|\Delta\! \LU{0}{\pv}\|$ | distance between both marker points (usually the actuator bushings); current actuator length |
+| Distance | $L = \vert \Delta\! \LU{0}{\pv}\vert $ | distance between both marker points (usually the actuator bushings); current actuator length |
 | Displacement |  | relative displacement between both marker points |
 | Velocity | $\Delta\! \LU{0}{\vv}$ | relative velocity between both points |
 | VelocityLocal | $\dot L$ | actuator velocity, the derivative of actuator length |
@@ -91,10 +91,10 @@ Available as `OutputVariableType` in sensors, `Get...Output()` and other functio
 | marker m1 position | $\LU{0}{\pv}_{m1}$ |  |
 | marker m0 velocity | $\LU{0}{\vv}_{m0}$ | current global velocity which is provided by marker m0 |
 | marker m1 velocity | $\LU{0}{\vv}_{m1}$ |  |
-| Displacement | $\Delta\! \LU{0}{\pv}$=$\LU{0}{\pv}_{m1} - \LU{0}{\pv}_{m0}$ | The relative vector between marker points, stored as Displacement in output variables |
-| current actuator length | $L$=$|\Delta\! \LU{0}{\pv}|$ | stored as Distance in output variables |
-| time derivative of actuator length | $\dot L$=$\Delta\! \LU{0}{\vv}\tp \vv_{f}$ |  |
-| Velocity | $\Delta\! \LU{0}{\vv}$=$\LU{0}{\vv}_{m1} - \LU{0}{\vv}_{m0}$ | The vectorial relative velocity |
+| Displacement | $\Delta\! \LU{0}{\pv} = \LU{0}{\pv}_{m1} - \LU{0}{\pv}_{m0}$ | The relative vector between marker points, stored as Displacement in output variables |
+| current actuator length | $L = \vert\Delta\! \LU{0}{\pv}\vert$ | stored as Distance in output variables |
+| time derivative of actuator length | $\dot L = \Delta\! \LU{0}{\vv}\tp \vv_{f}$ |  |
+| Velocity | $\Delta\! \LU{0}{\vv} = \LU{0}{\vv}_{m1} - \LU{0}{\vv}_{m0}$ | The vectorial relative velocity |
 | Force | $\fv$ | see below |
 
 ### Connector forces

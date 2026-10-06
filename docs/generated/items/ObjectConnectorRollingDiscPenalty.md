@@ -30,8 +30,8 @@ The parameters of the item; in a dictionary, its type is 'ConnectorRollingDiscPe
 | **markerNumbers** | ArrayMarkerIndex | 2 | [ invalid (-1), invalid (-1) ] | (symbol: $[m0,m1]\tp$) list of markers used in connector; $m0$ represents a point at the plane surface (normal of surface plane defined by planeNormal); the ground can also be a moving rigid body; $m1$ represents the rolling body, which has its reference point (=local position [0,0,0]) at the disc center point |
 | **nodeNumber** | NodeIndex |  | invalid (-1) | (symbol: $n_d$) node number of a NodeGenericData (size=3) for 3 dataCoordinates, needed for discontinuous iteration (friction and contact) |
 | **discRadius** | PReal |  | 0. | defines the disc radius; **must be given**: the default is only a placeholder |
-| **discAxis** | Vector3D | 3 | [1,0,0] | (symbol: $\LU{m1}{\wv_{1}}, \;\; |\LU{m1}{\wv_{1}}| = 1$) axis of disc defined in marker $m1$ frame |
-| **planeNormal** | Vector3D | 3 | [0,0,1] | (symbol: $\LU{m0}{\vv_{PN}}, \;\; |\LU{m0}{\vv_{PN}}| = 1$) normal to the contact / rolling plane (ground); note that the plane reference point can be arbitrarily chosen by the location of the marker $m0$ |
+| **discAxis** | Vector3D | 3 | [1,0,0] | (symbol: $\LU{m1}{\wv_{1}}, \;\; \vert \LU{m1}{\wv_{1}}\vert  = 1$) axis of disc defined in marker $m1$ frame |
+| **planeNormal** | Vector3D | 3 | [0,0,1] | (symbol: $\LU{m0}{\vv_{PN}}, \;\; \vert \LU{m0}{\vv_{PN}}\vert  = 1$) normal to the contact / rolling plane (ground); note that the plane reference point can be arbitrarily chosen by the location of the marker $m0$ |
 | **dryFrictionAngle** | Real |  | 0. | (symbol: $\alpha_t$) angle [SI:1 (rad)] which defines a rotation of the local tangential coordinates dry friction; this allows to model Mecanum wheels with specified roll angle |
 | **contactStiffness** | UReal |  | 0. | (symbol: $k_c$) normal contact stiffness [SI:N/m] |
 | **contactDamping** | UReal |  | 0. | (symbol: $d_c$) normal contact damping [SI:N/(m s)] |

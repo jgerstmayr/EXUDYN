@@ -131,7 +131,7 @@ The formulation is based on the EOM of `ObjectFFRF`, **also regarding parts of n
 and some input parameters, [](#sec-item-objectffrf), and
 can be found in Zwölfer and Gerstmayr [ZwoelferGerstmayr2021] with only small modifications in the notation.
 The notation of kinematics quantities follows the floating frame of reference idea with
-quantities given in the tables above and sketched in [](#fig-objectffrfreducedorder-mesh).
+quantities given in the tables above and sketched in {numref}`fig-objectffrfreducedorder-mesh`.
 
 (fig-objectffrfreducedorder-mesh)=
 ```{figure} /docs/figures/ObjectFFRFsketch.*

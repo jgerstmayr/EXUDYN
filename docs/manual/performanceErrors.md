@@ -47,7 +47,7 @@ study, and it should not end the study.
 
 ### An error inside your own user function
 
-If a Python user function -- `springForceUserFunction` and its kin -- raises, Exudyn\
+If a Python user function -- `springForceUserFunction` and its kin -- raises, Exudyn
 reports it as a `ModelError`, because a user function is part of the model. The original
 exception is **not** lost: it is attached as `__cause__`, with its own traceback,
 so Spyder and VS Code show the chain and jump to the line inside your function.
@@ -175,7 +175,7 @@ The faster versions are available for all release versions, but only for some `.
 - Alternatively, Python user functions can be speed up using the Python numba package, using `@jit` in front of functions (for more options, see [https://numba.pydata.org/numba-doc/dev/user/index.html](https://numba.pydata.org/numba-doc/dev/user/index.html)); Example given in `Examples/springDamperUserFunctionNumbaJIT.py` showing speedups of factor 4; more complicated Python functions may see speedups of 10 - 50
 - for **discontinuous problems**, try to adjust solver parameters; especially the discontinuous.iterationTolerance which may be too tight and cause many iterations; iterations may be limited by discontinuous.maxIterations, which at larger values solely multiplies the computation time with a factor if all iterations are performed
 - For multiple computations / multiple runs of Exudyn (parameter variation, optimization, compute sensitivities), you can use the processing sub module of Exudyn to parallelize computations and achieve speedups proporional to the number of cores/threads of your computer; specifically using the `multiThreading` option or even using a cluster (using `dispy`, see `ParameterVariation(...)` function)
-- In case of multiprocessing and cluster computing, you may see a very high CPU usage of "Antimalware Service Executable", which is the Microsoft Defender Antivirus; you can turn off such problems by excluding `python.exe` from the defender (on your own risk!) in your settings:\ Settings $\ra$ Update & Security $\ra$ Windows Security $\ra$ Virus & threat protection settings $\ra$ Manage settings $\ra$ Exclusions $\ra$ Add or remove exclusions
+- In case of multiprocessing and cluster computing, you may see a very high CPU usage of "Antimalware Service Executable", which is the Microsoft Defender Antivirus; you can turn off such problems by excluding `python.exe` from the defender (on your own risk!) in your settings: Settings $\ra$ Update & Security $\ra$ Windows Security $\ra$ Virus & threat protection settings $\ra$ Manage settings $\ra$ Exclusions $\ra$ Add or remove exclusions
 
 **Possible speed ups for dynamic simulations**:
 

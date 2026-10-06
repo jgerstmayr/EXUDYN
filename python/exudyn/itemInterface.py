@@ -3932,8 +3932,6 @@ class ObjectANCFThinPlate:
 
         curvatureCoefficients: [SI:Nm] stiffness coefficients related to curvatures, integrated over height of the plate, as a list of 3D matrices; used for a constant thickness (one matrix); for 4 or 12 thickness values :math:`\Dm_\kappa` follows from strainCoefficients and the local thickness; type: Matrix3DList
 
-        strainIsRelativeToReference: not used: the strains and curvatures are always relative to the reference configuration, which is the stressless state (#2867); type: float
-
         slopesScalingX: scaling of x-slopes at each element node; flat elements: half of the side length of the element; curved: optimal values such that curved geometry is best approximated; if negative (default) values are used, length is computed from node distances.; type: [float,float,float,float]
 
         slopesScalingY: scaling of y-slopes at each element node; flat elements: half of the side length of the element; curved: optimal values such that curved geometry is best approximated; if negative (default) values are used, length is computed from node distances.; type: [float,float,float,float]
@@ -3960,7 +3958,7 @@ class ObjectANCFThinPlate:
         Requested Node type: ``Position``
 
     """
-    def __init__(self, name = '', thickness = [], density = 0., massProportionalDamping = 0., stiffnessProportionalDamping = 0., bendingStiffnessProportionalDamping = -1., strainCoefficients = None, curvatureCoefficients = None, strainIsRelativeToReference = 1., slopesScalingX = [-1.,-1.,-1.,-1.], slopesScalingY = [-1.,-1.,-1.,-1.], nodeNumbers = [exudyn.InvalidIndex(), exudyn.InvalidIndex(), exudyn.InvalidIndex(), exudyn.InvalidIndex()], useReducedOrderIntegration = 0, physicsThickness = None, physicsDensity = None, physicsMassProportionalDamping = None, physicsStrainCoefficients = None, physicsCurvatureCoefficients = None, visualization = {'show': True, 'color': [-1.,-1.,-1.,-1.]}):
+    def __init__(self, name = '', thickness = [], density = 0., massProportionalDamping = 0., stiffnessProportionalDamping = 0., bendingStiffnessProportionalDamping = -1., strainCoefficients = None, curvatureCoefficients = None, slopesScalingX = [-1.,-1.,-1.,-1.], slopesScalingY = [-1.,-1.,-1.,-1.], nodeNumbers = [exudyn.InvalidIndex(), exudyn.InvalidIndex(), exudyn.InvalidIndex(), exudyn.InvalidIndex()], useReducedOrderIntegration = 0, physicsThickness = None, physicsDensity = None, physicsMassProportionalDamping = None, physicsStrainCoefficients = None, physicsCurvatureCoefficients = None, visualization = {'show': True, 'color': [-1.,-1.,-1.,-1.]}):
         self.name = name
         self.thickness = CheckForValidNumpyArray(thickness)
         self.density = density
@@ -3969,7 +3967,6 @@ class ObjectANCFThinPlate:
         self.bendingStiffnessProportionalDamping = bendingStiffnessProportionalDamping
         self.strainCoefficients = strainCoefficients
         self.curvatureCoefficients = curvatureCoefficients
-        self.strainIsRelativeToReference = strainIsRelativeToReference
         self.slopesScalingX = np.array(slopesScalingX)
         self.slopesScalingY = np.array(slopesScalingY)
         self.nodeNumbers = copy.copy(nodeNumbers)
@@ -3991,7 +3988,6 @@ class ObjectANCFThinPlate:
         yield 'bendingStiffnessProportionalDamping', self.bendingStiffnessProportionalDamping
         yield 'strainCoefficients', self.strainCoefficients
         yield 'curvatureCoefficients', self.curvatureCoefficients
-        yield 'strainIsRelativeToReference', self.strainIsRelativeToReference
         yield 'slopesScalingX', self.slopesScalingX
         yield 'slopesScalingY', self.slopesScalingY
         yield 'nodeNumbers', self.nodeNumbers
@@ -4616,7 +4612,7 @@ class ObjectConnectorCoordinateSpringDamperExt:
 
         offset: offset between two coordinates (reference length of springs), see equation; it can be used to represent the pre-scribed drive coordinate; type: float
 
-        velocityOffset: velocity offset, passed to springForceUserFunction; the force without user function does not use it (#2867); type: float
+        velocityOffset: velocity offset of the damper force, see equation; also passed to springForceUserFunction; type: float
 
         factor0: marker 0 coordinate is multiplied with factor0; type: float
 
@@ -5673,9 +5669,9 @@ class VObjectContactCircleCable2D:
         return str(dict(self))
 
 class ObjectContactCircleCable2D:
-    r"""A very specialized penalty-based contact condition between a 2D circle (=marker0, any Position-marker) on a body and an ANCFCable2DShape (=marker1, Marker: BodyCable2DShape), in xy-plane.
+    """A very specialized penalty-based contact condition between a 2D circle (=marker0, any Position-marker) on a body and an ANCFCable2DShape (=marker1, Marker: BodyCable2DShape), in xy-plane.
     
-    A node NodeGenericData is required with the number of cordinates according to the number of contact segments; the contact gap :math:`g` is integrated (piecewise linear) along the cable and circle; the contact force :math:`f_c` is zero for :math:`gap>0` and otherwise computed from :math:`f_c = g*contactStiffness + \dot g*contactDamping`; during Newton iterations, the contact force is actived only, if :math:`dataCoordinate[0] <= 0`; dataCoordinate is set equal to gap in nonlinear iterations, but not modified in Newton iterations.
+    A node NodeGenericData is required with the number of cordinates according to the number of contact segments; the contact gap :math:`g` is integrated (piecewise linear) along the cable and circle; the contact force :math:`f_c` is zero for :math:`gap>0` and otherwise computed from :math:`f_c = g*contactStiffness`, without damping; during Newton iterations, the contact force is actived only, if :math:`dataCoordinate[0] <= 0`; dataCoordinate is set equal to gap in nonlinear iterations, but not modified in Newton iterations.
     
     Args:
         name: connector's unique name; type: str
@@ -5687,8 +5683,6 @@ class ObjectContactCircleCable2D:
         numberOfContactSegments: number of linear contact segments to determine contact; each segment is a line and is associated to a data (history) variable; must be same as in according marker; type: int
 
         contactStiffness: contact (penalty) stiffness [SI:N/m/(contact segment)]; the stiffness is per contact segment; specific contact forces (per length) :math:`f_N` act in contact normal direction only upon penetration; type: float
-
-        contactDamping: contact damping [SI:N/(m s)/(contact segment)]; not used: the contact force is the stiffness term only (#2867); type: float
 
         circleRadius: radius [SI:m] of contact circle; type: float
 
@@ -5706,13 +5700,12 @@ class ObjectContactCircleCable2D:
         Requested Node type: ``GenericData``
 
     """
-    def __init__(self, name = '', markerNumbers = [ exudyn.InvalidIndex(), exudyn.InvalidIndex() ], nodeNumber = exudyn.InvalidIndex(), numberOfContactSegments = 3, contactStiffness = 0., contactDamping = 0., circleRadius = 0., offset = 0., activeConnector = True, visualization = {'show': True, 'showContactCircle': True, 'drawSize': -1., 'color': [-1.,-1.,-1.,-1.]}):
+    def __init__(self, name = '', markerNumbers = [ exudyn.InvalidIndex(), exudyn.InvalidIndex() ], nodeNumber = exudyn.InvalidIndex(), numberOfContactSegments = 3, contactStiffness = 0., circleRadius = 0., offset = 0., activeConnector = True, visualization = {'show': True, 'showContactCircle': True, 'drawSize': -1., 'color': [-1.,-1.,-1.,-1.]}):
         self.name = name
         self.markerNumbers = copy.copy(markerNumbers)
         self.nodeNumber = nodeNumber
         self.numberOfContactSegments = numberOfContactSegments
         self.contactStiffness = contactStiffness
-        self.contactDamping = contactDamping
         self.circleRadius = circleRadius
         self.offset = offset
         self.activeConnector = activeConnector
@@ -5725,7 +5718,6 @@ class ObjectContactCircleCable2D:
         yield 'nodeNumber', self.nodeNumber
         yield 'numberOfContactSegments', self.numberOfContactSegments
         yield 'contactStiffness', self.contactStiffness
-        yield 'contactDamping', self.contactDamping
         yield 'circleRadius', self.circleRadius
         yield 'offset', self.offset
         yield 'activeConnector', self.activeConnector
@@ -6212,7 +6204,7 @@ class VObjectContactCurveCircles:
 class ObjectContactCurveCircles:
     r"""A contact model between a curve defined by piecewise segments and a set of circles.
     
-    The 2D curve may corotate in 3D with the underlying marker and also defines the plane of action for the circles. [REQUIRES FURTHER TESTING; friction not yet available]
+    The 2D curve may corotate in 3D with the underlying marker and also defines the plane of action for the circles. [REQUIRES FURTHER TESTING]
     
     Args:
         name: constraints's unique name
@@ -6227,9 +6219,9 @@ class ObjectContactCurveCircles:
 
         polynomialData: matrix containing coefficients for special polynomial enhancements of the linear segments; each row contains coefficients for polynomials for the according segment, prescribing slopes at beginning and end of segment as well as curvature at beginning and end of segment; slopes and curvatures are defined in a local x/y coordinate system where x is the segment axis (start: x=0; x-axis points towards end point) and the segment normal is in y-direction; MatrixContainer has to be provided in dense mode!; type: PyMatrixContainer
 
-        dynamicFriction: dynamic friction coefficient for friction model, see StribeckFunction in exudyn.physics, sec-module-physics; type: float
+        dynamicFriction: dynamic friction coefficient: the friction force is :math:`\mu_d |f_N|`, regularized below frictionProportionalZone, see the equation; 0: no friction; type: float
 
-        frictionProportionalZone: limit velocity [m/s] up to which the friction is proportional to velocity (for regularization / avoid numerical oscillations), see StribeckFunction in exudyn.physics (named regVel there!), sec-module-physics; type: float
+        frictionProportionalZone: limit velocity [SI:m/s] up to which the friction force is proportional to the tangential velocity (regularization, against numerical oscillations); 0: no regularization; type: float
 
         contactStiffness: normal contact stiffness [SI:N/(m*m)]; type: float
 

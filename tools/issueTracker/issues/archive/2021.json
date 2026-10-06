@@ -41,7 +41,7 @@
       "deadline": "2019-07-19",
       "dateResolved": "2021-03-20 23:21",
       "resolvedAuthor": "JG",
-      "releaseNotes": "{\\bf ATTENTION}: this change affects many routines. All TestSuite examples passed the change but there may still be open problems due to this major change.",
+      "releaseNotes": "ATTENTION: this change affects many routines. All TestSuite examples passed the change but there may still be open problems due to this major change.",
       "resolvedInVersion": "1.0.160"
     },
     {
@@ -97,7 +97,7 @@
       "deadline": "2020-04-18",
       "dateResolved": "2021-03-20 23:22",
       "resolvedAuthor": "JG",
-      "releaseNotes": "{\\bf WARNING}: you need to adapt force, torque and stress, strain and curvature output variables accordingly as they may have changed specifically for ANCF beams; adapt all your model files regarding Force, Torque, etc.",
+      "releaseNotes": "WARNING: you need to adapt force, torque and stress, strain and curvature output variables accordingly as they may have changed specifically for ANCF beams; adapt all your model files regarding Force, Torque, etc.",
       "resolvedInVersion": "1.0.161"
     },
     {
@@ -1813,7 +1813,7 @@
       "deadline": "2021-06-25",
       "dateResolved": "2021-04-27 18:18",
       "resolvedAuthor": "JG",
-      "releaseNotes": "{\\bf CHANGED interface}: MarkerSuperElementRigid does not have a referencePosition anymore, but adds a parameter offset",
+      "releaseNotes": "CHANGED interface: MarkerSuperElementRigid does not have a referencePosition anymore, but adds a parameter offset",
       "resolvedInVersion": "1.0.186"
     },
     {
@@ -1998,7 +1998,7 @@
       "deadline": "2021-06-30",
       "dateResolved": "2021-05-01 23:36",
       "resolvedAuthor": "JG",
-      "releaseNotes": "{\\bf adapt your models if you used these options!}",
+      "releaseNotes": "adapt your models if you used these options!",
       "resolvedInVersion": "1.0.197"
     },
     {

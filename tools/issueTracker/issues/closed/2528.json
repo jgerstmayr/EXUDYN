@@ -5,7 +5,7 @@
   "status": "RESOLVED",
   "type": "CHANGE",
   "priority": "HIGH",
-  "description": "The classes exist (#2516)\\, the helpers can carry them (#2521) and the triage says which site is for whom (#2520) - but 1082 user-facing call sites still raise whatever they always raised. Map them area by area\\, starting with src/Pymodules\\, the layer closest to the user. revision2026 step R6.3.6.",
+  "description": "The classes exist (#2516), the helpers can carry them (#2521) and the triage says which site is for whom (#2520) - but 1082 user-facing call sites still raise whatever they always raised. Map them area by area, starting with src/Pymodules, the layer closest to the user. revision2026 step R6.3.6.",
   "dateRaised": "2026-09-18",
   "deadline": "2027-03-17",
   "dateResolved": "2026-09-18 22:06",

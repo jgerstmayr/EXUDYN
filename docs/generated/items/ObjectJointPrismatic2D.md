@@ -50,11 +50,11 @@ Available as `OutputVariableType` in sensors, `Get...Output()` and other functio
 
 | output variable | symbol | description |
 |---|---|---|
-| Distance | $(\pv_1-\pv_0)\tp \Am_0 \tv_0 / \|\tv_0\|$ | position of marker m1 along the axis, measured from marker m0 |
+| Distance | $(\pv_1-\pv_0)\tp \Am_0 \tv_0 / \vert \tv_0\vert $ | position of marker m1 along the axis, measured from marker m0 |
 | Rotation |  | the angle of marker m1 relative to marker m0 about $z$, from $\Am_0\tp \Am_1$ |
 | Position | $\LU{0}{\pv}_{m0}$ | current global position of position marker $m0$ |
 | Velocity | $\LU{0}{\vv}_{m0}$ | current global velocity of position marker $m0$ |
-| DisplacementLocal | $\LU{J0}{\Delta\pv} = \Am_0\tp(\pv_1-\pv_0)$ | relative position of marker m1 in the frame of marker m0, which is the joint frame $J0$; its component along $\tv_0$ is Distance times $\|\tv_0\|$ |
+| DisplacementLocal | $\LU{J0}{\Delta\pv} = \Am_0\tp(\pv_1-\pv_0)$ | relative position of marker m1 in the frame of marker m0, which is the joint frame $J0$; its component along $\tv_0$ is Distance times $\vert \tv_0\vert $ |
 | ForceLocal | $\LU{J0}{\fv} = \Am_0\tp \nv_1 \lambda_0$ | the joint force normal to the axis, in the joint frame $J0$; as for the other joints the force on marker m0; the torque $\lambda_1$ is not included |
 | HomogeneousTransformation | $\LU{0}{\Hm}_{J0}$ | the joint frame $J0$ as homogeneous transformation: its rotation matrix and the position of marker $m0$, as 4x4 matrix $[\LU{0}{\Rot}_{J0}\;\LU{0}{\pv}_{m0};\;\Null\tp\;1]$; the Get...Output functions return it as exu.HT, a sensor stores its 16 values row by row |
 | HomogeneousTransformationLocal | $\LU{J0}{\Hm}_{J1} = \LU{0}{\Hm}_{J0}^{-1}\,\LU{0}{\Hm}_{J1}$ | the joint frame $J1$ relative to the joint frame $J0$: the relative rotation matrix $\LU{0}{\Rot}_{J0}\tp\LU{0}{\Rot}_{J1}$ and the relative position $\LU{0}{\Rot}_{J0}\tp(\LU{0}{\pv}_{m1}-\LU{0}{\pv}_{m0})$; for a joint the identity up to its free axes and its drift; returned and stored as HomogeneousTransformation |

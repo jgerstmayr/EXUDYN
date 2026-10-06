@@ -58,7 +58,7 @@ Available as `OutputVariableType` in sensors, `Get...Output()` and other functio
 |---|---|---|
 | Displacement | $\LU{0}{\Delta\pv}$ | relative displacement in global coordinates |
 | Velocity | $\LU{0}{\Delta\vv}$ | relative translational velocity in global coordinates |
-| Distance | $\|\LU{0}{\Delta\pv}\|$ | distance between markers (should stay constant; shows constraint deviation) |
+| Distance | $\vert \LU{0}{\Delta\pv}\vert $ | distance between markers (should stay constant; shows constraint deviation) |
 | Force | $\lambda_0$ | joint force (=scalar Lagrange multiplier) |
 
 (description-objectconnectordistance)=

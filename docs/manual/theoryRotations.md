@@ -179,7 +179,7 @@ $$
 ### Elementary rotations
 
 Elementary rotations are rotations about a single axis, using one of the orthogonal basis vectors.
-Consider basis $(\ev_{x1},\,\ev_{y1},\,\ev_{z1})$ and a rotation around axis $\ev_{x1}$ with angle $\varphi_1$ in positive rotation sense, obtaining a rotated frame $(\ev_{x2},\,\ev_{y2},\,\ev_{z2})$, see {ref}`fig-theory-rotations-elementaryx`.
+Consider basis $(\ev_{x1},\,\ev_{y1},\,\ev_{z1})$ and a rotation around axis $\ev_{x1}$ with angle $\varphi_1$ in positive rotation sense, obtaining a rotated frame $(\ev_{x2},\,\ev_{y2},\,\ev_{z2})$, see {numref}`fig-theory-rotations-elementaryx`.
 The rotation matrix for this case reads:
 
 $$
@@ -198,7 +198,7 @@ $$
 Elementary rotation around axis $\mathbf{ x}_1$.
 ```
 
-In a second example, a rotation with angle $\varphi_2$ around $\ev_{y2}$ is performed to transform from basis $(\ev_{x2},\,\ev_{y2},\,\ev_{z2})$ into $(\ev_{x3},\,\ev_{y3},\,\ev_{z3})$, see {ref}`fig-theory-rotations-elementaryy`.
+In a second example, a rotation with angle $\varphi_2$ around $\ev_{y2}$ is performed to transform from basis $(\ev_{x2},\,\ev_{y2},\,\ev_{z2})$ into $(\ev_{x3},\,\ev_{y3},\,\ev_{z3})$, see {numref}`fig-theory-rotations-elementaryy`.
 The rotation matrix for this case reads:
 
 $$
@@ -275,7 +275,7 @@ Specifically, we see that for successive rotations, the following must be consid
 $$
   \Am_2 \Am_1 \vv \neq \Am_1 \Am_2 \vv \, .
 $$
-As an example, we consider in Figure {ref}`fig-theory-rotations-successive` the different order of rotations of a block.
+As an example, we consider in {numref}`fig-theory-rotations-successive` the different order of rotations of a block.
 
 (fig-theory-rotations-successive)=
 ```{figure} /docs/figures/RotationsSequences.*
@@ -284,7 +284,7 @@ As an example, we consider in Figure {ref}`fig-theory-rotations-successive` the 
 Successive rotations are not commutative.
 ```
 
-In {ref}`fig-theory-rotations-successive`a, the block shown is first rotated 90° about the $\mathbf{e}_2$ axis and then 90° about the $\mathbf{e}_3$ axis. In Figure {ref}`fig-theory-rotations-successive`b, the same rotations are applied in reverse order, i.e., the block is first rotated 90° about the $\mathbf{e}_3$ axis and then 90° about the $\mathbf{e}_2$ axis. It is immediately apparent that the resulting orientation of the block is different in both cases.
+In {numref}`fig-theory-rotations-successive`a, the block shown is first rotated 90° about the $\mathbf{e}_2$ axis and then 90° about the $\mathbf{e}_3$ axis. In {numref}`fig-theory-rotations-successive`b, the same rotations are applied in reverse order, i.e., the block is first rotated 90° about the $\mathbf{e}_3$ axis and then 90° about the $\mathbf{e}_2$ axis. It is immediately apparent that the resulting orientation of the block is different in both cases.
 
 Finally, it should be noted that there are two different types of successive rotations.
 In the first variant, also known as the **single-frame method**, the same reference frame is chosen for each rotation. This variant is best understood in the active rotation of vectors, where these rotations always take place, for example, in the global reference system.
@@ -319,7 +319,7 @@ $$
 Rotation of a vector $\mathbf{ r}_0$ by means of the angle-axis tuple $(\mathbf{ u}(t), \, \varphi(t))$.
 ```
 
-Using {ref}`fig-theory-rotations-angleaxis`, we may now consider relations of the two frames $(\ev_{x0},\,\ev_{y0},\,\ev_{z0})$ and $(\ev_{x1},\,\ev_{y1},\,\ev_{z1})$, solely defined by the angle-axis $(\uv(t), \, \varphi(t))$ relation.
+Using {numref}`fig-theory-rotations-angleaxis`, we may now consider relations of the two frames $(\ev_{x0},\,\ev_{y0},\,\ev_{z0})$ and $(\ev_{x1},\,\ev_{y1},\,\ev_{z1})$, solely defined by the angle-axis $(\uv(t), \, \varphi(t))$ relation.
 
 (fig-theory-rotations-axisanglederivation)=
 ```{figure} /docs/figures/RotationAxisAngleDerivation.*
@@ -328,7 +328,7 @@ Using {ref}`fig-theory-rotations-angleaxis`, we may now consider relations of th
 Relations for derivation of rotation tensor and Rodrigues' formula.
 ```
 
-According to {ref}`fig-theory-rotations-axisanglederivation`, we may split the vector $\rv$, which has the length $r = \vert \rv \vert$, into
+According to {numref}`fig-theory-rotations-axisanglederivation`, we may split the vector $\rv$, which has the length $r = \vert \rv \vert$, into
 
 $$
   \rv= c_1 \ev_1 + c_2 \ev_2 + c_3 \ev_3

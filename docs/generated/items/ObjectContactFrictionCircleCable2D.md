@@ -112,7 +112,7 @@ $$
 \rho = \frac{n}{d}
 $$
 
-We distinguish 3 cases (see also [](#fig-objectcontactfrictioncirclecable2d-sketch) for cases 1 and 2):
+We distinguish 3 cases (see also {numref}`fig-objectcontactfrictioncirclecable2d-sketch` for cases 1 and 2):
 
 1. If $\rho \le 0$, the shortest distance would be the distance to point $\pv_p=\pv_i$, reading
 
@@ -138,7 +138,7 @@ d_g = |\dv_g| = \sqrt{\vv_p\tp \vv_p - (n^2)/d}
 $$
 
 Here, the shortest distance vector for every segment results from the projected point $\pv_p$
-of the above mentioned cases, see also [](#fig-objectcontactfrictioncirclecable2d-sketch),
+of the above mentioned cases, see also {numref}`fig-objectcontactfrictioncirclecable2d-sketch`,
 with the relation
 
 $$
@@ -201,7 +201,7 @@ Calculation of last sticking position; blue parts mark the sticking position cal
 Because there is the chance to wind/unwind relative to the (last) sticking position without slipping,
 the following strategy is used.
 In case of sliding (which could be the last time sliding before sticking),
-we compute the **current sticking position**, see [](#fig-objectcontactfrictioncirclecable2d-stickingpos), as the sum of the relative position at the segment $s$
+we compute the **current sticking position**, see {numref}`fig-objectcontactfrictioncirclecable2d-stickingpos`, as the sum of the relative position at the segment $s$
 
 $$
 x_{s,curStick} = \rho \cdot L_{seg}
@@ -214,7 +214,7 @@ $$
 x_{c,curStick} = \alpha \cdot r
 $$
 
-We immediately see, that under pure rolling (neglecting the effects of small penetration, usually much smaller than shown for visibility in [](#fig-objectcontactfrictioncirclecable2d-stickingpos).),
+We immediately see, that under pure rolling (neglecting the effects of small penetration, usually much smaller than shown for visibility in {numref}`fig-objectcontactfrictioncirclecable2d-stickingpos`.),
 
 $$
 x_{s,curStick} + x_{c,curStick}  = \mathrm{const}.
@@ -260,7 +260,7 @@ $$
 
 ### Post Newton Step
 
-In general, see the solver flow chart for the `DiscontinuousIteration`, see [](#fig-solver-discontinuous-iteration), should be considered when reading this description. Every step is started with values `startOfStep`, while current values are iterated and updated in the Newton or `DiscontinuousIteration`.
+In general, see the solver flow chart for the `DiscontinuousIteration`, see {numref}`fig-solver-discontinuous-iteration`, should be considered when reading this description. Every step is started with values `startOfStep`, while current values are iterated and updated in the Newton or `DiscontinuousIteration`.
 
 The `PostNewtonStep` computes 3 values per segment, which are used for computation of contact forces, irrespectively of the
 current geometryof the contact.
@@ -382,7 +382,7 @@ If `activeConnector = True`,
 contact forces $\fv_i$ with $i \in [0,n_{cs}]$ -- these are $(n_{cs}+1)$ forces -- are applied at the points $p_i$, and they are computed for every contact segments (i.e., two segments may contribute to contact forces of one point).
 For every contact computation, first all contact forces at segment points are set to zero.
 We distinguish two cases SN and PWN. If `useSegmentNormals==True`, we use the SN case, while otherwise the PWN case is used,
-compare [](#fig-objectcontactfrictioncirclecable2d-normals).
+compare {numref}`fig-objectcontactfrictioncirclecable2d-normals`.
 
 (fig-objectcontactfrictioncirclecable2d-normals)=
 ```{figure} /docs/figures/ContactFrictionCircleCable2Dnormals.*
@@ -395,7 +395,7 @@ Segment normals (=SN) lead to always good approximations for normal directions, 
 
 - **CASE SN**: use **S**egment **N**ormals
 
-If there is contact in a segment $s_i$, i.e., gap state $x_{gap} \le 0$, see [](#fig-objectcontactfrictioncirclecable2d-sketch)(right), contact forces $\fv_{s_i}$ are computed per segment,
+If there is contact in a segment $s_i$, i.e., gap state $x_{gap} \le 0$, see {numref}`fig-objectcontactfrictioncirclecable2d-sketch`(right), contact forces $\fv_{s_i}$ are computed per segment,
 
 $$
 \fv_{s_i} = f_n \cdot \nv_{s_i} + f_t \tv_{s_i}
@@ -411,7 +411,7 @@ while in case $x_{gap}  > 0$ nothing is added.
 
 - **CASE PWN**: use **P**oint **W**ise **N**ormals (at segment points)
 
-If there is contact in a segment $s_i$, i.e., gap $x_{gap} \le 0$, see [](#fig-objectcontactfrictioncirclecable2d-sketch)(right), intermediate contact forces $\fv^{l,r}_{i}$ are computed per segment point,
+If there is contact in a segment $s_i$, i.e., gap $x_{gap} \le 0$, see {numref}`fig-objectcontactfrictioncirclecable2d-sketch`(right), intermediate contact forces $\fv^{l,r}_{i}$ are computed per segment point,
 
 $$
 \fv^l = f_n \cdot \nv_{l,s_i} + f_t \tv_{l,s_i}, \quad
@@ -447,7 +447,7 @@ $$
 
 During Newton iterations, the contact forces for segment $s_i$ are considered only, if
 $x_i <= 0$. The dataCoordinate $x_i$ is not modified during Newton iterations, but computed
-during the DiscontinuousIteration, see [](#fig-solver-discontinuous-iteration) in the solver description.
+during the DiscontinuousIteration, see {numref}`fig-solver-discontinuous-iteration` in the solver description.
 
 If `activeConnector = False`, all contact and friction forces on the cable and the force and torque on the
 circle's marker are set to zero.

@@ -24,7 +24,7 @@ The parameters of the item; in a dictionary, its type is 'RigidBody2D':
 | **name** | String |  | '' | node's unique name |
 | **referenceCoordinates** | Vector3D | 3 | [0.,0.,0.] | (symbol: $\qv\cRef = [q_0,\,q_1,\,\psi_0]\tp\cRef$) reference coordinates (x-pos,y-pos and rotation) of node ==> e.g. ref. coordinates for finite elements; global position of node without displacement |
 | **initialCoordinates** | Vector3D | 3 | [0.,0.,0.] | (symbol: $\qv\cIni = [q_0,\,q_1,\,\psi_0]\tp\cIni$) initial displacement coordinates and angle (relative to reference coordinates) |
-| **initialVelocities** | Vector3D | 3 | [0.,0.,0.] | (symbol: $\dot \qv\cIni = [\dot q_0,\,\dot q_1,\,\dot \psi_0]\tp\cIni =  [v_0,\,v_1,\,\omega_2]\tp\cIni$) initial velocity coordinates |
+| **initialVelocities** | Vector3D | 3 | [0.,0.,0.] | (symbol: $\dot \qv\cIni = [\dot q_0,\,\dot q_1,\,\dot \psi_0]\tp\cIni = [v_0,\,v_1,\,\omega_2]\tp\cIni$) initial velocity coordinates |
 | **visualization** | VNodeRigidBody2D |  |  | parameters for visualization of item |
 
 ## Visualization parameters

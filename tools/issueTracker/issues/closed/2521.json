@@ -5,7 +5,7 @@
   "status": "RESOLVED",
   "type": "EXTENSION",
   "priority": "HIGH",
-  "description": "CHECKandTHROW\\, CHECKandTHROWstring and SysError can only throw EXUexception\\, so a check cannot say what kind of error it states - and the measurement of #2520 shows no helper is one kind (CHECKandTHROW is 27 percent user-facing\\, SysError has 10 user sites). The type has to be choosable at the CALL SITE. revision2026 step R6.3.3.",
+  "description": "CHECKandTHROW, CHECKandTHROWstring and SysError can only throw EXUexception, so a check cannot say what kind of error it states - and the measurement of #2520 shows no helper is one kind (CHECKandTHROW is 27 percent user-facing, SysError has 10 user sites). The type has to be choosable at the CALL SITE. revision2026 step R6.3.3.",
   "dateRaised": "2026-09-18",
   "deadline": "2027-03-17",
   "dateResolved": "2026-09-18 17:33",

@@ -3216,7 +3216,7 @@ class MainSystem; //AUTO; for std::function / userFunction; avoid including Main
     and some input parameters, [](#sec-item-objectffrf), and 
     can be found in Zwölfer and Gerstmayr [CITE:ZwoelferGerstmayr2021] with only small modifications in the notation.
     The notation of kinematics quantities follows the floating frame of reference idea with
-    quantities given in the tables above and sketched in [](#fig-objectffrfreducedorder-mesh).
+    quantities given in the tables above and sketched in {numref}`fig-objectffrfreducedorder-mesh`.
     <!--++++++++++++++++++++++++ -->
     
 
@@ -5657,8 +5657,8 @@ definitions.append(ItemDefinition(
     #### Mass matrix and inertia terms
     The velocity field of the element interpolates the nodal velocities and angular velocities linearly,
     $\vv(x) = S_0 \vv_0 + S_1 \vv_1$ and $\tomega(x) = S_0 \tomega_0 + S_1 \tomega_1$, with
-    $S_0 = (L/2 - x)/L$ and $S_1 = (L/2 + x)/L$. The mass matrix is the one of this velocity field: $\rho A L
-    [1/3,\ 1/6;\ 1/6,\ 1/3]$ for the positions, and for the rotations
+    $S_0 = (L/2 - x)/L$ and $S_1 = (L/2 + x)/L$. The mass matrix is the one of this velocity field:
+    $\rho A L [1/3,\ 1/6;\ 1/6,\ 1/3]$ for the positions, and for the rotations
     $\Gm_i\tp \int S_i S_j\, \Rot(x) \Jm \Rot(x)\tp dx\ \Gm_j$ with the cross section inertia $\Jm$ per unit length,
     integrated with two Gauss points; the quadratic velocity vector is formed the same way. A rigid motion is
     therefore represented exactly by any number of elements. `exu.special.beams.geometricallyExactLumpedMass = True`
@@ -5852,9 +5852,13 @@ definitions.append(ItemDefinition(
     Kirchhoff-Love plate: the Green-Lagrange strains of the mid-surface,
     $\teps = [\frac{1}{2} \rv_{,x}\tp \rv_{,x},\; \frac{1}{2} \rv_{,y}\tp \rv_{,y},\; \rv_{,x}\tp \rv_{,y}]\tp$, and the curvatures of the
     material measure, with $\nv_3 = \rv_{,x} \times \rv_{,y}$,
-    $$\kappa_{xx} = \frac{\nv_3\tp \rv_{,xx}}{|\nv_3|\,|\rv_{,x}|}, \quad
+
+    $$
+    \kappa_{xx} = \frac{\nv_3\tp \rv_{,xx}}{|\nv_3|\,|\rv_{,x}|}, \quad
       \kappa_{yy} = \frac{\nv_3\tp \rv_{,yy}}{|\nv_3|\,|\rv_{,y}|}, \quad
-      \kappa_{xy} = \frac{2\,\nv_3\tp \rv_{,xy}}{|\nv_3|\,\sqrt{|\rv_{,x}|\,|\rv_{,y}|}},$$
+      \kappa_{xy} = \frac{2\,\nv_3\tp \rv_{,xy}}{|\nv_3|\,\sqrt{|\rv_{,x}|\,|\rv_{,y}|}},
+    $$
+
     each relative to the reference configuration. For a strip, $\kappa_{xx}$ is the curvature of `ObjectANCFCable2D`, and
     pure bending gives no membrane strain. The membrane forces $\mathbf{N} = \Dm_\varepsilon \teps$ and the moments
     $\mathbf{M} = \Dm_\kappa \tkappa$ do virtual work in two separate integrals, whose points `useReducedOrderIntegration`
@@ -5986,10 +5990,6 @@ definitions.append(ItemDefinition(
             deprecated=Deprecated('1.12.258', 2031),
             defaultValue=NoDefaultValue,
             description=r'curvatureCoefficients'),
-        ItemParameter(type=TReal, destination=DestComp+DestParam,
-            pythonName='strainIsRelativeToReference',
-            defaultValue=1.,
-            description=r"""$f\cRef$ not used: the strains and curvatures are always relative to the reference configuration, which is the stressless state (#2867)"""),
         ItemParameter(type=TVectorND(4), destination=DestComp+DestParam,
             pythonName='slopesScalingX',
             defaultValue='Vector4D({-1.,-1.,-1.,-1.})',
@@ -6198,7 +6198,7 @@ definitions.append(ItemDefinition(
     |---|---|---|
     | Displacement | $\Delta\! \LU{0}{\pv}$ | $\LU{0}{\pv}_{m1} - \LU{0}{\pv}_{m0}$ |
     | Velocity | $\Delta\! \LU{0}{\vv}$ | $\LU{0}{\vv}_{m1} - \LU{0}{\vv}_{m0}$ |
-    | Distance | $L$ | $|\Delta\! \LU{0}{\pv}|$ |
+    | Distance | $L$ | $\vert\Delta\! \LU{0}{\pv}\vert$ |
     | Force | $\fv$ | see below |
 
     <!--
@@ -8087,7 +8087,7 @@ definitions.append(ItemDefinition(
         ItemParameter(type=TReal, destination=DestComp+DestParam,
             pythonName='velocityOffset',
             defaultValue=0.,
-            description=r"""$v_\mathrm{off}$velocity offset, passed to springForceUserFunction; the force without user function does not use it (#2867)"""),
+            description=r"""$v_\mathrm{off}$velocity offset of the damper force, see equation; also passed to springForceUserFunction"""),
         ItemParameter(type=TReal, destination=DestComp+DestParam,
             pythonName='factor0',
             defaultValue=1.,
@@ -8273,7 +8273,7 @@ definitions.append(ItemDefinition(
     |---|---|---|
     | Displacement | $\Delta\! \LU{0}{\pv}$ | $\LU{0}{\pv}_{m1} - \LU{0}{\pv}_{m0}$ |
     | Velocity | $\Delta\! \LU{0}{\vv}$ | $\LU{0}{\vv}_{m1} - \LU{0}{\vv}_{m0}$ |
-    | Distance | $L$ | $|\Delta\! \LU{0}{\pv}|$ |
+    | Distance | $L$ | $\vert\Delta\! \LU{0}{\pv}\vert$ |
     | Force | $\fv$ | see below |
 
     <!--
@@ -8517,10 +8517,10 @@ definitions.append(ItemDefinition(
     | marker m1 position | $\LU{0}{\pv}_{m1}$ |  |
     | marker m0 velocity | $\LU{0}{\vv}_{m0}$ | current global velocity which is provided by marker m0 |
     | marker m1 velocity | $\LU{0}{\vv}_{m1}$ |  |
-    | Displacement | $\Delta\! \LU{0}{\pv}$=$\LU{0}{\pv}_{m1} - \LU{0}{\pv}_{m0}$ | The relative vector between marker points, stored as Displacement in output variables |
-    | current actuator length | $L$=$|\Delta\! \LU{0}{\pv}|$ | stored as Distance in output variables |
-    | time derivative of actuator length | $\dot L$=$\Delta\! \LU{0}{\vv}\tp \vv_{f}$ |  |
-    | Velocity | $\Delta\! \LU{0}{\vv}$=$\LU{0}{\vv}_{m1} - \LU{0}{\vv}_{m0}$ | The vectorial relative velocity |
+    | Displacement | $\Delta\! \LU{0}{\pv} = \LU{0}{\pv}_{m1} - \LU{0}{\pv}_{m0}$ | The relative vector between marker points, stored as Displacement in output variables |
+    | current actuator length | $L = \vert\Delta\! \LU{0}{\pv}\vert$ | stored as Distance in output variables |
+    | time derivative of actuator length | $\dot L = \Delta\! \LU{0}{\vv}\tp \vv_{f}$ |  |
+    | Velocity | $\Delta\! \LU{0}{\vv} = \LU{0}{\vv}_{m1} - \LU{0}{\vv}_{m0}$ | The vectorial relative velocity |
     | Force | $\fv$ | see below |
 
     <!--
@@ -8916,7 +8916,7 @@ definitions.append(ItemDefinition(
     #### Common tangent of two circles in 3D
 
     In order to compute the total length of the rope of the reeving system, the tangent of two arbitrary circles in space needs to be computed.
-    Considering [](#fig-reevingsystemsprings-tangents), the relations are based on the
+    Considering {numref}`fig-reevingsystemsprings-tangents`, the relations are based on the
     center points of the circles $\pv_A$ and $\pv_B$, the radii $R_A$ and $R_B$ as well as
     the axis vectors $\av_A$ and $\av_B$, the latter vectors also defining the side at which the tangent contacts.
     For the definition of the tangent, the vectors $\rv_A$ and $\rv_B$ need to be computed.
@@ -10286,7 +10286,7 @@ constexpr Index CObjectContactConvexRollNEvalConvexityCheck = 1000; // number of
     #### Geometric relations
 
     <!--++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
-    The geometrical setup is shown in [](#fig-objectcontactconvexroll-sketch). To calculate the contact point of the convex body of revolution the contact (ground) plane is rotated into the local frame of the body. In this local frame in which the generatrix of the body of revolution is described by the polynomial function
+    The geometrical setup is shown in {numref}`fig-objectcontactconvexroll-sketch`. To calculate the contact point of the convex body of revolution the contact (ground) plane is rotated into the local frame of the body. In this local frame in which the generatrix of the body of revolution is described by the polynomial function
 
 
     $$
@@ -10294,7 +10294,7 @@ constexpr Index CObjectContactConvexRollNEvalConvexityCheck = 1000; // number of
     $$ (eq-connectorconvexrolling-polynomial)
 
     with the coefficients of the hull $a_i$. As a pre-Check for the contact two spheres are put into both ends of the object with the maximum radius and only if one of these is in contact. The contact point $^{\mathrm{b}}\pv_{\mathrm{m1,C}} $ is calculated relative to the bodies marker `m1` in the bodies local frame and transformed accordingly. 
-    The contact point C can for be calculated convex bodies by matching the derivative of the polynomial $r(^bx)$ with the gradient of the contact plane, shown in [](#fig-objectcontactconvexroll-sketch), explained in detail in [CITE:ManzlGerstmayr2021]. 
+    The contact point C can for be calculated convex bodies by matching the derivative of the polynomial $r(^bx)$ with the gradient of the contact plane, shown in {numref}`fig-objectcontactconvexroll-sketch`, explained in detail in [CITE:ManzlGerstmayr2021]. 
     At the contact point a normal force $\fv_{\mathrm{N}} = [ 0 \; 0 \; \mathrm{f}_{\mathrm{N}} ]\tp$  with 
 
 
@@ -10725,7 +10725,7 @@ definitions.append(ItemDefinition(
     addIncludesC=r"""constexpr Index CObjectContactCircleCable2DmaxNumberOfSegments = 12; //maximum number of contact segments
 """,
     cParentClass=ParentClassCObjectConnector,
-    overallDescription=r"""A very specialized penalty-based contact condition between a 2D circle (=marker0, any Position-marker) on a body and an ANCFCable2DShape (=marker1, Marker: BodyCable2DShape), in xy-plane. A node NodeGenericData is required with the number of cordinates according to the number of contact segments; the contact gap $g$ is integrated (piecewise linear) along the cable and circle; the contact force $f_c$ is zero for $gap>0$ and otherwise computed from $f_c = g*contactStiffness + \dot g*contactDamping$; during Newton iterations, the contact force is actived only, if $dataCoordinate[0] <= 0$; dataCoordinate is set equal to gap in nonlinear iterations, but not modified in Newton iterations.""",
+    overallDescription=r"""A very specialized penalty-based contact condition between a 2D circle (=marker0, any Position-marker) on a body and an ANCFCable2DShape (=marker1, Marker: BodyCable2DShape), in xy-plane. A node NodeGenericData is required with the number of cordinates according to the number of contact segments; the contact gap $g$ is integrated (piecewise linear) along the cable and circle; the contact force $f_c$ is zero for $gap>0$ and otherwise computed from $f_c = g*contactStiffness$, without damping; during Newton iterations, the contact force is actived only, if $dataCoordinate[0] <= 0$; dataCoordinate is set equal to gap in nonlinear iterations, but not modified in Newton iterations.""",
     classType=ClassTypeObject,
     miniExample=r"""    from exudyn.beams import GenerateBeamElementsAlongLine
     #the shape of an ANCF cable element as line segments, for contact: a cantilever falls onto a circle
@@ -10765,8 +10765,8 @@ definitions.append(ItemDefinition(
 
     #### Connector forces
 
-    Per segment in contact, a force per length $f_N = k_c\, g + d_c\, \dot g$ in the normal direction of the
-    contact, with `contactStiffness` and `contactDamping` per segment; the forces act on the cable through
+    Per segment in contact, a force per length $f_N = k_c\, g$ in the normal direction of the contact, with
+    `contactStiffness` per segment and without damping; the forces act on the cable through
     the shape functions of the marker and on the circle center. There is **no friction and no torque** on
     the circle: otherwise geometry and equations are those of `ObjectContactFrictionCircleCable2D`, see
     [](#sec-item-objectcontactfrictioncirclecable2d). The data coordinates, one per segment, hold the gap of
@@ -10796,10 +10796,6 @@ definitions.append(ItemDefinition(
             pythonName='contactStiffness',
             defaultValue=0.,
             description=r'contact (penalty) stiffness [SI:N/m/(contact segment)]; the stiffness is per contact segment; specific contact forces (per length) $f_N$ act in contact normal direction only upon penetration'),
-        ItemParameter(type=TReal(minimum=0), destination=DestComp+DestParam,
-            pythonName='contactDamping',
-            defaultValue=0.,
-            description=r'contact damping [SI:N/(m s)/(contact segment)]; not used: the contact force is the stiffness term only (#2867)'),
         ItemParameter(type=TReal(minimum=0), destination=DestComp+DestParam,
             pythonName='circleRadius',
             defaultValue=0.,
@@ -10981,7 +10977,7 @@ definitions.append(ItemDefinition(
                         \rho = \frac{n}{d}
                         $$
 
-    We distinguish 3 cases (see also [](#fig-objectcontactfrictioncirclecable2d-sketch) for cases 1 and 2):
+    We distinguish 3 cases (see also {numref}`fig-objectcontactfrictioncirclecable2d-sketch` for cases 1 and 2):
         
         1. If $\rho \le 0$, the shortest distance would be the distance to point $\pv_p=\pv_i$, reading
 
@@ -11008,7 +11004,7 @@ definitions.append(ItemDefinition(
 
 
     Here, the shortest distance vector for every segment results from the projected point $\pv_p$ 
-    of the above mentioned cases, see also [](#fig-objectcontactfrictioncirclecable2d-sketch),
+    of the above mentioned cases, see also {numref}`fig-objectcontactfrictioncirclecable2d-sketch`,
     with the relation
 
 
@@ -11084,7 +11080,7 @@ definitions.append(ItemDefinition(
     Because there is the chance to wind/unwind relative to the (last) sticking position without slipping,
     the following strategy is used.
     In case of sliding (which could be the last time sliding before sticking), 
-    we compute the **current sticking position**, see [](#fig-objectcontactfrictioncirclecable2d-stickingpos), as the sum of the relative position at the segment $s$
+    we compute the **current sticking position**, see {numref}`fig-objectcontactfrictioncirclecable2d-stickingpos`, as the sum of the relative position at the segment $s$
 
 
     $$
@@ -11099,7 +11095,7 @@ definitions.append(ItemDefinition(
                         x_{c,curStick} = \alpha \cdot r
                         $$
 
-    We immediately see, that under pure rolling (neglecting the effects of small penetration, usually much smaller than shown for visibility in [](#fig-objectcontactfrictioncirclecable2d-stickingpos).),
+    We immediately see, that under pure rolling (neglecting the effects of small penetration, usually much smaller than shown for visibility in {numref}`fig-objectcontactfrictioncirclecable2d-stickingpos`.),
 
 
     $$
@@ -11161,7 +11157,7 @@ definitions.append(ItemDefinition(
 
     #### Post Newton Step
 
-    In general, see the solver flow chart for the `DiscontinuousIteration`, see [](#fig-solver-discontinuous-iteration), should be considered when reading this description. Every step is started with values `startOfStep`, while current values are iterated and updated in the Newton or `DiscontinuousIteration`.
+    In general, see the solver flow chart for the `DiscontinuousIteration`, see {numref}`fig-solver-discontinuous-iteration`, should be considered when reading this description. Every step is started with values `startOfStep`, while current values are iterated and updated in the Newton or `DiscontinuousIteration`.
     
     The `PostNewtonStep` computes 3 values per segment, which are used for computation of contact forces, irrespectively of the 
     current geometryof the contact. 
@@ -11285,7 +11281,7 @@ definitions.append(ItemDefinition(
     contact forces $\fv_i$ with $i \in [0,n_{cs}]$ -- these are $(n_{cs}+1)$ forces -- are applied at the points $p_i$, and they are computed for every contact segments (i.e., two segments may contribute to contact forces of one point).
     For every contact computation, first all contact forces at segment points are set to zero. 
     We distinguish two cases SN and PWN. If `useSegmentNormals==True`, we use the SN case, while otherwise the PWN case is used, 
-    compare [](#fig-objectcontactfrictioncirclecable2d-normals).
+    compare {numref}`fig-objectcontactfrictioncirclecable2d-normals`.
     <!--++++++++++++++++++++++++ -->
     
 
@@ -11302,7 +11298,7 @@ definitions.append(ItemDefinition(
     
     - **CASE SN**: use **S**egment **N**ormals
 
-      If there is contact in a segment $s_i$, i.e., gap state $x_{gap} \le 0$, see [](#fig-objectcontactfrictioncirclecable2d-sketch)(right), contact forces $\fv_{s_i}$ are computed per segment,
+      If there is contact in a segment $s_i$, i.e., gap state $x_{gap} \le 0$, see {numref}`fig-objectcontactfrictioncirclecable2d-sketch`(right), contact forces $\fv_{s_i}$ are computed per segment,
 
       $$
                             \fv_{s_i} = f_n \cdot \nv_{s_i} + f_t \tv_{s_i}
@@ -11318,7 +11314,7 @@ definitions.append(ItemDefinition(
 
     - **CASE PWN**: use **P**oint **W**ise **N**ormals (at segment points)
 
-      If there is contact in a segment $s_i$, i.e., gap $x_{gap} \le 0$, see [](#fig-objectcontactfrictioncirclecable2d-sketch)(right), intermediate contact forces $\fv^{l,r}_{i}$ are computed per segment point,
+      If there is contact in a segment $s_i$, i.e., gap $x_{gap} \le 0$, see {numref}`fig-objectcontactfrictioncirclecable2d-sketch`(right), intermediate contact forces $\fv^{l,r}_{i}$ are computed per segment point,
 
       $$
                                     \fv^l = f_n \cdot \nv_{l,s_i} + f_t \tv_{l,s_i}, \quad
@@ -11357,7 +11353,7 @@ definitions.append(ItemDefinition(
     <!-- -->
     During Newton iterations, the contact forces for segment $s_i$ are considered only, if 
     $x_i <= 0$. The dataCoordinate $x_i$ is not modified during Newton iterations, but computed
-    during the DiscontinuousIteration, see [](#fig-solver-discontinuous-iteration) in the solver description. 
+    during the DiscontinuousIteration, see {numref}`fig-solver-discontinuous-iteration` in the solver description. 
     <!-- -->
 
 
@@ -11563,7 +11559,7 @@ definitions.append(ItemDefinition(
     Two spheres that are in contact, showing a force on marker 1 in normal direction due to overlap; forces on marker 0 act in opposite direction.
     ```
 
-    Calculations reflect the case for outer contact of two spheres using $h_1=1$. In case that isHollowSphere1=True, we set $h_1=-1$ while the remaining formulas are unchanged. In Figure [](#fig-objectspherespherecontact) the sphere sphere and in Figure [](#fig-objectspherehollowspherecontact) the sphere hollowsphere contact case are shown.
+    Calculations reflect the case for outer contact of two spheres using $h_1=1$. In case that isHollowSphere1=True, we set $h_1=-1$ while the remaining formulas are unchanged. In {numref}`fig-objectspherespherecontact` the sphere sphere and in {numref}`fig-objectspherehollowspherecontact` the sphere hollowsphere contact case are shown.
 
     For the following, the gap $g$ between the two spheres is computed as
 
@@ -12342,7 +12338,7 @@ constexpr Index CObjectContactCurveCirclesMaxConstSize = 100; //maximum number o
     static constexpr Index dataIndexVtangent = 2; //!< index in data node (per segment) representing tangent velocity
 """,
     cParentClass=ParentClassCObjectConnector,
-    overallDescription=r'A contact model between a curve defined by piecewise segments and a set of circles. The 2D curve may corotate in 3D with the underlying marker and also defines the plane of action for the circles. [REQUIRES FURTHER TESTING; friction not yet available]',
+    overallDescription=r'A contact model between a curve defined by piecewise segments and a set of circles. The 2D curve may corotate in 3D with the underlying marker and also defines the plane of action for the circles. [REQUIRES FURTHER TESTING]',
     classType=ClassTypeObject,
     miniExample=r"""    #a planar body with a circle of radius 0.1 resting on a curve of line segments (the ground line y=0)
     node = mbs.AddNode(NodeRigidBody2D(referenceCoordinates=[0,0.1,0]))
@@ -12363,9 +12359,7 @@ constexpr Index CObjectContactCurveCirclesMaxConstSize = 100; //maximum number o
     exu.sys['testResult'] = mbs.GetNodeOutput(node, exu.OutputVariableType.Position)[1] #0.099
     """,
     miniExamplePerformanceTest={'numberOfSteps': 514120},
-    detailedDescription=r"""    **Further testing is required, and friction is not available yet**, as the class description says:
-    `dynamicFriction` and `frictionProportionalZone` are not used. The output variables are not computed yet and
-    give an empty vector (#2867).
+    detailedDescription=r"""    **Further testing is required**, as the class description says.
 
     #### Definition of quantities
 
@@ -12374,7 +12368,7 @@ constexpr Index CObjectContactCurveCirclesMaxConstSize = 100; //maximum number o
     | marker m0 position, orientation | $\LU{0}{\pv}_{m0}$, $\LU{0,m0}{\Rot}$ | the frame carrying the curve, which lies in its $x$-$y$ plane; a rotation of it is given to the marker as its `localHT` |
     | circle markers | $\LU{0}{\pv}_{c_i}$ | centers of the $n_c$ circles with radii `circlesRadii` |
     | segments | $\Dm$ | `segmentsData`: one straight segment per row, two planar points in the curve frame |
-    | polynomials | $\Pm$ | `polynomialData`: optional coefficients that bend each segment in the drawing; the contact uses the straight segments |
+    | polynomials | $\Pm$ | `polynomialData`: optional coefficients that bend each segment in the drawing only; the contact does not use them, it uses the straight segments |
     | data coordinates | $\xv$ | per segment, the state of the last post Newton step |
 
     #### Geometric relations
@@ -12391,13 +12385,23 @@ constexpr Index CObjectContactCurveCirclesMaxConstSize = 100; //maximum number o
     integrated penetration, as `contactModel` selects; it acts in the plane of the curve on the circle
     center and, with opposite sign, on marker 0 with the torque of its lever arm. A segment must be short
     enough that only one circle touches it at a time, which the connector warns about.
+
+    With `dynamicFriction` $\mu_d > 0$, a friction force acts in the tangential direction $\tv$ of the contact,
+    against the tangential relative velocity $v_t$ of the circle center against the curve,
+
+    $$
+    f_t = -\mu_d\, |f_N|\, \frac{v_t}{v_{reg}} \;\; \mathrm{for} \;\; |v_t| < v_{reg}, \quad
+    f_t = -\mu_d\, |f_N|\, \mathrm{sign}(v_t) \;\; \mathrm{otherwise},
+    $$
+
+    with `frictionProportionalZone` $v_{reg}$ (0: no regularization); there is no sticking state.
     """,
     mainParentClass=MainParentClassMainObjectConnector,
     objectType=ObjectTypeConnector,
     outputVariables=[
-        ItemOutputVariable(OVDisplacementLocal, 'vector containing the minimum distance to segments per circle midpoint (< 0 in case of contact, and -1 if not computed: if not in according vicinity in search tree)'),
-        ItemOutputVariable(OVVelocityLocal, 'vector containing relative (normal) velocity per circle midpoint (or NaN if not computed)'),
-        ItemOutputVariable(OVForceLocal, 'pairs of normal and tangential forces per circle or (Nan,Nan) if not computed'),
+        ItemOutputVariable(OVDisplacementLocal, r'$[g_0,\,g_1,\,\ldots]\tp$per segment, the gap of the circle closest to it (< 0: penetration), from the current configuration; the largest float if there is no circle'),
+        ItemOutputVariable(OVVelocityLocal, r'$[\dot g_0,\,\dot g_1,\,\ldots]\tp$per segment, the normal relative velocity of that circle'),
+        ItemOutputVariable(OVForceLocal, r'$[f_{x,0},\,f_{y,0},\,f_{x,1},\,\ldots]\tp$per segment, the contact force - normal and friction - on the circle in contact with it, in the frame of marker m0, with the contact states of the data node; zero without contact'),
         ],
     pythonShortName='CamFollowerContactPlanar',
     visuParentClass=VisuParentClassVisualizationObject,
@@ -12429,11 +12433,11 @@ constexpr Index CObjectContactCurveCirclesMaxConstSize = 100; //maximum number o
         ItemParameter(type=TReal(minimum=0), destination=DestComp+DestParam,
             pythonName='dynamicFriction',
             defaultValue=0.,
-            description=r"""$\mu_d$dynamic friction coefficient for friction model, see StribeckFunction in exudyn.physics, [](#sec-module-physics)"""),
+            description=r"""$\mu_d$dynamic friction coefficient: the friction force is $\mu_d |f_N|$, regularized below frictionProportionalZone, see the equation; 0: no friction"""),
         ItemParameter(type=TReal(minimum=0), destination=DestComp+DestParam,
             pythonName='frictionProportionalZone',
             defaultValue=0.001,
-            description=r"""$v_{reg}$limit velocity [m/s] up to which the friction is proportional to velocity (for regularization / avoid numerical oscillations), see StribeckFunction in exudyn.physics (named regVel there!), [](#sec-module-physics)"""),
+            description=r"""$v_{reg}$limit velocity [SI:m/s] up to which the friction force is proportional to the tangential velocity (regularization, against numerical oscillations); 0: no regularization"""),
         ItemParameter(type=TReal, destination=DestComp+DestParam,
             pythonName='contactStiffness',
             defaultValue=0.,

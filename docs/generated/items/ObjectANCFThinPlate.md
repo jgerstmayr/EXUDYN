@@ -30,7 +30,6 @@ The parameters of the item; in a dictionary, its type is 'ANCFThinPlate':
 | **bendingStiffnessProportionalDamping** | Real |  | -1. | bending stiffness-proportional damping coefficient $\beta_\kappa$ [SI:s]: Kelvin-Voigt damping $\beta_\kappa\, \Dm_\kappa\, \dot\tkappa$ added to the bending moments; if negative (default), $\beta_\varepsilon$ of stiffnessProportionalDamping is used, 0 switches it off |
 | **strainCoefficients** | Matrix3DList |  | [] | (symbol: $\Dm_\varepsilon$) [SI:N/m] stiffness coefficients related to inplane normal and shear strains, integrated over height of the plate, as a list of 3D matrices; for a constant thickness one matrix; for 4 or 12 thickness values, the first matrix divided by thickness[0] is the material matrix of a homogeneous isotropic plate, $\Dm_\varepsilon = \Dm_b\, h$ and $\Dm_\kappa = \Dm_b\, h^3/12$ at each point, and further matrices are not used |
 | **curvatureCoefficients** | Matrix3DList |  | [] | (symbol: $\Dm_\kappa$) [SI:Nm] stiffness coefficients related to curvatures, integrated over height of the plate, as a list of 3D matrices; used for a constant thickness (one matrix); for 4 or 12 thickness values $\Dm_\kappa$ follows from strainCoefficients and the local thickness |
-| **strainIsRelativeToReference** | Real |  | 1. | (symbol: $f\cRef$) not used: the strains and curvatures are always relative to the reference configuration, which is the stressless state (#2867) |
 | **slopesScalingX** | Vector4D | 4 | [-1.,-1.,-1.,-1.] | scaling of x-slopes at each element node; flat elements: half of the side length of the element; curved: optimal values such that curved geometry is best approximated; if negative (default) values are used, length is computed from node distances. |
 | **slopesScalingY** | Vector4D | 4 | [-1.,-1.,-1.,-1.] | scaling of y-slopes at each element node; flat elements: half of the side length of the element; curved: optimal values such that curved geometry is best approximated; if negative (default) values are used, length is computed from node distances. |
 | **nodeNumbers** | NodeIndex4 | 4 | [invalid (-1), invalid (-1), invalid (-1), invalid (-1)] | 4 NodePointSlope12 node numbers, with local (xi,eta) coordinates as [(-1,-1),(1,-1),(1,1),(-1,1)] |
@@ -103,9 +102,13 @@ the inverse of the reference Jacobian $\Am = \Jm_0^{-1}$.
 Kirchhoff-Love plate: the Green-Lagrange strains of the mid-surface,
 $\teps = [\frac{1}{2} \rv_{,x}\tp \rv_{,x},\; \frac{1}{2} \rv_{,y}\tp \rv_{,y},\; \rv_{,x}\tp \rv_{,y}]\tp$, and the curvatures of the
 material measure, with $\nv_3 = \rv_{,x} \times \rv_{,y}$,
-$$\kappa_{xx} = \frac{\nv_3\tp \rv_{,xx}}{|\nv_3|\,|\rv_{,x}|}, \quad
+
+$$
+\kappa_{xx} = \frac{\nv_3\tp \rv_{,xx}}{|\nv_3|\,|\rv_{,x}|}, \quad
 \kappa_{yy} = \frac{\nv_3\tp \rv_{,yy}}{|\nv_3|\,|\rv_{,y}|}, \quad
-\kappa_{xy} = \frac{2\,\nv_3\tp \rv_{,xy}}{|\nv_3|\,\sqrt{|\rv_{,x}|\,|\rv_{,y}|}},$$
+\kappa_{xy} = \frac{2\,\nv_3\tp \rv_{,xy}}{|\nv_3|\,\sqrt{|\rv_{,x}|\,|\rv_{,y}|}},
+$$
+
 each relative to the reference configuration. For a strip, $\kappa_{xx}$ is the curvature of `ObjectANCFCable2D`, and
 pure bending gives no membrane strain. The membrane forces $\mathbf{N} = \Dm_\varepsilon \teps$ and the moments
 $\mathbf{M} = \Dm_\kappa \tkappa$ do virtual work in two separate integrals, whose points `useReducedOrderIntegration`

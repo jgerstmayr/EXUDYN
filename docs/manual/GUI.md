@@ -94,7 +94,7 @@ Visualization settings are used for user interaction with the model. E.g., the n
 Details on visualization settings and its substructures are provided in {ref}`sec-visualizationsettingsmain`. These settings may also be edited by pressing 'V' in the active render window (does not work, if there is no active render loop using, e.g., `SC.renderer.DoIdleTasks()` ).
 `python -m exudyn dialogs vis` opens the same dialog with no model and no renderer, which is the way
 to look a setting up while writing the script; see {ref}`sec-commandline`.
-The visualization settings dialog is shown exemplarily in {ref}`fig-visualizationsettings`.
+The visualization settings dialog is shown exemplarily in {numref}`fig-visualizationsettings`.
 Note that this dialog is automatically created and uses Python's `tkinter`, which is lightweight, but not very well suited if display scalings are large (e.g., on high resolution laptop screens). If working with Spyder, it is recommended to restart Spyder, if display scaling is changed, in order to adjust scaling not only for Spyder but also for Exudyn.
 
 **Working in the dialog.** A setting is edited **in its cell**: select the row and type, or pick
@@ -249,7 +249,7 @@ The **simplest way to store the model view** is to **press CTRL-F3** when the re
 button **store model view** of the visualization settings dialog, key `V`, or switch the shortcut off in the system
 settings, *Keyboard - Keyboard Shortcuts - Keyboard*):
 
-- `Set current view: SC.renderer.SetModelView(zoom=8.8,rotationVector=`\ `[-0.8120557,0.4727261,0.7176849],centerPoint=[1.562,-1.526,0])`
+- `Set current view: SC.renderer.SetModelView(zoom=8.8,rotationVector=` `[-0.8120557,0.4727261,0.7176849],centerPoint=[1.562,-1.526,0])`
 
 Then, just copy the code after `SC.renderer.Start`, see the following code snippet:
 
@@ -266,7 +266,7 @@ A simple way is to reload the stored render state (model view) after simulating 
 ```
 
 ---
- \
+
 Whenever `SC.renderer.Start()` is called, the renderState is reset (because it is assumed that the model has been changed and the previous view is invalid). However, you always can store and restore the renderstate manually.
 Since version 1.10.98, the `ZoomAll` and `SetModelView` also work without starting the renderer (using only the raytracer). However, note that `ZoomAll` and `SetModelView` have to be called before the raytracer call RedrawAndGetImage(True) or after renderer.Start() using regular OpenGL.
 
@@ -331,7 +331,7 @@ For this, you can use
 - `interactive.SolutionViewer`, see {ref}`sec-mainsystemextensions-solutionviewer`
 - `interactive.AnimateModes`, lets you view the animation of computed modes, see {ref}`sec-interactive-animatemodes`
 
-shown exemplary in {ref}`fig-solutionviewer`.
+shown exemplary in {numref}`fig-solutionviewer`.
 
 (fig-solutionviewer)=
 ```{figure} /docs/figures/solutionViewer.png
@@ -368,7 +368,7 @@ to the same mbs - is loaded with `LoadSolutionFile`, in the model or at the comm
 ```{include} /docs/generated/notebooks/snippets/visualization-solutionViewer.md
 ```
 
-An example for the `SolutionViewer` is integrated into the `Examples/` directory, see `solutionViewerTest.py`. \
+An example for the `SolutionViewer` is integrated into the `Examples/` directory, see `solutionViewerTest.py`.
 
 (sec-overview-basics-animations)=
 ### Storing images and generating animations
@@ -470,8 +470,8 @@ The names `color4red`, `color4steelblue`, ..., `color4list` of `exudyn.graphicsD
 ### Character encoding: UTF-8
 
 Character encoding is a major issue in computer systems, as different languages need a huge amount of different characters,
-see the amusing blog of Joel Spolsky:\
-[The Absolute Minimum Every Software Developer Absolutely, Positively Must Know About Unicode ...](https://www.joelonsoftware.com/2003/10/08/the-absolute-minimum-every-software-developer-absolutely-positively-must-know-about-unicode-and-character-sets-no-excuses/)\
+see the amusing blog of Joel Spolsky:
+[The Absolute Minimum Every Software Developer Absolutely, Positively Must Know About Unicode ...](https://www.joelonsoftware.com/2003/10/08/the-absolute-minimum-every-software-developer-absolutely-positively-must-know-about-unicode-and-character-sets-no-excuses/)
 More about encoding can be found in [Wikipedia:UTF-8](https://en.wikipedia.org/wiki/UTF-8). UTF-8 encoding tables can be found within the wikipedia article and a comparison with the first 256 characters of unicode is provided at [UTF-8 char table](https://www.utf8-chartable.de/).
 
 For short, Exudyn uses UTF-8 character encoding in texts / strings drawn in OpenGL renderer window.

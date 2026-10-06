@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.12 | Metheney | 332 | 1.12.373 |
+| 1.12 | Metheney | 334 | 1.12.375 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
 | 1.9 | Krall | 235 | 1.9.234 |
@@ -29,6 +29,14 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.12 - Metheney (current)
 
+- **1.12.375** `DOCU` `raised by: Claude-JG` `resolved by: Claude-JG` PDF: LaTeX macros and backslashes printed as text (#2883)
+  - description: Maintainer 2026-10-07: 'there are a couple of stray \\LU, \\pv, \\mathbf, etc. in the PDF; there are many lost \\ in the PDF, possibly \\ from earlier line breaks'. Found in the text of the PDF: figure references that print the caption (its math stays LaTeX source), a pipe inside math in table rows (the table splits the cell - the rows of the hydraulic actuator, the spring-dampers, the rolling discs), display math not on lines of its own (ANCFThinPlate), LaTeX line breaks and spaces in the Markdown text (trailing backslash, backslash-space, backslash-comma) and backslash-commas in 12 issue texts of the tracker log.
+  - **notes:** The PDF documentation no longer shows LaTeX commands or stray backslashes in its text.
+  - date resolved: **2026-10-07 01:16**, date raised: 2026-10-07
+- **1.12.374** `CHECK` `MEDIUM EFF` `raised by: Claude-JG` `resolved by: Claude-JG` parameters and output variables that the C++ of an item does not use - found by RG13.3 (#2867)
+  - description: Found by checking the descriptions against the implementation (RG13.3.2-.5); the descriptions say what IS now, the code is for a decision: ObjectContactCurveCircles - the output variables DisplacementLocal, VelocityLocal, ForceLocal are declared and give an empty vector, dynamicFriction and frictionProportionalZone are not used, polynomialData only bends the drawing; ObjectContactCircleCable2D - contactDamping is not used (commented out); ObjectConnectorCoordinateSpringDamperExt - velocityOffset only reaches the user function, the built-in law k(x-x0)+d\*v ignores it; ObjectANCFThinPlate - strainIsRelativeToReference has no effect since the port of RG4.20 (strains always relative to the reference). Options per item: implement, or remove the parameter (no deprecation needed for 1.12-new ones).
+  - **notes:** ObjectContactCurveCircles returns its output variables (gap, gap velocity and contact force per segment) and has friction; ObjectConnectorCoordinateSpringDamperExt uses velocityOffset in its damper force; the parameters contactDamping of ObjectContactCircleCable2D and strainIsRelativeToReference of ObjectANCFThinPlate, which had no effect, are removed.
+  - date resolved: **2026-10-07 01:16**, date raised: 2026-10-06
 - **1.12.373** <span class="textred">`BUG`</span> `raised by: Claude-JG` `resolved by: Claude-JG` Linux suite of 1.12.372: deprecation warnings on the console, energiesTest (#2882)
   - description: tmp/Ubuntu/ubuntuTestSuiteConsoleOutput.txt (maintainer, WSL, cp313): 73 DeprecationWarnings on the console. 69 are expected - parameterConversionTest sets every parameter, the deprecated names included, and homogeneousTransformationParameterTest compares rotationMarker0/1 with localHT - and are now kept off the console. 2 came from the mini examples ObjectANCFCable/ObjectANCFCable2D: the mini examples are generated from the miniExample texts in definitions/, so the conversion of \#2873 in python/MiniExamples was undone by the next regeneration; the 11 texts are converted in definitions/. energiesTest.py differs by -5.9e-11 against 3e-11 (rel. 3.3e-12) and goes to UnresolvedOnLinux.
   - **notes:** The test suite no longer prints the deprecation warnings that its deprecation tests trigger on purpose, and the mini examples of the cable elements use GenerateBeamElementsAlongLine.

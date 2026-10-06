@@ -1,0 +1,65 @@
+#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+# This is an EXUDYN example
+#
+# Details:  ObjectContactCurveCircles with friction and its output variables (#2867): a circle (a planar rigid body)
+#           slides along a straight curve under gravity with an initial velocity; the friction force mu*|f_N|
+#           decelerates it by mu*g, so after the time t its velocity is v0 - mu*g*t. The output variables per
+#           segment: DisplacementLocal the gap (the static penetration m*g/(k*l) for contactModel 0, with the
+#           length l of the segment), VelocityLocal its rate, ForceLocal the force on the circle, [-mu*m*g, m*g]
+#           while it slides.
+#
+# Author:   Johannes Gerstmayr
+# Date:     2026-10-07
+#
+# Copyright:This file is part of Exudyn. Exudyn is free software. You can redistribute it and/or modify it under the terms of the Exudyn license. See 'LICENSE.txt' for more details.
+#
+#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+import exudyn as exu
+from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
+import numpy as np
+
+testIsActive = exu.sys.get('testIsActive', False)
+
+mass, g, mu, v0 = 1., 10., 0.2, 1.
+k, d, lSegment, radius = 1e5, 400., 4., 0.1
+tEnd = 0.3
+
+SC = exu.SystemContainer()
+mbs = SC.AddSystem()
+oGround = mbs.AddObject(ObjectGround())
+gapStatic = mass*g/(k*lSegment)
+node = mbs.AddNode(NodeRigidBody2D(referenceCoordinates=[0, radius - gapStatic, 0], initialVelocities=[v0, 0, 0]))
+oBody = mbs.AddObject(ObjectRigidBody2D(nodeNumber=node, mass=mass, inertia=0.01))
+mCircle = mbs.AddMarker(MarkerBodyRigid(bodyNumber=oBody))
+mbs.AddLoad(LoadForceVector(markerNumber=mCircle, loadVector=[0, -mass*g, 0]))
+mCurve = mbs.AddMarker(MarkerBodyRigid(bodyNumber=oGround))
+segments = np.array([[2,0, -2,0]]) #one segment of length 4; the contact side is y > 0
+nData = mbs.AddNode(NodeGenericData(numberOfDataCoordinates=3, initialCoordinates=[-1,0,0]))
+oContact = mbs.AddObject(ObjectContactCurveCircles(markerNumbers=[mCurve, mCircle], nodeNumber=nData, circlesRadii=[radius],
+                                                   segmentsData=exu.MatrixContainer(segments),
+                                                   contactStiffness=k, contactDamping=d,
+                                                   dynamicFriction=mu, frictionProportionalZone=1e-4))
+mbs.Assemble()
+
+simulationSettings = exu.SimulationSettings()
+simulationSettings.timeIntegration.numberOfSteps = 3000
+simulationSettings.timeIntegration.endTime = tEnd
+simulationSettings.timeIntegration.verboseMode = 0
+simulationSettings.solution.file.write = False
+mbs.SolveDynamic(simulationSettings)
+
+velocity = mbs.GetNodeOutput(node, exu.OutputVariableType.Velocity)
+gap = np.atleast_1d(mbs.GetObjectOutput(oContact, exu.OutputVariableType.DisplacementLocal)) #one value per segment
+gap_t = np.atleast_1d(mbs.GetObjectOutput(oContact, exu.OutputVariableType.VelocityLocal))
+force = mbs.GetObjectOutput(oContact, exu.OutputVariableType.ForceLocal)
+exu.Print('velocity', velocity[0], ', expected', v0 - mu*g*tEnd)
+exu.Print('gap', gap, ', expected', -gapStatic, '; gap_t', gap_t)
+exu.Print('force on the circle', force, ', expected', [-mu*mass*g, mass*g])
+
+errors = (int(abs(velocity[0] - (v0 - mu*g*tEnd)) > 1e-3) + int(abs(gap[0] + gapStatic) > 1e-6)
+          + int(abs(gap_t[0]) > 1e-3) + int(np.abs(force - [-mu*mass*g, mass*g]).max() > 1e-2))
+exu.Print('contactCurveCirclesFrictionTest: errors', errors)
+u = errors + velocity[0] + force[0] + force[1]
+exu.Print('solution of contactCurveCirclesFrictionTest=', u)
+exu.sys['testResult'] = u

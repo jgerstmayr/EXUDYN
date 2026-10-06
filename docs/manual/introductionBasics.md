@@ -17,8 +17,8 @@ when a solver fails or a model is slow is in {ref}`sec-performance-errors`.
 ## Interaction with the Exudyn module
 
 It is important that the Exudyn module is basically a state machine, where you create items on the C++ side using the Python interface. This helps you to easily set up models using many other Python modules (numpy, sympy, matplotlib, ...) while the computation will be performed in the end on the C++ side in a very efficient manner.
-\
-**Where do objects live?**\
+
+**Where do objects live?**
 Whenever a system container is created with `SC = exu.SystemContainer()`, the structure `SC` becomes a variable in the Python interpreter, but it is managed inside the C++ code and it can be modified via the Python interface.
 Usually, the system container will hold at least one system, usually called `mbs`.
 Commands such as `mbs.AddNode(...)` add objects to the system `mbs`.

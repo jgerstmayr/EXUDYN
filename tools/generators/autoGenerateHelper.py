@@ -192,8 +192,11 @@ def MarkdownHeading(title, level):
 
 
 def MarkdownCell(text):
-    """a table cell holds no line break and no bare pipe"""
-    return ' '.join(str(text).split()).replace('|', '\\|')
+    """a table cell holds no line break and no bare pipe: '\\|' in text, and '\\vert' inside math, because the table
+    splits at a pipe before the math is read, and '\\|' would be the double bar there"""
+    parts = re.split(r'(\$[^$]*\$)', ' '.join(str(text).split()))
+    return ''.join(part.replace('|', '\\vert ') if len(part) > 1 and part[0] == '$' == part[-1] else part.replace('|', '\\|')
+                   for part in parts)
 
 
 #a class that collects the pybind11 code, the stub text and the documentation of one
@@ -695,7 +698,7 @@ class DeclarationWriter:
         #the symbol opens the description, where it stays visible however narrow the name column is (#2741)
         descriptionCell = Cell(description)
         if sSymbol.strip() != '':
-            descriptionCell = '(symbol: $' + sSymbol.strip().strip('$') + '$) ' + descriptionCell
+            descriptionCell = MarkdownCell('(symbol: $' + sSymbol.strip().strip('$') + '$)') + ' ' + descriptionCell
         self.sMarkdown += ('| **' + pythonName + '** | ' + Cell(typeName) + ' | ' + Cell(sSize)
                            + ' | ' + Cell(sDefaultVal) + ' | ' + descriptionCell + ' |\n')
 

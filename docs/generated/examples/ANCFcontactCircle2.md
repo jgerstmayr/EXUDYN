@@ -148,11 +148,11 @@ if useCircleContact:
         #print("mCable="+str(mCable))
         nodeDataContactCable = mbs.AddNode(NodeGenericData(initialCoordinates=initialGapList,numberOfDataCoordinates=nSegments))
         mbs.AddObject(ObjectContactCircleCable2D(markerNumbers=[mGroundCircle, mCable], nodeNumber = nodeDataContactCable, 
-                                                 numberOfContactSegments=nSegments, contactStiffness = cStiffness, contactDamping=cDamping, 
+                                                 numberOfContactSegments=nSegments, contactStiffness = cStiffness, 
                                                  circleRadius = circleRadius, offset = 0))
         nodeDataContactCable = mbs.AddNode(NodeGenericData(initialCoordinates=initialGapList,numberOfDataCoordinates=nSegments))
         mbs.AddObject(ObjectContactCircleCable2D(markerNumbers=[mGroundCircle2, mCable], nodeNumber = nodeDataContactCable, 
-                                                 numberOfContactSegments=nSegments, contactStiffness = cStiffness, contactDamping=cDamping, 
+                                                 numberOfContactSegments=nSegments, contactStiffness = cStiffness, 
                                                  circleRadius = circleRadius2, offset = 0))
 
 

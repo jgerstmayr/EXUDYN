@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-09-18  21:48:31 (last modified)
+* @date         2026-10-07  00:51:49 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -38,7 +38,7 @@ public: // AUTO:
 
 /** ***********************************************************************************************
 * @class        MainObjectContactCircleCable2D
-* @brief        A very specialized penalty-based contact condition between a 2D circle (=marker0, any Position-marker) on a body and an ANCFCable2DShape (=marker1, Marker: BodyCable2DShape), in xy-plane. A node NodeGenericData is required with the number of cordinates according to the number of contact segments; the contact gap \f$g\f$ is integrated (piecewise linear) along the cable and circle; the contact force \f$f_c\f$ is zero for \f$gap>0\f$ and otherwise computed from \f$f_c = g*contactStiffness + \dot g*contactDamping\f$; during Newton iterations, the contact force is actived only, if \f$dataCoordinate[0] <= 0\f$; dataCoordinate is set equal to gap in nonlinear iterations, but not modified in Newton iterations.
+* @brief        A very specialized penalty-based contact condition between a 2D circle (=marker0, any Position-marker) on a body and an ANCFCable2DShape (=marker1, Marker: BodyCable2DShape), in xy-plane. A node NodeGenericData is required with the number of cordinates according to the number of contact segments; the contact gap \f$g\f$ is integrated (piecewise linear) along the cable and circle; the contact force \f$f_c\f$ is zero for \f$gap>0\f$ and otherwise computed from \f$f_c = g*contactStiffness\f$, without damping; during Newton iterations, the contact force is actived only, if \f$dataCoordinate[0] <= 0\f$; dataCoordinate is set equal to gap in nonlinear iterations, but not modified in Newton iterations.
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
@@ -118,7 +118,6 @@ public: // AUTO:
         if (EPyUtils::DictItemExists(d, "nodeNumber")) { EPyUtils::ItemIndexFromPython<NodeIndex>(d["nodeNumber"], cObjectContactCircleCable2D->GetParameters().nodeNumber); }
         if (EPyUtils::DictItemExists(d, "numberOfContactSegments")) { EPyUtils::FromPython(d["numberOfContactSegments"], cObjectContactCircleCable2D->GetParameters().numberOfContactSegments, "ObjectContactCircleCable2D.numberOfContactSegments"); }
         if (EPyUtils::DictItemExists(d, "contactStiffness")) { EPyUtils::FromPython(d["contactStiffness"], cObjectContactCircleCable2D->GetParameters().contactStiffness, EPyUtils::RangeCheck::nonNegative, "ObjectContactCircleCable2D.contactStiffness"); }
-        if (EPyUtils::DictItemExists(d, "contactDamping")) { EPyUtils::FromPython(d["contactDamping"], cObjectContactCircleCable2D->GetParameters().contactDamping, EPyUtils::RangeCheck::nonNegative, "ObjectContactCircleCable2D.contactDamping"); }
         if (EPyUtils::DictItemExists(d, "circleRadius")) { EPyUtils::FromPython(d["circleRadius"], cObjectContactCircleCable2D->GetParameters().circleRadius, EPyUtils::RangeCheck::nonNegative, "ObjectContactCircleCable2D.circleRadius"); }
         if (EPyUtils::DictItemExists(d, "offset")) { EPyUtils::FromPython(d["offset"], cObjectContactCircleCable2D->GetParameters().offset, "ObjectContactCircleCable2D.offset"); }
         if (EPyUtils::DictItemExists(d, "activeConnector")) { EPyUtils::FromPython(d["activeConnector"], cObjectContactCircleCable2D->GetParameters().activeConnector, "ObjectContactCircleCable2D.activeConnector"); }
@@ -139,7 +138,6 @@ public: // AUTO:
         d["nodeNumber"] = (NodeIndex)cObjectContactCircleCable2D->GetParameters().nodeNumber;
         d["numberOfContactSegments"] = (Index)cObjectContactCircleCable2D->GetParameters().numberOfContactSegments;
         d["contactStiffness"] = (Real)cObjectContactCircleCable2D->GetParameters().contactStiffness;
-        d["contactDamping"] = (Real)cObjectContactCircleCable2D->GetParameters().contactDamping;
         d["circleRadius"] = (Real)cObjectContactCircleCable2D->GetParameters().circleRadius;
         d["offset"] = (Real)cObjectContactCircleCable2D->GetParameters().offset;
         d["activeConnector"] = (bool)cObjectContactCircleCable2D->GetParameters().activeConnector;
@@ -159,7 +157,6 @@ public: // AUTO:
         else if (parameterName.compare("nodeNumber") == 0) { return py::cast((NodeIndex)cObjectContactCircleCable2D->GetParameters().nodeNumber); } //! AUTO: get parameter
         else if (parameterName.compare("numberOfContactSegments") == 0) { return py::cast((Index)cObjectContactCircleCable2D->GetParameters().numberOfContactSegments); } //! AUTO: get parameter
         else if (parameterName.compare("contactStiffness") == 0) { return py::cast((Real)cObjectContactCircleCable2D->GetParameters().contactStiffness); } //! AUTO: get parameter
-        else if (parameterName.compare("contactDamping") == 0) { return py::cast((Real)cObjectContactCircleCable2D->GetParameters().contactDamping); } //! AUTO: get parameter
         else if (parameterName.compare("circleRadius") == 0) { return py::cast((Real)cObjectContactCircleCable2D->GetParameters().circleRadius); } //! AUTO: get parameter
         else if (parameterName.compare("offset") == 0) { return py::cast((Real)cObjectContactCircleCable2D->GetParameters().offset); } //! AUTO: get parameter
         else if (parameterName.compare("activeConnector") == 0) { return py::cast((bool)cObjectContactCircleCable2D->GetParameters().activeConnector); } //! AUTO: get parameter
@@ -180,7 +177,6 @@ public: // AUTO:
         else if (parameterName.compare("nodeNumber") == 0) { EPyUtils::ItemIndexFromPython<NodeIndex>(value, cObjectContactCircleCable2D->GetParameters().nodeNumber); } //! AUTO: set parameter
         else if (parameterName.compare("numberOfContactSegments") == 0) { EPyUtils::FromPython(value, cObjectContactCircleCable2D->GetParameters().numberOfContactSegments, "ObjectContactCircleCable2D.numberOfContactSegments"); } //! AUTO: set parameter
         else if (parameterName.compare("contactStiffness") == 0) { EPyUtils::FromPython(value, cObjectContactCircleCable2D->GetParameters().contactStiffness, EPyUtils::RangeCheck::nonNegative, "ObjectContactCircleCable2D.contactStiffness"); } //! AUTO: set parameter
-        else if (parameterName.compare("contactDamping") == 0) { EPyUtils::FromPython(value, cObjectContactCircleCable2D->GetParameters().contactDamping, EPyUtils::RangeCheck::nonNegative, "ObjectContactCircleCable2D.contactDamping"); } //! AUTO: set parameter
         else if (parameterName.compare("circleRadius") == 0) { EPyUtils::FromPython(value, cObjectContactCircleCable2D->GetParameters().circleRadius, EPyUtils::RangeCheck::nonNegative, "ObjectContactCircleCable2D.circleRadius"); } //! AUTO: set parameter
         else if (parameterName.compare("offset") == 0) { EPyUtils::FromPython(value, cObjectContactCircleCable2D->GetParameters().offset, "ObjectContactCircleCable2D.offset"); } //! AUTO: set parameter
         else if (parameterName.compare("activeConnector") == 0) { EPyUtils::FromPython(value, cObjectContactCircleCable2D->GetParameters().activeConnector, "ObjectContactCircleCable2D.activeConnector"); } //! AUTO: set parameter

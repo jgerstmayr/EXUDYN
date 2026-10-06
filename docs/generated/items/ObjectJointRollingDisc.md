@@ -30,7 +30,7 @@ The parameters of the item; in a dictionary, its type is 'JointRollingDisc':
 | **constrainedAxes** | ArrayIndex | 3 | [1,1,1] | (symbol: $\jv=[j_0,\,\ldots,\,j_2]$) flags, which determine which constraints are active, in which $j_0$ represents lateral motion, $j_1$ longitudinal (forward/backward) motion and $j_2$ represents the normal (contact) direction |
 | **activeConnector** | Bool |  | True | flag, which determines, if the connector is active; used to deactivate (temporarily) a connector or constraint |
 | **discRadius** | PReal |  | 0 | defines the disc radius; **must be given**: the default is only a placeholder |
-| **discAxis** | Vector3D | 3 | [1,0,0] | (symbol: $\LU{m1}{\wv_{1}}, \;\; |\LU{m1}{\wv_{1}}| = 1$) axis of disc defined in marker $m1$ frame |
+| **discAxis** | Vector3D | 3 | [1,0,0] | (symbol: $\LU{m1}{\wv_{1}}, \;\; \vert \LU{m1}{\wv_{1}}\vert  = 1$) axis of disc defined in marker $m1$ frame |
 | **planeNormal** | Vector3D | 3 | [0,0,1] | (symbol: $\LU{m0}{\vv_{PN}}$) normal to the contact / rolling plane defined in marker $m0$ coordinates |
 | **visualization** | VObjectJointRollingDisc |  |  | parameters for visualization of item |
 

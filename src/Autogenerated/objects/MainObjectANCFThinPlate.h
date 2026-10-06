@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-10-05  08:53:07 (last modified)
+* @date         2026-10-07  00:51:49 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -121,7 +121,6 @@ public: // AUTO:
         if (EPyUtils::DictItemExists(d, "bendingStiffnessProportionalDamping")) { EPyUtils::FromPython(d["bendingStiffnessProportionalDamping"], cObjectANCFThinPlate->GetParameters().bendingStiffnessProportionalDamping, "ObjectANCFThinPlate.bendingStiffnessProportionalDamping"); }
         if (EPyUtils::DictItemExists(d, "strainCoefficients")) { EPyUtils::SetMatrix3DListSafely(d["strainCoefficients"], cObjectANCFThinPlate->GetParameters().strainCoefficients); }
         if (EPyUtils::DictItemExists(d, "curvatureCoefficients")) { EPyUtils::SetMatrix3DListSafely(d["curvatureCoefficients"], cObjectANCFThinPlate->GetParameters().curvatureCoefficients); }
-        if (EPyUtils::DictItemExists(d, "strainIsRelativeToReference")) { EPyUtils::FromPython(d["strainIsRelativeToReference"], cObjectANCFThinPlate->GetParameters().strainIsRelativeToReference, "ObjectANCFThinPlate.strainIsRelativeToReference"); }
         if (EPyUtils::DictItemExists(d, "slopesScalingX")) { EPyUtils::FromPython(d["slopesScalingX"], cObjectANCFThinPlate->GetParameters().slopesScalingX); }
         if (EPyUtils::DictItemExists(d, "slopesScalingY")) { EPyUtils::FromPython(d["slopesScalingY"], cObjectANCFThinPlate->GetParameters().slopesScalingY); }
         if (EPyUtils::DictItemExists(d, "nodeNumbers")) { EPyUtils::ItemIndexFromPython<NodeIndex>(d["nodeNumbers"], cObjectANCFThinPlate->GetParameters().nodeNumbers); }
@@ -149,7 +148,6 @@ public: // AUTO:
         d["bendingStiffnessProportionalDamping"] = (Real)cObjectANCFThinPlate->GetParameters().bendingStiffnessProportionalDamping;
         d["strainCoefficients"] = (PyMatrix3DList)cObjectANCFThinPlate->GetParameters().strainCoefficients;
         d["curvatureCoefficients"] = (PyMatrix3DList)cObjectANCFThinPlate->GetParameters().curvatureCoefficients;
-        d["strainIsRelativeToReference"] = (Real)cObjectANCFThinPlate->GetParameters().strainIsRelativeToReference;
         d["slopesScalingX"] = EPyUtils::ToPython(cObjectANCFThinPlate->GetParameters().slopesScalingX);
         d["slopesScalingY"] = EPyUtils::ToPython(cObjectANCFThinPlate->GetParameters().slopesScalingY);
         d["nodeNumbers"] = EPyUtils::ItemIndexToPython<NodeIndex>((ArrayIndex)cObjectANCFThinPlate->GetParameters().nodeNumbers);
@@ -171,7 +169,6 @@ public: // AUTO:
         else if (parameterName.compare("bendingStiffnessProportionalDamping") == 0) { return py::cast((Real)cObjectANCFThinPlate->GetParameters().bendingStiffnessProportionalDamping); } //! AUTO: get parameter
         else if (parameterName.compare("strainCoefficients") == 0) { return py::cast((PyMatrix3DList)cObjectANCFThinPlate->GetParameters().strainCoefficients); } //! AUTO: get parameter
         else if (parameterName.compare("curvatureCoefficients") == 0) { return py::cast((PyMatrix3DList)cObjectANCFThinPlate->GetParameters().curvatureCoefficients); } //! AUTO: get parameter
-        else if (parameterName.compare("strainIsRelativeToReference") == 0) { return py::cast((Real)cObjectANCFThinPlate->GetParameters().strainIsRelativeToReference); } //! AUTO: get parameter
         else if (parameterName.compare("slopesScalingX") == 0) { return EPyUtils::ToPython(cObjectANCFThinPlate->GetParameters().slopesScalingX); } //! AUTO: get parameter
         else if (parameterName.compare("slopesScalingY") == 0) { return EPyUtils::ToPython(cObjectANCFThinPlate->GetParameters().slopesScalingY); } //! AUTO: get parameter
         else if (parameterName.compare("nodeNumbers") == 0) { return py::cast(EPyUtils::ItemIndexToPython<NodeIndex>((ArrayIndex)cObjectANCFThinPlate->GetParameters().nodeNumbers)); } //! AUTO: get parameter
@@ -199,7 +196,6 @@ public: // AUTO:
         else if (parameterName.compare("bendingStiffnessProportionalDamping") == 0) { EPyUtils::FromPython(value, cObjectANCFThinPlate->GetParameters().bendingStiffnessProportionalDamping, "ObjectANCFThinPlate.bendingStiffnessProportionalDamping"); } //! AUTO: set parameter
         else if (parameterName.compare("strainCoefficients") == 0) { EPyUtils::SetMatrix3DListSafely(value, cObjectANCFThinPlate->GetParameters().strainCoefficients); } //! AUTO: set parameter
         else if (parameterName.compare("curvatureCoefficients") == 0) { EPyUtils::SetMatrix3DListSafely(value, cObjectANCFThinPlate->GetParameters().curvatureCoefficients); } //! AUTO: set parameter
-        else if (parameterName.compare("strainIsRelativeToReference") == 0) { EPyUtils::FromPython(value, cObjectANCFThinPlate->GetParameters().strainIsRelativeToReference, "ObjectANCFThinPlate.strainIsRelativeToReference"); } //! AUTO: set parameter
         else if (parameterName.compare("slopesScalingX") == 0) { EPyUtils::FromPython(value, cObjectANCFThinPlate->GetParameters().slopesScalingX); } //! AUTO: set parameter
         else if (parameterName.compare("slopesScalingY") == 0) { EPyUtils::FromPython(value, cObjectANCFThinPlate->GetParameters().slopesScalingY); } //! AUTO: set parameter
         else if (parameterName.compare("nodeNumbers") == 0) { EPyUtils::ItemIndexFromPython<NodeIndex>(value, cObjectANCFThinPlate->GetParameters().nodeNumbers); } //! AUTO: set parameter

@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-10-06  07:03:31 (last modified)
+* @date         2026-10-07  00:51:49 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -32,7 +32,6 @@ public: // AUTO:
     Index nodeNumber;                             //!< AUTO: node number of a NodeGenericData for nSegments dataCoordinates (used for active set strategy ==> hold the gap of the last discontinuous iteration and the friction state)
     Index numberOfContactSegments;                //!< AUTO: number of linear contact segments to determine contact; each segment is a line and is associated to a data (history) variable; must be same as in according marker
     Real contactStiffness;                        //!< AUTO: must be >= 0; contact (penalty) stiffness [SI:N/m/(contact segment)]; the stiffness is per contact segment; specific contact forces (per length) \f$f_N\f$ act in contact normal direction only upon penetration
-    Real contactDamping;                          //!< AUTO: must be >= 0; contact damping [SI:N/(m s)/(contact segment)]; not used: the contact force is the stiffness term only (#2867)
     Real circleRadius;                            //!< AUTO: must be >= 0; radius [SI:m] of contact circle
     Real offset;                                  //!< AUTO: offset [SI:m] of contact, e.g. to include thickness of cable element
     bool activeConnector;                         //!< AUTO: flag, which determines, if the connector is active; used to deactivate (temporarily) a connector or constraint
@@ -43,7 +42,6 @@ public: // AUTO:
         nodeNumber = EXUstd::InvalidIndex;
         numberOfContactSegments = 3;
         contactStiffness = 0.;
-        contactDamping = 0.;
         circleRadius = 0.;
         offset = 0.;
         activeConnector = true;
@@ -53,7 +51,7 @@ public: // AUTO:
 
 /** ***********************************************************************************************
 * @class        CObjectContactCircleCable2D
-* @brief        A very specialized penalty-based contact condition between a 2D circle (=marker0, any Position-marker) on a body and an ANCFCable2DShape (=marker1, Marker: BodyCable2DShape), in xy-plane. A node NodeGenericData is required with the number of cordinates according to the number of contact segments; the contact gap \f$g\f$ is integrated (piecewise linear) along the cable and circle; the contact force \f$f_c\f$ is zero for \f$gap>0\f$ and otherwise computed from \f$f_c = g*contactStiffness + \dot g*contactDamping\f$; during Newton iterations, the contact force is actived only, if \f$dataCoordinate[0] <= 0\f$; dataCoordinate is set equal to gap in nonlinear iterations, but not modified in Newton iterations.
+* @brief        A very specialized penalty-based contact condition between a 2D circle (=marker0, any Position-marker) on a body and an ANCFCable2DShape (=marker1, Marker: BodyCable2DShape), in xy-plane. A node NodeGenericData is required with the number of cordinates according to the number of contact segments; the contact gap \f$g\f$ is integrated (piecewise linear) along the cable and circle; the contact force \f$f_c\f$ is zero for \f$gap>0\f$ and otherwise computed from \f$f_c = g*contactStiffness\f$, without damping; during Newton iterations, the contact force is actived only, if \f$dataCoordinate[0] <= 0\f$; dataCoordinate is set equal to gap in nonlinear iterations, but not modified in Newton iterations.
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)

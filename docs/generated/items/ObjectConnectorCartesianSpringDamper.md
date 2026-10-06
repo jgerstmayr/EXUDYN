@@ -60,7 +60,7 @@ Available as `OutputVariableType` in sensors, `Get...Output()` and other functio
 | output variable | symbol | description |
 |---|---|---|
 | Displacement | $\Delta\! \LU{0}{\pv} = \LU{0}{\pv}_{m1} - \LU{0}{\pv}_{m0}$ | relative displacement in global coordinates |
-| Distance | $L=\|\Delta\! \LU{0}{\pv}\|$ | scalar distance between both marker points |
+| Distance | $L=\vert \Delta\! \LU{0}{\pv}\vert $ | scalar distance between both marker points |
 | Velocity | $\Delta\! \LU{0}{\vv} = \LU{0}{\vv}_{m1} - \LU{0}{\vv}_{m0}$ | relative translational velocity in global coordinates |
 | Force | $\fv_{SD}$ | joint force in global coordinates, see equations |
 | PotentialEnergy | $V = \frac{1}{2} \sum_i k_i\, (\Delta p_i - v_{\mathrm{off},i})^2$ | elastic energy of the three springs; zero if the connector is not active; raises for a springForceUserFunction |

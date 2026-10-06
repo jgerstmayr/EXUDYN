@@ -16,7 +16,7 @@ is what most answers need to start from, see {ref}`sec-commandline`.
 
  **Python import errors**:
 
-- Sometimes the Exudyn module cannot be loaded into Python. Typical **error messages if Python versions are not compatible** are: \ Typical **error messages if 32/64 bits versions are mixed**:\ **There are several reasons and workarounds**:
+- Sometimes the Exudyn module cannot be loaded into Python. Typical **error messages if Python versions are not compatible** are:  Typical **error messages if 32/64 bits versions are mixed**: **There are several reasons and workarounds**:
 
   ```
     Traceback (most recent call last):
@@ -76,7 +76,7 @@ is what most answers need to start from, see {ref}`sec-commandline`.
   ```
 
 - see installation instructions to install missing Python modules, {ref}`sec-install-installinstructions`.
-- Problems with **tkinter**, especially on MacOS:\ Exudyn uses `tkinter`, based on tcl/tk, to provide some basic dialogs, such as visualizationSettings\ As Python is not suited for multithreading, this causes problems in window and dialog workflows. Especially on MacOS `tkinter` is less stable and compatible with the window manager. Especially, `tkinter` already needs to run before the application's OpenGL window (renderer) is opened. Therefore, on MacOS `tkinter.Tk()` is called before the renderer is started. In some cases, visualizationSettings dialog may not be available and changes have to be made inside the code.
+- Problems with **tkinter**, especially on MacOS: Exudyn uses `tkinter`, based on tcl/tk, to provide some basic dialogs, such as visualizationSettings As Python is not suited for multithreading, this causes problems in window and dialog workflows. Especially on MacOS `tkinter` is less stable and compatible with the window manager. Especially, `tkinter` already needs to run before the application's OpenGL window (renderer) is opened. Therefore, on MacOS `tkinter.Tk()` is called before the renderer is started. In some cases, visualizationSettings dialog may not be available and changes have to be made inside the code.
 - To resolve issues, the following visualizationSettings may help (before starting renderer!), but may reduce functionality: dialogs.multiThreadedDialogs = False, general.useMultiThreadedRendering = False
 
  **Typical solver errors**:
@@ -137,7 +137,7 @@ is what most answers need to start from, see {ref}`sec-commandline`.
   - see also 'Convergence problems', {ref}`sec-overview-basics-convergenceproblems`
   - may be caused due to nonlinearity of formulation and round off errors, which restrict Newton to achieve desired tolerances; adjust  `.newton.relativeTolerance` / `.newton.absoluteTolerance` in static solver or in time integration
 
-- Typical **solver error due to redundant constraints or missing inertia terms**, could read as follows:   which draws the according object in red and others gray/transparent (but sometimes objects may be hidden inside other objects!). See the command's description for further options, e.g., to highlight nodes. \
+- Typical **solver error due to redundant constraints or missing inertia terms**, could read as follows:   which draws the according object in red and others gray/transparent (but sometimes objects may be hidden inside other objects!). See the command's description for further options, e.g., to highlight nodes.
 
   ```
     =========================================
@@ -243,7 +243,7 @@ is what most answers need to start from, see {ref}`sec-commandline`.
 6. Why does **type auto completion** / intellisense not work for mbs (MainSystem)?
 
   - in earlier versions of Exudyn type completion did not work properly for more complex structures
-  - since version 1.6.103 type completion works for most functions\, types and structures: tested in Spyder 5.2.2 and Visual Studio Code 1.78.1); with an added stub file (.pyi) the standard type completion fetches information about structures or functions; this even works for example with `SC.visualizationSettings.bodies.kinematicTree.showJointFrames`. If you still have problems, try to restart your environment / computer or switch to a different version, and create an issue on GitHub.
+  - since version 1.6.103 type completion works for most functions, types and structures: tested in Spyder 5.2.2 and Visual Studio Code 1.78.1); with an added stub file (.pyi) the standard type completion fetches information about structures or functions; this even works for example with `SC.visualizationSettings.bodies.kinematicTree.showJointFrames`. If you still have problems, try to restart your environment / computer or switch to a different version, and create an issue on GitHub.
 
 7. How to add graphics?
 

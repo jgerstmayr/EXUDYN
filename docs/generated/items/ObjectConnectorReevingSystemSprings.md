@@ -86,7 +86,7 @@ Geometry of common tangent for two spatial circles defined by radii $R_A$ and $R
 ### Common tangent of two circles in 3D
 
 In order to compute the total length of the rope of the reeving system, the tangent of two arbitrary circles in space needs to be computed.
-Considering [](#fig-reevingsystemsprings-tangents), the relations are based on the
+Considering {numref}`fig-reevingsystemsprings-tangents`, the relations are based on the
 center points of the circles $\pv_A$ and $\pv_B$, the radii $R_A$ and $R_B$ as well as
 the axis vectors $\av_A$ and $\av_B$, the latter vectors also defining the side at which the tangent contacts.
 For the definition of the tangent, the vectors $\rv_A$ and $\rv_B$ need to be computed.

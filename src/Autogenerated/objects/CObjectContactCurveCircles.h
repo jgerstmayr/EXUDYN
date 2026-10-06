@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-10-03  12:58:29 (last modified)
+* @date         2026-10-07  00:51:49 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -34,8 +34,8 @@ public: // AUTO:
     Vector circlesRadii;                          //!< AUTO: Vector containing radii of \f$n_c\f$ circles [SI:m]; number according to size of markerNumbers-1
     PyMatrixContainer segmentsData;               //!< AUTO: matrix containing a set of two planar point coordinates in each row, representing segments attached to marker \f$m0\f$ and undergoing contact with the circles; for segment \f$s0\f$ row 0 reads \f$[p_{0x,s0},\,p_{0y,s0},\,p_{1x,s0},\,p_{1y,s0}]\f$; note that the segments must be ordered such that going from \f$\pv_0\f$ to \f$\pv_1\f$, the exterior lies on the right (positive) side. MatrixContainer has to be provided in dense mode!
     PyMatrixContainer polynomialData;             //!< AUTO: matrix containing coefficients for special polynomial enhancements of the linear segments; each row contains coefficients for polynomials for the according segment, prescribing slopes at beginning and end of segment as well as curvature at beginning and end of segment; slopes and curvatures are defined in a local x/y coordinate system where x is the segment axis (start: x=0; x-axis points towards end point) and the segment normal is in y-direction; MatrixContainer has to be provided in dense mode!
-    Real dynamicFriction;                         //!< AUTO: must be >= 0; dynamic friction coefficient for friction model, see StribeckFunction in exudyn.physics, [](#sec-module-physics)
-    Real frictionProportionalZone;                //!< AUTO: must be >= 0; limit velocity [m/s] up to which the friction is proportional to velocity (for regularization / avoid numerical oscillations), see StribeckFunction in exudyn.physics (named regVel there!), [](#sec-module-physics)
+    Real dynamicFriction;                         //!< AUTO: must be >= 0; dynamic friction coefficient: the friction force is \f$\mu_d |f_N|\f$, regularized below frictionProportionalZone, see the equation; 0: no friction
+    Real frictionProportionalZone;                //!< AUTO: must be >= 0; limit velocity [SI:m/s] up to which the friction force is proportional to the tangential velocity (regularization, against numerical oscillations); 0: no regularization
     Real contactStiffness;                        //!< AUTO: normal contact stiffness [SI:N/(m*m)]
     Real contactDamping;                          //!< AUTO: linear normal contact damping [SI:N/(m s)]; this damping is a simplification of real contact dissipation and should be used with care.
     Index contactModel;                           //!< AUTO: must be >= 0; number of contact model: 0) linear model for stiffness and damping, only proportional to penetration; contact force is computed from \f$l_\mathrm{seg}\left(p \cdot  \cdot k_c + \dot p \cdot d_c \right)\f$ as long as \f$p>0\f$; while this is numerically more stable, it gives jumps in forces when sliding over contact geometry 1) contact force proportional to integral over penetration area of circle with segments, giving a smoother contact force when sliding over geometry;
@@ -60,7 +60,7 @@ public: // AUTO:
 
 /** ***********************************************************************************************
 * @class        CObjectContactCurveCircles
-* @brief        A contact model between a curve defined by piecewise segments and a set of circles. The 2D curve may corotate in 3D with the underlying marker and also defines the plane of action for the circles. [REQUIRES FURTHER TESTING; friction not yet available]
+* @brief        A contact model between a curve defined by piecewise segments and a set of circles. The 2D curve may corotate in 3D with the underlying marker and also defines the plane of action for the circles. [REQUIRES FURTHER TESTING]
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)

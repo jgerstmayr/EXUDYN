@@ -121,8 +121,8 @@ $\Tm_i$.
 ### Mass matrix and inertia terms
 The velocity field of the element interpolates the nodal velocities and angular velocities linearly,
 $\vv(x) = S_0 \vv_0 + S_1 \vv_1$ and $\tomega(x) = S_0 \tomega_0 + S_1 \tomega_1$, with
-$S_0 = (L/2 - x)/L$ and $S_1 = (L/2 + x)/L$. The mass matrix is the one of this velocity field: $\rho A L
-[1/3,\ 1/6;\ 1/6,\ 1/3]$ for the positions, and for the rotations
+$S_0 = (L/2 - x)/L$ and $S_1 = (L/2 + x)/L$. The mass matrix is the one of this velocity field:
+$\rho A L [1/3,\ 1/6;\ 1/6,\ 1/3]$ for the positions, and for the rotations
 $\Gm_i\tp \int S_i S_j\, \Rot(x) \Jm \Rot(x)\tp dx\ \Gm_j$ with the cross section inertia $\Jm$ per unit length,
 integrated with two Gauss points; the quadratic velocity vector is formed the same way. A rigid motion is
 therefore represented exactly by any number of elements. `exu.special.beams.geometricallyExactLumpedMass = True`

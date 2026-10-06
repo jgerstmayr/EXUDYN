@@ -71,7 +71,7 @@ Available as `OutputVariableType` in sensors, `Get...Output()` and other functio
 |---|---|---|
 | Displacement | $\Delta\! \LU{0}{\pv}$ | $\LU{0}{\pv}_{m1} - \LU{0}{\pv}_{m0}$ |
 | Velocity | $\Delta\! \LU{0}{\vv}$ | $\LU{0}{\vv}_{m1} - \LU{0}{\vv}_{m0}$ |
-| Distance | $L$ | $|\Delta\! \LU{0}{\pv}|$ |
+| Distance | $L$ | $\vert\Delta\! \LU{0}{\pv}\vert$ |
 | Force | $\fv$ | see below |
 
 ### Connector forces

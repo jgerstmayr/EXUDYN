@@ -122,6 +122,8 @@ def TestExamplesReferenceSolution():
         'rotationMarkerDeprecationTest.py':-0.13402861946207856, #new 2026-10-03: rotationMarker0/1 against localHT of the markers, the deprecation warning once per session (#2745, #2801)
         'contactFrictionCircleCable2DnoFrictionTest.py':18.22385932515495, #new 2026-10-05: no tangential force without a friction model, whatever the slip state (#1290)
         'systemContainerLifetimeTest.py':-3.809999999999995, #new 2026-10-05: the MainSystem of AddSystem and GetSystem keeps its SystemContainer alive (#2851)
+        'contactCurveCirclesFrictionTest.py':8.399999999953684, #new 2026-10-07: friction and output variables of ObjectContactCurveCircles (#2867)
+        'coordinateSpringDamperExtVelocityOffsetTest.py':0.6999999999999977, #new 2026-10-07: velocityOffset in the damper force (#2867)
         'connectorFrameOutputsTest.py':26, #2026-10-06: SlidingCoordinate of JointSliding2D counted once (#2872), before 25; new 2026-10-06: the frame outputs of joints and connectors, HomogeneousTransformation(Local), Displacement, the 2D joints (#2870)
         'createLinearSpringDamperTest.py':2.9930635558130834, #new 2026-10-05: mbs.CreateLinearSpringDamper, static deflection in three ways and a dynamic run (#1953, #1954)
         'initialAccelerationsTest.py':-2.587, #new 2026-10-05: the initial accelerations of the generalized-alpha method with a constraint and initial velocity (#2235)

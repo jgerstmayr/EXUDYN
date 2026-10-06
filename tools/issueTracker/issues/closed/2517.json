@@ -5,7 +5,7 @@
   "status": "RESOLVED",
   "type": "BUG",
   "priority": "HIGH",
-  "description": "The commit gates run in venvExuP313, exudev build installs into venvP313. So a C++ change can be built and the gates can still run against a wheel from an earlier version - a green result that means nothing. Seen on 2026-09-18: venvExuP313 held 1.11.173.dev1 while the sources were at 1.11.176.dev1. Either exudev build installs into the generator environment as well\\, or the checks refuse to run when the installed version differs from version.txt. revision2026 step R5.18.",
+  "description": "The commit gates run in venvExuP313, exudev build installs into venvP313. So a C++ change can be built and the gates can still run against a wheel from an earlier version - a green result that means nothing. Seen on 2026-09-18: venvExuP313 held 1.11.173.dev1 while the sources were at 1.11.176.dev1. Either exudev build installs into the generator environment as well, or the checks refuse to run when the installed version differs from version.txt. revision2026 step R5.18.",
   "dateRaised": "2026-09-18",
   "deadline": "2027-03-17",
   "dateResolved": "2026-09-19 09:54",

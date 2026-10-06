@@ -612,12 +612,6 @@ bool MainObjectContactCircleCable2D::CheckPreAssembleConsistency(const MainSyste
 		return false;
 	}
 
-	if (cObject->GetParameters().contactDamping != 0)
-	{
-		errorString = STDstring("ObjectContactCircleCable2D: contactDamping is not yet implemented; set parameter to zero");
-		return false;
-	}
-
 	const ArrayIndex& nMarkers = cObject->GetMarkerNumbers();
 	if (!(mainSystem.GetCSystem().GetSystemData().GetCMarker(nMarkers[0]).GetType() & Marker::Position))
 	{

@@ -87,14 +87,14 @@ Available as `OutputVariableType` in sensors, `Get...Output()` and other functio
 
 ### Geometric relations
 
-The geometrical setup is shown in [](#fig-objectcontactconvexroll-sketch). To calculate the contact point of the convex body of revolution the contact (ground) plane is rotated into the local frame of the body. In this local frame in which the generatrix of the body of revolution is described by the polynomial function
+The geometrical setup is shown in {numref}`fig-objectcontactconvexroll-sketch`. To calculate the contact point of the convex body of revolution the contact (ground) plane is rotated into the local frame of the body. In this local frame in which the generatrix of the body of revolution is described by the polynomial function
 
 $$
 \mathrm{r}(^bx) = \sum_{i=0}^n k_i \; x^{n-i}
 $$ (eq-connectorconvexrolling-polynomial)
 
 with the coefficients of the hull $a_i$. As a pre-Check for the contact two spheres are put into both ends of the object with the maximum radius and only if one of these is in contact. The contact point $^{\mathrm{b}}\pv_{\mathrm{m1,C}} $ is calculated relative to the bodies marker `m1` in the bodies local frame and transformed accordingly.
-The contact point C can for be calculated convex bodies by matching the derivative of the polynomial $r(^bx)$ with the gradient of the contact plane, shown in [](#fig-objectcontactconvexroll-sketch), explained in detail in [ManzlGerstmayr2021].
+The contact point C can for be calculated convex bodies by matching the derivative of the polynomial $r(^bx)$ with the gradient of the contact plane, shown in {numref}`fig-objectcontactconvexroll-sketch`, explained in detail in [ManzlGerstmayr2021].
 At the contact point a normal force $\fv_{\mathrm{N}} = [ 0 \; 0 \; \mathrm{f}_{\mathrm{N}} ]\tp$  with
 
 $$

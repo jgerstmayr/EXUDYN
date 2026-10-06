@@ -199,7 +199,7 @@ multibody dynamics formulation for reasons of simpler assembly of equations of m
  As an example, we investigate the equations of motion for a **mathematical pendulum** with mass $m$, distance $L$ between support and mass,
 under gravity $g$.
 
- In the minimal coordinates formulation, see {ref}`fig-theory-formulations-pendulum`, we define the angle $\varphi$, being zero in the horizontal configuration,
+ In the minimal coordinates formulation, see {numref}`fig-theory-formulations-pendulum`, we define the angle $\varphi$, being zero in the horizontal configuration,
 
 $$
   m L \ddot \varphi = m g \cos \varphi
@@ -213,7 +213,7 @@ leading to one $2^\mathrm{nd}$ order ordinary differential equation (ODE2), usin
 Mathematical pendulum with minimal coordinate $\varphi$.
 ```
 
- With redundant coordinates, see {ref}`fig-theory-formulations-pendulumconstraint`, we may introduce two Cartesian coordinates ($x$, $y$), to define the location of the mass in
+ With redundant coordinates, see {numref}`fig-theory-formulations-pendulumconstraint`, we may introduce two Cartesian coordinates ($x$, $y$), to define the location of the mass in
 the plane, leading to two differential equations for the mass point,
 
 $$

@@ -27,15 +27,15 @@ Overview on Exudyn C++ and Python modules
 ### Overview of modules
 
 Currently, the Exudyn module structure is split into a C++ core part and a set of
-Python parts, see {ref}`fig-exudyn-candpython`.
+Python parts, see {numref}`fig-exudyn-candpython`.
 
-- **C++ parts**, see {ref}`fig-exudyn-cpp` and {ref}`fig-system-overview`:
+- **C++ parts**, see {numref}`fig-exudyn-cpp` and {numref}`fig-system-overview`:
   - `exudyn`: on this level, there are just very few functions: `SystemContainer()`, `SC.renderer.Start()`, `SC.renderer.Stop()`, `SolveStatic(...)`, `SolveDynamic(...)`, ... as well as system and user variable dictionaries `exudyn.variables` and `exudyn.sys`
   - `config`, `special`: substructures for configuration (global settings) and special settings; use e.g. `exudyn.config.outputPrecision=4`
   - `symbolic`: tools for symbolic computation in user functions (speedup!)
   - `SystemContainer`: contains the systems (most important), solvers (static, dynamics, ...), visualization settings
   - `MainSystem` `mbs`: {ref}`mbs <mbs>` created with `mbs = SC.AddSystem()`, this structure contains everything that defines a solvable multibody system; a large set of nodes, objects, markers, loads can added to the system, see {ref}`sec-item-reference-manual`;
-  - `mbs.systemData`: contains the initial, current, visualization, ... states of the system and holds the items, see {ref}`fig-system-overview`
+  - `mbs.systemData`: contains the initial, current, visualization, ... states of the system and holds the items, see {numref}`fig-system-overview`
   - `SimulationSettings`: contains the systems (most important), solvers (static, dynamics, ...), visualization settings
 
 - **Python parts** (this list is continuously extended, see {ref}`sec-pythonutilityfunctions`):
@@ -80,10 +80,10 @@ In this documentation, we will use the term **item** to identify nodes, objects,
 
   item $\in$ \{node, object, marker, load, sensor\}
 
- **Indexes: arrays and vectors starting with 0:** \
+ **Indexes: arrays and vectors starting with 0:**
 As known from Python, all **indexes** of arrays, vectors, matrices, ... are starting with 0. This means that the first component of the vector `v=[1,2,3]` is accessed with `v[0]` in Python (and also in the C++ part of Exudyn ). The range is usually defined as `range(0,3)`, in which '3' marks the index after the last valid component of an array or vector.
 
-**Dimensionality of objects and vectors:** \
+**Dimensionality of objects and vectors:**
 {ref}`2D <2D>` vs. {ref}`3D <3D>`
 
 As a convention, quantities in Exudyn are 3D, such as nodes, objects, markers, loads, measured quantities, etc.
@@ -101,7 +101,7 @@ Furthermore, the local position in 2D objects is provided by a 3D vector. Usuall
 (sec-overview-items)=
 ## Items: Nodes, Objects, Loads, Markers, Sensors, ...
 
-In this section, the most important part of Exudyn are provided. An overview of the interaction of the items is given in {ref}`fig-items-interaction`
+In this section, the most important part of Exudyn are provided. An overview of the interaction of the items is given in {numref}`fig-items-interaction`
 
 (fig-items-interaction)=
 ```{figure} /docs/figures/itemsMultibodySystem.*

@@ -67,7 +67,7 @@ Finally, `elements` need to be included for visualization, and a surface needs t
 Test model and mesh for hinge created with Netgen (linear tetrahedral elements).
 ```
 
-As an example, we consider a part denoted as 'hinge' in the following, see {ref}`fig-hingepartmesh`. The test example can be found in `Examples/NGsolveCMStutorial.py` with lots of additional features.
+As an example, we consider a part denoted as 'hinge' in the following, see {numref}`fig-hingepartmesh`. The test example can be found in `Examples/NGsolveCMStutorial.py` with lots of additional features.
 
 After import of mass and stiffness matrix, eigenmodes and eigenfrequencies can be computed using `fem.ComputeEigenFrequencies(...)`,
 which computes the quantities `fem.modeBasis` and `fem.eigenValues`.
@@ -117,10 +117,10 @@ Lowest 8 free-free modes for hinge finite element model, contour plot for $xx$-s
 ```
 
 Clearly, if there are no supports included in the stiffness matrix, the resulting eigenmodes will contain 6 rigid body modes and we will also call this case for the computation of eigenmodes the free-free case, in analogy to a simply supported beam.
-This rigid body modes, which are usually not needed (=unwanted) in the succeeding computation, can be excluded with an according option in \
+This rigid body modes, which are usually not needed (=unwanted) in the succeeding computation, can be excluded with an according option in
 `fem.ComputeEigenFrequencies(excludeRigidBodyModes = ...)`
-\
-For our test example, 8 eigenmodes are shown in {ref}`fig-hingepartfreefreemodes`, where the 6 rigid body modes have been excluded (so in total, 14 eigenvectors were computed).
+
+For our test example, 8 eigenmodes are shown in {numref}`fig-hingepartfreefreemodes`, where the 6 rigid body modes have been excluded (so in total, 14 eigenvectors were computed).
 The 8 eigenfrequencies for the chosen coarse mesh with mesh size $h=0.01$ and 1216 nodes result as
 
 $$
@@ -130,7 +130,7 @@ Note, that a computation with a finer mesh, using mesh size $h=0.002$ and 100224
 
 After the computation of modes, it is always a good idea to visualize and/or animate these modes. We can do this, using the function `AnimateModes(...)` available in `exudyn.interactive`, which allows us to inspect and animate modes and to create animations for these modes, see the mentioned example.
 
-Clearly, the free-free modes in {ref}`fig-hingepartfreefreemodes` are not well suited for the modeling of the deformations within the hinge, if the bolt and the bushing shall be fixed to ground or to another part.
+Clearly, the free-free modes in {numref}`fig-hingepartfreefreemodes` are not well suited for the modeling of the deformations within the hinge, if the bolt and the bushing shall be fixed to ground or to another part.
 Therefore, we can use modes based on ideas of Hurty [Hurty1965] and Craig-Bampton [CraigBampton1968], as shown in the following.
 
 (sec-hurty-craig-bampton-modes)=
@@ -296,11 +296,11 @@ with the new boundary node vector $\qv_b = [\qv_{B_0}\tp \;\; \qv_{B_1}\tp]\tp$.
 - The factorization only needs to be applied to six vectors for every relevant boundary node set.
 - One set of boundary nodes can be omitted from the final static modes in {eq}`theory-eigenmodes-hcbrbe2`, because keeping all boundary modes, would introduce six rigid body motions to our mode basis, what is usually not wanted nor needed.
 
-Using again the examples given in {ref}`fig-hingepartmesh`, we now obtain a set of modified modes using the function `fem.ComputeHurtyCraigBamptonModes(...)`.
-{ref}`fig-hingepartstaticmodesa` shows the first 6 rigid body modes. Note that these modes are automatically removed in the function `fem.ComputeHurtyCraigBamptonModes(...)` with default settings.
-{ref}`fig-hingepartstaticmodesb` shows the second set of 6 rigid body modes.
+Using again the examples given in {numref}`fig-hingepartmesh`, we now obtain a set of modified modes using the function `fem.ComputeHurtyCraigBamptonModes(...)`.
+{numref}`fig-hingepartstaticmodesa` shows the first 6 rigid body modes. Note that these modes are automatically removed in the function `fem.ComputeHurtyCraigBamptonModes(...)` with default settings.
+{numref}`fig-hingepartstaticmodesb` shows the second set of 6 rigid body modes.
 Finally, 8 eigenmodes have been computed for the fixed-fixed case (where all boundary/interfaces nodes are fixed),
-see {ref}`fig-hingepartfixedfixedmodes`.
+see {numref}`fig-hingepartfixedfixedmodes`.
 The eigenfrequencies for this case now are significantly higher than in the free-free case, reading
 
 $$
@@ -430,7 +430,7 @@ In the `ObjectFFRF`, a `ObjectConnectorCoordinateVector` needs to be used to def
 
 In the `ObjectFFRFreducedOrder`, there are in general two approaches:
 
-- The computed modes do not include rigid body motions, by using the appropriate flag\ `excludeRigidBodyModes = True`\ for most of such functions; in this case, the reference conditions are defined such that the reference node positions of the mesh are rigidly attached to the reference frame. In case of Hurty-Craig-Bampton modes, one boundary set (the first one) is attached to the reference frame.
+- The computed modes do not include rigid body motions, by using the appropriate flag `excludeRigidBodyModes = True` for most of such functions; in this case, the reference conditions are defined such that the reference node positions of the mesh are rigidly attached to the reference frame. In case of Hurty-Craig-Bampton modes, one boundary set (the first one) is attached to the reference frame.
 - Alternatively, `excludeRigidBodyModes` can be set False, or arbitrary modes can be imported from elsewhere. In this case, rigid body motion must be excluded by appropriate constraints, e.g., a `ObjectConnectorCoordinateVector` applied to the `NodeGenericODE2` of `ObjectFFRFreducedOrder`. This task is completely left to the user.
 
 It should be noted that regarding efficiency or highest accuracy, better reference conditions may exists, which are not fully supported in the current code and may only be applied with user functions.

@@ -25,7 +25,7 @@ If successful, the IPython Console of Spyder will print something like:
 ```
 
 If you check your current directory (where `myFirstExample.py` lies), you will find a new directory `solution` with the file `coordinatesSolution.txt`, which contains the results of your computation (with default values for time integration). Every file a run writes by default goes there, so that nothing is written beside your script.
-The beginning and end of the file should look like: \
+The beginning and end of the file should look like:
 
 ```python
   #Exudyn implicit second order time integration solver solution file

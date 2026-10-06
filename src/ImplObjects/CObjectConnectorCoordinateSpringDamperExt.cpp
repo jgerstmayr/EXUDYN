@@ -180,7 +180,7 @@ void CObjectConnectorCoordinateSpringDamperExt::ComputeSpringForceRelative(Real 
 		{   //compute resulting force vector:
 			
             //spring-damper force:
-			force = parameters.stiffness * (relPos - parameters.offset) + parameters.damping * relVel;
+			force = parameters.stiffness * (relPos - parameters.offset) + parameters.damping * (relVel - parameters.velocityOffset); //velocityOffset as documented (#2867)
 
             //friction:
             if (parameters.frictionProportionalZone != 0)

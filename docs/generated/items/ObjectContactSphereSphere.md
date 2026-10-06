@@ -109,7 +109,7 @@ This section outlines the computation of the forces acting on the two spheres wh
 Two spheres that are in contact, showing a force on marker 1 in normal direction due to overlap; forces on marker 0 act in opposite direction.
 ```
 
-Calculations reflect the case for outer contact of two spheres using $h_1=1$. In case that isHollowSphere1=True, we set $h_1=-1$ while the remaining formulas are unchanged. In Figure [](#fig-objectspherespherecontact) the sphere sphere and in Figure [](#fig-objectspherehollowspherecontact) the sphere hollowsphere contact case are shown.
+Calculations reflect the case for outer contact of two spheres using $h_1=1$. In case that isHollowSphere1=True, we set $h_1=-1$ while the remaining formulas are unchanged. In {numref}`fig-objectspherespherecontact` the sphere sphere and in {numref}`fig-objectspherehollowspherecontact` the sphere hollowsphere contact case are shown.
 
 For the following, the gap $g$ between the two spheres is computed as
 

@@ -93,6 +93,51 @@ def BrokenTableRows(paths):
     return found
 
 
+def TextOutsideCodeAndMath(path):
+    """(line number, line, the line without inline code and math) of the lines outside fenced code and display
+    math"""
+    lines = []
+    inFence = False
+    inMath = False
+    for (number, line) in enumerate(io.open(path, encoding='utf-8').read().split('\n'), 1):
+        stripped = line.strip()
+        if stripped.startswith('```'):
+            inFence = not inFence
+            continue
+        if inFence:
+            continue
+        if stripped.count('$$') == 1:
+            inMath = not inMath
+            continue
+        if inMath or stripped.startswith('$$'):
+            continue
+        lines.append((number, line, re.sub(r'`[^`]*`|(?<!\\)\$(?:\\.|[^$\\])*\$', '', line)))
+    return lines
+
+
+def RenderingTraps(paths):
+    """what the PDF printed as raw LaTeX or as a stray backslash (#2883): a pipe inside math in a table row (the
+    table splits the cell there; write \\vert), display math that does not open and close on lines of its own, a
+    figure reference that prints the caption (a caption with math stays LaTeX source there; write {numref}), and a
+    backslash of LaTeX in text - a line ending in '\\' (a line break in LaTeX, printed in Markdown), '\\ ', '\\,'"""
+    found = []
+    for path in paths:
+        for (number, line, text) in TextOutsideCodeAndMath(path):
+            stripped = line.strip()
+            where = path + ':' + str(number) + ': '
+            if stripped.startswith('|') and stripped.endswith('|'):
+                for math in re.findall(r'(?<!\\)\$(?:\\.|[^$\\])*\$', stripped):
+                    if re.search(r'(?<!\\)\|', math):
+                        found.append(where + 'a pipe inside math in a table row, write \\vert: ' + math[:50])
+            if '$$' in stripped and stripped != '$$' and not re.fullmatch(r'\$\$\s*\([^)]*\)', stripped):
+                found.append(where + 'display math must open and close on lines of their own: ' + stripped[:50])
+            if re.search(r'\{ref\}`fig-|\[\]\(#fig-', line):
+                found.append(where + 'a figure reference prints the caption; write {numref}`fig-...`')
+            if re.search(r'\\\s*$|\\[ ,]', text):
+                found.append(where + 'a backslash of LaTeX in text: ' + stripped[:60])
+    return found
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--check', action='store_true', help='exit 1 when a macro is missing')
@@ -123,6 +168,16 @@ def main():
         print('TABLE ROWS over more than one line - the table ends there; write each row in one line:')
         for (path, start) in broken:
             print('   ' + path + ': ' + start)
+        if args.check:
+            return 1
+
+    traps = RenderingTraps(sorted(glob.glob('docs/manual/*.md') + glob.glob('docs/howTo/*.md')
+                                  + [path for path in glob.glob('docs/generated/**/*.md', recursive=True)
+                                     if not path.replace('\\', '/').endswith('trackerlog.md')]))
+    if traps:
+        print('RENDERING TRAPS - the PDF shows these as raw LaTeX or stray backslashes:')
+        for trap in traps:
+            print('   ' + trap)
         if args.check:
             return 1
 

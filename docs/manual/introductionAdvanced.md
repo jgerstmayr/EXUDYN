@@ -14,7 +14,7 @@ The solver runs a loop:
 - finish computation step; results are in current state
 - copy current state to visualization state (thread safe)
 - signal graphics pipeline that new visualization data is available
-- the renderer may update the visualization depending on `graphicsUpdateInterval` in \ `visualizationSettings.general`
+- the renderer may update the visualization depending on `graphicsUpdateInterval` in  `visualizationSettings.general`
 
 The openGL graphics thread (=separate thread) runs the following loop:
 
@@ -78,7 +78,7 @@ Typically, you can use primitives (cube, sphere, ...) or {ref}`STL <STL>` data t
 `GraphicsData` dictionaries can be created with functions provided in the utility module `exudyn.graphics`, see {ref}`sec-module-graphics`.
 
 `GraphicsData` can be transformed into points and triangles (mesh) and can be used for contact computation, as well.
-**NOTE** that for correct rendering and correct contact computations, all triangle nodes must follow a strict local order and triangle normals -- if defined -- must point outwards, see {ref}`fig-trianglenormals`.
+**NOTE** that for correct rendering and correct contact computations, all triangle nodes must follow a strict local order and triangle normals -- if defined -- must point outwards, see {numref}`fig-trianglenormals`.
 
 (fig-trianglenormals)=
 ```{figure} /docs/figures/triangleNormal.*

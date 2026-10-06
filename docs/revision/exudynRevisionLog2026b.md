@@ -16258,3 +16258,56 @@ checked general visualization problems (contour, sphereTiling, shadow, larger ma
 only need to re-check the ffmpeg conversion from solution viewer and image saving from terminal.")*: confirmed on the
 Mac; open there: Make mp4 of the SolutionViewer (the encoder fallback of #2877) and the images written when started
 from a terminal.
+
+<a id="rg13-3-6"></a>
+### RG13.3.6 — the parameters and output variables the C++ did not use, decided (2026-10-07, #2867)
+
+*(Maintainer 2026-10-07, on #2867: "ObjectContactCurveCircles - ... ForceLocal should be returned - if possible;
+DisplacementLocal, VelocityLocal: if meaningful values are available, implement; otherwise remove + dynamicFriction and
+frictionProportionalZone are not used => implement if possible, otherwise document that unused; polynomialData only
+bends the drawing => document that it is unused; ObjectContactCircleCable2D - contactDamping is not used => remove;
+ObjectConnectorCoordinateSpringDamperExt - velocityOffset only reaches the user function ... => please correct the
+implementation; ObjectANCFThinPlate - strainIsRelativeToReference has no effect ... => remove the parameter. => all the
+parameters above need no deprecation, as they had no effect ... But check the model scripts.")*
+
+- **ObjectContactCurveCircles**: the output variables are per segment - `DisplacementLocal` the gap of the closest
+  circle from the current geometry, `VelocityLocal` its normal relative velocity, `ForceLocal` the force (normal and
+  friction) on the circle in contact, in the frame of marker 0, with the contact states of the data node - computed on
+  a copy of the data coordinates, which an output must not change. Friction: against the tangential relative velocity
+  of the circle center, $\mu_d |f_N|$, proportional below `frictionProportionalZone` (0: none), no sticking state; the
+  reaction and its torque on marker 0. `polynomialData` is documented as bending the drawing only.
+  `contactCurveCirclesFrictionTest.py`: a circle sliding on a segment decelerates by $\mu g$ (velocity 0.4 after 0.3 s,
+  as computed), the gap is the static $mg/(k l)$, the force $[-\mu m g,\, m g]$.
+- **ObjectContactCircleCable2D**: `contactDamping` removed, and the pre-assemble check that refused a nonzero value;
+  removed from the 6 calls in 3 scripts (`ANCFcontactCircle.py`, `ANCFcontactCircle2.py`, `ANCFcontactCircleTest.py`).
+- **ObjectConnectorCoordinateSpringDamperExt**: $f = k(q - x_\mathrm{off}) + d(v - v_\mathrm{off})$, as the page
+  said; `coordinateSpringDamperExtVelocityOffsetTest.py` - a mass on a damper reaches $v_\mathrm{off}$. The scripts
+  that set it use 0.
+- **ObjectANCFThinPlate**: `strainIsRelativeToReference` removed; no script used it.
+- No deprecation, as decided; `parameterConversionTestReference.txt` re-recorded (the two removed parameters only).
+
+<a id="rg3-38"></a>
+### RG3.38 — no LaTeX source in the text of the PDF (2026-10-07, #2883)
+
+*(Maintainer 2026-10-07: "I am not sure if you can check this in the PDF, but please try: there are a couple of stray
+\LU, \pv, \mathbf, etc. in the PDF; there are many lost "\" in the PDF, possibly "\ " from earlier line breaks, etc.
+=> Please fix that.")*
+
+The text of the PDF of 1.12.368 (`pdftotext`) was searched for LaTeX commands and lone backslashes outside code; each
+one traced to its source:
+
+- **Figure references that print the caption**: `{ref}` to a figure and the empty link `[](#fig-...)` show the caption,
+  and a caption with math stays LaTeX source in the PDF ("see Elementary rotation around axis \mathbf{ x}_1.", the
+  reeving system, the cable contact). All 58 are `{numref}` now, "Fig. 12.2" ("Figure {ref}" lost its "Figure"); the
+  rule of `definitions/README.md` says so.
+- **A pipe inside math in a table row** split the cell, and the rest of the table became text (the rows of the
+  hydraulic actuator, the spring-dampers, the contact table, and the parameters `discAxis`/`planeNormal` of the rolling
+  discs with $|\wv| = 1$). `MarkdownCell` writes `\vert` for a pipe inside math (outside it `\|` as before), the
+  hand-written rows use `\vert`; `$a$=$b$` in those rows is one formula.
+- **Display math inside a paragraph** (`$$\kappa_{xx} = ...$$` of ObjectANCFThinPlate) - on lines of its own now; and an
+  inline formula over two lines (ObjectBeamGeometricallyExact) on one.
+- **LaTeX in Markdown text**: line endings `\` (a LaTeX line break), `\ ` and `\,` in 10 manual pages; and `\,` in 12
+  issue texts and `{\bf ...}` in 4 of 2021, which the tracker log prints (the JSON values changed, nothing else).
+- `tools/checkMathMacros.py --check` (in the all-checks) refuses all four kinds in the manual and the generated pages.
+  The new PDF has backslashes only in code (Windows paths, Python line continuations) and in the dev page that names
+  the macros.

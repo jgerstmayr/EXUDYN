@@ -137,9 +137,10 @@ not in the list below reaches the page as itself and is a defect.
   abbreviations. The key ends where the word ends. The keys are the `abbreviations` dict in
   `tools/generators/examplesDocsEmitter.py`, which also writes the list; add one there before using
   it. `tools/checkDefinitions.py` names the file and the line of a key that does not exist.
-- **A reference** is a Markdown link to the target: `[](#sec-item-objectground)` for a section,
-  `[](#fig-objectspheresphrecontact)` for a figure. Leave the text empty and the page supplies it -
-  the heading, the figure caption - or write your own,
+- **A reference** is a Markdown link to the target: `[](#sec-item-objectground)` for a section. A
+  **figure** is referenced by its number, `` {numref}`fig-objectspheresphrecontact` `` (*Fig. 12.3*): an
+  empty link would print the caption, and a caption with math stays LaTeX source there in the PDF.
+  Leave the text of a section link empty and the page supplies the heading, or write your own,
   `[the ground object](#sec-item-objectground)`. The target name is lower case with `-` between the
   parts, and it must sit on a **heading** or a **named figure**; a target above a paragraph resolves
   in no link at all. A section target goes on the line above its heading,

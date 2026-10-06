@@ -50,7 +50,7 @@ All contacts can be created in a `GeneralContact` object -- which is not a regul
 
 Note that one can create several, independent contact objects.
 Hereafter, spheres, triangles, ... are added with appropriate functions, see {ref}`sec-generalcontact`.
-Note that triangles need to be correctly numbered (see correct normals in {ref}`fig-trianglenormals`),
+Note that triangles need to be correctly numbered (see correct normals in {numref}`fig-trianglenormals`),
 which defines inside/outside of a triangluar mesh.
 
 ## Regularized friction
@@ -102,7 +102,7 @@ Marker positions and velocities are given by the relations:
 | sphere $i$ velocity | $\LU{0}{\vv}_{i}$ | current global velocity which is provided by marker m0 |
 | sphere $j$ velocity | $\LU{0}{\vv}_{j}$ |  |
 | relative position | $\LU{0}{\nv}$ | $\LU{0}{\pv}_{j} - \LU{0}{\pv}_{i}$ |
-| Distance$^*$ | $L = |\LU{0}{\nv}|$ |  |
+| Distance$^*$ | $L = \vert\LU{0}{\nv}\vert$ |  |
 | unit vector$^*$ | $\LU{0}{\nv_0} = \frac{1}{L} \LU{0}{\nv}$ | vector in contact normal direction |
 | gap$^*$ | $g = L - (r_i + r_j)$ |  |
 | penetration$^*$ | $p  = -g = r_i + r_j - L$ |  |
@@ -605,7 +605,7 @@ Jacobians for the derivative of contact forces w.r.t. marker positions and rotat
 
 ## Contact relations for ANCF cable $g_i$ (marker $m0$) and sphere $g_j$ (marker $m1$)
 
- If contact is active, we have two relative axial reference coordinates $s_0$ and $s_1$, which define start and end location at the beam, for which the span in between intersects with the circle, see {ref}`fig-contact-ancf2dcircle`.
+ If contact is active, we have two relative axial reference coordinates $s_0$ and $s_1$, which define start and end location at the beam, for which the span in between intersects with the circle, see {numref}`fig-contact-ancf2dcircle`.
 The intersection points are either computed based on the exact 6th order polynomial equations or using a set of linear segments for interpolation.
 In this model, due to the active set strategy, the reference coordinates spanning $[s_0,\, s_1]$ are kept fixed, even though that they would change during Newton iterations.
 

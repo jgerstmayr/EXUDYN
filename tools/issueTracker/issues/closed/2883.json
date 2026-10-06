@@ -1,0 +1,14 @@
+{
+  "number": 2883,
+  "title": "PDF: LaTeX macros and backslashes printed as text",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "DOCU",
+  "description": "Maintainer 2026-10-07: 'there are a couple of stray \\LU, \\pv, \\mathbf, etc. in the PDF; there are many lost \\ in the PDF, possibly \\ from earlier line breaks'. Found in the text of the PDF: figure references that print the caption (its math stays LaTeX source), a pipe inside math in table rows (the table splits the cell - the rows of the hydraulic actuator, the spring-dampers, the rolling discs), display math not on lines of its own (ANCFThinPlate), LaTeX line breaks and spaces in the Markdown text (trailing backslash, backslash-space, backslash-comma) and backslash-commas in 12 issue texts of the tracker log.",
+  "dateRaised": "2026-10-07",
+  "deadline": "2027-04-05",
+  "dateResolved": "2026-10-07 01:16",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "The PDF documentation no longer shows LaTeX commands or stray backslashes in its text.",
+  "resolvedInVersion": "1.12.375"
+}

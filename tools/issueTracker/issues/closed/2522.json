@@ -12,6 +12,6 @@
   "resolvedAuthor": "Claude-JG",
   "file": "src/Main/Stdoutput.cpp",
   "line": "396",
-  "releaseNotes": "PyDeprecated raises a real DeprecationWarning through PyErr_WarnEx: filterable, promotable with -W error::DeprecationWarning, reported once per source location and pointing at the users own file and line. 184 generated sites changed in structureHeaderEmitter.py and 15 hand-written ones converted. It does not call PyGetCurrentFileInformation at all\\, so 199 sites also stop paying for the inspect.getframeinfo scan of #2423. exudyn.config.suppressWarnings is still honoured. revision2026 step R6.3.4.",
+  "releaseNotes": "PyDeprecated raises a real DeprecationWarning through PyErr_WarnEx: filterable, promotable with -W error::DeprecationWarning, reported once per source location and pointing at the users own file and line. 184 generated sites changed in structureHeaderEmitter.py and 15 hand-written ones converted. It does not call PyGetCurrentFileInformation at all, so 199 sites also stop paying for the inspect.getframeinfo scan of #2423. exudyn.config.suppressWarnings is still honoured. revision2026 step R6.3.4.",
   "resolvedInVersion": "1.11.182"
 }

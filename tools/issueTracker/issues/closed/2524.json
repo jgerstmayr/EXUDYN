@@ -5,7 +5,7 @@
   "status": "RESOLVED",
   "type": "FIX",
   "priority": "HIGH",
-  "description": "An exception raised inside a Python user function is printed once as a User ERROR with the correct traceback and then AGAIN by SolverExceptionHandling as SYSTEM ERROR: EXUDYN raised internal error in CSolverBase::SolveSteps. The user mistake is thereby labelled an Exudyn bug\\, and since revision2026 step R6.3.3 the C++ class is ExudynInternalError - please report this - although nothing is wrong with Exudyn. Also the file/line header of both blocks names exudyn/solver.py rather than the users own file\\, while the At: block right below it has the correct line. Found by the model of revision2026 step R6.3.7, belongs to step R6.3.5.",
+  "description": "An exception raised inside a Python user function is printed once as a User ERROR with the correct traceback and then AGAIN by SolverExceptionHandling as SYSTEM ERROR: EXUDYN raised internal error in CSolverBase::SolveSteps. The user mistake is thereby labelled an Exudyn bug, and since revision2026 step R6.3.3 the C++ class is ExudynInternalError - please report this - although nothing is wrong with Exudyn. Also the file/line header of both blocks names exudyn/solver.py rather than the users own file, while the At: block right below it has the correct line. Found by the model of revision2026 step R6.3.7, belongs to step R6.3.5.",
   "dateRaised": "2026-09-18",
   "deadline": "2027-03-17",
   "dateResolved": "2026-09-18 18:39",

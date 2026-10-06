@@ -12,6 +12,6 @@
   "resolvedAuthor": "Claude-JG",
   "file": "tools/exudev/commands.py",
   "line": "183",
-  "releaseNotes": "runner.PythonTagOfEnvironment asks the environment interpreter for sys.version_info and caches it, build accepts --env. Under --dry-run the question is not asked either\\, so the tag is resolved at run time. revision2026 step R5.18.6.",
+  "releaseNotes": "runner.PythonTagOfEnvironment asks the environment interpreter for sys.version_info and caches it, build accepts --env. Under --dry-run the question is not asked either, so the tag is resolved at run time. revision2026 step R5.18.6.",
   "resolvedInVersion": "1.11.178"
 }

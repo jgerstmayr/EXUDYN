@@ -6,7 +6,7 @@
 (sec-item-objectcontactcurvecircles)=
 # ObjectContactCurveCircles
 
-A contact model between a curve defined by piecewise segments and a set of circles. The 2D curve may corotate in 3D with the underlying marker and also defines the plane of action for the circles. [REQUIRES FURTHER TESTING; friction not yet available]
+A contact model between a curve defined by piecewise segments and a set of circles. The 2D curve may corotate in 3D with the underlying marker and also defines the plane of action for the circles. [REQUIRES FURTHER TESTING]
 
 ## Interface
 
@@ -26,8 +26,8 @@ The parameters of the item; in a dictionary, its type is 'ContactCurveCircles':
 | **circlesRadii** | NumpyVector |  | [] | (symbol: $[r_{c0},r_{c1}, \ldots]\tp \in \Rcal^{n_c}$) Vector containing radii of $n_c$ circles [SI:m]; number according to size of markerNumbers-1 |
 | **segmentsData** | PyMatrixContainer |  | [] | (symbol: $\Dm \in \Rcal^{n_s \times 4}$) matrix containing a set of two planar point coordinates in each row, representing segments attached to marker $m0$ and undergoing contact with the circles; for segment $s0$ row 0 reads $[p_{0x,s0},\,p_{0y,s0},\,p_{1x,s0},\,p_{1y,s0}]$; note that the segments must be ordered such that going from $\pv_0$ to $\pv_1$, the exterior lies on the right (positive) side. MatrixContainer has to be provided in dense mode! |
 | **polynomialData** | PyMatrixContainer |  | [] | (symbol: $\Pm \in \Rcal^{n_s \times n_p}$) matrix containing coefficients for special polynomial enhancements of the linear segments; each row contains coefficients for polynomials for the according segment, prescribing slopes at beginning and end of segment as well as curvature at beginning and end of segment; slopes and curvatures are defined in a local x/y coordinate system where x is the segment axis (start: x=0; x-axis points towards end point) and the segment normal is in y-direction; MatrixContainer has to be provided in dense mode! |
-| **dynamicFriction** | UReal |  | 0. | (symbol: $\mu_d$) dynamic friction coefficient for friction model, see StribeckFunction in exudyn.physics, [](#sec-module-physics) |
-| **frictionProportionalZone** | UReal |  | 0.001 | (symbol: $v_{reg}$) limit velocity [m/s] up to which the friction is proportional to velocity (for regularization / avoid numerical oscillations), see StribeckFunction in exudyn.physics (named regVel there!), [](#sec-module-physics) |
+| **dynamicFriction** | UReal |  | 0. | (symbol: $\mu_d$) dynamic friction coefficient: the friction force is $\mu_d \vert f_N\vert $, regularized below frictionProportionalZone, see the equation; 0: no friction |
+| **frictionProportionalZone** | UReal |  | 0.001 | (symbol: $v_{reg}$) limit velocity [SI:m/s] up to which the friction force is proportional to the tangential velocity (regularization, against numerical oscillations); 0: no regularization |
 | **contactStiffness** | Real |  | 0. | (symbol: $k_c$) normal contact stiffness [SI:N/(m*m)] |
 | **contactDamping** | Real |  | 0. | (symbol: $d_c$) linear normal contact damping [SI:N/(m s)]; this damping is a simplification of real contact dissipation and should be used with care. |
 | **contactModel** | UInt |  | 0 | (symbol: $m_\mathrm{contact}$) number of contact model: 0) linear model for stiffness and damping, only proportional to penetration; contact force is computed from $l_\mathrm{seg}\left(p \cdot \cdot k_c + \dot p \cdot d_c \right)$ as long as $p>0$; while this is numerically more stable, it gives jumps in forces when sliding over contact geometry 1) contact force proportional to integral over penetration area of circle with segments, giving a smoother contact force when sliding over geometry; |
@@ -62,16 +62,14 @@ Available as `OutputVariableType` in sensors, `Get...Output()` and other functio
 
 | output variable | symbol | description |
 |---|---|---|
-| DisplacementLocal |  | vector containing the minimum distance to segments per circle midpoint (< 0 in case of contact, and -1 if not computed: if not in according vicinity in search tree) |
-| VelocityLocal |  | vector containing relative (normal) velocity per circle midpoint (or NaN if not computed) |
-| ForceLocal |  | pairs of normal and tangential forces per circle or (Nan,Nan) if not computed |
+| DisplacementLocal | $[g_0,\,g_1,\,\ldots]\tp$ | per segment, the gap of the circle closest to it (< 0: penetration), from the current configuration; the largest float if there is no circle |
+| VelocityLocal | $[\dot g_0,\,\dot g_1,\,\ldots]\tp$ | per segment, the normal relative velocity of that circle |
+| ForceLocal | $[f_{x,0},\,f_{y,0},\,f_{x,1},\,\ldots]\tp$ | per segment, the contact force - normal and friction - on the circle in contact with it, in the frame of marker m0, with the contact states of the data node; zero without contact |
 
 (description-objectcontactcurvecircles)=
 ## Detailed description
 
-**Further testing is required, and friction is not available yet**, as the class description says:
-`dynamicFriction` and `frictionProportionalZone` are not used. The output variables are not computed yet and
-give an empty vector (#2867).
+**Further testing is required**, as the class description says.
 
 ### Definition of quantities
 
@@ -80,7 +78,7 @@ give an empty vector (#2867).
 | marker m0 position, orientation | $\LU{0}{\pv}_{m0}$, $\LU{0,m0}{\Rot}$ | the frame carrying the curve, which lies in its $x$-$y$ plane; a rotation of it is given to the marker as its `localHT` |
 | circle markers | $\LU{0}{\pv}_{c_i}$ | centers of the $n_c$ circles with radii `circlesRadii` |
 | segments | $\Dm$ | `segmentsData`: one straight segment per row, two planar points in the curve frame |
-| polynomials | $\Pm$ | `polynomialData`: optional coefficients that bend each segment in the drawing; the contact uses the straight segments |
+| polynomials | $\Pm$ | `polynomialData`: optional coefficients that bend each segment in the drawing only; the contact does not use them, it uses the straight segments |
 | data coordinates | $\xv$ | per segment, the state of the last post Newton step |
 
 ### Geometric relations
@@ -97,6 +95,16 @@ Per segment in contact, the normal force follows from `contactStiffness`, `conta
 integrated penetration, as `contactModel` selects; it acts in the plane of the curve on the circle
 center and, with opposite sign, on marker 0 with the torque of its lever arm. A segment must be short
 enough that only one circle touches it at a time, which the connector warns about.
+
+With `dynamicFriction` $\mu_d > 0$, a friction force acts in the tangential direction $\tv$ of the contact,
+against the tangential relative velocity $v_t$ of the circle center against the curve,
+
+$$
+f_t = -\mu_d\, |f_N|\, \frac{v_t}{v_{reg}} \;\; \mathrm{for} \;\; |v_t| < v_{reg}, \quad
+f_t = -\mu_d\, |f_N|\, \mathrm{sign}(v_t) \;\; \mathrm{otherwise},
+$$
+
+with `frictionProportionalZone` $v_{reg}$ (0: no regularization); there is no sticking state.
 
 (miniexample-objectcontactcurvecircles)=
 ## Mini example
@@ -123,4 +131,4 @@ exu.sys['testResult'] = mbs.GetNodeOutput(node, exu.OutputVariableType.Position)
 ```
 
 
-Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`camFollowerExample.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/camFollowerExample.py) (Ex), [`chainDriveExample.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/chainDriveExample.py) (Ex), [`contactCurvePolynomial.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/contactCurvePolynomial.py) (Ex), [`contactCurveWithLongCurve.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/contactCurveWithLongCurve.py) (Ex), [`contactCurveExample.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/contactCurveExample.py) (TM)
+Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`camFollowerExample.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/camFollowerExample.py) (Ex), [`chainDriveExample.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/chainDriveExample.py) (Ex), [`contactCurvePolynomial.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/contactCurvePolynomial.py) (Ex), [`contactCurveWithLongCurve.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/contactCurveWithLongCurve.py) (Ex), [`contactCurveCirclesFrictionTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/contactCurveCirclesFrictionTest.py) (TM), [`contactCurveExample.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/contactCurveExample.py) (TM)

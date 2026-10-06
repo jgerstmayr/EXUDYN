@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-10-06  07:03:31 (last modified)
+* @date         2026-10-07  00:51:49 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -36,7 +36,7 @@ public: // AUTO:
     Real stiffness;                               //!< AUTO: stiffness [SI:N/m] of spring; acts against relative value of coordinates
     Real damping;                                 //!< AUTO: damping [SI:N/(m s)] of damper; acts against relative velocity of coordinates
     Real offset;                                  //!< AUTO: offset between two coordinates (reference length of springs), see equation; it can be used to represent the pre-scribed drive coordinate
-    Real velocityOffset;                          //!< AUTO: velocity offset, passed to springForceUserFunction; the force without user function does not use it (#2867)
+    Real velocityOffset;                          //!< AUTO: velocity offset of the damper force, see equation; also passed to springForceUserFunction
     Real factor0;                                 //!< AUTO: marker 0 coordinate is multiplied with factor0
     Real factor1;                                 //!< AUTO: marker 1 coordinate is multiplied with factor1
     Real dynamicFrictionForce;                    //!< AUTO: must be >= 0; dynamic (viscous) friction force [SI:N] against relative velocity when sliding; assuming a normal force \f$f_N\f$, the friction force can be interpreted as \f$f_\mu = \mu f_N\f$

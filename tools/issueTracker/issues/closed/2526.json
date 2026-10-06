@@ -5,7 +5,7 @@
   "status": "RESOLVED",
   "type": "BUG",
   "priority": "HIGH",
-  "description": "The file ends in the middle of main() - no write call and no __main__ block - so the generator runs\\, exits 0 and produces nothing. Its five declared outputs (MainSystemExt.rst\\, MainSystemCreateExt.rst\\, stubAutoBindingsExt.pyi\\, docs/theDoc/MainSystemExt.tex\\, MainSystemCreateExt.tex) have been frozen at their committed content since the split of revision2026 step R4.3 part 2e (commit 94710e6). The regeneration gate cannot see this: a generator that writes nothing always agrees with the commit. The writing half is in git at 94710e6^:src/pythonGenerator/utilitiesDocuGenerator.py lines 1050-1119. Found while fixing #2525\\, whose new link prefix could not reach those five files.",
+  "description": "The file ends in the middle of main() - no write call and no __main__ block - so the generator runs, exits 0 and produces nothing. Its five declared outputs (MainSystemExt.rst, MainSystemCreateExt.rst, stubAutoBindingsExt.pyi, docs/theDoc/MainSystemExt.tex, MainSystemCreateExt.tex) have been frozen at their committed content since the split of revision2026 step R4.3 part 2e (commit 94710e6). The regeneration gate cannot see this: a generator that writes nothing always agrees with the commit. The writing half is in git at 94710e6^:src/pythonGenerator/utilitiesDocuGenerator.py lines 1050-1119. Found while fixing #2525, whose new link prefix could not reach those five files.",
   "dateRaised": "2026-09-18",
   "deadline": "2027-03-17",
   "dateResolved": "2026-09-19 08:12",

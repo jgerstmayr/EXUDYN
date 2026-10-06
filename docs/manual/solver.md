@@ -5,7 +5,7 @@ This section provides and overview on most important solvers. Explicit and impli
 
 ## Solvers in Exudyn
 
-The user has a couple of basic solvers available in Exudyn , see {ref}`fig-available-solvers`:
+The user has a couple of basic solvers available in Exudyn , see {numref}`fig-available-solvers`:
 
 - `mbs.SolveStatic(...)`: compute static solution for given problem (may also be used to compute kinematic behavior by prescribing joint motion)
 - `mbs.SolveDynamic(...)`: time integration of equations of motion
@@ -69,12 +69,12 @@ in which $\fv^a$ represents applied forces and stiffness matrix $\Km$ and dampin
 ## General solver structure
 
 The description of solvers in this section follows the nomenclature given in {ref}`sec-generalnotation`.
-Both in the static as well as in the dynamic case, the solvers run in a loop to solve a nonlinear system of (differential and/or algebraic) equations over a given time or load interval. Explicit solvers only perform a factorization of the mass matrix, but the `Newton` loop, see {ref}`fig-solver-newton-iteration`, is replaced by an explicit computation of the time step according to a given Runge-Kutta tableau.
+Both in the static as well as in the dynamic case, the solvers run in a loop to solve a nonlinear system of (differential and/or algebraic) equations over a given time or load interval. Explicit solvers only perform a factorization of the mass matrix, but the `Newton` loop, see {numref}`fig-solver-newton-iteration`, is replaced by an explicit computation of the time step according to a given Runge-Kutta tableau.
 
-In case of an implicit time integration, {ref}`fig-solver-time-integration` shows the basic loops for the solution process. The inner loops are shown in {ref}`fig-solver-solve-steps` and{ref}`fig-solver-discontinuous-iteration`.
+In case of an implicit time integration, {numref}`fig-solver-time-integration` shows the basic loops for the solution process. The inner loops are shown in {numref}`fig-solver-solve-steps` and {numref}`fig-solver-discontinuous-iteration`.
 The static solver behaves very similar, while no velocities or accelerations need to be solved and time is replaced by load steps.
 
-Settings for the solver substructures, like timer, output, iterations, etc.\, are described in Sections {ref}`sec-csolvertimer` -- {ref}`sec-solveroutputdata`.
+Settings for the solver substructures, like timer, output, iterations, etc., are described in Sections {ref}`sec-csolvertimer` -- {ref}`sec-solveroutputdata`.
 The description of interfaces for solvers starts in {ref}`sec-mainsolverstatic`.
 
 (fig-solver-time-integration)=
@@ -306,10 +306,10 @@ Compared to alternative implicit integration methods (including the Newmark meth
 
 Based on a simple single DOF mass-spring-damper model [Bauchau2011], having the eigen frequency $\omega = 2\pi f$ with frequency $f$ and period $T=1/f$, the spectral radius $\rho$ for the integrator defines the amount of damping for a given step size $h$ related to $T$, thus using the dimensionless step size $\bar h=h/T$.
 
-In {ref}`fig-spectralradius` the spectral radius is shown versus $\bar h$ for various spectral radii at infinity $\rho_\infty$.
+In {numref}`fig-spectralradius` the spectral radius is shown versus $\bar h$ for various spectral radii at infinity $\rho_\infty$.
 Here, $\rho_\infty$ specifies the numerical damping of very time step for large step sizes (or very high frequencies). An amount of $\rho_\infty=0.9$ means that high frequency parts of the system (($\bar h \gg 1$); high compared to the step rate) are damped to $90\%$ in every step, reducing an initial value $1$ to $2.66e-5$ after 100 steps, which is already much larger than usual physical damping in many cases.
 
-Furthermore, low frequency parts of the system ($\bar h \ll 1$) receive almost no numerical damping, see again {ref}`fig-spectralradius`.
+Furthermore, low frequency parts of the system ($\bar h \ll 1$) receive almost no numerical damping, see again {numref}`fig-spectralradius`.
 Exemplarily, consider $\rho$ a low frequency situation with different $\rho_\infty$:
 
 - $\rho(\bar h=0.01, \rho_\infty=0.9) = 1 - 1.13\cdot 10^{-9}$
@@ -532,7 +532,7 @@ As an alternative stochastic methods can be use to compute only the objective fu
 
 **Genetic algorithms**[Goldberg1989; Whitley1994] can significantly reduce the necessary amount of objective function evaluations in order to perform the optimization. Genetic identification algorithms have been already successfully applied to multibody system dynamics[Eder2014].
 
-The general structure of a (canonical) genetic algorithm is depicted in {ref}`fig-geneticoptimization`.
+The general structure of a (canonical) genetic algorithm is depicted in {numref}`fig-geneticoptimization`.
 
 (fig-geneticoptimization)=
 ```{figure} /docs/figures/geneticOptimization.*

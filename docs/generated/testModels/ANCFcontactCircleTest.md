@@ -132,11 +132,11 @@ for i in range(len(cableList)):
     mCable = mbs.AddMarker(MarkerBodyCable2DShape(bodyNumber=cableList[i], numberOfSegments = nSegments))
     nodeDataContactCable = mbs.AddNode(NodeGenericData(initialCoordinates=initialGapList,numberOfDataCoordinates=nSegments))
     mbs.AddObject(ObjectContactCircleCable2D(markerNumbers=[mGroundCircle, mCable], nodeNumber = nodeDataContactCable, 
-                                             numberOfContactSegments=nSegments, contactStiffness = cStiffness, contactDamping=0*cDamping, 
+                                             numberOfContactSegments=nSegments, contactStiffness = cStiffness, 
                                              circleRadius = 0.2, offset = 0))
     nodeDataContactCable = mbs.AddNode(NodeGenericData(initialCoordinates=initialGapList,numberOfDataCoordinates=nSegments))
     mbs.AddObject(ObjectContactCircleCable2D(markerNumbers=[mGroundCircle2, mCable], nodeNumber = nodeDataContactCable, 
-                                             numberOfContactSegments=nSegments, contactStiffness = cStiffness, contactDamping=0*cDamping, 
+                                             numberOfContactSegments=nSegments, contactStiffness = cStiffness, 
                                              circleRadius = 0.1, offset = 0))
     
 

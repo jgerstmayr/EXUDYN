@@ -225,6 +225,21 @@ void CObjectContactCurveCircles::ComputeConnectorProperties(const MarkerDataStru
 
 						//add torque on marker 0 ...!
 						torqueMarker0 += segPoint.CrossProduct2D((-fNormal) * n); //segPoint is given relative to Marker0!
+
+						//friction (#2867): against the tangential relative velocity of the circle center, mu*|f_N|, proportional
+						//to that velocity below frictionProportionalZone; in the sign convention of the normal force above
+						if (parameters.dynamicFriction != 0.)
+						{
+							Vector2D tangent({ -n[1], n[0] });
+							Real vTangent = vRel * tangent;
+							Real zone = parameters.frictionProportionalZone;
+							Real regularized = (zone > 0. && fabs(vTangent) < zone) ? vTangent / zone : EXUstd::SignReal(vTangent);
+							Real fTangent = parameters.dynamicFriction * fabs(fNormal) * regularized;
+							segmentsForceLocalX[jSeg] += fTangent * tangent[0];
+							segmentsForceLocalY[jSeg] += fTangent * tangent[1];
+							forceMarker0 += (-fTangent) * tangent;
+							torqueMarker0 += segPoint.CrossProduct2D((-fTangent) * tangent);
+						}
 					}
 				}
 			}
@@ -318,22 +333,36 @@ void CObjectContactCurveCircles::ComputeODE2LHS(Vector& ode2Lhs, const MarkerDat
 //! provide according output variable in "value"
 void CObjectContactCurveCircles::GetOutputVariableConnector(OutputVariableType variableType, const MarkerDataStructure& markerData, Index itemIndex, Vector& value) const
 {
-	LinkedDataVector data = GetCNode(0)->GetCurrentCoordinateVector();
+	//per segment (#2867): the gaps and their velocities from the current geometry, the forces as they act with the contact
+	//states of the data node; computed on a copy of the data coordinates, which an output must not change
+	Vector dataCopy;
+	dataCopy.CopyFrom(GetCNode(0)->GetCurrentCoordinateVector());
+	LinkedDataVector data(dataCopy, 0, dataCopy.NumberOfItems());
+	Vector2D forceMarker0;
+	Real torqueMarker0;
+	Index nSegments = GetNumberOfSegments();
+	switch (variableType)
+	{
+	case OutputVariableType::DisplacementLocal:
+	case OutputVariableType::VelocityLocal:
+		ComputeConnectorProperties(markerData, itemIndex, data, false, forceMarker0, torqueMarker0,
+			gapPerSegment, gapPerSegment_t, segmentsForceLocalX, segmentsForceLocalY);
+		value.CopyFrom(variableType == OutputVariableType::DisplacementLocal ? gapPerSegment : gapPerSegment_t);
+		break;
+	case OutputVariableType::ForceLocal:
+		ComputeConnectorProperties(markerData, itemIndex, data, true, forceMarker0, torqueMarker0,
+			gapPerSegment, gapPerSegment_t, segmentsForceLocalX, segmentsForceLocalY);
+		value.SetNumberOfItems(2 * nSegments);
+		for (Index j = 0; j < nSegments; j++) //the force on the circle; the vectors hold it with the sign of the equations
+		{
+			value[2 * j] = parameters.activeConnector ? -segmentsForceLocalX[j] : 0.;
+			value[2 * j + 1] = parameters.activeConnector ? -segmentsForceLocalY[j] : 0.;
+		}
+		break;
+	default:
+		SysError("CObjectContactCurveCircles::GetOutputVariableConnector failed"); //error should not occur, because types are checked!
+	}
 
-	//ComputeConnectorProperties(markerData, itemIndex, data,
-	//	frictionCoeff, gap, deltaP, deltaV, fVec, fFriction, n0);
-
-	//switch (variableType)
-	//{
-	//case OutputVariableType::Displacement: value.CopyFrom(deltaP); break;
-	//case OutputVariableType::DisplacementLocal: value.CopyFrom(Vector1D({gap})); break;
-	//case OutputVariableType::Velocity: value.CopyFrom(deltaV); break;
-	//case OutputVariableType::Director1: value.CopyFrom(n0); break;
-	//case OutputVariableType::Force: value.CopyFrom(fVec); break;
-	//case OutputVariableType::Torque: value.CopyFrom(((-parameters.spheresRadii[0] - 0.5 * gap) * n0).CrossProduct(fVec)); break;
-	//default:
-	//	SysError("CObjectContactCurveCircles::GetOutputVariableConnector failed"); //error should not occur, because types are checked!
-	//}
 }
 
 

@@ -121,8 +121,8 @@ A series of interconnected links forms a kinematic chain. In most mechanisms, ex
 It is also crucial to differentiate between open-loop and closed-loop mechanisms. An open-loop mechanism is characterized by a configuration where traversing through the links in sequence does not lead back to the starting point. In the general case, such an open-loop system is represented by a kinematic tree, which has a root link, and every link can have arbitrary many joints -- as long as it leads to no single closed loop.
 Conversely, a closed-loop mechanism features a configuration where at least one path forms a loop, including the ground link, allowing for the possibility of returning to the starting link through the sequence of connections.
 
-{ref}`fig-open-closed-loop`a shows a double pendulum, which is an example of an open-loop mechanism.
-A closed-loop mechanism is shown in {ref}`fig-open-closed-loop`b, which is a four-bar linkage.
+{numref}`fig-open-closed-loop`a shows a double pendulum, which is an example of an open-loop mechanism.
+A closed-loop mechanism is shown in {numref}`fig-open-closed-loop`b, which is a four-bar linkage.
 As mentioned before, the fourth link is the ground link.
 
 (fig-open-closed-loop)=
@@ -170,10 +170,10 @@ Therefore, the general motion of the rigid body follows from Euler's theorem plu
 
 According to Nikravesh, "The minimum number of coordinates required to fully describe the configuration of a system
 is called the number of degrees of freedom of the system".
-We may consider two examples given in {ref}`fig-degrees-of-freedom`, to understand the {ref}`DOF <DOF>`.
+We may consider two examples given in {numref}`fig-degrees-of-freedom`, to understand the {ref}`DOF <DOF>`.
 A double pendulum is shown, which can be described with no less than two independent angles $\phi_1$ and $\phi_2$, thus the system has two degrees of freedom.
 
-As a second example, a four-bar mechanism is shown, see {ref}`fig-degrees-of-freedom`b.
+As a second example, a four-bar mechanism is shown, see {numref}`fig-degrees-of-freedom`b.
 There are three angles $\phi_a$, $\phi_b$ and $\phi_c$ related with the current configuration of the system.
 However, there are two algebraic relations (constraint conditions) between these three angles, given as
 
@@ -225,10 +225,10 @@ In the case of planar mechanisms, a body obtains only three degrees of freedom. 
 $$
   DOF_\mathrm{planar} = 3 \cdot n_b - n_c
 $$
-As a spatial example, consider again the double pendulum {ref}`fig-degrees-of-freedom`a as a spatial mechanism.
+As a spatial example, consider again the double pendulum {numref}`fig-degrees-of-freedom`a as a spatial mechanism.
 In this case, there are two bodies, $n_b=2$ and two revolute joints with 5 constraints each, giving $n_c=10$. Thus, the Chebychev-Gr\"ubler-Kutzbach criterion gives $n_\mathrm{DOF} = 12 - 10 = 2$, which we expect.
 
-As another example, consider a spatial four-bar mechanism according to {ref}`fig-degrees-of-freedom`b.
+As another example, consider a spatial four-bar mechanism according to {numref}`fig-degrees-of-freedom`b.
 In this case, there are four bodies, $n_b=4$, four revolute joints with 5 constraints each and a ground joints with 6 constraints, totalling at $n_c=4\cdot 5 + 6 = 26$. Thus, {eq}`eq-chebychev-grubler-kutzbach` gives
 
 $$
