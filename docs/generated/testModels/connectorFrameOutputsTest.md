@@ -17,7 +17,7 @@ You can view and download this file on Github: [connectorFrameOutputsTest.py](ht
 #           frame must give J1 as the markers and the rotationMarker1 of the joint say, the translation of the local
 #           frame must equal DisplacementLocal, and a SensorObject stores the 16 values. The 2D joints: a pendulum on
 #           JointRevolute2D (Position, Force), a body on JointPrismatic2D (ForceLocal, DisplacementLocal against
-#           Distance), and a body on a cable with JointSliding2D (DisplacementLocal, its drift).
+#           Distance), and a body on a cable with JointSliding2D (DisplacementLocal, its drift; SlidingCoordinate, #2872).
 #
 # Author:   Johannes Gerstmayr
 # Date:     2026-10-06
@@ -174,8 +174,10 @@ settings3.timeIntegration.newton.relativeTolerance = 1e-6
 settings3.timeIntegration.newton.absoluteTolerance = 1e-8
 mbs3.SolveDynamic(settings3)
 drift = mbs3.GetObjectOutput(jSliding, OVT.DisplacementLocal)
-#the tangential component is not checked after the step: it holds the last increment of the sliding coordinate (#2872)
-Check('JointSliding2D DisplacementLocal', np.abs(drift0).max() < 1e-14 and abs(drift[1]) < 1e-8 and drift[2] == 0)
+#the tangential component from the sliding coordinate of the step, counted once (#2872)
+Check('JointSliding2D DisplacementLocal', np.abs(drift0).max() < 1e-14 and abs(drift[0]) < 1e-8 and abs(drift[1]) < 1e-8
+      and drift[2] == 0)
+Check('JointSliding2D SlidingCoordinate', mbs3.GetObjectOutput(jSliding, OVT.SlidingCoordinate) == mbs3.GetNodeOutput(nodeData, OVT.Coordinates)[1])
 
 #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 u = sum(int(passed) for (name, passed) in checks)

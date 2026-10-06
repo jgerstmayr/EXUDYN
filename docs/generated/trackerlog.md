@@ -8,10 +8,10 @@ Every entry carries the **type** of the issue, then its **priority** and its **e
 
 General information on current version:
 
-- Exudyn version = 1.12.363.dev1
+- Exudyn version = 1.12.364.dev1
 - last change = 2026-10-06
 - Number of issues = 2873
-- Number of resolved issues = 2677 (363 in current version)
+- Number of resolved issues = 2678 (364 in current version)
 
 ## Resolved issues and resolved bugs before version 1.12
 
@@ -8162,6 +8162,3 @@ The following list contains the issues which have been **RESOLVED** in the accor
 
 ## Known bugs
 
-- <span class="textred">`BUG`</span> `raised by: Claude-JG` JointSliding/JointSliding2D: SlidingCoordinate counts the last increment twice after a step (#2872)
-  - description: After a step, PostNewtonStep has added the algebraic increment of the sliding coordinate to the data coordinate, but the algebraic coordinate keeps the increment; the output SlidingCoordinate (data + increment), and DisplacementLocal of JointSliding2D (\#2870), add it a second time. Measured on the setup of SlidingJoint2DTest after 50 steps: data 1.00137056, SlidingCoordinate 1.00142803, increment 5.75e-5; DisplacementLocal shows the increment as tangential drift. The solver itself is not affected: the next Newton solves the increment against the updated data coordinate. Found with RG12.42.
-  - date raised: 2026-10-06

@@ -16024,3 +16024,15 @@ implemented.
   holds the last increment, which `PostNewtonStep` has already added to the data coordinate - `SlidingCoordinate` counts
   it twice (setup of SlidingJoint2DTest, 50 steps: data 1.00137056, output 1.00142803, increment 5.75e-5), and the
   tangential component of the new `DisplacementLocal` shows it; the test checks the normal component only.
+
+<a id="rg4-19-12"></a>
+### RG4.19.12 — the sliding coordinate counted once (2026-10-06, #2872)
+
+*(Maintainer 2026-10-06: "fix #2872: the output function should not add the coordinate a second time.")*
+
+`SlidingCoordinate` of JointSliding and JointSliding2D, and the sliding point of `DisplacementLocal` of JointSliding2D,
+read the data coordinate of the joint's NodeGenericData alone: `PostNewtonStep` has added the increment of the step to
+it, and the algebraic coordinate, which still holds that increment, is no longer added. The equations are unchanged -
+in the Newton iteration the data coordinate is the start of the step and the algebraic coordinate the increment, as
+before. `connectorFrameOutputsTest.py` (26 checks) now checks the tangential drift (below 1e-8, before 5.7e-5) and
+`SlidingCoordinate` against the data coordinate; the suite is unchanged otherwise (no reference value depended on it).

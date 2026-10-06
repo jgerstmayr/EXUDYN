@@ -291,9 +291,9 @@ void CObjectJointSliding::GetOutputVariableConnector(OutputVariableType variable
 	}
 	case OutputVariableType::SlidingCoordinate: 
 	{
-		Real slidingPos = GetCurrentAEcoordinate(slidingCoordinateIndex); //this is only the small increment in a solution step; zero when evaluated in python function?
-		slidingPos += GetCNode(0)->GetCurrentCoordinate(1); //this contains the startOfStep value of the sliding coordinate (or initial value); ranges from 0 to total length of sliding cables
-		value.SetVector({ slidingPos });
+		//the data coordinate: PostNewtonStep has added the increment of the step to it, which the algebraic coordinate
+		//still holds; adding that again counted it twice (#2872)
+		value.SetVector({ GetCNode(0)->GetCurrentCoordinate(1) });
 		break;
 	}
 	default:

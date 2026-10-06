@@ -865,10 +865,11 @@ The steps are numbered in the order they were raised and stand here in the order
       #1247 (symbolic user functions remove the round trip, C++ user functions will), #707 and #728 (taken up by
       RG5.1.2, RG5.1.3), #2498 (superseded by #2866, RG9.6); done: #777 (`genericODE2matrixFormatsTest.py`), #2235
       (`initialAccelerationsTest.py`), #1740 (the examples of the symbolic page run); #1953, #1954 are RG12.41.
-    - **RG4.19.12** *open* (#2872, found with RG12.42) after a step, `SlidingCoordinate` of JointSliding and
+    - **RG4.19.12** **DONE 2026-10-06** — [log](exudynRevisionLog2026b.md#rg4-19-12) (#2872, found with RG12.42) after a step, `SlidingCoordinate` of JointSliding and
       JointSliding2D counts the last increment of the sliding coordinate twice: `PostNewtonStep` adds the algebraic
       increment to the data coordinate, and the algebraic coordinate keeps it; `DisplacementLocal` of JointSliding2D
-      shows it as tangential drift.
+      shows it as tangential drift. *(Maintainer 2026-10-06: "the output function should not add the coordinate a
+      second time")* - the outputs read the data coordinate only.
     - Not here, they need a Linux machine or a screen: #2204, #2205 (perspective), #2277, #2278 (GLFW on Linux) - RG6.8.
 
 <a id="rg4-20"></a>
@@ -1977,7 +1978,6 @@ issue and a short title only. The open issues that are not steps are in the trac
 | RG5.2 | - | make the hot linear algebra vectorizable |
 | RG6.8 | #2140, #2236, #2237, #2350 | the graphics fixes before 1.13: Linux (RG6.8.5) and macOS (RG6.8.6), which wait for those machines |
 | RG13.3 | #2867 | follow-up: parameters and output variables the C++ of four items does not use, for a decision |
-| RG4.19.12 | #2872 | JointSliding(2D): SlidingCoordinate counts the last increment twice after a step |
 | RG9.6 | #2866 | the member functions an item must provide, checked when it compiles (from #2498) |
 | RG8.1 to RG8.9 | - | the plugin ABI: registry, fingerprint, reference plugin, headers, discovery |
 | RG14.3 | #2745 | joints and their Jacobians on homogeneous transformations, after RG14.2.9 |

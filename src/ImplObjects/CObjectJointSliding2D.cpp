@@ -304,7 +304,9 @@ void CObjectJointSliding2D::GetOutputVariableConnector(OutputVariableType variab
 		LinkedDataVector qNode0(markerData.GetMarkerData(1).vectorValue, 0, ns);
 		LinkedDataVector qNode1(markerData.GetMarkerData(1).vectorValue, ns, ns);
 		Real L = markerData.GetMarkerData(1).GetHelper();
-		Real slidingCoordinate = ComputeLocalSlidingCoordinate();
+		//from the data coordinate only, as SlidingCoordinate (#2872)
+		Index slidingMarkerIndex = (Index)GetCNode(0)->GetCurrentCoordinate(0);
+		Real slidingCoordinate = GetCNode(0)->GetCurrentCoordinate(1) - parameters.slidingMarkerOffsets[slidingMarkerIndex];
 		Vector2D slidingPosition = CObjectANCFCable2D::MapCoordinates(CObjectANCFCable2D::ComputeShapeFunctions(slidingCoordinate, L), qNode0, qNode1);
 		Vector2D tangent = CObjectANCFCable2D::MapCoordinates(CObjectANCFCable2D::ComputeShapeFunctions_x(slidingCoordinate, L), qNode0, qNode1);
 		Real tangentLength = tangent.GetL2Norm();
@@ -326,10 +328,9 @@ void CObjectJointSliding2D::GetOutputVariableConnector(OutputVariableType variab
 	}
 	case OutputVariableType::SlidingCoordinate: 
 	{
-		const Index slidingCoordinateIndex = 2;
-		Real slidingPos = GetCurrentAEcoordinate(slidingCoordinateIndex); //this is only the small increment in a solution step; zero when evaluated in python function?
-		slidingPos += GetCNode(0)->GetCurrentCoordinate(1); //this contains the startOfStep value of the sliding coordinate (or initial value); ranges from 0 to total length of sliding cables
-		value.SetVector({ slidingPos });
+		//the data coordinate: PostNewtonStep has added the increment of the step to it, which the algebraic coordinate
+		//still holds; adding that again counted it twice (#2872)
+		value.SetVector({ GetCNode(0)->GetCurrentCoordinate(1) });
 		break;
 	}
 	default:

@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.12 | Metheney | 322 | 1.12.363 |
+| 1.12 | Metheney | 323 | 1.12.364 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
 | 1.9 | Krall | 235 | 1.9.234 |
@@ -29,6 +29,10 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.12 - Metheney (current)
 
+- **1.12.364** <span class="textred">`BUG`</span> `raised by: Claude-JG` `resolved by: Claude-JG` JointSliding/JointSliding2D: SlidingCoordinate counts the last increment twice after a step (#2872)
+  - description: After a step, PostNewtonStep has added the algebraic increment of the sliding coordinate to the data coordinate, but the algebraic coordinate keeps the increment; the output SlidingCoordinate (data + increment), and DisplacementLocal of JointSliding2D (\#2870), add it a second time. Measured on the setup of SlidingJoint2DTest after 50 steps: data 1.00137056, SlidingCoordinate 1.00142803, increment 5.75e-5; DisplacementLocal shows the increment as tangential drift. The solver itself is not affected: the next Newton solves the increment against the updated data coordinate. Found with RG12.42.
+  - **notes:** The output variable SlidingCoordinate of ObjectJointSliding and ObjectJointSliding2D counted the increment of the last step twice; it is the sliding coordinate of the step.
+  - date resolved: **2026-10-06 15:17**, date raised: 2026-10-06
 - **1.12.363** `EXTENSION` `MEDIUM EFF` `raised by: Claude-JG` `resolved by: Claude-JG` joints and connectors: consistent output variables - joint frame, drift and relative frame as HomogeneousTransformation(Local) (#2870)
   - description: Maintainer 2026-10-06: the connectors and joints have inconsistent output variables; consistent: local drift in joints, joint position/orientation (marker 0), relative position of connectors, DisplacementLocal for items without rotation, a new HomogeneousTransformationLocal for the drift of joints and the marker difference of connectors, HomogeneousTransformation for the joint frame J0 of the classical joints (not the rolling joints). Concept first (RG12.42), table in tmp/connectorOutputVariables.md; nothing implemented before the decisions.
   - **notes:** Joints and connectors give the same output variables for the same quantity: the new HomogeneousTransformationLocal (the joint frame J1 relative to J0, an exu.HT) for the joints and connectors on rigid markers, HomogeneousTransformation (the joint frame J0) for JointGeneric, JointRevoluteZ, JointPrismaticX and JointPrismatic2D, Position, Velocity and the force for JointRevolute2D and JointPrismatic2D, DisplacementLocal for JointPrismatic2D and JointSliding2D, Displacement for ConnectorRigidBodySpringDamper and ConnectorLinearSpringDamper.
