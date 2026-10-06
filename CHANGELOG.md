@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.12 | Metheney | 326 | 1.12.367 |
+| 1.12 | Metheney | 327 | 1.12.368 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
 | 1.9 | Krall | 235 | 1.9.234 |
@@ -29,6 +29,10 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.12 - Metheney (current)
 
+- **1.12.368** <span class="textred">`BUG`</span> `raised by: Claude-JG` `resolved by: Claude-JG` macOS: RedrawAndGetImage(useRaytracer=True) segfaults; double free of symbolic vector expressions (#2876)
+  - description: Found by a Claude session on the Mac (tmp/MacOS/mac\_\*.txt, 2026-10-06). (1) Raytracer::SoftwareRenderer always ends by drawing the image into the OpenGL window (DrawImageRGBA), also when RedrawAndGetImage calls it from the Python thread without a current OpenGL context: a no-op on Windows, a NULL dereference in the CGL dispatch on macOS. (2) VectorExpressionSReal::Destroy releases its expressions but keeps the pointers; ~VectorExpressionSReal calls Destroy again after SymbolicRealVector::Destroy did, a double free (heap corruption at MINI EXAMPLE 25, symbolicModuleTest). Both fixes tested on the Mac; raytracerNOGLFWtest.py runs on macOS again.
+  - **notes:** On macOS, SC.renderer.RedrawAndGetImage(useRaytracer=True) crashed, and freeing a symbolic user function that returns a vector corrupted the heap; both are fixed.
+  - date resolved: **2026-10-06 18:06**, date raised: 2026-10-06
 - **1.12.367** `TESTING` `raised by: Claude-JG` `resolved by: Claude-JG` The test suite runs the test models in one namespace, which hides a missing name; two models fail when run alone (#2875)
   - description: runTestSuite.py executes every test model with exec(..., globals()), so a name that a model uses without importing it is found if an earlier model imported it. Found with \#2873: 15 test models and mini examples called GenerateBeamElementsAlongLine without importing it and passed the suite; run alone they stop with NameError. Run alone (pre-run of \#2873), explicitLieGroupIntegratorPythonTest.py fails: SensorNode: OutputVariableType '\_None' is not available in node 0 (line 108); the example reevingSystem.py stops with an InternalError in SolveSteps. Proposal: a fresh namespace per model (a copy of the runner's globals), and the pre-run as a check.
   - **notes:** The test suite runs each test model and mini example as if it ran alone, in a module of its own, so a missing import is found; restartFileTest passes on Linux.

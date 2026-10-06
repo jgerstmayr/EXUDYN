@@ -1689,14 +1689,15 @@ void Raytracer::SoftwareRenderer(Index viewID, VisualizationSystemContainerBase*
 					RTS.finalImageAA[loIdx + 3] = 255;
 				}
 			}
-			DrawImageRGBA(RTS.finalImageAA, aaImageWidth, aaImageHeight, width, height);
+			//RedrawAndGetImage runs in the Python thread, where no OpenGL context is current; macOS crashes on the GL call (#2876)
+			if (!RTS.isCalledFromMainThread) { DrawImageRGBA(RTS.finalImageAA, aaImageWidth, aaImageHeight, width, height); }
 			finalImageWidth = aaImageWidth;
 			finalImageHeight = aaImageHeight;
 			finalImageData = &RTS.finalImageAA;
 		}
 		else
 		{
-			DrawImageRGBA(RTS.pixelsRGBA, RTS.imageWidth, RTS.imageHeight, width, height);
+			if (!RTS.isCalledFromMainThread) { DrawImageRGBA(RTS.pixelsRGBA, RTS.imageWidth, RTS.imageHeight, width, height); } //(#2876)
 			finalImageWidth = RTS.imageWidth;
 			finalImageHeight = RTS.imageHeight;
 			finalImageData = &RTS.pixelsRGBA;

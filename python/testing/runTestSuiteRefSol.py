@@ -224,9 +224,6 @@ def TestExamplesReferenceSolution():
     #add new reference values here (only uses new solver):
     refSol['sensorUserFunctionTest.py'] = 45
 
-    if sys.platform == 'darwin':
-            # offscreen RedrawAndGetImage crashes on macOS since Exudyn 1.11.0
-            refSol.pop('raytracerNOGLFWtest.py', None)
 
 
     return refSol

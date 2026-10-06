@@ -1,0 +1,14 @@
+{
+  "number": 2876,
+  "title": "macOS: RedrawAndGetImage(useRaytracer=True) segfaults; double free of symbolic vector expressions",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "BUG",
+  "description": "Found by a Claude session on the Mac (tmp/MacOS/mac_*.txt, 2026-10-06). (1) Raytracer::SoftwareRenderer always ends by drawing the image into the OpenGL window (DrawImageRGBA), also when RedrawAndGetImage calls it from the Python thread without a current OpenGL context: a no-op on Windows, a NULL dereference in the CGL dispatch on macOS. (2) VectorExpressionSReal::Destroy releases its expressions but keeps the pointers; ~VectorExpressionSReal calls Destroy again after SymbolicRealVector::Destroy did, a double free (heap corruption at MINI EXAMPLE 25, symbolicModuleTest). Both fixes tested on the Mac; raytracerNOGLFWtest.py runs on macOS again.",
+  "dateRaised": "2026-10-06",
+  "deadline": "2027-04-04",
+  "dateResolved": "2026-10-06 18:06",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "On macOS, SC.renderer.RedrawAndGetImage(useRaytracer=True) crashed, and freeing a symbolic user function that returns a vector corrupted the heap; both are fixed.",
+  "resolvedInVersion": "1.12.368"
+}

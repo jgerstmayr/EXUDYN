@@ -652,6 +652,12 @@ The steps are numbered in the order they were raised and stand here in the order
       module - measured there: the models off the reference go from 8 to 3; `geometricallyExactBeamCurvedTest.py`
       with `staticSolver.newton.absoluteTolerance = 1e-6`, as the case P = 0 has no load to measure the residual
       against.
+    - **RG4.1.5** **DONE 2026-10-06**, to be confirmed on the Mac — [log](exudynRevisionLog2026b.md#rg4-1-5) (#2876)
+      *(maintainer 2026-10-06: "the causes for the raytracer and another heap corruption in the test suite are described
+      in the two text files in tmp/MacOS. Implement the suggested changes")* the raytraced image of `RedrawAndGetImage`
+      is no longer drawn into an OpenGL window that does not exist in the Python thread (segfault on macOS); a symbolic
+      vector expression no longer frees its components twice (heap corruption); `raytracerNOGLFWtest.py` runs on macOS
+      again.
     - **RG4.1.3** *open (maintainer 2026-10-01)* — **the math library and uninitialized values**, two candidate
       causes to test. What is known (IEEE 754-2008/2019, the glibc manual *Errors in Math Functions*, the MSVC `/fp`
       and GCC/clang `-ffp-contract` documentation; from the standard literature, not re-fetched here):

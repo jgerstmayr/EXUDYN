@@ -149,6 +149,8 @@ public:
 				ExpressionBase::deleteCount++;
 			}
 		}
+		//released: the destructor calls Destroy() again after SymbolicRealVector::Destroy() did, which freed them twice (#2876)
+		exprList.SetNumberOfItems(0);
 	}
 	virtual ResizableConstVector Evaluate() const
 	{

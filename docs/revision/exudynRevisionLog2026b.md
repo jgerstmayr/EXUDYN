@@ -16125,3 +16125,33 @@ version on linux with the testsuite - it still fails.")*
   while what the test checks - the continued run equals the uninterrupted one on the same platform - holds. The state
   enters the result rounded to 6 digits (reference -2.93176); `createSphereQuadContact.py` and `computeItemTest.py`
   are reported as unresolved there, as intended (RG4.19.13).
+
+<a id="rg4-1-5"></a>
+### RG4.1.5 — macOS: the offscreen raytracer and a double free of symbolic vectors (2026-10-06, #2876)
+
+*(Maintainer 2026-10-06: "I now got the MacOS response from the Claude agent. The causes for the raytracer and another
+heap corruption in the test suite are described in the two text files in tmp/MacOS. Implement the suggested changes,
+then I re-run and test it.")*
+
+The two reports (`tmp/MacOS/mac_raytracerRedrawAndGetImageSegfault.txt`, `mac_heapCorruptionSymbolicVector.txt`) were
+written by a Claude session on the Mac (darwin arm64, Python 3.13), with crash reports and Guard Malloc; their fixes were
+tested there and are applied here as proposed:
+
+- `Raytracer::SoftwareRenderer` ended by drawing the image into the render window (`DrawImageRGBA`: glPushAttrib,
+  glTexImage2D, ...), also when `RedrawAndGetImage(useRaytracer=True)` calls it from the Python thread, where no OpenGL
+  context is current. Legacy GL without a context is a silent no-op on Windows; on macOS it dispatches through the
+  NULL CGL context (EXC_BAD_ACCESS at 0x688) - every variant of `raytracerCheck2.py` crashed, even an empty scene.
+  The image is drawn only when the render loop calls (`isCalledFromMainThread` false; `RedrawAndGetImage` is the only
+  caller with true). On the Mac, after the fix, `raytracerNOGLFWtest.py` gives 0.28161678591179, the Windows reference
+  exactly; its exclusion on darwin in `runTestSuiteRefSol.py` (since 1.11.0) is removed.
+- `VectorExpressionSReal::Destroy()` released and deleted its component expressions but kept the pointers;
+  `~VectorExpressionSReal` calls `Destroy()` again after `SymbolicRealVector::Destroy()` did - a double free whenever a
+  symbolic user function returning a vector is freed (`symbolicUserFunctionTest.py`, #2664 part). macOS reported
+  "Heap corruption detected" at MINI EXAMPLE 25; Windows tolerated it. The list is emptied at the end of `Destroy()`.
+  The Mac's full suite then ran to the end twice.
+
+The Mac also lists four tolerance deviations (1e-9..1e-7): `createSphereQuadContact`, `computeItemTest` (both unresolved
+there through `UnresolvedOnLinux()`, RG4.19.13), `restartFileTest` (RG2.6) and `geometricallyExactBeamRightAngleFrame`,
+which needs its value from the Mac log before it is classified. The "empty arrays" of `SC.renderer.GetGraphicsData()` in
+the `graphicsData` variant were the diagnostic script's: it printed `np.shape` of the dictionaries, which is `()`; the
+ground with `graphics.Sphere` gives one sphere (`'spheres'`, 1 item), as it should since #2709.
