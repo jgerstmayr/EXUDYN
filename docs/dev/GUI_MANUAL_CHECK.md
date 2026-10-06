@@ -17,14 +17,20 @@ mouse, tkinter windows, focus, fonts, window placement. That is this list.
 3. **Back up `~/.exudyn/config.json`** if it exists, then delete it, so that you test the defaults.
    Some checks below write this file; restore your backup at the end.
 4. Copy `python/testing/guiManualCheckModel.py`, `python/Examples/nMassOscillatorEigenmodes.py` and
-   `python/Examples/graphicsCurvedShapes.py` into an empty working directory.
-5. `python -m exudyn demo` - the renderer opens, the demo runs, the window closes. If this fails,
-   stop here and report it.
+   `python/Examples/graphicsCurvedShapes.py` into an empty working directory, and run everything from there in a
+   terminal (not from an IDE): images and files are written relative to it.
+5. `python -m exudyn demo 2` - the renderer opens, the demo runs, the window closes (`demo` alone is demo 1,
+   without graphics). If this fails, stop here and report it.
+
+**Which model**: sections 1 to 4 and 6 use `guiManualCheckModel.py`, K13 `graphicsCurvedShapes.py`,
+section 5 `nMassOscillatorEigenmodes.py`, O3 `mouseInteractionExample.py`; each section says it again.
 
 **Model used**: `guiManualCheckModel.py` - a mass point with spring-damper and force, and a 3D double
 pendulum of two rigid bodies with revolute joints; it has at least one node, body, connector,
-marker, load and sensor, and a sensor trace. It opens the renderer and **waits**; SPACE starts a
-real-time simulation of 120 s, Q stops it, then SolutionViewer and PlotSensor follow.
+marker, load and sensor, and a sensor trace; the red mass is drawn as its node, the orange sphere on
+the second link with `general.sphereTiling`. It opens the renderer and **waits**; SPACE starts a
+real-time simulation of 120 s, Q stops it, then SolutionViewer and PlotSensor follow; the script
+ends when the plot windows are closed.
 
 Report each check as **OK / FAIL / n.a.** with the ID; for a FAIL, one line on what happened.
 
@@ -38,7 +44,7 @@ Report each check as **OK / FAIL / n.a.** with the ID; for a FAIL, one line on w
 | R2 | left mouse: press, drag, release | model moves with the mouse in the screen plane |
 | R3 | right mouse: press, drag, release | model rotates about the screen axes; release stops it |
 | R4 | mouse wheel up/down; with CTRL | zoom in/out; CTRL gives small steps |
-| R5 | left **click** (no drag) on the red mass; then on empty space | status line *Selected item: ...*; item highlighted for ~5 s; empty space: *no item selected* |
+| R5 | left **click** (no drag) on the red mass; then on empty space | status line *Selected item: ...*; item highlighted for ~2 s; empty space: *no item selected* |
 | R6 | right **click** (no drag) on a pendulum link | read-only dialog *properties of <...>* opens with the item dictionary; ESCAPE closes it; render window still reacts afterwards |
 | R7 | keys `A`, `.` / `,` (and keypad `+` / `-` if present) | zoom all, zoom in, zoom out |
 | R8 | cursor keys; CTRL+cursor; SHIFT+cursor; ALT+LEFT/RIGHT | move; small move; rotate about screen x/y; rotate about screen z |
@@ -47,22 +53,22 @@ Report each check as **OK / FAIL / n.a.** with the ID; for a FAIL, one line on w
 | R11 | pan with left mouse so that the pendulum joint is at the window center, press `O`, then rotate with right mouse | message *Set rotationCenterPoint ...*; the model now rotates about the new center |
 | R12 | `R`, wait 3 s, `R` again | automatic rotation of the view starts and stops |
 | R13 | F3, then left-click twice at two points (after CTRL+1) | mouse coordinates in the status line; second click shows `lastPos` and `dist`; F3 again switches off |
-| R14 | CTRL+F3 | status line shows zoom / rotation / center; the console prints a `SC.renderer.SetModelView(...)` line |
+| R14 | CTRL+F3 (macOS: n.a. if the system shortcut *Move focus to the Dock* is on; then V, **store model view**) | status line shows zoom / rotation / center; the console prints a `SC.renderer.SetModelView(...)` line |
 
 ## 2. Render window: item keys, simulation keys, raytracer, views (10 min)
 
 | ID | action | expected |
 |---|---|---|
-| K1 | `N`, `B`, `C`, `M`, `L`, `S` - each pressed twice | nodes / bodies / connectors / markers / loads / sensors disappear and reappear; a message says *show ...: off/on* |
+| K1 | `N`, `B`, `C`, `M`, `L`, `S` - each pressed twice; then `B` (bodies off) and `M` twice | nodes / bodies / connectors / markers / loads / sensors disappear and reappear; a message says *show ...: off/on*; the markers sit inside the bodies and are seen with the bodies off |
 | K2 | CTRL+`N`, CTRL+`B`, CTRL+`C`, CTRL+`M`, CTRL+`L`, CTRL+`S` | the numbers of that item kind appear/disappear; text readable, not hidden behind the bodies |
 | K3 | `T` pressed repeatedly (6-7 times) | cycles through transparent faces / face edges only / faces with edges / ... and back to the start; message states the mode |
 | K4 | **SPACE** | simulation starts in real time; the sensor trace of the pendulum tip is drawn |
 | K5 | SPACE again, wait, SPACE | simulation pauses and continues (message *switch pause on/off*) |
 | K6 | during simulation: `1`, `5`, `2` | update interval 20 ms (smooth), 100 s (frozen), 100 ms (default) - message each time |
-| K7 | CTRL+R, rotate a little, CTRL+R | raytraced image (shadows, slower update), then back to OpenGL |
+| K7 | CTRL+R, rotate a little, CTRL+R | raytraced image (shadows, slower update) with the sensor trace, then back to OpenGL |
 | K8 | **CTRL+V** | a second window (view 1) opens and shows the running model; mouse and keys work in it independently; CTRL+R there only affects that window |
 | K9 | in the view 1 window: `Q` | only view 1 closes, the simulation continues in the main window |
-| K10 | F2, then `N`, then F2, then `N` | first `N` ignored (message *ignore keys mode switched on*), after F2 again `N` works |
+| K10 | F2, then `N`, then F2, then `N` | message *ignore keys mode switched on*, the first `N` ignored; after F2 again (*... off*) `N` works |
 | K11 | `Q` | simulation stops; console prints *simulation finished ...*; the window stays and can still be rotated |
 | K12 | `V`: `openGL.light0.shadow` = `0.4`, `openGL.light0.useCameraFrame` = `True`, `view0.camera.modelCentricView` = `False`; close the dialog, rotate and zoom with the mouse | the shadow of the pendulum stays where the light puts it and follows the view smoothly - it does not flicker or appear and vanish with the view (#2308); set the three back |
 | K13 | run `graphicsCurvedShapes.py` (its own window): look at the rows; `V`: `openGL.advanced.curvedTriangleTilingAngle` = `90`, then `5`, then back to `15`; `T` until face edges show; CTRL+R and back; SPACE | the curved row (y=0) is smooth where the flat row (y=-3) shows facets, the red rims lie on the cylinder and the vase; at 90 the coarse elements show, at 5 a fine split - at once, without restarting; the face edges of the curved shapes are curved; the raytraced image shows the same shapes; the body at x=12 rotates with its rims and ring (#2709) |
@@ -80,8 +86,8 @@ Still in phase 3 of the model (after K11), or start the model again.
 | V1 | `V` | visualization settings dialog: tree with columns Name / Value / Type / Description, readable font, sensible column widths; render window blocked or updated while it is open (both are acceptable, note which) |
 | V2 | open `nodes`, click the value of `show`, choose `False` | nodes disappear **in the render window** immediately; the row is marked as changed |
 | V3 | double-click the same `nodes.show` value | toggles back to `True`; nodes reappear |
-| V4 | `nodes.defaultSize`: type `0.2`, RETURN | nodes grow in the render window |
-| V5 | `general.sphereTiling`: type `4`, RETURN | spheres (nodes) become visibly coarse; set back with **undo** |
+| V4 | `nodes.defaultSize`: type `0.25`, RETURN | the red mass (a node) grows in the render window |
+| V5 | `nodes.tiling`: type `2`, RETURN; `general.sphereTiling`: type `2`, RETURN | first the red mass, then the orange sphere and the joint spheres become visibly coarse; set both back with **undo** |
 | V6 | `connectors.showJointAxes` = `True`; `bodies.showNumbers` = `True` | joint axes drawn; body numbers shown |
 | V7 | enter an invalid value, e.g. `abc` into `nodes.defaultSize`; then `-1` into `general.circleTiling` | value rejected with a message, old value kept, dialog survives |
 | V8 | enum: `contour.outputVariable` - pick `Displacement` from the list; `contour.outputVariableComponent` = `1` | combo box shows short names (no `OutputVariableType.` prefix); bodies get a contour color and a color bar appears; set back to `_None` |
@@ -90,8 +96,8 @@ Still in phase 3 of the model (after K11), or start the model again.
 | V11 | select a row, press **copy line**, paste into an editor | e.g. `SC.visualizationSettings.nodes.defaultSize = 0.2` |
 | V12 | **diff to default**, **changes since start** | each opens a window **in front of** the dialog, listing exactly the changes made so far as code lines |
 | V13 | **undo** (twice), **revert**, **reset** | undo steps back whole states; revert returns to the state when the dialog opened; reset to defaults - render window follows each |
-| V14 | change `general.backgroundColor` to `[0.9,0.9,1,1]`, press **store settings**, confirm | list shows the change; console says *stored 1 setting(s) in ...config.json* |
-| V15 | move/resize the dialog, press **store positions**, confirm; close with ESCAPE; `V` again | the dialog reopens at the stored position and size |
+| V14 | change `general.backgroundColor` to `[0.9,0.9,1,1]`, press **store settings**; in the window that lists what will be written, press **store** | the list shows the change; console says *stored 1 setting(s) in ...config.json* |
+| V15 | move/resize the dialog, press **store positions**, then **store** in the list; close with ESCAPE; `V` again | the dialog reopens at the stored position and size |
 | V16 | CTRL+mouse wheel over the tree | font size changes, row height and columns follow |
 | V17 | close the dialog with **close**, then `Q` / ESCAPE to leave phase 3 | render window closes; SolutionViewer (next section) starts |
 
@@ -108,8 +114,8 @@ The model continues with `mbs.SolutionViewer()` automatically.
 | S2 | let it run; then **Static**; drag the *Solution steps* slider | animation plays; in static mode the model follows the slider |
 | S3 | *Increment* to 10; *update period* to max | animation faster (skips frames) / slower |
 | S4 | **One cycle**, **Run** | plays once and stops |
-| S5 | keys in the render window during the viewer (`B`, SPACE, `V`) | still work; `V` opens the settings dialog |
-| S6 | *Record frames*, run one cycle, *No recording* | images appear in the `images` subfolder; (*Make mp4* only if ffmpeg is installed - optional) |
+| S5 | keys in the render window during the viewer (`B`, `V`) | still work; `V` opens the settings dialog (SPACE pauses a simulation, not the viewer: use **Stop**) |
+| S6 | *Record frames*, run one cycle, *No recording* | images `frame00000.png`, ... appear in the subfolder `images` of the working directory; a failed write is reported in the console; (*Make mp4* only if ffmpeg is installed - optional, see the section *Generating animations* of the GUI chapter) |
 | S7 | close the dialog (window close button, or `q` / ESCAPE in the dialog) | dialog and renderer close, script continues |
 | P1 | PlotSensor windows | two matplotlib figures: tip position x/y/z with legend and axis labels, and the spring force; windows can be zoomed, panned and closed; the script ends after closing them |
 
@@ -121,7 +127,7 @@ The model continues with `mbs.SolutionViewer()` automatically.
 |---|---|---|
 | A1 | dialog and renderer open | dialog with *Mode shape*, *Contour plot*, *Amplitude* (+ positive/negative), *update period*, run modes, mesh/faces, recording; renderer shows the masses |
 | A2 | **Run**; move the *Mode shape* slider; move *Amplitude*; switch *negative* | mode animates; the mode changes; amplitude grows/shrinks; motion inverts |
-| A3 | *Contour plot* = *Displacement*; *Static continuous* | masses colored with a color bar; the deformed shape stands still |
+| A3 | *Contour plot* = *Displacement*; *Static continuous* | each mass in one color (it only translates), the colors differ between the masses, with a color bar; the deformed shape stands still |
 | A4 | close the dialog with `q` in the dialog | dialog and renderer close, script ends without error or hang |
 
 ## 6. Quitting (3 min)

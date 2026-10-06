@@ -16155,3 +16155,55 @@ there through `UnresolvedOnLinux()`, RG4.19.13), `restartFileTest` (RG2.6) and `
 which needs its value from the Mac log before it is classified. The "empty arrays" of `SC.renderer.GetGraphicsData()` in
 the `graphicsData` variant were the diagnostic script's: it printed `np.shape` of the dictionaries, which is `()`; the
 ground with `graphics.Sphere` gives one sphere (`'spheres'`, 1 item), as it should since #2709.
+
+<a id="rg2-4-1"></a>
+### RG2.4.1 — the first GUI checks on macOS and Ubuntu: what could be fixed without a screen (2026-10-06, #2877)
+
+*(Maintainer 2026-10-06: "With the previous version I also did the first Manual GUI Check on the Mac: see
+tmp/MacOS/GUIcheckMacOS.txt. It gives a couple of errors. Some bugs also occur on linux ... Raise issues, add a
+step/substeps and try to resolve as much as is possible right away. Also add the comment on ffmpeg installation on
+MacOS to the docs ("Generating animations"). The result of the Ubuntu GUI check is under tmp/Ubuntu/")*
+
+Ubuntu 22.04 (M. Pieber): 54 OK, 12 FAIL; macOS 14.5 (maintainer): remarks and two aborts. Fixed here:
+
+- **R9** CTRL+keypad 2/8, 4/6, 7/9: the keys required `mods == 0`, so CTRL - documented as small rotation - did
+  nothing; now also with CTRL (in the key table too, `test_keyBindings.py`).
+- **K10** F2 changed the mode and set the message, but nothing redrew the window, so the message expired unseen;
+  F2 now requests a redraw like the other keys.
+- **R5** the highlight of a selected item lasted 0.5 s (the comment said 5 s); now 2 s, the check list says so.
+- **K7** sensor traces were drawn by the OpenGL renderer only: `Raytracer::SensorTraceLines` builds the lines of the
+  position traces, vectors and triads once, and both the OpenGL renderer and the raytracer draw them.
+- **V5, sphere tiling** (maintainer: "tiling for graphics.Sphere is defined at generation time, so the
+  general.sphereTiling does not affect it ... default tiling like -1 ... general.sphereTiling ... 16 instead of 6 ...
+  EXUvis::DrawSphere does not use the GLSphere - it should"): `graphics.Sphere` and `graphics.Spheres` have
+  `nTiles=-1` by default, which takes `general.sphereTiling` when drawn (`glSphereResolutionFromSettings`,
+  `EXUvis::SphereResolution` in the renderer, the raytracer and `GetGraphicsData`); `general.sphereTiling` is 16 (6 was
+  used as power of 2 rounded down: 4 segments); `EXUvis::DrawSphere` adds a GLSphere when it draws smooth - the
+  spheres of joints and connectors are display lists and exact in the raytracer -, `DrawSphereTriangles` keeps the
+  triangles for the display lists and for flat shading. The graphics references of the 7 mini examples with such
+  spheres re-recorded (288 triangles -> 2 spheres each); the other recorded differences were round-off and reverted.
+- **A3** contour *Displacement*: a body without rotation took the difference to its reference position for every
+  vertex, so its local position colored it (the maintainer's "artifacts ... with no rotation, but only
+  displacement"); now the reference position of that point, also in `ContourColorOfBodyPoint`. Spheres of a body got
+  no contour color; now the color of their center.
+- **S6** a failed PNG write was silent; it is reported. Where the images go (`images/frame...` relative to the
+  directory of the run, or `exudyn.config.outputDirectory`) is said in the docs and the check list.
+- **mp4** (macOS: "Unknown encoder 'libx264'"): `ConvertImages2Video(videoCodec=None)` tries libx264 and then
+  `h264_videotoolbox` on macOS, `mpeg4` elsewhere, and says which it used.
+- **Docs** (GUI.md, *Generating animations*): installing ffmpeg-python and ffmpeg per platform, conda-forge on macOS,
+  the command line with h264_videotoolbox; CTRL+F3 is the macOS shortcut *Move focus to the Dock* (the maintainer's
+  "tries to open the finder") - the **store model view** button gives the same.
+- **The check list and its model**: `python -m exudyn demo 2` (demo 1 has no graphics), which model each section uses
+  and to run from a terminal in the working directory; R5 ~2 s; R14 on macOS; K1 markers seen with the bodies off,
+  marker and sensor size 0.1 in the model; K7 with the trace; V4/V5 on items these settings reach (the red mass is now
+  its node with `nodes.defaultSize`, an orange `graphics.Sphere` on link 1 takes `general.sphereTiling`; before, the
+  mass had its own drawSize and no sphere took sphereTiling); V14/V15 the **store** button of the list; S5 SPACE
+  pauses a simulation, not the viewer; P1 `plt.show(block=True)` at the end, so the plot windows stay when the script
+  runs in a terminal; A3 one color per mass. `graphicsDataExample.py` stops the renderer before matplotlib shows its
+  window (macOS aborted otherwise).
+
+Not fixed here, raised: #2878 (RG2.4.2, macOS aborts: Tk dialog closed while glfwPollEvents dispatches its event; the
+crash report shows Tk's PythonCmd nested in a Python after-callback, so tkinter's saved thread state is NULL),
+#2879 (RG2.4.3, shadows of GLSpheres), #2880 (RG2.4.4, default sizes: 0.001 * initialMaxSceneSize), #2881 (RG2.4.5,
+Ubuntu K13 and S6 again). The checklist remark "4. The model continues with mbs.SolutionViewer()" referred to an older
+copy of the model; the current one has it.

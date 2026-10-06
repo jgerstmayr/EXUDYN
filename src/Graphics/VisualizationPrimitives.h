@@ -189,9 +189,20 @@ namespace EXUvis {
 	void DrawCone(const Vector3D& pAxis0, const Vector3D& vAxis, Real radius, const Float4& color, GraphicsData& graphicsData, 
 		Index itemID, Index nTiles = 12, bool drawSmooth = true);
 
-	//! draw a sphere with center at p, radius and color; nTiles are in 2 dimensions (8 tiles gives 8x8 x 2 faces)
+	//! draw a sphere with center at p, radius and color; drawSmooth: as GLSphere, which the renderer draws from a display
+	//! list and the raytracer intersects exactly (#2877); else as triangles with flat shading; nTiles are in 2 dimensions
 	void DrawSphere(const Vector3D& p, Real radius, const Float4& color, GraphicsData& graphicsData, 
 		Index itemID, Index nTiles = 8, bool drawSmooth = true);
+
+	//! a sphere as triangles; drawSmooth: normals of the sphere, else of the triangles (8 tiles gives 8x8 x 2 faces)
+	void DrawSphereTriangles(const Vector3D& p, Real radius, const Float4& color, GraphicsData& graphicsData,
+		Index itemID, Index nTiles, bool drawSmooth);
+
+	//! the resolution of a GLSphere when it is drawn: its own, or general.sphereTiling (#2877)
+	inline Index SphereResolution(const GLSphere& sphere, const VisualizationSettings& settings)
+	{
+		return sphere.resolution == glSphereResolutionFromSettings ? TilingToBitResolution(settings.general.sphereTiling) : sphere.resolution;
+	}
 
 	//! draw orthonormal basis using a rotation matrix, which transforms local to global coordinates
 	//! red=axisX, green=axisY, blue=axisZ

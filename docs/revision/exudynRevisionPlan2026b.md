@@ -154,6 +154,19 @@ NOT cover, and about the testing that no suite can do.
     changed in the running window, and all of it in the raytracer - what the graphics tests can only check as data.
     **The list and the model DONE 2026-09-29** — [log](exudynRevisionLog2026b.md#rg2-4); **the checks
     themselves** are done once per release on Windows, Ubuntu and macOS, and RG1.4 waits for them.
+    *(Maintainer 2026-10-06, after the first checks on macOS and Ubuntu with 1.12.368: "Raise issues, add a step/substeps
+    and try to resolve as much as is possible right away")*
+    - **RG2.4.1** **DONE 2026-10-06** — [log](exudynRevisionLog2026b.md#rg2-4-1) (#2877) what could be fixed without a
+      screen: CTRL+keypad, F2 message, highlight time, sensor traces in the raytracer, `general.sphereTiling` for
+      `graphics.Sphere` and the spheres of connectors, contour colors of spheres and of bodies without rotation, the
+      ffmpeg encoder, the check list and its model, the docs (ffmpeg on macOS, CTRL+F3).
+    - **RG2.4.2** *open* (#2878) macOS: abort when a Tk dialog (SolutionViewer) is closed - glfwPollEvents dispatches
+      the Tk event inside a Tk callback -, and when matplotlib shows a window while the renderer runs; for a Claude
+      session on the Mac.
+    - **RG2.4.3** *open* (#2879) shadows of the GLSpheres in the OpenGL renderer (maintainer).
+    - **RG2.4.4** *open, for decision* (#2880) the default drawing size of nodes, markers and sensors: 0.001 of
+      `initialMaxSceneSize`, too small to see.
+    - **RG2.4.5** *open* (#2881) Ubuntu: curved triangle tiling (K13) and recorded frames (S6) to be checked again.
 
 <a id="rg2-5"></a>
 **RG2.5** **DONE 2026-10-04** (#2832) — [log](exudynRevisionLog2026b.md#rg2-5) *(group RG2; feedback of a colleague installing Exudyn, forwarded by the maintainer 2026-10-04: "The
@@ -2002,6 +2015,10 @@ issue and a short title only. The open issues that are not steps are in the trac
 | RG5.2 | - | make the hot linear algebra vectorizable |
 | RG6.8 | #2140, #2236, #2237, #2350 | the graphics fixes before 1.13: Linux (RG6.8.5) and macOS (RG6.8.6), which wait for those machines |
 | RG13.3 | #2867 | follow-up: parameters and output variables the C++ of four items does not use, for a decision |
+| RG2.4.2 | #2878 | macOS: abort on closing a Tk dialog of the SolutionViewer; matplotlib with a running renderer |
+| RG2.4.3 | #2879 | shadows of GLSpheres in the OpenGL renderer |
+| RG2.4.4 | #2880 | default drawing size of nodes, markers and sensors too small (for decision) |
+| RG2.4.5 | #2881 | Ubuntu GUI check: curved tiling and recorded frames to be checked again |
 | RG9.6 | #2866 | the member functions an item must provide, checked when it compiles (from #2498) |
 | RG8.1 to RG8.9 | - | the plugin ABI: registry, fingerprint, reference plugin, headers, discovery |
 | RG14.3 | #2745 | joints and their Jacobians on homogeneous transformations, after RG14.2.9 |

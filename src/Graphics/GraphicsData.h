@@ -64,6 +64,9 @@ public:
 	std::array<Float4, 3> colors;	//!< RGBA color in range 0.f - 1.f; A ... alpha
 };
 
+//! the resolution of a GLSphere that takes visualizationSettings.general.sphereTiling when it is drawn (#2877)
+const Index glSphereResolutionFromSettings = -2;
+
 //! structure for a point (node); drawing might be realized as point, circle or sphere
 class GLSphere
 {
@@ -72,7 +75,7 @@ public:
 	Float3 point;			//!< 3D point coordinates
 	Float4 color;			//!< RGBA color in range 0.f - 1.f; A ... alpha
 	float radius;			//!< when drawn as sphere
-	Index resolution;		//!< resolution when drawn as sphere, indicates 2^i number of triangles along halfcircle, currently limited between i=0 and i=7; if i=-1, default is used
+	Index resolution;		//!< resolution when drawn as sphere, indicates 2^i number of triangles along halfcircle, currently limited between i=0 and i=7; -1: drawn as point; glSphereResolutionFromSettings: general.sphereTiling
 };
 
 //! structure for a circle in XY-plane with radius

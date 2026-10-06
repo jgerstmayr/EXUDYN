@@ -12,7 +12,7 @@
 #             2. simulation runs for up to tEnd seconds - press Q to stop it early
 #             3. renderer waits again - press Q (or ESCAPE) to go on
 #             4. SolutionViewer
-#             5. PlotSensor (matplotlib)
+#             5. PlotSensor (matplotlib); the script ends when the plot windows are closed
 #
 # Usage:    python guiManualCheckModel.py              #all phases
 #           python guiManualCheckModel.py quitdialog   #reallyQuitTimeLimit=10 s, to test the quit dialog
@@ -37,9 +37,10 @@ oGround = mbs.CreateGround(graphicsDataList=[graphics.CheckerBoard(point=[0.5,-1
                                                                    size=4)])
 
 #++++++++++++++++++++++++++++++++++++++
-#1) mass point + spring-damper + force (as in the notebook tutorialSpringDamperCreate)
+#1) mass point + spring-damper + force (as in the notebook tutorialSpringDamperCreate); the red mass is its node,
+#   drawn with nodes.defaultSize and nodes.tiling (checks V4, V5)
 oMass = mbs.CreateMassPoint(name='mass', referencePosition=[1.5,0.8,0], initialDisplacement=[-0.1,0,0],
-                            mass=1.6, drawSize=0.15, color=graphics.color.red)
+                            mass=1.6, color=graphics.color.red)
 oSD = mbs.CreateSpringDamper(name='springDamper', itemNumbers=[oGround, oMass],
                              referenceLength=1.5, stiffness=400, damping=0.5, drawSize=0.08)
 lForce = mbs.CreateForce(name='force', itemNumber=oMass, loadVector=[8,0,0])
@@ -56,7 +57,9 @@ b0 = mbs.CreateRigidBody(name='link0', inertia=iCube, referencePosition=[0.5*L,0
 b1 = mbs.CreateRigidBody(name='link1', inertia=iCube, referencePosition=[L,0,0.5*L],
                          referenceRotationMatrix=np.array([[0,0,-1],[0,1,0],[1,0,0]]), gravity=[0,-9.81,0],
                          graphicsDataList=[graphics.Brick(size=[L,w,w], color=graphics.color.lightgreen,
-                                                          addEdges=True)])
+                                                          addEdges=True),
+                                           #a sphere drawn with general.sphereTiling (check V5)
+                                           graphics.Sphere(point=[0,0,0], radius=1.5*w, color=graphics.color.orange)])
 mbs.CreateRevoluteJoint(name='joint0', itemNumbers=[oGround, b0], position=[0,0,0], axis=[0,0,1],
                         axisRadius=0.2*w, axisLength=1.5*w)
 mbs.CreateRevoluteJoint(name='joint1', itemNumbers=[b0, b1], position=[L,0,0], axis=[1,0,0],
@@ -71,9 +74,10 @@ mbs.Assemble()
 #because the defaults are what users get
 vs = SC.visualizationSettings
 vs.nodes.drawNodesAsPoint = False
-vs.nodes.defaultSize = 0.08
+vs.nodes.defaultSize = 0.15
 vs.nodes.showBasis = True
-vs.markers.defaultSize = 0.05
+vs.markers.defaultSize = 0.1    #the markers sit inside the bodies: M shows them when B hides the bodies
+vs.sensors.defaultSize = 0.1
 vs.loads.defaultSize = 0.3
 vs.sensors.traces.showPositionTrace = True
 vs.sensors.traces.listOfPositionSensors = [sTip]
@@ -105,3 +109,5 @@ mbs.SolutionViewer()
 #phase 5
 mbs.PlotSensor(sensorNumbers=[sTip, sTip, sTip], components=[0,1,2], closeAll=True)
 mbs.PlotSensor(sensorNumbers=[sForce], components=[0], newFigure=True)
+import matplotlib.pyplot as plt
+plt.show(block=True) #from a terminal the windows would close with the end of the script

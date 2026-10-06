@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.12 | Metheney | 327 | 1.12.368 |
+| 1.12 | Metheney | 328 | 1.12.369 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
 | 1.9 | Krall | 235 | 1.9.234 |
@@ -29,6 +29,10 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.12 - Metheney (current)
 
+- **1.12.369** <span class="textred">`BUG`</span> `MEDIUM EFF` `raised by: Claude-JG` `resolved by: Claude-JG` First manual GUI check on macOS and Ubuntu (1.12.368): the findings that can be fixed without a screen (#2877)
+  - description: From tmp/MacOS/GUIcheckMacOS.txt (maintainer) and tmp/Ubuntu/exudynGuiCheckUbuntu.txt (M. Pieber), 2026-10-06: CTRL+keypad rotation did nothing (R9); F2 showed no message (K10); the selection highlight lasted 0.5 s (R5); sensor traces missing in the raytracer (K7); graphics.Sphere ignored general.sphereTiling (tiling fixed at creation) and the spheres of connectors were triangles with sphereTiling 6 (= 4 segments as display list); contour Displacement: spheres not colored, and bodies without rotation colored by their local position (A3); a failed PNG write was silent; ConvertImages2Video failed with an ffmpeg without libx264 (conda-forge on macOS); the check list and its model: demo 2, which model, V4/V5 on items the settings reach, V14 'store', S5, P1 (plot windows closed at the end of the script), marker/sensor sizes; the docs: ffmpeg on macOS, CTRL+F3 is a macOS system shortcut.
+  - **notes:** Findings of the first manual GUI checks on macOS and Ubuntu: CTRL with the keypad rotates in small steps, F2 shows its message, sensor traces appear in the raytraced image, graphics.Sphere and graphics.Spheres follow visualizationSettings.general.sphereTiling (now 16), the spheres of joints and connectors are drawn smooth, the Displacement contour colors bodies without rotation and spheres correctly, ConvertImages2Video works with an ffmpeg without libx264 (macOS), and a failed image write is reported.
+  - date resolved: **2026-10-06 22:59**, date raised: 2026-10-06
 - **1.12.368** <span class="textred">`BUG`</span> `raised by: Claude-JG` `resolved by: Claude-JG` macOS: RedrawAndGetImage(useRaytracer=True) segfaults; double free of symbolic vector expressions (#2876)
   - description: Found by a Claude session on the Mac (tmp/MacOS/mac\_\*.txt, 2026-10-06). (1) Raytracer::SoftwareRenderer always ends by drawing the image into the OpenGL window (DrawImageRGBA), also when RedrawAndGetImage calls it from the Python thread without a current OpenGL context: a no-op on Windows, a NULL dereference in the CGL dispatch on macOS. (2) VectorExpressionSReal::Destroy releases its expressions but keeps the pointers; ~VectorExpressionSReal calls Destroy again after SymbolicRealVector::Destroy did, a double free (heap corruption at MINI EXAMPLE 25, symbolicModuleTest). Both fixes tested on the Mac; raytracerNOGLFWtest.py runs on macOS again.
   - **notes:** On macOS, SC.renderer.RedrawAndGetImage(useRaytracer=True) crashed, and freeing a symbolic user function that returns a vector corrupted the heap; both are fixed.

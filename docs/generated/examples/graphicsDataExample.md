@@ -112,12 +112,15 @@ mbs.SolveDynamic(simulationSettings)
 
 SC.renderer.DoIdleTasks()
 
+image = None
 if SC.renderer.IsActive(): #retrieve image into matplotlib
-    import matplotlib.pyplot as plt
     image=SC.renderer.RedrawAndGetImage() 
+
+SC.renderer.Stop() #safely close rendering window - before matplotlib shows its window, which macOS needs (#2877)
+
+if image is not None:
+    import matplotlib.pyplot as plt
     plt.imshow(image) 
     plt.axis('off') 
     plt.show()
-
-SC.renderer.Stop() #safely close rendering window!
 ```

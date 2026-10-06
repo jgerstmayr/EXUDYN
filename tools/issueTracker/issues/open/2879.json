@@ -1,0 +1,10 @@
+{
+  "number": 2879,
+  "title": "Shadows of GLSpheres in the OpenGL renderer",
+  "author": "Claude-JG",
+  "status": "RAISED",
+  "type": "EXTENSION",
+  "description": "Maintainer, GUIcheckMacOS.txt: the spheres drawn as GLSphere (display lists; graphics.Sphere and, since #2877, the spheres of connectors and joints) cast no shadow, because each may have many triangles. Proposal: a coarse shadow geometry, e.g. a cylinder or disc per sphere, with some artefacts that are acceptable.",
+  "dateRaised": "2026-10-06",
+  "deadline": "2027-04-04"
+}

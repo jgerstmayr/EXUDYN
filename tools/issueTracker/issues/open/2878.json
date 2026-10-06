@@ -1,0 +1,11 @@
+{
+  "number": 2878,
+  "title": "macOS: abort when a Tk dialog of the SolutionViewer is closed, and when matplotlib shows a window while the renderer runs",
+  "author": "Claude-JG",
+  "status": "RAISED",
+  "type": "BUG",
+  "effort": "MEDIUM",
+  "description": "GUIcheckMacOS.txt: (1) closing the SolutionViewer dialog after demo 2 aborts in PyEval_RestoreThread: the dialog's Tk after-callback calls SC.renderer.DoIdleTasks, whose glfwPollEvents dispatches the Tk close event (one NSApp event loop), so tkinter's PythonCmd runs nested inside a Python callback, with its saved thread state NULL. Proposal for the Mac session: inside a Tk mainloop on macOS, redraw without polling (Tk's loop already delivers the GLFW events), e.g. DoIdleTasks(pollEvents=False). (2) graphicsDataExample.py: plt.show() with the renderer still running aborts in matplotlib's macosx backend (PyEval_RestoreThread, GIL released); the example now stops the renderer first; whether a GLFW callback touches Python without the GIL is to be checked on the Mac.",
+  "dateRaised": "2026-10-06",
+  "deadline": "2027-04-04"
+}

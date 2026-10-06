@@ -317,7 +317,7 @@ void GlfwRenderer::InitGLlists()
 	{
 		Index nTiles = Index(pow(2, loop));
 		graphicsData.FlushData();
-		EXUvis::DrawSphere(Vector3D(0.), radius, EXUvis::grey2, graphicsData, itemID, nTiles, true);
+		EXUvis::DrawSphereTriangles(Vector3D(0.), radius, EXUvis::grey2, graphicsData, itemID, nTiles, true);
 
 		glNewList(spheresListBase + loop, GL_COMPILE);
 

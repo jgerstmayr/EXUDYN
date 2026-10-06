@@ -1,0 +1,10 @@
+{
+  "number": 2881,
+  "title": "Ubuntu GUI check: curved triangle tiling and recorded frames not reproduced from here",
+  "author": "Claude-JG",
+  "status": "RAISED",
+  "type": "TESTING",
+  "description": "exudynGuiCheckUbuntu.txt: K13 - openGL.advanced.curvedTriangleTilingAngle 90/5/15 shows no visible difference in graphicsCurvedShapes.py; S6 - Record frames in the SolutionViewer wrote no images (no images folder). Both need a screen: to be repeated with 1.12.37x (a failed PNG write is now reported in the console; the images go to images/ in the directory the script was started from), and the tiling compared with Windows.",
+  "dateRaised": "2026-10-06",
+  "deadline": "2027-04-04"
+}

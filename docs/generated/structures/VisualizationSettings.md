@@ -42,7 +42,7 @@ VSettingsGeneral has the following items:
 | `showSolutionInformation` | bool | True | true = show solution information (from simulationSettings.solution) |
 | `showSolverInformation` | bool | True | true = solver name and further information shown in render window |
 | `showSolverTime` | bool | True | true = solver current time shown in render window |
-| `sphereTiling` | PInt | 6 | global number of segments for spheres; if smaller than 2, 2 segments are used (flat) |
+| `sphereTiling` | PInt | 16 | global number of segments of a half circle for the spheres of connectors and joints and for graphics.Sphere and graphics.Spheres with nTiles=-1 (the default); used as power of 2 (rounded down), as the spheres are drawn from display lists; if smaller than 2, 2 segments are used |
 | `textAlwaysInFront` | bool | True | if true, text for item numbers and other item-related text is drawn in front; this may be unwanted in case that you only with to see numbers of objects in front; currently does not work with perspective |
 | `textColor` | Float4 | [0.,0.,0.,1.0] | general text color (default); used for system texts in render window |
 | `textHasBackground` | bool | False | if true, text for item numbers and other item-related text have a background (depending on text color), allowing for better visibility if many numbers are shown; the text itself is black; therefore, dark background colors are ignored and shown as white |

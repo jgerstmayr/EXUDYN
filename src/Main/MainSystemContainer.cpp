@@ -672,7 +672,7 @@ py::dict MainRenderer::GetGraphicsData(bool flatShapes)
 			for (Index k = 0; k < 3; k++) { si(iSphere, k) = item[k]; sp(iSphere, k) = sphere.point[k]; }
 			for (Index k = 0; k < 4; k++) { sc(iSphere, k) = sphere.color[k]; }
 			sr(iSphere) = sphere.radius;
-			sres(iSphere) = (int)sphere.resolution;
+			sres(iSphere) = (int)EXUvis::SphereResolution(sphere, VSC.GetVisualizationSettings()); //as drawn (#2877)
 			iSphere++;
 		}
 		for (const GLCircleXY& circle : data->glCirclesXY)

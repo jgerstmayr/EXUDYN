@@ -489,7 +489,7 @@ class VSettingsGeneral:
     showSolverTime: bool
     """true = solver current time shown in render window."""
     sphereTiling: int
-    """global number of segments for spheres; if smaller than 2, 2 segments are used (flat)."""
+    """global number of segments of a half circle for the spheres of connectors and joints and for graphics.Sphere and graphics.Spheres with nTiles=-1 (the default); used as power of 2 (rounded down), as the spheres are drawn from display lists; if smaller than 2, 2 segments are used."""
     textAlwaysInFront: bool
     """if true, text for item numbers and other item-related text is drawn in front; this may be unwanted in case that you only with to see numbers of objects in front; currently does not work with perspective."""
     textColor: Tuple[float,float,float,float]

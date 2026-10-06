@@ -987,6 +987,89 @@ void Raytracer::CopyVisSettings2RTS(Index viewID)
 
 bool inSoftwareRenderer = false;
 //! software renderer used instead of OpenGL renderer
+void Raytracer::SensorTraceLines(VisualizationSystemContainerBase* visualizationSystemContainer, const VisualizationSettings& visSettings,
+	ResizableArray<GLLine>& lines)
+{
+	lines.SetNumberOfItems(0);
+	const VSettingsTraces& traces = visSettings.sensors.traces;
+	if (!traces.showPositionTrace && !traces.showVectors && !traces.showTriads) { return; }
+
+	const ArrayIndex& positionSensors = traces.listOfPositionSensors;
+	const ArrayIndex& vectorSensors = traces.listOfVectorSensors;
+	const ArrayIndex& triadSensors = traces.listOfTriadSensors;
+	Index positionsShowEvery = EXUstd::Maximum(1, traces.positionsShowEvery); //max in order to avoid crash in case of 0 or negative numbers
+	Index vectorsShowEvery = EXUstd::Maximum(1, traces.vectorsShowEvery);
+	Index triadsShowEvery = EXUstd::Maximum(1, traces.triadsShowEvery);
+	const ArrayFloat& edgeColors = traces.traceColors;
+	bool showVectors = traces.showVectors && (positionSensors.NumberOfItems() == vectorSensors.NumberOfItems());
+	bool showTriads = traces.showTriads && (positionSensors.NumberOfItems() == triadSensors.NumberOfItems());
+	float vectorScaling = traces.vectorScaling;
+	float triadSize = traces.triadSize;
+
+	Vector3DList positions;
+	Vector3DList vectors;
+	Matrix3DList triads;
+	Vector values;
+	GLLine line;
+	line.itemID = -1;
+	auto Add = [&lines, &line](const Float3& p0, const Float3& p1, const Float4& color)
+	{
+		line.point1 = p0; line.point2 = p1; line.color1 = color; line.color2 = color;
+		lines.Append(line);
+	};
+
+	//if there is no list of position sensors, all sensors are taken as long as there are any
+	Index i = 0;
+	bool further = true;
+	while ((positionSensors.NumberOfItems() > 0 && i < positionSensors.NumberOfItems()) || (positionSensors.NumberOfItems() == 0 && further))
+	{
+		Float4 color({ 0.f, 0.f, 0.f, 1.f });
+		if (edgeColors.NumberOfItems() >= (i + 1) * 4)
+		{
+			for (Index j = 0; j < 4; j++) { color[j] = edgeColors[i * 4 + j]; }
+		}
+		Index positionSensorIndex = i < positionSensors.NumberOfItems() ? positionSensors[i] : i;
+		Index vectorSensorIndex = (i < vectorSensors.NumberOfItems() && showVectors) ? vectorSensors[i] : -1;
+		Index triadSensorIndex = (i < triadSensors.NumberOfItems() && showTriads) ? triadSensors[i] : -1;
+
+		further = visualizationSystemContainer->GetSensorsPositionsVectorsLists(traces.sensorsMbsNumber, positionSensorIndex,
+			vectorSensorIndex, triadSensorIndex, positions, vectors, triads, values, traces);
+
+		auto P = [&positions](Index j) { return Float3({ (float)positions[j][0], (float)positions[j][1], (float)positions[j][2] }); };
+		Index n = positions.NumberOfItems();
+		if (traces.showPositionTrace)
+		{
+			Index jLast = -1;
+			for (Index j = 0; j < n; j++)
+			{
+				if (j % positionsShowEvery == 0 || j == n - 1)
+				{
+					if (jLast != -1) { Add(P(jLast), P(j), color); }
+					jLast = j;
+				}
+			}
+		}
+		for (Index j = 0; j < n; j++)
+		{
+			if (j < vectors.NumberOfItems() && (j % vectorsShowEvery == 0 || j == vectors.NumberOfItems() - 1))
+			{
+				const Vector3D& v = vectors[j];
+				Add(P(j), P(j) + vectorScaling * Float3({ (float)v[0], (float)v[1], (float)v[2] }), color);
+			}
+			if (j < triads.NumberOfItems() && (j % triadsShowEvery == 0 || j == triads.NumberOfItems() - 1))
+			{
+				const Matrix3D& m = triads[j];
+				for (Index k = 0; k < 3; k++)
+				{
+					Float4 axisColor({ k == 0 ? 1.f : 0.f, k == 1 ? 1.f : 0.f, k == 2 ? 1.f : 0.f, color[3] });
+					Add(P(j), P(j) + triadSize * Float3({ (float)m(0, k), (float)m(1, k), (float)m(2, k) }), axisColor);
+				}
+			}
+		}
+		i++;
+	}
+}
+
 void Raytracer::SoftwareRenderer(Index viewID, VisualizationSystemContainerBase* basicVisualizationSystemContainerInit, 
 	const RenderStateMachine& stateMachine, bool storeImage, bool isCalledFromMainThread)
 {
@@ -1127,7 +1210,7 @@ void Raytracer::SoftwareRenderer(Index viewID, VisualizationSystemContainerBase*
 		}
 		for (const GLSphere& sphere : data->glSpheres) //drawn as spheres, not as points (#2709)
 		{
-			if (sphere.radius <= 0.f || sphere.resolution < 1 || !settingsView.scene.showFaces) { continue; }
+			if (sphere.radius <= 0.f || EXUvis::SphereResolution(sphere, *visSettings) < 1 || !settingsView.scene.showFaces) { continue; }
 			GLSphere sphereNew(sphere);
 			TransformVertexRM(sphere.point, RTS.modelViewRM, sphereNew.point);
 			Float3 surfacePoint;
@@ -1169,6 +1252,18 @@ void Raytracer::SoftwareRenderer(Index viewID, VisualizationSystemContainerBase*
 					point1 = point2;
 				}
 			}
+		}
+	}
+	if (RTS.showLines) //the sensor traces, as the OpenGL renderer draws them (#2877)
+	{
+		ResizableArray<GLLine> traceLines;
+		SensorTraceLines(basicVisualizationSystemContainer, *visSettings, traceLines);
+		for (const GLLine& line : traceLines)
+		{
+			GLLine lineNew(line);
+			TransformVertexRM(line.point1, RTS.modelViewRM, lineNew.point1);
+			TransformVertexRM(line.point2, RTS.modelViewRM, lineNew.point2);
+			graphicsData.glLines.Append(lineNew);
 		}
 	}
 	if (cntWrongNormals && !warnedWrongNormals && RTS.verbose)

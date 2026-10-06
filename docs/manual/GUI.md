@@ -245,6 +245,9 @@ $^*$Note that values with an asterisk are only available if the renderer has alr
 ### Storing the model view
 
 The **simplest way to store the model view** is to **press CTRL-F3** when the renderer is running, to get the code for setting the model view printed to the console, e.g.,
+(on macOS, CTRL+F3 is a shortcut of the system, *Move focus to the Dock*, and does not reach the renderer; use the
+button **store model view** of the visualization settings dialog, key `V`, or switch the shortcut off in the system
+settings, *Keyboard - Keyboard Shortcuts - Keyboard*):
 
 - `Set current view: SC.renderer.SetModelView(zoom=8.8,rotationVector=`\ `[-0.8120557,0.4727261,0.7176849],centerPoint=[1.562,-1.526,0])`
 
@@ -416,8 +419,21 @@ which means, that after every 0.01 seconds of simulation time, an image of the c
 
 By default, a consecutive numbering is generated for the image, e.g., 'frame0000.png, frame0001.png,...'. Note that the standard file format PNG with ending '.png' uses compression libraries included in glfw, while the alternative TGA format produces '.tga' files which contain raw image data and therefore can become very large.
 
-To create animation files, an external tool FFMPEG is used to efficiently convert a series of images into an animation. Since Exudyn V1.9.83, ffmpeg is integrated into the solution viewer (button 'Make mp4'), which requires prior installation using `pip install ffmpeg-python` .
-Note that you may also need to install ffmpeg itself, depending on your platform.
+To create animation files, an external tool FFMPEG is used to efficiently convert a series of images into an animation. Since Exudyn V1.9.83, ffmpeg is integrated into the solution viewer (button 'Make mp4') and into `exudyn.interactive.ConvertImages2Video`, which require the Python package `ffmpeg-python` and the program `ffmpeg` itself:
+
+- **Windows and Linux**: `pip install ffmpeg-python`; the program from your package manager (e.g. `sudo apt install ffmpeg`)
+  or, in a conda environment, `conda install -c conda-forge ffmpeg`.
+- **macOS**: `pip install ffmpeg-python` and `conda install -c conda-forge ffmpeg`. The ffmpeg of conda-forge on
+  macOS has no `libx264` encoder; `ConvertImages2Video` then takes the encoder of macOS, `h264_videotoolbox`, and says
+  so. From the command line, in the folder of the images:
+
+  ```
+  ffmpeg -i frame%05d.png -c:v h264_videotoolbox -b:v 8M animation.mp4
+  ```
+
+The images are written to `exportImages.saveImageFileName` (default `images/frame`), relative to the current
+directory of Python - in a terminal the directory the script was started from - or to
+`exudyn.config.outputDirectory` if that is set.
 See the {ref}`GUI chapter <sec-graphicsvisualization>` for the visualization settings that
 control image export.
 

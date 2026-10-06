@@ -261,10 +261,6 @@ private:
 	static VisualizationSystemContainerBase* basicVisualizationSystemContainer;
     //+++++++++++++++++++++++++++++++++++++++++
     //for sensor traces:
-    static Vector3DList sensorTracePositions;
-    static Vector3DList sensorTraceVectors;		//!< synchronized with triads
-    static Matrix3DList sensorTraceTriads;		//!< synchronized with vectors
-    static Vector sensorTraceValues; //temporary storage for current sensor data
     //+++++++++++++++++++++++++++++++++++++++++
 
 	//static Raytracer raytracer;

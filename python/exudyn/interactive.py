@@ -1107,7 +1107,8 @@ def ConvertImages2Video(workingDir='images',
                         outputFrameRate=25, 
                         compressionCRF=28,
                         startNumber=0,
-                        totalFrames=None):
+                        totalFrames=None,
+                        videoCodec=None):
     """function to call ffmpeg in the background and convert images to video; requires ffmpeg-python to be installed
 
     Args:
@@ -1119,6 +1120,9 @@ def ConvertImages2Video(workingDir='images',
         compressionCRF: compression rate of ffmpeg, where 0=uncompressed, 25 is medium compression, >30 is very low quality
         startNumber: start index of first frame chosen for animation
         totalFrames: total number of frames (keep field empty to select all frames after startNumber)
+        videoCodec: the ffmpeg encoder, e.g. 'libx264'; None: libx264, and if that ffmpeg has no libx264 (as the one of
+            conda-forge on macOS), h264_videotoolbox on macOS and mpeg4 on the other platforms; compressionCRF applies to
+            libx264 only
 
     Returns:
         None; writes animation when finished
@@ -1143,20 +1147,36 @@ def ConvertImages2Video(workingDir='images',
         inputPattern = os.path.join(workingDir, inputPattern)
         outputFile = os.path.join(workingDir, outputFile)
 
-    try:
-        (
-            ffmpeg
-            .input(filename=inputPattern, framerate=inputFrameRate, start_number=startNumber)
-            .output(filename=outputFile,
-                    vcodec='libx264',
-                    crf=compressionCRF,
-                    vf='fps='+str(outputFrameRate)+',format=yuv420p',
-                    **kwargs)
-            .run(overwrite_output=True)
-        )
-    except Exception:
-        exudyn.Print('ERROR in ConvertImages2Video:')
-        exudyn.Print('It seems that ffmpeg is not correctly installed; make sure that ffmpeg can be executed from the currently used console by executing "ffmpeg"\n')
+    import sys
+    if videoCodec is not None:
+        codecs = [videoCodec]
+    else: #an ffmpeg without libx264 stopped with "Unknown encoder 'libx264'" (#2877)
+        codecs = ['libx264', 'h264_videotoolbox' if sys.platform == 'darwin' else 'mpeg4']
+    errorText = ''
+    for codec in codecs:
+        quality = {'crf': compressionCRF} if codec == 'libx264' else {'b:v': '8M'}
+        try:
+            (
+                ffmpeg
+                .input(filename=inputPattern, framerate=inputFrameRate, start_number=startNumber)
+                .output(filename=outputFile,
+                        vcodec=codec,
+                        vf='fps='+str(outputFrameRate)+',format=yuv420p',
+                        **quality, **kwargs)
+                .run(overwrite_output=True, capture_stderr=True)
+            )
+            if codec != codecs[0]:
+                exudyn.Print('ConvertImages2Video: ffmpeg has no encoder ' + codecs[0] + '; used ' + codec)
+            return
+        except ffmpeg.Error as error: #ffmpeg ran and failed: try the next encoder
+            errorText = error.stderr.decode('utf-8', 'replace') if error.stderr else str(error)
+        except Exception as error: #ffmpeg could not be run at all
+            errorText = str(error)
+            break
+    exudyn.Print('ERROR in ConvertImages2Video: ffmpeg failed with the encoder(s) ' + ', '.join(codecs) + ':')
+    if errorText:
+        exudyn.Print(errorText.strip().splitlines()[-1])
+    exudyn.Print('make sure that ffmpeg can be executed from the currently used console by executing "ffmpeg"')
 
 def InteractiveImages2Video(closeAfterCreation=False,fontSize=11):
     """interactive dialog to convert generated images to videos using ffmpeg library; see also ConvertImages2Video() for meaning of values; requires ffmpeg-python to be installed

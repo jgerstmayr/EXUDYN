@@ -105,7 +105,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`CMSexampleC
 (sec-interactive-convertimages2video)=
 ## Function: ConvertImages2Video
 
-[`ConvertImages2Video(workingDir = 'images', inputPattern = 'frame%05d.png', outputFile = 'animation.mp4', inputFrameRate = 25, outputFrameRate = 25, compressionCRF = 28, startNumber = 0, totalFrames = None)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/interactive.py#L1103)
+[`ConvertImages2Video(workingDir = 'images', inputPattern = 'frame%05d.png', outputFile = 'animation.mp4', inputFrameRate = 25, outputFrameRate = 25, compressionCRF = 28, startNumber = 0, totalFrames = None, videoCodec = None)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/interactive.py#L1103)
 
 - **function description**: function to call ffmpeg in the background and convert images to video; requires ffmpeg-python to be installed
 - **input**:
@@ -117,6 +117,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`CMSexampleC
   - `compressionCRF`: compression rate of ffmpeg, where 0=uncompressed, 25 is medium compression, >30 is very low quality
   - `startNumber`: start index of first frame chosen for animation
   - `totalFrames`: total number of frames (keep field empty to select all frames after startNumber)
+  - `videoCodec`: the ffmpeg encoder, e.g. 'libx264'; None: libx264, and if that ffmpeg has no libx264 (as the one of conda-forge on macOS), h264_videotoolbox on macOS and mpeg4 on the other platforms; compressionCRF applies to libx264 only
 - **output**: None; writes animation when finished
 
 *example*:
@@ -133,7 +134,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`CMSexampleC
 (sec-interactive-interactiveimages2video)=
 ## Function: InteractiveImages2Video
 
-[`InteractiveImages2Video(closeAfterCreation = False, fontSize = 11)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/interactive.py#L1161)
+[`InteractiveImages2Video(closeAfterCreation = False, fontSize = 11)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/interactive.py#L1181)
 
 - **function description**: interactive dialog to convert generated images to videos using ffmpeg library; see also ConvertImages2Video() for meaning of values; requires ffmpeg-python to be installed
 

@@ -121,10 +121,6 @@ ResizableArray<GraphicsData*>* GlfwRenderer::graphicsDataList = nullptr;
 VisualizationSettings* GlfwRenderer::visSettings = nullptr;
 VisualizationSystemContainerBase* GlfwRenderer::basicVisualizationSystemContainer = nullptr;
 //++++++++++++++++++++++++++++++++++++++++++
-Vector3DList GlfwRenderer::sensorTracePositions;
-Vector3DList GlfwRenderer::sensorTraceVectors; //synchronized with triads
-Matrix3DList GlfwRenderer::sensorTraceTriads;  //synchronized with vectors
-Vector GlfwRenderer::sensorTraceValues; //temporary storage for current sensor data
 //++++++++++++++++++++++++++++++++++++++++++
 
 
@@ -311,6 +307,7 @@ void GlfwRenderer::key_callback(GLFWwindow* window, int key, int scancode, int a
 		//rendererOut << "ignore keys mode switched to " << visSettings->interactive.ignoreKeys << "\n";
 		//PyQueueExecutableString("print('ignore keys mode switched to " + EXUstd::ToString(visSettings->interactive.ignoreKeys) + "')\n");
 		ShowMessage("ignore keys mode switched " + OnOffFromBool(visSettings->interactive.ignoreKeys), timeoutShowItem);
+		UpdateGraphicsDataNow(); //a redraw, so that the message is shown (#2877)
 	}
 
 	//do this first, as key may still have time to complete action
@@ -645,12 +642,12 @@ void GlfwRenderer::key_callback(GLFWwindow* window, int key, int scancode, int a
 			bool hasShift = (mods & GLFW_MOD_SHIFT) != 0;
 			bool hasAlt = (mods & GLFW_MOD_ALT) != 0;
 
-			if (key == GLFW_KEY_KP_2 && (action == GLFW_PRESS || action == GLFW_REPEAT) && mods == 0) { incRot[0] = rotStep; keyPressed=true;}
-			if (key == GLFW_KEY_KP_8 && (action == GLFW_PRESS || action == GLFW_REPEAT) && mods == 0) { incRot[0] = -rotStep; keyPressed=true;}
-			if (key == GLFW_KEY_KP_4 && (action == GLFW_PRESS || action == GLFW_REPEAT) && mods == 0) { incRot[1] = rotStep; keyPressed=true;}
-			if (key == GLFW_KEY_KP_6 && (action == GLFW_PRESS || action == GLFW_REPEAT) && mods == 0) { incRot[1] = -rotStep; keyPressed=true;}
-			if (key == GLFW_KEY_KP_7 && (action == GLFW_PRESS || action == GLFW_REPEAT) && mods == 0) { incRot[2] = rotStep; keyPressed=true;}
-			if (key == GLFW_KEY_KP_9 && (action == GLFW_PRESS || action == GLFW_REPEAT) && mods == 0) { incRot[2] = -rotStep; keyPressed=true;}
+			if (key == GLFW_KEY_KP_2 && (action == GLFW_PRESS || action == GLFW_REPEAT) && (mods == 0 || mods == GLFW_MOD_CONTROL)) { incRot[0] = rotStep; keyPressed=true;}
+			if (key == GLFW_KEY_KP_8 && (action == GLFW_PRESS || action == GLFW_REPEAT) && (mods == 0 || mods == GLFW_MOD_CONTROL)) { incRot[0] = -rotStep; keyPressed=true;}
+			if (key == GLFW_KEY_KP_4 && (action == GLFW_PRESS || action == GLFW_REPEAT) && (mods == 0 || mods == GLFW_MOD_CONTROL)) { incRot[1] = rotStep; keyPressed=true;}
+			if (key == GLFW_KEY_KP_6 && (action == GLFW_PRESS || action == GLFW_REPEAT) && (mods == 0 || mods == GLFW_MOD_CONTROL)) { incRot[1] = -rotStep; keyPressed=true;}
+			if (key == GLFW_KEY_KP_7 && (action == GLFW_PRESS || action == GLFW_REPEAT) && (mods == 0 || mods == GLFW_MOD_CONTROL)) { incRot[2] = rotStep; keyPressed=true;}
+			if (key == GLFW_KEY_KP_9 && (action == GLFW_PRESS || action == GLFW_REPEAT) && (mods == 0 || mods == GLFW_MOD_CONTROL)) { incRot[2] = -rotStep; keyPressed=true;}
 
 			if (hasShift && key == GLFW_KEY_UP && (action == GLFW_PRESS || action == GLFW_REPEAT)) { incRot[0] = rotStep; keyPressed=true;}
 			if (hasShift && key == GLFW_KEY_DOWN && (action == GLFW_PRESS || action == GLFW_REPEAT)) { incRot[0] = -rotStep; keyPressed=true;}
@@ -1343,7 +1340,7 @@ bool GlfwRenderer::MouseSelect(Index viewID, Index mouseX, Index mouseY, Index& 
 		(Index)stateMachine.selectionMouseCoordinates[1],
 		itemID, zDepth);
 
-	const Real timeOutHighlightItem = 0.5; //just short to exactly see object
+	const Real timeOutHighlightItem = 2.; //long enough to see which item it is (#2877)
 	ItemID2IndexType(itemID, stateMachine.highlightIndex, stateMachine.highlightType, stateMachine.highlightMbsNumber);
 
 	state->mouseSelectionMbsNumber = stateMachine.highlightMbsNumber;
@@ -1357,7 +1354,7 @@ bool GlfwRenderer::MouseSelect(Index viewID, Index mouseX, Index mouseY, Index& 
 
 	if (stateMachine.highlightType != ItemType::_None && stateMachine.highlightIndex != EXUstd::InvalidIndex)
 	{
-		stateMachine.highlightTimeout = EXUstd::GetTimeInSeconds() + timeOutHighlightItem; //5 seconds timeout
+		stateMachine.highlightTimeout = EXUstd::GetTimeInSeconds() + timeOutHighlightItem;
 
 		STDstring itemTypeName;
 		STDstring itemName;
@@ -2759,7 +2756,10 @@ void GlfwRenderer::SaveSceneToFile(Index viewID, const STDstring& filename)
 		CheckPathAndCreateDirectories(filename);
 
 		windowHeight = heightAlignment * (Index)(windowHeight / heightAlignment);
-		stbi_write_png(filename.c_str(), windowWidth, windowHeight, nrChannels, pixelBufferFlip->GetDataPointer(), stride);
+		if (!stbi_write_png(filename.c_str(), windowWidth, windowHeight, nrChannels, pixelBufferFlip->GetDataPointer(), stride))
+		{
+			PrintDelayed("GlfwRenderer::SaveSceneToFile: Failed to write image file <" + filename + ">"); //said, not silent (#2877)
+		}
 		pixelBufferFlip->Flush(); //not stored to preserve earlier functionality
 #endif
 	}
@@ -2874,122 +2874,19 @@ void GlfwRenderer::RenderSensorTraces(Index viewID)
         glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
         if (visSettings->openGL.advanced.lineSmooth) { glEnable(GL_LINE_SMOOTH); }
 
-        const ArrayIndex& positionSensors = visSettings->sensors.traces.listOfPositionSensors;
-        const ArrayIndex& vectorSensors = visSettings->sensors.traces.listOfVectorSensors;
-        const ArrayIndex& triadSensors = visSettings->sensors.traces.listOfTriadSensors;
-
         glLineWidth(visSettings->sensors.traces.lineWidth);
 
-        Index positionsShowEvery = EXUstd::Maximum(1,visSettings->sensors.traces.positionsShowEvery); //max in order to avoid crash in case of 0 or negative numbers
-        Index vectorsShowEvery = EXUstd::Maximum(1, visSettings->sensors.traces.vectorsShowEvery);
-        Index triadsShowEvery = EXUstd::Maximum(1, visSettings->sensors.traces.triadsShowEvery);
-
-        const ArrayFloat& edgeColors = visSettings->sensors.traces.traceColors;
-
-        bool showVectors = visSettings->sensors.traces.showVectors && (positionSensors.NumberOfItems() == vectorSensors.NumberOfItems());
-        bool showTriads = visSettings->sensors.traces.showTriads && (positionSensors.NumberOfItems() == triadSensors.NumberOfItems());
-        
-        Real vectorScaling = (Real)visSettings->sensors.traces.vectorScaling;
-        float triadSize = visSettings->sensors.traces.triadSize;
-        // if no sensors, do other approach: 
-        //while list with stop criteria
-        //GetSensorsPositionsVectorsLists returns true if further sensors available
-        //std::cout << "ST" << showTriads << ", PL" << positionSensors.NumberOfItems()
-        //    << ", TL" << triadSensors.NumberOfItems() << "\n";
-
-        Index i = 0;
-        bool returnValue = true;
-        while ((positionSensors.NumberOfItems() > 0 && i < positionSensors.NumberOfItems()) || (positionSensors.NumberOfItems() == 0 && returnValue) )
+        //the lines are built where the raytracer builds them too (#2877)
+        static ResizableArray<GLLine> traceLines;
+        Raytracer::SensorTraceLines(basicVisualizationSystemContainer, *visSettings, traceLines);
+        glBegin(GL_LINES);
+        for (const GLLine& line : traceLines)
         {
-            Float4 edgeColor({ 0.,0.,0.,1. }); //Default
-            if (edgeColors.NumberOfItems() >= (i + 1) * 4)
-            {
-                for (Index j = 0; j < 4; j++)
-                {
-                    edgeColor[j] = edgeColors[i * 4 + j];
-                }
-            }
-
-            Index positionSensorIndex = i;
-            Index vectorSensorIndex = -1;
-            Index triadSensorIndex = -1;
-            if (i < positionSensors.NumberOfItems()) { positionSensorIndex = positionSensors[i]; }
-            if (i < vectorSensors.NumberOfItems() && showVectors) { vectorSensorIndex = vectorSensors[i]; }
-            if (i < triadSensors.NumberOfItems() && showTriads) { triadSensorIndex = triadSensors[i]; }
-
-            //get sensor data
-            returnValue = basicVisualizationSystemContainer->GetSensorsPositionsVectorsLists(visSettings->sensors.traces.sensorsMbsNumber, positionSensorIndex,
-                vectorSensorIndex, triadSensorIndex, sensorTracePositions, sensorTraceVectors, sensorTraceTriads, sensorTraceValues,
-                visSettings->sensors.traces);
-
-            if (visSettings->sensors.traces.showPositionTrace)// && sensorTracePositions.NumberOfItems() > 1)
-            {
-                glBegin(GL_LINE_STRIP); //list of single points to define lines
-                glColor4f(edgeColor[0], edgeColor[1], edgeColor[2], edgeColor[3]);
-
-                for (Index j = 0; j < sensorTracePositions.NumberOfItems(); j++)
-                {
-                    if (j % positionsShowEvery == 0 || j == sensorTracePositions.NumberOfItems() - 1)
-                    {
-                        const Vector3D& p = sensorTracePositions[j];
-                        glVertex3f((float)p[0], (float)p[1], (float)p[2]);
-                    }
-                }
-                glEnd(); //GL_LINE_STRIP
-            }
-
-            if ((visSettings->sensors.traces.showVectors && sensorTraceVectors.NumberOfItems() != 0) ||
-                (visSettings->sensors.traces.showTriads && sensorTraceTriads.NumberOfItems() != 0) )
-            {
-                glBegin(GL_LINES);
-                //if (visSettings->openGL.enableLighting) { glEnable(GL_LIGHTING); } //only enabled when drawing triangle faces
-                //glColorMaterial(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE);
-                for (Index j = 0; j < sensorTracePositions.NumberOfItems(); j++)
-                {
-                    if (j < sensorTraceVectors.NumberOfItems())
-                    {
-                        if (j % vectorsShowEvery == 0 || j == sensorTraceVectors.NumberOfItems() - 1)
-                        {
-                            const Vector3D& p = sensorTracePositions[j];
-                            const Vector3D& v = sensorTraceVectors[j];
-                            glColor4f(edgeColor[0], edgeColor[1], edgeColor[2], edgeColor[3]);
-                            glVertex3f((float)p[0], (float)p[1], (float)p[2]);
-                            glVertex3f((float)(p[0] + vectorScaling * v[0]),
-                                (float)(p[1] + vectorScaling * v[1]),
-                                (float)(p[2] + vectorScaling * v[2]));
-                        }
-                    }
-                    if (j < sensorTraceTriads.NumberOfItems())
-                    {
-                        if (j % triadsShowEvery == 0 || j == sensorTraceTriads.NumberOfItems() - 1)
-                        {
-                            float f = triadSize;
-                            Float3 p({ (float)sensorTracePositions[j][0],
-                                        (float)sensorTracePositions[j][1],
-                                        (float)sensorTracePositions[j][2] });
-                            const Matrix3D& m = sensorTraceTriads[j];
-                            //glColor4f(edgeColor[0], edgeColor[1], edgeColor[2], edgeColor[3]); //set back to trace color!
-                            glColor4f(1.f, 0, 0, edgeColor[3]);
-                            glVertex3f(p[0], p[1], p[2]);
-                            glVertex3f(p[0] + f * (float)m(0, 0), p[1] + f * (float)m(1, 0), p[2] + f * (float)m(2, 0));
-
-                            glColor4f(0, 1.f, 0, edgeColor[3]);
-                            glVertex3f(p[0], p[1], p[2]);
-                            glVertex3f(p[0] + f * (float)m(0, 1), p[1] + f * (float)m(1, 1), p[2] + f * (float)m(2, 1));
-
-                            glColor4f(0, 0, 1.f, edgeColor[3]);
-                            glVertex3f(p[0], p[1], p[2]);
-                            glVertex3f(p[0] + f * (float)m(0, 2), p[1] + f * (float)m(1, 2), p[2] + f * (float)m(2, 2));
-                        }
-                    }
-                }
-                glEnd(); //GL_LINES
-
-                //if (visSettings->openGL.enableLighting) { glDisable(GL_LIGHTING); } //only enabled when drawing triangle faces
-            }
-
-            i++;
+            glColor4f(line.color1[0], line.color1[1], line.color1[2], line.color1[3]);
+            glVertex3f(line.point1[0], line.point1[1], line.point1[2]);
+            glVertex3f(line.point2[0], line.point2[1], line.point2[2]);
         }
+        glEnd(); //GL_LINES
         if (visSettings->openGL.advanced.lineSmooth) { glDisable(GL_LINE_SMOOTH); }
 
     }
@@ -3343,7 +3240,8 @@ void GlfwRenderer::RenderGraphicsData(Index viewID, bool selectionMode)
 
 void GlfwRenderer::DrawSphere(const GLSphere& item, bool highlight, Index highlightID, const Float4& otherColor2, const Float4& highlightColor2, bool showFaces)
 {
-	if (!showFaces || item.resolution < 1 || item.radius <= 0.f)
+	Index resolution = EXUvis::SphereResolution(item, *visSettings);
+	if (!showFaces || resolution < 1 || item.radius <= 0.f)
 	{
 		GLfloat d = visSettings->general.pointSize; //point drawing parameter --> put into settings!
 		glBegin(GL_LINES);
@@ -3384,7 +3282,7 @@ void GlfwRenderer::DrawSphere(const GLSphere& item, bool highlight, Index highli
 		glScalef(item.radius, item.radius, item.radius);
 
 		//glListBase(spheresListBase + EXUstd::Minimum(item.resolution, maxSpheresLists-1); //assign base of string list, 32 MUST be smallest value
-		glCallList(spheresListBase + EXUstd::Minimum(item.resolution, maxSpheresLists - 1));
+		glCallList(spheresListBase + EXUstd::Minimum(resolution, maxSpheresLists - 1));
 		glPopMatrix();
 	}
 }

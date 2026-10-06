@@ -8,10 +8,10 @@ Every entry carries the **type** of the issue, then its **priority** and its **e
 
 General information on current version:
 
-- Exudyn version = 1.12.368.dev1
+- Exudyn version = 1.12.369.dev1
 - last change = 2026-10-06
-- Number of issues = 2877
-- Number of resolved issues = 2682 (368 in current version)
+- Number of issues = 2882
+- Number of resolved issues = 2683 (369 in current version)
 
 ## Resolved issues and resolved bugs before version 1.12
 
@@ -7568,6 +7568,15 @@ The following list contains the issues which have been **RESOLVED** in the accor
 
 ## Open issues
 
+- `TESTING` `raised by: Claude-JG` Ubuntu GUI check: curved triangle tiling and recorded frames not reproduced from here (#2881)
+  - description: exudynGuiCheckUbuntu.txt: K13 - openGL.advanced.curvedTriangleTilingAngle 90/5/15 shows no visible difference in graphicsCurvedShapes.py; S6 - Record frames in the SolutionViewer wrote no images (no images folder). Both need a screen: to be repeated with 1.12.37x (a failed PNG write is now reported in the console; the images go to images/ in the directory the script was started from), and the tiling compared with Windows.
+  - date raised: 2026-10-06
+- `CHANGE` `raised by: Claude-JG` The default drawing size of nodes, markers and sensors is too small to see (#2880)
+  - description: GUI checks on macOS and Ubuntu (K1, 'some markers/sensors are too small to see'): defaultSize = -1 gives a radius of 0.001 \* openGL.advanced.initialMaxSceneSize (1 by default), 1 mm in a scene of 1 m, whatever the size of the scene. Proposal, for decision: relative to the scene the renderer computed (maxSceneSize), e.g. 1 %, or a larger factor.
+  - date raised: 2026-10-06
+- `EXTENSION` `raised by: Claude-JG` Shadows of GLSpheres in the OpenGL renderer (#2879)
+  - description: Maintainer, GUIcheckMacOS.txt: the spheres drawn as GLSphere (display lists; graphics.Sphere and, since \#2877, the spheres of connectors and joints) cast no shadow, because each may have many triangles. Proposal: a coarse shadow geometry, e.g. a cylinder or disc per sphere, with some artefacts that are acceptable.
+  - date raised: 2026-10-06
 - `CHECK` `MEDIUM EFF` `raised by: Claude-JG` parameters and output variables that the C++ of an item does not use - found by RG13.3 (#2867)
   - description: Found by checking the descriptions against the implementation (RG13.3.2-.5); the descriptions say what IS now, the code is for a decision: ObjectContactCurveCircles - the output variables DisplacementLocal, VelocityLocal, ForceLocal are declared and give an empty vector, dynamicFriction and frictionProportionalZone are not used, polynomialData only bends the drawing; ObjectContactCircleCable2D - contactDamping is not used (commented out); ObjectConnectorCoordinateSpringDamperExt - velocityOffset only reaches the user function, the built-in law k(x-x0)+d\*v ignores it; ObjectANCFThinPlate - strainIsRelativeToReference has no effect since the port of RG4.20 (strains always relative to the reference). Options per item: implement, or remove the parameter (no deprecation needed for 1.12-new ones).
   - date raised: 2026-10-06
@@ -8162,3 +8171,6 @@ The following list contains the issues which have been **RESOLVED** in the accor
 
 ## Known bugs
 
+- <span class="textred">`BUG`</span> `MEDIUM EFF` `raised by: Claude-JG` macOS: abort when a Tk dialog of the SolutionViewer is closed, and when matplotlib shows a window while the renderer runs (#2878)
+  - description: GUIcheckMacOS.txt: (1) closing the SolutionViewer dialog after demo 2 aborts in PyEval\_RestoreThread: the dialog's Tk after-callback calls SC.renderer.DoIdleTasks, whose glfwPollEvents dispatches the Tk close event (one NSApp event loop), so tkinter's PythonCmd runs nested inside a Python callback, with its saved thread state NULL. Proposal for the Mac session: inside a Tk mainloop on macOS, redraw without polling (Tk's loop already delivers the GLFW events), e.g. DoIdleTasks(pollEvents=False). (2) graphicsDataExample.py: plt.show() with the renderer still running aborts in matplotlib's macosx backend (PyEval\_RestoreThread, GIL released); the example now stops the renderer first; whether a GLFW callback touches Python without the GIL is to be checked on the Mac.
+  - date raised: 2026-10-06

@@ -1,0 +1,15 @@
+{
+  "number": 2877,
+  "title": "First manual GUI check on macOS and Ubuntu (1.12.368): the findings that can be fixed without a screen",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "BUG",
+  "effort": "MEDIUM",
+  "description": "From tmp/MacOS/GUIcheckMacOS.txt (maintainer) and tmp/Ubuntu/exudynGuiCheckUbuntu.txt (M. Pieber), 2026-10-06: CTRL+keypad rotation did nothing (R9); F2 showed no message (K10); the selection highlight lasted 0.5 s (R5); sensor traces missing in the raytracer (K7); graphics.Sphere ignored general.sphereTiling (tiling fixed at creation) and the spheres of connectors were triangles with sphereTiling 6 (= 4 segments as display list); contour Displacement: spheres not colored, and bodies without rotation colored by their local position (A3); a failed PNG write was silent; ConvertImages2Video failed with an ffmpeg without libx264 (conda-forge on macOS); the check list and its model: demo 2, which model, V4/V5 on items the settings reach, V14 'store', S5, P1 (plot windows closed at the end of the script), marker/sensor sizes; the docs: ffmpeg on macOS, CTRL+F3 is a macOS system shortcut.",
+  "dateRaised": "2026-10-06",
+  "deadline": "2027-04-04",
+  "dateResolved": "2026-10-06 22:59",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "Findings of the first manual GUI checks on macOS and Ubuntu: CTRL with the keypad rotates in small steps, F2 shows its message, sensor traces appear in the raytraced image, graphics.Sphere and graphics.Spheres follow visualizationSettings.general.sphereTiling (now 16), the spheres of joints and connectors are drawn smooth, the Displacement contour colors bodies without rotation and spheres correctly, ConvertImages2Video works with an ffmpeg without libx264 (macOS), and a failed image write is reported.",
+  "resolvedInVersion": "1.12.369"
+}

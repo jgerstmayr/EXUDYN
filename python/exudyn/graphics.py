@@ -160,7 +160,7 @@ def _ReturnsRows(function):
 #%%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 @_ReturnsRows
-def Sphere(point=[0,0,0], radius=0.1, color=[0.,0.,0.,1.], nTiles = 8,
+def Sphere(point=[0,0,0], radius=0.1, color=[0.,0.,0.,1.], nTiles = -1,
            addEdges = False, edgeColor=color.black, addFaces=True,
            majorAngleMin = -0.5*pi, majorAngleMax = 0.5*pi, innerRadius = None):
     """generate graphics data for a sphere with point p and radius; a whole sphere is the type 'Spheres', which the
@@ -171,7 +171,7 @@ def Sphere(point=[0,0,0], radius=0.1, color=[0.,0.,0.,1.], nTiles = 8,
         point: center of sphere (3D list or np.array)
         radius: positive value
         color: provided as list of 4 RGBA values
-        nTiles: used to determine resolution of sphere >=2; represents resolution of a half-circle; use larger values for finer resolution
+        nTiles: resolution of the sphere, the number of segments of a half circle (>= 2); -1: a whole sphere takes visualizationSettings.general.sphereTiling when it is drawn, the other shapes 8
         addEdges: True or number of edges along sphere shell (under development); for optimal drawing, nTiles shall be multiple of 4 or 8
         edgeColor: optional color for edges
         addFaces: if False, no faces are added (only edges); ignored in case of hollow sphere
@@ -182,11 +182,13 @@ def Sphere(point=[0,0,0], radius=0.1, color=[0.,0.,0.,1.], nTiles = 8,
     Returns:
         graphicsData dictionary, to be used in visualization of EXUDYN objects
     """
-    if nTiles < 2:
-        exudyn.Print("WARNING: graphics.Sphere: nTiles < 2: setting nTiles=2")
-        nTiles = 2
     if (not addEdges and addFaces and majorAngleMin == -0.5*pi and majorAngleMax == 0.5*pi and innerRadius is None):
         return Spheres(points=[point], radii=radius, colors=color, nTiles=nTiles)
+    if nTiles < 0:
+        nTiles = 8 #the shapes that are triangles (#2877)
+    elif nTiles < 2:
+        exudyn.Print("WARNING: graphics.Sphere: nTiles < 2: setting nTiles=2")
+        nTiles = 2
     if innerRadius is None: #6-node triangles (#2709)
         return _SphereTriangles6(point=point, radius=radius, color=color, nTiles=nTiles, addEdges=addEdges,
                                  edgeColor=edgeColor, addFaces=addFaces, majorAngleMin=majorAngleMin,
@@ -197,7 +199,7 @@ def Sphere(point=[0,0,0], radius=0.1, color=[0.,0.,0.,1.], nTiles = 8,
 
 
 @_ReturnsRows
-def Spheres(points, radii=0.1, colors=[0.,0.,0.,1.], nTiles=8):
+def Spheres(points, radii=0.1, colors=[0.,0.,0.,1.], nTiles=-1):
     """generate graphics data for many spheres at once, as one item of the type 'Spheres' - for particles or point
     clouds; the renderer draws each as a sphere, the raytracer intersects them exactly
 
@@ -205,7 +207,7 @@ def Spheres(points, radii=0.1, colors=[0.,0.,0.,1.], nTiles=8):
         points: the centers, as a list of 3D points or a numpy array of shape (n,3)
         radii: one radius for all, or one per point
         colors: one RGBA color for all, or one per point (list of lists or numpy array of shape (n,4))
-        nTiles: resolution of the drawn spheres, the number of segments of a half circle (rounded down to a power of 2)
+        nTiles: resolution of the drawn spheres, the number of segments of a half circle (rounded down to a power of 2); -1: visualizationSettings.general.sphereTiling when they are drawn
 
     Returns:
         graphicsData dictionary {'type':'Spheres', 'points', 'radii', 'colors', 'resolution'}
@@ -267,7 +269,9 @@ def SpheresToTriangleList(graphicsData):
     n = len(points)
     radii = np.array(graphicsData.get('radii', 0.1), dtype=float).flatten()
     colors = np.array(graphicsData.get('colors', [0.,0.,0.,1.]), dtype=float).flatten()
-    nTiles = int(graphicsData.get('resolution', 8))
+    nTiles = int(graphicsData.get('resolution', -1))
+    if nTiles < 0:
+        nTiles = 16 #the default of visualizationSettings.general.sphereTiling (#2877)
     data = None
     for i in range(n):
         g = _SphereTriangleList(point=points[i], radius=radii[0] if len(radii) == 1 else radii[i],

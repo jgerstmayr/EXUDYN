@@ -103,7 +103,8 @@ keyBindings = [
                'rotate about the 1, 2 and 3-axis (use CTRL for small rotations)',
                'about 1,2 or 3-axis (use CTRL for small rotations)',
                'GLFW_KEY_KP_2,GLFW_KEY_KP_8,GLFW_KEY_KP_4,GLFW_KEY_KP_6,GLFW_KEY_KP_7,'
-               'GLFW_KEY_KP_9'),
+               'GLFW_KEY_KP_9,GLFW_KEY_KP_2+CONTROL,GLFW_KEY_KP_8+CONTROL,GLFW_KEY_KP_4+CONTROL,'
+               'GLFW_KEY_KP_6+CONTROL,GLFW_KEY_KP_7+CONTROL,GLFW_KEY_KP_9+CONTROL'),
     KeyBinding('N', 'show/hide nodes', 'switches the visibility of nodes', '', 'GLFW_KEY_N'),
     KeyBinding('CTRL+N', 'show/hide node numbers', 'switches the visibility of node numbers',
                '', 'GLFW_KEY_N+CONTROL'),

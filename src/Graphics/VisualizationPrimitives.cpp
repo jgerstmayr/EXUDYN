@@ -497,9 +497,8 @@ namespace EXUvis {
 		switch (visualizationSettings.contour.outputVariable)
 		{
 		case OutputVariableType::Position: value = point; break;
-		case OutputVariableType::Displacement:
-			if (applyRotation) { EXUmath::RigidBodyTransformation(refRotation, refPosition, locPoint, pRef); value = point - pRef; }
-			else { value = point - refPosition; }
+		case OutputVariableType::Displacement: //the reference position of this point of the body, also without rotation (#2877)
+			EXUmath::RigidBodyTransformation(refRotation, refPosition, locPoint, pRef); value = point - pRef;
 			break;
 		case OutputVariableType::Velocity:
 			value = applyRotation ? velocity + angularVelocity.CrossProduct(rotation * locPoint) : velocity; break;
@@ -555,6 +554,7 @@ namespace EXUvis {
 		for (GLSphere item : bodyGraphicsData.glSpheres) //copy objects; the radius does not change (#2709)
 		{
 			item.itemID = itemID;
+			Float3 locPoint = item.point;
 			if (applyRotation)
 			{
 				EXUmath::RigidBodyTransformation(rotation, position, item.point, item.point);
@@ -563,6 +563,8 @@ namespace EXUvis {
 			{
 				item.point += position;
 			}
+			//one color for the sphere, the one of its center (#2877)
+			if (contourColor) { ContourColorOfBodyPoint(locPoint, item.point, position, rotation, refPosition, refRotation, velocity, angularVelocity, applyRotation, visualizationSettings, item.color); }
 			graphicsData.glSpheres.Append(item);
 		}
 
@@ -708,14 +710,16 @@ namespace EXUvis {
 				{
 					for (Index i = 0; i < 3; i++)
 					{
+						Float3 locPoint = item.points[i];
 						item.points[i] += position;
 						switch (outputVariable)
 						{
 						case OutputVariableType::Position:
 							value = item.points[i];
 							break;
-						case OutputVariableType::Displacement:
-							value = item.points[i] - refPosition;
+						case OutputVariableType::Displacement: //the reference position of this point; it was the body's (#2877)
+							EXUmath::RigidBodyTransformation(refRotation, refPosition, locPoint, pRef);
+							value = item.points[i] - pRef;
 							break;
 						case OutputVariableType::DisplacementLocal:
 							value.SetAll(0);
@@ -1246,6 +1250,18 @@ namespace EXUvis {
 
 	//! draw a sphere with center at p, radius and color; nTiles are in 2 dimensions (8 tiles gives 8x8 x 2 faces)
 	void DrawSphere(const Vector3D& p, Real radius, const Float4& color, GraphicsData& graphicsData, Index itemID,
+		Index nTiles, bool drawSmooth)
+	{
+		if (radius <= 0.) { return; } //not visible
+		if (drawSmooth) //a GLSphere: no triangles, and the same in the raytracer (#2877)
+		{
+			graphicsData.AddSphere(p, color, itemID, (float)radius, TilingToBitResolution(EXUstd::Maximum(nTiles, (Index)2)));
+			return;
+		}
+		DrawSphereTriangles(p, radius, color, graphicsData, itemID, nTiles, drawSmooth);
+	}
+
+	void DrawSphereTriangles(const Vector3D& p, Real radius, const Float4& color, GraphicsData& graphicsData, Index itemID,
 		Index nTiles, bool drawSmooth)
 	{
 		if (nTiles < 2) { nTiles = 2; } //less than 2 tiles makes no sense

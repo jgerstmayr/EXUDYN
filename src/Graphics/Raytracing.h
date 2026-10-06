@@ -475,6 +475,11 @@ public:
 	void SoftwareRenderer(Index viewID, VisualizationSystemContainerBase* basicVisualizationSystemContainerInit, 
 		const RenderStateMachine& stateMachine, bool storeImage=false, bool isCalledFromMainThread=false);
 
+	//! the sensor traces of visualizationSettings.sensors.traces as lines - position trace, vectors and triads -, global;
+	//! the OpenGL renderer and the raytracer draw the same lines (#2877)
+	static void SensorTraceLines(VisualizationSystemContainerBase* visualizationSystemContainer, const VisualizationSettings& visSettings,
+		ResizableArray<GLLine>& lines);
+
 
 };
 

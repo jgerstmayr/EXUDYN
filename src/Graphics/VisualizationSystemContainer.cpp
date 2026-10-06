@@ -880,8 +880,12 @@ bool PyWriteBodyGraphicsDataList(const py::object object, BodyGraphicsData& data
 							}
 							if (colors.size() != 4 && (Index)colors.size() != 4 * n) { PyError("GraphicsData Spheres: 'colors' must be one RGBA color or one per point", PyErrorType::valueError); return false; }
 
-							Index resolution = TilingToBitResolution(8);
-							if (gDict.contains("resolution")) { resolution = TilingToBitResolution(EXUstd::Maximum(2, py::cast<Index>(gDict["resolution"]))); }
+							//a resolution < 0, the default of graphics.Spheres, takes general.sphereTiling when drawn (#2877)
+							Index resolution = glSphereResolutionFromSettings;
+							if (gDict.contains("resolution") && py::cast<Index>(gDict["resolution"]) >= 0)
+							{
+								resolution = TilingToBitResolution(EXUstd::Maximum(2, py::cast<Index>(gDict["resolution"])));
+							}
 
 							for (Index i = 0; i < n; i++)
 							{
@@ -1315,7 +1319,8 @@ py::list PyGetBodyGraphicsDataList(const BodyGraphicsData& data, bool addGraphic
 			d["points"] = Rows2NumPy(points, 3);
 			d["radii"] = FloatVector2NumPy(radii);
 			d["colors"] = Rows2NumPy(colors, 4);
-			d["resolution"] = (Index)1 << data.glSpheres[0].resolution;
+			Index resolution = data.glSpheres[0].resolution;
+			d["resolution"] = resolution == glSphereResolutionFromSettings ? (Index)-1 : (Index)1 << resolution; //-1: general.sphereTiling (#2877)
 			list.append(d);
 		}
 
