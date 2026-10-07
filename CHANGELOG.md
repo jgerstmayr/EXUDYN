@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.12 | Metheney | 352 | 1.12.447 |
+| 1.12 | Metheney | 354 | 1.12.449 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
 | 1.9 | Krall | 235 | 1.9.234 |
@@ -29,6 +29,14 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.12 - Metheney (current)
 
+- **1.12.449** `FIX` `MEDIUM EFF` `raised by: Claude-JG` `resolved by: Claude-JG` the scaling of the render window and the dialogs, restarted: system scaling times displayScaleFactor for the renderer, the scaling of Tk plus dialogs.fontScaling for every dialog (#2898)
+  - description: The maintainer's measurements on Ubuntu with fractional scaling 200 percent, 2026-10-07 (after \#2897): displayScaleFactor 0 / fontScaling 0: render window scaled, the settings tree scaled, but buttons and edit fields very small, help and command dialogs not scaled; displayScaleFactor 1: dialogs scaled with buttons and edit fields large (looks best), render window unscaled; fontScaling 0.5: all dialogs 2x smaller, buttons tiny; at 100 percent a displayScaleFactor 0.5 made the buttons huge. 'I would suggest to kind of restart the scaling thing ... a conservative approach ... check at which places these factors take effect ... consider that some tkFonts already scale with the linux fractional scaling, so double scaling is contraproductive ... write up a table'. revision2026b step RG6.16
+  - **notes:** The render window scales with the display scaling of the system times general.displayScaleFactor; every dialog - settings, help, command window, buttons and edit fields included - follows the system scaling, and dialogs.fontScaling is a factor on top of it; confirmed on Ubuntu with fractional scaling
+  - date resolved: **2026-10-07 21:37**, date raised: 2026-10-07
+- **1.12.448** `CHECK` `LOW EFF` `resolved by: Claude-JG` linux GLFW (#2277)
+  - description: check if glfwGetWindowContentScale now works on newer GLFW version to enable display scaling on linux
+  - **notes:** On Linux the display scaling of the system (also fractional scaling) is read through GLFW 3.3.6 or newer and scales the render window and the dialogs; confirmed on Ubuntu
+  - date resolved: **2026-10-07 21:37**, date raised: 2026-02-09
 - **1.12.447** `CHANGE` `MEDIUM EFF` `raised by: Claude-JG` `resolved by: Claude-JG` one display scaling setting: general.displayScaleFactor (0 = system, \> 0 = override); the dialog fonts of fontScaling for all widgets; after-callbacks of closed dialogs (#2897)
   - description: The maintainer's check on Ubuntu, 2026-10-07: scaling is improved; the display scaling provided by Ubuntu works perfectly, so merge the factors: displayScaleFactor = 0 uses the scaling of Windows, Linux (macOS if possible), \> 0 overrides; useWindowsDisplayScaleFactor and linuxDisplayScaleFactor deprecated (the linux value mapped to the new one, the windows value to a dummy). dialogs.fontScaling rescales only the inner text, not the buttons or the edit fields, and it rescales while the window opens; values \< 1 were used too. 'invalid command name ...\<lambda\> while executing (after script)' after closing dialogs. A crash 'X Error of failed request: BadWindow (X\_QueryTree)', 'terminate called without an active exception' after changing a few parameters and re-opening. revision2026b step RG6.15
   - **notes:** One display scaling setting, general.displayScaleFactor: 0 uses the scaling of the system (Windows, Linux, macOS), a value \> 0 replaces it; useWindowsDisplayScaleFactor and linuxDisplayScaleFactor are deprecated. dialogs.fontScaling applies to every widget of the dialogs, buttons and edit fields included, and closing a dialog no longer leaves invalid command name messages

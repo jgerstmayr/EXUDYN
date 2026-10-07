@@ -1966,7 +1966,7 @@ class VSettingsDialogs:
     columnWidthValue: float
     """width of the value column of a settings dialog, as a fraction of the width of the dialog."""
     fontScaling: float
-    """scaling of the font in dialogs; 0 = automatic, which is the system display scaling on Windows and Linux and a fixed factor on MacOS. Any value > 0 sets the font scaling on EVERY platform, which is the way to make the dialogs readable on a Linux desktop; it sets the named fonts of Tk, so every widget of the dialogs (text, buttons, edit fields) takes it."""
+    """factor on the font of the dialogs, relative to the display scaling of the system (monitor scaling on Windows, fractional scaling on Linux), which the dialogs follow anyway; 0 = 1 (on MacOS a fixed factor for the settings tree); every widget of the dialogs takes it - text, buttons, edit fields and the settings tree."""
     multiThreadedDialogs: bool
     """True: During dialogs, the OpenGL render windows will still get updates of changes in dialogs, etc., which may cause problems on some platforms or for some (complicated) models; False: changes of dialogs will take effect when dialogs are closed."""
     openTreeView: bool

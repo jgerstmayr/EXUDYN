@@ -1232,7 +1232,7 @@ definitions.append(StructureDefinition(
         StructureParameter(type=Tfloat(minimum=0),
             pythonName='fontScaling',
             defaultValue=0.,
-            description=r'scaling of the font in dialogs; 0 = automatic, which is the system display scaling on Windows and Linux and a fixed factor on MacOS. Any value > 0 sets the font scaling on EVERY platform, which is the way to make the dialogs readable on a Linux desktop; it sets the named fonts of Tk, so every widget of the dialogs (text, buttons, edit fields) takes it'),
+            description=r'factor on the font of the dialogs, relative to the display scaling of the system (monitor scaling on Windows, fractional scaling on Linux), which the dialogs follow anyway; 0 = 1 (on MacOS a fixed factor for the settings tree); every widget of the dialogs takes it - text, buttons, edit fields and the settings tree'),
         StructureParameter(type=Tfloat(minimum=0), cFlags=SFDeprecated,
             pythonName='fontScalingMacOS',
             deprecated=Deprecated('1.12.15', 2032),

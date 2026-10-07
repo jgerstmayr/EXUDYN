@@ -1,0 +1,15 @@
+{
+  "number": 2277,
+  "title": "linux GLFW",
+  "author": "JG",
+  "status": "RESOLVED",
+  "type": "CHECK",
+  "effort": "LOW",
+  "description": "check if glfwGetWindowContentScale now works on newer GLFW version to enable display scaling on linux",
+  "dateRaised": "2026-02-09",
+  "deadline": "2026-08-08",
+  "dateResolved": "2026-10-07 21:37",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "On Linux the display scaling of the system (also fractional scaling) is read through GLFW 3.3.6 or newer and scales the render window and the dialogs; confirmed on Ubuntu",
+  "resolvedInVersion": "1.12.448"
+}

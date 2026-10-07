@@ -8,10 +8,10 @@ Every entry carries the **type** of the issue, then its **priority** and its **e
 
 General information on current version:
 
-- Exudyn version = 1.12.447.dev1
+- Exudyn version = 1.12.449.dev1
 - last change = 2026-10-07
 - Number of issues = 2899
-- Number of resolved issues = 2761 (447 in current version)
+- Number of resolved issues = 2763 (449 in current version)
 
 ## Resolved issues and resolved bugs before version 1.12
 
@@ -7568,9 +7568,6 @@ The following list contains the issues which have been **RESOLVED** in the accor
 
 ## Open issues
 
-- `FIX` `MEDIUM EFF` `raised by: Claude-JG` the scaling of the render window and the dialogs, restarted: system scaling times displayScaleFactor for the renderer, the scaling of Tk plus dialogs.fontScaling for every dialog (#2898)
-  - description: The maintainer's measurements on Ubuntu with fractional scaling 200 percent, 2026-10-07 (after \#2897): displayScaleFactor 0 / fontScaling 0: render window scaled, the settings tree scaled, but buttons and edit fields very small, help and command dialogs not scaled; displayScaleFactor 1: dialogs scaled with buttons and edit fields large (looks best), render window unscaled; fontScaling 0.5: all dialogs 2x smaller, buttons tiny; at 100 percent a displayScaleFactor 0.5 made the buttons huge. 'I would suggest to kind of restart the scaling thing ... a conservative approach ... check at which places these factors take effect ... consider that some tkFonts already scale with the linux fractional scaling, so double scaling is contraproductive ... write up a table'. revision2026b step RG6.16
-  - date raised: 2026-10-07
 - `CHANGE` `HIGH EFF` `raised by: Claude-JG` joints and their Jacobians on homogeneous transformations (#2884)
   - description: The constraint equations of the joints become functions of the relative transformation H0^-1 H1 of the two marker frames, and their Jacobians follow systematically from the relative twist - one implementation for JointGeneric, JointRevoluteZ, JointPrismaticX, the 2D joints and the rolling disc instead of one each. Successor of \#2745 (the marker interface of RG14.2). revision2026b step RG14.3
   - date raised: 2026-10-07
@@ -7623,10 +7620,6 @@ The following list contains the issues which have been **RESOLVED** in the accor
   - description: add functionality to make consistent triangles with same orientation (all computed normals are outbound or inbound); used to heal imported geometries
   - **remarks:** planned as revision2026b step RG6.12 (triage 2026-10-07)
   - date raised: 2026-02-11
-- `CHECK` `LOW EFF` linux GLFW (#2277)
-  - description: check if glfwGetWindowContentScale now works on newer GLFW version to enable display scaling on linux
-  - **remarks:** planned as revision2026b step RG6.8.5 (triage 2026-10-07); 2026-10-07: compiled in on Linux from GLFW 3.3.6 on, revision2026b step RG6.14 (\#2893); to be checked on Ubuntu
-  - date raised: 2026-02-09
 - `DOCU` `LOW EFF` GetURDFrobotData (#2267)
   - description: add detailed description to function, in particular to returned dict
   - **remarks:** planned as revision2026b step RG18.1 (triage 2026-10-07)

@@ -58,7 +58,7 @@ see also common blogs for your operating system.
   and the dialogs (GLFW 3.3.6 or newer; Ubuntu 22.04 and later). To adjust by hand, while the renderer runs:
   `SC.visualizationSettings.general.displayScaleFactor` (a factor on the scaling of the system, for the texts of the
   render window), `window.globalFontSize` (the size of those texts) and `dialogs.fontScaling` (a factor on the font of
-  every widget of the dialogs; 0 = 1).
+  every widget of the dialogs, relative to the scaling of the system; 0 = 1).
 - **Videos from recorded frames**: `conda install ffmpeg` and `pip install ffmpeg-python`, see
   {ref}`sec-overview-basics-animations`.
 

@@ -16753,3 +16753,15 @@ contraproductive. Possibly you also write up a table".)*
 - `ScaledFontSize` and the test in `test_guiValues.py` follow the new rule (pixels to points, 0 = 1, at least 6).
 - Not measured here: the dialogs need a screen. The table is what the next measurement on Ubuntu (100 and 200 percent)
   and Windows checks.
+
+<a id="rg6-16-1"></a>
+### RG6.16 — confirmed on Ubuntu; the description of `dialogs.fontScaling` (2026-10-07, #2898, #2277)
+
+*(Maintainer 2026-10-07: "It works as I would expect. Note that dialogs.fontScaling is still *relative* to the linux
+fractional scaling, but this is ok, I believe (but it is different in the description - please adjust). Default works and
+adjustments are smooth. All parts of the dialogs are affected. So, don't change anything in the code any more.")*
+
+- No code changed. The description of `dialogs.fontScaling` says what it is: a factor relative to the display scaling of
+  the system, 0 = 1, for every widget of the dialogs; it said "0 = automatic ... any value > 0 sets the font scaling",
+  which was the behaviour before #2898. The section *Working with Ubuntu* says "relative to the scaling of the system".
+- #2898 and #2277 (the display scaling of GLFW on Linux) resolved.
