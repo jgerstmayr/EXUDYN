@@ -1,0 +1,16 @@
+{
+  "number": 2897,
+  "title": "one display scaling setting: general.displayScaleFactor (0 = system, > 0 = override); the dialog fonts of fontScaling for all widgets; after-callbacks of closed dialogs",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "CHANGE",
+  "effort": "MEDIUM",
+  "description": "The maintainer's check on Ubuntu, 2026-10-07: scaling is improved; the display scaling provided by Ubuntu works perfectly, so merge the factors: displayScaleFactor = 0 uses the scaling of Windows, Linux (macOS if possible), > 0 overrides; useWindowsDisplayScaleFactor and linuxDisplayScaleFactor deprecated (the linux value mapped to the new one, the windows value to a dummy). dialogs.fontScaling rescales only the inner text, not the buttons or the edit fields, and it rescales while the window opens; values < 1 were used too. 'invalid command name ...<lambda> while executing (after script)' after closing dialogs. A crash 'X Error of failed request: BadWindow (X_QueryTree)', 'terminate called without an active exception' after changing a few parameters and re-opening. revision2026b step RG6.15",
+  "dateRaised": "2026-10-07",
+  "deadline": "2027-04-05",
+  "dateResolved": "2026-10-07 18:47",
+  "resolvedAuthor": "Claude-JG",
+  "file": "definitions/structureDefsVisualizationSettings.py",
+  "releaseNotes": "One display scaling setting, general.displayScaleFactor: 0 uses the scaling of the system (Windows, Linux, macOS), a value > 0 replaces it; useWindowsDisplayScaleFactor and linuxDisplayScaleFactor are deprecated. dialogs.fontScaling applies to every widget of the dialogs, buttons and edit fields included, and closing a dialog no longer leaves invalid command name messages",
+  "resolvedInVersion": "1.12.447"
+}

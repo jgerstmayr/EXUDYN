@@ -71,12 +71,10 @@ for cnt, link in enumerate(robotDef['links']):
         alpha[cnt], dx[cnt], rz[cnt],  = link['stdDH'][0],link['stdDH'][1], link['stdDH'][3]
 
 myIkine = InverseKinematicsNumerical(robot2, useRenderer=True)
-## test 
-if 1:  # tests close to zero-configuration
-    R = RotXYZ2RotationMatrix(np.array([np.pi,0.2*0,np.pi/8*0 ]))
-    t = [0.4526, -0.1488, 0.5275] 
-    T2 = [[1,0,0,0.3], [0,1,0,0.3], [0,0,1,0.3], [0,0,0,1]]
-    T3 = exu.HT(rotation=R, translation=t)
-    sol = myIkine.Solve(T3, q0 = [0, -np.pi/4, -np.pi/4, -np.pi/4, np.pi/4, np.pi/2])
-    print('success = {}\nq = {} rad'.format(sol[1], np.round(sol[0], 3)))
+#the target pose is the one of a known configuration, so it is reachable; the solver starts from another one
+qTarget = [0.2, -0.9, -0.8, -0.7, 0.6, 1.4]
+T3 = robot2.JointHT(qTarget)[-1] @ robot2.tool.HT #the tool frame in the target configuration
+q0 = [0, -np.pi/4, -np.pi/4, -np.pi/4, np.pi/4, np.pi/2]
+[q, success] = myIkine.Solve(T3, q0=q0)
+print('success = {}\nq = {} rad'.format(success, None if q is None else np.round(q, 3)))
 ```

@@ -901,7 +901,7 @@ def testTheHintForATkWithoutXftOnLinuxOnly(platform, fontSystem, hinted):
         assert 'conda install -c conda-forge "tk=*=xft_*"' in hint
 
 
-#the dialogs H, X and the quit question follow dialogs.fontScaling as the settings dialog does (#2893)
+#dialogs.fontScaling sets the named fonts of Tk, so every widget of a dialog takes it - buttons and edit fields too (#2897)
 class _FontScalingSC:
     """a container whose only setting is dialogs.fontScaling"""
     def __init__(self, fontScaling):
@@ -912,13 +912,22 @@ class _FontScalingSC:
         self.visualizationSettings.dialogs.fontScaling = fontScaling
 
 
-def testTheOtherDialogsTakeTheFontOfFontScaling(monkeypatch):
-    root = TkRootOrSkip()
-    monkeypatch.setattr(gui, 'GetRendererSystemContainer', lambda: _FontScalingSC(0.))
-    assert gui.ScaledDialogFonts(root, ['TkDefaultFont', 'TkFixedFont']) == [{}, {}], 'at 0 the fonts of Tk stay'
+@pytest.mark.parametrize('size, fontScaling, expected', [(10, 0., 10), (10, 2., 20), (-12, 1.5, -18),
+                                                         (10, 0.4, 6), (-12, 0.5, -6), (0, 2., 0)])
+def testAScaledFontSizeKeepsPointsOrPixelsAndAMinimum(size, fontScaling, expected):
+    assert gui.ScaledFontSize(size, fontScaling) == expected
 
+
+def testFontScalingSetsTheNamedFontsAndZeroGivesThemBack(monkeypatch):
+    root = TkRootOrSkip()
+    defaultFont = gui.tkFont.nametofont('TkDefaultFont', root=root)
+    monkeypatch.setattr(gui, 'GetRendererSystemContainer', lambda: _FontScalingSC(0.))
+    gui.ApplyDialogFontScaling(root)
+    original = defaultFont.cget('size')
     monkeypatch.setattr(gui, 'GetRendererSystemContainer', lambda: _FontScalingSC(2.))
-    [textFont, fixedFont] = gui.ScaledDialogFonts(root, ['TkDefaultFont', 'TkFixedFont'])
-    assert textFont['font'].cget('size') == gui.DialogFontSize(2.)
-    assert fixedFont['font'].cget('size') == gui.DialogFontSize(2.)
-    assert fixedFont['font'].cget('family') == gui.tkFont.nametofont('TkFixedFont', root=root).cget('family')
+    gui.ApplyDialogFontScaling(root)
+    gui.ApplyDialogFontScaling(root)    #twice: scaled from the original, not compounded
+    assert defaultFont.cget('size') == gui.ScaledFontSize(original, 2.)
+    monkeypatch.setattr(gui, 'GetRendererSystemContainer', lambda: _FontScalingSC(0.))
+    gui.ApplyDialogFontScaling(root)
+    assert defaultFont.cget('size') == original

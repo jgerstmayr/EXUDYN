@@ -998,6 +998,12 @@ The steps are numbered in the order they were raised and stand here in the order
 on b834538a, forwarded by the maintainer)* **`mbs.ComputeItem` cast every object to a body**: a downcast to
 `CObjectBody` for connectors and constraints too, which UBSan reports; the cast is done for bodies only.
 
+<a id="rg4-26"></a>
+**RG4.26** **DONE 2026-10-07** (#2896) — [log](exudynRevisionLog2026b.md#rg4-26) *(group RG4; found by the examples run, the
+maintainer: "also fix #2896")* **`InverseKinematicsNumericalExample.py`**: its target pose was not reached (the static
+solver did not converge, since 1.12.288 `Solve` returns `q = None` then) and the example printed `np.round(None)`; the
+example takes the pose of a known configuration, `Solve` no longer rounds a `None`.
+
 ## RG5 — Performance
 
 Measurement first, then the code that is actually hot. revision2026 step R2.16 measured the linear
@@ -1262,6 +1268,13 @@ font of all dialogs**: the renderer reads the scaling of the system on Linux too
 Scaling* scales its texts; `useWindowsDisplayScaleFactor` and `linuxDisplayScaleFactor` act while the renderer runs;
 `dialogs.fontScaling` also sets the font of the help (H), the command window (X) and the quit question - done
 2026-10-07, **to be checked on Ubuntu** (and the Windows scaling unchanged).
+
+<a id="rg6-15"></a>
+**RG6.15** **DONE 2026-10-07** (#2897) — [log](exudynRevisionLog2026b.md#rg6-15) *(group RG6; the maintainer's check on
+Ubuntu 2026-10-07)* **One display scaling setting, and the dialog font for every widget**: `general.displayScaleFactor`
+(0 = the scaling of the system, > 0 replaces it, on every platform) instead of `useWindowsDisplayScaleFactor` (deprecated,
+no effect) and `linuxDisplayScaleFactor` (deprecated, forwards); `dialogs.fontScaling` sets the named fonts of Tk before a
+dialog is built, so buttons and edit fields follow; the callbacks of a closed dialog are cancelled.
 
 ## RG7 — Python user items
 
@@ -2243,7 +2256,7 @@ issue and a short title only. The open issues that are not steps are in the trac
 | RG5.4 | #2182, #2183, #2184 | the superelements for larger meshes |
 | RG6.8 | #2140, #2204, #2194 | the graphics fixes before 1.13: Linux (RG6.8.5), the near and far planes (RG6.8.8) |
 | RG6.11, RG6.12 | #2154, #2155, #2244, #2281 | textures; a ruler and consistent triangle orientation |
-| RG6.14 | #2893, #2277 | display scaling on Linux and the font of all dialogs: to be checked on Ubuntu |
+| RG6.14 | #2277 | display scaling on Linux: confirmed on Ubuntu (2026-10-07, #2893), the rest in RG6.15 |
 | RG12.44 to RG12.46 | #2075, #2342, #1931, #1932, #1941, #782, #1863, #1864, #1892 | dictionaries and item visualization, URDF import, `MatrixContainer` |
 | RG2.6 | #559, #591, #2326 | three old test models |
 | RG4.21 to RG4.24 | #303, #574, #2315-#2317, #1548, #926 | velocity/time-dependent constraints, a 3D sliding joint, ODE1 load Jacobians, rolling friction |

@@ -8,10 +8,10 @@ Every entry carries the **type** of the issue, then its **priority** and its **e
 
 General information on current version:
 
-- Exudyn version = 1.12.444.dev1
+- Exudyn version = 1.12.447.dev1
 - last change = 2026-10-07
-- Number of issues = 2897
-- Number of resolved issues = 2758 (444 in current version)
+- Number of issues = 2898
+- Number of resolved issues = 2761 (447 in current version)
 
 ## Resolved issues and resolved bugs before version 1.12
 
@@ -7568,9 +7568,6 @@ The following list contains the issues which have been **RESOLVED** in the accor
 
 ## Open issues
 
-- `FIX` `MEDIUM EFF` `raised by: Claude-JG` Ubuntu: fractional scaling not followed by the renderer, linuxDisplayScaleFactor without effect, dialogs.fontScaling not in the H and X dialogs (#2893)
-  - description: The maintainer's check on Ubuntu, 2026-10-07: 'general.linuxDisplayScaleFactor does nothing (can be removed?); dialogs.fontScaling works for the visualizationSettingsDialog, but not for the other dialogs (X, H); the linux settings Fractional Scaling affects the dialogs font sizes, but not the renderer's =\> fix if possible; the renderer's font size can be adjusted currently with the view0.window.globalFontSize.' revision2026b step RG6.14
-  - date raised: 2026-10-07
 - `CHANGE` `HIGH EFF` `raised by: Claude-JG` joints and their Jacobians on homogeneous transformations (#2884)
   - description: The constraint equations of the joints become functions of the relative transformation H0^-1 H1 of the two marker frames, and their Jacobians follow systematically from the relative twist - one implementation for JointGeneric, JointRevoluteZ, JointPrismaticX, the 2D joints and the rolling disc instead of one each. Successor of \#2745 (the marker interface of RG14.2). revision2026b step RG14.3
   - date raised: 2026-10-07
@@ -7709,7 +7706,7 @@ The following list contains the issues which have been **RESOLVED** in the accor
   - date raised: 2025-11-02
 - `FIX` `HIGH EFF` linux (#2140)
   - description: fix graphics-related crashes on linux versions, in particular when closing renderer and with mbs.SolutionViewer()
-  - **remarks:** planned before 1.13 as revision2026b step RG6.8.5 (2026-09-29)
+  - **remarks:** planned before 1.13 as revision2026b step RG6.8.5 (2026-09-29); 2026-10-07, maintainer on Ubuntu (1.12.443): after changing a few parameters in a dialog and re-opening it: X Error of failed request: BadWindow (invalid Window parameter), major opcode 15 (X\_QueryTree), then terminate called without an active exception, core dumped. Suspect: the tkinter dialog and the GLFW render thread both using X11; to be reproduced on the Ubuntu machine. The messages invalid command name ...\<lambda\> of demo 2 were scheduled callbacks of closed dialogs, fixed by \#2897
   - date raised: 2025-07-10
 - `EXTENSION` `MEDIUM EFF` ObjectContact (#2131)
   - description: add rolling resistance
@@ -8100,6 +8097,3 @@ The following list contains the issues which have been **RESOLVED** in the accor
 
 ## Known bugs
 
-- <span class="textred">`BUG`</span> `LOW EFF` `raised by: Claude-JG` InverseKinematicsNumericalExample.py fails: InverseKinematicsNumerical.Solve returns None for the joint values (#2896)
-  - description: Found by the examples run of 1.12.443 (2026-10-07): TypeError: unsupported operand type(s) for \*: 'NoneType' and 'float' in np.round(sol\[0\], 3) at line 72 - the solution of myIkine.Solve(T3, q0=...) is None. The example passed in the runs up to 1.12.279; the robotics classes were changed to exu.HT in between (\#2821). Not investigated yet.
-  - date raised: 2026-10-07

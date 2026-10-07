@@ -29,9 +29,9 @@ VSettingsGeneral has the following items:
 | `circleTiling` | PInt | 16 | global number of segments for circles; if smaller than 2, 2 segments are used (flat); the circles of the 2D cable contacts (ObjectContactCircleCable2D, ObjectContactFrictionCircleCable2D), large compared to the cable, take 4 times as many |
 | `coordinateSystemSize` | PFloat | 5. | size of coordinate system relative to font size |
 | `cylinderTiling` | PInt | 16 | global number of segments for cylinders; if smaller than 2, 2 segments are used (flat); also around the rope of a reeving system and the wire of a spring drawn as a tube; the disc of ObjectJointRollingDisc and ObjectConnectorRollingDiscPenalty, large compared to the joint, takes 4 times as many; space curves use connectors.curveTiling |
+| `displayScaleFactor` | UFloat | 0. | scaling of the texts of the render window and of the size of the dialogs; 0 = the display scaling of the system (monitor scaling, e.g. 150 percent on Windows, fractional scaling on Linux), read by GLFW (glfwGetWindowContentScale; on Linux from GLFW 3.3.6 on) and followed when it changes; a value > 0 is used instead of it, on every platform; acts while the renderer runs |
 | `graphicsUpdateInterval` | UFloat | 0.1 | interval of graphics update during simulation in seconds; 0.1 = 10 frames per second; low numbers might slow down computation speed |
 | `limitWindowToScreenSize` | bool | True | True: size for render window of respective view is limited to screen size; False: larger window sizes (e.g. for rendering) allowed according to renderWindowSize |
-| `linuxDisplayScaleFactor` | PFloat | 1. | an additional factor on Linux, multiplied with the display scaling of the system, for the texts of the render window and the size of the dialogs; for a system that reports no or a wrong scaling; acts while the renderer runs |
 | `minSceneSize` | PFloat | 0.1 | minimum scene size for initial scene size and for autoFitScene, to avoid division by zero; SET GREATER THAN ZERO |
 | `pointSize` | PFloat | 0.01 | global point size (absolute) |
 | `reallyQuitTimeLimit` | UReal | 900 | number of seconds after which user is asked a security question before stopping simulation and closing renderer; set to 0 in order to always get asked; set to 1e10 to (nearly) never get asked |
@@ -51,7 +51,6 @@ VSettingsGeneral has the following items:
 | `useBitmapText` | bool | True | if true, texts are displayed using pre-defined bitmaps for the text; may increase the complexity of your scene, e.g., if many (>10000) node numbers shown |
 | `useGradientBackground` | bool | False | true = use vertical gradient for background; |
 | `useMultiThreadedRendering` | bool | True | true = rendering is done in separate thread; false = no separate thread, which may be more stable but has lagging interaction for large models (do not interact with models during simulation); you MUST set this parameter BEFORE call to SC.renderer.Start(); MAC OS: uses always false, because MAC OS does not support multi threaded GLFW |
-| `useWindowsDisplayScaleFactor` | bool | True | the display scaling of the system (monitor scaling, e.g. 150 percent on Windows or fractional scaling on Linux) scales the texts of the render window and the dialogs; read by GLFW (glfwGetWindowContentScale; on Linux from GLFW 3.3.6 on) and followed when it changes; acts while the renderer runs |
 | `zoomAllUseBoundingBox` | bool | True | if true, use exact scene bounding box (but not including texts) for zoom; does not include perspective effects! |
 
 
@@ -539,7 +538,7 @@ VSettingsDialogs has the following items:
 | `columnWidthName` | UFloat | 0.31 | width of the name column of a settings dialog, as a fraction of the width of the dialog; the description column takes what the three columns leave |
 | `columnWidthType` | UFloat | 0.11 | width of the type column of a settings dialog, as a fraction of the width of the dialog |
 | `columnWidthValue` | UFloat | 0.18 | width of the value column of a settings dialog, as a fraction of the width of the dialog |
-| `fontScaling` | UFloat | 0. | scaling of the font in dialogs; 0 = automatic, which is the system display scaling on Windows and Linux and a fixed factor on MacOS. Any value > 0 sets the font scaling on EVERY platform, which is the way to make the dialogs readable on a Linux desktop; it applies to the settings dialogs, the help (H), the command window (X) and the quit question |
+| `fontScaling` | UFloat | 0. | scaling of the font in dialogs; 0 = automatic, which is the system display scaling on Windows and Linux and a fixed factor on MacOS. Any value > 0 sets the font scaling on EVERY platform, which is the way to make the dialogs readable on a Linux desktop; it sets the named fonts of Tk, so every widget of the dialogs (text, buttons, edit fields) takes it |
 | `multiThreadedDialogs` | bool | True | True: During dialogs, the OpenGL render windows will still get updates of changes in dialogs, etc., which may cause problems on some platforms or for some (complicated) models; False: changes of dialogs will take effect when dialogs are closed |
 | `openTreeView` | bool | False | True: all sub-trees of the visusalization dialog are opened when opening the dialog; False: only some sub-trees are opened |
 | `storeDialogPositions` | bool | False | True: a dialog stores its size and position in `~/.exudyn/config.json` when it closes, so that the next dialog of the same kind starts with them. A geometry that IS stored - by this flag, by the store button of the settings dialog, or by a script - is used whenever such a dialog opens, whatever this flag says: the size always, the position only if the window would still be reachable on the current screen. See Section [](#sec-usersettings) |
@@ -850,8 +849,10 @@ The following parameter changes have been made:
 
 - `visualizationSettings.general.drawCoordinateSystem` → `visualizationSettings.view0.scene.drawCoordinateSystem` (changed in version 1.10.80, expires: 2030)
 - `visualizationSettings.general.drawWorldBasis` → `visualizationSettings.view0.scene.drawWorldBasis` (changed in version 1.10.80, expires: 2030)
+- `visualizationSettings.general.linuxDisplayScaleFactor` → `visualizationSettings.general.displayScaleFactor` (changed in version 1.12.445, expires: 2031)
 - `visualizationSettings.general.showComputationInfo` → `visualizationSettings.view0.window.showComputationInfo` (changed in version 1.10.80, expires: 2030)
 - `visualizationSettings.general.textSize` → `visualizationSettings.view0.window.globalFontSize` (changed in version 1.10.80, expires: 2030)
+- `visualizationSettings.general.useWindowsDisplayScaleFactor` → `visualizationSettings.openGL.dummyBool` (changed in version 1.12.445, expires: 2031)
 - `visualizationSettings.general.worldBasisSize` → `visualizationSettings.view0.scene.worldBasisSize` (changed in version 1.10.80, expires: 2030)
 - `visualizationSettings.contour.colorBarPrecision` → `visualizationSettings.contour.advanced.colorBarPrecision` (changed in version 1.10.80, expires: 2030)
 - `visualizationSettings.contour.colorBarTiling` → `visualizationSettings.contour.advanced.colorBarTiling` (changed in version 1.10.80, expires: 2030)

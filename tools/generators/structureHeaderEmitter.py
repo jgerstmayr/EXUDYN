@@ -427,7 +427,10 @@ def StructureCppHeader(parseInfo):
                 newName = Description(parameter) #a rename in the same structure is named with its structure (#2588)
                 if DeprecatedForwardsInStructure(parameter):
                     newName = ConvertClassName2member(Header(parseInfo, 'class')) + '.' + newName
-                deprecationWarning += ' is deprecated! use '+newName+' instead!");'+lineBreakIDP
+                if Description(parameter) in ['openGL.dummy', 'openGL.dummyBool']: #a setting without a successor (#2897)
+                    deprecationWarning += ' is deprecated and has no effect!");'+lineBreakIDP
+                else:
+                    deprecationWarning += ' is deprecated! use '+newName+' instead!");'+lineBreakIDP
                 #and it must not dereference a backlink that was never set (#2603): a
                 #standalone sub-structure has none, and a segfault is not a diagnosis; a rename
                 #in the same structure needs no backlink (#2588)

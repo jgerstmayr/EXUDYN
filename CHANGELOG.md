@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.12 | Metheney | 349 | 1.12.444 |
+| 1.12 | Metheney | 352 | 1.12.447 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
 | 1.9 | Krall | 235 | 1.9.234 |
@@ -29,6 +29,18 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.12 - Metheney (current)
 
+- **1.12.447** `CHANGE` `MEDIUM EFF` `raised by: Claude-JG` `resolved by: Claude-JG` one display scaling setting: general.displayScaleFactor (0 = system, \> 0 = override); the dialog fonts of fontScaling for all widgets; after-callbacks of closed dialogs (#2897)
+  - description: The maintainer's check on Ubuntu, 2026-10-07: scaling is improved; the display scaling provided by Ubuntu works perfectly, so merge the factors: displayScaleFactor = 0 uses the scaling of Windows, Linux (macOS if possible), \> 0 overrides; useWindowsDisplayScaleFactor and linuxDisplayScaleFactor deprecated (the linux value mapped to the new one, the windows value to a dummy). dialogs.fontScaling rescales only the inner text, not the buttons or the edit fields, and it rescales while the window opens; values \< 1 were used too. 'invalid command name ...\<lambda\> while executing (after script)' after closing dialogs. A crash 'X Error of failed request: BadWindow (X\_QueryTree)', 'terminate called without an active exception' after changing a few parameters and re-opening. revision2026b step RG6.15
+  - **notes:** One display scaling setting, general.displayScaleFactor: 0 uses the scaling of the system (Windows, Linux, macOS), a value \> 0 replaces it; useWindowsDisplayScaleFactor and linuxDisplayScaleFactor are deprecated. dialogs.fontScaling applies to every widget of the dialogs, buttons and edit fields included, and closing a dialog no longer leaves invalid command name messages
+  - date resolved: **2026-10-07 18:47**, date raised: 2026-10-07
+- **1.12.446** <span class="textred">`BUG`</span> `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` InverseKinematicsNumericalExample.py fails: InverseKinematicsNumerical.Solve returns None for the joint values (#2896)
+  - description: Found by the examples run of 1.12.443 (2026-10-07): TypeError: unsupported operand type(s) for \*: 'NoneType' and 'float' in np.round(sol\[0\], 3) at line 72 - the solution of myIkine.Solve(T3, q0=...) is None. The example passed in the runs up to 1.12.279; the robotics classes were changed to exu.HT in between (\#2821). Not investigated yet.
+  - **notes:** InverseKinematicsNumericalExample.py solves a reachable pose again (the pose of a known configuration), and InverseKinematicsNumerical.Solve no longer fails on rounding the joint values of a failed solve
+  - date resolved: **2026-10-07 18:47**, date raised: 2026-10-07
+- **1.12.445** `FIX` `MEDIUM EFF` `raised by: Claude-JG` `resolved by: Claude-JG` Ubuntu: fractional scaling not followed by the renderer, linuxDisplayScaleFactor without effect, dialogs.fontScaling not in the H and X dialogs (#2893)
+  - description: The maintainer's check on Ubuntu, 2026-10-07: 'general.linuxDisplayScaleFactor does nothing (can be removed?); dialogs.fontScaling works for the visualizationSettingsDialog, but not for the other dialogs (X, H); the linux settings Fractional Scaling affects the dialogs font sizes, but not the renderer's =\> fix if possible; the renderer's font size can be adjusted currently with the view0.window.globalFontSize.' revision2026b step RG6.14
+  - **notes:** Fractional and other display scaling on Linux scales the texts of the render window and the dialogs (GLFW 3.3.6 or newer); confirmed on Ubuntu
+  - date resolved: **2026-10-07 18:47**, date raised: 2026-10-07
 - **1.12.444** `IMPROVEMENT` `MEDIUM EFF` `raised by: Claude-JG` `resolved by: Claude-JG` quiet runs: the build shows its version and a progress line, the test runners a progress line and no tables; the test suite log 260000 lines of caught user errors (#2895)
   - description: The maintainer, 2026-10-07: 'for the exudev build command, it would be extremely helpful to see in the console which exudyn version is built, and to see a progress during compilation ... The same would be nice for TestModel and Example runs (in quiet case). For the test suite, after the run finishes with python tools/exudev test --env venvExuP313 it outputs a lot of text =\> should be the quiet case by default. Furthermore, the log file for the testsuite has, since about version 1.12.366, approx. 260000 lines after TESTMODEL 138 parameterConversionTest.py which is unacceptable (User ERRORs =\> we need a solution (turn off by environment setting/config.special flag, etc.)' revision2026b step RG10.22
   - **notes:** Quiet runs: exudev build names the Exudyn version and counts the compiled files in one line; the test suite and the examples count the models in one line and end with their summary; exudyn.special.exceptions.writeErrorsToLogFile keeps caught errors out of the log (the test suite log: 7000 instead of 266000 lines)

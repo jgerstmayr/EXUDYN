@@ -2,11 +2,15 @@
   "number": 2893,
   "title": "Ubuntu: fractional scaling not followed by the renderer, linuxDisplayScaleFactor without effect, dialogs.fontScaling not in the H and X dialogs",
   "author": "Claude-JG",
-  "status": "RAISED",
+  "status": "RESOLVED",
   "type": "FIX",
   "effort": "MEDIUM",
   "description": "The maintainer's check on Ubuntu, 2026-10-07: 'general.linuxDisplayScaleFactor does nothing (can be removed?); dialogs.fontScaling works for the visualizationSettingsDialog, but not for the other dialogs (X, H); the linux settings Fractional Scaling affects the dialogs font sizes, but not the renderer's => fix if possible; the renderer's font size can be adjusted currently with the view0.window.globalFontSize.' revision2026b step RG6.14",
   "dateRaised": "2026-10-07",
   "deadline": "2027-04-05",
-  "file": "src/Graphics/GlfwClient.cpp"
+  "dateResolved": "2026-10-07 18:47",
+  "resolvedAuthor": "Claude-JG",
+  "file": "src/Graphics/GlfwClient.cpp",
+  "releaseNotes": "Fractional and other display scaling on Linux scales the texts of the render window and the dialogs (GLFW 3.3.6 or newer); confirmed on Ubuntu",
+  "resolvedInVersion": "1.12.445"
 }

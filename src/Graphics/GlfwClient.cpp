@@ -1886,11 +1886,15 @@ void GlfwRenderer::SetContentScaling(Index viewID, float xScale, float yScale)
 
 void GlfwRenderer::ApplyDisplayScaling(Index viewID)
 {
-	//called by every Render(), so that useWindowsDisplayScaleFactor and linuxDisplayScaleFactor act while the
-	//renderer runs and not only when it starts (#2893)
+	//called by every Render(), so that general.displayScaleFactor acts while the renderer runs (#2893);
+	//0 takes the display scaling of the system, a value > 0 replaces it (#2897)
 	float fontScaleOld = GetFontScaling(viewID);
 	float scaling = 1.f;
-	if (visSettings->general.useWindowsDisplayScaleFactor && viewID < MAX_VIEWS_GLFW && contentScaling[viewID] > 0.f)
+	if (visSettings->general.displayScaleFactor > 0.f)
+	{
+		scaling = visSettings->general.displayScaleFactor;
+	}
+	else if (viewID < MAX_VIEWS_GLFW && contentScaling[viewID] > 0.f)
 	{
 		scaling = contentScaling[viewID];
 	}
@@ -1915,11 +1919,7 @@ void GlfwRenderer::SetFontScaling(Index viewID, float scaling)
 {
     if (renderViews.State(viewID,false) != nullptr)
     {
-#if defined(__EXUDYN__LINUX__)
-		renderViews.State(viewID, false)->displayScaling = scaling * visSettings->general.linuxDisplayScaleFactor;
-#else
 		renderViews.State(viewID, false)->displayScaling = scaling;
-#endif
     }
 }
 

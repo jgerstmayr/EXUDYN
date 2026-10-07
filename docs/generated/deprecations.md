@@ -161,7 +161,7 @@ Every name of Exudyn that is deprecated, with the version it was deprecated in a
 | `ObjectRigidBody2D.physicsMass` | 1.12.258 | 2031 | mass | definitions (ObjectRigidBody2D) |
 | `ObjectRotationalMass1D.physicsInertia` | 1.12.258 | 2031 | inertia | definitions (ObjectRotationalMass1D) |
 
-## Settings (149)
+## Settings (151)
 
 | name | since | removed in | instead | declared in |
 |---|---|---|---|---|
@@ -313,4 +313,6 @@ Every name of Exudyn that is deprecated, with the version it was deprecated in a
 | `TimeIntegrationSettings.realtimeFactor` | 1.12.256 | 2031 | timeIntegration.realtime.factor | definitions (TimeIntegrationSettings) |
 | `TimeIntegrationSettings.realtimeWaitMicroseconds` | 1.12.256 | 2031 | timeIntegration.realtime.waitMicroseconds | definitions (TimeIntegrationSettings) |
 | `TimeIntegrationSettings.simulateInRealtime` | 1.12.256 | 2031 | timeIntegration.realtime.active | definitions (TimeIntegrationSettings) |
+| `VSettingsGeneral.linuxDisplayScaleFactor` | 1.12.445 | 2031 | displayScaleFactor | definitions (VSettingsGeneral) |
+| `VSettingsGeneral.useWindowsDisplayScaleFactor` | 1.12.445 | 2031 | openGL.dummyBool | definitions (VSettingsGeneral) |
 | `VSettingsDialogs.fontScalingMacOS` | 1.12.15 | 2032 | dialogs.fontScaling | definitions (VSettingsDialogs) |

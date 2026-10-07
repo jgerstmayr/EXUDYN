@@ -1911,6 +1911,14 @@ inline py::dict GetDictionaryWithTypeInfo(const VSettingsGeneral& data) {
 
     d = py::dict(); //reset local dict
     d["itemIdentifier"] = std::string(""); //identifier for item
+    d["value"] = data.displayScaleFactor;
+    d["type"] = "UFloat";
+    d["size"] = std::vector<int>{1};
+    d["description"] = "scaling of the texts of the render window and of the size of the dialogs; 0 = the display scaling of the system (monitor scaling, e.g. 150 percent on Windows, fractional scaling on Linux), read by GLFW (glfwGetWindowContentScale; on Linux from GLFW 3.3.6 on) and followed when it changes; a value > 0 is used instead of it, on every platform; acts while the renderer runs";
+    structureDict["displayScaleFactor"] = d;
+
+    d = py::dict(); //reset local dict
+    d["itemIdentifier"] = std::string(""); //identifier for item
     d["value"] = data.graphicsUpdateInterval;
     d["type"] = "UFloat";
     d["size"] = std::vector<int>{1};
@@ -1924,14 +1932,6 @@ inline py::dict GetDictionaryWithTypeInfo(const VSettingsGeneral& data) {
     d["size"] = std::vector<int>{1};
     d["description"] = "True: size for render window of respective view is limited to screen size; False: larger window sizes (e.g. for rendering) allowed according to renderWindowSize";
     structureDict["limitWindowToScreenSize"] = d;
-
-    d = py::dict(); //reset local dict
-    d["itemIdentifier"] = std::string(""); //identifier for item
-    d["value"] = data.linuxDisplayScaleFactor;
-    d["type"] = "PFloat";
-    d["size"] = std::vector<int>{1};
-    d["description"] = "an additional factor on Linux, multiplied with the display scaling of the system, for the texts of the render window and the size of the dialogs; for a system that reports no or a wrong scaling; acts while the renderer runs";
-    structureDict["linuxDisplayScaleFactor"] = d;
 
     d = py::dict(); //reset local dict
     d["itemIdentifier"] = std::string(""); //identifier for item
@@ -2087,14 +2087,6 @@ inline py::dict GetDictionaryWithTypeInfo(const VSettingsGeneral& data) {
 
     d = py::dict(); //reset local dict
     d["itemIdentifier"] = std::string(""); //identifier for item
-    d["value"] = data.useWindowsDisplayScaleFactor;
-    d["type"] = "bool";
-    d["size"] = std::vector<int>{1};
-    d["description"] = "the display scaling of the system (monitor scaling, e.g. 150 percent on Windows or fractional scaling on Linux) scales the texts of the render window and the dialogs; read by GLFW (glfwGetWindowContentScale; on Linux from GLFW 3.3.6 on) and followed when it changes; acts while the renderer runs";
-    structureDict["useWindowsDisplayScaleFactor"] = d;
-
-    d = py::dict(); //reset local dict
-    d["itemIdentifier"] = std::string(""); //identifier for item
     d["value"] = data.zoomAllUseBoundingBox;
     d["type"] = "bool";
     d["size"] = std::vector<int>{1};
@@ -2116,9 +2108,9 @@ inline py::dict GetDictionary(const VSettingsGeneral& data) {
     structureDict["circleTiling"] = data.circleTiling;
     structureDict["coordinateSystemSize"] = data.coordinateSystemSize;
     structureDict["cylinderTiling"] = data.cylinderTiling;
+    structureDict["displayScaleFactor"] = data.displayScaleFactor;
     structureDict["graphicsUpdateInterval"] = data.graphicsUpdateInterval;
     structureDict["limitWindowToScreenSize"] = data.limitWindowToScreenSize;
-    structureDict["linuxDisplayScaleFactor"] = data.linuxDisplayScaleFactor;
     structureDict["minSceneSize"] = data.minSceneSize;
     structureDict["pointSize"] = data.pointSize;
     structureDict["reallyQuitTimeLimit"] = data.reallyQuitTimeLimit;
@@ -2138,7 +2130,6 @@ inline py::dict GetDictionary(const VSettingsGeneral& data) {
     structureDict["useBitmapText"] = data.useBitmapText;
     structureDict["useGradientBackground"] = data.useGradientBackground;
     structureDict["useMultiThreadedRendering"] = data.useMultiThreadedRendering;
-    structureDict["useWindowsDisplayScaleFactor"] = data.useWindowsDisplayScaleFactor;
     structureDict["zoomAllUseBoundingBox"] = data.zoomAllUseBoundingBox;
     return structureDict;
 }
@@ -2154,9 +2145,9 @@ inline void SetDictionary(VSettingsGeneral& data, const py::dict& d) {
     EPyUtils::FromPython(d["circleTiling"], data.circleTiling, EPyUtils::RangeCheck::positive, "VSettingsGeneral.circleTiling");
     EPyUtils::FromPython(d["coordinateSystemSize"], data.coordinateSystemSize, EPyUtils::RangeCheck::positive, "VSettingsGeneral.coordinateSystemSize");
     EPyUtils::FromPython(d["cylinderTiling"], data.cylinderTiling, EPyUtils::RangeCheck::positive, "VSettingsGeneral.cylinderTiling");
+    EPyUtils::FromPython(d["displayScaleFactor"], data.displayScaleFactor, EPyUtils::RangeCheck::nonNegative, "VSettingsGeneral.displayScaleFactor");
     EPyUtils::FromPython(d["graphicsUpdateInterval"], data.graphicsUpdateInterval, EPyUtils::RangeCheck::nonNegative, "VSettingsGeneral.graphicsUpdateInterval");
     EPyUtils::FromPython(d["limitWindowToScreenSize"], data.limitWindowToScreenSize, "VSettingsGeneral.limitWindowToScreenSize");
-    EPyUtils::FromPython(d["linuxDisplayScaleFactor"], data.linuxDisplayScaleFactor, EPyUtils::RangeCheck::positive, "VSettingsGeneral.linuxDisplayScaleFactor");
     EPyUtils::FromPython(d["minSceneSize"], data.minSceneSize, EPyUtils::RangeCheck::positive, "VSettingsGeneral.minSceneSize");
     EPyUtils::FromPython(d["pointSize"], data.pointSize, EPyUtils::RangeCheck::positive, "VSettingsGeneral.pointSize");
     EPyUtils::FromPython(d["reallyQuitTimeLimit"], data.reallyQuitTimeLimit, EPyUtils::RangeCheck::nonNegative, "VSettingsGeneral.reallyQuitTimeLimit");
@@ -2176,7 +2167,6 @@ inline void SetDictionary(VSettingsGeneral& data, const py::dict& d) {
     EPyUtils::FromPython(d["useBitmapText"], data.useBitmapText, "VSettingsGeneral.useBitmapText");
     EPyUtils::FromPython(d["useGradientBackground"], data.useGradientBackground, "VSettingsGeneral.useGradientBackground");
     EPyUtils::FromPython(d["useMultiThreadedRendering"], data.useMultiThreadedRendering, "VSettingsGeneral.useMultiThreadedRendering");
-    EPyUtils::FromPython(d["useWindowsDisplayScaleFactor"], data.useWindowsDisplayScaleFactor, "VSettingsGeneral.useWindowsDisplayScaleFactor");
     EPyUtils::FromPython(d["zoomAllUseBoundingBox"], data.zoomAllUseBoundingBox, "VSettingsGeneral.zoomAllUseBoundingBox");
 }
 
@@ -4118,7 +4108,7 @@ inline py::dict GetDictionaryWithTypeInfo(const VSettingsDialogs& data) {
     d["value"] = data.fontScaling;
     d["type"] = "UFloat";
     d["size"] = std::vector<int>{1};
-    d["description"] = "scaling of the font in dialogs; 0 = automatic, which is the system display scaling on Windows and Linux and a fixed factor on MacOS. Any value > 0 sets the font scaling on EVERY platform, which is the way to make the dialogs readable on a Linux desktop; it applies to the settings dialogs, the help (H), the command window (X) and the quit question";
+    d["description"] = "scaling of the font in dialogs; 0 = automatic, which is the system display scaling on Windows and Linux and a fixed factor on MacOS. Any value > 0 sets the font scaling on EVERY platform, which is the way to make the dialogs readable on a Linux desktop; it sets the named fonts of Tk, so every widget of the dialogs (text, buttons, edit fields) takes it";
     structureDict["fontScaling"] = d;
 
     d = py::dict(); //reset local dict
@@ -5449,6 +5439,8 @@ inline void SetDictionary(VisualizationSettings& data, const py::dict& dGiven) {
         {"raytracer.showText", "raytracer.advanced.showText"},
         {"raytracer.searchTreeFactor", "raytracer.advanced.searchTreeFactor"},
         {"raytracer.ambientLightColor", "openGL.lightModelAmbient"},
+        {"general.useWindowsDisplayScaleFactor", "openGL.dummyBool"},
+        {"general.linuxDisplayScaleFactor", "general.displayScaleFactor"},
         {"general.drawWorldBasis", "view0.scene.drawWorldBasis"},
         {"general.worldBasisSize", "view0.scene.worldBasisSize"},
         {"general.drawCoordinateSystem", "view0.scene.drawCoordinateSystem"},

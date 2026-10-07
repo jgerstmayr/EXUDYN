@@ -37,9 +37,9 @@ public: // AUTO:
   Index circleTiling;                             //!< AUTO: must be > 0; global number of segments for circles; if smaller than 2, 2 segments are used (flat); the circles of the 2D cable contacts (ObjectContactCircleCable2D, ObjectContactFrictionCircleCable2D), large compared to the cable, take 4 times as many
   float coordinateSystemSize;                     //!< AUTO: must be > 0; size of coordinate system relative to font size
   Index cylinderTiling;                           //!< AUTO: must be > 0; global number of segments for cylinders; if smaller than 2, 2 segments are used (flat); also around the rope of a reeving system and the wire of a spring drawn as a tube; the disc of ObjectJointRollingDisc and ObjectConnectorRollingDiscPenalty, large compared to the joint, takes 4 times as many; space curves use connectors.curveTiling
+  float displayScaleFactor;                       //!< AUTO: must be >= 0; scaling of the texts of the render window and of the size of the dialogs; 0 = the display scaling of the system (monitor scaling, e.g. 150 percent on Windows, fractional scaling on Linux), read by GLFW (glfwGetWindowContentScale; on Linux from GLFW 3.3.6 on) and followed when it changes; a value > 0 is used instead of it, on every platform; acts while the renderer runs
   float graphicsUpdateInterval;                   //!< AUTO: must be >= 0; interval of graphics update during simulation in seconds; 0.1 = 10 frames per second; low numbers might slow down computation speed
   bool limitWindowToScreenSize;                   //!< AUTO: True: size for render window of respective view is limited to screen size; False: larger window sizes (e.g. for rendering) allowed according to renderWindowSize
-  float linuxDisplayScaleFactor;                  //!< AUTO: must be > 0; an additional factor on Linux, multiplied with the display scaling of the system, for the texts of the render window and the size of the dialogs; for a system that reports no or a wrong scaling; acts while the renderer runs
   float minSceneSize;                             //!< AUTO: must be > 0; minimum scene size for initial scene size and for autoFitScene, to avoid division by zero; SET GREATER THAN ZERO
   float pointSize;                                //!< AUTO: must be > 0; global point size (absolute)
   Real reallyQuitTimeLimit;                       //!< AUTO: must be >= 0; number of seconds after which user is asked a security question before stopping simulation and closing renderer; set to 0 in order to always get asked; set to 1e10 to (nearly) never get asked
@@ -59,7 +59,6 @@ public: // AUTO:
   bool useBitmapText;                             //!< AUTO: if true, texts are displayed using pre-defined bitmaps for the text; may increase the complexity of your scene, e.g., if many (>10000) node numbers shown
   bool useGradientBackground;                     //!< AUTO: true = use vertical gradient for background; 
   bool useMultiThreadedRendering;                 //!< AUTO: true = rendering is done in separate thread; false = no separate thread, which may be more stable but has lagging interaction for large models (do not interact with models during simulation); you MUST set this parameter BEFORE call to SC.renderer.Start(); MAC OS: uses always false, because MAC OS does not support multi threaded GLFW
-  bool useWindowsDisplayScaleFactor;              //!< AUTO: the display scaling of the system (monitor scaling, e.g. 150 percent on Windows or fractional scaling on Linux) scales the texts of the render window and the dialogs; read by GLFW (glfwGetWindowContentScale; on Linux from GLFW 3.3.6 on) and followed when it changes; acts while the renderer runs
   bool zoomAllUseBoundingBox;                     //!< AUTO: if true, use exact scene bounding box (but not including texts) for zoom; does not include perspective effects!
 
 private: // AUTO: 
@@ -80,9 +79,9 @@ public: // AUTO:
     circleTiling = 16;
     coordinateSystemSize = 5.f;
     cylinderTiling = 16;
+    displayScaleFactor = 0.f;
     graphicsUpdateInterval = 0.1f;
     limitWindowToScreenSize = true;
-    linuxDisplayScaleFactor = 1.;
     minSceneSize = 0.1f;
     pointSize = 0.01f;
     reallyQuitTimeLimit = 900;
@@ -101,7 +100,6 @@ public: // AUTO:
     useBitmapText = true;
     useGradientBackground = false;
     useMultiThreadedRendering = true;
-    useWindowsDisplayScaleFactor = true;
     zoomAllUseBoundingBox = true;
   };
   void Init(VisualizationSettings* backlinkInit) //!< AUTO: called from parent structure
@@ -120,6 +118,11 @@ public: // AUTO:
   //! AUTO: Read (Copy) access to: DEPRECATED; Instead use view0.scene.drawWorldBasis
   bool PyGetDrawWorldBasis() const ;
 
+  //! AUTO: Set function (needed in pybind) for: DEPRECATED; Instead use displayScaleFactor
+  void PySetLinuxDisplayScaleFactor(const float& displayScaleFactorInit) ;
+  //! AUTO: Read (Copy) access to: DEPRECATED; Instead use displayScaleFactor
+  float PyGetLinuxDisplayScaleFactor() const ;
+
   //! AUTO: Set function (needed in pybind) for: DEPRECATED; Instead use view0.window.showComputationInfo
   void PySetShowComputationInfo(const bool& showComputationInfoInit) ;
   //! AUTO: Read (Copy) access to: DEPRECATED; Instead use view0.window.showComputationInfo
@@ -129,6 +132,11 @@ public: // AUTO:
   void PySetTextSize(const float& globalFontSizeInit) ;
   //! AUTO: Read (Copy) access to: DEPRECATED; Instead use view0.window.globalFontSize
   float PyGetTextSize() const ;
+
+  //! AUTO: Set function (needed in pybind) for: DEPRECATED; Instead use openGL.dummyBool
+  void PySetUseWindowsDisplayScaleFactor(const bool& dummyBoolInit) ;
+  //! AUTO: Read (Copy) access to: DEPRECATED; Instead use openGL.dummyBool
+  bool PyGetUseWindowsDisplayScaleFactor() const ;
 
   //! AUTO: Set function (needed in pybind) for: DEPRECATED; Instead use view0.scene.worldBasisSize
   void PySetWorldBasisSize(const float& worldBasisSizeInit) ;
@@ -148,9 +156,9 @@ public: // AUTO:
     os << "  circleTiling = " << circleTiling << "\n";
     os << "  coordinateSystemSize = " << coordinateSystemSize << "\n";
     os << "  cylinderTiling = " << cylinderTiling << "\n";
+    os << "  displayScaleFactor = " << displayScaleFactor << "\n";
     os << "  graphicsUpdateInterval = " << graphicsUpdateInterval << "\n";
     os << "  limitWindowToScreenSize = " << limitWindowToScreenSize << "\n";
-    os << "  linuxDisplayScaleFactor = " << linuxDisplayScaleFactor << "\n";
     os << "  minSceneSize = " << minSceneSize << "\n";
     os << "  pointSize = " << pointSize << "\n";
     os << "  reallyQuitTimeLimit = " << reallyQuitTimeLimit << "\n";
@@ -170,7 +178,6 @@ public: // AUTO:
     os << "  useBitmapText = " << useBitmapText << "\n";
     os << "  useGradientBackground = " << useGradientBackground << "\n";
     os << "  useMultiThreadedRendering = " << useMultiThreadedRendering << "\n";
-    os << "  useWindowsDisplayScaleFactor = " << useWindowsDisplayScaleFactor << "\n";
     os << "  zoomAllUseBoundingBox = " << zoomAllUseBoundingBox << "\n";
     os << "\n";
   }
@@ -1665,7 +1672,7 @@ public: // AUTO:
   float columnWidthName;                          //!< AUTO: must be >= 0; width of the name column of a settings dialog, as a fraction of the width of the dialog; the description column takes what the three columns leave
   float columnWidthType;                          //!< AUTO: must be >= 0; width of the type column of a settings dialog, as a fraction of the width of the dialog
   float columnWidthValue;                         //!< AUTO: must be >= 0; width of the value column of a settings dialog, as a fraction of the width of the dialog
-  float fontScaling;                              //!< AUTO: must be >= 0; scaling of the font in dialogs; 0 = automatic, which is the system display scaling on Windows and Linux and a fixed factor on MacOS. Any value > 0 sets the font scaling on EVERY platform, which is the way to make the dialogs readable on a Linux desktop; it applies to the settings dialogs, the help (H), the command window (X) and the quit question
+  float fontScaling;                              //!< AUTO: must be >= 0; scaling of the font in dialogs; 0 = automatic, which is the system display scaling on Windows and Linux and a fixed factor on MacOS. Any value > 0 sets the font scaling on EVERY platform, which is the way to make the dialogs readable on a Linux desktop; it sets the named fonts of Tk, so every widget of the dialogs (text, buttons, edit fields) takes it
   bool multiThreadedDialogs;                      //!< AUTO: True: During dialogs, the OpenGL render windows will still get updates of changes in dialogs, etc., which may cause problems on some platforms or for some (complicated) models; False: changes of dialogs will take effect when dialogs are closed
   bool openTreeView;                              //!< AUTO: True: all sub-trees of the visusalization dialog are opened when opening the dialog; False: only some sub-trees are opened
   bool storeDialogPositions;                      //!< AUTO: True: a dialog stores its size and position in `~/.exudyn/config.json` when it closes, so that the next dialog of the same kind starts with them. A geometry that IS stored - by this flag, by the store button of the settings dialog, or by a script - is used whenever such a dialog opens, whatever this flag says: the size always, the position only if the window would still be reachable on the current screen. See Section [](#sec-usersettings)
@@ -2314,6 +2321,7 @@ public: // AUTO:
   Index multiSampling;                            //!< AUTO: must be > 0; NOTE: this parameter must be set before starting renderer; later changes are not affecting visualization; multi sampling turned off (<=1) or turned on to given values (2, 3, 4, 8 or 16); increases the graphics buffers and might crash due to graphics card memory limitations; only works if supported by hardware; if it does not work, try to change 3D graphics hardware settings!
   float zMaxSceneFactor;                          //!< AUTO: must be > 0; factor multiplied with maxSceneSize to avoid clipping of modelview; larger values reduce clipping of near or far objects, but may lead to artifacts (so-called Z-fighting)
   float dummy;                                    //!< AUTO: unused dummy variable, used to redirect deprecated values
+  bool dummyBool;                                 //!< AUTO: unused dummy variable, used to redirect deprecated bool values
 
 private: // AUTO: 
   VisualizationSettings* backlink; //!< AUTO: backlink for global access of structure
@@ -2328,6 +2336,7 @@ public: // AUTO:
     drawNormalsLength = 0.1f;
     drawVertexNormals = false;
     dummy = 0.f;
+    dummyBool = false;
     faceEdgesColor = Float4({0.2f,0.2f,0.2f,1.f});
     faceTransparencyGlobal = 0.4f;
     lightModelAmbient = Float4({0.4f,0.4f,0.4f,1.f});
@@ -2585,6 +2594,7 @@ public: // AUTO:
     os << "  drawNormalsLength = " << drawNormalsLength << "\n";
     os << "  drawVertexNormals = " << drawVertexNormals << "\n";
     os << "  dummy = " << dummy << "\n";
+    os << "  dummyBool = " << dummyBool << "\n";
     os << "  faceEdgesColor = " << faceEdgesColor << "\n";
     os << "  faceTransparencyGlobal = " << faceTransparencyGlobal << "\n";
     os << "  lightModelAmbient = " << lightModelAmbient << "\n";
@@ -3127,6 +3137,15 @@ inline bool VSettingsGeneral::PyGetDrawWorldBasis() const {
     return bool(backlink->view0.scene.drawWorldBasis); 
     }
 
+inline void VSettingsGeneral::PySetLinuxDisplayScaleFactor(const float& displayScaleFactorInit) { 
+    PyDeprecated("visualizationSettings", "general.linuxDisplayScaleFactor", "VisualizationSettings parameter general.linuxDisplayScaleFactor is deprecated! use general.displayScaleFactor instead!");
+    displayScaleFactor= (const float&)displayScaleFactorInit; 
+    }
+inline float VSettingsGeneral::PyGetLinuxDisplayScaleFactor() const { 
+    PyDeprecated("visualizationSettings", "general.linuxDisplayScaleFactor", "VisualizationSettings parameter general.linuxDisplayScaleFactor is deprecated! use general.displayScaleFactor instead!");
+    return float(displayScaleFactor); 
+    }
+
 inline void VSettingsGeneral::PySetShowComputationInfo(const bool& showComputationInfoInit) { 
     PyDeprecated("visualizationSettings", "general.showComputationInfo", "VisualizationSettings parameter general.showComputationInfo is deprecated! use view0.window.showComputationInfo instead!");
     if (backlink == nullptr) { CHECKandTHROWstring("general.showComputationInfo is deprecated and forwards to view0.window.showComputationInfo, which needs the settings structure it belongs to; this one was constructed on its own and is not linked"); }
@@ -3147,6 +3166,17 @@ inline float VSettingsGeneral::PyGetTextSize() const {
     PyDeprecated("visualizationSettings", "general.textSize", "VisualizationSettings parameter general.textSize is deprecated! use view0.window.globalFontSize instead!");
     if (backlink == nullptr) { CHECKandTHROWstring("general.textSize is deprecated and forwards to view0.window.globalFontSize, which needs the settings structure it belongs to; this one was constructed on its own and is not linked"); }
     return float(backlink->view0.window.globalFontSize); 
+    }
+
+inline void VSettingsGeneral::PySetUseWindowsDisplayScaleFactor(const bool& dummyBoolInit) { 
+    PyDeprecated("visualizationSettings", "general.useWindowsDisplayScaleFactor", "VisualizationSettings parameter general.useWindowsDisplayScaleFactor is deprecated and has no effect!");
+    if (backlink == nullptr) { CHECKandTHROWstring("general.useWindowsDisplayScaleFactor is deprecated and forwards to openGL.dummyBool, which needs the settings structure it belongs to; this one was constructed on its own and is not linked"); }
+    backlink->openGL.dummyBool= (const bool&)dummyBoolInit; 
+    }
+inline bool VSettingsGeneral::PyGetUseWindowsDisplayScaleFactor() const { 
+    PyDeprecated("visualizationSettings", "general.useWindowsDisplayScaleFactor", "VisualizationSettings parameter general.useWindowsDisplayScaleFactor is deprecated and has no effect!");
+    if (backlink == nullptr) { CHECKandTHROWstring("general.useWindowsDisplayScaleFactor is deprecated and forwards to openGL.dummyBool, which needs the settings structure it belongs to; this one was constructed on its own and is not linked"); }
+    return bool(backlink->openGL.dummyBool); 
     }
 
 inline void VSettingsGeneral::PySetWorldBasisSize(const float& worldBasisSizeInit) { 
@@ -3436,12 +3466,12 @@ inline float VSettingsRaytracer::PyGetZBiasLines() const {
     }
 
 inline void VSettingsRaytracer::PySetZOffsetCamera(const float& dummyInit) { 
-    PyDeprecated("visualizationSettings", "raytracer.zOffsetCamera", "VisualizationSettings parameter raytracer.zOffsetCamera is deprecated! use openGL.dummy instead!");
+    PyDeprecated("visualizationSettings", "raytracer.zOffsetCamera", "VisualizationSettings parameter raytracer.zOffsetCamera is deprecated and has no effect!");
     if (backlink == nullptr) { CHECKandTHROWstring("raytracer.zOffsetCamera is deprecated and forwards to openGL.dummy, which needs the settings structure it belongs to; this one was constructed on its own and is not linked"); }
     backlink->openGL.dummy= (const float&)dummyInit; 
     }
 inline float VSettingsRaytracer::PyGetZOffsetCamera() const { 
-    PyDeprecated("visualizationSettings", "raytracer.zOffsetCamera", "VisualizationSettings parameter raytracer.zOffsetCamera is deprecated! use openGL.dummy instead!");
+    PyDeprecated("visualizationSettings", "raytracer.zOffsetCamera", "VisualizationSettings parameter raytracer.zOffsetCamera is deprecated and has no effect!");
     if (backlink == nullptr) { CHECKandTHROWstring("raytracer.zOffsetCamera is deprecated and forwards to openGL.dummy, which needs the settings structure it belongs to; this one was constructed on its own and is not linked"); }
     return float(backlink->openGL.dummy); 
     }
@@ -3579,12 +3609,12 @@ inline float VSettingsOpenGL::PyGetInitialZoom() const {
     }
 
 inline void VSettingsOpenGL::PySetLight0ambient(const float& dummyInit) { 
-    PyDeprecated("visualizationSettings", "openGL.light0ambient", "VisualizationSettings parameter openGL.light0ambient is deprecated! use openGL.dummy instead!");
+    PyDeprecated("visualizationSettings", "openGL.light0ambient", "VisualizationSettings parameter openGL.light0ambient is deprecated and has no effect!");
     if (backlink == nullptr) { CHECKandTHROWstring("openGL.light0ambient is deprecated and forwards to openGL.dummy, which needs the settings structure it belongs to; this one was constructed on its own and is not linked"); }
     backlink->openGL.dummy= (const float&)dummyInit; 
     }
 inline float VSettingsOpenGL::PyGetLight0ambient() const { 
-    PyDeprecated("visualizationSettings", "openGL.light0ambient", "VisualizationSettings parameter openGL.light0ambient is deprecated! use openGL.dummy instead!");
+    PyDeprecated("visualizationSettings", "openGL.light0ambient", "VisualizationSettings parameter openGL.light0ambient is deprecated and has no effect!");
     if (backlink == nullptr) { CHECKandTHROWstring("openGL.light0ambient is deprecated and forwards to openGL.dummy, which needs the settings structure it belongs to; this one was constructed on its own and is not linked"); }
     return float(backlink->openGL.dummy); 
     }
@@ -3656,12 +3686,12 @@ inline float VSettingsOpenGL::PyGetLight0specular() const {
     }
 
 inline void VSettingsOpenGL::PySetLight1ambient(const float& dummyInit) { 
-    PyDeprecated("visualizationSettings", "openGL.light1ambient", "VisualizationSettings parameter openGL.light1ambient is deprecated! use openGL.dummy instead!");
+    PyDeprecated("visualizationSettings", "openGL.light1ambient", "VisualizationSettings parameter openGL.light1ambient is deprecated and has no effect!");
     if (backlink == nullptr) { CHECKandTHROWstring("openGL.light1ambient is deprecated and forwards to openGL.dummy, which needs the settings structure it belongs to; this one was constructed on its own and is not linked"); }
     backlink->openGL.dummy= (const float&)dummyInit; 
     }
 inline float VSettingsOpenGL::PyGetLight1ambient() const { 
-    PyDeprecated("visualizationSettings", "openGL.light1ambient", "VisualizationSettings parameter openGL.light1ambient is deprecated! use openGL.dummy instead!");
+    PyDeprecated("visualizationSettings", "openGL.light1ambient", "VisualizationSettings parameter openGL.light1ambient is deprecated and has no effect!");
     if (backlink == nullptr) { CHECKandTHROWstring("openGL.light1ambient is deprecated and forwards to openGL.dummy, which needs the settings structure it belongs to; this one was constructed on its own and is not linked"); }
     return float(backlink->openGL.dummy); 
     }

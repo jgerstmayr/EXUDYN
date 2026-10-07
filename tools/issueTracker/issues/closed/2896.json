@@ -2,11 +2,15 @@
   "number": 2896,
   "title": "InverseKinematicsNumericalExample.py fails: InverseKinematicsNumerical.Solve returns None for the joint values",
   "author": "Claude-JG",
-  "status": "RAISED",
+  "status": "RESOLVED",
   "type": "BUG",
   "effort": "LOW",
   "description": "Found by the examples run of 1.12.443 (2026-10-07): TypeError: unsupported operand type(s) for *: 'NoneType' and 'float' in np.round(sol[0], 3) at line 72 - the solution of myIkine.Solve(T3, q0=...) is None. The example passed in the runs up to 1.12.279; the robotics classes were changed to exu.HT in between (#2821). Not investigated yet.",
   "dateRaised": "2026-10-07",
   "deadline": "2027-04-05",
-  "file": "python/Examples/InverseKinematicsNumericalExample.py"
+  "dateResolved": "2026-10-07 18:47",
+  "resolvedAuthor": "Claude-JG",
+  "file": "python/Examples/InverseKinematicsNumericalExample.py",
+  "releaseNotes": "InverseKinematicsNumericalExample.py solves a reachable pose again (the pose of a known configuration), and InverseKinematicsNumerical.Solve no longer fails on rounding the joint values of a failed solve",
+  "resolvedInVersion": "1.12.446"
 }

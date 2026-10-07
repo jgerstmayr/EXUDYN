@@ -16655,3 +16655,52 @@ setting/config.special flag, etc.)")*
   `-v` (`exudev -v build`) shows everything as before.
 - Found by the examples run: `InverseKinematicsNumericalExample.py` fails (`Solve` returns None) - #2896, not part of
   this step.
+
+<a id="rg4-26"></a>
+### RG4.26 — `InverseKinematicsNumericalExample.py` (2026-10-07, #2896)
+
+*(Maintainer 2026-10-07: "also fix #2896".)*
+
+- Bisected over the wheels in `dist/`: up to 1.12.287 `Solve` returned `success = False` with a `q` (the log of 1.12.279
+  shows it - the example never reached its target); from 1.12.288 (#2829, the kinematic tree computed on the
+  placements of its links) the static solver does not converge for this pose and `Solve` returns `q = None`, which the
+  example and `Solve` itself (`solution.file.information` with `np.round(q, 3)`, when the renderer is used) rounded.
+- Not a wrong Jacobian: the marker Jacobians of the tree and the constraint Jacobian of the joint agree with
+  finite differences, and the system Jacobian of the static solver agrees with the numerical one (to 1e-7), with and
+  without Lagrange multipliers. The pose - rotated by pi about x, far from the start - is a case the Newton iteration
+  without the term of RG14.2.9.4 does not reach; round-off decides between "converged to another branch" and "did not
+  converge".
+- The example takes the pose of a known configuration, qTarget, and solves from another one: `success = True`, q =
+  qTarget. `Solve` writes `q=None` into the information instead of rounding it.
+
+<a id="rg6-15"></a>
+### RG6.15 — one display scaling setting, the dialog font for every widget (2026-10-07, #2897)
+
+*(Maintainer's check on Ubuntu, 2026-10-07: "scaling is improved. The dialogs fontScaling already tries to rescale during
+window open. This is not necessary / annoying, as it only scales the inner text, but not the buttons or the edit fields
+... I also used values < 1 ... the display scaling provided by ubuntu works perfectly. So, we don't need both any more and
+can merge the factors: in both cases: use displayScaleFactor = 0 to use Windows, linux (?MacOS if possible), while > 0
+uses the factor override ... The old parameters useWindowsDisplayScaleFactor and linuxDisplayScaleFactor deprecate ...
+map the linux value to the new one and ... the old windows value to a dummy ... interactive dialogs ... the solution
+viewer does already scale with the ubuntu settings ... So, then nothing would be needed." - and a crash with "X Error of
+failed request: BadWindow" and "invalid command name ...<lambda> ... ("after" script)".)*
+
+- `general.displayScaleFactor` (default 0): 0 = the scaling the system reports through `glfwGetWindowContentScale`
+  (Windows, Linux from GLFW 3.3.6, macOS), a value > 0 replaces it, on every platform; `ApplyDisplayScaling` in every
+  `Render`. `useWindowsDisplayScaleFactor` deprecated (1.12.445, removed 2031) and redirected to the new
+  `openGL.dummyBool`; `linuxDisplayScaleFactor` deprecated and forwarding to `displayScaleFactor` (a script that set it
+  to 1 now overrides the system scaling with 1). A deprecated setting redirected to `openGL.dummy`/`dummyBool` warns
+  "is deprecated and has no effect!" instead of "use openGL.dummy instead!" (`structureHeaderEmitter.py`; also for the
+  older ones such as `zOffsetCamera`).
+- `dialogs.fontScaling`: `ApplyDialogFontScaling(root)` in `GetTkRootAndNewWindow`, before any widget of a dialog
+  exists, sets the named fonts of Tk (`TkDefaultFont`, `TkTextFont`, `TkFixedFont`, ...) to their original size times
+  the factor (`ScaledFontSize`: points or pixels kept, at least 6 - values < 1 work), and 0 gives them back; so the
+  buttons, edit fields and menus follow, and nothing is rescaled while the window opens. The per-widget fonts of #2893
+  (`ScaledDialogFonts`, introduced the same day) are removed again. The settings tree keeps its own font of
+  `DialogFontSize`.
+- "invalid command name ...<lambda>": a tooltip (500 ms) or the delayed edit of a bool cell scheduled with `after`,
+  firing after its dialog was closed; both are cancelled on `<Destroy>`.
+- The SolutionViewer and the other dialogs of `exudyn.interactive`: unchanged, as the maintainer says they follow the
+  Ubuntu scaling and have their own font size.
+- The BadWindow crash is recorded at #2140 (Linux crashes of the renderer and the dialogs, RG6.8.5): not reproducible
+  from here.

@@ -1465,7 +1465,8 @@ class InverseKinematicsNumerical():
             q = None
 
         if self.useRenderer:    
-            self.simulationSettings.solution.file.information = 'success = {}\nq={}'.format(success, np.round(q, 3))
+            self.simulationSettings.solution.file.information = 'success = {}\nq={}'.format(
+                success, None if q is None else np.round(q, 3)) #q is None when the solver failed (#2896)
             self.SC.renderer.DoIdleTasks() # stop before closing
             self.SC.renderer.Stop() # close rendering window! 
 
