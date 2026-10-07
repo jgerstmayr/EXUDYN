@@ -1,0 +1,17 @@
+{
+  "number": 2892,
+  "title": "UBSan: mbs.ComputeItem casts every object to CObjectBody",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "FIX",
+  "effort": "LOW",
+  "description": "The sanitizer job of GitLab CI (b834538a, gcc 14, test suite exit 0, AddressSanitizer 0, one UB report): src/Main/MainSystem.cpp:1242:29: runtime error: downcast of address ... which does not point to an object of type 'CObjectBody'. MainSystem::PyComputeItem cast the object to CObjectBody before the switch, also for connectors and constraints; the cases that use the body apply to bodies alone, so the pointer was never used for another object, but the cast itself is undefined behaviour. revision2026b step RG4.25",
+  "dateRaised": "2026-10-07",
+  "deadline": "2027-04-05",
+  "dateResolved": "2026-10-07 16:23",
+  "resolvedAuthor": "Claude-JG",
+  "file": "src/Main/MainSystem.cpp",
+  "line": "1242",
+  "releaseNotes": "mbs.ComputeItem casts an object to a body only if it is one; the sanitizer build reported the cast of connectors and constraints as undefined behaviour",
+  "resolvedInVersion": "1.12.441"
+}

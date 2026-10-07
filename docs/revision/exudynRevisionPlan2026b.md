@@ -993,6 +993,11 @@ The steps are numbered in the order they were raised and stand here in the order
 **RG4.24** *(group RG4; from the triage of 2026-10-07, maintainer: "Group B goes into the plan")* **`ObjectRollingDiscPenalty`: viscous rolling friction for any axis** (#926) - today
     `rollingFrictionViscous` works only for an axis parallel to the plane; the formulas on its page.
 
+<a id="rg4-25"></a>
+**RG4.25** **DONE 2026-10-07** (#2892) — [log](exudynRevisionLog2026b.md#rg4-25) *(group RG4; the sanitizer job of GitLab CI
+on b834538a, forwarded by the maintainer)* **`mbs.ComputeItem` cast every object to a body**: a downcast to
+`CObjectBody` for connectors and constraints too, which UBSan reports; the cast is done for bodies only.
+
 ## RG5 — Performance
 
 Measurement first, then the code that is actually hot. revision2026 step R2.16 measured the linear

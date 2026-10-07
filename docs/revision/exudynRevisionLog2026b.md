@@ -16564,3 +16564,19 @@ perfect, but the tkinter dialogs.")*
   that runs it; the manylinux script builds cp310-cp314 unless given tags, and the classifiers name the wheels CI
   builds, both left as they are.
 - `test_exudev.py::testNewerPythonsAreAcceptedWhenNamedButNotInAll`; `condaEnvironments.md` says it.
+
+<a id="rg4-25"></a>
+### RG4.25 — UBSan: `ComputeItem` cast every object to a body (2026-10-07, #2892)
+
+*(Maintainer 2026-10-07: the log of the sanitizer job of GitLab CI - gcc 14.2, b834538a: test suite exit code 0,
+AddressSanitizer errors 0, UndefinedBehavior reports 1: `src/Main/MainSystem.cpp:1242:29: runtime error: downcast of
+address ... which does not point to an object of type 'CObjectBody'`.)*
+
+- `MainSystem::PyComputeItem` (#2779) cast the object to `const CObjectBody*` before the switch over the compute types,
+  for any object - `computeItemTest.py` asks connectors and constraints as well. The cases that use the body
+  (Jacobians, mass-weighted Jacobian, mass matrix) apply to bodies only, so the pointer was never dereferenced for
+  another object; the downcast itself is undefined behaviour, which UBSan's `vptr` check reports.
+- Now `static_cast` only if `IsOfType(object->GetType(), CObjectType::Body)`, else `nullptr`.
+- The other C-style casts to `CObjectBody*` (the markers) are on objects the pre-assemble checks require to be bodies.
+- Checked here with the build and the suites; the sanitizer job is the confirmation (the next push to the internal
+  repository).

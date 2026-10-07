@@ -1239,7 +1239,9 @@ py::object MainSystem::PyComputeItem(const py::object& itemIndex, const py::obje
 	Vector local;
 	if (itemType == ItemType::Object)
 	{
-		const CObjectBody* body = (const CObjectBody*)object;
+		//a body only for a body: the cases that use it apply to bodies alone, and casting a connector to a body is
+		//undefined behaviour even when the pointer is never used (#2892)
+		const CObjectBody* body = EXUstd::IsOfType(object->GetType(), CObjectType::Body) ? static_cast<const CObjectBody*>(object) : nullptr;
 		switch (computeType)
 		{
 		case ComputeItemType::PositionJacobian: body->GetPositionJacobian(localPosition, matrix); return EPyUtils::ToPython(matrix);
