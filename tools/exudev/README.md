@@ -37,7 +37,7 @@ three from any platform.
 | `exudev release [--dev] [--no-linux]` | `build --complete` over every version, with the guards a release needs |
 | `exudev clean [--dist] [--linux] [--all]` | the build directories and eggs |
 | `exudev env [--py]` | python, exudyn, numpy, scipy and matplotlib per environment |
-| `exudev issue <verb>` | the issue tracker: `raise`, `extend`, `remark`, `resolve`, `close`, `show`, `list`, `modify`, `triage`, `plot`, `serve`, `mode`. Runs in the current interpreter, without conda; `resolve` and `abandon` rewrite the version files |
+| `exudev issue <verb>` | the issue tracker: `raise`, `extend`, `remark`, `resolve`, `close`, `show`, `list`, `modify`, `triage`, `plot`, `html`, `serve`, `mode`. Runs in the current interpreter, without conda; `resolve` and `abandon` rewrite the version files |
 | `exudev issue bump` | start a new release: `--minor` (1.11 → 1.12), `--major` (1.11 → 2.0) or `--to <version>`; appends it to `releases.json` and restarts the micro version |
 | `exudev issue serve` | the same tracker as a local web page, for a backlog pass: list, search, filter, and raise/extend/remark/resolve through the same API |
 

@@ -16338,3 +16338,19 @@ in the tracker.
 - **Not touched**: the 21 issues of `GeneralContact`.
 - **For the maintainer's decision**: the rest, each with a recommendation - close, plan, or keep as an idea - in
   `tmp/oldIssuesProposal.md`.
+
+<a id="rg10-18"></a>
+### RG10.18 — `exudev issue html` (2026-10-07, #2885); #2236 resolved
+
+*(Maintainer 2026-10-07: "when I checkout the repo at another computer: I do not have the html page of the issue
+tracker (which is handy). Is it possible that this is also generated with some command" - and, on the proposal of a
+verb: "yes, add a small verb, exudev issue html".)*
+
+- `tools/issueTracker/trackerlog.html` is in `.gitignore`; `WritePages()` writes it after every verb that changes an
+  issue, and `serve`, `plot` and `regenerate.py` do not. The new verb calls `ConvertToHTML()` alone and changes no
+  tracked file. Named in `tools/exudev/README.md` and `docs/dev/WORKFLOW.md` §the tracker;
+  `test_exudev.py::testIssueHtmlWritesTheOverviewAlone` writes it into a copy of the tracker and refuses a call of
+  the other page writers.
+- **#2236** (the time in the renderer initialized wrong on Linux) resolved - *(maintainer 2026-10-07: "The tests also
+  showed that #2236 is resolved. Time is always zero in renderer, doing several tests.")*; RG6.8.5 keeps #2140,
+  #2277, #2278.

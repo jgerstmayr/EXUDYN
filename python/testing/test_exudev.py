@@ -211,3 +211,22 @@ def testEnvListsOnlyTheEnvironmentsThatExist(monkeypatch):
     assert labels[0] == 'environments of the version matrix that do not exist'
     assert 'venvP310' in steps[0].note and 'build --complete' in steps[0].note
     assert len(labels) == 2
+
+
+#%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+def testIssueHtmlWritesTheOverviewAlone(tmp_path, monkeypatch):
+    """#2885: trackerlog.html is ignored by git, so a fresh checkout has none; 'exudev issue html'
+    writes it, and nothing else - here into a copy of the tracker"""
+    import shutil
+    tracker = commands.IssueTracker()
+    shutil.copytree(os.path.join(repositoryRoot, 'tools', 'issueTracker', 'issues'), str(tmp_path / 'issues'))
+    shutil.copy(os.path.join(repositoryRoot, 'tools', 'issueTracker', 'releases.json'), str(tmp_path))
+    monkeypatch.setattr(tracker, 'releasesCache', None)
+    monkeypatch.setattr(tracker, 'trackerDirectory', str(tmp_path))
+    monkeypatch.setattr(tracker.issueStore, 'storeDirectory', str(tmp_path / 'issues'))
+    for name in ['ConvertToMarkdown', 'ConvertToChangelog', 'UpdateFiles', 'UpdateDateAndVersion']:
+        monkeypatch.setattr(tracker, name, lambda *args, **kwargs: pytest.fail(name + ' called'))
+    [step] = commands.Issue(Options(issueVerb='html'))
+    assert step.action() == 0
+    page = (tmp_path / (tracker.trackerFile + '.html')).read_text(encoding='utf-8')
+    assert '<h2>ISSUE Tracker</h2>' in page and '<td>2885</td>' in page

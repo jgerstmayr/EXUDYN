@@ -1,0 +1,15 @@
+{
+  "number": 2236,
+  "title": "linux",
+  "author": "JG",
+  "status": "RESOLVED",
+  "type": "FIX",
+  "effort": "LOW",
+  "description": "fix wrong initialization for time in renderer on linux systems",
+  "dateRaised": "2026-01-26",
+  "deadline": "2026-07-25",
+  "dateResolved": "2026-10-07 10:47",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "On Linux the time shown in the renderer starts at zero; confirmed by the maintainer's repeated tests on Ubuntu (2026-10-07)",
+  "resolvedInVersion": "1.12.415"
+}

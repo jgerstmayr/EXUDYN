@@ -1158,7 +1158,8 @@ the arc; the spring windings of the spring-dampers use `connectors.springNumberO
       volumes by the near and far planes of the camera-centric projection. **Changed 2026-09-30**
       ([log](exudynRevisionLog2026b.md#rg6-8-4-1)): depth clamping while the volumes are drawn. **DONE
       2026-09-30**: the maintainer checked it on screen - no artifacts any more;
-    - **RG6.8.5** (#2140, #2236, #2277, #2278) Linux: crashes when the renderer closes and with the SolutionViewer; the
+    - **RG6.8.5** (#2140, #2277, #2278; #2236 resolved 2026-10-07: the time in the renderer is right on Ubuntu, the
+      maintainer's tests) Linux: crashes when the renderer closes and with the SolutionViewer; the
       time in the renderer initialized wrong - the manual check (RG2.4) S7, Q1, Q2 on Ubuntu, plus a
       script that starts and stops the renderer twenty times; whether `glfwGetWindowContentScale` of the newer GLFW
       gives the display scaling on Linux (#2277), and whether `glfwDestroyWindow` in `StopRenderer` avoids the crashes
@@ -1404,6 +1405,12 @@ for `build --complete`, instead of stopping the command.
 **RG10.17** **DONE 2026-10-06** (#2868) — [log](exudynRevisionLog2026b.md#rg10-17) *(group RG10; maintainer 2026-10-06: "the
 linux build currently does not work")* **`exudev linux` asks WSL for the path without its shell**: `wsl --exec wslpath`
 with forward slashes; the login shell of current WSL removed the backslashes of the Windows path.
+
+<a id="rg10-18"></a>
+**RG10.18** **DONE 2026-10-07** (#2885) — [log](exudynRevisionLog2026b.md#rg10-18) *(group RG10; maintainer 2026-10-07:
+"when I checkout the repo at another computer: I do not have the html page of the issue tracker (which is handy)")*
+**`exudev issue html`** writes `tools/issueTracker/trackerlog.html`, which git ignores and which only the verbs that
+change an issue wrote.
 
 ## RG11 — Misc
 
@@ -2121,7 +2128,7 @@ issue and a short title only. The open issues that are not steps are in the trac
 | RG5.2 | - | make the hot linear algebra vectorizable |
 | RG5.3 | #858, #1202, #1203 | the Jacobians assembled in parallel |
 | RG5.4 | #2182, #2183, #2184 | the superelements for larger meshes |
-| RG6.8 | #2140, #2236, #2277, #2278, #2204, #2194 | the graphics fixes before 1.13: Linux (RG6.8.5), the near and far planes (RG6.8.8) |
+| RG6.8 | #2140, #2277, #2278, #2204, #2194 | the graphics fixes before 1.13: Linux (RG6.8.5), the near and far planes (RG6.8.8) |
 | RG2.4.5 | #2881 | Ubuntu GUI check: curved tiling and recorded frames to be checked again |
 | RG9.6 | #2866 | the member functions an item must provide, checked when it compiles (from #2498) |
 | RG8.1 to RG8.9 | #1139, #1140, #1241 | the plugin ABI: registry, fingerprint, reference plugin, headers, discovery |

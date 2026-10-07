@@ -106,6 +106,7 @@ exudev issue close 2566 "duplicate of #2134" | "superseded by ..." | "won't fix,
 exudev issue triage                                #the open issues by type and effort
 exudev issue plot                                  #the issues over time: total, closed, open; bugs and fixes
 exudev issue bump --minor | --major | --to 2.0     #start a RELEASE (maintainer decision)
+exudev issue html                                  #write tools/issueTracker/trackerlog.html (ignored by git), e.g. after a checkout
 exudev issue serve                                 #the same in a browser, read AND write
 exudev issue mode --release | --dev                              #fact 26
 ```

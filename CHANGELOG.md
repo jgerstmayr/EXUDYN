@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.12 | Metheney | 335 | 1.12.412 |
+| 1.12 | Metheney | 337 | 1.12.416 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
 | 1.9 | Krall | 235 | 1.9.234 |
@@ -29,6 +29,14 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.12 - Metheney (current)
 
+- **1.12.416** `EXTENSION` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` exudev issue html writes the HTML overview of the tracker (#2885)
+  - description: tools/issueTracker/trackerlog.html is ignored by git and only written as a side effect of a verb that changes an issue, so a fresh checkout has none. The maintainer, 2026-10-07: 'when I checkout the repo at another computer: I do not have the html page of the issue tracker (which is handy)' - a verb that writes just this page. revision2026b step RG10.18
+  - **notes:** exudev issue html writes the HTML overview of the tracker, tools/issueTracker/trackerlog.html, which git ignores - e.g. after a fresh checkout
+  - date resolved: **2026-10-07 10:47**, date raised: 2026-10-07
+- **1.12.415** `FIX` `LOW EFF` `resolved by: Claude-JG` linux (#2236)
+  - description: fix wrong initialization for time in renderer on linux systems
+  - **notes:** On Linux the time shown in the renderer starts at zero; confirmed by the maintainer's repeated tests on Ubuntu (2026-10-07)
+  - date resolved: **2026-10-07 10:47**, date raised: 2026-01-26
 - **1.12.412** `CHANGE` `NORMAL` `HUGE EFF` `raised by: Claude-JG` `resolved by: Claude-JG` connectors and loads compute their marker values themselves instead of precomputed MarkerData (#2745)
   - description: The maintainer, 2026-09-29: compute marker values inside the connector (joint, constraint) and load functions, no precomputation of MarkerData; a new temporary data with smaller footprint per marker; check GeneralContact. Migration: a function in CObjectConnector / CLoad that does what the precomputation does today, then each connector and load changed. Advantage: automatic differentiation becomes much simpler. First an evaluation step - what is there now, what are the best options - since it shapes future items and the user elements. revision2026b group RG14.
   - **notes:** Connectors, joints, constraints and loads compute the values of their markers themselves, through an interface per marker kind, instead of a precomputed MarkerData for every marker; the rigid markers give a homogeneous transformation and the Jacobians follow by automatic differentiation (revision2026b step RG14.2)

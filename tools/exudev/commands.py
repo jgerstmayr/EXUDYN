@@ -1476,7 +1476,7 @@ def SwitchBuildMode(tracker, release):
 
 def Issue(options):
     """exudev issue <verb>: raise, extend, remark, resolve, close, show, list, modify,
-    triage, serve, bump, mode"""
+    plot, html, triage, serve, bump, mode"""
     tracker = IssueTracker()
     verb = options.issueVerb
 
@@ -1562,6 +1562,14 @@ def Issue(options):
             print('issues: ' + str(counts['total'][-1]) + ' raised, ' + str(counts['closed'][-1]) + ' closed, '
                   + str(counts['open'][-1]) + ' open; open bugs ' + str(counts['openBugs'][-1])
                   + ', open fixes ' + str(counts['openFixes'][-1]))
+            return 0
+
+    elif verb == 'html':
+        note = 'write the HTML overview tools/issueTracker/trackerlog.html'
+
+        def Action():
+            tracker.ConvertToHTML()                     #ignored by git, so a fresh checkout has none (#2885)
+            print(tracker.TrackerPath(tracker.trackerFile + '.html'))
             return 0
 
     elif verb == 'triage':

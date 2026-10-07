@@ -8,10 +8,10 @@ Every entry carries the **type** of the issue, then its **priority** and its **e
 
 General information on current version:
 
-- Exudyn version = 1.12.414.dev1
+- Exudyn version = 1.12.416.dev1
 - last change = 2026-10-07
-- Number of issues = 2885
-- Number of resolved issues = 2728 (414 in current version)
+- Number of issues = 2886
+- Number of resolved issues = 2730 (416 in current version)
 
 ## Resolved issues and resolved bugs before version 1.12
 
@@ -7643,10 +7643,6 @@ The following list contains the issues which have been **RESOLVED** in the accor
 - `EXTENSION` `MEDIUM EFF` explicit solver (#2238)
   - description: add adaptive step refinement for case of divergence - define limit for velocities/solution increment to decide step refinement (+ nan/inf)
   - date raised: 2026-01-27
-- `FIX` `LOW EFF` linux (#2236)
-  - description: fix wrong initialization for time in renderer on linux systems
-  - **remarks:** planned before 1.13 as revision2026b step RG6.8.5 (2026-09-29)
-  - date raised: 2026-01-26
 - `EXTENSION` `LOW EFF` computeInitialAccelerations (#2234)
   - description: add WARNING for inconsistent initial velocities - which usually cause heavy oscillations in constraint forces
   - **remarks:** planned as revision2026b step RG18.1 (triage 2026-10-07)

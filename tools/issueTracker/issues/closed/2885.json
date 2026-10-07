@@ -1,0 +1,16 @@
+{
+  "number": 2885,
+  "title": "exudev issue html writes the HTML overview of the tracker",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "EXTENSION",
+  "effort": "LOW",
+  "description": "tools/issueTracker/trackerlog.html is ignored by git and only written as a side effect of a verb that changes an issue, so a fresh checkout has none. The maintainer, 2026-10-07: 'when I checkout the repo at another computer: I do not have the html page of the issue tracker (which is handy)' - a verb that writes just this page. revision2026b step RG10.18",
+  "dateRaised": "2026-10-07",
+  "deadline": "2027-04-05",
+  "dateResolved": "2026-10-07 10:47",
+  "resolvedAuthor": "Claude-JG",
+  "file": "tools/exudev/commands.py",
+  "releaseNotes": "exudev issue html writes the HTML overview of the tracker, tools/issueTracker/trackerlog.html, which git ignores - e.g. after a fresh checkout",
+  "resolvedInVersion": "1.12.416"
+}
