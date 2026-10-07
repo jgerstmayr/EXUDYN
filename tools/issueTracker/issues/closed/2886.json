@@ -1,0 +1,16 @@
+{
+  "number": 2886,
+  "title": "pip install --group dev fails on macOS and on Python 3.14+: scipy==1.15.2 has no wheel there",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "FIX",
+  "effort": "LOW",
+  "description": "The maintainer, 2026-10-07: on macOS with Python 3.14 and 3.15 'pip install --group dev' does not work with the scipy restriction to 1.15 - it cannot be installed; remove the restriction for macOS in general, and for the newer Python versions use the current scipy. The pin of the dev group gets PEP 508 markers, as tools/ci/buildManylinux.sh already has for 3.14. revision2026b step RG10.19",
+  "dateRaised": "2026-10-07",
+  "deadline": "2027-04-05",
+  "dateResolved": "2026-10-07 10:53",
+  "resolvedAuthor": "Claude-JG",
+  "file": "pyproject.toml",
+  "releaseNotes": "pip install --group dev works on macOS and on Python 3.14+: the dev group pins scipy==1.15.2 only where it has wheels (not macOS, Python < 3.14) and takes the current scipy elsewhere",
+  "resolvedInVersion": "1.12.417"
+}

@@ -16354,3 +16354,18 @@ verb: "yes, add a small verb, exudev issue html".)*
 - **#2236** (the time in the renderer initialized wrong on Linux) resolved - *(maintainer 2026-10-07: "The tests also
   showed that #2236 is resolved. Time is always zero in renderer, doing several tests.")*; RG6.8.5 keeps #2140,
   #2277, #2278.
+
+<a id="rg10-19"></a>
+### RG10.19 — the scipy pin of the dev group (2026-10-07, #2886)
+
+*(Maintainer 2026-10-07: "On MacOS, with python 3.14 and 3.15 the "pip install --group dev" does no work with the
+scipy restriction to version 1.15 in the toml file. It cannot be installed. Is it possible to change that - remove the
+restriction for MacOS in general? I also believe that for the newer Python versions, the old scipy version won't be
+available. So, possibly for > 3.14, to use the current scipy version?")*
+
+- `pyproject.toml`, group `dev`: `scipy==1.15.2; python_version < '3.14' and sys_platform != 'darwin'` and
+  `scipy; python_version >= '3.14' or sys_platform == 'darwin'` - exactly one applies on each platform (checked with
+  `packaging` for win32/linux/darwin and 3.10-3.15). `tools/ci/buildManylinux.sh` had the 3.14 marker already.
+- The pin exists for the speed of the sparse eigenvalue solver (revision2026 fact 19); on macOS and 3.14+ the suite may
+  therefore be slower - to be seen in the next macOS run. `docs/howTo/condaEnvironments.md` and `docs/dev/WORKFLOW.md`
+  say so.

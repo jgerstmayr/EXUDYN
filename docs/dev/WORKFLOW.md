@@ -713,7 +713,7 @@ never as a subset**. Record the failed-test count and compare it against the run
 Two things that will otherwise look like breakage:
 
 - **Pin scipy to 1.15.2.** scipy 1.18.0 slows the suite from ~22 s to over 10 minutes, apparently
-  in the eigensolver path. If a run suddenly takes minutes, check the scipy version
+  in the eigensolver path. The `dev` group pins it except on macOS and Python 3.14+, which have no 1.15.2 wheel (#2886). If a run suddenly takes minutes, check the scipy version
   before looking for a regression in Exudyn.
 - **The global tolerance is 5e-14 and some models sit close to it.** A failure just above it — for
   example `movingGroundRobotTest.py` at `5.0688e-14`, with result and reference agreeing to ~13

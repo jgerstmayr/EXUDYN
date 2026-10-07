@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.12 | Metheney | 337 | 1.12.416 |
+| 1.12 | Metheney | 338 | 1.12.417 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
 | 1.9 | Krall | 235 | 1.9.234 |
@@ -29,6 +29,10 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.12 - Metheney (current)
 
+- **1.12.417** `FIX` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` pip install --group dev fails on macOS and on Python 3.14+: scipy==1.15.2 has no wheel there (#2886)
+  - description: The maintainer, 2026-10-07: on macOS with Python 3.14 and 3.15 'pip install --group dev' does not work with the scipy restriction to 1.15 - it cannot be installed; remove the restriction for macOS in general, and for the newer Python versions use the current scipy. The pin of the dev group gets PEP 508 markers, as tools/ci/buildManylinux.sh already has for 3.14. revision2026b step RG10.19
+  - **notes:** pip install --group dev works on macOS and on Python 3.14+: the dev group pins scipy==1.15.2 only where it has wheels (not macOS, Python \< 3.14) and takes the current scipy elsewhere
+  - date resolved: **2026-10-07 10:53**, date raised: 2026-10-07
 - **1.12.416** `EXTENSION` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` exudev issue html writes the HTML overview of the tracker (#2885)
   - description: tools/issueTracker/trackerlog.html is ignored by git and only written as a side effect of a verb that changes an issue, so a fresh checkout has none. The maintainer, 2026-10-07: 'when I checkout the repo at another computer: I do not have the html page of the issue tracker (which is handy)' - a verb that writes just this page. revision2026b step RG10.18
   - **notes:** exudev issue html writes the HTML overview of the tracker, tools/issueTracker/trackerlog.html, which git ignores - e.g. after a fresh checkout

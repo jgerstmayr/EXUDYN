@@ -1412,6 +1412,11 @@ with forward slashes; the login shell of current WSL removed the backslashes of 
 **`exudev issue html`** writes `tools/issueTracker/trackerlog.html`, which git ignores and which only the verbs that
 change an issue wrote.
 
+<a id="rg10-19"></a>
+**RG10.19** **DONE 2026-10-07** (#2886) — [log](exudynRevisionLog2026b.md#rg10-19) *(group RG10; maintainer 2026-10-07:
+"On MacOS, with python 3.14 and 3.15 the 'pip install --group dev' does no work with the scipy restriction")*
+**The scipy pin of the `dev` group only where scipy 1.15.2 has wheels**: not on macOS, not on Python 3.14 and later.
+
 ## RG11 — Misc
 
 What belongs to no group yet. Three of a kind here are a reason to propose a group of their own.

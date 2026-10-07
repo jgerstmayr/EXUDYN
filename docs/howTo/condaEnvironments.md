@@ -53,7 +53,7 @@ pip install --pre --find-links=dist "exudyn[tests]"   #the local wheel plus what
 | `build` | `setuptools>=77`, `wheel`, `pybind11<3.0`, `tomli`, `cibuildwheel` | a direct `python setup.py bdist_wheel`, which has no build isolation; a local CI-identical wheel |
 | `test` | `pytest`, `pytest-xdist`, `quickjs` | `pytest -n 8`; the suite itself runs without them |
 | `ide` | `spyder-kernels`, `ipykernel`, `ipywidgets` | Spyder and Jupyter |
-| `dev` | all of the above, plus `scipy==1.15.2`, `jinja2`, `griffe` | the development environment |
+| `dev` | all of the above, plus `scipy==1.15.2` (any scipy on macOS and Python 3.14+), `jinja2`, `griffe` | the development environment |
 
 Groups are never published with the wheel, unlike the extras (`exudyn[tests]` etc.) below, which
 users see. A single group can be installed alone, e.g. `pip install --group docs`.
@@ -65,7 +65,8 @@ users see. A single group can be installed alone, e.g. `pip install --group docs
 
 > **Why scipy 1.15.2?** scipy 1.18.0 slows the Exudyn test suite from ~22 s to over 10 minutes,
 > apparently in the eigensolver path. The pin is in
-> the `dev` group; `exudyn[tests]` itself does not pin scipy.
+> the `dev` group; `exudyn[tests]` itself does not pin scipy. It does not apply on macOS and on Python 3.14 and later,
+> where scipy 1.15.2 has no wheel and `pip install --group dev` would fail (#2886); there the suite may be slower.
 
 > **spyder-kernels** in the `ide` group is `3.*`, matching Spyder 6; for an older Spyder see the
 > table below and install the matching version afterwards.

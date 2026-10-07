@@ -174,7 +174,10 @@ dev = [
     {include-group = "build"},
     {include-group = "ide"},
     {include-group = "test"},
-    "scipy==1.15.2",        #scipy 1.18.0 slows the test suite from ~22 s to over 10 min (revision2026 fact 19)
+    #scipy 1.18.0 slows the test suite from ~22 s to over 10 min (revision2026 fact 19), so it is pinned where 1.15.2
+    #has wheels; not on macOS and not on Python 3.14+, where it cannot be installed (#2886)
+    "scipy==1.15.2; python_version < '3.14' and sys_platform != 'darwin'",
+    "scipy; python_version >= '3.14' or sys_platform == 'darwin'",
     "jinja2",               #templates were measured in revision2026 step R4.4.2; kept available for the generators
     "griffe",               #static API inspection (revision2026 step R4.8 left it available)
     ]
