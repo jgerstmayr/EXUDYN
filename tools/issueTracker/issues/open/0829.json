@@ -7,5 +7,6 @@
   "effort": "MEDIUM",
   "description": "add velocity offset to all spring dampers in order to replace many user functions with preStepUserFunctions",
   "dateRaised": "2021-12-15",
-  "deadline": "2022-02-13"
+  "deadline": "2022-02-13",
+  "workingRemarks": "planned as revision2026b step RG18.2 (triage 2026-10-07)"
 }

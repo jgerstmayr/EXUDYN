@@ -8,5 +8,6 @@
   "effort": "HIGH",
   "description": "add auto registration for C++ user items",
   "dateRaised": "2022-06-12",
-  "deadline": "2022-08-11"
+  "deadline": "2022-08-11",
+  "workingRemarks": "planned as revision2026b step RG8.1 (triage 2026-10-07)"
 }

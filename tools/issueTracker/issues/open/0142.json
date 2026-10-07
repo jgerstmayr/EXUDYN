@@ -7,5 +7,6 @@
   "effort": "MEDIUM",
   "description": "check Vector operator[], and ConstVector performance regarding inlining",
   "dateRaised": "2019-05-21",
-  "deadline": "2019-07-20"
+  "deadline": "2019-07-20",
+  "workingRemarks": "planned as revision2026b step RG5.1.4 (triage 2026-10-07)"
 }

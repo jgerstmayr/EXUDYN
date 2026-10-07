@@ -7,5 +7,6 @@
   "effort": "MEDIUM",
   "description": "use ParallelFor with costs argument in GeneralContact and CSystem, to optimize usage",
   "dateRaised": "2022-01-13",
-  "deadline": "2022-03-14"
+  "deadline": "2022-03-14",
+  "workingRemarks": "planned as revision2026b step RG5.3 (triage 2026-10-07)"
 }

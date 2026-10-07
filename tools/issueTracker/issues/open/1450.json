@@ -8,5 +8,6 @@
   "effort": "MEDIUM",
   "description": "add number of threads to solution files and more details on computer; check parameter variation and other files (e.g. numberOfThreads and final computation time)",
   "dateRaised": "2023-02-25",
-  "deadline": "2023-08-24"
+  "deadline": "2023-08-24",
+  "workingRemarks": "planned as revision2026b step RG18.1 (triage 2026-10-07)"
 }

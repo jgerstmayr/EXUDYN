@@ -7,5 +7,6 @@
   "effort": "MEDIUM",
   "description": "highly improve efficiency for larger number of nodes by adding according precomputed transformations",
   "dateRaised": "2026-01-04",
-  "deadline": "2026-07-03"
+  "deadline": "2026-07-03",
+  "workingRemarks": "planned as revision2026b step RG5.4 (triage 2026-10-07)"
 }

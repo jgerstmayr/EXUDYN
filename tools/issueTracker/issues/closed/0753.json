@@ -1,0 +1,15 @@
+{
+  "number": 753,
+  "title": "autodiff for Connectors",
+  "author": "JG",
+  "status": "CLOSED",
+  "type": "EXTENSION",
+  "effort": "HIGH",
+  "description": "add autodiff for connectors using spezial sizes like 6 for 2 position nodes, 14 for 2 rigid bodies and 40 for most objects (ObjectFFRFreducedOrder) + 100? as extreme case, falling back to numerical diff for any larger case",
+  "dateRaised": "2021-09-21",
+  "deadline": "2021-11-20",
+  "dateResolved": "2026-10-07 08:29",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "superseded and done: the connector interface of revision2026b step RG14.2 (#2745) gives connectors their Jacobian by automatic differentiation",
+  "resolvedInVersion": "1.12.379"
+}

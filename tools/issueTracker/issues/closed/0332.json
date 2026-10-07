@@ -1,0 +1,15 @@
+{
+  "number": 332,
+  "title": "getobject/nodeparameter",
+  "author": "JG",
+  "status": "CLOSED",
+  "type": "EXTENSION",
+  "effort": "MEDIUM",
+  "description": "extend getobjectparameter/node/.. with default function from MainObject / MainNode/ ... which returns basic information, e.g., NodeType",
+  "dateRaised": "2020-02-04",
+  "deadline": "2020-04-04",
+  "dateResolved": "2026-10-07 08:33",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "already done: mbs.GetNode(...), GetObject(...), ... return the dict with the type (nodeType, objectType, ...), and GetNodeParameter(n, 'nodeType') reads it",
+  "resolvedInVersion": "1.12.413"
+}

@@ -1,0 +1,12 @@
+{
+  "number": 2884,
+  "title": "joints and their Jacobians on homogeneous transformations",
+  "author": "Claude-JG",
+  "status": "RAISED",
+  "type": "CHANGE",
+  "effort": "HIGH",
+  "description": "The constraint equations of the joints become functions of the relative transformation H0^-1 H1 of the two marker frames, and their Jacobians follow systematically from the relative twist - one implementation for JointGeneric, JointRevoluteZ, JointPrismaticX, the 2D joints and the rolling disc instead of one each. Successor of #2745 (the marker interface of RG14.2). revision2026b step RG14.3",
+  "dateRaised": "2026-10-07",
+  "deadline": "2027-04-05",
+  "file": "src/Objects/CObjectJointGeneric.cpp"
+}

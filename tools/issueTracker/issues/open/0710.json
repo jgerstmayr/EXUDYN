@@ -7,5 +7,6 @@
   "effort": "MEDIUM",
   "description": "implement CollectCurrentNodeData for NodeRigidBody2D, optimize CollectCurrentNodeData for all rigid body nodes",
   "dateRaised": "2021-07-08",
-  "deadline": "2021-09-06"
+  "deadline": "2021-09-06",
+  "workingRemarks": "planned as revision2026b step RG5.1.4 (triage 2026-10-07)"
 }

@@ -7,5 +7,6 @@
   "effort": "LOW",
   "description": "add exception in case that Lie group nodes are used with static solver, which cannot work",
   "dateRaised": "2023-04-06",
-  "deadline": "2023-10-03"
+  "deadline": "2023-10-03",
+  "workingRemarks": "planned as revision2026b step RG18.1 (triage 2026-10-07)"
 }

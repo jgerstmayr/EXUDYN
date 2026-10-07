@@ -7,5 +7,6 @@
   "effort": "LOW",
   "description": "add access function for rotation",
   "dateRaised": "2026-01-13",
-  "deadline": "2026-07-12"
+  "deadline": "2026-07-12",
+  "workingRemarks": "planned as revision2026b step RG4.20.5 (triage 2026-10-07)"
 }

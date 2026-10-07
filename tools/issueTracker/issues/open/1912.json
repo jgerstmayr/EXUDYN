@@ -7,5 +7,6 @@
   "effort": "MEDIUM",
   "description": "add simple model of two mass-spring-dampers to show simulator coupling of two implicit-explicit mbs, similar to issue 1905",
   "dateRaised": "2024-10-26",
-  "deadline": "2025-04-24"
+  "deadline": "2025-04-24",
+  "workingRemarks": "planned as revision2026b step RG18.1 (triage 2026-10-07)"
 }

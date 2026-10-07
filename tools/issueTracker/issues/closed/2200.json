@@ -1,0 +1,15 @@
+{
+  "number": 2200,
+  "title": "ANCFThinPlate",
+  "author": "JG",
+  "status": "CLOSED",
+  "type": "EXTENSION",
+  "effort": "LOW",
+  "description": "add test model",
+  "dateRaised": "2026-01-07",
+  "deadline": "2026-07-06",
+  "dateResolved": "2026-10-07 08:29",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "already done: ANCFThinPlate has test models (ANCFThinPlateTests.py, ANCFThinPlateRevisionTest.py, revision2026b step RG4.20)",
+  "resolvedInVersion": "1.12.402"
+}

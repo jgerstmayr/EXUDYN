@@ -1,0 +1,15 @@
+{
+  "number": 2017,
+  "title": "ContactCurveCircles",
+  "author": "JG",
+  "status": "CLOSED",
+  "type": "EXTENSION",
+  "effort": "MEDIUM",
+  "description": "implement polynomial enhancements",
+  "dateRaised": "2025-05-13",
+  "deadline": "2025-11-09",
+  "dateResolved": "2026-10-07 08:29",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "decided against (maintainer 2026-10-07, #2867): polynomialData only bends the drawing; the contact uses the straight segments, which is documented",
+  "resolvedInVersion": "1.12.400"
+}

@@ -1,0 +1,15 @@
+{
+  "number": 1668,
+  "title": "ANCFCable",
+  "author": "JG",
+  "status": "CLOSED",
+  "type": "EXAMPLE",
+  "effort": "LOW",
+  "description": "add test example",
+  "dateRaised": "2023-10-16",
+  "deadline": "2024-04-13",
+  "dateResolved": "2026-10-07 08:29",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "already done: ObjectANCFCable has a MiniExample and test models (ANCFcable2DuserFunction.py, ...)",
+  "resolvedInVersion": "1.12.394"
+}

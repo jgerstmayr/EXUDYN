@@ -1,0 +1,15 @@
+{
+  "number": 648,
+  "title": "solver tutorial",
+  "author": "JG",
+  "status": "CLOSED",
+  "type": "DOCU",
+  "effort": "HIGH",
+  "description": "create video with frequent solver errors and FAQ",
+  "dateRaised": "2021-05-01",
+  "deadline": "2021-06-30",
+  "dateResolved": "2026-10-07 08:29",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "not needed any more (maintainer 2026-10-07); the solver errors and their causes are in the manual chapter on performance, errors and solver failures",
+  "resolvedInVersion": "1.12.378"
+}

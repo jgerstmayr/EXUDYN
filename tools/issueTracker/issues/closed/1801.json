@@ -1,0 +1,15 @@
+{
+  "number": 1801,
+  "title": "joint constraints",
+  "author": "JG",
+  "status": "CLOSED",
+  "type": "DOCU",
+  "effort": "MEDIUM",
+  "description": "add description of position jacobian for rigid bodies (in particular 3D rigid); add reference in description for MarkerBodyPosition",
+  "dateRaised": "2024-03-03",
+  "deadline": "2024-08-30",
+  "dateResolved": "2026-10-07 08:32",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "already done: the markers' pages have a section Jacobians with the position Jacobian, the body pages its rotation part (revision2026b step RG13.5, #2725)",
+  "resolvedInVersion": "1.12.409"
+}

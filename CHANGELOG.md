@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.12 | Metheney | 334 | 1.12.375 |
+| 1.12 | Metheney | 335 | 1.12.412 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
 | 1.9 | Krall | 235 | 1.9.234 |
@@ -29,6 +29,10 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.12 - Metheney (current)
 
+- **1.12.412** `CHANGE` `NORMAL` `HUGE EFF` `raised by: Claude-JG` `resolved by: Claude-JG` connectors and loads compute their marker values themselves instead of precomputed MarkerData (#2745)
+  - description: The maintainer, 2026-09-29: compute marker values inside the connector (joint, constraint) and load functions, no precomputation of MarkerData; a new temporary data with smaller footprint per marker; check GeneralContact. Migration: a function in CObjectConnector / CLoad that does what the precomputation does today, then each connector and load changed. Advantage: automatic differentiation becomes much simpler. First an evaluation step - what is there now, what are the best options - since it shapes future items and the user elements. revision2026b group RG14.
+  - **notes:** Connectors, joints, constraints and loads compute the values of their markers themselves, through an interface per marker kind, instead of a precomputed MarkerData for every marker; the rigid markers give a homogeneous transformation and the Jacobians follow by automatic differentiation (revision2026b step RG14.2)
+  - date resolved: **2026-10-07 08:32**, date raised: 2026-09-29
 - **1.12.375** `DOCU` `raised by: Claude-JG` `resolved by: Claude-JG` PDF: LaTeX macros and backslashes printed as text (#2883)
   - description: Maintainer 2026-10-07: 'there are a couple of stray \\LU, \\pv, \\mathbf, etc. in the PDF; there are many lost \\ in the PDF, possibly \\ from earlier line breaks'. Found in the text of the PDF: figure references that print the caption (its math stays LaTeX source), a pipe inside math in table rows (the table splits the cell - the rows of the hydraulic actuator, the spring-dampers, the rolling discs), display math not on lines of its own (ANCFThinPlate), LaTeX line breaks and spaces in the Markdown text (trailing backslash, backslash-space, backslash-comma) and backslash-commas in 12 issue texts of the tracker log.
   - **notes:** The PDF documentation no longer shows LaTeX commands or stray backslashes in its text.

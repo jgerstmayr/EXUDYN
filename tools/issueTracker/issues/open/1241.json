@@ -7,5 +7,6 @@
   "effort": "HIGH",
   "description": "consider mechanism to self-register items: objects, nodes, ...; same a swith TimerStructure registration; this allows to add user-defined objects without touching the overall code",
   "dateRaised": "2022-08-24",
-  "deadline": "2022-10-23"
+  "deadline": "2022-10-23",
+  "workingRemarks": "planned as revision2026b step RG8.1 (triage 2026-10-07)"
 }

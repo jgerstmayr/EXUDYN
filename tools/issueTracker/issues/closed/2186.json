@@ -1,0 +1,15 @@
+{
+  "number": 2186,
+  "title": "RedrawAndSaveImage",
+  "author": "JG",
+  "status": "CLOSED",
+  "type": "EXTENSION",
+  "effort": "MEDIUM",
+  "description": "add raytracer flag and make working offline",
+  "dateRaised": "2026-01-04",
+  "deadline": "2026-07-03",
+  "dateResolved": "2026-10-07 08:29",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "already done (maintainer 2026-10-07): SC.renderer.RedrawAndGetImage(useRaytracer=True) renders without a window, also on macOS since #2876",
+  "resolvedInVersion": "1.12.401"
+}

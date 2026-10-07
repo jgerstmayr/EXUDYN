@@ -1,0 +1,15 @@
+{
+  "number": 844,
+  "title": "connector jacobian RigidBodySpringDamper",
+  "author": "JG",
+  "status": "CLOSED",
+  "type": "EXTENSION",
+  "effort": "MEDIUM",
+  "description": "add analytic jacobian for RigidBodySpringDamper connector",
+  "dateRaised": "2021-12-23",
+  "deadline": "2022-02-21",
+  "dateResolved": "2026-10-07 08:29",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "already done: ObjectConnectorRigidBodySpringDamper has its Jacobian by automatic differentiation since revision2026b step RG14.2 (#2745)",
+  "resolvedInVersion": "1.12.381"
+}

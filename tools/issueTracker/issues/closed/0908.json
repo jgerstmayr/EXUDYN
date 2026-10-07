@@ -1,0 +1,15 @@
+{
+  "number": 908,
+  "title": "MarkerData",
+  "author": "JG",
+  "status": "CLOSED",
+  "type": "EXTENSION",
+  "effort": "MEDIUM",
+  "description": "add configuration to markerdata computation; allows configuration in sensors and startOfStep configuration in Contact",
+  "dateRaised": "2022-02-02",
+  "deadline": "2022-04-03",
+  "dateResolved": "2026-10-07 08:29",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "obsolete (maintainer 2026-10-07): the MarkerData precomputation is practically gone since the connector interface of revision2026b step RG14.2 (#2745); markers compute their kinematics in the configuration asked for",
+  "resolvedInVersion": "1.12.385"
+}

@@ -1,0 +1,15 @@
+{
+  "number": 1292,
+  "title": "CSensorObject",
+  "author": "JG",
+  "status": "CLOSED",
+  "type": "CHANGE",
+  "effort": "MEDIUM",
+  "description": "store MarkerDataStructure locally in order to avoid memory allocations for evaluation of sensor data; also do this for MainSystem::PyGetObjectOutputVariable",
+  "dateRaised": "2022-11-13",
+  "deadline": "2023-05-12",
+  "dateResolved": "2026-10-07 08:29",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "already done: SensorObject and the output functions use a per-thread TemporaryMarkerDataStructure, no allocation per call (#2745)",
+  "resolvedInVersion": "1.12.391"
+}

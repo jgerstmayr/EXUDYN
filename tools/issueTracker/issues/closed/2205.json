@@ -1,0 +1,15 @@
+{
+  "number": 2205,
+  "title": "perspective",
+  "author": "JG",
+  "status": "CLOSED",
+  "type": "CHECK",
+  "effort": "LOW",
+  "description": "test moving along a scene when changing the centerPoint",
+  "dateRaised": "2026-01-08",
+  "deadline": "2026-07-07",
+  "dateResolved": "2026-10-07 08:29",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "already done (maintainer 2026-10-07)",
+  "resolvedInVersion": "1.12.403"
+}

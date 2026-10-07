@@ -8,5 +8,6 @@
   "effort": "LOW",
   "description": "add information to theDoc regarding copying and referencing objects, such as mbs, GetObject(...), etc.; add info into description C/R into generatePyBindings?",
   "dateRaised": "2022-04-30",
-  "deadline": "2022-06-29"
+  "deadline": "2022-06-29",
+  "workingRemarks": "planned as revision2026b step RG18.1 (triage 2026-10-07)"
 }

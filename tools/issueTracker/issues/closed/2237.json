@@ -1,0 +1,15 @@
+{
+  "number": 2237,
+  "title": "MacOS",
+  "author": "JG",
+  "status": "CLOSED",
+  "type": "FIX",
+  "effort": "MEDIUM",
+  "description": "Check Spyder-issues and crashes with PlotSensor on MacOS systems",
+  "dateRaised": "2026-01-26",
+  "deadline": "2026-07-25",
+  "dateResolved": "2026-10-07 08:29",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "fixed: the macOS checks of 1.12.37x show no Spyder or PlotSensor problems (#2876, #2878; maintainer 2026-10-07)",
+  "resolvedInVersion": "1.12.405"
+}

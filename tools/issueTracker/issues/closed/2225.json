@@ -1,0 +1,15 @@
+{
+  "number": 2225,
+  "title": "ANCFThinPlate",
+  "author": "JG",
+  "status": "CLOSED",
+  "type": "DOCU",
+  "effort": "MEDIUM",
+  "description": "add documentation of equations",
+  "dateRaised": "2026-01-16",
+  "deadline": "2026-07-15",
+  "dateResolved": "2026-10-07 08:29",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "already done: the equations of ObjectANCFThinPlate are in its description (revision2026b steps RG4.20 and RG13.3)",
+  "resolvedInVersion": "1.12.404"
+}

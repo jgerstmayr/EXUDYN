@@ -7,5 +7,6 @@
   "effort": "LOW",
   "description": "add option to constructor whether to attach to renderer or not (if used purely for computations, like in InverseKinematics",
   "dateRaised": "2026-02-02",
-  "deadline": "2026-08-01"
+  "deadline": "2026-08-01",
+  "workingRemarks": "planned as revision2026b step RG18.1 (triage 2026-10-07)"
 }

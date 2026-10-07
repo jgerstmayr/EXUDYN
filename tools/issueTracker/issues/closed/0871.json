@@ -1,0 +1,15 @@
+{
+  "number": 871,
+  "title": "restart method",
+  "author": "JG",
+  "status": "CLOSED",
+  "type": "EXTENSION",
+  "effort": "MEDIUM",
+  "description": "add option solutionSettings.writeRestartFile to restart from separate restart file; solutionSettings.restartFileName defines folder and fileName; solutionSettings.restartWritePeriod defines time in seconds, how often it is written; also writes backup file",
+  "dateRaised": "2022-01-18",
+  "deadline": "2022-03-19",
+  "dateResolved": "2026-10-07 08:29",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "already done: the restart file of solution.restart, continued with solution.restart.continueIfAvailable (#2850, revision2026b step RG12.39)",
+  "resolvedInVersion": "1.12.384"
+}

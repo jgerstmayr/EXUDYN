@@ -7,5 +7,6 @@
   "effort": "LOW",
   "description": "add to CartesianSpringDamper, RigidBodySpringDamper",
   "dateRaised": "2023-06-26",
-  "deadline": "2023-12-23"
+  "deadline": "2023-12-23",
+  "workingRemarks": "planned as revision2026b step RG18.2 (triage 2026-10-07)"
 }

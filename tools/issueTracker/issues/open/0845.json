@@ -7,5 +7,6 @@
   "effort": "HIGH",
   "description": "add documentation to object and connector jacobians",
   "dateRaised": "2021-12-23",
-  "deadline": "2022-02-21"
+  "deadline": "2022-02-21",
+  "workingRemarks": "planned as revision2026b step RG14.3 (triage 2026-10-07)"
 }

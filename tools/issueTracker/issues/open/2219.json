@@ -8,5 +8,5 @@
   "description": "correct average Rotation and RotationJacobian to be symmetric w.r.t. both slopes",
   "dateRaised": "2026-01-13",
   "deadline": "2026-07-12",
-  "workingRemarks": "RG13.3 (2026-10-05): GetRotationJacobianTTimesVector_q of NodePointSlope12 is not implemented - a RigidBodySpringDamper at the node with an implicit solver raises NotImplementedFeatureError; the angular velocity is the least-squares fit, the rotation the Gram-Schmidt frame of slope x - the description says so now"
+  "workingRemarks": "RG13.3 (2026-10-05): GetRotationJacobianTTimesVector_q of NodePointSlope12 is not implemented - a RigidBodySpringDamper at the node with an implicit solver raises NotImplementedFeatureError; the angular velocity is the least-squares fit, the rotation the Gram-Schmidt frame of slope x - the description says so now; planned as revision2026b step RG4.20.5 (triage 2026-10-07)"
 }

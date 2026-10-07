@@ -7,5 +7,6 @@
   "effort": "LOW",
   "description": "add hints (object type, etc.) to PyWriteBodyGraphicsDataList in VisualizationSystemContainer to simplify error localisation",
   "dateRaised": "2026-02-15",
-  "deadline": "2026-08-14"
+  "deadline": "2026-08-14",
+  "workingRemarks": "planned as revision2026b step RG18.1 (triage 2026-10-07)"
 }

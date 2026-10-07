@@ -8,5 +8,6 @@
   "effort": "LOW",
   "description": "add option addReferenceCoordinates=False to include reference value in coordinate",
   "dateRaised": "2022-03-16",
-  "deadline": "2022-05-15"
+  "deadline": "2022-05-15",
+  "workingRemarks": "planned as revision2026b step RG18.1 (triage 2026-10-07)"
 }

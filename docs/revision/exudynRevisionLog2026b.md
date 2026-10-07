@@ -16311,3 +16311,30 @@ one traced to its source:
 - `tools/checkMathMacros.py --check` (in the all-checks) refuses all four kinds in the manual and the generated pages.
   The new PDF has backslashes only in code (Windows paths, Python line continuations) and in the dev page that names
   the macros.
+
+<a id="rg18"></a>
+### RG18 — the triage of the old open issues (2026-10-07)
+
+*(Maintainer 2026-10-07: "check and clean up the revision plan b together with the open issues since 2350. Further,
+the MacOS issues 2350 and 2237 can be closed due to the recent tests. Isn't 2745 resolved already? Close 2205, 2186,
+1777 - they are already done - same as 258, right? Close 1906, 1907, 792, 648 - they are (currently) not needed any
+more. Also try resolve many older open issues: add to plan issues that could be resolved easily. Close issues that are
+not needed because of revision changes - like #908 - MarkerData is practically gone, so close it. If you are unsure,
+propose and I decide. ... Note: GeneralContact will be totally revised, so don't touch it now.")*
+
+195 issues were open. Each was read against the code, the generated pages or a run; each closed one carries its reason
+in the tracker.
+
+- **Closed as asked**: #258, #648, #792, #908, #1777, #1906, #1907, #2186, #2205, #2237, #2350.
+- **Closed as done by earlier work**: #401 (sensor MiniExamples, RG13.6), #753, #844 (Jacobians by automatic
+  differentiation, RG14.2), #852, #853, #914-#917 (`mbs.ComputeItem`, #2779), #871 (restart, #2850), #957 (#2870),
+  #1292 (per-thread marker temporaries, #2745), #1484, #1485, #1801, #2328 (RG13.5), #1668, #2200, #2225 (test models and
+  descriptions), #1905 (`simulatorCouplingTwoMbs.py`), #1924, #2016, #2017 (#2867), #2318, #2319 (#2709), #332 (the
+  type is in the item dict), #783 (`Set...Parameter` takes numpy arrays - checked).
+- **#2745 resolved** for RG14.2, which is done; RG14.3 has its own issue now, #2884.
+- **Planned**: into their groups - RG4.20.5, RG5.1.4, RG5.3, RG5.4, RG6.8.5, RG6.8.8, RG8.1, RG8.9, RG8.10, RG13.9,
+  RG14.3; the new group RG18 with RG18.1 (the quick ones, 17 issues) and RG18.2 (the velocity offset in all
+  spring-dampers).
+- **Not touched**: the 21 issues of `GeneralContact`.
+- **For the maintainer's decision**: the rest, each with a recommendation - close, plan, or keep as an idea - in
+  `tmp/oldIssuesProposal.md`.

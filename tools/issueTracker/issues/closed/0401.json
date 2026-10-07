@@ -1,0 +1,15 @@
+{
+  "number": 401,
+  "title": "add sensor miniexamples",
+  "author": "JG",
+  "status": "CLOSED",
+  "type": "EXTENSION",
+  "effort": "LOW",
+  "description": ".",
+  "dateRaised": "2020-05-21",
+  "deadline": "2020-07-20",
+  "dateResolved": "2026-10-07 08:29",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "already done: every sensor has a MiniExample since revision2026b step RG13.6 (#2732)",
+  "resolvedInVersion": "1.12.377"
+}

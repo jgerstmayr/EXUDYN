@@ -1,0 +1,15 @@
+{
+  "number": 783,
+  "title": "SetObjectParameter",
+  "author": "JG",
+  "status": "CLOSED",
+  "type": "EXTENSION",
+  "effort": "MEDIUM",
+  "description": "extend functionality of Set[Item]Parameter functions to accept lists AND numpy arrays for vectors",
+  "dateRaised": "2021-10-29",
+  "deadline": "2021-12-28",
+  "dateResolved": "2026-10-07 08:33",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "already done: Set...Parameter accepts lists and numpy arrays for vectors (checked 2026-10-07 with SetNodeParameter(n, 'referenceCoordinates', np.array(...)))",
+  "resolvedInVersion": "1.12.414"
+}

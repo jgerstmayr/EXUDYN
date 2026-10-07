@@ -1,0 +1,15 @@
+{
+  "number": 1484,
+  "title": "Joint description",
+  "author": "JG",
+  "status": "CLOSED",
+  "type": "DOCU",
+  "effort": "MEDIUM",
+  "description": "add general description for joint constraints",
+  "dateRaised": "2023-04-01",
+  "deadline": "2023-09-28",
+  "dateResolved": "2026-10-07 08:29",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "already done: the general section of the joints in definitions/itemKindDefinitions.py (revision2026b step RG13.5, #2725)",
+  "resolvedInVersion": "1.12.392"
+}

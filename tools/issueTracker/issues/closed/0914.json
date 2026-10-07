@@ -1,0 +1,15 @@
+{
+  "number": 914,
+  "title": "mbs.ComputeNode...",
+  "author": "JG",
+  "status": "CLOSED",
+  "type": "EXTENSION",
+  "effort": "MEDIUM",
+  "description": "add computation functions for nodes, e.g., position or rotation jacobian; coordinates are already available in GetNodeOutput(...)",
+  "dateRaised": "2022-02-02",
+  "deadline": "2022-04-03",
+  "dateResolved": "2026-10-07 08:29",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "already done: mbs.ComputeItem for nodes, PositionJacobian and RotationJacobian (#2779)",
+  "resolvedInVersion": "1.12.386"
+}

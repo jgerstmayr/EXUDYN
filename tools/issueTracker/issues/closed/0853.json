@@ -1,0 +1,15 @@
+{
+  "number": 853,
+  "title": "ComputeObjectJacobian...",
+  "author": "JG",
+  "status": "CLOSED",
+  "type": "EXTENSION",
+  "effort": "MEDIUM",
+  "description": "add mbs computation functions for jacobians, for ODE1, ODE2 and AE",
+  "dateRaised": "2022-01-08",
+  "deadline": "2022-03-09",
+  "dateResolved": "2026-10-07 08:29",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "already done: mbs.ComputeItem with ComputeItemType.JacobianODE2, JacobianODE2_t and ConstraintJacobian (#2779); ODE1 Jacobians have no use case yet",
+  "resolvedInVersion": "1.12.383"
+}

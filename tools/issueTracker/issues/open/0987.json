@@ -8,5 +8,6 @@
   "effort": "MEDIUM",
   "description": "add description - specifically regarding OutputVariables, special terms not available in ANCFCable2D (and add reference to ASME CND paper)",
   "dateRaised": "2022-03-15",
-  "deadline": "2022-05-14"
+  "deadline": "2022-05-14",
+  "workingRemarks": "planned as revision2026b step RG13.9 (triage 2026-10-07)"
 }

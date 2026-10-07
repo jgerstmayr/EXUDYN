@@ -7,5 +7,6 @@
   "effort": "MEDIUM",
   "description": "solver functions GetSystemJacobian() and GetSystemMassMatrix() need to be extended with arg sparseTriplets=False; if True, it will return CSR sparse triplets, useful for large matrices, e.g. in eigenvalue computation in linearized system",
   "dateRaised": "2023-04-26",
-  "deadline": "2023-10-23"
+  "deadline": "2023-10-23",
+  "workingRemarks": "planned as revision2026b step RG18.1 (triage 2026-10-07)"
 }

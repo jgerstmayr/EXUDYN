@@ -7,5 +7,6 @@
   "effort": "LOW",
   "description": "check OpenGL visibility problems with larger zoom (is this the 0.1 limit?)",
   "dateRaised": "2026-01-08",
-  "deadline": "2026-07-07"
+  "deadline": "2026-07-07",
+  "workingRemarks": "planned as revision2026b step RG6.8.8 (triage 2026-10-07)"
 }

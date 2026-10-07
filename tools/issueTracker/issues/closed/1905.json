@@ -1,0 +1,15 @@
+{
+  "number": 1905,
+  "title": "simulator coupling",
+  "author": "JG",
+  "status": "CLOSED",
+  "type": "TESTING",
+  "effort": "MEDIUM",
+  "description": "add test model for simulator coupling using mbs0 with joints and implicit integrator coupled to mbs1 with explicit integration",
+  "dateRaised": "2024-10-19",
+  "deadline": "2025-04-17",
+  "dateResolved": "2026-10-07 08:32",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "already done: python/TestModels/simulatorCouplingTwoMbs.py couples mbs0 with joints, solved implicitly, to mbs1 with particles, solved explicitly",
+  "resolvedInVersion": "1.12.410"
+}

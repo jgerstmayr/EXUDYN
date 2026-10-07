@@ -7,5 +7,6 @@
   "effort": "HIGH",
   "description": "Add cpp user functions fully to PythonUserFunctionBase capabilities",
   "dateRaised": "2024-02-02",
-  "deadline": "2024-07-31"
+  "deadline": "2024-07-31",
+  "workingRemarks": "planned as revision2026b step RG8.10 (triage 2026-10-07)"
 }

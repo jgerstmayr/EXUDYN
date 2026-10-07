@@ -7,5 +7,6 @@
   "effort": "LOW",
   "description": "check if call to glfwDestroyWindow from StopRenderer avoids crashes on linux?",
   "dateRaised": "2026-02-09",
-  "deadline": "2026-08-08"
+  "deadline": "2026-08-08",
+  "workingRemarks": "planned as revision2026b step RG6.8.5 (triage 2026-10-07)"
 }

@@ -1,0 +1,15 @@
+{
+  "number": 957,
+  "title": "JointRevolute2D",
+  "author": "JG",
+  "status": "CLOSED",
+  "type": "EXTENSION",
+  "effort": "MEDIUM",
+  "description": "add OutputVariables in C++ and in DOCU; check other objects with missing OutputVariables",
+  "dateRaised": "2022-02-28",
+  "deadline": "2022-04-29",
+  "dateResolved": "2026-10-07 08:29",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "already done: JointRevolute2D has Position, Velocity and Force since #2870 (revision2026b step RG12.42); the output variables of all items were checked by RG13.3",
+  "resolvedInVersion": "1.12.390"
+}

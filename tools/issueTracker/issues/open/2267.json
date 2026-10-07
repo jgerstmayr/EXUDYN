@@ -7,5 +7,6 @@
   "effort": "LOW",
   "description": "add detailed description to function, in particular to returned dict",
   "dateRaised": "2026-02-04",
-  "deadline": "2026-08-03"
+  "deadline": "2026-08-03",
+  "workingRemarks": "planned as revision2026b step RG18.1 (triage 2026-10-07)"
 }

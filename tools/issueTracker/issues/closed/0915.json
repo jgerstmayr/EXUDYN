@@ -1,0 +1,15 @@
+{
+  "number": 915,
+  "title": "mbs.ComputeObject...",
+  "author": "JG",
+  "status": "CLOSED",
+  "type": "EXTENSION",
+  "effort": "MEDIUM",
+  "description": "add mbs.ComputeObjectMassMatrix(...)",
+  "dateRaised": "2022-02-02",
+  "deadline": "2022-04-03",
+  "dateResolved": "2026-10-07 08:29",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "already done: mbs.ComputeItem(..., ComputeItemType.MassMatrix) (#2779)",
+  "resolvedInVersion": "1.12.387"
+}

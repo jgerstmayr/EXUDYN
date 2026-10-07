@@ -1,0 +1,15 @@
+{
+  "number": 2319,
+  "title": "FEM",
+  "author": "JG",
+  "status": "CLOSED",
+  "type": "EXTENSION",
+  "effort": "HIGH",
+  "description": "extend interface to 6-noded triangles to represent quadratic shape functions / meshOrder=2 in ngsolve directly",
+  "dateRaised": "2026-03-02",
+  "deadline": "2026-08-29",
+  "dateResolved": "2026-10-07 08:29",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "already done: NGsolveMesh2PointsAndTrigs(..., triangles6=True) for meshOrder=2 (#2709)",
+  "resolvedInVersion": "1.12.407"
+}

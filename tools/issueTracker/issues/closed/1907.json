@@ -1,0 +1,15 @@
+{
+  "number": 1907,
+  "title": "particles",
+  "author": "JG",
+  "status": "CLOSED",
+  "type": "EXTENSION",
+  "effort": "MEDIUM",
+  "description": "add improved functions to create densly packed particles in box using simulation",
+  "dateRaised": "2024-10-19",
+  "deadline": "2025-04-17",
+  "dateResolved": "2026-10-07 08:29",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "not needed (currently) (maintainer 2026-10-07)",
+  "resolvedInVersion": "1.12.397"
+}

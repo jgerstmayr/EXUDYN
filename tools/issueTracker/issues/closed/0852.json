@@ -1,0 +1,15 @@
+{
+  "number": 852,
+  "title": "ComputeObjectAlgebraicEquations",
+  "author": "JG",
+  "status": "CLOSED",
+  "type": "EXTENSION",
+  "effort": "MEDIUM",
+  "description": "add mbs computation functions for constraints",
+  "dateRaised": "2022-01-08",
+  "deadline": "2022-03-09",
+  "dateResolved": "2026-10-07 08:29",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "already done: mbs.ComputeItem(..., ComputeItemType.AlgebraicEquations) (#2779)",
+  "resolvedInVersion": "1.12.382"
+}

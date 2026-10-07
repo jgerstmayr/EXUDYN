@@ -1,0 +1,15 @@
+{
+  "number": 792,
+  "title": "test Pardiso integration",
+  "author": "JG",
+  "status": "CLOSED",
+  "type": "EXTENSION",
+  "effort": "HIGH",
+  "description": "VS2017 settings with Intel Performance Libraries and test interface via Eigen",
+  "dateRaised": "2021-11-02",
+  "deadline": "2022-01-01",
+  "dateResolved": "2026-10-07 08:29",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "not needed any more (maintainer 2026-10-07)",
+  "resolvedInVersion": "1.12.380"
+}

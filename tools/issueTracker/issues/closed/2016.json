@@ -1,0 +1,15 @@
+{
+  "number": 2016,
+  "title": "ContactCurveCircles",
+  "author": "JG",
+  "status": "CLOSED",
+  "type": "EXTENSION",
+  "effort": "LOW",
+  "description": "add output variables",
+  "dateRaised": "2025-05-11",
+  "deadline": "2025-11-07",
+  "dateResolved": "2026-10-07 08:29",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "already done: ObjectContactCurveCircles computes its output variables since #2867",
+  "resolvedInVersion": "1.12.399"
+}

@@ -1,0 +1,15 @@
+{
+  "number": 1777,
+  "title": "GraphicsData Sphere",
+  "author": "JG",
+  "status": "CLOSED",
+  "type": "EXTENSION",
+  "effort": "MEDIUM",
+  "description": "add spheres to graphicsData interface; user AddSphere method; only use in case that full sphere is shown; add option to fall back to regular triangular representation",
+  "dateRaised": "2024-02-07",
+  "deadline": "2024-08-05",
+  "dateResolved": "2026-10-07 08:29",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "already done (maintainer 2026-10-07): graphics.Sphere and graphics.Spheres give the type Spheres, drawn as spheres and exact in the raytracer (#2709); since #2877 with general.sphereTiling",
+  "resolvedInVersion": "1.12.395"
+}

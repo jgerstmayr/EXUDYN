@@ -8,10 +8,10 @@ Every entry carries the **type** of the issue, then its **priority** and its **e
 
 General information on current version:
 
-- Exudyn version = 1.12.375.dev1
+- Exudyn version = 1.12.414.dev1
 - last change = 2026-10-07
-- Number of issues = 2884
-- Number of resolved issues = 2689 (375 in current version)
+- Number of issues = 2885
+- Number of resolved issues = 2728 (414 in current version)
 
 ## Resolved issues and resolved bugs before version 1.12
 
@@ -7568,6 +7568,9 @@ The following list contains the issues which have been **RESOLVED** in the accor
 
 ## Open issues
 
+- `CHANGE` `HIGH EFF` `raised by: Claude-JG` joints and their Jacobians on homogeneous transformations (#2884)
+  - description: The constraint equations of the joints become functions of the relative transformation H0^-1 H1 of the two marker frames, and their Jacobians follow systematically from the relative twist - one implementation for JointGeneric, JointRevoluteZ, JointPrismaticX, the 2D joints and the rolling disc instead of one each. Successor of \#2745 (the marker interface of RG14.2). revision2026b step RG14.3
+  - date raised: 2026-10-07
 - `TESTING` `raised by: Claude-JG` Ubuntu GUI check: curved triangle tiling and recorded frames not reproduced from here (#2881)
   - description: exudynGuiCheckUbuntu.txt: K13 - openGL.advanced.curvedTriangleTilingAngle 90/5/15 shows no visible difference in graphicsCurvedShapes.py; S6 - Record frames in the SolutionViewer wrote no images (no images folder). Both need a screen: to be repeated with 1.12.37x (a failed PNG write is now reported in the console; the images go to images/ in the directory the script was started from), and the tiling compared with Windows.
   - date raised: 2026-10-06
@@ -7577,38 +7580,23 @@ The following list contains the issues which have been **RESOLVED** in the accor
 - `CHANGE` <span class="textorange">`NORMAL`</span> `HUGE EFF` `raised by: Claude-JG` objects compute from coordinates passed in, instead of reading them from their nodes (#2746)
   - description: The maintainer, 2026-09-29: CObject::ComputeODE2LHS (bodies, not connectors) getting the coordinates directly instead of retrieving them from the nodes, which enables simpler automatic differentiation. A real performance question with several cases: objects with one node (MassPoint, RigidBody, ...) can use linked data, while finite elements etc. would get displacement and velocity coordinates from the interface. First an evaluation step - what is there now, what are the best options. revision2026b group RG15.
   - date raised: 2026-09-29
-- `CHANGE` <span class="textorange">`NORMAL`</span> `HUGE EFF` `raised by: Claude-JG` connectors and loads compute their marker values themselves instead of precomputed MarkerData (#2745)
-  - description: The maintainer, 2026-09-29: compute marker values inside the connector (joint, constraint) and load functions, no precomputation of MarkerData; a new temporary data with smaller footprint per marker; check GeneralContact. Migration: a function in CObjectConnector / CLoad that does what the precomputation does today, then each connector and load changed. Advantage: automatic differentiation becomes much simpler. First an evaluation step - what is there now, what are the best options - since it shapes future items and the user elements. revision2026b group RG14.
-  - **remarks:** maintainer 2026-09-30: continue with RG14.2 - fallback, per-thread temporaries only, performance baseline from the MiniExamples first, two-layer interface per marker kind, unified ComputeConnectorForce, homogeneous transformations for rigid markers; proposal in tmp/evalRG14\_2\_connectorInterface.md; RG14.2.15 done 2026-10-03: rotationMarker0/1 deprecated (warning once per session, removed 2031), library, docs and examples on localHT; RG14.2 complete, the issue stays open for RG14.3
-  - date raised: 2026-09-29
 - `TESTING` <span class="textblue">`LOW`</span> `HIGH EFF` `raised by: Claude-JG` the ROS examples were last tested in 2023 and nobody can run them (#2511)
   - description: ROSMassPoint.py; ROSTurtle.py and ROSMobileManipulator.py were written and tested in 2023 against ROS1 noetic. They have not been run since: the maintainer has no ROS installation; and ExampleSkipReason() skips anything importing rospy; so the automated example run never touches them either. Their supplementary files - the ROS nodes; the launch file and the STL geometry - had been in an Examples/supplementary folder that no longer exists; the headers still pointed at it until revision2026 step R5.18.4 moved them to python/Examples/testData/ROS/ and said so. Each file now carries a STATUS note: it is a working illustration of how the coupling is put together; not something that runs unchanged - topic names; message types and the node layout have to be adapted to the installation and the ROS version. ROS1 noetic reached end of life in May 2025; so the open question is whether these should be ported to ROS2 or marked historical. Needs somebody with a ROS installation.
   - date raised: 2026-09-18
-- `FIX` `MEDIUM EFF` MacOS (#2350)
-  - description: fix problem in raytracerNOGLFWtest.py on MacOS
-  - **remarks:** planned before 1.13 as revision2026b step RG6.8.6 (2026-09-29)
-  - date raised: 2026-08-05
 - `EXTENSION` `LOW EFF` shells (#2349)
   - description: adjust comments to fit to internal exudyn format
+  - **remarks:** planned as revision2026b step RG18.1 (triage 2026-10-07)
   - date raised: 2026-08-05
 - `EXTENSION` `MEDIUM EFF` itemInterface (#2342)
   - description: replace CopyDictLevel1 with function that takes visualization and VItemClass in all self.visualization inits and either call VItemClass(\*\*visualization) if visualization is a dict, or store VItemClass object; this would enable to accept visualization as dict with only non-default values set; add try-except for dict-based call
   - date raised: 2026-04-17
-- `DOCU` `MEDIUM EFF` ANCFCable (#2328)
-  - description: add documentation
-  - date raised: 2026-03-24
 - `FIX` `LOW EFF` SliderCrank Benchmark (#2326)
   - description: adapt TestModels/sliderCrank3Dbenchmark.py to revised IFToMM model
   - date raised: 2026-03-23
 - `DOCU` `LOW EFF` GenericJoint (#2325)
   - description: improve documentation, in particular about order of axes for case of 1 and 2 rotation axes constrained
+  - **remarks:** planned as revision2026b step RG13.9 (triage 2026-10-07)
   - date raised: 2026-03-23
-- `EXTENSION` `HIGH EFF` FEM (#2319)
-  - description: extend interface to 6-noded triangles to represent quadratic shape functions / meshOrder=2 in ngsolve directly
-  - date raised: 2026-03-02
-- `EXTENSION` `HIGH EFF` GraphicsData (#2318)
-  - description: extend GraphicsData (C++ and interface) for 6-noded triangles to represent curved geometries with option for fine-interpolation and smooth normals
-  - date raised: 2026-03-02
 - `EXTENSION` `HIGH EFF` Add ObjectJointSliding (#2317)
   - description: Add implementation and tests for SlidingJoint with thick ANCF beam
   - date raised: 2026-03-02
@@ -7620,27 +7608,34 @@ The following list contains the issues which have been **RESOLVED** in the accor
   - date raised: 2026-03-02
 - `EXTENSION` `LOW EFF` graphics (#2305)
   - description: Add error checks for isfinite for all point data imported in PyWriteBodyGraphicsDataList
+  - **remarks:** planned as revision2026b step RG18.1 (triage 2026-10-07)
   - date raised: 2026-02-15
 - `EXTENSION` `LOW EFF` graphics (#2304)
   - description: add hints (object type, etc.) to PyWriteBodyGraphicsDataList in VisualizationSystemContainer to simplify error localisation
+  - **remarks:** planned as revision2026b step RG18.1 (triage 2026-10-07)
   - date raised: 2026-02-15
 - `EXTENSION` `MEDIUM EFF` graphics (#2281)
   - description: add functionality to make consistent triangles with same orientation (all computed normals are outbound or inbound); used to heal imported geometries
   - date raised: 2026-02-11
 - `CHECK` `LOW EFF` linux GLFW (#2278)
   - description: check if call to glfwDestroyWindow from StopRenderer avoids crashes on linux?
+  - **remarks:** planned as revision2026b step RG6.8.5 (triage 2026-10-07)
   - date raised: 2026-02-09
 - `CHECK` `LOW EFF` linux GLFW (#2277)
   - description: check if glfwGetWindowContentScale now works on newer GLFW version to enable display scaling on linux
+  - **remarks:** planned as revision2026b step RG6.8.5 (triage 2026-10-07)
   - date raised: 2026-02-09
 - `DOCU` `LOW EFF` GetURDFrobotData (#2267)
   - description: add detailed description to function, in particular to returned dict
+  - **remarks:** planned as revision2026b step RG18.1 (triage 2026-10-07)
   - date raised: 2026-02-04
 - `EXTENSION` `LOW EFF` SystemContainer (#2259)
   - description: add option to constructor whether to attach to renderer or not (if used purely for computations, like in InverseKinematics
+  - **remarks:** planned as revision2026b step RG18.1 (triage 2026-10-07)
   - date raised: 2026-02-02
 - `CHANGE` `LOW EFF` camera (#2247)
   - description: add documentation for model-centric and camera-centric views
+  - **remarks:** planned as revision2026b step RG18.1 (triage 2026-10-07)
   - date raised: 2026-01-31
 - `EXTENSION` `MEDIUM EFF` GLFWClient (#2244)
   - description: add ruler to renderer, only for case where axes are parallel to x, y and z (i.e. 90 degree rotations)
@@ -7648,65 +7643,60 @@ The following list contains the issues which have been **RESOLVED** in the accor
 - `EXTENSION` `MEDIUM EFF` explicit solver (#2238)
   - description: add adaptive step refinement for case of divergence - define limit for velocities/solution increment to decide step refinement (+ nan/inf)
   - date raised: 2026-01-27
-- `FIX` `MEDIUM EFF` MacOS (#2237)
-  - description: Check Spyder-issues and crashes with PlotSensor on MacOS systems
-  - **remarks:** planned before 1.13 as revision2026b step RG6.8.6 (2026-09-29); RG6.8.6.1 (2026-10-05): a solver destroyed by the garbage collector while another solve ran stopped that solve's threads (fixed, test\_solverThreads.py); the consistency flags of a directly created MainSystem were uninitialized (fixed). Whether this was the crash: check on macOS in Spyder.
-  - date raised: 2026-01-26
 - `FIX` `LOW EFF` linux (#2236)
   - description: fix wrong initialization for time in renderer on linux systems
   - **remarks:** planned before 1.13 as revision2026b step RG6.8.5 (2026-09-29)
   - date raised: 2026-01-26
 - `EXTENSION` `LOW EFF` computeInitialAccelerations (#2234)
   - description: add WARNING for inconsistent initial velocities - which usually cause heavy oscillations in constraint forces
+  - **remarks:** planned as revision2026b step RG18.1 (triage 2026-10-07)
   - date raised: 2026-01-21
 - `TESTING` `MEDIUM EFF` ANCFThinPlate (#2230)
   - description: add hemispheric test problem; compare to literature
+  - **remarks:** planned as revision2026b step RG4.20.5 (triage 2026-10-07)
   - date raised: 2026-01-18
 - `TESTING` `MEDIUM EFF` ANCFThinPlate (#2229)
   - description: add cylindrical test problem; compare to ANCFCable2D
+  - **remarks:** planned as revision2026b step RG4.20.5 (triage 2026-10-07)
   - date raised: 2026-01-18
 - `EXTENSION` `LOW EFF` Symmetric basis (#2228)
   - description: add a function to compute a basis for two given non-parallel vectors; the average of the two vectors is computed from averaging normalized vectors (=mid axis) and according projections; used for NodeSlope12
+  - **remarks:** planned as revision2026b step RG18.1 (triage 2026-10-07)
   - date raised: 2026-01-18
 - `EXTENSION` `MEDIUM EFF` ANCFThinPlate (#2226)
   - description: compute optimal slopes scaling in ShellMesh functionality
-  - date raised: 2026-01-16
-- `DOCU` `MEDIUM EFF` ANCFThinPlate (#2225)
-  - description: add documentation of equations
+  - **remarks:** planned as revision2026b step RG4.20.5 (triage 2026-10-07)
   - date raised: 2026-01-16
 - `EXTENSION` `HIGH EFF` symbolic (#2223)
   - description: add vector and matrix functionality for Diff()
   - date raised: 2026-01-16
 - `EXTENSION` `MEDIUM EFF` NodePointSlope12 (#2219)
   - description: correct average Rotation and RotationJacobian to be symmetric w.r.t. both slopes
-  - **remarks:** RG13.3 (2026-10-05): GetRotationJacobianTTimesVector\_q of NodePointSlope12 is not implemented - a RigidBodySpringDamper at the node with an implicit solver raises NotImplementedFeatureError; the angular velocity is the least-squares fit, the rotation the Gram-Schmidt frame of slope x - the description says so now
+  - **remarks:** RG13.3 (2026-10-05): GetRotationJacobianTTimesVector\_q of NodePointSlope12 is not implemented - a RigidBodySpringDamper at the node with an implicit solver raises NotImplementedFeatureError; the angular velocity is the least-squares fit, the rotation the Gram-Schmidt frame of slope x - the description says so now; planned as revision2026b step RG4.20.5 (triage 2026-10-07)
   - date raised: 2026-01-13
 - `EXTENSION` `LOW EFF` ANCFThinPlate (#2218)
   - description: add access function for rotation
+  - **remarks:** planned as revision2026b step RG4.20.5 (triage 2026-10-07)
   - date raised: 2026-01-13
-- `CHECK` `LOW EFF` perspective (#2205)
-  - description: test moving along a scene when changing the centerPoint
-  - date raised: 2026-01-08
 - `CHECK` `LOW EFF` perspective (#2204)
   - description: check OpenGL visibility problems with larger zoom (is this the 0.1 limit?)
+  - **remarks:** planned as revision2026b step RG6.8.8 (triage 2026-10-07)
   - date raised: 2026-01-08
-- `EXTENSION` `LOW EFF` ANCFThinPlate (#2200)
-  - description: add test model
-  - date raised: 2026-01-07
 - `EXTENSION` `LOW EFF` OpenGL view (#2194)
   - description: add manual offsets for zNear and zFar, to adjust visible objects
+  - **remarks:** planned as revision2026b step RG6.8.8 (triage 2026-10-07)
   - date raised: 2026-01-06
-- `EXTENSION` `MEDIUM EFF` RedrawAndSaveImage (#2186)
-  - description: add raytracer flag and make working offline
-  - date raised: 2026-01-04
 - `EXTENSION` `MEDIUM EFF` MarkerSuperElementRigid (#2184)
   - description: highly improve efficiency for larger number of nodes by adding according precomputed transformations
+  - **remarks:** planned as revision2026b step RG5.4 (triage 2026-10-07)
   - date raised: 2026-01-04
 - `EXTENSION` `MEDIUM EFF` SparseTripletMatrix (#2183)
   - description: add functions AddSparseTripletMatrix with parameters like AddToDenseMatrix; also add functions AddSubmatrix() and AddTransposedSubmatrix to add dense submatrices for ObjectFFRFreducedOrder
+  - **remarks:** planned as revision2026b step RG5.4 (triage 2026-10-07)
   - date raised: 2026-01-04
 - `EXTENSION` `MEDIUM EFF` ObjectFFRFreducedOrder (#2182)
   - description: improve efficiency by using internal sparse triplets for mass matrix in C++ code
+  - **remarks:** planned as revision2026b step RG5.4 (triage 2026-10-07)
   - date raised: 2026-01-04
 - `EXTENSION` `HIGH EFF` OpenGL (#2155)
   - description: add textures to renderer (and add reset function), using numpy binary array representing RGB/RGBA image; reference numbers are then used in triangle lists
@@ -7736,12 +7726,6 @@ The following list contains the issues which have been **RESOLVED** in the accor
 - `EXTENSION` `MEDIUM EFF` GetDictionary (#2075)
   - description: add read/write dict access for new structures SC.renderer and exudyn.config
   - date raised: 2025-06-02
-- `EXTENSION` `MEDIUM EFF` ContactCurveCircles (#2017)
-  - description: implement polynomial enhancements
-  - date raised: 2025-05-13
-- `EXTENSION` `LOW EFF` ContactCurveCircles (#2016)
-  - description: add output variables
-  - date raised: 2025-05-11
 - `EXTENSION` `MEDIUM EFF` solver timers (#2007)
   - description: add special timer for Python user functions, as solver timer for python does not include user functions
   - date raised: 2025-05-10
@@ -7760,27 +7744,16 @@ The following list contains the issues which have been **RESOLVED** in the accor
 - `EXTENSION` `MEDIUM EFF` URDF import (#1931)
   - description: GetURDFrobotData: check for import of other scene information than mesh; check for import of collision
   - date raised: 2024-11-10
-- `EXTENSION` `HIGH EFF` ContactCurveCircles (#1924)
-  - description: extend to frictional contact
-  - date raised: 2024-11-04
 - `EXTENSION` `MEDIUM EFF` ContactSphereSphere (#1920)
   - description: add autodiff Jacobian
   - date raised: 2024-11-02
 - `EXAMPLE` `MEDIUM EFF` co-simulation (#1912)
   - description: add simple model of two mass-spring-dampers to show simulator coupling of two implicit-explicit mbs, similar to issue 1905
+  - **remarks:** planned as revision2026b step RG18.1 (triage 2026-10-07)
   - date raised: 2024-10-26
 - `CHECK` `HIGH EFF` total coordinates (#1910)
   - description: consider a solver option which continuously provides total coordinates during iterations which could be used in user functions or globally and also be linked instead of copied; add an exception if the respective option is not switched on; by default, only add an empty Vector currentState.ODE2CoordsTotal
   - date raised: 2024-10-26
-- `EXTENSION` `MEDIUM EFF` particles (#1907)
-  - description: add improved functions to create densly packed particles in box using simulation
-  - date raised: 2024-10-19
-- `EXTENSION` `MEDIUM EFF` particles (#1906)
-  - description: add improved functions to create more densly packed particles using advanced geometrical considerations for randomized radius spherical particles
-  - date raised: 2024-10-19
-- `TESTING` `MEDIUM EFF` simulator coupling (#1905)
-  - description: add test model for simulator coupling using mbs0 with joints and implicit integrator coupled to mbs1 with explicit integration
-  - date raised: 2024-10-19
 - `EXTENSION` `HIGH EFF` Reference/link data (#1904)
   - description: evaluate further options to link to internal data, such as objects, nodes, etc.; possibly with GetObjectParameter(...) and similar functions possibly automated; this would highly speed up user functions as it reduces the number of exudyn function calls
   - date raised: 2024-10-19
@@ -7808,29 +7781,27 @@ The following list contains the issues which have been **RESOLVED** in the accor
 - `EXTENSION` `HUGE EFF` kinematics solver (#1821)
   - description: consider functionality of a kinematic solver; this could be based on a quasi-static solver which utilizes the velocity constraint level and computes unknown velocities for a given configuration; first attempt could be based on finite differences for prescribed incremental motion and resulting incremental coordinates; only possible for systems with DOF=0; alternatively, we could compute velocity coordinates only from the constrained system, which however would only work if all coordinates are constrained
   - date raised: 2024-04-19
-- `DOCU` `MEDIUM EFF` joint constraints (#1801)
-  - description: add description of position jacobian for rigid bodies (in particular 3D rigid); add reference in description for MarkerBodyPosition
-  - date raised: 2024-03-03
-- `EXTENSION` `MEDIUM EFF` GraphicsData Sphere (#1777)
-  - description: add spheres to graphicsData interface; user AddSphere method; only use in case that full sphere is shown; add option to fall back to regular triangular representation
-  - date raised: 2024-02-07
 - `CHECK` `MEDIUM EFF` ComputeLinearizedSystem (#1776)
   - description: consider paper of Agundez, Vallejo, Freire, Mikkola in International Journal of Mechanical Sciences, Vol 268, 2024 for computation of linearized system and eigenmodes. Test case with bicycle
   - date raised: 2024-02-07
 - `EXTENSION` `HIGH EFF` C++ user functions (#1769)
   - description: Add cpp user functions fully to PythonUserFunctionBase capabilities
+  - **remarks:** planned as revision2026b step RG8.10 (triage 2026-10-07)
   - date raised: 2024-02-02
 - `EXTENSION` `HIGH EFF` C++ user functions (#1768)
   - description: Add pybind object as container for Cpp user functions, similar to autogenerated SetUserFunction
+  - **remarks:** planned as revision2026b step RG8.10 (triage 2026-10-07)
   - date raised: 2024-02-02
 - `EXTENSION` `HIGH EFF` C++ user functions (#1767)
   - description: add file for cpp user functions, registration mechanism like timers
+  - **remarks:** planned as revision2026b step RG8.10 (triage 2026-10-07)
   - date raised: 2024-02-02
 - `EXTENSION` `MEDIUM EFF` GeneralContact (#1764)
   - description: add pickle functionality
   - date raised: 2024-01-31
 - `EXTENSION` `HIGH EFF` C++ user functions (#1751)
   - description: check injection of user functions with special item-function method, and separate cpp file holding prototypes of those functions, which may be injected accordingly; use mechanism to record user functions in exudyn.functions.userCpp.SpringDamper
+  - **remarks:** planned as revision2026b step RG8.10 (triage 2026-10-07)
   - date raised: 2024-01-29
 - `EXTENSION` `HUGE EFF` Parameter type (#1722)
   - description: add exudyn.Parameter for all parameters occuring in items, such as referencePosition, physicsMass, etc.; this helps to avoid strings in user functions to access parameter and may allow to use  more efficient case/switch in GetObjectParameter(...)
@@ -7850,17 +7821,16 @@ The following list contains the issues which have been **RESOLVED** in the accor
 - `CHANGE` `LOW EFF` license.ext (#1674)
   - description: split into internal and external licenses
   - date raised: 2023-10-29
-- `EXAMPLE` `LOW EFF` ANCFCable (#1668)
-  - description: add test example
-  - date raised: 2023-10-16
 - `CHANGE` `MEDIUM EFF` ANCFBeam (#1653)
   - description: reconsider name: ANCFBeamStructural, not to have too many cases; use this for 2/3 node, different number of slopes except for 1 slope, which is ANCFCable, the 3D version of ANCFCable2D
   - date raised: 2023-08-16
 - `EXTENSION` `LOW EFF` velocityOffset (#1631)
   - description: add to CartesianSpringDamper, RigidBodySpringDamper
+  - **remarks:** planned as revision2026b step RG18.2 (triage 2026-10-07)
   - date raised: 2023-06-26
 - `EXTENSION` `LOW EFF` static members (#1614)
   - description: LinearSolver GeneralMatrixEXUdense::FactorizeNew has static ResizableMatrix m, which should be turned into class members; add reset method to free memory at solver finalization
+  - **remarks:** planned as revision2026b step RG18.1 (triage 2026-10-07)
   - date raised: 2023-06-11
 - `EXTENSION` `HIGH EFF` KinematicTree (#1549)
   - description: consider extension w.r.t. rigid body node at basis (Lie group node in explicit integration...); add baseNode (default=invalid), inertia could be added via a separate rigid body?
@@ -7870,18 +7840,15 @@ The following list contains the issues which have been **RESOLVED** in the accor
   - date raised: 2023-05-01
 - `EXTENSION` `MEDIUM EFF` solver (#1529)
   - description: solver functions GetSystemJacobian() and GetSystemMassMatrix() need to be extended with arg sparseTriplets=False; if True, it will return CSR sparse triplets, useful for large matrices, e.g. in eigenvalue computation in linearized system
+  - **remarks:** planned as revision2026b step RG18.1 (triage 2026-10-07)
   - date raised: 2023-04-26
 - `CHANGE` `LOW EFF` StaticSolver (#1493)
   - description: add exception in case that Lie group nodes are used with static solver, which cannot work
+  - **remarks:** planned as revision2026b step RG18.1 (triage 2026-10-07)
   - date raised: 2023-04-06
-- `DOCU` `MEDIUM EFF` Spring-Damper connector description (#1485)
-  - description: add general description for connectors based on spring-dampers (penalty)
-  - date raised: 2023-04-01
-- `DOCU` `MEDIUM EFF` Joint description (#1484)
-  - description: add general description for joint constraints
-  - date raised: 2023-04-01
 - `EXTENSION` <span class="textred">`HIGH`</span> `MEDIUM EFF` coordinatesSolution (#1450)
   - description: add number of threads to solution files and more details on computer; check parameter variation and other files (e.g. numberOfThreads and final computation time)
+  - **remarks:** planned as revision2026b step RG18.1 (triage 2026-10-07)
   - date raised: 2023-02-25
 - `EXTENSION` <span class="textred">`HIGH`</span> `MEDIUM EFF` solver (#1434)
   - description: add CqT\*lambda terms to systemwide jacobian computation with flag
@@ -7892,32 +7859,35 @@ The following list contains the issues which have been **RESOLVED** in the accor
 - `EXTENSION` `MEDIUM EFF` InteractiveDialog (#1414)
   - description: extend for explicit solver; needs internally different setup of solvers; use dynamicSolverType with default generalizedAlpha changable to Newmark/Index2 as well as explicit solvers
   - date raised: 2023-01-22
-- `CHANGE` `MEDIUM EFF` CSensorObject (#1292)
-  - description: store MarkerDataStructure locally in order to avoid memory allocations for evaluation of sensor data; also do this for MainSystem::PyGetObjectOutputVariable
-  - date raised: 2022-11-13
 - `EXTENSION` `HIGH EFF` Register Items (#1241)
   - description: consider mechanism to self-register items: objects, nodes, ...; same a swith TimerStructure registration; this allows to add user-defined objects without touching the overall code
+  - **remarks:** planned as revision2026b step RG8.1 (triage 2026-10-07)
   - date raised: 2022-08-24
 - `EXTENSION` `MEDIUM EFF` Register unit tests (#1240)
   - description: consider mechanism to self-register unit tests; same a swith TimerStructure registration
   - date raised: 2022-08-24
 - `EXTENSION` <span class="textred">`HIGH`</span> `MEDIUM EFF` parallel / multithreaded (#1203)
   - description: C++: add multithreading for JacobianODE2 (analytic jacobians)
+  - **remarks:** planned as revision2026b step RG5.3 (triage 2026-10-07)
   - date raised: 2022-07-12
 - `EXTENSION` <span class="textred">`HIGH`</span> `MEDIUM EFF` parallel / multithreaded (#1202)
   - description: C++: add multithreading for JacobianAE
+  - **remarks:** planned as revision2026b step RG5.3 (triage 2026-10-07)
   - date raised: 2022-07-12
 - `EXTENSION` `MEDIUM EFF` generalizedAlpha scaling (#1194)
   - description: turn on/off scaling in interface to test symmetric solver speedup
   - date raised: 2022-07-11
 - `EXTENSION` `MEDIUM EFF` ContactFrictionCircleCable2D (#1189)
   - description: add velocity offset to MarkerCable2DShape
+  - **remarks:** planned as revision2026b step RG18.2 (triage 2026-10-07)
   - date raised: 2022-07-08
 - `EXTENSION` <span class="textorange">`NORMAL`</span> `HIGH EFF` c++ user elements (#1140)
   - description: add auto registration for C++ user items
+  - **remarks:** planned as revision2026b step RG8.1 (triage 2026-10-07)
   - date raised: 2022-06-12
 - `EXTENSION` <span class="textorange">`NORMAL`</span> `MEDIUM EFF` c++ user elements (#1139)
   - description: add description regarding which functions are needed to add C++ user elements
+  - **remarks:** planned as revision2026b step RG8.9 (triage 2026-10-07)
   - date raised: 2022-06-12
 - `EXTENSION` `HUGE EFF` GenericObject (#1104)
   - description: add most general generic object containing ODE1, ODE2 and AE equations + unknowns; jacobianAE as user functions
@@ -7930,6 +7900,7 @@ The following list contains the issues which have been **RESOLVED** in the accor
   - date raised: 2022-05-09
 - `EXTENSION` <span class="textred">`HIGH`</span> `LOW EFF` Reference and copy (#1061)
   - description: add information to theDoc regarding copying and referencing objects, such as mbs, GetObject(...), etc.; add info into description C/R into generatePyBindings?
+  - **remarks:** planned as revision2026b step RG18.1 (triage 2026-10-07)
   - date raised: 2022-04-30
 - `EXTENSION` `MEDIUM EFF` ObjectConnectorCoordinateVector (#1032)
   - description: cleanup, consider better UF and check implementation with theory (jac?)
@@ -7939,18 +7910,18 @@ The following list contains the issues which have been **RESOLVED** in the accor
   - date raised: 2022-03-26
 - `EXTENSION` <span class="textred">`HIGH`</span> `LOW EFF` MarkerNodeCoordinate (#990)
   - description: add option addReferenceCoordinates=False to include reference value in coordinate
+  - **remarks:** planned as revision2026b step RG18.1 (triage 2026-10-07)
   - date raised: 2022-03-16
 - `EXTENSION` `MEDIUM EFF` ComputeConstraintJacobianDerivative (#988)
   - description: make sparse version similar to numerically differentiated single objects in JacobianODE2RHS
   - date raised: 2022-03-15
 - `DOCU` <span class="textorange">`NORMAL`</span> `MEDIUM EFF` ALEANCFCable2D (#987)
   - description: add description - specifically regarding OutputVariables, special terms not available in ANCFCable2D (and add reference to ASME CND paper)
+  - **remarks:** planned as revision2026b step RG13.9 (triage 2026-10-07)
   - date raised: 2022-03-15
-- `EXTENSION` `MEDIUM EFF` JointRevolute2D (#957)
-  - description: add OutputVariables in C++ and in DOCU; check other objects with missing OutputVariables
-  - date raised: 2022-02-28
 - `CHANGE` `LOW EFF` update mecanumWheelRollingDiscTest (#948)
   - description: update w.r.t. Trajectory class and TorsionalSpringDamper
+  - **remarks:** planned as revision2026b step RG18.1 (triage 2026-10-07)
   - date raised: 2022-02-21
 - `EXTENSION` `MEDIUM EFF` GeneralContact (#937)
   - description: add option to draw contact forces
@@ -7961,18 +7932,6 @@ The following list contains the issues which have been **RESOLVED** in the accor
 - `EXTENSION` `MEDIUM EFF` RollingDiscPenalty (#926)
   - description: rollingFrictionViscous only works for rolls with axis parallel to z-Plane; add MISSING formulas to Docu and adapt formulation
   - date raised: 2022-02-03
-- `EXTENSION` `MEDIUM EFF` mbs.ComputeObjectLHSJacobian (#917)
-  - description: add computation functions for object; using system function; needing option for analytic/numeric computation
-  - date raised: 2022-02-02
-- `EXTENSION` `MEDIUM EFF` mbs.ComputeObjectAccessFunction (#916)
-  - description: add computation functions for access functions, e.g., TranlationalVelocity\_qt, AngVel\_qt, ...
-  - date raised: 2022-02-02
-- `EXTENSION` `MEDIUM EFF` mbs.ComputeObject... (#915)
-  - description: add mbs.ComputeObjectMassMatrix(...)
-  - date raised: 2022-02-02
-- `EXTENSION` `MEDIUM EFF` mbs.ComputeNode... (#914)
-  - description: add computation functions for nodes, e.g., position or rotation jacobian; coordinates are already available in GetNodeOutput(...)
-  - date raised: 2022-02-02
 - `CHANGE` `MEDIUM EFF` GeneralContact (#912)
   - description: add second CCactiveSetError mode, which computes error for given active set ==\> error for PostNewton computed (error in assumed conditions forces)
   - date raised: 2022-02-02
@@ -7984,9 +7943,6 @@ The following list contains the issues which have been **RESOLVED** in the accor
   - date raised: 2022-02-02
 - `EXTENSION` `MEDIUM EFF` GeneralContact (#909)
   - description: add functionality to store/restore contact state for start of time step
-  - date raised: 2022-02-02
-- `EXTENSION` `MEDIUM EFF` MarkerData (#908)
-  - description: add configuration to markerdata computation; allows configuration in sensors and startOfStep configuration in Contact
   - date raised: 2022-02-02
 - `EXTENSION` `HIGH EFF` GeneralContact (#907)
   - description: add implicit Trig-Sphere contact
@@ -8006,9 +7962,6 @@ The following list contains the issues which have been **RESOLVED** in the accor
 - `IMPROVEMENT` `MEDIUM EFF` GenericJoint (#873)
   - description: improve computation of jacobian, using crossproduct
   - date raised: 2022-01-18
-- `EXTENSION` `MEDIUM EFF` restart method (#871)
-  - description: add option solutionSettings.writeRestartFile to restart from separate restart file; solutionSettings.restartFileName defines folder and fileName; solutionSettings.restartWritePeriod defines time in seconds, how often it is written; also writes backup file
-  - date raised: 2022-01-18
 - `CHANGE` `MEDIUM EFF` GeneralContact (#867)
   - description: change deltaV terms in ANCFCable and TrigSphere contact to fit signs used in docu
   - date raised: 2022-01-17
@@ -8017,21 +7970,14 @@ The following list contains the issues which have been **RESOLVED** in the accor
   - date raised: 2022-01-13
 - `EXTENSION` `MEDIUM EFF` ParallelFor (#858)
   - description: use ParallelFor with costs argument in GeneralContact and CSystem, to optimize usage
+  - **remarks:** planned as revision2026b step RG5.3 (triage 2026-10-07)
   - date raised: 2022-01-13
 - `DOCU` `MEDIUM EFF` Assemble() docu (#855)
   - description: add information on general approach of adding objects and mbs.Assemble() procedure in Overview on Exudyn; add figure Add Nodes/Objects-\>Assemble-\>Solve
   - date raised: 2022-01-09
-- `EXTENSION` `MEDIUM EFF` ComputeObjectJacobian... (#853)
-  - description: add mbs computation functions for jacobians, for ODE1, ODE2 and AE
-  - date raised: 2022-01-08
-- `EXTENSION` `MEDIUM EFF` ComputeObjectAlgebraicEquations (#852)
-  - description: add mbs computation functions for constraints
-  - date raised: 2022-01-08
 - `DOCU` `HIGH EFF` Jacobian documentation (#845)
   - description: add documentation to object and connector jacobians
-  - date raised: 2021-12-23
-- `EXTENSION` `MEDIUM EFF` connector jacobian RigidBodySpringDamper (#844)
-  - description: add analytic jacobian for RigidBodySpringDamper connector
+  - **remarks:** planned as revision2026b step RG14.3 (triage 2026-10-07)
   - date raised: 2021-12-23
 - `EXTENSION` `HIGH EFF` GeneralContact regularized friction (#841)
   - description: extend regularized friction (Haff-Werner) to integrated form using either Cundall-Stack friction or breaking tangential springs
@@ -8050,39 +7996,32 @@ The following list contains the issues which have been **RESOLVED** in the accor
   - date raised: 2021-12-17
 - `EXTENSION` `MEDIUM EFF` velocityOffset (#829)
   - description: add velocity offset to all spring dampers in order to replace many user functions with preStepUserFunctions
+  - **remarks:** planned as revision2026b step RG18.2 (triage 2026-10-07)
   - date raised: 2021-12-15
-- `EXTENSION` `HIGH EFF` test Pardiso integration (#792)
-  - description: VS2017 settings with Intel Performance Libraries and test interface via Eigen
-  - date raised: 2021-11-02
-- `EXTENSION` `MEDIUM EFF` SetObjectParameter (#783)
-  - description: extend functionality of Set\[Item\]Parameter functions to accept lists AND numpy arrays for vectors
-  - date raised: 2021-10-29
 - `EXTENSION` `MEDIUM EFF` MatrixContainer (#782)
   - description: add SetWithNGsolveSparseMatrix; add an interface to directly convert from NGsolve matrix, also converting coordinate storage xxyyzz
   - date raised: 2021-10-27
-- `EXTENSION` `HIGH EFF` autodiff for Connectors (#753)
-  - description: add autodiff for connectors using spezial sizes like 6 for 2 position nodes, 14 for 2 rigid bodies and 40 for most objects (ObjectFFRFreducedOrder) + 100? as extreme case, falling back to numerical diff for any larger case
-  - date raised: 2021-09-21
 - `EXTENSION` `MEDIUM EFF` ContactCoordinate (#737)
   - description: check if is very close to switching, perform switching for end of step and set error very small; if immediate swichting after beginning of step, do not set stepRecommendation to avoid step reduction; repeat step; time integration: if recommended step is set, reduction is performed in first iteration, otherwise iterate
   - date raised: 2021-08-13
 - `EXTENSION` `MEDIUM EFF` CollectCurrentNodeData (#710)
   - description: implement CollectCurrentNodeData for NodeRigidBody2D, optimize CollectCurrentNodeData for all rigid body nodes
+  - **remarks:** planned as revision2026b step RG5.1.4 (triage 2026-10-07)
   - date raised: 2021-07-08
 - `CHANGE` `HIGH EFF` GetAvailableJacobians (#698)
   - description: unify constraint.GetAvailableJacobians() with jacobian computations in joints, in order to avoid large overheads for jacobian assembly
   - date raised: 2021-07-01
-- `DOCU` `HIGH EFF` solver tutorial (#648)
-  - description: create video with frequent solver errors and FAQ
-  - date raised: 2021-05-01
 - `DOCU` `MEDIUM EFF` ObjectContactFrictionCircleCable2D (#627)
   - description: add description, connector equations and figure
+  - **remarks:** planned as revision2026b step RG13.9 (triage 2026-10-07)
   - date raised: 2021-04-21
 - `DOCU` `MEDIUM EFF` GenericJoint (#626)
   - description: add more description on constraint configurations, coordinate transformations and figures for GenericJoint
+  - **remarks:** planned as revision2026b step RG13.9 (triage 2026-10-07)
   - date raised: 2021-04-21
 - `DOCU` `MEDIUM EFF` ObjectRigidBody (#625)
   - description: revise equations of motion and add figure for COM and local coordinates
+  - **remarks:** planned as revision2026b step RG13.9 (triage 2026-10-07)
   - date raised: 2021-04-15
 - `EXTENSION` `MEDIUM EFF` python userFunctions (#617)
   - description: consider adding an additional userFunctionVariable \[List? or Dict?\], which contains indices or further parameters needed in the userFunction
@@ -8114,18 +8053,12 @@ The following list contains the issues which have been **RESOLVED** in the accor
 - `EXTENSION` `MEDIUM EFF` drawing information (#410)
   - description: add consistent drawing information in show field of every item
   - date raised: 2020-05-24
-- `EXTENSION` `LOW EFF` add sensor miniexamples (#401)
-  - description: .
-  - date raised: 2020-05-21
 - `EXTENSION` `HUGE EFF` autodiff (#354)
   - description: add consistent object (not connector) differentiation either manually or with autodiff
   - date raised: 2020-03-05
 - `CHANGE` `MEDIUM EFF` initialCoordinates\_t (#347)
   - description: instead of initialVelocities
   - date raised: 2020-02-24
-- `EXTENSION` `MEDIUM EFF` getobject/nodeparameter (#332)
-  - description: extend getobjectparameter/node/.. with default function from MainObject / MainNode/ ... which returns basic information, e.g., NodeType
-  - date raised: 2020-02-04
 - `EXTENSION` `MEDIUM EFF` Add user marker (#314)
   - description: add user marker
   - date raised: 2020-01-10
@@ -8135,9 +8068,6 @@ The following list contains the issues which have been **RESOLVED** in the accor
 - `EXTENSION` `MEDIUM EFF` static computation (#260)
   - description: add consistent flag to markerdata computation, ODE2RHS computation, etc. for static computation, which does not compute information on velocities then.
   - date raised: 2019-09-10
-- `EXTENSION` `MEDIUM EFF` contour plot (#258)
-  - description: extend mass points and rigid bodies for contour plotting
-  - date raised: 2019-08-30
 - `CHANGE` `MEDIUM EFF` PostNewtonStep (#252)
   - description: post newton step object functions shall be called from solver including a ResizableVector& dataVariables to be changed; post newton function shall not use direct write access to nodal data coordinates
   - date raised: 2019-08-27
@@ -8146,12 +8076,15 @@ The following list contains the issues which have been **RESOLVED** in the accor
   - date raised: 2019-06-25
 - `EXTENSION` `MEDIUM EFF` SlimArray (#161)
   - description: Add template specializations to SlimArray\<T,2..4\> similar to SlimVector to speed up initialization of short vectors
+  - **remarks:** planned as revision2026b step RG5.1.4 (triage 2026-10-07)
   - date raised: 2019-06-02
 - `CHECK` `MEDIUM EFF` Vector performance (#142)
   - description: check Vector operator\[\], and ConstVector performance regarding inlining
+  - **remarks:** planned as revision2026b step RG5.1.4 (triage 2026-10-07)
   - date raised: 2019-05-21
 - `CHANGE` `LOW EFF` Linalg Override (#123)
   - description: Add override statement to all derived classes in linalg for safety
+  - **remarks:** planned as revision2026b step RG18.1 (triage 2026-10-07)
   - date raised: 2019-05-13
 - `EXTENSION` <span class="textblue">`LOW`</span> `MEDIUM EFF` Destructors/Cleanup (#98)
   - description: add destructors/cleanup to MainSystemData and all other system functions (check new commands)

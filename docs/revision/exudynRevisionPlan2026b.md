@@ -62,6 +62,7 @@ hand-maintained one is wrong the next day (the rule of RG3.9).
 | **RG15** Objects computing from given coordinates | bodies and finite elements take their coordinates as arguments; for automatic differentiation |
 | **RG16** Homogeneous transformations | `exu.HT` and the frames of items, markers and joints as one transformation |
 | **RG17** Notebooks | tutorials and examples as notebooks |
+| **RG18** Resolving old issues | old issues of the tracker that are quick to resolve, or important and fit no other group |
 
 ## RG1 — Release and publication
 
@@ -912,7 +913,8 @@ The steps are numbered in the order they were raised and stand here in the order
       many deprecation warnings during the last linux build"; the console output of the WSL suite of 1.12.372)* the
       expected warnings of the deprecation tests kept off the console; the mini examples converted in `definitions/`,
       where they are generated from (RG12.43 had changed the generated files); `energiesTest.py` unresolved on Linux.
-    - Not here, they need a Linux machine or a screen: #2204, #2205 (perspective), #2277, #2278 (GLFW on Linux) - RG6.8.
+    - Not here, they need a Linux machine or a screen: #2204 (perspective) - RG6.8.8; #2277, #2278 (GLFW on Linux) -
+      RG6.8.5; #2205 is closed (2026-10-07, done).
 
 <a id="rg4-20"></a>
 **RG4.20** *(group RG4; maintainer 2026-10-05: "a modification from an internal colleague the ANCFThinPlate element. He
@@ -939,6 +941,10 @@ The steps are numbered in the order they were raised and stand here in the order
       `CurvatureLocal` and `TorqueLocal`; the thickness gradients of `ShellMesh` projected onto the node slopes; default
       integration mode 0; the maps as `SurfaceMap.Cylinder(...)` and the others, `ShellMesh(surfaceMap=...)`;
       `SymSin`/`SymCos` and `ANCFThinPlateBuilder` removed.
+    - **RG4.20.5** *(from the triage of 2026-10-07)* the open issues of the element: the rotation as an access
+      function (#2218), the averaged rotation of `NodePointSlope12` symmetric in both slopes (#2219, with the basis of
+      RG18.1.9), the optimal scaling of the slopes in `ShellMesh` (#2226); the cylindrical problem against
+      `ObjectANCFCable2D` (#2229) and the hemispherical one against the literature (#2230) as test models.
 
 ## RG5 — Performance
 
@@ -979,6 +985,9 @@ maintained rather than written once, and the vectorization work it would guide.
       changed only for a gain.
     - **RG5.1.3** *(from #728, closed into this step 2026-10-05)* `CollectCurrentNodeMarkerData` for
       `NodeRigidBodyRotVecLG`: the time it takes in a benchmark of rigid bodies, then the optimization.
+    - **RG5.1.4** *(from the triage of 2026-10-07)* the inlining of `Vector::operator[]` and `ConstVector` (#142),
+      template specializations of `SlimArray<T,2..4>` as for `SlimVector` (#161), and `CollectCurrentNodeData` of
+      `NodeRigidBody2D` and the other rigid body nodes (#710) - measured with the benchmark, changed only for a gain.
 
 <a id="rg5-2"></a>
 **RG5.2** *(group RG5, after RG5.1; revision2026 step R11.3)* **Make the hot linear algebra vectorizable.** Revision2026 step R2.16 measured that the
@@ -988,6 +997,17 @@ maintained rather than written once, and the vectorization work it would guide.
     compile-time sizes where the size is known, more use of homogeneous transformations in the
     rigid-body kinematics, and the object loop of `ODE2RHS` itself. Steered by the benchmark of
     RG5.1; a compile-flag decision alone (revision2026 step R2.16) cannot achieve this.
+
+<a id="rg5-3"></a>
+**RG5.3** *(group RG5; from the triage of 2026-10-07)* **The Jacobians assembled in parallel**: the analytic
+    `JacobianODE2` (#1203) and `JacobianAE` (#1202) multithreaded like the right-hand side, with `ParallelFor` and a cost
+    per item so the threads get equal work (#858; `GeneralContact` left out, it is revised on its own).
+
+<a id="rg5-4"></a>
+**RG5.4** *(group RG5; from the triage of 2026-10-07)* **The superelements for larger meshes**: the mass matrix of
+    `ObjectFFRFreducedOrder` as internal sparse triplets (#2182), with `SparseTripletMatrix` functions that add dense
+    and transposed submatrices (#2183), and `MarkerSuperElementRigid` with precomputed transformations for many nodes
+    (#2184).
 
 
 ## RG6 — Graphics and rendering
@@ -1138,10 +1158,12 @@ the arc; the spring windings of the spring-dampers use `connectors.springNumberO
       volumes by the near and far planes of the camera-centric projection. **Changed 2026-09-30**
       ([log](exudynRevisionLog2026b.md#rg6-8-4-1)): depth clamping while the volumes are drawn. **DONE
       2026-09-30**: the maintainer checked it on screen - no artifacts any more;
-    - **RG6.8.5** (#2140, #2236) Linux: crashes when the renderer closes and with the SolutionViewer; the
+    - **RG6.8.5** (#2140, #2236, #2277, #2278) Linux: crashes when the renderer closes and with the SolutionViewer; the
       time in the renderer initialized wrong - the manual check (RG2.4) S7, Q1, Q2 on Ubuntu, plus a
-      script that starts and stops the renderer twenty times;
-    - **RG6.8.6** (#2237, #2350) macOS: PlotSensor in Spyder; `raytracerNOGLFWtest.py`, excluded on macOS
+      script that starts and stops the renderer twenty times; whether `glfwGetWindowContentScale` of the newer GLFW
+      gives the display scaling on Linux (#2277), and whether `glfwDestroyWindow` in `StopRenderer` avoids the crashes
+      (#2278);
+    - **RG6.8.6** **DONE 2026-10-07** (#2237, #2350 closed: the maintainer's checks on macOS of 1.12.37x) macOS: PlotSensor in Spyder; `raytracerNOGLFWtest.py`, excluded on macOS
       since 1.11.0 because offscreen `RedrawAndGetImage` crashes - when the macOS machine is there
       (around 2026-10-20), the manual check P1 in Spyder and the test model without its exclusion;
         - **RG6.8.6.1** **DONE 2026-10-05** — [log](exudynRevisionLog2026b.md#rg6-8-6-1) *(maintainer 2026-10-05:
@@ -1156,6 +1178,8 @@ the arc; the spring windings of the spring-dampers use `connectors.springNumberO
     - **RG6.8.7** **DONE 2026-10-04** — [log](exudynRevisionLog2026b.md#rg6-8-7) *(maintainer 2026-10-04: "by
       converting them to lines, so only a small fix")* (#2844) the raytracer draws no `GraphicsData` of type `Circle` (and none of the circles the
       2D items draw), found by the `GraphicsData` example of RG17.5.
+    - **RG6.8.8** *(from the triage of 2026-10-07)* the near and far planes: the visibility problems at a larger zoom
+      (#2204, is it the limit 0.1?), and manual offsets of `zNear` and `zFar` in the settings (#2194).
 
 <a id="rg6-10"></a>
 **RG6.10** **DONE 2026-10-05** (#2862) — [log](exudynRevisionLog2026b.md#rg6-10) *(group RG6; maintainer 2026-10-05: "an
@@ -1194,7 +1218,8 @@ is needed - plugins inherit from `CObject` directly.
 **RG8.1** *(revision2026 step R9.1)* Make the registry cross-binary. `MainObjectFactory.h:97` holds its singleton in a
     function-local static inside a header-only class template, so every binary gets a private
     copy. Move the storage into one exported accessor in a single translation unit. The dispatch
-    path needs no change.
+    path needs no change. *(Older issues of the same aim, 2026-10-07: #1140, #1241 - items that register themselves,
+    so a user item touches no other code.)*
 
 <a id="rg8-2"></a>
 **RG8.2** *(revision2026 step R9.2)* Define an ABI fingerprint checked at registration: exudyn version, active macro set, compiler
@@ -1236,7 +1261,15 @@ is needed - plugins inherit from `CObject` directly.
 **RG8.9** *(revision2026 step R9.9)* Document three constraints: plugins are never unloaded or reloaded (a rebuilt plugin needs a
     kernel restart in Spyder/Jupyter); plugin authors build from source; the Python
     dict-builder class stays an explicit `from myplugin import ObjectMyThing` rather than being
-    injected into `exudyn.itemInterface`, so every script says where its item types came from.
+    injected into `exudyn.itemInterface`, so every script says where its item types came from. And which member
+    functions a C++ user item must provide (#1139; checked when it compiles by RG9.6, #2866).
+
+<a id="rg8-10"></a>
+**RG8.10** *(group RG8; from the triage of 2026-10-07)* **Compiled user functions**: a user function written in C++
+    and given to an item in place of a Python function - a file of their prototypes and a registration as for the
+    timers (#1767), a pybind object that holds them, as the generated `SetUserFunction` does (#1768), the same
+    capabilities as `PythonUserFunctionBase` (#1769), and the injection through a function of the item (#1751).
+    After RG8.1-RG8.3, with which it shares the registry and the reference plugin.
 
 
 ## RG9 — Structural core improvements
@@ -1701,6 +1734,14 @@ color of `[-1,-1,-1,-1]` takes. Proposed:
       with its user function only without multithreaded rendering, the contour of the 3D beam line, the tiling of
       connectors and joints without a rule - per finding: draw it, remove the parameter, or say what it does.
 
+<a id="rg13-9"></a>
+**RG13.9** *(group RG13; from the triage of 2026-10-07)* **The old documentation issues of single items**, which the
+    general pages of RG13.5 did not reach: the equations of motion of `ObjectRigidBody` with a figure of the center of
+    mass and the local frame (#625); `ObjectJointGeneric` - the constraint configurations, the transformations, a
+    figure (#626), and the order of the axes when one or two rotations are constrained (#2325);
+    `ObjectContactFrictionCircleCable2D` - the connector equations and a figure (#627); `ObjectALEANCFCable2D` - its
+    output variables, the terms `ObjectANCFCable2D` does not have, the paper (#987).
+
 ## RG14 — Marker values computed where they are used
 
 *(Group created by the maintainer, 2026-09-29.)* Today every connector, joint, constraint and load gets
@@ -1718,7 +1759,7 @@ done.
 **RG14.2** **DONE 2026-10-04** (#2745) — [log](exudynRevisionLog2026b.md#rg14-2-1) · [plan text](exudynRevisionLog2026b.md#plan-rg14-2) — The migration. (the migration done; RG14.2.9.4 and RG14.2.12 in the list of what is not decided)
 
 <a id="rg14-3"></a>
-**RG14.3** *(group RG14; maintainer 2026-10-01)* **Joints and their Jacobians on homogeneous transformations.**
+**RG14.3** *(group RG14; maintainer 2026-10-01)* (#2884, successor of #2745) **Joints and their Jacobians on homogeneous transformations.**
     The derivatives of the kinematic equations of the joints are always of the same kind - relative position
     and rotation of two frames, projected on axes - and each joint writes them by hand today, with its own
     rotation Jacobians. With the rigid markers as homogeneous transformations (RG14.2.8), a joint's
@@ -1726,7 +1767,8 @@ done.
     the relative twist - one implementation for `JointGeneric`, `JointRevoluteZ`, `JointPrismaticX`, the 2D
     joints and the rolling disc, instead of one each. Done when homogeneous transformations are integrated
     more deeply, after RG14.2.9 (constraints on L0/L1/L2); a step of its own because it replaces working
-    code and needs the comparison of RG14.2.
+    code and needs the comparison of RG14.2. With it: the documentation of the Jacobians of objects and connectors
+    (#845).
 
 ## RG15 — Objects computing from given coordinates
 
@@ -2010,6 +2052,52 @@ own). Blocks that are not code to run - the FAQ's error messages, a command line
       (the renderer page: 12 blocks in 11 parts); the other 30 stay - the eleven of Julia, the outputs and console
       sessions, and the code that writes the user's settings or opens windows (see the log).
 
+## RG18 — Resolving old issues
+
+*(Group created by the maintainer, 2026-10-07: "try resolve many older open issues: add to plan issues that could
+be resolved easily ... For those that seem important or easily to be resolvable, add them either to an existing RG,
+or if it does not fit to new step in the new RG 'Resolving old issues'. Group the quicker and easier ones into one
+step with substeps.")* The tracker holds issues from 2019 on; the triage of 2026-10-07 closed what was done or not
+needed, put what fits into its group (RG4.20.5, RG5.1.4, RG5.3, RG5.4, RG6.8.5, RG6.8.8, RG8.1, RG8.9, RG8.10,
+RG13.9, RG14.3) and left the rest to a decision of the maintainer ([log](exudynRevisionLog2026b.md#rg18)).
+`GeneralContact` is revised as a whole and none of its issues is here.
+
+<a id="rg18-1"></a>
+**RG18.1** *(group RG18)* **The quick ones**, each small and with nothing to decide:
+    - **RG18.1.1** (#123) `override` on every virtual function of the derived classes in `src/Linalg`;
+    - **RG18.1.2** (#990) `MarkerNodeCoordinate`: a flag to include the reference value in the coordinate;
+    - **RG18.1.3** (#1061) the manual: what is a copy and what a reference - `mbs`, `GetObject(...)`, the dicts, the
+      settings structures;
+    - **RG18.1.4** (#1450) the header of the solution file: the number of threads, the computer, and at the end the
+      computation time - also in the files of the parameter variation;
+    - **RG18.1.5** (#1493) the static solver refuses Lie group nodes with a message, if they cannot work there
+      (checked first);
+    - **RG18.1.6** (#1529) `GetSystemJacobian()` and `GetSystemMassMatrix()` of the solvers with
+      `sparseTriplets=False`, returning sparse triplets for large systems;
+    - **RG18.1.7** (#1614) the static temporaries of `GeneralMatrixEXUdense::FactorizeNew` and of `Matrix.cpp` as members,
+      freed when the solver finishes;
+    - **RG18.1.8** (#1912) an example of two mass-spring-dampers coupled, one system implicit and one explicit;
+    - **RG18.1.9** (#2228) the symmetric basis of two non-parallel vectors (the mid axis of the normalized vectors and
+      the projections), in `rigidBodyUtilities`; used by RG4.20.5 (#2219);
+    - **RG18.1.10** (#2234) a warning of the initial accelerations when the initial velocities do not fulfill the
+      constraints, which gives oscillating constraint forces;
+    - **RG18.1.11** (#2247) the manual: model-centric and camera-centric views;
+    - **RG18.1.12** (#2267) `GetURDFrobotData`: the returned dict described key by key;
+    - **RG18.1.13** (#2304, #2305) `PyWriteBodyGraphicsDataList`: the item and the kind of data named in an error, and
+      every point checked to be finite;
+    - **RG18.1.14** (#2349) the comments of `exudyn.shells` in the format of the other modules;
+    - **RG18.1.15** (#948) `mecanumWheelRollingDiscTest.py` with the `Trajectory` class and
+      `ObjectConnectorTorsionalSpringDamper`, same result;
+    - **RG18.1.16** (#2259) `SystemContainer(...)` without the renderer, for a container used only to compute (as
+      in the inverse kinematics).
+
+<a id="rg18-2"></a>
+**RG18.2** *(group RG18)* **The velocity offset in all spring-dampers** (#829, #1631, #1189): `velocityOffset`, which
+    `ObjectConnectorSpringDamper`, `...LinearSpringDamper`, `...TorsionalSpringDamper` and `...CoordinateSpringDamperExt`
+    have, also in `ObjectConnectorCartesianSpringDamper`, `ObjectConnectorRigidBodySpringDamper` and
+    `ObjectConnectorCoordinateSpringDamper`, and for `MarkerCable2DShape` in `ObjectContactFrictionCircleCable2D`; it
+    replaces the user functions and the `preStepUserFunction` many models use to move a damper; one test model.
+
 ## Next steps recommended
 
 *A reading of the groups above, updated from time to time. It is **not** a second place where
@@ -2029,13 +2117,20 @@ issue and a short title only. The open issues that are not steps are in the trac
 | RG2.4 | - | the manual GUI check, once per release and platform (list and model done) |
 | RG4.1 | - | the Windows/Linux differences in contact and friction; RG4.1.2 the five macOS-only models, RG4.1.3 the math library |
 | RG5.1 | - | a maintained micro-benchmark of the linear algebra, inside Exudyn (from #2397); RG5.1.1 the no-rotation flag of the HT |
+| RG4.20.5 | #2218, #2219, #2226, #2229, #2230 | `ObjectANCFThinPlate`: rotation, symmetric slopes, slope scaling, two test problems |
 | RG5.2 | - | make the hot linear algebra vectorizable |
-| RG6.8 | #2140, #2236, #2237, #2350 | the graphics fixes before 1.13: Linux (RG6.8.5) and macOS (RG6.8.6), which wait for those machines |
+| RG5.3 | #858, #1202, #1203 | the Jacobians assembled in parallel |
+| RG5.4 | #2182, #2183, #2184 | the superelements for larger meshes |
+| RG6.8 | #2140, #2236, #2277, #2278, #2204, #2194 | the graphics fixes before 1.13: Linux (RG6.8.5), the near and far planes (RG6.8.8) |
 | RG2.4.5 | #2881 | Ubuntu GUI check: curved tiling and recorded frames to be checked again |
 | RG9.6 | #2866 | the member functions an item must provide, checked when it compiles (from #2498) |
-| RG8.1 to RG8.9 | - | the plugin ABI: registry, fingerprint, reference plugin, headers, discovery |
-| RG14.3 | #2745 | joints and their Jacobians on homogeneous transformations, after RG14.2.9 |
+| RG8.1 to RG8.9 | #1139, #1140, #1241 | the plugin ABI: registry, fingerprint, reference plugin, headers, discovery |
+| RG8.10 | #1751, #1767, #1768, #1769 | compiled user functions |
+| RG13.9 | #625, #626, #627, #987, #2325 | the old documentation issues of single items |
+| RG14.3 | #2884, #845 | joints and their Jacobians on homogeneous transformations, after RG14.2.9 |
 | RG15 | #2746 | objects computing from coordinates passed in: the work after the evaluation of RG15.1, not planned yet |
+| RG18.1 | 17 issues | the quick old issues, RG18.1.1 to RG18.1.16 |
+| RG18.2 | #829, #1189, #1631 | the velocity offset in all spring-dampers |
 
 <a id="not-decided"></a>
 ### Not decided to be resolved
@@ -2051,12 +2146,12 @@ reason, and a case that needs one of them opens a new issue that names the step.
 | RG6.7.2.1 | #2709, resolved | the faces of Hex20 meshes curved (`VolumeToSurfaceElements`) | an 8-node face has no node on a diagonal, which a 6-node triangle needs; it would need points that are not mesh nodes |
 | RG9.4.3.2 | #2202, resolved | energy of the contact and special objects | not now (maintainer, 2026-10-01); with friction it may be difficult |
 | RG13.6.6 | #2732, closed | MiniExamples of `ObjectFFRF` and `ObjectFFRFreducedOrder` | later (maintainer, 2026-09-29): when tetrahedral elements are part of Exudyn |
-| RG14.2.9.4 | #2745 | the term $\partial(\Cm_\qv\tp\lambdav)/\partial\qv$ in the Newton matrix of the joints | on hold (maintainer, 2026-10-02): the gain is limited to large reaction forces at large rotations |
-| RG14.2.12 | #2745 | `GeneralContact` on the marker interface | measured, not now: no gain found that would pay for the change |
+| RG14.2.9.4 | #2745, resolved | the term $\partial(\Cm_\qv\tp\lambdav)/\partial\qv$ in the Newton matrix of the joints | on hold (maintainer, 2026-10-02): the gain is limited to large reaction forces at large rotations |
+| RG14.2.12 | #2745, resolved | `GeneralContact` on the marker interface | measured, not now: no gain found that would pay for the change |
 | RG16.3.4 | - | a translation in the `localHT` of `MarkerNodeRigid` | when a case needs it: the position Jacobian and its derivative with an offset in the node; `MarkerBodyRigid` has it |
 
-Open in the tracker without a step: #2498 (nothing checks that an item type provides the member
-functions it must) and #2511 (the ROS examples were last run in 2023), both named in RG2.
+Open in the tracker without a step: #2511 (the ROS examples were last run in 2023), named in RG2; and the old issues
+the triage of 2026-10-07 left to a decision of the maintainer (`tmp/oldIssuesProposal.md`, RG18).
 
 ### Raised by the current work, and not yet a step
 

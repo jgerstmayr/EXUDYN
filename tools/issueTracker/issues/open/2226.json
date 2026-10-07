@@ -7,5 +7,6 @@
   "effort": "MEDIUM",
   "description": "compute optimal slopes scaling in ShellMesh functionality",
   "dateRaised": "2026-01-16",
-  "deadline": "2026-07-15"
+  "deadline": "2026-07-15",
+  "workingRemarks": "planned as revision2026b step RG4.20.5 (triage 2026-10-07)"
 }
