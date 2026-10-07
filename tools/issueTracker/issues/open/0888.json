@@ -7,5 +7,6 @@
   "effort": "MEDIUM",
   "description": "explain System errors, Python errors and Warnings; explain exception handling and add example",
   "dateRaised": "2022-01-25",
-  "deadline": "2022-03-26"
+  "deadline": "2022-03-26",
+  "workingRemarks": "planned as revision2026b step RG3.39 (triage 2026-10-07)"
 }

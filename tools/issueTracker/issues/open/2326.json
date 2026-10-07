@@ -7,5 +7,6 @@
   "effort": "LOW",
   "description": "adapt TestModels/sliderCrank3Dbenchmark.py to revised IFToMM model",
   "dateRaised": "2026-03-23",
-  "deadline": "2026-09-19"
+  "deadline": "2026-09-19",
+  "workingRemarks": "planned as revision2026b step RG2.6 (triage 2026-10-07)"
 }

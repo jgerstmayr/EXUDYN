@@ -7,5 +7,6 @@
   "effort": "MEDIUM",
   "description": "check if solver can raise full solver error message in exception, in order to alleviate tracing during automated code evaluation in SolveStatic and SolveDynamic",
   "dateRaised": "2025-03-30",
-  "deadline": "2025-09-26"
+  "deadline": "2025-09-26",
+  "workingRemarks": "planned as revision2026b step RG18.1 (triage 2026-10-07)"
 }

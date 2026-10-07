@@ -7,5 +7,6 @@
   "effort": "MEDIUM",
   "description": "add function to create chain gears as well as geometry from chain drive; calculate length similar to reeving system, but with two chains (and kinck) to compensate length",
   "dateRaised": "2025-06-21",
-  "deadline": "2025-12-18"
+  "deadline": "2025-12-18",
+  "workingRemarks": "kept open as an idea, no plan step (triage 2026-10-07, revision2026b group RG18)"
 }

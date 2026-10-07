@@ -7,5 +7,6 @@
   "effort": "HIGH",
   "description": "add vector and matrix functionality for Diff()",
   "dateRaised": "2026-01-16",
-  "deadline": "2026-07-15"
+  "deadline": "2026-07-15",
+  "workingRemarks": "kept open as an idea, no plan step (triage 2026-10-07, revision2026b group RG18)"
 }

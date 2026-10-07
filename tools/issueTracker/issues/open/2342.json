@@ -7,5 +7,6 @@
   "effort": "MEDIUM",
   "description": "replace CopyDictLevel1 with function that takes visualization and VItemClass in all self.visualization inits and either call VItemClass(**visualization) if visualization is a dict, or store VItemClass object; this would enable to accept visualization as dict with only non-default values set; add try-except for dict-based call",
   "dateRaised": "2026-04-17",
-  "deadline": "2026-10-14"
+  "deadline": "2026-10-14",
+  "workingRemarks": "planned as revision2026b step RG12.44 (triage 2026-10-07)"
 }

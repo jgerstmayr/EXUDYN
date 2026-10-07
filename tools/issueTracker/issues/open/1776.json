@@ -7,5 +7,6 @@
   "effort": "MEDIUM",
   "description": "consider paper of Agundez, Vallejo, Freire, Mikkola in International Journal of Mechanical Sciences, Vol 268, 2024 for computation of linearized system and eigenmodes. Test case with bicycle",
   "dateRaised": "2024-02-07",
-  "deadline": "2024-08-05"
+  "deadline": "2024-08-05",
+  "workingRemarks": "kept open as an idea, no plan step (triage 2026-10-07, revision2026b group RG18)"
 }

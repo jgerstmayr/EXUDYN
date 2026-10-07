@@ -7,5 +7,6 @@
   "effort": "MEDIUM",
   "description": "add Lie group integrator flybar governor",
   "dateRaised": "2021-01-26",
-  "deadline": "2021-03-27"
+  "deadline": "2021-03-27",
+  "workingRemarks": "planned as revision2026b step RG2.6 (triage 2026-10-07)"
 }

@@ -7,5 +7,6 @@
   "effort": "MEDIUM",
   "description": "add consistent flag to markerdata computation, ODE2RHS computation, etc. for static computation, which does not compute information on velocities then.",
   "dateRaised": "2019-09-10",
-  "deadline": "2019-11-09"
+  "deadline": "2019-11-09",
+  "workingRemarks": "kept open as an idea, no plan step (triage 2026-10-07, revision2026b group RG18)"
 }

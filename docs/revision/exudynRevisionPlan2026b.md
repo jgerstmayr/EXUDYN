@@ -381,6 +381,12 @@ matplotlib**: a test model that fails for a missing package of the `[tests]` ext
     - **RG2.3.5** **DONE 2026-09-27** (#2711) — [log](exudynRevisionLog2026b.md#rg2-3-5) —
       **`PlotImage` saves into `exudyn.config.outputDirectory`**, like every other output of a run.
 
+<a id="rg2-6"></a>
+**RG2.6** *(group RG2; from the triage of 2026-10-07, maintainer: "Group B goes into the plan")* **Three old test models**:
+    - **RG2.6.1** (#559) the Lie group integrator on the flybar governor;
+    - **RG2.6.2** (#591) `ObjectFFRF`: the force vector and the gravity forces against the paper;
+    - **RG2.6.3** (#2326) `sliderCrank3Dbenchmark.py` adapted to the revised IFToMM model.
+
 ## RG3 — Docs
 
 The documentation is Markdown, built with Sphinx and published for every release since
@@ -587,6 +593,14 @@ are said once above the table, "Reached as `simulationSettings.timeIntegration.n
     `docs/`, `definitions/` or `conf.py`. *Done as proposed, the second way*: `exudev docs --check` (implies `--pdf`),
     `tools/checkPdfLog.py`, the baseline `tools/pdfLogBaseline.json`; gate 4 of `WORKFLOW.md` and D17 say when.
 
+<a id="rg3-39"></a>
+**RG3.39** *(group RG3; from the triage of 2026-10-07, maintainer: "Group B goes into the plan")* **How a model is built, and what an error says**, in the manual:
+    - **RG3.39.1** (#855) the general approach - add nodes, objects, markers, loads, sensors, `mbs.Assemble()`, solve -
+      in the overview, with a figure;
+    - **RG3.39.2** (#888) system errors, Python errors and warnings: what each means, how an exception is handled, with
+      an example;
+    - **RG3.39.3** (#886) whether `py::raise_from` keeps the Python cause of an exception raised in a user function or
+      the renderer, so the message tells where it came from.
 
 ## RG4 — Implementation problems and bugs
 
@@ -946,6 +960,22 @@ The steps are numbered in the order they were raised and stand here in the order
       RG18.1.9), the optimal scaling of the slopes in `ShellMesh` (#2226); the cylindrical problem against
       `ObjectANCFCable2D` (#2229) and the hemispherical one against the literature (#2230) as test models.
 
+<a id="rg4-21"></a>
+**RG4.21** *(group RG4; from the triage of 2026-10-07, maintainer: "Group B goes into the plan")* **Constraints that depend on velocities or on time**: a flag of each constraint that
+    says so (#303), and the term $\partial \gv/\partial \qv\, \dot \qv$ of the velocity-level constraints in the initial
+    accelerations, checked with the rolling coin (#574).
+
+<a id="rg4-22"></a>
+**RG4.22** *(group RG4; from the triage of 2026-10-07, maintainer: "Group B goes into the plan")* **A 3D sliding joint**: `ObjectJointSliding` with rotation (#2315), tested with the thin
+    ANCF cable (#2316) and implemented and tested with the thick ANCF beam (#2317).
+
+<a id="rg4-23"></a>
+**RG4.23** *(group RG4; from the triage of 2026-10-07, maintainer: "Group B goes into the plan")* **The Jacobian of ODE1 loads** (#1548), with a test model.
+
+<a id="rg4-24"></a>
+**RG4.24** *(group RG4; from the triage of 2026-10-07, maintainer: "Group B goes into the plan")* **`ObjectRollingDiscPenalty`: viscous rolling friction for any axis** (#926) - today
+    `rollingFrictionViscous` works only for an axis parallel to the plane; the formulas on its page.
+
 ## RG5 — Performance
 
 Measurement first, then the code that is actually hot. revision2026 step R2.16 measured the linear
@@ -1158,8 +1188,8 @@ the arc; the spring windings of the spring-dampers use `connectors.springNumberO
       volumes by the near and far planes of the camera-centric projection. **Changed 2026-09-30**
       ([log](exudynRevisionLog2026b.md#rg6-8-4-1)): depth clamping while the volumes are drawn. **DONE
       2026-09-30**: the maintainer checked it on screen - no artifacts any more;
-    - **RG6.8.5** (#2140, #2277, #2278; #2236 resolved 2026-10-07: the time in the renderer is right on Ubuntu, the
-      maintainer's tests) Linux: crashes when the renderer closes and with the SolutionViewer; the
+    - **RG6.8.5** (#2140, #2277; #2236 and #2278 resolved 2026-10-07: the time in the renderer is right and no crash
+      when it closes on Ubuntu, the maintainer's tests) Linux: crashes when the renderer closes and with the SolutionViewer; the
       time in the renderer initialized wrong - the manual check (RG2.4) S7, Q1, Q2 on Ubuntu, plus a
       script that starts and stops the renderer twenty times; whether `glfwGetWindowContentScale` of the newer GLFW
       gives the display scaling on Linux (#2277), and whether `glfwDestroyWindow` in `StopRenderer` avoids the crashes
@@ -1190,6 +1220,14 @@ shows, and copies, the lines that give a script the current view of the render w
 - **RG6.10.1** **DONE 2026-10-06** — [log](exudynRevisionLog2026b.md#rg6-10-1) (#2871) *(maintainer 2026-10-06)* the button
   is **store model view** and gives `SC.renderer.Start()` and `SC.renderer.SetModelView(zoom=..., rotationVector=[...],
   centerPoint=[...])` as CTRL+F3 prints it; the hints of **store positions** say that it stores every open window.
+
+<a id="rg6-11"></a>
+**RG6.11** *(group RG6; from the triage of 2026-10-07, maintainer: "Group B goes into the plan")* **Textures**: in the renderer, from a numpy RGB/RGBA array with a reference number and a
+    reset (#2155), and in triangle lists by that number and texture coordinates (#2154); with the rendering revision.
+
+<a id="rg6-12"></a>
+**RG6.12** *(group RG6; from the triage of 2026-10-07, maintainer: "Group B goes into the plan")* **Two renderer tools**: a ruler for views with the axes parallel to x, y, z (#2244), and
+    the triangles of an imported geometry made consistent in orientation, the normals all outward (#2281).
 
 ## RG7 — Python user items
 
@@ -1663,6 +1701,21 @@ rigid markers, positioned as the joints; test model `createLinearSpringDamperTes
 <a id="rg12-39"></a>
 **RG12.39** **DONE 2026-10-05** (#2850) — [log](exudynRevisionLog2026b.md#rg12-39-done) · [plan text](exudynRevisionLog2026b.md#plan-rg12-39) — A dynamic simulation continues from its restart file: `solution.restart.write` and `solution.restart.continueIfAvailable`.
 
+<a id="rg12-44"></a>
+**RG12.44** *(group RG12; from the triage of 2026-10-07, maintainer: "Group B goes into the plan")* **Dictionaries of the newer structures, and the visualization of items**:
+    - **RG12.44.1** (#2075) `GetDictionary`/`SetDictionary` for `SC.renderer` and `exudyn.config`;
+    - **RG12.44.2** (#2342) `CopyDictLevel1` replaced: the `visualization` of an item given as its `VItem` class or as a
+      dict.
+
+<a id="rg12-45"></a>
+**RG12.45** *(group RG12; from the triage of 2026-10-07, maintainer: "Group B goes into the plan")* **The URDF import**: other scene and collision information (#1931), the tool
+    transformations (#1932), and the parent indices from the lists of link names, with the base links stored (#1941).
+
+<a id="rg12-46"></a>
+**RG12.46** *(group RG12; from the triage of 2026-10-07, maintainer: "Group B goes into the plan")* **`MatrixContainer` and the matrices of other packages**: linked to a scipy CSR matrix
+    (#1863) and to a dense numpy matrix (#1864), set from an NGsolve matrix with its coordinate order (#782), and with
+    `Vector3DList` and the others in the HDF5 load and save (#1892).
+
 ## RG13 — Item documentation
 
 *(Group created by the maintainer, 2026-09-27.)* **Every item gets a full documentation and a
@@ -2101,7 +2154,9 @@ RG13.9, RG14.3) and left the rest to a decision of the maintainer ([log](exudynR
     - **RG18.1.15** (#948) `mecanumWheelRollingDiscTest.py` with the `Trajectory` class and
       `ObjectConnectorTorsionalSpringDamper`, same result;
     - **RG18.1.16** (#2259) `SystemContainer(...)` without the renderer, for a container used only to compute (as
-      in the inverse kinematics).
+      in the inverse kinematics);
+    - **RG18.1.17** (#1977) the full message of a solver failure in the exception of `SolveStatic`/`SolveDynamic`;
+    - **RG18.1.18** (#2007) a timer of the Python user functions among the solver timers.
 
 <a id="rg18-2"></a>
 **RG18.2** *(group RG18)* **The velocity offset in all spring-dampers** (#829, #1631, #1189): `velocityOffset`, which
@@ -2133,7 +2188,12 @@ issue and a short title only. The open issues that are not steps are in the trac
 | RG5.2 | - | make the hot linear algebra vectorizable |
 | RG5.3 | #858, #1202, #1203 | the Jacobians assembled in parallel |
 | RG5.4 | #2182, #2183, #2184 | the superelements for larger meshes |
-| RG6.8 | #2140, #2277, #2278, #2204, #2194 | the graphics fixes before 1.13: Linux (RG6.8.5), the near and far planes (RG6.8.8) |
+| RG6.8 | #2140, #2204, #2194 | the graphics fixes before 1.13: Linux (RG6.8.5), the near and far planes (RG6.8.8) |
+| RG6.11, RG6.12 | #2154, #2155, #2244, #2281 | textures; a ruler and consistent triangle orientation |
+| RG12.44 to RG12.46 | #2075, #2342, #1931, #1932, #1941, #782, #1863, #1864, #1892 | dictionaries and item visualization, URDF import, `MatrixContainer` |
+| RG2.6 | #559, #591, #2326 | three old test models |
+| RG3.39 | #855, #886, #888 | how a model is built, and what an error says |
+| RG4.21 to RG4.24 | #303, #574, #2315-#2317, #1548, #926 | velocity/time-dependent constraints, a 3D sliding joint, ODE1 load Jacobians, rolling friction |
 | RG2.4.5 | #2881 | Ubuntu GUI check: curved tiling and recorded frames to be checked again |
 | RG9.6 | #2866 | the member functions an item must provide, checked when it compiles (from #2498) |
 | RG8.1 to RG8.9 | #1139, #1140, #1241 | the plugin ABI: registry, fingerprint, reference plugin, headers, discovery |
@@ -2141,7 +2201,7 @@ issue and a short title only. The open issues that are not steps are in the trac
 | RG13.9 | #625, #626, #627, #987, #2325 | the old documentation issues of single items |
 | RG14.3 | #2884, #845 | joints and their Jacobians on homogeneous transformations, after RG14.2.9 |
 | RG15 | #2746 | objects computing from coordinates passed in: the work after the evaluation of RG15.1, not planned yet |
-| RG18.1 | 17 issues | the quick old issues, RG18.1.1 to RG18.1.16 |
+| RG18.1 | 19 issues | the quick old issues, RG18.1.1 to RG18.1.18 |
 | RG18.2 | #829, #1189, #1631 | the velocity offset in all spring-dampers |
 
 <a id="not-decided"></a>
@@ -2163,7 +2223,7 @@ reason, and a case that needs one of them opens a new issue that names the step.
 | RG16.3.4 | - | a translation in the `localHT` of `MarkerNodeRigid` | when a case needs it: the position Jacobian and its derivative with an offset in the node; `MarkerBodyRigid` has it |
 
 Open in the tracker without a step: #2511 (the ROS examples were last run in 2023), named in RG2; and the old issues
-the triage of 2026-10-07 left to a decision of the maintainer (`tmp/oldIssuesProposal.md`, RG18).
+the triage of 2026-10-07 kept as ideas without a step (group C of the [log](exudynRevisionLog2026b.md#rg18-1)).
 
 ### Raised by the current work, and not yet a step
 

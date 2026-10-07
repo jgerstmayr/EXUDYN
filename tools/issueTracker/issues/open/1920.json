@@ -7,5 +7,6 @@
   "effort": "MEDIUM",
   "description": "add autodiff Jacobian",
   "dateRaised": "2024-11-02",
-  "deadline": "2025-05-01"
+  "deadline": "2025-05-01",
+  "workingRemarks": "kept open as an idea, no plan step (triage 2026-10-07, revision2026b group RG18)"
 }

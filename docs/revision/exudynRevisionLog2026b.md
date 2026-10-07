@@ -16369,3 +16369,19 @@ available. So, possibly for > 3.14, to use the current scipy version?")*
 - The pin exists for the speed of the sparse eigenvalue solver (revision2026 fact 19); on macOS and 3.14+ the suite may
   therefore be slower - to be seen in the next macOS run. `docs/howTo/condaEnvironments.md` and `docs/dev/WORKFLOW.md`
   say so.
+
+<a id="rg18-1"></a>
+### RG18 — the maintainer's decisions on the proposal (2026-10-07)
+
+*(Maintainer 2026-10-07: "#2278 is resolved, no more crashes observed. Your 13 recommended: close issues => yes,
+please close. The others: do exactly as proposed. Group B goes into the plan.")*
+
+- **A, closed** with the reason of the proposal: #88, #98, #347, #354, #410, #617, #698, #873, #892, #1240, #1434,
+  #1653, #1898.
+- **B, planned**: RG2.6 (#559, #591, #2326), RG3.39 (#855, #886, #888), RG4.21 (#303, #574), RG4.22 (#2315-#2317),
+  RG4.23 (#1548), RG4.24 (#926), RG6.11 (#2154, #2155), RG6.12 (#2244, #2281), RG12.44 (#2075, #2342), RG12.45 (#1931,
+  #1932, #1941), RG12.46 (#782, #1863, #1864, #1892), RG18.1.17 (#1977), RG18.1.18 (#2007).
+- **C, kept open as ideas, no step**: #194, #252, #260, #314, #517, #561, #565, #608, #614, #737, #988, #1008, #1032,
+  #1078, #1087, #1104, #1194, #1414, #1415, #1549, #1674, #1675, #1676, #1719, #1720, #1722, #1776, #1821, #1822,
+  #1904, #1910, #1920, #1989, #2097, #2106, #2110, #2120, #2131, #2223, #2238; each has the remark.
+- **#2278 resolved** (no crash when the renderer closes on Ubuntu); RG6.8.5 keeps #2140 and #2277.

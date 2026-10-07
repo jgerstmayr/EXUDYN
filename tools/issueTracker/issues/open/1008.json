@@ -7,5 +7,6 @@
   "effort": "HIGH",
   "description": "Test improved contact integration method with resolution of switching and correction of integration of discontinuous forces; compare to switching point resolution",
   "dateRaised": "2022-03-26",
-  "deadline": "2022-05-25"
+  "deadline": "2022-05-25",
+  "workingRemarks": "kept open as an idea, no plan step (triage 2026-10-07, revision2026b group RG18)"
 }

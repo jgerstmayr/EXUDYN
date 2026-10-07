@@ -7,5 +7,6 @@
   "effort": "MEDIUM",
   "description": "turn on/off scaling in interface to test symmetric solver speedup",
   "dateRaised": "2022-07-11",
-  "deadline": "2022-09-09"
+  "deadline": "2022-09-09",
+  "workingRemarks": "kept open as an idea, no plan step (triage 2026-10-07, revision2026b group RG18)"
 }

@@ -7,5 +7,6 @@
   "effort": "HIGH",
   "description": "Add implementation and tests for SlidingJoint with thick ANCF beam",
   "dateRaised": "2026-03-02",
-  "deadline": "2026-08-29"
+  "deadline": "2026-08-29",
+  "workingRemarks": "planned as revision2026b step RG4.22 (triage 2026-10-07)"
 }

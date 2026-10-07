@@ -1,0 +1,15 @@
+{
+  "number": 347,
+  "title": "initialCoordinates_t",
+  "author": "JG",
+  "status": "CLOSED",
+  "type": "CHANGE",
+  "effort": "MEDIUM",
+  "description": "instead of initialVelocities",
+  "dateRaised": "2020-02-24",
+  "deadline": "2020-04-24",
+  "dateResolved": "2026-10-07 10:59",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "won't fix: a rename of a parameter of every node without a gain in function (maintainer 2026-10-07, triage of revision2026b group RG18)",
+  "resolvedInVersion": "1.12.420"
+}

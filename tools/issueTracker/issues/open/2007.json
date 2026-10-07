@@ -7,5 +7,6 @@
   "effort": "MEDIUM",
   "description": "add special timer for Python user functions, as solver timer for python does not include user functions",
   "dateRaised": "2025-05-10",
-  "deadline": "2025-11-06"
+  "deadline": "2025-11-06",
+  "workingRemarks": "planned as revision2026b step RG18.1 (triage 2026-10-07)"
 }

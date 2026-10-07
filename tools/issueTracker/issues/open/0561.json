@@ -7,5 +7,6 @@
   "effort": "HIGH",
   "description": "setup new generalized alpha integrator with GGL",
   "dateRaised": "2021-01-26",
-  "deadline": "2021-03-27"
+  "deadline": "2021-03-27",
+  "workingRemarks": "kept open as an idea, no plan step (triage 2026-10-07, revision2026b group RG18)"
 }

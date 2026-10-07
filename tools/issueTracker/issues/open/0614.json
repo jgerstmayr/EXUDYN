@@ -7,5 +7,6 @@
   "effort": "HIGH",
   "description": "add functionality to compute sensor-dependencies (for LTG computation), used in controller connectors? alternatively add dependentNodes to existing connectors",
   "dateRaised": "2021-03-21",
-  "deadline": "2021-05-20"
+  "deadline": "2021-05-20",
+  "workingRemarks": "kept open as an idea, no plan step (triage 2026-10-07, revision2026b group RG18)"
 }

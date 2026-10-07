@@ -2,10 +2,14 @@
   "number": 698,
   "title": "GetAvailableJacobians",
   "author": "JG",
-  "status": "RAISED",
+  "status": "CLOSED",
   "type": "CHANGE",
   "effort": "HIGH",
   "description": "unify constraint.GetAvailableJacobians() with jacobian computations in joints, in order to avoid large overheads for jacobian assembly",
   "dateRaised": "2021-07-01",
-  "deadline": "2021-08-30"
+  "deadline": "2021-08-30",
+  "dateResolved": "2026-10-07 10:59",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "superseded by revision2026b steps RG14.2 and RG14.3 (#2884) (maintainer 2026-10-07, triage of revision2026b group RG18)",
+  "resolvedInVersion": "1.12.424"
 }

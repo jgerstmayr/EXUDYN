@@ -1,0 +1,16 @@
+{
+  "number": 1434,
+  "title": "solver",
+  "author": "JG",
+  "status": "CLOSED",
+  "type": "EXTENSION",
+  "priority": "HIGH",
+  "effort": "MEDIUM",
+  "description": "add CqT*lambda terms to systemwide jacobian computation with flag",
+  "dateRaised": "2023-02-16",
+  "deadline": "2023-08-15",
+  "dateResolved": "2026-10-07 10:59",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "duplicate of revision2026b step RG14.2.9.4, on hold by decision of 2026-10-02 (maintainer 2026-10-07, triage of revision2026b group RG18)",
+  "resolvedInVersion": "1.12.428"
+}

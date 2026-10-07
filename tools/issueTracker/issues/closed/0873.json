@@ -1,0 +1,15 @@
+{
+  "number": 873,
+  "title": "GenericJoint",
+  "author": "JG",
+  "status": "CLOSED",
+  "type": "IMPROVEMENT",
+  "effort": "MEDIUM",
+  "description": "improve computation of jacobian, using crossproduct",
+  "dateRaised": "2022-01-18",
+  "deadline": "2022-03-19",
+  "dateResolved": "2026-10-07 10:59",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "superseded by revision2026b step RG14.3 (#2884) (maintainer 2026-10-07, triage of revision2026b group RG18)",
+  "resolvedInVersion": "1.12.425"
+}

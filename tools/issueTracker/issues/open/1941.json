@@ -7,5 +7,6 @@
   "effort": "MEDIUM",
   "description": "include parent names and create correct parent indices in URDF files by using link name lists; store list of base link names as well and do reordering",
   "dateRaised": "2024-11-12",
-  "deadline": "2025-05-11"
+  "deadline": "2025-05-11",
+  "workingRemarks": "planned as revision2026b step RG12.45 (triage 2026-10-07)"
 }

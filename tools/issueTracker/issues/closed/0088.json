@@ -2,11 +2,15 @@
   "number": 88,
   "title": "Data dependency",
   "author": "JG",
-  "status": "RAISED",
+  "status": "CLOSED",
   "type": "IDEA",
   "priority": "LOW",
   "effort": "HUGE",
   "description": "use dependencies for every computational member function; node: \t\tNodeData: LinkedDataVector displacement, velocity, acceleration;; object(singlenoded): \tObjectData: LinkedDataVector displacement, velocity, acceleration;; object(multinoded): \tObjectData: ResizableArray<LinkedDataVector> displacements, velocities, accelerations;; constraint(Lagr.):\tFunctionResults1, FunctionResults2 (e.g. RotMatrix1, Position1, ...); marker:\t\tonly transforms data (load/constraint); load:\t\t\tonly provides load information",
   "dateRaised": "2019-04-01",
-  "deadline": "2019-07-01"
+  "deadline": "2019-07-01",
+  "dateResolved": "2026-10-07 10:59",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "superseded by revision2026b groups RG14 (markers, done) and RG15 (objects from given coordinates, #2746) (maintainer 2026-10-07, triage of revision2026b group RG18)",
+  "resolvedInVersion": "1.12.418"
 }

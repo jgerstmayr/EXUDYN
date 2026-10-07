@@ -7,5 +7,6 @@
   "effort": "MEDIUM",
   "description": "fully add Jacobian functionality for ODE1 loads and add test for ODE1 loads or recycle one",
   "dateRaised": "2023-05-01",
-  "deadline": "2023-10-28"
+  "deadline": "2023-10-28",
+  "workingRemarks": "planned as revision2026b step RG4.23 (triage 2026-10-07)"
 }

@@ -7,5 +7,6 @@
   "effort": "MEDIUM",
   "description": "post newton step object functions shall be called from solver including a ResizableVector& dataVariables to be changed; post newton function shall not use direct write access to nodal data coordinates",
   "dateRaised": "2019-08-27",
-  "deadline": "2019-10-26"
+  "deadline": "2019-10-26",
+  "workingRemarks": "kept open as an idea, no plan step (triage 2026-10-07, revision2026b group RG18)"
 }

@@ -1,0 +1,15 @@
+{
+  "number": 410,
+  "title": "drawing information",
+  "author": "JG",
+  "status": "CLOSED",
+  "type": "EXTENSION",
+  "effort": "MEDIUM",
+  "description": "add consistent drawing information in show field of every item",
+  "dateRaised": "2020-05-24",
+  "deadline": "2020-07-23",
+  "dateResolved": "2026-10-07 10:59",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "superseded by revision2026b step RG13.8: the Drawing section of every item page (maintainer 2026-10-07, triage of revision2026b group RG18)",
+  "resolvedInVersion": "1.12.422"
+}

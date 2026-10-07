@@ -7,5 +7,6 @@
   "effort": "HIGH",
   "description": "evaluate further options to link to internal data, such as objects, nodes, etc.; possibly with GetObjectParameter(...) and similar functions possibly automated; this would highly speed up user functions as it reduces the number of exudyn function calls",
   "dateRaised": "2024-10-19",
-  "deadline": "2025-04-17"
+  "deadline": "2025-04-17",
+  "workingRemarks": "kept open as an idea, no plan step (triage 2026-10-07, revision2026b group RG18)"
 }

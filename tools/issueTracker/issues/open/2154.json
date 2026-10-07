@@ -7,5 +7,6 @@
   "effort": "HIGH",
   "description": "add textures for triangle lists, using texture reference number and coordinates, according to standard format",
   "dateRaised": "2025-11-02",
-  "deadline": "2026-05-01"
+  "deadline": "2026-05-01",
+  "workingRemarks": "planned as revision2026b step RG6.11 (triage 2026-10-07)"
 }

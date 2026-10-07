@@ -7,5 +7,6 @@
   "effort": "MEDIUM",
   "description": "add dg/dq*(dot q) term for initial accelerations in velocity level constraints; check with rolling coin",
   "dateRaised": "2021-02-07",
-  "deadline": "2021-04-08"
+  "deadline": "2021-04-08",
+  "workingRemarks": "planned as revision2026b step RG4.21 (triage 2026-10-07)"
 }

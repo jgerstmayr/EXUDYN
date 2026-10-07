@@ -1,0 +1,15 @@
+{
+  "number": 892,
+  "title": "AccessFunctionType",
+  "author": "JG",
+  "status": "CLOSED",
+  "type": "EXTENSION",
+  "effort": "MEDIUM",
+  "description": "add AccessFunctionType::TranslationalVelocity_q and AccessFunctionType::AngularVelocity_q needed for analytical jacobians",
+  "dateRaised": "2022-01-26",
+  "deadline": "2022-03-27",
+  "dateResolved": "2026-10-07 10:59",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "superseded: the Jacobians come by automatic differentiation (revision2026b step RG14.2) (maintainer 2026-10-07, triage of revision2026b group RG18)",
+  "resolvedInVersion": "1.12.426"
+}

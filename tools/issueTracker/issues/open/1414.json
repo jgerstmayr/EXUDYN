@@ -7,5 +7,6 @@
   "effort": "MEDIUM",
   "description": "extend for explicit solver; needs internally different setup of solvers; use dynamicSolverType with default generalizedAlpha changable to Newmark/Index2 as well as explicit solvers",
   "dateRaised": "2023-01-22",
-  "deadline": "2023-07-21"
+  "deadline": "2023-07-21",
+  "workingRemarks": "kept open as an idea, no plan step (triage 2026-10-07, revision2026b group RG18)"
 }

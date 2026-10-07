@@ -7,5 +7,6 @@
   "effort": "MEDIUM",
   "description": "cleanup, consider better UF and check implementation with theory (jac?)",
   "dateRaised": "2022-04-04",
-  "deadline": "2022-06-03"
+  "deadline": "2022-06-03",
+  "workingRemarks": "kept open as an idea, no plan step (triage 2026-10-07, revision2026b group RG18)"
 }

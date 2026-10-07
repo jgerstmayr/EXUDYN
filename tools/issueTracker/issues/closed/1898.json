@@ -2,10 +2,14 @@
   "number": 1898,
   "title": "particles",
   "author": "JG",
-  "status": "RAISED",
+  "status": "CLOSED",
   "type": "EXTENSION",
   "effort": "MEDIUM",
   "description": "Add Python functionality for periodic walls, using pairs of walls at which particles are duplicated to the (-) side of a wall as soon as they transverse a periodic wall at the (+) side",
   "dateRaised": "2024-10-16",
-  "deadline": "2025-04-14"
+  "deadline": "2025-04-14",
+  "dateResolved": "2026-10-07 10:59",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "not needed currently, as #1906/#1907 (particles) (maintainer 2026-10-07, triage of revision2026b group RG18)",
+  "resolvedInVersion": "1.12.430"
 }

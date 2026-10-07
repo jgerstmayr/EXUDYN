@@ -7,5 +7,6 @@
   "effort": "MEDIUM",
   "description": "Make unique member function names for rotation/orientation jacobians in nodes and bodies",
   "dateRaised": "2019-06-25",
-  "deadline": "2019-08-24"
+  "deadline": "2019-08-24",
+  "workingRemarks": "kept open as an idea, no plan step (triage 2026-10-07, revision2026b group RG18)"
 }

@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.12 | Metheney | 338 | 1.12.417 |
+| 1.12 | Metheney | 339 | 1.12.431 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
 | 1.9 | Krall | 235 | 1.9.234 |
@@ -29,6 +29,10 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.12 - Metheney (current)
 
+- **1.12.431** `CHECK` `LOW EFF` `resolved by: Claude-JG` linux GLFW (#2278)
+  - description: check if call to glfwDestroyWindow from StopRenderer avoids crashes on linux?
+  - **notes:** On Linux no more crashes when the renderer is closed; confirmed by the maintainer's tests on Ubuntu (2026-10-07)
+  - date resolved: **2026-10-07 10:59**, date raised: 2026-02-09
 - **1.12.417** `FIX` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` pip install --group dev fails on macOS and on Python 3.14+: scipy==1.15.2 has no wheel there (#2886)
   - description: The maintainer, 2026-10-07: on macOS with Python 3.14 and 3.15 'pip install --group dev' does not work with the scipy restriction to 1.15 - it cannot be installed; remove the restriction for macOS in general, and for the newer Python versions use the current scipy. The pin of the dev group gets PEP 508 markers, as tools/ci/buildManylinux.sh already has for 3.14. revision2026b step RG10.19
   - **notes:** pip install --group dev works on macOS and on Python 3.14+: the dev group pins scipy==1.15.2 only where it has wheels (not macOS, Python \< 3.14) and takes the current scipy elsewhere

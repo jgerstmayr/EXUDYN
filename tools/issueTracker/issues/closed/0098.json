@@ -1,0 +1,16 @@
+{
+  "number": 98,
+  "title": "Destructors/Cleanup",
+  "author": "JG",
+  "status": "CLOSED",
+  "type": "EXTENSION",
+  "priority": "LOW",
+  "effort": "MEDIUM",
+  "description": "add destructors/cleanup to MainSystemData and all other system functions (check new commands)",
+  "dateRaised": "2019-04-01",
+  "deadline": "2019-07-01",
+  "dateResolved": "2026-10-07 10:59",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "nothing concrete named: mbs.Reset() and SC.Reset() exist; a leak would be a new bug (maintainer 2026-10-07, triage of revision2026b group RG18)",
+  "resolvedInVersion": "1.12.419"
+}

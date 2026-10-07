@@ -7,5 +7,6 @@
   "effort": "HIGH",
   "description": "add textures to renderer (and add reset function), using numpy binary array representing RGB/RGBA image; reference numbers are then used in triangle lists",
   "dateRaised": "2025-11-02",
-  "deadline": "2026-05-01"
+  "deadline": "2026-05-01",
+  "workingRemarks": "planned as revision2026b step RG6.11 (triage 2026-10-07)"
 }

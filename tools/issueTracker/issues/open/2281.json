@@ -7,5 +7,6 @@
   "effort": "MEDIUM",
   "description": "add functionality to make consistent triangles with same orientation (all computed normals are outbound or inbound); used to heal imported geometries",
   "dateRaised": "2026-02-11",
-  "deadline": "2026-08-10"
+  "deadline": "2026-08-10",
+  "workingRemarks": "planned as revision2026b step RG6.12 (triage 2026-10-07)"
 }

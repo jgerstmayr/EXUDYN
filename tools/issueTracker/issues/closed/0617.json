@@ -1,0 +1,15 @@
+{
+  "number": 617,
+  "title": "python userFunctions",
+  "author": "JG",
+  "status": "CLOSED",
+  "type": "EXTENSION",
+  "effort": "MEDIUM",
+  "description": "consider adding an additional userFunctionVariable [List? or Dict?], which contains indices or further parameters needed in the userFunction",
+  "dateRaised": "2021-03-23",
+  "deadline": "2021-05-22",
+  "dateResolved": "2026-10-07 10:59",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "not needed: a Python closure or functools.partial carries indices and parameters into a user function (maintainer 2026-10-07, triage of revision2026b group RG18)",
+  "resolvedInVersion": "1.12.423"
+}

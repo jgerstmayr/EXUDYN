@@ -7,5 +7,6 @@
   "effort": "HIGH",
   "description": "consider extension w.r.t. rigid body node at basis (Lie group node in explicit integration...); add baseNode (default=invalid), inertia could be added via a separate rigid body?",
   "dateRaised": "2023-05-02",
-  "deadline": "2023-10-29"
+  "deadline": "2023-10-29",
+  "workingRemarks": "kept open as an idea, no plan step (triage 2026-10-07, revision2026b group RG18)"
 }
