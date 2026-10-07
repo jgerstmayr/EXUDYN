@@ -53,6 +53,7 @@ for name in types.ItemNames():
 def AssembleWorks(Build):
     SC = exu.SystemContainer()
     mbs = SC.AddSystem()
+    printToConsole = exu.config.printToConsole
     exu.config.printToConsole = False
     try:
         with contextlib.redirect_stdout(io.StringIO()):
@@ -62,7 +63,7 @@ def AssembleWorks(Build):
     except Exception:
         return False
     finally:
-        exu.config.printToConsole = True
+        exu.config.printToConsole = printToConsole
 
 def AddBody(mbs, objectName):
     if objectName == 'ObjectMassPoint':

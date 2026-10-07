@@ -1,0 +1,16 @@
+{
+  "number": 2895,
+  "title": "quiet runs: the build shows its version and a progress line, the test runners a progress line and no tables; the test suite log 260000 lines of caught user errors",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "IMPROVEMENT",
+  "effort": "MEDIUM",
+  "description": "The maintainer, 2026-10-07: 'for the exudev build command, it would be extremely helpful to see in the console which exudyn version is built, and to see a progress during compilation ... The same would be nice for TestModel and Example runs (in quiet case). For the test suite, after the run finishes with python tools/exudev test --env venvExuP313 it outputs a lot of text => should be the quiet case by default. Furthermore, the log file for the testsuite has, since about version 1.12.366, approx. 260000 lines after TESTMODEL 138 parameterConversionTest.py which is unacceptable (User ERRORs => we need a solution (turn off by environment setting/config.special flag, etc.)' revision2026b step RG10.22",
+  "dateRaised": "2026-10-07",
+  "deadline": "2027-04-05",
+  "dateResolved": "2026-10-07 18:19",
+  "resolvedAuthor": "Claude-JG",
+  "file": "tools/exudev/commands.py",
+  "releaseNotes": "Quiet runs: exudev build names the Exudyn version and counts the compiled files in one line; the test suite and the examples count the models in one line and end with their summary; exudyn.special.exceptions.writeErrorsToLogFile keeps caught errors out of the log (the test suite log: 7000 instead of 266000 lines)",
+  "resolvedInVersion": "1.12.444"
+}

@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.12 | Metheney | 348 | 1.12.443 |
+| 1.12 | Metheney | 349 | 1.12.444 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
 | 1.9 | Krall | 235 | 1.9.234 |
@@ -29,6 +29,10 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.12 - Metheney (current)
 
+- **1.12.444** `IMPROVEMENT` `MEDIUM EFF` `raised by: Claude-JG` `resolved by: Claude-JG` quiet runs: the build shows its version and a progress line, the test runners a progress line and no tables; the test suite log 260000 lines of caught user errors (#2895)
+  - description: The maintainer, 2026-10-07: 'for the exudev build command, it would be extremely helpful to see in the console which exudyn version is built, and to see a progress during compilation ... The same would be nice for TestModel and Example runs (in quiet case). For the test suite, after the run finishes with python tools/exudev test --env venvExuP313 it outputs a lot of text =\> should be the quiet case by default. Furthermore, the log file for the testsuite has, since about version 1.12.366, approx. 260000 lines after TESTMODEL 138 parameterConversionTest.py which is unacceptable (User ERRORs =\> we need a solution (turn off by environment setting/config.special flag, etc.)' revision2026b step RG10.22
+  - **notes:** Quiet runs: exudev build names the Exudyn version and counts the compiled files in one line; the test suite and the examples count the models in one line and end with their summary; exudyn.special.exceptions.writeErrorsToLogFile keeps caught errors out of the log (the test suite log: 7000 instead of 266000 lines)
+  - date resolved: **2026-10-07 18:19**, date raised: 2026-10-07
 - **1.12.443** `FIX` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` docs job of GitLab CI fails: the generated page of a new test model was not committed (#2894)
   - description: GitLab docs job on ca70704f (tmp/gitlabRunsFailed/output.txt): docs/generated/testModels/testModelsIndex.md:7: WARNING: toctree contains reference to nonexisting document 'docs/generated/testModels/fileHeaderThreadsTest' - with -W one warning fails the build. The page was generated with \#1450 but left untracked (git add -u adds no new files); regenerate.py reported it as a tier 2 warning only. Fix: commit the page; regenerate.py --check fails for a new generated file git does not know. revision2026b step RG10.21
   - **notes:** The documentation builds from a fresh clone again: the page of the test model fileHeaderThreadsTest is committed, and the regeneration check fails for a newly generated page that is not in git

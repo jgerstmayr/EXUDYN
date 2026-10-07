@@ -875,7 +875,7 @@ def RunExampleInProcess(exampleFileName, examplesDirectory, outputDirectory='', 
 #%%******************************************************************************************************
 def RunExamplesInParallel(exampleFileNames, examplesDirectory, outputDirectory,
                           numberOfProcesses=0, printProgress=True, timeout=60, solverTimeout=1,
-                          quietMode=True):
+                          quietMode=True, compactProgress=False):
     """
     Run the examples in parallel, each in its own interpreter.
 
@@ -905,7 +905,10 @@ def RunExamplesInParallel(exampleFileNames, examplesDirectory, outputDirectory,
                                 timeout=timeout, solverTimeout=solverTimeout,
                                 quietMode=quietMode)
         finished[0] += 1
-        if printProgress:
+        if printProgress and compactProgress:
+            ProgressLine(finished[0], len(exampleFileNames), 'example ' + exampleFileName
+                         + (' *FAILED*' if r['failed'] else ''))
+        elif printProgress:
             print('  finished {:3d}/{:3d}: {:<46s}{:6.2f}s{}'.format(
                   finished[0], len(exampleFileNames), exampleFileName, r['seconds'],
                   ' (timeout, was solving)' if r['timedOut'] and not r['failed'] else
@@ -956,17 +959,31 @@ finally:
 
 
 #%%******************************************************************************************************
-def ExecModel(fileName):
+class PrintToLog:
+    """sys.stdout of a model in a quiet run: what it prints goes where exu.Print goes - into the log, and to the
+    console only if exudyn.config.printToConsole is set (#2895)"""
+    def write(self, text):
+        import exudyn as exu                                                   # noqa: PLC0415
+        exu.Print(text, end='')
+        return len(text)
+
+    def flush(self):
+        pass
+
+
+def ExecModel(fileName, quiet=False):
     """execute a test model as when it runs alone (#2875): in a fresh module that is __main__ while it runs - so a name
     the model uses without importing it raises instead of being found among the names of the runner or of an earlier
-    model, and pickle finds the model's functions in __main__"""
+    model, and pickle finds the model's functions in __main__; quiet: its print() goes into the log (#2895)"""
+    import contextlib
     import types
     module = types.ModuleType('__main__')
     module.__file__ = fileName
     previous = sys.modules.get('__main__')
     sys.modules['__main__'] = module
     try:
-        exec(open(fileName, encoding='utf8').read(), module.__dict__)
+        with contextlib.redirect_stdout(PrintToLog()) if quiet else contextlib.nullcontext():
+            exec(open(fileName, encoding='utf8').read(), module.__dict__)
     finally:
         sys.modules['__main__'] = previous
 
@@ -1034,8 +1051,22 @@ def RunModelInProcess(fileName, solutionDirectory, invalidResult, timeout=1800,
 
 
 #%%******************************************************************************************************
+def ProgressLine(count, total, text):
+    """one console line rewritten in place, '[ 23/170  13%] text', for the quiet runs; the line
+    of the last one ends with a line feed (#2895)
+
+    Args:
+        count: how many are done
+        total: how many there are
+        text: what was done last
+    """
+    line = '[{:3d}/{:3d} {:3d}%] {}'.format(count, total, int(100*count/max(1, total)), text)
+    print('\r' + line[:78].ljust(78), end='\n' if count >= total else '', flush=True)
+
+
+#%%******************************************************************************************************
 def RunModelsInParallel(fileNames, solutionDirectory, invalidResult, numberOfProcesses=0,
-                        printProgress=True, timeout=1800):
+                        printProgress=True, timeout=1800, compactProgress=False):
     """
     Run the test models in parallel, each in its own interpreter.
 
@@ -1052,6 +1083,7 @@ def RunModelsInParallel(fileNames, solutionDirectory, invalidResult, numberOfPro
             mostly compete for the same cores
         printProgress: write one line per finished model to the real console
         timeout: seconds per model
+        compactProgress: with printProgress, one line rewritten in place instead (quiet runs)
 
     Returns:
         dict: file name -> dict as returned by RunModelInProcess
@@ -1067,7 +1099,9 @@ def RunModelsInParallel(fileNames, solutionDirectory, invalidResult, numberOfPro
     def Run(fileName):
         r = RunModelInProcess(fileName, solutionDirectory, invalidResult, timeout=timeout)
         finished[0] += 1
-        if printProgress:
+        if printProgress and compactProgress:
+            ProgressLine(finished[0], len(fileNames), 'test model ' + fileName)
+        elif printProgress:
             print('  finished {:3d}/{:3d}: {:<46s}{:6.2f}s'.format(
                   finished[0], len(fileNames), fileName, r['seconds']), flush=True)
         return r

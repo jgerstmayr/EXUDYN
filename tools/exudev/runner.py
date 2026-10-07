@@ -46,7 +46,7 @@ class Step:
     carry a 'note' that says in words what it will do, because --dry-run cannot know the answer yet."""
 
     def __init__(self, label, argv=None, cwd=None, env=None, check=True, resolve=None, note=None,
-                 verdict=None, action=None):
+                 verdict=None, action=None, lineFilter=None):
         self.label   = label
         self.argv    = argv
         self.cwd     = cwd
@@ -59,6 +59,9 @@ class Step:
         self.action  = action            #callable() -> return code, for work that is not a process
                                          #(deleting build directories); 'note' describes it for
                                          #--dry-run, which must never perform it
+        self.lineFilter = lineFilter     #object with Line(text) -> text to print or None, and Done();
+                                         #the output is read line by line and only that is shown, the
+                                         #last lines are shown when the step fails (#2895)
 
 
 #%%******************************************************************************************************
@@ -349,8 +352,11 @@ def RunSteps(steps, options):
         environment.update(step.env)
 
         try:
-            completed = subprocess.run(argv, cwd=step.cwd, env=environment)
-            returnCode = completed.returncode
+            if step.lineFilter is not None:
+                returnCode = RunFiltered(argv, step.cwd, environment, step.lineFilter)
+            else:
+                completed = subprocess.run(argv, cwd=step.cwd, env=environment)
+                returnCode = completed.returncode
         except KeyboardInterrupt:
             print('')
             print('*** interrupted during: ' + step.label)
@@ -383,6 +389,37 @@ def RunSteps(steps, options):
         return 2
 
     return 0
+
+
+#%%******************************************************************************************************
+def RunFiltered(argv, cwd, environment, lineFilter, tailLength=60):
+    """Run a command whose output is read line by line: what lineFilter.Line returns is printed (a
+    text starting with a carriage return rewrites the current line), and if the command fails, its
+    last tailLength lines are printed, which is where a compiler error is (#2895)."""
+    import collections                                                     # noqa: PLC0415
+    tail = collections.deque(maxlen=tailLength)
+    process = subprocess.Popen(argv, cwd=cwd, env=environment, stdout=subprocess.PIPE,
+                               stderr=subprocess.STDOUT, universal_newlines=True,
+                               encoding='utf-8', errors='replace', bufsize=1)
+    try:
+        for line in process.stdout:
+            line = line.rstrip('\r\n')
+            tail.append(line)
+            text = lineFilter.Line(line)
+            if text is not None:
+                sys.stdout.write(text if text.startswith('\r') else text + '\n')
+                sys.stdout.flush()
+        returnCode = process.wait()
+    except KeyboardInterrupt:
+        process.kill()
+        raise
+    lineFilter.Done()
+    if returnCode != 0:
+        print('')
+        print('--- the last ' + str(len(tail)) + ' lines of the output ---')
+        for line in tail:
+            print(line)
+    return returnCode
 
 
 #%%******************************************************************************************************

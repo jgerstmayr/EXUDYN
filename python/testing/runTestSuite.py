@@ -332,13 +332,17 @@ if TSScope.runTestExamples:
         print('running ' + str(TSScope.totalTests) + ' test models in parallel', flush=True)
         TSScope.parallelResults = testRunnerTools.RunModelsInParallel(
             TSScope.testFileList, TSScope.solutionDirectory, TSScope.invalidResult,
-            numberOfProcesses=TSScope.numberOfProcesses, printProgress=writeToConsole)
+            numberOfProcesses=TSScope.numberOfProcesses, printProgress=True,
+            compactProgress=not writeToConsole) #a line rewritten in place when quiet (#2895)
 
     TSScope.testExamplesCnt = 0
     for TSScope.file in TSScope.testFileList:
         import platform #if platform is overwritten
         
         TSScope.name = TSScope.file #.split('.')[0] #without '.py'
+        exu.config.printToConsole = writeToConsole #a model that switched it on does not open the console for the rest (#2895)
+        if not writeToConsole and not TSScope.parallel:
+            testRunnerTools.ProgressLine(TSScope.testExamplesCnt + 1, TSScope.totalTests, 'test model ' + TSScope.file)
         exu.Print('\n\n******************************************')
         exu.Print('  START TESTMODEL ' + str(TSScope.testExamplesCnt) + ' ("' + TSScope.file + '"):')
         exu.Print('******************************************')
@@ -373,7 +377,7 @@ if TSScope.runTestExamples:
                     TSScope.missingPackage = testRunnerTools.MissingTestsExtraPackage(TSScope.modelRun['output'])
             else:
                 #a namespace of its own, as when the model runs alone: a name it does not import is an error (#2875)
-                testRunnerTools.ExecModel(TSScope.file)
+                testRunnerTools.ExecModel(TSScope.file, quiet=not writeToConsole)
         except Exception as e:
             TSScope.missingPackage = testRunnerTools.MissingTestsExtraPackage(repr(e) + str(e))
             exu.Print('TESTMODEL ' + str(TSScope.testExamplesCnt) + ' ("' + TSScope.file + '") raised exception:\n'+str(e))
@@ -481,6 +485,9 @@ if TSScope.runMiniExamples:
 
     for file in miniExamplesFileList:
         name = file
+        exu.config.printToConsole = writeToConsole #(#2895)
+        if not writeToConsole:
+            testRunnerTools.ProgressLine(testExamplesCnt + 1, len(miniExamplesFileList), 'mini example ' + file)
         exu.Print('\n\n******************************************')
         exu.Print('  START MINI EXAMPLE ' + str(testExamplesCnt) + ' ("' + file + '"):')
         SC.Reset()
@@ -491,7 +498,7 @@ if TSScope.runMiniExamples:
         fileDir = '../MiniExamples/'+file
         miniTimeStart = time.perf_counter()
         try:
-            testRunnerTools.ExecModel(fileDir) #as when it runs alone (#2875)
+            testRunnerTools.ExecModel(fileDir, quiet=not writeToConsole) #as when it runs alone (#2875)
         except Exception as e:
             exu.Print('MINI EXAMPLE ' + str(testExamplesCnt) + ' ("' + file + '") raised exception:\n'+str(e))
             print('MINI EXAMPLE ' + str(testExamplesCnt) + ' ("' + file + '") raised exception:\n'+str(e), flush=True)
@@ -612,6 +619,8 @@ else:
               'performUnitTests switch')
     # localFileName += '-nocpp'
 
+#the overview tables are for the log; a quiet run ends with the summary above (#2895)
+exu.config.printToConsole = writeToConsole
 #per-test overview at the end of the log: value, error, effective tolerance and runtime, one
 #fixed-width line each. Comparing these across machines is how SensitiveTests() has to be
 #populated (runTestSuiteRefSol.py), which is impractical while the numbers only appear in prose.
@@ -636,6 +645,7 @@ if TSScope.runMiniExamples:
         tolerances=miniExamplesTestTolList,
         times=miniExamplesTestTimeList,
         failedNames=miniExamplesFailedNames))
+exu.config.printToConsole = True
 
 #NOTE: the number of fails used to be appended to the file name as '-F<NN>'. It was dropped
 #2026-09-09: the exit code (--exit-code) now carries that information, and the varying name

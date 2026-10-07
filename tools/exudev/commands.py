@@ -88,6 +88,50 @@ def WarnAboutFastModule(pythonTags):
 
 
 #%%******************************************************************************************************
+class BuildProgress:
+    """The output of a quiet build: one line per C++ module that counts the compiled files up,
+    rewritten in place, the compiler errors, and the wheel that was created (#2895). setup.py
+    prints 'compile 012/133: ' (Windows) or 'completed 012/133: file.cpp' (Linux, macOS) for every
+    file; the counter starts again at 1 for the second module, exudynCPPfast."""
+
+    counterPattern = re.compile(r'(?:compile|completed)\s+(\d+)/(\d+)')
+
+    def __init__(self):
+        self.module = 0
+        self.lastCount = 0
+        self.open = False                #a progress line is waiting for its line feed
+
+    def Line(self, text):
+        match = self.counterPattern.search(text)
+        if match:
+            count, total = int(match.group(1)), int(match.group(2))
+            #the threads of the parallel compile may print 13 before 12: a new module is a counter
+            #that starts again at the beginning after the previous one came near its end
+            if self.module == 0 or (count <= 2 and self.lastCount >= total - 2):
+                if self.open:
+                    print('')
+                self.module += 1
+                self.lastCount = 0
+            self.lastCount = max(self.lastCount, count)
+            count = self.lastCount
+            self.open = True
+            name = 'exudynCPP' if self.module == 1 else 'exudynCPPfast'
+            return ('\rcompiling ' + name + ': ' + str(count).rjust(3) + '/' + str(total)
+                    + ' (' + str(int(100 * count / max(1, total))).rjust(3) + '%)'
+                    + (', linking' if count >= total else ''))
+        if re.search(r'\berror\b|Created wheel|Successfully built', text, re.IGNORECASE) \
+                and 'warning' not in text.lower():
+            prefix = '\n' if self.open else ''
+            self.open = False
+            return prefix + text.strip()
+        return None
+
+    def Done(self):
+        if self.open:
+            print('')
+            self.open = False
+
+
 def BuildEnvironment(options):
     """The setup.py switches as environment variables. setup.py reads them between pyproject.toml
     and the command line (setup.py:126-150), which is the layer the driver can reach through pip -
@@ -333,13 +377,14 @@ def Build(options):
     buildEnvironment = BuildEnvironment(options)
 
     for (pythonTag, environment) in targets:
-        wheelArgv = ['python', '-m', 'pip', 'wheel', '.', '-w', 'dist', '--no-deps']
-        if options.verbose:
-            wheelArgv += ['-v']
+        #'-v' always: pip shows the output of setup.py only with it, and the quiet build reads the
+        #counter of setup.py from there for its progress line (#2895)
+        wheelArgv = ['python', '-m', 'pip', 'wheel', '.', '-w', 'dist', '--no-deps', '-v']
 
-        steps += [Step('build the wheel for ' + environment,
+        steps += [Step('build the wheel of Exudyn ' + runner.RepositoryVersion() + ' for ' + environment,
                        argv=runner.InEnvironment(environment, wheelArgv, options),
-                       cwd=root, env=buildEnvironment)]
+                       cwd=root, env=buildEnvironment,
+                       lineFilter=None if options.verbose else BuildProgress())]
 
         steps += [WheelContentCheckStep(pythonTag, environment, options)]
 

@@ -163,13 +163,14 @@ if True:
     
     # constrainedCoordinates=[]
     
+    printToConsole = exu.config.printToConsole
     exu.config.printToConsole = False
     compeig=mbs.ComputeODE2Eigenvalues(simulationSettings, useSparseSolver=True, 
                                 numberOfEigenvalues= nRigidModes+nModes, 
                                 constrainedCoordinates=constrainedCoordinates,
                                 convert2Frequencies= False)
 
-    exu.config.printToConsole = True
+    exu.config.printToConsole = printToConsole
     #print('eigvalues=',np.sqrt(compeig[0][nRigidModes:]))
     print('# '+str(nElements)+' element(s):',list(np.sqrt(compeig[0][nRigidModes:]).round(6)))
 

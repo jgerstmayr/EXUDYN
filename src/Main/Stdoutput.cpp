@@ -506,7 +506,10 @@ void PyError(std::string error_msg, PyErrorType errorType)
 	//would still say it, which is what floods the terminal of a GUI or a parameter variation that
 	//handles its own errors. The log file is a different matter: on a long unattended run nothing
 	//else records that this happened.
-	outputBuffer.WriteToFileOnly(ErrorMessageBlock("User ERROR", error_msg, fileName, lineNumber));
+	if (pySpecial.exceptions.writeErrorsToLogFile) //off for a run that provokes and catches thousands (#2895)
+	{
+		outputBuffer.WriteToFileOnly(ErrorMessageBlock("User ERROR", error_msg, fileName, lineNumber));
+	}
 
 	//WHAT IS THROWN CARRIES THE DETAIL (#2527). Until now it was the fixed
 	//sentence "Exudyn: parsing of Python file terminated due to Python (user) error", identical for
@@ -528,7 +531,10 @@ void SysError(std::string error_msg, PyErrorType errorType)
 	PyGetCurrentFileInformation(fileName, lineNumber);
 
 	//file only, for the reasons written at the same place in PyError (#2530)
-	outputBuffer.WriteToFileOnly(ErrorMessageBlock("SYSTEM ERROR", error_msg, fileName, lineNumber));
+	if (pySpecial.exceptions.writeErrorsToLogFile) //#2895
+	{
+		outputBuffer.WriteToFileOnly(ErrorMessageBlock("SYSTEM ERROR", error_msg, fileName, lineNumber));
+	}
 	//an Exudyn invariant broke: exudyn.InternalError, which IS a RuntimeError, so an existing
 	//"except RuntimeError" keeps catching it while the type now says "please report this" (#2521).
 	//The message goes with it: an internal error that reaches a developer as a fixed sentence is a

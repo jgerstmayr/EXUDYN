@@ -8,10 +8,10 @@ Every entry carries the **type** of the issue, then its **priority** and its **e
 
 General information on current version:
 
-- Exudyn version = 1.12.443.dev1
+- Exudyn version = 1.12.444.dev1
 - last change = 2026-10-07
-- Number of issues = 2895
-- Number of resolved issues = 2757 (443 in current version)
+- Number of issues = 2897
+- Number of resolved issues = 2758 (444 in current version)
 
 ## Resolved issues and resolved bugs before version 1.12
 
@@ -8100,3 +8100,6 @@ The following list contains the issues which have been **RESOLVED** in the accor
 
 ## Known bugs
 
+- <span class="textred">`BUG`</span> `LOW EFF` `raised by: Claude-JG` InverseKinematicsNumericalExample.py fails: InverseKinematicsNumerical.Solve returns None for the joint values (#2896)
+  - description: Found by the examples run of 1.12.443 (2026-10-07): TypeError: unsupported operand type(s) for \*: 'NoneType' and 'float' in np.round(sol\[0\], 3) at line 72 - the solution of myIkine.Solve(T3, q0=...) is None. The example passed in the runs up to 1.12.279; the robotics classes were changed to exu.HT in between (\#2821). Not investigated yet.
+  - date raised: 2026-10-07

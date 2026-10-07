@@ -52,9 +52,9 @@ probes = [('neg', -1), ('zero', 0), ('int2', 2), ('real', 2.5), ('str', 'x'), ('
 itemKinds = ['Node', 'Object', 'Marker', 'Load', 'Sensor']
 
 #about 38000 probes end in an error, and every C++ user error is printed and written to the log
-#file (7 MB); both are switched off while probing. runTestSuite.py executes this file in its own
-#namespace, where logFileName names the suite's log, which is reopened afterwards
-suiteLogFileName = globals().get('logFileName', '')
+#file (260000 lines); both are switched off while probing (#2895)
+writeErrorsToLogFile = exu.special.exceptions.writeErrorsToLogFile
+exu.special.exceptions.writeErrorsToLogFile = False
 #every C++ user error also asks inspect.getframeinfo for file and line (Stdoutput.cpp,
 #PyGetCurrentFileInformation), which scans sys.modules and reads the source: inside the suite,
 #after scipy, matplotlib and ngsolve were imported, probing took 9 s instead of 1 s (#2423).
@@ -63,8 +63,6 @@ inspectGetFrameInfo = inspect.getframeinfo
 inspect.getframeinfo = lambda frame, context=1: type('FrameInfo', (), {'filename': frame.f_code.co_filename})
 printToConsole = exu.config.printToConsole
 exu.config.printToConsole = False
-if suiteLogFileName:
-    exu.SetWriteToFile(filename='', flagWriteToFile=False, flagAppend=False)
 
 def Outcome(function):
     """exception class name, or type/shape/value of what function() returns"""
@@ -237,8 +235,7 @@ for rootName, root in [('SimulationSettings', exu.SimulationSettings()), ('Visua
 #++++++++++++++++++++++++++++++++++++++++++++++++++
 inspect.getframeinfo = inspectGetFrameInfo
 exu.config.printToConsole = printToConsole
-if suiteLogFileName:
-    exu.SetWriteToFile(filename=suiteLogFileName, flagWriteToFile=True, flagAppend=True)
+exu.special.exceptions.writeErrorsToLogFile = writeErrorsToLogFile
 
 #++++++++++++++++++++++++++++++++++++++++++++++++++
 #text: one block per distinct outcome row, followed by the parameters that share it, one line

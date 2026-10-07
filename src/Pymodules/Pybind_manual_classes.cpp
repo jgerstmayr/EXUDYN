@@ -556,6 +556,7 @@ void Init_Pybind_manual_classes(py::module& m) {
 		.def_readwrite("dictionaryNonCopyable", &PySpecialExceptions::dictionaryNonCopyable)
 		.def_readwrite("dictionaryVersionMismatch", &PySpecialExceptions::dictionaryVersionMismatch)
 		.def_readwrite("parameterRangeChecks", &PySpecialExceptions::parameterRangeChecks)
+		.def_readwrite("writeErrorsToLogFile", &PySpecialExceptions::writeErrorsToLogFile)
 
 		//representation:
 		.def("__repr__", [](const PySpecialExceptions& item) {

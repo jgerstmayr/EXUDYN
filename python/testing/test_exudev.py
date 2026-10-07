@@ -241,3 +241,18 @@ def testNewerPythonsAreAcceptedWhenNamedButNotInAll():
     assert runner.NormalizePythonVersions('all') == ['P310', 'P311', 'P312', 'P313', 'P314']
     with pytest.raises(SystemExit):
         runner.NormalizePythonVersions('317')
+
+
+#%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+def testTheQuietBuildCountsTheFilesOfEachModule():
+    """#2895: the counter of setup.py becomes one line per module; errors and the wheel are shown"""
+    progress = commands.BuildProgress()
+    assert progress.Line('Building wheel for exudyn (pyproject.toml): started') is None
+    assert 'exudynCPP:   1/134' in progress.Line('compile 001/134: ')
+    assert 'exudynCPP:  13/134' in progress.Line('completed 013/134: CObject.cpp')
+    assert 'exudynCPP:  13/134' in progress.Line('compile 012/134: '), 'a counter printed late does not go back'
+    assert ', linking' in progress.Line('compile 134/134: ')
+    assert 'exudynCPPfast:   1/134' in progress.Line('compile 001/134: ')
+    assert 'error C2065' in progress.Line('src/x.cpp(3): error C2065: undeclared identifier')
+    assert progress.Line('src/x.cpp(3): warning C4100: unreferenced parameter') is None
+    assert 'Created wheel' in progress.Line('  Created wheel for exudyn: filename=exudyn-1.whl')

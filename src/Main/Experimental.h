@@ -109,6 +109,7 @@ public:
     bool dictionaryVersionMismatch;  //!< warn on version mismatch in SetDictionary(...)
     bool dictionaryNonCopyable;          //!< raise exception if things cannot be copied in GetDictionary(...)
     bool parameterRangeChecks;           //!< raise if an item or settings parameter violates its range (UReal, PInt, ...); false accepts any value
+    bool writeErrorsToLogFile;           //!< write the block of a user or system error into the log file of exudyn.SetWriteToFile (#2895)
 
     PySpecialExceptions()
     {
@@ -120,6 +121,7 @@ public:
         dictionaryVersionMismatch = true;
         dictionaryNonCopyable = true;
         parameterRangeChecks = true;
+        writeErrorsToLogFile = true;
     }
 
     //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -128,6 +130,7 @@ public:
         os << "  dictionaryVersionMismatch = " << dictionaryVersionMismatch << "\n";
         os << "  dictionaryNonCopyable = " << dictionaryNonCopyable << "\n";
         os << "  parameterRangeChecks = " << parameterRangeChecks << "\n";
+        os << "  writeErrorsToLogFile = " << writeErrorsToLogFile << "\n";
         os << "\n";
     }
 

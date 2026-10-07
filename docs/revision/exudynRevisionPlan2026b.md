@@ -1500,6 +1500,13 @@ ca70704f, forwarded by the maintainer)* **A new generated page that git does not
 the page of the test model `fileHeaderThreadsTest` had not been committed, so the committed index referred to a missing
 page; it is committed, and `tools/regenerate.py --check` refuses such a file instead of warning.
 
+<a id="rg10-22"></a>
+**RG10.22** **DONE 2026-10-07** (#2895) — [log](exudynRevisionLog2026b.md#rg10-22) *(group RG10; maintainer 2026-10-07)*
+**What a quiet run shows, and a log of a sane size**: `exudev build` names the version it builds and counts the compiled
+files in one line; the test suite and the examples count the models in one line and end with the summary; the test
+suite log is 7000 lines instead of 266000 - `exudyn.special.exceptions.writeErrorsToLogFile`, off while
+`parameterConversionTest.py` provokes its 38000 errors.
+
 ## RG11 — Misc
 
 What belongs to no group yet. Three of a kind here are a reason to propose a group of their own.

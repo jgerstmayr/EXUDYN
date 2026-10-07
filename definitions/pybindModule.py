@@ -345,6 +345,8 @@ pb.DefDataAccess('special.exceptions.dictionaryVersionMismatch','if True (=defau
                         dataType='bool', isTopLevel = True)
 pb.DefDataAccess('special.exceptions.dictionaryNonCopyable','if True (=default), GetDictionary(...) raises an error if a value cannot be copied into the dictionary',
                         dataType='bool', isTopLevel = True)
+pb.DefDataAccess('special.exceptions.writeErrorsToLogFile','if True (=default), the message of a user or system error is also written into the log file of exudyn.SetWriteToFile(...), as a record of an unattended run; set False for a run that provokes and catches many errors, whose exceptions carry the same message',
+                        dataType='bool', isTopLevel = True)
 pb.DefDataAccess('special.exceptions.parameterRangeChecks','if True (=default), writing an item or settings parameter outside its range (e.g. a negative mass or a non-positive number of steps) raises an error, on every write path (item classes, dictionaries, SetObjectParameter, ...); set False to accept any value, e.g. if a range limit turns out to be wrong',
                         dataType='bool', isTopLevel = True)
 

@@ -16623,3 +16623,35 @@ the view0.window.globalFontSize => add issues/step and fix it now if possible.")
   `exudev generate --all-checks` stops; the committed pages refer to such a page, and a fresh clone has a dangling
   reference. Tier 1 had this already: a file not in `HEAD` is drift there.
 - The page is committed.
+
+<a id="rg10-22"></a>
+### RG10.22 — the quiet runs, and the test suite log (2026-10-07, #2895)
+
+*(Maintainer 2026-10-07: "for the exudev build command, it would be extremely helpful to see in the console which exudyn
+version is built, and to see a progress during compilation - if possible (like with tqdm or just the % counting up).
+The same would be nice for TestModel and Example runs (in quiet case). For the test suite, after the run finishes with
+python tools/exudev test --env venvExuP313 It outputs a lot of text. => should be the quiet case by default.
+Furthermore, the log file for the testsuite has, since about version 1.12.366, approx. 260000 lines after TESTMODEL 138
+parameterConversionTest.py which is unacceptable. (User ERRORs => we need a solution (turn off by environment
+setting/config.special flag, etc.)")*
+
+- **The log**: `parameterConversionTest.py` switched the log off with `exu.SetWriteToFile(...)` when it found the
+  suite's `logFileName` among its globals - which it no longer does since every model runs in a namespace of its own
+  (#2875, 1.12.366). So 38000 caught user errors were written as blocks into the log (266211 lines). New:
+  `exudyn.special.exceptions.writeErrorsToLogFile` (default True; `PyError` and `SysError` in `Stdoutput.cpp`), which
+  the test model switches off while probing and restores. The log of the suite: **7010 lines**.
+- **`exudev test`** printed 2691 lines although it runs `-quiet`: the overview tables at the end went to the console
+  (now to the log only), three test models switched `exu.config.printToConsole` back to True instead of to its
+  previous value (`ANCFBeamEigTest`, `ANCFThinPlateRevisionTest`, `typeInformationTest`; the runner also resets it
+  before every model), and `print()` of the models went to the console (a quiet run now passes it to `exu.Print`,
+  into the log: `testRunnerTools.PrintToLog`, `ExecModel(..., quiet=True)`). Now **40 lines**: the header, one
+  progress line `[ 23/174  13%] test model ...` rewritten in place (`testRunnerTools.ProgressLine`) for the models and
+  for the mini examples, the summary.
+- **`exudev examples`**: the same progress line in parallel and serial runs instead of one line per example (58 lines).
+- **`exudev build`**: the step is called "build the wheel of Exudyn 1.12.443.dev1 for venvExuP313"; pip runs with `-v`,
+  and the output is read line by line (`runner.RunFiltered`, `commands.BuildProgress`): the counter that setup.py
+  writes per file becomes `compiling exudynCPP: 45/134 ( 33%)`, ending with `, linking`; a second line for
+  `exudynCPPfast`; compiler errors and the created wheel are shown; if the build fails, its last 60 lines are printed.
+  `-v` (`exudev -v build`) shows everything as before.
+- Found by the examples run: `InverseKinematicsNumericalExample.py` fails (`Solve` returns None) - #2896, not part of
+  this step.

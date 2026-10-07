@@ -256,7 +256,8 @@ if __name__ == '__main__': #include to avoid potential problems with multiproces
         results = testRunnerTools.RunExamplesInParallel(
             runList, dirPath, '../logs/tmp/exampleOutput',
             numberOfProcesses=numberOfProcesses, timeout=exampleTimeout,
-            solverTimeout=solverTimeout, quietMode=quietMode)
+            solverTimeout=solverTimeout, quietMode=quietMode,
+            compactProgress=quietMode) #a line rewritten in place when quiet (#2895)
 
         for testExamplesCnt, exampleFileName in enumerate(runList):
             r = results[exampleFileName]
@@ -284,7 +285,7 @@ if __name__ == '__main__': #include to avoid potential problems with multiproces
             exu.Print(s)
             if not writeToConsole:
                 if quietMode and not writeFileNames:
-                    print(' Ex'+str(testExamplesCnt),end='',sep='',flush=True)
+                    testRunnerTools.ProgressLine(testExamplesCnt + 1, len(runList), 'example ' + exampleFileName)
                 else:
                     print(s,flush=True)
             exu.Print('******************************************')

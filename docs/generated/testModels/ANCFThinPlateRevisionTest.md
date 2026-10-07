@@ -175,12 +175,13 @@ class TestANCFThinPlateElement(unittest.TestCase):
         """useReducedOrderIntegration = 3 must stop the solver with an error."""
         systemContainer, mbs, built, tipNodes = CreateStrip(numberOfElements=2, integrationMode=3)
         mbs.Assemble()
+        printToConsole = exu.config.printToConsole
         exu.config.printToConsole = False    #the expected error message would clutter the test output
         try:
             with self.assertRaises(ValueError):
                 mbs.SolveStatic(StaticSettings())
         finally:
-            exu.config.printToConsole = True
+            exu.config.printToConsole = printToConsole
 
     def testMaterialCurvatureOfStretchedArc(self):
         """Material curvature measure: a strip placed exactly on a circular arc of radius rho and stretched by
