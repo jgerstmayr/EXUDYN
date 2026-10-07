@@ -39,6 +39,8 @@ Exudyn
 
 **A flexible multibody dynamics systems simulation code with Python and C++**
 
+**Developers**, after cloning: start with `docs/dev/GETTING_STARTED.md <docs/dev/GETTING_STARTED.md>`_ - from a clone to a build and a passing test run.
+
 **Since version 1.11.0, Exudyn is heavily developed with Anthropic's Claude Code**: code,
 workflows, documentation, tests and examples.
 
@@ -46,7 +48,7 @@ workflows, documentation, tests and examples.
 .. the line below is written by tools/issueTracker/issueTracker.py; everything else in this
 .. file is hand-written (decision D11)
 
-+  Exudyn version = 1.12.436.dev1 (Metheney)
++  Exudyn version = 1.12.437.dev1 (Metheney)
 +  **University of Innsbruck**, Department of Mechatronics, Innsbruck, Austria
 
 .. |pic7| image:: docs/figures/ExudynLOGO1.9.jpg

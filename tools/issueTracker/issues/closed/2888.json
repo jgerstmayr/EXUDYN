@@ -1,0 +1,16 @@
+{
+  "number": 2888,
+  "title": "GETTING_STARTED.md: exudev started as 'python -m exudev', which fails; the README does not point to the page",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "DOCU",
+  "effort": "LOW",
+  "description": "The maintainer, 2026-10-07: 'python -m exudev build --env venvExuP313 => this is I believe wrong, it should be: python tools/exudev build ... Please check all commands in the getting started. It also should really help when starting up. The getting started document should also be linked from the README.md and README.rst in the repo root. Think about, if somebody clones the gitlab repo, the only info one has is the README.' revision2026b step RG3.40",
+  "dateRaised": "2026-10-07",
+  "deadline": "2027-04-05",
+  "dateResolved": "2026-10-07 14:09",
+  "resolvedAuthor": "Claude-JG",
+  "file": "docs/dev/GETTING_STARTED.md",
+  "releaseNotes": "The developer getting-started page starts the driver as python tools/exudev (python -m exudev fails without tools/ on the path), says what to do when conda is not found, and README.md and README.rst point to it",
+  "resolvedInVersion": "1.12.437"
+}

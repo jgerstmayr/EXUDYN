@@ -119,7 +119,7 @@ agreed, this is what it has to arrive as:
 2. commit messages in the form above, naming the agreed issue;
 3. **no generated file edited by hand**, and `tools/regenerate.py` run if you changed anything
    under `definitions/`;
-4. the **test suite passing**: `python -m exudev test`, and `pytest python/testing` if you touched
+4. the **test suite passing**: `python tools/exudev test`, and `pytest python/testing` if you touched
    Python;
 5. whatever documentation the change makes wrong, corrected in the same commit — the four gates in
    [WORKFLOW.md](WORKFLOW.md) §8 are what a pull request is checked against.

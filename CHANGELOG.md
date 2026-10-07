@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.12 | Metheney | 341 | 1.12.436 |
+| 1.12 | Metheney | 342 | 1.12.437 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
 | 1.9 | Krall | 235 | 1.9.234 |
@@ -29,6 +29,10 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.12 - Metheney (current)
 
+- **1.12.437** `DOCU` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` GETTING\_STARTED.md: exudev started as 'python -m exudev', which fails; the README does not point to the page (#2888)
+  - description: The maintainer, 2026-10-07: 'python -m exudev build --env venvExuP313 =\> this is I believe wrong, it should be: python tools/exudev build ... Please check all commands in the getting started. It also should really help when starting up. The getting started document should also be linked from the README.md and README.rst in the repo root. Think about, if somebody clones the gitlab repo, the only info one has is the README.' revision2026b step RG3.40
+  - **notes:** The developer getting-started page starts the driver as python tools/exudev (python -m exudev fails without tools/ on the path), says what to do when conda is not found, and README.md and README.rst point to it
+  - date resolved: **2026-10-07 14:09**, date raised: 2026-10-07
 - **1.12.436** <span class="textred">`BUG`</span> `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` Record frames in the SolutionViewer writes no images, at random: saveImageAsData not initialized (#2887)
   - description: Found by the GUI check agent on Ubuntu over xrdp (S6, HEAD c3327c06): RenderViewDataVSC::saveImageAsData was never initialized and InitializeRenderState did not reset it; with a nonzero value SaveSceneToFile took the RedrawAndGetImage() path and returned before the directory or the file was written - no images folder, no error, only the message of the first frame. Random by nature (guiManualCheckModel.py failed 2/2, a minimal script worked). Second: in data mode SaveImage built a file name, counted the frame and printed it, so a RedrawAndGetImage() before a recording used up frame00000 and announced a file that never existed. revision2026b step RG2.4.5.1
   - **notes:** Record frames in the SolutionViewer writes its images every time: the flag that keeps a frame in memory for RedrawAndGetImage() is initialized, and RedrawAndGetImage() no longer uses up a frame number

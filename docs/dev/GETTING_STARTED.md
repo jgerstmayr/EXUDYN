@@ -57,7 +57,8 @@ Co-developers at the institute clone the **internal** repository instead, which 
 branch and the full history; ask the maintainer for the URL. The GitHub clone is the right one for
 everybody else. Which branch is which, and what may be pushed where, is in
 [WORKFLOW.md](WORKFLOW.md) §4 — the short version is that **nothing reaches GitHub before the
-1.13 release**.
+1.13 release**. Until then a GitHub clone is the 1.11 tree, which has neither this page nor the
+`tools/exudev` driver it uses.
 ```
 
 A directory named after the repository is fine anywhere; the project itself puts no constraint on
@@ -70,8 +71,13 @@ This is where the `venvExuP313` that the rest of the documentation names comes f
 ```bash
 conda create -n venvExuP313 python=3.13
 conda activate venvExuP313
-pip install --group dev            #needs pip >= 25.1; the dependency groups of pyproject.toml
+python -m pip install --upgrade pip    #--group needs pip >= 25.1
+pip install --group dev                #the dependency groups of pyproject.toml, in the repository root
 ```
+
+Run the commands of this page from the **repository root**, in a terminal where this environment is
+active: on Windows the *Anaconda Prompt* (or a shell after `conda init`), elsewhere any shell after
+`conda init`.
 
 That one environment covers the generators, the documentation build, the checking tools and the
 test suite. The per-version environments `venvP310` … `venvP314` exist only for the release test
@@ -114,12 +120,23 @@ through subdirectories of `include/` (#2619).
 ## Build once
 
 ```bash
-python -m exudev build --env venvExuP313
+python tools/exudev build --env venvExuP313
 ```
 
 About a minute. It builds the wheel, installs it into that environment and checks that the
 installed version is the one just built. If it fails, or if you want to know what it does,
 {ref}`sec-dev-build` is the page.
+
+`exudev` is the project's driver for building, testing and the documentation; it lives in
+`tools/exudev/` and is started as `python tools/exudev <command>` (on Windows `exudev <command>`
+works as well, through `exudev.bat` in the repository root). `python tools/exudev --help` lists the
+commands, and `-n` in front of a command prints what it would run without running it:
+`python tools/exudev -n build --env venvExuP313`.
+
+It runs each step in the named environment through conda. If it answers *conda installation not
+found*, the terminal is not a conda shell: open one, or set `EXUDYN_CONDA_ROOT` to the conda
+directory (the one containing `Scripts/` or `bin/`), or add `--no-conda` to use the Python that
+started it.
 
 Check it by hand:
 
@@ -131,11 +148,11 @@ python -m exudyn demo          #a small built-in model
 ## Run the tests once
 
 ```bash
-python -m exudev test --env venvExuP313
+python tools/exudev test --env venvExuP313
 ```
 
-About 25 seconds for 126 test models and 23 mini examples. **Run this before you believe anything
-else works.** It is the gate every commit passes, and a failure here on a fresh clone is a problem
+About 25 seconds for all test models and mini examples; it ends with `PASSED` or the list of what
+failed. **Run this before you believe anything else works.** It is the gate every commit passes, and a failure here on a fresh clone is a problem
 with the build or the environment, not with your change.
 
 The other suites — the examples, the performance models, `pytest` — and when each of them is

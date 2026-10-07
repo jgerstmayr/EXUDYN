@@ -606,6 +606,13 @@ are said once above the table, "Reached as `simulationSettings.timeIntegration.n
 already in the docs. The others: check - but ideally they can also be removed")* How a model is built, and what an
 error says (#855, #886, #888): all three were in the manual already.
 
+<a id="rg3-40"></a>
+**RG3.40** **DONE 2026-10-07** (#2888) — [log](exudynRevisionLog2026b.md#rg3-40) *(group RG3; maintainer 2026-10-07: "Please
+check all commands in the getting started. It also should really help when starting up ... if somebody clones the
+gitlab repo, the only info one has is the README")* **The getting-started page, checked command by command**:
+`python tools/exudev` instead of `python -m exudev` (also in BUILD.md, GIT.md, sphinxDocs.md), what to do when conda is
+not found, pip upgraded before `--group`, no stale counts; `README.md` and `README.rst` point to the page.
+
 ## RG4 — Implementation problems and bugs
 
 Problems that are real, reproducible, and too deep to fix in passing. They are recorded here

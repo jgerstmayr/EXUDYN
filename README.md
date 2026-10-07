@@ -3,6 +3,8 @@
 
 A flexible multibody dynamics systems simulation code with Python and C++
 
+**Developers**, after cloning: start with [docs/dev/GETTING_STARTED.md](docs/dev/GETTING_STARTED.md) - from a clone to a build and a passing test run.
+
 Exudyn is hosted on `Github <https://github.com/jgerstmayr/EXUDYN>`_ which provides full documentation, tutorial, examples, etc.
 
 See `License on github <https://github.com/jgerstmayr/EXUDYN/blob/master/LICENSE.txt>`_ .

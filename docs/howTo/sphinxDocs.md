@@ -8,7 +8,7 @@ The documentation is Sphinx, built from the repository root: `conf.py` and the h
 ## The short way
 
 ```powershell
-python -m exudev docs
+python tools/exudev docs
 ```
 
 That is the same build the CI runs: `sphinx-build -b html . _build -E -W --keep-going`, in the

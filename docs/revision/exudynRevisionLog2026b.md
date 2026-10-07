@@ -16455,3 +16455,29 @@ fixed, built and tested, then reverted here; please apply the following (and add
   after `SaveSceneToFile(viewID, "")` in data mode, before any file name. The other three flags of the struct
   (`zoomAllRequest`, `saveImage`, `saveImageOpenGL`) also got `= false` in the declaration, the same kind of member.
 - Tested by the agent on Ubuntu; here the build and the suites (no window can be opened in this session).
+
+<a id="rg3-40"></a>
+### RG3.40 — the getting-started page, checked command by command (2026-10-07, #2888)
+
+*(Maintainer 2026-10-07: "In GETTING_STARTED.md: python -m exudev build --env venvExuP313 => this is I believe wrong, it
+should be: python tools/exudev build --env venvExuP313. Please check all commands in the getting started. It also
+should really help when starting up. The getting started document should also be linked from the README.md and
+README.rst in the repo root. Think about, if somebody clones the gitlab repo, the only info one has is the README. Just
+one line to link to GETTING_STARTED.md is enough.")*
+
+Each command run, or dry-run with `-n`, from a shell without `PYTHONPATH`:
+
+- `python -m exudev ...`: **fails** - "No module named exudev"; `tools/` is not on the path. `python tools/exudev ...`
+  works (the directory has a `__main__.py`). Replaced in `GETTING_STARTED.md`, `BUILD.md` (2), `GIT.md`,
+  `howTo/sphinxDocs.md`; no other page had it.
+- `python tools/exudev build --env venvExuP313` / `test --env venvExuP313`: work where conda is found; outside a conda
+  shell they stop with *conda installation not found* - the page now says what to do (a conda shell,
+  `EXUDYN_CONDA_ROOT`, or `--no-conda`, which was checked), names `exudev.bat` for Windows, `--help` and `-n`.
+- `pip install --group dev` needs pip >= 25.1: `python -m pip install --upgrade pip` before it; run in the repository
+  root.
+- `python -m exudyn info` / `demo`: exist (`python -m exudyn --help`). `git config core.hooksPath tools/hooks` and
+  `python tools/setupLocalWorkspace.py`: the files exist.
+- "126 test models and 23 mini examples" removed (a count is wrong the next day, RG3.9); the suite ends with `PASSED`.
+- The GitHub note: until 1.13 a GitHub clone is the 1.11 tree, without this page and without `tools/exudev`.
+- `README.md` and `README.rst`: one line each, "Developers, after cloning: start with docs/dev/GETTING_STARTED.md",
+  as a relative link, which GitLab and GitHub resolve.

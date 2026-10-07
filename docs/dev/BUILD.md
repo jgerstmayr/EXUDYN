@@ -21,7 +21,7 @@ an accident, and it is one of the invariants (see [README.md](README.md)).
 Most of the time you do not type any of the platform commands below:
 
 ```powershell
-python -m exudev build --env venvExuP313
+python tools/exudev build --env venvExuP313
 ```
 
 builds the wheel, installs it into that environment and then **checks that the installed version is
@@ -208,7 +208,7 @@ For Python-level debugging, `python3 -m pdb myModel.py`.
 ## Cleaning up
 
 ```powershell
-python -m exudev clean          #the build directories and eggs of this platform; keeps dist/
+python tools/exudev clean          #the build directories and eggs of this platform; keeps dist/
 ```
 
 or by hand:
