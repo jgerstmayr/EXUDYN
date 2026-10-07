@@ -10,7 +10,7 @@ General information on current version:
 
 - Exudyn version = 1.12.439.dev1
 - last change = 2026-10-07
-- Number of issues = 2890
+- Number of issues = 2891
 - Number of resolved issues = 2753 (439 in current version)
 
 ## Resolved issues and resolved bugs before version 1.12
@@ -7568,6 +7568,9 @@ The following list contains the issues which have been **RESOLVED** in the accor
 
 ## Open issues
 
+- `CHECK` `MEDIUM EFF` `raised by: Claude-JG` render window texts look awkward on Ubuntu: two test settings, display scaling on linux and mipmaps for the bitmap font (#2890)
+  - description: The maintainer, 2026-10-07: 'as I have now also the build config for Ubuntu: I could test now improvements for font scaling (or fonts in general - they look awkward on ubuntu). If you include a setting (like for activating font scaling on linux, or coupling it temporarily for macos), I could test, if it works now.' Two settings to test, default off: general.useDisplayScaleFactorOnLinux (glfwGetWindowContentScale on linux, \#2277) and general.useTextMipmaps (the 64-pixel characters of the bitmap font minified with mipmaps instead of 2x2 linear sampling). After the tests: defaults decided, or the settings removed. revision2026b step RG6.13
+  - date raised: 2026-10-07
 - `CHANGE` `HIGH EFF` `raised by: Claude-JG` joints and their Jacobians on homogeneous transformations (#2884)
   - description: The constraint equations of the joints become functions of the relative transformation H0^-1 H1 of the two marker frames, and their Jacobians follow systematically from the relative twist - one implementation for JointGeneric, JointRevoluteZ, JointPrismaticX, the 2D joints and the rolling disc instead of one each. Successor of \#2745 (the marker interface of RG14.2). revision2026b step RG14.3
   - date raised: 2026-10-07

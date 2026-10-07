@@ -16506,3 +16506,28 @@ the terminal.")*
   both commands - `pip install ffmpeg-python` alone gives the package without the program.
 
 *(Maintainer, later the same day: "ffmpeg conda install: also tested on windows, by the way." - the GUI chapter says checked on all three.)*
+
+<a id="rg6-13"></a>
+### RG6.13 — two test settings for the texts of the render window (2026-10-07, #2890)
+
+*(Maintainer 2026-10-07: "as I have now also the build config for Ubuntu: I could test now improvements for font scaling
+(or fonts in general - they look awkward on ubunut). If you include a setting (like for activating font scaling on
+linux, or coupling it temporarily for macos), I could test, if it works now.")*
+
+What the code does: the texts are textured quads of a bitmap font whose characters are stored with **64 pixels**
+(`characterBitmap.h`); a text of `window.globalFontSize = 12` is drawn at 12 pixels times the display scaling, with
+`GL_LINEAR` and **no mipmaps** - a minification by about 5, where linear filtering samples 2x2 of the 64-pixel texels and
+thin strokes break up. On Windows and macOS the display scaling (`glfwGetWindowContentScale`, e.g. 1.5 or 2) makes the
+text larger and the minification smaller; on Linux the call is compiled out ("crashes on Ubuntu18.04 and 20.04"), so the
+texts are smallest and most minified there - consistent with "awkward on Ubuntu".
+
+- `general.useTextMipmaps` (all platforms): `CreateFontTextures` uploads the mipmap levels down to 1x1, each the 2x2
+  average of the one before (`UploadTextureMipmaps`; OpenGL 1.1 has no generator and GLU is not linked), and minifies
+  with `GL_LINEAR_MIPMAP_LINEAR`.
+- `general.useDisplayScaleFactorOnLinux`: on Linux, `glfwGetWindowContentScale` and its callback, used as on the other
+  platforms when `useWindowsDisplayScaleFactor` is on, multiplied with `linuxDisplayScaleFactor`; a verbose renderer
+  prints the scale it read. GLFW 3.3 is what Ubuntu 24.04 ships (#2277).
+- Both off by default and read when the renderer starts; compiled and the suites run on Windows - the texts themselves
+  need a screen. To try: `SC.visualizationSettings.general.useTextMipmaps = True` (and on Linux
+  `...useDisplayScaleFactorOnLinux = True`) before `SC.renderer.Start()`, then compare the status text, item numbers and
+  a large `globalFontSize`.
