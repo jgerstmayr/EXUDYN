@@ -191,7 +191,7 @@ def CheckTkFontSystem(root):
     try:
         fontSystem = str(root.tk.call('::tk::pkgconfig', 'get', 'fontsystem'))
     except tk.TclError:             #a Tk without the key: nothing known, nothing said
-        return
+        fontSystem = ''
     hint = TkFontSystemHint(sys.platform, fontSystem)
     if hint:
         exudyn.Print(hint)
