@@ -142,6 +142,9 @@ extern OutputBuffer outputBuffer;  //!< link outputBuffer to change options
 //! works with local path
 bool CheckPathAndCreateDirectories(const STDstring& pathAndFileName);
 
+//! the absolute path of fileName, relative to the current directory; fileName itself if not available (#2881)
+STDstring AbsoluteFileName(const STDstring& fileName);
+
 extern STDstring outputDirectory; //!< global directory prepended to written files; exudyn.config.outputDirectory (#2418)
 
 //! prepend outputDirectory to fileName (solution, solver information, sensor and image files);

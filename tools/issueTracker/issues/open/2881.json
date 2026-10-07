@@ -6,5 +6,6 @@
   "type": "TESTING",
   "description": "exudynGuiCheckUbuntu.txt: K13 - openGL.advanced.curvedTriangleTilingAngle 90/5/15 shows no visible difference in graphicsCurvedShapes.py; S6 - Record frames in the SolutionViewer wrote no images (no images folder). Both need a screen: to be repeated with 1.12.37x (a failed PNG write is now reported in the console; the images go to images/ in the directory the script was started from), and the tiling compared with Windows.",
   "dateRaised": "2026-10-06",
-  "deadline": "2027-04-04"
+  "deadline": "2027-04-04",
+  "workingRemarks": "2026-10-07: K13 confirmed by the maintainer; S6 changed (frame read from GL_BACK before the swap, absolute path printed at the first frame, failures in console and render window) - to be checked again on Ubuntu and Windows"
 }

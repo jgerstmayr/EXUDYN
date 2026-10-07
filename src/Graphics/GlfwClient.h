@@ -558,6 +558,9 @@ private: //to be called internally only!
 	//! check if frame shall be grabed and saved to file using visualization options
 	static void SaveImage(Index viewID);
 
+	//! a failed image write, in the console and as a message in the render window (#2881)
+	static void ReportImageWriteFailure(const STDstring& filename);
+
 	//! save scene to a file with filename
 	static void SaveSceneToFile(Index viewID, const STDstring& filename);
 	

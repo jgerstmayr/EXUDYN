@@ -16400,3 +16400,25 @@ can also be removed.")*
 - **#886** (`py::raise_from`, whether the Python cause is kept): an exception in a Python user function arrives as
   `ModelError` with the original exception as `__cause__` and its traceback (`performanceErrors.md` §*An error inside
   your own user function*).
+
+<a id="rg2-4-5"></a>
+### RG2.4.5 — the Ubuntu check again: K13 confirmed, S6 changed (2026-10-07, #2881)
+
+*(Maintainer 2026-10-07, a Linux run just before the triage: "K13 OK: curvedTriangleTilingAngle now changes the curved
+row visibly. S6 FAIL: Record frames + One cycle in the SolutionViewer writes no images (no images folder in the
+working directory, no frame*.png under ~), and no error message in the console. When the folder images is created by
+hand before the run, frame*.png files are written there, but all images are black (in remote desktop session).")*
+
+- **Black images**: `SaveSceneToFile` read `GL_FRONT` after `glfwSwapBuffers`. The front buffer is not defined for
+  reading under a compositor or a remote desktop (it reads black), and the back buffer is undefined after the swap.
+  `Render()` now saves the frame **before** the swap, from `GL_BACK`; the call after `Render()` in the render loop is
+  gone. This applies to `RedrawAndGetImage()` with OpenGL as well, which takes the same path.
+- **No folder, no message**: the directory creation of the WSL build works (a solution file into a new subdirectory,
+  checked with 1.12.372 in WSL), so why the folder was not there is not explained from here. What changed:
+  `CheckPathAndCreateDirectories` uses the non-throwing `create_directories` and returns whether the directory exists
+  afterwards (no caller had used its result, which was inverted); a failed directory or file is reported in the
+  console, flushed, and as a message in the render window for 5 s (`ReportImageWriteFailure`); the first frame of a
+  recording prints the absolute path it writes, `AbsoluteFileName()` - a relative name is relative to the current
+  directory of Python, which need not be the directory of the script.
+- Not checked here: the renderer cannot open a window in this session (rule 11). S6 of `GUI_MANUAL_CHECK.md` says
+  what to see now; the check is due on Ubuntu and on Windows.

@@ -116,7 +116,7 @@ The model continues with `mbs.SolutionViewer()` automatically.
 | S3 | *Increment* to 10; *update period* to max | animation faster (skips frames) / slower |
 | S4 | **One cycle**, **Run** | plays once and stops |
 | S5 | keys in the render window during the viewer (`B`, `V`) | still work; `V` opens the settings dialog (SPACE pauses a simulation, not the viewer: use **Stop**) |
-| S6 | *Record frames*, run one cycle, *No recording* | images `frame00000.png`, ... appear in the subfolder `images` of the working directory; a failed write is reported in the console; (*Make mp4* only if ffmpeg is installed - optional, see the section *Generating animations* of the GUI chapter) |
+| S6 | *Record frames*, run one cycle, *No recording* | images `frame00000.png`, ... appear in the subfolder `images` of the working directory, whose absolute path the first frame prints, and they show the scene (not black); a failed write is reported in the console and in the render window; (*Make mp4* only if ffmpeg is installed - optional, see the section *Generating animations* of the GUI chapter) |
 | S7 | close the dialog (window close button, or `q` / ESCAPE in the dialog) | dialog and renderer close, script continues |
 | P1 | PlotSensor windows | two matplotlib figures: tip position x/y/z with legend and axis labels, and the spring force; windows can be zoomed, panned and closed; the script ends after closing them |
 

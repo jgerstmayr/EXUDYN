@@ -100,11 +100,25 @@ bool CheckPathAndCreateDirectories(const STDstring& pathAndFileName)
 	if (pos != std::string::npos)
 	{
 		STDstring pathStr = pathAndFileName.substr(0, pos);
-		returnValue = !filesystemNamespace::create_directories(pathStr);
+		//the error_code variant does not throw - a renderer thread must not end here - and the result
+		//says whether the directory is there afterwards, which the image writer reports (#2881)
+		std::error_code error;
+		filesystemNamespace::create_directories(pathStr, error);
+		returnValue = filesystemNamespace::is_directory(pathStr, error);
 	}
 #endif
 
 	return returnValue;
+}
+
+STDstring AbsoluteFileName(const STDstring& fileName)
+{
+#ifdef USE_AUTOCREATE_DIRECTORIES
+	std::error_code error;
+	auto path = filesystemNamespace::absolute(fileName, error);
+	if (!error) { return path.string(); }
+#endif
+	return fileName;
 }
 
 //! see Stdoutput.h; set from Python as exudyn.config.outputDirectory (#2418)

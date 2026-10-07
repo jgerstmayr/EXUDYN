@@ -171,6 +171,10 @@ NOT cover, and about the testing that no suite can do.
       Manual GUI Check")* larger sizes and `openGL.lineWidth = 3` in the check model, the simplified-style switches as
       check V6a; the defaults stay.
     - **RG2.4.5** *open* (#2881) Ubuntu: curved triangle tiling (K13) and recorded frames (S6) to be checked again.
+      **K13 confirmed 2026-10-07**; **S6 changed 2026-10-07** ([log](exudynRevisionLog2026b.md#rg2-4-5)): the frame is
+      read from the back buffer before the swap (black images under a remote desktop), the first frame prints its
+      absolute path, a failed directory or file is reported in the console and in the render window - S6 to be checked
+      again on Ubuntu and Windows.
 
 <a id="rg2-5"></a>
 **RG2.5** **DONE 2026-10-04** (#2832) — [log](exudynRevisionLog2026b.md#rg2-5) *(group RG2; feedback of a colleague installing Exudyn, forwarded by the maintainer 2026-10-04: "The
@@ -2189,7 +2193,7 @@ issue and a short title only. The open issues that are not steps are in the trac
 | RG12.44 to RG12.46 | #2075, #2342, #1931, #1932, #1941, #782, #1863, #1864, #1892 | dictionaries and item visualization, URDF import, `MatrixContainer` |
 | RG2.6 | #559, #591, #2326 | three old test models |
 | RG4.21 to RG4.24 | #303, #574, #2315-#2317, #1548, #926 | velocity/time-dependent constraints, a 3D sliding joint, ODE1 load Jacobians, rolling friction |
-| RG2.4.5 | #2881 | Ubuntu GUI check: curved tiling and recorded frames to be checked again |
+| RG2.4.5 | #2881 | Ubuntu GUI check: recorded frames (S6) to be checked again |
 | RG9.6 | #2866 | the member functions an item must provide, checked when it compiles (from #2498) |
 | RG8.1 to RG8.9 | #1139, #1140, #1241 | the plugin ABI: registry, fingerprint, reference plugin, headers, discovery |
 | RG8.10 | #1751, #1767, #1768, #1769 | compiled user functions |

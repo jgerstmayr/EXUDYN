@@ -2110,8 +2110,7 @@ void GlfwRenderer::DoRendererTasks(bool graphicsUpdateAndRender)
 		
 		ForEachWindowOpen([&](Index viewID) {
 			GLFWwindow* window = renderViews.GetWindow(viewID);
-			Render(window);
-			SaveImage(viewID); //in case of flag, save frame to image file
+			Render(window); //saves the frame to an image file, in case of the flag
 			});
 
 		lastGraphicsUpdate = time;
@@ -2534,6 +2533,9 @@ void GlfwRenderer::Render(GLFWwindow* window) //GLFWwindow* needed in argument, 
 		stateMachine.rendererMessage = "";
 	}
 
+	//the frame is read from the back buffer before the swap: after it the back buffer is undefined, and the
+	//front buffer reads black under a compositor or a remote desktop (#2881)
+	SaveImage(viewID); //in case of flag, save frame to image file
 	glfwSwapBuffers(window);
 
 	//++++++++++++++++++++++++++++++++++++++++++
@@ -2664,10 +2666,25 @@ void GlfwRenderer::SaveImage(Index viewID)
 			//SaveSceneToFile will do nothing
 		}
 
+		//the first frame of a recording says where the frames go, as an absolute path: a relative file name is
+		//relative to the current directory of Python, which need not be the directory of the script (#2881)
+		if (visSettings->exportImages.saveImageSingleFile || visSettings->exportImages.saveImageFileCounter == 1)
+		{
+			PrintDelayed("SaveImage: writing <" + AbsoluteFileName(filename) + ">", true, true);
+		}
+
 		SaveSceneToFile(viewID, filename);
 
 		basicVisualizationSystemContainer->SaveImageFinished(viewID);
 	}
+}
+
+void GlfwRenderer::ReportImageWriteFailure(const STDstring& filename)
+{
+	//in the console and in the render window, which a user recording frames is looking at (#2881)
+	STDstring message = "SaveImage: failed to write image file <" + AbsoluteFileName(filename) + ">";
+	PrintDelayed(message, true, true);
+	ShowMessage(message, 5.);
 }
 
 void GlfwRenderer::SaveSceneToFile(Index viewID, const STDstring& filename)
@@ -2721,7 +2738,7 @@ void GlfwRenderer::SaveSceneToFile(Index viewID, const STDstring& filename)
 		pixelBuffer.SetNumberOfItems(numberOfPixels);
 
 		glPixelStorei(GL_PACK_ALIGNMENT, strideAlignment);
-		glReadBuffer(GL_FRONT);
+		glReadBuffer(GL_BACK);
 		glReadPixels(0, 0, (GLsizei)windowWidth, (GLsizei)windowHeight, GL_RGB, GL_UNSIGNED_BYTE, pixelBuffer.GetDataPointer());
 
 		//pixelBufferFlip writes to buffer in visualizationSystemContainer to be able to retrieve data
@@ -2753,13 +2770,11 @@ void GlfwRenderer::SaveSceneToFile(Index viewID, const STDstring& filename)
 #ifdef GlfwRendererUsePNG
 		ResizableArray<uint8_t>* pixelBufferFlip = basicVisualizationSystemContainer->ImageData(viewID);
 
-		std::ofstream imageFile;
-		CheckPathAndCreateDirectories(filename);
-
 		windowHeight = heightAlignment * (Index)(windowHeight / heightAlignment);
-		if (!stbi_write_png(filename.c_str(), windowWidth, windowHeight, nrChannels, pixelBufferFlip->GetDataPointer(), stride))
+		if (!CheckPathAndCreateDirectories(filename) ||
+			!stbi_write_png(filename.c_str(), windowWidth, windowHeight, nrChannels, pixelBufferFlip->GetDataPointer(), stride))
 		{
-			PrintDelayed("GlfwRenderer::SaveSceneToFile: Failed to write image file <" + filename + ">"); //said, not silent (#2877)
+			ReportImageWriteFailure(filename); //said, not silent (#2877, #2881)
 		}
 		pixelBufferFlip->Flush(); //not stored to preserve earlier functionality
 #endif
@@ -2773,16 +2788,18 @@ void GlfwRenderer::SaveSceneToFile(Index viewID, const STDstring& filename)
 		pixelBuffer.SetNumberOfItems(numberOfPixels);
 
 		glPixelStorei(GL_PACK_ALIGNMENT, 1);
-		glReadBuffer(GL_FRONT);
+		glReadBuffer(GL_BACK);
 		glReadPixels(0, 0, (GLsizei)windowWidth, (GLsizei)windowHeight, GL_BGR_EXT, GL_UNSIGNED_BYTE, pixelBuffer.GetDataPointer());
 
 		std::ofstream imageFile;
-		CheckPathAndCreateDirectories(filename);
-		imageFile.open(filename, std::ofstream::out | std::ofstream::binary);
+		if (CheckPathAndCreateDirectories(filename))
+		{
+			imageFile.open(filename, std::ofstream::out | std::ofstream::binary);
+		}
 		if (!imageFile.is_open()) //failed to open file ...  e.g. invalid file name
 		{
-			//not thread/Python safe: PyWarning(STDstring("GlfwRenderer::SaveSceneToFile: Failed to open image file '") + filename + "'");
-			PrintDelayed("GlfwRenderer::SaveSceneToFile: Failed to open image file <" + filename + ">");
+			//not thread/Python safe: PyWarning(...)
+			ReportImageWriteFailure(filename);
 		}
 		else
 		{
