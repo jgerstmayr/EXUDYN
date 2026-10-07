@@ -105,6 +105,7 @@ Index GlfwRenderer::verboseRenderer = 0;         //0=False, 1=True (main output)
 std::atomic_flag GlfwRenderer::renderFunctionRunning = ATOMIC_FLAG_INIT;  //!< semaphore to check if Render(...)  function is currently running (prevent from calling twice); initialized with clear state
 std::atomic_flag GlfwRenderer::showMessageSemaphore = ATOMIC_FLAG_INIT;   //!< semaphore for ShowMessage
 
+std::array<float, MAX_VIEWS_GLFW> GlfwRenderer::contentScaling = {}; //!< the display scaling the system reports per view; 0 until a window reports it (#2893)
 BitmapFont GlfwRenderer::bitmapFont;				//!< bitmap font for regular texts, initialized upon start of renderer
 
 GLuint GlfwRenderer::textureNumberRGBbitmap[256*NUMBER_OF_TEXTUREFONT_LISTS];	//!< store texture number for our bitmap font; in ultimate case, there are 2*nCharacter lists
@@ -1807,8 +1808,9 @@ bool GlfwRenderer::CreateViewWindow(Index viewID)
 	// determine the windows scale; 
 	float xWindowScale = 1;
 	float yWindowScale = 1;
-#if !defined(__EXUDYN__LINUX__) //glfwGetWindowContentScale() crashes on Ubuntu18.04 and 20.04 compilation
+#if GLFW_CONTENT_SCALE_AVAILABLE
 	glfwGetWindowContentScale(window, &xWindowScale, &yWindowScale);
+	if (verboseRenderer) { PrintDelayed("display scaling of the system (glfwGetWindowContentScale) = " + EXUstd::ToString(xWindowScale) + ", " + EXUstd::ToString(yWindowScale)); }
 #endif
 	SetContentScaling(viewID, xWindowScale, yWindowScale); //must be done before initialization of fonts
 
@@ -1833,7 +1835,7 @@ bool GlfwRenderer::CreateViewWindow(Index viewID)
 
 	glfwSetWindowCloseCallback(window, window_close_callback);
 	glfwSetWindowRefreshCallback(window, Render);
-#if !defined(__EXUDYN__LINUX__)
+#if GLFW_CONTENT_SCALE_AVAILABLE
 	glfwSetWindowContentScaleCallback(window, window_content_scale_callback);
 #endif
 	if (verboseRenderer) { PrintDelayed("window callbacks successful"); }
@@ -1878,15 +1880,25 @@ void GlfwRenderer::CloseViewWindow(Index viewID)
 
 void GlfwRenderer::SetContentScaling(Index viewID, float xScale, float yScale)
 {
+	if (viewID < MAX_VIEWS_GLFW) { contentScaling[viewID] = 0.5f*(xScale + yScale); } //simplified for now!
+	ApplyDisplayScaling(viewID);
+}
+
+void GlfwRenderer::ApplyDisplayScaling(Index viewID)
+{
+	//called by every Render(), so that useWindowsDisplayScaleFactor and linuxDisplayScaleFactor act while the
+	//renderer runs and not only when it starts (#2893)
 	float fontScaleOld = GetFontScaling(viewID);
-	if (visSettings->general.useWindowsDisplayScaleFactor)
+	float scaling = 1.f;
+	if (visSettings->general.useWindowsDisplayScaleFactor && viewID < MAX_VIEWS_GLFW && contentScaling[viewID] > 0.f)
 	{
-		SetFontScaling(viewID, 0.5f*(xScale + yScale) ); //simplified for now!
-	} else {SetFontScaling(viewID, 1); }
+		scaling = contentScaling[viewID];
+	}
+	SetFontScaling(viewID, scaling);
 
 	if (GetFontScaling(viewID) != fontScaleOld)
 	{
-		ShowMessage(STDstring("Font size adjusted to monitor scaling for view ") + EXUstd::ToString(viewID), 3.);
+		ShowMessage(STDstring("Font scaling of view ") + EXUstd::ToString(viewID) + ": " + EXUstd::ToString(GetFontScaling(viewID)), 3.);
 	}
 }
 
@@ -2352,6 +2364,7 @@ void GlfwRenderer::Render(GLFWwindow* window) //GLFWwindow* needed in argument, 
 
 	if (PyGetRendererCallbackLock()) { return; }
 	EXUstd::WaitAndLockSemaphore(renderFunctionRunning); //lock Render(...) function, no second call possible
+	ApplyDisplayScaling(viewID);
 
 	//+++++++++++++++++
 	//activate openGL context

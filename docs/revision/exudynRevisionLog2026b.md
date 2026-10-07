@@ -16580,3 +16580,30 @@ address ... which does not point to an object of type 'CObjectBody'`.)*
 - The other C-style casts to `CObjectBody*` (the markers) are on objects the pre-assemble checks require to be bodies.
 - Checked here with the build and the suites; the sanitizer job is the confirmation (the next push to the internal
   repository).
+
+<a id="rg6-13-2"></a>
+### RG6.13 — done; RG6.14 — display scaling on Linux and the font of all dialogs (2026-10-07, #2890, #2893)
+
+*(Maintainer's check on Ubuntu, 2026-10-07: "new font works perfectly; put that into the docs for working with Ubuntu!
+general.linuxDisplayScaleFactor does nothing (can be removed?); dialogs.fontScaling works for the
+visualizationSettingsDialog, but not for the other dialogs (X, H); the linux settings "Fractional Scaling" affects the
+dialogs font sizes, but not the renderer's => fix if possible; the renderer's font size can be adjusted currently with
+the view0.window.globalFontSize => add issues/step and fix it now if possible.")*
+
+- **RG6.13 done** (#2890): the Xft build of conda-forge's `tk` works. `gettingStartedInstall.md` has a section
+  *Working with Ubuntu*: the tk command, the display scaling and its three settings, ffmpeg.
+- **Fractional scaling and the renderer**: `glfwGetWindowContentScale` and its callback were compiled out on Linux
+  ("crashes on Ubuntu18.04 and 20.04"). They are compiled in from GLFW 3.3.6 on (`GLFW_CONTENT_SCALE_AVAILABLE` in
+  `GlfwClient.h`; 22.04 ships 3.3.6, 24.04 3.3.10, the Debian of CI 3.4), and the scale is printed by a verbose
+  renderer. The dialogs follow, because their tk scaling is computed from the renderer's `displayScaling`.
+- **`linuxDisplayScaleFactor` did nothing visible**: it was multiplied in once, when the window was created, so a
+  change in the settings dialog had no effect, and with a reported scaling of 1 the start value 1 changed nothing.
+  `ApplyDisplayScaling` (called by every `Render`) now computes the font scaling from the system's scaling, the
+  switch `useWindowsDisplayScaleFactor` and, on Linux, `linuxDisplayScaleFactor`, and shows "Font scaling of view 0:
+  ..." when it changes - both settings act while the renderer runs. Kept rather than removed: it existed in 1.11.0, and
+  it is the correction for a system that reports no or a wrong scaling (xrdp, some Wayland sessions).
+- **`dialogs.fontScaling` in H, X and the quit question**: those dialogs used the fonts of Tk; `ScaledDialogFonts`
+  gives them `TkDefaultFont`/`TkFixedFont` at `DialogFontSize(fontScaling)` while the setting is > 0 (0 leaves Tk's
+  fonts), tested in `test_guiValues.py`. The dialogs of `exudyn.interactive` (SolutionViewer, ...) are not changed.
+- The descriptions of the three settings say what they do now. Not checked on a screen here: Ubuntu (scaling,
+  fractional, the factor, H/X fonts) and that Windows looks as before.

@@ -899,3 +899,26 @@ def testTheHintForATkWithoutXftOnLinuxOnly(platform, fontSystem, hinted):
     assert bool(hint) == hinted
     if hinted:
         assert 'conda install -c conda-forge "tk=*=xft_*"' in hint
+
+
+#the dialogs H, X and the quit question follow dialogs.fontScaling as the settings dialog does (#2893)
+class _FontScalingSC:
+    """a container whose only setting is dialogs.fontScaling"""
+    def __init__(self, fontScaling):
+        class Dialogs: pass
+        class VisualizationSettings: pass
+        self.visualizationSettings = VisualizationSettings()
+        self.visualizationSettings.dialogs = Dialogs()
+        self.visualizationSettings.dialogs.fontScaling = fontScaling
+
+
+def testTheOtherDialogsTakeTheFontOfFontScaling(monkeypatch):
+    root = TkRootOrSkip()
+    monkeypatch.setattr(gui, 'GetRendererSystemContainer', lambda: _FontScalingSC(0.))
+    assert gui.ScaledDialogFonts(root, ['TkDefaultFont', 'TkFixedFont']) == [{}, {}], 'at 0 the fonts of Tk stay'
+
+    monkeypatch.setattr(gui, 'GetRendererSystemContainer', lambda: _FontScalingSC(2.))
+    [textFont, fixedFont] = gui.ScaledDialogFonts(root, ['TkDefaultFont', 'TkFixedFont'])
+    assert textFont['font'].cget('size') == gui.DialogFontSize(2.)
+    assert fixedFont['font'].cget('size') == gui.DialogFontSize(2.)
+    assert fixedFont['font'].cget('family') == gui.tkFont.nametofont('TkFixedFont', root=root).cget('family')

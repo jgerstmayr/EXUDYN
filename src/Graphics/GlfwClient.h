@@ -24,6 +24,13 @@
 //#define GL_GLEXT_PROTOTYPES OpenGL3.2
 #include <GLFW/glfw3.h>
 
+//glfwGetWindowContentScale: on Linux only from GLFW 3.3.6 on - with older versions (Ubuntu 18.04 and 20.04) it crashed (#2277, #2893)
+#if !defined(__EXUDYN__LINUX__) || (GLFW_VERSION_MAJOR*10000 + GLFW_VERSION_MINOR*100 + GLFW_VERSION_REVISION >= 30306)
+#define GLFW_CONTENT_SCALE_AVAILABLE 1
+#else
+#define GLFW_CONTENT_SCALE_AVAILABLE 0
+#endif
+
 //DELETE: #define USE_TEXTURED_BITMAP_FONTS //!< textured based fonts with glLists are standard with no alternative
 #define NUMBER_OF_TEXTUREFONT_LISTS 2 //1 is standard; 2 are created to switch between transparent and font with background
 
@@ -505,6 +512,9 @@ private: //to be called internally only!
 
 	//! compute unified content scaling based on values provided by GLFW
 	static void SetContentScaling(Index viewID, float xScale, float yScale);
+	//! the font scaling of a view from the display scaling the system reported and the settings (#2893)
+	static void ApplyDisplayScaling(Index viewID);
+	static std::array<float, MAX_VIEWS_GLFW> contentScaling; //!< the display scaling the system reports, per view
 	static float GetFontScaling(Index viewID);
     static void SetFontScaling(Index viewID, float scaling);
 

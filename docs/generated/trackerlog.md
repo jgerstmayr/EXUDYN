@@ -8,10 +8,10 @@ Every entry carries the **type** of the issue, then its **priority** and its **e
 
 General information on current version:
 
-- Exudyn version = 1.12.441.dev1
+- Exudyn version = 1.12.442.dev1
 - last change = 2026-10-07
-- Number of issues = 2893
-- Number of resolved issues = 2755 (441 in current version)
+- Number of issues = 2894
+- Number of resolved issues = 2756 (442 in current version)
 
 ## Resolved issues and resolved bugs before version 1.12
 
@@ -7568,8 +7568,8 @@ The following list contains the issues which have been **RESOLVED** in the accor
 
 ## Open issues
 
-- `CHECK` `MEDIUM EFF` `raised by: Claude-JG` tkinter dialogs look awkward on Ubuntu: the Tk of conda on Linux has no Xft (#2890)
-  - description: The maintainer, 2026-10-07: 'as I have now also the build config for Ubuntu: I could test now improvements for font scaling (or fonts in general - they look awkward on ubuntu). If you include a setting (like for activating font scaling on linux, or coupling it temporarily for macos), I could test, if it works now.' Two settings to test, default off: general.useDisplayScaleFactorOnLinux (glfwGetWindowContentScale on linux, \#2277) and general.useTextMipmaps (the 64-pixel characters of the bitmap font minified with mipmaps instead of 2x2 linear sampling). After the tests: defaults decided, or the settings removed. revision2026b step RG6.13 \[2026-10-07, Claude-JG\]: Correction by the maintainer, 2026-10-07: 'It is not about the renderer text - that is perfect, but the tkinter dialogs.' The two renderer test settings are removed again. Cause found: the libtk8.6.so of the conda environments (tk 8.6.14/8.6.15 of the default channel) links no Xft, so Tk draws with X11 core fonts - no anti-aliasing, few sizes; the system Tk links libXft. Fix: the Xft build of conda-forge, conda install -c conda-forge 'tk=\*=xft\_\*'; the dialogs say so once on Linux when Tk reports fontsystem x11.
+- `FIX` `MEDIUM EFF` `raised by: Claude-JG` Ubuntu: fractional scaling not followed by the renderer, linuxDisplayScaleFactor without effect, dialogs.fontScaling not in the H and X dialogs (#2893)
+  - description: The maintainer's check on Ubuntu, 2026-10-07: 'general.linuxDisplayScaleFactor does nothing (can be removed?); dialogs.fontScaling works for the visualizationSettingsDialog, but not for the other dialogs (X, H); the linux settings Fractional Scaling affects the dialogs font sizes, but not the renderer's =\> fix if possible; the renderer's font size can be adjusted currently with the view0.window.globalFontSize.' revision2026b step RG6.14
   - date raised: 2026-10-07
 - `CHANGE` `HIGH EFF` `raised by: Claude-JG` joints and their Jacobians on homogeneous transformations (#2884)
   - description: The constraint equations of the joints become functions of the relative transformation H0^-1 H1 of the two marker frames, and their Jacobians follow systematically from the relative twist - one implementation for JointGeneric, JointRevoluteZ, JointPrismaticX, the 2D joints and the rolling disc instead of one each. Successor of \#2745 (the marker interface of RG14.2). revision2026b step RG14.3
@@ -7625,7 +7625,7 @@ The following list contains the issues which have been **RESOLVED** in the accor
   - date raised: 2026-02-11
 - `CHECK` `LOW EFF` linux GLFW (#2277)
   - description: check if glfwGetWindowContentScale now works on newer GLFW version to enable display scaling on linux
-  - **remarks:** planned as revision2026b step RG6.8.5 (triage 2026-10-07)
+  - **remarks:** planned as revision2026b step RG6.8.5 (triage 2026-10-07); 2026-10-07: compiled in on Linux from GLFW 3.3.6 on, revision2026b step RG6.14 (\#2893); to be checked on Ubuntu
   - date raised: 2026-02-09
 - `DOCU` `LOW EFF` GetURDFrobotData (#2267)
   - description: add detailed description to function, in particular to returned dict

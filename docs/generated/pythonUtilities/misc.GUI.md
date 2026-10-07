@@ -248,10 +248,22 @@ Helper functions and classes for graphical interaction with Exudyn
 - **output**: None
 
 
+(sec-gui-scaleddialogfonts)=
+## Function: ScaledDialogFonts
+
+[`ScaledDialogFonts(tkWindow, names)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/GUI.py#L2076)
+
+- **function description**: the named Tk fonts at the size dialogs.fontScaling asks for, as widget options
+- **input**:
+  - `tkWindow`: the dialog window; it keeps the fonts, which Tk forgets when the Python object is gone
+  - `names`: the named fonts, e.g. ['TkDefaultFont', 'TkFixedFont']
+- **output**: one dict per name, {'font': font} - or {} for each while dialogs.fontScaling is 0, so that the font of Tk stays as it is (#2893)
+
+
 (sec-gui-showhelpdialog)=
 ## Function: ShowHelpDialog
 
-[`ShowHelpDialog()`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/GUI.py#L2076)
+[`ShowHelpDialog()`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/GUI.py#L2100)
 
 - **function description**: The keyboard and mouse commands of the renderer, in a read-only window; opened with H in the render window.
 - **output**: None
@@ -260,7 +272,7 @@ Helper functions and classes for graphical interaction with Exudyn
 (sec-gui-modelscope)=
 ## Function: ModelScope
 
-[`ModelScope()`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/GUI.py#L2130)
+[`ModelScope()`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/GUI.py#L2155)
 
 - **function description**: the namespace a command of the command window runs in: the one the MODEL lives in `__main__` is the script the user started, or the console they are typing in, so this is where `mbs`, `SC` and everything else the model defined are. The command window used to be a Python string that the C++ executed in exactly this namespace; as a function of this module it would otherwise see the module's own globals, where there is no `mbs` (#2654).
 - **output**: the dictionary of `__main__`, which is written to as well as read: an assignment in the command window has to survive the command
@@ -269,7 +281,7 @@ Helper functions and classes for graphical interaction with Exudyn
 (sec-gui-showpythoncommanddialog)=
 ## Function: ShowPythonCommandDialog
 
-[`ShowPythonCommandDialog()`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/GUI.py#L2146)
+[`ShowPythonCommandDialog()`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/GUI.py#L2171)
 
 - **function description**: A window that executes a Python command in the global scope of the running model; opened with X in the render window. CTRL+RETURN runs what is in the text area.
 - **output**: None
@@ -278,7 +290,7 @@ Helper functions and classes for graphical interaction with Exudyn
 (sec-gui-showvisualizationsettingsdialog)=
 ## Function: ShowVisualizationSettingsDialog
 
-[`ShowVisualizationSettingsDialog()`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/GUI.py#L2234)
+[`ShowVisualizationSettingsDialog()`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/GUI.py#L2260)
 
 - **function description**: The settings tree of the renderer; opened with V in the render window.
 - **output**: None
@@ -287,7 +299,7 @@ Helper functions and classes for graphical interaction with Exudyn
 (sec-gui-showrightmouseselectiondialog)=
 ## Function: ShowRightMouseSelectionDialog
 
-[`ShowRightMouseSelectionDialog()`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/GUI.py#L2249)
+[`ShowRightMouseSelectionDialog()`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/GUI.py#L2275)
 
 - **function description**: The properties of the item the right mouse button selected, read-only; the renderer has put them into exudyn.sys['currentRendererSelectionDict'] before calling this.
 - **output**: None
@@ -296,7 +308,7 @@ Helper functions and classes for graphical interaction with Exudyn
 (sec-gui-askquitdialog)=
 ## Function: AskQuitDialog
 
-[`AskQuitDialog()`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/GUI.py#L2263)
+[`AskQuitDialog()`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/GUI.py#L2289)
 
 - **function description**: Ask whether a long running simulation really shall be stopped; the answer goes back to the renderer in exudyn.sys['quitResponse'], as 2 (do not quit) or 3 (quit).
 - **output**: None

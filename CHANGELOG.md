@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.12 | Metheney | 346 | 1.12.441 |
+| 1.12 | Metheney | 347 | 1.12.442 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
 | 1.9 | Krall | 235 | 1.9.234 |
@@ -29,6 +29,10 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.12 - Metheney (current)
 
+- **1.12.442** `CHECK` `MEDIUM EFF` `raised by: Claude-JG` `resolved by: Claude-JG` tkinter dialogs look awkward on Ubuntu: the Tk of conda on Linux has no Xft (#2890)
+  - description: The maintainer, 2026-10-07: 'as I have now also the build config for Ubuntu: I could test now improvements for font scaling (or fonts in general - they look awkward on ubuntu). If you include a setting (like for activating font scaling on linux, or coupling it temporarily for macos), I could test, if it works now.' Two settings to test, default off: general.useDisplayScaleFactorOnLinux (glfwGetWindowContentScale on linux, \#2277) and general.useTextMipmaps (the 64-pixel characters of the bitmap font minified with mipmaps instead of 2x2 linear sampling). After the tests: defaults decided, or the settings removed. revision2026b step RG6.13 \[2026-10-07, Claude-JG\]: Correction by the maintainer, 2026-10-07: 'It is not about the renderer text - that is perfect, but the tkinter dialogs.' The two renderer test settings are removed again. Cause found: the libtk8.6.so of the conda environments (tk 8.6.14/8.6.15 of the default channel) links no Xft, so Tk draws with X11 core fonts - no anti-aliasing, few sizes; the system Tk links libXft. Fix: the Xft build of conda-forge, conda install -c conda-forge 'tk=\*=xft\_\*'; the dialogs say so once on Linux when Tk reports fontsystem x11.
+  - **notes:** On Linux with conda, the dialogs draw smooth fonts with the Xft build of tk from conda-forge; Exudyn says so once, and the installation page has a section Working with Ubuntu
+  - date resolved: **2026-10-07 16:42**, date raised: 2026-10-07
 - **1.12.441** `FIX` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` UBSan: mbs.ComputeItem casts every object to CObjectBody (#2892)
   - description: The sanitizer job of GitLab CI (b834538a, gcc 14, test suite exit 0, AddressSanitizer 0, one UB report): src/Main/MainSystem.cpp:1242:29: runtime error: downcast of address ... which does not point to an object of type 'CObjectBody'. MainSystem::PyComputeItem cast the object to CObjectBody before the switch, also for connectors and constraints; the cases that use the body apply to bodies alone, so the pointer was never used for another object, but the cast itself is undefined behaviour. revision2026b step RG4.25
   - **notes:** mbs.ComputeItem casts an object to a body only if it is one; the sanitizer build reported the cast of connectors and constraints as undefined behaviour

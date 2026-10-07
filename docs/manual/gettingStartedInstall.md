@@ -42,6 +42,26 @@ For interaction (right-mouse-click, some key-board commands) you need the Python
 
 see also common blogs for your operating system.
 
+(sec-install-ubuntu)=
+### Working with Ubuntu
+
+- **Smooth fonts in the dialogs with conda**: the `tk` package of the Anaconda channel is built without Xft, so the
+  dialogs draw jagged fonts; Exudyn says so once when the first dialog opens. The Xft build of conda-forge draws them
+  smoothly (checked on Ubuntu):
+
+  ```bash
+  conda install -c conda-forge "tk=*=xft_*"
+  ```
+
+  A system Python with `python3-tk` has Xft already.
+- **Display scaling**: the scaling of the desktop, including *Fractional Scaling*, scales the texts of the render window
+  and the dialogs (GLFW 3.3.6 or newer; Ubuntu 22.04 and later). To adjust by hand, while the renderer runs:
+  `SC.visualizationSettings.general.linuxDisplayScaleFactor` (a factor on top of the system scaling, renderer and
+  dialogs), `dialogs.fontScaling` (the font of all dialogs; 0 = automatic) and `window.globalFontSize` (the texts of
+  the render window).
+- **Videos from recorded frames**: `conda install ffmpeg` and `pip install ffmpeg-python`, see
+  {ref}`sec-overview-basics-animations`.
+
 (sec-install-installinstructions-pipinstall)=
 ## Install Exudyn with PIP INSTALLER (pypi.org)
 

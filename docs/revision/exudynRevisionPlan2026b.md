@@ -1252,12 +1252,16 @@ shows, and copies, the lines that give a script the current view of the render w
     the triangles of an imported geometry made consistent in orientation, the normals all outward (#2281).
 
 <a id="rg6-13"></a>
-**RG6.13** *(group RG6; maintainer 2026-10-07: "I could test now improvements for font scaling (or fonts in general - they
-look awkward on ubuntu) ... It is not about the renderer text - that is perfect, but the tkinter dialogs")* (#2890)
-**The fonts of the tkinter dialogs on Linux**: the `tk` of the Anaconda channel is built without Xft (no anti-aliasing,
-X11 core fonts); the dialogs print once on Linux how to install the Xft build of conda-forge,
-`conda install -c conda-forge "tk=*=xft_*"`, and `condaEnvironments.md` says it - **to be tested on Ubuntu** whether
-that build installs and the dialogs look right; then RG6.13 is done.
+**RG6.13** **DONE 2026-10-07** (#2890) — [log](exudynRevisionLog2026b.md#rg6-13-2) *(group RG6; maintainer 2026-10-07)*
+**The fonts of the tkinter dialogs on Linux**: the `tk` of the Anaconda channel has no Xft; the Xft build of conda-forge
+works on Ubuntu (maintainer's check), the dialogs say so once, the installation page has a section *Working with Ubuntu*.
+
+<a id="rg6-14"></a>
+**RG6.14** *(group RG6; maintainer's check on Ubuntu 2026-10-07)* (#2893, with #2277) **Display scaling on Linux and the
+font of all dialogs**: the renderer reads the scaling of the system on Linux too (GLFW 3.3.6 or newer), so *Fractional
+Scaling* scales its texts; `useWindowsDisplayScaleFactor` and `linuxDisplayScaleFactor` act while the renderer runs;
+`dialogs.fontScaling` also sets the font of the help (H), the command window (X) and the quit question - done
+2026-10-07, **to be checked on Ubuntu** (and the Windows scaling unchanged).
 
 ## RG7 — Python user items
 
@@ -2226,7 +2230,7 @@ issue and a short title only. The open issues that are not steps are in the trac
 | RG5.4 | #2182, #2183, #2184 | the superelements for larger meshes |
 | RG6.8 | #2140, #2204, #2194 | the graphics fixes before 1.13: Linux (RG6.8.5), the near and far planes (RG6.8.8) |
 | RG6.11, RG6.12 | #2154, #2155, #2244, #2281 | textures; a ruler and consistent triangle orientation |
-| RG6.13 | #2890 | the fonts of the tkinter dialogs on Linux: the Xft build of tk, to be tested on Ubuntu |
+| RG6.14 | #2893, #2277 | display scaling on Linux and the font of all dialogs: to be checked on Ubuntu |
 | RG12.44 to RG12.46 | #2075, #2342, #1931, #1932, #1941, #782, #1863, #1864, #1892 | dictionaries and item visualization, URDF import, `MatrixContainer` |
 | RG2.6 | #559, #591, #2326 | three old test models |
 | RG4.21 to RG4.24 | #303, #574, #2315-#2317, #1548, #926 | velocity/time-dependent constraints, a 3D sliding joint, ODE1 load Jacobians, rolling friction |

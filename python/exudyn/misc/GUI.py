@@ -49,7 +49,7 @@ __all__ = [
     'TkinterEditDictionaryWithTypeInfo', 'EditDictionaryWithTypeInfo', 'TkinterEditDictionary',
     'EditDictionary', 'dialogScreenMargin', 'StoreDialogPositions', 'RestoreWindowGeometry',
     'RememberWindowGeometry', 'StoreGeometryString', 'StoreWindowGeometry',
-    'ApplyDialogWindowSettings', 'rendererHelpText', 'ShowHelpDialog', 'pythonCommandExamples',
+    'ApplyDialogWindowSettings', 'rendererHelpText', 'ScaledDialogFonts', 'ShowHelpDialog', 'pythonCommandExamples',
     'ModelScope', 'ShowPythonCommandDialog', 'ShowVisualizationSettingsDialog',
     'ShowRightMouseSelectionDialog', 'AskQuitDialog',
     ]
@@ -2073,6 +2073,30 @@ def ApplyDialogWindowSettings(tkWindow, alwaysTopmost=None, alphaTransparency=No
 rendererHelpText = RendererHelpText()
 
 
+def ScaledDialogFonts(tkWindow, names):
+    """the named Tk fonts at the size dialogs.fontScaling asks for, as widget options
+
+    Args:
+        tkWindow: the dialog window; it keeps the fonts, which Tk forgets when the Python object is gone
+        names: the named fonts, e.g. ['TkDefaultFont', 'TkFixedFont']
+
+    Returns:
+        one dict per name, {'font': font} - or {} for each while dialogs.fontScaling is 0, so that the font of
+        Tk stays as it is (#2893)
+    """
+    guiSC = GetRendererSystemContainer()
+    fontScaling = guiSC.visualizationSettings.dialogs.fontScaling if guiSC is not None else 0.
+    if fontScaling <= 0:
+        return [{} for name in names]
+    fonts = []
+    for name in names:
+        font = tkFont.nametofont(name, root=tkWindow).copy()
+        font.configure(size=DialogFontSize(fontScaling))
+        fonts += [font]
+    tkWindow.scaledDialogFonts = fonts
+    return [{'font': font} for font in fonts]
+
+
 def ShowHelpDialog():
     """The keyboard and mouse commands of the renderer, in a read-only window; opened with H in
     the render window.
@@ -2093,7 +2117,8 @@ def ShowHelpDialog():
     tkWindow.grid_columnconfigure(0, weight=1)
     tkWindow.grid_rowconfigure(0, weight=1)
 
-    textW = tk.Text(tkWindow, height=30, width=90, background='gray98')
+    [fixedFont] = ScaledDialogFonts(tkWindow, ['TkFixedFont'])
+    textW = tk.Text(tkWindow, height=30, width=90, background='gray98', **fixedFont)
     textW.focus_set()
     textW.grid(row=0, column=0, padx=10, pady=10, sticky=tk.NSEW)
     scrollW.grid(row=0, column=1, pady=10, sticky=tk.NSEW)
@@ -2165,11 +2190,12 @@ def ShowPythonCommandDialog():
                    'Evaluate or CHANGE your current model (parameters) during simulation;\n'
                    'Press CRTL+RETURN to execute, escape to close:')
 
+    [textFont, fixedFont] = ScaledDialogFonts(tkWindow, ['TkDefaultFont', 'TkFixedFont'])
     label = tk.Label(tkWindow, text=description, justify=tk.LEFT,
-                     relief=tk.SUNKEN, background='gray94')
+                     relief=tk.SUNKEN, background='gray94', **textFont)
     label.grid(row=0, column=0, padx=15, pady=(15, 0), sticky='W')
 
-    textArea = scrolledtext.ScrolledText(tkWindow, wrap=tk.WORD, width=60, height=8)
+    textArea = scrolledtext.ScrolledText(tkWindow, wrap=tk.WORD, width=60, height=8, **fixedFont)
     #configure tab size:
     font = tk.font.Font(font=textArea['font'])
     textArea.config(tabs=font.measure(' '*4))   #in pixels
@@ -2208,8 +2234,8 @@ def ShowPythonCommandDialog():
     tkWindow.bind('<Escape>', OnClose)
 
     frame = tk.Frame(tkWindow)
-    runButton = tk.Button(frame, text="    Run code    ", command=lambda: OnRunCode(None))
-    closeButton = tk.Button(frame, text="    Close    ", command=lambda: OnClose(None))
+    runButton = tk.Button(frame, text="    Run code    ", command=lambda: OnRunCode(None), **textFont)
+    closeButton = tk.Button(frame, text="    Close    ", command=lambda: OnClose(None), **textFont)
 
     frame.grid(row=2, column=0, padx=15, pady=(0, 15), sticky='', columnspan=3)
     runButton.grid(row=0, column=0, padx=80, sticky='')
@@ -2217,7 +2243,7 @@ def ShowPythonCommandDialog():
 
     textExample = scrolledtext.ScrolledText(tkWindow, wrap=tk.WORD, width=60,
                                             height=pythonCommandExamples.count('\n')+1,
-                                            background='gray94')
+                                            background='gray94', **fixedFont)
     textExample.grid(row=3, column=0, padx=15, pady=(0, 15), sticky=tk.NSEW)
     textExample.insert(tk.END, pythonCommandExamples)
     textExample.configure(state='disabled')  #unable to edit
@@ -2280,12 +2306,13 @@ def AskQuitDialog():
         response = clickResponse
         tkWindow.destroy()
 
+    [textFont] = ScaledDialogFonts(tkWindow, ['TkDefaultFont'])
     label = tk.Label(tkWindow, text="Do you really want to stop simulation and close renderer?",
-                     justify=tk.LEFT)
+                     justify=tk.LEFT, **textFont)
     yesButton = tk.Button(tkWindow, text="        Yes        ",
-                          command=lambda: QuitResponse(True))
+                          command=lambda: QuitResponse(True), **textFont)
     noButton = tk.Button(tkWindow, text="        No        ",
-                         command=lambda: QuitResponse(False))
+                         command=lambda: QuitResponse(False), **textFont)
 
     label.grid(row=0, column=0, pady=(20, 0), padx=50, columnspan=5)
     yesButton.grid(row=1, column=1, pady=20)

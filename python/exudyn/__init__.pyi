@@ -1476,7 +1476,7 @@ class VSettingsGeneral:
     limitWindowToScreenSize: bool
     """True: size for render window of respective view is limited to screen size; False: larger window sizes (e.g. for rendering) allowed according to renderWindowSize."""
     linuxDisplayScaleFactor: float
-    """Scaling factor for linux, which cannot determined from system by now; adjust this value to scale dialog fonts and renderer fonts."""
+    """an additional factor on Linux, multiplied with the display scaling of the system, for the texts of the render window and the size of the dialogs; for a system that reports no or a wrong scaling; acts while the renderer runs."""
     minSceneSize: float
     """minimum scene size for initial scene size and for autoFitScene, to avoid division by zero; SET GREATER THAN ZERO."""
     pointSize: float
@@ -1516,7 +1516,7 @@ class VSettingsGeneral:
     useMultiThreadedRendering: bool
     """true = rendering is done in separate thread; false = no separate thread, which may be more stable but has lagging interaction for large models (do not interact with models during simulation); you MUST set this parameter BEFORE call to SC.renderer.Start(); MAC OS: uses always false, because MAC OS does not support multi threaded GLFW."""
     useWindowsDisplayScaleFactor: bool
-    """the Windows display scaling (monitor scaling; content scaling) factor is used for increased visibility of texts on high resolution displays; based on GLFW glfwGetWindowContentScale; deactivated on linux compilation as it leads to crashes (adjust textSize manually!)."""
+    """the display scaling of the system (monitor scaling, e.g. 150 percent on Windows or fractional scaling on Linux) scales the texts of the render window and the dialogs; read by GLFW (glfwGetWindowContentScale; on Linux from GLFW 3.3.6 on) and followed when it changes; acts while the renderer runs."""
     zoomAllUseBoundingBox: bool
     """if true, use exact scene bounding box (but not including texts) for zoom; does not include perspective effects!"""
     def GetDictionary(self) -> dict: ...
@@ -1968,7 +1968,7 @@ class VSettingsDialogs:
     columnWidthValue: float
     """width of the value column of a settings dialog, as a fraction of the width of the dialog."""
     fontScaling: float
-    """scaling of the font in dialogs; 0 = automatic, which is the system display scaling on Windows and Linux and a fixed factor on MacOS. Any value > 0 sets the font scaling on EVERY platform, which is the way to make the dialogs readable on a Linux desktop."""
+    """scaling of the font in dialogs; 0 = automatic, which is the system display scaling on Windows and Linux and a fixed factor on MacOS. Any value > 0 sets the font scaling on EVERY platform, which is the way to make the dialogs readable on a Linux desktop; it applies to the settings dialogs, the help (H), the command window (X) and the quit question."""
     multiThreadedDialogs: bool
     """True: During dialogs, the OpenGL render windows will still get updates of changes in dialogs, etc., which may cause problems on some platforms or for some (complicated) models; False: changes of dialogs will take effect when dialogs are closed."""
     openTreeView: bool
