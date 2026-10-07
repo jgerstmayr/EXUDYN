@@ -2,11 +2,14 @@
   "number": 886,
   "title": "Exceptions",
   "author": "JG",
-  "status": "RAISED",
+  "status": "CLOSED",
   "type": "EXTENSION",
   "effort": "MEDIUM",
   "description": "test py::raise_from for Python-induced exceptions (in renderPythonInterface) or for SystemErrors; check whether execeptions are originating from C or Python, see pybind11 Exceptions",
   "dateRaised": "2022-01-25",
   "deadline": "2022-03-26",
-  "workingRemarks": "planned as revision2026b step RG3.39 (triage 2026-10-07)"
+  "dateResolved": "2026-10-07 11:36",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "already done: an exception in a Python user function arrives as ModelError with the original exception as __cause__ and its traceback (performanceErrors.md, An error inside your own user function)",
+  "resolvedInVersion": "1.12.433"
 }

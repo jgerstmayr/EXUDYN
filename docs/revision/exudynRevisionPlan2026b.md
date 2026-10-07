@@ -594,13 +594,9 @@ are said once above the table, "Reached as `simulationSettings.timeIntegration.n
     `tools/checkPdfLog.py`, the baseline `tools/pdfLogBaseline.json`; gate 4 of `WORKFLOW.md` and D17 say when.
 
 <a id="rg3-39"></a>
-**RG3.39** *(group RG3; from the triage of 2026-10-07, maintainer: "Group B goes into the plan")* **How a model is built, and what an error says**, in the manual:
-    - **RG3.39.1** (#855) the general approach - add nodes, objects, markers, loads, sensors, `mbs.Assemble()`, solve -
-      in the overview, with a figure;
-    - **RG3.39.2** (#888) system errors, Python errors and warnings: what each means, how an exception is handled, with
-      an example;
-    - **RG3.39.3** (#886) whether `py::raise_from` keeps the Python cause of an exception raised in a user function or
-      the renderer, so the message tells where it came from.
+**RG3.39** **CLOSED 2026-10-07** — [log](exudynRevisionLog2026b.md#rg3-39) *(maintainer 2026-10-07: "I think 855 is
+already in the docs. The others: check - but ideally they can also be removed")* How a model is built, and what an
+error says (#855, #886, #888): all three were in the manual already.
 
 ## RG4 — Implementation problems and bugs
 
@@ -2192,7 +2188,6 @@ issue and a short title only. The open issues that are not steps are in the trac
 | RG6.11, RG6.12 | #2154, #2155, #2244, #2281 | textures; a ruler and consistent triangle orientation |
 | RG12.44 to RG12.46 | #2075, #2342, #1931, #1932, #1941, #782, #1863, #1864, #1892 | dictionaries and item visualization, URDF import, `MatrixContainer` |
 | RG2.6 | #559, #591, #2326 | three old test models |
-| RG3.39 | #855, #886, #888 | how a model is built, and what an error says |
 | RG4.21 to RG4.24 | #303, #574, #2315-#2317, #1548, #926 | velocity/time-dependent constraints, a 3D sliding joint, ODE1 load Jacobians, rolling friction |
 | RG2.4.5 | #2881 | Ubuntu GUI check: curved tiling and recorded frames to be checked again |
 | RG9.6 | #2866 | the member functions an item must provide, checked when it compiles (from #2498) |

@@ -16385,3 +16385,18 @@ please close. The others: do exactly as proposed. Group B goes into the plan.")*
   #1078, #1087, #1104, #1194, #1414, #1415, #1549, #1674, #1675, #1676, #1719, #1720, #1722, #1776, #1821, #1822,
   #1904, #1910, #1920, #1989, #2097, #2106, #2110, #2120, #2131, #2223, #2238; each has the remark.
 - **#2278 resolved** (no crash when the renderer closes on Ubuntu); RG6.8.5 keeps #2140 and #2277.
+
+<a id="rg3-39"></a>
+### RG3.39 — closed: the three documentation issues were done (2026-10-07)
+
+*(Maintainer 2026-10-07: "#855, #888, #886: I think 855 is already in the docs. The others: check - but ideally they
+can also be removed.")*
+
+- **#855** (Add -> Assemble -> Solve): `introductionBasics.md` §*Interaction with the Exudyn module* says it, with the
+  figures of the module and of the system data in `introduction.md`.
+- **#888** (system errors, Python errors, warnings, with an example): `performanceErrors.md` §*Errors: what Exudyn
+  raises, and what to do about it* - the exception types, catching a solver failure, an error in a user function,
+  where the message is written, deprecation warnings.
+- **#886** (`py::raise_from`, whether the Python cause is kept): an exception in a Python user function arrives as
+  `ModelError` with the original exception as `__cause__` and its traceback (`performanceErrors.md` §*An error inside
+  your own user function*).

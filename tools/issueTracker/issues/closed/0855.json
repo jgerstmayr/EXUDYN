@@ -1,0 +1,15 @@
+{
+  "number": 855,
+  "title": "Assemble() docu",
+  "author": "JG",
+  "status": "CLOSED",
+  "type": "DOCU",
+  "effort": "MEDIUM",
+  "description": "add information on general approach of adding objects and mbs.Assemble() procedure in Overview on Exudyn; add figure Add Nodes/Objects->Assemble->Solve",
+  "dateRaised": "2022-01-09",
+  "deadline": "2022-03-10",
+  "dateResolved": "2026-10-07 11:36",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "already done: introductionBasics.md (Interaction with the Exudyn module) describes adding items, mbs.Assemble() and solving, with the overview figures in introduction.md (maintainer 2026-10-07)",
+  "resolvedInVersion": "1.12.432"
+}

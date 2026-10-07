@@ -8,10 +8,10 @@ Every entry carries the **type** of the issue, then its **priority** and its **e
 
 General information on current version:
 
-- Exudyn version = 1.12.431.dev1
+- Exudyn version = 1.12.434.dev1
 - last change = 2026-10-07
 - Number of issues = 2887
-- Number of resolved issues = 2745 (431 in current version)
+- Number of resolved issues = 2748 (434 in current version)
 
 ## Resolved issues and resolved bugs before version 1.12
 
@@ -7980,14 +7980,6 @@ The following list contains the issues which have been **RESOLVED** in the accor
 - `EXTENSION` `LOW EFF` GeneralContact (#904)
   - description: PostNewton (sphere-sphere, ancf-circle): add if clause to switch off contact in case of negative contact force
   - date raised: 2022-01-31
-- `DOCU` `MEDIUM EFF` add information on error handling (#888)
-  - description: explain System errors, Python errors and Warnings; explain exception handling and add example
-  - **remarks:** planned as revision2026b step RG3.39 (triage 2026-10-07)
-  - date raised: 2022-01-25
-- `EXTENSION` `MEDIUM EFF` Exceptions (#886)
-  - description: test py::raise\_from for Python-induced exceptions (in renderPythonInterface) or for SystemErrors; check whether execeptions are originating from C or Python, see pybind11 Exceptions
-  - **remarks:** planned as revision2026b step RG3.39 (triage 2026-10-07)
-  - date raised: 2022-01-25
 - `CHANGE` `MEDIUM EFF` GeneralContact (#867)
   - description: change deltaV terms in ANCFCable and TrigSphere contact to fit signs used in docu
   - date raised: 2022-01-17
@@ -7998,10 +7990,6 @@ The following list contains the issues which have been **RESOLVED** in the accor
   - description: use ParallelFor with costs argument in GeneralContact and CSystem, to optimize usage
   - **remarks:** planned as revision2026b step RG5.3 (triage 2026-10-07)
   - date raised: 2022-01-13
-- `DOCU` `MEDIUM EFF` Assemble() docu (#855)
-  - description: add information on general approach of adding objects and mbs.Assemble() procedure in Overview on Exudyn; add figure Add Nodes/Objects-\>Assemble-\>Solve
-  - **remarks:** planned as revision2026b step RG3.39 (triage 2026-10-07)
-  - date raised: 2022-01-09
 - `DOCU` `HIGH EFF` Jacobian documentation (#845)
   - description: add documentation to object and connector jacobians
   - **remarks:** planned as revision2026b step RG14.3 (triage 2026-10-07)

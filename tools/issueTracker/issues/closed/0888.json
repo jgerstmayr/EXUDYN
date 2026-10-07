@@ -1,0 +1,15 @@
+{
+  "number": 888,
+  "title": "add information on error handling",
+  "author": "JG",
+  "status": "CLOSED",
+  "type": "DOCU",
+  "effort": "MEDIUM",
+  "description": "explain System errors, Python errors and Warnings; explain exception handling and add example",
+  "dateRaised": "2022-01-25",
+  "deadline": "2022-03-26",
+  "dateResolved": "2026-10-07 11:36",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "already done: performanceErrors.md, Errors: what Exudyn raises, and what to do about it - the exception types, catching a solver failure with an example, user function errors, where messages are written, deprecation warnings",
+  "resolvedInVersion": "1.12.434"
+}
