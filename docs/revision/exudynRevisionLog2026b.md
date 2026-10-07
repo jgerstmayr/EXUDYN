@@ -16550,3 +16550,17 @@ perfect, but the tkinter dialogs.")*
 - `exudyn.misc.GUI.CheckTkFontSystem`: when the first tkinter root is created on Linux and Tk reports
   `::tk::pkgconfig get fontsystem` = `x11`, a NOTE with that command is printed, once per process
   (`TkFontSystemHint`, tested in `test_guiValues.py` for the four cases). `condaEnvironments.md` has the note.
+
+<a id="rg10-20"></a>
+### RG10.20 — `exudev` for Python 3.15 and 3.16 (2026-10-07, #2891)
+
+*(Maintainer 2026-10-07: "the exudev and similar scripts only work until 3.14. Please also allow Python 3.15 and Python
+3.16 with "315" and env venvP315, etc., keeping the standard still with 3.10-3.14.")*
+
+- `tools/exudev/runner.py`: `newerPythonVersions = ['P315', 'P316']` beside the matrix `allPythonVersions`
+  (P310-P314); `NormalizePythonVersions` accepts both lists, `all` is the matrix only. Every command with `--py`
+  (build, test, examples, perf, linux --wsl-conda, ...) then uses `venvP315`/`venvP316`; `--env` never had a limit.
+- Checked: the other tools have no list of versions - `exudev.bat` finds any Python, `setup.py` builds for the Python
+  that runs it; the manylinux script builds cp310-cp314 unless given tags, and the classifiers name the wheels CI
+  builds, both left as they are.
+- `test_exudev.py::testNewerPythonsAreAcceptedWhenNamedButNotInAll`; `condaEnvironments.md` says it.

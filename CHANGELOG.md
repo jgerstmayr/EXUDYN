@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.12 | Metheney | 344 | 1.12.439 |
+| 1.12 | Metheney | 345 | 1.12.440 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
 | 1.9 | Krall | 235 | 1.9.234 |
@@ -29,6 +29,10 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.12 - Metheney (current)
 
+- **1.12.440** `EXTENSION` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` exudev accepts Python 3.15 and 3.16 when named (--py 315, venvP315) (#2891)
+  - description: The maintainer, 2026-10-07: 'the exudev and similar scripts only work until 3.14. Please also allow Python 3.15 and Python 3.16 with 315 and env venvP315, etc., keeping the standard still with 3.10-3.14.' revision2026b step RG10.20
+  - **notes:** exudev accepts --py 315 and 316 (also 3.15, P316) with the environments venvP315 and venvP316; --py all stays the version matrix 3.10-3.14
+  - date resolved: **2026-10-07 16:02**, date raised: 2026-10-07
 - **1.12.439** `DOCU` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` ffmpeg for the videos: conda install ffmpeg and pip install ffmpeg-python on every platform (#2889)
   - description: The maintainer, 2026-10-07: 'for installation of ffmpeg, for the according places in the docs, please add: conda install ffmpeg (install ffmpeg in general); pip install ffmpeg-python (install python package). Tested on MacOS and linux. This removes the necessity for homebrew on mac (which takes very long); and it directly runs in the terminal.' revision2026b step RG3.41
   - **notes:** Videos from recorded frames: the documentation and the messages of exudyn.interactive name conda install ffmpeg and pip install ffmpeg-python, which work on Windows, Linux and macOS without Homebrew

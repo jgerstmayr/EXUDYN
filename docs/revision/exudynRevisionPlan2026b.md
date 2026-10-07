@@ -1480,6 +1480,11 @@ change an issue wrote.
 "On MacOS, with python 3.14 and 3.15 the 'pip install --group dev' does no work with the scipy restriction")*
 **The scipy pin of the `dev` group only where scipy 1.15.2 has wheels**: not on macOS, not on Python 3.14 and later.
 
+<a id="rg10-20"></a>
+**RG10.20** **DONE 2026-10-07** (#2891) — [log](exudynRevisionLog2026b.md#rg10-20) *(group RG10; maintainer 2026-10-07: "Please
+also allow Python 3.15 and Python 3.16 with '315' and env venvP315, etc., keeping the standard still with 3.10-3.14")*
+**`exudev --py 315` / `316`**: accepted when named, with `venvP315`/`venvP316`; `--py all` stays 3.10-3.14.
+
 ## RG11 — Misc
 
 What belongs to no group yet. Three of a kind here are a reason to propose a group of their own.

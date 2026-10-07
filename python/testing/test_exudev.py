@@ -230,3 +230,14 @@ def testIssueHtmlWritesTheOverviewAlone(tmp_path, monkeypatch):
     assert step.action() == 0
     page = (tmp_path / (tracker.trackerFile + '.html')).read_text(encoding='utf-8')
     assert '<h2>ISSUE Tracker</h2>' in page and '<td>2885</td>' in page
+
+
+#%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+def testNewerPythonsAreAcceptedWhenNamedButNotInAll():
+    """#2891: --py 315 / 3.16 select venvP315 / venvP316; 'all' stays the version matrix 3.10-3.14"""
+    assert runner.NormalizePythonVersions('315') == ['P315']
+    assert runner.NormalizePythonVersions('3.16,P313') == ['P316', 'P313']
+    assert runner.EnvironmentName('P315') == 'venvP315'
+    assert runner.NormalizePythonVersions('all') == ['P310', 'P311', 'P312', 'P313', 'P314']
+    with pytest.raises(SystemExit):
+        runner.NormalizePythonVersions('317')

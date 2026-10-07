@@ -1,0 +1,16 @@
+{
+  "number": 2891,
+  "title": "exudev accepts Python 3.15 and 3.16 when named (--py 315, venvP315)",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "EXTENSION",
+  "effort": "LOW",
+  "description": "The maintainer, 2026-10-07: 'the exudev and similar scripts only work until 3.14. Please also allow Python 3.15 and Python 3.16 with 315 and env venvP315, etc., keeping the standard still with 3.10-3.14.' revision2026b step RG10.20",
+  "dateRaised": "2026-10-07",
+  "deadline": "2027-04-05",
+  "dateResolved": "2026-10-07 16:02",
+  "resolvedAuthor": "Claude-JG",
+  "file": "tools/exudev/runner.py",
+  "releaseNotes": "exudev accepts --py 315 and 316 (also 3.15, P316) with the environments venvP315 and venvP316; --py all stays the version matrix 3.10-3.14",
+  "resolvedInVersion": "1.12.440"
+}

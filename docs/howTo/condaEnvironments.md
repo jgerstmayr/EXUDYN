@@ -82,7 +82,8 @@ users see. A single group can be installed alone, e.g. `pip install --group docs
 > table below and install the matching version afterwards.
 
 Test environments per Python version are named `venvP310` ... `venvP314` and carry an Exudyn build
-for that version.
+for that version. `--py all` of `exudev` means these five; a newer Python is used when named, e.g.
+`--py 315` with `venvP315` (3.15 and 3.16 are accepted), until wheels are built for it (#2891).
 
 ### Documentation toolchain only
 

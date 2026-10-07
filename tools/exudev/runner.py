@@ -29,7 +29,10 @@ import sys
 import time
 
 #the conda environments, see docs/howTo/condaEnvironments.md
-allPythonVersions = ['P310', 'P311', 'P312', 'P313', 'P314']
+allPythonVersions = ['P310', 'P311', 'P312', 'P313', 'P314']   #the version matrix, which 'all' means
+#newer Pythons, accepted when named (--py 315 -> venvP315) but not part of 'all' until wheels are built
+#for them (#2891)
+newerPythonVersions = ['P315', 'P316']
 generatorEnvironment = 'venvExuP313'     #generators, documentation and the checking tools
 
 onWindows = (sys.platform == 'win32')
@@ -131,9 +134,10 @@ def NormalizePythonVersions(specification):
             raise SystemExit('exudev: cannot read the Python version "' + token + '"; '
                              'use 313, P313, 3.13 or all')
         tag = 'P' + digits
-        if tag not in allPythonVersions:
+        if tag not in allPythonVersions + newerPythonVersions:
             raise SystemExit('exudev: unknown Python version "' + token + '"; known versions are '
-                             + ', '.join(allPythonVersions) + ' (see docs/howTo/condaEnvironments.md)')
+                             + ', '.join(allPythonVersions + newerPythonVersions)
+                             + ' (see docs/howTo/condaEnvironments.md)')
         if tag not in result:
             result += [tag]
 
