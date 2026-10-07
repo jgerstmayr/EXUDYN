@@ -336,6 +336,7 @@ void VisualizationSystemContainer::InitializeRenderState(bool validInitializatio
 		renderViewData.zoomAllRequest = false;
 		renderViewData.saveImage = false;
 		renderViewData.saveImageOpenGL = false;
+		renderViewData.saveImageAsData = false; //#2887
 
 		renderState.validInitialization = validInitialization; //not valid at SystemContainer instantiation (only default VisualizationSettings used)
 		//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++

@@ -89,10 +89,10 @@ class RenderViewDataVSC
 {
 public:
 	RenderState renderState;						//!< RenderState per view stored here, linked to GLFWClient, etc.
-	bool zoomAllRequest;					//!< used to perform zoom all()
-	bool saveImage;							//!< set true: signal to save the current state shall be rendered and saved to a given image (with consecutive number); will be set false, as soon as frame is saved
-	bool saveImageOpenGL;					//!< set true, as soon as graphics is updated (prevents that a frame is saved prior to updating to current visualization state); set false, as soon as frame is saved
-	bool saveImageAsData;					//!< if true, does not store image as file but stores retrievable data, used by RedrawAndGetImage()
+	bool zoomAllRequest = false;			//!< used to perform zoom all()
+	bool saveImage = false;					//!< set true: signal to save the current state shall be rendered and saved to a given image (with consecutive number); will be set false, as soon as frame is saved
+	bool saveImageOpenGL = false;			//!< set true, as soon as graphics is updated (prevents that a frame is saved prior to updating to current visualization state); set false, as soon as frame is saved
+	bool saveImageAsData = false;			//!< (#2887) if true, does not store image as file but stores retrievable data, used by RedrawAndGetImage()
 	SlimVectorBase<Index, 2> imageDataSize; //!< if saveImageAsData=true, contains image width and height stored in imageData
 	ResizableArray<uint8_t> imageData;		//!< image data in case of saveImageAsData=true
 };

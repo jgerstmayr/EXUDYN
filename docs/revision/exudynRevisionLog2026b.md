@@ -16436,3 +16436,22 @@ used for computation. cpuTime is already there at the end.")*
   binary solution file keeps its format.
 - Test model `fileHeaderThreadsTest.py` (result 33): 2 and 1 threads, read back from both files.
 - The example header in `gettingStartedExample.md` shows the new line.
+
+<a id="rg2-4-5-1"></a>
+### RG2.4.5.1 — recorded frames kept in memory: `saveImageAsData` not initialized (2026-10-07, #2887)
+
+*(Maintainer 2026-10-07, forwarding the GUI check agent - S6, Ubuntu over xrdp, venvExuP313, HEAD c3327c06 - "found,
+fixed, built and tested, then reverted here; please apply the following (and add an issue)".)*
+
+- **Cause** (the agent): `RenderViewDataVSC::saveImageAsData` had no initial value, and `InitializeRenderState` reset
+  `saveImage`/`saveImageOpenGL` but not it. With garbage that is nonzero, `SaveSceneToFile` took the path of
+  `RedrawAndGetImage()` and returned before the directory or the file was written - no `images/` folder, no error, only
+  the message of the first frame added by RG2.4.5. Random by nature: `guiManualCheckModel.py` (start/stop, then
+  SolutionViewer) failed 2 of 2, a minimal script worked. This explains the missing folder of RG2.4.5, which WSL could
+  not reproduce.
+- **Second**: in data mode `GlfwRenderer::SaveImage` still built a file name, counted `saveImageFileCounter` and printed
+  "SaveImage: writing ...", so a `RedrawAndGetImage()` before a recording used up `frame00000`.
+- **Fix, as given**: `saveImageAsData = false` in the declaration and in `InitializeRenderState`; `SaveImage` returns
+  after `SaveSceneToFile(viewID, "")` in data mode, before any file name. The other three flags of the struct
+  (`zoomAllRequest`, `saveImage`, `saveImageOpenGL`) also got `= false` in the declaration, the same kind of member.
+- Tested by the agent on Ubuntu; here the build and the suites (no window can be opened in this session).

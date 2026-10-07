@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.12 | Metheney | 340 | 1.12.435 |
+| 1.12 | Metheney | 341 | 1.12.436 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
 | 1.9 | Krall | 235 | 1.9.234 |
@@ -29,6 +29,10 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.12 - Metheney (current)
 
+- **1.12.436** <span class="textred">`BUG`</span> `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` Record frames in the SolutionViewer writes no images, at random: saveImageAsData not initialized (#2887)
+  - description: Found by the GUI check agent on Ubuntu over xrdp (S6, HEAD c3327c06): RenderViewDataVSC::saveImageAsData was never initialized and InitializeRenderState did not reset it; with a nonzero value SaveSceneToFile took the RedrawAndGetImage() path and returned before the directory or the file was written - no images folder, no error, only the message of the first frame. Random by nature (guiManualCheckModel.py failed 2/2, a minimal script worked). Second: in data mode SaveImage built a file name, counted the frame and printed it, so a RedrawAndGetImage() before a recording used up frame00000 and announced a file that never existed. revision2026b step RG2.4.5.1
+  - **notes:** Record frames in the SolutionViewer writes its images every time: the flag that keeps a frame in memory for RedrawAndGetImage() is initialized, and RedrawAndGetImage() no longer uses up a frame number
+  - date resolved: **2026-10-07 12:54**, date raised: 2026-10-07
 - **1.12.435** `EXTENSION` `HIGH` `MEDIUM EFF` `resolved by: Claude-JG` coordinatesSolution (#1450)
   - description: add number of threads to solution files and more details on computer; check parameter variation and other files (e.g. numberOfThreads and final computation time)
   - **notes:** The version line of the solution and sensor file headers ends with the number of threads of the computation, e.g. '\#Exudyn version = 1.12.435.dev1; Python3.13.2; Windows x86\_64 FLOAT64; 4 thread(s)'

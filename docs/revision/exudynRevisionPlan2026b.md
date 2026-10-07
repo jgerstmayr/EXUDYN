@@ -175,6 +175,10 @@ NOT cover, and about the testing that no suite can do.
       read from the back buffer before the swap (black images under a remote desktop), the first frame prints its
       absolute path, a failed directory or file is reported in the console and in the render window - S6 to be checked
       again on Ubuntu and Windows.
+        - **RG2.4.5.1** **DONE 2026-10-07** — [log](exudynRevisionLog2026b.md#rg2-4-5-1) (#2887) the cause of the missing
+          frames, found by the GUI check agent on Ubuntu: `saveImageAsData` of a view was never initialized, and a nonzero
+          value kept every recorded frame in memory instead of writing it; a `RedrawAndGetImage()` no longer counts a
+          frame number or prints a file name.
 
 <a id="rg2-5"></a>
 **RG2.5** **DONE 2026-10-04** (#2832) — [log](exudynRevisionLog2026b.md#rg2-5) *(group RG2; feedback of a colleague installing Exudyn, forwarded by the maintainer 2026-10-04: "The

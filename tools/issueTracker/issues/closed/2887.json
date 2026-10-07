@@ -1,0 +1,16 @@
+{
+  "number": 2887,
+  "title": "Record frames in the SolutionViewer writes no images, at random: saveImageAsData not initialized",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "BUG",
+  "effort": "LOW",
+  "description": "Found by the GUI check agent on Ubuntu over xrdp (S6, HEAD c3327c06): RenderViewDataVSC::saveImageAsData was never initialized and InitializeRenderState did not reset it; with a nonzero value SaveSceneToFile took the RedrawAndGetImage() path and returned before the directory or the file was written - no images folder, no error, only the message of the first frame. Random by nature (guiManualCheckModel.py failed 2/2, a minimal script worked). Second: in data mode SaveImage built a file name, counted the frame and printed it, so a RedrawAndGetImage() before a recording used up frame00000 and announced a file that never existed. revision2026b step RG2.4.5.1",
+  "dateRaised": "2026-10-07",
+  "deadline": "2027-04-05",
+  "dateResolved": "2026-10-07 12:54",
+  "resolvedAuthor": "Claude-JG",
+  "file": "src/Graphics/VisualizationSystemContainer.h",
+  "releaseNotes": "Record frames in the SolutionViewer writes its images every time: the flag that keeps a frame in memory for RedrawAndGetImage() is initialized, and RedrawAndGetImage() no longer uses up a frame number",
+  "resolvedInVersion": "1.12.436"
+}

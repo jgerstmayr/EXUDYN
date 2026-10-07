@@ -2634,6 +2634,14 @@ void GlfwRenderer::SaveImage(Index viewID)
 	//at this time, the scene must have been rendered (called directly from render loop after Render() )
 	if (basicVisualizationSystemContainer->SaveImageRequest(viewID))
 	{
+		//RedrawAndGetImage() keeps the frame in memory: no file name, no frame number and no message (#2887)
+		if (basicVisualizationSystemContainer->SaveImageAsData(viewID))
+		{
+			SaveSceneToFile(viewID, "");
+			basicVisualizationSystemContainer->SaveImageFinished(viewID);
+			return;
+		}
+
 		//exudyn.config.outputDirectory applies to images as well (#2418)
 		STDstring filename = ResolveOutputFileName(visSettings->exportImages.saveImageFileName);
 
