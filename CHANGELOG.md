@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.12 | Metheney | 347 | 1.12.442 |
+| 1.12 | Metheney | 348 | 1.12.443 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
 | 1.9 | Krall | 235 | 1.9.234 |
@@ -29,6 +29,10 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.12 - Metheney (current)
 
+- **1.12.443** `FIX` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` docs job of GitLab CI fails: the generated page of a new test model was not committed (#2894)
+  - description: GitLab docs job on ca70704f (tmp/gitlabRunsFailed/output.txt): docs/generated/testModels/testModelsIndex.md:7: WARNING: toctree contains reference to nonexisting document 'docs/generated/testModels/fileHeaderThreadsTest' - with -W one warning fails the build. The page was generated with \#1450 but left untracked (git add -u adds no new files); regenerate.py reported it as a tier 2 warning only. Fix: commit the page; regenerate.py --check fails for a new generated file git does not know. revision2026b step RG10.21
+  - **notes:** The documentation builds from a fresh clone again: the page of the test model fileHeaderThreadsTest is committed, and the regeneration check fails for a newly generated page that is not in git
+  - date resolved: **2026-10-07 17:47**, date raised: 2026-10-07
 - **1.12.442** `CHECK` `MEDIUM EFF` `raised by: Claude-JG` `resolved by: Claude-JG` tkinter dialogs look awkward on Ubuntu: the Tk of conda on Linux has no Xft (#2890)
   - description: The maintainer, 2026-10-07: 'as I have now also the build config for Ubuntu: I could test now improvements for font scaling (or fonts in general - they look awkward on ubuntu). If you include a setting (like for activating font scaling on linux, or coupling it temporarily for macos), I could test, if it works now.' Two settings to test, default off: general.useDisplayScaleFactorOnLinux (glfwGetWindowContentScale on linux, \#2277) and general.useTextMipmaps (the 64-pixel characters of the bitmap font minified with mipmaps instead of 2x2 linear sampling). After the tests: defaults decided, or the settings removed. revision2026b step RG6.13 \[2026-10-07, Claude-JG\]: Correction by the maintainer, 2026-10-07: 'It is not about the renderer text - that is perfect, but the tkinter dialogs.' The two renderer test settings are removed again. Cause found: the libtk8.6.so of the conda environments (tk 8.6.14/8.6.15 of the default channel) links no Xft, so Tk draws with X11 core fonts - no anti-aliasing, few sizes; the system Tk links libXft. Fix: the Xft build of conda-forge, conda install -c conda-forge 'tk=\*=xft\_\*'; the dialogs say so once on Linux when Tk reports fontsystem x11.
   - **notes:** On Linux with conda, the dialogs draw smooth fonts with the Xft build of tk from conda-forge; Exudyn says so once, and the installation page has a section Working with Ubuntu

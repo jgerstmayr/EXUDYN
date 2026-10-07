@@ -1,0 +1,16 @@
+{
+  "number": 2894,
+  "title": "docs job of GitLab CI fails: the generated page of a new test model was not committed",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "FIX",
+  "effort": "LOW",
+  "description": "GitLab docs job on ca70704f (tmp/gitlabRunsFailed/output.txt): docs/generated/testModels/testModelsIndex.md:7: WARNING: toctree contains reference to nonexisting document 'docs/generated/testModels/fileHeaderThreadsTest' - with -W one warning fails the build. The page was generated with #1450 but left untracked (git add -u adds no new files); regenerate.py reported it as a tier 2 warning only. Fix: commit the page; regenerate.py --check fails for a new generated file git does not know. revision2026b step RG10.21",
+  "dateRaised": "2026-10-07",
+  "deadline": "2027-04-05",
+  "dateResolved": "2026-10-07 17:47",
+  "resolvedAuthor": "Claude-JG",
+  "file": "tools/regenerate.py",
+  "releaseNotes": "The documentation builds from a fresh clone again: the page of the test model fileHeaderThreadsTest is committed, and the regeneration check fails for a newly generated page that is not in git",
+  "resolvedInVersion": "1.12.443"
+}

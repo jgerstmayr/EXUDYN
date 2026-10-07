@@ -1494,6 +1494,12 @@ change an issue wrote.
 also allow Python 3.15 and Python 3.16 with '315' and env venvP315, etc., keeping the standard still with 3.10-3.14")*
 **`exudev --py 315` / `316`**: accepted when named, with `venvP315`/`venvP316`; `--py all` stays 3.10-3.14.
 
+<a id="rg10-21"></a>
+**RG10.21** **DONE 2026-10-07** (#2894) — [log](exudynRevisionLog2026b.md#rg10-21) *(group RG10; the docs job of GitLab CI on
+ca70704f, forwarded by the maintainer)* **A new generated page that git does not know fails the regeneration check**:
+the page of the test model `fileHeaderThreadsTest` had not been committed, so the committed index referred to a missing
+page; it is committed, and `tools/regenerate.py --check` refuses such a file instead of warning.
+
 ## RG11 — Misc
 
 What belongs to no group yet. Three of a kind here are a reason to propose a group of their own.

@@ -103,6 +103,16 @@ def GetChangedFiles(repositoryRoot, paths=None):
 
 
 #%%******************************************************************************************************
+def GetUntrackedFiles(repositoryRoot):
+    """Set of repository-relative paths that git does not know and does not ignore."""
+    result = subprocess.run(['git', 'ls-files', '--others', '--exclude-standard'],
+                            capture_output=True, text=True, cwd=repositoryRoot)
+    if result.returncode != 0:
+        raise RuntimeError('git ls-files failed: ' + result.stderr.strip())
+    return set([line.strip() for line in result.stdout.splitlines() if line.strip()])
+
+
+#%%******************************************************************************************************
 def DiffersIgnoringDates(repositoryRoot, fileName):
     """
     True if the working copy of fileName really differs from HEAD, ignoring the volatile
@@ -227,6 +237,10 @@ def Main():
 
     tier1Drift = SelectDrift(changed, tier1Paths)
     tier2Drift = SelectDrift(changed, tier2Paths)
+    #a generated page that git does not know is not a warning: the committed pages refer to it (a new test
+    #model is in the committed index), so a fresh clone builds documentation with a dangling reference -
+    #which is how the docs job of CI failed on fileHeaderThreadsTest (#2894)
+    tier2New = SelectDrift(GetUntrackedFiles(repositoryRoot), tier2Paths) & tier2Drift
     otherDrift = changed - tier1Drift - tier2Drift
     otherDrift = set([f for f in otherDrift if not IsExcluded(f)])
 
@@ -237,13 +251,15 @@ def Main():
 
     if tier1Drift:
         ReportDrift('TIER 1 DRIFT (API surface, hard gate)', tier1Drift)
-    if tier2Drift:
-        ReportDrift('tier 2 drift (documentation, warning)', tier2Drift)
+    if tier2New:
+        ReportDrift('NEW GENERATED FILES NOT IN GIT (hard gate: "git add" them)', tier2New)
+    if tier2Drift - tier2New:
+        ReportDrift('tier 2 drift (documentation, warning)', tier2Drift - tier2New)
     if otherDrift:
         ReportDrift('drift outside both tiers (unexpected - check the manifest)', otherDrift)
 
     print('')
-    if tier1Drift or otherDrift:
+    if tier1Drift or otherDrift or tier2New:
         print('Generated files differ from the commit. If the change was intended, commit it;')
         print('if not, a generator or its input has changed unexpectedly.')
         print('If the difference is only a version string, the version was bumped after the last')

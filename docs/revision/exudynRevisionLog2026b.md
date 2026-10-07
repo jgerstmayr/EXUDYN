@@ -16607,3 +16607,19 @@ the view0.window.globalFontSize => add issues/step and fix it now if possible.")
   fonts), tested in `test_guiValues.py`. The dialogs of `exudyn.interactive` (SolutionViewer, ...) are not changed.
 - The descriptions of the three settings say what they do now. Not checked on a screen here: Ubuntu (scaling,
   fractional, the factor, H/X fonts) and that Windows looks as before.
+
+<a id="rg10-21"></a>
+### RG10.21 — the docs job failed: a generated page not committed (2026-10-07, #2894)
+
+*(Maintainer 2026-10-07: "the current gitlab docs fail under: tmp\gitlabRunsFailed" - the docs job on ca70704f.)*
+
+- The one warning, fatal under `-W`: `docs/generated/testModels/testModelsIndex.md:7: WARNING: toctree contains
+  reference to nonexisting document 'docs/generated/testModels/fileHeaderThreadsTest'`. The test model of RG18.1.4
+  (#1450) got its generated page, and the committed index lists it; the page itself stayed untracked, because the
+  commit took `git add -u`, which adds no new file. Locally the page existed, so the docs built.
+- `tools/regenerate.py` saw it - as **tier 2 drift, a warning** - and the gates of this session filtered the
+  uppercase `DRIFT` only. Now a file under `docs/generated` that git does not know (`git ls-files --others
+  --exclude-standard`) is reported as `NEW GENERATED FILES NOT IN GIT` and fails `--check`, so
+  `exudev generate --all-checks` stops; the committed pages refer to such a page, and a fresh clone has a dangling
+  reference. Tier 1 had this already: a file not in `HEAD` is drift there.
+- The page is committed.
