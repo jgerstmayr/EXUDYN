@@ -949,7 +949,7 @@ def SolutionViewer(mainSystem, solution=None, rowIncrement = 1, timeout=0.04, ru
         try:
             import ffmpeg # noqa # pylint: disable=unused-import
         except ImportError:
-            messagebox.showinfo('Warning', 'FFMPEG is not installed, therefore mp4 files cannot be generated.\nUse: "pip install ffmpeg-python"')
+            messagebox.showinfo('Warning', 'FFMPEG is not installed, therefore mp4 files cannot be generated.\nUse: "conda install ffmpeg" and "pip install ffmpeg-python"')
             return
         
         InteractiveImages2Video(closeAfterCreation=True) #goes back to SolutionViewer
@@ -1114,7 +1114,7 @@ def ConvertImages2Video(workingDir='images',
                         startNumber=0,
                         totalFrames=None,
                         videoCodec=None):
-    """function to call ffmpeg in the background and convert images to video; requires ffmpeg-python to be installed
+    """function to call ffmpeg in the background and convert images to video; requires the program ffmpeg and the package ffmpeg-python ("conda install ffmpeg", "pip install ffmpeg-python")
 
     Args:
         workingDir: directory where images are stored and where animation is written to
@@ -1142,7 +1142,7 @@ def ConvertImages2Video(workingDir='images',
     try:
         import ffmpeg
     except ImportError:
-        raise ImportError('ConvertImages2Video: ffmpeg not found! install using "pip install ffmpeg-python"')
+        raise ImportError('ConvertImages2Video: ffmpeg not found! install using "conda install ffmpeg" and "pip install ffmpeg-python"')
     
     kwargs = {}
     if totalFrames is not None:
@@ -1203,7 +1203,7 @@ def InteractiveImages2Video(closeAfterCreation=False,fontSize=11):
     try:
         import ffmpeg # noqa # pylint: disable=unused-import
     except ImportError:
-        raise ImportError('ConvertImages2Video: ffmpeg not found! install using "pip install ffmpeg-python"')
+        raise ImportError('ConvertImages2Video: ffmpeg not found! install using "conda install ffmpeg" and "pip install ffmpeg-python"')
 
     
     def RunConversion():

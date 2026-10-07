@@ -613,6 +613,12 @@ gitlab repo, the only info one has is the README")* **The getting-started page, 
 `python tools/exudev` instead of `python -m exudev` (also in BUILD.md, GIT.md, sphinxDocs.md), what to do when conda is
 not found, pip upgraded before `--group`, no stale counts; `README.md` and `README.rst` point to the page.
 
+<a id="rg3-41"></a>
+**RG3.41** **DONE 2026-10-07** (#2889) — [log](exudynRevisionLog2026b.md#rg3-41) *(group RG3; maintainer 2026-10-07, tested on Windows,
+macOS and Linux)* **ffmpeg installed with conda on every platform**: `conda install ffmpeg` and
+`pip install ffmpeg-python` in the GUI chapter (*Generating animations*), the extras table of `condaEnvironments.md` and
+the messages of `exudyn.interactive` when ffmpeg is missing; no Homebrew needed on macOS.
+
 ## RG4 — Implementation problems and bugs
 
 Problems that are real, reproducible, and too deep to fix in passing. They are recorded here

@@ -1,0 +1,16 @@
+{
+  "number": 2889,
+  "title": "ffmpeg for the videos: conda install ffmpeg and pip install ffmpeg-python on every platform",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "DOCU",
+  "effort": "LOW",
+  "description": "The maintainer, 2026-10-07: 'for installation of ffmpeg, for the according places in the docs, please add: conda install ffmpeg (install ffmpeg in general); pip install ffmpeg-python (install python package). Tested on MacOS and linux. This removes the necessity for homebrew on mac (which takes very long); and it directly runs in the terminal.' revision2026b step RG3.41",
+  "dateRaised": "2026-10-07",
+  "deadline": "2027-04-05",
+  "dateResolved": "2026-10-07 14:29",
+  "resolvedAuthor": "Claude-JG",
+  "file": "docs/manual/GUI.md",
+  "releaseNotes": "Videos from recorded frames: the documentation and the messages of exudyn.interactive name conda install ffmpeg and pip install ffmpeg-python, which work on Windows, Linux and macOS without Homebrew",
+  "resolvedInVersion": "1.12.439"
+}

@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.12 | Metheney | 343 | 1.12.438 |
+| 1.12 | Metheney | 344 | 1.12.439 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
 | 1.9 | Krall | 235 | 1.9.234 |
@@ -29,6 +29,10 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.12 - Metheney (current)
 
+- **1.12.439** `DOCU` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` ffmpeg for the videos: conda install ffmpeg and pip install ffmpeg-python on every platform (#2889)
+  - description: The maintainer, 2026-10-07: 'for installation of ffmpeg, for the according places in the docs, please add: conda install ffmpeg (install ffmpeg in general); pip install ffmpeg-python (install python package). Tested on MacOS and linux. This removes the necessity for homebrew on mac (which takes very long); and it directly runs in the terminal.' revision2026b step RG3.41
+  - **notes:** Videos from recorded frames: the documentation and the messages of exudyn.interactive name conda install ffmpeg and pip install ffmpeg-python, which work on Windows, Linux and macOS without Homebrew
+  - date resolved: **2026-10-07 14:29**, date raised: 2026-10-07
 - **1.12.438** `TESTING` `raised by: Claude-JG` `resolved by: Claude-JG` Ubuntu GUI check: curved triangle tiling and recorded frames not reproduced from here (#2881)
   - description: exudynGuiCheckUbuntu.txt: K13 - openGL.advanced.curvedTriangleTilingAngle 90/5/15 shows no visible difference in graphicsCurvedShapes.py; S6 - Record frames in the SolutionViewer wrote no images (no images folder). Both need a screen: to be repeated with 1.12.37x (a failed PNG write is now reported in the console; the images go to images/ in the directory the script was started from), and the tiling compared with Windows.
   - **notes:** On Ubuntu the curved triangles follow the tiling angle (K13) and Record frames in the SolutionViewer writes its images (S6): the frame is read before the buffer swap, the first frame prints where it is written, a failed write is reported

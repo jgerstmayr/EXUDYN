@@ -16490,3 +16490,19 @@ linux was outdated. It works!")*
 
 With 1.12.436 and later (#2887 and the back-buffer read of RG2.4.5) *Record frames* in the SolutionViewer writes the
 frames on Ubuntu. K13 was confirmed before; #2881 is resolved.
+
+<a id="rg3-41"></a>
+### RG3.41 — ffmpeg with conda on every platform (2026-10-07, #2889)
+
+*(Maintainer 2026-10-07: "for installation of ffmpeg, for the according places in the docs, please add the following
+(Note also: tested on MacOS and linux): #install ffmpeg in general: conda install ffmpeg; #install python package: pip
+install ffmpeg-python. This removes the necessity for homebrew on mac (which takes very long); and it directly runs in
+the terminal.")*
+
+- `docs/manual/GUI.md` (*Generating animations*): the two commands as the way for every platform, without conda the
+  package manager of the system; the note on macOS encoders (`h264_videotoolbox` when ffmpeg has no `libx264`) kept.
+- `docs/howTo/condaEnvironments.md`: the `[common]` extra names the program and its command beside `ffmpeg-python`.
+- `exudyn.interactive`: the message of *Make mp4*, the two `ImportError`s and the docstring of `ConvertImages2Video` name
+  both commands - `pip install ffmpeg-python` alone gives the package without the program.
+
+*(Maintainer, later the same day: "ffmpeg conda install: also tested on windows, by the way." - the GUI chapter says checked on all three.)*

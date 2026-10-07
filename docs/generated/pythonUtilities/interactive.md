@@ -107,7 +107,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`CMSexampleC
 
 [`ConvertImages2Video(workingDir = 'images', inputPattern = 'frame%05d.png', outputFile = 'animation.mp4', inputFrameRate = 25, outputFrameRate = 25, compressionCRF = 28, startNumber = 0, totalFrames = None, videoCodec = None)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/interactive.py#L1108)
 
-- **function description**: function to call ffmpeg in the background and convert images to video; requires ffmpeg-python to be installed
+- **function description**: function to call ffmpeg in the background and convert images to video; requires the program ffmpeg and the package ffmpeg-python ("conda install ffmpeg", "pip install ffmpeg-python")
 - **input**:
   - `workingDir`: directory where images are stored and where animation is written to
   - `inputPattern`: pattern of images; 'frame' is the name used in visualizationSettings.exportImages.saveImageFileName; if saveImageFormat=PNG, then the ending is .png

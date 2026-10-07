@@ -96,7 +96,7 @@ instead of being listed by hand:
 | command | installs |
 |---|---|
 | `pip install exudyn[tests]` | exactly what `TestModels/` needs: scipy, matplotlib, h5py, networkx, psutil, ngsolve |
-| `pip install exudyn[common]` | the above plus what frequently used features need: numpy-stl (STL import), tqdm (optimization progress), ffmpeg-python (video export) |
+| `pip install exudyn[common]` | the above plus what frequently used features need: numpy-stl (STL import), tqdm (optimization progress), ffmpeg-python (video export; the program itself: `conda install ffmpeg`) |
 | `pip install exudyn[all]` | the above plus everything else the package and the Examples refer to: pymeshlab, roboticstoolbox-python, spatialmath-python, numba, dispy, mpi4py |
 | `pip install exudyn[rl]` | reinforcement learning: torch, stable-baselines3, gymnasium, gym, tensorboard |
 

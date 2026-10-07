@@ -421,11 +421,17 @@ By default, a consecutive numbering is generated for the image, e.g., 'frame0000
 
 To create animation files, an external tool FFMPEG is used to efficiently convert a series of images into an animation. Since Exudyn V1.9.83, ffmpeg is integrated into the solution viewer (button 'Make mp4') and into `exudyn.interactive.ConvertImages2Video`, which require the Python package `ffmpeg-python` and the program `ffmpeg` itself:
 
-- **Windows and Linux**: `pip install ffmpeg-python`; the program from your package manager (e.g. `sudo apt install ffmpeg`)
-  or, in a conda environment, `conda install -c conda-forge ffmpeg`.
-- **macOS**: `pip install ffmpeg-python` and `conda install -c conda-forge ffmpeg`. The ffmpeg of conda-forge on
-  macOS has no `libx264` encoder; `ConvertImages2Video` then takes the encoder of macOS, `h264_videotoolbox`, and says
-  so. From the command line, in the folder of the images:
+```
+conda install ffmpeg          #the program ffmpeg, into the active conda environment
+pip install ffmpeg-python     #the Python package that calls it
+```
+
+This works on Windows, Linux and macOS (checked on all three), needs no Homebrew on macOS, and the program is
+then found from the terminal of that environment. Without conda, the program comes from the package manager of the
+system (e.g. `sudo apt install ffmpeg`, or Homebrew on macOS) and the Python package from pip as above.
+
+- **macOS**: an ffmpeg without the `libx264` encoder (as the one of conda-forge on macOS) makes `ConvertImages2Video`
+  take the encoder of macOS, `h264_videotoolbox`, and say so. From the command line, in the folder of the images:
 
   ```
   ffmpeg -i frame%05d.png -c:v h264_videotoolbox -b:v 8M animation.mp4
