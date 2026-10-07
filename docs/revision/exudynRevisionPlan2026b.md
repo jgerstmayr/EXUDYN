@@ -2133,8 +2133,9 @@ RG13.9, RG14.3) and left the rest to a decision of the maintainer ([log](exudynR
     - **RG18.1.2** (#990) `MarkerNodeCoordinate`: a flag to include the reference value in the coordinate;
     - **RG18.1.3** (#1061) the manual: what is a copy and what a reference - `mbs`, `GetObject(...)`, the dicts, the
       settings structures;
-    - **RG18.1.4** (#1450) the header of the solution file: the number of threads, the computer, and at the end the
-      computation time - also in the files of the parameter variation;
+    - **RG18.1.4** **DONE 2026-10-07** — [log](exudynRevisionLog2026b.md#rg18-1-4) (#1450) the version line of the
+      solution and sensor file headers ends with the number of threads, e.g. `...; FLOAT64; 4 thread(s)`; the
+      computation time is in the footer already;
     - **RG18.1.5** (#1493) the static solver refuses Lie group nodes with a message, if they cannot work there
       (checked first);
     - **RG18.1.6** (#1529) `GetSystemJacobian()` and `GetSystemMassMatrix()` of the solvers with

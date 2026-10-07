@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.12 | Metheney | 339 | 1.12.431 |
+| 1.12 | Metheney | 340 | 1.12.435 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
 | 1.9 | Krall | 235 | 1.9.234 |
@@ -29,6 +29,10 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.12 - Metheney (current)
 
+- **1.12.435** `EXTENSION` `HIGH` `MEDIUM EFF` `resolved by: Claude-JG` coordinatesSolution (#1450)
+  - description: add number of threads to solution files and more details on computer; check parameter variation and other files (e.g. numberOfThreads and final computation time)
+  - **notes:** The version line of the solution and sensor file headers ends with the number of threads of the computation, e.g. '\#Exudyn version = 1.12.435.dev1; Python3.13.2; Windows x86\_64 FLOAT64; 4 thread(s)'
+  - date resolved: **2026-10-07 12:05**, date raised: 2023-02-25
 - **1.12.431** `CHECK` `LOW EFF` `resolved by: Claude-JG` linux GLFW (#2278)
   - description: check if call to glfwDestroyWindow from StopRenderer avoids crashes on linux?
   - **notes:** On Linux no more crashes when the renderer is closed; confirmed by the maintainer's tests on Ubuntu (2026-10-07)

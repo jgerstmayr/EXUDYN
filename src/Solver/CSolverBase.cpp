@@ -41,6 +41,14 @@
 extern STDstring GetExudynPythonVersionString(); //for sensor/solution file headers
 extern STDstring GetExudynBuildVersionString(bool addDetails); //for sensor/solution file headers
 
+//! the version line of the solution and sensor file headers, with the threads of the computation (#1450); the
+//! headers are written before the task manager starts, so this is the number it is started with
+static STDstring FileHeaderVersionString(const SimulationSettings& simulationSettings)
+{
+	Index nThreads = simulationSettings.parallel.numberOfThreads > 1 ? simulationSettings.parallel.numberOfThreads : 1;
+	return GetExudynBuildVersionString(true) + "; " + EXUstd::ToString(nThreads) + " thread(s)";
+}
+
 #include "Main/Experimental.h"
 extern PySpecial pySpecial;			//! special features; affects exudyn globally; treat with care
 
@@ -2099,7 +2107,7 @@ void CSolverBase::WriteSolutionFileHeader(CSystem& computationalSystem, const Si
 			else { solFile << "#number of load steps (planned) = " << staticSolver.numberOfLoadSteps << "\n"; }
 
 			//solFile << "#Exudyn version = " << EXUstd::exudynVersion << "\n";
-			solFile << "#Exudyn version = " << GetExudynBuildVersionString(true) << "\n";
+			solFile << "#Exudyn version = " << FileHeaderVersionString(simulationSettings) << "\n";
 			solFile << "#\n"; //empty line for extension ...
 
 			if (solution.file.information.length())
@@ -2332,7 +2340,7 @@ void CSolverBase::WriteSensorsFileHeader(CSystem& computationalSystem, const Sim
 
 			(*sFile) << "#number of sensor values = " << output.sensorValuesTemp.NumberOfItems() << "\n";
 			//(*sFile) << "#Exudyn version = " << EXUstd::exudynVersion << "\n";
-			(*sFile) << "#Exudyn version = " << GetExudynBuildVersionString(true) << "\n";
+			(*sFile) << "#Exudyn version = " << FileHeaderVersionString(simulationSettings) << "\n";
 			(*sFile) << "#\n";
 		}
 		else

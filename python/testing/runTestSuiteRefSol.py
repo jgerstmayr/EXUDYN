@@ -124,6 +124,7 @@ def TestExamplesReferenceSolution():
         'systemContainerLifetimeTest.py':-3.809999999999995, #new 2026-10-05: the MainSystem of AddSystem and GetSystem keeps its SystemContainer alive (#2851)
         'contactCurveCirclesFrictionTest.py':8.399999999953684, #new 2026-10-07: friction and output variables of ObjectContactCurveCircles (#2867)
         'coordinateSpringDamperExtVelocityOffsetTest.py':0.6999999999999977, #new 2026-10-07: velocityOffset in the damper force (#2867)
+        'fileHeaderThreadsTest.py':33,                                #new 2026-10-07: the threads in the version line of the file headers (#1450)
         'connectorFrameOutputsTest.py':26, #2026-10-06: SlidingCoordinate of JointSliding2D counted once (#2872), before 25; new 2026-10-06: the frame outputs of joints and connectors, HomogeneousTransformation(Local), Displacement, the 2D joints (#2870)
         'createLinearSpringDamperTest.py':2.9930635558130834, #new 2026-10-05: mbs.CreateLinearSpringDamper, static deflection in three ways and a dynamic run (#1953, #1954)
         'initialAccelerationsTest.py':-2.587, #new 2026-10-05: the initial accelerations of the generalized-alpha method with a constraint and initial velocity (#2235)

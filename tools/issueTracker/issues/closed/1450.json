@@ -2,12 +2,15 @@
   "number": 1450,
   "title": "coordinatesSolution",
   "author": "JG",
-  "status": "RAISED",
+  "status": "RESOLVED",
   "type": "EXTENSION",
   "priority": "HIGH",
   "effort": "MEDIUM",
   "description": "add number of threads to solution files and more details on computer; check parameter variation and other files (e.g. numberOfThreads and final computation time)",
   "dateRaised": "2023-02-25",
   "deadline": "2023-08-24",
-  "workingRemarks": "planned as revision2026b step RG18.1 (triage 2026-10-07)"
+  "dateResolved": "2026-10-07 12:05",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "The version line of the solution and sensor file headers ends with the number of threads of the computation, e.g. '#Exudyn version = 1.12.435.dev1; Python3.13.2; Windows x86_64 FLOAT64; 4 thread(s)'",
+  "resolvedInVersion": "1.12.435"
 }

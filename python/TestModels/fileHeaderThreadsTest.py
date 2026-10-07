@@ -1,0 +1,51 @@
+#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+# This is an EXUDYN example
+#
+# Details:  The version line of the solution and sensor file headers names the number of threads of the
+#           computation (#1450): "#Exudyn version = ...; FLOAT64; 2 thread(s)". A mass point is solved with
+#           parallel.numberOfThreads = 2 and with 1; the result counts the threads read back from both files.
+#
+# Author:   Johannes Gerstmayr
+# Date:     2026-10-07
+#
+# Copyright:This file is part of Exudyn. Exudyn is free software. You can redistribute it and/or modify it under the terms of the Exudyn license. See 'LICENSE.txt' for more details.
+#
+#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+import exudyn as exu
+from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
+
+testIsActive = exu.sys.get('testIsActive', False)
+
+SC = exu.SystemContainer()
+mbs = SC.AddSystem()
+oMass = mbs.CreateMassPoint(referencePosition=[0,0,0], mass=1, gravity=[0,-9.81,0])
+mbs.AddSensor(SensorBody(bodyNumber=oMass, storeInternal=False, fileName='solution/fileHeaderThreadsSensor.txt',
+                         outputVariableType=exu.OutputVariableType.Position))
+mbs.Assemble()
+
+def ThreadsInHeader(fileName):
+    """the number at the end of the version line of a written file"""
+    with open(OutputFilePath(fileName), 'r') as file:
+        for line in file:
+            if line.startswith('#Exudyn version = '):
+                return int(line.split(';')[-1].split()[0]) #'... FLOAT64; 2 thread(s)'
+    return 0
+
+result = 0
+for nThreads in [2, 1]:
+    simulationSettings = exu.SimulationSettings()
+    simulationSettings.timeIntegration.numberOfSteps = 10
+    simulationSettings.timeIntegration.endTime = 0.1
+    simulationSettings.timeIntegration.verboseMode = 0
+    simulationSettings.parallel.numberOfThreads = nThreads
+    simulationSettings.solution.file.name = 'solution/fileHeaderThreadsSolution.txt'
+    mbs.SolveDynamic(simulationSettings)
+
+    solutionThreads = ThreadsInHeader('solution/fileHeaderThreadsSolution.txt')
+    sensorThreads = ThreadsInHeader('solution/fileHeaderThreadsSensor.txt')
+    exu.Print('requested', nThreads, 'threads; solution file:', solutionThreads, ', sensor file:', sensorThreads)
+    result += 10*nThreads*(solutionThreads == nThreads) + nThreads*(sensorThreads == nThreads)
+
+exu.Print('solution of fileHeaderThreadsTest=', result) #33 if both files name the threads in both runs
+exu.sys['testResult'] = result

@@ -8,10 +8,10 @@ Every entry carries the **type** of the issue, then its **priority** and its **e
 
 General information on current version:
 
-- Exudyn version = 1.12.434.dev1
+- Exudyn version = 1.12.435.dev1
 - last change = 2026-10-07
 - Number of issues = 2887
-- Number of resolved issues = 2748 (434 in current version)
+- Number of resolved issues = 2749 (435 in current version)
 
 ## Resolved issues and resolved bugs before version 1.12
 
@@ -7873,10 +7873,6 @@ The following list contains the issues which have been **RESOLVED** in the accor
   - description: add exception in case that Lie group nodes are used with static solver, which cannot work
   - **remarks:** planned as revision2026b step RG18.1 (triage 2026-10-07)
   - date raised: 2023-04-06
-- `EXTENSION` <span class="textred">`HIGH`</span> `MEDIUM EFF` coordinatesSolution (#1450)
-  - description: add number of threads to solution files and more details on computer; check parameter variation and other files (e.g. numberOfThreads and final computation time)
-  - **remarks:** planned as revision2026b step RG18.1 (triage 2026-10-07)
-  - date raised: 2023-02-25
 - `EXTENSION` `MEDIUM EFF` CoordinateSpringDamperExt (#1415)
   - description: add flag for stepSizeRecommendation, where 0 is no recommendation, -1 is automatic and \>0 is a directly recommended step size
   - **remarks:** kept open as an idea, no plan step (triage 2026-10-07, revision2026b group RG18)

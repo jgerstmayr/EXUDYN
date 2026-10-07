@@ -16422,3 +16422,17 @@ hand before the run, frame*.png files are written there, but all images are blac
   directory of Python, which need not be the directory of the script.
 - Not checked here: the renderer cannot open a window in this session (rule 11). S6 of `GUI_MANUAL_CHECK.md` says
   what to see now; the check is due on Ubuntu and on Windows.
+
+<a id="rg18-1-4"></a>
+### RG18.1.4 — the threads in the file headers (2026-10-07, #1450)
+
+*(Maintainer 2026-10-07: "The typical line in a solution/sensor file reads: "#Exudyn version = 1.12.122.dev1;
+Python3.13.2; Windows x86_64 FLOAT64" => extend this to "...; 4 thread(s)" where 4 is replaced by the number of threads
+used for computation. cpuTime is already there at the end.")*
+
+- `CSolverBase.cpp`: `FileHeaderVersionString(simulationSettings)` for the version line of the text solution file and
+  of the sensor files. The headers are written before the task manager starts (`InitializeSolverOutput` comes before
+  `InitializeSolverData`), so the number is the one it is started with: `parallel.numberOfThreads`, at least 1. The
+  binary solution file keeps its format.
+- Test model `fileHeaderThreadsTest.py` (result 33): 2 and 1 threads, read back from both files.
+- The example header in `gettingStartedExample.md` shows the new line.
