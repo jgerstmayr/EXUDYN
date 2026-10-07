@@ -68,6 +68,16 @@ users see. A single group can be installed alone, e.g. `pip install --group docs
 > the `dev` group; `exudyn[tests]` itself does not pin scipy. It does not apply on macOS and on Python 3.14 and later,
 > where scipy 1.15.2 has no wheel and `pip install --group dev` would fail (#2886); there the suite may be slower.
 
+> **Linux: jagged fonts in the dialogs?** The `tk` package of the Anaconda channel is built without Xft, so tkinter
+> draws its fonts without anti-aliasing and in few sizes; the dialogs of Exudyn say so once when they open. The
+> Xft build of conda-forge draws them smoothly:
+>
+> ```bash
+> conda install -c conda-forge "tk=*=xft_*"
+> ```
+>
+> A system Python (`apt install python3-tk`) has Xft already (#2890).
+
 > **spyder-kernels** in the `ide` group is `3.*`, matching Spyder 6; for an older Spyder see the
 > table below and install the matching version afterwards.
 

@@ -16531,3 +16531,22 @@ texts are smallest and most minified there - consistent with "awkward on Ubuntu"
   need a screen. To try: `SC.visualizationSettings.general.useTextMipmaps = True` (and on Linux
   `...useDisplayScaleFactorOnLinux = True`) before `SC.renderer.Start()`, then compare the status text, item numbers and
   a large `globalFontSize`.
+
+<a id="rg6-13-1"></a>
+### RG6.13 — corrected: the dialogs, not the renderer; Tk without Xft (2026-10-07, #2890)
+
+*(Maintainer 2026-10-07, on the two renderer settings of the entry above: "It is not about the renderer text - that is
+perfect, but the tkinter dialogs.")*
+
+- The two renderer settings (`general.useTextMipmaps`, `general.useDisplayScaleFactorOnLinux`) and their code are
+  removed again (introduced today, no deprecation); `parameterConversionTestReference.txt` back to before. #2277 stays
+  with RG6.8.5.
+- **Cause** of the dialogs: the `libtk8.6.so` of the conda environments in WSL (tk 8.6.14 and 8.6.15 of the Anaconda
+  channel) links no `libXft`/fontconfig/freetype, while the system Tk (`/usr/lib/x86_64-linux-gnu/libtk8.6.so`) links
+  `libXft.so.2`. A Tk without Xft draws with X11 core fonts: no anti-aliasing and only the sizes the X server has, so
+  the scaled dialog fonts come out jagged or at a different size than asked.
+- **Fix**, environment-level: the Xft build of conda-forge, `conda install -c conda-forge "tk=*=xft_*"` - not tried here
+  (no network access was used); the maintainer's test on Ubuntu decides.
+- `exudyn.misc.GUI.CheckTkFontSystem`: when the first tkinter root is created on Linux and Tk reports
+  `::tk::pkgconfig get fontsystem` = `x11`, a NOTE with that command is printed, once per process
+  (`TkFontSystemHint`, tested in `test_guiValues.py` for the four cases). `condaEnvironments.md` has the note.

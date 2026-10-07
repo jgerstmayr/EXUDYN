@@ -43,7 +43,7 @@ __all__ = [
     'treeEditDefaultHeight', 'treeEditMaxInitialHeight', 'dialogDefaultWidth',
     'dialogDefaultHeight', 'treeEditOpenItems', 'treeEditLastOpenItems', 'codeLineBackground',
     'changedValueColor', 'IsApple', 'GetRendererSystemContainer', 'MakeProcessDpiAware',
-    'GetTkRootAndNewWindow', 'TkRootExists', 'ColumnWidthFractions', 'DialogFontSize',
+    'TkFontSystemHint', 'CheckTkFontSystem', 'GetTkRootAndNewWindow', 'TkRootExists', 'ColumnWidthFractions', 'DialogFontSize',
     'DialogRowMetrics', 'TkTextHeight', 'GetExudynDisplayScaling', 'GetGUIContentScaling',
     'DialogScaling', 'SplitStoredFromChanged', 'RenderStateCodeLines', 'Tooltip',
     'TkinterEditDictionaryWithTypeInfo', 'EditDictionaryWithTypeInfo', 'TkinterEditDictionary',
@@ -164,12 +164,46 @@ def MakeProcessDpiAware():
             return False
 
 
+def TkFontSystemHint(platform, fontSystem):
+    """the hint for dialogs drawn without anti-aliasing, or '' if there is nothing to say
+
+    Args:
+        platform: sys.platform
+        fontSystem: what Tk reports as its font system, 'xft' or 'x11' on Linux
+
+    Returns:
+        the text to print, '' on Windows and macOS and for a Tk with Xft
+    """
+    if not platform.startswith('linux') or fontSystem != 'x11':
+        return ''
+    return ('NOTE: the Tk of this Python draws the dialogs without anti-aliasing (built without Xft, as the tk '
+            'package of the Anaconda channel on Linux); for smooth fonts install the Xft build: '
+            'conda install -c conda-forge "tk=*=xft_*"')
+
+
+def CheckTkFontSystem(root):
+    """say once, on Linux, that the Tk of this Python has no Xft, which makes the dialog fonts
+    jagged and coarse (#2890)
+
+    Args:
+        root: the tkinter root that was just created
+    """
+    try:
+        fontSystem = str(root.tk.call('::tk::pkgconfig', 'get', 'fontsystem'))
+    except tk.TclError:             #a Tk without the key: nothing known, nothing said
+        return
+    hint = TkFontSystemHint(sys.platform, fontSystem)
+    if hint:
+        exudyn.Print(hint)
+
+
 def GetTkRootAndNewWindow():
     """get new or current root and new window app; return list of [tkRoot, tkWindow, tkRuns]
     """
     if tk._default_root is None:
         MakeProcessDpiAware()       #before the first window, or Windows ignores it (#2634)
         root = tk.Tk()
+        CheckTkFontSystem(root)
         tkWindow = root
         tkRuns = False
     else:

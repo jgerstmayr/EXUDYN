@@ -1809,12 +1809,6 @@ bool GlfwRenderer::CreateViewWindow(Index viewID)
 	float yWindowScale = 1;
 #if !defined(__EXUDYN__LINUX__) //glfwGetWindowContentScale() crashes on Ubuntu18.04 and 20.04 compilation
 	glfwGetWindowContentScale(window, &xWindowScale, &yWindowScale);
-#else
-	if (visSettings->general.useDisplayScaleFactorOnLinux) //test setting, newer GLFW (#2277, #2890)
-	{
-		glfwGetWindowContentScale(window, &xWindowScale, &yWindowScale);
-		if (verboseRenderer) { PrintDelayed("glfwGetWindowContentScale = " + EXUstd::ToString(xWindowScale) + ", " + EXUstd::ToString(yWindowScale)); }
-	}
 #endif
 	SetContentScaling(viewID, xWindowScale, yWindowScale); //must be done before initialization of fonts
 
@@ -1841,8 +1835,6 @@ bool GlfwRenderer::CreateViewWindow(Index viewID)
 	glfwSetWindowRefreshCallback(window, Render);
 #if !defined(__EXUDYN__LINUX__)
 	glfwSetWindowContentScaleCallback(window, window_content_scale_callback);
-#else
-	if (visSettings->general.useDisplayScaleFactorOnLinux) { glfwSetWindowContentScaleCallback(window, window_content_scale_callback); } //#2890
 #endif
 	if (verboseRenderer) { PrintDelayed("window callbacks successful"); }
 	//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++

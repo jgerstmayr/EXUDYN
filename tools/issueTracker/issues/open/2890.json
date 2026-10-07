@@ -1,11 +1,11 @@
 {
   "number": 2890,
-  "title": "render window texts look awkward on Ubuntu: two test settings, display scaling on linux and mipmaps for the bitmap font",
+  "title": "tkinter dialogs look awkward on Ubuntu: the Tk of conda on Linux has no Xft",
   "author": "Claude-JG",
   "status": "RAISED",
   "type": "CHECK",
   "effort": "MEDIUM",
-  "description": "The maintainer, 2026-10-07: 'as I have now also the build config for Ubuntu: I could test now improvements for font scaling (or fonts in general - they look awkward on ubuntu). If you include a setting (like for activating font scaling on linux, or coupling it temporarily for macos), I could test, if it works now.' Two settings to test, default off: general.useDisplayScaleFactorOnLinux (glfwGetWindowContentScale on linux, #2277) and general.useTextMipmaps (the 64-pixel characters of the bitmap font minified with mipmaps instead of 2x2 linear sampling). After the tests: defaults decided, or the settings removed. revision2026b step RG6.13",
+  "description": "The maintainer, 2026-10-07: 'as I have now also the build config for Ubuntu: I could test now improvements for font scaling (or fonts in general - they look awkward on ubuntu). If you include a setting (like for activating font scaling on linux, or coupling it temporarily for macos), I could test, if it works now.' Two settings to test, default off: general.useDisplayScaleFactorOnLinux (glfwGetWindowContentScale on linux, #2277) and general.useTextMipmaps (the 64-pixel characters of the bitmap font minified with mipmaps instead of 2x2 linear sampling). After the tests: defaults decided, or the settings removed. revision2026b step RG6.13 [2026-10-07, Claude-JG]: Correction by the maintainer, 2026-10-07: 'It is not about the renderer text - that is perfect, but the tkinter dialogs.' The two renderer test settings are removed again. Cause found: the libtk8.6.so of the conda environments (tk 8.6.14/8.6.15 of the default channel) links no Xft, so Tk draws with X11 core fonts - no anti-aliasing, few sizes; the system Tk links libXft. Fix: the Xft build of conda-forge, conda install -c conda-forge 'tk=*=xft_*'; the dialogs say so once on Linux when Tk reports fontsystem x11.",
   "dateRaised": "2026-10-07",
   "deadline": "2027-04-05",
   "file": "src/Graphics/GlfwClientExtended.cpp"

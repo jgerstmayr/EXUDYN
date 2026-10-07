@@ -887,3 +887,15 @@ def test_renderStateCodeLines():
     assert abs(view['zoom'] - 0.75) < 1e-6
     assert np.allclose(view['centerPoint'], [0.5, -1.25, 0.], atol=1e-6)
     assert np.allclose(np.array(view['modelRotation'])[:3, :3], rotation, atol=1e-6)
+
+
+#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#the dialogs on Linux with a Tk without Xft (#2890): jagged fonts, one hint with the conda command
+
+@pytest.mark.parametrize('platform, fontSystem, hinted', [('linux', 'x11', True), ('linux', 'xft', False),
+                                                          ('win32', 'x11', False), ('darwin', 'x11', False)])
+def testTheHintForATkWithoutXftOnLinuxOnly(platform, fontSystem, hinted):
+    hint = gui.TkFontSystemHint(platform, fontSystem)
+    assert bool(hint) == hinted
+    if hinted:
+        assert 'conda install -c conda-forge "tk=*=xft_*"' in hint

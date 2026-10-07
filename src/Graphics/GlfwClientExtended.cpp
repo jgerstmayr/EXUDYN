@@ -11,7 +11,6 @@
                 
 ************************************************************************************************ */
 
-#include <vector>
 #include "Utilities/ReleaseAssert.h"
 #include "Utilities/BasicDefinitions.h"
 #include "Utilities/AdvancedStuff.h"
@@ -508,39 +507,6 @@ void GlfwRenderer::CreateTexturedQuadsLists(GLuint& listBase, GLuint* textureNum
 	}
 }
 
-//! upload the mipmap levels 1, 2, ... of the bound RGBA texture, each the 2x2 average of the level before, down
-//! to 1x1 (OpenGL 1.1 has no generator for them, and GLU is not linked) (#2890)
-void GlfwRenderer::UploadTextureMipmaps(const GLubyte* imageRGBA, GLsizei width, GLsizei height)
-{
-	std::vector<GLubyte> previous(imageRGBA, imageRGBA + 4 * width * height);
-	GLint level = 0;
-	while (width > 1 || height > 1)
-	{
-		GLsizei newWidth = width > 1 ? width / 2 : 1;
-		GLsizei newHeight = height > 1 ? height / 2 : 1;
-		std::vector<GLubyte> next(4 * newWidth * newHeight);
-		for (GLsizei y = 0; y < newHeight; y++)
-		{
-			for (GLsizei x = 0; x < newWidth; x++)
-			{
-				GLsizei x0 = EXUstd::Minimum(2 * x, width - 1), x1 = EXUstd::Minimum(2 * x + 1, width - 1);
-				GLsizei y0 = EXUstd::Minimum(2 * y, height - 1), y1 = EXUstd::Minimum(2 * y + 1, height - 1);
-				for (GLsizei c = 0; c < 4; c++)
-				{
-					int sum = previous[4 * (y0 * width + x0) + c] + previous[4 * (y0 * width + x1) + c]
-						+ previous[4 * (y1 * width + x0) + c] + previous[4 * (y1 * width + x1) + c];
-					next[4 * (y * newWidth + x) + c] = (GLubyte)((sum + 2) / 4);
-				}
-			}
-		}
-		level++;
-		glTexImage2D(MY_GL_TEXTURE_2D, level, 4, newWidth, newHeight, 0, GL_RGBA, GL_UNSIGNED_BYTE, next.data());
-		previous.swap(next);
-		width = newWidth;
-		height = newHeight;
-	}
-}
-
 //! create glTexImage2D objects for font characters, stored in textureNumberRGBbitmap
 void GlfwRenderer::CreateFontTextures()
 {
@@ -560,21 +526,10 @@ void GlfwRenderer::CreateFontTextures()
 
             glBindTexture(MY_GL_TEXTURE_2D, textureNumberRGBbitmap[iChar+ bitmapFont.nCharacters*j]);
             /* actually generate the texture */
+            glTexParameteri(MY_GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR); //linear filter give nicer results than GL_NEAREST
             glTexParameteri(MY_GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-            GLsizei width = bitmapFont.characterByteWidth * 8;
-            GLsizei height = bitmapFont.characterHeight;
-            glTexImage2D(MY_GL_TEXTURE_2D, 0, 4, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, textureRGB);
-            if (visSettings->general.useTextMipmaps)
-            {
-                //the characters are stored with 64 pixels and drawn at 10-20; linear filtering samples only 2x2 texels
-                //of the large texture, mipmaps average all of them (#2890)
-                glTexParameteri(MY_GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
-                UploadTextureMipmaps(textureRGB, width, height);
-            }
-            else
-            {
-                glTexParameteri(MY_GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR); //linear filter give nicer results than GL_NEAREST
-            }
+            glTexImage2D(MY_GL_TEXTURE_2D, 0, 4, bitmapFont.characterByteWidth * 8, //bitmapFont.characterWidth,
+                bitmapFont.characterHeight, 0, GL_RGBA, GL_UNSIGNED_BYTE, textureRGB);
             delete[] textureRGB; //not needed lateron
         }
     }

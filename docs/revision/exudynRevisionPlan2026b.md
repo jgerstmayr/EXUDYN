@@ -1248,12 +1248,11 @@ shows, and copies, the lines that give a script the current view of the render w
 
 <a id="rg6-13"></a>
 **RG6.13** *(group RG6; maintainer 2026-10-07: "I could test now improvements for font scaling (or fonts in general - they
-look awkward on ubuntu). If you include a setting ... I could test, if it works now")* (#2890, with #2277) **The texts of
-the render window on Linux**: two test settings, both off by default and read when the renderer starts -
-`general.useDisplayScaleFactorOnLinux` (the display scaling of GLFW on Linux, which the code had switched off for the
-crashes of Ubuntu 18.04/20.04) and `general.useTextMipmaps` (the characters of the bitmap font, stored with 64 pixels,
-minified through mipmaps instead of 2x2 linear sampling) - **to be tested on Ubuntu, macOS and Windows**; then the
-defaults are decided or the settings removed.
+look awkward on ubuntu) ... It is not about the renderer text - that is perfect, but the tkinter dialogs")* (#2890)
+**The fonts of the tkinter dialogs on Linux**: the `tk` of the Anaconda channel is built without Xft (no anti-aliasing,
+X11 core fonts); the dialogs print once on Linux how to install the Xft build of conda-forge,
+`conda install -c conda-forge "tk=*=xft_*"`, and `condaEnvironments.md` says it - **to be tested on Ubuntu** whether
+that build installs and the dialogs look right; then RG6.13 is done.
 
 ## RG7 — Python user items
 
@@ -2217,7 +2216,7 @@ issue and a short title only. The open issues that are not steps are in the trac
 | RG5.4 | #2182, #2183, #2184 | the superelements for larger meshes |
 | RG6.8 | #2140, #2204, #2194 | the graphics fixes before 1.13: Linux (RG6.8.5), the near and far planes (RG6.8.8) |
 | RG6.11, RG6.12 | #2154, #2155, #2244, #2281 | textures; a ruler and consistent triangle orientation |
-| RG6.13 | #2890, #2277 | texts of the render window on Linux: two test settings, to be tested on the machines |
+| RG6.13 | #2890 | the fonts of the tkinter dialogs on Linux: the Xft build of tk, to be tested on Ubuntu |
 | RG12.44 to RG12.46 | #2075, #2342, #1931, #1932, #1941, #782, #1863, #1864, #1892 | dictionaries and item visualization, URDF import, `MatrixContainer` |
 | RG2.6 | #559, #591, #2326 | three old test models |
 | RG4.21 to RG4.24 | #303, #574, #2315-#2317, #1548, #926 | velocity/time-dependent constraints, a 3D sliding joint, ODE1 load Jacobians, rolling friction |

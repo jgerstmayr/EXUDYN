@@ -502,14 +502,10 @@ class VSettingsGeneral:
     """true = updating of visualization is threadsafe, but slower for complicated models; deactivate this to speed up computation, but activate for generation of animations; may be improved in future by adding a safe visualizationUpdate state."""
     useBitmapText: bool
     """if true, texts are displayed using pre-defined bitmaps for the text; may increase the complexity of your scene, e.g., if many (>10000) node numbers shown."""
-    useDisplayScaleFactorOnLinux: bool
-    """test setting (#2890): if true and useWindowsDisplayScaleFactor=True, the display scaling of GLFW (glfwGetWindowContentScale) is used on linux as well, multiplied with linuxDisplayScaleFactor; takes effect when the renderer is started."""
     useGradientBackground: bool
     """true = use vertical gradient for background;."""
     useMultiThreadedRendering: bool
     """true = rendering is done in separate thread; false = no separate thread, which may be more stable but has lagging interaction for large models (do not interact with models during simulation); you MUST set this parameter BEFORE call to SC.renderer.Start(); MAC OS: uses always false, because MAC OS does not support multi threaded GLFW."""
-    useTextMipmaps: bool
-    """test setting (#2890): if true, the character textures of the bitmap font get mipmaps; the characters are stored with 64 pixels and drawn much smaller, which without mipmaps makes thin strokes break up; takes effect when the renderer is started."""
     useWindowsDisplayScaleFactor: bool
     """the Windows display scaling (monitor scaling; content scaling) factor is used for increased visibility of texts on high resolution displays; based on GLFW glfwGetWindowContentScale; deactivated on linux compilation as it leads to crashes (adjust textSize manually!)."""
     zoomAllUseBoundingBox: bool
