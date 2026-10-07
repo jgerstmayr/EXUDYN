@@ -1887,16 +1887,16 @@ void GlfwRenderer::SetContentScaling(Index viewID, float xScale, float yScale)
 void GlfwRenderer::ApplyDisplayScaling(Index viewID)
 {
 	//called by every Render(), so that general.displayScaleFactor acts while the renderer runs (#2893);
-	//0 takes the display scaling of the system, a value > 0 replaces it (#2897)
+	//the display scaling of the system times displayScaleFactor (#2898)
 	float fontScaleOld = GetFontScaling(viewID);
 	float scaling = 1.f;
-	if (visSettings->general.displayScaleFactor > 0.f)
-	{
-		scaling = visSettings->general.displayScaleFactor;
-	}
-	else if (viewID < MAX_VIEWS_GLFW && contentScaling[viewID] > 0.f)
+	if (viewID < MAX_VIEWS_GLFW && contentScaling[viewID] > 0.f)
 	{
 		scaling = contentScaling[viewID];
+	}
+	if (visSettings->general.displayScaleFactor > 0.f)
+	{
+		scaling *= visSettings->general.displayScaleFactor;
 	}
 	SetFontScaling(viewID, scaling);
 

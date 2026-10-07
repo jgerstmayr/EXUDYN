@@ -1472,7 +1472,7 @@ class VSettingsGeneral:
     cylinderTiling: int
     """global number of segments for cylinders; if smaller than 2, 2 segments are used (flat); also around the rope of a reeving system and the wire of a spring drawn as a tube; the disc of ObjectJointRollingDisc and ObjectConnectorRollingDiscPenalty, large compared to the joint, takes 4 times as many; space curves use connectors.curveTiling."""
     displayScaleFactor: float
-    """scaling of the texts of the render window and of the size of the dialogs; 0 = the display scaling of the system (monitor scaling, e.g. 150 percent on Windows, fractional scaling on Linux), read by GLFW (glfwGetWindowContentScale; on Linux from GLFW 3.3.6 on) and followed when it changes; a value > 0 is used instead of it, on every platform; acts while the renderer runs."""
+    """factor on the texts of the render window, multiplied with the display scaling of the system (monitor scaling, e.g. 150 percent on Windows, fractional scaling on Linux), which GLFW reads (glfwGetWindowContentScale; on Linux from GLFW 3.3.6 on) and follows when it changes; acts while the renderer runs; the dialogs are scaled with dialogs.fontScaling."""
     graphicsUpdateInterval: float
     """interval of graphics update during simulation in seconds; 0.1 = 10 frames per second; low numbers might slow down computation speed."""
     limitWindowToScreenSize: bool

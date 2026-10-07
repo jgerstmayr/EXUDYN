@@ -1912,9 +1912,9 @@ inline py::dict GetDictionaryWithTypeInfo(const VSettingsGeneral& data) {
     d = py::dict(); //reset local dict
     d["itemIdentifier"] = std::string(""); //identifier for item
     d["value"] = data.displayScaleFactor;
-    d["type"] = "UFloat";
+    d["type"] = "PFloat";
     d["size"] = std::vector<int>{1};
-    d["description"] = "scaling of the texts of the render window and of the size of the dialogs; 0 = the display scaling of the system (monitor scaling, e.g. 150 percent on Windows, fractional scaling on Linux), read by GLFW (glfwGetWindowContentScale; on Linux from GLFW 3.3.6 on) and followed when it changes; a value > 0 is used instead of it, on every platform; acts while the renderer runs";
+    d["description"] = "factor on the texts of the render window, multiplied with the display scaling of the system (monitor scaling, e.g. 150 percent on Windows, fractional scaling on Linux), which GLFW reads (glfwGetWindowContentScale; on Linux from GLFW 3.3.6 on) and follows when it changes; acts while the renderer runs; the dialogs are scaled with dialogs.fontScaling";
     structureDict["displayScaleFactor"] = d;
 
     d = py::dict(); //reset local dict
@@ -2145,7 +2145,7 @@ inline void SetDictionary(VSettingsGeneral& data, const py::dict& d) {
     EPyUtils::FromPython(d["circleTiling"], data.circleTiling, EPyUtils::RangeCheck::positive, "VSettingsGeneral.circleTiling");
     EPyUtils::FromPython(d["coordinateSystemSize"], data.coordinateSystemSize, EPyUtils::RangeCheck::positive, "VSettingsGeneral.coordinateSystemSize");
     EPyUtils::FromPython(d["cylinderTiling"], data.cylinderTiling, EPyUtils::RangeCheck::positive, "VSettingsGeneral.cylinderTiling");
-    EPyUtils::FromPython(d["displayScaleFactor"], data.displayScaleFactor, EPyUtils::RangeCheck::nonNegative, "VSettingsGeneral.displayScaleFactor");
+    EPyUtils::FromPython(d["displayScaleFactor"], data.displayScaleFactor, EPyUtils::RangeCheck::positive, "VSettingsGeneral.displayScaleFactor");
     EPyUtils::FromPython(d["graphicsUpdateInterval"], data.graphicsUpdateInterval, EPyUtils::RangeCheck::nonNegative, "VSettingsGeneral.graphicsUpdateInterval");
     EPyUtils::FromPython(d["limitWindowToScreenSize"], data.limitWindowToScreenSize, "VSettingsGeneral.limitWindowToScreenSize");
     EPyUtils::FromPython(d["minSceneSize"], data.minSceneSize, EPyUtils::RangeCheck::positive, "VSettingsGeneral.minSceneSize");

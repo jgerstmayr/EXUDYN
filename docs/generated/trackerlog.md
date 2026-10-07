@@ -10,7 +10,7 @@ General information on current version:
 
 - Exudyn version = 1.12.447.dev1
 - last change = 2026-10-07
-- Number of issues = 2898
+- Number of issues = 2899
 - Number of resolved issues = 2761 (447 in current version)
 
 ## Resolved issues and resolved bugs before version 1.12
@@ -7568,6 +7568,9 @@ The following list contains the issues which have been **RESOLVED** in the accor
 
 ## Open issues
 
+- `FIX` `MEDIUM EFF` `raised by: Claude-JG` the scaling of the render window and the dialogs, restarted: system scaling times displayScaleFactor for the renderer, the scaling of Tk plus dialogs.fontScaling for every dialog (#2898)
+  - description: The maintainer's measurements on Ubuntu with fractional scaling 200 percent, 2026-10-07 (after \#2897): displayScaleFactor 0 / fontScaling 0: render window scaled, the settings tree scaled, but buttons and edit fields very small, help and command dialogs not scaled; displayScaleFactor 1: dialogs scaled with buttons and edit fields large (looks best), render window unscaled; fontScaling 0.5: all dialogs 2x smaller, buttons tiny; at 100 percent a displayScaleFactor 0.5 made the buttons huge. 'I would suggest to kind of restart the scaling thing ... a conservative approach ... check at which places these factors take effect ... consider that some tkFonts already scale with the linux fractional scaling, so double scaling is contraproductive ... write up a table'. revision2026b step RG6.16
+  - date raised: 2026-10-07
 - `CHANGE` `HIGH EFF` `raised by: Claude-JG` joints and their Jacobians on homogeneous transformations (#2884)
   - description: The constraint equations of the joints become functions of the relative transformation H0^-1 H1 of the two marker frames, and their Jacobians follow systematically from the relative twist - one implementation for JointGeneric, JointRevoluteZ, JointPrismaticX, the 2D joints and the rolling disc instead of one each. Successor of \#2745 (the marker interface of RG14.2). revision2026b step RG14.3
   - date raised: 2026-10-07
@@ -7706,7 +7709,7 @@ The following list contains the issues which have been **RESOLVED** in the accor
   - date raised: 2025-11-02
 - `FIX` `HIGH EFF` linux (#2140)
   - description: fix graphics-related crashes on linux versions, in particular when closing renderer and with mbs.SolutionViewer()
-  - **remarks:** planned before 1.13 as revision2026b step RG6.8.5 (2026-09-29); 2026-10-07, maintainer on Ubuntu (1.12.443): after changing a few parameters in a dialog and re-opening it: X Error of failed request: BadWindow (invalid Window parameter), major opcode 15 (X\_QueryTree), then terminate called without an active exception, core dumped. Suspect: the tkinter dialog and the GLFW render thread both using X11; to be reproduced on the Ubuntu machine. The messages invalid command name ...\<lambda\> of demo 2 were scheduled callbacks of closed dialogs, fixed by \#2897
+  - **remarks:** planned before 1.13 as revision2026b step RG6.8.5 (2026-09-29); 2026-10-07, maintainer on Ubuntu (1.12.443): after changing a few parameters in a dialog and re-opening it: X Error of failed request: BadWindow (invalid Window parameter), major opcode 15 (X\_QueryTree), then terminate called without an active exception, core dumped. Suspect: the tkinter dialog and the GLFW render thread both using X11; to be reproduced on the Ubuntu machine. The messages invalid command name ...\<lambda\> of demo 2 were scheduled callbacks of closed dialogs, fixed by \#2897; 2026-10-07, second report: the same BadWindow on X\_QueryTree before switching to the SolutionViewer. Hypothesis to check on the machine: X\_QueryTree is what Tk calls in its window manager code, and Tk expects BadWindow there to be swallowed by its own X error handler; the X error handler of Xlib is global for the process, and GLFW in the render thread replaces it temporarily (\_glfwGrabErrorHandlerX11) and restores the one it saw - if that happens while Tk installs its handler, Tk's is lost and the default handler of Xlib exits the process (terminate called ...). Test: gdb --args python model.py, break exit / \_XDefaultError, bt in all threads; or XSynchronize.
   - date raised: 2025-07-10
 - `EXTENSION` `MEDIUM EFF` ObjectContact (#2131)
   - description: add rolling resistance

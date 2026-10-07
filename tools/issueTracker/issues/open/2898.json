@@ -1,0 +1,12 @@
+{
+  "number": 2898,
+  "title": "the scaling of the render window and the dialogs, restarted: system scaling times displayScaleFactor for the renderer, the scaling of Tk plus dialogs.fontScaling for every dialog",
+  "author": "Claude-JG",
+  "status": "RAISED",
+  "type": "FIX",
+  "effort": "MEDIUM",
+  "description": "The maintainer's measurements on Ubuntu with fractional scaling 200 percent, 2026-10-07 (after #2897): displayScaleFactor 0 / fontScaling 0: render window scaled, the settings tree scaled, but buttons and edit fields very small, help and command dialogs not scaled; displayScaleFactor 1: dialogs scaled with buttons and edit fields large (looks best), render window unscaled; fontScaling 0.5: all dialogs 2x smaller, buttons tiny; at 100 percent a displayScaleFactor 0.5 made the buttons huge. 'I would suggest to kind of restart the scaling thing ... a conservative approach ... check at which places these factors take effect ... consider that some tkFonts already scale with the linux fractional scaling, so double scaling is contraproductive ... write up a table'. revision2026b step RG6.16",
+  "dateRaised": "2026-10-07",
+  "deadline": "2027-04-05",
+  "file": "python/exudyn/misc/GUI.py"
+}

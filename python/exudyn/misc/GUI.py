@@ -202,27 +202,32 @@ _namedFontSizes = {}
 
 
 def ScaledFontSize(size, fontScaling):
-    """a Tk font size scaled, its sign kept (negative sizes are pixels, positive ones points)
+    """a Tk font size in points, times dialogs.fontScaling
+
+    A negative size is pixels - the named fonts of Tk on Linux are, e.g. -12 - and pixels do not follow the scaling
+    of Tk, which made the buttons and edit fields stay small while the text of the tree grew (#2898). It is converted
+    to points at 96 dpi first, so that every named font follows the display scaling once, through the scaling of Tk.
 
     Args:
         size: the size as Tk gives it
-        fontScaling: dialogs.fontScaling; 0 or less returns size unchanged
+        fontScaling: dialogs.fontScaling; 0 or less is 1
 
     Returns:
-        the scaled size, at least 6 points or pixels
+        the size in points, at least 6; 0 (the default of Tk) stays 0
     """
-    if fontScaling <= 0 or size == 0:
-        return size
-    scaled = max(6, int(round(abs(size) * fontScaling)))
-    return scaled if size > 0 else -scaled
+    if size == 0:
+        return 0
+    points = size if size > 0 else -size * 72. / 96.
+    factor = fontScaling if fontScaling > 0 else 1.
+    return max(6, int(round(points * factor)))
 
 
 def ApplyDialogFontScaling(root):
-    """set the named fonts of Tk (TkDefaultFont, TkTextFont, TkFixedFont, ...) to dialogs.fontScaling, so that
-    every widget of a dialog - text, buttons, edit fields, menus - takes the same font (#2897)
+    """set the named fonts of Tk (TkDefaultFont, TkTextFont, TkFixedFont, ...) in points, times dialogs.fontScaling,
+    so that every widget of a dialog - text, buttons, edit fields, menus - takes the same font and follows the
+    display scaling through the scaling of Tk (#2897, #2898)
 
-    It is called before the widgets of a dialog are created, so nothing is rescaled while a window opens;
-    fontScaling = 0 gives the fonts back the size Tk chose.
+    It is called before the widgets of a dialog are created, so nothing is rescaled while a window opens.
 
     Args:
         root: the tkinter root, which owns the named fonts
@@ -246,6 +251,7 @@ def GetTkRootAndNewWindow():
     if tk._default_root is None:
         MakeProcessDpiAware()       #before the first window, or Windows ignores it (#2634)
         root = tk.Tk()
+        root.exudynInitialTkScaling = float(root.tk.call('tk', 'scaling')) #before anything here changes it (#2898)
         CheckTkFontSystem(root)
         tkWindow = root
         tkRuns = False
@@ -253,6 +259,8 @@ def GetTkRootAndNewWindow():
         root = tk._default_root
         tkWindow = tk.Toplevel(root)
         tkRuns = True
+    if not IsApple():
+        GetGUIContentScaling(root)  #the scaling of Tk from the display scaling, for EVERY dialog - help and command too (#2898)
     ApplyDialogFontScaling(root)    #before the widgets of the dialog are created (#2897)
     return [root, tkWindow, tkRuns]
 
@@ -355,9 +363,16 @@ def GetExudynDisplayScaling(root=None):
         guiSC = GetRendererSystemContainer()
         if guiSC is not None: #None would mean that the renderer is detached
             rs = guiSC.renderer.GetState()
-            return rs['displayScaling']
+            #the renderer's scaling includes general.displayScaleFactor, which is for the render window only (#2898)
+            factor = guiSC.visualizationSettings.general.displayScaleFactor
+            return rs['displayScaling'] / (factor if factor > 0 else 1.)
         
         if root is not None:        #96 dpi is the unscaled display, 144 is 150%
+            #the scaling Tk chose when the root was created: what Tk reports now is what this module set, and reading
+            #it back made every dialog that opened 5% larger than the one before (#2898)
+            initialScaling = getattr(root, 'exudynInitialTkScaling', None)
+            if initialScaling is not None:
+                return max(1., initialScaling * 72. / 96.)
             return max(1., root.winfo_fpixels('1i') / 96.)
 
         return 1
@@ -405,9 +420,8 @@ def DialogScaling(root):
         fontFactor = 1
         systemScaling = GetGUIContentScaling(root)
 
-    if fontScaling > 0:                 #explicit, and it wins on every platform
-        fontFactor = fontScaling
-        systemScaling = fontScaling
+    if fontScaling > 0:                 #explicit, and it wins on every platform; a factor on the fonts only - the
+        fontFactor = fontScaling        #system scaling stays, or the two would count twice (#2898)
 
     return [systemScaling, fontFactor]
 

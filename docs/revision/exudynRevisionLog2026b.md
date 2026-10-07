@@ -16704,3 +16704,52 @@ failed request: BadWindow" and "invalid command name ...<lambda> ... ("after" sc
   Ubuntu scaling and have their own font size.
 - The BadWindow crash is recorded at #2140 (Linux crashes of the renderer and the dialogs, RG6.8.5): not reproducible
   from here.
+
+<a id="rg6-16"></a>
+### RG6.16 — the scaling, restarted (2026-10-07, #2898)
+
+*(Maintainer's measurements on Ubuntu, fractional scaling 200 percent, 2026-10-07: "displayScaleFactor = 0 &
+dialogs.fontScaling = 0: render window scales with linux fractional scaling, VisualizationSettings (VS) scales in
+general (tree), but buttons and editing the tree gives e.g. very small values to edit; Help and Command dialog do not
+scale. displayScaleFactor = 1 & dialogs.fontScaling = 0: VS still scaled with linux scaling, buttons and edit fields also
+large => looks best for dialogs; render window unscaled (small font); Help and Command window also scaled.
+displayScaleFactor = 0 & dialogs.fontScaling = 0.5: All dialogs get 2x much smaller ... buttons are tiny and tree edit is
+regular ... at 100%, a displayScaleFactor = 0.5 affects the button sizes in VS inversely (so they get huge, also the help
+window gets huge then). => I think that you did a lot of adjustments and they don't work. I would suggest to kind of
+restart the scaling thing ... try to do a conservative approach ... check at which places these factors take effect.
+Also consider the possibility that some tkFonts already scale with the linux fractional scaling, so double scaling is
+contraproductive. Possibly you also write up a table".)*
+
+**What the measurements say, read against the code of 1.12.447:**
+
+- The named fonts of Tk on Linux are in **pixels** (`TkDefaultFont` -12); pixels do not follow `tk scaling`. The tree of
+  the settings dialog has its own font in **points** (`DialogFontSize`), which does. So with `tk scaling` = 1.4 x 2 the
+  tree grew and the buttons, edit fields and the help and command dialogs (named fonts) stayed small.
+- `tk scaling` was set only by `DialogScaling`, i.e. by the settings dialogs; help and command never set it - they got
+  it only if a settings dialog had been open before.
+- `displayScaleFactor` > 0 *replaced* the system scaling in the renderer's `displayScaling`, which the dialogs read: with
+  1, `tk scaling` = 1.4, and the "large, looks best" dialogs came from the named fonts that #2897 had scaled.
+- `fontScaling` > 0 also set `systemScaling` = `fontScaling` in `DialogScaling`, and with 0.5 the scaling of the tree and
+  of the named fonts went down twice. With `displayScaleFactor` 0.5 at 100 percent, `tk scaling` became 0.7 while the
+  pixel fonts stayed: the "inverse" sizes.
+- Without a renderer, the scaling was read back from Tk (`winfo_fpixels('1i')`), i.e. from the value this module had set:
+  each dialog that opened was 5 percent larger than the previous one.
+
+**Now, three factors, each at one place:**
+
+| text | scaled by | where |
+|---|---|---|
+| render window: status texts, item numbers, `GraphicsData` texts | system scaling s (GLFW content scale) x `general.displayScaleFactor` (default 1) x `window.globalFontSize` | `GlfwRenderer::ApplyDisplayScaling`, every `Render()` |
+| `tk scaling` of every dialog | 1.4 x s (s without `displayScaleFactor`; without a renderer: the scaling Tk had when the root was created, x 72/96) | `GetGUIContentScaling`, called in `GetTkRootAndNewWindow` (every dialog) and in `DialogScaling` |
+| named fonts of Tk (buttons, edit fields, labels, help, command, quit, menus) | converted to points (pixels x 72/96), x `dialogs.fontScaling` (0 = 1), then by `tk scaling` | `ApplyDialogFontScaling`, in `GetTkRootAndNewWindow`, before the widgets exist |
+| tree of the settings dialogs | 9 pt x `fontScaling` (0 = 1; on macOS 1.35), then by `tk scaling`; CTRL+wheel on top | `DialogScaling`, `DialogFontSize` |
+| SolutionViewer, `InteractiveDialog` | their own `fontSize` in points, by `tk scaling` | `exudyn.interactive`, unchanged |
+| macOS | `tk scaling` untouched (Tk follows the retina scaling itself), fonts as above | `IsApple()` |
+
+- **No double scaling**: `tk scaling` is *set* (not multiplied) from s, and every font is in points, so each font meets
+  s exactly once; if Tk had already taken the fractional scaling from the X server, the value set is the same.
+- `general.displayScaleFactor`: default 1 and > 0, a factor on s for the render window only (it was "0 = system, > 0
+  replaces it" in #2897, the same day). The deprecated `linuxDisplayScaleFactor` forwards to it - a factor, as it was.
+- `ScaledFontSize` and the test in `test_guiValues.py` follow the new rule (pixels to points, 0 = 1, at least 6).
+- Not measured here: the dialogs need a screen. The table is what the next measurement on Ubuntu (100 and 200 percent)
+  and Windows checks.

@@ -56,9 +56,9 @@ see also common blogs for your operating system.
   A system Python with `python3-tk` has Xft already.
 - **Display scaling**: the scaling of the desktop, including *Fractional Scaling*, scales the texts of the render window
   and the dialogs (GLFW 3.3.6 or newer; Ubuntu 22.04 and later). To adjust by hand, while the renderer runs:
-  `SC.visualizationSettings.general.displayScaleFactor` (0 = the scaling of the system, a value > 0 replaces it, for
-  the renderer and the dialogs, on every platform), `dialogs.fontScaling` (the font of every widget of the dialogs;
-  0 = the font of Tk) and `window.globalFontSize` (the texts of the render window).
+  `SC.visualizationSettings.general.displayScaleFactor` (a factor on the scaling of the system, for the texts of the
+  render window), `window.globalFontSize` (the size of those texts) and `dialogs.fontScaling` (a factor on the font of
+  every widget of the dialogs; 0 = 1).
 - **Videos from recorded frames**: `conda install ffmpeg` and `pip install ffmpeg-python`, see
   {ref}`sec-overview-basics-animations`.
 

@@ -1276,6 +1276,13 @@ Ubuntu 2026-10-07)* **One display scaling setting, and the dialog font for every
 no effect) and `linuxDisplayScaleFactor` (deprecated, forwards); `dialogs.fontScaling` sets the named fonts of Tk before a
 dialog is built, so buttons and edit fields follow; the callbacks of a closed dialog are cancelled.
 
+<a id="rg6-16"></a>
+**RG6.16** *(group RG6; the maintainer's measurements on Ubuntu, 2026-10-07: "I would suggest to kind of restart the
+scaling thing ... a conservative approach")* (#2898) **The scaling of the render window and of the dialogs, restarted**:
+the render window = system scaling x `general.displayScaleFactor` (default 1); every dialog = the scaling of Tk from the
+system scaling, its named fonts in points x `dialogs.fontScaling`; the table of what scales how is in the
+[log](exudynRevisionLog2026b.md#rg6-16) - **to be measured on Ubuntu (100 and 200 percent) and Windows**.
+
 ## RG7 — Python user items
 
 Items whose behaviour is written in Python. Today that means user functions on existing items -
@@ -2256,7 +2263,7 @@ issue and a short title only. The open issues that are not steps are in the trac
 | RG5.4 | #2182, #2183, #2184 | the superelements for larger meshes |
 | RG6.8 | #2140, #2204, #2194 | the graphics fixes before 1.13: Linux (RG6.8.5), the near and far planes (RG6.8.8) |
 | RG6.11, RG6.12 | #2154, #2155, #2244, #2281 | textures; a ruler and consistent triangle orientation |
-| RG6.14 | #2277 | display scaling on Linux: confirmed on Ubuntu (2026-10-07, #2893), the rest in RG6.15 |
+| RG6.16 | #2898 | the scaling of the render window and the dialogs, restarted: to be measured on Ubuntu and Windows |
 | RG12.44 to RG12.46 | #2075, #2342, #1931, #1932, #1941, #782, #1863, #1864, #1892 | dictionaries and item visualization, URDF import, `MatrixContainer` |
 | RG2.6 | #559, #591, #2326 | three old test models |
 | RG4.21 to RG4.24 | #303, #574, #2315-#2317, #1548, #926 | velocity/time-dependent constraints, a 3D sliding joint, ODE1 load Jacobians, rolling friction |

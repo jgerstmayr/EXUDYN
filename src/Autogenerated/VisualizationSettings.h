@@ -37,7 +37,7 @@ public: // AUTO:
   Index circleTiling;                             //!< AUTO: must be > 0; global number of segments for circles; if smaller than 2, 2 segments are used (flat); the circles of the 2D cable contacts (ObjectContactCircleCable2D, ObjectContactFrictionCircleCable2D), large compared to the cable, take 4 times as many
   float coordinateSystemSize;                     //!< AUTO: must be > 0; size of coordinate system relative to font size
   Index cylinderTiling;                           //!< AUTO: must be > 0; global number of segments for cylinders; if smaller than 2, 2 segments are used (flat); also around the rope of a reeving system and the wire of a spring drawn as a tube; the disc of ObjectJointRollingDisc and ObjectConnectorRollingDiscPenalty, large compared to the joint, takes 4 times as many; space curves use connectors.curveTiling
-  float displayScaleFactor;                       //!< AUTO: must be >= 0; scaling of the texts of the render window and of the size of the dialogs; 0 = the display scaling of the system (monitor scaling, e.g. 150 percent on Windows, fractional scaling on Linux), read by GLFW (glfwGetWindowContentScale; on Linux from GLFW 3.3.6 on) and followed when it changes; a value > 0 is used instead of it, on every platform; acts while the renderer runs
+  float displayScaleFactor;                       //!< AUTO: must be > 0; factor on the texts of the render window, multiplied with the display scaling of the system (monitor scaling, e.g. 150 percent on Windows, fractional scaling on Linux), which GLFW reads (glfwGetWindowContentScale; on Linux from GLFW 3.3.6 on) and follows when it changes; acts while the renderer runs; the dialogs are scaled with dialogs.fontScaling
   float graphicsUpdateInterval;                   //!< AUTO: must be >= 0; interval of graphics update during simulation in seconds; 0.1 = 10 frames per second; low numbers might slow down computation speed
   bool limitWindowToScreenSize;                   //!< AUTO: True: size for render window of respective view is limited to screen size; False: larger window sizes (e.g. for rendering) allowed according to renderWindowSize
   float minSceneSize;                             //!< AUTO: must be > 0; minimum scene size for initial scene size and for autoFitScene, to avoid division by zero; SET GREATER THAN ZERO
@@ -79,7 +79,7 @@ public: // AUTO:
     circleTiling = 16;
     coordinateSystemSize = 5.f;
     cylinderTiling = 16;
-    displayScaleFactor = 0.f;
+    displayScaleFactor = 1.f;
     graphicsUpdateInterval = 0.1f;
     limitWindowToScreenSize = true;
     minSceneSize = 0.1f;

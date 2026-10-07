@@ -912,9 +912,10 @@ class _FontScalingSC:
         self.visualizationSettings.dialogs.fontScaling = fontScaling
 
 
-@pytest.mark.parametrize('size, fontScaling, expected', [(10, 0., 10), (10, 2., 20), (-12, 1.5, -18),
-                                                         (10, 0.4, 6), (-12, 0.5, -6), (0, 2., 0)])
-def testAScaledFontSizeKeepsPointsOrPixelsAndAMinimum(size, fontScaling, expected):
+#pixels (negative, the named fonts of Tk on Linux) become points, which follow the scaling of Tk (#2898)
+@pytest.mark.parametrize('size, fontScaling, expected', [(10, 0., 10), (10, 2., 20), (-12, 0., 9), (-12, 2., 18),
+                                                         (10, 0.4, 6), (-12, 0.5, 6), (0, 2., 0)])
+def testAScaledFontSizeIsInPointsWithAMinimum(size, fontScaling, expected):
     assert gui.ScaledFontSize(size, fontScaling) == expected
 
 
