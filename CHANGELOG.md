@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.12 | Metheney | 354 | 1.12.449 |
+| 1.12 | Metheney | 355 | 1.12.450 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
 | 1.9 | Krall | 235 | 1.9.234 |
@@ -29,6 +29,10 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.12 - Metheney (current)
 
+- **1.12.450** `EXTENSION` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` visualizationSettings.bodies.shells.inPlaneTiling: the subdivision of plates and shells in the drawing (#2899)
+  - description: The maintainer, 2026-10-07, testing the ANCF thin shells: 'there is no option in visualizationSettings.shells on how often plates/shells are subdivided in drawing - like a inPlaneTiling, per default 4 I would suppose. The cross-section tiling is currently less critical as it is probably linear. I also see that it probably does not use the 6-node triangles (which however would not help a lot, because for contour, the main problem is the subdivision for the values, not for the shape).' The plate used bodies.beams.axialTiling (default 8). revision2026b step RG6.17
+  - **notes:** Plates and shells (ObjectANCFThinPlate) are drawn with their own subdivision, visualizationSettings.bodies.shells.inPlaneTiling (default 4 x 4 quads per element), instead of the axial tiling of the beams
+  - date resolved: **2026-10-07 22:38**, date raised: 2026-10-07
 - **1.12.449** `FIX` `MEDIUM EFF` `raised by: Claude-JG` `resolved by: Claude-JG` the scaling of the render window and the dialogs, restarted: system scaling times displayScaleFactor for the renderer, the scaling of Tk plus dialogs.fontScaling for every dialog (#2898)
   - description: The maintainer's measurements on Ubuntu with fractional scaling 200 percent, 2026-10-07 (after \#2897): displayScaleFactor 0 / fontScaling 0: render window scaled, the settings tree scaled, but buttons and edit fields very small, help and command dialogs not scaled; displayScaleFactor 1: dialogs scaled with buttons and edit fields large (looks best), render window unscaled; fontScaling 0.5: all dialogs 2x smaller, buttons tiny; at 100 percent a displayScaleFactor 0.5 made the buttons huge. 'I would suggest to kind of restart the scaling thing ... a conservative approach ... check at which places these factors take effect ... consider that some tkFonts already scale with the linux fractional scaling, so double scaling is contraproductive ... write up a table'. revision2026b step RG6.16
   - **notes:** The render window scales with the display scaling of the system times general.displayScaleFactor; every dialog - settings, help, command window, buttons and edit fields included - follows the system scaling, and dialogs.fontScaling is a factor on top of it; confirmed on Ubuntu with fractional scaling

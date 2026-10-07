@@ -16765,3 +16765,22 @@ adjustments are smooth. All parts of the dialogs are affected. So, don't change 
   the system, 0 = 1, for every widget of the dialogs; it said "0 = automatic ... any value > 0 sets the font scaling",
   which was the behaviour before #2898. The section *Working with Ubuntu* says "relative to the scaling of the system".
 - #2898 and #2277 (the display scaling of GLFW on Linux) resolved.
+
+<a id="rg6-17"></a>
+### RG6.17 — `bodies.shells.inPlaneTiling` (2026-10-07, #2899)
+
+*(Maintainer 2026-10-07: "I just tested the ancfthin shells. I recognized that there is no option in
+visualizationSettings.shells on how often plates/shells are subdivided in drawing - like a inPlaneTiling, per default 4 I
+would suppose. The cross-section tiling is currently less critical as it is probably linear. I also see that it probably
+does not use the 6-node triangles (which however would not help a lot, because for contour, the main problem is the
+subdivision for the values, not for the shape). So add a step/issue and if everything is clear, implement.")*
+
+- `VisualizationObjectANCFThinPlate::UpdateGraphics` took the number of quads per direction from
+  `bodies.beams.axialTiling` (default 8, at least 2). Now `bodies.shells.inPlaneTiling` (default 4, at least 2), for the
+  surfaces, the edges, the points of the contour and of `drawNormal` alike. The thickness direction stays one quad: the
+  element is linear through the thickness. 6-node triangles are not used: they would bend the shape, while the contour
+  needs the values at more points, which the tiling gives.
+- The default is 4 as asked: a plate is now drawn with a quarter of the quads it had (8 x 8 before).
+- The drawing declaration of `ObjectANCFThinPlate` names the new setting; `test_graphicsData.py` checks the number of
+  triangles for 2 and 4 (and that the axial tiling of the beams does not matter); the graphics references of the mini
+  examples `ObjectANCFThinPlate` and `NodePointSlope12` re-recorded, `parameterConversionTestReference.txt` too.

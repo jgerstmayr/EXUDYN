@@ -222,3 +222,20 @@ def testPlotImageWritesIntoTheOutputDirectory(tmp_path):
     finally:
         exu.config.outputDirectory = previous
     assert os.path.getsize(os.path.join(str(tmp_path), 'figures', 'model.pdf')) > 0
+
+
+def testThePlateIsDrawnWithShellsInPlaneTiling():
+    """#2899: ObjectANCFThinPlate takes bodies.shells.inPlaneTiling, n x n quads per element, not the axial tiling
+    of the beams; the mid surface alone (drawSolid False) has 2 n^2 triangles per element"""
+    import os                                                                 # noqa: PLC0415
+    fileName = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', 'MiniExamples', 'ObjectANCFThinPlate.py')
+    namespace = {'__name__': 'miniExample'}
+    exec(open(fileName, encoding='utf8').read(), namespace)
+    SC = namespace['SC']
+    SC.visualizationSettings.bodies.shells.drawSolid = False
+    SC.visualizationSettings.bodies.beams.axialTiling = 7      #must not matter
+    numbers = {}
+    for n in [2, 4]:
+        SC.visualizationSettings.bodies.shells.inPlaneTiling = n
+        numbers[n] = len(SC.renderer.GetGraphicsData()['triangles']['items'])
+    assert numbers[4] == 4 * numbers[2] and numbers[2] > 0

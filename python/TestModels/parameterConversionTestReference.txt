@@ -439,6 +439,7 @@ outcome: !ExudynValueError !ExudynValueError int=2.0 !ExudynTypeError !ExudynTyp
   SimulationSettings.staticSolver: numberOfLoadSteps(attribute,dict)
   SimulationSettings.timeIntegration.realtime: waitMicroseconds(attribute,dict)
   VisualizationSettings.bodies.beams: axialTiling(attribute,dict) crossSectionTiling(attribute,dict)
+  VisualizationSettings.bodies.shells: inPlaneTiling(attribute,dict)
   VisualizationSettings.connectors: curveTiling(attribute,dict) springNumberOfWindings(attribute,dict)
   VisualizationSettings.contact: tilingCurves(attribute,dict) tilingSpheres(attribute,dict)
   VisualizationSettings.contour.advanced: colorBarPrecision(attribute,dict) colorBarTiling(attribute,dict)

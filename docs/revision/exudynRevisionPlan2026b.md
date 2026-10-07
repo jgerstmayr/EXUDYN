@@ -1283,6 +1283,11 @@ the render window = system scaling x `general.displayScaleFactor` (default 1); e
 system scaling, its named fonts in points x `dialogs.fontScaling`; the table of what scales how is in the
 [log](exudynRevisionLog2026b.md#rg6-16) - confirmed on Ubuntu (maintainer, 2026-10-07).
 
+<a id="rg6-17"></a>
+**RG6.17** **DONE 2026-10-07** (#2899) — [log](exudynRevisionLog2026b.md#rg6-17) *(group RG6; maintainer 2026-10-07, testing
+the ANCF thin shells)* **`bodies.shells.inPlaneTiling`**: the plates and shells are drawn as n x n quads per element with a
+setting of their own (default 4), no longer with `bodies.beams.axialTiling` (default 8).
+
 ## RG7 — Python user items
 
 Items whose behaviour is written in Python. Today that means user functions on existing items -

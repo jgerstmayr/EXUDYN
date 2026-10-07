@@ -2067,7 +2067,7 @@ void VisualizationObjectANCFThinPlate::UpdateGraphics(const VisualizationSetting
 
 	CObjectANCFThinPlate* cObject = (CObjectANCFThinPlate*)vSystem->systemData->GetCObjects()[itemNumber];
 
-	Index tiling = EXUstd::Maximum(2, visualizationSettings.bodies.beams.axialTiling);
+	Index tiling = EXUstd::Maximum(2, visualizationSettings.bodies.shells.inPlaneTiling); //a setting of its own, not the one of the beams (#2899)
 	const Float4& edgeColor = visualizationSettings.openGL.faceEdgesColor;
 
 	Real dXi = 2. / (Real)tiling;

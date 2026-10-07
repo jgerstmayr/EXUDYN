@@ -2680,6 +2680,14 @@ inline py::dict GetDictionaryWithTypeInfo(const VSettingsShells& data) {
 
     d = py::dict(); //reset local dict
     d["itemIdentifier"] = std::string(""); //identifier for item
+    d["value"] = data.inPlaneTiling;
+    d["type"] = "PInt";
+    d["size"] = std::vector<int>{1};
+    d["description"] = "number of segments along each local direction of an element, which is drawn as inPlaneTiling x inPlaneTiling quads (at least 2), for its shape and for the points at which the contour is evaluated";
+    structureDict["inPlaneTiling"] = d;
+
+    d = py::dict(); //reset local dict
+    d["itemIdentifier"] = std::string(""); //identifier for item
     d["value"] = data.reducedInterpolation;
     d["type"] = "bool";
     d["size"] = std::vector<int>{1};
@@ -2706,6 +2714,7 @@ inline py::dict GetDictionary(const VSettingsShells& data) {
     structureDict["drawNormalFactor"] = data.drawNormalFactor;
     structureDict["drawNormalLines"] = data.drawNormalLines;
     structureDict["drawSolid"] = data.drawSolid;
+    structureDict["inPlaneTiling"] = data.inPlaneTiling;
     structureDict["reducedInterpolation"] = data.reducedInterpolation;
     structureDict["thicknessFactor"] = data.thicknessFactor;
     return structureDict;
@@ -2719,6 +2728,7 @@ inline void SetDictionary(VSettingsShells& data, const py::dict& d) {
     EPyUtils::FromPython(d["drawNormalFactor"], data.drawNormalFactor, EPyUtils::RangeCheck::nonNegative, "VSettingsShells.drawNormalFactor");
     EPyUtils::FromPython(d["drawNormalLines"], data.drawNormalLines, "VSettingsShells.drawNormalLines");
     EPyUtils::FromPython(d["drawSolid"], data.drawSolid, "VSettingsShells.drawSolid");
+    EPyUtils::FromPython(d["inPlaneTiling"], data.inPlaneTiling, EPyUtils::RangeCheck::positive, "VSettingsShells.inPlaneTiling");
     EPyUtils::FromPython(d["reducedInterpolation"], data.reducedInterpolation, "VSettingsShells.reducedInterpolation");
     EPyUtils::FromPython(d["thicknessFactor"], data.thicknessFactor, EPyUtils::RangeCheck::positive, "VSettingsShells.thicknessFactor");
 }

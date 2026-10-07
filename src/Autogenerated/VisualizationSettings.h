@@ -546,6 +546,7 @@ public: // AUTO:
   float drawNormalFactor;                         //!< AUTO: must be >= 0; factor of the contour value drawn along the normal with drawNormal
   bool drawNormalLines;                           //!< AUTO: with drawNormal, also draw the lines from the mid surface to the envelope
   bool drawSolid;                                 //!< AUTO: if true: to draw plates/shells as 3D objects; false: only the element surface is drawn; equivalent to crossSectionFilled in beams
+  Index inPlaneTiling;                            //!< AUTO: must be > 0; number of segments along each local direction of an element, which is drawn as inPlaneTiling x inPlaneTiling quads (at least 2), for its shape and for the points at which the contour is evaluated
   bool reducedInterpolation;                      //!< AUTO: if True, the contour of the strain-type outputs StrainLocal, StressLocal, CurvatureLocal, ForceLocal and TorqueLocal is interpolated bilinearly from the values at the four corners of each element, as beams.reducedAxialInterploation does along a beam; if False, it is evaluated at each point of the drawing
   float thicknessFactor;                          //!< AUTO: must be > 0; a factor multiplied with the thickness of shells/plates only for visualization (e.g. to make some effects more visible)
 
@@ -564,6 +565,7 @@ public: // AUTO:
     drawNormalFactor = 1.f;
     drawNormalLines = true;
     drawSolid = true;
+    inPlaneTiling = 4;
     reducedInterpolation = true;
     thicknessFactor = 1.f;
   };
@@ -583,6 +585,7 @@ public: // AUTO:
     os << "  drawNormalFactor = " << drawNormalFactor << "\n";
     os << "  drawNormalLines = " << drawNormalLines << "\n";
     os << "  drawSolid = " << drawSolid << "\n";
+    os << "  inPlaneTiling = " << inPlaneTiling << "\n";
     os << "  reducedInterpolation = " << reducedInterpolation << "\n";
     os << "  thicknessFactor = " << thicknessFactor << "\n";
     os << "\n";

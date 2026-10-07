@@ -1637,6 +1637,8 @@ class VSettingsShells:
     """with drawNormal, also draw the lines from the mid surface to the envelope."""
     drawSolid: bool
     """if true: to draw plates/shells as 3D objects; false: only the element surface is drawn; equivalent to crossSectionFilled in beams."""
+    inPlaneTiling: int
+    """number of segments along each local direction of an element, which is drawn as inPlaneTiling x inPlaneTiling quads (at least 2), for its shape and for the points at which the contour is evaluated."""
     reducedInterpolation: bool
     """if True, the contour of the strain-type outputs StrainLocal, StressLocal, CurvatureLocal, ForceLocal and TorqueLocal is interpolated bilinearly from the values at the four corners of each element, as beams.reducedAxialInterploation does along a beam; if False, it is evaluated at each point of the drawing."""
     thicknessFactor: float

@@ -1,0 +1,16 @@
+{
+  "number": 2899,
+  "title": "visualizationSettings.bodies.shells.inPlaneTiling: the subdivision of plates and shells in the drawing",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "EXTENSION",
+  "effort": "LOW",
+  "description": "The maintainer, 2026-10-07, testing the ANCF thin shells: 'there is no option in visualizationSettings.shells on how often plates/shells are subdivided in drawing - like a inPlaneTiling, per default 4 I would suppose. The cross-section tiling is currently less critical as it is probably linear. I also see that it probably does not use the 6-node triangles (which however would not help a lot, because for contour, the main problem is the subdivision for the values, not for the shape).' The plate used bodies.beams.axialTiling (default 8). revision2026b step RG6.17",
+  "dateRaised": "2026-10-07",
+  "deadline": "2027-04-05",
+  "dateResolved": "2026-10-07 22:38",
+  "resolvedAuthor": "Claude-JG",
+  "file": "src/ImplObjects/CObjectANCFThinPlate.cpp",
+  "releaseNotes": "Plates and shells (ObjectANCFThinPlate) are drawn with their own subdivision, visualizationSettings.bodies.shells.inPlaneTiling (default 4 x 4 quads per element), instead of the axial tiling of the beams",
+  "resolvedInVersion": "1.12.450"
+}
