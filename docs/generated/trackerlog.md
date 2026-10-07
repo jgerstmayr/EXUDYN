@@ -8,10 +8,10 @@ Every entry carries the **type** of the issue, then its **priority** and its **e
 
 General information on current version:
 
-- Exudyn version = 1.12.437.dev1
+- Exudyn version = 1.12.438.dev1
 - last change = 2026-10-07
 - Number of issues = 2889
-- Number of resolved issues = 2751 (437 in current version)
+- Number of resolved issues = 2752 (438 in current version)
 
 ## Resolved issues and resolved bugs before version 1.12
 
@@ -7571,10 +7571,6 @@ The following list contains the issues which have been **RESOLVED** in the accor
 - `CHANGE` `HIGH EFF` `raised by: Claude-JG` joints and their Jacobians on homogeneous transformations (#2884)
   - description: The constraint equations of the joints become functions of the relative transformation H0^-1 H1 of the two marker frames, and their Jacobians follow systematically from the relative twist - one implementation for JointGeneric, JointRevoluteZ, JointPrismaticX, the 2D joints and the rolling disc instead of one each. Successor of \#2745 (the marker interface of RG14.2). revision2026b step RG14.3
   - date raised: 2026-10-07
-- `TESTING` `raised by: Claude-JG` Ubuntu GUI check: curved triangle tiling and recorded frames not reproduced from here (#2881)
-  - description: exudynGuiCheckUbuntu.txt: K13 - openGL.advanced.curvedTriangleTilingAngle 90/5/15 shows no visible difference in graphicsCurvedShapes.py; S6 - Record frames in the SolutionViewer wrote no images (no images folder). Both need a screen: to be repeated with 1.12.37x (a failed PNG write is now reported in the console; the images go to images/ in the directory the script was started from), and the tiling compared with Windows.
-  - **remarks:** 2026-10-07: K13 confirmed by the maintainer; S6 changed (frame read from GL\_BACK before the swap, absolute path printed at the first frame, failures in console and render window) - to be checked again on Ubuntu and Windows
-  - date raised: 2026-10-06
 - `CHECK` `MEDIUM EFF` `raised by: Claude-JG` the member functions an item must provide, checked at compile time (#2866)
   - description: Successor of \#2498, evaluated in RG9.6: an item must implement the functions its declarations require (access function types, output variables, node type, Jacobians); today the base classes provide ~110 defaults that throw 'illegal call' at run time and no pure virtual function. Plan: a table capability -\> required functions, generated static\_asserts per item header (decltype(&CItem::F) names the class that declares F), the runtime half (every declared output variable readable) as a test model.
   - date raised: 2026-10-05

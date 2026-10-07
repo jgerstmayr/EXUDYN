@@ -16481,3 +16481,12 @@ Each command run, or dry-run with `-n`, from a shell without `PYTHONPATH`:
 - The GitHub note: until 1.13 a GitHub clone is the 1.11 tree, without this page and without `tools/exudev`.
 - `README.md` and `README.rst`: one line each, "Developers, after cloning: start with docs/dev/GETTING_STARTED.md",
   as a relative link, which GitLab and GitHub resolve.
+
+<a id="rg2-4-5-2"></a>
+### RG2.4.5 — done: S6 confirmed on Ubuntu (2026-10-07, #2881)
+
+*(Maintainer 2026-10-07: "the images are still not written in linux" - then: "ok, I did not push the latest version, so
+linux was outdated. It works!")*
+
+With 1.12.436 and later (#2887 and the back-buffer read of RG2.4.5) *Record frames* in the SolutionViewer writes the
+frames on Ubuntu. K13 was confirmed before; #2881 is resolved.

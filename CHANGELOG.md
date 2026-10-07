@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.12 | Metheney | 342 | 1.12.437 |
+| 1.12 | Metheney | 343 | 1.12.438 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
 | 1.9 | Krall | 235 | 1.9.234 |
@@ -29,6 +29,10 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.12 - Metheney (current)
 
+- **1.12.438** `TESTING` `raised by: Claude-JG` `resolved by: Claude-JG` Ubuntu GUI check: curved triangle tiling and recorded frames not reproduced from here (#2881)
+  - description: exudynGuiCheckUbuntu.txt: K13 - openGL.advanced.curvedTriangleTilingAngle 90/5/15 shows no visible difference in graphicsCurvedShapes.py; S6 - Record frames in the SolutionViewer wrote no images (no images folder). Both need a screen: to be repeated with 1.12.37x (a failed PNG write is now reported in the console; the images go to images/ in the directory the script was started from), and the tiling compared with Windows.
+  - **notes:** On Ubuntu the curved triangles follow the tiling angle (K13) and Record frames in the SolutionViewer writes its images (S6): the frame is read before the buffer swap, the first frame prints where it is written, a failed write is reported
+  - date resolved: **2026-10-07 14:22**, date raised: 2026-10-06
 - **1.12.437** `DOCU` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` GETTING\_STARTED.md: exudev started as 'python -m exudev', which fails; the README does not point to the page (#2888)
   - description: The maintainer, 2026-10-07: 'python -m exudev build --env venvExuP313 =\> this is I believe wrong, it should be: python tools/exudev build ... Please check all commands in the getting started. It also should really help when starting up. The getting started document should also be linked from the README.md and README.rst in the repo root. Think about, if somebody clones the gitlab repo, the only info one has is the README.' revision2026b step RG3.40
   - **notes:** The developer getting-started page starts the driver as python tools/exudev (python -m exudev fails without tools/ on the path), says what to do when conda is not found, and README.md and README.rst point to it
