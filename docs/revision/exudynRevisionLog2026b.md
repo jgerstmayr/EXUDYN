@@ -16860,3 +16860,18 @@ windows gave no further errors.")*
   after `glfwDestroyWindow` (`__EXUDYN__APPLE__`). `InteractiveDialog.OnQuit` lets the Tk root process its events after
   the window is destroyed (darwin). The "tk" window: see R6.
 - Not checked on a screen here; R6 is tested in `test_guiValues.py`. The three rows are to be checked again on the Mac.
+
+<a id="rg1-4-1"></a>
+### RG1.4 — the state before 1.13: Linux crash, integration round, PDF (2026-10-08, #2140)
+
+*(Maintainer 2026-10-08: "a larger amount of tests could not reproduce the linux failure. Seems that it works in the
+current form. Mark as resolved. The integration round: there are practically no further models of my colleagues - it
+was more the idea to do before the GUI check. Mark as closed. PDF is checked.")*
+
+- #2140 (Linux crashes of the renderer and the SolutionViewer, the BadWindow of X_QueryTree) resolved; RG6.8.5 done. If
+  it comes back, the hypothesis in the remarks of #2140 (the X error handler shared by Tk and GLFW) is the place to
+  start.
+- RG2.2, the integration round, closed: no further models of the colleagues; the GUI checks on the three platforms
+  took its place.
+- The PDF of the documentation is checked; of the conditions of RG1.4 the review of the documentation by somebody
+  else, the macOS re-check of RG2.4.6 and the release path remain.

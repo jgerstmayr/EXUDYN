@@ -92,10 +92,11 @@ internal GitLab meanwhile.
     release after the revision, and the only one that is announced. What has to be true before it
     is built:
 
-    - the **integration round** of the colleagues is through (RG2.2), and what it found is either
-      fixed or recorded as an issue with a decision;
+    - ~~the **integration round** of the colleagues is through (RG2.2)~~ - closed 2026-10-08, there are no further
+      models to integrate;
     - **macOS wheels** exist and pass - the machine is expected around 2026-10-20;
-    - the documentation has been **read by somebody who did not write it**;
+    - the documentation has been **read by somebody who did not write it**; the PDF is checked (maintainer,
+      2026-10-08);
     - the **manual GUI check** (RG2.4, `docs/dev/GUI_MANUAL_CHECK.md`) is done on Windows, Ubuntu and
       macOS;
     - `exudev release` runs clean: its readiness step (revision2026 step R8.2) checks the issue
@@ -132,7 +133,9 @@ NOT cover, and about the testing that no suite can do.
     wanted. The work that follows from it is RG2.3 (the suite) and RG6.3 (the API it needs).
 
 <a id="rg2-2"></a>
-**RG2.2** *(group RG2; maintainer decision 2026-09-22)* **The integration round before 1.13.**
+**RG2.2** **CLOSED 2026-10-08** — [log](exudynRevisionLog2026b.md#rg1-4-1) *(group RG2; maintainer decision 2026-09-22; closed by
+the maintainer 2026-10-08: "there are practically no further models of my colleagues - it was more the idea to do before
+the GUI check")* **The integration round before 1.13.**
     The colleagues at the institute integrate their own work against the current version on the
     internal GitLab and report what breaks. This is the testing that the suite cannot do: real
     models, written by people who did not write the change, on machines that are not the
@@ -1228,7 +1231,8 @@ the arc; the spring windings of the spring-dampers use `connectors.springNumberO
       volumes by the near and far planes of the camera-centric projection. **Changed 2026-09-30**
       ([log](exudynRevisionLog2026b.md#rg6-8-4-1)): depth clamping while the volumes are drawn. **DONE
       2026-09-30**: the maintainer checked it on screen - no artifacts any more;
-    - **RG6.8.5** (#2140, #2277; #2236 and #2278 resolved 2026-10-07: the time in the renderer is right and no crash
+    - **RG6.8.5** **DONE 2026-10-08** — [log](exudynRevisionLog2026b.md#rg1-4-1) (#2140 resolved: "a larger amount of tests
+      could not reproduce the linux failure", the maintainer; #2277 resolved with #2898; #2236 and #2278 resolved 2026-10-07: the time in the renderer is right and no crash
       when it closes on Ubuntu, the maintainer's tests) Linux: crashes when the renderer closes and with the SolutionViewer; the
       time in the renderer initialized wrong - the manual check (RG2.4) S7, Q1, Q2 on Ubuntu, plus a
       script that starts and stops the renderer twenty times; whether `glfwGetWindowContentScale` of the newer GLFW
@@ -2278,7 +2282,6 @@ issue and a short title only. The open issues that are not steps are in the trac
 | RG1.2 | - | retroactive tags for the past releases whose commits can be identified |
 | RG1.3 | - | a second internal repository for development-only Python |
 | RG1.4 | - | **the 1.13 release** - the first public one after the revision |
-| RG2.2 | - | the integration round of the institute before 1.13 |
 | RG2.4 | - | the manual GUI check, once per release and platform (list and model done) |
 | RG4.1 | - | the Windows/Linux differences in contact and friction; RG4.1.2 the five macOS-only models, RG4.1.3 the math library |
 | RG5.1 | - | a maintained micro-benchmark of the linear algebra, inside Exudyn (from #2397); RG5.1.1 the no-rotation flag of the HT |
@@ -2286,7 +2289,7 @@ issue and a short title only. The open issues that are not steps are in the trac
 | RG5.2 | - | make the hot linear algebra vectorizable |
 | RG5.3 | #858, #1202, #1203 | the Jacobians assembled in parallel |
 | RG5.4 | #2182, #2183, #2184 | the superelements for larger meshes |
-| RG6.8 | #2140, #2204, #2194 | the graphics fixes before 1.13: Linux (RG6.8.5), the near and far planes (RG6.8.8) |
+| RG6.8 | #2204, #2194 | the graphics fixes: the near and far planes (RG6.8.8) |
 | RG6.11, RG6.12 | #2154, #2155, #2244, #2281 | textures; a ruler and consistent triangle orientation |
 | RG12.44 to RG12.46 | #2075, #2342, #1931, #1932, #1941, #782, #1863, #1864, #1892 | dictionaries and item visualization, URDF import, `MatrixContainer` |
 | RG2.6 | #559, #591, #2326 | three old test models |

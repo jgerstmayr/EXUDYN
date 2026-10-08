@@ -8,10 +8,10 @@ Every entry carries the **type** of the issue, then its **priority** and its **e
 
 General information on current version:
 
-- Exudyn version = 1.12.456.dev1
+- Exudyn version = 1.12.457.dev1
 - last change = 2026-10-08
 - Number of issues = 2907
-- Number of resolved issues = 2770 (456 in current version)
+- Number of resolved issues = 2771 (457 in current version)
 
 ## Resolved issues and resolved bugs before version 1.12
 
@@ -7704,10 +7704,6 @@ The following list contains the issues which have been **RESOLVED** in the accor
   - description: add textures for triangle lists, using texture reference number and coordinates, according to standard format
   - **remarks:** planned as revision2026b step RG6.11 (triage 2026-10-07)
   - date raised: 2025-11-02
-- `FIX` `HIGH EFF` linux (#2140)
-  - description: fix graphics-related crashes on linux versions, in particular when closing renderer and with mbs.SolutionViewer()
-  - **remarks:** planned before 1.13 as revision2026b step RG6.8.5 (2026-09-29); 2026-10-07, maintainer on Ubuntu (1.12.443): after changing a few parameters in a dialog and re-opening it: X Error of failed request: BadWindow (invalid Window parameter), major opcode 15 (X\_QueryTree), then terminate called without an active exception, core dumped. Suspect: the tkinter dialog and the GLFW render thread both using X11; to be reproduced on the Ubuntu machine. The messages invalid command name ...\<lambda\> of demo 2 were scheduled callbacks of closed dialogs, fixed by \#2897; 2026-10-07, second report: the same BadWindow on X\_QueryTree before switching to the SolutionViewer. Hypothesis to check on the machine: X\_QueryTree is what Tk calls in its window manager code, and Tk expects BadWindow there to be swallowed by its own X error handler; the X error handler of Xlib is global for the process, and GLFW in the render thread replaces it temporarily (\_glfwGrabErrorHandlerX11) and restores the one it saw - if that happens while Tk installs its handler, Tk's is lost and the default handler of Xlib exits the process (terminate called ...). Test: gdb --args python model.py, break exit / \_XDefaultError, bt in all threads; or XSynchronize.
-  - date raised: 2025-07-10
 - `EXTENSION` `MEDIUM EFF` ObjectContact (#2131)
   - description: add rolling resistance
   - **remarks:** kept open as an idea, no plan step (triage 2026-10-07, revision2026b group RG18)

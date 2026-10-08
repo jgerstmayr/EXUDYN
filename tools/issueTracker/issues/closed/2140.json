@@ -1,0 +1,15 @@
+{
+  "number": 2140,
+  "title": "linux",
+  "author": "JG",
+  "status": "RESOLVED",
+  "type": "FIX",
+  "effort": "HIGH",
+  "description": "fix graphics-related crashes on linux versions, in particular when closing renderer and with mbs.SolutionViewer()",
+  "dateRaised": "2025-07-10",
+  "deadline": "2026-01-06",
+  "dateResolved": "2026-10-08 20:01",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "No more crashes of the renderer or the SolutionViewer on Linux: a larger number of tests by the maintainer could not reproduce them",
+  "resolvedInVersion": "1.12.457"
+}
