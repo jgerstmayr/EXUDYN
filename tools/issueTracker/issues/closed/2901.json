@@ -1,0 +1,16 @@
+{
+  "number": 2901,
+  "title": "the quiet exudev build shows pip's message on conflicting packages as an ERROR line without the conflicts",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "FIX",
+  "effort": "LOW",
+  "description": "Complete build of 2026-10-08 (tmp/completeBuild2026-10-08.txt), venvP313: ERROR: pip's dependency resolver does not currently take into account all the packages that are installed ... - the quiet filter of #2895 passed the first line (it contains error) and swallowed the conflicts listed after it (spyder-kernels 2.5.0 for spyder 6.1.2, setuptools 72.1.0 for sip). Not an error of the build. revision2026b step RG10.23.1",
+  "dateRaised": "2026-10-08",
+  "deadline": "2027-04-06",
+  "dateResolved": "2026-10-08 18:46",
+  "resolvedAuthor": "Claude-JG",
+  "file": "tools/exudev/commands.py",
+  "releaseNotes": "The quiet exudev build shows pip's message on conflicting packages in the environment as a note with the conflicts, instead of an ERROR line without them",
+  "resolvedInVersion": "1.12.452"
+}

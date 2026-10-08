@@ -1536,6 +1536,14 @@ files in one line; the test suite and the examples count the models in one line 
 suite log is 7000 lines instead of 266000 - `exudyn.special.exceptions.writeErrorsToLogFile`, off while
 `parameterConversionTest.py` provokes its 38000 errors.
 
+<a id="rg10-23"></a>
+**RG10.23** **DONE 2026-10-08** — [log](exudynRevisionLog2026b.md#rg10-23) *(group RG10; the complete build of 2026-10-08,
+maintainer: "yes, add issues and a step and complete it right now")* **What the complete build still printed**:
+    - **RG10.23.1** (#2901) the quiet build shows pip's message on conflicting packages as a note, with the conflicts;
+    - **RG10.23.2** (#2902) the pytest files use the current helpers where they do not test a deprecation;
+    - **RG10.23.3** (#2903) `spotReinforcementLearning.py` imports `spotModel`, the model of its folder; the rotted
+      exemption of `exudynCPP` in `checkExtras.py` is gone.
+
 ## RG11 — Misc
 
 What belongs to no group yet. Three of a kind here are a reason to propose a group of their own.

@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.12 | Metheney | 356 | 1.12.451 |
+| 1.12 | Metheney | 359 | 1.12.454 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
 | 1.9 | Krall | 235 | 1.9.234 |
@@ -29,6 +29,18 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.12 - Metheney (current)
 
+- **1.12.454** `FIX` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` spotReinforcementLearning.py imports RL\_Spot, which is not in the repository; checkExtras keeps a rotted exemption for exudynCPP (#2903)
+  - description: Complete build of 2026-10-08, checkExtras warnings: broken import RL\_Spot in Examples/FurtherExamples/spotReinforcementLearning.py - the model of that folder is spotModel.py with the same GetModel(addShoulderContact) (the Details line names it); and the exemption of exudynCPP is used nowhere. revision2026b step RG10.23.3
+  - **notes:** spotReinforcementLearning.py imports spotModel, the model of its folder, instead of the missing RL\_Spot; checkExtras reports no warnings
+  - date resolved: **2026-10-08 18:46**, date raised: 2026-10-08
+- **1.12.453** `TESTING` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` pytest files use deprecated helpers where they do not test a deprecation (#2902)
+  - description: Complete build of 2026-10-08: DeprecationWarnings of graphics.BrickXYZ (test\_graphicsMiniExamples.py, test\_zoomAllTrackMarker.py) and beams.GenerateStraightLineANCFCable/2D (test\_itemCompatibility.py); these tests do not test the deprecations. revision2026b step RG10.23.2
+  - **notes:** The pytest files use graphics.Brick and GenerateBeamElementsAlongLine where they do not test a deprecation
+  - date resolved: **2026-10-08 18:46**, date raised: 2026-10-08
+- **1.12.452** `FIX` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` the quiet exudev build shows pip's message on conflicting packages as an ERROR line without the conflicts (#2901)
+  - description: Complete build of 2026-10-08 (tmp/completeBuild2026-10-08.txt), venvP313: ERROR: pip's dependency resolver does not currently take into account all the packages that are installed ... - the quiet filter of \#2895 passed the first line (it contains error) and swallowed the conflicts listed after it (spyder-kernels 2.5.0 for spyder 6.1.2, setuptools 72.1.0 for sip). Not an error of the build. revision2026b step RG10.23.1
+  - **notes:** The quiet exudev build shows pip's message on conflicting packages in the environment as a note with the conflicts, instead of an ERROR line without them
+  - date resolved: **2026-10-08 18:46**, date raised: 2026-10-08
 - **1.12.451** `TESTING` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` exudev build --complete stops at the test suite of Python 3.10: energiesTest.py differs by 5.9e-11 with numpy 2.2 (#2900)
   - description: The local complete build of 1.12.450 (2026-10-07/08): wheels for cp310-cp314 built, then the test suite in venvP310 failed with energiesTest.py: 17.61488435881711 against 17.614884358875663, error -5.855e-11 (rel. 3.3e-12), tolerance 5e-14; the build stopped there, so 3.11-3.14 and the fast module were not tested. The same difference was seen on Linux (WSL 1.12.372) and put into UnresolvedOnLinux; venvP310 has numpy 2.2.5, the reference environment numpy 2.4.6 - a round-off difference, not a platform one. revision2026b step RG4.1.4
   - **notes:** exudev build --complete passes again: energiesTest.py gets a tolerance factor for the round-off difference of numpy 2.2, and seven performance references follow the modified Newton default of the time integration (\#2815)

@@ -37,7 +37,7 @@ from stable_baselines3.common.callbacks import BaseCallback
 import numpy as np
 import gym
 
-import RL_Spot
+import spotModel #the model of this folder, spotModel.py
 
 dtypeNumpy = np.float64
 
@@ -149,7 +149,7 @@ class SpotEnv(OpenAIGymInterfaceEnv):
         #%%++++++++++++++++++++++++
         self.cntCalls = 0
         
-        self.mbs, self.SC, self.oKT, self.nKT = RL_Spot.GetModel(addShoulderContact=addShoulderContact)
+        self.mbs, self.SC, self.oKT, self.nKT = spotModel.GetModel(addShoulderContact=addShoulderContact)
         self.legsInit = self.mbs.variables['legsInit']
         self.legMarkers = self.mbs.variables['legMarkers']
         self.legRadius = self.mbs.variables['legRadius']

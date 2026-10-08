@@ -100,8 +100,20 @@ class BuildProgress:
         self.module = 0
         self.lastCount = 0
         self.open = False                #a progress line is waiting for its line feed
+        self.pipConflicts = False        #the lines after pip's message on conflicting packages (#2901)
 
     def Line(self, text):
+        #pip's resolver reports conflicts among the packages installed in the environment - not an error of the build;
+        #shown as a note, with the conflicts it lists, which used to be swallowed after its first line (#2901)
+        if "pip's dependency resolver" in text:
+            self.pipConflicts = True
+            prefix = '\n' if self.open else ''
+            self.open = False
+            return prefix + 'note (not an error of the build): conflicting packages installed in this environment:'
+        if self.pipConflicts:
+            if 'requires' in text or 'has requirement' in text:
+                return '  ' + text.strip()
+            self.pipConflicts = False
         match = self.counterPattern.search(text)
         if match:
             count, total = int(match.group(1)), int(match.group(2))

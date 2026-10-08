@@ -16812,3 +16812,25 @@ subdivision for the values, not for the shape). So add a step/issue and if every
 - **Examples** (venvP312): 156 run, the one failure `rendererNOGLFWexample.py` is the known one; `PASSED`. A
   `SyntaxWarning: invalid escape sequence '\p'` of `plotSensorExamples.py` (`$\\frac{180}{\pi}$` in a plot label) fixed.
 - **pytest**: in the gates of this step.
+
+<a id="rg10-23"></a>
+### RG10.23 — what the complete build still printed (2026-10-08, #2901, #2902, #2903)
+
+*(Maintainer 2026-10-08, on the four observations of the complete build `tmp/completeBuild2026-10-08.txt`: "yes, add
+issues and a step and complete it right now. Please also run a complete build at the end.")*
+
+- **RG10.23.1** (#2901): pip prints `ERROR: pip's dependency resolver does not currently take into account all the
+  packages that are installed ...` when the environment holds conflicting packages (venvP313: spyder-kernels 2.5.0 for
+  spyder 6.1.2, setuptools 72.1.0 for sip). The filter of #2895 passed that line for its "error" and dropped the
+  conflicts listed after it. `BuildProgress` shows it as "note (not an error of the build): conflicting packages
+  installed in this environment:" followed by the conflicts; tested in `test_exudev.py`. The environment itself is the
+  maintainer's (`pip check` in venvP313 names the two).
+- **RG10.23.2** (#2902): `graphics.BrickXYZ` in `test_graphicsMiniExamples.py` and `test_zoomAllTrackMarker.py` ->
+  `graphics.Brick(centerPoint, size)` (same corners), `GenerateStraightLineANCFCable/2D` in `test_itemCompatibility.py`
+  -> `GenerateBeamElementsAlongLine(...)['elements'][0]` (the same defaults). The four files pass with
+  `-W error::DeprecationWarning`; the graphics references are unchanged.
+- **RG10.23.3** (#2903): `spotReinforcementLearning.py` imported `RL_Spot`, the earlier name of `spotModel.py` in the
+  same folder (its Details line says "for spotModel.py (has to be in same folder)", and `spotModel.GetModel(
+  addShoulderContact)` returns the same `mbs, SC, oKT, nKT`): it imports `spotModel` now. `checkExtras.py`: the entry
+  of `RL_Spot` in `knownMissingLocalModules` and the exemption of `exudynCPP`, imported nowhere, removed - no warning
+  left.

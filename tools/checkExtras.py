@@ -84,7 +84,6 @@ exemptImports = {
     'std_srvs':      'ROS service package, not on PyPI; imported by the ROS node '
                      'python/Examples/testData/ROS/ROSControlMobileManipulator.py, which came into '
                      'the repository with the supplementary files.4',
-    'exudynCPP':     'the compiled extension itself, built by setup.py',
     'pyansys':       'imported inside GenerateStressModesFromPyAnsys() only, behind a flag that '
                      'is False; the distribution was renamed to ansys-mapdl-reader and pulling '
                      'it into [tests] would be a large dependency for dead code',
@@ -118,8 +117,6 @@ exemptImports = {
 #broken imports in the files listed, not packaging gaps, so they are reported as a warning rather
 #than treated as an uncovered dependency. Raised as an issue
 knownMissingLocalModules = {
-    'RL_Spot': 'Examples/FurtherExamples/spotReinforcementLearning.py imports it, but no such '
-               'file is in the repository - the model module was never committed',
     }
 
 #the [rl] extra is deliberately NOT part of [all]: torch is multi-GB and the CPU/CUDA choice is

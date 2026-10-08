@@ -53,7 +53,8 @@ brickCorners = np.array([[x, y, z] for x in [brickMin[0], brickMax[0]] for y in 
 
 def InjectedGraphics():
     """a little of each kind the graphics data has: triangles (a brick), lines and a text"""
-    return [graphics.BrickXYZ(*brickMin, *brickMax, color=graphics.color.steelblue),
+    return [graphics.Brick(centerPoint=0.5*(np.array(brickMin)+np.array(brickMax)),
+                           size=np.array(brickMax)-np.array(brickMin), color=graphics.color.steelblue),
             graphics.Lines([[0, 0, 0], brickMin, [brickMax[0], brickMin[1], brickMin[2]]], color=graphics.color.red),
             graphics.Text(point=list(brickMax), text='G', color=graphics.color.black)]
 

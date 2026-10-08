@@ -1,0 +1,16 @@
+{
+  "number": 2903,
+  "title": "spotReinforcementLearning.py imports RL_Spot, which is not in the repository; checkExtras keeps a rotted exemption for exudynCPP",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "FIX",
+  "effort": "LOW",
+  "description": "Complete build of 2026-10-08, checkExtras warnings: broken import RL_Spot in Examples/FurtherExamples/spotReinforcementLearning.py - the model of that folder is spotModel.py with the same GetModel(addShoulderContact) (the Details line names it); and the exemption of exudynCPP is used nowhere. revision2026b step RG10.23.3",
+  "dateRaised": "2026-10-08",
+  "deadline": "2027-04-06",
+  "dateResolved": "2026-10-08 18:46",
+  "resolvedAuthor": "Claude-JG",
+  "file": "python/Examples/FurtherExamples/spotReinforcementLearning.py",
+  "releaseNotes": "spotReinforcementLearning.py imports spotModel, the model of its folder, instead of the missing RL_Spot; checkExtras reports no warnings",
+  "resolvedInVersion": "1.12.454"
+}

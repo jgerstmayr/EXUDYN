@@ -34,7 +34,7 @@ def Model(track, rigid=False):
     mbs = SC.AddSystem()
     #the scene: a brick from (10,0) to (12,1), and the ground carrying the tracked marker
     mbs.AddObject(ObjectGround(visualization=VObjectGround(graphicsData=[
-        graphics.BrickXYZ(10, 0, 0, 12, 1, 0.5, color=graphics.color.red)])))
+        graphics.Brick(centerPoint=[11, 0.5, 0.25], size=[2, 1, 0.5], color=graphics.color.red)])))
     oCarrier = mbs.AddObject(ObjectGround(referencePosition=list(markerPosition),
                                           referenceRotation=markerRotation if rigid else np.eye(3)))
     if rigid:

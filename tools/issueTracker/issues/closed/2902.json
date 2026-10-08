@@ -1,0 +1,16 @@
+{
+  "number": 2902,
+  "title": "pytest files use deprecated helpers where they do not test a deprecation",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "TESTING",
+  "effort": "LOW",
+  "description": "Complete build of 2026-10-08: DeprecationWarnings of graphics.BrickXYZ (test_graphicsMiniExamples.py, test_zoomAllTrackMarker.py) and beams.GenerateStraightLineANCFCable/2D (test_itemCompatibility.py); these tests do not test the deprecations. revision2026b step RG10.23.2",
+  "dateRaised": "2026-10-08",
+  "deadline": "2027-04-06",
+  "dateResolved": "2026-10-08 18:46",
+  "resolvedAuthor": "Claude-JG",
+  "file": "python/testing/test_graphicsMiniExamples.py",
+  "releaseNotes": "The pytest files use graphics.Brick and GenerateBeamElementsAlongLine where they do not test a deprecation",
+  "resolvedInVersion": "1.12.453"
+}

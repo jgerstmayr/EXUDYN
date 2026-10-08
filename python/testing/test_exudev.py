@@ -256,3 +256,14 @@ def testTheQuietBuildCountsTheFilesOfEachModule():
     assert 'error C2065' in progress.Line('src/x.cpp(3): error C2065: undeclared identifier')
     assert progress.Line('src/x.cpp(3): warning C4100: unreferenced parameter') is None
     assert 'Created wheel' in progress.Line('  Created wheel for exudyn: filename=exudyn-1.whl')
+
+
+#%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+def testTheQuietBuildShowsPipsConflictsAsANote():
+    """#2901: pip's message on conflicting packages is a note with the conflicts it lists, not an error"""
+    progress = commands.BuildProgress()
+    note = progress.Line("ERROR: pip's dependency resolver does not currently take into account all the packages that are installed.")
+    assert note.startswith('note') and 'not an error' in note
+    assert 'sip 6.12.0 requires setuptools>=75.8.1' in progress.Line('sip 6.12.0 requires setuptools>=75.8.1, but you have setuptools 72.1.0 which is incompatible.')
+    assert progress.Line('Building wheel for exudyn (pyproject.toml): started') is None
+    assert 'exudynCPP:   1/134' in progress.Line('compile 001/134: ')
