@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.12 | Metheney | 355 | 1.12.450 |
+| 1.12 | Metheney | 356 | 1.12.451 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
 | 1.9 | Krall | 235 | 1.9.234 |
@@ -29,6 +29,10 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.12 - Metheney (current)
 
+- **1.12.451** `TESTING` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` exudev build --complete stops at the test suite of Python 3.10: energiesTest.py differs by 5.9e-11 with numpy 2.2 (#2900)
+  - description: The local complete build of 1.12.450 (2026-10-07/08): wheels for cp310-cp314 built, then the test suite in venvP310 failed with energiesTest.py: 17.61488435881711 against 17.614884358875663, error -5.855e-11 (rel. 3.3e-12), tolerance 5e-14; the build stopped there, so 3.11-3.14 and the fast module were not tested. The same difference was seen on Linux (WSL 1.12.372) and put into UnresolvedOnLinux; venvP310 has numpy 2.2.5, the reference environment numpy 2.4.6 - a round-off difference, not a platform one. revision2026b step RG4.1.4
+  - **notes:** exudev build --complete passes again: energiesTest.py gets a tolerance factor for the round-off difference of numpy 2.2, and seven performance references follow the modified Newton default of the time integration (\#2815)
+  - date resolved: **2026-10-08 08:51**, date raised: 2026-10-08
 - **1.12.450** `EXTENSION` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` visualizationSettings.bodies.shells.inPlaneTiling: the subdivision of plates and shells in the drawing (#2899)
   - description: The maintainer, 2026-10-07, testing the ANCF thin shells: 'there is no option in visualizationSettings.shells on how often plates/shells are subdivided in drawing - like a inPlaneTiling, per default 4 I would suppose. The cross-section tiling is currently less critical as it is probably linear. I also see that it probably does not use the 6-node triangles (which however would not help a lot, because for contour, the main problem is the subdivision for the values, not for the shape).' The plate used bodies.beams.axialTiling (default 8). revision2026b step RG6.17
   - **notes:** Plates and shells (ObjectANCFThinPlate) are drawn with their own subdivision, visualizationSettings.bodies.shells.inPlaneTiling (default 4 x 4 quads per element), instead of the axial tiling of the beams

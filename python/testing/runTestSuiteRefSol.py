@@ -334,6 +334,9 @@ def TestExamplesToleranceFactors():
 
     tolFact = {
         'serialRobotTest.py': 100,                                  #sparse eigenvalue solver
+        #the energies after a dynamic run: -5.9e-11 (rel. 3.3e-12) with numpy 2.2 (venvP310, Windows, 2026-10-07) and on
+        #Linux (WSL, 1.12.372) against the reference of numpy 2.4; a round-off difference, not a platform one (#2900)
+        'energiesTest.py': 1e4,
         }
 
     return tolFact
@@ -402,9 +405,6 @@ def UnresolvedOnLinux():
         #and ComputeItem evaluates the state of 100 steps of a double pendulum
         'createSphereQuadContact.py',           #rel. 1.1e-07
         'computeItemTest.py',                   #rel. 2.3e-11
-        #added 2026-10-07 from the WSL run of 1.12.372.dev1 (cp313): -5.9e-11 against 3e-11, the energies after a
-        #dynamic run of bodies and spring-dampers
-        'energiesTest.py',                      #rel. 3.3e-12
         ])
 
     return unresolved
@@ -563,7 +563,7 @@ def PerformanceTestsReferenceSolution():
         'generalContactSpheresPerf.py': -1.779402864432933, #2026-09-16: performance run shortened to tEnd*0.2; before: -5.98425321234168
         'perf3DRigidBodies.py':4.541173417942123, #2026-09-16: tEnd 1 -> 0.7; before: 5.307943301446709
         'perfObjectFFRFreducedOrder.py':21.00863102425483, 
-        'perfRigidPendulum.py':2.4735499200766586, #changed to some analytic Connector jacobians (CartSpringDamper), implicit solver(modified Newton restart, etc.); before 2022-01-18: 2.4745344452543323,
+        'perfRigidPendulum.py':2.473549926393305, #2026-10-08: modified Newton is the default of timeIntegration.newton since 2026-10-03 (#2815, #2900); before: 2.4735499200766586; changed to some analytic Connector jacobians (CartSpringDamper), implicit solver(modified Newton restart, etc.); before 2022-01-18: 2.4745344452543323,
         'perfSpringDamperExplicit.py':0.52,
         'perfSpringDamperUserFunction.py':0.5065575310983877,
         'perfConnectorInterface.py':1.8871766817354405, #new 2026-10-01 (#2745)
@@ -583,19 +583,19 @@ def PerformanceTestsReferenceSolution():
         'perfLargeMassSpringChain:rigid-n5000-implicit' : 0.01663000270673365,
         'perfLargeMassSpringChain:rigid-n20000-explicit': 0.01426191722384829,
         #the connector interface (#2745) - measured 2026-10-01 on Windows cp313
-        'perfConnectorInterface:spring-n200-implicit':             8.222900073211406,
+        'perfConnectorInterface:spring-n200-implicit':             8.222900067049855, #2026-10-08: modified Newton is the default of timeIntegration.newton since 2026-10-03 (#2815, #2900); before: 8.222900073211406
         'perfConnectorInterface:spring-n200-explicit':             6.071378919533291,
         'perfConnectorInterface:gravity-n200-implicit':            17.452516360952007,
         'perfConnectorInterface:coordinate-n1000-explicit':        0.9526968492542502,
-        'perfConnectorInterface:rigid-n100-implicit':              1.552725088397863,
+        'perfConnectorInterface:rigid-n100-implicit':              1.552725084801644, #2026-10-08: modified Newton is the default of timeIntegration.newton since 2026-10-03 (#2815, #2900); before: 1.552725088397863
         'perfConnectorInterface:rigid-n100-explicit':              1.8871766817354405,
         #the access functions of the bodies (#2744): hand-written, and for the cable the derivative of J^T f by automatic
         #differentiation - measured 2026-10-02 on Windows cp313
-        'perfAccessFunctionsAD:rigidEP-n100-implicit':           1.552725088397863,
-        'perfAccessFunctionsAD:rigidRxyz-n100-implicit':         38.06978409054861,
+        'perfAccessFunctionsAD:rigidEP-n100-implicit':           1.552725084801644, #2026-10-08: modified Newton is the default of timeIntegration.newton since 2026-10-03 (#2815, #2900); before: 1.552725088397863
+        'perfAccessFunctionsAD:rigidRxyz-n100-implicit':         38.06977882602512, #2026-10-08: modified Newton is the default of timeIntegration.newton since 2026-10-03 (#2815, #2900); before: 38.06978409054861
         'perfAccessFunctionsAD:rigidRxyz-n100-explicit':         39.70816787868968,
-        'perfAccessFunctionsAD:rigid2D-n200-implicit':           333.2416865794323,
-        'perfAccessFunctionsAD:cable-n200-implicit':             0.005112208211437852,
+        'perfAccessFunctionsAD:rigid2D-n200-implicit':           333.2416865462153, #2026-10-08: modified Newton is the default of timeIntegration.newton since 2026-10-03 (#2815, #2900); before: 333.2416865794323
+        'perfAccessFunctionsAD:cable-n200-implicit':             0.004663297110155585, #2026-10-08: modified Newton is the default of timeIntegration.newton since 2026-10-03 (#2815, #2900); before: 0.005112208211437852
         'perfAccessFunctionsAD:rigid2D-n200-explicit':           439.41627874357835,
         }
 

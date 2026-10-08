@@ -1,0 +1,16 @@
+{
+  "number": 2900,
+  "title": "exudev build --complete stops at the test suite of Python 3.10: energiesTest.py differs by 5.9e-11 with numpy 2.2",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "TESTING",
+  "effort": "LOW",
+  "description": "The local complete build of 1.12.450 (2026-10-07/08): wheels for cp310-cp314 built, then the test suite in venvP310 failed with energiesTest.py: 17.61488435881711 against 17.614884358875663, error -5.855e-11 (rel. 3.3e-12), tolerance 5e-14; the build stopped there, so 3.11-3.14 and the fast module were not tested. The same difference was seen on Linux (WSL 1.12.372) and put into UnresolvedOnLinux; venvP310 has numpy 2.2.5, the reference environment numpy 2.4.6 - a round-off difference, not a platform one. revision2026b step RG4.1.4",
+  "dateRaised": "2026-10-08",
+  "deadline": "2027-04-06",
+  "dateResolved": "2026-10-08 08:51",
+  "resolvedAuthor": "Claude-JG",
+  "file": "python/testing/runTestSuiteRefSol.py",
+  "releaseNotes": "exudev build --complete passes again: energiesTest.py gets a tolerance factor for the round-off difference of numpy 2.2, and seven performance references follow the modified Newton default of the time integration (#2815)",
+  "resolvedInVersion": "1.12.451"
+}

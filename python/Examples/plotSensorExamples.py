@@ -148,7 +148,7 @@ mbs.PlotSensor(sensorNumbers=['solution/sDisp.txt',sDisp,sDisp], components=0, x
             labels=['Displacement from file','Displacement internal','diff between file and \ninternal data (precision)'])
 
 mbs.PlotSensor(sensorNumbers=sOmega, components=[0,1,2],
-          yLabel='angular velocities with offset 0\nand scaled with $\\frac{180}{\pi}$', 
+          yLabel='angular velocities with offset 0\nand scaled with $\\frac{180}{\\pi}$',
           factors=180/pi, offsets=0,fontSize=12,title='angular velocities',
           lineWidths=[3,5,1], lineStyles=['-',':','-.'], colors=['r','g','b'])
 

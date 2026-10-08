@@ -712,6 +712,10 @@ The steps are numbered in the order they were raised and stand here in the order
       is no longer drawn into an OpenGL window that does not exist in the Python thread (segfault on macOS); a symbolic
       vector expression no longer frees its components twice (heap corruption); `raytracerNOGLFWtest.py` runs on macOS
       again.
+    - **RG4.1.6** **DONE 2026-10-08** — [log](exudynRevisionLog2026b.md#rg4-1-6) (#2900) the local `exudev build --complete`
+      of 1.12.450: `energiesTest.py` differs by 5.9e-11 with numpy 2.2 (venvP310, as on Linux) - a tolerance factor
+      instead of `UnresolvedOnLinux`; seven implicit performance runs had references from before modified Newton became
+      the default (#2815) - re-recorded; the suite passes on 3.10-3.14, the performance runs, the examples and pytest too.
     - **RG4.1.3** *open (maintainer 2026-10-01)* — **the math library and uninitialized values**, two candidate
       causes to test. What is known (IEEE 754-2008/2019, the glibc manual *Errors in Math Functions*, the MSVC `/fp`
       and GCC/clang `-ffp-contract` documentation; from the standard literature, not re-fetched here):
