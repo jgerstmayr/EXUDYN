@@ -2165,6 +2165,9 @@ void GlfwRenderer::FinishRunLoop()
 		RecordWindowGeometry(mainViewID);
 		glfwDestroyWindow(renderViews.GetWindow(mainViewID)); //HAS TO BE CALLED FROM GLFWClient THREAD
 		renderViews.SetWindow(mainViewID, nullptr);
+#if defined(__EXUDYN__APPLE__)
+		glfwPollEvents(); //Cocoa removes the destroyed windows from the screen only when it processes its events (#2906)
+#endif
 	}
 	rendererActive = false; //for new startup of renderer
 	stopRenderer = false;	//if stopped by user

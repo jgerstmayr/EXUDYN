@@ -1,0 +1,16 @@
+{
+  "number": 2905,
+  "title": "real-time mode: the time of a pause counts, the simulation jumps when it continues",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "BUG",
+  "effort": "LOW",
+  "description": "macOS GUI check 2026-10-08, K5: in real-time mode the simulation time runs on while paused; paused at 9 s, waited 5 s, continued: it jumps to 14 s and continues in real time. CSolverBase: the real-time pacing compares the simulated time with the wall-clock time since the start of the solver, pauses included (on every platform); and the realtime.factor is applied to the first value only, not inside the waiting loop. revision2026b step RG2.4.6.2",
+  "dateRaised": "2026-10-08",
+  "deadline": "2027-04-06",
+  "dateResolved": "2026-10-08 19:15",
+  "resolvedAuthor": "Claude-JG",
+  "file": "src/Solver/CSolverBase.cpp",
+  "releaseNotes": "Real-time mode: a pause (SPACE, pauseAfterEachStep) no longer counts as simulated time, the simulation continues where it was paused; realtime.factor holds while the solver waits",
+  "resolvedInVersion": "1.12.456"
+}

@@ -448,6 +448,14 @@ class InteractiveDialog:
         #del exudyn.sys['tkinterRoot'] #this is not thread safe, but interuption should not happen ...
         self.tkWindow.quit()
         self.tkWindow.destroy()
+        if sys.platform == 'darwin':
+            #on macOS the window stays on the screen, empty, until Tk processes its events (#2906)
+            import tkinter                                                   # noqa: PLC0415
+            if tkinter._default_root is not None:
+                try:
+                    tkinter._default_root.update()
+                except tkinter.TclError:
+                    pass
 
     def StartSimulation(self, event=None):
         """function called on button 'Run'

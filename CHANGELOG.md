@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.12 | Metheney | 359 | 1.12.454 |
+| 1.12 | Metheney | 361 | 1.12.456 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
 | 1.9 | Krall | 235 | 1.9.234 |
@@ -29,6 +29,14 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.12 - Metheney (current)
 
+- **1.12.456** <span class="textred">`BUG`</span> `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` real-time mode: the time of a pause counts, the simulation jumps when it continues (#2905)
+  - description: macOS GUI check 2026-10-08, K5: in real-time mode the simulation time runs on while paused; paused at 9 s, waited 5 s, continued: it jumps to 14 s and continues in real time. CSolverBase: the real-time pacing compares the simulated time with the wall-clock time since the start of the solver, pauses included (on every platform); and the realtime.factor is applied to the first value only, not inside the waiting loop. revision2026b step RG2.4.6.2
+  - **notes:** Real-time mode: a pause (SPACE, pauseAfterEachStep) no longer counts as simulated time, the simulation continues where it was paused; realtime.factor holds while the solver waits
+  - date resolved: **2026-10-08 19:15**, date raised: 2026-10-08
+- **1.12.455** <span class="textred">`BUG`</span> `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` right click on a sensor: the properties dialog fails (ShowRightMouseSelectionDialog: showing the dictionary failed) (#2904)
+  - description: macOS GUI check 2026-10-08 (tmp/MacOS/GuiManualCheckMacOS.txt), R6 with Sensor0 of guiManualCheckModel.py: ERROR: ShowRightMouseSelectionDialog: showing the dictionary failed, then an abort in plt.show of phase 5. Reproduced on Windows: TkinterEditDictionary.GetDictionary takes self.tree.item(i,'values')\[0\], and for an empty value - fileName '' of a sensor - Tk gives '' instead of a tuple: IndexError. The broad except printed no reason. The Tk root the failed dialog left behind is the empty 'tk' window of S7 and plausibly the abort under the macosx backend of matplotlib. revision2026b step RG2.4.6.1
+  - **notes:** The properties dialog of a right click works for items with an empty value, e.g. a sensor without a file name; a failure of the dialog names its reason
+  - date resolved: **2026-10-08 19:15**, date raised: 2026-10-08
 - **1.12.454** `FIX` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` spotReinforcementLearning.py imports RL\_Spot, which is not in the repository; checkExtras keeps a rotted exemption for exudynCPP (#2903)
   - description: Complete build of 2026-10-08, checkExtras warnings: broken import RL\_Spot in Examples/FurtherExamples/spotReinforcementLearning.py - the model of that folder is spotModel.py with the same GetModel(addShoulderContact) (the Details line names it); and the exemption of exudynCPP is used nowhere. revision2026b step RG10.23.3
   - **notes:** spotReinforcementLearning.py imports spotModel, the model of its folder, instead of the missing RL\_Spot; checkExtras reports no warnings

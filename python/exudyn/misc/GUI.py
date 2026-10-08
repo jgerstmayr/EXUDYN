@@ -1802,7 +1802,8 @@ class TkinterEditDictionary(tk.Frame):
         for i in kids:
             nchilds = len(self.tree.get_children(i))
             if nchilds == 0:
-                d.update({self.tree.item(i,'text'): self.tree.item(i,'values')[0]})
+                values = self.tree.item(i,'values') #'' instead of a tuple for an empty value, e.g. fileName '' of a sensor (#2904)
+                d.update({self.tree.item(i,'text'): values[0] if values else ''})
             else:
                 d.update({self.tree.item(i,'text'): self.GetDictionary(i)})
         return d
@@ -2317,8 +2318,9 @@ def ShowRightMouseSelectionDialog():
     try:
         d = exudyn.sys['currentRendererSelectionDict']
         EditDictionary(d, False, dialogName='properties of <' + d['name'] + '>')
-    except Exception:                        #a dict without 'name', or no dict at all
-        exudyn.Print('ERROR: ShowRightMouseSelectionDialog: showing the dictionary failed')
+    except Exception as error:               #a dict without 'name', or no dict at all; the reason is said (#2904)
+        exudyn.Print('ERROR: ShowRightMouseSelectionDialog: showing the dictionary failed: '
+                     + type(error).__name__ + ': ' + str(error))
 
 
 def AskQuitDialog():

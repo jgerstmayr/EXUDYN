@@ -1,0 +1,13 @@
+{
+  "number": 2906,
+  "title": "macOS: after Q or ESCAPE in the SolutionViewer, its window and a 'tk' window stay visible and empty",
+  "author": "Claude-JG",
+  "status": "RAISED",
+  "type": "FIX",
+  "effort": "LOW",
+  "description": "macOS GUI check 2026-10-08, S7: after Q or Escape in the dialog, the SolutionViewer and a tk window remain visible but empty. Cocoa removes a destroyed GLFW window only when its events are processed, and a destroyed Tk window stays until Tk processes its events; the 'tk' window is the root left by the failed dialog of R6 (#2904). revision2026b step RG2.4.6.3",
+  "dateRaised": "2026-10-08",
+  "deadline": "2027-04-06",
+  "file": "python/exudyn/interactive.py",
+  "workingRemarks": "2026-10-08: glfwPollEvents after glfwDestroyWindow on macOS, Tk root update after the dialog is destroyed (darwin); to be checked on the Mac (RG2.4.6.3)"
+}

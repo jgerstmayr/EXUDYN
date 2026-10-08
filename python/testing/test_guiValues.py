@@ -932,3 +932,16 @@ def testFontScalingSetsTheNamedFontsAndZeroGivesThemBack(monkeypatch):
     monkeypatch.setattr(gui, 'GetRendererSystemContainer', lambda: _FontScalingSC(0.))
     gui.ApplyDialogFontScaling(root)
     assert defaultFont.cget('size') == original
+
+
+#the properties dialog of a right click with an empty value - the fileName '' of a sensor (#2904)
+def testThePropertiesDialogTakesAnEmptyValue():
+    root = TkRootOrSkip()
+    window = gui.tk.Toplevel(root)
+    window.withdraw()
+    try:
+        dialog = gui.TkinterEditDictionary(window, {'sensorType': 'Body', 'fileName': '', 'storeInternal': True,
+                                                    'name': 'sensor0'}, False, 15)
+        assert dialog.GetDictionary('')['fileName'] == ''
+    finally:
+        window.destroy()

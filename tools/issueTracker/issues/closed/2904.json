@@ -1,0 +1,16 @@
+{
+  "number": 2904,
+  "title": "right click on a sensor: the properties dialog fails (ShowRightMouseSelectionDialog: showing the dictionary failed)",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "BUG",
+  "effort": "LOW",
+  "description": "macOS GUI check 2026-10-08 (tmp/MacOS/GuiManualCheckMacOS.txt), R6 with Sensor0 of guiManualCheckModel.py: ERROR: ShowRightMouseSelectionDialog: showing the dictionary failed, then an abort in plt.show of phase 5. Reproduced on Windows: TkinterEditDictionary.GetDictionary takes self.tree.item(i,'values')[0], and for an empty value - fileName '' of a sensor - Tk gives '' instead of a tuple: IndexError. The broad except printed no reason. The Tk root the failed dialog left behind is the empty 'tk' window of S7 and plausibly the abort under the macosx backend of matplotlib. revision2026b step RG2.4.6.1",
+  "dateRaised": "2026-10-08",
+  "deadline": "2027-04-06",
+  "dateResolved": "2026-10-08 19:15",
+  "resolvedAuthor": "Claude-JG",
+  "file": "python/exudyn/misc/GUI.py",
+  "releaseNotes": "The properties dialog of a right click works for items with an empty value, e.g. a sensor without a file name; a failure of the dialog names its reason",
+  "resolvedInVersion": "1.12.455"
+}

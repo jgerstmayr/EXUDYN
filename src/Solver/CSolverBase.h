@@ -66,6 +66,7 @@ public: //made public for simpler access via pybind; nevertheless, C++ functions
 		std::vector<Real> ODE2, ODE2_t, ODE2_tt, aAlgorithmic, ODE1, ODE1_t, AE, data;
 	} restart;
 	Index stepsSinceLastStepSizeReduction = 0; //!< steps since the step size was reduced; an increase waits for adaptiveStepRecoverySteps of them
+	Real pausedSeconds = 0.; //!< wall-clock time the simulation was paused (SPACE, pauseAfterEachStep), not counted by the real-time mode (#2905)
 public:
 	CSolverBase()
 	{

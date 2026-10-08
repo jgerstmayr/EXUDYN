@@ -16834,3 +16834,29 @@ issues and a step and complete it right now. Please also run a complete build at
   addShoulderContact)` returns the same `mbs, SC, oKT, nKT`): it imports `spotModel` now. `checkExtras.py`: the entry
   of `RL_Spot` in `knownMissingLocalModules` and the exemption of `exudynCPP`, imported nowhere, removed - no warning
   left.
+
+<a id="rg2-4-6"></a>
+### RG2.4.6 — the manual GUI check on macOS, 1.12.451 (2026-10-08, #2904, #2905, #2906)
+
+*(Maintainer 2026-10-08: "tmp/MacOS/GuiManualCheckMacOS.txt contains the gui test on MacOS with a couple of errors -
+please also add step(s)/issues at the end of the current task, then resolve as much as is possible. The gui test on
+windows gave no further errors.")*
+
+- **R6** (#2904) - right click on Sensor0: "ERROR: ShowRightMouseSelectionDialog: showing the dictionary failed", later
+  an abort in `plt.show` (macosx backend) of phase 5. Reproduced on Windows with the dictionary of a sensor in a
+  withdrawn Tk root: `TkinterEditDictionary.__init__` -> `GetDictionary` takes `self.tree.item(i,'values')[0]`, and for
+  an empty value (`fileName: ''`) Tk returns `''` instead of a tuple -> `IndexError: string index out of range`. Every
+  platform; the check of Windows clicks a pendulum link, not a sensor. Fixed (an empty value is ''), and the error of
+  `ShowRightMouseSelectionDialog` names its type and message. The failed dialog had created a Tk root and left it:
+  that is the empty "tk" window of S7, and a Tk root next to the macosx backend of matplotlib is the likely cause of
+  the abort - to be seen on the Mac whether it goes with the fix.
+- **K5** (#2905) - real-time mode, paused at 9 s for 5 s: continues at 14 s. `CSolverBase` paced the simulated time
+  against the wall-clock time since the start of the solver, pauses included, so the solver ran unpaced until it had
+  caught up - on every platform. Now the time spent in `WaitForUserToContinue` (SPACE, `pauseAfterEachStep`) is summed
+  in `pausedSeconds` and not counted. The `realtime.factor` was applied to the first value only and not inside the
+  waiting loop, so a factor other than 1 waited for the unscaled time - fixed with it.
+- **S7** (#2906) - macOS: after Q/ESCAPE the SolutionViewer and a "tk" window stay visible and empty. GLFW on macOS
+  removes a destroyed window from the screen when Cocoa processes its events: `FinishRunLoop` polls the events once
+  after `glfwDestroyWindow` (`__EXUDYN__APPLE__`). `InteractiveDialog.OnQuit` lets the Tk root process its events after
+  the window is destroyed (darwin). The "tk" window: see R6.
+- Not checked on a screen here; R6 is tested in `test_guiValues.py`. The three rows are to be checked again on the Mac.

@@ -8,10 +8,10 @@ Every entry carries the **type** of the issue, then its **priority** and its **e
 
 General information on current version:
 
-- Exudyn version = 1.12.454.dev1
+- Exudyn version = 1.12.456.dev1
 - last change = 2026-10-08
-- Number of issues = 2904
-- Number of resolved issues = 2768 (454 in current version)
+- Number of issues = 2907
+- Number of resolved issues = 2770 (456 in current version)
 
 ## Resolved issues and resolved bugs before version 1.12
 
@@ -7568,6 +7568,10 @@ The following list contains the issues which have been **RESOLVED** in the accor
 
 ## Open issues
 
+- `FIX` `LOW EFF` `raised by: Claude-JG` macOS: after Q or ESCAPE in the SolutionViewer, its window and a 'tk' window stay visible and empty (#2906)
+  - description: macOS GUI check 2026-10-08, S7: after Q or Escape in the dialog, the SolutionViewer and a tk window remain visible but empty. Cocoa removes a destroyed GLFW window only when its events are processed, and a destroyed Tk window stays until Tk processes its events; the 'tk' window is the root left by the failed dialog of R6 (\#2904). revision2026b step RG2.4.6.3
+  - **remarks:** 2026-10-08: glfwPollEvents after glfwDestroyWindow on macOS, Tk root update after the dialog is destroyed (darwin); to be checked on the Mac (RG2.4.6.3)
+  - date raised: 2026-10-08
 - `CHANGE` `HIGH EFF` `raised by: Claude-JG` joints and their Jacobians on homogeneous transformations (#2884)
   - description: The constraint equations of the joints become functions of the relative transformation H0^-1 H1 of the two marker frames, and their Jacobians follow systematically from the relative twist - one implementation for JointGeneric, JointRevoluteZ, JointPrismaticX, the 2D joints and the rolling disc instead of one each. Successor of \#2745 (the marker interface of RG14.2). revision2026b step RG14.3
   - date raised: 2026-10-07

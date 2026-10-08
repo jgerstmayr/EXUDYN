@@ -641,6 +641,7 @@ bool CSolverBase::SolveSystem(CSystem& computationalSystem, const SimulationSett
 		timer.Reset(simulationSettings.show.computationTime);
 		timer.total = -EXUstd::GetTimeInSeconds();
 		output.cpuSolverStartTime = -timer.total; //exactly the same!
+		pausedSeconds = 0.;
 		output.cpuLastTimePrinted = output.cpuSolverStartTime; //this should be close to start of first step
 
 		if (success)
@@ -1112,7 +1113,10 @@ void CSolverBase::FinishStep(CSystem& computationalSystem, const SimulationSetti
 	if (simulationSettings.timeIntegration.realtime.active)
 	{
 		STARTTIMER(timer.realtimeIdleCPU);
-		Real cpuTimeElapsed = simulationSettings.timeIntegration.realtime.factor * (EXUstd::GetTimeInSeconds() - output.cpuSolverStartTime);
+		//the wall-clock time since the start without the pauses, times the factor - also inside the loop (#2905)
+		auto RealtimeElapsed = [&]() { return simulationSettings.timeIntegration.realtime.factor *
+			(EXUstd::GetTimeInSeconds() - output.cpuSolverStartTime - pausedSeconds); };
+		Real cpuTimeElapsed = RealtimeElapsed();
 		Real simTimeElapsed = t - it.startTime;
 		Index waitMicroSeconds = simulationSettings.timeIntegration.realtime.waitMicroseconds; //wait time until next computation
 
@@ -1122,7 +1126,7 @@ void CSolverBase::FinishStep(CSystem& computationalSystem, const SimulationSetti
 			{
 				std::this_thread::sleep_for(std::chrono::microseconds(waitMicroSeconds)); //avoid continuous computation
 			}
-			cpuTimeElapsed = (EXUstd::GetTimeInSeconds() - output.cpuSolverStartTime);
+			cpuTimeElapsed = RealtimeElapsed();
 		}
 		STOPTIMER(timer.realtimeIdleCPU);
 	}
@@ -1257,7 +1261,12 @@ void CSolverBase::FinishStep(CSystem& computationalSystem, const SimulationSetti
 		computationalSystem.UpdatePostProcessData(recordImage);
 	}
 
-	if (simulationSettings.pauseAfterEachStep) { computationalSystem.GetPostProcessData()->WaitForUserToContinue(output.verboseMode > 0); }
+	if (simulationSettings.pauseAfterEachStep)
+	{
+		Real pauseStart = EXUstd::GetTimeInSeconds();
+		computationalSystem.GetPostProcessData()->WaitForUserToContinue(output.verboseMode > 0);
+		pausedSeconds += EXUstd::GetTimeInSeconds() - pauseStart; //#2905
+	}
 	STOPTIMER(timer.visualization);
 }
 
@@ -2436,7 +2445,9 @@ void CSolverBase::DoIdleOperations(CSystem& computationalSystem)
 {
     if (computationalSystem.GetPostProcessData()->simulationPaused)
     {
+        Real pauseStart = EXUstd::GetTimeInSeconds();
         computationalSystem.GetPostProcessData()->WaitForUserToContinue(output.verboseMode>0);
+        pausedSeconds += EXUstd::GetTimeInSeconds() - pauseStart; //the real-time mode does not count the pause (#2905)
     }
 
     PyProcessExecuteQueue(); //execute incoming python tasks if available

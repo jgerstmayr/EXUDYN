@@ -179,6 +179,14 @@ NOT cover, and about the testing that no suite can do.
           frames, found by the GUI check agent on Ubuntu: `saveImageAsData` of a view was never initialized, and a nonzero
           value kept every recorded frame in memory instead of writing it; a `RedrawAndGetImage()` no longer counts a
           frame number or prints a file name.
+    - **RG2.4.6** — [log](exudynRevisionLog2026b.md#rg2-4-6) the manual GUI check of 1.12.451 on macOS (2026-10-08); on
+      Windows no further errors. Changed 2026-10-08, **to be checked again on the Mac**:
+        - **RG2.4.6.1** (#2904) R6: the properties dialog of a right click failed for a sensor - an empty value
+          (`fileName` '') made `TkinterEditDictionary.GetDictionary` fail on every platform; the error names its reason;
+        - **RG2.4.6.2** (#2905) K5: real-time mode - a pause no longer counts, the simulation continues where it was; the
+          factor holds while waiting;
+        - **RG2.4.6.3** (#2906) S7: macOS - the render window and the dialog leave the screen when they are closed; the
+          empty 'tk' window was the root the failed dialog of R6 left.
 
 <a id="rg2-5"></a>
 **RG2.5** **DONE 2026-10-04** (#2832) — [log](exudynRevisionLog2026b.md#rg2-5) *(group RG2; feedback of a colleague installing Exudyn, forwarded by the maintainer 2026-10-04: "The
