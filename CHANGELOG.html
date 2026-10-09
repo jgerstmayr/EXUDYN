@@ -6,7 +6,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Changelog &mdash; Exudyn1.13.3 1.13.3 documentation</title>
+  <title>Changelog &mdash; Exudyn1.13.5 1.13.5 documentation</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=3ee1c6c6" />
       <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="_static/copybutton.css?v=76b2166b" />
@@ -16,7 +16,7 @@
   
       <script src="_static/jquery.js?v=5d32c60e"></script>
       <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="_static/documentation_options.js?v=b8a3e558"></script>
+      <script src="_static/documentation_options.js?v=d752f18c"></script>
       <script src="_static/doctools.js?v=fd6eb6e6"></script>
       <script src="_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="_static/clipboard.min.js?v=a7894cd8"></script>
@@ -39,7 +39,7 @@
           
           
           <a href="index.html" class="icon icon-home">
-            Exudyn1.13.3
+            Exudyn1.13.5
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
@@ -99,7 +99,7 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="index.html">Exudyn1.13.3</a>
+          <a href="index.html">Exudyn1.13.5</a>
       </nav>
 
       <div class="wy-nav-content">
@@ -135,8 +135,8 @@
 <tbody>
 <tr class="row-even"><td><p>1.13</p></td>
 <td><p>Newborn</p></td>
-<td><p>4</p></td>
-<td><p>1.13.3</p></td>
+<td><p>6</p></td>
+<td><p>1.13.5</p></td>
 </tr>
 <tr class="row-odd"><td><p>1.12</p></td>
 <td><p>Metheney</p></td>
@@ -213,6 +213,20 @@
 <section id="version-1-13-newborn-current">
 <h2>Version 1.13 - Newborn (current)<a class="headerlink" href="#version-1-13-newborn-current" title="Link to this heading"></a></h2>
 <ul class="simple">
+<li><p><strong>1.13.5</strong> <code class="docutils literal notranslate"><span class="pre">TESTING</span></code> <code class="docutils literal notranslate"><span class="pre">HIGH</span></code> <code class="docutils literal notranslate"><span class="pre">LOW</span> <span class="pre">EFF</span></code> <code class="docutils literal notranslate"><span class="pre">raised</span> <span class="pre">by:</span> <span class="pre">Claude-JG</span></code> <code class="docutils literal notranslate"><span class="pre">resolved</span> <span class="pre">by:</span> <span class="pre">Claude-JG</span></code> the GitHub macOS test jobs fail on two platform differences, and Linux ARM has no list (#2919)</p>
+<ul>
+<li><p>description: GitHub CI of 1.13.3, macos-15 ARM: geometricallyExactBeamRightAngleFrame (rel. 3.9e-10, cp313 and cp314) and objectFFRFreducedOrderTest (rel. 1.3e-08, cp314 only) differ beyond the tolerance and are not in UnresolvedOnMacOS, so –exit-code fails the job. Linux ARM (aarch64) was judged with UnresolvedOnLinux although it is arm64 and fuses a*b+c into FMA as macOS ARM does</p></li>
+<li><p><strong>notes:</strong> the test suite on macOS ARM accepts two more known platform differences (geometricallyExactBeamRightAngleFrame, objectFFRFreducedOrderTest on cp314), and Linux ARM is judged with the same list. revision2026b step RG10.26</p></li>
+<li><p>date resolved: <strong>2026-10-09 19:43</strong>, date raised: 2026-10-09</p></li>
+</ul>
+</li>
+<li><p><strong>1.13.4</strong> <span class="textred"><code class="docutils literal notranslate"><span class="pre">BUG</span></code></span> <code class="docutils literal notranslate"><span class="pre">HIGH</span></code> <code class="docutils literal notranslate"><span class="pre">LOW</span> <span class="pre">EFF</span></code> <code class="docutils literal notranslate"><span class="pre">raised</span> <span class="pre">by:</span> <span class="pre">Claude-JG</span></code> <code class="docutils literal notranslate"><span class="pre">resolved</span> <span class="pre">by:</span> <span class="pre">Claude-JG</span></code> the Linux ARM wheels do not build: exudynCPPfast gets the x86-64 options -mavx2 -mfma (#2918)</p>
+<ul>
+<li><p>description: GitHub CI of 1.13.3, ubuntu-24.04-arm: g++: error: unrecognized command-line option ‘-mavx2’ / ‘-mfma’ while compiling exudynCPPfast. A release version builds the fast module for every Python version and setup.py adds the AVX2 options on every Linux; a development version builds it only on cp313, so the ARM jobs of dev builds failed the same way there. __init__.py loads exudynCPPfast only on a CPU with AVX2, so on ARM it is never used</p></li>
+<li><p><strong>notes:</strong> the Linux ARM wheels build again: setup.py builds exudynCPPfast, with its AVX2 options, only on x86-64 Linux; on ARM it was never loaded. revision2026b step RG10.26</p></li>
+<li><p>date resolved: <strong>2026-10-09 19:43</strong>, date raised: 2026-10-09</p></li>
+</ul>
+</li>
 <li><p><strong>1.13.3</strong> <code class="docutils literal notranslate"><span class="pre">DOCU</span></code> <code class="docutils literal notranslate"><span class="pre">HIGH</span></code> <code class="docutils literal notranslate"><span class="pre">LOW</span> <span class="pre">EFF</span></code> <code class="docutils literal notranslate"><span class="pre">raised</span> <span class="pre">by:</span> <span class="pre">Claude-JG</span></code> <code class="docutils literal notranslate"><span class="pre">resolved</span> <span class="pre">by:</span> <span class="pre">Claude-JG</span></code> the GitHub start page and the PyPI page show stale texts with a dead link to theDoc.pdf (#2917)</p>
 <ul>
 <li><p>description: GitHub shows README.md before README.rst: a 22-line leftover (RST syntax in a .md file, Python 3.6 - 3.9, docs/theDoc/theDoc.pdf), while README.rst is the landing page of Read the Docs. The PyPI description, inline in pyproject.toml, also pointed to theDoc.pdf; it is part of the wheel metadata, so the 1.13.2 wheels cannot be published with it (maintainer 2026-10-09, after pushing master)</p></li>
