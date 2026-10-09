@@ -17104,3 +17104,19 @@ environment of cibuildwheel, the Actions settings), was seen there first.
   the message of `tools/hooks/pre-push` and CLAUDE.md no longer say "until the 1.13 release".
 - The follow-ups are RG10.29 (#2915, #2916, #2922-#2927) and RG2.8 (#2914). The working notes were
   `tmp/githubHowTo.md`.
+
+<a id="rg10-28-1"></a>
+### RG10.28.1 — the logs of 1.13.6 and a cp315 wheel (2026-10-09)
+
+*(Maintainer 2026-10-09: "rerun the examples (at least for one windows Python 3.13) with version 1.13.6 - this can be done
+with the PyPI variants - ... build the Python 3.15 Windows version ... ideally for 1.13.6 ... rerun performance tests - add
+testsuite results (from Github) - untrack 1.13.3 testsuite/examples/performance files")*
+
+- `exudyn==1.13.6` from PyPI in venvP313. All of the following passed: the test suite with both modules (174 and 171
+  test models, 93 mini examples), the performance tests (42.7 s; the fast module 33.9 s) and the examples.
+- The cp315 wheel of 1.13.6 was built from the tag in a separate worktree, in venvP315 (Python 3.15.0rc3, numpy 2.5.3,
+  scipy 1.18.1), in 1 min 44 s. Both test suites pass. It is in `distPyPI/` for the upload; CI and docs follow in
+  RG10.29.9 (#2928).
+- The test logs of GitHub CI for macOS (cp310-314, 12 known platform differences each) and Windows (cp310-312, cp314)
+  are added. The Windows cp313 log is the local run with the PyPI wheel, which has the same file name.
+- The 19 logs of 1.13.3 are no longer tracked; 1.13.6 is the release.

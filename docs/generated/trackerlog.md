@@ -10,7 +10,7 @@ General information on current version:
 
 - Exudyn version = 1.13.7.dev1
 - last change = 2026-10-09
-- Number of issues = 2928
+- Number of issues = 2929
 - Number of resolved issues = 2784 (7 in current version)
 
 ## Resolved issues and resolved bugs before version 1.13
@@ -9039,6 +9039,9 @@ The following list contains the issues which have been **RESOLVED** in the accor
 
 ## Open issues
 
+- `IMPROVEMENT` <span class="textorange">`NORMAL`</span> `LOW EFF` `raised by: Claude-JG` Python 3.15: GitHub CI, the version matrix and the documentation (#2928)
+  - description: the cp315 wheel of 1.13.6 was built by hand on Windows (Python 3.15.0rc3, numpy 2.5.3) and passes the test suite of both modules; GitHub CI builds cp310-cp314 only (matrix python-version and cibuildwheel 3.4.1), the installation page and README.rst say 3.10 - 3.14, venvP315 is not part of the exudev version matrix. Add 3.15 once cibuildwheel and numpy support it in a final release
+  - date raised: 2026-10-09
 - `IMPROVEMENT` <span class="textblue">`LOW`</span> `LOW EFF` `raised by: Claude-JG` twine is not part of the development environment (#2927)
   - description: the 1.13 upload needed twine \>= 6.1 and pkginfo \>= 1.12 for Metadata-Version 2.4 (License-Expression, License-File); an older twine in the base environment reported the fields as malformed. A dependency group 'release' with twine\>=6.1, used by docs/dev/RELEASE.md
   - date raised: 2026-10-09

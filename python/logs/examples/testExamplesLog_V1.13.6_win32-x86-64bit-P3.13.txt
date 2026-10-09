@@ -2,18 +2,17 @@
 +++++++++++++++++++++++++++++++++++++++++++
 +++++      EXUDYN TEST EXAMPLES       +++++
 +++++++++++++++++++++++++++++++++++++++++++
-EXUDYN version      = 1.13.3
-EXUDYN build date   = 2026-10-09 17:24:23
+EXUDYN version      = 1.13.6
+EXUDYN build date   = 2026-10-09 21:48:56
 architecture        = 64bit
 processor           = x86
 CPU                 = AMD64 Family 26 Model 68 Stepping 0, AuthenticAMD (32 threads)
 platform            = win32
-python version      = 3.12.9
-packages            = numpy 2.2.4, scipy 1.15.2, matplotlib 3.10.0, ngsolve 6.2.2501, h5py 3.13.0
-packages            = numpy-stl 3.2.0, numba (not installed), torch 2.9.0+cu128
-packages            = stable-baselines3 (not installed), mpi4py (not installed), pybind11 (not installed)
-packages            = setuptools 72.1.0
-test date (now)     = 2026-10-09 17:41:12
+python version      = 3.13.2
+packages            = numpy 2.2.4, scipy 1.15.2, matplotlib 3.10.0, ngsolve 6.2.2601, h5py 3.15.1
+packages            = numpy-stl 3.2.0, numba (not installed), torch 2.11.0, stable-baselines3 2.7.1
+packages            = mpi4py (not installed), pybind11 (not installed), setuptools 72.1.0
+test date (now)     = 2026-10-09 21:52:07
 +++++++++++++++++++++++++++++++++++++++++++
   ... "FurtherExamples/spotReinforcementLearning.py" skipped: needs stable-baselines3 and a training run
   ... "ROSMassPoint.py" skipped: needs a ROS installation
@@ -69,37 +68,37 @@ For details see mbs.systemData, mbs.sys and mbs.variables
 NOTE: the renderer is suppressed by exudyn.special.userInterface.suppressRenderer; no window is opened
 NOTE: StartResultsMonitor opens no window, because exudyn.special.userInterface.suppressPlots=True
 +++++++++++++++++++++++++++++++
-EXUDYN V1.13.3 solver: implicit second order time integration
+EXUDYN V1.13.6 solver: implicit second order time integration
 
 ++++++++++++++++++++++++++++++
 exudyn.special.solver.timeout=1 seconds reached
 simulation receives stop signal
 
-STEP471424 (stopped), t = 2357.12s, tCPU=1.00005s, Nit/step = 1.00004
+STEP458747 (stopped), t = 2293.73s, tCPU=1.00005s, Nit/step = 1.00004
 solver stopped due to special.solver.timout after 1.00005 seconds.
 ====================
 CPU-time statistics:
   total time   = 1 seconds
-  measured time= 0.796 seconds (=79.6%) 
+  measured time= 0.798 seconds (=79.8%) 
   non-zero timer [__ sub-timer]:
-  factorization     = 7.54e-05%
-  newtonIncrement   = 2.07%
-  integrationFormula= 4.03%
-  ODE2RHS           = 50.1%
+  factorization     = 7.52e-05%
+  newtonIncrement   = 2.05%
+  integrationFormula= 3.92%
+  ODE2RHS           = 50.4%
   ODE1RHS           = 2.69%
-  AERHS             = 17.5%
-  totalJacobian     = 0.00107%
-  __jacobianODE2    = 0.000955%
-  __jacobianODE1    = 2.51e-05%
-  __jacobianAE      = 5.03e-05%
-  massMatrix        = 1.26e-05%
-  reactionForces    = 19.2%
-  writeSolution     = 1.47%
-  overhead          = 1.57%
-  visualization/user= 1.33%
+  AERHS             = 17.9%
+  totalJacobian     = 0.00104%
+  __jacobianODE2    = 0.000802%
+  __jacobianODE1    = 0.000125%
+  __jacobianAE      = 5.01e-05%
+  massMatrix        = 1.25e-05%
+  reactionForces    = 18.7%
+  writeSolution     = 1.43%
+  overhead          = 1.56%
+  visualization/user= 1.31%
 Solver iteration statistics:
-total number of steps:        471423
-total number of Newton iterations: 471441
+total number of steps:        458746
+total number of Newton iterations: 458764
 total number of Newton Jacobians:  1
 
 
@@ -107,9 +106,9 @@ total number of Newton Jacobians:  1
 EXAMPLE 1 ("addPrismaticJoint.py"):
 ******************************************
 +++++++++++++++++++++++++++++++
-EXUDYN V1.13.3 solver: implicit second order time integration
+EXUDYN V1.13.6 solver: implicit second order time integration
 STEP2000, t = 2s, timeToGo = 0s, Nit/step = 2
-Solver terminated successfully after 0.0464857 seconds.
+Solver terminated successfully after 0.0451555 seconds.
 NOTE: SolutionViewer opens no window, because exudyn.special.userInterface.suppressSolutionViewer=True
 u0= [-7.77156117e-16 -1.26128571e+01  2.22044605e-16] , rot0= [-1.57079633e+00 -7.20833049e-17 -1.82792293e-16]
 solution of addPrismaticJoint= 14.183653469652036
@@ -119,30 +118,30 @@ solution of addPrismaticJoint= 14.183653469652036
 EXAMPLE 2 ("addRevoluteJoint.py"):
 ******************************************
 +++++++++++++++++++++++++++++++
-EXUDYN V1.13.3 solver: implicit second order time integration
+EXUDYN V1.13.6 solver: implicit second order time integration
 STEP2000, t = 2s, timeToGo = 0s, Nit/step = 7.315
-Solver terminated successfully after 0.185154 seconds.
+Solver terminated successfully after 0.173241 seconds.
 ====================
 CPU-time statistics:
-  total time   = 0.185 seconds
-  measured time= 0.182 seconds (=98%) 
+  total time   = 0.173 seconds
+  measured time= 0.17 seconds (=98%) 
   non-zero timer [__ sub-timer]:
-  factorization     = 10.8%
-  newtonIncrement   = 28%
-  integrationFormula= 0.561%
+  factorization     = 11.4%
+  newtonIncrement   = 28.4%
+  integrationFormula= 0.636%
   ODE2RHS           = 12.7%
-  ODE1RHS           = 0.205%
-  AERHS             = 7.47%
-  totalJacobian     = 3.81%
-  __jacobianODE2    = 1.55%
-  __jacobianODE1    = 0.0129%
-  __jacobianAE      = 1.85%
-  massMatrix        = 6.16%
-  reactionForces    = 24.7%
-  Python          = 0.0106%
-  writeSolution     = 5.43%
-  overhead          = 0.0531%
-  visualization/user= 0.025%
+  ODE1RHS           = 0.231%
+  AERHS             = 7.49%
+  totalJacobian     = 4.1%
+  __jacobianODE2    = 1.83%
+  __jacobianODE1    = 0.0132%
+  __jacobianAE      = 1.81%
+  massMatrix        = 6.83%
+  reactionForces    = 22.4%
+  Python          = 0.0108%
+  writeSolution     = 5.73%
+  overhead          = 0.0628%
+  visualization/user= 0.0274%
 Solver iteration statistics:
 total number of steps:        2000
 total number of Newton iterations: 14630
@@ -176,39 +175,39 @@ For details see mbs.systemData, mbs.sys and mbs.variables
 
 NOTE: the renderer is suppressed by exudyn.special.userInterface.suppressRenderer; no window is opened
 +++++++++++++++++++++++++++++++
-EXUDYN V1.13.3 solver: implicit second order time integration
+EXUDYN V1.13.6 solver: implicit second order time integration
 
 ++++++++++++++++++++++++++++++
 exudyn.special.solver.timeout=1 seconds reached
 simulation receives stop signal
 
-STEP1492 (stopped), t = 1.491s, tCPU=1.00032s, Nit/step = 2.26273
-solver stopped due to special.solver.timout after 1.00032 seconds.
+STEP1631 (stopped), t = 1.63s, tCPU=1.00055s, Nit/step = 2.25567
+solver stopped due to special.solver.timout after 1.00055 seconds.
 ====================
 CPU-time statistics:
   total time   = 1 seconds
   measured time= 1.01 seconds (=101%) 
   non-zero timer [__ sub-timer]:
-  factorization     = 29.6%
-  newtonIncrement   = 2.33%
-  integrationFormula= 0.0465%
-  ODE2RHS           = 8.24%
-  ODE1RHS           = 0.0115%
-  AERHS             = 0.0829%
-  totalJacobian     = 55%
-  __jacobianODE2    = 53.7%
-  __jacobianODE1    = 0.0104%
-  __jacobianAE      = 0.138%
-  massMatrix        = 2.94%
-  reactionForces    = 0.178%
-  Python          = 0.0075%
-  writeSolution     = 1.55%
-  overhead          = 0.00879%
-  visualization/user= 0.00352%
+  factorization     = 32.9%
+  newtonIncrement   = 2.5%
+  integrationFormula= 0.0533%
+  ODE2RHS           = 8.31%
+  ODE1RHS           = 0.0124%
+  AERHS             = 0.0991%
+  totalJacobian     = 50.9%
+  __jacobianODE2    = 49.4%
+  __jacobianODE1    = 0.0116%
+  __jacobianAE      = 0.158%
+  massMatrix        = 3.23%
+  reactionForces    = 0.233%
+  Python          = 0.00815%
+  writeSolution     = 1.77%
+  overhead          = 0.0103%
+  visualization/user= 0.00426%
 Solver iteration statistics:
-total number of steps:        1491
-total number of Newton iterations: 3376
-total number of Newton Jacobians:  3376
+total number of steps:        1630
+total number of Newton iterations: 3679
+total number of Newton Jacobians:  3679
 
 
 ******************************************
@@ -222,37 +221,37 @@ EXAMPLE 5 ("ANCFcableCantilevered.py"):
 ******************************************
 NOTE: the renderer is suppressed by exudyn.special.userInterface.suppressRenderer; no window is opened
 +++++++++++++++++++++++++++++++
-EXUDYN V1.13.3 solver: implicit second order time integration
+EXUDYN V1.13.6 solver: implicit second order time integration
 Start multi-threading with 8 threads (multithreading & load balancing)
 
 ++++++++++++++++++++++++++++++
 exudyn.special.solver.timeout=1 seconds reached
 simulation receives stop signal
 
-STEP1, t = 0.0005s, timeToGo = 17.9792h, Nit/step = 3
-STEP2 (stopped), t = 0.0005s, tCPU=3.23643s, Nit/step = 1.5
-solver stopped due to special.solver.timout after 3.23643 seconds.
+STEP1, t = 0.0005s, timeToGo = 15.8001h, Nit/step = 3
+STEP2 (stopped), t = 0.0005s, tCPU=2.84417s, Nit/step = 1.5
+solver stopped due to special.solver.timout after 2.84417 seconds.
 ====================
 CPU-time statistics:
-  total time   = 3.24 seconds
-  measured time= 3.24 seconds (=100%) 
+  total time   = 2.84 seconds
+  measured time= 2.85 seconds (=100%) 
   non-zero timer [__ sub-timer]:
-  factorization     = 25.3%
-  newtonIncrement   = 4.04%
-  integrationFormula= 0.147%
-  ODE2RHS           = 4.62%
-  ODE1RHS           = 1.23e-05%
-  AERHS             = 0.313%
-  totalJacobian     = 61.4%
-  __jacobianODE2    = 60%
-  __jacobianODE1    = 2.16e-05%
-  __jacobianAE      = 1.01%
-  massMatrix        = 0.354%
-  reactionForces    = 0.738%
-  Python          = 6.17e-06%
-  writeSolution     = 3.11%
-  overhead          = 0.00244%
-  visualization/user= 3.39e-05%
+  factorization     = 22.2%
+  newtonIncrement   = 4.03%
+  integrationFormula= 0.178%
+  ODE2RHS           = 4.11%
+  ODE1RHS           = 1.41e-05%
+  AERHS             = 0.305%
+  totalJacobian     = 65.2%
+  __jacobianODE2    = 63.9%
+  __jacobianODE1    = 4.92e-05%
+  __jacobianAE      = 0.941%
+  massMatrix        = 0.338%
+  reactionForces    = 0.78%
+  Python          = 3.51e-06%
+  writeSolution     = 2.92%
+  overhead          = 0.0033%
+  visualization/user= 2.81e-05%
 Solver iteration statistics:
 total number of steps:        1
 total number of Newton iterations: 3
@@ -266,7 +265,7 @@ EXAMPLE 6 ("ANCFcantileverTest.py"):
 load f=1293750.0000000002
 NOTE: the renderer is suppressed by exudyn.special.userInterface.suppressRenderer; no window is opened
 +++++++++++++++++++++++++++++++
-EXUDYN V1.13.3 solver: implicit second order time integration
+EXUDYN V1.13.6 solver: implicit second order time integration
   Newton (time/load step #1): convergence failed after 25 iterations; relative error = 1.5421e+09, time = 0.0001
   Solve steps: adaptive reduction to step size = 5e-05, time = 0
   Newton (time/load step #1): convergence failed after 25 iterations; relative error = 32693.1, time = 5e-05
@@ -276,28 +275,28 @@ EXUDYN V1.13.3 solver: implicit second order time integration
   Newton (time/load step #45): convergence failed after 25 iterations; relative error = 440862, time = 0.001475
   Solve steps: adaptive reduction to step size = 5e-05, time = 0.001375
 STEP1039, t = 0.1s, timeToGo = 0s, Nit/step = 7.92589
-Solver terminated successfully after 0.691728 seconds.
+Solver terminated successfully after 0.688759 seconds.
 ====================
 CPU-time statistics:
-  total time   = 0.692 seconds
-  measured time= 0.687 seconds (=99.4%) 
+  total time   = 0.689 seconds
+  measured time= 0.684 seconds (=99.4%) 
   non-zero timer [__ sub-timer]:
-  factorization     = 7.99%
-  newtonIncrement   = 7.67%
-  integrationFormula= 0.402%
-  ODE2RHS           = 24.9%
-  ODE1RHS           = 0.0305%
-  AERHS             = 0.16%
-  totalJacobian     = 11.1%
-  __jacobianODE2    = 10.9%
-  __jacobianODE1    = 0.00313%
-  __jacobianAE      = 0.0289%
-  massMatrix        = 0.127%
-  reactionForces    = 0.4%
-  Python          = 0.00161%
-  writeSolution     = 47.2%
-  overhead          = 0.0184%
-  visualization/user= 0.00426%
+  factorization     = 7.16%
+  newtonIncrement   = 6.36%
+  integrationFormula= 0.358%
+  ODE2RHS           = 22.8%
+  ODE1RHS           = 0.0321%
+  AERHS             = 0.164%
+  totalJacobian     = 11.8%
+  __jacobianODE2    = 11.6%
+  __jacobianODE1    = 0.00402%
+  __jacobianAE      = 0.0336%
+  massMatrix        = 0.115%
+  reactionForces    = 0.42%
+  Python          = 0.00158%
+  writeSolution     = 50.8%
+  overhead          = 0.0268%
+  visualization/user= 0.00424%
 Solver iteration statistics:
 total number of steps:        1039
 total number of Newton iterations: 8235
@@ -325,38 +324,38 @@ For details see mbs.systemData, mbs.sys and mbs.variables
 
 NOTE: the renderer is suppressed by exudyn.special.userInterface.suppressRenderer; no window is opened
 +++++++++++++++++++++++++++++++
-EXUDYN V1.13.3 solver: implicit second order time integration
+EXUDYN V1.13.6 solver: implicit second order time integration
 
 ++++++++++++++++++++++++++++++
 exudyn.special.solver.timeout=1 seconds reached
 simulation receives stop signal
 
-STEP5892 (stopped), t = 0.147275s, tCPU=1.00022s, Nit/step = 4.00475
-solver stopped due to special.solver.timout after 1.00022 seconds.
+STEP5730 (stopped), t = 0.143225s, tCPU=1.00017s, Nit/step = 3.97679
+solver stopped due to special.solver.timout after 1.00017 seconds.
 ====================
 CPU-time statistics:
   total time   = 1 seconds
-  measured time= 0.991 seconds (=99.1%) 
+  measured time= 0.992 seconds (=99.2%) 
   non-zero timer [__ sub-timer]:
-  factorization     = 0.13%
-  newtonIncrement   = 15.7%
+  factorization     = 0.127%
+  newtonIncrement   = 14.9%
   integrationFormula= 0.308%
-  ODE2RHS           = 30.3%
-  ODE1RHS           = 0.0681%
-  AERHS             = 0.324%
-  totalJacobian     = 0.123%
-  __jacobianODE2    = 0.11%
-  __jacobianODE1    = 0.000343%
-  __jacobianAE      = 0.00183%
-  massMatrix        = 0.00839%
-  reactionForces    = 0.833%
-  Python          = 1.38%
-  writeSolution     = 50.8%
-  overhead          = 0.0219%
-  visualization/user= 0.0137%
+  ODE2RHS           = 28.1%
+  ODE1RHS           = 0.0674%
+  AERHS             = 0.345%
+  totalJacobian     = 0.131%
+  __jacobianODE2    = 0.117%
+  __jacobianODE1    = 0.000393%
+  __jacobianAE      = 0.0021%
+  massMatrix        = 0.0086%
+  reactionForces    = 0.841%
+  Python          = 1.47%
+  writeSolution     = 53.7%
+  overhead          = 0.0229%
+  visualization/user= 0.0136%
 Solver iteration statistics:
-total number of steps:        5891
-total number of Newton iterations: 23596
+total number of steps:        5729
+total number of Newton iterations: 22787
 total number of Newton Jacobians:  26
 
 
@@ -381,7 +380,7 @@ For details see mbs.systemData, mbs.sys and mbs.variables
 
 NOTE: the renderer is suppressed by exudyn.special.userInterface.suppressRenderer; no window is opened
 +++++++++++++++++++++++++++++++
-EXUDYN V1.13.3 solver: nonlinear static solver
+EXUDYN V1.13.6 solver: nonlinear static solver
 *********************
 Static solver (40 load steps):
 *********************
@@ -1615,28 +1614,28 @@ Newton: initial residual = 0.30541; goals: relTol=1e-07, absTol=1e-10
 STEP70, factor = 1, timeToGo = 0s, Nit/step = 4
 +++++++++++++++ STEP FINISHED ++++++++++++++
 
-Solver terminated successfully after 0.0359172 seconds.
+Solver terminated successfully after 0.0364644 seconds.
 ====================
 CPU-time statistics:
-  total time   = 0.0359 seconds
-  measured time= 0.0366 seconds (=102%) 
+  total time   = 0.0365 seconds
+  measured time= 0.0372 seconds (=102%) 
   non-zero timer [__ sub-timer]:
-  factorization     = 15.9%
-  newtonIncrement   = 2.04%
-  ODE2RHS           = 6.91%
-  ODE1RHS           = 0.0345%
-  AERHS             = 0.179%
+  factorization     = 15.8%
+  newtonIncrement   = 1.69%
+  ODE2RHS           = 6.44%
+  ODE1RHS           = 0.035%
+  AERHS             = 0.178%
   totalJacobian     = 52.3%
-  __jacobianODE2    = 49.9%
-  __jacobianODE1    = 0.0238%
-  __jacobianAE      = 0.335%
-  massMatrix        = 6.15%
-  reactionForces    = 0.386%
-  postNewton    = 1.18%
-  Python          = 0.0243%
-  writeSolution     = 7.21%
-  overhead          = 7.6%
-  visualization/user= 0.00355%
+  __jacobianODE2    = 49.8%
+  __jacobianODE1    = 0.0258%
+  __jacobianAE      = 0.349%
+  massMatrix        = 5.7%
+  reactionForces    = 0.419%
+  postNewton    = 1.08%
+  Python          = 0.0237%
+  writeSolution     = 7.46%
+  overhead          = 8.94%
+  visualization/user= 0.00538%
 Solver iteration statistics:
 total number of steps:        70
 total number of Newton iterations: 392
@@ -1665,34 +1664,34 @@ For details see mbs.systemData, mbs.sys and mbs.variables
 
 NOTE: the renderer is suppressed by exudyn.special.userInterface.suppressRenderer; no window is opened
 +++++++++++++++++++++++++++++++
-EXUDYN V1.13.3 solver: nonlinear static solver
+EXUDYN V1.13.6 solver: nonlinear static solver
 
 Python WARNING [file '<string>', line 41]: 
 CSolverBase::InitializeSolverPreChecks: staticSolver.adaptiveStep is not possible for staticSolver.loadStepGeometric; adaptiveStep will be ignored
 
 STEP40, factor = 1, timeToGo = 0s, Nit/step = 4.6
-Solver terminated successfully after 0.111371 seconds.
+Solver terminated successfully after 0.116279 seconds.
 ====================
 CPU-time statistics:
-  total time   = 0.111 seconds
-  measured time= 0.115 seconds (=104%) 
+  total time   = 0.116 seconds
+  measured time= 0.12 seconds (=103%) 
   non-zero timer [__ sub-timer]:
-  factorization     = 28%
-  newtonIncrement   = 5.16%
-  ODE2RHS           = 6.13%
-  ODE1RHS           = 0.00451%
-  AERHS             = 0.0388%
-  totalJacobian     = 41%
-  __jacobianODE2    = 38.2%
-  __jacobianODE1    = 0.00408%
-  __jacobianAE      = 0.0578%
-  massMatrix        = 11.5%
-  reactionForces    = 0.0858%
-  postNewton    = 1.36%
-  Python          = 0.00329%
-  writeSolution     = 6.59%
-  overhead          = 0.0347%
-  visualization/user= 0.00165%
+  factorization     = 25.3%
+  newtonIncrement   = 4.78%
+  ODE2RHS           = 5.31%
+  ODE1RHS           = 0.00599%
+  AERHS             = 0.0416%
+  totalJacobian     = 37.3%
+  __jacobianODE2    = 34.7%
+  __jacobianODE1    = 0.00458%
+  __jacobianAE      = 0.0612%
+  massMatrix        = 10.8%
+  reactionForces    = 0.0926%
+  postNewton    = 1.22%
+  Python          = 0.00399%
+  writeSolution     = 15%
+  overhead          = 0.0418%
+  visualization/user= 0.00125%
 Solver iteration statistics:
 total number of steps:        40
 total number of Newton iterations: 184
@@ -1722,40 +1721,40 @@ For details see mbs.systemData, mbs.sys and mbs.variables
 
 NOTE: the renderer is suppressed by exudyn.special.userInterface.suppressRenderer; no window is opened
 +++++++++++++++++++++++++++++++
-EXUDYN V1.13.3 solver: implicit second order time integration
+EXUDYN V1.13.6 solver: implicit second order time integration
 
 ++++++++++++++++++++++++++++++
 exudyn.special.solver.timeout=1 seconds reached
 simulation receives stop signal
 
-STEP542 (stopped), t = 0.541s, tCPU=1.00058s, Nit/step = 2.00923
-solver stopped due to special.solver.timout after 1.00058 seconds.
+STEP575 (stopped), t = 0.574s, tCPU=1.00033s, Nit/step = 2.0087
+solver stopped due to special.solver.timout after 1.00033 seconds.
 ====================
 CPU-time statistics:
   total time   = 1 seconds
   measured time= 1.01 seconds (=101%) 
   non-zero timer [__ sub-timer]:
-  factorization     = 28.6%
-  newtonIncrement   = 3.96%
-  integrationFormula= 0.0386%
-  ODE2RHS           = 7.97%
-  ODE1RHS           = 0.00431%
-  AERHS             = 0.0694%
-  totalJacobian     = 46.7%
-  __jacobianODE2    = 34.6%
-  __jacobianODE1    = 0.00432%
-  __jacobianAE      = 10.6%
-  massMatrix        = 2.65%
-  reactionForces    = 0.183%
-  postNewton    = 0.0193%
-  Python          = 0.00251%
-  writeSolution     = 9.79%
-  overhead          = 0.00684%
-  visualization/user= 0.00237%
+  factorization     = 30.2%
+  newtonIncrement   = 4.14%
+  integrationFormula= 0.0429%
+  ODE2RHS           = 7.91%
+  ODE1RHS           = 0.00426%
+  AERHS             = 0.0778%
+  totalJacobian     = 43.6%
+  __jacobianODE2    = 30.6%
+  __jacobianODE1    = 0.0043%
+  __jacobianAE      = 11.4%
+  massMatrix        = 2.95%
+  reactionForces    = 0.211%
+  postNewton    = 0.0214%
+  Python          = 0.00296%
+  writeSolution     = 10.9%
+  overhead          = 0.00832%
+  visualization/user= 0.00184%
 Solver iteration statistics:
-total number of steps:        541
-total number of Newton iterations: 1089
-total number of Newton Jacobians:  1089
+total number of steps:        574
+total number of Newton iterations: 1155
+total number of Newton Jacobians:  1155
 
 
 ******************************************
@@ -1763,9 +1762,9 @@ EXAMPLE 11 ("ANCFrotatingCable2D.py"):
 ******************************************
 load f=125.00000000000001
 +++++++++++++++++++++++++++++++
-EXUDYN V1.13.3 solver: implicit second order time integration
+EXUDYN V1.13.6 solver: implicit second order time integration
 STEP5000, t = 10s, timeToGo = 0s, Nit/step = 5.0396
-Solver terminated successfully after 0.591896 seconds.
+Solver terminated successfully after 0.575233 seconds.
 NOTE: SolutionViewer opens no window, because exudyn.special.userInterface.suppressSolutionViewer=True
 
 
@@ -1774,40 +1773,40 @@ EXAMPLE 12 ("ANCFslidingJoint.py"):
 ******************************************
 NOTE: the renderer is suppressed by exudyn.special.userInterface.suppressRenderer; no window is opened
 +++++++++++++++++++++++++++++++
-EXUDYN V1.13.3 solver: implicit second order time integration
+EXUDYN V1.13.6 solver: implicit second order time integration
 
 ++++++++++++++++++++++++++++++
 exudyn.special.solver.timeout=1 seconds reached
 simulation receives stop signal
 
-STEP2087 (stopped), t = 1.043s, tCPU=1.0005s, Nit/step = 7.32151
-solver stopped due to special.solver.timout after 1.0005 seconds.
+STEP2144 (stopped), t = 1.0715s, tCPU=1.00042s, Nit/step = 7.32743
+solver stopped due to special.solver.timout after 1.00042 seconds.
 ====================
 CPU-time statistics:
   total time   = 1 seconds
-  measured time= 0.99 seconds (=98.9%) 
+  measured time= 0.989 seconds (=98.9%) 
   non-zero timer [__ sub-timer]:
-  factorization     = 3.21%
-  newtonIncrement   = 11.3%
+  factorization     = 3.17%
+  newtonIncrement   = 10.9%
   integrationFormula= 0.559%
-  ODE2RHS           = 55.8%
-  ODE1RHS           = 0.0399%
-  AERHS             = 0.948%
-  totalJacobian     = 10.3%
-  __jacobianODE2    = 10.2%
-  __jacobianODE1    = 0.00114%
-  __jacobianAE      = 0.037%
+  ODE2RHS           = 56.4%
+  ODE1RHS           = 0.0444%
+  AERHS             = 0.973%
+  totalJacobian     = 9.97%
+  __jacobianODE2    = 9.87%
+  __jacobianODE1    = 0.00174%
+  __jacobianAE      = 0.0503%
   massMatrix        = 14.9%
-  reactionForces    = 2.66%
-  postNewton    = 0.0471%
-  Python          = 0.000364%
-  writeSolution     = 0.208%
-  overhead          = 0.0121%
-  visualization/user= 0.00491%
+  reactionForces    = 2.87%
+  postNewton    = 0.0527%
+  Python          = 0.000546%
+  writeSolution     = 0.212%
+  overhead          = 0.0133%
+  visualization/user= 0.00554%
 Solver iteration statistics:
-total number of steps:        2086
-total number of Newton iterations: 15280
-total number of Newton Jacobians:  154
+total number of steps:        2143
+total number of Newton iterations: 15710
+total number of Newton Jacobians:  159
 NOTE: SolutionViewer opens no window, because exudyn.special.userInterface.suppressSolutionViewer=True
 
 
@@ -1832,31 +1831,31 @@ For details see mbs.systemData, mbs.sys and mbs.variables
 
 NOTE: the renderer is suppressed by exudyn.special.userInterface.suppressRenderer; no window is opened
 +++++++++++++++++++++++++++++++
-EXUDYN V1.13.3 solver: implicit second order time integration
+EXUDYN V1.13.6 solver: implicit second order time integration
 STEP1000, t = 0.5s, timeToGo = 0s, Nit/step = 2.506
-Solver terminated successfully after 0.0736203 seconds.
+Solver terminated successfully after 0.0757183 seconds.
 ====================
 CPU-time statistics:
-  total time   = 0.0736 seconds
-  measured time= 0.0735 seconds (=99.8%) 
+  total time   = 0.0757 seconds
+  measured time= 0.0756 seconds (=99.8%) 
   non-zero timer [__ sub-timer]:
-  factorization     = 18.7%
-  newtonIncrement   = 2.14%
-  integrationFormula= 0.262%
-  ODE2RHS           = 7.41%
-  ODE1RHS           = 0.107%
-  AERHS             = 1.48%
-  totalJacobian     = 29.4%
-  __jacobianODE2    = 25.4%
-  __jacobianODE1    = 0.0927%
-  __jacobianAE      = 2.31%
-  massMatrix        = 0.971%
-  reactionForces    = 3.01%
-  postNewton    = 0.275%
-  Python          = 0.0806%
-  writeSolution     = 36.1%
-  overhead          = 0.0892%
-  visualization/user= 0.0328%
+  factorization     = 18.2%
+  newtonIncrement   = 1.98%
+  integrationFormula= 0.281%
+  ODE2RHS           = 6.58%
+  ODE1RHS           = 0.105%
+  AERHS             = 1.46%
+  totalJacobian     = 30.2%
+  __jacobianODE2    = 26.3%
+  __jacobianODE1    = 0.0905%
+  __jacobianAE      = 2.25%
+  massMatrix        = 0.957%
+  reactionForces    = 3.1%
+  postNewton    = 0.27%
+  Python          = 0.0745%
+  writeSolution     = 36.7%
+  overhead          = 0.103%
+  visualization/user= 0.0298%
 Solver iteration statistics:
 total number of steps:        1000
 total number of Newton iterations: 2506
@@ -1884,46 +1883,46 @@ For details see mbs.systemData, mbs.sys and mbs.variables
 
 NOTE: the renderer is suppressed by exudyn.special.userInterface.suppressRenderer; no window is opened
 +++++++++++++++++++++++++++++++
-EXUDYN V1.13.3 solver: implicit second order time integration
+EXUDYN V1.13.6 solver: implicit second order time integration
 
 ++++++++++++++++++++++++++++++
 exudyn.special.solver.timeout=1 seconds reached
 simulation receives stop signal
 
-STEP846 (stopped), t = 0.4225s, tCPU=1.00062s, Nit/step = 8.03428
-solver stopped due to special.solver.timout after 1.00062 seconds.
+STEP834 (stopped), t = 0.4165s, tCPU=1.00056s, Nit/step = 8.04436
+solver stopped due to special.solver.timout after 1.00056 seconds.
 ====================
 CPU-time statistics:
   total time   = 1 seconds
-  measured time= 1.01 seconds (=100%) 
+  measured time= 1.01 seconds (=101%) 
   non-zero timer [__ sub-timer]:
-  factorization     = 16.9%
-  newtonIncrement   = 24.4%
-  integrationFormula= 0.136%
-  ODE2RHS           = 34.1%
-  ODE1RHS           = 0.0171%
-  AERHS             = 0.286%
-  totalJacobian     = 6.22%
-  __jacobianODE2    = 5.31%
-  __jacobianODE1    = 0.00283%
-  __jacobianAE      = 0.0648%
-  massMatrix        = 0.785%
-  reactionForces    = 0.633%
-  postNewton    = 0.0306%
-  Python          = 0.00142%
-  writeSolution     = 16.5%
-  overhead          = 0.00835%
-  visualization/user= 0.00271%
+  factorization     = 16.5%
+  newtonIncrement   = 24.1%
+  integrationFormula= 0.137%
+  ODE2RHS           = 33.4%
+  ODE1RHS           = 0.0186%
+  AERHS             = 0.302%
+  totalJacobian     = 6.57%
+  __jacobianODE2    = 5.59%
+  __jacobianODE1    = 0.00338%
+  __jacobianAE      = 0.0667%
+  massMatrix        = 0.85%
+  reactionForces    = 0.697%
+  postNewton    = 0.0343%
+  Python          = 0.00157%
+  writeSolution     = 17.4%
+  overhead          = 0.00955%
+  visualization/user= 0.00284%
 Solver iteration statistics:
-total number of steps:        845
-total number of Newton iterations: 6797
-total number of Newton Jacobians:  607
+total number of steps:        833
+total number of Newton iterations: 6709
+total number of Newton Jacobians:  595
 
 
 ******************************************
 EXAMPLE 15 ("ANCFswitchingSlidingJoint2D.py"):
 ******************************************
-EXUDYN version=1.13.3
+EXUDYN version=1.13.6
 load f=0.0025875000000000004
 EI=0.003450000000000001
 <systemData: 
@@ -1942,14 +1941,14 @@ For details see mbs.systemData, mbs.sys and mbs.variables
 
 NOTE: the renderer is suppressed by exudyn.special.userInterface.suppressRenderer; no window is opened
 +++++++++++++++++++++++++++++++
-EXUDYN V1.13.3 solver: implicit second order time integration
+EXUDYN V1.13.6 solver: implicit second order time integration
 
 ++++++++++++++++++++++++++++++
 exudyn.special.solver.timeout=1 seconds reached
 simulation receives stop signal
 
-STEP285 (stopped), t = 0.142s, tCPU=1.00418s, Nit/step = 7.12982
-solver stopped due to special.solver.timout after 1.00418 seconds.
+STEP271 (stopped), t = 0.135s, tCPU=1.00342s, Nit/step = 7.1476
+solver stopped due to special.solver.timout after 1.00342 seconds.
 
 
 ******************************************
@@ -1973,28 +1972,28 @@ For details see mbs.systemData, mbs.sys and mbs.variables
 
 NOTE: the renderer is suppressed by exudyn.special.userInterface.suppressRenderer; no window is opened
 +++++++++++++++++++++++++++++++
-EXUDYN V1.13.3 solver: nonlinear static solver
+EXUDYN V1.13.6 solver: nonlinear static solver
 STEP1, factor = 1, timeToGo = 0s, Nit/step = 32
-Solver terminated successfully after 0.0378148 seconds.
+Solver terminated successfully after 0.0371577 seconds.
 ====================
 CPU-time statistics:
-  total time   = 0.0378 seconds
-  measured time= 0.0378 seconds (=99.8%) 
+  total time   = 0.0372 seconds
+  measured time= 0.0371 seconds (=99.8%) 
   non-zero timer [__ sub-timer]:
-  factorization     = 34.7%
-  newtonIncrement   = 2.05%
-  ODE2RHS           = 6.07%
-  ODE1RHS           = 0.00556%
-  AERHS             = 0.0252%
-  totalJacobian     = 54.9%
-  __jacobianODE2    = 54.8%
-  __jacobianODE1    = 0.00291%
-  __jacobianAE      = 0.0331%
-  reactionForces    = 0.0365%
-  Python          = 0.000795%
-  writeSolution     = 2.13%
-  overhead          = 0.0784%
-  visualization/user= 0.00053%
+  factorization     = 30.6%
+  newtonIncrement   = 1.78%
+  ODE2RHS           = 5.6%
+  ODE1RHS           = 0.00323%
+  AERHS             = 0.0361%
+  totalJacobian     = 59.5%
+  __jacobianODE2    = 59.4%
+  __jacobianODE1    = 0.0035%
+  __jacobianAE      = 0.055%
+  reactionForces    = 0.0561%
+  Python          = 0.0027%
+  writeSolution     = 2.28%
+  overhead          = 0.163%
+  visualization/user= 0.00108%
 Solver iteration statistics:
 total number of steps:        1
 total number of Newton iterations: 32
@@ -2008,11 +2007,11 @@ load f=1293750.0000000002
 EI=1725000.0000000005
 NOTE: the renderer is suppressed by exudyn.special.userInterface.suppressRenderer; no window is opened
 +++++++++++++++++++++++++++++++
-EXUDYN V1.13.3 solver: implicit second order time integration
+EXUDYN V1.13.6 solver: implicit second order time integration
   Newton (time/load step #548): convergence failed after 25 iterations; relative error = 1.35049e-08, time = 1.096
   Solve steps: adaptive reduction to step size = 0.001, time = 1.094
-STEP1453, t = 2s, timeToGo = 1.94221e-14s, Nit/step = 12.2354
-Solver terminated successfully after 0.392312 seconds.
+STEP1453, t = 2s, timeToGo = 1.96825e-14s, Nit/step = 12.2354
+Solver terminated successfully after 0.397604 seconds.
 Solver iteration statistics:
 total number of steps:        1453
 total number of Newton iterations: 17778
@@ -2025,7 +2024,7 @@ EXAMPLE 18 ("ballBearningModel.py"):
 ******************************************
 NOTE: the renderer is suppressed by exudyn.special.userInterface.suppressRenderer; no window is opened
 +++++++++++++++++++++++++++++++
-EXUDYN V1.13.3 solver: implicit second order time integration
+EXUDYN V1.13.6 solver: implicit second order time integration
   Newton (time/load step #2): convergence failed after 25 iterations; relative error = 0.00834992, time = 0.0002
   Solve steps: adaptive reduction to step size = 5e-05, time = 0.0001
   Newton (time/load step #2): convergence failed after 25 iterations; relative error = 0.963419, time = 0.00015
@@ -2049,34 +2048,34 @@ EXUDYN V1.13.3 solver: implicit second order time integration
 exudyn.special.solver.timeout=1 seconds reached
 simulation receives stop signal
 
-STEP2124 (stopped), t = 0.204105s, tCPU=1.00011s, Nit/step = 4.07674
-solver stopped due to special.solver.timout after 1.00011 seconds.
+STEP2073 (stopped), t = 0.199005s, tCPU=1.0006s, Nit/step = 4.07863
+solver stopped due to special.solver.timout after 1.0006 seconds.
 ====================
 CPU-time statistics:
   total time   = 1 seconds
-  measured time= 0.994 seconds (=99.4%) 
+  measured time= 0.995 seconds (=99.4%) 
   non-zero timer [__ sub-timer]:
-  factorization     = 20.5%
-  newtonIncrement   = 11.9%
-  integrationFormula= 0.301%
-  ODE2RHS           = 36.8%
-  ODE1RHS           = 0.0254%
-  AERHS             = 0.68%
-  totalJacobian     = 19.5%
-  __jacobianODE2    = 19.4%
-  __jacobianODE1    = 0.00302%
-  __jacobianAE      = 0.0625%
-  massMatrix        = 4.33%
-  reactionForces    = 1.07%
-  postNewton    = 2.48%
-  Python          = 0.00104%
-  writeSolution     = 2.41%
-  overhead          = 0.0349%
+  factorization     = 19.2%
+  newtonIncrement   = 11.5%
+  integrationFormula= 0.298%
+  ODE2RHS           = 37.6%
+  ODE1RHS           = 0.0256%
+  AERHS             = 0.721%
+  totalJacobian     = 20.3%
+  __jacobianODE2    = 20.2%
+  __jacobianODE1    = 0.00361%
+  __jacobianAE      = 0.0735%
+  massMatrix        = 4.15%
+  reactionForces    = 1.08%
+  postNewton    = 2.57%
+  Python          = 0.00119%
+  writeSolution     = 2.52%
+  overhead          = 0.037%
   visualization/user= 0.00527%
 Solver iteration statistics:
-total number of steps:        2123
-total number of Newton iterations: 8659
-total number of Newton Jacobians:  428
+total number of steps:        2072
+total number of Newton iterations: 8455
+total number of Newton Jacobians:  423
 rejected modified Newton steps:      10
 NOTE: SolutionViewer opens no window, because exudyn.special.userInterface.suppressSolutionViewer=True
 
@@ -2085,9 +2084,9 @@ NOTE: SolutionViewer opens no window, because exudyn.special.userInterface.suppr
 EXAMPLE 19 ("basicTutorial2024.py"):
 ******************************************
 +++++++++++++++++++++++++++++++
-EXUDYN V1.13.3 solver: implicit second order time integration
+EXUDYN V1.13.6 solver: implicit second order time integration
 STEP500, t = 10s, timeToGo = 0s, Nit/step = 4.202
-Solver terminated successfully after 0.0045664 seconds.
+Solver terminated successfully after 0.0044907 seconds.
 NOTE: SolutionViewer opens no window, because exudyn.special.userInterface.suppressSolutionViewer=True
 
 
@@ -2097,9 +2096,9 @@ EXAMPLE 20 ("beltDriveALE.py"):
 preStretch= -0.05
 Reeving system total length= 1.2566370614359172
 +++++++++++++++++++++++++++++++
-EXUDYN V1.13.3 solver: nonlinear static solver
+EXUDYN V1.13.6 solver: nonlinear static solver
 STEP10, factor = 1, timeToGo = 0s, Nit/step = 3.7
-Solver terminated successfully after 0.180781 seconds.
+Solver terminated successfully after 0.185431 seconds.
 Solver iteration statistics:
 total number of steps:        10
 total number of Newton iterations: 37
@@ -2107,17 +2106,17 @@ total number of Newton Jacobians:  37
 Force x in support of left pulley =  -798.0398607094861
 Belt pre-tension= -400.0
 +++++++++++++++++++++++++++++++
-EXUDYN V1.13.3 solver: implicit second order time integration
+EXUDYN V1.13.6 solver: implicit second order time integration
 
 ++++++++++++++++++++++++++++++
 exudyn.special.solver.timeout=1 seconds reached
 simulation receives stop signal
 
-STEP2015 (stopped), t = 0.025175s, tCPU=1.00006s, Nit/step = 1.00496 Dit/step = 1.0005 jac/step = 0.000992556
-solver stopped due to special.solver.timout after 1.00006 seconds.
+STEP2028 (stopped), t = 0.0253375s, tCPU=1.0004s, Nit/step = 1.00493 Dit/step = 1.00049 jac/step = 0.000986193
+solver stopped due to special.solver.timout after 1.0004 seconds.
 Solver iteration statistics:
-total number of steps:        2014
-total number of Newton iterations: 2025
+total number of steps:        2027
+total number of Newton iterations: 2038
 total number of Newton Jacobians:  2
 
 
@@ -2131,36 +2130,36 @@ cFact= 0.00020943951023931953 , lElem= 0.005235987755982988
 auto computed searchTree box={[-0.09995,-0.09995,-0.09995], [0.414109,0.09995,0.09995]}
 NOTE: the renderer is suppressed by exudyn.special.userInterface.suppressRenderer; no window is opened
 +++++++++++++++++++++++++++++++
-EXUDYN V1.13.3 solver: nonlinear static solver
+EXUDYN V1.13.6 solver: nonlinear static solver
 STEP10, factor = 1, timeToGo = 0s, Nit/step = 4.6
-Solver terminated successfully after 0.250872 seconds.
+Solver terminated successfully after 0.270718 seconds.
 ====================
 CPU-time statistics:
-  total time   = 0.251 seconds
-  measured time= 0.254 seconds (=101%) 
+  total time   = 0.271 seconds
+  measured time= 0.274 seconds (=101%) 
   non-zero timer [__ sub-timer]:
-  factorization     = 27.5%
-  newtonIncrement   = 0.864%
-  ODE2RHS           = 6.89%
-  ODE1RHS           = 0.000749%
-  AERHS             = 0.0172%
-  totalJacobian     = 54.9%
-  __jacobianODE2    = 54.3%
-  __jacobianODE1    = 0.0013%
-  __jacobianAE      = 0.0246%
-  massMatrix        = 1.95%
-  reactionForces    = 0.0263%
-  postNewton    = 1.23%
-  Python          = 0.000355%
-  writeSolution     = 6.55%
-  overhead          = 0.0174%
-  visualization/user= 0.00067%
+  factorization     = 26.5%
+  newtonIncrement   = 0.883%
+  ODE2RHS           = 7.05%
+  ODE1RHS           = 0.00128%
+  AERHS             = 0.0194%
+  totalJacobian     = 54.7%
+  __jacobianODE2    = 54%
+  __jacobianODE1    = 0.00106%
+  __jacobianAE      = 0.0286%
+  massMatrix        = 1.96%
+  reactionForces    = 0.0306%
+  postNewton    = 1.3%
+  Python          = 0.000621%
+  writeSolution     = 7.59%
+  overhead          = 0.0172%
+  visualization/user= 0.000402%
 special timers:
-  Contact:BoundingBoxes = 4.354e-05s (0.0172%)
-  Contact:SearchTree = 1.739e-05s (0.00685%)
-  Contact:Jacobian = 3.923e-05s (0.0155%)
-  Contact:PostNewton = 9.199e-05s (0.0362%)
-  Contact:Overall = 5.242e-05s (0.0207%)
+  Contact:BoundingBoxes = 6.184e-05s (0.0226%)
+  Contact:SearchTree = 1.749e-05s (0.00639%)
+  Contact:Jacobian = 5.393e-05s (0.0197%)
+  Contact:PostNewton = 9.849e-05s (0.036%)
+  Contact:Overall = 6.352e-05s (0.0232%)
 
 Solver iteration statistics:
 total number of steps:        10
@@ -2169,46 +2168,46 @@ total number of Newton Jacobians:  46
 Force x in support of left pulley =  -799.8095344689816
 Belt pre-tension= -400.0
 +++++++++++++++++++++++++++++++
-EXUDYN V1.13.3 solver: implicit second order time integration
+EXUDYN V1.13.6 solver: implicit second order time integration
 
 ++++++++++++++++++++++++++++++
 exudyn.special.solver.timeout=1 seconds reached
 simulation receives stop signal
 
-STEP502 (stopped), t = 0.0501s, tCPU=1.0042s, Nit/step = 4.05578 Dit/step = 1.00598 jac/step = 0.0059761
-solver stopped due to special.solver.timout after 1.0042 seconds.
+STEP504 (stopped), t = 0.0503s, tCPU=1.00065s, Nit/step = 4.05556 Dit/step = 1.00595 jac/step = 0.00595238
+solver stopped due to special.solver.timout after 1.00065 seconds.
 ====================
 CPU-time statistics:
   total time   = 1 seconds
-  measured time= 1 seconds (=99.6%) 
+  measured time= 0.996 seconds (=99.5%) 
   non-zero timer [__ sub-timer]:
-  factorization     = 0.483%
-  newtonIncrement   = 8.07%
-  integrationFormula= 0.226%
-  ODE2RHS           = 71%
-  ODE1RHS           = 0.00591%
-  AERHS             = 0.187%
-  totalJacobian     = 1.58%
-  __jacobianODE2    = 1.58%
-  __jacobianODE1    = 2e-05%
-  __jacobianAE      = 0.00071%
-  massMatrix        = 0.00248%
-  reactionForces    = 0.202%
-  postNewton    = 8.67%
-  Python          = 2e-05%
-  writeSolution     = 9.55%
-  overhead          = 0.00603%
-  visualization/user= 0.00368%
+  factorization     = 0.419%
+  newtonIncrement   = 7.94%
+  integrationFormula= 0.215%
+  ODE2RHS           = 70.4%
+  ODE1RHS           = 0.00623%
+  AERHS             = 0.197%
+  totalJacobian     = 1.55%
+  __jacobianODE2    = 1.54%
+  __jacobianODE1    = 0.000462%
+  __jacobianAE      = 0.000934%
+  massMatrix        = 0.00566%
+  reactionForces    = 0.233%
+  postNewton    = 8.65%
+  Python          = 3.01e-05%
+  writeSolution     = 10.4%
+  overhead          = 0.00724%
+  visualization/user= 0.00213%
 special timers:
-  Contact:BoundingBoxes = 0.00063105s (0.0631%)
-  Contact:SearchTree = 0.00021428s (0.0214%)
-  Contact:Jacobian = 4.365e-06s (0.000437%)
-  Contact:PostNewton = 0.0011755s (0.118%)
-  Contact:Overall = 0.00091701s (0.0917%)
+  Contact:BoundingBoxes = 0.00071321s (0.0716%)
+  Contact:SearchTree = 0.00019979s (0.0201%)
+  Contact:Jacobian = 6.465e-06s (0.000649%)
+  Contact:PostNewton = 0.0012952s (0.13%)
+  Contact:Overall = 0.0010056s (0.101%)
 
 Solver iteration statistics:
-total number of steps:        501
-total number of Newton iterations: 2036
+total number of steps:        503
+total number of Newton iterations: 2044
 total number of Newton Jacobians:  3
 
 
@@ -2220,18 +2219,19 @@ Reeving system total length= 3.2192320682037225
 Reeving system total length= 2.4042343525924075
 Reeving system total length= 2.4249719169160286
 +++++++++++++++++++++++++++++++
-EXUDYN V1.13.3 solver: nonlinear static solver
+EXUDYN V1.13.6 solver: nonlinear static solver
 STEP10, factor = 1, timeToGo = 0s, Nit/step = 9.9
-Solver terminated successfully after 0.799126 seconds.
+Solver terminated successfully after 0.812778 seconds.
 +++++++++++++++++++++++++++++++
-EXUDYN V1.13.3 solver: implicit second order time integration
+EXUDYN V1.13.6 solver: implicit second order time integration
 
 ++++++++++++++++++++++++++++++
 exudyn.special.solver.timeout=1 seconds reached
 simulation receives stop signal
 
-STEP8 (stopped), t = 0.000875s, tCPU=1.00242s, Nit/step = 16.75
-solver stopped due to special.solver.timout after 1.00242 seconds.
+  Solve steps: adaptive increase to step size = 0.00025 due to fast convergence, time = 0.00125
+STEP11 (stopped), t = 0.00125s, tCPU=1.00293s, Nit/step = 13.9091
+solver stopped due to special.solver.timout after 1.00293 seconds.
 
 
 ******************************************
@@ -2240,9 +2240,9 @@ EXAMPLE 23 ("bicycleIftommBenchmark.py"):
 pR= [0.  0.  0.3]
 pB1= [0.  0.  0.3]
 +++++++++++++++++++++++++++++++
-EXUDYN V1.13.3 solver: implicit second order time integration
+EXUDYN V1.13.6 solver: implicit second order time integration
 STEP5000, t = 5s, timeToGo = 0s, Nit/step = 6.937
-Solver terminated successfully after 0.425284 seconds.
+Solver terminated successfully after 0.399948 seconds.
 
 
 ******************************************
@@ -2251,18 +2251,18 @@ EXAMPLE 24 ("bungeeJump.py"):
 Reeving system total length= 81.57079632679489
 NOTE: the renderer is suppressed by exudyn.special.userInterface.suppressRenderer; no window is opened
 +++++++++++++++++++++++++++++++
-EXUDYN V1.13.3 solver: nonlinear static solver
+EXUDYN V1.13.6 solver: nonlinear static solver
 STEP10, factor = 1, timeToGo = 0s, Nit/step = 4.7
-Solver terminated successfully after 0.0358704 seconds.
+Solver terminated successfully after 0.0263518 seconds.
 +++++++++++++++++++++++++++++++
-EXUDYN V1.13.3 solver: implicit second order time integration
+EXUDYN V1.13.6 solver: implicit second order time integration
 
 ++++++++++++++++++++++++++++++
 exudyn.special.solver.timeout=1 seconds reached
 simulation receives stop signal
 
-STEP1742 (stopped), t = 3.482s, tCPU=1.00063s, Nit/step = 7.57922
-solver stopped due to special.solver.timout after 1.00063 seconds.
+STEP1763 (stopped), t = 3.524s, tCPU=1.00037s, Nit/step = 7.59217
+solver stopped due to special.solver.timout after 1.00037 seconds.
 
 
 ******************************************
@@ -2270,9 +2270,9 @@ EXAMPLE 25 ("camFollowerExample.py"):
 ******************************************
 NOTE: the renderer is suppressed by exudyn.special.userInterface.suppressRenderer; no window is opened
 +++++++++++++++++++++++++++++++
-EXUDYN V1.13.3 solver: implicit second order time integration
+EXUDYN V1.13.6 solver: implicit second order time integration
 STEP10000, t = 2s, timeToGo = 0s, Nit/step = 3.5832
-Solver terminated successfully after 0.0932264 seconds.
+Solver terminated successfully after 0.089175 seconds.
 
 
 ******************************************
@@ -2287,15 +2287,15 @@ EXAMPLE 27 ("cartesianSpringDamperUserFunction.py"):
 ******************************************
 NOTE: the renderer is suppressed by exudyn.special.userInterface.suppressRenderer; no window is opened
 +++++++++++++++++++++++++++++++
-EXUDYN V1.13.3 solver: explicit time integration (ExplicitMidpoint)
+EXUDYN V1.13.6 solver: explicit time integration (ExplicitMidpoint)
 
 ++++++++++++++++++++++++++++++
 exudyn.special.solver.timeout=1 seconds reached
 simulation receives stop signal
 
-STEP70821 (stopped), t = 0.7082s, tCPU=1.00005s, Nit/step = 0
-solver stopped due to special.solver.timout after 1.00005 seconds.
-u= [0.73129991 0.         0.        ]
+STEP71071 (stopped), t = 0.7107s, tCPU=1.00006s, Nit/step = 0
+solver stopped due to special.solver.timout after 1.00006 seconds.
+u= [0.73555083 0.         0.        ]
 
 
 ******************************************
@@ -2313,18 +2313,18 @@ Chain geometry:
  [-0.06768521 -0.02421816 -0.0794334  -0.01989703]]
 NOTE: the renderer is suppressed by exudyn.special.userInterface.suppressRenderer; no window is opened
 +++++++++++++++++++++++++++++++
-EXUDYN V1.13.3 solver: implicit second order time integration
+EXUDYN V1.13.6 solver: implicit second order time integration
 
 ++++++++++++++++++++++++++++++
 exudyn.special.solver.timeout=1 seconds reached
 simulation receives stop signal
 
-STEP2714 (stopped), t = 0.2713s, tCPU=1.00038s, Nit/step = 5.74171
-solver stopped due to special.solver.timout after 1.00038 seconds.
+STEP2443 (stopped), t = 0.2442s, tCPU=1.00044s, Nit/step = 5.80106
+solver stopped due to special.solver.timout after 1.00044 seconds.
 Solver iteration statistics:
-total number of steps:        2713
-total number of Newton iterations: 15583
-total number of Newton Jacobians:  2
+total number of steps:        2442
+total number of Newton iterations: 14172
+total number of Newton Jacobians:  1
 
 
 ******************************************
@@ -2342,51 +2342,51 @@ NOTE: SolutionViewer opens no window, because exudyn.special.userInterface.suppr
 ******************************************
 EXAMPLE 31 ("CMSexampleCourse.py"):
 ******************************************
-number of nodes =  6239
+number of nodes =  6152
 pMid= [0.125, 0.010142135623730952, -0.01] , nMid= 426
 pTip= [0.266, 0, -0.01] , nTip= 477
 compute modes... 
-computation of modes needed 0.944 seconds
-eigen freq.= [107.23975108 108.20267128 281.02734356 281.70444146 398.82600293
- 502.20939735 516.31874639 599.10558558]
+computation of modes needed 0.894 seconds
+eigen freq.= [107.26225286 108.19875094 280.99000112 281.60977235 398.5573676
+ 502.08896842 516.19063353 598.75595304]
 NOTE: the renderer is suppressed by exudyn.special.userInterface.suppressRenderer; no window is opened
 +++++++++++++++++++++++++++++++
-EXUDYN V1.13.3 solver: implicit second order time integration
+EXUDYN V1.13.6 solver: implicit second order time integration
 
 ++++++++++++++++++++++++++++++
 exudyn.special.solver.timeout=1 seconds reached
 simulation receives stop signal
 
-STEP158 (stopped), t = 0.157s, tCPU=1.00095s, Nit/step = 5.49367
-solver stopped due to special.solver.timout after 1.00095 seconds.
+STEP271 (stopped), t = 0.27s, tCPU=1.00243s, Nit/step = 5.53137
+solver stopped due to special.solver.timout after 1.00243 seconds.
 ====================
 CPU-time statistics:
   total time   = 1 seconds
   measured time= 1 seconds (=99.9%) 
   non-zero timer [__ sub-timer]:
-  factorization     = 0.0294%
-  newtonIncrement   = 0.0992%
-  integrationFormula= 0.0145%
-  ODE2RHS           = 1.22%
-  ODE1RHS           = 0.00271%
-  AERHS             = 33.8%
-  totalJacobian     = 1.73%
-  __jacobianODE2    = 0.725%
-  __jacobianODE1    = 0.0004%
-  __jacobianAE      = 0.999%
-  massMatrix        = 0.665%
-  reactionForces    = 61.3%
-  Python          = 0.0001%
-  writeSolution     = 1.13%
-  overhead          = 0.00776%
-  visualization/user= 0.0015%
-nModes= 8 , mid displacement= [-2.33306881e-02 -8.58891986e-02  2.02177984e-05]
+  factorization     = 0.0579%
+  newtonIncrement   = 0.129%
+  integrationFormula= 0.0181%
+  ODE2RHS           = 1.65%
+  ODE1RHS           = 0.00501%
+  AERHS             = 33.3%
+  totalJacobian     = 3.18%
+  __jacobianODE2    = 1.6%
+  __jacobianODE1    = 0.000879%
+  __jacobianAE      = 1.57%
+  massMatrix        = 1.01%
+  reactionForces    = 59.2%
+  Python          = 0.00013%
+  writeSolution     = 1.46%
+  overhead          = 0.00713%
+  visualization/user= 0.0012%
+nModes= 8 , mid displacement= [-1.54265552e-01 -1.41168482e-01  3.16998864e-05]
 
 
 ******************************************
 EXAMPLE 32 ("ComputeSensitivitiesExample.py"):
 ******************************************
---- 0.006090879440307617 seconds ---
+--- 0.005716085433959961 seconds ---
 
 
 ******************************************
@@ -2394,14 +2394,14 @@ EXAMPLE 33 ("contactCurvePolynomial.py"):
 ******************************************
 NOTE: the renderer is suppressed by exudyn.special.userInterface.suppressRenderer; no window is opened
 +++++++++++++++++++++++++++++++
-EXUDYN V1.13.3 solver: implicit second order time integration
+EXUDYN V1.13.6 solver: implicit second order time integration
 
 ++++++++++++++++++++++++++++++
 exudyn.special.solver.timeout=1 seconds reached
 simulation receives stop signal
 
-STEP9882 (stopped), t = 0.9881s, tCPU=1.00018s, Nit/step = 2.92137
-solver stopped due to special.solver.timout after 1.00018 seconds.
+STEP9926 (stopped), t = 0.9925s, tCPU=1.00165s, Nit/step = 2.92696
+solver stopped due to special.solver.timout after 1.00165 seconds.
 
 
 ******************************************
@@ -2411,20 +2411,20 @@ Reeving system total length= 15.636674654774444
 len(segmentsData)= 800
 NOTE: the renderer is suppressed by exudyn.special.userInterface.suppressRenderer; no window is opened
 +++++++++++++++++++++++++++++++
-EXUDYN V1.13.3 solver: implicit second order time integration
+EXUDYN V1.13.6 solver: implicit second order time integration
 
 ++++++++++++++++++++++++++++++
 exudyn.special.solver.timeout=1 seconds reached
 simulation receives stop signal
 
-STEP4497 (stopped), t = 4.496s, tCPU=1.00035s, Nit/step = 8.11385
-solver stopped due to special.solver.timout after 1.00035 seconds.
+STEP4272 (stopped), t = 4.271s, tCPU=1.00037s, Nit/step = 8.01756
+solver stopped due to special.solver.timout after 1.00037 seconds.
 
 
 ******************************************
 EXAMPLE 35 ("coordinateSpringDamper.py"):
 ******************************************
-EXUDYN version=1.13.3
+EXUDYN version=1.13.6
 static value = 0.02
 <systemData: 
   Number of nodes= 2
@@ -2452,36 +2452,36 @@ EXAMPLE 36 ("craneReevingSystem.py"):
 ******************************************
 EArope= 1963495.4084936208
 +++++++++++++++++++++++++++++++
-EXUDYN V1.13.3 solver: implicit second order time integration
+EXUDYN V1.13.6 solver: implicit second order time integration
 Start multi-threading with 4 threads (multithreading & load balancing)
 
 ++++++++++++++++++++++++++++++
 exudyn.special.solver.timeout=1 seconds reached
 simulation receives stop signal
 
-STEP9079 (stopped), t = 9.078s, tCPU=1.00006s, Nit/step = 5.36293
-solver stopped due to special.solver.timout after 1.00006 seconds.
+STEP7861 (stopped), t = 7.86s, tCPU=1.00017s, Nit/step = 5.3095
+solver stopped due to special.solver.timout after 1.00017 seconds.
 ====================
 CPU-time statistics:
   total time   = 1 seconds
-  measured time= 0.983 seconds (=98.3%) 
+  measured time= 0.984 seconds (=98.4%) 
   non-zero timer [__ sub-timer]:
-  factorization     = 0.0122%
-  newtonIncrement   = 20.1%
-  integrationFormula= 0.447%
-  ODE2RHS           = 53.9%
-  ODE1RHS           = 0.139%
-  AERHS             = 4.22%
-  totalJacobian     = 0.0744%
-  __jacobianODE2    = 0.0717%
-  __jacobianODE1    = 9.16e-05%
-  __jacobianAE      = 0.00184%
-  massMatrix        = 5.2%
-  reactionForces    = 13.1%
-  Python          = 2.23%
-  writeSolution     = 0.531%
-  overhead          = 0.0384%
-  visualization/user= 0.0218%
+  factorization     = 0.0152%
+  newtonIncrement   = 18.3%
+  integrationFormula= 0.491%
+  ODE2RHS           = 55.4%
+  ODE1RHS           = 0.13%
+  AERHS             = 4.44%
+  totalJacobian     = 0.104%
+  __jacobianODE2    = 0.101%
+  __jacobianODE1    = 0.000173%
+  __jacobianAE      = 0.00209%
+  massMatrix        = 5.71%
+  reactionForces    = 12.4%
+  Python          = 2.49%
+  writeSolution     = 0.494%
+  overhead          = 0.0425%
+  visualization/user= 0.02%
 Stop multi-threading
 NOTE: SolutionViewer opens no window, because exudyn.special.userInterface.suppressSolutionViewer=True
 
@@ -2491,14 +2491,14 @@ EXAMPLE 37 ("doublePendulum2D.py"):
 ******************************************
 NOTE: the renderer is suppressed by exudyn.special.userInterface.suppressRenderer; no window is opened
 +++++++++++++++++++++++++++++++
-EXUDYN V1.13.3 solver: implicit second order time integration
+EXUDYN V1.13.6 solver: implicit second order time integration
 
 ++++++++++++++++++++++++++++++
 exudyn.special.solver.timeout=1 seconds reached
 simulation receives stop signal
 
-STEP998 (stopped), t = 0.997s, tCPU=1.01043s, Nit/step = 6.24549
-solver stopped due to special.solver.timout after 1.01043 seconds.
+STEP1000 (stopped), t = 0.999s, tCPU=1.01307s, Nit/step = 6.249
+solver stopped due to special.solver.timout after 1.01307 seconds.
 
 
 ******************************************
@@ -2506,17 +2506,17 @@ EXAMPLE 38 ("finiteSegmentMethod.py"):
 ******************************************
 NOTE: the renderer is suppressed by exudyn.special.userInterface.suppressRenderer; no window is opened
 +++++++++++++++++++++++++++++++
-EXUDYN V1.13.3 solver: implicit second order time integration
+EXUDYN V1.13.6 solver: implicit second order time integration
 
 ++++++++++++++++++++++++++++++
 exudyn.special.solver.timeout=1 seconds reached
 simulation receives stop signal
 
-STEP429 (stopped), t = 0.428s, tCPU=1.00034s, Nit/step = 5.83916
-solver stopped due to special.solver.timout after 1.00034 seconds.
+STEP413 (stopped), t = 0.412s, tCPU=1.00096s, Nit/step = 5.74334
+solver stopped due to special.solver.timout after 1.00096 seconds.
 Solver iteration statistics:
-total number of steps:        428
-total number of Newton iterations: 2505
+total number of steps:        412
+total number of Newton iterations: 2372
 total number of Newton Jacobians:  24
 
 
@@ -2524,53 +2524,53 @@ total number of Newton Jacobians:  24
 EXAMPLE 39 ("flexiblePendulumANCF.py"):
 ******************************************
 +++++++++++++++++++++++++++++++
-EXUDYN V1.13.3 solver: implicit second order time integration
+EXUDYN V1.13.6 solver: implicit second order time integration
 Start multi-threading with 4 threads (multithreading & load balancing)
 
 ++++++++++++++++++++++++++++++
 exudyn.special.solver.timeout=1 seconds reached
 simulation receives stop signal
 
-STEP11256 (stopped), t = 1.1255s, tCPU=1.00017s, Nit/step = 5.89588
-solver stopped due to special.solver.timout after 1.00017 seconds.
+STEP12653 (stopped), t = 1.2652s, tCPU=1.00011s, Nit/step = 5.93804
+solver stopped due to special.solver.timout after 1.00011 seconds.
 Solver iteration statistics:
-total number of steps:        11255
-total number of Newton iterations: 66364
-total number of Newton Jacobians:  32
+total number of steps:        12652
+total number of Newton iterations: 75134
+total number of Newton Jacobians:  37
 Stop multi-threading
 
 
 ******************************************
 EXAMPLE 40 ("flexibleRotor3Dtest.py"):
 ******************************************
-EXUDYN version=1.13.3
+EXUDYN version=1.13.6
 resonance frequency (rad/s)= 28.284271247461902
 [0. 0. 0. 0.]
 +++++++++++++++++++++++++++++++
-EXUDYN V1.13.3 solver: implicit second order time integration
+EXUDYN V1.13.6 solver: implicit second order time integration
 STEP10000, t = 30s, timeToGo = 0s, Nit/step = 8.9574
-Solver terminated successfully after 0.782844 seconds.
+Solver terminated successfully after 0.838303 seconds.
 ====================
 CPU-time statistics:
-  total time   = 0.783 seconds
-  measured time= 0.759 seconds (=97%) 
+  total time   = 0.838 seconds
+  measured time= 0.815 seconds (=97.2%) 
   non-zero timer [__ sub-timer]:
-  factorization     = 1.69%
-  newtonIncrement   = 3.48%
-  integrationFormula= 0.69%
-  ODE2RHS           = 41.5%
-  ODE1RHS           = 0.331%
-  AERHS             = 1.17%
-  totalJacobian     = 11%
+  factorization     = 1.56%
+  newtonIncrement   = 2.95%
+  integrationFormula= 0.707%
+  ODE2RHS           = 41.9%
+  ODE1RHS           = 0.306%
+  AERHS             = 1.25%
+  totalJacobian     = 10.9%
   __jacobianODE2    = 10.6%
-  __jacobianODE1    = 0.0236%
-  __jacobianAE      = 0.0939%
-  massMatrix        = 5.74%
-  reactionForces    = 1.39%
-  Python          = 0.0167%
-  writeSolution     = 32.9%
-  overhead          = 0.0511%
-  visualization/user= 0.0335%
+  __jacobianODE1    = 0.0218%
+  __jacobianAE      = 0.101%
+  massMatrix        = 5.87%
+  reactionForces    = 1.38%
+  Python          = 0.0152%
+  writeSolution     = 33%
+  overhead          = 0.0533%
+  visualization/user= 0.0304%
 Solver iteration statistics:
 total number of steps:        10000
 total number of Newton iterations: 89574
@@ -2588,7 +2588,7 @@ run four bar mechanism with case:
   redundant constraints
 ************************************************
 +++++++++++++++++++++++++++++++
-EXUDYN V1.13.3 solver: implicit second order time integration
+EXUDYN V1.13.6 solver: implicit second order time integration
 CSolverBase::Newton: System Jacobian seems to be singular / not invertible!
   time/load step #2786, time = 5.572
   causing system equation number (coordinate number) = 45
@@ -2608,7 +2608,7 @@ run four bar mechanism with case:
   redundant constraints with improved solver
 ************************************************
 +++++++++++++++++++++++++++++++
-EXUDYN V1.13.3 solver: implicit second order time integration
+EXUDYN V1.13.6 solver: implicit second order time integration
 CSolverBase::Newton: System Jacobian seems to be singular / not invertible!
   time/load step #2786, time = 5.572
   causing system equation number (coordinate number) = 45
@@ -2629,9 +2629,9 @@ run four bar mechanism with case:
 ************************************************
 use non-redundant constraints for last joint: [1, 1, 0, 0, 0, 0]
 +++++++++++++++++++++++++++++++
-EXUDYN V1.13.3 solver: implicit second order time integration
+EXUDYN V1.13.6 solver: implicit second order time integration
 STEP5000, t = 10s, timeToGo = 0s, Nit/step = 6.2836
-Solver terminated successfully after 0.382915 seconds.
+Solver terminated successfully after 0.365516 seconds.
 
 
 ******************************************
@@ -2689,23 +2689,23 @@ For details see mbs.systemData, mbs.sys and mbs.variables
 
 NOTE: the renderer is suppressed by exudyn.special.userInterface.suppressRenderer; no window is opened
 +++++++++++++++++++++++++++++++
-EXUDYN V1.13.3 solver: implicit second order time integration
+EXUDYN V1.13.6 solver: implicit second order time integration
 
 ++++++++++++++++++++++++++++++
 exudyn.special.solver.timeout=1 seconds reached
 simulation receives stop signal
 
-STEP52 (stopped), t = 1.02s, tCPU=1.03414s, Nit/step = 7.40385
-solver stopped due to special.solver.timout after 1.03414 seconds.
+STEP52 (stopped), t = 1.02s, tCPU=1.02489s, Nit/step = 7.40385
+solver stopped due to special.solver.timout after 1.02489 seconds.
 
 
 ******************************************
 EXAMPLE 45 ("gyroStability.py"):
 ******************************************
 +++++++++++++++++++++++++++++++
-EXUDYN V1.13.3 solver: implicit second order time integration
-STEP40000, t = 20s, timeToGo = 4.35124e-14s, Nit/step = 7.06888
-Solver terminated successfully after 0.690098 seconds.
+EXUDYN V1.13.6 solver: implicit second order time integration
+STEP40000, t = 20s, timeToGo = 4.92595e-14s, Nit/step = 7.06888
+Solver terminated successfully after 0.781282 seconds.
 omega 0 =  [ 4.99999982e+00  1.71951049e-03 -3.00010443e-04]
 omega 1 =  [ 9.20753501e-04 -5.00000002e+00  9.62062456e-04]
 omega 2 =  [-8.74815872e-04  1.12192840e-03  4.99999999e+00]
@@ -2724,9 +2724,9 @@ EXAMPLE 47 ("HydraulicActuator2Arms.py"):
 ******************************************
 NOTE: the renderer is suppressed by exudyn.special.userInterface.suppressRenderer; no window is opened
 +++++++++++++++++++++++++++++++
-EXUDYN V1.13.3 solver: implicit second order time integration
+EXUDYN V1.13.6 solver: implicit second order time integration
 STEP30000, t = 30s, timeToGo = 0s, Nit/step = 5.9486
-Solver terminated successfully after 0.884597 seconds.
+Solver terminated successfully after 0.854551 seconds.
 Solver iteration statistics:
 total number of steps:        30000
 total number of Newton iterations: 178458
@@ -2738,13 +2738,13 @@ NOTE: SolutionViewer opens no window, because exudyn.special.userInterface.suppr
 EXAMPLE 48 ("HydraulicActuatorStaticInitialization.py"):
 ******************************************
 +++++++++++++++++++++++++++++++
-EXUDYN V1.13.3 solver: nonlinear static solver
+EXUDYN V1.13.6 solver: nonlinear static solver
 
 Python WARNING [file '<string>', line 41]: 
 StaticSolver: system contains ODE1 equations, which is untested
 
 STEP1, factor = 1, timeToGo = 0s, Nit/step = 1
-Solver terminated successfully after 9.26e-05 seconds.
+Solver terminated successfully after 7.26e-05 seconds.
 Solver iteration statistics:
 total number of steps:        1
 total number of Newton iterations: 1
@@ -2753,9 +2753,9 @@ initial force= 3329.6244112512154
 sysODE1= [2000000. 2000000.]
 p0,p1= 2332962.4411251214 2000000.0
 +++++++++++++++++++++++++++++++
-EXUDYN V1.13.3 solver: implicit second order time integration
+EXUDYN V1.13.6 solver: implicit second order time integration
 STEP1000, t = 1s, timeToGo = 0s, Nit/step = 3.746
-Solver terminated successfully after 0.0100302 seconds.
+Solver terminated successfully after 0.0101218 seconds.
 Solver iteration statistics:
 total number of steps:        1000
 total number of Newton iterations: 3746
@@ -2770,9 +2770,9 @@ EXAMPLE 49 ("HydraulicsUserFunction.py"):
 ******************************************
 NOTE: the renderer is suppressed by exudyn.special.userInterface.suppressRenderer; no window is opened
 +++++++++++++++++++++++++++++++
-EXUDYN V1.13.3 solver: implicit second order time integration
+EXUDYN V1.13.6 solver: implicit second order time integration
 STEP400, t = 0.4s, timeToGo = 0s, Nit/step = 5.0475
-Solver terminated successfully after 0.0516902 seconds.
+Solver terminated successfully after 0.0554912 seconds.
 Solver iteration statistics:
 total number of steps:        400
 total number of Newton iterations: 2019
@@ -2802,39 +2802,39 @@ EXAMPLE 52 ("involuteGearGraphics.py"):
 ******************************************
 NOTE: the renderer is suppressed by exudyn.special.userInterface.suppressRenderer; no window is opened
 +++++++++++++++++++++++++++++++
-EXUDYN V1.13.3 solver: implicit second order time integration
+EXUDYN V1.13.6 solver: implicit second order time integration
 
 ++++++++++++++++++++++++++++++
 exudyn.special.solver.timeout=1 seconds reached
 simulation receives stop signal
 
-STEP14124 (stopped), t = 1.4123s, tCPU=1.00008s, Nit/step = 6.26289
-solver stopped due to special.solver.timout after 1.00008 seconds.
+STEP16023 (stopped), t = 1.6022s, tCPU=1.00007s, Nit/step = 6.22524
+solver stopped due to special.solver.timout after 1.00007 seconds.
 ====================
 CPU-time statistics:
   total time   = 1 seconds
-  measured time= 0.963 seconds (=96.3%) 
+  measured time= 0.962 seconds (=96.2%) 
   non-zero timer [__ sub-timer]:
-  factorization     = 0.454%
-  newtonIncrement   = 10%
-  integrationFormula= 0.686%
-  ODE2RHS           = 24.6%
-  ODE1RHS           = 0.257%
-  AERHS             = 14.5%
-  totalJacobian     = 0.898%
-  __jacobianODE2    = 0.772%
-  __jacobianODE1    = 0.00334%
-  __jacobianAE      = 0.111%
-  massMatrix        = 5.5%
-  reactionForces    = 37.4%
-  Python          = 0.000623%
-  writeSolution     = 5.6%
-  overhead          = 0.056%
-  visualization/user= 0.0378%
+  factorization     = 0.336%
+  newtonIncrement   = 9.21%
+  integrationFormula= 0.696%
+  ODE2RHS           = 25.4%
+  ODE1RHS           = 0.284%
+  AERHS             = 15%
+  totalJacobian     = 0.883%
+  __jacobianODE2    = 0.777%
+  __jacobianODE1    = 0.00188%
+  __jacobianAE      = 0.0956%
+  massMatrix        = 5.54%
+  reactionForces    = 36.9%
+  Python          = 0.000613%
+  writeSolution     = 5.62%
+  overhead          = 0.0618%
+  visualization/user= 0.0388%
 Solver iteration statistics:
-total number of steps:        14123
-total number of Newton iterations: 88457
-total number of Newton Jacobians:  215
+total number of steps:        16022
+total number of Newton iterations: 99747
+total number of Newton Jacobians:  227
 
 
 ******************************************
@@ -2842,9 +2842,9 @@ EXAMPLE 53 ("kinematicTreeAndMBS.py"):
 ******************************************
 NOTE: the renderer is suppressed by exudyn.special.userInterface.suppressRenderer; no window is opened
 +++++++++++++++++++++++++++++++
-EXUDYN V1.13.3 solver: explicit time integration (ExplicitEuler)
+EXUDYN V1.13.6 solver: explicit time integration (ExplicitEuler)
 STEP100, t = 1s, timeToGo = 0s, Nit/step = 0
-Solver terminated successfully after 0.0974751 seconds.
+Solver terminated successfully after 0.0909421 seconds.
 joint angles = [-1.34104992 -0.04603818 -0.13745839 -0.49759959  0.7356457 ] , case   KT T66
 joint angles = [-1.34104992 -0.04603818 -0.13745839 -0.49759959  0.7356457 ] , case   KT cpp
 
@@ -2853,15 +2853,15 @@ joint angles = [-1.34104992 -0.04603818 -0.13745839 -0.49759959  0.7356457 ] , c
 EXAMPLE 54 ("kinematicTreePendulum.py"):
 ******************************************
 +++++++++++++++++++++++++++++++
-EXUDYN V1.13.3 solver: explicit time integration (ExplicitMidpoint)
+EXUDYN V1.13.6 solver: explicit time integration (ExplicitMidpoint)
 STEP200001, t = 2000s, timeToGo = 0s, Nit/step = 0
-Solver terminated successfully after 0.335628 seconds.
+Solver terminated successfully after 0.351226 seconds.
 
 
 ******************************************
 EXAMPLE 55 ("lavalRotor2Dtest.py"):
 ******************************************
-EXUDYN version=1.13.3
+EXUDYN version=1.13.6
 resonance frequency = 7.957747154594767Hz
 <systemData: 
   Number of nodes= 2
@@ -2886,48 +2886,48 @@ displacement= -0.01123852347768667
 EXAMPLE 56 ("leggedRobot.py"):
 ******************************************
 +++++++++++++++++++++++++++++++
-EXUDYN V1.13.3 solver: implicit second order time integration
+EXUDYN V1.13.6 solver: implicit second order time integration
 
 ++++++++++++++++++++++++++++++
 exudyn.special.solver.timeout=1 seconds reached
 simulation receives stop signal
 
-STEP3925 (stopped), t = 0.784856s, tCPU=1.00018s, Nit/step = 7.86777
-solver stopped due to special.solver.timout after 1.00018 seconds.
-WARNING: implicit second order time integration detected large amount (284749) of memory allocations, which seem to occur in every time step; this may be due to user functions; solver may be slow
+STEP3787 (stopped), t = 0.757254s, tCPU=1.00031s, Nit/step = 7.82651
+solver stopped due to special.solver.timout after 1.00031 seconds.
+WARNING: implicit second order time integration detected large amount (273489) of memory allocations, which seem to occur in every time step; this may be due to user functions; solver may be slow
 
 
 ******************************************
 EXAMPLE 57 ("lugreFrictionODE1.py"):
 ******************************************
-EXUDYN version=1.13.3
+EXUDYN version=1.13.6
 +++++++++++++++++++++++++++++++
-EXUDYN V1.13.3 solver: explicit time integration (ODE23)
+EXUDYN V1.13.6 solver: explicit time integration (ODE23)
 
 ++++++++++++++++++++++++++++++
 exudyn.special.solver.timeout=1 seconds reached
 simulation receives stop signal
 
-STEP139788 (stopped), t = 13.9787s, tCPU=1.00006s, Nit/step = 0
-solver stopped due to special.solver.timout after 1.00006 seconds.
-WARNING: explicit time integration (ODE23) detected large amount (1425851) of memory allocations, which seem to occur in every time step; this may be due to user functions; solver may be slow
+STEP139663 (stopped), t = 13.9662s, tCPU=1.00004s, Nit/step = 0
+solver stopped due to special.solver.timout after 1.00004 seconds.
+WARNING: explicit time integration (ODE23) detected large amount (1424577) of memory allocations, which seem to occur in every time step; this may be due to user functions; solver may be slow
 
 
 ******************************************
 EXAMPLE 58 ("lugreFrictionTest.py"):
 ******************************************
-EXUDYN version=1.13.3
+EXUDYN version=1.13.6
 +++++++++++++++++++++++++++++++
-EXUDYN V1.13.3 solver: implicit second order time integration
+EXUDYN V1.13.6 solver: implicit second order time integration
 
 ++++++++++++++++++++++++++++++
 exudyn.special.solver.timeout=1 seconds reached
 simulation receives stop signal
 
-STEP27532 (stopped), t = 13.7655s, tCPU=1.00004s, Nit/step = 4.01486
-solver stopped due to special.solver.timout after 1.00004 seconds.
-WARNING: implicit second order time integration detected large amount (593262) of memory allocations, which seem to occur in every time step; this may be due to user functions; solver may be slow
-coords1= [np.float64(0.6363356737006527), np.float64(0.00020112096269289106), np.float64(1.4763058478334321e-05)]
+STEP28050 (stopped), t = 14.0245s, tCPU=1.00008s, Nit/step = 4.02307
+solver stopped due to special.solver.timout after 1.00008 seconds.
+WARNING: implicit second order time integration detected large amount (605124) of memory allocations, which seem to occur in every time step; this may be due to user functions; solver may be slow
+coords1= [np.float64(0.6485207866756268), np.float64(0.10766144307380143), np.float64(1.0000000000000004e-05)]
 
 
 ******************************************
@@ -2935,7 +2935,7 @@ EXAMPLE 59 ("mobileMecanumWheelRobotWithLidar.py"):
 ******************************************
 NOTE: the renderer is suppressed by exudyn.special.userInterface.suppressRenderer; no window is opened
 +++++++++++++++++++++++++++++++
-EXUDYN V1.13.3 solver: implicit second order time integration
+EXUDYN V1.13.6 solver: implicit second order time integration
   Solve steps: adaptive reduction to step size = 0.0025, time = 3.17
   Solve steps: adaptive reduction to step size = 0.00125, time = 3.1775
   Solve steps: adaptive reduction to step size = 0.00125, time = 3.205
@@ -2948,29 +2948,29 @@ EXUDYN V1.13.3 solver: implicit second order time integration
 exudyn.special.solver.timeout=1 seconds reached
 simulation receives stop signal
 
-STEP2334 (stopped), t = 10.6013s, tCPU=1.00254s, Nit/step = 11.0973
-solver stopped due to special.solver.timout after 1.00254 seconds.
+STEP2395 (stopped), t = 10.9063s, tCPU=1.00194s, Nit/step = 10.9937
+solver stopped due to special.solver.timout after 1.00194 seconds.
 
 
 ******************************************
 EXAMPLE 60 ("mouseInteractionExample.py"):
 ******************************************
 +++++++++++++++++++++++++++++++
-EXUDYN V1.13.3 solver: implicit second order time integration
+EXUDYN V1.13.6 solver: implicit second order time integration
 
 ++++++++++++++++++++++++++++++
 exudyn.special.solver.timeout=1 seconds reached
 simulation receives stop signal
 
-STEP989 (stopped), t = 0.988s, tCPU=1.0014s, Nit/step = 1.88979
-solver stopped due to special.solver.timout after 1.0014 seconds.
+STEP992 (stopped), t = 0.991s, tCPU=1.00411s, Nit/step = 1.89315
+solver stopped due to special.solver.timout after 1.00411 seconds.
 
 
 ******************************************
 EXAMPLE 61 ("mpi4pyExample.py"):
 ******************************************
 parameter variation with MPI
---- 25.92914867401123 seconds ---
+--- 22.180902004241943 seconds ---
 sum= 149311628802.25964
 
 
@@ -2979,67 +2979,60 @@ EXAMPLE 62 ("multiMbsTest.py"):
 ******************************************
 NOTE: the renderer is suppressed by exudyn.special.userInterface.suppressRenderer; no window is opened
 +++++++++++++++++++++++++++++++
-EXUDYN V1.13.3 solver: implicit second order time integration
+EXUDYN V1.13.6 solver: implicit second order time integration
 
 ++++++++++++++++++++++++++++++
 exudyn.special.solver.timeout=1 seconds reached
 simulation receives stop signal
 
-STEP994 (stopped), t = 0.993s, tCPU=1.00836s, Nit/step = 7.11871
-solver stopped due to special.solver.timout after 1.00836 seconds.
+STEP993 (stopped), t = 0.992s, tCPU=1.00553s, Nit/step = 7.11682
+solver stopped due to special.solver.timout after 1.00553 seconds.
 +++++++++++++++++++++++++++++++
-EXUDYN V1.13.3 solver: implicit second order time integration
+EXUDYN V1.13.6 solver: implicit second order time integration
 
 ++++++++++++++++++++++++++++++
 exudyn.special.solver.timeout=1 seconds reached
 simulation receives stop signal
 
-STEP999 (stopped), t = 0.998s, tCPU=1.00009s, Nit/step = 7.12813
-solver stopped due to special.solver.timout after 1.00009 seconds.
+STEP990 (stopped), t = 0.989s, tCPU=1.00302s, Nit/step = 7.11111
+solver stopped due to special.solver.timout after 1.00302 seconds.
 
 
 ******************************************
 EXAMPLE 63 ("myFirstExample.py"):
 ******************************************
 +++++++++++++++++++++++++++++++
-EXUDYN V1.13.3 solver: implicit second order time integration
+EXUDYN V1.13.6 solver: implicit second order time integration
 STEP100, t = 1s, timeToGo = 0s, Nit/step = 1
-Solver terminated successfully after 0.0003227 seconds.
+Solver terminated successfully after 0.0003875 seconds.
 
 
 ******************************************
 EXAMPLE 64 ("newtonsCradle.py"):
 ******************************************
-EXUDYN version=1.13.3
+EXUDYN version=1.13.6
 impact vel= 0.0
 NOTE: the renderer is suppressed by exudyn.special.userInterface.suppressRenderer; no window is opened
 +++++++++++++++++++++++++++++++
-EXUDYN V1.13.3 solver: implicit second order time integration
+EXUDYN V1.13.6 solver: implicit second order time integration
   Solve steps: adaptive reduction to step size = 2.05466e-05, time = 0.2967
   Solve steps: adaptive reduction to step size = 3.75e-05, time = 0.297416
   Solve steps: adaptive reduction to step size = 8.48348e-06, time = 0.297454
   Solve steps: adaptive reduction to step size = 1e-08, time = 0.297462
   Solve steps: adaptive reduction to step size = 9.90872e-07, time = 0.297624
   Solve steps: adaptive reduction to step size = 1e-08, time = 0.297625
-  Solve steps: adaptive reduction to step size = 1.4378e-05, time = 0.29785
-  Solve steps: adaptive reduction to step size = 1.44134e-06, time = 0.297865
-  Solve steps: adaptive reduction to step size = 2.14568e-07, time = 0.297878
-  Solve steps: adaptive reduction to step size = 3.75e-05, time = 0.298525
-  Solve steps: adaptive reduction to step size = 3.88866e-06, time = 0.298562
-  Solve steps: adaptive reduction to step size = 5.95523e-07, time = 0.298574
-  Solve steps: adaptive reduction to step size = 1e-08, time = 0.298575
 
 ++++++++++++++++++++++++++++++
 exudyn.special.solver.timeout=1 seconds reached
 simulation receives stop signal
 
-STEP6403 (stopped), t = 0.298576s, tCPU=1.00018s, Nit/step = 6.00625
-solver stopped due to special.solver.timout after 1.00018 seconds.
+STEP6192 (stopped), t = 0.297639s, tCPU=1.0001s, Nit/step = 6.03957
+solver stopped due to special.solver.timout after 1.0001 seconds.
 Solver iteration statistics:
-total number of steps:        6402
-total number of Newton iterations: 38458
-total number of Newton Jacobians:  421
-uTotal= 1.2204106619867483e-05
+total number of steps:        6191
+total number of Newton iterations: 37397
+total number of Newton Jacobians:  416
+uTotal= 6.344426333904085e-06
 NOTE: SolutionViewer opens no window, because exudyn.special.userInterface.suppressSolutionViewer=True
 
 
@@ -3048,43 +3041,43 @@ EXAMPLE 65 ("NGsolveCMStutorial.py"):
 ******************************************
 nNodes= 1143
 compute eigen modes... 
-eigen modes computation needed 0.043 seconds
+eigen modes computation needed 0.045 seconds
 eigen freq.= [ 20.78549902  21.83488296  40.26391642  60.12851119  60.97856771
   97.19646203 111.97517965 133.30636655]
 ComputePostProcessingModes ... (may take a while)
-   ... needed 0.082 seconds
+   ... needed 0.126 seconds
 create CMS element ...
 +++++++++++++++++++++++++++++++
-EXUDYN V1.13.3 solver: implicit second order time integration
+EXUDYN V1.13.6 solver: implicit second order time integration
 
 ++++++++++++++++++++++++++++++
 exudyn.special.solver.timeout=1 seconds reached
 simulation receives stop signal
 
-STEP844 (stopped), t = 0.843s, tCPU=1.00124s, Nit/step = 6.01659
-solver stopped due to special.solver.timout after 1.00124 seconds.
+STEP830 (stopped), t = 0.829s, tCPU=1.00016s, Nit/step = 6.0012
+solver stopped due to special.solver.timout after 1.00016 seconds.
 ====================
 CPU-time statistics:
   total time   = 1 seconds
-  measured time= 1 seconds (=99.8%) 
+  measured time= 0.998 seconds (=99.8%) 
   non-zero timer [__ sub-timer]:
-  factorization     = 0.0756%
-  newtonIncrement   = 0.264%
-  integrationFormula= 0.0374%
-  ODE2RHS           = 2.1%
-  ODE1RHS           = 0.0138%
-  AERHS             = 32.7%
-  totalJacobian     = 2.25%
-  __jacobianODE2    = 1.04%
-  __jacobianODE1    = 0.00105%
-  __jacobianAE      = 1.21%
-  massMatrix        = 1.3%
-  reactionForces    = 58.9%
-  Python          = 0.00031%
+  factorization     = 0.0772%
+  newtonIncrement   = 0.242%
+  integrationFormula= 0.0385%
+  ODE2RHS           = 2.01%
+  ODE1RHS           = 0.0143%
+  AERHS             = 33.1%
+  totalJacobian     = 2.32%
+  __jacobianODE2    = 1.05%
+  __jacobianODE1    = 0.00102%
+  __jacobianAE      = 1.26%
+  massMatrix        = 1.44%
+  reactionForces    = 58.4%
+  Python          = 0.00032%
   writeSolution     = 2.38%
-  overhead          = 0.00852%
-  visualization/user= 0.00264%
-max von-Mises stress= 157324.69505165415
+  overhead          = 0.00904%
+  visualization/user= 0.00269%
+max von-Mises stress= 90957.64921367541
 
 
 ******************************************
@@ -3092,40 +3085,40 @@ EXAMPLE 66 ("NGsolveCraigBampton.py"):
 ******************************************
 nNodes= 2435
 compute HCB modes... 
-HCB modes needed 0.135 seconds
+HCB modes needed 0.145 seconds
 create CMS element ...
 NOTE: the renderer is suppressed by exudyn.special.userInterface.suppressRenderer; no window is opened
 +++++++++++++++++++++++++++++++
-EXUDYN V1.13.3 solver: implicit second order time integration
+EXUDYN V1.13.6 solver: implicit second order time integration
 
 ++++++++++++++++++++++++++++++
 exudyn.special.solver.timeout=1 seconds reached
 simulation receives stop signal
 
-STEP3158 (stopped), t = 3.157s, tCPU=1.00045s, Nit/step = 5.80241
-solver stopped due to special.solver.timout after 1.00045 seconds.
+STEP2986 (stopped), t = 2.985s, tCPU=1.00017s, Nit/step = 5.82284
+solver stopped due to special.solver.timout after 1.00016 seconds.
 ====================
 CPU-time statistics:
   total time   = 1 seconds
   measured time= 0.995 seconds (=99.5%) 
   non-zero timer [__ sub-timer]:
-  factorization     = 0.14%
-  newtonIncrement   = 0.952%
-  integrationFormula= 0.119%
-  ODE2RHS           = 7.49%
-  ODE1RHS           = 0.053%
-  AERHS             = 29.2%
-  totalJacobian     = 2.98%
-  __jacobianODE2    = 2.28%
-  __jacobianODE1    = 0.00138%
-  __jacobianAE      = 0.68%
-  massMatrix        = 4.6%
-  reactionForces    = 52.7%
-  Python          = 0.000673%
-  writeSolution     = 1.7%
-  overhead          = 0.0157%
-  visualization/user= 0.0079%
-nModes= 8 , tip displacement= -0.4071371622291569
+  factorization     = 0.144%
+  newtonIncrement   = 0.834%
+  integrationFormula= 0.122%
+  ODE2RHS           = 9.98%
+  ODE1RHS           = 0.0488%
+  AERHS             = 28.5%
+  totalJacobian     = 2.8%
+  __jacobianODE2    = 2.08%
+  __jacobianODE1    = 0.00222%
+  __jacobianAE      = 0.7%
+  massMatrix        = 4.95%
+  reactionForces    = 50.9%
+  Python          = 0.000744%
+  writeSolution     = 1.74%
+  overhead          = 0.0161%
+  visualization/user= 0.0082%
+nModes= 8 , tip displacement= 0.0003498958912953251
 
 
 ******************************************
@@ -3138,45 +3131,45 @@ NOTE: SolutionViewer opens no window, because exudyn.special.userInterface.suppr
 ******************************************
 EXAMPLE 68 ("NGsolveFFRF.py"):
 ******************************************
-elements= 22033
+elements= 18560
 materials= ('default', 'filling', 'filling')
-nNodes= 6264
+nNodes= 5257
 compute HCB modes... 
-HCB modes needed 1.942 seconds
+HCB modes needed 1.601 seconds
 ComputePostProcessingModes ... (may take a while)
-   ... needed 1.541 seconds
+   ... needed 2.148 seconds
 create CMS element ...
 NOTE: the renderer is suppressed by exudyn.special.userInterface.suppressRenderer; no window is opened
 +++++++++++++++++++++++++++++++
-EXUDYN V1.13.3 solver: implicit second order time integration
+EXUDYN V1.13.6 solver: implicit second order time integration
 
 ++++++++++++++++++++++++++++++
 exudyn.special.solver.timeout=1 seconds reached
 simulation receives stop signal
 
-STEP306 (stopped), t = 1.22s, tCPU=1.00048s, Nit/step = 4.71895
-solver stopped due to special.solver.timout after 1.00048 seconds.
+STEP330 (stopped), t = 1.316s, tCPU=1.00074s, Nit/step = 6.08182
+solver stopped due to special.solver.timout after 1.00074 seconds.
 ====================
 CPU-time statistics:
   total time   = 1 seconds
   measured time= 0.999 seconds (=99.9%) 
   non-zero timer [__ sub-timer]:
-  factorization     = 0.0578%
-  newtonIncrement   = 0.45%
-  integrationFormula= 0.0291%
-  ODE2RHS           = 26.4%
-  ODE1RHS           = 0.00488%
-  AERHS             = 21%
-  totalJacobian     = 5.02%
-  __jacobianODE2    = 4.93%
-  __jacobianODE1    = 0.0002%
-  __jacobianAE      = 0.0883%
-  massMatrix        = 6.38%
-  reactionForces    = 39.3%
-  Python          = 0.482%
-  writeSolution     = 0.946%
-  overhead          = 0.00688%
-  visualization/user= 0.00327%
+  factorization     = 0.0608%
+  newtonIncrement   = 0.499%
+  integrationFormula= 0.0341%
+  ODE2RHS           = 29.5%
+  ODE1RHS           = 0.00705%
+  AERHS             = 20.9%
+  totalJacobian     = 2.91%
+  __jacobianODE2    = 2.83%
+  __jacobianODE1    = 0.00042%
+  __jacobianAE      = 0.0791%
+  massMatrix        = 11.7%
+  reactionForces    = 33.1%
+  Python          = 0.367%
+  writeSolution     = 0.861%
+  overhead          = 0.00813%
+  visualization/user= 0.00201%
 NOTE: SolutionViewer opens no window, because exudyn.special.userInterface.suppressSolutionViewer=True
 
 
@@ -3184,34 +3177,34 @@ NOTE: SolutionViewer opens no window, because exudyn.special.userInterface.suppr
 EXAMPLE 69 ("NGsolveFFRFSlidingJoint.py"):
 ******************************************
 meshing ...
-nNodes= 8499
+nNodes= 8440
 compute eigenvalues and eigenvectors... 
-   ... needed 0.861 seconds
+   ... needed 0.797 seconds
 factorize Kii... 
-   ... needed 0.577 seconds
+   ... needed 0.527 seconds
 eigenfrequencies frame (Hz):
-[286.95 287.32 309.62 310.03 546.17 546.41 655.74 656.24]
-nNodesC= 11646
+[286.75 287.23 309.34 309.96 545.87 546.3  655.45 656.2 ]
+nNodesC= 11580
 compute eigenvalues and eigenvectors... 
-   ... needed 1.655 seconds
+   ... needed 1.983 seconds
 factorize Kii... 
-   ... needed 1.180 seconds
+   ... needed 1.171 seconds
 eigenfrequencies carrier (Hz):
-[ 771.45  783.33 1125.17 1135.9  1585.99 1592.34 1807.94 1827.98]
-pMarkerCorr= [0.11999974 1.32       0.75      ]
-pMarkerCorr= [0.54000027 1.32       0.75      ]
-pMarkerCorr= [ 0.12000946 -1.32        0.75      ]
-pMarkerCorr= [ 0.53999062 -1.32        0.75      ]
+[ 771.45  783.34 1125.15 1135.88 1585.86 1592.26 1808.09 1828.1 ]
+pMarkerCorr= [0.12 1.32 0.75]
+pMarkerCorr= [0.54000012 1.32       0.75      ]
+pMarkerCorr= [ 0.12000856 -1.32        0.75      ]
+pMarkerCorr= [ 0.53999207 -1.32        0.75      ]
 NOTE: the renderer is suppressed by exudyn.special.userInterface.suppressRenderer; no window is opened
 +++++++++++++++++++++++++++++++
-EXUDYN V1.13.3 solver: implicit second order time integration
+EXUDYN V1.13.6 solver: implicit second order time integration
 
 ++++++++++++++++++++++++++++++
 exudyn.special.solver.timeout=1 seconds reached
 simulation receives stop signal
 
-STEP13 (stopped), t = 0.024s, tCPU=1.0298s, Nit/step = 3.46154
-solver stopped due to special.solver.timout after 1.0298 seconds.
+STEP15 (stopped), t = 0.028s, tCPU=1.04843s, Nit/step = 3.4
+solver stopped due to special.solver.timout after 1.04843 seconds.
 
 
 ******************************************
@@ -3225,29 +3218,29 @@ EXAMPLE 71 ("NGsolveLinearFEM.py"):
 ******************************************
 NOTE: the renderer is suppressed by exudyn.special.userInterface.suppressRenderer; no window is opened
 +++++++++++++++++++++++++++++++
-EXUDYN V1.13.3 solver: implicit second order time integration
-STEP4000, t = 2s, timeToGo = 5.99006e-14s, Nit/step = 1
-Solver terminated successfully after 0.727192 seconds.
+EXUDYN V1.13.6 solver: implicit second order time integration
+STEP4000, t = 2s, timeToGo = 6.18929e-14s, Nit/step = 1
+Solver terminated successfully after 0.751385 seconds.
 ====================
 CPU-time statistics:
-  total time   = 0.727 seconds
-  measured time= 0.718 seconds (=98.7%) 
+  total time   = 0.751 seconds
+  measured time= 0.742 seconds (=98.8%) 
   non-zero timer [__ sub-timer]:
-  factorization     = 0.185%
-  newtonIncrement   = 15%
-  integrationFormula= 1.07%
-  ODE2RHS           = 54.5%
-  ODE1RHS           = 0.0279%
-  AERHS             = 8.85%
-  totalJacobian     = 4.27%
-  __jacobianODE2    = 4.26%
-  __jacobianODE1    = 0.000139%
-  __jacobianAE      = 0.0069%
-  massMatrix        = 0.00189%
-  reactionForces    = 16%
-  Python          = 2.79e-05%
-  overhead          = 0.0263%
-  visualization/user= 0.0166%
+  factorization     = 0.168%
+  newtonIncrement   = 14.2%
+  integrationFormula= 1.02%
+  ODE2RHS           = 56.5%
+  ODE1RHS           = 0.0266%
+  AERHS             = 8.45%
+  totalJacobian     = 4.24%
+  __jacobianODE2    = 4.23%
+  __jacobianODE1    = 0.000269%
+  __jacobianAE      = 0.00625%
+  massMatrix        = 0.00115%
+  reactionForces    = 15.4%
+  Python          = 1.35e-05%
+  overhead          = 0.0271%
+  visualization/user= 0.0163%
 
 
 ******************************************
@@ -3260,21 +3253,21 @@ nodes B3 : [30, 31, 33, 35, 66, 87, 88, 212]
 nodes B4 : [234, 235, 236, 237, 238, 239, 240, 241, 242, 243, 244, 245, 246, 275, 276, 277, 278, 279, 280, 281, 282, 283, 284, 285, 286, 287]
 total number of nodes= 4548
 compute HCB modes... 
-HCB modes needed 0.407 seconds
+HCB modes needed 0.386 seconds
 eigen frequencies: [11.4832 11.517  31.1921 31.2505 59.1625 59.9488 63.73   96.4098]
 ComputePostProcessingModes ... (may take a while)
-   ... needed 0.642 seconds
+   ... needed 0.964 seconds
 create CMS element ...
 NOTE: the renderer is suppressed by exudyn.special.userInterface.suppressRenderer; no window is opened
 +++++++++++++++++++++++++++++++
-EXUDYN V1.13.3 solver: implicit second order time integration
+EXUDYN V1.13.6 solver: implicit second order time integration
 
 ++++++++++++++++++++++++++++++
 exudyn.special.solver.timeout=1 seconds reached
 simulation receives stop signal
 
-STEP469 (stopped), t = 2.34s, tCPU=1.00097s, Nit/step = 1.9936
-solver stopped due to special.solver.timout after 1.00097 seconds.
+STEP786 (stopped), t = 3.925s, tCPU=1.00012s, Nit/step = 1.99618
+solver stopped due to special.solver.timout after 1.00012 seconds.
 
 
 ******************************************
@@ -3282,8 +3275,8 @@ EXAMPLE 73 ("NGsolveOCCboundaries.py"):
 ******************************************
 meshing ...
 eigenfrequencies (Hz):
-[149.45070452 203.97324211 232.89119875 301.8404891  320.18785147
- 323.70743966 325.98365415 352.13234729]
+[149.4876127  204.1246798  233.92262581 302.24691302 320.64219592
+ 323.93553808 326.00615038 354.33968585]
 NOTE: the renderer is suppressed by exudyn.special.userInterface.suppressRenderer; no window is opened
 
 
@@ -3292,15 +3285,15 @@ EXAMPLE 74 ("NGsolveOCCboundaries2.py"):
 ******************************************
 meshing ...
 compute eigenvalues and eigenvectors... 
-   ... needed 14.183 seconds
+   ... needed 12.521 seconds
 factorize Kii... 
-   ... needed 7.994 seconds
+   ... needed 6.460 seconds
 eigenfrequencies (Hz):
-[ 23.18647893  94.15878063 132.6510308  155.31797679 189.13643589
- 221.82064981 242.79536101 259.03828118 265.3366536  325.0864473
- 336.69467804 352.78129296 364.31307789 392.28673022 442.64848459
- 478.03832893 484.13610739 488.86981203 504.99212904 527.26799748
- 565.92454839 569.41026176 571.25605442 590.9884948 ]
+[ 23.21937141  94.3118886  132.78290857 155.50088076 189.15983404
+ 219.61157166 243.37338043 259.35048585 265.34688133 326.34184271
+ 336.55404789 353.52425919 365.21680808 392.32557495 443.14797038
+ 478.90749849 484.38636933 491.11720275 507.69068811 527.83585385
+ 566.81368824 569.91068017 572.32217942 591.2811841 ]
 NOTE: the renderer is suppressed by exudyn.special.userInterface.suppressRenderer; no window is opened
 
 
@@ -3317,34 +3310,34 @@ NOTE: the renderer is suppressed by exudyn.special.userInterface.suppressRendere
 EXAMPLE 76 ("NGsolvePistonEngine.py"):
 ******************************************
 using 8 mkl threads ...
-NGsolve mode computation needed 0.982 seconds
+NGsolve mode computation needed 0.815 seconds
 eigen freq. crank= [ 114.44213063  121.47083326  276.33605995  300.16210868  325.64276962
   341.27405098  507.8332381   561.37365431  593.61106134  717.74420974
   742.71550703  803.10265903  895.20982219  973.12146193  994.01035675
- 1097.77272632 1184.78736479 1208.74980878 1245.50714688 1490.44051622]
+ 1097.77272632 1184.78736479 1208.74980878 1245.50714688 1490.44051608]
 ComputePostProcessingModes femCrank ... 
---- 0.33207178115844727 seconds ---
+--- 0.7187709808349609 seconds ---
 ComputePostProcessingModes femConrod ... 
---- 0.09387516975402832 seconds ---
+--- 0.06327247619628906 seconds ---
 ComputePostProcessingModes femPiston ... 
---- 0.06273865699768066 seconds ---
+--- 0.06565356254577637 seconds ---
 
-total elapsed time= 5.441930399974808
+total elapsed time= 5.165130800101906
 totalFEcoordinates= 10128
 NOTE: the renderer is suppressed by exudyn.special.userInterface.suppressRenderer; no window is opened
 +++++++++++++++++++++++++++++++
-EXUDYN V1.13.3 solver: implicit second order time integration
+EXUDYN V1.13.6 solver: implicit second order time integration
 
 ++++++++++++++++++++++++++++++
 exudyn.special.solver.timeout=1 seconds reached
 simulation receives stop signal
 
-STEP130 (stopped), t = 0.00645s, tCPU=1.07486s, Nit/step = 6.90769
-solver stopped due to special.solver.timout after 1.07486 seconds.
+STEP120 (stopped), t = 0.00595s, tCPU=1.00681s, Nit/step = 6.725
+solver stopped due to special.solver.timout after 1.00681 seconds.
 Solver iteration statistics:
-total number of steps:        129
-total number of Newton iterations: 898
-total number of Newton Jacobians:  4
+total number of steps:        119
+total number of Newton iterations: 807
+total number of Newton Jacobians:  3
 
 
 ******************************************
@@ -3352,12 +3345,12 @@ EXAMPLE 77 ("NGsolvePostProcessingStresses.py"):
 ******************************************
 nNodes= 9645
 ComputePostProcessingModes ... (may take a while)
---- 0.7550537586212158 seconds ---
+--- 0.8876042366027832 seconds ---
 create CMS element ...
 +++++++++++++++++++++++++++++++
-EXUDYN V1.13.3 solver: implicit second order time integration
+EXUDYN V1.13.6 solver: implicit second order time integration
 STEP200, t = 0.05s, timeToGo = 0s, Nit/step = 3.57
-Solver terminated successfully after 0.024786 seconds.
+Solver terminated successfully after 0.0154665 seconds.
 
 
 ******************************************
@@ -3366,30 +3359,30 @@ EXAMPLE 78 ("nMassOscillator.py"):
 omegas (rad/s)= [ 3.55196817 10.59988786 17.48064098 24.08571395 30.31094082 36.05814605
  41.23669278 45.76491223 49.57139167 52.59610065 54.79133771 56.12248264]
 +++++++++++++++++++++++++++++++
-EXUDYN V1.13.3 solver: implicit second order time integration
+EXUDYN V1.13.6 solver: implicit second order time integration
 STEP1000, t = 5s, timeToGo = 0s, Nit/step = 1
-Solver terminated successfully after 0.00897 seconds.
+Solver terminated successfully after 0.0134451 seconds.
 ====================
 CPU-time statistics:
-  total time   = 0.00897 seconds
-  measured time= 0.00841 seconds (=93.8%) 
+  total time   = 0.0134 seconds
+  measured time= 0.0127 seconds (=94.6%) 
   non-zero timer [__ sub-timer]:
-  factorization     = 0.0214%
-  newtonIncrement   = 2.06%
-  integrationFormula= 1.29%
-  ODE2RHS           = 66.2%
-  ODE1RHS           = 0.564%
-  AERHS             = 0.633%
-  totalJacobian     = 0.227%
-  __jacobianODE2    = 0.205%
-  __jacobianODE1    = 0.0107%
-  __jacobianAE      = 0.00119%
-  massMatrix        = 0.00595%
-  reactionForces    = 0.653%
-  Python          = 0.00119%
-  writeSolution     = 27.1%
-  overhead          = 0.936%
-  visualization/user= 0.272%
+  factorization     = 0.0118%
+  newtonIncrement   = 1.63%
+  integrationFormula= 1.27%
+  ODE2RHS           = 68.8%
+  ODE1RHS           = 0.456%
+  AERHS             = 0.408%
+  totalJacobian     = 0.0974%
+  __jacobianODE2    = 0.0762%
+  __jacobianODE1    = 0.0126%
+  __jacobianAE      = 0.000786%
+  massMatrix        = 0.00393%
+  reactionForces    = 0.464%
+  Python          = 0.00157%
+  writeSolution     = 26.2%
+  overhead          = 0.525%
+  visualization/user= 0.193%
 NOTE: SolutionViewer opens no window, because exudyn.special.userInterface.suppressSolutionViewer=True
 
 
@@ -3400,13 +3393,13 @@ nNodes= 1662
 compute HCB modes... 
 eigen freq.= [  5.36954377   5.41547455  32.15443455  32.43005628  50.46889692
   79.4108131   84.58654535  85.32818167 151.80297696 153.73075596]
-HCB modes needed 0.104 seconds
+HCB modes needed 0.121 seconds
 create CMS element ...
 +++++++++++++++++++++++++++++++
-EXUDYN V1.13.3 solver: nonlinear static solver
+EXUDYN V1.13.6 solver: nonlinear static solver
 STEP1, factor = 1, timeToGo = 0s, Nit/step = 1
-Solver terminated successfully after 0.000378 seconds.
-uTipNumerical= 0.014210346044525493 , uTipAnalytical= 0.014714999999999999
+Solver terminated successfully after 0.0003767 seconds.
+uTipNumerical= 0.014210346044454883 , uTipAnalytical= 0.014714999999999999
 
 
 ******************************************
@@ -3421,52 +3414,52 @@ eigen freq.= [  3.27375449   3.72545222  22.77048704  27.80424045  28.2967088
  454.34801602 489.62169473 491.24776153 497.00011774 572.60434446
  580.87479465 620.67398737 654.13214191 657.48714993 666.75346751
  682.85258559 716.57103277]
-HCB modes needed 0.125 seconds
+HCB modes needed 0.119 seconds
 create CMS element ...
 +++++++++++++++++++++++++++++++
-EXUDYN V1.13.3 solver: implicit second order time integration
-STEP4000, t = 1s, timeToGo = 7.31899e-14s, Nit/step = 1
-Solver terminated successfully after 0.888516 seconds.
+EXUDYN V1.13.6 solver: implicit second order time integration
+STEP4000, t = 1s, timeToGo = 7.94785e-14s, Nit/step = 1
+Solver terminated successfully after 0.964852 seconds.
 ====================
 CPU-time statistics:
-  total time   = 0.889 seconds
-  measured time= 0.884 seconds (=99.5%) 
+  total time   = 0.965 seconds
+  measured time= 0.961 seconds (=99.6%) 
   non-zero timer [__ sub-timer]:
-  factorization     = 0.00507%
-  newtonIncrement   = 1.29%
-  integrationFormula= 0.147%
-  ODE2RHS           = 72%
-  ODE1RHS           = 0.0269%
-  AERHS             = 0.0821%
-  totalJacobian     = 0.624%
-  __jacobianODE2    = 0.623%
-  __jacobianODE1    = 4.52e-05%
-  __jacobianAE      = 0.000124%
-  massMatrix        = 25.6%
+  factorization     = 0.00642%
+  newtonIncrement   = 1.07%
+  integrationFormula= 0.133%
+  ODE2RHS           = 65.6%
+  ODE1RHS           = 0.0255%
+  AERHS             = 0.0792%
+  totalJacobian     = 0.544%
+  __jacobianODE2    = 0.543%
+  __jacobianODE1    = 0.000166%
+  __jacobianAE      = 0.000135%
+  massMatrix        = 32.4%
   reactionForces    = 0.1%
-  Python          = 4.52e-05%
-  overhead          = 0.0322%
-  visualization/user= 0.0163%
+  Python          = 2.08e-05%
+  overhead          = 0.0265%
+  visualization/user= 0.0127%
 
 
 ******************************************
 EXAMPLE 81 ("objectFFRFreducedOrderNetgen.py"):
 ******************************************
 +++++++++++++++++++++++++++++++
-EXUDYN V1.13.3 solver: implicit second order time integration
+EXUDYN V1.13.6 solver: implicit second order time integration
 
 ++++++++++++++++++++++++++++++
 exudyn.special.solver.timeout=1 seconds reached
 simulation receives stop signal
 
-STEP194 (stopped), t = 0.0965s, tCPU=1.00562s, Nit/step = 5.22165
-solver stopped due to special.solver.timout after 1.00562 seconds.
+STEP251 (stopped), t = 0.125s, tCPU=1.0027s, Nit/step = 5.32669
+solver stopped due to special.solver.timout after 1.0027 seconds.
 
 
 ******************************************
 EXAMPLE 82 ("parameterVariationExample.py"):
 ******************************************
---- 0.3925819396972656 seconds ---
+--- 0.3926374912261963 seconds ---
 values[-1]= 3.8418270115121276
 values2[-1]= 1.8943208245642793
 <string>:216: UserWarning: FigureCanvasAgg is non-interactive, and thus cannot be shown
@@ -3477,33 +3470,33 @@ EXAMPLE 83 ("particleClusters.py"):
 ******************************************
 auto computed searchTree box={[-0.7,-0.6,-2.1], [11.5,11.5,2.1]}
 +++++++++++++++++++++++++++++++
-EXUDYN V1.13.3 solver: explicit time integration (ExplicitEuler)
+EXUDYN V1.13.6 solver: explicit time integration (ExplicitEuler)
 Start multi-threading with 8 threads (multithreading & load balancing)
 
 ++++++++++++++++++++++++++++++
 exudyn.special.solver.timeout=1 seconds reached
 simulation receives stop signal
 
-STEP1700 (stopped), t = 0.1699s, tCPU=1.00025s, Nit/step = 0
-solver stopped due to special.solver.timout after 1.00025 seconds.
+STEP878 (stopped), t = 0.0877s, tCPU=1.00034s, Nit/step = 0
+solver stopped due to special.solver.timout after 1.00034 seconds.
 ====================
 CPU-time statistics:
   total time   = 1 seconds
-  measured time= 0.993 seconds (=99.3%) 
+  measured time= 0.996 seconds (=99.6%) 
   non-zero timer [__ sub-timer]:
-  newtonIncrement   = 1.16%
-  integrationFormula= 9.05%
-  ODE2RHS           = 89.2%
-  writeSolution     = 0.438%
-  overhead          = 0.147%
-  visualization/user= 0.00696%
+  newtonIncrement   = 0.678%
+  integrationFormula= 12.2%
+  ODE2RHS           = 86.8%
+  writeSolution     = 0.248%
+  overhead          = 0.0717%
+  visualization/user= 0.00454%
 special timers:
-  Contact:BoundingBoxes = 0.18311s (18.4%)
-  Contact:SearchTree = 0.057503s (5.79%)
-  Contact:Overall = 0.77196s (77.7%)
+  Contact:BoundingBoxes = 0.30633s (30.7%)
+  Contact:SearchTree = 0.031208s (3.13%)
+  Contact:Overall = 0.679s (68.2%)
 
 Stop multi-threading
-p= [np.float64(1.0), np.float64(0.7947238892249876), np.float64(-0.9375)]
+p= [np.float64(1.0), np.float64(0.9028793098499966), np.float64(-0.9375)]
 
 
 ******************************************
@@ -3513,7 +3506,7 @@ start create: number of masses = 8000
 finish gContact
 n spheres= 8000 , ss= 48
 +++++++++++++++++++++++++++++++
-EXUDYN V1.13.3 solver: explicit time integration (VelocityVerlet)
+EXUDYN V1.13.6 solver: explicit time integration (VelocityVerlet)
 Start multi-threading with 8 threads (multithreading & load balancing)
 WARNING: VelocityVerlet: still under development
 
@@ -3521,23 +3514,23 @@ WARNING: VelocityVerlet: still under development
 exudyn.special.solver.timeout=1 seconds reached
 simulation receives stop signal
 
-STEP356 (stopped), t = 0.0355s, tCPU=1.00241s, Nit/step = 0
-solver stopped due to special.solver.timout after 1.00241 seconds.
+STEP183 (stopped), t = 0.0182s, tCPU=1.0349s, Nit/step = 0
+solver stopped due to special.solver.timout after 1.0349 seconds.
 ====================
 CPU-time statistics:
-  total time   = 1 seconds
-  measured time= 0.96 seconds (=95.7%) 
+  total time   = 1.03 seconds
+  measured time= 0.968 seconds (=93.5%) 
   non-zero timer [__ sub-timer]:
-  newtonIncrement   = 2.46%
-  integrationFormula= 6.42%
-  ODE2RHS           = 86.1%
-  writeSolution     = 3.85%
-  overhead          = 1.12%
-  visualization/user= 0.00487%
+  newtonIncrement   = 1.52%
+  integrationFormula= 13.1%
+  ODE2RHS           = 80.5%
+  writeSolution     = 1.63%
+  overhead          = 3.28%
+  visualization/user= 0.00364%
 special timers:
-  Contact:BoundingBoxes = 0.14285s (14.9%)
-  Contact:SearchTree = 0.15911s (16.6%)
-  Contact:Overall = 0.60193s (62.7%)
+  Contact:BoundingBoxes = 0.19074s (19.7%)
+  Contact:SearchTree = 0.092757s (9.58%)
+  Contact:Overall = 0.58178s (60.1%)
 
 Stop multi-threading
 
@@ -3554,30 +3547,30 @@ FinalizeContact(...): sphereMarkerBased: friction coefficients are != 0, but som
 
 finish gContact
 +++++++++++++++++++++++++++++++
-EXUDYN V1.13.3 solver: explicit time integration (ExplicitMidpoint)
+EXUDYN V1.13.6 solver: explicit time integration (ExplicitMidpoint)
 Start multi-threading with 8 threads (multithreading & load balancing)
 
 ++++++++++++++++++++++++++++++
 exudyn.special.solver.timeout=1 seconds reached
 simulation receives stop signal
 
-STEP672 (stopped), t = 0.3355s, tCPU=1.00042s, Nit/step = 0
-solver stopped due to special.solver.timout after 1.00042 seconds.
+STEP566 (stopped), t = 0.2825s, tCPU=1.06457s, Nit/step = 0
+solver stopped due to special.solver.timout after 1.06457 seconds.
 ====================
 CPU-time statistics:
-  total time   = 1 seconds
-  measured time= 0.962 seconds (=96.1%) 
+  total time   = 1.06 seconds
+  measured time= 1.04 seconds (=97.3%) 
   non-zero timer [__ sub-timer]:
-  newtonIncrement   = 9.76%
-  integrationFormula= 1.17%
-  ODE2RHS           = 74.7%
-  writeSolution     = 13.9%
-  overhead          = 0.392%
-  visualization/user= 0.00531%
+  newtonIncrement   = 8.11%
+  integrationFormula= 1.03%
+  ODE2RHS           = 78.1%
+  writeSolution     = 12.5%
+  overhead          = 0.278%
+  visualization/user= 0.00503%
 special timers:
-  Contact:BoundingBoxes = 0.19801s (20.6%)
-  Contact:SearchTree = 0.12547s (13%)
-  Contact:Overall = 0.57664s (60%)
+  Contact:BoundingBoxes = 0.28593s (27.6%)
+  Contact:SearchTree = 0.11301s (10.9%)
+  Contact:Overall = 0.63956s (61.8%)
 
 Stop multi-threading
 
@@ -3613,30 +3606,30 @@ FinalizeContact(...): sphereMarkerBased: friction coefficients are != 0, but som
 
 finish gContact
 +++++++++++++++++++++++++++++++
-EXUDYN V1.13.3 solver: explicit time integration (ExplicitEuler)
+EXUDYN V1.13.6 solver: explicit time integration (ExplicitEuler)
 Start multi-threading with 4 threads (multithreading & load balancing)
 
 ++++++++++++++++++++++++++++++
 exudyn.special.solver.timeout=1 seconds reached
 simulation receives stop signal
 
-STEP40 (stopped), t = 0.000975s, tCPU=1.01955s, Nit/step = 0
-solver stopped due to special.solver.timout after 1.01955 seconds.
+STEP41 (stopped), t = 0.001s, tCPU=1.00275s, Nit/step = 0
+solver stopped due to special.solver.timout after 1.00275 seconds.
 ====================
 CPU-time statistics:
-  total time   = 1.02 seconds
-  measured time= 0.946 seconds (=92.7%) 
+  total time   = 1 seconds
+  measured time= 0.946 seconds (=94.3%) 
   non-zero timer [__ sub-timer]:
-  newtonIncrement   = 6.65%
-  integrationFormula= 3.61%
-  ODE2RHS           = 85.5%
-  writeSolution     = 3.85%
-  overhead          = 0.409%
-  visualization/user= 0.00149%
+  newtonIncrement   = 6.16%
+  integrationFormula= 0.456%
+  ODE2RHS           = 87.5%
+  writeSolution     = 5.24%
+  overhead          = 0.597%
+  visualization/user= 0.00168%
 special timers:
-  Contact:BoundingBoxes = 0.21344s (22.6%)
-  Contact:SearchTree = 0.061345s (6.49%)
-  Contact:Overall = 0.54863s (58%)
+  Contact:BoundingBoxes = 0.22675s (24%)
+  Contact:SearchTree = 0.059036s (6.24%)
+  Contact:Overall = 0.55421s (58.6%)
 
 Stop multi-threading
 
@@ -3668,39 +3661,39 @@ Linalg stats:
   matrix_delete_counts:0
   linkedDataVec_counts:0
 +++++++++++++++++++++++++++++++
-EXUDYN V1.13.3 solver: implicit second order time integration
+EXUDYN V1.13.6 solver: implicit second order time integration
 
 ++++++++++++++++++++++++++++++
 exudyn.special.solver.timeout=1 seconds reached
 simulation receives stop signal
 
-STEP269594 (stopped), t = 1347.97s, tCPU=1.00004s, Nit/step = 1.99883
-solver stopped due to special.solver.timout after 1.00004 seconds.
+STEP248249 (stopped), t = 1241.24s, tCPU=1.00008s, Nit/step = 1.99888
+solver stopped due to special.solver.timout after 1.00008 seconds.
 ====================
 CPU-time statistics:
   total time   = 1 seconds
-  measured time= 0.833 seconds (=83.3%) 
+  measured time= 0.841 seconds (=84.1%) 
   non-zero timer [__ sub-timer]:
-  factorization     = 5.68%
-  newtonIncrement   = 2%
-  integrationFormula= 3.69%
-  ODE2RHS           = 30.1%
-  ODE1RHS           = 2.28%
-  AERHS             = 2.33%
-  totalJacobian     = 45.2%
-  __jacobianODE2    = 29%
-  __jacobianODE1    = 1.78%
-  __jacobianAE      = 1.62%
-  massMatrix        = 2.13%
-  reactionForces    = 2.43%
-  Python          = 1.42%
-  writeSolution     = 1.1%
-  overhead          = 0.853%
-  visualization/user= 0.71%
+  factorization     = 5.49%
+  newtonIncrement   = 2.01%
+  integrationFormula= 3.37%
+  ODE2RHS           = 34.7%
+  ODE1RHS           = 2.17%
+  AERHS             = 2.16%
+  totalJacobian     = 41.8%
+  __jacobianODE2    = 26.7%
+  __jacobianODE1    = 1.68%
+  __jacobianAE      = 1.52%
+  massMatrix        = 2.07%
+  reactionForces    = 2.29%
+  Python          = 1.31%
+  writeSolution     = 1.05%
+  overhead          = 0.898%
+  visualization/user= 0.719%
 Solver iteration statistics:
-total number of steps:        269593
-total number of Newton iterations: 538873
-total number of Newton Jacobians:  538873
+total number of steps:        248248
+total number of Newton iterations: 496220
+total number of Newton Jacobians:  496220
 Linalg stats:
   array_new_counts:   75
   array_delete_counts:29
@@ -3716,18 +3709,18 @@ EXAMPLE 89 ("pendulum2Dconstraint.py"):
 ******************************************
 NOTE: the renderer is suppressed by exudyn.special.userInterface.suppressRenderer; no window is opened
 +++++++++++++++++++++++++++++++
-EXUDYN V1.13.3 solver: implicit second order time integration
+EXUDYN V1.13.6 solver: implicit second order time integration
 
 ++++++++++++++++++++++++++++++
 exudyn.special.solver.timeout=1 seconds reached
 simulation receives stop signal
 
-STEP758181 (stopped), t = 758.18s, tCPU=1.00005s, Nit/step = 1.97583
-solver stopped due to special.solver.timout after 1.00005 seconds.
+STEP737046 (stopped), t = 737.045s, tCPU=1.00006s, Nit/step = 1.97579
+solver stopped due to special.solver.timout after 1.00006 seconds.
 Solver iteration statistics:
-total number of steps:        758180
-total number of Newton iterations: 1498037
-total number of Newton Jacobians:  758180
+total number of steps:        737045
+total number of Newton iterations: 1456251
+total number of Newton Jacobians:  737045
 ODE2= 2
 
 
@@ -3735,9 +3728,9 @@ ODE2= 2
 EXAMPLE 90 ("pendulumGeomExactBeam2D.py"):
 ******************************************
 +++++++++++++++++++++++++++++++
-EXUDYN V1.13.3 solver: implicit second order time integration
+EXUDYN V1.13.6 solver: implicit second order time integration
 STEP2000, t = 5s, timeToGo = 0s, Nit/step = 8.139
-Solver terminated successfully after 0.156004 seconds.
+Solver terminated successfully after 0.150819 seconds.
 NOTE: SolutionViewer opens no window, because exudyn.special.userInterface.suppressSolutionViewer=True
 
 
@@ -3745,9 +3738,9 @@ NOTE: SolutionViewer opens no window, because exudyn.special.userInterface.suppr
 EXAMPLE 91 ("pendulumGeomExactBeam2Dsimple.py"):
 ******************************************
 +++++++++++++++++++++++++++++++
-EXUDYN V1.13.3 solver: implicit second order time integration
+EXUDYN V1.13.6 solver: implicit second order time integration
 STEP400, t = 1s, timeToGo = 0s, Nit/step = 7.98
-Solver terminated successfully after 0.0299253 seconds.
+Solver terminated successfully after 0.0292734 seconds.
 NOTE: SolutionViewer opens no window, because exudyn.special.userInterface.suppressSolutionViewer=True
 
 
@@ -3755,9 +3748,9 @@ NOTE: SolutionViewer opens no window, because exudyn.special.userInterface.suppr
 EXAMPLE 92 ("pendulumIftommBenchmark.py"):
 ******************************************
 +++++++++++++++++++++++++++++++
-EXUDYN V1.13.3 solver: implicit second order time integration
+EXUDYN V1.13.6 solver: implicit second order time integration
 STEP12500, t = 10s, timeToGo = 0s, Nit/step = 1.96392
-Solver terminated successfully after 0.0164664 seconds.
+Solver terminated successfully after 0.0164502 seconds.
 Solver iteration statistics:
 total number of steps:        12500
 total number of Newton iterations: 24549
@@ -3772,14 +3765,14 @@ V= 12800  (mm^3), mass= 0.03456 (kg)
 tip displ (weight)= 0.2270314285714286
 nNodes= 3563
 compute HCB modes... 
-eigen freq.= [ 157.48242284  276.271768    434.22188555  758.36071572  850.08705498
- 1400.78383478 1479.28576832 2091.61884603 2431.28376444 2907.48968785]
-HCB modes needed 0.198 seconds
+eigen freq.= [ 157.48242284  276.27176798  434.22188555  758.36071572  850.08705498
+ 1400.78383478 1479.28576831 2091.61884603 2431.28376444 2907.48968785]
+HCB modes needed 0.191 seconds
 create CMS element ...
 +++++++++++++++++++++++++++++++
-EXUDYN V1.13.3 solver: nonlinear static solver
+EXUDYN V1.13.6 solver: nonlinear static solver
 STEP1, factor = 1, timeToGo = 0s, Nit/step = 1
-Solver terminated successfully after 0.000515 seconds.
+Solver terminated successfully after 0.0006287 seconds.
 tip disp= [ 0.00272643 -0.20326075 -0.00199498]
 
 
@@ -3788,61 +3781,61 @@ EXAMPLE 94 ("pistonEngine.py"):
 ******************************************
 NOTE: the renderer is suppressed by exudyn.special.userInterface.suppressRenderer; no window is opened
 +++++++++++++++++++++++++++++++
-EXUDYN V1.13.3 solver: implicit second order time integration
+EXUDYN V1.13.6 solver: implicit second order time integration
 
 ++++++++++++++++++++++++++++++
 exudyn.special.solver.timeout=1 seconds reached
 simulation receives stop signal
 
-STEP497 (stopped), t = 0.992s, tCPU=1.00441s, Nit/step = 7.66398
-solver stopped due to special.solver.timout after 1.00441 seconds.
+STEP496 (stopped), t = 0.99s, tCPU=1.00246s, Nit/step = 7.65927
+solver stopped due to special.solver.timout after 1.00246 seconds.
 
 
 ******************************************
 EXAMPLE 95 ("plotSensorExamples.py"):
 ******************************************
 +++++++++++++++++++++++++++++++
-EXUDYN V1.13.3 solver: explicit time integration (ExplicitEuler)
+EXUDYN V1.13.6 solver: explicit time integration (ExplicitEuler)
 STEP2000, t = 4s, timeToGo = 0s, Nit/step = 0
-Solver terminated successfully after 0.0090671 seconds.
+Solver terminated successfully after 0.0095274 seconds.
 ====================
 CPU-time statistics:
-  total time   = 0.00907 seconds
-  measured time= 0.00827 seconds (=91.2%) 
+  total time   = 0.00953 seconds
+  measured time= 0.00866 seconds (=90.9%) 
   non-zero timer [__ sub-timer]:
-  factorization     = 15.9%
-  newtonIncrement   = 4.06%
-  integrationFormula= 1.32%
-  ODE2RHS           = 15.2%
-  massMatrix        = 13.3%
-  writeSolution     = 48.4%
-  overhead          = 1.18%
-  visualization/user= 0.582%
+  factorization     = 14%
+  newtonIncrement   = 3.65%
+  integrationFormula= 1.22%
+  ODE2RHS           = 15.5%
+  massMatrix        = 14%
+  writeSolution     = 49.8%
+  overhead          = 1.32%
+  visualization/user= 0.537%
 +++++++++++++++++++++++++++++++
-EXUDYN V1.13.3 solver: implicit second order time integration
+EXUDYN V1.13.6 solver: implicit second order time integration
 STEP2000, t = 4s, timeToGo = 0s, Nit/step = 7.6125
-Solver terminated successfully after 0.0222727 seconds.
+Solver terminated successfully after 0.0228563 seconds.
 ====================
 CPU-time statistics:
-  total time   = 0.0223 seconds
-  measured time= 0.0189 seconds (=84.8%) 
+  total time   = 0.0229 seconds
+  measured time= 0.0194 seconds (=84.7%) 
   non-zero timer [__ sub-timer]:
-  factorization     = 0.623%
-  newtonIncrement   = 6.24%
-  integrationFormula= 3.66%
-  ODE2RHS           = 34.4%
-  ODE1RHS           = 2.12%
-  AERHS             = 2.07%
-  totalJacobian     = 4.72%
-  __jacobianODE2    = 4.18%
-  __jacobianODE1    = 0.0471%
-  __jacobianAE      = 0.0455%
-  massMatrix        = 23.7%
-  reactionForces    = 2.2%
-  Python          = 0.0386%
-  writeSolution     = 19.5%
-  overhead          = 0.44%
-  visualization/user= 0.233%
+  factorization     = 0.562%
+  newtonIncrement   = 5.81%
+  integrationFormula= 3.25%
+  ODE2RHS           = 33.3%
+  ODE1RHS           = 2.09%
+  AERHS             = 2.1%
+  totalJacobian     = 4.82%
+  __jacobianODE2    = 4.27%
+  __jacobianODE1    = 0.0584%
+  __jacobianAE      = 0.0398%
+  massMatrix        = 24.6%
+  reactionForces    = 2.22%
+  Python          = 0.0367%
+  writeSolution     = 20.4%
+  overhead          = 0.563%
+  visualization/user= 0.242%
 displacement= [0.51999887 0.         0.        ]
 
 
@@ -3851,9 +3844,9 @@ EXAMPLE 96 ("pymeshlabFileImport.py"):
 ******************************************
 NOTE: the renderer is suppressed by exudyn.special.userInterface.suppressRenderer; no window is opened
 +++++++++++++++++++++++++++++++
-EXUDYN V1.13.3 solver: implicit second order time integration
+EXUDYN V1.13.6 solver: implicit second order time integration
 STEP4000, t = 4s, timeToGo = 0s, Nit/step = 7.0475
-Solver terminated successfully after 0.0938758 seconds.
+Solver terminated successfully after 0.0819284 seconds.
 
 
 ******************************************
@@ -3863,18 +3856,18 @@ Reeving system total length= 20.34528808903546
 auto computed searchTree box={[-0.4,-1.4,-0.4], [5.4,1.4,0.4]}
 NOTE: the renderer is suppressed by exudyn.special.userInterface.suppressRenderer; no window is opened
 +++++++++++++++++++++++++++++++
-EXUDYN V1.13.3 solver: implicit second order time integration
+EXUDYN V1.13.6 solver: implicit second order time integration
   solution did not converge with full Newton
 
 ++++++++++++++++++++++++++++++
 exudyn.special.solver.timeout=1 seconds reached
 simulation receives stop signal
 
-STEP111 (stopped), t = 0.0275s, tCPU=1.00218s, Nit/step = 9.95495
-solver stopped due to special.solver.timout after 1.00218 seconds.
+STEP139 (stopped), t = 0.0345s, tCPU=1.00361s, Nit/step = 9.56115
+solver stopped due to special.solver.timout after 1.00361 seconds.
 Solver iteration statistics:
-total number of steps:        110
-total number of Newton iterations: 1105
+total number of steps:        138
+total number of Newton iterations: 1329
 total number of Newton Jacobians:  125
 rejected modified Newton steps:      7
 NOTE: SolutionViewer opens no window, because exudyn.special.userInterface.suppressSolutionViewer=True
@@ -3887,20 +3880,20 @@ Reeving system total length= 12.080696804562574
 auto computed searchTree box={[-0.45,-3,-0.45], [1.45,0.45,0.45]}
 NOTE: the renderer is suppressed by exudyn.special.userInterface.suppressRenderer; no window is opened
 +++++++++++++++++++++++++++++++
-EXUDYN V1.13.3 solver: implicit second order time integration
+EXUDYN V1.13.6 solver: implicit second order time integration
 Start multi-threading with 4 threads (multithreading & load balancing)
 
 ++++++++++++++++++++++++++++++
 exudyn.special.solver.timeout=1 seconds reached
 simulation receives stop signal
 
-STEP204 (stopped), t = 0.02425s, tCPU=1.00423s, Nit/step = 31.951 Dit/step = 3.51961 jac/step = 6.04412
-solver stopped due to special.solver.timout after 1.00423 seconds.
+STEP238 (stopped), t = 0.034s, tCPU=1.00037s, Nit/step = 28.1891 Dit/step = 3.19748 jac/step = 5.36975
+solver stopped due to special.solver.timout after 1.00037 seconds.
 Solver iteration statistics:
-total number of steps:        203
-total number of Newton iterations: 6518
-total number of Newton Jacobians:  1233
-rejected modified Newton steps:      398
+total number of steps:        237
+total number of Newton iterations: 6709
+total number of Newton Jacobians:  1278
+rejected modified Newton steps:      399
 Stop multi-threading
 NOTE: SolutionViewer opens no window, because exudyn.special.userInterface.suppressSolutionViewer=True
 
@@ -3909,7 +3902,7 @@ NOTE: SolutionViewer opens no window, because exudyn.special.userInterface.suppr
 EXAMPLE 99 ("rendererNOGLFWexample.py"):
 ******************************************
 +++++++++++++++++++++++++++++++
-EXUDYN V1.13.3 solver: implicit second order time integration
+EXUDYN V1.13.6 solver: implicit second order time integration
 get image: 0.0005
 get image: 0.07500000000000005
 get image: 0.1500000000000001
@@ -3936,8 +3929,8 @@ get image: 1.5001238696055503
 exudyn.special.solver.timeout=1 seconds reached
 simulation receives stop signal
 
-STEP4116 (stopped), t = 1.50012s, tCPU=1.02214s, Nit/step = 4.40015
-solver stopped due to special.solver.timout after 1.02214 seconds.
+STEP4116 (stopped), t = 1.50012s, tCPU=1.04254s, Nit/step = 4.40015
+solver stopped due to special.solver.timout after 1.04254 seconds.
 Solver iteration statistics:
 total number of steps:        4115
 total number of Newton iterations: 18111
@@ -3946,14 +3939,17 @@ rejected modified Newton steps:      4
 <string>:187: UserWarning: FigureCanvasAgg is non-interactive, and thus cannot be shown
 Traceback (most recent call last):
   File "<string>", line 46, in <module>
+    exec(testRunnerTools.PrepareExampleSource(_source, True), globals())
+    ~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
   File "<string>", line 189, in <module>
-  File "%USERPROFILE%\Anaconda\envs\venvP312\Lib\site-packages\matplotlib\pyplot.py", line 2620, in imsave
+  File "%USERPROFILE%\Anaconda\envs\venvP313\Lib\site-packages\matplotlib\pyplot.py", line 2620, in imsave
     matplotlib.image.imsave(fname, arr, **kwargs)
-  File "%USERPROFILE%\Anaconda\envs\venvP312\Lib\site-packages\matplotlib\image.py", line 1634, in imsave
+    ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^
+  File "%USERPROFILE%\Anaconda\envs\venvP313\Lib\site-packages\matplotlib\image.py", line 1634, in imsave
     image.save(fname, **pil_kwargs)
-  File "%USERPROFILE%\Anaconda\envs\venvP312\Lib\site-packages\PIL\Image.py", line 2591, in save
+    ~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^
+  File "%USERPROFILE%\Anaconda\envs\venvP313\Lib\site-packages\PIL\Image.py", line 2566, in save
     fp = builtins.open(filename, "w+b")
-         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 FileNotFoundError: [Errno 2] No such file or directory: 'images/mergedImageBallContact.jpg'
 *FAILED*: EXAMPLE 99 ("rendererNOGLFWexample.py") terminated with an error
 
@@ -3961,7 +3957,7 @@ FileNotFoundError: [Errno 2] No such file or directory: 'images/mergedImageBallC
 ******************************************
 EXAMPLE 100 ("rigid3Dexample.py"):
 ******************************************
-EXUDYN version=1.13.3
+EXUDYN version=1.13.6
 <systemData: 
   Number of nodes= 20
   Number of objects = 41
@@ -3978,30 +3974,30 @@ For details see mbs.systemData, mbs.sys and mbs.variables
 
 NOTE: the renderer is suppressed by exudyn.special.userInterface.suppressRenderer; no window is opened
 +++++++++++++++++++++++++++++++
-EXUDYN V1.13.3 solver: implicit second order time integration
+EXUDYN V1.13.6 solver: implicit second order time integration
 
 ++++++++++++++++++++++++++++++
 exudyn.special.solver.timeout=1 seconds reached
 simulation receives stop signal
 
-STEP3913 (stopped), t = 7.824s, tCPU=1.00005s, Nit/step = 8.23562
-solver stopped due to special.solver.timout after 1.00005 seconds.
+STEP3535 (stopped), t = 7.068s, tCPU=1.00016s, Nit/step = 8.14851
+solver stopped due to special.solver.timout after 1.00016 seconds.
 
 
 ******************************************
 EXAMPLE 101 ("rigidBodyIMUtest.py"):
 ******************************************
-EXUDYN version=1.13.3
+EXUDYN version=1.13.6
 NOTE: the renderer is suppressed by exudyn.special.userInterface.suppressRenderer; no window is opened
 +++++++++++++++++++++++++++++++
-EXUDYN V1.13.3 solver: implicit second order time integration
+EXUDYN V1.13.6 solver: implicit second order time integration
 
 ++++++++++++++++++++++++++++++
 exudyn.special.solver.timeout=1 seconds reached
 simulation receives stop signal
 
-STEP79699 (stopped), t = 0.796982s, tCPU=1.00005s, Nit/step = 6.73454
-solver stopped due to special.solver.timout after 1.00005 seconds.
+STEP67387 (stopped), t = 0.673862s, tCPU=1.00006s, Nit/step = 6.67477
+solver stopped due to special.solver.timout after 1.00006 seconds.
 
 
 ******************************************
@@ -4023,40 +4019,40 @@ For details see mbs.systemData, mbs.sys and mbs.variables
 
 NOTE: the renderer is suppressed by exudyn.special.userInterface.suppressRenderer; no window is opened
 +++++++++++++++++++++++++++++++
-EXUDYN V1.13.3 solver: implicit second order time integration
+EXUDYN V1.13.6 solver: implicit second order time integration
 
 ++++++++++++++++++++++++++++++
 exudyn.special.solver.timeout=1 seconds reached
 simulation receives stop signal
 
-STEP290537 (stopped), t = 581.072s, tCPU=1.00005s, Nit/step = 1.81373
+STEP272993 (stopped), t = 545.984s, tCPU=1.00005s, Nit/step = 1.81365
 solver stopped due to special.solver.timout after 1.00005 seconds.
 Solver iteration statistics:
-total number of steps:        290536
-total number of Newton iterations: 526955
-total number of Newton Jacobians:  526955
+total number of steps:        272992
+total number of Newton iterations: 495115
+total number of Newton Jacobians:  495115
 
 
 ******************************************
 EXAMPLE 103 ("rigidRotor3DbasicBehaviour.py"):
 ******************************************
-EXUDYN version=1.13.3
+EXUDYN version=1.13.6
 symmetric rotor resonance frequency (Hz)= 4.501581580785531
 omega intial (Hz)= 9.003163161571061
 [ 0.         28.28427125  0.          0.        ]
 NOTE: the renderer is suppressed by exudyn.special.userInterface.suppressRenderer; no window is opened
 omega final (Hz)= [9.00316316 0.         0.        ]
-nc= [ 0.         -0.00843289 -0.00292394 -0.46610858  0.84555305  0.
-  0.        ]
-nc_t= [  0.           0.16543377   0.08568248 -23.9158517   15.10072968
-   0.           0.        ]
+nc= [ 0.00000000e+00 -6.67013955e-03  2.22130507e-04 -1.00882583e+00
+  9.99961052e-01  0.00000000e+00  0.00000000e+00]
+nc_t= [ 0.00000000e+00 -1.24955566e-02  1.88399823e-01 -2.82831696e+01
+ -2.49632217e-01  0.00000000e+00  0.00000000e+00]
 <string>:271: UserWarning: FigureCanvasAgg is non-interactive, and thus cannot be shown
 
 
 ******************************************
 EXAMPLE 104 ("rigidRotor3DFWBW.py"):
 ******************************************
-EXUDYN version=1.13.3
+EXUDYN version=1.13.6
 symmetric rotor resonance frequency (Hz)= 4.501581580785531
 [0. 0. 0. 0.]
 NOTE: the renderer is suppressed by exudyn.special.userInterface.suppressRenderer; no window is opened
@@ -4067,7 +4063,7 @@ omega final (Hz)= [2.26350836 0.         0.        ]
 ******************************************
 EXAMPLE 105 ("rigidRotor3Dnutation.py"):
 ******************************************
-EXUDYN version=1.13.3
+EXUDYN version=1.13.6
 resonance frequency (rad/s)= 89.44271909999159
 [0.         4.47213595 0.         0.        ]
 [0.3, 0.2, 0.1]
@@ -4095,20 +4091,20 @@ NOTE: SolutionViewer opens no window, because exudyn.special.userInterface.suppr
 ******************************************
 EXAMPLE 106 ("rigidRotor3Drunup.py"):
 ******************************************
-EXUDYN version=1.13.3
+EXUDYN version=1.13.6
 symmetric rotor resonance frequency (Hz)= 4.501581580785531
 [0. 0. 0. 0.]
 NOTE: the renderer is suppressed by exudyn.special.userInterface.suppressRenderer; no window is opened
-omega= [55.71969711  0.          0.        ]
+omega= [56.61774386  0.          0.        ]
 
 
 ******************************************
 EXAMPLE 107 ("rollerBearningModel.py"):
 ******************************************
-EXUDYN version=1.13.3
+EXUDYN version=1.13.6
 NOTE: the renderer is suppressed by exudyn.special.userInterface.suppressRenderer; no window is opened
 +++++++++++++++++++++++++++++++
-EXUDYN V1.13.3 solver: implicit second order time integration
+EXUDYN V1.13.6 solver: implicit second order time integration
   Newton (time/load step #193): convergence failed after 25 iterations; relative error = 0.432617, time = 0.0193
   Solve steps: adaptive reduction to step size = 5e-05, time = 0.0192
   Newton (time/load step #193): convergence failed after 25 iterations; relative error = 0.414268, time = 0.01925
@@ -4146,14 +4142,14 @@ EXUDYN V1.13.3 solver: implicit second order time integration
 exudyn.special.solver.timeout=1 seconds reached
 simulation receives stop signal
 
-STEP5457 (stopped), t = 0.5301s, tCPU=1.00027s, Nit/step = 6.43705
-solver stopped due to special.solver.timout after 1.00027 seconds.
+STEP5316 (stopped), t = 0.516s, tCPU=1.00007s, Nit/step = 6.44752
+solver stopped due to special.solver.timout after 1.00007 seconds.
 Solver iteration statistics:
-total number of steps:        5456
-total number of Newton iterations: 35127
-total number of Newton Jacobians:  403
+total number of steps:        5315
+total number of Newton iterations: 34275
+total number of Newton Jacobians:  402
 rejected modified Newton steps:      16
-uTotal= 0.2211446231803931
+uTotal= 0.24394623462754994
 NOTE: SolutionViewer opens no window, because exudyn.special.userInterface.suppressSolutionViewer=True
 
 
@@ -4169,9 +4165,9 @@ WARNING: RigidBodyInertia: inertiaTensor does not fulfill triangle inequality! T
 WARNING: RigidBodyInertia: inertiaTensor does not fulfill triangle inequality! This may lead to unphysical and numerically unstable results!
 WARNING: RigidBodyInertia: inertiaTensor does not fulfill triangle inequality! This may lead to unphysical and numerically unstable results!
 +++++++++++++++++++++++++++++++
-EXUDYN V1.13.3 solver: implicit second order time integration
+EXUDYN V1.13.6 solver: implicit second order time integration
 STEP1000, t = 2s, timeToGo = 0s, Nit/step = 7.194
-Solver terminated successfully after 0.47801 seconds.
+Solver terminated successfully after 0.466043 seconds.
 Solver iteration statistics:
 total number of steps:        1000
 total number of Newton iterations: 7194
@@ -4210,30 +4206,30 @@ WARNING: RigidBodyInertia: inertiaTensor does not fulfill triangle inequality! T
 WARNING: RigidBodyInertia: inertiaTensor does not fulfill triangle inequality! This may lead to unphysical and numerically unstable results!
 WARNING: RigidBodyInertia: inertiaTensor does not fulfill triangle inequality! This may lead to unphysical and numerically unstable results!
 +++++++++++++++++++++++++++++++
-EXUDYN V1.13.3 solver: implicit second order time integration
-STEP2500, t = 5s, timeToGo = 1.93793e-14s, Nit/step = 3.6424
-Solver terminated successfully after 0.294894 seconds.
+EXUDYN V1.13.6 solver: implicit second order time integration
+STEP2500, t = 5s, timeToGo = 1.92345e-14s, Nit/step = 3.6424
+Solver terminated successfully after 0.292697 seconds.
 ====================
 CPU-time statistics:
-  total time   = 0.295 seconds
-  measured time= 0.292 seconds (=99%) 
+  total time   = 0.293 seconds
+  measured time= 0.29 seconds (=98.9%) 
   non-zero timer [__ sub-timer]:
-  factorization     = 0.00127%
-  newtonIncrement   = 0.174%
-  integrationFormula= 0.247%
-  ODE2RHS           = 4.58%
-  ODE1RHS           = 0.0958%
+  factorization     = 0.00121%
+  newtonIncrement   = 0.179%
+  integrationFormula= 0.245%
+  ODE2RHS           = 4.77%
+  ODE1RHS           = 0.1%
   AERHS             = 0.101%
-  totalJacobian     = 0.023%
-  __jacobianODE2    = 0.0218%
-  __jacobianODE1    = 0.00024%
-  __jacobianAE      = 0.000171%
-  massMatrix        = 8.28%
-  reactionForces    = 0.104%
-  Python          = 84.6%
-  writeSolution     = 1.73%
-  overhead          = 0.0386%
-  visualization/user= 0.02%
+  totalJacobian     = 0.0291%
+  __jacobianODE2    = 0.0273%
+  __jacobianODE1    = 0.000691%
+  __jacobianAE      = 0.000173%
+  massMatrix        = 8.4%
+  reactionForces    = 0.107%
+  Python          = 84.1%
+  writeSolution     = 1.91%
+  overhead          = 0.0425%
+  visualization/user= 0.0222%
 NOTE: SolutionViewer opens no window, because exudyn.special.userInterface.suppressSolutionViewer=True
 rotations at tEnd= 2.216817495136977 , [ 0.67340818 -0.87627779  0.48795655  1.04443958  2.10666638 -1.21937541]
 
@@ -4244,9 +4240,9 @@ EXAMPLE 111 ("serialRobotKinematicTree.py"):
 WARNING: RigidBodyInertia: inertiaTensor does not fulfill triangle inequality! This may lead to unphysical and numerically unstable results!
 WARNING: RigidBodyInertia: inertiaTensor does not fulfill triangle inequality! This may lead to unphysical and numerically unstable results!
 +++++++++++++++++++++++++++++++
-EXUDYN V1.13.3 solver: implicit second order time integration
-STEP1250, t = 1.25s, timeToGo = 5.32298e-15s, Nit/step = 7.1128
-Solver terminated successfully after 0.247685 seconds.
+EXUDYN V1.13.6 solver: implicit second order time integration
+STEP1250, t = 1.25s, timeToGo = 7.20549e-15s, Nit/step = 7.1128
+Solver terminated successfully after 0.335305 seconds.
 Solver iteration statistics:
 total number of steps:        1250
 total number of Newton iterations: 8891
@@ -4271,15 +4267,15 @@ WARNING: RigidBodyInertia: inertiaTensor does not fulfill triangle inequality! T
 trajectory cycle time= 3
 auto computed searchTree box={[-1.01,-0.51,-0.37], [1.11,1.11,0.4865]}
 +++++++++++++++++++++++++++++++
-EXUDYN V1.13.3 solver: explicit time integration (ExplicitEuler)
+EXUDYN V1.13.6 solver: explicit time integration (ExplicitEuler)
 Start multi-threading with 8 threads (multithreading & load balancing)
 
 ++++++++++++++++++++++++++++++
 exudyn.special.solver.timeout=1 seconds reached
 simulation receives stop signal
 
-STEP111 (stopped), t = 0.0055s, tCPU=1.00323s
-solver stopped due to special.solver.timout after 1.00323 seconds.
+STEP91 (stopped), t = 0.0045s, tCPU=1.00129s
+solver stopped due to special.solver.timout after 1.00129 seconds.
 Stop multi-threading
 NOTE: SolutionViewer opens no window, because exudyn.special.userInterface.suppressSolutionViewer=True
 
@@ -4296,9 +4292,9 @@ WARNING: RigidBodyInertia: inertiaTensor does not fulfill triangle inequality! T
 WARNING: RigidBodyInertia: inertiaTensor does not fulfill triangle inequality! This may lead to unphysical and numerically unstable results!
 WARNING: RigidBodyInertia: inertiaTensor does not fulfill triangle inequality! This may lead to unphysical and numerically unstable results!
 +++++++++++++++++++++++++++++++
-EXUDYN V1.13.3 solver: implicit second order time integration
+EXUDYN V1.13.6 solver: implicit second order time integration
 STEP625, t = 1.25s, timeToGo = 0s, Nit/step = 7.3808
-Solver terminated successfully after 0.234253 seconds.
+Solver terminated successfully after 0.262957 seconds.
 Solver iteration statistics:
 total number of steps:        625
 total number of Newton iterations: 4613
@@ -4311,12 +4307,12 @@ torques at tEnd= 37.719244592001296
 ******************************************
 EXAMPLE 114 ("shapeOptimization.py"):
 ******************************************
---- 16.266839027404785 seconds ---
+--- 14.375759840011597 seconds ---
 [pOpt, vOpt]= [{'r0': 0.08209109719409513, 'r1': 0.09560913601775908, 'r2': 0.08647452430582106, 'x0': 0.2612207957492242, 'x1': 0.5889784249586816, 'x2': 0.830736764133332}, np.float64(40.0)]
 optimized eigenfrequency= -40.0
 nNodes= 3287
-total mass= 62.50760115440594
-smallest Eigenfrequency= 87.5046049293386
+total mass= 62.50760115440593
+smallest Eigenfrequency= 87.5046049293344
 create CMS element ...
 
 
@@ -4340,36 +4336,36 @@ EXAMPLE 117 ("SliderCrank.py"):
 global ODE2 coordinate index of mass: 6
 NOTE: the renderer is suppressed by exudyn.special.userInterface.suppressRenderer; no window is opened
 +++++++++++++++++++++++++++++++
-EXUDYN V1.13.3 solver: implicit second order time integration
+EXUDYN V1.13.6 solver: implicit second order time integration
 
 ++++++++++++++++++++++++++++++
 exudyn.special.solver.timeout=1 seconds reached
 simulation receives stop signal
 
-STEP87827 (stopped), t = 0.87826s, tCPU=1.00006s, Nit/step = 4.42756
-solver stopped due to special.solver.timout after 1.00006 seconds.
-error errorSliderCrankIndex3= -0.5314383153445403
+STEP77220 (stopped), t = 0.77219s, tCPU=1.00007s, Nit/step = 4.38147
+solver stopped due to special.solver.timout after 1.00007 seconds.
+error errorSliderCrankIndex3= -0.8269701882600927
 <string>:166: UserWarning: FigureCanvasAgg is non-interactive, and thus cannot be shown
 
 
 ******************************************
 EXAMPLE 118 ("sliderCrank3DwithANCFbeltDrive.py"):
 ******************************************
-EXUDYN version=1.13.3
+EXUDYN version=1.13.6
 NOTE: the renderer is suppressed by exudyn.special.userInterface.suppressRenderer; no window is opened
 +++++++++++++++++++++++++++++++
-EXUDYN V1.13.3 solver: implicit second order time integration
+EXUDYN V1.13.6 solver: implicit second order time integration
 
 ++++++++++++++++++++++++++++++
 exudyn.special.solver.timeout=1 seconds reached
 simulation receives stop signal
 
-STEP157 (stopped), t = 0.156s, tCPU=1.02761s, Nit/step = 2.3121
-solver stopped due to special.solver.timout after 1.02761 seconds.
+STEP155 (stopped), t = 0.154s, tCPU=1.0136s, Nit/step = 2.2
+solver stopped due to special.solver.timout after 1.0136 seconds.
 Solver iteration statistics:
-total number of steps:        156
-total number of Newton iterations: 363
-total number of Newton Jacobians:  363
+total number of steps:        154
+total number of Newton iterations: 341
+total number of Newton Jacobians:  341
 <string>:504: UserWarning: FigureCanvasAgg is non-interactive, and thus cannot be shown
 <string>:522: UserWarning: FigureCanvasAgg is non-interactive, and thus cannot be shown
 <string>:542: UserWarning: FigureCanvasAgg is non-interactive, and thus cannot be shown
@@ -4378,7 +4374,7 @@ total number of Newton Jacobians:  363
 ******************************************
 EXAMPLE 119 ("sliderCrank3DwithANCFbeltDrive2.py"):
 ******************************************
-Exudyn used: 1.13.3
+Exudyn used: 1.13.6
 Belt length:  1.476243077261245  and after preload force:  1.4024309233981826
 Reeving system total length= 1.476243077261245
 <systemData: 
@@ -4397,7 +4393,7 @@ For details see mbs.systemData, mbs.sys and mbs.variables
 
 NOTE: the renderer is suppressed by exudyn.special.userInterface.suppressRenderer; no window is opened
 +++++++++++++++++++++++++++++++
-EXUDYN V1.13.3 solver: implicit second order time integration
+EXUDYN V1.13.6 solver: implicit second order time integration
   Newton (time/load step #1): convergence failed after 25 iterations; relative error = 1.35466e-06, time = 2.5e-05
   Solve steps: adaptive reduction to step size = 1.25e-05, time = 0
 
@@ -4405,34 +4401,34 @@ EXUDYN V1.13.3 solver: implicit second order time integration
 exudyn.special.solver.timeout=1 seconds reached
 simulation receives stop signal
 
-STEP207 (stopped), t = 0.0040875s, tCPU=1.00017s, Nit/step = 11.3285
-solver stopped due to special.solver.timout after 1.00017 seconds.
+STEP192 (stopped), t = 0.0037125s, tCPU=1.00098s, Nit/step = 11.3438
+solver stopped due to special.solver.timout after 1.00098 seconds.
 ====================
 CPU-time statistics:
   total time   = 1 seconds
   measured time= 1 seconds (=100%) 
   non-zero timer [__ sub-timer]:
   factorization     = 12.9%
-  newtonIncrement   = 27%
-  integrationFormula= 0.0869%
-  ODE2RHS           = 43.3%
-  ODE1RHS           = 0.00663%
-  AERHS             = 0.355%
-  totalJacobian     = 10.4%
-  __jacobianODE2    = 10%
-  __jacobianODE1    = 0.00138%
-  __jacobianAE      = 0.0427%
-  massMatrix        = 2.7%
-  reactionForces    = 0.782%
-  postNewton    = 1.32%
-  Python          = 0.00026%
-  writeSolution     = 1.05%
-  overhead          = 0.0118%
-  visualization/user= 0.00228%
+  newtonIncrement   = 25.2%
+  integrationFormula= 0.0963%
+  ODE2RHS           = 43.8%
+  ODE1RHS           = 0.00734%
+  AERHS             = 0.425%
+  totalJacobian     = 11.2%
+  __jacobianODE2    = 10.7%
+  __jacobianODE1    = 0.00323%
+  __jacobianAE      = 0.0681%
+  massMatrix        = 3.02%
+  reactionForces    = 1%
+  postNewton    = 1.34%
+  Python          = 0.000959%
+  writeSolution     = 1.08%
+  overhead          = 0.0125%
+  visualization/user= 0.00232%
 Solver iteration statistics:
-total number of steps:        206
-total number of Newton iterations: 2345
-total number of Newton Jacobians:  91
+total number of steps:        191
+total number of Newton iterations: 2178
+total number of Newton Jacobians:  87
 rejected modified Newton steps:      2
 
 
@@ -4440,13 +4436,13 @@ rejected modified Newton steps:      2
 EXAMPLE 120 ("slidercrankWithMassSpring.py"):
 ******************************************
 +++++++++++++++++++++++++++++++
-EXUDYN V1.13.3 solver: nonlinear static solver
+EXUDYN V1.13.6 solver: nonlinear static solver
 STEP1, factor = 1, timeToGo = 0s, Nit/step = 4
-Solver terminated successfully after 0.0001181 seconds.
+Solver terminated successfully after 0.0001322 seconds.
 +++++++++++++++++++++++++++++++
-EXUDYN V1.13.3 solver: implicit second order time integration
+EXUDYN V1.13.6 solver: implicit second order time integration
 STEP200, t = 1s, timeToGo = 0s, Nit/step = 6.565
-Solver terminated successfully after 0.0065548 seconds.
+Solver terminated successfully after 0.0069426 seconds.
 sol = 0.8678410369444836
 solutionSliderCrankIndex2= 0.8678410369444836
 
@@ -4486,17 +4482,17 @@ NOTE: SolutionViewer opens no window, because exudyn.special.userInterface.suppr
 EXAMPLE 122 ("solutionViewerTest.py"):
 ******************************************
 +++++++++++++++++++++++++++++++
-EXUDYN V1.13.3 solver: implicit second order time integration
+EXUDYN V1.13.6 solver: implicit second order time integration
 
 ++++++++++++++++++++++++++++++
 exudyn.special.solver.timeout=1 seconds reached
 simulation receives stop signal
 
-STEP839 (stopped), t = 0.419s, tCPU=1.00092s, Nit/step = 7.14184
-solver stopped due to special.solver.timout after 1.00092 seconds.
+STEP899 (stopped), t = 0.449s, tCPU=1.00089s, Nit/step = 7.20022
+solver stopped due to special.solver.timout after 1.00089 seconds.
 NOTE: SolutionViewer opens no window, because exudyn.special.userInterface.suppressSolutionViewer=True
-u0= [-0.41063207 -0.14389018  0.46680392] , rot0= [0.24487544 0.05653513 0.52870181]
-solution of addRevoluteJoint= 1.8514385544019825
+u0= [-0.47237951 -0.16588939  0.5379427 ] , rot0= [0.2385606  0.0531782  0.51945809]
+solution of addRevoluteJoint= 1.98740849284897
 
 
 ******************************************
@@ -4505,14 +4501,14 @@ EXAMPLE 123 ("solverFunctionsTestEigenvalues.py"):
 
 
 ++++++++++++++++++++++++++
-Start EXUDYN version 1.13.3
+Start EXUDYN version 1.13.6
 
 load f=129.37500000000003
 EI=172.50000000000003
 rhoA=0.78
 NOTE: the renderer is suppressed by exudyn.special.userInterface.suppressRenderer; no window is opened
 +++++++++++++++++++++++++++++++
-EXUDYN V1.13.3 solver: nonlinear static solver
+EXUDYN V1.13.6 solver: nonlinear static solver
 eigvals= [-1.50870619e-07  9.85679229e-07  1.55896661e-06  6.91885658e+03
   5.25731917e+04  2.02050446e+05  5.52136625e+05  1.23218280e+06
   2.40394871e+06  4.26178341e+06  6.54810292e+06  7.03286417e+06
@@ -4553,29 +4549,29 @@ omega analytical = [ 83.17963697 229.28787233 449.4959069  743.03956742]
 ******************************************
 EXAMPLE 124 ("SpringDamperMasspointSystem.py"):
 ******************************************
-EXUDYN version=1.13.3
+EXUDYN version=1.13.6
 499999
 NOTE: the renderer is suppressed by exudyn.special.userInterface.suppressRenderer; no window is opened
 +++++++++++++++++++++++++++++++
-EXUDYN V1.13.3 solver: explicit time integration (ODE23)
+EXUDYN V1.13.6 solver: explicit time integration (ODE23)
 
 ++++++++++++++++++++++++++++++
 exudyn.special.solver.timeout=1 seconds reached
 simulation receives stop signal
 
-STEP10508 (stopped), t = 0.10507s, tCPU=1.00008s, Nit/step = 0
-solver stopped due to special.solver.timout after 1.00008 seconds.
+STEP10657 (stopped), t = 0.10656s, tCPU=1.00014s, Nit/step = 0
+solver stopped due to special.solver.timout after 1.00014 seconds.
 ====================
 CPU-time statistics:
   total time   = 1 seconds
   measured time= 0.992 seconds (=99.2%) 
   non-zero timer [__ sub-timer]:
-  newtonIncrement   = 16.4%
-  integrationFormula= 0.414%
-  ODE2RHS           = 82.8%
-  errorEstimator    = 0.347%
-  overhead          = 0.0428%
-  visualization/user= 0.0242%
+  newtonIncrement   = 15.8%
+  integrationFormula= 0.426%
+  ODE2RHS           = 83.4%
+  errorEstimator    = 0.356%
+  overhead          = 0.0409%
+  visualization/user= 0.0253%
 
 
 ******************************************
@@ -4596,50 +4592,48 @@ For details see mbs.systemData, mbs.sys and mbs.variables
 >
 
 +++++++++++++++++++++++++++++++
-EXUDYN V1.13.3 solver: explicit time integration (ExplicitMidpoint)
+EXUDYN V1.13.6 solver: explicit time integration (ExplicitMidpoint)
 
 ++++++++++++++++++++++++++++++
 exudyn.special.solver.timeout=1 seconds reached
 simulation receives stop signal
 
-STEP10548 (stopped), t = 105.47s, tCPU=1.00006s, Nit/step = 0
-solver stopped due to special.solver.timout after 1.00006 seconds.
+STEP10065 (stopped), t = 100.64s, tCPU=1.00008s, Nit/step = 0
+solver stopped due to special.solver.timout after 1.00008 seconds.
 ====================
 CPU-time statistics:
   total time   = 1 seconds
-  measured time= 0.993 seconds (=99.2%) 
+  measured time= 0.993 seconds (=99.3%) 
   non-zero timer [__ sub-timer]:
-  newtonIncrement   = 2.89%
+  newtonIncrement   = 2.4%
   integrationFormula= 0.247%
-  ODE2RHS           = 96.8%
-  overhead          = 0.0709%
-  visualization/user= 0.0261%
+  ODE2RHS           = 97.3%
+  overhead          = 0.0463%
+  visualization/user= 0.0251%
 Solver iteration statistics:
-total number of steps:        10547
+total number of steps:        10064
 total number of Newton iterations: 0
 total number of Newton Jacobians:  0
 +++++++++++++++++++++++++++++++
-EXUDYN V1.13.3 solver: nonlinear static solver
+EXUDYN V1.13.6 solver: nonlinear static solver
 STEP1, factor = 1, timeToGo = 0s, Nit/step = 2
-Solver terminated successfully after 0.0006842 seconds.
+Solver terminated successfully after 0.0006966 seconds.
 ====================
 CPU-time statistics:
-  total time   = 0.000684 seconds
-  measured time= 0.000681 seconds (=99.5%) 
+  total time   = 0.000697 seconds
+  measured time= 0.000694 seconds (=99.6%) 
   non-zero timer [__ sub-timer]:
-  factorization     = 37.5%
-  newtonIncrement   = 1.4%
-  ODE2RHS           = 13%
-  ODE1RHS           = 0.0147%
-  AERHS             = 0.176%
-  totalJacobian     = 46.1%
-  __jacobianODE2    = 45.8%
-  __jacobianODE1    = 0.0294%
-  __jacobianAE      = 0.147%
-  reactionForces    = 0.118%
-  Python          = 0.0147%
-  overhead          = 1.78%
-  visualization/user= 0.0147%
+  factorization     = 36.6%
+  newtonIncrement   = 1.56%
+  ODE2RHS           = 13.4%
+  ODE1RHS           = 0.0432%
+  AERHS             = 0.245%
+  totalJacobian     = 45.6%
+  __jacobianODE2    = 45.3%
+  __jacobianODE1    = 0.0288%
+  __jacobianAE      = 0.173%
+  reactionForces    = 0.245%
+  overhead          = 2.39%
 Solver iteration statistics:
 total number of steps:        1
 total number of Newton iterations: 2
@@ -4651,20 +4645,20 @@ static tip displacement (y)= -0.35098389199225555
 EXAMPLE 126 ("springMassFriction.py"):
 ******************************************
 +++++++++++++++++++++++++++++++
-EXUDYN V1.13.3 solver: explicit time integration (ExplicitMidpoint)
+EXUDYN V1.13.6 solver: explicit time integration (ExplicitMidpoint)
 STEP10000, t = 1s, timeToGo = 0s, Nit/step = 0
-Solver terminated successfully after 0.0548761 seconds.
+Solver terminated successfully after 0.065183 seconds.
 ====================
 CPU-time statistics:
-  total time   = 0.0549 seconds
-  measured time= 0.0501 seconds (=91.3%) 
+  total time   = 0.0652 seconds
+  measured time= 0.0602 seconds (=92.4%) 
   non-zero timer [__ sub-timer]:
-  newtonIncrement   = 1.87%
-  integrationFormula= 1.5%
-  ODE2RHS           = 92.7%
-  writeSolution     = 2.91%
-  overhead          = 0.611%
-  visualization/user= 0.419%
+  newtonIncrement   = 1.63%
+  integrationFormula= 1.36%
+  ODE2RHS           = 93.1%
+  writeSolution     = 2.92%
+  overhead          = 0.581%
+  visualization/user= 0.374%
 NOTE: SolutionViewer opens no window, because exudyn.special.userInterface.suppressSolutionViewer=True
 
 
@@ -4693,7 +4687,7 @@ For details see mbs.systemData, mbs.sys and mbs.variables
 
 NOTE: the renderer is suppressed by exudyn.special.userInterface.suppressRenderer; no window is opened
 +++++++++++++++++++++++++++++++
-EXUDYN V1.13.3 solver: nonlinear static solver
+EXUDYN V1.13.6 solver: nonlinear static solver
 number of steps = 1
 start time = 0
 end time = 1
@@ -4733,24 +4727,25 @@ Newton: initial residual = 10; goals: relTol=1e-08, absTol=1e-10
 STEP1, factor = 1, timeToGo = 0s, Nit/step = 1
 +++++++++++++++ STEP FINISHED ++++++++++++++
 
-Solver terminated successfully after 0.0001995 seconds.
+Solver terminated successfully after 0.0002133 seconds.
 ====================
 CPU-time statistics:
-  total time   = 0.000199 seconds
-  measured time= 0.000166 seconds (=83.1%) 
+  total time   = 0.000213 seconds
+  measured time= 0.000182 seconds (=85.2%) 
   non-zero timer [__ sub-timer]:
-  factorization     = 3.2%
-  newtonIncrement   = 0.181%
-  ODE2RHS           = 7.66%
-  ODE1RHS           = 0.181%
-  AERHS             = 2.9%
-  totalJacobian     = 31.1%
-  __jacobianODE2    = 6.52%
-  __jacobianAE      = 1.45%
-  reactionForces    = 3.92%
-  writeSolution     = 6.94%
-  overhead          = 43.7%
-  visualization/user= 0.181%
+  factorization     = 3.96%
+  newtonIncrement   = 0.66%
+  ODE2RHS           = 9.03%
+  ODE1RHS           = 0.11%
+  AERHS             = 2.53%
+  totalJacobian     = 26.5%
+  __jacobianODE2    = 3.91%
+  __jacobianODE1    = 0.055%
+  __jacobianAE      = 1.27%
+  reactionForces    = 4.29%
+  Python          = 0.055%
+  writeSolution     = 6.49%
+  overhead          = 46.4%
 Solver iteration statistics:
 total number of steps:        1
 total number of Newton iterations: 1
@@ -4762,32 +4757,32 @@ EXAMPLE 129 ("stiffFlyballGovernor2.py"):
 ******************************************
 NOTE: the renderer is suppressed by exudyn.special.userInterface.suppressRenderer; no window is opened
 +++++++++++++++++++++++++++++++
-EXUDYN V1.13.3 solver: implicit second order time integration
+EXUDYN V1.13.6 solver: implicit second order time integration
 
 ++++++++++++++++++++++++++++++
 exudyn.special.solver.timeout=1 seconds reached
 simulation receives stop signal
 
-STEP12460 (stopped), t = 0.24918s, tCPU=1.00012s, Nit/step = 6.77159
-solver stopped due to special.solver.timout after 1.00012 seconds.
+STEP11151 (stopped), t = 0.223s, tCPU=1.00016s, Nit/step = 6.76038
+solver stopped due to special.solver.timout after 1.00016 seconds.
 <SolverIterationData:
 SolverIterationData:
   adaptiveStep = 1
   automaticStepSize = 0
   automaticStepSizeError = 0
-  currentStepIndex = 12460
+  currentStepIndex = 11151
   currentStepSize = 2e-05
-  currentTime = 0.24918
+  currentTime = 0.223
   discontinuousIteration = 1
-  discontinuousIterationsCount = 12459
+  discontinuousIterationsCount = 11150
   endTime = 10
   initialStepSize = 2e-05
   lastStepSize = 2e-05
   maxStepSize = 2e-05
   minStepSize = 1e-08
-  newtonJacobiCount = 4
-  newtonSteps = 6
-  newtonStepsCount = 84374
+  newtonJacobiCount = 3
+  newtonSteps = 9
+  newtonStepsCount = 75385
   numberOfSteps = 499999
   recommendedStepSize = -1
   rejectedAutomaticStepSizeSteps = 0
@@ -4795,7 +4790,7 @@ SolverIterationData:
   startTime = 0
 
  >
-solution of stiffFlyballGovernor= 0.644031726940017
+solution of stiffFlyballGovernor= 0.7078288432641429
 <string>:409: UserWarning: FigureCanvasAgg is non-interactive, and thus cannot be shown
 
 
@@ -4804,9 +4799,9 @@ EXAMPLE 130 ("stiffFlyballGovernorKT.py"):
 ******************************************
 NOTE: the renderer is suppressed by exudyn.special.userInterface.suppressRenderer; no window is opened
 +++++++++++++++++++++++++++++++
-EXUDYN V1.13.3 solver: implicit second order time integration
+EXUDYN V1.13.6 solver: implicit second order time integration
 STEP20000, t = 10s, timeToGo = 0s, Nit/step = 2.9152
-Solver terminated successfully after 0.495884 seconds.
+Solver terminated successfully after 0.634131 seconds.
 Solver iteration statistics:
 total number of steps:        20000
 total number of Newton iterations: 58304
@@ -4820,9 +4815,9 @@ EXAMPLE 131 ("switchingConstraintsPendulum.py"):
 ******************************************
 NOTE: the renderer is suppressed by exudyn.special.userInterface.suppressRenderer; no window is opened
 +++++++++++++++++++++++++++++++
-EXUDYN V1.13.3 solver: implicit second order time integration
+EXUDYN V1.13.6 solver: implicit second order time integration
 STEP4000, t = 2s, timeToGo = 0s, Nit/step = 1
-Solver terminated successfully after 0.0233677 seconds.
+Solver terminated successfully after 0.0236533 seconds.
 Solver iteration statistics:
 total number of steps:        4000
 total number of Newton iterations: 4000
@@ -4837,17 +4832,17 @@ EXAMPLE 132 ("symbolicUserFunctionMasses.py"):
 NOTE: the renderer is suppressed by exudyn.special.userInterface.suppressRenderer; no window is opened
 start simulation
 +++++++++++++++++++++++++++++++
-EXUDYN V1.13.3 solver: explicit time integration (RK44)
+EXUDYN V1.13.6 solver: explicit time integration (RK44)
 Start multi-threading with 8 threads (multithreading & load balancing)
 
 ++++++++++++++++++++++++++++++
 exudyn.special.solver.timeout=1 seconds reached
 simulation receives stop signal
 
-STEP758 (stopped), t = 0.3785s, tCPU=1.02466s, Nit/step = 0
-solver stopped due to special.solver.timout after 1.02466 seconds.
+STEP775 (stopped), t = 0.387s, tCPU=1.00007s, Nit/step = 0
+solver stopped due to special.solver.timout after 1.00007 seconds.
 Stop multi-threading
-finished:  1.028247594833374 seconds
+finished:  1.0033483505249023 seconds
 
 
 ******************************************
@@ -4875,16 +4870,16 @@ For details see mbs.systemData, mbs.sys and mbs.variables
 >
 
 +++++++++++++++++++++++++++++++
-EXUDYN V1.13.3 solver: explicit time integration (ExplicitEuler)
+EXUDYN V1.13.6 solver: explicit time integration (ExplicitEuler)
 
 ++++++++++++++++++++++++++++++
 exudyn.special.solver.timeout=1 seconds reached
 simulation receives stop signal
 
-STEP188384 (stopped), t = 37.6766s, tCPU=1.00004s, Nit/step = 0
-solver stopped due to special.solver.timout after 1.00004 seconds.
+STEP187371 (stopped), t = 37.474s, tCPU=1.00006s, Nit/step = 0
+solver stopped due to special.solver.timout after 1.00006 seconds.
 Solver iteration statistics:
-total number of steps:        188383
+total number of steps:        187370
 total number of Newton iterations: 0
 total number of Newton Jacobians:  0
 NOTE: SolutionViewer opens no window, because exudyn.special.userInterface.suppressSolutionViewer=True
@@ -4901,14 +4896,14 @@ EXAMPLE 136 ("universalJoint.py"):
 ******************************************
 NOTE: the renderer is suppressed by exudyn.special.userInterface.suppressRenderer; no window is opened
 +++++++++++++++++++++++++++++++
-EXUDYN V1.13.3 solver: implicit second order time integration
+EXUDYN V1.13.6 solver: implicit second order time integration
 
 ++++++++++++++++++++++++++++++
 exudyn.special.solver.timeout=1 seconds reached
 simulation receives stop signal
 
-STEP201 (stopped), t = 0.2s, tCPU=1.00637s, Nit/step = 7.45274
-solver stopped due to special.solver.timout after 1.00637 seconds.
+STEP200 (stopped), t = 0.199s, tCPU=1.00245s, Nit/step = 7.445
+solver stopped due to special.solver.timout after 1.00245 seconds.
 
 
 ******************************************
@@ -4923,9 +4918,9 @@ For advanced information, read theDoc: https://github.com/jgerstmayr/EXUDYN/blob
 Good luck and have fun!
 (C) 2018-2025 University of Innsbruck
 
-EXUDYN version=1.13.3
-EXUDYN version with details=1.13.3; Python3.12.9; Windows x86_64 FLOAT64
-  Version() = 1.13.3; Python3.12.9; Windows x86_64 FLOAT64
+EXUDYN version=1.13.6
+EXUDYN version with details=1.13.6; Python3.13.12; Windows x86_64 FLOAT64
+  Version() = 1.13.6; Python3.13.12; Windows x86_64 FLOAT64
   suppressWarnings = 1
   outputDirectory = C:\DATA\cpp\EXUDYN_git\python\logs\tmp\exampleOutput\xExudynConfigSpecial
   outputPrecision = 4
@@ -5018,7 +5013,7 @@ test flush=False with end="\n":9
 
 end
 +++++++++++++++++++++++++++++++
-EXUDYN V1.13.3 solver: implicit second order time integration
+EXUDYN V1.13.6 solver: implicit second order time integration
 number of steps = 1
 start time = 0
 end time = 0.001
@@ -5066,9 +5061,9 @@ Newton: initial residual = 0.001; goals: relTol=1e-08, absTol=1e-10
 STEP1, t = 0.001s, timeToGo = 0s, Nit/step = 1
 +++++++++++++++ STEP FINISHED ++++++++++++++
 
-Solver terminated successfully after 0.6164 seconds.
+Solver terminated successfully after 0.5764 seconds.
 +++++++++++++++++++++++++++++++
-EXUDYN V1.13.3 solver: implicit second order time integration
+EXUDYN V1.13.6 solver: implicit second order time integration
 number of steps = 1
 start time = 0
 end time = 0.001
@@ -5116,12 +5111,12 @@ Newton: initial residual = 0.001; goals: relTol=1e-08, absTol=1e-10
 STEP1, t = 0.001s, timeToGo = 0s, Nit/step = 1
 +++++++++++++++ STEP FINISHED ++++++++++++++
 
-Solver terminated successfully after 0.545 seconds.
+Solver terminated successfully after 0.6029 seconds.
 start demo1: verify that exudyn is running
 +++++++++++++++++++++++++++++++
-EXUDYN V1.13.3 solver: implicit second order time integration
+EXUDYN V1.13.6 solver: implicit second order time integration
 STEP100, t = 1s, timeToGo = 0s, Nit/step = 1
-Solver terminated successfully after 0.01514 seconds.
+Solver terminated successfully after 0.0155 seconds.
 results can be found in local directory: tmp/solution/demo1.txt
 
 ************************************
@@ -5141,14 +5136,14 @@ EXAMPLE 138 ("FurtherExamples/bicycleIftommBenchmarkMarkerBasedJoints.py"):
 pR= [0.  0.  0.3]
 pB1= [0.  0.  0.3]
 +++++++++++++++++++++++++++++++
-EXUDYN V1.13.3 solver: implicit second order time integration
+EXUDYN V1.13.6 solver: implicit second order time integration
 
 ++++++++++++++++++++++++++++++
 exudyn.special.solver.timeout=1 seconds reached
 simulation receives stop signal
 
-STEP11393 (stopped), t = 11.392s, tCPU=1.00006s, Nit/step = 6.93356
-solver stopped due to special.solver.timout after 1.00006 seconds.
+STEP11728 (stopped), t = 11.727s, tCPU=1.00013s, Nit/step = 6.93503
+solver stopped due to special.solver.timout after 1.00013 seconds.
 
 
 ******************************************
@@ -5156,23 +5151,23 @@ EXAMPLE 139 ("FurtherExamples/fourBarKinematicTreeGravity.py"):
 ******************************************
 NOTE: the renderer is suppressed by exudyn.special.userInterface.suppressRenderer; no window is opened
 +++++++++++++++++++++++++++++++
-EXUDYN V1.13.3 solver: implicit second order time integration
+EXUDYN V1.13.6 solver: implicit second order time integration
 
 ++++++++++++++++++++++++++++++
 exudyn.special.solver.timeout=1 seconds reached
 simulation receives stop signal
 
-STEP200 (stopped), t = 0.995s, tCPU=1.00438s, Nit/step = 6.735
-solver stopped due to special.solver.timout after 1.00438 seconds.
+STEP200 (stopped), t = 0.995s, tCPU=1.00325s, Nit/step = 6.735
+solver stopped due to special.solver.timout after 1.00325 seconds.
 
 
 ******************************************
 EXAMPLE 140 ("FurtherExamples/fourBarKinematicTreeJointControl.py"):
 ******************************************
 +++++++++++++++++++++++++++++++
-EXUDYN V1.13.3 solver: implicit second order time integration
+EXUDYN V1.13.6 solver: implicit second order time integration
 STEP2000, t = 10s, timeToGo = 0s, Nit/step = 7.7655
-Solver terminated successfully after 0.06296 seconds.
+Solver terminated successfully after 0.0570056 seconds.
 NOTE: SolutionViewer opens no window, because exudyn.special.userInterface.suppressSolutionViewer=True
 
 
@@ -5181,9 +5176,9 @@ EXAMPLE 141 ("FurtherExamples/fourBarKinematicTreeLoadDep.py"):
 ******************************************
 NOTE: the renderer is suppressed by exudyn.special.userInterface.suppressRenderer; no window is opened
 +++++++++++++++++++++++++++++++
-EXUDYN V1.13.3 solver: implicit second order time integration
+EXUDYN V1.13.6 solver: implicit second order time integration
 STEP400, t = 2s, timeToGo = 0s, Nit/step = 9.0125
-Solver terminated successfully after 0.0277319 seconds.
+Solver terminated successfully after 0.0261357 seconds.
 Solver iteration statistics:
 total number of steps:        400
 total number of Newton iterations: 3605
@@ -5208,14 +5203,14 @@ For details see mbs.systemData, mbs.sys and mbs.variables
 >
 
 +++++++++++++++++++++++++++++++
-EXUDYN V1.13.3 solver: implicit second order time integration
+EXUDYN V1.13.6 solver: implicit second order time integration
 
 ++++++++++++++++++++++++++++++
 exudyn.special.solver.timeout=1 seconds reached
 simulation receives stop signal
 
-STEP249 (stopped), t = 0.992s, tCPU=1.00209s, Nit/step = 6.48193
-solver stopped due to special.solver.timout after 1.00209 seconds.
+STEP251 (stopped), t = 1s, tCPU=1.00066s, Nit/step = 6.49004
+solver stopped due to special.solver.timout after 1.00066 seconds.
 
 
 ******************************************
@@ -5223,9 +5218,9 @@ EXAMPLE 143 ("FurtherExamples/fourBarKinematicTreeUF.py"):
 ******************************************
 NOTE: the renderer is suppressed by exudyn.special.userInterface.suppressRenderer; no window is opened
 +++++++++++++++++++++++++++++++
-EXUDYN V1.13.3 solver: implicit second order time integration
+EXUDYN V1.13.6 solver: implicit second order time integration
 STEP2000, t = 2s, timeToGo = 0s, Nit/step = 9.062
-Solver terminated successfully after 0.153015 seconds.
+Solver terminated successfully after 0.149695 seconds.
 Solver iteration statistics:
 total number of steps:        2000
 total number of Newton iterations: 18124
@@ -5236,14 +5231,14 @@ total number of Newton Jacobians:  2663
 EXAMPLE 144 ("FurtherExamples/spotModel.py"):
 ******************************************
 +++++++++++++++++++++++++++++++
-EXUDYN V1.13.3 solver: explicit time integration (ExplicitEuler)
+EXUDYN V1.13.6 solver: explicit time integration (ExplicitEuler)
 
 ++++++++++++++++++++++++++++++
 exudyn.special.solver.timeout=1 seconds reached
 simulation receives stop signal
 
-STEP21053 (stopped), t = 4.2104s, tCPU=1.00008s, Nit/step = 0
-solver stopped due to special.solver.timout after 1.00008 seconds.
+STEP23518 (stopped), t = 4.7034s, tCPU=1.0001s, Nit/step = 0
+solver stopped due to special.solver.timout after 1.0001 seconds.
 max joint vel= 0
 NOTE: SolutionViewer opens no window, because exudyn.special.userInterface.suppressSolutionViewer=True
 
@@ -5252,8 +5247,8 @@ NOTE: SolutionViewer opens no window, because exudyn.special.userInterface.suppr
 EXAMPLE 145 ("notebooks/tutorialFFRF.py"):
 ******************************************
 nNodes= 2435
-HCB modes needed 0.124 seconds
-nModes= 8 , tip displacement= [-1.84111309e+00 -5.16387969e-01  1.97100834e-06]
+HCB modes needed 0.140 seconds
+nModes= 8 , tip displacement= [-1.99326591e+00 -9.27274460e-02 -1.35660031e-06]
 NOTE: ShowImage opens no window, because exudyn.special.userInterface.suppressPlots=True
 
 
@@ -5292,7 +5287,7 @@ NOTE: ShowImage opens no window, because exudyn.special.userInterface.suppressPl
 ******************************************
 EXAMPLE 149 ("notebooks/tutorialSpringDamper.py"):
 ******************************************
-EXUDYN version=1.13.3
+EXUDYN version=1.13.6
 resonance frequency = 50.0
 static displacement = 0.02
 <systemData: 
@@ -5311,16 +5306,16 @@ For details see mbs.systemData, mbs.sys and mbs.variables
 
 NOTE: ShowImage opens no window, because exudyn.special.userInterface.suppressPlots=True
 +++++++++++++++++++++++++++++++
-EXUDYN V1.13.3 solver: implicit second order time integration
+EXUDYN V1.13.6 solver: implicit second order time integration
 STEP1000, t = 1s, timeToGo = 0s, Nit/step = 1
-Solver terminated successfully after 0.0013693 seconds.
+Solver terminated successfully after 0.0024131 seconds.
 displacement= [0.51183493 0.         0.        ]
 
 
 ******************************************
 EXAMPLE 150 ("notebooks/tutorialSpringDamperCreate.py"):
 ******************************************
-Exudyn version 1.13.3
+Exudyn version 1.13.6
 eigenfrequency (rad/s) = 50.0
 static displacement (m) = 0.02
 <systemData: 
@@ -5387,35 +5382,35 @@ eigenvals= [10126.8  12267.26 18709.22 19563.41 26502.58 29577.37 30536.01 34003
 nMid= 190
 NOTE: the renderer is suppressed by exudyn.special.userInterface.suppressRenderer; no window is opened
 +++++++++++++++++++++++++++++++
-EXUDYN V1.13.3 solver: implicit second order time integration
+EXUDYN V1.13.6 solver: implicit second order time integration
 
 ++++++++++++++++++++++++++++++
 exudyn.special.solver.timeout=1 seconds reached
 simulation receives stop signal
 
-STEP290 (stopped), t = 0.00289039s, tCPU=1.00244s, Nit/step = 5.83448
-solver stopped due to special.solver.timout after 1.00244 seconds.
+STEP249 (stopped), t = 0.00248033s, tCPU=1.00058s, Nit/step = 5.79116
+solver stopped due to special.solver.timout after 1.00058 seconds.
 ====================
 CPU-time statistics:
   total time   = 1 seconds
-  measured time= 1 seconds (=99.9%) 
+  measured time= 0.999 seconds (=99.9%) 
   non-zero timer [__ sub-timer]:
-  factorization     = 0.0187%
-  newtonIncrement   = 0.381%
-  integrationFormula= 0.025%
-  ODE2RHS           = 58.5%
-  ODE1RHS           = 0.00523%
-  AERHS             = 6.91%
-  totalJacobian     = 1.83%
-  __jacobianODE2    = 1.81%
-  __jacobianODE1    = 4.99e-05%
-  __jacobianAE      = 0.0134%
-  massMatrix        = 25.7%
-  reactionForces    = 5.82%
-  Python          = 9.99e-06%
-  writeSolution     = 0.841%
-  overhead          = 0.00613%
-  visualization/user= 0.00164%
+  factorization     = 0.0182%
+  newtonIncrement   = 0.406%
+  integrationFormula= 0.0297%
+  ODE2RHS           = 56%
+  ODE1RHS           = 0.00552%
+  AERHS             = 6.72%
+  totalJacobian     = 1.93%
+  __jacobianODE2    = 1.9%
+  __jacobianODE1    = 0.00016%
+  __jacobianAE      = 0.0246%
+  massMatrix        = 28.4%
+  reactionForces    = 5.63%
+  Python          = 1e-05%
+  writeSolution     = 0.855%
+  overhead          = 0.00804%
+  visualization/user= 0.00156%
 <string>:500: UserWarning: FigureCanvasAgg is non-interactive, and thus cannot be shown
 <string>:520: UserWarning: FigureCanvasAgg is non-interactive, and thus cannot be shown
 <string>:545: UserWarning: FigureCanvasAgg is non-interactive, and thus cannot be shown
@@ -5440,7 +5435,7 @@ run  4 / 6 : parameters={'vAx': 9, 'nElements': 16, 'computationIndex': 3}      
 run  5 / 6 : parameters={'vAx': 9, 'nElements': 32, 'computationIndex': 4}                 9.0
 
 run  6 / 6 : parameters={'vAx': 9, 'nElements': 64, 'computationIndex': 5}                 
---- 6.410968065261841 seconds ---
+--- 6.396671772003174 seconds ---
 <string>:682: UserWarning: FigureCanvasAgg is non-interactive, and thus cannot be shown
 <string>:694: UserWarning: FigureCanvasAgg is non-interactive, and thus cannot be shown
 
@@ -5452,7 +5447,7 @@ EXAMPLE 154 ("publications/CND2022PieberNtarladimaGerstmayr/allTestsMovingMassFa
 NOTE: the renderer is suppressed by exudyn.special.userInterface.suppressRenderer; no window is opened
 8.0
 16.0
-tipDisp= [np.float64(1.853265469e-08), np.float64(-1.921174891e-08), np.float64(0.0592513267), np.float64(-0.04842588204), np.float64(0.03665796029), np.float64(-0.04727905251)]
+tipDisp= [np.float64(1.853265469e-08), np.float64(-1.921174891e-08), np.float64(0.0592513267), np.float64(-0.04842588204), np.float64(0.03914965855), np.float64(-0.04727905251)]
 <string>:518: UserWarning: FigureCanvasAgg is non-interactive, and thus cannot be shown
 <string>:519: UserWarning: FigureCanvasAgg is non-interactive, and thus cannot be shown
 <string>:641: UserWarning: FigureCanvasAgg is non-interactive, and thus cannot be shown
@@ -5468,21 +5463,21 @@ WARNING: JointALEMoving2D: sliding coordinate < 0; further warnings suppressed!
 ******************************************
 
 TEST EXAMPLES SUMMARY:
-time elapsed = 49.261 seconds
+time elapsed = 49.585 seconds
 1 Examples OUT OF 187 FAILED: 
   Example 99 : rendererNOGLFWexample.py FAILED
 
 slowest examples:
-  NGsolveOCCboundaries2.py                            28.52 s
-  mpi4pyExample.py                                    26.29 s
-  shapeOptimization.py                                17.81 s
-  NGsolveFFRFSlidingJoint.py                          15.43 s
-  NGsolveGeometry.py                                  11.40 s
-  NGsolveFFRF.py                                      10.39 s
-  ANCFcableCantilevered.py                             9.84 s
-  NGsolvePostProcessingStresses.py                     7.86 s
-  publications/CND2022PieberNtarladimaGerstmayr/allTestsMovingMassFactor.py   7.62 s
-  publications/CND2022PieberNtarladimaGerstmayr/allTestsConvergenceParameterVariation.py   7.38 s
+  NGsolveOCCboundaries2.py                            25.11 s
+  mpi4pyExample.py                                    22.53 s
+  shapeOptimization.py                                15.71 s
+  NGsolveFFRFSlidingJoint.py                          15.47 s
+  NGsolveGeometry.py                                  11.24 s
+  publications/CND2022PieberNtarladimaGerstmayr/allTestsMovingMassFactor.py   9.68 s
+  ANCFcableCantilevered.py                             8.57 s
+  NGsolveFFRF.py                                       8.47 s
+  NGsolvePostProcessingStresses.py                     8.17 s
+  publications/CND2022PieberNtarladimaGerstmayr/allTestsConvergenceParameterVariation.py   7.34 s
 
 Skipped 31 examples
 ******************************************

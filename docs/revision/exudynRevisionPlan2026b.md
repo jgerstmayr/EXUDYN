@@ -1624,7 +1624,8 @@ development mode.
     - **RG10.29.5** (#2924) what the release notes of a minor release contain - a decision of the maintainer;
     - **RG10.29.6** (#2925) a check of the links of `README.rst` and of the PyPI description;
     - **RG10.29.7** (#2926) the fast-module suite in the weekly routine, and its reference set renewed with the regular one;
-    - **RG10.29.8** (#2927) a dependency group `release` with twine >= 6.1.
+    - **RG10.29.8** (#2927) a dependency group `release` with twine >= 6.1;
+    - **RG10.29.9** (#2928) Python 3.15 in GitHub CI, the version matrix and the documentation.
 
 ## RG11 — Misc
 
