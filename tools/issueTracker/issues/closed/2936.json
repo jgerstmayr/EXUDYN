@@ -1,0 +1,17 @@
+{
+  "number": 2936,
+  "title": "the Twitter link in README.rst and the docs is no longer used",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "DOCU",
+  "priority": "LOW",
+  "effort": "LOW",
+  "description": "maintainer 2026-10-10: remove the Twitter link from README.rst and the documentation",
+  "dateRaised": "2026-10-10",
+  "deadline": "2027-04-08",
+  "dateResolved": "2026-10-10 00:04",
+  "resolvedAuthor": "Claude-JG",
+  "file": "README.rst",
+  "releaseNotes": "the Twitter link is removed from README.rst. revision2026c step RG3.45",
+  "resolvedInVersion": "1.13.17"
+}

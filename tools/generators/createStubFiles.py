@@ -16,6 +16,7 @@
 import copy #for deep copies
 import io   #for utf-8 encoding
 import ast  #to verify that the written stub is valid Python
+import os
 
 #stub files are merged from fragments line by line; a fragment that indents differently
 #than expected silently produces a file that no longer parses, and then no IDE and no type
@@ -85,11 +86,20 @@ for key, value in classData.items():
 # for line in mergedFileLines:
 #     mergedFile += line
 
+def WriteIfChanged(fileName, text):
+    """write the stub only if its text changed: a build in Docker on the Windows checkout wrote the same text with
+    other line endings, git saw a change, and the release could not tag (#2915)"""
+    if os.path.isfile(fileName):
+        with io.open(fileName, 'r', encoding='utf8') as existing:
+            if existing.read() == text: #read in text mode: CRLF and LF both read as LF
+                os.utime(fileName, None) #written in the sense of tools/regenerate.py, which checks the time
+                return
+    with io.open(fileName, 'w', encoding='utf8') as file:
+        file.write(text)
+
 if True:
     CheckStubIsValidPython(destFile, mergedFile) #raises before anything is written, #2486
-    file=io.open(destFile,'w',encoding='utf8')
-    file.write(mergedFile)
-    file.close()
+    WriteIfChanged(destFile, mergedFile)
 
 
 
@@ -106,8 +116,6 @@ if True:
     file.close()
 
     CheckStubIsValidPython(destFile2, mergedText) #raises before anything is written, #2486
-    file=io.open(destFile2,'w',encoding='utf8')
-    file.write(mergedText)
-    file.close()
+    WriteIfChanged(destFile2, mergedText)
 
 

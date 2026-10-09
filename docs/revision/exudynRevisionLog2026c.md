@@ -65,3 +65,67 @@ ready, move the open steps of revision2026b to revision2026c, possibly keeping t
 - Tried on a copy:
   - `add RG4` gave RG4.27, because 2026b used up to RG4.26;
   - opening an empty group and citing a missing step were both refused.
+
+<a id="rg3-45"></a>
+### RG3.45 — the user documentation after the 1.13 review (2026-10-10, #2932-#2937)
+
+*(Maintainer 2026-10-10, a list collected after the release.)*
+
+- **#2932**: four references in *Getting started* were written as LaTeX `\url{...}`, which the PDF printed as text.
+  They are now Markdown links. `checkMathMacros.py` refuses `\url{` and `\href{` in text, as it refuses a LaTeX
+  accent (#2908).
+- **#2933**: *Goals of Exudyn*.
+  - The first development phase (2019-2023) says "allows to add user functions for items and solvers in Python"
+    instead of user-defined objects and solvers in C++ and Python.
+  - A **second development phase (2024-2026)** names what it brought:
+    - specific connectors and contact;
+    - 3D beams and plates;
+    - symbolic user functions;
+    - `exu.HT` with energies, `Inspect` and `ComputeItem`;
+    - the 2026 revision: tested wheels for all four platforms, Markdown documentation, notebooks.
+  - The **future goals (2027-2029)**: Python and C++ user elements, advanced contact formulations, automatic step
+    size selection for second order solvers, export of the equations, GPU support.
+- **#2934**: the raytracer draws item texts; the note that it does not is gone from `introductionAdvanced.md`.
+- **#2935**: the tetrahedron of the graphics notebook has its fourth point off the corner (`[2.1,0.2,0.6]`), so it no
+  longer looks like a corner of a cube, and `openGL.light0.shadow = 0.3` gives the shapes their depth. The notebook
+  was run again.
+- **#2936**: the Twitter link is gone from `README.rst`, the only place it was.
+- **#2937**: the six images of `README.rst` are in two rows of three (a line block), with widths given in pixels and
+  the second row smaller. GitLab showed them too large; how GitLab renders the widths can only be seen there, and the
+  maintainer adjusts them.
+
+<a id="rg6-18"></a>
+### RG6.18 — the SolutionViewer: the PreStepUserFunction, and the space key (2026-10-10, #2930, #2931)
+
+- **#2930**:
+  - `SolutionViewer(..., callPreStepUserFunction=False)`. With True, the `PreStepUserFunction` of the system is called
+    after `SetSolutionState` with the time of the shown row (column 0 of the solution) before the step is drawn, also
+    when the viewer wraps around to row 0.
+  - The function is read with `mbs.GetPreStepUserFunction()`, which gives `{'function': ..., 'type': 'Python'}` or
+    `0`. A symbolic user function is not called.
+  - Example `python/Examples/solutionViewerPreStepUserFunction.py`: a ground brick with its frame moves along a screw,
+    its `referenceHT` set as an `exu.HT` in the `PreStepUserFunction`, beside a pendulum. Checked without a window:
+    the call with the time of row 50 (t = 1) puts the ground at z = 0.0625. On screen only the maintainer can check it.
+- **#2931**:
+  - Tk's class binding of a button runs its command on the space key when the button has the focus. On macOS the Run
+    button has it, so the space key toggled twice: once through the button, once through the binding of the window.
+    On Windows the focus stays on the window, which is why it worked there.
+  - `InteractiveDialog.OnSpaceKey` toggles only when the event did not come from the Run button, then calls
+    `userSpaceKey(dialog, stopped)`.
+  - The SolutionViewer uses `userSpaceKey` to set the mode: the space key starts in *Continuous run* and stops in
+    *Static*. To be checked on macOS.
+
+<a id="rg10-29-1"></a>
+### RG10.29.1, RG10.29.2 — the stubs, and large files (2026-10-10, #2915, #2916)
+
+- **#2915**:
+  - `createStubFiles.py`, which setup.py runs in every build, wrote `__init__.pyi` and `symbolic.pyi` every time, with
+    the line endings of the platform. The Linux build in Docker runs on the Windows checkout, so the stubs had LF
+    endings afterwards, and git shows a working copy with only LF as modified (measured: the same content, LF instead
+    of CRLF, gives `M`). The tree was dirty, and `exudev release --tag` refused to tag - twice at 1.13.
+  - A stub is now written only when its text changes, compared in text mode, so CRLF and LF compare equal.
+- **#2916**:
+  - `*.synctex` is ignored beside `*.synctex.gz`.
+  - The pre-commit hook refuses a new file above 6 MB: build output, or deliberate - then `--no-verify`. The largest
+    tracked files are matrices of an example of up to 10 MB.
+  - Tested with a staged 7 MB file: refused, with its name and size.

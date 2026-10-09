@@ -48,7 +48,7 @@ workflows, documentation, tests and examples.
 .. the line below is written by tools/issueTracker/issueTracker.py; everything else in this
 .. file is hand-written (decision D11)
 
-+  Exudyn version = 1.13.8.dev1 (Newborn)
++  Exudyn version = 1.13.18.dev1 (Newborn)
 +  **University of Innsbruck**, Department of Mechatronics, Innsbruck, Austria
 
 .. |pic7| image:: docs/figures/ExudynLOGO1.9.jpg
@@ -63,24 +63,25 @@ workflows, documentation, tests and examples.
 +  Exudyn can be linked to any other Python package, but we explicitly mention: `NGsolve <https://github.com/NGSolve/ngsolve>`_, `OpenAI <https://github.com/openai>`_, `OpenAI gym <https://github.com/openai/gym>`_, `Robotics Toolbox (Peter Corke) <https://github.com/petercorke/robotics-toolbox-python>`_, `Pybind11 <https://github.com/pybind/pybind11>`_
 
 .. |pic1| image:: docs/demo/screenshots/pistonEngine.gif
-   :width: 200
+   :width: 200px
 
 .. |pic2| image:: docs/demo/screenshots/hydraulic2arm.gif
-   :width: 200
+   :width: 200px
 
 .. |pic3| image:: docs/demo/screenshots/particles2M.gif
-   :width: 120
+   :width: 120px
 
 .. |pic4| image:: docs/demo/screenshots/shaftGear.png
-   :width: 160
+   :width: 130px
 
 .. |pic5| image:: docs/demo/screenshots/rotor_runup_plot3.png
-   :width: 190
+   :width: 150px
 
 .. |pic6| image:: docs/figures/DrawSystemGraphExample.png
-   :width: 240
+   :width: 200px
    
-|pic1| |pic2| |pic3| |pic4| |pic5| |pic6|
+| |pic1| |pic2| |pic3|
+| |pic4| |pic5| |pic6|
 
 How to cite:
 
@@ -90,8 +91,7 @@ The full documentation is the HTML documentation on `Read the Docs <https://exud
 
 For license, see LICENSE.txt in the root github folder on github!
 
-If you like using Exudyn, please add a *star* on github and follow us on 
-`Twitter @RExudyn <https://twitter.com/RExudyn>`_ !
+If you like using Exudyn, please add a *star* on GitHub!
 
 In addition to the tutorials in the documentation, many ( **250+** ) examples can be downloaded on github under python/Examples and python/TestModels . They are also on ReadTheDocs.
 

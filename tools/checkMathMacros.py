@@ -137,6 +137,8 @@ def RenderingTraps(paths):
                 found.append(where + 'a backslash of LaTeX in text: ' + stripped[:60])
             if re.search(r'\\"\{?[a-zA-Z]', text):  #Gr\"ubler, Br{\"u}ls: write the letter, ü (#2908)
                 found.append(where + 'a LaTeX accent in text, write the letter itself: ' + stripped[:60])
+            if re.search(r'\\(url|href)\{', text):  #the PDF printed \url{...} as it is (#2932)
+                found.append(where + 'a LaTeX link in text, write [text](https://...): ' + stripped[:60])
     return found
 
 

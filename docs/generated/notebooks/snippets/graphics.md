@@ -67,7 +67,7 @@ gSpheres = graphics.Spheres(points=[[1.5,0,0],[1.5,0.5,0]], radii=[0.1,0.2],
 what most functions of `exudyn.graphics` return, such as a brick with its edges:
 
 ```python
-gTetrahedron = graphics.FromPointsAndTrigs(points=[[2,0,0],[2.6,0,0],[2,0.6,0],[2,0,0.6]],
+gTetrahedron = graphics.FromPointsAndTrigs(points=[[2,0,0],[2.6,0,0],[2,0.6,0],[2.1,0.2,0.6]],
                                            triangles=[[0,2,1],[0,1,3],[0,3,2],[1,2,3]],
                                            color=graphics.color.orange)
 gBrick = graphics.Brick(centerPoint=[2.3,1,0.15], size=[0.6,0.4,0.3], color=graphics.color.steelblue,
@@ -93,6 +93,7 @@ mbs.Assemble()
 
 SC.visualizationSettings.openGL.multiSampling = 1
 SC.visualizationSettings.openGL.light1.enable = False
+SC.visualizationSettings.openGL.light0.shadow = 0.3 #shadows show the depth of the shapes
 SC.visualizationSettings.raytracer.numberOfThreads = 8 #adjust to your number of threads
 SC.visualizationSettings.openGL.lineWidth = 3
 SC.visualizationSettings.general.showSolverInformation = False

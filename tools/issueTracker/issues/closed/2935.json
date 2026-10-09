@@ -1,0 +1,17 @@
+{
+  "number": 2935,
+  "title": "graphics notebook: the tetrahedron is not visible as a tetrahedron",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "EXAMPLE",
+  "priority": "LOW",
+  "effort": "LOW",
+  "description": "maintainer 2026-10-10: points=[[2,0,0],[2.6,0,0],[2,0.6,0],[2.1,0.2,0.6]] for gTetrahedron, and SC.visualizationSettings.openGL.light0.shadow = 0.3 for visibility",
+  "dateRaised": "2026-10-10",
+  "deadline": "2027-04-08",
+  "dateResolved": "2026-10-10 00:04",
+  "resolvedAuthor": "Claude-JG",
+  "file": "docs/notebooks/graphics.ipynb",
+  "releaseNotes": "the graphics notebook draws its tetrahedron as one, with shadows. revision2026c step RG3.45",
+  "resolvedInVersion": "1.13.16"
+}

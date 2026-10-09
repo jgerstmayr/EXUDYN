@@ -1,0 +1,17 @@
+{
+  "number": 2933,
+  "title": "the goals of Exudyn reflect the state of 2023",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "DOCU",
+  "priority": "NORMAL",
+  "effort": "LOW",
+  "description": "maintainer 2026-10-10: the first development phase does not include user defined objects and solvers in C++ / Python - it is 'user functions for items and solvers in Python'; the future goals (2024-2026) become the second development phase without automatic step size selection, export of equations and GPU support, which go with Python / C++ user elements and advanced contact formulations to future goals (2027-2029); the main things completed 2024-2026 added to the second phase",
+  "dateRaised": "2026-10-10",
+  "deadline": "2027-04-08",
+  "dateResolved": "2026-10-10 00:04",
+  "resolvedAuthor": "Claude-JG",
+  "file": "docs/manual/introduction.md",
+  "releaseNotes": "the goals of Exudyn: the first development phase with user functions in Python, a second phase 2024-2026 with what it brought, future goals 2027-2029. revision2026c step RG3.45",
+  "resolvedInVersion": "1.13.14"
+}

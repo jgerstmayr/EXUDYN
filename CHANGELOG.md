@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.13 | Newborn | 9 | 1.13.8 |
+| 1.13 | Newborn | 19 | 1.13.18 |
 | 1.12 | Metheney | 367 | 1.12.462 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
@@ -30,6 +30,46 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.13 - Newborn (current)
 
+- **1.13.18** `DOCU` `LOW` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` README.rst: the six images are too large on GitLab (#2937)
+  - description: maintainer 2026-10-10: on GitLab the six images of the landing page are too large (not on GitHub); two rows of three, the last three smaller, the DrawSystemGraph image a little wider for visibility; the maintainer adjusts afterwards
+  - **notes:** the six images of README.rst are in two rows of three, the second row smaller. revision2026c step RG3.45
+  - date resolved: **2026-10-10 00:04**, date raised: 2026-10-10
+- **1.13.17** `DOCU` `LOW` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` the Twitter link in README.rst and the docs is no longer used (#2936)
+  - description: maintainer 2026-10-10: remove the Twitter link from README.rst and the documentation
+  - **notes:** the Twitter link is removed from README.rst. revision2026c step RG3.45
+  - date resolved: **2026-10-10 00:04**, date raised: 2026-10-10
+- **1.13.16** `EXAMPLE` `LOW` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` graphics notebook: the tetrahedron is not visible as a tetrahedron (#2935)
+  - description: maintainer 2026-10-10: points=\[\[2,0,0\],\[2.6,0,0\],\[2,0.6,0\],\[2.1,0.2,0.6\]\] for gTetrahedron, and SC.visualizationSettings.openGL.light0.shadow = 0.3 for visibility
+  - **notes:** the graphics notebook draws its tetrahedron as one, with shadows. revision2026c step RG3.45
+  - date resolved: **2026-10-10 00:04**, date raised: 2026-10-10
+- **1.13.15** `DOCU` `LOW` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` the raytracing section says item texts are not shown in the raytracer, which is no longer true (#2934)
+  - description: maintainer 2026-10-10: remove 'However, note that item texts are currently not shown in raytracer, affecting node numbers, etc.!'
+  - **notes:** the raytracing section no longer says that item texts are not shown. revision2026c step RG3.45
+  - date resolved: **2026-10-10 00:04**, date raised: 2026-10-10
+- **1.13.14** `DOCU` `NORMAL` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` the goals of Exudyn reflect the state of 2023 (#2933)
+  - description: maintainer 2026-10-10: the first development phase does not include user defined objects and solvers in C++ / Python - it is 'user functions for items and solvers in Python'; the future goals (2024-2026) become the second development phase without automatic step size selection, export of equations and GPU support, which go with Python / C++ user elements and advanced contact formulations to future goals (2027-2029); the main things completed 2024-2026 added to the second phase
+  - **notes:** the goals of Exudyn: the first development phase with user functions in Python, a second phase 2024-2026 with what it brought, future goals 2027-2029. revision2026c step RG3.45
+  - date resolved: **2026-10-10 00:04**, date raised: 2026-10-10
+- **1.13.13** `DOCU` `NORMAL` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` PDF: several \\url{ references remain in Getting started (#2932)
+  - description: maintainer 2026-10-10: in the PDF of the documentation, Getting started shows several raw \\url{ references
+  - **notes:** the references of Getting started are Markdown links, which the PDF shows as links; checkMathMacros refuses LaTeX links in text. revision2026c step RG3.45
+  - date resolved: **2026-10-10 00:04**, date raised: 2026-10-10
+- **1.13.12** <span class="textred">`BUG`</span> `NORMAL` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` SolutionViewer: the space key starts and immediately stops again on macOS (#2931)
+  - description: maintainer 2026-10-10: on macOS the space key does not start/stop as promised, it stops again at once; on Windows it works. Wanted: space switches between (Continuous run and start) and (stop and Static)
+  - **notes:** the space key of the SolutionViewer starts in Continuous run and stops in Static, also on macOS, where the focused Run button toggled a second time. revision2026c step RG6.18
+  - date resolved: **2026-10-10 00:04**, date raised: 2026-10-10
+- **1.13.11** `EXTENSION` `NORMAL` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` SolutionViewer: call the PreStepUserFunction before a step is drawn, with callPreStepUserFunction (#2930)
+  - description: maintainer 2026-10-10: often helpful if the SolutionViewer called mbs.PreStepUserFunction before rendering a step - graphical animation, prescribed control values updated in the frames; a flag callPreStepUserFunction=True/False, False by default, called after SetSolutionState with the time of the row; an example: a ground brick with its frame moving along a screw, its referenceHT set as exu.HT in a PreStepUserFunction
+  - **notes:** SolutionViewer(..., callPreStepUserFunction=True) calls the PreStepUserFunction with the time of each shown step before it is drawn; example solutionViewerPreStepUserFunction.py. revision2026c step RG6.18
+  - date resolved: **2026-10-10 00:04**, date raised: 2026-10-10
+- **1.13.10** `CHECK` `NORMAL` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` a 57 MB LaTeX build file in the history: ignore \*.synctex and refuse large files at commit (#2916)
+  - description: docs/theDoc/theDoc.synctex (56.8 MB, uncompressed SyncTeX of a LaTeX run) was committed with 8c0044f4 (revision2026 step R7.1.5) and deleted with f6c93a52 (R7.1.7); pushing master for 1.13 made GitHub warn (GH001, above the recommended 50 MB). It stays in the history - removing it would rewrite the published history. .gitignore has \*.synctex.gz but not \*.synctex; add it, and let the commit gate refuse a new tracked file above a few MB
+  - **notes:** \*.synctex is ignored, and the pre-commit hook refuses a new file above 6 MB. revision2026c step RG10.29.2
+  - date resolved: **2026-10-10 00:04**, date raised: 2026-10-09
+- **1.13.9** <span class="textred">`BUG`</span> `HIGH` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` the release run dirties the working tree, so its tag step refuses (#2915)
+  - description: exudev release --tag 1.13.2: after the run python/exudyn/\_\_init\_\_.pyi and symbolic.pyi showed as modified with identical content (line endings only) - most likely setup.py rewrote them inside the manylinux Docker build, which runs on the Windows checkout; the tag step then found a dirty tree and no tag v1.13.2 was created. setup.py should write the stubs only when their content changes (or with the line endings of the file), and the release should check the tree before the tag step and say why it does not tag
+  - **notes:** the build writes the stub files only when their text changes, so the Linux build in Docker leaves the Windows checkout clean and the release run tags. revision2026c step RG10.29.1
+  - date resolved: **2026-10-10 00:04**, date raised: 2026-10-09
 - **1.13.8** `CHANGE` `HIGH` `MEDIUM EFF` `raised by: Claude-JG` `resolved by: Claude-JG` revision plan 2026b closed; plan 2026c with markers OPEN\_RG/CLOSED\_RG and a checking tool (#2929)
   - description: maintainer 2026-10-10: plan 2026b got messy - keep the short information in the plan and move the rest to the log; a new plan 2026c whose steps start with \*\*OPEN\_RGx.y\*\* or \*\*CLOSED\_RGx.y\*\* and a title saying what is done, four fixed sections (how to, next steps, open steps, groups), the open steps and the groups written by a tool docs/revision/planManager.py that also checks the plan (order, duplicates, headings, references, next steps) and adds and changes steps; the open steps of 2026b moved, groups 12 to 18 into misc
   - **notes:** revision plan 2026b closed (one line per step, the texts in its log); plan 2026c with steps as headings \*\*OPEN\_RGx.y\*\* / \*\*CLOSED\_RGx.y\*\*, four fixed sections, and docs/revision/planManager.py to check it, write its generated parts and add and change steps; the open steps carried over, groups 12 to 18 into misc. revision2026c step RG10.30

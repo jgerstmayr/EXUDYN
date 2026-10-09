@@ -147,6 +147,7 @@ sliderCrank3DwithANCFbeltDrive
 sliderCrank3DwithANCFbeltDrive2
 slidercrankWithMassSpring
 solutionViewerMultipleSimulations
+solutionViewerPreStepUserFunction
 solutionViewerTest
 solverFunctionsTestEigenvalues
 SpringDamperMasspointSystem

@@ -1,0 +1,17 @@
+{
+  "number": 2937,
+  "title": "README.rst: the six images are too large on GitLab",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "DOCU",
+  "priority": "LOW",
+  "effort": "LOW",
+  "description": "maintainer 2026-10-10: on GitLab the six images of the landing page are too large (not on GitHub); two rows of three, the last three smaller, the DrawSystemGraph image a little wider for visibility; the maintainer adjusts afterwards",
+  "dateRaised": "2026-10-10",
+  "deadline": "2027-04-08",
+  "dateResolved": "2026-10-10 00:04",
+  "resolvedAuthor": "Claude-JG",
+  "file": "README.rst",
+  "releaseNotes": "the six images of README.rst are in two rows of three, the second row smaller. revision2026c step RG3.45",
+  "resolvedInVersion": "1.13.18"
+}

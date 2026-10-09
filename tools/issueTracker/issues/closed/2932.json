@@ -1,0 +1,17 @@
+{
+  "number": 2932,
+  "title": "PDF: several \\url{ references remain in Getting started",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "DOCU",
+  "priority": "NORMAL",
+  "effort": "LOW",
+  "description": "maintainer 2026-10-10: in the PDF of the documentation, Getting started shows several raw \\url{ references",
+  "dateRaised": "2026-10-10",
+  "deadline": "2027-04-08",
+  "dateResolved": "2026-10-10 00:04",
+  "resolvedAuthor": "Claude-JG",
+  "file": "docs/manual/gettingStarted.md",
+  "releaseNotes": "the references of Getting started are Markdown links, which the PDF shows as links; checkMathMacros refuses LaTeX links in text. revision2026c step RG3.45",
+  "resolvedInVersion": "1.13.13"
+}

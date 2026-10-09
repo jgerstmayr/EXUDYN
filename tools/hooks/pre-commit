@@ -3,7 +3,7 @@
 # Exudyn pre-commit hook
 #
 # Details:  Refuses a commit whose staged content contains a university account ID, a personal
-#           Windows user path, or something shaped like a credential. Everything committed here
+#           Windows user path, something shaped like a credential, or a new file above 6 MB. Everything committed here
 #           becomes public at the 1.13 release, and once published it cannot be withdrawn -
 #           rewriting history does not help, because clones, forks and crawlers already have it.
 #
@@ -57,6 +57,18 @@ fi
 hits=$(echo "$stagedDiff" | grep -oE 'BEGIN [A-Z ]*PRIVATE KEY|ssh-rsa AAAA[A-Za-z0-9+/]{20,}|ssh-ed25519 AAAA[A-Za-z0-9+/]{20,}|AKIA[0-9A-Z]{16}|ghp_[A-Za-z0-9]{30,}|glpat-[A-Za-z0-9_-]{20,}|xox[baprs]-[A-Za-z0-9-]{10,}' | sort -u)
 if [ -n "$hits" ]; then
     Report "possible credential:" "$hits"
+fi
+
+#--- new files that are large -----------------------------------------------------------------
+# a file once pushed stays in the history for good; build output such as a 57 MB LaTeX .synctex
+# slipped in this way (#2916). The largest tracked files are the matrices of an example, up to 10 MB.
+maxKB=6000
+hits=$(git diff --cached --name-only --diff-filter=A | while IFS= read -r newFile; do
+           size=$(git cat-file -s ":$newFile" 2>/dev/null || echo 0)
+           if [ "$size" -gt $((maxKB*1024)) ]; then echo "$newFile ($((size/1024)) KB)"; fi
+       done)
+if [ -n "$hits" ]; then
+    Report "a new file above $maxKB KB (build output? or deliberate - then --no-verify):" "$hits"
 fi
 
 if [ "$found" -eq 1 ]; then

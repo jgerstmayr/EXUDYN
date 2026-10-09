@@ -54,7 +54,7 @@ The basic things to know are:
 - Materials can only be used within triangulated geometries (GraphicsData `TriangleList`) using a material-flag in the color, like `graphics.Sphere(..., color=graphics.material.chrome)`. In the RGBA color, the alpha-channel is replaced by a material index which starts at 1000 (where 1000 represents material index 0). Note that in the regular OpenGL-rendering, alpha$>$1 is equivalent to alpha$=$1. The first 10 materials are linked to `raytracer.material0 ... raytracer.material9`.
 - The material's `baseColor` is used if the color red-channel is set to $-1$. Note that this allows to globally change the color of objects by changing `baseColor` in the material settings in `visualizationSettings`. Summarizing, using `color=[1,0,0,graphics.material.indexSteel]` chooses red color with steel material settings, while `color=[-1,-1,-1,graphics.material.indexSteel]` will use the color of steel (but will be black for OpenGL renderer), identical with `color=graphics.material.steel`.
 - The setting `backgroundColorReflections` can be used to represent the background which is used for rendering, while the background is independently set to black or white. Otherwise, black background leads to black regions on highly reflective objects or very light regions for white backgrounds.
-- System text messages (solver, version, etc.) are overlayed over raytracing and can be turned off using the settings in `general.showComputationInfo` and similar. However, note that **item texts are currently not shown** in raytracer, affecting node numbers, etc.!
+- System text messages (solver, version, etc.) are overlayed over raytracing and can be turned off using the settings in `general.showComputationInfo` and similar.
 
  **Limitations and risks**:
 

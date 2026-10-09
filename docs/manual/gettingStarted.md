@@ -59,10 +59,10 @@ For details on the interaction of nodes, objects, markers and loads see {ref}`se
 
 There are several journal papers of the developers which were using Exudyn (list is incomplete -- see google scholar):
 
-- J. Gerstmayr. Exudyn -- a C++-based Python package for flexible multibody systems. Multibody System Dynamics (2023). \url{https://doi.org/10.1007/s11044-023-09937-1}
-- J. Gerstmayr, P. Manzl, M. Pieber. Multibody Models Generated from Natural Language, Multibody System Dynamics (2024). \url{https://doi.org/10.1007/s11044-023-09962-0}
-- P. Manzl, O. Rogov, J. Gerstmayr, A. Mikkola, G. Orzechowski. Reliability Evaluation of Reinforcement Learning Methods for Mechanical Systems with Increasing Complexity.  Preprint, Research Square, 2023.  \url{https://doi.org/10.21203/rs.3.rs-3066420/v1}
-- S. Holzinger, M. Arnold, J. Gerstmayr. Evaluation and Implementation of Lie Group Integration Methods for Rigid Multibody Systems. Preprint, Research Square, 2023.  \url{https://doi.org/10.21203/rs.3.rs-2715112/v1}
+- J. Gerstmayr. Exudyn -- a C++-based Python package for flexible multibody systems. Multibody System Dynamics (2023). [https://doi.org/10.1007/s11044-023-09937-1](https://doi.org/10.1007/s11044-023-09937-1)
+- J. Gerstmayr, P. Manzl, M. Pieber. Multibody Models Generated from Natural Language, Multibody System Dynamics (2024). [https://doi.org/10.1007/s11044-023-09962-0](https://doi.org/10.1007/s11044-023-09962-0)
+- P. Manzl, O. Rogov, J. Gerstmayr, A. Mikkola, G. Orzechowski. Reliability Evaluation of Reinforcement Learning Methods for Mechanical Systems with Increasing Complexity.  Preprint, Research Square, 2023.  [https://doi.org/10.21203/rs.3.rs-3066420/v1](https://doi.org/10.21203/rs.3.rs-3066420/v1)
+- S. Holzinger, M. Arnold, J. Gerstmayr. Evaluation and Implementation of Lie Group Integration Methods for Rigid Multibody Systems. Preprint, Research Square, 2023.  [https://doi.org/10.21203/rs.3.rs-2715112/v1](https://doi.org/10.21203/rs.3.rs-2715112/v1)
 - M. Sereinig, P. Manzl, and J. Gerstmayr. Task Dependent Comfort Zone, a Base Placement Strategy for Autonomous Mobile Manipulators using Manipulability Measures, Robotics and Autonomous Systems, submitted. [Sereinig2023comfortZone]
 - R. Neurauter, J. Gerstmayr. A novel motion reconstruction method for inertial sensors with constraints, Multibody System Dynamics, 2022. [NeurauterGerstmayr2023]
 - M. Pieber, K. Ntarladima, R. Winkler, J. Gerstmayr. A Hybrid ALE Formulation for the Investigation of the Stability of Pipes Conveying Fluid and Axially Moving Beams, ASME Journal of Computational and Nonlinear Dynamics, 2022.
@@ -118,21 +118,31 @@ After the first development phase (2019-2023), it
 - allows to efficiently simulate small scale systems (compute $100\,000$s of time steps per second for systems with $n_{DOF}<10$),
 - allows to efficiently simulate medium scaled systems for problems with $n_{DOF} < 1\,000\,000$,
 - is a safe and widely accessible module for Python,
-- allows to add user defined objects and solvers in C++,
-- allows to add user defined objects and solvers in Python,
+- allows to add user functions for items and solvers in Python,
 - allows multi-threaded parallel computing,
 - includes Lie group integration,
 - includes interfaces for robotics and ROS,
 - includes interfaces for reinforcement learning (stable-baselines3), pytorch and artificial intelligence,
 - includes kinematical trees with minimal coordinates.
 
-Future goals (2024-2026) are:
+The second development phase (2024-2026)
 
-- add specific and advanced connectors/constraints (extended wheels, contact, control connector)
-- automatic step size selection for second order solvers (planned 2025),
-- add 3D beams and plates (first attempts exist; planned 2024),
-- export equations (planned, 2025),
-- add GPU support (planned, 2025).
+- added specific and advanced connectors and constraints (rolling discs, reeving systems, hydraulic actuators, contact
+  between spheres, triangles and curves, and `GeneralContact` for many bodies),
+- added 3D beams (geometrically exact and ANCF) and plates (ANCF thin plates, with `exudyn.shells`),
+- added symbolic user functions, which run at the speed of C++ (`exudyn.symbolic`),
+- added homogeneous transformations (`exu.HT`) for the frames of bodies, markers and joints, kinetic and potential
+  energies as output variables, and `mbs.Inspect` and `mbs.ComputeItem` for what an item provides and computes,
+- revised the whole project (2026): tested wheels for Windows, Linux and macOS (also ARM), a documentation in Markdown
+  with a reference page for every item, notebooks, and a test suite run on every supported Python version.
+
+Future goals (2027-2029) are:
+
+- Python and C++ user elements,
+- advanced contact formulations,
+- automatic step size selection for second order solvers,
+- export of the equations,
+- GPU support.
 
 For solved issues (and new features), see section 'Issues and Bugs', {ref}`sec-issuetracker`.
 The open issues are in the same section, and every resolved issue of every release is in the [changelog](../../CHANGELOG.md).

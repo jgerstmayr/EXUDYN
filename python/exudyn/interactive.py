@@ -131,7 +131,7 @@ class InteractiveDialog:
                  doTimeIntegration = True, runOnStart = False, 
                  addLabelStringVariables=False, addSliderVariables=False, 
                  checkRenderEngineStopFlag = True, userOnChange=None, useSysVariables=False,
-                 windowSize=None):
+                 windowSize=None, userSpaceKey=None):
         """initialize an InteractiveDialog
 
         Args:
@@ -154,6 +154,7 @@ class InteractiveDialog:
             userOnChange: a user function(mbs, self) which is called after period, if widget values are different from values stored in mbs.variables; this usually occurs if buttons are pressed or sliders are moved; the arguments are the MainSystem mbs and the InteractiveDialog (self)
             useSysVariables: for internal visualization functions: in this case, variables are written to mbs.sys instead of mbs.variables
             windowSize: [width, height] of the dialog in pixels; None gives the size stored in ~/.exudyn/config.json, or the size of the layout if nothing is stored. A size given here wins over a stored one, as a position given in a script wins for the render window
+            userSpaceKey: a function F(dialog, stopped) called after the space key started (stopped = False) or stopped (stopped = True) the dialog
 
         Note:
             detailed description of dialogItems and plots list/dictionary is given in commented the example below
@@ -186,6 +187,7 @@ class InteractiveDialog:
 
         self.plots = plots
         self.userStartSimulation = userStartSimulation
+        self.userSpaceKey = userSpaceKey
         self.userOnChange = userOnChange
         self.showTime = showTime
         self.fontSize = fontSize
@@ -392,7 +394,7 @@ class InteractiveDialog:
         self.Run['command'] = self.StartSimulation
         self.Run.focus_set() #does not work
         
-        self.tkWindow.bind('<space>', func=self.StartSimulation) #if focus is not set to button ...
+        self.tkWindow.bind('<space>', func=self.OnSpaceKey)
         self.tkWindow.bind('<Escape>', self.OnQuit) #Escape causes immediate quit (no further checks)
         self.tkWindow.bind('q', self.OnQuit) #Button 'Q' causes immediate quit (no further checks)
 
@@ -456,6 +458,15 @@ class InteractiveDialog:
                     tkinter._default_root.update()
                 except tkinter.TclError:
                     pass
+
+    def OnSpaceKey(self, event=None):
+        """the space key starts or stops, as the button does"""
+        #where the Run button has the focus (macOS), Tk's class binding of a button already ran its command on
+        #the space key; starting here as well stopped it again at once (#2931)
+        if event is None or event.widget is not self.Run:
+            self.StartSimulation()
+        if self.userSpaceKey is not None:
+            self.userSpaceKey(self, self.simulationStopped)
 
     def StartSimulation(self, event=None):
         """function called on button 'Run'
@@ -880,7 +891,8 @@ def AnimateModes(systemContainer, mainSystem, nodeNumber, period = 0.04, stepsPe
 #++++++++++++++++++++++++++++++++++++++++++++
 @extends(exudyn.MainSystem)
 def SolutionViewer(mainSystem, solution=None, rowIncrement = 1, timeout=0.04, runOnStart = True, runMode=2, 
-                   fontSize=12, title='', checkRenderEngineStopFlag=True, windowSize=None) -> None:
+                   fontSize=12, title='', checkRenderEngineStopFlag=True, windowSize=None,
+                   callPreStepUserFunction=False) -> None:
     """open interactive dialog and visulation (animate) solution loaded with LoadSolutionFile(...); Change slider 'Increment' to change the automatic increment of time frames; Change mode between continuous run, one cycle (fits perfect for animation recording) or 'Static' (to change Solution steps manually with the mouse); update period also lets you change the speed of animation; Press Run / Stop button to start/stop interactive mode (updating of grpahics)
 
     Args:
@@ -894,9 +906,10 @@ def SolutionViewer(mainSystem, solution=None, rowIncrement = 1, timeout=0.04, ru
         title: if empty, it uses default; otherwise define specific title
         checkRenderEngineStopFlag: if True, stopping renderer (pressing Q or Escape) also causes stopping the interactive dialog
         windowSize: [width, height] of the dialog in pixels; None gives the size stored in ~/.exudyn/config.json, or the size of the layout
+        callPreStepUserFunction: if True, the PreStepUserFunction of mainSystem is called with the time of each shown solution step before it is drawn; it may move graphics or set prescribed values (e.g. the reference position of a ground object), as it does in the simulation
 
     Returns:
-        :None: updates current visualization state, renders the scene continuously (after pressing button 'Run')
+        :None: updates current visualization state, renders the scene continuously (after pressing button 'Run'); the space key starts in 'Continuous run' and stops in 'Static'
 
     Example:
         #HERE, mbs must contain same model as solution stored in solution/coordinatesSolution.txt
@@ -987,12 +1000,27 @@ def SolutionViewer(mainSystem, solution=None, rowIncrement = 1, timeout=0.04, ru
 
     from tkinter import messagebox
 
-            
+    def CallPreStepUserFunction(i):
+        """the PreStepUserFunction of the system at the time of row i, if asked for (#2930)"""
+        if not callPreStepUserFunction:
+            return
+        userFunction = mainSystem.GetPreStepUserFunction()
+        if isinstance(userFunction, dict) and callable(userFunction.get('function', None)):
+            userFunction['function'](mainSystem, float(mbs.sys['solutionViewerSolution']['data'][i][0]))
+
+    def UFspaceKey(dialog, stopped):
+        """the space key: start in 'Continuous run', stop in 'Static' (#2931)"""
+        for (variable, name) in dialog.variableList:
+            if name == 'solutionViewerRunModus':
+                variable.set(2 if stopped else 0)
+                mbs.sys['solutionViewerRunModus'] = 2 if stopped else 0
+
     def UFviewer(mbs, dialog):
         i = int(mbs.sys['solutionViewerStep'])
 
         # mbs.systemData.SetTime(t, exudyn.ConfigurationType.Visualization)
         SetSolutionState(mainSystem, mbs.sys['solutionViewerSolution'], i, exudyn.ConfigurationType.Visualization)
+        CallPreStepUserFunction(i)
         
         SC.renderer.SendRedrawSignal()
         SC.renderer.DoIdleTasks(0, pollEvents=_pollEventsInTkCallback) #as there is no simulation, we must do this for singlethreaded renderer to draw graphicsDataUserFunctions
@@ -1015,6 +1043,7 @@ def SolutionViewer(mainSystem, solution=None, rowIncrement = 1, timeout=0.04, ru
             dialog.variableList[0][0].set(0)
 
             SetSolutionState(mainSystem, mbs.sys['solutionViewerSolution'], 0, exudyn.ConfigurationType.Visualization)
+            CallPreStepUserFunction(0)
             # SC.renderer.SendRedrawSignal()
             # SC.renderer.DoIdleTasks(0) #as there is no simulation, we must do this for graphicsDataUserFunctions
             if mbs.sys['solutionViewerRunModus'] == 1: #one cylce ==> stop
@@ -1049,6 +1078,7 @@ def SolutionViewer(mainSystem, solution=None, rowIncrement = 1, timeout=0.04, ru
                       showTime=False, runOnStart=runOnStart, windowSize=windowSize,
                       checkRenderEngineStopFlag=checkRenderEngineStopFlag,
                       useSysVariables=True, #use mbs.sys, not to bloat the mbs.variables of the user
+                      userSpaceKey=UFspaceKey,
                       )
 
 

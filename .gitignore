@@ -89,6 +89,7 @@ python/TestModels/testData/netgenTestMesh2*.npz
 *.toc
 *.out
 *.synctex.gz
+*.synctex
 *.bbl
 *.blg
 *.fls

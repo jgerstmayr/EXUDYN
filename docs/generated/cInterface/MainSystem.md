@@ -667,7 +667,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`addPrismati
 
 
 
-Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`newtonsCradle.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/newtonsCradle.py) (Ex), [`NGsolveCreateFFRFreducedOrder.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/NGsolveCreateFFRFreducedOrder.py) (Ex), [`ANCFThinPlateTests.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/ANCFThinPlateTests.py) (TM), [`createFunctionsTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/createFunctionsTest.py) (TM), [`createItemNumbersTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/createItemNumbersTest.py) (TM), [`driveTrainTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/driveTrainTest.py) (TM), [`mainSystemExtensionsTests.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/mainSystemExtensionsTests.py) (TM)
+Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`newtonsCradle.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/newtonsCradle.py) (Ex), [`NGsolveCreateFFRFreducedOrder.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/NGsolveCreateFFRFreducedOrder.py) (Ex), [`solutionViewerPreStepUserFunction.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/solutionViewerPreStepUserFunction.py) (Ex), [`ANCFThinPlateTests.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/ANCFThinPlateTests.py) (TM), [`createFunctionsTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/createFunctionsTest.py) (TM), [`createItemNumbersTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/createItemNumbersTest.py) (TM), [`driveTrainTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/driveTrainTest.py) (TM), [`mainSystemExtensionsTests.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/mainSystemExtensionsTests.py) (TM)
 
 
 (sec-mainsystemextensions-creategenericjoint)=
@@ -1379,7 +1379,7 @@ degree of freedom         = 3
 (sec-mainsystemextensions-solutionviewer)=
 ### Function: SolutionViewer
 
-[`SolutionViewer(mainSystem, solution = None, rowIncrement = 1, timeout = 0.04, runOnStart = True, runMode = 2, fontSize = 12, title = '', checkRenderEngineStopFlag = True, windowSize = None) -> None`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/interactive.py#L882)
+[`SolutionViewer(mainSystem, solution = None, rowIncrement = 1, timeout = 0.04, runOnStart = True, runMode = 2, fontSize = 12, title = '', checkRenderEngineStopFlag = True, windowSize = None, callPreStepUserFunction = False) -> None`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/interactive.py#L893)
 
 - **function description**: open interactive dialog and visulation (animate) solution loaded with LoadSolutionFile(...); Change slider 'Increment' to change the automatic increment of time frames; Change mode between continuous run, one cycle (fits perfect for animation recording) or 'Static' (to change Solution steps manually with the mouse); update period also lets you change the speed of animation; Press Run / Stop button to start/stop interactive mode (updating of grpahics) - NOTE that this function is added to MainSystem via Python function SolutionViewer.
 - **input**:
@@ -1393,7 +1393,8 @@ degree of freedom         = 3
   - `title`: if empty, it uses default; otherwise define specific title
   - `checkRenderEngineStopFlag`: if True, stopping renderer (pressing Q or Escape) also causes stopping the interactive dialog
   - `windowSize`: [width, height] of the dialog in pixels; None gives the size stored in ~/.exudyn/config.json, or the size of the layout
-- **output**: (type: None) updates current visualization state, renders the scene continuously (after pressing button 'Run')
+  - `callPreStepUserFunction`: if True, the PreStepUserFunction of mainSystem is called with the time of each shown solution step before it is drawn; it may move graphics or set prescribed values (e.g. the reference position of a ground object), as it does in the simulation
+- **output**: (type: None) updates current visualization state, renders the scene continuously (after pressing button 'Run'); the space key starts in 'Continuous run' and stops in 'Static'
 
 *example*:
 
