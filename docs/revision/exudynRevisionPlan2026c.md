@@ -323,6 +323,10 @@ CLOSED 2026-10-10 (#2930): `callPreStepUserFunction` (False by default), example
 
 CLOSED 2026-10-10 (#2931): the space key starts in Continuous run and stops in Static; to be checked on macOS.
 
+#### **CLOSED_RG6.18.3** Switch a running SolutionViewer from Static to Continuous run with the first space key
+
+CLOSED 2026-10-10 (#2940): running in Static or One cycle, space switches to Continuous run and keeps running; the Run button's own space binding ends with 'break'; to be checked on screen.
+
 ## **CLOSED_RG7** Python user items
 
 Items whose behaviour is written in Python, and where the line runs against compiled user items (RG8). No step yet.

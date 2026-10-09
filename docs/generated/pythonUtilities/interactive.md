@@ -19,7 +19,7 @@ Utilities for interactive simulation and results monitoring; NOTE: does not work
 (sec-interactive-animatemodes)=
 ## Function: AnimateModes
 
-[`AnimateModes(systemContainer, mainSystem, nodeNumber, period = 0.04, stepsPerPeriod = 30, showTime = True, renderWindowText = '', runOnStart = False, runMode = 0, scaleAmplitude = 1, title = '', fontSize = 12, checkRenderEngineStopFlag = True, systemEigenVectors = None)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/interactive.py#L693)
+[`AnimateModes(systemContainer, mainSystem, nodeNumber, period = 0.04, stepsPerPeriod = 30, showTime = True, renderWindowText = '', runOnStart = False, runMode = 0, scaleAmplitude = 1, title = '', fontSize = 12, checkRenderEngineStopFlag = True, systemEigenVectors = None)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/interactive.py#L694)
 
 - **function description**: animate modes of ObjectFFRFreducedOrder, of nodal coordinates (changes periodically one nodal coordinate) or of a list of system modes provided as list of lists; for creating snapshots, press 'Static' and 'Record frames' and press 'Run' to save one figure in the image subfolder; for creating animations for one mode, use the same procedure but use 'One Cycle'. Modes may be inverted by pressing according '+' and '-' buttons next to Amplitude.
 - **input**:
@@ -47,7 +47,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`CMSexampleC
 (sec-interactive-solutionviewer)=
 ## Function: SolutionViewer
 
-[`SolutionViewer(mainSystem, solution = None, rowIncrement = 1, timeout = 0.04, runOnStart = True, runMode = 2, fontSize = 12, title = '', checkRenderEngineStopFlag = True, windowSize = None, callPreStepUserFunction = False) -> None`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/interactive.py#L893)
+[`SolutionViewer(mainSystem, solution = None, rowIncrement = 1, timeout = 0.04, runOnStart = True, runMode = 2, fontSize = 12, title = '', checkRenderEngineStopFlag = True, windowSize = None, callPreStepUserFunction = False) -> None`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/interactive.py#L894)
 
 - **function description**: open interactive dialog and visulation (animate) solution loaded with LoadSolutionFile(...); Change slider 'Increment' to change the automatic increment of time frames; Change mode between continuous run, one cycle (fits perfect for animation recording) or 'Static' (to change Solution steps manually with the mouse); update period also lets you change the speed of animation; Press Run / Stop button to start/stop interactive mode (updating of grpahics)
 - **input**:
@@ -82,7 +82,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`CMSexampleC
 (sec-interactive-showimage)=
 ## Function: ShowImage
 
-[`ShowImage(systemContainer, size = [800, 600], modelRotation = None, zoomAll = True, show = True, fileName = '')`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/interactive.py#L1093)
+[`ShowImage(systemContainer, size = [800, 600], modelRotation = None, zoomAll = True, show = True, fileName = '')`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/interactive.py#L1098)
 
 - **function description**: the current scene as an image, rendered by the raytracer without a window, and shown with matplotlib; made for notebooks, where no render window opens, and for documentation images
 - **input**:
@@ -106,7 +106,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`CMSexampleC
 (sec-interactive-convertimages2video)=
 ## Function: ConvertImages2Video
 
-[`ConvertImages2Video(workingDir = 'images', inputPattern = 'frame%05d.png', outputFile = 'animation.mp4', inputFrameRate = 25, outputFrameRate = 25, compressionCRF = 28, startNumber = 0, totalFrames = None, videoCodec = None)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/interactive.py#L1146)
+[`ConvertImages2Video(workingDir = 'images', inputPattern = 'frame%05d.png', outputFile = 'animation.mp4', inputFrameRate = 25, outputFrameRate = 25, compressionCRF = 28, startNumber = 0, totalFrames = None, videoCodec = None)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/interactive.py#L1151)
 
 - **function description**: function to call ffmpeg in the background and convert images to video; requires the program ffmpeg and the package ffmpeg-python ("conda install ffmpeg", "pip install ffmpeg-python")
 - **input**:
@@ -135,7 +135,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`CMSexampleC
 (sec-interactive-interactiveimages2video)=
 ## Function: InteractiveImages2Video
 
-[`InteractiveImages2Video(closeAfterCreation = False, fontSize = 11)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/interactive.py#L1224)
+[`InteractiveImages2Video(closeAfterCreation = False, fontSize = 11)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/interactive.py#L1229)
 
 - **function description**: interactive dialog to convert generated images to videos using ffmpeg library; see also ConvertImages2Video() for meaning of values; requires ffmpeg-python to be installed
 
@@ -225,14 +225,14 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`CMSexampleC
   - `userOnChange`: a user function(mbs, self) which is called after period, if widget values are different from values stored in mbs.variables; this usually occurs if buttons are pressed or sliders are moved; the arguments are the MainSystem mbs and the InteractiveDialog (self)
   - `useSysVariables`: for internal visualization functions: in this case, variables are written to mbs.sys instead of mbs.variables
   - `windowSize`: [width, height] of the dialog in pixels; None gives the size stored in ~/.exudyn/config.json, or the size of the layout if nothing is stored. A size given here wins over a stored one, as a position given in a script wins for the render window
-  - `userSpaceKey`: a function F(dialog, stopped) called after the space key started (stopped = False) or stopped (stopped = True) the dialog
+  - `userSpaceKey`: a function F(dialog) called on the space key instead of starting or stopping the dialog; it calls dialog.StartSimulation() where it starts or stops, and dialog.simulationStopped says whether the dialog runs
 - **notes**: detailed description of dialogItems and plots list/dictionary is given in commented the example below
 
 
 (sec-interactive-interactivedialog-onquit)=
 ### Class function: OnQuit
 
-[`OnQuit(self, event = None)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/interactive.py#L434)
+[`OnQuit(self, event = None)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/interactive.py#L437)
 
 - **class function description**: function called when pressing escape or closing dialog
 
@@ -240,15 +240,15 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`CMSexampleC
 (sec-interactive-interactivedialog-onspacekey)=
 ### Class function: OnSpaceKey
 
-[`OnSpaceKey(self, event = None)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/interactive.py#L462)
+[`OnSpaceKey(self, event = None)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/interactive.py#L465)
 
-- **class function description**: the space key starts or stops, as the button does
+- **class function description**: the space key starts or stops, as the button does - or does what userSpaceKey says
 
 
 (sec-interactive-interactivedialog-startsimulation)=
 ### Class function: StartSimulation
 
-[`StartSimulation(self, event = None)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/interactive.py#L471)
+[`StartSimulation(self, event = None)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/interactive.py#L472)
 
 - **class function description**: function called on button 'Run'
 
@@ -256,7 +256,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`CMSexampleC
 (sec-interactive-interactivedialog-processwidgetstates)=
 ### Class function: ProcessWidgetStates
 
-[`ProcessWidgetStates(self)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/interactive.py#L485)
+[`ProcessWidgetStates(self)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/interactive.py#L486)
 
 - **class function description**: assign current values of radio buttons and sliders to mbs.variables or mbs.sys
 
@@ -264,7 +264,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`CMSexampleC
 (sec-interactive-interactivedialog-continuousrunfunction)=
 ### Class function: ContinuousRunFunction
 
-[`ContinuousRunFunction(self, event = None)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/interactive.py#L501)
+[`ContinuousRunFunction(self, event = None)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/interactive.py#L502)
 
 - **class function description**: function which is repeatedly called when button 'Run' is pressed
 
@@ -272,7 +272,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`CMSexampleC
 (sec-interactive-interactivedialog-initializeplots)=
 ### Class function: InitializePlots
 
-[`InitializePlots(self)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/interactive.py#L520)
+[`InitializePlots(self)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/interactive.py#L521)
 
 - **class function description**: initialize figure and subplots for plots structure
 
@@ -280,7 +280,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`CMSexampleC
 (sec-interactive-interactivedialog-updateplots)=
 ### Class function: UpdatePlots
 
-[`UpdatePlots(self)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/interactive.py#L568)
+[`UpdatePlots(self)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/interactive.py#L569)
 
 - **class function description**: update all subplots with current sensor values
 
@@ -288,7 +288,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`CMSexampleC
 (sec-interactive-interactivedialog-initializesolver)=
 ### Class function: InitializeSolver
 
-[`InitializeSolver(self)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/interactive.py#L625)
+[`InitializeSolver(self)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/interactive.py#L626)
 
 - **class function description**: function to initialize solver for repeated calls
 
@@ -296,7 +296,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`CMSexampleC
 (sec-interactive-interactivedialog-finalizesolver)=
 ### Class function: FinalizeSolver
 
-[`FinalizeSolver(self)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/interactive.py#L632)
+[`FinalizeSolver(self)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/interactive.py#L633)
 
 - **class function description**: stop solver (finalize correctly)
 
@@ -304,7 +304,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`CMSexampleC
 (sec-interactive-interactivedialog-runsimulationperiod)=
 ### Class function: RunSimulationPeriod
 
-[`RunSimulationPeriod(self)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/interactive.py#L639)
+[`RunSimulationPeriod(self)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/interactive.py#L640)
 
 - **class function description**: function which performs short simulation for given period
 

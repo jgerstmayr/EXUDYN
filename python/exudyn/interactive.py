@@ -154,7 +154,7 @@ class InteractiveDialog:
             userOnChange: a user function(mbs, self) which is called after period, if widget values are different from values stored in mbs.variables; this usually occurs if buttons are pressed or sliders are moved; the arguments are the MainSystem mbs and the InteractiveDialog (self)
             useSysVariables: for internal visualization functions: in this case, variables are written to mbs.sys instead of mbs.variables
             windowSize: [width, height] of the dialog in pixels; None gives the size stored in ~/.exudyn/config.json, or the size of the layout if nothing is stored. A size given here wins over a stored one, as a position given in a script wins for the render window
-            userSpaceKey: a function F(dialog, stopped) called after the space key started (stopped = False) or stopped (stopped = True) the dialog
+            userSpaceKey: a function F(dialog) called on the space key instead of starting or stopping the dialog; it calls dialog.StartSimulation() where it starts or stops, and dialog.simulationStopped says whether the dialog runs
 
         Note:
             detailed description of dialogItems and plots list/dictionary is given in commented the example below
@@ -395,6 +395,9 @@ class InteractiveDialog:
         self.Run.focus_set() #does not work
         
         self.tkWindow.bind('<space>', func=self.OnSpaceKey)
+        #the Run button runs its command on the space key by itself when it has the focus (macOS); this binding comes
+        #first and 'break' ends the handling there, so the key acts once (#2931)
+        self.Run.bind('<space>', lambda event: (self.OnSpaceKey(event), 'break')[1])
         self.tkWindow.bind('<Escape>', self.OnQuit) #Escape causes immediate quit (no further checks)
         self.tkWindow.bind('q', self.OnQuit) #Button 'Q' causes immediate quit (no further checks)
 
@@ -460,13 +463,11 @@ class InteractiveDialog:
                     pass
 
     def OnSpaceKey(self, event=None):
-        """the space key starts or stops, as the button does"""
-        #where the Run button has the focus (macOS), Tk's class binding of a button already ran its command on
-        #the space key; starting here as well stopped it again at once (#2931)
-        if event is None or event.widget is not self.Run:
-            self.StartSimulation()
+        """the space key starts or stops, as the button does - or does what userSpaceKey says"""
         if self.userSpaceKey is not None:
-            self.userSpaceKey(self, self.simulationStopped)
+            self.userSpaceKey(self)
+        else:
+            self.StartSimulation()
 
     def StartSimulation(self, event=None):
         """function called on button 'Run'
@@ -1008,12 +1009,16 @@ def SolutionViewer(mainSystem, solution=None, rowIncrement = 1, timeout=0.04, ru
         if isinstance(userFunction, dict) and callable(userFunction.get('function', None)):
             userFunction['function'](mainSystem, float(mbs.sys['solutionViewerSolution']['data'][i][0]))
 
-    def UFspaceKey(dialog, stopped):
-        """the space key: start in 'Continuous run', stop in 'Static' (#2931)"""
+    def UFspaceKey(dialog):
+        """the space key: start in 'Continuous run', stop in 'Static' (#2931); running in 'Static' or 'One cycle', it
+        switches to 'Continuous run' and keeps running (#2940)"""
+        if dialog.simulationStopped or mbs.sys['solutionViewerRunModus'] == 0:
+            dialog.StartSimulation()
+        modus = 2 if dialog.simulationStopped else 0
         for (variable, name) in dialog.variableList:
             if name == 'solutionViewerRunModus':
-                variable.set(2 if stopped else 0)
-                mbs.sys['solutionViewerRunModus'] = 2 if stopped else 0
+                variable.set(modus)
+        mbs.sys['solutionViewerRunModus'] = modus
 
     def UFviewer(mbs, dialog):
         i = int(mbs.sys['solutionViewerStep'])

@@ -202,3 +202,19 @@ possible). In some cases, it would be probably possible to automatically fix ...
 - The original of a fixed script is kept once as `<script>.py.bak`; an existing `.bak` is not overwritten.
 - On the copies of the examples and test models: 6 findings left, all deprecations without a one-to-one replacement
   (`MecanumXYphi2WheelVelocities`, `rotationMarker0/1`). Two more tests.
+
+<a id="rg6-18-3"></a>
+### RG6.18.3 — the first space key of a running SolutionViewer (2026-10-10, #2940)
+
+*(Maintainer 2026-10-10: "it does not work at the first time if it starts already in the 'run' mode but at 'Static'.
+Then it should first switch to 'continuous run' first, without switching to stop.")*
+
+- The SolutionViewer starts running (`runOnStart=True`) in *Static* (`runMode=2`). The space key of #2931 toggled first
+  and then set the mode, so the first press stopped the running viewer.
+- `InteractiveDialog(userSpaceKey=F)` now calls `F(dialog)` **instead of** starting or stopping, and `F` calls
+  `dialog.StartSimulation()` where it starts or stops. The SolutionViewer:
+  - running in *Static* or *One cycle*: switch to *Continuous run*, keep running;
+  - otherwise: start in *Continuous run*, or stop in *Static*.
+- The double toggle on macOS is now handled where it starts: the Run button gets its own `<space>` binding. It comes
+  before Tk's class binding of the button and ends with `'break'`, so the key acts once - also where the button has the
+  focus. To be checked on screen.
