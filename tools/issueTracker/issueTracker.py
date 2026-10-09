@@ -135,7 +135,7 @@ def ReleaseName(version):
 
 
 # versionDev = '' #release (works in pip)
-versionDev = '.dev1' #(development version, get with pip install exudyn --pre)
+versionDev = '' #(development version, get with pip install exudyn --pre)
 
 #the release names - jazz legends, alphabetically - moved into releases.json with the baselines
 #; ReleaseName() reads them.

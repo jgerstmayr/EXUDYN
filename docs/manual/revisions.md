@@ -14,8 +14,9 @@ there are two of them, *revision2026* - finished, and what version 1.12 is - and
 [developer documentation](../dev/README.md), together with the standing information document
 that holds the measured facts and the decisions.
 
+(sec-revisions-1-13)=
 (sec-revisions-1-12)=
-## Version 1.12
+## Version 1.13
 
 A revision of the whole project rather than a feature release: the layout of the repository, the
 build, the tests, the documentation and the development tools. Most of it is invisible from a
@@ -24,8 +25,8 @@ model script. The parts that are not are first.
 ```{note}
 The individual issues of this revision carry **1.11.x** version numbers, because the micro
 version counts closed issues continuously and does not restart; **1.12.0** is the point at which
-the revision was declared complete. 1.12 itself was **not published** — **1.13 is the first
-release that carries it**.
+the revision was declared complete. 1.12 itself was **not published**: **1.13.0** is the first
+release after 1.11 and carries the revision together with what followed it.
 ```
 
 ### What can break a script
