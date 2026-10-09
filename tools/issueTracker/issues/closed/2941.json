@@ -1,0 +1,17 @@
+{
+  "number": 2941,
+  "title": "exudev scripts --fix: GraphicsDataRectangle and GraphicsDataOrthoCubeLines as graphics.Brick",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "IMPROVEMENT",
+  "priority": "NORMAL",
+  "effort": "LOW",
+  "description": "maintainer 2026-10-10: GraphicsDataRectangle is reported but not fixed; with its first four arguments it converts to graphics.Brick with size 0 in z, addFaces=False, addEdges=True",
+  "dateRaised": "2026-10-10",
+  "deadline": "2027-04-08",
+  "dateResolved": "2026-10-10 01:04",
+  "resolvedAuthor": "Claude-JG",
+  "file": "tools/checkUserScripts.py",
+  "releaseNotes": "exudev scripts --fix rewrites GraphicsDataRectangle and GraphicsDataOrthoCubeLines as graphics.Brick drawing edges only (the rectangle with size 0 in z, its color as edgeColor). revision2026c step RG10.31.9",
+  "resolvedInVersion": "1.13.22"
+}

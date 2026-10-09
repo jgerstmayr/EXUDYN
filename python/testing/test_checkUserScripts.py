@@ -362,3 +362,19 @@ def testFixKeepsTheOriginalAsBackup(tmp_path, tables):
                    capture_output=True, text=True, check=True)
     assert 'import numpy as np' in script.read_text()
     assert (tmp_path / 'old.py.bak').read_text() == 'import exudyn as exu\nfrom exudyn.utilities import *\nx = np.zeros(3)\n'
+
+
+def testFixDrawsRectanglesAndCubeLinesAsBricks(tables):
+    """--fix (#2941): GraphicsDataRectangle and GraphicsDataOrthoCubeLines become graphics.Brick with edges only,
+    the rectangle with size 0 in z, its color as the color of the edges"""
+    source = ('import exudyn as exu\n'
+              'import exudyn.graphicsDataUtilities as gdu\n'
+              'g = gdu.GraphicsDataRectangle(-1, -2, 1, 2, color=[1,0,0,1])\n'
+              'h = gdu.GraphicsDataOrthoCubeLines(0, 0, 0, a, 1, 1)\n')
+    (fixed, tree, nFixed) = checker.FixSource(source, ast.parse(source), tables)
+    assert fixed == ('import exudyn as exu\n'
+                     'import exudyn.graphicsDataUtilities as gdu\n'
+                     'import exudyn.graphics as graphics  #added by exudev scripts --fix\n'
+                     'g = graphics.Brick(centerPoint=[0.0, 0.0, 0], size=[2, 4, 0], addFaces=False, addEdges=True, '
+                     'edgeColor=[1,0,0,1])\n'
+                     'h = graphics.Brick(centerPoint=[0.5*(0+a), 0.5, 0.5], size=[a-0, 1, 1], addFaces=False, addEdges=True)\n')

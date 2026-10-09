@@ -218,3 +218,22 @@ Then it should first switch to 'continuous run' first, without switching to stop
 - The double toggle on macOS is now handled where it starts: the Run button gets its own `<space>` binding. It comes
   before Tk's class binding of the button and ends with `'break'`, so the key acts once - also where the button has the
   focus. To be checked on screen.
+
+<a id="rg10-31-9"></a>
+### RG10.31.9 — GraphicsDataRectangle and GraphicsDataOrthoCubeLines as graphics.Brick (2026-10-10, #2941)
+
+*(Maintainer 2026-10-10: "if GraphicsDataRectangle stays in a script, it is currently not found. But taking the first 4
+args, it could be easily converted into a graphics.Brick command, setting Z-size to 0 addFaces=False and
+addEdges=True.")*
+
+- Both were reported, as deprecated library functions and, with `from exudyn.utilities import *`, as names that star
+  import no longer provides; neither was fixed. Checked with the three ways a script reaches them: the star import of
+  `exudyn.utilities`, the star import of `exudyn.graphicsDataUtilities`, and `gdu.GraphicsDataRectangle`.
+- `--fix` now writes:
+  - `GraphicsDataRectangle(x0, y0, x1, y1, color)` → `graphics.Brick(centerPoint=[cx, cy, 0], size=[w, h, 0],
+    addFaces=False, addEdges=True, edgeColor=color)`;
+  - `GraphicsDataOrthoCubeLines(x0, y0, z0, x1, y1, z1, color)` the same with its z.
+- The rewrite shares the corner arithmetic of `BrickXYZ`: numbers where the corners are numbers, expressions where not.
+  `import exudyn.graphics as graphics` is added if missing.
+- A brick with size 0 in z and no faces gives 8 points and 12 edges (4 of them of length 0), and it draws as the
+  rectangle; checked as ground graphics. One more test.

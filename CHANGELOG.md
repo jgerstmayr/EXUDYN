@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.13 | Newborn | 22 | 1.13.21 |
+| 1.13 | Newborn | 23 | 1.13.22 |
 | 1.12 | Metheney | 367 | 1.12.462 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
@@ -30,6 +30,10 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.13 - Newborn (current)
 
+- **1.13.22** `IMPROVEMENT` `NORMAL` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` exudev scripts --fix: GraphicsDataRectangle and GraphicsDataOrthoCubeLines as graphics.Brick (#2941)
+  - description: maintainer 2026-10-10: GraphicsDataRectangle is reported but not fixed; with its first four arguments it converts to graphics.Brick with size 0 in z, addFaces=False, addEdges=True
+  - **notes:** exudev scripts --fix rewrites GraphicsDataRectangle and GraphicsDataOrthoCubeLines as graphics.Brick drawing edges only (the rectangle with size 0 in z, its color as edgeColor). revision2026c step RG10.31.9
+  - date resolved: **2026-10-10 01:04**, date raised: 2026-10-10
 - **1.13.21** <span class="textred">`BUG`</span> `NORMAL` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` SolutionViewer: the first space key stops instead of switching from Static to Continuous run (#2940)
   - description: maintainer 2026-10-10, after \#2931: the SolutionViewer starts running in Static mode (runOnStart=True, runMode=2); the first space key then stopped it (and set Static); it should switch to Continuous run and keep running; after a few presses it worked
   - **notes:** the first space key of a SolutionViewer running in Static switches to Continuous run and keeps it running; the space key acts once also where the Run button has the focus. revision2026c step RG6.18

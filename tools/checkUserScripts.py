@@ -544,17 +544,28 @@ def CheckTree(tree, tables, fixes=None, source=None):
         items = sorted(list(call.args) + list(call.keywords), key=lambda n: (n.lineno, n.col_offset))
         DeleteItem(items, items.index(keyword))
 
-    def FixBrickXYZ(call):
-        """BrickXYZ(x0, y0, z0, x1, y1, z1, ...) -> Brick(centerPoint=..., size=..., ...) (#2938)"""
-        names = ['xMin', 'yMin', 'zMin', 'xMax', 'yMax', 'zMax', 'color', 'addNormals', 'addEdges', 'edgeColor', 'addFaces']
+    def FixCornersToBrick(call, functionName):
+        """a box or rectangle given by its corners as graphics.Brick(centerPoint=..., size=...) (#2938, #2941):
+        BrickXYZ(x0, y0, z0, x1, y1, z1, ...) keeps its other arguments; GraphicsDataOrthoCubeLines(x0, y0, z0, x1, y1,
+        z1, color) and GraphicsDataRectangle(x0, y0, x1, y1, color) draw edges only, the rectangle with size 0 in z"""
+        if functionName == 'BrickXYZ':
+            names = ['xMin', 'yMin', 'zMin', 'xMax', 'yMax', 'zMax', 'color', 'addNormals', 'addEdges', 'edgeColor',
+                     'addFaces']
+        elif functionName == 'GraphicsDataOrthoCubeLines':
+            names = ['xMin', 'yMin', 'zMin', 'xMax', 'yMax', 'zMax', 'color']
+        else:
+            names = ['xMin', 'yMin', 'xMax', 'yMax', 'color']
+        corners = [n for n in names if n[1:] in ['Min', 'Max']]
         if Arguments(call) is None or len(call.args) > len(names):
             return
         values = dict(zip(names, call.args))
         values.update((k.arg, k.value) for k in call.keywords)
-        if not all(name in values for name in names[:6]) or not set(values) <= set(names):
+        if not all(name in values for name in corners) or not set(values) <= set(names):
             return
 
         def Combined(a, b, minus):
+            if a not in values:              #the rectangle has no z: center 0, size 0
+                return '0'
             try:
                 (x, y) = (ast.literal_eval(values[a]), ast.literal_eval(values[b]))
                 return repr(y - x if minus else 0.5 * (x + y))
@@ -564,10 +575,15 @@ def CheckTree(tree, tables, fixes=None, source=None):
         axes = [('xMin', 'xMax'), ('yMin', 'yMax'), ('zMin', 'zMax')]
         center = '[' + ', '.join(Combined(a, b, False) for (a, b) in axes) + ']'
         size = '[' + ', '.join(Combined(a, b, True) for (a, b) in axes) + ']'
-        rest = [name + '=' + Segment(values[name]) for name in names[6:] if name in values]
-        function = Segment(call.func)
-        Replace(call, function[:-len('BrickXYZ')] + 'Brick(centerPoint=' + center + ', size=' + size
-                + ''.join(', ' + r for r in rest) + ')')
+        if functionName == 'BrickXYZ':
+            rest = [name + '=' + Segment(values[name]) for name in names[6:] if name in values]
+            function = Segment(call.func)[:-len('BrickXYZ')] + 'Brick'
+        else:                                #edges only, in the color of the lines
+            rest = ['addFaces=False', 'addEdges=True'] + (['edgeColor=' + Segment(values['color'])]
+                                                          if 'color' in values else [])
+            function = 'graphics.Brick'
+            Import('graphics', 'import exudyn.graphics as graphics')
+        Replace(call, function + '(centerPoint=' + center + ', size=' + size + ''.join(', ' + r for r in rest) + ')')
 
     def Parenthesized(text):
         return text if re.fullmatch(r'[\w.]+', text) else '(' + text + ')'
@@ -741,8 +757,8 @@ def CheckTree(tree, tables, fixes=None, source=None):
                 (use, since, expires) = library['functions'][className]
                 Report(node.lineno, ('library', className), "'" + className + "' is deprecated since " + since
                        + ' and removed in ' + expires + ('; use ' + use if use else ''))
-                if className == 'BrickXYZ' and fixes is not None:
-                    FixBrickXYZ(node)
+                if className in ['BrickXYZ', 'GraphicsDataOrthoCubeLines', 'GraphicsDataRectangle'] and fixes is not None:
+                    FixCornersToBrick(node, className)
             for (owner, argument, use, since, expires) in library['arguments']:
                 if owner in (None, className) and any(keyword.arg == argument for keyword in node.keywords):
                     Report(node.lineno, ('libraryArgument', className, argument), className + '(' + argument
