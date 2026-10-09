@@ -73,19 +73,24 @@ https://github.com/jgerstmayr/EXUDYN/tree/master/docs/theDoc/theDoc.pdf
 
 #Optional dependency groups, checked against the imports actually present in the code by
 #'python tools/checkExtras.py' (revision2026 step R2.12) - so these lists cannot quietly go stale.
+#  pip install exudyn[basic]   what most models need: scipy and matplotlib - the recommended start
 #  pip install exudyn[tests]   everything TestModels/ needs to run the test suite
 #  pip install exudyn[all]     the above plus everything the package and the Examples refer to
 #  pip install exudyn[rl]      reinforcement learning; deliberately NOT part of [all], see below
 [project.optional-dependencies]
-#The three sets nest: tests < common < all, each built on the previous with a PEP 508
-#self-reference so no package is ever listed twice.
+#The sets nest: basic < tests < common < all, each built on the previous with a PEP 508
+#self-reference so no package is ever listed twice. [basic] is what a user needs to run, plot and
+#analyse most models; it leaves out ngsolve, which is not available on every platform.
 #Note the direction: [tests] is the INNERMOST set, not the outermost. It is the one with a hard
 #definition - exactly what TestModels/ needs to run - so it stays minimal and stable. [common] is
 #where packages land once a frequently used feature depends on them, and is the set that grows as
 #things migrate down from [all]. Do not "simplify" this by folding common into tests.
-tests = [
+basic = [
     "scipy",
     "matplotlib",
+    ]
+tests = [
+    "exudyn[basic]",
     "h5py",
     "networkx",
     "psutil",

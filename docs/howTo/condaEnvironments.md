@@ -99,6 +99,7 @@ Build the HTML documentation from the repository root:
 sphinx-build -b html . _build -E
 ```
 
+(sec-install-extras)=
 ### Optional packages via the Exudyn extras
 
 The optional dependencies are declared in `pyproject.toml`, so they can be installed by name
@@ -106,8 +107,9 @@ instead of being listed by hand:
 
 | command | installs |
 |---|---|
-| `pip install exudyn[tests]` | exactly what `TestModels/` needs: scipy, matplotlib, h5py, networkx, psutil, ngsolve |
-| `pip install exudyn[common]` | the above plus what frequently used features need: numpy-stl (STL import), tqdm (optimization progress), ffmpeg-python (video export; the program itself: `conda install ffmpeg`) |
+| `pip install exudyn[basic]` | what most models need: scipy (eigenvalues, sparse matrices, FEM) and matplotlib (plots, `PlotSensor`) - **recommended to start with** |
+| `pip install exudyn[tests]` | the above plus exactly what `TestModels/` needs: h5py, networkx, psutil, ngsolve |
+| `pip install exudyn[common]` | the above plus what frequently used features need: numpy-stl (STL import), tqdm (optimization progress), ffmpeg-python (video export; the program itself: `conda install ffmpeg`) - **to use most features** |
 | `pip install exudyn[all]` | the above plus everything else the package and the Examples refer to: pymeshlab, roboticstoolbox-python, spatialmath-python, numba, dispy, mpi4py |
 | `pip install exudyn[rl]` | reinforcement learning: torch, stable-baselines3, gymnasium, gym, tensorboard |
 

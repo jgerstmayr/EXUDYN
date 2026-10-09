@@ -16901,3 +16901,24 @@ still crash, but this seems to be on another side and is something that we won't
 - R6, K5, S7 confirmed on macOS; #2906 resolved. The manual GUI check (RG2.4) is done for 1.13 on Windows, Ubuntu and
   macOS; it is repeated at the next release.
 - The matplotlib window (macosx backend) may still crash on closing: outside Exudyn, not pursued.
+
+<a id="rg1-4-2"></a>
+### RG1.4 — the installation page before the release, and the extra `[basic]` (2026-10-09)
+
+*(Maintainer 2026-10-09, reading the documentation before the release - "does not require an issue": the sections "Run
+without Anaconda" and "Working with Ubuntu" come early and are too detailed, move the rest to troubleshooting; ffmpeg is
+for all platforms; add a "basic" dependency with scipy and matplotlib only, the rest hierarchically - "basic"
+recommended to start with, "common" to use most features; keep only `pip install exudyn` and `--pre -U` in the main
+instructions, the pip3 and pip update remarks to troubleshooting; the Ubuntu commands without `sudo`, with a remark.)*
+
+- `pyproject.toml`: `basic = [scipy, matplotlib]`, and `tests` starts from `exudyn[basic]`: basic < tests < common < all
+  (`[rl]` apart). `checkExtras.py`: OK.
+- `gettingStartedInstall.md`: the pip section first after the requirements, with `pip install "exudyn[basic]"`
+  (recommended to start with), `"exudyn[common]"` (most features), `exudyn` and `--pre -U`, and the link to the extras
+  (quoted for zsh). *Troubleshooting pip install* holds pip/pip3, `python -m pip`, the pip update, manylinux, the index,
+  `sudo` (needed by `apt`; for pip only with the global Python of the system, which should be avoided), the packages
+  without Anaconda (tkinter, `python3-tk`) and ffmpeg for all platforms; then a short *Linux: fonts of the dialogs and
+  display scaling* (label `sec-install-ubuntu` kept). "Run without Anaconda" and "Working with Ubuntu" are gone as
+  sections. Uninstall: `pip uninstall exudyn` everywhere.
+- `condaEnvironments.md`: the extras table has `[basic]` and the label `sec-install-extras`; `revisions.md` names the
+  extras; `GUI.md`: `apt install ffmpeg` with the remark on `sudo`.

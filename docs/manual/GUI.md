@@ -428,7 +428,7 @@ pip install ffmpeg-python     #the Python package that calls it
 
 This works on Windows, Linux and macOS (checked on all three), needs no Homebrew on macOS, and the program is
 then found from the terminal of that environment. Without conda, the program comes from the package manager of the
-system (e.g. `sudo apt install ffmpeg`, or Homebrew on macOS) and the Python package from pip as above.
+system (e.g. `apt install ffmpeg`, with `sudo`, or Homebrew on macOS) and the Python package from pip as above.
 
 - **macOS**: an ffmpeg without the `libx264` encoder (as the one of conda-forge on macOS) makes `ConvertImages2Video`
   take the encoder of macOS, `h264_videotoolbox`, and say so. From the command line, in the folder of the images:

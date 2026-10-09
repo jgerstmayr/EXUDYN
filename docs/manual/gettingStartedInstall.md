@@ -24,87 +24,63 @@ with the sparse solver; it is not supported). The everyday development of Exudyn
 **Visual Studio Code**, which is also what most co-developers use; {ref}`sec-dev-gettingstarted`
 sets both up.
 
-### Run without Anaconda
+(sec-install-installinstructions-pipinstall)=
+## Install Exudyn with PIP INSTALLER (pypi.org)
 
-If you do not install Anaconda (e.g., under Linux), make sure that you have the according Python packages installed:
+Pre-built versions of Exudyn are hosted on `pypi.org`, see the project
+[https://pypi.org/project/exudyn](https://pypi.org/project/exudyn). Install it with
 
-- `numpy` (used throughout the code, inevitable)
-- `matplotlib` (for any plot, also PlotSensor(...))
-- `tkinter` (for interactive dialogs, SolutionViewer, etc.)
-- `scipy` (needed for eigenvalue computation)
+- `pip install "exudyn[basic]"` - Exudyn with scipy and matplotlib, which most models need for eigenvalues, sparse
+  matrices and plots: **recommended to start with**;
+- `pip install "exudyn[common]"` - the above plus the packages of frequently used features: **to use most features**;
+- `pip install exudyn` - Exudyn and numpy only.
 
-You can install most of these packages using `pip install numpy` (Windows) or `pip3 install numpy` (Linux).
-NOTE: as there is only `numpy` needed (but not for all sub-packages) and `numpy` supports many variants, we do not add a particular requirement for installation of depending packages. It is not necessary to install `scipy` as long as you are not using features of `scipy`. Same reason for `tkinter` and `matplotlib`.
+The quotes keep shells such as zsh (macOS) from reading the brackets. What each set contains, and the larger ones,
+is listed in {ref}`sec-install-extras`.
 
-For interaction (right-mouse-click, some key-board commands) you need the Python module `tkinter`. This is included in regular Anaconda distributions (recommended, see below), but on Ubuntu you need to type alike (do not forget the '3', otherwise it installs for Python2 ...):
+For pre-releases (use with care!), add `--pre`:
 
-- `sudo apt-get install python3-tk`
+- `pip install exudyn --pre -U`
 
-see also common blogs for your operating system.
+The `-U` (identical to `--upgrade`) flag ensures that the installed version is also updated for a new micro version
+(e.g., from 1.6.119 to 1.6.164); otherwise, pip only updates when a newer minor version appears.
+
+If something does not work, see the next section; if no pre-built version exists for your system (e.g. a special Linux),
+build from source as described in {ref}`sec-dev-build`.
+
+(sec-install-troubleshooting)=
+### Troubleshooting pip install
+
+- **pip or pip3**: depending on the installation, the command may read `pip3` instead of `pip`. `python -m pip install
+  exudyn` is always right: it uses the pip of the Python that runs it.
+- **`import exudyn` fails after the install**: with several environments, the installation went into another Python;
+  `python -m pip install exudyn` installs into the Python you call, see also {ref}`sec-install-troubleshootingfaq`.
+- **pip too old (Linux)**: the manylinux wheels need pip 20.3 or newer:
+  `python -m pip install --upgrade pip`; a Python without pip gets it from the package manager,
+  e.g. `apt install python3-pip`.
+- **manylinux not supported**: Red Hat, CentOS, Rocky Linux and similar systems usually support manylinux2014, which
+  Exudyn's wheels accept since 1.7.116; otherwise build from source, see {ref}`sec-dev-build`.
+- **The index is not updated**: `pip install -i https://pypi.org/project/ exudyn`.
+- **sudo**: the commands on this page are written without `sudo`. The package manager of Linux (`apt ...`) needs it;
+  pip needs it only when it installs into the global Python of the system, which should be avoided - use a conda or
+  virtual environment instead.
+- **Without Anaconda**: Exudyn needs numpy, which pip installs with it; the extras above add scipy and matplotlib. The
+  dialogs (right mouse click, settings, SolutionViewer) need `tkinter`, which is part of Python on Windows and macOS and
+  of the Anaconda Python; a Linux system Python needs the package `python3-tk` (`apt install python3-tk`).
+- **Videos from recorded frames** need the program ffmpeg, on every platform: `conda install ffmpeg` and
+  `pip install ffmpeg-python` (part of `[common]`), see {ref}`sec-overview-basics-animations`.
 
 (sec-install-ubuntu)=
-### Working with Ubuntu
+#### Linux: fonts of the dialogs and display scaling
 
-- **Smooth fonts in the dialogs with conda**: the `tk` package of the Anaconda channel is built without Xft, so the
-  dialogs draw jagged fonts; Exudyn says so once when the first dialog opens. The Xft build of conda-forge draws them
-  smoothly (checked on Ubuntu):
-
-  ```bash
-  conda install -c conda-forge "tk=*=xft_*"
-  ```
-
-  A system Python with `python3-tk` has Xft already.
+- **Jagged fonts in the dialogs with conda**: the `tk` package of the Anaconda channel is built without Xft; Exudyn says
+  so once when the first dialog opens. The Xft build of conda-forge draws smooth fonts:
+  `conda install -c conda-forge "tk=*=xft_*"`. A system Python with `python3-tk` has Xft already.
 - **Display scaling**: the scaling of the desktop, including *Fractional Scaling*, scales the texts of the render window
   and the dialogs (GLFW 3.3.6 or newer; Ubuntu 22.04 and later). To adjust by hand, while the renderer runs:
   `SC.visualizationSettings.general.displayScaleFactor` (a factor on the scaling of the system, for the texts of the
   render window), `window.globalFontSize` (the size of those texts) and `dialogs.fontScaling` (a factor on the font of
   every widget of the dialogs, relative to the scaling of the system; 0 = 1).
-- **Videos from recorded frames**: `conda install ffmpeg` and `pip install ffmpeg-python`, see
-  {ref}`sec-overview-basics-animations`.
-
-(sec-install-installinstructions-pipinstall)=
-## Install Exudyn with PIP INSTALLER (pypi.org)
-
-Pre-built versions of Exudyn are hosted on `pypi.org`, see the project
-
-- [https://pypi.org/project/exudyn](https://pypi.org/project/exudyn)
-
-As with most other packages, in the regular case (if your binary has been pre-built) you just need to do
-
-- `pip install exudyn`
-
-On Ubuntu/Linux, make sure that pip is installed and up-to-date (**update pip to at least 20.3**; otherwise the manylinux wheels will not be accepted!):
-
-- `sudo apt install python3-pip`
-- `python3 -m pip install --upgrade`
-
-Depending on installation the command may read `pip3` or `pip`:
-
-- `pip3 install exudyn`
-
-For pre-releases (use with care!), add `--pre` flag:
-
-- `pip install exudyn --pre -U`
-
-The `-U` (identical to `--upgrade`) flag ensures that the current installed version is also updated in case of a change of the micro version (e.g., from version 1.6.119 to version 1.6.164), otherwise, it will only update if you switch to a newer minor version.
-
-In some cases (e.g. for AppleM1 or special Linux versions), your pre-built binary will not work due to some incompatibilities. Then you need to build from source as described in {ref}`sec-dev-build`.
-
-### Troubleshooting pip install
-
-Pip install may fail, if your linux version does not support the current manylinux version.
-This was known for Red Hat, CentOS, Rocky Linux or simlilar systems which usually support manylinux2014. In this case, you had to build Exudyn from source, see {ref}`sec-dev-build`. Since version 1.7.116, the manylinux2014 version is supported and according problems should be solved.
-
-Sometimes, you install exudyn, but when running python, the `import exudyn` fails.
-In case of several environments, check where your installation goes. To guarantee that the pip install goes to the python call, use:
-
-- `python -m pip install exudyn`
-
-which ensures that the used python is calling its associated pip module.
-
-If the PyPi index is not updated, it may help to use
-
-- `pip install -i https://pypi.org/project/ exudyn`
 
 (sec-install-installinstructions-wheel)=
 ## Install from a specific wheel (Ubuntu and Windows)
@@ -161,13 +137,11 @@ installed first, which is what {ref}`sec-dev-build` lists.
 (sec-install-installinstructions-uninstall)=
 ## Uninstall Exudyn
 
-To uninstall exudyn under Windows, run (may require admin rights):
+To uninstall Exudyn, run
 
 - `pip uninstall exudyn`
 
- To uninstall under Ubuntu, run:
-
-- `sudo pip3 uninstall exudyn`
+(with `sudo` only for the global Python of a Linux system, see {ref}`sec-install-troubleshooting`).
 
 If you upgrade to a newer version, uninstall is usually not necessary!
 

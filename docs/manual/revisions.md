@@ -192,6 +192,10 @@ array writes `HomogeneousTransformation(A, r)` (#2781).
 
 ### What is new to use
 
+**Optional packages by name.** `pip install "exudyn[basic]"` installs scipy and matplotlib with Exudyn, which most
+models need; `[common]` adds what frequently used features need, `[tests]`, `[all]` and `[rl]` the larger sets, see
+{ref}`sec-install-extras`.
+
 **Renamed settings keep working.** A simulation setting that is renamed answers to its old name with a
 `DeprecationWarning` that names the new one, as the visualization settings do: `parallel.multithreadedLLimitLoads`,
 `...Residuals`, `...Jacobians` and `...MassMatrices` are `parallel.multithreadedLowerLimitLoads` and so on, until 2031 (#2588, #2800).
