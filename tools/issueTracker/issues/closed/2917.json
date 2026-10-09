@@ -1,0 +1,17 @@
+{
+  "number": 2917,
+  "title": "the GitHub start page and the PyPI page show stale texts with a dead link to theDoc.pdf",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "DOCU",
+  "priority": "HIGH",
+  "effort": "LOW",
+  "description": "GitHub shows README.md before README.rst: a 22-line leftover (RST syntax in a .md file, Python 3.6 - 3.9, docs/theDoc/theDoc.pdf), while README.rst is the landing page of Read the Docs. The PyPI description, inline in pyproject.toml, also pointed to theDoc.pdf; it is part of the wheel metadata, so the 1.13.2 wheels cannot be published with it (maintainer 2026-10-09, after pushing master)",
+  "dateRaised": "2026-10-09",
+  "deadline": "2027-04-07",
+  "dateResolved": "2026-10-09 17:08",
+  "resolvedAuthor": "Claude-JG",
+  "file": "README.md",
+  "releaseNotes": "GitHub shows README.rst, the landing page of Read the Docs (the stale README.md is removed); the PyPI description links to the documentation on Read the Docs instead of the deleted theDoc.pdf. revision2026b step RG3.44",
+  "resolvedInVersion": "1.13.3"
+}

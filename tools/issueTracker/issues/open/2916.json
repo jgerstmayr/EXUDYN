@@ -1,0 +1,13 @@
+{
+  "number": 2916,
+  "title": "a 57 MB LaTeX build file in the history: ignore *.synctex and refuse large files at commit",
+  "author": "Claude-JG",
+  "status": "RAISED",
+  "type": "CHECK",
+  "priority": "NORMAL",
+  "effort": "LOW",
+  "description": "docs/theDoc/theDoc.synctex (56.8 MB, uncompressed SyncTeX of a LaTeX run) was committed with 8c0044f4 (revision2026 step R7.1.5) and deleted with f6c93a52 (R7.1.7); pushing master for 1.13 made GitHub warn (GH001, above the recommended 50 MB). It stays in the history - removing it would rewrite the published history. .gitignore has *.synctex.gz but not *.synctex; add it, and let the commit gate refuse a new tracked file above a few MB",
+  "dateRaised": "2026-10-09",
+  "deadline": "2027-04-07",
+  "file": ".gitignore"
+}

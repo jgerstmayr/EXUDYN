@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.13 | Newborn | 3 | 1.13.2 |
+| 1.13 | Newborn | 4 | 1.13.3 |
 | 1.12 | Metheney | 367 | 1.12.462 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
@@ -30,6 +30,10 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.13 - Newborn (current)
 
+- **1.13.3** `DOCU` `HIGH` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` the GitHub start page and the PyPI page show stale texts with a dead link to theDoc.pdf (#2917)
+  - description: GitHub shows README.md before README.rst: a 22-line leftover (RST syntax in a .md file, Python 3.6 - 3.9, docs/theDoc/theDoc.pdf), while README.rst is the landing page of Read the Docs. The PyPI description, inline in pyproject.toml, also pointed to theDoc.pdf; it is part of the wheel metadata, so the 1.13.2 wheels cannot be published with it (maintainer 2026-10-09, after pushing master)
+  - **notes:** GitHub shows README.rst, the landing page of Read the Docs (the stale README.md is removed); the PyPI description links to the documentation on Read the Docs instead of the deleted theDoc.pdf. revision2026b step RG3.44
+  - date resolved: **2026-10-09 17:08**, date raised: 2026-10-09
 - **1.13.2** <span class="textred">`BUG`</span> `NORMAL` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` exudev points to an empty setuppy.output.txt when a test fails (#2913)
   - description: after any failing build or release step exudev printed 'compiler output: setuppy.output.txt' - also when a test suite failed and the file was empty or from an earlier build; it now names the file only if this run wrote something into it
   - **notes:** exudev names setuppy.output.txt after a failed build or release only if this run wrote something into it. revision2026b step RG10.25

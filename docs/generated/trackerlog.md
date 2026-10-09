@@ -8,10 +8,10 @@ Every entry carries the **type** of the issue, then its **priority** and its **e
 
 General information on current version:
 
-- Exudyn version = 1.13.2
+- Exudyn version = 1.13.3
 - last change = 2026-10-09
-- Number of issues = 2915
-- Number of resolved issues = 2779 (2 in current version)
+- Number of issues = 2918
+- Number of resolved issues = 2780 (3 in current version)
 
 ## Resolved issues and resolved bugs before version 1.13
 
@@ -9039,6 +9039,9 @@ The following list contains the issues which have been **RESOLVED** in the accor
 
 ## Open issues
 
+- `CHECK` <span class="textorange">`NORMAL`</span> `LOW EFF` `raised by: Claude-JG` a 57 MB LaTeX build file in the history: ignore \*.synctex and refuse large files at commit (#2916)
+  - description: docs/theDoc/theDoc.synctex (56.8 MB, uncompressed SyncTeX of a LaTeX run) was committed with 8c0044f4 (revision2026 step R7.1.5) and deleted with f6c93a52 (R7.1.7); pushing master for 1.13 made GitHub warn (GH001, above the recommended 50 MB). It stays in the history - removing it would rewrite the published history. .gitignore has \*.synctex.gz but not \*.synctex; add it, and let the commit gate refuse a new tracked file above a few MB
+  - date raised: 2026-10-09
 - `TESTING` <span class="textorange">`NORMAL`</span> `MEDIUM EFF` `raised by: Claude-JG` the cable run of perfAccessFunctionsAD is ill-conditioned: its result moves by 20% with the Newton settings (#2914)
   - description: perfAccessFunctionsAD:cable-n200-implicit (200 ANCF cable elements, axialStiffness 1000, massPerLength 1, on spring-dampers) gives 0.004663 with the default modified Newton, 0.005112 with full Newton, 0.005388 with relativeTolerance 1e-10 and 0.005266 with both (15 s instead of 0.6 s); the fast module differs by 8.4e-7. A performance run should judge a converged result: choose parameters (stiffness, mass, step size) for which the Newton settings do not move it, then re-record its reference and timing
   - date raised: 2026-10-09
@@ -9563,3 +9566,6 @@ The following list contains the issues which have been **RESOLVED** in the accor
 
 ## Known bugs
 
+- <span class="textred">`BUG`</span> <span class="textred">`HIGH`</span> `LOW EFF` `raised by: Claude-JG` the release run dirties the working tree, so its tag step refuses (#2915)
+  - description: exudev release --tag 1.13.2: after the run python/exudyn/\_\_init\_\_.pyi and symbolic.pyi showed as modified with identical content (line endings only) - most likely setup.py rewrote them inside the manylinux Docker build, which runs on the Windows checkout; the tag step then found a dirty tree and no tag v1.13.2 was created. setup.py should write the stubs only when their content changes (or with the line endings of the file), and the release should check the tree before the tag step and say why it does not tag
+  - date raised: 2026-10-09

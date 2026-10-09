@@ -52,6 +52,8 @@ wheelhouse/
 
 # build output; untracked 2026-09-09 (revision2026 step R0.1)
 dist/
+# the wheels copied by hand for "twine upload"
+distPyPI/
 
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 # Generator scratch output

@@ -653,6 +653,12 @@ from the PDF checks)* **Return annotations in the signatures, and the index URL 
 in `-> exudyn.ObjectInde)`, `-> boo)`, `-> lis)` (34 functions) - the annotation is parsed and written as it is; the
 installation page names a valid index, `https://pypi.org/simple`.
 
+<a id="rg3-44"></a>
+**RG3.44** **DONE 2026-10-09** (#2917) — [log](exudynRevisionLog2026b.md#rg3-44) *(group RG3; maintainer 2026-10-09, after
+pushing master for 1.13: "the github landing page should be practically identical to the main landing page on RTD")*
+**One landing page for GitHub and Read the Docs, a current one for PyPI**: `README.md` is gone, so GitHub shows
+`README.rst`; the PyPI text in `pyproject.toml` links to Read the Docs instead of `theDoc.pdf`. Released as 1.13.3.
+
 ## RG4 — Implementation problems and bugs
 
 Problems that are real, reproducible, and too deep to fix in passing. They are recorded here

@@ -17000,3 +17000,23 @@ empty.")*
 
 - `exudev` printed the pointer after any failing `build` or `release`, also when a test suite failed and the file was
   empty or from an earlier build. It now prints it only when the file was written during this run and is not empty.
+
+<a id="rg3-44"></a>
+### RG3.44 — the landing pages of GitHub and PyPI (2026-10-09, #2917)
+
+*(Maintainer 2026-10-09, after `git push github master` for 1.13.2: "on the start page on github, there is still
+theDoc.pdf ... the github landing page should be practically identical to the main landing page on RTD", and on the
+recommendation to fix both and release 1.13.3: "you do the recommended fixes".)*
+
+- GitHub shows `README.md` before `README.rst`. `README.md` was a 22-line leftover: reStructuredText in a `.md` file,
+  "Pre-compiled available for Windows / Python 3.6 - 3.9" and a link to `docs/theDoc/theDoc.pdf`, which R7.1.7 deleted.
+  It is removed (`git rm`), so GitHub shows `README.rst`, the same file as the first page on Read the Docs (plain
+  reStructuredText: badges, substitutions, images). `MANIFEST.in` includes `README.rst` instead, and the exclude entry
+  in `conf.py` is gone.
+- The PyPI description is the inline text of `[project.readme]` in `pyproject.toml`, because the images of `README.rst`
+  are paths in the repository, which pypi.org cannot show. It also pointed to `theDoc.pdf`; it now links to the
+  documentation, the installation page, the revisions chapter, GitHub and the license on Read the Docs and GitHub, and
+  names how to cite. Checked with docutils, which reports no warning.
+- The description is in the metadata of every wheel, so the 1.13.2 wheels were not uploaded. Their tag, never pushed,
+  was deleted, and the release was run again as 1.13.3. `master` had already been pushed at the 1.13.2 commit and moves
+  on by a fast-forward.

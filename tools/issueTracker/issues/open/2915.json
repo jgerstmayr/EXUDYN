@@ -1,0 +1,13 @@
+{
+  "number": 2915,
+  "title": "the release run dirties the working tree, so its tag step refuses",
+  "author": "Claude-JG",
+  "status": "RAISED",
+  "type": "BUG",
+  "priority": "HIGH",
+  "effort": "LOW",
+  "description": "exudev release --tag 1.13.2: after the run python/exudyn/__init__.pyi and symbolic.pyi showed as modified with identical content (line endings only) - most likely setup.py rewrote them inside the manylinux Docker build, which runs on the Windows checkout; the tag step then found a dirty tree and no tag v1.13.2 was created. setup.py should write the stubs only when their content changes (or with the line endings of the file), and the release should check the tree before the tag step and say why it does not tag",
+  "dateRaised": "2026-10-09",
+  "deadline": "2027-04-07",
+  "file": "setup.py"
+}

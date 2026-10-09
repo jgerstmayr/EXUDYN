@@ -45,8 +45,8 @@ email = "reply.exudyn@gmail.com"
 [project.urls]
 Homepage = "https://github.com/jgerstmayr/EXUDYN"
 
-#text/x-rst, shown as the project page on pypi.org. Inline rather than a file because README.md
-#is markdown and is aimed at the repository, not at pypi.
+#text/x-rst, shown as the project page on pypi.org. Inline rather than README.rst, the landing page of GitHub and Read
+#the Docs, because its images are paths in the repository, which pypi.org cannot show (#2917).
 [project.readme]
 content-type = "text/x-rst"
 text = """
@@ -54,21 +54,20 @@ text = """
 **Exudyn**
 ==========
 
-A flexible multibody dynamics systems simulation code with Python and C++
+**A flexible multibody dynamics systems simulation code with Python and C++**
 
-Exudyn is hosted on `Github <https://github.com/jgerstmayr/EXUDYN>`_ which provides full documentation, tutorial, examples, etc.
++  **Documentation**: the user manual, tutorials, the reference manual of all items and the Python utility functions on
+   `Read the Docs <https://exudyn.readthedocs.io/>`_
++  **Install**: ``pip install "exudyn[basic]"`` - Exudyn with scipy and matplotlib, recommended to start;
+   ``pip install "exudyn[common]"`` for most features; see the
+   `installation page <https://exudyn.readthedocs.io/en/latest/docs/manual/gettingStartedInstall.html>`_
++  **Changes**: the `revisions chapter <https://exudyn.readthedocs.io/en/latest/docs/manual/revisions.html>`_
++  **Source, examples and test models**: `GitHub <https://github.com/jgerstmayr/EXUDYN>`_
++  **License**: `LICENSE.txt <https://github.com/jgerstmayr/EXUDYN/blob/master/LICENSE.txt>`_
++  pre-built for Python 3.10 - 3.14 under Windows, Linux and macOS
 
-See `License on github <https://github.com/jgerstmayr/EXUDYN/blob/master/LICENSE.txt>`_ .
-Pre-compiled wheels available on PyPI via pip install.
-
-For more information, installation and tutorials see:
-
-https://github.com/jgerstmayr/EXUDYN
-
-For CHANGES (section Issues and Bugs), detailed DOCUMENTATION on theory, usage, and REFERENCE MANUAL on **600+** pages:
-
-https://github.com/jgerstmayr/EXUDYN/tree/master/docs/theDoc/theDoc.pdf
-
+How to cite: Johannes Gerstmayr. Exudyn -- A C++ based Python package for flexible multibody systems. Multibody System
+Dynamics, Vol. 60, pp. 533-561, 2024. `https://doi.org/10.1007/s11044-023-09937-1 <https://doi.org/10.1007/s11044-023-09937-1>`_
 """
 
 #Optional dependency groups, checked against the imports actually present in the code by
