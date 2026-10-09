@@ -1,0 +1,17 @@
+{
+  "number": 2919,
+  "title": "the GitHub macOS test jobs fail on two platform differences, and Linux ARM has no list",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "TESTING",
+  "priority": "HIGH",
+  "effort": "LOW",
+  "description": "GitHub CI of 1.13.3, macos-15 ARM: geometricallyExactBeamRightAngleFrame (rel. 3.9e-10, cp313 and cp314) and objectFFRFreducedOrderTest (rel. 1.3e-08, cp314 only) differ beyond the tolerance and are not in UnresolvedOnMacOS, so --exit-code fails the job. Linux ARM (aarch64) was judged with UnresolvedOnLinux although it is arm64 and fuses a*b+c into FMA as macOS ARM does",
+  "dateRaised": "2026-10-09",
+  "deadline": "2027-04-07",
+  "dateResolved": "2026-10-09 19:43",
+  "resolvedAuthor": "Claude-JG",
+  "file": "python/testing/runTestSuiteRefSol.py",
+  "releaseNotes": "the test suite on macOS ARM accepts two more known platform differences (geometricallyExactBeamRightAngleFrame, objectFFRFreducedOrderTest on cp314), and Linux ARM is judged with the same list. revision2026b step RG10.26",
+  "resolvedInVersion": "1.13.5"
+}

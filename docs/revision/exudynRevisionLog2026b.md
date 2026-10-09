@@ -17020,3 +17020,25 @@ recommendation to fix both and release 1.13.3: "you do the recommended fixes".)*
 - The description is in the metadata of every wheel, so the 1.13.2 wheels were not uploaded. Their tag, never pushed,
   was deleted, and the release was run again as 1.13.3. `master` had already been pushed at the 1.13.2 commit and moves
   on by a fast-forward.
+
+<a id="rg10-26"></a>
+### RG10.26 — the GitHub wheels of Linux ARM and macOS (2026-10-09, #2918, #2919)
+
+*(Maintainer 2026-10-09: "Unfortunately, most wheels failed (only windows worked). Check tmp/GitHub for the
+log/testsuite reports. Please fix and suggest steps to continue. I think, we don't have to re-build locally - that takes a
+lot of time without any gain." Later: "the ubuntu x64 wheels worked, same as on Gitlab.")*
+
+The first GitHub CI run of a release version since the fast module got AVX2 (#2466). Windows and Linux x86-64 passed.
+- **#2918**, Linux ARM: g++ for aarch64 refused `-mavx2` and `-mfma`, the options of exudynCPPfast. A release version
+  builds the fast module for every Python version, and setup.py added these options on every Linux. A development
+  version builds it only for cp313, so that ARM job failed in the same way. `__init__.py` loads exudynCPPfast only on a CPU
+  that reports AVX2, so on ARM it is never used. setup.py no longer builds it on Linux unless `platform.machine()` is
+  x86_64. macOS had no fast module already (#2499).
+- **#2919**, the test suite with `--exit-code` (#2907): on macos-15 (ARM), 12 and 13 models failed. All were in
+  `UnresolvedOnMacOS()` except `geometricallyExactBeamRightAngleFrame` (rel. 3.9e-10, cp313 and cp314; the frame
+  buckles laterally) and `objectFFRFreducedOrderTest` (rel. 1.3e-08, cp314 only; its modes come from the eigenvalue
+  solver). Both are now in the set. Linux ARM ran no tests until now, because its build failed. It is arm64 like Apple
+  silicon, and gcc fuses a*b+c into one FMA there, so it is judged with `UnresolvedOnMacOS()`, which includes the Linux
+  list. The note in the log names both lists.
+- No local rebuild. The tag of 1.13.3, never pushed, is deleted, and 1.13.5 is released with the wheels that GitHub CI
+  builds and tests for all four platforms from the tagged commit.

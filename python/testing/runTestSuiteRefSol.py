@@ -418,6 +418,7 @@ def UnresolvedOnMacOS():
     libm - and not a fault of the model. Measured on 2026-09-26 by the maintainer, on macOS ARM with
     Python 3.13 and V1.12.68.dev1 (tmp/testSuiteLog_V1.12.68.dev1_darwin-ARM-64bit-P3.13.txt):
     thirteen test models and one mini example, of which nine are also unresolved on Linux.
+    The set also applies to Linux on ARM (aarch64), which fuses a*b+c into one FMA as macOS ARM does (#2919).
 
     A model that is in this set and passes is not a problem: the set says "a difference here proves
     nothing", not "there must be one"."""
@@ -432,6 +433,10 @@ def UnresolvedOnMacOS():
         #the only mini example that differs; the test model of the same connector
         #(rigidBodySpringDamperIntrinsic.py) is in the Linux list above
         'ObjectConnectorRigidBodySpringDamper.py',  #rel. 2.5e-09
+        #GitHub CI of 1.13.3, macOS ARM (#2919): the frame buckles laterally, which amplifies the roundoff; and the
+        #reduced order FFRF model on cp314 only (numpy 2.5.3), whose modes come from the eigenvalue solver
+        'geometricallyExactBeamRightAngleFrame.py', #rel. 3.9e-10
+        'objectFFRFreducedOrderTest.py',        #rel. 1.3e-08
         ])
 
     return unresolved

@@ -247,6 +247,10 @@ if platform.system() == 'Windows':
 if platform.system() == 'Linux':
     isLinux = True
     print("platform == Linux")
+    #NO fast module on Linux ARM (aarch64): its compiler options are those of x86-64 (-mavx2 -mfma),
+    #which g++ for ARM refuses, and __init__.py loads exudynCPPfast only on a CPU with AVX2 (#2918)
+    if platform.machine().lower() not in ('x86_64', 'amd64'):
+        config['compileExudynFast'] = False
 
 if sys.platform == 'darwin':
     isMacOS = True

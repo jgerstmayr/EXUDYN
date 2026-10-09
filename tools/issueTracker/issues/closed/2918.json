@@ -1,0 +1,17 @@
+{
+  "number": 2918,
+  "title": "the Linux ARM wheels do not build: exudynCPPfast gets the x86-64 options -mavx2 -mfma",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "BUG",
+  "priority": "HIGH",
+  "effort": "LOW",
+  "description": "GitHub CI of 1.13.3, ubuntu-24.04-arm: g++: error: unrecognized command-line option '-mavx2' / '-mfma' while compiling exudynCPPfast. A release version builds the fast module for every Python version and setup.py adds the AVX2 options on every Linux; a development version builds it only on cp313, so the ARM jobs of dev builds failed the same way there. __init__.py loads exudynCPPfast only on a CPU with AVX2, so on ARM it is never used",
+  "dateRaised": "2026-10-09",
+  "deadline": "2027-04-07",
+  "dateResolved": "2026-10-09 19:43",
+  "resolvedAuthor": "Claude-JG",
+  "file": "setup.py",
+  "releaseNotes": "the Linux ARM wheels build again: setup.py builds exudynCPPfast, with its AVX2 options, only on x86-64 Linux; on ARM it was never loaded. revision2026b step RG10.26",
+  "resolvedInVersion": "1.13.4"
+}

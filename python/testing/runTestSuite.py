@@ -281,7 +281,8 @@ if TSScope.runTestExamples:
     #known platform differences are excluded from the exit code ON THAT PLATFORM ONLY: the
     #reference values are the Windows ones, so Windows must still pass them
     TSScope.unresolvedTests = set()
-    if isMacOS:
+    #Linux on ARM (aarch64) is arm64 as Apple silicon is: its compiler fuses a*b+c into one FMA as well (#2919)
+    if isMacOS or platform.machine().lower() in ('aarch64', 'arm64'):
         TSScope.unresolvedTests = UnresolvedOnMacOS()
     elif not isWindows:
         TSScope.unresolvedTests = UnresolvedOnLinux()
@@ -446,8 +447,8 @@ if TSScope.runTestExamples:
                     exu.Print('  NOTE: this test is marked SENSITIVE (chaotic or unseeded);')
                     exu.Print('        it is reported but does not affect the exit code')
                 elif TSScope.file in TSScope.unresolvedTests:
-                    exu.Print('  NOTE: known unresolved Windows/Linux difference, in')
-                    exu.Print('        UnresolvedOnLinux(); reported but does not affect the exit code')
+                    exu.Print('  NOTE: known unresolved platform difference, in UnresolvedOnLinux()')
+                    exu.Print('        or UnresolvedOnMacOS(); reported but does not affect the exit code')
                 exu.Print('******************************************')
                 testsFailed = testsFailed + [TSScope.testExamplesCnt]
                 TSScope.examplesFailedNames.add(TSScope.name)

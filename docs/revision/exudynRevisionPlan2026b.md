@@ -1595,6 +1595,13 @@ passes `--exit-code` on Linux, macOS and Windows, as the GitLab job does.
 says compiler output: setuppy.output.txt, but the file is empty")* **exudev names the compiler output only when there
 is one**: written by this run and not empty.
 
+<a id="rg10-26"></a>
+**RG10.26** **DONE 2026-10-09** (#2918, #2919) — [log](exudynRevisionLog2026b.md#rg10-26) *(group RG10; maintainer
+2026-10-09, after the first GitHub CI run of 1.13.3: "most wheels failed ... Please fix and suggest steps to continue. I
+think, we don't have to re-build locally")* **The GitHub wheels of Linux ARM and macOS**: no fast module on Linux ARM
+(#2918); two macOS differences in `UnresolvedOnMacOS()`, which also judges Linux ARM (#2919). Released as 1.13.5 from the
+GitHub wheels of all platforms.
+
 ## RG11 — Misc
 
 What belongs to no group yet. Three of a kind here are a reason to propose a group of their own.
