@@ -1,0 +1,17 @@
+{
+  "number": 2920,
+  "title": "allExudynModulesTest fails where Python has no tkinter: the Windows jobs of GitHub CI",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "TESTING",
+  "priority": "HIGH",
+  "effort": "LOW",
+  "description": "GitHub CI of 1.13.5, windows-2025, cp313 (Python 3.13.12, the interpreter cibuildwheel installs for its tests): 'Failed to execute ...exudyn/misc/GUI.py: No module named tkinter', so the model returns 0 and --exit-code fails all Windows wheel jobs; the other 15 jobs passed. tkinter is optional for Exudyn - only the dialogs need it, and every other module imports GUI.py lazily",
+  "dateRaised": "2026-10-09",
+  "deadline": "2027-04-07",
+  "dateResolved": "2026-10-09 20:38",
+  "resolvedAuthor": "Claude-JG",
+  "file": "python/TestModels/allExudynModulesTest.py",
+  "releaseNotes": "allExudynModulesTest skips GUI.py where Python has no tkinter, which only the dialogs need; the Windows jobs of GitHub CI pass again. revision2026b step RG10.27",
+  "resolvedInVersion": "1.13.6"
+}

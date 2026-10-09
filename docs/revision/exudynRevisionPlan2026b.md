@@ -1602,6 +1602,11 @@ think, we don't have to re-build locally")* **The GitHub wheels of Linux ARM and
 (#2918); two macOS differences in `UnresolvedOnMacOS()`, which also judges Linux ARM (#2919). Released as 1.13.5 from the
 GitHub wheels of all platforms.
 
+<a id="rg10-27"></a>
+**RG10.27** **DONE 2026-10-09** (#2920) — [log](exudynRevisionLog2026b.md#rg10-27) *(group RG10; maintainer 2026-10-09:
+"Now the windows builds failed (all 15 others are green!)")* **The module test without tkinter**:
+`allExudynModulesTest` skips `GUI.py` where Python has no tkinter. Released as 1.13.6.
+
 ## RG11 — Misc
 
 What belongs to no group yet. Three of a kind here are a reason to propose a group of their own.

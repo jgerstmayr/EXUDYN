@@ -44,6 +44,13 @@ except:
     exu.Print('stable-baselines3 not available: skip artificialIntelligence.py')
     excludeModules.append('artificialIntelligence.py')
 
+#the dialogs need tkinter, which a Python may lack: the Python of the cibuildwheel tests on Windows has none (#2920)
+try:
+    import tkinter
+except ImportError:
+    exu.Print('tkinter not available: skip GUI.py')
+    excludeModules.append('GUI.py')
+
 #test all modules
 for moduleCheck in allModules: #moduleCheck converts to string as path+fileName
     if moduleCheck.name in excludeModules:

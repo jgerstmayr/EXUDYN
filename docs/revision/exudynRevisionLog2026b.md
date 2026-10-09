@@ -17042,3 +17042,19 @@ The first GitHub CI run of a release version since the fast module got AVX2 (#24
   list. The note in the log names both lists.
 - No local rebuild. The tag of 1.13.3, never pushed, is deleted, and 1.13.5 is released with the wheels that GitHub CI
   builds and tests for all four platforms from the tagged commit.
+
+<a id="rg10-27"></a>
+### RG10.27 — the module test without tkinter (2026-10-09, #2920)
+
+*(Maintainer 2026-10-09, on the GitHub CI run of 1.13.5: "Now the windwos builds failed (all 15 others are green!). See
+again the tmp/github folder.")*
+
+- In the Windows jobs, the test suite ran with the Python that cibuildwheel installs for its tests (3.13.12). That Python
+  has no tkinter. `allExudynModulesTest` executes every module of the package, and `GUI.py` imports tkinter at the
+  top, so it raised "No module named 'tkinter'". The model returned 0 and `--exit-code` (#2907) failed the job. It was
+  the only failing model: 173 of 174 test models and all mini examples passed.
+- tkinter is optional for Exudyn. Only the dialogs need it, and every other module imports `GUI.py` when a dialog
+  opens, not at import. The model now skips `GUI.py` when tkinter cannot be imported, as it skips
+  `artificialIntelligence.py` without stable-baselines3. Not explained: why the Windows jobs of the first run (1.13.3)
+  passed.
+- Linux ARM, whose tests ran on CI for the first time, passed with `UnresolvedOnMacOS()` (#2919).
