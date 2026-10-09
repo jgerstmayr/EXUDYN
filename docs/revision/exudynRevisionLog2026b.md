@@ -16922,3 +16922,18 @@ instructions, the pip3 and pip update remarks to troubleshooting; the Ubuntu com
   sections. Uninstall: `pip uninstall exudyn` everywhere.
 - `condaEnvironments.md`: the extras table has `[basic]` and the label `sec-install-extras`; `revisions.md` names the
   extras; `GUI.md`: `apt install ffmpeg` with the remark on `sudo`.
+
+<a id="rg3-42"></a>
+### RG3.42 — LaTeX umlauts in the text (2026-10-09, #2908)
+
+*(Maintainer 2026-10-09: "In the docs/theory section I found a couple of "Gr”ubler-Kutzbach" typos to be fixed. Please
+check and fix all such "o, "a and "u in the document.")*
+
+- Searched every tracked text file (generated pages, `.bib`, the issue store and the logs aside): `\"u`/`{\"u}` and the
+  like in `theoryMultibody.md` (7, Chebychev-Grübler-Kutzbach, Brüls), `solver.md` (2, Brüls), `introduction.md`
+  (1, Grübler), and the module headers of `FEM.py` (Schöberl, Zwölfer) and `kinematicTree.py` (Plücker), which reach
+  the generated pages `FEM.md` and `kinematicTree.md`. All written as the letters. The other hits are not text:
+  escaped quotes in a notebook's JSON, the conversion table of `referencesDocsEmitter.py`, and a record in
+  `documentationImpact2026.md`.
+- `tools/checkMathMacros.py --check` (`RenderingTraps`) refuses a LaTeX accent (`\"` before a letter or a brace) in
+  text outside code and math; it found all 12 of the manual and the generated pages before the fix.

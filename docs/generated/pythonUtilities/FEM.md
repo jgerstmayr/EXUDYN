@@ -6,7 +6,7 @@
 Support functions and helper classes for import of meshes, finite element models (ABAQUS, ANSYS, NETGEN) and for generation of FFRF (floating frame of reference) objects.
 Note that since exudyn version 1.8.69 the mass and stiffness matrices in FEMinterface are either None or given in SciPy-sparse csr format (leading also to a new load/save fileVersion of FEMinterface)
 
-- **Author**: Johannes Gerstmayr; Stefan Holzinger (Abaqus and Ansys import utilities); Joachim Sch\"oberl (support for Netgen and NGsolve [Schoeberl1997; NGsolve2014; NGsolve2022] import and eigen computations)
+- **Author**: Johannes Gerstmayr; Stefan Holzinger (Abaqus and Ansys import utilities); Joachim Schöberl (support for Netgen and NGsolve [Schoeberl1997; NGsolve2014; NGsolve2022] import and eigen computations)
 - **Date**: 2020-03-10 (created)
 - **Notes**: OLD internal CSR matrix storage format contains 3 float numbers per row: [row, column, value], can be converted to scipy csr sparse matrices with function CSRtoScipySparseCSR(...); the NEW format uses scipy's internal sparse csr format! To switch to the old format, set exudyn.FEM.useOldCSRformat=True
 

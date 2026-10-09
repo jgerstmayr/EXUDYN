@@ -1,0 +1,16 @@
+{
+  "number": 2908,
+  "title": "LaTeX umlauts in the manual: Gr\"ubler-Kutzbach, Br\"uls",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "DOCU",
+  "effort": "LOW",
+  "description": "The maintainer, checking the PDF before 1.13 (2026-10-09): 'In the docs/theory section I found a couple of Gr”ubler-Kutzbach typos to be fixed. Please check and fix all such \"o, \"a and \"u in the document.' Leftovers of the LaTeX conversion in theoryMultibody.md, solver.md, introduction.md and the module headers of FEM.py and kinematicTree.py (generated pages). revision2026b step RG3.42",
+  "dateRaised": "2026-10-09",
+  "deadline": "2027-04-07",
+  "dateResolved": "2026-10-09 10:21",
+  "resolvedAuthor": "Claude-JG",
+  "file": "docs/manual/theoryMultibody.md",
+  "releaseNotes": "The manual writes Grübler, Brüls, Schöberl, Zwölfer and Plücker with their letters instead of LaTeX accents, and the documentation check refuses a LaTeX accent in text",
+  "resolvedInVersion": "1.12.460"
+}

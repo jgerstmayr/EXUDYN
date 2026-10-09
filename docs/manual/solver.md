@@ -260,7 +260,7 @@ For now, all implemented solvers can be viewed as a generalization of Newmark's 
 
 - **Implicit trapezoidal rule** (Newmark with $\beta = \frac 1 4$ and $\gamma = \frac 1 2$)
 - **Newmark's method** [Newmark1959]
-- **Generalized**-$\alpha$ **method** ($=$ generalized Newmark method with additional parameters), see Chung and Hulbert [Chung1993] for the original method and Arnold and Br\"uls [Arnold2007] for the application to multibody system dynamics.
+- **Generalized**-$\alpha$ **method** ($=$ generalized Newmark method with additional parameters), see Chung and Hulbert [Chung1993] for the original method and Arnold and Brüls [Arnold2007] for the application to multibody system dynamics.
 
 ### Newmark and Generalized-alpha method
 
@@ -414,7 +414,7 @@ Once an update $\qv^\mathrm{Newton}_{k+1}$ has been computed, the interpolation 
 
 #### (B) Solve for unknown displacements
 
-This approach is similar to the previous approach and follows exactly the algorithm given by Arnold and Br\"uls [Arnold2007], however, extended for {ref}`ODE1 <ODE1>` variables, which are integrated by the (undamped) trapezoidal rule.
+This approach is similar to the previous approach and follows exactly the algorithm given by Arnold and Brüls [Arnold2007], however, extended for {ref}`ODE1 <ODE1>` variables, which are integrated by the (undamped) trapezoidal rule.
 Documentation will be added lateron.
 
 ### Initial accelerations

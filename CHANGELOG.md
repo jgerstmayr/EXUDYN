@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.12 | Metheney | 364 | 1.12.459 |
+| 1.12 | Metheney | 365 | 1.12.460 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
 | 1.9 | Krall | 235 | 1.9.234 |
@@ -29,6 +29,10 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.12 - Metheney (current)
 
+- **1.12.460** `DOCU` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` LaTeX umlauts in the manual: Gr"ubler-Kutzbach, Br"uls (#2908)
+  - description: The maintainer, checking the PDF before 1.13 (2026-10-09): 'In the docs/theory section I found a couple of Gr”ubler-Kutzbach typos to be fixed. Please check and fix all such "o, "a and "u in the document.' Leftovers of the LaTeX conversion in theoryMultibody.md, solver.md, introduction.md and the module headers of FEM.py and kinematicTree.py (generated pages). revision2026b step RG3.42
+  - **notes:** The manual writes Grübler, Brüls, Schöberl, Zwölfer and Plücker with their letters instead of LaTeX accents, and the documentation check refuses a LaTeX accent in text
+  - date resolved: **2026-10-09 10:21**, date raised: 2026-10-09
 - **1.12.459** `FIX` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` macOS: after Q or ESCAPE in the SolutionViewer, its window and a 'tk' window stay visible and empty (#2906)
   - description: macOS GUI check 2026-10-08, S7: after Q or Escape in the dialog, the SolutionViewer and a tk window remain visible but empty. Cocoa removes a destroyed GLFW window only when its events are processed, and a destroyed Tk window stays until Tk processes its events; the 'tk' window is the root left by the failed dialog of R6 (\#2904). revision2026b step RG2.4.6.3
   - **notes:** macOS: the render window and the SolutionViewer leave the screen when they are closed; confirmed on the Mac

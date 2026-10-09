@@ -118,7 +118,7 @@ Nodes provide the coordinates (and the degrees of freedom) to the system. They h
 Without nodes, the system has no unknown coordinates.
 Adding a node provides (for the system unknown) coordinates. In addition we also need equations for every nodal coordinate -- otherwise the system cannot be computed (NOTE: this is currently not checked by the preprocessor).
 In general, adding nodes and objects (e.g., to represent rigid bodies), leads to a **redundant coordinate formulation**.
-In order to determine the degree of freedom, you may use the Gr{\"u}bler-Kutzbach criterion. This can also be done numerically, using the function `ComputeSystemDegreeOfFreedom`, see the module `exudyn.solver`.
+In order to determine the degree of freedom, you may use the Grübler-Kutzbach criterion. This can also be done numerically, using the function `ComputeSystemDegreeOfFreedom`, see the module `exudyn.solver`.
 Furthermore, **minimal** coordinates can be used for open tree systems, using `ObjectKinematicTree`.
 
 ### Objects

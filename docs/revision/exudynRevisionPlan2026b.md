@@ -630,6 +630,11 @@ macOS and Linux)* **ffmpeg installed with conda on every platform**: `conda inst
 `pip install ffmpeg-python` in the GUI chapter (*Generating animations*), the extras table of `condaEnvironments.md` and
 the messages of `exudyn.interactive` when ffmpeg is missing; no Homebrew needed on macOS.
 
+<a id="rg3-42"></a>
+**RG3.42** **DONE 2026-10-09** (#2908) — [log](exudynRevisionLog2026b.md#rg3-42) *(group RG3; maintainer 2026-10-09, checking the
+PDF before 1.13)* **LaTeX umlauts in the text**: Gr\"ubler, Br{\"u}ls, Sch\"oberl, Zw\"olfer, Pl\"ucker written as letters
+(13 places, the manual and two module headers); `tools/checkMathMacros.py --check` refuses a LaTeX accent in text.
+
 ## RG4 — Implementation problems and bugs
 
 Problems that are real, reproducible, and too deep to fix in passing. They are recorded here

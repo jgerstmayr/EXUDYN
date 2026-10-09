@@ -135,6 +135,8 @@ def RenderingTraps(paths):
                 found.append(where + 'a figure reference prints the caption; write {numref}`fig-...`')
             if re.search(r'\\\s*$|\\[ ,]', text):
                 found.append(where + 'a backslash of LaTeX in text: ' + stripped[:60])
+            if re.search(r'\\"\{?[a-zA-Z]', text):  #Gr\"ubler, Br{\"u}ls: write the letter, ü (#2908)
+                found.append(where + 'a LaTeX accent in text, write the letter itself: ' + stripped[:60])
     return found
 
 

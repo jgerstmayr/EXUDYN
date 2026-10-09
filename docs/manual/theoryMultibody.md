@@ -25,7 +25,7 @@ Multibody system dynamics attracted the attention of engineers as soon as comput
 Since the 1960s, flexibility of structures has been introduced, e.g., in order to understand the instability of a satellite with flexible antennas or a helicopter's rotor blades.
 Since the 1990s flexible multibody system methods have been applied in vehicle and aerospace industry, in particular because model order reduction became available and real life components could be simulated.
 Models where mainly made out of kinematic trees, using minimum coordinate models in the beginning. For long time, algebraic constraints could only be approximated, such as with Baumgarte's stabilization introduced in the 1970.
-Major advances on differential-algebraic solvers have been made in the 1990s, introducing Raudau-5 of Hairer and Wanner, as well as BDF solvers of Linda Petzold. Because both approaches had drawbacks, the implicit generalized-alpha solver (Chung, Hubert; Arnold, Br{\"u}ls)  has become a quasi-standard in the 2000s, as it allows to solve almost any index 3 (position level) constraint problem with high efficiency.
+Major advances on differential-algebraic solvers have been made in the 1990s, introducing Raudau-5 of Hairer and Wanner, as well as BDF solvers of Linda Petzold. Because both approaches had drawbacks, the implicit generalized-alpha solver (Chung, Hubert; Arnold, Brüls)  has become a quasi-standard in the 2000s, as it allows to solve almost any index 3 (position level) constraint problem with high efficiency.
 
 ## Simulation tools in computational engineering
 
@@ -205,7 +205,7 @@ Assuming a holonomic mechanical system with $k$ degrees of freedom, one can find
 
 In addition to the independent coordinates, there may be **dependent coordinates**, similar to the angles $\phi_a$ and $\phi_b$ which are dependent on $\phi_c$ in the example of the four-bar mechanism. It is left to the engineer, whether to find the minimum coordinates of a system and to write all equations in terms of these, or to work with a larger set of independent and dependent coordinates together with algebraic constraint conditions.
 
-## Chebychev-Gr\"ubler-Kutzbach criterion
+## Chebychev-Grübler-Kutzbach criterion
 
 A **rigid body in space has six degrees of freedom**, and thus, six independent coordinates can be used to describe its configuration.
 Thus for a system with $n_b$ bodies, there are $6 \cdot n_b$ coordinates, to describe the bodies.
@@ -218,15 +218,15 @@ $$
   n_\mathrm{DOF} = 6 \cdot n_b - n_c
 $$ (eq-chebychev-grubler-kutzbach)
 
-which is denoted sometimes as the **Kutzbach**, or **Chebychev-Gr\"ubler-Kutzbach criterion**.
+which is denoted sometimes as the **Kutzbach**, or **Chebychev-Grübler-Kutzbach criterion**.
 
-In the case of planar mechanisms, a body obtains only three degrees of freedom. Therefore the Chebychev-Gr\"ubler-Kutzbach criterion reads
+In the case of planar mechanisms, a body obtains only three degrees of freedom. Therefore the Chebychev-Grübler-Kutzbach criterion reads
 
 $$
   DOF_\mathrm{planar} = 3 \cdot n_b - n_c
 $$
 As a spatial example, consider again the double pendulum {numref}`fig-degrees-of-freedom`a as a spatial mechanism.
-In this case, there are two bodies, $n_b=2$ and two revolute joints with 5 constraints each, giving $n_c=10$. Thus, the Chebychev-Gr\"ubler-Kutzbach criterion gives $n_\mathrm{DOF} = 12 - 10 = 2$, which we expect.
+In this case, there are two bodies, $n_b=2$ and two revolute joints with 5 constraints each, giving $n_c=10$. Thus, the Chebychev-Grübler-Kutzbach criterion gives $n_\mathrm{DOF} = 12 - 10 = 2$, which we expect.
 
 As another example, consider a spatial four-bar mechanism according to {numref}`fig-degrees-of-freedom`b.
 In this case, there are four bodies, $n_b=4$, four revolute joints with 5 constraints each and a ground joints with 6 constraints, totalling at $n_c=4\cdot 5 + 6 = 26$. Thus, {eq}`eq-chebychev-grubler-kutzbach` gives
@@ -234,13 +234,13 @@ In this case, there are four bodies, $n_b=4$, four revolute joints with 5 constr
 $$
   n_\mathrm{DOF} = 24 - 26 = -2.
 $$
-This is certainly not what we expect, as we know that the mechanism can move and has $n_\mathrm{DOF} = 1$. The reason for this number lies in redundant constraints, which may not be counted for the Chebychev-Gr\"ubler-Kutzbach criterion.
+This is certainly not what we expect, as we know that the mechanism can move and has $n_\mathrm{DOF} = 1$. The reason for this number lies in redundant constraints, which may not be counted for the Chebychev-Grübler-Kutzbach criterion.
 A solution to this problem is to replace one revolute joint by a planar revolute joint (2 constraints), which then gives
 
 $$
   n_c=3\cdot 5 + 2 + 6 = 23 \quad \mathrm{and} \quad n_\mathrm{DOF} = 1.
 $$
-Therefore, Exudyn uses an **extended Chebychev-Gr\"ubler-Kutzbach criterion** for redundant constraints,
+Therefore, Exudyn uses an **extended Chebychev-Grübler-Kutzbach criterion** for redundant constraints,
 
 $$
   n_\mathrm{DOF}^* = n_\mathrm{ODE2} - (n_c - n_{ca} - n_r)
