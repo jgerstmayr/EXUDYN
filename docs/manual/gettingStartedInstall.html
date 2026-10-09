@@ -1,0 +1,296 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Installation instructions &mdash; Exudyn1.13.3 1.13.3 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=3ee1c6c6" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/rtd_sphinx_search.min.css" />
+      <link rel="stylesheet" type="text/css" href="../../_static/custom.css?v=e2783f0e" />
+
+  
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=b8a3e558"></script>
+      <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../_static/copybutton.js?v=f281be69"></script>
+      <script src="../../_static/js/rtd_search_config.js"></script>
+      <script src="../../_static/js/rtd_sphinx_search.min.js"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Run a simple example in Python" href="gettingStartedExample.html" />
+    <link rel="prev" title="Installation and getting started" href="gettingStarted.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            Exudyn1.13.3
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Exudyn User Manual</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../README.html">Exudyn</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="gettingStarted.html">Installation and getting started</a><ul class="current">
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Installation instructions</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#requirements-for-exudyn">Requirements for Exudyn ?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#install-exudyn-with-pip-installer-pypi-org">Install Exudyn with PIP INSTALLER (pypi.org)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#install-from-a-specific-wheel-ubuntu-and-windows">Install from a specific wheel (Ubuntu and Windows)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#build-exudyn-from-source">Build Exudyn from source</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#uninstall-exudyn">Uninstall Exudyn</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="gettingStartedExample.html">Run a simple example in Python</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gettingStartedFAQ.html">Trouble shooting and FAQ</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gettingStarted.html#getting-started">Getting started</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gettingStarted.html#further-notes">Further notes</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="introduction.html">Overview on Exudyn</a></li>
+<li class="toctree-l1"><a class="reference internal" href="introductionBasics.html">Exudyn basics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorial.html">Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="GUI.html">Renderer, graphics and visualization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="performanceErrors.html">Performance, errors and solver failures</a></li>
+<li class="toctree-l1"><a class="reference internal" href="introductionAdvanced.html">Advanced topics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="notation.html">Notation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="theory.html">Theory and formulations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="solver.html">Solvers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../generated/cInterface/cInterfaceIndex.html">Python-C++ command interface</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Reference Manual</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../generated/items/itemsIndex.html">Items reference manual</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../generated/pythonUtilities/utilitiesIndex.html">Python Utility Functions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../generated/structures/structuresIndex.html">Structures and Settings</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../generated/references.html">References</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Developer documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../dev/README.html">Exudyn developer documentation</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">How-to notes</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../howTo/condaEnvironments.html">Conda environments for Exudyn</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../howTo/sphinxDocs.html">Building the documentation</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Examples, models and issues</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../generated/examples/examplesIndex.html">Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../generated/testModels/testModelsIndex.html">TestModels</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../generated/abbreviations.html">List of Abbreviations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="revisions.html">Revisions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../CHANGELOG.html">Changelog</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../generated/trackerlog.html">Issue tracker</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">Exudyn1.13.3</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="gettingStarted.html">Installation and getting started</a></li>
+      <li class="breadcrumb-item active">Installation instructions</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../_sources/docs/manual/gettingStartedInstall.md.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section class="tex2jax_ignore mathjax_ignore" id="installation-instructions">
+<span id="sec-install-installinstructions"></span><h1>Installation instructions<a class="headerlink" href="#installation-instructions" title="Link to this heading"></a></h1>
+<section id="requirements-for-exudyn">
+<span id="sec-install-installinstructions-requirements"></span><h2>Requirements for Exudyn ?<a class="headerlink" href="#requirements-for-exudyn" title="Link to this heading"></a></h2>
+<p>Exudyn is a Python package with a compiled core, so what you need is a Python it was built for.</p>
+<p><strong>Wheels are published for Python 3.10, 3.11, 3.12, 3.13 and 3.14</strong>, on Windows, Linux and
+MacOS. Newer Python versions are usually added in line with the Python release cycle (every
+October).</p>
+<p><strong>64-bit only.</strong> Exudyn is not built for 32-bit systems. If you still read advice about
+matching 32-bit and 64-bit installations, it is out of date.</p>
+<ul class="simple">
+<li><p><strong>conda environments</strong> are what the developers use and what is tested most; the environment decides which Python you get, and <code class="docutils literal notranslate"><span class="pre">pip</span> <span class="pre">install</span> <span class="pre">exudyn</span></code> inside it installs the matching wheel.</p></li>
+<li><p><strong>Spyder</strong> (any recent version), <strong>Visual Studio Code</strong> and <strong>Jupyter</strong> all work with default settings. Spyder works with all virtual environments.</p></li>
+<li><p>The Python running your script and the Python Exudyn was installed into must be the same one. In an environment that is automatic; outside one it is the usual source of <code class="docutils literal notranslate"><span class="pre">import</span> <span class="pre">exudyn</span></code> failing, see <a class="reference internal" href="gettingStartedFAQ.html#sec-install-troubleshootingfaq"><span class="std std-ref">Trouble shooting and FAQ</span></a>.</p></li>
+</ul>
+<p>If you plan to extend the <strong>C++ code</strong>, you need <strong>Microsoft Visual Studio 2022</strong> on
+Windows: it is what compiles the sources, and it is the one debugger that steps from a Python
+script into the C++ (VS2019 has problems with the library ‘Eigen’ and leads to erroneous results
+with the sparse solver; it is not supported). The everyday development of Exudyn itself happens in
+<strong>Visual Studio Code</strong>, which is also what most co-developers use; <a class="reference internal" href="../dev/GETTING_STARTED.html#sec-dev-gettingstarted"><span class="std std-ref">Getting started as a developer</span></a>
+sets both up.</p>
+</section>
+<section id="install-exudyn-with-pip-installer-pypi-org">
+<span id="sec-install-installinstructions-pipinstall"></span><h2>Install Exudyn with PIP INSTALLER (pypi.org)<a class="headerlink" href="#install-exudyn-with-pip-installer-pypi-org" title="Link to this heading"></a></h2>
+<p>Pre-built versions of Exudyn are hosted on <code class="docutils literal notranslate"><span class="pre">pypi.org</span></code>, see the project
+<a class="reference external" href="https://pypi.org/project/exudyn">https://pypi.org/project/exudyn</a>. Install it with</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">pip</span> <span class="pre">install</span> <span class="pre">&quot;exudyn[basic]&quot;</span></code> - Exudyn with scipy and matplotlib, which most models need for eigenvalues, sparse
+matrices and plots: <strong>recommended to start with</strong>;</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">pip</span> <span class="pre">install</span> <span class="pre">&quot;exudyn[common]&quot;</span></code> - the above plus the packages of frequently used features: <strong>to use most features</strong>;</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">pip</span> <span class="pre">install</span> <span class="pre">exudyn</span></code> - Exudyn and numpy only.</p></li>
+</ul>
+<p>The quotes keep shells such as zsh (macOS) from reading the brackets. What each set contains, and the larger ones,
+is listed in <a class="reference internal" href="../howTo/condaEnvironments.html#sec-install-extras"><span class="std std-ref">Optional packages via the Exudyn extras</span></a>.</p>
+<p>For pre-releases (use with care!), add <code class="docutils literal notranslate"><span class="pre">--pre</span></code>:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">pip</span> <span class="pre">install</span> <span class="pre">exudyn</span> <span class="pre">--pre</span> <span class="pre">-U</span></code></p></li>
+</ul>
+<p>The <code class="docutils literal notranslate"><span class="pre">-U</span></code> (identical to <code class="docutils literal notranslate"><span class="pre">--upgrade</span></code>) flag ensures that the installed version is also updated for a new micro version
+(e.g., from 1.6.119 to 1.6.164); otherwise, pip only updates when a newer minor version appears.</p>
+<p>If something does not work, see the next section; if no pre-built version exists for your system (e.g. a special Linux),
+build from source as described in <a class="reference internal" href="../dev/BUILD.html#sec-dev-build"><span class="std std-ref">Building Exudyn from source</span></a>.</p>
+<section id="troubleshooting-pip-install">
+<span id="sec-install-troubleshooting"></span><h3>Troubleshooting pip install<a class="headerlink" href="#troubleshooting-pip-install" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p><strong>pip or pip3</strong>: depending on the installation, the command may read <code class="docutils literal notranslate"><span class="pre">pip3</span></code> instead of <code class="docutils literal notranslate"><span class="pre">pip</span></code>. <code class="docutils literal notranslate"><span class="pre">python</span> <span class="pre">-m</span> <span class="pre">pip</span> <span class="pre">install</span> <span class="pre">exudyn</span></code> is always right: it uses the pip of the Python that runs it.</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">import</span> <span class="pre">exudyn</span></code> fails after the install</strong>: with several environments, the installation went into another Python;
+<code class="docutils literal notranslate"><span class="pre">python</span> <span class="pre">-m</span> <span class="pre">pip</span> <span class="pre">install</span> <span class="pre">exudyn</span></code> installs into the Python you call, see also <a class="reference internal" href="gettingStartedFAQ.html#sec-install-troubleshootingfaq"><span class="std std-ref">Trouble shooting and FAQ</span></a>.</p></li>
+<li><p><strong>pip too old (Linux)</strong>: the manylinux wheels need pip 20.3 or newer:
+<code class="docutils literal notranslate"><span class="pre">python</span> <span class="pre">-m</span> <span class="pre">pip</span> <span class="pre">install</span> <span class="pre">--upgrade</span> <span class="pre">pip</span></code>; a Python without pip gets it from the package manager,
+e.g. <code class="docutils literal notranslate"><span class="pre">apt</span> <span class="pre">install</span> <span class="pre">python3-pip</span></code>.</p></li>
+<li><p><strong>manylinux not supported</strong>: Red Hat, CentOS, Rocky Linux and similar systems usually support manylinux2014, which
+Exudyn’s wheels accept since 1.7.116; otherwise build from source, see <a class="reference internal" href="../dev/BUILD.html#sec-dev-build"><span class="std std-ref">Building Exudyn from source</span></a>.</p></li>
+<li><p><strong>A new version does not show up</strong> (a cached index, or a mirror configured for pip): <code class="docutils literal notranslate"><span class="pre">pip</span> <span class="pre">install</span> <span class="pre">--no-cache-dir</span> <span class="pre">--index-url</span> <span class="pre">https://pypi.org/simple</span> <span class="pre">-U</span> <span class="pre">exudyn</span></code> asks pypi.org itself.</p></li>
+<li><p><strong>sudo</strong>: the commands on this page are written without <code class="docutils literal notranslate"><span class="pre">sudo</span></code>. The package manager of Linux (<code class="docutils literal notranslate"><span class="pre">apt</span> <span class="pre">...</span></code>) needs it;
+pip needs it only when it installs into the global Python of the system, which should be avoided - use a conda or
+virtual environment instead.</p></li>
+<li><p><strong>Without Anaconda</strong>: Exudyn needs numpy, which pip installs with it; the extras above add scipy and matplotlib. The
+dialogs (right mouse click, settings, SolutionViewer) need <code class="docutils literal notranslate"><span class="pre">tkinter</span></code>, which is part of Python on Windows and macOS and
+of the Anaconda Python; a Linux system Python needs the package <code class="docutils literal notranslate"><span class="pre">python3-tk</span></code> (<code class="docutils literal notranslate"><span class="pre">apt</span> <span class="pre">install</span> <span class="pre">python3-tk</span></code>).</p></li>
+<li><p><strong>Videos from recorded frames</strong> need the program ffmpeg, on every platform: <code class="docutils literal notranslate"><span class="pre">conda</span> <span class="pre">install</span> <span class="pre">ffmpeg</span></code> and
+<code class="docutils literal notranslate"><span class="pre">pip</span> <span class="pre">install</span> <span class="pre">ffmpeg-python</span></code> (part of <code class="docutils literal notranslate"><span class="pre">[common]</span></code>), see <a class="reference internal" href="GUI.html#sec-overview-basics-animations"><span class="std std-ref">Storing images and generating animations</span></a>.</p></li>
+</ul>
+<section id="linux-fonts-of-the-dialogs-and-display-scaling">
+<span id="sec-install-ubuntu"></span><h4>Linux: fonts of the dialogs and display scaling<a class="headerlink" href="#linux-fonts-of-the-dialogs-and-display-scaling" title="Link to this heading"></a></h4>
+<ul class="simple">
+<li><p><strong>Jagged fonts in the dialogs with conda</strong>: the <code class="docutils literal notranslate"><span class="pre">tk</span></code> package of the Anaconda channel is built without Xft; Exudyn says
+so once when the first dialog opens. The Xft build of conda-forge draws smooth fonts:
+<code class="docutils literal notranslate"><span class="pre">conda</span> <span class="pre">install</span> <span class="pre">-c</span> <span class="pre">conda-forge</span> <span class="pre">&quot;tk=*=xft_*&quot;</span></code>. A system Python with <code class="docutils literal notranslate"><span class="pre">python3-tk</span></code> has Xft already.</p></li>
+<li><p><strong>Display scaling</strong>: the scaling of the desktop, including <em>Fractional Scaling</em>, scales the texts of the render window
+and the dialogs (GLFW 3.3.6 or newer; Ubuntu 22.04 and later). To adjust by hand, while the renderer runs:
+<code class="docutils literal notranslate"><span class="pre">SC.visualizationSettings.general.displayScaleFactor</span></code> (a factor on the scaling of the system, for the texts of the
+render window), <code class="docutils literal notranslate"><span class="pre">window.globalFontSize</span></code> (the size of those texts) and <code class="docutils literal notranslate"><span class="pre">dialogs.fontScaling</span></code> (a factor on the font of
+every widget of the dialogs, relative to the scaling of the system; 0 = 1).</p></li>
+</ul>
+</section>
+</section>
+</section>
+<section id="install-from-a-specific-wheel-ubuntu-and-windows">
+<span id="sec-install-installinstructions-wheel"></span><h2>Install from a specific wheel (Ubuntu and Windows)<a class="headerlink" href="#install-from-a-specific-wheel-ubuntu-and-windows" title="Link to this heading"></a></h2>
+<p>A way to install the Python package Exudyn is to use the so-called ‘wheels’ (file ending <code class="docutils literal notranslate"><span class="pre">.whl</span></code>).
+NOTE that this approach usually is not required; usually, just use the pip installer of the previous section!</p>
+<p>Wheels can be downloaded directly from
+<a class="reference external" href="https://pypi.org/project/exudyn/#files">https://pypi.org/project/exudyn/#files</a>, one per
+Python version and platform. The file name says which one it is: <code class="docutils literal notranslate"><span class="pre">cp313</span></code> means CPython 3.13,
+and the last part names the platform.</p>
+<p>Check which Python you are about to install into:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">python</span> <span class="pre">--version</span></code></p></li>
+</ul>
+<p>and then install the matching wheel (the version number <code class="docutils literal notranslate"><span class="pre">1.11.0</span></code> below is an
+example):</p>
+<ul class="simple">
+<li><p><strong>Windows</strong>, Python 3.13: <code class="docutils literal notranslate"><span class="pre">pip</span> <span class="pre">install</span> <span class="pre">exudyn-1.11.0-cp313-cp313-win_amd64.whl</span></code></p></li>
+<li><p><strong>Linux</strong>, Python 3.13: <code class="docutils literal notranslate"><span class="pre">pip3</span> <span class="pre">install</span> <span class="pre">exudyn-1.11.0-cp313-cp313-manylinux_2_28_x86_64.whl</span></code></p></li>
+<li><p><strong>MacOS</strong>, Python 3.13: <code class="docutils literal notranslate"><span class="pre">pip3</span> <span class="pre">install</span> <span class="pre">exudyn-1.11.0-cp313-cp313-macosx_11_0_arm64.whl</span></code></p></li>
+</ul>
+<p>The same pattern holds for <code class="docutils literal notranslate"><span class="pre">cp310</span></code> to <code class="docutils literal notranslate"><span class="pre">cp314</span></code>. Installing a wheel built
+for a different Python version fails with a message about the wheel not being supported on this
+platform, which is the intended outcome rather than a problem to work around.</p>
+<p>If no wheel works on your system, build Exudyn for it as described in
+<a class="reference internal" href="../dev/BUILD.html#sec-dev-build"><span class="std std-ref">Building Exudyn from source</span></a>.</p>
+</section>
+<section id="build-exudyn-from-source">
+<span id="sec-install-installinstructions-buildfromsource"></span><h2>Build Exudyn from source<a class="headerlink" href="#build-exudyn-from-source" title="Link to this heading"></a></h2>
+<p>You need this only in two cases:</p>
+<ul class="simple">
+<li><p>there is <strong>no wheel for your platform</strong> - an unusual Linux, an old macOS, a Raspberry Pi;</p></li>
+<li><p>you want to <strong>change the C++ core</strong> itself.</p></li>
+</ul>
+<p>Everything about it - what a build needs on each platform, the commands, what to do when the
+build works and the import does not, and how to debug the C++ from a Python run - is in
+<a class="reference internal" href="../dev/BUILD.html#sec-dev-build"><span class="std std-ref">Building Exudyn from source</span></a>.</p>
+<p>The short form, from the root of the cloned repository, with the environment you want to
+install into active:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python<span class="w"> </span>-m<span class="w"> </span>pip<span class="w"> </span>wheel<span class="w"> </span>.<span class="w"> </span>-w<span class="w"> </span>dist<span class="w"> </span>--no-deps
+pip<span class="w"> </span>install<span class="w"> </span>--force-reinstall<span class="w"> </span>--no-deps<span class="w"> </span>dist/&lt;the<span class="w"> </span>wheel<span class="w"> </span>that<span class="w"> </span>was<span class="w"> </span>built&gt;
+</pre></div>
+</div>
+<p>It takes about a minute. On Linux the OpenGL and X11 development packages have to be
+installed first, which is what <a class="reference internal" href="../dev/BUILD.html#sec-dev-build"><span class="std std-ref">Building Exudyn from source</span></a> lists.</p>
+</section>
+<section id="uninstall-exudyn">
+<span id="sec-install-installinstructions-uninstall"></span><h2>Uninstall Exudyn<a class="headerlink" href="#uninstall-exudyn" title="Link to this heading"></a></h2>
+<p>To uninstall Exudyn, run</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">pip</span> <span class="pre">uninstall</span> <span class="pre">exudyn</span></code></p></li>
+</ul>
+<p>(with <code class="docutils literal notranslate"><span class="pre">sudo</span></code> only for the global Python of a Linux system, see <a class="reference internal" href="#sec-install-troubleshooting"><span class="std std-ref">Troubleshooting pip install</span></a>).</p>
+<p>If you upgrade to a newer version, uninstall is usually not necessary!</p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="gettingStarted.html" class="btn btn-neutral float-left" title="Installation and getting started" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="gettingStartedExample.html" class="btn btn-neutral float-right" title="Run a simple example in Python" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

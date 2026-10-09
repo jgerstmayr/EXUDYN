@@ -1,0 +1,468 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Type definitions &mdash; Exudyn1.13.3 1.13.3 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=3ee1c6c6" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/rtd_sphinx_search.min.css" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/custom.css?v=e2783f0e" />
+
+  
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=b8a3e558"></script>
+      <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../../_static/copybutton.js?v=f281be69"></script>
+      <script src="../../../_static/js/rtd_search_config.js"></script>
+      <script src="../../../_static/js/rtd_sphinx_search.min.js"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+    <link rel="next" title="Environment variables" href="EnvironmentVariables.html" />
+    <link rel="prev" title="Data structures" href="DataStructures.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            Exudyn1.13.3
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Exudyn User Manual</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../../README.html">Exudyn</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../manual/gettingStarted.html">Installation and getting started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../manual/introduction.html">Overview on Exudyn</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../manual/introductionBasics.html">Exudyn basics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../manual/tutorial.html">Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../manual/GUI.html">Renderer, graphics and visualization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../manual/performanceErrors.html">Performance, errors and solver failures</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../manual/introductionAdvanced.html">Advanced topics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../manual/notation.html">Notation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../manual/theory.html">Theory and formulations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../manual/solver.html">Solvers</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="cInterfaceIndex.html">Python-C++ command interface</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="GeneralInformation.html">General information</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Exudyn.html">Exudyn module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="SystemContainer.html">SystemContainer</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Renderer.html">Renderer</a></li>
+<li class="toctree-l2"><a class="reference internal" href="MainSystem.html">MainSystem</a></li>
+<li class="toctree-l2"><a class="reference internal" href="SystemData.html">SystemData</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Symbolic.html">Symbolic</a></li>
+<li class="toctree-l2"><a class="reference internal" href="GeneralContact.html">GeneralContact</a></li>
+<li class="toctree-l2"><a class="reference internal" href="DataStructures.html">Data structures</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Type definitions</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#outputvariabletype">OutputVariableType</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#inspecttype">InspectType</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#computeitemtype">ComputeItemType</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#configurationtype">ConfigurationType</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#itemtype">ItemType</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#nodetype">NodeType</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#markertype">MarkerType</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#jointtype">JointType</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#accessfunctiontype">AccessFunctionType</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#dynamicsolvertype">DynamicSolverType</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#crosssectiontype">CrossSectionType</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#keycode">KeyCode</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#linearsolvertype">LinearSolverType</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#contacttypeindex">ContactTypeIndex</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="EnvironmentVariables.html">Environment variables</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Reference Manual</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../items/itemsIndex.html">Items reference manual</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../pythonUtilities/utilitiesIndex.html">Python Utility Functions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../structures/structuresIndex.html">Structures and Settings</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../references.html">References</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Developer documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../dev/README.html">Exudyn developer documentation</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">How-to notes</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../howTo/condaEnvironments.html">Conda environments for Exudyn</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../howTo/sphinxDocs.html">Building the documentation</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Examples, models and issues</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../examples/examplesIndex.html">Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../testModels/testModelsIndex.html">TestModels</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../abbreviations.html">List of Abbreviations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../manual/revisions.html">Revisions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../CHANGELOG.html">Changelog</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../trackerlog.html">Issue tracker</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">Exudyn1.13.3</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="cInterfaceIndex.html">Python-C++ command interface</a></li>
+      <li class="breadcrumb-item active">Type definitions</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../../_sources/docs/generated/cInterface/TypeDefinitions.md.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <!-- GENERATED by tools/generators/pybindEmitter.py from definitions/ - do not edit -->
+<section class="tex2jax_ignore mathjax_ignore" id="type-definitions">
+<span id="sec-cinterface-typedef"></span><h1>Type definitions<a class="headerlink" href="#type-definitions" title="Link to this heading"></a></h1>
+<p>This section defines a couple of structures (C++: enum aka enumeration type), which are used to select, e.g., a configuration type or a variable type. In the background, these types are integer numbers, but for safety, the types should be used as type variables. See this examples:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1">#Conversion to integer is possible:</span>
+<span class="n">x</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">exu</span><span class="o">.</span><span class="nc">OutputVariableType</span><span class="o">.</span><span class="n">Displacement</span><span class="p">)</span>
+<span class="c1">#also conversion from integer:</span>
+<span class="n">varType</span> <span class="o">=</span> <span class="n">exu</span><span class="o">.</span><span class="nc">OutputVariableType</span><span class="p">(</span><span class="mi">8</span><span class="p">)</span>
+<span class="c1">#use in settings:</span>
+<span class="n">SC</span><span class="o">.</span><span class="nf">visualizationSettings</span><span class="o">.</span><span class="n">contour</span><span class="o">.</span><span class="n">outputVariable</span> <span class="o">=</span> <span class="n">exu</span><span class="o">.</span><span class="nc">OutputVariableType</span><span class="o">.</span><span class="n">StressLocal</span>
+<span class="c1">#use outputVariableType in sensor:</span>
+<span class="n">sensor</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">AddSensor</span><span class="p">(</span><span class="nc">SensorBody</span><span class="p">(</span><span class="n">bodyNumber</span><span class="o">=</span><span class="n">rigid</span><span class="p">,</span> <span class="n">storeInternal</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                                  <span class="n">outputVariableType</span><span class="o">=</span><span class="n">exu</span><span class="o">.</span><span class="nc">OutputVariableType</span><span class="o">.</span><span class="n">Displacement</span><span class="p">))</span>
+</pre></div>
+</div>
+<div class="notebookorigin docutils container">
+<p><code class="docutils literal notranslate"><span class="pre">python/Notebooks/reference/generalInformation.ipynb</span></code></p>
+</div>
+<section id="outputvariabletype">
+<span id="sec-outputvariabletype"></span><h2>OutputVariableType<a class="headerlink" href="#outputvariabletype" title="Link to this heading"></a></h2>
+<p>The enumeration type  OutputVariableType is used for selecting output values, e.g., for GetObjectOutput(…) or for selecting variables for contour plot.</p>
+<p>Available output variables and the interpreation of the output variable can be found at the object definitions.
+The OutputVariableType does not provide information about the size of the output variable, which can be either scalar or a list (vector). For vector output quantities, the contour plot option offers an additional parameter for selection of the component of the OutputVariableType. The components are usually out of {0,1,2}, representing {x,y,z} components (e.g., of displacements, velocities, …), or {0,1,2,3,4,5} representing {xx,yy,zz,yz,xz,xy} components (e.g., of strain or stress). In order to compute a norm, chose component=-1, which will result in the quadratic norm for other vectors and to a norm specified for stresses (if no norm is defined for an outputVariable, it does not compute anything)</p>
+<p>The class <strong>OutputVariableType</strong> has the following <strong>functions and structures</strong>:</p>
+<ul class="simple">
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">_None</span></code></strong>: no value; used, e.g., to select no output variable in contour plot</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">Distance</span></code></strong>: e.g., measure distance in spring damper connector</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">Position</span></code></strong>: measure 3D position, e.g., of node or body</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">Displacement</span></code></strong>: measure displacement; usually difference between current position and reference position</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">DisplacementLocal</span></code></strong>: measure local displacement, e.g., in local joint coordinates</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">Velocity</span></code></strong>: measure (translational) velocity of node or object</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">VelocityLocal</span></code></strong>: measure local (translational) velocity, e.g., in local body or joint coordinates</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">Acceleration</span></code></strong>: measure (translational) acceleration of node or object</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">AccelerationLocal</span></code></strong>: measure (translational) acceleration of node or object in local coordinates</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">RotationMatrix</span></code></strong>: measure rotation matrix of rigid body node or object</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">Rotation</span></code></strong>: measure, e.g., scalar rotation of 2D body, Euler angles of a 3D object or rotation within a joint</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">AngularVelocity</span></code></strong>: measure angular velocity of node or object</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">AngularVelocityLocal</span></code></strong>: measure local (body-fixed) angular velocity of node or object</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">AngularAcceleration</span></code></strong>: measure angular acceleration of node or object</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">AngularAccelerationLocal</span></code></strong>: measure angular acceleration of node or object in local coordinates</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">CoordinatesTotal</span></code></strong>: measure the total coordinates (including reference configuration) of a node or object; otherwise the same as Coordinates</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">Coordinates</span></code></strong>: measure the coordinates of a node or object; coordinates just contain displacements, but not the reference (position or rotation) values - see also definition of respective nodes or objects</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">Coordinates_t</span></code></strong>: measure the time derivative of coordinates (= velocity coordinates) of a node or object</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">Coordinates_tt</span></code></strong>: measure the second time derivative of coordinates (= acceleration coordinates) of a node or object</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">SlidingCoordinate</span></code></strong>: measure sliding coordinate in sliding joint</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">Director1</span></code></strong>: measure a director (e.g., of a rigid body frame), or a slope vector in local 1 or x-direction</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">Director2</span></code></strong>: measure a director (e.g., of a rigid body frame), or a slope vector in local 2 or y-direction</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">Director3</span></code></strong>: measure a director (e.g., of a rigid body frame), or a slope vector in local 3 or z-direction</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">Force</span></code></strong>: measure global force, e.g., in joint or beam (resultant force), or generalized forces; see description of according object</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">ForceLocal</span></code></strong>: measure local force, e.g., in joint or beam (resultant force)</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">Torque</span></code></strong>: measure torque, e.g., in joint or beam (resultant couple/moment)</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">TorqueLocal</span></code></strong>: measure local torque, e.g., in joint or beam (resultant couple/moment)</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">StrainLocal</span></code></strong>: measure local strain, e.g., axial strain in cross section frame of beam or Green-Lagrange strain</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">StressLocal</span></code></strong>: measure local stress, e.g., axial stress in cross section frame of beam or Second Piola-Kirchoff stress; choosing component==-1 will result in the computation of the Mises stress</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">CurvatureLocal</span></code></strong>: measure local curvature; may be scalar or vectorial: twist and curvature of beam in cross section frame</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">ConstraintEquation</span></code></strong>: evaluates constraint equation (=current deviation or drift of constraint equation)</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">KineticEnergy</span></code></strong>: measure kinetic energy of a body, position independent</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">PotentialEnergy</span></code></strong>: measure potential (=elastic) energy of a body or connector, position independent</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">HomogeneousTransformation</span></code></strong>: measure the homogeneous transformation of a node, body point or marker: its rotation matrix A and position p as the 4x4 matrix [A p; 0 1]; the Get…Output functions return it as exu.HT, a sensor stores its 16 components row by row; every item with Position and RotationMatrix provides it</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">HomogeneousTransformationLocal</span></code></strong>: measure the homogeneous transformation of a frame relative to another, e.g., of joint frame J1 in joint frame J0: the 4x4 matrix [A p; 0 1] with the relative rotation matrix A and the relative position p in the first frame; returned and stored as HomogeneousTransformation</p></li>
+</ul>
+</section>
+<section id="inspecttype">
+<span id="sec-inspecttype"></span><h2>InspectType<a class="headerlink" href="#inspecttype" title="Link to this heading"></a></h2>
+<p>The enumeration type InspectType selects what mbs.Inspect(itemIndex, what) reports about an item; each answer is a list of the enumeration types Exudyn exports, the flags of C++ split into their single members.</p>
+<p>The class <strong>InspectType</strong> has the following <strong>functions and structures</strong>:</p>
+<ul class="simple">
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">OutputVariables</span></code></strong>: the output variables of an object, node or marker (OutputVariableType), with its current parameters: the energies only where they can be computed</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">ObjectType</span></code></strong>: the type flags of an object (ObjectType): Body, Connector, Constraint, SuperElement, …</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">NodeType</span></code></strong>: the types a node provides (NodeType): Position, Orientation, RotationEulerParameters, …</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">RequestedNodeTypes</span></code></strong>: for each node of an object, the node types it requests (NodeType), all of them; for the node of a node marker, a list of requirements, each a list of alternatives of which the node provides one - [[NodeType.Position, NodeType.Position2D]] for MarkerNodePosition</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">MarkerType</span></code></strong>: the types a marker provides (MarkerType)</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">RequestedMarkerTypes</span></code></strong>: for each marker of a connector, constraint or load, the marker types it requests (MarkerType)</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">AccessFunctions</span></code></strong>: the access functions a body offers (AccessFunctionType), which decide the body markers it takes</p></li>
+</ul>
+</section>
+<section id="computeitemtype">
+<span id="sec-computeitemtype"></span><h2>ComputeItemType<a class="headerlink" href="#computeitemtype" title="Link to this heading"></a></h2>
+<p>The enumeration type ComputeItemType selects what mbs.ComputeItem(itemIndex, what, …) computes for an item at the current state of the system; matrices and vectors refer to the coordinates of the item (its local-to-global ODE2 coordinates, mbs.systemData.GetObjectLTGODE2, or the coordinates of the node).</p>
+<p>The class <strong>ComputeItemType</strong> has the following <strong>functions and structures</strong>:</p>
+<ul class="simple">
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">PositionJacobian</span></code></strong>: the position Jacobian, d(velocity)/d(q_t): of a body at localPosition, of a node, of a marker</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">RotationJacobian</span></code></strong>: the rotation Jacobian, d(angular velocity)/d(q_t), global: of a body at localPosition, of a node, of a rigid marker</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">JacobianTTimesVectorDerivative</span></code></strong>: the derivative of the transposed Jacobian times a vector by the coordinates: of a body at localPosition and of a marker, d(J_pos^T f + J_rot^T tau)/dq with vector = [f, tau] (6 values); of a node, d(J_rot^T tau)/dq with vector = tau (3 values); an empty matrix where it is zero</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">MassWeightedPositionJacobian</span></code></strong>: the integral of the density times the position Jacobian over a body, as the mass-proportional load uses it</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">ODE2LHS</span></code></strong>: the left-hand side of the second order equations of an object - a body, or the forces of a connector projected on its markers -, with the sign of ComputeODE2LHS</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">MassMatrix</span></code></strong>: the mass matrix of a body</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">AlgebraicEquations</span></code></strong>: the algebraic equations of a constraint, or of a body with algebraic equations</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">ConstraintJacobian</span></code></strong>: the Jacobian of the algebraic equations by the ODE2 coordinates (by the velocities for a constraint at velocity level)</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">ReactionForces</span></code></strong>: the reaction forces C_q^T lambda of a constraint, with the current Lagrange multipliers</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">Kinematics</span></code></strong>: the marker data of a marker, without Jacobians, as a dict: position, velocity, rotationMatrix and angularVelocityLocal where the marker has an orientation, value and value_t for a coordinate marker</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">CoordinateJacobian</span></code></strong>: the Jacobian of a coordinate marker by the coordinates it acts on</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">JacobianODE2</span></code></strong>: the analytic Jacobian d(ODE2LHS)/dq of a body or connector, where it has one - the one the solver uses; for the others, NumericalJacobian of ODE2LHS</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">JacobianODE2_t</span></code></strong>: the analytic Jacobian d(ODE2LHS)/dq_t of a body or connector, where it has one</p></li>
+</ul>
+</section>
+<section id="configurationtype">
+<span id="sec-configurationtype"></span><h2>ConfigurationType<a class="headerlink" href="#configurationtype" title="Link to this heading"></a></h2>
+<p>The enumeration type  ConfigurationType is used for selecting a configuration for reading or writing information to the module. Specifically, the ConfigurationType.Current configuration is usually used at the end of a solution process, to obtain result values, or the ConfigurationType.Initial is used to set initial values for a solution process.</p>
+<p>The class <strong>ConfigurationType</strong> has the following <strong>functions and structures</strong>:</p>
+<ul class="simple">
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">_None</span></code></strong>: no configuration; usually not valid, but may be used, e.g., if no configurationType is required</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">Initial</span></code></strong>: initial configuration prior to static or dynamic solver; is computed during mbs.Assemble() or AssembleInitializeSystemCoordinates()</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">Current</span></code></strong>: current configuration during and at the end of the computation of a step (static or dynamic)</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">Reference</span></code></strong>: configuration used to define deformable bodies (reference configuration for finite elements) or joints (configuration for which some joints are defined)</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">StartOfStep</span></code></strong>: during computation, this refers to the solution at the start of the step = end of last step, to which the solver falls back if convergence fails</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">Visualization</span></code></strong>: this is a state completely de-coupled from computation, used for visualization</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">EndOfEnumList</span></code></strong>: this marks the end of the list, usually not important to the user</p></li>
+</ul>
+</section>
+<section id="itemtype">
+<span id="sec-itemtype"></span><h2>ItemType<a class="headerlink" href="#itemtype" title="Link to this heading"></a></h2>
+<p>The enumeration type  ItemType is used for defining types of indices, e.g., in render window and will be also used in item dictionaries in future.</p>
+<p>The class <strong>ItemType</strong> has the following <strong>functions and structures</strong>:</p>
+<ul class="simple">
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">_None</span></code></strong>: item has no type</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">Node</span></code></strong>: item or index is of type Node</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">Object</span></code></strong>: item or index is of type Object</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">Marker</span></code></strong>: item or index is of type Marker</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">Load</span></code></strong>: item or index is of type Load</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">Sensor</span></code></strong>: item or index is of type Sensor</p></li>
+</ul>
+</section>
+<section id="nodetype">
+<span id="sec-nodetype"></span><h2>NodeType<a class="headerlink" href="#nodetype" title="Link to this heading"></a></h2>
+<p>The enumeration type  NodeType is used for defining node types for 3D rigid bodies.</p>
+<p>The class <strong>NodeType</strong> has the following <strong>functions and structures</strong>:</p>
+<ul class="simple">
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">_None</span></code></strong>: node has no type</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">Ground</span></code></strong>: ground node</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">Position2D</span></code></strong>: 2D position node</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">Orientation2D</span></code></strong>: node with 2D rotation</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">Point2DSlope1</span></code></strong>: 2D node with 1 slope vector</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">Position</span></code></strong>: 3D position node</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">Orientation</span></code></strong>: 3D orientation node</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">RigidBody</span></code></strong>: node that can be used for rigid bodies</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">RotationEulerParameters</span></code></strong>: node with 3D orientations that are modelled with Euler parameters (unit quaternions)</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">RotationRxyz</span></code></strong>: node with 3D orientations that are modelled with Tait-Bryan angles</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">RotationRotationVector</span></code></strong>: node with 3D orientations that are modelled with the rotation vector</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">LieGroupWithDirectUpdate</span></code></strong>: node to be solved with Lie group methods, without data coordinates</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">GenericODE2</span></code></strong>: node with general ODE2 variables</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">GenericODE1</span></code></strong>: node with general ODE1 variables</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">GenericAE</span></code></strong>: node with general algebraic variables</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">GenericData</span></code></strong>: node with general data variables</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">PointSlope1</span></code></strong>: node with 1 slope vector</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">PointSlope12</span></code></strong>: node with 2 slope vectors in x and y direction</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">PointSlope23</span></code></strong>: node with 2 slope vectors in y and z direction</p></li>
+</ul>
+</section>
+<section id="markertype">
+<span id="sec-markertype"></span><h2>MarkerType<a class="headerlink" href="#markertype" title="Link to this heading"></a></h2>
+<p>The enumeration type MarkerType lists the properties of a marker as bits; a connector or load requests a combination of them (GetRequestedMarkerType), which the marker type must contain.</p>
+<p>The class <strong>MarkerType</strong> has the following <strong>functions and structures</strong>:</p>
+<ul class="simple">
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">_None</span></code></strong>: no type is used</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">Body</span></code></strong>: marker is attached to a body (must also be Object)</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">Node</span></code></strong>: marker is attached to a node</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">Object</span></code></strong>: marker is attached to an object</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">SuperElement</span></code></strong>: marker only applicable to super elements; accesses (virtual) nodes of super elements</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">KinematicTree</span></code></strong>: marker only applicable to KinematicTree; accesses (virtual) nodes of KinematicTree</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">Position</span></code></strong>: can measure position, apply distance constraint</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">Orientation</span></code></strong>: can measure rotation, apply general rigid body constraint (if Position is set)</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">Coordinate</span></code></strong>: access any coordinate (always available)</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">Coordinates</span></code></strong>: access all coordinates (always available)</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">BodyLine</span></code></strong>: line load (vector load applied to line)</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">BodySurface</span></code></strong>: surface load / connector (e.g. for revolute joint with FE-mesh)</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">BodyVolume</span></code></strong>: volume load, usually gravity</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">BodyMass</span></code></strong>: mass proportional load, usually gravity</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">BodySurfaceNormal</span></code></strong>: surface pressure (uses scalar load)</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">MultiNodal</span></code></strong>: multinodal marker uses a weighting matrix to transform node values into the marker value</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">ReducedCoordinates</span></code></strong>: marker uses reduced (modal) coordinates of a super element</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">ODE1</span></code></strong>: marker addresses ODE1 coordinate(s) (standard is ODE2)</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">JacobianDerivativeNonZero</span></code></strong>: the derivative of the marker jacobian is non-zero (e.g. for rotations)</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">JacobianDerivativeAvailable</span></code></strong>: the derivative of the marker jacobian is implemented</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">HasPostNewton</span></code></strong>: the PostNewton function has to be called</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">Beam2DShape</span></code></strong>: access to 2D beam shape</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">Beam3DShape</span></code></strong>: access to 3D beam shape</p></li>
+</ul>
+</section>
+<section id="jointtype">
+<span id="sec-jointtype"></span><h2>JointType<a class="headerlink" href="#jointtype" title="Link to this heading"></a></h2>
+<p>The enumeration type  JointType is used for defining joint types, used in KinematicTree.</p>
+<p>The class <strong>JointType</strong> has the following <strong>functions and structures</strong>:</p>
+<ul class="simple">
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">_None</span></code></strong>: node has no type</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">RevoluteX</span></code></strong>: revolute joint type with rotation around local X axis</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">RevoluteY</span></code></strong>: revolute joint type with rotation around local Y axis</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">RevoluteZ</span></code></strong>: revolute joint type with rotation around local Z axis</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">PrismaticX</span></code></strong>: prismatic joint type with translation along local X axis</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">PrismaticY</span></code></strong>: prismatic joint type with translation along local Y axis</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">PrismaticZ</span></code></strong>: prismatic joint type with translation along local Z axis</p></li>
+</ul>
+</section>
+<section id="accessfunctiontype">
+<span id="sec-accessfunctiontype"></span><h2>AccessFunctionType<a class="headerlink" href="#accessfunctiontype" title="Link to this heading"></a></h2>
+<p>The enumeration type AccessFunctionType lists the access functions (jacobians) an object provides for markers, as bits; its values share the bits of MarkerType. A marker can be attached to an object only if the object provides the access function the marker needs.</p>
+<p>The class <strong>AccessFunctionType</strong> has the following <strong>functions and structures</strong>:</p>
+<ul class="simple">
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">_None</span></code></strong>: no access function</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">TranslationalVelocity_qt</span></code></strong>: for application of forces, position constraints</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">AngularVelocity_qt</span></code></strong>: for application of torques, rotational constraints</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">Coordinate_q</span></code></strong>: for application of generalized forces</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">DisplacementLineIntegral_q</span></code></strong>: for line loads</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">DisplacementSurfaceIntegral_q</span></code></strong>: for surface loads</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">DisplacementVolumeIntegral_q</span></code></strong>: for distributed (body-volume) loads</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">DisplacementMassIntegral_q</span></code></strong>: for distributed (body-mass) loads</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">DisplacementSurfaceNormalIntegral_q</span></code></strong>: for surface loads; pressure acts normal to the surface</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">SuperElement</span></code></strong>: for super elements, using TranslationalVelocity_qt and AngularVelocity_qt</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">KinematicTree</span></code></strong>: for KinematicTree, using TranslationalVelocity_qt and AngularVelocity_qt</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">OwnMarkersOnly</span></code></strong>: the access functions serve only the object’s own markers (super element or kinematic tree markers); the general body markers are refused</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">JacobianTtimesVector_q</span></code></strong>: derivative of jacobian^T times vector (provided in markerData.vectorValue)</p></li>
+</ul>
+</section>
+<section id="dynamicsolvertype">
+<span id="sec-dynamicsolvertype"></span><h2>DynamicSolverType<a class="headerlink" href="#dynamicsolvertype" title="Link to this heading"></a></h2>
+<p>The enumeration type  DynamicSolverType is used for selecting dynamic solvers for simulation.</p>
+<p>The class <strong>DynamicSolverType</strong> has the following <strong>functions and structures</strong>:</p>
+<ul class="simple">
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">GeneralizedAlpha</span></code></strong>: an implicit solver for index 3 problems; intended to be used for solving directly the index 3 constraints using the spectralRadius sufficiently small (usually 0.5 .. 1)</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">TrapezoidalIndex2</span></code></strong>: an implicit solver for index 3 problems with index2 reduction; uses generalized alpha solver with settings for Newmark with index2 reduction</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">ExplicitEuler</span></code></strong>: an explicit 1st order solver (generally not compatible with constraints)</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">ExplicitMidpoint</span></code></strong>: an explicit 2nd order solver (generally not compatible with constraints)</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">RK33</span></code></strong>: an explicit 3 stage 3rd order Runge-Kutta method, aka “Heun third order”; (generally not compatible with constraints)</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">RK44</span></code></strong>: an explicit 4 stage 4th order Runge-Kutta method, aka “classical Runge Kutta” (generally not compatible with constraints), compatible with Lie group integration and elimination of CoordinateConstraints</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">RK67</span></code></strong>: an explicit 7 stage 6th order Runge-Kutta method, see ‘On Runge-Kutta Processes of High Order’, J. C. Butcher, J. Austr Math Soc 4, (1964); can be used for very accurate (reference) solutions, but without step size control!</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">ODE23</span></code></strong>: an explicit Runge Kutta method with automatic step size selection with 3rd order of accuracy and 2nd order error estimation, see Bogacki and Shampine, 1989; also known as ODE23 in MATLAB</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">DOPRI5</span></code></strong>: an explicit Runge Kutta method with automatic step size selection with 5th order of accuracy and 4th order error estimation, see  Dormand and Prince, ‘A Family of Embedded Runge-Kutta Formulae.’, J. Comp. Appl. Math. 6, 1980</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">DVERK6</span></code></strong>: [NOT IMPLEMENTED YET] an explicit Runge Kutta solver of 6th order with 5th order error estimation; includes adaptive step selection</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">VelocityVerlet</span></code></strong>: [TEST phase] a special explicit time integration scheme, the ‘velocity Verlet’ method (similar to leap frog method), with second order accuracy for conservative second order differential equations, often used for particle dynamics and contact; implementation uses Explicit Euler for ODE1 equations</p></li>
+</ul>
+</section>
+<section id="crosssectiontype">
+<span id="sec-crosssectiontype"></span><h2>CrossSectionType<a class="headerlink" href="#crosssectiontype" title="Link to this heading"></a></h2>
+<p>The enumeration type  CrossSectionType is used for defining beam cross section types.</p>
+<p>The class <strong>CrossSectionType</strong> has the following <strong>functions and structures</strong>:</p>
+<ul class="simple">
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">Polygon</span></code></strong>: cross section profile defined by polygon</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">Circular</span></code></strong>: cross section is circle or elliptic</p></li>
+</ul>
+</section>
+<section id="keycode">
+<span id="sec-keycode"></span><h2>KeyCode<a class="headerlink" href="#keycode" title="Link to this heading"></a></h2>
+<p>The enumeration type  KeyCode is used for special key codes in keyPressUserFunction.</p>
+<p>The class <strong>KeyCode</strong> has the following <strong>functions and structures</strong>:</p>
+<ul class="simple">
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">SPACE</span></code></strong>: space key</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">ENTER</span></code></strong>: enter (return) key</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">TAB</span></code></strong></p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">BACKSPACE</span></code></strong></p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">RIGHT</span></code></strong>: cursor right</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">LEFT</span></code></strong>: cursor left</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">DOWN</span></code></strong>: cursor down</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">UP</span></code></strong>: cursor up</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">F1</span></code></strong>: function key F1</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">F2</span></code></strong>: function key F2</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">F3</span></code></strong>: function key F3</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">F4</span></code></strong>: function key F4</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">F5</span></code></strong>: function key F5</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">F6</span></code></strong>: function key F6</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">F7</span></code></strong>: function key F7</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">F8</span></code></strong>: function key F8</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">F9</span></code></strong>: function key F9</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">F10</span></code></strong>: function key F10</p></li>
+</ul>
+</section>
+<section id="linearsolvertype">
+<span id="sec-linearsolvertype"></span><h2>LinearSolverType<a class="headerlink" href="#linearsolvertype" title="Link to this heading"></a></h2>
+<p>The enumeration type  LinearSolverType is used for selecting linear solver types, which are dense or sparse solvers.</p>
+<p>The class <strong>LinearSolverType</strong> has the following <strong>functions and structures</strong>:</p>
+<ul class="simple">
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">_None</span></code></strong>: no value; used, e.g., if no solver is selected</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">EXUdense</span></code></strong>: use dense matrices and according solvers for densly populated matrices (usually the CPU time grows cubically with the number of unknowns)</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">EigenSparse</span></code></strong>: use sparse matrices and according solvers; additional overhead for very small multibody systems; specifically, memory allocation is performed during a factorization process</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">EigenSparseSymmetric</span></code></strong>: use sparse matrices and according solvers; NOTE: this is the symmetric mode, which assumes symmetric system matrices; this is EXPERIMENTAL and should only be used of user knows that the system matrices are (nearly) symmetric; does not work with scaled GeneralizedAlpha matrices; does not work with constraints, as it must be symmetric positive definite</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">EigenDense</span></code></strong>: use Eigen’s LU factorization with partial pivoting (faster than EXUdense) or full pivot (if linearSolver.ignoreSingularJacobian=True; is much slower, but can resolve overdetermined and underdetermined problems!); NOTE: in the default partial pivoting mode a singular matrix is NOT detected - Eigen provides no invertibility check there - so the solver continues with an undefined result instead of reporting a singular jacobian; use EXUdense or EigenSparse if that must be reported, or full pivot (ignoreSingularJacobian=True), which resolves the singular system by least squares on purpose</p></li>
+</ul>
+</section>
+<section id="contacttypeindex">
+<span id="sec-contacttypeindex"></span><h2>ContactTypeIndex<a class="headerlink" href="#contacttypeindex" title="Link to this heading"></a></h2>
+<p>The enumeration type  ContactTypeIndex is used in GeneralContact to select specific contact items, such as spheres, ANCFCable or triangle items.</p>
+<p>The class <strong>ContactTypeIndex</strong> has the following <strong>functions and structures</strong>:</p>
+<ul class="simple">
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">IndexSpheresMarkerBased</span></code></strong>: spheres attached to markers</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">IndexANCFCable2D</span></code></strong>: ANCFCable2D contact items</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">IndexTrigsRigidBodyBased</span></code></strong>: triangles attached to rigid body (or rigid body marker)</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">IndexEndOfEnumList</span></code></strong>: signals end of list</p></li>
+</ul>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="DataStructures.html" class="btn btn-neutral float-left" title="Data structures" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="EnvironmentVariables.html" class="btn btn-neutral float-right" title="Environment variables" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

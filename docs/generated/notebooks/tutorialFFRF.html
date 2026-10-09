@@ -1,0 +1,307 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Flexible body with the floating frame of reference formulation &mdash; Exudyn1.13.3 1.13.3 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=3ee1c6c6" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/rtd_sphinx_search.min.css" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/custom.css?v=e2783f0e" />
+
+  
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=b8a3e558"></script>
+      <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../../_static/copybutton.js?v=f281be69"></script>
+      <script src="../../../_static/js/rtd_search_config.js"></script>
+      <script src="../../../_static/js/rtd_sphinx_search.min.js"></script>
+      <script>window.MathJax = {"loader": {"load": ["[tex]/mathtools"]}, "tex": {"packages": {"[+]": ["mathtools"]}, "macros": {"ANCFdk": "{\\LU{0}{\\dv_k}}", "ANCFdkO": "{\\LU{0}{\\dv_{0,k}}}", "ANCFdkOtp": "{\\LU{0}{\\dv_{0,k}\\tp}}", "ANCFdkt": "{\\LU{0}{\\dot\\dv_k}}", "Am": "{\\mathbf{A}}", "Dm": "{\\mathbf{D}}", "Em": "{\\mathbf{E}}", "Gm": "{\\mathbf{G}}", "Im": "{\\mathbf{I}}", "ImThree": "{\\mathbf{I}_{3 \\times 3}}", "Jm": "{\\mathbf{J}}", "Km": "{\\mathbf{K}}", "Mm": "{\\mathbf{M}}", "Pm": "{\\mathbf{P}}", "Rm": "{\\mathbf{R}}", "Sm": "{\\mathbf{S}}", "Tm": "{\\mathbf{T}}", "av": "{\\mathbf{a}}", "bv": "{\\mathbf{b}}", "cv": "{\\mathbf{c}}", "diffANCF": ["{\\frac{\\partial #1}{\\partial \\qv_{ANCF}}}", 1], "diffANCFdk": "{\\diffANCFmI{\\ANCFdk}}", "diffANCFmI": ["{\\frac{\\partial #1}{\\partial \\qv_{ANCF,m1}}}", 1], "diffANCFmIt": ["{\\frac{\\partial #1}{\\partial \\dot \\qv_{ANCF,m1}}}", 1], "diffANCFt": ["{\\frac{\\partial #1}{\\partial \\dot \\qv_{ANCF}}}", 1], "diffmI": ["{\\frac{\\partial #1}{\\partial \\qv_{m1}}}", 1], "diffmIt": ["{\\frac{\\partial #1}{\\partial \\dot \\qv_{m1}}}", 1], "diffmOI": ["{\\frac{\\partial #1}{\\partial \\qv_{m0,m1}}}", 1], "diffmOIt": ["{\\frac{\\partial #1}{\\partial \\dot \\qv_{m0,m1}}}", 1], "diffmOt": ["{\\frac{\\partial #1}{\\partial \\dot \\qv_{m0}}}", 1], "dv": "{\\mathbf{d}}", "ev": "{\\mathbf{e}}", "fv": "{\\mathbf{f}}", "gv": "{\\mathbf{g}}", "hv": "{\\mathbf{h}}", "nv": "{\\mathbf{n}}", "pv": "{\\mathbf{p}}", "qv": "{\\mathbf{q}}", "rv": "{\\mathbf{r}}", "sv": "{\\mathbf{s}}", "tv": "{\\mathbf{t}}", "uv": "{\\mathbf{u}}", "vv": "{\\mathbf{v}}", "xv": "{\\mathbf{x}}", "yv": "{\\mathbf{y}}", "zv": "{\\mathbf{z}}", "vspace": ["{}", 1], "ra": "{\\rightarrow}", "Rcal": "{\\mathbb{R}}", "Ccal": "{\\mathbb{C}}", "Ncal": "{\\mathbb{N}}", "Rot": "{\\mathbf{A}}", "dd": "{\\mathrm{d}}", "ps": "{p_\\mathrm{s}}", "co": "{\\mathrm{c}}", "si": "{\\mathrm{s}}", "tp": "{^\\mathrm{T}}", "diag": "{\\mathrm{diag}}", "vec": "{\\mathrm{vec}}", "Null": "{\\mathbf{0}}", "varepsilonDot": "{\\boldsymbol{\\varepsilon}}", "talpha": "{\\boldsymbol{\\alpha}}", "tbeta": "{\\boldsymbol{\\beta}}", "tgamma": "{\\boldsymbol{\\gamma}}", "tchi": "{\\boldsymbol{\\chi}}", "tdelta": "{\\boldsymbol{\\delta}}", "teps": "{\\boldsymbol{\\varepsilon}}", "tepsDot": "{\\boldsymbol{\\dot \\varepsilon}}", "teta": "{\\boldsymbol{\\eta}}", "tkappa": "{\\boldsymbol{\\kappa}}", "tkappaDot": "{\\boldsymbol{\\dot \\kappa}}", "tphi": "{\\boldsymbol{\\phi}}", "boldVarPhi": "{\\boldsymbol{\\varphi}}", "tPhi": "{\\boldsymbol{\\Phi}}", "ttheta": "{\\boldsymbol{\\theta}}", "tTheta": "{\\boldsymbol{\\Theta}}", "tlambda": "{\\boldsymbol{\\lambda}}", "tnu": "{\\boldsymbol{\\nu}}", "tmu": "{\\boldsymbol{\\mu}}", "tpsi": "{\\boldsymbol{\\psi}}", "tPsi": "{\\boldsymbol{\\Psi}}", "ttau": "{\\boldsymbol{\\tau}}", "tsigma": "{\\boldsymbol{\\sigma}}", "txi": "{\\boldsymbol{\\xi}}", "tzeta": "{\\boldsymbol{\\zeta}}", "tomega": "{\\boldsymbol{\\omega}}", "tOmega": "{\\boldsymbol{\\Omega}}", "vareps": "{\\varepsilon}", "myoverline": ["\\overline{#1}", 1], "pluseq": "\\mathrel{+}=", "LU": ["{\\prescript{#1}{}{#2}\\,}", 2], "LUX": ["{\\prescript{#1}{}{#2}#3\\,}", 3], "LUR": ["{\\prescript{#1}{}{#2}_{#3}\\,}", 3], "LURU": ["{\\prescript{#1}{}{#2}_{#3}^{#4}\\,}", 4], "LLdot": ["{\\prescript{}{#1}{\\dot{#2}}_{#3}\\,}", 3], "vr": ["{\\left[ \\begin{array}{c} { #1}\\vspace{0.04cm} \\\\ { #2}\\vspace{0.04cm} \\\\ { #3} \\end{array} \\right]}", 3], "mr": ["{\\left[ \\begin{array}{ccc} #1 & #2 & #3 \\vspace{0.04cm}\\\\ #4 & #5 & #6 \\vspace{0.04cm}\\\\ #7 & #8 & #9  \\end{array} \\right]}", 9], "vp": ["{\\left[ \\begin{array}{c} { #1} \\vspace{0.04cm}\\\\ { #2} \\end{array} \\right]}", 2], "mp": ["{\\left[ \\begin{array}{cc} #1 & #2 \\vspace{0.04cm}\\\\ #3 & #4 \\end{array} \\right]}", 4], "mfour": ["{\\left[ \\begin{array}{cccc} { #1} \\\\ { #2} \\\\ { #3} \\\\ { #4} \\end{array} \\right]}", 4], "vfour": ["{\\left[ \\begin{array}{c} { #1} \\\\ { #2} \\\\ { #3} \\\\ { #4} \\end{array} \\right]}", 4], "vrRow": ["{[#1,\\, #2,\\, #3]}", 3], "vsix": ["{\\left[ \\begin{array}{c} { #1} \\\\ { #2} \\\\ { #3} \\\\ { #4} \\\\ { #5} \\\\ { #6} \\end{array} \\right]}", 6], "vsixb": ["{\\begin{array}{c} { #1} \\\\ { #2} \\\\ { #3} \\\\ { #4} \\\\ { #5} \\\\ { #6} \\end{array} }", 6], "vsixs": ["{ \\begin{array}{c} { #1} \\\\ { #2} \\\\ { #3} \\\\ { #4} \\\\ { #5} \\\\ { #6} \\end{array} }", 6], "SO": "{q}", "FO": "{y}", "AE": "{\\lambda}", "SYS": "{s}", "SON": "{$2^\\mathrm{nd}$ order differential equations}", "FON": "{$1^\\mathrm{st}$ order differential equations}", "AEN": "{algebraic equations}", "Bm": "{\\mathbf{B}}", "Cm": "{\\mathbf{C}}", "Fm": "{\\mathbf{F}}", "SYSN": "{system equations}", "cIni": "{_\\mathrm{ini}}", "cRef": "{_\\mathrm{ref}}", "cCur": "{_\\mathrm{cur}}", "cVis": "{_\\mathrm{vis}}", "cSOS": "{_\\mathrm{start\\;of\\;step}}", "cConfig": "{_\\mathrm{config}}", "pLoc": "{\\mathbf{b}}", "pLocB": "{\\,^{b}{\\mathbf{v}}}", "pRef": "{\\mathbf{r}}", "pRefG": "{\\,^{0}{\\mathbf{r}}}", "indf": "{_\\mathrm{f}}", "indt": "{_\\mathrm{t}}", "indr": "{_\\mathrm{r}}", "indtt": "{_\\mathrm{tt}}", "indrr": "{_\\mathrm{rr}}", "indff": "{_\\mathrm{ff}}", "indtf": "{_\\mathrm{tf}}", "indrf": "{_\\mathrm{rf}}", "indtr": "{_\\mathrm{tr}}", "omegaBDtilde": "{\\LU{b}{\\tilde \\tomega_\\mathrm{bd}}}", "indrigid": "{_\\mathrm{rigid}}", "indred": "{_\\mathrm{red}}", "induser": "{_\\mathrm{user}}", "indu": "{_\\mathrm{u}}", "termA": ["{\\color{blue}{#1}}", 1], "termB": ["{\\color{red}{#1}}", 1], "termC": ["{\\color{green}{#1}}", 1], "acc": "{\\ddot{\\mathbf{q}}}", "GA": "{G\\alpha}", "Hm": "{\\mathbf{H}}", "ImTwo": "{\\mathbf{I}_{2 \\times 2}}", "Lm": "{\\mathbf{L}}", "Qm": "{\\mathbf{Q}}", "Vm": "{\\mathbf{V}}", "Wm": "{\\mathbf{W}}", "Xm": "{\\mathbf{X}}", "Ym": "{\\mathbf{Y}}", "aalg": "{\\mathbf{a}}", "iv": "{\\mathbf{i}}", "jv": "{\\mathbf{j}}", "kv": "{\\mathbf{k}}", "lv": "{\\mathbf{l}}", "mv": "{\\mathbf{m}}", "ov": "{\\mathbf{o}}", "vel": "{\\mathbf{v}}", "wv": "{\\mathbf{w}}"}}, "options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+      <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-mml-chtml.js"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+    <link rel="next" title="Renderer, graphics and visualization" href="../../manual/GUI.html" />
+    <link rel="prev" title="Symbolic user functions" href="tutorialSymbolic.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            Exudyn1.13.3
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Exudyn User Manual</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../../README.html">Exudyn</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../manual/gettingStarted.html">Installation and getting started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../manual/introduction.html">Overview on Exudyn</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../manual/introductionBasics.html">Exudyn basics</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../../manual/tutorial.html">Tutorial</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="tutorialSpringDamper.html">Mass-spring-damper</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tutorialSpringDamperCreate.html">Mass-spring-damper with Create functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tutorialRigidBody.html">Rigid bodies and joints</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tutorialRigidBodyCreate.html">Rigid bodies and joints with Create functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tutorialFlexibleBeams.html">Flexible beams</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tutorialSymbolic.html">Symbolic user functions</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Flexible body with the floating frame of reference formulation</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../manual/GUI.html">Renderer, graphics and visualization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../manual/performanceErrors.html">Performance, errors and solver failures</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../manual/introductionAdvanced.html">Advanced topics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../manual/notation.html">Notation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../manual/theory.html">Theory and formulations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../manual/solver.html">Solvers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../cInterface/cInterfaceIndex.html">Python-C++ command interface</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Reference Manual</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../items/itemsIndex.html">Items reference manual</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../pythonUtilities/utilitiesIndex.html">Python Utility Functions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../structures/structuresIndex.html">Structures and Settings</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../references.html">References</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Developer documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../dev/README.html">Exudyn developer documentation</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">How-to notes</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../howTo/condaEnvironments.html">Conda environments for Exudyn</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../howTo/sphinxDocs.html">Building the documentation</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Examples, models and issues</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../examples/examplesIndex.html">Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../testModels/testModelsIndex.html">TestModels</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../abbreviations.html">List of Abbreviations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../manual/revisions.html">Revisions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../CHANGELOG.html">Changelog</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../trackerlog.html">Issue tracker</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">Exudyn1.13.3</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../manual/tutorial.html">Tutorial</a></li>
+      <li class="breadcrumb-item active">Flexible body with the floating frame of reference formulation</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../../_sources/docs/generated/notebooks/tutorialFFRF.md.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <!-- GENERATED by tools/generators/notebookEmitter.py from python/Notebooks/tutorialFFRF.ipynb - do not edit -->
+<section class="tex2jax_ignore mathjax_ignore" id="flexible-body-with-the-floating-frame-of-reference-formulation">
+<span id="notebook-tutorialffrf"></span><h1>Flexible body with the floating frame of reference formulation<a class="headerlink" href="#flexible-body-with-the-floating-frame-of-reference-formulation" title="Link to this heading"></a></h1>
+<p>Notebook <code class="docutils literal notranslate"><span class="pre">python/Notebooks/tutorialFFRF.ipynb</span></code>.</p>
+<p>A flexible pendulum with the floating frame of reference formulation (FFRF): Netgen meshes it and NGsolve computes the
+finite element matrices, the body is reduced to Hurty-Craig-Bampton modes, and it hangs on a revolute joint. It needs
+the package ngsolve (<code class="docutils literal notranslate"><span class="pre">pip</span> <span class="pre">install</span> <span class="pre">ngsolve</span></code>). The outputs below each cell are those of the last run.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">exudyn</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">exu</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">exudyn.utilities</span><span class="w"> </span><span class="kn">import</span> <span class="o">*</span>  <span class="c1"># includes itemInterface and rigidBodyUtilities</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">exudyn.graphics</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">graphics</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">exudyn.FEM</span><span class="w"> </span><span class="kn">import</span> <span class="o">*</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">exudyn.interactive</span><span class="w"> </span><span class="kn">import</span> <span class="nf">ShowImage</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">time</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">ngsolve</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">ngs</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">netgen.csg</span><span class="w"> </span><span class="kn">import</span> <span class="n">CSGeometry</span><span class="p">,</span> <span class="n">OrthoBrick</span><span class="p">,</span> <span class="n">Pnt</span>
+
+<span class="n">SC</span> <span class="o">=</span> <span class="n">exu</span><span class="o">.</span><span class="nc">SystemContainer</span><span class="p">()</span>
+<span class="n">mbs</span> <span class="o">=</span> <span class="n">SC</span><span class="o">.</span><span class="nf">AddSystem</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>The parameters, and the mesh of a simple brick made with Netgen’s CSG geometry - a brick makes the boundary interfaces
+and the joint simple. In Jupyter, <code class="docutils literal notranslate"><span class="pre">webgui_jupyter_widgets</span></code> shows the mesh, see the Netgen documentation.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">a</span> <span class="o">=</span> <span class="mf">0.025</span>   <span class="c1"># height/width of beam</span>
+<span class="n">b</span> <span class="o">=</span> <span class="n">a</span>
+<span class="n">h</span> <span class="o">=</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="n">a</span> <span class="c1"># mesh size</span>
+<span class="n">L</span> <span class="o">=</span> <span class="mi">1</span>       <span class="c1"># length of beam</span>
+<span class="n">nModes</span> <span class="o">=</span> <span class="mi">8</span>
+
+<span class="n">rho</span> <span class="o">=</span> <span class="mi">1000</span>
+<span class="n">Emodulus</span> <span class="o">=</span> <span class="mf">1e8</span>
+<span class="n">nu</span> <span class="o">=</span> <span class="mf">0.3</span>
+<span class="n">meshOrder</span> <span class="o">=</span> <span class="mi">1</span>  <span class="c1"># use order 2 for higher accuracy, but more unknowns</span>
+
+<span class="n">geo</span> <span class="o">=</span> <span class="n">CSGeometry</span><span class="p">()</span>
+<span class="n">geo</span><span class="o">.</span><span class="nf">Add</span><span class="p">(</span><span class="n">OrthoBrick</span><span class="p">(</span><span class="n">Pnt</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="n">a</span><span class="p">,</span> <span class="o">-</span><span class="n">b</span><span class="p">),</span> <span class="n">Pnt</span><span class="p">(</span><span class="n">L</span><span class="p">,</span> <span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">)))</span>
+<span class="n">mesh</span> <span class="o">=</span> <span class="n">ngs</span><span class="o">.</span><span class="n">Mesh</span><span class="p">(</span><span class="n">geo</span><span class="o">.</span><span class="n">GenerateMesh</span><span class="p">(</span><span class="n">maxh</span><span class="o">=</span><span class="n">h</span><span class="p">))</span>
+<span class="n">mesh</span><span class="o">.</span><span class="n">Curve</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>&lt;ngsolve.comp.Mesh object at 0x000002A694F99E50&gt;
+</pre></div>
+</div>
+<p>The <code class="docutils literal notranslate"><span class="pre">FEMinterface</span></code> imports the mesh from NGsolve, with the mechanical properties of the material, and holds the finite
+element data:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">fem</span> <span class="o">=</span> <span class="nc">FEMinterface</span><span class="p">()</span>
+<span class="p">[</span><span class="n">bfM</span><span class="p">,</span> <span class="n">bfK</span><span class="p">,</span> <span class="n">fes</span><span class="p">]</span> <span class="o">=</span> <span class="n">fem</span><span class="o">.</span><span class="nf">ImportMeshFromNGsolve</span><span class="p">(</span><span class="n">mesh</span><span class="p">,</span> <span class="n">density</span><span class="o">=</span><span class="n">rho</span><span class="p">,</span> <span class="n">youngsModulus</span><span class="o">=</span><span class="n">Emodulus</span><span class="p">,</span>
+                                            <span class="n">poissonsRatio</span><span class="o">=</span><span class="n">nu</span><span class="p">,</span> <span class="n">meshOrder</span><span class="o">=</span><span class="n">meshOrder</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"nNodes="</span><span class="p">,</span> <span class="n">fem</span><span class="o">.</span><span class="nf">NumberOfNodes</span><span class="p">())</span>
+</pre></div>
+</div>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>nNodes= 2435
+</pre></div>
+</div>
+<p>The eigenmodes of the free body do not respect the boundary conditions and would be inaccurate, so we use
+Hurty-Craig-Bampton modes. They need the boundary interfaces as lists of node numbers and weights; the <code class="docutils literal notranslate"><span class="pre">FEMinterface</span></code>
+finds the nodes on planar or cylindrical surfaces. The first boundary’s modes are eliminated, as they are fixed to the
+reference frame of the FFRF object.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">pLeft</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="n">a</span><span class="p">,</span> <span class="o">-</span><span class="n">b</span><span class="p">]</span>
+<span class="n">pRight</span> <span class="o">=</span> <span class="p">[</span><span class="n">L</span><span class="p">,</span> <span class="o">-</span><span class="n">a</span><span class="p">,</span> <span class="o">-</span><span class="n">b</span><span class="p">]</span>
+<span class="n">nTip</span> <span class="o">=</span> <span class="n">fem</span><span class="o">.</span><span class="nf">GetNodeAtPoint</span><span class="p">(</span><span class="n">pRight</span><span class="p">)</span> <span class="c1">#for the sensor</span>
+<span class="n">nodesLeftPlane</span> <span class="o">=</span> <span class="n">fem</span><span class="o">.</span><span class="nf">GetNodesInPlane</span><span class="p">(</span><span class="n">pLeft</span><span class="p">,</span> <span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span>
+<span class="n">weightsLeftPlane</span> <span class="o">=</span> <span class="n">fem</span><span class="o">.</span><span class="nf">GetNodeWeightsFromSurfaceAreas</span><span class="p">(</span><span class="n">nodesLeftPlane</span><span class="p">)</span>
+
+<span class="n">start_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+<span class="n">fem</span><span class="o">.</span><span class="nf">ComputeHurtyCraigBamptonModes</span><span class="p">(</span><span class="n">boundaryNodesList</span><span class="o">=</span><span class="p">[</span><span class="n">nodesLeftPlane</span><span class="p">],</span> <span class="n">nEigenModes</span><span class="o">=</span><span class="n">nModes</span><span class="p">,</span>
+                                  <span class="n">useSparseSolver</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">computationMode</span><span class="o">=</span><span class="nc">HCBstaticModeSelection</span><span class="o">.</span><span class="n">RBE2</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"HCB modes needed </span><span class="si">%.3f</span><span class="s2"> seconds"</span> <span class="o">%</span> <span class="p">(</span><span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">start_time</span><span class="p">))</span>
+</pre></div>
+</div>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>HCB modes needed 0.108 seconds
+</pre></div>
+</div>
+<p>Stress modes for the postprocessing - not needed for the simulation, but they show the stresses:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">mat</span> <span class="o">=</span> <span class="nc">KirchhoffMaterial</span><span class="p">(</span><span class="n">Emodulus</span><span class="p">,</span> <span class="n">nu</span><span class="p">,</span> <span class="n">rho</span><span class="p">)</span>
+<span class="n">varType</span> <span class="o">=</span> <span class="n">exu</span><span class="o">.</span><span class="nc">OutputVariableType</span><span class="o">.</span><span class="n">StressLocal</span>
+<span class="n">fem</span><span class="o">.</span><span class="nf">ComputePostProcessingModesNGsolve</span><span class="p">(</span><span class="n">fes</span><span class="p">,</span> <span class="nc">material</span><span class="o">=</span><span class="n">mat</span><span class="p">,</span> <span class="n">outputVariableType</span><span class="o">=</span><span class="n">varType</span><span class="p">)</span>
+<span class="n">SC</span><span class="o">.</span><span class="nf">visualizationSettings</span><span class="o">.</span><span class="n">contour</span><span class="o">.</span><span class="n">reduceRange</span> <span class="o">=</span> <span class="kc">False</span>
+<span class="n">SC</span><span class="o">.</span><span class="nf">visualizationSettings</span><span class="o">.</span><span class="n">contour</span><span class="o">.</span><span class="n">outputVariable</span> <span class="o">=</span> <span class="n">varType</span>
+<span class="n">SC</span><span class="o">.</span><span class="nf">visualizationSettings</span><span class="o">.</span><span class="n">contour</span><span class="o">.</span><span class="n">outputVariableComponent</span> <span class="o">=</span> <span class="mi">0</span>  <span class="c1"># x-component</span>
+</pre></div>
+</div>
+<p>The FFRF object made from the modes, added to <code class="docutils literal notranslate"><span class="pre">mbs</span></code>, with gravity:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">cms</span> <span class="o">=</span> <span class="nc">ObjectFFRFreducedOrderInterface</span><span class="p">(</span><span class="n">fem</span><span class="p">)</span>
+<span class="n">objFFRF</span> <span class="o">=</span> <span class="n">cms</span><span class="o">.</span><span class="nf">AddObjectFFRFreducedOrder</span><span class="p">(</span><span class="n">mbs</span><span class="p">,</span> <span class="n">positionRef</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">initialVelocity</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span>
+                                        <span class="n">initialAngularVelocity</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">gravity</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="mf">9.81</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span>
+                                        <span class="nc">color</span><span class="o">=</span><span class="p">[</span><span class="mf">0.1</span><span class="p">,</span> <span class="mf">0.9</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">,</span> <span class="mf">1.</span><span class="p">])</span>
+</pre></div>
+</div>
+<p>A revolute joint at the left end: a <code class="docutils literal notranslate"><span class="pre">MarkerSuperElementRigid</span></code> on the nodes of the left face, with their weights -
+they give the average (midpoint) position of the non-uniform surface mesh accurately -, and a generic joint to the
+ground with the rotation about <span class="math notranslate nohighlight">\(z\)</span> free:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">oGround</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">CreateGround</span><span class="p">(</span><span class="n">referencePosition</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span>
+<span class="n">mGround</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">AddMarker</span><span class="p">(</span><span class="nc">MarkerBodyRigid</span><span class="p">(</span><span class="n">bodyNumber</span><span class="o">=</span><span class="n">oGround</span><span class="p">,</span> <span class="n">localPosition</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]))</span>
+<span class="n">mLeft</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">AddMarker</span><span class="p">(</span><span class="nc">MarkerSuperElementRigid</span><span class="p">(</span><span class="n">bodyNumber</span><span class="o">=</span><span class="n">objFFRF</span><span class="p">[</span><span class="s1">'oFFRFreducedOrder'</span><span class="p">],</span>
+                                              <span class="n">meshNodeNumbers</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">nodesLeftPlane</span><span class="p">),</span>
+                                              <span class="n">weightingFactors</span><span class="o">=</span><span class="n">weightsLeftPlane</span><span class="p">))</span>
+<span class="n">oJoint</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">AddObject</span><span class="p">(</span><span class="nc">GenericJoint</span><span class="p">(</span><span class="n">markerNumbers</span><span class="o">=</span><span class="p">[</span><span class="n">mGround</span><span class="p">,</span> <span class="n">mLeft</span><span class="p">],</span> <span class="n">constrainedAxes</span><span class="o">=</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span>
+                                    <span class="n">visualization</span><span class="o">=</span><span class="nc">VGenericJoint</span><span class="p">(</span><span class="n">axesRadius</span><span class="o">=</span><span class="mf">0.1</span> <span class="o">*</span> <span class="n">a</span><span class="p">,</span> <span class="n">axesLength</span><span class="o">=</span><span class="mf">0.1</span> <span class="o">*</span> <span class="n">a</span><span class="p">)))</span>
+</pre></div>
+</div>
+<p>A sensor of the displacement of the tip node, and assemble:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">sensTipDispl</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">AddSensor</span><span class="p">(</span><span class="nc">SensorSuperElement</span><span class="p">(</span><span class="n">bodyNumber</span><span class="o">=</span><span class="n">objFFRF</span><span class="p">[</span><span class="s1">'oFFRFreducedOrder'</span><span class="p">],</span> <span class="n">meshNodeNumber</span><span class="o">=</span><span class="n">nTip</span><span class="p">,</span>
+                                                <span class="n">storeInternal</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                                                <span class="n">outputVariableType</span><span class="o">=</span><span class="n">exu</span><span class="o">.</span><span class="nc">OutputVariableType</span><span class="o">.</span><span class="n">Displacement</span><span class="p">))</span>
+<span class="n">mbs</span><span class="o">.</span><span class="nf">Assemble</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>The simulation settings, some visualization settings, and four seconds of the swinging pendulum:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">simulationSettings</span> <span class="o">=</span> <span class="n">exu</span><span class="o">.</span><span class="nc">SimulationSettings</span><span class="p">()</span>
+<span class="n">SC</span><span class="o">.</span><span class="nf">visualizationSettings</span><span class="o">.</span><span class="n">nodes</span><span class="o">.</span><span class="n">show</span> <span class="o">=</span> <span class="kc">False</span>
+<span class="n">SC</span><span class="o">.</span><span class="nf">visualizationSettings</span><span class="o">.</span><span class="n">markers</span><span class="o">.</span><span class="n">show</span> <span class="o">=</span> <span class="kc">False</span>
+<span class="n">SC</span><span class="o">.</span><span class="nf">visualizationSettings</span><span class="o">.</span><span class="n">loads</span><span class="o">.</span><span class="n">show</span> <span class="o">=</span> <span class="kc">False</span>
+<span class="n">SC</span><span class="o">.</span><span class="nf">visualizationSettings</span><span class="o">.</span><span class="n">general</span><span class="o">.</span><span class="n">showSolverInformation</span> <span class="o">=</span> <span class="kc">False</span>
+
+<span class="n">h</span> <span class="o">=</span> <span class="mf">1e-3</span>
+<span class="n">tEnd</span> <span class="o">=</span> <span class="mi">4</span>
+<span class="n">simulationSettings</span><span class="o">.</span><span class="n">timeIntegration</span><span class="o">.</span><span class="n">numberOfSteps</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">tEnd</span> <span class="o">/</span> <span class="n">h</span><span class="p">)</span>
+<span class="n">simulationSettings</span><span class="o">.</span><span class="n">timeIntegration</span><span class="o">.</span><span class="n">endTime</span> <span class="o">=</span> <span class="n">tEnd</span>
+<span class="n">simulationSettings</span><span class="o">.</span><span class="n">timeIntegration</span><span class="o">.</span><span class="n">newton</span><span class="o">.</span><span class="n">useModifiedNewton</span> <span class="o">=</span> <span class="kc">True</span>
+<span class="n">simulationSettings</span><span class="o">.</span><span class="n">solution</span><span class="o">.</span><span class="n">sensors</span><span class="o">.</span><span class="n">writePeriod</span> <span class="o">=</span> <span class="n">h</span>
+<span class="n">simulationSettings</span><span class="o">.</span><span class="n">timeIntegration</span><span class="o">.</span><span class="n">generalizedAlpha</span><span class="o">.</span><span class="n">spectralRadius</span> <span class="o">=</span> <span class="mf">0.8</span>
+
+<span class="n">mbs</span><span class="o">.</span><span class="nf">SolveDynamic</span><span class="p">(</span><span class="n">simulationSettings</span><span class="o">=</span><span class="n">simulationSettings</span><span class="p">)</span>
+
+<span class="n">uTip</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">GetSensorValues</span><span class="p">(</span><span class="n">sensTipDispl</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"nModes="</span><span class="p">,</span> <span class="n">nModes</span><span class="p">,</span> <span class="s2">", tip displacement="</span><span class="p">,</span> <span class="n">uTip</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>nModes= 8 , tip displacement= [-1.02332099e-02 -1.21177798e-01 -3.89491831e-06]
+</pre></div>
+</div>
+<p>The pendulum at the end, with the stresses <span class="math notranslate nohighlight">\(\sigma_{xx}\)</span>:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">image</span> <span class="o">=</span> <span class="nf">ShowImage</span><span class="p">(</span><span class="n">SC</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="p">[</span><span class="mi">1280</span><span class="p">,</span><span class="mi">800</span><span class="p">])</span>
+</pre></div>
+</div>
+<a class="reference internal image-reference" href="../../../_images/tutorialFFRF_0.png"><img alt="../../../_images/tutorialFFRF_0.png" src="../../../_images/tutorialFFRF_0.png" style="width: 640px;" />
+</a>
+<p>The tip displacement over time:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">mbs</span><span class="o">.</span><span class="nf">PlotSensor</span><span class="p">(</span><span class="n">sensTipDispl</span><span class="p">,</span> <span class="n">components</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">],</span> <span class="n">closeAll</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+</div>
+<a class="reference internal image-reference" href="../../../_images/tutorialFFRF_1.png"><img alt="../../../_images/tutorialFFRF_1.png" src="../../../_images/tutorialFFRF_1.png" style="width: 640px;" />
+</a>
+<p>In a script, <code class="docutils literal notranslate"><span class="pre">mbs.SolutionViewer()</span></code> shows the swinging pendulum with its stresses.</p>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="tutorialSymbolic.html" class="btn btn-neutral float-left" title="Symbolic user functions" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="../../manual/GUI.html" class="btn btn-neutral float-right" title="Renderer, graphics and visualization" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

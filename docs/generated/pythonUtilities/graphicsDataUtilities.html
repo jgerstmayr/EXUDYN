@@ -1,0 +1,353 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Module: graphicsDataUtilities &mdash; Exudyn1.13.3 1.13.3 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=3ee1c6c6" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/rtd_sphinx_search.min.css" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/custom.css?v=e2783f0e" />
+
+  
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=b8a3e558"></script>
+      <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../../_static/copybutton.js?v=f281be69"></script>
+      <script src="../../../_static/js/rtd_search_config.js"></script>
+      <script src="../../../_static/js/rtd_sphinx_search.min.js"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+    <link rel="next" title="Module: misc.GUI" href="misc.GUI.html" />
+    <link rel="prev" title="Module: graphics" href="graphics.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            Exudyn1.13.3
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Exudyn User Manual</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../README.html">Exudyn</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../manual/gettingStarted.html">Installation and getting started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../manual/introduction.html">Overview on Exudyn</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../manual/introductionBasics.html">Exudyn basics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../manual/tutorial.html">Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../manual/GUI.html">Renderer, graphics and visualization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../manual/performanceErrors.html">Performance, errors and solver failures</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../manual/introductionAdvanced.html">Advanced topics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../manual/notation.html">Notation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../manual/theory.html">Theory and formulations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../manual/solver.html">Solvers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../cInterface/cInterfaceIndex.html">Python-C++ command interface</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Reference Manual</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../items/itemsIndex.html">Items reference manual</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="utilitiesIndex.html">Python Utility Functions</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="advancedUtilities.html">Module: advancedUtilities</a></li>
+<li class="toctree-l2"><a class="reference internal" href="artificialIntelligence.html">Module: artificialIntelligence</a></li>
+<li class="toctree-l2"><a class="reference internal" href="basicUtilities.html">Module: basicUtilities</a></li>
+<li class="toctree-l2"><a class="reference internal" href="beams.html">Module: beams</a></li>
+<li class="toctree-l2"><a class="reference internal" href="demos.html">Module: demos</a></li>
+<li class="toctree-l2"><a class="reference internal" href="FEM.html">Module: FEM</a></li>
+<li class="toctree-l2"><a class="reference internal" href="graphics.html">Module: graphics</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Module: graphicsDataUtilities</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#function-switchtripletorder">Function: SwitchTripletOrder</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#function-computetrianglenormal">Function: ComputeTriangleNormal</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#function-computetrianglearea">Function: ComputeTriangleArea</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#function-compute6nodetrigsnormals">Function: Compute6NodeTrigsNormals</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#function-refinemesh">Function: RefineMesh</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#function-shrinkmeshnormaltosurface">Function: ShrinkMeshNormalToSurface</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#function-computetriangularmesh">Function: ComputeTriangularMesh</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#function-segmentsfrompoints">Function: SegmentsFromPoints</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#function-circlepointsandsegments">Function: CirclePointsAndSegments</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#function-graphicsdatarectangle">Function: GraphicsDataRectangle</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#function-graphicsdataorthocubelines">Function: GraphicsDataOrthoCubeLines</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="misc.GUI.html">Module: misc.GUI</a></li>
+<li class="toctree-l2"><a class="reference internal" href="misc.settingsUtilities.html">Module: misc.settingsUtilities</a></li>
+<li class="toctree-l2"><a class="reference internal" href="interactive.html">Module: interactive</a></li>
+<li class="toctree-l2"><a class="reference internal" href="kinematicTree.html">Module: kinematicTree</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lieGroupBasics.html">Module: lieGroupBasics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="misc.mainSystemExtensions.html">Module: misc.mainSystemExtensions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="particles.html">Module: particles</a></li>
+<li class="toctree-l2"><a class="reference internal" href="physics.html">Module: physics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="plot.html">Module: plot</a></li>
+<li class="toctree-l2"><a class="reference internal" href="processing.html">Module: processing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rigidBodyUtilities.html">Module: rigidBodyUtilities</a></li>
+<li class="toctree-l2"><a class="reference internal" href="robotics.html">Module: robotics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="robotics.rosInterface.html">Module: robotics.rosInterface</a></li>
+<li class="toctree-l2"><a class="reference internal" href="robotics.future.html">Module: robotics.future</a></li>
+<li class="toctree-l2"><a class="reference internal" href="robotics.models.html">Module: robotics.models</a></li>
+<li class="toctree-l2"><a class="reference internal" href="robotics.mobile.html">Module: robotics.mobile</a></li>
+<li class="toctree-l2"><a class="reference internal" href="robotics.motion.html">Module: robotics.motion</a></li>
+<li class="toctree-l2"><a class="reference internal" href="robotics.special.html">Module: robotics.special</a></li>
+<li class="toctree-l2"><a class="reference internal" href="robotics.utilities.html">Module: robotics.utilities</a></li>
+<li class="toctree-l2"><a class="reference internal" href="shells.html">Module: shells</a></li>
+<li class="toctree-l2"><a class="reference internal" href="signalProcessing.html">Module: signalProcessing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="solver.html">Module: solver</a></li>
+<li class="toctree-l2"><a class="reference internal" href="utilities.html">Module: utilities</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../structures/structuresIndex.html">Structures and Settings</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../references.html">References</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Developer documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../dev/README.html">Exudyn developer documentation</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">How-to notes</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../howTo/condaEnvironments.html">Conda environments for Exudyn</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../howTo/sphinxDocs.html">Building the documentation</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Examples, models and issues</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../examples/examplesIndex.html">Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../testModels/testModelsIndex.html">TestModels</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../abbreviations.html">List of Abbreviations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../manual/revisions.html">Revisions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../CHANGELOG.html">Changelog</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../trackerlog.html">Issue tracker</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">Exudyn1.13.3</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="utilitiesIndex.html">Python Utility Functions</a></li>
+      <li class="breadcrumb-item active">Module: graphicsDataUtilities</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../../_sources/docs/generated/pythonUtilities/graphicsDataUtilities.md.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <!-- GENERATED by tools/generators/utilityDocsEmitter.py from the docstrings of python/exudyn - do not edit -->
+<section class="tex2jax_ignore mathjax_ignore" id="module-graphicsdatautilities">
+<span id="sec-module-graphicsdatautilities"></span><h1>Module: graphicsDataUtilities<a class="headerlink" href="#module-graphicsdatautilities" title="Link to this heading"></a></h1>
+<p>Utility functions for visualization, which provides functions for special graphics manipulation, colors, mesh manipulation, etc.;
+note that specific function for GraphicsData creation now moved into the graphics submodule;
+includes functionality like mesh manipulation and some helper functions</p>
+<ul class="simple">
+<li><p><strong>Author</strong>: Johannes Gerstmayr</p></li>
+<li><p><strong>Date</strong>: 2020-07-26 (created) Modified: 2024-05-10 (moved primitive functions to graphics)</p></li>
+<li><p><strong>Notes</strong>: Some useful colors are defined, using RGBA (Red, Green, Blue and Alpha = opacity) channels in the range [0,1], e.g., red = [1,0,0,1].    Available colors are: color4red, color4green, color4blue, color4cyan, color4magenta, color4yellow, color4orange, color4pink, color4lawngreen, color4violet, color4springgreen, color4dodgerblue, color4grey, color4darkgrey, color4lightgrey, color4lightred, color4lightgreen, color4steelblue, color4brown, color4black, color4darkgrey2, color4lightgrey2, color4white    Additionally, a list of 16 colors ‘color4list’ is available, which is intended to be used, e.g., for creating n bodies with different colors</p></li>
+</ul>
+<section id="function-switchtripletorder">
+<span id="sec-graphicsdatautilities-switchtripletorder"></span><h2>Function: SwitchTripletOrder<a class="headerlink" href="#function-switchtripletorder" title="Link to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/graphicsDataUtilities.py#L96"><code class="docutils literal notranslate"><span class="pre">SwitchTripletOrder(vector)</span></code></a></p>
+<ul class="simple">
+<li><p><strong>function description</strong>: helper function to switch order of three items in a list; mostly used for reverting normals in triangles</p></li>
+<li><p><strong>input</strong>: 3D vector as list or as np.array</p></li>
+<li><p><strong>output</strong>: interchanged 2nd and 3rd component of list</p></li>
+</ul>
+</section>
+<section id="function-computetrianglenormal">
+<span id="sec-graphicsdatautilities-computetrianglenormal"></span><h2>Function: ComputeTriangleNormal<a class="headerlink" href="#function-computetrianglenormal" title="Link to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/graphicsDataUtilities.py#L111"><code class="docutils literal notranslate"><span class="pre">ComputeTriangleNormal(p0,</span> <span class="pre">p1,</span> <span class="pre">p2)</span></code></a></p>
+<ul class="simple">
+<li><p><strong>function description</strong>: compute normalized normal for 3 triangle points</p></li>
+<li><p><strong>input</strong>: 3D vector as list or as np.array</p></li>
+<li><p><strong>output</strong>: normal as np.array</p></li>
+</ul>
+</section>
+<section id="function-computetrianglearea">
+<span id="sec-graphicsdatautilities-computetrianglearea"></span><h2>Function: ComputeTriangleArea<a class="headerlink" href="#function-computetrianglearea" title="Link to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/graphicsDataUtilities.py#L129"><code class="docutils literal notranslate"><span class="pre">ComputeTriangleArea(p0,</span> <span class="pre">p1,</span> <span class="pre">p2)</span></code></a></p>
+<ul class="simple">
+<li><p><strong>function description</strong>: compute area of triangle given by 3 points</p></li>
+<li><p><strong>input</strong>: 3D vector as list or as np.array</p></li>
+<li><p><strong>output</strong>: area as float</p></li>
+</ul>
+</section>
+<section id="function-compute6nodetrigsnormals">
+<span id="sec-graphicsdatautilities-compute6nodetrigsnormals"></span><h2>Function: Compute6NodeTrigsNormals<a class="headerlink" href="#function-compute6nodetrigsnormals" title="Link to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/graphicsDataUtilities.py#L141"><code class="docutils literal notranslate"><span class="pre">Compute6NodeTrigsNormals(elementNodes)</span></code></a></p>
+<ul class="simple">
+<li><p><strong>function description</strong>: Internal function: compute normals to 6-node triangular surface given by elementNodes input: elementNodes given as np.array with 6 node vectors in rows; node ordering must follow Netgen order, see the local coordinates in the function</p></li>
+<li><p><strong>output</strong>: returns np.array with 6 normals in rows</p></li>
+</ul>
+</section>
+<section id="function-refinemesh">
+<span id="sec-graphicsdatautilities-refinemesh"></span><h2>Function: RefineMesh<a class="headerlink" href="#function-refinemesh" title="Link to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/graphicsDataUtilities.py#L212"><code class="docutils literal notranslate"><span class="pre">RefineMesh(points,</span> <span class="pre">triangles)</span></code></a></p>
+<ul class="simple">
+<li><p><strong>function description</strong>: refine triangle mesh; every triangle is subdivided into 4 triangles</p></li>
+<li><p><strong>input</strong>:</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">points</span></code>: list of np.array with 3 floats per point</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">triangles</span></code>: list of np.array with 3 int per triangle (0-based indices to triangles)</p></li>
+</ul>
+</li>
+<li><p><strong>output</strong>: returns [points2, triangles2] containing the refined mesh; if the original mesh is consistent, no points are duplicated; if the mesh is not consistent, some mesh points are duplicated!</p></li>
+<li><p><strong>notes</strong>: becomes slow for meshes with more than 5000 points</p></li>
+</ul>
+<p>Relevant Examples (Ex) and TestModels (TM) with weblink to github: <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/particleClusters.py"><code class="docutils literal notranslate"><span class="pre">particleClusters.py</span></code></a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/particlesSilo.py"><code class="docutils literal notranslate"><span class="pre">particlesSilo.py</span></code></a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/tippeTop.py"><code class="docutils literal notranslate"><span class="pre">tippeTop.py</span></code></a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/distanceSensor.py"><code class="docutils literal notranslate"><span class="pre">distanceSensor.py</span></code></a> (TM), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/generalContactCylinderTest.py"><code class="docutils literal notranslate"><span class="pre">generalContactCylinderTest.py</span></code></a> (TM), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/generalContactFrictionTests.py"><code class="docutils literal notranslate"><span class="pre">generalContactFrictionTests.py</span></code></a> (TM), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/generalContactImplicit1.py"><code class="docutils literal notranslate"><span class="pre">generalContactImplicit1.py</span></code></a> (TM), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/generalContactImplicit2.py"><code class="docutils literal notranslate"><span class="pre">generalContactImplicit2.py</span></code></a> (TM)</p>
+</section>
+<section id="function-shrinkmeshnormaltosurface">
+<span id="sec-graphicsdatautilities-shrinkmeshnormaltosurface"></span><h2>Function: ShrinkMeshNormalToSurface<a class="headerlink" href="#function-shrinkmeshnormaltosurface" title="Link to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/graphicsDataUtilities.py#L269"><code class="docutils literal notranslate"><span class="pre">ShrinkMeshNormalToSurface(points,</span> <span class="pre">triangles,</span> <span class="pre">distance)</span></code></a></p>
+<ul class="simple">
+<li><p><strong>function description</strong>: shrink mesh using triangle normals; every point is at least moved a distance ‘distance’ normal from boundary</p></li>
+<li><p><strong>input</strong>:</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">points</span></code>: list of np.array with 3 floats per point</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">triangles</span></code>: list of np.array with 3 int per triangle (0-based indices to triangles)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">distance</span></code>: float value of minimum distance</p></li>
+</ul>
+</li>
+<li><p><strong>output</strong>: returns [points2, triangles2] containing the refined mesh; currently the points of the subdivided triangles are duplicated!</p></li>
+<li><p><strong>notes</strong>: ONLY works for consistent meshes (no duplicated points!)</p></li>
+</ul>
+<p>Relevant Examples (Ex) and TestModels (TM) with weblink to github: <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/generalContactFrictionTests.py"><code class="docutils literal notranslate"><span class="pre">generalContactFrictionTests.py</span></code></a> (TM)</p>
+</section>
+<section id="function-computetriangularmesh">
+<span id="sec-graphicsdatautilities-computetriangularmesh"></span><h2>Function: ComputeTriangularMesh<a class="headerlink" href="#function-computetriangularmesh" title="Link to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/graphicsDataUtilities.py#L306"><code class="docutils literal notranslate"><span class="pre">ComputeTriangularMesh(vertices,</span> <span class="pre">segments)</span></code></a></p>
+<ul class="simple">
+<li><p><strong>function description</strong>: helper function to compute triangular mesh from list of vertices (=points) and segments; computes triangular meshes for non-convex case. In order to make it efficient, it first computes neighbors and then defines triangles at segments to be inside/outside. Finally neighboring relations are used to define all triangles inside/outside finally only returns triangles that are inside the segments</p></li>
+<li><p><strong>input</strong>:</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">vertices</span></code>: list of pairs of coordinates of vertices in mesh [x,y]</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">segments</span></code>: list of segments, which are pairs of node numbers [i,j], defining the boundary of the mesh; the ordering of the nodes is such that left triangle = inside, right triangle = outside, compare example with segment [V1,V2]: inside V1         V2 O———-O outside</p></li>
+</ul>
+</li>
+<li><p><strong>output</strong>: triangulation structure of Delaunay(…), see scipy.spatial.Delaunaystructure, containing all simplices (=triangles)</p></li>
+<li><p><strong>notes</strong>: Delauney will not work if points are duplicated; you must first create point lists without duplicated points!</p></li>
+</ul>
+<p><em>example</em>:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span>  <span class="n">points</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">],</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">],</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">]])</span>
+  <span class="n">segments</span> <span class="o">=</span> <span class="p">[</span><span class="nb">len</span><span class="p">(</span><span class="n">points</span><span class="p">)</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span>
+  <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">points</span><span class="p">)</span><span class="o">-</span><span class="mi">1</span><span class="p">):</span>
+      <span class="n">segments</span> <span class="o">+=</span> <span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span>
+  <span class="n">tri</span> <span class="o">=</span> <span class="nf">ComputeTriangularMesh</span><span class="p">(</span><span class="n">points</span><span class="p">,</span> <span class="n">segments</span><span class="p">)</span>
+  <span class="n">exudyn</span><span class="o">.</span><span class="nf">Print</span><span class="p">(</span><span class="n">tri</span><span class="o">.</span><span class="n">simplices</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="function-segmentsfrompoints">
+<span id="sec-graphicsdatautilities-segmentsfrompoints"></span><h2>Function: SegmentsFromPoints<a class="headerlink" href="#function-segmentsfrompoints" title="Link to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/graphicsDataUtilities.py#L398"><code class="docutils literal notranslate"><span class="pre">SegmentsFromPoints(points,</span> <span class="pre">pointIndexOffset</span> <span class="pre">=</span> <span class="pre">0,</span> <span class="pre">invert</span> <span class="pre">=</span> <span class="pre">False,</span> <span class="pre">closeCurve</span> <span class="pre">=</span> <span class="pre">True)</span></code></a></p>
+<ul class="simple">
+<li><p><strong>function description</strong>: convert point list into segments (indices to points); point indices start with pointIndexOffset</p></li>
+<li><p><strong>input</strong>:</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">invert</span></code>: True: circle defines outter boundary; False: circle cuts out geometry inside a geometry</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">pointIndexOffset</span></code>: point indices start with pointIndexOffset</p></li>
+</ul>
+</li>
+<li><p><strong>output</strong>: return segments, containing list of lists of point indices for segments</p></li>
+</ul>
+</section>
+<section id="function-circlepointsandsegments">
+<span id="sec-graphicsdatautilities-circlepointsandsegments"></span><h2>Function: CirclePointsAndSegments<a class="headerlink" href="#function-circlepointsandsegments" title="Link to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/graphicsDataUtilities.py#L425"><code class="docutils literal notranslate"><span class="pre">CirclePointsAndSegments(center</span> <span class="pre">=</span> <span class="pre">[0,0],</span> <span class="pre">radius</span> <span class="pre">=</span> <span class="pre">0.1,</span> <span class="pre">invert</span> <span class="pre">=</span> <span class="pre">False,</span> <span class="pre">pointIndexOffset</span> <span class="pre">=</span> <span class="pre">0,</span> <span class="pre">nTiles</span> <span class="pre">=</span> <span class="pre">16)</span></code></a></p>
+<ul class="simple">
+<li><p><strong>function description</strong>: create points and segments, used in SolidExtrusion(…) for circle with given parameters</p></li>
+<li><p><strong>input</strong>:</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">center</span></code>: 2D center point (list/numpy array) for circle center</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">radius</span></code>: radius of circle</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">invert</span></code>: True: circle defines outter boundary; False: circle cuts out geometry inside a geometry</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">pointIndexOffset</span></code>: point indices start with pointIndexOffset</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">nTiles</span></code>: number of tiles/segments for circle creation (higher is finer)</p></li>
+</ul>
+</li>
+<li><p><strong>output</strong>: return [points, segments], both containing lists of lists</p></li>
+<li><p><strong>notes</strong>: geometries may not intersect!</p></li>
+</ul>
+</section>
+<section id="function-graphicsdatarectangle">
+<span id="sec-graphicsdatautilities-graphicsdatarectangle"></span><h2>Function: GraphicsDataRectangle<a class="headerlink" href="#function-graphicsdatarectangle" title="Link to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/graphicsDataUtilities.py#L461"><code class="docutils literal notranslate"><span class="pre">GraphicsDataRectangle(xMin,</span> <span class="pre">yMin,</span> <span class="pre">xMax,</span> <span class="pre">yMax,</span> <span class="pre">color</span> <span class="pre">=</span> <span class="pre">[0.,0.,0.,1.])</span></code></a></p>
+<ul class="simple">
+<li><p><strong>function description</strong>: generate graphics data for 2D rectangle</p></li>
+<li><p><strong>input</strong>: minimal and maximal cartesian coordinates in (x/y) plane; color provided as list of 4 RGBA values</p></li>
+<li><p><strong>output</strong>: graphicsData dictionary, to be used in visualization of EXUDYN objects</p></li>
+<li><p><strong>notes</strong>: DEPRECATED: use graphics.Lines with the five corner points, graphics.Lines([[xMin,yMin,0],[xMax,yMin,0],[xMax,yMax,0],[xMin,yMax,0],[xMin,yMin,0]], color)</p></li>
+</ul>
+<p>Relevant Examples (Ex) and TestModels (TM) with weblink to github: <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/particleClusters.py"><code class="docutils literal notranslate"><span class="pre">particleClusters.py</span></code></a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/particlesTest.py"><code class="docutils literal notranslate"><span class="pre">particlesTest.py</span></code></a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/particlesTest3D.py"><code class="docutils literal notranslate"><span class="pre">particlesTest3D.py</span></code></a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/particlesTest3D2.py"><code class="docutils literal notranslate"><span class="pre">particlesTest3D2.py</span></code></a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/rigid3Dexample.py"><code class="docutils literal notranslate"><span class="pre">rigid3Dexample.py</span></code></a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/coordinateVectorConstraint.py"><code class="docutils literal notranslate"><span class="pre">coordinateVectorConstraint.py</span></code></a> (TM), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/coordinateVectorConstraintGenericODE2.py"><code class="docutils literal notranslate"><span class="pre">coordinateVectorConstraintGenericODE2.py</span></code></a> (TM), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/plotSensorTest.py"><code class="docutils literal notranslate"><span class="pre">plotSensorTest.py</span></code></a> (TM), …</p>
+</section>
+<section id="function-graphicsdataorthocubelines">
+<span id="sec-graphicsdatautilities-graphicsdataorthocubelines"></span><h2>Function: GraphicsDataOrthoCubeLines<a class="headerlink" href="#function-graphicsdataorthocubelines" title="Link to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/graphicsDataUtilities.py#L483"><code class="docutils literal notranslate"><span class="pre">GraphicsDataOrthoCubeLines(xMin,</span> <span class="pre">yMin,</span> <span class="pre">zMin,</span> <span class="pre">xMax,</span> <span class="pre">yMax,</span> <span class="pre">zMax,</span> <span class="pre">color</span> <span class="pre">=</span> <span class="pre">[0.,0.,0.,1.])</span></code></a></p>
+<ul class="simple">
+<li><p><strong>function description</strong>: generate graphics data for orthogonal block drawn with lines</p></li>
+<li><p><strong>input</strong>: minimal and maximal cartesian coordinates for orthogonal cube; color provided as list of 4 RGBA values</p></li>
+<li><p><strong>output</strong>: graphicsData dictionary, to be used in visualization of EXUDYN objects</p></li>
+<li><p><strong>notes</strong>: DEPRECATED: use graphics.Brick(centerPoint, size, addFaces=False, addEdges=True, edgeColor=color)</p></li>
+</ul>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="graphics.html" class="btn btn-neutral float-left" title="Module: graphics" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="misc.GUI.html" class="btn btn-neutral float-right" title="Module: misc.GUI" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

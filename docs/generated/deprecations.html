@@ -1,0 +1,1998 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Deprecations &mdash; Exudyn1.13.3 1.13.3 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=3ee1c6c6" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/rtd_sphinx_search.min.css" />
+      <link rel="stylesheet" type="text/css" href="../../_static/custom.css?v=e2783f0e" />
+
+  
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=b8a3e558"></script>
+      <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../_static/copybutton.js?v=f281be69"></script>
+      <script src="../../_static/js/rtd_search_config.js"></script>
+      <script src="../../_static/js/rtd_sphinx_search.min.js"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="definitions/ — the item and structure definitions as Python" href="../../definitions/README.html" />
+    <link rel="prev" title="Manual GUI check before a release" href="../dev/GUI_MANUAL_CHECK.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            Exudyn1.13.3
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Exudyn User Manual</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../README.html">Exudyn</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../manual/gettingStarted.html">Installation and getting started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../manual/introduction.html">Overview on Exudyn</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../manual/introductionBasics.html">Exudyn basics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../manual/tutorial.html">Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../manual/GUI.html">Renderer, graphics and visualization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../manual/performanceErrors.html">Performance, errors and solver failures</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../manual/introductionAdvanced.html">Advanced topics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../manual/notation.html">Notation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../manual/theory.html">Theory and formulations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../manual/solver.html">Solvers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cInterface/cInterfaceIndex.html">Python-C++ command interface</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Reference Manual</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="items/itemsIndex.html">Items reference manual</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pythonUtilities/utilitiesIndex.html">Python Utility Functions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="structures/structuresIndex.html">Structures and Settings</a></li>
+<li class="toctree-l1"><a class="reference internal" href="references.html">References</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Developer documentation</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="../dev/README.html">Exudyn developer documentation</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../dev/GETTING_STARTED.html">Getting started as a developer</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../dev/BUILD.html">Building Exudyn from source</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../dev/GIT.html">Working with git in this repository</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../dev/ARCHITECTURE.html">Exudyn C++ architecture</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../dev/CODING_STYLE.html">Exudyn coding style and conventions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../dev/WORKFLOW.html">Development workflow</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../dev/NEW_ITEM.html">How to set up a new item</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../dev/GUI_MANUAL_CHECK.html">Manual GUI check before a release</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Deprecations</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#functions-and-arguments-of-the-python-library-40">Functions and arguments of the Python library (40)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#functions-of-the-c-module-26">Functions of the C++ module (26)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#item-parameters-76">Item parameters (76)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#settings-151">Settings (151)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../definitions/README.html">definitions/ — the item and structure definitions as Python</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../tools/generators/README.html">tools/generators/ — the new generator code</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../tools/exudev/README.html"><code class="docutils literal notranslate"><span class="pre">exudev</span></code> — the Exudyn maintainer driver</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../CONTRIBUTING.html">Contributing to Exudyn</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../dev/README.html#repository-layout">Repository layout</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../dev/README.html#building-and-running">Building and running</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../dev/README.html#how-to-notes">How-to notes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../dev/README.html#invariants">Invariants</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">How-to notes</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../howTo/condaEnvironments.html">Conda environments for Exudyn</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../howTo/sphinxDocs.html">Building the documentation</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Examples, models and issues</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="examples/examplesIndex.html">Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="testModels/testModelsIndex.html">TestModels</a></li>
+<li class="toctree-l1"><a class="reference internal" href="abbreviations.html">List of Abbreviations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../manual/revisions.html">Revisions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../CHANGELOG.html">Changelog</a></li>
+<li class="toctree-l1"><a class="reference internal" href="trackerlog.html">Issue tracker</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">Exudyn1.13.3</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../dev/README.html">Exudyn developer documentation</a></li>
+      <li class="breadcrumb-item active">Deprecations</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../_sources/docs/generated/deprecations.md.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <!-- GENERATED by tools/generators/deprecationsEmitter.py from definitions/ and python/exudyn - do not edit -->
+<section class="tex2jax_ignore mathjax_ignore" id="deprecations">
+<span id="sec-dev-deprecations"></span><h1>Deprecations<a class="headerlink" href="#deprecations" title="Link to this heading"></a></h1>
+<p>Every name of Exudyn that is deprecated, with the version it was deprecated in and the year it is removed. A use warns once per session and is counted in <code class="docutils literal notranslate"><span class="pre">exudyn.sys['deprecationUse']</span></code>; <code class="docutils literal notranslate"><span class="pre">tools/checkDeprecations.py</span></code> fails for a deprecation whose year has come, which then has to be removed. How to deprecate something: <code class="docutils literal notranslate"><span class="pre">CODING_STYLE.md</span></code> §10.5. The version is 1.11.0 for what was deprecated before the history of this repository begins.</p>
+<section id="functions-and-arguments-of-the-python-library-40">
+<h2>Functions and arguments of the Python library (40)<a class="headerlink" href="#functions-and-arguments-of-the-python-library-40" title="Link to this heading"></a></h2>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>name</p></th>
+<th class="head"><p>since</p></th>
+<th class="head"><p>removed in</p></th>
+<th class="head"><p>instead</p></th>
+<th class="head"><p>declared in</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">FEM.AddObjectFFRFreducedOrderWithUserFunctions.eulerParametersRef</span></code></p></td>
+<td><p>1.11.0</p></td>
+<td><p>2029</p></td>
+<td><p>rotationMatrixRef</p></td>
+<td><p>python/exudyn/FEM.py</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">FEM.CSRtoScipySparseCSR</span></code></p></td>
+<td><p>1.11.0</p></td>
+<td><p>2029</p></td>
+<td><p>SparseTripletsToScipySparseCSR</p></td>
+<td><p>python/exudyn/FEM.py</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">FEM.ReadNodesFromAbaqusInp</span></code></p></td>
+<td><p>1.11.0</p></td>
+<td><p>2029</p></td>
+<td><p>FEMinterface.ImportFromAbaqusInputFile</p></td>
+<td><p>python/exudyn/FEM.py</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">FEM.mode='NPY'</span></code></p></td>
+<td><p>1.11.0</p></td>
+<td><p>2029</p></td>
+<td><p>mode=’NPZ’</p></td>
+<td><p>python/exudyn/FEM.py</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">basicUtilities.AddSensorRecorder</span></code></p></td>
+<td><p>1.11.0</p></td>
+<td><p>2029</p></td>
+<td><p>a sensor with storeInternal=True</p></td>
+<td><p>python/exudyn/basicUtilities.py</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">beams.GenerateStraightBeam</span></code></p></td>
+<td><p>1.11.0</p></td>
+<td><p>2029</p></td>
+<td><p>beams.GenerateBeamElementsAlongLine</p></td>
+<td><p>python/exudyn/beams.py</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">beams.GenerateStraightLineANCFCable</span></code></p></td>
+<td><p>1.11.0</p></td>
+<td><p>2029</p></td>
+<td><p>beams.GenerateBeamElementsAlongLine</p></td>
+<td><p>python/exudyn/beams.py</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">beams.GenerateStraightLineANCFCable2D</span></code></p></td>
+<td><p>1.11.0</p></td>
+<td><p>2029</p></td>
+<td><p>beams.GenerateBeamElementsAlongLine</p></td>
+<td><p>python/exudyn/beams.py</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">graphics.BrickXYZ</span></code></p></td>
+<td><p>1.11.0</p></td>
+<td><p>2029</p></td>
+<td><p>graphics.Brick(centerPoint, size)</p></td>
+<td><p>python/exudyn/graphics.py</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">graphicsDataUtilities.GraphicsDataOrthoCubeLines</span></code></p></td>
+<td><p>1.11.0</p></td>
+<td><p>2029</p></td>
+<td><p>graphics.Brick(centerPoint, size, addFaces=False, addEdges=True)</p></td>
+<td><p>python/exudyn/graphicsDataUtilities.py</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">graphicsDataUtilities.GraphicsDataRectangle</span></code></p></td>
+<td><p>1.11.0</p></td>
+<td><p>2029</p></td>
+<td><p>graphics.Lines with the five corner points</p></td>
+<td><p>python/exudyn/graphicsDataUtilities.py</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">processing.GeneticOptimization.numberOfChildren</span></code></p></td>
+<td><p>1.11.0</p></td>
+<td><p>2029</p></td>
+<td><p>populationSize and elitistRatio</p></td>
+<td><p>python/exudyn/processing.py</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">processing.GeneticOptimization.survivingIndividuals</span></code></p></td>
+<td><p>1.11.0</p></td>
+<td><p>2029</p></td>
+<td><p>populationSize and elitistRatio</p></td>
+<td><p>python/exudyn/processing.py</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">rigidBodyUtilities.AddPrismaticJoint</span></code></p></td>
+<td><p>1.11.0</p></td>
+<td><p>2029</p></td>
+<td><p>mbs.CreatePrismaticJoint</p></td>
+<td><p>python/exudyn/rigidBodyUtilities.py</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">rigidBodyUtilities.AddRevoluteJoint</span></code></p></td>
+<td><p>1.11.0</p></td>
+<td><p>2029</p></td>
+<td><p>mbs.CreateRevoluteJoint</p></td>
+<td><p>python/exudyn/rigidBodyUtilities.py</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">rigidBodyUtilities.AddRigidBody</span></code></p></td>
+<td><p>1.11.0</p></td>
+<td><p>2029</p></td>
+<td><p>mbs.CreateRigidBody</p></td>
+<td><p>python/exudyn/rigidBodyUtilities.py</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">robotics.mobile.MecanumWheelVelocity2XYphi</span></code></p></td>
+<td><p>1.11.0</p></td>
+<td><p>2029</p></td>
+<td><p>MobileKinematics</p></td>
+<td><p>python/exudyn/robotics/mobile.py</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">robotics.mobile.MecanumXYphi2WheelVelocities</span></code></p></td>
+<td><p>1.11.0</p></td>
+<td><p>2029</p></td>
+<td><p>MobileKinematics</p></td>
+<td><p>python/exudyn/robotics/mobile.py</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">robotics.models.LinkDictModDHKK2Robot</span></code></p></td>
+<td><p>1.11.0</p></td>
+<td><p>2029</p></td>
+<td><p>LinkDict2Robot</p></td>
+<td><p>python/exudyn/robotics/models.py</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">MainSystem.CreateCartesianSpringDamper.bodyNumbers</span></code></p></td>
+<td><p>1.12.337</p></td>
+<td><p>2031</p></td>
+<td><p>itemNumbers</p></td>
+<td><p>python/exudyn/misc/mainSystemExtensions.py</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">MainSystem.CreateCoordinateConstraint.bodyNumbers</span></code></p></td>
+<td><p>1.12.337</p></td>
+<td><p>2031</p></td>
+<td><p>itemNumbers</p></td>
+<td><p>python/exudyn/misc/mainSystemExtensions.py</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">MainSystem.CreateCoordinateConstraint.factorValue1</span></code></p></td>
+<td><p>1.12.258</p></td>
+<td><p>2031</p></td>
+<td><p>factor1</p></td>
+<td><p>python/exudyn/misc/mainSystemExtensions.py</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">MainSystem.CreateDistanceConstraint.bodyNumbers</span></code></p></td>
+<td><p>1.12.337</p></td>
+<td><p>2031</p></td>
+<td><p>itemNumbers</p></td>
+<td><p>python/exudyn/misc/mainSystemExtensions.py</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">MainSystem.CreateForce.bodyNumber</span></code></p></td>
+<td><p>1.12.337</p></td>
+<td><p>2031</p></td>
+<td><p>itemNumber</p></td>
+<td><p>python/exudyn/misc/mainSystemExtensions.py</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">MainSystem.CreateGenericJoint.bodyNumbers</span></code></p></td>
+<td><p>1.12.337</p></td>
+<td><p>2031</p></td>
+<td><p>itemNumbers</p></td>
+<td><p>python/exudyn/misc/mainSystemExtensions.py</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">MainSystem.CreateMassPoint.physicsMass</span></code></p></td>
+<td><p>1.12.258</p></td>
+<td><p>2031</p></td>
+<td><p>mass</p></td>
+<td><p>python/exudyn/misc/mainSystemExtensions.py</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">MainSystem.CreatePrismaticJoint.bodyNumbers</span></code></p></td>
+<td><p>1.12.337</p></td>
+<td><p>2031</p></td>
+<td><p>itemNumbers</p></td>
+<td><p>python/exudyn/misc/mainSystemExtensions.py</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">MainSystem.CreateRevoluteJoint.bodyNumbers</span></code></p></td>
+<td><p>1.12.337</p></td>
+<td><p>2031</p></td>
+<td><p>itemNumbers</p></td>
+<td><p>python/exudyn/misc/mainSystemExtensions.py</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">MainSystem.CreateRigidBodySpringDamper.bodyNumbers</span></code></p></td>
+<td><p>1.12.337</p></td>
+<td><p>2031</p></td>
+<td><p>itemNumbers</p></td>
+<td><p>python/exudyn/misc/mainSystemExtensions.py</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">MainSystem.CreateRigidBodySpringDamper.intrinsicFormulation</span></code></p></td>
+<td><p>1.12.258</p></td>
+<td><p>2031</p></td>
+<td><p>useIntrinsicFormulation</p></td>
+<td><p>python/exudyn/misc/mainSystemExtensions.py</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">MainSystem.CreateRollingDiscPenalty.rollingFrictionViscous</span></code></p></td>
+<td><p>1.12.258</p></td>
+<td><p>2031</p></td>
+<td><p>rollingViscousFriction</p></td>
+<td><p>python/exudyn/misc/mainSystemExtensions.py</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">MainSystem.CreateSphereQuadContact.bodyNumbers</span></code></p></td>
+<td><p>1.12.337</p></td>
+<td><p>2031</p></td>
+<td><p>itemNumbers</p></td>
+<td><p>python/exudyn/misc/mainSystemExtensions.py</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">MainSystem.CreateSphereQuadContact.radiusSphere</span></code></p></td>
+<td><p>1.12.258</p></td>
+<td><p>2031</p></td>
+<td><p>sphereRadius</p></td>
+<td><p>python/exudyn/misc/mainSystemExtensions.py</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">MainSystem.CreateSphereSphereContact.bodyNumbers</span></code></p></td>
+<td><p>1.12.337</p></td>
+<td><p>2031</p></td>
+<td><p>itemNumbers</p></td>
+<td><p>python/exudyn/misc/mainSystemExtensions.py</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">MainSystem.CreateSphereTriangleContact.bodyNumbers</span></code></p></td>
+<td><p>1.12.337</p></td>
+<td><p>2031</p></td>
+<td><p>itemNumbers</p></td>
+<td><p>python/exudyn/misc/mainSystemExtensions.py</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">MainSystem.CreateSphereTriangleContact.radiusSphere</span></code></p></td>
+<td><p>1.12.258</p></td>
+<td><p>2031</p></td>
+<td><p>sphereRadius</p></td>
+<td><p>python/exudyn/misc/mainSystemExtensions.py</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">MainSystem.CreateSphericalJoint.bodyNumbers</span></code></p></td>
+<td><p>1.12.337</p></td>
+<td><p>2031</p></td>
+<td><p>itemNumbers</p></td>
+<td><p>python/exudyn/misc/mainSystemExtensions.py</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">MainSystem.CreateSpringDamper.bodyNumbers</span></code></p></td>
+<td><p>1.12.337</p></td>
+<td><p>2031</p></td>
+<td><p>itemNumbers</p></td>
+<td><p>python/exudyn/misc/mainSystemExtensions.py</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">MainSystem.CreateTorque.bodyNumber</span></code></p></td>
+<td><p>1.12.337</p></td>
+<td><p>2031</p></td>
+<td><p>itemNumber</p></td>
+<td><p>python/exudyn/misc/mainSystemExtensions.py</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">MainSystem.CreateTorsionalSpringDamper.bodyNumbers</span></code></p></td>
+<td><p>1.12.337</p></td>
+<td><p>2031</p></td>
+<td><p>itemNumbers</p></td>
+<td><p>python/exudyn/misc/mainSystemExtensions.py</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="functions-of-the-c-module-26">
+<h2>Functions of the C++ module (26)<a class="headerlink" href="#functions-of-the-c-module-26" title="Link to this heading"></a></h2>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>name</p></th>
+<th class="head"><p>since</p></th>
+<th class="head"><p>removed in</p></th>
+<th class="head"><p>instead</p></th>
+<th class="head"><p>declared in</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">MainSystem.WaitForUserToContinue</span></code></p></td>
+<td><p>1.11.0</p></td>
+<td><p>2029</p></td>
+<td><p></p></td>
+<td><p>definitions/pybindMainSystem.py</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">MatrixContainer.SetWithSparseMatrixCSR</span></code></p></td>
+<td><p>1.11.0</p></td>
+<td><p>2029</p></td>
+<td><p></p></td>
+<td><p>definitions/pybindDataStructures.py</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">SystemContainer.AttachToRenderEngine</span></code></p></td>
+<td><p>1.11.0</p></td>
+<td><p>2029</p></td>
+<td><p></p></td>
+<td><p>definitions/pybindSystemContainer.py</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">SystemContainer.DetachFromRenderEngine</span></code></p></td>
+<td><p>1.11.0</p></td>
+<td><p>2029</p></td>
+<td><p></p></td>
+<td><p>definitions/pybindSystemContainer.py</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">SystemContainer.GetCurrentMouseCoordinates</span></code></p></td>
+<td><p>1.11.0</p></td>
+<td><p>2029</p></td>
+<td><p></p></td>
+<td><p>definitions/pybindSystemContainer.py</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">SystemContainer.GetRenderState</span></code></p></td>
+<td><p>1.11.0</p></td>
+<td><p>2029</p></td>
+<td><p></p></td>
+<td><p>definitions/pybindSystemContainer.py</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">SystemContainer.RedrawAndSaveImage</span></code></p></td>
+<td><p>1.11.0</p></td>
+<td><p>2029</p></td>
+<td><p></p></td>
+<td><p>definitions/pybindSystemContainer.py</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">SystemContainer.RenderEngineZoomAll</span></code></p></td>
+<td><p>1.11.0</p></td>
+<td><p>2029</p></td>
+<td><p></p></td>
+<td><p>definitions/pybindSystemContainer.py</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">SystemContainer.SendRedrawSignal</span></code></p></td>
+<td><p>1.11.0</p></td>
+<td><p>2029</p></td>
+<td><p></p></td>
+<td><p>definitions/pybindSystemContainer.py</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">SystemContainer.SetRenderState</span></code></p></td>
+<td><p>1.11.0</p></td>
+<td><p>2029</p></td>
+<td><p></p></td>
+<td><p>definitions/pybindSystemContainer.py</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">SystemContainer.WaitForRenderEngineStopFlag</span></code></p></td>
+<td><p>1.11.0</p></td>
+<td><p>2029</p></td>
+<td><p></p></td>
+<td><p>definitions/pybindSystemContainer.py</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">exudyn.ComputeODE2Eigenvalues</span></code></p></td>
+<td><p>1.11.0</p></td>
+<td><p>2029</p></td>
+<td><p></p></td>
+<td><p>definitions/pybindModule.py</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">exudyn.DoRendererIdleTasks</span></code></p></td>
+<td><p>1.11.0</p></td>
+<td><p>2029</p></td>
+<td><p></p></td>
+<td><p>definitions/pybindModule.py</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">exudyn.GetVersionString</span></code></p></td>
+<td><p>1.11.0</p></td>
+<td><p>2029</p></td>
+<td><p></p></td>
+<td><p>definitions/pybindModule.py</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">exudyn.InfoStat</span></code></p></td>
+<td><p>1.11.0</p></td>
+<td><p>2029</p></td>
+<td><p></p></td>
+<td><p>definitions/pybindModule.py</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">exudyn.IsRendererActive</span></code></p></td>
+<td><p>1.11.0</p></td>
+<td><p>2029</p></td>
+<td><p></p></td>
+<td><p>definitions/pybindModule.py</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">exudyn.SetLinalgOutputFormatPython</span></code></p></td>
+<td><p>1.11.0</p></td>
+<td><p>2029</p></td>
+<td><p></p></td>
+<td><p>definitions/pybindModule.py</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">exudyn.SetOutputPrecision</span></code></p></td>
+<td><p>1.11.0</p></td>
+<td><p>2029</p></td>
+<td><p></p></td>
+<td><p>definitions/pybindModule.py</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">exudyn.SetPrintDelayMilliSeconds</span></code></p></td>
+<td><p>1.11.0</p></td>
+<td><p>2029</p></td>
+<td><p></p></td>
+<td><p>definitions/pybindModule.py</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">exudyn.SetWriteToConsole</span></code></p></td>
+<td><p>1.11.0</p></td>
+<td><p>2029</p></td>
+<td><p></p></td>
+<td><p>definitions/pybindModule.py</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">exudyn.SolveDynamic</span></code></p></td>
+<td><p>1.11.0</p></td>
+<td><p>2029</p></td>
+<td><p></p></td>
+<td><p>definitions/pybindModule.py</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">exudyn.SolveStatic</span></code></p></td>
+<td><p>1.11.0</p></td>
+<td><p>2029</p></td>
+<td><p></p></td>
+<td><p>definitions/pybindModule.py</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">exudyn.StartRenderer</span></code></p></td>
+<td><p>1.11.0</p></td>
+<td><p>2029</p></td>
+<td><p></p></td>
+<td><p>definitions/pybindModule.py</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">exudyn.StopRenderer</span></code></p></td>
+<td><p>1.11.0</p></td>
+<td><p>2029</p></td>
+<td><p></p></td>
+<td><p>definitions/pybindModule.py</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">exudyn.SuppressWarnings</span></code></p></td>
+<td><p>1.11.0</p></td>
+<td><p>2029</p></td>
+<td><p></p></td>
+<td><p>definitions/pybindModule.py</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">renderer.Detach</span></code></p></td>
+<td><p>1.11.0</p></td>
+<td><p>2029</p></td>
+<td><p></p></td>
+<td><p>definitions/pybindRenderer.py</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="item-parameters-76">
+<h2>Item parameters (76)<a class="headerlink" href="#item-parameters-76" title="Link to this heading"></a></h2>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>name</p></th>
+<th class="head"><p>since</p></th>
+<th class="head"><p>removed in</p></th>
+<th class="head"><p>instead</p></th>
+<th class="head"><p>declared in</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">ObjectALEANCFCable2D.physicsAddALEvariation</span></code></p></td>
+<td><p>1.12.258</p></td>
+<td><p>2031</p></td>
+<td><p>addALEvariation</p></td>
+<td><p>definitions (ObjectALEANCFCable2D)</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">ObjectALEANCFCable2D.physicsAxialDamping</span></code></p></td>
+<td><p>1.12.258</p></td>
+<td><p>2031</p></td>
+<td><p>axialDamping</p></td>
+<td><p>definitions (ObjectALEANCFCable2D)</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">ObjectALEANCFCable2D.physicsAxialStiffness</span></code></p></td>
+<td><p>1.12.258</p></td>
+<td><p>2031</p></td>
+<td><p>axialStiffness</p></td>
+<td><p>definitions (ObjectALEANCFCable2D)</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">ObjectALEANCFCable2D.physicsBendingDamping</span></code></p></td>
+<td><p>1.12.258</p></td>
+<td><p>2031</p></td>
+<td><p>bendingDamping</p></td>
+<td><p>definitions (ObjectALEANCFCable2D)</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">ObjectALEANCFCable2D.physicsBendingStiffness</span></code></p></td>
+<td><p>1.12.258</p></td>
+<td><p>2031</p></td>
+<td><p>bendingStiffness</p></td>
+<td><p>definitions (ObjectALEANCFCable2D)</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">ObjectALEANCFCable2D.physicsLength</span></code></p></td>
+<td><p>1.12.258</p></td>
+<td><p>2031</p></td>
+<td><p>length</p></td>
+<td><p>definitions (ObjectALEANCFCable2D)</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">ObjectALEANCFCable2D.physicsMassPerLength</span></code></p></td>
+<td><p>1.12.258</p></td>
+<td><p>2031</p></td>
+<td><p>massPerLength</p></td>
+<td><p>definitions (ObjectALEANCFCable2D)</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">ObjectALEANCFCable2D.physicsMovingMassFactor</span></code></p></td>
+<td><p>1.12.258</p></td>
+<td><p>2031</p></td>
+<td><p>movingMassFactor</p></td>
+<td><p>definitions (ObjectALEANCFCable2D)</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">ObjectALEANCFCable2D.physicsReferenceAxialStrain</span></code></p></td>
+<td><p>1.12.258</p></td>
+<td><p>2031</p></td>
+<td><p>referenceAxialStrain</p></td>
+<td><p>definitions (ObjectALEANCFCable2D)</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">ObjectALEANCFCable2D.physicsReferenceCurvature</span></code></p></td>
+<td><p>1.12.258</p></td>
+<td><p>2031</p></td>
+<td><p>referenceCurvature</p></td>
+<td><p>definitions (ObjectALEANCFCable2D)</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">ObjectALEANCFCable2D.physicsUseCouplingTerms</span></code></p></td>
+<td><p>1.12.258</p></td>
+<td><p>2031</p></td>
+<td><p>useCouplingTerms</p></td>
+<td><p>definitions (ObjectALEANCFCable2D)</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">ObjectANCFBeam.physicsLength</span></code></p></td>
+<td><p>1.12.258</p></td>
+<td><p>2031</p></td>
+<td><p>length</p></td>
+<td><p>definitions (ObjectANCFBeam)</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">ObjectANCFCable.physicsAxialDamping</span></code></p></td>
+<td><p>1.12.258</p></td>
+<td><p>2031</p></td>
+<td><p>axialDamping</p></td>
+<td><p>definitions (ObjectANCFCable)</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">ObjectANCFCable.physicsAxialStiffness</span></code></p></td>
+<td><p>1.12.258</p></td>
+<td><p>2031</p></td>
+<td><p>axialStiffness</p></td>
+<td><p>definitions (ObjectANCFCable)</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">ObjectANCFCable.physicsBendingDamping</span></code></p></td>
+<td><p>1.12.258</p></td>
+<td><p>2031</p></td>
+<td><p>bendingDamping</p></td>
+<td><p>definitions (ObjectANCFCable)</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">ObjectANCFCable.physicsBendingStiffness</span></code></p></td>
+<td><p>1.12.258</p></td>
+<td><p>2031</p></td>
+<td><p>bendingStiffness</p></td>
+<td><p>definitions (ObjectANCFCable)</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">ObjectANCFCable.physicsLength</span></code></p></td>
+<td><p>1.12.258</p></td>
+<td><p>2031</p></td>
+<td><p>length</p></td>
+<td><p>definitions (ObjectANCFCable)</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">ObjectANCFCable.physicsMassPerLength</span></code></p></td>
+<td><p>1.12.258</p></td>
+<td><p>2031</p></td>
+<td><p>massPerLength</p></td>
+<td><p>definitions (ObjectANCFCable)</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">ObjectANCFCable.physicsReferenceAxialStrain</span></code></p></td>
+<td><p>1.12.258</p></td>
+<td><p>2031</p></td>
+<td><p>referenceAxialStrain</p></td>
+<td><p>definitions (ObjectANCFCable)</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">ObjectANCFCable2D.physicsAxialDamping</span></code></p></td>
+<td><p>1.12.258</p></td>
+<td><p>2031</p></td>
+<td><p>axialDamping</p></td>
+<td><p>definitions (ObjectANCFCable2D)</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">ObjectANCFCable2D.physicsAxialStiffness</span></code></p></td>
+<td><p>1.12.258</p></td>
+<td><p>2031</p></td>
+<td><p>axialStiffness</p></td>
+<td><p>definitions (ObjectANCFCable2D)</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">ObjectANCFCable2D.physicsBendingDamping</span></code></p></td>
+<td><p>1.12.258</p></td>
+<td><p>2031</p></td>
+<td><p>bendingDamping</p></td>
+<td><p>definitions (ObjectANCFCable2D)</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">ObjectANCFCable2D.physicsBendingStiffness</span></code></p></td>
+<td><p>1.12.258</p></td>
+<td><p>2031</p></td>
+<td><p>bendingStiffness</p></td>
+<td><p>definitions (ObjectANCFCable2D)</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">ObjectANCFCable2D.physicsLength</span></code></p></td>
+<td><p>1.12.258</p></td>
+<td><p>2031</p></td>
+<td><p>length</p></td>
+<td><p>definitions (ObjectANCFCable2D)</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">ObjectANCFCable2D.physicsMassPerLength</span></code></p></td>
+<td><p>1.12.258</p></td>
+<td><p>2031</p></td>
+<td><p>massPerLength</p></td>
+<td><p>definitions (ObjectANCFCable2D)</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">ObjectANCFCable2D.physicsReferenceAxialStrain</span></code></p></td>
+<td><p>1.12.258</p></td>
+<td><p>2031</p></td>
+<td><p>referenceAxialStrain</p></td>
+<td><p>definitions (ObjectANCFCable2D)</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">ObjectANCFCable2D.physicsReferenceCurvature</span></code></p></td>
+<td><p>1.12.258</p></td>
+<td><p>2031</p></td>
+<td><p>referenceCurvature</p></td>
+<td><p>definitions (ObjectANCFCable2D)</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">ObjectANCFThinPlate.physicsCurvatureCoefficients</span></code></p></td>
+<td><p>1.12.258</p></td>
+<td><p>2031</p></td>
+<td><p>curvatureCoefficients</p></td>
+<td><p>definitions (ObjectANCFThinPlate)</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">ObjectANCFThinPlate.physicsDensity</span></code></p></td>
+<td><p>1.12.258</p></td>
+<td><p>2031</p></td>
+<td><p>density</p></td>
+<td><p>definitions (ObjectANCFThinPlate)</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">ObjectANCFThinPlate.physicsMassProportionalDamping</span></code></p></td>
+<td><p>1.12.258</p></td>
+<td><p>2031</p></td>
+<td><p>massProportionalDamping</p></td>
+<td><p>definitions (ObjectANCFThinPlate)</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">ObjectANCFThinPlate.physicsStrainCoefficients</span></code></p></td>
+<td><p>1.12.258</p></td>
+<td><p>2031</p></td>
+<td><p>strainCoefficients</p></td>
+<td><p>definitions (ObjectANCFThinPlate)</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">ObjectANCFThinPlate.physicsThickness</span></code></p></td>
+<td><p>1.12.258</p></td>
+<td><p>2031</p></td>
+<td><p>thickness</p></td>
+<td><p>definitions (ObjectANCFThinPlate)</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">ObjectBeamGeometricallyExact.physicsLength</span></code></p></td>
+<td><p>1.12.258</p></td>
+<td><p>2031</p></td>
+<td><p>length</p></td>
+<td><p>definitions (ObjectBeamGeometricallyExact)</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">ObjectBeamGeometricallyExact2D.physicsAxialDamping</span></code></p></td>
+<td><p>1.12.258</p></td>
+<td><p>2031</p></td>
+<td><p>axialDamping</p></td>
+<td><p>definitions (ObjectBeamGeometricallyExact2D)</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">ObjectBeamGeometricallyExact2D.physicsAxialStiffness</span></code></p></td>
+<td><p>1.12.258</p></td>
+<td><p>2031</p></td>
+<td><p>axialStiffness</p></td>
+<td><p>definitions (ObjectBeamGeometricallyExact2D)</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">ObjectBeamGeometricallyExact2D.physicsBendingDamping</span></code></p></td>
+<td><p>1.12.258</p></td>
+<td><p>2031</p></td>
+<td><p>bendingDamping</p></td>
+<td><p>definitions (ObjectBeamGeometricallyExact2D)</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">ObjectBeamGeometricallyExact2D.physicsBendingStiffness</span></code></p></td>
+<td><p>1.12.258</p></td>
+<td><p>2031</p></td>
+<td><p>bendingStiffness</p></td>
+<td><p>definitions (ObjectBeamGeometricallyExact2D)</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">ObjectBeamGeometricallyExact2D.physicsCrossSectionInertia</span></code></p></td>
+<td><p>1.12.258</p></td>
+<td><p>2031</p></td>
+<td><p>crossSectionInertia</p></td>
+<td><p>definitions (ObjectBeamGeometricallyExact2D)</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">ObjectBeamGeometricallyExact2D.physicsLength</span></code></p></td>
+<td><p>1.12.258</p></td>
+<td><p>2031</p></td>
+<td><p>length</p></td>
+<td><p>definitions (ObjectBeamGeometricallyExact2D)</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">ObjectBeamGeometricallyExact2D.physicsMassPerLength</span></code></p></td>
+<td><p>1.12.258</p></td>
+<td><p>2031</p></td>
+<td><p>massPerLength</p></td>
+<td><p>definitions (ObjectBeamGeometricallyExact2D)</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">ObjectBeamGeometricallyExact2D.physicsReferenceCurvature</span></code></p></td>
+<td><p>1.12.258</p></td>
+<td><p>2031</p></td>
+<td><p>referenceCurvature</p></td>
+<td><p>definitions (ObjectBeamGeometricallyExact2D)</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">ObjectBeamGeometricallyExact2D.physicsShearDamping</span></code></p></td>
+<td><p>1.12.258</p></td>
+<td><p>2031</p></td>
+<td><p>shearDamping</p></td>
+<td><p>definitions (ObjectBeamGeometricallyExact2D)</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">ObjectBeamGeometricallyExact2D.physicsShearStiffness</span></code></p></td>
+<td><p>1.12.258</p></td>
+<td><p>2031</p></td>
+<td><p>shearStiffness</p></td>
+<td><p>definitions (ObjectBeamGeometricallyExact2D)</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">ObjectConnectorCoordinate.factorValue1</span></code></p></td>
+<td><p>1.12.258</p></td>
+<td><p>2031</p></td>
+<td><p>factor1</p></td>
+<td><p>definitions (ObjectConnectorCoordinate)</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">ObjectConnectorCoordinateSpringDamperExt.fDynamicFriction</span></code></p></td>
+<td><p>1.12.258</p></td>
+<td><p>2031</p></td>
+<td><p>dynamicFrictionForce</p></td>
+<td><p>definitions (ObjectConnectorCoordinateSpringDamperExt)</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">ObjectConnectorCoordinateSpringDamperExt.fStaticFrictionOffset</span></code></p></td>
+<td><p>1.12.258</p></td>
+<td><p>2031</p></td>
+<td><p>staticFrictionOffsetForce</p></td>
+<td><p>definitions (ObjectConnectorCoordinateSpringDamperExt)</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">ObjectConnectorCoordinateSpringDamperExt.fViscousFriction</span></code></p></td>
+<td><p>1.12.258</p></td>
+<td><p>2031</p></td>
+<td><p>viscousFrictionFactor</p></td>
+<td><p>definitions (ObjectConnectorCoordinateSpringDamperExt)</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">ObjectConnectorRigidBodySpringDamper.intrinsicFormulation</span></code></p></td>
+<td><p>1.12.258</p></td>
+<td><p>2031</p></td>
+<td><p>useIntrinsicFormulation</p></td>
+<td><p>definitions (ObjectConnectorRigidBodySpringDamper)</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">ObjectConnectorRigidBodySpringDamper.rotationMarker0</span></code></p></td>
+<td><p>1.12.244</p></td>
+<td><p>2031</p></td>
+<td><p>give the rotation to marker 0 as its localHT, e.g. MarkerBodyRigid(bodyNumber=b, localHT=exu.HT(rotation=A, translation=p))</p></td>
+<td><p>definitions (ObjectConnectorRigidBodySpringDamper)</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">ObjectConnectorRigidBodySpringDamper.rotationMarker1</span></code></p></td>
+<td><p>1.12.244</p></td>
+<td><p>2031</p></td>
+<td><p>give the rotation to marker 1 as its localHT, e.g. MarkerBodyRigid(bodyNumber=b, localHT=exu.HT(rotation=A, translation=p))</p></td>
+<td><p>definitions (ObjectConnectorRigidBodySpringDamper)</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">ObjectConnectorRollingDiscPenalty.rollingFrictionViscous</span></code></p></td>
+<td><p>1.12.258</p></td>
+<td><p>2031</p></td>
+<td><p>rollingViscousFriction</p></td>
+<td><p>definitions (ObjectConnectorRollingDiscPenalty)</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">ObjectConnectorTorsionalSpringDamper.rotationMarker0</span></code></p></td>
+<td><p>1.12.244</p></td>
+<td><p>2031</p></td>
+<td><p>give the rotation to marker 0 as its localHT, e.g. MarkerBodyRigid(bodyNumber=b, localHT=exu.HT(rotation=A, translation=p))</p></td>
+<td><p>definitions (ObjectConnectorTorsionalSpringDamper)</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">ObjectConnectorTorsionalSpringDamper.rotationMarker1</span></code></p></td>
+<td><p>1.12.244</p></td>
+<td><p>2031</p></td>
+<td><p>give the rotation to marker 1 as its localHT, e.g. MarkerBodyRigid(bodyNumber=b, localHT=exu.HT(rotation=A, translation=p))</p></td>
+<td><p>definitions (ObjectConnectorTorsionalSpringDamper)</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">ObjectContactSphereTorus.radiusSphere</span></code></p></td>
+<td><p>1.12.258</p></td>
+<td><p>2031</p></td>
+<td><p>sphereRadius</p></td>
+<td><p>definitions (ObjectContactSphereTorus)</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">ObjectContactSphereTriangle.radiusSphere</span></code></p></td>
+<td><p>1.12.258</p></td>
+<td><p>2031</p></td>
+<td><p>sphereRadius</p></td>
+<td><p>definitions (ObjectContactSphereTriangle)</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">ObjectFFRFreducedOrder.physicsCenterOfMass</span></code></p></td>
+<td><p>1.12.258</p></td>
+<td><p>2031</p></td>
+<td><p>centerOfMass</p></td>
+<td><p>definitions (ObjectFFRFreducedOrder)</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">ObjectFFRFreducedOrder.physicsCenterOfMassTilde</span></code></p></td>
+<td><p>1.12.258</p></td>
+<td><p>2031</p></td>
+<td><p>centerOfMassTilde</p></td>
+<td><p>definitions (ObjectFFRFreducedOrder)</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">ObjectFFRFreducedOrder.physicsInertia</span></code></p></td>
+<td><p>1.12.258</p></td>
+<td><p>2031</p></td>
+<td><p>inertia</p></td>
+<td><p>definitions (ObjectFFRFreducedOrder)</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">ObjectFFRFreducedOrder.physicsMass</span></code></p></td>
+<td><p>1.12.258</p></td>
+<td><p>2031</p></td>
+<td><p>mass</p></td>
+<td><p>definitions (ObjectFFRFreducedOrder)</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">ObjectJointGeneric.rotationMarker0</span></code></p></td>
+<td><p>1.12.244</p></td>
+<td><p>2031</p></td>
+<td><p>give the rotation to marker 0 as its localHT, e.g. MarkerBodyRigid(bodyNumber=b, localHT=exu.HT(rotation=A, translation=p))</p></td>
+<td><p>definitions (ObjectJointGeneric)</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">ObjectJointGeneric.rotationMarker1</span></code></p></td>
+<td><p>1.12.244</p></td>
+<td><p>2031</p></td>
+<td><p>give the rotation to marker 1 as its localHT, e.g. MarkerBodyRigid(bodyNumber=b, localHT=exu.HT(rotation=A, translation=p))</p></td>
+<td><p>definitions (ObjectJointGeneric)</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">ObjectJointPrismaticX.rotationMarker0</span></code></p></td>
+<td><p>1.12.244</p></td>
+<td><p>2031</p></td>
+<td><p>give the rotation to marker 0 as its localHT, e.g. MarkerBodyRigid(bodyNumber=b, localHT=exu.HT(rotation=A, translation=p))</p></td>
+<td><p>definitions (ObjectJointPrismaticX)</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">ObjectJointPrismaticX.rotationMarker1</span></code></p></td>
+<td><p>1.12.244</p></td>
+<td><p>2031</p></td>
+<td><p>give the rotation to marker 1 as its localHT, e.g. MarkerBodyRigid(bodyNumber=b, localHT=exu.HT(rotation=A, translation=p))</p></td>
+<td><p>definitions (ObjectJointPrismaticX)</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">ObjectJointRevoluteZ.rotationMarker0</span></code></p></td>
+<td><p>1.12.244</p></td>
+<td><p>2031</p></td>
+<td><p>give the rotation to marker 0 as its localHT, e.g. MarkerBodyRigid(bodyNumber=b, localHT=exu.HT(rotation=A, translation=p))</p></td>
+<td><p>definitions (ObjectJointRevoluteZ)</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">ObjectJointRevoluteZ.rotationMarker1</span></code></p></td>
+<td><p>1.12.244</p></td>
+<td><p>2031</p></td>
+<td><p>give the rotation to marker 1 as its localHT, e.g. MarkerBodyRigid(bodyNumber=b, localHT=exu.HT(rotation=A, translation=p))</p></td>
+<td><p>definitions (ObjectJointRevoluteZ)</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">ObjectJointSliding2D.classicalFormulation</span></code></p></td>
+<td><p>1.12.258</p></td>
+<td><p>2031</p></td>
+<td><p>useClassicalFormulation</p></td>
+<td><p>definitions (ObjectJointSliding2D)</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">ObjectMass1D.physicsMass</span></code></p></td>
+<td><p>1.12.258</p></td>
+<td><p>2031</p></td>
+<td><p>mass</p></td>
+<td><p>definitions (ObjectMass1D)</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">ObjectMassPoint.physicsMass</span></code></p></td>
+<td><p>1.12.258</p></td>
+<td><p>2031</p></td>
+<td><p>mass</p></td>
+<td><p>definitions (ObjectMassPoint)</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">ObjectMassPoint2D.physicsMass</span></code></p></td>
+<td><p>1.12.258</p></td>
+<td><p>2031</p></td>
+<td><p>mass</p></td>
+<td><p>definitions (ObjectMassPoint2D)</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">ObjectRigidBody.physicsCenterOfMass</span></code></p></td>
+<td><p>1.12.258</p></td>
+<td><p>2031</p></td>
+<td><p>centerOfMass</p></td>
+<td><p>definitions (ObjectRigidBody)</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">ObjectRigidBody.physicsInertia</span></code></p></td>
+<td><p>1.12.258</p></td>
+<td><p>2031</p></td>
+<td><p>inertia</p></td>
+<td><p>definitions (ObjectRigidBody)</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">ObjectRigidBody.physicsMass</span></code></p></td>
+<td><p>1.12.258</p></td>
+<td><p>2031</p></td>
+<td><p>mass</p></td>
+<td><p>definitions (ObjectRigidBody)</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">ObjectRigidBody2D.physicsCenterOfMass</span></code></p></td>
+<td><p>1.12.258</p></td>
+<td><p>2031</p></td>
+<td><p>centerOfMass</p></td>
+<td><p>definitions (ObjectRigidBody2D)</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">ObjectRigidBody2D.physicsInertia</span></code></p></td>
+<td><p>1.12.258</p></td>
+<td><p>2031</p></td>
+<td><p>inertia</p></td>
+<td><p>definitions (ObjectRigidBody2D)</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">ObjectRigidBody2D.physicsMass</span></code></p></td>
+<td><p>1.12.258</p></td>
+<td><p>2031</p></td>
+<td><p>mass</p></td>
+<td><p>definitions (ObjectRigidBody2D)</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">ObjectRotationalMass1D.physicsInertia</span></code></p></td>
+<td><p>1.12.258</p></td>
+<td><p>2031</p></td>
+<td><p>inertia</p></td>
+<td><p>definitions (ObjectRotationalMass1D)</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="settings-151">
+<h2>Settings (151)<a class="headerlink" href="#settings-151" title="Link to this heading"></a></h2>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>name</p></th>
+<th class="head"><p>since</p></th>
+<th class="head"><p>removed in</p></th>
+<th class="head"><p>instead</p></th>
+<th class="head"><p>declared in</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">VSettingsContour.colorBarPrecision</span></code></p></td>
+<td><p>1.10.80</p></td>
+<td><p>2030</p></td>
+<td><p>contour.advanced.colorBarPrecision</p></td>
+<td><p>definitions (VSettingsContour)</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">VSettingsContour.colorBarTiling</span></code></p></td>
+<td><p>1.10.80</p></td>
+<td><p>2030</p></td>
+<td><p>contour.advanced.colorBarTiling</p></td>
+<td><p>definitions (VSettingsContour)</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">VSettingsContour.showColorBar</span></code></p></td>
+<td><p>1.10.80</p></td>
+<td><p>2030</p></td>
+<td><p>contour.advanced.showColorBar</p></td>
+<td><p>definitions (VSettingsContour)</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">VSettingsGeneral.drawCoordinateSystem</span></code></p></td>
+<td><p>1.10.80</p></td>
+<td><p>2030</p></td>
+<td><p>view0.scene.drawCoordinateSystem</p></td>
+<td><p>definitions (VSettingsGeneral)</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">VSettingsGeneral.drawWorldBasis</span></code></p></td>
+<td><p>1.10.80</p></td>
+<td><p>2030</p></td>
+<td><p>view0.scene.drawWorldBasis</p></td>
+<td><p>definitions (VSettingsGeneral)</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">VSettingsGeneral.showComputationInfo</span></code></p></td>
+<td><p>1.10.80</p></td>
+<td><p>2030</p></td>
+<td><p>view0.window.showComputationInfo</p></td>
+<td><p>definitions (VSettingsGeneral)</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">VSettingsGeneral.textSize</span></code></p></td>
+<td><p>1.10.80</p></td>
+<td><p>2030</p></td>
+<td><p>view0.window.globalFontSize</p></td>
+<td><p>definitions (VSettingsGeneral)</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">VSettingsGeneral.worldBasisSize</span></code></p></td>
+<td><p>1.10.80</p></td>
+<td><p>2030</p></td>
+<td><p>view0.scene.worldBasisSize</p></td>
+<td><p>definitions (VSettingsGeneral)</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">VSettingsInteractive.highlightColor</span></code></p></td>
+<td><p>1.10.80</p></td>
+<td><p>2030</p></td>
+<td><p>interactive.advanced.highlightColor</p></td>
+<td><p>definitions (VSettingsInteractive)</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">VSettingsInteractive.highlightOtherColor</span></code></p></td>
+<td><p>1.10.80</p></td>
+<td><p>2030</p></td>
+<td><p>interactive.advanced.highlightOtherColor</p></td>
+<td><p>definitions (VSettingsInteractive)</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">VSettingsInteractive.joystickScaleRotation</span></code></p></td>
+<td><p>1.10.80</p></td>
+<td><p>2030</p></td>
+<td><p>interactive.advanced.joystickScaleRotation</p></td>
+<td><p>definitions (VSettingsInteractive)</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">VSettingsInteractive.joystickScaleTranslation</span></code></p></td>
+<td><p>1.10.80</p></td>
+<td><p>2030</p></td>
+<td><p>interactive.advanced.joystickScaleTranslation</p></td>
+<td><p>definitions (VSettingsInteractive)</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">VSettingsInteractive.keypressRotationStep</span></code></p></td>
+<td><p>1.10.80</p></td>
+<td><p>2030</p></td>
+<td><p>interactive.advanced.keypressRotationStep</p></td>
+<td><p>definitions (VSettingsInteractive)</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">VSettingsInteractive.keypressTranslationStep</span></code></p></td>
+<td><p>1.10.80</p></td>
+<td><p>2030</p></td>
+<td><p>interactive.advanced.keypressTranslationStep</p></td>
+<td><p>definitions (VSettingsInteractive)</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">VSettingsInteractive.lockModelView</span></code></p></td>
+<td><p>1.10.80</p></td>
+<td><p>2030</p></td>
+<td><p>view0.window.lockModelView</p></td>
+<td><p>definitions (VSettingsInteractive)</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">VSettingsInteractive.mouseMoveRotationFactor</span></code></p></td>
+<td><p>1.10.80</p></td>
+<td><p>2030</p></td>
+<td><p>interactive.advanced.mouseMoveRotationFactor</p></td>
+<td><p>definitions (VSettingsInteractive)</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">VSettingsInteractive.pauseWithSpacebar</span></code></p></td>
+<td><p>1.10.80</p></td>
+<td><p>2030</p></td>
+<td><p>interactive.advanced.pauseWithSpacebar</p></td>
+<td><p>definitions (VSettingsInteractive)</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">VSettingsInteractive.selectionHighlights</span></code></p></td>
+<td><p>1.10.80</p></td>
+<td><p>2030</p></td>
+<td><p>interactive.advanced.selectionHighlights</p></td>
+<td><p>definitions (VSettingsInteractive)</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">VSettingsInteractive.selectionLeftMouse</span></code></p></td>
+<td><p>1.10.80</p></td>
+<td><p>2030</p></td>
+<td><p>interactive.advanced.selectionLeftMouse</p></td>
+<td><p>definitions (VSettingsInteractive)</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">VSettingsInteractive.selectionLeftMouseItemTypes</span></code></p></td>
+<td><p>1.10.80</p></td>
+<td><p>2030</p></td>
+<td><p>interactive.advanced.selectionLeftMouseItemTypes</p></td>
+<td><p>definitions (VSettingsInteractive)</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">VSettingsInteractive.selectionRightMouse</span></code></p></td>
+<td><p>1.10.80</p></td>
+<td><p>2030</p></td>
+<td><p>interactive.advanced.selectionRightMouse</p></td>
+<td><p>definitions (VSettingsInteractive)</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">VSettingsInteractive.selectionRightMouseGraphicsData</span></code></p></td>
+<td><p>1.10.80</p></td>
+<td><p>2030</p></td>
+<td><p>interactive.advanced.selectionRightMouseGraphicsData</p></td>
+<td><p>definitions (VSettingsInteractive)</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">VSettingsInteractive.trackMarker</span></code></p></td>
+<td><p>1.10.80</p></td>
+<td><p>2030</p></td>
+<td><p>view0.camera.trackMarker</p></td>
+<td><p>definitions (VSettingsInteractive)</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">VSettingsInteractive.trackMarkerMbsNumber</span></code></p></td>
+<td><p>1.10.80</p></td>
+<td><p>2030</p></td>
+<td><p>view0.camera.trackMarkerMbsNumber</p></td>
+<td><p>definitions (VSettingsInteractive)</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">VSettingsInteractive.trackMarkerOrientation</span></code></p></td>
+<td><p>1.10.80</p></td>
+<td><p>2030</p></td>
+<td><p>view0.camera.trackMarkerOrientation</p></td>
+<td><p>definitions (VSettingsInteractive)</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">VSettingsInteractive.trackMarkerPosition</span></code></p></td>
+<td><p>1.10.80</p></td>
+<td><p>2030</p></td>
+<td><p>view0.camera.trackMarkerPosition</p></td>
+<td><p>definitions (VSettingsInteractive)</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">VSettingsInteractive.zoomStepFactor</span></code></p></td>
+<td><p>1.10.80</p></td>
+<td><p>2030</p></td>
+<td><p>interactive.advanced.zoomStepFactor</p></td>
+<td><p>definitions (VSettingsInteractive)</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">VSettingsOpenGL.clippingPlaneColor</span></code></p></td>
+<td><p>1.10.80</p></td>
+<td><p>2030</p></td>
+<td><p>openGL.advanced.clippingPlaneColor</p></td>
+<td><p>definitions (VSettingsOpenGL)</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">VSettingsOpenGL.clippingPlaneDistance</span></code></p></td>
+<td><p>1.10.80</p></td>
+<td><p>2030</p></td>
+<td><p>view0.camera.clippingPlaneDistance</p></td>
+<td><p>definitions (VSettingsOpenGL)</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">VSettingsOpenGL.clippingPlaneNormal</span></code></p></td>
+<td><p>1.10.80</p></td>
+<td><p>2030</p></td>
+<td><p>view0.camera.clippingPlaneNormal</p></td>
+<td><p>definitions (VSettingsOpenGL)</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">VSettingsOpenGL.depthSorting</span></code></p></td>
+<td><p>1.10.80</p></td>
+<td><p>2030</p></td>
+<td><p>openGL.advanced.depthSorting</p></td>
+<td><p>definitions (VSettingsOpenGL)</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">VSettingsOpenGL.enableLight0</span></code></p></td>
+<td><p>1.10.80</p></td>
+<td><p>2030</p></td>
+<td><p>openGL.light0.enable</p></td>
+<td><p>definitions (VSettingsOpenGL)</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">VSettingsOpenGL.enableLight1</span></code></p></td>
+<td><p>1.10.80</p></td>
+<td><p>2030</p></td>
+<td><p>openGL.light1.enable</p></td>
+<td><p>definitions (VSettingsOpenGL)</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">VSettingsOpenGL.enableLighting</span></code></p></td>
+<td><p>1.10.80</p></td>
+<td><p>2030</p></td>
+<td><p>openGL.advanced.enableLighting</p></td>
+<td><p>definitions (VSettingsOpenGL)</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">VSettingsOpenGL.facesTransparent</span></code></p></td>
+<td><p>1.10.80</p></td>
+<td><p>2030</p></td>
+<td><p>view0.scene.facesTransparent</p></td>
+<td><p>definitions (VSettingsOpenGL)</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">VSettingsOpenGL.initialCenterPoint</span></code></p></td>
+<td><p>1.10.80</p></td>
+<td><p>2030</p></td>
+<td><p>openGL.advanced.initialCenterPoint</p></td>
+<td><p>definitions (VSettingsOpenGL)</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">VSettingsOpenGL.initialMaxSceneSize</span></code></p></td>
+<td><p>1.10.80</p></td>
+<td><p>2030</p></td>
+<td><p>openGL.advanced.initialMaxSceneSize</p></td>
+<td><p>definitions (VSettingsOpenGL)</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">VSettingsOpenGL.initialModelRotation</span></code></p></td>
+<td><p>1.10.80</p></td>
+<td><p>2030</p></td>
+<td><p>openGL.advanced.initialModelRotation</p></td>
+<td><p>definitions (VSettingsOpenGL)</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">VSettingsOpenGL.initialZoom</span></code></p></td>
+<td><p>1.10.80</p></td>
+<td><p>2030</p></td>
+<td><p>openGL.advanced.initialZoom</p></td>
+<td><p>definitions (VSettingsOpenGL)</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">VSettingsOpenGL.light0ambient</span></code></p></td>
+<td><p>1.10.80</p></td>
+<td><p>2030</p></td>
+<td><p>openGL.dummy</p></td>
+<td><p>definitions (VSettingsOpenGL)</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">VSettingsOpenGL.light0constantAttenuation</span></code></p></td>
+<td><p>1.10.80</p></td>
+<td><p>2030</p></td>
+<td><p>openGL.light0.constantAttenuation</p></td>
+<td><p>definitions (VSettingsOpenGL)</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">VSettingsOpenGL.light0diffuse</span></code></p></td>
+<td><p>1.10.80</p></td>
+<td><p>2030</p></td>
+<td><p>openGL.light0.diffuse</p></td>
+<td><p>definitions (VSettingsOpenGL)</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">VSettingsOpenGL.light0linearAttenuation</span></code></p></td>
+<td><p>1.10.80</p></td>
+<td><p>2030</p></td>
+<td><p>openGL.light0.linearAttenuation</p></td>
+<td><p>definitions (VSettingsOpenGL)</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">VSettingsOpenGL.light0position</span></code></p></td>
+<td><p>1.10.80</p></td>
+<td><p>2030</p></td>
+<td><p>openGL.light0.position</p></td>
+<td><p>definitions (VSettingsOpenGL)</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">VSettingsOpenGL.light0quadraticAttenuation</span></code></p></td>
+<td><p>1.10.80</p></td>
+<td><p>2030</p></td>
+<td><p>openGL.light0.quadraticAttenuation</p></td>
+<td><p>definitions (VSettingsOpenGL)</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">VSettingsOpenGL.light0specular</span></code></p></td>
+<td><p>1.10.80</p></td>
+<td><p>2030</p></td>
+<td><p>openGL.light0.specular</p></td>
+<td><p>definitions (VSettingsOpenGL)</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">VSettingsOpenGL.light1ambient</span></code></p></td>
+<td><p>1.10.80</p></td>
+<td><p>2030</p></td>
+<td><p>openGL.dummy</p></td>
+<td><p>definitions (VSettingsOpenGL)</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">VSettingsOpenGL.light1constantAttenuation</span></code></p></td>
+<td><p>1.10.80</p></td>
+<td><p>2030</p></td>
+<td><p>openGL.light1.constantAttenuation</p></td>
+<td><p>definitions (VSettingsOpenGL)</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">VSettingsOpenGL.light1diffuse</span></code></p></td>
+<td><p>1.10.80</p></td>
+<td><p>2030</p></td>
+<td><p>openGL.light1.diffuse</p></td>
+<td><p>definitions (VSettingsOpenGL)</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">VSettingsOpenGL.light1linearAttenuation</span></code></p></td>
+<td><p>1.10.80</p></td>
+<td><p>2030</p></td>
+<td><p>openGL.light1.linearAttenuation</p></td>
+<td><p>definitions (VSettingsOpenGL)</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">VSettingsOpenGL.light1position</span></code></p></td>
+<td><p>1.10.80</p></td>
+<td><p>2030</p></td>
+<td><p>openGL.light1.position</p></td>
+<td><p>definitions (VSettingsOpenGL)</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">VSettingsOpenGL.light1quadraticAttenuation</span></code></p></td>
+<td><p>1.10.80</p></td>
+<td><p>2030</p></td>
+<td><p>openGL.light1.quadraticAttenuation</p></td>
+<td><p>definitions (VSettingsOpenGL)</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">VSettingsOpenGL.light1specular</span></code></p></td>
+<td><p>1.10.80</p></td>
+<td><p>2030</p></td>
+<td><p>openGL.light1.specular</p></td>
+<td><p>definitions (VSettingsOpenGL)</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">VSettingsOpenGL.lightModelLocalViewer</span></code></p></td>
+<td><p>1.10.80</p></td>
+<td><p>2030</p></td>
+<td><p>openGL.advanced.lightModelLocalViewer</p></td>
+<td><p>definitions (VSettingsOpenGL)</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">VSettingsOpenGL.lightModelTwoSide</span></code></p></td>
+<td><p>1.10.80</p></td>
+<td><p>2030</p></td>
+<td><p>openGL.advanced.lightModelTwoSide</p></td>
+<td><p>definitions (VSettingsOpenGL)</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">VSettingsOpenGL.lightPositionsInCameraFrame</span></code></p></td>
+<td><p>1.10.80</p></td>
+<td><p>2030</p></td>
+<td><p>openGL.light0.useCameraFrame</p></td>
+<td><p>definitions (VSettingsOpenGL)</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">VSettingsOpenGL.lineSmooth</span></code></p></td>
+<td><p>1.10.80</p></td>
+<td><p>2030</p></td>
+<td><p>openGL.advanced.lineSmooth</p></td>
+<td><p>definitions (VSettingsOpenGL)</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">VSettingsOpenGL.materialAmbientAndDiffuse</span></code></p></td>
+<td><p>1.10.80</p></td>
+<td><p>2030</p></td>
+<td><p>openGL.materialSpecular</p></td>
+<td><p>definitions (VSettingsOpenGL)</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">VSettingsOpenGL.perspective</span></code></p></td>
+<td><p>1.10.80</p></td>
+<td><p>2030</p></td>
+<td><p>view0.camera.perspective</p></td>
+<td><p>definitions (VSettingsOpenGL)</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">VSettingsOpenGL.polygonOffset</span></code></p></td>
+<td><p>1.10.80</p></td>
+<td><p>2030</p></td>
+<td><p>openGL.advanced.polygonOffset</p></td>
+<td><p>definitions (VSettingsOpenGL)</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">VSettingsOpenGL.shadeModelSmooth</span></code></p></td>
+<td><p>1.10.80</p></td>
+<td><p>2030</p></td>
+<td><p>openGL.advanced.shadeModelSmooth</p></td>
+<td><p>definitions (VSettingsOpenGL)</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">VSettingsOpenGL.shadow</span></code></p></td>
+<td><p>1.10.80</p></td>
+<td><p>2030</p></td>
+<td><p>openGL.light0.shadow</p></td>
+<td><p>definitions (VSettingsOpenGL)</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">VSettingsOpenGL.shadowPolygonOffset</span></code></p></td>
+<td><p>1.10.80</p></td>
+<td><p>2030</p></td>
+<td><p>openGL.advanced.shadowPolygonOffset</p></td>
+<td><p>definitions (VSettingsOpenGL)</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">VSettingsOpenGL.showFaceEdges</span></code></p></td>
+<td><p>1.10.80</p></td>
+<td><p>2030</p></td>
+<td><p>view0.scene.showFaceEdges</p></td>
+<td><p>definitions (VSettingsOpenGL)</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">VSettingsOpenGL.showFaces</span></code></p></td>
+<td><p>1.10.80</p></td>
+<td><p>2030</p></td>
+<td><p>view0.scene.showFaces</p></td>
+<td><p>definitions (VSettingsOpenGL)</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">VSettingsOpenGL.showLines</span></code></p></td>
+<td><p>1.10.80</p></td>
+<td><p>2030</p></td>
+<td><p>view0.scene.showLines</p></td>
+<td><p>definitions (VSettingsOpenGL)</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">VSettingsOpenGL.showMeshEdges</span></code></p></td>
+<td><p>1.10.80</p></td>
+<td><p>2030</p></td>
+<td><p>view0.scene.showMeshEdges</p></td>
+<td><p>definitions (VSettingsOpenGL)</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">VSettingsOpenGL.showMeshFaces</span></code></p></td>
+<td><p>1.10.80</p></td>
+<td><p>2030</p></td>
+<td><p>view0.scene.showMeshFaces</p></td>
+<td><p>definitions (VSettingsOpenGL)</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">VSettingsOpenGL.textLineSmooth</span></code></p></td>
+<td><p>1.10.80</p></td>
+<td><p>2030</p></td>
+<td><p>openGL.advanced.textLineSmooth</p></td>
+<td><p>definitions (VSettingsOpenGL)</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">VSettingsOpenGL.textLineWidth</span></code></p></td>
+<td><p>1.10.80</p></td>
+<td><p>2030</p></td>
+<td><p>openGL.advanced.textLineWidth</p></td>
+<td><p>definitions (VSettingsOpenGL)</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">VSettingsRaytracer.ambientLightColor</span></code></p></td>
+<td><p>1.10.80</p></td>
+<td><p>2030</p></td>
+<td><p>openGL.lightModelAmbient</p></td>
+<td><p>definitions (VSettingsRaytracer)</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">VSettingsRaytracer.backgroundColorReflections</span></code></p></td>
+<td><p>1.10.80</p></td>
+<td><p>2030</p></td>
+<td><p>raytracer.advanced.backgroundColorReflections</p></td>
+<td><p>definitions (VSettingsRaytracer)</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">VSettingsRaytracer.enable</span></code></p></td>
+<td><p>1.10.80</p></td>
+<td><p>2030</p></td>
+<td><p>view0.camera.useRaytracer</p></td>
+<td><p>definitions (VSettingsRaytracer)</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">VSettingsRaytracer.lightRadius</span></code></p></td>
+<td><p>1.10.80</p></td>
+<td><p>2030</p></td>
+<td><p>openGL.light0.lightRadius</p></td>
+<td><p>definitions (VSettingsRaytracer)</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">VSettingsRaytracer.searchTreeFactor</span></code></p></td>
+<td><p>1.10.80</p></td>
+<td><p>2030</p></td>
+<td><p>raytracer.advanced.searchTreeFactor</p></td>
+<td><p>definitions (VSettingsRaytracer)</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">VSettingsRaytracer.shadowScalingFactor</span></code></p></td>
+<td><p>1.10.80</p></td>
+<td><p>2030</p></td>
+<td><p>raytracer.advanced.shadowScalingFactor</p></td>
+<td><p>definitions (VSettingsRaytracer)</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">VSettingsRaytracer.shadowSmoothingSteps</span></code></p></td>
+<td><p>1.10.80</p></td>
+<td><p>2030</p></td>
+<td><p>raytracer.advanced.shadowSmoothingSteps</p></td>
+<td><p>definitions (VSettingsRaytracer)</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">VSettingsRaytracer.showText</span></code></p></td>
+<td><p>1.10.80</p></td>
+<td><p>2030</p></td>
+<td><p>raytracer.advanced.showText</p></td>
+<td><p>definitions (VSettingsRaytracer)</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">VSettingsRaytracer.tilesPerThread</span></code></p></td>
+<td><p>1.10.80</p></td>
+<td><p>2030</p></td>
+<td><p>raytracer.advanced.tilesPerThread</p></td>
+<td><p>definitions (VSettingsRaytracer)</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">VSettingsRaytracer.zBiasLines</span></code></p></td>
+<td><p>1.10.80</p></td>
+<td><p>2030</p></td>
+<td><p>raytracer.advanced.zBiasLines</p></td>
+<td><p>definitions (VSettingsRaytracer)</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">VSettingsRaytracer.zOffsetCamera</span></code></p></td>
+<td><p>1.10.80</p></td>
+<td><p>2030</p></td>
+<td><p>openGL.dummy</p></td>
+<td><p>definitions (VSettingsRaytracer)</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">VSettingsWindowDeprecated.alwaysOnTop</span></code></p></td>
+<td><p>1.10.80</p></td>
+<td><p>2030</p></td>
+<td><p>view0.window.alwaysOnTop</p></td>
+<td><p>definitions (VSettingsWindowDeprecated)</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">VSettingsWindowDeprecated.ignoreKeys</span></code></p></td>
+<td><p>1.10.80</p></td>
+<td><p>2030</p></td>
+<td><p>interactive.ignoreKeys</p></td>
+<td><p>definitions (VSettingsWindowDeprecated)</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">VSettingsWindowDeprecated.keyPressUserFunction</span></code></p></td>
+<td><p>1.10.80</p></td>
+<td><p>2030</p></td>
+<td><p>interactive.keyPressUserFunction</p></td>
+<td><p>definitions (VSettingsWindowDeprecated)</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">VSettingsWindowDeprecated.limitWindowToScreenSize</span></code></p></td>
+<td><p>1.10.80</p></td>
+<td><p>2030</p></td>
+<td><p>general.limitWindowToScreenSize</p></td>
+<td><p>definitions (VSettingsWindowDeprecated)</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">VSettingsWindowDeprecated.maximize</span></code></p></td>
+<td><p>1.10.80</p></td>
+<td><p>2030</p></td>
+<td><p>view0.window.maximize</p></td>
+<td><p>definitions (VSettingsWindowDeprecated)</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">VSettingsWindowDeprecated.reallyQuitTimeLimit</span></code></p></td>
+<td><p>1.10.80</p></td>
+<td><p>2030</p></td>
+<td><p>general.reallyQuitTimeLimit</p></td>
+<td><p>definitions (VSettingsWindowDeprecated)</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">VSettingsWindowDeprecated.renderWindowSize</span></code></p></td>
+<td><p>1.10.80</p></td>
+<td><p>2030</p></td>
+<td><p>view0.window.renderWindowSize</p></td>
+<td><p>definitions (VSettingsWindowDeprecated)</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">VSettingsWindowDeprecated.showMouseCoordinates</span></code></p></td>
+<td><p>1.10.80</p></td>
+<td><p>2030</p></td>
+<td><p>view0.window.showMouseCoordinates</p></td>
+<td><p>definitions (VSettingsWindowDeprecated)</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">VSettingsWindowDeprecated.showRenderStateInfo</span></code></p></td>
+<td><p>1.10.80</p></td>
+<td><p>2030</p></td>
+<td><p>view0.window.showRenderStateInfo</p></td>
+<td><p>definitions (VSettingsWindowDeprecated)</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">VSettingsWindowDeprecated.showWindow</span></code></p></td>
+<td><p>1.10.80</p></td>
+<td><p>2030</p></td>
+<td><p>view0.window.showWindow</p></td>
+<td><p>definitions (VSettingsWindowDeprecated)</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">VSettingsWindowDeprecated.startupTimeout</span></code></p></td>
+<td><p>1.10.80</p></td>
+<td><p>2030</p></td>
+<td><p>general.rendererStartupTimeout</p></td>
+<td><p>definitions (VSettingsWindowDeprecated)</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">VisualizationSettings.window</span></code></p></td>
+<td><p>1.10.80</p></td>
+<td><p>2030</p></td>
+<td><p>Deprecated visualization settings for window; DO NOT USE</p></td>
+<td><p>definitions (VisualizationSettings)</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">ExplicitIntegrationSettingsDeprecated.computeEndOfStepAccelerations</span></code></p></td>
+<td><p>1.12.256</p></td>
+<td><p>2031</p></td>
+<td><p>timeIntegration.explicit.computeEndOfStepAccelerations</p></td>
+<td><p>definitions (ExplicitIntegrationSettingsDeprecated)</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">ExplicitIntegrationSettingsDeprecated.computeMassMatrixInversePerBody</span></code></p></td>
+<td><p>1.12.256</p></td>
+<td><p>2031</p></td>
+<td><p>timeIntegration.explicit.computeMassMatrixInversePerBody</p></td>
+<td><p>definitions (ExplicitIntegrationSettingsDeprecated)</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">ExplicitIntegrationSettingsDeprecated.dynamicSolverType</span></code></p></td>
+<td><p>1.12.256</p></td>
+<td><p>2031</p></td>
+<td><p>timeIntegration.solverType</p></td>
+<td><p>definitions (ExplicitIntegrationSettingsDeprecated)</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">ExplicitIntegrationSettingsDeprecated.eliminateConstraints</span></code></p></td>
+<td><p>1.12.256</p></td>
+<td><p>2031</p></td>
+<td><p>timeIntegration.explicit.eliminateConstraints</p></td>
+<td><p>definitions (ExplicitIntegrationSettingsDeprecated)</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">ExplicitIntegrationSettingsDeprecated.useLieGroupIntegration</span></code></p></td>
+<td><p>1.12.256</p></td>
+<td><p>2031</p></td>
+<td><p>timeIntegration.explicit.useLieGroupIntegration</p></td>
+<td><p>definitions (ExplicitIntegrationSettingsDeprecated)</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">LinearSolverSettingsDeprecated.ignoreSingularJacobian</span></code></p></td>
+<td><p>1.12.256</p></td>
+<td><p>2031</p></td>
+<td><p>linearSolver.ignoreSingularJacobian</p></td>
+<td><p>definitions (LinearSolverSettingsDeprecated)</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">LinearSolverSettingsDeprecated.pivotThreshold</span></code></p></td>
+<td><p>1.12.256</p></td>
+<td><p>2031</p></td>
+<td><p>linearSolver.pivotThreshold</p></td>
+<td><p>definitions (LinearSolverSettingsDeprecated)</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">LinearSolverSettingsDeprecated.reuseAnalyzedPattern</span></code></p></td>
+<td><p>1.12.256</p></td>
+<td><p>2031</p></td>
+<td><p>linearSolver.reuseAnalyzedPattern</p></td>
+<td><p>definitions (LinearSolverSettingsDeprecated)</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">LinearSolverSettingsDeprecated.showCausingItems</span></code></p></td>
+<td><p>1.12.256</p></td>
+<td><p>2031</p></td>
+<td><p>linearSolver.showCausingItems</p></td>
+<td><p>definitions (LinearSolverSettingsDeprecated)</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">NewtonSettings.newtonResidualMode</span></code></p></td>
+<td><p>1.12.256</p></td>
+<td><p>2031</p></td>
+<td><p>residualMode</p></td>
+<td><p>definitions (NewtonSettings)</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">NewtonSettings.useNewtonSolver</span></code></p></td>
+<td><p>1.12.256</p></td>
+<td><p>2031</p></td>
+<td><p>active</p></td>
+<td><p>definitions (NewtonSettings)</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">NumericalDifferentiationSettings.forODE2connectors</span></code></p></td>
+<td><p>1.12.256</p></td>
+<td><p>2031</p></td>
+<td><p>forODE2Connectors</p></td>
+<td><p>definitions (NumericalDifferentiationSettings)</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">Parallel.multithreadedLLimitJacobians</span></code></p></td>
+<td><p>1.12.244</p></td>
+<td><p>2031</p></td>
+<td><p>multithreadedLowerLimitJacobians</p></td>
+<td><p>definitions (Parallel)</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">Parallel.multithreadedLLimitLoads</span></code></p></td>
+<td><p>1.12.244</p></td>
+<td><p>2031</p></td>
+<td><p>multithreadedLowerLimitLoads</p></td>
+<td><p>definitions (Parallel)</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">Parallel.multithreadedLLimitMassMatrices</span></code></p></td>
+<td><p>1.12.244</p></td>
+<td><p>2031</p></td>
+<td><p>multithreadedLowerLimitMassMatrices</p></td>
+<td><p>definitions (Parallel)</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">Parallel.multithreadedLLimitResiduals</span></code></p></td>
+<td><p>1.12.244</p></td>
+<td><p>2031</p></td>
+<td><p>multithreadedLowerLimitResiduals</p></td>
+<td><p>definitions (Parallel)</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">SimulationSettings.displayComputationTime</span></code></p></td>
+<td><p>1.12.256</p></td>
+<td><p>2031</p></td>
+<td><p>show.computationTime</p></td>
+<td><p>definitions (SimulationSettings)</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">SimulationSettings.displayGlobalTimers</span></code></p></td>
+<td><p>1.12.256</p></td>
+<td><p>2031</p></td>
+<td><p>show.globalTimers</p></td>
+<td><p>definitions (SimulationSettings)</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">SimulationSettings.displayStatistics</span></code></p></td>
+<td><p>1.12.256</p></td>
+<td><p>2031</p></td>
+<td><p>show.statistics</p></td>
+<td><p>definitions (SimulationSettings)</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">SimulationSettings.linearSolverSettings</span></code></p></td>
+<td><p>1.12.256</p></td>
+<td><p>2031</p></td>
+<td><p>deprecated, use linearSolver</p></td>
+<td><p>definitions (SimulationSettings)</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">SimulationSettings.linearSolverType</span></code></p></td>
+<td><p>1.12.256</p></td>
+<td><p>2031</p></td>
+<td><p>linearSolver.solverType</p></td>
+<td><p>definitions (SimulationSettings)</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">SimulationSettings.outputPrecision</span></code></p></td>
+<td><p>1.12.256</p></td>
+<td><p>2031</p></td>
+<td><p>consolePrecision</p></td>
+<td><p>definitions (SimulationSettings)</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">SimulationSettings.solutionSettings</span></code></p></td>
+<td><p>1.12.256</p></td>
+<td><p>2031</p></td>
+<td><p>deprecated, use solution</p></td>
+<td><p>definitions (SimulationSettings)</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">SolutionSettingsDeprecated.appendToFile</span></code></p></td>
+<td><p>1.12.256</p></td>
+<td><p>2031</p></td>
+<td><p>solution.file.append</p></td>
+<td><p>definitions (SolutionSettingsDeprecated)</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">SolutionSettingsDeprecated.binarySolutionFile</span></code></p></td>
+<td><p>1.12.256</p></td>
+<td><p>2031</p></td>
+<td><p>solution.file.binary</p></td>
+<td><p>definitions (SolutionSettingsDeprecated)</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">SolutionSettingsDeprecated.coordinatesSolutionFileName</span></code></p></td>
+<td><p>1.12.256</p></td>
+<td><p>2031</p></td>
+<td><p>solution.file.name</p></td>
+<td><p>definitions (SolutionSettingsDeprecated)</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">SolutionSettingsDeprecated.exportAccelerations</span></code></p></td>
+<td><p>1.12.256</p></td>
+<td><p>2031</p></td>
+<td><p>solution.file.export.accelerations</p></td>
+<td><p>definitions (SolutionSettingsDeprecated)</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">SolutionSettingsDeprecated.exportAlgebraicCoordinates</span></code></p></td>
+<td><p>1.12.256</p></td>
+<td><p>2031</p></td>
+<td><p>solution.file.export.algebraicCoordinates</p></td>
+<td><p>definitions (SolutionSettingsDeprecated)</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">SolutionSettingsDeprecated.exportDataCoordinates</span></code></p></td>
+<td><p>1.12.256</p></td>
+<td><p>2031</p></td>
+<td><p>solution.file.export.dataCoordinates</p></td>
+<td><p>definitions (SolutionSettingsDeprecated)</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">SolutionSettingsDeprecated.exportODE1Velocities</span></code></p></td>
+<td><p>1.12.256</p></td>
+<td><p>2031</p></td>
+<td><p>solution.file.export.ODE1Velocities</p></td>
+<td><p>definitions (SolutionSettingsDeprecated)</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">SolutionSettingsDeprecated.exportVelocities</span></code></p></td>
+<td><p>1.12.256</p></td>
+<td><p>2031</p></td>
+<td><p>solution.file.export.velocities</p></td>
+<td><p>definitions (SolutionSettingsDeprecated)</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">SolutionSettingsDeprecated.flushFilesDOF</span></code></p></td>
+<td><p>1.12.256</p></td>
+<td><p>2031</p></td>
+<td><p>solution.file.flushAboveCoordinates</p></td>
+<td><p>definitions (SolutionSettingsDeprecated)</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">SolutionSettingsDeprecated.flushFilesImmediately</span></code></p></td>
+<td><p>1.12.256</p></td>
+<td><p>2031</p></td>
+<td><p>solution.flushFilesImmediately</p></td>
+<td><p>definitions (SolutionSettingsDeprecated)</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">SolutionSettingsDeprecated.outputPrecision</span></code></p></td>
+<td><p>1.12.256</p></td>
+<td><p>2031</p></td>
+<td><p>solution.precision</p></td>
+<td><p>definitions (SolutionSettingsDeprecated)</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">SolutionSettingsDeprecated.recordImagesInterval</span></code></p></td>
+<td><p>1.12.256</p></td>
+<td><p>2031</p></td>
+<td><p>solution.recordImagesInterval</p></td>
+<td><p>definitions (SolutionSettingsDeprecated)</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">SolutionSettingsDeprecated.restartFileName</span></code></p></td>
+<td><p>1.12.256</p></td>
+<td><p>2031</p></td>
+<td><p>solution.restart.name</p></td>
+<td><p>definitions (SolutionSettingsDeprecated)</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">SolutionSettingsDeprecated.restartWritePeriod</span></code></p></td>
+<td><p>1.12.256</p></td>
+<td><p>2031</p></td>
+<td><p>solution.restart.writePeriod</p></td>
+<td><p>definitions (SolutionSettingsDeprecated)</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">SolutionSettingsDeprecated.sensorsAppendToFile</span></code></p></td>
+<td><p>1.12.256</p></td>
+<td><p>2031</p></td>
+<td><p>solution.sensors.append</p></td>
+<td><p>definitions (SolutionSettingsDeprecated)</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">SolutionSettingsDeprecated.sensorsStoreAndWriteFiles</span></code></p></td>
+<td><p>1.12.256</p></td>
+<td><p>2031</p></td>
+<td><p>solution.sensors.active</p></td>
+<td><p>definitions (SolutionSettingsDeprecated)</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">SolutionSettingsDeprecated.sensorsWriteFileFooter</span></code></p></td>
+<td><p>1.12.256</p></td>
+<td><p>2031</p></td>
+<td><p>solution.sensors.writeFooter</p></td>
+<td><p>definitions (SolutionSettingsDeprecated)</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">SolutionSettingsDeprecated.sensorsWriteFileHeader</span></code></p></td>
+<td><p>1.12.256</p></td>
+<td><p>2031</p></td>
+<td><p>solution.sensors.writeHeader</p></td>
+<td><p>definitions (SolutionSettingsDeprecated)</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">SolutionSettingsDeprecated.sensorsWritePeriod</span></code></p></td>
+<td><p>1.12.256</p></td>
+<td><p>2031</p></td>
+<td><p>solution.sensors.writePeriod</p></td>
+<td><p>definitions (SolutionSettingsDeprecated)</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">SolutionSettingsDeprecated.solutionInformation</span></code></p></td>
+<td><p>1.12.256</p></td>
+<td><p>2031</p></td>
+<td><p>solution.file.information</p></td>
+<td><p>definitions (SolutionSettingsDeprecated)</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">SolutionSettingsDeprecated.solutionWritePeriod</span></code></p></td>
+<td><p>1.12.256</p></td>
+<td><p>2031</p></td>
+<td><p>solution.file.writePeriod</p></td>
+<td><p>definitions (SolutionSettingsDeprecated)</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">SolutionSettingsDeprecated.solverInformationFileName</span></code></p></td>
+<td><p>1.12.256</p></td>
+<td><p>2031</p></td>
+<td><p>solution.solverInformationFileName</p></td>
+<td><p>definitions (SolutionSettingsDeprecated)</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">SolutionSettingsDeprecated.writeFileFooter</span></code></p></td>
+<td><p>1.12.256</p></td>
+<td><p>2031</p></td>
+<td><p>solution.file.writeFooter</p></td>
+<td><p>definitions (SolutionSettingsDeprecated)</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">SolutionSettingsDeprecated.writeFileHeader</span></code></p></td>
+<td><p>1.12.256</p></td>
+<td><p>2031</p></td>
+<td><p>solution.file.writeHeader</p></td>
+<td><p>definitions (SolutionSettingsDeprecated)</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">SolutionSettingsDeprecated.writeInitialValues</span></code></p></td>
+<td><p>1.12.256</p></td>
+<td><p>2031</p></td>
+<td><p>solution.file.writeInitialValues</p></td>
+<td><p>definitions (SolutionSettingsDeprecated)</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">SolutionSettingsDeprecated.writeRestartFile</span></code></p></td>
+<td><p>1.12.256</p></td>
+<td><p>2031</p></td>
+<td><p>solution.restart.write</p></td>
+<td><p>definitions (SolutionSettingsDeprecated)</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">SolutionSettingsDeprecated.writeSolutionToFile</span></code></p></td>
+<td><p>1.12.256</p></td>
+<td><p>2031</p></td>
+<td><p>solution.file.write</p></td>
+<td><p>definitions (SolutionSettingsDeprecated)</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">StaticSolverSettings.constrainODE1coordinates</span></code></p></td>
+<td><p>1.12.256</p></td>
+<td><p>2031</p></td>
+<td><p>constrainODE1Coordinates</p></td>
+<td><p>definitions (StaticSolverSettings)</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">TimeIntegrationSettings.explicitIntegration</span></code></p></td>
+<td><p>1.12.256</p></td>
+<td><p>2031</p></td>
+<td><p>deprecated, use timeIntegration.explicit and timeIntegration.solverType</p></td>
+<td><p>definitions (TimeIntegrationSettings)</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">TimeIntegrationSettings.realtimeFactor</span></code></p></td>
+<td><p>1.12.256</p></td>
+<td><p>2031</p></td>
+<td><p>timeIntegration.realtime.factor</p></td>
+<td><p>definitions (TimeIntegrationSettings)</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">TimeIntegrationSettings.realtimeWaitMicroseconds</span></code></p></td>
+<td><p>1.12.256</p></td>
+<td><p>2031</p></td>
+<td><p>timeIntegration.realtime.waitMicroseconds</p></td>
+<td><p>definitions (TimeIntegrationSettings)</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">TimeIntegrationSettings.simulateInRealtime</span></code></p></td>
+<td><p>1.12.256</p></td>
+<td><p>2031</p></td>
+<td><p>timeIntegration.realtime.active</p></td>
+<td><p>definitions (TimeIntegrationSettings)</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">VSettingsGeneral.linuxDisplayScaleFactor</span></code></p></td>
+<td><p>1.12.445</p></td>
+<td><p>2031</p></td>
+<td><p>displayScaleFactor</p></td>
+<td><p>definitions (VSettingsGeneral)</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">VSettingsGeneral.useWindowsDisplayScaleFactor</span></code></p></td>
+<td><p>1.12.445</p></td>
+<td><p>2031</p></td>
+<td><p>openGL.dummyBool</p></td>
+<td><p>definitions (VSettingsGeneral)</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">VSettingsDialogs.fontScalingMacOS</span></code></p></td>
+<td><p>1.12.15</p></td>
+<td><p>2032</p></td>
+<td><p>dialogs.fontScaling</p></td>
+<td><p>definitions (VSettingsDialogs)</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="../dev/GUI_MANUAL_CHECK.html" class="btn btn-neutral float-left" title="Manual GUI check before a release" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="../../definitions/README.html" class="btn btn-neutral float-right" title="definitions/ — the item and structure definitions as Python" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

@@ -1,0 +1,681 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CSolverStructures &mdash; Exudyn1.13.3 1.13.3 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=3ee1c6c6" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/rtd_sphinx_search.min.css" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/custom.css?v=e2783f0e" />
+
+  
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=b8a3e558"></script>
+      <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../../_static/copybutton.js?v=f281be69"></script>
+      <script src="../../../_static/js/rtd_search_config.js"></script>
+      <script src="../../../_static/js/rtd_sphinx_search.min.js"></script>
+      <script>window.MathJax = {"loader": {"load": ["[tex]/mathtools"]}, "tex": {"packages": {"[+]": ["mathtools"]}, "macros": {"ANCFdk": "{\\LU{0}{\\dv_k}}", "ANCFdkO": "{\\LU{0}{\\dv_{0,k}}}", "ANCFdkOtp": "{\\LU{0}{\\dv_{0,k}\\tp}}", "ANCFdkt": "{\\LU{0}{\\dot\\dv_k}}", "Am": "{\\mathbf{A}}", "Dm": "{\\mathbf{D}}", "Em": "{\\mathbf{E}}", "Gm": "{\\mathbf{G}}", "Im": "{\\mathbf{I}}", "ImThree": "{\\mathbf{I}_{3 \\times 3}}", "Jm": "{\\mathbf{J}}", "Km": "{\\mathbf{K}}", "Mm": "{\\mathbf{M}}", "Pm": "{\\mathbf{P}}", "Rm": "{\\mathbf{R}}", "Sm": "{\\mathbf{S}}", "Tm": "{\\mathbf{T}}", "av": "{\\mathbf{a}}", "bv": "{\\mathbf{b}}", "cv": "{\\mathbf{c}}", "diffANCF": ["{\\frac{\\partial #1}{\\partial \\qv_{ANCF}}}", 1], "diffANCFdk": "{\\diffANCFmI{\\ANCFdk}}", "diffANCFmI": ["{\\frac{\\partial #1}{\\partial \\qv_{ANCF,m1}}}", 1], "diffANCFmIt": ["{\\frac{\\partial #1}{\\partial \\dot \\qv_{ANCF,m1}}}", 1], "diffANCFt": ["{\\frac{\\partial #1}{\\partial \\dot \\qv_{ANCF}}}", 1], "diffmI": ["{\\frac{\\partial #1}{\\partial \\qv_{m1}}}", 1], "diffmIt": ["{\\frac{\\partial #1}{\\partial \\dot \\qv_{m1}}}", 1], "diffmOI": ["{\\frac{\\partial #1}{\\partial \\qv_{m0,m1}}}", 1], "diffmOIt": ["{\\frac{\\partial #1}{\\partial \\dot \\qv_{m0,m1}}}", 1], "diffmOt": ["{\\frac{\\partial #1}{\\partial \\dot \\qv_{m0}}}", 1], "dv": "{\\mathbf{d}}", "ev": "{\\mathbf{e}}", "fv": "{\\mathbf{f}}", "gv": "{\\mathbf{g}}", "hv": "{\\mathbf{h}}", "nv": "{\\mathbf{n}}", "pv": "{\\mathbf{p}}", "qv": "{\\mathbf{q}}", "rv": "{\\mathbf{r}}", "sv": "{\\mathbf{s}}", "tv": "{\\mathbf{t}}", "uv": "{\\mathbf{u}}", "vv": "{\\mathbf{v}}", "xv": "{\\mathbf{x}}", "yv": "{\\mathbf{y}}", "zv": "{\\mathbf{z}}", "vspace": ["{}", 1], "ra": "{\\rightarrow}", "Rcal": "{\\mathbb{R}}", "Ccal": "{\\mathbb{C}}", "Ncal": "{\\mathbb{N}}", "Rot": "{\\mathbf{A}}", "dd": "{\\mathrm{d}}", "ps": "{p_\\mathrm{s}}", "co": "{\\mathrm{c}}", "si": "{\\mathrm{s}}", "tp": "{^\\mathrm{T}}", "diag": "{\\mathrm{diag}}", "vec": "{\\mathrm{vec}}", "Null": "{\\mathbf{0}}", "varepsilonDot": "{\\boldsymbol{\\varepsilon}}", "talpha": "{\\boldsymbol{\\alpha}}", "tbeta": "{\\boldsymbol{\\beta}}", "tgamma": "{\\boldsymbol{\\gamma}}", "tchi": "{\\boldsymbol{\\chi}}", "tdelta": "{\\boldsymbol{\\delta}}", "teps": "{\\boldsymbol{\\varepsilon}}", "tepsDot": "{\\boldsymbol{\\dot \\varepsilon}}", "teta": "{\\boldsymbol{\\eta}}", "tkappa": "{\\boldsymbol{\\kappa}}", "tkappaDot": "{\\boldsymbol{\\dot \\kappa}}", "tphi": "{\\boldsymbol{\\phi}}", "boldVarPhi": "{\\boldsymbol{\\varphi}}", "tPhi": "{\\boldsymbol{\\Phi}}", "ttheta": "{\\boldsymbol{\\theta}}", "tTheta": "{\\boldsymbol{\\Theta}}", "tlambda": "{\\boldsymbol{\\lambda}}", "tnu": "{\\boldsymbol{\\nu}}", "tmu": "{\\boldsymbol{\\mu}}", "tpsi": "{\\boldsymbol{\\psi}}", "tPsi": "{\\boldsymbol{\\Psi}}", "ttau": "{\\boldsymbol{\\tau}}", "tsigma": "{\\boldsymbol{\\sigma}}", "txi": "{\\boldsymbol{\\xi}}", "tzeta": "{\\boldsymbol{\\zeta}}", "tomega": "{\\boldsymbol{\\omega}}", "tOmega": "{\\boldsymbol{\\Omega}}", "vareps": "{\\varepsilon}", "myoverline": ["\\overline{#1}", 1], "pluseq": "\\mathrel{+}=", "LU": ["{\\prescript{#1}{}{#2}\\,}", 2], "LUX": ["{\\prescript{#1}{}{#2}#3\\,}", 3], "LUR": ["{\\prescript{#1}{}{#2}_{#3}\\,}", 3], "LURU": ["{\\prescript{#1}{}{#2}_{#3}^{#4}\\,}", 4], "LLdot": ["{\\prescript{}{#1}{\\dot{#2}}_{#3}\\,}", 3], "vr": ["{\\left[ \\begin{array}{c} { #1}\\vspace{0.04cm} \\\\ { #2}\\vspace{0.04cm} \\\\ { #3} \\end{array} \\right]}", 3], "mr": ["{\\left[ \\begin{array}{ccc} #1 & #2 & #3 \\vspace{0.04cm}\\\\ #4 & #5 & #6 \\vspace{0.04cm}\\\\ #7 & #8 & #9  \\end{array} \\right]}", 9], "vp": ["{\\left[ \\begin{array}{c} { #1} \\vspace{0.04cm}\\\\ { #2} \\end{array} \\right]}", 2], "mp": ["{\\left[ \\begin{array}{cc} #1 & #2 \\vspace{0.04cm}\\\\ #3 & #4 \\end{array} \\right]}", 4], "mfour": ["{\\left[ \\begin{array}{cccc} { #1} \\\\ { #2} \\\\ { #3} \\\\ { #4} \\end{array} \\right]}", 4], "vfour": ["{\\left[ \\begin{array}{c} { #1} \\\\ { #2} \\\\ { #3} \\\\ { #4} \\end{array} \\right]}", 4], "vrRow": ["{[#1,\\, #2,\\, #3]}", 3], "vsix": ["{\\left[ \\begin{array}{c} { #1} \\\\ { #2} \\\\ { #3} \\\\ { #4} \\\\ { #5} \\\\ { #6} \\end{array} \\right]}", 6], "vsixb": ["{\\begin{array}{c} { #1} \\\\ { #2} \\\\ { #3} \\\\ { #4} \\\\ { #5} \\\\ { #6} \\end{array} }", 6], "vsixs": ["{ \\begin{array}{c} { #1} \\\\ { #2} \\\\ { #3} \\\\ { #4} \\\\ { #5} \\\\ { #6} \\end{array} }", 6], "SO": "{q}", "FO": "{y}", "AE": "{\\lambda}", "SYS": "{s}", "SON": "{$2^\\mathrm{nd}$ order differential equations}", "FON": "{$1^\\mathrm{st}$ order differential equations}", "AEN": "{algebraic equations}", "Bm": "{\\mathbf{B}}", "Cm": "{\\mathbf{C}}", "Fm": "{\\mathbf{F}}", "SYSN": "{system equations}", "cIni": "{_\\mathrm{ini}}", "cRef": "{_\\mathrm{ref}}", "cCur": "{_\\mathrm{cur}}", "cVis": "{_\\mathrm{vis}}", "cSOS": "{_\\mathrm{start\\;of\\;step}}", "cConfig": "{_\\mathrm{config}}", "pLoc": "{\\mathbf{b}}", "pLocB": "{\\,^{b}{\\mathbf{v}}}", "pRef": "{\\mathbf{r}}", "pRefG": "{\\,^{0}{\\mathbf{r}}}", "indf": "{_\\mathrm{f}}", "indt": "{_\\mathrm{t}}", "indr": "{_\\mathrm{r}}", "indtt": "{_\\mathrm{tt}}", "indrr": "{_\\mathrm{rr}}", "indff": "{_\\mathrm{ff}}", "indtf": "{_\\mathrm{tf}}", "indrf": "{_\\mathrm{rf}}", "indtr": "{_\\mathrm{tr}}", "omegaBDtilde": "{\\LU{b}{\\tilde \\tomega_\\mathrm{bd}}}", "indrigid": "{_\\mathrm{rigid}}", "indred": "{_\\mathrm{red}}", "induser": "{_\\mathrm{user}}", "indu": "{_\\mathrm{u}}", "termA": ["{\\color{blue}{#1}}", 1], "termB": ["{\\color{red}{#1}}", 1], "termC": ["{\\color{green}{#1}}", 1], "acc": "{\\ddot{\\mathbf{q}}}", "GA": "{G\\alpha}", "Hm": "{\\mathbf{H}}", "ImTwo": "{\\mathbf{I}_{2 \\times 2}}", "Lm": "{\\mathbf{L}}", "Qm": "{\\mathbf{Q}}", "Vm": "{\\mathbf{V}}", "Wm": "{\\mathbf{W}}", "Xm": "{\\mathbf{X}}", "Ym": "{\\mathbf{Y}}", "aalg": "{\\mathbf{a}}", "iv": "{\\mathbf{i}}", "jv": "{\\mathbf{j}}", "kv": "{\\mathbf{k}}", "lv": "{\\mathbf{l}}", "mv": "{\\mathbf{m}}", "ov": "{\\mathbf{o}}", "vel": "{\\mathbf{v}}", "wv": "{\\mathbf{w}}"}}, "options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+      <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-mml-chtml.js"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+    <link rel="next" title="MainSolver" href="MainSolver.html" />
+    <link rel="prev" title="VisualizationSettings" href="VisualizationSettings.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            Exudyn1.13.3
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Exudyn User Manual</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../README.html">Exudyn</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../manual/gettingStarted.html">Installation and getting started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../manual/introduction.html">Overview on Exudyn</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../manual/introductionBasics.html">Exudyn basics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../manual/tutorial.html">Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../manual/GUI.html">Renderer, graphics and visualization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../manual/performanceErrors.html">Performance, errors and solver failures</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../manual/introductionAdvanced.html">Advanced topics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../manual/notation.html">Notation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../manual/theory.html">Theory and formulations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../manual/solver.html">Solvers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../cInterface/cInterfaceIndex.html">Python-C++ command interface</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Reference Manual</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../items/itemsIndex.html">Items reference manual</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../pythonUtilities/utilitiesIndex.html">Python Utility Functions</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="structuresIndex.html">Structures and Settings</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="SimulationSettings.html">SimulationSettings</a></li>
+<li class="toctree-l2"><a class="reference internal" href="VisualizationSettings.html">VisualizationSettings</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">CSolverStructures</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#solver-substructures">Solver substructures</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="MainSolver.html">MainSolver</a></li>
+<li class="toctree-l2"><a class="reference internal" href="PyStructuralElementsDataStructures.html">PyStructuralElementsDataStructures</a></li>
+<li class="toctree-l2"><a class="reference internal" href="BeamSectionGeometry.html">BeamSectionGeometry</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../references.html">References</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Developer documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../dev/README.html">Exudyn developer documentation</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">How-to notes</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../howTo/condaEnvironments.html">Conda environments for Exudyn</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../howTo/sphinxDocs.html">Building the documentation</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Examples, models and issues</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../examples/examplesIndex.html">Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../testModels/testModelsIndex.html">TestModels</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../abbreviations.html">List of Abbreviations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../manual/revisions.html">Revisions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../CHANGELOG.html">Changelog</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../trackerlog.html">Issue tracker</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">Exudyn1.13.3</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="structuresIndex.html">Structures and Settings</a></li>
+      <li class="breadcrumb-item active">CSolverStructures</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../../_sources/docs/generated/structures/CSolverStructures.md.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <!-- GENERATED by tools/generators/structureDocsEmitter.py from definitions/ - do not edit -->
+<section class="tex2jax_ignore mathjax_ignore" id="csolverstructures">
+<h1>CSolverStructures<a class="headerlink" href="#csolverstructures" title="Link to this heading"></a></h1>
+<section id="solver-substructures">
+<span id="sec-solversubstructures"></span><h2>Solver substructures<a class="headerlink" href="#solver-substructures" title="Link to this heading"></a></h2>
+<p>This section includes structures contained in the solver, which can be accessed via the Python interface during solution or for building a customized solver in Python.
+There is plenty of possibilities to interact with the solvers, being it the extraction of data at the end (such as .it or .conv), computation of mass matrix or system matrices, and finally the modification of solver structures (which may have effect or not). In any case, there is no full description for all these methods and the user must always consider the according C++ function to verify the desired behavior.</p>
+<section id="csolvertimer">
+<span id="sec-csolvertimer"></span><h3>CSolverTimer<a class="headerlink" href="#csolvertimer" title="Link to this heading"></a></h3>
+<p>Structure for timing in solver. Each Real variable is used to measure the CPU time which certain parts of the solver need. This structure is only active if the code is not compiled with the __FAST_EXUDYN_LINALG option and if displayComputationTime is set True. Timings will only be filled, if useTimer is True.</p>
+<p>CSolverTimer has the following items:</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>name</p></th>
+<th class="head"><p>type / return type</p></th>
+<th class="head"><p>default / arguments</p></th>
+<th class="head"><p>description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">AERHS</span></code></p></td>
+<td><p>Real</p></td>
+<td><p>0.</p></td>
+<td><p>time for residual evaluation of algebraic equations right-hand-side</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">errorEstimator</span></code></p></td>
+<td><p>Real</p></td>
+<td><p>0.</p></td>
+<td><p>for explicit solvers, additional evaluation</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">factorization</span></code></p></td>
+<td><p>Real</p></td>
+<td><p>0.</p></td>
+<td><p>solve or inverse</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">integrationFormula</span></code></p></td>
+<td><p>Real</p></td>
+<td><p>0.</p></td>
+<td><p>time spent for evaluation of integration formulas</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">jacobianAE</span></code></p></td>
+<td><p>Real</p></td>
+<td><p>0.</p></td>
+<td><p>jacobian of algebraic equations (not counted in sum)</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">jacobianODE1</span></code></p></td>
+<td><p>Real</p></td>
+<td><p>0.</p></td>
+<td><p>jacobian w.r.t. coordinates of <a class="reference internal" href="../abbreviations.html#ode1"><span class="std std-ref">ODE1</span></a> equations (not counted in sum)</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">jacobianODE2</span></code></p></td>
+<td><p>Real</p></td>
+<td><p>0.</p></td>
+<td><p>jacobian w.r.t. coordinates of <a class="reference internal" href="../abbreviations.html#ode2"><span class="std std-ref">ODE2</span></a> equations (not counted in sum)</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">jacobianODE2_t</span></code></p></td>
+<td><p>Real</p></td>
+<td><p>0.</p></td>
+<td><p>jacobian w.r.t. coordinates_t of <a class="reference internal" href="../abbreviations.html#ode2"><span class="std std-ref">ODE2</span></a> equations (not counted in sum)</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">massMatrix</span></code></p></td>
+<td><p>Real</p></td>
+<td><p>0.</p></td>
+<td><p>mass matrix computation</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">newtonIncrement</span></code></p></td>
+<td><p>Real</p></td>
+<td><p>0.</p></td>
+<td><p>Jac<span class="math notranslate nohighlight">\(^{-1}\)</span> * RHS; backsubstitution</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">ODE1RHS</span></code></p></td>
+<td><p>Real</p></td>
+<td><p>0.</p></td>
+<td><p>time for residual evaluation of <a class="reference internal" href="../abbreviations.html#ode1"><span class="std std-ref">ODE1</span></a> right-hand-side</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">ODE2RHS</span></code></p></td>
+<td><p>Real</p></td>
+<td><p>0.</p></td>
+<td><p>time for residual evaluation of <a class="reference internal" href="../abbreviations.html#ode2"><span class="std std-ref">ODE2</span></a> right-hand-side</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">overhead</span></code></p></td>
+<td><p>Real</p></td>
+<td><p>0.</p></td>
+<td><p>overhead, such as initialization, copying and some matrix-vector multiplication</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">postNewton</span></code></p></td>
+<td><p>Real</p></td>
+<td><p>0.</p></td>
+<td><p>discontinuous iteration / PostNewtonStep</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">python</span></code></p></td>
+<td><p>Real</p></td>
+<td><p>0.</p></td>
+<td><p>time spent for Python functions</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">reactionForces</span></code></p></td>
+<td><p>Real</p></td>
+<td><p>0.</p></td>
+<td><p>CqT * lambda</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">realtimeIdleCPU</span></code></p></td>
+<td><p>Real</p></td>
+<td><p>0.</p></td>
+<td><p>time waited for next frame to compute and draw if timeIntegration.realtime.active is True</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">Reset(...)</span></code></p></td>
+<td><p>void</p></td>
+<td><p>useSolverTimer</p></td>
+<td><p>reset solver timings to initial state by assigning default values; useSolverTimer sets the useTimer flag</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">StartTimer(...)</span></code></p></td>
+<td><p>void</p></td>
+<td><p>value</p></td>
+<td><p>start timer function for a given variable; subtracts current CPU time from value</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">StopTimer(...)</span></code></p></td>
+<td><p>void</p></td>
+<td><p>value</p></td>
+<td><p>stop timer function for a given variable; adds current CPU time to value</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">Sum()</span></code></p></td>
+<td><p>Real</p></td>
+<td><p></p></td>
+<td><p>compute sum of all timers (except for those counted multiple, e.g., jacobians</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">ToString()</span></code></p></td>
+<td><p>String</p></td>
+<td><p></p></td>
+<td><p>converts the current timings to a string</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">total</span></code></p></td>
+<td><p>Real</p></td>
+<td><p>0.</p></td>
+<td><p>total time measured between start and end of computation (static/dynamics)</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">totalJacobian</span></code></p></td>
+<td><p>Real</p></td>
+<td><p>0.</p></td>
+<td><p>time for all jacobian computations</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">useTimer</span></code></p></td>
+<td><p>bool</p></td>
+<td><p>True</p></td>
+<td><p>flag to decide, whether the timer is used (true) or not</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">visualization</span></code></p></td>
+<td><p>Real</p></td>
+<td><p>0.</p></td>
+<td><p>time spent for visualization in computation thread</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">writeSolution</span></code></p></td>
+<td><p>Real</p></td>
+<td><p>0.</p></td>
+<td><p>time for writing solution</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="solveriterationdata">
+<span id="sec-solveriterationdata"></span><h3>SolverIterationData<a class="headerlink" href="#solveriterationdata" title="Link to this heading"></a></h3>
+<p>Solver internal structure for counters, steps, step size, time, etc.; solution vectors, residuals, etc. are SolverLocalData. The given default values are overwritten by the simulationSettings when initializing the solver.</p>
+<p>SolverIterationData has the following items:</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>name</p></th>
+<th class="head"><p>type / return type</p></th>
+<th class="head"><p>default / arguments</p></th>
+<th class="head"><p>description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">adaptiveStep</span></code></p></td>
+<td><p>bool</p></td>
+<td><p>True</p></td>
+<td><p>True: the step size may be reduced if step fails; no automatic stepsize control</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">automaticStepSize</span></code></p></td>
+<td><p>bool</p></td>
+<td><p>True</p></td>
+<td><p>True: if timeIntegration.automaticStepSize == True AND chosen integrators supports automatic step size control (e.g., DOPRI5); False: constant step size used (step may be reduced if adaptiveStep=True)</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">automaticStepSizeError</span></code></p></td>
+<td><p>Real</p></td>
+<td><p>0</p></td>
+<td><p>estimated error (relative to atol + rtol*solution) of last step; must be <span class="math notranslate nohighlight">\(\le 1\)</span> for a step to be accepted</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">currentStepIndex</span></code></p></td>
+<td><p>Index</p></td>
+<td><p>0</p></td>
+<td><p>current step index; <span class="math notranslate nohighlight">\(i\)</span></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">currentStepSize</span></code></p></td>
+<td><p>Real</p></td>
+<td><p>0.</p></td>
+<td><p>stepSize of current step</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">currentTime</span></code></p></td>
+<td><p>Real</p></td>
+<td><p>0.</p></td>
+<td><p>holds the current simulation time, copy of state.current.time; interval is [startTime,tEnd]; in static solver, duration is loadStepDuration</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">discontinuousIteration</span></code></p></td>
+<td><p>Index</p></td>
+<td><p>0</p></td>
+<td><p>number of current discontinuous iteration</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">discontinuousIterationsCount</span></code></p></td>
+<td><p>Index</p></td>
+<td><p>0</p></td>
+<td><p>count total number of discontinuous iterations (min. 1 per step)</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">endTime</span></code></p></td>
+<td><p>Real</p></td>
+<td><p>0.</p></td>
+<td><p>end time of static/dynamic solver</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">initialStepSize</span></code></p></td>
+<td><p>Real</p></td>
+<td><p>1e-6</p></td>
+<td><p>initial stepSize for dynamic solver; only used, if automaticStepSize is activated</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">lastStepSize</span></code></p></td>
+<td><p>Real</p></td>
+<td><p>0.</p></td>
+<td><p>stepSize suggested from last step or by initial step size; only used, if automaticStepSize is activated</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">maxStepSize</span></code></p></td>
+<td><p>Real</p></td>
+<td><p>0.</p></td>
+<td><p>constant or maximum stepSize</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">minStepSize</span></code></p></td>
+<td><p>Real</p></td>
+<td><p>0.</p></td>
+<td><p>minimum stepSize for static/dynamic solver; only used, if automaticStepSize is activated</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">newtonJacobiCount</span></code></p></td>
+<td><p>Index</p></td>
+<td><p>0</p></td>
+<td><p>count total Newton jacobian computations</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">newtonSteps</span></code></p></td>
+<td><p>Index</p></td>
+<td><p>0</p></td>
+<td><p>number of current newton steps</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">newtonStepsCount</span></code></p></td>
+<td><p>Index</p></td>
+<td><p>0</p></td>
+<td><p>count total Newton steps</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">numberOfSteps</span></code></p></td>
+<td><p>Index</p></td>
+<td><p>0</p></td>
+<td><p>number of time steps (if fixed size); <span class="math notranslate nohighlight">\(n\)</span></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">recommendedStepSize</span></code></p></td>
+<td><p>Real</p></td>
+<td><p>-1.</p></td>
+<td><p>recommended step size <span class="math notranslate nohighlight">\(h_{recom}\)</span> after PostNewton(…): <span class="math notranslate nohighlight">\(h_{recom} &lt; 0\)</span>: no recommendation, <span class="math notranslate nohighlight">\(h_{recom}==0\)</span>: use minimum step size, <span class="math notranslate nohighlight">\(h_{recom}&gt;0\)</span>: use specific step size, if no smaller size requested by other reason</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">rejectedAutomaticStepSizeSteps</span></code></p></td>
+<td><p>Index</p></td>
+<td><p>0</p></td>
+<td><p>count the number of rejected steps in case of automatic step size control (rejected steps are repeated with smaller step size)</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">rejectedModifiedNewtonSteps</span></code></p></td>
+<td><p>Index</p></td>
+<td><p>0</p></td>
+<td><p>count the number of rejected modified Newton steps (switch to full Newton)</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">startTime</span></code></p></td>
+<td><p>Real</p></td>
+<td><p>0.</p></td>
+<td><p>time at beginning of time integration</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">ToString()</span></code></p></td>
+<td><p>String</p></td>
+<td><p></p></td>
+<td><p>convert iteration statistics to string; used for displayStatistics option</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="solverconvergencedata">
+<span id="sec-solverconvergencedata"></span><h3>SolverConvergenceData<a class="headerlink" href="#solverconvergencedata" title="Link to this heading"></a></h3>
+<p>Solver internal structure for convergence information: residua, iteration loop errors and error flags. For detailed behavior of these flags, visit the source code!.</p>
+<p>SolverConvergenceData has the following items:</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>name</p></th>
+<th class="head"><p>type / return type</p></th>
+<th class="head"><p>default / arguments</p></th>
+<th class="head"><p>description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">contractivity</span></code></p></td>
+<td><p>Real</p></td>
+<td><p>0.</p></td>
+<td><p>Newton contractivity = geometric decay of error in every step</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">discontinuousIterationError</span></code></p></td>
+<td><p>Real</p></td>
+<td><p>0.</p></td>
+<td><p>error of discontinuous iterations (contact, friction, …) outside of Newton iteration</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">discontinuousIterationSuccessful</span></code></p></td>
+<td><p>bool</p></td>
+<td><p>True</p></td>
+<td><p>true, if last discontinuous iteration had success (failure may be recovered by adaptive step)</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">errorCoordinateFactor</span></code></p></td>
+<td><p>Real</p></td>
+<td><p>1.</p></td>
+<td><p>factor may include the number of system coordinates to reduce the residual</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">InitializeData()</span></code></p></td>
+<td><p>void</p></td>
+<td><p></p></td>
+<td><p>initialize SolverConvergenceData by assigning default values</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">jacobianUpdateRequested</span></code></p></td>
+<td><p>bool</p></td>
+<td><p>True</p></td>
+<td><p>true, if a jacobian update is requested in modified Newton (determined in previous step)</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">lastResidual</span></code></p></td>
+<td><p>Real</p></td>
+<td><p>0.</p></td>
+<td><p>last Newton residual to determine contractivity</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">linearSolverCausingRow</span></code></p></td>
+<td><p>Index</p></td>
+<td><p>-1</p></td>
+<td><p>-1 if successful, 0 … n-1, the system equation (=coordinate) index which may have caused the problem, at which the linear solver failed</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">linearSolverFailed</span></code></p></td>
+<td><p>bool</p></td>
+<td><p>False</p></td>
+<td><p>true, if linear solver failed to factorize</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">massMatrixNotInvertible</span></code></p></td>
+<td><p>bool</p></td>
+<td><p>False</p></td>
+<td><p>true, if mass matrix is not invertable during initialization or solution (explicit solver)</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">newtonConverged</span></code></p></td>
+<td><p>bool</p></td>
+<td><p>False</p></td>
+<td><p>true, if Newton has (finally) converged</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">newtonSolutionDiverged</span></code></p></td>
+<td><p>bool</p></td>
+<td><p>False</p></td>
+<td><p>true, if Newton diverged (may be recovered)</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">residual</span></code></p></td>
+<td><p>Real</p></td>
+<td><p>0.</p></td>
+<td><p>current Newton residual</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">stepReductionFailed</span></code></p></td>
+<td><p>bool</p></td>
+<td><p>False</p></td>
+<td><p>true, if iterations over time/static steps failed (finally, cannot be recovered)</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">stopNewton</span></code></p></td>
+<td><p>bool</p></td>
+<td><p>False</p></td>
+<td><p>set true by Newton, if Newton was stopped, e.g., because of exceeding iterations or linear solver failed</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="solveroutputdata">
+<span id="sec-solveroutputdata"></span><h3>SolverOutputData<a class="headerlink" href="#solveroutputdata" title="Link to this heading"></a></h3>
+<p>Solver internal structure for output modes, output timers and counters.</p>
+<p>SolverOutputData has the following items:</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>name</p></th>
+<th class="head"><p>type / return type</p></th>
+<th class="head"><p>default / arguments</p></th>
+<th class="head"><p>description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">cpuLastTimePrinted</span></code></p></td>
+<td><p>Real</p></td>
+<td><p>0.</p></td>
+<td><p>CPU time when output has been printed last time</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">cpuSolverStartTime</span></code></p></td>
+<td><p>Real</p></td>
+<td><p>0.</p></td>
+<td><p>CPU start time of main solver (not including initial conditions); cpuSolverStartTime-cpuStartTime gives time for initialization</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">cpuStartTime</span></code></p></td>
+<td><p>Real</p></td>
+<td><p>0.</p></td>
+<td><p>CPU start time of computation (starts counting at computation of initial conditions)</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">finishedSuccessfully</span></code></p></td>
+<td><p>bool</p></td>
+<td><p>False</p></td>
+<td><p>flag is false until solver functions SolveSteps)…) or SolveSystem(…) finished successfully (can be used as external trigger)</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">initializationSuccessful</span></code></p></td>
+<td><p>bool</p></td>
+<td><p>False</p></td>
+<td><p>flag is set during call to InitializeSolver(…); reasons for failure are multiple, either inconsistent solver settings are used, files cannot be written (file locked), or initial conditions could not be computed</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">InitializeData()</span></code></p></td>
+<td><p>void</p></td>
+<td><p></p></td>
+<td><p>initialize SolverOutputData by assigning default values</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">lastDiscontinuousIterationsCount</span></code></p></td>
+<td><p>Index</p></td>
+<td><p>0</p></td>
+<td><p>discontinuous iterations count when written to console (or file) last time</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">lastImageRecorded</span></code></p></td>
+<td><p>Real</p></td>
+<td><p>0.</p></td>
+<td><p>simulation time when last image has been recorded</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">lastNewtonJacobiCount</span></code></p></td>
+<td><p>Index</p></td>
+<td><p>0</p></td>
+<td><p>jacobian update count when written to console (or file) last time</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">lastNewtonStepsCount</span></code></p></td>
+<td><p>Index</p></td>
+<td><p>0</p></td>
+<td><p>newton steps count when written to console (or file) last time</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">lastRestartWritten</span></code></p></td>
+<td><p>Real</p></td>
+<td><p>0.</p></td>
+<td><p>simulation time when the restart file has been written last</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">lastSensorsWritten</span></code></p></td>
+<td><p>Real</p></td>
+<td><p>0.</p></td>
+<td><p>simulation time when last sensors have been written</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">lastSolutionWritten</span></code></p></td>
+<td><p>Real</p></td>
+<td><p>0.</p></td>
+<td><p>simulation time when last solution has been written</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">lastVerboseStepIndex</span></code></p></td>
+<td><p>Index</p></td>
+<td><p>0</p></td>
+<td><p>step index when last time written to console (or file)</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">multiThreadingMode</span></code></p></td>
+<td><p>Index</p></td>
+<td><p>0</p></td>
+<td><p>multithreading mode that has been used: 0=None (serial), 1=multithreading, 2=multithreading with load balancing; (modes new since 2025-06, V1.9.198)</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">numberOfThreadsUsed</span></code></p></td>
+<td><p>Index</p></td>
+<td><p>1</p></td>
+<td><p>number of threads that have been used in simulation</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">restartTime</span></code></p></td>
+<td><p>Real</p></td>
+<td><p>-1.</p></td>
+<td><p>simulation time from which the solver continued with the restart file (solution.restart.continueIfAvailable); -1 if it started at the start time</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">simulationStoppedByUser</span></code></p></td>
+<td><p>bool</p></td>
+<td><p>False</p></td>
+<td><p>flag (initialized false) is set true when user stops the simulation (press Q, Escape, etc.)</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">simulationStoppedByUserFunction</span></code></p></td>
+<td><p>bool</p></td>
+<td><p>False</p></td>
+<td><p>flag (initialized false) is set true when a user function (PreStep, PostNewton, etc.) sends termination signal</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">simulationTimeout</span></code></p></td>
+<td><p>bool</p></td>
+<td><p>False</p></td>
+<td><p>flag (initialized false) is set true when exudyn.special.solver.timeout is reached (and timeout is &gt;= 0)</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">stepInformation</span></code></p></td>
+<td><p>Index</p></td>
+<td><p>0</p></td>
+<td><p>this is a copy of the solvers stepInformation used for console output</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">verboseMode</span></code></p></td>
+<td><p>Index</p></td>
+<td><p>0</p></td>
+<td><p>this is a copy of the solvers verboseMode used for console output</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">verboseModeFile</span></code></p></td>
+<td><p>Index</p></td>
+<td><p>0</p></td>
+<td><p>this is a copy of the solvers verboseModeFile used for file</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">writeToSolutionFile</span></code></p></td>
+<td><p>bool</p></td>
+<td><p>False</p></td>
+<td><p>if false, no solution file is generated and no file is written</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">writeToSolverFile</span></code></p></td>
+<td><p>bool</p></td>
+<td><p>False</p></td>
+<td><p>if false, no solver output file is generated and no file is written</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="VisualizationSettings.html" class="btn btn-neutral float-left" title="VisualizationSettings" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="MainSolver.html" class="btn btn-neutral float-right" title="MainSolver" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

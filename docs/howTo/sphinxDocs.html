@@ -1,0 +1,210 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Building the documentation &mdash; Exudyn1.13.3 1.13.3 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=3ee1c6c6" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/rtd_sphinx_search.min.css" />
+      <link rel="stylesheet" type="text/css" href="../../_static/custom.css?v=e2783f0e" />
+
+  
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=b8a3e558"></script>
+      <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../_static/copybutton.js?v=f281be69"></script>
+      <script src="../../_static/js/rtd_search_config.js"></script>
+      <script src="../../_static/js/rtd_sphinx_search.min.js"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Examples" href="../generated/examples/examplesIndex.html" />
+    <link rel="prev" title="Conda environments for Exudyn" href="condaEnvironments.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            Exudyn1.13.3
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Exudyn User Manual</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../README.html">Exudyn</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../manual/gettingStarted.html">Installation and getting started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../manual/introduction.html">Overview on Exudyn</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../manual/introductionBasics.html">Exudyn basics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../manual/tutorial.html">Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../manual/GUI.html">Renderer, graphics and visualization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../manual/performanceErrors.html">Performance, errors and solver failures</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../manual/introductionAdvanced.html">Advanced topics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../manual/notation.html">Notation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../manual/theory.html">Theory and formulations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../manual/solver.html">Solvers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../generated/cInterface/cInterfaceIndex.html">Python-C++ command interface</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Reference Manual</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../generated/items/itemsIndex.html">Items reference manual</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../generated/pythonUtilities/utilitiesIndex.html">Python Utility Functions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../generated/structures/structuresIndex.html">Structures and Settings</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../generated/references.html">References</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Developer documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../dev/README.html">Exudyn developer documentation</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">How-to notes</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="condaEnvironments.html">Conda environments for Exudyn</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Building the documentation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#the-short-way">The short way</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#what-has-to-be-installed">What has to be installed</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#building-by-hand">Building by hand</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#where-it-is-published">Where it is published</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Examples, models and issues</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../generated/examples/examplesIndex.html">Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../generated/testModels/testModelsIndex.html">TestModels</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../generated/abbreviations.html">List of Abbreviations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../manual/revisions.html">Revisions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../CHANGELOG.html">Changelog</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../generated/trackerlog.html">Issue tracker</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">Exudyn1.13.3</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Building the documentation</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../_sources/docs/howTo/sphinxDocs.md.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section class="tex2jax_ignore mathjax_ignore" id="building-the-documentation">
+<h1>Building the documentation<a class="headerlink" href="#building-the-documentation" title="Link to this heading"></a></h1>
+<p>The documentation is Sphinx, built from the repository root: <code class="docutils literal notranslate"><span class="pre">conf.py</span></code> and the hand-written
+<code class="docutils literal notranslate"><span class="pre">index.md</span></code> are there, and the pages live in <code class="docutils literal notranslate"><span class="pre">docs/manual/</span></code> (the hand-written user manual),
+<code class="docutils literal notranslate"><span class="pre">docs/generated/</span></code> (written by the emitters and the issue tracker — do not edit), <code class="docutils literal notranslate"><span class="pre">docs/dev/</span></code> and
+<code class="docutils literal notranslate"><span class="pre">docs/howTo/</span></code>.</p>
+<section id="the-short-way">
+<h2>The short way<a class="headerlink" href="#the-short-way" title="Link to this heading"></a></h2>
+<div class="highlight-powershell notranslate"><div class="highlight"><pre><span></span><span class="n">python</span> <span class="n">tools</span><span class="p">/</span><span class="n">exudev</span> <span class="n">docs</span>
+</pre></div>
+</div>
+<p>That is the same build the CI runs: <code class="docutils literal notranslate"><span class="pre">sphinx-build</span> <span class="pre">-b</span> <span class="pre">html</span> <span class="pre">.</span> <span class="pre">_build</span> <span class="pre">-E</span> <span class="pre">-W</span> <span class="pre">--keep-going</span></code>, in the
+environment the driver knows. <strong><code class="docutils literal notranslate"><span class="pre">-W</span></code> turns every warning into an error</strong>, so a broken cross
+reference, a document that is in no toctree or an image that is not there fails the build rather
+than being printed and forgotten.</p>
+<p>The result is <code class="docutils literal notranslate"><span class="pre">_build/index.html</span></code>; open it in a browser.</p>
+</section>
+<section id="what-has-to-be-installed">
+<h2>What has to be installed<a class="headerlink" href="#what-has-to-be-installed" title="Link to this heading"></a></h2>
+<p>The documentation dependencies are a group in <code class="docutils literal notranslate"><span class="pre">pyproject.toml</span></code>, so they are installed by name and
+not from a list that drifts:</p>
+<div class="highlight-powershell notranslate"><div class="highlight"><pre><span></span><span class="n">pip</span> <span class="n">install</span> <span class="p">-</span><span class="n">-group</span> <span class="n">docs</span>
+</pre></div>
+</div>
+<p>That group holds Sphinx itself, the <code class="docutils literal notranslate"><span class="pre">sphinx_rtd_theme</span></code>, <code class="docutils literal notranslate"><span class="pre">sphinx-copybutton</span></code>,
+<code class="docutils literal notranslate"><span class="pre">readthedocs-sphinx-search</span></code> and <code class="docutils literal notranslate"><span class="pre">myst-parser</span></code> (Markdown). The search extension only works on a
+server — on a local page it does nothing.</p>
+</section>
+<section id="building-by-hand">
+<h2>Building by hand<a class="headerlink" href="#building-by-hand" title="Link to this heading"></a></h2>
+<p>If you want to run Sphinx yourself, from the repository root:</p>
+<div class="highlight-powershell notranslate"><div class="highlight"><pre><span></span><span class="n">sphinx-build</span> <span class="n">-b</span> <span class="n">html</span> <span class="p">.</span> <span class="n">_build</span>          <span class="c">#incremental</span>
+<span class="n">sphinx-build</span> <span class="n">-b</span> <span class="n">html</span> <span class="p">.</span> <span class="n">_build</span> <span class="n">-E</span>       <span class="c">#ignore the cache: reads every file again</span>
+<span class="n">sphinx-build</span> <span class="n">-b</span> <span class="n">html</span> <span class="p">.</span> <span class="n">_build</span> <span class="n">-E</span> <span class="n">-W</span> <span class="p">-</span><span class="n">-keep-going</span>    <span class="c">#what the gate does</span>
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">-E</span></code> matters more often than it should: a page whose <em>source</em> changed is rebuilt, but a page that
+changed because something it includes changed is not always.</p>
+</section>
+<section id="where-it-is-published">
+<h2>Where it is published<a class="headerlink" href="#where-it-is-published" title="Link to this heading"></a></h2>
+<ul class="simple">
+<li><p><strong>readthedocs</strong>: <a class="reference external" href="https://exudyn.readthedocs.io">https://exudyn.readthedocs.io</a></p></li>
+<li><p><strong>GitHub Pages</strong>: built by <code class="docutils literal notranslate"><span class="pre">.github/workflows/documentation.yaml</span></code> and deployed to the <code class="docutils literal notranslate"><span class="pre">gh-pages</span></code>
+branch (Settings → Pages → <em>Deploy from a branch</em>, <code class="docutils literal notranslate"><span class="pre">gh-pages</span></code> + <code class="docutils literal notranslate"><span class="pre">/root</span></code>). Under <em>Actions</em> two
+jobs appear: the one from that workflow, and GitHub’s own <code class="docutils literal notranslate"><span class="pre">pages-build-deployment</span></code>.</p></li>
+<li><p><strong>GitLab</strong> builds the documentation during the GitHub freeze (<code class="docutils literal notranslate"><span class="pre">.gitlab-ci.yml</span></code>) with <code class="docutils literal notranslate"><span class="pre">-W</span></code>, but
+deploys nothing.</p></li>
+</ul>
+<p>The workflow file is deliberately <strong>not</strong> copied into this page: a copy of a configuration drifts
+from the original and is then worse than no copy.</p>
+<p>Sphinx’s own tutorial on deploying is at
+<a class="reference external" href="https://www.sphinx-doc.org/en/master/tutorial/deploying.html">https://www.sphinx-doc.org/en/master/tutorial/deploying.html</a>.</p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="condaEnvironments.html" class="btn btn-neutral float-left" title="Conda environments for Exudyn" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="../generated/examples/examplesIndex.html" class="btn btn-neutral float-right" title="Examples" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

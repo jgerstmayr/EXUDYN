@@ -1,0 +1,597 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Module: misc.GUI &mdash; Exudyn1.13.3 1.13.3 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=3ee1c6c6" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/rtd_sphinx_search.min.css" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/custom.css?v=e2783f0e" />
+
+  
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=b8a3e558"></script>
+      <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../../_static/copybutton.js?v=f281be69"></script>
+      <script src="../../../_static/js/rtd_search_config.js"></script>
+      <script src="../../../_static/js/rtd_sphinx_search.min.js"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+    <link rel="next" title="Module: misc.settingsUtilities" href="misc.settingsUtilities.html" />
+    <link rel="prev" title="Module: graphicsDataUtilities" href="graphicsDataUtilities.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            Exudyn1.13.3
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Exudyn User Manual</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../README.html">Exudyn</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../manual/gettingStarted.html">Installation and getting started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../manual/introduction.html">Overview on Exudyn</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../manual/introductionBasics.html">Exudyn basics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../manual/tutorial.html">Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../manual/GUI.html">Renderer, graphics and visualization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../manual/performanceErrors.html">Performance, errors and solver failures</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../manual/introductionAdvanced.html">Advanced topics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../manual/notation.html">Notation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../manual/theory.html">Theory and formulations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../manual/solver.html">Solvers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../cInterface/cInterfaceIndex.html">Python-C++ command interface</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Reference Manual</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../items/itemsIndex.html">Items reference manual</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="utilitiesIndex.html">Python Utility Functions</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="advancedUtilities.html">Module: advancedUtilities</a></li>
+<li class="toctree-l2"><a class="reference internal" href="artificialIntelligence.html">Module: artificialIntelligence</a></li>
+<li class="toctree-l2"><a class="reference internal" href="basicUtilities.html">Module: basicUtilities</a></li>
+<li class="toctree-l2"><a class="reference internal" href="beams.html">Module: beams</a></li>
+<li class="toctree-l2"><a class="reference internal" href="demos.html">Module: demos</a></li>
+<li class="toctree-l2"><a class="reference internal" href="FEM.html">Module: FEM</a></li>
+<li class="toctree-l2"><a class="reference internal" href="graphics.html">Module: graphics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="graphicsDataUtilities.html">Module: graphicsDataUtilities</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Module: misc.GUI</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#function-complainonce">Function: _ComplainOnce</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#function-getrenderersystemcontainer">Function: GetRendererSystemContainer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#function-makeprocessdpiaware">Function: MakeProcessDpiAware</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#function-tkfontsystemhint">Function: TkFontSystemHint</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#function-checktkfontsystem">Function: CheckTkFontSystem</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#function-scaledfontsize">Function: ScaledFontSize</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#function-applydialogfontscaling">Function: ApplyDialogFontScaling</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#function-gettkrootandnewwindow">Function: GetTkRootAndNewWindow</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#function-tkrootexists">Function: TkRootExists</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#function-columnwidthfractions">Function: ColumnWidthFractions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#function-dialogfontsize">Function: DialogFontSize</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#function-dialogrowmetrics">Function: DialogRowMetrics</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#function-getexudyndisplayscaling">Function: GetExudynDisplayScaling</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#function-dialogscaling">Function: DialogScaling</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#function-splitstoredfromchanged">Function: SplitStoredFromChanged</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#function-renderstatecodelines">Function: RenderStateCodeLines</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#function-editdictionarywithtypeinfo">Function: EditDictionaryWithTypeInfo</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#function-storedialogpositions">Function: StoreDialogPositions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#function-restorewindowgeometry">Function: RestoreWindowGeometry</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#function-rememberwindowgeometry">Function: RememberWindowGeometry</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#function-storegeometrystring">Function: StoreGeometryString</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#function-storewindowgeometry">Function: StoreWindowGeometry</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#function-applydialogwindowsettings">Function: ApplyDialogWindowSettings</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#function-showhelpdialog">Function: ShowHelpDialog</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#function-modelscope">Function: ModelScope</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#function-showpythoncommanddialog">Function: ShowPythonCommandDialog</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#function-showvisualizationsettingsdialog">Function: ShowVisualizationSettingsDialog</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#function-showrightmouseselectiondialog">Function: ShowRightMouseSelectionDialog</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#function-askquitdialog">Function: AskQuitDialog</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#class-tooltip-in-module-misc-gui">CLASS Tooltip (in module misc.GUI)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="misc.settingsUtilities.html">Module: misc.settingsUtilities</a></li>
+<li class="toctree-l2"><a class="reference internal" href="interactive.html">Module: interactive</a></li>
+<li class="toctree-l2"><a class="reference internal" href="kinematicTree.html">Module: kinematicTree</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lieGroupBasics.html">Module: lieGroupBasics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="misc.mainSystemExtensions.html">Module: misc.mainSystemExtensions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="particles.html">Module: particles</a></li>
+<li class="toctree-l2"><a class="reference internal" href="physics.html">Module: physics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="plot.html">Module: plot</a></li>
+<li class="toctree-l2"><a class="reference internal" href="processing.html">Module: processing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rigidBodyUtilities.html">Module: rigidBodyUtilities</a></li>
+<li class="toctree-l2"><a class="reference internal" href="robotics.html">Module: robotics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="robotics.rosInterface.html">Module: robotics.rosInterface</a></li>
+<li class="toctree-l2"><a class="reference internal" href="robotics.future.html">Module: robotics.future</a></li>
+<li class="toctree-l2"><a class="reference internal" href="robotics.models.html">Module: robotics.models</a></li>
+<li class="toctree-l2"><a class="reference internal" href="robotics.mobile.html">Module: robotics.mobile</a></li>
+<li class="toctree-l2"><a class="reference internal" href="robotics.motion.html">Module: robotics.motion</a></li>
+<li class="toctree-l2"><a class="reference internal" href="robotics.special.html">Module: robotics.special</a></li>
+<li class="toctree-l2"><a class="reference internal" href="robotics.utilities.html">Module: robotics.utilities</a></li>
+<li class="toctree-l2"><a class="reference internal" href="shells.html">Module: shells</a></li>
+<li class="toctree-l2"><a class="reference internal" href="signalProcessing.html">Module: signalProcessing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="solver.html">Module: solver</a></li>
+<li class="toctree-l2"><a class="reference internal" href="utilities.html">Module: utilities</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../structures/structuresIndex.html">Structures and Settings</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../references.html">References</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Developer documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../dev/README.html">Exudyn developer documentation</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">How-to notes</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../howTo/condaEnvironments.html">Conda environments for Exudyn</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../howTo/sphinxDocs.html">Building the documentation</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Examples, models and issues</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../examples/examplesIndex.html">Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../testModels/testModelsIndex.html">TestModels</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../abbreviations.html">List of Abbreviations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../manual/revisions.html">Revisions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../CHANGELOG.html">Changelog</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../trackerlog.html">Issue tracker</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">Exudyn1.13.3</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="utilitiesIndex.html">Python Utility Functions</a></li>
+      <li class="breadcrumb-item active">Module: misc.GUI</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../../_sources/docs/generated/pythonUtilities/misc.GUI.md.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <!-- GENERATED by tools/generators/utilityDocsEmitter.py from the docstrings of python/exudyn - do not edit -->
+<section class="tex2jax_ignore mathjax_ignore" id="module-misc-gui">
+<span id="sec-module-misc-gui"></span><h1>Module: misc.GUI<a class="headerlink" href="#module-misc-gui" title="Link to this heading"></a></h1>
+<p>Helper functions and classes for graphical interaction with Exudyn</p>
+<ul class="simple">
+<li><p><strong>Author</strong>: Johannes Gerstmayr</p></li>
+<li><p><strong>Date</strong>: 2020-01-25</p></li>
+<li><p><strong>Notes</strong>: This is an internal library, which is only used inside Exudyn for modifying settings.</p></li>
+</ul>
+<section id="function-complainonce">
+<span id="sec-gui-complainonce"></span><h2>Function: _ComplainOnce<a class="headerlink" href="#function-complainonce" title="Link to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/GUI.py#L96"><code class="docutils literal notranslate"><span class="pre">_ComplainOnce(reason)</span></code></a></p>
+<ul class="simple">
+<li><p><strong>function description</strong>: say once per process that the renderer’s SystemContainer could not be used, and why</p></li>
+</ul>
+</section>
+<section id="function-getrenderersystemcontainer">
+<span id="sec-gui-getrenderersystemcontainer"></span><h2>Function: GetRendererSystemContainer<a class="headerlink" href="#function-getrenderersystemcontainer" title="Link to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/GUI.py#L104"><code class="docutils literal notranslate"><span class="pre">GetRendererSystemContainer()</span></code></a></p>
+<ul class="simple">
+<li><p><strong>function description</strong>: The SystemContainer that is attached to the render engine, or None.</p></li>
+<li><p><strong>output</strong>: the container, or None when no renderer is running, when the entry names a container whose C++ object is gone, or when it names something else entirely</p></li>
+<li><p><strong>notes</strong>: None is the normal answer without a renderer and is not reported. Anything ELSE that goes wrong here says so once per process: a dialog that finds no container does nothing, and nothing being printed is how “the V key opens no dialog” became a reproduction rather than a message (#2691, maintainer 2026-09-26).</p></li>
+</ul>
+</section>
+<section id="function-makeprocessdpiaware">
+<span id="sec-gui-makeprocessdpiaware"></span><h2>Function: MakeProcessDpiAware<a class="headerlink" href="#function-makeprocessdpiaware" title="Link to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/GUI.py#L139"><code class="docutils literal notranslate"><span class="pre">MakeProcessDpiAware()</span></code></a></p>
+<ul class="simple">
+<li><p><strong>function description</strong>: tell Windows that this process draws at the real resolution of the display Without it, Windows renders the window at 96 dpi and stretches the bitmap, which is why a dialog opened from a shell looked soft while the same dialog opened from the render window was sharp: GLFW makes the process DPI aware when it creates the render window, and a dialog that comes after it inherits that. From “python -m exudyn dialogs” there is no GLFW (#2634). It must be called BEFORE the first window is created; afterwards Windows refuses, which is not an error here - something else has already set it, which is what we wanted.</p></li>
+<li><p><strong>output</strong>: True if this process is DPI aware afterwards</p></li>
+</ul>
+</section>
+<section id="function-tkfontsystemhint">
+<span id="sec-gui-tkfontsystemhint"></span><h2>Function: TkFontSystemHint<a class="headerlink" href="#function-tkfontsystemhint" title="Link to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/GUI.py#L167"><code class="docutils literal notranslate"><span class="pre">TkFontSystemHint(platform,</span> <span class="pre">fontSystem)</span></code></a></p>
+<ul class="simple">
+<li><p><strong>function description</strong>: the hint for dialogs drawn without anti-aliasing, or ‘’ if there is nothing to say</p></li>
+<li><p><strong>input</strong>:</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">platform</span></code>: sys.platform</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">fontSystem</span></code>: what Tk reports as its font system, ‘xft’ or ‘x11’ on Linux</p></li>
+</ul>
+</li>
+<li><p><strong>output</strong>: the text to print, ‘’ on Windows and macOS and for a Tk with Xft</p></li>
+</ul>
+</section>
+<section id="function-checktkfontsystem">
+<span id="sec-gui-checktkfontsystem"></span><h2>Function: CheckTkFontSystem<a class="headerlink" href="#function-checktkfontsystem" title="Link to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/GUI.py#L184"><code class="docutils literal notranslate"><span class="pre">CheckTkFontSystem(root)</span></code></a></p>
+<ul class="simple">
+<li><p><strong>function description</strong>: say once, on Linux, that the Tk of this Python has no Xft, which makes the dialog fonts jagged and coarse (#2890)</p></li>
+<li><p><strong>input</strong>:</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">root</span></code>: the tkinter root that was just created</p></li>
+</ul>
+</li>
+</ul>
+</section>
+<section id="function-scaledfontsize">
+<span id="sec-gui-scaledfontsize"></span><h2>Function: ScaledFontSize<a class="headerlink" href="#function-scaledfontsize" title="Link to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/GUI.py#L204"><code class="docutils literal notranslate"><span class="pre">ScaledFontSize(size,</span> <span class="pre">fontScaling)</span></code></a></p>
+<ul class="simple">
+<li><p><strong>function description</strong>: a Tk font size in points, times dialogs.fontScaling A negative size is pixels - the named fonts of Tk on Linux are, e.g. -12 - and pixels do not follow the scaling of Tk, which made the buttons and edit fields stay small while the text of the tree grew (#2898). It is converted to points at 96 dpi first, so that every named font follows the display scaling once, through the scaling of Tk.</p></li>
+<li><p><strong>input</strong>:</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">size</span></code>: the size as Tk gives it</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">fontScaling</span></code>: dialogs.fontScaling; 0 or less is 1</p></li>
+</ul>
+</li>
+<li><p><strong>output</strong>: the size in points, at least 6; 0 (the default of Tk) stays 0</p></li>
+</ul>
+</section>
+<section id="function-applydialogfontscaling">
+<span id="sec-gui-applydialogfontscaling"></span><h2>Function: ApplyDialogFontScaling<a class="headerlink" href="#function-applydialogfontscaling" title="Link to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/GUI.py#L225"><code class="docutils literal notranslate"><span class="pre">ApplyDialogFontScaling(root)</span></code></a></p>
+<ul class="simple">
+<li><p><strong>function description</strong>: set the named fonts of Tk (TkDefaultFont, TkTextFont, TkFixedFont, …) in points, times dialogs.fontScaling, so that every widget of a dialog - text, buttons, edit fields, menus - takes the same font and follows the display scaling through the scaling of Tk (#2897, #2898) It is called before the widgets of a dialog are created, so nothing is rescaled while a window opens.</p></li>
+<li><p><strong>input</strong>:</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">root</span></code>: the tkinter root, which owns the named fonts</p></li>
+</ul>
+</li>
+</ul>
+</section>
+<section id="function-gettkrootandnewwindow">
+<span id="sec-gui-gettkrootandnewwindow"></span><h2>Function: GetTkRootAndNewWindow<a class="headerlink" href="#function-gettkrootandnewwindow" title="Link to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/GUI.py#L248"><code class="docutils literal notranslate"><span class="pre">GetTkRootAndNewWindow()</span></code></a></p>
+<ul class="simple">
+<li><p><strong>function description</strong>: get new or current root and new window app; return list of [tkRoot, tkWindow, tkRuns]</p></li>
+</ul>
+</section>
+<section id="function-tkrootexists">
+<span id="sec-gui-tkrootexists"></span><h2>Function: TkRootExists<a class="headerlink" href="#function-tkrootexists" title="Link to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/GUI.py#L267"><code class="docutils literal notranslate"><span class="pre">TkRootExists()</span></code></a></p>
+<ul class="simple">
+<li><p><strong>function description</strong>: this function returns True, if tkinter has already a root window (which is assumed to have already a mainloop running)</p></li>
+</ul>
+</section>
+<section id="function-columnwidthfractions">
+<span id="sec-gui-columnwidthfractions"></span><h2>Function: ColumnWidthFractions<a class="headerlink" href="#function-columnwidthfractions" title="Link to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/GUI.py#L274"><code class="docutils literal notranslate"><span class="pre">ColumnWidthFractions(widths)</span></code></a></p>
+<ul class="simple">
+<li><p><strong>function description</strong>: the three column fractions, usable whatever was configured</p></li>
+<li><p><strong>input</strong>:</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">widths</span></code>: <code class="docutils literal notranslate"><span class="pre">[name,</span> <span class="pre">value,</span> <span class="pre">type]</span></code>, each a fraction of the dialog width</p></li>
+</ul>
+</li>
+<li><p><strong>output</strong>: the same three, each at least 0.05, and scaled down together if they would leave the description column less than 10% of the dialog</p></li>
+<li><p><strong>notes</strong>: A settings dialog whose description column is a few pixels wide cannot be read, and the settings that produce it are three independent numbers a user may set in any order. So the rule is applied here rather than refused at the setting: what a user asks for, as far as it still leaves a dialog.</p></li>
+</ul>
+</section>
+<section id="function-dialogfontsize">
+<span id="sec-gui-dialogfontsize"></span><h2>Function: DialogFontSize<a class="headerlink" href="#function-dialogfontsize" title="Link to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/GUI.py#L297"><code class="docutils literal notranslate"><span class="pre">DialogFontSize(fontFactor)</span></code></a></p>
+<ul class="simple">
+<li><p><strong>function description</strong>: the point size the tree, its headings and its tags use</p></li>
+<li><p><strong>input</strong>:</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">fontFactor</span></code>: the multiplier DialogScaling returned</p></li>
+</ul>
+</li>
+<li><p><strong>output</strong>: the size in points, never below 6</p></li>
+</ul>
+</section>
+<section id="function-dialogrowmetrics">
+<span id="sec-gui-dialogrowmetrics"></span><h2>Function: DialogRowMetrics<a class="headerlink" href="#function-dialogrowmetrics" title="Link to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/GUI.py#L309"><code class="docutils literal notranslate"><span class="pre">DialogRowMetrics(root,</span> <span class="pre">fontFactor)</span></code></a></p>
+<ul class="simple">
+<li><p><strong>function description</strong>: how tall a row must be and how much wider the columns must be, MEASURED Both used to be computed from systemScaling, which is not what decides how large a glyph comes out: the point-to-pixel conversion follows the tk scaling of the display, so at dialogs.fontScaling=1 the rows were 13 pixels tall for a font with a linespace of 16 to 18 and the text was clipped, while the column factor max(1,int(round(systemScaling))) stayed at 1 for every value below 1.5 (#2631). The font is asked instead, which is right at any scaling and on any platform.</p></li>
+<li><p><strong>input</strong>:</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">root</span></code>: the tkinter root, which the fonts are measured against</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">fontFactor</span></code>: the multiplier DialogScaling returned</p></li>
+</ul>
+</li>
+<li><p><strong>output</strong>: [rowHeight in pixels, columnScale relative to the unscaled font]</p></li>
+</ul>
+</section>
+<section id="function-getexudyndisplayscaling">
+<span id="sec-gui-getexudyndisplayscaling"></span><h2>Function: GetExudynDisplayScaling<a class="headerlink" href="#function-getexudyndisplayscaling" title="Link to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/GUI.py#L346"><code class="docutils literal notranslate"><span class="pre">GetExudynDisplayScaling(root</span> <span class="pre">=</span> <span class="pre">None)</span></code></a></p>
+<ul class="simple">
+<li><p><strong>function description</strong>: the display scaling the dialogs size themselves by The renderer knows it and reports it in its state. Without a renderer this used to return 1, so a dialog opened from the command line came out at a different size than the same dialog opened with V in the render window (#2634); tkinter is asked instead, which knows it once MakeProcessDpiAware has been called.</p></li>
+<li><p><strong>input</strong>:</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">root</span></code>: a tkinter root to ask when there is no renderer; without one the answer is 1</p></li>
+</ul>
+</li>
+<li><p><strong>output</strong>: the scaling, 1 if nothing knows better</p></li>
+</ul>
+</section>
+<section id="function-dialogscaling">
+<span id="sec-gui-dialogscaling"></span><h2>Function: DialogScaling<a class="headerlink" href="#function-dialogscaling" title="Link to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/GUI.py#L395"><code class="docutils literal notranslate"><span class="pre">DialogScaling(root)</span></code></a></p>
+<ul class="simple">
+<li><p><strong>function description</strong>: How tall a row of a dialog is and how large its font is, as [systemScaling, fontFactor]. dialogs.fontScaling is 0 by default, and 0 means what every platform did before the setting existed: a fixed factor on MacOS, the system display scaling on Windows and Linux. A value &gt; 0 sets the font on EVERY platform, which is what makes the dialogs readable on a Linux desktop - off MacOS the font factor used to be forced to 1 and nothing could change it (#2602).</p></li>
+<li><p><strong>input</strong>:</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">root</span></code>: the tkinter root window, which knows the display scaling</p></li>
+</ul>
+</li>
+<li><p><strong>output</strong>: [systemScaling, fontFactor]</p></li>
+</ul>
+</section>
+<section id="function-splitstoredfromchanged">
+<span id="sec-gui-splitstoredfromchanged"></span><h2>Function: SplitStoredFromChanged<a class="headerlink" href="#function-splitstoredfromchanged" title="Link to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/GUI.py#L428"><code class="docutils literal notranslate"><span class="pre">SplitStoredFromChanged(changes,</span> <span class="pre">overriddenPaths,</span> <span class="pre">fileName)</span></code></a></p>
+<ul class="simple">
+<li><p><strong>function description</strong>: The changed settings, with the ones the override file stores named separately.</p></li>
+<li><p><strong>input</strong>:</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">changes</span></code>: [(path, line)] as SettingsCodeLines returns them - every setting that differs from the DEFAULT, which is what the difference is to</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">overriddenPaths</span></code>: the paths that <code class="docutils literal notranslate"><span class="pre">~/.exudyn/config.json</span></code> stores</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">fileName</span></code>: the name of that file, for the comment line</p></li>
+</ul>
+</li>
+<li><p><strong>output</strong>: (lines, storedCount): the same pairs, the stored ones last and behind a comment line, and how many of them there are</p></li>
+<li><p><strong>notes</strong>: The maintainer decided this on 2026-09-26: the difference is to the REAL default, and what the file already covers is named separately with a comment between them, so that a user can see what they would be copying and decide. Comparing against default-plus-override instead would hide exactly the settings that file is about.</p></li>
+</ul>
+</section>
+<section id="function-renderstatecodelines">
+<span id="sec-gui-renderstatecodelines"></span><h2>Function: RenderStateCodeLines<a class="headerlink" href="#function-renderstatecodelines" title="Link to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/GUI.py#L455"><code class="docutils literal notranslate"><span class="pre">RenderStateCodeLines(renderState,</span> <span class="pre">systemContainerName</span> <span class="pre">=</span> <span class="pre">'SC')</span></code></a></p>
+<ul class="simple">
+<li><p><strong>function description</strong>: The lines that give a script the current model view of the render window, as CTRL+F3 prints them (#2862).</p></li>
+<li><p><strong>input</strong>:</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">renderState</span></code>: the dictionary of SC.renderer.GetState()</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">systemContainerName</span></code>: the name of the SystemContainer in the script</p></li>
+</ul>
+</li>
+<li><p><strong>output</strong>: [(key, line)]: SC.renderer.Start() and SC.renderer.SetModelView with zoom, rotation vector and center point</p></li>
+</ul>
+</section>
+<section id="function-editdictionarywithtypeinfo">
+<span id="sec-gui-editdictionarywithtypeinfo"></span><h2>Function: EditDictionaryWithTypeInfo<a class="headerlink" href="#function-editdictionarywithtypeinfo" title="Link to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/GUI.py#L1603"><code class="docutils literal notranslate"><span class="pre">EditDictionaryWithTypeInfo(settingsStructure,</span> <span class="pre">exu</span> <span class="pre">=</span> <span class="pre">None,</span> <span class="pre">dictionaryName</span> <span class="pre">=</span> <span class="pre">'edit')</span></code></a></p>
+<ul class="simple">
+<li><p><strong>function description</strong>: edit dictionaryData and return modified (new) dictionary</p></li>
+<li><p><strong>input</strong>:</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">settingsStructure</span></code>: hierarchical settings structure, e.g., SC.visualizationSettings</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">exu</span></code>: exudyn module</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">dictionaryName</span></code>: name displayed in dialog</p></li>
+</ul>
+</li>
+<li><p><strong>output</strong>: returns modified dictionary, which can be used, e.g., for SC.visualizationSettings.SetDictionary(…)</p></li>
+</ul>
+</section>
+<section id="function-storedialogpositions">
+<span id="sec-gui-storedialogpositions"></span><h2>Function: StoreDialogPositions<a class="headerlink" href="#function-storedialogpositions" title="Link to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/GUI.py#L1949"><code class="docutils literal notranslate"><span class="pre">StoreDialogPositions(settingsStructure</span> <span class="pre">=</span> <span class="pre">None)</span></code></a></p>
+<ul class="simple">
+<li><p><strong>function description</strong>: True if a dialog should store where it was left, when it closes.</p></li>
+<li><p><strong>input</strong>:</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">settingsStructure</span></code>: the structure the dialog is editing, if it is a <code class="docutils literal notranslate"><span class="pre">visualizationSettings</span></code>; it is asked FIRST, because it is the one the user is looking at</p></li>
+</ul>
+</li>
+<li><p><strong>output</strong>: the value of <code class="docutils literal notranslate"><span class="pre">visualizationSettings.dialogs.storeDialogPositions</span></code>, or False when there is nothing to ask</p></li>
+<li><p><strong>notes</strong>: This decides whether a dialog stores ITSELF on closing, and nothing else: a geometry that is already stored - by this flag, by the store button or by a script - is used whenever a dialog opens, see <code class="docutils literal notranslate"><span class="pre">RestoreWindowGeometry</span></code> (#2686). The structure is asked before the renderer’s SystemContainer because <code class="docutils literal notranslate"><span class="pre">python</span> <span class="pre">-m</span> <span class="pre">exudyn</span> <span class="pre">dialogs</span></code> has no container at all, and a script that has not started the renderer has none that can be found - so the flag used to be False there however it was set, and such a dialog could never store itself.</p></li>
+</ul>
+</section>
+<section id="function-restorewindowgeometry">
+<span id="sec-gui-restorewindowgeometry"></span><h2>Function: RestoreWindowGeometry<a class="headerlink" href="#function-restorewindowgeometry" title="Link to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/GUI.py#L1982"><code class="docutils literal notranslate"><span class="pre">RestoreWindowGeometry(tkWindow,</span> <span class="pre">name,</span> <span class="pre">width</span> <span class="pre">=</span> <span class="pre">None,</span> <span class="pre">height</span> <span class="pre">=</span> <span class="pre">None)</span></code></a></p>
+<ul class="simple">
+<li><p><strong>function description</strong>: Give a dialog the size and position it was left at, as far as that is safe.</p></li>
+<li><p><strong>input</strong>:</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">tkWindow</span></code>: the window</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">name</span></code>: the title of the dialog, which is what it is stored under</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">width</span></code>: the width it would otherwise get, in pixels; None leaves the size to the layout when nothing is stored, which is what a dialog whose size is computed from its widgets needs</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">height</span></code>: the height it would otherwise get, or None</p></li>
+</ul>
+</li>
+<li><p><strong>output</strong>: None</p></li>
+<li><p><strong>notes</strong>: The <strong>size</strong> is restored always and the <strong>position</strong> only when the window would still be reachable on the current screen. A monitor that is gone, a resolution that changed, a laptop that was undocked: each of them would otherwise put the dialog where nobody can close it. A GEOMETRY THAT IS STORED IS USED, whatever <code class="docutils literal notranslate"><span class="pre">dialogs.storeDialogPositions</span></code> says (#2686). That flag decides whether a dialog stores ITSELF when it closes; this function only reads what is there, and it is there because the flag was on, or because the store button of the dialog wrote it, or because a script did. Asking the flag here is what made the store button (#2685) write something that nothing read back.</p></li>
+</ul>
+</section>
+<section id="function-rememberwindowgeometry">
+<span id="sec-gui-rememberwindowgeometry"></span><h2>Function: RememberWindowGeometry<a class="headerlink" href="#function-rememberwindowgeometry" title="Link to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/GUI.py#L2036"><code class="docutils literal notranslate"><span class="pre">RememberWindowGeometry(tkWindow,</span> <span class="pre">name,</span> <span class="pre">settingsStructure</span> <span class="pre">=</span> <span class="pre">None)</span></code></a></p>
+<ul class="simple">
+<li><p><strong>function description</strong>: Record where a dialog is while it lives, so that it can be stored when it closes.</p></li>
+<li><p><strong>input</strong>:</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">tkWindow</span></code>: the window</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">name</span></code>: the title of the dialog, which is what it is stored under</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">settingsStructure</span></code>: the structure being edited, which is asked for <code class="docutils literal notranslate"><span class="pre">dialogs.storeDialogPositions</span></code> before the renderer’s SystemContainer</p></li>
+</ul>
+</li>
+<li><p><strong>output</strong>: a dictionary that <code class="docutils literal notranslate"><span class="pre">StoreWindowGeometry</span></code> reads; empty when nothing is to be stored</p></li>
+<li><p><strong>notes</strong>: The geometry cannot be read after the window is destroyed, and a dialog is left in three ways - the close button, Escape, and the window manager - so it is recorded on every <code class="docutils literal notranslate"><span class="pre">&lt;Configure&gt;</span></code> and the last value is the one that is stored.</p></li>
+</ul>
+</section>
+<section id="function-storegeometrystring">
+<span id="sec-gui-storegeometrystring"></span><h2>Function: StoreGeometryString<a class="headerlink" href="#function-storegeometrystring" title="Link to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/GUI.py#L2068"><code class="docutils literal notranslate"><span class="pre">StoreGeometryString(geometry,</span> <span class="pre">name)</span></code></a></p>
+<ul class="simple">
+<li><p><strong>function description</strong>: Store one ‘WIDTHxHEIGHT+X+Y’ under the name of a dialog.</p></li>
+<li><p><strong>input</strong>:</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">geometry</span></code>: what tkWindow.geometry() reported</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">name</span></code>: the title of the dialog</p></li>
+</ul>
+</li>
+<li><p><strong>output</strong>: True if it was stored</p></li>
+<li><p><strong>notes</strong>: This does NOT ask whether storeDialogPositions is on: the flag decides whether a dialog remembers itself on closing, and the store button of the settings dialog stores on request (#2685). RememberWindowGeometry is where the flag is read.</p></li>
+</ul>
+</section>
+<section id="function-storewindowgeometry">
+<span id="sec-gui-storewindowgeometry"></span><h2>Function: StoreWindowGeometry<a class="headerlink" href="#function-storewindowgeometry" title="Link to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/GUI.py#L2098"><code class="docutils literal notranslate"><span class="pre">StoreWindowGeometry(recorded,</span> <span class="pre">name)</span></code></a></p>
+<ul class="simple">
+<li><p><strong>function description</strong>: Store what <code class="docutils literal notranslate"><span class="pre">RememberWindowGeometry</span></code> recorded, after the dialog has closed.</p></li>
+<li><p><strong>input</strong>:</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">recorded</span></code>: what <code class="docutils literal notranslate"><span class="pre">RememberWindowGeometry</span></code> returned</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">name</span></code>: the title of the dialog</p></li>
+</ul>
+</li>
+</ul>
+</section>
+<section id="function-applydialogwindowsettings">
+<span id="sec-gui-applydialogwindowsettings"></span><h2>Function: ApplyDialogWindowSettings<a class="headerlink" href="#function-applydialogwindowsettings" title="Link to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/GUI.py#L2108"><code class="docutils literal notranslate"><span class="pre">ApplyDialogWindowSettings(tkWindow,</span> <span class="pre">alwaysTopmost</span> <span class="pre">=</span> <span class="pre">None,</span> <span class="pre">alphaTransparency</span> <span class="pre">=</span> <span class="pre">None)</span></code></a></p>
+<ul class="simple">
+<li><p><strong>function description</strong>: Apply what visualizationSettings.dialogs says about a dialog window.</p></li>
+<li><p><strong>input</strong>:</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">tkWindow</span></code>: the window to configure</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">alwaysTopmost</span></code>: None takes dialogs.alwaysTopmost; True or False overrides it</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">alphaTransparency</span></code>: None takes dialogs.alphaTransparency; a float overrides it</p></li>
+</ul>
+</li>
+<li><p><strong>output</strong>: None</p></li>
+</ul>
+</section>
+<section id="function-showhelpdialog">
+<span id="sec-gui-showhelpdialog"></span><h2>Function: ShowHelpDialog<a class="headerlink" href="#function-showhelpdialog" title="Link to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/GUI.py#L2138"><code class="docutils literal notranslate"><span class="pre">ShowHelpDialog()</span></code></a></p>
+<ul class="simple">
+<li><p><strong>function description</strong>: The keyboard and mouse commands of the renderer, in a read-only window; opened with H in the render window.</p></li>
+<li><p><strong>output</strong>: None</p></li>
+</ul>
+</section>
+<section id="function-modelscope">
+<span id="sec-gui-modelscope"></span><h2>Function: ModelScope<a class="headerlink" href="#function-modelscope" title="Link to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/GUI.py#L2192"><code class="docutils literal notranslate"><span class="pre">ModelScope()</span></code></a></p>
+<ul class="simple">
+<li><p><strong>function description</strong>: the namespace a command of the command window runs in: the one the MODEL lives in <code class="docutils literal notranslate"><span class="pre">__main__</span></code> is the script the user started, or the console they are typing in, so this is where <code class="docutils literal notranslate"><span class="pre">mbs</span></code>, <code class="docutils literal notranslate"><span class="pre">SC</span></code> and everything else the model defined are. The command window used to be a Python string that the C++ executed in exactly this namespace; as a function of this module it would otherwise see the module’s own globals, where there is no <code class="docutils literal notranslate"><span class="pre">mbs</span></code> (#2654).</p></li>
+<li><p><strong>output</strong>: the dictionary of <code class="docutils literal notranslate"><span class="pre">__main__</span></code>, which is written to as well as read: an assignment in the command window has to survive the command</p></li>
+</ul>
+</section>
+<section id="function-showpythoncommanddialog">
+<span id="sec-gui-showpythoncommanddialog"></span><h2>Function: ShowPythonCommandDialog<a class="headerlink" href="#function-showpythoncommanddialog" title="Link to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/GUI.py#L2208"><code class="docutils literal notranslate"><span class="pre">ShowPythonCommandDialog()</span></code></a></p>
+<ul class="simple">
+<li><p><strong>function description</strong>: A window that executes a Python command in the global scope of the running model; opened with X in the render window. CTRL+RETURN runs what is in the text area.</p></li>
+<li><p><strong>output</strong>: None</p></li>
+</ul>
+</section>
+<section id="function-showvisualizationsettingsdialog">
+<span id="sec-gui-showvisualizationsettingsdialog"></span><h2>Function: ShowVisualizationSettingsDialog<a class="headerlink" href="#function-showvisualizationsettingsdialog" title="Link to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/GUI.py#L2296"><code class="docutils literal notranslate"><span class="pre">ShowVisualizationSettingsDialog()</span></code></a></p>
+<ul class="simple">
+<li><p><strong>function description</strong>: The settings tree of the renderer; opened with V in the render window.</p></li>
+<li><p><strong>output</strong>: None</p></li>
+</ul>
+</section>
+<section id="function-showrightmouseselectiondialog">
+<span id="sec-gui-showrightmouseselectiondialog"></span><h2>Function: ShowRightMouseSelectionDialog<a class="headerlink" href="#function-showrightmouseselectiondialog" title="Link to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/GUI.py#L2311"><code class="docutils literal notranslate"><span class="pre">ShowRightMouseSelectionDialog()</span></code></a></p>
+<ul class="simple">
+<li><p><strong>function description</strong>: The properties of the item the right mouse button selected, read-only; the renderer has put them into exudyn.sys[‘currentRendererSelectionDict’] before calling this.</p></li>
+<li><p><strong>output</strong>: None</p></li>
+</ul>
+</section>
+<section id="function-askquitdialog">
+<span id="sec-gui-askquitdialog"></span><h2>Function: AskQuitDialog<a class="headerlink" href="#function-askquitdialog" title="Link to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/GUI.py#L2326"><code class="docutils literal notranslate"><span class="pre">AskQuitDialog()</span></code></a></p>
+<ul class="simple">
+<li><p><strong>function description</strong>: Ask whether a long running simulation really shall be stopped; the answer goes back to the renderer in exudyn.sys[‘quitResponse’], as 2 (do not quit) or 3 (quit).</p></li>
+<li><p><strong>output</strong>: None</p></li>
+</ul>
+</section>
+<section id="class-tooltip-in-module-misc-gui">
+<span id="sec-module-misc-gui-class-tooltip"></span><h2>CLASS Tooltip (in module misc.GUI)<a class="headerlink" href="#class-tooltip-in-module-misc-gui" title="Link to this heading"></a></h2>
+<p><strong>class description</strong>: The small yellow window that shows the description of the row under the mouse. tkinter has none, and the description used to be behind the key ‘h’ and a modal message box - which is not where a reader looks for it (#2601). It is a borderless Toplevel that is created when it is first needed and hidden afterwards, so a dialog that is never hovered never builds one. It is <strong>topmost</strong>, and that is not decoration: the dialog itself is topmost - it has to be, it blocks the render window - and on Windows a topmost window is always above one that is not, so a tooltip without the flag opens BEHIND the dialog and looks like a tooltip that never comes (#2639). The same mechanism hid the window of the changes in #2621. Turning <code class="docutils literal notranslate"><span class="pre">dialogs.alwaysTopmost</span></code> off made the tooltips work, which is what named the cause.</p>
+<section id="class-function-show">
+<span id="sec-gui-tooltip-show"></span><h3>Class function: Show<a class="headerlink" href="#class-function-show" title="Link to this heading"></a></h3>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/GUI.py#L506"><code class="docutils literal notranslate"><span class="pre">Show(self,</span> <span class="pre">text,</span> <span class="pre">x,</span> <span class="pre">y)</span></code></a></p>
+<ul class="simple">
+<li><p><strong>class function description</strong>: show the tooltip after the delay, at the screen position (x, y) The delay is the maintainer’s (#2614): a description that appears the moment the pointer crosses a row is annoying, and with the find (#2607) nobody has to sweep the tree to find a setting any more.</p></li>
+</ul>
+</section>
+<section id="class-function-cancel">
+<span id="sec-gui-tooltip-cancel"></span><h3>Class function: Cancel<a class="headerlink" href="#class-function-cancel" title="Link to this heading"></a></h3>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/GUI.py#L519"><code class="docutils literal notranslate"><span class="pre">Cancel(self)</span></code></a></p>
+<ul class="simple">
+<li><p><strong>class function description</strong>: forget a tooltip that was scheduled and has not appeared yet</p></li>
+</ul>
+</section>
+<section id="class-function-bind">
+<span id="sec-gui-tooltip-bind"></span><h3>Class function: Bind<a class="headerlink" href="#class-function-bind" title="Link to this heading"></a></h3>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/GUI.py#L528"><code class="docutils literal notranslate"><span class="pre">Bind(self,</span> <span class="pre">widget,</span> <span class="pre">text)</span></code></a></p>
+<ul class="simple">
+<li><p><strong>class function description</strong>: let a widget - a button, say - show this tooltip while the pointer rests on it</p></li>
+</ul>
+</section>
+<section id="class-function-place">
+<span id="sec-gui-tooltip-place"></span><h3>Class function: Place<a class="headerlink" href="#class-function-place" title="Link to this heading"></a></h3>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/GUI.py#L533"><code class="docutils literal notranslate"><span class="pre">Place(self,</span> <span class="pre">text,</span> <span class="pre">x,</span> <span class="pre">y)</span></code></a></p>
+<ul class="simple">
+<li><p><strong>class function description</strong>: place the tooltip at the screen position (x, y), a little below the pointer</p></li>
+</ul>
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="graphicsDataUtilities.html" class="btn btn-neutral float-left" title="Module: graphicsDataUtilities" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="misc.settingsUtilities.html" class="btn btn-neutral float-right" title="Module: misc.settingsUtilities" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

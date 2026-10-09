@@ -1,0 +1,250 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Symbolic user functions &mdash; Exudyn1.13.3 1.13.3 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=3ee1c6c6" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/rtd_sphinx_search.min.css" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/custom.css?v=e2783f0e" />
+
+  
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=b8a3e558"></script>
+      <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../../_static/copybutton.js?v=f281be69"></script>
+      <script src="../../../_static/js/rtd_search_config.js"></script>
+      <script src="../../../_static/js/rtd_sphinx_search.min.js"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+    <link rel="next" title="Flexible body with the floating frame of reference formulation" href="tutorialFFRF.html" />
+    <link rel="prev" title="Flexible beams" href="tutorialFlexibleBeams.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            Exudyn1.13.3
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Exudyn User Manual</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../../README.html">Exudyn</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../manual/gettingStarted.html">Installation and getting started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../manual/introduction.html">Overview on Exudyn</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../manual/introductionBasics.html">Exudyn basics</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../../manual/tutorial.html">Tutorial</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="tutorialSpringDamper.html">Mass-spring-damper</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tutorialSpringDamperCreate.html">Mass-spring-damper with Create functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tutorialRigidBody.html">Rigid bodies and joints</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tutorialRigidBodyCreate.html">Rigid bodies and joints with Create functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tutorialFlexibleBeams.html">Flexible beams</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Symbolic user functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tutorialFFRF.html">Flexible body with the floating frame of reference formulation</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../manual/GUI.html">Renderer, graphics and visualization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../manual/performanceErrors.html">Performance, errors and solver failures</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../manual/introductionAdvanced.html">Advanced topics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../manual/notation.html">Notation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../manual/theory.html">Theory and formulations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../manual/solver.html">Solvers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../cInterface/cInterfaceIndex.html">Python-C++ command interface</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Reference Manual</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../items/itemsIndex.html">Items reference manual</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../pythonUtilities/utilitiesIndex.html">Python Utility Functions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../structures/structuresIndex.html">Structures and Settings</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../references.html">References</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Developer documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../dev/README.html">Exudyn developer documentation</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">How-to notes</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../howTo/condaEnvironments.html">Conda environments for Exudyn</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../howTo/sphinxDocs.html">Building the documentation</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Examples, models and issues</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../examples/examplesIndex.html">Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../testModels/testModelsIndex.html">TestModels</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../abbreviations.html">List of Abbreviations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../manual/revisions.html">Revisions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../CHANGELOG.html">Changelog</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../trackerlog.html">Issue tracker</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">Exudyn1.13.3</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../manual/tutorial.html">Tutorial</a></li>
+      <li class="breadcrumb-item active">Symbolic user functions</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../../_sources/docs/generated/notebooks/tutorialSymbolic.md.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <!-- GENERATED by tools/generators/notebookEmitter.py from python/Notebooks/tutorialSymbolic.ipynb - do not edit -->
+<section class="tex2jax_ignore mathjax_ignore" id="symbolic-user-functions">
+<span id="notebook-tutorialsymbolic"></span><h1>Symbolic user functions<a class="headerlink" href="#symbolic-user-functions" title="Link to this heading"></a></h1>
+<p>Notebook <code class="docutils literal notranslate"><span class="pre">python/Notebooks/tutorialSymbolic.ipynb</span></code>.</p>
+<p>A nonlinear oscillator: a mass point on a Cartesian spring-damper whose force is a user function, written once in
+Python and turned into a symbolic user function, which runs much faster. The outputs below each cell are those of the
+last run.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">exudyn</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">exu</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">exudyn.utilities</span><span class="w"> </span><span class="kn">import</span> <span class="o">*</span>  <span class="c1"># includes itemInterface and rigidBodyUtilities</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">exudyn.graphics</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">graphics</span>
+
+<span class="n">SC</span> <span class="o">=</span> <span class="n">exu</span><span class="o">.</span><span class="nc">SystemContainer</span><span class="p">()</span>
+<span class="n">mbs</span> <span class="o">=</span> <span class="n">SC</span><span class="o">.</span><span class="nf">AddSystem</span><span class="p">()</span>
+<span class="n">esym</span> <span class="o">=</span> <span class="n">exu</span><span class="o">.</span><span class="n">symbolic</span>   <span class="c1">#an abbreviation of the symbolic library; often it can be replaced by numpy</span>
+</pre></div>
+</div>
+<p>The parameters of the spring-damper system:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">L</span> <span class="o">=</span> <span class="mf">0.5</span>
+<span class="n">mass</span> <span class="o">=</span> <span class="mf">1.6</span>
+<span class="n">k</span> <span class="o">=</span> <span class="mi">4000</span>
+<span class="n">omega0</span> <span class="o">=</span> <span class="mi">50</span>  <span class="c1"># sqrt(k / mass)</span>
+<span class="n">dRel</span> <span class="o">=</span> <span class="mf">0.05</span>
+<span class="n">d</span> <span class="o">=</span> <span class="n">dRel</span> <span class="o">*</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">omega0</span>
+<span class="n">u0</span> <span class="o">=</span> <span class="o">-</span><span class="mf">0.08</span>
+<span class="n">v0</span> <span class="o">=</span> <span class="mi">1</span>
+<span class="n">f</span> <span class="o">=</span> <span class="mi">80</span>
+</pre></div>
+</div>
+<p>The ground and the mass point with its initial conditions, the Cartesian spring-damper between them, a force on the
+mass point, and a sensor of its position:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">objectGround</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">CreateGround</span><span class="p">(</span><span class="n">referencePosition</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span>
+<span class="n">massPoint</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">CreateMassPoint</span><span class="p">(</span><span class="n">referencePosition</span><span class="o">=</span><span class="p">[</span><span class="n">L</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span>
+                                <span class="n">initialDisplacement</span><span class="o">=</span><span class="p">[</span><span class="n">u0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span>
+                                <span class="n">initialVelocity</span><span class="o">=</span><span class="p">[</span><span class="n">v0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span>
+                                <span class="n">mass</span><span class="o">=</span><span class="n">mass</span><span class="p">)</span>
+<span class="n">csd</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">CreateCartesianSpringDamper</span><span class="p">(</span><span class="n">itemNumbers</span><span class="o">=</span><span class="p">[</span><span class="n">objectGround</span><span class="p">,</span> <span class="n">massPoint</span><span class="p">],</span>
+                                      <span class="n">stiffness</span><span class="o">=</span><span class="p">[</span><span class="n">k</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="n">k</span><span class="p">],</span>
+                                      <span class="n">damping</span><span class="o">=</span><span class="p">[</span><span class="n">d</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span>
+                                      <span class="n">offset</span><span class="o">=</span><span class="p">[</span><span class="n">L</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span>
+<span class="n">load</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">CreateForce</span><span class="p">(</span><span class="n">itemNumber</span><span class="o">=</span><span class="n">massPoint</span><span class="p">,</span> <span class="n">loadVector</span><span class="o">=</span><span class="p">[</span><span class="n">f</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span>
+<span class="n">sMass</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">AddSensor</span><span class="p">(</span><span class="nc">SensorBody</span><span class="p">(</span><span class="n">bodyNumber</span><span class="o">=</span><span class="n">massPoint</span><span class="p">,</span> <span class="n">storeInternal</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                                 <span class="n">outputVariableType</span><span class="o">=</span><span class="n">exu</span><span class="o">.</span><span class="nc">OutputVariableType</span><span class="o">.</span><span class="n">Position</span><span class="p">))</span>
+</pre></div>
+</div>
+<p>The user function of the spring-damper, with Python or symbolic expressions - <code class="docutils literal notranslate"><span class="pre">esym.sign</span></code> works for both:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">springForceUserFunction</span><span class="p">(</span><span class="n">mbs</span><span class="p">,</span> <span class="n">t</span><span class="p">,</span> <span class="n">itemNumber</span><span class="p">,</span> <span class="n">u</span><span class="p">,</span> <span class="n">v</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="n">d</span><span class="p">,</span> <span class="n">offset</span><span class="p">):</span>
+    <span class="k">return</span> <span class="p">[</span><span class="mf">0.5</span> <span class="o">*</span> <span class="n">u</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">**</span><span class="mi">2</span> <span class="o">*</span> <span class="n">k</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">esym</span><span class="o">.</span><span class="nf">sign</span><span class="p">(</span><span class="n">v</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">*</span> <span class="mi">10</span><span class="p">,</span> <span class="n">k</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="n">u</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">k</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">*</span> <span class="n">u</span><span class="p">[</span><span class="mi">2</span><span class="p">]]</span>
+</pre></div>
+</div>
+<p>Up to here, this is a regular Python user function. <code class="docutils literal notranslate"><span class="pre">CreateSymbolicUserFunction</span></code> records it with symbolic arguments
+and makes a symbolic user function, which is evaluated in C++; printing it shows the recorded expressions:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">doSymbolic</span> <span class="o">=</span> <span class="kc">True</span>
+<span class="n">CSDuserFunction</span> <span class="o">=</span> <span class="n">springForceUserFunction</span>   <span class="c1">#used if no symbolic user function is made</span>
+<span class="k">if</span> <span class="n">doSymbolic</span><span class="p">:</span>
+    <span class="n">CSDuserFunction</span> <span class="o">=</span> <span class="nf">CreateSymbolicUserFunction</span><span class="p">(</span><span class="n">mbs</span><span class="p">,</span> <span class="n">springForceUserFunction</span><span class="p">,</span> <span class="s1">'springForceUserFunction'</span><span class="p">,</span> <span class="n">csd</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">'user function:</span><span class="se">\n</span><span class="s1">'</span><span class="p">,</span> <span class="n">CSDuserFunction</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>user function:
+ [(((0.5 * pow(u[0], 2)) * k[0]) + (sign(v[0]) * 10)),(k[1] * u[1]),(k[2] * u[2])]
+</pre></div>
+</div>
+<p>The user function goes to the object; then assemble and solve, with an explicit solver and small steps:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">mbs</span><span class="o">.</span><span class="nf">SetObjectParameter</span><span class="p">(</span><span class="n">csd</span><span class="p">,</span> <span class="s1">'springForceUserFunction'</span><span class="p">,</span> <span class="n">CSDuserFunction</span><span class="p">)</span>
+<span class="n">mbs</span><span class="o">.</span><span class="nf">Assemble</span><span class="p">()</span>
+
+<span class="n">simulationSettings</span> <span class="o">=</span> <span class="n">exu</span><span class="o">.</span><span class="nc">SimulationSettings</span><span class="p">()</span>
+<span class="n">tEnd</span> <span class="o">=</span> <span class="mi">2</span>
+<span class="n">steps</span> <span class="o">=</span> <span class="mi">200000</span>
+<span class="n">simulationSettings</span><span class="o">.</span><span class="n">timeIntegration</span><span class="o">.</span><span class="n">numberOfSteps</span> <span class="o">=</span> <span class="n">steps</span>
+<span class="n">simulationSettings</span><span class="o">.</span><span class="n">timeIntegration</span><span class="o">.</span><span class="n">endTime</span> <span class="o">=</span> <span class="n">tEnd</span>
+<span class="n">simulationSettings</span><span class="o">.</span><span class="n">solution</span><span class="o">.</span><span class="n">file</span><span class="o">.</span><span class="n">write</span> <span class="o">=</span> <span class="kc">False</span>
+<span class="n">simulationSettings</span><span class="o">.</span><span class="n">solution</span><span class="o">.</span><span class="n">sensors</span><span class="o">.</span><span class="n">writePeriod</span> <span class="o">=</span> <span class="mf">0.001</span>
+
+<span class="n">mbs</span><span class="o">.</span><span class="nf">SolveDynamic</span><span class="p">(</span><span class="n">simulationSettings</span><span class="p">,</span> <span class="n">solverType</span><span class="o">=</span><span class="n">exu</span><span class="o">.</span><span class="nc">DynamicSolverType</span><span class="o">.</span><span class="n">ExplicitMidpoint</span><span class="p">)</span>
+
+<span class="n">n1</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">GetObject</span><span class="p">(</span><span class="n">massPoint</span><span class="p">)[</span><span class="s1">'nodeNumber'</span><span class="p">]</span>
+<span class="n">u</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">GetNodeOutput</span><span class="p">(</span><span class="n">n1</span><span class="p">,</span> <span class="n">exu</span><span class="o">.</span><span class="nc">OutputVariableType</span><span class="o">.</span><span class="n">Position</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">'u='</span><span class="p">,</span> <span class="n">u</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>u= [0.69752247 0.         0.        ]
+</pre></div>
+</div>
+<p>The position of the mass point over time:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">mbs</span><span class="o">.</span><span class="nf">PlotSensor</span><span class="p">(</span><span class="n">sMass</span><span class="p">,</span> <span class="n">components</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">closeAll</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+</div>
+<a class="reference internal image-reference" href="../../../_images/tutorialSymbolic_0.png"><img alt="../../../_images/tutorialSymbolic_0.png" src="../../../_images/tutorialSymbolic_0.png" style="width: 640px;" />
+</a>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="tutorialFlexibleBeams.html" class="btn btn-neutral float-left" title="Flexible beams" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="tutorialFFRF.html" class="btn btn-neutral float-right" title="Flexible body with the floating frame of reference formulation" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

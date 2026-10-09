@@ -1,0 +1,472 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ObjectANCFThinPlate &mdash; Exudyn1.13.3 1.13.3 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=3ee1c6c6" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/rtd_sphinx_search.min.css" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/custom.css?v=e2783f0e" />
+
+  
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=b8a3e558"></script>
+      <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../../_static/copybutton.js?v=f281be69"></script>
+      <script src="../../../_static/js/rtd_search_config.js"></script>
+      <script src="../../../_static/js/rtd_sphinx_search.min.js"></script>
+      <script>window.MathJax = {"loader": {"load": ["[tex]/mathtools"]}, "tex": {"packages": {"[+]": ["mathtools"]}, "macros": {"ANCFdk": "{\\LU{0}{\\dv_k}}", "ANCFdkO": "{\\LU{0}{\\dv_{0,k}}}", "ANCFdkOtp": "{\\LU{0}{\\dv_{0,k}\\tp}}", "ANCFdkt": "{\\LU{0}{\\dot\\dv_k}}", "Am": "{\\mathbf{A}}", "Dm": "{\\mathbf{D}}", "Em": "{\\mathbf{E}}", "Gm": "{\\mathbf{G}}", "Im": "{\\mathbf{I}}", "ImThree": "{\\mathbf{I}_{3 \\times 3}}", "Jm": "{\\mathbf{J}}", "Km": "{\\mathbf{K}}", "Mm": "{\\mathbf{M}}", "Pm": "{\\mathbf{P}}", "Rm": "{\\mathbf{R}}", "Sm": "{\\mathbf{S}}", "Tm": "{\\mathbf{T}}", "av": "{\\mathbf{a}}", "bv": "{\\mathbf{b}}", "cv": "{\\mathbf{c}}", "diffANCF": ["{\\frac{\\partial #1}{\\partial \\qv_{ANCF}}}", 1], "diffANCFdk": "{\\diffANCFmI{\\ANCFdk}}", "diffANCFmI": ["{\\frac{\\partial #1}{\\partial \\qv_{ANCF,m1}}}", 1], "diffANCFmIt": ["{\\frac{\\partial #1}{\\partial \\dot \\qv_{ANCF,m1}}}", 1], "diffANCFt": ["{\\frac{\\partial #1}{\\partial \\dot \\qv_{ANCF}}}", 1], "diffmI": ["{\\frac{\\partial #1}{\\partial \\qv_{m1}}}", 1], "diffmIt": ["{\\frac{\\partial #1}{\\partial \\dot \\qv_{m1}}}", 1], "diffmOI": ["{\\frac{\\partial #1}{\\partial \\qv_{m0,m1}}}", 1], "diffmOIt": ["{\\frac{\\partial #1}{\\partial \\dot \\qv_{m0,m1}}}", 1], "diffmOt": ["{\\frac{\\partial #1}{\\partial \\dot \\qv_{m0}}}", 1], "dv": "{\\mathbf{d}}", "ev": "{\\mathbf{e}}", "fv": "{\\mathbf{f}}", "gv": "{\\mathbf{g}}", "hv": "{\\mathbf{h}}", "nv": "{\\mathbf{n}}", "pv": "{\\mathbf{p}}", "qv": "{\\mathbf{q}}", "rv": "{\\mathbf{r}}", "sv": "{\\mathbf{s}}", "tv": "{\\mathbf{t}}", "uv": "{\\mathbf{u}}", "vv": "{\\mathbf{v}}", "xv": "{\\mathbf{x}}", "yv": "{\\mathbf{y}}", "zv": "{\\mathbf{z}}", "vspace": ["{}", 1], "ra": "{\\rightarrow}", "Rcal": "{\\mathbb{R}}", "Ccal": "{\\mathbb{C}}", "Ncal": "{\\mathbb{N}}", "Rot": "{\\mathbf{A}}", "dd": "{\\mathrm{d}}", "ps": "{p_\\mathrm{s}}", "co": "{\\mathrm{c}}", "si": "{\\mathrm{s}}", "tp": "{^\\mathrm{T}}", "diag": "{\\mathrm{diag}}", "vec": "{\\mathrm{vec}}", "Null": "{\\mathbf{0}}", "varepsilonDot": "{\\boldsymbol{\\varepsilon}}", "talpha": "{\\boldsymbol{\\alpha}}", "tbeta": "{\\boldsymbol{\\beta}}", "tgamma": "{\\boldsymbol{\\gamma}}", "tchi": "{\\boldsymbol{\\chi}}", "tdelta": "{\\boldsymbol{\\delta}}", "teps": "{\\boldsymbol{\\varepsilon}}", "tepsDot": "{\\boldsymbol{\\dot \\varepsilon}}", "teta": "{\\boldsymbol{\\eta}}", "tkappa": "{\\boldsymbol{\\kappa}}", "tkappaDot": "{\\boldsymbol{\\dot \\kappa}}", "tphi": "{\\boldsymbol{\\phi}}", "boldVarPhi": "{\\boldsymbol{\\varphi}}", "tPhi": "{\\boldsymbol{\\Phi}}", "ttheta": "{\\boldsymbol{\\theta}}", "tTheta": "{\\boldsymbol{\\Theta}}", "tlambda": "{\\boldsymbol{\\lambda}}", "tnu": "{\\boldsymbol{\\nu}}", "tmu": "{\\boldsymbol{\\mu}}", "tpsi": "{\\boldsymbol{\\psi}}", "tPsi": "{\\boldsymbol{\\Psi}}", "ttau": "{\\boldsymbol{\\tau}}", "tsigma": "{\\boldsymbol{\\sigma}}", "txi": "{\\boldsymbol{\\xi}}", "tzeta": "{\\boldsymbol{\\zeta}}", "tomega": "{\\boldsymbol{\\omega}}", "tOmega": "{\\boldsymbol{\\Omega}}", "vareps": "{\\varepsilon}", "myoverline": ["\\overline{#1}", 1], "pluseq": "\\mathrel{+}=", "LU": ["{\\prescript{#1}{}{#2}\\,}", 2], "LUX": ["{\\prescript{#1}{}{#2}#3\\,}", 3], "LUR": ["{\\prescript{#1}{}{#2}_{#3}\\,}", 3], "LURU": ["{\\prescript{#1}{}{#2}_{#3}^{#4}\\,}", 4], "LLdot": ["{\\prescript{}{#1}{\\dot{#2}}_{#3}\\,}", 3], "vr": ["{\\left[ \\begin{array}{c} { #1}\\vspace{0.04cm} \\\\ { #2}\\vspace{0.04cm} \\\\ { #3} \\end{array} \\right]}", 3], "mr": ["{\\left[ \\begin{array}{ccc} #1 & #2 & #3 \\vspace{0.04cm}\\\\ #4 & #5 & #6 \\vspace{0.04cm}\\\\ #7 & #8 & #9  \\end{array} \\right]}", 9], "vp": ["{\\left[ \\begin{array}{c} { #1} \\vspace{0.04cm}\\\\ { #2} \\end{array} \\right]}", 2], "mp": ["{\\left[ \\begin{array}{cc} #1 & #2 \\vspace{0.04cm}\\\\ #3 & #4 \\end{array} \\right]}", 4], "mfour": ["{\\left[ \\begin{array}{cccc} { #1} \\\\ { #2} \\\\ { #3} \\\\ { #4} \\end{array} \\right]}", 4], "vfour": ["{\\left[ \\begin{array}{c} { #1} \\\\ { #2} \\\\ { #3} \\\\ { #4} \\end{array} \\right]}", 4], "vrRow": ["{[#1,\\, #2,\\, #3]}", 3], "vsix": ["{\\left[ \\begin{array}{c} { #1} \\\\ { #2} \\\\ { #3} \\\\ { #4} \\\\ { #5} \\\\ { #6} \\end{array} \\right]}", 6], "vsixb": ["{\\begin{array}{c} { #1} \\\\ { #2} \\\\ { #3} \\\\ { #4} \\\\ { #5} \\\\ { #6} \\end{array} }", 6], "vsixs": ["{ \\begin{array}{c} { #1} \\\\ { #2} \\\\ { #3} \\\\ { #4} \\\\ { #5} \\\\ { #6} \\end{array} }", 6], "SO": "{q}", "FO": "{y}", "AE": "{\\lambda}", "SYS": "{s}", "SON": "{$2^\\mathrm{nd}$ order differential equations}", "FON": "{$1^\\mathrm{st}$ order differential equations}", "AEN": "{algebraic equations}", "Bm": "{\\mathbf{B}}", "Cm": "{\\mathbf{C}}", "Fm": "{\\mathbf{F}}", "SYSN": "{system equations}", "cIni": "{_\\mathrm{ini}}", "cRef": "{_\\mathrm{ref}}", "cCur": "{_\\mathrm{cur}}", "cVis": "{_\\mathrm{vis}}", "cSOS": "{_\\mathrm{start\\;of\\;step}}", "cConfig": "{_\\mathrm{config}}", "pLoc": "{\\mathbf{b}}", "pLocB": "{\\,^{b}{\\mathbf{v}}}", "pRef": "{\\mathbf{r}}", "pRefG": "{\\,^{0}{\\mathbf{r}}}", "indf": "{_\\mathrm{f}}", "indt": "{_\\mathrm{t}}", "indr": "{_\\mathrm{r}}", "indtt": "{_\\mathrm{tt}}", "indrr": "{_\\mathrm{rr}}", "indff": "{_\\mathrm{ff}}", "indtf": "{_\\mathrm{tf}}", "indrf": "{_\\mathrm{rf}}", "indtr": "{_\\mathrm{tr}}", "omegaBDtilde": "{\\LU{b}{\\tilde \\tomega_\\mathrm{bd}}}", "indrigid": "{_\\mathrm{rigid}}", "indred": "{_\\mathrm{red}}", "induser": "{_\\mathrm{user}}", "indu": "{_\\mathrm{u}}", "termA": ["{\\color{blue}{#1}}", 1], "termB": ["{\\color{red}{#1}}", 1], "termC": ["{\\color{green}{#1}}", 1], "acc": "{\\ddot{\\mathbf{q}}}", "GA": "{G\\alpha}", "Hm": "{\\mathbf{H}}", "ImTwo": "{\\mathbf{I}_{2 \\times 2}}", "Lm": "{\\mathbf{L}}", "Qm": "{\\mathbf{Q}}", "Vm": "{\\mathbf{V}}", "Wm": "{\\mathbf{W}}", "Xm": "{\\mathbf{X}}", "Ym": "{\\mathbf{Y}}", "aalg": "{\\mathbf{a}}", "iv": "{\\mathbf{i}}", "jv": "{\\mathbf{j}}", "kv": "{\\mathbf{k}}", "lv": "{\\mathbf{l}}", "mv": "{\\mathbf{m}}", "ov": "{\\mathbf{o}}", "vel": "{\\mathbf{v}}", "wv": "{\\mathbf{w}}"}}, "options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+      <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-mml-chtml.js"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+    <link rel="next" title="Object (Connector)" href="objectConnectorIndex.html" />
+    <link rel="prev" title="ObjectBeamGeometricallyExact" href="ObjectBeamGeometricallyExact.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            Exudyn1.13.3
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Exudyn User Manual</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../README.html">Exudyn</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../manual/gettingStarted.html">Installation and getting started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../manual/introduction.html">Overview on Exudyn</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../manual/introductionBasics.html">Exudyn basics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../manual/tutorial.html">Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../manual/GUI.html">Renderer, graphics and visualization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../manual/performanceErrors.html">Performance, errors and solver failures</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../manual/introductionAdvanced.html">Advanced topics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../manual/notation.html">Notation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../manual/theory.html">Theory and formulations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../manual/solver.html">Solvers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../cInterface/cInterfaceIndex.html">Python-C++ command interface</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Reference Manual</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="itemsIndex.html">Items reference manual</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="nodeIndex.html">Node</a></li>
+<li class="toctree-l2"><a class="reference internal" href="objectBodyIndex.html">Object (Body)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="objectSuperElementIndex.html">Object (SuperElement)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="objectObjectIndex.html">Object (Object)</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="objectFiniteElementIndex.html">Object (FiniteElement)</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="objectFiniteElementGeneral.html">General info for all finite elements</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ObjectANCFCable.html">ObjectANCFCable</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ObjectANCFCable2D.html">ObjectANCFCable2D</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ObjectALEANCFCable2D.html">ObjectALEANCFCable2D</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ObjectANCFBeam.html">ObjectANCFBeam</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ObjectBeamGeometricallyExact2D.html">ObjectBeamGeometricallyExact2D</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ObjectBeamGeometricallyExact.html">ObjectBeamGeometricallyExact</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">ObjectANCFThinPlate</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="objectConnectorIndex.html">Object (Connector)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="objectConstraintIndex.html">Object (Constraint)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="objectJointIndex.html">Object (Joint)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="markerIndex.html">Marker</a></li>
+<li class="toctree-l2"><a class="reference internal" href="loadIndex.html">Load</a></li>
+<li class="toctree-l2"><a class="reference internal" href="sensorIndex.html">Sensor</a></li>
+<li class="toctree-l2"><a class="reference internal" href="itemsIndex.html#parameter-changes">Parameter changes</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../pythonUtilities/utilitiesIndex.html">Python Utility Functions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../structures/structuresIndex.html">Structures and Settings</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../references.html">References</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Developer documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../dev/README.html">Exudyn developer documentation</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">How-to notes</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../howTo/condaEnvironments.html">Conda environments for Exudyn</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../howTo/sphinxDocs.html">Building the documentation</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Examples, models and issues</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../examples/examplesIndex.html">Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../testModels/testModelsIndex.html">TestModels</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../abbreviations.html">List of Abbreviations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../manual/revisions.html">Revisions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../CHANGELOG.html">Changelog</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../trackerlog.html">Issue tracker</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">Exudyn1.13.3</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="itemsIndex.html">Items reference manual</a></li>
+          <li class="breadcrumb-item"><a href="objectFiniteElementIndex.html">Object (FiniteElement)</a></li>
+      <li class="breadcrumb-item active">ObjectANCFThinPlate</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../../_sources/docs/generated/items/ObjectANCFThinPlate.md.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <!-- GENERATED by tools/generators/itemDocsEmitter.py from definitions/ - do not edit -->
+<section class="tex2jax_ignore mathjax_ignore" id="objectancfthinplate">
+<span id="sec-item-objectancfthinplate"></span><h1>ObjectANCFThinPlate<a class="headerlink" href="#objectancfthinplate" title="Link to this heading"></a></h1>
+<p>OBJECT UNDER CONSTRUCTION: A 3D thin Kirchhoff plate finite element based on the absolute nodal coordinate formulation, using 4 nodes of type NodePointSlope12. The geometry as well as (deformed and distorted) reference configuration is given by the nodes. The localPosition follows unit-coordinates in the range [-1,1] for X, Y and Z coordinates; the thickness of the plate is h; This element is under construction.</p>
+<a class="reference internal image-reference" href="../../../_images/ObjectANCFThinPlate.png"><img alt="../../../_images/ObjectANCFThinPlate.png" src="../../../_images/ObjectANCFThinPlate.png" width="500" />
+</a>
+<section id="interface">
+<h2>Interface<a class="headerlink" href="#interface" title="Link to this heading"></a></h2>
+<ul class="simple">
+<li><p>Nodes it takes: <a class="reference internal" href="NodePointSlope12.html#sec-item-nodepointslope12"><span class="std std-ref">NodePointSlope12</span></a></p></li>
+<li><p>Body markers that can be placed on it: <a class="reference internal" href="MarkerBodyMass.html#sec-item-markerbodymass"><span class="std std-ref">MarkerBodyMass</span></a>, <a class="reference internal" href="MarkerBodyPosition.html#sec-item-markerbodyposition"><span class="std std-ref">MarkerBodyPosition</span></a></p></li>
+</ul>
+</section>
+<section id="parameters">
+<h2>Parameters<a class="headerlink" href="#parameters" title="Link to this heading"></a></h2>
+<p>The parameters of the item; in a dictionary, its type is ‘ANCFThinPlate’:</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>name</p></th>
+<th class="head"><p>type</p></th>
+<th class="head"><p>size</p></th>
+<th class="head"><p>default</p></th>
+<th class="head"><p>description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><strong>name</strong></p></td>
+<td><p>String</p></td>
+<td><p></p></td>
+<td><p>‘’</p></td>
+<td><p>objects’s unique name</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>thickness</strong></p></td>
+<td><p>NumpyVector</p></td>
+<td><p></p></td>
+<td><p>[]</p></td>
+<td><p>(symbol: <span class="math notranslate nohighlight">\(h\)</span>) [SI:m] thickness of the plate: one value for a constant thickness; 4 values, the thicknesses at the nodes in their order, interpolated bilinearly; or 12 values <span class="math notranslate nohighlight">\([h_0,\, h_{,s,0},\, h_{,t,0},\, \ldots,\, h_3,\, h_{,s,3},\, h_{,t,3}]\)</span>, the thickness and its gradients along the slopes of each node, interpolated with the 12 shape functions of the position; with 4 or 12 values, the stiffness is computed from the local thickness, see strainCoefficients</p></td>
+</tr>
+<tr class="row-even"><td><p><strong>density</strong></p></td>
+<td><p>UReal</p></td>
+<td><p></p></td>
+<td><p>0.</p></td>
+<td><p>(symbol: <span class="math notranslate nohighlight">\(\rho\)</span>) [SI:kg/m<span class="math notranslate nohighlight">\(^3\)</span>] density of the plate, possibly averaged over thickness</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>massProportionalDamping</strong></p></td>
+<td><p>Real</p></td>
+<td><p></p></td>
+<td><p>0.</p></td>
+<td><p>mass-proportional damping coefficient <span class="math notranslate nohighlight">\(\alpha\)</span> [SI:1/s]; adds massmatrix proportional damping forces <span class="math notranslate nohighlight">\(\fv_d = \alpha \Mm \dot{\qv}\)</span></p></td>
+</tr>
+<tr class="row-even"><td><p><strong>stiffnessProportionalDamping</strong></p></td>
+<td><p>Real</p></td>
+<td><p></p></td>
+<td><p>0.</p></td>
+<td><p>membrane stiffness-proportional damping coefficient <span class="math notranslate nohighlight">\(\beta_\varepsilon\)</span> [SI:s]: Kelvin-Voigt damping <span class="math notranslate nohighlight">\(\beta_\varepsilon\, \Dm_\varepsilon\, \dot\teps\)</span> added to the membrane forces, in the current configuration; it does not damp a rigid-body motion</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>bendingStiffnessProportionalDamping</strong></p></td>
+<td><p>Real</p></td>
+<td><p></p></td>
+<td><p>-1.</p></td>
+<td><p>bending stiffness-proportional damping coefficient <span class="math notranslate nohighlight">\(\beta_\kappa\)</span> [SI:s]: Kelvin-Voigt damping <span class="math notranslate nohighlight">\(\beta_\kappa\, \Dm_\kappa\, \dot\tkappa\)</span> added to the bending moments; if negative (default), <span class="math notranslate nohighlight">\(\beta_\varepsilon\)</span> of stiffnessProportionalDamping is used, 0 switches it off</p></td>
+</tr>
+<tr class="row-even"><td><p><strong>strainCoefficients</strong></p></td>
+<td><p>Matrix3DList</p></td>
+<td><p></p></td>
+<td><p>[]</p></td>
+<td><p>(symbol: <span class="math notranslate nohighlight">\(\Dm_\varepsilon\)</span>) [SI:N/m] stiffness coefficients related to inplane normal and shear strains, integrated over height of the plate, as a list of 3D matrices; for a constant thickness one matrix; for 4 or 12 thickness values, the first matrix divided by thickness[0] is the material matrix of a homogeneous isotropic plate, <span class="math notranslate nohighlight">\(\Dm_\varepsilon = \Dm_b\, h\)</span> and <span class="math notranslate nohighlight">\(\Dm_\kappa = \Dm_b\, h^3/12\)</span> at each point, and further matrices are not used</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>curvatureCoefficients</strong></p></td>
+<td><p>Matrix3DList</p></td>
+<td><p></p></td>
+<td><p>[]</p></td>
+<td><p>(symbol: <span class="math notranslate nohighlight">\(\Dm_\kappa\)</span>) [SI:Nm] stiffness coefficients related to curvatures, integrated over height of the plate, as a list of 3D matrices; used for a constant thickness (one matrix); for 4 or 12 thickness values <span class="math notranslate nohighlight">\(\Dm_\kappa\)</span> follows from strainCoefficients and the local thickness</p></td>
+</tr>
+<tr class="row-even"><td><p><strong>slopesScalingX</strong></p></td>
+<td><p>Vector4D</p></td>
+<td><p>4</p></td>
+<td><p>[-1.,-1.,-1.,-1.]</p></td>
+<td><p>scaling of x-slopes at each element node; flat elements: half of the side length of the element; curved: optimal values such that curved geometry is best approximated; if negative (default) values are used, length is computed from node distances.</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>slopesScalingY</strong></p></td>
+<td><p>Vector4D</p></td>
+<td><p>4</p></td>
+<td><p>[-1.,-1.,-1.,-1.]</p></td>
+<td><p>scaling of y-slopes at each element node; flat elements: half of the side length of the element; curved: optimal values such that curved geometry is best approximated; if negative (default) values are used, length is computed from node distances.</p></td>
+</tr>
+<tr class="row-even"><td><p><strong>nodeNumbers</strong></p></td>
+<td><p>NodeIndex4</p></td>
+<td><p>4</p></td>
+<td><p>[invalid (-1), invalid (-1), invalid (-1), invalid (-1)]</p></td>
+<td><p>4 NodePointSlope12 node numbers, with local (xi,eta) coordinates as [(-1,-1),(1,-1),(1,1),(-1,1)]</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>useReducedOrderIntegration</strong></p></td>
+<td><p>Index</p></td>
+<td><p></p></td>
+<td><p>0</p></td>
+<td><p>integration of the virtual work: 0 - Gauss 5 x 5 points for the membrane and the bending terms; 1 - Lobatto 3 x 3 points for the membrane and Gauss 2 x 2 for the bending terms (disjoint points, against membrane locking); 2 - the same as 1</p></td>
+</tr>
+<tr class="row-even"><td><p><strong>visualization</strong></p></td>
+<td><p>VObjectANCFThinPlate</p></td>
+<td><p></p></td>
+<td><p></p></td>
+<td><p>parameters for visualization of item</p></td>
+</tr>
+</tbody>
+</table>
+<p>Renamed parameters, still taken with a <code class="docutils literal notranslate"><span class="pre">DeprecationWarning</span></code>: <code class="docutils literal notranslate"><span class="pre">physicsThickness</span></code> (deprecated since 1.12.258, removed in 2031): use <code class="docutils literal notranslate"><span class="pre">thickness</span></code>; <code class="docutils literal notranslate"><span class="pre">physicsDensity</span></code> (deprecated since 1.12.258, removed in 2031): use <code class="docutils literal notranslate"><span class="pre">density</span></code>; <code class="docutils literal notranslate"><span class="pre">physicsMassProportionalDamping</span></code> (deprecated since 1.12.258, removed in 2031): use <code class="docutils literal notranslate"><span class="pre">massProportionalDamping</span></code>; <code class="docutils literal notranslate"><span class="pre">physicsStrainCoefficients</span></code> (deprecated since 1.12.258, removed in 2031): use <code class="docutils literal notranslate"><span class="pre">strainCoefficients</span></code>; <code class="docutils literal notranslate"><span class="pre">physicsCurvatureCoefficients</span></code> (deprecated since 1.12.258, removed in 2031): use <code class="docutils literal notranslate"><span class="pre">curvatureCoefficients</span></code>.</p>
+</section>
+<section id="visualization-parameters">
+<h2>Visualization parameters<a class="headerlink" href="#visualization-parameters" title="Link to this heading"></a></h2>
+<p>The parameters of <code class="docutils literal notranslate"><span class="pre">VObjectANCFThinPlate</span></code>, given as <code class="docutils literal notranslate"><span class="pre">visualization</span></code>:</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>name</p></th>
+<th class="head"><p>type</p></th>
+<th class="head"><p>size</p></th>
+<th class="head"><p>default</p></th>
+<th class="head"><p>description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><strong>show</strong></p></td>
+<td><p>Bool</p></td>
+<td><p></p></td>
+<td><p>True</p></td>
+<td><p>set true, if item is shown in visualization and false if it is not shown; the plate is drawn as n x n quads per element, n = bodies.beams.axialTiling/2, at least 2, on its surfaces if it has a thickness; the outline of the element is drawn as lines if view0.scene.showMeshEdges is set when the graphics data is built (the curved surface is drawn as flat quads, so the renderer cannot find the element edges itself)</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>color</strong></p></td>
+<td><p>Float4</p></td>
+<td><p>4</p></td>
+<td><p>[-1.,-1.,-1.,-1.]</p></td>
+<td><p>RGBA color of the object; if R==-1, use default color</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="drawing">
+<h2>Drawing<a class="headerlink" href="#drawing" title="Link to this heading"></a></h2>
+<p>Drawn as <a class="reference internal" href="objectFiniteElementGeneral.html#sec-drawing-objectsfiniteelement"><span class="std std-ref">all finite elements</span></a>; the mid surface, or with <code class="docutils literal notranslate"><span class="pre">bodies.shells.drawSolid</span></code> both surfaces and the edges at <code class="docutils literal notranslate"><span class="pre">bodies.shells.thicknessFactor</span></code> times the thickness, as n x n quads per element, n = <code class="docutils literal notranslate"><span class="pre">bodies.shells.inPlaneTiling</span></code>, at least 2; the outline of the element as lines with <code class="docutils literal notranslate"><span class="pre">view0.scene.showMeshEdges</span></code>. The contour at the thickness coordinate <code class="docutils literal notranslate"><span class="pre">bodies.shells.contourZeta</span></code> on the top, its negative on the bottom; with <code class="docutils literal notranslate"><span class="pre">bodies.shells.reducedInterpolation</span></code> the strain-type outputs interpolated bilinearly from the corners of the element; with <code class="docutils literal notranslate"><span class="pre">bodies.shells.drawNormal</span></code> the contour value along the normal of the mid surface as lines.</p>
+<p>Settings beyond those of all finite elements: <a class="reference internal" href="../structures/VisualizationSettings.html#sec-vsettingsshells"><span class="std std-ref"><code class="docutils literal notranslate"><span class="pre">bodies.shells.contourZeta</span></code></span></a>, <a class="reference internal" href="../structures/VisualizationSettings.html#sec-vsettingsshells"><span class="std std-ref"><code class="docutils literal notranslate"><span class="pre">bodies.shells.drawNormal</span></code></span></a>, <a class="reference internal" href="../structures/VisualizationSettings.html#sec-vsettingsshells"><span class="std std-ref"><code class="docutils literal notranslate"><span class="pre">bodies.shells.drawNormalColor</span></code></span></a>, <a class="reference internal" href="../structures/VisualizationSettings.html#sec-vsettingsshells"><span class="std std-ref"><code class="docutils literal notranslate"><span class="pre">bodies.shells.drawNormalFactor</span></code></span></a>, <a class="reference internal" href="../structures/VisualizationSettings.html#sec-vsettingsshells"><span class="std std-ref"><code class="docutils literal notranslate"><span class="pre">bodies.shells.drawNormalLines</span></code></span></a>, <a class="reference internal" href="../structures/VisualizationSettings.html#sec-vsettingsshells"><span class="std std-ref"><code class="docutils literal notranslate"><span class="pre">bodies.shells.drawSolid</span></code></span></a>, <a class="reference internal" href="../structures/VisualizationSettings.html#sec-vsettingsshells"><span class="std std-ref"><code class="docutils literal notranslate"><span class="pre">bodies.shells.inPlaneTiling</span></code></span></a>, <a class="reference internal" href="../structures/VisualizationSettings.html#sec-vsettingsshells"><span class="std std-ref"><code class="docutils literal notranslate"><span class="pre">bodies.shells.reducedInterpolation</span></code></span></a>, <a class="reference internal" href="../structures/VisualizationSettings.html#sec-vsettingsshells"><span class="std std-ref"><code class="docutils literal notranslate"><span class="pre">bodies.shells.thicknessFactor</span></code></span></a>, <a class="reference internal" href="../structures/VisualizationSettings.html#sec-vsettingscontour"><span class="std std-ref"><code class="docutils literal notranslate"><span class="pre">contour.nodesColored</span></code></span></a>, <a class="reference internal" href="../structures/VisualizationSettings.html#sec-vsettingsopengl"><span class="std std-ref"><code class="docutils literal notranslate"><span class="pre">openGL.faceEdgesColor</span></code></span></a>, <a class="reference internal" href="../structures/VisualizationSettings.html#sec-vsettingsscene"><span class="std std-ref"><code class="docutils literal notranslate"><span class="pre">view0.scene.showMeshEdges</span></code></span></a>.</p>
+</section>
+<section id="output-variables">
+<h2>Output variables<a class="headerlink" href="#output-variables" title="Link to this heading"></a></h2>
+<p>Available as <code class="docutils literal notranslate"><span class="pre">OutputVariableType</span></code> in sensors, <code class="docutils literal notranslate"><span class="pre">Get...Output()</span></code> and other functions:</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>output variable</p></th>
+<th class="head"><p>symbol</p></th>
+<th class="head"><p>description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Position</p></td>
+<td><p><span class="math notranslate nohighlight">\(\LU{0}{\pv\cConfig(x,y,z)}\)</span></p></td>
+<td><p>global position vector of local position <span class="math notranslate nohighlight">\([x,y,z]\)</span></p></td>
+</tr>
+<tr class="row-odd"><td><p>Displacement</p></td>
+<td><p><span class="math notranslate nohighlight">\(\LU{0}{\uv\cConfig(x,y,z)} = \LU{0}{\pv\cConfig(x,y,z)} - \LU{0}{\pv\cRef(x,y,z)}\)</span></p></td>
+<td><p>global displacement vector of local position</p></td>
+</tr>
+<tr class="row-even"><td><p>Velocity</p></td>
+<td><p><span class="math notranslate nohighlight">\(\LU{0}{\vv(x,y,z)} = \LU{0}{\dot \rv(x,y,z)}\)</span></p></td>
+<td><p>global velocity vector of local position</p></td>
+</tr>
+<tr class="row-odd"><td><p>Director1</p></td>
+<td><p><span class="math notranslate nohighlight">\(\rv_x(x,y,z)\)</span></p></td>
+<td><p>(axial) slope vector of local position (at <span class="math notranslate nohighlight">\(z\)</span>=0)</p></td>
+</tr>
+<tr class="row-even"><td><p>Director2</p></td>
+<td><p><span class="math notranslate nohighlight">\(\rv_y(x,y,z)\)</span></p></td>
+<td><p>(axial) slope vector of local position (at <span class="math notranslate nohighlight">\(z\)</span>=0)</p></td>
+</tr>
+<tr class="row-odd"><td><p>StrainLocal</p></td>
+<td><p><span class="math notranslate nohighlight">\([\varepsilon_{11},\, \varepsilon_{22},\, 0,\, 0,\, 0,\, \gamma_{12}]\tp\)</span></p></td>
+<td><p>strains at the thickness coordinate <span class="math notranslate nohighlight">\(\zeta\)</span> of the local position, <span class="math notranslate nohighlight">\(\teps - \zeta\,\frac{h}{2}\,\tkappa\)</span>, relative to the reference configuration</p></td>
+</tr>
+<tr class="row-even"><td><p>CurvatureLocal</p></td>
+<td><p><span class="math notranslate nohighlight">\([\kappa_{xx},\, \kappa_{yy},\, \kappa_{xy}]\tp\)</span></p></td>
+<td><p>curvatures of the mid-surface relative to the reference configuration, positive where the surface bends towards its normal</p></td>
+</tr>
+<tr class="row-odd"><td><p>ForceLocal</p></td>
+<td><p><span class="math notranslate nohighlight">\([N_{xx},\, N_{yy},\, N_{xy}]\tp\)</span></p></td>
+<td><p>membrane force resultants per length in the local frame, from the membrane strains relative to the reference configuration</p></td>
+</tr>
+<tr class="row-even"><td><p>TorqueLocal</p></td>
+<td><p><span class="math notranslate nohighlight">\([M_{xx},\, M_{yy},\, M_{xy}]\tp\)</span></p></td>
+<td><p>bending moment resultants per length in the local frame, <span class="math notranslate nohighlight">\(\mathbf{M} = \Dm_\kappa \tkappa\)</span>, from the curvatures relative to the reference configuration</p></td>
+</tr>
+<tr class="row-odd"><td><p>StressLocal</p></td>
+<td><p><span class="math notranslate nohighlight">\([\sigma_{11},\, \sigma_{22},\, 0,\, 0,\, 0,\, \sigma_{12}]\tp\)</span></p></td>
+<td><p>stresses at the thickness coordinate <span class="math notranslate nohighlight">\(\zeta\)</span> of the local position, <span class="math notranslate nohighlight">\(\mathbf{N}/h - \zeta\, 6\mathbf{M}/h^2\)</span>; without damping</p></td>
+</tr>
+<tr class="row-even"><td><p>Acceleration</p></td>
+<td><p><span class="math notranslate nohighlight">\(\LU{0}{\av(x,y,z)} = \LU{0}{\ddot \rv(x,y,z)}\)</span></p></td>
+<td><p>global acceleration vector of local position</p></td>
+</tr>
+<tr class="row-odd"><td><p>KineticEnergy</p></td>
+<td><p><span class="math notranslate nohighlight">\(T = \frac{1}{2} \dot\qv\tp \Mm\, \dot\qv\)</span></p></td>
+<td><p>kinetic energy from the mass matrix of the current state and the velocities of the nodes; current configuration only; localPosition must be <span class="math notranslate nohighlight">\([0,0,0]\)</span></p></td>
+</tr>
+<tr class="row-even"><td><p>PotentialEnergy</p></td>
+<td><p><span class="math notranslate nohighlight">\(V = \frac{1}{2}\int_A \teps\tp \mathbf{N} + \tkappa\tp \mathbf{M}\, dA\)</span></p></td>
+<td><p>elastic energy of the membrane strains and curvatures relative to the reference configuration, with the membrane forces <span class="math notranslate nohighlight">\(\mathbf{N}\)</span> and moments <span class="math notranslate nohighlight">\(\mathbf{M}\)</span> and the integration rule of the elastic forces; localPosition must be <span class="math notranslate nohighlight">\([0,0,0]\)</span></p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="detailed-description">
+<span id="description-objectancfthinplate"></span><h2>Detailed description<a class="headerlink" href="#detailed-description" title="Link to this heading"></a></h2>
+<p><strong>This element is under construction</strong>, as its class description says.</p>
+<section id="nodes-and-coordinates">
+<h3>Nodes and coordinates<a class="headerlink" href="#nodes-and-coordinates" title="Link to this heading"></a></h3>
+<p>Four nodes of type <code class="docutils literal notranslate"><span class="pre">NodePointSlope12</span></code>, each with a position and the two in-plane slopes; 36
+coordinates. The local coordinates <span class="math notranslate nohighlight">\((\xi,\,\eta) \in [-1,1]^2\)</span> place node 0 at <span class="math notranslate nohighlight">\((-1,-1)\)</span>, node 1 at
+<span class="math notranslate nohighlight">\((1,-1)\)</span>, node 2 at <span class="math notranslate nohighlight">\((1,1)\)</span> and node 3 at <span class="math notranslate nohighlight">\((-1,1)\)</span>; the thickness coordinate <span class="math notranslate nohighlight">\(\zeta\)</span> is in <span class="math notranslate nohighlight">\([-1,1]\)</span> as well.</p>
+</section>
+<section id="kinematics-and-interpolation">
+<h3>Kinematics and interpolation<a class="headerlink" href="#kinematics-and-interpolation" title="Link to this heading"></a></h3>
+<p>The position of the mid-surface is interpolated with 12 shape functions of the
+Adini-Clough-Melosh type - cubic Hermite in each direction, from the positions and slopes of the
+four nodes -, and the slopes of a node are scaled by <code class="docutils literal notranslate"><span class="pre">slopesScalingX</span></code> and <code class="docutils literal notranslate"><span class="pre">slopesScalingY</span></code>, the
+side lengths of a flat element by default. The derivatives with respect to <span class="math notranslate nohighlight">\((\xi,\,\eta)\)</span> are mapped to
+the local frame of the reference configuration, <span class="math notranslate nohighlight">\(\ev_1 \parallel \rv_{,\xi}\)</span> and <span class="math notranslate nohighlight">\(\ev_2 = \nv_0 \times \ev_1\)</span>, with
+the inverse of the reference Jacobian <span class="math notranslate nohighlight">\(\Am = \Jm_0^{-1}\)</span>.</p>
+</section>
+<section id="strains-and-elastic-forces">
+<h3>Strains and elastic forces<a class="headerlink" href="#strains-and-elastic-forces" title="Link to this heading"></a></h3>
+<p>Kirchhoff-Love plate: the Green-Lagrange strains of the mid-surface,
+<span class="math notranslate nohighlight">\(\teps = [\frac{1}{2} \rv_{,x}\tp \rv_{,x},\; \frac{1}{2} \rv_{,y}\tp \rv_{,y},\; \rv_{,x}\tp \rv_{,y}]\tp\)</span>, and the curvatures of the
+material measure, with <span class="math notranslate nohighlight">\(\nv_3 = \rv_{,x} \times \rv_{,y}\)</span>,</p>
+<div class="math notranslate nohighlight">
+\[
+\kappa_{xx} = \frac{\nv_3\tp \rv_{,xx}}{|\nv_3|\,|\rv_{,x}|}, \quad
+\kappa_{yy} = \frac{\nv_3\tp \rv_{,yy}}{|\nv_3|\,|\rv_{,y}|}, \quad
+\kappa_{xy} = \frac{2\,\nv_3\tp \rv_{,xy}}{|\nv_3|\,\sqrt{|\rv_{,x}|\,|\rv_{,y}|}},
+\]</div>
+<p>each relative to the reference configuration. For a strip, <span class="math notranslate nohighlight">\(\kappa_{xx}\)</span> is the curvature of <code class="docutils literal notranslate"><span class="pre">ObjectANCFCable2D</span></code>, and
+pure bending gives no membrane strain. The membrane forces <span class="math notranslate nohighlight">\(\mathbf{N} = \Dm_\varepsilon \teps\)</span> and the moments
+<span class="math notranslate nohighlight">\(\mathbf{M} = \Dm_\kappa \tkappa\)</span> do virtual work in two separate integrals, whose points <code class="docutils literal notranslate"><span class="pre">useReducedOrderIntegration</span></code>
+chooses: 0 - Gauss <span class="math notranslate nohighlight">\(5 \times 5\)</span> for both; 1 - Lobatto <span class="math notranslate nohighlight">\(3 \times 3\)</span> for the membrane and Gauss <span class="math notranslate nohighlight">\(2 \times 2\)</span> for the bending
+(disjoint points, against membrane locking, after Ntarladima, Pieber and Gerstmayr 2023); 2 - the same as 1.</p>
+<p>The thickness is constant (one value), bilinear in <span class="math notranslate nohighlight">\((\xi,\,\eta)\)</span> from 4 nodal values, or interpolated from 12 values -
+a thickness and its two gradients per node - with the 12 shape functions of the position. With 4 or 12 values the
+stiffness follows the local thickness, <span class="math notranslate nohighlight">\(\Dm_\varepsilon = \Dm_b\, h\)</span> and <span class="math notranslate nohighlight">\(\Dm_\kappa = \Dm_b\, h^3/12\)</span> with
+<span class="math notranslate nohighlight">\(\Dm_b\)</span> = <code class="docutils literal notranslate"><span class="pre">strainCoefficients[0]</span></code>/<code class="docutils literal notranslate"><span class="pre">thickness[0]</span></code>: a homogeneous isotropic plate.</p>
+</section>
+<section id="mass-matrix-and-damping">
+<h3>Mass matrix and damping<a class="headerlink" href="#mass-matrix-and-damping" title="Link to this heading"></a></h3>
+<p>The mass matrix is constant (Gauss <span class="math notranslate nohighlight">\(5 \times 5\)</span>). Mass-proportional damping adds <span class="math notranslate nohighlight">\(\fv_d = \alpha \Mm \dot\qv\)</span>;
+Kelvin-Voigt damping adds <span class="math notranslate nohighlight">\(\beta_\varepsilon \Dm_\varepsilon \dot\teps\)</span> to the membrane forces and
+<span class="math notranslate nohighlight">\(\beta_\kappa \Dm_\kappa \dot\tkappa\)</span> to the moments, evaluated in the current configuration, so that it does not damp a
+rigid-body motion. The Jacobian is computed by automatic differentiation with respect to the coordinates and, for
+the damping, the velocities.</p>
+</section>
+<section id="outputs-through-the-thickness">
+<h3>Outputs through the thickness<a class="headerlink" href="#outputs-through-the-thickness" title="Link to this heading"></a></h3>
+<p>At <span class="math notranslate nohighlight">\(\zeta \in [-1,1]\)</span>: <code class="docutils literal notranslate"><span class="pre">StrainLocal</span></code> <span class="math notranslate nohighlight">\(= \teps - \zeta\,\frac{h}{2}\,\tkappa\)</span> and <code class="docutils literal notranslate"><span class="pre">StressLocal</span></code>
+<span class="math notranslate nohighlight">\(= \mathbf{N}/h - \zeta\, 6\mathbf{M}/h^2\)</span>, both as 6 components <span class="math notranslate nohighlight">\([\cdot_{11},\, \cdot_{22},\, 0,\, 0,\, 0,\, \cdot_{12}]\)</span>;
+<code class="docutils literal notranslate"><span class="pre">ForceLocal</span></code> <span class="math notranslate nohighlight">\(= [N_{11},\, N_{22},\, N_{12}]\)</span> per length, <code class="docutils literal notranslate"><span class="pre">TorqueLocal</span></code> <span class="math notranslate nohighlight">\(= [M_{11},\, M_{22},\, M_{12}]\)</span> and
+<code class="docutils literal notranslate"><span class="pre">CurvatureLocal</span></code> <span class="math notranslate nohighlight">\(= [\kappa_{xx},\, \kappa_{yy},\, \kappa_{xy}]\)</span>. A curvature is positive where the surface bends
+towards its normal <span class="math notranslate nohighlight">\(\nv_3\)</span>, and <span class="math notranslate nohighlight">\(\zeta = 1\)</span> is the side of the normal: for a strip whose normal points in <span class="math notranslate nohighlight">\(+z\)</span> the
+signs of <code class="docutils literal notranslate"><span class="pre">ObjectANCFCable2D</span></code>, <span class="math notranslate nohighlight">\(\kappa = w''\)</span> and <span class="math notranslate nohighlight">\(\varepsilon = \varepsilon_m - y\,\kappa\)</span>.</p>
+</section>
+<section id="limitations">
+<h3>Limitations<a class="headerlink" href="#limitations" title="Link to this heading"></a></h3>
+<p>Under construction; for output variables, the local position is given in <span class="math notranslate nohighlight">\([-1,1]^3\)</span>. The gradients of the 12
+thickness values are per unit length along the slopes of the nodes; the thickness function of <code class="docutils literal notranslate"><span class="pre">ShellMesh</span></code> gives
+them so.</p>
+</section>
+</section>
+<section id="mini-example">
+<span id="miniexample-objectancfthinplate"></span><h2>Mini example<a class="headerlink" href="#mini-example" title="Link to this heading"></a></h2>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1">#a square plate of 2x2 ANCF thin plate elements, clamped at one edge, under its own weight</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">exudyn.shells</span><span class="w"> </span><span class="kn">import</span> <span class="nc">ShellMesh</span>
+<span class="n">plate</span> <span class="o">=</span> <span class="nc">ShellMesh</span><span class="p">(</span><span class="n">vertices</span><span class="o">=</span><span class="p">[[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">],[</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">],[</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">],[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">]],</span> <span class="n">numberOfElementsX</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">numberOfElementsY</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+                  <span class="n">youngsModulus</span><span class="o">=</span><span class="mf">2e9</span><span class="p">,</span> <span class="n">poissonsRatio</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">density</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span> <span class="n">thickness</span><span class="o">=</span><span class="mf">0.01</span><span class="p">)</span>
+<span class="n">plate</span><span class="o">.</span><span class="n">CreateANCFThinPlateElements</span><span class="p">(</span><span class="n">mbs</span><span class="p">)</span> <span class="c1">#adds ObjectANCFThinPlate elements on NodePointSlope12 nodes</span>
+<span class="k">for</span> <span class="n">node</span> <span class="ow">in</span> <span class="n">plate</span><span class="o">.</span><span class="n">boundaryNodeNumbers</span><span class="p">[</span><span class="s1">'left'</span><span class="p">]:</span>
+    <span class="n">mNode</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">AddMarker</span><span class="p">(</span><span class="nc">MarkerNodeRigid</span><span class="p">(</span><span class="n">nodeNumber</span><span class="o">=</span><span class="n">node</span><span class="p">))</span>
+    <span class="n">mbs</span><span class="o">.</span><span class="nf">AddObject</span><span class="p">(</span><span class="nc">ObjectJointGeneric</span><span class="p">(</span><span class="n">markerNumbers</span><span class="o">=</span><span class="p">[</span><span class="n">mbs</span><span class="o">.</span><span class="nf">AddMarker</span><span class="p">(</span><span class="nc">MarkerBodyRigid</span><span class="p">(</span><span class="n">bodyNumber</span><span class="o">=</span><span class="n">oGround</span><span class="p">,</span>
+                  <span class="n">localPosition</span><span class="o">=</span><span class="n">mbs</span><span class="o">.</span><span class="nf">GetNodeOutput</span><span class="p">(</span><span class="n">node</span><span class="p">,</span> <span class="n">exu</span><span class="o">.</span><span class="nc">OutputVariableType</span><span class="o">.</span><span class="n">Position</span><span class="p">,</span> <span class="n">exu</span><span class="o">.</span><span class="nc">ConfigurationType</span><span class="o">.</span><span class="n">Reference</span><span class="p">))),</span>
+                  <span class="n">mNode</span><span class="p">]))</span>
+<span class="k">for</span> <span class="n">element</span> <span class="ow">in</span> <span class="n">plate</span><span class="o">.</span><span class="n">elementNumbers</span><span class="p">:</span>
+    <span class="n">mbs</span><span class="o">.</span><span class="nf">AddLoad</span><span class="p">(</span><span class="nc">LoadMassProportional</span><span class="p">(</span><span class="n">markerNumber</span><span class="o">=</span><span class="n">mbs</span><span class="o">.</span><span class="nf">AddMarker</span><span class="p">(</span><span class="nc">MarkerBodyMass</span><span class="p">(</span><span class="n">bodyNumber</span><span class="o">=</span><span class="n">element</span><span class="p">)),</span>
+                                     <span class="n">loadVector</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="o">-</span><span class="mf">9.81</span><span class="p">]))</span>
+
+<span class="n">mbs</span><span class="o">.</span><span class="nf">Assemble</span><span class="p">()</span>
+<span class="n">mbs</span><span class="o">.</span><span class="nf">SolveStatic</span><span class="p">()</span>
+
+<span class="c1">#a corner of the free edge; compare q*L^4/(8*D) = 0.0736 of a cantilever strip, D = E*h^3/12</span>
+<span class="n">exu</span><span class="o">.</span><span class="n">sys</span><span class="p">[</span><span class="s1">'testResult'</span><span class="p">]</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">GetNodeOutput</span><span class="p">(</span><span class="n">plate</span><span class="o">.</span><span class="n">vertexNodeNumbers</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">exu</span><span class="o">.</span><span class="nc">OutputVariableType</span><span class="o">.</span><span class="n">Displacement</span><span class="p">)[</span><span class="mi">2</span><span class="p">]</span>
+</pre></div>
+</div>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="ObjectBeamGeometricallyExact.html" class="btn btn-neutral float-left" title="ObjectBeamGeometricallyExact" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="objectConnectorIndex.html" class="btn btn-neutral float-right" title="Object (Connector)" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

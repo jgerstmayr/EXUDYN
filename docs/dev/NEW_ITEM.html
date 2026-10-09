@@ -1,0 +1,337 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>How to set up a new item &mdash; Exudyn1.13.3 1.13.3 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=3ee1c6c6" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/rtd_sphinx_search.min.css" />
+      <link rel="stylesheet" type="text/css" href="../../_static/custom.css?v=e2783f0e" />
+
+  
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=b8a3e558"></script>
+      <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../_static/copybutton.js?v=f281be69"></script>
+      <script src="../../_static/js/rtd_search_config.js"></script>
+      <script src="../../_static/js/rtd_sphinx_search.min.js"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Manual GUI check before a release" href="GUI_MANUAL_CHECK.html" />
+    <link rel="prev" title="Development workflow" href="WORKFLOW.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            Exudyn1.13.3
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Exudyn User Manual</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../README.html">Exudyn</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../manual/gettingStarted.html">Installation and getting started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../manual/introduction.html">Overview on Exudyn</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../manual/introductionBasics.html">Exudyn basics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../manual/tutorial.html">Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../manual/GUI.html">Renderer, graphics and visualization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../manual/performanceErrors.html">Performance, errors and solver failures</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../manual/introductionAdvanced.html">Advanced topics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../manual/notation.html">Notation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../manual/theory.html">Theory and formulations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../manual/solver.html">Solvers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../generated/cInterface/cInterfaceIndex.html">Python-C++ command interface</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Reference Manual</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../generated/items/itemsIndex.html">Items reference manual</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../generated/pythonUtilities/utilitiesIndex.html">Python Utility Functions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../generated/structures/structuresIndex.html">Structures and Settings</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../generated/references.html">References</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Developer documentation</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="README.html">Exudyn developer documentation</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="GETTING_STARTED.html">Getting started as a developer</a></li>
+<li class="toctree-l2"><a class="reference internal" href="BUILD.html">Building Exudyn from source</a></li>
+<li class="toctree-l2"><a class="reference internal" href="GIT.html">Working with git in this repository</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ARCHITECTURE.html">Exudyn C++ architecture</a></li>
+<li class="toctree-l2"><a class="reference internal" href="CODING_STYLE.html">Exudyn coding style and conventions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="WORKFLOW.html">Development workflow</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">How to set up a new item</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#first-in-python">0. First in Python</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#how-it-works">1. How it works</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#the-definition">2. The definition</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#generate">3. Generate</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#the-c">4. The C++</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#build-and-test">5. Build and test</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="GUI_MANUAL_CHECK.html">Manual GUI check before a release</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../generated/deprecations.html">Deprecations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../definitions/README.html">definitions/ — the item and structure definitions as Python</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../tools/generators/README.html">tools/generators/ — the new generator code</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../tools/exudev/README.html"><code class="docutils literal notranslate"><span class="pre">exudev</span></code> — the Exudyn maintainer driver</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../CONTRIBUTING.html">Contributing to Exudyn</a></li>
+<li class="toctree-l2"><a class="reference internal" href="README.html#repository-layout">Repository layout</a></li>
+<li class="toctree-l2"><a class="reference internal" href="README.html#building-and-running">Building and running</a></li>
+<li class="toctree-l2"><a class="reference internal" href="README.html#how-to-notes">How-to notes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="README.html#invariants">Invariants</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">How-to notes</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../howTo/condaEnvironments.html">Conda environments for Exudyn</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../howTo/sphinxDocs.html">Building the documentation</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Examples, models and issues</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../generated/examples/examplesIndex.html">Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../generated/testModels/testModelsIndex.html">TestModels</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../generated/abbreviations.html">List of Abbreviations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../manual/revisions.html">Revisions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../CHANGELOG.html">Changelog</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../generated/trackerlog.html">Issue tracker</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">Exudyn1.13.3</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="README.html">Exudyn developer documentation</a></li>
+      <li class="breadcrumb-item active">How to set up a new item</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../_sources/docs/dev/NEW_ITEM.md.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section class="tex2jax_ignore mathjax_ignore" id="how-to-set-up-a-new-item">
+<h1>How to set up a new item<a class="headerlink" href="#how-to-set-up-a-new-item" title="Link to this heading"></a></h1>
+<p>A new node, object, marker, load or sensor. Short: <strong>write the definition, generate, write the
+<code class="docutils literal notranslate"><span class="pre">.cpp</span></code>, build, test.</strong> The details of each part are in the documents linked here; this page says what
+to do in which order.</p>
+<section id="first-in-python">
+<h2>0. First in Python<a class="headerlink" href="#first-in-python" title="Link to this heading"></a></h2>
+<p>Try the model with the generic items and user functions: <code class="docutils literal notranslate"><span class="pre">ObjectGenericODE2</span></code>/<code class="docutils literal notranslate"><span class="pre">ODE1</span></code> with user
+functions for a body or a system, <code class="docutils literal notranslate"><span class="pre">ObjectConnectorCoordinateVector</span></code> for a constraint, a spring-damper
+with a force user function for a connector, <code class="docutils literal notranslate"><span class="pre">SensorUserFunction</span></code> for a sensor. A C++ item is worth it
+when that prototype works <strong>and is too slow</strong>.</p>
+</section>
+<section id="how-it-works">
+<h2>1. How it works<a class="headerlink" href="#how-it-works" title="Link to this heading"></a></h2>
+<p>An item is one <code class="docutils literal notranslate"><span class="pre">ItemDefinition(...)</span></code> in <code class="docutils literal notranslate"><span class="pre">definitions/itemDefs&lt;Kind&gt;.py</span></code>. The generators read it and
+write everything that follows from it; the computation is hand-written C++.</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>written</p></th>
+<th class="head"><p>for item <code class="docutils literal notranslate"><span class="pre">ObjectMyBody</span></code> of kind <code class="docutils literal notranslate"><span class="pre">Object</span></code></p></th>
+<th class="head"><p>by</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>the definition</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">definitions/itemDefsObjects.py</span></code></p></td>
+<td><p>you</p></td>
+</tr>
+<tr class="row-odd"><td><p>C++ headers: parameters, the three classes</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">src/Autogenerated/objects/CObjectMyBody.h</span></code>, <code class="docutils literal notranslate"><span class="pre">MainObjectMyBody.h</span></code>, <code class="docutils literal notranslate"><span class="pre">VisuObjectMyBody.h</span></code></p></td>
+<td><p>generator</p></td>
+</tr>
+<tr class="row-even"><td><p>registration in the object factory: <code class="docutils literal notranslate"><span class="pre">mbs.AddObject({'objectType':'MyBody',</span> <span class="pre">...})</span></code> creates the three</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">src/Autogenerated/objectFactoryAutoReg.h</span></code> (<a class="reference internal" href="ARCHITECTURE.html"><span class="std std-doc">ARCHITECTURE.md</span></a>)</p></td>
+<td><p>generator</p></td>
+</tr>
+<tr class="row-odd"><td><p>the Python class <code class="docutils literal notranslate"><span class="pre">ObjectMyBody</span></code> (and its short name) and the typed stub</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">python/exudyn/itemInterface.py</span></code>, <code class="docutils literal notranslate"><span class="pre">python/exudyn/types/items.py</span></code></p></td>
+<td><p>generator</p></td>
+</tr>
+<tr class="row-even"><td><p>the reference manual page, and the item in the index of its kind</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">docs/generated/items/ObjectMyBody.md</span></code></p></td>
+<td><p>generator</p></td>
+</tr>
+<tr class="row-odd"><td><p>the MiniExample file and its entry in the list the test suite runs</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">python/MiniExamples/ObjectMyBody.py</span></code>, <code class="docutils literal notranslate"><span class="pre">miniExamplesFileList.py</span></code></p></td>
+<td><p>generator</p></td>
+</tr>
+<tr class="row-even"><td><p>the computation, the output variables and the drawing (<code class="docutils literal notranslate"><span class="pre">UpdateGraphics</span></code>)</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">src/ImplObjects/CObjectMyBody.cpp</span></code>; loads in <code class="docutils literal notranslate"><span class="pre">src/System/CLoad.cpp</span></code>, sensors in <code class="docutils literal notranslate"><span class="pre">src/System/CSensor.cpp</span></code></p></td>
+<td><p>you</p></td>
+</tr>
+<tr class="row-odd"><td><p>the checks before assembly, if the definition declares <code class="docutils literal notranslate"><span class="pre">CheckPreAssembleConsistency</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">src/System/checkPreAssembleConsistencies&lt;Kind&gt;.cpp</span></code></p></td>
+<td><p>you</p></td>
+</tr>
+<tr class="row-even"><td><p>a new <code class="docutils literal notranslate"><span class="pre">.cpp</span></code> in the build</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">msvc/cppsrc.vcxproj</span></code>, then <code class="docutils literal notranslate"><span class="pre">python</span> <span class="pre">tools/gen_sources.py</span></code> writes <code class="docutils literal notranslate"><span class="pre">sources.json</span></code></p></td>
+<td><p>you</p></td>
+</tr>
+<tr class="row-odd"><td><p>the reference value of the MiniExample</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">python/testing/runTestSuiteRefSol.py</span></code>, <code class="docutils literal notranslate"><span class="pre">MiniExamplesReferenceSolution</span></code></p></td>
+<td><p>you</p></td>
+</tr>
+</tbody>
+</table>
+<p>Never edit a generated file; a hand edit is overwritten by the next generation.</p>
+</section>
+<section id="the-definition">
+<h2>2. The definition<a class="headerlink" href="#the-definition" title="Link to this heading"></a></h2>
+<p>Copy the definition of the item that is most like yours, in the same file, and change it. The
+vocabulary is in <a class="reference internal" href="../../definitions/README.html"><span class="std std-doc">definitions/README.md</span></a>.</p>
+<ul class="simple">
+<li><p><strong>Header</strong>: <code class="docutils literal notranslate"><span class="pre">className</span></code>, <code class="docutils literal notranslate"><span class="pre">classType</span></code>, <code class="docutils literal notranslate"><span class="pre">objectType</span></code> (objects), the parents <code class="docutils literal notranslate"><span class="pre">cParentClass</span></code>,
+<code class="docutils literal notranslate"><span class="pre">mainParentClass</span></code>, <code class="docutils literal notranslate"><span class="pre">visuParentClass</span></code>, <code class="docutils literal notranslate"><span class="pre">pythonShortName</span></code>.</p></li>
+<li><p><strong>Parameters</strong>: <code class="docutils literal notranslate"><span class="pre">ItemParameter(type=...,</span> <span class="pre">destination=...,</span> <span class="pre">pythonName=...,</span> <span class="pre">defaultValue=...,</span> <span class="pre">description=...)</span></code>. A description that starts with a symbol in <code class="docutils literal notranslate"><span class="pre">$...$</span></code> puts the symbol into the
+table, <code class="docutils literal notranslate"><span class="pre">(symbol:</span> <span class="pre">...)</span></code>.</p></li>
+<li><p><strong>Functions</strong>: <code class="docutils literal notranslate"><span class="pre">ItemFunctionDef('Name')</span></code> for a function that overrides a base-class function - the
+declaration comes from the library; <code class="docutils literal notranslate"><span class="pre">implementation=</span></code> for a one-line body, otherwise the body is in
+your <code class="docutils literal notranslate"><span class="pre">.cpp</span></code>. <code class="docutils literal notranslate"><span class="pre">ItemFunction(...)</span></code> for a function new in this item. Each with a <code class="docutils literal notranslate"><span class="pre">description</span></code> where
+it is not obvious.</p></li>
+<li><p><strong>Types</strong>: what the item provides and needs - <code class="docutils literal notranslate"><span class="pre">ItemTypes</span></code>, <code class="docutils literal notranslate"><span class="pre">ItemRequestedTypes</span></code>,
+<code class="docutils literal notranslate"><span class="pre">ItemAccessFunctionTypes()</span></code> (objects: the types are derived from the access functions the object
+provides; <code class="docutils literal notranslate"><span class="pre">ownMarkers=</span></code> for a super element or kinematic tree with markers of its own),
+<code class="docutils literal notranslate"><span class="pre">requestedNodeTypes</span></code> (node markers). They decide which items fit together; <code class="docutils literal notranslate"><span class="pre">Assemble()</span></code> checks
+them, and the page lists the fitting items from them.</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">outputVariables</span></code></strong>: <code class="docutils literal notranslate"><span class="pre">ItemOutputVariable(OVPosition,</span> <span class="pre">r&quot;&quot;&quot;$symbol$description&quot;&quot;&quot;)</span></code> for every output
+variable; the generator writes <code class="docutils literal notranslate"><span class="pre">GetOutputVariableTypes</span></code> from the list, you implement
+<code class="docutils literal notranslate"><span class="pre">GetOutputVariable...</span></code> for exactly these.</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">overallDescription</span></code></strong>: one or two sentences, what it is and what for.</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">detailedDescription</span></code></strong>: the equations - headings and contents by kind in
+<a class="reference internal" href="../../definitions/README.html"><span class="std std-doc">definitions/README.md</span></a> §<em>The page of an item</em>, the rules of the text in
+§<em>Writing a description</em>.</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">miniExample</span></code></strong>: a short model that uses the item and sets <code class="docutils literal notranslate"><span class="pre">exu.sys['testResult']</span></code>; rules in
+§<em>The mini example</em>.</p></li>
+<li><p>optional: <code class="docutils literal notranslate"><span class="pre">createFunctions</span></code>, <code class="docutils literal notranslate"><span class="pre">examples</span></code> (§<em>The page of an item</em>).</p></li>
+</ul>
+</section>
+<section id="generate">
+<h2>3. Generate<a class="headerlink" href="#generate" title="Link to this heading"></a></h2>
+<p>In <code class="docutils literal notranslate"><span class="pre">venvExuP313</span></code>:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">python</span> <span class="n">tools</span><span class="o">/</span><span class="n">regenerate</span><span class="o">.</span><span class="n">py</span> <span class="o">--</span><span class="n">check</span>     <span class="c1"># validates the definitions, generates, reports what changed</span>
+<span class="n">exudev</span> <span class="n">generate</span> <span class="o">--</span><span class="nb">all</span><span class="o">-</span><span class="n">checks</span>           <span class="c1"># the same with all checks</span>
+</pre></div>
+</div>
+<p>The validator fails on a function that overrides nothing, a wrong type, a description that breaks
+the text rules. Then read the page, <code class="docutils literal notranslate"><span class="pre">docs/generated/items/&lt;Item&gt;.md</span></code>.</p>
+</section>
+<section id="the-c">
+<h2>4. The C++<a class="headerlink" href="#the-c" title="Link to this heading"></a></h2>
+<p>Copy the <code class="docutils literal notranslate"><span class="pre">.cpp</span></code> of the same item as in step 2 and rewrite its functions; the class declarations are
+in the generated headers.</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>kind</p></th>
+<th class="head"><p>functions to implement</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>body</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">ComputeMassMatrix</span></code>, <code class="docutils literal notranslate"><span class="pre">ComputeODE2LHS</span></code>, the access functions <code class="docutils literal notranslate"><span class="pre">GetPositionJacobian</span></code>, <code class="docutils literal notranslate"><span class="pre">GetRotationJacobian</span></code>, <code class="docutils literal notranslate"><span class="pre">GetMassWeightedPositionJacobian</span></code>, <code class="docutils literal notranslate"><span class="pre">GetJacobianTransposedTimesVectorDerivative</span></code> (how a force or torque reaches the body; each gives the body its access function type, derived by <code class="docutils literal notranslate"><span class="pre">ItemAccessFunctionTypes()</span></code>) and <code class="docutils literal notranslate"><span class="pre">IsValidLocalPosition</span></code> where they are defined at restricted local positions only, <code class="docutils literal notranslate"><span class="pre">GetOutputVariableBody</span></code>, <code class="docutils literal notranslate"><span class="pre">GetPosition</span></code>, <code class="docutils literal notranslate"><span class="pre">GetVelocity</span></code>, … as far as they apply, <code class="docutils literal notranslate"><span class="pre">GetAvailableJacobians</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p>connector</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">ComputeODE2LHS</span></code> (the forces on the markers), <code class="docutils literal notranslate"><span class="pre">ComputeJacobianODE2_ODE2</span></code> unless <code class="docutils literal notranslate"><span class="pre">GetAvailableJacobians</span></code> says it is not a function, <code class="docutils literal notranslate"><span class="pre">GetOutputVariableConnector</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p>constraint</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">ComputeAlgebraicEquations</span></code>, <code class="docutils literal notranslate"><span class="pre">ComputeJacobianAE</span></code>, <code class="docutils literal notranslate"><span class="pre">GetOutputVariableConnector</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p>node</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">GetPosition</span></code>, <code class="docutils literal notranslate"><span class="pre">GetVelocity</span></code>, …, <code class="docutils literal notranslate"><span class="pre">GetOutputVariable</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p>marker</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">ComputeMarkerData</span></code> (values and Jacobians), <code class="docutils literal notranslate"><span class="pre">GetPosition</span></code>, …</p></td>
+</tr>
+<tr class="row-odd"><td><p>load</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">GetLoadVector</span></code> or <code class="docutils literal notranslate"><span class="pre">GetLoadValue</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p>sensor</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">GetSensorValues</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p>every item</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">UpdateGraphics</span></code> of <code class="docutils literal notranslate"><span class="pre">Visualization&lt;Item&gt;</span></code>, in the same <code class="docutils literal notranslate"><span class="pre">.cpp</span></code></p></td>
+</tr>
+</tbody>
+</table>
+<p>Checks of parameters and of the items it is attached to go into <code class="docutils literal notranslate"><span class="pre">CheckPreAssembleConsistency</span></code>, with
+a message that names the parameter; errors raised from C++ follow
+<a class="reference internal" href="CODING_STYLE.html"><span class="std std-doc">CODING_STYLE.md</span></a> §10.</p>
+</section>
+<section id="build-and-test">
+<h2>5. Build and test<a class="headerlink" href="#build-and-test" title="Link to this heading"></a></h2>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">exudev</span> <span class="n">build</span> <span class="o">--</span><span class="n">env</span> <span class="n">venvExuP313</span>
+<span class="n">exudev</span> <span class="n">test</span> <span class="o">--</span><span class="n">env</span> <span class="n">venvExuP313</span>          <span class="c1"># runs the MiniExample; add its value to runTestSuiteRefSol.py</span>
+</pre></div>
+</div>
+<p>A test model in <code class="docutils literal notranslate"><span class="pre">python/TestModels/</span></code> for what the MiniExample does not cover
+(<a class="reference internal" href="WORKFLOW.html"><span class="std std-doc">WORKFLOW.md</span></a> §<em>What a test model looks like</em>); then the four gates of
+<a class="reference internal" href="WORKFLOW.html"><span class="std std-doc">WORKFLOW.md</span></a>.</p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="WORKFLOW.html" class="btn btn-neutral float-left" title="Development workflow" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="GUI_MANUAL_CHECK.html" class="btn btn-neutral float-right" title="Manual GUI check before a release" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

@@ -1,0 +1,264 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Contributing to Exudyn &mdash; Exudyn1.13.3 1.13.3 documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=3ee1c6c6" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="_static/css/rtd_sphinx_search.min.css" />
+      <link rel="stylesheet" type="text/css" href="_static/custom.css?v=e2783f0e" />
+
+  
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="_static/documentation_options.js?v=b8a3e558"></script>
+      <script src="_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="_static/copybutton.js?v=f281be69"></script>
+      <script src="_static/js/rtd_search_config.js"></script>
+      <script src="_static/js/rtd_sphinx_search.min.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Conda environments for Exudyn" href="docs/howTo/condaEnvironments.html" />
+    <link rel="prev" title="exudev — the Exudyn maintainer driver" href="tools/exudev/README.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            Exudyn1.13.3
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Exudyn User Manual</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="README.html">Exudyn</a></li>
+<li class="toctree-l1"><a class="reference internal" href="docs/manual/gettingStarted.html">Installation and getting started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="docs/manual/introduction.html">Overview on Exudyn</a></li>
+<li class="toctree-l1"><a class="reference internal" href="docs/manual/introductionBasics.html">Exudyn basics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="docs/manual/tutorial.html">Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="docs/manual/GUI.html">Renderer, graphics and visualization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="docs/manual/performanceErrors.html">Performance, errors and solver failures</a></li>
+<li class="toctree-l1"><a class="reference internal" href="docs/manual/introductionAdvanced.html">Advanced topics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="docs/manual/notation.html">Notation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="docs/manual/theory.html">Theory and formulations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="docs/manual/solver.html">Solvers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="docs/generated/cInterface/cInterfaceIndex.html">Python-C++ command interface</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Reference Manual</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="docs/generated/items/itemsIndex.html">Items reference manual</a></li>
+<li class="toctree-l1"><a class="reference internal" href="docs/generated/pythonUtilities/utilitiesIndex.html">Python Utility Functions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="docs/generated/structures/structuresIndex.html">Structures and Settings</a></li>
+<li class="toctree-l1"><a class="reference internal" href="docs/generated/references.html">References</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Developer documentation</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="docs/dev/README.html">Exudyn developer documentation</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="docs/dev/GETTING_STARTED.html">Getting started as a developer</a></li>
+<li class="toctree-l2"><a class="reference internal" href="docs/dev/BUILD.html">Building Exudyn from source</a></li>
+<li class="toctree-l2"><a class="reference internal" href="docs/dev/GIT.html">Working with git in this repository</a></li>
+<li class="toctree-l2"><a class="reference internal" href="docs/dev/ARCHITECTURE.html">Exudyn C++ architecture</a></li>
+<li class="toctree-l2"><a class="reference internal" href="docs/dev/CODING_STYLE.html">Exudyn coding style and conventions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="docs/dev/WORKFLOW.html">Development workflow</a></li>
+<li class="toctree-l2"><a class="reference internal" href="docs/dev/NEW_ITEM.html">How to set up a new item</a></li>
+<li class="toctree-l2"><a class="reference internal" href="docs/dev/GUI_MANUAL_CHECK.html">Manual GUI check before a release</a></li>
+<li class="toctree-l2"><a class="reference internal" href="docs/generated/deprecations.html">Deprecations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="definitions/README.html">definitions/ — the item and structure definitions as Python</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tools/generators/README.html">tools/generators/ — the new generator code</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tools/exudev/README.html"><code class="docutils literal notranslate"><span class="pre">exudev</span></code> — the Exudyn maintainer driver</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Contributing to Exudyn</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#what-helps-most">What helps most</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#code">Code</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#if-a-change-is-agreed">If a change is agreed</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#licence">Licence</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="docs/dev/README.html#repository-layout">Repository layout</a></li>
+<li class="toctree-l2"><a class="reference internal" href="docs/dev/README.html#building-and-running">Building and running</a></li>
+<li class="toctree-l2"><a class="reference internal" href="docs/dev/README.html#how-to-notes">How-to notes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="docs/dev/README.html#invariants">Invariants</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">How-to notes</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="docs/howTo/condaEnvironments.html">Conda environments for Exudyn</a></li>
+<li class="toctree-l1"><a class="reference internal" href="docs/howTo/sphinxDocs.html">Building the documentation</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Examples, models and issues</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="docs/generated/examples/examplesIndex.html">Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="docs/generated/testModels/testModelsIndex.html">TestModels</a></li>
+<li class="toctree-l1"><a class="reference internal" href="docs/generated/abbreviations.html">List of Abbreviations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="docs/manual/revisions.html">Revisions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="CHANGELOG.html">Changelog</a></li>
+<li class="toctree-l1"><a class="reference internal" href="docs/generated/trackerlog.html">Issue tracker</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Exudyn1.13.3</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="docs/dev/README.html">Exudyn developer documentation</a></li>
+      <li class="breadcrumb-item active">Contributing to Exudyn</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/CONTRIBUTING.md.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section class="tex2jax_ignore mathjax_ignore" id="contributing-to-exudyn">
+<h1>Contributing to Exudyn<a class="headerlink" href="#contributing-to-exudyn" title="Link to this heading"></a></h1>
+<p>Exudyn is developed by a small group with very limited capacity for code review. That one fact
+shapes everything below: <strong>reports, questions and ideas are welcome and are read; code is agreed
+before it is written.</strong></p>
+<section id="what-helps-most">
+<h2>What helps most<a class="headerlink" href="#what-helps-most" title="Link to this heading"></a></h2>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>you want to</p></th>
+<th class="head"><p>do this</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>report something that goes wrong</p></td>
+<td><p>open a <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/issues/new/choose">bug report</a></p></td>
+</tr>
+<tr class="row-odd"><td><p>ask for a feature or a change</p></td>
+<td><p>open a <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/issues/new/choose">feature request</a></p></td>
+</tr>
+<tr class="row-even"><td><p>ask how to model something</p></td>
+<td><p>open a <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/discussions">discussion</a> — the answer then helps the next person who searches for it</p></td>
+</tr>
+<tr class="row-odd"><td><p>write something that does not belong in public</p></td>
+<td><p>reply.exudyn&#64;gmail.com</p></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Start a report with the output of</strong></p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">python</span> <span class="o">-</span><span class="n">m</span> <span class="n">exudyn</span> <span class="n">info</span>
+</pre></div>
+</div>
+<p>It prints the version, the location of the installed package, which compiled module is loaded,
+the Python version and platform, and which optional packages are present. That is what most
+answers need to start from, and it saves a round of questions.</p>
+<p>The second thing that makes a report answerable in one round is <strong>a script that shows the problem
+and nothing else</strong>. Cutting a model down to what still fails is not busywork — it is the step that
+most often finds the cause before anyone else has looked.</p>
+</section>
+<section id="code">
+<h2>Code<a class="headerlink" href="#code" title="Link to this heading"></a></h2>
+<p>The repository is <strong>not open for unsolicited pull requests</strong>, and one that arrives without a prior
+agreement will probably not be reviewed. This is not about the quality of the contribution:</p>
+<ul class="simple">
+<li><p>reviewing a change to the C++ core costs more than writing it, and the review capacity is the
+scarce resource here;</p></li>
+<li><p>the C++/Python boundary is deliberate and narrow (items are created from validated Python dicts
+dispatched on a type string, not from per-class bindings), and a change that crosses it in a new
+way affects every item;</p></li>
+<li><p>large parts of the tree are <strong>generated</strong> — <code class="docutils literal notranslate"><span class="pre">src/Autogenerated/</span></code> from <code class="docutils literal notranslate"><span class="pre">definitions/</span></code>,
+<code class="docutils literal notranslate"><span class="pre">docs/generated/</span></code> from the definitions and the docstrings, <code class="docutils literal notranslate"><span class="pre">CHANGELOG.md</span></code> from the issue
+tracker. A hand edit to any of them survives until the next generator run and no longer.</p></li>
+</ul>
+<p>So: <strong>talk first</strong> — an issue, a discussion or an email. If a change is agreed, it is welcome, and
+the rest of this page applies to it.</p>
+<p>It would be opened further if there were enough requests for that. Say so if you want it.</p>
+</section>
+<section id="if-a-change-is-agreed">
+<h2>If a change is agreed<a class="headerlink" href="#if-a-change-is-agreed" title="Link to this heading"></a></h2>
+<p>Read the two pages that carry the conventions:</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="docs/dev/CODING_STYLE.html"><span class="std std-doc"><code class="docutils literal notranslate"><span class="pre">docs/dev/CODING_STYLE.md</span></code></span></a> — naming, headers, and §10 in particular:
+how Exudyn reports an error, and which of the exception types a new check should raise;</p></li>
+<li><p><a class="reference internal" href="docs/dev/WORKFLOW.html"><span class="std std-doc"><code class="docutils literal notranslate"><span class="pre">docs/dev/WORKFLOW.md</span></code></span></a> — the issue tracker, the version numbering and the
+gates a change passes before it is committed.</p></li>
+</ul>
+<p>The short form of those gates, which is what a pull request is checked against:</p>
+<ol class="arabic simple">
+<li><p><strong>Never edit a generated file.</strong> Change what it is generated from and run
+<code class="docutils literal notranslate"><span class="pre">python</span> <span class="pre">tools/regenerate.py</span></code>; the regenerated files belong to the same change. Every generated
+file says in its first line which tool wrote it.</p></li>
+<li><p><strong>The test suite passes in full</strong>: <code class="docutils literal notranslate"><span class="pre">python</span> <span class="pre">python/testing/runTestSuite.py</span></code> (about 20 seconds)
+and <code class="docutils literal notranslate"><span class="pre">pytest</span></code>.</p></li>
+<li><p><strong>New behaviour has a test</strong>, and a fixed bug has the test that would have caught it.
+A test model is three lines of boilerplate; <code class="docutils literal notranslate"><span class="pre">docs/dev/WORKFLOW.md</span></code>, <em>What a test model
+looks like</em>, says which three.</p></li>
+<li><p><strong>The documentation is updated</strong> where it describes what changed.</p></li>
+<li><p><strong>The style of the file you are editing is followed</strong>, even where it differs from your own.</p></li>
+</ol>
+<p>Building from source, the environments and the developer driver <code class="docutils literal notranslate"><span class="pre">exudev</span></code> are described in
+<a class="reference internal" href="docs/dev/README.html"><span class="std std-doc"><code class="docutils literal notranslate"><span class="pre">docs/dev/README.md</span></code></span></a> and
+<a class="reference internal" href="docs/dev/BUILD.html"><span class="std std-doc"><code class="docutils literal notranslate"><span class="pre">docs/dev/BUILD.md</span></code></span></a>.</p>
+</section>
+<section id="licence">
+<h2>Licence<a class="headerlink" href="#licence" title="Link to this heading"></a></h2>
+<p>Exudyn is free software; see <a class="reference download internal" download="" href="_downloads/61e0bdf7e1b43c5c93d9488b22e04170/LICENSE.txt"><span class="xref download myst"><code class="docutils literal notranslate"><span class="pre">LICENSE.txt</span></code></span></a>. A contribution is made under the same
+licence as the rest of the project.</p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="tools/exudev/README.html" class="btn btn-neutral float-left" title="exudev — the Exudyn maintainer driver" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="docs/howTo/condaEnvironments.html" class="btn btn-neutral float-right" title="Conda environments for Exudyn" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

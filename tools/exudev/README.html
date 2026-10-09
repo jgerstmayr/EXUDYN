@@ -1,0 +1,339 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>exudev — the Exudyn maintainer driver &mdash; Exudyn1.13.3 1.13.3 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=3ee1c6c6" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/rtd_sphinx_search.min.css" />
+      <link rel="stylesheet" type="text/css" href="../../_static/custom.css?v=e2783f0e" />
+
+  
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=b8a3e558"></script>
+      <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../_static/copybutton.js?v=f281be69"></script>
+      <script src="../../_static/js/rtd_search_config.js"></script>
+      <script src="../../_static/js/rtd_sphinx_search.min.js"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Contributing to Exudyn" href="../../CONTRIBUTING.html" />
+    <link rel="prev" title="tools/generators/ — the new generator code" href="../generators/README.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            Exudyn1.13.3
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Exudyn User Manual</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../README.html">Exudyn</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../docs/manual/gettingStarted.html">Installation and getting started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../docs/manual/introduction.html">Overview on Exudyn</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../docs/manual/introductionBasics.html">Exudyn basics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../docs/manual/tutorial.html">Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../docs/manual/GUI.html">Renderer, graphics and visualization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../docs/manual/performanceErrors.html">Performance, errors and solver failures</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../docs/manual/introductionAdvanced.html">Advanced topics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../docs/manual/notation.html">Notation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../docs/manual/theory.html">Theory and formulations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../docs/manual/solver.html">Solvers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../docs/generated/cInterface/cInterfaceIndex.html">Python-C++ command interface</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Reference Manual</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../docs/generated/items/itemsIndex.html">Items reference manual</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../docs/generated/pythonUtilities/utilitiesIndex.html">Python Utility Functions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../docs/generated/structures/structuresIndex.html">Structures and Settings</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../docs/generated/references.html">References</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Developer documentation</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="../../docs/dev/README.html">Exudyn developer documentation</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../../docs/dev/GETTING_STARTED.html">Getting started as a developer</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../docs/dev/BUILD.html">Building Exudyn from source</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../docs/dev/GIT.html">Working with git in this repository</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../docs/dev/ARCHITECTURE.html">Exudyn C++ architecture</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../docs/dev/CODING_STYLE.html">Exudyn coding style and conventions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../docs/dev/WORKFLOW.html">Development workflow</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../docs/dev/NEW_ITEM.html">How to set up a new item</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../docs/dev/GUI_MANUAL_CHECK.html">Manual GUI check before a release</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../docs/generated/deprecations.html">Deprecations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../definitions/README.html">definitions/ — the item and structure definitions as Python</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../generators/README.html">tools/generators/ — the new generator code</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#"><code class="docutils literal notranslate"><span class="pre">exudev</span></code> — the Exudyn maintainer driver</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#commands">Commands</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#the-three-things-worth-knowing">The three things worth knowing</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#how-the-environment-is-chosen">How the environment is chosen</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#passing-something-through">Passing something through</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#how-a-step-is-judged">How a step is judged</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#the-files">The files</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../CONTRIBUTING.html">Contributing to Exudyn</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../docs/dev/README.html#repository-layout">Repository layout</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../docs/dev/README.html#building-and-running">Building and running</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../docs/dev/README.html#how-to-notes">How-to notes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../docs/dev/README.html#invariants">Invariants</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">How-to notes</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../docs/howTo/condaEnvironments.html">Conda environments for Exudyn</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../docs/howTo/sphinxDocs.html">Building the documentation</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Examples, models and issues</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../docs/generated/examples/examplesIndex.html">Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../docs/generated/testModels/testModelsIndex.html">TestModels</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../docs/generated/abbreviations.html">List of Abbreviations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../docs/manual/revisions.html">Revisions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../CHANGELOG.html">Changelog</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../docs/generated/trackerlog.html">Issue tracker</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">Exudyn1.13.3</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../docs/dev/README.html">Exudyn developer documentation</a></li>
+      <li class="breadcrumb-item active"><code class="docutils literal notranslate"><span class="pre">exudev</span></code> — the Exudyn maintainer driver</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../_sources/tools/exudev/README.md.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section class="tex2jax_ignore mathjax_ignore" id="exudev-the-exudyn-maintainer-driver">
+<h1><code class="docutils literal notranslate"><span class="pre">exudev</span></code> — the Exudyn maintainer driver<a class="headerlink" href="#exudev-the-exudyn-maintainer-driver" title="Link to this heading"></a></h1>
+<p>One command for building, testing and documenting the repository. It replaces the sixteen batch
+files that used to live in <code class="docutils literal notranslate"><span class="pre">tools/buildAndGenerate/</span></code> (issue #2503).</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">exudev</span> <span class="o">--</span><span class="n">help</span>               <span class="n">the</span> <span class="n">commands</span>
+<span class="n">exudev</span> <span class="o">&lt;</span><span class="n">command</span><span class="o">&gt;</span> <span class="o">--</span><span class="n">help</span>     <span class="n">the</span> <span class="n">options</span> <span class="n">of</span> <span class="n">one</span> <span class="n">command</span>
+<span class="n">exudev</span> <span class="o">-</span><span class="n">n</span> <span class="o">&lt;</span><span class="n">command</span><span class="o">&gt;</span>         <span class="nb">print</span> <span class="n">the</span> <span class="n">commands</span> <span class="n">it</span> <span class="n">would</span> <span class="n">run</span><span class="p">,</span> <span class="ow">and</span> <span class="n">run</span> <span class="n">nothing</span>
+</pre></div>
+</div>
+<p>On Windows type <code class="docutils literal notranslate"><span class="pre">exudev</span></code> from anywhere in the tree (<code class="docutils literal notranslate"><span class="pre">exudev.bat</span></code> sits in the repository root);
+everywhere else — WSL, linux, macOS — type <code class="docutils literal notranslate"><span class="pre">python</span> <span class="pre">tools/exudev</span></code>.</p>
+<p>Every command plans the same steps on the three platforms (#2644); what differs is the build directories <code class="docutils literal notranslate"><span class="pre">clean</span></code> removes, the program <code class="docutils literal notranslate"><span class="pre">docs</span> <span class="pre">--open</span></code> calls,
+and the shell that starts the manylinux container. <code class="docutils literal notranslate"><span class="pre">python/testing/test_exudev.py</span></code> pins those
+three from any platform.</p>
+<p><strong>Quiet is the default</strong>; <code class="docutils literal notranslate"><span class="pre">-v/--verbose</span></code> turns the tools’ own output back on.</p>
+<section id="commands">
+<h2>Commands<a class="headerlink" href="#commands" title="Link to this heading"></a></h2>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>command</p></th>
+<th class="head"><p>what it runs</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">exudev</span> <span class="pre">generate</span> <span class="pre">[--check]</span> <span class="pre">[--no-run]</span> <span class="pre">[--all-checks]</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">tools/regenerate.py</span></code>; with <code class="docutils literal notranslate"><span class="pre">--all-checks</span></code> also every <code class="docutils literal notranslate"><span class="pre">tools/check*.py</span></code> - <code class="docutils literal notranslate"><span class="pre">checkTocs</span></code> among them, which holds <code class="docutils literal notranslate"><span class="pre">index.md</span></code> and <code class="docutils literal notranslate"><span class="pre">pdfIndex.md</span></code> together - and <code class="docutils literal notranslate"><span class="pre">gen_sources</span></code>, each with <code class="docutils literal notranslate"><span class="pre">--check</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">exudev</span> <span class="pre">scripts</span> <span class="pre">&lt;folder&gt;</span> <span class="pre">[...]</span> <span class="pre">[--check]</span> <span class="pre">[--run</span> <span class="pre">[--timeout</span> <span class="pre">120]]</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">tools/checkUserScripts.py</span></code>: every <code class="docutils literal notranslate"><span class="pre">.py</span></code> under the folders that imports exudyn, checked for what changed in Exudyn - names a star import no longer provides, removed and deprecated names, settings and arguments, submodules used without their import, files written beside the script - with the line to write instead. It parses; with <code class="docutils literal notranslate"><span class="pre">--run</span></code> it also runs each script in a copy of its folder, without windows, with a timeout and a solver timeout of 2 s, and reports what failed, timed out or needs a package - a script that names a path outside its folder (<code class="docutils literal notranslate"><span class="pre">C:/...</span></code>, <code class="docutils literal notranslate"><span class="pre">../data</span></code>) is not run (#2713); <code class="docutils literal notranslate"><span class="pre">--check</span></code> fails if anything was found or failed</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">exudev</span> <span class="pre">notebooks</span> <span class="pre">[names]</span> <span class="pre">[--check]</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">tools/runNotebooks.py</span></code>: runs the notebooks of <code class="docutils literal notranslate"><span class="pre">python/Notebooks/</span></code> without a window and stores their outputs in them, which the documentation shows; the environment needs what the notebooks import (<code class="docutils literal notranslate"><span class="pre">--env</span> <span class="pre">venvP313</span></code>: networkx, ngsolve). <code class="docutils literal notranslate"><span class="pre">--check</span></code> runs nothing and lists the notebooks whose code changed after their outputs were stored; <code class="docutils literal notranslate"><span class="pre">exudev</span> <span class="pre">release</span></code> refuses them</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">exudev</span> <span class="pre">figures</span> <span class="pre">[--all]</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">tools/buildFigures.py</span></code>: the TikZ flow charts of <code class="docutils literal notranslate"><span class="pre">docs/figures/tikz/</span></code> that changed, compiled into <code class="docutils literal notranslate"><span class="pre">docs/figures/&lt;name&gt;.pdf</span></code> (the PDF documentation) and <code class="docutils literal notranslate"><span class="pre">.svg</span></code> (html); needs pdflatex and pdftocairo. <code class="docutils literal notranslate"><span class="pre">exudev</span> <span class="pre">generate</span> <span class="pre">--all-checks</span></code> fails for a chart changed and not compiled</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">exudev</span> <span class="pre">build</span> <span class="pre">[--py</span> <span class="pre">P313]</span> <span class="pre">[--fast]</span> <span class="pre">[--complete]</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">pip</span> <span class="pre">wheel</span> <span class="pre">.</span> <span class="pre">-w</span> <span class="pre">dist</span> <span class="pre">--no-deps</span></code>, then installs exactly that wheel. <strong>No clean, no regeneration, no docs, no tests</strong> unless <code class="docutils literal notranslate"><span class="pre">--complete</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">exudev</span> <span class="pre">test</span> <span class="pre">[--py]</span> <span class="pre">[--fast]</span> <span class="pre">[--parallel</span> <span class="pre">[N]]</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">runTestSuite.py</span></code>, always with <code class="docutils literal notranslate"><span class="pre">--exit-code</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">exudev</span> <span class="pre">examples</span> <span class="pre">[--py]</span> <span class="pre">[--timeout</span> <span class="pre">S]</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">runTestExamples.py</span></code> (slow; default <code class="docutils literal notranslate"><span class="pre">venvP312</span></code>)</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">exudev</span> <span class="pre">perf</span> <span class="pre">[--py]</span> <span class="pre">[--fast]</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">runPerformanceTests.py</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">exudev</span> <span class="pre">perf</span> <span class="pre">--mini</span> <span class="pre">[--full]</span> <span class="pre">[--processes</span> <span class="pre">N]</span> <span class="pre">[--only</span> <span class="pre">A,B]</span> <span class="pre">[--compare</span> <span class="pre">LOG1</span> <span class="pre">LOG2]</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">runMiniExamplePerformance.py</span></code>: every MiniExample solved once more with a small step, the solver timers recorded; the regular module only</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">exudev</span> <span class="pre">pytest</span> <span class="pre">[--graphics]</span> <span class="pre">[--gate]</span> <span class="pre">[--record]</span> <span class="pre">[-k</span> <span class="pre">EXPR]</span> <span class="pre">[--processes</span> <span class="pre">N]</span></code></p></td>
+<td><p>pytest over <code class="docutils literal notranslate"><span class="pre">python/testing/</span></code> in <code class="docutils literal notranslate"><span class="pre">venvExuP313</span></code> (the environment with pytest), 8 processes; <code class="docutils literal notranslate"><span class="pre">--graphics</span></code> the graphics tests only, <code class="docutils literal notranslate"><span class="pre">--gate</span></code> the commit-gate subset, <code class="docutils literal notranslate"><span class="pre">--record</span></code> writes the graphics references anew and lists what changed</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">exudev</span> <span class="pre">docs</span> <span class="pre">[--keep-cache]</span> <span class="pre">[--open]</span> <span class="pre">[--pdf]</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">sphinx-build</span> <span class="pre">-b</span> <span class="pre">html</span> <span class="pre">.</span> <span class="pre">_build</span> <span class="pre">-E</span></code>; <code class="docutils literal notranslate"><span class="pre">--pdf</span></code> adds the printable documentation in <code class="docutils literal notranslate"><span class="pre">dist/</span></code> (LaTeX needed, release only)</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">exudev</span> <span class="pre">linux</span> <span class="pre">[--manylinux</span> <span class="pre">|</span> <span class="pre">--wsl-conda]</span></code></p></td>
+<td><p>the linux wheels: through WSL on Windows, in this shell on linux; refused on macOS</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">exudev</span> <span class="pre">release</span> <span class="pre">[--dev]</span> <span class="pre">[--no-linux]</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">build</span> <span class="pre">--complete</span></code> over every version, with the guards a release needs</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">exudev</span> <span class="pre">clean</span> <span class="pre">[--dist]</span> <span class="pre">[--linux]</span> <span class="pre">[--all]</span></code></p></td>
+<td><p>the build directories and eggs</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">exudev</span> <span class="pre">env</span> <span class="pre">[--py]</span></code></p></td>
+<td><p>python, exudyn, numpy, scipy and matplotlib per environment</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">exudev</span> <span class="pre">issue</span> <span class="pre">&lt;verb&gt;</span></code></p></td>
+<td><p>the issue tracker: <code class="docutils literal notranslate"><span class="pre">raise</span></code>, <code class="docutils literal notranslate"><span class="pre">extend</span></code>, <code class="docutils literal notranslate"><span class="pre">remark</span></code>, <code class="docutils literal notranslate"><span class="pre">resolve</span></code>, <code class="docutils literal notranslate"><span class="pre">close</span></code>, <code class="docutils literal notranslate"><span class="pre">show</span></code>, <code class="docutils literal notranslate"><span class="pre">list</span></code>, <code class="docutils literal notranslate"><span class="pre">modify</span></code>, <code class="docutils literal notranslate"><span class="pre">triage</span></code>, <code class="docutils literal notranslate"><span class="pre">plot</span></code>, <code class="docutils literal notranslate"><span class="pre">html</span></code>, <code class="docutils literal notranslate"><span class="pre">serve</span></code>, <code class="docutils literal notranslate"><span class="pre">mode</span></code>. Runs in the current interpreter, without conda; <code class="docutils literal notranslate"><span class="pre">resolve</span></code> and <code class="docutils literal notranslate"><span class="pre">abandon</span></code> rewrite the version files</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">exudev</span> <span class="pre">issue</span> <span class="pre">bump</span></code></p></td>
+<td><p>start a new release: <code class="docutils literal notranslate"><span class="pre">--minor</span></code> (1.11 → 1.12), <code class="docutils literal notranslate"><span class="pre">--major</span></code> (1.11 → 2.0) or <code class="docutils literal notranslate"><span class="pre">--to</span> <span class="pre">&lt;version&gt;</span></code>; appends it to <code class="docutils literal notranslate"><span class="pre">releases.json</span></code> and restarts the micro version</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">exudev</span> <span class="pre">issue</span> <span class="pre">serve</span></code></p></td>
+<td><p>the same tracker as a local web page, for a backlog pass: list, search, filter, and raise/extend/remark/resolve through the same API</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="the-three-things-worth-knowing">
+<h2>The three things worth knowing<a class="headerlink" href="#the-three-things-worth-knowing" title="Link to this heading"></a></h2>
+<p><strong><code class="docutils literal notranslate"><span class="pre">-n/--dry-run</span></code> is the documentation.</strong> It prints the real command lines — the conda call, the
+environment variables it overrides, the working directory — and runs nothing. When you want to know
+what a release does, <code class="docutils literal notranslate"><span class="pre">exudev</span> <span class="pre">-n</span> <span class="pre">release</span></code> answers in one screen and cannot be out of date, because
+the printed line and the executed line are built by the same code.</p>
+<p><strong><code class="docutils literal notranslate"><span class="pre">--fast</span></code> is opt-in, and it turns the repository default OFF.</strong> <code class="docutils literal notranslate"><span class="pre">pyproject.toml</span></code> has
+<code class="docutils literal notranslate"><span class="pre">compileExudynFast</span> <span class="pre">=</span> <span class="pre">true</span></code>, so a plain <code class="docutils literal notranslate"><span class="pre">pip</span> <span class="pre">wheel</span> <span class="pre">.</span></code> builds <code class="docutils literal notranslate"><span class="pre">exudynCPPfast</span></code> as well; <code class="docutils literal notranslate"><span class="pre">exudev</span> <span class="pre">build</span></code>
+sets <code class="docutils literal notranslate"><span class="pre">EXUDYN_COMPILE_EXUDYN_FAST=0</span></code> unless you ask for <code class="docutils literal notranslate"><span class="pre">--fast</span></code>. Two silent gates remain, and the
+driver warns about both: on a <code class="docutils literal notranslate"><span class="pre">.dev</span></code> version <code class="docutils literal notranslate"><span class="pre">setup.py</span></code> builds the fast module for <strong>Python 3.13
+only</strong>, and on macOS not at all.</p>
+<p><strong><code class="docutils literal notranslate"><span class="pre">exudev</span> <span class="pre">env</span></code> is the first thing to run when a test fails “only here”.</strong> A stale exudyn install or
+a different numpy changes results — the two failing models of issues #2501 and #2502 differ between
+<code class="docutils literal notranslate"><span class="pre">venvP313</span></code> (numpy 2.2.4) and <code class="docutils literal notranslate"><span class="pre">venvExuP313</span></code> (numpy 2.4.6) with a byte-identical binary.</p>
+</section>
+<section id="how-the-environment-is-chosen">
+<h2>How the environment is chosen<a class="headerlink" href="#how-the-environment-is-chosen" title="Link to this heading"></a></h2>
+<p><code class="docutils literal notranslate"><span class="pre">--py</span> <span class="pre">313</span></code> / <code class="docutils literal notranslate"><span class="pre">P313</span></code> / <code class="docutils literal notranslate"><span class="pre">3.13</span></code> / <code class="docutils literal notranslate"><span class="pre">all</span></code> / <code class="docutils literal notranslate"><span class="pre">310,313</span></code> selects the <code class="docutils literal notranslate"><span class="pre">venvP3xx</span></code> environments;
+<code class="docutils literal notranslate"><span class="pre">--env</span> <span class="pre">NAME</span></code> names one directly (not for <code class="docutils literal notranslate"><span class="pre">build</span></code>, which needs to know which <code class="docutils literal notranslate"><span class="pre">cp3xx</span></code> wheel belongs
+to it). Generation and documentation default to <code class="docutils literal notranslate"><span class="pre">venvExuP313</span></code>.</p>
+<p>Dispatch is <code class="docutils literal notranslate"><span class="pre">conda</span> <span class="pre">run</span> <span class="pre">-n</span> <span class="pre">&lt;env&gt;</span> <span class="pre">--no-capture-output</span> <span class="pre">…</span></code> — one process, the exit code propagated, no
+activate/deactivate dance and no way to leave the shell in the wrong environment. The conda base is
+found through <code class="docutils literal notranslate"><span class="pre">EXUDYN_CONDA_ROOT</span></code>, then <code class="docutils literal notranslate"><span class="pre">CONDA_EXE</span></code>, then <code class="docutils literal notranslate"><span class="pre">PATH</span></code>; <code class="docutils literal notranslate"><span class="pre">--no-conda</span></code> runs everything in the
+current environment instead, which is what you want inside WSL.</p>
+</section>
+<section id="passing-something-through">
+<h2>Passing something through<a class="headerlink" href="#passing-something-through" title="Link to this heading"></a></h2>
+<p><code class="docutils literal notranslate"><span class="pre">test</span></code>, <code class="docutils literal notranslate"><span class="pre">examples</span></code> and <code class="docutils literal notranslate"><span class="pre">perf</span></code> forward everything after <code class="docutils literal notranslate"><span class="pre">--</span></code> to the runner, and say so:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">exudev</span> <span class="n">test</span> <span class="o">--</span><span class="n">py</span> <span class="n">P313</span> <span class="o">--</span> <span class="o">--</span><span class="n">timeout</span><span class="o">=</span><span class="mi">5</span>
+</pre></div>
+</div>
+<p>Nothing is forwarded implicitly. The runners scan <code class="docutils literal notranslate"><span class="pre">sys.argv</span></code> by hand and only <em>print</em> a complaint
+about an option they do not know, so a silently forwarded typo would run a full suite against the
+wrong thing and report success.</p>
+</section>
+<section id="how-a-step-is-judged">
+<h2>How a step is judged<a class="headerlink" href="#how-a-step-is-judged" title="Link to this heading"></a></h2>
+<p>Every step is judged by its <strong>exit code</strong>; the driver adds <code class="docutils literal notranslate"><span class="pre">--exit-code</span></code> to all three runners and
+offers no way to turn that off, so the driver never reads a summary line out of a log to decide
+whether a run failed (#2504).</p>
+<p>Two of the exit codes mean “nothing NEW broke”, not “everything passed”:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">runTestSuite.py</span></code> excludes <code class="docutils literal notranslate"><span class="pre">SensitiveTests()</span></code> and, on Linux, <code class="docutils literal notranslate"><span class="pre">UnresolvedOnLinux()</span></code>;</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">runTestExamples.py</span></code> excludes <code class="docutils literal notranslate"><span class="pre">testRunnerTools.KnownExampleFailures()</span></code> - five examples today, three
+of them missing an optional package (#2507). A known failure that starts passing is reported as a
+<strong>dead exclusion</strong> by name, so the list shrinks rather than rots.</p></li>
+</ul>
+<p><code class="docutils literal notranslate"><span class="pre">runPerformanceTests.py</span></code> has no exclusions: every performance test passes, and one that does not is
+worth going red for.</p>
+<p>One thing the driver still cannot do: attribute a run if two <code class="docutils literal notranslate"><span class="pre">exudev</span></code> processes overlap. Don’t run
+two at once.</p>
+</section>
+<section id="the-files">
+<h2>The files<a class="headerlink" href="#the-files" title="Link to this heading"></a></h2>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>file</p></th>
+<th class="head"><p>what is in it</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">__main__.py</span></code></p></td>
+<td><p>every option, every spelling, every help text; dispatch</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">commands.py</span></code></p></td>
+<td><p>one function per subcommand — <strong>read this to find out what a command does</strong>. It builds <code class="docutils literal notranslate"><span class="pre">Step</span></code> objects and runs nothing</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">runner.py</span></code></p></td>
+<td><p>the only file that knows about processes, conda and the file system; executes or prints the steps</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">probe.py</span></code></p></td>
+<td><p>runs <em>inside</em> an environment and reports what is installed; the only part that imports exudyn</p></td>
+</tr>
+</tbody>
+</table>
+<p>Nothing except <code class="docutils literal notranslate"><span class="pre">probe.py</span></code> imports exudyn — the driver selects the environment, so it must run in any
+interpreter. Standard library only, Python 3.8 syntax.</p>
+<p><code class="docutils literal notranslate"><span class="pre">manylinuxBuild.sh</span></code> and <code class="docutils literal notranslate"><span class="pre">buildManylinux.sh</span></code> stay in <code class="docutils literal notranslate"><span class="pre">tools/ci/</span></code>: they run inside the manylinux docker
+image and have to be shell.</p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="../generators/README.html" class="btn btn-neutral float-left" title="tools/generators/ — the new generator code" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="../../CONTRIBUTING.html" class="btn btn-neutral float-right" title="Contributing to Exudyn" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

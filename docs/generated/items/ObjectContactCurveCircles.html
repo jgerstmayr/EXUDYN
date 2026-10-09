@@ -1,0 +1,462 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ObjectContactCurveCircles &mdash; Exudyn1.13.3 1.13.3 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=3ee1c6c6" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/rtd_sphinx_search.min.css" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/custom.css?v=e2783f0e" />
+
+  
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=b8a3e558"></script>
+      <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../../_static/copybutton.js?v=f281be69"></script>
+      <script src="../../../_static/js/rtd_search_config.js"></script>
+      <script src="../../../_static/js/rtd_sphinx_search.min.js"></script>
+      <script>window.MathJax = {"loader": {"load": ["[tex]/mathtools"]}, "tex": {"packages": {"[+]": ["mathtools"]}, "macros": {"ANCFdk": "{\\LU{0}{\\dv_k}}", "ANCFdkO": "{\\LU{0}{\\dv_{0,k}}}", "ANCFdkOtp": "{\\LU{0}{\\dv_{0,k}\\tp}}", "ANCFdkt": "{\\LU{0}{\\dot\\dv_k}}", "Am": "{\\mathbf{A}}", "Dm": "{\\mathbf{D}}", "Em": "{\\mathbf{E}}", "Gm": "{\\mathbf{G}}", "Im": "{\\mathbf{I}}", "ImThree": "{\\mathbf{I}_{3 \\times 3}}", "Jm": "{\\mathbf{J}}", "Km": "{\\mathbf{K}}", "Mm": "{\\mathbf{M}}", "Pm": "{\\mathbf{P}}", "Rm": "{\\mathbf{R}}", "Sm": "{\\mathbf{S}}", "Tm": "{\\mathbf{T}}", "av": "{\\mathbf{a}}", "bv": "{\\mathbf{b}}", "cv": "{\\mathbf{c}}", "diffANCF": ["{\\frac{\\partial #1}{\\partial \\qv_{ANCF}}}", 1], "diffANCFdk": "{\\diffANCFmI{\\ANCFdk}}", "diffANCFmI": ["{\\frac{\\partial #1}{\\partial \\qv_{ANCF,m1}}}", 1], "diffANCFmIt": ["{\\frac{\\partial #1}{\\partial \\dot \\qv_{ANCF,m1}}}", 1], "diffANCFt": ["{\\frac{\\partial #1}{\\partial \\dot \\qv_{ANCF}}}", 1], "diffmI": ["{\\frac{\\partial #1}{\\partial \\qv_{m1}}}", 1], "diffmIt": ["{\\frac{\\partial #1}{\\partial \\dot \\qv_{m1}}}", 1], "diffmOI": ["{\\frac{\\partial #1}{\\partial \\qv_{m0,m1}}}", 1], "diffmOIt": ["{\\frac{\\partial #1}{\\partial \\dot \\qv_{m0,m1}}}", 1], "diffmOt": ["{\\frac{\\partial #1}{\\partial \\dot \\qv_{m0}}}", 1], "dv": "{\\mathbf{d}}", "ev": "{\\mathbf{e}}", "fv": "{\\mathbf{f}}", "gv": "{\\mathbf{g}}", "hv": "{\\mathbf{h}}", "nv": "{\\mathbf{n}}", "pv": "{\\mathbf{p}}", "qv": "{\\mathbf{q}}", "rv": "{\\mathbf{r}}", "sv": "{\\mathbf{s}}", "tv": "{\\mathbf{t}}", "uv": "{\\mathbf{u}}", "vv": "{\\mathbf{v}}", "xv": "{\\mathbf{x}}", "yv": "{\\mathbf{y}}", "zv": "{\\mathbf{z}}", "vspace": ["{}", 1], "ra": "{\\rightarrow}", "Rcal": "{\\mathbb{R}}", "Ccal": "{\\mathbb{C}}", "Ncal": "{\\mathbb{N}}", "Rot": "{\\mathbf{A}}", "dd": "{\\mathrm{d}}", "ps": "{p_\\mathrm{s}}", "co": "{\\mathrm{c}}", "si": "{\\mathrm{s}}", "tp": "{^\\mathrm{T}}", "diag": "{\\mathrm{diag}}", "vec": "{\\mathrm{vec}}", "Null": "{\\mathbf{0}}", "varepsilonDot": "{\\boldsymbol{\\varepsilon}}", "talpha": "{\\boldsymbol{\\alpha}}", "tbeta": "{\\boldsymbol{\\beta}}", "tgamma": "{\\boldsymbol{\\gamma}}", "tchi": "{\\boldsymbol{\\chi}}", "tdelta": "{\\boldsymbol{\\delta}}", "teps": "{\\boldsymbol{\\varepsilon}}", "tepsDot": "{\\boldsymbol{\\dot \\varepsilon}}", "teta": "{\\boldsymbol{\\eta}}", "tkappa": "{\\boldsymbol{\\kappa}}", "tkappaDot": "{\\boldsymbol{\\dot \\kappa}}", "tphi": "{\\boldsymbol{\\phi}}", "boldVarPhi": "{\\boldsymbol{\\varphi}}", "tPhi": "{\\boldsymbol{\\Phi}}", "ttheta": "{\\boldsymbol{\\theta}}", "tTheta": "{\\boldsymbol{\\Theta}}", "tlambda": "{\\boldsymbol{\\lambda}}", "tnu": "{\\boldsymbol{\\nu}}", "tmu": "{\\boldsymbol{\\mu}}", "tpsi": "{\\boldsymbol{\\psi}}", "tPsi": "{\\boldsymbol{\\Psi}}", "ttau": "{\\boldsymbol{\\tau}}", "tsigma": "{\\boldsymbol{\\sigma}}", "txi": "{\\boldsymbol{\\xi}}", "tzeta": "{\\boldsymbol{\\zeta}}", "tomega": "{\\boldsymbol{\\omega}}", "tOmega": "{\\boldsymbol{\\Omega}}", "vareps": "{\\varepsilon}", "myoverline": ["\\overline{#1}", 1], "pluseq": "\\mathrel{+}=", "LU": ["{\\prescript{#1}{}{#2}\\,}", 2], "LUX": ["{\\prescript{#1}{}{#2}#3\\,}", 3], "LUR": ["{\\prescript{#1}{}{#2}_{#3}\\,}", 3], "LURU": ["{\\prescript{#1}{}{#2}_{#3}^{#4}\\,}", 4], "LLdot": ["{\\prescript{}{#1}{\\dot{#2}}_{#3}\\,}", 3], "vr": ["{\\left[ \\begin{array}{c} { #1}\\vspace{0.04cm} \\\\ { #2}\\vspace{0.04cm} \\\\ { #3} \\end{array} \\right]}", 3], "mr": ["{\\left[ \\begin{array}{ccc} #1 & #2 & #3 \\vspace{0.04cm}\\\\ #4 & #5 & #6 \\vspace{0.04cm}\\\\ #7 & #8 & #9  \\end{array} \\right]}", 9], "vp": ["{\\left[ \\begin{array}{c} { #1} \\vspace{0.04cm}\\\\ { #2} \\end{array} \\right]}", 2], "mp": ["{\\left[ \\begin{array}{cc} #1 & #2 \\vspace{0.04cm}\\\\ #3 & #4 \\end{array} \\right]}", 4], "mfour": ["{\\left[ \\begin{array}{cccc} { #1} \\\\ { #2} \\\\ { #3} \\\\ { #4} \\end{array} \\right]}", 4], "vfour": ["{\\left[ \\begin{array}{c} { #1} \\\\ { #2} \\\\ { #3} \\\\ { #4} \\end{array} \\right]}", 4], "vrRow": ["{[#1,\\, #2,\\, #3]}", 3], "vsix": ["{\\left[ \\begin{array}{c} { #1} \\\\ { #2} \\\\ { #3} \\\\ { #4} \\\\ { #5} \\\\ { #6} \\end{array} \\right]}", 6], "vsixb": ["{\\begin{array}{c} { #1} \\\\ { #2} \\\\ { #3} \\\\ { #4} \\\\ { #5} \\\\ { #6} \\end{array} }", 6], "vsixs": ["{ \\begin{array}{c} { #1} \\\\ { #2} \\\\ { #3} \\\\ { #4} \\\\ { #5} \\\\ { #6} \\end{array} }", 6], "SO": "{q}", "FO": "{y}", "AE": "{\\lambda}", "SYS": "{s}", "SON": "{$2^\\mathrm{nd}$ order differential equations}", "FON": "{$1^\\mathrm{st}$ order differential equations}", "AEN": "{algebraic equations}", "Bm": "{\\mathbf{B}}", "Cm": "{\\mathbf{C}}", "Fm": "{\\mathbf{F}}", "SYSN": "{system equations}", "cIni": "{_\\mathrm{ini}}", "cRef": "{_\\mathrm{ref}}", "cCur": "{_\\mathrm{cur}}", "cVis": "{_\\mathrm{vis}}", "cSOS": "{_\\mathrm{start\\;of\\;step}}", "cConfig": "{_\\mathrm{config}}", "pLoc": "{\\mathbf{b}}", "pLocB": "{\\,^{b}{\\mathbf{v}}}", "pRef": "{\\mathbf{r}}", "pRefG": "{\\,^{0}{\\mathbf{r}}}", "indf": "{_\\mathrm{f}}", "indt": "{_\\mathrm{t}}", "indr": "{_\\mathrm{r}}", "indtt": "{_\\mathrm{tt}}", "indrr": "{_\\mathrm{rr}}", "indff": "{_\\mathrm{ff}}", "indtf": "{_\\mathrm{tf}}", "indrf": "{_\\mathrm{rf}}", "indtr": "{_\\mathrm{tr}}", "omegaBDtilde": "{\\LU{b}{\\tilde \\tomega_\\mathrm{bd}}}", "indrigid": "{_\\mathrm{rigid}}", "indred": "{_\\mathrm{red}}", "induser": "{_\\mathrm{user}}", "indu": "{_\\mathrm{u}}", "termA": ["{\\color{blue}{#1}}", 1], "termB": ["{\\color{red}{#1}}", 1], "termC": ["{\\color{green}{#1}}", 1], "acc": "{\\ddot{\\mathbf{q}}}", "GA": "{G\\alpha}", "Hm": "{\\mathbf{H}}", "ImTwo": "{\\mathbf{I}_{2 \\times 2}}", "Lm": "{\\mathbf{L}}", "Qm": "{\\mathbf{Q}}", "Vm": "{\\mathbf{V}}", "Wm": "{\\mathbf{W}}", "Xm": "{\\mathbf{X}}", "Ym": "{\\mathbf{Y}}", "aalg": "{\\mathbf{a}}", "iv": "{\\mathbf{i}}", "jv": "{\\mathbf{j}}", "kv": "{\\mathbf{k}}", "lv": "{\\mathbf{l}}", "mv": "{\\mathbf{m}}", "ov": "{\\mathbf{o}}", "vel": "{\\mathbf{v}}", "wv": "{\\mathbf{w}}"}}, "options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+      <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-mml-chtml.js"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+    <link rel="next" title="Object (Constraint)" href="objectConstraintIndex.html" />
+    <link rel="prev" title="ObjectContactSphereTriangle" href="ObjectContactSphereTriangle.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            Exudyn1.13.3
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Exudyn User Manual</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../README.html">Exudyn</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../manual/gettingStarted.html">Installation and getting started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../manual/introduction.html">Overview on Exudyn</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../manual/introductionBasics.html">Exudyn basics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../manual/tutorial.html">Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../manual/GUI.html">Renderer, graphics and visualization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../manual/performanceErrors.html">Performance, errors and solver failures</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../manual/introductionAdvanced.html">Advanced topics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../manual/notation.html">Notation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../manual/theory.html">Theory and formulations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../manual/solver.html">Solvers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../cInterface/cInterfaceIndex.html">Python-C++ command interface</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Reference Manual</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="itemsIndex.html">Items reference manual</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="nodeIndex.html">Node</a></li>
+<li class="toctree-l2"><a class="reference internal" href="objectBodyIndex.html">Object (Body)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="objectSuperElementIndex.html">Object (SuperElement)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="objectObjectIndex.html">Object (Object)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="objectFiniteElementIndex.html">Object (FiniteElement)</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="objectConnectorIndex.html">Object (Connector)</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="objectConnectorGeneral.html">General info for all connectors</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ObjectConnectorSpringDamper.html">ObjectConnectorSpringDamper</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ObjectConnectorCartesianSpringDamper.html">ObjectConnectorCartesianSpringDamper</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ObjectConnectorRigidBodySpringDamper.html">ObjectConnectorRigidBodySpringDamper</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ObjectConnectorLinearSpringDamper.html">ObjectConnectorLinearSpringDamper</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ObjectConnectorTorsionalSpringDamper.html">ObjectConnectorTorsionalSpringDamper</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ObjectConnectorCoordinateSpringDamper.html">ObjectConnectorCoordinateSpringDamper</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ObjectConnectorCoordinateSpringDamperExt.html">ObjectConnectorCoordinateSpringDamperExt</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ObjectConnectorGravity.html">ObjectConnectorGravity</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ObjectConnectorHydraulicActuatorSimple.html">ObjectConnectorHydraulicActuatorSimple</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ObjectConnectorReevingSystemSprings.html">ObjectConnectorReevingSystemSprings</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ObjectConnectorRollingDiscPenalty.html">ObjectConnectorRollingDiscPenalty</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ObjectContactConvexRoll.html">ObjectContactConvexRoll</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ObjectContactCoordinate.html">ObjectContactCoordinate</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ObjectContactCircleCable2D.html">ObjectContactCircleCable2D</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ObjectContactFrictionCircleCable2D.html">ObjectContactFrictionCircleCable2D</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ObjectContactSphereSphere.html">ObjectContactSphereSphere</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ObjectContactSphereTorus.html">ObjectContactSphereTorus</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ObjectContactSphereTriangle.html">ObjectContactSphereTriangle</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">ObjectContactCurveCircles</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="objectConstraintIndex.html">Object (Constraint)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="objectJointIndex.html">Object (Joint)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="markerIndex.html">Marker</a></li>
+<li class="toctree-l2"><a class="reference internal" href="loadIndex.html">Load</a></li>
+<li class="toctree-l2"><a class="reference internal" href="sensorIndex.html">Sensor</a></li>
+<li class="toctree-l2"><a class="reference internal" href="itemsIndex.html#parameter-changes">Parameter changes</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../pythonUtilities/utilitiesIndex.html">Python Utility Functions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../structures/structuresIndex.html">Structures and Settings</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../references.html">References</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Developer documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../dev/README.html">Exudyn developer documentation</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">How-to notes</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../howTo/condaEnvironments.html">Conda environments for Exudyn</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../howTo/sphinxDocs.html">Building the documentation</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Examples, models and issues</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../examples/examplesIndex.html">Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../testModels/testModelsIndex.html">TestModels</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../abbreviations.html">List of Abbreviations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../manual/revisions.html">Revisions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../CHANGELOG.html">Changelog</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../trackerlog.html">Issue tracker</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">Exudyn1.13.3</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="itemsIndex.html">Items reference manual</a></li>
+          <li class="breadcrumb-item"><a href="objectConnectorIndex.html">Object (Connector)</a></li>
+      <li class="breadcrumb-item active">ObjectContactCurveCircles</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../../_sources/docs/generated/items/ObjectContactCurveCircles.md.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <!-- GENERATED by tools/generators/itemDocsEmitter.py from definitions/ - do not edit -->
+<section class="tex2jax_ignore mathjax_ignore" id="objectcontactcurvecircles">
+<span id="sec-item-objectcontactcurvecircles"></span><h1>ObjectContactCurveCircles<a class="headerlink" href="#objectcontactcurvecircles" title="Link to this heading"></a></h1>
+<p>A contact model between a curve defined by piecewise segments and a set of circles. The 2D curve may corotate in 3D with the underlying marker and also defines the plane of action for the circles. [REQUIRES FURTHER TESTING]</p>
+<section id="interface">
+<h2>Interface<a class="headerlink" href="#interface" title="Link to this heading"></a></h2>
+<ul class="simple">
+<li><p>Python names: <code class="docutils literal notranslate"><span class="pre">ObjectContactCurveCircles</span></code> or <code class="docutils literal notranslate"><span class="pre">CamFollowerContactPlanar</span></code>, and <code class="docutils literal notranslate"><span class="pre">VCamFollowerContactPlanar</span></code> for its visualization</p></li>
+<li><p>Nodes it takes: <a class="reference internal" href="NodeGenericData.html#sec-item-nodegenericdata"><span class="std std-ref">NodeGenericData</span></a></p></li>
+<li><p>Markers it acts on: those providing <code class="docutils literal notranslate"><span class="pre">Position</span></code> and <code class="docutils literal notranslate"><span class="pre">Orientation</span></code>: <a class="reference internal" href="MarkerBodyRigid.html#sec-item-markerbodyrigid"><span class="std std-ref">MarkerBodyRigid</span></a>, <a class="reference internal" href="MarkerNodeRigid.html#sec-item-markernoderigid"><span class="std std-ref">MarkerNodeRigid</span></a>, <a class="reference internal" href="MarkerSuperElementRigid.html#sec-item-markersuperelementrigid"><span class="std std-ref">MarkerSuperElementRigid</span></a>, <a class="reference internal" href="MarkerKinematicTreeRigid.html#sec-item-markerkinematictreerigid"><span class="std std-ref">MarkerKinematicTreeRigid</span></a></p></li>
+</ul>
+</section>
+<section id="parameters">
+<h2>Parameters<a class="headerlink" href="#parameters" title="Link to this heading"></a></h2>
+<p>The parameters of the item; in a dictionary, its type is ‘ContactCurveCircles’:</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>name</p></th>
+<th class="head"><p>type</p></th>
+<th class="head"><p>size</p></th>
+<th class="head"><p>default</p></th>
+<th class="head"><p>description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><strong>name</strong></p></td>
+<td><p>String</p></td>
+<td><p></p></td>
+<td><p>‘’</p></td>
+<td><p>constraints’s unique name</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>markerNumbers</strong></p></td>
+<td><p>ArrayMarkerIndex</p></td>
+<td><p>2</p></td>
+<td><p>[ invalid (-1), invalid (-1) ]</p></td>
+<td><p>(symbol: <span class="math notranslate nohighlight">\([m0,m_{c0},m_{c1},\ldots]\tp\)</span>) list of <span class="math notranslate nohighlight">\(n_c+1\)</span> markers; marker <span class="math notranslate nohighlight">\(m0\)</span> represents the marker carrying the curve; all other markers represent centers of <span class="math notranslate nohighlight">\(n_c\)</span> circles, used in connector</p></td>
+</tr>
+<tr class="row-even"><td><p><strong>nodeNumber</strong></p></td>
+<td><p>NodeIndex</p></td>
+<td><p></p></td>
+<td><p>invalid (-1)</p></td>
+<td><p>(symbol: <span class="math notranslate nohighlight">\(n_d\)</span>) node number of a NodeGenericData with nDataVariablesPerSegment dataCoordinates per segment, needed for discontinuous iteration; data variables contain values from last PostNewton iteration: data[0+3<em>i] is the circle number, data[1+3</em>i] is the gap, data[2+3*i] is the tangential velocity (and thus contains information if it is stick or slip)</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>circlesRadii</strong></p></td>
+<td><p>NumpyVector</p></td>
+<td><p></p></td>
+<td><p>[]</p></td>
+<td><p>(symbol: <span class="math notranslate nohighlight">\([r_{c0},r_{c1}, \ldots]\tp \in \Rcal^{n_c}\)</span>) Vector containing radii of <span class="math notranslate nohighlight">\(n_c\)</span> circles [SI:m]; number according to size of markerNumbers-1</p></td>
+</tr>
+<tr class="row-even"><td><p><strong>segmentsData</strong></p></td>
+<td><p>PyMatrixContainer</p></td>
+<td><p></p></td>
+<td><p>[]</p></td>
+<td><p>(symbol: <span class="math notranslate nohighlight">\(\Dm \in \Rcal^{n_s \times 4}\)</span>) matrix containing a set of two planar point coordinates in each row, representing segments attached to marker <span class="math notranslate nohighlight">\(m0\)</span> and undergoing contact with the circles; for segment <span class="math notranslate nohighlight">\(s0\)</span> row 0 reads <span class="math notranslate nohighlight">\([p_{0x,s0},\,p_{0y,s0},\,p_{1x,s0},\,p_{1y,s0}]\)</span>; note that the segments must be ordered such that going from <span class="math notranslate nohighlight">\(\pv_0\)</span> to <span class="math notranslate nohighlight">\(\pv_1\)</span>, the exterior lies on the right (positive) side. MatrixContainer has to be provided in dense mode!</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>polynomialData</strong></p></td>
+<td><p>PyMatrixContainer</p></td>
+<td><p></p></td>
+<td><p>[]</p></td>
+<td><p>(symbol: <span class="math notranslate nohighlight">\(\Pm \in \Rcal^{n_s \times n_p}\)</span>) matrix containing coefficients for special polynomial enhancements of the linear segments; each row contains coefficients for polynomials for the according segment, prescribing slopes at beginning and end of segment as well as curvature at beginning and end of segment; slopes and curvatures are defined in a local x/y coordinate system where x is the segment axis (start: x=0; x-axis points towards end point) and the segment normal is in y-direction; MatrixContainer has to be provided in dense mode!</p></td>
+</tr>
+<tr class="row-even"><td><p><strong>dynamicFriction</strong></p></td>
+<td><p>UReal</p></td>
+<td><p></p></td>
+<td><p>0.</p></td>
+<td><p>(symbol: <span class="math notranslate nohighlight">\(\mu_d\)</span>) dynamic friction coefficient: the friction force is <span class="math notranslate nohighlight">\(\mu_d \vert f_N\vert \)</span>, regularized below frictionProportionalZone, see the equation; 0: no friction</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>frictionProportionalZone</strong></p></td>
+<td><p>UReal</p></td>
+<td><p></p></td>
+<td><p>0.001</p></td>
+<td><p>(symbol: <span class="math notranslate nohighlight">\(v_{reg}\)</span>) limit velocity [SI:m/s] up to which the friction force is proportional to the tangential velocity (regularization, against numerical oscillations); 0: no regularization</p></td>
+</tr>
+<tr class="row-even"><td><p><strong>contactStiffness</strong></p></td>
+<td><p>Real</p></td>
+<td><p></p></td>
+<td><p>0.</p></td>
+<td><p>(symbol: <span class="math notranslate nohighlight">\(k_c\)</span>) normal contact stiffness [SI:N/(m*m)]</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>contactDamping</strong></p></td>
+<td><p>Real</p></td>
+<td><p></p></td>
+<td><p>0.</p></td>
+<td><p>(symbol: <span class="math notranslate nohighlight">\(d_c\)</span>) linear normal contact damping [SI:N/(m s)]; this damping is a simplification of real contact dissipation and should be used with care.</p></td>
+</tr>
+<tr class="row-even"><td><p><strong>contactModel</strong></p></td>
+<td><p>UInt</p></td>
+<td><p></p></td>
+<td><p>0</p></td>
+<td><p>(symbol: <span class="math notranslate nohighlight">\(m_\mathrm{contact}\)</span>) number of contact model: 0) linear model for stiffness and damping, only proportional to penetration; contact force is computed from <span class="math notranslate nohighlight">\(l_\mathrm{seg}\left(p \cdot \cdot k_c + \dot p \cdot d_c \right)\)</span> as long as <span class="math notranslate nohighlight">\(p&gt;0\)</span>; while this is numerically more stable, it gives jumps in forces when sliding over contact geometry 1) contact force proportional to integral over penetration area of circle with segments, giving a smoother contact force when sliding over geometry;</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>activeConnector</strong></p></td>
+<td><p>Bool</p></td>
+<td><p></p></td>
+<td><p>True</p></td>
+<td><p>flag, which determines, if the connector is active; used to deactivate (temporarily) a connector or constraint</p></td>
+</tr>
+<tr class="row-even"><td><p><strong>gapPerSegment</strong></p></td>
+<td><p>NumpyVector</p></td>
+<td><p></p></td>
+<td><p>[]</p></td>
+<td><p>temporary vector for computed gap</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>gapPerSegment_t</strong></p></td>
+<td><p>NumpyVector</p></td>
+<td><p></p></td>
+<td><p>[]</p></td>
+<td><p>temporary vector for computed gap velocity</p></td>
+</tr>
+<tr class="row-even"><td><p><strong>segmentsForceLocalX</strong></p></td>
+<td><p>NumpyVector</p></td>
+<td><p></p></td>
+<td><p>[]</p></td>
+<td><p>temporary vector for contact force per segment in local X-direction</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>segmentsForceLocalY</strong></p></td>
+<td><p>NumpyVector</p></td>
+<td><p></p></td>
+<td><p>[]</p></td>
+<td><p>temporary vector for contact force per segment in local Y-direction</p></td>
+</tr>
+<tr class="row-even"><td><p><strong>visualization</strong></p></td>
+<td><p>VObjectContactCurveCircles</p></td>
+<td><p></p></td>
+<td><p></p></td>
+<td><p>parameters for visualization of item</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="visualization-parameters">
+<h2>Visualization parameters<a class="headerlink" href="#visualization-parameters" title="Link to this heading"></a></h2>
+<p>The parameters of <code class="docutils literal notranslate"><span class="pre">VObjectContactCurveCircles</span></code>, given as <code class="docutils literal notranslate"><span class="pre">visualization</span></code>:</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>name</p></th>
+<th class="head"><p>type</p></th>
+<th class="head"><p>size</p></th>
+<th class="head"><p>default</p></th>
+<th class="head"><p>description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><strong>show</strong></p></td>
+<td><p>Bool</p></td>
+<td><p></p></td>
+<td><p>True</p></td>
+<td><p>set true, if item is shown in visualization and false if it is not shown; draws curve and circles with given radii; uses visualizationSettings circleTiling for circles and circleTiling/2 for tiling of non-straight segments</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>color</strong></p></td>
+<td><p>Float4</p></td>
+<td><p>4</p></td>
+<td><p>[-1.,-1.,-1.,-1.]</p></td>
+<td><p>RGBA connector color; if R==-1, use default color</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="drawing">
+<h2>Drawing<a class="headerlink" href="#drawing" title="Link to this heading"></a></h2>
+<p>Drawn as <a class="reference internal" href="objectConnectorGeneral.html#sec-drawing-objectsconnector"><span class="std std-ref">all connectors</span></a>; with <code class="docutils literal notranslate"><span class="pre">connectors.showContact</span></code>, the curve as lines with points at its segments, and the circles of the markers with <code class="docutils literal notranslate"><span class="pre">general.circleTiling</span></code> segments.</p>
+<p>Settings beyond those of all connectors: <a class="reference internal" href="../structures/VisualizationSettings.html#sec-vsettingsconnectors"><span class="std std-ref"><code class="docutils literal notranslate"><span class="pre">connectors.showContact</span></code></span></a>, <a class="reference internal" href="../structures/VisualizationSettings.html#sec-vsettingscontact"><span class="std std-ref"><code class="docutils literal notranslate"><span class="pre">contact.contactPointsDefaultSize</span></code></span></a>, <a class="reference internal" href="../structures/VisualizationSettings.html#sec-vsettingscontact"><span class="std std-ref"><code class="docutils literal notranslate"><span class="pre">contact.tilingCurves</span></code></span></a>, <a class="reference internal" href="../structures/VisualizationSettings.html#sec-vsettingsgeneral"><span class="std std-ref"><code class="docutils literal notranslate"><span class="pre">general.circleTiling</span></code></span></a>, <a class="reference internal" href="../structures/VisualizationSettings.html#sec-vsettingsgeneral"><span class="std std-ref"><code class="docutils literal notranslate"><span class="pre">general.sphereTiling</span></code></span></a>.</p>
+</section>
+<section id="output-variables">
+<h2>Output variables<a class="headerlink" href="#output-variables" title="Link to this heading"></a></h2>
+<p>Available as <code class="docutils literal notranslate"><span class="pre">OutputVariableType</span></code> in sensors, <code class="docutils literal notranslate"><span class="pre">Get...Output()</span></code> and other functions:</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>output variable</p></th>
+<th class="head"><p>symbol</p></th>
+<th class="head"><p>description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>DisplacementLocal</p></td>
+<td><p><span class="math notranslate nohighlight">\([g_0,\,g_1,\,\ldots]\tp\)</span></p></td>
+<td><p>per segment, the gap of the circle closest to it (&lt; 0: penetration), from the current configuration; the largest float if there is no circle</p></td>
+</tr>
+<tr class="row-odd"><td><p>VelocityLocal</p></td>
+<td><p><span class="math notranslate nohighlight">\([\dot g_0,\,\dot g_1,\,\ldots]\tp\)</span></p></td>
+<td><p>per segment, the normal relative velocity of that circle</p></td>
+</tr>
+<tr class="row-even"><td><p>ForceLocal</p></td>
+<td><p><span class="math notranslate nohighlight">\([f_{x,0},\,f_{y,0},\,f_{x,1},\,\ldots]\tp\)</span></p></td>
+<td><p>per segment, the contact force - normal and friction - on the circle in contact with it, in the frame of marker m0, with the contact states of the data node; zero without contact</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="detailed-description">
+<span id="description-objectcontactcurvecircles"></span><h2>Detailed description<a class="headerlink" href="#detailed-description" title="Link to this heading"></a></h2>
+<p><strong>Further testing is required</strong>, as the class description says.</p>
+<section id="definition-of-quantities">
+<h3>Definition of quantities<a class="headerlink" href="#definition-of-quantities" title="Link to this heading"></a></h3>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>intermediate variables</p></th>
+<th class="head"><p>symbol</p></th>
+<th class="head"><p>description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>marker m0 position, orientation</p></td>
+<td><p><span class="math notranslate nohighlight">\(\LU{0}{\pv}_{m0}\)</span>, <span class="math notranslate nohighlight">\(\LU{0,m0}{\Rot}\)</span></p></td>
+<td><p>the frame carrying the curve, which lies in its <span class="math notranslate nohighlight">\(x\)</span>-<span class="math notranslate nohighlight">\(y\)</span> plane; a rotation of it is given to the marker as its <code class="docutils literal notranslate"><span class="pre">localHT</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p>circle markers</p></td>
+<td><p><span class="math notranslate nohighlight">\(\LU{0}{\pv}_{c_i}\)</span></p></td>
+<td><p>centers of the <span class="math notranslate nohighlight">\(n_c\)</span> circles with radii <code class="docutils literal notranslate"><span class="pre">circlesRadii</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p>segments</p></td>
+<td><p><span class="math notranslate nohighlight">\(\Dm\)</span></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">segmentsData</span></code>: one straight segment per row, two planar points in the curve frame</p></td>
+</tr>
+<tr class="row-odd"><td><p>polynomials</p></td>
+<td><p><span class="math notranslate nohighlight">\(\Pm\)</span></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">polynomialData</span></code>: optional coefficients that bend each segment in the drawing only; the contact does not use them, it uses the straight segments</p></td>
+</tr>
+<tr class="row-even"><td><p>data coordinates</p></td>
+<td><p><span class="math notranslate nohighlight">\(\xv\)</span></p></td>
+<td><p>per segment, the state of the last post Newton step</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="geometric-relations">
+<h3>Geometric relations<a class="headerlink" href="#geometric-relations" title="Link to this heading"></a></h3>
+<p>The circle centers are transformed into the frame of the curve and projected into its plane. For each
+segment and each circle, the gap is the distance of the circle center from the segment minus the
+radius; a segment takes the circle with the largest penetration. The penetration is integrated along
+the part of the segment in contact, so that the contact stiffness does not depend on how finely the
+curve is divided.</p>
+</section>
+<section id="connector-forces">
+<h3>Connector forces<a class="headerlink" href="#connector-forces" title="Link to this heading"></a></h3>
+<p>Per segment in contact, the normal force follows from <code class="docutils literal notranslate"><span class="pre">contactStiffness</span></code>, <code class="docutils literal notranslate"><span class="pre">contactDamping</span></code> and the
+integrated penetration, as <code class="docutils literal notranslate"><span class="pre">contactModel</span></code> selects; it acts in the plane of the curve on the circle
+center and, with opposite sign, on marker 0 with the torque of its lever arm. A segment must be short
+enough that only one circle touches it at a time, which the connector warns about.</p>
+<p>With <code class="docutils literal notranslate"><span class="pre">dynamicFriction</span></code> <span class="math notranslate nohighlight">\(\mu_d &gt; 0\)</span>, a friction force acts in the tangential direction <span class="math notranslate nohighlight">\(\tv\)</span> of the contact,
+against the tangential relative velocity <span class="math notranslate nohighlight">\(v_t\)</span> of the circle center against the curve,</p>
+<div class="math notranslate nohighlight">
+\[
+f_t = -\mu_d\, |f_N|\, \frac{v_t}{v_{reg}} \;\; \mathrm{for} \;\; |v_t| &lt; v_{reg}, \quad
+f_t = -\mu_d\, |f_N|\, \mathrm{sign}(v_t) \;\; \mathrm{otherwise},
+\]</div>
+<p>with <code class="docutils literal notranslate"><span class="pre">frictionProportionalZone</span></code> <span class="math notranslate nohighlight">\(v_{reg}\)</span> (0: no regularization); there is no sticking state.</p>
+</section>
+</section>
+<section id="mini-example">
+<span id="miniexample-objectcontactcurvecircles"></span><h2>Mini example<a class="headerlink" href="#mini-example" title="Link to this heading"></a></h2>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1">#a planar body with a circle of radius 0.1 resting on a curve of line segments (the ground line y=0)</span>
+<span class="n">node</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">AddNode</span><span class="p">(</span><span class="nc">NodeRigidBody2D</span><span class="p">(</span><span class="n">referenceCoordinates</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mf">0.1</span><span class="p">,</span><span class="mi">0</span><span class="p">]))</span>
+<span class="n">body</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">AddObject</span><span class="p">(</span><span class="nc">ObjectRigidBody2D</span><span class="p">(</span><span class="n">nodeNumber</span><span class="o">=</span><span class="n">node</span><span class="p">,</span> <span class="n">mass</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">inertia</span><span class="o">=</span><span class="mf">0.01</span><span class="p">))</span>
+<span class="n">mbs</span><span class="o">.</span><span class="nf">AddLoad</span><span class="p">(</span><span class="nc">LoadForceVector</span><span class="p">(</span><span class="n">markerNumber</span><span class="o">=</span><span class="n">mbs</span><span class="o">.</span><span class="nf">AddMarker</span><span class="p">(</span><span class="nc">MarkerBodyPosition</span><span class="p">(</span><span class="n">bodyNumber</span><span class="o">=</span><span class="n">body</span><span class="p">)),</span> <span class="n">loadVector</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="o">-</span><span class="mi">10</span><span class="p">,</span><span class="mi">0</span><span class="p">]))</span>
+<span class="n">mCurve</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">AddMarker</span><span class="p">(</span><span class="nc">MarkerBodyRigid</span><span class="p">(</span><span class="n">bodyNumber</span><span class="o">=</span><span class="n">oGround</span><span class="p">,</span> <span class="n">localPosition</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]))</span>
+<span class="n">mCircle</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">AddMarker</span><span class="p">(</span><span class="nc">MarkerBodyRigid</span><span class="p">(</span><span class="n">bodyNumber</span><span class="o">=</span><span class="n">body</span><span class="p">,</span> <span class="n">localPosition</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]))</span>
+<span class="n">segments</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">]])</span> <span class="c1">#one segment [x0,y0, x1,y1]; the contact side is to the left of 1-&gt;0</span>
+<span class="n">nData</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">AddNode</span><span class="p">(</span><span class="nc">NodeGenericData</span><span class="p">(</span><span class="n">numberOfDataCoordinates</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">initialCoordinates</span><span class="o">=</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]))</span>
+<span class="n">mbs</span><span class="o">.</span><span class="nf">AddObject</span><span class="p">(</span><span class="nc">ObjectContactCurveCircles</span><span class="p">(</span><span class="n">markerNumbers</span><span class="o">=</span><span class="p">[</span><span class="n">mCurve</span><span class="p">,</span> <span class="n">mCircle</span><span class="p">],</span> <span class="n">nodeNumber</span><span class="o">=</span><span class="n">nData</span><span class="p">,</span> <span class="n">circlesRadii</span><span class="o">=</span><span class="p">[</span><span class="mf">0.1</span><span class="p">],</span>
+                                        <span class="n">segmentsData</span><span class="o">=</span><span class="n">exu</span><span class="o">.</span><span class="nc">MatrixContainer</span><span class="p">(</span><span class="n">segments</span><span class="p">),</span>
+                                        <span class="n">contactStiffness</span><span class="o">=</span><span class="mf">1e4</span><span class="p">,</span> <span class="n">contactDamping</span><span class="o">=</span><span class="mi">100</span><span class="p">))</span>
+
+<span class="n">mbs</span><span class="o">.</span><span class="nf">Assemble</span><span class="p">()</span>
+<span class="n">mbs</span><span class="o">.</span><span class="nf">SolveDynamic</span><span class="p">()</span>
+
+<span class="c1">#at rest: 0.1 - F/k</span>
+<span class="n">exu</span><span class="o">.</span><span class="n">sys</span><span class="p">[</span><span class="s1">'testResult'</span><span class="p">]</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">GetNodeOutput</span><span class="p">(</span><span class="n">node</span><span class="p">,</span> <span class="n">exu</span><span class="o">.</span><span class="nc">OutputVariableType</span><span class="o">.</span><span class="n">Position</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span> <span class="c1">#0.099</span>
+</pre></div>
+</div>
+<p>Relevant Examples (Ex) and TestModels (TM) with weblink to github: <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/camFollowerExample.py"><code class="docutils literal notranslate"><span class="pre">camFollowerExample.py</span></code></a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/chainDriveExample.py"><code class="docutils literal notranslate"><span class="pre">chainDriveExample.py</span></code></a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/contactCurvePolynomial.py"><code class="docutils literal notranslate"><span class="pre">contactCurvePolynomial.py</span></code></a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/contactCurveWithLongCurve.py"><code class="docutils literal notranslate"><span class="pre">contactCurveWithLongCurve.py</span></code></a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/contactCurveCirclesFrictionTest.py"><code class="docutils literal notranslate"><span class="pre">contactCurveCirclesFrictionTest.py</span></code></a> (TM), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/contactCurveExample.py"><code class="docutils literal notranslate"><span class="pre">contactCurveExample.py</span></code></a> (TM)</p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="ObjectContactSphereTriangle.html" class="btn btn-neutral float-left" title="ObjectContactSphereTriangle" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="objectConstraintIndex.html" class="btn btn-neutral float-right" title="Object (Constraint)" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

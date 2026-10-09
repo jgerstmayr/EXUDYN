@@ -1,0 +1,341 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Working with git in this repository &mdash; Exudyn1.13.3 1.13.3 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=3ee1c6c6" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/rtd_sphinx_search.min.css" />
+      <link rel="stylesheet" type="text/css" href="../../_static/custom.css?v=e2783f0e" />
+
+  
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=b8a3e558"></script>
+      <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../_static/copybutton.js?v=f281be69"></script>
+      <script src="../../_static/js/rtd_search_config.js"></script>
+      <script src="../../_static/js/rtd_sphinx_search.min.js"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Exudyn C++ architecture" href="ARCHITECTURE.html" />
+    <link rel="prev" title="Building Exudyn from source" href="BUILD.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            Exudyn1.13.3
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Exudyn User Manual</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../README.html">Exudyn</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../manual/gettingStarted.html">Installation and getting started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../manual/introduction.html">Overview on Exudyn</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../manual/introductionBasics.html">Exudyn basics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../manual/tutorial.html">Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../manual/GUI.html">Renderer, graphics and visualization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../manual/performanceErrors.html">Performance, errors and solver failures</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../manual/introductionAdvanced.html">Advanced topics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../manual/notation.html">Notation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../manual/theory.html">Theory and formulations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../manual/solver.html">Solvers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../generated/cInterface/cInterfaceIndex.html">Python-C++ command interface</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Reference Manual</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../generated/items/itemsIndex.html">Items reference manual</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../generated/pythonUtilities/utilitiesIndex.html">Python Utility Functions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../generated/structures/structuresIndex.html">Structures and Settings</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../generated/references.html">References</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Developer documentation</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="README.html">Exudyn developer documentation</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="GETTING_STARTED.html">Getting started as a developer</a></li>
+<li class="toctree-l2"><a class="reference internal" href="BUILD.html">Building Exudyn from source</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Working with git in this repository</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#branches">Branches</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#the-everyday-loop">The everyday loop</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#commit-messages">Commit messages</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#branching-for-a-larger-change">Branching for a larger change</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#if-you-are-contributing-from-outside">If you are contributing from outside</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#things-that-go-wrong-and-the-way-back">Things that go wrong, and the way back</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="ARCHITECTURE.html">Exudyn C++ architecture</a></li>
+<li class="toctree-l2"><a class="reference internal" href="CODING_STYLE.html">Exudyn coding style and conventions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="WORKFLOW.html">Development workflow</a></li>
+<li class="toctree-l2"><a class="reference internal" href="NEW_ITEM.html">How to set up a new item</a></li>
+<li class="toctree-l2"><a class="reference internal" href="GUI_MANUAL_CHECK.html">Manual GUI check before a release</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../generated/deprecations.html">Deprecations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../definitions/README.html">definitions/ — the item and structure definitions as Python</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../tools/generators/README.html">tools/generators/ — the new generator code</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../tools/exudev/README.html"><code class="docutils literal notranslate"><span class="pre">exudev</span></code> — the Exudyn maintainer driver</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../CONTRIBUTING.html">Contributing to Exudyn</a></li>
+<li class="toctree-l2"><a class="reference internal" href="README.html#repository-layout">Repository layout</a></li>
+<li class="toctree-l2"><a class="reference internal" href="README.html#building-and-running">Building and running</a></li>
+<li class="toctree-l2"><a class="reference internal" href="README.html#how-to-notes">How-to notes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="README.html#invariants">Invariants</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">How-to notes</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../howTo/condaEnvironments.html">Conda environments for Exudyn</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../howTo/sphinxDocs.html">Building the documentation</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Examples, models and issues</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../generated/examples/examplesIndex.html">Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../generated/testModels/testModelsIndex.html">TestModels</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../generated/abbreviations.html">List of Abbreviations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../manual/revisions.html">Revisions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../CHANGELOG.html">Changelog</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../generated/trackerlog.html">Issue tracker</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">Exudyn1.13.3</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="README.html">Exudyn developer documentation</a></li>
+      <li class="breadcrumb-item active">Working with git in this repository</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../_sources/docs/dev/GIT.md.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section class="tex2jax_ignore mathjax_ignore" id="working-with-git-in-this-repository">
+<span id="sec-dev-git"></span><h1>Working with git in this repository<a class="headerlink" href="#working-with-git-in-this-repository" title="Link to this heading"></a></h1>
+<p>What to type, in what order, and what a change has to look like before it is pushed. Written for
+the command line, because that is what a VS Code user has in front of them; every command has an
+equivalent in the editor’s git panel and in Visual Studio, and they do the same thing.</p>
+<p>This page is the <em>mechanics</em>. <strong>What</strong> a change has to pass before it is committed — the issue,
+the version bump, the four gates — is <a class="reference internal" href="WORKFLOW.html"><span class="std std-doc">WORKFLOW.md</span></a>. If you have not cloned yet,
+start at <a class="reference internal" href="GETTING_STARTED.html"><span class="std std-doc">GETTING_STARTED.md</span></a>.</p>
+<section id="branches">
+<h2>Branches<a class="headerlink" href="#branches" title="Link to this heading"></a></h2>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>branch</p></th>
+<th class="head"><p>what it is</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">master</span></code></p></td>
+<td><p>the public GitHub branch, currently a read-only mirror frozen at 1.11.0 — <strong>never commit here</strong></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">v2-dev</span></code></p></td>
+<td><p>the working branch of the 2026 revision; the name is historical (it was planned as 1.11 → 2.0 and completes as 1.12)</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">release/*</span></code></p></td>
+<td><p>release preparation</p></td>
+</tr>
+</tbody>
+</table>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>origin  →  the internal server    (v2-dev tracks origin/v2-dev)
+github  →  git@github.com:jgerstmayr/EXUDYN.git    (master tracks github/master)
+</pre></div>
+</div>
+<p><strong>Work on <code class="docutils literal notranslate"><span class="pre">v2-dev</span></code>.</strong> A bare <code class="docutils literal notranslate"><span class="pre">git</span> <span class="pre">push</span></code> from it goes to <code class="docutils literal notranslate"><span class="pre">origin</span></code>, the internal server, which is the
+safe default and the normal thing to do. <strong>Nothing reaches GitHub before the 1.13 release</strong>
+(decision D16); <code class="docutils literal notranslate"><span class="pre">tools/hooks/pre-push</span></code> refuses it, but only where <code class="docutils literal notranslate"><span class="pre">core.hooksPath</span></code> is set — which
+is why that is step 4 of <a class="reference internal" href="GETTING_STARTED.html"><span class="std std-doc">GETTING_STARTED.md</span></a>.</p>
+</section>
+<section id="the-everyday-loop">
+<h2>The everyday loop<a class="headerlink" href="#the-everyday-loop" title="Link to this heading"></a></h2>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git<span class="w"> </span>status<span class="w">                       </span><span class="c1">#what is changed, and on which branch</span>
+git<span class="w"> </span>pull<span class="w">                         </span><span class="c1">#before starting, and before pushing</span>
+<span class="w">                                 </span><span class="c1">#... make the change, run the gates ...</span>
+git<span class="w"> </span>add<span class="w"> </span>&lt;the<span class="w"> </span>files<span class="w"> </span>you<span class="w"> </span>changed&gt;<span class="w">  </span><span class="c1">#or: git add -A, after reading git status</span>
+git<span class="w"> </span>commit<span class="w"> </span>-F<span class="w"> </span>&lt;message<span class="w"> </span>file&gt;<span class="w">     </span><span class="c1">#or: git commit -m "..."</span>
+git<span class="w"> </span>push<span class="w">                         </span><span class="c1">#to origin</span>
+</pre></div>
+</div>
+<p>Three habits that save time here:</p>
+<ul class="simple">
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">git</span> <span class="pre">status</span></code> before <code class="docutils literal notranslate"><span class="pre">git</span> <span class="pre">add</span> <span class="pre">-A</span></code>.</strong> The build writes into <code class="docutils literal notranslate"><span class="pre">build/</span></code>, <code class="docutils literal notranslate"><span class="pre">dist/</span></code> and <code class="docutils literal notranslate"><span class="pre">python/logs/</span></code>;
+they are ignored, but a stray scratch file is not.</p></li>
+<li><p><strong>Pull before you push, not after a conflict.</strong> The working branch is shared.</p></li>
+<li><p><strong>Never commit a generated file by hand.</strong> <code class="docutils literal notranslate"><span class="pre">src/Autogenerated/</span></code>, <code class="docutils literal notranslate"><span class="pre">docs/generated/</span></code> and
+<code class="docutils literal notranslate"><span class="pre">CHANGELOG.md</span></code> are written by the generators and by the issue tracker; they <em>are</em> committed, but
+only as the generators wrote them. A hand edit survives until the next run and no longer.</p></li>
+</ul>
+<section id="seeing-what-you-are-about-to-commit">
+<h3>Seeing what you are about to commit<a class="headerlink" href="#seeing-what-you-are-about-to-commit" title="Link to this heading"></a></h3>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git<span class="w"> </span>diff<span class="w">                         </span><span class="c1">#unstaged</span>
+git<span class="w"> </span>diff<span class="w"> </span>--staged<span class="w">                </span><span class="c1">#what "git commit" would record</span>
+git<span class="w"> </span>diff<span class="w"> </span>--stat<span class="w">                  </span><span class="c1">#the file list with line counts, to check the size of a change</span>
+git<span class="w"> </span>log<span class="w"> </span>--oneline<span class="w"> </span>-10<span class="w">            </span><span class="c1">#the last ten commits, which is the style guide for the next one</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="commit-messages">
+<h2>Commit messages<a class="headerlink" href="#commit-messages" title="Link to this heading"></a></h2>
+<p>The message reuses the <strong>vocabulary of the issue tracker</strong>, so that a commit and its issue speak
+the same language:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">&lt;</span><span class="n">TYPE</span><span class="o">&gt;</span> <span class="c1">#&lt;issue number&gt;: &lt;one line summary&gt;</span>
+
+<span class="o">&lt;</span><span class="n">why</span><span class="p">,</span> <span class="ow">and</span> <span class="n">whatever</span> <span class="n">the</span> <span class="n">diff</span> <span class="n">does</span> <span class="ow">not</span> <span class="n">make</span> <span class="n">obvious</span><span class="o">&gt;</span>
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">&lt;TYPE&gt;</span></code> is one of the issue types — <code class="docutils literal notranslate"><span class="pre">BUG</span></code>, <code class="docutils literal notranslate"><span class="pre">FIX</span></code>, <code class="docutils literal notranslate"><span class="pre">CHANGE</span></code>, <code class="docutils literal notranslate"><span class="pre">EXTENSION</span></code>, <code class="docutils literal notranslate"><span class="pre">IMPROVEMENT</span></code>, <code class="docutils literal notranslate"><span class="pre">TESTING</span></code>,
+<code class="docutils literal notranslate"><span class="pre">DOCU</span></code>, <code class="docutils literal notranslate"><span class="pre">EXAMPLE</span></code>, <code class="docutils literal notranslate"><span class="pre">CHECK</span></code>, <code class="docutils literal notranslate"><span class="pre">IDEA</span></code> — and the number is the issue the change resolves. A change
+worth committing is worth an issue; that is the loop in <a class="reference internal" href="WORKFLOW.html"><span class="std std-doc">WORKFLOW.md</span></a> §2.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">BUG</span> <span class="c1">#2107: fix 32-byte alignment of VectorBase under AVX2</span>
+
+<span class="n">The</span> <span class="n">AVX2</span> <span class="n">module</span> <span class="n">reads</span> <span class="mi">32</span> <span class="nb">bytes</span> <span class="n">at</span> <span class="n">a</span> <span class="n">time</span><span class="p">,</span> <span class="ow">and</span> <span class="n">VectorBase</span> <span class="n">was</span> <span class="n">aligned</span> <span class="n">to</span> <span class="mi">16</span><span class="p">,</span>
+<span class="n">so</span> <span class="n">a</span> <span class="n">load</span> <span class="n">at</span> <span class="n">the</span> <span class="n">end</span> <span class="n">of</span> <span class="n">an</span> <span class="n">array</span> <span class="n">crossed</span> <span class="n">into</span> <span class="n">unmapped</span> <span class="n">memory</span> <span class="n">on</span> <span class="n">Linux</span> <span class="n">only</span><span class="o">.</span>
+</pre></div>
+</div>
+<p>Two rules about the body: <strong>say why, not what</strong> — the diff already says what — and <strong>name what a
+reader could not see</strong>, such as a measurement, a platform the fault appears on, or a decision that
+was taken and the alternative that was not.</p>
+<p>A <strong>work in progress</strong> commit, used only on <code class="docutils literal notranslate"><span class="pre">v2-dev</span></code> and only to move unfinished work between
+machines, is prefixed <code class="docutils literal notranslate"><span class="pre">WIP:</span></code> and says what is broken. It is the one kind that does not pass the
+gates.</p>
+</section>
+<section id="branching-for-a-larger-change">
+<h2>Branching for a larger change<a class="headerlink" href="#branching-for-a-larger-change" title="Link to this heading"></a></h2>
+<p>For anything that will take more than a day, or that might not work out:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git<span class="w"> </span>switch<span class="w"> </span>-c<span class="w"> </span>topic/&lt;short<span class="w"> </span>name&gt;<span class="w">      </span><span class="c1">#branch from v2-dev</span>
+<span class="w">                                      </span><span class="c1">#... commits ...</span>
+git<span class="w"> </span>switch<span class="w"> </span>v2-dev
+git<span class="w"> </span>pull
+git<span class="w"> </span>merge<span class="w"> </span>topic/&lt;short<span class="w"> </span>name&gt;
+git<span class="w"> </span>branch<span class="w"> </span>-d<span class="w"> </span>topic/&lt;short<span class="w"> </span>name&gt;
+</pre></div>
+</div>
+<p>Merge into <code class="docutils literal notranslate"><span class="pre">v2-dev</span></code> when the change passes the gates, not before. If <code class="docutils literal notranslate"><span class="pre">v2-dev</span></code> has moved on and the
+merge conflicts, <code class="docutils literal notranslate"><span class="pre">git</span> <span class="pre">pull</span></code> first and resolve on the topic branch, where a mistake costs nothing.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git<span class="w"> </span>merge<span class="w"> </span>--abort<span class="w">                     </span><span class="c1">#get out of a merge you do not want to finish</span>
+git<span class="w"> </span>switch<span class="w"> </span>-<span class="w">                          </span><span class="c1">#back to the previous branch</span>
+</pre></div>
+</div>
+</section>
+<section id="if-you-are-contributing-from-outside">
+<h2>If you are contributing from outside<a class="headerlink" href="#if-you-are-contributing-from-outside" title="Link to this heading"></a></h2>
+<p>The repository is <strong>not open for unsolicited pull requests</strong> — the reasons are in
+<a class="reference internal" href="../../CONTRIBUTING.html"><span class="std std-doc">CONTRIBUTING.md</span></a>, and the short one is that reviewing a change to the C++
+core costs more than writing it. <strong>Talk first</strong>: an issue, a discussion or an email. If a change is
+agreed, this is what it has to arrive as:</p>
+<ol class="arabic simple">
+<li><p>a branch off the current working branch, with a <strong>clear, small set of commits</strong> — one logical
+change per commit;</p></li>
+<li><p>commit messages in the form above, naming the agreed issue;</p></li>
+<li><p><strong>no generated file edited by hand</strong>, and <code class="docutils literal notranslate"><span class="pre">tools/regenerate.py</span></code> run if you changed anything
+under <code class="docutils literal notranslate"><span class="pre">definitions/</span></code>;</p></li>
+<li><p>the <strong>test suite passing</strong>: <code class="docutils literal notranslate"><span class="pre">python</span> <span class="pre">tools/exudev</span> <span class="pre">test</span></code>, and <code class="docutils literal notranslate"><span class="pre">pytest</span> <span class="pre">python/testing</span></code> if you touched
+Python;</p></li>
+<li><p>whatever documentation the change makes wrong, corrected in the same commit — the four gates in
+<a class="reference internal" href="WORKFLOW.html"><span class="std std-doc">WORKFLOW.md</span></a> §8 are what a pull request is checked against.</p></li>
+</ol>
+<p>What is <em>not</em> expected: that you bump a version, edit <code class="docutils literal notranslate"><span class="pre">CHANGELOG.md</span></code> or close an issue. The micro
+version is derived from the count of resolved issues and is written by the tracker; a contribution
+that edits it creates a conflict for everybody.</p>
+</section>
+<section id="things-that-go-wrong-and-the-way-back">
+<h2>Things that go wrong, and the way back<a class="headerlink" href="#things-that-go-wrong-and-the-way-back" title="Link to this heading"></a></h2>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p></p></th>
+<th class="head"><p></p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>committed on the wrong branch</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">git</span> <span class="pre">switch</span> <span class="pre">-c</span> <span class="pre">right-branch</span></code> then <code class="docutils literal notranslate"><span class="pre">git</span> <span class="pre">reset</span> <span class="pre">--hard</span> <span class="pre">HEAD~1</span></code> on the wrong one</p></td>
+</tr>
+<tr class="row-odd"><td><p>committed too early</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">git</span> <span class="pre">commit</span> <span class="pre">--amend</span></code> — <strong>only</strong> if it is not pushed yet</p></td>
+</tr>
+<tr class="row-even"><td><p>want to undo the last commit but keep the work</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">git</span> <span class="pre">reset</span> <span class="pre">--soft</span> <span class="pre">HEAD~1</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p>a file you did not mean to add</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">git</span> <span class="pre">restore</span> <span class="pre">--staged</span> <span class="pre">&lt;file&gt;</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p>your working tree is a mess</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">git</span> <span class="pre">stash</span></code>, do the urgent thing, <code class="docutils literal notranslate"><span class="pre">git</span> <span class="pre">stash</span> <span class="pre">pop</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p>a push is refused by the hook</p></td>
+<td><p>read the message; it is refusing a push of the working branch to the public remote, which is the rule of decision D16</p></td>
+</tr>
+</tbody>
+</table>
+<p><code class="docutils literal notranslate"><span class="pre">git</span> <span class="pre">reset</span> <span class="pre">--hard</span></code> and <code class="docutils literal notranslate"><span class="pre">git</span> <span class="pre">push</span> <span class="pre">--force</span></code> throw work away. Before either one, <code class="docutils literal notranslate"><span class="pre">git</span> <span class="pre">log</span> <span class="pre">--oneline</span></code>
+and be sure of what you are pointing at; a commit that is lost from a branch is still reachable
+through <code class="docutils literal notranslate"><span class="pre">git</span> <span class="pre">reflog</span></code> for a while, and that is the escape hatch.</p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="BUILD.html" class="btn btn-neutral float-left" title="Building Exudyn from source" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="ARCHITECTURE.html" class="btn btn-neutral float-right" title="Exudyn C++ architecture" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

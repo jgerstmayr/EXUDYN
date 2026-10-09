@@ -1,0 +1,283 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>The results monitor &mdash; Exudyn1.13.3 1.13.3 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=3ee1c6c6" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/rtd_sphinx_search.min.css" />
+      <link rel="stylesheet" type="text/css" href="../../_static/custom.css?v=e2783f0e" />
+
+  
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=b8a3e558"></script>
+      <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../_static/copybutton.js?v=f281be69"></script>
+      <script src="../../_static/js/rtd_search_config.js"></script>
+      <script src="../../_static/js/rtd_sphinx_search.min.js"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="User settings that persist between runs" href="userSettings.html" />
+    <link rel="prev" title="The command line: python -m exudyn" href="commandLine.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            Exudyn1.13.3
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Exudyn User Manual</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../README.html">Exudyn</a></li>
+<li class="toctree-l1"><a class="reference internal" href="gettingStarted.html">Installation and getting started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="introduction.html">Overview on Exudyn</a></li>
+<li class="toctree-l1"><a class="reference internal" href="introductionBasics.html">Exudyn basics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorial.html">Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="GUI.html">Renderer, graphics and visualization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="performanceErrors.html">Performance, errors and solver failures</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="introductionAdvanced.html">Advanced topics</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="introductionAdvanced.html#graphics-pipeline">Graphics pipeline</a></li>
+<li class="toctree-l2"><a class="reference internal" href="introductionAdvanced.html#raytracing">Raytracing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="introductionAdvanced.html#graphicsdata">GraphicsData</a></li>
+<li class="toctree-l2"><a class="reference internal" href="introductionAdvanced.html#contact-problems">Contact problems</a></li>
+<li class="toctree-l2"><a class="reference internal" href="introductionAdvanced.html#interaction-with-julia">Interaction with Julia</a></li>
+<li class="toctree-l2"><a class="reference internal" href="introductionAdvanced.html#the-c-core">The C++ core</a></li>
+<li class="toctree-l2"><a class="reference internal" href="introductionAdvanced.html#interaction-with-other-codes">Interaction with other codes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="introductionAdvanced.html#ros">ROS</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="introductionAdvanced.html#tools-that-are-not-part-of-a-model">Tools that are not part of a model</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="commandLine.html">The command line: <code class="docutils literal notranslate"><span class="pre">python</span> <span class="pre">-m</span> <span class="pre">exudyn</span></code></a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">The results monitor</a></li>
+<li class="toctree-l3"><a class="reference internal" href="userSettings.html">User settings that persist between runs</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="notation.html">Notation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="theory.html">Theory and formulations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="solver.html">Solvers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../generated/cInterface/cInterfaceIndex.html">Python-C++ command interface</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Reference Manual</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../generated/items/itemsIndex.html">Items reference manual</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../generated/pythonUtilities/utilitiesIndex.html">Python Utility Functions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../generated/structures/structuresIndex.html">Structures and Settings</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../generated/references.html">References</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Developer documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../dev/README.html">Exudyn developer documentation</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">How-to notes</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../howTo/condaEnvironments.html">Conda environments for Exudyn</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../howTo/sphinxDocs.html">Building the documentation</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Examples, models and issues</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../generated/examples/examplesIndex.html">Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../generated/testModels/testModelsIndex.html">TestModels</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../generated/abbreviations.html">List of Abbreviations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="revisions.html">Revisions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../CHANGELOG.html">Changelog</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../generated/trackerlog.html">Issue tracker</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">Exudyn1.13.3</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="introductionAdvanced.html">Advanced topics</a></li>
+      <li class="breadcrumb-item active">The results monitor</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../_sources/docs/manual/resultsMonitor.md.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section class="tex2jax_ignore mathjax_ignore" id="the-results-monitor">
+<span id="sec-resultsmonitor"></span><h1>The results monitor<a class="headerlink" href="#the-results-monitor" title="Link to this heading"></a></h1>
+<p>A long simulation, a parameter variation that runs overnight, a genetic optimization on a cluster:
+all of them write their results to a file <em>while</em> they run. The results monitor shows that file as
+it grows — it re-reads what has been appended since the last update and redraws the curves, until
+the window is closed.</p>
+<p>It reads the four kinds of file Exudyn writes: a <strong>sensor</strong> file, a <strong>coordinates solution</strong> file,
+and the <code class="docutils literal notranslate"><span class="pre">resultsFile</span></code> of <strong><code class="docutils literal notranslate"><span class="pre">ParameterVariation</span></code></strong> and <strong><code class="docutils literal notranslate"><span class="pre">GeneticOptimization</span></code></strong>. Which one it is
+does not have to be said; the header of the file tells it.</p>
+<section id="three-ways-to-call-it">
+<h2>Three ways to call it<a class="headerlink" href="#three-ways-to-call-it" title="Link to this heading"></a></h2>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">python</span> <span class="o">-</span><span class="n">m</span> <span class="n">exudyn</span> <span class="n">monitor</span> <span class="o">--</span><span class="n">last</span>                 <span class="c1">#the newest results file that is found</span>
+<span class="n">python</span> <span class="o">-</span><span class="n">m</span> <span class="n">exudyn</span> <span class="n">monitor</span> <span class="n">solution</span><span class="o">/</span><span class="n">genetic</span><span class="o">.</span><span class="n">txt</span>   <span class="c1">#a given file</span>
+<span class="n">python</span> <span class="o">-</span><span class="n">m</span> <span class="n">exudyn</span><span class="o">.</span><span class="n">misc</span><span class="o">.</span><span class="n">resultsMonitor</span> <span class="n">f</span><span class="o">.</span><span class="n">txt</span>      <span class="c1">#the module directly, same options</span>
+</pre></div>
+</div>
+<p>and from a script or from the Spyder console:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">exudyn.misc.resultsMonitor</span><span class="w"> </span><span class="kn">import</span> <span class="n">MonitorResults</span>
+<span class="n">MonitorResults</span><span class="p">(</span><span class="s1">'solution/genetic.txt'</span><span class="p">,</span> <span class="n">logY</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">updatePeriod</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">MonitorResults(...)</span></code> is the function; the command line is a thin layer over it. Everything the
+options do is available as an argument, and <code class="docutils literal notranslate"><span class="pre">help(MonitorResults)</span></code> describes them.</p>
+<p><code class="docutils literal notranslate"><span class="pre">MonitorResults(...)</span></code> <strong>blocks</strong> until its window is closed, which is what is wanted in a console
+and not what is wanted in a script that still has to run the simulation. For that there is</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">exudyn.misc.resultsMonitor</span><span class="w"> </span><span class="kn">import</span> <span class="n">StartResultsMonitor</span>
+<span class="n">StartResultsMonitor</span><span class="p">(</span><span class="s1">'solution/sensorPos.txt'</span><span class="p">,</span> <span class="n">updatePeriod</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
+<span class="n">mbs</span><span class="o">.</span><span class="nf">SolveDynamic</span><span class="p">(</span><span class="n">simulationSettings</span><span class="p">)</span>     <span class="c1">#the plot follows the file while this runs</span>
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">StartResultsMonitor(...)</span></code> starts the monitor as a <strong>second process</strong> - <code class="docutils literal notranslate"><span class="pre">python</span> <span class="pre">-m</span> <span class="pre">exudyn</span> <span class="pre">monitor</span></code>
+with the options it was given - and returns at once. The two processes share nothing but the file,
+which is the protocol they already had, so there is no plotting inside the solver and no question of
+threads. The file does not have to exist yet: the monitor waits for it to appear and for its
+first row, and says which file it is waiting for.</p>
+<p>The process is <strong>not</strong> stopped when the script ends, so the plot is still there when a short
+simulation is over; the returned <code class="docutils literal notranslate"><span class="pre">subprocess.Popen</span></code> is the handle for a script that wants it gone.
+Nothing is started when windows are suppressed
+(<code class="docutils literal notranslate"><span class="pre">EXUDYN_SUPPRESS_UI_WINDOW_OPEN</span></code>, <code class="docutils literal notranslate"><span class="pre">exudyn.special.userInterface.suppressPlots</span></code>), so a test that runs such a
+script neither opens a window nor leaves a process behind. <code class="docutils literal notranslate"><span class="pre">3SpringsDistance.py</span></code> watches the coordinates
+solution this way.</p>
+</section>
+<section id="finding-the-file">
+<h2>Finding the file<a class="headerlink" href="#finding-the-file" title="Link to this heading"></a></h2>
+<p>Typing a path is the part that used to make the monitor awkward, so there are three ways around
+it:</p>
+<ul class="simple">
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">--last</span></code></strong> takes the most recently written results file it finds.</p></li>
+<li><p><strong>no file name at all</strong> opens a file dialog; without tkinter, a numbered list in the terminal.</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">--list-files</span></code></strong> prints the results files that were found and their type, and exits.</p></li>
+</ul>
+<p>It looks in <code class="docutils literal notranslate"><span class="pre">exudyn.config.outputDirectory</span></code>, in <code class="docutils literal notranslate"><span class="pre">solution/</span></code> and in the current directory;
+<code class="docutils literal notranslate"><span class="pre">--dir</span> <span class="pre">DIR</span></code> adds another place and may be given repeatedly.</p>
+</section>
+<section id="choosing-what-is-drawn">
+<h2>Choosing what is drawn<a class="headerlink" href="#choosing-what-is-drawn" title="Link to this heading"></a></h2>
+<p>By default a sensor or solution file is drawn over time, with every column except time; an
+optimization file is drawn over its varied parameters.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">python</span> <span class="o">-</span><span class="n">m</span> <span class="n">exudyn</span> <span class="n">monitor</span> <span class="n">f</span><span class="o">.</span><span class="n">txt</span> <span class="o">--</span><span class="nb">list</span><span class="o">-</span><span class="n">columns</span>       <span class="c1">#which column is which, with indices</span>
+<span class="n">python</span> <span class="o">-</span><span class="n">m</span> <span class="n">exudyn</span> <span class="n">monitor</span> <span class="n">f</span><span class="o">.</span><span class="n">txt</span> <span class="o">-</span><span class="n">y</span> <span class="mi">2</span><span class="p">,</span><span class="mi">3</span> <span class="o">--</span><span class="nf">log</span><span class="o">-</span><span class="n">y</span>       <span class="c1">#only these columns, logarithmic</span>
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">--list-columns</span></code> exists because guessing a column index from a file is the second thing that used
+to make the monitor awkward. For a parameter variation, <code class="docutils literal notranslate"><span class="pre">--color-variations</span></code> draws the first
+parameter only and gives every variation of the remaining parameters its own colour.</p>
+</section>
+<section id="the-control-panel">
+<h2>The control panel<a class="headerlink" href="#the-control-panel" title="Link to this heading"></a></h2>
+<p>Next to the plot there is a small window (tkinter, part of the standard library — no extra
+dependency) which changes what you are looking at <strong>without restarting the run</strong>:</p>
+<ul class="simple">
+<li><p>pause and resume the updates, and change the update period;</p></li>
+<li><p>logarithmic x / y, autoscale on or off;</p></li>
+<li><p>one checkbox per curve, up to 16 curves;</p></li>
+<li><p><em>save figure…</em> and <em>save data…</em> (the plotted data as CSV);</p></li>
+<li><p><em>open file…</em>, which points the monitor at another results file.</p></li>
+</ul>
+<p><code class="docutils literal notranslate"><span class="pre">--no-panel</span></code> leaves it out. If tkinter is missing, or windows are suppressed, the monitor says so
+in one line and draws the plot without the panel.</p>
+</section>
+<section id="settings-that-survive">
+<h2>Settings that survive<a class="headerlink" href="#settings-that-survive" title="Link to this heading"></a></h2>
+<p>What you set in the panel is stored in <code class="docutils literal notranslate"><span class="pre">~/.exudyn/config.json</span></code>, under <code class="docutils literal notranslate"><span class="pre">resultsMonitor</span></code> — update
+period, log scales, autoscale, window size, whether the panel is shown, and the directory last used.
+It is the one file Exudyn remembers anything in (<a class="reference internal" href="userSettings.html#sec-usersettings"><span class="std std-ref">User settings that persist between runs</span></a>). The next monitor starts
+the way the last one ended. <code class="docutils literal notranslate"><span class="pre">--no-settings</span></code> neither reads nor writes it, which is what a reproducible
+script or a test wants.</p>
+<p>An option given on the command line always wins over the stored setting.</p>
+<p>The monitor <strong>does not take the keyboard focus</strong> and does not come to the front while it updates. It
+did until 1.12.104, because the update used <code class="docutils literal notranslate"><span class="pre">matplotlib.pyplot.pause</span></code>, which raises and focuses the
+window every time it is called - once per update period - so the control panel beside the plot could
+not be typed into. If you <em>want</em> the window above the others, <code class="docutils literal notranslate"><span class="pre">--always-on-top</span></code> (or
+<code class="docutils literal notranslate"><span class="pre">alwaysOnTop=True</span></code>) does that, and it still leaves the keyboard where it was.</p>
+</section>
+<section id="in-a-script-in-a-test-on-a-server">
+<h2>In a script, in a test, on a server<a class="headerlink" href="#in-a-script-in-a-test-on-a-server" title="Link to this heading"></a></h2>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">python</span> <span class="o">-</span><span class="n">m</span> <span class="n">exudyn</span> <span class="n">monitor</span> <span class="n">f</span><span class="o">.</span><span class="n">txt</span> <span class="o">--</span><span class="n">once</span> <span class="o">--</span><span class="n">save</span> <span class="n">results</span><span class="o">.</span><span class="n">png</span>
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">--once</span></code> draws the file as it is, writes <code class="docutils literal notranslate"><span class="pre">--save</span></code> if given, and returns instead of entering the
+update loop. That is what makes the monitor usable where nobody can close a window — a CI job, a
+batch script, a machine reached over SSH — and it is how the monitor itself is tested
+(<code class="docutils literal notranslate"><span class="pre">python/TestModels/resultsMonitorTest.py</span></code>).</p>
+<p>The same happens automatically when window opening is suppressed
+(<code class="docutils literal notranslate"><span class="pre">EXUDYN_SUPPRESS_UI_WINDOW_OPEN</span></code>, <code class="docutils literal notranslate"><span class="pre">exudyn.special.userInterface.suppressPlots</span></code>): the monitor
+draws once and
+returns rather than waiting for a human who is not there.</p>
+</section>
+<section id="every-option">
+<h2>Every option<a class="headerlink" href="#every-option" title="Link to this heading"></a></h2>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">python</span> <span class="o">-</span><span class="n">m</span> <span class="n">exudyn</span> <span class="n">monitor</span> <span class="o">--</span><span class="n">help</span>
+</pre></div>
+</div>
+<p>The options are grouped there — what to plot, appearance, updating — and that list is generated
+from the program itself, so it cannot go out of date the way a list printed in a manual can.</p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="commandLine.html" class="btn btn-neutral float-left" title="The command line: python -m exudyn" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="userSettings.html" class="btn btn-neutral float-right" title="User settings that persist between runs" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

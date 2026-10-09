@@ -1,0 +1,256 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>References &mdash; Exudyn1.13.3 1.13.3 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=3ee1c6c6" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/rtd_sphinx_search.min.css" />
+      <link rel="stylesheet" type="text/css" href="../../_static/custom.css?v=e2783f0e" />
+
+  
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=b8a3e558"></script>
+      <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../_static/copybutton.js?v=f281be69"></script>
+      <script src="../../_static/js/rtd_search_config.js"></script>
+      <script src="../../_static/js/rtd_sphinx_search.min.js"></script>
+      <script>window.MathJax = {"loader": {"load": ["[tex]/mathtools"]}, "tex": {"packages": {"[+]": ["mathtools"]}, "macros": {"ANCFdk": "{\\LU{0}{\\dv_k}}", "ANCFdkO": "{\\LU{0}{\\dv_{0,k}}}", "ANCFdkOtp": "{\\LU{0}{\\dv_{0,k}\\tp}}", "ANCFdkt": "{\\LU{0}{\\dot\\dv_k}}", "Am": "{\\mathbf{A}}", "Dm": "{\\mathbf{D}}", "Em": "{\\mathbf{E}}", "Gm": "{\\mathbf{G}}", "Im": "{\\mathbf{I}}", "ImThree": "{\\mathbf{I}_{3 \\times 3}}", "Jm": "{\\mathbf{J}}", "Km": "{\\mathbf{K}}", "Mm": "{\\mathbf{M}}", "Pm": "{\\mathbf{P}}", "Rm": "{\\mathbf{R}}", "Sm": "{\\mathbf{S}}", "Tm": "{\\mathbf{T}}", "av": "{\\mathbf{a}}", "bv": "{\\mathbf{b}}", "cv": "{\\mathbf{c}}", "diffANCF": ["{\\frac{\\partial #1}{\\partial \\qv_{ANCF}}}", 1], "diffANCFdk": "{\\diffANCFmI{\\ANCFdk}}", "diffANCFmI": ["{\\frac{\\partial #1}{\\partial \\qv_{ANCF,m1}}}", 1], "diffANCFmIt": ["{\\frac{\\partial #1}{\\partial \\dot \\qv_{ANCF,m1}}}", 1], "diffANCFt": ["{\\frac{\\partial #1}{\\partial \\dot \\qv_{ANCF}}}", 1], "diffmI": ["{\\frac{\\partial #1}{\\partial \\qv_{m1}}}", 1], "diffmIt": ["{\\frac{\\partial #1}{\\partial \\dot \\qv_{m1}}}", 1], "diffmOI": ["{\\frac{\\partial #1}{\\partial \\qv_{m0,m1}}}", 1], "diffmOIt": ["{\\frac{\\partial #1}{\\partial \\dot \\qv_{m0,m1}}}", 1], "diffmOt": ["{\\frac{\\partial #1}{\\partial \\dot \\qv_{m0}}}", 1], "dv": "{\\mathbf{d}}", "ev": "{\\mathbf{e}}", "fv": "{\\mathbf{f}}", "gv": "{\\mathbf{g}}", "hv": "{\\mathbf{h}}", "nv": "{\\mathbf{n}}", "pv": "{\\mathbf{p}}", "qv": "{\\mathbf{q}}", "rv": "{\\mathbf{r}}", "sv": "{\\mathbf{s}}", "tv": "{\\mathbf{t}}", "uv": "{\\mathbf{u}}", "vv": "{\\mathbf{v}}", "xv": "{\\mathbf{x}}", "yv": "{\\mathbf{y}}", "zv": "{\\mathbf{z}}", "vspace": ["{}", 1], "ra": "{\\rightarrow}", "Rcal": "{\\mathbb{R}}", "Ccal": "{\\mathbb{C}}", "Ncal": "{\\mathbb{N}}", "Rot": "{\\mathbf{A}}", "dd": "{\\mathrm{d}}", "ps": "{p_\\mathrm{s}}", "co": "{\\mathrm{c}}", "si": "{\\mathrm{s}}", "tp": "{^\\mathrm{T}}", "diag": "{\\mathrm{diag}}", "vec": "{\\mathrm{vec}}", "Null": "{\\mathbf{0}}", "varepsilonDot": "{\\boldsymbol{\\varepsilon}}", "talpha": "{\\boldsymbol{\\alpha}}", "tbeta": "{\\boldsymbol{\\beta}}", "tgamma": "{\\boldsymbol{\\gamma}}", "tchi": "{\\boldsymbol{\\chi}}", "tdelta": "{\\boldsymbol{\\delta}}", "teps": "{\\boldsymbol{\\varepsilon}}", "tepsDot": "{\\boldsymbol{\\dot \\varepsilon}}", "teta": "{\\boldsymbol{\\eta}}", "tkappa": "{\\boldsymbol{\\kappa}}", "tkappaDot": "{\\boldsymbol{\\dot \\kappa}}", "tphi": "{\\boldsymbol{\\phi}}", "boldVarPhi": "{\\boldsymbol{\\varphi}}", "tPhi": "{\\boldsymbol{\\Phi}}", "ttheta": "{\\boldsymbol{\\theta}}", "tTheta": "{\\boldsymbol{\\Theta}}", "tlambda": "{\\boldsymbol{\\lambda}}", "tnu": "{\\boldsymbol{\\nu}}", "tmu": "{\\boldsymbol{\\mu}}", "tpsi": "{\\boldsymbol{\\psi}}", "tPsi": "{\\boldsymbol{\\Psi}}", "ttau": "{\\boldsymbol{\\tau}}", "tsigma": "{\\boldsymbol{\\sigma}}", "txi": "{\\boldsymbol{\\xi}}", "tzeta": "{\\boldsymbol{\\zeta}}", "tomega": "{\\boldsymbol{\\omega}}", "tOmega": "{\\boldsymbol{\\Omega}}", "vareps": "{\\varepsilon}", "myoverline": ["\\overline{#1}", 1], "pluseq": "\\mathrel{+}=", "LU": ["{\\prescript{#1}{}{#2}\\,}", 2], "LUX": ["{\\prescript{#1}{}{#2}#3\\,}", 3], "LUR": ["{\\prescript{#1}{}{#2}_{#3}\\,}", 3], "LURU": ["{\\prescript{#1}{}{#2}_{#3}^{#4}\\,}", 4], "LLdot": ["{\\prescript{}{#1}{\\dot{#2}}_{#3}\\,}", 3], "vr": ["{\\left[ \\begin{array}{c} { #1}\\vspace{0.04cm} \\\\ { #2}\\vspace{0.04cm} \\\\ { #3} \\end{array} \\right]}", 3], "mr": ["{\\left[ \\begin{array}{ccc} #1 & #2 & #3 \\vspace{0.04cm}\\\\ #4 & #5 & #6 \\vspace{0.04cm}\\\\ #7 & #8 & #9  \\end{array} \\right]}", 9], "vp": ["{\\left[ \\begin{array}{c} { #1} \\vspace{0.04cm}\\\\ { #2} \\end{array} \\right]}", 2], "mp": ["{\\left[ \\begin{array}{cc} #1 & #2 \\vspace{0.04cm}\\\\ #3 & #4 \\end{array} \\right]}", 4], "mfour": ["{\\left[ \\begin{array}{cccc} { #1} \\\\ { #2} \\\\ { #3} \\\\ { #4} \\end{array} \\right]}", 4], "vfour": ["{\\left[ \\begin{array}{c} { #1} \\\\ { #2} \\\\ { #3} \\\\ { #4} \\end{array} \\right]}", 4], "vrRow": ["{[#1,\\, #2,\\, #3]}", 3], "vsix": ["{\\left[ \\begin{array}{c} { #1} \\\\ { #2} \\\\ { #3} \\\\ { #4} \\\\ { #5} \\\\ { #6} \\end{array} \\right]}", 6], "vsixb": ["{\\begin{array}{c} { #1} \\\\ { #2} \\\\ { #3} \\\\ { #4} \\\\ { #5} \\\\ { #6} \\end{array} }", 6], "vsixs": ["{ \\begin{array}{c} { #1} \\\\ { #2} \\\\ { #3} \\\\ { #4} \\\\ { #5} \\\\ { #6} \\end{array} }", 6], "SO": "{q}", "FO": "{y}", "AE": "{\\lambda}", "SYS": "{s}", "SON": "{$2^\\mathrm{nd}$ order differential equations}", "FON": "{$1^\\mathrm{st}$ order differential equations}", "AEN": "{algebraic equations}", "Bm": "{\\mathbf{B}}", "Cm": "{\\mathbf{C}}", "Fm": "{\\mathbf{F}}", "SYSN": "{system equations}", "cIni": "{_\\mathrm{ini}}", "cRef": "{_\\mathrm{ref}}", "cCur": "{_\\mathrm{cur}}", "cVis": "{_\\mathrm{vis}}", "cSOS": "{_\\mathrm{start\\;of\\;step}}", "cConfig": "{_\\mathrm{config}}", "pLoc": "{\\mathbf{b}}", "pLocB": "{\\,^{b}{\\mathbf{v}}}", "pRef": "{\\mathbf{r}}", "pRefG": "{\\,^{0}{\\mathbf{r}}}", "indf": "{_\\mathrm{f}}", "indt": "{_\\mathrm{t}}", "indr": "{_\\mathrm{r}}", "indtt": "{_\\mathrm{tt}}", "indrr": "{_\\mathrm{rr}}", "indff": "{_\\mathrm{ff}}", "indtf": "{_\\mathrm{tf}}", "indrf": "{_\\mathrm{rf}}", "indtr": "{_\\mathrm{tr}}", "omegaBDtilde": "{\\LU{b}{\\tilde \\tomega_\\mathrm{bd}}}", "indrigid": "{_\\mathrm{rigid}}", "indred": "{_\\mathrm{red}}", "induser": "{_\\mathrm{user}}", "indu": "{_\\mathrm{u}}", "termA": ["{\\color{blue}{#1}}", 1], "termB": ["{\\color{red}{#1}}", 1], "termC": ["{\\color{green}{#1}}", 1], "acc": "{\\ddot{\\mathbf{q}}}", "GA": "{G\\alpha}", "Hm": "{\\mathbf{H}}", "ImTwo": "{\\mathbf{I}_{2 \\times 2}}", "Lm": "{\\mathbf{L}}", "Qm": "{\\mathbf{Q}}", "Vm": "{\\mathbf{V}}", "Wm": "{\\mathbf{W}}", "Xm": "{\\mathbf{X}}", "Ym": "{\\mathbf{Y}}", "aalg": "{\\mathbf{a}}", "iv": "{\\mathbf{i}}", "jv": "{\\mathbf{j}}", "kv": "{\\mathbf{k}}", "lv": "{\\mathbf{l}}", "mv": "{\\mathbf{m}}", "ov": "{\\mathbf{o}}", "vel": "{\\mathbf{v}}", "wv": "{\\mathbf{w}}"}}, "options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+      <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-mml-chtml.js"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Exudyn developer documentation" href="../dev/README.html" />
+    <link rel="prev" title="BeamSectionGeometry" href="structures/BeamSectionGeometry.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            Exudyn1.13.3
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Exudyn User Manual</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../README.html">Exudyn</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../manual/gettingStarted.html">Installation and getting started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../manual/introduction.html">Overview on Exudyn</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../manual/introductionBasics.html">Exudyn basics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../manual/tutorial.html">Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../manual/GUI.html">Renderer, graphics and visualization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../manual/performanceErrors.html">Performance, errors and solver failures</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../manual/introductionAdvanced.html">Advanced topics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../manual/notation.html">Notation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../manual/theory.html">Theory and formulations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../manual/solver.html">Solvers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cInterface/cInterfaceIndex.html">Python-C++ command interface</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Reference Manual</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="items/itemsIndex.html">Items reference manual</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pythonUtilities/utilitiesIndex.html">Python Utility Functions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="structures/structuresIndex.html">Structures and Settings</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">References</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Developer documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../dev/README.html">Exudyn developer documentation</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">How-to notes</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../howTo/condaEnvironments.html">Conda environments for Exudyn</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../howTo/sphinxDocs.html">Building the documentation</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Examples, models and issues</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="examples/examplesIndex.html">Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="testModels/testModelsIndex.html">TestModels</a></li>
+<li class="toctree-l1"><a class="reference internal" href="abbreviations.html">List of Abbreviations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../manual/revisions.html">Revisions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../CHANGELOG.html">Changelog</a></li>
+<li class="toctree-l1"><a class="reference internal" href="trackerlog.html">Issue tracker</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">Exudyn1.13.3</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">References</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../_sources/docs/generated/references.md.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <!-- GENERATED by tools/generators/referencesDocsEmitter.py from docs/bibliographyDoc.bib - do not edit -->
+<section class="tex2jax_ignore mathjax_ignore" id="references">
+<span id="sec-references"></span><h1>References<a class="headerlink" href="#references" title="Link to this heading"></a></h1>
+<p>The literature the documentation cites. A citation in the text - [Newmark1959], [ZwoelferGerstmayr2021] - links here; this page is generated from <code class="docutils literal notranslate"><span class="pre">docs/bibliographyDoc.bib</span></code>, which is the bibliography of the project and holds more than the chapters cite.</p>
+<p id="ref-2022-exudynyoutube"><strong>[2022_ExudynYoutube]</strong> Johannes Gerstmayr: <em>Exudyn – Youtube channel</em>. Youtube, https://www.youtube.com/playlist?list=PLZduTa9mdcmOh5KVUqatD9GzVg_jtl6fx (accessed on March 8, 2023), 2023.</p>
+<p id="ref-2022-gerstmayr-thedoc"><strong>[2022_Gerstmayr_theDoc]</strong> Johannes Gerstmayr: <em>Exudyn – Flexible Multibody Dynamics Systems with Python and C++</em>. GitHub repository, GitHub, https://github.com/jgerstmayr/EXUDYN (accessed on March 8, 2023), 2023.</p>
+<p id="ref-apm2004"><strong>[APM2004]</strong> D A Indeitsev (ed.): <em>Proceedings of the XXXII Summer School on Advanced Problems in Mechanics (APM 2004)</em>. Proceedings of the XXXII Summer School on Advanced Problems in Mechanics (APM 2004), 2004.</p>
+<p id="ref-arnold2007"><strong>[Arnold2007]</strong> Martin Arnold, Olivier Brüls: <em>Convergence of the generalized-<span class="math notranslate nohighlight">\(\alpha\)</span> scheme for constrained mechanical systems</em>. Multibody System Dynamics 85, pp. 187–202, 2007.</p>
+<p id="ref-bauchau2011"><strong>[Bauchau2011]</strong> Olivier A. Bauchau: <em>Flexible Multibody Dynamics</em>. Springer New York, Philadelphia, 2011.</p>
+<p id="ref-berzeri2000"><strong>[berzeri2000]</strong> M Berzeri, AA Shabana: <em>Development of simple models for the elastic forces in the absolute nodal co-ordinate formulation</em>. Journal of Sound and Vibration 235(4), Elsevier, pp. 539–565, 2000.</p>
+<p id="ref-bruels2011"><strong>[Bruels2011]</strong> Olivier Brüls, Martin Arnold, Alberto Cardona: <em>Two Lie group formulations for dynamic multibody systems with large rotations</em>. Proceedings of IDETC/MSNDC 2011, ASME 2011 International Design Engineering Technical Conferences, Washington, USA, 2011.</p>
+<p id="ref-canudasdewitetal1993"><strong>[CanudasDeWitEtAl1993]</strong> C. Canudas de Wit, H. Olsson, K.J. Aström, P. Lischinsky: <em>Dynamic Friction Models and Control Design</em>. 1993 American Control Conference, pp. 1920-1926, 1993. <a class="reference external" href="https://doi.org/10.23919/ACC.1993.4793212">doi:10.23919/ACC.1993.4793212</a></p>
+<p id="ref-carvalho2019"><strong>[Carvalho2019]</strong> André S. Carvalho, Jorge M. Martins: <em>Exact restitution and generalizations for the Hunt Crossley contact model</em>. Mechanism and Machine Theory 139, pp. 174–194, 2019. <a class="reference external" href="https://doi.org/10.1016/j.mechmachtheory.2019.03.028">doi:10.1016/j.mechmachtheory.2019.03.028</a></p>
+<p id="ref-chiacchio1998"><strong>[Chiacchio1998]</strong> Pasquale Chiacchio, Mariano Concilio: <em>The dynamic manipulability ellipsoid for redundant manipulators</em>. Proceedings. 1998 IEEE International Conference on Robotics and Automation (Cat. No.98CH36146) 1, pp. 95-100 vol.1, 1998.</p>
+<p id="ref-chung1993"><strong>[Chung1993]</strong> J. Chung, G. M. Hulbert: <em>A Time Integration Algorithm for Structural Dynamics With Improved Numerical Dissipation: The Generalized-<span class="math notranslate nohighlight">\(\alpha\)</span> Method</em>. Journal of Applied Mechanics 60(2), pp. 371, 1993.</p>
+<p id="ref-corke2013"><strong>[Corke2013]</strong> Peter Corke: <em>Robotics, Vision and Control: Fundamental Algorithms in MATLAB</em>. 1st, Springer Publishing Company, Incorporated, 2013. ISBN 3642201431</p>
+<p id="ref-coumans2015bullet"><strong>[coumans2015bullet]</strong> Erwin Coumans: <em>Bullet Physics Simulation</em>. ACM SIGGRAPH 2015 Courses, Association for Computing Machinery, New York, NY, USA, 2015. <a class="reference external" href="https://doi.org/10.1145/2776880.2792704">doi:10.1145/2776880.2792704</a></p>
+<p id="ref-coumans2016pybullet"><strong>[coumans2016pybullet]</strong> Erwin Coumans, Yunfei Bai: <em>Pybullet, a python module for physics simulation for games, robotics and machine learning</em>. https://docs.google.com/document/d/10sXEhzFRSnvFcl3XxNGhnD4N2SedqwdAvK3dsihxVUA (accessed on August 16, 2022), 2016.</p>
+<p id="ref-craigbampton1968"><strong>[CraigBampton1968]</strong> M C C Bampton, R R Craig Jr.: <em>Coupling of substructures for dynamic analyses</em>. American Institute of Aeronautics and Astronautics Journal 6(7), pp. 1313–1319, 1968.</p>
+<p id="ref-eccomasmultibody2009"><strong>[EccomasMultibody2009]</strong> K Arczewski, J Fraczek, M Wojtyra (ed.): <em>Proceedings of the Multibody Dynamics 2009 Eccomas Thematic Conference</em>. Proceedings of the Multibody Dynamics 2009 Eccomas Thematic Conference, 2009.</p>
+<p id="ref-eder2014"><strong>[Eder2014]</strong> R. Eder, J. Gerstmayr: <em>Special Genetic Identification Algorithm with smoothing in the frequency domain</em>. Advances in Engineering Software 70, pp. 113-122, 2014.</p>
+<p id="ref-edergerstmayr2014"><strong>[EderGerstmayr2014]</strong> Rafael Eder, Johannes Gerstmayr: <em>Special Genetic Identification Algorithm with smoothing in the frequency domain</em>. Advances in Engineering Software 70, pp. 113–122, 2014. <a class="reference external" href="https://doi.org/10.1016/j.advengsoft.2014.01.008">doi:10.1016/j.advengsoft.2014.01.008</a></p>
+<p id="ref-exudyn2023"><strong>[Exudyn2023]</strong> Johannes Gerstmayr: <em>Exudyn – a C++-based Python package for flexible multibody systems</em>. Multibody System Dynamics 60, pp. 533–561, 2024. <a class="reference external" href="https://doi.org/10.1007/s11044-023-09937-1">doi:10.1007/s11044-023-09937-1</a></p>
+<p id="ref-exudyn2023preprint"><strong>[Exudyn2023preprint]</strong> Johannes Gerstmayr: <em>Exudyn – A C++ based Python package for flexible multibody systems</em>. Research Square, preprint, Research Square, https://www.researchsquare.com/article/rs-2693700/v1, 2023. <a class="reference external" href="https://doi.org/10.21203/rs.3.rs-2693700/v1">doi:10.21203/rs.3.rs-2693700/v1</a></p>
+<p id="ref-exudyngit"><strong>[EXUDYNgit]</strong> Johannes Gerstmayr: <em>Exudyn github repository</em>. https://github.com/jgerstmayr/EXUDYN (accessed on March 8, 2023), 2023.</p>
+<p id="ref-exudynnaturallanguage2023preprint"><strong>[ExudynNaturalLanguage2023preprint]</strong> Johannes Gerstmayr, Peter Manzl, Michael Pieber: <em>Multibody Models Generated from Natural Language</em>. Research Square, preprint, Research Square, https://www.researchsquare.com/article/rs-3552291/v1, 2023. <a class="reference external" href="https://doi.org/10.21203/rs.3.rs-3552291/v1">doi:10.21203/rs.3.rs-3552291/v1</a></p>
+<p id="ref-exudynnaturallanguage2024"><strong>[ExudynNaturalLanguage2024]</strong> Johannes Gerstmayr, Peter Manzl, Michael Pieber: <em>Multibody Models Generated from Natural Language</em>. Multibody System Dynamics 62, pp. 249–271, 2024. <a class="reference external" href="https://doi.org/10.1007/s11044-023-09962-0">doi:10.1007/s11044-023-09962-0</a></p>
+<p id="ref-featherstone2008"><strong>[Featherstone2008]</strong> Roy Featherstone (ed.): <em>Rigid Body Dynamics Algorithms</em>. Springer, 2008.</p>
+<p id="ref-flores2008"><strong>[Flores2008]</strong> P. Flores, J. Ambrósio, J.C. Pimenta Claro, H.M. Lankarani: <em>Kinematics and Dynamics of Multibody Systems with Imperfect Joints</em>. Springer Berlin, 2008. ISBN 978-3-540-74361-3</p>
+<p id="ref-gazdeluca2019"><strong>[GazDeLuca2019]</strong> C. Gaz, M. Cognetti, A. Oliva, P. Robuffo Giordano, A. De Luca: <em>Dynamic Identification of the Franka Emika Panda Robot With Retrieval of Feasible Parameters Using Penalty-Based Optimization</em>. IEEE Robotics and Automation Letters 4(4), pp. 4147-4154, 2019. <a class="reference external" href="https://doi.org/10.1109/LRA.2019.2931248">doi:10.1109/LRA.2019.2931248</a></p>
+<p id="ref-geradincardona2001"><strong>[GeradinCardona2001]</strong> Michel Geradin, Alberto Cardona: <em>Flexible Multibody Dynamics</em>. John Wiley &amp; Sons, 2001.</p>
+<p id="ref-geradinrixen2015"><strong>[GeradinRixen2015]</strong> M Geradin, D J Rixen: <em>Mechanical Vibrations - Theory and Application to Structural Dynamics</em>. 3rd, John Wiley &amp; Sons, New York, 2015. ISBN 978-1-118-90020-8</p>
+<p id="ref-gerstmayr2004"><strong>[Gerstmayr2004]</strong> J Gerstmayr: <em>The Absolute Coordinate Formulation with Elasto-Plastic Deformations</em>. Multibody System Dynamics 12(4), pp. 363–383, 2004. <a class="reference external" href="https://doi.org/10.1007/s11044-004-2522-3">doi:10.1007/s11044-004-2522-3</a></p>
+<p id="ref-gerstmayr2006"><strong>[Gerstmayr2006]</strong> J Gerstmayr, J Schöberl: <em>A 3D finite element method for flexible multibody systems</em>. Multibody System Dynamics 15(4), pp. 305–320, 2006. <a class="reference external" href="https://doi.org/10.1007/s11044-006-9009-3">doi:10.1007/s11044-006-9009-3</a></p>
+<p id="ref-gerstmayr2009"><strong>[Gerstmayr2009]</strong> Johannes Gerstmayr: <em>HOTINT – A C++ Environment for the simulation of multibody dynamics systems and finite elements</em>. Proceedings of the Multibody Dynamics 2009 Eccomas Thematic Conference, 2009.</p>
+<p id="ref-gerstmayrambrosio2008"><strong>[GerstmayrAmbrosio2008]</strong> J Gerstmayr, J A C Ambrósio: <em>Component mode synthesis with constant mass and stiffness matrices applied to flexible multibody systems</em>. International Journal for Numerical Methods in Engineering 73(11), pp. 1518–1546, 2008.</p>
+<p id="ref-gerstmayretal2013"><strong>[GerstmayrEtAl2013]</strong> Johannes Gerstmayr, Alexander Dorninger, Rafael Eder, Peter Gruber, Daniel Reischl, Martin Saxinger, Markus Schörgenhumer, Alexander Humer, Karin Nachbagauer, Astrid Pechstein, Yury Vetyukov: <em>HOTINT: A Script Language Based Framework for the Simulation of Multibody Dynamics Systems</em>. 9th International Conference on Multibody Systems, Nonlinear Dynamics, and Control, International Design Engineering Technical Conferences and Computers and Information in Engineering Conference (ASME IDETC 2013), 2013. <a class="reference external" href="https://doi.org/10.1115/DETC2013-12299">doi:10.1115/DETC2013-12299</a></p>
+<p id="ref-gerstmayrexudyn2022"><strong>[GerstmayrExudyn2022]</strong> Johannes Gerstmayr: <em>Exudyn - A C++ based Python package for flexible multibody systems</em>. The 6th Joint International Conference on Multibody System Dynamics and the 10th Asian Conference on Multibody System Dynamics 2020, 2022.</p>
+<p id="ref-gerstmayrirschik2008"><strong>[GerstmayrIrschik2008]</strong> Johannes Gerstmayr, Hans Irschik: <em>On the correct representation of bending and axial deformation in the absolute nodal coordinate formulation with an elastic line approach</em>. Journal of Sound and Vibration 318(3), pp. 461–487, 2008. <a class="reference external" href="https://doi.org/10.1016/j.jsv.2008.04.019">doi:10.1016/j.jsv.2008.04.019</a></p>
+<p id="ref-gerstmayrstangl2004"><strong>[GerstmayrStangl2004]</strong> Johannes Gerstmayr, Michael Stangl: <em>High-Order Implicit Runge-Kutta Methods for Discontinuous Multibody Systems</em>. Proceedings of the XXXII Summer School on Advanced Problems in Mechanics (APM 2004), 2004.</p>
+<p id="ref-gfrerrer2008"><strong>[Gfrerrer2008]</strong> Anton Gfrerrer: <em>Geometry and kinematics of the Mecanum wheel</em>. Computer Aided Geometric Design 25(9), Elsevier, pp. 784–791, 2008.</p>
+<p id="ref-goldberg1989"><strong>[Goldberg1989]</strong> D. Goldberg: <em>Genetic Algorithms in Search, Optimization and Machine Learning</em>. Addison-Wesley, Reading, MA., 1989.</p>
+<p id="ref-gonthier2004"><strong>[Gonthier2004]</strong> Yves Gonthier, John McPhee, Christian Lange, Jean-Claude Piedbøeuf: <em>A Regularized Contact Model with Asymmetric Damping and Dwell Time Dependent Friction</em>. Multibody System Dynamics 11(3), pp. 209–233, 2004. <a class="reference external" href="https://doi.org/10.1023/B:MUBO.0000029392.21648.bc">doi:10.1023/B:MUBO.0000029392.21648.bc</a></p>
+<p id="ref-hairer1987"><strong>[Hairer1987]</strong> E. Hairer, S. P. Nørsett, G. Wanner: <em>Solving ordinary differential equations I, nonstiff problems</em>. Springer Berlin Heidelberg, 1987.</p>
+<p id="ref-heirmandesmet2010"><strong>[HeirmanDesmet2010]</strong> Gert H.K. Heirman, Wim Desmet: <em>Interface reduction of flexible bodies for efficient modeling of body flexibility in multibody dynamics</em>. Multibody system dynamics 24, Springer, pp. 219–234, 2010.</p>
+<p id="ref-henderson1977"><strong>[Henderson1977]</strong> D.M. Henderson: <em>Euler angles, quaternions, and transformation matrices for space shuttle analysis</em>. NASA, 1977. <a class="reference external" href="https://doi.org/19770019231">doi:19770019231</a></p>
+<p id="ref-holzinger2021"><strong>[Holzinger2021]</strong> Stefan Holzinger, Johannes Gerstmayr: <em>Time integration of rigid bodies modelled with three rotation parameters</em>. Multibody System Dynamics 53(4), pp. 345–378, 2021.</p>
+<p id="ref-holzingerarnoldgerst2023"><strong>[HolzingerArnoldGerst2023]</strong> Stefan Holzinger, Martin Arnold, Johannes Gerstmayr: <em>Evaluation and Implementation of Lie Group Integration Methods for Rigid Multibody Systems</em>. Research Square, preprint, Research Square, https://www.researchsquare.com/article/rs-2715112/v1, 2023. <a class="reference external" href="https://doi.org/10.21203/rs.3.rs-2715112/v1">doi:10.21203/rs.3.rs-2715112/v1</a></p>
+<p id="ref-holzingergerstmayr2020"><strong>[HolzingerGerstmayr2020]</strong> Johannes Gerstmayr, Stefan Holzinger: <em>Explicit time integration of multibody systems modelled with three rotation parameters</em>. International Conference on Multibody Systems, Nonlinear Dynamics, and Control, International Design Engineering Technical Conferences and Computers and Information in Engineering Conference (ASME IDETC 2020), 2020.</p>
+<p id="ref-holzingerschieferle2022"><strong>[HolzingerSchieferle2022]</strong> Stefan Holzinger, Manuel Schieferle, Christoph Gutmann, Manfred Hofer, Johannes Gerstmayr: <em>Modeling and Parameter Identification for a Flexible Rotor With Impacts</em>. Journal of Computational and Nonlinear Dynamics 17(5), 2022. <a class="reference external" href="https://doi.org/10.1115/1.4053560">doi:10.1115/1.4053560</a></p>
+<p id="ref-holzingerschoeberl2020"><strong>[HolzingerSchoeberl2020]</strong> Stefan Holzinger, Joachim Schöberl, Johannes Gerstmayr: <em>The equations of motion for a rigid body using non-redundant unified local velocity coordinates</em>. Multibody System Dynamics 48(3), pp. 283–309, 2020. <a class="reference external" href="https://doi.org/10.1007/s11044-019-09700-5">doi:10.1007/s11044-019-09700-5</a></p>
+<p id="ref-humer2014c"><strong>[Humer2014c]</strong> Alexander Humer, Frank Naets, Wim Desmet, Johannes Gerstmayr: <em>A generalized component mode synthesis approach for global modal parameterization in flexible multibody dynamics</em>. 2014.</p>
+<p id="ref-hunt1975"><strong>[Hunt1975]</strong> K. H. Hunt, F. R. E. Crossley: <em>Coefficient of Restitution Interpreted as Damping in Vibroimpact</em>. Journal of Applied Mechanics 42(2), pp. 440–445, 1975. <a class="reference external" href="https://doi.org/10.1115/1.3423596">doi:10.1115/1.3423596</a></p>
+<p id="ref-hurty1965"><strong>[Hurty1965]</strong> Walter C. Hurty: <em>Dynamic analysis of structural systems using component modes</em>. American Institute of Aeronautics and Astronautics Journal 4(3), pp. 678–685, 1965.</p>
+<p id="ref-kiusalaas2013"><strong>[Kiusalaas2013]</strong> Jaan Kiusalaas: <em>Numerical methods in engineering with Python 3</em>. Cambridge University Press, 2013.</p>
+<p id="ref-lanczos2012"><strong>[Lanczos2012]</strong> Cornelius Lanczos: <em>The Variational Principles of Mechanics</em>. 4th, Dover Publications Inc., New York, 2012.</p>
+<p id="ref-lugrisescalonadc2011"><strong>[LugrisEscalonaDC2011]</strong> U. Lugrís, J.L. Escalona, D. Dopico, J. Cuadrado: <em>Efficient and accurate simulation of the rope-sheave interaction in weight-lifting machines</em>. Proceedings of the Institution of Mechanical Engineers, Part K: Journal of Multi-body Dynamics 225(4), pp. 331–343, 2011.</p>
+<p id="ref-manzlgerstmayr2021"><strong>[ManzlGerstmayr2021]</strong> Peter Manzl, Johannes Gerstmayr: <em>An Improved Dynamic Model of the Mecanum Wheel for Multibody Simulations</em>. ASME 2021 International Design Engineering Technical Conferences and Computers and Information in Engineering Conference, 2021.</p>
+<p id="ref-manzlrl2023"><strong>[ManzlRL2023]</strong> Peter Manzl, Oleg Rogov, Johannes Gerstmayr, Aki Mikkola, Grzegorz Orzechowski: <em>Reliability Evaluation of Reinforcement Learning Methods for Mechanical Systems with Increasing Complexity</em>. Research Square, preprint, Research Square, https://www.researchsquare.com/article/rs-3066420/v1, 2023. <a class="reference external" href="https://doi.org/doi.org/10.21203/rs.3.rs-3066420/v1">doi:doi.org/10.21203/rs.3.rs-3066420/v1</a></p>
+<p id="ref-masaratimbdyn2014"><strong>[MasaratiMBDyn2014]</strong> Pierangelo Masarati, Marco Morandini, Paolo Mantegazza: <em>An Efficient Formulation for General-Purpose Multibody/Multiphysics Analysis</em>. Journal of Computational and Nonlinear Dynamics 9(4), 2014. <a class="reference external" href="https://doi.org/10.1115/1.4025628">doi:10.1115/1.4025628</a></p>
+<p id="ref-morrissey2014"><strong>[Morrissey2014]</strong> John Morrissey, Subhash Thakur, J. Ooi: <em>EDEM Contact Model: Adhesive Elasto-Plastic Model</em>. 2014. <a class="reference external" href="https://doi.org/10.13140/RG.2.2.10139.18724">doi:10.13140/RG.2.2.10139.18724</a></p>
+<p id="ref-msndc2013"><strong>[MSNDC2013]</strong> <em>9th International Conference on Multibody Systems, Nonlinear Dynamics, and Control, International Design Engineering Technical Conferences and Computers and Information in Engineering Conference (ASME IDETC 2013)</em>. 9th International Conference on Multibody Systems, Nonlinear Dynamics, and Control, International Design Engineering Technical Conferences and Computers and Information in Engineering Conference (ASME IDETC 2013), 2013.</p>
+<p id="ref-msndc2020"><strong>[MSNDC2020]</strong> <em>International Conference on Multibody Systems, Nonlinear Dynamics, and Control, International Design Engineering Technical Conferences and Computers and Information in Engineering Conference (ASME IDETC 2020)</em>. International Conference on Multibody Systems, Nonlinear Dynamics, and Control, International Design Engineering Technical Conferences and Computers and Information in Engineering Conference (ASME IDETC 2020), 2020.</p>
+<p id="ref-mueller2017"><strong>[Mueller2017]</strong> Andreas Müller: <em>Coordinate Mappings for Rigid Body Motions</em>. Journal of Computational and Nonlinear Dynamics 12(2), pp. 10, 2017. <a class="reference external" href="https://doi.org/10.1115/1.4034730">doi:10.1115/1.4034730</a></p>
+<p id="ref-naetsdevoshumergerstmayr2020"><strong>[NaetsDevosHumerGerstmayr2020]</strong> Frank Naets, Thijs Devos, Alexander Humer, Johannes Gerstmayr: <em>A noninvasive system-level model order reduction scheme for flexible multibody simulation</em>. International Journal for Numerical Methods in Engineering 121(14), pp. 3083–3107, 2020. <a class="reference external" href="https://doi.org/10.1002/nme.6348">doi:10.1002/nme.6348</a></p>
+<p id="ref-neurautergerstmayr2023"><strong>[NeurauterGerstmayr2023]</strong> Rene Neurauter, Johannes Gerstmayr: <em>A novel motion-reconstruction method for inertial sensors with constraints</em>. Multibody System Dynamics 57, pp. 181–209, 2023. <a class="reference external" href="https://doi.org/10.1007/s11044-022-09863-8">doi:10.1007/s11044-022-09863-8</a></p>
+<p id="ref-newmark1959"><strong>[Newmark1959]</strong> N M Newmark: <em>A Method of Computation for Structural Dynamics</em>. ASCE Journal of the Engineering Mechanics Division 85(3), pp. 67–94, 1959.</p>
+<p id="ref-ngsolve2014"><strong>[NGsolve2014]</strong> Joachim Schöberl: <em>C++11 Implementation of Finite Elements in NGSolve, ASC Report 30/2014</em>. Institute for Analysis and Scientific Computing, Vienna University of Technology, https://www.asc.tuwien.ac.at/ schoeberl/wiki/publications/ngs-cpp11.pdf (accessed on August 16, 2022), 2014.</p>
+<p id="ref-ngsolve2022"><strong>[NGsolve2022]</strong> Peter Gangl, Kevin Sturm, Michael Neunteufel, Joachim Schöberl: <em>Fully and Semi-Automated Shape Differentiation in NGSolve</em>. arXiv, 2020. <a class="reference external" href="https://doi.org/10.48550/ARXIV.2004.06783">doi:10.48550/ARXIV.2004.06783</a></p>
+<p id="ref-nikravesh1988"><strong>[Nikravesh1988]</strong> P. E. Nikravesh: <em>Computer-Aided Analysis of Mechanical Systems</em>. Prentice-Hall Inc., Englewood Cliffs, New Jersey, 1988.</p>
+<p id="ref-numba2015"><strong>[Numba2015]</strong> Siu Kwan Lam, Antoine Pitrou, Stanley Seibert: <em>Numba: A LLVM-Based Python JIT Compiler</em>. Proceedings of the Second Workshop on the LLVM Compiler Infrastructure in HPC, Association for Computing Machinery, New York, NY, USA, 2015. <a class="reference external" href="https://doi.org/10.1145/2833157.2833162">doi:10.1145/2833157.2833162</a></p>
+<p id="ref-pechsteingerstmayr2013"><strong>[PechsteinGerstmayr2013]</strong> Astrid Pechstein, Daniel Reischl, Johannes Gerstmayr: <em>A Generalized Component Mode Synthesis Approach for Flexible Multibody Systems With a Constant Mass Matrix</em>. Journal of Computational and Nonlinear Dynamics 8(1), pp. 011019/1–011019/10, 2013.</p>
+<p id="ref-pechsteingerstmayr2013ale"><strong>[PechsteinGerstmayr2013ale]</strong> Astrid Pechstein, Johannes Gerstmayr: <em>A Lagrange-Eulerian formulation of an axially moving beam based on the absolute nodal coordinate formulation</em>. Multibody System Dynamics 30(3), pp. 343–358, 2013.</p>
+<p id="ref-pieber2017"><strong>[Pieber2017]</strong> Michael Pieber, Johannes Gerstmayr: <em>A reconfigurable robot based on tetrahedral cells with adaptive shape</em>. IEEE/RSJ International Conference on Intelligent Robots and Systems, 2017.</p>
+<p id="ref-pieberntarladima2022"><strong>[PieberNtarladima2022]</strong> Michael Pieber, Konstantina Ntarladima, Johannes Gerstmayr: <em>A Hybrid Arbitrary Lagrangian Eulerian Formulation for the Investigation of the Stability of Pipes Conveying Fluid and Axially Moving Beams</em>. Journal of Computational and Nonlinear Dynamics 17(5), pp. 051006 (13 pages), 2022. <a class="reference external" href="https://doi.org/10.1115/1.4053505">doi:10.1115/1.4053505</a></p>
+<p id="ref-pybind11"><strong>[pybind11]</strong> Wenzel Jakob, Jason Rhinelander, Dean Moldovan: <em>pybind11 – Seamless operability between C++11 and Python</em>. 2016.</p>
+<p id="ref-qian2018"><strong>[Qian2018]</strong> Z. Qian, D. Zhang, C. Jin: <em>A regularized approach for frictional impact dynamics of flexible multi-link manipulator arms considering the dynamic stiffening effect</em>. Multibody System Dynamics 43, pp. 229-255, 2018.</p>
+<p id="ref-rahikainengonzaleznayaetal2020"><strong>[RahikainenGonzalezNayaEtAl2020]</strong> Jarkko Rahikainen, Francisco González, Miguel Ángel Naya, Jussi Sopanen, Aki Mikkola: <em>On the cosimulation of multibody systems and hydraulic dynamics</em>. Multibody System Dynamics 50, 2020. <a class="reference external" href="https://doi.org/10.1007/s11044-020-09727-z">doi:10.1007/s11044-020-09727-z</a></p>
+<p id="ref-schoeberl1997"><strong>[Schoeberl1997]</strong> Joachim Schöberl: <em>NETGEN An advancing front 2D/3D-mesh generator based on abstract rules</em>. Computing and Visualization in Science 1, pp. 41–52, 1997.</p>
+<p id="ref-schoergenhumerhumergerstmayr2014"><strong>[SchoergenhumerHumerGerstmayr2014]</strong> M Schörgenhumer, A Humer, J Gerstmayr: <em>Efficient fluid-structure interaction based on modally reduced multibody systems and smoothed particle hydrodynamics</em>. Proceedings of the WCCM XI, ECCM V and ECFD VI, 2014.</p>
+<p id="ref-schwertassek1999"><strong>[Schwertassek1999]</strong> R Schwertassek, O Wallrapp: <em>Dynamik flexibler Mehrkörpersysteme</em>. Grundlagen und Fortschritte der Ingenieurwissenschaften, Vieweg+Teubner Verlag, 1999.</p>
+<p id="ref-sereinig2023comfortzone"><strong>[Sereinig2023comfortZone]</strong> Martin Sereinig, Peter Manzl, Johannes Gerstmayr: <em>Task Dependent Comfort Zone, a Base Placement Strategy for Autonomous Mobile Manipulators using Manipulability Measures</em>. Robotics and Autonomous Systems, submitted, 2023.</p>
+<p id="ref-shabana1997"><strong>[Shabana1997]</strong> Ahmed A Shabana: <em>Flexible multibody dynamics: Review of past and recent developments</em>. Multibody System Dynamics 1(2), pp. 189–222, 1997.</p>
+<p id="ref-shabana1997ancf"><strong>[shabana1997ancf]</strong> Ahmed A Shabana: <em>Definition of the slopes and the finite element absolute nodal coordinate formulation</em>. Multibody system dynamics 1(3), Springer, pp. 339–348, 1997.</p>
+<p id="ref-shabana2013"><strong>[Shabana2013]</strong> Ahmed A Shabana: <em>Dynamics of Multibody Systems</em>. 4th, Cambridge University Press, Cambridge, 2013.</p>
+<p id="ref-siciliano2016"><strong>[Siciliano2016]</strong> Bruno Siciliano, Oussama Khatib (ed.): <em>Springer Handbook of Robotics</em>. Springer, 2016.</p>
+<p id="ref-simo1988"><strong>[Simo1988]</strong> J. C. Simo, L. Vu-Quoc: <em>On the dynamics in space of rods undergoing large motions - A geometrically exact approach</em>. Computer Methods in Applied Mechanics and Engineering 66(2), pp. 125–161, 1988. <a class="reference external" href="https://doi.org/10.1016/0045-7825(88)90073-4">doi:10.1016/0045-7825(88)90073-4</a></p>
+<p id="ref-sonneville2014"><strong>[Sonneville2014]</strong> Valentin Sonneville, Alberto. Cardona, Olivier Brüls: <em>Geometrically exact beam finite element formulated on the special Euclidean group SE(3)</em>. Computer Methods in Applied Mechanics and Engineering 268, pp. 451–474, 2014. <a class="reference external" href="https://doi.org/10.1016/j.cma.2013.10.008">doi:10.1016/j.cma.2013.10.008</a></p>
+<p id="ref-sonneville2017"><strong>[Sonneville2017]</strong> Valentin Sonneville, Olivier Brüls, Olivier A Bauchau: <em>Interpolation schemes for geometrically exact beams: A motion approach</em>. International Journal for Numerical Methods in Engineering 112, pp. 1129–1153, 2017. <a class="reference external" href="https://doi.org/10.1002/nme.5548">doi:10.1002/nme.5548</a></p>
+<p id="ref-tasorachrono2007"><strong>[TasoraChrono2007]</strong> Alessandro Tasora, Marco Silvestri, P. Righettini: <em>Architecture of the Chrono::Engine physics simulation middleware</em>. 2007.</p>
+<p id="ref-tasoranegrutchrono2013"><strong>[TasoraNegrutChrono2013]</strong> Hammad Mazhar, Toby Heyn, Arman Pazouki, Dan Melanz, Andrew Seidl, Aaron Bartholomew, Alessandro Tasora, Dan Negrut: <em>CHRONO: A parallel multi-physics library for rigid-body, flexible-body, and fluid dynamics</em>. Mechanical Sciences 4, pp. 49-64, 2013. <a class="reference external" href="https://doi.org/10.5194/ms-4-49-2013">doi:10.5194/ms-4-49-2013</a></p>
+<p id="ref-terze2016"><strong>[Terze2016]</strong> Zdravko Terze, Andreas Müller, Dario Zlatar: <em>Singularity-free time integration of rotational quaternions using non-redundant ordinary differential equations</em>. Multibody System Dynamics 38(3), pp. 201–225, 2016. <a class="reference external" href="https://doi.org/10.1007/s11044-016-9518-7">doi:10.1007/s11044-016-9518-7</a></p>
+<p id="ref-todorov2012mujoco"><strong>[todorov2012mujoco]</strong> Emanuel Todorov, Tom Erez, Yuval Tassa: <em>MuJoCo: A physics engine for model-based control</em>. 2012 IEEE/RSJ International Conference on Intelligent Robots and Systems, pp. 5026–5033, 2012. <a class="reference external" href="https://doi.org/10.1109/IROS.2012.6386109">doi:10.1109/IROS.2012.6386109</a></p>
+<p id="ref-trefethenbau1997"><strong>[TrefethenBau1997]</strong> L N Trefethen, D Bau III: <em>Numerical Linear Algebra</em>. Society for Industrial and Applied Mathematics, Philadelphia, 1997. ISBN 978-0-898-71957-4</p>
+<p id="ref-wasfynoor2003"><strong>[WasfyNoor2003]</strong> Tamer M Wasfy, Ahmed K Noor: <em>Computational strategies for flexible multibody systems</em>. ASME Applied Mechanics Reviews 56(6), pp. 553–613, 2003.</p>
+<p id="ref-whitley1994"><strong>[Whitley1994]</strong> Darrell Whitley: <em>A genetic algorithm tutorial</em>. Statistics and Computing 4, pp. 65-85, 1994.</p>
+<p id="ref-winkler2016"><strong>[Winkler2016]</strong> R. G. Winkler, Dimitrios Plakomytis, Johannes Gerstmayr: <em>A Null Space Projection Approach for Modally Reduced Flexible Multibody Systems., (In Review)</em>. Asme 2016, 2016. <a class="reference external" href="https://doi.org/10.1115/DETC201659241">doi:10.1115/DETC201659241</a></p>
+<p id="ref-woernle2016"><strong>[woernle2016]</strong> C. Woernle: <em>Mehrkörpersysteme: Eine Einführung in die Kinematik und Dynamik von Systemen starrer Körper</em>. Lecture Notes in Applied and Computational Mechanics, Springer Berlin Heidelberg, 2016. ISBN 9783662466872</p>
+<p id="ref-woernle2024"><strong>[woernle2024]</strong> Christoph Woernle: <em>Multibody Systems – An Introduction to the Kinematics and Dynamics of Systems of Rigid Bodies</em>. Springer, 2024. ISBN 978-3-662-67261-7</p>
+<p id="ref-yoshikawa1985"><strong>[Yoshikawa1985]</strong> Tsuneo Yoshikawa: <em>Manipulability of Robotic Mechanisms</em>. The International Journal of Robotics Research 4(2), pp. 3-9, 1985.</p>
+<p id="ref-zieglerhumerpechsteingerstmayr2016"><strong>[ZieglerHumerPechsteinGerstmayr2016]</strong> P Ziegler, A Humer, A Pechstein, J Gerstmayr: <em>Generalized Component Mode Synthesis for the Spatial Motion of Flexible Bodies With Large Rotations About One Axis</em>. ASME Journal of Computational and Nonlinear Dynamics 11(4), pp. 041018; 10 pages, 2016.</p>
+<p id="ref-zienkiewicztaylor2000"><strong>[ZienkiewiczTaylor2000]</strong> O C Zienkiewicz, R L Taylor: <em>The Finite Element Method: The basis</em>. 5th, Butterworth-Heinemann, Oxford, 2000. ISBN 978-0-750-65049-6</p>
+<p id="ref-zwoelfergerstmayr2020"><strong>[ZwoelferGerstmayr2020]</strong> Andreas Zwölfer, Johannes Gerstmayr: <em>A concise nodal-based derivation of the floating frame of reference formulation for displacement-based solid finite elements</em>. Multibody System Dynamics 49(3), pp. 291–313, 2020.</p>
+<p id="ref-zwoelfergerstmayr2021"><strong>[ZwoelferGerstmayr2021]</strong> Andreas Zwölfer, Johannes Gerstmayr: <em>The nodal-based floating frame of reference formulation with modal reduction</em>. Acta Mechanica 232(3), pp. 835–851, 2021.</p>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="structures/BeamSectionGeometry.html" class="btn btn-neutral float-left" title="BeamSectionGeometry" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="../dev/README.html" class="btn btn-neutral float-right" title="Exudyn developer documentation" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

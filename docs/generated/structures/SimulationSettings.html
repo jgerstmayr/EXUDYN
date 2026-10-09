@@ -1,0 +1,1269 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SimulationSettings &mdash; Exudyn1.13.3 1.13.3 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=3ee1c6c6" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/rtd_sphinx_search.min.css" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/custom.css?v=e2783f0e" />
+
+  
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=b8a3e558"></script>
+      <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../../_static/copybutton.js?v=f281be69"></script>
+      <script src="../../../_static/js/rtd_search_config.js"></script>
+      <script src="../../../_static/js/rtd_sphinx_search.min.js"></script>
+      <script>window.MathJax = {"loader": {"load": ["[tex]/mathtools"]}, "tex": {"packages": {"[+]": ["mathtools"]}, "macros": {"ANCFdk": "{\\LU{0}{\\dv_k}}", "ANCFdkO": "{\\LU{0}{\\dv_{0,k}}}", "ANCFdkOtp": "{\\LU{0}{\\dv_{0,k}\\tp}}", "ANCFdkt": "{\\LU{0}{\\dot\\dv_k}}", "Am": "{\\mathbf{A}}", "Dm": "{\\mathbf{D}}", "Em": "{\\mathbf{E}}", "Gm": "{\\mathbf{G}}", "Im": "{\\mathbf{I}}", "ImThree": "{\\mathbf{I}_{3 \\times 3}}", "Jm": "{\\mathbf{J}}", "Km": "{\\mathbf{K}}", "Mm": "{\\mathbf{M}}", "Pm": "{\\mathbf{P}}", "Rm": "{\\mathbf{R}}", "Sm": "{\\mathbf{S}}", "Tm": "{\\mathbf{T}}", "av": "{\\mathbf{a}}", "bv": "{\\mathbf{b}}", "cv": "{\\mathbf{c}}", "diffANCF": ["{\\frac{\\partial #1}{\\partial \\qv_{ANCF}}}", 1], "diffANCFdk": "{\\diffANCFmI{\\ANCFdk}}", "diffANCFmI": ["{\\frac{\\partial #1}{\\partial \\qv_{ANCF,m1}}}", 1], "diffANCFmIt": ["{\\frac{\\partial #1}{\\partial \\dot \\qv_{ANCF,m1}}}", 1], "diffANCFt": ["{\\frac{\\partial #1}{\\partial \\dot \\qv_{ANCF}}}", 1], "diffmI": ["{\\frac{\\partial #1}{\\partial \\qv_{m1}}}", 1], "diffmIt": ["{\\frac{\\partial #1}{\\partial \\dot \\qv_{m1}}}", 1], "diffmOI": ["{\\frac{\\partial #1}{\\partial \\qv_{m0,m1}}}", 1], "diffmOIt": ["{\\frac{\\partial #1}{\\partial \\dot \\qv_{m0,m1}}}", 1], "diffmOt": ["{\\frac{\\partial #1}{\\partial \\dot \\qv_{m0}}}", 1], "dv": "{\\mathbf{d}}", "ev": "{\\mathbf{e}}", "fv": "{\\mathbf{f}}", "gv": "{\\mathbf{g}}", "hv": "{\\mathbf{h}}", "nv": "{\\mathbf{n}}", "pv": "{\\mathbf{p}}", "qv": "{\\mathbf{q}}", "rv": "{\\mathbf{r}}", "sv": "{\\mathbf{s}}", "tv": "{\\mathbf{t}}", "uv": "{\\mathbf{u}}", "vv": "{\\mathbf{v}}", "xv": "{\\mathbf{x}}", "yv": "{\\mathbf{y}}", "zv": "{\\mathbf{z}}", "vspace": ["{}", 1], "ra": "{\\rightarrow}", "Rcal": "{\\mathbb{R}}", "Ccal": "{\\mathbb{C}}", "Ncal": "{\\mathbb{N}}", "Rot": "{\\mathbf{A}}", "dd": "{\\mathrm{d}}", "ps": "{p_\\mathrm{s}}", "co": "{\\mathrm{c}}", "si": "{\\mathrm{s}}", "tp": "{^\\mathrm{T}}", "diag": "{\\mathrm{diag}}", "vec": "{\\mathrm{vec}}", "Null": "{\\mathbf{0}}", "varepsilonDot": "{\\boldsymbol{\\varepsilon}}", "talpha": "{\\boldsymbol{\\alpha}}", "tbeta": "{\\boldsymbol{\\beta}}", "tgamma": "{\\boldsymbol{\\gamma}}", "tchi": "{\\boldsymbol{\\chi}}", "tdelta": "{\\boldsymbol{\\delta}}", "teps": "{\\boldsymbol{\\varepsilon}}", "tepsDot": "{\\boldsymbol{\\dot \\varepsilon}}", "teta": "{\\boldsymbol{\\eta}}", "tkappa": "{\\boldsymbol{\\kappa}}", "tkappaDot": "{\\boldsymbol{\\dot \\kappa}}", "tphi": "{\\boldsymbol{\\phi}}", "boldVarPhi": "{\\boldsymbol{\\varphi}}", "tPhi": "{\\boldsymbol{\\Phi}}", "ttheta": "{\\boldsymbol{\\theta}}", "tTheta": "{\\boldsymbol{\\Theta}}", "tlambda": "{\\boldsymbol{\\lambda}}", "tnu": "{\\boldsymbol{\\nu}}", "tmu": "{\\boldsymbol{\\mu}}", "tpsi": "{\\boldsymbol{\\psi}}", "tPsi": "{\\boldsymbol{\\Psi}}", "ttau": "{\\boldsymbol{\\tau}}", "tsigma": "{\\boldsymbol{\\sigma}}", "txi": "{\\boldsymbol{\\xi}}", "tzeta": "{\\boldsymbol{\\zeta}}", "tomega": "{\\boldsymbol{\\omega}}", "tOmega": "{\\boldsymbol{\\Omega}}", "vareps": "{\\varepsilon}", "myoverline": ["\\overline{#1}", 1], "pluseq": "\\mathrel{+}=", "LU": ["{\\prescript{#1}{}{#2}\\,}", 2], "LUX": ["{\\prescript{#1}{}{#2}#3\\,}", 3], "LUR": ["{\\prescript{#1}{}{#2}_{#3}\\,}", 3], "LURU": ["{\\prescript{#1}{}{#2}_{#3}^{#4}\\,}", 4], "LLdot": ["{\\prescript{}{#1}{\\dot{#2}}_{#3}\\,}", 3], "vr": ["{\\left[ \\begin{array}{c} { #1}\\vspace{0.04cm} \\\\ { #2}\\vspace{0.04cm} \\\\ { #3} \\end{array} \\right]}", 3], "mr": ["{\\left[ \\begin{array}{ccc} #1 & #2 & #3 \\vspace{0.04cm}\\\\ #4 & #5 & #6 \\vspace{0.04cm}\\\\ #7 & #8 & #9  \\end{array} \\right]}", 9], "vp": ["{\\left[ \\begin{array}{c} { #1} \\vspace{0.04cm}\\\\ { #2} \\end{array} \\right]}", 2], "mp": ["{\\left[ \\begin{array}{cc} #1 & #2 \\vspace{0.04cm}\\\\ #3 & #4 \\end{array} \\right]}", 4], "mfour": ["{\\left[ \\begin{array}{cccc} { #1} \\\\ { #2} \\\\ { #3} \\\\ { #4} \\end{array} \\right]}", 4], "vfour": ["{\\left[ \\begin{array}{c} { #1} \\\\ { #2} \\\\ { #3} \\\\ { #4} \\end{array} \\right]}", 4], "vrRow": ["{[#1,\\, #2,\\, #3]}", 3], "vsix": ["{\\left[ \\begin{array}{c} { #1} \\\\ { #2} \\\\ { #3} \\\\ { #4} \\\\ { #5} \\\\ { #6} \\end{array} \\right]}", 6], "vsixb": ["{\\begin{array}{c} { #1} \\\\ { #2} \\\\ { #3} \\\\ { #4} \\\\ { #5} \\\\ { #6} \\end{array} }", 6], "vsixs": ["{ \\begin{array}{c} { #1} \\\\ { #2} \\\\ { #3} \\\\ { #4} \\\\ { #5} \\\\ { #6} \\end{array} }", 6], "SO": "{q}", "FO": "{y}", "AE": "{\\lambda}", "SYS": "{s}", "SON": "{$2^\\mathrm{nd}$ order differential equations}", "FON": "{$1^\\mathrm{st}$ order differential equations}", "AEN": "{algebraic equations}", "Bm": "{\\mathbf{B}}", "Cm": "{\\mathbf{C}}", "Fm": "{\\mathbf{F}}", "SYSN": "{system equations}", "cIni": "{_\\mathrm{ini}}", "cRef": "{_\\mathrm{ref}}", "cCur": "{_\\mathrm{cur}}", "cVis": "{_\\mathrm{vis}}", "cSOS": "{_\\mathrm{start\\;of\\;step}}", "cConfig": "{_\\mathrm{config}}", "pLoc": "{\\mathbf{b}}", "pLocB": "{\\,^{b}{\\mathbf{v}}}", "pRef": "{\\mathbf{r}}", "pRefG": "{\\,^{0}{\\mathbf{r}}}", "indf": "{_\\mathrm{f}}", "indt": "{_\\mathrm{t}}", "indr": "{_\\mathrm{r}}", "indtt": "{_\\mathrm{tt}}", "indrr": "{_\\mathrm{rr}}", "indff": "{_\\mathrm{ff}}", "indtf": "{_\\mathrm{tf}}", "indrf": "{_\\mathrm{rf}}", "indtr": "{_\\mathrm{tr}}", "omegaBDtilde": "{\\LU{b}{\\tilde \\tomega_\\mathrm{bd}}}", "indrigid": "{_\\mathrm{rigid}}", "indred": "{_\\mathrm{red}}", "induser": "{_\\mathrm{user}}", "indu": "{_\\mathrm{u}}", "termA": ["{\\color{blue}{#1}}", 1], "termB": ["{\\color{red}{#1}}", 1], "termC": ["{\\color{green}{#1}}", 1], "acc": "{\\ddot{\\mathbf{q}}}", "GA": "{G\\alpha}", "Hm": "{\\mathbf{H}}", "ImTwo": "{\\mathbf{I}_{2 \\times 2}}", "Lm": "{\\mathbf{L}}", "Qm": "{\\mathbf{Q}}", "Vm": "{\\mathbf{V}}", "Wm": "{\\mathbf{W}}", "Xm": "{\\mathbf{X}}", "Ym": "{\\mathbf{Y}}", "aalg": "{\\mathbf{a}}", "iv": "{\\mathbf{i}}", "jv": "{\\mathbf{j}}", "kv": "{\\mathbf{k}}", "lv": "{\\mathbf{l}}", "mv": "{\\mathbf{m}}", "ov": "{\\mathbf{o}}", "vel": "{\\mathbf{v}}", "wv": "{\\mathbf{w}}"}}, "options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+      <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-mml-chtml.js"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+    <link rel="next" title="VisualizationSettings" href="VisualizationSettings.html" />
+    <link rel="prev" title="Structures and Settings" href="structuresIndex.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            Exudyn1.13.3
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Exudyn User Manual</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../README.html">Exudyn</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../manual/gettingStarted.html">Installation and getting started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../manual/introduction.html">Overview on Exudyn</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../manual/introductionBasics.html">Exudyn basics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../manual/tutorial.html">Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../manual/GUI.html">Renderer, graphics and visualization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../manual/performanceErrors.html">Performance, errors and solver failures</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../manual/introductionAdvanced.html">Advanced topics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../manual/notation.html">Notation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../manual/theory.html">Theory and formulations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../manual/solver.html">Solvers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../cInterface/cInterfaceIndex.html">Python-C++ command interface</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Reference Manual</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../items/itemsIndex.html">Items reference manual</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../pythonUtilities/utilitiesIndex.html">Python Utility Functions</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="structuresIndex.html">Structures and Settings</a><ul class="current">
+<li class="toctree-l2 current"><a class="current reference internal" href="#">SimulationSettings</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#simulation-settings">Simulation settings</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="VisualizationSettings.html">VisualizationSettings</a></li>
+<li class="toctree-l2"><a class="reference internal" href="CSolverStructures.html">CSolverStructures</a></li>
+<li class="toctree-l2"><a class="reference internal" href="MainSolver.html">MainSolver</a></li>
+<li class="toctree-l2"><a class="reference internal" href="PyStructuralElementsDataStructures.html">PyStructuralElementsDataStructures</a></li>
+<li class="toctree-l2"><a class="reference internal" href="BeamSectionGeometry.html">BeamSectionGeometry</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../references.html">References</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Developer documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../dev/README.html">Exudyn developer documentation</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">How-to notes</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../howTo/condaEnvironments.html">Conda environments for Exudyn</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../howTo/sphinxDocs.html">Building the documentation</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Examples, models and issues</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../examples/examplesIndex.html">Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../testModels/testModelsIndex.html">TestModels</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../abbreviations.html">List of Abbreviations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../manual/revisions.html">Revisions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../CHANGELOG.html">Changelog</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../trackerlog.html">Issue tracker</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">Exudyn1.13.3</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="structuresIndex.html">Structures and Settings</a></li>
+      <li class="breadcrumb-item active">SimulationSettings</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../../_sources/docs/generated/structures/SimulationSettings.md.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <!-- GENERATED by tools/generators/structureDocsEmitter.py from definitions/ - do not edit -->
+<section class="tex2jax_ignore mathjax_ignore" id="simulationsettings">
+<h1>SimulationSettings<a class="headerlink" href="#simulationsettings" title="Link to this heading"></a></h1>
+<section id="simulation-settings">
+<span id="sec-simulationsettingsmain"></span><h2>Simulation settings<a class="headerlink" href="#simulation-settings" title="Link to this heading"></a></h2>
+<p>This section includes hierarchical structures for simulation settings, e.g., time integration, static solver, Newton iteration and solution file export.</p>
+<section id="solutionfileexportsettings">
+<span id="sec-solutionfileexportsettings"></span><h3>SolutionFileExportSettings<a class="headerlink" href="#solutionfileexportsettings" title="Link to this heading"></a></h3>
+<p>The quantities written into the coordinates solution file in addition to the coordinates.</p>
+<p>Reached as <code class="docutils literal notranslate"><span class="pre">simulationSettings.solution.file.export</span></code>.</p>
+<p>SolutionFileExportSettings has the following items:</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>name</p></th>
+<th class="head"><p>type</p></th>
+<th class="head"><p>default</p></th>
+<th class="head"><p>description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">accelerations</span></code></p></td>
+<td><p>bool</p></td>
+<td><p>True</p></td>
+<td><p>add <a class="reference internal" href="../abbreviations.html#ode2"><span class="std std-ref">ODE2</span></a> accelerations to the solution file</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">algebraicCoordinates</span></code></p></td>
+<td><p>bool</p></td>
+<td><p>True</p></td>
+<td><p>add algebraicCoordinates (=Lagrange multipliers) to the solution file</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">dataCoordinates</span></code></p></td>
+<td><p>bool</p></td>
+<td><p>True</p></td>
+<td><p>add DataCoordinates to the solution file</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">ODE1Velocities</span></code></p></td>
+<td><p>bool</p></td>
+<td><p>True</p></td>
+<td><p>add coordinatesODE1_t to the solution file</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">velocities</span></code></p></td>
+<td><p>bool</p></td>
+<td><p>True</p></td>
+<td><p>add <a class="reference internal" href="../abbreviations.html#ode2"><span class="std std-ref">ODE2</span></a> velocities to the solution file</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="solutionfilesettings">
+<span id="sec-solutionfilesettings"></span><h3>SolutionFileSettings<a class="headerlink" href="#solutionfilesettings" title="Link to this heading"></a></h3>
+<p>The coordinates solution file: all coordinates of the system versus time, read by the SolutionViewer and exudyn.utilities.LoadSolutionFile.</p>
+<p>Reached as <code class="docutils literal notranslate"><span class="pre">simulationSettings.solution.file</span></code>.</p>
+<p>SolutionFileSettings has the following items:</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>name</p></th>
+<th class="head"><p>type</p></th>
+<th class="head"><p>default</p></th>
+<th class="head"><p>description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">export</span></code></p></td>
+<td><p>SolutionFileExportSettings</p></td>
+<td><p></p></td>
+<td><p>which quantities are written in addition to the coordinates</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">append</span></code></p></td>
+<td><p>bool</p></td>
+<td><p>False</p></td>
+<td><p>flag (true/false); if true, the solution and the solver information are appended to existing files (otherwise created); in BINARY mode, files are always replaced and this parameter is ineffective!</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">binary</span></code></p></td>
+<td><p>bool</p></td>
+<td><p>False</p></td>
+<td><p>if true, the solution file is written in binary format for improved speed and smaller file sizes; setting solution.precision &gt;= 8 uses double (8 bytes), otherwise float (4 bytes) is used; note that append is ineffective and files are always replaced without asking! If not provided, file ending will read .sol in case of binary files and .txt in case of text files</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">flushAboveCoordinates</span></code></p></td>
+<td><p>PInt</p></td>
+<td><p>10000</p></td>
+<td><p>number of coordinates above which the buffers of the solution file are always flushed, irrespectively of solution.flushFilesImmediately; for larger files, writing takes so much time that flushing does not add considerable time</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">information</span></code></p></td>
+<td><p>String</p></td>
+<td><p>‘’</p></td>
+<td><p>special information added to header of solution file (e.g. parameters and settings, modes, …); character encoding my be UTF-8, restricted to characters in <a class="reference internal" href="../../manual/GUI.html#sec-utf8"><span class="std std-ref">Character encoding: UTF-8</span></a>, but for compatibility, it is recommended to use ASCII characters only (95 characters, see wiki)</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">name</span></code></p></td>
+<td><p>FileName</p></td>
+<td><p>‘solution/coordinatesSolution’</p></td>
+<td><p>filename and (relative) path of the solution file containing all multibody system coordinates versus time; the default is in the directory solution/, like every file a run writes by default, so that nothing is written beside the script; directory will be created if it does not exist; character encoding of string is up to your filesystem, but for compatibility, it is recommended to use letters, numbers and ‘_’ only; filename ending will be added automatically if not provided: .txt in case of text mode and .sol in case of binary solution files (binary=True)</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">write</span></code></p></td>
+<td><p>bool</p></td>
+<td><p>True</p></td>
+<td><p>flag (true/false), which determines if the coordinates are written to the solution file; standard quantities that are written are: solution is written as displacements and coordinatesODE1; for additional quantities, see export</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">writeFooter</span></code></p></td>
+<td><p>bool</p></td>
+<td><p>True</p></td>
+<td><p>flag (true/false); if true, information at end of simulation is written: convergence, total solution time, statistics</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">writeHeader</span></code></p></td>
+<td><p>bool</p></td>
+<td><p>True</p></td>
+<td><p>flag (true/false); if true, file header is written (turn off, e.g. for multiple runs of time integration)</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">writeInitialValues</span></code></p></td>
+<td><p>bool</p></td>
+<td><p>True</p></td>
+<td><p>flag (true/false); if true, initial values are exported for the start time; applies to the solution file and the sensor files; this may not be wanted in the append file mode if the initial values are identical to the final values of a previous computation</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">writePeriod</span></code></p></td>
+<td><p>UReal</p></td>
+<td><p>0.01</p></td>
+<td><p>time span (period), determines how often the solution file is written during a simulation</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="solutionsensorssettings">
+<span id="sec-solutionsensorssettings"></span><h3>SolutionSensorsSettings<a class="headerlink" href="#solutionsensorssettings" title="Link to this heading"></a></h3>
+<p>Storing and writing of the sensors.</p>
+<p>Reached as <code class="docutils literal notranslate"><span class="pre">simulationSettings.solution.sensors</span></code>.</p>
+<p>SolutionSensorsSettings has the following items:</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>name</p></th>
+<th class="head"><p>type</p></th>
+<th class="head"><p>default</p></th>
+<th class="head"><p>description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">active</span></code></p></td>
+<td><p>bool</p></td>
+<td><p>True</p></td>
+<td><p>flag (true/false); if false, no sensor files will be created and no sensor data will be stored; this may be advantageous for benchmarking as well as for special solvers which should not overwrite existing results (e.g. ComputeODE2Eigenvalues); settings this value to False may cause problems if sensors are required to perform operations which are needed e.g. in UserSensors as input of loads, etc.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">append</span></code></p></td>
+<td><p>bool</p></td>
+<td><p>False</p></td>
+<td><p>flag (true/false); if true, sensor output is appended to existing file (otherwise created) or in case of internal storage, it is appended to existing currently stored data; this allows storing sensor values over different simulations</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">writeFooter</span></code></p></td>
+<td><p>bool</p></td>
+<td><p>False</p></td>
+<td><p>flag (true/false); if true, file footer is written for sensor output (turn off, e.g. for multiple runs of time integration)</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">writeHeader</span></code></p></td>
+<td><p>bool</p></td>
+<td><p>True</p></td>
+<td><p>flag (true/false); if true, file header is written for sensor output (turn off, e.g. for multiple runs of time integration)</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">writePeriod</span></code></p></td>
+<td><p>UReal</p></td>
+<td><p>0.01</p></td>
+<td><p>time span (period), determines how often the sensor output is written to file or internal storage during a simulation</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="solutionrestartsettings">
+<span id="sec-solutionrestartsettings"></span><h3>SolutionRestartSettings<a class="headerlink" href="#solutionrestartsettings" title="Link to this heading"></a></h3>
+<p>The restart file of a dynamic simulation: its state - time, coordinates, velocities, accelerations, the algorithmic accelerations of the generalized-alpha method, the step size and the sizes of the output files - written every writePeriod and at the end, from which the same script continues with continueIfAvailable; for a job that is stopped (e.g. by exudyn.special.solver.timeout or on a cluster) and started again unchanged. The model itself, its user functions and their Python state come from the script; the static solver writes no restart file.</p>
+<p>Reached as <code class="docutils literal notranslate"><span class="pre">simulationSettings.solution.restart</span></code>.</p>
+<p>SolutionRestartSettings has the following items:</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>name</p></th>
+<th class="head"><p>type</p></th>
+<th class="head"><p>default</p></th>
+<th class="head"><p>description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">continueIfAvailable</span></code></p></td>
+<td><p>bool</p></td>
+<td><p>False</p></td>
+<td><p>flag (true/false); if true and the restart file exists, a dynamic solver continues from its state instead of starting at startTime: it takes time, state and step size from the file, appends to the solution and sensor files - shortened to what was written up to that state - and writes no initial values; a file that does not fit the system or the solver raises an error; without a file, the simulation starts as usual. Sensors with storeInternal hold only the values after the restart.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">name</span></code></p></td>
+<td><p>FileName</p></td>
+<td><p>‘solution/restartFile.txt’</p></td>
+<td><p>filename and (relative) path of the restart file</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">write</span></code></p></td>
+<td><p>bool</p></td>
+<td><p>False</p></td>
+<td><p>flag (true/false); if true, the dynamic solvers write the restart file every writePeriod and at the end of the simulation; the file is written to name.tmp and renamed, the previous one kept as name.bck</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">writePeriod</span></code></p></td>
+<td><p>UReal</p></td>
+<td><p>0.01</p></td>
+<td><p>time span (period) in which the restart file is updated</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="solutionsettings">
+<span id="sec-solutionsettings"></span><h3>SolutionSettings<a class="headerlink" href="#solutionsettings" title="Link to this heading"></a></h3>
+<p>General settings for exporting the solution (results) of a simulation: the solution file, the sensors and the restart file.</p>
+<p>Reached as <code class="docutils literal notranslate"><span class="pre">simulationSettings.solution</span></code>.</p>
+<p>SolutionSettings has the following items:</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>name</p></th>
+<th class="head"><p>type</p></th>
+<th class="head"><p>default</p></th>
+<th class="head"><p>description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">file</span></code></p></td>
+<td><p>SolutionFileSettings</p></td>
+<td><p></p></td>
+<td><p>the coordinates solution file</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">restart</span></code></p></td>
+<td><p>SolutionRestartSettings</p></td>
+<td><p></p></td>
+<td><p>the restart file</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">sensors</span></code></p></td>
+<td><p>SolutionSensorsSettings</p></td>
+<td><p></p></td>
+<td><p>storing and writing of the sensors</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">flushFilesImmediately</span></code></p></td>
+<td><p>bool</p></td>
+<td><p>False</p></td>
+<td><p>flush file buffers after every period written (solution file and sensor files); if set False, the output is written through a buffer, which is highly efficient, but during simulation, files may be always in an incomplete state; if set True, this may add a large amount of CPU time as the process waits until files are really written to hard disc (especially for simulation of small scale systems, writing 10.000s of time steps; at least 5us per step/file, depending on hardware)</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">precision</span></code></p></td>
+<td><p>UInt</p></td>
+<td><p>10</p></td>
+<td><p>precision for floating point numbers written to the solution and sensor files; the precision of the output to the console is consolePrecision</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">recordImagesInterval</span></code></p></td>
+<td><p>Real</p></td>
+<td><p>-1.</p></td>
+<td><p>record frames of the main view in the renderer (images) during solving: amount of time to wait until next image (frame) is recorded; set recordImages = -1. if no images shall be recorded; set, e.g., recordImages = 0.01 to record an image every 10 milliseconds (requires that the time steps / load steps are sufficiently small!); for file names, etc., see VisualizationSettings.exportImages; note that only the main view (0) can be saved in this way, while for multiple views, you have to aquire data via renderer.RedrawAndGetImage()</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">solverInformationFileName</span></code></p></td>
+<td><p>FileName</p></td>
+<td><p>‘solution/solverInformation.txt’</p></td>
+<td><p>filename and (relative) path of text file showing detailed information during solving; detail level according to yourSolver.verboseModeFile; if file.append is true, the information is appended in every solution step; directory will be created if it does not exist; character encoding of string is up to your filesystem, but for compatibility, it is recommended to use letters, numbers and ‘_’ only</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="solutionsettingsdeprecated">
+<span id="sec-solutionsettingsdeprecated"></span><h3>SolutionSettingsDeprecated<a class="headerlink" href="#solutionsettingsdeprecated" title="Link to this heading"></a></h3>
+<p>The settings of the solution as they were named up to Exudyn 1.11: each forwards to its place in simulationSettings.solution, with a DeprecationWarning.</p>
+<p>Reached as <code class="docutils literal notranslate"><span class="pre">simulationSettings.solutionSettings</span></code>.</p>
+<p>SolutionSettingsDeprecated has the following items:</p>
+<p><em>(none: this structure has no items in the Python interface. A deprecated item keeps working and is described where it moved to.)</em></p>
+</section>
+<section id="numericaldifferentiationsettings">
+<span id="sec-numericaldifferentiationsettings"></span><h3>NumericalDifferentiationSettings<a class="headerlink" href="#numericaldifferentiationsettings" title="Link to this heading"></a></h3>
+<p>Settings for numerical differentiation of a function (needed for computation of numerical jacobian e.g. in implizit integration).</p>
+<p>Reached as <code class="docutils literal notranslate"><span class="pre">simulationSettings.timeIntegration.newton.numericalDifferentiation</span></code>, <code class="docutils literal notranslate"><span class="pre">simulationSettings.staticSolver.newton.numericalDifferentiation</span></code>.</p>
+<p>NumericalDifferentiationSettings has the following items:</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>name</p></th>
+<th class="head"><p>type</p></th>
+<th class="head"><p>default</p></th>
+<th class="head"><p>description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">addReferenceCoordinatesToEpsilon</span></code></p></td>
+<td><p>bool</p></td>
+<td><p>False</p></td>
+<td><p>True: for the size estimation of the differentiation parameter, the reference coordinate <span class="math notranslate nohighlight">\(q^{Ref}_i\)</span> is added to <a class="reference internal" href="../abbreviations.html#ode2"><span class="std std-ref">ODE2</span></a> coordinates –&gt; see; False: only the current coordinate is used for size estimation of the differentiation parameter</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">doSystemWideDifferentiation</span></code></p></td>
+<td><p>bool</p></td>
+<td><p>False</p></td>
+<td><p>True: system wide differentiation (e.g. all <a class="reference internal" href="../abbreviations.html#ode2"><span class="std std-ref">ODE2</span></a> equations w.r.t. all <a class="reference internal" href="../abbreviations.html#ode2"><span class="std std-ref">ODE2</span></a> coordinates); False: only local (object) differentiation</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">forAE</span></code></p></td>
+<td><p>bool</p></td>
+<td><p>False</p></td>
+<td><p>flag (true/false); false = perform direct computation of jacobian for algebraic equations (AE), true = use numerical differentiation; as there must always exist an analytical implemented jacobian for AE, ‘true’ should only be used for verification</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">forODE2</span></code></p></td>
+<td><p>bool</p></td>
+<td><p>False</p></td>
+<td><p>flag (true/false); false = perform direct computation (e.g., using autodiff) of jacobian for ODE2 equations, true = use numerical differentiation; numerical differentiation is less efficient and may lead to numerical problems, but may smoothen problems of analytical derivatives; sometimes the analytical derivative may neglect terms</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">forODE2Connectors</span></code></p></td>
+<td><p>bool</p></td>
+<td><p>False</p></td>
+<td><p>flag (true/false); false: if also forODE2==false, perform direct computation of jacobian for ODE2 terms for connectors; else: use numerical differentiation; NOTE: THIS FLAG IS FOR DEVELOPMENT AND WILL BE ERASED IN FUTURE</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">jacobianConnectorDerivative</span></code></p></td>
+<td><p>bool</p></td>
+<td><p>True</p></td>
+<td><p>True: for analytic Jacobians of connectors, the Jacobian derivative is computed, causing additional CPU costs and not beeing available for all connectors or markers (thus switching to numerical differentiation); False: Jacobian derivative is neglected in analytic Jacobians (but included in numerical Jacobians), which often has only minor influence on convergence</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">minimumCoordinateSize</span></code></p></td>
+<td><p>UReal</p></td>
+<td><p>0.01</p></td>
+<td><p>minimum size of coordinates in relative differentiation parameter</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">relativeEpsilon</span></code></p></td>
+<td><p>UReal</p></td>
+<td><p>1e-7</p></td>
+<td><p>relative differentiation parameter epsilon; the numerical differentiation parameter <span class="math notranslate nohighlight">\(\varepsilon\)</span> follows from the formula (<span class="math notranslate nohighlight">\(\varepsilon = \varepsilon_\mathrm{relative}*max(q_{min}, \vert q_i + [q^{Ref}_i]\vert )\)</span>, with <span class="math notranslate nohighlight">\(\varepsilon_\mathrm{relative}\)</span>=relativeEpsilon, <span class="math notranslate nohighlight">\(q_{min} = \)</span>minimumCoordinateSize, <span class="math notranslate nohighlight">\(q_i\)</span> is the current coordinate which is differentiated, and <span class="math notranslate nohighlight">\(qRef_i\)</span> is the reference coordinate of the current coordinate</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="discontinuoussettings">
+<span id="sec-discontinuoussettings"></span><h3>DiscontinuousSettings<a class="headerlink" href="#discontinuoussettings" title="Link to this heading"></a></h3>
+<p>Settings for discontinuous iterations, as in contact, friction, plasticity and general switching phenomena.</p>
+<p>Reached as <code class="docutils literal notranslate"><span class="pre">simulationSettings.timeIntegration.discontinuous</span></code>, <code class="docutils literal notranslate"><span class="pre">simulationSettings.staticSolver.discontinuous</span></code>.</p>
+<p>DiscontinuousSettings has the following items:</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>name</p></th>
+<th class="head"><p>type</p></th>
+<th class="head"><p>default</p></th>
+<th class="head"><p>description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">ignoreMaxIterations</span></code></p></td>
+<td><p>bool</p></td>
+<td><p>True</p></td>
+<td><p>continue solver if maximum number of discontinuous (post Newton) iterations is reached (ignore tolerance)</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">iterationTolerance</span></code></p></td>
+<td><p>UReal</p></td>
+<td><p>1</p></td>
+<td><p>absolute tolerance for discontinuous (post Newton) iterations; the errors represent absolute residuals and can be quite high</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">maxIterations</span></code></p></td>
+<td><p>UInt</p></td>
+<td><p>5</p></td>
+<td><p>maximum number of discontinuous (post Newton) iterations</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">useRecommendedStepSize</span></code></p></td>
+<td><p>bool</p></td>
+<td><p>True</p></td>
+<td><p>some objects (contact-related) provide a recommendedStepSize; if True, this recommendation is used, but may lead to very small step sizes and solver could fail if restrictions are too hard; set to False to ignore this recommendation</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="newtonsettings">
+<span id="sec-newtonsettings"></span><h3>NewtonSettings<a class="headerlink" href="#newtonsettings" title="Link to this heading"></a></h3>
+<p>Settings for Newton method used in static or dynamic simulation.</p>
+<p>Reached as <code class="docutils literal notranslate"><span class="pre">simulationSettings.timeIntegration.newton</span></code>, <code class="docutils literal notranslate"><span class="pre">simulationSettings.staticSolver.newton</span></code>.</p>
+<p>NewtonSettings has the following items:</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>name</p></th>
+<th class="head"><p>type</p></th>
+<th class="head"><p>default</p></th>
+<th class="head"><p>description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">numericalDifferentiation</span></code></p></td>
+<td><p>NumericalDifferentiationSettings</p></td>
+<td><p></p></td>
+<td><p>numerical differentiation parameters for numerical jacobian (e.g. Newton in static solver or implicit time integration)</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">absoluteTolerance</span></code></p></td>
+<td><p>UReal</p></td>
+<td><p>1e-10</p></td>
+<td><p>absolute tolerance of residual for Newton (needed e.g. if residual is fulfilled right at beginning); condition: sqrt(q*q)/numberOfCoordinates &lt;= absoluteTolerance</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">active</span></code></p></td>
+<td><p>bool</p></td>
+<td><p>True</p></td>
+<td><p>flag (true/false); false = linear computation, true = use Newton solver for nonlinear solution</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">adaptInitialResidual</span></code></p></td>
+<td><p>bool</p></td>
+<td><p>True</p></td>
+<td><p>flag (true/false); false = standard; True: if initialResidual is very small (or zero), it may increase significantely in the first Newton iteration; to achieve relativeTolerance, the initialResidual will by updated by a higher residual within the first Newton iteration</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">maximumSolutionNorm</span></code></p></td>
+<td><p>UReal</p></td>
+<td><p>1e38</p></td>
+<td><p>this is the maximum allowed value for solutionU.L2NormSquared() which is the square of the square norm (i.e., value=<span class="math notranslate nohighlight">\(u_1^2\)</span>+<span class="math notranslate nohighlight">\(u_2^2\)</span>+…), and solutionV/A…; if the norm of solution vectors is larger, Newton method is stopped; the default value is chosen such that it would still work for single precision numbers (float)</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">maxIterations</span></code></p></td>
+<td><p>UInt</p></td>
+<td><p>25</p></td>
+<td><p>maximum number of iterations (including modified + restart Newton iterations); after that total number of iterations, the static/dynamic solver refines the step size or stops with an error</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">maxModifiedNewtonIterations</span></code></p></td>
+<td><p>UInt</p></td>
+<td><p>8</p></td>
+<td><p>maximum number of iterations for modified Newton (without Jacobian update); after that number of iterations, the modified Newton method gets a jacobian update and is further iterated</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">maxModifiedNewtonRestartIterations</span></code></p></td>
+<td><p>UInt</p></td>
+<td><p>7</p></td>
+<td><p>maximum number of iterations for modified Newton after a Jacobian update; after that number of iterations, the full Newton method is started for this step</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">modifiedNewtonContractivity</span></code></p></td>
+<td><p>PReal</p></td>
+<td><p>0.5</p></td>
+<td><p>maximum contractivity (=reduction of error in every Newton iteration) accepted by modified Newton; if contractivity is greater, a Jacobian update is computed</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">modifiedNewtonJacUpdatePerStep</span></code></p></td>
+<td><p>bool</p></td>
+<td><p>False</p></td>
+<td><p>True: compute Jacobian at every time step (or static step), but not in every Newton iteration (except for bad convergence ==&gt; switch to full Newton)</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">relativeTolerance</span></code></p></td>
+<td><p>UReal</p></td>
+<td><p>1e-8</p></td>
+<td><p>relative tolerance of residual for Newton (general goal of Newton is to decrease the residual by this factor)</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">residualMode</span></code></p></td>
+<td><p>UInt</p></td>
+<td><p>0</p></td>
+<td><p>0 … use residual for computation of error (standard); 1 … use <a class="reference internal" href="../abbreviations.html#ode2"><span class="std std-ref">ODE2</span></a> and <a class="reference internal" href="../abbreviations.html#ode1"><span class="std std-ref">ODE1</span></a> newton increment for error (set relTol and absTol to same values!) ==&gt; may be advantageous if residual is zero, e.g., in kinematic analysis; TAKE CARE with this flag</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">useModifiedNewton</span></code></p></td>
+<td><p>bool</p></td>
+<td><p>False</p></td>
+<td><p>True: compute Jacobian only at first call to solver; the Jacobian (and its factorizations) is not computed in each Newton iteration, even not in every (time integration) step; False: Jacobian (and factorization) is computed in every Newton iteration, which may be costly; the default is True for timeIntegration.newton and False for staticSolver.newton</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">weightTolerancePerCoordinate</span></code></p></td>
+<td><p>bool</p></td>
+<td><p>False</p></td>
+<td><p>flag (true/false); false = compute error as L2-Norm of residual; true = compute error as (L2-Norm of residual) / (sqrt(number of coordinates)), which can help to use common tolerance independent of system size</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="generalizedalphasettings">
+<span id="sec-generalizedalphasettings"></span><h3>GeneralizedAlphaSettings<a class="headerlink" href="#generalizedalphasettings" title="Link to this heading"></a></h3>
+<p>Settings for generalized-alpha, implicit trapezoidal or Newmark time integration methods.</p>
+<p>Reached as <code class="docutils literal notranslate"><span class="pre">simulationSettings.timeIntegration.generalizedAlpha</span></code>.</p>
+<p>GeneralizedAlphaSettings has the following items:</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>name</p></th>
+<th class="head"><p>type</p></th>
+<th class="head"><p>default</p></th>
+<th class="head"><p>description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">computeInitialAccelerations</span></code></p></td>
+<td><p>bool</p></td>
+<td><p>True</p></td>
+<td><p>True: compute initial accelerations from system EOM in acceleration form; NOTE that initial accelerations that are following from user functions in constraints are not considered for now! False: use zero accelerations</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">lieGroupAddTangentOperator</span></code></p></td>
+<td><p>bool</p></td>
+<td><p>True</p></td>
+<td><p>True: for Lie group nodes, in case that lieGroupSimplifiedKinematicRelations=True, the integrator adds the tangent operator for stiffness and constraint matrices, for improved Newton convergence; not available for sparse matrix mode (EigenSparse)</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">lieGroupSimplifiedKinematicRelations</span></code></p></td>
+<td><p>bool</p></td>
+<td><p>False</p></td>
+<td><p>True: for Lie group nodes, the integrator uses the original kinematic relations of the Bruls and Cardona 2010 paper; False (recommended): higher accuracy as proposed in paper by Holzinger, Arnold, Gerstmayr, sigma-modified Lie group generalized alpha methods for constrained multibody systems, 2025 (to be sumitted)</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">newmarkBeta</span></code></p></td>
+<td><p>UReal</p></td>
+<td><p>0.25</p></td>
+<td><p>value beta for Newmark method; default value beta = <span class="math notranslate nohighlight">\(\frac 1 4\)</span> corresponds to (undamped) trapezoidal rule</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">newmarkGamma</span></code></p></td>
+<td><p>UReal</p></td>
+<td><p>0.5</p></td>
+<td><p>value gamma for Newmark method; default value gamma = <span class="math notranslate nohighlight">\(\frac 1 2\)</span> corresponds to (undamped) trapezoidal rule</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">resetAccelerations</span></code></p></td>
+<td><p>bool</p></td>
+<td><p>False</p></td>
+<td><p>this flag only affects if computeInitialAccelerations=False: if resetAccelerations=True, accelerations are set zero in the solver function InitializeSolverInitialConditions; this may be unwanted in case of repeatedly called SolveSteps() and in cases where solutions shall be prolonged from previous computations</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">spectralRadius</span></code></p></td>
+<td><p>UReal</p></td>
+<td><p>0.9</p></td>
+<td><p>spectral radius for Generalized-alpha solver; set this value to 1 for no damping or to 0 &lt; spectralRadius &lt; 1 for damping of high-frequency dynamics; for position-level constraints (index 3), spectralRadius must be &lt; 1</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">storeInitialAlgebraicCoordinates</span></code></p></td>
+<td><p>bool</p></td>
+<td><p>True</p></td>
+<td><p>True: IF computeInitialAccelerations=True, store initial algebraic coordinates (usually the Lagrange multipliers) in the initial coordinates vector (and thus in the first line of the coordinates solution file); for further details on limitations, see computeInitialAccelerations</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">useIndex2Constraints</span></code></p></td>
+<td><p>bool</p></td>
+<td><p>False</p></td>
+<td><p>set useIndex2Constraints = true in order to use index2 (velocity level constraints) formulation</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">useNewmark</span></code></p></td>
+<td><p>bool</p></td>
+<td><p>False</p></td>
+<td><p>if true, use Newmark method with beta and gamma instead of generalized-Alpha</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="explicitintegrationsettings">
+<span id="sec-explicitintegrationsettings"></span><h3>ExplicitIntegrationSettings<a class="headerlink" href="#explicitintegrationsettings" title="Link to this heading"></a></h3>
+<p>Settings for explicit solvers, like Explicit Euler, RK44, ODE23, DOPRI5 and others. The settings may significantely influence performance.</p>
+<p>Reached as <code class="docutils literal notranslate"><span class="pre">simulationSettings.timeIntegration.explicit</span></code>.</p>
+<p>ExplicitIntegrationSettings has the following items:</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>name</p></th>
+<th class="head"><p>type</p></th>
+<th class="head"><p>default</p></th>
+<th class="head"><p>description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">computeEndOfStepAccelerations</span></code></p></td>
+<td><p>bool</p></td>
+<td><p>True</p></td>
+<td><p>accelerations are computed at stages of the explicit integration scheme; if the user needs accelerations at the end of a step, this flag needs to be activated; if True, this causes a second call to the RHS of the equations, which may DOUBLE COMPUTATIONAL COSTS for one-step-methods; if False, the accelerations are re-used from the last stage, being slightly different</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">computeMassMatrixInversePerBody</span></code></p></td>
+<td><p>bool</p></td>
+<td><p>False</p></td>
+<td><p>If true, the solver assumes the bodies to be independent and computes the inverse of the mass matrix for all bodies independently; this may lead to WRONG RESULTS, if bodies share nodes, e.g., two MassPoint objects put on the same node or a beam with a mass point attached at a shared node; however, it may speed up explicit time integration for large systems significantly (multi-threaded) - together with a sparse solver, linearSolver.solverType = exu.LinearSolverType.EigenSparse: with the dense default the inverse is stored as a dense matrix and every step costs O(n^2) (#2400)</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">eliminateConstraints</span></code></p></td>
+<td><p>bool</p></td>
+<td><p>True</p></td>
+<td><p>True: make explicit solver work for simple CoordinateConstraints, which are eliminated for ground constraints (e.g. fixed nodes in finite element models). False: incompatible constraints are ignored (BE CAREFUL)!</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">useLieGroupIntegration</span></code></p></td>
+<td><p>bool</p></td>
+<td><p>True</p></td>
+<td><p>True: use Lie group integration for rigid body nodes; must be turned on for Lie group nodes (without data coordinates) to work properly; does not work for nodes with data coordinates!</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="explicitintegrationsettingsdeprecated">
+<span id="sec-explicitintegrationsettingsdeprecated"></span><h3>ExplicitIntegrationSettingsDeprecated<a class="headerlink" href="#explicitintegrationsettingsdeprecated" title="Link to this heading"></a></h3>
+<p>The settings of the explicit solvers as they were named up to Exudyn 1.11: each forwards to its place in simulationSettings.timeIntegration, with a DeprecationWarning.</p>
+<p>Reached as <code class="docutils literal notranslate"><span class="pre">simulationSettings.timeIntegration.explicitIntegration</span></code>.</p>
+<p>ExplicitIntegrationSettingsDeprecated has the following items:</p>
+<p><em>(none: this structure has no items in the Python interface. A deprecated item keeps working and is described where it moved to.)</em></p>
+</section>
+<section id="realtimesettings">
+<span id="sec-realtimesettings"></span><h3>RealtimeSettings<a class="headerlink" href="#realtimesettings" title="Link to this heading"></a></h3>
+<p>Simulation in realtime: the time integration waits until the CPU time has reached the simulation time.</p>
+<p>Reached as <code class="docutils literal notranslate"><span class="pre">simulationSettings.timeIntegration.realtime</span></code>.</p>
+<p>RealtimeSettings has the following items:</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>name</p></th>
+<th class="head"><p>type</p></th>
+<th class="head"><p>default</p></th>
+<th class="head"><p>description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">active</span></code></p></td>
+<td><p>bool</p></td>
+<td><p>False</p></td>
+<td><p>True: simulate in realtime; the solver waits for computation of the next step until the CPU time reached the simulation time; if the simulation is slower than realtime, it simply continues</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">factor</span></code></p></td>
+<td><p>PReal</p></td>
+<td><p>1</p></td>
+<td><p>if active=True, this factor is used to make the simulation slower than realtime (factor &lt; 1) or faster than realtime (factor &gt; 1)</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">waitMicroseconds</span></code></p></td>
+<td><p>PInt</p></td>
+<td><p>1000</p></td>
+<td><p>if active=True, a loop runs which waits waitMicroseconds until checking again if the realtime is reached; using larger values leads to less CPU usage but less accurate realtime accuracy; smaller values (&lt; 1000) increase CPU usage but improve realtime accuracy</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="timeintegrationsettings">
+<span id="sec-timeintegrationsettings"></span><h3>TimeIntegrationSettings<a class="headerlink" href="#timeintegrationsettings" title="Link to this heading"></a></h3>
+<p>General parameters used in time integration; specific parameters are provided in the according solver settings, e.g. for generalizedAlpha.</p>
+<p>Reached as <code class="docutils literal notranslate"><span class="pre">simulationSettings.timeIntegration</span></code>.</p>
+<p>TimeIntegrationSettings has the following items:</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>name</p></th>
+<th class="head"><p>type</p></th>
+<th class="head"><p>default</p></th>
+<th class="head"><p>description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">discontinuous</span></code></p></td>
+<td><p>DiscontinuousSettings</p></td>
+<td><p></p></td>
+<td><p>parameters for treatment of discontinuities</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">explicit</span></code></p></td>
+<td><p>ExplicitIntegrationSettings</p></td>
+<td><p></p></td>
+<td><p>special parameters for explicit time integration</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">generalizedAlpha</span></code></p></td>
+<td><p>GeneralizedAlphaSettings</p></td>
+<td><p></p></td>
+<td><p>parameters for generalized-alpha, implicit trapezoidal rule or Newmark (options only apply for these methods)</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">newton</span></code></p></td>
+<td><p>NewtonSettings</p></td>
+<td><p></p></td>
+<td><p>parameters for Newton method; used for implicit time integration methods only; the modified Newton method is the default here; starts from useModifiedNewton=True; every other value is the default of the type</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">realtime</span></code></p></td>
+<td><p>RealtimeSettings</p></td>
+<td><p></p></td>
+<td><p>simulation in realtime</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">absoluteTolerance</span></code></p></td>
+<td><p>UReal</p></td>
+<td><p>1e-8</p></td>
+<td><p><span class="math notranslate nohighlight">\(a_{tol}\)</span>: if automaticStepSize=True, absolute tolerance for the error control; must fulfill <span class="math notranslate nohighlight">\(a_{tol} &gt; 0\)</span>; see <a class="reference internal" href="../../manual/solver.html#sec-explicitsolver"><span class="std std-ref">Explicit solvers</span></a></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">adaptiveStep</span></code></p></td>
+<td><p>bool</p></td>
+<td><p>True</p></td>
+<td><p>True: the step size may be reduced if step fails; no automatic stepsize control</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">adaptiveStepDecrease</span></code></p></td>
+<td><p>UReal</p></td>
+<td><p>0.5</p></td>
+<td><p>Multiplicative factor (MUST BE: 0 &lt; factor &lt; 1) for step size to decrese due to discontinuousIteration or Newton errors</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">adaptiveStepIncrease</span></code></p></td>
+<td><p>UReal</p></td>
+<td><p>2</p></td>
+<td><p>Multiplicative factor (MUST BE &gt; 1) for step size to increase after previous step reduction due to discontinuousIteration or Newton errors</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">adaptiveStepRecoveryIterations</span></code></p></td>
+<td><p>UInt</p></td>
+<td><p>7</p></td>
+<td><p>Number of max. (Newton iterations + discontinuous iterations) at which a step increase is considered; in order to immediately increase steps after reduction, chose a high value</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">adaptiveStepRecoverySteps</span></code></p></td>
+<td><p>UInt</p></td>
+<td><p>10</p></td>
+<td><p>Number of steps needed after which steps will be increased after previous step reduction due to discontinuousIteration or Newton errors</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">automaticStepSize</span></code></p></td>
+<td><p>bool</p></td>
+<td><p>True</p></td>
+<td><p>True: for specific integrators with error control (e.g., DOPRI5), compute automatic step size based on error estimation; False: constant step size (step may be reduced if adaptiveStep=True); the maximum stepSize reads <span class="math notranslate nohighlight">\(h = h_{max} = \frac{t_{end} - t_{start}}{n_{steps}}\)</span></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">computeLoadsJacobian</span></code></p></td>
+<td><p>UInt</p></td>
+<td><p>0</p></td>
+<td><p>0: jacobian of loads not considered (may lead to slow convergence or Newton failure); 1: in case of implicit integrators, compute (numerical) Jacobian of ODE2 and ODE1 coordinates for loads, causing additional computational costs; this is advantageous in cases where loads are related nonlinearly to coordinates; 2: also compute ODE2_t dependencies for jacobian; note that computeLoadsJacobian has no effect in case of doSystemWideDifferentiation, as this anyway includes all load dependencies</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">endTime</span></code></p></td>
+<td><p>UReal</p></td>
+<td><p>1</p></td>
+<td><p><span class="math notranslate nohighlight">\(t_{end}\)</span>: end time of time integration</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">initialStepSize</span></code></p></td>
+<td><p>UReal</p></td>
+<td><p>0</p></td>
+<td><p><span class="math notranslate nohighlight">\(h_{init}\)</span>: if automaticStepSize=True, initial step size; if initialStepSize==0, max. stepSize, which is (endTime-startTime)/numberOfSteps, is used as initial guess; a good choice of initialStepSize may help the solver to start up faster.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">minimumStepSize</span></code></p></td>
+<td><p>PReal</p></td>
+<td><p>1e-8</p></td>
+<td><p><span class="math notranslate nohighlight">\(h_{min}\)</span>: if automaticStepSize=True or adaptiveStep=True: lower limit of time step size, before integrator stops with adaptiveStep; lower limit of automaticStepSize control (continues but raises warning)</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">numberOfSteps</span></code></p></td>
+<td><p>PReal</p></td>
+<td><p>100</p></td>
+<td><p><span class="math notranslate nohighlight">\(n_{steps}\)</span>: number of steps in time integration; (maximum) stepSize <span class="math notranslate nohighlight">\(h\)</span> is computed from <span class="math notranslate nohighlight">\(h = \frac{t_{end} - t_{start}}{n_{steps}}\)</span>; for automatic stepsize control, this stepSize is the maximum steps size, <span class="math notranslate nohighlight">\(h_{max} = h\)</span>; numberOfSteps can also be a float type, but must be close to an integer (relative tolerance <span class="math notranslate nohighlight">\(100\cdot\varepsilon\)</span>) as it is silently rounded to int</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">relativeTolerance</span></code></p></td>
+<td><p>UReal</p></td>
+<td><p>1e-8</p></td>
+<td><p><span class="math notranslate nohighlight">\(r_{tol}\)</span>: if automaticStepSize=True, relative tolerance for the error control; must fulfill <span class="math notranslate nohighlight">\(r_{tol} \ge 0\)</span>; see <a class="reference internal" href="../../manual/solver.html#sec-explicitsolver"><span class="std std-ref">Explicit solvers</span></a></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">reuseConstantMassMatrix</span></code></p></td>
+<td><p>bool</p></td>
+<td><p>True</p></td>
+<td><p>True: does not recompute constant mass matrices (e.g. of some finite elements, mass points, etc.); if False, it always recomputes the mass matrix (e.g. needed, if user changes mass parameters via Python)</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">solverType</span></code></p></td>
+<td><p>DynamicSolverType</p></td>
+<td><p>DynamicSolverType::GeneralizedAlpha</p></td>
+<td><p>the solver of mbs.SolveDynamic(…): an implicit one (GeneralizedAlpha, TrapezoidalIndex2, …) or an explicit one (DOPRI5, ExplicitEuler, RK44, …), see DynamicSolverType, <a class="reference internal" href="../cInterface/TypeDefinitions.html#sec-dynamicsolvertype"><span class="std std-ref">DynamicSolverType</span></a>; the argument solverType of mbs.SolveDynamic, if given, takes its place for that run</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">startTime</span></code></p></td>
+<td><p>UReal</p></td>
+<td><p>0</p></td>
+<td><p><span class="math notranslate nohighlight">\(t_{start}\)</span>: start time of time integration (usually set to zero)</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">stepInformation</span></code></p></td>
+<td><p>UInt</p></td>
+<td><p>67</p></td>
+<td><p>add up the following binary flags: 0 … show only step time, 1 … show time to go, 2 … show newton iterations (Nit) per step or period, 4 … show Newton jacobians (jac) per step or period, 8 … show discontinuous iterations (Dit) per step or period, 16 … show step size (dt), 32 … show CPU time spent; 64 … show adaptive step reduction warnings; 128 … show step increase information; 1024 … show every time step; time is usually shown in fractions of seconds (s), hours (h), or days</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">stepSizeMaxIncrease</span></code></p></td>
+<td><p>UReal</p></td>
+<td><p>2</p></td>
+<td><p><span class="math notranslate nohighlight">\(f_{maxInc}\)</span>: if automaticStepSize=True, maximum increase of step size per step, see <a class="reference internal" href="../../manual/solver.html#sec-explicitsolver"><span class="std std-ref">Explicit solvers</span></a>; make this factor smaller (but <span class="math notranslate nohighlight">\(&gt; 1\)</span>) if too many rejected steps</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">stepSizeSafety</span></code></p></td>
+<td><p>UReal</p></td>
+<td><p>0.9</p></td>
+<td><p><span class="math notranslate nohighlight">\(r_{sfty}\)</span>: if automaticStepSize=True, a safety factor added to estimated optimal step size, in order to prevent from many rejected steps, see <a class="reference internal" href="../../manual/solver.html#sec-explicitsolver"><span class="std std-ref">Explicit solvers</span></a>. Make this factor smaller if many steps are rejected.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">verboseMode</span></code></p></td>
+<td><p>UInt</p></td>
+<td><p>0</p></td>
+<td><p>0 … no output, 1 … show short step information every 2 seconds (every 30 seconds after 1 hour CPU time), 2 … show every step information, 3 … show also solution vector, 4 … show also mass matrix and jacobian (implicit methods), 5 … show also Jacobian inverse (implicit methods)</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">verboseModeFile</span></code></p></td>
+<td><p>UInt</p></td>
+<td><p>0</p></td>
+<td><p>same behaviour as verboseMode, but outputs all solver information to file</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="staticsolversettings">
+<span id="sec-staticsolversettings"></span><h3>StaticSolverSettings<a class="headerlink" href="#staticsolversettings" title="Link to this heading"></a></h3>
+<p>Settings for static solver linear or nonlinear (Newton).</p>
+<p>Reached as <code class="docutils literal notranslate"><span class="pre">simulationSettings.staticSolver</span></code>.</p>
+<p>StaticSolverSettings has the following items:</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>name</p></th>
+<th class="head"><p>type</p></th>
+<th class="head"><p>default</p></th>
+<th class="head"><p>description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">discontinuous</span></code></p></td>
+<td><p>DiscontinuousSettings</p></td>
+<td><p></p></td>
+<td><p>parameters for treatment of discontinuities</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">newton</span></code></p></td>
+<td><p>NewtonSettings</p></td>
+<td><p></p></td>
+<td><p>parameters for Newton method (e.g. in static solver or time integration)</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">adaptiveStep</span></code></p></td>
+<td><p>bool</p></td>
+<td><p>True</p></td>
+<td><p>True: use step reduction if step fails; False: fixed step size</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">adaptiveStepDecrease</span></code></p></td>
+<td><p>UReal</p></td>
+<td><p>0.25</p></td>
+<td><p>Multiplicative factor (MUST BE: 0 &lt; factor &lt; 1) for step size to decrese due to discontinuousIteration or Newton errors</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">adaptiveStepIncrease</span></code></p></td>
+<td><p>UReal</p></td>
+<td><p>2</p></td>
+<td><p>Multiplicative factor (MUST BE &gt; 1) for step size to increase after previous step reduction due to discontinuousIteration or Newton errors</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">adaptiveStepRecoveryIterations</span></code></p></td>
+<td><p>UInt</p></td>
+<td><p>7</p></td>
+<td><p>Number of max. (Newton iterations + discontinuous iterations) at which a step increase is considered; in order to immediately increase steps after reduction, chose a high value</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">adaptiveStepRecoverySteps</span></code></p></td>
+<td><p>UInt</p></td>
+<td><p>4</p></td>
+<td><p>Number of steps needed after which steps will be increased after previous step reduction due to discontinuousIteration or Newton errors</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">computeLoadsJacobian</span></code></p></td>
+<td><p>bool</p></td>
+<td><p>True</p></td>
+<td><p>True: compute (currently numerical) Jacobian for loads, causing additional computational costs; this is advantageous in cases where loads are related nonlinearly to coordinates; False: jacobian of loads not considered (may lead to slow convergence or Newton failure); note that computeLoadsJacobian has no effect in case of doSystemWideDifferentiation, as this anyway includes all load dependencies</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">constrainODE1Coordinates</span></code></p></td>
+<td><p>bool</p></td>
+<td><p>True</p></td>
+<td><p>True: ODE1coordinates are constrained to initial values; False: undefined behavior, currently not supported</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">loadStepDuration</span></code></p></td>
+<td><p>PReal</p></td>
+<td><p>1</p></td>
+<td><p>quasi-time for all load steps (added to current time in load steps)</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">loadStepGeometric</span></code></p></td>
+<td><p>bool</p></td>
+<td><p>False</p></td>
+<td><p>if loadStepGeometric=false, the load steps are incremental (arithmetic series, e.g. 0.1,0.2,0.3,…); if true, the load steps are increased in a geometric series, e.g. for <span class="math notranslate nohighlight">\(n=8\)</span> numberOfLoadSteps and <span class="math notranslate nohighlight">\(d = 1000\)</span> loadStepGeometricRange, it follows: <span class="math notranslate nohighlight">\(1000^{1/8}/1000=0.00237\)</span>, <span class="math notranslate nohighlight">\(1000^{2/8}/1000=0.00562\)</span>, <span class="math notranslate nohighlight">\(1000^{3/8}/1000=0.0133\)</span>, …, <span class="math notranslate nohighlight">\(1000^{7/8}/1000=0.422\)</span>, <span class="math notranslate nohighlight">\(1000^{8/8}/1000=1\)</span></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">loadStepGeometricRange</span></code></p></td>
+<td><p>PReal</p></td>
+<td><p>1000</p></td>
+<td><p>if loadStepGeometric=true, the load steps are increased in a geometric series, see loadStepGeometric</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">loadStepStart</span></code></p></td>
+<td><p>UReal</p></td>
+<td><p>0</p></td>
+<td><p>a quasi time, which can be used for the output (first column) as well as for time-dependent forces; quasi-time is increased in every step i by loadStepDuration/numberOfLoadSteps; loadStepTime = loadStepStart + i*loadStepDuration/numberOfLoadSteps, but loadStepStart untouched ==&gt; increment by user</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">minimumStepSize</span></code></p></td>
+<td><p>PReal</p></td>
+<td><p>1e-8</p></td>
+<td><p>lower limit of step size, before nonlinear solver stops</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">numberOfLoadSteps</span></code></p></td>
+<td><p>PInt</p></td>
+<td><p>1</p></td>
+<td><p>number of load steps; if numberOfLoadSteps=1, no load steps are used and full forces are applied at once</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">stabilizerODE2term</span></code></p></td>
+<td><p>UReal</p></td>
+<td><p>0</p></td>
+<td><p>add mass-proportional stabilizer term in <a class="reference internal" href="../abbreviations.html#ode2"><span class="std std-ref">ODE2</span></a> part of jacobian for stabilization (scaled ), e.g. of badly conditioned problems; the diagnoal terms are scaled with <span class="math notranslate nohighlight">\(stabilizer = (1-loadStepFactor^2)\)</span>, and go to zero at the end of all load steps: <span class="math notranslate nohighlight">\(loadStepFactor=1\)</span> -&gt; <span class="math notranslate nohighlight">\(stabilizer = 0\)</span></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">stepInformation</span></code></p></td>
+<td><p>UInt</p></td>
+<td><p>67</p></td>
+<td><p>add up the following binary flags: 0 … show only step time, 1 … show time to go, 2 … show newton iterations (Nit) per step or period, 4 … show Newton jacobians (jac) per step or period, 8 … show discontinuous iterations (Dit) per step or period, 16 … show step size (dt), 32 … show CPU time spent; 64 … show adaptive step reduction warnings; 128 … show step increase information; 1024 … show every time step; time is usually shown in fractions of seconds (s), hours (h), or days</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">useLoadFactor</span></code></p></td>
+<td><p>bool</p></td>
+<td><p>True</p></td>
+<td><p>True: compute a load factor <span class="math notranslate nohighlight">\(\in [0,1]\)</span> from static step time; all loads are scaled by the load factor; False: loads are always scaled with 1 – use this option if time dependent loads use a userFunction</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">verboseMode</span></code></p></td>
+<td><p>UInt</p></td>
+<td><p>1</p></td>
+<td><p>0 … no output, 1 … show errors and load steps, 2 … show short Newton step information (error), 3 … show also solution vector, 4 … show also jacobian, 5 … show also Jacobian inverse</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">verboseModeFile</span></code></p></td>
+<td><p>UInt</p></td>
+<td><p>0</p></td>
+<td><p>same behaviour as verboseMode, but outputs all solver information to file</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="linearsolversettings">
+<span id="sec-linearsolversettings"></span><h3>LinearSolverSettings<a class="headerlink" href="#linearsolversettings" title="Link to this heading"></a></h3>
+<p>Settings for linear solver, both dense and sparse (Eigen).</p>
+<p>Reached as <code class="docutils literal notranslate"><span class="pre">simulationSettings.linearSolver</span></code>.</p>
+<p>LinearSolverSettings has the following items:</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>name</p></th>
+<th class="head"><p>type</p></th>
+<th class="head"><p>default</p></th>
+<th class="head"><p>description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">ignoreSingularJacobian</span></code></p></td>
+<td><p>bool</p></td>
+<td><p>False</p></td>
+<td><p>[ONLY implemented for dense, Eigen matrix mode] False: standard way, fails if jacobian is singular; True: use Eigen’s FullPivLU (thus only works with LinearSolverType.EigenDense) which handles over- and underdetermined systems; can often resolve redundant constraints, but MAY ALSO LEAD TO ERRONEOUS RESULTS!</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">pivotThreshold</span></code></p></td>
+<td><p>UReal</p></td>
+<td><p>0</p></td>
+<td><p>[ONLY available for EXUdense and EigenDense (FullPivot) solver] threshold for dense linear solver, can be used to detect close to singular solutions, setting this to, e.g., 1e-12; solver then reports on equations that are causing close to singularity</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">reuseAnalyzedPattern</span></code></p></td>
+<td><p>bool</p></td>
+<td><p>False</p></td>
+<td><p>[ONLY available for sparse matrices] True: the Eigen SparseLU solver offers the possibility to reuse an analyzed pattern of a previous factorization; this may reduce total factorization time by a factor of 2 or 3, depending on the matrix type; however, if the matrix patterns heavily change between computations, this may even slow down performance; this flag is set for SparseMatrices in InitializeSolverData(…) and should be handled with care!</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">showCausingItems</span></code></p></td>
+<td><p>bool</p></td>
+<td><p>True</p></td>
+<td><p>False: no output, if solver fails; True: if redundant equations appear, they are resolved such that according solution variables are set to zero; in case of redundant constraints, this may help, but it may lead to erroneous behaviour; for static problems, this may suppress static motion or resolve problems in case of instabilities, but should in general be considered with care!</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">solverType</span></code></p></td>
+<td><p>LinearSolverType</p></td>
+<td><p>LinearSolverType::EXUdense</p></td>
+<td><p>selection of numerical linear solver: exu.LinearSolverType.EXUdense (dense matrix inverse), exu.LinearSolverType.EigenSparse (sparse matrix LU-factorization), … (enumeration type)</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="linearsolversettingsdeprecated">
+<span id="sec-linearsolversettingsdeprecated"></span><h3>LinearSolverSettingsDeprecated<a class="headerlink" href="#linearsolversettingsdeprecated" title="Link to this heading"></a></h3>
+<p>The settings of the linear solver as they were named up to Exudyn 1.11: each forwards to its place in simulationSettings.linearSolver, with a DeprecationWarning.</p>
+<p>Reached as <code class="docutils literal notranslate"><span class="pre">simulationSettings.linearSolverSettings</span></code>.</p>
+<p>LinearSolverSettingsDeprecated has the following items:</p>
+<p><em>(none: this structure has no items in the Python interface. A deprecated item keeps working and is described where it moved to.)</em></p>
+</section>
+<section id="parallel">
+<span id="sec-parallel"></span><h3>Parallel<a class="headerlink" href="#parallel" title="Link to this heading"></a></h3>
+<p>Settings for linear solver, both dense and sparse (Eigen).</p>
+<p>Reached as <code class="docutils literal notranslate"><span class="pre">simulationSettings.parallel</span></code>.</p>
+<p>Parallel has the following items:</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>name</p></th>
+<th class="head"><p>type</p></th>
+<th class="head"><p>default</p></th>
+<th class="head"><p>description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">multithreadedLowerLimitJacobians</span></code></p></td>
+<td><p>PInt</p></td>
+<td><p>20</p></td>
+<td><p>compute jacobians (ODE2, AE, …) multi-threaded; this is the limit number of according objects from which on parallelization is used; flag is copied into MainSystem internal flag at InitializeSolverData(…)</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">multithreadedLowerLimitLoads</span></code></p></td>
+<td><p>PInt</p></td>
+<td><p>20</p></td>
+<td><p>compute loads multi-threaded; this is the limit number of loads from which on parallelization is used; flag is copied into MainSystem internal flag at InitializeSolverData(…)</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">multithreadedLowerLimitMassMatrices</span></code></p></td>
+<td><p>PInt</p></td>
+<td><p>20</p></td>
+<td><p>compute bodies mass matrices multi-threaded; this is the limit number of bodies from which on parallelization is used; flag is copied into MainSystem internal flag at InitializeSolverData(…)</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">multithreadedLowerLimitResiduals</span></code></p></td>
+<td><p>PInt</p></td>
+<td><p>20</p></td>
+<td><p>compute RHS vectors, AE, and reaction forces multi-threaded; this is the limit number of objects from which on parallelization is used; flag is copied into MainSystem internal flag at InitializeSolverData(…)</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">numberOfThreads</span></code></p></td>
+<td><p>PInt</p></td>
+<td><p>1</p></td>
+<td><p>number of threads used for parallel computation (1 == scalar processing); do not use more threads than available threads (in most cases it is good to restrict to the number of cores); currently, only one solver can be started with multithreading; if you use several mbs in parallel (co-simulation), you should use serial computing</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">taskSplitMinItems</span></code></p></td>
+<td><p>PInt</p></td>
+<td><p>50</p></td>
+<td><p>number of items from which on the tasks are split into subtasks (which slightly increases threading performance; this may be critical for smaller number of objects, should be roughly between 50 and 5000; flag is copied into MainSystem internal flag at InitializeSolverData(…)</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">taskSplitTasksPerThread</span></code></p></td>
+<td><p>PInt</p></td>
+<td><p>16</p></td>
+<td><p>this is the number of subtasks that every thread receives; minimum is 1, the maximum should not be larger than 100; this factor is 1 as long as the taskSplitMinItems is not reached; flag is copied into MainSystem internal flag at InitializeSolverData(…)</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">useLoadBalancing</span></code></p></td>
+<td><p>bool</p></td>
+<td><p>True</p></td>
+<td><p>if True, parallel computation uses load balancing, which may give better performance in case of non-equilibrated loads; (mobile) Intel CPUs may perform better without load balancing; this flag is coupled to exudyn.special.solver.multiThreadingLoadBalancing (overwritten when solver starts with multithreading)</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="showsettings">
+<span id="sec-showsettings"></span><h3>ShowSettings<a class="headerlink" href="#showsettings" title="Link to this heading"></a></h3>
+<p>What the solvers show in the console at the end of solving.</p>
+<p>Reached as <code class="docutils literal notranslate"><span class="pre">simulationSettings.show</span></code>.</p>
+<p>ShowSettings has the following items:</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>name</p></th>
+<th class="head"><p>type</p></th>
+<th class="head"><p>default</p></th>
+<th class="head"><p>description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">computationTime</span></code></p></td>
+<td><p>bool</p></td>
+<td><p>False</p></td>
+<td><p>display computation time statistics at end of solving</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">globalTimers</span></code></p></td>
+<td><p>bool</p></td>
+<td><p>True</p></td>
+<td><p>display global timer statistics at end of solving (e.g., for contact, but also for internal timings during development)</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">statistics</span></code></p></td>
+<td><p>bool</p></td>
+<td><p>False</p></td>
+<td><p>display general computation information at end of time step (steps, iterations, function calls, step rejections, …</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="sec-simulationsettings">
+<span id="id1"></span><h3>SimulationSettings<a class="headerlink" href="#sec-simulationsettings" title="Link to this heading"></a></h3>
+<p>General Settings for simulation; according settings for solution and solvers are given in subitems of this structure.</p>
+<p>Reached as <code class="docutils literal notranslate"><span class="pre">simulationSettings</span></code>.</p>
+<p>SimulationSettings has the following items:</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>name</p></th>
+<th class="head"><p>type</p></th>
+<th class="head"><p>default</p></th>
+<th class="head"><p>description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">linearSolver</span></code></p></td>
+<td><p>LinearSolverSettings</p></td>
+<td><p></p></td>
+<td><p>linear solver parameters (used for dense and sparse solvers)</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">parallel</span></code></p></td>
+<td><p>Parallel</p></td>
+<td><p></p></td>
+<td><p>parameters for vectorized and parallelized (multi-threaded) computations</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">show</span></code></p></td>
+<td><p>ShowSettings</p></td>
+<td><p></p></td>
+<td><p>what the solvers show in the console at the end of solving</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">solution</span></code></p></td>
+<td><p>SolutionSettings</p></td>
+<td><p></p></td>
+<td><p>settings for solution files</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">staticSolver</span></code></p></td>
+<td><p>StaticSolverSettings</p></td>
+<td><p></p></td>
+<td><p>static solver parameters</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">timeIntegration</span></code></p></td>
+<td><p>TimeIntegrationSettings</p></td>
+<td><p></p></td>
+<td><p>time integration parameters</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">cleanUpMemory</span></code></p></td>
+<td><p>bool</p></td>
+<td><p>False</p></td>
+<td><p>True: solvers will free memory at exit (recommended for large systems); False: keep allocated memory for repeated computations to increase performance</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">consolePrecision</span></code></p></td>
+<td><p>UInt</p></td>
+<td><p>6</p></td>
+<td><p>precision for floating point numbers written to the console, e.g. the values written by the solver; the precision of the solution and sensor files is solution.precision</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">pauseAfterEachStep</span></code></p></td>
+<td><p>bool</p></td>
+<td><p>False</p></td>
+<td><p>pause after every time step or static load step(user press SPACE)</p></td>
+</tr>
+</tbody>
+</table>
+<p>The following parameter changes have been made:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">simulationSettings.solutionSettings.appendToFile</span></code> → <code class="docutils literal notranslate"><span class="pre">simulationSettings.solution.file.append</span></code> (changed in version 1.12.256, expires: 2031)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">simulationSettings.solutionSettings.binarySolutionFile</span></code> → <code class="docutils literal notranslate"><span class="pre">simulationSettings.solution.file.binary</span></code> (changed in version 1.12.256, expires: 2031)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">simulationSettings.solutionSettings.coordinatesSolutionFileName</span></code> → <code class="docutils literal notranslate"><span class="pre">simulationSettings.solution.file.name</span></code> (changed in version 1.12.256, expires: 2031)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">simulationSettings.solutionSettings.exportAccelerations</span></code> → <code class="docutils literal notranslate"><span class="pre">simulationSettings.solution.file.export.accelerations</span></code> (changed in version 1.12.256, expires: 2031)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">simulationSettings.solutionSettings.exportAlgebraicCoordinates</span></code> → <code class="docutils literal notranslate"><span class="pre">simulationSettings.solution.file.export.algebraicCoordinates</span></code> (changed in version 1.12.256, expires: 2031)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">simulationSettings.solutionSettings.exportDataCoordinates</span></code> → <code class="docutils literal notranslate"><span class="pre">simulationSettings.solution.file.export.dataCoordinates</span></code> (changed in version 1.12.256, expires: 2031)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">simulationSettings.solutionSettings.exportODE1Velocities</span></code> → <code class="docutils literal notranslate"><span class="pre">simulationSettings.solution.file.export.ODE1Velocities</span></code> (changed in version 1.12.256, expires: 2031)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">simulationSettings.solutionSettings.exportVelocities</span></code> → <code class="docutils literal notranslate"><span class="pre">simulationSettings.solution.file.export.velocities</span></code> (changed in version 1.12.256, expires: 2031)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">simulationSettings.solutionSettings.flushFilesDOF</span></code> → <code class="docutils literal notranslate"><span class="pre">simulationSettings.solution.file.flushAboveCoordinates</span></code> (changed in version 1.12.256, expires: 2031)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">simulationSettings.solutionSettings.flushFilesImmediately</span></code> → <code class="docutils literal notranslate"><span class="pre">simulationSettings.solution.flushFilesImmediately</span></code> (changed in version 1.12.256, expires: 2031)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">simulationSettings.solutionSettings.outputPrecision</span></code> → <code class="docutils literal notranslate"><span class="pre">simulationSettings.solution.precision</span></code> (changed in version 1.12.256, expires: 2031)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">simulationSettings.solutionSettings.recordImagesInterval</span></code> → <code class="docutils literal notranslate"><span class="pre">simulationSettings.solution.recordImagesInterval</span></code> (changed in version 1.12.256, expires: 2031)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">simulationSettings.solutionSettings.restartFileName</span></code> → <code class="docutils literal notranslate"><span class="pre">simulationSettings.solution.restart.name</span></code> (changed in version 1.12.256, expires: 2031)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">simulationSettings.solutionSettings.restartWritePeriod</span></code> → <code class="docutils literal notranslate"><span class="pre">simulationSettings.solution.restart.writePeriod</span></code> (changed in version 1.12.256, expires: 2031)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">simulationSettings.solutionSettings.sensorsAppendToFile</span></code> → <code class="docutils literal notranslate"><span class="pre">simulationSettings.solution.sensors.append</span></code> (changed in version 1.12.256, expires: 2031)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">simulationSettings.solutionSettings.sensorsStoreAndWriteFiles</span></code> → <code class="docutils literal notranslate"><span class="pre">simulationSettings.solution.sensors.active</span></code> (changed in version 1.12.256, expires: 2031)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">simulationSettings.solutionSettings.sensorsWriteFileFooter</span></code> → <code class="docutils literal notranslate"><span class="pre">simulationSettings.solution.sensors.writeFooter</span></code> (changed in version 1.12.256, expires: 2031)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">simulationSettings.solutionSettings.sensorsWriteFileHeader</span></code> → <code class="docutils literal notranslate"><span class="pre">simulationSettings.solution.sensors.writeHeader</span></code> (changed in version 1.12.256, expires: 2031)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">simulationSettings.solutionSettings.sensorsWritePeriod</span></code> → <code class="docutils literal notranslate"><span class="pre">simulationSettings.solution.sensors.writePeriod</span></code> (changed in version 1.12.256, expires: 2031)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">simulationSettings.solutionSettings.solutionInformation</span></code> → <code class="docutils literal notranslate"><span class="pre">simulationSettings.solution.file.information</span></code> (changed in version 1.12.256, expires: 2031)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">simulationSettings.solutionSettings.solutionWritePeriod</span></code> → <code class="docutils literal notranslate"><span class="pre">simulationSettings.solution.file.writePeriod</span></code> (changed in version 1.12.256, expires: 2031)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">simulationSettings.solutionSettings.solverInformationFileName</span></code> → <code class="docutils literal notranslate"><span class="pre">simulationSettings.solution.solverInformationFileName</span></code> (changed in version 1.12.256, expires: 2031)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">simulationSettings.solutionSettings.writeFileFooter</span></code> → <code class="docutils literal notranslate"><span class="pre">simulationSettings.solution.file.writeFooter</span></code> (changed in version 1.12.256, expires: 2031)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">simulationSettings.solutionSettings.writeFileHeader</span></code> → <code class="docutils literal notranslate"><span class="pre">simulationSettings.solution.file.writeHeader</span></code> (changed in version 1.12.256, expires: 2031)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">simulationSettings.solutionSettings.writeInitialValues</span></code> → <code class="docutils literal notranslate"><span class="pre">simulationSettings.solution.file.writeInitialValues</span></code> (changed in version 1.12.256, expires: 2031)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">simulationSettings.solutionSettings.writeRestartFile</span></code> → <code class="docutils literal notranslate"><span class="pre">simulationSettings.solution.restart.write</span></code> (changed in version 1.12.256, expires: 2031)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">simulationSettings.solutionSettings.writeSolutionToFile</span></code> → <code class="docutils literal notranslate"><span class="pre">simulationSettings.solution.file.write</span></code> (changed in version 1.12.256, expires: 2031)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">simulationSettings.timeIntegration.newton.numericalDifferentiation.forODE2connectors</span></code> → <code class="docutils literal notranslate"><span class="pre">simulationSettings.timeIntegration.newton.numericalDifferentiation.forODE2Connectors</span></code> (changed in version 1.12.256, expires: 2031)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">simulationSettings.staticSolver.newton.numericalDifferentiation.forODE2connectors</span></code> → <code class="docutils literal notranslate"><span class="pre">simulationSettings.staticSolver.newton.numericalDifferentiation.forODE2Connectors</span></code> (changed in version 1.12.256, expires: 2031)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">simulationSettings.timeIntegration.newton.newtonResidualMode</span></code> → <code class="docutils literal notranslate"><span class="pre">simulationSettings.timeIntegration.newton.residualMode</span></code> (changed in version 1.12.256, expires: 2031)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">simulationSettings.staticSolver.newton.newtonResidualMode</span></code> → <code class="docutils literal notranslate"><span class="pre">simulationSettings.staticSolver.newton.residualMode</span></code> (changed in version 1.12.256, expires: 2031)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">simulationSettings.timeIntegration.newton.useNewtonSolver</span></code> → <code class="docutils literal notranslate"><span class="pre">simulationSettings.timeIntegration.newton.active</span></code> (changed in version 1.12.256, expires: 2031)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">simulationSettings.staticSolver.newton.useNewtonSolver</span></code> → <code class="docutils literal notranslate"><span class="pre">simulationSettings.staticSolver.newton.active</span></code> (changed in version 1.12.256, expires: 2031)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">simulationSettings.timeIntegration.explicitIntegration.computeEndOfStepAccelerations</span></code> → <code class="docutils literal notranslate"><span class="pre">simulationSettings.timeIntegration.explicit.computeEndOfStepAccelerations</span></code> (changed in version 1.12.256, expires: 2031)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">simulationSettings.timeIntegration.explicitIntegration.computeMassMatrixInversePerBody</span></code> → <code class="docutils literal notranslate"><span class="pre">simulationSettings.timeIntegration.explicit.computeMassMatrixInversePerBody</span></code> (changed in version 1.12.256, expires: 2031)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">simulationSettings.timeIntegration.explicitIntegration.dynamicSolverType</span></code> → <code class="docutils literal notranslate"><span class="pre">simulationSettings.timeIntegration.solverType</span></code> (changed in version 1.12.256, expires: 2031)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">simulationSettings.timeIntegration.explicitIntegration.eliminateConstraints</span></code> → <code class="docutils literal notranslate"><span class="pre">simulationSettings.timeIntegration.explicit.eliminateConstraints</span></code> (changed in version 1.12.256, expires: 2031)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">simulationSettings.timeIntegration.explicitIntegration.useLieGroupIntegration</span></code> → <code class="docutils literal notranslate"><span class="pre">simulationSettings.timeIntegration.explicit.useLieGroupIntegration</span></code> (changed in version 1.12.256, expires: 2031)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">simulationSettings.timeIntegration.realtimeFactor</span></code> → <code class="docutils literal notranslate"><span class="pre">simulationSettings.timeIntegration.realtime.factor</span></code> (changed in version 1.12.256, expires: 2031)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">simulationSettings.timeIntegration.realtimeWaitMicroseconds</span></code> → <code class="docutils literal notranslate"><span class="pre">simulationSettings.timeIntegration.realtime.waitMicroseconds</span></code> (changed in version 1.12.256, expires: 2031)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">simulationSettings.timeIntegration.simulateInRealtime</span></code> → <code class="docutils literal notranslate"><span class="pre">simulationSettings.timeIntegration.realtime.active</span></code> (changed in version 1.12.256, expires: 2031)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">simulationSettings.staticSolver.constrainODE1coordinates</span></code> → <code class="docutils literal notranslate"><span class="pre">simulationSettings.staticSolver.constrainODE1Coordinates</span></code> (changed in version 1.12.256, expires: 2031)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">simulationSettings.linearSolverSettings.ignoreSingularJacobian</span></code> → <code class="docutils literal notranslate"><span class="pre">simulationSettings.linearSolver.ignoreSingularJacobian</span></code> (changed in version 1.12.256, expires: 2031)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">simulationSettings.linearSolverSettings.pivotThreshold</span></code> → <code class="docutils literal notranslate"><span class="pre">simulationSettings.linearSolver.pivotThreshold</span></code> (changed in version 1.12.256, expires: 2031)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">simulationSettings.linearSolverSettings.reuseAnalyzedPattern</span></code> → <code class="docutils literal notranslate"><span class="pre">simulationSettings.linearSolver.reuseAnalyzedPattern</span></code> (changed in version 1.12.256, expires: 2031)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">simulationSettings.linearSolverSettings.showCausingItems</span></code> → <code class="docutils literal notranslate"><span class="pre">simulationSettings.linearSolver.showCausingItems</span></code> (changed in version 1.12.256, expires: 2031)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">simulationSettings.parallel.multithreadedLLimitJacobians</span></code> → <code class="docutils literal notranslate"><span class="pre">simulationSettings.parallel.multithreadedLowerLimitJacobians</span></code> (changed in version 1.12.244, expires: 2031)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">simulationSettings.parallel.multithreadedLLimitLoads</span></code> → <code class="docutils literal notranslate"><span class="pre">simulationSettings.parallel.multithreadedLowerLimitLoads</span></code> (changed in version 1.12.244, expires: 2031)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">simulationSettings.parallel.multithreadedLLimitMassMatrices</span></code> → <code class="docutils literal notranslate"><span class="pre">simulationSettings.parallel.multithreadedLowerLimitMassMatrices</span></code> (changed in version 1.12.244, expires: 2031)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">simulationSettings.parallel.multithreadedLLimitResiduals</span></code> → <code class="docutils literal notranslate"><span class="pre">simulationSettings.parallel.multithreadedLowerLimitResiduals</span></code> (changed in version 1.12.244, expires: 2031)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">simulationSettings.displayComputationTime</span></code> → <code class="docutils literal notranslate"><span class="pre">simulationSettings.show.computationTime</span></code> (changed in version 1.12.256, expires: 2031)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">simulationSettings.displayGlobalTimers</span></code> → <code class="docutils literal notranslate"><span class="pre">simulationSettings.show.globalTimers</span></code> (changed in version 1.12.256, expires: 2031)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">simulationSettings.displayStatistics</span></code> → <code class="docutils literal notranslate"><span class="pre">simulationSettings.show.statistics</span></code> (changed in version 1.12.256, expires: 2031)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">simulationSettings.linearSolverType</span></code> → <code class="docutils literal notranslate"><span class="pre">simulationSettings.linearSolver.solverType</span></code> (changed in version 1.12.256, expires: 2031)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">simulationSettings.outputPrecision</span></code> → <code class="docutils literal notranslate"><span class="pre">simulationSettings.consolePrecision</span></code> (changed in version 1.12.256, expires: 2031)</p></li>
+</ul>
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="structuresIndex.html" class="btn btn-neutral float-left" title="Structures and Settings" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="VisualizationSettings.html" class="btn btn-neutral float-right" title="VisualizationSettings" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

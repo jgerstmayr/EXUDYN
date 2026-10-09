@@ -1,0 +1,727 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Python Utility Functions &mdash; Exudyn1.13.3 1.13.3 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=3ee1c6c6" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/rtd_sphinx_search.min.css" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/custom.css?v=e2783f0e" />
+
+  
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=b8a3e558"></script>
+      <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../../_static/copybutton.js?v=f281be69"></script>
+      <script src="../../../_static/js/rtd_search_config.js"></script>
+      <script src="../../../_static/js/rtd_sphinx_search.min.js"></script>
+      <script>window.MathJax = {"loader": {"load": ["[tex]/mathtools"]}, "tex": {"packages": {"[+]": ["mathtools"]}, "macros": {"ANCFdk": "{\\LU{0}{\\dv_k}}", "ANCFdkO": "{\\LU{0}{\\dv_{0,k}}}", "ANCFdkOtp": "{\\LU{0}{\\dv_{0,k}\\tp}}", "ANCFdkt": "{\\LU{0}{\\dot\\dv_k}}", "Am": "{\\mathbf{A}}", "Dm": "{\\mathbf{D}}", "Em": "{\\mathbf{E}}", "Gm": "{\\mathbf{G}}", "Im": "{\\mathbf{I}}", "ImThree": "{\\mathbf{I}_{3 \\times 3}}", "Jm": "{\\mathbf{J}}", "Km": "{\\mathbf{K}}", "Mm": "{\\mathbf{M}}", "Pm": "{\\mathbf{P}}", "Rm": "{\\mathbf{R}}", "Sm": "{\\mathbf{S}}", "Tm": "{\\mathbf{T}}", "av": "{\\mathbf{a}}", "bv": "{\\mathbf{b}}", "cv": "{\\mathbf{c}}", "diffANCF": ["{\\frac{\\partial #1}{\\partial \\qv_{ANCF}}}", 1], "diffANCFdk": "{\\diffANCFmI{\\ANCFdk}}", "diffANCFmI": ["{\\frac{\\partial #1}{\\partial \\qv_{ANCF,m1}}}", 1], "diffANCFmIt": ["{\\frac{\\partial #1}{\\partial \\dot \\qv_{ANCF,m1}}}", 1], "diffANCFt": ["{\\frac{\\partial #1}{\\partial \\dot \\qv_{ANCF}}}", 1], "diffmI": ["{\\frac{\\partial #1}{\\partial \\qv_{m1}}}", 1], "diffmIt": ["{\\frac{\\partial #1}{\\partial \\dot \\qv_{m1}}}", 1], "diffmOI": ["{\\frac{\\partial #1}{\\partial \\qv_{m0,m1}}}", 1], "diffmOIt": ["{\\frac{\\partial #1}{\\partial \\dot \\qv_{m0,m1}}}", 1], "diffmOt": ["{\\frac{\\partial #1}{\\partial \\dot \\qv_{m0}}}", 1], "dv": "{\\mathbf{d}}", "ev": "{\\mathbf{e}}", "fv": "{\\mathbf{f}}", "gv": "{\\mathbf{g}}", "hv": "{\\mathbf{h}}", "nv": "{\\mathbf{n}}", "pv": "{\\mathbf{p}}", "qv": "{\\mathbf{q}}", "rv": "{\\mathbf{r}}", "sv": "{\\mathbf{s}}", "tv": "{\\mathbf{t}}", "uv": "{\\mathbf{u}}", "vv": "{\\mathbf{v}}", "xv": "{\\mathbf{x}}", "yv": "{\\mathbf{y}}", "zv": "{\\mathbf{z}}", "vspace": ["{}", 1], "ra": "{\\rightarrow}", "Rcal": "{\\mathbb{R}}", "Ccal": "{\\mathbb{C}}", "Ncal": "{\\mathbb{N}}", "Rot": "{\\mathbf{A}}", "dd": "{\\mathrm{d}}", "ps": "{p_\\mathrm{s}}", "co": "{\\mathrm{c}}", "si": "{\\mathrm{s}}", "tp": "{^\\mathrm{T}}", "diag": "{\\mathrm{diag}}", "vec": "{\\mathrm{vec}}", "Null": "{\\mathbf{0}}", "varepsilonDot": "{\\boldsymbol{\\varepsilon}}", "talpha": "{\\boldsymbol{\\alpha}}", "tbeta": "{\\boldsymbol{\\beta}}", "tgamma": "{\\boldsymbol{\\gamma}}", "tchi": "{\\boldsymbol{\\chi}}", "tdelta": "{\\boldsymbol{\\delta}}", "teps": "{\\boldsymbol{\\varepsilon}}", "tepsDot": "{\\boldsymbol{\\dot \\varepsilon}}", "teta": "{\\boldsymbol{\\eta}}", "tkappa": "{\\boldsymbol{\\kappa}}", "tkappaDot": "{\\boldsymbol{\\dot \\kappa}}", "tphi": "{\\boldsymbol{\\phi}}", "boldVarPhi": "{\\boldsymbol{\\varphi}}", "tPhi": "{\\boldsymbol{\\Phi}}", "ttheta": "{\\boldsymbol{\\theta}}", "tTheta": "{\\boldsymbol{\\Theta}}", "tlambda": "{\\boldsymbol{\\lambda}}", "tnu": "{\\boldsymbol{\\nu}}", "tmu": "{\\boldsymbol{\\mu}}", "tpsi": "{\\boldsymbol{\\psi}}", "tPsi": "{\\boldsymbol{\\Psi}}", "ttau": "{\\boldsymbol{\\tau}}", "tsigma": "{\\boldsymbol{\\sigma}}", "txi": "{\\boldsymbol{\\xi}}", "tzeta": "{\\boldsymbol{\\zeta}}", "tomega": "{\\boldsymbol{\\omega}}", "tOmega": "{\\boldsymbol{\\Omega}}", "vareps": "{\\varepsilon}", "myoverline": ["\\overline{#1}", 1], "pluseq": "\\mathrel{+}=", "LU": ["{\\prescript{#1}{}{#2}\\,}", 2], "LUX": ["{\\prescript{#1}{}{#2}#3\\,}", 3], "LUR": ["{\\prescript{#1}{}{#2}_{#3}\\,}", 3], "LURU": ["{\\prescript{#1}{}{#2}_{#3}^{#4}\\,}", 4], "LLdot": ["{\\prescript{}{#1}{\\dot{#2}}_{#3}\\,}", 3], "vr": ["{\\left[ \\begin{array}{c} { #1}\\vspace{0.04cm} \\\\ { #2}\\vspace{0.04cm} \\\\ { #3} \\end{array} \\right]}", 3], "mr": ["{\\left[ \\begin{array}{ccc} #1 & #2 & #3 \\vspace{0.04cm}\\\\ #4 & #5 & #6 \\vspace{0.04cm}\\\\ #7 & #8 & #9  \\end{array} \\right]}", 9], "vp": ["{\\left[ \\begin{array}{c} { #1} \\vspace{0.04cm}\\\\ { #2} \\end{array} \\right]}", 2], "mp": ["{\\left[ \\begin{array}{cc} #1 & #2 \\vspace{0.04cm}\\\\ #3 & #4 \\end{array} \\right]}", 4], "mfour": ["{\\left[ \\begin{array}{cccc} { #1} \\\\ { #2} \\\\ { #3} \\\\ { #4} \\end{array} \\right]}", 4], "vfour": ["{\\left[ \\begin{array}{c} { #1} \\\\ { #2} \\\\ { #3} \\\\ { #4} \\end{array} \\right]}", 4], "vrRow": ["{[#1,\\, #2,\\, #3]}", 3], "vsix": ["{\\left[ \\begin{array}{c} { #1} \\\\ { #2} \\\\ { #3} \\\\ { #4} \\\\ { #5} \\\\ { #6} \\end{array} \\right]}", 6], "vsixb": ["{\\begin{array}{c} { #1} \\\\ { #2} \\\\ { #3} \\\\ { #4} \\\\ { #5} \\\\ { #6} \\end{array} }", 6], "vsixs": ["{ \\begin{array}{c} { #1} \\\\ { #2} \\\\ { #3} \\\\ { #4} \\\\ { #5} \\\\ { #6} \\end{array} }", 6], "SO": "{q}", "FO": "{y}", "AE": "{\\lambda}", "SYS": "{s}", "SON": "{$2^\\mathrm{nd}$ order differential equations}", "FON": "{$1^\\mathrm{st}$ order differential equations}", "AEN": "{algebraic equations}", "Bm": "{\\mathbf{B}}", "Cm": "{\\mathbf{C}}", "Fm": "{\\mathbf{F}}", "SYSN": "{system equations}", "cIni": "{_\\mathrm{ini}}", "cRef": "{_\\mathrm{ref}}", "cCur": "{_\\mathrm{cur}}", "cVis": "{_\\mathrm{vis}}", "cSOS": "{_\\mathrm{start\\;of\\;step}}", "cConfig": "{_\\mathrm{config}}", "pLoc": "{\\mathbf{b}}", "pLocB": "{\\,^{b}{\\mathbf{v}}}", "pRef": "{\\mathbf{r}}", "pRefG": "{\\,^{0}{\\mathbf{r}}}", "indf": "{_\\mathrm{f}}", "indt": "{_\\mathrm{t}}", "indr": "{_\\mathrm{r}}", "indtt": "{_\\mathrm{tt}}", "indrr": "{_\\mathrm{rr}}", "indff": "{_\\mathrm{ff}}", "indtf": "{_\\mathrm{tf}}", "indrf": "{_\\mathrm{rf}}", "indtr": "{_\\mathrm{tr}}", "omegaBDtilde": "{\\LU{b}{\\tilde \\tomega_\\mathrm{bd}}}", "indrigid": "{_\\mathrm{rigid}}", "indred": "{_\\mathrm{red}}", "induser": "{_\\mathrm{user}}", "indu": "{_\\mathrm{u}}", "termA": ["{\\color{blue}{#1}}", 1], "termB": ["{\\color{red}{#1}}", 1], "termC": ["{\\color{green}{#1}}", 1], "acc": "{\\ddot{\\mathbf{q}}}", "GA": "{G\\alpha}", "Hm": "{\\mathbf{H}}", "ImTwo": "{\\mathbf{I}_{2 \\times 2}}", "Lm": "{\\mathbf{L}}", "Qm": "{\\mathbf{Q}}", "Vm": "{\\mathbf{V}}", "Wm": "{\\mathbf{W}}", "Xm": "{\\mathbf{X}}", "Ym": "{\\mathbf{Y}}", "aalg": "{\\mathbf{a}}", "iv": "{\\mathbf{i}}", "jv": "{\\mathbf{j}}", "kv": "{\\mathbf{k}}", "lv": "{\\mathbf{l}}", "mv": "{\\mathbf{m}}", "ov": "{\\mathbf{o}}", "vel": "{\\mathbf{v}}", "wv": "{\\mathbf{w}}"}}, "options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+      <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-mml-chtml.js"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+    <link rel="next" title="Module: advancedUtilities" href="advancedUtilities.html" />
+    <link rel="prev" title="SensorUserFunction" href="../items/SensorUserFunction.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            Exudyn1.13.3
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Exudyn User Manual</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../README.html">Exudyn</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../manual/gettingStarted.html">Installation and getting started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../manual/introduction.html">Overview on Exudyn</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../manual/introductionBasics.html">Exudyn basics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../manual/tutorial.html">Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../manual/GUI.html">Renderer, graphics and visualization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../manual/performanceErrors.html">Performance, errors and solver failures</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../manual/introductionAdvanced.html">Advanced topics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../manual/notation.html">Notation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../manual/theory.html">Theory and formulations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../manual/solver.html">Solvers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../cInterface/cInterfaceIndex.html">Python-C++ command interface</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Reference Manual</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../items/itemsIndex.html">Items reference manual</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Python Utility Functions</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="advancedUtilities.html">Module: advancedUtilities</a></li>
+<li class="toctree-l2"><a class="reference internal" href="artificialIntelligence.html">Module: artificialIntelligence</a></li>
+<li class="toctree-l2"><a class="reference internal" href="basicUtilities.html">Module: basicUtilities</a></li>
+<li class="toctree-l2"><a class="reference internal" href="beams.html">Module: beams</a></li>
+<li class="toctree-l2"><a class="reference internal" href="demos.html">Module: demos</a></li>
+<li class="toctree-l2"><a class="reference internal" href="FEM.html">Module: FEM</a></li>
+<li class="toctree-l2"><a class="reference internal" href="graphics.html">Module: graphics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="graphicsDataUtilities.html">Module: graphicsDataUtilities</a></li>
+<li class="toctree-l2"><a class="reference internal" href="misc.GUI.html">Module: misc.GUI</a></li>
+<li class="toctree-l2"><a class="reference internal" href="misc.settingsUtilities.html">Module: misc.settingsUtilities</a></li>
+<li class="toctree-l2"><a class="reference internal" href="interactive.html">Module: interactive</a></li>
+<li class="toctree-l2"><a class="reference internal" href="kinematicTree.html">Module: kinematicTree</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lieGroupBasics.html">Module: lieGroupBasics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="misc.mainSystemExtensions.html">Module: misc.mainSystemExtensions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="particles.html">Module: particles</a></li>
+<li class="toctree-l2"><a class="reference internal" href="physics.html">Module: physics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="plot.html">Module: plot</a></li>
+<li class="toctree-l2"><a class="reference internal" href="processing.html">Module: processing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rigidBodyUtilities.html">Module: rigidBodyUtilities</a></li>
+<li class="toctree-l2"><a class="reference internal" href="robotics.html">Module: robotics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="robotics.rosInterface.html">Module: robotics.rosInterface</a></li>
+<li class="toctree-l2"><a class="reference internal" href="robotics.future.html">Module: robotics.future</a></li>
+<li class="toctree-l2"><a class="reference internal" href="robotics.models.html">Module: robotics.models</a></li>
+<li class="toctree-l2"><a class="reference internal" href="robotics.mobile.html">Module: robotics.mobile</a></li>
+<li class="toctree-l2"><a class="reference internal" href="robotics.motion.html">Module: robotics.motion</a></li>
+<li class="toctree-l2"><a class="reference internal" href="robotics.special.html">Module: robotics.special</a></li>
+<li class="toctree-l2"><a class="reference internal" href="robotics.utilities.html">Module: robotics.utilities</a></li>
+<li class="toctree-l2"><a class="reference internal" href="shells.html">Module: shells</a></li>
+<li class="toctree-l2"><a class="reference internal" href="signalProcessing.html">Module: signalProcessing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="solver.html">Module: solver</a></li>
+<li class="toctree-l2"><a class="reference internal" href="utilities.html">Module: utilities</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../structures/structuresIndex.html">Structures and Settings</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../references.html">References</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Developer documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../dev/README.html">Exudyn developer documentation</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">How-to notes</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../howTo/condaEnvironments.html">Conda environments for Exudyn</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../howTo/sphinxDocs.html">Building the documentation</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Examples, models and issues</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../examples/examplesIndex.html">Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../testModels/testModelsIndex.html">TestModels</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../abbreviations.html">List of Abbreviations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../manual/revisions.html">Revisions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../CHANGELOG.html">Changelog</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../trackerlog.html">Issue tracker</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">Exudyn1.13.3</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Python Utility Functions</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../../_sources/docs/generated/pythonUtilities/utilitiesIndex.md.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <!-- GENERATED by tools/generators/utilityDocsEmitter.py from the docstrings of python/exudyn - do not edit -->
+<section class="tex2jax_ignore mathjax_ignore" id="python-utility-functions">
+<span id="sec-pythonutilityfunctions"></span><h1>Python Utility Functions<a class="headerlink" href="#python-utility-functions" title="Link to this heading"></a></h1>
+<p>This chapter describes in every section the functions and classes of the utility modules.
+These modules help to create multibody systems with the Exudyn core module. Functions are
+implemented in Python and can be changed, extended and verified by the user - <strong>check the
+source code</strong> by entering a function in Spyder and pressing <strong>CTRL + left mouse button</strong>.
+These Python functions are much slower than the functions of the C++ core; some matrix
+computations with larger matrices, implemented in numpy and scipy, are parallelised and
+therefore very efficient.</p>
+<p>Note that in general functions accept lists and numpy arrays. If not, an error will occur,
+which is easily tracked. Furthermore, angles are generally provided in radian (<span class="math notranslate nohighlight">\(2\pi\)</span> equals
+<span class="math notranslate nohighlight">\(360\,^o\)</span>) and no units are used for distances, but it is recommended to use SI units
+(m, kg, s) throughout.</p>
+<p>Functions have been implemented, if not otherwise mentioned, by Johannes Gerstmayr.</p>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="advancedUtilities.html">Module: advancedUtilities</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="advancedUtilities.html#function-plotlinecode">Function: PlotLineCode</a></li>
+<li class="toctree-l2"><a class="reference internal" href="advancedUtilities.html#function-findobjectindex">Function: FindObjectIndex</a></li>
+<li class="toctree-l2"><a class="reference internal" href="advancedUtilities.html#function-findnodeindex">Function: FindNodeIndex</a></li>
+<li class="toctree-l2"><a class="reference internal" href="advancedUtilities.html#function-islistorarray">Function: IsListOrArray</a></li>
+<li class="toctree-l2"><a class="reference internal" href="advancedUtilities.html#function-raisetypeerror">Function: RaiseTypeError</a></li>
+<li class="toctree-l2"><a class="reference internal" href="advancedUtilities.html#function-isnone">Function: IsNone</a></li>
+<li class="toctree-l2"><a class="reference internal" href="advancedUtilities.html#function-isnotnone">Function: IsNotNone</a></li>
+<li class="toctree-l2"><a class="reference internal" href="advancedUtilities.html#function-isvalidbool">Function: IsValidBool</a></li>
+<li class="toctree-l2"><a class="reference internal" href="advancedUtilities.html#function-isvalidrealint">Function: IsValidRealInt</a></li>
+<li class="toctree-l2"><a class="reference internal" href="advancedUtilities.html#function-isvalidint">Function: IsValidInt</a></li>
+<li class="toctree-l2"><a class="reference internal" href="advancedUtilities.html#function-isvalidprealint">Function: IsValidPRealInt</a></li>
+<li class="toctree-l2"><a class="reference internal" href="advancedUtilities.html#function-isvalidurealint">Function: IsValidURealInt</a></li>
+<li class="toctree-l2"><a class="reference internal" href="advancedUtilities.html#function-isreal">Function: IsReal</a></li>
+<li class="toctree-l2"><a class="reference internal" href="advancedUtilities.html#function-isinteger">Function: IsInteger</a></li>
+<li class="toctree-l2"><a class="reference internal" href="advancedUtilities.html#function-isvector">Function: IsVector</a></li>
+<li class="toctree-l2"><a class="reference internal" href="advancedUtilities.html#function-isintvector">Function: IsIntVector</a></li>
+<li class="toctree-l2"><a class="reference internal" href="advancedUtilities.html#function-issquarematrix">Function: IsSquareMatrix</a></li>
+<li class="toctree-l2"><a class="reference internal" href="advancedUtilities.html#function-isvalidobjectindex">Function: IsValidObjectIndex</a></li>
+<li class="toctree-l2"><a class="reference internal" href="advancedUtilities.html#function-isvalidnodeindex">Function: IsValidNodeIndex</a></li>
+<li class="toctree-l2"><a class="reference internal" href="advancedUtilities.html#function-isvalidmarkerindex">Function: IsValidMarkerIndex</a></li>
+<li class="toctree-l2"><a class="reference internal" href="advancedUtilities.html#function-isemptylist">Function: IsEmptyList</a></li>
+<li class="toctree-l2"><a class="reference internal" href="advancedUtilities.html#function-fillinsubmatrix">Function: FillInSubMatrix</a></li>
+<li class="toctree-l2"><a class="reference internal" href="advancedUtilities.html#function-sweepsin">Function: SweepSin</a></li>
+<li class="toctree-l2"><a class="reference internal" href="advancedUtilities.html#function-sweepcos">Function: SweepCos</a></li>
+<li class="toctree-l2"><a class="reference internal" href="advancedUtilities.html#function-frequencysweep">Function: FrequencySweep</a></li>
+<li class="toctree-l2"><a class="reference internal" href="advancedUtilities.html#function-smoothstep">Function: SmoothStep</a></li>
+<li class="toctree-l2"><a class="reference internal" href="advancedUtilities.html#function-smoothstepderivative">Function: SmoothStepDerivative</a></li>
+<li class="toctree-l2"><a class="reference internal" href="advancedUtilities.html#function-indexfromvalue">Function: IndexFromValue</a></li>
+<li class="toctree-l2"><a class="reference internal" href="advancedUtilities.html#function-roundmatrix">Function: RoundMatrix</a></li>
+<li class="toctree-l2"><a class="reference internal" href="advancedUtilities.html#function-convertscipysparsetodict">Function: ConvertScipySparseToDict</a></li>
+<li class="toctree-l2"><a class="reference internal" href="advancedUtilities.html#function-convertdicttoscipysparse">Function: ConvertDictToScipySparse</a></li>
+<li class="toctree-l2"><a class="reference internal" href="advancedUtilities.html#function-savedicttohdf5">Function: SaveDictToHDF5</a></li>
+<li class="toctree-l2"><a class="reference internal" href="advancedUtilities.html#function-loaddictfromhdf5">Function: LoadDictFromHDF5</a></li>
+<li class="toctree-l2"><a class="reference internal" href="advancedUtilities.html#function-convertfunctiontosymbolic">Function: ConvertFunctionToSymbolic</a></li>
+<li class="toctree-l2"><a class="reference internal" href="advancedUtilities.html#function-createsymbolicuserfunction">Function: CreateSymbolicUserFunction</a></li>
+<li class="toctree-l2"><a class="reference internal" href="advancedUtilities.html#function-createtcpipconnection">Function: CreateTCPIPconnection</a></li>
+<li class="toctree-l2"><a class="reference internal" href="advancedUtilities.html#function-tcpipsendreceive">Function: TCPIPsendReceive</a></li>
+<li class="toctree-l2"><a class="reference internal" href="advancedUtilities.html#function-closetcpipconnection">Function: CloseTCPIPconnection</a></li>
+<li class="toctree-l2"><a class="reference internal" href="advancedUtilities.html#function-loadpotentialenergy">Function: LoadPotentialEnergy</a></li>
+<li class="toctree-l2"><a class="reference internal" href="advancedUtilities.html#function-createloadenergysensor">Function: CreateLoadEnergySensor</a></li>
+<li class="toctree-l2"><a class="reference internal" href="advancedUtilities.html#function-itemode2coordinates">Function: ItemODE2Coordinates</a></li>
+<li class="toctree-l2"><a class="reference internal" href="advancedUtilities.html#function-numericaljacobian">Function: NumericalJacobian</a></li>
+<li class="toctree-l2"><a class="reference internal" href="advancedUtilities.html#class-expectedtype-enum-in-module-advancedutilities">CLASS ExpectedType(Enum) (in module advancedUtilities)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="advancedUtilities.html#class-tcpipdata-in-module-advancedutilities">CLASS TCPIPdata (in module advancedUtilities)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="advancedUtilities.html#class-systemenergy-in-module-advancedutilities">CLASS SystemEnergy (in module advancedUtilities)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="artificialIntelligence.html">Module: artificialIntelligence</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="artificialIntelligence.html#class-openaigyminterfaceenv-env-in-module-artificialintelligence">CLASS OpenAIGymInterfaceEnv(Env) (in module artificialIntelligence)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="basicUtilities.html">Module: basicUtilities</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="basicUtilities.html#function-clearworkspace">Function: ClearWorkspace</a></li>
+<li class="toctree-l2"><a class="reference internal" href="basicUtilities.html#function-smartround2string">Function: SmartRound2String</a></li>
+<li class="toctree-l2"><a class="reference internal" href="basicUtilities.html#function-normalize">Function: Normalize</a></li>
+<li class="toctree-l2"><a class="reference internal" href="basicUtilities.html#function-gaussintegrate">Function: GaussIntegrate</a></li>
+<li class="toctree-l2"><a class="reference internal" href="basicUtilities.html#function-lobattointegrate">Function: LobattoIntegrate</a></li>
+<li class="toctree-l2"><a class="reference internal" href="basicUtilities.html#function-getothermarker">Function: GetOtherMarker</a></li>
+<li class="toctree-l2"><a class="reference internal" href="basicUtilities.html#function-getjointargs">Function: GetJointArgs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="basicUtilities.html#function-showonlyobjects">Function: ShowOnlyObjects</a></li>
+<li class="toctree-l2"><a class="reference internal" href="basicUtilities.html#function-highlightitem">Function: HighlightItem</a></li>
+<li class="toctree-l2"><a class="reference internal" href="basicUtilities.html#function-ufsensorrecord">Function: UFsensorRecord</a></li>
+<li class="toctree-l2"><a class="reference internal" href="basicUtilities.html#function-addsensorrecorder">Function: AddSensorRecorder</a></li>
+<li class="toctree-l2"><a class="reference internal" href="basicUtilities.html#function-uiwindowsuppressed">Function: UIWindowSuppressed</a></li>
+<li class="toctree-l2"><a class="reference internal" href="basicUtilities.html#function-outputfilepath">Function: OutputFilePath</a></li>
+<li class="toctree-l2"><a class="reference internal" href="basicUtilities.html#function-createdirectoryforfile">Function: CreateDirectoryForFile</a></li>
+<li class="toctree-l2"><a class="reference internal" href="basicUtilities.html#function-loadsolutionfile">Function: LoadSolutionFile</a></li>
+<li class="toctree-l2"><a class="reference internal" href="basicUtilities.html#function-numpyint8arraytostring">Function: NumpyInt8ArrayToString</a></li>
+<li class="toctree-l2"><a class="reference internal" href="basicUtilities.html#function-binaryreadindex">Function: BinaryReadIndex</a></li>
+<li class="toctree-l2"><a class="reference internal" href="basicUtilities.html#function-binaryreadreal">Function: BinaryReadReal</a></li>
+<li class="toctree-l2"><a class="reference internal" href="basicUtilities.html#function-binaryreadstring">Function: BinaryReadString</a></li>
+<li class="toctree-l2"><a class="reference internal" href="basicUtilities.html#function-binaryreadarrayindex">Function: BinaryReadArrayIndex</a></li>
+<li class="toctree-l2"><a class="reference internal" href="basicUtilities.html#function-binaryreadrealvector">Function: BinaryReadRealVector</a></li>
+<li class="toctree-l2"><a class="reference internal" href="basicUtilities.html#function-loadbinarysolutionfile">Function: LoadBinarySolutionFile</a></li>
+<li class="toctree-l2"><a class="reference internal" href="basicUtilities.html#function-recoversolutionfile">Function: RecoverSolutionFile</a></li>
+<li class="toctree-l2"><a class="reference internal" href="basicUtilities.html#function-setsolutionstate">Function: SetSolutionState</a></li>
+<li class="toctree-l2"><a class="reference internal" href="basicUtilities.html#function-animatesolution">Function: AnimateSolution</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="beams.html">Module: beams</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="beams.html#function-generatestraightlineancfcable2d">Function: GenerateStraightLineANCFCable2D</a></li>
+<li class="toctree-l2"><a class="reference internal" href="beams.html#function-generatestraightlineancfcable">Function: GenerateStraightLineANCFCable</a></li>
+<li class="toctree-l2"><a class="reference internal" href="beams.html#function-generatebeamelementsalongline">Function: GenerateBeamElementsAlongLine</a></li>
+<li class="toctree-l2"><a class="reference internal" href="beams.html#function-generatestraightbeam">Function: GenerateStraightBeam</a></li>
+<li class="toctree-l2"><a class="reference internal" href="beams.html#function-generatecirculararcancfcable2d">Function: GenerateCircularArcANCFCable2D</a></li>
+<li class="toctree-l2"><a class="reference internal" href="beams.html#function-createreevingcurve">Function: CreateReevingCurve</a></li>
+<li class="toctree-l2"><a class="reference internal" href="beams.html#function-pointsandslopes2ancfcable2d">Function: PointsAndSlopes2ANCFCable2D</a></li>
+<li class="toctree-l2"><a class="reference internal" href="beams.html#function-generateslidingjoint">Function: GenerateSlidingJoint</a></li>
+<li class="toctree-l2"><a class="reference internal" href="beams.html#function-generatealeslidingjoint">Function: GenerateAleSlidingJoint</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="demos.html">Module: demos</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="demos.html#function-demosolutionfile">Function: DemoSolutionFile</a></li>
+<li class="toctree-l2"><a class="reference internal" href="demos.html#function-demo1">Function: Demo1</a></li>
+<li class="toctree-l2"><a class="reference internal" href="demos.html#function-demo2">Function: Demo2</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="FEM.html">Module: FEM</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="FEM.html#function-compressedrowsparsetodensematrix">Function: CompressedRowSparseToDenseMatrix</a></li>
+<li class="toctree-l2"><a class="reference internal" href="FEM.html#function-mapsparsematrixindices">Function: MapSparseMatrixIndices</a></li>
+<li class="toctree-l2"><a class="reference internal" href="FEM.html#function-vectordiadicunitmatrix3d">Function: VectorDiadicUnitMatrix3D</a></li>
+<li class="toctree-l2"><a class="reference internal" href="FEM.html#function-cycliccomparereversed">Function: CyclicCompareReversed</a></li>
+<li class="toctree-l2"><a class="reference internal" href="FEM.html#function-addentrytocompressedrowsparsearray">Function: AddEntryToCompressedRowSparseArray</a></li>
+<li class="toctree-l2"><a class="reference internal" href="FEM.html#function-csrtorowsandcolumns">Function: CSRtoRowsAndColumns</a></li>
+<li class="toctree-l2"><a class="reference internal" href="FEM.html#function-csrtoscipysparsecsr">Function: CSRtoScipySparseCSR</a></li>
+<li class="toctree-l2"><a class="reference internal" href="FEM.html#function-sparsetripletstoscipysparsecsr">Function: SparseTripletsToScipySparseCSR</a></li>
+<li class="toctree-l2"><a class="reference internal" href="FEM.html#function-scipysparsecsrtocsr">Function: ScipySparseCSRtoCSR</a></li>
+<li class="toctree-l2"><a class="reference internal" href="FEM.html#function-resortindicesofcsrmatrix">Function: ResortIndicesOfCSRmatrix</a></li>
+<li class="toctree-l2"><a class="reference internal" href="FEM.html#function-resortindicesofngvector">Function: ResortIndicesOfNGvector</a></li>
+<li class="toctree-l2"><a class="reference internal" href="FEM.html#function-resortindicesexudyn2ngvector">Function: ResortIndicesExudyn2NGvector</a></li>
+<li class="toctree-l2"><a class="reference internal" href="FEM.html#function-readnodesfromabaqusinp">Function: ReadNodesFromAbaqusInp</a></li>
+<li class="toctree-l2"><a class="reference internal" href="FEM.html#function-converthextotrigs">Function: ConvertHexToTrigs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="FEM.html#function-converttettotrigs">Function: ConvertTetToTrigs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="FEM.html#function-convertdensetocompressedrowmatrix">Function: ConvertDenseToCompressedRowMatrix</a></li>
+<li class="toctree-l2"><a class="reference internal" href="FEM.html#function-readmatrixfromansysmmf">Function: ReadMatrixFromAnsysMMF</a></li>
+<li class="toctree-l2"><a class="reference internal" href="FEM.html#function-readmatrixdofmappingvectorfromansystxt">Function: ReadMatrixDOFmappingVectorFromAnsysTxt</a></li>
+<li class="toctree-l2"><a class="reference internal" href="FEM.html#function-readnodalcoordinatesfromansystxt">Function: ReadNodalCoordinatesFromAnsysTxt</a></li>
+<li class="toctree-l2"><a class="reference internal" href="FEM.html#function-readelementsfromansystxt">Function: ReadElementsFromAnsysTxt</a></li>
+<li class="toctree-l2"><a class="reference internal" href="FEM.html#function-cmsobjectcomputenorm">Function: CMSObjectComputeNorm</a></li>
+<li class="toctree-l2"><a class="reference internal" href="FEM.html#function-postprocessingmodestostorage">Function: PostProcessingModesToStorage</a></li>
+<li class="toctree-l2"><a class="reference internal" href="FEM.html#function-postprocessingmodesfromstorage">Function: PostProcessingModesFromStorage</a></li>
+<li class="toctree-l2"><a class="reference internal" href="FEM.html#class-materialbaseclass-in-module-fem">CLASS MaterialBaseClass (in module FEM)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="FEM.html#class-kirchhoffmaterial-materialbaseclass-in-module-fem">CLASS KirchhoffMaterial(MaterialBaseClass) (in module FEM)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="FEM.html#class-finiteelement-in-module-fem">CLASS FiniteElement (in module FEM)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="FEM.html#class-tet4-finiteelement-in-module-fem">CLASS Tet4(FiniteElement) (in module FEM)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="FEM.html#class-objectffrfinterface-in-module-fem">CLASS ObjectFFRFinterface (in module FEM)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="FEM.html#class-objectffrfreducedorderinterface-in-module-fem">CLASS ObjectFFRFreducedOrderInterface (in module FEM)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="FEM.html#class-hcbstaticmodeselection-enum-in-module-fem">CLASS HCBstaticModeSelection(Enum) (in module FEM)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="FEM.html#class-feminterface-in-module-fem">CLASS FEMinterface (in module FEM)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="graphics.html">Module: graphics</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="graphics.html#function-sphere">Function: Sphere</a></li>
+<li class="toctree-l2"><a class="reference internal" href="graphics.html#function-spheres">Function: Spheres</a></li>
+<li class="toctree-l2"><a class="reference internal" href="graphics.html#function-triangles6totriangles">Function: Triangles6ToTriangles</a></li>
+<li class="toctree-l2"><a class="reference internal" href="graphics.html#function-spherestotrianglelist">Function: SpheresToTriangleList</a></li>
+<li class="toctree-l2"><a class="reference internal" href="graphics.html#function-spheretriangles6">Function: _SphereTriangles6</a></li>
+<li class="toctree-l2"><a class="reference internal" href="graphics.html#function-spherehollowtriangles6">Function: _SphereHollowTriangles6</a></li>
+<li class="toctree-l2"><a class="reference internal" href="graphics.html#function-spheretrianglelist">Function: _SphereTriangleList</a></li>
+<li class="toctree-l2"><a class="reference internal" href="graphics.html#function-lines">Function: Lines</a></li>
+<li class="toctree-l2"><a class="reference internal" href="graphics.html#function-circle">Function: Circle</a></li>
+<li class="toctree-l2"><a class="reference internal" href="graphics.html#function-text">Function: Text</a></li>
+<li class="toctree-l2"><a class="reference internal" href="graphics.html#function-cuboid">Function: Cuboid</a></li>
+<li class="toctree-l2"><a class="reference internal" href="graphics.html#function-brickxyz">Function: BrickXYZ</a></li>
+<li class="toctree-l2"><a class="reference internal" href="graphics.html#function-brick">Function: Brick</a></li>
+<li class="toctree-l2"><a class="reference internal" href="graphics.html#function-quadraticpatch">Function: _QuadraticPatch</a></li>
+<li class="toctree-l2"><a class="reference internal" href="graphics.html#function-orienttriangle6">Function: _OrientTriangle6</a></li>
+<li class="toctree-l2"><a class="reference internal" href="graphics.html#function-orienttriangle">Function: _OrientTriangle</a></li>
+<li class="toctree-l2"><a class="reference internal" href="graphics.html#function-numberofquadraticelements">Function: _NumberOfQuadraticElements</a></li>
+<li class="toctree-l2"><a class="reference internal" href="graphics.html#function-cylinder">Function: Cylinder</a></li>
+<li class="toctree-l2"><a class="reference internal" href="graphics.html#function-tube">Function: Tube</a></li>
+<li class="toctree-l2"><a class="reference internal" href="graphics.html#function-torus">Function: Torus</a></li>
+<li class="toctree-l2"><a class="reference internal" href="graphics.html#function-rigidlink">Function: RigidLink</a></li>
+<li class="toctree-l2"><a class="reference internal" href="graphics.html#function-solidofrevolution">Function: SolidOfRevolution</a></li>
+<li class="toctree-l2"><a class="reference internal" href="graphics.html#function-arrow">Function: Arrow</a></li>
+<li class="toctree-l2"><a class="reference internal" href="graphics.html#function-basis">Function: Basis</a></li>
+<li class="toctree-l2"><a class="reference internal" href="graphics.html#function-frame">Function: Frame</a></li>
+<li class="toctree-l2"><a class="reference internal" href="graphics.html#function-quad">Function: Quad</a></li>
+<li class="toctree-l2"><a class="reference internal" href="graphics.html#function-checkerboard">Function: CheckerBoard</a></li>
+<li class="toctree-l2"><a class="reference internal" href="graphics.html#function-solidextrusion">Function: SolidExtrusion</a></li>
+<li class="toctree-l2"><a class="reference internal" href="graphics.html#function-linkedcylinders">Function: LinkedCylinders</a></li>
+<li class="toctree-l2"><a class="reference internal" href="graphics.html#function-linkedcylindersflat">Function: _LinkedCylindersFlat</a></li>
+<li class="toctree-l2"><a class="reference internal" href="graphics.html#function-ballbearingrings">Function: BallBearingRings</a></li>
+<li class="toctree-l2"><a class="reference internal" href="graphics.html#function-involutegear">Function: InvoluteGear</a></li>
+<li class="toctree-l2"><a class="reference internal" href="graphics.html#function-toothedrack">Function: ToothedRack</a></li>
+<li class="toctree-l2"><a class="reference internal" href="graphics.html#function-boundingboxsingle">Function: BoundingBoxSingle</a></li>
+<li class="toctree-l2"><a class="reference internal" href="graphics.html#function-boundingbox">Function: BoundingBox</a></li>
+<li class="toctree-l2"><a class="reference internal" href="graphics.html#function-frompointsandtrigs">Function: FromPointsAndTrigs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="graphics.html#function-topointsandtrigs">Function: ToPointsAndTrigs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="graphics.html#function-transform">Function: Transform</a></li>
+<li class="toctree-l2"><a class="reference internal" href="graphics.html#function-move">Function: Move</a></li>
+<li class="toctree-l2"><a class="reference internal" href="graphics.html#function-mergetrianglelists">Function: MergeTriangleLists</a></li>
+<li class="toctree-l2"><a class="reference internal" href="graphics.html#function-inverttriangles">Function: InvertTriangles</a></li>
+<li class="toctree-l2"><a class="reference internal" href="graphics.html#function-inconsistenttriangles">Function: InconsistentTriangles</a></li>
+<li class="toctree-l2"><a class="reference internal" href="graphics.html#function-ngsolvemesh2pointsandtrigs">Function: NGsolveMesh2PointsAndTrigs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="graphics.html#function-fromstlfileascii">Function: FromSTLfileASCII</a></li>
+<li class="toctree-l2"><a class="reference internal" href="graphics.html#function-frompymeshlabfile">Function: FromPyMeshlabFile</a></li>
+<li class="toctree-l2"><a class="reference internal" href="graphics.html#function-fromstlfile">Function: FromSTLfile</a></li>
+<li class="toctree-l2"><a class="reference internal" href="graphics.html#function-addedgesandsmoothennormals">Function: AddEdgesAndSmoothenNormals</a></li>
+<li class="toctree-l2"><a class="reference internal" href="graphics.html#function-exportstl">Function: ExportSTL</a></li>
+<li class="toctree-l2"><a class="reference internal" href="graphics.html#class-color-in-module-graphics">CLASS color (in module graphics)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="graphics.html#class-material-in-module-graphics">CLASS material (in module graphics)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="graphicsDataUtilities.html">Module: graphicsDataUtilities</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="graphicsDataUtilities.html#function-switchtripletorder">Function: SwitchTripletOrder</a></li>
+<li class="toctree-l2"><a class="reference internal" href="graphicsDataUtilities.html#function-computetrianglenormal">Function: ComputeTriangleNormal</a></li>
+<li class="toctree-l2"><a class="reference internal" href="graphicsDataUtilities.html#function-computetrianglearea">Function: ComputeTriangleArea</a></li>
+<li class="toctree-l2"><a class="reference internal" href="graphicsDataUtilities.html#function-compute6nodetrigsnormals">Function: Compute6NodeTrigsNormals</a></li>
+<li class="toctree-l2"><a class="reference internal" href="graphicsDataUtilities.html#function-refinemesh">Function: RefineMesh</a></li>
+<li class="toctree-l2"><a class="reference internal" href="graphicsDataUtilities.html#function-shrinkmeshnormaltosurface">Function: ShrinkMeshNormalToSurface</a></li>
+<li class="toctree-l2"><a class="reference internal" href="graphicsDataUtilities.html#function-computetriangularmesh">Function: ComputeTriangularMesh</a></li>
+<li class="toctree-l2"><a class="reference internal" href="graphicsDataUtilities.html#function-segmentsfrompoints">Function: SegmentsFromPoints</a></li>
+<li class="toctree-l2"><a class="reference internal" href="graphicsDataUtilities.html#function-circlepointsandsegments">Function: CirclePointsAndSegments</a></li>
+<li class="toctree-l2"><a class="reference internal" href="graphicsDataUtilities.html#function-graphicsdatarectangle">Function: GraphicsDataRectangle</a></li>
+<li class="toctree-l2"><a class="reference internal" href="graphicsDataUtilities.html#function-graphicsdataorthocubelines">Function: GraphicsDataOrthoCubeLines</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="misc.GUI.html">Module: misc.GUI</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="misc.GUI.html#function-complainonce">Function: _ComplainOnce</a></li>
+<li class="toctree-l2"><a class="reference internal" href="misc.GUI.html#function-getrenderersystemcontainer">Function: GetRendererSystemContainer</a></li>
+<li class="toctree-l2"><a class="reference internal" href="misc.GUI.html#function-makeprocessdpiaware">Function: MakeProcessDpiAware</a></li>
+<li class="toctree-l2"><a class="reference internal" href="misc.GUI.html#function-tkfontsystemhint">Function: TkFontSystemHint</a></li>
+<li class="toctree-l2"><a class="reference internal" href="misc.GUI.html#function-checktkfontsystem">Function: CheckTkFontSystem</a></li>
+<li class="toctree-l2"><a class="reference internal" href="misc.GUI.html#function-scaledfontsize">Function: ScaledFontSize</a></li>
+<li class="toctree-l2"><a class="reference internal" href="misc.GUI.html#function-applydialogfontscaling">Function: ApplyDialogFontScaling</a></li>
+<li class="toctree-l2"><a class="reference internal" href="misc.GUI.html#function-gettkrootandnewwindow">Function: GetTkRootAndNewWindow</a></li>
+<li class="toctree-l2"><a class="reference internal" href="misc.GUI.html#function-tkrootexists">Function: TkRootExists</a></li>
+<li class="toctree-l2"><a class="reference internal" href="misc.GUI.html#function-columnwidthfractions">Function: ColumnWidthFractions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="misc.GUI.html#function-dialogfontsize">Function: DialogFontSize</a></li>
+<li class="toctree-l2"><a class="reference internal" href="misc.GUI.html#function-dialogrowmetrics">Function: DialogRowMetrics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="misc.GUI.html#function-getexudyndisplayscaling">Function: GetExudynDisplayScaling</a></li>
+<li class="toctree-l2"><a class="reference internal" href="misc.GUI.html#function-dialogscaling">Function: DialogScaling</a></li>
+<li class="toctree-l2"><a class="reference internal" href="misc.GUI.html#function-splitstoredfromchanged">Function: SplitStoredFromChanged</a></li>
+<li class="toctree-l2"><a class="reference internal" href="misc.GUI.html#function-renderstatecodelines">Function: RenderStateCodeLines</a></li>
+<li class="toctree-l2"><a class="reference internal" href="misc.GUI.html#function-editdictionarywithtypeinfo">Function: EditDictionaryWithTypeInfo</a></li>
+<li class="toctree-l2"><a class="reference internal" href="misc.GUI.html#function-storedialogpositions">Function: StoreDialogPositions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="misc.GUI.html#function-restorewindowgeometry">Function: RestoreWindowGeometry</a></li>
+<li class="toctree-l2"><a class="reference internal" href="misc.GUI.html#function-rememberwindowgeometry">Function: RememberWindowGeometry</a></li>
+<li class="toctree-l2"><a class="reference internal" href="misc.GUI.html#function-storegeometrystring">Function: StoreGeometryString</a></li>
+<li class="toctree-l2"><a class="reference internal" href="misc.GUI.html#function-storewindowgeometry">Function: StoreWindowGeometry</a></li>
+<li class="toctree-l2"><a class="reference internal" href="misc.GUI.html#function-applydialogwindowsettings">Function: ApplyDialogWindowSettings</a></li>
+<li class="toctree-l2"><a class="reference internal" href="misc.GUI.html#function-showhelpdialog">Function: ShowHelpDialog</a></li>
+<li class="toctree-l2"><a class="reference internal" href="misc.GUI.html#function-modelscope">Function: ModelScope</a></li>
+<li class="toctree-l2"><a class="reference internal" href="misc.GUI.html#function-showpythoncommanddialog">Function: ShowPythonCommandDialog</a></li>
+<li class="toctree-l2"><a class="reference internal" href="misc.GUI.html#function-showvisualizationsettingsdialog">Function: ShowVisualizationSettingsDialog</a></li>
+<li class="toctree-l2"><a class="reference internal" href="misc.GUI.html#function-showrightmouseselectiondialog">Function: ShowRightMouseSelectionDialog</a></li>
+<li class="toctree-l2"><a class="reference internal" href="misc.GUI.html#function-askquitdialog">Function: AskQuitDialog</a></li>
+<li class="toctree-l2"><a class="reference internal" href="misc.GUI.html#class-tooltip-in-module-misc-gui">CLASS Tooltip (in module misc.GUI)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="misc.settingsUtilities.html">Module: misc.settingsUtilities</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="misc.settingsUtilities.html#function-getcomboboxlistsdict">Function: GetComboBoxListsDict</a></li>
+<li class="toctree-l2"><a class="reference internal" href="misc.settingsUtilities.html#function-settingsleaflist">Function: SettingsLeafList</a></li>
+<li class="toctree-l2"><a class="reference internal" href="misc.settingsUtilities.html#function-enumdisplayname">Function: EnumDisplayName</a></li>
+<li class="toctree-l2"><a class="reference internal" href="misc.settingsUtilities.html#function-enumfullname">Function: EnumFullName</a></li>
+<li class="toctree-l2"><a class="reference internal" href="misc.settingsUtilities.html#function-valueliteral">Function: ValueLiteral</a></li>
+<li class="toctree-l2"><a class="reference internal" href="misc.settingsUtilities.html#function-settingscodelines">Function: SettingsCodeLines</a></li>
+<li class="toctree-l2"><a class="reference internal" href="misc.settingsUtilities.html#function-compiledsettingsclass">Function: CompiledSettingsClass</a></li>
+<li class="toctree-l2"><a class="reference internal" href="misc.settingsUtilities.html#function-defaultsettingsdictionary">Function: DefaultSettingsDictionary</a></li>
+<li class="toctree-l2"><a class="reference internal" href="misc.settingsUtilities.html#function-settingsvaluestrings">Function: SettingsValueStrings</a></li>
+<li class="toctree-l2"><a class="reference internal" href="misc.settingsUtilities.html#function-findmatches">Function: FindMatches</a></li>
+<li class="toctree-l2"><a class="reference internal" href="misc.settingsUtilities.html#function-settingsprefix">Function: SettingsPrefix</a></li>
+<li class="toctree-l2"><a class="reference internal" href="misc.settingsUtilities.html#function-changedsettings">Function: ChangedSettings</a></li>
+<li class="toctree-l2"><a class="reference internal" href="misc.settingsUtilities.html#function-changedsettingscode">Function: ChangedSettingsCode</a></li>
+<li class="toctree-l2"><a class="reference internal" href="misc.settingsUtilities.html#function-printchangedsettings">Function: PrintChangedSettings</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="interactive.html">Module: interactive</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="interactive.html#function-configuredialogcolumns">Function: ConfigureDialogColumns</a></li>
+<li class="toctree-l2"><a class="reference internal" href="interactive.html#function-animatemodes">Function: AnimateModes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="interactive.html#function-solutionviewer">Function: SolutionViewer</a></li>
+<li class="toctree-l2"><a class="reference internal" href="interactive.html#function-showimage">Function: ShowImage</a></li>
+<li class="toctree-l2"><a class="reference internal" href="interactive.html#function-convertimages2video">Function: ConvertImages2Video</a></li>
+<li class="toctree-l2"><a class="reference internal" href="interactive.html#function-interactiveimages2video">Function: InteractiveImages2Video</a></li>
+<li class="toctree-l2"><a class="reference internal" href="interactive.html#class-interactivedialog-in-module-interactive">CLASS InteractiveDialog (in module interactive)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="kinematicTree.html">Module: kinematicTree</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="kinematicTree.html#function-masscominertia2t66">Function: MassCOMinertia2T66</a></li>
+<li class="toctree-l2"><a class="reference internal" href="kinematicTree.html#function-inertia2t66">Function: Inertia2T66</a></li>
+<li class="toctree-l2"><a class="reference internal" href="kinematicTree.html#function-inertia66tomasscominertia">Function: Inertia66toMassCOMinertia</a></li>
+<li class="toctree-l2"><a class="reference internal" href="kinematicTree.html#function-jointtransformmotionsubspace66">Function: JointTransformMotionSubspace66</a></li>
+<li class="toctree-l2"><a class="reference internal" href="kinematicTree.html#function-jointtransformmotionsubspace">Function: JointTransformMotionSubspace</a></li>
+<li class="toctree-l2"><a class="reference internal" href="kinematicTree.html#function-crm">Function: CRM</a></li>
+<li class="toctree-l2"><a class="reference internal" href="kinematicTree.html#function-crf">Function: CRF</a></li>
+<li class="toctree-l2"><a class="reference internal" href="kinematicTree.html#class-kinematictree33-in-module-kinematictree">CLASS KinematicTree33 (in module kinematicTree)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="kinematicTree.html#class-kinematictree66-in-module-kinematictree">CLASS KinematicTree66 (in module kinematicTree)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="lieGroupBasics.html">Module: lieGroupBasics</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="lieGroupBasics.html#function-sinc">Function: Sinc</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lieGroupBasics.html#function-cot">Function: Cot</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lieGroupBasics.html#function-r3xso3matrix2rotationmatrix">Function: R3xSO3Matrix2RotationMatrix</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lieGroupBasics.html#function-r3xso3matrix2translation">Function: R3xSO3Matrix2Translation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lieGroupBasics.html#function-r3xso3matrix">Function: R3xSO3Matrix</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lieGroupBasics.html#function-expso3">Function: ExpSO3</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lieGroupBasics.html#function-exps3">Function: ExpS3</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lieGroupBasics.html#function-logso3">Function: LogSO3</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lieGroupBasics.html#function-texpso3">Function: TExpSO3</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lieGroupBasics.html#function-texpso3inv">Function: TExpSO3Inv</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lieGroupBasics.html#function-expse3">Function: ExpSE3</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lieGroupBasics.html#function-logse3">Function: LogSE3</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lieGroupBasics.html#function-texpse3">Function: TExpSE3</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lieGroupBasics.html#function-texpse3inv">Function: TExpSE3Inv</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lieGroupBasics.html#function-expr3xso3">Function: ExpR3xSO3</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lieGroupBasics.html#function-texpr3xso3">Function: TExpR3xSO3</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lieGroupBasics.html#function-texpr3xso3inv">Function: TExpR3xSO3Inv</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lieGroupBasics.html#function-compositionruledirectproductr3ands3">Function: CompositionRuleDirectProductR3AndS3</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lieGroupBasics.html#function-compositionrulesemidirectproductr3ands3">Function: CompositionRuleSemiDirectProductR3AndS3</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lieGroupBasics.html#function-compositionruledirectproductr3andr3rotvec">Function: CompositionRuleDirectProductR3AndR3RotVec</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lieGroupBasics.html#function-compositionrulesemidirectproductr3andr3rotvec">Function: CompositionRuleSemiDirectProductR3AndR3RotVec</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lieGroupBasics.html#function-compositionruledirectproductr3andr3rotxyzangles">Function: CompositionRuleDirectProductR3AndR3RotXYZAngles</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lieGroupBasics.html#function-compositionrulesemidirectproductr3andr3rotxyzangles">Function: CompositionRuleSemiDirectProductR3AndR3RotXYZAngles</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lieGroupBasics.html#function-compositionruleforeulerparameters">Function: CompositionRuleForEulerParameters</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lieGroupBasics.html#function-compositionruleforrotationvectors">Function: CompositionRuleForRotationVectors</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lieGroupBasics.html#function-compositionrulerotxyzanglesrotationvector">Function: CompositionRuleRotXYZAnglesRotationVector</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="misc.mainSystemExtensions.html">Module: misc.mainSystemExtensions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="particles.html">Module: particles</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="particles.html#function-createparticlesinbox">Function: CreateParticlesInBox</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="physics.html">Module: physics</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="physics.html#function-stribeckfunction">Function: StribeckFunction</a></li>
+<li class="toctree-l2"><a class="reference internal" href="physics.html#function-regularizedfrictionstep">Function: RegularizedFrictionStep</a></li>
+<li class="toctree-l2"><a class="reference internal" href="physics.html#function-regularizedfriction">Function: RegularizedFriction</a></li>
+<li class="toctree-l2"><a class="reference internal" href="physics.html#function-vonmisesstress">Function: VonMisesStress</a></li>
+<li class="toctree-l2"><a class="reference internal" href="physics.html#function-ufvonmisesstress">Function: UFvonMisesStress</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="plot.html">Module: plot</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="plot.html#function-plotwindowname">Function: __PlotWindowName</a></li>
+<li class="toctree-l2"><a class="reference internal" href="plot.html#function-plotwindowof">Function: __PlotWindowOf</a></li>
+<li class="toctree-l2"><a class="reference internal" href="plot.html#function-windowgeometry">Function: __WindowGeometry</a></li>
+<li class="toctree-l2"><a class="reference internal" href="plot.html#function-storeplotwindow">Function: __StorePlotWindow</a></li>
+<li class="toctree-l2"><a class="reference internal" href="plot.html#function-storeplotwindowgeometry">Function: StorePlotWindowGeometry</a></li>
+<li class="toctree-l2"><a class="reference internal" href="plot.html#function-plotwindowgeometries">Function: PlotWindowGeometries</a></li>
+<li class="toctree-l2"><a class="reference internal" href="plot.html#function-placeplotwindow">Function: __PlacePlotWindow</a></li>
+<li class="toctree-l2"><a class="reference internal" href="plot.html#function-parseoutputfileheader">Function: ParseOutputFileHeader</a></li>
+<li class="toctree-l2"><a class="reference internal" href="plot.html#function-plotsensordefaults">Function: PlotSensorDefaults</a></li>
+<li class="toctree-l2"><a class="reference internal" href="plot.html#function-plotsensor">Function: PlotSensor</a></li>
+<li class="toctree-l2"><a class="reference internal" href="plot.html#function-plotfft">Function: PlotFFT</a></li>
+<li class="toctree-l2"><a class="reference internal" href="plot.html#function-filestripspaces">Function: FileStripSpaces</a></li>
+<li class="toctree-l2"><a class="reference internal" href="plot.html#function-dataarrayfromsensorlist">Function: DataArrayFromSensorList</a></li>
+<li class="toctree-l2"><a class="reference internal" href="plot.html#function-imagedatafromgraphicsdata">Function: __ImageDataFromGraphicsData</a></li>
+<li class="toctree-l2"><a class="reference internal" href="plot.html#function-plotimage">Function: PlotImage</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="processing.html">Module: processing</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="processing.html#function-getversionplatformstring">Function: GetVersionPlatformString</a></li>
+<li class="toctree-l2"><a class="reference internal" href="processing.html#function-processparameterlist">Function: ProcessParameterList</a></li>
+<li class="toctree-l2"><a class="reference internal" href="processing.html#function-parametervariation">Function: ParameterVariation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="processing.html#function-geneticoptimization">Function: GeneticOptimization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="processing.html#function-minimize">Function: Minimize</a></li>
+<li class="toctree-l2"><a class="reference internal" href="processing.html#function-computesensitivities">Function: ComputeSensitivities</a></li>
+<li class="toctree-l2"><a class="reference internal" href="processing.html#function-plotoptimizationresults2d">Function: PlotOptimizationResults2D</a></li>
+<li class="toctree-l2"><a class="reference internal" href="processing.html#function-plotsensitivityresults">Function: PlotSensitivityResults</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="rigidBodyUtilities.html">Module: rigidBodyUtilities</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="rigidBodyUtilities.html#function-computeorthonormalbasisvectors">Function: ComputeOrthonormalBasisVectors</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rigidBodyUtilities.html#function-computeorthonormalbasis">Function: ComputeOrthonormalBasis</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rigidBodyUtilities.html#function-gramschmidt">Function: GramSchmidt</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rigidBodyUtilities.html#function-skew">Function: Skew</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rigidBodyUtilities.html#function-skew2vec">Function: Skew2Vec</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rigidBodyUtilities.html#function-computeskewmatrix">Function: ComputeSkewMatrix</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rigidBodyUtilities.html#function-eulerparameters2g">Function: EulerParameters2G</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rigidBodyUtilities.html#function-eulerparameters2glocal">Function: EulerParameters2GLocal</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rigidBodyUtilities.html#function-eulerparameters2rotationmatrix">Function: EulerParameters2RotationMatrix</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rigidBodyUtilities.html#function-rotationmatrix2eulerparameters">Function: RotationMatrix2EulerParameters</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rigidBodyUtilities.html#function-angularvelocity2eulerparameters-t">Function: AngularVelocity2EulerParameters_t</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rigidBodyUtilities.html#function-rotationvector2rotationmatrix">Function: RotationVector2RotationMatrix</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rigidBodyUtilities.html#function-rotationmatrix2rotationvector">Function: RotationMatrix2RotationVector</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rigidBodyUtilities.html#function-computerotationaxisfromrotationvector">Function: ComputeRotationAxisFromRotationVector</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rigidBodyUtilities.html#function-rotationvector2g">Function: RotationVector2G</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rigidBodyUtilities.html#function-rotationvector2glocal">Function: RotationVector2GLocal</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rigidBodyUtilities.html#function-rotxyz2rotationmatrix">Function: RotXYZ2RotationMatrix</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rigidBodyUtilities.html#function-rotationmatrix2rotxyz">Function: RotationMatrix2RotXYZ</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rigidBodyUtilities.html#function-rotxyz2g">Function: RotXYZ2G</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rigidBodyUtilities.html#function-rotxyz2g-t">Function: RotXYZ2G_t</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rigidBodyUtilities.html#function-rotxyz2glocal">Function: RotXYZ2GLocal</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rigidBodyUtilities.html#function-rotxyz2glocal-t">Function: RotXYZ2GLocal_t</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rigidBodyUtilities.html#function-angularvelocity2rotxyz-t">Function: AngularVelocity2RotXYZ_t</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rigidBodyUtilities.html#function-rotxyz2eulerparameters">Function: RotXYZ2EulerParameters</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rigidBodyUtilities.html#function-rotationmatrix2rotzyz">Function: RotationMatrix2RotZYZ</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rigidBodyUtilities.html#function-rotationmatrixx">Function: RotationMatrixX</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rigidBodyUtilities.html#function-rotationmatrixy">Function: RotationMatrixY</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rigidBodyUtilities.html#function-rotationmatrixz">Function: RotationMatrixZ</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rigidBodyUtilities.html#function-rotationmatrix2d">Function: RotationMatrix2D</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rigidBodyUtilities.html#function-homogeneoustransformation">Function: HomogeneousTransformation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rigidBodyUtilities.html#function-httranslate">Function: HTtranslate</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rigidBodyUtilities.html#function-httranslatex">Function: HTtranslateX</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rigidBodyUtilities.html#function-httranslatey">Function: HTtranslateY</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rigidBodyUtilities.html#function-httranslatez">Function: HTtranslateZ</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rigidBodyUtilities.html#function-ht0">Function: HT0</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rigidBodyUtilities.html#function-htrotatex">Function: HTrotateX</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rigidBodyUtilities.html#function-htrotatey">Function: HTrotateY</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rigidBodyUtilities.html#function-htrotatez">Function: HTrotateZ</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rigidBodyUtilities.html#function-ht2translation">Function: HT2translation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rigidBodyUtilities.html#function-ht2rotationmatrix">Function: HT2rotationMatrix</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rigidBodyUtilities.html#function-inverseht">Function: InverseHT</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rigidBodyUtilities.html#function-rotationx2t66">Function: RotationX2T66</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rigidBodyUtilities.html#function-rotationy2t66">Function: RotationY2T66</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rigidBodyUtilities.html#function-rotationz2t66">Function: RotationZ2T66</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rigidBodyUtilities.html#function-translation2t66">Function: Translation2T66</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rigidBodyUtilities.html#function-translationx2t66">Function: TranslationX2T66</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rigidBodyUtilities.html#function-translationy2t66">Function: TranslationY2T66</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rigidBodyUtilities.html#function-translationz2t66">Function: TranslationZ2T66</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rigidBodyUtilities.html#function-t66torotationtranslation">Function: T66toRotationTranslation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rigidBodyUtilities.html#function-inverset66torotationtranslation">Function: InverseT66toRotationTranslation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rigidBodyUtilities.html#function-rotationtranslation2t66">Function: RotationTranslation2T66</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rigidBodyUtilities.html#function-rotationtranslation2t66inverse">Function: RotationTranslation2T66Inverse</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rigidBodyUtilities.html#function-t66inverse">Function: T66Inverse</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rigidBodyUtilities.html#function-t66toht">Function: T66toHT</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rigidBodyUtilities.html#function-ht2t66inverse">Function: HT2T66Inverse</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rigidBodyUtilities.html#function-inertiatensor2inertia6d">Function: InertiaTensor2Inertia6D</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rigidBodyUtilities.html#function-inertia6d2inertiatensor">Function: Inertia6D2InertiaTensor</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rigidBodyUtilities.html#function-strnodetype2nodetype">Function: StrNodeType2NodeType</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rigidBodyUtilities.html#function-getrigidbodynode">Function: GetRigidBodyNode</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rigidBodyUtilities.html#function-addrigidbody">Function: AddRigidBody</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rigidBodyUtilities.html#function-addrevolutejoint">Function: AddRevoluteJoint</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rigidBodyUtilities.html#function-addprismaticjoint">Function: AddPrismaticJoint</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rigidBodyUtilities.html#class-treelink-in-module-rigidbodyutilities">CLASS TreeLink (in module rigidBodyUtilities)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rigidBodyUtilities.html#class-rigidbodyinertia-in-module-rigidbodyutilities">CLASS RigidBodyInertia (in module rigidBodyUtilities)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rigidBodyUtilities.html#class-inertiacuboid-rigidbodyinertia-in-module-rigidbodyutilities">CLASS InertiaCuboid(RigidBodyInertia) (in module rigidBodyUtilities)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rigidBodyUtilities.html#class-inertiarodx-rigidbodyinertia-in-module-rigidbodyutilities">CLASS InertiaRodX(RigidBodyInertia) (in module rigidBodyUtilities)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rigidBodyUtilities.html#class-inertiamasspoint-rigidbodyinertia-in-module-rigidbodyutilities">CLASS InertiaMassPoint(RigidBodyInertia) (in module rigidBodyUtilities)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rigidBodyUtilities.html#class-inertiasphere-rigidbodyinertia-in-module-rigidbodyutilities">CLASS InertiaSphere(RigidBodyInertia) (in module rigidBodyUtilities)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rigidBodyUtilities.html#class-inertiahollowsphere-rigidbodyinertia-in-module-rigidbodyutilities">CLASS InertiaHollowSphere(RigidBodyInertia) (in module rigidBodyUtilities)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rigidBodyUtilities.html#class-inertiacylinder-rigidbodyinertia-in-module-rigidbodyutilities">CLASS InertiaCylinder(RigidBodyInertia) (in module rigidBodyUtilities)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="robotics.html">Module: robotics</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="robotics.html#function-toht">Function: _ToHT</a></li>
+<li class="toctree-l2"><a class="reference internal" href="robotics.html#function-stddh2ht">Function: StdDH2HT</a></li>
+<li class="toctree-l2"><a class="reference internal" href="robotics.html#function-moddhkk2ht">Function: ModDHKK2HT</a></li>
+<li class="toctree-l2"><a class="reference internal" href="robotics.html#function-projectangletopmpi">Function: projectAngleToPMPi</a></li>
+<li class="toctree-l2"><a class="reference internal" href="robotics.html#class-vrobotlink-in-module-robotics">CLASS VRobotLink (in module robotics)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="robotics.html#class-robotlink-in-module-robotics">CLASS RobotLink (in module robotics)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="robotics.html#class-vrobottool-in-module-robotics">CLASS VRobotTool (in module robotics)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="robotics.html#class-robottool-in-module-robotics">CLASS RobotTool (in module robotics)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="robotics.html#class-vrobotbase-in-module-robotics">CLASS VRobotBase (in module robotics)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="robotics.html#class-robotbase-in-module-robotics">CLASS RobotBase (in module robotics)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="robotics.html#class-robot-in-module-robotics">CLASS Robot (in module robotics)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="robotics.html#class-inversekinematicsnumerical-in-module-robotics">CLASS InverseKinematicsNumerical() (in module robotics)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="robotics.rosInterface.html">Module: robotics.rosInterface</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="robotics.rosInterface.html#class-rosinterface-in-module-robotics-rosinterface">CLASS ROSInterface (in module robotics.rosInterface)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="robotics.future.html">Module: robotics.future</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="robotics.future.html#function-makecorkerobot">Function: MakeCorkeRobot</a></li>
+<li class="toctree-l2"><a class="reference internal" href="robotics.future.html#function-computeik3r">Function: ComputeIK3R</a></li>
+<li class="toctree-l2"><a class="reference internal" href="robotics.future.html#function-computeikpuma560">Function: ComputeIKPuma560</a></li>
+<li class="toctree-l2"><a class="reference internal" href="robotics.future.html#function-computeikur">Function: ComputeIKUR</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="robotics.models.html">Module: robotics.models</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="robotics.models.html#function-manipulator4rsimple">Function: Manipulator4Rsimple</a></li>
+<li class="toctree-l2"><a class="reference internal" href="robotics.models.html#function-manipulator3rsimple">Function: Manipulator3RSimple</a></li>
+<li class="toctree-l2"><a class="reference internal" href="robotics.models.html#function-manipulatorpanda">Function: ManipulatorPANDA</a></li>
+<li class="toctree-l2"><a class="reference internal" href="robotics.models.html#function-manipulatorur5">Function: ManipulatorUR5</a></li>
+<li class="toctree-l2"><a class="reference internal" href="robotics.models.html#function-manipulatorpuma560">Function: ManipulatorPuma560</a></li>
+<li class="toctree-l2"><a class="reference internal" href="robotics.models.html#function-linkdict2robot">Function: LinkDict2Robot</a></li>
+<li class="toctree-l2"><a class="reference internal" href="robotics.models.html#function-linkdictmoddhkk2robot">Function: LinkDictModDHKK2Robot</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="robotics.mobile.html">Module: robotics.mobile</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="robotics.mobile.html#function-mobilerobot2mbs">Function: MobileRobot2MBS</a></li>
+<li class="toctree-l2"><a class="reference internal" href="robotics.mobile.html#function-generatrix2polynomial">Function: Generatrix2Polynomial</a></li>
+<li class="toctree-l2"><a class="reference internal" href="robotics.mobile.html#function-generatrixroll">Function: GeneratrixRoll</a></li>
+<li class="toctree-l2"><a class="reference internal" href="robotics.mobile.html#function-fundiffpoly">Function: FunDiffPoly</a></li>
+<li class="toctree-l2"><a class="reference internal" href="robotics.mobile.html#function-funddiffpoly">Function: FunDDiffPoly</a></li>
+<li class="toctree-l2"><a class="reference internal" href="robotics.mobile.html#function-mecanumxyphi2wheelvelocities">Function: MecanumXYphi2WheelVelocities</a></li>
+<li class="toctree-l2"><a class="reference internal" href="robotics.mobile.html#function-mecanumwheelvelocity2xyphi">Function: MecanumWheelVelocity2XYphi</a></li>
+<li class="toctree-l2"><a class="reference internal" href="robotics.mobile.html#class-mobilekinematics-in-module-robotics-mobile">CLASS MobileKinematics (in module robotics.mobile)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="robotics.motion.html">Module: robotics.motion</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="robotics.motion.html#class-profileconstantacceleration-in-module-robotics-motion">CLASS ProfileConstantAcceleration (in module robotics.motion)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="robotics.motion.html#class-profilelinearaccelerationslist-in-module-robotics-motion">CLASS ProfileLinearAccelerationsList (in module robotics.motion)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="robotics.motion.html#class-profileptp-in-module-robotics-motion">CLASS ProfilePTP (in module robotics.motion)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="robotics.motion.html#class-trajectory-in-module-robotics-motion">CLASS Trajectory (in module robotics.motion)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="robotics.special.html">Module: robotics.special</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="robotics.special.html#function-velocitymanipulability">Function: VelocityManipulability</a></li>
+<li class="toctree-l2"><a class="reference internal" href="robotics.special.html#function-forcemanipulability">Function: ForceManipulability</a></li>
+<li class="toctree-l2"><a class="reference internal" href="robotics.special.html#function-stiffnessmanipulability">Function: StiffnessManipulability</a></li>
+<li class="toctree-l2"><a class="reference internal" href="robotics.special.html#function-jointjacobian">Function: JointJacobian</a></li>
+<li class="toctree-l2"><a class="reference internal" href="robotics.special.html#function-massmatrix">Function: MassMatrix</a></li>
+<li class="toctree-l2"><a class="reference internal" href="robotics.special.html#function-dynamicmanipulability">Function: DynamicManipulability</a></li>
+<li class="toctree-l2"><a class="reference internal" href="robotics.special.html#function-calculateallmeasures">Function: CalculateAllMeasures</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="robotics.utilities.html">Module: robotics.utilities</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="robotics.utilities.html#function-addlidar">Function: AddLidar</a></li>
+<li class="toctree-l2"><a class="reference internal" href="robotics.utilities.html#function-getroboticstoolboxinternalmodel">Function: GetRoboticsToolboxInternalModel</a></li>
+<li class="toctree-l2"><a class="reference internal" href="robotics.utilities.html#function-loadurdfrobot">Function: LoadURDFrobot</a></li>
+<li class="toctree-l2"><a class="reference internal" href="robotics.utilities.html#function-geturdfrobotdata">Function: GetURDFrobotData</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="shells.html">Module: shells</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="shells.html#function-unitvector">Function: _UnitVector</a></li>
+<li class="toctree-l2"><a class="reference internal" href="shells.html#function-addnodeconstraints">Function: AddNodeConstraints</a></li>
+<li class="toctree-l2"><a class="reference internal" href="shells.html#function-addsphericaljointtoground">Function: AddSphericalJointToGround</a></li>
+<li class="toctree-l2"><a class="reference internal" href="shells.html#function-addclamptoground">Function: AddClampToGround</a></li>
+<li class="toctree-l2"><a class="reference internal" href="shells.html#function-thinplateshapefunctionderivatives">Function: _ThinPlateShapeFunctionDerivatives</a></li>
+<li class="toctree-l2"><a class="reference internal" href="shells.html#function-creatempczeromarker">Function: _CreateMPCZeroMarker</a></li>
+<li class="toctree-l2"><a class="reference internal" href="shells.html#function-addslopedeviationconstraint">Function: _AddSlopeDeviationConstraint</a></li>
+<li class="toctree-l2"><a class="reference internal" href="shells.html#function-addslopeconformityconstraints">Function: AddSlopeConformityConstraints</a></li>
+<li class="toctree-l2"><a class="reference internal" href="shells.html#function-adddistributedclamptoedge">Function: AddDistributedClampToEdge</a></li>
+<li class="toctree-l2"><a class="reference internal" href="shells.html#function-applyedgeload">Function: ApplyEdgeLoad</a></li>
+<li class="toctree-l2"><a class="reference internal" href="shells.html#function-addrotationalspringdamper">Function: AddRotationalSpringDamper</a></li>
+<li class="toctree-l2"><a class="reference internal" href="shells.html#function-addedgespringdamper">Function: AddEdgeSpringDamper</a></li>
+<li class="toctree-l2"><a class="reference internal" href="shells.html#class-shellmesh-in-module-shells">CLASS ShellMesh (in module shells)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="shells.html#class-surfacemap-in-module-shells">CLASS SurfaceMap (in module shells)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="signalProcessing.html">Module: signalProcessing</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="signalProcessing.html#function-filtersensoroutput">Function: FilterSensorOutput</a></li>
+<li class="toctree-l2"><a class="reference internal" href="signalProcessing.html#function-filtersignal">Function: FilterSignal</a></li>
+<li class="toctree-l2"><a class="reference internal" href="signalProcessing.html#function-computefft">Function: ComputeFFT</a></li>
+<li class="toctree-l2"><a class="reference internal" href="signalProcessing.html#function-getinterpolatedsignalvalue">Function: GetInterpolatedSignalValue</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="solver.html">Module: solver</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="solver.html#function-solvererrormessage">Function: SolverErrorMessage</a></li>
+<li class="toctree-l2"><a class="reference internal" href="solver.html#function-solvestatic">Function: SolveStatic</a></li>
+<li class="toctree-l2"><a class="reference internal" href="solver.html#function-solvedynamic">Function: SolveDynamic</a></li>
+<li class="toctree-l2"><a class="reference internal" href="solver.html#id1">Function: _SolveDynamic</a></li>
+<li class="toctree-l2"><a class="reference internal" href="solver.html#function-solversuccess">Function: SolverSuccess</a></li>
+<li class="toctree-l2"><a class="reference internal" href="solver.html#function-computelinearizedsystem">Function: ComputeLinearizedSystem</a></li>
+<li class="toctree-l2"><a class="reference internal" href="solver.html#function-computeode2eigenvalues">Function: ComputeODE2Eigenvalues</a></li>
+<li class="toctree-l2"><a class="reference internal" href="solver.html#function-computesystemdegreeoffreedom">Function: ComputeSystemDegreeOfFreedom</a></li>
+<li class="toctree-l2"><a class="reference internal" href="solver.html#function-checksolverinfostatistics">Function: CheckSolverInfoStatistics</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="utilities.html">Module: utilities</a></li>
+</ul>
+</div>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="../items/SensorUserFunction.html" class="btn btn-neutral float-left" title="SensorUserFunction" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="advancedUtilities.html" class="btn btn-neutral float-right" title="Module: advancedUtilities" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

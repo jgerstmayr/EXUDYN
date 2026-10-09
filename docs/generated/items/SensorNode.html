@@ -1,0 +1,297 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SensorNode &mdash; Exudyn1.13.3 1.13.3 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=3ee1c6c6" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/rtd_sphinx_search.min.css" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/custom.css?v=e2783f0e" />
+
+  
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=b8a3e558"></script>
+      <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../../_static/copybutton.js?v=f281be69"></script>
+      <script src="../../../_static/js/rtd_search_config.js"></script>
+      <script src="../../../_static/js/rtd_sphinx_search.min.js"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+    <link rel="next" title="SensorObject" href="SensorObject.html" />
+    <link rel="prev" title="General info for all sensors" href="sensorGeneral.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            Exudyn1.13.3
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Exudyn User Manual</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../README.html">Exudyn</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../manual/gettingStarted.html">Installation and getting started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../manual/introduction.html">Overview on Exudyn</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../manual/introductionBasics.html">Exudyn basics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../manual/tutorial.html">Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../manual/GUI.html">Renderer, graphics and visualization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../manual/performanceErrors.html">Performance, errors and solver failures</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../manual/introductionAdvanced.html">Advanced topics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../manual/notation.html">Notation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../manual/theory.html">Theory and formulations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../manual/solver.html">Solvers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../cInterface/cInterfaceIndex.html">Python-C++ command interface</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Reference Manual</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="itemsIndex.html">Items reference manual</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="nodeIndex.html">Node</a></li>
+<li class="toctree-l2"><a class="reference internal" href="objectBodyIndex.html">Object (Body)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="objectSuperElementIndex.html">Object (SuperElement)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="objectObjectIndex.html">Object (Object)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="objectFiniteElementIndex.html">Object (FiniteElement)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="objectConnectorIndex.html">Object (Connector)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="objectConstraintIndex.html">Object (Constraint)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="objectJointIndex.html">Object (Joint)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="markerIndex.html">Marker</a></li>
+<li class="toctree-l2"><a class="reference internal" href="loadIndex.html">Load</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="sensorIndex.html">Sensor</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="sensorGeneral.html">General info for all sensors</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">SensorNode</a></li>
+<li class="toctree-l3"><a class="reference internal" href="SensorObject.html">SensorObject</a></li>
+<li class="toctree-l3"><a class="reference internal" href="SensorBody.html">SensorBody</a></li>
+<li class="toctree-l3"><a class="reference internal" href="SensorSuperElement.html">SensorSuperElement</a></li>
+<li class="toctree-l3"><a class="reference internal" href="SensorKinematicTree.html">SensorKinematicTree</a></li>
+<li class="toctree-l3"><a class="reference internal" href="SensorMarker.html">SensorMarker</a></li>
+<li class="toctree-l3"><a class="reference internal" href="SensorLoad.html">SensorLoad</a></li>
+<li class="toctree-l3"><a class="reference internal" href="SensorUserFunction.html">SensorUserFunction</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="itemsIndex.html#parameter-changes">Parameter changes</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../pythonUtilities/utilitiesIndex.html">Python Utility Functions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../structures/structuresIndex.html">Structures and Settings</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../references.html">References</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Developer documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../dev/README.html">Exudyn developer documentation</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">How-to notes</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../howTo/condaEnvironments.html">Conda environments for Exudyn</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../howTo/sphinxDocs.html">Building the documentation</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Examples, models and issues</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../examples/examplesIndex.html">Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../testModels/testModelsIndex.html">TestModels</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../abbreviations.html">List of Abbreviations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../manual/revisions.html">Revisions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../CHANGELOG.html">Changelog</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../trackerlog.html">Issue tracker</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">Exudyn1.13.3</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="itemsIndex.html">Items reference manual</a></li>
+          <li class="breadcrumb-item"><a href="sensorIndex.html">Sensor</a></li>
+      <li class="breadcrumb-item active">SensorNode</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../../_sources/docs/generated/items/SensorNode.md.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <!-- GENERATED by tools/generators/itemDocsEmitter.py from definitions/ - do not edit -->
+<section class="tex2jax_ignore mathjax_ignore" id="sensornode">
+<span id="sec-item-sensornode"></span><h1>SensorNode<a class="headerlink" href="#sensornode" title="Link to this heading"></a></h1>
+<p>A sensor attached to a node, which measures one of the output variables of the node.</p>
+<section id="parameters">
+<h2>Parameters<a class="headerlink" href="#parameters" title="Link to this heading"></a></h2>
+<p>The parameters of the item; in a dictionary, its type is ‘Node’:</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>name</p></th>
+<th class="head"><p>type</p></th>
+<th class="head"><p>size</p></th>
+<th class="head"><p>default</p></th>
+<th class="head"><p>description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><strong>name</strong></p></td>
+<td><p>String</p></td>
+<td><p></p></td>
+<td><p>‘’</p></td>
+<td><p>sensor’s unique name</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>nodeNumber</strong></p></td>
+<td><p>NodeIndex</p></td>
+<td><p></p></td>
+<td><p>invalid (-1)</p></td>
+<td><p>node number to which sensor is attached to</p></td>
+</tr>
+<tr class="row-even"><td><p><strong>writeToFile</strong></p></td>
+<td><p>Bool</p></td>
+<td><p></p></td>
+<td><p>True</p></td>
+<td><p>True: write sensor output to file; flag is ignored (interpreted as False), if fileName=’’</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>fileName</strong></p></td>
+<td><p>String</p></td>
+<td><p></p></td>
+<td><p>‘’</p></td>
+<td><p>directory and file name for sensor file output; empty: no file is written; a relative name is placed in <code class="docutils literal notranslate"><span class="pre">exudyn.config.outputDirectory</span></code> if that is set; the directory is created if it does not exist</p></td>
+</tr>
+<tr class="row-even"><td><p><strong>outputVariableType</strong></p></td>
+<td><p>OutputVariableType</p></td>
+<td><p></p></td>
+<td><p>OutputVariableType::_None</p></td>
+<td><p>OutputVariableType for sensor</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>storeInternal</strong></p></td>
+<td><p>Bool</p></td>
+<td><p></p></td>
+<td><p>False</p></td>
+<td><p>true: store sensor data in memory (faster, but may consume large amounts of memory); false: internal storage not available</p></td>
+</tr>
+<tr class="row-even"><td><p><strong>visualization</strong></p></td>
+<td><p>VSensorNode</p></td>
+<td><p></p></td>
+<td><p></p></td>
+<td><p>parameters for visualization of item</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="visualization-parameters">
+<h2>Visualization parameters<a class="headerlink" href="#visualization-parameters" title="Link to this heading"></a></h2>
+<p>The parameters of <code class="docutils literal notranslate"><span class="pre">VSensorNode</span></code>, given as <code class="docutils literal notranslate"><span class="pre">visualization</span></code>:</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>name</p></th>
+<th class="head"><p>type</p></th>
+<th class="head"><p>size</p></th>
+<th class="head"><p>default</p></th>
+<th class="head"><p>description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><strong>show</strong></p></td>
+<td><p>Bool</p></td>
+<td><p></p></td>
+<td><p>True</p></td>
+<td><p>set true, if item is shown in visualization and false if it is not shown</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="drawing">
+<h2>Drawing<a class="headerlink" href="#drawing" title="Link to this heading"></a></h2>
+<p>Drawn as <a class="reference internal" href="sensorGeneral.html#sec-drawing-sensors"><span class="std std-ref">all sensors</span></a>.</p>
+</section>
+<section id="detailed-description">
+<span id="description-sensornode"></span><h2>Detailed description<a class="headerlink" href="#detailed-description" title="Link to this heading"></a></h2>
+<section id="attached-to">
+<h3>Attached to<a class="headerlink" href="#attached-to" title="Link to this heading"></a></h3>
+<p>The node <code class="docutils literal notranslate"><span class="pre">nodeNumber</span></code>: every node, with <a class="reference internal" href="../abbreviations.html#ode2"><span class="std std-ref">ODE2</span></a>, <a class="reference internal" href="../abbreviations.html#ode1"><span class="std std-ref">ODE1</span></a> or other coordinates.</p>
+</section>
+<section id="measures">
+<h3>Measures<a class="headerlink" href="#measures" title="Link to this heading"></a></h3>
+<p><code class="docutils literal notranslate"><span class="pre">outputVariableType</span></code> is one of the output variables of the node, as its page lists them under
+<strong>Output variables</strong> - <code class="docutils literal notranslate"><span class="pre">Position</span></code>, <code class="docutils literal notranslate"><span class="pre">Velocity</span></code>, <code class="docutils literal notranslate"><span class="pre">Coordinates</span></code>, and for a rigid body node also
+<code class="docutils literal notranslate"><span class="pre">RotationMatrix</span></code>, <code class="docutils literal notranslate"><span class="pre">AngularVelocity</span></code> and the like. The frame is the one the node page gives for the
+variable.</p>
+</section>
+</section>
+<section id="mini-example">
+<span id="miniexample-sensornode"></span><h2>Mini example<a class="headerlink" href="#mini-example" title="Link to this heading"></a></h2>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1">#the position of a node, stored during the simulation</span>
+<span class="n">node</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">AddNode</span><span class="p">(</span><span class="nc">NodePoint</span><span class="p">(</span><span class="n">referenceCoordinates</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span> <span class="n">initialVelocities</span><span class="o">=</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]))</span>
+<span class="n">mbs</span><span class="o">.</span><span class="nf">AddObject</span><span class="p">(</span><span class="nc">ObjectMassPoint</span><span class="p">(</span><span class="n">nodeNumber</span><span class="o">=</span><span class="n">node</span><span class="p">,</span> <span class="n">mass</span><span class="o">=</span><span class="mi">1</span><span class="p">))</span>
+<span class="n">sNode</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">AddSensor</span><span class="p">(</span><span class="nc">SensorNode</span><span class="p">(</span><span class="n">nodeNumber</span><span class="o">=</span><span class="n">node</span><span class="p">,</span> <span class="n">outputVariableType</span><span class="o">=</span><span class="n">exu</span><span class="o">.</span><span class="nc">OutputVariableType</span><span class="o">.</span><span class="n">Position</span><span class="p">,</span>
+                                 <span class="n">storeInternal</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">writeToFile</span><span class="o">=</span><span class="kc">False</span><span class="p">))</span>
+
+<span class="n">mbs</span><span class="o">.</span><span class="nf">Assemble</span><span class="p">()</span>
+<span class="n">mbs</span><span class="o">.</span><span class="nf">SolveDynamic</span><span class="p">()</span>
+
+<span class="c1">#rows [t, x, y, z]; the last row at t=1</span>
+<span class="n">data</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">GetSensorStoredData</span><span class="p">(</span><span class="n">sNode</span><span class="p">)</span>
+<span class="n">exu</span><span class="o">.</span><span class="n">sys</span><span class="p">[</span><span class="s1">'testResult'</span><span class="p">]</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">data</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">]</span> <span class="c1">#1+1</span>
+</pre></div>
+</div>
+<p>Examples (Ex) and TestModels (TM) that show this item, with weblink to github: <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/plotSensorExamples.py"><code class="docutils literal notranslate"><span class="pre">plotSensorExamples.py</span></code></a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/sensorUserFunctionTest.py"><code class="docutils literal notranslate"><span class="pre">sensorUserFunctionTest.py</span></code></a> (TM), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/springDamperUserFunctionTest.py"><code class="docutils literal notranslate"><span class="pre">springDamperUserFunctionTest.py</span></code></a> (TM), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/rigidBodyCOMtest.py"><code class="docutils literal notranslate"><span class="pre">rigidBodyCOMtest.py</span></code></a> (TM), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/plotSensorTest.py"><code class="docutils literal notranslate"><span class="pre">plotSensorTest.py</span></code></a> (TM)</p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="sensorGeneral.html" class="btn btn-neutral float-left" title="General info for all sensors" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="SensorObject.html" class="btn btn-neutral float-right" title="SensorObject" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

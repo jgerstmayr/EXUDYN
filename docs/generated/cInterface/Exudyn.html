@@ -1,0 +1,302 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Exudyn module &mdash; Exudyn1.13.3 1.13.3 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=3ee1c6c6" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/rtd_sphinx_search.min.css" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/custom.css?v=e2783f0e" />
+
+  
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=b8a3e558"></script>
+      <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../../_static/copybutton.js?v=f281be69"></script>
+      <script src="../../../_static/js/rtd_search_config.js"></script>
+      <script src="../../../_static/js/rtd_sphinx_search.min.js"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+    <link rel="next" title="SystemContainer" href="SystemContainer.html" />
+    <link rel="prev" title="General information" href="GeneralInformation.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            Exudyn1.13.3
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Exudyn User Manual</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../../README.html">Exudyn</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../manual/gettingStarted.html">Installation and getting started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../manual/introduction.html">Overview on Exudyn</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../manual/introductionBasics.html">Exudyn basics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../manual/tutorial.html">Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../manual/GUI.html">Renderer, graphics and visualization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../manual/performanceErrors.html">Performance, errors and solver failures</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../manual/introductionAdvanced.html">Advanced topics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../manual/notation.html">Notation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../manual/theory.html">Theory and formulations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../manual/solver.html">Solvers</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="cInterfaceIndex.html">Python-C++ command interface</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="GeneralInformation.html">General information</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Exudyn module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#module-functions">Module functions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#exudyn-config">exudyn.config</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#exudyn-experimental">exudyn.experimental</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#exudyn-special">exudyn.special</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#exudyn-variables-and-exudyn-sys">exudyn.variables and exudyn.sys</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="SystemContainer.html">SystemContainer</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Renderer.html">Renderer</a></li>
+<li class="toctree-l2"><a class="reference internal" href="MainSystem.html">MainSystem</a></li>
+<li class="toctree-l2"><a class="reference internal" href="SystemData.html">SystemData</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Symbolic.html">Symbolic</a></li>
+<li class="toctree-l2"><a class="reference internal" href="GeneralContact.html">GeneralContact</a></li>
+<li class="toctree-l2"><a class="reference internal" href="DataStructures.html">Data structures</a></li>
+<li class="toctree-l2"><a class="reference internal" href="TypeDefinitions.html">Type definitions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="EnvironmentVariables.html">Environment variables</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Reference Manual</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../items/itemsIndex.html">Items reference manual</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../pythonUtilities/utilitiesIndex.html">Python Utility Functions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../structures/structuresIndex.html">Structures and Settings</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../references.html">References</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Developer documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../dev/README.html">Exudyn developer documentation</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">How-to notes</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../howTo/condaEnvironments.html">Conda environments for Exudyn</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../howTo/sphinxDocs.html">Building the documentation</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Examples, models and issues</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../examples/examplesIndex.html">Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../testModels/testModelsIndex.html">TestModels</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../abbreviations.html">List of Abbreviations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../manual/revisions.html">Revisions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../CHANGELOG.html">Changelog</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../trackerlog.html">Issue tracker</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">Exudyn1.13.3</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="cInterfaceIndex.html">Python-C++ command interface</a></li>
+      <li class="breadcrumb-item active">Exudyn module</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../../_sources/docs/generated/cInterface/Exudyn.md.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <!-- GENERATED by tools/generators/pybindEmitter.py from definitions/ - do not edit -->
+<section class="tex2jax_ignore mathjax_ignore" id="exudyn-module">
+<h1>Exudyn module<a class="headerlink" href="#exudyn-module" title="Link to this heading"></a></h1>
+<section id="module-functions">
+<h2>Module functions<a class="headerlink" href="#module-functions" title="Link to this heading"></a></h2>
+<p>These are the access functions to the Exudyn module. General usage is explained in <a class="reference internal" href="GeneralInformation.html#sec-generalpythoninterface"><span class="std std-ref">General information on Python-C++ interface</span></a> and examples are provided there. The C++ module <code class="docutils literal notranslate"><span class="pre">exudyn</span></code> is the root level object linked between Python and C++.In the installed site-packages, the according file is usually denoted as <code class="docutils literal notranslate"><span class="pre">exudynCPP.pyd</span></code> for the regular module, which is compiled for the baseline instruction set and runs on any 64-bit CPU, and <code class="docutils literal notranslate"><span class="pre">exudynCPPfast.pyd</span></code> for the optional module without range checks, which additionally uses the AVX2 vector extensions (may depend on your installation).</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1">#import exudyn module:</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">exudyn</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">exu</span>
+<span class="c1">#create systemcontainer and mbs:</span>
+<span class="n">SC</span> <span class="o">=</span> <span class="n">exu</span><span class="o">.</span><span class="nc">SystemContainer</span><span class="p">()</span>
+<span class="n">mbs</span> <span class="o">=</span> <span class="n">SC</span><span class="o">.</span><span class="nf">AddSystem</span><span class="p">()</span>
+</pre></div>
+</div>
+<div class="notebookorigin docutils container">
+<p><code class="docutils literal notranslate"><span class="pre">python/Notebooks/reference/generalInformation.ipynb</span></code></p>
+</div>
+<p>The class <strong>exudyn</strong> has the following <strong>functions and structures</strong>:</p>
+<ul>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">Help()</span></code></strong>: Show basic help information</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">RequireVersion(requiredVersionString)</span></code></strong>: Checks if the installed version is according to the required version. Major, micro and minor version must agree the required level. This function is defined in the <code class="docutils literal notranslate"><span class="pre">__init__.py</span></code> file</p>
+<p><em>Example</em>:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">exu</span><span class="o">.</span><span class="nf">RequireVersion</span><span class="p">(</span><span class="s2">"1.0.31"</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">SetWriteToFile(filename,</span> <span class="pre">flagWriteToFile</span> <span class="pre">=</span> <span class="pre">True,</span> <span class="pre">flagAppend</span> <span class="pre">=</span> <span class="pre">False,</span> <span class="pre">flagFlushAlways</span> <span class="pre">=</span> <span class="pre">False)</span></code></strong>: set flag to write (True) or not write to console; default value of flagWriteToFile = False; flagAppend appends output to file, if set True; in order to finalize the file, write <code class="docutils literal notranslate"><span class="pre">exu.SetWriteToFile('',</span> <span class="pre">False)</span></code> to close the output file; in case of flagFlushAlways=True, file will be finalized immediately in every print command, but may be slower; the filename is relative to exudyn.config.outputDirectory, which is prepended when the file is opened; an absolute filename together with a non-empty outputDirectory raises an error;</p>
+<p><em>Example</em>:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">exudyn</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">printToConsole</span> <span class="o">=</span> <span class="kc">False</span> <span class="c1">#no output to console</span>
+<span class="n">exu</span><span class="o">.</span><span class="nf">SetWriteToFile</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s1">'testOutput.log'</span><span class="p">,</span> <span class="n">flagWriteToFile</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">flagAppend</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">flagFlushAlways</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="n">exu</span><span class="o">.</span><span class="nf">Print</span><span class="p">(</span><span class="s1">'print this to file'</span><span class="p">)</span>
+<span class="n">exu</span><span class="o">.</span><span class="nf">SetWriteToFile</span><span class="p">(</span><span class="s1">''</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span> <span class="c1">#terminate writing to file which closes the file</span>
+</pre></div>
+</div>
+</li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">Print()</span></code></strong>: this allows printing via exudyn with similar syntax as in Python print(args) except for keyword arguments: exu.Print(‘test=’,42,sep=’ ‘,end=’’,flush=True); allows to redirect all output to file given by SetWriteToFile(…); does not print to console in case that exudyn.config.printToConsole is set to False</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">InvalidIndex()</span></code></strong>: This function provides the invalid index, which may depend on the kind of 32-bit, 64-bit signed or unsigned integer; e.g., node index or item index in list; currently, the InvalidIndex() gives -1, but it may be changed in future versions, therefore you should use this function</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">__version__</span></code></strong>: contains the current version of the Exudyn package</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">symbolic</span></code></strong>: the symbolic submodule for creating symbolic variables in Python, see documentation of Symbolic; For details, see Section Symbolic.</p></li>
+</ul>
+</section>
+<section id="exudyn-config">
+<span id="sec-exudyn-config"></span><h2>exudyn.config<a class="headerlink" href="#exudyn-config" title="Link to this heading"></a></h2>
+<ul class="simple">
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">config</span></code></strong>: global config settings, like precision, print behavior, warnings, etc.</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">config.suppressWarnings</span></code></strong>: flag to suppress all warnings (default=False)</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">config.outputDirectory</span></code></strong>: directory which is prepended to all files written by the solver: the coordinates solution file, the solver information file, sensor files and exported images; default=”” (files are written exactly as given). An absolute file name together with a non-empty outputDirectory raises an error when the file is opened. NOTE: this setting is global and stays active as long as the exudyn module is loaded, so running two models one after the other in the same process will put both outputs into the same directory; normally you should specify the output folder directly in the file names and use this setting only for a test runner or a batch script. The rule is: everything WRITTEN as output of a run follows the setting, while a file is READ from there only if its name comes from Exudyn itself. Writing: the coordinates solution file, the solver information file, sensor files, exported images, the exudyn.Print log (SetWriteToFile), the figure saved by PlotSensor and the results file of ParameterVariation/GeneticOptimization. Reading: SolutionViewer (name taken from the simulation settings) and PlotSensor for a sensor given by its number (name taken from the sensor). NOT affected: a file name you pass yourself, e.g. to LoadSolutionFile, LoadBinarySolutionFile, RecoverSolutionFile or PlotSensor as a string, and all model data such as mesh import, FEMinterface/ObjectFFRFreducedOrderInterface SaveToFile/LoadFromFile and SaveDictToHDF5/LoadDictFromHDF5; use exudyn.basicUtilities.OutputFilePath(fileName, callerInfo) in your script if you want those in the output directory as well</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">config.outputPrecision</span></code></strong>: change precision (number of digits) in C++ and Python output</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">config.linalgOutputFormatPython</span></code></strong>: True (default): use Python format for output of vectors and matrices; False: use Matlab format</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">config.printDelayMilliSeconds</span></code></strong>: add some delay (in milliSeconds) to printing to console (exudyn.Print), in order to let console (e.g., Spyder) process the output; default = 0</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">config.printFlushAlways</span></code></strong>: flush always buffers when using exudyn.Print(…) to write to file or console; this is needed if you are streaming text or showing counters in parameter variation; default=False</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">config.printToConsole</span></code></strong>: enables or disables writing to console with exudyn.Print(…); default=True</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">config.printToFile</span></code></strong>: flag that shows if writing to file with exudyn.Print(…) is enabled; flag is readonly</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">config.printFileName</span></code></strong>: file name for writing to file with exudyn.Print(…), as resolved when the file was opened: it is relative to config.outputDirectory, which is prepended by SetWriteToFile(…); flag is readonly</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">config.printToFileAppend</span></code></strong>: flag that shows if append mode is used for writing to file with exudyn.Print(…); flag is readonly</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">config.Version(addDetails</span> <span class="pre">=</span> <span class="pre">False)</span></code></strong>: Get Exudyn built version as string (if addDetails=True, adds more information on compilation Python version, platform, etc.; the Python micro version may differ from that you are working with; AVX2 shows that you are running a AVX2 compiled version)</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">config.GetDictionary()</span></code></strong>: all settings of <code class="docutils literal notranslate"><span class="pre">exudyn.config</span></code> as a dictionary, the way a settings structure gives them; <code class="docutils literal notranslate"><span class="pre">printToFile</span></code>, <code class="docutils literal notranslate"><span class="pre">printFileName</span></code> and <code class="docutils literal notranslate"><span class="pre">printToFileAppend</span></code> are in it but only report what the output is doing</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">config.SetDictionary(values)</span></code></strong>: set the settings named in the dictionary and leave the others; a name that <code class="docutils literal notranslate"><span class="pre">exudyn.config</span></code> does not have, and one of the three that only report, is ignored</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">config.GetDefaults()</span></code></strong>: the defaults of <code class="docutils literal notranslate"><span class="pre">exudyn.config</span></code>: what Exudyn started with, taken while the module was imported and before a script, an override setting or an environment variable could change one. This is what tells a setting somebody chose from one nobody touched, which is how <code class="docutils literal notranslate"><span class="pre">overrideSettings.Store(config=...)</span></code> knows what to store. They cannot be constructed - <code class="docutils literal notranslate"><span class="pre">exudyn.config</span></code> reads global state, so a second one reports the current values - so they are taken once</p></li>
+</ul>
+</section>
+<section id="exudyn-experimental">
+<span id="sec-exudyn-experimental"></span><h2>exudyn.experimental<a class="headerlink" href="#exudyn-experimental" title="Link to this heading"></a></h2>
+<ul class="simple">
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">experimental</span></code></strong>: Experimental features, not intended for regular users; for available features, see the C++ code class PyExperimental</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">experimental.eigenFullPivotLUsolverDebugLevel</span></code></strong>: debug output of the EigenDense solver with full pivoting: 0 (default) = none, 1 = rank and information, 2 = also the matrices</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">experimental.markerSuperElementRigidTexpSO3</span></code></strong>: if nonzero (default), MarkerSuperElementRigid uses the additional tangent operator TexpSO3 of the rotation parameters</p></li>
+</ul>
+</section>
+<section id="exudyn-special">
+<span id="sec-exudyn-special"></span><h2>exudyn.special<a class="headerlink" href="#exudyn-special" title="Link to this heading"></a></h2>
+<ul class="simple">
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">special</span></code></strong>: special attributes and functions, such as global (solver) flags or helper functions; not intended for regular users; for available features, see the C++ code class PySpecial</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">special.InfoStat(writeOutput</span> <span class="pre">=</span> <span class="pre">True)</span></code></strong>: Retrieve list of global information on memory allocation and other counts as list:[array_new_counts, array_delete_counts, vector_new_counts, vector_delete_counts, matrix_new_counts, matrix_delete_counts, linkedDataVectorCast_counts]; May be extended in future; if writeOutput==True, it additionally prints the statistics; counts for new vectors and matrices should not depend on numberOfSteps, except for some objects such as ObjectGenericODE2 and for (sensor) output to files; Not available if code is compiled with __FAST_EXUDYN_LINALG flag</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">special.currentRendererSystemContainer</span></code></strong>: the <code class="docutils literal notranslate"><span class="pre">SystemContainer</span></code> the renderer is attached to, or <code class="docutils literal notranslate"><span class="pre">None</span></code>; the render engine can hold one at a time, which is why this is module-wide. It is set when a container attaches to the render engine and cleared when it detaches or is destroyed, and it is what the dialogs of <code class="docutils literal notranslate"><span class="pre">exudyn.misc.GUI</span></code> ask for; not intended for regular users</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">special.overrideSettings</span></code></strong>: the settings that persist between runs, read once by <code class="docutils literal notranslate"><span class="pre">import</span> <span class="pre">exudyn</span></code> from <code class="docutils literal notranslate"><span class="pre">~/.exudyn/config.json</span></code>: a dictionary with one key per section, <code class="docutils literal notranslate"><span class="pre">config</span></code>, <code class="docutils literal notranslate"><span class="pre">visualizationSettings</span></code>, <code class="docutils literal notranslate"><span class="pre">dialogs</span></code> and <code class="docutils literal notranslate"><span class="pre">resultsMonitor</span></code>; it is empty unless something was stored, and both Python and the C++ side read it. See Section <a class="reference internal" href="../../manual/userSettings.html#sec-usersettings"><span class="std std-ref">User settings that persist between runs</span></a></p></li>
+</ul>
+<section id="exudyn-special-solver">
+<span id="sec-exudyn-special-solver"></span><h3>exudyn.special.solver<a class="headerlink" href="#exudyn-special-solver" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">special.solver</span></code></strong>: special solver attributes and functions; not intended for regular users; for available features, see the C++ code class PySpecialSolver</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">special.solver.timeout</span></code></strong>: if &gt;= 0, the solver stops after reaching accoring CPU time specified with timeout; makes sense for parameter variation, automatic testing or for long-running simulations; default=-1 (no timeout)</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">special.solver.throwErrorWithCtrlC</span></code></strong>: if True, pressing CTRL-C during a simulation raises an error in Python; if False (default), the solver stops and returns; the error works in a console, the default also in Spyder</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">special.solver.multiThreadingLoadBalancing</span></code></strong>: if True (=default), multithreaded code parts (in particular solver and raytracing) use load balancing, which may give better performance in case of non-equilibrated loads; (mobile) Intel CPUs may perform significantly better without load balancing</p></li>
+</ul>
+</section>
+<section id="exudyn-special-exceptions">
+<span id="sec-exudyn-special-exceptions"></span><h3>exudyn.special.exceptions<a class="headerlink" href="#exudyn-special-exceptions" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">special.exceptions</span></code></strong>: special flags for exceptions and checks; not intended for regular users; for available features, see the C++ code class PySpecialExceptions</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">special.exceptions.dictionaryVersionMismatch</span></code></strong>: if True (=default), SetDictionary(…) of a settings structure warns if the dictionary comes from another version of Exudyn</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">special.exceptions.dictionaryNonCopyable</span></code></strong>: if True (=default), GetDictionary(…) raises an error if a value cannot be copied into the dictionary</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">special.exceptions.writeErrorsToLogFile</span></code></strong>: if True (=default), the message of a user or system error is also written into the log file of exudyn.SetWriteToFile(…), as a record of an unattended run; set False for a run that provokes and catches many errors, whose exceptions carry the same message</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">special.exceptions.parameterRangeChecks</span></code></strong>: if True (=default), writing an item or settings parameter outside its range (e.g. a negative mass or a non-positive number of steps) raises an error, on every write path (item classes, dictionaries, SetObjectParameter, …); set False to accept any value, e.g. if a range limit turns out to be wrong</p></li>
+</ul>
+</section>
+<section id="exudyn-special-beams">
+<span id="sec-exudyn-special-beams"></span><h3>exudyn.special.beams<a class="headerlink" href="#exudyn-special-beams" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">special.beams</span></code></strong>: switches of the beam elements, for tests and comparisons; a model keeps the defaults; for available features, see the C++ code class PySpecialBeams</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">special.beams.geometricallyExactLumpedMass</span></code></strong>: if True, ObjectBeamGeometricallyExact uses the lumped mass matrix of its nodes and their quadratic velocity vector instead of the element-consistent ones (default False); for comparisons and tests</p></li>
+</ul>
+</section>
+<section id="exudyn-special-userinterface">
+<span id="sec-exudyn-special-userinterface"></span><h3>exudyn.special.userInterface<a class="headerlink" href="#exudyn-special-userinterface" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">special.userInterface</span></code></strong>: flags that stop Exudyn from opening windows; meant for automated runs (test runners, CI, AI-assisted development), where a window that waits for a human stops everything; not intended for regular users; for available features, see the C++ code class PySpecialUserInterface</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">special.userInterface.suppressRenderer</span></code></strong>: if True, SC.renderer.Start() returns immediately without opening a window, IsActive() is False - so that a “while SC.renderer.IsActive()” loop ends at once - and DoIdleTasks() does nothing; default=False</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">special.userInterface.suppressSolutionViewer</span></code></strong>: if True, mbs.SolutionViewer(…) and AnimateModes(…) return immediately instead of opening the viewer; default=False</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">special.userInterface.suppressPlots</span></code></strong>: if True, PlotSensor and the other plotting helpers do not show a plot window; figures are still drawn and a figure given a file name is still saved; setting the environment variable EXUDYN_SUPPRESS_UI_WINDOW_OPEN additionally switches matplotlib to the non-interactive Agg backend, which also silences a plt.show() written in a script; default=False</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">special.userInterface.suppressDialogs</span></code></strong>: if True, InteractiveDialog and the other tkinter dialogs return their defaults instead of opening a window; default=False</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">special.userInterface.SuppressAll(flag</span> <span class="pre">=</span> <span class="pre">True)</span></code></strong>: set all four suppress flags at once; a run either wants windows or does not</p></li>
+</ul>
+</section>
+<section id="exudyn-special-deprecations">
+<span id="sec-exudyn-special-deprecations"></span><h3>exudyn.special.deprecations<a class="headerlink" href="#exudyn-special-deprecations" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">special.deprecations</span></code></strong>: how a deprecated name - a setting, an item parameter, a function - is reported: a DeprecationWarning once per session and name, or on every use, and a count of every use in the dictionary exudyn.sys[deprecationUse], by source (simulationSettings, visualizationSettings, items, functions) and name; see the C++ code class PySpecialDeprecations</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">special.deprecations.warnOnce</span></code></strong>: if True (=default), each deprecated name warns once per session; if False, every use warns, e.g. to find all places in a script that use it</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">special.deprecations.recordUse</span></code></strong>: if True (=default), every use of a deprecated name is counted in exudyn.sys[deprecationUse], by source and name, also when no warning is shown; a test reads it instead of catching warnings</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">special.deprecations.Reset()</span></code></strong>: forget which names were warned about in this session, so that each one warns once more</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">special.deprecations.Warn(source,</span> <span class="pre">name,</span> <span class="pre">message,</span> <span class="pre">stackLevel</span> <span class="pre">=</span> <span class="pre">2)</span></code></strong>: report the use of a deprecated name from Python, as the C++ side does: a DeprecationWarning, once per session unless warnOnce is False, and a count in exudyn.sys[deprecationUse]; stackLevel=2 attributes the warning to the caller of the function that calls Warn</p></li>
+</ul>
+</section>
+</section>
+<section id="exudyn-variables-and-exudyn-sys">
+<span id="sec-exudyn-variables"></span><h2>exudyn.variables and exudyn.sys<a class="headerlink" href="#exudyn-variables-and-exudyn-sys" title="Link to this heading"></a></h2>
+<ul class="simple">
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">variables</span></code></strong>: this dictionary may be used by the user to store exudyn-wide data in order to avoid global Python variables; usage: exu.variables[“myvar”] = 42; can be used in particular to exchange data between different mbs or between packages by importing exudyn.variables wherever needed.</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">sys</span></code></strong>: this dictionary is used and reserved by the system, e.g., for testsuite, graphics or system function to store module-wide data in order to avoid global Python variables; the variable exu.sys[‘renderState’] contains the last render state after SC.renderer.Stop() and can be used for subsequent simulations</p></li>
+</ul>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="GeneralInformation.html" class="btn btn-neutral float-left" title="General information" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="SystemContainer.html" class="btn btn-neutral float-right" title="SystemContainer" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

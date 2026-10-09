@@ -1,0 +1,210 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Environment variables &mdash; Exudyn1.13.3 1.13.3 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=3ee1c6c6" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/rtd_sphinx_search.min.css" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/custom.css?v=e2783f0e" />
+
+  
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=b8a3e558"></script>
+      <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../../_static/copybutton.js?v=f281be69"></script>
+      <script src="../../../_static/js/rtd_search_config.js"></script>
+      <script src="../../../_static/js/rtd_sphinx_search.min.js"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+    <link rel="next" title="Items reference manual" href="../items/itemsIndex.html" />
+    <link rel="prev" title="Type definitions" href="TypeDefinitions.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            Exudyn1.13.3
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Exudyn User Manual</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../../README.html">Exudyn</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../manual/gettingStarted.html">Installation and getting started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../manual/introduction.html">Overview on Exudyn</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../manual/introductionBasics.html">Exudyn basics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../manual/tutorial.html">Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../manual/GUI.html">Renderer, graphics and visualization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../manual/performanceErrors.html">Performance, errors and solver failures</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../manual/introductionAdvanced.html">Advanced topics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../manual/notation.html">Notation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../manual/theory.html">Theory and formulations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../manual/solver.html">Solvers</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="cInterfaceIndex.html">Python-C++ command interface</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="GeneralInformation.html">General information</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Exudyn.html">Exudyn module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="SystemContainer.html">SystemContainer</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Renderer.html">Renderer</a></li>
+<li class="toctree-l2"><a class="reference internal" href="MainSystem.html">MainSystem</a></li>
+<li class="toctree-l2"><a class="reference internal" href="SystemData.html">SystemData</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Symbolic.html">Symbolic</a></li>
+<li class="toctree-l2"><a class="reference internal" href="GeneralContact.html">GeneralContact</a></li>
+<li class="toctree-l2"><a class="reference internal" href="DataStructures.html">Data structures</a></li>
+<li class="toctree-l2"><a class="reference internal" href="TypeDefinitions.html">Type definitions</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Environment variables</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Reference Manual</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../items/itemsIndex.html">Items reference manual</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../pythonUtilities/utilitiesIndex.html">Python Utility Functions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../structures/structuresIndex.html">Structures and Settings</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../references.html">References</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Developer documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../dev/README.html">Exudyn developer documentation</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">How-to notes</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../howTo/condaEnvironments.html">Conda environments for Exudyn</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../howTo/sphinxDocs.html">Building the documentation</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Examples, models and issues</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../examples/examplesIndex.html">Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../testModels/testModelsIndex.html">TestModels</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../abbreviations.html">List of Abbreviations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../manual/revisions.html">Revisions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../CHANGELOG.html">Changelog</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../trackerlog.html">Issue tracker</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">Exudyn1.13.3</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="cInterfaceIndex.html">Python-C++ command interface</a></li>
+      <li class="breadcrumb-item active">Environment variables</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../../_sources/docs/generated/cInterface/EnvironmentVariables.md.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <!-- GENERATED by tools/generators/pybindEmitter.py from definitions/ - do not edit -->
+<section class="tex2jax_ignore mathjax_ignore" id="environment-variables">
+<span id="sec-environmentvariables"></span><h1>Environment variables<a class="headerlink" href="#environment-variables" title="Link to this heading"></a></h1>
+<p>These change what Exudyn does before a script says anything, which is what makes them worth knowing
+when a run behaves differently than it reads:</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>variable</p></th>
+<th class="head"><p>what it does</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">EXUDYN_NO_USER_SETTINGS</span></code></p></td>
+<td><p>anything but empty or <code class="docutils literal notranslate"><span class="pre">0</span></code> ignores <code class="docutils literal notranslate"><span class="pre">~/.exudyn/config.json</span></code> completely, so that a run starts from the defaults. <code class="docutils literal notranslate"><span class="pre">runTestSuite.py</span></code>, <code class="docutils literal notranslate"><span class="pre">runTestExamples.py</span></code>, <code class="docutils literal notranslate"><span class="pre">runPerformanceTests.py</span></code> and <code class="docutils literal notranslate"><span class="pre">pytest</span></code> set it for themselves, so a stored setting can never move a test result</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">EXUDYN_CONFIG_FILE</span></code></p></td>
+<td><p>names a different settings file, for a second configuration or for a test</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">EXUDYN_OUTPUTDIRECTORY</span></code></p></td>
+<td><p>the initial value of <code class="docutils literal notranslate"><span class="pre">exudyn.config.outputDirectory</span></code>: every solution and sensor file a model writes goes there, which is how a model is run without writing into the working directory</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">EXUDYN_SUPPRESS_UI_WINDOW_OPEN</span></code></p></td>
+<td><p>switches on all of <code class="docutils literal notranslate"><span class="pre">exudyn.special.userInterface</span></code>: no renderer, no solution viewer, no plot window and no dialog, and matplotlib is switched to its non-interactive backend. Meant for automated runs, where a window that waits for a human stops everything</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">EXUDYN_MODULE</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">fast</span></code> loads <code class="docutils literal notranslate"><span class="pre">exudynCPPfast</span></code> - no range checks, AVX2 - instead of the regular module; it belongs to release testing, because without range checks a wrong index is undefined behaviour instead of an exception</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">EXUDYN_IMPORT_VERBOSE</span></code></p></td>
+<td><p>1 prints which compiled module was tried and what came of it, which is the whole answer to <em>it imports the wrong one</em></p></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Setting one for every run in Spyder</strong>: Spyder starts its consoles itself, so a variable is set
+where a console starts. In <em>Tools &gt; Preferences &gt; IPython console &gt; Startup</em>, under <em>Run code</em>, the
+lines</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">os</span><span class="p">;</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s1">'EXUDYN_OUTPUTDIRECTORY'</span><span class="p">]</span> <span class="o">=</span> <span class="s1">'solution'</span>
+</pre></div>
+</div>
+<p>make every run of a restarted console write its output into <code class="docutils literal notranslate"><span class="pre">solution/</span></code> beside the script it runs -
+with the working directory set to the directory of the file being executed, which is Spyder’s
+default. A script that writes to <code class="docutils literal notranslate"><span class="pre">solution/...</span></code> itself then writes to <code class="docutils literal notranslate"><span class="pre">solution/solution/...</span></code>.
+Outside Spyder, <code class="docutils literal notranslate"><span class="pre">setx</span> <span class="pre">EXUDYN_OUTPUTDIRECTORY</span> <span class="pre">solution</span></code> sets the variable for every program the user
+starts afterwards.</p>
+<p><code class="docutils literal notranslate"><span class="pre">EXUDYN_NO_USER_SETTINGS=1</span></code> is also what makes a problem reproducible on a machine that has
+stored something: run the script with the variable set and the difference is either gone (the
+stored setting caused it) or still there (it did not).</p>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="TypeDefinitions.html" class="btn btn-neutral float-left" title="Type definitions" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="../items/itemsIndex.html" class="btn btn-neutral float-right" title="Items reference manual" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

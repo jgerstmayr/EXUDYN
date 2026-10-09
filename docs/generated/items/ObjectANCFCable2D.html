@@ -1,0 +1,891 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ObjectANCFCable2D &mdash; Exudyn1.13.3 1.13.3 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=3ee1c6c6" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/rtd_sphinx_search.min.css" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/custom.css?v=e2783f0e" />
+
+  
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=b8a3e558"></script>
+      <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../../_static/copybutton.js?v=f281be69"></script>
+      <script src="../../../_static/js/rtd_search_config.js"></script>
+      <script src="../../../_static/js/rtd_sphinx_search.min.js"></script>
+      <script>window.MathJax = {"loader": {"load": ["[tex]/mathtools"]}, "tex": {"packages": {"[+]": ["mathtools"]}, "macros": {"ANCFdk": "{\\LU{0}{\\dv_k}}", "ANCFdkO": "{\\LU{0}{\\dv_{0,k}}}", "ANCFdkOtp": "{\\LU{0}{\\dv_{0,k}\\tp}}", "ANCFdkt": "{\\LU{0}{\\dot\\dv_k}}", "Am": "{\\mathbf{A}}", "Dm": "{\\mathbf{D}}", "Em": "{\\mathbf{E}}", "Gm": "{\\mathbf{G}}", "Im": "{\\mathbf{I}}", "ImThree": "{\\mathbf{I}_{3 \\times 3}}", "Jm": "{\\mathbf{J}}", "Km": "{\\mathbf{K}}", "Mm": "{\\mathbf{M}}", "Pm": "{\\mathbf{P}}", "Rm": "{\\mathbf{R}}", "Sm": "{\\mathbf{S}}", "Tm": "{\\mathbf{T}}", "av": "{\\mathbf{a}}", "bv": "{\\mathbf{b}}", "cv": "{\\mathbf{c}}", "diffANCF": ["{\\frac{\\partial #1}{\\partial \\qv_{ANCF}}}", 1], "diffANCFdk": "{\\diffANCFmI{\\ANCFdk}}", "diffANCFmI": ["{\\frac{\\partial #1}{\\partial \\qv_{ANCF,m1}}}", 1], "diffANCFmIt": ["{\\frac{\\partial #1}{\\partial \\dot \\qv_{ANCF,m1}}}", 1], "diffANCFt": ["{\\frac{\\partial #1}{\\partial \\dot \\qv_{ANCF}}}", 1], "diffmI": ["{\\frac{\\partial #1}{\\partial \\qv_{m1}}}", 1], "diffmIt": ["{\\frac{\\partial #1}{\\partial \\dot \\qv_{m1}}}", 1], "diffmOI": ["{\\frac{\\partial #1}{\\partial \\qv_{m0,m1}}}", 1], "diffmOIt": ["{\\frac{\\partial #1}{\\partial \\dot \\qv_{m0,m1}}}", 1], "diffmOt": ["{\\frac{\\partial #1}{\\partial \\dot \\qv_{m0}}}", 1], "dv": "{\\mathbf{d}}", "ev": "{\\mathbf{e}}", "fv": "{\\mathbf{f}}", "gv": "{\\mathbf{g}}", "hv": "{\\mathbf{h}}", "nv": "{\\mathbf{n}}", "pv": "{\\mathbf{p}}", "qv": "{\\mathbf{q}}", "rv": "{\\mathbf{r}}", "sv": "{\\mathbf{s}}", "tv": "{\\mathbf{t}}", "uv": "{\\mathbf{u}}", "vv": "{\\mathbf{v}}", "xv": "{\\mathbf{x}}", "yv": "{\\mathbf{y}}", "zv": "{\\mathbf{z}}", "vspace": ["{}", 1], "ra": "{\\rightarrow}", "Rcal": "{\\mathbb{R}}", "Ccal": "{\\mathbb{C}}", "Ncal": "{\\mathbb{N}}", "Rot": "{\\mathbf{A}}", "dd": "{\\mathrm{d}}", "ps": "{p_\\mathrm{s}}", "co": "{\\mathrm{c}}", "si": "{\\mathrm{s}}", "tp": "{^\\mathrm{T}}", "diag": "{\\mathrm{diag}}", "vec": "{\\mathrm{vec}}", "Null": "{\\mathbf{0}}", "varepsilonDot": "{\\boldsymbol{\\varepsilon}}", "talpha": "{\\boldsymbol{\\alpha}}", "tbeta": "{\\boldsymbol{\\beta}}", "tgamma": "{\\boldsymbol{\\gamma}}", "tchi": "{\\boldsymbol{\\chi}}", "tdelta": "{\\boldsymbol{\\delta}}", "teps": "{\\boldsymbol{\\varepsilon}}", "tepsDot": "{\\boldsymbol{\\dot \\varepsilon}}", "teta": "{\\boldsymbol{\\eta}}", "tkappa": "{\\boldsymbol{\\kappa}}", "tkappaDot": "{\\boldsymbol{\\dot \\kappa}}", "tphi": "{\\boldsymbol{\\phi}}", "boldVarPhi": "{\\boldsymbol{\\varphi}}", "tPhi": "{\\boldsymbol{\\Phi}}", "ttheta": "{\\boldsymbol{\\theta}}", "tTheta": "{\\boldsymbol{\\Theta}}", "tlambda": "{\\boldsymbol{\\lambda}}", "tnu": "{\\boldsymbol{\\nu}}", "tmu": "{\\boldsymbol{\\mu}}", "tpsi": "{\\boldsymbol{\\psi}}", "tPsi": "{\\boldsymbol{\\Psi}}", "ttau": "{\\boldsymbol{\\tau}}", "tsigma": "{\\boldsymbol{\\sigma}}", "txi": "{\\boldsymbol{\\xi}}", "tzeta": "{\\boldsymbol{\\zeta}}", "tomega": "{\\boldsymbol{\\omega}}", "tOmega": "{\\boldsymbol{\\Omega}}", "vareps": "{\\varepsilon}", "myoverline": ["\\overline{#1}", 1], "pluseq": "\\mathrel{+}=", "LU": ["{\\prescript{#1}{}{#2}\\,}", 2], "LUX": ["{\\prescript{#1}{}{#2}#3\\,}", 3], "LUR": ["{\\prescript{#1}{}{#2}_{#3}\\,}", 3], "LURU": ["{\\prescript{#1}{}{#2}_{#3}^{#4}\\,}", 4], "LLdot": ["{\\prescript{}{#1}{\\dot{#2}}_{#3}\\,}", 3], "vr": ["{\\left[ \\begin{array}{c} { #1}\\vspace{0.04cm} \\\\ { #2}\\vspace{0.04cm} \\\\ { #3} \\end{array} \\right]}", 3], "mr": ["{\\left[ \\begin{array}{ccc} #1 & #2 & #3 \\vspace{0.04cm}\\\\ #4 & #5 & #6 \\vspace{0.04cm}\\\\ #7 & #8 & #9  \\end{array} \\right]}", 9], "vp": ["{\\left[ \\begin{array}{c} { #1} \\vspace{0.04cm}\\\\ { #2} \\end{array} \\right]}", 2], "mp": ["{\\left[ \\begin{array}{cc} #1 & #2 \\vspace{0.04cm}\\\\ #3 & #4 \\end{array} \\right]}", 4], "mfour": ["{\\left[ \\begin{array}{cccc} { #1} \\\\ { #2} \\\\ { #3} \\\\ { #4} \\end{array} \\right]}", 4], "vfour": ["{\\left[ \\begin{array}{c} { #1} \\\\ { #2} \\\\ { #3} \\\\ { #4} \\end{array} \\right]}", 4], "vrRow": ["{[#1,\\, #2,\\, #3]}", 3], "vsix": ["{\\left[ \\begin{array}{c} { #1} \\\\ { #2} \\\\ { #3} \\\\ { #4} \\\\ { #5} \\\\ { #6} \\end{array} \\right]}", 6], "vsixb": ["{\\begin{array}{c} { #1} \\\\ { #2} \\\\ { #3} \\\\ { #4} \\\\ { #5} \\\\ { #6} \\end{array} }", 6], "vsixs": ["{ \\begin{array}{c} { #1} \\\\ { #2} \\\\ { #3} \\\\ { #4} \\\\ { #5} \\\\ { #6} \\end{array} }", 6], "SO": "{q}", "FO": "{y}", "AE": "{\\lambda}", "SYS": "{s}", "SON": "{$2^\\mathrm{nd}$ order differential equations}", "FON": "{$1^\\mathrm{st}$ order differential equations}", "AEN": "{algebraic equations}", "Bm": "{\\mathbf{B}}", "Cm": "{\\mathbf{C}}", "Fm": "{\\mathbf{F}}", "SYSN": "{system equations}", "cIni": "{_\\mathrm{ini}}", "cRef": "{_\\mathrm{ref}}", "cCur": "{_\\mathrm{cur}}", "cVis": "{_\\mathrm{vis}}", "cSOS": "{_\\mathrm{start\\;of\\;step}}", "cConfig": "{_\\mathrm{config}}", "pLoc": "{\\mathbf{b}}", "pLocB": "{\\,^{b}{\\mathbf{v}}}", "pRef": "{\\mathbf{r}}", "pRefG": "{\\,^{0}{\\mathbf{r}}}", "indf": "{_\\mathrm{f}}", "indt": "{_\\mathrm{t}}", "indr": "{_\\mathrm{r}}", "indtt": "{_\\mathrm{tt}}", "indrr": "{_\\mathrm{rr}}", "indff": "{_\\mathrm{ff}}", "indtf": "{_\\mathrm{tf}}", "indrf": "{_\\mathrm{rf}}", "indtr": "{_\\mathrm{tr}}", "omegaBDtilde": "{\\LU{b}{\\tilde \\tomega_\\mathrm{bd}}}", "indrigid": "{_\\mathrm{rigid}}", "indred": "{_\\mathrm{red}}", "induser": "{_\\mathrm{user}}", "indu": "{_\\mathrm{u}}", "termA": ["{\\color{blue}{#1}}", 1], "termB": ["{\\color{red}{#1}}", 1], "termC": ["{\\color{green}{#1}}", 1], "acc": "{\\ddot{\\mathbf{q}}}", "GA": "{G\\alpha}", "Hm": "{\\mathbf{H}}", "ImTwo": "{\\mathbf{I}_{2 \\times 2}}", "Lm": "{\\mathbf{L}}", "Qm": "{\\mathbf{Q}}", "Vm": "{\\mathbf{V}}", "Wm": "{\\mathbf{W}}", "Xm": "{\\mathbf{X}}", "Ym": "{\\mathbf{Y}}", "aalg": "{\\mathbf{a}}", "iv": "{\\mathbf{i}}", "jv": "{\\mathbf{j}}", "kv": "{\\mathbf{k}}", "lv": "{\\mathbf{l}}", "mv": "{\\mathbf{m}}", "ov": "{\\mathbf{o}}", "vel": "{\\mathbf{v}}", "wv": "{\\mathbf{w}}"}}, "options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+      <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-mml-chtml.js"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+    <link rel="next" title="ObjectALEANCFCable2D" href="ObjectALEANCFCable2D.html" />
+    <link rel="prev" title="ObjectANCFCable" href="ObjectANCFCable.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            Exudyn1.13.3
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Exudyn User Manual</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../README.html">Exudyn</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../manual/gettingStarted.html">Installation and getting started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../manual/introduction.html">Overview on Exudyn</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../manual/introductionBasics.html">Exudyn basics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../manual/tutorial.html">Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../manual/GUI.html">Renderer, graphics and visualization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../manual/performanceErrors.html">Performance, errors and solver failures</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../manual/introductionAdvanced.html">Advanced topics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../manual/notation.html">Notation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../manual/theory.html">Theory and formulations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../manual/solver.html">Solvers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../cInterface/cInterfaceIndex.html">Python-C++ command interface</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Reference Manual</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="itemsIndex.html">Items reference manual</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="nodeIndex.html">Node</a></li>
+<li class="toctree-l2"><a class="reference internal" href="objectBodyIndex.html">Object (Body)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="objectSuperElementIndex.html">Object (SuperElement)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="objectObjectIndex.html">Object (Object)</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="objectFiniteElementIndex.html">Object (FiniteElement)</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="objectFiniteElementGeneral.html">General info for all finite elements</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ObjectANCFCable.html">ObjectANCFCable</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">ObjectANCFCable2D</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ObjectALEANCFCable2D.html">ObjectALEANCFCable2D</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ObjectANCFBeam.html">ObjectANCFBeam</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ObjectBeamGeometricallyExact2D.html">ObjectBeamGeometricallyExact2D</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ObjectBeamGeometricallyExact.html">ObjectBeamGeometricallyExact</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ObjectANCFThinPlate.html">ObjectANCFThinPlate</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="objectConnectorIndex.html">Object (Connector)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="objectConstraintIndex.html">Object (Constraint)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="objectJointIndex.html">Object (Joint)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="markerIndex.html">Marker</a></li>
+<li class="toctree-l2"><a class="reference internal" href="loadIndex.html">Load</a></li>
+<li class="toctree-l2"><a class="reference internal" href="sensorIndex.html">Sensor</a></li>
+<li class="toctree-l2"><a class="reference internal" href="itemsIndex.html#parameter-changes">Parameter changes</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../pythonUtilities/utilitiesIndex.html">Python Utility Functions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../structures/structuresIndex.html">Structures and Settings</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../references.html">References</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Developer documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../dev/README.html">Exudyn developer documentation</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">How-to notes</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../howTo/condaEnvironments.html">Conda environments for Exudyn</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../howTo/sphinxDocs.html">Building the documentation</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Examples, models and issues</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../examples/examplesIndex.html">Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../testModels/testModelsIndex.html">TestModels</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../abbreviations.html">List of Abbreviations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../manual/revisions.html">Revisions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../CHANGELOG.html">Changelog</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../trackerlog.html">Issue tracker</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">Exudyn1.13.3</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="itemsIndex.html">Items reference manual</a></li>
+          <li class="breadcrumb-item"><a href="objectFiniteElementIndex.html">Object (FiniteElement)</a></li>
+      <li class="breadcrumb-item active">ObjectANCFCable2D</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../../_sources/docs/generated/items/ObjectANCFCable2D.md.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <!-- GENERATED by tools/generators/itemDocsEmitter.py from definitions/ - do not edit -->
+<section class="tex2jax_ignore mathjax_ignore" id="objectancfcable2d">
+<span id="sec-item-objectancfcable2d"></span><h1>ObjectANCFCable2D<a class="headerlink" href="#objectancfcable2d" title="Link to this heading"></a></h1>
+<p>A 2D cable finite element using 2 nodes of type NodePoint2DSlope1. The localPosition of the beam with length <span class="math notranslate nohighlight">\(L\)</span>=length and height <span class="math notranslate nohighlight">\(h\)</span> ranges in <span class="math notranslate nohighlight">\(X\)</span>-direction in range <span class="math notranslate nohighlight">\([0, L]\)</span> and in <span class="math notranslate nohighlight">\(Y\)</span>-direction in range <span class="math notranslate nohighlight">\([-h/2,h/2]\)</span> (which is in fact not needed in the <a class="reference internal" href="../abbreviations.html#eom"><span class="std std-ref">EOM</span></a>).</p>
+<a class="reference internal image-reference" href="../../../_images/ObjectANCFCable2D.png"><img alt="../../../_images/ObjectANCFCable2D.png" src="../../../_images/ObjectANCFCable2D.png" width="500" />
+</a>
+<section id="interface">
+<h2>Interface<a class="headerlink" href="#interface" title="Link to this heading"></a></h2>
+<ul class="simple">
+<li><p>Python names: <code class="docutils literal notranslate"><span class="pre">ObjectANCFCable2D</span></code> or <code class="docutils literal notranslate"><span class="pre">Cable2D</span></code>, and <code class="docutils literal notranslate"><span class="pre">VCable2D</span></code> for its visualization</p></li>
+<li><p>Nodes it takes: <a class="reference internal" href="NodePoint2DSlope1.html#sec-item-nodepoint2dslope1"><span class="std std-ref">NodePoint2DSlope1</span></a></p></li>
+<li><p>Body markers that can be placed on it: <a class="reference internal" href="MarkerBodyMass.html#sec-item-markerbodymass"><span class="std std-ref">MarkerBodyMass</span></a>, <a class="reference internal" href="MarkerBodyPosition.html#sec-item-markerbodyposition"><span class="std std-ref">MarkerBodyPosition</span></a>, <a class="reference internal" href="MarkerBodyRigid.html#sec-item-markerbodyrigid"><span class="std std-ref">MarkerBodyRigid</span></a></p></li>
+</ul>
+</section>
+<section id="parameters">
+<h2>Parameters<a class="headerlink" href="#parameters" title="Link to this heading"></a></h2>
+<p>The parameters of the item; in a dictionary, its type is ‘ANCFCable2D’:</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>name</p></th>
+<th class="head"><p>type</p></th>
+<th class="head"><p>size</p></th>
+<th class="head"><p>default</p></th>
+<th class="head"><p>description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><strong>name</strong></p></td>
+<td><p>String</p></td>
+<td><p></p></td>
+<td><p>‘’</p></td>
+<td><p>objects’s unique name</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>length</strong></p></td>
+<td><p>UReal</p></td>
+<td><p></p></td>
+<td><p>0.</p></td>
+<td><p>(symbol: <span class="math notranslate nohighlight">\(L\)</span>) [SI:m] reference length of beam; such that the total volume (e.g. for volume load) gives <span class="math notranslate nohighlight">\(\rho A L\)</span>; must be positive</p></td>
+</tr>
+<tr class="row-even"><td><p><strong>massPerLength</strong></p></td>
+<td><p>UReal</p></td>
+<td><p></p></td>
+<td><p>0.</p></td>
+<td><p>(symbol: <span class="math notranslate nohighlight">\(\rho A\)</span>) [SI:kg/m] mass per length of beam</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>bendingStiffness</strong></p></td>
+<td><p>UReal</p></td>
+<td><p></p></td>
+<td><p>0.</p></td>
+<td><p>(symbol: <span class="math notranslate nohighlight">\(EI\)</span>) [SI:Nm<span class="math notranslate nohighlight">\(^2\)</span>] bending stiffness of beam; the bending moment is <span class="math notranslate nohighlight">\(m = EI (\kappa - \kappa_0)\)</span>, in which <span class="math notranslate nohighlight">\(\kappa\)</span> is the material measure of curvature</p></td>
+</tr>
+<tr class="row-even"><td><p><strong>axialStiffness</strong></p></td>
+<td><p>UReal</p></td>
+<td><p></p></td>
+<td><p>0.</p></td>
+<td><p>(symbol: <span class="math notranslate nohighlight">\(EA\)</span>) [SI:N] axial stiffness of beam; the axial force is <span class="math notranslate nohighlight">\(f_{ax} = EA (\varepsilon -\varepsilon_0)\)</span>, in which <span class="math notranslate nohighlight">\(\varepsilon = \vert \rv^\prime\vert -1\)</span> is the axial strain</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>bendingDamping</strong></p></td>
+<td><p>UReal</p></td>
+<td><p></p></td>
+<td><p>0.</p></td>
+<td><p>(symbol: <span class="math notranslate nohighlight">\(d_{K}\)</span>) [SI:Nm<span class="math notranslate nohighlight">\(^2\)</span>/s] bending damping of beam ; the additional virtual work due to damping is <span class="math notranslate nohighlight">\(\delta W_{\dot \kappa} = \int_0^L \dot \kappa \delta \kappa dx\)</span></p></td>
+</tr>
+<tr class="row-even"><td><p><strong>axialDamping</strong></p></td>
+<td><p>UReal</p></td>
+<td><p></p></td>
+<td><p>0.</p></td>
+<td><p>(symbol: <span class="math notranslate nohighlight">\(d_{\varepsilon}\)</span>) [SI:N/s] axial damping of beam; the additional virtual work due to damping is <span class="math notranslate nohighlight">\(\delta W_{\dot\varepsilon} = \int_0^L \dot \varepsilon \delta \varepsilon dx\)</span></p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>referenceAxialStrain</strong></p></td>
+<td><p>Real</p></td>
+<td><p></p></td>
+<td><p>0.</p></td>
+<td><p>(symbol: <span class="math notranslate nohighlight">\(\varepsilon_0\)</span>) [SI:1] reference axial strain of beam (pre-deformation) of beam; without external loading the beam will statically keep the reference axial strain value</p></td>
+</tr>
+<tr class="row-even"><td><p><strong>referenceCurvature</strong></p></td>
+<td><p>Real</p></td>
+<td><p></p></td>
+<td><p>0.</p></td>
+<td><p>(symbol: <span class="math notranslate nohighlight">\(\kappa_0\)</span>) [SI:1/m] reference curvature of beam (pre-deformation) of beam; without external loading the beam will statically keep the reference curvature value</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>strainIsRelativeToReference</strong></p></td>
+<td><p>Real</p></td>
+<td><p></p></td>
+<td><p>0.</p></td>
+<td><p>(symbol: <span class="math notranslate nohighlight">\(f\cRef\)</span>) if set to 1., a pre-deformed reference configuration is considered as the stressless state; if set to 0., the straight configuration plus the values of <span class="math notranslate nohighlight">\(\varepsilon_0\)</span> and <span class="math notranslate nohighlight">\(\kappa_0\)</span> serve as a reference geometry; allows also values between 0. and 1.</p></td>
+</tr>
+<tr class="row-even"><td><p><strong>nodeNumbers</strong></p></td>
+<td><p>NodeIndex2</p></td>
+<td><p>2</p></td>
+<td><p>[invalid (-1), invalid (-1)]</p></td>
+<td><p>two node numbers ANCF cable element</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>useReducedOrderIntegration</strong></p></td>
+<td><p>Index</p></td>
+<td><p></p></td>
+<td><p>0</p></td>
+<td><p>0/false: use Gauss order 9 integration for virtual work of axial forces, order 5 for virtual work of bending moments; 1/True: use Gauss order 7 integration for virtual work of axial forces, order 3 for virtual work of bending moments; 2: use mixed Lobatto/Gauss integration with exceptional quality of axial strain, however, spurious (hourglass) modes may occur!</p></td>
+</tr>
+<tr class="row-even"><td><p><strong>axialForceUserFunction</strong></p></td>
+<td><p>ObjectANCFCable2DAxialForceUserFunction</p></td>
+<td><p></p></td>
+<td><p>0</p></td>
+<td><p>(symbol: <span class="math notranslate nohighlight">\(\mathrm{UF} \in \Rcal\)</span>) A Python function which defines the (nonlinear relations) of local strains (including axial strain and bending strain) as well as time derivatives to the local axial force; see description below</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>bendingMomentUserFunction</strong></p></td>
+<td><p>ObjectANCFCable2DBendingMomentUserFunction</p></td>
+<td><p></p></td>
+<td><p>0</p></td>
+<td><p>(symbol: <span class="math notranslate nohighlight">\(\mathrm{UF} \in \Rcal\)</span>) A Python function which defines the (nonlinear relations) of local strains (including axial strain and bending strain) as well as time derivatives to the local bending moment; see description below</p></td>
+</tr>
+<tr class="row-even"><td><p><strong>visualization</strong></p></td>
+<td><p>VObjectANCFCable2D</p></td>
+<td><p></p></td>
+<td><p></p></td>
+<td><p>parameters for visualization of item</p></td>
+</tr>
+</tbody>
+</table>
+<p>Renamed parameters, still taken with a <code class="docutils literal notranslate"><span class="pre">DeprecationWarning</span></code>: <code class="docutils literal notranslate"><span class="pre">physicsLength</span></code> (deprecated since 1.12.258, removed in 2031): use <code class="docutils literal notranslate"><span class="pre">length</span></code>; <code class="docutils literal notranslate"><span class="pre">physicsMassPerLength</span></code> (deprecated since 1.12.258, removed in 2031): use <code class="docutils literal notranslate"><span class="pre">massPerLength</span></code>; <code class="docutils literal notranslate"><span class="pre">physicsBendingStiffness</span></code> (deprecated since 1.12.258, removed in 2031): use <code class="docutils literal notranslate"><span class="pre">bendingStiffness</span></code>; <code class="docutils literal notranslate"><span class="pre">physicsAxialStiffness</span></code> (deprecated since 1.12.258, removed in 2031): use <code class="docutils literal notranslate"><span class="pre">axialStiffness</span></code>; <code class="docutils literal notranslate"><span class="pre">physicsBendingDamping</span></code> (deprecated since 1.12.258, removed in 2031): use <code class="docutils literal notranslate"><span class="pre">bendingDamping</span></code>; <code class="docutils literal notranslate"><span class="pre">physicsAxialDamping</span></code> (deprecated since 1.12.258, removed in 2031): use <code class="docutils literal notranslate"><span class="pre">axialDamping</span></code>; <code class="docutils literal notranslate"><span class="pre">physicsReferenceAxialStrain</span></code> (deprecated since 1.12.258, removed in 2031): use <code class="docutils literal notranslate"><span class="pre">referenceAxialStrain</span></code>; <code class="docutils literal notranslate"><span class="pre">physicsReferenceCurvature</span></code> (deprecated since 1.12.258, removed in 2031): use <code class="docutils literal notranslate"><span class="pre">referenceCurvature</span></code>.</p>
+</section>
+<section id="visualization-parameters">
+<h2>Visualization parameters<a class="headerlink" href="#visualization-parameters" title="Link to this heading"></a></h2>
+<p>The parameters of <code class="docutils literal notranslate"><span class="pre">VObjectANCFCable2D</span></code>, given as <code class="docutils literal notranslate"><span class="pre">visualization</span></code>:</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>name</p></th>
+<th class="head"><p>type</p></th>
+<th class="head"><p>size</p></th>
+<th class="head"><p>default</p></th>
+<th class="head"><p>description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><strong>show</strong></p></td>
+<td><p>Bool</p></td>
+<td><p></p></td>
+<td><p>True</p></td>
+<td><p>set true, if item is shown in visualization and false if it is not shown</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>drawHeight</strong></p></td>
+<td><p>float</p></td>
+<td><p></p></td>
+<td><p>0.</p></td>
+<td><p>if beam is drawn with rectangular shape, this is the drawing height</p></td>
+</tr>
+<tr class="row-even"><td><p><strong>color</strong></p></td>
+<td><p>Float4</p></td>
+<td><p>4</p></td>
+<td><p>[-1.,-1.,-1.,-1.]</p></td>
+<td><p>RGBA color of the object; if R==-1, use default color</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="drawing">
+<h2>Drawing<a class="headerlink" href="#drawing" title="Link to this heading"></a></h2>
+<p>Drawn as <a class="reference internal" href="objectFiniteElementGeneral.html#sec-drawing-objectsfiniteelement"><span class="std std-ref">all finite elements</span></a>; a band of height <code class="docutils literal notranslate"><span class="pre">drawHeight</span></code> along the axis, of <code class="docutils literal notranslate"><span class="pre">bodies.beams.axialTiling</span></code> segments, or a line if <code class="docutils literal notranslate"><span class="pre">drawHeight</span></code> is 0; the <code class="docutils literal notranslate"><span class="pre">bodies.beams.drawVertical...</span></code> settings draw a value (e.g. a force) across it.</p>
+<p>Settings beyond those of all finite elements: <a class="reference internal" href="../structures/VisualizationSettings.html#sec-vsettingsbeams"><span class="std std-ref"><code class="docutils literal notranslate"><span class="pre">bodies.beams.axialTiling</span></code></span></a>, <a class="reference internal" href="../structures/VisualizationSettings.html#sec-vsettingsbeams"><span class="std std-ref"><code class="docutils literal notranslate"><span class="pre">bodies.beams.crossSectionFilled</span></code></span></a>, <a class="reference internal" href="../structures/VisualizationSettings.html#sec-vsettingsbeams"><span class="std std-ref"><code class="docutils literal notranslate"><span class="pre">bodies.beams.crossSectionTiling</span></code></span></a>, <a class="reference internal" href="../structures/VisualizationSettings.html#sec-vsettingsbeams"><span class="std std-ref"><code class="docutils literal notranslate"><span class="pre">bodies.beams.drawVertical</span></code></span></a>, <a class="reference internal" href="../structures/VisualizationSettings.html#sec-vsettingsbeams"><span class="std std-ref"><code class="docutils literal notranslate"><span class="pre">bodies.beams.drawVerticalColor</span></code></span></a>, <a class="reference internal" href="../structures/VisualizationSettings.html#sec-vsettingsbeams"><span class="std std-ref"><code class="docutils literal notranslate"><span class="pre">bodies.beams.drawVerticalFactor</span></code></span></a>, <a class="reference internal" href="../structures/VisualizationSettings.html#sec-vsettingsbeams"><span class="std std-ref"><code class="docutils literal notranslate"><span class="pre">bodies.beams.drawVerticalLines</span></code></span></a>, <a class="reference internal" href="../structures/VisualizationSettings.html#sec-vsettingsbeams"><span class="std std-ref"><code class="docutils literal notranslate"><span class="pre">bodies.beams.drawVerticalOffset</span></code></span></a>, <a class="reference internal" href="../structures/VisualizationSettings.html#sec-vsettingsbeams"><span class="std std-ref"><code class="docutils literal notranslate"><span class="pre">bodies.beams.drawVerticalValues</span></code></span></a>, <a class="reference internal" href="../structures/VisualizationSettings.html#sec-vsettingsbeams"><span class="std std-ref"><code class="docutils literal notranslate"><span class="pre">bodies.beams.reducedAxialInterploation</span></code></span></a>, <a class="reference internal" href="../structures/VisualizationSettings.html#sec-vsettingsgeneral"><span class="std std-ref"><code class="docutils literal notranslate"><span class="pre">general.rendererPrecision</span></code></span></a>.</p>
+</section>
+<section id="output-variables">
+<h2>Output variables<a class="headerlink" href="#output-variables" title="Link to this heading"></a></h2>
+<p>Available as <code class="docutils literal notranslate"><span class="pre">OutputVariableType</span></code> in sensors, <code class="docutils literal notranslate"><span class="pre">Get...Output()</span></code> and other functions:</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>output variable</p></th>
+<th class="head"><p>symbol</p></th>
+<th class="head"><p>description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Position</p></td>
+<td><p><span class="math notranslate nohighlight">\(\LU{0}{\pv\cConfig(x,y,0)} = \rv\cConfig(x) + y\cdot \nv\cConfig(x)\)</span></p></td>
+<td><p>global position vector of local position <span class="math notranslate nohighlight">\([x,y,0]\)</span></p></td>
+</tr>
+<tr class="row-odd"><td><p>Displacement</p></td>
+<td><p><span class="math notranslate nohighlight">\(\LU{0}{\uv\cConfig(x,y,0)} = \LU{0}{\pv\cConfig(x,y,0)} - \LU{0}{\pv\cRef(x,y,0)}\)</span></p></td>
+<td><p>global displacement vector of local position</p></td>
+</tr>
+<tr class="row-even"><td><p>Velocity</p></td>
+<td><p><span class="math notranslate nohighlight">\(\LU{0}{\vv(x,y,0)} = \LU{0}{\dot \rv(x)} - y \cdot \omega_2 \cdot\LU{0}{\tv(x)} \)</span></p></td>
+<td><p>global velocity vector of local position</p></td>
+</tr>
+<tr class="row-odd"><td><p>VelocityLocal</p></td>
+<td><p><span class="math notranslate nohighlight">\(\LU{b}{\vv(x,y,0)} = \LU{b0}{\Rot}\LU{0}{\vv(x,y,0)}\)</span></p></td>
+<td><p>local velocity vector of local position</p></td>
+</tr>
+<tr class="row-even"><td><p>Rotation</p></td>
+<td><p><span class="math notranslate nohighlight">\(\varphi = \mathrm{atan2}(r'_y, r'_x)\)</span></p></td>
+<td><p>(scalar) rotation angle of axial slope vector (relative to global <span class="math notranslate nohighlight">\(x\)</span>-axis)</p></td>
+</tr>
+<tr class="row-odd"><td><p>Director1</p></td>
+<td><p><span class="math notranslate nohighlight">\(\rv'(x)\)</span></p></td>
+<td><p>(axial) slope vector of local axis position (at <span class="math notranslate nohighlight">\(y\)</span>=0)</p></td>
+</tr>
+<tr class="row-even"><td><p>StrainLocal</p></td>
+<td><p><span class="math notranslate nohighlight">\(\varepsilon\)</span></p></td>
+<td><p>axial strain (scalar) of local axis position (at Y=0)</p></td>
+</tr>
+<tr class="row-odd"><td><p>CurvatureLocal</p></td>
+<td><p><span class="math notranslate nohighlight">\(K\)</span></p></td>
+<td><p>axial strain (scalar)</p></td>
+</tr>
+<tr class="row-even"><td><p>ForceLocal</p></td>
+<td><p><span class="math notranslate nohighlight">\(N\)</span></p></td>
+<td><p>(local) section normal force (scalar, including reference strains) (at <span class="math notranslate nohighlight">\(y\)</span>=0); note that strains are highly inaccurate when coupled to bending, thus consider useReducedOrderIntegration=2 and evaluate axial strain at nodes or at midpoint</p></td>
+</tr>
+<tr class="row-odd"><td><p>TorqueLocal</p></td>
+<td><p><span class="math notranslate nohighlight">\(M\)</span></p></td>
+<td><p>(local) bending moment (scalar) (at <span class="math notranslate nohighlight">\(y\)</span>=0)</p></td>
+</tr>
+<tr class="row-even"><td><p>AngularVelocity</p></td>
+<td><p><span class="math notranslate nohighlight">\(\tomega = [0,\, ,0,\, \omega_2]\)</span></p></td>
+<td><p>angular velocity of local axis position (at <span class="math notranslate nohighlight">\(y\)</span>=0)</p></td>
+</tr>
+<tr class="row-odd"><td><p>AngularVelocityLocal</p></td>
+<td><p><span class="math notranslate nohighlight">\([0,\,0,\,\omega_z]\tp\)</span></p></td>
+<td><p>the angular velocity of the axis, the same as AngularVelocity in the plane</p></td>
+</tr>
+<tr class="row-even"><td><p>Acceleration</p></td>
+<td><p><span class="math notranslate nohighlight">\(\LU{0}{\av(x,y,0)} = \LU{0}{\ddot \rv(x)} - y \cdot \dot\omega_2 \cdot\LU{0}{\tv(x)}- y \cdot \omega_2 \cdot\LU{0}{\dot\tv(x)} \)</span></p></td>
+<td><p>global acceleration vector of local position</p></td>
+</tr>
+<tr class="row-odd"><td><p>AngularAcceleration</p></td>
+<td><p><span class="math notranslate nohighlight">\(\talpha = [0,\, ,0,\, \dot\omega_2]\)</span></p></td>
+<td><p>angular acceleration of local axis position</p></td>
+</tr>
+<tr class="row-even"><td><p>KineticEnergy</p></td>
+<td><p><span class="math notranslate nohighlight">\(T = \frac{1}{2} \dot\qv\tp \Mm\, \dot\qv\)</span></p></td>
+<td><p>kinetic energy from the mass matrix of the current state and the velocities of the nodes; current configuration only; localPosition must be <span class="math notranslate nohighlight">\([0,0,0]\)</span></p></td>
+</tr>
+<tr class="row-odd"><td><p>PotentialEnergy</p></td>
+<td><p><span class="math notranslate nohighlight">\(V = \frac{1}{2}\int_0^L EA\,(\varepsilon - \varepsilon_\mathrm{ref})^2 + EI\,(\kappa - \kappa_\mathrm{ref})^2\, dx\)</span></p></td>
+<td><p>elastic energy, integrated with the rules of the elastic forces (useReducedOrderIntegration); raises for a user function; localPosition must be <span class="math notranslate nohighlight">\([0,0,0]\)</span></p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="detailed-description">
+<span id="description-objectancfcable2d"></span><h2>Detailed description<a class="headerlink" href="#detailed-description" title="Link to this heading"></a></h2>
+<section id="definition-of-quantities">
+<h3>Definition of quantities<a class="headerlink" href="#definition-of-quantities" title="Link to this heading"></a></h3>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>intermediate variables</p></th>
+<th class="head"><p>symbol</p></th>
+<th class="head"><p>description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>beam height</p></td>
+<td><p><span class="math notranslate nohighlight">\(h\)</span></p></td>
+<td><p>beam height used in several definitions, but effectively undefined. The geometry of the cross section has no influence except for drawing or contact.</p></td>
+</tr>
+<tr class="row-odd"><td><p>local beam position</p></td>
+<td><p><span class="math notranslate nohighlight">\(\pLocB=[x,\, y,\, 0]\tp\)</span></p></td>
+<td><p>local position at axial coordinate <span class="math notranslate nohighlight">\(x \in [0,L]\)</span> and cross section coordinate <span class="math notranslate nohighlight">\(y \in [-h/2, h/2]\)</span>.</p></td>
+</tr>
+<tr class="row-even"><td><p>beam axis position</p></td>
+<td><p><span class="math notranslate nohighlight">\(\LU{0}{\rv(x)} = \rv(x) \)</span></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p>beam axis slope</p></td>
+<td><p><span class="math notranslate nohighlight">\(\LU{0}{\rv'(x)} = \rv'(x) \)</span></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p>beam axis tangent</p></td>
+<td><p><span class="math notranslate nohighlight">\(\LU{0}{\tv(x)} = \frac{\rv'(x)}{\Vert \rv(x)'\Vert} \)</span></p></td>
+<td><p>this (normalized) vector is normal to cross section</p></td>
+</tr>
+<tr class="row-odd"><td><p>beam axis normal</p></td>
+<td><p><span class="math notranslate nohighlight">\(\LU{0}{\nv(x)} = [n_x,\, n_y]\tp = [-t_y,\, t_x]\tp  \)</span></p></td>
+<td><p>this (normalized) vector lies within the cross section and defines positive <span class="math notranslate nohighlight">\(y\)</span>-direction.</p></td>
+</tr>
+<tr class="row-even"><td><p>angular velocity</p></td>
+<td><p><span class="math notranslate nohighlight">\(\omega_2 = (-r'_y \cdot \dot r'_x + r'_x \cdot \dot r'_y) / \Vert \rv(x)'\Vert^2 \)</span></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p>rotation matrix</p></td>
+<td><p><span class="math notranslate nohighlight">\(\LU{0b}{\Rot}\)</span></p></td>
+<td><p></p></td>
+</tr>
+</tbody>
+</table>
+<p>The Bernoulli-Euler beam is capable of large axial and bendig deformation as it employs the material measure of curvature for the bending.</p>
+</section>
+<section id="kinematics-and-interpolation">
+<h3>Kinematics and interpolation<a class="headerlink" href="#kinematics-and-interpolation" title="Link to this heading"></a></h3>
+<p>Note that in this section, expressions are written in 2D, while output variables are in general 3D quantities, adding a zero for the <span class="math notranslate nohighlight">\(z\)</span>-coordinate.</p>
+<p>ANCF elements follow the original concept proposed by Shabana <a class="reference internal" href="../references.html#ref-shabana1997ancf"><span class="std std-ref">shabana1997ancf</span></a>.
+The present 2D element is based on the interpolation used by Berzeri and Shabana <a class="reference internal" href="../references.html#ref-berzeri2000"><span class="std std-ref">berzeri2000</span></a>, but the formulation (especially of the elastic forces) is according to
+Gerstmayr and Irschik <a class="reference internal" href="../references.html#ref-gerstmayrirschik2008"><span class="std std-ref">GerstmayrIrschik2008</span></a>.
+Slight improvements for the integration of elastic forces and additional terms for off-axis forces and constraints are mentioned here.</p>
+<p>The current position of an arbitrary element at local axial position <span class="math notranslate nohighlight">\(x \in [0,L]\)</span>, where <span class="math notranslate nohighlight">\(L\)</span> is the beam length, reads</p>
+<div class="math notranslate nohighlight">
+\[
+\rv=\rv(x, t),
+\]</div>
+<p>The derivative of the position w.r.t. the axial reference coordinate is denoted as slope vector,</p>
+<div class="math notranslate nohighlight">
+\[
+\rv'= \frac{\partial \rv(x, t)}{\partial x}
+\]</div>
+<p>The interpolation is based on cubic (spline) interpolation of position, displacements and velocities.
+The generalized coordinates <span class="math notranslate nohighlight">\(\qv \in \Rcal^8\)</span> of the beam element is defined by</p>
+<div class="math notranslate nohighlight">
+\[
+\qv= \left[\, \rv_0^{T}\;\;\rv_0^{' T}\;\; \rv_1^{T}\;\; \rv_1^{' T}\, \right]^{T}.
+\]</div>
+<p>in which <span class="math notranslate nohighlight">\(\rv_0\)</span> is the position of node 0 and <span class="math notranslate nohighlight">\(\rv_1\)</span> is the position of node 1,
+<span class="math notranslate nohighlight">\(\rv'_0\)</span> the slope at node 0 and <span class="math notranslate nohighlight">\(\rv'_1\)</span> the slope at node 1.
+Note that ANCF coordinates in the present notation are computed as sum of reference and current coordinates</p>
+<div class="math notranslate nohighlight">
+\[
+\qv = \qv\cCur + \qv\cRef
+\]</div>
+<p>which is used throughout here. For time derivatives, it follows that <span class="math notranslate nohighlight">\(\dot \qv = \dot \qv\cCur\)</span>.</p>
+<p>Position and slope are interpolated with shape functions.
+The position and slope along the beam are interpolated by means of</p>
+<div class="math notranslate nohighlight">
+\[
+\rv = \Sm \qv \qquad \mathrm{and} \qquad \rv'=\Sm' \qv.
+\]</div>
+<p>in which <span class="math notranslate nohighlight">\(\Sm\)</span> is the shape function matrix,</p>
+<div class="math notranslate nohighlight">
+\[
+\Sm(x)= \left[\, S_1(x)\,\ImTwo\;\; S_2(x)\,\ImTwo\;\; S_3(x)\,\ImTwo\;\; S_4(x)\,\ImTwo\, \right].
+\]</div>
+<p>with identity matrix <span class="math notranslate nohighlight">\(\ImTwo \in \Rcal^{2 \times 2}\)</span> and the shape functions</p>
+<div class="math notranslate nohighlight" id="equation-eq-cable2d-shapefunctions">
+<span class="eqno">(65)<a class="headerlink" href="#equation-eq-cable2d-shapefunctions" title="Link to this equation"></a></span>\[\begin{split}
+\begin{aligned}
+S_1(x) &amp;= 1-3\frac{x^2}{L^2}+2\frac{x^3}{L^3}, \quad
+S_2(x) = x-2\frac{x^2}{L}+\frac{x^3}{L^2}\\
+S_3(x) &amp;= 3\frac{x^2}{L^2}-2\frac{x^3}{L^3}, \; \; \; \; \; \;  \quad
+S_4(x) = -\frac{x^2}{L}+\frac{x^3}{L^2}
+\end{aligned}
+\end{split}\]</div>
+<p>Velocity simply follows as</p>
+<div class="math notranslate nohighlight">
+\[
+\frac{\partial \rv}{\partial t} = \dot \rv = \Sm \dot \qv.
+\]</div>
+</section>
+<section id="strains-and-limitations">
+<h3>Strains and limitations<a class="headerlink" href="#strains-and-limitations" title="Link to this heading"></a></h3>
+<p>Axial strain and bending (the material measure of curvature) of a Bernoulli-Euler beam: no shear
+deformation and no deformation of the cross section, which has no geometry of its own except for
+drawing and contact.</p>
+</section>
+<section id="mass-matrix">
+<h3>Mass matrix<a class="headerlink" href="#mass-matrix" title="Link to this heading"></a></h3>
+<p>The mass matrix is constant and therefore precomputed at the first time it is needed (e.g., during computation of initial accelerations).
+The analytical form of the mass matrix reads</p>
+<div class="math notranslate nohighlight">
+\[
+\Mm_{analytic} = \int_0^L \rho A \Sm(x)^T \Sm(x) dx
+\]</div>
+<p>which is approximated using</p>
+<div class="math notranslate nohighlight">
+\[
+\Mm = \sum_{ip = 0}^{n_{ip}-1} w(x_{ip}) \frac{L}{2} \rho A \Sm(x_{ip})^T \Sm(x_{ip})
+\]</div>
+<p>with integration weights <span class="math notranslate nohighlight">\(w(x_{ip})\)</span>, <span class="math notranslate nohighlight">\(\sum w(x_{ip})=2\)</span>, and integration points <span class="math notranslate nohighlight">\(x_{ip}\)</span>, given as,</p>
+<div class="math notranslate nohighlight" id="equation-eq-ancfcable-iptransform">
+<span class="eqno">(66)<a class="headerlink" href="#equation-eq-ancfcable-iptransform" title="Link to this equation"></a></span>\[
+x_{ip} = \frac{L}{2}\xi_{ip} + \frac{L}{2} \, .
+\]</div>
+<p>Here, we use the Gauss integration rule with order 7, having <span class="math notranslate nohighlight">\(n_{ip}=4\)</span> Gauss points, see <a class="reference internal" href="../../manual/theoryFEM.html#sec-integrationpoints"><span class="std std-ref">Integration points</span></a>.
+Due to the third order polynomials, the integration is exact up to round-off errors.</p>
+</section>
+<section id="elastic-forces">
+<h3>Elastic forces<a class="headerlink" href="#elastic-forces" title="Link to this heading"></a></h3>
+<p>The elastic forces <span class="math notranslate nohighlight">\(\Qm_e\)</span> are implicitly defined by the relation to the
+virtual work of elastic forces, <span class="math notranslate nohighlight">\(\delta W_e\)</span>, of applied forces, <span class="math notranslate nohighlight">\(\delta W_a\)</span> and of viscous forces, <span class="math notranslate nohighlight">\(\delta W_v\)</span>,</p>
+<div class="math notranslate nohighlight" id="equation-eq-cable2d-elasticforces">
+<span class="eqno">(67)<a class="headerlink" href="#equation-eq-cable2d-elasticforces" title="Link to this equation"></a></span>\[
+\Qm_e^T \delta \qv = \delta W_e + \delta W_a + \delta W_v.
+\]</div>
+<p>The virtual work of elastic forces reads <a class="reference internal" href="../references.html#ref-gerstmayrirschik2008"><span class="std std-ref">GerstmayrIrschik2008</span></a>,</p>
+<div class="math notranslate nohighlight">
+\[
+\delta W_e = \int_0^L (N \delta \varepsilon + M \delta K) \,dx,
+\]</div>
+<p>in which the axial strain is defined as <a class="reference internal" href="../references.html#ref-gerstmayrirschik2008"><span class="std std-ref">GerstmayrIrschik2008</span></a></p>
+<div class="math notranslate nohighlight">
+\[
+\varepsilon=\Vert \rv'\Vert-1.
+\]</div>
+<p>and the material measure of curvature (bending strain) is given as</p>
+<div class="math notranslate nohighlight">
+\[
+K=\ev_3^T \frac{ \rv'\times \rv'' }{\Vert \rv'\Vert^2} .
+\]</div>
+<p>in which <span class="math notranslate nohighlight">\(\ev_3\)</span> is the unit vector which is perpendicular to the plane of the planar beam element.</p>
+<p>By derivation, we obtain the variation of axial strain</p>
+<div class="math notranslate nohighlight" id="equation-eq-cable2d-deltaepsilon">
+<span class="eqno">(68)<a class="headerlink" href="#equation-eq-cable2d-deltaepsilon" title="Link to this equation"></a></span>\[
+\delta \varepsilon =\frac{\partial \varepsilon}{\partial q_i}\delta q_i
+=\frac{1}{\Vert \rv'\Vert}\rv'^{T}\Sm'_i \delta q_i.
+\]</div>
+<p>and the variation of <span class="math notranslate nohighlight">\(K\)</span></p>
+<div class="math notranslate nohighlight" id="equation-eq-cable2d-deltakappa">
+<span class="eqno">(69)<a class="headerlink" href="#equation-eq-cable2d-deltakappa" title="Link to this equation"></a></span>\[\begin{split}
+\begin{aligned}
+\delta K &amp;= \frac{\partial}{\partial q_i} \left( \frac{(\rv'^{T}\times \rv'' )^{T}\ev_{3}}{\Vert \rv' \Vert^2 }\right) \delta q_i\\
+&amp;= \frac{1}{\Vert \rv' \Vert^4} \left[ \Vert \rv' \Vert^2 (\Sm'_i  \times \rv'' +\rv' \times \Sm''_i) -2 (\rv' \times \rv'') (\rv'^{T} \Sm'_i) \right]^{T} \ev_3 \delta q_i
+\end{aligned}
+\end{split}\]</div>
+<p>The normal force (axial force) <span class="math notranslate nohighlight">\(N\)</span> in the beam is defined as function of the current strain <span class="math notranslate nohighlight">\(\varepsilon\)</span>,</p>
+<div class="math notranslate nohighlight" id="equation-eq-n">
+<span class="eqno">(70)<a class="headerlink" href="#equation-eq-n" title="Link to this equation"></a></span>\[
+N = EA \, (\varepsilon - \varepsilon_0 - f\cRef \cdot \varepsilon\cRef).
+\]</div>
+<p>in which <span class="math notranslate nohighlight">\(\varepsilon_0\)</span> includes the (pre-)stretch of the beam, e.g., due to temperature or plastic deformation and
+<span class="math notranslate nohighlight">\(\varepsilon\cRef\)</span> includes the strain of the reference configuration.
+As can be seen, the reference strain is only considered, if <span class="math notranslate nohighlight">\(f\cRef=1\)</span>, which allows to consider the reference configuration to be
+completely stress-free (but the default value is <span class="math notranslate nohighlight">\(f\cRef=0\)</span> !).
+Note that – due to the inherent nonlinearity of <span class="math notranslate nohighlight">\(\varepsilon\)</span> – a combination of <span class="math notranslate nohighlight">\(\varepsilon_0\)</span> and <span class="math notranslate nohighlight">\(f\cRef=1\)</span> is physically only meaningful for small strains.
+A factor <span class="math notranslate nohighlight">\(f\cRef&lt;1\)</span> allows to realize a smooth transition between deformed and straight reference configuration, e.g. for initial configurations.</p>
+<p>The bending moment <span class="math notranslate nohighlight">\(M\)</span> in the beam is defined as function of the current material measure of curvature <span class="math notranslate nohighlight">\(K\)</span>,</p>
+<div class="math notranslate nohighlight" id="equation-eq-m">
+<span class="eqno">(71)<a class="headerlink" href="#equation-eq-m" title="Link to this equation"></a></span>\[
+M = EI \, (K - K_0 - f\cRef \cdot K\cRef).
+\]</div>
+<p>in which <span class="math notranslate nohighlight">\(K_0\)</span> includes the (pre-)curvature of the undeformed beam and
+<span class="math notranslate nohighlight">\(K\cRef\)</span> includes the curvature of the reference configuration, multiplied with the factor <span class="math notranslate nohighlight">\(f\cRef=1\)</span>, see the axial strain above.</p>
+<p>Using the latter definitions, the elastic forces follow from <a class="reference internal" href="#equation-eq-cable2d-elasticforces">(67)</a>.</p>
+<p>The virtual work of viscous damping forces, assuming viscous effects proportial to axial streching and bending, is defined as</p>
+<div class="math notranslate nohighlight">
+\[
+\delta W_v = \int_0^L \left( d_\varepsilon \dot \varepsilon \delta \varepsilon + d_K \dot K \delta K \right) \,d x.
+\]</div>
+<p>with material coefficients <span class="math notranslate nohighlight">\(d_\varepsilon\)</span> and <span class="math notranslate nohighlight">\(d_K\)</span>.
+The time derivatives of axial strain <span class="math notranslate nohighlight">\(\dot \varepsilon_p\)</span> follows by elementary differentiation</p>
+<div class="math notranslate nohighlight">
+\[
+\dot \varepsilon =  \frac{\partial }{\partial t}\left(\Vert \rv'\Vert-1 \right)
+= \frac{1}{\Vert \rv'\Vert} \rv^{\prime T} \Sm' \dot \qv
+\]</div>
+<p>as well as the derivative of the curvature,</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{aligned}
+\dot K &amp; = &amp;  \frac{\partial }{\partial t}\left(\ev_3^T\frac{ \rv'\times \rv'' }{\Vert \rv'\Vert^2}\right) \\
+&amp; = &amp;\frac{\ev_3^T}{(\rv'^T \rv')^2} \left( (\rv'^T \rv')   \frac{\partial \left( \rv' \times \rv'' \right)^T }{\partial t} -\left( \rv' \times \rv'' \right)^T  \frac{\partial  (\rv'^T \rv')}{\partial t} \right)\\
+&amp; = &amp;  \frac{\ev_3^T}{(\rv'^T \rv')^2}\left((\rv'^T \rv')\left((\Sm' \dot \qv) \times \rv'' + (\Sm'' \dot \qv) \times \rv'\right)-\left( \rv' \times \rv'' \right) (2\rv'^T (\Sm' \dot \qv)) \right) .
+\end{aligned}
+\end{split}\]</div>
+<p>The virtual work of applied forces reads</p>
+<div class="math notranslate nohighlight" id="equation-eq-applied">
+<span class="eqno">(72)<a class="headerlink" href="#equation-eq-applied" title="Link to this equation"></a></span>\[
+\delta W_a = \sum_i \fv_i^T \delta \rv_i(x_f) + \int_0^L \bv^T \delta \rv(x) \,d x \, ,
+\]</div>
+<p>in which <span class="math notranslate nohighlight">\(\fv_i\)</span> are forces applied to a certain position <span class="math notranslate nohighlight">\(x_f\)</span> at the beam centerline.
+The second term contains a load per length <span class="math notranslate nohighlight">\(\bv\)</span>, which is case of gravity vector <span class="math notranslate nohighlight">\(\gv\)</span> reads</p>
+<div class="math notranslate nohighlight">
+\[
+\bv = \rho \gv.
+\]</div>
+<p>Note that the variation of <span class="math notranslate nohighlight">\(\rv\)</span> simply follows as</p>
+<div class="math notranslate nohighlight">
+\[
+\delta \rv= \Sm\, \delta \qv
+\]</div>
+</section>
+<section id="numerical-integration-of-elastic-forces">
+<h3>Numerical integration of Elastic Forces<a class="headerlink" href="#numerical-integration-of-elastic-forces" title="Link to this heading"></a></h3>
+<p>The numerical integration of elastic forces <span class="math notranslate nohighlight">\(\Qm_e\)</span> is split into terms due to <span class="math notranslate nohighlight">\(\delta \varepsilon\)</span> and <span class="math notranslate nohighlight">\(\delta K\)</span>,</p>
+<div class="math notranslate nohighlight">
+\[
+\Qm_e = \int_0^L \left(\bullet(x) \frac{\partial \delta \varepsilon}{\partial \delta \qv} + \bullet(x) \frac{\partial \delta K}{\partial \delta \qv} \right) \,dx
+\]</div>
+<p>using different integration rules</p>
+<div class="math notranslate nohighlight">
+\[
+\Qm_e \approx  \sum_{ip = 0}^{n_{ip}^\varepsilon-1}  \left(\frac{L}{2}  \bullet(x_{ip}) \frac{\partial \delta \varepsilon}{\partial \delta \qv} \right)
++ \sum_{ip = 0}^{n_{ip}^K-1} \left( \frac{L}{2}\bullet(x_{ip}) \frac{\partial \delta K}{\partial \delta \qv} \right) \,dx
+\]</div>
+<p>with the integration points <span class="math notranslate nohighlight">\(x_{ip}\)</span> as defined in <a class="reference internal" href="#equation-eq-ancfcable-iptransform">(66)</a> and integration rules from <a class="reference internal" href="../../manual/theoryFEM.html#sec-integrationpoints"><span class="std std-ref">Integration points</span></a>.
+There are 3 different options for integration rules depending on the flag <code class="docutils literal notranslate"><span class="pre">useReducedOrderIntegration</span></code>:</p>
+<ol class="arabic simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">useReducedOrderIntegration</span></code> = 0: <span class="math notranslate nohighlight">\(n_{ip}^\varepsilon = 5\)</span> (Gauss order 9), <span class="math notranslate nohighlight">\(n_{ip}^K = 3\)</span> (Gauss order 5) – this is considered as full integration, leading to very small approximations; certainly, due to the high nonlinearity of expressions, this is only an approximation.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">useReducedOrderIntegration</span></code> = 1: <span class="math notranslate nohighlight">\(n_{ip}^\varepsilon = 4\)</span> (Gauss order 7), <span class="math notranslate nohighlight">\(n_{ip}^K = 2\)</span> (Gauss order 3) – this is considered as reduced integration, which is usually sufficiently accurate but leads to slightly less computational efforts, especially for bending terms.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">useReducedOrderIntegration</span></code> = 2: <span class="math notranslate nohighlight">\(n_{ip}^\varepsilon = 3\)</span> (Lobatto order 3), <span class="math notranslate nohighlight">\(n_{ip}^K = 2\)</span> (Gauss order 3) – this is a further reduced integration, with the exceptional property that axial strain and bending strain terms are computed at completely disjointed locations: axial strain terms are evaluated at <span class="math notranslate nohighlight">\(0\)</span>, <span class="math notranslate nohighlight">\(L/2\)</span> and <span class="math notranslate nohighlight">\(L\)</span>, while bending terms are evaluated at <span class="math notranslate nohighlight">\(\frac{L}{2} \pm \frac{L}{2}\sqrt{1/3}\)</span>. This allows axial strains to freely follow the bending terms at <span class="math notranslate nohighlight">\(\frac{L}{2} \pm \frac{L}{2}\sqrt{1/3}\)</span>, while axial strains are almost independent from bending terms at <span class="math notranslate nohighlight">\(0\)</span>, <span class="math notranslate nohighlight">\(L/2\)</span> and <span class="math notranslate nohighlight">\(L\)</span>. However, due to the highly reduced integration, spurious (hourglass) modes may occur in certain applications!</p></li>
+</ol>
+<p>Note that the Jacobian of elastic forces is computed using automatic differentiation.</p>
+</section>
+<section id="marker-interfaces">
+<h3>Marker interfaces<a class="headerlink" href="#marker-interfaces" title="Link to this heading"></a></h3>
+<p>For application of forces and constraints at any local beam position <span class="math notranslate nohighlight">\(\pLocB=[x,\, y,\, 0]\tp\)</span>, the position / velocity Jacobian reads</p>
+<div class="math notranslate nohighlight">
+\[
+\frac{\partial \LU{0}{\vv(x)}}{\dot \qv} = \Sm(x) + \left[ -y \cdot n_x S'_1(x) \frac{1}{\Vert \rv'\Vert} \LU{0}{\tv}, \,\,
+-y \cdot n_y S'_1(x) \frac{1}{\Vert \rv'\Vert} \LU{0}{\tv}, \,\, -y \cdot n_x S'_2(x) \frac{1}{\Vert \rv'\Vert} \LU{0}{\tv}, \,\,\ldots \right]
+\]</div>
+<p>with the normalized beam axis normal <span class="math notranslate nohighlight">\(\LU{0}{\nv} = [n_x,\, n_y]\tp\)</span>, see table above.</p>
+<p>For application of torques at any axis point <span class="math notranslate nohighlight">\(x\)</span>, the rotation / angular velocity Jacobian <span class="math notranslate nohighlight">\(\frac{\partial \LU{0}{\omega(x)}}{\dot \qv} \in \Rcal^{3 \times 8}\)</span> reads</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\frac{\partial \LU{0}{\omega(x)}}{\dot \qv} =
+\left[\!\! \begin{array}{ccccc}
+0 &amp; 0 &amp; 0 &amp; \cdots &amp; 0 \vspace{0.1cm}\\
+0 &amp; 0 &amp; 0 &amp; \cdots &amp; 0 \vspace{0.1cm}\\
+-r'_y \cdot S'_1(x) \frac{1}{\rv^{\prime 2}} &amp; r'_x \cdot S'_1(x) \frac{1}{\rv^{\prime 2}} &amp;
+-r'_y \cdot S'_2(x) \frac{1}{\rv^{\prime 2}} &amp; \cdots &amp; r'_x \cdot S'_4(x) \frac{1}{\rv^{\prime 2}}  \end{array} \!\!\right]
+\end{split}\]</div>
+<p><strong>Userfunction</strong>: <code class="docutils literal notranslate"><span class="pre">axialForceUserFunction(mbs,</span> <span class="pre">t,</span> <span class="pre">itemNumber,</span> <span class="pre">axialPositionNormalized,</span> <span class="pre">axialStrain,</span> <span class="pre">axialStrain_t,</span> <span class="pre">axialStrainRef,</span> <span class="pre">axialStiffness,</span> <span class="pre">axialDamping,</span> <span class="pre">curvature,</span> <span class="pre">curvature_t,</span> <span class="pre">curvatureRef)</span></code>
+A user function, which computes the axial force depending on time, strains and curvatures and
+object parameters (stiffness, damping).
+The object variables are provided to the function using the current values of the ANCFCable2D object.
+Note that itemNumber represents the index of the object in mbs, which can be used to retrieve additional data from the object through
+<code class="docutils literal notranslate"><span class="pre">mbs.GetObjectParameter(itemNumber,</span> <span class="pre">...)</span></code>, see the according description of <code class="docutils literal notranslate"><span class="pre">GetObjectParameter</span></code>.
+<strong>NOTE:</strong> this function has a different interface as compared to the bending moment function.</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>arguments / return</p></th>
+<th class="head"><p>type or size</p></th>
+<th class="head"><p>description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">mbs</span></code></p></td>
+<td><p>MainSystem</p></td>
+<td><p>provides MainSystem mbs to which object belongs</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">t</span></code></p></td>
+<td><p>Real</p></td>
+<td><p>current time in mbs</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">itemNumber</span></code></p></td>
+<td><p>Index</p></td>
+<td><p>integer number <span class="math notranslate nohighlight">\(i_N\)</span> of the object in mbs, allowing easy access to all object data via mbs.GetObjectParameter(itemNumber, …)</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">axialPositionNormalized</span></code></p></td>
+<td><p>Real</p></td>
+<td><p>axial position at the cable where the user function is evaluated; range is [0,1]</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">axialStrain</span></code></p></td>
+<td><p>Real</p></td>
+<td><p><span class="math notranslate nohighlight">\(\varepsilon\)</span></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">axialStrain_t</span></code></p></td>
+<td><p>Real</p></td>
+<td><p><span class="math notranslate nohighlight">\(\varepsilon_t\)</span></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">axialStrainRef</span></code></p></td>
+<td><p>Real</p></td>
+<td><p><span class="math notranslate nohighlight">\(\varepsilon_0 + f\cRef \cdot \varepsilon\cRef\)</span></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">axialStiffness</span></code></p></td>
+<td><p>Real</p></td>
+<td><p>as given in object parameters</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">axialDamping</span></code></p></td>
+<td><p>Real</p></td>
+<td><p>as given in object parameters</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">curvature</span></code></p></td>
+<td><p>Real</p></td>
+<td><p><span class="math notranslate nohighlight">\(K\)</span></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">curvature_t</span></code></p></td>
+<td><p>Real</p></td>
+<td><p><span class="math notranslate nohighlight">\(\dot K\)</span></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">curvatureRef</span></code></p></td>
+<td><p>Real</p></td>
+<td><p><span class="math notranslate nohighlight">\(K_0 + f\cRef \cdot K\cRef\)</span></p></td>
+</tr>
+<tr class="row-even"><td><p><strong>return value</strong></p></td>
+<td><p>Real</p></td>
+<td><p>scalar value of computed axial force</p></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Userfunction</strong>: <code class="docutils literal notranslate"><span class="pre">bendingMomentUserFunction(mbs,</span> <span class="pre">t,</span> <span class="pre">itemNumber,</span> <span class="pre">axialPositionNormalized,</span> <span class="pre">curvature,</span> <span class="pre">curvature_t,</span> <span class="pre">curvatureRef,</span> <span class="pre">bendingStiffness,</span> <span class="pre">bendingDamping,</span> <span class="pre">axialStrain,</span> <span class="pre">axialStrain_t,</span> <span class="pre">axialStrainRef)</span></code>
+A user function, which computes the bending moment depending on time, strains and curvatures and
+object parameters (stiffness, damping).
+The object variables are provided to the function using the current values of the ANCFCable2D object.
+Note that itemNumber represents the index of the object in mbs, which can be used to retrieve additional data from the object through
+<code class="docutils literal notranslate"><span class="pre">mbs.GetObjectParameter(itemNumber,</span> <span class="pre">...)</span></code>, see the according description of <code class="docutils literal notranslate"><span class="pre">GetObjectParameter</span></code>.
+<strong>NOTE:</strong> this function has a different interface as compared to the axial force function.</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>arguments / return</p></th>
+<th class="head"><p>type or size</p></th>
+<th class="head"><p>description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">mbs</span></code></p></td>
+<td><p>MainSystem</p></td>
+<td><p>provides MainSystem mbs to which object belongs</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">t</span></code></p></td>
+<td><p>Real</p></td>
+<td><p>current time in mbs</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">itemNumber</span></code></p></td>
+<td><p>Index</p></td>
+<td><p>integer number <span class="math notranslate nohighlight">\(i_N\)</span> of the object in mbs, allowing easy access to all object data via mbs.GetObjectParameter(itemNumber, …)</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">axialPositionNormalized</span></code></p></td>
+<td><p>Real</p></td>
+<td><p>axial position at the cable where the user function is evaluated; range is [0,1]</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">curvature</span></code></p></td>
+<td><p>Real</p></td>
+<td><p><span class="math notranslate nohighlight">\(K\)</span></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">curvature_t</span></code></p></td>
+<td><p>Real</p></td>
+<td><p><span class="math notranslate nohighlight">\(\dot K\)</span></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">curvatureRef</span></code></p></td>
+<td><p>Real</p></td>
+<td><p><span class="math notranslate nohighlight">\(K_0 + f\cRef \cdot K\cRef\)</span></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">bendingStiffness</span></code></p></td>
+<td><p>Real</p></td>
+<td><p>as given in object parameters</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">bendingDamping</span></code></p></td>
+<td><p>Real</p></td>
+<td><p>as given in object parameters</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">axialStrain</span></code></p></td>
+<td><p>Real</p></td>
+<td><p><span class="math notranslate nohighlight">\(\varepsilon\)</span></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">axialStrain_t</span></code></p></td>
+<td><p>Real</p></td>
+<td><p><span class="math notranslate nohighlight">\(\varepsilon_t\)</span></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">axialStrainRef</span></code></p></td>
+<td><p>Real</p></td>
+<td><p><span class="math notranslate nohighlight">\(\varepsilon_0 + f\cRef \cdot \varepsilon\cRef\)</span></p></td>
+</tr>
+<tr class="row-even"><td><p><strong>return value</strong></p></td>
+<td><p>Real</p></td>
+<td><p>scalar value of computed bending moment</p></td>
+</tr>
+</tbody>
+</table>
+<p><em>Example</em>:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1">#define some material parameters</span>
+<span class="n">rhoA</span> <span class="o">=</span> <span class="mf">100.</span>
+<span class="n">EA</span> <span class="o">=</span>   <span class="mf">1e7</span><span class="o">.</span>
+<span class="n">EI</span> <span class="o">=</span>   <span class="mf">1e5</span>
+
+<span class="c1">#example of bending moment user function</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">bendingMomentUserFunction</span><span class="p">(</span><span class="n">mbs</span><span class="p">,</span> <span class="n">t</span><span class="p">,</span> <span class="n">itemNumber</span><span class="p">,</span> <span class="n">axialPositionNormalized</span><span class="p">,</span>
+           <span class="n">curvature</span><span class="p">,</span> <span class="n">curvature_t</span><span class="p">,</span> <span class="n">curvatureRef</span><span class="p">,</span> <span class="n">bendingStiffness</span><span class="p">,</span>
+           <span class="n">bendingDamping</span><span class="p">,</span> <span class="n">axialStrain</span><span class="p">,</span> <span class="n">axialStrain_t</span><span class="p">,</span> <span class="n">axialStrainRef</span><span class="p">):</span>
+    <span class="n">fact</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="n">t</span><span class="p">)</span> <span class="c1">#runs from 0 to 1</span>
+    <span class="c1">#change reference curvature of beam over time:</span>
+    <span class="n">kappa</span><span class="o">=</span><span class="p">(</span><span class="n">curvature</span><span class="o">-</span><span class="n">curvatureRef</span><span class="o">*</span><span class="n">fact</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">bendingStiffness</span><span class="o">*</span><span class="p">(</span><span class="n">kappa</span><span class="p">)</span> <span class="o">+</span> <span class="n">bendingDamping</span><span class="o">*</span><span class="n">curvature_t</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">axialForceUserFunction</span><span class="p">(</span><span class="n">mbs</span><span class="p">,</span> <span class="n">t</span><span class="p">,</span> <span class="n">itemNumber</span><span class="p">,</span> <span class="n">axialPositionNormalized</span><span class="p">,</span>
+           <span class="n">axialStrain</span><span class="p">,</span> <span class="n">axialStrain_t</span><span class="p">,</span> <span class="n">axialStrainRef</span><span class="p">,</span> <span class="n">axialStiffness</span><span class="p">,</span>
+           <span class="n">axialDamping</span><span class="p">,</span> <span class="n">curvature</span><span class="p">,</span> <span class="n">curvature_t</span><span class="p">,</span> <span class="n">curvatureRef</span><span class="p">):</span>
+    <span class="n">fact</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="n">t</span><span class="p">)</span> <span class="c1">#runs from 0 to 1</span>
+    <span class="k">return</span> <span class="p">(</span><span class="n">axialStiffness</span><span class="o">*</span><span class="p">(</span><span class="n">axialStrain</span><span class="o">-</span><span class="n">fact</span><span class="o">*</span><span class="n">axialStrainRef</span><span class="p">)</span> <span class="o">+</span>
+            <span class="n">axialDamping</span><span class="o">*</span><span class="n">axialStrain_t</span><span class="p">)</span>
+
+<span class="n">cable</span> <span class="o">=</span> <span class="nc">ObjectANCFCable2D</span><span class="p">(</span><span class="n">massPerLength</span><span class="o">=</span><span class="n">rhoA</span><span class="p">,</span>
+                <span class="n">bendingStiffness</span><span class="o">=</span><span class="n">EI</span><span class="p">,</span>
+                <span class="n">bendingDamping</span> <span class="o">=</span> <span class="n">EI</span><span class="o">*</span><span class="mf">0.1</span><span class="p">,</span>
+                <span class="n">axialStiffness</span><span class="o">=</span><span class="n">EA</span><span class="p">,</span>
+                <span class="n">axialDamping</span><span class="o">=</span><span class="n">EA</span><span class="o">*</span><span class="mf">0.05</span><span class="p">,</span>
+                <span class="n">referenceAxialStrain</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span> <span class="c1">#10</span>
+                <span class="n">referenceCurvature</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>     <span class="c1">#radius=1</span>
+                <span class="n">bendingMomentUserFunction</span><span class="o">=</span><span class="n">bendingMomentUserFunction</span><span class="p">,</span>
+                <span class="n">axialForceUserFunction</span><span class="o">=</span><span class="n">axialForceUserFunction</span><span class="p">,</span>
+                <span class="p">)</span>
+<span class="c1">#use  cable with GenerateBeamElementsAlongLine(...)</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="mini-example">
+<span id="miniexample-objectancfcable2d"></span><h2>Mini example<a class="headerlink" href="#mini-example" title="Link to this heading"></a></h2>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">exudyn.beams</span><span class="w"> </span><span class="kn">import</span> <span class="nf">GenerateBeamElementsAlongLine</span>
+<span class="n">rhoA</span> <span class="o">=</span> <span class="mf">78.</span>
+<span class="n">EA</span> <span class="o">=</span> <span class="mf">1000000.</span>
+<span class="n">EI</span> <span class="o">=</span> <span class="mf">833.3333333333333</span>
+<span class="n">cable</span> <span class="o">=</span> <span class="nc">Cable2D</span><span class="p">(</span><span class="n">massPerLength</span><span class="o">=</span><span class="n">rhoA</span><span class="p">,</span> 
+                <span class="n">bendingStiffness</span><span class="o">=</span><span class="n">EI</span><span class="p">,</span> 
+                <span class="n">axialStiffness</span><span class="o">=</span><span class="n">EA</span><span class="p">,</span> 
+                <span class="p">)</span>
+
+<span class="n">ancf</span><span class="o">=</span><span class="nf">GenerateBeamElementsAlongLine</span><span class="p">(</span><span class="n">mbs</span><span class="o">=</span><span class="n">mbs</span><span class="p">,</span>
+                <span class="n">positionStart</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span> <span class="n">positionEnd</span><span class="o">=</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span>
+                <span class="n">numberOfElements</span><span class="o">=</span><span class="mi">32</span><span class="p">,</span> <span class="c1">#converged to 4 digits</span>
+                <span class="n">beamTemplate</span><span class="o">=</span><span class="n">cable</span><span class="p">,</span> <span class="c1">#this defines the beam element properties</span>
+                <span class="n">gravity</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="o">-</span><span class="mf">9.81</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span>
+                <span class="n">groundConstraintsStart</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">],</span> <span class="c1">#add constraints for pos and rot (r'_y)</span>
+                <span class="p">)</span>
+<span class="n">lastNode</span> <span class="o">=</span> <span class="n">ancf</span><span class="p">[</span><span class="s1">'nodes'</span><span class="p">][</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+
+<span class="c1">#assemble and solve system for default parameters</span>
+<span class="n">mbs</span><span class="o">.</span><span class="nf">Assemble</span><span class="p">()</span>
+<span class="n">mbs</span><span class="o">.</span><span class="nf">SolveStatic</span><span class="p">()</span>
+
+<span class="c1">#check result</span>
+<span class="n">exu</span><span class="o">.</span><span class="n">sys</span><span class="p">[</span><span class="s1">'testResult'</span><span class="p">]</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">GetNodeOutput</span><span class="p">(</span><span class="n">lastNode</span><span class="p">,</span> <span class="n">exu</span><span class="o">.</span><span class="nc">OutputVariableType</span><span class="o">.</span><span class="n">Displacement</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+<span class="c1">#ux=-0.5013058140308901</span>
+</pre></div>
+</div>
+<p>Relevant Examples (Ex) and TestModels (TM) with weblink to github: <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/ALEANCFpipe.py"><code class="docutils literal notranslate"><span class="pre">ALEANCFpipe.py</span></code></a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/ANCFcantileverTest.py"><code class="docutils literal notranslate"><span class="pre">ANCFcantileverTest.py</span></code></a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/ANCFcantileverTestDyn.py"><code class="docutils literal notranslate"><span class="pre">ANCFcantileverTestDyn.py</span></code></a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/ANCFcontactCircle.py"><code class="docutils literal notranslate"><span class="pre">ANCFcontactCircle.py</span></code></a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/ANCFcontactCircle2.py"><code class="docutils literal notranslate"><span class="pre">ANCFcontactCircle2.py</span></code></a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/ANCFmovingRigidbody.py"><code class="docutils literal notranslate"><span class="pre">ANCFmovingRigidbody.py</span></code></a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/ANCFrotatingCable2D.py"><code class="docutils literal notranslate"><span class="pre">ANCFrotatingCable2D.py</span></code></a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/ANCFslidingJoint2D.py"><code class="docutils literal notranslate"><span class="pre">ANCFslidingJoint2D.py</span></code></a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/ANCFslidingJoint2Drigid.py"><code class="docutils literal notranslate"><span class="pre">ANCFslidingJoint2Drigid.py</span></code></a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/ANCFswitchingSlidingJoint2D.py"><code class="docutils literal notranslate"><span class="pre">ANCFswitchingSlidingJoint2D.py</span></code></a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/ANCFtestHalfcircle.py"><code class="docutils literal notranslate"><span class="pre">ANCFtestHalfcircle.py</span></code></a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/ANCFtests2.py"><code class="docutils literal notranslate"><span class="pre">ANCFtests2.py</span></code></a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/createItemNumbersTest.py"><code class="docutils literal notranslate"><span class="pre">createItemNumbersTest.py</span></code></a> (TM), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/energiesFlexibleBodiesTest.py"><code class="docutils literal notranslate"><span class="pre">energiesFlexibleBodiesTest.py</span></code></a> (TM), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/energiesTest.py"><code class="docutils literal notranslate"><span class="pre">energiesTest.py</span></code></a> (TM), …</p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="ObjectANCFCable.html" class="btn btn-neutral float-left" title="ObjectANCFCable" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="ObjectALEANCFCable2D.html" class="btn btn-neutral float-right" title="ObjectALEANCFCable2D" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

@@ -1,0 +1,289 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>tools/generators/ — the new generator code &mdash; Exudyn1.13.3 1.13.3 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=3ee1c6c6" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/rtd_sphinx_search.min.css" />
+      <link rel="stylesheet" type="text/css" href="../../_static/custom.css?v=e2783f0e" />
+
+  
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=b8a3e558"></script>
+      <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../_static/copybutton.js?v=f281be69"></script>
+      <script src="../../_static/js/rtd_search_config.js"></script>
+      <script src="../../_static/js/rtd_sphinx_search.min.js"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="exudev — the Exudyn maintainer driver" href="../exudev/README.html" />
+    <link rel="prev" title="definitions/ — the item and structure definitions as Python" href="../../definitions/README.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            Exudyn1.13.3
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Exudyn User Manual</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../README.html">Exudyn</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../docs/manual/gettingStarted.html">Installation and getting started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../docs/manual/introduction.html">Overview on Exudyn</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../docs/manual/introductionBasics.html">Exudyn basics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../docs/manual/tutorial.html">Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../docs/manual/GUI.html">Renderer, graphics and visualization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../docs/manual/performanceErrors.html">Performance, errors and solver failures</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../docs/manual/introductionAdvanced.html">Advanced topics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../docs/manual/notation.html">Notation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../docs/manual/theory.html">Theory and formulations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../docs/manual/solver.html">Solvers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../docs/generated/cInterface/cInterfaceIndex.html">Python-C++ command interface</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Reference Manual</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../docs/generated/items/itemsIndex.html">Items reference manual</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../docs/generated/pythonUtilities/utilitiesIndex.html">Python Utility Functions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../docs/generated/structures/structuresIndex.html">Structures and Settings</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../docs/generated/references.html">References</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Developer documentation</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="../../docs/dev/README.html">Exudyn developer documentation</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../../docs/dev/GETTING_STARTED.html">Getting started as a developer</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../docs/dev/BUILD.html">Building Exudyn from source</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../docs/dev/GIT.html">Working with git in this repository</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../docs/dev/ARCHITECTURE.html">Exudyn C++ architecture</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../docs/dev/CODING_STYLE.html">Exudyn coding style and conventions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../docs/dev/WORKFLOW.html">Development workflow</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../docs/dev/NEW_ITEM.html">How to set up a new item</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../docs/dev/GUI_MANUAL_CHECK.html">Manual GUI check before a release</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../docs/generated/deprecations.html">Deprecations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../definitions/README.html">definitions/ — the item and structure definitions as Python</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">tools/generators/ — the new generator code</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#changing-a-definition">Changing a definition</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../exudev/README.html"><code class="docutils literal notranslate"><span class="pre">exudev</span></code> — the Exudyn maintainer driver</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../CONTRIBUTING.html">Contributing to Exudyn</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../docs/dev/README.html#repository-layout">Repository layout</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../docs/dev/README.html#building-and-running">Building and running</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../docs/dev/README.html#how-to-notes">How-to notes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../docs/dev/README.html#invariants">Invariants</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">How-to notes</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../docs/howTo/condaEnvironments.html">Conda environments for Exudyn</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../docs/howTo/sphinxDocs.html">Building the documentation</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Examples, models and issues</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../docs/generated/examples/examplesIndex.html">Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../docs/generated/testModels/testModelsIndex.html">TestModels</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../docs/generated/abbreviations.html">List of Abbreviations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../docs/manual/revisions.html">Revisions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../CHANGELOG.html">Changelog</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../docs/generated/trackerlog.html">Issue tracker</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">Exudyn1.13.3</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../docs/dev/README.html">Exudyn developer documentation</a></li>
+      <li class="breadcrumb-item active">tools/generators/ — the new generator code</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../_sources/tools/generators/README.md.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section class="tex2jax_ignore mathjax_ignore" id="tools-generators-the-new-generator-code">
+<h1>tools/generators/ — the new generator code<a class="headerlink" href="#tools-generators-the-new-generator-code" title="Link to this heading"></a></h1>
+<p>Maintainer tools around <a class="reference internal" href="../../definitions/README.html"><span class="std std-doc"><code class="docutils literal notranslate"><span class="pre">definitions/</span></code></span></a>, the input of code
+generation, and all code generators: the driver <code class="docutils literal notranslate"><span class="pre">generate.py</span></code>, the emitters,
+their shared helpers (<code class="docutils literal notranslate"><span class="pre">autoGenerateHelper.py</span></code>, <code class="docutils literal notranslate"><span class="pre">generatorPaths.py</span></code>), <code class="docutils literal notranslate"><span class="pre">createStubFiles.py</span></code> with
+<code class="docutils literal notranslate"><span class="pre">stubHeader.pyi</span></code>, and <code class="docutils literal notranslate"><span class="pre">generated/</span></code>, the intermediate files handed from one stage to the next.
+<code class="docutils literal notranslate"><span class="pre">src/pythonGenerator/</span></code> is gone; <code class="docutils literal notranslate"><span class="pre">exudynVersion.py</span></code>, which the
+build reads, lives here. <code class="docutils literal notranslate"><span class="pre">doc2rst.py</span></code> and
+<code class="docutils literal notranslate"><span class="pre">latexConverter.py</span></code> were deleted What stood here before:
+<code class="docutils literal notranslate"><span class="pre">makeAllBinariesScripts.py</span></code> and <code class="docutils literal notranslate"><span class="pre">exudynVersion.py</span></code> (read by <code class="docutils literal notranslate"><span class="pre">setup.py</span></code> and <code class="docutils literal notranslate"><span class="pre">conf.py</span></code>).</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>file</p></th>
+<th class="head"><p>what it does</p></th>
+<th class="head"><p>used by</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">definitionLoader.py</span></code></p></td>
+<td><p>imports <code class="docutils literal notranslate"><span class="pre">definitions/</span></code> and hands each class to the generators as <code class="docutils literal notranslate"><span class="pre">(parseInfo,</span> <span class="pre">parameterList)</span></code> - the form their old line parser produced - so their per-class code is unchanged. Removed once the generators read <code class="docutils literal notranslate"><span class="pre">definitions/</span></code> directly</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">itemModel.LegacyItems()</span></code>, <code class="docutils literal notranslate"><span class="pre">structureModel.LegacyStructures()</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">typeModel.py</span></code></p></td>
+<td><p>one type model: <code class="docutils literal notranslate"><span class="pre">Render(typeName,</span> <span class="pre">destination,</span> <span class="pre">context)</span></code> spells a definition type for <code class="docutils literal notranslate"><span class="pre">cppStorage</span></code>, <code class="docutils literal notranslate"><span class="pre">cppExchange</span></code>, <code class="docutils literal notranslate"><span class="pre">dictType</span></code>, <code class="docutils literal notranslate"><span class="pre">stub</span></code> or <code class="docutils literal notranslate"><span class="pre">pyTyping</span></code>, for items or structures; rules plus a named exception table</p></td>
+<td><p>the item and structure emitters, <code class="docutils literal notranslate"><span class="pre">definitionValidator.py</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">itemModel.py</span></code></p></td>
+<td><p>facts about items shared by the emitters: type predicates, user-function types, member predicates for direct access (<code class="docutils literal notranslate"><span class="pre">IsOwnVariable</span></code>, <code class="docutils literal notranslate"><span class="pre">HasFlag</span></code>, <code class="docutils literal notranslate"><span class="pre">DefaultValue</span></code>, …), how a <code class="docutils literal notranslate"><span class="pre">definitions/</span></code> member renders to the old string forms, per-item accessors</p></td>
+<td><p>the item emitters, <code class="docutils literal notranslate"><span class="pre">definitionLoader.py</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">itemInterfaceEmitter.py</span></code></p></td>
+<td><p>emits <code class="docutils literal notranslate"><span class="pre">python/exudyn/itemInterface.py</span></code> from <code class="docutils literal notranslate"><span class="pre">definitions/</span></code>; <code class="docutils literal notranslate"><span class="pre">--output</span></code> for another target</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">tools/regenerate.py</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">itemHeaderEmitter.py</span></code></p></td>
+<td><p>emits the per-item C++ headers <code class="docutils literal notranslate"><span class="pre">C/Main/Visu&lt;Item&gt;.h</span></code>, <code class="docutils literal notranslate"><span class="pre">PySymbolicUserFunctionSet.h</span></code> / <code class="docutils literal notranslate"><span class="pre">PythonUserFunctionsTemplates.h</span></code> and <code class="docutils literal notranslate"><span class="pre">objectFactoryAutoReg.h</span></code>; <code class="docutils literal notranslate"><span class="pre">--output-dir</span></code> for another target</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">tools/regenerate.py</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">miniExampleEmitter.py</span></code></p></td>
+<td><p>emits <code class="docutils literal notranslate"><span class="pre">python/MiniExamples/&lt;Item&gt;.py</span></code> and <code class="docutils literal notranslate"><span class="pre">miniExamplesFileList.py</span></code>; <code class="docutils literal notranslate"><span class="pre">--output-dir</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">tools/regenerate.py</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">itemDocsEmitter.py</span></code></p></td>
+<td><p>emits the item reference manual: <code class="docutils literal notranslate"><span class="pre">docs/generated/items/*.md</span></code> (one page per item, one index per item type) and <code class="docutils literal notranslate"><span class="pre">confHelperItems.py</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">tools/regenerate.py</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">structureModel.py</span></code></p></td>
+<td><p>facts about structures shared by the structure emitters: type tables, predicates on classes and parameters, sorted parameters, typical paths, the old string records</p></td>
+<td><p>the structure emitters</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">structureHeaderEmitter.py</span></code></p></td>
+<td><p>emits the structure C++ headers (<code class="docutils literal notranslate"><span class="pre">SimulationSettings.h</span></code>, <code class="docutils literal notranslate"><span class="pre">VisualizationSettings.h</span></code>, …), <code class="docutils literal notranslate"><span class="pre">DictionariesGetSet.h</span></code> and <code class="docutils literal notranslate"><span class="pre">pybind_modules.h</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">tools/regenerate.py</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">structureStubEmitter.py</span></code></p></td>
+<td><p>emits the stub fragment <code class="docutils literal notranslate"><span class="pre">tools/generators/generated/stubSystemStructures.pyi</span></code> read by <code class="docutils literal notranslate"><span class="pre">createStubFiles.py</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">tools/regenerate.py</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">structureDocsEmitter.py</span></code></p></td>
+<td><p>emits the structure reference documentation: <code class="docutils literal notranslate"><span class="pre">docs/generated/structures/*.md</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">tools/regenerate.py</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">examplesDocsEmitter.py</span></code></p></td>
+<td><p>emits the pages of <code class="docutils literal notranslate"><span class="pre">python/Examples/</span></code> and <code class="docutils literal notranslate"><span class="pre">python/TestModels/</span></code>, and <code class="docutils literal notranslate"><span class="pre">docs/generated/abbreviations.md</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">tools/regenerate.py</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">latexToMarkdown.py</span></code></p></td>
+<td><p>the LaTeX of <code class="docutils literal notranslate"><span class="pre">definitions/</span></code> and of the docstrings, as MyST Markdown; called by every docs emitter</p></td>
+<td><p>the emitters</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">docstringText.py</span></code></p></td>
+<td><p>text helpers for generated docstrings (<code class="docutils literal notranslate"><span class="pre">RemoveIndentation</span></code>, <code class="docutils literal notranslate"><span class="pre">CleanStringForPyiDescription</span></code>, <code class="docutils literal notranslate"><span class="pre">SplitSummaryDescription</span></code>) and <code class="docutils literal notranslate"><span class="pre">GoogleDocstringRenderer</span></code>; what was kept of <code class="docutils literal notranslate"><span class="pre">autoGenerateDocstrings.py</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">autoGenerateHelper.py</span></code>, <code class="docutils literal notranslate"><span class="pre">itemInterfaceEmitter.py</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">enumEmitter.py</span></code></p></td>
+<td><p>generates <code class="docutils literal notranslate"><span class="pre">src/Autogenerated/EnumTypes.h</span></code> (enums and string functions) from <code class="docutils literal notranslate"><span class="pre">definitions/enumTypes.py</span></code>, after checking unique names and values</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">pybindEmitter.py</span></code>, on every generation</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">utilityDocsModel.py</span></code></p></td>
+<td><p>the reader of the docstrings in the utility modules, with <code class="docutils literal notranslate"><span class="pre">ast</span></code> (statically; <code class="docutils literal notranslate"><span class="pre">&#64;docmeta</span></code> gives author, date, status and <code class="docutils literal notranslate"><span class="pre">public=False</span></code>, <code class="docutils literal notranslate"><span class="pre">&#64;extends(exudyn.MainSystem)</span></code> a MainSystem method) and the text helpers shared by the three emitters below</p></td>
+<td><p>the utility emitters</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">mainSystemExtensionDocsEmitter.py</span></code></p></td>
+<td><p>emits <code class="docutils literal notranslate"><span class="pre">MainSystemExt</span></code>/<code class="docutils literal notranslate"><span class="pre">MainSystemCreateExt</span></code> as <code class="docutils literal notranslate"><span class="pre">.md</span></code> and <code class="docutils literal notranslate"><span class="pre">.rst</span></code> fragments for the <code class="docutils literal notranslate"><span class="pre">&#64;extends</span></code> functions (both read by <code class="docutils literal notranslate"><span class="pre">pybindEmitter.py</span></code>) and <code class="docutils literal notranslate"><span class="pre">stubAutoBindingsExt.pyi</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">tools/regenerate.py</span></code>, before <code class="docutils literal notranslate"><span class="pre">pybindEmitter.py</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">utilityDocsEmitter.py</span></code></p></td>
+<td><p>emits the utility module reference: <code class="docutils literal notranslate"><span class="pre">docs/generated/pythonUtilities/*.md</span></code> and <code class="docutils literal notranslate"><span class="pre">confHelperPyUtilities.py</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">tools/regenerate.py</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">pybindEmitter.py</span></code></p></td>
+<td><p>replays <code class="docutils literal notranslate"><span class="pre">definitions/pybind*.py</span></code> into <code class="docutils literal notranslate"><span class="pre">pybind_manual_classes.h</span></code>, the stub fragments <code class="docutils literal notranslate"><span class="pre">stubAutoBindings.pyi</span></code> / <code class="docutils literal notranslate"><span class="pre">stubSymbolic.pyi</span></code> / <code class="docutils literal notranslate"><span class="pre">stubEnums.pyi</span></code>, <code class="docutils literal notranslate"><span class="pre">docs/generated/cInterface/*.md</span></code> and <code class="docutils literal notranslate"><span class="pre">confHelper.py</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">tools/regenerate.py</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">generate.py</span></code></p></td>
+<td><p>the single driver: declares every generator stage with the paths it reads and writes, derives the run order, validates <code class="docutils literal notranslate"><span class="pre">definitions/</span></code> first; <code class="docutils literal notranslate"><span class="pre">--list</span></code>, <code class="docutils literal notranslate"><span class="pre">--only</span> <span class="pre">NAME</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">tools/regenerate.py</span></code>, or directly</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">definitionValidator.py</span></code></p></td>
+<td><p>the cross-file checks on <code class="docutils literal notranslate"><span class="pre">definitions/</span></code>: every virtual item function overrides a real declaration in the C++ parent headers, <code class="docutils literal notranslate"><span class="pre">fromParent</span></code> members exist in the parent, no duplicate member, shaped defaults have the right size, a body declares an access function type exactly if it provides its function (#2744); in <code class="docutils literal notranslate"><span class="pre">pybind*.py</span></code>, argument/default/type lists agree, no function is declared twice, Begin/End steering calls pair up; reports all violations</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">tools/regenerate.py</span></code>, before the generators run (exit code 3)</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">outputVariableEmitter.py</span></code></p></td>
+<td><p>generates <code class="docutils literal notranslate"><span class="pre">src/Autogenerated/OutputVariableTypes.h</span></code> from <code class="docutils literal notranslate"><span class="pre">definitions/outputVariableTypes.py</span></code>, after checking the bit allocation</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">pybindEmitter.py</span></code>, on every generation</p></td>
+</tr>
+</tbody>
+</table>
+<section id="changing-a-definition">
+<h2>Changing a definition<a class="headerlink" href="#changing-a-definition" title="Link to this heading"></a></h2>
+<p>Edit <code class="docutils literal notranslate"><span class="pre">definitions/</span></code>, then in <code class="docutils literal notranslate"><span class="pre">venvExuP313</span></code>:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">python</span> <span class="n">tools</span><span class="o">/</span><span class="n">regenerate</span><span class="o">.</span><span class="n">py</span> <span class="o">--</span><span class="n">check</span>
+</pre></div>
+</div>
+<p>It validates the definitions, runs all generators and reports what changed in the generated set.</p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="../../definitions/README.html" class="btn btn-neutral float-left" title="definitions/ — the item and structure definitions as Python" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="../exudev/README.html" class="btn btn-neutral float-right" title="exudev — the Exudyn maintainer driver" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

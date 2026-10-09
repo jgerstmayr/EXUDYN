@@ -1,0 +1,546 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Module: lieGroupBasics &mdash; Exudyn1.13.3 1.13.3 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=3ee1c6c6" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/rtd_sphinx_search.min.css" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/custom.css?v=e2783f0e" />
+
+  
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=b8a3e558"></script>
+      <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../../_static/copybutton.js?v=f281be69"></script>
+      <script src="../../../_static/js/rtd_search_config.js"></script>
+      <script src="../../../_static/js/rtd_sphinx_search.min.js"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+    <link rel="next" title="Module: misc.mainSystemExtensions" href="misc.mainSystemExtensions.html" />
+    <link rel="prev" title="Module: kinematicTree" href="kinematicTree.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            Exudyn1.13.3
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Exudyn User Manual</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../README.html">Exudyn</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../manual/gettingStarted.html">Installation and getting started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../manual/introduction.html">Overview on Exudyn</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../manual/introductionBasics.html">Exudyn basics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../manual/tutorial.html">Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../manual/GUI.html">Renderer, graphics and visualization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../manual/performanceErrors.html">Performance, errors and solver failures</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../manual/introductionAdvanced.html">Advanced topics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../manual/notation.html">Notation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../manual/theory.html">Theory and formulations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../manual/solver.html">Solvers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../cInterface/cInterfaceIndex.html">Python-C++ command interface</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Reference Manual</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../items/itemsIndex.html">Items reference manual</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="utilitiesIndex.html">Python Utility Functions</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="advancedUtilities.html">Module: advancedUtilities</a></li>
+<li class="toctree-l2"><a class="reference internal" href="artificialIntelligence.html">Module: artificialIntelligence</a></li>
+<li class="toctree-l2"><a class="reference internal" href="basicUtilities.html">Module: basicUtilities</a></li>
+<li class="toctree-l2"><a class="reference internal" href="beams.html">Module: beams</a></li>
+<li class="toctree-l2"><a class="reference internal" href="demos.html">Module: demos</a></li>
+<li class="toctree-l2"><a class="reference internal" href="FEM.html">Module: FEM</a></li>
+<li class="toctree-l2"><a class="reference internal" href="graphics.html">Module: graphics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="graphicsDataUtilities.html">Module: graphicsDataUtilities</a></li>
+<li class="toctree-l2"><a class="reference internal" href="misc.GUI.html">Module: misc.GUI</a></li>
+<li class="toctree-l2"><a class="reference internal" href="misc.settingsUtilities.html">Module: misc.settingsUtilities</a></li>
+<li class="toctree-l2"><a class="reference internal" href="interactive.html">Module: interactive</a></li>
+<li class="toctree-l2"><a class="reference internal" href="kinematicTree.html">Module: kinematicTree</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Module: lieGroupBasics</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#function-sinc">Function: Sinc</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#function-cot">Function: Cot</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#function-r3xso3matrix2rotationmatrix">Function: R3xSO3Matrix2RotationMatrix</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#function-r3xso3matrix2translation">Function: R3xSO3Matrix2Translation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#function-r3xso3matrix">Function: R3xSO3Matrix</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#function-expso3">Function: ExpSO3</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#function-exps3">Function: ExpS3</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#function-logso3">Function: LogSO3</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#function-texpso3">Function: TExpSO3</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#function-texpso3inv">Function: TExpSO3Inv</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#function-expse3">Function: ExpSE3</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#function-logse3">Function: LogSE3</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#function-texpse3">Function: TExpSE3</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#function-texpse3inv">Function: TExpSE3Inv</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#function-expr3xso3">Function: ExpR3xSO3</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#function-texpr3xso3">Function: TExpR3xSO3</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#function-texpr3xso3inv">Function: TExpR3xSO3Inv</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#function-compositionruledirectproductr3ands3">Function: CompositionRuleDirectProductR3AndS3</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#function-compositionrulesemidirectproductr3ands3">Function: CompositionRuleSemiDirectProductR3AndS3</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#function-compositionruledirectproductr3andr3rotvec">Function: CompositionRuleDirectProductR3AndR3RotVec</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#function-compositionrulesemidirectproductr3andr3rotvec">Function: CompositionRuleSemiDirectProductR3AndR3RotVec</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#function-compositionruledirectproductr3andr3rotxyzangles">Function: CompositionRuleDirectProductR3AndR3RotXYZAngles</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#function-compositionrulesemidirectproductr3andr3rotxyzangles">Function: CompositionRuleSemiDirectProductR3AndR3RotXYZAngles</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#function-compositionruleforeulerparameters">Function: CompositionRuleForEulerParameters</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#function-compositionruleforrotationvectors">Function: CompositionRuleForRotationVectors</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#function-compositionrulerotxyzanglesrotationvector">Function: CompositionRuleRotXYZAnglesRotationVector</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="misc.mainSystemExtensions.html">Module: misc.mainSystemExtensions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="particles.html">Module: particles</a></li>
+<li class="toctree-l2"><a class="reference internal" href="physics.html">Module: physics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="plot.html">Module: plot</a></li>
+<li class="toctree-l2"><a class="reference internal" href="processing.html">Module: processing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rigidBodyUtilities.html">Module: rigidBodyUtilities</a></li>
+<li class="toctree-l2"><a class="reference internal" href="robotics.html">Module: robotics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="robotics.rosInterface.html">Module: robotics.rosInterface</a></li>
+<li class="toctree-l2"><a class="reference internal" href="robotics.future.html">Module: robotics.future</a></li>
+<li class="toctree-l2"><a class="reference internal" href="robotics.models.html">Module: robotics.models</a></li>
+<li class="toctree-l2"><a class="reference internal" href="robotics.mobile.html">Module: robotics.mobile</a></li>
+<li class="toctree-l2"><a class="reference internal" href="robotics.motion.html">Module: robotics.motion</a></li>
+<li class="toctree-l2"><a class="reference internal" href="robotics.special.html">Module: robotics.special</a></li>
+<li class="toctree-l2"><a class="reference internal" href="robotics.utilities.html">Module: robotics.utilities</a></li>
+<li class="toctree-l2"><a class="reference internal" href="shells.html">Module: shells</a></li>
+<li class="toctree-l2"><a class="reference internal" href="signalProcessing.html">Module: signalProcessing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="solver.html">Module: solver</a></li>
+<li class="toctree-l2"><a class="reference internal" href="utilities.html">Module: utilities</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../structures/structuresIndex.html">Structures and Settings</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../references.html">References</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Developer documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../dev/README.html">Exudyn developer documentation</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">How-to notes</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../howTo/condaEnvironments.html">Conda environments for Exudyn</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../howTo/sphinxDocs.html">Building the documentation</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Examples, models and issues</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../examples/examplesIndex.html">Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../testModels/testModelsIndex.html">TestModels</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../abbreviations.html">List of Abbreviations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../manual/revisions.html">Revisions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../CHANGELOG.html">Changelog</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../trackerlog.html">Issue tracker</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">Exudyn1.13.3</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="utilitiesIndex.html">Python Utility Functions</a></li>
+      <li class="breadcrumb-item active">Module: lieGroupBasics</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../../_sources/docs/generated/pythonUtilities/lieGroupBasics.md.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <!-- GENERATED by tools/generators/utilityDocsEmitter.py from the docstrings of python/exudyn - do not edit -->
+<section class="tex2jax_ignore mathjax_ignore" id="module-liegroupbasics">
+<span id="sec-module-liegroupbasics"></span><h1>Module: lieGroupBasics<a class="headerlink" href="#module-liegroupbasics" title="Link to this heading"></a></h1>
+<p>Lie group methods and formulas for Lie group integration.</p>
+<ul class="simple">
+<li><p><strong>Author</strong>: Stefan Holzinger, Johannes Gerstmayr</p></li>
+<li><p><strong>Date</strong>: 2020-09-11</p></li>
+<li><p><strong>References</strong>: For details on Lie group methods used here, see the references [Henderson1977; Simo1988; Bruels2011; Sonneville2014; Sonneville2017; Terze2016; Mueller2017]. Lie group methods for rotation vector are described in Holzinger and Gerstmayr [HolzingerGerstmayr2020; Holzinger2021].</p></li>
+</ul>
+<section id="function-sinc">
+<span id="sec-liegroupbasics-sinc"></span><h2>Function: Sinc<a class="headerlink" href="#function-sinc" title="Link to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/lieGroupBasics.py#L45"><code class="docutils literal notranslate"><span class="pre">Sinc(x)</span></code></a></p>
+<ul class="simple">
+<li><p><strong>function description</strong>: compute the cardinal sine function in radians</p></li>
+<li><p><strong>input</strong>: scalar float or int value</p></li>
+<li><p><strong>output</strong>: float value in radians</p></li>
+<li><p><strong>author</strong>: Stefan Holzinger</p></li>
+</ul>
+</section>
+<section id="function-cot">
+<span id="sec-liegroupbasics-cot"></span><h2>Function: Cot<a class="headerlink" href="#function-cot" title="Link to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/lieGroupBasics.py#L63"><code class="docutils literal notranslate"><span class="pre">Cot(x)</span></code></a></p>
+<ul class="simple">
+<li><p><strong>function description</strong>: compute the cotangent function cot(x)=1/tan(x) in radians</p></li>
+<li><p><strong>input</strong>: scalar float or int value</p></li>
+<li><p><strong>output</strong>: float value in radians</p></li>
+<li><p><strong>author</strong>: Stefan Holzinger</p></li>
+</ul>
+</section>
+<section id="function-r3xso3matrix2rotationmatrix">
+<span id="sec-liegroupbasics-r3xso3matrix2rotationmatrix"></span><h2>Function: R3xSO3Matrix2RotationMatrix<a class="headerlink" href="#function-r3xso3matrix2rotationmatrix" title="Link to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/lieGroupBasics.py#L76"><code class="docutils literal notranslate"><span class="pre">R3xSO3Matrix2RotationMatrix(G)</span></code></a></p>
+<ul class="simple">
+<li><p><strong>function description</strong>: computes 3x3 rotation matrix from 7x7 R3xSO(3) matrix, see <a class="reference internal" href="../references.html#ref-bruels2011"><span class="std std-ref">Bruels2011</span></a></p></li>
+<li><p><strong>input</strong>:</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">G</span></code>: 7x7 matrix as np.array</p></li>
+</ul>
+</li>
+<li><p><strong>output</strong>: 3x3 rotation matrix as np.array</p></li>
+<li><p><strong>author</strong>: Stefan Holzinger</p></li>
+</ul>
+</section>
+<section id="function-r3xso3matrix2translation">
+<span id="sec-liegroupbasics-r3xso3matrix2translation"></span><h2>Function: R3xSO3Matrix2Translation<a class="headerlink" href="#function-r3xso3matrix2translation" title="Link to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/lieGroupBasics.py#L89"><code class="docutils literal notranslate"><span class="pre">R3xSO3Matrix2Translation(G)</span></code></a></p>
+<ul class="simple">
+<li><p><strong>function description</strong>: computes translation part of R3xSO(3) matrix, see <a class="reference internal" href="../references.html#ref-bruels2011"><span class="std std-ref">Bruels2011</span></a></p></li>
+<li><p><strong>input</strong>:</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">G</span></code>: 7x7 matrix as np.array</p></li>
+</ul>
+</li>
+<li><p><strong>output</strong>: 3D vector as np.array containg translational part of R3xSO(3)</p></li>
+<li><p><strong>author</strong>: Stefan Holzinger</p></li>
+</ul>
+</section>
+<section id="function-r3xso3matrix">
+<span id="sec-liegroupbasics-r3xso3matrix"></span><h2>Function: R3xSO3Matrix<a class="headerlink" href="#function-r3xso3matrix" title="Link to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/lieGroupBasics.py#L102"><code class="docutils literal notranslate"><span class="pre">R3xSO3Matrix(x,</span> <span class="pre">R)</span></code></a></p>
+<ul class="simple">
+<li><p><strong>function description</strong>: builds 7x7 matrix as element of the Lie group R3xSO(3), see <a class="reference internal" href="../references.html#ref-bruels2011"><span class="std std-ref">Bruels2011</span></a></p></li>
+<li><p><strong>input</strong>:</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">x</span></code>: 3D vector as np.array representing the translation part corresponding to R3</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">R</span></code>: 3x3 rotation matrix as np.array</p></li>
+</ul>
+</li>
+<li><p><strong>output</strong>: 7x7 matrix as np.array</p></li>
+<li><p><strong>author</strong>: Stefan Holzinger</p></li>
+</ul>
+</section>
+<section id="function-expso3">
+<span id="sec-liegroupbasics-expso3"></span><h2>Function: ExpSO3<a class="headerlink" href="#function-expso3" title="Link to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/lieGroupBasics.py#L131"><code class="docutils literal notranslate"><span class="pre">ExpSO3(Omega)</span></code></a></p>
+<ul class="simple">
+<li><p><strong>function description</strong>: compute the matrix exponential map on the Lie group SO(3), see <a class="reference internal" href="../references.html#ref-mueller2017"><span class="std std-ref">Mueller2017</span></a></p></li>
+<li><p><strong>input</strong>: 3D rotation vector as np.array</p></li>
+<li><p><strong>output</strong>: 3x3 matrix as np.array</p></li>
+<li><p><strong>author</strong>: Stefan Holzinger</p></li>
+</ul>
+<p>Relevant Examples (Ex) and TestModels (TM) with weblink to github: <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/LieGroupIntegrationUnitTests.py"><code class="docutils literal notranslate"><span class="pre">LieGroupIntegrationUnitTests.py</span></code></a> (TM)</p>
+</section>
+<section id="function-exps3">
+<span id="sec-liegroupbasics-exps3"></span><h2>Function: ExpS3<a class="headerlink" href="#function-exps3" title="Link to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/lieGroupBasics.py#L148"><code class="docutils literal notranslate"><span class="pre">ExpS3(Omega)</span></code></a></p>
+<ul class="simple">
+<li><p><strong>function description</strong>: compute the quaternion exponential map on the Lie group S(3), see [Terze2016; Mueller2017]</p></li>
+<li><p><strong>input</strong>: 3D rotation vector as np.array</p></li>
+<li><p><strong>output</strong>: 4D vector as np.array containing four Euler parameters entry zero of output represent the scalar part of Euler parameters</p></li>
+<li><p><strong>author</strong>: Stefan Holzinger</p></li>
+</ul>
+</section>
+<section id="function-logso3">
+<span id="sec-liegroupbasics-logso3"></span><h2>Function: LogSO3<a class="headerlink" href="#function-logso3" title="Link to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/lieGroupBasics.py#L165"><code class="docutils literal notranslate"><span class="pre">LogSO3(R)</span></code></a></p>
+<ul class="simple">
+<li><p><strong>function description</strong>: compute the matrix logarithmic map on the Lie group SO(3)</p></li>
+<li><p><strong>input</strong>: 3x3 rotation matrix as np.array</p></li>
+<li><p><strong>output</strong>: 3x3 skew symmetric matrix as np.array</p></li>
+<li><p><strong>author</strong>: Johannes Gerstmayr</p></li>
+<li><p><strong>notes</strong>: improved accuracy for very small angles as well as angles phi close to pi AS WELL AS at phi=pi</p></li>
+</ul>
+</section>
+<section id="function-texpso3">
+<span id="sec-liegroupbasics-texpso3"></span><h2>Function: TExpSO3<a class="headerlink" href="#function-texpso3" title="Link to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/lieGroupBasics.py#L209"><code class="docutils literal notranslate"><span class="pre">TExpSO3(Omega)</span></code></a></p>
+<ul class="simple">
+<li><p><strong>function description</strong>: compute the tangent operator corresponding to ExpSO3, see <a class="reference internal" href="../references.html#ref-bruels2011"><span class="std std-ref">Bruels2011</span></a></p></li>
+<li><p><strong>input</strong>: 3D rotation vector as np.array</p></li>
+<li><p><strong>output</strong>: 3x3 matrix as np.array</p></li>
+<li><p><strong>author</strong>: Stefan Holzinger</p></li>
+</ul>
+</section>
+<section id="function-texpso3inv">
+<span id="sec-liegroupbasics-texpso3inv"></span><h2>Function: TExpSO3Inv<a class="headerlink" href="#function-texpso3inv" title="Link to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/lieGroupBasics.py#L237"><code class="docutils literal notranslate"><span class="pre">TExpSO3Inv(Omega)</span></code></a></p>
+<ul class="simple">
+<li><p><strong>function description</strong>: compute the inverse of the tangent operator TExpSO3, see <a class="reference internal" href="../references.html#ref-sonneville2014"><span class="std std-ref">Sonneville2014</span></a> this function was improved, see coordinateMaps.pdf by Stefan Holzinger</p></li>
+<li><p><strong>input</strong>: 3D rotation vector as np.array</p></li>
+<li><p><strong>output</strong>: 3x3 matrix as np.array</p></li>
+<li><p><strong>author</strong>: Stefan Holzinger</p></li>
+</ul>
+</section>
+<section id="function-expse3">
+<span id="sec-liegroupbasics-expse3"></span><h2>Function: ExpSE3<a class="headerlink" href="#function-expse3" title="Link to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/lieGroupBasics.py#L266"><code class="docutils literal notranslate"><span class="pre">ExpSE3(x)</span></code></a></p>
+<ul class="simple">
+<li><p><strong>function description</strong>: compute the matrix exponential map on the Lie group SE(3), see <a class="reference internal" href="../references.html#ref-bruels2011"><span class="std std-ref">Bruels2011</span></a></p></li>
+<li><p><strong>input</strong>: 6D incremental motion vector as np.array</p></li>
+<li><p><strong>output</strong>: 4x4 homogeneous transformation matrix as np.array</p></li>
+<li><p><strong>author</strong>: Stefan Holzinger</p></li>
+</ul>
+<p>Relevant Examples (Ex) and TestModels (TM) with weblink to github: <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/serialRobotInverseKinematics.py"><code class="docutils literal notranslate"><span class="pre">serialRobotInverseKinematics.py</span></code></a> (Ex)</p>
+</section>
+<section id="function-logse3">
+<span id="sec-liegroupbasics-logse3"></span><h2>Function: LogSE3<a class="headerlink" href="#function-logse3" title="Link to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/lieGroupBasics.py#L283"><code class="docutils literal notranslate"><span class="pre">LogSE3(H)</span></code></a></p>
+<ul class="simple">
+<li><p><strong>function description</strong>: compute the matrix logarithm on the Lie group SE(3), see <a class="reference internal" href="../references.html#ref-sonneville2014"><span class="std std-ref">Sonneville2014</span></a></p></li>
+<li><p><strong>input</strong>: 4x4 homogeneous transformation matrix as np.array</p></li>
+<li><p><strong>output</strong>: 4x4 skew symmetric matrix as np.array</p></li>
+<li><p><strong>author</strong>: Stefan Holzinger</p></li>
+</ul>
+<p>Relevant Examples (Ex) and TestModels (TM) with weblink to github: <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/serialRobotInverseKinematics.py"><code class="docutils literal notranslate"><span class="pre">serialRobotInverseKinematics.py</span></code></a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/homogeneousTransformationInterfaceTest.py"><code class="docutils literal notranslate"><span class="pre">homogeneousTransformationInterfaceTest.py</span></code></a> (TM)</p>
+</section>
+<section id="function-texpse3">
+<span id="sec-liegroupbasics-texpse3"></span><h2>Function: TExpSE3<a class="headerlink" href="#function-texpse3" title="Link to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/lieGroupBasics.py#L304"><code class="docutils literal notranslate"><span class="pre">TExpSE3(x)</span></code></a></p>
+<ul class="simple">
+<li><p><strong>function description</strong>: compute the tangent operator corresponding to ExpSE3, see <a class="reference internal" href="../references.html#ref-bruels2011"><span class="std std-ref">Bruels2011</span></a></p></li>
+<li><p><strong>input</strong>: 6D incremental motion vector as np.array</p></li>
+<li><p><strong>output</strong>: 6x6 matrix as np.array</p></li>
+<li><p><strong>author</strong>: Stefan Holzinger</p></li>
+<li><p><strong>notes</strong>: improved accuracy for very small angles as well as angles phi</p></li>
+</ul>
+</section>
+<section id="function-texpse3inv">
+<span id="sec-liegroupbasics-texpse3inv"></span><h2>Function: TExpSE3Inv<a class="headerlink" href="#function-texpse3inv" title="Link to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/lieGroupBasics.py#L357"><code class="docutils literal notranslate"><span class="pre">TExpSE3Inv(x)</span></code></a></p>
+<ul class="simple">
+<li><p><strong>function description</strong>: compute the inverse of tangent operator TExpSE3, see <a class="reference internal" href="../references.html#ref-sonneville2014"><span class="std std-ref">Sonneville2014</span></a></p></li>
+<li><p><strong>input</strong>: 6D incremental motion vector as np.array</p></li>
+<li><p><strong>output</strong>: 6x6 matrix as np.array</p></li>
+<li><p><strong>author</strong>: Stefan Holzinger</p></li>
+<li><p><strong>notes</strong>: improved accuracy for very small angles as well as angles phi</p></li>
+</ul>
+</section>
+<section id="function-expr3xso3">
+<span id="sec-liegroupbasics-expr3xso3"></span><h2>Function: ExpR3xSO3<a class="headerlink" href="#function-expr3xso3" title="Link to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/lieGroupBasics.py#L397"><code class="docutils literal notranslate"><span class="pre">ExpR3xSO3(x)</span></code></a></p>
+<ul class="simple">
+<li><p><strong>function description</strong>: compute the matrix exponential map on the Lie group R3xSO(3), see <a class="reference internal" href="../references.html#ref-bruels2011"><span class="std std-ref">Bruels2011</span></a></p></li>
+<li><p><strong>input</strong>: 6D incremental motion vector as np.array</p></li>
+<li><p><strong>output</strong>: 7x7 matrix as np.array</p></li>
+<li><p><strong>author</strong>: Stefan Holzinger</p></li>
+</ul>
+</section>
+<section id="function-texpr3xso3">
+<span id="sec-liegroupbasics-texpr3xso3"></span><h2>Function: TExpR3xSO3<a class="headerlink" href="#function-texpr3xso3" title="Link to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/lieGroupBasics.py#L413"><code class="docutils literal notranslate"><span class="pre">TExpR3xSO3(x)</span></code></a></p>
+<ul class="simple">
+<li><p><strong>function description</strong>: compute the tangent operator corresponding to ExpR3xSO3, see <a class="reference internal" href="../references.html#ref-bruels2011"><span class="std std-ref">Bruels2011</span></a></p></li>
+<li><p><strong>input</strong>: 6D incremental motion vector as np.array</p></li>
+<li><p><strong>output</strong>: 6x6 matrix as np.array</p></li>
+<li><p><strong>author</strong>: Stefan Holzinger</p></li>
+</ul>
+</section>
+<section id="function-texpr3xso3inv">
+<span id="sec-liegroupbasics-texpr3xso3inv"></span><h2>Function: TExpR3xSO3Inv<a class="headerlink" href="#function-texpr3xso3inv" title="Link to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/lieGroupBasics.py#L428"><code class="docutils literal notranslate"><span class="pre">TExpR3xSO3Inv(x)</span></code></a></p>
+<ul class="simple">
+<li><p><strong>function description</strong>: compute the inverse of tangent operator TExpR3xSO3</p></li>
+<li><p><strong>input</strong>: 6D incremental motion vector as np.array</p></li>
+<li><p><strong>output</strong>: 6x6 matrix as np.array</p></li>
+<li><p><strong>author</strong>: Stefan Holzinger</p></li>
+</ul>
+</section>
+<section id="function-compositionruledirectproductr3ands3">
+<span id="sec-liegroupbasics-compositionruledirectproductr3ands3"></span><h2>Function: CompositionRuleDirectProductR3AndS3<a class="headerlink" href="#function-compositionruledirectproductr3ands3" title="Link to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/lieGroupBasics.py#L455"><code class="docutils literal notranslate"><span class="pre">CompositionRuleDirectProductR3AndS3(q0,</span> <span class="pre">incrementalMotionVector)</span></code></a></p>
+<ul class="simple">
+<li><p><strong>function description</strong>: compute composition operation for pairs in the Lie group R3xS3</p></li>
+<li><p><strong>input</strong>:</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">q0</span></code>: 7D vector as np.array containing position coordinates and Euler parameters</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">incrementalMotionVector</span></code>: 6D incremental motion vector as np.array</p></li>
+</ul>
+</li>
+<li><p><strong>output</strong>: 7D vector as np.array containing composed position coordinates and composed Euler parameters</p></li>
+<li><p><strong>author</strong>: Stefan Holzinger</p></li>
+</ul>
+</section>
+<section id="function-compositionrulesemidirectproductr3ands3">
+<span id="sec-liegroupbasics-compositionrulesemidirectproductr3ands3"></span><h2>Function: CompositionRuleSemiDirectProductR3AndS3<a class="headerlink" href="#function-compositionrulesemidirectproductr3ands3" title="Link to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/lieGroupBasics.py#L482"><code class="docutils literal notranslate"><span class="pre">CompositionRuleSemiDirectProductR3AndS3(q0,</span> <span class="pre">incrementalMotionVector)</span></code></a></p>
+<ul class="simple">
+<li><p><strong>function description</strong>: compute composition operation for pairs in the Lie group R3 semiTimes S3 (corresponds to SE(3))</p></li>
+<li><p><strong>input</strong>:</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">q0</span></code>: 7D vector as np.array containing position coordinates and Euler parameters</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">incrementalMotionVector</span></code>: 6D incremental motion vector as np.array</p></li>
+</ul>
+</li>
+<li><p><strong>output</strong>: 7D vector as np.array containing composed position coordinates and composed Euler parameters</p></li>
+<li><p><strong>author</strong>: Stefan Holzinger</p></li>
+</ul>
+</section>
+<section id="function-compositionruledirectproductr3andr3rotvec">
+<span id="sec-liegroupbasics-compositionruledirectproductr3andr3rotvec"></span><h2>Function: CompositionRuleDirectProductR3AndR3RotVec<a class="headerlink" href="#function-compositionruledirectproductr3andr3rotvec" title="Link to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/lieGroupBasics.py#L510"><code class="docutils literal notranslate"><span class="pre">CompositionRuleDirectProductR3AndR3RotVec(q0,</span> <span class="pre">incrementalMotionVector)</span></code></a></p>
+<ul class="simple">
+<li><p><strong>function description</strong>: compute composition operation for pairs in the group obtained from the direct product of R3 and R3, see <a class="reference internal" href="../references.html#ref-holzingergerstmayr2020"><span class="std std-ref">HolzingerGerstmayr2020</span></a> the rotation vector is used as rotation parametrizations this composition operation can be used in formulations which represent the translational velocities in the global (inertial) frame</p></li>
+<li><p><strong>input</strong>:</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">q0</span></code>: 6D vector as np.array containing position coordinates and rotation vector</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">incrementalMotionVector</span></code>: 6D incremental motion vector as np.array</p></li>
+</ul>
+</li>
+<li><p><strong>output</strong>: 7D vector as np.array containing composed position coordinates and composed rotation vector</p></li>
+<li><p><strong>author</strong>: Stefan Holzinger</p></li>
+</ul>
+</section>
+<section id="function-compositionrulesemidirectproductr3andr3rotvec">
+<span id="sec-liegroupbasics-compositionrulesemidirectproductr3andr3rotvec"></span><h2>Function: CompositionRuleSemiDirectProductR3AndR3RotVec<a class="headerlink" href="#function-compositionrulesemidirectproductr3andr3rotvec" title="Link to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/lieGroupBasics.py#L539"><code class="docutils literal notranslate"><span class="pre">CompositionRuleSemiDirectProductR3AndR3RotVec(q0,</span> <span class="pre">incrementalMotionVector)</span></code></a></p>
+<ul class="simple">
+<li><p><strong>function description</strong>: compute composition operation for pairs in the group obtained from the direct product of R3 and R3. the rotation vector is used as rotation parametrizations this composition operation can be used in formulations which represent the translational velocities in the local (body-attached) frame</p></li>
+<li><p><strong>input</strong>:</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">q0</span></code>: 6D vector as np.array containing position coordinates and rotation vector</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">incrementalMotionVector</span></code>: 6D incremental motion vector as np.array</p></li>
+</ul>
+</li>
+<li><p><strong>output</strong>: 6D vector as np.array containing composed position coordinates and composed rotation vector</p></li>
+<li><p><strong>author</strong>: Stefan Holzinger</p></li>
+</ul>
+</section>
+<section id="function-compositionruledirectproductr3andr3rotxyzangles">
+<span id="sec-liegroupbasics-compositionruledirectproductr3andr3rotxyzangles"></span><h2>Function: CompositionRuleDirectProductR3AndR3RotXYZAngles<a class="headerlink" href="#function-compositionruledirectproductr3andr3rotxyzangles" title="Link to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/lieGroupBasics.py#L569"><code class="docutils literal notranslate"><span class="pre">CompositionRuleDirectProductR3AndR3RotXYZAngles(q0,</span> <span class="pre">incrementalMotionVector)</span></code></a></p>
+<ul class="simple">
+<li><p><strong>function description</strong>: compute composition operation for pairs in the group obtained from the direct product of R3 and R3. Cardan-Tait/Bryan (CTB) angles are used as rotation parametrizations this composition operation can be used in formulations which represent the translational velocities in the global (inertial) frame</p></li>
+<li><p><strong>input</strong>:</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">q0</span></code>: 6D vector as np.array containing position coordinates and Cardan-Tait/Bryan angles</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">incrementalMotionVector</span></code>: 6D incremental motion vector as np.array</p></li>
+</ul>
+</li>
+<li><p><strong>output</strong>: 6D vector as np.array containing composed position coordinates and composed Cardan-Tait/Bryan angles</p></li>
+<li><p><strong>author</strong>: Stefan Holzinger</p></li>
+</ul>
+</section>
+<section id="function-compositionrulesemidirectproductr3andr3rotxyzangles">
+<span id="sec-liegroupbasics-compositionrulesemidirectproductr3andr3rotxyzangles"></span><h2>Function: CompositionRuleSemiDirectProductR3AndR3RotXYZAngles<a class="headerlink" href="#function-compositionrulesemidirectproductr3andr3rotxyzangles" title="Link to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/lieGroupBasics.py#L598"><code class="docutils literal notranslate"><span class="pre">CompositionRuleSemiDirectProductR3AndR3RotXYZAngles(q0,</span> <span class="pre">incrementalMotionVector)</span></code></a></p>
+<ul class="simple">
+<li><p><strong>function description</strong>: compute composition operation for pairs in the group obtained from the direct product of R3 and R3. Cardan-Tait/Bryan (CTB) angles are used as rotation parametrizations this composition operation can be used in formulations which represent the translational velocities in the local (body-attached) frame</p></li>
+<li><p><strong>input</strong>:</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">q0</span></code>: 6D vector as np.array containing position coordinates and Cardan-Tait/Bryan angles</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">incrementalMotionVector</span></code>: 6D incremental motion vector as np.array</p></li>
+</ul>
+</li>
+<li><p><strong>output</strong>: 6D vector as np.array containing composed position coordinates and composed Cardan-Tait/Bryan angles</p></li>
+<li><p><strong>author</strong>: Stefan Holzinger</p></li>
+</ul>
+</section>
+<section id="function-compositionruleforeulerparameters">
+<span id="sec-liegroupbasics-compositionruleforeulerparameters"></span><h2>Function: CompositionRuleForEulerParameters<a class="headerlink" href="#function-compositionruleforeulerparameters" title="Link to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/lieGroupBasics.py#L628"><code class="docutils literal notranslate"><span class="pre">CompositionRuleForEulerParameters(q,</span> <span class="pre">p)</span></code></a></p>
+<ul class="simple">
+<li><p><strong>function description</strong>: compute composition operation for Euler parameters (unit quaternions) this composition operation is quaternion multiplication, see <a class="reference internal" href="../references.html#ref-terze2016"><span class="std std-ref">Terze2016</span></a></p></li>
+<li><p><strong>input</strong>:</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">q</span></code>: 4D vector as np.array containing Euler parameters</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">p</span></code>: 4D vector as np.array containing Euler parameters</p></li>
+</ul>
+</li>
+<li><p><strong>output</strong>: 4D vector as np.array containing composed (multiplied) Euler parameters</p></li>
+<li><p><strong>author</strong>: Stefan Holzinger</p></li>
+</ul>
+</section>
+<section id="function-compositionruleforrotationvectors">
+<span id="sec-liegroupbasics-compositionruleforrotationvectors"></span><h2>Function: CompositionRuleForRotationVectors<a class="headerlink" href="#function-compositionruleforrotationvectors" title="Link to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/lieGroupBasics.py#L649"><code class="docutils literal notranslate"><span class="pre">CompositionRuleForRotationVectors(v0,</span> <span class="pre">Omega)</span></code></a></p>
+<ul class="simple">
+<li><p><strong>function description</strong>: compute composition operation for rotation vectors v0 and Omega, see <a class="reference internal" href="../references.html#ref-holzinger2021"><span class="std std-ref">Holzinger2021</span></a> The composed vector is NOT mapped into the principal range: its norm lies in [0, 2<em>pi] and may therefore exceed pi. It always describes the correct rotation - ExpSO3 of it is the intended rotation matrix - but it need not be the shortest representative of it. Composing pi</em>n with itself, for example, gives a vector of norm 2<em>pi rather than 0; both are the identity rotation. This matches the C++ implementation EXUlie::CompositionRotationVector (src/Linalg/RigidBodyMath.h), which is the verified one used by the Lie group integrator, and is a deliberate decision (#2494): the formulas accept and pass on such noise rather than snapping to a boundary, which keeps every existing result unchanged. A caller who needs the principal range must map it - for a norm w &gt; pi, use (2</em>pi - w) about the negated axis. Note also that accuracy degrades towards w = 2<em>pi, which is the singularity of the tangent operator: TExpSO3Inv() returns entries of order 1e15 there. How much is lost depends on the axis - composing pi</em>n with itself is exact to about 1e-15 for n = [1,1,1]/sqrt(3) and to about 4e-8 for n = [0,0,1].</p></li>
+<li><p><strong>input</strong>:</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">v0</span></code>: 3D rotation vector as np.array</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">Omega</span></code>: 3D (incremental) rotation vector as np.array</p></li>
+</ul>
+</li>
+<li><p><strong>output</strong>: 3D vector as np.array containing composed rotation vector v; norm in [0, 2*pi], see above</p></li>
+<li><p><strong>author</strong>: Stefan Holzinger</p></li>
+</ul>
+<p>Relevant Examples (Ex) and TestModels (TM) with weblink to github: <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/LieGroupIntegrationUnitTests.py"><code class="docutils literal notranslate"><span class="pre">LieGroupIntegrationUnitTests.py</span></code></a> (TM)</p>
+</section>
+<section id="function-compositionrulerotxyzanglesrotationvector">
+<span id="sec-liegroupbasics-compositionrulerotxyzanglesrotationvector"></span><h2>Function: CompositionRuleRotXYZAnglesRotationVector<a class="headerlink" href="#function-compositionrulerotxyzanglesrotationvector" title="Link to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/lieGroupBasics.py#L696"><code class="docutils literal notranslate"><span class="pre">CompositionRuleRotXYZAnglesRotationVector(alpha0,</span> <span class="pre">Omega)</span></code></a></p>
+<ul class="simple">
+<li><p><strong>function description</strong>: compute composition operation for RotXYZ angles, see <a class="reference internal" href="../references.html#ref-holzinger2021"><span class="std std-ref">Holzinger2021</span></a></p></li>
+<li><p><strong>input</strong>:</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">alpha0</span></code>: 3D vector as np.array containing RotXYZ angles</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">Omega</span></code>: 3D vector as np.array containing the (incremental) rotation vector</p></li>
+</ul>
+</li>
+<li><p><strong>output</strong>: 3D vector as np.array containing composed RotXYZ angles</p></li>
+<li><p><strong>author</strong>: Stefan Holzinger</p></li>
+</ul>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="kinematicTree.html" class="btn btn-neutral float-left" title="Module: kinematicTree" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="misc.mainSystemExtensions.html" class="btn btn-neutral float-right" title="Module: misc.mainSystemExtensions" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

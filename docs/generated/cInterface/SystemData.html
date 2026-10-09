@@ -1,0 +1,495 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SystemData &mdash; Exudyn1.13.3 1.13.3 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=3ee1c6c6" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/rtd_sphinx_search.min.css" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/custom.css?v=e2783f0e" />
+
+  
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=b8a3e558"></script>
+      <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../../_static/copybutton.js?v=f281be69"></script>
+      <script src="../../../_static/js/rtd_search_config.js"></script>
+      <script src="../../../_static/js/rtd_sphinx_search.min.js"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+    <link rel="next" title="Symbolic" href="Symbolic.html" />
+    <link rel="prev" title="MainSystem" href="MainSystem.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            Exudyn1.13.3
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Exudyn User Manual</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../../README.html">Exudyn</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../manual/gettingStarted.html">Installation and getting started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../manual/introduction.html">Overview on Exudyn</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../manual/introductionBasics.html">Exudyn basics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../manual/tutorial.html">Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../manual/GUI.html">Renderer, graphics and visualization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../manual/performanceErrors.html">Performance, errors and solver failures</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../manual/introductionAdvanced.html">Advanced topics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../manual/notation.html">Notation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../manual/theory.html">Theory and formulations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../manual/solver.html">Solvers</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="cInterfaceIndex.html">Python-C++ command interface</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="GeneralInformation.html">General information</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Exudyn.html">Exudyn module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="SystemContainer.html">SystemContainer</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Renderer.html">Renderer</a></li>
+<li class="toctree-l2"><a class="reference internal" href="MainSystem.html">MainSystem</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">SystemData</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#systemdata-access-coordinates">SystemData: Access coordinates</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#systemdata-get-object-ltg-coordinate-mappings">SystemData: Get object LTG coordinate mappings</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="Symbolic.html">Symbolic</a></li>
+<li class="toctree-l2"><a class="reference internal" href="GeneralContact.html">GeneralContact</a></li>
+<li class="toctree-l2"><a class="reference internal" href="DataStructures.html">Data structures</a></li>
+<li class="toctree-l2"><a class="reference internal" href="TypeDefinitions.html">Type definitions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="EnvironmentVariables.html">Environment variables</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Reference Manual</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../items/itemsIndex.html">Items reference manual</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../pythonUtilities/utilitiesIndex.html">Python Utility Functions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../structures/structuresIndex.html">Structures and Settings</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../references.html">References</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Developer documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../dev/README.html">Exudyn developer documentation</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">How-to notes</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../howTo/condaEnvironments.html">Conda environments for Exudyn</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../howTo/sphinxDocs.html">Building the documentation</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Examples, models and issues</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../examples/examplesIndex.html">Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../testModels/testModelsIndex.html">TestModels</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../abbreviations.html">List of Abbreviations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../manual/revisions.html">Revisions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../CHANGELOG.html">Changelog</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../trackerlog.html">Issue tracker</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">Exudyn1.13.3</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="cInterfaceIndex.html">Python-C++ command interface</a></li>
+      <li class="breadcrumb-item active">SystemData</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../../_sources/docs/generated/cInterface/SystemData.md.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <!-- GENERATED by tools/generators/pybindEmitter.py from definitions/ - do not edit -->
+<section class="tex2jax_ignore mathjax_ignore" id="systemdata">
+<span id="sec-mbs-systemdata"></span><h1>SystemData<a class="headerlink" href="#systemdata" title="Link to this heading"></a></h1>
+<p>A data structure of a MainSystem which mainly allows access to states and details of items (objects, nodes, loads, etc.). In particular access is given to system coordinates in all configurations, object and node coordinates, as well as to local-to-global (LTG) coordinate indices. Here, ODE2 represents second order differential equations (and coordinates), ODE1 for first order ODEs, AE represents algebraic equations, and Data is used for data (=history) variables that represent contact states or plastic deformation which is no classical state. The SystemData structure allows advanced access to this data, which HAS TO BE USED WITH CARE, as unexpected results and system crash might happen.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">exudyn</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">exu</span>               <span class="c1">#EXUDYN package including C++ core part</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">exudyn.itemInterface</span><span class="w"> </span><span class="kn">import</span> <span class="o">*</span> <span class="c1">#conversion of data to exudyn dictionaries</span>
+<span class="n">SC</span> <span class="o">=</span> <span class="n">exu</span><span class="o">.</span><span class="nc">SystemContainer</span><span class="p">()</span>         <span class="c1">#container of systems</span>
+<span class="n">mbs</span> <span class="o">=</span> <span class="n">SC</span><span class="o">.</span><span class="nf">AddSystem</span><span class="p">()</span>               <span class="c1">#add a new system to work with</span>
+<span class="n">nMP</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">AddNode</span><span class="p">(</span><span class="nc">NodePoint</span><span class="p">(</span><span class="n">referenceCoordinates</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]))</span>
+<span class="n">mbs</span><span class="o">.</span><span class="nf">AddObject</span><span class="p">(</span><span class="nc">ObjectMassPoint</span><span class="p">(</span><span class="n">mass</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">nodeNumber</span><span class="o">=</span><span class="n">nMP</span> <span class="p">))</span>
+<span class="n">mMP</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">AddMarker</span><span class="p">(</span><span class="nc">MarkerNodePosition</span><span class="p">(</span><span class="n">nodeNumber</span> <span class="o">=</span> <span class="n">nMP</span><span class="p">))</span>
+<span class="n">mbs</span><span class="o">.</span><span class="nf">AddLoad</span><span class="p">(</span><span class="nc">Force</span><span class="p">(</span><span class="n">markerNumber</span> <span class="o">=</span> <span class="n">mMP</span><span class="p">,</span> <span class="n">loadVector</span><span class="o">=</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">5</span><span class="p">]))</span>
+<span class="n">mbs</span><span class="o">.</span><span class="nf">Assemble</span><span class="p">()</span>
+<span class="n">mbs</span><span class="o">.</span><span class="nf">SolveDynamic</span><span class="p">(</span><span class="n">exu</span><span class="o">.</span><span class="nc">SimulationSettings</span><span class="p">())</span>
+
+<span class="c1">#obtain current ODE2 system vector including reference values:</span>
+<span class="n">uTotal</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">systemData</span><span class="o">.</span><span class="nf">GetODE2CoordinatesTotal</span><span class="p">()</span>
+
+<span class="c1">#obtain current ODE2 system vector without reference values</span>
+<span class="c1">#  (e.g., after static simulation finished):</span>
+<span class="n">u</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">systemData</span><span class="o">.</span><span class="nf">GetODE2Coordinates</span><span class="p">()</span>
+<span class="c1">#set initial ODE2 vector for next simulation (only coordinates!):</span>
+<span class="n">mbs</span><span class="o">.</span><span class="nf">systemData</span><span class="o">.</span><span class="nf">SetODE2Coordinates</span><span class="p">(</span><span class="n">coordinates</span><span class="o">=</span><span class="n">u</span><span class="p">,</span>
+               <span class="n">configuration</span><span class="o">=</span><span class="n">exu</span><span class="o">.</span><span class="nc">ConfigurationType</span><span class="o">.</span><span class="n">Initial</span><span class="p">)</span>
+
+<span class="c1">#faster access with reference access (copy=False):</span>
+<span class="n">uReference</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">systemData</span><span class="o">.</span><span class="nf">GetODE2Coordinates</span><span class="p">(</span><span class="n">copy</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="n">u2</span> <span class="o">=</span> <span class="n">uReference</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
+<span class="c1">#we can also modify data, but this may be dangerous!</span>
+<span class="n">uReference</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">'u2 ='</span><span class="p">,</span> <span class="n">u2</span><span class="p">,</span> <span class="s1">', now:'</span><span class="p">,</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">systemData</span><span class="o">.</span><span class="nf">GetODE2Coordinates</span><span class="p">()[</span><span class="mi">2</span><span class="p">])</span>
+<span class="c1">#NOTE: reference access is possible throughout simulation and may</span>
+<span class="c1">#      allow faster user functions, but is potentially dangerous</span>
+<span class="c1">#      to erroneous behavior: for safety, compare with copy=True results!</span>
+
+<span class="c1">#print detailed information on items:</span>
+<span class="n">mbs</span><span class="o">.</span><span class="nf">systemData</span><span class="o">.</span><span class="nf">Info</span><span class="p">()</span>
+<span class="c1">#print LTG lists for objects and loads:</span>
+<span class="n">mbs</span><span class="o">.</span><span class="nf">systemData</span><span class="o">.</span><span class="nf">InfoLTG</span><span class="p">()</span>
+</pre></div>
+</div>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>u2 = 0.24999999999999897 , now: 1.249999999999999
+node0:
+    {'nodeType': 'Point', 'referenceCoordinates': array([0., 0., 0.]), 'initialCoordinates': array([0., 0., 0.]), 'initialVelocities': array([0., 0., 0.]), 'name': 'node0', 'Vshow': True, 'VdrawSize': -1.0, 'Vcolor': [-1.0, -1.0, -1.0, -1.0]}
+object0:
+    {'objectType': 'MassPoint', 'mass': 10.0, 'nodeNumber': 0, 'name': 'object0', 'Vshow': True, 'VgraphicsData': [{'graphicsData': '&lt;not requested&gt;'}]}
+marker0:
+    {'markerType': 'NodePosition', 'nodeNumber': 0, 'name': 'marker0', 'Vshow': True}
+load0:
+    {'loadType': 'ForceVector', 'markerNumber': 0, 'loadVector': array([2., 0., 5.]), 'bodyFixed': False, 'loadVectorUserFunction': 0, 'name': 'load0', 'Vshow': True}
+object 0 ODE2 LTG=[0,1,2]
+object 0 ODE1 LTG=[]
+object 0 AE LTG  =[]
+object 0 Data LTG=[]
+</pre></div>
+</div>
+<div class="notebookorigin docutils container">
+<p><code class="docutils literal notranslate"><span class="pre">python/Notebooks/reference/mainSystem.ipynb</span></code></p>
+</div>
+<p>The class <strong>MainSystemData</strong> has the following <strong>functions and structures</strong>:</p>
+<ul>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">NumberOfLoads()</span></code></strong>: return number of loads in system</p>
+<p><em>Example</em>:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="n">mbs</span><span class="o">.</span><span class="nf">systemData</span><span class="o">.</span><span class="nf">NumberOfLoads</span><span class="p">())</span>
+</pre></div>
+</div>
+</li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">NumberOfMarkers()</span></code></strong>: return number of markers in system</p>
+<p><em>Example</em>:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="n">mbs</span><span class="o">.</span><span class="nf">systemData</span><span class="o">.</span><span class="nf">NumberOfMarkers</span><span class="p">())</span>
+</pre></div>
+</div>
+</li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">NumberOfNodes()</span></code></strong>: return number of nodes in system</p>
+<p><em>Example</em>:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="n">mbs</span><span class="o">.</span><span class="nf">systemData</span><span class="o">.</span><span class="nf">NumberOfNodes</span><span class="p">())</span>
+</pre></div>
+</div>
+</li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">NumberOfObjects()</span></code></strong>: return number of objects in system</p>
+<p><em>Example</em>:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="n">mbs</span><span class="o">.</span><span class="nf">systemData</span><span class="o">.</span><span class="nf">NumberOfObjects</span><span class="p">())</span>
+</pre></div>
+</div>
+</li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">NumberOfSensors()</span></code></strong>: return number of sensors in system</p>
+<p><em>Example</em>:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="n">mbs</span><span class="o">.</span><span class="nf">systemData</span><span class="o">.</span><span class="nf">NumberOfSensors</span><span class="p">())</span>
+</pre></div>
+</div>
+</li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">ODE2Size(configurationType</span> <span class="pre">=</span> <span class="pre">exu.ConfigurationType.Current)</span></code></strong>: get size of ODE2 coordinate vector for given configuration (only works correctly after mbs.Assemble() )</p>
+<p><em>Example</em>:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="s1">'ODE2 size='</span><span class="p">,</span><span class="n">mbs</span><span class="o">.</span><span class="nf">systemData</span><span class="o">.</span><span class="nf">ODE2Size</span><span class="p">())</span>
+</pre></div>
+</div>
+</li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">ODE1Size(configurationType</span> <span class="pre">=</span> <span class="pre">exu.ConfigurationType.Current)</span></code></strong>: get size of ODE1 coordinate vector for given configuration (only works correctly after mbs.Assemble() )</p>
+<p><em>Example</em>:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="s1">'ODE1 size='</span><span class="p">,</span><span class="n">mbs</span><span class="o">.</span><span class="nf">systemData</span><span class="o">.</span><span class="nf">ODE1Size</span><span class="p">())</span>
+</pre></div>
+</div>
+</li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">AEsize(configurationType</span> <span class="pre">=</span> <span class="pre">exu.ConfigurationType.Current)</span></code></strong>: get size of AE coordinate vector for given configuration (only works correctly after mbs.Assemble() )</p>
+<p><em>Example</em>:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="s1">'AE size='</span><span class="p">,</span><span class="n">mbs</span><span class="o">.</span><span class="nf">systemData</span><span class="o">.</span><span class="nf">AEsize</span><span class="p">())</span>
+</pre></div>
+</div>
+</li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">DataSize(configurationType</span> <span class="pre">=</span> <span class="pre">exu.ConfigurationType.Current)</span></code></strong>: get size of Data coordinate vector for given configuration (only works correctly after mbs.Assemble() )</p>
+<p><em>Example</em>:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="s1">'Data size='</span><span class="p">,</span><span class="n">mbs</span><span class="o">.</span><span class="nf">systemData</span><span class="o">.</span><span class="nf">DataSize</span><span class="p">())</span>
+</pre></div>
+</div>
+</li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">SystemSize(configurationType</span> <span class="pre">=</span> <span class="pre">exu.ConfigurationType.Current)</span></code></strong>: get size of System coordinate vector for given configuration (only works correctly after mbs.Assemble() )</p>
+<p><em>Example</em>:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="s1">'System size='</span><span class="p">,</span><span class="n">mbs</span><span class="o">.</span><span class="nf">systemData</span><span class="o">.</span><span class="nf">SystemSize</span><span class="p">())</span>
+</pre></div>
+</div>
+</li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">GetTime(configurationType</span> <span class="pre">=</span> <span class="pre">exu.ConfigurationType.Current)</span></code></strong>: get configuration dependent time.</p>
+<p><em>Example</em>:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">mbs</span><span class="o">.</span><span class="nf">systemData</span><span class="o">.</span><span class="nf">GetTime</span><span class="p">(</span><span class="n">exu</span><span class="o">.</span><span class="nc">ConfigurationType</span><span class="o">.</span><span class="n">Initial</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">SetTime(newTime,</span> <span class="pre">configurationType</span> <span class="pre">=</span> <span class="pre">exu.ConfigurationType.Current)</span></code></strong>: set configuration dependent time; use this access with care, e.g., in user-defined solvers.</p>
+<p><em>Example</em>:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">mbs</span><span class="o">.</span><span class="nf">systemData</span><span class="o">.</span><span class="nf">SetTime</span><span class="p">(</span><span class="mf">10.</span><span class="p">,</span> <span class="n">exu</span><span class="o">.</span><span class="nc">ConfigurationType</span><span class="o">.</span><span class="n">Initial</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">AddODE2LoadDependencies(loadNumber,</span> <span class="pre">globalODE2coordinates)</span></code></strong>: advanced function for adding special dependencies of loads onto ODE2 coordinates, taking a list / numpy array of global ODE2 coordinates; this function needs to be called after Assemble() and needs to contain global ODE2 coordinate indices; this list only affects implicit or static solvers if timeIntegration.computeLoadsJacobian or staticSolver.computeLoadsJacobian is set to 1 (ODE2) or 2 (ODE2 and ODE2_t dependencies); if set, it may greatly improve convergence if loads with user functions depend on some system states, such as in a load with feedback control loop; the additional dependencies are not required, if doSystemWideDifferentiation=True, however the latter option being much less efficient. For more details, consider the file doublePendulum2DControl.py in the examples directory.</p>
+<p><em>Example</em>:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">mbs</span><span class="o">.</span><span class="nf">systemData</span><span class="o">.</span><span class="nf">AddODE2LoadDependencies</span><span class="p">(</span><span class="mi">0</span><span class="p">,[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">])</span>
+<span class="c1">#add dependency of load 5 onto node 2 coordinates:</span>
+<span class="n">nodeLTG2</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">systemData</span><span class="o">.</span><span class="nf">GetNodeLTGODE2</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+<span class="n">mbs</span><span class="o">.</span><span class="nf">systemData</span><span class="o">.</span><span class="nf">AddODE2LoadDependencies</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span><span class="n">nodeLTG2</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">Info()</span></code></strong>: print detailed information on every item; for short information use print(mbs)</p>
+<p><em>Example</em>:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">mbs</span><span class="o">.</span><span class="nf">systemData</span><span class="o">.</span><span class="nf">Info</span><span class="p">()</span>
+</pre></div>
+</div>
+</li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">InfoLTG()</span></code></strong>: print LTG information of objects and load dependencies</p>
+<p><em>Example</em>:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">mbs</span><span class="o">.</span><span class="nf">systemData</span><span class="o">.</span><span class="nf">InfoLTG</span><span class="p">()</span>
+</pre></div>
+</div>
+</li>
+</ul>
+<section id="systemdata-access-coordinates">
+<span id="sec-mbs-systemdata-coordinates"></span><h2>SystemData: Access coordinates<a class="headerlink" href="#systemdata-access-coordinates" title="Link to this heading"></a></h2>
+<p>This section provides access functions to global coordinate vectors. Assigning invalid values or using wrong vector size might lead to system crash and unexpected results.</p>
+<p>The class <strong>MainSystemData</strong> has the following <strong>functions and structures</strong> regarding <strong>coordinate access</strong>:</p>
+<ul>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">GetODE2CoordinatesTotal(configuration</span> <span class="pre">=</span> <span class="pre">exu.ConfigurationType.Current)</span></code></strong>: get ODE2 system coordinates (displacements/rotation) including reference values for given configuration (default: exu.Configuration.Current); in case of exu.ConfigurationType.Reference, it only includes reference values once and is identical to GetODE2Coordinates; note that faster access to coordinates is possibly with GetODE2Coordinates(copy=False), which is not possible with GetODE2CoordinatesTotal !</p>
+<p><em>Example</em>:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">uTotal</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">systemData</span><span class="o">.</span><span class="nf">GetODE2CoordinatesTotal</span><span class="p">()</span>
+<span class="c1">#this is equivalent to:</span>
+<span class="n">uTotal</span><span class="o">=</span><span class="n">mbs</span><span class="o">.</span><span class="nf">systemData</span><span class="o">.</span><span class="nf">GetODE2Coordinates</span><span class="p">()</span><span class="o">+</span><span class="n">mbs</span><span class="o">.</span><span class="nf">systemData</span><span class="o">.</span><span class="nf">GetODE2Coordinates</span><span class="p">(</span><span class="n">exu</span><span class="o">.</span><span class="nc">ConfigurationType</span><span class="o">.</span><span class="n">Reference</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">GetODE2Coordinates(configuration</span> <span class="pre">=</span> <span class="pre">exu.ConfigurationType.Current,</span> <span class="pre">copy</span> <span class="pre">=</span> <span class="pre">True)</span></code></strong>: get ODE2 system coordinates (displacements/rotations) for given configuration (default: exu.Configuration.Current)</p>
+<p><em>Example</em>:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">uCurrent</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">systemData</span><span class="o">.</span><span class="nf">GetODE2Coordinates</span><span class="p">()</span>
+</pre></div>
+</div>
+</li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">SetODE2Coordinates(coordinates,</span> <span class="pre">configuration</span> <span class="pre">=</span> <span class="pre">exu.ConfigurationType.Current)</span></code></strong>: set ODE2 system coordinates (displacements/rotations) for given configuration (default: exu.Configuration.Current); invalid vector size may lead to system crash!</p>
+<p><em>Example</em>:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">mbs</span><span class="o">.</span><span class="nf">systemData</span><span class="o">.</span><span class="nf">SetODE2Coordinates</span><span class="p">(</span><span class="n">uCurrent</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">GetODE2Coordinates_t(configuration</span> <span class="pre">=</span> <span class="pre">exu.ConfigurationType.Current,</span> <span class="pre">copy</span> <span class="pre">=</span> <span class="pre">True)</span></code></strong>: get ODE2 system coordinates (velocities) for given configuration (default: exu.Configuration.Current)</p>
+<p><em>Example</em>:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">vCurrent</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">systemData</span><span class="o">.</span><span class="nf">GetODE2Coordinates_t</span><span class="p">()</span>
+</pre></div>
+</div>
+</li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">SetODE2Coordinates_t(coordinates,</span> <span class="pre">configuration</span> <span class="pre">=</span> <span class="pre">exu.ConfigurationType.Current)</span></code></strong>: set ODE2 system coordinates (velocities) for given configuration (default: exu.Configuration.Current); invalid vector size may lead to system crash!</p>
+<p><em>Example</em>:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">mbs</span><span class="o">.</span><span class="nf">systemData</span><span class="o">.</span><span class="nf">SetODE2Coordinates_t</span><span class="p">(</span><span class="n">vCurrent</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">GetODE2Coordinates_tt(configuration</span> <span class="pre">=</span> <span class="pre">exu.ConfigurationType.Current,</span> <span class="pre">copy</span> <span class="pre">=</span> <span class="pre">True)</span></code></strong>: get ODE2 system coordinates (accelerations) for given configuration (default: exu.Configuration.Current)</p>
+<p><em>Example</em>:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">vCurrent</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">systemData</span><span class="o">.</span><span class="nf">GetODE2Coordinates_tt</span><span class="p">()</span>
+</pre></div>
+</div>
+</li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">SetODE2Coordinates_tt(coordinates,</span> <span class="pre">configuration</span> <span class="pre">=</span> <span class="pre">exu.ConfigurationType.Current)</span></code></strong>: set ODE2 system coordinates (accelerations) for given configuration (default: exu.Configuration.Current); invalid vector size may lead to system crash!</p>
+<p><em>Example</em>:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">mbs</span><span class="o">.</span><span class="nf">systemData</span><span class="o">.</span><span class="nf">SetODE2Coordinates_tt</span><span class="p">(</span><span class="n">aCurrent</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">GetODE1Coordinates(configuration</span> <span class="pre">=</span> <span class="pre">exu.ConfigurationType.Current,</span> <span class="pre">copy</span> <span class="pre">=</span> <span class="pre">True)</span></code></strong>: get ODE1 system coordinates (displacements) for given configuration (default: exu.Configuration.Current)</p>
+<p><em>Example</em>:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">qCurrent</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">systemData</span><span class="o">.</span><span class="nf">GetODE1Coordinates</span><span class="p">()</span>
+</pre></div>
+</div>
+</li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">SetODE1Coordinates(coordinates,</span> <span class="pre">configuration</span> <span class="pre">=</span> <span class="pre">exu.ConfigurationType.Current)</span></code></strong>: set ODE1 system coordinates (velocities) for given configuration (default: exu.Configuration.Current); invalid vector size may lead to system crash!</p>
+<p><em>Example</em>:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">mbs</span><span class="o">.</span><span class="nf">systemData</span><span class="o">.</span><span class="nf">SetODE1Coordinates_t</span><span class="p">(</span><span class="n">qCurrent</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">GetODE1Coordinates_t(configuration</span> <span class="pre">=</span> <span class="pre">exu.ConfigurationType.Current,</span> <span class="pre">copy</span> <span class="pre">=</span> <span class="pre">True)</span></code></strong>: get ODE1 system coordinates (velocities) for given configuration (default: exu.Configuration.Current)</p>
+<p><em>Example</em>:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">qCurrent</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">systemData</span><span class="o">.</span><span class="nf">GetODE1Coordinates_t</span><span class="p">()</span>
+</pre></div>
+</div>
+</li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">SetODE1Coordinates_t(coordinates,</span> <span class="pre">configuration</span> <span class="pre">=</span> <span class="pre">exu.ConfigurationType.Current)</span></code></strong>: set ODE1 system coordinates (displacements) for given configuration (default: exu.Configuration.Current); invalid vector size may lead to system crash!</p>
+<p><em>Example</em>:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">mbs</span><span class="o">.</span><span class="nf">systemData</span><span class="o">.</span><span class="nf">SetODE1Coordinates</span><span class="p">(</span><span class="n">qCurrent</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">GetAECoordinates(configuration</span> <span class="pre">=</span> <span class="pre">exu.ConfigurationType.Current,</span> <span class="pre">copy</span> <span class="pre">=</span> <span class="pre">True)</span></code></strong>: get algebraic equations (AE) system coordinates for given configuration (default: exu.Configuration.Current)</p>
+<p><em>Example</em>:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">lambdaCurrent</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">systemData</span><span class="o">.</span><span class="nf">GetAECoordinates</span><span class="p">()</span>
+</pre></div>
+</div>
+</li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">SetAECoordinates(coordinates,</span> <span class="pre">configuration</span> <span class="pre">=</span> <span class="pre">exu.ConfigurationType.Current)</span></code></strong>: set algebraic equations (AE) system coordinates for given configuration (default: exu.Configuration.Current); invalid vector size may lead to system crash!</p>
+<p><em>Example</em>:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">mbs</span><span class="o">.</span><span class="nf">systemData</span><span class="o">.</span><span class="nf">SetAECoordinates</span><span class="p">(</span><span class="n">lambdaCurrent</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">GetDataCoordinates(configuration</span> <span class="pre">=</span> <span class="pre">exu.ConfigurationType.Current,</span> <span class="pre">copy</span> <span class="pre">=</span> <span class="pre">True)</span></code></strong>: get system data coordinates for given configuration (default: exu.Configuration.Current)</p>
+<p><em>Example</em>:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">dataCurrent</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">systemData</span><span class="o">.</span><span class="nf">GetDataCoordinates</span><span class="p">()</span>
+</pre></div>
+</div>
+</li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">SetDataCoordinates(coordinates,</span> <span class="pre">configuration</span> <span class="pre">=</span> <span class="pre">exu.ConfigurationType.Current)</span></code></strong>: set system data coordinates for given configuration (default: exu.Configuration.Current); invalid vector size may lead to system crash!</p>
+<p><em>Example</em>:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">mbs</span><span class="o">.</span><span class="nf">systemData</span><span class="o">.</span><span class="nf">SetDataCoordinates</span><span class="p">(</span><span class="n">dataCurrent</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">GetSystemState(configuration</span> <span class="pre">=</span> <span class="pre">exu.ConfigurationType.Current)</span></code></strong>: get system state for given configuration (default: exu.Configuration.Current); state vectors do not include the non-state derivatives ODE1_t and ODE2_tt and the time; function is copying data - not highly efficient; format of pyList: [ODE2Coords, ODE2Coords_t, ODE1Coords, AEcoords, dataCoords]</p>
+<p><em>Example</em>:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">sysStateList</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">systemData</span><span class="o">.</span><span class="nf">GetSystemState</span><span class="p">()</span>
+</pre></div>
+</div>
+</li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">SetSystemState(systemStateList,</span> <span class="pre">configuration</span> <span class="pre">=</span> <span class="pre">exu.ConfigurationType.Current)</span></code></strong>: set system data coordinates for given configuration (default: exu.Configuration.Current); invalid list of vectors / vector size may lead to system crash; write access to state vectors (but not the non-state derivatives ODE1_t and ODE2_tt and the time); function is copying data - not highly efficient; format of pyList: [ODE2Coords, ODE2Coords_t, ODE1Coords, AEcoords, dataCoords]</p>
+<p><em>Example</em>:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">mbs</span><span class="o">.</span><span class="nf">systemData</span><span class="o">.</span><span class="nf">SetSystemState</span><span class="p">(</span><span class="n">sysStateList</span><span class="p">,</span> <span class="n">configuration</span> <span class="o">=</span> <span class="n">exu</span><span class="o">.</span><span class="nc">ConfigurationType</span><span class="o">.</span><span class="n">Initial</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">GetSystemStateDict(configuration</span> <span class="pre">=</span> <span class="pre">exu.ConfigurationType.Current,</span> <span class="pre">reference</span> <span class="pre">=</span> <span class="pre">False)</span></code></strong>: get dictionary with copies of (or references to) system states for given configuration (default: exu.Configuration.Current), with at least the following quantities: ODE1Coords, ODE1Coords_t, ODE2Coords, ODE2Coords_t, ODE2Coords_tt, AECoords, dataCoords; we can obtain copies OR references to vectors without copying, meaning that these vectors then have read-write properties and have to be treated carefully! The dictionary’s contents are subject to changes in the future; if reference=False, data is copied</p>
+<p><em>Example</em>:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">d</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">systemData</span><span class="o">.</span><span class="nf">GetSystemStateDict</span><span class="p">()</span>
+</pre></div>
+</div>
+</li>
+</ul>
+</section>
+<section id="systemdata-get-object-ltg-coordinate-mappings">
+<span id="sec-systemdata-objectltg"></span><h2>SystemData: Get object LTG coordinate mappings<a class="headerlink" href="#systemdata-get-object-ltg-coordinate-mappings" title="Link to this heading"></a></h2>
+<p>This section provides access functions the <a class="reference internal" href="../abbreviations.html#ltg"><span class="std std-ref">LTG</span></a>-lists for every object (body, constraint, …) in the system. For details on the <a class="reference internal" href="../abbreviations.html#ltg"><span class="std std-ref">LTG</span></a> mapping, see <a class="reference internal" href="../../manual/introduction.html#sec-overview-ltgmapping"><span class="std std-ref">Mapping between local and global coordinate indices</span></a>.</p>
+<p>The class <strong>MainSystemData</strong> has the following <strong>functions and structures</strong> regarding <strong>object LTG coordinate mappings</strong>:</p>
+<ul>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">GetObjectLTGODE2(objectNumber)</span></code></strong>: get object local-to-global coordinate mapping (list of global coordinate indices) for ODE2 coordinates; only available after Assemble()</p>
+<p><em>Example</em>:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">ltgObject4</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">systemData</span><span class="o">.</span><span class="nf">GetObjectLTGODE2</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">GetObjectLTGODE1(objectNumber)</span></code></strong>: get object local-to-global coordinate mapping (list of global coordinate indices) for ODE1 coordinates; only available after Assemble()</p>
+<p><em>Example</em>:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">ltgObject4</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">systemData</span><span class="o">.</span><span class="nf">GetObjectLTGODE1</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">GetObjectLTGAE(objectNumber)</span></code></strong>: get object local-to-global coordinate mapping (list of global coordinate indices) for algebraic equations (AE) coordinates; only available after Assemble()</p>
+<p><em>Example</em>:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">ltgObject4</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">systemData</span><span class="o">.</span><span class="nf">GetObjectLTGAE</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">GetObjectLTGData(objectNumber)</span></code></strong>: get object local-to-global coordinate mapping (list of global coordinate indices) for data coordinates; only available after Assemble()</p>
+<p><em>Example</em>:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">ltgObject4</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">systemData</span><span class="o">.</span><span class="nf">GetObjectLTGData</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">GetNodeLTGODE2(nodeNumber)</span></code></strong>: get node local-to-global coordinate mapping (list of global coordinate indices) for ODE2 coordinates; only available after Assemble()</p>
+<p><em>Example</em>:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">ltgNode4</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">systemData</span><span class="o">.</span><span class="nf">GetNodeLTGODE2</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">GetNodeLTGODE1(nodeNumber)</span></code></strong>: get node local-to-global coordinate mapping (list of global coordinate indices) for ODE1 coordinates; only available after Assemble()</p>
+<p><em>Example</em>:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">ltgNode4</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">systemData</span><span class="o">.</span><span class="nf">GetNodeLTGODE1</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">GetNodeLTGAE(nodeNumber)</span></code></strong>: get node local-to-global coordinate mapping (list of global coordinate indices) for AE coordinates; only available after Assemble()</p>
+<p><em>Example</em>:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">ltgNode4</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">systemData</span><span class="o">.</span><span class="nf">GetNodeLTGAE</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">GetNodeLTGData(nodeNumber)</span></code></strong>: get node local-to-global coordinate mapping (list of global coordinate indices) for Data coordinates; only available after Assemble()</p>
+<p><em>Example</em>:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">ltgNode4</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">systemData</span><span class="o">.</span><span class="nf">GetNodeLTGData</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+</ul>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="MainSystem.html" class="btn btn-neutral float-left" title="MainSystem" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="Symbolic.html" class="btn btn-neutral float-right" title="Symbolic" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

@@ -1,0 +1,2444 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>VisualizationSettings &mdash; Exudyn1.13.3 1.13.3 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=3ee1c6c6" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/rtd_sphinx_search.min.css" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/custom.css?v=e2783f0e" />
+
+  
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=b8a3e558"></script>
+      <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../../_static/copybutton.js?v=f281be69"></script>
+      <script src="../../../_static/js/rtd_search_config.js"></script>
+      <script src="../../../_static/js/rtd_sphinx_search.min.js"></script>
+      <script>window.MathJax = {"loader": {"load": ["[tex]/mathtools"]}, "tex": {"packages": {"[+]": ["mathtools"]}, "macros": {"ANCFdk": "{\\LU{0}{\\dv_k}}", "ANCFdkO": "{\\LU{0}{\\dv_{0,k}}}", "ANCFdkOtp": "{\\LU{0}{\\dv_{0,k}\\tp}}", "ANCFdkt": "{\\LU{0}{\\dot\\dv_k}}", "Am": "{\\mathbf{A}}", "Dm": "{\\mathbf{D}}", "Em": "{\\mathbf{E}}", "Gm": "{\\mathbf{G}}", "Im": "{\\mathbf{I}}", "ImThree": "{\\mathbf{I}_{3 \\times 3}}", "Jm": "{\\mathbf{J}}", "Km": "{\\mathbf{K}}", "Mm": "{\\mathbf{M}}", "Pm": "{\\mathbf{P}}", "Rm": "{\\mathbf{R}}", "Sm": "{\\mathbf{S}}", "Tm": "{\\mathbf{T}}", "av": "{\\mathbf{a}}", "bv": "{\\mathbf{b}}", "cv": "{\\mathbf{c}}", "diffANCF": ["{\\frac{\\partial #1}{\\partial \\qv_{ANCF}}}", 1], "diffANCFdk": "{\\diffANCFmI{\\ANCFdk}}", "diffANCFmI": ["{\\frac{\\partial #1}{\\partial \\qv_{ANCF,m1}}}", 1], "diffANCFmIt": ["{\\frac{\\partial #1}{\\partial \\dot \\qv_{ANCF,m1}}}", 1], "diffANCFt": ["{\\frac{\\partial #1}{\\partial \\dot \\qv_{ANCF}}}", 1], "diffmI": ["{\\frac{\\partial #1}{\\partial \\qv_{m1}}}", 1], "diffmIt": ["{\\frac{\\partial #1}{\\partial \\dot \\qv_{m1}}}", 1], "diffmOI": ["{\\frac{\\partial #1}{\\partial \\qv_{m0,m1}}}", 1], "diffmOIt": ["{\\frac{\\partial #1}{\\partial \\dot \\qv_{m0,m1}}}", 1], "diffmOt": ["{\\frac{\\partial #1}{\\partial \\dot \\qv_{m0}}}", 1], "dv": "{\\mathbf{d}}", "ev": "{\\mathbf{e}}", "fv": "{\\mathbf{f}}", "gv": "{\\mathbf{g}}", "hv": "{\\mathbf{h}}", "nv": "{\\mathbf{n}}", "pv": "{\\mathbf{p}}", "qv": "{\\mathbf{q}}", "rv": "{\\mathbf{r}}", "sv": "{\\mathbf{s}}", "tv": "{\\mathbf{t}}", "uv": "{\\mathbf{u}}", "vv": "{\\mathbf{v}}", "xv": "{\\mathbf{x}}", "yv": "{\\mathbf{y}}", "zv": "{\\mathbf{z}}", "vspace": ["{}", 1], "ra": "{\\rightarrow}", "Rcal": "{\\mathbb{R}}", "Ccal": "{\\mathbb{C}}", "Ncal": "{\\mathbb{N}}", "Rot": "{\\mathbf{A}}", "dd": "{\\mathrm{d}}", "ps": "{p_\\mathrm{s}}", "co": "{\\mathrm{c}}", "si": "{\\mathrm{s}}", "tp": "{^\\mathrm{T}}", "diag": "{\\mathrm{diag}}", "vec": "{\\mathrm{vec}}", "Null": "{\\mathbf{0}}", "varepsilonDot": "{\\boldsymbol{\\varepsilon}}", "talpha": "{\\boldsymbol{\\alpha}}", "tbeta": "{\\boldsymbol{\\beta}}", "tgamma": "{\\boldsymbol{\\gamma}}", "tchi": "{\\boldsymbol{\\chi}}", "tdelta": "{\\boldsymbol{\\delta}}", "teps": "{\\boldsymbol{\\varepsilon}}", "tepsDot": "{\\boldsymbol{\\dot \\varepsilon}}", "teta": "{\\boldsymbol{\\eta}}", "tkappa": "{\\boldsymbol{\\kappa}}", "tkappaDot": "{\\boldsymbol{\\dot \\kappa}}", "tphi": "{\\boldsymbol{\\phi}}", "boldVarPhi": "{\\boldsymbol{\\varphi}}", "tPhi": "{\\boldsymbol{\\Phi}}", "ttheta": "{\\boldsymbol{\\theta}}", "tTheta": "{\\boldsymbol{\\Theta}}", "tlambda": "{\\boldsymbol{\\lambda}}", "tnu": "{\\boldsymbol{\\nu}}", "tmu": "{\\boldsymbol{\\mu}}", "tpsi": "{\\boldsymbol{\\psi}}", "tPsi": "{\\boldsymbol{\\Psi}}", "ttau": "{\\boldsymbol{\\tau}}", "tsigma": "{\\boldsymbol{\\sigma}}", "txi": "{\\boldsymbol{\\xi}}", "tzeta": "{\\boldsymbol{\\zeta}}", "tomega": "{\\boldsymbol{\\omega}}", "tOmega": "{\\boldsymbol{\\Omega}}", "vareps": "{\\varepsilon}", "myoverline": ["\\overline{#1}", 1], "pluseq": "\\mathrel{+}=", "LU": ["{\\prescript{#1}{}{#2}\\,}", 2], "LUX": ["{\\prescript{#1}{}{#2}#3\\,}", 3], "LUR": ["{\\prescript{#1}{}{#2}_{#3}\\,}", 3], "LURU": ["{\\prescript{#1}{}{#2}_{#3}^{#4}\\,}", 4], "LLdot": ["{\\prescript{}{#1}{\\dot{#2}}_{#3}\\,}", 3], "vr": ["{\\left[ \\begin{array}{c} { #1}\\vspace{0.04cm} \\\\ { #2}\\vspace{0.04cm} \\\\ { #3} \\end{array} \\right]}", 3], "mr": ["{\\left[ \\begin{array}{ccc} #1 & #2 & #3 \\vspace{0.04cm}\\\\ #4 & #5 & #6 \\vspace{0.04cm}\\\\ #7 & #8 & #9  \\end{array} \\right]}", 9], "vp": ["{\\left[ \\begin{array}{c} { #1} \\vspace{0.04cm}\\\\ { #2} \\end{array} \\right]}", 2], "mp": ["{\\left[ \\begin{array}{cc} #1 & #2 \\vspace{0.04cm}\\\\ #3 & #4 \\end{array} \\right]}", 4], "mfour": ["{\\left[ \\begin{array}{cccc} { #1} \\\\ { #2} \\\\ { #3} \\\\ { #4} \\end{array} \\right]}", 4], "vfour": ["{\\left[ \\begin{array}{c} { #1} \\\\ { #2} \\\\ { #3} \\\\ { #4} \\end{array} \\right]}", 4], "vrRow": ["{[#1,\\, #2,\\, #3]}", 3], "vsix": ["{\\left[ \\begin{array}{c} { #1} \\\\ { #2} \\\\ { #3} \\\\ { #4} \\\\ { #5} \\\\ { #6} \\end{array} \\right]}", 6], "vsixb": ["{\\begin{array}{c} { #1} \\\\ { #2} \\\\ { #3} \\\\ { #4} \\\\ { #5} \\\\ { #6} \\end{array} }", 6], "vsixs": ["{ \\begin{array}{c} { #1} \\\\ { #2} \\\\ { #3} \\\\ { #4} \\\\ { #5} \\\\ { #6} \\end{array} }", 6], "SO": "{q}", "FO": "{y}", "AE": "{\\lambda}", "SYS": "{s}", "SON": "{$2^\\mathrm{nd}$ order differential equations}", "FON": "{$1^\\mathrm{st}$ order differential equations}", "AEN": "{algebraic equations}", "Bm": "{\\mathbf{B}}", "Cm": "{\\mathbf{C}}", "Fm": "{\\mathbf{F}}", "SYSN": "{system equations}", "cIni": "{_\\mathrm{ini}}", "cRef": "{_\\mathrm{ref}}", "cCur": "{_\\mathrm{cur}}", "cVis": "{_\\mathrm{vis}}", "cSOS": "{_\\mathrm{start\\;of\\;step}}", "cConfig": "{_\\mathrm{config}}", "pLoc": "{\\mathbf{b}}", "pLocB": "{\\,^{b}{\\mathbf{v}}}", "pRef": "{\\mathbf{r}}", "pRefG": "{\\,^{0}{\\mathbf{r}}}", "indf": "{_\\mathrm{f}}", "indt": "{_\\mathrm{t}}", "indr": "{_\\mathrm{r}}", "indtt": "{_\\mathrm{tt}}", "indrr": "{_\\mathrm{rr}}", "indff": "{_\\mathrm{ff}}", "indtf": "{_\\mathrm{tf}}", "indrf": "{_\\mathrm{rf}}", "indtr": "{_\\mathrm{tr}}", "omegaBDtilde": "{\\LU{b}{\\tilde \\tomega_\\mathrm{bd}}}", "indrigid": "{_\\mathrm{rigid}}", "indred": "{_\\mathrm{red}}", "induser": "{_\\mathrm{user}}", "indu": "{_\\mathrm{u}}", "termA": ["{\\color{blue}{#1}}", 1], "termB": ["{\\color{red}{#1}}", 1], "termC": ["{\\color{green}{#1}}", 1], "acc": "{\\ddot{\\mathbf{q}}}", "GA": "{G\\alpha}", "Hm": "{\\mathbf{H}}", "ImTwo": "{\\mathbf{I}_{2 \\times 2}}", "Lm": "{\\mathbf{L}}", "Qm": "{\\mathbf{Q}}", "Vm": "{\\mathbf{V}}", "Wm": "{\\mathbf{W}}", "Xm": "{\\mathbf{X}}", "Ym": "{\\mathbf{Y}}", "aalg": "{\\mathbf{a}}", "iv": "{\\mathbf{i}}", "jv": "{\\mathbf{j}}", "kv": "{\\mathbf{k}}", "lv": "{\\mathbf{l}}", "mv": "{\\mathbf{m}}", "ov": "{\\mathbf{o}}", "vel": "{\\mathbf{v}}", "wv": "{\\mathbf{w}}"}}, "options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+      <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-mml-chtml.js"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+    <link rel="next" title="CSolverStructures" href="CSolverStructures.html" />
+    <link rel="prev" title="SimulationSettings" href="SimulationSettings.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            Exudyn1.13.3
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Exudyn User Manual</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../README.html">Exudyn</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../manual/gettingStarted.html">Installation and getting started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../manual/introduction.html">Overview on Exudyn</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../manual/introductionBasics.html">Exudyn basics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../manual/tutorial.html">Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../manual/GUI.html">Renderer, graphics and visualization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../manual/performanceErrors.html">Performance, errors and solver failures</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../manual/introductionAdvanced.html">Advanced topics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../manual/notation.html">Notation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../manual/theory.html">Theory and formulations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../manual/solver.html">Solvers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../cInterface/cInterfaceIndex.html">Python-C++ command interface</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Reference Manual</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../items/itemsIndex.html">Items reference manual</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../pythonUtilities/utilitiesIndex.html">Python Utility Functions</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="structuresIndex.html">Structures and Settings</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="SimulationSettings.html">SimulationSettings</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">VisualizationSettings</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#visualization-settings">Visualization settings</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="CSolverStructures.html">CSolverStructures</a></li>
+<li class="toctree-l2"><a class="reference internal" href="MainSolver.html">MainSolver</a></li>
+<li class="toctree-l2"><a class="reference internal" href="PyStructuralElementsDataStructures.html">PyStructuralElementsDataStructures</a></li>
+<li class="toctree-l2"><a class="reference internal" href="BeamSectionGeometry.html">BeamSectionGeometry</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../references.html">References</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Developer documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../dev/README.html">Exudyn developer documentation</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">How-to notes</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../howTo/condaEnvironments.html">Conda environments for Exudyn</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../howTo/sphinxDocs.html">Building the documentation</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Examples, models and issues</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../examples/examplesIndex.html">Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../testModels/testModelsIndex.html">TestModels</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../abbreviations.html">List of Abbreviations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../manual/revisions.html">Revisions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../CHANGELOG.html">Changelog</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../trackerlog.html">Issue tracker</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">Exudyn1.13.3</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="structuresIndex.html">Structures and Settings</a></li>
+      <li class="breadcrumb-item active">VisualizationSettings</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../../_sources/docs/generated/structures/VisualizationSettings.md.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <!-- GENERATED by tools/generators/structureDocsEmitter.py from definitions/ - do not edit -->
+<section class="tex2jax_ignore mathjax_ignore" id="visualizationsettings">
+<h1>VisualizationSettings<a class="headerlink" href="#visualizationsettings" title="Link to this heading"></a></h1>
+<section id="visualization-settings">
+<span id="sec-visualizationsettingsmain"></span><h2>Visualization settings<a class="headerlink" href="#visualization-settings" title="Link to this heading"></a></h2>
+<p>This section includes hierarchical structures for visualization settings, e.g., drawing of nodes, bodies, connectors, loads and markers and furthermore openGL, window and save image options. For further information, see <a class="reference internal" href="../../manual/GUI.html#sec-overview-basics-visualizationsettings"><span class="std std-ref">Visualization settings dialog</span></a>.</p>
+<section id="vsettingsgeneral">
+<span id="sec-vsettingsgeneral"></span><h3>VSettingsGeneral<a class="headerlink" href="#vsettingsgeneral" title="Link to this heading"></a></h3>
+<p>General settings for visualization that influence all windows, default values, autofit, multithreading, etc.</p>
+<p>Reached as <code class="docutils literal notranslate"><span class="pre">SC.visualizationSettings.general</span></code>.</p>
+<p>VSettingsGeneral has the following items:</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>name</p></th>
+<th class="head"><p>type</p></th>
+<th class="head"><p>default</p></th>
+<th class="head"><p>description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">autoFitScene</span></code></p></td>
+<td><p>bool</p></td>
+<td><p>True</p></td>
+<td><p>automatically fit scene within startup after SC.renderer.Start()</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">axesTiling</span></code></p></td>
+<td><p>PInt</p></td>
+<td><p>12</p></td>
+<td><p>global number of segments for drawing cylinders for axes and cones for arrows (reduce this number, e.g. to 4, if many axes are drawn)</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">backgroundColor</span></code></p></td>
+<td><p>Float4</p></td>
+<td><p>[1.0,1.0,1.0,1.0]</p></td>
+<td><p>red, green, blue and alpha values for background color of render window (white=[1,1,1,1]; black = [0,0,0,1])</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">backgroundColorBottom</span></code></p></td>
+<td><p>Float4</p></td>
+<td><p>[0.8,0.8,1.0,1.0]</p></td>
+<td><p>red, green, blue and alpha values for bottom background color in case that useGradientBackground = True</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">boundingBoxZoomAllFactor</span></code></p></td>
+<td><p>PFloat</p></td>
+<td><p>1.2</p></td>
+<td><p>factor on boundingBox for zoom all (without minimum offset)</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">boundingBoxZoomAllOffset</span></code></p></td>
+<td><p>UFloat</p></td>
+<td><p>0.01</p></td>
+<td><p>minimum offset to bounding box of scene in window - width or height, whatever is smaller; adjust for very small or large scenes; may be negative</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">circleTiling</span></code></p></td>
+<td><p>PInt</p></td>
+<td><p>16</p></td>
+<td><p>global number of segments for circles; if smaller than 2, 2 segments are used (flat); the circles of the 2D cable contacts (ObjectContactCircleCable2D, ObjectContactFrictionCircleCable2D), large compared to the cable, take 4 times as many</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">coordinateSystemSize</span></code></p></td>
+<td><p>PFloat</p></td>
+<td><p>5.</p></td>
+<td><p>size of coordinate system relative to font size</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">cylinderTiling</span></code></p></td>
+<td><p>PInt</p></td>
+<td><p>16</p></td>
+<td><p>global number of segments for cylinders; if smaller than 2, 2 segments are used (flat); also around the rope of a reeving system and the wire of a spring drawn as a tube; the disc of ObjectJointRollingDisc and ObjectConnectorRollingDiscPenalty, large compared to the joint, takes 4 times as many; space curves use connectors.curveTiling</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">displayScaleFactor</span></code></p></td>
+<td><p>PFloat</p></td>
+<td><p>1.</p></td>
+<td><p>factor on the texts of the render window, multiplied with the display scaling of the system (monitor scaling, e.g. 150 percent on Windows, fractional scaling on Linux), which GLFW reads (glfwGetWindowContentScale; on Linux from GLFW 3.3.6 on) and follows when it changes; acts while the renderer runs; the dialogs are scaled with dialogs.fontScaling</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">graphicsUpdateInterval</span></code></p></td>
+<td><p>UFloat</p></td>
+<td><p>0.1</p></td>
+<td><p>interval of graphics update during simulation in seconds; 0.1 = 10 frames per second; low numbers might slow down computation speed</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">limitWindowToScreenSize</span></code></p></td>
+<td><p>bool</p></td>
+<td><p>True</p></td>
+<td><p>True: size for render window of respective view is limited to screen size; False: larger window sizes (e.g. for rendering) allowed according to renderWindowSize</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">minSceneSize</span></code></p></td>
+<td><p>PFloat</p></td>
+<td><p>0.1</p></td>
+<td><p>minimum scene size for initial scene size and for autoFitScene, to avoid division by zero; SET GREATER THAN ZERO</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">pointSize</span></code></p></td>
+<td><p>PFloat</p></td>
+<td><p>0.01</p></td>
+<td><p>global point size (absolute)</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">reallyQuitTimeLimit</span></code></p></td>
+<td><p>UReal</p></td>
+<td><p>900</p></td>
+<td><p>number of seconds after which user is asked a security question before stopping simulation and closing renderer; set to 0 in order to always get asked; set to 1e10 to (nearly) never get asked</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">rendererPrecision</span></code></p></td>
+<td><p>PInt</p></td>
+<td><p>4</p></td>
+<td><p>precision of general floating point numbers shown in render window: total number of digits used (max. 16)</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">rendererStartupTimeout</span></code></p></td>
+<td><p>PInt</p></td>
+<td><p>2500</p></td>
+<td><p>OpenGL render windows startup timeout in ms (change might be necessary if CPU is very slow)</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">renderWindowString</span></code></p></td>
+<td><p>String</p></td>
+<td><p>‘’</p></td>
+<td><p>string shown in render window (use this, e.g., for debugging, etc.; written below EXUDYN, similar to information in simulationSettings.solution.file)</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">showHelpOnStartup</span></code></p></td>
+<td><p>UInt</p></td>
+<td><p>5</p></td>
+<td><p>seconds to show help message on startup (0=deactivate)</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">showSolutionInformation</span></code></p></td>
+<td><p>bool</p></td>
+<td><p>True</p></td>
+<td><p>true = show solution information (from simulationSettings.solution)</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">showSolverInformation</span></code></p></td>
+<td><p>bool</p></td>
+<td><p>True</p></td>
+<td><p>true = solver name and further information shown in render window</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">showSolverTime</span></code></p></td>
+<td><p>bool</p></td>
+<td><p>True</p></td>
+<td><p>true = solver current time shown in render window</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">sphereTiling</span></code></p></td>
+<td><p>PInt</p></td>
+<td><p>16</p></td>
+<td><p>global number of segments of a half circle for the spheres of connectors and joints and for graphics.Sphere and graphics.Spheres with nTiles=-1 (the default); used as power of 2 (rounded down), as the spheres are drawn from display lists; if smaller than 2, 2 segments are used</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">textAlwaysInFront</span></code></p></td>
+<td><p>bool</p></td>
+<td><p>True</p></td>
+<td><p>if true, text for item numbers and other item-related text is drawn in front; this may be unwanted in case that you only with to see numbers of objects in front; currently does not work with perspective</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">textColor</span></code></p></td>
+<td><p>Float4</p></td>
+<td><p>[0.,0.,0.,1.0]</p></td>
+<td><p>general text color (default); used for system texts in render window</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">textHasBackground</span></code></p></td>
+<td><p>bool</p></td>
+<td><p>False</p></td>
+<td><p>if true, text for item numbers and other item-related text have a background (depending on text color), allowing for better visibility if many numbers are shown; the text itself is black; therefore, dark background colors are ignored and shown as white</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">textOffsetFactor</span></code></p></td>
+<td><p>UFloat</p></td>
+<td><p>0.005</p></td>
+<td><p>This is an additional out of plane offset for item texts (node number, etc.); the factor is relative to the maximum scene size and is only used, if textAlwaysInFront=False; this factor allows to draw text, e.g., in front of nodes</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">threadSafeGraphicsUpdate</span></code></p></td>
+<td><p>bool</p></td>
+<td><p>True</p></td>
+<td><p>true = updating of visualization is threadsafe, but slower for complicated models; deactivate this to speed up computation, but activate for generation of animations; may be improved in future by adding a safe visualizationUpdate state</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">useBitmapText</span></code></p></td>
+<td><p>bool</p></td>
+<td><p>True</p></td>
+<td><p>if true, texts are displayed using pre-defined bitmaps for the text; may increase the complexity of your scene, e.g., if many (&gt;10000) node numbers shown</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">useGradientBackground</span></code></p></td>
+<td><p>bool</p></td>
+<td><p>False</p></td>
+<td><p>true = use vertical gradient for background;</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">useMultiThreadedRendering</span></code></p></td>
+<td><p>bool</p></td>
+<td><p>True</p></td>
+<td><p>true = rendering is done in separate thread; false = no separate thread, which may be more stable but has lagging interaction for large models (do not interact with models during simulation); you MUST set this parameter BEFORE call to SC.renderer.Start(); MAC OS: uses always false, because MAC OS does not support multi threaded GLFW</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">zoomAllUseBoundingBox</span></code></p></td>
+<td><p>bool</p></td>
+<td><p>True</p></td>
+<td><p>if true, use exact scene bounding box (but not including texts) for zoom; does not include perspective effects!</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="vsettingscontouradvanced">
+<span id="sec-vsettingscontouradvanced"></span><h3>VSettingsContourAdvanced<a class="headerlink" href="#vsettingscontouradvanced" title="Link to this heading"></a></h3>
+<p>Advanced settings for contour plots.</p>
+<p>Reached as <code class="docutils literal notranslate"><span class="pre">SC.visualizationSettings.contour.advanced</span></code>.</p>
+<p>VSettingsContourAdvanced has the following items:</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>name</p></th>
+<th class="head"><p>type</p></th>
+<th class="head"><p>default</p></th>
+<th class="head"><p>description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">colorBarPrecision</span></code></p></td>
+<td><p>PInt</p></td>
+<td><p>4</p></td>
+<td><p>precision of floating point values shown in color bar; total number of digits used (max. 16)</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">colorBarTiling</span></code></p></td>
+<td><p>PInt</p></td>
+<td><p>12</p></td>
+<td><p>number of tiles (segements) shown in the colorbar for the contour plot</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">contourColor0</span></code></p></td>
+<td><p>Float4</p></td>
+<td><p>[0.1,0.1,0.9,1.]</p></td>
+<td><p>RGBA color for relative value 0 used for contour plot; alpha is ignored</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">contourColor1</span></code></p></td>
+<td><p>Float4</p></td>
+<td><p>[0.1,0.9,0.9,1.]</p></td>
+<td><p>RGBA color for relative value 0.25 used for contour plot; alpha is ignored</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">contourColor2</span></code></p></td>
+<td><p>Float4</p></td>
+<td><p>[0.1,0.9,0.1,1.]</p></td>
+<td><p>RGBA color for relative value 0.25 used for contour plot; alpha is ignored</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">contourColor3</span></code></p></td>
+<td><p>Float4</p></td>
+<td><p>[0.9,0.9,0.1,1.]</p></td>
+<td><p>RGBA color for relative value 0.25 used for contour plot; alpha is ignored</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">contourColor4</span></code></p></td>
+<td><p>Float4</p></td>
+<td><p>[0.9,0.1,0.1,1.]</p></td>
+<td><p>RGBA color for relative value 0.25 used for contour plot; alpha is ignored</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">contourColorMax</span></code></p></td>
+<td><p>Float4</p></td>
+<td><p>[0.9,0.9,0.9,1.]</p></td>
+<td><p>RGBA color if relative value in contour plot is larger than 1 (if automaticRange=False); alpha is ignored</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">contourColorMin</span></code></p></td>
+<td><p>Float4</p></td>
+<td><p>[0.1,0.1,0.1,1.]</p></td>
+<td><p>RGBA color if relative value in contour plot is smaller than 0 (if automaticRange=False); alpha is ignored</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">showColorBar</span></code></p></td>
+<td><p>bool</p></td>
+<td><p>True</p></td>
+<td><p>show the colour bar with minimum and maximum values for the contour plot</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="vsettingscontour">
+<span id="sec-vsettingscontour"></span><h3>VSettingsContour<a class="headerlink" href="#vsettingscontour" title="Link to this heading"></a></h3>
+<p>Settings for contour plots; use these options to visualize field data, such as displacements, stresses, strains, etc. for bodies, nodes and finite elements.</p>
+<p>Reached as <code class="docutils literal notranslate"><span class="pre">SC.visualizationSettings.contour</span></code>.</p>
+<p>VSettingsContour has the following items:</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>name</p></th>
+<th class="head"><p>type</p></th>
+<th class="head"><p>default</p></th>
+<th class="head"><p>description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">advanced</span></code></p></td>
+<td><p>VSettingsContourAdvanced</p></td>
+<td><p></p></td>
+<td><p>advanced settings for contour</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">alphaTransparency</span></code></p></td>
+<td><p>float</p></td>
+<td><p>1</p></td>
+<td><p>default value for contour alpha transparency (RGB color computed from contour value)</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">automaticRange</span></code></p></td>
+<td><p>bool</p></td>
+<td><p>True</p></td>
+<td><p>if true, the contour plot value range is chosen automatically to the maximum range</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">maxValue</span></code></p></td>
+<td><p>float</p></td>
+<td><p>1</p></td>
+<td><p>maximum value for contour plot; set manually, if automaticRange == False</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">minValue</span></code></p></td>
+<td><p>float</p></td>
+<td><p>0</p></td>
+<td><p>minimum value for contour plot; set manually, if automaticRange == False</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">nodesColored</span></code></p></td>
+<td><p>bool</p></td>
+<td><p>True</p></td>
+<td><p>if true, the contour color is also applied to nodes (except mesh nodes), otherwise node drawing is not influenced by contour settings</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">outputVariable</span></code></p></td>
+<td><p>OutputVariableType</p></td>
+<td><p>OutputVariableType::_None</p></td>
+<td><p>selected contour plot output variable type; select OutputVariableType._None to deactivate contour plotting.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">outputVariableComponent</span></code></p></td>
+<td><p>Int</p></td>
+<td><p>0</p></td>
+<td><p>select the component of the chosen output variable; e.g., for displacements, 3 components are available: 0 == x, 1 == y, 2 == z component; for stresses, 6 components are available, see OutputVariableType description; to draw the norm of a outputVariable, set component to -1; if a certain component is not available by certain objects or nodes, no value is drawn (using default color)</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">reduceRange</span></code></p></td>
+<td><p>bool</p></td>
+<td><p>True</p></td>
+<td><p>if true, the contour plot value range is also reduced; better for static computation; in dynamic computation set this option to false, it can reduce visualization artifacts; you should also set minVal to max(float) and maxVal to min(float)</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">rigidBodiesColored</span></code></p></td>
+<td><p>bool</p></td>
+<td><p>True</p></td>
+<td><p>if true, the contour color is also applied to triangular faces of rigid bodies and mass points, otherwise the rigid body drawing are not influenced by contour settings; for general rigid bodies (except for ObjectGround), Position, Displacement, DisplacementLocal(=0), Velocity, VelocityLocal, AngularVelocity, and AngularVelocityLocal are available; may slow down visualization!</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="vsettingsnodes">
+<span id="sec-vsettingsnodes"></span><h3>VSettingsNodes<a class="headerlink" href="#vsettingsnodes" title="Link to this heading"></a></h3>
+<p>Visualization settings for nodes.</p>
+<p>Reached as <code class="docutils literal notranslate"><span class="pre">SC.visualizationSettings.nodes</span></code>.</p>
+<p>VSettingsNodes has the following items:</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>name</p></th>
+<th class="head"><p>type</p></th>
+<th class="head"><p>default</p></th>
+<th class="head"><p>description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">basisSize</span></code></p></td>
+<td><p>float</p></td>
+<td><p>0.2</p></td>
+<td><p>size of basis for nodes</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">defaultColor</span></code></p></td>
+<td><p>Float4</p></td>
+<td><p>[0.2,0.2,1.,1.]</p></td>
+<td><p>default RGBA color for nodes; 4th value is alpha-transparency</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">defaultSize</span></code></p></td>
+<td><p>float</p></td>
+<td><p>-1.</p></td>
+<td><p>global node size; if -1.f, node size is relative to openGL.initialMaxSceneSize</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">drawNodesAsPoint</span></code></p></td>
+<td><p>bool</p></td>
+<td><p>True</p></td>
+<td><p>simplified/faster drawing of nodes; uses general-&gt;pointSize as drawing size; if drawNodesAsPoint==True, the basis of the node will be drawn with lines</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">show</span></code></p></td>
+<td><p>bool</p></td>
+<td><p>True</p></td>
+<td><p>flag to decide, whether the nodes are shown</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">showBasis</span></code></p></td>
+<td><p>bool</p></td>
+<td><p>False</p></td>
+<td><p>show basis (three axes) of coordinate system in 3D nodes</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">showNodalSlopes</span></code></p></td>
+<td><p>bool</p></td>
+<td><p>False</p></td>
+<td><p>draw nodal slope vectors, e.g. in ANCF beam finite elements</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">showNumbers</span></code></p></td>
+<td><p>bool</p></td>
+<td><p>False</p></td>
+<td><p>flag to decide, whether the node number is shown</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">tiling</span></code></p></td>
+<td><p>PInt</p></td>
+<td><p>4</p></td>
+<td><p>tiling for node if drawn as sphere; used to lower the amount of triangles to draw each node; if drawn as circle, this value is multiplied with 4</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="vsettingsbeams">
+<span id="sec-vsettingsbeams"></span><h3>VSettingsBeams<a class="headerlink" href="#vsettingsbeams" title="Link to this heading"></a></h3>
+<p>Visualization settings for beam finite elements.</p>
+<p>Reached as <code class="docutils literal notranslate"><span class="pre">SC.visualizationSettings.bodies.beams</span></code>.</p>
+<p>VSettingsBeams has the following items:</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>name</p></th>
+<th class="head"><p>type</p></th>
+<th class="head"><p>default</p></th>
+<th class="head"><p>description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">axialTiling</span></code></p></td>
+<td><p>PInt</p></td>
+<td><p>8</p></td>
+<td><p>number of segments to discretise the beams axis</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">crossSectionFilled</span></code></p></td>
+<td><p>bool</p></td>
+<td><p>True</p></td>
+<td><p>if implemented for element, cross section is drawn as solid (filled) instead of wire-frame; NOTE: some quantities may not be interpolated correctly over cross section in visualization; equivalent to drawSolid of shells</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">crossSectionTiling</span></code></p></td>
+<td><p>PInt</p></td>
+<td><p>4</p></td>
+<td><p>number of quads drawn over height of beam, if drawn as flat objects; leads to higher accuracy of components drawn over beam height or with, but also to larger CPU costs for drawing</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">drawVertical</span></code></p></td>
+<td><p>bool</p></td>
+<td><p>False</p></td>
+<td><p>draw contour plot outputVariables ‘vertical’ along beam height; contour.outputVariable must be set accordingly</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">drawVerticalColor</span></code></p></td>
+<td><p>Float4</p></td>
+<td><p>[0.2,0.2,0.2,1.]</p></td>
+<td><p>color for outputVariable to be drawn along cross section (vertically)</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">drawVerticalFactor</span></code></p></td>
+<td><p>UFloat</p></td>
+<td><p>1.</p></td>
+<td><p>factor for outputVariable to be drawn along cross section (vertically)</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">drawVerticalLines</span></code></p></td>
+<td><p>bool</p></td>
+<td><p>True</p></td>
+<td><p>draw additional vertical lines for better visibility</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">drawVerticalOffset</span></code></p></td>
+<td><p>float</p></td>
+<td><p>0.</p></td>
+<td><p>offset for vertical drawn lines; offset is added before multiplication with drawVerticalFactor</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">drawVerticalValues</span></code></p></td>
+<td><p>bool</p></td>
+<td><p>False</p></td>
+<td><p>show values at vertical lines; note that these numbers are interpolated values and may be different from values evaluated directly at this point!</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">reducedAxialInterploation</span></code></p></td>
+<td><p>bool</p></td>
+<td><p>True</p></td>
+<td><p>if True, the interpolation along the beam axis may be lower than the beam element order; this may, however, show more consistent values than a full interpolation, e.g. for strains or forces</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="vsettingsshells">
+<span id="sec-vsettingsshells"></span><h3>VSettingsShells<a class="headerlink" href="#vsettingsshells" title="Link to this heading"></a></h3>
+<p>Visualization settings for plate/shell finite elements.</p>
+<p>Reached as <code class="docutils literal notranslate"><span class="pre">SC.visualizationSettings.bodies.shells</span></code>.</p>
+<p>VSettingsShells has the following items:</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>name</p></th>
+<th class="head"><p>type</p></th>
+<th class="head"><p>default</p></th>
+<th class="head"><p>description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">contourZeta</span></code></p></td>
+<td><p>float</p></td>
+<td><p>1.</p></td>
+<td><p>thickness coordinate in [-1,1] at which the contour is evaluated: the top surface (and the mid surface without drawSolid) at +|contourZeta|, the bottom surface at -|contourZeta|; 0 is the mid surface, 1 the outer fibre</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">drawNormal</span></code></p></td>
+<td><p>bool</p></td>
+<td><p>False</p></td>
+<td><p>if True, the contour value is drawn along the normal of the mid surface, n = r_x x r_y normalized, as lines: an envelope through the points p + drawNormalFactor * value * n, positive values on the side of the normal; contour.outputVariable must be set</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">drawNormalColor</span></code></p></td>
+<td><p>Float4</p></td>
+<td><p>[0.2,0.2,0.2,1.]</p></td>
+<td><p>color of the lines drawn with drawNormal</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">drawNormalFactor</span></code></p></td>
+<td><p>UFloat</p></td>
+<td><p>1.</p></td>
+<td><p>factor of the contour value drawn along the normal with drawNormal</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">drawNormalLines</span></code></p></td>
+<td><p>bool</p></td>
+<td><p>True</p></td>
+<td><p>with drawNormal, also draw the lines from the mid surface to the envelope</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">drawSolid</span></code></p></td>
+<td><p>bool</p></td>
+<td><p>True</p></td>
+<td><p>if true: to draw plates/shells as 3D objects; false: only the element surface is drawn; equivalent to crossSectionFilled in beams</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">inPlaneTiling</span></code></p></td>
+<td><p>PInt</p></td>
+<td><p>4</p></td>
+<td><p>number of segments along each local direction of an element, which is drawn as inPlaneTiling x inPlaneTiling quads (at least 2), for its shape and for the points at which the contour is evaluated</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">reducedInterpolation</span></code></p></td>
+<td><p>bool</p></td>
+<td><p>True</p></td>
+<td><p>if True, the contour of the strain-type outputs StrainLocal, StressLocal, CurvatureLocal, ForceLocal and TorqueLocal is interpolated bilinearly from the values at the four corners of each element, as beams.reducedAxialInterploation does along a beam; if False, it is evaluated at each point of the drawing</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">thicknessFactor</span></code></p></td>
+<td><p>PFloat</p></td>
+<td><p>1.</p></td>
+<td><p>a factor multiplied with the thickness of shells/plates only for visualization (e.g. to make some effects more visible)</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="vsettingskinematictree">
+<span id="sec-vsettingskinematictree"></span><h3>VSettingsKinematicTree<a class="headerlink" href="#vsettingskinematictree" title="Link to this heading"></a></h3>
+<p>Visualization settings for kinematic trees.</p>
+<p>Reached as <code class="docutils literal notranslate"><span class="pre">SC.visualizationSettings.bodies.kinematicTree</span></code>.</p>
+<p>VSettingsKinematicTree has the following items:</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>name</p></th>
+<th class="head"><p>type</p></th>
+<th class="head"><p>default</p></th>
+<th class="head"><p>description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">frameSize</span></code></p></td>
+<td><p>float</p></td>
+<td><p>0.2</p></td>
+<td><p>size of COM and joint frames</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">showCOMframes</span></code></p></td>
+<td><p>bool</p></td>
+<td><p>False</p></td>
+<td><p>if True, a frame is attached to every center of mass</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">showFramesNumbers</span></code></p></td>
+<td><p>bool</p></td>
+<td><p>False</p></td>
+<td><p>if True, numbers are drawn for joint frames (O[i]J[j]) and COM frames (O[i]COM[j]) for object [i] and local joint [j]</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">showJointFrames</span></code></p></td>
+<td><p>bool</p></td>
+<td><p>True</p></td>
+<td><p>if True, a frame is attached to the origin of every joint frame</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="vsettingsbodies">
+<span id="sec-vsettingsbodies"></span><h3>VSettingsBodies<a class="headerlink" href="#vsettingsbodies" title="Link to this heading"></a></h3>
+<p>Visualization settings for bodies.</p>
+<p>Reached as <code class="docutils literal notranslate"><span class="pre">SC.visualizationSettings.bodies</span></code>.</p>
+<p>VSettingsBodies has the following items:</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>name</p></th>
+<th class="head"><p>type</p></th>
+<th class="head"><p>default</p></th>
+<th class="head"><p>description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">beams</span></code></p></td>
+<td><p>VSettingsBeams</p></td>
+<td><p></p></td>
+<td><p>visualization settings for beams (e.g. ANCFCable or other beam elements)</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">kinematicTree</span></code></p></td>
+<td><p>VSettingsKinematicTree</p></td>
+<td><p></p></td>
+<td><p>visualization settings for kinematic tree</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">shells</span></code></p></td>
+<td><p>VSettingsShells</p></td>
+<td><p></p></td>
+<td><p>visualization settings for plates and shells</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">defaultColor</span></code></p></td>
+<td><p>Float4</p></td>
+<td><p>[0.3,0.3,1.,1.]</p></td>
+<td><p>default RGBA color for bodies; 4th value is alpha-transparency</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">defaultSize</span></code></p></td>
+<td><p>Float3</p></td>
+<td><p>[1.,1.,1.]</p></td>
+<td><p>global body size of xyz-cube</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">deformationScaleFactor</span></code></p></td>
+<td><p>float</p></td>
+<td><p>1</p></td>
+<td><p>global deformation scale factor for the drawing of superelements (FFRF, FFRFreducedOrder, GenericODE2 with a mesh): their mesh nodes and the markers on them are drawn with the local deformation scaled by it (#1813)</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">show</span></code></p></td>
+<td><p>bool</p></td>
+<td><p>True</p></td>
+<td><p>flag to decide, whether the bodies are shown</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">showNumbers</span></code></p></td>
+<td><p>bool</p></td>
+<td><p>False</p></td>
+<td><p>flag to decide, whether the body(=object) number is shown</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="vsettingsconnectors">
+<span id="sec-vsettingsconnectors"></span><h3>VSettingsConnectors<a class="headerlink" href="#vsettingsconnectors" title="Link to this heading"></a></h3>
+<p>Visualization settings for connectors.</p>
+<p>Reached as <code class="docutils literal notranslate"><span class="pre">SC.visualizationSettings.connectors</span></code>.</p>
+<p>VSettingsConnectors has the following items:</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>name</p></th>
+<th class="head"><p>type</p></th>
+<th class="head"><p>default</p></th>
+<th class="head"><p>description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">contactPointsDefaultSize</span></code></p></td>
+<td><p>float</p></td>
+<td><p>0.02</p></td>
+<td><p>DEPRECATED: do not use! global contact points size; if -1.f, connector size is relative to maxSceneSize</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">curveTiling</span></code></p></td>
+<td><p>PInt</p></td>
+<td><p>32</p></td>
+<td><p>number of segments of a full turn of a space curve drawn by a connector: a winding of a spring, the arc of a rope on a sheave (ObjectConnectorReevingSystemSprings); an arc gets the share of its angle, at least one segment; circles and cylinders take the tilings of general</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">defaultColor</span></code></p></td>
+<td><p>Float4</p></td>
+<td><p>[0.2,0.2,1.,1.]</p></td>
+<td><p>default RGBA color for connectors; 4th value is alpha-transparency</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">defaultSize</span></code></p></td>
+<td><p>float</p></td>
+<td><p>0.1</p></td>
+<td><p>global connector size; if -1.f, connector size is relative to maxSceneSize</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">drawSimplified</span></code></p></td>
+<td><p>bool</p></td>
+<td><p>True</p></td>
+<td><p>draw connectors with lines: the windings of springs, ObjectConnectorDistance; False draws the windings as a tube with a tenth of the spring radius and the distance connector as a rod of its drawSize</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">jointAxesLength</span></code></p></td>
+<td><p>float</p></td>
+<td><p>0.2</p></td>
+<td><p>global joint axes length</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">jointAxesRadius</span></code></p></td>
+<td><p>float</p></td>
+<td><p>0.02</p></td>
+<td><p>global joint axes radius</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">show</span></code></p></td>
+<td><p>bool</p></td>
+<td><p>True</p></td>
+<td><p>flag to decide, whether the connectors are shown</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">showContact</span></code></p></td>
+<td><p>bool</p></td>
+<td><p>False</p></td>
+<td><p>flag to decide, whether contact points, lines, etc. are shown for special cable-circle contacts; for spheres, triangles, tori, see visualizationSettings.contact</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">showJointAxes</span></code></p></td>
+<td><p>bool</p></td>
+<td><p>False</p></td>
+<td><p>flag to decide, whether contact joint axes of 3D joints are shown</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">showNumbers</span></code></p></td>
+<td><p>bool</p></td>
+<td><p>False</p></td>
+<td><p>flag to decide, whether the connector(=object) number is shown</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">springNumberOfWindings</span></code></p></td>
+<td><p>PInt</p></td>
+<td><p>8</p></td>
+<td><p>number of windings for springs drawn as helical spring</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="vsettingsmarkers">
+<span id="sec-vsettingsmarkers"></span><h3>VSettingsMarkers<a class="headerlink" href="#vsettingsmarkers" title="Link to this heading"></a></h3>
+<p>Visualization settings for markers.</p>
+<p>Reached as <code class="docutils literal notranslate"><span class="pre">SC.visualizationSettings.markers</span></code>.</p>
+<p>VSettingsMarkers has the following items:</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>name</p></th>
+<th class="head"><p>type</p></th>
+<th class="head"><p>default</p></th>
+<th class="head"><p>description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">basisSize</span></code></p></td>
+<td><p>float</p></td>
+<td><p>0.2</p></td>
+<td><p>size of the frame of the markers</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">defaultColor</span></code></p></td>
+<td><p>Float4</p></td>
+<td><p>[0.1,0.5,0.1,1.]</p></td>
+<td><p>default RGBA color for markers; 4th value is alpha-transparency</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">defaultSize</span></code></p></td>
+<td><p>float</p></td>
+<td><p>-1.</p></td>
+<td><p>global marker size; if -1.f, marker size is relative to maxSceneSize</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">drawSimplified</span></code></p></td>
+<td><p>bool</p></td>
+<td><p>True</p></td>
+<td><p>draw markers with simplified symbols</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">show</span></code></p></td>
+<td><p>bool</p></td>
+<td><p>True</p></td>
+<td><p>flag to decide, whether the markers are shown</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">showBasis</span></code></p></td>
+<td><p>bool</p></td>
+<td><p>False</p></td>
+<td><p>show the frame (three axes) of the markers with position and orientation; with drawSimplified as three lines in red, green and blue, else as three arrows, whose heads are half as long as those of a node basis</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">showNumbers</span></code></p></td>
+<td><p>bool</p></td>
+<td><p>False</p></td>
+<td><p>flag to decide, whether the marker numbers are shown</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="vsettingsloads">
+<span id="sec-vsettingsloads"></span><h3>VSettingsLoads<a class="headerlink" href="#vsettingsloads" title="Link to this heading"></a></h3>
+<p>Visualization settings for loads.</p>
+<p>Reached as <code class="docutils literal notranslate"><span class="pre">SC.visualizationSettings.loads</span></code>.</p>
+<p>VSettingsLoads has the following items:</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>name</p></th>
+<th class="head"><p>type</p></th>
+<th class="head"><p>default</p></th>
+<th class="head"><p>description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">defaultColor</span></code></p></td>
+<td><p>Float4</p></td>
+<td><p>[0.7,0.1,0.1,1.]</p></td>
+<td><p>default RGBA color for loads; 4th value is alpha-transparency</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">defaultRadius</span></code></p></td>
+<td><p>float</p></td>
+<td><p>0.005</p></td>
+<td><p>global radius of load axis if drawn in 3D</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">defaultSize</span></code></p></td>
+<td><p>float</p></td>
+<td><p>0.2</p></td>
+<td><p>global load size; if -1.f, load size is relative to maxSceneSize</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">drawSimplified</span></code></p></td>
+<td><p>bool</p></td>
+<td><p>True</p></td>
+<td><p>draw loads with simplified symbols</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">drawWithUserFunction</span></code></p></td>
+<td><p>bool</p></td>
+<td><p>True</p></td>
+<td><p>draw loads with the value of their user function, time dependent; make sure that fixedLoadSize=false, while otherwise only the direction will change; a symbolic user function is always drawn so, a Python user function only with general.useMultiThreadedRendering=False, because the render thread cannot call Python; otherwise the load is drawn with its loadVector</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">fixedLoadSize</span></code></p></td>
+<td><p>bool</p></td>
+<td><p>True</p></td>
+<td><p>if true, the load is drawn with a fixed vector length in direction of the load vector, independently of the load size</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">loadSizeFactor</span></code></p></td>
+<td><p>float</p></td>
+<td><p>0.1</p></td>
+<td><p>if fixedLoadSize=false, then this scaling factor is used to draw the load vector</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">show</span></code></p></td>
+<td><p>bool</p></td>
+<td><p>True</p></td>
+<td><p>flag to decide, whether the loads are shown</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">showNumbers</span></code></p></td>
+<td><p>bool</p></td>
+<td><p>False</p></td>
+<td><p>flag to decide, whether the load numbers are shown</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="vsettingstraces">
+<span id="sec-vsettingstraces"></span><h3>VSettingsTraces<a class="headerlink" href="#vsettingstraces" title="Link to this heading"></a></h3>
+<p>Visualization settings for traces of sensors. Note that a large number of time points (influenced by simulationSettings.solution.sensors.writePeriod) may lead to slow graphics.</p>
+<p>Reached as <code class="docutils literal notranslate"><span class="pre">SC.visualizationSettings.sensors.traces</span></code>.</p>
+<p>VSettingsTraces has the following items:</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>name</p></th>
+<th class="head"><p>type</p></th>
+<th class="head"><p>default</p></th>
+<th class="head"><p>description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">lineWidth</span></code></p></td>
+<td><p>UFloat</p></td>
+<td><p>2.</p></td>
+<td><p>line width for traces</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">listOfPositionSensors</span></code></p></td>
+<td><p>ArrayIndex</p></td>
+<td><p>[]</p></td>
+<td><p>list of position sensors which can be shown as trace inside render window if sensors have storeInternal=True; if this list is empty and showPositionTrace=True, then all available sensors are shown</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">listOfTriadSensors</span></code></p></td>
+<td><p>ArrayIndex</p></td>
+<td><p>[]</p></td>
+<td><p>list of sensors of with OutputVariableType RotationMatrix; this non-empty list needs to coincide in length with the listOfPositionSensors to be shown if showTriads=True; the triad is drawn at the related position</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">listOfVectorSensors</span></code></p></td>
+<td><p>ArrayIndex</p></td>
+<td><p>[]</p></td>
+<td><p>list of sensors with 3D vector quantities; this non-empty list needs to coincide in length with the listOfPositionSensors to be shown if showVectors=True; the vector quantity is drawn relative to the related position</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">positionsShowEvery</span></code></p></td>
+<td><p>PInt</p></td>
+<td><p>1</p></td>
+<td><p>integer value i; out of available sensor data, show every i-th position</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">sensorsMbsNumber</span></code></p></td>
+<td><p>Index</p></td>
+<td><p>0</p></td>
+<td><p>number of main system which is used to for sensor lists; if only 1 mbs is in the SystemContainer, use 0; if there are several mbs, it needs to specify the number</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">showCurrent</span></code></p></td>
+<td><p>bool</p></td>
+<td><p>True</p></td>
+<td><p>show current trace position (and especially vector quantity) related to current visualization state; this only works in solution viewer if sensor values are stored at time grid points of the solution file (up to a precision of 1e-10) and may therefore be temporarily unavailable</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">showFuture</span></code></p></td>
+<td><p>bool</p></td>
+<td><p>False</p></td>
+<td><p>show trace future to current visualization state if already computed (e.g. in SolutionViewer)</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">showPast</span></code></p></td>
+<td><p>bool</p></td>
+<td><p>True</p></td>
+<td><p>show trace previous to current visualization state</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">showPositionTrace</span></code></p></td>
+<td><p>bool</p></td>
+<td><p>False</p></td>
+<td><p>show position trace of all position sensors if listOfPositionSensors=[] or of specified sensors; sensors need to activate storeInternal=True</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">showTriads</span></code></p></td>
+<td><p>bool</p></td>
+<td><p>False</p></td>
+<td><p>if True, show basis vectors from rotation matrices provided by sensors</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">showVectors</span></code></p></td>
+<td><p>bool</p></td>
+<td><p>False</p></td>
+<td><p>if True, show vector quantities according to description in showPositionTrace</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">timeSpan</span></code></p></td>
+<td><p>UReal</p></td>
+<td><p>0</p></td>
+<td><p>maximum trace time span of past or future trace; given in seconds of simulation time; if zero, it is unused</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">traceColors</span></code></p></td>
+<td><p>ArrayFloat</p></td>
+<td><p>[0.2,0.2,0.2,1., 0.8,0.2,0.2,1., 0.2,0.8,0.2,1., 0.2,0.2,0.8,1., 0.2,0.8,0.8,1., 0.8,0.2,0.8,1., 0.8,0.4,0.1,1.]</p></td>
+<td><p>RGBA float values for traces in one array; using 6x4 values gives different colors for 6 traces; in case of triads, the 0/1/2-axes are drawn in red, green, and blue</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">triadSize</span></code></p></td>
+<td><p>float</p></td>
+<td><p>0.1</p></td>
+<td><p>length of triad axes if shown</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">triadsShowEvery</span></code></p></td>
+<td><p>PInt</p></td>
+<td><p>1</p></td>
+<td><p>integer value i; out of available sensor data, show every i-th triad</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">vectorScaling</span></code></p></td>
+<td><p>float</p></td>
+<td><p>0.01</p></td>
+<td><p>scaling of vector quantities; if, e.g., loads, this factor has to be adjusted significantly</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">vectorsShowEvery</span></code></p></td>
+<td><p>PInt</p></td>
+<td><p>1</p></td>
+<td><p>integer value i; out of available sensor data, show every i-th vector</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="vsettingssensors">
+<span id="sec-vsettingssensors"></span><h3>VSettingsSensors<a class="headerlink" href="#vsettingssensors" title="Link to this heading"></a></h3>
+<p>Visualization settings for sensors.</p>
+<p>Reached as <code class="docutils literal notranslate"><span class="pre">SC.visualizationSettings.sensors</span></code>.</p>
+<p>VSettingsSensors has the following items:</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>name</p></th>
+<th class="head"><p>type</p></th>
+<th class="head"><p>default</p></th>
+<th class="head"><p>description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">traces</span></code></p></td>
+<td><p>VSettingsTraces</p></td>
+<td><p></p></td>
+<td><p>settings for showing (position/triad) sensor traces and vector plots in the render window</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">defaultColor</span></code></p></td>
+<td><p>Float4</p></td>
+<td><p>[0.6,0.6,0.1,1.]</p></td>
+<td><p>default RGBA color for sensors; 4th value is alpha-transparency</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">defaultSize</span></code></p></td>
+<td><p>float</p></td>
+<td><p>-1.</p></td>
+<td><p>global sensor size; if -1.f, sensor size is relative to maxSceneSize</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">drawSimplified</span></code></p></td>
+<td><p>bool</p></td>
+<td><p>True</p></td>
+<td><p>draw sensors with simplified symbols</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">show</span></code></p></td>
+<td><p>bool</p></td>
+<td><p>True</p></td>
+<td><p>flag to decide, whether the sensors are shown</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">showNumbers</span></code></p></td>
+<td><p>bool</p></td>
+<td><p>False</p></td>
+<td><p>flag to decide, whether the sensor numbers are shown</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="vsettingscontact">
+<span id="sec-vsettingscontact"></span><h3>VSettingsContact<a class="headerlink" href="#vsettingscontact" title="Link to this heading"></a></h3>
+<p>Global visualization settings for GeneralContact. This allows to easily switch on/off during visualization; also used for contact objects, such as ObjectContactSphereSphere or ObjectContactSphereTriangle.</p>
+<p>Reached as <code class="docutils literal notranslate"><span class="pre">SC.visualizationSettings.contact</span></code>.</p>
+<p>VSettingsContact has the following items:</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>name</p></th>
+<th class="head"><p>type</p></th>
+<th class="head"><p>default</p></th>
+<th class="head"><p>description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">colorBoundingBoxes</span></code></p></td>
+<td><p>Float4</p></td>
+<td><p>[0.9,0.1,0.1,1.]</p></td>
+<td><p>RGBA color for boudnding boxes, see showBoundingBoxes</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">colorSearchTree</span></code></p></td>
+<td><p>Float4</p></td>
+<td><p>[0.1,0.1,0.9,1.]</p></td>
+<td><p>RGBA color for search tree, see showSearchTree</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">colorSpheres</span></code></p></td>
+<td><p>Float4</p></td>
+<td><p>[0.8,0.5,0.2,1.]</p></td>
+<td><p>RGBA color for contact spheres, see showSpheres</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">colorTori</span></code></p></td>
+<td><p>Float4</p></td>
+<td><p>[0.8,0.2,0.8,1.]</p></td>
+<td><p>RGBA color for contact tori, see showTori</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">colorTriangles</span></code></p></td>
+<td><p>Float4</p></td>
+<td><p>[0.5,0.5,0.5,1.]</p></td>
+<td><p>RGBA color for contact triangles, see showTriangles</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">contactForcesFactor</span></code></p></td>
+<td><p>float</p></td>
+<td><p>0.001</p></td>
+<td><p>factor used for scaling of contact forces is showContactForces=True</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">contactPointsDefaultSize</span></code></p></td>
+<td><p>float</p></td>
+<td><p>0.001</p></td>
+<td><p>global contact points size; if -1.f, connector size is relative to maxSceneSize; used for some contacts, e.g., in ContactFrictionCircle</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">showBoundingBoxes</span></code></p></td>
+<td><p>bool</p></td>
+<td><p>False</p></td>
+<td><p>show computed bounding boxes of all GeneralContacts; Warning: avoid for large number of contact objects!</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">showContactForces</span></code></p></td>
+<td><p>bool</p></td>
+<td><p>False</p></td>
+<td><p>if True, contact forces are drawn for certain contact models</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">showContactForcesValues</span></code></p></td>
+<td><p>bool</p></td>
+<td><p>False</p></td>
+<td><p>if True and showContactForces=True, numerical values for contact forces are shown at certain points</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">showSearchTree</span></code></p></td>
+<td><p>bool</p></td>
+<td><p>False</p></td>
+<td><p>show outer box of search tree for all GeneralContacts</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">showSearchTreeCells</span></code></p></td>
+<td><p>bool</p></td>
+<td><p>False</p></td>
+<td><p>show all cells of search tree; empty cells have colorSearchTree, cells with contact objects have higher red value; Warning: avoid for large number of search tree cells!</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">showSpheres</span></code></p></td>
+<td><p>bool</p></td>
+<td><p>False</p></td>
+<td><p>show contact spheres (SpheresWithMarker, …)</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">showTori</span></code></p></td>
+<td><p>bool</p></td>
+<td><p>False</p></td>
+<td><p>show each contact torus</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">showTriangles</span></code></p></td>
+<td><p>bool</p></td>
+<td><p>False</p></td>
+<td><p>show contact triangles (TrianglesRigidBodyBased, …)</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">tilingCurves</span></code></p></td>
+<td><p>PInt</p></td>
+<td><p>8</p></td>
+<td><p>tiling for nonlinear/polynomial curves; higher values give smoother curves</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">tilingSpheres</span></code></p></td>
+<td><p>PInt</p></td>
+<td><p>4</p></td>
+<td><p>tiling for spheres; higher values give smoother spheres, but may lead to lower frame rates</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="vsettingscamera">
+<span id="sec-vsettingscamera"></span><h3>VSettingsCamera<a class="headerlink" href="#vsettingscamera" title="Link to this heading"></a></h3>
+<p>Settings for camera like perspective, marker tracking, clipping plane, etc. Note that some options may also be found in openGL settings.</p>
+<p>Reached as <code class="docutils literal notranslate"><span class="pre">SC.visualizationSettings.view0.camera</span></code>, <code class="docutils literal notranslate"><span class="pre">SC.visualizationSettings.view1.camera</span></code>, <code class="docutils literal notranslate"><span class="pre">SC.visualizationSettings.view2.camera</span></code>, <code class="docutils literal notranslate"><span class="pre">SC.visualizationSettings.view3.camera</span></code>.</p>
+<p>VSettingsCamera has the following items:</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>name</p></th>
+<th class="head"><p>type</p></th>
+<th class="head"><p>default</p></th>
+<th class="head"><p>description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">cameraPosition</span></code></p></td>
+<td><p>Float3</p></td>
+<td><p>[0.,0.,0.]</p></td>
+<td><p>if modelCentricView=True: offset to camera position in model view (and, if used, relative to tracked marker - instead of a tracked marker position, you could also just change the camera position in camera-centric views); camera rotation follows modelRotation in renderState</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">clippingPlaneDistance</span></code></p></td>
+<td><p>float</p></td>
+<td><p>0.</p></td>
+<td><p>distance of clipping plane on normal vector; see also clippingPlaneNormal and openGL.advanced.clippingPlaneColor</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">clippingPlaneNormal</span></code></p></td>
+<td><p>Float3</p></td>
+<td><p>[0.,0.,0.]</p></td>
+<td><p>normal vector of clipping plane, e.g. [0,0,1] to set a xy-clipping plane; the clipped half-space is in direction of the normal; use [0,0,0] to deactivate clipping plane; Note that clipping is mainly made for triangles in order to visualize hidden objects and currently it only fully clips triangles, but does not exactly cut them; see also clippingPlaneDistance and openGL.advanced.clippingPlaneColor</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">modelCentricView</span></code></p></td>
+<td><p>bool</p></td>
+<td><p>True</p></td>
+<td><p>True: rotations and translations are applied to model, while camera stays far enough away from the model and always captures the whole model (everything is in front of camera plane); False: camera moves and rotates while model stays in physical space; only geometry in front of camera is visible; note that the behavior of trackMarker changes with modelCentricView and some features are not available in case of modelCentricView=False.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">nearFarPlaneOffset</span></code></p></td>
+<td><p>Float3</p></td>
+<td><p>[0.,0.,0.]</p></td>
+<td><p>the three values are [nearPlaneOffset, farPlaneOffset, flag]; if flag=0, the offsets are ignored and computed automatically, using x = 2 * maxSceneSize * zMaxSceneFactor, setting near plane to -x and far plane to +x in case of modelCentricView=True and setting near plane to 0.01 (minimal offset to eye point) and far plane to +x if modelCentricView=False; if flag=1, the near and far plane values are just overwritten; note that positive values for near plane make objects in front of the camera invisible while negative values make objects behind the camera plane visible; in case of camera-centric view, the eyepoint can be shifted backwards using cameraPosition accordingly.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">perspective</span></code></p></td>
+<td><p>UFloat</p></td>
+<td><p>0.</p></td>
+<td><p>parameter prescribes amount of perspective (0=no perspective=orthographic projection; positive values increase perspective; feasible values are 0.001 (little perspective) … 1 (extreme: 5), where larger values are possible but should be used with care; NOTE that the relation to the common field of view (FOV) angle alpha, with alpha=90°, is given by perspective = tan(alpha/2) = 1; mouse coordinates (F3) can not be shown with perspective&gt;0</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">trackMarker</span></code></p></td>
+<td><p>Int</p></td>
+<td><p>-1</p></td>
+<td><p>if valid marker index is provided and marker provides position (and orientation), the centerpoint of the scene follows the marker (and orientation); depends on trackMarkerPosition and trackMarkerOrientation; by default, only position is tracked</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">trackMarkerMbsNumber</span></code></p></td>
+<td><p>Index</p></td>
+<td><p>0</p></td>
+<td><p>number of main system which is used to track marker; if only 1 mbs is in the SystemContainer, use 0; if there are several mbs, it needs to specify the number</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">trackMarkerOrientation</span></code></p></td>
+<td><p>Float3</p></td>
+<td><p>[0.,0.,0.]</p></td>
+<td><p>choose which orientation axes (x,y,z) are tracked; currently can only be all zero or all one</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">trackMarkerPosition</span></code></p></td>
+<td><p>Float3</p></td>
+<td><p>[1.,1.,1.]</p></td>
+<td><p>choose which coordinates or marker are tracked (x,y,z)</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">useRaytracer</span></code></p></td>
+<td><p>bool</p></td>
+<td><p>False</p></td>
+<td><p>True: use (software) raytracer for this view; False: use standard OpenGL renderer</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="vsettingsscene">
+<span id="sec-vsettingsscene"></span><h3>VSettingsScene<a class="headerlink" href="#vsettingsscene" title="Link to this heading"></a></h3>
+<p>Settings change scene representation (show edges, show faces, global transparency), adding world basis, etc., in particular settings that are individual to each view. Note that some scene settings that are global to all views may be found in general and in openGL settings.</p>
+<p>Reached as <code class="docutils literal notranslate"><span class="pre">SC.visualizationSettings.view0.scene</span></code>, <code class="docutils literal notranslate"><span class="pre">SC.visualizationSettings.view1.scene</span></code>, <code class="docutils literal notranslate"><span class="pre">SC.visualizationSettings.view2.scene</span></code>, <code class="docutils literal notranslate"><span class="pre">SC.visualizationSettings.view3.scene</span></code>.</p>
+<p>VSettingsScene has the following items:</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>name</p></th>
+<th class="head"><p>type</p></th>
+<th class="head"><p>default</p></th>
+<th class="head"><p>description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">drawCoordinateSystem</span></code></p></td>
+<td><p>UInt</p></td>
+<td><p>2</p></td>
+<td><p>0 = no coordinate system shown, 1 = draw lines with text, 2 = draw arrows, 3 = draw arrows with text</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">drawWorldBasis</span></code></p></td>
+<td><p>bool</p></td>
+<td><p>False</p></td>
+<td><p>true = draw world basis coordinate system at (0,0,0)</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">facesTransparent</span></code></p></td>
+<td><p>bool</p></td>
+<td><p>False</p></td>
+<td><p>True: show faces transparent independent of transparency (A)-value in color of objects; allow to show otherwise hidden node/marker/object numbers</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">showFaceEdges</span></code></p></td>
+<td><p>bool</p></td>
+<td><p>False</p></td>
+<td><p>True: show edges of triangles; using the options showFaces=false and showFaceEdges=true gives are wire frame representation</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">showFaces</span></code></p></td>
+<td><p>bool</p></td>
+<td><p>True</p></td>
+<td><p>True: show faces of triangles, etc.; using the options showFaces=false and showFaceEdges=true gives are wireframe representation</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">showLines</span></code></p></td>
+<td><p>bool</p></td>
+<td><p>True</p></td>
+<td><p>True: show lines (other lines than face and mesh edges)</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">showMeshEdges</span></code></p></td>
+<td><p>bool</p></td>
+<td><p>True</p></td>
+<td><p>True: show edges of finite elements; independent of showFaceEdges</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">showMeshFaces</span></code></p></td>
+<td><p>bool</p></td>
+<td><p>True</p></td>
+<td><p>True: show faces of finite elements; independent of showFaces</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">worldBasisSize</span></code></p></td>
+<td><p>PFloat</p></td>
+<td><p>1.</p></td>
+<td><p>size of world basis coordinate system</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="vsettingswindow">
+<span id="sec-vsettingswindow"></span><h3>VSettingsWindow<a class="headerlink" href="#vsettingswindow" title="Link to this heading"></a></h3>
+<p>Settings for window that are individual to each view; in particular initial size, and behavior. Note that some of the settings are only used during creation of the window.</p>
+<p>Reached as <code class="docutils literal notranslate"><span class="pre">SC.visualizationSettings.view0.window</span></code>, <code class="docutils literal notranslate"><span class="pre">SC.visualizationSettings.view1.window</span></code>, <code class="docutils literal notranslate"><span class="pre">SC.visualizationSettings.view2.window</span></code>, <code class="docutils literal notranslate"><span class="pre">SC.visualizationSettings.view3.window</span></code>.</p>
+<p>VSettingsWindow has the following items:</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>name</p></th>
+<th class="head"><p>type</p></th>
+<th class="head"><p>default</p></th>
+<th class="head"><p>description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">alwaysOnTop</span></code></p></td>
+<td><p>bool</p></td>
+<td><p>False</p></td>
+<td><p>True: render window of respective view will be always on top of all other windows</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">globalFontSize</span></code></p></td>
+<td><p>PFloat</p></td>
+<td><p>12.</p></td>
+<td><p>general text font size (roughly measured in pixels); if useWindowsDisplayScaleFactor=True, the the textSize is multplied with the windows display scaling (monitor scaling; content scaling) factor for larger texts on on high resolution displays; for bitmap fonts, the maximum size of any font (standard/large/huge) is limited to 256 (which is not recommended, especially if you do not have a powerful graphics card)</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">lockModelView</span></code></p></td>
+<td><p>bool</p></td>
+<td><p>False</p></td>
+<td><p>True: all movements (with mouse/keys), rotations, zoom are disabled; the view is either based on initial values (or on the current state) ==&gt; initial zoom, rotation and center point need to be adjusted, approx. 0.4*maxSceneSize is a good value</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">maximize</span></code></p></td>
+<td><p>bool</p></td>
+<td><p>False</p></td>
+<td><p>True: render window of respective view will be maximized at startup</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">renderWindowPosition</span></code></p></td>
+<td><p>Index2</p></td>
+<td><p>[-1,-1]</p></td>
+<td><p>position of the top left corner of the render window of this view, in pixels; a NEGATIVE coordinate - which is the default - means that the window manager places the window, as it did before this setting existed. Set both to place the window, or store them in <code class="docutils literal notranslate"><span class="pre">~/.exudyn/config.json</span></code> to have every run start there, see Section <a class="reference internal" href="../../manual/userSettings.html#sec-usersettings"><span class="std std-ref">User settings that persist between runs</span></a>. NOTE: this is the position of the OpenGL area, not of the title bar, so a small value hides part of the title bar and 0 hides it completely - which still leaves the escape key, and is a way to have a view without one. The position is only used while the window is created, and one that lies outside the screens you have now puts the window where you cannot reach it</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">renderWindowSize</span></code></p></td>
+<td><p>Index2</p></td>
+<td><p>[1024,768]</p></td>
+<td><p>initial size of the render window of this view, in pixels</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">showComputationInfo</span></code></p></td>
+<td><p>bool</p></td>
+<td><p>True</p></td>
+<td><p>true = show (hide) all computation information including Exudyn and version</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">showMouseCoordinates</span></code></p></td>
+<td><p>bool</p></td>
+<td><p>False</p></td>
+<td><p>True: show OpenGL coordinates and distance to last left mouse button pressed position in renderer status message; switched on/off with key ‘F3’; only works for axis-aligned ortho-projections</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">showRenderStateInfo</span></code></p></td>
+<td><p>bool</p></td>
+<td><p>False</p></td>
+<td><p>True: show renderer.state infos regarding zoom, offset and rotation in renderer status message; switched on/off with ‘CTRL-F3’</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">showWindow</span></code></p></td>
+<td><p>bool</p></td>
+<td><p>True</p></td>
+<td><p>True: render window of respective view is shown when created; False: window will be iconified when created (e.g. if you are starting multiple computations automatically)</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">storeRenderWindowGeometry</span></code></p></td>
+<td><p>bool</p></td>
+<td><p>False</p></td>
+<td><p>True: when the render window of this view closes, where it was is written into <code class="docutils literal notranslate"><span class="pre">renderWindowSize</span></code> and <code class="docutils literal notranslate"><span class="pre">renderWindowPosition</span></code> - so that storing the settings keeps the window where you left it, see Section <a class="reference internal" href="../../manual/userSettings.html#sec-usersettings"><span class="std std-ref">User settings that persist between runs</span></a>. False (default): the settings are only ever what you set, which is why <em>diff to default</em> does not report a window position after every run</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="vsettingsview">
+<span id="sec-vsettingsview"></span><h3>VSettingsView<a class="headerlink" href="#vsettingsview" title="Link to this heading"></a></h3>
+<p>Settings for view including camera, scene, window, and advanced options to setup a view or view window.</p>
+<p>Reached as <code class="docutils literal notranslate"><span class="pre">SC.visualizationSettings.view0</span></code>, <code class="docutils literal notranslate"><span class="pre">SC.visualizationSettings.view1</span></code>, <code class="docutils literal notranslate"><span class="pre">SC.visualizationSettings.view2</span></code>, <code class="docutils literal notranslate"><span class="pre">SC.visualizationSettings.view3</span></code>.</p>
+<p>VSettingsView has the following items:</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>name</p></th>
+<th class="head"><p>type</p></th>
+<th class="head"><p>default</p></th>
+<th class="head"><p>description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">camera</span></code></p></td>
+<td><p>VSettingsCamera</p></td>
+<td><p></p></td>
+<td><p>settings for camera like perspective, marker tracking or clipping plane</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">scene</span></code></p></td>
+<td><p>VSettingsScene</p></td>
+<td><p></p></td>
+<td><p>settings which change scene representation, showing edges, faces or world basis</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">window</span></code></p></td>
+<td><p>VSettingsWindow</p></td>
+<td><p></p></td>
+<td><p>visualization settings for window that are individual to each view</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="vsettingswindowdeprecated">
+<span id="sec-vsettingswindowdeprecated"></span><h3>VSettingsWindowDeprecated<a class="headerlink" href="#vsettingswindowdeprecated" title="Link to this heading"></a></h3>
+<p>OpenGL Window and interaction settings for visualization; handle changes with care, as they might lead to unexpected results or crashes.</p>
+<p>Reached as <code class="docutils literal notranslate"><span class="pre">SC.visualizationSettings.window</span></code>.</p>
+<p>VSettingsWindowDeprecated has the following items:</p>
+<p><em>(none: this structure has no items in the Python interface. A deprecated item keeps working and is described where it moved to.)</em></p>
+</section>
+<section id="vsettingsdialogs">
+<span id="sec-vsettingsdialogs"></span><h3>VSettingsDialogs<a class="headerlink" href="#vsettingsdialogs" title="Link to this heading"></a></h3>
+<p>Settings related to dialogs (e.g., visualization settings dialog).</p>
+<p>Reached as <code class="docutils literal notranslate"><span class="pre">SC.visualizationSettings.dialogs</span></code>.</p>
+<p>VSettingsDialogs has the following items:</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>name</p></th>
+<th class="head"><p>type</p></th>
+<th class="head"><p>default</p></th>
+<th class="head"><p>description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">alphaTransparency</span></code></p></td>
+<td><p>UFloat</p></td>
+<td><p>0.94</p></td>
+<td><p>alpha-transparency of dialogs; recommended range 0.7 (very transparent) - 1 (not transparent at all)</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">alwaysTopmost</span></code></p></td>
+<td><p>bool</p></td>
+<td><p>True</p></td>
+<td><p>True: dialogs are always topmost (otherwise, they are sometimes hidden)</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">columnWidthName</span></code></p></td>
+<td><p>UFloat</p></td>
+<td><p>0.31</p></td>
+<td><p>width of the name column of a settings dialog, as a fraction of the width of the dialog; the description column takes what the three columns leave</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">columnWidthType</span></code></p></td>
+<td><p>UFloat</p></td>
+<td><p>0.11</p></td>
+<td><p>width of the type column of a settings dialog, as a fraction of the width of the dialog</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">columnWidthValue</span></code></p></td>
+<td><p>UFloat</p></td>
+<td><p>0.18</p></td>
+<td><p>width of the value column of a settings dialog, as a fraction of the width of the dialog</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">fontScaling</span></code></p></td>
+<td><p>UFloat</p></td>
+<td><p>0.</p></td>
+<td><p>factor on the font of the dialogs, relative to the display scaling of the system (monitor scaling on Windows, fractional scaling on Linux), which the dialogs follow anyway; 0 = 1 (on MacOS a fixed factor for the settings tree); every widget of the dialogs takes it - text, buttons, edit fields and the settings tree</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">multiThreadedDialogs</span></code></p></td>
+<td><p>bool</p></td>
+<td><p>True</p></td>
+<td><p>True: During dialogs, the OpenGL render windows will still get updates of changes in dialogs, etc., which may cause problems on some platforms or for some (complicated) models; False: changes of dialogs will take effect when dialogs are closed</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">openTreeView</span></code></p></td>
+<td><p>bool</p></td>
+<td><p>False</p></td>
+<td><p>True: all sub-trees of the visusalization dialog are opened when opening the dialog; False: only some sub-trees are opened</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">storeDialogPositions</span></code></p></td>
+<td><p>bool</p></td>
+<td><p>False</p></td>
+<td><p>True: a dialog stores its size and position in <code class="docutils literal notranslate"><span class="pre">~/.exudyn/config.json</span></code> when it closes, so that the next dialog of the same kind starts with them. A geometry that IS stored - by this flag, by the store button of the settings dialog, or by a script - is used whenever such a dialog opens, whatever this flag says: the size always, the position only if the window would still be reachable on the current screen. See Section <a class="reference internal" href="../../manual/userSettings.html#sec-usersettings"><span class="std std-ref">User settings that persist between runs</span></a></p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="vsettingsmaterial">
+<span id="sec-vsettingsmaterial"></span><h3>VSettingsMaterial<a class="headerlink" href="#vsettingsmaterial" title="Link to this heading"></a></h3>
+<p>Settings for rendering materials, in particular for the Raytracer (may be available also in the OpenGL renderer in the future). This material (widely follows Phong model) can be either accessed via SC.renderer.materials or directly in visualizationSettings.raytracer.material0, material1, etc.; the ten materials of the raytracer each start from their own values, which are listed at material0 to material9.</p>
+<p>Reached as <code class="docutils literal notranslate"><span class="pre">SC.visualizationSettings.raytracer.material</span></code>.</p>
+<p>VSettingsMaterial has the following items:</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>name</p></th>
+<th class="head"><p>type</p></th>
+<th class="head"><p>default</p></th>
+<th class="head"><p>description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">alpha</span></code></p></td>
+<td><p>UFloat</p></td>
+<td><p>1.</p></td>
+<td><p>alpha-transparency, same as in alpha channel in RGBA colors; 1=opaque, 0=fully transparent; leads to extra rendering costs per transparent pixel</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">baseColor</span></code></p></td>
+<td><p>Float3</p></td>
+<td><p>[0.5,0.5,0.5]</p></td>
+<td><p>RGB default material color if face color has R-color channel -1</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">emission</span></code></p></td>
+<td><p>Float3</p></td>
+<td><p>[0.,0.,0.]</p></td>
+<td><p>RGB emissive material color (enlightened material)</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">ior</span></code></p></td>
+<td><p>UFloat</p></td>
+<td><p>1.</p></td>
+<td><p>index of refraction for transparent materials (1=no refraction), &gt;1 represents refraction</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">name</span></code></p></td>
+<td><p>String</p></td>
+<td><p>‘undefined’</p></td>
+<td><p>material name for easier handling</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">reflectivity</span></code></p></td>
+<td><p>UFloat</p></td>
+<td><p>0.</p></td>
+<td><p>controls reflectivity of material; 0=no reflections (rough, e.g. rubber), 1=fully reflective (mirror); this leads to large extra rendering costs per visible reflective pixel</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">shininess</span></code></p></td>
+<td><p>UFloat</p></td>
+<td><p>32.</p></td>
+<td><p>controls shininess of specular component of lights; values &lt; 5 is not very shiny, while &gt; 50 is very shiny</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">specular</span></code></p></td>
+<td><p>Float3</p></td>
+<td><p>[0.5,0.5,0.5]</p></td>
+<td><p>RGB specular material color</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="vsettingsraytraceradvanced">
+<span id="sec-vsettingsraytraceradvanced"></span><h3>VSettingsRaytracerAdvanced<a class="headerlink" href="#vsettingsraytraceradvanced" title="Link to this heading"></a></h3>
+<p>Advanced settings for raytracer.</p>
+<p>Reached as <code class="docutils literal notranslate"><span class="pre">SC.visualizationSettings.raytracer.advanced</span></code>.</p>
+<p>VSettingsRaytracerAdvanced has the following items:</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>name</p></th>
+<th class="head"><p>type</p></th>
+<th class="head"><p>default</p></th>
+<th class="head"><p>description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">backgroundColorReflections</span></code></p></td>
+<td><p>Float4</p></td>
+<td><p>[0.4,0.4,0.4,1.]</p></td>
+<td><p>scene RGBA color for background that is hit by reflection material; while openGL.backgroundColor is used for rays that do not hit an object, this background may - if black or white - not be a suitable color for computing reflections; this is generally needed, as our scenes are usually not inside a closed geometry (like inside a room); this color is also used if maxReflectionDepth is reached</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">searchTreeFactor</span></code></p></td>
+<td><p>PInt</p></td>
+<td><p>1</p></td>
+<td><p>This factor can be used to increase the number of search tree bins, which can improve performance in case of inequilibrated scense; range=1..128</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">shadowScalingFactor</span></code></p></td>
+<td><p>UInt</p></td>
+<td><p>3</p></td>
+<td><p>if lightRadiusVariations&gt;1, this defines the downscaling factor of the shadow map, where 2 means that the resolution is 2 times smaller than the image resolution; additionally, multisampling is not used for shadow map computation if shadowScalingFactor&gt;0, thus reducing the computational effort for shadow computation also in case of 1; range=0..16; larger values cause significant artifacts at shadow boundaries</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">shadowSmoothingSteps</span></code></p></td>
+<td><p>UInt</p></td>
+<td><p>3</p></td>
+<td><p>if lightRadiusVariations&gt;1, this defines the number of smoothing steps at the low-resolution shadow map; smoothing reduces shadow artifacts caused by smaller values of lightRadiusVariations; range=0..32; smoothing steps may cause artifacts at shadow boundaries; only works for lights with a position (the 4th component of the light position should be 1)</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">showText</span></code></p></td>
+<td><p>bool</p></td>
+<td><p>True</p></td>
+<td><p>True: show any kind of status text, node numbers, object numbers, etc. (depending on settings); False: do not show any text in raytracer, independently of settings</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">tilesPerThread</span></code></p></td>
+<td><p>PInt</p></td>
+<td><p>12</p></td>
+<td><p>Total number of sub-tiles per thread, used to evenly distribute rendering load to threads</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">zBiasLines</span></code></p></td>
+<td><p>float</p></td>
+<td><p>0.001</p></td>
+<td><p>offset for lines to draw in front of faces; relative to scene radius</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="vsettingsraytracer">
+<span id="sec-vsettingsraytracer"></span><h3>VSettingsRaytracer<a class="headerlink" href="#vsettingsraytracer" title="Link to this heading"></a></h3>
+<p>Settings for raytracer (software renderer) which can be used as alternative to classic OpenGL rendering; this option may be erased in future in favor of a modern GPU rendering. To activate the raytracer, simply switch the enable flag to True. The raytracer uses CPU-based rendering and is therefore comparably slow (may take seconds to render one frame). Thus, take care with the window dimension (start with small window size like 400 x 300) and use openGL.multiSampling=1. Note that many parameters are used from openGL settings, like backgroundColor, lineWidth, multiSampling, shadow (only on/off), and lights. See the options to improve appearance and performance.</p>
+<p>Reached as <code class="docutils literal notranslate"><span class="pre">SC.visualizationSettings.raytracer</span></code>.</p>
+<p>VSettingsRaytracer has the following items:</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>name</p></th>
+<th class="head"><p>type</p></th>
+<th class="head"><p>default</p></th>
+<th class="head"><p>description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">advanced</span></code></p></td>
+<td><p>VSettingsRaytracerAdvanced</p></td>
+<td><p></p></td>
+<td><p>advanced settings for raytracer</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">material0</span></code></p></td>
+<td><p>VSettingsMaterial</p></td>
+<td><p></p></td>
+<td><p>settings for material0; starts from name=’default’, baseColor=[0.4, 0.4, 0.9], specular=[0.6, 0.6, 0.6]; every other value is the default of the type</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">material1</span></code></p></td>
+<td><p>VSettingsMaterial</p></td>
+<td><p></p></td>
+<td><p>settings for material1; starts from name=’matt’, baseColor=[0., 1., 0.], specular=[0.3, 0.3, 0.3], shininess=5.0; every other value is the default of the type</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">material2</span></code></p></td>
+<td><p>VSettingsMaterial</p></td>
+<td><p></p></td>
+<td><p>settings for material2; starts from name=’steel’, baseColor=[0.6, 0.6, 0.6], specular=[0.3, 0.33, 0.4], shininess=25.0, reflectivity=0.1; every other value is the default of the type</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">material3</span></code></p></td>
+<td><p>VSettingsMaterial</p></td>
+<td><p></p></td>
+<td><p>settings for material3; starts from name=’plastic’, baseColor=[1., 0., 0.], specular=[0.4, 0.45, 0.45], shininess=20.0, reflectivity=0.1; every other value is the default of the type</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">material4</span></code></p></td>
+<td><p>VSettingsMaterial</p></td>
+<td><p></p></td>
+<td><p>settings for material4; starts from name=’chrome’, baseColor=[0.75, 0.75, 0.75], specular=[0.6, 0.62, 0.67], shininess=60.0, reflectivity=0.25; every other value is the default of the type</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">material5</span></code></p></td>
+<td><p>VSettingsMaterial</p></td>
+<td><p></p></td>
+<td><p>settings for material5; starts from name=’shiny’, baseColor=[1., 0.5, 0.], specular=[0.7, 0.65, 0.7], shininess=100.0, reflectivity=0.5; every other value is the default of the type</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">material6</span></code></p></td>
+<td><p>VSettingsMaterial</p></td>
+<td><p></p></td>
+<td><p>settings for material6; starts from name=’transparent’, baseColor=[0.75, 0.75, 0.75], specular=[0.4, 0.4, 0.45], shininess=20.0, ior=1.05, alpha=0.3; every other value is the default of the type</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">material7</span></code></p></td>
+<td><p>VSettingsMaterial</p></td>
+<td><p></p></td>
+<td><p>settings for material7; starts from name=’glass’, baseColor=[0.8, 0.8, 0.8], specular=[0.6, 0.68, 0.63], shininess=50.0, reflectivity=0.6, ior=1.5, alpha=0.15; every other value is the default of the type</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">material8</span></code></p></td>
+<td><p>VSettingsMaterial</p></td>
+<td><p></p></td>
+<td><p>settings for material8; starts from name=’mirror’, baseColor=[0.8, 0.8, 0.8], specular=[0.4, 0.4, 0.4], shininess=50.0, reflectivity=0.8; every other value is the default of the type</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">material9</span></code></p></td>
+<td><p>VSettingsMaterial</p></td>
+<td><p></p></td>
+<td><p>settings for material9; starts from name=’emission’, baseColor=[0.85, 0.85, 0.7], specular=[0.6, 0.6, 0.6], shininess=20.0, emission=[0.8, 0.8, 0.7]; every other value is the default of the type</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">globalFogColor</span></code></p></td>
+<td><p>Float4</p></td>
+<td><p>[0.5,0.5,0.5,1.]</p></td>
+<td><p>scene RGBA fog color</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">globalFogDensity</span></code></p></td>
+<td><p>UFloat</p></td>
+<td><p>0.</p></td>
+<td><p>global fog density; fog is deactivated if fogDensity=0, otherwise it is a density relative to scene max size; as it is relative, the factor has to be relatively high to be visible (usually &gt;1)</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">imageSizeFactor</span></code></p></td>
+<td><p>PInt</p></td>
+<td><p>1</p></td>
+<td><p>Special size factor (1-16) to allow drawing with smaller resolution (faster); use this for long rendering times for adjustments, etc.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">keepWindowActive</span></code></p></td>
+<td><p>bool</p></td>
+<td><p>False</p></td>
+<td><p>Special flag, handle with care; True: sends some glfw functions to keep window reactive for long render times (&gt;2 seconds); otherwise, the rendering may not finish due to timeout</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">lightRadiusVariations</span></code></p></td>
+<td><p>PInt</p></td>
+<td><p>1</p></td>
+<td><p>if lightRadiusVariations&gt;1, this defines the number of positions that are used to compute the effect of distributed lights (larger is slower but better quality); range=1..256; avoid squares of integers; good values: 1 (hard shadow boundaries), 6, 13, 20, 31, 72, 130, 240; for lower values, use shadowSmoothingSteps=2..8</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">maxReflectionDepth</span></code></p></td>
+<td><p>UInt</p></td>
+<td><p>2</p></td>
+<td><p>Maximum number of reflections computed for one ray (note that for each transparent face passed, the reflection depth is reduced by 1); maximum is 32 (but should not be more than 2-4 usually!)</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">maxTransparencyDepth</span></code></p></td>
+<td><p>UInt</p></td>
+<td><p>2</p></td>
+<td><p>Maximum number of transparent faces that can be passed (note that for each reflection, the transparency depth is reduced by 1); maximum is 32 (but should not be more than 2-4 usually!)</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">multiSampling</span></code></p></td>
+<td><p>PInt</p></td>
+<td><p>1</p></td>
+<td><p>Multi-sampling used for rendering of faces, lines and text; increases image quality along edges (lines, etc.) but INCREASES rendering costs dramatically (multiSampling=3 =&gt; 3x3=9 times slower); also used for shadow if shadowScalingFactor=0; values only accepted in range [1..4]</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">numberOfThreads</span></code></p></td>
+<td><p>PInt</p></td>
+<td><p>8</p></td>
+<td><p>Number of CPU-threads (max: 256) used for software rendering (should be approx. the number of available threads)</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">verbose</span></code></p></td>
+<td><p>Index</p></td>
+<td><p>0</p></td>
+<td><p>1: print out some debug information on rendering, in particular rendering timings and counter; 2 and higher: advanced debug information</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="vsettingsopengladvanced">
+<span id="sec-vsettingsopengladvanced"></span><h3>VSettingsOpenGLAdvanced<a class="headerlink" href="#vsettingsopengladvanced" title="Link to this heading"></a></h3>
+<p>Advanced settings for openGL.</p>
+<p>Reached as <code class="docutils literal notranslate"><span class="pre">SC.visualizationSettings.openGL.advanced</span></code>.</p>
+<p>VSettingsOpenGLAdvanced has the following items:</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>name</p></th>
+<th class="head"><p>type</p></th>
+<th class="head"><p>default</p></th>
+<th class="head"><p>description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">clippingPlaneColor</span></code></p></td>
+<td><p>Float4</p></td>
+<td><p>[0.7,0.5,0.5,0.]</p></td>
+<td><p>RGBA color for clipping plane; if alpha-channel is 0, the cutting plane is not drawn; if alpha-channel is 1, the clippingPlaneColor is used; if alpha-channel is 2, the color of the object interior is used as clipping plane color (which may look strange in case of object-in-object); see also view.camera for clipping plane options</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">curvedTriangleMaxTiling</span></code></p></td>
+<td><p>UInt</p></td>
+<td><p>8</p></td>
+<td><p>maximum number of subdivisions per edge of a 6-node (curved) triangle; see curvedTriangleTilingAngle</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">curvedTriangleTilingAngle</span></code></p></td>
+<td><p>UFloat</p></td>
+<td><p>15.</p></td>
+<td><p>6-node (curved) triangles of a TriangleList (key triangles6) are drawn as flat triangles, split when they are drawn: each edge is subdivided until the angle between its end tangents, and between the given normals of its nodes, falls below this angle (in degrees), at most curvedTriangleMaxTiling times, and the inside follows its three edges - 15 degrees give 24 segments around a full cylinder, and a surface curved in one direction is not subdivided along the other; 0 draws each as 1 flat triangle; used by the raytracer as well</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">depthSorting</span></code></p></td>
+<td><p>bool</p></td>
+<td><p>False</p></td>
+<td><p>True (slower): sort triangles by Z-depth to remove transparency artifacts: only works if triangles do not intersect or come close (you may like to refine triangle meshes); False: no depth-sort (faster)</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">enableLighting</span></code></p></td>
+<td><p>bool</p></td>
+<td><p>True</p></td>
+<td><p>generally enable lighting (otherwise, colors of objects are used); OpenGL: glEnable(GL_LIGHTING)</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">faceNormalsColor</span></code></p></td>
+<td><p>Float4</p></td>
+<td><p>[0.8,0.2,0.2,1.]</p></td>
+<td><p>global RGBA color for face normals</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">initialCenterPoint</span></code></p></td>
+<td><p>Float3</p></td>
+<td><p>[0.,0.,0.]</p></td>
+<td><p>centerpoint of scene (3D) at renderer startup; overwritten if autoFitScene = True; only used in case that modelCentricView=True</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">initialMaxSceneSize</span></code></p></td>
+<td><p>PFloat</p></td>
+<td><p>1.</p></td>
+<td><p>initial maximum scene size (auto: diagonal of cube with maximum scene coordinates); used for ‘zoom all’ functionality and for visibility of objects; overwritten if autoFitScene = True</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">initialModelRotation</span></code></p></td>
+<td><p>StdArray33F</p></td>
+<td><p>[[1.,0.,0.], [0.,1.,0.], [0.,0.,1.]]</p></td>
+<td><p>initial model rotation matrix for OpenGl; in python use e.g.: initialModelRotation=[[1,0,0],[0,1,0],[0,0,1]]; only used in case that modelCentricView=True</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">initialZoom</span></code></p></td>
+<td><p>UFloat</p></td>
+<td><p>1.</p></td>
+<td><p>initial zoom of scene; overwritten/ignored if autoFitScene = True</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">lightModelLocalViewer</span></code></p></td>
+<td><p>bool</p></td>
+<td><p>False</p></td>
+<td><p>True: the camera origin is used to compute shininess effects (more realistic); maps to OpenGL glLightModeli(GL_LIGHT_MODEL_LOCAL_VIEWER,…)</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">lightModelTwoSide</span></code></p></td>
+<td><p>bool</p></td>
+<td><p>False</p></td>
+<td><p>enlighten also backside of object; may cause problems on some graphics cards and lead to slower performance; maps to OpenGL glLightModeli(GL_LIGHT_MODEL_TWO_SIDE,…)</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">lineSmooth</span></code></p></td>
+<td><p>bool</p></td>
+<td><p>True</p></td>
+<td><p>draw lines smooth</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">polygonOffset</span></code></p></td>
+<td><p>float</p></td>
+<td><p>0.05</p></td>
+<td><p>general polygon offset for polygons, except for shadows; use this parameter to draw polygons behind lines to reduce artifacts for very large or small models</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">shadeModelSmooth</span></code></p></td>
+<td><p>bool</p></td>
+<td><p>True</p></td>
+<td><p>True: turn on smoothing for shaders, which uses vertex normals to smooth surfaces</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">shadowPolygonOffset</span></code></p></td>
+<td><p>PFloat</p></td>
+<td><p>0.1</p></td>
+<td><p>some special drawing parameter for shadows which should be handled with care; defines some offset needed by openGL to avoid aritfacts for shadows and depends on maxSceneSize; this value may need to be reduced for larger models in order to achieve more accurate shadows, it may be needed to be increased for thin bodies</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">showBoundingBox</span></code></p></td>
+<td><p>bool</p></td>
+<td><p>False</p></td>
+<td><p>show scene bounding box (red), as available in renderState.boundingBox; NOTE that the bounding box is only updated with ZoomAll or at startup; this is a debug flag and it may show reasongs for strange ZoomAll behavior, as ZoomAll should zoom to the bounding box; does only work for perspective=0</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">textLineSmooth</span></code></p></td>
+<td><p>bool</p></td>
+<td><p>False</p></td>
+<td><p>draw lines for representation of text smooth</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">textLineWidth</span></code></p></td>
+<td><p>UFloat</p></td>
+<td><p>1.</p></td>
+<td><p>width of lines used for representation of text</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">vertexNormalsColor</span></code></p></td>
+<td><p>Float4</p></td>
+<td><p>[0.8,0.2,0.2,1.]</p></td>
+<td><p>global RGBA color for vertex normals</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="vsettingslight">
+<span id="sec-vsettingslight"></span><h3>VSettingsLight<a class="headerlink" href="#vsettingslight" title="Link to this heading"></a></h3>
+<p>Settings for lights.</p>
+<p>Reached as <code class="docutils literal notranslate"><span class="pre">SC.visualizationSettings.openGL.light</span></code>.</p>
+<p>VSettingsLight has the following items:</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>name</p></th>
+<th class="head"><p>type</p></th>
+<th class="head"><p>default</p></th>
+<th class="head"><p>description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">constantAttenuation</span></code></p></td>
+<td><p>float</p></td>
+<td><p>1.</p></td>
+<td><p>constant attenuation coefficient of this light, this is a constant factor that attenuates the light source; attenuation factor = 1/(kc +kl<em>d + kq</em>d*d); (kc,kl,kq)=(1,0,0) means no attenuation; only used for lights, where last component of light position is 1</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">diffuse</span></code></p></td>
+<td><p>float</p></td>
+<td><p>0.5</p></td>
+<td><p>diffuse value of this light</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">enable</span></code></p></td>
+<td><p>bool</p></td>
+<td><p>True</p></td>
+<td><p>turn this light on or off; the four lights light0 to light3 of visualizationSettings.openGL are OpenGL GL_LIGHT0 to GL_LIGHT3, and each of them can cast a shadow - see shadow below</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">lightRadius</span></code></p></td>
+<td><p>float</p></td>
+<td><p>0.1</p></td>
+<td><p>only used by raytracers: radius of light used to compute smooth shadows (approximated by raytracer.lightRadiusVariations); if lightRadiusVariations&gt;1, this value defines the radius of the light, converting point lights into distributed lights (slower)</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">linearAttenuation</span></code></p></td>
+<td><p>float</p></td>
+<td><p>0.</p></td>
+<td><p>linear attenuation coefficient of this light, this is a linear factor for attenuation of the light source with distance</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">position</span></code></p></td>
+<td><p>Float4</p></td>
+<td><p>[2.,2.,10.,0.]</p></td>
+<td><p>4D position vector of this light; the 4th value should be 0 for directional lights that are (almost) infinitely far away, like the sun, but 1 for position-based lights (and for the attenuation factor to be computed); if this light casts a shadow, its position decides where the shadow falls, so it has to be at a reasonable place for the scene; see opengl manuals</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">quadraticAttenuation</span></code></p></td>
+<td><p>float</p></td>
+<td><p>0.</p></td>
+<td><p>quadratic attenuation coefficient of this light, this is a quadratic factor for attenuation of the light source with distance</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">shadow</span></code></p></td>
+<td><p>UFloat</p></td>
+<td><p>0.</p></td>
+<td><p>in OpenGL renderer, the shadow parameter <span class="math notranslate nohighlight">\(\in [0 ... 1]\)</span> prescribes the amount of shadow of this light that is added to the scene, using its position (or only its direction); every light can cast a shadow and the effects accumulate; if this parameter is different from 0, rendering of triangles becomes approx. 5 times more expensive, so take care in case of complex scenes; for complex object, such as spheres with fine resolution or for particle systems, the present approach has limitations and leads to artifacts and unrealistic shadows; for raytracer, shadow is included by a physics-based model for each light if shadow&gt;0, accumulating effects of each light source; the openGL renderer computes shadows with shadow volumes and approximates a directional light by enlarging its direction to a multiple of maxSceneSize, while the raytracer uses the direction itself</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">specular</span></code></p></td>
+<td><p>float</p></td>
+<td><p>0.5</p></td>
+<td><p>specular value of this light</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">useCameraFrame</span></code></p></td>
+<td><p>bool</p></td>
+<td><p>False</p></td>
+<td><p>set False to set light positions and directions relative to model frame; True: lights are in camera frame, not following the visual transformations; this was True up to Exudyn 1.9.174</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="vsettingsopengl">
+<span id="sec-vsettingsopengl"></span><h3>VSettingsOpenGL<a class="headerlink" href="#vsettingsopengl" title="Link to this heading"></a></h3>
+<p>OpenGL settings for 2D and 3D rendering - with many settings also used for raytracer. For further details and backgrounds also see OpenGL 1.3 functionality on the web.</p>
+<p>Reached as <code class="docutils literal notranslate"><span class="pre">SC.visualizationSettings.openGL</span></code>.</p>
+<p>VSettingsOpenGL has the following items:</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>name</p></th>
+<th class="head"><p>type</p></th>
+<th class="head"><p>default</p></th>
+<th class="head"><p>description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">advanced</span></code></p></td>
+<td><p>VSettingsOpenGLAdvanced</p></td>
+<td><p></p></td>
+<td><p>advanced settings for openGL</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">light0</span></code></p></td>
+<td><p>VSettingsLight</p></td>
+<td><p></p></td>
+<td><p>settings for light0 and shadow</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">light1</span></code></p></td>
+<td><p>VSettingsLight</p></td>
+<td><p></p></td>
+<td><p>settings for light1 and shadow; starts from diffuse=0.25, specular=0.25, position=[2., 2., -10., 0.]; every other value is the default of the type</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">light2</span></code></p></td>
+<td><p>VSettingsLight</p></td>
+<td><p></p></td>
+<td><p>settings for light2 and shadow; starts from diffuse=0.2, specular=0.2, enable=False; every other value is the default of the type</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">light3</span></code></p></td>
+<td><p>VSettingsLight</p></td>
+<td><p></p></td>
+<td><p>settings for light3 and shadow; starts from diffuse=0.2, specular=0.2, enable=False; every other value is the default of the type</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">drawFaceNormals</span></code></p></td>
+<td><p>bool</p></td>
+<td><p>False</p></td>
+<td><p>draws triangle normals, e.g. at center of triangles; used for debugging of faces</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">drawNormalsLength</span></code></p></td>
+<td><p>PFloat</p></td>
+<td><p>0.1</p></td>
+<td><p>length of normals; used for debugging</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">drawVertexNormals</span></code></p></td>
+<td><p>bool</p></td>
+<td><p>False</p></td>
+<td><p>draws vertex normals; used for debugging</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">faceEdgesColor</span></code></p></td>
+<td><p>Float4</p></td>
+<td><p>[0.2,0.2,0.2,1.]</p></td>
+<td><p>global RGBA color for face edges</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">faceTransparencyGlobal</span></code></p></td>
+<td><p>UFloat</p></td>
+<td><p>0.4</p></td>
+<td><p>in case that facesTransparent=True this represents the max alpha-transparency</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">lightModelAmbient</span></code></p></td>
+<td><p>Float4</p></td>
+<td><p>[0.4,0.4,0.4,1.]</p></td>
+<td><p>global ambient light (needed for faces that are close to orthogonal to light or faces in shadow region); maps to OpenGL glLightModeli(GL_LIGHT_MODEL_AMBIENT,[r,g,b,a]); also used by raytracer</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">lineWidth</span></code></p></td>
+<td><p>UFloat</p></td>
+<td><p>1.</p></td>
+<td><p>width of lines used for representation of lines, circles, points, etc.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">materialShininess</span></code></p></td>
+<td><p>float</p></td>
+<td><p>32.</p></td>
+<td><p>shininess of material</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">materialSpecular</span></code></p></td>
+<td><p>Float4</p></td>
+<td><p>[0.6,0.6,0.6,1.]</p></td>
+<td><p>RGBA specular color of material</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">multiSampling</span></code></p></td>
+<td><p>PInt</p></td>
+<td><p>1</p></td>
+<td><p>NOTE: this parameter must be set before starting renderer; later changes are not affecting visualization; multi sampling turned off (&lt;=1) or turned on to given values (2, 3, 4, 8 or 16); increases the graphics buffers and might crash due to graphics card memory limitations; only works if supported by hardware; if it does not work, try to change 3D graphics hardware settings!</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">zMaxSceneFactor</span></code></p></td>
+<td><p>PFloat</p></td>
+<td><p>2.</p></td>
+<td><p>factor multiplied with maxSceneSize to avoid clipping of modelview; larger values reduce clipping of near or far objects, but may lead to artifacts (so-called Z-fighting)</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="vsettingsexportimages">
+<span id="sec-vsettingsexportimages"></span><h3>VSettingsExportImages<a class="headerlink" href="#vsettingsexportimages" title="Link to this heading"></a></h3>
+<p>Functionality to export images of view0 to files (PNG or TGA format) which can be used to create animations; in order to activate image recording during the solution process, set SolutionSettings.recordImagesInterval accordingly.</p>
+<p>Reached as <code class="docutils literal notranslate"><span class="pre">SC.visualizationSettings.exportImages</span></code>.</p>
+<p>VSettingsExportImages has the following items:</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>name</p></th>
+<th class="head"><p>type</p></th>
+<th class="head"><p>default</p></th>
+<th class="head"><p>description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">heightAlignment</span></code></p></td>
+<td><p>PInt</p></td>
+<td><p>2</p></td>
+<td><p>alignment of exported image height; using a value of 2 helps to reduce problems with video conversion (additional horizontal lines are lost)</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">saveImageFileCounter</span></code></p></td>
+<td><p>UInt</p></td>
+<td><p>0</p></td>
+<td><p>current value of the counter which is used to consecutively save frames (images) with consecutive numbers</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">saveImageFileName</span></code></p></td>
+<td><p>FileName</p></td>
+<td><p>‘images/frame’</p></td>
+<td><p>filename (without extension!) and (relative) path for image file(s) with consecutive numbering (e.g., frame0000.png, frame0001.png,…); ; directory will be created if it does not exist</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">saveImageFormat</span></code></p></td>
+<td><p>String</p></td>
+<td><p>‘PNG’</p></td>
+<td><p>format of an exported image, <code class="docutils literal notranslate"><span class="pre">PNG</span></code> or <code class="docutils literal notranslate"><span class="pre">TGA</span></code>; <code class="docutils literal notranslate"><span class="pre">TGA</span></code> has the highest compatibility with all platforms. The drawing elements of a scene as data - lines, triangles, texts, each with the item that drew it - are <code class="docutils literal notranslate"><span class="pre">SC.renderer.GetGraphicsData()</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">saveImageSingleFile</span></code></p></td>
+<td><p>bool</p></td>
+<td><p>False</p></td>
+<td><p>True: only save single files with given filename, not adding numbering; False: add numbering to files, see saveImageFileName</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">saveImageTimeOut</span></code></p></td>
+<td><p>PInt</p></td>
+<td><p>5000</p></td>
+<td><p>timeout in milliseconds for saving a frame as image to disk; this is the amount of time waited for redrawing; increase for very complex scenes</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">widthAlignment</span></code></p></td>
+<td><p>PInt</p></td>
+<td><p>4</p></td>
+<td><p>alignment of exported image width; using a value of 4 helps to reduce problems with video conversion (additional vertical lines are lost)</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="vsettingsinteractiveadvanced">
+<span id="sec-vsettingsinteractiveadvanced"></span><h3>VSettingsInteractiveAdvanced<a class="headerlink" href="#vsettingsinteractiveadvanced" title="Link to this heading"></a></h3>
+<p>Advanced settings for interactive.</p>
+<p>Reached as <code class="docutils literal notranslate"><span class="pre">SC.visualizationSettings.interactive.advanced</span></code>.</p>
+<p>VSettingsInteractiveAdvanced has the following items:</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>name</p></th>
+<th class="head"><p>type</p></th>
+<th class="head"><p>default</p></th>
+<th class="head"><p>description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">highlightColor</span></code></p></td>
+<td><p>Float4</p></td>
+<td><p>[0.8,0.05,0.05,0.75]</p></td>
+<td><p>RGBA color for highlighted item; 4th value is alpha-transparency</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">highlightOtherColor</span></code></p></td>
+<td><p>Float4</p></td>
+<td><p>[0.5,0.5,0.5,0.4]</p></td>
+<td><p>RGBA color for other items (which are not highlighted); 4th value is alpha-transparency</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">joystickScaleRotation</span></code></p></td>
+<td><p>float</p></td>
+<td><p>200.</p></td>
+<td><p>rotation scaling factor for joystick input</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">joystickScaleTranslation</span></code></p></td>
+<td><p>float</p></td>
+<td><p>6.</p></td>
+<td><p>translation scaling factor for joystick input</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">keypressRotationStep</span></code></p></td>
+<td><p>float</p></td>
+<td><p>5.</p></td>
+<td><p>rotation increment per keypress in degree (full rotation = 360 degree)</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">keypressTranslationStep</span></code></p></td>
+<td><p>float</p></td>
+<td><p>0.1</p></td>
+<td><p>translation increment per keypress relative to window size</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">mouseMoveRotationFactor</span></code></p></td>
+<td><p>float</p></td>
+<td><p>1.</p></td>
+<td><p>rotation increment per 1 pixel mouse movement in degree</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">pauseWithSpacebar</span></code></p></td>
+<td><p>bool</p></td>
+<td><p>True</p></td>
+<td><p>True: during simulation, space bar can be pressed to pause simulation</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">selectionHighlights</span></code></p></td>
+<td><p>bool</p></td>
+<td><p>True</p></td>
+<td><p>True: enable mouse click to highlights item (default: red)</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">selectionLeftMouse</span></code></p></td>
+<td><p>bool</p></td>
+<td><p>True</p></td>
+<td><p>True: enable left mouse click on items to show basic information</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">selectionLeftMouseItemTypes</span></code></p></td>
+<td><p>Index</p></td>
+<td><p>31</p></td>
+<td><p>binary flags (1,2,4,8,16) for (Node,Object,Marker,Load,Sensor) that are identified with left mouse click selection</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">selectionRightMouse</span></code></p></td>
+<td><p>bool</p></td>
+<td><p>True</p></td>
+<td><p>True: enable right mouse click on items to show dictionary (read only!)</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">selectionRightMouseGraphicsData</span></code></p></td>
+<td><p>bool</p></td>
+<td><p>False</p></td>
+<td><p>True: right mouse click on items also shows GraphicsData information for inspectation (may sometimes be very large and may not fit into dialog for large graphics objects!)</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">zoomStepFactor</span></code></p></td>
+<td><p>float</p></td>
+<td><p>1.15</p></td>
+<td><p>change of zoom per keypress (keypad +/-) or mouse wheel increment</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="vsettingsinteractive">
+<span id="sec-vsettingsinteractive"></span><h3>VSettingsInteractive<a class="headerlink" href="#vsettingsinteractive" title="Link to this heading"></a></h3>
+<p>Functionality to interact with render window; includes special rotation and zoom factors, item-highlighting, marker tracking, item selection and keyPressUserFunction.</p>
+<p>Reached as <code class="docutils literal notranslate"><span class="pre">SC.visualizationSettings.interactive</span></code>.</p>
+<p>VSettingsInteractive has the following items:</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>name</p></th>
+<th class="head"><p>type</p></th>
+<th class="head"><p>default</p></th>
+<th class="head"><p>description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">advanced</span></code></p></td>
+<td><p>VSettingsInteractiveAdvanced</p></td>
+<td><p></p></td>
+<td><p>advanced interactive visualization settings</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">autoRotateModelView</span></code></p></td>
+<td><p>bool</p></td>
+<td><p>False</p></td>
+<td><p>True: rotate model view with autorotation</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">autoRotationVelocity</span></code></p></td>
+<td><p>Float3</p></td>
+<td><p>[0.,0.,1.047198]</p></td>
+<td><p>Angular velocity vector for auto-rotation of scene (only visualization view is rotated, not the model itself!)</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">highlightItemIndex</span></code></p></td>
+<td><p>Int</p></td>
+<td><p>-1</p></td>
+<td><p>index of item that shall be highlighted (e.g., to find item which cauess problems); if set -1, no item is highlighted</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">highlightItemType</span></code></p></td>
+<td><p>ItemType</p></td>
+<td><p>ItemType::_None</p></td>
+<td><p>item type (Node, Object, …) that shall be highlighted (e.g., to find item which cauess problems)</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">highlightMbsNumber</span></code></p></td>
+<td><p>UInt</p></td>
+<td><p>0</p></td>
+<td><p>index of main system (mbs) for which the item shall be highlighted; number is related to the ID in SystemContainer (first mbs = 0, second = 1, …)</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">ignoreKeys</span></code></p></td>
+<td><p>bool</p></td>
+<td><p>False</p></td>
+<td><p>True: ignore keyboard input except escape and ‘F2’ keys; used for interactive mode, e.g., to perform kinematic analysis; This flag can be switched with key ‘F2’; if ignoreKeys=True, then keyPressUserFunction can be used!</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">keyPressUserFunction</span></code></p></td>
+<td><p>KeyPressUserFunction</p></td>
+<td><p>0</p></td>
+<td><p>add a Python function f(key, action, mods) here, which is called every time a key is pressed; set this parameter to 0 (int) in order to deactivate it; the user function is only called if interactive.ignoreKeys=True; function shall return true, if key has been processed; Example: <code class="docutils literal notranslate"><span class="pre">def</span> <span class="pre">f(key,</span> <span class="pre">action,</span> <span class="pre">mods):</span> <span class="pre">print('key=',key)</span></code>; use chr(key) to convert key codes [32 …96] to ascii; special key codes (&gt;256) are provided in the exudyn.KeyCode enumeration type; key action needs to be checked (0=released, 1=pressed, 2=repeated); mods provide information (binary) for SHIFT (1), CTRL (2), ALT (4), Super keys (8), CAPSLOCK (16)</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">logMouseCoordinates</span></code></p></td>
+<td><p>bool</p></td>
+<td><p>True</p></td>
+<td><p>True: if showMouseCoordinates=True, also log mouse coordinates (transformed to model coordinates); only works for axis-aligned ortho-projections and shows the coordinates of the current plane</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">useJoystickInput</span></code></p></td>
+<td><p>bool</p></td>
+<td><p>True</p></td>
+<td><p>True: read joystick input (use 6-axis joystick with lowest ID found when starting renderer window) and interpret as (x,y,z) position and (rotx, roty, rotz) rotation: as available from 3Dconnexion space mouse and maybe others as well; set to False, if external joystick makes problems …</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="sec-visualizationsettings">
+<span id="id1"></span><h3>VisualizationSettings<a class="headerlink" href="#sec-visualizationsettings" title="Link to this heading"></a></h3>
+<p>Top structure for all visualization settings in Exudyn.</p>
+<p>Reached as <code class="docutils literal notranslate"><span class="pre">SC.visualizationSettings</span></code>.</p>
+<p>VisualizationSettings has the following items:</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>name</p></th>
+<th class="head"><p>type</p></th>
+<th class="head"><p>default</p></th>
+<th class="head"><p>description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">bodies</span></code></p></td>
+<td><p>VSettingsBodies</p></td>
+<td><p></p></td>
+<td><p>body visualization settings</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">connectors</span></code></p></td>
+<td><p>VSettingsConnectors</p></td>
+<td><p></p></td>
+<td><p>connector visualization settings</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">contact</span></code></p></td>
+<td><p>VSettingsContact</p></td>
+<td><p></p></td>
+<td><p>contact visualization settings</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">contour</span></code></p></td>
+<td><p>VSettingsContour</p></td>
+<td><p></p></td>
+<td><p>contour plot visualization settings</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">dialogs</span></code></p></td>
+<td><p>VSettingsDialogs</p></td>
+<td><p></p></td>
+<td><p>dialogs settings</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">exportImages</span></code></p></td>
+<td><p>VSettingsExportImages</p></td>
+<td><p></p></td>
+<td><p>settings for exporting (saving) images to files in order to create animations</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">general</span></code></p></td>
+<td><p>VSettingsGeneral</p></td>
+<td><p></p></td>
+<td><p>general visualization settings</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">interactive</span></code></p></td>
+<td><p>VSettingsInteractive</p></td>
+<td><p></p></td>
+<td><p>Settings for interaction with renderer</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">loads</span></code></p></td>
+<td><p>VSettingsLoads</p></td>
+<td><p></p></td>
+<td><p>load visualization settings</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">markers</span></code></p></td>
+<td><p>VSettingsMarkers</p></td>
+<td><p></p></td>
+<td><p>marker visualization settings</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">nodes</span></code></p></td>
+<td><p>VSettingsNodes</p></td>
+<td><p></p></td>
+<td><p>node visualization settings</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">openGL</span></code></p></td>
+<td><p>VSettingsOpenGL</p></td>
+<td><p></p></td>
+<td><p>OpenGL rendering settings</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">raytracer</span></code></p></td>
+<td><p>VSettingsRaytracer</p></td>
+<td><p></p></td>
+<td><p>Raytracer settings (builds on OpenGL rendering settings)</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">sensors</span></code></p></td>
+<td><p>VSettingsSensors</p></td>
+<td><p></p></td>
+<td><p>sensor visualization settings</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">view0</span></code></p></td>
+<td><p>VSettingsView</p></td>
+<td><p></p></td>
+<td><p>Settings for main view 0</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">view1</span></code></p></td>
+<td><p>VSettingsView</p></td>
+<td><p></p></td>
+<td><p>Settings for sub-view 1</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">view2</span></code></p></td>
+<td><p>VSettingsView</p></td>
+<td><p></p></td>
+<td><p>Settings for sub-view 2</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">view3</span></code></p></td>
+<td><p>VSettingsView</p></td>
+<td><p></p></td>
+<td><p>Settings for sub-view 3</p></td>
+</tr>
+</tbody>
+</table>
+<p>The following parameter changes have been made:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">visualizationSettings.general.drawCoordinateSystem</span></code> → <code class="docutils literal notranslate"><span class="pre">visualizationSettings.view0.scene.drawCoordinateSystem</span></code> (changed in version 1.10.80, expires: 2030)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">visualizationSettings.general.drawWorldBasis</span></code> → <code class="docutils literal notranslate"><span class="pre">visualizationSettings.view0.scene.drawWorldBasis</span></code> (changed in version 1.10.80, expires: 2030)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">visualizationSettings.general.linuxDisplayScaleFactor</span></code> → <code class="docutils literal notranslate"><span class="pre">visualizationSettings.general.displayScaleFactor</span></code> (changed in version 1.12.445, expires: 2031)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">visualizationSettings.general.showComputationInfo</span></code> → <code class="docutils literal notranslate"><span class="pre">visualizationSettings.view0.window.showComputationInfo</span></code> (changed in version 1.10.80, expires: 2030)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">visualizationSettings.general.textSize</span></code> → <code class="docutils literal notranslate"><span class="pre">visualizationSettings.view0.window.globalFontSize</span></code> (changed in version 1.10.80, expires: 2030)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">visualizationSettings.general.useWindowsDisplayScaleFactor</span></code> → <code class="docutils literal notranslate"><span class="pre">visualizationSettings.openGL.dummyBool</span></code> (changed in version 1.12.445, expires: 2031)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">visualizationSettings.general.worldBasisSize</span></code> → <code class="docutils literal notranslate"><span class="pre">visualizationSettings.view0.scene.worldBasisSize</span></code> (changed in version 1.10.80, expires: 2030)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">visualizationSettings.contour.colorBarPrecision</span></code> → <code class="docutils literal notranslate"><span class="pre">visualizationSettings.contour.advanced.colorBarPrecision</span></code> (changed in version 1.10.80, expires: 2030)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">visualizationSettings.contour.colorBarTiling</span></code> → <code class="docutils literal notranslate"><span class="pre">visualizationSettings.contour.advanced.colorBarTiling</span></code> (changed in version 1.10.80, expires: 2030)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">visualizationSettings.contour.showColorBar</span></code> → <code class="docutils literal notranslate"><span class="pre">visualizationSettings.contour.advanced.showColorBar</span></code> (changed in version 1.10.80, expires: 2030)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">visualizationSettings.window.alwaysOnTop</span></code> → <code class="docutils literal notranslate"><span class="pre">visualizationSettings.view0.window.alwaysOnTop</span></code> (changed in version 1.10.80, expires: 2030)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">visualizationSettings.window.ignoreKeys</span></code> → <code class="docutils literal notranslate"><span class="pre">visualizationSettings.interactive.ignoreKeys</span></code> (changed in version 1.10.80, expires: 2030)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">visualizationSettings.window.keyPressUserFunction</span></code> → <code class="docutils literal notranslate"><span class="pre">visualizationSettings.interactive.keyPressUserFunction</span></code> (changed in version 1.10.80, expires: 2030)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">visualizationSettings.window.limitWindowToScreenSize</span></code> → <code class="docutils literal notranslate"><span class="pre">visualizationSettings.general.limitWindowToScreenSize</span></code> (changed in version 1.10.80, expires: 2030)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">visualizationSettings.window.maximize</span></code> → <code class="docutils literal notranslate"><span class="pre">visualizationSettings.view0.window.maximize</span></code> (changed in version 1.10.80, expires: 2030)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">visualizationSettings.window.reallyQuitTimeLimit</span></code> → <code class="docutils literal notranslate"><span class="pre">visualizationSettings.general.reallyQuitTimeLimit</span></code> (changed in version 1.10.80, expires: 2030)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">visualizationSettings.window.renderWindowSize</span></code> → <code class="docutils literal notranslate"><span class="pre">visualizationSettings.view0.window.renderWindowSize</span></code> (changed in version 1.10.80, expires: 2030)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">visualizationSettings.window.showMouseCoordinates</span></code> → <code class="docutils literal notranslate"><span class="pre">visualizationSettings.view0.window.showMouseCoordinates</span></code> (changed in version 1.10.80, expires: 2030)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">visualizationSettings.window.showRenderStateInfo</span></code> → <code class="docutils literal notranslate"><span class="pre">visualizationSettings.view0.window.showRenderStateInfo</span></code> (changed in version 1.10.80, expires: 2030)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">visualizationSettings.window.showWindow</span></code> → <code class="docutils literal notranslate"><span class="pre">visualizationSettings.view0.window.showWindow</span></code> (changed in version 1.10.80, expires: 2030)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">visualizationSettings.window.startupTimeout</span></code> → <code class="docutils literal notranslate"><span class="pre">visualizationSettings.general.rendererStartupTimeout</span></code> (changed in version 1.10.80, expires: 2030)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">visualizationSettings.dialogs.fontScalingMacOS</span></code> → <code class="docutils literal notranslate"><span class="pre">visualizationSettings.dialogs.fontScaling</span></code> (changed in version 1.12.15, expires: 2032)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">visualizationSettings.raytracer.ambientLightColor</span></code> → <code class="docutils literal notranslate"><span class="pre">visualizationSettings.openGL.lightModelAmbient</span></code> (changed in version 1.10.80, expires: 2030)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">visualizationSettings.raytracer.backgroundColorReflections</span></code> → <code class="docutils literal notranslate"><span class="pre">visualizationSettings.raytracer.advanced.backgroundColorReflections</span></code> (changed in version 1.10.80, expires: 2030)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">visualizationSettings.raytracer.enable</span></code> → <code class="docutils literal notranslate"><span class="pre">visualizationSettings.view0.camera.useRaytracer</span></code> (changed in version 1.10.80, expires: 2030)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">visualizationSettings.raytracer.lightRadius</span></code> → <code class="docutils literal notranslate"><span class="pre">visualizationSettings.openGL.light0.lightRadius</span></code> (changed in version 1.10.80, expires: 2030)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">visualizationSettings.raytracer.searchTreeFactor</span></code> → <code class="docutils literal notranslate"><span class="pre">visualizationSettings.raytracer.advanced.searchTreeFactor</span></code> (changed in version 1.10.80, expires: 2030)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">visualizationSettings.raytracer.shadowScalingFactor</span></code> → <code class="docutils literal notranslate"><span class="pre">visualizationSettings.raytracer.advanced.shadowScalingFactor</span></code> (changed in version 1.10.80, expires: 2030)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">visualizationSettings.raytracer.shadowSmoothingSteps</span></code> → <code class="docutils literal notranslate"><span class="pre">visualizationSettings.raytracer.advanced.shadowSmoothingSteps</span></code> (changed in version 1.10.80, expires: 2030)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">visualizationSettings.raytracer.showText</span></code> → <code class="docutils literal notranslate"><span class="pre">visualizationSettings.raytracer.advanced.showText</span></code> (changed in version 1.10.80, expires: 2030)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">visualizationSettings.raytracer.tilesPerThread</span></code> → <code class="docutils literal notranslate"><span class="pre">visualizationSettings.raytracer.advanced.tilesPerThread</span></code> (changed in version 1.10.80, expires: 2030)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">visualizationSettings.raytracer.zBiasLines</span></code> → <code class="docutils literal notranslate"><span class="pre">visualizationSettings.raytracer.advanced.zBiasLines</span></code> (changed in version 1.10.80, expires: 2030)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">visualizationSettings.raytracer.zOffsetCamera</span></code> → <code class="docutils literal notranslate"><span class="pre">visualizationSettings.openGL.dummy</span></code> (changed in version 1.10.80, expires: 2030)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">visualizationSettings.openGL.clippingPlaneColor</span></code> → <code class="docutils literal notranslate"><span class="pre">visualizationSettings.openGL.advanced.clippingPlaneColor</span></code> (changed in version 1.10.80, expires: 2030)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">visualizationSettings.openGL.clippingPlaneDistance</span></code> → <code class="docutils literal notranslate"><span class="pre">visualizationSettings.view0.camera.clippingPlaneDistance</span></code> (changed in version 1.10.80, expires: 2030)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">visualizationSettings.openGL.clippingPlaneNormal</span></code> → <code class="docutils literal notranslate"><span class="pre">visualizationSettings.view0.camera.clippingPlaneNormal</span></code> (changed in version 1.10.80, expires: 2030)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">visualizationSettings.openGL.depthSorting</span></code> → <code class="docutils literal notranslate"><span class="pre">visualizationSettings.openGL.advanced.depthSorting</span></code> (changed in version 1.10.80, expires: 2030)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">visualizationSettings.openGL.enableLight0</span></code> → <code class="docutils literal notranslate"><span class="pre">visualizationSettings.openGL.light0.enable</span></code> (changed in version 1.10.80, expires: 2030)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">visualizationSettings.openGL.enableLight1</span></code> → <code class="docutils literal notranslate"><span class="pre">visualizationSettings.openGL.light1.enable</span></code> (changed in version 1.10.80, expires: 2030)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">visualizationSettings.openGL.enableLighting</span></code> → <code class="docutils literal notranslate"><span class="pre">visualizationSettings.openGL.advanced.enableLighting</span></code> (changed in version 1.10.80, expires: 2030)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">visualizationSettings.openGL.facesTransparent</span></code> → <code class="docutils literal notranslate"><span class="pre">visualizationSettings.view0.scene.facesTransparent</span></code> (changed in version 1.10.80, expires: 2030)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">visualizationSettings.openGL.initialCenterPoint</span></code> → <code class="docutils literal notranslate"><span class="pre">visualizationSettings.openGL.advanced.initialCenterPoint</span></code> (changed in version 1.10.80, expires: 2030)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">visualizationSettings.openGL.initialMaxSceneSize</span></code> → <code class="docutils literal notranslate"><span class="pre">visualizationSettings.openGL.advanced.initialMaxSceneSize</span></code> (changed in version 1.10.80, expires: 2030)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">visualizationSettings.openGL.initialModelRotation</span></code> → <code class="docutils literal notranslate"><span class="pre">visualizationSettings.openGL.advanced.initialModelRotation</span></code> (changed in version 1.10.80, expires: 2030)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">visualizationSettings.openGL.initialZoom</span></code> → <code class="docutils literal notranslate"><span class="pre">visualizationSettings.openGL.advanced.initialZoom</span></code> (changed in version 1.10.80, expires: 2030)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">visualizationSettings.openGL.light0ambient</span></code> → <code class="docutils literal notranslate"><span class="pre">visualizationSettings.openGL.dummy</span></code> (changed in version 1.10.80, expires: 2030)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">visualizationSettings.openGL.light0constantAttenuation</span></code> → <code class="docutils literal notranslate"><span class="pre">visualizationSettings.openGL.light0.constantAttenuation</span></code> (changed in version 1.10.80, expires: 2030)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">visualizationSettings.openGL.light0diffuse</span></code> → <code class="docutils literal notranslate"><span class="pre">visualizationSettings.openGL.light0.diffuse</span></code> (changed in version 1.10.80, expires: 2030)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">visualizationSettings.openGL.light0linearAttenuation</span></code> → <code class="docutils literal notranslate"><span class="pre">visualizationSettings.openGL.light0.linearAttenuation</span></code> (changed in version 1.10.80, expires: 2030)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">visualizationSettings.openGL.light0position</span></code> → <code class="docutils literal notranslate"><span class="pre">visualizationSettings.openGL.light0.position</span></code> (changed in version 1.10.80, expires: 2030)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">visualizationSettings.openGL.light0quadraticAttenuation</span></code> → <code class="docutils literal notranslate"><span class="pre">visualizationSettings.openGL.light0.quadraticAttenuation</span></code> (changed in version 1.10.80, expires: 2030)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">visualizationSettings.openGL.light0specular</span></code> → <code class="docutils literal notranslate"><span class="pre">visualizationSettings.openGL.light0.specular</span></code> (changed in version 1.10.80, expires: 2030)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">visualizationSettings.openGL.light1ambient</span></code> → <code class="docutils literal notranslate"><span class="pre">visualizationSettings.openGL.dummy</span></code> (changed in version 1.10.80, expires: 2030)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">visualizationSettings.openGL.light1constantAttenuation</span></code> → <code class="docutils literal notranslate"><span class="pre">visualizationSettings.openGL.light1.constantAttenuation</span></code> (changed in version 1.10.80, expires: 2030)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">visualizationSettings.openGL.light1diffuse</span></code> → <code class="docutils literal notranslate"><span class="pre">visualizationSettings.openGL.light1.diffuse</span></code> (changed in version 1.10.80, expires: 2030)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">visualizationSettings.openGL.light1linearAttenuation</span></code> → <code class="docutils literal notranslate"><span class="pre">visualizationSettings.openGL.light1.linearAttenuation</span></code> (changed in version 1.10.80, expires: 2030)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">visualizationSettings.openGL.light1position</span></code> → <code class="docutils literal notranslate"><span class="pre">visualizationSettings.openGL.light1.position</span></code> (changed in version 1.10.80, expires: 2030)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">visualizationSettings.openGL.light1quadraticAttenuation</span></code> → <code class="docutils literal notranslate"><span class="pre">visualizationSettings.openGL.light1.quadraticAttenuation</span></code> (changed in version 1.10.80, expires: 2030)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">visualizationSettings.openGL.light1specular</span></code> → <code class="docutils literal notranslate"><span class="pre">visualizationSettings.openGL.light1.specular</span></code> (changed in version 1.10.80, expires: 2030)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">visualizationSettings.openGL.lightModelLocalViewer</span></code> → <code class="docutils literal notranslate"><span class="pre">visualizationSettings.openGL.advanced.lightModelLocalViewer</span></code> (changed in version 1.10.80, expires: 2030)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">visualizationSettings.openGL.lightModelTwoSide</span></code> → <code class="docutils literal notranslate"><span class="pre">visualizationSettings.openGL.advanced.lightModelTwoSide</span></code> (changed in version 1.10.80, expires: 2030)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">visualizationSettings.openGL.lightPositionsInCameraFrame</span></code> → <code class="docutils literal notranslate"><span class="pre">visualizationSettings.openGL.light0.useCameraFrame</span></code> (changed in version 1.10.80, expires: 2030)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">visualizationSettings.openGL.lineSmooth</span></code> → <code class="docutils literal notranslate"><span class="pre">visualizationSettings.openGL.advanced.lineSmooth</span></code> (changed in version 1.10.80, expires: 2030)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">visualizationSettings.openGL.materialAmbientAndDiffuse</span></code> → <code class="docutils literal notranslate"><span class="pre">visualizationSettings.openGL.materialSpecular</span></code> (changed in version 1.10.80, expires: 2030)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">visualizationSettings.openGL.perspective</span></code> → <code class="docutils literal notranslate"><span class="pre">visualizationSettings.view0.camera.perspective</span></code> (changed in version 1.10.80, expires: 2030)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">visualizationSettings.openGL.polygonOffset</span></code> → <code class="docutils literal notranslate"><span class="pre">visualizationSettings.openGL.advanced.polygonOffset</span></code> (changed in version 1.10.80, expires: 2030)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">visualizationSettings.openGL.shadeModelSmooth</span></code> → <code class="docutils literal notranslate"><span class="pre">visualizationSettings.openGL.advanced.shadeModelSmooth</span></code> (changed in version 1.10.80, expires: 2030)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">visualizationSettings.openGL.shadow</span></code> → <code class="docutils literal notranslate"><span class="pre">visualizationSettings.openGL.light0.shadow</span></code> (changed in version 1.10.80, expires: 2030)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">visualizationSettings.openGL.shadowPolygonOffset</span></code> → <code class="docutils literal notranslate"><span class="pre">visualizationSettings.openGL.advanced.shadowPolygonOffset</span></code> (changed in version 1.10.80, expires: 2030)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">visualizationSettings.openGL.showFaceEdges</span></code> → <code class="docutils literal notranslate"><span class="pre">visualizationSettings.view0.scene.showFaceEdges</span></code> (changed in version 1.10.80, expires: 2030)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">visualizationSettings.openGL.showFaces</span></code> → <code class="docutils literal notranslate"><span class="pre">visualizationSettings.view0.scene.showFaces</span></code> (changed in version 1.10.80, expires: 2030)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">visualizationSettings.openGL.showLines</span></code> → <code class="docutils literal notranslate"><span class="pre">visualizationSettings.view0.scene.showLines</span></code> (changed in version 1.10.80, expires: 2030)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">visualizationSettings.openGL.showMeshEdges</span></code> → <code class="docutils literal notranslate"><span class="pre">visualizationSettings.view0.scene.showMeshEdges</span></code> (changed in version 1.10.80, expires: 2030)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">visualizationSettings.openGL.showMeshFaces</span></code> → <code class="docutils literal notranslate"><span class="pre">visualizationSettings.view0.scene.showMeshFaces</span></code> (changed in version 1.10.80, expires: 2030)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">visualizationSettings.openGL.textLineSmooth</span></code> → <code class="docutils literal notranslate"><span class="pre">visualizationSettings.openGL.advanced.textLineSmooth</span></code> (changed in version 1.10.80, expires: 2030)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">visualizationSettings.openGL.textLineWidth</span></code> → <code class="docutils literal notranslate"><span class="pre">visualizationSettings.openGL.advanced.textLineWidth</span></code> (changed in version 1.10.80, expires: 2030)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">visualizationSettings.interactive.highlightColor</span></code> → <code class="docutils literal notranslate"><span class="pre">visualizationSettings.interactive.advanced.highlightColor</span></code> (changed in version 1.10.80, expires: 2030)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">visualizationSettings.interactive.highlightOtherColor</span></code> → <code class="docutils literal notranslate"><span class="pre">visualizationSettings.interactive.advanced.highlightOtherColor</span></code> (changed in version 1.10.80, expires: 2030)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">visualizationSettings.interactive.joystickScaleRotation</span></code> → <code class="docutils literal notranslate"><span class="pre">visualizationSettings.interactive.advanced.joystickScaleRotation</span></code> (changed in version 1.10.80, expires: 2030)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">visualizationSettings.interactive.joystickScaleTranslation</span></code> → <code class="docutils literal notranslate"><span class="pre">visualizationSettings.interactive.advanced.joystickScaleTranslation</span></code> (changed in version 1.10.80, expires: 2030)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">visualizationSettings.interactive.keypressRotationStep</span></code> → <code class="docutils literal notranslate"><span class="pre">visualizationSettings.interactive.advanced.keypressRotationStep</span></code> (changed in version 1.10.80, expires: 2030)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">visualizationSettings.interactive.keypressTranslationStep</span></code> → <code class="docutils literal notranslate"><span class="pre">visualizationSettings.interactive.advanced.keypressTranslationStep</span></code> (changed in version 1.10.80, expires: 2030)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">visualizationSettings.interactive.lockModelView</span></code> → <code class="docutils literal notranslate"><span class="pre">visualizationSettings.view0.window.lockModelView</span></code> (changed in version 1.10.80, expires: 2030)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">visualizationSettings.interactive.mouseMoveRotationFactor</span></code> → <code class="docutils literal notranslate"><span class="pre">visualizationSettings.interactive.advanced.mouseMoveRotationFactor</span></code> (changed in version 1.10.80, expires: 2030)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">visualizationSettings.interactive.pauseWithSpacebar</span></code> → <code class="docutils literal notranslate"><span class="pre">visualizationSettings.interactive.advanced.pauseWithSpacebar</span></code> (changed in version 1.10.80, expires: 2030)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">visualizationSettings.interactive.selectionHighlights</span></code> → <code class="docutils literal notranslate"><span class="pre">visualizationSettings.interactive.advanced.selectionHighlights</span></code> (changed in version 1.10.80, expires: 2030)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">visualizationSettings.interactive.selectionLeftMouse</span></code> → <code class="docutils literal notranslate"><span class="pre">visualizationSettings.interactive.advanced.selectionLeftMouse</span></code> (changed in version 1.10.80, expires: 2030)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">visualizationSettings.interactive.selectionLeftMouseItemTypes</span></code> → <code class="docutils literal notranslate"><span class="pre">visualizationSettings.interactive.advanced.selectionLeftMouseItemTypes</span></code> (changed in version 1.10.80, expires: 2030)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">visualizationSettings.interactive.selectionRightMouse</span></code> → <code class="docutils literal notranslate"><span class="pre">visualizationSettings.interactive.advanced.selectionRightMouse</span></code> (changed in version 1.10.80, expires: 2030)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">visualizationSettings.interactive.selectionRightMouseGraphicsData</span></code> → <code class="docutils literal notranslate"><span class="pre">visualizationSettings.interactive.advanced.selectionRightMouseGraphicsData</span></code> (changed in version 1.10.80, expires: 2030)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">visualizationSettings.interactive.trackMarker</span></code> → <code class="docutils literal notranslate"><span class="pre">visualizationSettings.view0.camera.trackMarker</span></code> (changed in version 1.10.80, expires: 2030)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">visualizationSettings.interactive.trackMarkerMbsNumber</span></code> → <code class="docutils literal notranslate"><span class="pre">visualizationSettings.view0.camera.trackMarkerMbsNumber</span></code> (changed in version 1.10.80, expires: 2030)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">visualizationSettings.interactive.trackMarkerOrientation</span></code> → <code class="docutils literal notranslate"><span class="pre">visualizationSettings.view0.camera.trackMarkerOrientation</span></code> (changed in version 1.10.80, expires: 2030)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">visualizationSettings.interactive.trackMarkerPosition</span></code> → <code class="docutils literal notranslate"><span class="pre">visualizationSettings.view0.camera.trackMarkerPosition</span></code> (changed in version 1.10.80, expires: 2030)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">visualizationSettings.interactive.zoomStepFactor</span></code> → <code class="docutils literal notranslate"><span class="pre">visualizationSettings.interactive.advanced.zoomStepFactor</span></code> (changed in version 1.10.80, expires: 2030)</p></li>
+</ul>
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="SimulationSettings.html" class="btn btn-neutral float-left" title="SimulationSettings" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="CSolverStructures.html" class="btn btn-neutral float-right" title="CSolverStructures" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

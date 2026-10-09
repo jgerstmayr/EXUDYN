@@ -1,0 +1,352 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Exudyn developer documentation &mdash; Exudyn1.13.3 1.13.3 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=3ee1c6c6" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/rtd_sphinx_search.min.css" />
+      <link rel="stylesheet" type="text/css" href="../../_static/custom.css?v=e2783f0e" />
+
+  
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=b8a3e558"></script>
+      <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../_static/copybutton.js?v=f281be69"></script>
+      <script src="../../_static/js/rtd_search_config.js"></script>
+      <script src="../../_static/js/rtd_sphinx_search.min.js"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Getting started as a developer" href="GETTING_STARTED.html" />
+    <link rel="prev" title="References" href="../generated/references.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            Exudyn1.13.3
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Exudyn User Manual</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../README.html">Exudyn</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../manual/gettingStarted.html">Installation and getting started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../manual/introduction.html">Overview on Exudyn</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../manual/introductionBasics.html">Exudyn basics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../manual/tutorial.html">Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../manual/GUI.html">Renderer, graphics and visualization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../manual/performanceErrors.html">Performance, errors and solver failures</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../manual/introductionAdvanced.html">Advanced topics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../manual/notation.html">Notation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../manual/theory.html">Theory and formulations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../manual/solver.html">Solvers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../generated/cInterface/cInterfaceIndex.html">Python-C++ command interface</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Reference Manual</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../generated/items/itemsIndex.html">Items reference manual</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../generated/pythonUtilities/utilitiesIndex.html">Python Utility Functions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../generated/structures/structuresIndex.html">Structures and Settings</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../generated/references.html">References</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Developer documentation</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Exudyn developer documentation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="GETTING_STARTED.html">Getting started as a developer</a></li>
+<li class="toctree-l2"><a class="reference internal" href="BUILD.html">Building Exudyn from source</a></li>
+<li class="toctree-l2"><a class="reference internal" href="GIT.html">Working with git in this repository</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ARCHITECTURE.html">Exudyn C++ architecture</a></li>
+<li class="toctree-l2"><a class="reference internal" href="CODING_STYLE.html">Exudyn coding style and conventions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="WORKFLOW.html">Development workflow</a></li>
+<li class="toctree-l2"><a class="reference internal" href="NEW_ITEM.html">How to set up a new item</a></li>
+<li class="toctree-l2"><a class="reference internal" href="GUI_MANUAL_CHECK.html">Manual GUI check before a release</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../generated/deprecations.html">Deprecations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../definitions/README.html">definitions/ — the item and structure definitions as Python</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../tools/generators/README.html">tools/generators/ — the new generator code</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../tools/exudev/README.html"><code class="docutils literal notranslate"><span class="pre">exudev</span></code> — the Exudyn maintainer driver</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../CONTRIBUTING.html">Contributing to Exudyn</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#repository-layout">Repository layout</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#building-and-running">Building and running</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#how-to-notes">How-to notes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#invariants">Invariants</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">How-to notes</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../howTo/condaEnvironments.html">Conda environments for Exudyn</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../howTo/sphinxDocs.html">Building the documentation</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Examples, models and issues</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../generated/examples/examplesIndex.html">Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../generated/testModels/testModelsIndex.html">TestModels</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../generated/abbreviations.html">List of Abbreviations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../manual/revisions.html">Revisions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../CHANGELOG.html">Changelog</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../generated/trackerlog.html">Issue tracker</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">Exudyn1.13.3</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Exudyn developer documentation</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../_sources/docs/dev/README.md.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section class="tex2jax_ignore mathjax_ignore" id="exudyn-developer-documentation">
+<h1>Exudyn developer documentation<a class="headerlink" href="#exudyn-developer-documentation" title="Link to this heading"></a></h1>
+<p>Developer-facing notes. Users start at <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/README.rst"><code class="docutils literal notranslate"><span class="pre">README.rst</span></code></a> and
+<a class="reference download internal" download="" href="../../_downloads/48d1bc6644af8a5b129735ddf46363c4/INSTALL.txt"><span class="xref download myst"><code class="docutils literal notranslate"><span class="pre">INSTALL.txt</span></code></span></a> in the repository root, or at the
+<a class="reference external" href="https://exudyn.readthedocs.io/">online documentation</a>.</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>document</p></th>
+<th class="head"><p>contents</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><a class="reference internal" href="ARCHITECTURE.html"><span class="std std-doc">ARCHITECTURE.md</span></a></p></td>
+<td><p>the C++ internals: items, the C/Main/Visualization split, the object factory, modules, solvers</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="CODING_STYLE.html"><span class="std std-doc">CODING_STYLE.md</span></a></p></td>
+<td><p>naming, abbreviations, file headers, how to report an error from C++ (§10), what is deprecated</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="WORKFLOW.html"><span class="std std-doc">WORKFLOW.md</span></a></p></td>
+<td><p>issue tracker, versioning, the four commit gates</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="NEW_ITEM.html"><span class="std std-doc">NEW_ITEM.md</span></a></p></td>
+<td><p>how to set up a new item: the definition, what is generated, the C++, what to run</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="GUI_MANUAL_CHECK.html"><span class="std std-doc">GUI_MANUAL_CHECK.md</span></a></p></td>
+<td><p>the manual check of the render window and the dialogs before a release, per platform</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="../../definitions/README.html"><span class="std std-doc">../../definitions/README.md</span></a></p></td>
+<td><p>the item and structure definitions as Python, and the function declaration library</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="../../tools/generators/README.html"><span class="std std-doc">../../tools/generators/README.md</span></a></p></td>
+<td><p>the new generator code and how to re-emit the definitions</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/docs/revision/exudynRevisionInfo2026.md">exudynRevisionInfo2026.md</a></p></td>
+<td><p>general information on the v1.11.0 → v2.0 restructuring: rules, facts, decisions</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/docs/revision/exudynRevisionPlan2026b.md">exudynRevisionPlan2026b.md</a></p></td>
+<td><p><strong>the plan that is open</strong>: what the revision did not finish and what comes next, by group RG1 … RG15</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/docs/revision/exudynRevisionPlan2026.md">exudynRevisionPlan2026.md</a></p></td>
+<td><p>the finished plan of the 2026 revision, phases R0 … R11 — a record; the revision completed as 1.12</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/docs/revision/exudynRevisionLog2026b.md">exudynRevisionLog2026b.md</a> / <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/docs/revision/exudynRevisionLog2026.md">exudynRevisionLog2026.md</a></p></td>
+<td><p>what each closed step actually turned out to be — the second is closed with its plan, the first is where the work of revision2026b is written up</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="../../CONTRIBUTING.html"><span class="std std-doc">../../CONTRIBUTING.md</span></a></p></td>
+<td><p>how to contribute from outside</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/CLAUDE.md">CLAUDE.md</a></p></td>
+<td><p>the working contract for Claude Code sessions</p></td>
+</tr>
+</tbody>
+</table>
+<div class="toctree-wrapper compound">
+</div>
+<section id="repository-layout">
+<h2>Repository layout<a class="headerlink" href="#repository-layout" title="Link to this heading"></a></h2>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">setup</span><span class="o">.</span><span class="n">py</span>                                  <span class="n">the</span> <span class="n">real</span> <span class="n">build</span>
+<span class="n">exudynTemplate</span><span class="o">.</span><span class="n">sln</span>                        <span class="n">VS2022</span> <span class="n">solution</span> <span class="n">template</span> <span class="p">(</span><span class="n">exudynPython</span><span class="o">.</span><span class="n">pyproj</span> <span class="o">+</span> <span class="n">cppsrc</span><span class="o">.</span><span class="n">vcxproj</span><span class="p">)</span>
+<span class="n">msvc</span><span class="o">/</span><span class="n">cppsrc</span><span class="o">.</span><span class="n">vcxproj</span>                       <span class="n">the</span> <span class="n">C</span><span class="o">++</span> <span class="n">source</span> <span class="nb">list</span><span class="p">;</span> <span class="n">sources</span><span class="o">.</span><span class="n">json</span> <span class="ow">is</span> <span class="n">generated</span> <span class="kn">from</span><span class="w"> </span><span class="nn">it</span>
+<span class="n">src</span><span class="o">/</span>                                      <span class="n">hand</span><span class="o">-</span><span class="n">written</span> <span class="n">C</span><span class="o">++</span><span class="p">:</span> <span class="n">Graphics</span> <span class="n">ImplMarkers</span> <span class="n">ImplNodes</span> <span class="n">ImplObjects</span>
+                                          <span class="n">Linalg</span> <span class="n">Main</span> <span class="n">Pymodules</span> <span class="n">Solver</span> <span class="n">System</span> <span class="n">Tests</span> <span class="n">Utilities</span>
+<span class="n">src</span><span class="o">/</span><span class="n">Autogenerated</span><span class="o">/</span>                        <span class="n">generated</span> <span class="n">C</span><span class="o">++</span> <span class="o">-</span> <span class="n">never</span> <span class="n">edit</span> <span class="n">by</span> <span class="n">hand</span>
+<span class="n">definitions</span><span class="o">/</span><span class="p">,</span> <span class="n">tools</span><span class="o">/</span><span class="n">generators</span><span class="o">/</span>          <span class="n">the</span> <span class="n">generator</span> <span class="nb">input</span> <span class="ow">and</span> <span class="n">the</span> <span class="n">generators</span>
+<span class="n">python</span><span class="o">/</span><span class="n">exudyn</span><span class="o">/</span>                            <span class="n">the</span> <span class="n">shipped</span> <span class="n">Python</span> <span class="n">package</span>
+<span class="n">python</span><span class="o">/</span><span class="n">TestModels</span><span class="o">/</span>                        <span class="n">the</span> <span class="n">test</span> <span class="n">models</span><span class="p">,</span> <span class="n">nothing</span> <span class="k">else</span>
+<span class="n">python</span><span class="o">/</span><span class="n">PerformanceModels</span><span class="o">/</span>                 <span class="n">the</span> <span class="n">performance</span> <span class="n">models</span>
+<span class="n">python</span><span class="o">/</span><span class="n">MiniExamples</span><span class="o">/</span>                      <span class="n">the</span> <span class="n">generated</span> <span class="n">mini</span> <span class="n">examples</span>
+<span class="n">python</span><span class="o">/</span><span class="n">Examples</span><span class="o">/</span>                          <span class="n">the</span> <span class="n">examples</span>
+<span class="n">python</span><span class="o">/</span><span class="n">testing</span><span class="o">/</span>                           <span class="n">the</span> <span class="n">runners</span><span class="p">:</span> <span class="n">runTestSuite</span><span class="o">.</span><span class="n">py</span> <span class="ow">and</span> <span class="n">the</span> <span class="n">rest</span>
+<span class="n">python</span><span class="o">/</span><span class="n">logs</span><span class="o">/</span>                              <span class="n">testmodels</span><span class="o">/</span> <span class="n">examples</span><span class="o">/</span> <span class="n">performance</span><span class="o">/</span> <span class="n">tmp</span><span class="o">/</span>
+<span class="n">index</span><span class="o">.</span><span class="n">md</span>                                  <span class="n">the</span> <span class="n">table</span> <span class="n">of</span> <span class="n">contents</span> <span class="n">of</span> <span class="n">the</span> <span class="n">documentation</span><span class="p">,</span> <span class="n">hand</span><span class="o">-</span><span class="n">written</span><span class="p">:</span> <span class="n">what</span> <span class="n">comes</span> <span class="ow">in</span> <span class="n">which</span> <span class="n">order</span>
+<span class="n">docs</span><span class="o">/</span><span class="n">manual</span><span class="o">/</span>                              <span class="n">the</span> <span class="n">user</span> <span class="n">manual</span><span class="p">,</span> <span class="n">hand</span><span class="o">-</span><span class="n">written</span> <span class="n">Markdown</span>
+<span class="n">docs</span><span class="o">/</span><span class="n">generated</span><span class="o">/</span>                           <span class="n">the</span> <span class="n">generated</span> <span class="n">documentation</span> <span class="p">(</span><span class="n">emitters</span><span class="p">,</span> <span class="n">issue</span> <span class="n">tracker</span><span class="p">)</span>
+<span class="n">docs</span><span class="o">/</span><span class="n">figures</span><span class="o">/</span>                             <span class="n">the</span> <span class="n">images</span> <span class="n">of</span> <span class="n">the</span> <span class="n">documentation</span>
+<span class="n">docs</span><span class="o">/</span><span class="n">howTo</span><span class="o">/</span>                               <span class="n">loose</span> <span class="n">how</span><span class="o">-</span><span class="n">to</span> <span class="n">notes</span><span class="p">,</span> <span class="n">see</span> <span class="n">below</span>
+<span class="n">tools</span><span class="o">/</span><span class="n">issueTracker</span><span class="o">/</span>                       <span class="n">issue</span> <span class="n">tracker</span> <span class="ow">and</span> <span class="n">version</span> <span class="n">source</span> <span class="n">of</span> <span class="n">truth</span>
+<span class="n">tools</span><span class="o">/</span><span class="n">exudev</span><span class="o">/</span>                             <span class="n">the</span> <span class="n">dev</span> <span class="n">driver</span><span class="p">:</span> <span class="n">build</span><span class="p">,</span> <span class="n">test</span><span class="p">,</span> <span class="n">docs</span><span class="p">,</span> <span class="n">release</span>
+</pre></div>
+</div>
+</section>
+<section id="building-and-running">
+<h2>Building and running<a class="headerlink" href="#building-and-running" title="Link to this heading"></a></h2>
+<p>Three pages, in the order a new developer needs them:</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p></p></th>
+<th class="head"><p></p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><a class="reference internal" href="GETTING_STARTED.html"><span class="std std-doc">GETTING_STARTED.md</span></a></p></td>
+<td><p>from nothing: clone, environment, <code class="docutils literal notranslate"><span class="pre">setupLocalWorkspace.py</span></code>, first build, first test run</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="BUILD.html"><span class="std std-doc">BUILD.md</span></a></p></td>
+<td><p>the build itself, per platform, and what to do when it does not work</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="GIT.html"><span class="std std-doc">GIT.md</span></a></p></td>
+<td><p>branches, commit messages, pull, push, merge, and what a contribution provides</p></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Editors.</strong> The everyday work happens in <strong>VS Code</strong> - the Python package, the definition
+files, the documentation, and Claude Code. <strong>Visual Studio 2022</strong> is the debugger: stepping from
+a Python script into a C++ item’s <code class="docutils literal notranslate"><span class="pre">ComputeODE2LHS</span></code> with one debugger is the project’s most
+valuable development capability and is protected by design. <code class="docutils literal notranslate"><span class="pre">tools/setupLocalWorkspace.py</span></code>
+prepares both.</p>
+<p><strong>The driver</strong>: one command, <code class="docutils literal notranslate"><span class="pre">exudev</span></code> - <code class="docutils literal notranslate"><span class="pre">exudev</span> <span class="pre">--help</span></code>, and <code class="docutils literal notranslate"><span class="pre">exudev</span> <span class="pre">-n</span> <span class="pre">&lt;command&gt;</span></code> to see what a
+command would run without running it. Its commands are in
+<a class="reference internal" href="../../tools/exudev/README.html"><span class="std std-doc"><code class="docutils literal notranslate"><span class="pre">tools/exudev/README.md</span></code></span></a>.</p>
+<p>Entry points worth knowing:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">src/Pymodules/PybindModule.cpp</span></code> — module creation.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">src/Main/MainObjectFactory.h/.cpp</span></code> — item creation behind <code class="docutils literal notranslate"><span class="pre">mbs.AddNode(...)</span></code>; dispatch is
+on the <code class="docutils literal notranslate"><span class="pre">objectType</span></code> <strong>string</strong> from the Python dict, through a runtime class-factory registry.</p></li>
+</ul>
+</section>
+<section id="how-to-notes">
+<h2>How-to notes<a class="headerlink" href="#how-to-notes" title="Link to this heading"></a></h2>
+<p><code class="docutils literal notranslate"><span class="pre">docs/howTo/</span></code> was cut from 26 loose <code class="docutils literal notranslate"><span class="pre">.txt</span></code> files to 8 in the 2026-09 cleanup. Anything referring to
+VS2017/VS2019, 32-bit builds, Python ≤ 3.7 or the pre-WSLg X-server era was deleted; the specifics
+worth keeping were lifted into <code class="docutils literal notranslate"><span class="pre">buildQuirks.md</span></code>. The originals remain in git history, in the
+archived internal repository and on GitHub.</p>
+<p>Three of them are <strong>pages of the documentation</strong>, because a user or a first-time contributor
+needs them:</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>file</p></th>
+<th class="head"><p>what it is for</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><a class="reference internal" href="../howTo/condaEnvironments.html"><span class="std std-doc">condaEnvironments.md</span></a></p></td>
+<td><p>environment recipes, the package→feature map, the scipy pin</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="../howTo/sphinxDocs.html"><span class="std std-doc">sphinxDocs.md</span></a></p></td>
+<td><p>building the documentation locally</p></td>
+</tr>
+</tbody>
+</table>
+<p>The other five are <strong>maintainer notes</strong>: they are in the repository, and they are linked here to
+GitHub rather than to a page, because they are not published (#2585 — <code class="docutils literal notranslate"><span class="pre">exclude_patterns</span></code> in
+<code class="docutils literal notranslate"><span class="pre">conf.py</span></code>).</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>file</p></th>
+<th class="head"><p>what it is for</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/docs/howTo/buildQuirks.md">buildQuirks.md</a></p></td>
+<td><p>traps that cost real time: MSVC↔GCC flags, <code class="docutils literal notranslate"><span class="pre">/bigobj</span></code>, ABI tags, debugging a startup crash</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/docs/howTo/gccVsMsvcTraps.md">gccVsMsvcTraps.md</a></p></td>
+<td><p>what MSVC accepts and GCC does not, and why</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/docs/howTo/visualStudio2022.md">visualStudio2022.md</a></p></td>
+<td><p>VS2022 install specifics and <code class="docutils literal notranslate"><span class="pre">dumpbin</span> <span class="pre">/version</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/docs/howTo/convertVideosFfmpeg.md">convertVideosFfmpeg.md</a></p></td>
+<td><p>producing the demo animations</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/docs/howTo/matplotlibExamples.md">matplotlibExamples.md</a></p></td>
+<td><p>plotting recipes used in examples</p></td>
+</tr>
+</tbody>
+</table>
+<p>macOS setup is covered in <a class="reference internal" href="../manual/gettingStarted.html"><span class="std std-doc">docs/manual/gettingStarted.md</span></a>,
+not here.</p>
+</section>
+<section id="invariants">
+<h2>Invariants<a class="headerlink" href="#invariants" title="Link to this heading"></a></h2>
+<p>These are differentiators, not technical debt. Every restructuring step preserves them
+(plan §7):</p>
+<ul class="simple">
+<li><p>Mixed Python/native debugging in VS2022 - the capability, not which editor is primary;
+the everyday work happens in VS Code.</p></li>
+<li><p>The setuptools-based fast build.</p></li>
+<li><p>No heavy C++ dependencies; vendored headers.</p></li>
+<li><p>The hard C++/Python split with dict-based validated interfaces.</p></li>
+<li><p>Runtime dependencies stay at numpy only. Development-only tools are unconstrained.</p></li>
+</ul>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="../generated/references.html" class="btn btn-neutral float-left" title="References" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="GETTING_STARTED.html" class="btn btn-neutral float-right" title="Getting started as a developer" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

@@ -1,0 +1,656 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ObjectGenericODE2 &mdash; Exudyn1.13.3 1.13.3 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=3ee1c6c6" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/rtd_sphinx_search.min.css" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/custom.css?v=e2783f0e" />
+
+  
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=b8a3e558"></script>
+      <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../../_static/copybutton.js?v=f281be69"></script>
+      <script src="../../../_static/js/rtd_search_config.js"></script>
+      <script src="../../../_static/js/rtd_sphinx_search.min.js"></script>
+      <script>window.MathJax = {"loader": {"load": ["[tex]/mathtools"]}, "tex": {"packages": {"[+]": ["mathtools"]}, "macros": {"ANCFdk": "{\\LU{0}{\\dv_k}}", "ANCFdkO": "{\\LU{0}{\\dv_{0,k}}}", "ANCFdkOtp": "{\\LU{0}{\\dv_{0,k}\\tp}}", "ANCFdkt": "{\\LU{0}{\\dot\\dv_k}}", "Am": "{\\mathbf{A}}", "Dm": "{\\mathbf{D}}", "Em": "{\\mathbf{E}}", "Gm": "{\\mathbf{G}}", "Im": "{\\mathbf{I}}", "ImThree": "{\\mathbf{I}_{3 \\times 3}}", "Jm": "{\\mathbf{J}}", "Km": "{\\mathbf{K}}", "Mm": "{\\mathbf{M}}", "Pm": "{\\mathbf{P}}", "Rm": "{\\mathbf{R}}", "Sm": "{\\mathbf{S}}", "Tm": "{\\mathbf{T}}", "av": "{\\mathbf{a}}", "bv": "{\\mathbf{b}}", "cv": "{\\mathbf{c}}", "diffANCF": ["{\\frac{\\partial #1}{\\partial \\qv_{ANCF}}}", 1], "diffANCFdk": "{\\diffANCFmI{\\ANCFdk}}", "diffANCFmI": ["{\\frac{\\partial #1}{\\partial \\qv_{ANCF,m1}}}", 1], "diffANCFmIt": ["{\\frac{\\partial #1}{\\partial \\dot \\qv_{ANCF,m1}}}", 1], "diffANCFt": ["{\\frac{\\partial #1}{\\partial \\dot \\qv_{ANCF}}}", 1], "diffmI": ["{\\frac{\\partial #1}{\\partial \\qv_{m1}}}", 1], "diffmIt": ["{\\frac{\\partial #1}{\\partial \\dot \\qv_{m1}}}", 1], "diffmOI": ["{\\frac{\\partial #1}{\\partial \\qv_{m0,m1}}}", 1], "diffmOIt": ["{\\frac{\\partial #1}{\\partial \\dot \\qv_{m0,m1}}}", 1], "diffmOt": ["{\\frac{\\partial #1}{\\partial \\dot \\qv_{m0}}}", 1], "dv": "{\\mathbf{d}}", "ev": "{\\mathbf{e}}", "fv": "{\\mathbf{f}}", "gv": "{\\mathbf{g}}", "hv": "{\\mathbf{h}}", "nv": "{\\mathbf{n}}", "pv": "{\\mathbf{p}}", "qv": "{\\mathbf{q}}", "rv": "{\\mathbf{r}}", "sv": "{\\mathbf{s}}", "tv": "{\\mathbf{t}}", "uv": "{\\mathbf{u}}", "vv": "{\\mathbf{v}}", "xv": "{\\mathbf{x}}", "yv": "{\\mathbf{y}}", "zv": "{\\mathbf{z}}", "vspace": ["{}", 1], "ra": "{\\rightarrow}", "Rcal": "{\\mathbb{R}}", "Ccal": "{\\mathbb{C}}", "Ncal": "{\\mathbb{N}}", "Rot": "{\\mathbf{A}}", "dd": "{\\mathrm{d}}", "ps": "{p_\\mathrm{s}}", "co": "{\\mathrm{c}}", "si": "{\\mathrm{s}}", "tp": "{^\\mathrm{T}}", "diag": "{\\mathrm{diag}}", "vec": "{\\mathrm{vec}}", "Null": "{\\mathbf{0}}", "varepsilonDot": "{\\boldsymbol{\\varepsilon}}", "talpha": "{\\boldsymbol{\\alpha}}", "tbeta": "{\\boldsymbol{\\beta}}", "tgamma": "{\\boldsymbol{\\gamma}}", "tchi": "{\\boldsymbol{\\chi}}", "tdelta": "{\\boldsymbol{\\delta}}", "teps": "{\\boldsymbol{\\varepsilon}}", "tepsDot": "{\\boldsymbol{\\dot \\varepsilon}}", "teta": "{\\boldsymbol{\\eta}}", "tkappa": "{\\boldsymbol{\\kappa}}", "tkappaDot": "{\\boldsymbol{\\dot \\kappa}}", "tphi": "{\\boldsymbol{\\phi}}", "boldVarPhi": "{\\boldsymbol{\\varphi}}", "tPhi": "{\\boldsymbol{\\Phi}}", "ttheta": "{\\boldsymbol{\\theta}}", "tTheta": "{\\boldsymbol{\\Theta}}", "tlambda": "{\\boldsymbol{\\lambda}}", "tnu": "{\\boldsymbol{\\nu}}", "tmu": "{\\boldsymbol{\\mu}}", "tpsi": "{\\boldsymbol{\\psi}}", "tPsi": "{\\boldsymbol{\\Psi}}", "ttau": "{\\boldsymbol{\\tau}}", "tsigma": "{\\boldsymbol{\\sigma}}", "txi": "{\\boldsymbol{\\xi}}", "tzeta": "{\\boldsymbol{\\zeta}}", "tomega": "{\\boldsymbol{\\omega}}", "tOmega": "{\\boldsymbol{\\Omega}}", "vareps": "{\\varepsilon}", "myoverline": ["\\overline{#1}", 1], "pluseq": "\\mathrel{+}=", "LU": ["{\\prescript{#1}{}{#2}\\,}", 2], "LUX": ["{\\prescript{#1}{}{#2}#3\\,}", 3], "LUR": ["{\\prescript{#1}{}{#2}_{#3}\\,}", 3], "LURU": ["{\\prescript{#1}{}{#2}_{#3}^{#4}\\,}", 4], "LLdot": ["{\\prescript{}{#1}{\\dot{#2}}_{#3}\\,}", 3], "vr": ["{\\left[ \\begin{array}{c} { #1}\\vspace{0.04cm} \\\\ { #2}\\vspace{0.04cm} \\\\ { #3} \\end{array} \\right]}", 3], "mr": ["{\\left[ \\begin{array}{ccc} #1 & #2 & #3 \\vspace{0.04cm}\\\\ #4 & #5 & #6 \\vspace{0.04cm}\\\\ #7 & #8 & #9  \\end{array} \\right]}", 9], "vp": ["{\\left[ \\begin{array}{c} { #1} \\vspace{0.04cm}\\\\ { #2} \\end{array} \\right]}", 2], "mp": ["{\\left[ \\begin{array}{cc} #1 & #2 \\vspace{0.04cm}\\\\ #3 & #4 \\end{array} \\right]}", 4], "mfour": ["{\\left[ \\begin{array}{cccc} { #1} \\\\ { #2} \\\\ { #3} \\\\ { #4} \\end{array} \\right]}", 4], "vfour": ["{\\left[ \\begin{array}{c} { #1} \\\\ { #2} \\\\ { #3} \\\\ { #4} \\end{array} \\right]}", 4], "vrRow": ["{[#1,\\, #2,\\, #3]}", 3], "vsix": ["{\\left[ \\begin{array}{c} { #1} \\\\ { #2} \\\\ { #3} \\\\ { #4} \\\\ { #5} \\\\ { #6} \\end{array} \\right]}", 6], "vsixb": ["{\\begin{array}{c} { #1} \\\\ { #2} \\\\ { #3} \\\\ { #4} \\\\ { #5} \\\\ { #6} \\end{array} }", 6], "vsixs": ["{ \\begin{array}{c} { #1} \\\\ { #2} \\\\ { #3} \\\\ { #4} \\\\ { #5} \\\\ { #6} \\end{array} }", 6], "SO": "{q}", "FO": "{y}", "AE": "{\\lambda}", "SYS": "{s}", "SON": "{$2^\\mathrm{nd}$ order differential equations}", "FON": "{$1^\\mathrm{st}$ order differential equations}", "AEN": "{algebraic equations}", "Bm": "{\\mathbf{B}}", "Cm": "{\\mathbf{C}}", "Fm": "{\\mathbf{F}}", "SYSN": "{system equations}", "cIni": "{_\\mathrm{ini}}", "cRef": "{_\\mathrm{ref}}", "cCur": "{_\\mathrm{cur}}", "cVis": "{_\\mathrm{vis}}", "cSOS": "{_\\mathrm{start\\;of\\;step}}", "cConfig": "{_\\mathrm{config}}", "pLoc": "{\\mathbf{b}}", "pLocB": "{\\,^{b}{\\mathbf{v}}}", "pRef": "{\\mathbf{r}}", "pRefG": "{\\,^{0}{\\mathbf{r}}}", "indf": "{_\\mathrm{f}}", "indt": "{_\\mathrm{t}}", "indr": "{_\\mathrm{r}}", "indtt": "{_\\mathrm{tt}}", "indrr": "{_\\mathrm{rr}}", "indff": "{_\\mathrm{ff}}", "indtf": "{_\\mathrm{tf}}", "indrf": "{_\\mathrm{rf}}", "indtr": "{_\\mathrm{tr}}", "omegaBDtilde": "{\\LU{b}{\\tilde \\tomega_\\mathrm{bd}}}", "indrigid": "{_\\mathrm{rigid}}", "indred": "{_\\mathrm{red}}", "induser": "{_\\mathrm{user}}", "indu": "{_\\mathrm{u}}", "termA": ["{\\color{blue}{#1}}", 1], "termB": ["{\\color{red}{#1}}", 1], "termC": ["{\\color{green}{#1}}", 1], "acc": "{\\ddot{\\mathbf{q}}}", "GA": "{G\\alpha}", "Hm": "{\\mathbf{H}}", "ImTwo": "{\\mathbf{I}_{2 \\times 2}}", "Lm": "{\\mathbf{L}}", "Qm": "{\\mathbf{Q}}", "Vm": "{\\mathbf{V}}", "Wm": "{\\mathbf{W}}", "Xm": "{\\mathbf{X}}", "Ym": "{\\mathbf{Y}}", "aalg": "{\\mathbf{a}}", "iv": "{\\mathbf{i}}", "jv": "{\\mathbf{j}}", "kv": "{\\mathbf{k}}", "lv": "{\\mathbf{l}}", "mv": "{\\mathbf{m}}", "ov": "{\\mathbf{o}}", "vel": "{\\mathbf{v}}", "wv": "{\\mathbf{w}}"}}, "options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+      <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-mml-chtml.js"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+    <link rel="next" title="ObjectKinematicTree" href="ObjectKinematicTree.html" />
+    <link rel="prev" title="General info for all super elements" href="objectSuperElementGeneral.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            Exudyn1.13.3
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Exudyn User Manual</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../README.html">Exudyn</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../manual/gettingStarted.html">Installation and getting started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../manual/introduction.html">Overview on Exudyn</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../manual/introductionBasics.html">Exudyn basics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../manual/tutorial.html">Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../manual/GUI.html">Renderer, graphics and visualization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../manual/performanceErrors.html">Performance, errors and solver failures</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../manual/introductionAdvanced.html">Advanced topics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../manual/notation.html">Notation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../manual/theory.html">Theory and formulations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../manual/solver.html">Solvers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../cInterface/cInterfaceIndex.html">Python-C++ command interface</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Reference Manual</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="itemsIndex.html">Items reference manual</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="nodeIndex.html">Node</a></li>
+<li class="toctree-l2"><a class="reference internal" href="objectBodyIndex.html">Object (Body)</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="objectSuperElementIndex.html">Object (SuperElement)</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="objectSuperElementGeneral.html">General info for all super elements</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">ObjectGenericODE2</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ObjectKinematicTree.html">ObjectKinematicTree</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ObjectFFRF.html">ObjectFFRF</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ObjectFFRFreducedOrder.html">ObjectFFRFreducedOrder</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="objectObjectIndex.html">Object (Object)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="objectFiniteElementIndex.html">Object (FiniteElement)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="objectConnectorIndex.html">Object (Connector)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="objectConstraintIndex.html">Object (Constraint)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="objectJointIndex.html">Object (Joint)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="markerIndex.html">Marker</a></li>
+<li class="toctree-l2"><a class="reference internal" href="loadIndex.html">Load</a></li>
+<li class="toctree-l2"><a class="reference internal" href="sensorIndex.html">Sensor</a></li>
+<li class="toctree-l2"><a class="reference internal" href="itemsIndex.html#parameter-changes">Parameter changes</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../pythonUtilities/utilitiesIndex.html">Python Utility Functions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../structures/structuresIndex.html">Structures and Settings</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../references.html">References</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Developer documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../dev/README.html">Exudyn developer documentation</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">How-to notes</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../howTo/condaEnvironments.html">Conda environments for Exudyn</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../howTo/sphinxDocs.html">Building the documentation</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Examples, models and issues</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../examples/examplesIndex.html">Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../testModels/testModelsIndex.html">TestModels</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../abbreviations.html">List of Abbreviations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../manual/revisions.html">Revisions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../CHANGELOG.html">Changelog</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../trackerlog.html">Issue tracker</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">Exudyn1.13.3</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="itemsIndex.html">Items reference manual</a></li>
+          <li class="breadcrumb-item"><a href="objectSuperElementIndex.html">Object (SuperElement)</a></li>
+      <li class="breadcrumb-item active">ObjectGenericODE2</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../../_sources/docs/generated/items/ObjectGenericODE2.md.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <!-- GENERATED by tools/generators/itemDocsEmitter.py from definitions/ - do not edit -->
+<section class="tex2jax_ignore mathjax_ignore" id="objectgenericode2">
+<span id="sec-item-objectgenericode2"></span><h1>ObjectGenericODE2<a class="headerlink" href="#objectgenericode2" title="Link to this heading"></a></h1>
+<p>A system of <span class="math notranslate nohighlight">\(n\)</span> second order ordinary differential equations (<a class="reference internal" href="../abbreviations.html#ode2"><span class="std std-ref">ODE2</span></a>), having a mass matrix, damping/gyroscopic matrix, stiffness matrix and generalized forces. It can combine generic nodes, or node points. User functions can be used to compute mass matrix and generalized forces depending on given coordinates. NOTE: all matrices, vectors, etc. must have the same dimensions <span class="math notranslate nohighlight">\(n\)</span> or <span class="math notranslate nohighlight">\((n \times n)\)</span>, or they must be empty <span class="math notranslate nohighlight">\((0 \times 0)\)</span>, except for the mass matrix which always needs to have dimensions <span class="math notranslate nohighlight">\((n \times n)\)</span>.</p>
+<section id="interface">
+<h2>Interface<a class="headerlink" href="#interface" title="Link to this heading"></a></h2>
+<ul class="simple">
+<li><p>Body markers that can be placed on it: <a class="reference internal" href="MarkerSuperElementPosition.html#sec-item-markersuperelementposition"><span class="std std-ref">MarkerSuperElementPosition</span></a>, <a class="reference internal" href="MarkerSuperElementRigid.html#sec-item-markersuperelementrigid"><span class="std std-ref">MarkerSuperElementRigid</span></a></p></li>
+<li><p>Nodes: see the detailed description</p></li>
+</ul>
+</section>
+<section id="parameters">
+<h2>Parameters<a class="headerlink" href="#parameters" title="Link to this heading"></a></h2>
+<p>The parameters of the item; in a dictionary, its type is ‘GenericODE2’:</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>name</p></th>
+<th class="head"><p>type</p></th>
+<th class="head"><p>size</p></th>
+<th class="head"><p>default</p></th>
+<th class="head"><p>description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><strong>name</strong></p></td>
+<td><p>String</p></td>
+<td><p></p></td>
+<td><p>‘’</p></td>
+<td><p>objects’s unique name</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>nodeNumbers</strong></p></td>
+<td><p>ArrayNodeIndex</p></td>
+<td><p></p></td>
+<td><p>[]</p></td>
+<td><p>(symbol: <span class="math notranslate nohighlight">\(\mathbf{n}_n = [n_0,\,\ldots,\,n_n]\tp\)</span>) node numbers which provide the coordinates for the object (consecutively as provided in this list)</p></td>
+</tr>
+<tr class="row-even"><td><p><strong>massMatrix</strong></p></td>
+<td><p>PyMatrixContainer</p></td>
+<td><p></p></td>
+<td><p>[]</p></td>
+<td><p>(symbol: <span class="math notranslate nohighlight">\(\Mm \in \Rcal^{n \times n}\)</span>) mass matrix of object as MatrixContainer (or numpy array / list of lists)</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>stiffnessMatrix</strong></p></td>
+<td><p>PyMatrixContainer</p></td>
+<td><p></p></td>
+<td><p>[]</p></td>
+<td><p>(symbol: <span class="math notranslate nohighlight">\(\Km \in \Rcal^{n \times n}\)</span>) stiffness matrix of object as MatrixContainer (or numpy array / list of lists); NOTE that (dense/sparse triplets) format must agree with dampingMatrix and jacobianUserFunction</p></td>
+</tr>
+<tr class="row-even"><td><p><strong>dampingMatrix</strong></p></td>
+<td><p>PyMatrixContainer</p></td>
+<td><p></p></td>
+<td><p>[]</p></td>
+<td><p>(symbol: <span class="math notranslate nohighlight">\(\Dm \in \Rcal^{n \times n}\)</span>) damping matrix of object as MatrixContainer (or numpy array / list of lists); NOTE that (dense/sparse triplets) format must agree with stiffnessMatrix and jacobianUserFunction</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>forceVector</strong></p></td>
+<td><p>NumpyVector</p></td>
+<td><p></p></td>
+<td><p>[]</p></td>
+<td><p>(symbol: <span class="math notranslate nohighlight">\(\fv \in \Rcal^{n}\)</span>) generalized force vector added to RHS</p></td>
+</tr>
+<tr class="row-even"><td><p><strong>forceUserFunction</strong></p></td>
+<td><p>ObjectGenericODE2ForceUserFunction</p></td>
+<td><p></p></td>
+<td><p>0</p></td>
+<td><p>(symbol: <span class="math notranslate nohighlight">\(\fv_{user} \in \Rcal^{n}\)</span>) A Python user function which computes the generalized user force vector for the <a class="reference internal" href="../abbreviations.html#ode2"><span class="std std-ref">ODE2</span></a> equations; see description below</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>massMatrixUserFunction</strong></p></td>
+<td><p>ObjectGenericODE2MassMatrixUserFunction</p></td>
+<td><p></p></td>
+<td><p>0</p></td>
+<td><p>(symbol: <span class="math notranslate nohighlight">\(\Mm_{user} \in \Rcal^{n\times n}\)</span>) A Python user function which computes the mass matrix instead of the constant mass matrix given in <span class="math notranslate nohighlight">\(\Mm\)</span>; return numpy array or MatrixContainer; see description below</p></td>
+</tr>
+<tr class="row-even"><td><p><strong>jacobianUserFunction</strong></p></td>
+<td><p>ObjectGenericODE2JacobianUserFunction</p></td>
+<td><p></p></td>
+<td><p>0</p></td>
+<td><p>(symbol: <span class="math notranslate nohighlight">\(\Jm_{user} \in \Rcal^{n\times n}\)</span>) A Python user function which computes the jacobian, i.e., the derivative of the left-hand-side object equation w.r.t. the coordinates (times <span class="math notranslate nohighlight">\(f_{ODE2}\)</span>) and w.r.t. the velocities (times <span class="math notranslate nohighlight">\(f_{ODE2_t}\)</span>). Terms on the RHS must be subtracted from the LHS equation; the respective terms for the stiffness matrix and damping matrix are automatically added; see description below</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>coordinateIndexPerNode</strong></p></td>
+<td><p>ArrayIndex</p></td>
+<td><p></p></td>
+<td><p>[]</p></td>
+<td><p>this list contains the local coordinate index for every node, which is needed, e.g., for markers; the list is generated automatically every time parameters have been changed</p></td>
+</tr>
+<tr class="row-even"><td><p><strong>tempCoordinates</strong></p></td>
+<td><p>NumpyVector</p></td>
+<td><p></p></td>
+<td><p>[]</p></td>
+<td><p>(symbol: <span class="math notranslate nohighlight">\(\cv_{temp} \in \Rcal^{n}\)</span>) temporary vector containing coordinates</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>tempCoordinates_t</strong></p></td>
+<td><p>NumpyVector</p></td>
+<td><p></p></td>
+<td><p>[]</p></td>
+<td><p>(symbol: <span class="math notranslate nohighlight">\(\dot \cv_{temp} \in \Rcal^{n}\)</span>) temporary vector containing velocity coordinates</p></td>
+</tr>
+<tr class="row-even"><td><p><strong>tempCoordinates_tt</strong></p></td>
+<td><p>NumpyVector</p></td>
+<td><p></p></td>
+<td><p>[]</p></td>
+<td><p>(symbol: <span class="math notranslate nohighlight">\(\ddot \cv_{temp} \in \Rcal^{n}\)</span>) temporary vector containing acceleration coordinates</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>visualization</strong></p></td>
+<td><p>VObjectGenericODE2</p></td>
+<td><p></p></td>
+<td><p></p></td>
+<td><p>parameters for visualization of item</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="visualization-parameters">
+<h2>Visualization parameters<a class="headerlink" href="#visualization-parameters" title="Link to this heading"></a></h2>
+<p>The parameters of <code class="docutils literal notranslate"><span class="pre">VObjectGenericODE2</span></code>, given as <code class="docutils literal notranslate"><span class="pre">visualization</span></code>:</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>name</p></th>
+<th class="head"><p>type</p></th>
+<th class="head"><p>size</p></th>
+<th class="head"><p>default</p></th>
+<th class="head"><p>description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><strong>show</strong></p></td>
+<td><p>Bool</p></td>
+<td><p></p></td>
+<td><p>True</p></td>
+<td><p>set true, if item is shown in visualization and false if it is not shown</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>color</strong></p></td>
+<td><p>Float4</p></td>
+<td><p>4</p></td>
+<td><p>[-1.,-1.,-1.,-1.]</p></td>
+<td><p>RGBA color for object; 4th value is alpha-transparency; R=-1.f means, that default color is used</p></td>
+</tr>
+<tr class="row-even"><td><p><strong>triangleMesh</strong></p></td>
+<td><p>NumpyMatrixI</p></td>
+<td><p></p></td>
+<td><p>[]</p></td>
+<td><p>a matrix of node numbers referring to the mesh nodes of the object, one triangle per row: 3 columns for flat triangles, or 6 for 6-node triangles drawn curved - the corners counterclockwise seen from outside, then the mid nodes of the edges 0-1, 1-2 and 2-0, as in GraphicsData triangles6; the mesh uses the nodes to visualize the underlying object; contour plot colors are still computed in the local frame!</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>showNodes</strong></p></td>
+<td><p>Bool</p></td>
+<td><p></p></td>
+<td><p>False</p></td>
+<td><p>set true, nodes are drawn uniquely via the mesh, eventually using the floating reference frame, even in the visualization of the node is show=False; node numbers are shown with indicator ‘NF’</p></td>
+</tr>
+<tr class="row-even"><td><p><strong>graphicsDataUserFunction</strong></p></td>
+<td><p>ObjectGenericODE2GraphicsDataUserFunction</p></td>
+<td><p></p></td>
+<td><p>0</p></td>
+<td><p>A Python function which returns a bodyGraphicsData object, which is a list of graphics data in a dictionary computed by the user function; the graphics data is draw in global coordinates; it can be used to implement user element visualization, e.g., beam elements or simple mechanical systems; note that this user function may significantly slow down visualization</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="drawing">
+<h2>Drawing<a class="headerlink" href="#drawing" title="Link to this heading"></a></h2>
+<p>Drawn as <a class="reference internal" href="objectSuperElementGeneral.html#sec-drawing-objectssuperelement"><span class="std std-ref">all super elements</span></a>; its <code class="docutils literal notranslate"><span class="pre">triangleMesh</span></code> on the nodes, deformed with <code class="docutils literal notranslate"><span class="pre">bodies.deformationScaleFactor</span></code>, and with <code class="docutils literal notranslate"><span class="pre">showNodes</span></code> its nodes; or what its <code class="docutils literal notranslate"><span class="pre">graphicsDataUserFunction</span></code> returns.</p>
+<p>Settings beyond those of all super elements: <a class="reference internal" href="../structures/VisualizationSettings.html#sec-vsettingsnodes"><span class="std std-ref"><code class="docutils literal notranslate"><span class="pre">nodes.defaultSize</span></code></span></a>, <a class="reference internal" href="../structures/VisualizationSettings.html#sec-vsettingsnodes"><span class="std std-ref"><code class="docutils literal notranslate"><span class="pre">nodes.drawNodesAsPoint</span></code></span></a>, <a class="reference internal" href="../structures/VisualizationSettings.html#sec-vsettingsnodes"><span class="std std-ref"><code class="docutils literal notranslate"><span class="pre">nodes.show</span></code></span></a>, <a class="reference internal" href="../structures/VisualizationSettings.html#sec-vsettingsnodes"><span class="std std-ref"><code class="docutils literal notranslate"><span class="pre">nodes.showNumbers</span></code></span></a>, <a class="reference internal" href="../structures/VisualizationSettings.html#sec-vsettingsnodes"><span class="std std-ref"><code class="docutils literal notranslate"><span class="pre">nodes.tiling</span></code></span></a>, <a class="reference internal" href="../structures/VisualizationSettings.html#sec-vsettingsopengladvanced"><span class="std std-ref"><code class="docutils literal notranslate"><span class="pre">openGL.advanced.initialMaxSceneSize</span></code></span></a>.</p>
+</section>
+<section id="output-variables">
+<h2>Output variables<a class="headerlink" href="#output-variables" title="Link to this heading"></a></h2>
+<p>Available as <code class="docutils literal notranslate"><span class="pre">OutputVariableType</span></code> in sensors, <code class="docutils literal notranslate"><span class="pre">Get...Output()</span></code> and other functions:</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>output variable</p></th>
+<th class="head"><p>symbol</p></th>
+<th class="head"><p>description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>CoordinatesTotal</p></td>
+<td><p></p></td>
+<td><p>all <a class="reference internal" href="../abbreviations.html#ode2"><span class="std std-ref">ODE2</span></a> displacement plus reference coordinates of object</p></td>
+</tr>
+<tr class="row-odd"><td><p>Coordinates</p></td>
+<td><p></p></td>
+<td><p>all <a class="reference internal" href="../abbreviations.html#ode2"><span class="std std-ref">ODE2</span></a> (displacement) coordinates</p></td>
+</tr>
+<tr class="row-even"><td><p>Coordinates_t</p></td>
+<td><p></p></td>
+<td><p>all <a class="reference internal" href="../abbreviations.html#ode2"><span class="std std-ref">ODE2</span></a> velocity coordinates</p></td>
+</tr>
+<tr class="row-odd"><td><p>Coordinates_tt</p></td>
+<td><p></p></td>
+<td><p>all <a class="reference internal" href="../abbreviations.html#ode2"><span class="std std-ref">ODE2</span></a> acceleration coordinates</p></td>
+</tr>
+<tr class="row-even"><td><p>Force</p></td>
+<td><p></p></td>
+<td><p>generalized forces for all coordinates (residual of all forces except mass*accleration; corresponds to ComputeODE2LHS)</p></td>
+</tr>
+<tr class="row-odd"><td><p>KineticEnergy</p></td>
+<td><p><span class="math notranslate nohighlight">\(T = \frac{1}{2} \dot\qv\tp \Mm\, \dot\qv\)</span></p></td>
+<td><p>kinetic energy from the mass matrix of the current state and the velocities of the nodes; current configuration only; localPosition must be <span class="math notranslate nohighlight">\([0,0,0]\)</span></p></td>
+</tr>
+<tr class="row-even"><td><p>PotentialEnergy</p></td>
+<td><p><span class="math notranslate nohighlight">\(V = \frac{1}{2} \qv\tp \Km\, \qv - \fv\tp \qv\)</span></p></td>
+<td><p>elastic energy of the stiffness matrix and the potential of the constant force vector; raises for a forceUserFunction; localPosition must be <span class="math notranslate nohighlight">\([0,0,0]\)</span></p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="detailed-description">
+<span id="description-objectgenericode2"></span><h2>Detailed description<a class="headerlink" href="#detailed-description" title="Link to this heading"></a></h2>
+<section id="additional-output-variables-for-superelement-node-access">
+<h3>Additional output variables for superelement node access<a class="headerlink" href="#additional-output-variables-for-superelement-node-access" title="Link to this heading"></a></h3>
+<p>Functions like <code class="docutils literal notranslate"><span class="pre">GetObjectOutputSuperElement(...)</span></code>, see <a class="reference internal" href="../cInterface/MainSystem.html#sec-mainsystem-object"><span class="std std-ref">MainSystem: Object</span></a>,
+or <code class="docutils literal notranslate"><span class="pre">SensorSuperElement</span></code>, see <a class="reference internal" href="../cInterface/MainSystem.html#sec-mainsystem-sensor"><span class="std std-ref">MainSystem: Sensor</span></a>, directly access special output variables
+(<code class="docutils literal notranslate"><span class="pre">OutputVariableType</span></code>) of the mesh nodes of the superelement.
+Additionally, the contour drawing of the object can make use the <code class="docutils literal notranslate"><span class="pre">OutputVariableType</span></code> of the meshnodes.</p>
+<p>For this object, all nodes of <code class="docutils literal notranslate"><span class="pre">ObjectGenericODE2</span></code> map their <code class="docutils literal notranslate"><span class="pre">OutputVariableType</span></code> to the meshnode <span class="math notranslate nohighlight">\(\ra\)</span>
+see at the according node for the list of <code class="docutils literal notranslate"><span class="pre">OutputVariableType</span></code>.</p>
+</section>
+<section id="equations-of-motion">
+<h3>Equations of motion<a class="headerlink" href="#equations-of-motion" title="Link to this heading"></a></h3>
+<p>An object with node numbers <span class="math notranslate nohighlight">\([n_0,\,\ldots,\,n_n]\)</span> and according numbers of nodal coordinates <span class="math notranslate nohighlight">\([n_{c_0},\,\ldots,\,n_{c_n}]\)</span>, the total number of equations (=coordinates) of the object is</p>
+<div class="math notranslate nohighlight">
+\[
+n = \sum_{i} n_{c_i},
+\]</div>
+<p>which is used throughout the description of this object.</p>
+</section>
+<section id="id1">
+<h3>Equations of motion<a class="headerlink" href="#id1" title="Link to this heading"></a></h3>
+<p>The equations of motion read,</p>
+<div class="math notranslate nohighlight" id="equation-eq-objectgenericode2-eom">
+<span class="eqno">(56)<a class="headerlink" href="#equation-eq-objectgenericode2-eom" title="Link to this equation"></a></span>\[
+\Mm \ddot \qv + \Dm \dot \qv + \Km \qv = \fv + \fv_{user}(mbs, t, i_N,\qv,\dot \qv)
+\]</div>
+<p>Note that the user function <span class="math notranslate nohighlight">\(\fv_{user}(mbs, t, i_N,\qv,\dot \qv)\)</span> may be empty (=0), and <code class="docutils literal notranslate"><span class="pre">iN</span></code> represents the itemNumber (=objectNumber).</p>
+<p>In case that a user mass matrix is specified, <a class="reference internal" href="#equation-eq-objectgenericode2-eom">(56)</a> is replaced with</p>
+<div class="math notranslate nohighlight">
+\[
+\Mm_{user}(mbs, t, i_N, \qv,\dot \qv) \ddot \qv + \Dm \dot \qv + \Km \qv = \fv + \fv_{user}(mbs, t, i_N, \qv,\dot \qv)
+\]</div>
+<p>The (internal) Jacobian <span class="math notranslate nohighlight">\(\Jm\)</span> of <a class="reference internal" href="#equation-eq-objectgenericode2-eom">(56)</a> (assuming <span class="math notranslate nohighlight">\(\fv\)</span> to be constant!) reads</p>
+<div class="math notranslate nohighlight">
+\[
+\Jm = f_{ODE2}   \left(\Km - \frac{\partial \fv_{user}(mbs, t, i_N,\qv,\dot \qv)}{\partial \qv}\right) +
+f_{ODE2_t} \left(\Dm - \frac{\partial \fv_{user}(mbs, t, i_N,\qv,\dot \qv)}{\partial \dot \qv} \right) +
+\]</div>
+<p>Chosing <span class="math notranslate nohighlight">\(f_{ODE2} = 1\)</span> and <span class="math notranslate nohighlight">\(f_{ODE2_t}=0\)</span> would immediately give the jacobian of position quantities.</p>
+<p>If no <code class="docutils literal notranslate"><span class="pre">jacobianUserFunction</span></code> is specified, the jacobian is – as with many objects in Exudyn – computed
+by means of numerical differentiation.
+In case that a <code class="docutils literal notranslate"><span class="pre">jacobianUserFunction</span></code> is specified, it must represent the jacobian of the <a class="reference internal" href="../abbreviations.html#lhs"><span class="std std-ref">LHS</span></a> of <a class="reference internal" href="#equation-eq-objectgenericode2-eom">(56)</a>
+without <span class="math notranslate nohighlight">\(\Km\)</span> and <span class="math notranslate nohighlight">\(\Dm\)</span> (these matrices are added internally),</p>
+<div class="math notranslate nohighlight" id="equation-eq-objectgenericode2-jac">
+<span class="eqno">(57)<a class="headerlink" href="#equation-eq-objectgenericode2-jac" title="Link to this equation"></a></span>\[
+\Jm_{user}(mbs, t, i_N, \qv, \dot \qv, f_{ODE2}, f_{ODE2_t}) =
+-f_{ODE2}   \left(\frac{\partial \fv_{user}(mbs, t, i_N,\qv,\dot \qv)}{\partial \qv} \right) -
+f_{ODE2_t} \left(\frac{\partial \fv_{user}(mbs, t, i_N,\qv,\dot \qv)}{\partial \dot \qv} \right)
+\]</div>
+<p>For clarification also see the <strong>example</strong> in <code class="docutils literal notranslate"><span class="pre">TestModels/linearFEMgenericODE2.py</span></code>.</p>
+<p>CoordinateLoads are added for the respective <a class="reference internal" href="../abbreviations.html#ode2"><span class="std std-ref">ODE2</span></a> coordinate on the RHS of the latter equation.</p>
+</section>
+<section id="marker-interfaces">
+<h3>Marker interfaces<a class="headerlink" href="#marker-interfaces" title="Link to this heading"></a></h3>
+<p>The mesh nodes of the object are its nodes: mesh node <span class="math notranslate nohighlight">\(i\)</span> is node <span class="math notranslate nohighlight">\(n_i\)</span> of <code class="docutils literal notranslate"><span class="pre">nodeNumbers</span></code>, at the
+position of that node. <code class="docutils literal notranslate"><span class="pre">MarkerSuperElementPosition</span></code> and <code class="docutils literal notranslate"><span class="pre">MarkerSuperElementRigid</span></code> act on them, with
+the Jacobians of the nodes and the weights of the marker; a load or constraint on single coordinates
+uses <code class="docutils literal notranslate"><span class="pre">MarkerObjectODE2Coordinates</span></code> or the coordinate markers of the nodes. The general body markers -
+<code class="docutils literal notranslate"><span class="pre">MarkerBodyPosition</span></code>, <code class="docutils literal notranslate"><span class="pre">MarkerBodyRigid</span></code>, <code class="docutils literal notranslate"><span class="pre">MarkerBodyMass</span></code> - do <strong>not</strong> work on this object, whose body
+access functions are not available: <code class="docutils literal notranslate"><span class="pre">Assemble()</span></code> refuses them.</p>
+<p><strong>Userfunction</strong>: <code class="docutils literal notranslate"><span class="pre">forceUserFunction(mbs,</span> <span class="pre">t,</span> <span class="pre">itemNumber,</span> <span class="pre">q,</span> <span class="pre">q_t)</span></code>
+A user function, which computes a force vector depending on current time and states of object. Can be used to create any kind of mechanical system by using the object states.
+Note that itemNumber represents the index of the ObjectGenericODE2 object in mbs, which can be used to retrieve additional data from the object through
+<code class="docutils literal notranslate"><span class="pre">mbs.GetObjectParameter(itemNumber,</span> <span class="pre">...)</span></code>, see the according description of <code class="docutils literal notranslate"><span class="pre">GetObjectParameter</span></code>.</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>arguments / return</p></th>
+<th class="head"><p>type or size</p></th>
+<th class="head"><p>description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">mbs</span></code></p></td>
+<td><p>MainSystem</p></td>
+<td><p>provides MainSystem mbs to which object belongs</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">t</span></code></p></td>
+<td><p>Real</p></td>
+<td><p>current time in mbs</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">itemNumber</span></code></p></td>
+<td><p>Index</p></td>
+<td><p>integer number <span class="math notranslate nohighlight">\(i_N\)</span> of the object in mbs, allowing easy access to all object data via mbs.GetObjectParameter(itemNumber, …)</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">q</span></code></p></td>
+<td><p>Vector <span class="math notranslate nohighlight">\(\in \Rcal^n\)</span></p></td>
+<td><p>object coordinates (e.g., nodal displacement coordinates) in current configuration, without reference values</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">q_t</span></code></p></td>
+<td><p>Vector <span class="math notranslate nohighlight">\(\in \Rcal^n\)</span></p></td>
+<td><p>object velocity coordinates (time derivative of <code class="docutils literal notranslate"><span class="pre">q</span></code>) in current configuration</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>return value</strong></p></td>
+<td><p>Vector <span class="math notranslate nohighlight">\(\in \Rcal^{n}\)</span></p></td>
+<td><p>returns force vector for object</p></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Userfunction</strong>: <code class="docutils literal notranslate"><span class="pre">massMatrixUserFunction(mbs,</span> <span class="pre">t,</span> <span class="pre">itemNumber,</span> <span class="pre">q,</span> <span class="pre">q_t)</span></code>
+A user function, which computes a mass matrix depending on current time and states of object. Can be used to create any kind of mechanical system by using the object states.</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>arguments / return</p></th>
+<th class="head"><p>type or size</p></th>
+<th class="head"><p>description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">mbs</span></code></p></td>
+<td><p>MainSystem</p></td>
+<td><p>provides MainSystem mbs to which object belongs to</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">t</span></code></p></td>
+<td><p>Real</p></td>
+<td><p>current time in mbs</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">itemNumber</span></code></p></td>
+<td><p>Index</p></td>
+<td><p>integer number <span class="math notranslate nohighlight">\(i_N\)</span> of the object in mbs, allowing easy access to all object data via mbs.GetObjectParameter(itemNumber, …)</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">q</span></code></p></td>
+<td><p>Vector <span class="math notranslate nohighlight">\(\in \Rcal^n\)</span></p></td>
+<td><p>object coordinates (e.g., nodal displacement coordinates) in current configuration, without reference values</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">q_t</span></code></p></td>
+<td><p>Vector <span class="math notranslate nohighlight">\(\in \Rcal^n\)</span></p></td>
+<td><p>object velocity coordinates (time derivative of <code class="docutils literal notranslate"><span class="pre">q</span></code>) in current configuration</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>return value</strong></p></td>
+<td><p>MatrixContainer <span class="math notranslate nohighlight">\(\in \Rcal^{n \times n}\)</span></p></td>
+<td><p>returns mass matrix for object, as exu.MatrixContainer, numpy array or list of lists; use MatrixContainer sparse format for larger matrices to speed up computations.</p></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Userfunction</strong>: <code class="docutils literal notranslate"><span class="pre">jacobianUserFunction(mbs,</span> <span class="pre">t,</span> <span class="pre">itemNumber,</span> <span class="pre">q,</span> <span class="pre">q_t,</span> <span class="pre">fODE2,</span> <span class="pre">fODE2_t)</span></code>
+A user function, which computes the jacobian of the <a class="reference internal" href="../abbreviations.html#lhs"><span class="std std-ref">LHS</span></a> of the equations of motion, depending on current time, states of object and two
+factors which are used to distinguish between position level and velocity level derivatives.
+Can be used to create any kind of mechanical system by using the object states.</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>arguments / return</p></th>
+<th class="head"><p>type or size</p></th>
+<th class="head"><p>description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">mbs</span></code></p></td>
+<td><p>MainSystem</p></td>
+<td><p>provides MainSystem mbs to which object belongs to</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">t</span></code></p></td>
+<td><p>Real</p></td>
+<td><p>current time in mbs</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">itemNumber</span></code></p></td>
+<td><p>Index</p></td>
+<td><p>integer number <span class="math notranslate nohighlight">\(i_N\)</span> of the object in mbs, allowing easy access to all object data via mbs.GetObjectParameter(itemNumber, …)</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">q</span></code></p></td>
+<td><p>Vector <span class="math notranslate nohighlight">\(\in \Rcal^n\)</span></p></td>
+<td><p>object coordinates (e.g., nodal displacement coordinates) in current configuration, without reference values</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">q_t</span></code></p></td>
+<td><p>Vector <span class="math notranslate nohighlight">\(\in \Rcal^n\)</span></p></td>
+<td><p>object velocity coordinates (time derivative of <code class="docutils literal notranslate"><span class="pre">q</span></code>) in current configuration</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">fODE2</span></code></p></td>
+<td><p>Real</p></td>
+<td><p>factor to be multiplied with the position level jacobian, see <a class="reference internal" href="#equation-eq-objectgenericode2-jac">(57)</a></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">fODE2_t</span></code></p></td>
+<td><p>Real</p></td>
+<td><p>factor to be multiplied with the velocity level jacobian, see <a class="reference internal" href="#equation-eq-objectgenericode2-jac">(57)</a></p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>return value</strong></p></td>
+<td><p>MatrixContainer <span class="math notranslate nohighlight">\(\in \Rcal^{n \times n}\)</span></p></td>
+<td><p>returns special jacobian for object, as exu.MatrixContainer, numpy array or list of lists; use MatrixContainer sparse format for larger matrices to speed up computations; NOTE that the format of returnValue must AGREE with (dense/sparse triplet) format of stiffnessMatrix and dampingMatrix; sparse triplets MAY NOT contain zero values!</p></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Userfunction</strong>: <code class="docutils literal notranslate"><span class="pre">graphicsDataUserFunction(mbs,</span> <span class="pre">itemNumber)</span></code>
+A user function, which is called by the visualization thread in order to draw user-defined objects.
+The function can be used to generate any <code class="docutils literal notranslate"><span class="pre">BodyGraphicsData</span></code>, see Section <a class="reference internal" href="../../manual/introductionAdvanced.html#sec-graphicsdata"><span class="std std-ref">GraphicsData</span></a>.
+Use <code class="docutils literal notranslate"><span class="pre">exudyn.graphics</span></code> functions, see Section <a class="reference internal" href="../pythonUtilities/graphics.html#sec-module-graphics"><span class="std std-ref">Module: graphics</span></a>, to create more complicated objects.
+Note that <code class="docutils literal notranslate"><span class="pre">graphicsDataUserFunction</span></code> needs to copy lots of data and is therefore
+inefficient and only designed to enable simpler tests, but not large scale problems.</p>
+<p>For an example for <code class="docutils literal notranslate"><span class="pre">graphicsDataUserFunction</span></code> see ObjectGround, <a class="reference internal" href="ObjectGround.html#sec-item-objectground"><span class="std std-ref">ObjectGround</span></a>.</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>arguments / return</p></th>
+<th class="head"><p>type or size</p></th>
+<th class="head"><p>description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">mbs</span></code></p></td>
+<td><p>MainSystem</p></td>
+<td><p>provides reference to mbs, which can be used in user function to access all data of the object</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">itemNumber</span></code></p></td>
+<td><p>Index</p></td>
+<td><p>integer number of the object in mbs, allowing easy access</p></td>
+</tr>
+<tr class="row-even"><td><p><strong>return value</strong></p></td>
+<td><p>BodyGraphicsData</p></td>
+<td><p>list of <code class="docutils literal notranslate"><span class="pre">GraphicsData</span></code> dictionaries, see Section <a class="reference internal" href="../../manual/introductionAdvanced.html#sec-graphicsdata"><span class="std std-ref">GraphicsData</span></a></p></td>
+</tr>
+</tbody>
+</table>
+<p><em>Example</em>:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1">#user function, using variables M, K, ... from mini example, replacing ObjectGenericODE2(...)</span>
+<span class="n">KD</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">diag</span><span class="p">([</span><span class="mi">200</span><span class="p">,</span><span class="mi">100</span><span class="p">])</span>
+<span class="c1">#nonlinear force example; this force is added to right-hand-side ==&gt; negative sign!</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">UFforce</span><span class="p">(</span><span class="n">mbs</span><span class="p">,</span> <span class="n">t</span><span class="p">,</span> <span class="n">itemNumber</span><span class="p">,</span> <span class="n">q</span><span class="p">,</span> <span class="n">q_t</span><span class="p">):</span>
+    <span class="k">return</span> <span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">KD</span><span class="p">,</span> <span class="n">q_t</span><span class="o">*</span><span class="n">q</span><span class="p">)</span> <span class="c1">#add nonlinear term for q_t and q, q_t*q gives vector</span>
+
+<span class="c1">#non-constant mass matrix:</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">UFmass</span><span class="p">(</span><span class="n">mbs</span><span class="p">,</span> <span class="n">t</span><span class="p">,</span> <span class="n">itemNumber</span><span class="p">,</span> <span class="n">q</span><span class="p">,</span> <span class="n">q_t</span><span class="p">):</span>
+    <span class="k">return</span> <span class="p">(</span><span class="n">q</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span><span class="o">*</span><span class="n">M</span> <span class="c1">#uses mass matrix from mini example</span>
+
+<span class="c1">#non-constant mass matrix:</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">UFgraphics</span><span class="p">(</span><span class="n">mbs</span><span class="p">,</span> <span class="n">itemNumber</span><span class="p">):</span>
+    <span class="n">t</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">systemData</span><span class="o">.</span><span class="nf">GetTime</span><span class="p">(</span><span class="n">exu</span><span class="o">.</span><span class="nc">ConfigurationType</span><span class="o">.</span><span class="n">Visualization</span><span class="p">)</span> <span class="c1">#get time if needed</span>
+    <span class="n">p</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">GetObjectOutputSuperElement</span><span class="p">(</span><span class="n">objectNumber</span><span class="o">=</span><span class="n">itemNumber</span><span class="p">,</span> <span class="n">variableType</span> <span class="o">=</span> <span class="n">exu</span><span class="o">.</span><span class="nc">OutputVariableType</span><span class="o">.</span><span class="n">Position</span><span class="p">,</span>
+                                        <span class="n">meshNodeNumber</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="c1">#get first node's position</span>
+                                        <span class="n">configuration</span> <span class="o">=</span> <span class="n">exu</span><span class="o">.</span><span class="nc">ConfigurationType</span><span class="o">.</span><span class="n">Visualization</span><span class="p">)</span>
+    <span class="n">graphics1</span><span class="o">=</span><span class="n">graphics</span><span class="o">.</span><span class="nf">Sphere</span><span class="p">(</span><span class="n">point</span><span class="o">=</span><span class="n">p</span><span class="p">,</span><span class="n">radius</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span> <span class="nc">color</span><span class="o">=</span><span class="n">graphics</span><span class="o">.</span><span class="nc">color</span><span class="o">.</span><span class="n">red</span><span class="p">)</span>
+        <span class="n">graphics2</span> <span class="o">=</span> <span class="p">{</span><span class="s1">'type'</span><span class="p">:</span><span class="s1">'Line'</span><span class="p">,</span> <span class="s1">'data'</span><span class="p">:</span> <span class="nb">list</span><span class="p">(</span><span class="n">p</span><span class="p">)</span><span class="o">+</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span> <span class="s1">'color'</span><span class="p">:</span><span class="n">graphics</span><span class="o">.</span><span class="nc">color</span><span class="o">.</span><span class="n">blue</span><span class="p">}</span>
+    <span class="k">return</span> <span class="p">[</span><span class="n">graphics1</span><span class="p">,</span> <span class="n">graphics2</span><span class="p">]</span>
+
+<span class="c1">#now add object instead of object in mini-example:</span>
+<span class="n">oGenericODE2</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">AddObject</span><span class="p">(</span><span class="nc">ObjectGenericODE2</span><span class="p">(</span><span class="n">nodeNumbers</span><span class="o">=</span><span class="p">[</span><span class="n">nMass0</span><span class="p">,</span><span class="n">nMass1</span><span class="p">],</span>
+                   <span class="n">massMatrix</span><span class="o">=</span><span class="n">M</span><span class="p">,</span> <span class="n">stiffnessMatrix</span><span class="o">=</span><span class="n">K</span><span class="p">,</span> <span class="n">dampingMatrix</span><span class="o">=</span><span class="n">D</span><span class="p">,</span>
+                   <span class="n">forceUserFunction</span><span class="o">=</span><span class="nf">UFforce</span><span class="p">,</span> <span class="n">massMatrixUserFunction</span><span class="o">=</span><span class="n">UFmass</span><span class="p">,</span>
+                   <span class="n">visualization</span><span class="o">=</span><span class="nc">VObjectGenericODE2</span><span class="p">(</span><span class="n">graphicsDataUserFunction</span><span class="o">=</span><span class="n">UFgraphics</span><span class="p">)))</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="mini-example">
+<span id="miniexample-objectgenericode2"></span><h2>Mini example<a class="headerlink" href="#mini-example" title="Link to this heading"></a></h2>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1">#set up a mechanical system with two nodes; it has the structure: |~~M0~~M1</span>
+<span class="n">nMass0</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">AddNode</span><span class="p">(</span><span class="nc">NodePoint</span><span class="p">(</span><span class="n">referenceCoordinates</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]))</span>
+<span class="n">nMass1</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">AddNode</span><span class="p">(</span><span class="nc">NodePoint</span><span class="p">(</span><span class="n">referenceCoordinates</span><span class="o">=</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]))</span>
+
+<span class="n">mass</span> <span class="o">=</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">eye</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>      <span class="c1">#mass of nodes</span>
+<span class="n">stif</span> <span class="o">=</span> <span class="mi">5000</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">eye</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>     <span class="c1">#stiffness of nodes</span>
+<span class="n">damp</span> <span class="o">=</span> <span class="mi">50</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">eye</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>      <span class="c1">#damping of nodes</span>
+<span class="n">Z</span> <span class="o">=</span> <span class="mf">0.</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">eye</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>          <span class="c1">#matrix with zeros</span>
+<span class="c1">#build mass, stiffness and damping matrices (:</span>
+<span class="n">M</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">block</span><span class="p">([[</span><span class="n">mass</span><span class="p">,</span>         <span class="mf">0.</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">eye</span><span class="p">(</span><span class="mi">3</span><span class="p">)],</span>
+              <span class="p">[</span><span class="mf">0.</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">eye</span><span class="p">(</span><span class="mi">3</span><span class="p">),</span> <span class="n">mass</span>        <span class="p">]</span> <span class="p">])</span>
+<span class="n">K</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">block</span><span class="p">([[</span><span class="mi">2</span><span class="o">*</span><span class="n">stif</span><span class="p">,</span> <span class="o">-</span><span class="n">stif</span><span class="p">],</span>
+              <span class="p">[</span> <span class="o">-</span><span class="n">stif</span><span class="p">,</span>  <span class="n">stif</span><span class="p">]</span> <span class="p">])</span>
+<span class="n">D</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">block</span><span class="p">([[</span><span class="mi">2</span><span class="o">*</span><span class="n">damp</span><span class="p">,</span> <span class="o">-</span><span class="n">damp</span><span class="p">],</span>
+              <span class="p">[</span> <span class="o">-</span><span class="n">damp</span><span class="p">,</span>  <span class="n">damp</span><span class="p">]</span> <span class="p">])</span>
+
+<span class="n">oGenericODE2</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">AddObject</span><span class="p">(</span><span class="nc">ObjectGenericODE2</span><span class="p">(</span><span class="n">nodeNumbers</span><span class="o">=</span><span class="p">[</span><span class="n">nMass0</span><span class="p">,</span><span class="n">nMass1</span><span class="p">],</span> 
+                                               <span class="n">massMatrix</span><span class="o">=</span><span class="n">M</span><span class="p">,</span> 
+                                               <span class="n">stiffnessMatrix</span><span class="o">=</span><span class="n">K</span><span class="p">,</span>
+                                               <span class="n">dampingMatrix</span><span class="o">=</span><span class="n">D</span><span class="p">))</span>
+
+<span class="n">mNode1</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">AddMarker</span><span class="p">(</span><span class="nc">MarkerNodePosition</span><span class="p">(</span><span class="n">nodeNumber</span><span class="o">=</span><span class="n">nMass1</span><span class="p">))</span>
+<span class="n">mbs</span><span class="o">.</span><span class="nf">AddLoad</span><span class="p">(</span><span class="nc">Force</span><span class="p">(</span><span class="n">markerNumber</span> <span class="o">=</span> <span class="n">mNode1</span><span class="p">,</span> <span class="n">loadVector</span> <span class="o">=</span> <span class="p">[</span><span class="mi">10</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]))</span> <span class="c1">#static solution=10*(1/5000+1/5000)=0.0004</span>
+
+<span class="c1">#assemble and solve system for default parameters</span>
+<span class="n">mbs</span><span class="o">.</span><span class="nf">Assemble</span><span class="p">()</span>
+
+<span class="n">mbs</span><span class="o">.</span><span class="nf">SolveDynamic</span><span class="p">(</span><span class="n">solverType</span> <span class="o">=</span> <span class="n">exu</span><span class="o">.</span><span class="nc">DynamicSolverType</span><span class="o">.</span><span class="n">TrapezoidalIndex2</span><span class="p">)</span>
+
+<span class="c1">#check result at default integration time</span>
+<span class="n">exu</span><span class="o">.</span><span class="n">sys</span><span class="p">[</span><span class="s1">'testResult'</span><span class="p">]</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">GetNodeOutput</span><span class="p">(</span><span class="n">nMass1</span><span class="p">,</span> <span class="n">exu</span><span class="o">.</span><span class="nc">OutputVariableType</span><span class="o">.</span><span class="n">Position</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+</pre></div>
+</div>
+<p>Relevant Examples (Ex) and TestModels (TM) with weblink to github: <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/kinematicTreeAndMBS.py"><code class="docutils literal notranslate"><span class="pre">kinematicTreeAndMBS.py</span></code></a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/nMassOscillator.py"><code class="docutils literal notranslate"><span class="pre">nMassOscillator.py</span></code></a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/nMassOscillatorInteractive.py"><code class="docutils literal notranslate"><span class="pre">nMassOscillatorInteractive.py</span></code></a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/simulateInteractively.py"><code class="docutils literal notranslate"><span class="pre">simulateInteractively.py</span></code></a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/ACFtest.py"><code class="docutils literal notranslate"><span class="pre">ACFtest.py</span></code></a> (TM), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/coordinateVectorConstraintGenericODE2.py"><code class="docutils literal notranslate"><span class="pre">coordinateVectorConstraintGenericODE2.py</span></code></a> (TM), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/energiesTest.py"><code class="docutils literal notranslate"><span class="pre">energiesTest.py</span></code></a> (TM), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/genericODE2matrixFormatsTest.py"><code class="docutils literal notranslate"><span class="pre">genericODE2matrixFormatsTest.py</span></code></a> (TM), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/genericODE2test.py"><code class="docutils literal notranslate"><span class="pre">genericODE2test.py</span></code></a> (TM), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/linearFEMgenericODE2.py"><code class="docutils literal notranslate"><span class="pre">linearFEMgenericODE2.py</span></code></a> (TM), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/objectFFRFTest.py"><code class="docutils literal notranslate"><span class="pre">objectFFRFTest.py</span></code></a> (TM), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/objectGenericODE2Test.py"><code class="docutils literal notranslate"><span class="pre">objectGenericODE2Test.py</span></code></a> (TM), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/rigidBodyAsUserFunctionTest.py"><code class="docutils literal notranslate"><span class="pre">rigidBodyAsUserFunctionTest.py</span></code></a> (TM), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/solverExplicitODE1ODE2test.py"><code class="docutils literal notranslate"><span class="pre">solverExplicitODE1ODE2test.py</span></code></a> (TM)</p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="objectSuperElementGeneral.html" class="btn btn-neutral float-left" title="General info for all super elements" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="ObjectKinematicTree.html" class="btn btn-neutral float-right" title="ObjectKinematicTree" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

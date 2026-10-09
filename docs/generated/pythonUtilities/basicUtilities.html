@@ -1,0 +1,574 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Module: basicUtilities &mdash; Exudyn1.13.3 1.13.3 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=3ee1c6c6" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/rtd_sphinx_search.min.css" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/custom.css?v=e2783f0e" />
+
+  
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=b8a3e558"></script>
+      <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../../_static/copybutton.js?v=f281be69"></script>
+      <script src="../../../_static/js/rtd_search_config.js"></script>
+      <script src="../../../_static/js/rtd_sphinx_search.min.js"></script>
+      <script>window.MathJax = {"loader": {"load": ["[tex]/mathtools"]}, "tex": {"packages": {"[+]": ["mathtools"]}, "macros": {"ANCFdk": "{\\LU{0}{\\dv_k}}", "ANCFdkO": "{\\LU{0}{\\dv_{0,k}}}", "ANCFdkOtp": "{\\LU{0}{\\dv_{0,k}\\tp}}", "ANCFdkt": "{\\LU{0}{\\dot\\dv_k}}", "Am": "{\\mathbf{A}}", "Dm": "{\\mathbf{D}}", "Em": "{\\mathbf{E}}", "Gm": "{\\mathbf{G}}", "Im": "{\\mathbf{I}}", "ImThree": "{\\mathbf{I}_{3 \\times 3}}", "Jm": "{\\mathbf{J}}", "Km": "{\\mathbf{K}}", "Mm": "{\\mathbf{M}}", "Pm": "{\\mathbf{P}}", "Rm": "{\\mathbf{R}}", "Sm": "{\\mathbf{S}}", "Tm": "{\\mathbf{T}}", "av": "{\\mathbf{a}}", "bv": "{\\mathbf{b}}", "cv": "{\\mathbf{c}}", "diffANCF": ["{\\frac{\\partial #1}{\\partial \\qv_{ANCF}}}", 1], "diffANCFdk": "{\\diffANCFmI{\\ANCFdk}}", "diffANCFmI": ["{\\frac{\\partial #1}{\\partial \\qv_{ANCF,m1}}}", 1], "diffANCFmIt": ["{\\frac{\\partial #1}{\\partial \\dot \\qv_{ANCF,m1}}}", 1], "diffANCFt": ["{\\frac{\\partial #1}{\\partial \\dot \\qv_{ANCF}}}", 1], "diffmI": ["{\\frac{\\partial #1}{\\partial \\qv_{m1}}}", 1], "diffmIt": ["{\\frac{\\partial #1}{\\partial \\dot \\qv_{m1}}}", 1], "diffmOI": ["{\\frac{\\partial #1}{\\partial \\qv_{m0,m1}}}", 1], "diffmOIt": ["{\\frac{\\partial #1}{\\partial \\dot \\qv_{m0,m1}}}", 1], "diffmOt": ["{\\frac{\\partial #1}{\\partial \\dot \\qv_{m0}}}", 1], "dv": "{\\mathbf{d}}", "ev": "{\\mathbf{e}}", "fv": "{\\mathbf{f}}", "gv": "{\\mathbf{g}}", "hv": "{\\mathbf{h}}", "nv": "{\\mathbf{n}}", "pv": "{\\mathbf{p}}", "qv": "{\\mathbf{q}}", "rv": "{\\mathbf{r}}", "sv": "{\\mathbf{s}}", "tv": "{\\mathbf{t}}", "uv": "{\\mathbf{u}}", "vv": "{\\mathbf{v}}", "xv": "{\\mathbf{x}}", "yv": "{\\mathbf{y}}", "zv": "{\\mathbf{z}}", "vspace": ["{}", 1], "ra": "{\\rightarrow}", "Rcal": "{\\mathbb{R}}", "Ccal": "{\\mathbb{C}}", "Ncal": "{\\mathbb{N}}", "Rot": "{\\mathbf{A}}", "dd": "{\\mathrm{d}}", "ps": "{p_\\mathrm{s}}", "co": "{\\mathrm{c}}", "si": "{\\mathrm{s}}", "tp": "{^\\mathrm{T}}", "diag": "{\\mathrm{diag}}", "vec": "{\\mathrm{vec}}", "Null": "{\\mathbf{0}}", "varepsilonDot": "{\\boldsymbol{\\varepsilon}}", "talpha": "{\\boldsymbol{\\alpha}}", "tbeta": "{\\boldsymbol{\\beta}}", "tgamma": "{\\boldsymbol{\\gamma}}", "tchi": "{\\boldsymbol{\\chi}}", "tdelta": "{\\boldsymbol{\\delta}}", "teps": "{\\boldsymbol{\\varepsilon}}", "tepsDot": "{\\boldsymbol{\\dot \\varepsilon}}", "teta": "{\\boldsymbol{\\eta}}", "tkappa": "{\\boldsymbol{\\kappa}}", "tkappaDot": "{\\boldsymbol{\\dot \\kappa}}", "tphi": "{\\boldsymbol{\\phi}}", "boldVarPhi": "{\\boldsymbol{\\varphi}}", "tPhi": "{\\boldsymbol{\\Phi}}", "ttheta": "{\\boldsymbol{\\theta}}", "tTheta": "{\\boldsymbol{\\Theta}}", "tlambda": "{\\boldsymbol{\\lambda}}", "tnu": "{\\boldsymbol{\\nu}}", "tmu": "{\\boldsymbol{\\mu}}", "tpsi": "{\\boldsymbol{\\psi}}", "tPsi": "{\\boldsymbol{\\Psi}}", "ttau": "{\\boldsymbol{\\tau}}", "tsigma": "{\\boldsymbol{\\sigma}}", "txi": "{\\boldsymbol{\\xi}}", "tzeta": "{\\boldsymbol{\\zeta}}", "tomega": "{\\boldsymbol{\\omega}}", "tOmega": "{\\boldsymbol{\\Omega}}", "vareps": "{\\varepsilon}", "myoverline": ["\\overline{#1}", 1], "pluseq": "\\mathrel{+}=", "LU": ["{\\prescript{#1}{}{#2}\\,}", 2], "LUX": ["{\\prescript{#1}{}{#2}#3\\,}", 3], "LUR": ["{\\prescript{#1}{}{#2}_{#3}\\,}", 3], "LURU": ["{\\prescript{#1}{}{#2}_{#3}^{#4}\\,}", 4], "LLdot": ["{\\prescript{}{#1}{\\dot{#2}}_{#3}\\,}", 3], "vr": ["{\\left[ \\begin{array}{c} { #1}\\vspace{0.04cm} \\\\ { #2}\\vspace{0.04cm} \\\\ { #3} \\end{array} \\right]}", 3], "mr": ["{\\left[ \\begin{array}{ccc} #1 & #2 & #3 \\vspace{0.04cm}\\\\ #4 & #5 & #6 \\vspace{0.04cm}\\\\ #7 & #8 & #9  \\end{array} \\right]}", 9], "vp": ["{\\left[ \\begin{array}{c} { #1} \\vspace{0.04cm}\\\\ { #2} \\end{array} \\right]}", 2], "mp": ["{\\left[ \\begin{array}{cc} #1 & #2 \\vspace{0.04cm}\\\\ #3 & #4 \\end{array} \\right]}", 4], "mfour": ["{\\left[ \\begin{array}{cccc} { #1} \\\\ { #2} \\\\ { #3} \\\\ { #4} \\end{array} \\right]}", 4], "vfour": ["{\\left[ \\begin{array}{c} { #1} \\\\ { #2} \\\\ { #3} \\\\ { #4} \\end{array} \\right]}", 4], "vrRow": ["{[#1,\\, #2,\\, #3]}", 3], "vsix": ["{\\left[ \\begin{array}{c} { #1} \\\\ { #2} \\\\ { #3} \\\\ { #4} \\\\ { #5} \\\\ { #6} \\end{array} \\right]}", 6], "vsixb": ["{\\begin{array}{c} { #1} \\\\ { #2} \\\\ { #3} \\\\ { #4} \\\\ { #5} \\\\ { #6} \\end{array} }", 6], "vsixs": ["{ \\begin{array}{c} { #1} \\\\ { #2} \\\\ { #3} \\\\ { #4} \\\\ { #5} \\\\ { #6} \\end{array} }", 6], "SO": "{q}", "FO": "{y}", "AE": "{\\lambda}", "SYS": "{s}", "SON": "{$2^\\mathrm{nd}$ order differential equations}", "FON": "{$1^\\mathrm{st}$ order differential equations}", "AEN": "{algebraic equations}", "Bm": "{\\mathbf{B}}", "Cm": "{\\mathbf{C}}", "Fm": "{\\mathbf{F}}", "SYSN": "{system equations}", "cIni": "{_\\mathrm{ini}}", "cRef": "{_\\mathrm{ref}}", "cCur": "{_\\mathrm{cur}}", "cVis": "{_\\mathrm{vis}}", "cSOS": "{_\\mathrm{start\\;of\\;step}}", "cConfig": "{_\\mathrm{config}}", "pLoc": "{\\mathbf{b}}", "pLocB": "{\\,^{b}{\\mathbf{v}}}", "pRef": "{\\mathbf{r}}", "pRefG": "{\\,^{0}{\\mathbf{r}}}", "indf": "{_\\mathrm{f}}", "indt": "{_\\mathrm{t}}", "indr": "{_\\mathrm{r}}", "indtt": "{_\\mathrm{tt}}", "indrr": "{_\\mathrm{rr}}", "indff": "{_\\mathrm{ff}}", "indtf": "{_\\mathrm{tf}}", "indrf": "{_\\mathrm{rf}}", "indtr": "{_\\mathrm{tr}}", "omegaBDtilde": "{\\LU{b}{\\tilde \\tomega_\\mathrm{bd}}}", "indrigid": "{_\\mathrm{rigid}}", "indred": "{_\\mathrm{red}}", "induser": "{_\\mathrm{user}}", "indu": "{_\\mathrm{u}}", "termA": ["{\\color{blue}{#1}}", 1], "termB": ["{\\color{red}{#1}}", 1], "termC": ["{\\color{green}{#1}}", 1], "acc": "{\\ddot{\\mathbf{q}}}", "GA": "{G\\alpha}", "Hm": "{\\mathbf{H}}", "ImTwo": "{\\mathbf{I}_{2 \\times 2}}", "Lm": "{\\mathbf{L}}", "Qm": "{\\mathbf{Q}}", "Vm": "{\\mathbf{V}}", "Wm": "{\\mathbf{W}}", "Xm": "{\\mathbf{X}}", "Ym": "{\\mathbf{Y}}", "aalg": "{\\mathbf{a}}", "iv": "{\\mathbf{i}}", "jv": "{\\mathbf{j}}", "kv": "{\\mathbf{k}}", "lv": "{\\mathbf{l}}", "mv": "{\\mathbf{m}}", "ov": "{\\mathbf{o}}", "vel": "{\\mathbf{v}}", "wv": "{\\mathbf{w}}"}}, "options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+      <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-mml-chtml.js"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+    <link rel="next" title="Module: beams" href="beams.html" />
+    <link rel="prev" title="Module: artificialIntelligence" href="artificialIntelligence.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            Exudyn1.13.3
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Exudyn User Manual</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../README.html">Exudyn</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../manual/gettingStarted.html">Installation and getting started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../manual/introduction.html">Overview on Exudyn</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../manual/introductionBasics.html">Exudyn basics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../manual/tutorial.html">Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../manual/GUI.html">Renderer, graphics and visualization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../manual/performanceErrors.html">Performance, errors and solver failures</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../manual/introductionAdvanced.html">Advanced topics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../manual/notation.html">Notation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../manual/theory.html">Theory and formulations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../manual/solver.html">Solvers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../cInterface/cInterfaceIndex.html">Python-C++ command interface</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Reference Manual</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../items/itemsIndex.html">Items reference manual</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="utilitiesIndex.html">Python Utility Functions</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="advancedUtilities.html">Module: advancedUtilities</a></li>
+<li class="toctree-l2"><a class="reference internal" href="artificialIntelligence.html">Module: artificialIntelligence</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Module: basicUtilities</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#function-clearworkspace">Function: ClearWorkspace</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#function-smartround2string">Function: SmartRound2String</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#function-normalize">Function: Normalize</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#function-gaussintegrate">Function: GaussIntegrate</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#function-lobattointegrate">Function: LobattoIntegrate</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#function-getothermarker">Function: GetOtherMarker</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#function-getjointargs">Function: GetJointArgs</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#function-showonlyobjects">Function: ShowOnlyObjects</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#function-highlightitem">Function: HighlightItem</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#function-ufsensorrecord">Function: UFsensorRecord</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#function-addsensorrecorder">Function: AddSensorRecorder</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#function-uiwindowsuppressed">Function: UIWindowSuppressed</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#function-outputfilepath">Function: OutputFilePath</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#function-createdirectoryforfile">Function: CreateDirectoryForFile</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#function-loadsolutionfile">Function: LoadSolutionFile</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#function-numpyint8arraytostring">Function: NumpyInt8ArrayToString</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#function-binaryreadindex">Function: BinaryReadIndex</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#function-binaryreadreal">Function: BinaryReadReal</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#function-binaryreadstring">Function: BinaryReadString</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#function-binaryreadarrayindex">Function: BinaryReadArrayIndex</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#function-binaryreadrealvector">Function: BinaryReadRealVector</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#function-loadbinarysolutionfile">Function: LoadBinarySolutionFile</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#function-recoversolutionfile">Function: RecoverSolutionFile</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#function-setsolutionstate">Function: SetSolutionState</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#function-animatesolution">Function: AnimateSolution</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="beams.html">Module: beams</a></li>
+<li class="toctree-l2"><a class="reference internal" href="demos.html">Module: demos</a></li>
+<li class="toctree-l2"><a class="reference internal" href="FEM.html">Module: FEM</a></li>
+<li class="toctree-l2"><a class="reference internal" href="graphics.html">Module: graphics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="graphicsDataUtilities.html">Module: graphicsDataUtilities</a></li>
+<li class="toctree-l2"><a class="reference internal" href="misc.GUI.html">Module: misc.GUI</a></li>
+<li class="toctree-l2"><a class="reference internal" href="misc.settingsUtilities.html">Module: misc.settingsUtilities</a></li>
+<li class="toctree-l2"><a class="reference internal" href="interactive.html">Module: interactive</a></li>
+<li class="toctree-l2"><a class="reference internal" href="kinematicTree.html">Module: kinematicTree</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lieGroupBasics.html">Module: lieGroupBasics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="misc.mainSystemExtensions.html">Module: misc.mainSystemExtensions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="particles.html">Module: particles</a></li>
+<li class="toctree-l2"><a class="reference internal" href="physics.html">Module: physics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="plot.html">Module: plot</a></li>
+<li class="toctree-l2"><a class="reference internal" href="processing.html">Module: processing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rigidBodyUtilities.html">Module: rigidBodyUtilities</a></li>
+<li class="toctree-l2"><a class="reference internal" href="robotics.html">Module: robotics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="robotics.rosInterface.html">Module: robotics.rosInterface</a></li>
+<li class="toctree-l2"><a class="reference internal" href="robotics.future.html">Module: robotics.future</a></li>
+<li class="toctree-l2"><a class="reference internal" href="robotics.models.html">Module: robotics.models</a></li>
+<li class="toctree-l2"><a class="reference internal" href="robotics.mobile.html">Module: robotics.mobile</a></li>
+<li class="toctree-l2"><a class="reference internal" href="robotics.motion.html">Module: robotics.motion</a></li>
+<li class="toctree-l2"><a class="reference internal" href="robotics.special.html">Module: robotics.special</a></li>
+<li class="toctree-l2"><a class="reference internal" href="robotics.utilities.html">Module: robotics.utilities</a></li>
+<li class="toctree-l2"><a class="reference internal" href="shells.html">Module: shells</a></li>
+<li class="toctree-l2"><a class="reference internal" href="signalProcessing.html">Module: signalProcessing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="solver.html">Module: solver</a></li>
+<li class="toctree-l2"><a class="reference internal" href="utilities.html">Module: utilities</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../structures/structuresIndex.html">Structures and Settings</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../references.html">References</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Developer documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../dev/README.html">Exudyn developer documentation</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">How-to notes</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../howTo/condaEnvironments.html">Conda environments for Exudyn</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../howTo/sphinxDocs.html">Building the documentation</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Examples, models and issues</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../examples/examplesIndex.html">Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../testModels/testModelsIndex.html">TestModels</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../abbreviations.html">List of Abbreviations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../manual/revisions.html">Revisions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../CHANGELOG.html">Changelog</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../trackerlog.html">Issue tracker</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">Exudyn1.13.3</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="utilitiesIndex.html">Python Utility Functions</a></li>
+      <li class="breadcrumb-item active">Module: basicUtilities</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../../_sources/docs/generated/pythonUtilities/basicUtilities.md.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <!-- GENERATED by tools/generators/utilityDocsEmitter.py from the docstrings of python/exudyn - do not edit -->
+<section class="tex2jax_ignore mathjax_ignore" id="module-basicutilities">
+<span id="sec-module-basicutilities"></span><h1>Module: basicUtilities<a class="headerlink" href="#module-basicutilities" title="Link to this heading"></a></h1>
+<p>Basic utility functions and constants; they depend on numpy only, not on exudyn.</p>
+<ul class="simple">
+<li><p><strong>Author</strong>: Johannes Gerstmayr</p></li>
+<li><p><strong>Date</strong>: 2020-03-10 (created)</p></li>
+<li><p><strong>Notes</strong>: Additional constants are defined:     pi = 3.1415926535897932     sqrt2 = 2**0.5    g=9.81    Two variables ‘gaussIntegrationPoints’ and ‘gaussIntegrationWeights’ define integration points and weights for function GaussIntegrate(…)</p></li>
+</ul>
+<section id="function-clearworkspace">
+<span id="sec-basicutilities-clearworkspace"></span><h2>Function: ClearWorkspace<a class="headerlink" href="#function-clearworkspace" title="Link to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/basicUtilities.py#L44"><code class="docutils literal notranslate"><span class="pre">ClearWorkspace()</span></code></a></p>
+<ul class="simple">
+<li><p><strong>function description</strong>: clear all workspace variables except for system variables with ‘_’ at beginning, ‘func’ or ‘module’ in name; it also deletes all items in exudyn.sys and exudyn.variables, EXCEPT from exudyn.sys[‘renderState’] for pertaining the previous view of the renderer</p></li>
+<li><p><strong>notes</strong>: Use this function with CARE! In Spyder, it is certainly safer to add the preference Run<span class="math notranslate nohighlight">\(\ra\)</span>’remove all variables before execution’. It is recommended to call ClearWorkspace() at the very beginning of your models, to avoid that variables still exist from previous computations which may destroy repeatability of results</p></li>
+</ul>
+<p><em>example</em>:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span>  <span class="kn">import</span><span class="w"> </span><span class="nn">exudyn</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">exu</span>
+  <span class="kn">import</span><span class="w"> </span><span class="nn">exudyn.utilities</span>
+  <span class="c1">#clear workspace at the very beginning, before loading other modules and potentially destroying unwanted things ...</span>
+  <span class="nf">ClearWorkspace</span><span class="p">()</span>       <span class="c1">#cleanup</span>
+  <span class="c1">#now continue with other code</span>
+  <span class="kn">from</span><span class="w"> </span><span class="nn">exudyn.itemInterface</span><span class="w"> </span><span class="kn">import</span> <span class="o">*</span>
+  <span class="n">SC</span> <span class="o">=</span> <span class="n">exu</span><span class="o">.</span><span class="nc">SystemContainer</span><span class="p">()</span>
+  <span class="n">mbs</span> <span class="o">=</span> <span class="n">SC</span><span class="o">.</span><span class="nf">AddSystem</span><span class="p">()</span>
+  <span class="o">...</span>
+</pre></div>
+</div>
+<p>Relevant Examples (Ex) and TestModels (TM) with weblink to github: <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/springDamperUserFunctionNumbaJIT.py"><code class="docutils literal notranslate"><span class="pre">springDamperUserFunctionNumbaJIT.py</span></code></a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/ACFtest.py"><code class="docutils literal notranslate"><span class="pre">ACFtest.py</span></code></a> (TM)</p>
+</section>
+<section id="function-smartround2string">
+<span id="sec-basicutilities-smartround2string"></span><h2>Function: SmartRound2String<a class="headerlink" href="#function-smartround2string" title="Link to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/basicUtilities.py#L94"><code class="docutils literal notranslate"><span class="pre">SmartRound2String(x,</span> <span class="pre">prec</span> <span class="pre">=</span> <span class="pre">3)</span></code></a></p>
+<ul class="simple">
+<li><p><strong>function description</strong>: round to max number of digits; may give more digits if this is shorter; using in general the format() with ‘.g’ option, but keeping decimal point and using exponent where necessary</p></li>
+</ul>
+</section>
+<section id="function-normalize">
+<span id="sec-basicutilities-normalize"></span><h2>Function: Normalize<a class="headerlink" href="#function-normalize" title="Link to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/basicUtilities.py#L106"><code class="docutils literal notranslate"><span class="pre">Normalize(v)</span></code></a></p>
+<ul class="simple">
+<li><p><strong>function description</strong>: take a vector and return it normalized to L2-norm 1; a zero vector is returned as zero vector</p></li>
+<li><p><strong>input</strong>: vector v as list or in numpy format</p></li>
+<li><p><strong>output</strong>: list: v multiplied with a scalar such that its L2-norm is 1, or the zero vector; a list, as callers append the result to lists of normals</p></li>
+</ul>
+<p>Relevant Examples (Ex) and TestModels (TM) with weblink to github: <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/contactCurveWithLongCurve.py"><code class="docutils literal notranslate"><span class="pre">contactCurveWithLongCurve.py</span></code></a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/NGsolveCMStutorial.py"><code class="docutils literal notranslate"><span class="pre">NGsolveCMStutorial.py</span></code></a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/NGsolveGeometry.py"><code class="docutils literal notranslate"><span class="pre">NGsolveGeometry.py</span></code></a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/NGsolvePistonEngine.py"><code class="docutils literal notranslate"><span class="pre">NGsolvePistonEngine.py</span></code></a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/ObjectFFRFconvergenceTestHinge.py"><code class="docutils literal notranslate"><span class="pre">ObjectFFRFconvergenceTestHinge.py</span></code></a> (Ex)</p>
+</section>
+<section id="function-gaussintegrate">
+<span id="sec-basicutilities-gaussintegrate"></span><h2>Function: GaussIntegrate<a class="headerlink" href="#function-gaussintegrate" title="Link to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/basicUtilities.py#L138"><code class="docutils literal notranslate"><span class="pre">GaussIntegrate(functionOfX,</span> <span class="pre">integrationOrder,</span> <span class="pre">a,</span> <span class="pre">b)</span></code></a></p>
+<ul class="simple">
+<li><p><strong>function description</strong>: compute numerical integration of functionOfX in interval [a,b] using Gaussian integration</p></li>
+<li><p><strong>input</strong>:</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">functionOfX</span></code>: scalar, vector or matrix-valued function with scalar argument (X or other variable)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">integrationOrder</span></code>: odd number in {1,3,5,7,9}; currently maximum order is 9</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">a</span></code>: integration range start</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">b</span></code>: integration range end</p></li>
+</ul>
+</li>
+<li><p><strong>output</strong>: (scalar or vectorized) integral value</p></li>
+</ul>
+</section>
+<section id="function-lobattointegrate">
+<span id="sec-basicutilities-lobattointegrate"></span><h2>Function: LobattoIntegrate<a class="headerlink" href="#function-lobattointegrate" title="Link to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/basicUtilities.py#L178"><code class="docutils literal notranslate"><span class="pre">LobattoIntegrate(functionOfX,</span> <span class="pre">integrationOrder,</span> <span class="pre">a,</span> <span class="pre">b)</span></code></a></p>
+<ul class="simple">
+<li><p><strong>function description</strong>: compute numerical integration of functionOfX in interval [a,b] using Lobatto integration</p></li>
+<li><p><strong>input</strong>:</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">functionOfX</span></code>: scalar, vector or matrix-valued function with scalar argument (X or other variable)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">integrationOrder</span></code>: odd number in {1,3,5}; currently maximum order is 5</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">a</span></code>: integration range start</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">b</span></code>: integration range end</p></li>
+</ul>
+</li>
+<li><p><strong>output</strong>: (scalar or vectorized) integral value</p></li>
+</ul>
+</section>
+<section id="function-getothermarker">
+<span id="sec-basicutilities-getothermarker"></span><h2>Function: GetOtherMarker<a class="headerlink" href="#function-getothermarker" title="Link to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/basicUtilities.py#L211"><code class="docutils literal notranslate"><span class="pre">GetOtherMarker(mbs,</span> <span class="pre">bodyNumber,</span> <span class="pre">existingMarker,</span> <span class="pre">show</span> <span class="pre">=</span> <span class="pre">True)</span></code></a></p>
+<ul class="simple">
+<li><p><strong>function description</strong>: creates a new marker for body with bodyNumber using another marker existingMarker, such that the new marker has the same reference position as the existing marker, working for MarkerBodyPosition (no rotations included); this alleviates creation of markers and calculation of localPosition</p></li>
+<li><p><strong>input</strong>:</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">mbs</span></code>: multibody system where new marker is added to</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">bodyNumber</span></code>: body where new marker shall be attached to</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">existingMarker</span></code>: marker number which serves as a reference</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">show</span></code>: if True, marker is shown</p></li>
+</ul>
+</li>
+<li><p><strong>output</strong>: returns marker number of new marker</p></li>
+</ul>
+<p><em>example</em>:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span>  <span class="c1">#oBody0 = mbs.CreateRigidBody(...)</span>
+  <span class="c1">#oBody1 = mbs.CreateRigidBody(...)</span>
+  <span class="n">marker0</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">AddMarker</span><span class="p">(</span><span class="nc">MarkerBodyPosition</span><span class="p">(</span><span class="n">bodyNumber</span><span class="o">=</span><span class="n">oBody0</span><span class="p">,</span><span class="n">localPosition</span><span class="o">=</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]))</span>
+  <span class="c1">#create joint from one marker (with rotation) and other body</span>
+  <span class="n">mbs</span><span class="o">.</span><span class="nf">AddObject</span><span class="p">(</span><span class="nc">SphericalJoint</span><span class="p">(</span><span class="n">markerNumbers</span><span class="o">=</span><span class="p">[</span><span class="n">marker0</span><span class="p">,</span> <span class="nf">GetOtherMarker</span><span class="p">(</span><span class="n">mbs</span><span class="p">,</span> <span class="n">oBody1</span><span class="p">,</span> <span class="n">marker0</span><span class="p">)]))</span>
+</pre></div>
+</div>
+<p>Relevant Examples (Ex) and TestModels (TM) with weblink to github: <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/NGsolveFFRF.py"><code class="docutils literal notranslate"><span class="pre">NGsolveFFRF.py</span></code></a> (Ex)</p>
+</section>
+<section id="function-getjointargs">
+<span id="sec-basicutilities-getjointargs"></span><h2>Function: GetJointArgs<a class="headerlink" href="#function-getjointargs" title="Link to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/basicUtilities.py#L248"><code class="docutils literal notranslate"><span class="pre">GetJointArgs(mbs,</span> <span class="pre">markerNumber0</span> <span class="pre">=</span> <span class="pre">None,</span> <span class="pre">markerNumber1</span> <span class="pre">=</span> <span class="pre">None,</span> <span class="pre">rotationMarker0</span> <span class="pre">=</span> <span class="pre">None,</span> <span class="pre">rotationMarker1</span> <span class="pre">=</span> <span class="pre">None,</span> <span class="pre">bodyNumber0</span> <span class="pre">=</span> <span class="pre">None,</span> <span class="pre">bodyNumber1</span> <span class="pre">=</span> <span class="pre">None)</span></code></a></p>
+<ul class="simple">
+<li><p><strong>function description</strong>: creates input args for joints, based on an exiting marker (markerNumber, may be rigid or flex body), with optional existing rotationMarker and uses another rigid body (given as bodyNumber) to create a new MarkerBodyRigid and rotationMarker; this alleviates creation of joint args, see the example; inputs are either markerNumber0 [, rotationMarker0], bodyNumber1 OR markerNumber1 [, rotationMarker1], bodyNumber0</p></li>
+<li><p><strong>input</strong>:</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">mbs</span></code>: multibody system where new marker is added to</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">markerNumber0</span></code>: markerNumber of existing rigid body marker</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">markerNumber1</span></code>: markerNumber of existing rigid body marker</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">rotationMarker0</span></code>: rotation of the joint frame relative to the frame of markerNumber0; the joint then takes a copy of the marker turned by it</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">rotationMarker1</span></code>: the same for markerNumber1</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">bodyNumber0</span></code>: existing body used to create new marker</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">bodyNumber1</span></code>: existing body used to create new marker</p></li>
+</ul>
+</li>
+<li><p><strong>output</strong>: returns dict with the ‘markerNumbers’ list, ready to be used as args; the new marker carries the joint’s rotation as its localHT; for a rotationMarker0/1 given, the existing marker is replaced by a copy turned by it</p></li>
+</ul>
+<p><em>example</em>:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span>  <span class="c1">#oBody0 = mbs.CreateRigidBody(...)</span>
+  <span class="c1">#oBody1 = mbs.CreateRigidBody(...)</span>
+  <span class="n">marker0</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">AddMarker</span><span class="p">(</span><span class="nc">MarkerBodyRigid</span><span class="p">(</span><span class="n">bodyNumber</span><span class="o">=</span><span class="n">oBody0</span><span class="p">,</span>
+                                          <span class="nf">localHT</span><span class="o">=</span><span class="n">exu</span><span class="o">.</span><span class="nc">HT</span><span class="p">(</span><span class="n">rotation</span><span class="o">=</span><span class="nf">RotationMatrixX</span><span class="p">(</span><span class="mf">0.5</span><span class="o">*</span><span class="n">pi</span><span class="p">),</span> <span class="n">translation</span><span class="o">=</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">])))</span>
+  <span class="c1">#create joint from one marker (with rotation) and other body</span>
+  <span class="n">mbs</span><span class="o">.</span><span class="nf">AddObject</span><span class="p">(</span><span class="nc">RevoluteJointZ</span><span class="p">(</span><span class="o">**</span><span class="nf">GetJointArgs</span><span class="p">(</span><span class="n">mbs</span><span class="p">,</span> <span class="n">markerNumber0</span><span class="o">=</span><span class="n">marker0</span><span class="p">,</span> <span class="n">bodyNumber1</span><span class="o">=</span><span class="n">oBody1</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Relevant Examples (Ex) and TestModels (TM) with weblink to github: <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/jointArgsTest.py"><code class="docutils literal notranslate"><span class="pre">jointArgsTest.py</span></code></a> (TM), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/rotationMarkerDeprecationTest.py"><code class="docutils literal notranslate"><span class="pre">rotationMarkerDeprecationTest.py</span></code></a> (TM)</p>
+</section>
+<section id="function-showonlyobjects">
+<span id="sec-basicutilities-showonlyobjects"></span><h2>Function: ShowOnlyObjects<a class="headerlink" href="#function-showonlyobjects" title="Link to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/basicUtilities.py#L321"><code class="docutils literal notranslate"><span class="pre">ShowOnlyObjects(mbs,</span> <span class="pre">objectNumbers</span> <span class="pre">=</span> <span class="pre">[],</span> <span class="pre">showOthers</span> <span class="pre">=</span> <span class="pre">False)</span></code></a></p>
+<ul class="simple">
+<li><p><strong>function description</strong>: function to hide all objects in mbs except for those listed in objectNumbers</p></li>
+<li><p><strong>input</strong>:</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">mbs</span></code>: mbs containing object</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">objectNumbers</span></code>: integer object number or list of object numbers to be shown; if empty list [], then all objects are shown</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">showOthers</span></code>: if True, then all other objects are shown again</p></li>
+</ul>
+</li>
+<li><p><strong>output</strong>: changes all colors in mbs, which is NOT reversible</p></li>
+</ul>
+</section>
+<section id="function-highlightitem">
+<span id="sec-basicutilities-highlightitem"></span><h2>Function: HighlightItem<a class="headerlink" href="#function-highlightitem" title="Link to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/basicUtilities.py#L349"><code class="docutils literal notranslate"><span class="pre">HighlightItem(SC,</span> <span class="pre">mbs,</span> <span class="pre">itemNumber,</span> <span class="pre">itemType</span> <span class="pre">=</span> <span class="pre">exudyn.ItemType.Object,</span> <span class="pre">showNumbers</span> <span class="pre">=</span> <span class="pre">True)</span></code></a></p>
+<ul class="simple">
+<li><p><strong>function description</strong>: highlight a certain item with number itemNumber; set itemNumber to -1 to show again all objects</p></li>
+<li><p><strong>input</strong>:</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">mbs</span></code>: mbs containing object</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">itemNumbers</span></code>: integer object/node/etc number to be highlighted</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">itemType</span></code>: type of items to be highlighted</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">showNumbers</span></code>: if True, then the numbers of these items are shown</p></li>
+</ul>
+</li>
+</ul>
+</section>
+<section id="function-ufsensorrecord">
+<span id="sec-basicutilities-ufsensorrecord"></span><h2>Function: UFsensorRecord<a class="headerlink" href="#function-ufsensorrecord" title="Link to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/basicUtilities.py#L392"><code class="docutils literal notranslate"><span class="pre">UFsensorRecord(mbs,</span> <span class="pre">t,</span> <span class="pre">sensorNumbers,</span> <span class="pre">factors,</span> <span class="pre">configuration)</span></code></a></p>
+<ul class="simple">
+<li><p><strong>function description</strong>: Internal SensorUserFunction of the deprecated function AddSensorRecorder</p></li>
+<li><p><strong>notes</strong>: Warning: this method is DEPRECATED, use storeInternal in Sensors, which is much more performant; Note, that a sensor usually just passes through values of an existing sensor, while recording the values to a numpy array row-wise (time in first column, data in remaining columns)</p></li>
+</ul>
+</section>
+<section id="function-addsensorrecorder">
+<span id="sec-basicutilities-addsensorrecorder"></span><h2>Function: AddSensorRecorder<a class="headerlink" href="#function-addsensorrecorder" title="Link to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/basicUtilities.py#L411"><code class="docutils literal notranslate"><span class="pre">AddSensorRecorder(mbs,</span> <span class="pre">sensorNumber,</span> <span class="pre">endTime,</span> <span class="pre">sensorsWritePeriod,</span> <span class="pre">sensorOutputSize</span> <span class="pre">=</span> <span class="pre">3)</span></code></a></p>
+<ul class="simple">
+<li><p><strong>function description</strong>: DEPRECATED: Add a SensorUserFunction object in order to record sensor output internally; this avoids creation of files for sensors, which can speedup and simplify evaluation in ParameterVariation and GeneticOptimization; values are stored internally in mbs.variables[‘sensorRecord’+str(sensorNumber)] where sensorNumber is the mbs sensor number</p></li>
+<li><p><strong>input</strong>:</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">mbs</span></code>: mbs containing object</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">sensorNumber</span></code>: integer sensor number to be recorded</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">endTime</span></code>: end time of simulation, as given in simulationSettings.timeIntegration.endTime</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">sensorsWritePeriod</span></code>: as given in simulationSettings.solution.sensors.writePeriod</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">sensorOutputSize</span></code>: size of sensor data: 3 for Displacement, Position, etc. sensors; may be larger for RotationMatrix or Coordinates sensors; check this size by calling mbs.GetSensorValues(sensorNumber)</p></li>
+</ul>
+</li>
+<li><p><strong>output</strong>: adds an according SensorUserFunction sensor to mbs; returns new sensor number; during initialization a new numpy array is allocated in  mbs.variables[‘sensorRecord’+str(sensorNumber)] and the information is written row-wise: [time, sensorValue1, sensorValue2, …]</p></li>
+<li><p><strong>notes</strong>: Warning: this method is DEPRECATED, use storeInternal in Sensors, which is much more performant; Note, that a sensor usually just passes through values of an existing sensor, while recording the values to a numpy array row-wise (time in first column, data in remaining columns)</p></li>
+</ul>
+<p>Relevant Examples (Ex) and TestModels (TM) with weblink to github: <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/ComputeSensitivitiesExample.py"><code class="docutils literal notranslate"><span class="pre">ComputeSensitivitiesExample.py</span></code></a> (Ex)</p>
+</section>
+<section id="function-uiwindowsuppressed">
+<span id="sec-basicutilities-uiwindowsuppressed"></span><h2>Function: UIWindowSuppressed<a class="headerlink" href="#function-uiwindowsuppressed" title="Link to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/basicUtilities.py#L441"><code class="docutils literal notranslate"><span class="pre">UIWindowSuppressed(kind,</span> <span class="pre">callerInfo</span> <span class="pre">=</span> <span class="pre">'')</span></code></a></p>
+<ul class="simple">
+<li><p><strong>function description</strong>: ask exudyn.special.userInterface whether this kind of window must not open (#2477)</p></li>
+<li><p><strong>input</strong>:</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">kind</span></code>: one of ‘Renderer’, ‘SolutionViewer’, ‘Plots’, ‘Dialogs’; the name of the flag without the ‘suppress’ prefix</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">callerInfo</span></code>: name of the calling function, shown in the notice</p></li>
+</ul>
+</li>
+<li><p><strong>output</strong>: True if the window must not be opened</p></li>
+<li><p><strong>notes</strong>: The flags are set for automated runs - test runners, CI, AI-assisted development - where a window that waits for a human stops everything. A suppressed call is a silent no-op, except that the FIRST suppression of each kind prints one line, so that a window-less session is never a mystery.</p></li>
+</ul>
+<p><em>example</em>:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span>  <span class="k">if</span> <span class="nf">UIWindowSuppressed</span><span class="p">(</span><span class="s1">'Plots'</span><span class="p">,</span> <span class="s1">'PlotSensor'</span><span class="p">):</span> <span class="k">return</span> <span class="n">plt</span>
+</pre></div>
+</div>
+</section>
+<section id="function-outputfilepath">
+<span id="sec-basicutilities-outputfilepath"></span><h2>Function: OutputFilePath<a class="headerlink" href="#function-outputfilepath" title="Link to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/basicUtilities.py#L469"><code class="docutils literal notranslate"><span class="pre">OutputFilePath(fileName,</span> <span class="pre">callerInfo</span> <span class="pre">=</span> <span class="pre">'')</span></code></a></p>
+<ul class="simple">
+<li><p><strong>function description</strong>: merge a local file name with the global exudyn.config.outputDirectory, exactly as the solver does when it writes solution, sensor, image and print files (#2454)</p></li>
+<li><p><strong>input</strong>:</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">fileName</span></code>: file name as given by the user or stored in a sensor or in the simulation settings</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">callerInfo</span></code>: name of the calling function, used in the error message</p></li>
+</ul>
+</li>
+<li><p><strong>output</strong>: fileName unchanged if exudyn.config.outputDirectory is empty, otherwise the merged path</p></li>
+<li><p><strong>notes</strong>: The rule in Exudyn is: everything WRITTEN as output of a run follows exudyn.config.outputDirectory, and a file is READ from there only if its name comes from Exudyn itself - the simulation settings (SolutionViewer) or a sensor definition (PlotSensor). A file name that you pass to a function such as LoadSolutionFile is read exactly as given; wrap it in OutputFilePath(…) yourself if you want the output directory. Model data (mesh import, FEMinterface/ObjectFFRFreducedOrderInterface SaveToFile and LoadFromFile, SaveDictToHDF5/LoadDictFromHDF5) is never redirected.</p></li>
+</ul>
+<p><em>example</em>:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span>  <span class="n">exudyn</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">outputDirectory</span> <span class="o">=</span> <span class="s1">'run17'</span>
+  <span class="nf">OutputFilePath</span><span class="p">(</span><span class="s1">'solution/sensor.txt'</span><span class="p">)</span> <span class="c1">#'run17/solution/sensor.txt'</span>
+</pre></div>
+</div>
+<p>Relevant Examples (Ex) and TestModels (TM) with weblink to github: <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/ANCFALEtest.py"><code class="docutils literal notranslate"><span class="pre">ANCFALEtest.py</span></code></a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/beltDriveALE.py"><code class="docutils literal notranslate"><span class="pre">beltDriveALE.py</span></code></a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/beltDriveReevingSystem.py"><code class="docutils literal notranslate"><span class="pre">beltDriveReevingSystem.py</span></code></a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/beltDrivesComparison.py"><code class="docutils literal notranslate"><span class="pre">beltDrivesComparison.py</span></code></a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/bicycleIftommBenchmark.py"><code class="docutils literal notranslate"><span class="pre">bicycleIftommBenchmark.py</span></code></a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/abaqusImportTest.py"><code class="docutils literal notranslate"><span class="pre">abaqusImportTest.py</span></code></a> (TM), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/binarySolutionFileTest.py"><code class="docutils literal notranslate"><span class="pre">binarySolutionFileTest.py</span></code></a> (TM), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/compareFullModifiedNewton.py"><code class="docutils literal notranslate"><span class="pre">compareFullModifiedNewton.py</span></code></a> (TM), …</p>
+</section>
+<section id="function-createdirectoryforfile">
+<span id="sec-basicutilities-createdirectoryforfile"></span><h2>Function: CreateDirectoryForFile<a class="headerlink" href="#function-createdirectoryforfile" title="Link to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/basicUtilities.py#L511"><code class="docutils literal notranslate"><span class="pre">CreateDirectoryForFile(fileName)</span></code></a></p>
+<ul class="simple">
+<li><p><strong>function description</strong>: create the directory a file is going to be written into, if it does not exist yet</p></li>
+<li><p><strong>input</strong>:</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">fileName</span></code>: file name including its path; a name without any path is left alone</p></li>
+</ul>
+</li>
+<li><p><strong>output</strong>: fileName unchanged, so that the call can wrap the file name at the point of use</p></li>
+<li><p><strong>notes</strong>: Every Exudyn function that writes a file calls this first, so that a path such as ‘solution/sensor.txt’ - or anything under exudyn.config.outputDirectory - works without the caller having to create the directory. Failure is deliberately ignored: creating a directory can fail for reasons that do not stop the write (a read-only parent on a network share, a race with another process that just created it), and the write itself reports the real problem with a better message (#2493).</p></li>
+</ul>
+</section>
+<section id="function-loadsolutionfile">
+<span id="sec-basicutilities-loadsolutionfile"></span><h2>Function: LoadSolutionFile<a class="headerlink" href="#function-loadsolutionfile" title="Link to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/basicUtilities.py#L538"><code class="docutils literal notranslate"><span class="pre">LoadSolutionFile(fileName,</span> <span class="pre">safeMode</span> <span class="pre">=</span> <span class="pre">False,</span> <span class="pre">maxRows</span> <span class="pre">=</span> <span class="pre">-1,</span> <span class="pre">verbose</span> <span class="pre">=</span> <span class="pre">True,</span> <span class="pre">hasHeader</span> <span class="pre">=</span> <span class="pre">True)</span></code></a></p>
+<ul class="simple">
+<li><p><strong>function description</strong>: read coordinates solution file (exported during static or dynamic simulation with option exu.SimulationSettings().solution.file.name=’…’) into dictionary:</p></li>
+<li><p><strong>input</strong>:</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">fileName</span></code>: string containing directory and filename of stored coordinatesSolutionFile</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">saveMode</span></code>: if True, it loads lines directly to load inconsistent lines as well; use this for huge files (&gt;2GB); is slower but needs less memory!</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">verbose</span></code>: if True, some information is written when importing file (use for huge files to track progress)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">maxRows</span></code>: maximum number of data rows loaded, if saveMode=True; use this for huge files to reduce loading time; set -1 to load all rows</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">hasHeader</span></code>: set to False, if file is expected to have no header; if False, then some error checks related to file header are not performed</p></li>
+</ul>
+</li>
+<li><p><strong>output</strong>: dictionary with ‘data’: the matrix of stored solution vectors, ‘columnsExported’: a list with integer values showing the exported sizes [nODE2, nVel2, nAcc2, nODE1, nVel1, nAlgebraic, nData], ‘nColumns’: the number of data columns and ‘nRows’: the number of data rows</p></li>
+</ul>
+<p>Relevant Examples (Ex) and TestModels (TM) with weblink to github: <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/beltDriveALE.py"><code class="docutils literal notranslate"><span class="pre">beltDriveALE.py</span></code></a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/beltDriveReevingSystem.py"><code class="docutils literal notranslate"><span class="pre">beltDriveReevingSystem.py</span></code></a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/beltDrivesComparison.py"><code class="docutils literal notranslate"><span class="pre">beltDrivesComparison.py</span></code></a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/fourBarMechanism3D.py"><code class="docutils literal notranslate"><span class="pre">fourBarMechanism3D.py</span></code></a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/kinematicTreeAndMBS.py"><code class="docutils literal notranslate"><span class="pre">kinematicTreeAndMBS.py</span></code></a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/ACFtest.py"><code class="docutils literal notranslate"><span class="pre">ACFtest.py</span></code></a> (TM), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/ANCFbeltDrive.py"><code class="docutils literal notranslate"><span class="pre">ANCFbeltDrive.py</span></code></a> (TM), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/ANCFgeneralContactCircle.py"><code class="docutils literal notranslate"><span class="pre">ANCFgeneralContactCircle.py</span></code></a> (TM), …</p>
+</section>
+<section id="function-numpyint8arraytostring">
+<span id="sec-basicutilities-numpyint8arraytostring"></span><h2>Function: NumpyInt8ArrayToString<a class="headerlink" href="#function-numpyint8arraytostring" title="Link to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/basicUtilities.py#L676"><code class="docutils literal notranslate"><span class="pre">NumpyInt8ArrayToString(npArray)</span></code></a></p>
+<ul class="simple">
+<li><p><strong>function description</strong>: simple conversion of int8 arrays into strings (not highly efficient, so use only for short strings)</p></li>
+</ul>
+</section>
+<section id="function-binaryreadindex">
+<span id="sec-basicutilities-binaryreadindex"></span><h2>Function: BinaryReadIndex<a class="headerlink" href="#function-binaryreadindex" title="Link to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/basicUtilities.py#L685"><code class="docutils literal notranslate"><span class="pre">BinaryReadIndex(file,</span> <span class="pre">intType)</span></code></a></p>
+<ul class="simple">
+<li><p><strong>function description</strong>: read single Index from current file position in binary solution file</p></li>
+</ul>
+</section>
+<section id="function-binaryreadreal">
+<span id="sec-basicutilities-binaryreadreal"></span><h2>Function: BinaryReadReal<a class="headerlink" href="#function-binaryreadreal" title="Link to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/basicUtilities.py#L693"><code class="docutils literal notranslate"><span class="pre">BinaryReadReal(file,</span> <span class="pre">realType)</span></code></a></p>
+<ul class="simple">
+<li><p><strong>function description</strong>: read single Real from current file position in binary solution file</p></li>
+</ul>
+</section>
+<section id="function-binaryreadstring">
+<span id="sec-basicutilities-binaryreadstring"></span><h2>Function: BinaryReadString<a class="headerlink" href="#function-binaryreadstring" title="Link to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/basicUtilities.py#L701"><code class="docutils literal notranslate"><span class="pre">BinaryReadString(file,</span> <span class="pre">intType)</span></code></a></p>
+<ul class="simple">
+<li><p><strong>function description</strong>: read string from current file position in binary solution file</p></li>
+</ul>
+</section>
+<section id="function-binaryreadarrayindex">
+<span id="sec-basicutilities-binaryreadarrayindex"></span><h2>Function: BinaryReadArrayIndex<a class="headerlink" href="#function-binaryreadarrayindex" title="Link to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/basicUtilities.py#L709"><code class="docutils literal notranslate"><span class="pre">BinaryReadArrayIndex(file,</span> <span class="pre">intType)</span></code></a></p>
+<ul class="simple">
+<li><p><strong>function description</strong>: read Index array from current file position in binary solution file</p></li>
+</ul>
+</section>
+<section id="function-binaryreadrealvector">
+<span id="sec-basicutilities-binaryreadrealvector"></span><h2>Function: BinaryReadRealVector<a class="headerlink" href="#function-binaryreadrealvector" title="Link to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/basicUtilities.py#L717"><code class="docutils literal notranslate"><span class="pre">BinaryReadRealVector(file,</span> <span class="pre">intType,</span> <span class="pre">realType)</span></code></a></p>
+<ul class="simple">
+<li><p><strong>function description</strong>: read Real vector from current file position in binary solution file</p></li>
+<li><p><strong>output</strong>: return data as numpy array, or False if no data read</p></li>
+</ul>
+</section>
+<section id="function-loadbinarysolutionfile">
+<span id="sec-basicutilities-loadbinarysolutionfile"></span><h2>Function: LoadBinarySolutionFile<a class="headerlink" href="#function-loadbinarysolutionfile" title="Link to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/basicUtilities.py#L731"><code class="docutils literal notranslate"><span class="pre">LoadBinarySolutionFile(fileName,</span> <span class="pre">maxRows</span> <span class="pre">=</span> <span class="pre">-1,</span> <span class="pre">verbose</span> <span class="pre">=</span> <span class="pre">True)</span></code></a></p>
+<ul class="simple">
+<li><p><strong>function description</strong>: read BINARY coordinates solution file (exported during static or dynamic simulation with option exu.SimulationSettings().solution.file.name=’…’) into dictionary</p></li>
+<li><p><strong>input</strong>:</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">fileName</span></code>: string containing directory and filename of stored coordinatesSolutionFile</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">verbose</span></code>: if True, some information is written when importing file (use for huge files to track progress)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">maxRows</span></code>: maximum number of data rows loaded, if saveMode=True; use this for huge files to reduce loading time; set -1 to load all rows</p></li>
+</ul>
+</li>
+<li><p><strong>output</strong>: dictionary with ‘data’: the matrix of stored solution vectors, ‘columnsExported’: a list with integer values showing the exported sizes [nODE2, nVel2, nAcc2, nODE1, nVel1, nAlgebraic, nData], ‘nColumns’: the number of data columns and ‘nRows’: the number of data rows</p></li>
+</ul>
+</section>
+<section id="function-recoversolutionfile">
+<span id="sec-basicutilities-recoversolutionfile"></span><h2>Function: RecoverSolutionFile<a class="headerlink" href="#function-recoversolutionfile" title="Link to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/basicUtilities.py#L916"><code class="docutils literal notranslate"><span class="pre">RecoverSolutionFile(fileName,</span> <span class="pre">newFileName,</span> <span class="pre">verbose</span> <span class="pre">=</span> <span class="pre">0)</span></code></a></p>
+<ul class="simple">
+<li><p><strong>function description</strong>: recover solution file with last row not completely written (e.g., if crashed, interrupted or no flush file option set)</p></li>
+<li><p><strong>input</strong>:</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">fileName</span></code>: string containing directory and filename of stored coordinatesSolutionFile</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">newFileName</span></code>: string containing directory and filename of new coordinatesSolutionFile</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">verbose</span></code>: 0=no information, 1=basic information, 2=information per row</p></li>
+</ul>
+</li>
+<li><p><strong>output</strong>: writes only consistent rows of file to file with name newFileName</p></li>
+</ul>
+</section>
+<section id="function-setsolutionstate">
+<span id="sec-basicutilities-setsolutionstate"></span><h2>Function: SetSolutionState<a class="headerlink" href="#function-setsolutionstate" title="Link to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/basicUtilities.py#L975"><code class="docutils literal notranslate"><span class="pre">SetSolutionState(mbs,</span> <span class="pre">solution,</span> <span class="pre">row,</span> <span class="pre">configuration</span> <span class="pre">=</span> <span class="pre">exudyn.ConfigurationType.Current,</span> <span class="pre">sendRedrawSignal</span> <span class="pre">=</span> <span class="pre">True)</span></code></a></p>
+<ul class="simple">
+<li><p><strong>function description</strong>: load selected row of solution dictionary (previously loaded with LoadSolutionFile) into specific state; flag sendRedrawSignal is only used if configuration = exudyn.ConfigurationType.Visualization</p></li>
+</ul>
+</section>
+<section id="function-animatesolution">
+<span id="sec-basicutilities-animatesolution"></span><h2>Function: AnimateSolution<a class="headerlink" href="#function-animatesolution" title="Link to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/basicUtilities.py#L1001"><code class="docutils literal notranslate"><span class="pre">AnimateSolution(mbs,</span> <span class="pre">solution,</span> <span class="pre">rowIncrement</span> <span class="pre">=</span> <span class="pre">1,</span> <span class="pre">timeout</span> <span class="pre">=</span> <span class="pre">0.04,</span> <span class="pre">createImages</span> <span class="pre">=</span> <span class="pre">False,</span> <span class="pre">runLoop</span> <span class="pre">=</span> <span class="pre">False)</span></code></a></p>
+<ul class="simple">
+<li><p><strong>function description</strong>: This function is not further maintaned and should only be used if you do not have tkinter (like on some MacOS versions); use exudyn.interactive.SolutionViewer() instead! AnimateSolution consecutively load the rows of a solution file and visualize the result</p></li>
+<li><p><strong>input</strong>:</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">mbs</span></code>: the system used for animation</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">solution</span></code>: solution dictionary previously loaded with LoadSolutionFile; will be played from first to last row</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">rowIncrement</span></code>: can be set larger than 1 in order to skip solution frames: e.g. rowIncrement=10 visualizes every 10th row (frame)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">timeout</span></code>: in seconds is used between frames in order to limit the speed of animation; e.g. use timeout=0.04 to achieve approximately 25 frames per second</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">createImages</span></code>: creates consecutively images from the animation, which can be converted into an animation</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">runLoop</span></code>: if True, the animation is played in a loop until ‘q’ is pressed in render window</p></li>
+</ul>
+</li>
+<li><p><strong>output</strong>: renders the scene in mbs and changes the visualization state in mbs continuously</p></li>
+</ul>
+<p>Relevant Examples (Ex) and TestModels (TM) with weblink to github: <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/NGsolvePistonEngine.py"><code class="docutils literal notranslate"><span class="pre">NGsolvePistonEngine.py</span></code></a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/SliderCrank.py"><code class="docutils literal notranslate"><span class="pre">SliderCrank.py</span></code></a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/slidercrankWithMassSpring.py"><code class="docutils literal notranslate"><span class="pre">slidercrankWithMassSpring.py</span></code></a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/sliderCrankFloatingTest.py"><code class="docutils literal notranslate"><span class="pre">sliderCrankFloatingTest.py</span></code></a> (TM)</p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="artificialIntelligence.html" class="btn btn-neutral float-left" title="Module: artificialIntelligence" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="beams.html" class="btn btn-neutral float-right" title="Module: beams" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

@@ -1,0 +1,401 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Module: misc.settingsUtilities &mdash; Exudyn1.13.3 1.13.3 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=3ee1c6c6" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/rtd_sphinx_search.min.css" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/custom.css?v=e2783f0e" />
+
+  
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=b8a3e558"></script>
+      <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../../_static/copybutton.js?v=f281be69"></script>
+      <script src="../../../_static/js/rtd_search_config.js"></script>
+      <script src="../../../_static/js/rtd_sphinx_search.min.js"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+    <link rel="next" title="Module: interactive" href="interactive.html" />
+    <link rel="prev" title="Module: misc.GUI" href="misc.GUI.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            Exudyn1.13.3
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Exudyn User Manual</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../README.html">Exudyn</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../manual/gettingStarted.html">Installation and getting started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../manual/introduction.html">Overview on Exudyn</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../manual/introductionBasics.html">Exudyn basics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../manual/tutorial.html">Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../manual/GUI.html">Renderer, graphics and visualization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../manual/performanceErrors.html">Performance, errors and solver failures</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../manual/introductionAdvanced.html">Advanced topics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../manual/notation.html">Notation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../manual/theory.html">Theory and formulations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../manual/solver.html">Solvers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../cInterface/cInterfaceIndex.html">Python-C++ command interface</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Reference Manual</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../items/itemsIndex.html">Items reference manual</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="utilitiesIndex.html">Python Utility Functions</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="advancedUtilities.html">Module: advancedUtilities</a></li>
+<li class="toctree-l2"><a class="reference internal" href="artificialIntelligence.html">Module: artificialIntelligence</a></li>
+<li class="toctree-l2"><a class="reference internal" href="basicUtilities.html">Module: basicUtilities</a></li>
+<li class="toctree-l2"><a class="reference internal" href="beams.html">Module: beams</a></li>
+<li class="toctree-l2"><a class="reference internal" href="demos.html">Module: demos</a></li>
+<li class="toctree-l2"><a class="reference internal" href="FEM.html">Module: FEM</a></li>
+<li class="toctree-l2"><a class="reference internal" href="graphics.html">Module: graphics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="graphicsDataUtilities.html">Module: graphicsDataUtilities</a></li>
+<li class="toctree-l2"><a class="reference internal" href="misc.GUI.html">Module: misc.GUI</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Module: misc.settingsUtilities</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#function-getcomboboxlistsdict">Function: GetComboBoxListsDict</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#function-settingsleaflist">Function: SettingsLeafList</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#function-enumdisplayname">Function: EnumDisplayName</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#function-enumfullname">Function: EnumFullName</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#function-valueliteral">Function: ValueLiteral</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#function-settingscodelines">Function: SettingsCodeLines</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#function-compiledsettingsclass">Function: CompiledSettingsClass</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#function-defaultsettingsdictionary">Function: DefaultSettingsDictionary</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#function-settingsvaluestrings">Function: SettingsValueStrings</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#function-findmatches">Function: FindMatches</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#function-settingsprefix">Function: SettingsPrefix</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#function-changedsettings">Function: ChangedSettings</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#function-changedsettingscode">Function: ChangedSettingsCode</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#function-printchangedsettings">Function: PrintChangedSettings</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="interactive.html">Module: interactive</a></li>
+<li class="toctree-l2"><a class="reference internal" href="kinematicTree.html">Module: kinematicTree</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lieGroupBasics.html">Module: lieGroupBasics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="misc.mainSystemExtensions.html">Module: misc.mainSystemExtensions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="particles.html">Module: particles</a></li>
+<li class="toctree-l2"><a class="reference internal" href="physics.html">Module: physics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="plot.html">Module: plot</a></li>
+<li class="toctree-l2"><a class="reference internal" href="processing.html">Module: processing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rigidBodyUtilities.html">Module: rigidBodyUtilities</a></li>
+<li class="toctree-l2"><a class="reference internal" href="robotics.html">Module: robotics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="robotics.rosInterface.html">Module: robotics.rosInterface</a></li>
+<li class="toctree-l2"><a class="reference internal" href="robotics.future.html">Module: robotics.future</a></li>
+<li class="toctree-l2"><a class="reference internal" href="robotics.models.html">Module: robotics.models</a></li>
+<li class="toctree-l2"><a class="reference internal" href="robotics.mobile.html">Module: robotics.mobile</a></li>
+<li class="toctree-l2"><a class="reference internal" href="robotics.motion.html">Module: robotics.motion</a></li>
+<li class="toctree-l2"><a class="reference internal" href="robotics.special.html">Module: robotics.special</a></li>
+<li class="toctree-l2"><a class="reference internal" href="robotics.utilities.html">Module: robotics.utilities</a></li>
+<li class="toctree-l2"><a class="reference internal" href="shells.html">Module: shells</a></li>
+<li class="toctree-l2"><a class="reference internal" href="signalProcessing.html">Module: signalProcessing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="solver.html">Module: solver</a></li>
+<li class="toctree-l2"><a class="reference internal" href="utilities.html">Module: utilities</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../structures/structuresIndex.html">Structures and Settings</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../references.html">References</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Developer documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../dev/README.html">Exudyn developer documentation</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">How-to notes</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../howTo/condaEnvironments.html">Conda environments for Exudyn</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../howTo/sphinxDocs.html">Building the documentation</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Examples, models and issues</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../examples/examplesIndex.html">Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../testModels/testModelsIndex.html">TestModels</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../abbreviations.html">List of Abbreviations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../manual/revisions.html">Revisions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../CHANGELOG.html">Changelog</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../trackerlog.html">Issue tracker</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">Exudyn1.13.3</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="utilitiesIndex.html">Python Utility Functions</a></li>
+      <li class="breadcrumb-item active">Module: misc.settingsUtilities</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../../_sources/docs/generated/pythonUtilities/misc.settingsUtilities.md.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <!-- GENERATED by tools/generators/utilityDocsEmitter.py from the docstrings of python/exudyn - do not edit -->
+<section class="tex2jax_ignore mathjax_ignore" id="module-misc-settingsutilities">
+<span id="sec-module-misc-settingsutilities"></span><h1>Module: misc.settingsUtilities<a class="headerlink" href="#module-misc-settingsutilities" title="Link to this heading"></a></h1>
+<p>What a settings structure looks like as Python: which values it has, what each of
+them is called, what a value looks like in a script, and which of them differ from
+the defaults. It works on the dictionary GetDictionaryWithTypeInfo() returns, so
+every function here runs without a window and can be tested without one.</p>
+<ul class="simple">
+<li><p><strong>Author</strong>: Johannes Gerstmayr</p></li>
+<li><p><strong>Date</strong>: 2020-01-25 (as part of GUI.py), 2026-09-24 (own module)</p></li>
+</ul>
+<section id="function-getcomboboxlistsdict">
+<span id="sec-settingsutilities-getcomboboxlistsdict"></span><h2>Function: GetComboBoxListsDict<a class="headerlink" href="#function-getcomboboxlistsdict" title="Link to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/settingsUtilities.py#L67"><code class="docutils literal notranslate"><span class="pre">GetComboBoxListsDict(exu</span> <span class="pre">=</span> <span class="pre">None)</span></code></a></p>
+<ul class="simple">
+<li><p><strong>function description</strong>: The values a settings item of an enum type may take, as {typeName: [values]}. EVERY enum of the module, not a hand-written list of three: this named OutputVariableType, LinearSolverType and ItemType, and timeIntegration.solverType - a DynamicSolverType - was therefore edited as free text, where a typo is a silent wrong value (#2597). A pybind11 enum is recognised by its <strong>members</strong>, so an enum added to the module arrives here by itself.</p></li>
+<li><p><strong>input</strong>:</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">exu</span></code>: the exudyn module</p></li>
+</ul>
+</li>
+<li><p><strong>output</strong>: the dictionary the dialog picks its combo box entries from</p></li>
+</ul>
+</section>
+<section id="function-settingsleaflist">
+<span id="sec-settingsutilities-settingsleaflist"></span><h2>Function: SettingsLeafList<a class="headerlink" href="#function-settingsleaflist" title="Link to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/settingsUtilities.py#L255"><code class="docutils literal notranslate"><span class="pre">SettingsLeafList(dictionaryWithTypeInfo,</span> <span class="pre">path</span> <span class="pre">=</span> <span class="pre">'')</span></code></a></p>
+<ul class="simple">
+<li><p><strong>function description</strong>: every editable value of a settings structure, in tree order</p></li>
+<li><p><strong>input</strong>:</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">dictionaryWithTypeInfo</span></code>: what GetDictionaryWithTypeInfo() returns, or a part of it</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">path</span></code>: the dotted path the given dictionary sits at, ‘’ for the whole structure</p></li>
+</ul>
+</li>
+<li><p><strong>output</strong>: list of (path, value, valueString, vType, vSize, description); valueString is what the dialog shows in the cell, which is what everything else compares and copies, and value is what the settings structure holds</p></li>
+</ul>
+</section>
+<section id="function-enumdisplayname">
+<span id="sec-settingsutilities-enumdisplayname"></span><h2>Function: EnumDisplayName<a class="headerlink" href="#function-enumdisplayname" title="Link to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/settingsUtilities.py#L280"><code class="docutils literal notranslate"><span class="pre">EnumDisplayName(valueStr,</span> <span class="pre">vType)</span></code></a></p>
+<ul class="simple">
+<li><p><strong>function description</strong>: the enum value without the type in front of it: Displacement, not OutputVariableType.Displacement An enum is edited in a combo box as wide as the value column, and every entry of a list begins with the same type name - which is already in the type column beside it - so the part that tells the entries apart was pushed out of sight (#2635). Since #2640 this is <strong>the</strong> value string of an enum - what <code class="docutils literal notranslate"><span class="pre">ConvertValue2String</span></code> produces, what the cell shows, and what <code class="docutils literal notranslate"><span class="pre">ChangedSettings</span></code> compares - because shortening only the list left the cell unreadable the moment the box collapsed. The full name lives in exactly one place: <code class="docutils literal notranslate"><span class="pre">ValueLiteral</span></code>, which writes the Python.</p></li>
+<li><p><strong>input</strong>:</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">valueStr</span></code>: the value as str() writes it</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">vType</span></code>: the type name of the setting</p></li>
+</ul>
+</li>
+<li><p><strong>output</strong>: the value without its type prefix; anything else unchanged, bool included</p></li>
+</ul>
+</section>
+<section id="function-enumfullname">
+<span id="sec-settingsutilities-enumfullname"></span><h2>Function: EnumFullName<a class="headerlink" href="#function-enumfullname" title="Link to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/settingsUtilities.py#L303"><code class="docutils literal notranslate"><span class="pre">EnumFullName(displayName,</span> <span class="pre">vType)</span></code></a></p>
+<ul class="simple">
+<li><p><strong>function description</strong>: the inverse of EnumDisplayName: the name Python needs, which <code class="docutils literal notranslate"><span class="pre">ValueLiteral</span></code> writes</p></li>
+<li><p><strong>input</strong>:</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">displayName</span></code>: the value as the combo box shows it</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">vType</span></code>: the type name of the setting</p></li>
+</ul>
+</li>
+<li><p><strong>output</strong>: the value with its type prefix; an empty string, a bool and an already complete name unchanged</p></li>
+</ul>
+</section>
+<section id="function-valueliteral">
+<span id="sec-settingsutilities-valueliteral"></span><h2>Function: ValueLiteral<a class="headerlink" href="#function-valueliteral" title="Link to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/settingsUtilities.py#L319"><code class="docutils literal notranslate"><span class="pre">ValueLiteral(valueStr,</span> <span class="pre">vType,</span> <span class="pre">dictionaryTypesT</span> <span class="pre">=</span> <span class="pre">None)</span></code></a></p>
+<ul class="simple">
+<li><p><strong>function description</strong>: the value as PYTHON writes it: a string is quoted, an enum carries its module</p></li>
+<li><p><strong>input</strong>:</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">valueStr</span></code>: the value as the dialog shows it</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">vType</span></code>: the type name of the setting</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">dictionaryTypesT</span></code>: the lists of the types that have a fixed set of values</p></li>
+</ul>
+</li>
+<li><p><strong>output</strong>: a string that can stand on the right hand side of an assignment</p></li>
+</ul>
+</section>
+<section id="function-settingscodelines">
+<span id="sec-settingsutilities-settingscodelines"></span><h2>Function: SettingsCodeLines<a class="headerlink" href="#function-settingscodelines" title="Link to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/settingsUtilities.py#L338"><code class="docutils literal notranslate"><span class="pre">SettingsCodeLines(currentLeaves,</span> <span class="pre">referenceValueStrings,</span> <span class="pre">prefix,</span> <span class="pre">dictionaryTypesT</span> <span class="pre">=</span> <span class="pre">None)</span></code></a></p>
+<ul class="simple">
+<li><p><strong>function description</strong>: the settings that differ from a reference, as the lines that set them The comparison is on the string the dialog SHOWS, not on the value: that is what makes a float and an enum comparable at all, and it marks exactly what a user sees in the cell.</p></li>
+<li><p><strong>input</strong>:</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">currentLeaves</span></code>: SettingsLeafList(…), or the same six fields taken from the dialog</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">referenceValueStrings</span></code>: {path: valueString} of what is compared against - the defaults, or the values a dialog opened with; a path that is not in it counts as unchanged</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">prefix</span></code>: SettingsPrefix(…) of the structure</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">dictionaryTypesT</span></code>: the lists of the types that have a fixed set of values</p></li>
+</ul>
+</li>
+<li><p><strong>output</strong>: list of (path, line), in tree order</p></li>
+</ul>
+</section>
+<section id="function-compiledsettingsclass">
+<span id="sec-settingsutilities-compiledsettingsclass"></span><h2>Function: CompiledSettingsClass<a class="headerlink" href="#function-compiledsettingsclass" title="Link to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/settingsUtilities.py#L371"><code class="docutils literal notranslate"><span class="pre">CompiledSettingsClass(settingsStructure)</span></code></a></p>
+<ul class="simple">
+<li><p><strong>function description</strong>: the class the COMPILED module defines for this structure, which is not always its own A settings structure can be an instance of a Python subclass: <code class="docutils literal notranslate"><span class="pre">import</span> <span class="pre">exudyn</span></code> installs one for VisualizationSettings when ~/.exudyn/config.json holds any, so that a stored setting reaches every structure that is created (#2684). Constructing that subclass to find the DEFAULTS would apply the overrides to it and report them as the defaults - measured on the first attempt: openGL.multiSampling came back with 4 as its own default - so everything that shows a difference has to construct the compiled class instead.</p></li>
+<li><p><strong>input</strong>:</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">settingsStructure</span></code>: the structure being edited</p></li>
+</ul>
+</li>
+<li><p><strong>output</strong>: the first class of its mro that the compiled module defines; the structure’s own class when it is not a subclass, which is the normal case</p></li>
+</ul>
+</section>
+<section id="function-defaultsettingsdictionary">
+<span id="sec-settingsutilities-defaultsettingsdictionary"></span><h2>Function: DefaultSettingsDictionary<a class="headerlink" href="#function-defaultsettingsdictionary" title="Link to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/settingsUtilities.py#L395"><code class="docutils literal notranslate"><span class="pre">DefaultSettingsDictionary(settingsStructure)</span></code></a></p>
+<ul class="simple">
+<li><p><strong>function description</strong>: the defaults of a settings structure, as its own constructor produces them NOT from a SystemContainer, although that is the state a user really starts from: creating one ATTACHES IT TO THE RUNNING RENDER ENGINE (MainSystemContainer() calls AttachToRenderEngineInternal) and destroying one DETACHES it (Reset() -&gt; DetachFromRenderEngine), so a temporary container opened for a moment takes the render window away from the container that owns it - the window closes (#2625). The settings a container initialises are listed in containerInitialisedSettings above, and #2626 moves them where this function can see them. AND NOT BY CONSTRUCTING ANYTHING when the override settings are in use: the constructor of the compiled class itself applies a stored setting (#2691), so <code class="docutils literal notranslate"><span class="pre">exudyn.misc.overrideSettings.structureDefaults</span></code> holds what it produced BEFORE it was wrapped, and that is used when it is there.</p></li>
+<li><p><strong>input</strong>:</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">settingsStructure</span></code>: the structure being edited</p></li>
+</ul>
+</li>
+<li><p><strong>output</strong>: the dictionary with type info of a fresh structure of the same kind</p></li>
+</ul>
+</section>
+<section id="function-settingsvaluestrings">
+<span id="sec-settingsutilities-settingsvaluestrings"></span><h2>Function: SettingsValueStrings<a class="headerlink" href="#function-settingsvaluestrings" title="Link to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/settingsUtilities.py#L427"><code class="docutils literal notranslate"><span class="pre">SettingsValueStrings(dictionaryWithTypeInfo)</span></code></a></p>
+<ul class="simple">
+<li><p><strong>function description</strong>: {path: valueString} of a settings structure - what SettingsCodeLines compares against</p></li>
+</ul>
+</section>
+<section id="function-findmatches">
+<span id="sec-settingsutilities-findmatches"></span><h2>Function: FindMatches<a class="headerlink" href="#function-findmatches" title="Link to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/settingsUtilities.py#L433"><code class="docutils literal notranslate"><span class="pre">FindMatches(leaves,</span> <span class="pre">searchText)</span></code></a></p>
+<ul class="simple">
+<li><p><strong>function description</strong>: the settings a search text finds: the NAMES first, the descriptions second Several hundred values in a tree of folders, and the only way to a setting was knowing which folder it sits in.</p></li>
+<li><p><strong>input</strong>:</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">leaves</span></code>: SettingsLeafList(…) of the settings being searched</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">searchText</span></code>: what the user typed; case does not matter</p></li>
+</ul>
+</li>
+<li><p><strong>output</strong>: list of (path, label), name hits first, then hits in the path, then hits that are only in the description - those labelled with the part of the description that matched</p></li>
+</ul>
+</section>
+<section id="function-settingsprefix">
+<span id="sec-settingsutilities-settingsprefix"></span><h2>Function: SettingsPrefix<a class="headerlink" href="#function-settingsprefix" title="Link to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/settingsUtilities.py#L464"><code class="docutils literal notranslate"><span class="pre">SettingsPrefix(settingsStructure)</span></code></a></p>
+<ul class="simple">
+<li><p><strong>function description</strong>: the name a script uses for this settings structure, e.g. SC.visualizationSettings</p></li>
+</ul>
+</section>
+<section id="function-changedsettings">
+<span id="sec-settingsutilities-changedsettings"></span><h2>Function: ChangedSettings<a class="headerlink" href="#function-changedsettings" title="Link to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/settingsUtilities.py#L478"><code class="docutils literal notranslate"><span class="pre">ChangedSettings(settingsStructure,</span> <span class="pre">reference</span> <span class="pre">=</span> <span class="pre">None)</span></code></a></p>
+<ul class="simple">
+<li><p><strong>function description</strong>: every setting that differs from the defaults, as (path, the line that sets it)</p></li>
+<li><p><strong>input</strong>:</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">settingsStructure</span></code>: SC.visualizationSettings or a simulationSettings object</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">reference</span></code>: {path: valueString} to compare against; the defaults of the structure by default. SettingsValueStrings(structure.GetDictionaryWithTypeInfo()) taken earlier gives the changes since THAT moment instead</p></li>
+</ul>
+</li>
+<li><p><strong>output</strong>: list of (path, line), in tree order; empty if nothing differs</p></li>
+</ul>
+<p><em>example</em>:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span>  <span class="n">SC</span><span class="o">.</span><span class="nf">visualizationSettings</span><span class="o">.</span><span class="n">openGL</span><span class="o">.</span><span class="n">lineWidth</span> <span class="o">=</span> <span class="mi">2</span>
+  <span class="nf">ChangedSettings</span><span class="p">(</span><span class="n">SC</span><span class="o">.</span><span class="nf">visualizationSettings</span><span class="p">)</span>
+  <span class="c1">#[('openGL.lineWidth', 'SC.visualizationSettings.openGL.lineWidth = 2.0')]</span>
+</pre></div>
+</div>
+</section>
+<section id="function-changedsettingscode">
+<span id="sec-settingsutilities-changedsettingscode"></span><h2>Function: ChangedSettingsCode<a class="headerlink" href="#function-changedsettingscode" title="Link to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/settingsUtilities.py#L502"><code class="docutils literal notranslate"><span class="pre">ChangedSettingsCode(settingsStructure,</span> <span class="pre">reference</span> <span class="pre">=</span> <span class="pre">None,</span> <span class="pre">comment</span> <span class="pre">=</span> <span class="pre">True)</span></code></a></p>
+<ul class="simple">
+<li><p><strong>function description</strong>: what ChangedSettings found, as one pastable block of Python</p></li>
+<li><p><strong>input</strong>:</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">settingsStructure</span></code>: SC.visualizationSettings or a simulationSettings object</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">reference</span></code>: see ChangedSettings</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">comment</span></code>: True writes one ‘#’ line saying how many settings differ, which is what makes the block readable when it is stored somewhere</p></li>
+</ul>
+</li>
+<li><p><strong>output</strong>: the lines as one string, ‘’ if nothing differs and comment is False</p></li>
+<li><p><strong>notes</strong>: This is also what belongs in a solution file that has to be reproducible: simulationSettings.solution.file.information is written into the header of the solution file, and it takes any string.</p></li>
+</ul>
+</section>
+<section id="function-printchangedsettings">
+<span id="sec-settingsutilities-printchangedsettings"></span><h2>Function: PrintChangedSettings<a class="headerlink" href="#function-printchangedsettings" title="Link to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/settingsUtilities.py#L529"><code class="docutils literal notranslate"><span class="pre">PrintChangedSettings(settingsStructure,</span> <span class="pre">reference</span> <span class="pre">=</span> <span class="pre">None)</span></code></a></p>
+<ul class="simple">
+<li><p><strong>function description</strong>: print what a model changed, as the code that changes it</p></li>
+<li><p><strong>input</strong>:</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">settingsStructure</span></code>: SC.visualizationSettings or a simulationSettings object</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">reference</span></code>: see ChangedSettings</p></li>
+</ul>
+</li>
+<li><p><strong>output</strong>: None</p></li>
+</ul>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="misc.GUI.html" class="btn btn-neutral float-left" title="Module: misc.GUI" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="interactive.html" class="btn btn-neutral float-right" title="Module: interactive" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

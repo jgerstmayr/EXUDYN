@@ -1,0 +1,1149 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Module: rigidBodyUtilities &mdash; Exudyn1.13.3 1.13.3 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=3ee1c6c6" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/rtd_sphinx_search.min.css" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/custom.css?v=e2783f0e" />
+
+  
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=b8a3e558"></script>
+      <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../../_static/copybutton.js?v=f281be69"></script>
+      <script src="../../../_static/js/rtd_search_config.js"></script>
+      <script src="../../../_static/js/rtd_sphinx_search.min.js"></script>
+      <script>window.MathJax = {"loader": {"load": ["[tex]/mathtools"]}, "tex": {"packages": {"[+]": ["mathtools"]}, "macros": {"ANCFdk": "{\\LU{0}{\\dv_k}}", "ANCFdkO": "{\\LU{0}{\\dv_{0,k}}}", "ANCFdkOtp": "{\\LU{0}{\\dv_{0,k}\\tp}}", "ANCFdkt": "{\\LU{0}{\\dot\\dv_k}}", "Am": "{\\mathbf{A}}", "Dm": "{\\mathbf{D}}", "Em": "{\\mathbf{E}}", "Gm": "{\\mathbf{G}}", "Im": "{\\mathbf{I}}", "ImThree": "{\\mathbf{I}_{3 \\times 3}}", "Jm": "{\\mathbf{J}}", "Km": "{\\mathbf{K}}", "Mm": "{\\mathbf{M}}", "Pm": "{\\mathbf{P}}", "Rm": "{\\mathbf{R}}", "Sm": "{\\mathbf{S}}", "Tm": "{\\mathbf{T}}", "av": "{\\mathbf{a}}", "bv": "{\\mathbf{b}}", "cv": "{\\mathbf{c}}", "diffANCF": ["{\\frac{\\partial #1}{\\partial \\qv_{ANCF}}}", 1], "diffANCFdk": "{\\diffANCFmI{\\ANCFdk}}", "diffANCFmI": ["{\\frac{\\partial #1}{\\partial \\qv_{ANCF,m1}}}", 1], "diffANCFmIt": ["{\\frac{\\partial #1}{\\partial \\dot \\qv_{ANCF,m1}}}", 1], "diffANCFt": ["{\\frac{\\partial #1}{\\partial \\dot \\qv_{ANCF}}}", 1], "diffmI": ["{\\frac{\\partial #1}{\\partial \\qv_{m1}}}", 1], "diffmIt": ["{\\frac{\\partial #1}{\\partial \\dot \\qv_{m1}}}", 1], "diffmOI": ["{\\frac{\\partial #1}{\\partial \\qv_{m0,m1}}}", 1], "diffmOIt": ["{\\frac{\\partial #1}{\\partial \\dot \\qv_{m0,m1}}}", 1], "diffmOt": ["{\\frac{\\partial #1}{\\partial \\dot \\qv_{m0}}}", 1], "dv": "{\\mathbf{d}}", "ev": "{\\mathbf{e}}", "fv": "{\\mathbf{f}}", "gv": "{\\mathbf{g}}", "hv": "{\\mathbf{h}}", "nv": "{\\mathbf{n}}", "pv": "{\\mathbf{p}}", "qv": "{\\mathbf{q}}", "rv": "{\\mathbf{r}}", "sv": "{\\mathbf{s}}", "tv": "{\\mathbf{t}}", "uv": "{\\mathbf{u}}", "vv": "{\\mathbf{v}}", "xv": "{\\mathbf{x}}", "yv": "{\\mathbf{y}}", "zv": "{\\mathbf{z}}", "vspace": ["{}", 1], "ra": "{\\rightarrow}", "Rcal": "{\\mathbb{R}}", "Ccal": "{\\mathbb{C}}", "Ncal": "{\\mathbb{N}}", "Rot": "{\\mathbf{A}}", "dd": "{\\mathrm{d}}", "ps": "{p_\\mathrm{s}}", "co": "{\\mathrm{c}}", "si": "{\\mathrm{s}}", "tp": "{^\\mathrm{T}}", "diag": "{\\mathrm{diag}}", "vec": "{\\mathrm{vec}}", "Null": "{\\mathbf{0}}", "varepsilonDot": "{\\boldsymbol{\\varepsilon}}", "talpha": "{\\boldsymbol{\\alpha}}", "tbeta": "{\\boldsymbol{\\beta}}", "tgamma": "{\\boldsymbol{\\gamma}}", "tchi": "{\\boldsymbol{\\chi}}", "tdelta": "{\\boldsymbol{\\delta}}", "teps": "{\\boldsymbol{\\varepsilon}}", "tepsDot": "{\\boldsymbol{\\dot \\varepsilon}}", "teta": "{\\boldsymbol{\\eta}}", "tkappa": "{\\boldsymbol{\\kappa}}", "tkappaDot": "{\\boldsymbol{\\dot \\kappa}}", "tphi": "{\\boldsymbol{\\phi}}", "boldVarPhi": "{\\boldsymbol{\\varphi}}", "tPhi": "{\\boldsymbol{\\Phi}}", "ttheta": "{\\boldsymbol{\\theta}}", "tTheta": "{\\boldsymbol{\\Theta}}", "tlambda": "{\\boldsymbol{\\lambda}}", "tnu": "{\\boldsymbol{\\nu}}", "tmu": "{\\boldsymbol{\\mu}}", "tpsi": "{\\boldsymbol{\\psi}}", "tPsi": "{\\boldsymbol{\\Psi}}", "ttau": "{\\boldsymbol{\\tau}}", "tsigma": "{\\boldsymbol{\\sigma}}", "txi": "{\\boldsymbol{\\xi}}", "tzeta": "{\\boldsymbol{\\zeta}}", "tomega": "{\\boldsymbol{\\omega}}", "tOmega": "{\\boldsymbol{\\Omega}}", "vareps": "{\\varepsilon}", "myoverline": ["\\overline{#1}", 1], "pluseq": "\\mathrel{+}=", "LU": ["{\\prescript{#1}{}{#2}\\,}", 2], "LUX": ["{\\prescript{#1}{}{#2}#3\\,}", 3], "LUR": ["{\\prescript{#1}{}{#2}_{#3}\\,}", 3], "LURU": ["{\\prescript{#1}{}{#2}_{#3}^{#4}\\,}", 4], "LLdot": ["{\\prescript{}{#1}{\\dot{#2}}_{#3}\\,}", 3], "vr": ["{\\left[ \\begin{array}{c} { #1}\\vspace{0.04cm} \\\\ { #2}\\vspace{0.04cm} \\\\ { #3} \\end{array} \\right]}", 3], "mr": ["{\\left[ \\begin{array}{ccc} #1 & #2 & #3 \\vspace{0.04cm}\\\\ #4 & #5 & #6 \\vspace{0.04cm}\\\\ #7 & #8 & #9  \\end{array} \\right]}", 9], "vp": ["{\\left[ \\begin{array}{c} { #1} \\vspace{0.04cm}\\\\ { #2} \\end{array} \\right]}", 2], "mp": ["{\\left[ \\begin{array}{cc} #1 & #2 \\vspace{0.04cm}\\\\ #3 & #4 \\end{array} \\right]}", 4], "mfour": ["{\\left[ \\begin{array}{cccc} { #1} \\\\ { #2} \\\\ { #3} \\\\ { #4} \\end{array} \\right]}", 4], "vfour": ["{\\left[ \\begin{array}{c} { #1} \\\\ { #2} \\\\ { #3} \\\\ { #4} \\end{array} \\right]}", 4], "vrRow": ["{[#1,\\, #2,\\, #3]}", 3], "vsix": ["{\\left[ \\begin{array}{c} { #1} \\\\ { #2} \\\\ { #3} \\\\ { #4} \\\\ { #5} \\\\ { #6} \\end{array} \\right]}", 6], "vsixb": ["{\\begin{array}{c} { #1} \\\\ { #2} \\\\ { #3} \\\\ { #4} \\\\ { #5} \\\\ { #6} \\end{array} }", 6], "vsixs": ["{ \\begin{array}{c} { #1} \\\\ { #2} \\\\ { #3} \\\\ { #4} \\\\ { #5} \\\\ { #6} \\end{array} }", 6], "SO": "{q}", "FO": "{y}", "AE": "{\\lambda}", "SYS": "{s}", "SON": "{$2^\\mathrm{nd}$ order differential equations}", "FON": "{$1^\\mathrm{st}$ order differential equations}", "AEN": "{algebraic equations}", "Bm": "{\\mathbf{B}}", "Cm": "{\\mathbf{C}}", "Fm": "{\\mathbf{F}}", "SYSN": "{system equations}", "cIni": "{_\\mathrm{ini}}", "cRef": "{_\\mathrm{ref}}", "cCur": "{_\\mathrm{cur}}", "cVis": "{_\\mathrm{vis}}", "cSOS": "{_\\mathrm{start\\;of\\;step}}", "cConfig": "{_\\mathrm{config}}", "pLoc": "{\\mathbf{b}}", "pLocB": "{\\,^{b}{\\mathbf{v}}}", "pRef": "{\\mathbf{r}}", "pRefG": "{\\,^{0}{\\mathbf{r}}}", "indf": "{_\\mathrm{f}}", "indt": "{_\\mathrm{t}}", "indr": "{_\\mathrm{r}}", "indtt": "{_\\mathrm{tt}}", "indrr": "{_\\mathrm{rr}}", "indff": "{_\\mathrm{ff}}", "indtf": "{_\\mathrm{tf}}", "indrf": "{_\\mathrm{rf}}", "indtr": "{_\\mathrm{tr}}", "omegaBDtilde": "{\\LU{b}{\\tilde \\tomega_\\mathrm{bd}}}", "indrigid": "{_\\mathrm{rigid}}", "indred": "{_\\mathrm{red}}", "induser": "{_\\mathrm{user}}", "indu": "{_\\mathrm{u}}", "termA": ["{\\color{blue}{#1}}", 1], "termB": ["{\\color{red}{#1}}", 1], "termC": ["{\\color{green}{#1}}", 1], "acc": "{\\ddot{\\mathbf{q}}}", "GA": "{G\\alpha}", "Hm": "{\\mathbf{H}}", "ImTwo": "{\\mathbf{I}_{2 \\times 2}}", "Lm": "{\\mathbf{L}}", "Qm": "{\\mathbf{Q}}", "Vm": "{\\mathbf{V}}", "Wm": "{\\mathbf{W}}", "Xm": "{\\mathbf{X}}", "Ym": "{\\mathbf{Y}}", "aalg": "{\\mathbf{a}}", "iv": "{\\mathbf{i}}", "jv": "{\\mathbf{j}}", "kv": "{\\mathbf{k}}", "lv": "{\\mathbf{l}}", "mv": "{\\mathbf{m}}", "ov": "{\\mathbf{o}}", "vel": "{\\mathbf{v}}", "wv": "{\\mathbf{w}}"}}, "options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+      <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-mml-chtml.js"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+    <link rel="next" title="Module: robotics" href="robotics.html" />
+    <link rel="prev" title="Module: processing" href="processing.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            Exudyn1.13.3
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Exudyn User Manual</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../README.html">Exudyn</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../manual/gettingStarted.html">Installation and getting started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../manual/introduction.html">Overview on Exudyn</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../manual/introductionBasics.html">Exudyn basics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../manual/tutorial.html">Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../manual/GUI.html">Renderer, graphics and visualization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../manual/performanceErrors.html">Performance, errors and solver failures</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../manual/introductionAdvanced.html">Advanced topics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../manual/notation.html">Notation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../manual/theory.html">Theory and formulations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../manual/solver.html">Solvers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../cInterface/cInterfaceIndex.html">Python-C++ command interface</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Reference Manual</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../items/itemsIndex.html">Items reference manual</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="utilitiesIndex.html">Python Utility Functions</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="advancedUtilities.html">Module: advancedUtilities</a></li>
+<li class="toctree-l2"><a class="reference internal" href="artificialIntelligence.html">Module: artificialIntelligence</a></li>
+<li class="toctree-l2"><a class="reference internal" href="basicUtilities.html">Module: basicUtilities</a></li>
+<li class="toctree-l2"><a class="reference internal" href="beams.html">Module: beams</a></li>
+<li class="toctree-l2"><a class="reference internal" href="demos.html">Module: demos</a></li>
+<li class="toctree-l2"><a class="reference internal" href="FEM.html">Module: FEM</a></li>
+<li class="toctree-l2"><a class="reference internal" href="graphics.html">Module: graphics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="graphicsDataUtilities.html">Module: graphicsDataUtilities</a></li>
+<li class="toctree-l2"><a class="reference internal" href="misc.GUI.html">Module: misc.GUI</a></li>
+<li class="toctree-l2"><a class="reference internal" href="misc.settingsUtilities.html">Module: misc.settingsUtilities</a></li>
+<li class="toctree-l2"><a class="reference internal" href="interactive.html">Module: interactive</a></li>
+<li class="toctree-l2"><a class="reference internal" href="kinematicTree.html">Module: kinematicTree</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lieGroupBasics.html">Module: lieGroupBasics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="misc.mainSystemExtensions.html">Module: misc.mainSystemExtensions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="particles.html">Module: particles</a></li>
+<li class="toctree-l2"><a class="reference internal" href="physics.html">Module: physics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="plot.html">Module: plot</a></li>
+<li class="toctree-l2"><a class="reference internal" href="processing.html">Module: processing</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Module: rigidBodyUtilities</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#function-computeorthonormalbasisvectors">Function: ComputeOrthonormalBasisVectors</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#function-computeorthonormalbasis">Function: ComputeOrthonormalBasis</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#function-gramschmidt">Function: GramSchmidt</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#function-skew">Function: Skew</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#function-skew2vec">Function: Skew2Vec</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#function-computeskewmatrix">Function: ComputeSkewMatrix</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#function-eulerparameters2g">Function: EulerParameters2G</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#function-eulerparameters2glocal">Function: EulerParameters2GLocal</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#function-eulerparameters2rotationmatrix">Function: EulerParameters2RotationMatrix</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#function-rotationmatrix2eulerparameters">Function: RotationMatrix2EulerParameters</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#function-angularvelocity2eulerparameters-t">Function: AngularVelocity2EulerParameters_t</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#function-rotationvector2rotationmatrix">Function: RotationVector2RotationMatrix</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#function-rotationmatrix2rotationvector">Function: RotationMatrix2RotationVector</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#function-computerotationaxisfromrotationvector">Function: ComputeRotationAxisFromRotationVector</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#function-rotationvector2g">Function: RotationVector2G</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#function-rotationvector2glocal">Function: RotationVector2GLocal</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#function-rotxyz2rotationmatrix">Function: RotXYZ2RotationMatrix</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#function-rotationmatrix2rotxyz">Function: RotationMatrix2RotXYZ</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#function-rotxyz2g">Function: RotXYZ2G</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#function-rotxyz2g-t">Function: RotXYZ2G_t</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#function-rotxyz2glocal">Function: RotXYZ2GLocal</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#function-rotxyz2glocal-t">Function: RotXYZ2GLocal_t</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#function-angularvelocity2rotxyz-t">Function: AngularVelocity2RotXYZ_t</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#function-rotxyz2eulerparameters">Function: RotXYZ2EulerParameters</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#function-rotationmatrix2rotzyz">Function: RotationMatrix2RotZYZ</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#function-rotationmatrixx">Function: RotationMatrixX</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#function-rotationmatrixy">Function: RotationMatrixY</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#function-rotationmatrixz">Function: RotationMatrixZ</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#function-rotationmatrix2d">Function: RotationMatrix2D</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#function-homogeneoustransformation">Function: HomogeneousTransformation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#function-httranslate">Function: HTtranslate</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#function-httranslatex">Function: HTtranslateX</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#function-httranslatey">Function: HTtranslateY</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#function-httranslatez">Function: HTtranslateZ</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#function-ht0">Function: HT0</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#function-htrotatex">Function: HTrotateX</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#function-htrotatey">Function: HTrotateY</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#function-htrotatez">Function: HTrotateZ</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#function-ht2translation">Function: HT2translation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#function-ht2rotationmatrix">Function: HT2rotationMatrix</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#function-inverseht">Function: InverseHT</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#function-rotationx2t66">Function: RotationX2T66</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#function-rotationy2t66">Function: RotationY2T66</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#function-rotationz2t66">Function: RotationZ2T66</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#function-translation2t66">Function: Translation2T66</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#function-translationx2t66">Function: TranslationX2T66</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#function-translationy2t66">Function: TranslationY2T66</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#function-translationz2t66">Function: TranslationZ2T66</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#function-t66torotationtranslation">Function: T66toRotationTranslation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#function-inverset66torotationtranslation">Function: InverseT66toRotationTranslation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#function-rotationtranslation2t66">Function: RotationTranslation2T66</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#function-rotationtranslation2t66inverse">Function: RotationTranslation2T66Inverse</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#function-t66inverse">Function: T66Inverse</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#function-t66toht">Function: T66toHT</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#function-ht2t66inverse">Function: HT2T66Inverse</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#function-inertiatensor2inertia6d">Function: InertiaTensor2Inertia6D</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#function-inertia6d2inertiatensor">Function: Inertia6D2InertiaTensor</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#function-strnodetype2nodetype">Function: StrNodeType2NodeType</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#function-getrigidbodynode">Function: GetRigidBodyNode</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#function-addrigidbody">Function: AddRigidBody</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#function-addrevolutejoint">Function: AddRevoluteJoint</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#function-addprismaticjoint">Function: AddPrismaticJoint</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#class-treelink-in-module-rigidbodyutilities">CLASS TreeLink (in module rigidBodyUtilities)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#class-rigidbodyinertia-in-module-rigidbodyutilities">CLASS RigidBodyInertia (in module rigidBodyUtilities)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#class-inertiacuboid-rigidbodyinertia-in-module-rigidbodyutilities">CLASS InertiaCuboid(RigidBodyInertia) (in module rigidBodyUtilities)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#class-inertiarodx-rigidbodyinertia-in-module-rigidbodyutilities">CLASS InertiaRodX(RigidBodyInertia) (in module rigidBodyUtilities)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#class-inertiamasspoint-rigidbodyinertia-in-module-rigidbodyutilities">CLASS InertiaMassPoint(RigidBodyInertia) (in module rigidBodyUtilities)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#class-inertiasphere-rigidbodyinertia-in-module-rigidbodyutilities">CLASS InertiaSphere(RigidBodyInertia) (in module rigidBodyUtilities)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#class-inertiahollowsphere-rigidbodyinertia-in-module-rigidbodyutilities">CLASS InertiaHollowSphere(RigidBodyInertia) (in module rigidBodyUtilities)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#class-inertiacylinder-rigidbodyinertia-in-module-rigidbodyutilities">CLASS InertiaCylinder(RigidBodyInertia) (in module rigidBodyUtilities)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="robotics.html">Module: robotics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="robotics.rosInterface.html">Module: robotics.rosInterface</a></li>
+<li class="toctree-l2"><a class="reference internal" href="robotics.future.html">Module: robotics.future</a></li>
+<li class="toctree-l2"><a class="reference internal" href="robotics.models.html">Module: robotics.models</a></li>
+<li class="toctree-l2"><a class="reference internal" href="robotics.mobile.html">Module: robotics.mobile</a></li>
+<li class="toctree-l2"><a class="reference internal" href="robotics.motion.html">Module: robotics.motion</a></li>
+<li class="toctree-l2"><a class="reference internal" href="robotics.special.html">Module: robotics.special</a></li>
+<li class="toctree-l2"><a class="reference internal" href="robotics.utilities.html">Module: robotics.utilities</a></li>
+<li class="toctree-l2"><a class="reference internal" href="shells.html">Module: shells</a></li>
+<li class="toctree-l2"><a class="reference internal" href="signalProcessing.html">Module: signalProcessing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="solver.html">Module: solver</a></li>
+<li class="toctree-l2"><a class="reference internal" href="utilities.html">Module: utilities</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../structures/structuresIndex.html">Structures and Settings</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../references.html">References</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Developer documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../dev/README.html">Exudyn developer documentation</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">How-to notes</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../howTo/condaEnvironments.html">Conda environments for Exudyn</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../howTo/sphinxDocs.html">Building the documentation</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Examples, models and issues</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../examples/examplesIndex.html">Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../testModels/testModelsIndex.html">TestModels</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../abbreviations.html">List of Abbreviations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../manual/revisions.html">Revisions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../CHANGELOG.html">Changelog</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../trackerlog.html">Issue tracker</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">Exudyn1.13.3</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="utilitiesIndex.html">Python Utility Functions</a></li>
+      <li class="breadcrumb-item active">Module: rigidBodyUtilities</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../../_sources/docs/generated/pythonUtilities/rigidBodyUtilities.md.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <!-- GENERATED by tools/generators/utilityDocsEmitter.py from the docstrings of python/exudyn - do not edit -->
+<section class="tex2jax_ignore mathjax_ignore" id="module-rigidbodyutilities">
+<span id="sec-module-rigidbodyutilities"></span><h1>Module: rigidBodyUtilities<a class="headerlink" href="#module-rigidbodyutilities" title="Link to this heading"></a></h1>
+<p>Advanced utility/mathematical functions for reference frames, rigid body kinematics
+and dynamics. Useful Euler parameter and Tait-Bryan angle conversion functions
+are included. A class for rigid body inertia creating and transformation is available.</p>
+<ul class="simple">
+<li><p><strong>Author</strong>: Johannes Gerstmayr, Stefan Holzinger (rotation vector and Tait-Bryan angles)</p></li>
+<li><p><strong>Date</strong>: 2020-03-10 (created)</p></li>
+</ul>
+<section id="function-computeorthonormalbasisvectors">
+<span id="sec-rigidbodyutilities-computeorthonormalbasisvectors"></span><h2>Function: ComputeOrthonormalBasisVectors<a class="headerlink" href="#function-computeorthonormalbasisvectors" title="Link to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/rigidBodyUtilities.py#L52"><code class="docutils literal notranslate"><span class="pre">ComputeOrthonormalBasisVectors(vector0)</span></code></a></p>
+<ul class="simple">
+<li><p><strong>function description</strong>: compute orthogonal basis vectors (normal1, normal2) for given vector0 (non-unique solution!); the length of vector0 must not be 1; if vector0 == [0,0,0], then any normal basis is returned</p></li>
+<li><p><strong>output</strong>: returns [vector0normalized, normal1, normal2], in which vector0normalized is the normalized vector0 (has unit length); all vectors in numpy array format</p></li>
+</ul>
+</section>
+<section id="function-computeorthonormalbasis">
+<span id="sec-rigidbodyutilities-computeorthonormalbasis"></span><h2>Function: ComputeOrthonormalBasis<a class="headerlink" href="#function-computeorthonormalbasis" title="Link to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/rigidBodyUtilities.py#L80"><code class="docutils literal notranslate"><span class="pre">ComputeOrthonormalBasis(vector0)</span></code></a></p>
+<ul class="simple">
+<li><p><strong>function description</strong>: compute orthogonal basis, in which the normalized vector0 is the first column and the other columns are normals to vector0 (non-unique solution!); the length of vector0 must not be 1; if vector0 == [0,0,0], then any normal basis is returned</p></li>
+<li><p><strong>output</strong>: returns A, a rotation matrix, in which the first column is parallel to vector0; A is a 2D numpy array</p></li>
+</ul>
+</section>
+<section id="function-gramschmidt">
+<span id="sec-rigidbodyutilities-gramschmidt"></span><h2>Function: GramSchmidt<a class="headerlink" href="#function-gramschmidt" title="Link to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/rigidBodyUtilities.py#L90"><code class="docutils literal notranslate"><span class="pre">GramSchmidt(vector0,</span> <span class="pre">vector1)</span></code></a></p>
+<ul class="simple">
+<li><p><strong>function description</strong>: compute Gram-Schmidt projection of given 3D vector 1 on vector 0 and return normalized triad (vector0, vector1, vector0 x vector1)</p></li>
+</ul>
+<p>Relevant Examples (Ex) and TestModels (TM) with weblink to github: <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/ACFtest.py"><code class="docutils literal notranslate"><span class="pre">ACFtest.py</span></code></a> (TM), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/sliderCrank3Dbenchmark.py"><code class="docutils literal notranslate"><span class="pre">sliderCrank3Dbenchmark.py</span></code></a> (TM), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/sliderCrank3Dtest.py"><code class="docutils literal notranslate"><span class="pre">sliderCrank3Dtest.py</span></code></a> (TM)</p>
+</section>
+<section id="function-skew">
+<span id="sec-rigidbodyutilities-skew"></span><h2>Function: Skew<a class="headerlink" href="#function-skew" title="Link to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/rigidBodyUtilities.py#L111"><code class="docutils literal notranslate"><span class="pre">Skew(vector)</span></code></a></p>
+<ul class="simple">
+<li><p><strong>function description</strong>: compute skew symmetric 3x3-matrix from 3x1- or 1x3-vector</p></li>
+</ul>
+<p>Relevant Examples (Ex) and TestModels (TM) with weblink to github: <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/leggedRobot.py"><code class="docutils literal notranslate"><span class="pre">leggedRobot.py</span></code></a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/mobileMecanumWheelRobotWithLidar.py"><code class="docutils literal notranslate"><span class="pre">mobileMecanumWheelRobotWithLidar.py</span></code></a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/carRollingDiscTest.py"><code class="docutils literal notranslate"><span class="pre">carRollingDiscTest.py</span></code></a> (TM), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/createRollingDiscPenaltyTest.py"><code class="docutils literal notranslate"><span class="pre">createRollingDiscPenaltyTest.py</span></code></a> (TM), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/explicitLieGroupIntegratorPythonTest.py"><code class="docutils literal notranslate"><span class="pre">explicitLieGroupIntegratorPythonTest.py</span></code></a> (TM), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/explicitLieGroupIntegratorTest.py"><code class="docutils literal notranslate"><span class="pre">explicitLieGroupIntegratorTest.py</span></code></a> (TM), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/explicitLieGroupMBSTest.py"><code class="docutils literal notranslate"><span class="pre">explicitLieGroupMBSTest.py</span></code></a> (TM), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/heavyTop.py"><code class="docutils literal notranslate"><span class="pre">heavyTop.py</span></code></a> (TM), …</p>
+</section>
+<section id="function-skew2vec">
+<span id="sec-rigidbodyutilities-skew2vec"></span><h2>Function: Skew2Vec<a class="headerlink" href="#function-skew2vec" title="Link to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/rigidBodyUtilities.py#L120"><code class="docutils literal notranslate"><span class="pre">Skew2Vec(skew)</span></code></a></p>
+<ul class="simple">
+<li><p><strong>function description</strong>: convert skew symmetric matrix m to vector</p></li>
+</ul>
+<p>Relevant Examples (Ex) and TestModels (TM) with weblink to github: <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/serialRobotInverseKinematics.py"><code class="docutils literal notranslate"><span class="pre">serialRobotInverseKinematics.py</span></code></a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/homogeneousTransformationInterfaceTest.py"><code class="docutils literal notranslate"><span class="pre">homogeneousTransformationInterfaceTest.py</span></code></a> (TM)</p>
+</section>
+<section id="function-computeskewmatrix">
+<span id="sec-rigidbodyutilities-computeskewmatrix"></span><h2>Function: ComputeSkewMatrix<a class="headerlink" href="#function-computeskewmatrix" title="Link to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/rigidBodyUtilities.py#L141"><code class="docutils literal notranslate"><span class="pre">ComputeSkewMatrix(v)</span></code></a></p>
+<ul class="simple">
+<li><p><strong>function description</strong>: compute skew matrix from vector or matrix; used for ObjectFFRF and CMS implementation</p></li>
+<li><p><strong>input</strong>: a vector v in np.array format, containing 3*n components or a matrix with m columns of same shape</p></li>
+<li><p><strong>output</strong>: if v is a vector, output is (3<em>n x 3) skew matrix in np.array format; if v is a (n x m) matrix, the output is a (3</em>n x m) skew matrix in np.array format</p></li>
+</ul>
+<p>Relevant Examples (Ex) and TestModels (TM) with weblink to github: <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/objectFFRFTest.py"><code class="docutils literal notranslate"><span class="pre">objectFFRFTest.py</span></code></a> (TM)</p>
+</section>
+<section id="function-eulerparameters2g">
+<span id="sec-rigidbodyutilities-eulerparameters2g"></span><h2>Function: EulerParameters2G<a class="headerlink" href="#function-eulerparameters2g" title="Link to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/rigidBodyUtilities.py#L211"><code class="docutils literal notranslate"><span class="pre">EulerParameters2G(eulerParameters)</span></code></a></p>
+<ul class="simple">
+<li><p><strong>function description</strong>: convert Euler parameters (ep) to G-matrix (=<span class="math notranslate nohighlight">\(\partial \tomega  / \partial \pv_t\)</span>)</p></li>
+<li><p><strong>input</strong>: vector of 4 eulerParameters as list or np.array</p></li>
+<li><p><strong>output</strong>: 3x4 matrix G as np.array</p></li>
+</ul>
+</section>
+<section id="function-eulerparameters2glocal">
+<span id="sec-rigidbodyutilities-eulerparameters2glocal"></span><h2>Function: EulerParameters2GLocal<a class="headerlink" href="#function-eulerparameters2glocal" title="Link to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/rigidBodyUtilities.py#L225"><code class="docutils literal notranslate"><span class="pre">EulerParameters2GLocal(eulerParameters)</span></code></a></p>
+<ul class="simple">
+<li><p><strong>function description</strong>: convert Euler parameters (ep) to local G-matrix (=<span class="math notranslate nohighlight">\(\partial \LU{b}{\tomega} / \partial \pv_t\)</span>)</p></li>
+<li><p><strong>input</strong>: vector of 4 eulerParameters as list or np.array</p></li>
+<li><p><strong>output</strong>: 3x4 matrix G as np.array</p></li>
+</ul>
+<p>Relevant Examples (Ex) and TestModels (TM) with weblink to github: <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/objectFFRFTest.py"><code class="docutils literal notranslate"><span class="pre">objectFFRFTest.py</span></code></a> (TM), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/rigidBodyAsUserFunctionTest.py"><code class="docutils literal notranslate"><span class="pre">rigidBodyAsUserFunctionTest.py</span></code></a> (TM)</p>
+</section>
+<section id="function-eulerparameters2rotationmatrix">
+<span id="sec-rigidbodyutilities-eulerparameters2rotationmatrix"></span><h2>Function: EulerParameters2RotationMatrix<a class="headerlink" href="#function-eulerparameters2rotationmatrix" title="Link to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/rigidBodyUtilities.py#L239"><code class="docutils literal notranslate"><span class="pre">EulerParameters2RotationMatrix(eulerParameters)</span></code></a></p>
+<ul class="simple">
+<li><p><strong>function description</strong>: compute rotation matrix from eulerParameters</p></li>
+<li><p><strong>input</strong>: vector of 4 eulerParameters as list or np.array</p></li>
+<li><p><strong>output</strong>: 3x3 rotation matrix as np.array</p></li>
+</ul>
+<p>Relevant Examples (Ex) and TestModels (TM) with weblink to github: <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/ROSMobileManipulator.py"><code class="docutils literal notranslate"><span class="pre">ROSMobileManipulator.py</span></code></a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/stiffFlyballGovernor2.py"><code class="docutils literal notranslate"><span class="pre">stiffFlyballGovernor2.py</span></code></a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/stiffFlyballGovernor.py"><code class="docutils literal notranslate"><span class="pre">stiffFlyballGovernor.py</span></code></a> (TM)</p>
+</section>
+<section id="function-rotationmatrix2eulerparameters">
+<span id="sec-rigidbodyutilities-rotationmatrix2eulerparameters"></span><h2>Function: RotationMatrix2EulerParameters<a class="headerlink" href="#function-rotationmatrix2eulerparameters" title="Link to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/rigidBodyUtilities.py#L254"><code class="docutils literal notranslate"><span class="pre">RotationMatrix2EulerParameters(rotationMatrix)</span></code></a></p>
+<ul class="simple">
+<li><p><strong>function description</strong>: compute Euler parameters from given rotation matrix</p></li>
+<li><p><strong>input</strong>: 3x3 rotation matrix as list of lists or as np.array</p></li>
+<li><p><strong>output</strong>: vector of 4 eulerParameters as np.array</p></li>
+</ul>
+<p>Relevant Examples (Ex) and TestModels (TM) with weblink to github: <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/stiffFlyballGovernor2.py"><code class="docutils literal notranslate"><span class="pre">stiffFlyballGovernor2.py</span></code></a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/geometricallyExactBeamCurvedTest.py"><code class="docutils literal notranslate"><span class="pre">geometricallyExactBeamCurvedTest.py</span></code></a> (TM), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/geometricallyExactBeamElbowCantilever.py"><code class="docutils literal notranslate"><span class="pre">geometricallyExactBeamElbowCantilever.py</span></code></a> (TM), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/geometricallyExactBeamJacobianTest.py"><code class="docutils literal notranslate"><span class="pre">geometricallyExactBeamJacobianTest.py</span></code></a> (TM), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/geometricallyExactBeamMassTest.py"><code class="docutils literal notranslate"><span class="pre">geometricallyExactBeamMassTest.py</span></code></a> (TM), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/geometricallyExactBeamRightAngleFrame.py"><code class="docutils literal notranslate"><span class="pre">geometricallyExactBeamRightAngleFrame.py</span></code></a> (TM), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/homogeneousTransformationInterfaceTest.py"><code class="docutils literal notranslate"><span class="pre">homogeneousTransformationInterfaceTest.py</span></code></a> (TM), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/rightAngleFrame.py"><code class="docutils literal notranslate"><span class="pre">rightAngleFrame.py</span></code></a> (TM), …</p>
+</section>
+<section id="function-angularvelocity2eulerparameters-t">
+<span id="sec-rigidbodyutilities-angularvelocity2eulerparameters-t"></span><h2>Function: AngularVelocity2EulerParameters_t<a class="headerlink" href="#function-angularvelocity2eulerparameters-t" title="Link to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/rigidBodyUtilities.py#L301"><code class="docutils literal notranslate"><span class="pre">AngularVelocity2EulerParameters_t(angularVelocity,</span> <span class="pre">eulerParameters)</span></code></a></p>
+<ul class="simple">
+<li><p><strong>function description</strong>: compute time derivative of Euler parameters from (global) angular velocity vector note that for Euler parameters <span class="math notranslate nohighlight">\(\pv\)</span>, we have <span class="math notranslate nohighlight">\(\tomega=\Gm \dot \pv\)</span> ==&gt; <span class="math notranslate nohighlight">\(\Gm^T \tomega = \Gm^T\cdot \Gm\cdot \dot \pv\)</span> ==&gt; <span class="math notranslate nohighlight">\(\Gm^T \Gm=4(\Im_{4 \times 4} - \pv\cdot \pv^T)\dot\pv = 4 (\Im_{4x4}) \dot \pv\)</span></p></li>
+<li><p><strong>input</strong>:</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">angularVelocity</span></code>: 3D vector of angular velocity in global frame, as lists or as np.array</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">eulerParameters</span></code>: vector of 4 eulerParameters as np.array or list</p></li>
+</ul>
+</li>
+<li><p><strong>output</strong>: vector of time derivatives of 4 eulerParameters as np.array</p></li>
+</ul>
+<p>Relevant Examples (Ex) and TestModels (TM) with weblink to github: <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/flexibleRotor3Dtest.py"><code class="docutils literal notranslate"><span class="pre">flexibleRotor3Dtest.py</span></code></a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/performanceMultiThreadingNG.py"><code class="docutils literal notranslate"><span class="pre">performanceMultiThreadingNG.py</span></code></a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/rigid3Dexample.py"><code class="docutils literal notranslate"><span class="pre">rigid3Dexample.py</span></code></a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/rigidBodyIMUtest.py"><code class="docutils literal notranslate"><span class="pre">rigidBodyIMUtest.py</span></code></a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/rigidRotor3DbasicBehaviour.py"><code class="docutils literal notranslate"><span class="pre">rigidRotor3DbasicBehaviour.py</span></code></a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/contactSphereTorusMomentumTest.py"><code class="docutils literal notranslate"><span class="pre">contactSphereTorusMomentumTest.py</span></code></a> (TM), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/energiesFlexibleBodiesTest.py"><code class="docutils literal notranslate"><span class="pre">energiesFlexibleBodiesTest.py</span></code></a> (TM), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/energiesTest.py"><code class="docutils literal notranslate"><span class="pre">energiesTest.py</span></code></a> (TM), …</p>
+</section>
+<section id="function-rotationvector2rotationmatrix">
+<span id="sec-rigidbodyutilities-rotationvector2rotationmatrix"></span><h2>Function: RotationVector2RotationMatrix<a class="headerlink" href="#function-rotationvector2rotationmatrix" title="Link to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/rigidBodyUtilities.py#L320"><code class="docutils literal notranslate"><span class="pre">RotationVector2RotationMatrix(rotationVector)</span></code></a></p>
+<ul class="simple">
+<li><p><strong>function description</strong>: rotaton matrix from rotation vector, see appendix B in <a class="reference internal" href="../references.html#ref-simo1988"><span class="std std-ref">Simo1988</span></a></p></li>
+<li><p><strong>input</strong>: 3D rotation vector as list or np.array</p></li>
+<li><p><strong>output</strong>: 3x3 rotation matrix as np.array</p></li>
+<li><p><strong>notes</strong>: gets inaccurate for very large rotations, <span class="math notranslate nohighlight">\(\phi \\gg 2*\pi\)</span></p></li>
+</ul>
+<p>Relevant Examples (Ex) and TestModels (TM) with weblink to github: <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/chatGPTupdate.py"><code class="docutils literal notranslate"><span class="pre">chatGPTupdate.py</span></code></a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/chatGPTupdate2.py"><code class="docutils literal notranslate"><span class="pre">chatGPTupdate2.py</span></code></a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/stiffFlyballGovernor2.py"><code class="docutils literal notranslate"><span class="pre">stiffFlyballGovernor2.py</span></code></a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/universalJoint.py"><code class="docutils literal notranslate"><span class="pre">universalJoint.py</span></code></a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/createFunctionsTest.py"><code class="docutils literal notranslate"><span class="pre">createFunctionsTest.py</span></code></a> (TM), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/explicitLieGroupMBSTest.py"><code class="docutils literal notranslate"><span class="pre">explicitLieGroupMBSTest.py</span></code></a> (TM), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/homogeneousTransformationInterfaceTest.py"><code class="docutils literal notranslate"><span class="pre">homogeneousTransformationInterfaceTest.py</span></code></a> (TM), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/jointArgsTest.py"><code class="docutils literal notranslate"><span class="pre">jointArgsTest.py</span></code></a> (TM), …</p>
+</section>
+<section id="function-rotationmatrix2rotationvector">
+<span id="sec-rigidbodyutilities-rotationmatrix2rotationvector"></span><h2>Function: RotationMatrix2RotationVector<a class="headerlink" href="#function-rotationmatrix2rotationvector" title="Link to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/rigidBodyUtilities.py#L347"><code class="docutils literal notranslate"><span class="pre">RotationMatrix2RotationVector(rotationMatrix)</span></code></a></p>
+<ul class="simple">
+<li><p><strong>function description</strong>: compute rotation vector from rotation matrix</p></li>
+<li><p><strong>input</strong>: 3x3 rotation matrix as list of lists or as np.array</p></li>
+<li><p><strong>output</strong>: vector of 3 components of rotation vector as np.array</p></li>
+</ul>
+<p>Relevant Examples (Ex) and TestModels (TM) with weblink to github: <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/explicitLieGroupMBSTest.py"><code class="docutils literal notranslate"><span class="pre">explicitLieGroupMBSTest.py</span></code></a> (TM), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/homogeneousTransformationInterfaceTest.py"><code class="docutils literal notranslate"><span class="pre">homogeneousTransformationInterfaceTest.py</span></code></a> (TM), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/raytracerNOGLFWtest.py"><code class="docutils literal notranslate"><span class="pre">raytracerNOGLFWtest.py</span></code></a> (TM)</p>
+</section>
+<section id="function-computerotationaxisfromrotationvector">
+<span id="sec-rigidbodyutilities-computerotationaxisfromrotationvector"></span><h2>Function: ComputeRotationAxisFromRotationVector<a class="headerlink" href="#function-computerotationaxisfromrotationvector" title="Link to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/rigidBodyUtilities.py#L384"><code class="docutils literal notranslate"><span class="pre">ComputeRotationAxisFromRotationVector(rotationVector)</span></code></a></p>
+<ul class="simple">
+<li><p><strong>function description</strong>: compute rotation axis from given rotation vector</p></li>
+<li><p><strong>input</strong>: 3D rotation vector as np.array</p></li>
+<li><p><strong>output</strong>: 3D vector as np.array representing the rotation axis</p></li>
+</ul>
+<p>Relevant Examples (Ex) and TestModels (TM) with weblink to github: <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/LieGroupIntegrationUnitTests.py"><code class="docutils literal notranslate"><span class="pre">LieGroupIntegrationUnitTests.py</span></code></a> (TM)</p>
+</section>
+<section id="function-rotationvector2g">
+<span id="sec-rigidbodyutilities-rotationvector2g"></span><h2>Function: RotationVector2G<a class="headerlink" href="#function-rotationvector2g" title="Link to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/rigidBodyUtilities.py#L407"><code class="docutils literal notranslate"><span class="pre">RotationVector2G(rotationVector)</span></code></a></p>
+<ul class="simple">
+<li><p><strong>function description</strong>: convert rotation vector (parameters) (v) to G-matrix (=<span class="math notranslate nohighlight">\(\partial \tomega  / \partial \dot \vv\)</span>)</p></li>
+<li><p><strong>input</strong>: vector of rotation vector (len=3) as list or np.array</p></li>
+<li><p><strong>output</strong>: 3x3 matrix G as np.array</p></li>
+</ul>
+</section>
+<section id="function-rotationvector2glocal">
+<span id="sec-rigidbodyutilities-rotationvector2glocal"></span><h2>Function: RotationVector2GLocal<a class="headerlink" href="#function-rotationvector2glocal" title="Link to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/rigidBodyUtilities.py#L418"><code class="docutils literal notranslate"><span class="pre">RotationVector2GLocal(eulerParameters)</span></code></a></p>
+<ul class="simple">
+<li><p><strong>function description</strong>: convert rotation vector (parameters) (v) to local G-matrix (=<span class="math notranslate nohighlight">\(\partial \LU{b}{\tomega}   / \partial \vv_t\)</span>)</p></li>
+<li><p><strong>input</strong>: vector of rotation vector (len=3) as list or np.array</p></li>
+<li><p><strong>output</strong>: 3x3 matrix G as np.array</p></li>
+</ul>
+</section>
+<section id="function-rotxyz2rotationmatrix">
+<span id="sec-rigidbodyutilities-rotxyz2rotationmatrix"></span><h2>Function: RotXYZ2RotationMatrix<a class="headerlink" href="#function-rotxyz2rotationmatrix" title="Link to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/rigidBodyUtilities.py#L436"><code class="docutils literal notranslate"><span class="pre">RotXYZ2RotationMatrix(rot)</span></code></a></p>
+<ul class="simple">
+<li><p><strong>function description</strong>: compute rotation matrix from consecutive xyz <a class="reference internal" href="../abbreviations.html#rot"><span class="std std-ref">Rot</span></a> (Tait-Bryan angles); A=Ax<em>Ay</em>Az; rot=[rotX, rotY, rotZ]</p></li>
+<li><p><strong>input</strong>: 3D vector of Tait-Bryan rotation parameters [X,Y,Z] in radiant</p></li>
+<li><p><strong>output</strong>: 3x3 rotation matrix as np.array</p></li>
+</ul>
+<p>Relevant Examples (Ex) and TestModels (TM) with weblink to github: <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/kinematicTreeAndMBS.py"><code class="docutils literal notranslate"><span class="pre">kinematicTreeAndMBS.py</span></code></a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/stiffFlyballGovernor2.py"><code class="docutils literal notranslate"><span class="pre">stiffFlyballGovernor2.py</span></code></a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/explicitLieGroupMBSTest.py"><code class="docutils literal notranslate"><span class="pre">explicitLieGroupMBSTest.py</span></code></a> (TM), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/generalContactImplicit2.py"><code class="docutils literal notranslate"><span class="pre">generalContactImplicit2.py</span></code></a> (TM), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/homogeneousTransformationInterfaceTest.py"><code class="docutils literal notranslate"><span class="pre">homogeneousTransformationInterfaceTest.py</span></code></a> (TM), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/homogeneousTransformationParameterTest.py"><code class="docutils literal notranslate"><span class="pre">homogeneousTransformationParameterTest.py</span></code></a> (TM), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/homogeneousTransformationTest.py"><code class="docutils literal notranslate"><span class="pre">homogeneousTransformationTest.py</span></code></a> (TM), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/kinematicTreeTest.py"><code class="docutils literal notranslate"><span class="pre">kinematicTreeTest.py</span></code></a> (TM), …</p>
+</section>
+<section id="function-rotationmatrix2rotxyz">
+<span id="sec-rigidbodyutilities-rotationmatrix2rotxyz"></span><h2>Function: RotationMatrix2RotXYZ<a class="headerlink" href="#function-rotationmatrix2rotxyz" title="Link to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/rigidBodyUtilities.py#L456"><code class="docutils literal notranslate"><span class="pre">RotationMatrix2RotXYZ(rotationMatrix)</span></code></a></p>
+<ul class="simple">
+<li><p><strong>function description</strong>: convert rotation matrix to xyz Euler angles (Tait-Bryan angles);  A=Ax<em>Ay</em>Az;</p></li>
+<li><p><strong>input</strong>: 3x3 rotation matrix as list of lists or np.array</p></li>
+<li><p><strong>output</strong>: vector of Tait-Bryan rotation parameters [X,Y,Z] (in radiant) as np.array</p></li>
+<li><p><strong>notes</strong>: due to gimbal lock / singularity at rot[1] = pi/2, -pi/2, … the reconstruction of <code class="docutils literal notranslate"><span class="pre">RotationMatrix2RotXYZ(</span> <span class="pre">RotXYZ2RotationMatrix(rot)</span> <span class="pre">)</span></code> may fail, but <code class="docutils literal notranslate"><span class="pre">RotXYZ2RotationMatrix(</span> <span class="pre">RotationMatrix2RotXYZ(</span> <span class="pre">RotXYZ2RotationMatrix(rot)</span> <span class="pre">)</span> <span class="pre">)</span></code> works always</p></li>
+</ul>
+<p>Relevant Examples (Ex) and TestModels (TM) with weblink to github: <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/serialRobotInteractiveLimits.py"><code class="docutils literal notranslate"><span class="pre">serialRobotInteractiveLimits.py</span></code></a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/geometricallyExactBeamJacobianTest.py"><code class="docutils literal notranslate"><span class="pre">geometricallyExactBeamJacobianTest.py</span></code></a> (TM), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/homogeneousTransformationInterfaceTest.py"><code class="docutils literal notranslate"><span class="pre">homogeneousTransformationInterfaceTest.py</span></code></a> (TM)</p>
+</section>
+<section id="function-rotxyz2g">
+<span id="sec-rigidbodyutilities-rotxyz2g"></span><h2>Function: RotXYZ2G<a class="headerlink" href="#function-rotxyz2g" title="Link to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/rigidBodyUtilities.py#L497"><code class="docutils literal notranslate"><span class="pre">RotXYZ2G(rot)</span></code></a></p>
+<ul class="simple">
+<li><p><strong>function description</strong>: compute (global-frame) G-matrix for xyz Euler angles (Tait-Bryan angles) (<span class="math notranslate nohighlight">\(\LU{0}{\Gm} = \partial \LU{0}{\tomega}  / \partial \dot \ttheta\)</span>)</p></li>
+<li><p><strong>input</strong>: 3D vector of Tait-Bryan rotation parameters [X,Y,Z] in radiant</p></li>
+<li><p><strong>output</strong>: 3x3 matrix G as np.array</p></li>
+</ul>
+</section>
+<section id="function-rotxyz2g-t">
+<span id="sec-rigidbodyutilities-rotxyz2g-t"></span><h2>Function: RotXYZ2G_t<a class="headerlink" href="#function-rotxyz2g-t" title="Link to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/rigidBodyUtilities.py#L515"><code class="docutils literal notranslate"><span class="pre">RotXYZ2G_t(rot,</span> <span class="pre">rot_t)</span></code></a></p>
+<ul class="simple">
+<li><p><strong>function description</strong>: compute time derivative of (global-frame) G-matrix for xyz Euler angles (Tait-Bryan angles) (<span class="math notranslate nohighlight">\(\LU{0}{\Gm} = \partial \LU{0}{\tomega}  / \partial \dot \ttheta\)</span>)</p></li>
+<li><p><strong>input</strong>:</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">rot</span></code>: 3D vector of Tait-Bryan rotation parameters [X,Y,Z] in radiant</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">rot_t</span></code>: 3D vector of time derivative of Tait-Bryan rotation parameters [X,Y,Z] in radiant/s</p></li>
+</ul>
+</li>
+<li><p><strong>output</strong>: 3x3 matrix G_t as np.array</p></li>
+</ul>
+</section>
+<section id="function-rotxyz2glocal">
+<span id="sec-rigidbodyutilities-rotxyz2glocal"></span><h2>Function: RotXYZ2GLocal<a class="headerlink" href="#function-rotxyz2glocal" title="Link to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/rigidBodyUtilities.py#L535"><code class="docutils literal notranslate"><span class="pre">RotXYZ2GLocal(rot)</span></code></a></p>
+<ul class="simple">
+<li><p><strong>function description</strong>: compute local (body-fixed) G-matrix for xyz Euler angles (Tait-Bryan angles) (<span class="math notranslate nohighlight">\(\LU{b}{\Gm} = \partial \LU{b}{\tomega}  / \partial \ttheta_t\)</span>)</p></li>
+<li><p><strong>input</strong>: 3D vector of Tait-Bryan rotation parameters [X,Y,Z] in radiant</p></li>
+<li><p><strong>output</strong>: 3x3 matrix GLocal as np.array</p></li>
+</ul>
+</section>
+<section id="function-rotxyz2glocal-t">
+<span id="sec-rigidbodyutilities-rotxyz2glocal-t"></span><h2>Function: RotXYZ2GLocal_t<a class="headerlink" href="#function-rotxyz2glocal-t" title="Link to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/rigidBodyUtilities.py#L553"><code class="docutils literal notranslate"><span class="pre">RotXYZ2GLocal_t(rot,</span> <span class="pre">rot_t)</span></code></a></p>
+<ul class="simple">
+<li><p><strong>function description</strong>: compute time derivative of (body-fixed) G-matrix for xyz Euler angles (Tait-Bryan angles) (<span class="math notranslate nohighlight">\(\LU{b}{\Gm} = \partial \LU{b}{\tomega}  / \partial \ttheta_t\)</span>)</p></li>
+<li><p><strong>input</strong>:</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">rot</span></code>: 3D vector of Tait-Bryan rotation parameters [X,Y,Z] in radiant</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">rot_t</span></code>: 3D vector of time derivative of Tait-Bryan rotation parameters [X,Y,Z] in radiant/s</p></li>
+</ul>
+</li>
+<li><p><strong>output</strong>: 3x3 matrix GLocal_t as np.array</p></li>
+</ul>
+</section>
+<section id="function-angularvelocity2rotxyz-t">
+<span id="sec-rigidbodyutilities-angularvelocity2rotxyz-t"></span><h2>Function: AngularVelocity2RotXYZ_t<a class="headerlink" href="#function-angularvelocity2rotxyz-t" title="Link to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/rigidBodyUtilities.py#L577"><code class="docutils literal notranslate"><span class="pre">AngularVelocity2RotXYZ_t(angularVelocity,</span> <span class="pre">rotation)</span></code></a></p>
+<ul class="simple">
+<li><p><strong>function description</strong>: compute time derivatives of angles RotXYZ from (global) angular velocity vector and given rotation</p></li>
+<li><p><strong>input</strong>:</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">angularVelocity</span></code>: global angular velocity vector as list or np.array</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">rotation</span></code>: 3D vector of Tait-Bryan rotation parameters [X,Y,Z] in radiant</p></li>
+</ul>
+</li>
+<li><p><strong>output</strong>: time derivative of vector of Tait-Bryan rotation parameters [X,Y,Z] (in radiant) as np.array</p></li>
+</ul>
+<p>Relevant Examples (Ex) and TestModels (TM) with weblink to github: <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/explicitLieGroupIntegratorPythonTest.py"><code class="docutils literal notranslate"><span class="pre">explicitLieGroupIntegratorPythonTest.py</span></code></a> (TM), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/explicitLieGroupIntegratorTest.py"><code class="docutils literal notranslate"><span class="pre">explicitLieGroupIntegratorTest.py</span></code></a> (TM), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/explicitLieGroupMBSTest.py"><code class="docutils literal notranslate"><span class="pre">explicitLieGroupMBSTest.py</span></code></a> (TM), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/geometricallyExactBeamJacobianTest.py"><code class="docutils literal notranslate"><span class="pre">geometricallyExactBeamJacobianTest.py</span></code></a> (TM), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/heavyTop.py"><code class="docutils literal notranslate"><span class="pre">heavyTop.py</span></code></a> (TM)</p>
+</section>
+<section id="function-rotxyz2eulerparameters">
+<span id="sec-rigidbodyutilities-rotxyz2eulerparameters"></span><h2>Function: RotXYZ2EulerParameters<a class="headerlink" href="#function-rotxyz2eulerparameters" title="Link to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/rigidBodyUtilities.py#L600"><code class="docutils literal notranslate"><span class="pre">RotXYZ2EulerParameters(alpha)</span></code></a></p>
+<ul class="simple">
+<li><p><strong>function description</strong>: compute four Euler parameters from given RotXYZ angles, see <a class="reference internal" href="../references.html#ref-henderson1977"><span class="std std-ref">Henderson1977</span></a></p></li>
+<li><p><strong>input</strong>:</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">alpha</span></code>: 3D vector as np.array containing RotXYZ angles</p></li>
+</ul>
+</li>
+<li><p><strong>output</strong>: 4D vector as np.array containing four Euler parameters entry zero of output represent the scalar part of Euler parameters</p></li>
+</ul>
+<p>Relevant Examples (Ex) and TestModels (TM) with weblink to github: <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/inactiveConnectorForceTest.py"><code class="docutils literal notranslate"><span class="pre">inactiveConnectorForceTest.py</span></code></a> (TM)</p>
+</section>
+<section id="function-rotationmatrix2rotzyz">
+<span id="sec-rigidbodyutilities-rotationmatrix2rotzyz"></span><h2>Function: RotationMatrix2RotZYZ<a class="headerlink" href="#function-rotationmatrix2rotzyz" title="Link to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/rigidBodyUtilities.py#L634"><code class="docutils literal notranslate"><span class="pre">RotationMatrix2RotZYZ(rotationMatrix,</span> <span class="pre">flip)</span></code></a></p>
+<ul class="simple">
+<li><p><strong>function description</strong>: convert rotation matrix to zyz Euler angles;  A=Az<em>Ay</em>Az;</p></li>
+<li><p><strong>input</strong>:</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">rotationMatrix</span></code>: 3x3 rotation matrix as list of lists or np.array</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">flip</span></code>: argument to choose first Euler angle to be in quadrant 2 or 3.</p></li>
+</ul>
+</li>
+<li><p><strong>output</strong>: vector of Euler rotation parameters [Z,Y,Z] (in radiant) as np.array</p></li>
+<li><p><strong>author</strong>: Martin Sereinig</p></li>
+<li><p><strong>notes</strong>: tested (compared with Robotics, Vision and Control book of P. Corke)</p></li>
+</ul>
+</section>
+<section id="function-rotationmatrixx">
+<span id="sec-rigidbodyutilities-rotationmatrixx"></span><h2>Function: RotationMatrixX<a class="headerlink" href="#function-rotationmatrixx" title="Link to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/rigidBodyUtilities.py#L682"><code class="docutils literal notranslate"><span class="pre">RotationMatrixX(angleRad)</span></code></a></p>
+<ul class="simple">
+<li><p><strong>function description</strong>: compute rotation matrix w.r.t. X-axis (first axis)</p></li>
+<li><p><strong>input</strong>: angle around X-axis in radiant</p></li>
+<li><p><strong>output</strong>: 3x3 rotation matrix as np.array</p></li>
+</ul>
+<p>Relevant Examples (Ex) and TestModels (TM) with weblink to github: <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/addPrismaticJoint.py"><code class="docutils literal notranslate"><span class="pre">addPrismaticJoint.py</span></code></a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/addRevoluteJoint.py"><code class="docutils literal notranslate"><span class="pre">addRevoluteJoint.py</span></code></a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/graphicsDataExample.py"><code class="docutils literal notranslate"><span class="pre">graphicsDataExample.py</span></code></a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/mobileMecanumWheelRobotWithLidar.py"><code class="docutils literal notranslate"><span class="pre">mobileMecanumWheelRobotWithLidar.py</span></code></a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/NGsolveCraigBampton.py"><code class="docutils literal notranslate"><span class="pre">NGsolveCraigBampton.py</span></code></a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/connectorFrameOutputsTest.py"><code class="docutils literal notranslate"><span class="pre">connectorFrameOutputsTest.py</span></code></a> (TM), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/generalContactCylinderTest.py"><code class="docutils literal notranslate"><span class="pre">generalContactCylinderTest.py</span></code></a> (TM), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/generalContactCylinderTrigsTest.py"><code class="docutils literal notranslate"><span class="pre">generalContactCylinderTrigsTest.py</span></code></a> (TM), …</p>
+</section>
+<section id="function-rotationmatrixy">
+<span id="sec-rigidbodyutilities-rotationmatrixy"></span><h2>Function: RotationMatrixY<a class="headerlink" href="#function-rotationmatrixy" title="Link to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/rigidBodyUtilities.py#L695"><code class="docutils literal notranslate"><span class="pre">RotationMatrixY(angleRad)</span></code></a></p>
+<ul class="simple">
+<li><p><strong>function description</strong>: compute rotation matrix w.r.t. Y-axis (second axis)</p></li>
+<li><p><strong>input</strong>: angle around Y-axis in radiant</p></li>
+<li><p><strong>output</strong>: 3x3 rotation matrix as np.array</p></li>
+</ul>
+<p>Relevant Examples (Ex) and TestModels (TM) with weblink to github: <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/addPrismaticJoint.py"><code class="docutils literal notranslate"><span class="pre">addPrismaticJoint.py</span></code></a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/addRevoluteJoint.py"><code class="docutils literal notranslate"><span class="pre">addRevoluteJoint.py</span></code></a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/bicycleIftommBenchmark.py"><code class="docutils literal notranslate"><span class="pre">bicycleIftommBenchmark.py</span></code></a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/graphicsCurvedShapes.py"><code class="docutils literal notranslate"><span class="pre">graphicsCurvedShapes.py</span></code></a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/leggedRobot.py"><code class="docutils literal notranslate"><span class="pre">leggedRobot.py</span></code></a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/bricardMechanism.py"><code class="docutils literal notranslate"><span class="pre">bricardMechanism.py</span></code></a> (TM), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/complexEigenvaluesTest.py"><code class="docutils literal notranslate"><span class="pre">complexEigenvaluesTest.py</span></code></a> (TM), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/computeODE2AEeigenvaluesTest.py"><code class="docutils literal notranslate"><span class="pre">computeODE2AEeigenvaluesTest.py</span></code></a> (TM), …</p>
+</section>
+<section id="function-rotationmatrixz">
+<span id="sec-rigidbodyutilities-rotationmatrixz"></span><h2>Function: RotationMatrixZ<a class="headerlink" href="#function-rotationmatrixz" title="Link to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/rigidBodyUtilities.py#L708"><code class="docutils literal notranslate"><span class="pre">RotationMatrixZ(angleRad)</span></code></a></p>
+<ul class="simple">
+<li><p><strong>function description</strong>: compute rotation matrix w.r.t. Z-axis (third axis)</p></li>
+<li><p><strong>input</strong>: angle around Z-axis in radiant</p></li>
+<li><p><strong>output</strong>: 3x3 rotation matrix as np.array</p></li>
+</ul>
+<p>Relevant Examples (Ex) and TestModels (TM) with weblink to github: <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/addPrismaticJoint.py"><code class="docutils literal notranslate"><span class="pre">addPrismaticJoint.py</span></code></a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/addRevoluteJoint.py"><code class="docutils literal notranslate"><span class="pre">addRevoluteJoint.py</span></code></a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/bicycleIftommBenchmark.py"><code class="docutils literal notranslate"><span class="pre">bicycleIftommBenchmark.py</span></code></a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/chainDriveExample.py"><code class="docutils literal notranslate"><span class="pre">chainDriveExample.py</span></code></a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/fourBarMechanism3D.py"><code class="docutils literal notranslate"><span class="pre">fourBarMechanism3D.py</span></code></a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/bricardMechanism.py"><code class="docutils literal notranslate"><span class="pre">bricardMechanism.py</span></code></a> (TM), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/carRollingDiscTest.py"><code class="docutils literal notranslate"><span class="pre">carRollingDiscTest.py</span></code></a> (TM), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/complexEigenvaluesTest.py"><code class="docutils literal notranslate"><span class="pre">complexEigenvaluesTest.py</span></code></a> (TM), …</p>
+</section>
+<section id="function-rotationmatrix2d">
+<span id="sec-rigidbodyutilities-rotationmatrix2d"></span><h2>Function: RotationMatrix2D<a class="headerlink" href="#function-rotationmatrix2d" title="Link to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/rigidBodyUtilities.py#L721"><code class="docutils literal notranslate"><span class="pre">RotationMatrix2D(angleRad)</span></code></a></p>
+<ul class="simple">
+<li><p><strong>function description</strong>: compute 2D rotation matrix</p></li>
+<li><p><strong>input</strong>: angle around out-of-plane axis in radiant</p></li>
+<li><p><strong>output</strong>: 2x2 rotation matrix as np.array</p></li>
+</ul>
+</section>
+<section id="function-homogeneoustransformation">
+<span id="sec-rigidbodyutilities-homogeneoustransformation"></span><h2>Function: HomogeneousTransformation<a class="headerlink" href="#function-homogeneoustransformation" title="Link to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/rigidBodyUtilities.py#L736"><code class="docutils literal notranslate"><span class="pre">HomogeneousTransformation(A,</span> <span class="pre">r)</span></code></a></p>
+<ul class="simple">
+<li><p><strong>function description</strong>: compute <a class="reference internal" href="../abbreviations.html#ht"><span class="std std-ref">HT</span></a> matrix from rotation matrix A and translation vector r, as a 4x4 numpy array; exudyn.HT is the C++ class of the same transformation, faster in products, inverses and transformed points: exudyn.HT(rotation=A, translation=r) (#2780)</p></li>
+</ul>
+<p>Relevant Examples (Ex) and TestModels (TM) with weblink to github: <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/humanRobotInteraction.py"><code class="docutils literal notranslate"><span class="pre">humanRobotInteraction.py</span></code></a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/NGsolveCraigBampton.py"><code class="docutils literal notranslate"><span class="pre">NGsolveCraigBampton.py</span></code></a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/NGsolvePistonEngine.py"><code class="docutils literal notranslate"><span class="pre">NGsolvePistonEngine.py</span></code></a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/connectorFrameOutputsTest.py"><code class="docutils literal notranslate"><span class="pre">connectorFrameOutputsTest.py</span></code></a> (TM), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/homogeneousTransformationParameterTest.py"><code class="docutils literal notranslate"><span class="pre">homogeneousTransformationParameterTest.py</span></code></a> (TM), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/homogeneousTransformationTest.py"><code class="docutils literal notranslate"><span class="pre">homogeneousTransformationTest.py</span></code></a> (TM)</p>
+</section>
+<section id="function-httranslate">
+<span id="sec-rigidbodyutilities-httranslate"></span><h2>Function: HTtranslate<a class="headerlink" href="#function-httranslate" title="Link to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/rigidBodyUtilities.py#L748"><code class="docutils literal notranslate"><span class="pre">HTtranslate(r)</span></code></a></p>
+<ul class="simple">
+<li><p><strong>function description</strong>: <a class="reference internal" href="../abbreviations.html#ht"><span class="std std-ref">HT</span></a> for translation with vector r</p></li>
+</ul>
+<p>Relevant Examples (Ex) and TestModels (TM) with weblink to github: <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/humanRobotInteraction.py"><code class="docutils literal notranslate"><span class="pre">humanRobotInteraction.py</span></code></a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/serialRobotInverseKinematics.py"><code class="docutils literal notranslate"><span class="pre">serialRobotInverseKinematics.py</span></code></a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/homogeneousTransformationInterfaceTest.py"><code class="docutils literal notranslate"><span class="pre">homogeneousTransformationInterfaceTest.py</span></code></a> (TM), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/homogeneousTransformationParameterTest.py"><code class="docutils literal notranslate"><span class="pre">homogeneousTransformationParameterTest.py</span></code></a> (TM), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/homogeneousTransformationTest.py"><code class="docutils literal notranslate"><span class="pre">homogeneousTransformationTest.py</span></code></a> (TM), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/kinematicTreeAndMBStest.py"><code class="docutils literal notranslate"><span class="pre">kinematicTreeAndMBStest.py</span></code></a> (TM)</p>
+</section>
+<section id="function-httranslatex">
+<span id="sec-rigidbodyutilities-httranslatex"></span><h2>Function: HTtranslateX<a class="headerlink" href="#function-httranslatex" title="Link to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/rigidBodyUtilities.py#L755"><code class="docutils literal notranslate"><span class="pre">HTtranslateX(x)</span></code></a></p>
+<ul class="simple">
+<li><p><strong>function description</strong>: <a class="reference internal" href="../abbreviations.html#ht"><span class="std std-ref">HT</span></a> for translation along x axis with value x</p></li>
+</ul>
+</section>
+<section id="function-httranslatey">
+<span id="sec-rigidbodyutilities-httranslatey"></span><h2>Function: HTtranslateY<a class="headerlink" href="#function-httranslatey" title="Link to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/rigidBodyUtilities.py#L762"><code class="docutils literal notranslate"><span class="pre">HTtranslateY(y)</span></code></a></p>
+<ul class="simple">
+<li><p><strong>function description</strong>: <a class="reference internal" href="../abbreviations.html#ht"><span class="std std-ref">HT</span></a> for translation along y axis with value y</p></li>
+</ul>
+<p>Relevant Examples (Ex) and TestModels (TM) with weblink to github: <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/kinematicTreeAndMBStest.py"><code class="docutils literal notranslate"><span class="pre">kinematicTreeAndMBStest.py</span></code></a> (TM)</p>
+</section>
+<section id="function-httranslatez">
+<span id="sec-rigidbodyutilities-httranslatez"></span><h2>Function: HTtranslateZ<a class="headerlink" href="#function-httranslatez" title="Link to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/rigidBodyUtilities.py#L769"><code class="docutils literal notranslate"><span class="pre">HTtranslateZ(z)</span></code></a></p>
+<ul class="simple">
+<li><p><strong>function description</strong>: <a class="reference internal" href="../abbreviations.html#ht"><span class="std std-ref">HT</span></a> for translation along z axis with value z</p></li>
+</ul>
+</section>
+<section id="function-ht0">
+<span id="sec-rigidbodyutilities-ht0"></span><h2>Function: HT0<a class="headerlink" href="#function-ht0" title="Link to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/rigidBodyUtilities.py#L776"><code class="docutils literal notranslate"><span class="pre">HT0()</span></code></a></p>
+<ul class="simple">
+<li><p><strong>function description</strong>: identity <a class="reference internal" href="../abbreviations.html#ht"><span class="std std-ref">HT</span></a>:</p></li>
+</ul>
+<p>Relevant Examples (Ex) and TestModels (TM) with weblink to github: <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/humanRobotInteraction.py"><code class="docutils literal notranslate"><span class="pre">humanRobotInteraction.py</span></code></a> (Ex)</p>
+</section>
+<section id="function-htrotatex">
+<span id="sec-rigidbodyutilities-htrotatex"></span><h2>Function: HTrotateX<a class="headerlink" href="#function-htrotatex" title="Link to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/rigidBodyUtilities.py#L781"><code class="docutils literal notranslate"><span class="pre">HTrotateX(angle)</span></code></a></p>
+<ul class="simple">
+<li><p><strong>function description</strong>: <a class="reference internal" href="../abbreviations.html#ht"><span class="std std-ref">HT</span></a> for rotation around axis X (first axis)</p></li>
+</ul>
+<p>Relevant Examples (Ex) and TestModels (TM) with weblink to github: <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/homogeneousTransformationParameterTest.py"><code class="docutils literal notranslate"><span class="pre">homogeneousTransformationParameterTest.py</span></code></a> (TM)</p>
+</section>
+<section id="function-htrotatey">
+<span id="sec-rigidbodyutilities-htrotatey"></span><h2>Function: HTrotateY<a class="headerlink" href="#function-htrotatey" title="Link to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/rigidBodyUtilities.py#L788"><code class="docutils literal notranslate"><span class="pre">HTrotateY(angle)</span></code></a></p>
+<ul class="simple">
+<li><p><strong>function description</strong>: <a class="reference internal" href="../abbreviations.html#ht"><span class="std std-ref">HT</span></a> for rotation around axis X (first axis)</p></li>
+</ul>
+</section>
+<section id="function-htrotatez">
+<span id="sec-rigidbodyutilities-htrotatez"></span><h2>Function: HTrotateZ<a class="headerlink" href="#function-htrotatez" title="Link to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/rigidBodyUtilities.py#L795"><code class="docutils literal notranslate"><span class="pre">HTrotateZ(angle)</span></code></a></p>
+<ul class="simple">
+<li><p><strong>function description</strong>: <a class="reference internal" href="../abbreviations.html#ht"><span class="std std-ref">HT</span></a> for rotation around axis X (first axis)</p></li>
+</ul>
+<p>Relevant Examples (Ex) and TestModels (TM) with weblink to github: <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/ROSMobileManipulator.py"><code class="docutils literal notranslate"><span class="pre">ROSMobileManipulator.py</span></code></a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/homogeneousTransformationInterfaceTest.py"><code class="docutils literal notranslate"><span class="pre">homogeneousTransformationInterfaceTest.py</span></code></a> (TM), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/homogeneousTransformationTest.py"><code class="docutils literal notranslate"><span class="pre">homogeneousTransformationTest.py</span></code></a> (TM)</p>
+</section>
+<section id="function-ht2translation">
+<span id="sec-rigidbodyutilities-ht2translation"></span><h2>Function: HT2translation<a class="headerlink" href="#function-ht2translation" title="Link to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/rigidBodyUtilities.py#L802"><code class="docutils literal notranslate"><span class="pre">HT2translation(T)</span></code></a></p>
+<ul class="simple">
+<li><p><strong>function description</strong>: return translation part of <a class="reference internal" href="../abbreviations.html#ht"><span class="std std-ref">HT</span></a>; T is a 4x4 array or an exudyn.HT</p></li>
+</ul>
+<p>Relevant Examples (Ex) and TestModels (TM) with weblink to github: <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/kinematicTreeAndMBS.py"><code class="docutils literal notranslate"><span class="pre">kinematicTreeAndMBS.py</span></code></a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/serialRobotInverseKinematics.py"><code class="docutils literal notranslate"><span class="pre">serialRobotInverseKinematics.py</span></code></a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/serialRobotURDF.py"><code class="docutils literal notranslate"><span class="pre">serialRobotURDF.py</span></code></a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/homogeneousTransformationParameterTest.py"><code class="docutils literal notranslate"><span class="pre">homogeneousTransformationParameterTest.py</span></code></a> (TM), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/kinematicTreeAndMBStest.py"><code class="docutils literal notranslate"><span class="pre">kinematicTreeAndMBStest.py</span></code></a> (TM), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/movingGroundRobotTest.py"><code class="docutils literal notranslate"><span class="pre">movingGroundRobotTest.py</span></code></a> (TM), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/serialRobotTest.py"><code class="docutils literal notranslate"><span class="pre">serialRobotTest.py</span></code></a> (TM)</p>
+</section>
+<section id="function-ht2rotationmatrix">
+<span id="sec-rigidbodyutilities-ht2rotationmatrix"></span><h2>Function: HT2rotationMatrix<a class="headerlink" href="#function-ht2rotationmatrix" title="Link to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/rigidBodyUtilities.py#L807"><code class="docutils literal notranslate"><span class="pre">HT2rotationMatrix(T)</span></code></a></p>
+<ul class="simple">
+<li><p><strong>function description</strong>: return rotation matrix of <a class="reference internal" href="../abbreviations.html#ht"><span class="std std-ref">HT</span></a>; T is a 4x4 array or an exudyn.HT</p></li>
+</ul>
+<p>Relevant Examples (Ex) and TestModels (TM) with weblink to github: <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/kinematicTreeAndMBS.py"><code class="docutils literal notranslate"><span class="pre">kinematicTreeAndMBS.py</span></code></a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/homogeneousTransformationParameterTest.py"><code class="docutils literal notranslate"><span class="pre">homogeneousTransformationParameterTest.py</span></code></a> (TM), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/kinematicTreeAndMBStest.py"><code class="docutils literal notranslate"><span class="pre">kinematicTreeAndMBStest.py</span></code></a> (TM)</p>
+</section>
+<section id="function-inverseht">
+<span id="sec-rigidbodyutilities-inverseht"></span><h2>Function: InverseHT<a class="headerlink" href="#function-inverseht" title="Link to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/rigidBodyUtilities.py#L813"><code class="docutils literal notranslate"><span class="pre">InverseHT(T)</span></code></a></p>
+<ul class="simple">
+<li><p><strong>function description</strong>: return inverse <a class="reference internal" href="../abbreviations.html#ht"><span class="std std-ref">HT</span></a> such that inv(T)*T = np.eye(4); T is a 4x4 array or an exudyn.HT</p></li>
+</ul>
+<p>Relevant Examples (Ex) and TestModels (TM) with weblink to github: <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/serialRobotKinematicTree.py"><code class="docutils literal notranslate"><span class="pre">serialRobotKinematicTree.py</span></code></a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/homogeneousTransformationParameterTest.py"><code class="docutils literal notranslate"><span class="pre">homogeneousTransformationParameterTest.py</span></code></a> (TM), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/homogeneousTransformationTest.py"><code class="docutils literal notranslate"><span class="pre">homogeneousTransformationTest.py</span></code></a> (TM)</p>
+</section>
+<section id="function-rotationx2t66">
+<span id="sec-rigidbodyutilities-rotationx2t66"></span><h2>Function: RotationX2T66<a class="headerlink" href="#function-rotationx2t66" title="Link to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/rigidBodyUtilities.py#L836"><code class="docutils literal notranslate"><span class="pre">RotationX2T66(angle)</span></code></a></p>
+<ul class="simple">
+<li><p><strong>function description</strong>: compute 6x6 coordinate transformation matrix for rotation around X axis; output: first 3 components for rotation, second 3 components for translation! See Featherstone / Handbook of robotics <a class="reference internal" href="../references.html#ref-siciliano2016"><span class="std std-ref">Siciliano2016</span></a></p></li>
+</ul>
+</section>
+<section id="function-rotationy2t66">
+<span id="sec-rigidbodyutilities-rotationy2t66"></span><h2>Function: RotationY2T66<a class="headerlink" href="#function-rotationy2t66" title="Link to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/rigidBodyUtilities.py#L849"><code class="docutils literal notranslate"><span class="pre">RotationY2T66(angle)</span></code></a></p>
+<ul class="simple">
+<li><p><strong>function description</strong>: compute 6x6 transformation matrix for rotation around Y axis; output: first 3 components for rotation, second 3 components for translation</p></li>
+</ul>
+</section>
+<section id="function-rotationz2t66">
+<span id="sec-rigidbodyutilities-rotationz2t66"></span><h2>Function: RotationZ2T66<a class="headerlink" href="#function-rotationz2t66" title="Link to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/rigidBodyUtilities.py#L862"><code class="docutils literal notranslate"><span class="pre">RotationZ2T66(angle)</span></code></a></p>
+<ul class="simple">
+<li><p><strong>function description</strong>: compute 6x6 transformation matrix for rotation around Z axis; output: first 3 components for rotation, second 3 components for translation</p></li>
+</ul>
+</section>
+<section id="function-translation2t66">
+<span id="sec-rigidbodyutilities-translation2t66"></span><h2>Function: Translation2T66<a class="headerlink" href="#function-translation2t66" title="Link to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/rigidBodyUtilities.py#L875"><code class="docutils literal notranslate"><span class="pre">Translation2T66(translation3D)</span></code></a></p>
+<ul class="simple">
+<li><p><strong>function description</strong>: compute 6x6 transformation matrix for translation according to 3D vector translation3D; output: first 3 components for rotation, second 3 components for translation!</p></li>
+</ul>
+</section>
+<section id="function-translationx2t66">
+<span id="sec-rigidbodyutilities-translationx2t66"></span><h2>Function: TranslationX2T66<a class="headerlink" href="#function-translationx2t66" title="Link to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/rigidBodyUtilities.py#L887"><code class="docutils literal notranslate"><span class="pre">TranslationX2T66(translation)</span></code></a></p>
+<ul class="simple">
+<li><p><strong>function description</strong>: compute 6x6 transformation matrix for translation along X axis; output: first 3 components for rotation, second 3 components for translation!</p></li>
+</ul>
+</section>
+<section id="function-translationy2t66">
+<span id="sec-rigidbodyutilities-translationy2t66"></span><h2>Function: TranslationY2T66<a class="headerlink" href="#function-translationy2t66" title="Link to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/rigidBodyUtilities.py#L892"><code class="docutils literal notranslate"><span class="pre">TranslationY2T66(translation)</span></code></a></p>
+<ul class="simple">
+<li><p><strong>function description</strong>: compute 6x6 transformation matrix for translation along Y axis; output: first 3 components for rotation, second 3 components for translation!</p></li>
+</ul>
+</section>
+<section id="function-translationz2t66">
+<span id="sec-rigidbodyutilities-translationz2t66"></span><h2>Function: TranslationZ2T66<a class="headerlink" href="#function-translationz2t66" title="Link to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/rigidBodyUtilities.py#L897"><code class="docutils literal notranslate"><span class="pre">TranslationZ2T66(translation)</span></code></a></p>
+<ul class="simple">
+<li><p><strong>function description</strong>: compute 6x6 transformation matrix for translation along Z axis; output: first 3 components for rotation, second 3 components for translation!</p></li>
+</ul>
+</section>
+<section id="function-t66torotationtranslation">
+<span id="sec-rigidbodyutilities-t66torotationtranslation"></span><h2>Function: T66toRotationTranslation<a class="headerlink" href="#function-t66torotationtranslation" title="Link to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/rigidBodyUtilities.py#L902"><code class="docutils literal notranslate"><span class="pre">T66toRotationTranslation(T66)</span></code></a></p>
+<ul class="simple">
+<li><p><strong>function description</strong>: convert 6x6 coordinate transformation (Plücker transform) into rotation and translation</p></li>
+<li><p><strong>input</strong>: T66 given as  6x6 numpy array</p></li>
+<li><p><strong>output</strong>: [A, v] with 3x3 rotation matrix A and 3D translation vector v</p></li>
+</ul>
+<p>Relevant Examples (Ex) and TestModels (TM) with weblink to github: <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/kinematicTreeAndMBS.py"><code class="docutils literal notranslate"><span class="pre">kinematicTreeAndMBS.py</span></code></a> (Ex)</p>
+</section>
+<section id="function-inverset66torotationtranslation">
+<span id="sec-rigidbodyutilities-inverset66torotationtranslation"></span><h2>Function: InverseT66toRotationTranslation<a class="headerlink" href="#function-inverset66torotationtranslation" title="Link to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/rigidBodyUtilities.py#L915"><code class="docutils literal notranslate"><span class="pre">InverseT66toRotationTranslation(T66)</span></code></a></p>
+<ul class="simple">
+<li><p><strong>function description</strong>: convert inverse 6x6 coordinate transformation (Plücker transform) into rotation and translation</p></li>
+<li><p><strong>input</strong>: inverse T66 given as  6x6 numpy array</p></li>
+<li><p><strong>output</strong>: [A, v] with 3x3 rotation matrix A and 3D translation vector v</p></li>
+</ul>
+</section>
+<section id="function-rotationtranslation2t66">
+<span id="sec-rigidbodyutilities-rotationtranslation2t66"></span><h2>Function: RotationTranslation2T66<a class="headerlink" href="#function-rotationtranslation2t66" title="Link to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/rigidBodyUtilities.py#L928"><code class="docutils literal notranslate"><span class="pre">RotationTranslation2T66(A,</span> <span class="pre">v)</span></code></a></p>
+<ul class="simple">
+<li><p><strong>function description</strong>: convert rotation and translation into 6x6 coordinate transformation (Plücker transform)</p></li>
+<li><p><strong>input</strong>:</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">A</span></code>: 3x3 rotation matrix A</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">v</span></code>: 3D translation vector v</p></li>
+</ul>
+</li>
+<li><p><strong>output</strong>: return 6x6 transformation matrix ‘T66’</p></li>
+</ul>
+</section>
+<section id="function-rotationtranslation2t66inverse">
+<span id="sec-rigidbodyutilities-rotationtranslation2t66inverse"></span><h2>Function: RotationTranslation2T66Inverse<a class="headerlink" href="#function-rotationtranslation2t66inverse" title="Link to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/rigidBodyUtilities.py#L942"><code class="docutils literal notranslate"><span class="pre">RotationTranslation2T66Inverse(A,</span> <span class="pre">v)</span></code></a></p>
+<ul class="simple">
+<li><p><strong>function description</strong>: convert rotation and translation into INVERSE 6x6 coordinate transformation (Plücker transform)</p></li>
+<li><p><strong>input</strong>:</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">A</span></code>: 3x3 rotation matrix A</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">v</span></code>: 3D translation vector v</p></li>
+</ul>
+</li>
+<li><p><strong>output</strong>: return 6x6 transformation matrix ‘T66’</p></li>
+</ul>
+<p>Relevant Examples (Ex) and TestModels (TM) with weblink to github: <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/kinematicTreeAndMBS.py"><code class="docutils literal notranslate"><span class="pre">kinematicTreeAndMBS.py</span></code></a> (Ex)</p>
+</section>
+<section id="function-t66inverse">
+<span id="sec-rigidbodyutilities-t66inverse"></span><h2>Function: T66Inverse<a class="headerlink" href="#function-t66inverse" title="Link to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/rigidBodyUtilities.py#L956"><code class="docutils literal notranslate"><span class="pre">T66Inverse(T66)</span></code></a></p>
+<ul class="simple">
+<li><p><strong>function description</strong>: compute inverse of 6x6 coordinate transformation (Plücker transform)</p></li>
+<li><p><strong>input</strong>:</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">T66</span></code>: 6x6 coordinate transformation (Plücker transform)</p></li>
+</ul>
+</li>
+<li><p><strong>output</strong>: return inverse 6x6 transformation matrix ‘T66’</p></li>
+<li><p><strong>notes</strong>: Skew(A&#64;v) = A&#64;Skew(v)&#64;A.T; v=ApB: -BRA&#64;Skew(ApB) = Skew(BpA)&#64;BRA</p></li>
+</ul>
+</section>
+<section id="function-t66toht">
+<span id="sec-rigidbodyutilities-t66toht"></span><h2>Function: T66toHT<a class="headerlink" href="#function-t66toht" title="Link to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/rigidBodyUtilities.py#L982"><code class="docutils literal notranslate"><span class="pre">T66toHT(T66)</span></code></a></p>
+<ul class="simple">
+<li><p><strong>function description</strong>: convert 6x6 coordinate transformation (Plücker transform) into 4x4 homogeneous transformation; NOTE that the homogeneous transformation is the inverse of what is computed in function pluho() of Featherstone</p></li>
+<li><p><strong>input</strong>: T66 given as 6x6 numpy array</p></li>
+<li><p><strong>output</strong>: homogeneous transformation (4x4 numpy array)</p></li>
+</ul>
+<p>Relevant Examples (Ex) and TestModels (TM) with weblink to github: <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/kinematicTreeAndMBS.py"><code class="docutils literal notranslate"><span class="pre">kinematicTreeAndMBS.py</span></code></a> (Ex)</p>
+</section>
+<section id="function-ht2t66inverse">
+<span id="sec-rigidbodyutilities-ht2t66inverse"></span><h2>Function: HT2T66Inverse<a class="headerlink" href="#function-ht2t66inverse" title="Link to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/rigidBodyUtilities.py#L998"><code class="docutils literal notranslate"><span class="pre">HT2T66Inverse(T)</span></code></a></p>
+<ul class="simple">
+<li><p><strong>function description</strong>: convert 4x4 homogeneous transformation into 6x6 coordinate transformation (Plücker transform); NOTE that the homogeneous transformation is the inverse of what is computed in function pluho() of Featherstone</p></li>
+<li><p><strong>input</strong>:</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">T</span></code>: 4x4 homogeneous transformation (numpy array or exudyn.HT)</p></li>
+</ul>
+</li>
+<li><p><strong>output</strong>: T66 (6x6 numpy array)</p></li>
+</ul>
+</section>
+<section id="function-inertiatensor2inertia6d">
+<span id="sec-rigidbodyutilities-inertiatensor2inertia6d"></span><h2>Function: InertiaTensor2Inertia6D<a class="headerlink" href="#function-inertiatensor2inertia6d" title="Link to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/rigidBodyUtilities.py#L1017"><code class="docutils literal notranslate"><span class="pre">InertiaTensor2Inertia6D(inertiaTensor)</span></code></a></p>
+<ul class="simple">
+<li><p><strong>function description</strong>: convert a 3x3 matrix (list or numpy array) into a list with 6 inertia components, sorted as J00, J11, J22, J12, J02, J01</p></li>
+</ul>
+</section>
+<section id="function-inertia6d2inertiatensor">
+<span id="sec-rigidbodyutilities-inertia6d2inertiatensor"></span><h2>Function: Inertia6D2InertiaTensor<a class="headerlink" href="#function-inertia6d2inertiatensor" title="Link to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/rigidBodyUtilities.py#L1023"><code class="docutils literal notranslate"><span class="pre">Inertia6D2InertiaTensor(inertia6D)</span></code></a></p>
+<ul class="simple">
+<li><p><strong>function description</strong>: convert a list or numpy array with 6 inertia components (sorted as [J00, J11, J22, J12, J02, J01]) (list or numpy array) into a 3x3 matrix (np.array)</p></li>
+</ul>
+<p>Relevant Examples (Ex) and TestModels (TM) with weblink to github: <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/rigidBodyAsUserFunctionTest.py"><code class="docutils literal notranslate"><span class="pre">rigidBodyAsUserFunctionTest.py</span></code></a> (TM)</p>
+</section>
+<section id="function-strnodetype2nodetype">
+<span id="sec-rigidbodyutilities-strnodetype2nodetype"></span><h2>Function: StrNodeType2NodeType<a class="headerlink" href="#function-strnodetype2nodetype" title="Link to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/rigidBodyUtilities.py#L1430"><code class="docutils literal notranslate"><span class="pre">StrNodeType2NodeType(sNodeType)</span></code></a></p>
+<ul class="simple">
+<li><p><strong>function description</strong>: convert string into exudyn.NodeType; call e.g. with ‘NodeType.RotationEulerParameters’ or ‘RotationEulerParameters’</p></li>
+<li><p><strong>notes</strong>: function is not very fast, so should be avoided in time-critical situations</p></li>
+</ul>
+</section>
+<section id="function-getrigidbodynode">
+<span id="sec-rigidbodyutilities-getrigidbodynode"></span><h2>Function: GetRigidBodyNode<a class="headerlink" href="#function-getrigidbodynode" title="Link to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/rigidBodyUtilities.py#L1448"><code class="docutils literal notranslate"><span class="pre">GetRigidBodyNode(nodeType,</span> <span class="pre">position</span> <span class="pre">=</span> <span class="pre">[0,0,0],</span> <span class="pre">velocity</span> <span class="pre">=</span> <span class="pre">[0,0,0],</span> <span class="pre">rotationMatrix</span> <span class="pre">=</span> <span class="pre">[],</span> <span class="pre">rotationParameters</span> <span class="pre">=</span> <span class="pre">[],</span> <span class="pre">angularVelocity</span> <span class="pre">=</span> <span class="pre">[0,0,0])</span></code></a></p>
+<ul class="simple">
+<li><p><strong>function description</strong>: get node item interface according to nodeType, using initialization with position, velocity, angularVelocity and rotationMatrix</p></li>
+<li><p><strong>input</strong>:</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">nodeType</span></code>: a node type according to exudyn.NodeType, or a string of it, e.g., ‘NodeType.RotationEulerParameters’ (fastest, but additional algebraic constraint equation), ‘NodeType.RotationRxyz’ (Tait-Bryan angles, singularity for second angle at +/- 90 degrees), ‘NodeType.RotationRotationVector’ (used for Lie group integration)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">position</span></code>: reference position as list or numpy array with 3 components (in global/world frame)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">velocity</span></code>: initial translational velocity as list or numpy array with 3 components (in global/world frame)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">rotationMatrix</span></code>: 3x3 list or numpy matrix to define reference rotation; use EITHER rotationMatrix=[[…],[…],[…]] (while rotationParameters=[]) or rotationParameters=[…] (while rotationMatrix=[])</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">rotationParameters</span></code>: reference rotation parameters; use EITHER rotationMatrix=[[…],[…],[…]] (while rotationParameters=[]) or rotationParameters=[…] (while rotationMatrix=[])</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">angularVelocity</span></code>: initial angular velocity as list or numpy array with 3 components (in global/world frame)</p></li>
+</ul>
+</li>
+<li><p><strong>output</strong>: returns list containing node number and body number: [nodeNumber, bodyNumber]</p></li>
+</ul>
+</section>
+<section id="function-addrigidbody">
+<span id="sec-rigidbodyutilities-addrigidbody"></span><h2>Function: AddRigidBody<a class="headerlink" href="#function-addrigidbody" title="Link to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/rigidBodyUtilities.py#L1542"><code class="docutils literal notranslate"><span class="pre">AddRigidBody(mainSys,</span> <span class="pre">inertia,</span> <span class="pre">nodeType</span> <span class="pre">=</span> <span class="pre">exu.NodeType.RotationEulerParameters,</span> <span class="pre">position</span> <span class="pre">=</span> <span class="pre">[0,0,0],</span> <span class="pre">velocity</span> <span class="pre">=</span> <span class="pre">[0,0,0],</span> <span class="pre">rotationMatrix</span> <span class="pre">=</span> <span class="pre">[],</span> <span class="pre">rotationParameters</span> <span class="pre">=</span> <span class="pre">[],</span> <span class="pre">angularVelocity</span> <span class="pre">=</span> <span class="pre">[0,0,0],</span> <span class="pre">gravity</span> <span class="pre">=</span> <span class="pre">[0,0,0],</span> <span class="pre">graphicsDataList</span> <span class="pre">=</span> <span class="pre">[])</span></code></a></p>
+<ul class="simple">
+<li><p><strong>function description</strong>: DEPRECATED: adds a node (with str(exu.NodeType. …)) and body for a given rigid body; all quantities (esp. velocity and angular velocity) are given in global coordinates!</p></li>
+<li><p><strong>input</strong>:</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">inertia</span></code>: an inertia object as created by class RigidBodyInertia; containing mass, COM and inertia</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">nodeType</span></code>: a node type according to exudyn.NodeType, or a string of it, e.g., ‘NodeType.RotationEulerParameters’ (fastest, but additional algebraic constraint equation), ‘NodeType.RotationRxyz’ (Tait-Bryan angles, singularity for second angle at +/- 90 degrees), ‘NodeType.RotationRotationVector’ (used for Lie group integration)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">position</span></code>: reference position as list or numpy array with 3 components (in global/world frame)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">velocity</span></code>: initial translational velocity as list or numpy array with 3 components (in global/world frame)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">rotationMatrix</span></code>: 3x3 list or numpy matrix to define reference rotation; use EITHER rotationMatrix=[[…],[…],[…]] (while rotationParameters=[]) or rotationParameters=[…] (while rotationMatrix=[])</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">rotationParameters</span></code>: reference rotation parameters; use EITHER rotationMatrix=[[…],[…],[…]] (while rotationParameters=[]) or rotationParameters=[…] (while rotationMatrix=[])</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">angularVelocity</span></code>: initial angular velocity as list or numpy array with 3 components (in global/world frame)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">gravity</span></code>: if provided as list or numpy array with 3 components, it adds gravity force to the body at the COM, i.e., fAdd = m*gravity</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">graphicsDataList</span></code>: list of graphicsData objects to define appearance of body</p></li>
+</ul>
+</li>
+<li><p><strong>output</strong>: returns list containing node number and body number: [nodeNumber, bodyNumber]</p></li>
+<li><p><strong>notes</strong>: DEPRECATED and will be removed; use MainSystem.CreateRigidBody(…) instead!</p></li>
+</ul>
+</section>
+<section id="function-addrevolutejoint">
+<span id="sec-rigidbodyutilities-addrevolutejoint"></span><h2>Function: AddRevoluteJoint<a class="headerlink" href="#function-addrevolutejoint" title="Link to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/rigidBodyUtilities.py#L1653"><code class="docutils literal notranslate"><span class="pre">AddRevoluteJoint(mbs,</span> <span class="pre">body0,</span> <span class="pre">body1,</span> <span class="pre">point,</span> <span class="pre">axis,</span> <span class="pre">useGlobalFrame</span> <span class="pre">=</span> <span class="pre">True,</span> <span class="pre">showJoint</span> <span class="pre">=</span> <span class="pre">True,</span> <span class="pre">axisRadius</span> <span class="pre">=</span> <span class="pre">0.1,</span> <span class="pre">axisLength</span> <span class="pre">=</span> <span class="pre">0.4)</span></code></a></p>
+<ul class="simple">
+<li><p><strong>function description</strong>: DEPRECATED (use MainSystem function instead): add revolute joint between two bodies; definition of joint position and axis in global coordinates (alternatively in body0 local coordinates) for reference configuration of bodies; all markers, markerRotation and other quantities are automatically computed</p></li>
+<li><p><strong>input</strong>:</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">mbs</span></code>: the MainSystem to which the joint and markers shall be added</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">body0</span></code>: a object number for body0, must be rigid body or ground object</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">body1</span></code>: a object number for body1, must be rigid body or ground object</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">point</span></code>: a 3D vector as list or np.array containing the global center point of the joint in reference configuration</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">axis</span></code>: a 3D vector as list or np.array containing the global rotation axis of the joint in reference configuration</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">useGlobalFrame</span></code>: if False, the point and axis vectors are defined in the local coordinate system of body0</p></li>
+</ul>
+</li>
+<li><p><strong>output</strong>: returns list [oJoint, mBody0, mBody1], containing the joint object number, and the two rigid body markers on body0/1 for the joint</p></li>
+<li><p><strong>notes</strong>: DEPRECATED and will be removed; use MainSystem.CreateRevoluteJoint(…) instead!</p></li>
+</ul>
+</section>
+<section id="function-addprismaticjoint">
+<span id="sec-rigidbodyutilities-addprismaticjoint"></span><h2>Function: AddPrismaticJoint<a class="headerlink" href="#function-addprismaticjoint" title="Link to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/rigidBodyUtilities.py#L1741"><code class="docutils literal notranslate"><span class="pre">AddPrismaticJoint(mbs,</span> <span class="pre">body0,</span> <span class="pre">body1,</span> <span class="pre">point,</span> <span class="pre">axis,</span> <span class="pre">useGlobalFrame</span> <span class="pre">=</span> <span class="pre">True,</span> <span class="pre">showJoint</span> <span class="pre">=</span> <span class="pre">True,</span> <span class="pre">axisRadius</span> <span class="pre">=</span> <span class="pre">0.1,</span> <span class="pre">axisLength</span> <span class="pre">=</span> <span class="pre">0.4)</span></code></a></p>
+<ul class="simple">
+<li><p><strong>function description</strong>: DEPRECATED (use MainSystem function instead): add prismatic joint between two bodies; definition of joint position and axis in global coordinates (alternatively in body0 local coordinates) for reference configuration of bodies; all markers, markerRotation and other quantities are automatically computed</p></li>
+<li><p><strong>input</strong>:</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">mbs</span></code>: the MainSystem to which the joint and markers shall be added</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">body0</span></code>: a object number for body0, must be rigid body or ground object</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">body1</span></code>: a object number for body1, must be rigid body or ground object</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">point</span></code>: a 3D vector as list or np.array containing the global center point of the joint in reference configuration</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">axis</span></code>: a 3D vector as list or np.array containing the global translation axis of the joint in reference configuration</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">useGlobalFrame</span></code>: if False, the point and axis vectors are defined in the local coordinate system of body0</p></li>
+</ul>
+</li>
+<li><p><strong>output</strong>: returns list [oJoint, mBody0, mBody1], containing the joint object number, and the two rigid body markers on body0/1 for the joint</p></li>
+<li><p><strong>notes</strong>: DEPRECATED and will be removed; use MainSystem.CreatePrismaticJoint(…) instead!</p></li>
+</ul>
+</section>
+<section id="class-treelink-in-module-rigidbodyutilities">
+<span id="sec-module-rigidbodyutilities-class-treelink"></span><h2>CLASS TreeLink (in module rigidBodyUtilities)<a class="headerlink" href="#class-treelink-in-module-rigidbodyutilities" title="Link to this heading"></a></h2>
+<p><strong>class description</strong>: helper class for CreateKinematicTree, representing a link on a joint within a kinematic tree</p>
+<p><em>example</em>:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span>  <span class="n">link3</span> <span class="o">=</span> <span class="nc">TreeLink</span><span class="p">(</span><span class="n">linkInertia</span> <span class="o">=</span> <span class="nc">InertiaCuboid</span><span class="p">(</span><span class="mi">2800</span><span class="p">,</span> <span class="p">[</span><span class="mf">0.25</span><span class="p">,</span><span class="mf">0.08</span><span class="p">,</span><span class="mf">0.08</span><span class="p">])</span><span class="o">.</span><span class="nf">Translated</span><span class="p">([</span><span class="mf">0.125</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]),</span>
+                   <span class="n">jointType</span> <span class="o">=</span> <span class="o">=</span><span class="n">exu</span><span class="o">.</span><span class="n">JointType</span><span class="o">.</span><span class="n">RevoluteZ</span><span class="p">,</span>
+                   <span class="n">parent</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
+                   <span class="n">graphicsData</span> <span class="o">=</span> <span class="n">graphics</span><span class="o">.</span><span class="nf">Brick</span><span class="p">(</span><span class="n">centerPoint</span><span class="o">=</span><span class="p">[</span><span class="mf">0.125</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span> <span class="n">size</span><span class="o">=</span><span class="p">[</span><span class="mf">0.25</span><span class="p">,</span><span class="mf">0.08</span><span class="p">,</span><span class="mf">0.08</span><span class="p">],</span>
+                                                 <span class="nc">color</span><span class="o">=</span><span class="n">graphics</span><span class="o">.</span><span class="nc">color</span><span class="o">.</span><span class="n">blue</span><span class="p">),</span>
+                   <span class="p">)</span>
+</pre></div>
+</div>
+<section id="class-function-init">
+<span id="sec-rigidbodyutilities-treelink-init"></span><h3>Class function: <strong>init</strong><a class="headerlink" href="#class-function-init" title="Link to this heading"></a></h3>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/rigidBodyUtilities.py#L1044"><code class="docutils literal notranslate"><span class="pre">__init__(self,</span> <span class="pre">linkInertia,</span> <span class="pre">jointType</span> <span class="pre">=</span> <span class="pre">exu.JointType.RevoluteZ,</span> <span class="pre">jointHT</span> <span class="pre">=</span> <span class="pre">None,</span> <span class="pre">parent</span> <span class="pre">=</span> <span class="pre">None,</span> <span class="pre">PDcontrol</span> <span class="pre">=</span> <span class="pre">None,</span> <span class="pre">graphicsDataList</span> <span class="pre">=</span> <span class="pre">None)</span></code></a></p>
+<ul class="simple">
+<li><p><strong>class function description</strong>: initialize inertia</p></li>
+<li><p><strong>input</strong>:</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">linkInertia</span></code>: RigidBodyInertia class, containing mass, inertia, and COM</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">jointHT</span></code>: transformation from previous link to this link’s joint, an exu.HT or a 4x4 matrix; None for the identity</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">parent</span></code>: index to parent link; if parent link is ground, use -1; if all parents in a serial kinematic tree are None, parent indices are computed automatically</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">PDcontrol</span></code>: tuple of PD control parameters</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">graphicsData</span></code>: graphicsDataList link; None automatically adds a suitable graphical object from next joint to this joint; use empty list [] to add no graphics for link</p></li>
+</ul>
+</li>
+</ul>
+<p>Relevant Examples (Ex) and TestModels (TM) with weblink to github: <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/createKinematicTreeTest.py"><code class="docutils literal notranslate"><span class="pre">createKinematicTreeTest.py</span></code></a> (TM)</p>
+</section>
+</section>
+<section id="class-rigidbodyinertia-in-module-rigidbodyutilities">
+<span id="sec-module-rigidbodyutilities-class-rigidbodyinertia"></span><h2>CLASS RigidBodyInertia (in module rigidBodyUtilities)<a class="headerlink" href="#class-rigidbodyinertia-in-module-rigidbodyutilities" title="Link to this heading"></a></h2>
+<p><strong>class description</strong>: helper class for rigid body inertia (see also derived classes Inertia…). Provides a structure to define mass, inertia and center of mass (COM) of a rigid body. The inertia tensor and center of mass must correspond when initializing the body!</p>
+<ul class="simple">
+<li><p><strong>notes</strong>: in the default mode, inertiaTensorAtCOM = False, the inertia tensor must be provided with respect to the reference point; otherwise, it is given at COM; internally, the inertia tensor is always with respect to the reference point, not w.r.t. to COM!</p></li>
+</ul>
+<p><em>example</em>:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span>  <span class="n">i0</span> <span class="o">=</span> <span class="nc">RigidBodyInertia</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span><span class="n">np</span><span class="o">.</span><span class="n">diag</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">]))</span>
+  <span class="n">i1</span> <span class="o">=</span> <span class="n">i0</span><span class="o">.</span><span class="nf">Rotated</span><span class="p">(</span><span class="nf">RotationMatrixX</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">/</span><span class="mi">2</span><span class="p">))</span>
+  <span class="n">i2</span> <span class="o">=</span> <span class="n">i1</span><span class="o">.</span><span class="nf">Translated</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">])</span>
+</pre></div>
+</div>
+<section id="sec-rigidbodyutilities-rigidbodyinertia-init">
+<span id="id1"></span><h3>Class function: <strong>init</strong><a class="headerlink" href="#sec-rigidbodyutilities-rigidbodyinertia-init" title="Link to this heading"></a></h3>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/rigidBodyUtilities.py#L1081"><code class="docutils literal notranslate"><span class="pre">__init__(self,</span> <span class="pre">mass</span> <span class="pre">=</span> <span class="pre">0,</span> <span class="pre">inertiaTensor</span> <span class="pre">=</span> <span class="pre">np.zeros([3,3]),</span> <span class="pre">com</span> <span class="pre">=</span> <span class="pre">np.zeros(3),</span> <span class="pre">inertiaTensorAtCOM</span> <span class="pre">=</span> <span class="pre">False)</span></code></a></p>
+<ul class="simple">
+<li><p><strong>class function description</strong>: initialize RigidBodyInertia with scalar mass, 3x3 inertiaTensor (w.r.t. reference point!!!) and center of mass com</p></li>
+<li><p><strong>input</strong>:</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">mass</span></code>: mass of rigid body (dimensions need to be consistent, should be in SI-units)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">inertiaTensor</span></code>: tensor given w.r.t. reference point, NOT w.r.t. center of mass!</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">com</span></code>: center of mass relative to reference point, in same coordinate system as inertiaTensor</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">inertiaTensorAtCOM</span></code>: bool flag: if False (default), the inertiaTensor has to be provided w.r.t. the reference point; if True, it has to be provided at the center of mass</p></li>
+</ul>
+</li>
+</ul>
+</section>
+<section id="class-function-add">
+<span id="sec-rigidbodyutilities-rigidbodyinertia-add"></span><h3>Class function: <strong>add</strong><a class="headerlink" href="#class-function-add" title="Link to this heading"></a></h3>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/rigidBodyUtilities.py#L1124"><code class="docutils literal notranslate"><span class="pre">__add__(self,</span> <span class="pre">otherBodyInertia)</span></code></a></p>
+<ul class="simple">
+<li><p><strong>class function description</strong>: add (+) operator allows adding another inertia information with SAME local coordinate system and reference point! only inertias with same center of rotation can be added!</p></li>
+</ul>
+<p><em>example</em>:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span>  <span class="n">J</span> <span class="o">=</span> <span class="nc">InertiaSphere</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="mf">0.1</span><span class="p">)</span> <span class="o">+</span> <span class="nc">InertiaRodX</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="class-function-iadd">
+<span id="sec-rigidbodyutilities-rigidbodyinertia-iadd"></span><h3>Class function: <strong>iadd</strong><a class="headerlink" href="#class-function-iadd" title="Link to this heading"></a></h3>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/rigidBodyUtilities.py#L1136"><code class="docutils literal notranslate"><span class="pre">__iadd__(self,</span> <span class="pre">otherBodyInertia)</span></code></a></p>
+<ul class="simple">
+<li><p><strong>class function description</strong>: += operator allows adding another inertia information with SAME local coordinate system and reference point! only inertias with same center of rotation can be added!</p></li>
+</ul>
+<p><em>example</em>:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span>  <span class="n">J</span> <span class="o">=</span> <span class="nc">InertiaSphere</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="mf">0.1</span><span class="p">)</span>
+  <span class="n">J</span> <span class="o">+=</span> <span class="nc">InertiaRodX</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="class-function-setwithcominertia">
+<span id="sec-rigidbodyutilities-rigidbodyinertia-setwithcominertia"></span><h3>Class function: SetWithCOMinertia<a class="headerlink" href="#class-function-setwithcominertia" title="Link to this heading"></a></h3>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/rigidBodyUtilities.py#L1147"><code class="docutils literal notranslate"><span class="pre">SetWithCOMinertia(self,</span> <span class="pre">mass,</span> <span class="pre">inertiaTensorCOM,</span> <span class="pre">com)</span></code></a></p>
+<ul class="simple">
+<li><p><strong>class function description</strong>: set RigidBodyInertia with scalar mass, 3x3 inertiaTensor (w.r.t. com) and center of mass com</p></li>
+<li><p><strong>input</strong>:</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">mass</span></code>: mass of rigid body (dimensions need to be consistent, should be in SI-units)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">inertiaTensorCOM</span></code>: tensor given w.r.t. reference point, NOT w.r.t. center of mass!</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">com</span></code>: center of mass relative to reference point, in same coordinate system as inertiaTensor</p></li>
+</ul>
+</li>
+</ul>
+</section>
+<section id="class-function-inertia">
+<span id="sec-rigidbodyutilities-rigidbodyinertia-inertia"></span><h3>Class function: Inertia<a class="headerlink" href="#class-function-inertia" title="Link to this heading"></a></h3>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/rigidBodyUtilities.py#L1164"><code class="docutils literal notranslate"><span class="pre">Inertia(self)</span></code></a></p>
+<ul class="simple">
+<li><p><strong>class function description</strong>: returns 3x3 inertia tensor with respect to chosen reference point (not necessarily COM)</p></li>
+</ul>
+</section>
+<section id="class-function-inertiacom">
+<span id="sec-rigidbodyutilities-rigidbodyinertia-inertiacom"></span><h3>Class function: InertiaCOM<a class="headerlink" href="#class-function-inertiacom" title="Link to this heading"></a></h3>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/rigidBodyUtilities.py#L1169"><code class="docutils literal notranslate"><span class="pre">InertiaCOM(self)</span></code></a></p>
+<ul class="simple">
+<li><p><strong>class function description</strong>: returns 3x3 inertia tensor with respect to COM</p></li>
+</ul>
+</section>
+<section id="class-function-com">
+<span id="sec-rigidbodyutilities-rigidbodyinertia-com"></span><h3>Class function: COM<a class="headerlink" href="#class-function-com" title="Link to this heading"></a></h3>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/rigidBodyUtilities.py#L1174"><code class="docutils literal notranslate"><span class="pre">COM(self)</span></code></a></p>
+<ul class="simple">
+<li><p><strong>class function description</strong>: returns center of mass (COM) w.r.t. chosen reference point</p></li>
+</ul>
+</section>
+<section id="class-function-mass">
+<span id="sec-rigidbodyutilities-rigidbodyinertia-mass"></span><h3>Class function: Mass<a class="headerlink" href="#class-function-mass" title="Link to this heading"></a></h3>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/rigidBodyUtilities.py#L1179"><code class="docutils literal notranslate"><span class="pre">Mass(self)</span></code></a></p>
+<ul class="simple">
+<li><p><strong>class function description</strong>: returns mass</p></li>
+</ul>
+</section>
+<section id="class-function-translated">
+<span id="sec-rigidbodyutilities-rigidbodyinertia-translated"></span><h3>Class function: Translated<a class="headerlink" href="#class-function-translated" title="Link to this heading"></a></h3>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/rigidBodyUtilities.py#L1184"><code class="docutils literal notranslate"><span class="pre">Translated(self,</span> <span class="pre">vec)</span></code></a></p>
+<ul class="simple">
+<li><p><strong>class function description</strong>: returns a RigidBodyInertia with center of mass com shifted by vec; <span class="math notranslate nohighlight">\(\ra\)</span> transforms the returned inertiaTensor to the new center of rotation</p></li>
+</ul>
+</section>
+<section id="class-function-rotated">
+<span id="sec-rigidbodyutilities-rigidbodyinertia-rotated"></span><h3>Class function: Rotated<a class="headerlink" href="#class-function-rotated" title="Link to this heading"></a></h3>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/rigidBodyUtilities.py#L1204"><code class="docutils literal notranslate"><span class="pre">Rotated(self,</span> <span class="pre">rot)</span></code></a></p>
+<ul class="simple">
+<li><p><strong>class function description</strong>: returns a RigidBodyInertia rotated by 3x3 rotation matrix rot, such that for a given J, the new inertia tensor reads Jnew = rot<em>J</em>rot.T</p></li>
+<li><p><strong>notes</strong>: only allowed if COM=0 !</p></li>
+</ul>
+</section>
+<section id="class-function-transformed">
+<span id="sec-rigidbodyutilities-rigidbodyinertia-transformed"></span><h3>Class function: Transformed<a class="headerlink" href="#class-function-transformed" title="Link to this heading"></a></h3>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/rigidBodyUtilities.py#L1221"><code class="docutils literal notranslate"><span class="pre">Transformed(self,</span> <span class="pre">HT)</span></code></a></p>
+<ul class="simple">
+<li><p><strong>class function description</strong>: return rigid body inertia transformed by homogeneous transformation HT</p></li>
+</ul>
+</section>
+<section id="class-function-getinertia6d">
+<span id="sec-rigidbodyutilities-rigidbodyinertia-getinertia6d"></span><h3>Class function: GetInertia6D<a class="headerlink" href="#class-function-getinertia6d" title="Link to this heading"></a></h3>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/rigidBodyUtilities.py#L1243"><code class="docutils literal notranslate"><span class="pre">GetInertia6D(self)</span></code></a></p>
+<ul class="simple">
+<li><p><strong>class function description</strong>: get vector with 6 inertia components (Jxx, Jyy, Jzz, Jyz, Jxz, Jxy) w.r.t. to reference point (not necessarily the COM), as needed in ObjectRigidBody</p></li>
+</ul>
+</section>
+<section id="class-function-gettypename">
+<span id="sec-rigidbodyutilities-rigidbodyinertia-gettypename"></span><h3>Class function: GetTypeName<a class="headerlink" href="#class-function-gettypename" title="Link to this heading"></a></h3>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/rigidBodyUtilities.py#L1250"><code class="docutils literal notranslate"><span class="pre">GetTypeName(self)</span></code></a></p>
+<ul class="simple">
+<li><p><strong>class function description</strong>: which returns str of type (‘InertiaCylinder’, ‘InertiaCuboid’, …)</p></li>
+</ul>
+</section>
+<section id="class-function-getspecialdata">
+<span id="sec-rigidbodyutilities-rigidbodyinertia-getspecialdata"></span><h3>Class function: GetSpecialData<a class="headerlink" href="#class-function-getspecialdata" title="Link to this heading"></a></h3>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/rigidBodyUtilities.py#L1255"><code class="docutils literal notranslate"><span class="pre">GetSpecialData(self)</span></code></a></p>
+<ul class="simple">
+<li><p><strong>class function description</strong>: returns dictionary with further data of inertia, like cylinder radius, etc.</p></li>
+</ul>
+</section>
+<section id="class-function-getgraphics">
+<span id="sec-rigidbodyutilities-rigidbodyinertia-getgraphics"></span><h3>Class function: GetGraphics<a class="headerlink" href="#class-function-getgraphics" title="Link to this heading"></a></h3>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/rigidBodyUtilities.py#L1261"><code class="docutils literal notranslate"><span class="pre">GetGraphics(self,</span> <span class="pre">color,</span> <span class="pre">nTiles</span> <span class="pre">=</span> <span class="pre">None,</span> <span class="pre">roundness</span> <span class="pre">=</span> <span class="pre">None)</span></code></a></p>
+<ul class="simple">
+<li><p><strong>class function description</strong>: get graphicsData object from inertia; this simplifies the rigid body creation process and allows to check for consistency; currently does not include HT-rotations!</p></li>
+</ul>
+<p>Relevant Examples (Ex) and TestModels (TM) with weblink to github: <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/bicycleIftommBenchmark.py"><code class="docutils literal notranslate"><span class="pre">bicycleIftommBenchmark.py</span></code></a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/humanRobotInteraction.py"><code class="docutils literal notranslate"><span class="pre">humanRobotInteraction.py</span></code></a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/openAIgymNLinkAdvanced.py"><code class="docutils literal notranslate"><span class="pre">openAIgymNLinkAdvanced.py</span></code></a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/openAIgymNLinkContinuous.py"><code class="docutils literal notranslate"><span class="pre">openAIgymNLinkContinuous.py</span></code></a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/reinforcementLearningRobot.py"><code class="docutils literal notranslate"><span class="pre">reinforcementLearningRobot.py</span></code></a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/createRollingDiscPenaltyTest.py"><code class="docutils literal notranslate"><span class="pre">createRollingDiscPenaltyTest.py</span></code></a> (TM), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/rigidBody2Dtest.py"><code class="docutils literal notranslate"><span class="pre">rigidBody2Dtest.py</span></code></a> (TM), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/rigidBodyCOMtest.py"><code class="docutils literal notranslate"><span class="pre">rigidBodyCOMtest.py</span></code></a> (TM), …</p>
+</section>
+</section>
+<section id="class-inertiacuboid-rigidbodyinertia-in-module-rigidbodyutilities">
+<span id="sec-module-rigidbodyutilities-class-inertiacuboid-rigidbodyinertia"></span><h2>CLASS InertiaCuboid(RigidBodyInertia) (in module rigidBodyUtilities)<a class="headerlink" href="#class-inertiacuboid-rigidbodyinertia-in-module-rigidbodyutilities" title="Link to this heading"></a></h2>
+<p><strong>class description</strong>: create RigidBodyInertia with moment of inertia and mass of a cuboid with density and side lengths sideLengths along local axes 1, 2, 3; inertia w.r.t. center of mass, com=[0,0,0]</p>
+<p><em>example</em>:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span>  <span class="nc">InertiaCuboid</span><span class="p">(</span><span class="n">density</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span><span class="n">sideLengths</span><span class="o">=</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mf">0.1</span><span class="p">,</span><span class="mf">0.1</span><span class="p">])</span>
+</pre></div>
+</div>
+<section id="sec-rigidbodyutilities-inertiacuboid-rigidbodyinertia-init">
+<span id="id2"></span><h3>Class function: <strong>init</strong><a class="headerlink" href="#sec-rigidbodyutilities-inertiacuboid-rigidbodyinertia-init" title="Link to this heading"></a></h3>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/rigidBodyUtilities.py#L1334"><code class="docutils literal notranslate"><span class="pre">__init__(self,</span> <span class="pre">density,</span> <span class="pre">sideLengths)</span></code></a></p>
+<ul class="simple">
+<li><p><strong>class function description</strong>: initialize inertia</p></li>
+</ul>
+<p>Relevant Examples (Ex) and TestModels (TM) with weblink to github: <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/addPrismaticJoint.py"><code class="docutils literal notranslate"><span class="pre">addPrismaticJoint.py</span></code></a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/addRevoluteJoint.py"><code class="docutils literal notranslate"><span class="pre">addRevoluteJoint.py</span></code></a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/ANCFrotatingCable2D.py"><code class="docutils literal notranslate"><span class="pre">ANCFrotatingCable2D.py</span></code></a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/ANCFslidingJoint.py"><code class="docutils literal notranslate"><span class="pre">ANCFslidingJoint.py</span></code></a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/bungeeJump.py"><code class="docutils literal notranslate"><span class="pre">bungeeJump.py</span></code></a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/bricardMechanism.py"><code class="docutils literal notranslate"><span class="pre">bricardMechanism.py</span></code></a> (TM), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/carRollingDiscTest.py"><code class="docutils literal notranslate"><span class="pre">carRollingDiscTest.py</span></code></a> (TM), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/complexEigenvaluesTest.py"><code class="docutils literal notranslate"><span class="pre">complexEigenvaluesTest.py</span></code></a> (TM), …</p>
+</section>
+</section>
+<section id="class-inertiarodx-rigidbodyinertia-in-module-rigidbodyutilities">
+<span id="sec-module-rigidbodyutilities-class-inertiarodx-rigidbodyinertia"></span><h2>CLASS InertiaRodX(RigidBodyInertia) (in module rigidBodyUtilities)<a class="headerlink" href="#class-inertiarodx-rigidbodyinertia-in-module-rigidbodyutilities" title="Link to this heading"></a></h2>
+<p><strong>class description</strong>: create RigidBodyInertia with moment of inertia and mass of a rod with mass m and length L in local 1-direction (x-direction); inertia w.r.t. center of mass, com=[0,0,0]</p>
+<section id="sec-rigidbodyutilities-inertiarodx-rigidbodyinertia-init">
+<span id="id3"></span><h3>Class function: <strong>init</strong><a class="headerlink" href="#sec-rigidbodyutilities-inertiarodx-rigidbodyinertia-init" title="Link to this heading"></a></h3>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/rigidBodyUtilities.py#L1349"><code class="docutils literal notranslate"><span class="pre">__init__(self,</span> <span class="pre">mass,</span> <span class="pre">length)</span></code></a></p>
+<ul class="simple">
+<li><p><strong>class function description</strong>: initialize inertia with mass and length of rod</p></li>
+</ul>
+<p>Relevant Examples (Ex) and TestModels (TM) with weblink to github: <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/fourBarMechanismIftomm.py"><code class="docutils literal notranslate"><span class="pre">fourBarMechanismIftomm.py</span></code></a> (TM)</p>
+</section>
+</section>
+<section id="class-inertiamasspoint-rigidbodyinertia-in-module-rigidbodyutilities">
+<span id="sec-module-rigidbodyutilities-class-inertiamasspoint-rigidbodyinertia"></span><h2>CLASS InertiaMassPoint(RigidBodyInertia) (in module rigidBodyUtilities)<a class="headerlink" href="#class-inertiamasspoint-rigidbodyinertia-in-module-rigidbodyutilities" title="Link to this heading"></a></h2>
+<p><strong>class description</strong>: create RigidBodyInertia with moment of inertia and mass of mass point with given ‘mass’; inertia w.r.t. center of mass, com=[0,0,0]; note that the inertia tensor gives zero and cannot be directly used in rigid bodies, however, it can be used to be added to another inertia tensor (e.g. to add unbalance)</p>
+<section id="sec-rigidbodyutilities-inertiamasspoint-rigidbodyinertia-init">
+<span id="id4"></span><h3>Class function: <strong>init</strong><a class="headerlink" href="#sec-rigidbodyutilities-inertiamasspoint-rigidbodyinertia-init" title="Link to this heading"></a></h3>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/rigidBodyUtilities.py#L1360"><code class="docutils literal notranslate"><span class="pre">__init__(self,</span> <span class="pre">mass)</span></code></a></p>
+<ul class="simple">
+<li><p><strong>class function description</strong>: initialize inertia with mass of point</p></li>
+</ul>
+<p>Relevant Examples (Ex) and TestModels (TM) with weblink to github: <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/stiffFlyballGovernor2.py"><code class="docutils literal notranslate"><span class="pre">stiffFlyballGovernor2.py</span></code></a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/stiffFlyballGovernorKT.py"><code class="docutils literal notranslate"><span class="pre">stiffFlyballGovernorKT.py</span></code></a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/stiffFlyballGovernor.py"><code class="docutils literal notranslate"><span class="pre">stiffFlyballGovernor.py</span></code></a> (TM)</p>
+</section>
+</section>
+<section id="class-inertiasphere-rigidbodyinertia-in-module-rigidbodyutilities">
+<span id="sec-module-rigidbodyutilities-class-inertiasphere-rigidbodyinertia"></span><h2>CLASS InertiaSphere(RigidBodyInertia) (in module rigidBodyUtilities)<a class="headerlink" href="#class-inertiasphere-rigidbodyinertia-in-module-rigidbodyutilities" title="Link to this heading"></a></h2>
+<p><strong>class description</strong>: create RigidBodyInertia with moment of inertia and mass of sphere with mass and radius; inertia w.r.t. center of mass, com=[0,0,0]</p>
+<section id="sec-rigidbodyutilities-inertiasphere-rigidbodyinertia-init">
+<span id="id5"></span><h3>Class function: <strong>init</strong><a class="headerlink" href="#sec-rigidbodyutilities-inertiasphere-rigidbodyinertia-init" title="Link to this heading"></a></h3>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/rigidBodyUtilities.py#L1371"><code class="docutils literal notranslate"><span class="pre">__init__(self,</span> <span class="pre">mass</span> <span class="pre">=</span> <span class="pre">None,</span> <span class="pre">radius</span> <span class="pre">=</span> <span class="pre">None,</span> <span class="pre">density</span> <span class="pre">=</span> <span class="pre">None)</span></code></a></p>
+<ul class="simple">
+<li><p><strong>class function description</strong>: initialize inertia with mass and radius of sphere</p></li>
+</ul>
+<p>Relevant Examples (Ex) and TestModels (TM) with weblink to github: <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/contactCurveWithLongCurve.py"><code class="docutils literal notranslate"><span class="pre">contactCurveWithLongCurve.py</span></code></a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/graphicsDataExample.py"><code class="docutils literal notranslate"><span class="pre">graphicsDataExample.py</span></code></a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/newtonsCradle.py"><code class="docutils literal notranslate"><span class="pre">newtonsCradle.py</span></code></a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/particleClusters.py"><code class="docutils literal notranslate"><span class="pre">particleClusters.py</span></code></a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/particlesSilo.py"><code class="docutils literal notranslate"><span class="pre">particlesSilo.py</span></code></a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/contactComparisonTest.py"><code class="docutils literal notranslate"><span class="pre">contactComparisonTest.py</span></code></a> (TM), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/contactSphereSphereTest.py"><code class="docutils literal notranslate"><span class="pre">contactSphereSphereTest.py</span></code></a> (TM), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/contactSphereSphereTestEAPM.py"><code class="docutils literal notranslate"><span class="pre">contactSphereSphereTestEAPM.py</span></code></a> (TM), …</p>
+</section>
+</section>
+<section id="class-inertiahollowsphere-rigidbodyinertia-in-module-rigidbodyutilities">
+<span id="sec-module-rigidbodyutilities-class-inertiahollowsphere-rigidbodyinertia"></span><h2>CLASS InertiaHollowSphere(RigidBodyInertia) (in module rigidBodyUtilities)<a class="headerlink" href="#class-inertiahollowsphere-rigidbodyinertia-in-module-rigidbodyutilities" title="Link to this heading"></a></h2>
+<p><strong>class description</strong>: create RigidBodyInertia with moment of inertia and mass of hollow sphere with mass (concentrated at circumference) and radius; inertia w.r.t. center of mass, com=0</p>
+<section id="sec-rigidbodyutilities-inertiahollowsphere-rigidbodyinertia-init">
+<span id="id6"></span><h3>Class function: <strong>init</strong><a class="headerlink" href="#sec-rigidbodyutilities-inertiahollowsphere-rigidbodyinertia-init" title="Link to this heading"></a></h3>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/rigidBodyUtilities.py#L1391"><code class="docutils literal notranslate"><span class="pre">__init__(self,</span> <span class="pre">mass,</span> <span class="pre">radius)</span></code></a></p>
+<ul class="simple">
+<li><p><strong>class function description</strong>: initialize inertia with mass and (inner==outer) radius of hollow sphere</p></li>
+</ul>
+</section>
+</section>
+<section id="class-inertiacylinder-rigidbodyinertia-in-module-rigidbodyutilities">
+<span id="sec-module-rigidbodyutilities-class-inertiacylinder-rigidbodyinertia"></span><h2>CLASS InertiaCylinder(RigidBodyInertia) (in module rigidBodyUtilities)<a class="headerlink" href="#class-inertiacylinder-rigidbodyinertia-in-module-rigidbodyutilities" title="Link to this heading"></a></h2>
+<p><strong>class description</strong>: create RigidBodyInertia with moment of inertia and mass of cylinder with density, length and outerRadius; axis defines the orientation of the cylinder axis (0=x-axis, 1=y-axis, 2=z-axis); for hollow cylinder use innerRadius != 0; inertia w.r.t. center of mass, com=[0,0,0]</p>
+<section id="sec-rigidbodyutilities-inertiacylinder-rigidbodyinertia-init">
+<span id="id7"></span><h3>Class function: <strong>init</strong><a class="headerlink" href="#sec-rigidbodyutilities-inertiacylinder-rigidbodyinertia-init" title="Link to this heading"></a></h3>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/rigidBodyUtilities.py#L1403"><code class="docutils literal notranslate"><span class="pre">__init__(self,</span> <span class="pre">density,</span> <span class="pre">length,</span> <span class="pre">outerRadius,</span> <span class="pre">axis,</span> <span class="pre">innerRadius</span> <span class="pre">=</span> <span class="pre">0)</span></code></a></p>
+<ul class="simple">
+<li><p><strong>class function description</strong>: initialize inertia with density, length, outer radius, axis (0=x-axis, 1=y-axis, 2=z-axis) and optional inner radius (for hollow cylinder)</p></li>
+</ul>
+<p>Relevant Examples (Ex) and TestModels (TM) with weblink to github: <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/ballBearningModel.py"><code class="docutils literal notranslate"><span class="pre">ballBearningModel.py</span></code></a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/camFollowerExample.py"><code class="docutils literal notranslate"><span class="pre">camFollowerExample.py</span></code></a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/chainDriveExample.py"><code class="docutils literal notranslate"><span class="pre">chainDriveExample.py</span></code></a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/graphicsCurvedShapes.py"><code class="docutils literal notranslate"><span class="pre">graphicsCurvedShapes.py</span></code></a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/gyroStability.py"><code class="docutils literal notranslate"><span class="pre">gyroStability.py</span></code></a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/ANCFbeltDrive.py"><code class="docutils literal notranslate"><span class="pre">ANCFbeltDrive.py</span></code></a> (TM), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/ANCFgeneralContactCircle.py"><code class="docutils literal notranslate"><span class="pre">ANCFgeneralContactCircle.py</span></code></a> (TM), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/ballBearingTest.py"><code class="docutils literal notranslate"><span class="pre">ballBearingTest.py</span></code></a> (TM), …</p>
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="processing.html" class="btn btn-neutral float-left" title="Module: processing" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="robotics.html" class="btn btn-neutral float-right" title="Module: robotics" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

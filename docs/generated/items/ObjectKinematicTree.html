@@ -1,0 +1,723 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ObjectKinematicTree &mdash; Exudyn1.13.3 1.13.3 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=3ee1c6c6" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/rtd_sphinx_search.min.css" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/custom.css?v=e2783f0e" />
+
+  
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=b8a3e558"></script>
+      <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../../_static/copybutton.js?v=f281be69"></script>
+      <script src="../../../_static/js/rtd_search_config.js"></script>
+      <script src="../../../_static/js/rtd_sphinx_search.min.js"></script>
+      <script>window.MathJax = {"loader": {"load": ["[tex]/mathtools"]}, "tex": {"packages": {"[+]": ["mathtools"]}, "macros": {"ANCFdk": "{\\LU{0}{\\dv_k}}", "ANCFdkO": "{\\LU{0}{\\dv_{0,k}}}", "ANCFdkOtp": "{\\LU{0}{\\dv_{0,k}\\tp}}", "ANCFdkt": "{\\LU{0}{\\dot\\dv_k}}", "Am": "{\\mathbf{A}}", "Dm": "{\\mathbf{D}}", "Em": "{\\mathbf{E}}", "Gm": "{\\mathbf{G}}", "Im": "{\\mathbf{I}}", "ImThree": "{\\mathbf{I}_{3 \\times 3}}", "Jm": "{\\mathbf{J}}", "Km": "{\\mathbf{K}}", "Mm": "{\\mathbf{M}}", "Pm": "{\\mathbf{P}}", "Rm": "{\\mathbf{R}}", "Sm": "{\\mathbf{S}}", "Tm": "{\\mathbf{T}}", "av": "{\\mathbf{a}}", "bv": "{\\mathbf{b}}", "cv": "{\\mathbf{c}}", "diffANCF": ["{\\frac{\\partial #1}{\\partial \\qv_{ANCF}}}", 1], "diffANCFdk": "{\\diffANCFmI{\\ANCFdk}}", "diffANCFmI": ["{\\frac{\\partial #1}{\\partial \\qv_{ANCF,m1}}}", 1], "diffANCFmIt": ["{\\frac{\\partial #1}{\\partial \\dot \\qv_{ANCF,m1}}}", 1], "diffANCFt": ["{\\frac{\\partial #1}{\\partial \\dot \\qv_{ANCF}}}", 1], "diffmI": ["{\\frac{\\partial #1}{\\partial \\qv_{m1}}}", 1], "diffmIt": ["{\\frac{\\partial #1}{\\partial \\dot \\qv_{m1}}}", 1], "diffmOI": ["{\\frac{\\partial #1}{\\partial \\qv_{m0,m1}}}", 1], "diffmOIt": ["{\\frac{\\partial #1}{\\partial \\dot \\qv_{m0,m1}}}", 1], "diffmOt": ["{\\frac{\\partial #1}{\\partial \\dot \\qv_{m0}}}", 1], "dv": "{\\mathbf{d}}", "ev": "{\\mathbf{e}}", "fv": "{\\mathbf{f}}", "gv": "{\\mathbf{g}}", "hv": "{\\mathbf{h}}", "nv": "{\\mathbf{n}}", "pv": "{\\mathbf{p}}", "qv": "{\\mathbf{q}}", "rv": "{\\mathbf{r}}", "sv": "{\\mathbf{s}}", "tv": "{\\mathbf{t}}", "uv": "{\\mathbf{u}}", "vv": "{\\mathbf{v}}", "xv": "{\\mathbf{x}}", "yv": "{\\mathbf{y}}", "zv": "{\\mathbf{z}}", "vspace": ["{}", 1], "ra": "{\\rightarrow}", "Rcal": "{\\mathbb{R}}", "Ccal": "{\\mathbb{C}}", "Ncal": "{\\mathbb{N}}", "Rot": "{\\mathbf{A}}", "dd": "{\\mathrm{d}}", "ps": "{p_\\mathrm{s}}", "co": "{\\mathrm{c}}", "si": "{\\mathrm{s}}", "tp": "{^\\mathrm{T}}", "diag": "{\\mathrm{diag}}", "vec": "{\\mathrm{vec}}", "Null": "{\\mathbf{0}}", "varepsilonDot": "{\\boldsymbol{\\varepsilon}}", "talpha": "{\\boldsymbol{\\alpha}}", "tbeta": "{\\boldsymbol{\\beta}}", "tgamma": "{\\boldsymbol{\\gamma}}", "tchi": "{\\boldsymbol{\\chi}}", "tdelta": "{\\boldsymbol{\\delta}}", "teps": "{\\boldsymbol{\\varepsilon}}", "tepsDot": "{\\boldsymbol{\\dot \\varepsilon}}", "teta": "{\\boldsymbol{\\eta}}", "tkappa": "{\\boldsymbol{\\kappa}}", "tkappaDot": "{\\boldsymbol{\\dot \\kappa}}", "tphi": "{\\boldsymbol{\\phi}}", "boldVarPhi": "{\\boldsymbol{\\varphi}}", "tPhi": "{\\boldsymbol{\\Phi}}", "ttheta": "{\\boldsymbol{\\theta}}", "tTheta": "{\\boldsymbol{\\Theta}}", "tlambda": "{\\boldsymbol{\\lambda}}", "tnu": "{\\boldsymbol{\\nu}}", "tmu": "{\\boldsymbol{\\mu}}", "tpsi": "{\\boldsymbol{\\psi}}", "tPsi": "{\\boldsymbol{\\Psi}}", "ttau": "{\\boldsymbol{\\tau}}", "tsigma": "{\\boldsymbol{\\sigma}}", "txi": "{\\boldsymbol{\\xi}}", "tzeta": "{\\boldsymbol{\\zeta}}", "tomega": "{\\boldsymbol{\\omega}}", "tOmega": "{\\boldsymbol{\\Omega}}", "vareps": "{\\varepsilon}", "myoverline": ["\\overline{#1}", 1], "pluseq": "\\mathrel{+}=", "LU": ["{\\prescript{#1}{}{#2}\\,}", 2], "LUX": ["{\\prescript{#1}{}{#2}#3\\,}", 3], "LUR": ["{\\prescript{#1}{}{#2}_{#3}\\,}", 3], "LURU": ["{\\prescript{#1}{}{#2}_{#3}^{#4}\\,}", 4], "LLdot": ["{\\prescript{}{#1}{\\dot{#2}}_{#3}\\,}", 3], "vr": ["{\\left[ \\begin{array}{c} { #1}\\vspace{0.04cm} \\\\ { #2}\\vspace{0.04cm} \\\\ { #3} \\end{array} \\right]}", 3], "mr": ["{\\left[ \\begin{array}{ccc} #1 & #2 & #3 \\vspace{0.04cm}\\\\ #4 & #5 & #6 \\vspace{0.04cm}\\\\ #7 & #8 & #9  \\end{array} \\right]}", 9], "vp": ["{\\left[ \\begin{array}{c} { #1} \\vspace{0.04cm}\\\\ { #2} \\end{array} \\right]}", 2], "mp": ["{\\left[ \\begin{array}{cc} #1 & #2 \\vspace{0.04cm}\\\\ #3 & #4 \\end{array} \\right]}", 4], "mfour": ["{\\left[ \\begin{array}{cccc} { #1} \\\\ { #2} \\\\ { #3} \\\\ { #4} \\end{array} \\right]}", 4], "vfour": ["{\\left[ \\begin{array}{c} { #1} \\\\ { #2} \\\\ { #3} \\\\ { #4} \\end{array} \\right]}", 4], "vrRow": ["{[#1,\\, #2,\\, #3]}", 3], "vsix": ["{\\left[ \\begin{array}{c} { #1} \\\\ { #2} \\\\ { #3} \\\\ { #4} \\\\ { #5} \\\\ { #6} \\end{array} \\right]}", 6], "vsixb": ["{\\begin{array}{c} { #1} \\\\ { #2} \\\\ { #3} \\\\ { #4} \\\\ { #5} \\\\ { #6} \\end{array} }", 6], "vsixs": ["{ \\begin{array}{c} { #1} \\\\ { #2} \\\\ { #3} \\\\ { #4} \\\\ { #5} \\\\ { #6} \\end{array} }", 6], "SO": "{q}", "FO": "{y}", "AE": "{\\lambda}", "SYS": "{s}", "SON": "{$2^\\mathrm{nd}$ order differential equations}", "FON": "{$1^\\mathrm{st}$ order differential equations}", "AEN": "{algebraic equations}", "Bm": "{\\mathbf{B}}", "Cm": "{\\mathbf{C}}", "Fm": "{\\mathbf{F}}", "SYSN": "{system equations}", "cIni": "{_\\mathrm{ini}}", "cRef": "{_\\mathrm{ref}}", "cCur": "{_\\mathrm{cur}}", "cVis": "{_\\mathrm{vis}}", "cSOS": "{_\\mathrm{start\\;of\\;step}}", "cConfig": "{_\\mathrm{config}}", "pLoc": "{\\mathbf{b}}", "pLocB": "{\\,^{b}{\\mathbf{v}}}", "pRef": "{\\mathbf{r}}", "pRefG": "{\\,^{0}{\\mathbf{r}}}", "indf": "{_\\mathrm{f}}", "indt": "{_\\mathrm{t}}", "indr": "{_\\mathrm{r}}", "indtt": "{_\\mathrm{tt}}", "indrr": "{_\\mathrm{rr}}", "indff": "{_\\mathrm{ff}}", "indtf": "{_\\mathrm{tf}}", "indrf": "{_\\mathrm{rf}}", "indtr": "{_\\mathrm{tr}}", "omegaBDtilde": "{\\LU{b}{\\tilde \\tomega_\\mathrm{bd}}}", "indrigid": "{_\\mathrm{rigid}}", "indred": "{_\\mathrm{red}}", "induser": "{_\\mathrm{user}}", "indu": "{_\\mathrm{u}}", "termA": ["{\\color{blue}{#1}}", 1], "termB": ["{\\color{red}{#1}}", 1], "termC": ["{\\color{green}{#1}}", 1], "acc": "{\\ddot{\\mathbf{q}}}", "GA": "{G\\alpha}", "Hm": "{\\mathbf{H}}", "ImTwo": "{\\mathbf{I}_{2 \\times 2}}", "Lm": "{\\mathbf{L}}", "Qm": "{\\mathbf{Q}}", "Vm": "{\\mathbf{V}}", "Wm": "{\\mathbf{W}}", "Xm": "{\\mathbf{X}}", "Ym": "{\\mathbf{Y}}", "aalg": "{\\mathbf{a}}", "iv": "{\\mathbf{i}}", "jv": "{\\mathbf{j}}", "kv": "{\\mathbf{k}}", "lv": "{\\mathbf{l}}", "mv": "{\\mathbf{m}}", "ov": "{\\mathbf{o}}", "vel": "{\\mathbf{v}}", "wv": "{\\mathbf{w}}"}}, "options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+      <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-mml-chtml.js"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+    <link rel="next" title="ObjectFFRF" href="ObjectFFRF.html" />
+    <link rel="prev" title="ObjectGenericODE2" href="ObjectGenericODE2.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            Exudyn1.13.3
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Exudyn User Manual</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../README.html">Exudyn</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../manual/gettingStarted.html">Installation and getting started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../manual/introduction.html">Overview on Exudyn</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../manual/introductionBasics.html">Exudyn basics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../manual/tutorial.html">Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../manual/GUI.html">Renderer, graphics and visualization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../manual/performanceErrors.html">Performance, errors and solver failures</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../manual/introductionAdvanced.html">Advanced topics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../manual/notation.html">Notation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../manual/theory.html">Theory and formulations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../manual/solver.html">Solvers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../cInterface/cInterfaceIndex.html">Python-C++ command interface</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Reference Manual</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="itemsIndex.html">Items reference manual</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="nodeIndex.html">Node</a></li>
+<li class="toctree-l2"><a class="reference internal" href="objectBodyIndex.html">Object (Body)</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="objectSuperElementIndex.html">Object (SuperElement)</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="objectSuperElementGeneral.html">General info for all super elements</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ObjectGenericODE2.html">ObjectGenericODE2</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">ObjectKinematicTree</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ObjectFFRF.html">ObjectFFRF</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ObjectFFRFreducedOrder.html">ObjectFFRFreducedOrder</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="objectObjectIndex.html">Object (Object)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="objectFiniteElementIndex.html">Object (FiniteElement)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="objectConnectorIndex.html">Object (Connector)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="objectConstraintIndex.html">Object (Constraint)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="objectJointIndex.html">Object (Joint)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="markerIndex.html">Marker</a></li>
+<li class="toctree-l2"><a class="reference internal" href="loadIndex.html">Load</a></li>
+<li class="toctree-l2"><a class="reference internal" href="sensorIndex.html">Sensor</a></li>
+<li class="toctree-l2"><a class="reference internal" href="itemsIndex.html#parameter-changes">Parameter changes</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../pythonUtilities/utilitiesIndex.html">Python Utility Functions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../structures/structuresIndex.html">Structures and Settings</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../references.html">References</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Developer documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../dev/README.html">Exudyn developer documentation</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">How-to notes</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../howTo/condaEnvironments.html">Conda environments for Exudyn</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../howTo/sphinxDocs.html">Building the documentation</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Examples, models and issues</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../examples/examplesIndex.html">Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../testModels/testModelsIndex.html">TestModels</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../abbreviations.html">List of Abbreviations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../manual/revisions.html">Revisions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../CHANGELOG.html">Changelog</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../trackerlog.html">Issue tracker</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">Exudyn1.13.3</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="itemsIndex.html">Items reference manual</a></li>
+          <li class="breadcrumb-item"><a href="objectSuperElementIndex.html">Object (SuperElement)</a></li>
+      <li class="breadcrumb-item active">ObjectKinematicTree</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../../_sources/docs/generated/items/ObjectKinematicTree.md.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <!-- GENERATED by tools/generators/itemDocsEmitter.py from definitions/ - do not edit -->
+<section class="tex2jax_ignore mathjax_ignore" id="objectkinematictree">
+<span id="sec-item-objectkinematictree"></span><h1>ObjectKinematicTree<a class="headerlink" href="#objectkinematictree" title="Link to this heading"></a></h1>
+<p>A special object to represent open kinematic trees using minimal coordinate formulation. The kinematic tree is defined by lists of joint types, parents, inertia parameters (w.r.t. COM), etc. per link (body) and given joint (pre) transformations from the previous joint. Every joint / link is defined by the position and orientation of the previous joint and a coordinate transformation (incl. translation) from the previous link’s to this link’s joint coordinates. The joint can be combined with a marker, which allows to attach connectors as well as joints to represent closed loop mechanisms. Efficient models can be created by using tree structures in combination with constraints and very long chains should be avoided and replaced by (smaller) jointed chains if possible. The class Robot from exudyn.robotics can also be used to create kinematic trees, which are then exported as KinematicTree or as redundant multibody system. Use specialized settings in VisualizationSettings.bodies.kinematicTree for showing joint frames and other properties.</p>
+<a class="reference internal image-reference" href="../../../_images/ObjectKinematicTree.png"><img alt="../../../_images/ObjectKinematicTree.png" src="../../../_images/ObjectKinematicTree.png" width="500" />
+</a>
+<p><strong>Simpler</strong>: <a class="reference internal" href="../cInterface/MainSystem.html#sec-mainsystemextensions-createkinematictree"><span class="std std-ref"><code class="docutils literal notranslate"><span class="pre">mbs.CreateKinematicTree</span></code></span></a> adds this item, with what it needs, in one call.</p>
+<section id="interface">
+<h2>Interface<a class="headerlink" href="#interface" title="Link to this heading"></a></h2>
+<ul class="simple">
+<li><p>Python names: <code class="docutils literal notranslate"><span class="pre">ObjectKinematicTree</span></code> or <code class="docutils literal notranslate"><span class="pre">KinematicTree</span></code>, and <code class="docutils literal notranslate"><span class="pre">VKinematicTree</span></code> for its visualization</p></li>
+<li><p>Nodes it takes: <a class="reference internal" href="Node1D.html#sec-item-node1d"><span class="std std-ref">Node1D</span></a>, <a class="reference internal" href="NodeGenericODE2.html#sec-item-nodegenericode2"><span class="std std-ref">NodeGenericODE2</span></a>, <a class="reference internal" href="NodePointGround.html#sec-item-nodepointground"><span class="std std-ref">NodePointGround</span></a></p></li>
+<li><p>Body markers that can be placed on it: <a class="reference internal" href="MarkerKinematicTreeRigid.html#sec-item-markerkinematictreerigid"><span class="std std-ref">MarkerKinematicTreeRigid</span></a></p></li>
+</ul>
+</section>
+<section id="parameters">
+<h2>Parameters<a class="headerlink" href="#parameters" title="Link to this heading"></a></h2>
+<p>The parameters of the item; in a dictionary, its type is ‘KinematicTree’:</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>name</p></th>
+<th class="head"><p>type</p></th>
+<th class="head"><p>size</p></th>
+<th class="head"><p>default</p></th>
+<th class="head"><p>description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><strong>name</strong></p></td>
+<td><p>String</p></td>
+<td><p></p></td>
+<td><p>‘’</p></td>
+<td><p>objects’s unique name</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>nodeNumber</strong></p></td>
+<td><p>NodeIndex</p></td>
+<td><p></p></td>
+<td><p>invalid (-1)</p></td>
+<td><p>(symbol: <span class="math notranslate nohighlight">\(n_0 \in \Ncal^n\)</span>) node number (type NodeIndex) of GenericODE2 node containing the coordinates for the kinematic tree; <span class="math notranslate nohighlight">\(n\)</span> being the number of minimal coordinates</p></td>
+</tr>
+<tr class="row-even"><td><p><strong>gravity</strong></p></td>
+<td><p>Vector3D</p></td>
+<td><p>3</p></td>
+<td><p>[0.,0.,0.]</p></td>
+<td><p>(symbol: <span class="math notranslate nohighlight">\(\LU{0}{\gv} \in \Rcal^{3}\)</span>) gravity vector in inertial coordinates; used to simply apply gravity as LoadMassProportional is not available for KinematicTree</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>baseOffset</strong></p></td>
+<td><p>Vector3D</p></td>
+<td><p>3</p></td>
+<td><p>[0.,0.,0.]</p></td>
+<td><p>(symbol: <span class="math notranslate nohighlight">\(\LU{0}{\pv_b} \in \Rcal^{3}\)</span>) offset vector for base, in global coordinates</p></td>
+</tr>
+<tr class="row-even"><td><p><strong>jointTypes</strong></p></td>
+<td><p>JointTypeList</p></td>
+<td><p></p></td>
+<td><p>[]</p></td>
+<td><p>(symbol: <span class="math notranslate nohighlight">\(\jv_T \in \Ncal^{n}\)</span>) joint types of kinematic Tree joints, using exu.JointType, like exu.JointType.RevoluteZ; must be always set</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>linkParents</strong></p></td>
+<td><p>ArrayIndex</p></td>
+<td><p></p></td>
+<td><p>[]</p></td>
+<td><p>(symbol: <span class="math notranslate nohighlight">\(\iv_p = [p_0,\, p_1,\, \ldots] \in \Ncal^{n}\)</span>) index of parent joint/link; if no parent exists, the value is <span class="math notranslate nohighlight">\(-1\)</span>; by default, <span class="math notranslate nohighlight">\(p_0=-1\)</span> because the <span class="math notranslate nohighlight">\(i\)</span>th parent index must always fulfill <span class="math notranslate nohighlight">\(p_i&lt;i\)</span>; must be always set</p></td>
+</tr>
+<tr class="row-even"><td><p><strong>jointTransformations</strong></p></td>
+<td><p>Matrix3DList</p></td>
+<td><p></p></td>
+<td><p>[]</p></td>
+<td><p>(symbol: <span class="math notranslate nohighlight">\(\Tm = [\LU{p_0,j_0}{\Tm_0},\, \LU{p_1,j_1}{\Tm_1},\, \ldots ] \in [\Rcal^{3 \times 3}, ...]\)</span>) list of constant joint transformations from parent joint coordinates <span class="math notranslate nohighlight">\(p_0\)</span> to this joint coordinates <span class="math notranslate nohighlight">\(j_0\)</span>; this allows to adjust the orientation of the joint axes (but it does not affect the joint offset); if no parent exists (<span class="math notranslate nohighlight">\(-1\)</span>), the base coordinate system <span class="math notranslate nohighlight">\(0\)</span> is used; must be always set</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>jointOffsets</strong></p></td>
+<td><p>Vector3DList</p></td>
+<td><p></p></td>
+<td><p>[]</p></td>
+<td><p>(symbol: <span class="math notranslate nohighlight">\(\Vm = [\LU{p_0}{o_0},\, \LU{p_1}{o_1},\, \ldots ] \in [\Rcal^{3}, ...]\)</span>) list of constant joint offsets from parent joint to this joint; <span class="math notranslate nohighlight">\(p_0\)</span>, <span class="math notranslate nohighlight">\(p_1\)</span>, <span class="math notranslate nohighlight">\(\ldots\)</span> denote the parent coordinate systems; this means that the joint offset is added prior to performing the joint transformation; if no parent exists (<span class="math notranslate nohighlight">\(-1\)</span>), the base coordinate system <span class="math notranslate nohighlight">\(0\)</span> is used; must be always set</p></td>
+</tr>
+<tr class="row-even"><td><p><strong>jointHTs</strong></p></td>
+<td><p>HomogeneousTransformationList</p></td>
+<td><p></p></td>
+<td><p>None</p></td>
+<td><p>(symbol: <span class="math notranslate nohighlight">\([\LU{p_0,j_0}{\Hm_0},\, \LU{p_1,j_1}{\Hm_1},\, \ldots ]\)</span>) the joint transformations and the joint offsets at once, as a list of homogeneous transformations from the parent joint to this joint - <span class="math notranslate nohighlight">\(\Hm_i\)</span> with the rotation <span class="math notranslate nohighlight">\(\Tm_i\)</span> and the translation <span class="math notranslate nohighlight">\(\LU{p_i}{o_i}\)</span>, each a 4x4 matrix, its 16 values or an exu.HT; None: not given; given together with jointTransformations or jointOffsets, they must agree</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>linkInertiasCOM</strong></p></td>
+<td><p>Matrix3DList</p></td>
+<td><p></p></td>
+<td><p>[]</p></td>
+<td><p>(symbol: <span class="math notranslate nohighlight">\(\Jm_{COM} = [\LU{j_0}{\Jm_0},\, \LU{j_1}{\Jm_1},\, \ldots ] \in [\Rcal^{3 \times 3}, ...]\)</span>) list of link inertia tensors w.r.t. <a class="reference internal" href="../abbreviations.html#com"><span class="std std-ref">COM</span></a> in joint/link <span class="math notranslate nohighlight">\(j_i\)</span> coordinates; must be always set</p></td>
+</tr>
+<tr class="row-even"><td><p><strong>linkCOMs</strong></p></td>
+<td><p>Vector3DList</p></td>
+<td><p></p></td>
+<td><p>[]</p></td>
+<td><p>(symbol: <span class="math notranslate nohighlight">\(\Cm = [\LU{j_0}{\cv_0},\, \LU{j_1}{\cv_1},\, \ldots ] \in [\Rcal^{3}, ...]\)</span>) list of vectors for center of mass (COM) in joint/link <span class="math notranslate nohighlight">\(j_i\)</span> coordinates; must be always set</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>linkMasses</strong></p></td>
+<td><p>Vector</p></td>
+<td><p></p></td>
+<td><p>[]</p></td>
+<td><p>(symbol: <span class="math notranslate nohighlight">\(\mv \in \Rcal^{n}\)</span>) masses of links; must be always set</p></td>
+</tr>
+<tr class="row-even"><td><p><strong>linkForces</strong></p></td>
+<td><p>Vector3DList</p></td>
+<td><p></p></td>
+<td><p>[]</p></td>
+<td><p>(symbol: <span class="math notranslate nohighlight">\(\LU{0}{\Fm} \in [\Rcal^{3}, ...]\)</span>) list of 3D force vectors per link in global coordinates acting on joint frame origin; use force-torque couple to realize off-origin forces; defaults to empty list <span class="math notranslate nohighlight">\([]\)</span>, adding no forces</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>linkTorques</strong></p></td>
+<td><p>Vector3DList</p></td>
+<td><p></p></td>
+<td><p>[]</p></td>
+<td><p>(symbol: <span class="math notranslate nohighlight">\(\LU{0}{\Fm_\tau} \in [\Rcal^{3}, ...]\)</span>) list of 3D torque vectors per link in global coordinates; defaults to empty list <span class="math notranslate nohighlight">\([]\)</span>, adding no torques</p></td>
+</tr>
+<tr class="row-even"><td><p><strong>jointForceVector</strong></p></td>
+<td><p>Vector</p></td>
+<td><p></p></td>
+<td><p>[]</p></td>
+<td><p>(symbol: <span class="math notranslate nohighlight">\(\fv \in \Rcal^{n}\)</span>) generalized force vector per coordinate added to RHS of EOM; represents a torque around the axis of rotation in revolute joints and a force in prismatic joints; for a revolute joint <span class="math notranslate nohighlight">\(i\)</span>, the torque <span class="math notranslate nohighlight">\(f[i]\)</span> acts positive (w.r.t. rotation axis) on link <span class="math notranslate nohighlight">\(i\)</span> and negative on parent link <span class="math notranslate nohighlight">\(p_i\)</span>; must be either empty list/array <span class="math notranslate nohighlight">\([]\)</span> (default) or have size <span class="math notranslate nohighlight">\(n\)</span></p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>jointPositionOffsetVector</strong></p></td>
+<td><p>Vector</p></td>
+<td><p></p></td>
+<td><p>[]</p></td>
+<td><p>(symbol: <span class="math notranslate nohighlight">\(\uv_o \in \Rcal^{n}\)</span>) offset for joint coordinates used in P(D) control; acts in positive joint direction similar to jointForceVector; should be modified, e.g., in preStepUserFunction; must be either empty list/array <span class="math notranslate nohighlight">\([]\)</span> (default) or have size <span class="math notranslate nohighlight">\(n\)</span></p></td>
+</tr>
+<tr class="row-even"><td><p><strong>jointVelocityOffsetVector</strong></p></td>
+<td><p>Vector</p></td>
+<td><p></p></td>
+<td><p>[]</p></td>
+<td><p>(symbol: <span class="math notranslate nohighlight">\(\vv_o \in \Rcal^{n}\)</span>) velocity offset for joint coordinates used in (P)D control; acts in positive joint direction similar to jointForceVector; should be modified, e.g., in preStepUserFunction; must be either empty list/array <span class="math notranslate nohighlight">\([]\)</span> (default) or have size <span class="math notranslate nohighlight">\(n\)</span></p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>jointPControlVector</strong></p></td>
+<td><p>Vector</p></td>
+<td><p></p></td>
+<td><p>[]</p></td>
+<td><p>(symbol: <span class="math notranslate nohighlight">\(\Pm \in \Rcal^{n}\)</span>) proportional (P) control values per joint (multiplied with position error between joint value and offset <span class="math notranslate nohighlight">\(\uv_o\)</span>); note that more complicated control laws must be implemented with user functions; must be either empty list/array <span class="math notranslate nohighlight">\([]\)</span> (default) or have size <span class="math notranslate nohighlight">\(n\)</span></p></td>
+</tr>
+<tr class="row-even"><td><p><strong>jointDControlVector</strong></p></td>
+<td><p>Vector</p></td>
+<td><p></p></td>
+<td><p>[]</p></td>
+<td><p>(symbol: <span class="math notranslate nohighlight">\(\Dm \in \Rcal^{n}\)</span>) derivative (D) control values per joint (multiplied with velocity error between joint velocity and velocity offset <span class="math notranslate nohighlight">\(\vv_o\)</span>); note that more complicated control laws must be implemented with user functions; must be either empty list/array <span class="math notranslate nohighlight">\([]\)</span> (default) or have size <span class="math notranslate nohighlight">\(n\)</span></p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>forceUserFunction</strong></p></td>
+<td><p>ObjectKinematicTreeForceUserFunction</p></td>
+<td><p></p></td>
+<td><p>0</p></td>
+<td><p>(symbol: <span class="math notranslate nohighlight">\(\fv_{user} \in \Rcal^{n}\)</span>) A Python user function which computes the generalized force vector on RHS with identical action as jointForceVector; see description below</p></td>
+</tr>
+<tr class="row-even"><td><p><strong>visualization</strong></p></td>
+<td><p>VObjectKinematicTree</p></td>
+<td><p></p></td>
+<td><p></p></td>
+<td><p>parameters for visualization of item</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="visualization-parameters">
+<h2>Visualization parameters<a class="headerlink" href="#visualization-parameters" title="Link to this heading"></a></h2>
+<p>The parameters of <code class="docutils literal notranslate"><span class="pre">VObjectKinematicTree</span></code>, given as <code class="docutils literal notranslate"><span class="pre">visualization</span></code>:</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>name</p></th>
+<th class="head"><p>type</p></th>
+<th class="head"><p>size</p></th>
+<th class="head"><p>default</p></th>
+<th class="head"><p>description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><strong>show</strong></p></td>
+<td><p>Bool</p></td>
+<td><p></p></td>
+<td><p>True</p></td>
+<td><p>set true, if item is shown in visualization and false if it is not shown</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>showLinks</strong></p></td>
+<td><p>Bool</p></td>
+<td><p></p></td>
+<td><p>True</p></td>
+<td><p>set true, if links shall be shown; if graphicsDataList is empty, a standard drawing for links is used (drawing a cylinder from previous joint or base to next joint; size relative to frame size in KinematicTree visualization settings); else graphicsDataList are used per link; NOTE visualization of joint and COM frames can be modified via visualizationSettings.bodies.kinematicTree</p></td>
+</tr>
+<tr class="row-even"><td><p><strong>showJoints</strong></p></td>
+<td><p>Bool</p></td>
+<td><p></p></td>
+<td><p>True</p></td>
+<td><p>set true, if joints shall be shown; if graphicsDataList is empty, a standard drawing for joints is used (drawing a cylinder for revolute joints; size relative to frame size in KinematicTree visualization settings)</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>color</strong></p></td>
+<td><p>Float4</p></td>
+<td><p>4</p></td>
+<td><p>[-1.,-1.,-1.,-1.]</p></td>
+<td><p>RGBA color for object; 4th value is alpha-transparency; R=-1.f means, that default color is used</p></td>
+</tr>
+<tr class="row-even"><td><p><strong>graphicsDataList</strong></p></td>
+<td><p>BodyGraphicsDataList</p></td>
+<td><p></p></td>
+<td><p></p></td>
+<td><p>Structure contains data for link/joint visualization; data is defined as list of BodyGraphicsData where every BodyGraphicsData corresponds to one link/joint; must either be emtpy list or length must agree with number of links</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="drawing">
+<h2>Drawing<a class="headerlink" href="#drawing" title="Link to this heading"></a></h2>
+<p>Drawn as <a class="reference internal" href="objectSuperElementGeneral.html#sec-drawing-objectssuperelement"><span class="std std-ref">all super elements</span></a>; per link its <code class="docutils literal notranslate"><span class="pre">graphicsDataList</span></code> in the link frame; a link without graphics data as a cylinder from the previous joint with <code class="docutils literal notranslate"><span class="pre">showLinks</span></code>, and its revolute axis as a cylinder with <code class="docutils literal notranslate"><span class="pre">showJoints</span></code>; the frames of the joints and of the centers of mass with <code class="docutils literal notranslate"><span class="pre">bodies.kinematicTree.showJointFrames</span></code> and <code class="docutils literal notranslate"><span class="pre">showCOMframes</span></code>, of size <code class="docutils literal notranslate"><span class="pre">frameSize</span></code>.</p>
+<p>Settings beyond those of all super elements: <a class="reference internal" href="../structures/VisualizationSettings.html#sec-vsettingskinematictree"><span class="std std-ref"><code class="docutils literal notranslate"><span class="pre">bodies.kinematicTree.frameSize</span></code></span></a>, <a class="reference internal" href="../structures/VisualizationSettings.html#sec-vsettingskinematictree"><span class="std std-ref"><code class="docutils literal notranslate"><span class="pre">bodies.kinematicTree.showCOMframes</span></code></span></a>, <a class="reference internal" href="../structures/VisualizationSettings.html#sec-vsettingskinematictree"><span class="std std-ref"><code class="docutils literal notranslate"><span class="pre">bodies.kinematicTree.showFramesNumbers</span></code></span></a>, <a class="reference internal" href="../structures/VisualizationSettings.html#sec-vsettingskinematictree"><span class="std std-ref"><code class="docutils literal notranslate"><span class="pre">bodies.kinematicTree.showJointFrames</span></code></span></a>, <a class="reference internal" href="../structures/VisualizationSettings.html#sec-vsettingsgeneral"><span class="std std-ref"><code class="docutils literal notranslate"><span class="pre">general.cylinderTiling</span></code></span></a>.</p>
+</section>
+<section id="output-variables">
+<h2>Output variables<a class="headerlink" href="#output-variables" title="Link to this heading"></a></h2>
+<p>Available as <code class="docutils literal notranslate"><span class="pre">OutputVariableType</span></code> in sensors, <code class="docutils literal notranslate"><span class="pre">Get...Output()</span></code> and other functions:</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>output variable</p></th>
+<th class="head"><p>symbol</p></th>
+<th class="head"><p>description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Coordinates</p></td>
+<td><p></p></td>
+<td><p>all <a class="reference internal" href="../abbreviations.html#ode2"><span class="std std-ref">ODE2</span></a> joint coordinates, including reference values (which is slightly inconsistent with CoordinatesTotal used in nodes); if you need values without reference part, read out the node; these are the minimal coordinates of the object</p></td>
+</tr>
+<tr class="row-odd"><td><p>Coordinates_t</p></td>
+<td><p></p></td>
+<td><p>all <a class="reference internal" href="../abbreviations.html#ode2"><span class="std std-ref">ODE2</span></a> velocity coordinates</p></td>
+</tr>
+<tr class="row-even"><td><p>Coordinates_tt</p></td>
+<td><p></p></td>
+<td><p>all <a class="reference internal" href="../abbreviations.html#ode2"><span class="std std-ref">ODE2</span></a> acceleration coordinates</p></td>
+</tr>
+<tr class="row-odd"><td><p>Force</p></td>
+<td><p></p></td>
+<td><p>generalized forces for all coordinates (residual of all forces except mass*accleration; corresponds to ComputeODE2LHS)</p></td>
+</tr>
+<tr class="row-even"><td><p>KineticEnergy</p></td>
+<td><p><span class="math notranslate nohighlight">\(T = \frac{1}{2} \dot\qv\tp \Mm\, \dot\qv\)</span></p></td>
+<td><p>kinetic energy from the mass matrix of the current state and the velocities of the nodes; current configuration only; localPosition must be <span class="math notranslate nohighlight">\([0,0,0]\)</span></p></td>
+</tr>
+<tr class="row-odd"><td><p>PotentialEnergy</p></td>
+<td><p><span class="math notranslate nohighlight">\(V = \sum_i \frac{1}{2} P_i (q_i - q_{\mathrm{off},i})^2 - f_i\, (q_i - q_{\mathrm{ref},i}) - m_i\, \gv\tp (\pv_{\mathrm{COM},i} - \pv_{\mathrm{COM},i,\mathrm{ref}})\)</span></p></td>
+<td><p>the springs of the P control (where jointPositionOffsetVector is given), the constant joint forces and the built-in gravity on the centers of mass of the links; the D control dissipates; raises for a forceUserFunction; localPosition must be <span class="math notranslate nohighlight">\([0,0,0]\)</span></p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="detailed-description">
+<span id="description-objectkinematictree"></span><h2>Detailed description<a class="headerlink" href="#detailed-description" title="Link to this heading"></a></h2>
+<section id="sensorkinematictree-output-variables">
+<span id="sec-kinematictree-additionaloutput"></span><h3>SensorKinematicTree output variables<a class="headerlink" href="#sensorkinematictree-output-variables" title="Link to this heading"></a></h3>
+<p>The following output variables are available with <code class="docutils literal notranslate"><span class="pre">SensorKinematicTree</span></code> for a specific link.
+Within the link <span class="math notranslate nohighlight">\(n_i\)</span>, a local position <span class="math notranslate nohighlight">\(\LU{n_i}{\pv_{n_i}}\)</span> is required. All output variables are available for different
+configurations. Furthermore, <span class="math notranslate nohighlight">\(\LU{0,n_i}{\Tm}\)</span> is the homogeneous transformation from link <span class="math notranslate nohighlight">\(n_i\)</span> coordinates to global coordinates.</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Kinematic tree output variables</p></th>
+<th class="head"><p>symbol</p></th>
+<th class="head"><p>description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Position</p></td>
+<td><p><span class="math notranslate nohighlight">\(\LU{0}{\pv_{n_i}} = \LU{0,n_i}{\Tm} \LU{n_i}{\pv_{n_i}}\)</span></p></td>
+<td><p>global position of local position at link <span class="math notranslate nohighlight">\(n_i\)</span></p></td>
+</tr>
+<tr class="row-odd"><td><p>Displacement</p></td>
+<td><p><span class="math notranslate nohighlight">\(\LU{0}{\uv_{n_i}} = \LU{0,n_i}{\Tm} \LU{n_i}{\pv_{n_i}} - \LU{0}{\pv_{n_i,\cRef}}\)</span></p></td>
+<td><p>global displacement of local position at link <span class="math notranslate nohighlight">\(n_i\)</span></p></td>
+</tr>
+<tr class="row-even"><td><p>Rotation</p></td>
+<td><p><span class="math notranslate nohighlight">\(\tphi_{n_i}\)</span></p></td>
+<td><p>Tait-Bryan angles of link <span class="math notranslate nohighlight">\(n_i\)</span></p></td>
+</tr>
+<tr class="row-odd"><td><p>RotationMatrix</p></td>
+<td><p><span class="math notranslate nohighlight">\(\LU{0,n_i}{\Rot_{n_i}}\)</span></p></td>
+<td><p>rotation matrix of link <span class="math notranslate nohighlight">\(n_i\)</span></p></td>
+</tr>
+<tr class="row-even"><td><p>VelocityLocal</p></td>
+<td><p><span class="math notranslate nohighlight">\(\LU{n_i}{\vv_{n_i}}\)</span></p></td>
+<td><p>local velocity of local position at link <span class="math notranslate nohighlight">\(n_i\)</span></p></td>
+</tr>
+<tr class="row-odd"><td><p>Velocity</p></td>
+<td><p><span class="math notranslate nohighlight">\(\LU{0}{\vv_{n_i}} = \LU{0,n_i}{\dot\Tm} \LU{n_i}{\pv_{n_i}}\)</span></p></td>
+<td><p>global velocity of local position at link <span class="math notranslate nohighlight">\(n_i\)</span></p></td>
+</tr>
+<tr class="row-even"><td><p>VelocityLocal</p></td>
+<td><p><span class="math notranslate nohighlight">\(\LU{n_i}{\vv_{n_i}}\)</span></p></td>
+<td><p>local velocity of local position at link <span class="math notranslate nohighlight">\(n_i\)</span></p></td>
+</tr>
+<tr class="row-odd"><td><p>Acceleration</p></td>
+<td><p><span class="math notranslate nohighlight">\(\LU{0}{\av_{n_i}} = \LU{0,n_i}{\dot\Tm} \LU{n_i}{\pv_{n_i}}\)</span></p></td>
+<td><p>global acceleration of local position at link <span class="math notranslate nohighlight">\(n_i\)</span></p></td>
+</tr>
+<tr class="row-even"><td><p>AccelerationLocal</p></td>
+<td><p><span class="math notranslate nohighlight">\(\LU{n_i}{\av_{n_i}}\)</span></p></td>
+<td><p>local acceleration of local position at link <span class="math notranslate nohighlight">\(n_i\)</span></p></td>
+</tr>
+<tr class="row-odd"><td><p>AngularVelocity</p></td>
+<td><p><span class="math notranslate nohighlight">\(\LU{0}{\tomega_{n_i}}\)</span></p></td>
+<td><p>global angular velocity of local position at link <span class="math notranslate nohighlight">\(n_i\)</span></p></td>
+</tr>
+<tr class="row-even"><td><p>AngularVelocityLocal</p></td>
+<td><p><span class="math notranslate nohighlight">\(\LU{n_i}{\tomega_{n_i}}\)</span></p></td>
+<td><p>local angular velocity of local position at link <span class="math notranslate nohighlight">\(n_i\)</span></p></td>
+</tr>
+<tr class="row-odd"><td><p>AngularAcceleration</p></td>
+<td><p><span class="math notranslate nohighlight">\(\LU{0}{\talpha_{n_i}}\)</span></p></td>
+<td><p>global angular acceleration of local position at link <span class="math notranslate nohighlight">\(n_i\)</span></p></td>
+</tr>
+<tr class="row-even"><td><p>AngularAccelerationLocal</p></td>
+<td><p><span class="math notranslate nohighlight">\(\LU{n_i}{\talpha_{n_i}}\)</span></p></td>
+<td><p>local angular acceleration of local position at link <span class="math notranslate nohighlight">\(n_i\)</span></p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="general-notes">
+<h3>General notes<a class="headerlink" href="#general-notes" title="Link to this heading"></a></h3>
+<p>The <code class="docutils literal notranslate"><span class="pre">KinematicTree</span></code> object is used to represent the equations of motion of a (open) tree-structured multibody system
+using a minimal set of coordinates. Even though that Exudyn is based on redundant coordinates,
+the <code class="docutils literal notranslate"><span class="pre">KinematicTree</span></code> allows to efficiently model standard multibody models based on revolute and prismatic joints.
+Especially, a chain with 3 links leads to only 3 equations of motion, while a redundant formulation would lead
+to <span class="math notranslate nohighlight">\(3 \times 7\)</span> coordinates using Euler Parameters and <span class="math notranslate nohighlight">\(3 \times 6\)</span> constraints for joints and Euler parameters,
+which gives a set of 39 equations. However this set of equations is very sparse and the evaluation is much faster
+than the kinematic tree.</p>
+<p>The question, which formulation to chose cannot be answered uniquely. However, <code class="docutils literal notranslate"><span class="pre">KinematicTree</span></code> objects
+do not include constraints, so they can be solved with explicit solvers. Furthermore, the joint values (angels)
+can be addressed directly – controllers or sensors are generally simpler.</p>
+</section>
+<section id="general">
+<h3>General<a class="headerlink" href="#general" title="Link to this heading"></a></h3>
+<p>The equations follow the description given in Chapters 2 and 3 in the handbook of robotics, 2016 edition <a class="reference internal" href="../references.html#ref-siciliano2016"><span class="std std-ref">Siciliano2016</span></a>.</p>
+<p>Functions like <code class="docutils literal notranslate"><span class="pre">GetObjectOutputSuperElement(...)</span></code>, see <a class="reference internal" href="../cInterface/MainSystem.html#sec-mainsystem-object"><span class="std std-ref">MainSystem: Object</span></a>,
+or <code class="docutils literal notranslate"><span class="pre">SensorSuperElement</span></code>, see <a class="reference internal" href="../cInterface/MainSystem.html#sec-mainsystem-sensor"><span class="std std-ref">MainSystem: Sensor</span></a>, directly access special output variables
+(<code class="docutils literal notranslate"><span class="pre">OutputVariableType</span></code>) of the (mesh) nodes of the superelement. The mesh nodes are the links of the
+<code class="docutils literal notranslate"><span class="pre">KinematicTree</span></code>.</p>
+<p>Note, however, that some functionality is considerably different for <code class="docutils literal notranslate"><span class="pre">ObjectGenericODE2</span></code>.</p>
+</section>
+<section id="equations-of-motion">
+<h3>Equations of motion<a class="headerlink" href="#equations-of-motion" title="Link to this heading"></a></h3>
+<p>The <code class="docutils literal notranslate"><span class="pre">KinematicTree</span></code> has one node of type <code class="docutils literal notranslate"><span class="pre">NodeGenericODE2</span></code> with <span class="math notranslate nohighlight">\(n\)</span> coordinates.</p>
+<p>The equations of motion are built by special multibody algorithms, following Featherstone <a class="reference internal" href="../references.html#ref-featherstone2008"><span class="std std-ref">Featherstone2008</span></a>.
+For a short introduction into this topic, see Chapter 3 of <a class="reference internal" href="../references.html#ref-siciliano2016"><span class="std std-ref">Siciliano2016</span></a>.</p>
+<p>The kinematic tree defines a set of rigid bodies connected by joints, having no loops.
+In this way, every body <span class="math notranslate nohighlight">\(i\)</span>, also denoted as link, has either a previous body <span class="math notranslate nohighlight">\(p(i) \neq \mathrm{-1}\)</span> or not.
+The previous body for body <span class="math notranslate nohighlight">\(i\)</span> is <span class="math notranslate nohighlight">\(p(i)\)</span>. The coordinates of joint <span class="math notranslate nohighlight">\(i\)</span> are defined as <span class="math notranslate nohighlight">\(q_i\)</span>.</p>
+<p>The following joint transformations are considered (as homogeneous transformations):</p>
+<ul class="simple">
+<li><p><span class="math notranslate nohighlight">\(\Xm_J(i)\)</span> <span class="math notranslate nohighlight">\(\ldots\)</span> joint transformation due to rotation or translation</p></li>
+<li><p><span class="math notranslate nohighlight">\(\Xm_L(i)\)</span> <span class="math notranslate nohighlight">\(\ldots\)</span> link transformation (e.g. given by kinematics of mechanism)</p></li>
+<li><p><span class="math notranslate nohighlight">\(\LU{i,\mathrm{-1}}{\Xm}\)</span> <span class="math notranslate nohighlight">\(\ldots\)</span> transformation from global (-1) to local joint <span class="math notranslate nohighlight">\(i\)</span> coordinates</p></li>
+<li><p><span class="math notranslate nohighlight">\(\LU{i,p(i)}{\Xm}\)</span> <span class="math notranslate nohighlight">\(\ldots\)</span> transformation from previous joint to joint <span class="math notranslate nohighlight">\(i\)</span> coordinates</p></li>
+</ul>
+<p>Furthermore, we use</p>
+<ul class="simple">
+<li><p><span class="math notranslate nohighlight">\(\tPhi_i\)</span> <span class="math notranslate nohighlight">\(\ldots\)</span> motion subspace for joint <span class="math notranslate nohighlight">\(i\)</span></p></li>
+</ul>
+<p>which denotes the transformation from joint coordinate (scalar) to rotations and translations.
+We can compute the local joint angular velocity <span class="math notranslate nohighlight">\(\tomega_i\)</span> and translational velocity <span class="math notranslate nohighlight">\(\wv_i\)</span>, as a 6D vector <span class="math notranslate nohighlight">\(\vv^J_i\)</span>, from</p>
+<div class="math notranslate nohighlight">
+\[
+\vv^J_i = \vp{\tomega_i}{\wv_i} = \tPhi_i \, \dot q_i
+\]</div>
+<p>The joint coordinates, which can be rotational or translational, are stored in the vector</p>
+<div class="math notranslate nohighlight">
+\[
+\qv = [q_0, \, \ldots,\, q_{N_B-1}]\tp \, ,
+\]</div>
+<p>and the vector of joint velocity coordinates reads</p>
+<div class="math notranslate nohighlight">
+\[
+\dot \qv = [\dot q_0, \, \ldots,\, \dot q_{N_B-1}]\tp \, .
+\]</div>
+<p>Knowing the motion subspace <span class="math notranslate nohighlight">\(\tPhi_i\)</span> for joint <span class="math notranslate nohighlight">\(i\)</span>, the velocity of joint <span class="math notranslate nohighlight">\(i\)</span> reads</p>
+<div class="math notranslate nohighlight">
+\[
+\vv_i = \vv_{p(i)} + \tPhi_i \, \dot q_i \, ,
+\]</div>
+<p>and accelerations follow as</p>
+<div class="math notranslate nohighlight">
+\[
+\av_i = \av_{p(i)} + \tPhi_i \, \ddot q_i + \dot \tPhi_i \, \dot q_i\, .
+\]</div>
+<p>Note that the previous formulas can be interpreted coordinate free, but they are usually implemented in joint coordinates.</p>
+<p>The local forces due to applied forces and inertia forces are computed, for now independently, for every link,</p>
+<div class="math notranslate nohighlight">
+\[
+\fv_i = \Im_i \av_i + \vv_i \times \Im_i \vv_i - \LU{i,\mathrm{-1}}{\Xm\tp} \!\cdot\! \LU{\mathrm{-1}}{\fv}^a
+\]</div>
+<p>The total forces can be computed from inverse dynamics.
+At every free end of the tree, the forces are added up for the previous link, which needs to be done recursively starting at the leaves of the tree,</p>
+<div class="math notranslate nohighlight">
+\[
+\fv_{p(i)} \mathrel{+}=  \LU{i,p(i)}{\Xm\tp} \!\cdot \fv_i
+\]</div>
+<p>The mass matrix is then built by recursively computing the intertia of the links and adding the joint contributions by
+projecting the local inertia into the joint motion space, see the composite-rigid-body algorithm.</p>
+<p>Note that <span class="math notranslate nohighlight">\(\cdot\)</span> for multiplication of matrices and vectors is added for clarity, especially in case of left and right indices.
+The whole algorithm for forward and inverse dynamics is given in the following figures.</p>
+<p><strong>Recursive Newton-Euler algorithm</strong> (acc. to Featherstone). It returns the joint forces
+<span class="math notranslate nohighlight">\(\tau\)</span> for given <span class="math notranslate nohighlight">\(\qv\)</span>, <span class="math notranslate nohighlight">\(\dot \qv\)</span>, <span class="math notranslate nohighlight">\(\mathrm{MotionSubspace}(i)\)</span>, <span class="math notranslate nohighlight">\(\Xm_{L}\)</span> and
+<span class="math notranslate nohighlight">\(\LU{\mathrm{-1}}{\fv}^a_i\)</span>, assuming <span class="math notranslate nohighlight">\(\dot\tPhi_i=0\)</span>:</p>
+<ol class="arabic simple">
+<li><p>start with <span class="math notranslate nohighlight">\(\vv_{\mathrm{-1}} = \Null\)</span> and <span class="math notranslate nohighlight">\(\av_{\mathrm{-1}} = -\gv\)</span>, the gravity vector.</p></li>
+<li><p><strong>Forward pass</strong> over the <span class="math notranslate nohighlight">\(N_B\)</span> bodies, <span class="math notranslate nohighlight">\(i=0\)</span> to <span class="math notranslate nohighlight">\(N_B-1\)</span>: the transformations
+<span class="math notranslate nohighlight">\(\Xm_J(i) = \Xm_{JT}(i, q_i)\)</span>, <span class="math notranslate nohighlight">\(\LU{i,p(i)}{\Xm} = \Xm_J(i) \, \Xm_{L}(i)\)</span> and
+<span class="math notranslate nohighlight">\(\tPhi_i = \mathrm{MotionSubspace}(i)\)</span>, with
+<span class="math notranslate nohighlight">\(\LU{i,\mathrm{-1}}{\Xm} = \LU{i,p(i)}{\Xm} \cdot \LU{p(i),\mathrm{-1}}{\Xm}\)</span> if
+<span class="math notranslate nohighlight">\(p(i) \neq \mathrm{-1}\)</span>; then the kinematics
+<span class="math notranslate nohighlight">\(\vv_i = \vv_{p(i)} + \tPhi_i \, \dot q_i\)</span> and
+<span class="math notranslate nohighlight">\(\av_i = \av_{p(i)} + \vv_i \times \tPhi_i \, \dot q_i\)</span>, where <span class="math notranslate nohighlight">\(\tPhi_i \, \ddot q_i\)</span> is put
+on the right hand side; then the forces
+<span class="math notranslate nohighlight">\(\fv_i = \Im_i \av_i + \vv_i \times \Im_i \vv_i - \LU{i,\mathrm{-1}}{\Xm\tp} \!\cdot\! \LU{\mathrm{-1}}{\fv}^a_i\)</span>.</p></li>
+<li><p><strong>Backward pass</strong>, <span class="math notranslate nohighlight">\(i=N_B-1\)</span> down to <span class="math notranslate nohighlight">\(0\)</span>: the joint force (torque)
+<span class="math notranslate nohighlight">\(\tau_i = \tPhi_i\tp \cdot \fv_i\)</span>, and
+<span class="math notranslate nohighlight">\(\fv_{p(i)} \mathrel{+}= \LU{i,p(i)}{\Xm\tp} \fv_i\)</span> if <span class="math notranslate nohighlight">\(p(i) \neq \mathrm{-1}\)</span>.</p></li>
+</ol>
+<p><strong>Composite-rigid-body algorithm</strong> (acc. to Featherstone). It returns the mass matrix <span class="math notranslate nohighlight">\(\Mm\)</span>
+for given <span class="math notranslate nohighlight">\(\tPhi_i\)</span>, <span class="math notranslate nohighlight">\(\LU{i,p(i)}{\Xm}\)</span> and <span class="math notranslate nohighlight">\(\Im_i\)</span>:</p>
+<ol class="arabic simple">
+<li><p>start with <span class="math notranslate nohighlight">\(\Mm_0 = \Null\)</span> and the 6D inertia tensors <span class="math notranslate nohighlight">\(\Im_i^C = \Im_i\)</span> for every body.</p></li>
+<li><p><strong>Recursively update the inertias</strong>, <span class="math notranslate nohighlight">\(i=N_B-1\)</span> down to <span class="math notranslate nohighlight">\(0\)</span>: project the inertia into the
+motion subspace, <span class="math notranslate nohighlight">\(\Fm = \Im_i^C \, \tPhi_i\)</span> and <span class="math notranslate nohighlight">\(\Mm_{ii} = \tPhi_i\tp \, \Fm\)</span>; add it to
+the parent, <span class="math notranslate nohighlight">\(\Im_{p(i)}^C \mathrel{+}= \LU{i,p(i)}{\Xm\tp} \cdot \Im_i^C \cdot \LU{i,p(i)}{\Xm}\)</span>,
+if <span class="math notranslate nohighlight">\(p(i) \neq \mathrm{-1}\)</span>.</p></li>
+<li><p><strong>The mass matrix terms</strong> of the same pass: with <span class="math notranslate nohighlight">\(j=i\)</span>, while <span class="math notranslate nohighlight">\(p(j) \neq \mathrm{-1}\)</span>, set
+<span class="math notranslate nohighlight">\(\Fm = \LU{j,p(j)}{\Xm\tp} \cdot \Fm\)</span>, <span class="math notranslate nohighlight">\(j = p(j)\)</span>, <span class="math notranslate nohighlight">\(\Mm_{ij} = \Fm\tp \, \tPhi_i\)</span> and
+<span class="math notranslate nohighlight">\(\Mm_{ji} = \Mm_{ij}\)</span>.</p></li>
+</ol>
+</section>
+<section id="implementation-and-user-functions">
+<h3>Implementation and user functions<a class="headerlink" href="#implementation-and-user-functions" title="Link to this heading"></a></h3>
+<p>Currently, there is only the so-called Composite-Rigid-Body (CRB) algorithm implemented.
+This algorithm does not show the highest performance, but creates the mass matrix <span class="math notranslate nohighlight">\(\Mm_{CRB}\)</span> and forces <span class="math notranslate nohighlight">\(\fv_{CRB}\)</span>
+in a conventional form. The equations read</p>
+<div class="math notranslate nohighlight" id="equation-eq-kinematictree-eom">
+<span class="eqno">(58)<a class="headerlink" href="#equation-eq-kinematictree-eom" title="Link to this equation"></a></span>\[
+\Mm_{CRB}(\qv) \ddot \qv = \fv_{CRB}(\qv,\dot \qv) + \fv + \fv_{PD} + \fv_{user}(mbs, t, i_N,\qv,\dot \qv)
+\]</div>
+<p>The term <span class="math notranslate nohighlight">\(\fv_{CRB}(\qv,\dot \qv)\)</span> represents inertial terms, which are due to accelerations and
+quadratic velocities and is computed by <code class="docutils literal notranslate"><span class="pre">ComputeODE2LHS</span></code>.
+Note that the user function <span class="math notranslate nohighlight">\(\fv_{user}(mbs, t, i_N,\qv,\dot \qv)\)</span> may be empty (=0),
+and <code class="docutils literal notranslate"><span class="pre">iN</span></code> represents the itemNumber (=objectNumber).
+The force <span class="math notranslate nohighlight">\(\fv\)</span> is given by the <code class="docutils literal notranslate"><span class="pre">jointForceVector</span></code>, which also may have zero length, causing it to be ignored.
+While <span class="math notranslate nohighlight">\(\fv\)</span> is constant, it may be varied using a <code class="docutils literal notranslate"><span class="pre">mbs.preStepUserFunction</span></code>, which can
+then represent any force over time. Note that such changes are not considered in the object’s jacobian.</p>
+<p>The user force <span class="math notranslate nohighlight">\(\fv_{user}\)</span> is described below and may represent any force over time.
+Note that this force is considered in the object’s jacobian, but it does not include external
+dependencies – if a control law is feeds back measured quantities and couples them to forces.
+This leads to worse performance (up to non-convergence) of implicit solvers.</p>
+<p>The control force <span class="math notranslate nohighlight">\(\fv_{PD}\)</span> realizes a simple linear control law</p>
+<div class="math notranslate nohighlight">
+\[
+\fv_{PD} = \Pm \cdot (\uv_o - \qv) + \Dm \cdot (\vv_o - \dot \qv)
+\]</div>
+<p>Here, the ‘.’ operator represents an element-wise multiplication of two vectors, resulting in a vector.
+The force <span class="math notranslate nohighlight">\(\fv_{PD}\)</span> at the <a class="reference internal" href="../abbreviations.html#rhs"><span class="std std-ref">RHS</span></a> acts in direction of prescribed joint motion <span class="math notranslate nohighlight">\(\uv_o\)</span> and
+prescribed joint velocities <span class="math notranslate nohighlight">\(\vv_o\)</span> multiplied with proportional and ‘derivative’ factors <span class="math notranslate nohighlight">\(P\)</span> and <span class="math notranslate nohighlight">\(D\)</span>.
+Omitting <span class="math notranslate nohighlight">\(\uv_o\)</span> and <span class="math notranslate nohighlight">\(\vv_o\)</span> and putting <span class="math notranslate nohighlight">\(\fv_{PD}\)</span> on the <a class="reference internal" href="../abbreviations.html#lhs"><span class="std std-ref">LHS</span></a>, we immediately can interpret these
+terms as stiffness and damping on the single coordinates.
+The control force is also considered in the object’s jacobian, which is currently computed by numerical
+differentiation.</p>
+<p>More detailed equations will be added later on. Follow exactly the description (and coordinate systems) of the object parameters,
+especially for describing the kinematic chain as well as the inertial parameters.</p>
+</section>
+<section id="marker-interfaces">
+<h3>Marker interfaces<a class="headerlink" href="#marker-interfaces" title="Link to this heading"></a></h3>
+<p>The tree has one marker of its own, <code class="docutils literal notranslate"><span class="pre">MarkerKinematicTreeRigid</span></code>: a link <span class="math notranslate nohighlight">\(n_l\)</span> and a local position in
+the frame of that link, with position, orientation and their Jacobians with respect to the joint
+coordinates. Loads and connectors act on the tree through it; forces and torques on the joints
+themselves are the object’s own parameters. A joint coordinate can also be reached with
+<code class="docutils literal notranslate"><span class="pre">MarkerNodeCoordinate</span></code> on the <code class="docutils literal notranslate"><span class="pre">NodeGenericODE2</span></code> of the tree. The general body markers and the super
+element markers do <strong>not</strong> work on this object: <code class="docutils literal notranslate"><span class="pre">Assemble()</span></code> refuses them.</p>
+<p><strong>Userfunction</strong>: <code class="docutils literal notranslate"><span class="pre">forceUserFunction(mbs,</span> <span class="pre">t,</span> <span class="pre">itemNumber,</span> <span class="pre">q,</span> <span class="pre">q_t)</span></code>
+A user function, which computes a force vector applied to the joint coordinates depending on current time and states of object.
+Note that itemNumber represents the index of the ObjectKinematicTree object in mbs, which can be used to retrieve additional data from the object through
+<code class="docutils literal notranslate"><span class="pre">mbs.GetObjectParameter(itemNumber,</span> <span class="pre">...)</span></code>, see the according description of <code class="docutils literal notranslate"><span class="pre">GetObjectParameter</span></code>.</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>arguments / return</p></th>
+<th class="head"><p>type or size</p></th>
+<th class="head"><p>description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">mbs</span></code></p></td>
+<td><p>MainSystem</p></td>
+<td><p>provides MainSystem mbs to which object belongs</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">t</span></code></p></td>
+<td><p>Real</p></td>
+<td><p>current time in mbs</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">itemNumber</span></code></p></td>
+<td><p>Index</p></td>
+<td><p>integer number <span class="math notranslate nohighlight">\(i_N\)</span> of the object in mbs, allowing easy access to all object data via mbs.GetObjectParameter(itemNumber, …)</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">q</span></code></p></td>
+<td><p>Vector <span class="math notranslate nohighlight">\(\in \Rcal^n\)</span></p></td>
+<td><p>object coordinates (e.g., nodal displacement coordinates) in current configuration, without reference values</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">q_t</span></code></p></td>
+<td><p>Vector <span class="math notranslate nohighlight">\(\in \Rcal^n\)</span></p></td>
+<td><p>object velocity coordinates (time derivative of <code class="docutils literal notranslate"><span class="pre">q</span></code>) in current configuration</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>return value</strong></p></td>
+<td><p>Vector <span class="math notranslate nohighlight">\(\in \Rcal^{n}\)</span></p></td>
+<td><p>returns force vector for object</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+<section id="mini-example">
+<span id="miniexample-objectkinematictree"></span><h2>Mini example<a class="headerlink" href="#mini-example" title="Link to this heading"></a></h2>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1">#build 1R mechanism (pendulum)</span>
+<span class="n">L</span> <span class="o">=</span> <span class="mi">1</span> <span class="c1">#length of link</span>
+<span class="n">RBinertia</span> <span class="o">=</span> <span class="nc">InertiaCuboid</span><span class="p">(</span><span class="mi">1000</span><span class="p">,</span> <span class="p">[</span><span class="n">L</span><span class="p">,</span><span class="mf">0.1</span><span class="o">*</span><span class="n">L</span><span class="p">,</span><span class="mf">0.1</span><span class="o">*</span><span class="n">L</span><span class="p">])</span>
+<span class="n">inertiaLinkCOM</span> <span class="o">=</span> <span class="n">RBinertia</span><span class="o">.</span><span class="nf">InertiaCOM</span><span class="p">()</span> <span class="c1">#KinematicTree requires COM inertia</span>
+<span class="n">linkCOM</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">0.5</span><span class="o">*</span><span class="n">L</span><span class="p">,</span><span class="mf">0.</span><span class="p">,</span><span class="mf">0.</span><span class="p">])</span> <span class="c1">#if COM=0, gravity does not act on pendulum!</span>
+
+<span class="n">linkCOMs</span><span class="o">=</span><span class="n">exu</span><span class="o">.</span><span class="nc">Vector3DList</span><span class="p">([</span><span class="n">linkCOM</span><span class="p">])</span>
+<span class="n">linkInertiasCOM</span><span class="o">=</span><span class="n">exu</span><span class="o">.</span><span class="nc">Matrix3DList</span><span class="p">([</span><span class="n">inertiaLinkCOM</span><span class="p">])</span>
+
+
+<span class="n">nGeneric</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">AddNode</span><span class="p">(</span><span class="nc">NodeGenericODE2</span><span class="p">(</span><span class="n">referenceCoordinates</span><span class="o">=</span><span class="p">[</span><span class="mf">0.</span><span class="p">],</span><span class="n">initialCoordinates</span><span class="o">=</span><span class="p">[</span><span class="mf">0.</span><span class="p">],</span>
+                                       <span class="n">initialCoordinates_t</span><span class="o">=</span><span class="p">[</span><span class="mf">0.</span><span class="p">],</span><span class="n">numberOfODE2Coordinates</span><span class="o">=</span><span class="mi">1</span><span class="p">))</span>
+
+<span class="n">oKT</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">AddObject</span><span class="p">(</span><span class="nc">ObjectKinematicTree</span><span class="p">(</span><span class="n">nodeNumber</span><span class="o">=</span><span class="n">nGeneric</span><span class="p">,</span> <span class="n">jointTypes</span><span class="o">=</span><span class="p">[</span><span class="n">exu</span><span class="o">.</span><span class="n">JointType</span><span class="o">.</span><span class="n">RevoluteZ</span><span class="p">],</span> <span class="n">linkParents</span><span class="o">=</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span>
+                                  <span class="n">jointHTs</span><span class="o">=</span><span class="p">[</span><span class="n">exu</span><span class="o">.</span><span class="nc">HT</span><span class="p">()],</span> <span class="n">linkInertiasCOM</span><span class="o">=</span><span class="n">linkInertiasCOM</span><span class="p">,</span> <span class="c1">#the joint frame is the base frame</span>
+                                  <span class="n">linkCOMs</span><span class="o">=</span><span class="n">linkCOMs</span><span class="p">,</span> <span class="n">linkMasses</span><span class="o">=</span><span class="p">[</span><span class="n">RBinertia</span><span class="o">.</span><span class="n">mass</span><span class="p">],</span> 
+                                  <span class="n">baseOffset</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.5</span><span class="p">,</span><span class="mf">0.</span><span class="p">,</span><span class="mf">0.</span><span class="p">],</span> <span class="n">gravity</span><span class="o">=</span><span class="p">[</span><span class="mf">0.</span><span class="p">,</span><span class="o">-</span><span class="mf">9.81</span><span class="p">,</span><span class="mf">0.</span><span class="p">]))</span>
+
+<span class="c1">#assemble and solve system for default parameters</span>
+<span class="n">mbs</span><span class="o">.</span><span class="nf">Assemble</span><span class="p">()</span>
+
+<span class="n">simulationSettings</span> <span class="o">=</span> <span class="n">exu</span><span class="o">.</span><span class="nc">SimulationSettings</span><span class="p">()</span> <span class="c1">#takes currently set values or default values</span>
+<span class="n">simulationSettings</span><span class="o">.</span><span class="n">timeIntegration</span><span class="o">.</span><span class="n">numberOfSteps</span> <span class="o">=</span> <span class="mi">1000</span> <span class="c1">#gives very accurate results</span>
+<span class="n">mbs</span><span class="o">.</span><span class="nf">SolveDynamic</span><span class="p">(</span><span class="n">simulationSettings</span> <span class="p">,</span> <span class="n">solverType</span><span class="o">=</span><span class="n">exu</span><span class="o">.</span><span class="nc">DynamicSolverType</span><span class="o">.</span><span class="n">RK67</span><span class="p">)</span> <span class="c1">#highly accurate!</span>
+
+<span class="c1">#check final value of angle:</span>
+<span class="n">q0</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">GetNodeOutput</span><span class="p">(</span><span class="n">nGeneric</span><span class="p">,</span> <span class="n">exu</span><span class="o">.</span><span class="nc">OutputVariableType</span><span class="o">.</span><span class="n">Coordinates</span><span class="p">)</span>
+<span class="c1">#exu.Print(q0)</span>
+<span class="n">exu</span><span class="o">.</span><span class="n">sys</span><span class="p">[</span><span class="s1">'testResult'</span><span class="p">]</span> <span class="o">=</span> <span class="n">q0</span> <span class="c1">#-3.134018551808591; RigidBody2D with 2e6 time steps gives: -3.134018551809384</span>
+</pre></div>
+</div>
+<p>Relevant Examples (Ex) and TestModels (TM) with weblink to github: <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/kinematicTreeAndMBS.py"><code class="docutils literal notranslate"><span class="pre">kinematicTreeAndMBS.py</span></code></a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/reinforcementLearningRobot.py"><code class="docutils literal notranslate"><span class="pre">reinforcementLearningRobot.py</span></code></a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/stiffFlyballGovernorKT.py"><code class="docutils literal notranslate"><span class="pre">stiffFlyballGovernorKT.py</span></code></a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/energiesFlexibleBodiesTest.py"><code class="docutils literal notranslate"><span class="pre">energiesFlexibleBodiesTest.py</span></code></a> (TM), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/kinematicTreePrismaticJacobianTest.py"><code class="docutils literal notranslate"><span class="pre">kinematicTreePrismaticJacobianTest.py</span></code></a> (TM), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/kinematicTreeTest.py"><code class="docutils literal notranslate"><span class="pre">kinematicTreeTest.py</span></code></a> (TM), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/kinematicTreeUserFunctionTest.py"><code class="docutils literal notranslate"><span class="pre">kinematicTreeUserFunctionTest.py</span></code></a> (TM), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/createKinematicTreeTest.py"><code class="docutils literal notranslate"><span class="pre">createKinematicTreeTest.py</span></code></a> (TM)</p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="ObjectGenericODE2.html" class="btn btn-neutral float-left" title="ObjectGenericODE2" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="ObjectFFRF.html" class="btn btn-neutral float-right" title="ObjectFFRF" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

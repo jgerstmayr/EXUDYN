@@ -1,0 +1,1118 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Development workflow &mdash; Exudyn1.13.3 1.13.3 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=3ee1c6c6" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/rtd_sphinx_search.min.css" />
+      <link rel="stylesheet" type="text/css" href="../../_static/custom.css?v=e2783f0e" />
+
+  
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=b8a3e558"></script>
+      <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../_static/copybutton.js?v=f281be69"></script>
+      <script src="../../_static/js/rtd_search_config.js"></script>
+      <script src="../../_static/js/rtd_sphinx_search.min.js"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="How to set up a new item" href="NEW_ITEM.html" />
+    <link rel="prev" title="Exudyn coding style and conventions" href="CODING_STYLE.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            Exudyn1.13.3
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Exudyn User Manual</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../README.html">Exudyn</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../manual/gettingStarted.html">Installation and getting started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../manual/introduction.html">Overview on Exudyn</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../manual/introductionBasics.html">Exudyn basics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../manual/tutorial.html">Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../manual/GUI.html">Renderer, graphics and visualization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../manual/performanceErrors.html">Performance, errors and solver failures</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../manual/introductionAdvanced.html">Advanced topics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../manual/notation.html">Notation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../manual/theory.html">Theory and formulations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../manual/solver.html">Solvers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../generated/cInterface/cInterfaceIndex.html">Python-C++ command interface</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Reference Manual</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../generated/items/itemsIndex.html">Items reference manual</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../generated/pythonUtilities/utilitiesIndex.html">Python Utility Functions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../generated/structures/structuresIndex.html">Structures and Settings</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../generated/references.html">References</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Developer documentation</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="README.html">Exudyn developer documentation</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="GETTING_STARTED.html">Getting started as a developer</a></li>
+<li class="toctree-l2"><a class="reference internal" href="BUILD.html">Building Exudyn from source</a></li>
+<li class="toctree-l2"><a class="reference internal" href="GIT.html">Working with git in this repository</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ARCHITECTURE.html">Exudyn C++ architecture</a></li>
+<li class="toctree-l2"><a class="reference internal" href="CODING_STYLE.html">Exudyn coding style and conventions</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Development workflow</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#environments">1. Environments</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#the-issue-tracker">2. The issue tracker</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#versioning">3. Versioning</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#branches-and-remotes">4. Branches and remotes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#testing">5. Testing</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#continuous-integration">6. Continuous integration</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#commit-tiers">7. Commit tiers</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#the-four-gates-for-a-normal-commit">8. The four gates for a normal commit</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#committing">9. Committing</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#build-and-release-scripts">10. Build and release scripts</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="NEW_ITEM.html">How to set up a new item</a></li>
+<li class="toctree-l2"><a class="reference internal" href="GUI_MANUAL_CHECK.html">Manual GUI check before a release</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../generated/deprecations.html">Deprecations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../definitions/README.html">definitions/ — the item and structure definitions as Python</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../tools/generators/README.html">tools/generators/ — the new generator code</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../tools/exudev/README.html"><code class="docutils literal notranslate"><span class="pre">exudev</span></code> — the Exudyn maintainer driver</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../CONTRIBUTING.html">Contributing to Exudyn</a></li>
+<li class="toctree-l2"><a class="reference internal" href="README.html#repository-layout">Repository layout</a></li>
+<li class="toctree-l2"><a class="reference internal" href="README.html#building-and-running">Building and running</a></li>
+<li class="toctree-l2"><a class="reference internal" href="README.html#how-to-notes">How-to notes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="README.html#invariants">Invariants</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">How-to notes</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../howTo/condaEnvironments.html">Conda environments for Exudyn</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../howTo/sphinxDocs.html">Building the documentation</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Examples, models and issues</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../generated/examples/examplesIndex.html">Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../generated/testModels/testModelsIndex.html">TestModels</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../generated/abbreviations.html">List of Abbreviations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../manual/revisions.html">Revisions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../CHANGELOG.html">Changelog</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../generated/trackerlog.html">Issue tracker</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">Exudyn1.13.3</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="README.html">Exudyn developer documentation</a></li>
+      <li class="breadcrumb-item active">Development workflow</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../_sources/docs/dev/WORKFLOW.md.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section class="tex2jax_ignore mathjax_ignore" id="development-workflow">
+<h1>Development workflow<a class="headerlink" href="#development-workflow" title="Link to this heading"></a></h1>
+<p>How work is done on this repository: issue tracker, versioning, and the gates a commit must pass.
+Written for Claude Code sessions, but it describes the human workflow too.</p>
+<section id="environments">
+<h2>1. Environments<a class="headerlink" href="#environments" title="Link to this heading"></a></h2>
+<p>Python is <strong>not</strong> on <code class="docutils literal notranslate"><span class="pre">PATH</span></code> under a plain shell. Use the named conda environments:</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>purpose</p></th>
+<th class="head"><p>interpreter</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><strong>default — generators, docs and tests</strong></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">%USERPROFILE%\Anaconda\envs\venvExuP313\python.exe</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>per-version test matrix</strong></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">...\envs\venvP31x\python.exe</span></code>, x in 0–4</p></td>
+</tr>
+</tbody>
+</table>
+<p><code class="docutils literal notranslate"><span class="pre">venvExuP313</span></code> covers regeneration, the docs build, the docstring check and the test suite. Its
+packages are the dependency groups in <code class="docutils literal notranslate"><span class="pre">pyproject.toml</span></code> (<code class="docutils literal notranslate"><span class="pre">pip</span> <span class="pre">install</span> <span class="pre">--group</span> <span class="pre">dev</span></code>, pip &gt;= 25.1) plus
+the <code class="docutils literal notranslate"><span class="pre">[tests]</span></code> extra of the locally built wheel; the recipe is in
+<a class="reference internal" href="../howTo/condaEnvironments.html"><span class="std std-doc"><code class="docutils literal notranslate"><span class="pre">docs/howTo/condaEnvironments.md</span></code></span></a>. The
+driver <code class="docutils literal notranslate"><span class="pre">exudev</span></code> selects the environment itself – <code class="docutils literal notranslate"><span class="pre">--py</span> <span class="pre">P310</span></code>…<code class="docutils literal notranslate"><span class="pre">P314</span></code>, <code class="docutils literal notranslate"><span class="pre">--py</span> <span class="pre">all</span></code>, or
+<code class="docutils literal notranslate"><span class="pre">--env</span> <span class="pre">NAME</span></code> – so nothing has to be activated by hand; see
+<a class="reference internal" href="../../tools/exudev/README.html"><span class="std std-doc"><code class="docutils literal notranslate"><span class="pre">tools/exudev/README.md</span></code></span></a>.</p>
+<blockquote>
+<div><p><strong>Check before trusting a test run.</strong> <code class="docutils literal notranslate"><span class="pre">import</span> <span class="pre">exudyn;</span> <span class="pre">exudyn.__version__</span></code> must match
+<code class="docutils literal notranslate"><span class="pre">version.txt</span></code>. The <strong>base</strong> Anaconda environment carries a stale <strong>1.10.0</strong>, so a
+test suite run from it silently tests old binaries.</p>
+</div></blockquote>
+<p>Run the generators and the docs build from a Windows shell (PowerShell): without a
+<code class="docutils literal notranslate"><span class="pre">.gitattributes</span></code>, generating from a different shell can produce spurious line-ending diffs.</p>
+<p>Documentation build, from the repository root:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sphinx-build<span class="w"> </span>-b<span class="w"> </span>html<span class="w"> </span>.<span class="w"> </span>_build<span class="w"> </span>-E
+</pre></div>
+</div>
+<p>The <strong>printable documentation</strong> is a release artifact: <code class="docutils literal notranslate"><span class="pre">exudev</span> <span class="pre">docs</span> <span class="pre">--pdf</span></code> needs a LaTeX installation with
+<code class="docutils literal notranslate"><span class="pre">xelatex</span></code>, writes <code class="docutils literal notranslate"><span class="pre">dist/exudynDocumentationV&lt;version&gt;.pdf</span></code> (decision D17), and takes about 2.5 minutes.
+<code class="docutils literal notranslate"><span class="pre">exudev</span> <span class="pre">docs</span> <span class="pre">--check</span></code> builds it and checks its LaTeX log against <code class="docutils literal notranslate"><span class="pre">tools/pdfLogBaseline.json</span></code>
+(<code class="docutils literal notranslate"><span class="pre">tools/checkPdfLog.py</span></code>): an error, a missing file or character, an undefined reference, a float or a box too large
+for its page and a line more than 20pt too wide fail unless the baseline has them, and the report gives the page.
+It is part of gate 4 for a change to <code class="docutils literal notranslate"><span class="pre">docs/</span></code>, <code class="docutils literal notranslate"><span class="pre">definitions/</span></code> or <code class="docutils literal notranslate"><span class="pre">conf.py</span></code> (#2856). A finding that is accepted - or
+one fixed, which the check reports as gone - goes into the baseline with <code class="docutils literal notranslate"><span class="pre">python</span> <span class="pre">tools/checkPdfLog.py</span> <span class="pre">--write-baseline</span></code>, committed with the change.</p>
+<section id="dependencies">
+<h3>Dependencies<a class="headerlink" href="#dependencies" title="Link to this heading"></a></h3>
+<p><strong>numpy is the only hard requirement</strong>, and that follows from the nature of the C++/Python
+coupling — it is not a preference and should not grow.</p>
+<p>Advanced functionality legitimately needs more: scipy, networkx, Gym, stable-baselines, NGsolve
+and others. Those stay <strong>optional</strong>. Installing exudyn requires the minimum; a function that needs
+more raises at the point of use. Today those failures are not consistently <code class="docutils literal notranslate"><span class="pre">ImportError</span></code>, which is
+a known rough edge — not something to fix opportunistically.</p>
+<p>When adding code: a new <em>optional</em> dependency behind a clear failure is acceptable; a new
+<em>mandatory</em> one is not.</p>
+<p>The <strong>one-time setup of a clone</strong> - <code class="docutils literal notranslate"><span class="pre">git</span> <span class="pre">config</span> <span class="pre">core.hooksPath</span> <span class="pre">tools/hooks</span></code> and
+<code class="docutils literal notranslate"><span class="pre">python</span> <span class="pre">tools/setupLocalWorkspace.py</span></code> - is step 4 of
+<a class="reference internal" href="GETTING_STARTED.html"><span class="std std-doc">GETTING_STARTED.md</span></a>, where a reader meets it before the rules rather than
+after them. Without it there is no mechanical guard against
+pushing the working branch to the public repository.</p>
+</section>
+</section>
+<section id="the-issue-tracker">
+<h2>2. The issue tracker<a class="headerlink" href="#the-issue-tracker" title="Link to this heading"></a></h2>
+<p><code class="docutils literal notranslate"><span class="pre">tools/issueTracker/issueTracker.py</span></code> is both the issue tracker <strong>and the source of truth for the
+version number</strong>; <code class="docutils literal notranslate"><span class="pre">exudev</span> <span class="pre">issue</span> <span class="pre">&lt;verb&gt;</span></code> is its command line. The issues live in
+<code class="docutils literal notranslate"><span class="pre">tools/issueTracker/issues/</span></code> as JSON (2,568 issues, 270 open as of
+1.11.225):</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">issues</span><span class="o">/</span><span class="nb">open</span><span class="o">/</span><span class="mf">2567.</span><span class="n">json</span>        <span class="n">one</span> <span class="n">file</span> <span class="n">per</span> <span class="n">OPEN</span> <span class="n">issue</span>
+<span class="n">issues</span><span class="o">/</span><span class="n">closed</span><span class="o">/</span><span class="mf">2473.</span><span class="n">json</span>      <span class="o">...</span> <span class="n">per</span> <span class="n">issue</span> <span class="n">closed</span> <span class="n">since</span> <span class="mi">1</span> <span class="n">January</span> <span class="n">of</span> <span class="n">the</span> <span class="n">previous</span> <span class="n">year</span>
+<span class="n">issues</span><span class="o">/</span><span class="n">archive</span><span class="o">/</span><span class="mf">2019.</span><span class="n">json</span>     <span class="o">...</span> <span class="n">per</span> <span class="n">YEAR</span> <span class="k">for</span> <span class="n">the</span> <span class="n">older</span> <span class="n">ones</span><span class="p">,</span> <span class="n">written</span> <span class="n">once</span>
+<span class="n">issues</span><span class="o">/</span><span class="n">meta</span><span class="o">.</span><span class="n">json</span>             <span class="n">the</span> <span class="n">date</span> <span class="n">of</span> <span class="n">the</span> <span class="n">last</span> <span class="n">change</span> <span class="ow">and</span> <span class="n">the</span> <span class="n">version</span> <span class="n">it</span> <span class="n">produced</span>
+<span class="n">releases</span><span class="o">.</span><span class="n">json</span>                <span class="n">the</span> <span class="n">releases</span><span class="p">,</span> <span class="n">their</span> <span class="n">names</span><span class="p">,</span> <span class="ow">and</span> <span class="n">the</span> <span class="n">closed</span><span class="o">-</span><span class="n">issue</span> <span class="n">count</span> <span class="n">each</span> <span class="n">began</span> <span class="n">at</span>
+</pre></div>
+</div>
+<p><strong>The version a closed issue produced is stored in it</strong> (<code class="docutils literal notranslate"><span class="pre">resolvedInVersion</span></code>): the micro version is a running count, so recomputing every number on every run made a
+published version depend on a sort by <code class="docutils literal notranslate"><span class="pre">dateResolved</span></code> — one corrected date renumbered history
+and nothing said so. <code class="docutils literal notranslate"><span class="pre">python</span> <span class="pre">tools/checkIssues.py</span></code> recomputes and compares, and that is a check
+only because the number was written down once.</p>
+<p><strong>Every new issue becomes a step in the revision plan</strong> — a new step, or part of an existing step
+where it belongs; small issues may share a step. The tracker describes the issue, the plan says
+when and together with what it is done (plan §12).</p>
+<p>Run it from its own directory — it uses relative and Windows-style paths:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">cd</span><span class="w"> </span>tools/issueTracker
+</pre></div>
+</div>
+<section id="api">
+<h3>API<a class="headerlink" href="#api" title="Link to this heading"></a></h3>
+<p><strong>From the command line</strong>, which is the way to use it:</p>
+<div class="highlight-powershell notranslate"><div class="highlight"><pre><span></span><span class="n">exudev</span> <span class="n">issue</span> <span class="n">list</span> <span class="p">-</span><span class="n">-open</span> <span class="p">-</span><span class="n">-type</span> <span class="n">FIX</span> <span class="p">-</span><span class="n">-effort</span> <span class="n">LOW</span>    <span class="c">#the list a triage pass works from</span>
+<span class="n">exudev</span> <span class="n">issue</span> <span class="n">show</span> <span class="n">2566</span>
+<span class="n">exudev</span> <span class="n">issue</span> <span class="n">raise</span> <span class="s2">"title"</span> <span class="s2">"description"</span> <span class="p">-</span><span class="n">-type</span> <span class="n">FIX</span> <span class="p">-</span><span class="n">-effort</span> <span class="n">LOW</span> <span class="p">-</span><span class="n">-author</span> <span class="n">Claude-JG</span>
+<span class="n">exudev</span> <span class="n">issue</span> <span class="n">extend</span> <span class="n">2566</span> <span class="s2">"what the analysis turned up"</span>
+<span class="n">exudev</span> <span class="n">issue</span> <span class="n">remark</span> <span class="n">2566</span> <span class="s2">"duplicate of #2134, check before starting"</span>
+<span class="n">exudev</span> <span class="n">issue</span> <span class="n">resolve</span> <span class="n">2566</span> <span class="s2">"what was done"</span> <span class="p">-</span><span class="n">-author</span> <span class="n">Claude-JG</span>     <span class="c">#bumps the micro version</span>
+<span class="n">exudev</span> <span class="n">issue</span> <span class="n">close</span> <span class="n">2566</span> <span class="s2">"duplicate of #2134"</span> <span class="p">|</span> <span class="s2">"superseded by ..."</span> <span class="p">|</span> <span class="s2">"won't fix, because ..."</span>
+<span class="n">exudev</span> <span class="n">issue</span> <span class="n">triage</span>                                <span class="c">#the open issues by type and effort</span>
+<span class="n">exudev</span> <span class="n">issue</span> <span class="n">plot</span>                                  <span class="c">#the issues over time: total, closed, open; bugs and fixes</span>
+<span class="n">exudev</span> <span class="n">issue</span> <span class="n">bump</span> <span class="p">-</span><span class="n">-minor</span> <span class="p">|</span> <span class="p">-</span><span class="n">-major</span> <span class="p">|</span> <span class="p">-</span><span class="n">-to</span> <span class="n">2</span><span class="p">.</span><span class="n">0</span>     <span class="c">#start a RELEASE (maintainer decision)</span>
+<span class="n">exudev</span> <span class="n">issue</span> <span class="n">html</span>                                  <span class="c">#write tools/issueTracker/trackerlog.html (ignored by git), e.g. after a checkout</span>
+<span class="n">exudev</span> <span class="n">issue</span> <span class="n">serve</span>                                 <span class="c">#the same in a browser, read AND write</span>
+<span class="n">exudev</span> <span class="n">issue</span> <span class="n">mode</span> <span class="p">-</span><span class="n">-release</span> <span class="p">|</span> <span class="p">-</span><span class="n">-dev</span>                              <span class="c">#fact 26</span>
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">exudev</span> <span class="pre">issue</span> <span class="pre">serve</span></code> opens a local page (<code class="docutils literal notranslate"><span class="pre">http://127.0.0.1:8099/</span></code>, standard library only) that
+lists, searches and filters the issues and writes through the same functions as the verbs above
+— which is the tool for a backlog pass, where a command line is not. It answers on the loopback
+interface only, and <strong>deleting an issue is not on it</strong>: that stays a file operation with a commit
+behind it.</p>
+<p><code class="docutils literal notranslate"><span class="pre">exudev</span> <span class="pre">-n</span> <span class="pre">issue</span> <span class="pre">resolve</span> <span class="pre">...</span></code> prints what it would do and writes nothing — worth using before
+anything that touches the version.</p>
+<p><strong>The same through the API</strong>, which the CLI calls and which a script can import:</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>call</p></th>
+<th class="head"><p>effect</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">RaiseIssue(issueName,</span> <span class="pre">description,</span> <span class="pre">issueType='EXTENSION',</span> <span class="pre">fileName='',</span> <span class="pre">lineNumber='',</span> <span class="pre">deadline='',</span> <span class="pre">author='JG',</span> <span class="pre">priority='')</span></code></p></td>
+<td><p>appends a <code class="docutils literal notranslate"><span class="pre">RAISED</span></code> issue; default deadline +180 days</p></td>
+</tr>
+</tbody>
+</table>
+<p>| <code class="docutils literal notranslate"><span class="pre">RaiseIssueDict(issueDict)</span></code> | same, full control over fields |
+| <code class="docutils literal notranslate"><span class="pre">ResolveIssue(issueNumber,</span> <span class="pre">notes='',</span> <span class="pre">author='JG')</span></code> | marks <code class="docutils literal notranslate"><span class="pre">RESOLVED</span></code>, stamps date, <strong>bumps the micro version</strong>; <code class="docutils literal notranslate"><span class="pre">notes</span></code> becomes <code class="docutils literal notranslate"><span class="pre">releaseNotes</span></code> and the working remarks are cleared |
+| <code class="docutils literal notranslate"><span class="pre">CloseIssue(issueNumber,</span> <span class="pre">reason,</span> <span class="pre">author='JG')</span></code> | closes without resolving; the reason is mandatory and becomes <code class="docutils literal notranslate"><span class="pre">releaseNotes</span></code> |
+| <code class="docutils literal notranslate"><span class="pre">ExtendIssue(issueNumber,</span> <span class="pre">text,</span> <span class="pre">author='JG')</span></code> | appends a dated paragraph to the description of an OPEN issue and changes nothing else (R8.3.3) |
+| <code class="docutils literal notranslate"><span class="pre">RemarkIssue(issueNumber,</span> <span class="pre">text,</span> <span class="pre">author='JG',</span> <span class="pre">replace=False)</span></code> | writes <code class="docutils literal notranslate"><span class="pre">workingRemarks</span></code> of an OPEN issue; appends by default (R8.5.3) |
+| <code class="docutils literal notranslate"><span class="pre">ChangeIssue(issueNumber,</span> <span class="pre">key,</span> <span class="pre">value)</span></code> | change one field; the enum fields are checked here too |
+| <code class="docutils literal notranslate"><span class="pre">ModifyDictIssue(issueDict)</span></code> | replace a whole issue (needs <code class="docutils literal notranslate"><span class="pre">number</span></code>) |
+| <code class="docutils literal notranslate"><span class="pre">GetIssue(n)</span></code> / <code class="docutils literal notranslate"><span class="pre">GetIssues()</span></code> / <code class="docutils literal notranslate"><span class="pre">NumberOfIssues()</span></code> | read-only |
+| <code class="docutils literal notranslate"><span class="pre">VersionString()</span></code> / <code class="docutils literal notranslate"><span class="pre">GetMajorMinorMicroVersion()</span></code> | current version |</p>
+<p>Fields: <code class="docutils literal notranslate"><span class="pre">number,</span> <span class="pre">issue,</span> <span class="pre">author,</span> <span class="pre">status,</span> <span class="pre">description,</span> <span class="pre">type,</span> <span class="pre">priority,</span> <span class="pre">date</span> <span class="pre">raised,</span> <span class="pre">deadline,</span> <span class="pre">date</span> <span class="pre">resolved,</span> <span class="pre">resolved</span> <span class="pre">author,</span> <span class="pre">file,</span> <span class="pre">line,</span> <span class="pre">releaseNotes,</span> <span class="pre">workingRemarks,</span> <span class="pre">effort</span></code>.</p>
+<blockquote>
+<div><p><strong>Two kinds of note, two fields</strong>. <code class="docutils literal notranslate"><span class="pre">releaseNotes</span></code> is written when
+the issue <strong>closes</strong> and is <strong>published</strong> — in <code class="docutils literal notranslate"><span class="pre">docs/generated/trackerlog.md</span></code> and, later, in
+<code class="docutils literal notranslate"><span class="pre">CHANGELOG.md</span></code>. <code class="docutils literal notranslate"><span class="pre">workingRemarks</span></code> is what the work knows meanwhile: <em>duplicate of #2134</em>,
+<em>marked for deprecation</em>, <em>check whether this still happens</em>, <em>part A solved, B open</em>. It is
+worthless once the issue closes, so <code class="docutils literal notranslate"><span class="pre">ResolveIssue</span></code> and <code class="docutils literal notranslate"><span class="pre">CloseIssue</span></code> <strong>clear</strong> it, and
+<code class="docutils literal notranslate"><span class="pre">RaiseIssue</span></code> refuses a release note: there is nothing to release yet.</p>
+</div></blockquote>
+<blockquote>
+<div><p><strong><code class="docutils literal notranslate"><span class="pre">effort</span></code> sorts the backlog</strong>, in human working hours without AI assistance:
+<code class="docutils literal notranslate"><span class="pre">LOW</span></code> within 2, <code class="docutils literal notranslate"><span class="pre">MEDIUM</span></code> within 16, <code class="docutils literal notranslate"><span class="pre">HIGH</span></code> within 40, <code class="docutils literal notranslate"><span class="pre">HUGE</span></code> above 40. It is a classification
+and not an estimate anyone is held to; empty means not classified. <code class="docutils literal notranslate"><span class="pre">priority</span></code> is a separate
+question and may stay empty, which is what 2,405 of the 2,567 issues say — but its spelling is
+now one of <code class="docutils literal notranslate"><span class="pre">LOW</span></code>, <code class="docutils literal notranslate"><span class="pre">NORMAL</span></code>, <code class="docutils literal notranslate"><span class="pre">HIGH</span></code>, enforced wherever an issue is written.</p>
+</div></blockquote>
+<blockquote>
+<div><p><strong>Extending an issue instead of rewriting it.</strong> When the first analysis turns up more than the
+issue says, <code class="docutils literal notranslate"><span class="pre">ExtendIssue</span></code> appends it with the date and the author. It refuses a closed issue:
+that text has already been published, so it is reopened or superseded, never rewritten.</p>
+</div></blockquote>
+<blockquote>
+<div><p><strong>Author attribution.</strong> When Claude raises or resolves an issue on the maintainer’s behalf, pass
+<code class="docutils literal notranslate"><span class="pre">author='Claude-JG'</span></code> to <strong>both</strong> <code class="docutils literal notranslate"><span class="pre">RaiseIssue</span></code> and <code class="docutils literal notranslate"><span class="pre">ResolveIssue</span></code> — the two fields are separate
+(<code class="docutils literal notranslate"><span class="pre">author</span></code> and <code class="docutils literal notranslate"><span class="pre">resolved</span> <span class="pre">author</span></code>), so both need it. <code class="docutils literal notranslate"><span class="pre">JG</span></code> alone means Johannes worked it himself.
+This keeps the tracker honest about who did what without needing a separate audit trail.</p>
+</div></blockquote>
+<p>The value lists live in <code class="docutils literal notranslate"><span class="pre">issueTracker.py</span></code> (<code class="docutils literal notranslate"><span class="pre">issueStatuses</span></code>, <code class="docutils literal notranslate"><span class="pre">issueTypes</span></code>, <code class="docutils literal notranslate"><span class="pre">issuePriorities</span></code>,
+<code class="docutils literal notranslate"><span class="pre">issueEfforts</span></code>) and nowhere else — this used to be a second list here and the two disagreed:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">status</span></code>: <code class="docutils literal notranslate"><span class="pre">RAISED</span></code>, <code class="docutils literal notranslate"><span class="pre">RESOLVED</span></code>, <code class="docutils literal notranslate"><span class="pre">CLOSED</span></code> — <code class="docutils literal notranslate"><span class="pre">CLOSED</span></code> means everything except resolved (obsolete, won’t fix, duplicate, superseded, not reproducible, abandoned), with the kind in the mandatory reason</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">type</span></code>: <code class="docutils literal notranslate"><span class="pre">BUG,</span> <span class="pre">FIX,</span> <span class="pre">CHANGE,</span> <span class="pre">EXTENSION,</span> <span class="pre">IMPROVEMENT,</span> <span class="pre">TESTING,</span> <span class="pre">DOCU,</span> <span class="pre">EXAMPLE,</span> <span class="pre">CHECK,</span> <span class="pre">IDEA</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">priority</span></code>: <code class="docutils literal notranslate"><span class="pre">''</span></code> (none), <code class="docutils literal notranslate"><span class="pre">LOW</span></code>, <code class="docutils literal notranslate"><span class="pre">NORMAL</span></code>, <code class="docutils literal notranslate"><span class="pre">HIGH</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">effort</span></code>: <code class="docutils literal notranslate"><span class="pre">''</span></code> (not classified), <code class="docutils literal notranslate"><span class="pre">LOW</span></code>, <code class="docutils literal notranslate"><span class="pre">MEDIUM</span></code>, <code class="docutils literal notranslate"><span class="pre">HIGH</span></code>, <code class="docutils literal notranslate"><span class="pre">HUGE</span></code></p></li>
+</ul>
+<section id="bug-vs-fix-the-distinction-is-user-facing">
+<h4><code class="docutils literal notranslate"><span class="pre">BUG</span></code> vs <code class="docutils literal notranslate"><span class="pre">FIX</span></code> — the distinction is user-facing<a class="headerlink" href="#bug-vs-fix-the-distinction-is-user-facing" title="Link to this heading"></a></h4>
+<p><code class="docutils literal notranslate"><span class="pre">BUG</span></code> is not “anything broken”. It is reserved for defects a <em>package user</em> has to know about,
+because they explain why something silently did the wrong thing:</p>
+<ul class="simple">
+<li><p>a solver, formulation or model gives <strong>wrong results</strong>;</p></li>
+<li><p>something <strong>crashes</strong> during a simulation;</p></li>
+<li><p>a documented feature does not work at all, with no clear message.</p></li>
+</ul>
+<p><code class="docutils literal notranslate"><span class="pre">FIX</span></code> covers everything that is merely annoying to <em>us</em>: a build that does not compile, a
+packaging or CI defect, documentation drift, a feature unavailable in some mode. These are
+visibly failing with the cause in the message, so a user never mistakes one for correct output.</p>
+<p>Why it matters mechanically: <code class="docutils literal notranslate"><span class="pre">ConvertToLatex</span></code>/<code class="docutils literal notranslate"><span class="pre">ConvertToHTML</span></code> select on <code class="docutils literal notranslate"><span class="pre">type</span> <span class="pre">==</span> <span class="pre">'BUG'</span></code> to build
+the open-bug list and the “resolved BUG” lines of the release notes. Anything typed <code class="docutils literal notranslate"><span class="pre">BUG</span></code> is
+therefore published to users. Mistyping a build defect as <code class="docutils literal notranslate"><span class="pre">BUG</span></code> costs them attention for
+something that could never have affected their results; mistyping a wrong-result defect as <code class="docutils literal notranslate"><span class="pre">FIX</span></code>
+hides it.</p>
+<p>When the cause is not yet known, prefer <code class="docutils literal notranslate"><span class="pre">BUG</span></code> — it is the safe direction.</p>
+</section>
+</section>
+<section id="what-a-tracker-write-touches">
+<h3>What a tracker write touches<a class="headerlink" href="#what-a-tracker-write-touches" title="Link to this heading"></a></h3>
+<p>Every verb that changes an issue rewrites the pages; only a verb that <strong>closes</strong> an issue moves
+the version, because the micro version is the count of closed issues.</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>file</p></th>
+<th class="head"><p>written by</p></th>
+<th class="head"><p>in git</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">tools/issueTracker/issues/&lt;n&gt;.json</span></code></p></td>
+<td><p>the verb itself</p></td>
+<td><p>yes</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">tools/issueTracker/issues/meta.json</span></code></p></td>
+<td><p>every verb (date and version of the last change)</p></td>
+<td><p>yes</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">tools/issueTracker/trackerlog.html</span></code></p></td>
+<td><p>every verb (<code class="docutils literal notranslate"><span class="pre">ConvertToHTML</span></code>)</p></td>
+<td><p><strong>no</strong> — a local overview</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">docs/generated/trackerlog.md</span></code></p></td>
+<td><p>every verb (<code class="docutils literal notranslate"><span class="pre">ConvertToMarkdown</span></code>)</p></td>
+<td><p>yes — the published issue list, every release <strong>before</strong> the current one, in full</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">CHANGELOG.md</span></code> (repository root)</p></td>
+<td><p>every verb (<code class="docutils literal notranslate"><span class="pre">ConvertToChangelog</span></code>)</p></td>
+<td><p>yes — the <strong>current</strong> release for users, with a table of all of them</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">version.txt</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">resolve</span></code>, <code class="docutils literal notranslate"><span class="pre">close</span></code>, <code class="docutils literal notranslate"><span class="pre">bump</span></code>, <code class="docutils literal notranslate"><span class="pre">mode</span></code></p></td>
+<td><p>yes</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">src/Autogenerated/versionCpp.cpp</span></code></p></td>
+<td><p>the same</p></td>
+<td><p>yes</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">tools/issueTracker/versionName.txt</span></code></p></td>
+<td><p>the same</p></td>
+<td><p>yes</p></td>
+</tr>
+<tr class="row-even"><td><p>the version line of <code class="docutils literal notranslate"><span class="pre">README.rst</span></code></p></td>
+<td><p>the same</p></td>
+<td><p>yes</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">tools/issueTracker/releases.json</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">bump</span></code> only</p></td>
+<td><p>yes</p></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Nothing else.</strong> <code class="docutils literal notranslate"><span class="pre">exudev</span> <span class="pre">docs</span></code> renders <code class="docutils literal notranslate"><span class="pre">docs/</span></code> to HTML and writes no tracker file; it only
+<em>reads</em> <code class="docutils literal notranslate"><span class="pre">docs/generated/trackerlog.md</span></code>, which the tracker had already written. So after raising
+an issue the working tree carries the new issue file, <code class="docutils literal notranslate"><span class="pre">meta.json</span></code> and <code class="docutils literal notranslate"><span class="pre">trackerlog.md</span></code> — and if
+that issue is deleted again by hand, <code class="docutils literal notranslate"><span class="pre">trackerlog.md</span></code> still lists it until the next tracker write
+regenerates it (<code class="docutils literal notranslate"><span class="pre">python</span> <span class="pre">tools/checkIssues.py</span></code> does not regenerate; any verb does).</p>
+<p><strong>Deleting an issue by hand</strong> is legitimate for the NEWEST open issue, which is why nothing
+automates it: its number is simply handed out again. A gap anywhere else is reported by
+<code class="docutils literal notranslate"><span class="pre">tools/checkIssues.py</span></code>, and a CLOSED issue must never be deleted — it is one count of the micro
+version and its number stands in a released changelog.</p>
+<blockquote>
+<div><p><strong>An issue file can be read and even edited by hand</strong> — that was the point of R8.5 — but go
+through <code class="docutils literal notranslate"><span class="pre">exudev</span> <span class="pre">issue</span></code> where a verb exists: it checks the enum fields, moves a closed issue from
+<code class="docutils literal notranslate"><span class="pre">open/</span></code> to <code class="docutils literal notranslate"><span class="pre">closed/</span></code>, and rewrites the version files, which a hand edit does not.
+<code class="docutils literal notranslate"><span class="pre">python</span> <span class="pre">tools/checkIssues.py</span></code> says whether the store is consistent; it runs in the commit gate.</p>
+</div></blockquote>
+</section>
+<section id="known-inconsistencies-raise-as-issues-do-not-fix-inline">
+<h3>Known inconsistencies (raise as issues; do not fix inline)<a class="headerlink" href="#known-inconsistencies-raise-as-issues-do-not-fix-inline" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p>~~The header documents <code class="docutils literal notranslate"><span class="pre">priority</span></code> values <code class="docutils literal notranslate"><span class="pre">NO,</span> <span class="pre">LOW,</span> <span class="pre">NORMAL,</span> <span class="pre">HIGH</span></code>, but <code class="docutils literal notranslate"><span class="pre">ConvertToHTML</span></code> colours
+on <code class="docutils literal notranslate"><span class="pre">high</span></code> / <code class="docutils literal notranslate"><span class="pre">med</span></code> / <code class="docutils literal notranslate"><span class="pre">low</span></code>~~ — settled: one enum, normalized in the
+data and enforced on write.</p></li>
+<li><p>~~Historical <code class="docutils literal notranslate"><span class="pre">type</span></code> values include typos and variants outside the documented set~~ — settled in
+R8.7 (#2519): 39 spellings became 10 types, checked where an issue is born.</p></li>
+<li><p>The batch scripts that used to live in <code class="docutils literal notranslate"><span class="pre">tools/buildAndGenerate/</span></code> carried several such
+leftovers, among them a <code class="docutils literal notranslate"><span class="pre">cd</span></code> into a directory removed years ago. They were replaced by
+<code class="docutils literal notranslate"><span class="pre">exudev</span></code> and moved out of the repository.</p></li>
+</ul>
+</section>
+<section id="what-next">
+<h3>What next?<a class="headerlink" href="#what-next" title="Link to this heading"></a></h3>
+<p>Answer in this order:</p>
+<ol class="arabic simple">
+<li><p>Open <code class="docutils literal notranslate"><span class="pre">BUG</span></code>s (<code class="docutils literal notranslate"><span class="pre">status</span> <span class="pre">!=</span> <span class="pre">RESOLVED</span> <span class="pre">and</span> <span class="pre">type</span> <span class="pre">==</span> <span class="pre">'BUG'</span></code>) — currently 9.</p></li>
+<li><p>Open issues by priority (<code class="docutils literal notranslate"><span class="pre">HIGH</span></code>, then <code class="docutils literal notranslate"><span class="pre">MED</span></code>, then <code class="docutils literal notranslate"><span class="pre">LOW</span></code>) — currently 9 / 5 / 4.</p></li>
+<li><p>The current phase of <code class="docutils literal notranslate"><span class="pre">docs/revision/exudynRevisionPlan2026.md</span></code>.</p></li>
+</ol>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">cd</span><span class="w"> </span>tools/issueTracker
+<span class="nv">$env</span>:USERPROFILE/Anaconda/envs/venvP312/python.exe<span class="w"> </span>-c<span class="w"> </span><span class="s2">"import issueTracker as it; [print(i['number'], i['priority'], i['type'], i['issue']) for i in it.GetIssues() if i['status'].strip()!='RESOLVED' and i['priority'].strip().lower()=='high']"</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="versioning">
+<h2>3. Versioning<a class="headerlink" href="#versioning" title="Link to this heading"></a></h2>
+<p><strong>The micro version is derived, not written.</strong> <code class="docutils literal notranslate"><span class="pre">GetMajorMinorMicroVersion()</span></code> counts <code class="docutils literal notranslate"><span class="pre">RESOLVED</span></code>
+issues and subtracts the baseline for the current minor version, so <strong>resolving an issue <em>is</em> the
+version bump</strong>. <code class="docutils literal notranslate"><span class="pre">ResolveIssue()</span></code> then rewrites, in one pass:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">tools</span><span class="o">/</span><span class="n">issueTracker</span><span class="o">/</span><span class="n">issues</span><span class="o">/&lt;</span><span class="n">the</span> <span class="n">issue</span><span class="o">&gt;.</span><span class="n">json</span>  <span class="ow">and</span> <span class="n">issues</span><span class="o">/</span><span class="n">meta</span><span class="o">.</span><span class="n">json</span>
+<span class="n">tools</span><span class="o">/</span><span class="n">issueTracker</span><span class="o">/</span><span class="n">trackerlog</span><span class="o">.</span><span class="n">html</span>          <span class="n">the</span> <span class="n">overview</span> <span class="p">(</span><span class="ow">not</span> <span class="ow">in</span> <span class="n">git</span><span class="p">)</span>
+<span class="n">docs</span><span class="o">/</span><span class="n">generated</span><span class="o">/</span><span class="n">trackerlog</span><span class="o">.</span><span class="n">md</span>
+<span class="n">src</span><span class="o">/</span><span class="n">Autogenerated</span><span class="o">/</span><span class="n">versionCpp</span><span class="o">.</span><span class="n">cpp</span>           <span class="n">the</span> <span class="n">version</span> <span class="n">reported</span> <span class="n">by</span> <span class="n">exudyn</span> <span class="n">at</span> <span class="n">runtime</span>
+<span class="n">version</span><span class="o">.</span><span class="n">txt</span>                                <span class="n">the</span> <span class="n">single</span> <span class="n">version</span> <span class="n">source</span><span class="p">,</span> <span class="n">at</span> <span class="n">the</span> <span class="n">repository</span> <span class="n">root</span>
+<span class="n">tools</span><span class="o">/</span><span class="n">issueTracker</span><span class="o">/</span><span class="n">versionName</span><span class="o">.</span><span class="n">txt</span>         <span class="n">the</span> <span class="n">jazz</span><span class="o">-</span><span class="n">musician</span> <span class="n">release</span> <span class="n">name</span>
+</pre></div>
+</div>
+<p>Never edit any of those seven files by hand.</p>
+<section id="how-a-version-is-named-in-prose-maintainer-2026-09-22">
+<h3>How a version is named in prose (maintainer, 2026-09-22)<a class="headerlink" href="#how-a-version-is-named-in-prose-maintainer-2026-09-22" title="Link to this heading"></a></h3>
+<p>Two audiences, two forms, and mixing them is what confuses people:</p>
+<ul class="simple">
+<li><p><strong>for users</strong> — name the <strong>release that ships a feature</strong>: <em>“since 1.12”</em>. A micro
+version such as 1.11.238 is a number they cannot install, and telling them one they cannot
+get from <code class="docutils literal notranslate"><span class="pre">pip</span></code> is worse than telling them nothing.</p></li>
+<li><p><strong>for development</strong> — name the <strong>exact version</strong>: <em>“since 1.11.238”</em>. That is what the
+colleagues on the internal GitLab run, it is checkable against <code class="docutils literal notranslate"><span class="pre">version.txt</span></code>, and the
+changelog carries it for every issue anyway.</p></li>
+</ul>
+<p>So the manual, the landing page and the <a class="reference internal" href="../manual/revisions.html#sec-revisions"><span class="std std-ref">revisions chapter</span></a> say <em>1.12</em>;
+<code class="docutils literal notranslate"><span class="pre">CHANGELOG.md</span></code>, the issue tracker and notes between developers say <em>1.11.238</em>. Since the micro
+version only ever grows, a reader comparing the two still gets the order right.</p>
+<p><strong>1.12 is not a public release</strong> (decision D16): it marks the completion of the 2026 revision
+and stays internal — no PyPI wheels, no GitHub release. <strong>1.13</strong> is the first release that
+is published, after the integration round of the colleagues, the documentation review and the
+macOS wheels.</p>
+</section>
+<section id="release-mode-vs-development-mode">
+<h3>Release mode vs development mode<a class="headerlink" href="#release-mode-vs-development-mode" title="Link to this heading"></a></h3>
+<p><code class="docutils literal notranslate"><span class="pre">versionDev</span></code> in <code class="docutils literal notranslate"><span class="pre">tools/issueTracker/issueTracker.py</span></code> selects one of two intended
+modes. Both are kept; this is not a leftover switch.</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>mode</p></th>
+<th class="head"><p><code class="docutils literal notranslate"><span class="pre">versionDev</span></code></p></th>
+<th class="head"><p>version</p></th>
+<th class="head"><p>modules built</p></th>
+<th class="head"><p>cp313 build</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><strong>release</strong></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">''</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">1.11.14</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">exudynCPP</span></code> <strong>+</strong> <code class="docutils literal notranslate"><span class="pre">exudynCPPfast</span></code> (both platforms)</p></td>
+<td><p><strong>86 s</strong> (2026-09-16, two modules; was 168.9 s with three)</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>development</strong></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">'.dev1'</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">1.11.14.dev1</span></code></p></td>
+<td><p>one <code class="docutils literal notranslate"><span class="pre">exudynCPP</span></code>; <code class="docutils literal notranslate"><span class="pre">exudynCPPfast</span></code> only on Python 3.13</p></td>
+<td><p><strong>58.1 s</strong></p></td>
+</tr>
+</tbody>
+</table>
+<p>Switch by editing the line and running <code class="docutils literal notranslate"><span class="pre">UpdateFiles()</span></code> from <code class="docutils literal notranslate"><span class="pre">tools/issueTracker/</span></code>.</p>
+<p>Two things follow from a switch:</p>
+<ul class="simple">
+<li><p><strong>The version string changes</strong>, so the version line of <code class="docutils literal notranslate"><span class="pre">README.rst</span></code> picks up (or loses) the
+<code class="docutils literal notranslate"><span class="pre">.dev1</span></code> suffix when the tracker stamps it — see §8 gate 2 on ordering.</p></li>
+<li><p><strong>A <code class="docutils literal notranslate"><span class="pre">.dev1</span></code> version is not installed by a plain <code class="docutils literal notranslate"><span class="pre">pip</span> <span class="pre">install</span> <span class="pre">exudyn</span></code></strong> — only with <code class="docutils literal notranslate"><span class="pre">--pre</span></code> or an
+exact version. A development build therefore cannot reach users by accident.</p></li>
+</ul>
+<p>Use development mode for ordinary work: outside Python 3.13 it builds one module instead of two
+and is roughly 2× faster. Switch to release only when producing a release.</p>
+<p><strong>Starting a release is the maintainer’s decision</strong>, and it is one command:</p>
+<div class="highlight-powershell notranslate"><div class="highlight"><pre><span></span><span class="n">exudev</span> <span class="n">issue</span> <span class="n">bump</span> <span class="p">-</span><span class="n">-minor</span>              <span class="c">#1.11 → 1.12</span>
+<span class="n">exudev</span> <span class="n">issue</span> <span class="n">bump</span> <span class="p">-</span><span class="n">-major</span> <span class="p">-</span><span class="n">-name</span> <span class="p">...</span>   <span class="c">#1.11 → 2.0</span>
+</pre></div>
+</div>
+<p>It appends the release to <code class="docutils literal notranslate"><span class="pre">tools/issueTracker/releases.json</span></code> with the current count of closed
+issues as its baseline, and the micro version restarts at 0. Claude asks first, every time.</p>
+</section>
+</section>
+<section id="branches-and-remotes">
+<h2>4. Branches and remotes<a class="headerlink" href="#branches-and-remotes" title="Link to this heading"></a></h2>
+<p>Full picture in plan §2a. The short version, which is what matters day to day:</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>branch</p></th>
+<th class="head"><p>purpose</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">master</span></code></p></td>
+<td><p>read-only mirror of public GitHub <code class="docutils literal notranslate"><span class="pre">master</span></code>, frozen at 1.11.0 — <strong>never commit here</strong></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">v2-dev</span></code></p></td>
+<td><p>the working branch of the 2026 revision; the name is historical (the revision was planned as 1.11 → 2.0 and completes as 1.12)</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">release/*</span></code></p></td>
+<td><p>release preparation</p></td>
+</tr>
+</tbody>
+</table>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>origin  →  git@&lt;internal-gitlab&gt;:&lt;group&gt;/exudyn.git   internal   (v2-dev tracks origin/v2-dev)
+github  →  git@github.com:jgerstmayr/EXUDYN.git     public     (master tracks github/master)
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">origin</span></code> is the internal server, so a bare <code class="docutils literal notranslate"><span class="pre">git</span> <span class="pre">push</span></code> from <code class="docutils literal notranslate"><span class="pre">v2-dev</span></code> syncs there — the safe default,
+and the normal thing to do. The internal repository carries <strong>full history</strong>; this clone is still
+<code class="docutils literal notranslate"><span class="pre">--depth</span> <span class="pre">1</span></code> and stays small.</p>
+<ul class="simple">
+<li><p>Work on <code class="docutils literal notranslate"><span class="pre">v2-dev</span></code>; never commit on <code class="docutils literal notranslate"><span class="pre">master</span></code>.</p></li>
+<li><p>Push <code class="docutils literal notranslate"><span class="pre">v2-dev</span></code> to <code class="docutils literal notranslate"><span class="pre">origin</span></code> freely.</p></li>
+<li><p><strong>Nothing reaches GitHub before the 1.13 release.</strong> 1.12 marks the completion of the 2026
+revision and stays internal: no PyPI wheels, no GitHub release, no promotion (decision D16).
+<code class="docutils literal notranslate"><span class="pre">tools/hooks/pre-push</span></code> enforces this, but
+only where <code class="docutils literal notranslate"><span class="pre">core.hooksPath</span></code> is set — see <a class="reference internal" href="GETTING_STARTED.html"><span class="std std-doc">GETTING_STARTED.md</span></a>, and tell anyone you add to the server.</p></li>
+<li><p>Claude never pushes to any remote, under any circumstances, and announces network access first.</p></li>
+</ul>
+</section>
+<section id="testing">
+<h2>5. Testing<a class="headerlink" href="#testing" title="Link to this heading"></a></h2>
+<p>What the suites are, which of them a change has to run, and what a test model looks like.
+The gates that require them are §8.</p>
+<section id="which-tests-run-when">
+<h3>Which tests run when<a class="headerlink" href="#which-tests-run-when" title="Link to this heading"></a></h3>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>run</p></th>
+<th class="head"><p>what</p></th>
+<th class="head"><p>how</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>commit gate / pull request</p></td>
+<td><p>test models without the slow ones and without optional packages</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">runTestSuite.py</span> <span class="pre">--fast</span></code> (12 s) or <code class="docutils literal notranslate"><span class="pre">exudev</span> <span class="pre">pytest</span> <span class="pre">--gate</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p>full local check</p></td>
+<td><p>all test models and mini examples, and the tests that are not models - graphics, settings, dialogs, tools</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">exudev</span> <span class="pre">test</span></code> (22 s) and <code class="docutils literal notranslate"><span class="pre">exudev</span> <span class="pre">pytest</span></code> (about a minute in 8 processes)</p></td>
+</tr>
+<tr class="row-even"><td><p>graphics</p></td>
+<td><p>what the renderer would draw, every item through its MiniExample, small raytraced images</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">exudev</span> <span class="pre">pytest</span> <span class="pre">--graphics</span></code> (15 s); <code class="docutils literal notranslate"><span class="pre">--record</span></code> after an intended change, then read the diff of <code class="docutils literal notranslate"><span class="pre">python/testing/graphicsReferences/</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p>performance of the items</p></td>
+<td><p>every MiniExample, the solver timers</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">exudev</span> <span class="pre">perf</span> <span class="pre">--mini</span></code> (regular), <code class="docutils literal notranslate"><span class="pre">--full</span></code> for a comparison, <code class="docutils literal notranslate"><span class="pre">--compare</span> <span class="pre">LOG1</span> <span class="pre">LOG2</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p>nightly / release</p></td>
+<td><p>models, performance tests, all examples and the pytest files</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">exudev</span> <span class="pre">build</span> <span class="pre">--complete</span></code>, or <code class="docutils literal notranslate"><span class="pre">exudev</span> <span class="pre">release</span></code>, which calls the runners</p></td>
+</tr>
+<tr class="row-odd"><td><p>examples</p></td>
+<td><p>all 171 examples, in parallel, as an API check</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">exudev</span> <span class="pre">examples</span></code>, i.e. <code class="docutils literal notranslate"><span class="pre">runTestExamples.py</span></code> (49 s; <code class="docutils literal notranslate"><span class="pre">--serial</span></code>, <code class="docutils literal notranslate"><span class="pre">--parallel=N</span></code>, <code class="docutils literal notranslate"><span class="pre">--timeout=S</span></code>, <code class="docutils literal notranslate"><span class="pre">--exit-code</span></code>)</p></td>
+</tr>
+<tr class="row-even"><td><p>C++ unit tests</p></td>
+<td><p>the <code class="docutils literal notranslate"><span class="pre">lest</span></code> tests in <code class="docutils literal notranslate"><span class="pre">src/Tests/</span></code></p></td>
+<td><p>only in a build with the <code class="docutils literal notranslate"><span class="pre">performUnitTests</span></code> switch, or the VS <code class="docutils literal notranslate"><span class="pre">Debug</span></code> configuration; then <code class="docutils literal notranslate"><span class="pre">runTestSuite.py</span></code> runs them</p></td>
+</tr>
+</tbody>
+</table>
+<p>The two lists behind this live in <code class="docutils literal notranslate"><span class="pre">runTestSuiteRefSol.py</span></code> as data - <code class="docutils literal notranslate"><span class="pre">SlowTests()</span></code> (measured,
+above 0.6 s) and <code class="docutils literal notranslate"><span class="pre">OptionalPackageTests()</span></code> (needs ngsolve, stable-baselines3, …) - and are read
+both by <code class="docutils literal notranslate"><span class="pre">--fast</span></code> and by the pytest markers, so the two runners always skip the same models.
+<code class="docutils literal notranslate"><span class="pre">pytest</span></code> additionally marks <code class="docutils literal notranslate"><span class="pre">sensitive</span></code> and <code class="docutils literal notranslate"><span class="pre">unresolvedOnLinux</span></code> from the same file.</p>
+<p><strong>The models are not the slow part of a nightly run</strong>: the whole suite is 26 seconds, while the
+171 examples and the performance tests dominate. Those are the slow part, not this split.</p>
+</section>
+<section id="where-a-test-goes-test-model-or-python-testing">
+<h3>Where a test goes: test model or <code class="docutils literal notranslate"><span class="pre">python/testing/</span></code><a class="headerlink" href="#where-a-test-goes-test-model-or-python-testing" title="Link to this heading"></a></h3>
+<p><strong>A test of what a user does with Exudyn is a test model</strong> in <code class="docutils literal notranslate"><span class="pre">python/TestModels/</span></code>: an item, an
+output variable, a sensor, a solver setting, a utility such as <code class="docutils literal notranslate"><span class="pre">SystemEnergy</span></code> - including what it
+refuses and with which message. Users search the test models for examples; a test of the energy
+output variables in <code class="docutils literal notranslate"><span class="pre">python/testing/</span></code> is one they never find. The test model shows the use and
+reports one number (§<em>What a test model looks like</em>); a refused input is shown with <code class="docutils literal notranslate"><span class="pre">try</span></code>/<code class="docutils literal notranslate"><span class="pre">except</span></code>
+and counted in the result. (Maintainer, 2026-10-01, #2202.)</p>
+<p><strong><code class="docutils literal notranslate"><span class="pre">python/testing/</span></code> is for what is not an example</strong>: the tools, the generators and the definitions,
+the renderer, dialogs and settings, the runners, and comparisons between two code paths of the core
+(such as <code class="docutils literal notranslate"><span class="pre">test_connectorInterface.py</span></code>, the connector interface against its legacy path) - tests that
+need pytest’s parametrization, fixtures or <code class="docutils literal notranslate"><span class="pre">pytest.raises</span></code> over internals a user does not touch.</p>
+</section>
+<section id="what-a-test-model-looks-like">
+<h3>What a test model looks like<a class="headerlink" href="#what-a-test-model-looks-like" title="Link to this heading"></a></h3>
+<p>A test model is an ordinary Exudyn script that says <strong>one</strong> thing about itself and reports <strong>one</strong>
+number. Since #2632 that is three lines, and nothing is imported from
+<code class="docutils literal notranslate"><span class="pre">python/testing/</span></code>:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">testIsActive</span> <span class="o">=</span> <span class="n">exu</span><span class="o">.</span><span class="n">sys</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'testIsActive'</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>   <span class="c1">#True only while a runner runs this file</span>
+<span class="o">...</span>
+<span class="n">simulationSettings</span><span class="o">.</span><span class="n">solution</span><span class="o">.</span><span class="n">file</span><span class="o">.</span><span class="n">write</span> <span class="o">=</span> <span class="ow">not</span> <span class="n">testIsActive</span>
+<span class="o">...</span>
+<span class="k">if</span> <span class="ow">not</span> <span class="n">testIsActive</span><span class="p">:</span>
+    <span class="n">SC</span><span class="o">.</span><span class="n">renderer</span><span class="o">.</span><span class="nf">Start</span><span class="p">()</span>
+    <span class="n">SC</span><span class="o">.</span><span class="n">renderer</span><span class="o">.</span><span class="nf">RestoreSavedState</span><span class="p">()</span>
+    <span class="n">SC</span><span class="o">.</span><span class="n">renderer</span><span class="o">.</span><span class="nf">DoIdleTasks</span><span class="p">()</span>
+    <span class="o">...</span>
+    <span class="n">SC</span><span class="o">.</span><span class="n">renderer</span><span class="o">.</span><span class="nf">Stop</span><span class="p">()</span>
+<span class="o">...</span>
+<span class="n">exu</span><span class="o">.</span><span class="nf">Print</span><span class="p">(</span><span class="s1">'solution of myTest='</span><span class="p">,</span> <span class="n">testResult</span><span class="p">)</span>
+<span class="n">exu</span><span class="o">.</span><span class="n">sys</span><span class="p">[</span><span class="s1">'testResult'</span><span class="p">]</span> <span class="o">=</span> <span class="n">testResult</span>
+</pre></div>
+</div>
+<ul>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">exu.sys</span></code> is the channel.</strong> It is a dictionary the C++ side owns and Python can read, it lives
+as long as the interpreter, and it is reserved for the system, so no model can collide with
+another. Before RG10.6 a model imported <code class="docutils literal notranslate"><span class="pre">exudynTestGlobals</span></code> from the test suite inside a
+<code class="docutils literal notranslate"><span class="pre">try/except</span></code>, nine lines of it, which is why a model could not be run from anywhere else.</p></li>
+<li><p><strong>The renderer calls stay behind <code class="docutils literal notranslate"><span class="pre">if</span> <span class="pre">not</span> <span class="pre">testIsActive:</span></code>.</strong> The runners suppress windows anyway
+(<code class="docutils literal notranslate"><span class="pre">exu.special.userInterface.SuppressAll(True)</span></code>), but a test is worth running <strong>with</strong> graphics
+by hand, and the branch is what makes that possible.</p></li>
+<li><p><strong>The result is the model’s own number, and the reference lives in
+<code class="docutils literal notranslate"><span class="pre">python/testing/runTestSuiteRefSol.py</span></code></strong> - not in the model. Print it with a name: that is what
+lets a reference be recomputed without running the suite.</p></li>
+<li><p><strong>Never scale a result to make it fit the tolerance.</strong> If a model needs a wider one, say so:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">exu</span><span class="o">.</span><span class="n">sys</span><span class="p">[</span><span class="s1">'testTolerance'</span><span class="p">]</span> <span class="o">=</span> <span class="mf">5e-7</span>   <span class="c1">#with the reason, in a comment</span>
+</pre></div>
+</div>
+<p>This is an absolute tolerance and it replaces the default for that model, in the suite, in
+<code class="docutils literal notranslate"><span class="pre">pytest</span></code> and in the parallel path alike. Multiplying the result instead - which one model did</p>
+<ul class="simple">
+<li><p>hides the tolerance inside the number the test compares,
+and the reference solution then has to be a scaled number nobody recognises.</p></li>
+</ul>
+</li>
+</ul>
+<p>A <strong>mini example</strong> is generated from <code class="docutils literal notranslate"><span class="pre">definitions/</span></code> and only writes <code class="docutils literal notranslate"><span class="pre">exu.sys['testResult']</span></code>; a
+<strong>performance model</strong> additionally calls <code class="docutils literal notranslate"><span class="pre">testRunnerTools.AddTiming(name,</span> <span class="pre">mbs,</span> <span class="pre">result)</span></code> once per
+simulation run.</p>
+</section>
+<section id="pytest">
+<h3>pytest<a class="headerlink" href="#pytest" title="Link to this heading"></a></h3>
+<p><code class="docutils literal notranslate"><span class="pre">pytest</span></code> (from the repository root, configured in <code class="docutils literal notranslate"><span class="pre">pyproject.toml</span></code>) runs
+<code class="docutils literal notranslate"><span class="pre">python/testing/test_testModels.py</span></code>: one test case per test model and per mini example, each in
+its own interpreter, judged against the same reference values, tolerance factors and
+sensitive/unresolved lists as <code class="docutils literal notranslate"><span class="pre">runTestSuite.py</span></code> - those have one definition in
+<code class="docutils literal notranslate"><span class="pre">runTestSuiteRefSol.py</span></code> and <code class="docutils literal notranslate"><span class="pre">testRunnerTools.BaseTolerance()</span></code>.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">pytest</span>                       <span class="nb">all</span> <span class="n">models</span> <span class="ow">and</span> <span class="n">mini</span> <span class="n">examples</span> <span class="p">(</span><span class="mi">149</span> <span class="n">cases</span><span class="p">,</span> <span class="o">~</span><span class="mi">71</span> <span class="n">s</span><span class="p">)</span>
+<span class="n">pytest</span> <span class="o">-</span><span class="n">k</span> <span class="n">ANCF</span>               <span class="n">a</span> <span class="n">subset</span> <span class="n">by</span> <span class="n">name</span>
+<span class="n">pytest</span> <span class="o">-</span><span class="n">n</span> <span class="mi">8</span>                  <span class="k">with</span> <span class="n">pytest</span><span class="o">-</span><span class="n">xdist</span><span class="p">:</span> <span class="o">~</span><span class="mi">12</span> <span class="n">s</span>
+<span class="n">pytest</span> <span class="o">-</span><span class="n">k</span> <span class="n">plotSensorTest</span> <span class="o">-</span><span class="n">s</span>  <span class="n">one</span> <span class="n">model</span> <span class="k">with</span> <span class="n">its</span> <span class="n">output</span>
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">pytest</span></code> and <code class="docutils literal notranslate"><span class="pre">pytest-xdist</span></code> are <strong>dev tools</strong>: install them yourself (<code class="docutils literal notranslate"><span class="pre">pip</span> <span class="pre">install</span> <span class="pre">pytest</span> <span class="pre">pytest-xdist</span></code>); neither the package nor <code class="docutils literal notranslate"><span class="pre">runTestSuite.py</span></code> needs them. <strong>Do not start pytest with
+<code class="docutils literal notranslate"><span class="pre">python/</span></code> as working directory</strong> - the untracked scratch file <code class="docutils literal notranslate"><span class="pre">python/pytest.py</span></code> would shadow the
+pytest module.</p>
+<p><code class="docutils literal notranslate"><span class="pre">runTestSuite.py</span></code> stays the runner for the commit gate and the release log: it writes the release-
+named log, the coverage report and the overview table, and its exit code is what CI checks.</p>
+</section>
+<section id="running-the-suite-in-parallel">
+<h3>Running the suite in parallel<a class="headerlink" href="#running-the-suite-in-parallel" title="Link to this heading"></a></h3>
+<p><code class="docutils literal notranslate"><span class="pre">runTestSuite.py</span> <span class="pre">--parallel</span></code> runs every test model in its own interpreter; <code class="docutils literal notranslate"><span class="pre">--parallel=N</span></code> sets the
+number of workers (default: half the cores, at least 2, at most 8). Measured on a 32-thread
+machine: <strong>22 s serial, 11 s with 8 workers, 9 s with 16</strong>; the limit is the interpreter start of
+each model, not the models themselves. It is possible because every model writes into its own
+output directory (<code class="docutils literal notranslate"><span class="pre">exudyn.config.outputDirectory</span></code>).</p>
+<p>The log reports the models in the order of the reference list, whatever order they finish in, so
+log and exit code do not depend on scheduling. <strong>The gating run stays serial by default</strong>: models
+that use multithreaded solvers or ARPACK can shift in the last digits when the machine is loaded
+(measured: <code class="docutils literal notranslate"><span class="pre">NGsolveCMStest</span></code>, <code class="docutils literal notranslate"><span class="pre">objectFFRFreducedOrderTest</span></code>, <code class="docutils literal notranslate"><span class="pre">superElementRigidJointTest</span></code>, all far
+inside their tolerance). Use <code class="docutils literal notranslate"><span class="pre">--parallel</span></code> while developing, and the serial run for a commit gate.</p>
+</section>
+<section id="reproducible-vs-sensitive-tests">
+<h3>Reproducible vs sensitive tests<a class="headerlink" href="#reproducible-vs-sensitive-tests" title="Link to this heading"></a></h3>
+<p><strong>All three runners take <code class="docutils literal notranslate"><span class="pre">--exit-code</span></code></strong> and return non-zero when something fails - CI depends on
+it, and without it CI cannot fail at all. <code class="docutils literal notranslate"><span class="pre">runTestExamples.py</span></code> and <code class="docutils literal notranslate"><span class="pre">runPerformanceTests.py</span></code> got
+theirs in #2504; until then they always returned 0 and a caller had
+to read the summary out of the log. The <code class="docutils literal notranslate"><span class="pre">exudev</span></code> driver passes the flag always, with no way to
+turn it off, and so do the CI jobs: <code class="docutils literal notranslate"><span class="pre">.gitlab-ci.yml</span></code> through <code class="docutils literal notranslate"><span class="pre">tools/ci/buildManylinux.sh</span></code>, the GitHub
+wheels through the <code class="docutils literal notranslate"><span class="pre">test-command</span></code> of <code class="docutils literal notranslate"><span class="pre">[tool.cibuildwheel]</span></code> in <code class="docutils literal notranslate"><span class="pre">pyproject.toml</span></code> (#2907).</p>
+<p>Two of the three mean <em>nothing NEW broke</em> rather than <em>everything passed</em>. For the examples the
+exclusions are <code class="docutils literal notranslate"><span class="pre">testRunnerTools.KnownExampleFailures()</span></code> - five today, three of them missing an
+optional package (#2507) - and an entry that starts passing is reported as a <strong>dead exclusion</strong>
+by name, so the list shrinks instead of rotting. For the test suite it is the two sets below.
+<code class="docutils literal notranslate"><span class="pre">runPerformanceTests.py</span></code> excludes nothing: every performance test passes today.</p>
+<p>Not every test is reproducible across machines:</p>
+<ul class="simple">
+<li><p><strong>contact and friction models</strong> are chaotic; a different machine gives a materially different
+error, and the size of that error says nothing about correctness</p></li>
+<li><p><strong>sparse eigenvalue problems</strong> go through ARPACK from a random start vector that cannot be seeded</p></li>
+</ul>
+<p>Those are listed in <code class="docutils literal notranslate"><span class="pre">SensitiveTests()</span></code> in <code class="docutils literal notranslate"><span class="pre">runTestSuiteRefSol.py</span></code>. They still run, and their
+failures are reported prominently — but they <strong>do not set the exit code</strong>, because a scheduled run
+that goes red at random is an alarm nobody reads. Tests needing a looser but still meaningful
+tolerance go in <code class="docutils literal notranslate"><span class="pre">TestExamplesToleranceFactors()</span></code> instead.</p>
+<p><code class="docutils literal notranslate"><span class="pre">SensitiveTests()</span></code> is currently <strong>empty and needs populating from evidence</strong>: run the suite on
+Windows, Linux and macOS and compare per-test <code class="docutils literal notranslate"><span class="pre">ERROR</span></code> values; anything varying by orders of
+magnitude belongs there. Do not populate it by matching file names — contact/friction/eigen matches
+about a third of the suite and would gut the gate.</p>
+</section>
+<section id="the-third-list-known-platform-differences">
+<h3>The third list: known platform differences<a class="headerlink" href="#the-third-list-known-platform-differences" title="Link to this heading"></a></h3>
+<p><code class="docutils literal notranslate"><span class="pre">UnresolvedOnLinux()</span></code> holds tests that fail on Linux against the Windows reference values for a
+<strong>reproducible</strong> reason that has not been found yet — currently eight contact and friction models,
+measured 2026-09-10. They are excluded from the exit code <strong>on Linux only</strong>; on Windows they must
+still pass, since that is where the reference values come from. Marked <code class="docutils literal notranslate"><span class="pre">L</span></code> in the overview table,
+against <code class="docutils literal notranslate"><span class="pre">*</span></code> for sensitive.</p>
+<p>The distinction matters: sensitive tests are non-deterministic and can never be pinned down;
+these have a cause and are scheduled for investigation. The
+list should shrink, and every entry removed is a real fix — treat it as a debt register, not an
+exemption.</p>
+<p><code class="docutils literal notranslate"><span class="pre">sphereTriangleTest.py</span></code> is in that list but is not like the others: reference 3.8226, Linux
+59370.97. Four orders of magnitude is a divergence, not an accuracy difference.</p>
+</section>
+</section>
+<section id="continuous-integration">
+<h2>6. Continuous integration<a class="headerlink" href="#continuous-integration" title="Link to this heading"></a></h2>
+<p>GitHub Actions only fire on pushes to <code class="docutils literal notranslate"><span class="pre">master</span></code> and on pull requests, so <strong>while <code class="docutils literal notranslate"><span class="pre">master</span></code> is frozen
+at 1.11.0 nothing runs there</strong>. <code class="docutils literal notranslate"><span class="pre">.gitlab-ci.yml</span></code> covers the gap.</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>leg</p></th>
+<th class="head"><p>how it is covered</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><strong>Linux x86_64, cp310–314</strong></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">.gitlab-ci.yml</span></code>, on the internal GitLab’s shared Docker runners</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>Windows x64</strong></p></td>
+<td><p>this development machine; <code class="docutils literal notranslate"><span class="pre">exudev</span> <span class="pre">release</span></code> (or <code class="docutils literal notranslate"><span class="pre">exudev</span> <span class="pre">build</span> <span class="pre">--complete</span></code>) weekly</p></td>
+</tr>
+<tr class="row-even"><td><p><strong>macOS</strong></p></td>
+<td><p>a real Mac, at milestones</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>Linux aarch64</strong></p></td>
+<td><p>not covered until GitHub CI resumes — accepted gap</p></td>
+</tr>
+<tr class="row-even"><td><p><strong>docs</strong></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">docs</span></code> job builds sphinx with <code class="docutils literal notranslate"><span class="pre">-W</span></code>; it does <strong>not</strong> deploy</p></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Nothing is triggered by an ordinary push.</strong> Pipelines start from the weekly schedule, the
+<em>Run pipeline</em> button, or a tag. The schedule itself lives in the GitLab UI, not in the file:
+<strong>Settings → CI/CD → Schedules</strong>, target branch <code class="docutils literal notranslate"><span class="pre">v2-dev</span></code>. If that schedule is deleted, CI silently
+stops and the repository looks exactly the same — worth checking if the pipeline list goes quiet.</p>
+<p>The Linux job runs <code class="docutils literal notranslate"><span class="pre">tools/ci/buildManylinux.sh</span> <span class="pre">&lt;pyTag&gt;</span></code> <strong>inside</strong> the manylinux image, which is
+also what the local docker path uses, so a CI failure reproduces locally with one command:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>exudev<span class="w"> </span>linux<span class="w">            </span><span class="c1"># all five, via docker + WSL; exudev -n linux prints the docker command</span>
+</pre></div>
+</div>
+<p>Regular CI sets <code class="docutils literal notranslate"><span class="pre">EXUDYN_NOFAST=1</span></code>, which skips the <code class="docutils literal notranslate"><span class="pre">__FAST_EXUDYN_LINALG</span></code> binary and roughly halves
+build time. Ordinary test runs do not exercise that binary. <strong>Release builds must not set it.</strong></p>
+<section id="the-sanitizer-job">
+<h3>The sanitizer job<a class="headerlink" href="#the-sanitizer-job" title="Link to this heading"></a></h3>
+<p><code class="docutils literal notranslate"><span class="pre">sanitizers_linux</span></code> builds Exudyn with <strong>AddressSanitizer and UndefinedBehaviorSanitizer</strong> and runs
+the test suite against it. For a library that calls arbitrary user
+callbacks from C++ and hands out references into its own storage, this is the job that turns
+<em>“it crashed with no message”</em> into a file and a line.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>bash<span class="w"> </span>tools/ci/buildSanitizers.sh<span class="w"> </span>python3<span class="w">          </span><span class="c1"># also runs locally, in WSL</span>
+</pre></div>
+</div>
+<p>Four things about it are worth knowing before reading a red run:</p>
+<ul class="simple">
+<li><p><strong>No <code class="docutils literal notranslate"><span class="pre">setup.py</span></code> change was needed.</strong> The flags travel in <code class="docutils literal notranslate"><span class="pre">EXUDYN_EXTRA_COMPILE_ARGS</span></code> and
+<code class="docutils literal notranslate"><span class="pre">EXUDYN_EXTRA_LINK_ARGS</span></code>, which <code class="docutils literal notranslate"><span class="pre">setup.py</span></code> already appends to every extension. <code class="docutils literal notranslate"><span class="pre">CFLAGS</span></code> does not
+work there.</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">-O1</span></code>, not <code class="docutils literal notranslate"><span class="pre">-O3</span></code>.</strong> That alone found #2506 on the first build, before a single sanitizer check
+ran: <code class="docutils literal notranslate"><span class="pre">RaytracingSettings::maxNThreads</span></code> had no out-of-class definition, which <code class="docutils literal notranslate"><span class="pre">-O3</span></code> hid by folding
+the constant and <code class="docutils literal notranslate"><span class="pre">-O1</span></code> turned into a module that would not load.</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">LD_PRELOAD</span></code> carries libasan <em>and</em> the compiler’s libstdc++.</strong> Python is not instrumented, so
+the ASan runtime has to come first; and if the interpreter brings its own C++ runtime - every
+conda python does - ASan intercepts <code class="docutils literal notranslate"><span class="pre">__cxa_throw</span></code> against the wrong libstdc++ and aborts with
+<code class="docutils literal notranslate"><span class="pre">CHECK</span> <span class="pre">failed:</span> <span class="pre">...</span> <span class="pre">real___cxa_throw</span> <span class="pre">!=</span> <span class="pre">0</span></code>, which looks like a finding and is only a mismatch.</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">detect_leaks=0</span></code>.</strong> CPython and numpy hold allocations until exit by design; memory <em>errors</em>
+are still caught, only the exit-time leak report is off.</p></li>
+</ul>
+<p>The job is <code class="docutils literal notranslate"><span class="pre">allow_failure:</span> <span class="pre">true</span></code> <strong>on purpose and temporarily</strong>: a first sanitizer pass over 107k
+lines of C++ finds things, and a job that stays red trains people to ignore it. It flips to <code class="docutils literal notranslate"><span class="pre">false</span></code>
+when the findings are triaged (step R5.6.1). The run log is kept as an artifact whether the job
+passes or fails - the log <em>is</em> the result.</p>
+</section>
+</section>
+<section id="commit-tiers">
+<h2>7. Commit tiers<a class="headerlink" href="#commit-tiers" title="Link to this heading"></a></h2>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>tier</p></th>
+<th class="head"><p>when</p></th>
+<th class="head"><p>gates</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><strong>sync</strong></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">v2-dev</span></code> only, knowingly non-working, to move work between machines</p></td>
+<td><p>none — but the message must be prefixed <code class="docutils literal notranslate"><span class="pre">WIP:</span></code> and say what is broken</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>normal</strong></p></td>
+<td><p>the default for every real change</p></td>
+<td><p>all four gates in §8</p></td>
+</tr>
+<tr class="row-even"><td><p><strong>release</strong></p></td>
+<td><p>a minor version advance, i.e. an Exudyn <em>Release</em></p></td>
+<td><p>§8 plus the full <code class="docutils literal notranslate"><span class="pre">Examples</span></code> run, the wheel matrix across P310–P314, and maintainer sign-off</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="the-four-gates-for-a-normal-commit">
+<h2>8. The four gates for a normal commit<a class="headerlink" href="#the-four-gates-for-a-normal-commit" title="Link to this heading"></a></h2>
+<p>Run in this order; stop at the first failure.</p>
+<section id="the-build-succeeds">
+<h3>1. The build succeeds<a class="headerlink" href="#the-build-succeeds" title="Link to this heading"></a></h3>
+<p>Required for any change to C++, <code class="docutils literal notranslate"><span class="pre">setup.py</span></code>, or <code class="docutils literal notranslate"><span class="pre">msvc/cppsrc.vcxproj</span></code>. VS2022
+<code class="docutils literal notranslate"><span class="pre">Debug|x64</span></code> or <code class="docutils literal notranslate"><span class="pre">Release|x64</span></code> from <code class="docutils literal notranslate"><span class="pre">exudyn.sln</span></code> (created by <code class="docutils literal notranslate"><span class="pre">tools/setupLocalWorkspace.py</span></code>), or
+<code class="docutils literal notranslate"><span class="pre">exudev</span> <span class="pre">build</span></code> (add <code class="docutils literal notranslate"><span class="pre">--fast</span></code> for the <code class="docutils literal notranslate"><span class="pre">exudynCPPfast</span></code> module, which is opt-in).</p>
+<p><strong>Stale binaries: nothing to do by hand any more.</strong> A header change rebuilds because the
+<code class="docutils literal notranslate"><span class="pre">Extension</span></code> lists every header in <code class="docutils literal notranslate"><span class="pre">depends=</span></code> (#2427), and a change of compiler OPTIONS is caught by
+<code class="docutils literal notranslate"><span class="pre">build/exudynBuildFlags.txt</span></code>, which makes <code class="docutils literal notranslate"><span class="pre">setup.py</span></code> delete the objects and the linked modules
+before compiling (#2468). Both were once manual steps, and the manual advice — <em>delete
+<code class="docutils literal notranslate"><span class="pre">build/temp.*</span></code></em> — was <strong>wrong for a flag change</strong>: <code class="docutils literal notranslate"><span class="pre">build/lib.*</span></code> keeps the previously linked <code class="docutils literal notranslate"><span class="pre">.pyd</span></code>
+and the wheel is assembled from that. If you ever doubt a measurement, delete the whole <code class="docutils literal notranslate"><span class="pre">build/</span></code>
+directory; that is always sufficient. Note that <code class="docutils literal notranslate"><span class="pre">pip</span> <span class="pre">wheel</span></code> hides the build output which would tell
+you what happened, unless you pass <code class="docutils literal notranslate"><span class="pre">-v</span></code> or the build fails.</p>
+</section>
+<section id="regeneration-is-clean-and-runs-after-resolveissue">
+<h3>2. Regeneration is clean — and runs <em>after</em> <code class="docutils literal notranslate"><span class="pre">ResolveIssue</span></code><a class="headerlink" href="#regeneration-is-clean-and-runs-after-resolveissue" title="Link to this heading"></a></h3>
+<blockquote>
+<div><p><strong>Order matters.</strong> <code class="docutils literal notranslate"><span class="pre">ResolveIssue</span></code> bumps the micro version and rewrites <code class="docutils literal notranslate"><span class="pre">version.txt</span></code>, the
+version line of <code class="docutils literal notranslate"><span class="pre">README.rst</span></code> and <code class="docutils literal notranslate"><span class="pre">docs/generated/trackerlog.md</span></code>; the wheel in your environment
+then holds the previous version, which the stub gate refuses to compare against. Resolve, then
+regenerate, then build.</p>
+<p>The working order is: <strong>resolve the issue first, then regenerate, then commit.</strong> During
+development, run the generators as often as you like; the run that matters is the last one.</p>
+</div></blockquote>
+<p>Use the tool:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python<span class="w"> </span>tools/regenerate.py<span class="w"> </span>--check
+</pre></div>
+</div>
+<p>It runs the six generators from their required working directory and classifies every difference
+against HEAD: <strong>Tier 1</strong> (the API surface) fails with exit 1, <strong>Tier 2</strong> (documentation) warns,
+anything outside both tiers is reported as an unexpected gap in the manifest. <code class="docutils literal notranslate"><span class="pre">--no-run</span></code> checks
+without regenerating; <code class="docutils literal notranslate"><span class="pre">--python</span></code> selects the interpreter. It ignores modifications outside the two
+tiers as unrelated work, and ignores files that differ only in their <code class="docutils literal notranslate"><span class="pre">&#64;date</span> <span class="pre">...</span> <span class="pre">(last</span> <span class="pre">modified)</span></code>
+line — but never excuses a real change inside a tier, however the file got that way.</p>
+<p>If your change added an <code class="docutils literal notranslate"><span class="pre">import</span></code> of a third-party package anywhere in <code class="docutils literal notranslate"><span class="pre">exudyn/</span></code>, <code class="docutils literal notranslate"><span class="pre">TestModels/</span></code> or
+<code class="docutils literal notranslate"><span class="pre">Examples/</span></code>, also run:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python<span class="w"> </span>tools/checkExtras.py<span class="w"> </span>--check
+</pre></div>
+</div>
+<p>It compares the <code class="docutils literal notranslate"><span class="pre">[project.optional-dependencies]</span></code> extras in <code class="docutils literal notranslate"><span class="pre">pyproject.toml</span></code> against the
+imports actually present in the code and fails if something is installed by no extra — so
+<code class="docutils literal notranslate"><span class="pre">pip</span> <span class="pre">install</span> <span class="pre">exudyn[tests]</span></code> and <code class="docutils literal notranslate"><span class="pre">pip</span> <span class="pre">install</span> <span class="pre">exudyn[all]</span></code> cannot quietly stop being sufficient.
+A fresh environment is set up with those extras rather than a hand-written package list; see
+<a class="reference internal" href="../howTo/condaEnvironments.html"><span class="std std-doc">../howTo/condaEnvironments.md</span></a>.</p>
+<p>If your change touched any file under <code class="docutils literal notranslate"><span class="pre">python/exudyn/</span></code>, run the linter:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python<span class="w"> </span>tools/checkPython.py<span class="w"> </span>--check
+</pre></div>
+</div>
+<p>It runs <strong>ruff</strong> with the rule set fixed in <code class="docutils literal notranslate"><span class="pre">pyproject.toml</span></code> — <code class="docutils literal notranslate"><span class="pre">F</span></code> (pyflakes: undefined names,
+names defined twice, unused imports) and <code class="docutils literal notranslate"><span class="pre">E4</span></code>/<code class="docutils literal notranslate"><span class="pre">E7</span></code>/<code class="docutils literal notranslate"><span class="pre">E9</span></code> (import placement, <code class="docutils literal notranslate"><span class="pre">==</span> <span class="pre">None</span></code>, bare
+<code class="docutils literal notranslate"><span class="pre">except:</span></code>, a file that does not parse), and nothing about formatting — and compares the result
+against <code class="docutils literal notranslate"><span class="pre">tools/ci/ruffBaseline.txt</span></code>. The findings that existed when the check was introduced are
+tolerated; a <strong>new</strong> one fails. The baseline is meant to shrink: after fixing findings, regenerate
+it with <code class="docutils literal notranslate"><span class="pre">python</span> <span class="pre">tools/checkPython.py</span> <span class="pre">--write</span></code>, and the tool tells you when that is due.
+<code class="docutils literal notranslate"><span class="pre">--all</span></code> lists every finding by rule, ignoring the baseline. ruff is in the <code class="docutils literal notranslate"><span class="pre">lint</span></code> dependency group
+(<code class="docutils literal notranslate"><span class="pre">pip</span> <span class="pre">install</span> <span class="pre">--group</span> <span class="pre">lint</span></code>); the check fails rather than passes if it is not installed.</p>
+<p>If your change touched the <strong>stub files</strong> or anything that generates them (<code class="docutils literal notranslate"><span class="pre">definitions/</span></code>, the
+emitters), also run:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python<span class="w"> </span>tools/checkPython.py<span class="w"> </span>--stubs<span class="w"> </span>--check
+</pre></div>
+</div>
+<p>It runs <strong>mypy’s <code class="docutils literal notranslate"><span class="pre">stubtest</span></code></strong>, which imports the module and compares it name by name and signature
+by signature against <code class="docutils literal notranslate"><span class="pre">__init__.pyi</span></code> and <code class="docutils literal notranslate"><span class="pre">symbolic.pyi</span></code>. Two allowlists: <code class="docutils literal notranslate"><span class="pre">tools/ci/stubtestNoise.txt</span></code>
+is curated (the dunders pybind11 adds to every class, the typing helpers that exist only in the
+stub) and <code class="docutils literal notranslate"><span class="pre">tools/ci/stubtestBaseline.txt</span></code> is the generated backlog, regenerated with
+<code class="docutils literal notranslate"><span class="pre">--stubs</span> <span class="pre">--write</span></code> and meant to shrink.</p>
+<blockquote>
+<div><p><strong>This check reads the INSTALLED package</strong>, as do <code class="docutils literal notranslate"><span class="pre">runTestSuite.py</span></code>, <code class="docutils literal notranslate"><span class="pre">pytest</span></code> and
+<code class="docutils literal notranslate"><span class="pre">runTestExamples.py</span></code>: they all <code class="docutils literal notranslate"><span class="pre">import</span> <span class="pre">exudyn</span></code> from site-packages, never from <code class="docutils literal notranslate"><span class="pre">python/exudyn/</span></code>.
+A change under <code class="docutils literal notranslate"><span class="pre">python/exudyn/</span></code> therefore proves nothing until the package is installed — a
+passing gate on an uninstalled change is a gate that tested the previous version.</p>
+</div></blockquote>
+<p>If you <strong>added, removed or renamed a <code class="docutils literal notranslate"><span class="pre">.cpp</span></code> file</strong>, do it in <code class="docutils literal notranslate"><span class="pre">msvc/cppsrc.vcxproj</span></code> — the
+Visual Studio project is the source of truth for the compile list — and then regenerate the list
+<code class="docutils literal notranslate"><span class="pre">setup.py</span></code> actually builds from:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python<span class="w"> </span>tools/gen_sources.py<span class="w">          </span><span class="c1"># rewrites sources.json</span>
+python<span class="w"> </span>tools/gen_sources.py<span class="w"> </span>--check<span class="w">  </span><span class="c1"># CI mode: fails on any disagreement</span>
+</pre></div>
+</div>
+<p>It compares the vcxproj, <code class="docutils literal notranslate"><span class="pre">sources.json</span></code> and the files on disk <strong>case-exactly</strong>, because
+<code class="docutils literal notranslate"><span class="pre">src/tests/X.cpp</span></code> and <code class="docutils literal notranslate"><span class="pre">src/Tests/X.cpp</span></code> are the same file on Windows and two different ones on
+Linux. Commit <code class="docutils literal notranslate"><span class="pre">sources.json</span></code> with the change; an sdist without it cannot build. The <code class="docutils literal notranslate"><span class="pre">minimal</span></code>
+list in that file is <em>not</em> derived — <code class="docutils literal notranslate"><span class="pre">--minimal</span></code> also defines <code class="docutils literal notranslate"><span class="pre">EXUDYN_MINIMAL_COMPILATION</span></code>, so it
+still has to be kept in sync with the C++ <code class="docutils literal notranslate"><span class="pre">#ifdef</span></code>s by hand.</p>
+<p>Regenerate with <code class="docutils literal notranslate"><span class="pre">python</span> <span class="pre">tools/regenerate.py</span></code> (add <code class="docutils literal notranslate"><span class="pre">--check</span></code> to fail on Tier 1 drift). It validates
+<code class="docutils literal notranslate"><span class="pre">definitions/</span></code>, runs every generator and emitter in the required order from any directory, and
+reports Tier 1 (plan §4.2) and Tier 2 (plan §4.3) differences. The order lives in one place, its
+<code class="docutils literal notranslate"><span class="pre">generatorScripts</span></code> list — do not run the scripts by hand: the order in that list is
+the one that works.
+<code class="docutils literal notranslate"><span class="pre">makeAllBinariesScripts.py</span></code> is not part of it; it writes only a volatile build date.</p>
+<p>Two measured caveats (2026-09-09, plan §3 facts 11 and 13):</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">src/Autogenerated/pybind_manual_classes.h</span></code> is rewritten unconditionally by
+<code class="docutils literal notranslate"><span class="pre">autoGeneratePyBindings.py</span></code> (now <code class="docutils literal notranslate"><span class="pre">tools/generators/pybindEmitter.py</span></code>), so its <code class="docutils literal notranslate"><span class="pre">//</span> <span class="pre">AUTO:</span>&#160; <span class="pre">last</span> <span class="pre">modified</span></code> line <strong>always</strong> shows as modified.
+Ignore that one line; treat any other change in it as real drift.</p></li>
+<li><p>The committed documentation at <code class="docutils literal notranslate"><span class="pre">e44aca1</span></code> is <strong>already</strong> out of sync with
+<code class="docutils literal notranslate"><span class="pre">python/Examples/</span></code> — a fresh regeneration changes 50 doc files and adds 6. Until that is
+reconciled, compare against a fresh regeneration, not against the committed state.</p></li>
+</ul>
+</section>
+<section id="the-full-test-suite-passes">
+<h3>3. The full test suite passes<a class="headerlink" href="#the-full-test-suite-passes" title="Link to this heading"></a></h3>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">cd</span><span class="w"> </span>python/TestModels
+<span class="nv">$env</span>:USERPROFILE/Anaconda/envs/venvP312/python.exe<span class="w"> </span>runTestSuite.py<span class="w"> </span>-quiet
+</pre></div>
+</div>
+<p>About 22 s serially — far shorter than the compile — so it runs <strong>in full, before every commit,
+never as a subset</strong>. Record the failed-test count and compare it against the run before the change.</p>
+<p>Two things that will otherwise look like breakage:</p>
+<ul class="simple">
+<li><p><strong>Pin scipy to 1.15.2.</strong> scipy 1.18.0 slows the suite from ~22 s to over 10 minutes, apparently
+in the eigensolver path. The <code class="docutils literal notranslate"><span class="pre">dev</span></code> group pins it except on macOS and Python 3.14+, which have no 1.15.2 wheel (#2886). If a run suddenly takes minutes, check the scipy version
+before looking for a regression in Exudyn.</p></li>
+<li><p><strong>The global tolerance is 5e-14 and some models sit close to it.</strong> A failure just above it — for
+example <code class="docutils literal notranslate"><span class="pre">movingGroundRobotTest.py</span></code> at <code class="docutils literal notranslate"><span class="pre">5.0688e-14</span></code>, with result and reference agreeing to ~13
+significant digits — is floating-point noise from a different numpy/BLAS build, not a real
+break. Compare the reported <code class="docutils literal notranslate"><span class="pre">RESULT</span></code> and <code class="docutils literal notranslate"><span class="pre">refsol</span></code> before treating it as one.</p></li>
+</ul>
+<p><strong>Committed logs are protected — the runner diverts rather than overwriting.</strong> All three runners
+(<code class="docutils literal notranslate"><span class="pre">runTestSuite.py</span></code>, <code class="docutils literal notranslate"><span class="pre">runTestExamples.py</span></code>, <code class="docutils literal notranslate"><span class="pre">runPerformanceTests.py</span></code>) write a release-named log into a
+tracked directory, truncating it at startup <em>before any test runs</em>. Since 2026-09-10 they check
+first:</p>
+<ul class="simple">
+<li><p>target does not exist → written normally (the release flow: the version was just bumped)</p></li>
+<li><p>target exists → the log is <strong>diverted to <code class="docutils literal notranslate"><span class="pre">python/logs/tmp/</span></code></strong> (gitignored), the tests run
+as usual, and a message names the override</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--overwrite-log</span></code> → the existing log is replaced deliberately</p></li>
+</ul>
+<p>Existence is the test, so this also covers the multi-machine case: the committed log from another
+machine with the same platform and Python is present, and is not clobbered.</p>
+<p><code class="docutils literal notranslate"><span class="pre">python/logs/tmp/</span></code> is one shared directory for all three runners, so clearing it is a single
+delete. The release-named logs go to <code class="docutils literal notranslate"><span class="pre">python/logs/{testmodels,examples,performance}/</span></code>.</p>
+</section>
+<section id="what-is-in-a-log">
+<h3>What is in a log<a class="headerlink" href="#what-is-in-a-log" title="Link to this heading"></a></h3>
+<p>The header records what results depend on: Exudyn version and build date, CPU and core count, and
+the installed versions of the relevant packages (<code class="docutils literal notranslate"><span class="pre">numpy</span></code>, <code class="docutils literal notranslate"><span class="pre">scipy</span></code>, <code class="docutils literal notranslate"><span class="pre">matplotlib</span></code>, <code class="docutils literal notranslate"><span class="pre">ngsolve</span></code>, …,
+listed as <code class="docutils literal notranslate"><span class="pre">not</span> <span class="pre">installed</span></code> when absent). scipy 1.18 vs 1.15 already changed suite runtime by more
+than an order of magnitude, so this is not decoration.</p>
+<p>The log ends with a per-test overview — one fixed-width line per test with result, error, effective
+tolerance and runtime, for both TestModels and MiniExamples, with sensitive tests marked <code class="docutils literal notranslate"><span class="pre">*</span></code>. That
+table is how <code class="docutils literal notranslate"><span class="pre">SensitiveTests()</span></code> gets populated: diff two of them from different machines and the
+non-reproducible tests stand out.</p>
+<p><strong>Which compiled module is under test.</strong> A release ships two: <code class="docutils literal notranslate"><span class="pre">exudynCPP</span></code>, built for the baseline
+instruction set, and <code class="docutils literal notranslate"><span class="pre">exudynCPPfast</span></code>, without range checks and with AVX2. By default every runner
+uses the first. To run against the second:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python<span class="w"> </span>runTestSuite.py<span class="w"> </span>--fast-module<span class="w">          </span><span class="c1"># also works with --parallel</span>
+python<span class="w"> </span>runPerformanceTests.py<span class="w"> </span>--fast-module
+<span class="nv">EXUDYN_MODULE</span><span class="o">=</span>fast<span class="w"> </span>python<span class="w"> </span>-m<span class="w"> </span>pytest<span class="w"> </span>-q<span class="w"> </span>-n<span class="w"> </span><span class="m">8</span><span class="w">   </span><span class="c1"># pytest has no flag; the variable is the mechanism</span>
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">--fast-module</span></code> sets <code class="docutils literal notranslate"><span class="pre">EXUDYN_MODULE=fast</span></code>, which is read by <code class="docutils literal notranslate"><span class="pre">exudyn/__init__.py</span></code> <em>before</em> the C++
+module is imported. It is an environment variable rather than a flag precisely because <strong>child
+processes inherit it</strong>: <code class="docutils literal notranslate"><span class="pre">--parallel</span></code> and <code class="docutils literal notranslate"><span class="pre">pytest</span> <span class="pre">-n</span></code> run each model in its own interpreter. An
+explicit <code class="docutils literal notranslate"><span class="pre">sys.exudynFast</span></code> in a script still wins over it. Note <code class="docutils literal notranslate"><span class="pre">--fast</span></code> is a different option
+entirely — the pull-request subset.</p>
+<p>Two things follow automatically. The suite applies <code class="docutils literal notranslate"><span class="pre">AVX2ReferenceSolutionUpdate()</span></code> (a second set of
+reference values for the models whose results move under AVX2) and says so in the log; and the log
+file gets a <code class="docutils literal notranslate"><span class="pre">_fast</span></code> suffix, so the two runs do not overwrite each other. If the fast module cannot
+be loaded — no AVX2 on this CPU, or it is not in the installed package — the run <strong>stops</strong> rather
+than quietly testing the regular module under a fast-module log name.</p>
+</section>
+<section id="release-testing-matrix">
+<h3>Release testing matrix<a class="headerlink" href="#release-testing-matrix" title="Link to this heading"></a></h3>
+<p>Decided 2026-09-16, adjusted to the two variants of step R2.10:</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>what</p></th>
+<th class="head"><p>against which Python versions</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>full <code class="docutils literal notranslate"><span class="pre">runTestSuite.py</span></code>, default module</p></td>
+<td><p>every supported version</p></td>
+</tr>
+<tr class="row-odd"><td><p>full <code class="docutils literal notranslate"><span class="pre">runTestSuite.py</span> <span class="pre">--fast-module</span></code></p></td>
+<td><p>the <strong>oldest</strong> and the <strong>second newest</strong> (today 3.10 and 3.13)</p></td>
+</tr>
+<tr class="row-even"><td><p>examples</p></td>
+<td><p>one version, default module</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">runPerformanceTests.py</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">--fast-module</span></code>, plus one default-module run to compare against</p></td>
+</tr>
+</tbody>
+</table>
+<p>The newest version is deliberately not the fast-mode target: right after a release its packages are
+the unstable part, so a failure there would almost never be about the module. <strong>Keep every log</strong> —
+the <code class="docutils literal notranslate"><span class="pre">_fast</span></code> suffix is what makes that possible.</p>
+<p><strong>Performance logs are per machine.</strong> Set <code class="docutils literal notranslate"><span class="pre">EXUDYN_MACHINE_ID</span></code> once per machine (e.g. <code class="docutils literal notranslate"><span class="pre">i7-1370P</span></code>)
+and <code class="docutils literal notranslate"><span class="pre">runPerformanceTests.py</span></code> files its logs in that subfolder, since timings from a laptop and a
+workstation are not comparable. Without it, a legacy fallback still routes any 20-core machine to
+<code class="docutils literal notranslate"><span class="pre">i7-1370P/</span></code>; that fallback goes away once the variable is set everywhere.</p>
+<p><code class="docutils literal notranslate"><span class="pre">Examples</span></code> are <strong>not</strong> run here: they take many minutes and only check that scripts do not crash
+(they time out after a few seconds each, and are not compared for identical results). Run them
+with <code class="docutils literal notranslate"><span class="pre">exudev</span> <span class="pre">examples</span></code> for releases and large steps only.</p>
+</section>
+<section id="docs-and-plan-are-updated">
+<h3>4. Docs and plan are updated<a class="headerlink" href="#docs-and-plan-are-updated" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">docs/manual/*.md</span></code>, wherever user-visible behaviour changed; the generated pages follow from
+<code class="docutils literal notranslate"><span class="pre">definitions/</span></code> and the docstrings.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">exudev</span> <span class="pre">docs</span></code> builds without a warning; for a change to <code class="docutils literal notranslate"><span class="pre">docs/</span></code>, <code class="docutils literal notranslate"><span class="pre">definitions/</span></code> or <code class="docutils literal notranslate"><span class="pre">conf.py</span></code>,
+<code class="docutils literal notranslate"><span class="pre">exudev</span> <span class="pre">docs</span> <span class="pre">--check</span></code> - the PDF as well, its log against the baseline (§1, #2856).</p></li>
+<li><p>The step status in <code class="docutils literal notranslate"><span class="pre">docs/revision/exudynRevisionPlan2026.md</span></code>. If a fact in info document §3 turned out to
+be wrong, correct it there rather than working around it.</p></li>
+</ul>
+</section>
+</section>
+<section id="committing">
+<h2>9. Committing<a class="headerlink" href="#committing" title="Link to this heading"></a></h2>
+<p>After the gates pass:</p>
+<ol class="arabic simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">ResolveIssue(issueNumber,</span> <span class="pre">notes='...')</span></code> — this bumps the micro version and rewrites the
+version files listed in §3. <strong>Then re-run the generators and build the wheel</strong>, because the
+documentation and the installed module carry the version string — see gate 2.</p></li>
+<li><p>Present the maintainer with an overview: files changed, gate results (build, drift, test count),
+the issue resolved, and the proposed commit message.</p></li>
+<li><p><strong>Wait for explicit approval.</strong> Claude commits only on a clear go-ahead.</p></li>
+<li><p><strong>Claude never pushes, to any remote, ever.</strong> The <code class="docutils literal notranslate"><span class="pre">pre-push</span></code> hook in <code class="docutils literal notranslate"><span class="pre">tools/hooks/</span></code> refuses
+a push to <code class="docutils literal notranslate"><span class="pre">github</span></code> from any ref but <code class="docutils literal notranslate"><span class="pre">master</span></code> / <code class="docutils literal notranslate"><span class="pre">release/*</span></code>.</p></li>
+</ol>
+<p>Commit message convention — reuse the tracker’s own vocabulary so commits and issues speak the same
+language:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">&lt;</span><span class="n">TYPE</span><span class="o">&gt;</span> <span class="c1">#&lt;issue number&gt;: &lt;one-line summary&gt;</span>
+
+<span class="o">&lt;</span><span class="n">why</span><span class="p">,</span> <span class="ow">and</span> <span class="n">anything</span> <span class="n">the</span> <span class="n">diff</span> <span class="n">does</span> <span class="ow">not</span> <span class="n">make</span> <span class="n">obvious</span><span class="o">&gt;</span>
+
+<span class="n">Co</span><span class="o">-</span><span class="n">Authored</span><span class="o">-</span><span class="n">By</span><span class="p">:</span> <span class="n">Claude</span> <span class="n">Opus</span> <span class="mi">5</span> <span class="o">&lt;</span><span class="n">noreply</span><span class="nd">@anthropic</span><span class="o">.</span><span class="n">com</span><span class="o">&gt;</span>
+</pre></div>
+</div>
+<p>Example: <code class="docutils literal notranslate"><span class="pre">BUG</span> <span class="pre">#2107:</span> <span class="pre">fix</span> <span class="pre">32-byte</span> <span class="pre">alignment</span> <span class="pre">of</span> <span class="pre">VectorBase</span> <span class="pre">under</span> <span class="pre">AVX2</span></code></p>
+</section>
+<section id="build-and-release-scripts">
+<h2>10. Build and release scripts<a class="headerlink" href="#build-and-release-scripts" title="Link to this heading"></a></h2>
+<p>One driver, <code class="docutils literal notranslate"><span class="pre">exudev</span></code> (<code class="docutils literal notranslate"><span class="pre">exudev.bat</span></code> in the repository root; <code class="docutils literal notranslate"><span class="pre">python</span> <span class="pre">tools/exudev</span></code> elsewhere). It
+replaced the sixteen batch files of <code class="docutils literal notranslate"><span class="pre">tools/buildAndGenerate/</span></code> Every
+command has a <code class="docutils literal notranslate"><span class="pre">--help</span></code>, quiet is the default and <code class="docutils literal notranslate"><span class="pre">-v/--verbose</span></code> turns the tools’ output back on;
+<strong><code class="docutils literal notranslate"><span class="pre">exudev</span> <span class="pre">-n</span> <span class="pre">&lt;command&gt;</span></code> prints the command lines it would run and runs nothing</strong>, which is the
+quickest way to see how a step actually works. The commands are listed in
+<a class="reference internal" href="../../tools/exudev/README.html"><span class="std std-doc"><code class="docutils literal notranslate"><span class="pre">tools/exudev/README.md</span></code></span></a>: <code class="docutils literal notranslate"><span class="pre">generate</span></code>, <code class="docutils literal notranslate"><span class="pre">build</span></code>, <code class="docutils literal notranslate"><span class="pre">test</span></code>, <code class="docutils literal notranslate"><span class="pre">examples</span></code>,
+<code class="docutils literal notranslate"><span class="pre">perf</span></code>, <code class="docutils literal notranslate"><span class="pre">docs</span></code>, <code class="docutils literal notranslate"><span class="pre">linux</span></code>, <code class="docutils literal notranslate"><span class="pre">release</span></code>, <code class="docutils literal notranslate"><span class="pre">clean</span></code>, <code class="docutils literal notranslate"><span class="pre">env</span></code>.</p>
+<p>Two points that catch people out. <strong><code class="docutils literal notranslate"><span class="pre">--fast</span></code> is opt-in</strong>: <code class="docutils literal notranslate"><span class="pre">pyproject.toml</span></code> has
+<code class="docutils literal notranslate"><span class="pre">compileExudynFast</span> <span class="pre">=</span> <span class="pre">true</span></code>, so a plain <code class="docutils literal notranslate"><span class="pre">pip</span> <span class="pre">wheel</span> <span class="pre">.</span></code> builds <code class="docutils literal notranslate"><span class="pre">exudynCPPfast</span></code> while <code class="docutils literal notranslate"><span class="pre">exudev</span> <span class="pre">build</span></code>
+does not unless asked. And <strong><code class="docutils literal notranslate"><span class="pre">exudev</span> <span class="pre">env</span></code></strong> is the first thing to run when a test fails in one
+environment only - it prints python, exudyn and numpy per environment, which is how the numpy
+dependence of issues #2501 and #2502 was found.</p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="CODING_STYLE.html" class="btn btn-neutral float-left" title="Exudyn coding style and conventions" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="NEW_ITEM.html" class="btn btn-neutral float-right" title="How to set up a new item" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

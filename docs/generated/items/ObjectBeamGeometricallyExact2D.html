@@ -1,0 +1,467 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ObjectBeamGeometricallyExact2D &mdash; Exudyn1.13.3 1.13.3 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=3ee1c6c6" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/rtd_sphinx_search.min.css" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/custom.css?v=e2783f0e" />
+
+  
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=b8a3e558"></script>
+      <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../../_static/copybutton.js?v=f281be69"></script>
+      <script src="../../../_static/js/rtd_search_config.js"></script>
+      <script src="../../../_static/js/rtd_sphinx_search.min.js"></script>
+      <script>window.MathJax = {"loader": {"load": ["[tex]/mathtools"]}, "tex": {"packages": {"[+]": ["mathtools"]}, "macros": {"ANCFdk": "{\\LU{0}{\\dv_k}}", "ANCFdkO": "{\\LU{0}{\\dv_{0,k}}}", "ANCFdkOtp": "{\\LU{0}{\\dv_{0,k}\\tp}}", "ANCFdkt": "{\\LU{0}{\\dot\\dv_k}}", "Am": "{\\mathbf{A}}", "Dm": "{\\mathbf{D}}", "Em": "{\\mathbf{E}}", "Gm": "{\\mathbf{G}}", "Im": "{\\mathbf{I}}", "ImThree": "{\\mathbf{I}_{3 \\times 3}}", "Jm": "{\\mathbf{J}}", "Km": "{\\mathbf{K}}", "Mm": "{\\mathbf{M}}", "Pm": "{\\mathbf{P}}", "Rm": "{\\mathbf{R}}", "Sm": "{\\mathbf{S}}", "Tm": "{\\mathbf{T}}", "av": "{\\mathbf{a}}", "bv": "{\\mathbf{b}}", "cv": "{\\mathbf{c}}", "diffANCF": ["{\\frac{\\partial #1}{\\partial \\qv_{ANCF}}}", 1], "diffANCFdk": "{\\diffANCFmI{\\ANCFdk}}", "diffANCFmI": ["{\\frac{\\partial #1}{\\partial \\qv_{ANCF,m1}}}", 1], "diffANCFmIt": ["{\\frac{\\partial #1}{\\partial \\dot \\qv_{ANCF,m1}}}", 1], "diffANCFt": ["{\\frac{\\partial #1}{\\partial \\dot \\qv_{ANCF}}}", 1], "diffmI": ["{\\frac{\\partial #1}{\\partial \\qv_{m1}}}", 1], "diffmIt": ["{\\frac{\\partial #1}{\\partial \\dot \\qv_{m1}}}", 1], "diffmOI": ["{\\frac{\\partial #1}{\\partial \\qv_{m0,m1}}}", 1], "diffmOIt": ["{\\frac{\\partial #1}{\\partial \\dot \\qv_{m0,m1}}}", 1], "diffmOt": ["{\\frac{\\partial #1}{\\partial \\dot \\qv_{m0}}}", 1], "dv": "{\\mathbf{d}}", "ev": "{\\mathbf{e}}", "fv": "{\\mathbf{f}}", "gv": "{\\mathbf{g}}", "hv": "{\\mathbf{h}}", "nv": "{\\mathbf{n}}", "pv": "{\\mathbf{p}}", "qv": "{\\mathbf{q}}", "rv": "{\\mathbf{r}}", "sv": "{\\mathbf{s}}", "tv": "{\\mathbf{t}}", "uv": "{\\mathbf{u}}", "vv": "{\\mathbf{v}}", "xv": "{\\mathbf{x}}", "yv": "{\\mathbf{y}}", "zv": "{\\mathbf{z}}", "vspace": ["{}", 1], "ra": "{\\rightarrow}", "Rcal": "{\\mathbb{R}}", "Ccal": "{\\mathbb{C}}", "Ncal": "{\\mathbb{N}}", "Rot": "{\\mathbf{A}}", "dd": "{\\mathrm{d}}", "ps": "{p_\\mathrm{s}}", "co": "{\\mathrm{c}}", "si": "{\\mathrm{s}}", "tp": "{^\\mathrm{T}}", "diag": "{\\mathrm{diag}}", "vec": "{\\mathrm{vec}}", "Null": "{\\mathbf{0}}", "varepsilonDot": "{\\boldsymbol{\\varepsilon}}", "talpha": "{\\boldsymbol{\\alpha}}", "tbeta": "{\\boldsymbol{\\beta}}", "tgamma": "{\\boldsymbol{\\gamma}}", "tchi": "{\\boldsymbol{\\chi}}", "tdelta": "{\\boldsymbol{\\delta}}", "teps": "{\\boldsymbol{\\varepsilon}}", "tepsDot": "{\\boldsymbol{\\dot \\varepsilon}}", "teta": "{\\boldsymbol{\\eta}}", "tkappa": "{\\boldsymbol{\\kappa}}", "tkappaDot": "{\\boldsymbol{\\dot \\kappa}}", "tphi": "{\\boldsymbol{\\phi}}", "boldVarPhi": "{\\boldsymbol{\\varphi}}", "tPhi": "{\\boldsymbol{\\Phi}}", "ttheta": "{\\boldsymbol{\\theta}}", "tTheta": "{\\boldsymbol{\\Theta}}", "tlambda": "{\\boldsymbol{\\lambda}}", "tnu": "{\\boldsymbol{\\nu}}", "tmu": "{\\boldsymbol{\\mu}}", "tpsi": "{\\boldsymbol{\\psi}}", "tPsi": "{\\boldsymbol{\\Psi}}", "ttau": "{\\boldsymbol{\\tau}}", "tsigma": "{\\boldsymbol{\\sigma}}", "txi": "{\\boldsymbol{\\xi}}", "tzeta": "{\\boldsymbol{\\zeta}}", "tomega": "{\\boldsymbol{\\omega}}", "tOmega": "{\\boldsymbol{\\Omega}}", "vareps": "{\\varepsilon}", "myoverline": ["\\overline{#1}", 1], "pluseq": "\\mathrel{+}=", "LU": ["{\\prescript{#1}{}{#2}\\,}", 2], "LUX": ["{\\prescript{#1}{}{#2}#3\\,}", 3], "LUR": ["{\\prescript{#1}{}{#2}_{#3}\\,}", 3], "LURU": ["{\\prescript{#1}{}{#2}_{#3}^{#4}\\,}", 4], "LLdot": ["{\\prescript{}{#1}{\\dot{#2}}_{#3}\\,}", 3], "vr": ["{\\left[ \\begin{array}{c} { #1}\\vspace{0.04cm} \\\\ { #2}\\vspace{0.04cm} \\\\ { #3} \\end{array} \\right]}", 3], "mr": ["{\\left[ \\begin{array}{ccc} #1 & #2 & #3 \\vspace{0.04cm}\\\\ #4 & #5 & #6 \\vspace{0.04cm}\\\\ #7 & #8 & #9  \\end{array} \\right]}", 9], "vp": ["{\\left[ \\begin{array}{c} { #1} \\vspace{0.04cm}\\\\ { #2} \\end{array} \\right]}", 2], "mp": ["{\\left[ \\begin{array}{cc} #1 & #2 \\vspace{0.04cm}\\\\ #3 & #4 \\end{array} \\right]}", 4], "mfour": ["{\\left[ \\begin{array}{cccc} { #1} \\\\ { #2} \\\\ { #3} \\\\ { #4} \\end{array} \\right]}", 4], "vfour": ["{\\left[ \\begin{array}{c} { #1} \\\\ { #2} \\\\ { #3} \\\\ { #4} \\end{array} \\right]}", 4], "vrRow": ["{[#1,\\, #2,\\, #3]}", 3], "vsix": ["{\\left[ \\begin{array}{c} { #1} \\\\ { #2} \\\\ { #3} \\\\ { #4} \\\\ { #5} \\\\ { #6} \\end{array} \\right]}", 6], "vsixb": ["{\\begin{array}{c} { #1} \\\\ { #2} \\\\ { #3} \\\\ { #4} \\\\ { #5} \\\\ { #6} \\end{array} }", 6], "vsixs": ["{ \\begin{array}{c} { #1} \\\\ { #2} \\\\ { #3} \\\\ { #4} \\\\ { #5} \\\\ { #6} \\end{array} }", 6], "SO": "{q}", "FO": "{y}", "AE": "{\\lambda}", "SYS": "{s}", "SON": "{$2^\\mathrm{nd}$ order differential equations}", "FON": "{$1^\\mathrm{st}$ order differential equations}", "AEN": "{algebraic equations}", "Bm": "{\\mathbf{B}}", "Cm": "{\\mathbf{C}}", "Fm": "{\\mathbf{F}}", "SYSN": "{system equations}", "cIni": "{_\\mathrm{ini}}", "cRef": "{_\\mathrm{ref}}", "cCur": "{_\\mathrm{cur}}", "cVis": "{_\\mathrm{vis}}", "cSOS": "{_\\mathrm{start\\;of\\;step}}", "cConfig": "{_\\mathrm{config}}", "pLoc": "{\\mathbf{b}}", "pLocB": "{\\,^{b}{\\mathbf{v}}}", "pRef": "{\\mathbf{r}}", "pRefG": "{\\,^{0}{\\mathbf{r}}}", "indf": "{_\\mathrm{f}}", "indt": "{_\\mathrm{t}}", "indr": "{_\\mathrm{r}}", "indtt": "{_\\mathrm{tt}}", "indrr": "{_\\mathrm{rr}}", "indff": "{_\\mathrm{ff}}", "indtf": "{_\\mathrm{tf}}", "indrf": "{_\\mathrm{rf}}", "indtr": "{_\\mathrm{tr}}", "omegaBDtilde": "{\\LU{b}{\\tilde \\tomega_\\mathrm{bd}}}", "indrigid": "{_\\mathrm{rigid}}", "indred": "{_\\mathrm{red}}", "induser": "{_\\mathrm{user}}", "indu": "{_\\mathrm{u}}", "termA": ["{\\color{blue}{#1}}", 1], "termB": ["{\\color{red}{#1}}", 1], "termC": ["{\\color{green}{#1}}", 1], "acc": "{\\ddot{\\mathbf{q}}}", "GA": "{G\\alpha}", "Hm": "{\\mathbf{H}}", "ImTwo": "{\\mathbf{I}_{2 \\times 2}}", "Lm": "{\\mathbf{L}}", "Qm": "{\\mathbf{Q}}", "Vm": "{\\mathbf{V}}", "Wm": "{\\mathbf{W}}", "Xm": "{\\mathbf{X}}", "Ym": "{\\mathbf{Y}}", "aalg": "{\\mathbf{a}}", "iv": "{\\mathbf{i}}", "jv": "{\\mathbf{j}}", "kv": "{\\mathbf{k}}", "lv": "{\\mathbf{l}}", "mv": "{\\mathbf{m}}", "ov": "{\\mathbf{o}}", "vel": "{\\mathbf{v}}", "wv": "{\\mathbf{w}}"}}, "options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+      <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-mml-chtml.js"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+    <link rel="next" title="ObjectBeamGeometricallyExact" href="ObjectBeamGeometricallyExact.html" />
+    <link rel="prev" title="ObjectANCFBeam" href="ObjectANCFBeam.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            Exudyn1.13.3
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Exudyn User Manual</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../README.html">Exudyn</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../manual/gettingStarted.html">Installation and getting started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../manual/introduction.html">Overview on Exudyn</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../manual/introductionBasics.html">Exudyn basics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../manual/tutorial.html">Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../manual/GUI.html">Renderer, graphics and visualization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../manual/performanceErrors.html">Performance, errors and solver failures</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../manual/introductionAdvanced.html">Advanced topics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../manual/notation.html">Notation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../manual/theory.html">Theory and formulations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../manual/solver.html">Solvers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../cInterface/cInterfaceIndex.html">Python-C++ command interface</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Reference Manual</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="itemsIndex.html">Items reference manual</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="nodeIndex.html">Node</a></li>
+<li class="toctree-l2"><a class="reference internal" href="objectBodyIndex.html">Object (Body)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="objectSuperElementIndex.html">Object (SuperElement)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="objectObjectIndex.html">Object (Object)</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="objectFiniteElementIndex.html">Object (FiniteElement)</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="objectFiniteElementGeneral.html">General info for all finite elements</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ObjectANCFCable.html">ObjectANCFCable</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ObjectANCFCable2D.html">ObjectANCFCable2D</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ObjectALEANCFCable2D.html">ObjectALEANCFCable2D</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ObjectANCFBeam.html">ObjectANCFBeam</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">ObjectBeamGeometricallyExact2D</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ObjectBeamGeometricallyExact.html">ObjectBeamGeometricallyExact</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ObjectANCFThinPlate.html">ObjectANCFThinPlate</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="objectConnectorIndex.html">Object (Connector)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="objectConstraintIndex.html">Object (Constraint)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="objectJointIndex.html">Object (Joint)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="markerIndex.html">Marker</a></li>
+<li class="toctree-l2"><a class="reference internal" href="loadIndex.html">Load</a></li>
+<li class="toctree-l2"><a class="reference internal" href="sensorIndex.html">Sensor</a></li>
+<li class="toctree-l2"><a class="reference internal" href="itemsIndex.html#parameter-changes">Parameter changes</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../pythonUtilities/utilitiesIndex.html">Python Utility Functions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../structures/structuresIndex.html">Structures and Settings</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../references.html">References</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Developer documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../dev/README.html">Exudyn developer documentation</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">How-to notes</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../howTo/condaEnvironments.html">Conda environments for Exudyn</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../howTo/sphinxDocs.html">Building the documentation</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Examples, models and issues</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../examples/examplesIndex.html">Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../testModels/testModelsIndex.html">TestModels</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../abbreviations.html">List of Abbreviations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../manual/revisions.html">Revisions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../CHANGELOG.html">Changelog</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../trackerlog.html">Issue tracker</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">Exudyn1.13.3</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="itemsIndex.html">Items reference manual</a></li>
+          <li class="breadcrumb-item"><a href="objectFiniteElementIndex.html">Object (FiniteElement)</a></li>
+      <li class="breadcrumb-item active">ObjectBeamGeometricallyExact2D</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../../_sources/docs/generated/items/ObjectBeamGeometricallyExact2D.md.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <!-- GENERATED by tools/generators/itemDocsEmitter.py from definitions/ - do not edit -->
+<section class="tex2jax_ignore mathjax_ignore" id="objectbeamgeometricallyexact2d">
+<span id="sec-item-objectbeamgeometricallyexact2d"></span><h1>ObjectBeamGeometricallyExact2D<a class="headerlink" href="#objectbeamgeometricallyexact2d" title="Link to this heading"></a></h1>
+<p>A 2D geometrically exact beam finite element, using 2 or 3 nodes of type NodeRigidBody2D. Note that the orientation of the nodes need to follow the cross section orientation in case that includeReferenceRotations=True; e.g., an angle 0 represents the cross section aligned with the <span class="math notranslate nohighlight">\(y\)</span>-axis, while and angle <span class="math notranslate nohighlight">\(\pi/2\)</span> means that the cross section points in negative <span class="math notranslate nohighlight">\(x\)</span>-direction. Pre-curvature can be included with referenceCurvature and axial pre-stress can be considered by using a length different from the reference configuration of the nodes. The localPosition of the beam with length <span class="math notranslate nohighlight">\(L\)</span>=length and height <span class="math notranslate nohighlight">\(h\)</span> ranges in <span class="math notranslate nohighlight">\(X\)</span>-direction in range <span class="math notranslate nohighlight">\([-L/2, L/2]\)</span> and in <span class="math notranslate nohighlight">\(Y\)</span>-direction in range <span class="math notranslate nohighlight">\([-h/2,h/2]\)</span> (which is in fact not needed in the <a class="reference internal" href="../abbreviations.html#eom"><span class="std std-ref">EOM</span></a>).</p>
+<section id="interface">
+<h2>Interface<a class="headerlink" href="#interface" title="Link to this heading"></a></h2>
+<ul class="simple">
+<li><p>Python names: <code class="docutils literal notranslate"><span class="pre">ObjectBeamGeometricallyExact2D</span></code> or <code class="docutils literal notranslate"><span class="pre">Beam2D</span></code>, and <code class="docutils literal notranslate"><span class="pre">VBeam2D</span></code> for its visualization</p></li>
+<li><p>Nodes it takes: <a class="reference internal" href="NodeRigidBody2D.html#sec-item-noderigidbody2d"><span class="std std-ref">NodeRigidBody2D</span></a>, <a class="reference internal" href="NodePoint2DSlope1.html#sec-item-nodepoint2dslope1"><span class="std std-ref">NodePoint2DSlope1</span></a></p></li>
+<li><p>Body markers that can be placed on it: <a class="reference internal" href="MarkerBodyMass.html#sec-item-markerbodymass"><span class="std std-ref">MarkerBodyMass</span></a>, <a class="reference internal" href="MarkerBodyPosition.html#sec-item-markerbodyposition"><span class="std std-ref">MarkerBodyPosition</span></a>, <a class="reference internal" href="MarkerBodyRigid.html#sec-item-markerbodyrigid"><span class="std std-ref">MarkerBodyRigid</span></a></p></li>
+</ul>
+</section>
+<section id="parameters">
+<h2>Parameters<a class="headerlink" href="#parameters" title="Link to this heading"></a></h2>
+<p>The parameters of the item; in a dictionary, its type is ‘BeamGeometricallyExact2D’:</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>name</p></th>
+<th class="head"><p>type</p></th>
+<th class="head"><p>size</p></th>
+<th class="head"><p>default</p></th>
+<th class="head"><p>description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><strong>name</strong></p></td>
+<td><p>String</p></td>
+<td><p></p></td>
+<td><p>‘’</p></td>
+<td><p>objects’s unique name</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>nodeNumbers</strong></p></td>
+<td><p>ArrayNodeIndex</p></td>
+<td><p></p></td>
+<td><p>[]</p></td>
+<td><p>two node numbers for beam element</p></td>
+</tr>
+<tr class="row-even"><td><p><strong>length</strong></p></td>
+<td><p>UReal</p></td>
+<td><p></p></td>
+<td><p>0.</p></td>
+<td><p>(symbol: <span class="math notranslate nohighlight">\(L\)</span>) [SI:m] reference length of beam; such that the total volume (e.g. for volume load) gives <span class="math notranslate nohighlight">\(\rho A L\)</span>; must be positive</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>massPerLength</strong></p></td>
+<td><p>UReal</p></td>
+<td><p></p></td>
+<td><p>0.</p></td>
+<td><p>(symbol: <span class="math notranslate nohighlight">\(\rho A\)</span>) [SI:kg/m] mass per length of beam</p></td>
+</tr>
+<tr class="row-even"><td><p><strong>crossSectionInertia</strong></p></td>
+<td><p>UReal</p></td>
+<td><p></p></td>
+<td><p>0.</p></td>
+<td><p>(symbol: <span class="math notranslate nohighlight">\(\rho J\)</span>) [SI:kg m] cross section mass moment of inertia; inertia acting against rotation of cross section</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>bendingStiffness</strong></p></td>
+<td><p>UReal</p></td>
+<td><p></p></td>
+<td><p>0.</p></td>
+<td><p>(symbol: <span class="math notranslate nohighlight">\(EI\)</span>) [SI:Nm<span class="math notranslate nohighlight">\(^2\)</span>] bending stiffness of beam; the bending moment is <span class="math notranslate nohighlight">\(m = EI (\kappa - \kappa_0)\)</span>, in which <span class="math notranslate nohighlight">\(\kappa\)</span> is the material measure of curvature</p></td>
+</tr>
+<tr class="row-even"><td><p><strong>axialStiffness</strong></p></td>
+<td><p>UReal</p></td>
+<td><p></p></td>
+<td><p>0.</p></td>
+<td><p>(symbol: <span class="math notranslate nohighlight">\(EA\)</span>) [SI:N] axial stiffness of beam; the axial force is <span class="math notranslate nohighlight">\(f_{ax} = EA (\varepsilon -\varepsilon_0)\)</span>, in which <span class="math notranslate nohighlight">\(\varepsilon\)</span> is the axial strain</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>shearStiffness</strong></p></td>
+<td><p>UReal</p></td>
+<td><p></p></td>
+<td><p>0.</p></td>
+<td><p>(symbol: <span class="math notranslate nohighlight">\(GA\)</span>) [SI:N] effective shear stiffness of beam, including stiffness correction</p></td>
+</tr>
+<tr class="row-even"><td><p><strong>bendingDamping</strong></p></td>
+<td><p>UReal</p></td>
+<td><p></p></td>
+<td><p>0.</p></td>
+<td><p>(symbol: <span class="math notranslate nohighlight">\(d_{K}\)</span>) [SI:Nm<span class="math notranslate nohighlight">\(^2\)</span>/s] viscous damping of bending deformation; the additional virtual work due to damping is <span class="math notranslate nohighlight">\(\delta W_{\dot \kappa} = \int_0^L \dot \kappa \delta \kappa dx\)</span></p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>axialDamping</strong></p></td>
+<td><p>UReal</p></td>
+<td><p></p></td>
+<td><p>0.</p></td>
+<td><p>(symbol: <span class="math notranslate nohighlight">\(d_{\varepsilon}\)</span>) [SI:N/s] viscous damping of axial deformation</p></td>
+</tr>
+<tr class="row-even"><td><p><strong>shearDamping</strong></p></td>
+<td><p>UReal</p></td>
+<td><p></p></td>
+<td><p>0.</p></td>
+<td><p>(symbol: <span class="math notranslate nohighlight">\(d_{\gamma}\)</span>) [SI:N/s] viscous damping of shear deformation</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>referenceCurvature</strong></p></td>
+<td><p>Real</p></td>
+<td><p></p></td>
+<td><p>0.</p></td>
+<td><p>(symbol: <span class="math notranslate nohighlight">\(\kappa_0\)</span>) [SI:1/m] reference curvature of beam (pre-deformation) of beam</p></td>
+</tr>
+<tr class="row-even"><td><p><strong>includeReferenceRotations</strong></p></td>
+<td><p>bool</p></td>
+<td><p></p></td>
+<td><p>False</p></td>
+<td><p>if True, rotation of the cross section at the nodes includes node reference rotations (within referenceCoordinates of NodeRigidBody2D), which are used for the computation of bending strains (this means that a pre-curved beam is stress-free); if False, the reference rotation of the cross section is orthogonal to the reference slope vector. This allows to easily share nodes among several beams with different reference cross section orientation (i.e., only the change of rotation counts).</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>visualization</strong></p></td>
+<td><p>VObjectBeamGeometricallyExact2D</p></td>
+<td><p></p></td>
+<td><p></p></td>
+<td><p>parameters for visualization of item</p></td>
+</tr>
+</tbody>
+</table>
+<p>Renamed parameters, still taken with a <code class="docutils literal notranslate"><span class="pre">DeprecationWarning</span></code>: <code class="docutils literal notranslate"><span class="pre">physicsLength</span></code> (deprecated since 1.12.258, removed in 2031): use <code class="docutils literal notranslate"><span class="pre">length</span></code>; <code class="docutils literal notranslate"><span class="pre">physicsMassPerLength</span></code> (deprecated since 1.12.258, removed in 2031): use <code class="docutils literal notranslate"><span class="pre">massPerLength</span></code>; <code class="docutils literal notranslate"><span class="pre">physicsCrossSectionInertia</span></code> (deprecated since 1.12.258, removed in 2031): use <code class="docutils literal notranslate"><span class="pre">crossSectionInertia</span></code>; <code class="docutils literal notranslate"><span class="pre">physicsBendingStiffness</span></code> (deprecated since 1.12.258, removed in 2031): use <code class="docutils literal notranslate"><span class="pre">bendingStiffness</span></code>; <code class="docutils literal notranslate"><span class="pre">physicsAxialStiffness</span></code> (deprecated since 1.12.258, removed in 2031): use <code class="docutils literal notranslate"><span class="pre">axialStiffness</span></code>; <code class="docutils literal notranslate"><span class="pre">physicsShearStiffness</span></code> (deprecated since 1.12.258, removed in 2031): use <code class="docutils literal notranslate"><span class="pre">shearStiffness</span></code>; <code class="docutils literal notranslate"><span class="pre">physicsBendingDamping</span></code> (deprecated since 1.12.258, removed in 2031): use <code class="docutils literal notranslate"><span class="pre">bendingDamping</span></code>; <code class="docutils literal notranslate"><span class="pre">physicsAxialDamping</span></code> (deprecated since 1.12.258, removed in 2031): use <code class="docutils literal notranslate"><span class="pre">axialDamping</span></code>; <code class="docutils literal notranslate"><span class="pre">physicsShearDamping</span></code> (deprecated since 1.12.258, removed in 2031): use <code class="docutils literal notranslate"><span class="pre">shearDamping</span></code>; <code class="docutils literal notranslate"><span class="pre">physicsReferenceCurvature</span></code> (deprecated since 1.12.258, removed in 2031): use <code class="docutils literal notranslate"><span class="pre">referenceCurvature</span></code>.</p>
+</section>
+<section id="visualization-parameters">
+<h2>Visualization parameters<a class="headerlink" href="#visualization-parameters" title="Link to this heading"></a></h2>
+<p>The parameters of <code class="docutils literal notranslate"><span class="pre">VObjectBeamGeometricallyExact2D</span></code>, given as <code class="docutils literal notranslate"><span class="pre">visualization</span></code>:</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>name</p></th>
+<th class="head"><p>type</p></th>
+<th class="head"><p>size</p></th>
+<th class="head"><p>default</p></th>
+<th class="head"><p>description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><strong>show</strong></p></td>
+<td><p>Bool</p></td>
+<td><p></p></td>
+<td><p>True</p></td>
+<td><p>set true, if item is shown in visualization and false if it is not shown</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>drawHeight</strong></p></td>
+<td><p>float</p></td>
+<td><p></p></td>
+<td><p>0.</p></td>
+<td><p>if beam is drawn with rectangular shape, this is the drawing height</p></td>
+</tr>
+<tr class="row-even"><td><p><strong>color</strong></p></td>
+<td><p>Float4</p></td>
+<td><p>4</p></td>
+<td><p>[-1.,-1.,-1.,-1.]</p></td>
+<td><p>RGBA color of the object; if R==-1, use default color</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="drawing">
+<h2>Drawing<a class="headerlink" href="#drawing" title="Link to this heading"></a></h2>
+<p>Drawn as <a class="reference internal" href="objectFiniteElementGeneral.html#sec-drawing-objectsfiniteelement"><span class="std std-ref">all finite elements</span></a>; a band of height <code class="docutils literal notranslate"><span class="pre">drawHeight</span></code> along the axis, of <code class="docutils literal notranslate"><span class="pre">bodies.beams.axialTiling</span></code> segments, or a line if <code class="docutils literal notranslate"><span class="pre">drawHeight</span></code> is 0; the <code class="docutils literal notranslate"><span class="pre">bodies.beams.drawVertical...</span></code> settings draw a value across it.</p>
+<p>Settings beyond those of all finite elements: <a class="reference internal" href="../structures/VisualizationSettings.html#sec-vsettingsbeams"><span class="std std-ref"><code class="docutils literal notranslate"><span class="pre">bodies.beams.axialTiling</span></code></span></a>, <a class="reference internal" href="../structures/VisualizationSettings.html#sec-vsettingsbeams"><span class="std std-ref"><code class="docutils literal notranslate"><span class="pre">bodies.beams.crossSectionFilled</span></code></span></a>, <a class="reference internal" href="../structures/VisualizationSettings.html#sec-vsettingsbeams"><span class="std std-ref"><code class="docutils literal notranslate"><span class="pre">bodies.beams.drawVertical</span></code></span></a>, <a class="reference internal" href="../structures/VisualizationSettings.html#sec-vsettingsbeams"><span class="std std-ref"><code class="docutils literal notranslate"><span class="pre">bodies.beams.drawVerticalColor</span></code></span></a>, <a class="reference internal" href="../structures/VisualizationSettings.html#sec-vsettingsbeams"><span class="std std-ref"><code class="docutils literal notranslate"><span class="pre">bodies.beams.drawVerticalFactor</span></code></span></a>, <a class="reference internal" href="../structures/VisualizationSettings.html#sec-vsettingsbeams"><span class="std std-ref"><code class="docutils literal notranslate"><span class="pre">bodies.beams.drawVerticalLines</span></code></span></a>, <a class="reference internal" href="../structures/VisualizationSettings.html#sec-vsettingsbeams"><span class="std std-ref"><code class="docutils literal notranslate"><span class="pre">bodies.beams.drawVerticalOffset</span></code></span></a>, <a class="reference internal" href="../structures/VisualizationSettings.html#sec-vsettingsbeams"><span class="std std-ref"><code class="docutils literal notranslate"><span class="pre">bodies.beams.drawVerticalValues</span></code></span></a>, <a class="reference internal" href="../structures/VisualizationSettings.html#sec-vsettingsgeneral"><span class="std std-ref"><code class="docutils literal notranslate"><span class="pre">general.rendererPrecision</span></code></span></a>.</p>
+</section>
+<section id="output-variables">
+<h2>Output variables<a class="headerlink" href="#output-variables" title="Link to this heading"></a></h2>
+<p>Available as <code class="docutils literal notranslate"><span class="pre">OutputVariableType</span></code> in sensors, <code class="docutils literal notranslate"><span class="pre">Get...Output()</span></code> and other functions:</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>output variable</p></th>
+<th class="head"><p>symbol</p></th>
+<th class="head"><p>description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Position</p></td>
+<td><p></p></td>
+<td><p>global position vector of local axis (X) and cross section (Y) position</p></td>
+</tr>
+<tr class="row-odd"><td><p>Displacement</p></td>
+<td><p></p></td>
+<td><p>global displacement vector of local axis (X) and cross section (Y) position</p></td>
+</tr>
+<tr class="row-even"><td><p>Velocity</p></td>
+<td><p></p></td>
+<td><p>global velocity vector of local axis (X) and cross section (Y) position</p></td>
+</tr>
+<tr class="row-odd"><td><p>Rotation</p></td>
+<td><p></p></td>
+<td><p>3D Tait-Bryan rotation components, containing rotation around <span class="math notranslate nohighlight">\(Z\)</span>-axis only</p></td>
+</tr>
+<tr class="row-even"><td><p>StrainLocal</p></td>
+<td><p></p></td>
+<td><p>6 (local) strain components, containing only axial (<span class="math notranslate nohighlight">\(XX\)</span>, index 0) and shear strain (<span class="math notranslate nohighlight">\(XY\)</span>, index 5); evaluated at beam axis ONLY</p></td>
+</tr>
+<tr class="row-odd"><td><p>CurvatureLocal</p></td>
+<td><p></p></td>
+<td><p>3D vector of (local) curvature, only <span class="math notranslate nohighlight">\(Z\)</span> component is non-zero</p></td>
+</tr>
+<tr class="row-even"><td><p>ForceLocal</p></td>
+<td><p></p></td>
+<td><p>3D vector of (local) section normal force, containing axial (X) and shear force (Y)</p></td>
+</tr>
+<tr class="row-odd"><td><p>TorqueLocal</p></td>
+<td><p></p></td>
+<td><p>3D vector of (local) torques, containing only bending moment (Z)</p></td>
+</tr>
+<tr class="row-even"><td><p>KineticEnergy</p></td>
+<td><p><span class="math notranslate nohighlight">\(T = \frac{1}{2} \dot\qv\tp \Mm\, \dot\qv\)</span></p></td>
+<td><p>kinetic energy from the mass matrix of the current state and the velocities of the nodes; current configuration only; localPosition must be <span class="math notranslate nohighlight">\([0,0,0]\)</span></p></td>
+</tr>
+<tr class="row-odd"><td><p>PotentialEnergy</p></td>
+<td><p><span class="math notranslate nohighlight">\(V = \frac{1}{2}\int_0^L EA\,\gamma_1^2 + GA\,\gamma_2^2 + EI\,\theta_x^2\, dx\)</span></p></td>
+<td><p>elastic energy of the axial, shear and bending strains, integrated with the rule of the elastic forces; localPosition must be <span class="math notranslate nohighlight">\([0,0,0]\)</span></p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="detailed-description">
+<span id="description-objectbeamgeometricallyexact2d"></span><h2>Detailed description<a class="headerlink" href="#detailed-description" title="Link to this heading"></a></h2>
+<p>A shear deformable beam after Simo and Vu-Quoc (1986): the positions and the rotations of the cross
+section are interpolated independently.</p>
+<section id="nodes-and-coordinates">
+<h3>Nodes and coordinates<a class="headerlink" href="#nodes-and-coordinates" title="Link to this heading"></a></h3>
+<p>Two nodes (linear element) or three nodes (quadratic element) of type <code class="docutils literal notranslate"><span class="pre">NodeRigidBody2D</span></code>, each with
+the position <span class="math notranslate nohighlight">\([r_{x},\, r_{y}]\)</span> of the axis and the rotation <span class="math notranslate nohighlight">\(\theta\)</span> of the cross section; 6 or 9
+coordinates. The local axial coordinate is <span class="math notranslate nohighlight">\(x \in [-L/2,\, L/2]\)</span>.</p>
+</section>
+<section id="kinematics-and-interpolation">
+<h3>Kinematics and interpolation<a class="headerlink" href="#kinematics-and-interpolation" title="Link to this heading"></a></h3>
+<p>Position and rotation are interpolated with Lagrange shape functions - linear, <span class="math notranslate nohighlight">\(S_0 = (L/2 - x)/L\)</span>,
+<span class="math notranslate nohighlight">\(S_1 = (L/2 + x)/L\)</span>, or quadratic in <span class="math notranslate nohighlight">\(\xi = 2x/L\)</span> -</p>
+<div class="math notranslate nohighlight">
+\[
+\rv(x) = \sum_i S_i(x)\, \rv_i , \quad \theta(x) = \sum_i S_i(x)\, \theta_i .
+\]</div>
+<p>With <code class="docutils literal notranslate"><span class="pre">includeReferenceRotations</span> <span class="pre">=</span> <span class="pre">False</span></code> (default) the rotation of the cross section is measured
+from the direction of the reference axis, <span class="math notranslate nohighlight">\(\mathrm{atan2}(r'_{y,\mathrm{ref}},\, r'_{x,\mathrm{ref}})\)</span>; with
+<code class="docutils literal notranslate"><span class="pre">True</span></code> the reference rotations of the nodes are used.</p>
+</section>
+<section id="strains">
+<h3>Strains<a class="headerlink" href="#strains" title="Link to this heading"></a></h3>
+<p>With the tangent <span class="math notranslate nohighlight">\(\tv = [\cos\theta,\, \sin\theta]\tp\)</span> and the normal <span class="math notranslate nohighlight">\(\nv = [-\sin\theta,\, \cos\theta]\tp\)</span>
+of the cross section,</p>
+<div class="math notranslate nohighlight">
+\[
+\gamma_1 = \tv\tp \rv' - 1 , \quad \gamma_2 = \nv\tp \rv' , \quad \kappa = \theta' - \kappa_0 ,
+\]</div>
+<p>the axial strain, the shear strain and the curvature, with the reference curvature <span class="math notranslate nohighlight">\(\kappa_0\)</span> =
+<code class="docutils literal notranslate"><span class="pre">referenceCurvature</span></code>. The virtual work of the elastic forces is</p>
+<div class="math notranslate nohighlight">
+\[
+\delta W_e = \int_{-L/2}^{L/2} \left( EA\,\gamma_1\,\delta\gamma_1 + GA\,\gamma_2\,\delta\gamma_2 + EI\,\kappa\,\delta\kappa \right) dx ,
+\]</div>
+<p>with the damping terms <span class="math notranslate nohighlight">\(d_\varepsilon \dot\gamma_1\)</span>, <span class="math notranslate nohighlight">\(d_\gamma \dot\gamma_2\)</span> and <span class="math notranslate nohighlight">\(d_K \dot\kappa\)</span> added in
+the same way.</p>
+</section>
+<section id="mass-matrix-and-integration">
+<h3>Mass matrix and integration<a class="headerlink" href="#mass-matrix-and-integration" title="Link to this heading"></a></h3>
+<p>The mass matrix is constant: <span class="math notranslate nohighlight">\(\rho A\)</span> for the positions and <span class="math notranslate nohighlight">\(\rho J\)</span> for the rotations, integrated with
+Gauss rules of order 3 (linear) or 5 (quadratic). The elastic forces are integrated with <strong>reduced</strong>
+integration against shear locking: one point for the linear element, the rule of order 3 for the
+quadratic element.</p>
+</section>
+<section id="marker-interfaces">
+<h3>Marker interfaces<a class="headerlink" href="#marker-interfaces" title="Link to this heading"></a></h3>
+<p>The position and rotation Jacobians follow from the interpolation above; a marker at a local
+position <span class="math notranslate nohighlight">\((x,\, y)\)</span> moves with the cross section.</p>
+</section>
+<section id="limitations">
+<h3>Limitations<a class="headerlink" href="#limitations" title="Link to this heading"></a></h3>
+<p>Planar; the output variables <code class="docutils literal notranslate"><span class="pre">StrainLocal</span></code> and <code class="docutils literal notranslate"><span class="pre">ForceLocal</span></code> give <span class="math notranslate nohighlight">\(\gamma_1\)</span> and <span class="math notranslate nohighlight">\(\gamma_2\)</span> and the
+forces <span class="math notranslate nohighlight">\(EA\gamma_1\)</span>, <span class="math notranslate nohighlight">\(GA\gamma_2\)</span>.</p>
+</section>
+</section>
+<section id="mini-example">
+<span id="miniexample-objectbeamgeometricallyexact2d"></span><h2>Mini example<a class="headerlink" href="#mini-example" title="Link to this heading"></a></h2>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1">#a cantilever of four planar geometrically exact beam elements on rigid body nodes, loaded at the tip</span>
+<span class="n">L</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span> <span class="n">nElements</span> <span class="o">=</span> <span class="mi">4</span><span class="p">;</span> <span class="n">EI</span> <span class="o">=</span> <span class="mi">100</span><span class="p">;</span> <span class="n">GA</span> <span class="o">=</span> <span class="mf">1e4</span><span class="p">;</span> <span class="n">F</span> <span class="o">=</span> <span class="o">-</span><span class="mf">0.1</span>
+<span class="n">mGround</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">AddMarker</span><span class="p">(</span><span class="nc">MarkerNodeCoordinate</span><span class="p">(</span><span class="n">nodeNumber</span><span class="o">=</span><span class="n">nGround</span><span class="p">,</span> <span class="n">coordinate</span><span class="o">=</span><span class="mi">0</span><span class="p">))</span>
+<span class="n">n0</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">AddNode</span><span class="p">(</span><span class="nc">NodeRigidBody2D</span><span class="p">(</span><span class="n">referenceCoordinates</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]))</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">3</span><span class="p">):</span> <span class="c1">#clamped: x, y, rotation</span>
+    <span class="n">mbs</span><span class="o">.</span><span class="nf">AddObject</span><span class="p">(</span><span class="nc">ObjectConnectorCoordinate</span><span class="p">(</span><span class="n">markerNumbers</span><span class="o">=</span><span class="p">[</span><span class="n">mGround</span><span class="p">,</span>
+                  <span class="n">mbs</span><span class="o">.</span><span class="nf">AddMarker</span><span class="p">(</span><span class="nc">MarkerNodeCoordinate</span><span class="p">(</span><span class="n">nodeNumber</span><span class="o">=</span><span class="n">n0</span><span class="p">,</span> <span class="n">coordinate</span><span class="o">=</span><span class="n">i</span><span class="p">))]))</span>
+<span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">nElements</span><span class="p">):</span>
+    <span class="n">n1</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">AddNode</span><span class="p">(</span><span class="nc">NodeRigidBody2D</span><span class="p">(</span><span class="n">referenceCoordinates</span><span class="o">=</span><span class="p">[</span><span class="n">L</span><span class="o">*</span><span class="p">(</span><span class="n">k</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span><span class="o">/</span><span class="n">nElements</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]))</span>
+    <span class="n">mbs</span><span class="o">.</span><span class="nf">AddObject</span><span class="p">(</span><span class="nc">ObjectBeamGeometricallyExact2D</span><span class="p">(</span><span class="n">nodeNumbers</span><span class="o">=</span><span class="p">[</span><span class="n">n0</span><span class="p">,</span><span class="n">n1</span><span class="p">],</span> <span class="n">length</span><span class="o">=</span><span class="n">L</span><span class="o">/</span><span class="n">nElements</span><span class="p">,</span>
+                  <span class="n">massPerLength</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">crossSectionInertia</span><span class="o">=</span><span class="mf">0.01</span><span class="p">,</span> <span class="n">bendingStiffness</span><span class="o">=</span><span class="n">EI</span><span class="p">,</span>
+                  <span class="n">axialStiffness</span><span class="o">=</span><span class="mf">1e5</span><span class="p">,</span> <span class="n">shearStiffness</span><span class="o">=</span><span class="n">GA</span><span class="p">))</span>
+    <span class="n">n0</span> <span class="o">=</span> <span class="n">n1</span>
+<span class="n">mbs</span><span class="o">.</span><span class="nf">AddLoad</span><span class="p">(</span><span class="nc">LoadForceVector</span><span class="p">(</span><span class="n">markerNumber</span><span class="o">=</span><span class="n">mbs</span><span class="o">.</span><span class="nf">AddMarker</span><span class="p">(</span><span class="nc">MarkerNodePosition</span><span class="p">(</span><span class="n">nodeNumber</span><span class="o">=</span><span class="n">n1</span><span class="p">)),</span> <span class="n">loadVector</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="n">F</span><span class="p">,</span><span class="mi">0</span><span class="p">]))</span>
+
+<span class="n">mbs</span><span class="o">.</span><span class="nf">Assemble</span><span class="p">()</span>
+<span class="n">mbs</span><span class="o">.</span><span class="nf">SolveStatic</span><span class="p">()</span>
+
+<span class="c1">#Timoshenko beam: F*L^3/(3*EI) + F*L/GA = -0.3433e-3, approached with more elements</span>
+<span class="n">exu</span><span class="o">.</span><span class="n">sys</span><span class="p">[</span><span class="s1">'testResult'</span><span class="p">]</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">GetNodeOutput</span><span class="p">(</span><span class="n">n1</span><span class="p">,</span> <span class="n">exu</span><span class="o">.</span><span class="nc">OutputVariableType</span><span class="o">.</span><span class="n">Displacement</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span><span class="o">*</span><span class="mi">1000</span>
+</pre></div>
+</div>
+<p>Relevant Examples (Ex) and TestModels (TM) with weblink to github: <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/pendulumGeomExactBeam2D.py"><code class="docutils literal notranslate"><span class="pre">pendulumGeomExactBeam2D.py</span></code></a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/ANCFBeamEigTest.py"><code class="docutils literal notranslate"><span class="pre">ANCFBeamEigTest.py</span></code></a> (TM), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/energiesFlexibleBodiesTest.py"><code class="docutils literal notranslate"><span class="pre">energiesFlexibleBodiesTest.py</span></code></a> (TM), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/flexiblePendulumBeamComparison.py"><code class="docutils literal notranslate"><span class="pre">flexiblePendulumBeamComparison.py</span></code></a> (TM), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/geometricallyExactBeam2DquadraticTest.py"><code class="docutils literal notranslate"><span class="pre">geometricallyExactBeam2DquadraticTest.py</span></code></a> (TM), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/geometricallyExactBeam2Dtest.py"><code class="docutils literal notranslate"><span class="pre">geometricallyExactBeam2Dtest.py</span></code></a> (TM), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/gridGeomExactBeam2D.py"><code class="docutils literal notranslate"><span class="pre">gridGeomExactBeam2D.py</span></code></a> (TM), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/LShapeGeomExactBeam2D.py"><code class="docutils literal notranslate"><span class="pre">LShapeGeomExactBeam2D.py</span></code></a> (TM)</p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="ObjectANCFBeam.html" class="btn btn-neutral float-left" title="ObjectANCFBeam" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="ObjectBeamGeometricallyExact.html" class="btn btn-neutral float-right" title="ObjectBeamGeometricallyExact" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

@@ -1,0 +1,543 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ObjectConnectorCartesianSpringDamper &mdash; Exudyn1.13.3 1.13.3 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=3ee1c6c6" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/rtd_sphinx_search.min.css" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/custom.css?v=e2783f0e" />
+
+  
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=b8a3e558"></script>
+      <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../../_static/copybutton.js?v=f281be69"></script>
+      <script src="../../../_static/js/rtd_search_config.js"></script>
+      <script src="../../../_static/js/rtd_sphinx_search.min.js"></script>
+      <script>window.MathJax = {"loader": {"load": ["[tex]/mathtools"]}, "tex": {"packages": {"[+]": ["mathtools"]}, "macros": {"ANCFdk": "{\\LU{0}{\\dv_k}}", "ANCFdkO": "{\\LU{0}{\\dv_{0,k}}}", "ANCFdkOtp": "{\\LU{0}{\\dv_{0,k}\\tp}}", "ANCFdkt": "{\\LU{0}{\\dot\\dv_k}}", "Am": "{\\mathbf{A}}", "Dm": "{\\mathbf{D}}", "Em": "{\\mathbf{E}}", "Gm": "{\\mathbf{G}}", "Im": "{\\mathbf{I}}", "ImThree": "{\\mathbf{I}_{3 \\times 3}}", "Jm": "{\\mathbf{J}}", "Km": "{\\mathbf{K}}", "Mm": "{\\mathbf{M}}", "Pm": "{\\mathbf{P}}", "Rm": "{\\mathbf{R}}", "Sm": "{\\mathbf{S}}", "Tm": "{\\mathbf{T}}", "av": "{\\mathbf{a}}", "bv": "{\\mathbf{b}}", "cv": "{\\mathbf{c}}", "diffANCF": ["{\\frac{\\partial #1}{\\partial \\qv_{ANCF}}}", 1], "diffANCFdk": "{\\diffANCFmI{\\ANCFdk}}", "diffANCFmI": ["{\\frac{\\partial #1}{\\partial \\qv_{ANCF,m1}}}", 1], "diffANCFmIt": ["{\\frac{\\partial #1}{\\partial \\dot \\qv_{ANCF,m1}}}", 1], "diffANCFt": ["{\\frac{\\partial #1}{\\partial \\dot \\qv_{ANCF}}}", 1], "diffmI": ["{\\frac{\\partial #1}{\\partial \\qv_{m1}}}", 1], "diffmIt": ["{\\frac{\\partial #1}{\\partial \\dot \\qv_{m1}}}", 1], "diffmOI": ["{\\frac{\\partial #1}{\\partial \\qv_{m0,m1}}}", 1], "diffmOIt": ["{\\frac{\\partial #1}{\\partial \\dot \\qv_{m0,m1}}}", 1], "diffmOt": ["{\\frac{\\partial #1}{\\partial \\dot \\qv_{m0}}}", 1], "dv": "{\\mathbf{d}}", "ev": "{\\mathbf{e}}", "fv": "{\\mathbf{f}}", "gv": "{\\mathbf{g}}", "hv": "{\\mathbf{h}}", "nv": "{\\mathbf{n}}", "pv": "{\\mathbf{p}}", "qv": "{\\mathbf{q}}", "rv": "{\\mathbf{r}}", "sv": "{\\mathbf{s}}", "tv": "{\\mathbf{t}}", "uv": "{\\mathbf{u}}", "vv": "{\\mathbf{v}}", "xv": "{\\mathbf{x}}", "yv": "{\\mathbf{y}}", "zv": "{\\mathbf{z}}", "vspace": ["{}", 1], "ra": "{\\rightarrow}", "Rcal": "{\\mathbb{R}}", "Ccal": "{\\mathbb{C}}", "Ncal": "{\\mathbb{N}}", "Rot": "{\\mathbf{A}}", "dd": "{\\mathrm{d}}", "ps": "{p_\\mathrm{s}}", "co": "{\\mathrm{c}}", "si": "{\\mathrm{s}}", "tp": "{^\\mathrm{T}}", "diag": "{\\mathrm{diag}}", "vec": "{\\mathrm{vec}}", "Null": "{\\mathbf{0}}", "varepsilonDot": "{\\boldsymbol{\\varepsilon}}", "talpha": "{\\boldsymbol{\\alpha}}", "tbeta": "{\\boldsymbol{\\beta}}", "tgamma": "{\\boldsymbol{\\gamma}}", "tchi": "{\\boldsymbol{\\chi}}", "tdelta": "{\\boldsymbol{\\delta}}", "teps": "{\\boldsymbol{\\varepsilon}}", "tepsDot": "{\\boldsymbol{\\dot \\varepsilon}}", "teta": "{\\boldsymbol{\\eta}}", "tkappa": "{\\boldsymbol{\\kappa}}", "tkappaDot": "{\\boldsymbol{\\dot \\kappa}}", "tphi": "{\\boldsymbol{\\phi}}", "boldVarPhi": "{\\boldsymbol{\\varphi}}", "tPhi": "{\\boldsymbol{\\Phi}}", "ttheta": "{\\boldsymbol{\\theta}}", "tTheta": "{\\boldsymbol{\\Theta}}", "tlambda": "{\\boldsymbol{\\lambda}}", "tnu": "{\\boldsymbol{\\nu}}", "tmu": "{\\boldsymbol{\\mu}}", "tpsi": "{\\boldsymbol{\\psi}}", "tPsi": "{\\boldsymbol{\\Psi}}", "ttau": "{\\boldsymbol{\\tau}}", "tsigma": "{\\boldsymbol{\\sigma}}", "txi": "{\\boldsymbol{\\xi}}", "tzeta": "{\\boldsymbol{\\zeta}}", "tomega": "{\\boldsymbol{\\omega}}", "tOmega": "{\\boldsymbol{\\Omega}}", "vareps": "{\\varepsilon}", "myoverline": ["\\overline{#1}", 1], "pluseq": "\\mathrel{+}=", "LU": ["{\\prescript{#1}{}{#2}\\,}", 2], "LUX": ["{\\prescript{#1}{}{#2}#3\\,}", 3], "LUR": ["{\\prescript{#1}{}{#2}_{#3}\\,}", 3], "LURU": ["{\\prescript{#1}{}{#2}_{#3}^{#4}\\,}", 4], "LLdot": ["{\\prescript{}{#1}{\\dot{#2}}_{#3}\\,}", 3], "vr": ["{\\left[ \\begin{array}{c} { #1}\\vspace{0.04cm} \\\\ { #2}\\vspace{0.04cm} \\\\ { #3} \\end{array} \\right]}", 3], "mr": ["{\\left[ \\begin{array}{ccc} #1 & #2 & #3 \\vspace{0.04cm}\\\\ #4 & #5 & #6 \\vspace{0.04cm}\\\\ #7 & #8 & #9  \\end{array} \\right]}", 9], "vp": ["{\\left[ \\begin{array}{c} { #1} \\vspace{0.04cm}\\\\ { #2} \\end{array} \\right]}", 2], "mp": ["{\\left[ \\begin{array}{cc} #1 & #2 \\vspace{0.04cm}\\\\ #3 & #4 \\end{array} \\right]}", 4], "mfour": ["{\\left[ \\begin{array}{cccc} { #1} \\\\ { #2} \\\\ { #3} \\\\ { #4} \\end{array} \\right]}", 4], "vfour": ["{\\left[ \\begin{array}{c} { #1} \\\\ { #2} \\\\ { #3} \\\\ { #4} \\end{array} \\right]}", 4], "vrRow": ["{[#1,\\, #2,\\, #3]}", 3], "vsix": ["{\\left[ \\begin{array}{c} { #1} \\\\ { #2} \\\\ { #3} \\\\ { #4} \\\\ { #5} \\\\ { #6} \\end{array} \\right]}", 6], "vsixb": ["{\\begin{array}{c} { #1} \\\\ { #2} \\\\ { #3} \\\\ { #4} \\\\ { #5} \\\\ { #6} \\end{array} }", 6], "vsixs": ["{ \\begin{array}{c} { #1} \\\\ { #2} \\\\ { #3} \\\\ { #4} \\\\ { #5} \\\\ { #6} \\end{array} }", 6], "SO": "{q}", "FO": "{y}", "AE": "{\\lambda}", "SYS": "{s}", "SON": "{$2^\\mathrm{nd}$ order differential equations}", "FON": "{$1^\\mathrm{st}$ order differential equations}", "AEN": "{algebraic equations}", "Bm": "{\\mathbf{B}}", "Cm": "{\\mathbf{C}}", "Fm": "{\\mathbf{F}}", "SYSN": "{system equations}", "cIni": "{_\\mathrm{ini}}", "cRef": "{_\\mathrm{ref}}", "cCur": "{_\\mathrm{cur}}", "cVis": "{_\\mathrm{vis}}", "cSOS": "{_\\mathrm{start\\;of\\;step}}", "cConfig": "{_\\mathrm{config}}", "pLoc": "{\\mathbf{b}}", "pLocB": "{\\,^{b}{\\mathbf{v}}}", "pRef": "{\\mathbf{r}}", "pRefG": "{\\,^{0}{\\mathbf{r}}}", "indf": "{_\\mathrm{f}}", "indt": "{_\\mathrm{t}}", "indr": "{_\\mathrm{r}}", "indtt": "{_\\mathrm{tt}}", "indrr": "{_\\mathrm{rr}}", "indff": "{_\\mathrm{ff}}", "indtf": "{_\\mathrm{tf}}", "indrf": "{_\\mathrm{rf}}", "indtr": "{_\\mathrm{tr}}", "omegaBDtilde": "{\\LU{b}{\\tilde \\tomega_\\mathrm{bd}}}", "indrigid": "{_\\mathrm{rigid}}", "indred": "{_\\mathrm{red}}", "induser": "{_\\mathrm{user}}", "indu": "{_\\mathrm{u}}", "termA": ["{\\color{blue}{#1}}", 1], "termB": ["{\\color{red}{#1}}", 1], "termC": ["{\\color{green}{#1}}", 1], "acc": "{\\ddot{\\mathbf{q}}}", "GA": "{G\\alpha}", "Hm": "{\\mathbf{H}}", "ImTwo": "{\\mathbf{I}_{2 \\times 2}}", "Lm": "{\\mathbf{L}}", "Qm": "{\\mathbf{Q}}", "Vm": "{\\mathbf{V}}", "Wm": "{\\mathbf{W}}", "Xm": "{\\mathbf{X}}", "Ym": "{\\mathbf{Y}}", "aalg": "{\\mathbf{a}}", "iv": "{\\mathbf{i}}", "jv": "{\\mathbf{j}}", "kv": "{\\mathbf{k}}", "lv": "{\\mathbf{l}}", "mv": "{\\mathbf{m}}", "ov": "{\\mathbf{o}}", "vel": "{\\mathbf{v}}", "wv": "{\\mathbf{w}}"}}, "options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+      <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-mml-chtml.js"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+    <link rel="next" title="ObjectConnectorRigidBodySpringDamper" href="ObjectConnectorRigidBodySpringDamper.html" />
+    <link rel="prev" title="ObjectConnectorSpringDamper" href="ObjectConnectorSpringDamper.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            Exudyn1.13.3
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Exudyn User Manual</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../README.html">Exudyn</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../manual/gettingStarted.html">Installation and getting started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../manual/introduction.html">Overview on Exudyn</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../manual/introductionBasics.html">Exudyn basics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../manual/tutorial.html">Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../manual/GUI.html">Renderer, graphics and visualization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../manual/performanceErrors.html">Performance, errors and solver failures</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../manual/introductionAdvanced.html">Advanced topics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../manual/notation.html">Notation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../manual/theory.html">Theory and formulations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../manual/solver.html">Solvers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../cInterface/cInterfaceIndex.html">Python-C++ command interface</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Reference Manual</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="itemsIndex.html">Items reference manual</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="nodeIndex.html">Node</a></li>
+<li class="toctree-l2"><a class="reference internal" href="objectBodyIndex.html">Object (Body)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="objectSuperElementIndex.html">Object (SuperElement)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="objectObjectIndex.html">Object (Object)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="objectFiniteElementIndex.html">Object (FiniteElement)</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="objectConnectorIndex.html">Object (Connector)</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="objectConnectorGeneral.html">General info for all connectors</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ObjectConnectorSpringDamper.html">ObjectConnectorSpringDamper</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">ObjectConnectorCartesianSpringDamper</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ObjectConnectorRigidBodySpringDamper.html">ObjectConnectorRigidBodySpringDamper</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ObjectConnectorLinearSpringDamper.html">ObjectConnectorLinearSpringDamper</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ObjectConnectorTorsionalSpringDamper.html">ObjectConnectorTorsionalSpringDamper</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ObjectConnectorCoordinateSpringDamper.html">ObjectConnectorCoordinateSpringDamper</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ObjectConnectorCoordinateSpringDamperExt.html">ObjectConnectorCoordinateSpringDamperExt</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ObjectConnectorGravity.html">ObjectConnectorGravity</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ObjectConnectorHydraulicActuatorSimple.html">ObjectConnectorHydraulicActuatorSimple</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ObjectConnectorReevingSystemSprings.html">ObjectConnectorReevingSystemSprings</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ObjectConnectorRollingDiscPenalty.html">ObjectConnectorRollingDiscPenalty</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ObjectContactConvexRoll.html">ObjectContactConvexRoll</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ObjectContactCoordinate.html">ObjectContactCoordinate</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ObjectContactCircleCable2D.html">ObjectContactCircleCable2D</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ObjectContactFrictionCircleCable2D.html">ObjectContactFrictionCircleCable2D</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ObjectContactSphereSphere.html">ObjectContactSphereSphere</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ObjectContactSphereTorus.html">ObjectContactSphereTorus</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ObjectContactSphereTriangle.html">ObjectContactSphereTriangle</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ObjectContactCurveCircles.html">ObjectContactCurveCircles</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="objectConstraintIndex.html">Object (Constraint)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="objectJointIndex.html">Object (Joint)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="markerIndex.html">Marker</a></li>
+<li class="toctree-l2"><a class="reference internal" href="loadIndex.html">Load</a></li>
+<li class="toctree-l2"><a class="reference internal" href="sensorIndex.html">Sensor</a></li>
+<li class="toctree-l2"><a class="reference internal" href="itemsIndex.html#parameter-changes">Parameter changes</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../pythonUtilities/utilitiesIndex.html">Python Utility Functions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../structures/structuresIndex.html">Structures and Settings</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../references.html">References</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Developer documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../dev/README.html">Exudyn developer documentation</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">How-to notes</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../howTo/condaEnvironments.html">Conda environments for Exudyn</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../howTo/sphinxDocs.html">Building the documentation</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Examples, models and issues</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../examples/examplesIndex.html">Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../testModels/testModelsIndex.html">TestModels</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../abbreviations.html">List of Abbreviations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../manual/revisions.html">Revisions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../CHANGELOG.html">Changelog</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../trackerlog.html">Issue tracker</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">Exudyn1.13.3</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="itemsIndex.html">Items reference manual</a></li>
+          <li class="breadcrumb-item"><a href="objectConnectorIndex.html">Object (Connector)</a></li>
+      <li class="breadcrumb-item active">ObjectConnectorCartesianSpringDamper</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../../_sources/docs/generated/items/ObjectConnectorCartesianSpringDamper.md.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <!-- GENERATED by tools/generators/itemDocsEmitter.py from definitions/ - do not edit -->
+<section class="tex2jax_ignore mathjax_ignore" id="objectconnectorcartesianspringdamper">
+<span id="sec-item-objectconnectorcartesianspringdamper"></span><h1>ObjectConnectorCartesianSpringDamper<a class="headerlink" href="#objectconnectorcartesianspringdamper" title="Link to this heading"></a></h1>
+<p>An 3D spring-damper element, providing springs and dampers in three (global) directions (x,y,z); the connector can be attached to position-based markers.</p>
+<a class="reference internal image-reference" href="../../../_images/ObjectConnectorCartesianSpringDamper.png"><img alt="../../../_images/ObjectConnectorCartesianSpringDamper.png" src="../../../_images/ObjectConnectorCartesianSpringDamper.png" width="500" />
+</a>
+<p><strong>Simpler</strong>: <a class="reference internal" href="../cInterface/MainSystem.html#sec-mainsystemextensions-createcartesianspringdamper"><span class="std std-ref"><code class="docutils literal notranslate"><span class="pre">mbs.CreateCartesianSpringDamper</span></code></span></a> adds this item, with what it needs, in one call.</p>
+<section id="interface">
+<h2>Interface<a class="headerlink" href="#interface" title="Link to this heading"></a></h2>
+<ul class="simple">
+<li><p>Python names: <code class="docutils literal notranslate"><span class="pre">ObjectConnectorCartesianSpringDamper</span></code> or <code class="docutils literal notranslate"><span class="pre">CartesianSpringDamper</span></code>, and <code class="docutils literal notranslate"><span class="pre">VCartesianSpringDamper</span></code> for its visualization</p></li>
+<li><p>Markers it acts on: those providing <code class="docutils literal notranslate"><span class="pre">Position</span></code>: <a class="reference internal" href="MarkerBodyPosition.html#sec-item-markerbodyposition"><span class="std std-ref">MarkerBodyPosition</span></a>, <a class="reference internal" href="MarkerBodyRigid.html#sec-item-markerbodyrigid"><span class="std std-ref">MarkerBodyRigid</span></a>, <a class="reference internal" href="MarkerNodePosition.html#sec-item-markernodeposition"><span class="std std-ref">MarkerNodePosition</span></a>, <a class="reference internal" href="MarkerNodeRigid.html#sec-item-markernoderigid"><span class="std std-ref">MarkerNodeRigid</span></a>, <a class="reference internal" href="MarkerSuperElementPosition.html#sec-item-markersuperelementposition"><span class="std std-ref">MarkerSuperElementPosition</span></a>, <a class="reference internal" href="MarkerSuperElementRigid.html#sec-item-markersuperelementrigid"><span class="std std-ref">MarkerSuperElementRigid</span></a>, <a class="reference internal" href="MarkerKinematicTreeRigid.html#sec-item-markerkinematictreerigid"><span class="std std-ref">MarkerKinematicTreeRigid</span></a></p></li>
+</ul>
+</section>
+<section id="parameters">
+<h2>Parameters<a class="headerlink" href="#parameters" title="Link to this heading"></a></h2>
+<p>The parameters of the item; in a dictionary, its type is ‘ConnectorCartesianSpringDamper’:</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>name</p></th>
+<th class="head"><p>type</p></th>
+<th class="head"><p>size</p></th>
+<th class="head"><p>default</p></th>
+<th class="head"><p>description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><strong>name</strong></p></td>
+<td><p>String</p></td>
+<td><p></p></td>
+<td><p>‘’</p></td>
+<td><p>connector’s unique name</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>markerNumbers</strong></p></td>
+<td><p>ArrayMarkerIndex</p></td>
+<td><p></p></td>
+<td><p>[ invalid (-1), invalid (-1) ]</p></td>
+<td><p>(symbol: <span class="math notranslate nohighlight">\([m0,m1]\tp\)</span>) list of markers used in connector</p></td>
+</tr>
+<tr class="row-even"><td><p><strong>stiffness</strong></p></td>
+<td><p>Vector3D</p></td>
+<td><p>3</p></td>
+<td><p>[0.,0.,0.]</p></td>
+<td><p>(symbol: <span class="math notranslate nohighlight">\(\kv\)</span>) stiffness [SI:N/m] of springs; act against relative displacements in 0, 1, and 2-direction</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>damping</strong></p></td>
+<td><p>Vector3D</p></td>
+<td><p>3</p></td>
+<td><p>[0.,0.,0.]</p></td>
+<td><p>(symbol: <span class="math notranslate nohighlight">\(\dv\)</span>) damping [SI:N/(m s)] of dampers; act against relative velocities in 0, 1, and 2-direction</p></td>
+</tr>
+<tr class="row-even"><td><p><strong>offset</strong></p></td>
+<td><p>Vector3D</p></td>
+<td><p>3</p></td>
+<td><p>[0.,0.,0.]</p></td>
+<td><p>(symbol: <span class="math notranslate nohighlight">\(\vv_{\mathrm{off}}\)</span>) offset between two springs</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>springForceUserFunction</strong></p></td>
+<td><p>ObjectConnectorCartesianSpringDamperSpringForceUserFunction</p></td>
+<td><p></p></td>
+<td><p>0</p></td>
+<td><p>(symbol: <span class="math notranslate nohighlight">\(\mathrm{UF} \in \Rcal^3\)</span>) A Python function which computes the 3D force vector between the two marker points, if activeConnector=True; see description below</p></td>
+</tr>
+<tr class="row-even"><td><p><strong>activeConnector</strong></p></td>
+<td><p>Bool</p></td>
+<td><p></p></td>
+<td><p>True</p></td>
+<td><p>flag, which determines, if the connector is active; used to deactivate (temporarily) a connector or constraint</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>visualization</strong></p></td>
+<td><p>VObjectConnectorCartesianSpringDamper</p></td>
+<td><p></p></td>
+<td><p></p></td>
+<td><p>parameters for visualization of item</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="visualization-parameters">
+<h2>Visualization parameters<a class="headerlink" href="#visualization-parameters" title="Link to this heading"></a></h2>
+<p>The parameters of <code class="docutils literal notranslate"><span class="pre">VObjectConnectorCartesianSpringDamper</span></code>, given as <code class="docutils literal notranslate"><span class="pre">visualization</span></code>:</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>name</p></th>
+<th class="head"><p>type</p></th>
+<th class="head"><p>size</p></th>
+<th class="head"><p>default</p></th>
+<th class="head"><p>description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><strong>show</strong></p></td>
+<td><p>Bool</p></td>
+<td><p></p></td>
+<td><p>True</p></td>
+<td><p>set true, if item is shown in visualization and false if it is not shown</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>drawSize</strong></p></td>
+<td><p>float</p></td>
+<td><p></p></td>
+<td><p>-1.</p></td>
+<td><p>drawing size = diameter of spring; size == -1.f means that default connector size is used</p></td>
+</tr>
+<tr class="row-even"><td><p><strong>color</strong></p></td>
+<td><p>Float4</p></td>
+<td><p>4</p></td>
+<td><p>[-1.,-1.,-1.,-1.]</p></td>
+<td><p>RGBA connector color; if R==-1, use default color</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="drawing">
+<h2>Drawing<a class="headerlink" href="#drawing" title="Link to this heading"></a></h2>
+<p>Drawn as <a class="reference internal" href="objectConnectorGeneral.html#sec-drawing-objectsconnector"><span class="std std-ref">all connectors</span></a>; three springs of diameter <code class="docutils literal notranslate"><span class="pre">drawSize</span></code>, along x, y and z from marker 0 to marker 1, drawn as the spring of ObjectConnectorSpringDamper.</p>
+<p>Settings beyond those of all connectors: <a class="reference internal" href="../structures/VisualizationSettings.html#sec-vsettingsconnectors"><span class="std std-ref"><code class="docutils literal notranslate"><span class="pre">connectors.curveTiling</span></code></span></a>, <a class="reference internal" href="../structures/VisualizationSettings.html#sec-vsettingsconnectors"><span class="std std-ref"><code class="docutils literal notranslate"><span class="pre">connectors.drawSimplified</span></code></span></a>, <a class="reference internal" href="../structures/VisualizationSettings.html#sec-vsettingsconnectors"><span class="std std-ref"><code class="docutils literal notranslate"><span class="pre">connectors.springNumberOfWindings</span></code></span></a>, <a class="reference internal" href="../structures/VisualizationSettings.html#sec-vsettingsgeneral"><span class="std std-ref"><code class="docutils literal notranslate"><span class="pre">general.cylinderTiling</span></code></span></a>.</p>
+</section>
+<section id="output-variables">
+<h2>Output variables<a class="headerlink" href="#output-variables" title="Link to this heading"></a></h2>
+<p>Available as <code class="docutils literal notranslate"><span class="pre">OutputVariableType</span></code> in sensors, <code class="docutils literal notranslate"><span class="pre">Get...Output()</span></code> and other functions:</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>output variable</p></th>
+<th class="head"><p>symbol</p></th>
+<th class="head"><p>description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Displacement</p></td>
+<td><p><span class="math notranslate nohighlight">\(\Delta\! \LU{0}{\pv} = \LU{0}{\pv}_{m1} - \LU{0}{\pv}_{m0}\)</span></p></td>
+<td><p>relative displacement in global coordinates</p></td>
+</tr>
+<tr class="row-odd"><td><p>Distance</p></td>
+<td><p><span class="math notranslate nohighlight">\(L=\vert \Delta\! \LU{0}{\pv}\vert \)</span></p></td>
+<td><p>scalar distance between both marker points</p></td>
+</tr>
+<tr class="row-even"><td><p>Velocity</p></td>
+<td><p><span class="math notranslate nohighlight">\(\Delta\! \LU{0}{\vv} = \LU{0}{\vv}_{m1} - \LU{0}{\vv}_{m0}\)</span></p></td>
+<td><p>relative translational velocity in global coordinates</p></td>
+</tr>
+<tr class="row-odd"><td><p>Force</p></td>
+<td><p><span class="math notranslate nohighlight">\(\fv_{SD}\)</span></p></td>
+<td><p>joint force in global coordinates, see equations</p></td>
+</tr>
+<tr class="row-even"><td><p>PotentialEnergy</p></td>
+<td><p><span class="math notranslate nohighlight">\(V = \frac{1}{2} \sum_i k_i\, (\Delta p_i - v_{\mathrm{off},i})^2\)</span></p></td>
+<td><p>elastic energy of the three springs; zero if the connector is not active; raises for a springForceUserFunction</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="detailed-description">
+<span id="description-objectconnectorcartesianspringdamper"></span><h2>Detailed description<a class="headerlink" href="#detailed-description" title="Link to this heading"></a></h2>
+<section id="definition-of-quantities">
+<h3>Definition of quantities<a class="headerlink" href="#definition-of-quantities" title="Link to this heading"></a></h3>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>intermediate variables</p></th>
+<th class="head"><p>symbol</p></th>
+<th class="head"><p>description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>marker m0 position</p></td>
+<td><p><span class="math notranslate nohighlight">\(\LU{0}{\pv}_{m0}\)</span></p></td>
+<td><p>current global position which is provided by marker m0</p></td>
+</tr>
+<tr class="row-odd"><td><p>marker m1 position</p></td>
+<td><p><span class="math notranslate nohighlight">\(\LU{0}{\pv}_{m1}\)</span></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p>marker m0 velocity</p></td>
+<td><p><span class="math notranslate nohighlight">\(\LU{0}{\vv}_{m0}\)</span></p></td>
+<td><p>current global velocity which is provided by marker m0</p></td>
+</tr>
+<tr class="row-odd"><td><p>marker m1 velocity</p></td>
+<td><p><span class="math notranslate nohighlight">\(\LU{0}{\vv}_{m1}\)</span></p></td>
+<td><p></p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="connector-forces">
+<h3>Connector forces<a class="headerlink" href="#connector-forces" title="Link to this heading"></a></h3>
+<p>Connector forces are based on relative displacements and relative veolocities in global coordinates.
+Relative displacement between marker m0 to marker m1 positions is given by</p>
+<div class="math notranslate nohighlight" id="equation-eq-objectcartesianspringdamper-deltapos">
+<span class="eqno">(73)<a class="headerlink" href="#equation-eq-objectcartesianspringdamper-deltapos" title="Link to this equation"></a></span>\[
+\Delta\! \LU{0}{\pv}= \LU{0}{\pv}_{m1} - \LU{0}{\pv}_{m0} \, ,
+\]</div>
+<p>and relative velocity reads</p>
+<div class="math notranslate nohighlight">
+\[
+\Delta\! \LU{0}{\vv}= \LU{0}{\vv}_{m1} - \LU{0}{\vv}_{m0} \, .
+\]</div>
+<p>If <code class="docutils literal notranslate"><span class="pre">activeConnector</span> <span class="pre">=</span> <span class="pre">True</span></code>, the spring force vector is computed as</p>
+<div class="math notranslate nohighlight">
+\[
+\LU{0}{\fv_{SD}} = \diag(\kv)\cdot(\Delta\! \LU{0}{\pv}-\LU{0}{\vv_{\mathrm{off}}}) + \diag(\dv) \cdot \Delta\! \LU{0}{\vv} \, .
+\]</div>
+<p>If the springForceUserFunction <span class="math notranslate nohighlight">\(\mathrm{UF}\)</span> is defined, <span class="math notranslate nohighlight">\(\fv_{SD}\)</span> instead becomes (<span class="math notranslate nohighlight">\(t\)</span> is current time)</p>
+<div class="math notranslate nohighlight">
+\[
+\LU{0}{\fv_{SD}} = \mathrm{UF}(mbs, t, i_N, \Delta\! \LU{0}{\pv}, \Delta\! \LU{0}{\vv}, \kv, \dv, \vv_{\mathrm{off}}) \, ,
+\]</div>
+<p>and <code class="docutils literal notranslate"><span class="pre">iN</span></code> represents the itemNumber (=objectNumber).
+If <code class="docutils literal notranslate"><span class="pre">activeConnector</span> <span class="pre">=</span> <span class="pre">False</span></code>, <span class="math notranslate nohighlight">\(\fv_{SD}\)</span> is set to zero.</p>
+<p>The force <span class="math notranslate nohighlight">\(\fv_{SD}\)</span> acts via the markers’ position jacobians <span class="math notranslate nohighlight">\(\Jm_{pos,m0}\)</span> and <span class="math notranslate nohighlight">\(\Jm_{pos,m1}\)</span>.
+The generalized forces added to the <a class="reference internal" href="../abbreviations.html#lhs"><span class="std std-ref">LHS</span></a> equations read for marker <span class="math notranslate nohighlight">\(m0\)</span>,</p>
+<div class="math notranslate nohighlight">
+\[
+\fv_{LHS,m0} = -\LU{0}{\Jm_{pos,m0}\tp} \LU{0}{\fv_{SD}} \, ,
+\]</div>
+<p>and for marker <span class="math notranslate nohighlight">\(m1\)</span>,</p>
+<div class="math notranslate nohighlight">
+\[
+\fv_{LHS,m1} =  \LU{0}{\Jm_{pos,m1}\tp} \LU{0}{\fv_{SD}} \, .
+\]</div>
+<p>The <a class="reference internal" href="../abbreviations.html#lhs"><span class="std std-ref">LHS</span></a> equation parts are added accordingly using the <a class="reference internal" href="../abbreviations.html#ltg"><span class="std std-ref">LTG</span></a> mapping.
+Note that the different signs result from the signs in <a class="reference internal" href="#equation-eq-objectcartesianspringdamper-deltapos">(73)</a>.</p>
+<p>The connector also provides an analytic jacobian, which is used if <code class="docutils literal notranslate"><span class="pre">newton.numericalDifferentiation.forODE2</span> <span class="pre">=</span> <span class="pre">False</span></code>
+and if there is no springForceUserFunction (otherwise numerical differentiation is used).</p>
+<p>The anayltic jacobian for the coupled equation parts <span class="math notranslate nohighlight">\(\fv_{LHS,m0}\)</span> and <span class="math notranslate nohighlight">\(\fv_{LHS,m1}\)</span> is based on the local jacobians</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{aligned}
+\Jm_{loc0} &amp;= f_{ODE2}\frac{\partial \LU{0}{\fv_{SD}}}{\partial \LU{0}{\pv}_{m0}} +
+f_{ODE2_t}\frac{\partial \LU{0}{\fv_{SD}}}{\partial \LU{0}{\vv}_{m0}}
+= -f_{ODE2} \cdot \diag(\kv) - f_{ODE2_t} \cdot \diag(\dv) \, , \\
+\Jm_{loc1} &amp;= f_{ODE2}\frac{\partial \LU{0}{\fv_{SD}}}{\partial \LU{0}{\pv}_{m1}} +
+f_{ODE2_t}\frac{\partial \LU{0}{\fv_{SD}}}{\partial \LU{0}{\vv}_{m1}}
+=  f_{ODE2} \cdot \diag(\kv) + f_{ODE2_t} \cdot \diag(\dv) \, .
+\end{aligned}
+\end{split}\]</div>
+<p>Here, <span class="math notranslate nohighlight">\(f_{ODE2}\)</span> is the factor for the position derivative and <span class="math notranslate nohighlight">\(f_{ODE2_t}\)</span> is the factor for the velocity derivative,
+which allows a computation of the computation for both the position as well as the velocity part at the same time.</p>
+<p>The complete jacobian for the <a class="reference internal" href="../abbreviations.html#lhs"><span class="std std-ref">LHS</span></a> equations then reads,</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{aligned}
+\Jm_{CSD}&amp;=\mp{\displaystyle \frac{\partial \fv_{LHS,m0}}{\partial  \qv_{m0}}}
+{\displaystyle \frac{\partial \fv_{LHS,m0}}{\partial  \qv_{m1}}}
+{\displaystyle \frac{\partial \fv_{LHS,m1}}{\partial  \qv_{m0}}}
+{\displaystyle \frac{\partial \fv_{LHS,m1}}{\partial  \qv_{m1}}} + \Jm_{CSD'} \\
+&amp;= \mp{-\LU{0}{\Jm_{pos,m0}\tp} \Jm_{loc0} \Jm_{pos,m0}}
+{-\LU{0}{\Jm_{pos,m0}\tp} \Jm_{loc1} \Jm_{pos,m1}}
+{\LU{0}{\Jm_{pos,m1}\tp} \Jm_{loc0} \Jm_{pos,m0}}
+{\LU{0}{\Jm_{pos,m1}\tp} \Jm_{loc1} \Jm_{pos,m1}} + \Jm_{CSD'} \\
+&amp;= \mp{\LU{0}{\Jm_{pos,m0}\tp} \Jm_{loc1} \Jm_{pos,m0}}
+{-\LU{0}{\Jm_{pos,m0}\tp} \Jm_{loc1} \Jm_{pos,m1}}
+{-\LU{0}{\Jm_{pos,m1}\tp} \Jm_{loc1} \Jm_{pos,m0}}
+{\LU{0}{\Jm_{pos,m1}\tp} \Jm_{loc1} \Jm_{pos,m1}} + \Jm_{CSD'}
+\end{aligned}
+\end{split}\]</div>
+<p>Here, <span class="math notranslate nohighlight">\(\qv_{m0}\)</span> are the coordinates associated with marker <span class="math notranslate nohighlight">\(m0\)</span> and <span class="math notranslate nohighlight">\(\qv_{m1}\)</span> of marker <span class="math notranslate nohighlight">\(m1\)</span>.</p>
+<p>The second term <span class="math notranslate nohighlight">\(\Jm_{CSD'}\)</span> is only non-zero if <span class="math notranslate nohighlight">\(\frac{\partial \LU{0}{\Jm_{pos,i}\tp}}{\partial \qv_{i}}\)</span> is non-zero, using <span class="math notranslate nohighlight">\(i \in \{m0, \, m1\}\)</span>.
+As the latter terms would require to compute a 3-dimensional array, the second jacobian term is computed as</p>
+<div class="math notranslate nohighlight" id="equation-eq-objectcartesianspringdamper-jacderiv">
+<span class="eqno">(74)<a class="headerlink" href="#equation-eq-objectcartesianspringdamper-jacderiv" title="Link to this equation"></a></span>\[
+\Jm_{CSD'} = \mp{-f_{ODE2}\frac{\partial \left(\LU{0}{\Jm_{pos,m0}\tp} \fv' \right)}{\partial \qv_{m0}}}{\Null}{\Null}
+{ f_{ODE2}\frac{\partial \left(\LU{0}{\Jm_{pos,m1}\tp} \fv' \right)}{\partial \qv_{m1}}}
+\]</div>
+<p>in which we set <span class="math notranslate nohighlight">\(\fv' = \LU{0}{\fv_{SD}}\)</span>, but the derivatives in <a class="reference internal" href="#equation-eq-objectcartesianspringdamper-jacderiv">(74)</a> are evaluated by setting <span class="math notranslate nohighlight">\(\fv' = const\)</span>.</p>
+<p><strong>Userfunction</strong>: <code class="docutils literal notranslate"><span class="pre">springForceUserFunction(mbs,</span> <span class="pre">t,</span> <span class="pre">itemNumber,</span> <span class="pre">displacement,</span> <span class="pre">velocity,</span> <span class="pre">stiffness,</span> <span class="pre">damping,</span> <span class="pre">offset)</span></code>
+A user function, which computes the 3D spring force vector depending on time, object variables (deltaL, deltaL_t) and object parameters
+(stiffness, damping, force).
+The object variables are provided to the function using the current values of the SpringDamper object.
+Note that itemNumber represents the index of the object in mbs, which can be used to retrieve additional data from the object through
+<code class="docutils literal notranslate"><span class="pre">mbs.GetObjectParameter(itemNumber,</span> <span class="pre">...)</span></code>, see the according description of <code class="docutils literal notranslate"><span class="pre">GetObjectParameter</span></code>.</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>arguments / return</p></th>
+<th class="head"><p>type or size</p></th>
+<th class="head"><p>description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">mbs</span></code></p></td>
+<td><p>MainSystem</p></td>
+<td><p>provides MainSystem mbs in which underlying item is defined</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">t</span></code></p></td>
+<td><p>Real</p></td>
+<td><p>current time in mbs</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">itemNumber</span></code></p></td>
+<td><p>Index</p></td>
+<td><p>integer number <span class="math notranslate nohighlight">\(i_N\)</span> of the object in mbs, allowing easy access to all object data via mbs.GetObjectParameter(itemNumber, …)</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">displacement</span></code></p></td>
+<td><p>Vector3D</p></td>
+<td><p><span class="math notranslate nohighlight">\(\Delta\! \LU{0}{\pv}\)</span></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">velocity</span></code></p></td>
+<td><p>Vector3D</p></td>
+<td><p><span class="math notranslate nohighlight">\(\Delta\! \LU{0}{\vv}\)</span></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">stiffness</span></code></p></td>
+<td><p>Vector3D</p></td>
+<td><p>copied from object</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">damping</span></code></p></td>
+<td><p>Vector3D</p></td>
+<td><p>copied from object</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">offset</span></code></p></td>
+<td><p>Vector3D</p></td>
+<td><p>copied from object</p></td>
+</tr>
+<tr class="row-even"><td><p><strong>return value</strong></p></td>
+<td><p>Vector3D</p></td>
+<td><p>list or numpy array of computed spring force</p></td>
+</tr>
+</tbody>
+</table>
+<p><em>Example</em>:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1">#define simple force for spring-damper:</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">UFforce</span><span class="p">(</span><span class="n">mbs</span><span class="p">,</span> <span class="n">t</span><span class="p">,</span> <span class="n">itemNumber</span><span class="p">,</span> <span class="n">u</span><span class="p">,</span> <span class="n">v</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="n">d</span><span class="p">,</span> <span class="n">offset</span><span class="p">):</span>
+    <span class="k">return</span> <span class="p">[</span><span class="n">u</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">*</span><span class="n">k</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span><span class="n">u</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">*</span><span class="n">k</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span><span class="n">u</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">*</span><span class="n">k</span><span class="p">[</span><span class="mi">2</span><span class="p">]]</span>
+
+<span class="c1">#markerNumbers and parameters taken from mini example</span>
+<span class="n">mbs</span><span class="o">.</span><span class="nf">AddObject</span><span class="p">(</span><span class="nc">CartesianSpringDamper</span><span class="p">(</span><span class="n">markerNumbers</span> <span class="o">=</span> <span class="p">[</span><span class="n">mGround</span><span class="p">,</span> <span class="n">mMass</span><span class="p">],</span>
+                                    <span class="n">stiffness</span> <span class="o">=</span> <span class="p">[</span><span class="n">k</span><span class="p">,</span><span class="n">k</span><span class="p">,</span><span class="n">k</span><span class="p">],</span>
+                                    <span class="n">damping</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="n">k</span><span class="o">*</span><span class="mf">0.05</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span> <span class="n">offset</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span>
+                                    <span class="n">springForceUserFunction</span> <span class="o">=</span> <span class="nf">UFforce</span><span class="p">))</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="mini-example">
+<span id="miniexample-objectconnectorcartesianspringdamper"></span><h2>Mini example<a class="headerlink" href="#mini-example" title="Link to this heading"></a></h2>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1">#example with mass at [1,1,0], 5kg under load 5N in -y direction</span>
+<span class="n">k</span><span class="o">=</span><span class="mi">5000</span>
+<span class="n">nMass</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">AddNode</span><span class="p">(</span><span class="nc">NodePoint</span><span class="p">(</span><span class="n">referenceCoordinates</span><span class="o">=</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">]))</span>
+<span class="n">oMass</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">AddObject</span><span class="p">(</span><span class="nc">MassPoint</span><span class="p">(</span><span class="n">mass</span> <span class="o">=</span> <span class="mi">5</span><span class="p">,</span> <span class="n">nodeNumber</span> <span class="o">=</span> <span class="n">nMass</span><span class="p">))</span>
+
+<span class="n">mMass</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">AddMarker</span><span class="p">(</span><span class="nc">MarkerNodePosition</span><span class="p">(</span><span class="n">nodeNumber</span><span class="o">=</span><span class="n">nMass</span><span class="p">))</span>
+<span class="n">mGround</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">AddMarker</span><span class="p">(</span><span class="nc">MarkerBodyPosition</span><span class="p">(</span><span class="n">bodyNumber</span><span class="o">=</span><span class="n">oGround</span><span class="p">,</span> <span class="n">localPosition</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">]))</span>
+<span class="n">mbs</span><span class="o">.</span><span class="nf">AddObject</span><span class="p">(</span><span class="nc">CartesianSpringDamper</span><span class="p">(</span><span class="n">markerNumbers</span> <span class="o">=</span> <span class="p">[</span><span class="n">mGround</span><span class="p">,</span> <span class="n">mMass</span><span class="p">],</span> 
+                                    <span class="n">stiffness</span> <span class="o">=</span> <span class="p">[</span><span class="n">k</span><span class="p">,</span><span class="n">k</span><span class="p">,</span><span class="n">k</span><span class="p">],</span> 
+                                    <span class="n">damping</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="n">k</span><span class="o">*</span><span class="mf">0.05</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span> <span class="n">offset</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]))</span>
+<span class="n">mbs</span><span class="o">.</span><span class="nf">AddLoad</span><span class="p">(</span><span class="nc">Force</span><span class="p">(</span><span class="n">markerNumber</span> <span class="o">=</span> <span class="n">mMass</span><span class="p">,</span> <span class="n">loadVector</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="mi">5</span><span class="p">,</span> <span class="mi">0</span><span class="p">]))</span> <span class="c1">#static solution=-5/5000=-0.001m</span>
+
+<span class="c1">#assemble and solve system for default parameters</span>
+<span class="n">mbs</span><span class="o">.</span><span class="nf">Assemble</span><span class="p">()</span>
+<span class="n">mbs</span><span class="o">.</span><span class="nf">SolveDynamic</span><span class="p">()</span>
+
+<span class="c1">#check result at default integration time</span>
+<span class="n">exu</span><span class="o">.</span><span class="n">sys</span><span class="p">[</span><span class="s1">'testResult'</span><span class="p">]</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">GetNodeOutput</span><span class="p">(</span><span class="n">nMass</span><span class="p">,</span> <span class="n">exu</span><span class="o">.</span><span class="nc">OutputVariableType</span><span class="o">.</span><span class="n">Displacement</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span>
+</pre></div>
+</div>
+<p>Examples (Ex) and TestModels (TM) that show this item, with weblink to github: <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/cartesianSpringDamper.py"><code class="docutils literal notranslate"><span class="pre">cartesianSpringDamper.py</span></code></a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/CartesianSpringDamperTest.py"><code class="docutils literal notranslate"><span class="pre">CartesianSpringDamperTest.py</span></code></a> (TM), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/sphericalJointTest.py"><code class="docutils literal notranslate"><span class="pre">sphericalJointTest.py</span></code></a> (TM)</p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="ObjectConnectorSpringDamper.html" class="btn btn-neutral float-left" title="ObjectConnectorSpringDamper" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="ObjectConnectorRigidBodySpringDamper.html" class="btn btn-neutral float-right" title="ObjectConnectorRigidBodySpringDamper" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

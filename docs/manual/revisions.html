@@ -1,0 +1,633 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Revisions &mdash; Exudyn1.13.3 1.13.3 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=3ee1c6c6" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/rtd_sphinx_search.min.css" />
+      <link rel="stylesheet" type="text/css" href="../../_static/custom.css?v=e2783f0e" />
+
+  
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=b8a3e558"></script>
+      <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../_static/copybutton.js?v=f281be69"></script>
+      <script src="../../_static/js/rtd_search_config.js"></script>
+      <script src="../../_static/js/rtd_sphinx_search.min.js"></script>
+      <script>window.MathJax = {"loader": {"load": ["[tex]/mathtools"]}, "tex": {"packages": {"[+]": ["mathtools"]}, "macros": {"ANCFdk": "{\\LU{0}{\\dv_k}}", "ANCFdkO": "{\\LU{0}{\\dv_{0,k}}}", "ANCFdkOtp": "{\\LU{0}{\\dv_{0,k}\\tp}}", "ANCFdkt": "{\\LU{0}{\\dot\\dv_k}}", "Am": "{\\mathbf{A}}", "Dm": "{\\mathbf{D}}", "Em": "{\\mathbf{E}}", "Gm": "{\\mathbf{G}}", "Im": "{\\mathbf{I}}", "ImThree": "{\\mathbf{I}_{3 \\times 3}}", "Jm": "{\\mathbf{J}}", "Km": "{\\mathbf{K}}", "Mm": "{\\mathbf{M}}", "Pm": "{\\mathbf{P}}", "Rm": "{\\mathbf{R}}", "Sm": "{\\mathbf{S}}", "Tm": "{\\mathbf{T}}", "av": "{\\mathbf{a}}", "bv": "{\\mathbf{b}}", "cv": "{\\mathbf{c}}", "diffANCF": ["{\\frac{\\partial #1}{\\partial \\qv_{ANCF}}}", 1], "diffANCFdk": "{\\diffANCFmI{\\ANCFdk}}", "diffANCFmI": ["{\\frac{\\partial #1}{\\partial \\qv_{ANCF,m1}}}", 1], "diffANCFmIt": ["{\\frac{\\partial #1}{\\partial \\dot \\qv_{ANCF,m1}}}", 1], "diffANCFt": ["{\\frac{\\partial #1}{\\partial \\dot \\qv_{ANCF}}}", 1], "diffmI": ["{\\frac{\\partial #1}{\\partial \\qv_{m1}}}", 1], "diffmIt": ["{\\frac{\\partial #1}{\\partial \\dot \\qv_{m1}}}", 1], "diffmOI": ["{\\frac{\\partial #1}{\\partial \\qv_{m0,m1}}}", 1], "diffmOIt": ["{\\frac{\\partial #1}{\\partial \\dot \\qv_{m0,m1}}}", 1], "diffmOt": ["{\\frac{\\partial #1}{\\partial \\dot \\qv_{m0}}}", 1], "dv": "{\\mathbf{d}}", "ev": "{\\mathbf{e}}", "fv": "{\\mathbf{f}}", "gv": "{\\mathbf{g}}", "hv": "{\\mathbf{h}}", "nv": "{\\mathbf{n}}", "pv": "{\\mathbf{p}}", "qv": "{\\mathbf{q}}", "rv": "{\\mathbf{r}}", "sv": "{\\mathbf{s}}", "tv": "{\\mathbf{t}}", "uv": "{\\mathbf{u}}", "vv": "{\\mathbf{v}}", "xv": "{\\mathbf{x}}", "yv": "{\\mathbf{y}}", "zv": "{\\mathbf{z}}", "vspace": ["{}", 1], "ra": "{\\rightarrow}", "Rcal": "{\\mathbb{R}}", "Ccal": "{\\mathbb{C}}", "Ncal": "{\\mathbb{N}}", "Rot": "{\\mathbf{A}}", "dd": "{\\mathrm{d}}", "ps": "{p_\\mathrm{s}}", "co": "{\\mathrm{c}}", "si": "{\\mathrm{s}}", "tp": "{^\\mathrm{T}}", "diag": "{\\mathrm{diag}}", "vec": "{\\mathrm{vec}}", "Null": "{\\mathbf{0}}", "varepsilonDot": "{\\boldsymbol{\\varepsilon}}", "talpha": "{\\boldsymbol{\\alpha}}", "tbeta": "{\\boldsymbol{\\beta}}", "tgamma": "{\\boldsymbol{\\gamma}}", "tchi": "{\\boldsymbol{\\chi}}", "tdelta": "{\\boldsymbol{\\delta}}", "teps": "{\\boldsymbol{\\varepsilon}}", "tepsDot": "{\\boldsymbol{\\dot \\varepsilon}}", "teta": "{\\boldsymbol{\\eta}}", "tkappa": "{\\boldsymbol{\\kappa}}", "tkappaDot": "{\\boldsymbol{\\dot \\kappa}}", "tphi": "{\\boldsymbol{\\phi}}", "boldVarPhi": "{\\boldsymbol{\\varphi}}", "tPhi": "{\\boldsymbol{\\Phi}}", "ttheta": "{\\boldsymbol{\\theta}}", "tTheta": "{\\boldsymbol{\\Theta}}", "tlambda": "{\\boldsymbol{\\lambda}}", "tnu": "{\\boldsymbol{\\nu}}", "tmu": "{\\boldsymbol{\\mu}}", "tpsi": "{\\boldsymbol{\\psi}}", "tPsi": "{\\boldsymbol{\\Psi}}", "ttau": "{\\boldsymbol{\\tau}}", "tsigma": "{\\boldsymbol{\\sigma}}", "txi": "{\\boldsymbol{\\xi}}", "tzeta": "{\\boldsymbol{\\zeta}}", "tomega": "{\\boldsymbol{\\omega}}", "tOmega": "{\\boldsymbol{\\Omega}}", "vareps": "{\\varepsilon}", "myoverline": ["\\overline{#1}", 1], "pluseq": "\\mathrel{+}=", "LU": ["{\\prescript{#1}{}{#2}\\,}", 2], "LUX": ["{\\prescript{#1}{}{#2}#3\\,}", 3], "LUR": ["{\\prescript{#1}{}{#2}_{#3}\\,}", 3], "LURU": ["{\\prescript{#1}{}{#2}_{#3}^{#4}\\,}", 4], "LLdot": ["{\\prescript{}{#1}{\\dot{#2}}_{#3}\\,}", 3], "vr": ["{\\left[ \\begin{array}{c} { #1}\\vspace{0.04cm} \\\\ { #2}\\vspace{0.04cm} \\\\ { #3} \\end{array} \\right]}", 3], "mr": ["{\\left[ \\begin{array}{ccc} #1 & #2 & #3 \\vspace{0.04cm}\\\\ #4 & #5 & #6 \\vspace{0.04cm}\\\\ #7 & #8 & #9  \\end{array} \\right]}", 9], "vp": ["{\\left[ \\begin{array}{c} { #1} \\vspace{0.04cm}\\\\ { #2} \\end{array} \\right]}", 2], "mp": ["{\\left[ \\begin{array}{cc} #1 & #2 \\vspace{0.04cm}\\\\ #3 & #4 \\end{array} \\right]}", 4], "mfour": ["{\\left[ \\begin{array}{cccc} { #1} \\\\ { #2} \\\\ { #3} \\\\ { #4} \\end{array} \\right]}", 4], "vfour": ["{\\left[ \\begin{array}{c} { #1} \\\\ { #2} \\\\ { #3} \\\\ { #4} \\end{array} \\right]}", 4], "vrRow": ["{[#1,\\, #2,\\, #3]}", 3], "vsix": ["{\\left[ \\begin{array}{c} { #1} \\\\ { #2} \\\\ { #3} \\\\ { #4} \\\\ { #5} \\\\ { #6} \\end{array} \\right]}", 6], "vsixb": ["{\\begin{array}{c} { #1} \\\\ { #2} \\\\ { #3} \\\\ { #4} \\\\ { #5} \\\\ { #6} \\end{array} }", 6], "vsixs": ["{ \\begin{array}{c} { #1} \\\\ { #2} \\\\ { #3} \\\\ { #4} \\\\ { #5} \\\\ { #6} \\end{array} }", 6], "SO": "{q}", "FO": "{y}", "AE": "{\\lambda}", "SYS": "{s}", "SON": "{$2^\\mathrm{nd}$ order differential equations}", "FON": "{$1^\\mathrm{st}$ order differential equations}", "AEN": "{algebraic equations}", "Bm": "{\\mathbf{B}}", "Cm": "{\\mathbf{C}}", "Fm": "{\\mathbf{F}}", "SYSN": "{system equations}", "cIni": "{_\\mathrm{ini}}", "cRef": "{_\\mathrm{ref}}", "cCur": "{_\\mathrm{cur}}", "cVis": "{_\\mathrm{vis}}", "cSOS": "{_\\mathrm{start\\;of\\;step}}", "cConfig": "{_\\mathrm{config}}", "pLoc": "{\\mathbf{b}}", "pLocB": "{\\,^{b}{\\mathbf{v}}}", "pRef": "{\\mathbf{r}}", "pRefG": "{\\,^{0}{\\mathbf{r}}}", "indf": "{_\\mathrm{f}}", "indt": "{_\\mathrm{t}}", "indr": "{_\\mathrm{r}}", "indtt": "{_\\mathrm{tt}}", "indrr": "{_\\mathrm{rr}}", "indff": "{_\\mathrm{ff}}", "indtf": "{_\\mathrm{tf}}", "indrf": "{_\\mathrm{rf}}", "indtr": "{_\\mathrm{tr}}", "omegaBDtilde": "{\\LU{b}{\\tilde \\tomega_\\mathrm{bd}}}", "indrigid": "{_\\mathrm{rigid}}", "indred": "{_\\mathrm{red}}", "induser": "{_\\mathrm{user}}", "indu": "{_\\mathrm{u}}", "termA": ["{\\color{blue}{#1}}", 1], "termB": ["{\\color{red}{#1}}", 1], "termC": ["{\\color{green}{#1}}", 1], "acc": "{\\ddot{\\mathbf{q}}}", "GA": "{G\\alpha}", "Hm": "{\\mathbf{H}}", "ImTwo": "{\\mathbf{I}_{2 \\times 2}}", "Lm": "{\\mathbf{L}}", "Qm": "{\\mathbf{Q}}", "Vm": "{\\mathbf{V}}", "Wm": "{\\mathbf{W}}", "Xm": "{\\mathbf{X}}", "Ym": "{\\mathbf{Y}}", "aalg": "{\\mathbf{a}}", "iv": "{\\mathbf{i}}", "jv": "{\\mathbf{j}}", "kv": "{\\mathbf{k}}", "lv": "{\\mathbf{l}}", "mv": "{\\mathbf{m}}", "ov": "{\\mathbf{o}}", "vel": "{\\mathbf{v}}", "wv": "{\\mathbf{w}}"}}, "options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+      <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-mml-chtml.js"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Changelog" href="../../CHANGELOG.html" />
+    <link rel="prev" title="List of Abbreviations" href="../generated/abbreviations.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            Exudyn1.13.3
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Exudyn User Manual</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../README.html">Exudyn</a></li>
+<li class="toctree-l1"><a class="reference internal" href="gettingStarted.html">Installation and getting started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="introduction.html">Overview on Exudyn</a></li>
+<li class="toctree-l1"><a class="reference internal" href="introductionBasics.html">Exudyn basics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorial.html">Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="GUI.html">Renderer, graphics and visualization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="performanceErrors.html">Performance, errors and solver failures</a></li>
+<li class="toctree-l1"><a class="reference internal" href="introductionAdvanced.html">Advanced topics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="notation.html">Notation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="theory.html">Theory and formulations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="solver.html">Solvers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../generated/cInterface/cInterfaceIndex.html">Python-C++ command interface</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Reference Manual</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../generated/items/itemsIndex.html">Items reference manual</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../generated/pythonUtilities/utilitiesIndex.html">Python Utility Functions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../generated/structures/structuresIndex.html">Structures and Settings</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../generated/references.html">References</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Developer documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../dev/README.html">Exudyn developer documentation</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">How-to notes</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../howTo/condaEnvironments.html">Conda environments for Exudyn</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../howTo/sphinxDocs.html">Building the documentation</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Examples, models and issues</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../generated/examples/examplesIndex.html">Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../generated/testModels/testModelsIndex.html">TestModels</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../generated/abbreviations.html">List of Abbreviations</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Revisions</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#version-1-13">Version 1.13</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#what-can-break-a-script">What can break a script</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#what-is-new-to-use">What is new to use</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#what-is-new-to-read">What is new to read</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#what-changed-behind-the-scenes">What changed behind the scenes</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../CHANGELOG.html">Changelog</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../generated/trackerlog.html">Issue tracker</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">Exudyn1.13.3</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Revisions</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../_sources/docs/manual/revisions.md.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section class="tex2jax_ignore mathjax_ignore" id="revisions">
+<span id="sec-revisions"></span><h1>Revisions<a class="headerlink" href="#revisions" title="Link to this heading"></a></h1>
+<p>What changed between one release of Exudyn and the next, in prose, for somebody who has models
+written against the previous one. Every single resolved issue is in the
+<a class="reference internal" href="../../CHANGELOG.html"><span class="std std-doc">changelog</span></a>, and the issues themselves are in the
+<a class="reference internal" href="../generated/trackerlog.html#sec-issuetracker"><span class="std std-ref">issue tracker</span></a>; this chapter is the short version, and a new section is
+added on top of it at each release.</p>
+<p>This chapter is deliberately short. The revision behind it is recorded <strong>step by step</strong> in a
+plan and a log, which are working documents of the project rather than user documentation:
+there are two of them, <em>revision2026</em> - finished, and what version 1.12 is - and
+<em>revision2026b</em>, which carries what it did not finish. Both are linked from the
+<a class="reference internal" href="../dev/README.html"><span class="std std-doc">developer documentation</span></a>, together with the standing information document
+that holds the measured facts and the decisions.</p>
+<section id="version-1-13">
+<span id="sec-revisions-1-12"></span><span id="sec-revisions-1-13"></span><h2>Version 1.13<a class="headerlink" href="#version-1-13" title="Link to this heading"></a></h2>
+<p>A revision of the whole project rather than a feature release: the layout of the repository, the
+build, the tests, the documentation and the development tools. Most of it is invisible from a
+model script. The parts that are not are first.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The individual issues of this revision carry <strong>1.11.x</strong> version numbers, because the micro
+version counts closed issues continuously and does not restart; <strong>1.12.0</strong> is the point at which
+the revision was declared complete. 1.12 itself was <strong>not published</strong>: <strong>1.13.0</strong> is the first
+release after 1.11 and carries the revision together with what followed it.</p>
+</div>
+<section id="what-can-break-a-script">
+<h3>What can break a script<a class="headerlink" href="#what-can-break-a-script" title="Link to this heading"></a></h3>
+<p><strong><code class="docutils literal notranslate"><span class="pre">ObjectANCFThinPlate</span></code> computes other values.</strong> Its curvatures use the material measure - for a strip
+the curvature of <code class="docutils literal notranslate"><span class="pre">ObjectANCFCable2D</span></code> -, its integration rules changed (<code class="docutils literal notranslate"><span class="pre">useReducedOrderIntegration</span></code> 0: Gauss
+5 x 5; 1 and 2: Lobatto 3 x 3 for the membrane, Gauss 2 x 2 for the bending), and a variable thickness gives
+the stiffness from the local thickness. Results change slightly; the outputs change in form: <code class="docutils literal notranslate"><span class="pre">StrainLocal</span></code>
+has 6 components through the thickness instead of the 3 membrane strains, <code class="docutils literal notranslate"><span class="pre">CurvatureLocal</span></code> and <code class="docutils literal notranslate"><span class="pre">TorqueLocal</span></code>
+are in the order <span class="math notranslate nohighlight">\(xx,\, yy,\, xy\)</span> with one sign - positive where the surface bends towards its normal -, and
+<code class="docutils literal notranslate"><span class="pre">StressLocal</span></code> has the opposite sign of its bending part (#2857, #2864).</p>
+<p><strong><code class="docutils literal notranslate"><span class="pre">bodyOrNodeList</span></code> and <code class="docutils literal notranslate"><span class="pre">bodyList</span></code> of the Create functions are not accepted</strong>: the items are given in
+<code class="docutils literal notranslate"><span class="pre">itemNumbers</span></code>; a script that passes either gets a <code class="docutils literal notranslate"><span class="pre">TypeError</span></code> that says so, and <code class="docutils literal notranslate"><span class="pre">exudev</span> <span class="pre">scripts</span> <span class="pre">--fix</span></code> renames
+them (#2863).</p>
+<p><strong>Visualization parameters of items that draw nothing are gone</strong>: <code class="docutils literal notranslate"><span class="pre">show</span></code> of <code class="docutils literal notranslate"><span class="pre">Node1D</span></code>, the generic nodes,
+<code class="docutils literal notranslate"><span class="pre">ObjectGenericODE1</span></code>, the coordinate markers, <code class="docutils literal notranslate"><span class="pre">LoadCoordinate</span></code> and <code class="docutils literal notranslate"><span class="pre">SensorUserFunction</span></code>, <code class="docutils literal notranslate"><span class="pre">show</span></code> and <code class="docutils literal notranslate"><span class="pre">color</span></code> of
+<code class="docutils literal notranslate"><span class="pre">ObjectConnectorCoordinateVector</span></code>, and <code class="docutils literal notranslate"><span class="pre">drawSize</span></code> of <code class="docutils literal notranslate"><span class="pre">ObjectConnectorGravity</span></code>. A script that gives them, e.g.
+<code class="docutils literal notranslate"><span class="pre">visualization=VCoordinateVectorConstraint(show=False)</span></code>, leaves them out; <code class="docutils literal notranslate"><span class="pre">exudev</span> <span class="pre">scripts</span></code> finds them (#2843).</p>
+<p><strong><code class="docutils literal notranslate"><span class="pre">exudyn.AccessFunctionType.SuperElementAlternativeRotationMode</span></code> is gone</strong>: it was a mode of
+<code class="docutils literal notranslate"><span class="pre">MarkerSuperElementRigid</span></code> (<code class="docutils literal notranslate"><span class="pre">useAlternativeApproach</span></code>), not an access type, and is passed as an argument
+now (#2744).</p>
+<p><strong>Star imports export only what a module defines.</strong> <code class="docutils literal notranslate"><span class="pre">from</span> <span class="pre">exudyn.utilities</span> <span class="pre">import</span> <span class="pre">*</span></code> used to drag
+in everything that module had imported itself — <code class="docutils literal notranslate"><span class="pre">np</span></code>, <code class="docutils literal notranslate"><span class="pre">sin</span></code>, <code class="docutils literal notranslate"><span class="pre">cos</span></code>, <code class="docutils literal notranslate"><span class="pre">sqrt</span></code>, <code class="docutils literal notranslate"><span class="pre">graphics</span></code> and more.
+Every module now declares <code class="docutils literal notranslate"><span class="pre">__all__</span></code>, so a script that relied on those names arriving <em>through</em>
+Exudyn raises <code class="docutils literal notranslate"><span class="pre">NameError</span></code>. The fix is one line at the top of the script:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">math</span><span class="w"> </span><span class="kn">import</span> <span class="nf">sin</span><span class="p">,</span> <span class="nf">cos</span><span class="p">,</span> <span class="nf">sqrt</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">exudyn.graphics</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">graphics</span>
+</pre></div>
+</div>
+<p><strong><code class="docutils literal notranslate"><span class="pre">from</span> <span class="pre">exudyn.utilities</span> <span class="pre">import</span> <span class="pre">*</span></code> provides less</strong> (#2756): no longer the beam generators, the
+MainSystem extensions and the old graphics helpers, which each have their own place. A script that
+used them without importing them gets a <code class="docutils literal notranslate"><span class="pre">NameError</span></code>, and the fix is one line:</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>name</p></th>
+<th class="head"><p>write instead</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">GenerateStraightLineANCFCable2D</span></code>, <code class="docutils literal notranslate"><span class="pre">GenerateSlidingJoint</span></code>, <code class="docutils literal notranslate"><span class="pre">GenerateAleSlidingJoint</span></code>, <code class="docutils literal notranslate"><span class="pre">GenerateStraightBeam</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">from</span> <span class="pre">exudyn.beams</span> <span class="pre">import</span> <span class="pre">GenerateStraightBeam</span></code> (the one used)</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">CreateDistanceSensorGeometry</span></code>, <code class="docutils literal notranslate"><span class="pre">CreateDistanceSensor</span></code>, <code class="docutils literal notranslate"><span class="pre">DrawSystemGraph</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">mbs.CreateDistanceSensor(...)</span></code>, <code class="docutils literal notranslate"><span class="pre">mbs.DrawSystemGraph(...)</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">color4red</span></code>, <code class="docutils literal notranslate"><span class="pre">color4steelblue</span></code>, …</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">graphics.color.red</span></code>, <code class="docutils literal notranslate"><span class="pre">graphics.color.steelblue</span></code>, …</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">GraphicsDataRectangle(x0,</span> <span class="pre">y0,</span> <span class="pre">x1,</span> <span class="pre">y1,</span> <span class="pre">color)</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">graphics.Lines([[x0,y0,0],</span> <span class="pre">[x1,y0,0],</span> <span class="pre">[x1,y1,0],</span> <span class="pre">[x0,y1,0],</span> <span class="pre">[x0,y0,0]],</span> <span class="pre">color=color)</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">GraphicsDataOrthoCubeLines(x0,</span> <span class="pre">y0,</span> <span class="pre">z0,</span> <span class="pre">x1,</span> <span class="pre">y1,</span> <span class="pre">z1,</span> <span class="pre">color)</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">graphics.BrickXYZ(x0,</span> <span class="pre">y0,</span> <span class="pre">z0,</span> <span class="pre">x1,</span> <span class="pre">y1,</span> <span class="pre">z1,</span> <span class="pre">addFaces=False,</span> <span class="pre">addEdges=True,</span> <span class="pre">edgeColor=color)</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">RefineMesh</span></code>, <code class="docutils literal notranslate"><span class="pre">ShrinkMeshNormalToSurface</span></code>, … - the mesh functions of <code class="docutils literal notranslate"><span class="pre">exudyn.graphicsDataUtilities</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">from</span> <span class="pre">exudyn.graphicsDataUtilities</span> <span class="pre">import</span> <span class="pre">RefineMesh</span></code> (the one used)</p></td>
+</tr>
+</tbody>
+</table>
+<p><code class="docutils literal notranslate"><span class="pre">GraphicsDataRectangle</span></code>, <code class="docutils literal notranslate"><span class="pre">GraphicsDataOrthoCubeLines</span></code> and the <code class="docutils literal notranslate"><span class="pre">color4...</span></code> names are deprecated; the
+scripts of the repository use <code class="docutils literal notranslate"><span class="pre">exudyn.graphics</span></code> for them. <code class="docutils literal notranslate"><span class="pre">exudev</span> <span class="pre">scripts</span> <span class="pre">&lt;folder&gt;</span></code> names every such
+line of a script.</p>
+<p><strong>Names that are gone.</strong> Eleven small vector helpers were removed from <code class="docutils literal notranslate"><span class="pre">exudyn.basicUtilities</span></code>
+— numpy does all of them, faster and in one call; what they did is in the
+<a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/e44aca1b4fe3e5f4d820ff407fb3fd30b6581c1c/main/pythonDev/exudyn/basicUtilities.py"><code class="docutils literal notranslate"><span class="pre">basicUtilities.py</span></code> of Exudyn 1.11.0</a>.
+They returned lists, numpy returns arrays:</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>removed</p></th>
+<th class="head"><p>use</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">NormL2(v)</span></code>, <code class="docutils literal notranslate"><span class="pre">VSum(v)</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">np.linalg.norm(v)</span></code>, <code class="docutils literal notranslate"><span class="pre">np.sum(v)</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">VAdd(a,</span> <span class="pre">b)</span></code>, <code class="docutils literal notranslate"><span class="pre">VSub(a,</span> <span class="pre">b)</span></code>, <code class="docutils literal notranslate"><span class="pre">ScalarMult(s,</span> <span class="pre">v)</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">np.array(a)</span> <span class="pre">+</span> <span class="pre">b</span></code>, <code class="docutils literal notranslate"><span class="pre">np.array(a)</span> <span class="pre">-</span> <span class="pre">b</span></code>, <code class="docutils literal notranslate"><span class="pre">s*np.array(v)</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">VMult(a,</span> <span class="pre">b)</span></code> (the scalar product)</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">np.dot(a,</span> <span class="pre">b)</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">Vec2Tilde(v)</span></code>, <code class="docutils literal notranslate"><span class="pre">Tilde2Vec(m)</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">Skew(v)</span></code>, <code class="docutils literal notranslate"><span class="pre">Skew2Vec(m)</span></code> of <code class="docutils literal notranslate"><span class="pre">exudyn.rigidBodyUtilities</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">DiagonalMatrix(n,</span> <span class="pre">value)</span></code>, <code class="docutils literal notranslate"><span class="pre">eye2D</span></code>, <code class="docutils literal notranslate"><span class="pre">eye3D</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">value*np.eye(n)</span></code>, <code class="docutils literal notranslate"><span class="pre">np.eye(2)</span></code>, <code class="docutils literal notranslate"><span class="pre">np.eye(3)</span></code></p></td>
+</tr>
+</tbody>
+</table>
+<p>The 23 deprecated <code class="docutils literal notranslate"><span class="pre">GraphicsData...</span></code> aliases in <code class="docutils literal notranslate"><span class="pre">exudyn.utilities</span></code> are gone as well; the current names
+are in <code class="docutils literal notranslate"><span class="pre">exudyn.graphics</span></code> - mostly the old name without the prefix, <code class="docutils literal notranslate"><span class="pre">GraphicsDataSphere</span></code> is
+<code class="docutils literal notranslate"><span class="pre">graphics.Sphere</span></code>. The exceptions: <code class="docutils literal notranslate"><span class="pre">GraphicsDataOrthoCubePoint</span></code> is <code class="docutils literal notranslate"><span class="pre">graphics.Brick</span></code>, <code class="docutils literal notranslate"><span class="pre">GraphicsDataCube</span></code>
+<code class="docutils literal notranslate"><span class="pre">graphics.Cuboid</span></code>, <code class="docutils literal notranslate"><span class="pre">GraphicsDataOrthoCube</span></code> <code class="docutils literal notranslate"><span class="pre">graphics.BrickXYZ</span></code>, <code class="docutils literal notranslate"><span class="pre">GraphicsDataLine</span></code> <code class="docutils literal notranslate"><span class="pre">graphics.Lines</span></code>,
+<code class="docutils literal notranslate"><span class="pre">GraphicsDataFromSTLfileTxt</span></code> <code class="docutils literal notranslate"><span class="pre">graphics.FromSTLfileASCII</span></code>, <code class="docutils literal notranslate"><span class="pre">GraphicsData2PointsAndTrigs</span></code>
+<code class="docutils literal notranslate"><span class="pre">graphics.ToPointsAndTrigs</span></code>, <code class="docutils literal notranslate"><span class="pre">ExportGraphicsData2STL</span></code> <code class="docutils literal notranslate"><span class="pre">graphics.ExportSTL</span></code> and
+<code class="docutils literal notranslate"><span class="pre">MergeGraphicsDataTriangleList</span></code> <code class="docutils literal notranslate"><span class="pre">graphics.MergeTriangleLists</span></code>
+(<a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/e44aca1b4fe3e5f4d820ff407fb3fd30b6581c1c/main/pythonDev/exudyn/utilities.py">the aliases of 1.11.0</a>).</p>
+<p><strong>Functions that moved inside the package</strong>: from <code class="docutils literal notranslate"><span class="pre">exudyn.utilities</span></code> into <code class="docutils literal notranslate"><span class="pre">basicUtilities</span></code>,
+<code class="docutils literal notranslate"><span class="pre">advancedUtilities</span></code> and <code class="docutils literal notranslate"><span class="pre">mainSystemExtensions</span></code>. A script that imports from <code class="docutils literal notranslate"><span class="pre">exudyn.utilities</span></code> in
+the usual way notices nothing; one that imported such a function by its full module path imports it
+from <code class="docutils literal notranslate"><span class="pre">exudyn.utilities</span></code> instead.</p>
+<p><strong>The files a run writes by default are in <code class="docutils literal notranslate"><span class="pre">solution/</span></code></strong>: the solution file is
+<code class="docutils literal notranslate"><span class="pre">solution/coordinatesSolution.txt</span></code>, and the solver information and the restart file are there as
+well, so that a run writes nothing beside the script. A script that reads the solution file back as
+<code class="docutils literal notranslate"><span class="pre">'coordinatesSolution.txt'</span></code> reads the new name <code class="docutils literal notranslate"><span class="pre">'solution/coordinatesSolution.txt'</span></code> instead; a script
+that sets its own file names keeps them. <code class="docutils literal notranslate"><span class="pre">exudev</span> <span class="pre">scripts</span> <span class="pre">&lt;folder&gt;</span></code> finds both, and every file a script
+names without a directory.</p>
+<p><strong><code class="docutils literal notranslate"><span class="pre">InitializeFromRestartFile</span></code> is gone</strong> from <code class="docutils literal notranslate"><span class="pre">exudyn.utilities</span></code>: it raised “not fully implemented” in
+every version. The restart file is still written (<code class="docutils literal notranslate"><span class="pre">simulationSettings.solution.restart</span></code>); how a
+simulation continues from it is #2850.</p>
+<p><strong>Item dictionaries are more forgiving, not less</strong>: a parameter that is left out keeps its default
+or its current value, where it used to raise <code class="docutils literal notranslate"><span class="pre">KeyError</span></code>.</p>
+<p><strong>A settings file changes what a script does, if you make one.</strong> <code class="docutils literal notranslate"><span class="pre">~/.exudyn/config.json</span></code> is read at
+import into <code class="docutils literal notranslate"><span class="pre">exudyn.special.overrideSettings</span></code> and can override <code class="docutils literal notranslate"><span class="pre">exudyn.config</span></code>, any plain
+<code class="docutils literal notranslate"><span class="pre">visualizationSettings</span></code> — in <strong>every</strong> such structure that is created, not only in a
+<code class="docutils literal notranslate"><span class="pre">SystemContainer</span></code> — the size and position of a dialog, and the settings of the results monitor, which
+has no file of its own (<a class="reference internal" href="userSettings.html#sec-usersettings"><span class="std std-ref">User settings that persist between runs</span></a>). Nothing writes it by itself, <code class="docutils literal notranslate"><span class="pre">import</span> <span class="pre">exudyn</span></code>
+prints one note naming what came from it, and <code class="docutils literal notranslate"><span class="pre">EXUDYN_NO_USER_SETTINGS=1</span></code> ignores it — which is what
+a bug report needs. The test suites set that variable for themselves.</p>
+<p><strong><code class="docutils literal notranslate"><span class="pre">ObjectContactConvexRoll.rBoundingSphere</span></code> is read-only.</strong> It is computed from
+<code class="docutils literal notranslate"><span class="pre">coefficientsHull</span></code>, and setting it never had an effect: the value was recomputed whenever the
+parameters changed. It is no longer an argument of the item and can no longer be set, so a script
+that passed it says so instead of being quietly ignored - delete the argument. Reading it — and <code class="docutils literal notranslate"><span class="pre">pContact</span></code>, the current
+potential contact point — works as before, with <code class="docutils literal notranslate"><span class="pre">mbs.GetObjectParameter(objectNumber,</span> <span class="pre">'pContact')</span></code>.</p>
+<p><strong>OpenVR is removed.</strong> The <code class="docutils literal notranslate"><span class="pre">--openvr</span></code> build flag, the settings under
+<code class="docutils literal notranslate"><span class="pre">visualizationSettings.interactive.openVR</span></code>, the <code class="docutils literal notranslate"><span class="pre">openVR</span></code> entry of the render state and the
+example <code class="docutils literal notranslate"><span class="pre">openVRengine.py</span></code> are gone. It could only be used with a head mounted display or an
+emulator, it was never part of a released wheel - it had to be compiled in - and it stood in the
+way of the coming rendering work. A script that only sets <code class="docutils literal notranslate"><span class="pre">openVR</span></code> settings runs once those lines are
+deleted; one that needs a head mounted display stays on Exudyn 1.11.</p>
+<p><strong>The text export of an image is removed.</strong> <code class="docutils literal notranslate"><span class="pre">exportImages.saveImageFormat</span> <span class="pre">=</span> <span class="pre">'TXT'</span></code>, the four
+<code class="docutils literal notranslate"><span class="pre">exportImages.saveImageAsText...</span></code> settings and <code class="docutils literal notranslate"><span class="pre">exudyn.plot.LoadImage</span></code> are gone.
+<code class="docutils literal notranslate"><span class="pre">SC.renderer.GetGraphicsData()</span></code> gives the same drawing elements, and more of them, as numpy arrays,
+without a render window; <code class="docutils literal notranslate"><span class="pre">exudyn.plot.PlotImage</span></code> draws what it returns, so a vector figure of a model
+is <code class="docutils literal notranslate"><span class="pre">PlotImage(SC.renderer.GetGraphicsData(),</span> <span class="pre">fileName='model.pdf')</span></code>.</p>
+<p><strong>GraphicsData comes as rows.</strong> The functions of <code class="docutils literal notranslate"><span class="pre">exudyn.graphics</span></code> return points, normals, colors,
+triangles and edges as 2D numpy arrays - one row per point, color or triangle - and so does
+<code class="docutils literal notranslate"><span class="pre">mbs.GetObject(...,</span> <span class="pre">addGraphicsData=True)</span></code>; they had been flat lists. Given to Exudyn, both forms are
+read. A script that indexes a returned list as flat, <code class="docutils literal notranslate"><span class="pre">g['points'][3*i+1]</span></code>, reshapes it first:
+<code class="docutils literal notranslate"><span class="pre">np.array(g['points']).reshape(-1,3)[i,1]</span></code> works for both. <code class="docutils literal notranslate"><span class="pre">graphics.Sphere</span></code> returns the new type
+<code class="docutils literal notranslate"><span class="pre">Spheres</span></code> for a whole sphere instead of a <code class="docutils literal notranslate"><span class="pre">TriangleList</span></code>; the functions of <code class="docutils literal notranslate"><span class="pre">exudyn.graphics</span></code> that need
+triangles convert it (#2709).</p>
+<p><strong>Round primitives are curved.</strong> <code class="docutils literal notranslate"><span class="pre">graphics.Cylinder</span></code>, <code class="docutils literal notranslate"><span class="pre">SolidOfRevolution</span></code> (and with it <code class="docutils literal notranslate"><span class="pre">Arrow</span></code>, <code class="docutils literal notranslate"><span class="pre">Basis</span></code>,
+<code class="docutils literal notranslate"><span class="pre">Frame</span></code>, <code class="docutils literal notranslate"><span class="pre">RigidLink</span></code>, <code class="docutils literal notranslate"><span class="pre">BallBearingRings</span></code>) and <code class="docutils literal notranslate"><span class="pre">Torus</span></code> return 6-node triangles (<code class="docutils literal notranslate"><span class="pre">triangles6</span></code>) and curved
+rims (<code class="docutils literal notranslate"><span class="pre">edges3</span></code>) instead of flat triangles. <code class="docutils literal notranslate"><span class="pre">nTiles</span></code> keeps its meaning, the number of flat segments
+around: half as many curved elements carry them, and the renderer draws at least those segments. A
+script that reads <code class="docutils literal notranslate"><span class="pre">g['triangles']</span></code> of such a shape gets the flat ones with
+<code class="docutils literal notranslate"><span class="pre">graphics.Triangles6ToTriangles(g)</span></code>; <code class="docutils literal notranslate"><span class="pre">graphics.ToPointsAndTrigs</span></code> does this itself, so a contact mesh
+made from a cylinder with an even <code class="docutils literal notranslate"><span class="pre">nTiles</span></code> has the same facets as before, on more triangles (#2709).</p>
+<p><strong>The rotation of an ANCF slope node is one frame.</strong> <code class="docutils literal notranslate"><span class="pre">NodePointSlope23</span></code> and the cross section of
+<code class="docutils literal notranslate"><span class="pre">ObjectANCFBeam</span></code> rotate with the orthonormal frame of their slopes (<span class="math notranslate nohighlight">\(
+v_z\)</span> normalized, <span class="math notranslate nohighlight">\(
+v_y\)</span>
+orthogonalized against it), and their angular velocity and rotation Jacobian are now its
+derivatives; they were a least-squares fit of both slopes, which differs where the cross section
+deforms. Joints and torques on these nodes converge as they should; the angular velocity output of a
+deformed cross section, and results with joints on slope nodes, change slightly (#2763).</p>
+<p><strong>The time integration uses the modified Newton method by default.</strong> <code class="docutils literal notranslate"><span class="pre">timeIntegration.newton.useModifiedNewton</span></code> is
+<code class="docutils literal notranslate"><span class="pre">True</span></code>: the Jacobian is kept over the steps and computed again only when Newton converges badly, which is much faster
+for most models. Results change within the tolerances of Newton - in most models from the eighth digit on, with
+contact and friction earlier; set it to <code class="docutils literal notranslate"><span class="pre">False</span></code> for the full Newton method. <code class="docutils literal notranslate"><span class="pre">staticSolver.newton</span></code> keeps the full Newton method (#2815).</p>
+<p><strong>The robotics classes compute with <code class="docutils literal notranslate"><span class="pre">exudyn.HT</span></code>.</strong> <code class="docutils literal notranslate"><span class="pre">Robot.LinkHT</span></code>, <code class="docutils literal notranslate"><span class="pre">JointHT</span></code>, <code class="docutils literal notranslate"><span class="pre">COMHT</span></code>, <code class="docutils literal notranslate"><span class="pre">StdDH2HT</span></code>, <code class="docutils literal notranslate"><span class="pre">ModDHKK2HT</span></code>,
+<code class="docutils literal notranslate"><span class="pre">InverseKinematicsNumerical.GetCurrentRobotHT</span></code> and <code class="docutils literal notranslate"><span class="pre">dictJointType2HT</span></code> return <code class="docutils literal notranslate"><span class="pre">exu.HT</span></code> instead of 4x4 numpy arrays, and
+<code class="docutils literal notranslate"><span class="pre">RobotBase.HT</span></code>, <code class="docutils literal notranslate"><span class="pre">RobotTool.HT</span></code>, <code class="docutils literal notranslate"><span class="pre">RobotLink.localHT</span></code> and <code class="docutils literal notranslate"><span class="pre">preHT</span></code> are stored as <code class="docutils literal notranslate"><span class="pre">exu.HT</span></code>, given as <code class="docutils literal notranslate"><span class="pre">exu.HT</span></code> or 4x4 matrix
+as before; the kinematics is about twice as fast. Scripts written for numpy arrays keep working: an <code class="docutils literal notranslate"><span class="pre">exu.HT</span></code> is indexed
+as its 4x4 matrix (<code class="docutils literal notranslate"><span class="pre">H[0:3,3]</span></code>, also for writing, except the last row), <code class="docutils literal notranslate"><span class="pre">H1</span> <span class="pre">&#64;</span> <span class="pre">H2</span></code> is the product and <code class="docutils literal notranslate"><span class="pre">H</span> <span class="pre">&#64;</span> <span class="pre">x</span></code> what numpy
+computes, <code class="docutils literal notranslate"><span class="pre">copy.deepcopy</span></code> copies it, and <code class="docutils literal notranslate"><span class="pre">np.array(H)</span></code> gives the matrix. What no longer works is numpy arithmetic on it,
+such as <code class="docutils literal notranslate"><span class="pre">H1</span> <span class="pre">-</span> <span class="pre">H2</span></code>: use <code class="docutils literal notranslate"><span class="pre">np.array(H1)</span> <span class="pre">-</span> <span class="pre">np.array(H2)</span></code> (#2821).</p>
+<p><strong><code class="docutils literal notranslate"><span class="pre">rigidBodyUtilities.HT</span></code> is gone; its name is <code class="docutils literal notranslate"><span class="pre">exudyn.HT</span></code> now.</strong> The shortcut <code class="docutils literal notranslate"><span class="pre">HT</span></code> of the function
+<code class="docutils literal notranslate"><span class="pre">HomogeneousTransformation(A,</span> <span class="pre">r)</span></code>, which <code class="docutils literal notranslate"><span class="pre">from</span> <span class="pre">exudyn.utilities</span> <span class="pre">import</span> <span class="pre">*</span></code> brought into a script, is
+removed, so that <code class="docutils literal notranslate"><span class="pre">HT</span></code> means one thing - the class <code class="docutils literal notranslate"><span class="pre">exu.HT</span></code>. A script that called <code class="docutils literal notranslate"><span class="pre">HT(A,</span> <span class="pre">r)</span></code> for a 4x4
+array writes <code class="docutils literal notranslate"><span class="pre">HomogeneousTransformation(A,</span> <span class="pre">r)</span></code> (#2781).</p>
+</section>
+<section id="what-is-new-to-use">
+<h3>What is new to use<a class="headerlink" href="#what-is-new-to-use" title="Link to this heading"></a></h3>
+<p><strong>Optional packages by name.</strong> <code class="docutils literal notranslate"><span class="pre">pip</span> <span class="pre">install</span> <span class="pre">&quot;exudyn[basic]&quot;</span></code> installs scipy and matplotlib with Exudyn, which most
+models need; <code class="docutils literal notranslate"><span class="pre">[common]</span></code> adds what frequently used features need, <code class="docutils literal notranslate"><span class="pre">[tests]</span></code>, <code class="docutils literal notranslate"><span class="pre">[all]</span></code> and <code class="docutils literal notranslate"><span class="pre">[rl]</span></code> the larger sets, see
+<a class="reference internal" href="../howTo/condaEnvironments.html#sec-install-extras"><span class="std std-ref">Optional packages via the Exudyn extras</span></a>.</p>
+<p><strong>Renamed settings keep working.</strong> A simulation setting that is renamed answers to its old name with a
+<code class="docutils literal notranslate"><span class="pre">DeprecationWarning</span></code> that names the new one, as the visualization settings do: <code class="docutils literal notranslate"><span class="pre">parallel.multithreadedLLimitLoads</span></code>,
+<code class="docutils literal notranslate"><span class="pre">...Residuals</span></code>, <code class="docutils literal notranslate"><span class="pre">...Jacobians</span></code> and <code class="docutils literal notranslate"><span class="pre">...MassMatrices</span></code> are <code class="docutils literal notranslate"><span class="pre">parallel.multithreadedLowerLimitLoads</span></code> and so on, until 2031 (#2588, #2800).
+The same holds for item parameters: a renamed one is still taken under its old name - in the item class, in a
+dictionary and by <code class="docutils literal notranslate"><span class="pre">mbs.GetObjectParameter</span></code>/<code class="docutils literal notranslate"><span class="pre">SetObjectParameter</span></code> - with a warning naming the new one; the page of the
+item lists it (#2589).</p>
+<p><strong><code class="docutils literal notranslate"><span class="pre">mbs.CreateLinearSpringDamper</span></code></strong> creates a linear spring-damper along an axis between two rigid bodies or rigid
+markers, with the arguments of the joints - <code class="docutils literal notranslate"><span class="pre">itemNumbers</span></code>, <code class="docutils literal notranslate"><span class="pre">position</span></code>, <code class="docutils literal notranslate"><span class="pre">axis</span></code>, <code class="docutils literal notranslate"><span class="pre">useGlobalFrame</span></code> -, e.g. inside a
+prismatic joint (#1953).</p>
+<p><strong>A singular Jacobian with adaptive steps reduces the step.</strong> With <code class="docutils literal notranslate"><span class="pre">adaptiveStep</span></code> (the default) or automatic step size,
+the static and the implicit dynamic solvers take a singular system Jacobian as a failed step and reduce the step size,
+instead of stopping at once; a singularity of the model still ends the run, at the minimum step size, with the
+causing coordinate in the solver message and file (#1337). <code class="docutils literal notranslate"><span class="pre">SC.GetSystem(i)</span></code> keeps its <code class="docutils literal notranslate"><span class="pre">SystemContainer</span></code> alive, as
+<code class="docutils literal notranslate"><span class="pre">SC.AddSystem()</span></code> does, so that a system returned from a function works after the container went out of scope (#2851).
+<code class="docutils literal notranslate"><span class="pre">ObjectContactFrictionCircleCable2D</span></code> without a friction model - <code class="docutils literal notranslate"><span class="pre">frictionStiffness</span></code> and <code class="docutils literal notranslate"><span class="pre">frictionVelocityPenalty</span></code>
+zero - has no tangential force, also when its data node starts in slip (#1290).</p>
+<p><strong>A dynamic simulation continues from its restart file.</strong> With <code class="docutils literal notranslate"><span class="pre">solution.restart.write</span></code> the solvers write the state
+every <code class="docutils literal notranslate"><span class="pre">solution.restart.writePeriod</span></code> and at the end, and with <code class="docutils literal notranslate"><span class="pre">solution.restart.continueIfAvailable</span></code> the same script,
+started again, continues from it - appending to its solution and sensor files -, for a job that is stopped and
+resubmitted; see the user manual, <em>Continuing a simulation from its restart file</em> (#2850).</p>
+<p><strong>The Create functions take bodies, nodes or markers in <code class="docutils literal notranslate"><span class="pre">itemNumbers</span></code>.</strong> <code class="docutils literal notranslate"><span class="pre">CreateSpringDamper</span></code>,
+<code class="docutils literal notranslate"><span class="pre">CreateCartesianSpringDamper</span></code>, <code class="docutils literal notranslate"><span class="pre">CreateRigidBodySpringDamper</span></code> and <code class="docutils literal notranslate"><span class="pre">CreateDistanceConstraint</span></code> take a body at its local
+position, a node or a marker for each side; the joints and <code class="docutils literal notranslate"><span class="pre">CreateTorsionalSpringDamper</span></code> a body or a rigid marker;
+<code class="docutils literal notranslate"><span class="pre">CreateCoordinateConstraint</span></code> a body - its coordinates counted over its nodes -, a node, or None for the ground; the
+sphere contacts the sphere on a body, node or marker and the triangle or quad on a body; <code class="docutils literal notranslate"><span class="pre">CreateForce</span></code> and
+<code class="docutils literal notranslate"><span class="pre">CreateTorque</span></code> one body, node or marker in <code class="docutils literal notranslate"><span class="pre">itemNumber</span></code>. <code class="docutils literal notranslate"><span class="pre">bodyNumbers</span></code> and <code class="docutils literal notranslate"><span class="pre">bodyNumber</span></code> are the deprecated names
+until 2031, which <code class="docutils literal notranslate"><span class="pre">exudev</span> <span class="pre">scripts</span> <span class="pre">--fix</span></code> rewrites; the rolling discs keep <code class="docutils literal notranslate"><span class="pre">bodyNumbers</span></code>, as they take bodies only
+(#2863, #2337).</p>
+<p><strong>More markers on more bodies.</strong> <code class="docutils literal notranslate"><span class="pre">ObjectRotationalMass1D</span></code> takes forces and connectors anywhere on
+its table, not only on its axis; <code class="docutils literal notranslate"><span class="pre">ObjectANCFBeam</span></code> takes <code class="docutils literal notranslate"><span class="pre">MarkerBodyRigid</span></code>, so torques and joints with
+rotations act on its cross sections (#2775).</p>
+<p><strong>ANCF thin plates: damping, thickness and surface maps.</strong> <code class="docutils literal notranslate"><span class="pre">ObjectANCFThinPlate</span></code> has Kelvin-Voigt damping of
+the membrane and the bending stiffness (<code class="docutils literal notranslate"><span class="pre">stiffnessProportionalDamping</span></code>, <code class="docutils literal notranslate"><span class="pre">bendingStiffnessProportionalDamping</span></code>),
+which does not damp a rigid motion, and takes 12 thickness values - a thickness and its two gradients per
+node, which <code class="docutils literal notranslate"><span class="pre">ShellMesh</span></code> computes from a <code class="docutils literal notranslate"><span class="pre">thicknessFunction</span></code>. <code class="docutils literal notranslate"><span class="pre">ShellMesh(surfaceMap=...)</span></code> maps the mesh onto a
+surface, with the maps of <code class="docutils literal notranslate"><span class="pre">exudyn.shells.SurfaceMap</span></code> - <code class="docutils literal notranslate"><span class="pre">SurfaceMap.Cylinder</span></code>, <code class="docutils literal notranslate"><span class="pre">ConeFrustum</span></code>,
+<code class="docutils literal notranslate"><span class="pre">HemisphericalShell</span></code>, <code class="docutils literal notranslate"><span class="pre">ToroidalPanel</span></code>, … - or a map of one’s own; <code class="docutils literal notranslate"><span class="pre">exudyn.shells</span></code> has functions for
+constraints, edge loads and hinges of plate nodes (<code class="docutils literal notranslate"><span class="pre">AddNodeConstraints</span></code>, <code class="docutils literal notranslate"><span class="pre">AddClampToGround</span></code>, <code class="docutils literal notranslate"><span class="pre">ApplyEdgeLoad</span></code>,
+<code class="docutils literal notranslate"><span class="pre">AddEdgeSpringDamper</span></code>, …). <code class="docutils literal notranslate"><span class="pre">visualizationSettings.bodies.shells</span></code> draws the contour at a thickness coordinate
+(<code class="docutils literal notranslate"><span class="pre">contourZeta</span></code>), interpolated from the corners of the elements (<code class="docutils literal notranslate"><span class="pre">reducedInterpolation</span></code>), and along the normal
+(<code class="docutils literal notranslate"><span class="pre">drawNormal</span></code>) (#2857, #2858, #2859, #2864).</p>
+<p><strong><code class="docutils literal notranslate"><span class="pre">GeneralContact</span></code> can keep a contact while the bodies penetrate.</strong> With
+<code class="docutils literal notranslate"><span class="pre">keepContactWhilePenetrating</span> <span class="pre">=</span> <span class="pre">True</span></code> a sphere-sphere or sphere-triangle contact acts as long as the
+bodies penetrate, and its damping may pull at the end of the contact, as <code class="docutils literal notranslate"><span class="pre">ObjectContactSphereSphere</span></code> and
+<code class="docutils literal notranslate"><span class="pre">ObjectContactSphereTriangle</span></code> do; by default it acts only while its force presses (#2848).</p>
+<p><strong>What an item computes, from Python.</strong> <code class="docutils literal notranslate"><span class="pre">mbs.ComputeItem(item,</span> <span class="pre">what)</span></code> computes, at the current state,
+what the solver computes for one object, node or marker - the position and rotation Jacobians of a
+body at a local position, its mass matrix and right-hand side, the forces of a connector, the
+equations, constraint Jacobian and reaction forces of a joint, the kinematics of a marker -, and
+<code class="docutils literal notranslate"><span class="pre">mbs.ComputeItem(item)</span></code> lists what applies (<code class="docutils literal notranslate"><span class="pre">exu.ComputeItemType</span></code>).
+<code class="docutils literal notranslate"><span class="pre">exudyn.advancedUtilities.NumericalJacobian</span></code> gives the numerical derivative to compare with, for
+testing a model or an item of one’s own (#2779).</p>
+<p><strong><code class="docutils literal notranslate"><span class="pre">exudyn.HT</span></code>, the homogeneous transformation of the C++ core.</strong> <code class="docutils literal notranslate"><span class="pre">exu.HT(rotation=A,</span> <span class="pre">translation=p)</span></code>
+composes with <code class="docutils literal notranslate"><span class="pre">*</span></code> (<code class="docutils literal notranslate"><span class="pre">H1*H2</span></code>, and <code class="docutils literal notranslate"><span class="pre">H*v</span></code> for a point), inverts (<code class="docutils literal notranslate"><span class="pre">Inverse()</span></code>), and converts to and from the
+4x4 matrix (<code class="docutils literal notranslate"><span class="pre">HT44()</span></code>, <code class="docutils literal notranslate"><span class="pre">exu.HT(T44)</span></code>) - faster than the 4x4 numpy arrays of
+<code class="docutils literal notranslate"><span class="pre">exudyn.rigidBodyUtilities</span></code>, whose function <code class="docutils literal notranslate"><span class="pre">HomogeneousTransformation</span></code> stays (#2780). It converts the rotation from and to Euler
+parameters, Tait-Bryan angles and the rotation vector, and the reference coordinates of the three rigid body nodes
+(<code class="docutils literal notranslate"><span class="pre">GetCoordinatesEP()</span></code>, <code class="docutils literal notranslate"><span class="pre">SetCoordinatesRxyz(q)</span></code>, …), gives the frame of one HT seen from another (<code class="docutils literal notranslate"><span class="pre">Relative</span></code>),
+interpolates (<code class="docutils literal notranslate"><span class="pre">InterpolateSO3</span></code>, <code class="docutils literal notranslate"><span class="pre">InterpolateSE3</span></code>) and the angle and axis of its rotation; its Set functions return it,
+so that <code class="docutils literal notranslate"><span class="pre">exu.HT().SetRotationAxis(axis,</span> <span class="pre">angle)</span></code> is one line (#2810). <code class="docutils literal notranslate"><span class="pre">LogSE3()</span></code> and <code class="docutils literal notranslate"><span class="pre">SetExpSE3(v)</span></code> give and take the
+motion vector of a screw motion, <code class="docutils literal notranslate"><span class="pre">LogR3xSO3()</span></code> and <code class="docutils literal notranslate"><span class="pre">SetExpR3xSO3(v)</span></code> the translation and the rotation vector (#2819).
+The example <code class="docutils literal notranslate"><span class="pre">homogeneousTransformationInterpolation.py</span></code> drives rigid bodies along both interpolations; <code class="docutils literal notranslate"><span class="pre">exu.HT(H)</span></code>
+copies an HT (#2824).</p>
+<p><strong>The output variable <code class="docutils literal notranslate"><span class="pre">HomogeneousTransformation</span></code>.</strong> Every node, body point, marker and connector that
+gives <code class="docutils literal notranslate"><span class="pre">Position</span></code> and <code class="docutils literal notranslate"><span class="pre">RotationMatrix</span></code> also gives <code class="docutils literal notranslate"><span class="pre">HomogeneousTransformation</span></code>, the 4x4 matrix [A p; 0 1]:
+<code class="docutils literal notranslate"><span class="pre">GetNodeOutput</span></code>, <code class="docutils literal notranslate"><span class="pre">GetObjectOutputBody</span></code> and <code class="docutils literal notranslate"><span class="pre">GetMarkerOutput</span></code> return it as an <code class="docutils literal notranslate"><span class="pre">exu.HT</span></code>, a sensor stores
+its 16 values row by row, from which <code class="docutils literal notranslate"><span class="pre">exu.HT(values)</span></code> makes the HT (#2780, #2789, #2792).</p>
+<p><strong>A frame as one parameter.</strong> <code class="docutils literal notranslate"><span class="pre">ObjectGround</span></code> takes its frame as <code class="docutils literal notranslate"><span class="pre">referencePosition</span></code> and
+<code class="docutils literal notranslate"><span class="pre">referenceRotation</span></code> or at once as <code class="docutils literal notranslate"><span class="pre">referenceHT</span></code> - a 4x4 matrix, its 16 values or an <code class="docutils literal notranslate"><span class="pre">exu.HT</span></code>; a
+parameter left <code class="docutils literal notranslate"><span class="pre">None</span></code> is not given, and an HT given with one of its parts must agree with it.
+<code class="docutils literal notranslate"><span class="pre">CreateGround</span></code> and <code class="docutils literal notranslate"><span class="pre">CreateRigidBody</span></code> take <code class="docutils literal notranslate"><span class="pre">referenceHT</span></code>, and <code class="docutils literal notranslate"><span class="pre">CreateRigidBody</span></code> also <code class="docutils literal notranslate"><span class="pre">initialHT</span></code> for
+<code class="docutils literal notranslate"><span class="pre">initialRotationMatrix</span></code> and <code class="docutils literal notranslate"><span class="pre">initialDisplacement</span></code> (#2793, #2794). The rigid markers take <code class="docutils literal notranslate"><span class="pre">localHT</span></code>, a frame
+with a rotation in the body, link or node: <code class="docutils literal notranslate"><span class="pre">MarkerBodyRigid</span></code> and <code class="docutils literal notranslate"><span class="pre">MarkerKinematicTreeRigid</span></code> with <code class="docutils literal notranslate"><span class="pre">localPosition</span></code> as
+its translation, <code class="docutils literal notranslate"><span class="pre">MarkerSuperElementRigid</span></code> with <code class="docutils literal notranslate"><span class="pre">offset</span></code>, <code class="docutils literal notranslate"><span class="pre">MarkerNodeRigid</span></code> a rotation only - so a joint can take its
+axis from its markers instead of <code class="docutils literal notranslate"><span class="pre">rotationMarker0/1</span></code> (#2795).
+<code class="docutils literal notranslate"><span class="pre">ObjectKinematicTree</span></code> takes its joint transformations and offsets as one list <code class="docutils literal notranslate"><span class="pre">jointHTs</span></code>, and numpy reads an <code class="docutils literal notranslate"><span class="pre">exu.HT</span></code>
+as its 4x4 matrix (<code class="docutils literal notranslate"><span class="pre">np.array(H)</span></code>), so the HT functions of <code class="docutils literal notranslate"><span class="pre">exudyn.rigidBodyUtilities</span></code> and the robotics classes take an
+<code class="docutils literal notranslate"><span class="pre">exu.HT</span></code> wherever they take a 4x4 array (#2798, #2799).</p>
+<p><strong>The rotation of a joint is its markers’.</strong> <code class="docutils literal notranslate"><span class="pre">rotationMarker0/1</span></code> of <code class="docutils literal notranslate"><span class="pre">ObjectJointGeneric</span></code>, <code class="docutils literal notranslate"><span class="pre">ObjectJointRevoluteZ</span></code>,
+<code class="docutils literal notranslate"><span class="pre">ObjectJointPrismaticX</span></code>, <code class="docutils literal notranslate"><span class="pre">ObjectConnectorRigidBodySpringDamper</span></code> and <code class="docutils literal notranslate"><span class="pre">ObjectConnectorTorsionalSpringDamper</span></code> are deprecated and removed in 2031: the rotation is given to the
+markers as <code class="docutils literal notranslate"><span class="pre">localHT</span></code>, e.g. <code class="docutils literal notranslate"><span class="pre">MarkerBodyRigid(bodyNumber=b,</span> <span class="pre">localHT=HomogeneousTransformation(A,</span> <span class="pre">p))</span></code>; setting one
+other than the unit matrix gives a <code class="docutils literal notranslate"><span class="pre">DeprecationWarning</span></code> at the line that adds the item. The <code class="docutils literal notranslate"><span class="pre">Create...</span></code> functions,
+<code class="docutils literal notranslate"><span class="pre">AddRevoluteJoint</span></code>, <code class="docutils literal notranslate"><span class="pre">AddPrismaticJoint</span></code>, <code class="docutils literal notranslate"><span class="pre">GetJointArgs</span></code> and the robotics classes put the rotation into the markers
+they create (#2745). <code class="docutils literal notranslate"><span class="pre">ObjectConnectorRigidBodySpringDamper</span></code> applies <code class="docutils literal notranslate"><span class="pre">rotationMarker0</span></code> after the frame of marker 0,
+as the joints do and as its page says; a model with a <code class="docutils literal notranslate"><span class="pre">rotationMarker0</span></code> other than the unit matrix moves differently
+than before (#2801). <code class="docutils literal notranslate"><span class="pre">ObjectContactCurveCircles</span></code> has no <code class="docutils literal notranslate"><span class="pre">rotationMarker0</span></code> any more: it was used only for drawing,
+and <code class="docutils literal notranslate"><span class="pre">Assemble()</span></code> refused any value other than the unit matrix; the curve lies in the frame of marker 0 (#2803).</p>
+<p><strong>Deprecations: once, counted, and found.</strong> A deprecated setting, item parameter or function warns once per session
+and name; <code class="docutils literal notranslate"><span class="pre">exu.special.deprecations.warnOnce</span> <span class="pre">=</span> <span class="pre">False</span></code> shows every use, to find all of them in a script. Every use is
+counted in <code class="docutils literal notranslate"><span class="pre">exu.sys['deprecationUse']</span></code>, by source (<code class="docutils literal notranslate"><span class="pre">simulationSettings</span></code>, <code class="docutils literal notranslate"><span class="pre">visualizationSettings</span></code>, <code class="docutils literal notranslate"><span class="pre">items</span></code>, <code class="docutils literal notranslate"><span class="pre">functions</span></code>)
+and name, so a test sees whether a model used anything deprecated (<code class="docutils literal notranslate"><span class="pre">recordUse</span></code>). <code class="docutils literal notranslate"><span class="pre">exudev</span> <span class="pre">scripts</span></code> also reports deprecated
+and removed item parameters, as keyword of the item class and as key of an item dictionary (#2804, #2805, #2806).</p>
+<p><strong>The deprecated functions of the Python library warn as well.</strong> <code class="docutils literal notranslate"><span class="pre">AddRigidBody</span></code>, <code class="docutils literal notranslate"><span class="pre">AddRevoluteJoint</span></code>,
+<code class="docutils literal notranslate"><span class="pre">AddPrismaticJoint</span></code>, <code class="docutils literal notranslate"><span class="pre">graphics.BrickXYZ</span></code>, <code class="docutils literal notranslate"><span class="pre">GenerateStraightLineANCFCable2D</span></code> and the others marked DEPRECATED in their
+description, and the arguments <code class="docutils literal notranslate"><span class="pre">bodyList</span></code> of the <code class="docutils literal notranslate"><span class="pre">Create...</span></code> functions and <code class="docutils literal notranslate"><span class="pre">numberOfChildren</span></code>/<code class="docutils literal notranslate"><span class="pre">survivingIndividuals</span></code> of
+<code class="docutils literal notranslate"><span class="pre">GeneticOptimization</span></code>, give a <code class="docutils literal notranslate"><span class="pre">DeprecationWarning</span></code> at the line of the script, once per session, and are counted in
+<code class="docutils literal notranslate"><span class="pre">exu.sys['deprecationUse']['library']</span></code>; each says what to use instead. They, and the deprecated functions of the C++
+module, are removed in 2029; <code class="docutils literal notranslate"><span class="pre">exudev</span> <span class="pre">scripts</span></code> reports them in a script (#2807).</p>
+<p><strong>The simulation settings, reordered.</strong> No substructure ends in <code class="docutils literal notranslate"><span class="pre">Settings</span></code> any more, everything of the solution file
+is in <code class="docutils literal notranslate"><span class="pre">solution.file</span></code>, of the sensors in <code class="docutils literal notranslate"><span class="pre">solution.sensors</span></code>, of the restart file in <code class="docutils literal notranslate"><span class="pre">solution.restart</span></code>, and the solver of
+<code class="docutils literal notranslate"><span class="pre">mbs.SolveDynamic</span></code> is a setting. Every old name still works until 2031, with a <code class="docutils literal notranslate"><span class="pre">DeprecationWarning</span></code> naming the new one,
+and <strong><code class="docutils literal notranslate"><span class="pre">exudev</span> <span class="pre">scripts</span> <span class="pre">&lt;folder&gt;</span> <span class="pre">--fix</span></code></strong> rewrites a script to the new names (#2813):</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>old</p></th>
+<th class="head"><p>new</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">solutionSettings</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">solution</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">solutionSettings.writeSolutionToFile</span></code>, <code class="docutils literal notranslate"><span class="pre">coordinatesSolutionFileName</span></code>, <code class="docutils literal notranslate"><span class="pre">solutionWritePeriod</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">solution.file.write</span></code>, <code class="docutils literal notranslate"><span class="pre">.name</span></code>, <code class="docutils literal notranslate"><span class="pre">.writePeriod</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">solutionSettings.appendToFile</span></code>, <code class="docutils literal notranslate"><span class="pre">binarySolutionFile</span></code>, <code class="docutils literal notranslate"><span class="pre">writeFileHeader</span></code>, <code class="docutils literal notranslate"><span class="pre">writeFileFooter</span></code>, <code class="docutils literal notranslate"><span class="pre">writeInitialValues</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">solution.file.append</span></code>, <code class="docutils literal notranslate"><span class="pre">.binary</span></code>, <code class="docutils literal notranslate"><span class="pre">.writeHeader</span></code>, <code class="docutils literal notranslate"><span class="pre">.writeFooter</span></code>, <code class="docutils literal notranslate"><span class="pre">.writeInitialValues</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">solutionSettings.solutionInformation</span></code>, <code class="docutils literal notranslate"><span class="pre">flushFilesDOF</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">solution.file.information</span></code>, <code class="docutils literal notranslate"><span class="pre">.flushAboveCoordinates</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">solutionSettings.exportVelocities</span></code>, <code class="docutils literal notranslate"><span class="pre">exportAccelerations</span></code>, …</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">solution.file.export.velocities</span></code>, <code class="docutils literal notranslate"><span class="pre">.accelerations</span></code>, …</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">solutionSettings.sensorsStoreAndWriteFiles</span></code>, <code class="docutils literal notranslate"><span class="pre">sensorsWritePeriod</span></code>, <code class="docutils literal notranslate"><span class="pre">sensorsAppendToFile</span></code>, <code class="docutils literal notranslate"><span class="pre">sensorsWriteFileHeader</span></code>, <code class="docutils literal notranslate"><span class="pre">sensorsWriteFileFooter</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">solution.sensors.active</span></code>, <code class="docutils literal notranslate"><span class="pre">.writePeriod</span></code>, <code class="docutils literal notranslate"><span class="pre">.append</span></code>, <code class="docutils literal notranslate"><span class="pre">.writeHeader</span></code>, <code class="docutils literal notranslate"><span class="pre">.writeFooter</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">solutionSettings.writeRestartFile</span></code>, <code class="docutils literal notranslate"><span class="pre">restartFileName</span></code>, <code class="docutils literal notranslate"><span class="pre">restartWritePeriod</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">solution.restart.write</span></code>, <code class="docutils literal notranslate"><span class="pre">.name</span></code>, <code class="docutils literal notranslate"><span class="pre">.writePeriod</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">solutionSettings.outputPrecision</span></code> (files)</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">solution.precision</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">outputPrecision</span></code> (console)</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">consolePrecision</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">linearSolverSettings</span></code>, <code class="docutils literal notranslate"><span class="pre">linearSolverType</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">linearSolver</span></code>, <code class="docutils literal notranslate"><span class="pre">linearSolver.solverType</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">displayComputationTime</span></code>, <code class="docutils literal notranslate"><span class="pre">displayGlobalTimers</span></code>, <code class="docutils literal notranslate"><span class="pre">displayStatistics</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">show.computationTime</span></code>, <code class="docutils literal notranslate"><span class="pre">show.globalTimers</span></code>, <code class="docutils literal notranslate"><span class="pre">show.statistics</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">timeIntegration.simulateInRealtime</span></code>, <code class="docutils literal notranslate"><span class="pre">realtimeFactor</span></code>, <code class="docutils literal notranslate"><span class="pre">realtimeWaitMicroseconds</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">timeIntegration.realtime.active</span></code>, <code class="docutils literal notranslate"><span class="pre">.factor</span></code>, <code class="docutils literal notranslate"><span class="pre">.waitMicroseconds</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">timeIntegration.explicitIntegration</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">timeIntegration.explicit</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">timeIntegration.explicitIntegration.dynamicSolverType</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">timeIntegration.solverType</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">newton.newtonResidualMode</span></code>, <code class="docutils literal notranslate"><span class="pre">newton.useNewtonSolver</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">newton.residualMode</span></code>, <code class="docutils literal notranslate"><span class="pre">newton.active</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">numericalDifferentiation.forODE2connectors</span></code>, <code class="docutils literal notranslate"><span class="pre">staticSolver.constrainODE1coordinates</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">forODE2Connectors</span></code>, <code class="docutils literal notranslate"><span class="pre">constrainODE1Coordinates</span></code></p></td>
+</tr>
+</tbody>
+</table>
+<p><code class="docutils literal notranslate"><span class="pre">timeIntegration.solverType</span></code> (default <code class="docutils literal notranslate"><span class="pre">GeneralizedAlpha</span></code>) is the solver <code class="docutils literal notranslate"><span class="pre">mbs.SolveDynamic</span></code> uses; a <code class="docutils literal notranslate"><span class="pre">solverType</span></code> given
+to <code class="docutils literal notranslate"><span class="pre">SolveDynamic</span></code> is used for that run and the setting is set back afterwards - <code class="docutils literal notranslate"><span class="pre">SolveDynamic</span></code> no longer leaves the
+explicit solver type written into the settings. An <code class="docutils literal notranslate"><span class="pre">exudyn.MainSolverExplicit</span></code> used directly takes the solver from
+<code class="docutils literal notranslate"><span class="pre">timeIntegration.solverType</span></code> and refuses an implicit one with a message naming the setting.</p>
+<p>The binary solution file (<code class="docutils literal notranslate"><span class="pre">solution.file.binary</span></code>) stores its numbers as <code class="docutils literal notranslate"><span class="pre">float</span></code> if <code class="docutils literal notranslate"><span class="pre">solution.precision</span></code> is below 8 and
+as <code class="docutils literal notranslate"><span class="pre">double</span></code> otherwise (#2816).</p>
+<p><strong>Item parameters without the prefix <code class="docutils literal notranslate"><span class="pre">physics</span></code>, and a few more renamed.</strong> The parameters of the bodies and finite
+elements lost their prefix - <code class="docutils literal notranslate"><span class="pre">physicsMass</span></code> is <code class="docutils literal notranslate"><span class="pre">mass</span></code>, <code class="docutils literal notranslate"><span class="pre">physicsInertia</span></code> is <code class="docutils literal notranslate"><span class="pre">inertia</span></code>, <code class="docutils literal notranslate"><span class="pre">physicsCenterOfMass</span></code> is
+<code class="docutils literal notranslate"><span class="pre">centerOfMass</span></code>, <code class="docutils literal notranslate"><span class="pre">physicsLength</span></code>, <code class="docutils literal notranslate"><span class="pre">physicsMassPerLength</span></code>, <code class="docutils literal notranslate"><span class="pre">physicsAxialStiffness</span></code>, <code class="docutils literal notranslate"><span class="pre">physicsBendingDamping</span></code> and the others
+of the beams and the plate likewise; <code class="docutils literal notranslate"><span class="pre">radiusSphere</span></code> is <code class="docutils literal notranslate"><span class="pre">sphereRadius</span></code> (<code class="docutils literal notranslate"><span class="pre">ContactSphereTorus</span></code>, <code class="docutils literal notranslate"><span class="pre">ContactSphereTriangle</span></code>),
+the friction of <code class="docutils literal notranslate"><span class="pre">ObjectConnectorCoordinateSpringDamperExt</span></code> is <code class="docutils literal notranslate"><span class="pre">dynamicFrictionForce</span></code>, <code class="docutils literal notranslate"><span class="pre">staticFrictionOffsetForce</span></code> and
+<code class="docutils literal notranslate"><span class="pre">viscousFrictionFactor</span></code> (N s/m), <code class="docutils literal notranslate"><span class="pre">factorValue1</span></code> of <code class="docutils literal notranslate"><span class="pre">ObjectConnectorCoordinate</span></code> is <code class="docutils literal notranslate"><span class="pre">factor1</span></code>, <code class="docutils literal notranslate"><span class="pre">rollingFrictionViscous</span></code>
+of <code class="docutils literal notranslate"><span class="pre">ObjectConnectorRollingDiscPenalty</span></code> is <code class="docutils literal notranslate"><span class="pre">rollingViscousFriction</span></code> (s/m), and <code class="docutils literal notranslate"><span class="pre">intrinsicFormulation</span></code> and
+<code class="docutils literal notranslate"><span class="pre">classicalFormulation</span></code> are <code class="docutils literal notranslate"><span class="pre">useIntrinsicFormulation</span></code> and <code class="docutils literal notranslate"><span class="pre">useClassicalFormulation</span></code>. The <code class="docutils literal notranslate"><span class="pre">Create...</span></code> functions take the
+new names. Every old name still works until 2031 with a <code class="docutils literal notranslate"><span class="pre">DeprecationWarning</span></code> - in the item class, in a dictionary, in
+<code class="docutils literal notranslate"><span class="pre">GetObjectParameter</span></code>/<code class="docutils literal notranslate"><span class="pre">SetObjectParameter</span></code> and as argument of a <code class="docutils literal notranslate"><span class="pre">Create...</span></code> function - and <code class="docutils literal notranslate"><span class="pre">exudev</span> <span class="pre">scripts</span> <span class="pre">--fix</span></code>
+rewrites it (#2814).</p>
+<p><strong>A system without coordinates</strong> - only ground, sensors and user functions - is solved by every
+solver: time advances, the user functions are called and the sensors record (#2790).</p>
+<p><strong>The frame of a rigid marker</strong> is drawn with <code class="docutils literal notranslate"><span class="pre">visualizationSettings.markers.showBasis</span></code> and
+<code class="docutils literal notranslate"><span class="pre">basisSize</span></code>: three lines in red, green and blue, or three arrows with short heads (#2791).</p>
+<p><strong>Curved shapes in GraphicsData.</strong> 6-node (quadratic) triangles - the key <code class="docutils literal notranslate"><span class="pre">triangles6</span></code> of a
+<code class="docutils literal notranslate"><span class="pre">TriangleList</span></code> - quadratic lines (<code class="docutils literal notranslate"><span class="pre">Lines</span></code> with <code class="docutils literal notranslate"><span class="pre">shape</span></code> <code class="docutils literal notranslate"><span class="pre">'quadratic'</span></code>) and quadratic edges (<code class="docutils literal notranslate"><span class="pre">edges3</span></code>)
+are drawn curved: the renderers split them when they draw, as fine as
+<code class="docutils literal notranslate"><span class="pre">visualizationSettings.openGL.advanced.curvedTriangleTilingAngle</span></code> asks, and a change of it shows at
+once; each edge is split by its own curvature, so a surface curved in one direction is not split along the
+other. The type <code class="docutils literal notranslate"><span class="pre">Spheres</span></code> draws many spheres at once, and the raytracer intersects them exactly. The round
+shapes of <code class="docutils literal notranslate"><span class="pre">exudyn.graphics</span></code> - <code class="docutils literal notranslate"><span class="pre">Cylinder</span></code>, <code class="docutils literal notranslate"><span class="pre">Sphere</span></code> (also partial and hollow), <code class="docutils literal notranslate"><span class="pre">Torus</span></code>, <code class="docutils literal notranslate"><span class="pre">SolidOfRevolution</span></code>,
+<code class="docutils literal notranslate"><span class="pre">Tube</span></code>, <code class="docutils literal notranslate"><span class="pre">LinkedCylinders</span></code> and the shapes built from them - consist of 6-node triangles, as do the surfaces of
+quadratic NGsolve meshes and of Tet10 meshes (<code class="docutils literal notranslate"><span class="pre">FEMinterface.VolumeToSurfaceElements</span></code>) in the FFRF objects.
+<code class="docutils literal notranslate"><span class="pre">python/Examples/graphicsCurvedShapes.py</span></code> shows them all (#2709).</p>
+<p><strong>A command line for the installed package</strong>: <code class="docutils literal notranslate"><span class="pre">python</span> <span class="pre">-m</span> <span class="pre">exudyn</span> <span class="pre">info</span></code> prints the version, where
+the package is installed, which compiled module is loaded and which optional packages are present
+— the first thing to put into a bug report. <code class="docutils literal notranslate"><span class="pre">monitor</span></code>, <code class="docutils literal notranslate"><span class="pre">plot</span></code> and <code class="docutils literal notranslate"><span class="pre">demo</span></code> are the other three
+commands; see <a class="reference internal" href="commandLine.html#sec-commandline"><span class="std std-ref">The command line: python -m exudyn</span></a>.</p>
+<p><strong>Errors say what kind of problem they are.</strong> Everything Exudyn raises derives from
+<code class="docutils literal notranslate"><span class="pre">exudyn.ExudynError</span></code> <em>and</em> from the matching Python built-in, so <code class="docutils literal notranslate"><span class="pre">except</span> <span class="pre">ValueError</span></code> still works
+and <code class="docutils literal notranslate"><span class="pre">except</span> <span class="pre">exudyn.SolverError</span></code> is now possible — see
+<a class="reference internal" href="performanceErrors.html#sec-overview-basics-errors"><span class="std std-ref">Errors: what Exudyn raises</span></a>.</p>
+<p><strong>Two environment variables keep a run quiet</strong>, which matters for parameter studies and for
+anything that runs unattended: <code class="docutils literal notranslate"><span class="pre">EXUDYN_SUPPRESS_UI_WINDOW_OPEN=1</span></code> opens no renderer, viewer, plot
+or dialog window, and <code class="docutils literal notranslate"><span class="pre">EXUDYN_OUTPUTDIRECTORY=&lt;path&gt;</span></code> puts the files a model writes where you want
+them.</p>
+<p><strong>The windows can remember where you put them.</strong> The settings dialog has a <strong>store settings</strong> and a
+<strong>store positions</strong> button, the render window has a size and a position among its settings
+(<code class="docutils literal notranslate"><span class="pre">view0.window.renderWindowSize</span></code> and <code class="docutils literal notranslate"><span class="pre">renderWindowPosition</span></code>), and
+<code class="docutils literal notranslate"><span class="pre">exudyn.plot.StorePlotWindowGeometry()</span></code> keeps the plot windows of <code class="docutils literal notranslate"><span class="pre">PlotSensor</span></code> where they are
+arranged. Everything goes into <code class="docutils literal notranslate"><span class="pre">~/.exudyn/config.json</span></code>, after showing what will be written
+(<a class="reference internal" href="userSettings.html#sec-usersettings"><span class="std std-ref">User settings that persist between runs</span></a>).</p>
+<p><strong>The scene as data</strong>: <code class="docutils literal notranslate"><span class="pre">SC.renderer.GetGraphicsData()</span></code> returns every line, sphere, circle, text and
+triangle the renderer would draw, each with the item that drew it, and needs no window - for a test
+that checks what a model looks like, or for a figure drawn with matplotlib.</p>
+<p><strong>Stopping a simulation from a script</strong>: <code class="docutils literal notranslate"><span class="pre">SC.renderer.StopSimulation()</span></code> does what closing the
+render window does - the running simulation ends after its step, a later one before its first, and
+neither is reported as a solver failure - from a user function, another thread or a test;
+<code class="docutils literal notranslate"><span class="pre">mbs.SetRenderEngineStopFlag(False)</span></code> lets the next one run again.</p>
+<p><strong><code class="docutils literal notranslate"><span class="pre">exudyn.types</span></code></strong> answers questions about items from Python: which markers an object accepts,
+which item types exist.</p>
+<p><strong><code class="docutils literal notranslate"><span class="pre">mbs.Inspect(itemIndex,</span> <span class="pre">what)</span></code></strong> asks an existing item what it provides and requests - its output
+variables, its type flags, the node and marker types it requests, the access functions of a body -
+as lists of the exported enumerations; <code class="docutils literal notranslate"><span class="pre">what</span></code> is a member of <code class="docutils literal notranslate"><span class="pre">exu.InspectType</span></code>, or <code class="docutils literal notranslate"><span class="pre">None</span></code> for all
+that apply. A node marker answers the node types its node must provide as requirements, each a list of
+alternatives (#2817). The test model <code class="docutils literal notranslate"><span class="pre">inspectTest.py</span></code> shows it.</p>
+<p><strong>Tutorials as notebooks.</strong> <code class="docutils literal notranslate"><span class="pre">python/Notebooks/</span></code> holds the tutorials as Jupyter notebooks, stored with the outputs of
+their last run; the documentation shows them with these outputs, and <code class="docutils literal notranslate"><span class="pre">python/Examples/notebooks/</span></code> holds the same code as
+scripts. <code class="docutils literal notranslate"><span class="pre">exudev</span> <span class="pre">notebooks</span></code> runs them and stores the outputs. <code class="docutils literal notranslate"><span class="pre">exudyn.interactive.ShowImage(SC)</span></code> shows the scene in a notebook -
+an image of the raytracer, without a window (#2831). The examples of the Python-C++ interface chapter are notebooks
+of <code class="docutils literal notranslate"><span class="pre">python/Notebooks/reference/</span></code>, those of the user manual’s pages on graphics, solving and the renderer notebooks of
+<code class="docutils literal notranslate"><span class="pre">python/Notebooks/snippets/</span></code>; the tests run them, so each example on these pages shows what it printed.</p>
+<p><strong>Kinetic and potential energy as output variables</strong> (<code class="docutils literal notranslate"><span class="pre">OutputVariableType.KineticEnergy</span></code>,
+<code class="docutils literal notranslate"><span class="pre">PotentialEnergy</span></code>) of the bodies, beams, plates, superelements and spring-dampers, and
+<code class="docutils literal notranslate"><span class="pre">exudyn.advancedUtilities.SystemEnergy</span></code> for the energy of a whole system with its loads; an item
+that cannot compute its energy - with a user function defining its force - says so, and
+<code class="docutils literal notranslate"><span class="pre">mbs.Inspect</span></code> does not list it. The test models <code class="docutils literal notranslate"><span class="pre">energiesTest.py</span></code> and <code class="docutils literal notranslate"><span class="pre">energiesFlexibleBodiesTest.py</span></code>
+show them.</p>
+<p><strong>Springs and ropes drawn as tubes.</strong> <code class="docutils literal notranslate"><span class="pre">visualizationSettings.connectors.curveTiling</span></code> is the number of segments of a
+full turn of a spring winding or of the arc of a rope on a sheave, and <code class="docutils literal notranslate"><span class="pre">connectors.drawSimplified</span> <span class="pre">=</span> <span class="pre">False</span></code> draws the windings
+of the springs as a tube instead of lines and <code class="docutils literal notranslate"><span class="pre">ObjectConnectorDistance</span></code> as a rod of its <code class="docutils literal notranslate"><span class="pre">drawSize</span></code>; the rope of
+<code class="docutils literal notranslate"><span class="pre">ObjectConnectorReevingSystemSprings</span></code> is one closed tube along its spans and arcs (#2839, #2843). A 3D beam without
+section geometry is drawn as a line, and its contour colors follow it (#2837, #2843). <code class="docutils literal notranslate"><span class="pre">ObjectConnectorGravity</span></code>, if
+shown, is a line between its markers, and <code class="docutils literal notranslate"><span class="pre">SensorLoad</span></code> is drawn at the marker of its load (#2843).</p>
+</section>
+<section id="what-is-new-to-read">
+<h3>What is new to read<a class="headerlink" href="#what-is-new-to-read" title="Link to this heading"></a></h3>
+<p>The documentation is <strong>Markdown</strong> and is built with Sphinx for every release; the hand-written
+chapters are <code class="docutils literal notranslate"><span class="pre">docs/manual/</span></code>, and everything under <code class="docutils literal notranslate"><span class="pre">docs/generated/</span></code> — the reference manual of all
+items, the Python utilities, the examples and the test models — is written by the generators from
+the definitions and the docstrings.</p>
+<p>Until this release the documentation was <strong>one PDF, <code class="docutils literal notranslate"><span class="pre">theDoc.pdf</span></code></strong> — a name that still appears in
+older issues, in scripts and in printed notes. It is the HTML documentation now: the same content,
+searchable, and one place per subject instead of a chapter and a PDF section saying it twice.</p>
+<p><strong>Installing and building are told once each.</strong> The installation instructions come before the
+first example, and building from source - which used to be described in three places that
+disagreed - is one page of the developer documentation, together with a page that takes a new
+developer from cloning the repository to a passing test run and one on the git workflow (#2646).</p>
+<p><strong><code class="docutils literal notranslate"><span class="pre">CHANGELOG.md</span></code></strong> is new: every resolved issue of the <strong>current</strong> release, newest first, with
+a table of every release above it. The version number says where an issue landed — the micro
+version <em>is</em> the count of issues closed in a release, so 1.10.160 is the 160th issue closed in
+release 1.10. The earlier releases are on the issue tracker page, which carries more about each
+issue than the changelog does, and the two no longer print the same list twice (#2599).</p>
+</section>
+<section id="what-changed-behind-the-scenes">
+<h3>What changed behind the scenes<a class="headerlink" href="#what-changed-behind-the-scenes" title="Link to this heading"></a></h3>
+<p>The wheels for Windows, Linux and macOS are built by continuous integration on every tagged
+release, and the documentation is built the same way. Everything else a maintainer does — build,
+test, documentation, issues, release — runs through one driver, <code class="docutils literal notranslate"><span class="pre">exudev</span></code>, which replaced sixteen
+batch files. None of that changes anything for a user of a wheel; it changes how quickly a fix
+reaches one.</p>
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="../generated/abbreviations.html" class="btn btn-neutral float-left" title="List of Abbreviations" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="../../CHANGELOG.html" class="btn btn-neutral float-right" title="Changelog" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

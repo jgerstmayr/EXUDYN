@@ -1,0 +1,449 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>NodePointSlope23 &mdash; Exudyn1.13.3 1.13.3 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=3ee1c6c6" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/rtd_sphinx_search.min.css" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/custom.css?v=e2783f0e" />
+
+  
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=b8a3e558"></script>
+      <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../../_static/copybutton.js?v=f281be69"></script>
+      <script src="../../../_static/js/rtd_search_config.js"></script>
+      <script src="../../../_static/js/rtd_sphinx_search.min.js"></script>
+      <script>window.MathJax = {"loader": {"load": ["[tex]/mathtools"]}, "tex": {"packages": {"[+]": ["mathtools"]}, "macros": {"ANCFdk": "{\\LU{0}{\\dv_k}}", "ANCFdkO": "{\\LU{0}{\\dv_{0,k}}}", "ANCFdkOtp": "{\\LU{0}{\\dv_{0,k}\\tp}}", "ANCFdkt": "{\\LU{0}{\\dot\\dv_k}}", "Am": "{\\mathbf{A}}", "Dm": "{\\mathbf{D}}", "Em": "{\\mathbf{E}}", "Gm": "{\\mathbf{G}}", "Im": "{\\mathbf{I}}", "ImThree": "{\\mathbf{I}_{3 \\times 3}}", "Jm": "{\\mathbf{J}}", "Km": "{\\mathbf{K}}", "Mm": "{\\mathbf{M}}", "Pm": "{\\mathbf{P}}", "Rm": "{\\mathbf{R}}", "Sm": "{\\mathbf{S}}", "Tm": "{\\mathbf{T}}", "av": "{\\mathbf{a}}", "bv": "{\\mathbf{b}}", "cv": "{\\mathbf{c}}", "diffANCF": ["{\\frac{\\partial #1}{\\partial \\qv_{ANCF}}}", 1], "diffANCFdk": "{\\diffANCFmI{\\ANCFdk}}", "diffANCFmI": ["{\\frac{\\partial #1}{\\partial \\qv_{ANCF,m1}}}", 1], "diffANCFmIt": ["{\\frac{\\partial #1}{\\partial \\dot \\qv_{ANCF,m1}}}", 1], "diffANCFt": ["{\\frac{\\partial #1}{\\partial \\dot \\qv_{ANCF}}}", 1], "diffmI": ["{\\frac{\\partial #1}{\\partial \\qv_{m1}}}", 1], "diffmIt": ["{\\frac{\\partial #1}{\\partial \\dot \\qv_{m1}}}", 1], "diffmOI": ["{\\frac{\\partial #1}{\\partial \\qv_{m0,m1}}}", 1], "diffmOIt": ["{\\frac{\\partial #1}{\\partial \\dot \\qv_{m0,m1}}}", 1], "diffmOt": ["{\\frac{\\partial #1}{\\partial \\dot \\qv_{m0}}}", 1], "dv": "{\\mathbf{d}}", "ev": "{\\mathbf{e}}", "fv": "{\\mathbf{f}}", "gv": "{\\mathbf{g}}", "hv": "{\\mathbf{h}}", "nv": "{\\mathbf{n}}", "pv": "{\\mathbf{p}}", "qv": "{\\mathbf{q}}", "rv": "{\\mathbf{r}}", "sv": "{\\mathbf{s}}", "tv": "{\\mathbf{t}}", "uv": "{\\mathbf{u}}", "vv": "{\\mathbf{v}}", "xv": "{\\mathbf{x}}", "yv": "{\\mathbf{y}}", "zv": "{\\mathbf{z}}", "vspace": ["{}", 1], "ra": "{\\rightarrow}", "Rcal": "{\\mathbb{R}}", "Ccal": "{\\mathbb{C}}", "Ncal": "{\\mathbb{N}}", "Rot": "{\\mathbf{A}}", "dd": "{\\mathrm{d}}", "ps": "{p_\\mathrm{s}}", "co": "{\\mathrm{c}}", "si": "{\\mathrm{s}}", "tp": "{^\\mathrm{T}}", "diag": "{\\mathrm{diag}}", "vec": "{\\mathrm{vec}}", "Null": "{\\mathbf{0}}", "varepsilonDot": "{\\boldsymbol{\\varepsilon}}", "talpha": "{\\boldsymbol{\\alpha}}", "tbeta": "{\\boldsymbol{\\beta}}", "tgamma": "{\\boldsymbol{\\gamma}}", "tchi": "{\\boldsymbol{\\chi}}", "tdelta": "{\\boldsymbol{\\delta}}", "teps": "{\\boldsymbol{\\varepsilon}}", "tepsDot": "{\\boldsymbol{\\dot \\varepsilon}}", "teta": "{\\boldsymbol{\\eta}}", "tkappa": "{\\boldsymbol{\\kappa}}", "tkappaDot": "{\\boldsymbol{\\dot \\kappa}}", "tphi": "{\\boldsymbol{\\phi}}", "boldVarPhi": "{\\boldsymbol{\\varphi}}", "tPhi": "{\\boldsymbol{\\Phi}}", "ttheta": "{\\boldsymbol{\\theta}}", "tTheta": "{\\boldsymbol{\\Theta}}", "tlambda": "{\\boldsymbol{\\lambda}}", "tnu": "{\\boldsymbol{\\nu}}", "tmu": "{\\boldsymbol{\\mu}}", "tpsi": "{\\boldsymbol{\\psi}}", "tPsi": "{\\boldsymbol{\\Psi}}", "ttau": "{\\boldsymbol{\\tau}}", "tsigma": "{\\boldsymbol{\\sigma}}", "txi": "{\\boldsymbol{\\xi}}", "tzeta": "{\\boldsymbol{\\zeta}}", "tomega": "{\\boldsymbol{\\omega}}", "tOmega": "{\\boldsymbol{\\Omega}}", "vareps": "{\\varepsilon}", "myoverline": ["\\overline{#1}", 1], "pluseq": "\\mathrel{+}=", "LU": ["{\\prescript{#1}{}{#2}\\,}", 2], "LUX": ["{\\prescript{#1}{}{#2}#3\\,}", 3], "LUR": ["{\\prescript{#1}{}{#2}_{#3}\\,}", 3], "LURU": ["{\\prescript{#1}{}{#2}_{#3}^{#4}\\,}", 4], "LLdot": ["{\\prescript{}{#1}{\\dot{#2}}_{#3}\\,}", 3], "vr": ["{\\left[ \\begin{array}{c} { #1}\\vspace{0.04cm} \\\\ { #2}\\vspace{0.04cm} \\\\ { #3} \\end{array} \\right]}", 3], "mr": ["{\\left[ \\begin{array}{ccc} #1 & #2 & #3 \\vspace{0.04cm}\\\\ #4 & #5 & #6 \\vspace{0.04cm}\\\\ #7 & #8 & #9  \\end{array} \\right]}", 9], "vp": ["{\\left[ \\begin{array}{c} { #1} \\vspace{0.04cm}\\\\ { #2} \\end{array} \\right]}", 2], "mp": ["{\\left[ \\begin{array}{cc} #1 & #2 \\vspace{0.04cm}\\\\ #3 & #4 \\end{array} \\right]}", 4], "mfour": ["{\\left[ \\begin{array}{cccc} { #1} \\\\ { #2} \\\\ { #3} \\\\ { #4} \\end{array} \\right]}", 4], "vfour": ["{\\left[ \\begin{array}{c} { #1} \\\\ { #2} \\\\ { #3} \\\\ { #4} \\end{array} \\right]}", 4], "vrRow": ["{[#1,\\, #2,\\, #3]}", 3], "vsix": ["{\\left[ \\begin{array}{c} { #1} \\\\ { #2} \\\\ { #3} \\\\ { #4} \\\\ { #5} \\\\ { #6} \\end{array} \\right]}", 6], "vsixb": ["{\\begin{array}{c} { #1} \\\\ { #2} \\\\ { #3} \\\\ { #4} \\\\ { #5} \\\\ { #6} \\end{array} }", 6], "vsixs": ["{ \\begin{array}{c} { #1} \\\\ { #2} \\\\ { #3} \\\\ { #4} \\\\ { #5} \\\\ { #6} \\end{array} }", 6], "SO": "{q}", "FO": "{y}", "AE": "{\\lambda}", "SYS": "{s}", "SON": "{$2^\\mathrm{nd}$ order differential equations}", "FON": "{$1^\\mathrm{st}$ order differential equations}", "AEN": "{algebraic equations}", "Bm": "{\\mathbf{B}}", "Cm": "{\\mathbf{C}}", "Fm": "{\\mathbf{F}}", "SYSN": "{system equations}", "cIni": "{_\\mathrm{ini}}", "cRef": "{_\\mathrm{ref}}", "cCur": "{_\\mathrm{cur}}", "cVis": "{_\\mathrm{vis}}", "cSOS": "{_\\mathrm{start\\;of\\;step}}", "cConfig": "{_\\mathrm{config}}", "pLoc": "{\\mathbf{b}}", "pLocB": "{\\,^{b}{\\mathbf{v}}}", "pRef": "{\\mathbf{r}}", "pRefG": "{\\,^{0}{\\mathbf{r}}}", "indf": "{_\\mathrm{f}}", "indt": "{_\\mathrm{t}}", "indr": "{_\\mathrm{r}}", "indtt": "{_\\mathrm{tt}}", "indrr": "{_\\mathrm{rr}}", "indff": "{_\\mathrm{ff}}", "indtf": "{_\\mathrm{tf}}", "indrf": "{_\\mathrm{rf}}", "indtr": "{_\\mathrm{tr}}", "omegaBDtilde": "{\\LU{b}{\\tilde \\tomega_\\mathrm{bd}}}", "indrigid": "{_\\mathrm{rigid}}", "indred": "{_\\mathrm{red}}", "induser": "{_\\mathrm{user}}", "indu": "{_\\mathrm{u}}", "termA": ["{\\color{blue}{#1}}", 1], "termB": ["{\\color{red}{#1}}", 1], "termC": ["{\\color{green}{#1}}", 1], "acc": "{\\ddot{\\mathbf{q}}}", "GA": "{G\\alpha}", "Hm": "{\\mathbf{H}}", "ImTwo": "{\\mathbf{I}_{2 \\times 2}}", "Lm": "{\\mathbf{L}}", "Qm": "{\\mathbf{Q}}", "Vm": "{\\mathbf{V}}", "Wm": "{\\mathbf{W}}", "Xm": "{\\mathbf{X}}", "Ym": "{\\mathbf{Y}}", "aalg": "{\\mathbf{a}}", "iv": "{\\mathbf{i}}", "jv": "{\\mathbf{j}}", "kv": "{\\mathbf{k}}", "lv": "{\\mathbf{l}}", "mv": "{\\mathbf{m}}", "ov": "{\\mathbf{o}}", "vel": "{\\mathbf{v}}", "wv": "{\\mathbf{w}}"}}, "options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+      <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-mml-chtml.js"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+    <link rel="next" title="NodeGenericODE2" href="NodeGenericODE2.html" />
+    <link rel="prev" title="NodePointSlope12" href="NodePointSlope12.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            Exudyn1.13.3
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Exudyn User Manual</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../README.html">Exudyn</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../manual/gettingStarted.html">Installation and getting started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../manual/introduction.html">Overview on Exudyn</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../manual/introductionBasics.html">Exudyn basics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../manual/tutorial.html">Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../manual/GUI.html">Renderer, graphics and visualization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../manual/performanceErrors.html">Performance, errors and solver failures</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../manual/introductionAdvanced.html">Advanced topics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../manual/notation.html">Notation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../manual/theory.html">Theory and formulations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../manual/solver.html">Solvers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../cInterface/cInterfaceIndex.html">Python-C++ command interface</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Reference Manual</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="itemsIndex.html">Items reference manual</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="nodeIndex.html">Node</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="nodeGeneral.html">General info for all nodes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="NodePoint.html">NodePoint</a></li>
+<li class="toctree-l3"><a class="reference internal" href="NodePoint2D.html">NodePoint2D</a></li>
+<li class="toctree-l3"><a class="reference internal" href="NodeRigidBodyEP.html">NodeRigidBodyEP</a></li>
+<li class="toctree-l3"><a class="reference internal" href="NodeRigidBodyRxyz.html">NodeRigidBodyRxyz</a></li>
+<li class="toctree-l3"><a class="reference internal" href="NodeRigidBodyRotVecLG.html">NodeRigidBodyRotVecLG</a></li>
+<li class="toctree-l3"><a class="reference internal" href="NodeRigidBody2D.html">NodeRigidBody2D</a></li>
+<li class="toctree-l3"><a class="reference internal" href="Node1D.html">Node1D</a></li>
+<li class="toctree-l3"><a class="reference internal" href="NodePoint2DSlope1.html">NodePoint2DSlope1</a></li>
+<li class="toctree-l3"><a class="reference internal" href="NodePointSlope1.html">NodePointSlope1</a></li>
+<li class="toctree-l3"><a class="reference internal" href="NodePointSlope12.html">NodePointSlope12</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">NodePointSlope23</a></li>
+<li class="toctree-l3"><a class="reference internal" href="NodeGenericODE2.html">NodeGenericODE2</a></li>
+<li class="toctree-l3"><a class="reference internal" href="NodeGenericODE1.html">NodeGenericODE1</a></li>
+<li class="toctree-l3"><a class="reference internal" href="NodeGenericAE.html">NodeGenericAE</a></li>
+<li class="toctree-l3"><a class="reference internal" href="NodeGenericData.html">NodeGenericData</a></li>
+<li class="toctree-l3"><a class="reference internal" href="NodePointGround.html">NodePointGround</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="objectBodyIndex.html">Object (Body)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="objectSuperElementIndex.html">Object (SuperElement)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="objectObjectIndex.html">Object (Object)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="objectFiniteElementIndex.html">Object (FiniteElement)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="objectConnectorIndex.html">Object (Connector)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="objectConstraintIndex.html">Object (Constraint)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="objectJointIndex.html">Object (Joint)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="markerIndex.html">Marker</a></li>
+<li class="toctree-l2"><a class="reference internal" href="loadIndex.html">Load</a></li>
+<li class="toctree-l2"><a class="reference internal" href="sensorIndex.html">Sensor</a></li>
+<li class="toctree-l2"><a class="reference internal" href="itemsIndex.html#parameter-changes">Parameter changes</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../pythonUtilities/utilitiesIndex.html">Python Utility Functions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../structures/structuresIndex.html">Structures and Settings</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../references.html">References</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Developer documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../dev/README.html">Exudyn developer documentation</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">How-to notes</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../howTo/condaEnvironments.html">Conda environments for Exudyn</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../howTo/sphinxDocs.html">Building the documentation</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Examples, models and issues</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../examples/examplesIndex.html">Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../testModels/testModelsIndex.html">TestModels</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../abbreviations.html">List of Abbreviations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../manual/revisions.html">Revisions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../CHANGELOG.html">Changelog</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../trackerlog.html">Issue tracker</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">Exudyn1.13.3</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="itemsIndex.html">Items reference manual</a></li>
+          <li class="breadcrumb-item"><a href="nodeIndex.html">Node</a></li>
+      <li class="breadcrumb-item active">NodePointSlope23</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../../_sources/docs/generated/items/NodePointSlope23.md.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <!-- GENERATED by tools/generators/itemDocsEmitter.py from definitions/ - do not edit -->
+<section class="tex2jax_ignore mathjax_ignore" id="nodepointslope23">
+<span id="sec-item-nodepointslope23"></span><h1>NodePointSlope23<a class="headerlink" href="#nodepointslope23" title="Link to this heading"></a></h1>
+<p>A 3D point/slope vector node for spatial, shear and cross-section deformable ANCF (absolute nodal coordinate formulation) beam elements, with 3 position and 2 <span class="math notranslate nohighlight">\(\times\)</span> 3 slope coordinates, all <a class="reference internal" href="../abbreviations.html#ode2"><span class="std std-ref">ODE2</span></a>; the slope vectors are the derivatives of the position with respect to the two cross section coordinates <span class="math notranslate nohighlight">\(y\)</span> and <span class="math notranslate nohighlight">\(z\)</span>.</p>
+<section id="interface">
+<h2>Interface<a class="headerlink" href="#interface" title="Link to this heading"></a></h2>
+<ul class="simple">
+<li><p>Provides: <code class="docutils literal notranslate"><span class="pre">Position</span></code>, <code class="docutils literal notranslate"><span class="pre">Orientation</span></code>, <code class="docutils literal notranslate"><span class="pre">PointSlope23</span></code></p></li>
+<li><p>Node markers that can be attached: <a class="reference internal" href="MarkerNodePosition.html#sec-item-markernodeposition"><span class="std std-ref">MarkerNodePosition</span></a>, <a class="reference internal" href="MarkerNodeRigid.html#sec-item-markernoderigid"><span class="std std-ref">MarkerNodeRigid</span></a>, <a class="reference internal" href="MarkerNodeRotationCoordinate.html#sec-item-markernoderotationcoordinate"><span class="std std-ref">MarkerNodeRotationCoordinate</span></a></p></li>
+<li><p>Objects that take this node: <a class="reference internal" href="ObjectMassPoint.html#sec-item-objectmasspoint"><span class="std std-ref">ObjectMassPoint</span></a>, <a class="reference internal" href="ObjectANCFBeam.html#sec-item-objectancfbeam"><span class="std std-ref">ObjectANCFBeam</span></a>, <a class="reference internal" href="ObjectBeamGeometricallyExact.html#sec-item-objectbeamgeometricallyexact"><span class="std std-ref">ObjectBeamGeometricallyExact</span></a></p></li>
+</ul>
+</section>
+<section id="parameters">
+<h2>Parameters<a class="headerlink" href="#parameters" title="Link to this heading"></a></h2>
+<p>The parameters of the item; in a dictionary, its type is ‘PointSlope23’:</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>name</p></th>
+<th class="head"><p>type</p></th>
+<th class="head"><p>size</p></th>
+<th class="head"><p>default</p></th>
+<th class="head"><p>description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><strong>name</strong></p></td>
+<td><p>String</p></td>
+<td><p></p></td>
+<td><p>‘’</p></td>
+<td><p>node’s unique name</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>referenceCoordinates</strong></p></td>
+<td><p>Vector9D</p></td>
+<td><p>9</p></td>
+<td><p>[0.,0.,0.,0.,1.,0.,0.,0.,1.]</p></td>
+<td><p>reference coordinates (x-pos,y-pos,z-pos; x-slopey, y-slopey, z-slopey; x-slopez, y-slopez, z-slopez) of node; global position of node without displacement</p></td>
+</tr>
+<tr class="row-even"><td><p><strong>initialCoordinates</strong></p></td>
+<td><p>Vector9D</p></td>
+<td><p>9</p></td>
+<td><p>[0.,0.,0.,0.,0.,0.,0.,0.,0.]</p></td>
+<td><p>initial displacement coordinates relative to reference coordinates</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>initialVelocities</strong></p></td>
+<td><p>Vector9D</p></td>
+<td><p>9</p></td>
+<td><p>[0.,0.,0.,0.,0.,0.,0.,0.,0.]</p></td>
+<td><p>initial velocity coordinates</p></td>
+</tr>
+<tr class="row-even"><td><p><strong>visualization</strong></p></td>
+<td><p>VNodePointSlope23</p></td>
+<td><p></p></td>
+<td><p></p></td>
+<td><p>parameters for visualization of item</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="visualization-parameters">
+<h2>Visualization parameters<a class="headerlink" href="#visualization-parameters" title="Link to this heading"></a></h2>
+<p>The parameters of <code class="docutils literal notranslate"><span class="pre">VNodePointSlope23</span></code>, given as <code class="docutils literal notranslate"><span class="pre">visualization</span></code>:</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>name</p></th>
+<th class="head"><p>type</p></th>
+<th class="head"><p>size</p></th>
+<th class="head"><p>default</p></th>
+<th class="head"><p>description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><strong>show</strong></p></td>
+<td><p>Bool</p></td>
+<td><p></p></td>
+<td><p>True</p></td>
+<td><p>set true, if item is shown in visualization and false if it is not shown</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>drawSize</strong></p></td>
+<td><p>float</p></td>
+<td><p></p></td>
+<td><p>-1.</p></td>
+<td><p>drawing size (diameter, dimensions of underlying cube, etc.) for item; size == -1.f means that default size is used</p></td>
+</tr>
+<tr class="row-even"><td><p><strong>color</strong></p></td>
+<td><p>Float4</p></td>
+<td><p>4</p></td>
+<td><p>[-1.,-1.,-1.,-1.]</p></td>
+<td><p>Default RGBA color for nodes; 4th value is alpha-transparency; R=-1.f means, that default color is used</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="drawing">
+<h2>Drawing<a class="headerlink" href="#drawing" title="Link to this heading"></a></h2>
+<p>Drawn as <a class="reference internal" href="nodeGeneral.html#sec-drawing-nodes"><span class="std std-ref">all nodes</span></a>; with <code class="docutils literal notranslate"><span class="pre">nodes.showNodalSlopes</span></code>, also its slope vectors.</p>
+<p>Settings beyond those of all nodes: <a class="reference internal" href="../structures/VisualizationSettings.html#sec-vsettingsnodes"><span class="std std-ref"><code class="docutils literal notranslate"><span class="pre">nodes.showNodalSlopes</span></code></span></a>.</p>
+</section>
+<section id="output-variables">
+<h2>Output variables<a class="headerlink" href="#output-variables" title="Link to this heading"></a></h2>
+<p>Available as <code class="docutils literal notranslate"><span class="pre">OutputVariableType</span></code> in sensors, <code class="docutils literal notranslate"><span class="pre">Get...Output()</span></code> and other functions:</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>output variable</p></th>
+<th class="head"><p>symbol</p></th>
+<th class="head"><p>description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Position</p></td>
+<td><p><span class="math notranslate nohighlight">\(\LU{0}{\pv}\cConfig = \LU{0}{[p_0,\, p_1,\, p_2]}\cConfig\tp\)</span></p></td>
+<td><p>global 3D position vector of node (=displacement+reference position)</p></td>
+</tr>
+<tr class="row-odd"><td><p>Displacement</p></td>
+<td><p><span class="math notranslate nohighlight">\(\LU{0}{\uv}\cConfig = \LU{0}{[q_0,\, q_1,\, q_2]}\cConfig\tp\)</span></p></td>
+<td><p>global 3D displacement vector of node</p></td>
+</tr>
+<tr class="row-even"><td><p>Velocity</p></td>
+<td><p><span class="math notranslate nohighlight">\(\LU{0}{\vv}\cConfig = \LU{0}{[\dot q_0,\,\dot q_1,\,\dot q_2]}\cConfig\tp\)</span></p></td>
+<td><p>global 3D velocity vector of node</p></td>
+</tr>
+<tr class="row-odd"><td><p>Acceleration</p></td>
+<td><p><span class="math notranslate nohighlight">\(\LU{0}{\av}\cConfig = \LU{0}{[\ddot q_0,\,\ddot q_1,\,\ddot q_2]}\cConfig\tp\)</span></p></td>
+<td><p>global 3D acceleration vector of node</p></td>
+</tr>
+<tr class="row-even"><td><p>CoordinatesTotal</p></td>
+<td><p></p></td>
+<td><p>displacement plus reference coordinates of node</p></td>
+</tr>
+<tr class="row-odd"><td><p>Coordinates</p></td>
+<td><p></p></td>
+<td><p>coordinate vector of node (relative to reference configuration)</p></td>
+</tr>
+<tr class="row-even"><td><p>Coordinates_t</p></td>
+<td><p></p></td>
+<td><p>velocity coordinates vector of node</p></td>
+</tr>
+<tr class="row-odd"><td><p>Coordinates_tt</p></td>
+<td><p></p></td>
+<td><p>acceleration coordinates vector of node</p></td>
+</tr>
+<tr class="row-even"><td><p>RotationMatrix</p></td>
+<td><p><span class="math notranslate nohighlight">\([A_{00},\,A_{01},\,A_{02},\,A_{10},\,\ldots,\,A_{21},\,A_{22}]\cConfig\tp\)</span></p></td>
+<td><p>vector with 9 components of the rotation matrix <span class="math notranslate nohighlight">\(\LU{0b}{\Rot}\cConfig\)</span> in row-major format, in any configuration; the rotation matrix transforms local (<span class="math notranslate nohighlight">\(b\)</span>) to global (0) coordinates</p></td>
+</tr>
+<tr class="row-odd"><td><p>Rotation</p></td>
+<td><p><span class="math notranslate nohighlight">\([\varphi_0,\,\varphi_1,\,\varphi_2]\tp\cConfig\)</span></p></td>
+<td><p>vector with 3 components of the Euler / Tait-Bryan angles in xyz-sequence</p></td>
+</tr>
+<tr class="row-even"><td><p>AngularVelocity</p></td>
+<td><p><span class="math notranslate nohighlight">\(\LU{0}{\tomega}\cConfig = \LU{0}{[\omega_0,\,\omega_1,\,\omega_2]}\cConfig\tp\)</span></p></td>
+<td><p>global 3D angular velocity vector of node</p></td>
+</tr>
+<tr class="row-odd"><td><p>AngularVelocityLocal</p></td>
+<td><p><span class="math notranslate nohighlight">\(\LU{b}{\tomega}\cConfig = \LU{b}{[\omega_0,\,\omega_1,\,\omega_2]}\cConfig\tp\)</span></p></td>
+<td><p>local (body-fixed) 3D angular velocity vector of node</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="detailed-description">
+<span id="description-nodepointslope23"></span><h2>Detailed description<a class="headerlink" href="#detailed-description" title="Link to this heading"></a></h2>
+<section id="coordinates">
+<h3>Coordinates<a class="headerlink" href="#coordinates" title="Link to this heading"></a></h3>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>index</p></th>
+<th class="head"><p>symbol</p></th>
+<th class="head"><p>kind</p></th>
+<th class="head"><p>meaning</p></th>
+<th class="head"><p>frame</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>0, 1, 2</p></td>
+<td><p><span class="math notranslate nohighlight">\(q_0,\,q_1,\,q_2\)</span></p></td>
+<td><p><a class="reference internal" href="../abbreviations.html#ode2"><span class="std std-ref">ODE2</span></a></p></td>
+<td><p>displacement of the node position <span class="math notranslate nohighlight">\(\rv\)</span></p></td>
+<td><p>global</p></td>
+</tr>
+<tr class="row-odd"><td><p>3, 4, 5</p></td>
+<td><p><span class="math notranslate nohighlight">\(q_3,\,q_4,\,q_5\)</span></p></td>
+<td><p><a class="reference internal" href="../abbreviations.html#ode2"><span class="std std-ref">ODE2</span></a></p></td>
+<td><p>change of the slope vector <span class="math notranslate nohighlight">\(\rv_y\)</span></p></td>
+<td><p>global</p></td>
+</tr>
+<tr class="row-even"><td><p>6, 7, 8</p></td>
+<td><p><span class="math notranslate nohighlight">\(q_6,\,q_7,\,q_8\)</span></p></td>
+<td><p><a class="reference internal" href="../abbreviations.html#ode2"><span class="std std-ref">ODE2</span></a></p></td>
+<td><p>change of the slope vector <span class="math notranslate nohighlight">\(\rv_z\)</span></p></td>
+<td><p>global</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="configuration">
+<h3>Configuration<a class="headerlink" href="#configuration" title="Link to this heading"></a></h3>
+<div class="math notranslate nohighlight">
+\[
+\rv = \rv\cRef + [q_0,\,q_1,\,q_2]\tp, \quad
+\rv_y = \rv_{y,\mathrm{ref}} + [q_3,\,q_4,\,q_5]\tp, \quad
+\rv_z = \rv_{z,\mathrm{ref}} + [q_6,\,q_7,\,q_8]\tp .
+\]</div>
+</section>
+<section id="the-slope-vectors">
+<h3>The slope vectors<a class="headerlink" href="#the-slope-vectors" title="Link to this heading"></a></h3>
+<p>Unlike the slopes of the cable nodes, the two slope vectors of this node are <strong>not</strong> taken along the
+beam axis: they are the derivatives of the position with respect to the two <strong>cross section</strong>
+coordinates <span class="math notranslate nohighlight">\(y\)</span> and <span class="math notranslate nohighlight">\(z\)</span>, <span class="math notranslate nohighlight">\(\rv_y = \partial \rv / \partial y\)</span> and <span class="math notranslate nohighlight">\(\rv_z = \partial \rv / \partial z\)</span>,
+so that a point of the cross section at <span class="math notranslate nohighlight">\((y,\,z)\)</span> is at <span class="math notranslate nohighlight">\(\rv + y\,\rv_y + z\,\rv_z\)</span>, as
+<code class="docutils literal notranslate"><span class="pre">ObjectANCFBeam</span></code> computes it. The axial direction follows from the positions of the two nodes of the
+element. In a beam along the global <span class="math notranslate nohighlight">\(x\)</span>-axis the slope vectors are <span class="math notranslate nohighlight">\([0,\;1,\;0]\tp\)</span> and
+<span class="math notranslate nohighlight">\([0,\;0,\;1]\tp\)</span>; they span the cross section, and their lengths and angle carry its deformation -
+the element is shear and cross section deformable. The default reference coordinates are those
+of a beam along the global <span class="math notranslate nohighlight">\(x\)</span>-axis; a model gives the reference coordinates of every node.</p>
+</section>
+<section id="frame-and-interpretation">
+<h3>Frame and interpretation<a class="headerlink" href="#frame-and-interpretation" title="Link to this heading"></a></h3>
+<p>All nine coordinates are global (absolute nodal coordinates). The node is used by <code class="docutils literal notranslate"><span class="pre">ObjectANCFBeam</span></code>.</p>
+</section>
+<section id="rotation">
+<h3>Rotation<a class="headerlink" href="#rotation" title="Link to this heading"></a></h3>
+<p><code class="docutils literal notranslate"><span class="pre">MarkerNodeRigid</span></code> and the output variables of the rotation take the orthonormal frame of the slopes:
+<span class="math notranslate nohighlight">\(\rv_z\)</span> normalized is its <span class="math notranslate nohighlight">\(z\)</span>-axis, <span class="math notranslate nohighlight">\(\rv_y\)</span> orthogonalized against it and normalized its <span class="math notranslate nohighlight">\(y\)</span>-axis, and the
+<span class="math notranslate nohighlight">\(x\)</span>-axis is their cross product. The angular velocity <span class="math notranslate nohighlight">\(\tomega\)</span> and the rotation Jacobian
+<span class="math notranslate nohighlight">\(\Jm_{rot} = \partial \tomega / \partial \dot \qv\)</span> are the derivatives of this frame, so joints and torques act
+consistently with it (#2763).</p>
+</section>
+<section id="action-on-the-equations-of-motion">
+<h3>Action on the equations of motion<a class="headerlink" href="#action-on-the-equations-of-motion" title="Link to this heading"></a></h3>
+<p>The nine coordinates lead to nine <a class="reference internal" href="../abbreviations.html#ode2"><span class="std std-ref">ODE2</span></a> equations, which the element provides; a force at the
+node enters the first three.</p>
+</section>
+</section>
+<section id="mini-example">
+<span id="miniexample-nodepointslope23"></span><h2>Mini example<a class="headerlink" href="#mini-example" title="Link to this heading"></a></h2>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1">#a cantilever of four ANCF beam elements: position and the slopes r_y, r_z of the cross section</span>
+<span class="n">L</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span> <span class="n">nElements</span> <span class="o">=</span> <span class="mi">4</span><span class="p">;</span> <span class="n">F</span> <span class="o">=</span> <span class="o">-</span><span class="mf">0.1</span>
+<span class="n">section</span> <span class="o">=</span> <span class="n">exu</span><span class="o">.</span><span class="n">BeamSection</span><span class="p">()</span>
+<span class="n">section</span><span class="o">.</span><span class="n">stiffnessMatrix</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">diag</span><span class="p">([</span><span class="mf">1e5</span><span class="p">,</span> <span class="mf">1e4</span><span class="p">,</span> <span class="mf">1e4</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="mi">100</span><span class="p">])</span> <span class="c1">#EA, GA_y, GA_z, GJ, EI_y, EI_z</span>
+<span class="n">section</span><span class="o">.</span><span class="n">massPerLength</span> <span class="o">=</span> <span class="mi">1</span>
+<span class="n">section</span><span class="o">.</span><span class="n">inertia</span> <span class="o">=</span> <span class="mf">0.01</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">eye</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
+<span class="n">mGround</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">AddMarker</span><span class="p">(</span><span class="nc">MarkerNodeCoordinate</span><span class="p">(</span><span class="n">nodeNumber</span><span class="o">=</span><span class="n">nGround</span><span class="p">,</span> <span class="n">coordinate</span><span class="o">=</span><span class="mi">0</span><span class="p">))</span>
+<span class="n">n0</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">AddNode</span><span class="p">(</span><span class="nc">NodePointSlope23</span><span class="p">(</span><span class="n">referenceCoordinates</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">]))</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">9</span><span class="p">):</span> <span class="c1">#clamped: position and both slopes</span>
+    <span class="n">mbs</span><span class="o">.</span><span class="nf">AddObject</span><span class="p">(</span><span class="nc">ObjectConnectorCoordinate</span><span class="p">(</span><span class="n">markerNumbers</span><span class="o">=</span><span class="p">[</span><span class="n">mGround</span><span class="p">,</span>
+                  <span class="n">mbs</span><span class="o">.</span><span class="nf">AddMarker</span><span class="p">(</span><span class="nc">MarkerNodeCoordinate</span><span class="p">(</span><span class="n">nodeNumber</span><span class="o">=</span><span class="n">n0</span><span class="p">,</span> <span class="n">coordinate</span><span class="o">=</span><span class="n">i</span><span class="p">))]))</span>
+<span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">nElements</span><span class="p">):</span>
+    <span class="n">n1</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">AddNode</span><span class="p">(</span><span class="nc">NodePointSlope23</span><span class="p">(</span><span class="n">referenceCoordinates</span><span class="o">=</span><span class="p">[</span><span class="n">L</span><span class="o">*</span><span class="p">(</span><span class="n">k</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span><span class="o">/</span><span class="n">nElements</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">]))</span>
+    <span class="n">mbs</span><span class="o">.</span><span class="nf">AddObject</span><span class="p">(</span><span class="nc">ObjectANCFBeam</span><span class="p">(</span><span class="n">nodeNumbers</span><span class="o">=</span><span class="p">[</span><span class="n">n0</span><span class="p">,</span><span class="n">n1</span><span class="p">],</span> <span class="n">length</span><span class="o">=</span><span class="n">L</span><span class="o">/</span><span class="n">nElements</span><span class="p">,</span> <span class="n">sectionData</span><span class="o">=</span><span class="n">section</span><span class="p">))</span>
+    <span class="n">n0</span> <span class="o">=</span> <span class="n">n1</span>
+<span class="n">mTip</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">AddMarker</span><span class="p">(</span><span class="nc">MarkerNodeRigid</span><span class="p">(</span><span class="n">nodeNumber</span><span class="o">=</span><span class="n">n1</span><span class="p">))</span>
+<span class="n">mbs</span><span class="o">.</span><span class="nf">AddLoad</span><span class="p">(</span><span class="nc">LoadForceVector</span><span class="p">(</span><span class="n">markerNumber</span><span class="o">=</span><span class="n">mTip</span><span class="p">,</span> <span class="n">loadVector</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="n">F</span><span class="p">,</span><span class="mi">0</span><span class="p">]))</span>
+
+<span class="n">mbs</span><span class="o">.</span><span class="nf">Assemble</span><span class="p">()</span>
+<span class="n">mbs</span><span class="o">.</span><span class="nf">SolveStatic</span><span class="p">()</span>
+
+<span class="c1">#converges to F*L^3/(3*EI_z) + F*L/GA_y = -0.3433e-3 as the number of elements grows</span>
+<span class="n">exu</span><span class="o">.</span><span class="n">sys</span><span class="p">[</span><span class="s1">'testResult'</span><span class="p">]</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">GetNodeOutput</span><span class="p">(</span><span class="n">n1</span><span class="p">,</span> <span class="n">exu</span><span class="o">.</span><span class="nc">OutputVariableType</span><span class="o">.</span><span class="n">Displacement</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span><span class="o">*</span><span class="mi">1000</span> <span class="c1">#-0.338</span>
+</pre></div>
+</div>
+<p>Relevant Examples (Ex) and TestModels (TM) with weblink to github: <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/ANCFBeamEigTest.py"><code class="docutils literal notranslate"><span class="pre">ANCFBeamEigTest.py</span></code></a> (TM), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/ANCFBeamTest.py"><code class="docutils literal notranslate"><span class="pre">ANCFBeamTest.py</span></code></a> (TM), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/ANCFCableBeamDampingTest.py"><code class="docutils literal notranslate"><span class="pre">ANCFCableBeamDampingTest.py</span></code></a> (TM), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/energiesFlexibleBodiesTest.py"><code class="docutils literal notranslate"><span class="pre">energiesFlexibleBodiesTest.py</span></code></a> (TM), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/geometricallyExactBeamTest.py"><code class="docutils literal notranslate"><span class="pre">geometricallyExactBeamTest.py</span></code></a> (TM), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/rightAngleFrame.py"><code class="docutils literal notranslate"><span class="pre">rightAngleFrame.py</span></code></a> (TM)</p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="NodePointSlope12.html" class="btn btn-neutral float-left" title="NodePointSlope12" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="NodeGenericODE2.html" class="btn btn-neutral float-right" title="NodeGenericODE2" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

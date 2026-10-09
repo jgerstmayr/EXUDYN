@@ -100,3 +100,15 @@ th {
 }
 
 
+
+/* the file name of the notebook an example comes from, small and close under its first code cell
+   (tools/generators/autoGenerateHelper.py, NotebookOrigins) */
+.notebookorigin {
+  font-size: 80%;
+  color: #707070;
+  margin-top: -20px;
+  margin-bottom: 16px;
+}
+.notebookorigin p {
+  margin-bottom: 0px;
+}

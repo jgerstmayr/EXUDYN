@@ -1,0 +1,347 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>User settings that persist between runs &mdash; Exudyn1.13.3 1.13.3 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=3ee1c6c6" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/rtd_sphinx_search.min.css" />
+      <link rel="stylesheet" type="text/css" href="../../_static/custom.css?v=e2783f0e" />
+
+  
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=b8a3e558"></script>
+      <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../_static/copybutton.js?v=f281be69"></script>
+      <script src="../../_static/js/rtd_search_config.js"></script>
+      <script src="../../_static/js/rtd_sphinx_search.min.js"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Notation" href="notation.html" />
+    <link rel="prev" title="The results monitor" href="resultsMonitor.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            Exudyn1.13.3
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Exudyn User Manual</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../README.html">Exudyn</a></li>
+<li class="toctree-l1"><a class="reference internal" href="gettingStarted.html">Installation and getting started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="introduction.html">Overview on Exudyn</a></li>
+<li class="toctree-l1"><a class="reference internal" href="introductionBasics.html">Exudyn basics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorial.html">Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="GUI.html">Renderer, graphics and visualization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="performanceErrors.html">Performance, errors and solver failures</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="introductionAdvanced.html">Advanced topics</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="introductionAdvanced.html#graphics-pipeline">Graphics pipeline</a></li>
+<li class="toctree-l2"><a class="reference internal" href="introductionAdvanced.html#raytracing">Raytracing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="introductionAdvanced.html#graphicsdata">GraphicsData</a></li>
+<li class="toctree-l2"><a class="reference internal" href="introductionAdvanced.html#contact-problems">Contact problems</a></li>
+<li class="toctree-l2"><a class="reference internal" href="introductionAdvanced.html#interaction-with-julia">Interaction with Julia</a></li>
+<li class="toctree-l2"><a class="reference internal" href="introductionAdvanced.html#the-c-core">The C++ core</a></li>
+<li class="toctree-l2"><a class="reference internal" href="introductionAdvanced.html#interaction-with-other-codes">Interaction with other codes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="introductionAdvanced.html#ros">ROS</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="introductionAdvanced.html#tools-that-are-not-part-of-a-model">Tools that are not part of a model</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="commandLine.html">The command line: <code class="docutils literal notranslate"><span class="pre">python</span> <span class="pre">-m</span> <span class="pre">exudyn</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="resultsMonitor.html">The results monitor</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">User settings that persist between runs</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="notation.html">Notation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="theory.html">Theory and formulations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="solver.html">Solvers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../generated/cInterface/cInterfaceIndex.html">Python-C++ command interface</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Reference Manual</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../generated/items/itemsIndex.html">Items reference manual</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../generated/pythonUtilities/utilitiesIndex.html">Python Utility Functions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../generated/structures/structuresIndex.html">Structures and Settings</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../generated/references.html">References</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Developer documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../dev/README.html">Exudyn developer documentation</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">How-to notes</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../howTo/condaEnvironments.html">Conda environments for Exudyn</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../howTo/sphinxDocs.html">Building the documentation</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Examples, models and issues</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../generated/examples/examplesIndex.html">Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../generated/testModels/testModelsIndex.html">TestModels</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../generated/abbreviations.html">List of Abbreviations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="revisions.html">Revisions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../CHANGELOG.html">Changelog</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../generated/trackerlog.html">Issue tracker</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">Exudyn1.13.3</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="introductionAdvanced.html">Advanced topics</a></li>
+      <li class="breadcrumb-item active">User settings that persist between runs</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../_sources/docs/manual/userSettings.md.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section class="tex2jax_ignore mathjax_ignore" id="user-settings-that-persist-between-runs">
+<span id="sec-usersettings"></span><h1>User settings that persist between runs<a class="headerlink" href="#user-settings-that-persist-between-runs" title="Link to this heading"></a></h1>
+<p>A setting that is changed on every start - the output directory, the multi-sampling of
+the renderer, the size of the basis vectors - is stored once and taken by every run afterwards.
+Exudyn reads one file for that, <code class="docutils literal notranslate"><span class="pre">~/.exudyn/config.json</span></code>:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+  <span class="s2">"version"</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+  <span class="s2">"config"</span><span class="p">:</span> <span class="p">{</span><span class="s2">"outputDirectory"</span><span class="p">:</span> <span class="s2">"solution/"</span><span class="p">},</span>
+  <span class="s2">"visualizationSettings"</span><span class="p">:</span> <span class="p">{</span><span class="s2">"openGL.multiSampling"</span><span class="p">:</span> <span class="mi">4</span><span class="p">,</span> <span class="s2">"nodes.basisSize"</span><span class="p">:</span> <span class="mf">0.5</span><span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>Nothing writes this file by itself. A script that behaves differently on another
+machine, because something was stored there, is the one thing a settings file must not cause, so
+storing is always asked for:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">exudyn.misc</span><span class="w"> </span><span class="kn">import</span> <span class="n">overrideSettings</span>
+
+<span class="n">SC</span><span class="o">.</span><span class="nf">visualizationSettings</span><span class="o">.</span><span class="n">openGL</span><span class="o">.</span><span class="n">multiSampling</span> <span class="o">=</span> <span class="mi">4</span>
+<span class="n">overrideSettings</span><span class="o">.</span><span class="n">Store</span><span class="p">(</span><span class="n">SC</span><span class="p">)</span>         <span class="c1">#every run from now on starts with it</span>
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">Store(SC)</span></code> writes the settings that differ from the defaults - the same list
+the settings dialog shows as <em>changed</em> - and <code class="docutils literal notranslate"><span class="pre">Store(config=exudyn.config)</span></code> does the same for
+<code class="docutils literal notranslate"><span class="pre">exudyn.config</span></code>. <code class="docutils literal notranslate"><span class="pre">overrideSettings.Clear()</span></code> deletes the file.</p>
+<p><strong>The <code class="docutils literal notranslate"><span class="pre">version</span></code> is the format of the file</strong>, and it has to match: a file of another version is
+ignored, with one note naming both. It is a plain integer that moves only when Exudyn has been
+released <em>and</em> the meaning of something in this file has changed - not with the Exudyn version, which
+moves on every resolved issue. Store your settings again to write a current file.</p>
+<section id="what-happens-when-the-file-is-there">
+<h2>What happens when the file is there<a class="headerlink" href="#what-happens-when-the-file-is-there" title="Link to this heading"></a></h2>
+<p><code class="docutils literal notranslate"><span class="pre">import</span> <span class="pre">exudyn</span></code> reads it once into <code class="docutils literal notranslate"><span class="pre">exudyn.special.overrideSettings</span></code> and prints
+<strong>one note</strong> naming how many settings it took:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">NOTE</span><span class="p">:</span> <span class="mi">1</span> <span class="n">config</span> <span class="n">settings</span> <span class="ow">and</span> <span class="mi">2</span> <span class="nf">visualizationSettings</span> <span class="n">read</span> <span class="kn">from</span><span class="w"> </span><span class="o">~/.</span><span class="n">exudyn</span><span class="o">/</span><span class="n">config</span><span class="o">.</span><span class="n">json</span>
+</pre></div>
+</div>
+<p>A count that is 0 is left out. <code class="docutils literal notranslate"><span class="pre">overrideSettings.Print()</span></code> lists what came from the file, which
+is the answer to <em>why does this script behave differently here</em>, <code class="docutils literal notranslate"><span class="pre">overrideSettings.Applied()</span></code> gives
+the same as a list, for a script that wants to print it into its own output, and
+<code class="docutils literal notranslate"><span class="pre">EXUDYN_NO_USER_SETTINGS=1</span></code> runs a script as if there were no file.</p>
+<p><strong>A file that should stay quiet</strong> says so itself, beside its <code class="docutils literal notranslate"><span class="pre">version</span></code>:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+  <span class="s2">"version"</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+  <span class="s2">"suppressOverrideSettingsWarning"</span><span class="p">:</span> <span class="n">true</span><span class="p">,</span>
+  <span class="s2">"visualizationSettings"</span><span class="p">:</span> <span class="p">{</span><span class="s2">"openGL.multiSampling"</span><span class="p">:</span> <span class="mi">4</span><span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>The key does not exist unless it is written, and without it the note is printed. It suppresses the
+note only: a setting that could not be applied is still reported, because that is a defect and not
+information.</p>
+<p><strong>What happens, in order:</strong></p>
+<ol class="arabic simple">
+<li><p>the whole file is read into <code class="docutils literal notranslate"><span class="pre">exudyn.special.overrideSettings</span></code>, once, by <code class="docutils literal notranslate"><span class="pre">import</span> <span class="pre">exudyn</span></code>;</p></li>
+<li><p>what can be applied at once is applied at once, which is the <code class="docutils literal notranslate"><span class="pre">config</span></code> section;</p></li>
+<li><p>the rest stays in the dictionary, because the things it sets do not exist yet;</p></li>
+<li><p>every <code class="docutils literal notranslate"><span class="pre">VisualizationSettings</span></code> structure applies the stored settings <strong>when it is created</strong> - the
+one a <code class="docutils literal notranslate"><span class="pre">SystemContainer</span></code> builds, and one built by <code class="docutils literal notranslate"><span class="pre">exu.VisualizationSettings()</span></code>. A setting that
+names nothing is reported and changes nothing;</p></li>
+<li><p>a dialog reads its size and position from the <code class="docutils literal notranslate"><span class="pre">dialogs</span></code> section when it opens, and the results
+monitor its own settings from <code class="docutils literal notranslate"><span class="pre">resultsMonitor</span></code>;</p></li>
+<li><p>nothing writes the file unless it is asked to.</p></li>
+</ol>
+<p><strong>The file is read once</strong>, so a file you edit while a session is running - or one that another
+session stored - has no effect until you read it again. That is what makes a stored setting look as
+if it had not been stored in a console that keeps its kernel, such as Spyder:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">exudyn.misc</span><span class="w"> </span><span class="kn">import</span> <span class="n">overrideSettings</span>
+<span class="n">overrideSettings</span><span class="o">.</span><span class="n">Reload</span><span class="p">()</span>          <span class="c1">#read it again and apply what can be applied</span>
+<span class="n">overrideSettings</span><span class="o">.</span><span class="nf">Print</span><span class="p">()</span>           <span class="c1">#what came from it now</span>
+</pre></div>
+</div>
+<p>A reload does not <strong>undo</strong>: a setting that already reached <code class="docutils literal notranslate"><span class="pre">exudyn.config</span></code>, and a structure that
+already exists, keep what they were given. A setting you removed from the file is seen by the
+structures created after the reload; for everything else, start a new session.</p>
+<p>A stored <code class="docutils literal notranslate"><span class="pre">visualizationSetting</span></code> is <strong>not</strong> a new default: <code class="docutils literal notranslate"><span class="pre">exu.VisualizationSettings()</span></code> carries it,
+and the defaults the settings dialog compares against are still the defaults of Exudyn, so <em>diff to
+default</em> shows a stored setting as a difference. That is the point - it is what the file changed.</p>
+<p><strong>What may be stored are plain values</strong>: a number, a flag, a string, or a list of numbers - and an
+enum setting, <code class="docutils literal notranslate"><span class="pre">contour.outputVariable</span></code>, as the name of its value, <code class="docutils literal notranslate"><span class="pre">&quot;StressLocal&quot;</span></code>, which is read back
+by that name; <code class="docutils literal notranslate"><span class="pre">interactive.highlightItemType</span></code> is the state of a highlight and is not stored. A setting
+that holds graphics data, a user function or a matrix container is refused with a message and
+changes nothing - such a value cannot be carried honestly by a JSON file. A key that names no
+setting, a section nobody reads, a file that is not valid JSON: each of them is reported and none of
+them stops <code class="docutils literal notranslate"><span class="pre">import</span> <span class="pre">exudyn</span></code>.</p>
+</section>
+<section id="storing-from-the-dialog">
+<h2>Storing from the dialog<a class="headerlink" href="#storing-from-the-dialog" title="Link to this heading"></a></h2>
+<p>The settings dialog has a <strong>store settings</strong> button. It writes the <code class="docutils literal notranslate"><span class="pre">visualizationSettings</span></code> that
+differ from the defaults, and the size and position of the dialog itself, and <strong>nothing else</strong> - not
+<code class="docutils literal notranslate"><span class="pre">exudyn.config</span></code>, not the simulation settings - and it shows exactly what it is about to write before
+it writes anything. It is the way to keep a look you have just made without switching
+<code class="docutils literal notranslate"><span class="pre">storeDialogPositions</span></code> on.</p>
+<p><strong>diff to default</strong> stays a difference to the <em>default</em>, and a setting that the file already stores
+is listed with the others and then named again under a comment line that says so. Comparing against
+the defaults plus the file instead would hide exactly the settings the file is about.</p>
+</section>
+<section id="placing-a-dialog-and-a-window-from-a-script">
+<h2>Placing a dialog, and a window, from a script<a class="headerlink" href="#placing-a-dialog-and-a-window-from-a-script" title="Link to this heading"></a></h2>
+<p>A script can say where a dialog opens, which is the same mechanism the dialogs use for themselves:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">exudyn.misc</span><span class="w"> </span><span class="kn">import</span> <span class="n">overrideSettings</span>
+
+<span class="c1">#the visualization settings dialog, 1024x768 at (100, 80):</span>
+<span class="n">overrideSettings</span><span class="o">.</span><span class="n">StoreDialogGeometry</span><span class="p">(</span><span class="s1">'Visualization Settings'</span><span class="p">,</span> <span class="p">[</span><span class="mi">1024</span><span class="p">,</span> <span class="mi">768</span><span class="p">],</span> <span class="p">[</span><span class="mi">100</span><span class="p">,</span> <span class="mi">80</span><span class="p">])</span>
+</pre></div>
+</div>
+<p>The name is the <strong>title</strong> of the dialog, and <code class="docutils literal notranslate"><span class="pre">overrideSettings.DialogKey(name)</span></code> is the key it is
+stored under, so the same call places the solution viewer (<code class="docutils literal notranslate"><span class="pre">'Solution</span> <span class="pre">Viewer'</span></code>) or any other dialog.
+The <strong>size comes back always and the position only if the window would still be reachable</strong> on the
+screen you have now - a monitor that is gone must not put a dialog where its title bar cannot be
+grabbed. This writes <code class="docutils literal notranslate"><span class="pre">~/.exudyn/config.json</span></code>, so it holds for every run afterwards.</p>
+<p>The <strong>render window</strong> is not a dialog and is placed by its own settings, per view:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">SC</span><span class="o">.</span><span class="nf">visualizationSettings</span><span class="o">.</span><span class="n">view0</span><span class="o">.</span><span class="n">window</span><span class="o">.</span><span class="n">renderWindowSize</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1024</span><span class="p">,</span> <span class="mi">768</span><span class="p">]</span>
+<span class="n">SC</span><span class="o">.</span><span class="nf">visualizationSettings</span><span class="o">.</span><span class="n">view0</span><span class="o">.</span><span class="n">window</span><span class="o">.</span><span class="n">renderWindowPosition</span> <span class="o">=</span> <span class="p">[</span><span class="mi">100</span><span class="p">,</span> <span class="mi">80</span><span class="p">]</span>
+</pre></div>
+</div>
+<p>A negative coordinate - the default - means the window manager places it. The position is that of the
+OpenGL area rather than the title bar, so a small value hides part of the title bar and 0 hides it
+completely, which is a way to have a view without one.</p>
+<p><strong>The render window is the one window whose geometry lives in two places</strong>: these settings, and -
+because they are ordinary settings - the <code class="docutils literal notranslate"><span class="pre">visualizationSettings</span></code> section of the file. The file is
+applied when the settings structure is created and a script speaks afterwards, so <strong>what the script
+sets wins</strong>, and <code class="docutils literal notranslate"><span class="pre">SC.renderer.Start()</span></code> says so once when the two differ:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Python</span> <span class="n">WARNING</span><span class="p">:</span> <span class="n">the</span> <span class="nf">render</span> <span class="n">window</span> <span class="n">geometry</span> <span class="n">stored</span> <span class="ow">in</span> <span class="n">the</span> <span class="n">settings</span> <span class="n">file</span> <span class="n">differs</span> <span class="kn">from</span><span class="w"> </span><span class="nn">what</span> <span class="n">this</span> <span class="n">session</span>
+<span class="nb">set</span><span class="p">,</span> <span class="ow">and</span> <span class="n">what</span> <span class="n">the</span> <span class="n">session</span> <span class="nb">set</span> <span class="ow">is</span> <span class="n">used</span><span class="p">:</span>
+  <span class="n">view0</span><span class="o">.</span><span class="n">window</span><span class="o">.</span><span class="n">renderWindowPosition</span><span class="p">:</span> <span class="n">the</span> <span class="n">file</span> <span class="n">says</span> <span class="p">[</span><span class="mi">100</span><span class="p">,</span><span class="mi">80</span><span class="p">]</span> <span class="ow">and</span> <span class="n">this</span> <span class="n">session</span> <span class="n">uses</span> <span class="p">[</span><span class="mi">500</span><span class="p">,</span><span class="mi">400</span><span class="p">]</span>
+<span class="n">store</span> <span class="n">the</span> <span class="n">settings</span> <span class="n">again</span> <span class="n">to</span> <span class="n">change</span> <span class="n">the</span> <span class="n">file</span><span class="p">,</span> <span class="ow">or</span> <span class="n">remove</span> <span class="n">them</span> <span class="kn">from</span><span class="w"> </span><span class="nn">it</span>
+</pre></div>
+</div>
+<p>It says nothing when they agree, which is the normal case for someone who stored the geometry and has
+not touched it since. <code class="docutils literal notranslate"><span class="pre">view*.window.storeRenderWindowGeometry</span></code> writes where the window was back into
+these settings when it closes, and <code class="docutils literal notranslate"><span class="pre">SC.renderer.GetState()['currentWindowPosition']</span></code> is where it is
+while it is open.</p>
+</section>
+<section id="the-plot-windows-of-plotsensor">
+<h2>The plot windows of PlotSensor<a class="headerlink" href="#the-plot-windows-of-plotsensor" title="Link to this heading"></a></h2>
+<p>A plot window is remembered by its <strong>sequence</strong>, the order <code class="docutils literal notranslate"><span class="pre">PlotSensor</span></code> made it in, because plot
+windows have no title of their own: the first one of a run is stored as <code class="docutils literal notranslate"><span class="pre">'PlotSensor</span> <span class="pre">1'</span></code>, the second
+as <code class="docutils literal notranslate"><span class="pre">'PlotSensor</span> <span class="pre">2'</span></code>, and <code class="docutils literal notranslate"><span class="pre">PlotSensor(...,</span> <span class="pre">closeAll=True)</span></code> starts that order over. They are stored in
+the same <code class="docutils literal notranslate"><span class="pre">dialogs</span></code> section, with the same rules - the size comes back always, the position only if the
+window would still be reachable - so the next run opens the plots where they were arranged.</p>
+<p>Storing them is asked for, once the windows are where they should be:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">exudyn.plot</span><span class="w"> </span><span class="kn">import</span> <span class="nf">StorePlotWindowGeometry</span>
+
+<span class="c1">#after arranging the plot windows on the screen:</span>
+<span class="nf">StorePlotWindowGeometry</span><span class="p">()</span>          <span class="c1">#returns how many windows it stored</span>
+</pre></div>
+</div>
+<p>This is the call to use when the plots are made after <code class="docutils literal notranslate"><span class="pre">SC.renderer.Stop()</span></code>, when the settings dialog
+is gone; while it is open, its <strong>store positions</strong> button stores the plot windows together with the
+other windows. <code class="docutils literal notranslate"><span class="pre">PlotSensorDefaults().storeWindowPositions</span> <span class="pre">=</span> <span class="pre">True</span></code> in addition stores each window when it closes, one window at a time, which asks nothing but
+also keeps whatever a window happened to be when it was closed.</p>
+<p>A plot window is only placed by a backend that has one: with matplotlib on <code class="docutils literal notranslate"><span class="pre">Agg</span></code> - which
+<code class="docutils literal notranslate"><span class="pre">EXUDYN_SUPPRESS_UI_WINDOW_OPEN</span></code> selects - there is no window, nothing is placed and nothing is
+stored.</p>
+<p><strong>For this run only</strong>, a script can write into <code class="docutils literal notranslate"><span class="pre">exudyn.special.overrideSettings</span></code> instead of the file:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">exudyn</span><span class="o">.</span><span class="n">special</span><span class="o">.</span><span class="n">overrideSettings</span><span class="p">[</span><span class="s1">'dialogs'</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s1">'visualizationsettings'</span><span class="p">:</span> <span class="p">{</span><span class="s1">'size'</span><span class="p">:</span> <span class="p">[</span><span class="mi">1024</span><span class="p">,</span> <span class="mi">768</span><span class="p">],</span> <span class="s1">'position'</span><span class="p">:</span> <span class="p">[</span><span class="mi">100</span><span class="p">,</span> <span class="mi">80</span><span class="p">]}}</span>
+</pre></div>
+</div>
+<p>That is read by the next dialog that opens and the file is not touched. It is <strong>not the recommended
+way</strong>: nothing checks what is put there, and a value of the wrong shape is simply not used - the
+functions above are what say what they mean, and what a later Exudyn will keep working.</p>
+</section>
+<section id="remembering-a-dialog-its-columns-and-its-font">
+<h2>Remembering a dialog, its columns and its font<a class="headerlink" href="#remembering-a-dialog-its-columns-and-its-font" title="Link to this heading"></a></h2>
+<p><code class="docutils literal notranslate"><span class="pre">visualizationSettings.dialogs.storeDialogPositions</span> <span class="pre">=</span> <span class="pre">True</span></code> makes a settings dialog remember
+where it was left, under <code class="docutils literal notranslate"><span class="pre">&quot;dialogs&quot;</span></code>, one entry per dialog. <strong>The size comes back always; the
+position only when the window would still be reachable.</strong> A monitor that is unplugged, a laptop
+undocked, a screen resolution that changed: each of them would otherwise put the dialog where nobody
+can reach its title bar, and a dialog that cannot be closed is a stuck session. When the stored
+position is not usable, the dialog opens where it would have opened anyway, at its remembered size.</p>
+<p>The three fixed columns of a settings dialog take a share of its width, each a fraction in
+<code class="docutils literal notranslate"><span class="pre">visualizationSettings.dialogs</span></code> - <code class="docutils literal notranslate"><span class="pre">columnWidthName</span></code>, <code class="docutils literal notranslate"><span class="pre">columnWidthValue</span></code>,
+<code class="docutils literal notranslate"><span class="pre">columnWidthType</span></code> - and the description column takes what they leave; if the three together
+would leave the description less than a tenth of the dialog, all three are scaled down to leave it
+that much. <strong>Ctrl and the mouse wheel change the font size</strong> of an open dialog, about 10% per notch;
+the wheel alone still scrolls.</p>
+<p>The environment variables that change what Exudyn does before a script says anything are listed in
+<a class="reference internal" href="../generated/cInterface/EnvironmentVariables.html#sec-environmentvariables"><span class="std std-ref">Environment variables</span></a>; <code class="docutils literal notranslate"><span class="pre">EXUDYN_NO_USER_SETTINGS</span></code> and <code class="docutils literal notranslate"><span class="pre">EXUDYN_CONFIG_FILE</span></code> are the two for this file.
+The functions that read and write the file are in <code class="docutils literal notranslate"><span class="pre">exudyn.misc.overrideSettings</span></code>.</p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="resultsMonitor.html" class="btn btn-neutral float-left" title="The results monitor" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="notation.html" class="btn btn-neutral float-right" title="Notation" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

@@ -1,0 +1,479 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Module: interactive &mdash; Exudyn1.13.3 1.13.3 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=3ee1c6c6" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/rtd_sphinx_search.min.css" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/custom.css?v=e2783f0e" />
+
+  
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=b8a3e558"></script>
+      <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../../_static/copybutton.js?v=f281be69"></script>
+      <script src="../../../_static/js/rtd_search_config.js"></script>
+      <script src="../../../_static/js/rtd_sphinx_search.min.js"></script>
+      <script>window.MathJax = {"loader": {"load": ["[tex]/mathtools"]}, "tex": {"packages": {"[+]": ["mathtools"]}, "macros": {"ANCFdk": "{\\LU{0}{\\dv_k}}", "ANCFdkO": "{\\LU{0}{\\dv_{0,k}}}", "ANCFdkOtp": "{\\LU{0}{\\dv_{0,k}\\tp}}", "ANCFdkt": "{\\LU{0}{\\dot\\dv_k}}", "Am": "{\\mathbf{A}}", "Dm": "{\\mathbf{D}}", "Em": "{\\mathbf{E}}", "Gm": "{\\mathbf{G}}", "Im": "{\\mathbf{I}}", "ImThree": "{\\mathbf{I}_{3 \\times 3}}", "Jm": "{\\mathbf{J}}", "Km": "{\\mathbf{K}}", "Mm": "{\\mathbf{M}}", "Pm": "{\\mathbf{P}}", "Rm": "{\\mathbf{R}}", "Sm": "{\\mathbf{S}}", "Tm": "{\\mathbf{T}}", "av": "{\\mathbf{a}}", "bv": "{\\mathbf{b}}", "cv": "{\\mathbf{c}}", "diffANCF": ["{\\frac{\\partial #1}{\\partial \\qv_{ANCF}}}", 1], "diffANCFdk": "{\\diffANCFmI{\\ANCFdk}}", "diffANCFmI": ["{\\frac{\\partial #1}{\\partial \\qv_{ANCF,m1}}}", 1], "diffANCFmIt": ["{\\frac{\\partial #1}{\\partial \\dot \\qv_{ANCF,m1}}}", 1], "diffANCFt": ["{\\frac{\\partial #1}{\\partial \\dot \\qv_{ANCF}}}", 1], "diffmI": ["{\\frac{\\partial #1}{\\partial \\qv_{m1}}}", 1], "diffmIt": ["{\\frac{\\partial #1}{\\partial \\dot \\qv_{m1}}}", 1], "diffmOI": ["{\\frac{\\partial #1}{\\partial \\qv_{m0,m1}}}", 1], "diffmOIt": ["{\\frac{\\partial #1}{\\partial \\dot \\qv_{m0,m1}}}", 1], "diffmOt": ["{\\frac{\\partial #1}{\\partial \\dot \\qv_{m0}}}", 1], "dv": "{\\mathbf{d}}", "ev": "{\\mathbf{e}}", "fv": "{\\mathbf{f}}", "gv": "{\\mathbf{g}}", "hv": "{\\mathbf{h}}", "nv": "{\\mathbf{n}}", "pv": "{\\mathbf{p}}", "qv": "{\\mathbf{q}}", "rv": "{\\mathbf{r}}", "sv": "{\\mathbf{s}}", "tv": "{\\mathbf{t}}", "uv": "{\\mathbf{u}}", "vv": "{\\mathbf{v}}", "xv": "{\\mathbf{x}}", "yv": "{\\mathbf{y}}", "zv": "{\\mathbf{z}}", "vspace": ["{}", 1], "ra": "{\\rightarrow}", "Rcal": "{\\mathbb{R}}", "Ccal": "{\\mathbb{C}}", "Ncal": "{\\mathbb{N}}", "Rot": "{\\mathbf{A}}", "dd": "{\\mathrm{d}}", "ps": "{p_\\mathrm{s}}", "co": "{\\mathrm{c}}", "si": "{\\mathrm{s}}", "tp": "{^\\mathrm{T}}", "diag": "{\\mathrm{diag}}", "vec": "{\\mathrm{vec}}", "Null": "{\\mathbf{0}}", "varepsilonDot": "{\\boldsymbol{\\varepsilon}}", "talpha": "{\\boldsymbol{\\alpha}}", "tbeta": "{\\boldsymbol{\\beta}}", "tgamma": "{\\boldsymbol{\\gamma}}", "tchi": "{\\boldsymbol{\\chi}}", "tdelta": "{\\boldsymbol{\\delta}}", "teps": "{\\boldsymbol{\\varepsilon}}", "tepsDot": "{\\boldsymbol{\\dot \\varepsilon}}", "teta": "{\\boldsymbol{\\eta}}", "tkappa": "{\\boldsymbol{\\kappa}}", "tkappaDot": "{\\boldsymbol{\\dot \\kappa}}", "tphi": "{\\boldsymbol{\\phi}}", "boldVarPhi": "{\\boldsymbol{\\varphi}}", "tPhi": "{\\boldsymbol{\\Phi}}", "ttheta": "{\\boldsymbol{\\theta}}", "tTheta": "{\\boldsymbol{\\Theta}}", "tlambda": "{\\boldsymbol{\\lambda}}", "tnu": "{\\boldsymbol{\\nu}}", "tmu": "{\\boldsymbol{\\mu}}", "tpsi": "{\\boldsymbol{\\psi}}", "tPsi": "{\\boldsymbol{\\Psi}}", "ttau": "{\\boldsymbol{\\tau}}", "tsigma": "{\\boldsymbol{\\sigma}}", "txi": "{\\boldsymbol{\\xi}}", "tzeta": "{\\boldsymbol{\\zeta}}", "tomega": "{\\boldsymbol{\\omega}}", "tOmega": "{\\boldsymbol{\\Omega}}", "vareps": "{\\varepsilon}", "myoverline": ["\\overline{#1}", 1], "pluseq": "\\mathrel{+}=", "LU": ["{\\prescript{#1}{}{#2}\\,}", 2], "LUX": ["{\\prescript{#1}{}{#2}#3\\,}", 3], "LUR": ["{\\prescript{#1}{}{#2}_{#3}\\,}", 3], "LURU": ["{\\prescript{#1}{}{#2}_{#3}^{#4}\\,}", 4], "LLdot": ["{\\prescript{}{#1}{\\dot{#2}}_{#3}\\,}", 3], "vr": ["{\\left[ \\begin{array}{c} { #1}\\vspace{0.04cm} \\\\ { #2}\\vspace{0.04cm} \\\\ { #3} \\end{array} \\right]}", 3], "mr": ["{\\left[ \\begin{array}{ccc} #1 & #2 & #3 \\vspace{0.04cm}\\\\ #4 & #5 & #6 \\vspace{0.04cm}\\\\ #7 & #8 & #9  \\end{array} \\right]}", 9], "vp": ["{\\left[ \\begin{array}{c} { #1} \\vspace{0.04cm}\\\\ { #2} \\end{array} \\right]}", 2], "mp": ["{\\left[ \\begin{array}{cc} #1 & #2 \\vspace{0.04cm}\\\\ #3 & #4 \\end{array} \\right]}", 4], "mfour": ["{\\left[ \\begin{array}{cccc} { #1} \\\\ { #2} \\\\ { #3} \\\\ { #4} \\end{array} \\right]}", 4], "vfour": ["{\\left[ \\begin{array}{c} { #1} \\\\ { #2} \\\\ { #3} \\\\ { #4} \\end{array} \\right]}", 4], "vrRow": ["{[#1,\\, #2,\\, #3]}", 3], "vsix": ["{\\left[ \\begin{array}{c} { #1} \\\\ { #2} \\\\ { #3} \\\\ { #4} \\\\ { #5} \\\\ { #6} \\end{array} \\right]}", 6], "vsixb": ["{\\begin{array}{c} { #1} \\\\ { #2} \\\\ { #3} \\\\ { #4} \\\\ { #5} \\\\ { #6} \\end{array} }", 6], "vsixs": ["{ \\begin{array}{c} { #1} \\\\ { #2} \\\\ { #3} \\\\ { #4} \\\\ { #5} \\\\ { #6} \\end{array} }", 6], "SO": "{q}", "FO": "{y}", "AE": "{\\lambda}", "SYS": "{s}", "SON": "{$2^\\mathrm{nd}$ order differential equations}", "FON": "{$1^\\mathrm{st}$ order differential equations}", "AEN": "{algebraic equations}", "Bm": "{\\mathbf{B}}", "Cm": "{\\mathbf{C}}", "Fm": "{\\mathbf{F}}", "SYSN": "{system equations}", "cIni": "{_\\mathrm{ini}}", "cRef": "{_\\mathrm{ref}}", "cCur": "{_\\mathrm{cur}}", "cVis": "{_\\mathrm{vis}}", "cSOS": "{_\\mathrm{start\\;of\\;step}}", "cConfig": "{_\\mathrm{config}}", "pLoc": "{\\mathbf{b}}", "pLocB": "{\\,^{b}{\\mathbf{v}}}", "pRef": "{\\mathbf{r}}", "pRefG": "{\\,^{0}{\\mathbf{r}}}", "indf": "{_\\mathrm{f}}", "indt": "{_\\mathrm{t}}", "indr": "{_\\mathrm{r}}", "indtt": "{_\\mathrm{tt}}", "indrr": "{_\\mathrm{rr}}", "indff": "{_\\mathrm{ff}}", "indtf": "{_\\mathrm{tf}}", "indrf": "{_\\mathrm{rf}}", "indtr": "{_\\mathrm{tr}}", "omegaBDtilde": "{\\LU{b}{\\tilde \\tomega_\\mathrm{bd}}}", "indrigid": "{_\\mathrm{rigid}}", "indred": "{_\\mathrm{red}}", "induser": "{_\\mathrm{user}}", "indu": "{_\\mathrm{u}}", "termA": ["{\\color{blue}{#1}}", 1], "termB": ["{\\color{red}{#1}}", 1], "termC": ["{\\color{green}{#1}}", 1], "acc": "{\\ddot{\\mathbf{q}}}", "GA": "{G\\alpha}", "Hm": "{\\mathbf{H}}", "ImTwo": "{\\mathbf{I}_{2 \\times 2}}", "Lm": "{\\mathbf{L}}", "Qm": "{\\mathbf{Q}}", "Vm": "{\\mathbf{V}}", "Wm": "{\\mathbf{W}}", "Xm": "{\\mathbf{X}}", "Ym": "{\\mathbf{Y}}", "aalg": "{\\mathbf{a}}", "iv": "{\\mathbf{i}}", "jv": "{\\mathbf{j}}", "kv": "{\\mathbf{k}}", "lv": "{\\mathbf{l}}", "mv": "{\\mathbf{m}}", "ov": "{\\mathbf{o}}", "vel": "{\\mathbf{v}}", "wv": "{\\mathbf{w}}"}}, "options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+      <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-mml-chtml.js"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+    <link rel="next" title="Module: kinematicTree" href="kinematicTree.html" />
+    <link rel="prev" title="Module: misc.settingsUtilities" href="misc.settingsUtilities.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            Exudyn1.13.3
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Exudyn User Manual</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../README.html">Exudyn</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../manual/gettingStarted.html">Installation and getting started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../manual/introduction.html">Overview on Exudyn</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../manual/introductionBasics.html">Exudyn basics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../manual/tutorial.html">Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../manual/GUI.html">Renderer, graphics and visualization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../manual/performanceErrors.html">Performance, errors and solver failures</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../manual/introductionAdvanced.html">Advanced topics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../manual/notation.html">Notation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../manual/theory.html">Theory and formulations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../manual/solver.html">Solvers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../cInterface/cInterfaceIndex.html">Python-C++ command interface</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Reference Manual</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../items/itemsIndex.html">Items reference manual</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="utilitiesIndex.html">Python Utility Functions</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="advancedUtilities.html">Module: advancedUtilities</a></li>
+<li class="toctree-l2"><a class="reference internal" href="artificialIntelligence.html">Module: artificialIntelligence</a></li>
+<li class="toctree-l2"><a class="reference internal" href="basicUtilities.html">Module: basicUtilities</a></li>
+<li class="toctree-l2"><a class="reference internal" href="beams.html">Module: beams</a></li>
+<li class="toctree-l2"><a class="reference internal" href="demos.html">Module: demos</a></li>
+<li class="toctree-l2"><a class="reference internal" href="FEM.html">Module: FEM</a></li>
+<li class="toctree-l2"><a class="reference internal" href="graphics.html">Module: graphics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="graphicsDataUtilities.html">Module: graphicsDataUtilities</a></li>
+<li class="toctree-l2"><a class="reference internal" href="misc.GUI.html">Module: misc.GUI</a></li>
+<li class="toctree-l2"><a class="reference internal" href="misc.settingsUtilities.html">Module: misc.settingsUtilities</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Module: interactive</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#function-configuredialogcolumns">Function: ConfigureDialogColumns</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#function-animatemodes">Function: AnimateModes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#function-solutionviewer">Function: SolutionViewer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#function-showimage">Function: ShowImage</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#function-convertimages2video">Function: ConvertImages2Video</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#function-interactiveimages2video">Function: InteractiveImages2Video</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#class-interactivedialog-in-module-interactive">CLASS InteractiveDialog (in module interactive)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="kinematicTree.html">Module: kinematicTree</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lieGroupBasics.html">Module: lieGroupBasics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="misc.mainSystemExtensions.html">Module: misc.mainSystemExtensions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="particles.html">Module: particles</a></li>
+<li class="toctree-l2"><a class="reference internal" href="physics.html">Module: physics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="plot.html">Module: plot</a></li>
+<li class="toctree-l2"><a class="reference internal" href="processing.html">Module: processing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rigidBodyUtilities.html">Module: rigidBodyUtilities</a></li>
+<li class="toctree-l2"><a class="reference internal" href="robotics.html">Module: robotics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="robotics.rosInterface.html">Module: robotics.rosInterface</a></li>
+<li class="toctree-l2"><a class="reference internal" href="robotics.future.html">Module: robotics.future</a></li>
+<li class="toctree-l2"><a class="reference internal" href="robotics.models.html">Module: robotics.models</a></li>
+<li class="toctree-l2"><a class="reference internal" href="robotics.mobile.html">Module: robotics.mobile</a></li>
+<li class="toctree-l2"><a class="reference internal" href="robotics.motion.html">Module: robotics.motion</a></li>
+<li class="toctree-l2"><a class="reference internal" href="robotics.special.html">Module: robotics.special</a></li>
+<li class="toctree-l2"><a class="reference internal" href="robotics.utilities.html">Module: robotics.utilities</a></li>
+<li class="toctree-l2"><a class="reference internal" href="shells.html">Module: shells</a></li>
+<li class="toctree-l2"><a class="reference internal" href="signalProcessing.html">Module: signalProcessing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="solver.html">Module: solver</a></li>
+<li class="toctree-l2"><a class="reference internal" href="utilities.html">Module: utilities</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../structures/structuresIndex.html">Structures and Settings</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../references.html">References</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Developer documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../dev/README.html">Exudyn developer documentation</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">How-to notes</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../howTo/condaEnvironments.html">Conda environments for Exudyn</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../howTo/sphinxDocs.html">Building the documentation</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Examples, models and issues</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../examples/examplesIndex.html">Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../testModels/testModelsIndex.html">TestModels</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../abbreviations.html">List of Abbreviations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../manual/revisions.html">Revisions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../CHANGELOG.html">Changelog</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../trackerlog.html">Issue tracker</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">Exudyn1.13.3</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="utilitiesIndex.html">Python Utility Functions</a></li>
+      <li class="breadcrumb-item active">Module: interactive</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../../_sources/docs/generated/pythonUtilities/interactive.md.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <!-- GENERATED by tools/generators/utilityDocsEmitter.py from the docstrings of python/exudyn - do not edit -->
+<section class="tex2jax_ignore mathjax_ignore" id="module-interactive">
+<span id="sec-module-interactive"></span><h1>Module: interactive<a class="headerlink" href="#module-interactive" title="Link to this heading"></a></h1>
+<p>Utilities for interactive simulation and results monitoring; NOTE: does not work on MacOS!</p>
+<ul class="simple">
+<li><p><strong>Author</strong>: Johannes Gerstmayr</p></li>
+<li><p><strong>Date</strong>: 2021-01-17 (created)</p></li>
+</ul>
+<section id="function-configuredialogcolumns">
+<span id="sec-interactive-configuredialogcolumns"></span><h2>Function: ConfigureDialogColumns<a class="headerlink" href="#function-configuredialogcolumns" title="Link to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/interactive.py#L43"><code class="docutils literal notranslate"><span class="pre">ConfigureDialogColumns(tkWindow)</span></code></a></p>
+<ul class="simple">
+<li><p><strong>function description</strong>: give the columns of a dialog’s grid their weights and minimum widths; returns the number of columns</p></li>
+</ul>
+</section>
+<section id="function-animatemodes">
+<span id="sec-interactive-animatemodes"></span><h2>Function: AnimateModes<a class="headerlink" href="#function-animatemodes" title="Link to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/interactive.py#L682"><code class="docutils literal notranslate"><span class="pre">AnimateModes(systemContainer,</span> <span class="pre">mainSystem,</span> <span class="pre">nodeNumber,</span> <span class="pre">period</span> <span class="pre">=</span> <span class="pre">0.04,</span> <span class="pre">stepsPerPeriod</span> <span class="pre">=</span> <span class="pre">30,</span> <span class="pre">showTime</span> <span class="pre">=</span> <span class="pre">True,</span> <span class="pre">renderWindowText</span> <span class="pre">=</span> <span class="pre">'',</span> <span class="pre">runOnStart</span> <span class="pre">=</span> <span class="pre">False,</span> <span class="pre">runMode</span> <span class="pre">=</span> <span class="pre">0,</span> <span class="pre">scaleAmplitude</span> <span class="pre">=</span> <span class="pre">1,</span> <span class="pre">title</span> <span class="pre">=</span> <span class="pre">'',</span> <span class="pre">fontSize</span> <span class="pre">=</span> <span class="pre">12,</span> <span class="pre">checkRenderEngineStopFlag</span> <span class="pre">=</span> <span class="pre">True,</span> <span class="pre">systemEigenVectors</span> <span class="pre">=</span> <span class="pre">None)</span></code></a></p>
+<ul class="simple">
+<li><p><strong>function description</strong>: animate modes of ObjectFFRFreducedOrder, of nodal coordinates (changes periodically one nodal coordinate) or of a list of system modes provided as list of lists; for creating snapshots, press ‘Static’ and ‘Record frames’ and press ‘Run’ to save one figure in the image subfolder; for creating animations for one mode, use the same procedure but use ‘One Cycle’. Modes may be inverted by pressing according ‘+’ and ‘-’ buttons next to Amplitude.</p></li>
+<li><p><strong>input</strong>:</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">systemContainer</span></code>: system container (usually SC) of your model, containing visualization settings</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">mainSystem</span></code>: system (usually mbs) containing your model</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">nodeNumber</span></code>: node number of which the coordinates shall be animated. In case of ObjectFFRFreducedOrder, this is the generic node, e.g., ‘nGenericODE2’ in the dictionary returned by the function AddObjectFFRFreducedOrderWithUserFunctions(…); if nodeNumber=None, then the systemEigenVectors list is used</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">period</span></code>: delay for animation of every frame; the default of 0.04 results in approximately 25 frames per second</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">stepsPerPeriod</span></code>: number of steps into which the animation of one cycle of the mode is split into</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">showTime</span></code>: show a virtual time running from 0 to 2*pi during one mode cycle</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">renderWindowText</span></code>: additional text written into renderwindow before ‘Mode X’ (use <span class="math notranslate nohighlight">\(\backslash\)</span>n to add line breaks)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">runOnStart</span></code>: immediately go into ‘Run’ mode</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">runMode</span></code>: 0=continuous run, 1=static continuous, 2=one cycle, 3=static (use slider/mouse to vary time steps)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">scaleAmplitude</span></code>: additional scaling for amplitude if necessary</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">fontSize</span></code>: define font size for labels in InteractiveDialog</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">title</span></code>: if empty, it uses default; otherwise define specific title</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">checkRenderEngineStopFlag</span></code>: if True, stopping renderer (pressing Q or Escape) also causes stopping the interactive dialog</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">systemEigenVectors</span></code>: may be a list of lists of system eigenvectors for ODE2 (and possibly ODE1) coordinates or a eigenvector matrix containing mode vectors in columns; if nodeNumber=None, these eigenvectors are then used to be animated</p></li>
+</ul>
+</li>
+<li><p><strong>output</strong>: opens interactive dialog with further settings</p></li>
+<li><p><strong>notes</strong>: Uses class InteractiveDialog in the background, which can be used to adjust animation creation. If meshes are large, animation artifacts may appear, which are resolved by using a larger update period. Press ‘Run’ to start animation; Chose ‘Mode shape’, according component for contour plot; to record one cycle for animation, choose ‘One cycle’, run once to get the according range in the contour plot, press ‘Record frames’ and press ‘Run’, now images can be found in subfolder ‘images’ (for further info on animation creation see <a class="reference internal" href="../../manual/GUI.html#sec-overview-basics-animations"><span class="std std-ref">Storing images and generating animations</span></a>); now deactivate ‘Record frames’ by pressing ‘Off’ and chose another mode</p></li>
+</ul>
+<p>Relevant Examples (Ex) and TestModels (TM) with weblink to github: <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/CMSexampleCourse.py"><code class="docutils literal notranslate"><span class="pre">CMSexampleCourse.py</span></code></a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/netgenSTLtest.py"><code class="docutils literal notranslate"><span class="pre">netgenSTLtest.py</span></code></a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/NGsolveCMStutorial.py"><code class="docutils literal notranslate"><span class="pre">NGsolveCMStutorial.py</span></code></a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/NGsolveCraigBampton.py"><code class="docutils literal notranslate"><span class="pre">NGsolveCraigBampton.py</span></code></a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/NGsolveFFRF.py"><code class="docutils literal notranslate"><span class="pre">NGsolveFFRF.py</span></code></a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/ANCFThinPlateTests.py"><code class="docutils literal notranslate"><span class="pre">ANCFThinPlateTests.py</span></code></a> (TM), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/objectFFRFreducedOrderShowModes.py"><code class="docutils literal notranslate"><span class="pre">objectFFRFreducedOrderShowModes.py</span></code></a> (TM), …</p>
+</section>
+<section id="function-solutionviewer">
+<span id="sec-interactive-solutionviewer"></span><h2>Function: SolutionViewer<a class="headerlink" href="#function-solutionviewer" title="Link to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/interactive.py#L882"><code class="docutils literal notranslate"><span class="pre">SolutionViewer(mainSystem,</span> <span class="pre">solution</span> <span class="pre">=</span> <span class="pre">None,</span> <span class="pre">rowIncrement</span> <span class="pre">=</span> <span class="pre">1,</span> <span class="pre">timeout</span> <span class="pre">=</span> <span class="pre">0.04,</span> <span class="pre">runOnStart</span> <span class="pre">=</span> <span class="pre">True,</span> <span class="pre">runMode</span> <span class="pre">=</span> <span class="pre">2,</span> <span class="pre">fontSize</span> <span class="pre">=</span> <span class="pre">12,</span> <span class="pre">title</span> <span class="pre">=</span> <span class="pre">'',</span> <span class="pre">checkRenderEngineStopFlag</span> <span class="pre">=</span> <span class="pre">True,</span> <span class="pre">windowSize</span> <span class="pre">=</span> <span class="pre">None)</span> <span class="pre">-&gt;</span> <span class="pre">None</span></code></a></p>
+<ul class="simple">
+<li><p><strong>function description</strong>: open interactive dialog and visulation (animate) solution loaded with LoadSolutionFile(…); Change slider ‘Increment’ to change the automatic increment of time frames; Change mode between continuous run, one cycle (fits perfect for animation recording) or ‘Static’ (to change Solution steps manually with the mouse); update period also lets you change the speed of animation; Press Run / Stop button to start/stop interactive mode (updating of grpahics)</p></li>
+<li><p><strong>input</strong>:</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">mainSystem</span></code>: the system used for visualization of solution (solution is loaded into visualization state of that system)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">solution</span></code>: solution dictionary previously loaded with exudyn.utilities.LoadSolutionFile(…); will be played from first to last row; if solution==None, it tries to load the file coordinatesSolutionFileName as stored in mbs.sys[‘simulationSettings’], which are the simulationSettings of the previous simulation</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">rowIncrement</span></code>: can be set larger than 1 in order to skip solution frames: e.g. rowIncrement=10 visualizes every 10th row (frame)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">timeout</span></code>: in seconds is used between frames in order to limit the speed of animation; e.g. use timeout=0.04 to achieve approximately 25 frames per second</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">runOnStart</span></code>: immediately go into ‘Run’ mode</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">runMode</span></code>: 0=continuous run, 1=one cycle, 2=static (use slider/mouse to vary time steps)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">fontSize</span></code>: define font size for labels in InteractiveDialog</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">title</span></code>: if empty, it uses default; otherwise define specific title</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">checkRenderEngineStopFlag</span></code>: if True, stopping renderer (pressing Q or Escape) also causes stopping the interactive dialog</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">windowSize</span></code>: [width, height] of the dialog in pixels; None gives the size stored in ~/.exudyn/config.json, or the size of the layout</p></li>
+</ul>
+</li>
+<li><p><strong>output</strong>: (type: None) updates current visualization state, renders the scene continuously (after pressing button ‘Run’)</p></li>
+</ul>
+<p><em>example</em>:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span>  <span class="c1">#HERE, mbs must contain same model as solution stored in solution/coordinatesSolution.txt</span>
+  <span class="c1">#adjust autoFitScence, otherwise it may lead to unwanted fit to scene</span>
+  <span class="n">SC</span><span class="o">.</span><span class="nf">visualizationSettings</span><span class="o">.</span><span class="n">general</span><span class="o">.</span><span class="n">autoFitScene</span> <span class="o">=</span> <span class="kc">False</span>
+  <span class="kn">from</span><span class="w"> </span><span class="nn">exudyn.interactive</span><span class="w"> </span><span class="kn">import</span> <span class="nf">SolutionViewer</span> <span class="c1">#import function</span>
+  <span class="n">sol</span> <span class="o">=</span> <span class="nf">LoadSolutionFile</span><span class="p">(</span><span class="s1">'solution/coordinatesSolution.txt'</span><span class="p">)</span> <span class="c1">#the default solution file</span>
+  <span class="n">mbs</span><span class="o">.</span><span class="nf">SolutionViewer</span><span class="p">(</span><span class="n">sol</span><span class="p">)</span> <span class="c1">#call via MainSystem</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><p><strong>NOTE</strong>: this function is directly available in MainSystem (mbs); it should be directly called as mbs.SolutionViewer(…). For description of the interface, see the MainSystem Python extensions, <a class="reference internal" href="../cInterface/MainSystem.html#sec-mainsystemextensions-solutionviewer"><span class="std std-ref">Function: SolutionViewer</span></a></p></li>
+</ul>
+</section>
+<section id="function-showimage">
+<span id="sec-interactive-showimage"></span><h2>Function: ShowImage<a class="headerlink" href="#function-showimage" title="Link to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/interactive.py#L1063"><code class="docutils literal notranslate"><span class="pre">ShowImage(systemContainer,</span> <span class="pre">size</span> <span class="pre">=</span> <span class="pre">[800,</span> <span class="pre">600],</span> <span class="pre">modelRotation</span> <span class="pre">=</span> <span class="pre">None,</span> <span class="pre">zoomAll</span> <span class="pre">=</span> <span class="pre">True,</span> <span class="pre">show</span> <span class="pre">=</span> <span class="pre">True,</span> <span class="pre">fileName</span> <span class="pre">=</span> <span class="pre">'')</span></code></a></p>
+<ul class="simple">
+<li><p><strong>function description</strong>: the current scene as an image, rendered by the raytracer without a window, and shown with matplotlib; made for notebooks, where no render window opens, and for documentation images</p></li>
+<li><p><strong>input</strong>:</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">systemContainer</span></code>: the SystemContainer whose systems are drawn, with its visualizationSettings</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">size</span></code>: [width, height] of the image in pixels; the render window size of the settings is set back afterwards</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">modelRotation</span></code>: the rotation of the view as 3x3 matrix, e.g. RotationMatrixX(0.4)&#64;RotationMatrixY(-0.5), for this image; None takes openGL.advanced.initialModelRotation of the settings</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">zoomAll</span></code>: if True, the view is fitted to the scene first; set False to keep a view set by SC.renderer.SetModelView(…) or a stored render state</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">show</span></code>: if True, the image is drawn with matplotlib (inline in a notebook); False only returns it</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">fileName</span></code>: if not empty, the image is also written to this file (e.g. ‘images/scene.png’)</p></li>
+</ul>
+</li>
+<li><p><strong>output</strong>: the image as numpy array of shape (height, width, 3), RGB values 0 to 255</p></li>
+</ul>
+<p><em>example</em>:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span>  <span class="n">mbs</span><span class="o">.</span><span class="nf">Assemble</span><span class="p">()</span>
+  <span class="n">exudyn</span><span class="o">.</span><span class="n">interactive</span><span class="o">.</span><span class="nf">ShowImage</span><span class="p">(</span><span class="n">SC</span><span class="p">)</span>   <span class="c1">#the scene in the reference configuration</span>
+</pre></div>
+</div>
+</section>
+<section id="function-convertimages2video">
+<span id="sec-interactive-convertimages2video"></span><h2>Function: ConvertImages2Video<a class="headerlink" href="#function-convertimages2video" title="Link to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/interactive.py#L1116"><code class="docutils literal notranslate"><span class="pre">ConvertImages2Video(workingDir</span> <span class="pre">=</span> <span class="pre">'images',</span> <span class="pre">inputPattern</span> <span class="pre">=</span> <span class="pre">'frame%05d.png',</span> <span class="pre">outputFile</span> <span class="pre">=</span> <span class="pre">'animation.mp4',</span> <span class="pre">inputFrameRate</span> <span class="pre">=</span> <span class="pre">25,</span> <span class="pre">outputFrameRate</span> <span class="pre">=</span> <span class="pre">25,</span> <span class="pre">compressionCRF</span> <span class="pre">=</span> <span class="pre">28,</span> <span class="pre">startNumber</span> <span class="pre">=</span> <span class="pre">0,</span> <span class="pre">totalFrames</span> <span class="pre">=</span> <span class="pre">None,</span> <span class="pre">videoCodec</span> <span class="pre">=</span> <span class="pre">None)</span></code></a></p>
+<ul class="simple">
+<li><p><strong>function description</strong>: function to call ffmpeg in the background and convert images to video; requires the program ffmpeg and the package ffmpeg-python (“conda install ffmpeg”, “pip install ffmpeg-python”)</p></li>
+<li><p><strong>input</strong>:</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">workingDir</span></code>: directory where images are stored and where animation is written to</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">inputPattern</span></code>: pattern of images; ‘frame’ is the name used in visualizationSettings.exportImages.saveImageFileName; if saveImageFormat=PNG, then the ending is .png</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">outputFile</span></code>: filename and ending (.mp4 recommended) for generated video</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">inputFrameRate</span></code>: framerate for images relative to outputFrameRate: if inputFrameRate=50 and outputFrameRate=25, then only every second frame is used</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">outputFrameRate</span></code>: framerate for resulting video</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">compressionCRF</span></code>: compression rate of ffmpeg, where 0=uncompressed, 25 is medium compression, &gt;30 is very low quality</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">startNumber</span></code>: start index of first frame chosen for animation</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">totalFrames</span></code>: total number of frames (keep field empty to select all frames after startNumber)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">videoCodec</span></code>: the ffmpeg encoder, e.g. ‘libx264’; None: libx264, and if that ffmpeg has no libx264 (as the one of conda-forge on macOS), h264_videotoolbox on macOS and mpeg4 on the other platforms; compressionCRF applies to libx264 only</p></li>
+</ul>
+</li>
+<li><p><strong>output</strong>: None; writes animation when finished</p></li>
+</ul>
+<p><em>example</em>:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span>  <span class="c1">#after successful simulation, call:</span>
+  <span class="n">mbs</span><span class="o">.</span><span class="nf">SolutionViewer</span><span class="p">()</span> <span class="c1">#click "Stop", "One Cycle" and "Record frames" =&gt; close window</span>
+  <span class="c1">#if images are in folder 'images', then call this to create animation:</span>
+  <span class="nf">ConvertImages2Video</span><span class="p">(</span><span class="n">workingDir</span><span class="o">=</span><span class="s1">'images'</span><span class="p">,</span> <span class="n">outputFile</span><span class="o">=</span><span class="s1">'test.mp4'</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="function-interactiveimages2video">
+<span id="sec-interactive-interactiveimages2video"></span><h2>Function: InteractiveImages2Video<a class="headerlink" href="#function-interactiveimages2video" title="Link to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/interactive.py#L1194"><code class="docutils literal notranslate"><span class="pre">InteractiveImages2Video(closeAfterCreation</span> <span class="pre">=</span> <span class="pre">False,</span> <span class="pre">fontSize</span> <span class="pre">=</span> <span class="pre">11)</span></code></a></p>
+<ul class="simple">
+<li><p><strong>function description</strong>: interactive dialog to convert generated images to videos using ffmpeg library; see also ConvertImages2Video() for meaning of values; requires ffmpeg-python to be installed</p></li>
+</ul>
+</section>
+<section id="class-interactivedialog-in-module-interactive">
+<span id="sec-module-interactive-class-interactivedialog"></span><h2>CLASS InteractiveDialog (in module interactive)<a class="headerlink" href="#class-interactivedialog-in-module-interactive" title="Link to this heading"></a></h2>
+<p><strong>class description</strong>: create an interactive dialog, which allows to interact with simulations the dialog has a ‘Run’ button, which initiates the simulation and a ‘Stop’ button which stops/pauses simulation; ‘Quit’ closes the simulation model for examples, see <code class="docutils literal notranslate"><span class="pre">simulateInteractively.py</span></code> and <code class="docutils literal notranslate"><span class="pre">massSpringFrictionInteractive.py</span></code> use <strong>init</strong> method to setup this class with certain buttons, edit boxes and sliders</p>
+<p><em>example</em>:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span>  <span class="c1">#the following example is only demonstrating the structure of dialogItems and plots</span>
+  <span class="c1">#dialogItems structure:</span>
+  <span class="c1">#general items:</span>
+  <span class="c1">#    'type' can be out of:</span>
+  <span class="c1">#               'label' (simple text),</span>
+  <span class="c1">#               'button' (button with callback function),</span>
+  <span class="c1">#               'radio' (a radio button with several alternative options),</span>
+  <span class="c1">#               'slider' (with an adjustable range to choose a value)</span>
+  <span class="c1">#    'grid': (row, col, colspan) specifies the row, column and (optionally) the span of columns the item is placed at;</span>
+  <span class="c1">#            exception in 'radio', where grid is a list of (row, col) for every choice</span>
+  <span class="c1">#    'options': text options, where 'L' means flush left, 'R' means flush right</span>
+  <span class="c1">#suboptions of 'label':</span>
+  <span class="c1">#               'text': a text to be drawn</span>
+  <span class="c1">#suboptions of 'button':</span>
+  <span class="c1">#               'text': a text to be drawn on button</span>
+  <span class="c1">#               'callFunction': function which is called on button-press</span>
+  <span class="c1">#suboptions of 'radio':</span>
+  <span class="c1">#               'textValueList': [('text1',0),('text2',1)] a list of texts with according values</span>
+  <span class="c1">#               'value': default value (choice) of radio buttons</span>
+  <span class="c1">#               'variable': according variable in mbs.variables (or mbs.sys), which is set to current radio button value</span>
+  <span class="c1">#suboptions of 'slider':</span>
+  <span class="c1">#               'range': (min, max) a tuple containing minimum and maximum value of slider</span>
+  <span class="c1">#               'value': default value of slider</span>
+  <span class="c1">#               'steps': number of steps in slider</span>
+  <span class="c1">#               'variable': according variable in mbs.variables (or mbs.sys), which is set to current slider value</span>
+  <span class="c1">#example:</span>
+  <span class="n">dialogItems</span> <span class="o">=</span> <span class="p">[{</span><span class="s1">'type'</span><span class="p">:</span><span class="s1">'label'</span><span class="p">,</span> <span class="s1">'text'</span><span class="p">:</span><span class="s1">'Nonlinear oscillation simulator'</span><span class="p">,</span> <span class="s1">'grid'</span><span class="p">:(</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">2</span><span class="p">),</span> <span class="s1">'options'</span><span class="p">:[</span><span class="s1">'L'</span><span class="p">]},</span>
+                 <span class="p">{</span><span class="s1">'type'</span><span class="p">:</span><span class="s1">'button'</span><span class="p">,</span> <span class="s1">'text'</span><span class="p">:</span><span class="s1">'test button'</span><span class="p">,</span><span class="s1">'callFunction'</span><span class="p">:</span><span class="n">ButtonCall</span><span class="p">,</span> <span class="s1">'grid'</span><span class="p">:(</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">2</span><span class="p">)},</span>
+                 <span class="p">{</span><span class="s1">'type'</span><span class="p">:</span><span class="s1">'radio'</span><span class="p">,</span> <span class="s1">'textValueList'</span><span class="p">:[(</span><span class="s1">'linear'</span><span class="p">,</span><span class="mi">0</span><span class="p">),(</span><span class="s1">'nonlinear'</span><span class="p">,</span><span class="mi">1</span><span class="p">)],</span> <span class="s1">'value'</span><span class="p">:</span><span class="mi">0</span><span class="p">,</span> <span class="s1">'variable'</span><span class="p">:</span><span class="s1">'mode'</span><span class="p">,</span> <span class="s1">'grid'</span><span class="p">:</span> <span class="p">[(</span><span class="mi">2</span><span class="p">,</span><span class="mi">0</span><span class="p">),(</span><span class="mi">2</span><span class="p">,</span><span class="mi">1</span><span class="p">)]},</span>
+                 <span class="p">{</span><span class="s1">'type'</span><span class="p">:</span><span class="s1">'label'</span><span class="p">,</span> <span class="s1">'text'</span><span class="p">:</span><span class="s1">'excitation frequency (Hz):'</span><span class="p">,</span> <span class="s1">'grid'</span><span class="p">:(</span><span class="mi">5</span><span class="p">,</span><span class="mi">0</span><span class="p">)},</span>
+                 <span class="p">{</span><span class="s1">'type'</span><span class="p">:</span><span class="s1">'slider'</span><span class="p">,</span> <span class="s1">'range'</span><span class="p">:(</span><span class="mi">3</span><span class="o">*</span><span class="n">f1</span><span class="o">/</span><span class="mi">800</span><span class="p">,</span> <span class="mi">3</span><span class="o">*</span><span class="n">f1</span><span class="p">),</span> <span class="s1">'value'</span><span class="p">:</span><span class="n">omegaInit</span><span class="o">/</span><span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="n">pi</span><span class="p">),</span> <span class="s1">'steps'</span><span class="p">:</span><span class="mi">800</span><span class="p">,</span> <span class="s1">'variable'</span><span class="p">:</span><span class="s1">'frequency'</span><span class="p">,</span> <span class="s1">'grid'</span><span class="p">:(</span><span class="mi">5</span><span class="p">,</span><span class="mi">1</span><span class="p">)},</span>
+                 <span class="p">{</span><span class="s1">'type'</span><span class="p">:</span><span class="s1">'label'</span><span class="p">,</span> <span class="s1">'text'</span><span class="p">:</span><span class="s1">'damping:'</span><span class="p">,</span> <span class="s1">'grid'</span><span class="p">:(</span><span class="mi">6</span><span class="p">,</span><span class="mi">0</span><span class="p">)},</span>
+                 <span class="p">{</span><span class="s1">'type'</span><span class="p">:</span><span class="s1">'slider'</span><span class="p">,</span> <span class="s1">'range'</span><span class="p">:</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">40</span><span class="p">),</span> <span class="s1">'value'</span><span class="p">:</span><span class="n">damper</span><span class="p">,</span> <span class="s1">'steps'</span><span class="p">:</span><span class="mi">800</span><span class="p">,</span> <span class="s1">'variable'</span><span class="p">:</span><span class="s1">'damping'</span><span class="p">,</span> <span class="s1">'grid'</span><span class="p">:(</span><span class="mi">6</span><span class="p">,</span><span class="mi">1</span><span class="p">)},</span>
+                 <span class="p">{</span><span class="s1">'type'</span><span class="p">:</span><span class="s1">'label'</span><span class="p">,</span> <span class="s1">'text'</span><span class="p">:</span><span class="s1">'stiffness:'</span><span class="p">,</span> <span class="s1">'grid'</span><span class="p">:(</span><span class="mi">7</span><span class="p">,</span><span class="mi">0</span><span class="p">)},</span>
+                 <span class="p">{</span><span class="s1">'type'</span><span class="p">:</span><span class="s1">'slider'</span><span class="p">,</span> <span class="s1">'range'</span><span class="p">:(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">10000</span><span class="p">),</span> <span class="s1">'value'</span><span class="p">:</span><span class="n">spring</span><span class="p">,</span> <span class="s1">'steps'</span><span class="p">:</span><span class="mi">800</span><span class="p">,</span> <span class="s1">'variable'</span><span class="p">:</span><span class="s1">'stiffness'</span><span class="p">,</span> <span class="s1">'grid'</span><span class="p">:(</span><span class="mi">7</span><span class="p">,</span><span class="mi">1</span><span class="p">)}]</span>
+  <span class="c1">#plots structure:</span>
+  <span class="n">plots</span><span class="o">=</span><span class="p">{</span><span class="s1">'nPoints'</span><span class="p">:</span><span class="mi">500</span><span class="p">,</span>              <span class="c1">#number of stored points in subplots (higher means slower drawing)</span>
+         <span class="s1">'subplots'</span><span class="p">:(</span><span class="mi">2</span><span class="p">,</span><span class="mi">1</span><span class="p">),</span>           <span class="c1">#(rows, columns) arrangement of subplots (for every sensor)</span>
+         <span class="c1">#sensors defines per subplot (sensor, coordinate), xlabel and ylabel; if coordinate=0, time is used:</span>
+         <span class="s1">'sensors'</span><span class="p">:[[(</span><span class="n">sensPos</span><span class="p">,</span><span class="mi">0</span><span class="p">),(</span><span class="n">sensPos</span><span class="p">,</span><span class="mi">1</span><span class="p">),</span><span class="s1">'time'</span><span class="p">,</span><span class="s1">'mass position'</span><span class="p">],</span>
+                    <span class="p">[(</span><span class="n">sensFreq</span><span class="p">,</span><span class="mi">0</span><span class="p">),(</span><span class="n">sensFreq</span><span class="p">,</span><span class="mi">1</span><span class="p">),</span><span class="s1">'time'</span><span class="p">,</span><span class="s1">'excitation frequency'</span><span class="p">]],</span>
+         <span class="s1">'limitsX'</span><span class="p">:[(</span><span class="mi">0</span><span class="p">,</span><span class="mi">2</span><span class="p">),(</span><span class="o">-</span><span class="mi">5</span><span class="p">,</span><span class="mi">5</span><span class="p">)],</span>   <span class="c1">#x-range per subplot; if not provided, autoscale is applied</span>
+         <span class="s1">'limitsY'</span><span class="p">:[(</span><span class="o">-</span><span class="mi">5</span><span class="p">,</span><span class="mi">5</span><span class="p">),(</span><span class="mi">0</span><span class="p">,</span><span class="mi">10</span><span class="p">),],</span> <span class="c1">#y-range per subplot; if not provided, autoscale is applied</span>
+         <span class="s1">'fontSize'</span><span class="p">:</span><span class="mi">16</span><span class="p">,</span>              <span class="c1">#custom font size for figure</span>
+         <span class="s1">'subplots'</span><span class="p">:</span><span class="kc">False</span><span class="p">,</span>           <span class="c1">#if not specified, subplots are created; if False, all plots go into one window</span>
+         <span class="s1">'lineStyles'</span><span class="p">:[</span><span class="s1">'r-'</span><span class="p">,</span><span class="s1">'b-'</span><span class="p">],</span>    <span class="c1">#if not specified, uses default '-b', otherwise define list of line styles [string for matplotlib.pyplot.plot] per sensor</span>
+         <span class="s1">'sizeInches'</span><span class="p">:(</span><span class="mi">12</span><span class="p">,</span><span class="mi">12</span><span class="p">)}</span>       <span class="c1">#specific x and y size of figure in inches (using 100 dpi)</span>
+</pre></div>
+</div>
+<section id="class-function-init">
+<span id="sec-interactive-interactivedialog-init"></span><h3>Class function: <strong>init</strong><a class="headerlink" href="#class-function-init" title="Link to this heading"></a></h3>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/interactive.py#L127"><code class="docutils literal notranslate"><span class="pre">__init__(self,</span> <span class="pre">mbs,</span> <span class="pre">simulationSettings,</span> <span class="pre">simulationFunction,</span> <span class="pre">dialogItems,</span> <span class="pre">plots</span> <span class="pre">=</span> <span class="pre">None,</span> <span class="pre">period</span> <span class="pre">=</span> <span class="pre">0.04,</span> <span class="pre">realtimeFactor</span> <span class="pre">=</span> <span class="pre">1,</span> <span class="pre">userStartSimulation</span> <span class="pre">=</span> <span class="pre">None,</span> <span class="pre">title</span> <span class="pre">=</span> <span class="pre">'',</span> <span class="pre">showTime</span> <span class="pre">=</span> <span class="pre">False,</span> <span class="pre">fontSize</span> <span class="pre">=</span> <span class="pre">12,</span> <span class="pre">doTimeIntegration</span> <span class="pre">=</span> <span class="pre">True,</span> <span class="pre">runOnStart</span> <span class="pre">=</span> <span class="pre">False,</span> <span class="pre">addLabelStringVariables</span> <span class="pre">=</span> <span class="pre">False,</span> <span class="pre">addSliderVariables</span> <span class="pre">=</span> <span class="pre">False,</span> <span class="pre">checkRenderEngineStopFlag</span> <span class="pre">=</span> <span class="pre">True,</span> <span class="pre">userOnChange</span> <span class="pre">=</span> <span class="pre">None,</span> <span class="pre">useSysVariables</span> <span class="pre">=</span> <span class="pre">False,</span> <span class="pre">windowSize</span> <span class="pre">=</span> <span class="pre">None)</span></code></a></p>
+<ul class="simple">
+<li><p><strong>class function description</strong>: initialize an InteractiveDialog</p></li>
+<li><p><strong>input</strong>:</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">mbs</span></code>: a multibody system to be simulated</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">simulationSettings</span></code>: exudyn.SimulationSettings() according to user settings</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">simulationFunction</span></code>: a user function(mbs, self) which is called before a simulation for the short period is started (e.g, assign special values, etc.); the arguments are the MainSystem mbs and the InteractiveDialog (self)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">dialogItems</span></code>: a list of dictionaries, which describe the contents of the interactive items, where every dict has the structure {‘type’:[label, entry, button, slider, check] … according to tkinter widgets, ‘callFunction’: a function to be called, if item is changed/button pressed, ‘grid’: (row,col) of item to be placed, ‘rowSpan’: number of rows to be used, ‘columnSpan’: number of columns to be used; for special item options see notes}</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">plots</span></code>: list of dictionaries to specify a sensor to be plotted live, see example; otherwise use default None</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">period</span></code>: a simulation time span in seconds which is simulated with the simulationFunction in every iteration</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">realtimeFactor</span></code>: if 1, the simulation is nearly performed in realtime (except for computation time); if &gt; 1, it runs faster than realtime, if &lt; 1, than it is slower</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">userStartSimulation</span></code>: a function F(flag) which is called every time after Run/Stop is pressed. The argument flag = False if button “Run” has been pressed, flag = True, if “Stop” has been pressed</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">title</span></code>: title text for interactive dialog</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">showTime</span></code>: shows current time in dialog</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">fontSize</span></code>: adjust font size for all dialog items</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">doTimeIntegration</span></code>: performs internal time integration with given parameters</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">runOnStart</span></code>: immediately activate ‘Run’ button on start</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">addLabelStringVariables</span></code>: True: adds a list labelStringVariables containing the (modifiable) list of string variables for label (text) widgets</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">addSliderVariables</span></code>: True: adds a list sliderVariables containing the (modifiable) list of variables for slider (=tkinter scale) widgets; this is not necessarily needed for changing slider values, as they can also be modified with dialog.widgets[..].set(…) method</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">checkRenderEngineStopFlag</span></code>: if True, stopping renderer (pressing Q or Escape) also causes stopping the interactive dialog</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">userOnChange</span></code>: a user function(mbs, self) which is called after period, if widget values are different from values stored in mbs.variables; this usually occurs if buttons are pressed or sliders are moved; the arguments are the MainSystem mbs and the InteractiveDialog (self)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">useSysVariables</span></code>: for internal visualization functions: in this case, variables are written to mbs.sys instead of mbs.variables</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">windowSize</span></code>: [width, height] of the dialog in pixels; None gives the size stored in ~/.exudyn/config.json, or the size of the layout if nothing is stored. A size given here wins over a stored one, as a position given in a script wins for the render window</p></li>
+</ul>
+</li>
+<li><p><strong>notes</strong>: detailed description of dialogItems and plots list/dictionary is given in commented the example below</p></li>
+</ul>
+</section>
+<section id="class-function-onquit">
+<span id="sec-interactive-interactivedialog-onquit"></span><h3>Class function: OnQuit<a class="headerlink" href="#class-function-onquit" title="Link to this heading"></a></h3>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/interactive.py#L432"><code class="docutils literal notranslate"><span class="pre">OnQuit(self,</span> <span class="pre">event</span> <span class="pre">=</span> <span class="pre">None)</span></code></a></p>
+<ul class="simple">
+<li><p><strong>class function description</strong>: function called when pressing escape or closing dialog</p></li>
+</ul>
+</section>
+<section id="class-function-startsimulation">
+<span id="sec-interactive-interactivedialog-startsimulation"></span><h3>Class function: StartSimulation<a class="headerlink" href="#class-function-startsimulation" title="Link to this heading"></a></h3>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/interactive.py#L460"><code class="docutils literal notranslate"><span class="pre">StartSimulation(self,</span> <span class="pre">event</span> <span class="pre">=</span> <span class="pre">None)</span></code></a></p>
+<ul class="simple">
+<li><p><strong>class function description</strong>: function called on button ‘Run’</p></li>
+</ul>
+</section>
+<section id="class-function-processwidgetstates">
+<span id="sec-interactive-interactivedialog-processwidgetstates"></span><h3>Class function: ProcessWidgetStates<a class="headerlink" href="#class-function-processwidgetstates" title="Link to this heading"></a></h3>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/interactive.py#L474"><code class="docutils literal notranslate"><span class="pre">ProcessWidgetStates(self)</span></code></a></p>
+<ul class="simple">
+<li><p><strong>class function description</strong>: assign current values of radio buttons and sliders to mbs.variables or mbs.sys</p></li>
+</ul>
+</section>
+<section id="class-function-continuousrunfunction">
+<span id="sec-interactive-interactivedialog-continuousrunfunction"></span><h3>Class function: ContinuousRunFunction<a class="headerlink" href="#class-function-continuousrunfunction" title="Link to this heading"></a></h3>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/interactive.py#L490"><code class="docutils literal notranslate"><span class="pre">ContinuousRunFunction(self,</span> <span class="pre">event</span> <span class="pre">=</span> <span class="pre">None)</span></code></a></p>
+<ul class="simple">
+<li><p><strong>class function description</strong>: function which is repeatedly called when button ‘Run’ is pressed</p></li>
+</ul>
+</section>
+<section id="class-function-initializeplots">
+<span id="sec-interactive-interactivedialog-initializeplots"></span><h3>Class function: InitializePlots<a class="headerlink" href="#class-function-initializeplots" title="Link to this heading"></a></h3>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/interactive.py#L509"><code class="docutils literal notranslate"><span class="pre">InitializePlots(self)</span></code></a></p>
+<ul class="simple">
+<li><p><strong>class function description</strong>: initialize figure and subplots for plots structure</p></li>
+</ul>
+</section>
+<section id="class-function-updateplots">
+<span id="sec-interactive-interactivedialog-updateplots"></span><h3>Class function: UpdatePlots<a class="headerlink" href="#class-function-updateplots" title="Link to this heading"></a></h3>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/interactive.py#L557"><code class="docutils literal notranslate"><span class="pre">UpdatePlots(self)</span></code></a></p>
+<ul class="simple">
+<li><p><strong>class function description</strong>: update all subplots with current sensor values</p></li>
+</ul>
+</section>
+<section id="class-function-initializesolver">
+<span id="sec-interactive-interactivedialog-initializesolver"></span><h3>Class function: InitializeSolver<a class="headerlink" href="#class-function-initializesolver" title="Link to this heading"></a></h3>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/interactive.py#L614"><code class="docutils literal notranslate"><span class="pre">InitializeSolver(self)</span></code></a></p>
+<ul class="simple">
+<li><p><strong>class function description</strong>: function to initialize solver for repeated calls</p></li>
+</ul>
+</section>
+<section id="class-function-finalizesolver">
+<span id="sec-interactive-interactivedialog-finalizesolver"></span><h3>Class function: FinalizeSolver<a class="headerlink" href="#class-function-finalizesolver" title="Link to this heading"></a></h3>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/interactive.py#L621"><code class="docutils literal notranslate"><span class="pre">FinalizeSolver(self)</span></code></a></p>
+<ul class="simple">
+<li><p><strong>class function description</strong>: stop solver (finalize correctly)</p></li>
+</ul>
+</section>
+<section id="class-function-runsimulationperiod">
+<span id="sec-interactive-interactivedialog-runsimulationperiod"></span><h3>Class function: RunSimulationPeriod<a class="headerlink" href="#class-function-runsimulationperiod" title="Link to this heading"></a></h3>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/interactive.py#L628"><code class="docutils literal notranslate"><span class="pre">RunSimulationPeriod(self)</span></code></a></p>
+<ul class="simple">
+<li><p><strong>class function description</strong>: function which performs short simulation for given period</p></li>
+</ul>
+<p>Relevant Examples (Ex) and TestModels (TM) with weblink to github: <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/massSpringFrictionInteractive.py"><code class="docutils literal notranslate"><span class="pre">massSpringFrictionInteractive.py</span></code></a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/nMassOscillatorInteractive.py"><code class="docutils literal notranslate"><span class="pre">nMassOscillatorInteractive.py</span></code></a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/serialRobotInteractiveLimits.py"><code class="docutils literal notranslate"><span class="pre">serialRobotInteractiveLimits.py</span></code></a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/simulateInteractively.py"><code class="docutils literal notranslate"><span class="pre">simulateInteractively.py</span></code></a> (Ex)</p>
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="misc.settingsUtilities.html" class="btn btn-neutral float-left" title="Module: misc.settingsUtilities" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="kinematicTree.html" class="btn btn-neutral float-right" title="Module: kinematicTree" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

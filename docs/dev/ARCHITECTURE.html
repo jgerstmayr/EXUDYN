@@ -1,0 +1,433 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Exudyn C++ architecture &mdash; Exudyn1.13.3 1.13.3 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=3ee1c6c6" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/rtd_sphinx_search.min.css" />
+      <link rel="stylesheet" type="text/css" href="../../_static/custom.css?v=e2783f0e" />
+
+  
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=b8a3e558"></script>
+      <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../_static/copybutton.js?v=f281be69"></script>
+      <script src="../../_static/js/rtd_search_config.js"></script>
+      <script src="../../_static/js/rtd_sphinx_search.min.js"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Exudyn coding style and conventions" href="CODING_STYLE.html" />
+    <link rel="prev" title="Working with git in this repository" href="GIT.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            Exudyn1.13.3
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Exudyn User Manual</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../README.html">Exudyn</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../manual/gettingStarted.html">Installation and getting started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../manual/introduction.html">Overview on Exudyn</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../manual/introductionBasics.html">Exudyn basics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../manual/tutorial.html">Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../manual/GUI.html">Renderer, graphics and visualization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../manual/performanceErrors.html">Performance, errors and solver failures</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../manual/introductionAdvanced.html">Advanced topics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../manual/notation.html">Notation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../manual/theory.html">Theory and formulations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../manual/solver.html">Solvers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../generated/cInterface/cInterfaceIndex.html">Python-C++ command interface</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Reference Manual</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../generated/items/itemsIndex.html">Items reference manual</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../generated/pythonUtilities/utilitiesIndex.html">Python Utility Functions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../generated/structures/structuresIndex.html">Structures and Settings</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../generated/references.html">References</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Developer documentation</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="README.html">Exudyn developer documentation</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="GETTING_STARTED.html">Getting started as a developer</a></li>
+<li class="toctree-l2"><a class="reference internal" href="BUILD.html">Building Exudyn from source</a></li>
+<li class="toctree-l2"><a class="reference internal" href="GIT.html">Working with git in this repository</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Exudyn C++ architecture</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#why-it-looks-like-this">Why it looks like this</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#the-shape-of-the-thing">The shape of the thing</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#items-the-central-abstraction">Items: the central abstraction</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#the-three-fold-split-c-main-visualization">The three-fold split: <code class="docutils literal notranslate"><span class="pre">C</span></code> / <code class="docutils literal notranslate"><span class="pre">Main</span></code> / <code class="docutils literal notranslate"><span class="pre">Visualization</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#how-mbs-addobject-actually-works">How <code class="docutils literal notranslate"><span class="pre">mbs.AddObject(...)</span></code> actually works</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#modules-src">Modules — <code class="docutils literal notranslate"><span class="pre">src/</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#coordinates-the-ltg-mapping">Coordinates: the LTG mapping</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#solvers">Solvers</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#experimental-features-pyexperimental">Experimental features: <code class="docutils literal notranslate"><span class="pre">PyExperimental</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#where-to-start-reading">Where to start reading</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="CODING_STYLE.html">Exudyn coding style and conventions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="WORKFLOW.html">Development workflow</a></li>
+<li class="toctree-l2"><a class="reference internal" href="NEW_ITEM.html">How to set up a new item</a></li>
+<li class="toctree-l2"><a class="reference internal" href="GUI_MANUAL_CHECK.html">Manual GUI check before a release</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../generated/deprecations.html">Deprecations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../definitions/README.html">definitions/ — the item and structure definitions as Python</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../tools/generators/README.html">tools/generators/ — the new generator code</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../tools/exudev/README.html"><code class="docutils literal notranslate"><span class="pre">exudev</span></code> — the Exudyn maintainer driver</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../CONTRIBUTING.html">Contributing to Exudyn</a></li>
+<li class="toctree-l2"><a class="reference internal" href="README.html#repository-layout">Repository layout</a></li>
+<li class="toctree-l2"><a class="reference internal" href="README.html#building-and-running">Building and running</a></li>
+<li class="toctree-l2"><a class="reference internal" href="README.html#how-to-notes">How-to notes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="README.html#invariants">Invariants</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">How-to notes</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../howTo/condaEnvironments.html">Conda environments for Exudyn</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../howTo/sphinxDocs.html">Building the documentation</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Examples, models and issues</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../generated/examples/examplesIndex.html">Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../generated/testModels/testModelsIndex.html">TestModels</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../generated/abbreviations.html">List of Abbreviations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../manual/revisions.html">Revisions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../CHANGELOG.html">Changelog</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../generated/trackerlog.html">Issue tracker</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">Exudyn1.13.3</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="README.html">Exudyn developer documentation</a></li>
+      <li class="breadcrumb-item active">Exudyn C++ architecture</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../_sources/docs/dev/ARCHITECTURE.md.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section class="tex2jax_ignore mathjax_ignore" id="exudyn-c-architecture">
+<h1>Exudyn C++ architecture<a class="headerlink" href="#exudyn-c-architecture" title="Link to this heading"></a></h1>
+<p>The overall idea of the C++ side: what the pieces are, how a Python call reaches computation, and
+where to look when changing something. <strong>Not an API reference</strong> — the per-item reference is
+generated into <code class="docutils literal notranslate"><span class="pre">docs/generated/items/</span></code> from <code class="docutils literal notranslate"><span class="pre">definitions/</span></code>, and is far better at that job.</p>
+<p>Related, deliberately not repeated here: repository layout in <a class="reference internal" href="README.html"><span class="std std-doc">README.md</span></a>, build and
+commit workflow in <a class="reference internal" href="WORKFLOW.html"><span class="std std-doc">WORKFLOW.md</span></a>, naming and file headers in
+<a class="reference internal" href="CODING_STYLE.html"><span class="std std-doc">CODING_STYLE.md</span></a>.</p>
+<section id="why-it-looks-like-this">
+<h2>Why it looks like this<a class="headerlink" href="#why-it-looks-like-this" title="Link to this heading"></a></h2>
+<p><em>(From the user manual, where this stood until the 2026 revision</em></p>
+<p>The C++ side follows four principles, in this order of priority:</p>
+<ol class="arabic simple">
+<li><p><strong>developer-friendly</strong>  — first, because a formulation that cannot be implemented without a
+fight does not get implemented correctly;</p></li>
+<li><p><strong>error minimization</strong>;</p></li>
+<li><p><strong>user-friendliness</strong>;</p></li>
+<li><p><strong>efficiency</strong>.</p></li>
+</ol>
+<p>What follows from that order: the basic libraries are slim and extensively tested rather than
+general; new program parts get unit tests while they are written (LEST for C++, the test models
+for everything above); parallelization classes exist, but the assumption behind them is a
+multi-core processor with one main memory, so the gain is in what stays inside the caches, and
+vectorization is written for SIMD as Intel processors have it; and the Python interface is a
+nearly 1:1 image of the system and of what happens in it, so that anything Python can do can be
+done to a model.</p>
+</section>
+<section id="the-shape-of-the-thing">
+<h2>The shape of the thing<a class="headerlink" href="#the-shape-of-the-thing" title="Link to this heading"></a></h2>
+<p>A C++ computational core exposed to Python through pybind11. The boundary is deliberate and hard:
+Python builds a <strong>dictionary</strong>, the C++ side validates it and constructs an item from a <strong>type
+string</strong>. There is no per-class binding for items, which is why a new item needs no new pybind11
+code — and why compiled user plugins are possible at all.</p>
+<p>Stated design priorities, in order: <strong>developer-friendly, error minimization, user-friendliness,
+efficiency</strong>. Efficiency last is not an accident — see <code class="docutils literal notranslate"><span class="pre">introduction.tex</span></code>, “Focus of the C++ code”.</p>
+</section>
+<section id="items-the-central-abstraction">
+<h2>Items: the central abstraction<a class="headerlink" href="#items-the-central-abstraction" title="Link to this heading"></a></h2>
+<p>An <strong>item</strong> is one of five kinds: <strong>node, object, marker, load, sensor</strong>.</p>
+<ul class="simple">
+<li><p><strong>Nodes</strong> carry coordinates — the degrees of freedom. They have no mass and no stiffness.</p></li>
+<li><p><strong>Objects</strong> are everything with behaviour: <em>bodies</em> (ground = no node, simple body = one node,
+FE/FFRF = many nodes) and <em>connectors</em> (constraints, joints, spring-dampers).</p></li>
+<li><p><strong>Markers</strong> are the glue, and the reason the design scales: a load or constraint attaches to a
+marker, so it <strong>does not need to know</strong> whether it acts on a node or on a local position of a
+body. <code class="docutils literal notranslate"><span class="pre">Load</span> <span class="pre">→</span> <span class="pre">Marker</span> <span class="pre">→</span> <span class="pre">Node</span></code> and <code class="docutils literal notranslate"><span class="pre">Body1</span> <span class="pre">→</span> <span class="pre">Marker1</span> <span class="pre">→</span> <span class="pre">Joint</span> <span class="pre">→</span> <span class="pre">Marker2</span> <span class="pre">→</span> <span class="pre">Body2</span></code>.</p></li>
+<li><p><strong>Loads</strong> apply forces/torques through markers.</p></li>
+<li><p><strong>Sensors</strong> observe, with only weak influence on the system.</p></li>
+</ul>
+<p>Coordinates are <strong>redundant</strong> (not minimal), and constraints add Lagrange multipliers
+automatically. Index conventions — 0-based in both languages, 3D by default with a <code class="docutils literal notranslate"><span class="pre">2D</span></code> suffix for
+planar items — are in <a class="reference internal" href="CODING_STYLE.html#item-and-dimensionality-conventions"><span class="std std-ref">CODING_STYLE.md</span></a>.</p>
+</section>
+<section id="the-three-fold-split-c-main-visualization">
+<h2>The three-fold split: <code class="docutils literal notranslate"><span class="pre">C</span></code> / <code class="docutils literal notranslate"><span class="pre">Main</span></code> / <code class="docutils literal notranslate"><span class="pre">Visualization</span></code><a class="headerlink" href="#the-three-fold-split-c-main-visualization" title="Link to this heading"></a></h2>
+<p>Every item kind exists three times, and this is the single most important structural fact:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>                     ┌───────────────────────────────────────────────┐
+   Python  ──dict──▶ │  Main&lt;Item&gt;      management, Python interface │
+                     │       │          (parameter get/set, checks)  │
+                     │       ├─▶ C&lt;Item&gt;            computation      │
+                     │       │                (the hot path only)    │
+                     │       └─▶ Visualization&lt;Item&gt;   drawing       │
+                     └───────────────────────────────────────────────┘
+</pre></div>
+</div>
+<p>Visible directly in <code class="docutils literal notranslate"><span class="pre">src/System/</span></code>:</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>kind</p></th>
+<th class="head"><p>computation</p></th>
+<th class="head"><p>management</p></th>
+<th class="head"><p>visualization</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>node</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">CNode.h</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">MainNode.h</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">VisualizationNode.h</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p>object</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">CObject.h</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">MainObject.h</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">VisualizationObject.h</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p>marker</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">CMarker.h</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">MainMarker.h</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">VisualizationMarker.h</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p>load</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">CLoad.h</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">MainLoad.h</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">VisualizationLoad.h</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p>sensor</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">CSensor.h</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">MainSensor.h</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">VisualizationSensor.h</span></code></p></td>
+</tr>
+</tbody>
+</table>
+<p><code class="docutils literal notranslate"><span class="pre">CObject</span></code> has two specialisations: <strong><code class="docutils literal notranslate"><span class="pre">CObjectBody.h</span></code></strong> and <strong><code class="docutils literal notranslate"><span class="pre">CObjectConnector.h</span></code></strong>.</p>
+<p><strong>Why it matters:</strong> the <code class="docutils literal notranslate"><span class="pre">C*</span></code> half is what runs inside the time-integration loop, so it holds no
+Python state and does no management work. Everything not needed during computation — Python
+conversion, parameter validation, the GUI link — lives in <code class="docutils literal notranslate"><span class="pre">Main*</span></code>. Putting work on the wrong side
+is the most common way to make the solver slow.</p>
+</section>
+<section id="how-mbs-addobject-actually-works">
+<h2>How <code class="docutils literal notranslate"><span class="pre">mbs.AddObject(...)</span></code> actually works<a class="headerlink" href="#how-mbs-addobject-actually-works" title="Link to this heading"></a></h2>
+<p>Not a switch statement — a <strong>runtime registry of lambdas</strong>, and this is what makes plugins feasible:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>mbs.AddObject({'objectType':'MassPoint', ...})
+        │
+        ▼
+MainObjectFactory::AddMainObject(MainSystem&amp;, const py::dict&amp;)      src/Main/MainObjectFactory.cpp
+        │   reads the 'objectType' STRING from the dict
+        ▼
+CreateMainObject(mainSystem, objectType)
+        │   looks the string up in
+        ▼
+ClassFactoryItemsSystemData&lt;MainObject&gt;::Get()                       registry, keyed by string
+        │   entries registered at start-up by generated lambdas in
+        ▼
+src/Autogenerated/objectFactoryAutoReg.h                        //AUTO: do not modify
+        │   each lambda constructs the triple:
+        └─▶  new CObjectMassPoint()          + wire CData / CSystemData
+             new MainObjectMassPoint()       + SetCObject
+             new VisualizationObjectMassPoint() + SetVisualizationObject
+</pre></div>
+</div>
+<p>So adding an item type adds a <strong>registry entry</strong>, not a binding. Nothing in <code class="docutils literal notranslate"><span class="pre">PybindModule.cpp</span></code>
+changes.</p>
+<blockquote>
+<div><p><strong>One caveat that matters for compiled user plugins:</strong> the registry singleton is a function-local static inside
+a header-only class template (<code class="docutils literal notranslate"><span class="pre">MainObjectFactory.h</span></code>), so <strong>every binary gets its own private
+map</strong>. That is the single blocker for them, and it is solved by moving the storage into one
+exported accessor.</p>
+</div></blockquote>
+</section>
+<section id="modules-src">
+<h2>Modules — <code class="docutils literal notranslate"><span class="pre">src/</span></code><a class="headerlink" href="#modules-src" title="Link to this heading"></a></h2>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>module</p></th>
+<th class="head"><p>what it is</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">Autogenerated/</span></code></p></td>
+<td><p><strong>generated — never edit.</strong> The per-item <code class="docutils literal notranslate"><span class="pre">C*</span></code>/<code class="docutils literal notranslate"><span class="pre">Main*</span></code>/<code class="docutils literal notranslate"><span class="pre">Visu*</span></code> classes, the pybind bindings, settings structures, and the factory registration table. 319 files.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">System/</span></code></p></td>
+<td><p>the core item base classes (the table above), plus <code class="docutils literal notranslate"><span class="pre">CSystemData</span></code>, item indices, contact</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">Main/</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">CSystem</span></code>, <code class="docutils literal notranslate"><span class="pre">MainSystem</span></code> (<code class="docutils literal notranslate"><span class="pre">mbs</span></code>), <code class="docutils literal notranslate"><span class="pre">MainSystemContainer</span></code>, <code class="docutils literal notranslate"><span class="pre">MainObjectFactory</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">ImplObjects/</span></code></p></td>
+<td><p>the hand-written <em>implementation</em> of the generated objects — <code class="docutils literal notranslate"><span class="pre">CObjectANCFCable2D.cpp</span></code> and friends, 53 files, each with the <code class="docutils literal notranslate"><span class="pre">UpdateGraphics</span></code> of its own visualization</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">ImplNodes/</span></code>, <code class="docutils literal notranslate"><span class="pre">ImplMarkers/</span></code></p></td>
+<td><p>the same for the nodes (16) and markers (18). Loads and sensors are one short file each and live in <code class="docutils literal notranslate"><span class="pre">System/</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">Solver/</span></code></p></td>
+<td><p>static, explicit and implicit second-order solvers</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">Linalg/</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">SlimVector</span></code> (small, fixed), <code class="docutils literal notranslate"><span class="pre">Vector</span></code>/<code class="docutils literal notranslate"><span class="pre">ResizableVector</span></code> (large), <code class="docutils literal notranslate"><span class="pre">LinkedDataVector</span></code> (no copy), <code class="docutils literal notranslate"><span class="pre">ConstSizeVector</span></code> (constant size), matrices, <code class="docutils literal notranslate"><span class="pre">RigidBodyMath</span></code>, <code class="docutils literal notranslate"><span class="pre">Symbolic</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">Graphics/</span></code></p></td>
+<td><p>2D/3D graphics data plus a small OpenGL renderer via GLFW</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">Pymodules/</span></code></p></td>
+<td><p>the hand-written pybind11 layer; the generated half lives in <code class="docutils literal notranslate"><span class="pre">Autogenerated/</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">Utilities/</span></code></p></td>
+<td><p>arrays, <code class="docutils literal notranslate"><span class="pre">BasicDefinitions.h</span></code>, threading, automatic differentiation</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">Tests/</span></code></p></td>
+<td><p>LEST-based unit tests for linalg and data structures</p></td>
+</tr>
+</tbody>
+</table>
+<p>Vendored third-party (in <code class="docutils literal notranslate"><span class="pre">include/</span></code>): <strong>Eigen</strong> (dense/sparse linear algebra), <strong>pybind11</strong>,
+<strong>GLFW</strong> (windowing/OpenGL), <strong>LEST</strong> (unit tests). No heavy dependencies — see the invariants in
+<a class="reference internal" href="README.html#invariants"><span class="std std-ref">README.md</span></a>.</p>
+</section>
+<section id="coordinates-the-ltg-mapping">
+<h2>Coordinates: the LTG mapping<a class="headerlink" href="#coordinates-the-ltg-mapping" title="Link to this heading"></a></h2>
+<p>Each item owns <em>local</em> coordinates; the solver works on <em>global</em> ones. The <strong>local-to-global (LTG)</strong>
+map is built during <code class="docutils literal notranslate"><span class="pre">mbs.Assemble()</span></code>: node ordering fixes the global coordinate order, and each
+object records which global indices its local coordinates map to (<code class="docutils literal notranslate"><span class="pre">GetObjectLTGODE2</span></code>,
+<code class="docutils literal notranslate"><span class="pre">GetObjectLTGAE</span></code>). Constraints get their Lagrange multipliers allocated at the same time.</p>
+<p>Practical consequence: <strong>nothing about global indices is valid before <code class="docutils literal notranslate"><span class="pre">Assemble()</span></code></strong>, and adding an
+item invalidates the mapping.</p>
+</section>
+<section id="solvers">
+<h2>Solvers<a class="headerlink" href="#solvers" title="Link to this heading"></a></h2>
+<p>Structure is documented in <a class="reference internal" href="../manual/solver.html"><span class="std std-doc">docs/manual/solver.md</span></a> (“General solver
+structure”), not in the introduction. The shape is a template method:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>SolveSystem()
+   ├── InitializeSolver()
+   │      PreInitializeSolverSpecific → InitializeSolverOutput → InitializeSolverPreChecks
+   │      → InitializeSolverData → InitializeSolverInitialConditions → PostInitializeSolverSpecific
+   ├── SolveSteps()          loop over time / load steps
+   │      └── Newton iteration, with a discontinuous-iteration outer loop for contact/friction
+   └── FinalizeSolver()
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">CSolverBase</span></code> holds the common machinery; <code class="docutils literal notranslate"><span class="pre">CSolverStatic</span></code>, <code class="docutils literal notranslate"><span class="pre">CSolverExplicit</span></code> and
+<code class="docutils literal notranslate"><span class="pre">CSolverImplicitSecondOrder</span></code> fill in the specifics.</p>
+</section>
+<section id="experimental-features-pyexperimental">
+<h2>Experimental features: <code class="docutils literal notranslate"><span class="pre">PyExperimental</span></code><a class="headerlink" href="#experimental-features-pyexperimental" title="Link to this heading"></a></h2>
+<p><code class="docutils literal notranslate"><span class="pre">src/Main/Experimental.h</span></code> defines <code class="docutils literal notranslate"><span class="pre">class</span> <span class="pre">PyExperimental</span></code>, exposed to Python. It is <strong>not</strong>
+leftover debug code — it is the mechanism for shipping a method <strong>behind a switch</strong> while it is
+still incomplete: a formulation needed for a paper, or one whose “part B” is unfinished.</p>
+<p>Flags default to off, so a release carries the code without advertising it, and a small group can
+enable it. <strong>Keep it.</strong> A cleanup pass that judges by name will read it as stray debugging surface,
+which is exactly the wrong conclusion.</p>
+</section>
+<section id="where-to-start-reading">
+<h2>Where to start reading<a class="headerlink" href="#where-to-start-reading" title="Link to this heading"></a></h2>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>you want to</p></th>
+<th class="head"><p>start at</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>see how the module is created</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">src/Pymodules/PybindModule.cpp</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p>follow <code class="docutils literal notranslate"><span class="pre">mbs.AddObject</span></code> into C++</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">src/Main/MainObjectFactory.cpp</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p>add a new item</p></td>
+<td><p><a class="reference internal" href="NEW_ITEM.html"><span class="std std-doc">NEW_ITEM.md</span></a> — edit <code class="docutils literal notranslate"><span class="pre">definitions/</span></code>, never the generated header</p></td>
+</tr>
+<tr class="row-odd"><td><p>understand the time loop</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">src/Solver/CSolverImplicitSecondOrder.cpp</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p>debug Python→C++</p></td>
+<td><p>VS2022, `Debug</p></td>
+</tr>
+</tbody>
+</table>
+<p>Those four overview diagrams are in the user manual: the module overview and the C++ module in
+<code class="docutils literal notranslate"><span class="pre">docs/manual/introduction.md</span></code>, <code class="docutils literal notranslate"><span class="pre">systemData</span></code> and the interaction of items in the same chapter. They
+are TikZ in <code class="docutils literal notranslate"><span class="pre">docs/figures/tikz/</span></code>, compiled into a PDF and an SVG by <code class="docutils literal notranslate"><span class="pre">exudev</span> <span class="pre">figures</span></code>.</p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="GIT.html" class="btn btn-neutral float-left" title="Working with git in this repository" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="CODING_STYLE.html" class="btn btn-neutral float-right" title="Exudyn coding style and conventions" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

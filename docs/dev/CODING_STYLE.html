@@ -1,0 +1,759 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Exudyn coding style and conventions &mdash; Exudyn1.13.3 1.13.3 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=3ee1c6c6" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/rtd_sphinx_search.min.css" />
+      <link rel="stylesheet" type="text/css" href="../../_static/custom.css?v=e2783f0e" />
+
+  
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=b8a3e558"></script>
+      <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../_static/copybutton.js?v=f281be69"></script>
+      <script src="../../_static/js/rtd_search_config.js"></script>
+      <script src="../../_static/js/rtd_sphinx_search.min.js"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Development workflow" href="WORKFLOW.html" />
+    <link rel="prev" title="Exudyn C++ architecture" href="ARCHITECTURE.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            Exudyn1.13.3
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Exudyn User Manual</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../README.html">Exudyn</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../manual/gettingStarted.html">Installation and getting started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../manual/introduction.html">Overview on Exudyn</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../manual/introductionBasics.html">Exudyn basics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../manual/tutorial.html">Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../manual/GUI.html">Renderer, graphics and visualization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../manual/performanceErrors.html">Performance, errors and solver failures</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../manual/introductionAdvanced.html">Advanced topics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../manual/notation.html">Notation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../manual/theory.html">Theory and formulations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../manual/solver.html">Solvers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../generated/cInterface/cInterfaceIndex.html">Python-C++ command interface</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Reference Manual</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../generated/items/itemsIndex.html">Items reference manual</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../generated/pythonUtilities/utilitiesIndex.html">Python Utility Functions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../generated/structures/structuresIndex.html">Structures and Settings</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../generated/references.html">References</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Developer documentation</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="README.html">Exudyn developer documentation</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="GETTING_STARTED.html">Getting started as a developer</a></li>
+<li class="toctree-l2"><a class="reference internal" href="BUILD.html">Building Exudyn from source</a></li>
+<li class="toctree-l2"><a class="reference internal" href="GIT.html">Working with git in this repository</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ARCHITECTURE.html">Exudyn C++ architecture</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Exudyn coding style and conventions</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#general-rules">1. General rules</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#notation-conventions">2. Notation conventions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#suffix-conventions">3. Suffix conventions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#the-no-abbreviations-rule">4. The no-abbreviations rule</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#abbreviations-used-in-the-documentation-and-code">5. Abbreviations used in the documentation and code</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#item-and-dimensionality-conventions">6. Item and dimensionality conventions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#file-headers">7. File headers</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#deprecated-and-in-transition">8. Deprecated and in transition</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#adding-a-new-item-node-object-marker-load-sensor">9. Adding a new item (node, object, marker, load, sensor)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#reporting-an-error-from-c">10. Reporting an error from C++</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="WORKFLOW.html">Development workflow</a></li>
+<li class="toctree-l2"><a class="reference internal" href="NEW_ITEM.html">How to set up a new item</a></li>
+<li class="toctree-l2"><a class="reference internal" href="GUI_MANUAL_CHECK.html">Manual GUI check before a release</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../generated/deprecations.html">Deprecations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../definitions/README.html">definitions/ — the item and structure definitions as Python</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../tools/generators/README.html">tools/generators/ — the new generator code</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../tools/exudev/README.html"><code class="docutils literal notranslate"><span class="pre">exudev</span></code> — the Exudyn maintainer driver</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../CONTRIBUTING.html">Contributing to Exudyn</a></li>
+<li class="toctree-l2"><a class="reference internal" href="README.html#repository-layout">Repository layout</a></li>
+<li class="toctree-l2"><a class="reference internal" href="README.html#building-and-running">Building and running</a></li>
+<li class="toctree-l2"><a class="reference internal" href="README.html#how-to-notes">How-to notes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="README.html#invariants">Invariants</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">How-to notes</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../howTo/condaEnvironments.html">Conda environments for Exudyn</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../howTo/sphinxDocs.html">Building the documentation</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Examples, models and issues</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../generated/examples/examplesIndex.html">Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../generated/testModels/testModelsIndex.html">TestModels</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../generated/abbreviations.html">List of Abbreviations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../manual/revisions.html">Revisions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../CHANGELOG.html">Changelog</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../generated/trackerlog.html">Issue tracker</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">Exudyn1.13.3</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="README.html">Exudyn developer documentation</a></li>
+      <li class="breadcrumb-item active">Exudyn coding style and conventions</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../_sources/docs/dev/CODING_STYLE.md.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section class="tex2jax_ignore mathjax_ignore" id="exudyn-coding-style-and-conventions">
+<h1>Exudyn coding style and conventions<a class="headerlink" href="#exudyn-coding-style-and-conventions" title="Link to this heading"></a></h1>
+<blockquote>
+<div><p><strong>Source of truth.</strong> This file. It began as a transcription of the <em>Code style and conventions</em>
+sections of the LaTeX introduction, which was converted to
+<a class="reference internal" href="../manual/introduction.html"><span class="std std-doc">docs/manual/introduction.md</span></a> and no
+longer carries them; the abbreviation table is generated into
+<code class="docutils literal notranslate"><span class="pre">docs/generated/abbreviations.md</span></code>. There is one place for a rule again.</p>
+</div></blockquote>
+<section id="general-rules">
+<h2>1. General rules<a class="headerlink" href="#general-rules" title="Link to this heading"></a></h2>
+<ul class="simple">
+<li><p>Write <strong>simple</strong> code — no complicated structures, no uncommon constructs.</p></li>
+<li><p>Write <strong>readable</strong> code: variables and functions named for their content or functionality.
+Avoid abbreviations (§4).</p></li>
+<li><p>Put a <strong>header in every file</strong> (§7).</p></li>
+<li><p>Put a comment on every global function, member function, data member and template parameter.</p></li>
+<li><p><strong>Always use curly brackets</strong>, including for single statements:
+<code class="docutils literal notranslate"><span class="pre">if</span> <span class="pre">(i</span> <span class="pre">&lt;</span> <span class="pre">n)</span> <span class="pre">{</span> <span class="pre">i</span> <span class="pre">+=</span> <span class="pre">1;</span> <span class="pre">}</span></code></p></li>
+<li><p><strong>4-space tabs, expanded to spaces.</strong>
+VS: <em>Extras → Options → C/C++ → Tabstopps</em>: tab size 4, <strong>keep spaces = yes</strong>.</p></li>
+<li><p>Use C++11 where appropriate, but not exhaustively - prefer readability for engineering programmers.</p></li>
+<li><p>Use C++14 - C++20, if very helpful and reducing the overall code size, or to avoid larger workarounds and to enable future extensibility; switching to C++20 features shall be reported by Claude.</p></li>
+<li><p>Standards after C++20 should be used with care: we like to have multi-platform compatibility, mini computers (Raspberry) often have older setups, so we should not require too modern compilers.</p></li>
+<li><p><strong>One class, one file</strong> — except for collectors of single implementation functions.</p></li>
+<li><p>Avoid large classes: more than 45 member functions or more than 30 data members is a warning;
+more than 60 member functions is a god class and should be split - except for some autogenerated containers or similar.</p></li>
+<li><p>Mark changed code with your name and the date.</p></li>
+</ul>
+<p>Stated priorities, in order: developer-friendliness, error minimization, user-friendliness,
+efficiency.</p>
+</section>
+<section id="notation-conventions">
+<h2>2. Notation conventions<a class="headerlink" href="#notation-conventions" title="Link to this heading"></a></h2>
+<p>The source states these with <em>“no exceptions”</em>.</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>kind</p></th>
+<th class="head"><p>case</p></th>
+<th class="head"><p>examples</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>variables, class members, consts, defines</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">lowerCamelCase</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">secondOrderSize</span></code>, <code class="docutils literal notranslate"><span class="pre">massMatrix</span></code>, <code class="docutils literal notranslate"><span class="pre">mThetaTheta</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p>functions, classes, structs</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">UpperCamelCase</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">SecondOrderSize</span></code>, <code class="docutils literal notranslate"><span class="pre">EvaluateMassMatrix</span></code></p></td>
+</tr>
+</tbody>
+</table>
+<p>Exception: algorithms that follow a formula may mirror the formula —
+<code class="docutils literal notranslate"><span class="pre">f</span> <span class="pre">=</span> <span class="pre">M*q_tt</span> <span class="pre">+</span> <span class="pre">K*q</span></code>, <code class="docutils literal notranslate"><span class="pre">GBar</span></code>.</p>
+<p><strong>Abbreviations inside CamelCase</strong> — the one rule that trips people up:</p>
+<ul class="simple">
+<li><p>In <strong>functions and classes</strong>, an upper-case abbreviation continues <strong>upper case</strong>:
+<code class="docutils literal notranslate"><span class="pre">ODESystem</span></code>, <code class="docutils literal notranslate"><span class="pre">Point2DClass</span></code>, <code class="docutils literal notranslate"><span class="pre">ANCFCable2D</span></code>, <code class="docutils literal notranslate"><span class="pre">ANCFALE</span></code>, <code class="docutils literal notranslate"><span class="pre">ComputeODE1Equations</span></code>.
+(“Not always nice to read, but has become a standard and will be further used.”)</p></li>
+<li><p>In <strong>variables and class members</strong>, it continues <strong>lower case</strong>:
+<code class="docutils literal notranslate"><span class="pre">nODE1variables</span></code>, <code class="docutils literal notranslate"><span class="pre">dim2Dspecial</span></code>, <code class="docutils literal notranslate"><span class="pre">ANCFsize</span></code>.</p></li>
+<li><p>At the <em>beginning</em> of a name: functions and classes may lead with the abbreviation
+(<code class="docutils literal notranslate"><span class="pre">ODEComputeCoords()</span></code>); variables must not — write <code class="docutils literal notranslate"><span class="pre">nODE</span></code> or <code class="docutils literal notranslate"><span class="pre">odeCoordinates</span></code>.</p></li>
+</ul>
+<p>Further:</p>
+<ul class="simple">
+<li><p><strong>American English</strong> throughout (<code class="docutils literal notranslate"><span class="pre">Visualization</span></code>, not <code class="docutils literal notranslate"><span class="pre">Visualisation</span></code>).</p></li>
+<li><p>Avoid consecutive capitalized words — avoid <code class="docutils literal notranslate"><span class="pre">ODEAE</span></code>.</p></li>
+<li><p>No underscore in names. <strong>Exception: derivatives</strong> (§3).</p></li>
+<li><p>Name exactly what the thing is: <code class="docutils literal notranslate"><span class="pre">numberOfItems</span></code>, not <code class="docutils literal notranslate"><span class="pre">size</span></code> or <code class="docutils literal notranslate"><span class="pre">l</span></code>.</p></li>
+<li><p><strong>Get/Set convention</strong>: <code class="docutils literal notranslate"><span class="pre">Get</span></code> when data is retrieved from a class, <code class="docutils literal notranslate"><span class="pre">Set</span></code> when something is set.
+Use <code class="docutils literal notranslate"><span class="pre">const</span> <span class="pre">T&amp;</span> <span class="pre">Get()</span></code> / <code class="docutils literal notranslate"><span class="pre">T&amp;</span> <span class="pre">Get()</span></code> where direct access is needed. Same convention for pybind11.
+Examples: <code class="docutils literal notranslate"><span class="pre">Real*</span> <span class="pre">GetDataPointer()</span></code>, <code class="docutils literal notranslate"><span class="pre">Vector::SetAll(Real)</span></code>, <code class="docutils literal notranslate"><span class="pre">GetTransposed()</span></code>,
+<code class="docutils literal notranslate"><span class="pre">SetRotationalParameters(...)</span></code>, <code class="docutils literal notranslate"><span class="pre">SetColor(...)</span></code>.</p></li>
+<li><p>Use <strong><code class="docutils literal notranslate"><span class="pre">Real</span></code></strong>, not <code class="docutils literal notranslate"><span class="pre">double</span></code> or <code class="docutils literal notranslate"><span class="pre">float</span></code> — compatibility, and single/double precision under AVX.</p></li>
+<li><p>Use <strong><code class="docutils literal notranslate"><span class="pre">Index</span></code></strong> for sizes and indices, not <code class="docutils literal notranslate"><span class="pre">size_t</span></code> or <code class="docutils literal notranslate"><span class="pre">int</span></code>.</p></li>
+<li><p><strong>No magic numbers</strong> — not even <code class="docutils literal notranslate"><span class="pre">3</span></code> for 3D or a rotation-parameter count. Define a
+<code class="docutils literal notranslate"><span class="pre">const</span> <span class="pre">Index</span></code> or <code class="docutils literal notranslate"><span class="pre">constexpr</span></code>.</p></li>
+</ul>
+</section>
+<section id="suffix-conventions">
+<h2>3. Suffix conventions<a class="headerlink" href="#suffix-conventions" title="Link to this heading"></a></h2>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>suffix</p></th>
+<th class="head"><p>meaning</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">_t</span></code>, <code class="docutils literal notranslate"><span class="pre">_tt</span></code></p></td>
+<td><p>first / second time derivative — <code class="docutils literal notranslate"><span class="pre">Position_t</span></code>, <code class="docutils literal notranslate"><span class="pre">Position_tt</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">_x</span></code>, <code class="docutils literal notranslate"><span class="pre">_xx</span></code>, <code class="docutils literal notranslate"><span class="pre">_y</span></code>, …</p></td>
+<td><p>spatial derivatives</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">_q</span></code></p></td>
+<td><p>derivative with respect to coordinates (scalar quantity)</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">_v</span></code></p></td>
+<td><p>derivative with respect to velocity coordinates</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">[...]Init</span></code></p></td>
+<td><p>argument initializing a member — <code class="docutils literal notranslate"><span class="pre">valueInit</span></code> initializes <code class="docutils literal notranslate"><span class="pre">value</span></code></p></td>
+</tr>
+</tbody>
+</table>
+<p>For components, elements and entries of vectors, arrays and matrices, use the word <strong><code class="docutils literal notranslate"><span class="pre">item</span></code></strong>
+throughout.</p>
+</section>
+<section id="the-no-abbreviations-rule">
+<h2>4. The no-abbreviations rule<a class="headerlink" href="#the-no-abbreviations-rule" title="Link to this heading"></a></h2>
+<p>The code uses a <strong>minimum set of abbreviations</strong>. In general: do not abbreviate function, class or
+variable names — <code class="docutils literal notranslate"><span class="pre">GetDataPointer()</span></code>, not <code class="docutils literal notranslate"><span class="pre">GetPtr()</span></code>. Short loop-local names (<code class="docutils literal notranslate"><span class="pre">cnt</span></code>, <code class="docutils literal notranslate"><span class="pre">i</span></code>, <code class="docutils literal notranslate"><span class="pre">j</span></code>, <code class="docutils literal notranslate"><span class="pre">k</span></code>,
+<code class="docutils literal notranslate"><span class="pre">x</span></code>, <code class="docutils literal notranslate"><span class="pre">v</span></code>) are acceptable only where the meaning is unmistakable, in short (about 5-line) functions.</p>
+<p>The permitted exceptions, in full: <code class="docutils literal notranslate"><span class="pre">ODE</span></code>, <code class="docutils literal notranslate"><span class="pre">ODE2</span></code>, <code class="docutils literal notranslate"><span class="pre">ODE1</span></code>, <code class="docutils literal notranslate"><span class="pre">AE</span></code> (as in <code class="docutils literal notranslate"><span class="pre">AEcoordinates</span></code>),
+<code class="docutils literal notranslate"><span class="pre">C[...]</span></code> for <em>Computational</em> (<code class="docutils literal notranslate"><span class="pre">CNode</span></code> = ComputationalNode), <code class="docutils literal notranslate"><span class="pre">mbs</span></code>, <code class="docutils literal notranslate"><span class="pre">min</span></code>, <code class="docutils literal notranslate"><span class="pre">max</span></code>, <code class="docutils literal notranslate"><span class="pre">abs</span></code>, <code class="docutils literal notranslate"><span class="pre">rel</span></code>,
+<code class="docutils literal notranslate"><span class="pre">trig</span></code>, <code class="docutils literal notranslate"><span class="pre">quad</span></code>, <code class="docutils literal notranslate"><span class="pre">RHS</span></code>, <code class="docutils literal notranslate"><span class="pre">LHS</span></code>, <code class="docutils literal notranslate"><span class="pre">EP</span></code>, <code class="docutils literal notranslate"><span class="pre">Rxyz</span></code>, <code class="docutils literal notranslate"><span class="pre">coeffs</span></code>, <code class="docutils literal notranslate"><span class="pre">pos</span></code>, <code class="docutils literal notranslate"><span class="pre">T66</span></code>.</p>
+<p>Historical note: <code class="docutils literal notranslate"><span class="pre">ODE2</span></code> corresponds to <code class="docutils literal notranslate"><span class="pre">SOS2</span></code> / <code class="docutils literal notranslate"><span class="pre">EvalF2</span></code> in HOTINT, <code class="docutils literal notranslate"><span class="pre">ODE1</span></code> to <code class="docutils literal notranslate"><span class="pre">ES</span></code> / <code class="docutils literal notranslate"><span class="pre">EvalF</span></code>.</p>
+</section>
+<section id="abbreviations-used-in-the-documentation-and-code">
+<h2>5. Abbreviations used in the documentation and code<a class="headerlink" href="#abbreviations-used-in-the-documentation-and-code" title="Link to this heading"></a></h2>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>abbrev</p></th>
+<th class="head"><p>meaning</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>2D</p></td>
+<td><p>two dimensions or planar</p></td>
+</tr>
+<tr class="row-odd"><td><p>3D</p></td>
+<td><p>three dimensions or spatial</p></td>
+</tr>
+<tr class="row-even"><td><p>abs</p></td>
+<td><p>absolute (e.g. absolute error), absolute value</p></td>
+</tr>
+<tr class="row-odd"><td><p>AE</p></td>
+<td><p>algebraic equations</p></td>
+</tr>
+<tr class="row-even"><td><p>CMS</p></td>
+<td><p>component mode synthesis</p></td>
+</tr>
+<tr class="row-odd"><td><p>coeffs</p></td>
+<td><p>coefficients</p></td>
+</tr>
+<tr class="row-even"><td><p>COM</p></td>
+<td><p>center of mass</p></td>
+</tr>
+<tr class="row-odd"><td><p>DOF</p></td>
+<td><p>degree of freedom</p></td>
+</tr>
+<tr class="row-even"><td><p>EOM</p></td>
+<td><p>equations of motion</p></td>
+</tr>
+<tr class="row-odd"><td><p>EP</p></td>
+<td><p>Euler parameters</p></td>
+</tr>
+<tr class="row-even"><td><p>FFRF</p></td>
+<td><p>floating frame of reference formulation</p></td>
+</tr>
+<tr class="row-odd"><td><p>HT</p></td>
+<td><p>homogeneous transformation</p></td>
+</tr>
+<tr class="row-even"><td><p>LHS</p></td>
+<td><p>Left-Hand-Side (of equation)</p></td>
+</tr>
+<tr class="row-odd"><td><p>LTG</p></td>
+<td><p>local-to-global</p></td>
+</tr>
+<tr class="row-even"><td><p>mbs</p></td>
+<td><p>multibody system</p></td>
+</tr>
+<tr class="row-odd"><td><p>min</p></td>
+<td><p>minimum</p></td>
+</tr>
+<tr class="row-even"><td><p>max</p></td>
+<td><p>maximum</p></td>
+</tr>
+<tr class="row-odd"><td><p>ODE</p></td>
+<td><p>ordinary differential equation</p></td>
+</tr>
+<tr class="row-even"><td><p>ODE1</p></td>
+<td><p>first order ordinary differential equations</p></td>
+</tr>
+<tr class="row-odd"><td><p>ODE2</p></td>
+<td><p>second order ordinary differential equations</p></td>
+</tr>
+<tr class="row-even"><td><p>pos</p></td>
+<td><p>position</p></td>
+</tr>
+<tr class="row-odd"><td><p>quad</p></td>
+<td><p>quadrangle, polygon with 4 vertices</p></td>
+</tr>
+<tr class="row-even"><td><p>rel</p></td>
+<td><p>relative (e.g. relative error)</p></td>
+</tr>
+<tr class="row-odd"><td><p>RHS</p></td>
+<td><p>Right-Hand-Side (of equation)</p></td>
+</tr>
+<tr class="row-even"><td><p>Rot</p></td>
+<td><p>rotation</p></td>
+</tr>
+<tr class="row-odd"><td><p>Rxyz</p></td>
+<td><p>rotation parameterization: consecutive rotations around x, y and z axis (Tait-Bryan)</p></td>
+</tr>
+<tr class="row-even"><td><p>STL</p></td>
+<td><p>STereoLithography</p></td>
+</tr>
+<tr class="row-odd"><td><p>T66</p></td>
+<td><p>Pluecker transformation</p></td>
+</tr>
+<tr class="row-even"><td><p>trig</p></td>
+<td><p>triangle</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="item-and-dimensionality-conventions">
+<h2>6. Item and dimensionality conventions<a class="headerlink" href="#item-and-dimensionality-conventions" title="Link to this heading"></a></h2>
+<ul class="simple">
+<li><p>An <strong>item</strong> is a node, object, marker, load or sensor — the five registered kinds.</p></li>
+<li><p>Each item has up to three halves: <code class="docutils literal notranslate"><span class="pre">CObject</span></code> (computational), <code class="docutils literal notranslate"><span class="pre">MainObject</span></code> (Python interface),
+<code class="docutils literal notranslate"><span class="pre">VObject</span></code> (visualization).</p></li>
+<li><p><strong>All indices start at 0</strong>, in Python <em>and</em> in C++. Ranges are usually written <code class="docutils literal notranslate"><span class="pre">range(0,3)</span></code>,
+where 3 is the index after the last valid component.</p></li>
+<li><p>Quantities are <strong>3D by default</strong>. Planar items carry the suffix <code class="docutils literal notranslate"><span class="pre">2D</span></code>; 3D items carry no suffix.
+Rare exceptions exist where a Python name-space conflict would arise (e.g. <code class="docutils literal notranslate"><span class="pre">Beam3D</span></code>).</p></li>
+<li><p>Input and output of objects, markers and loads is usually 3D even when the node is 2D: a
+<code class="docutils literal notranslate"><span class="pre">NodePoint2D</span></code> has 2D <code class="docutils literal notranslate"><span class="pre">referenceCoordinates</span></code> but a 3D measured position, and a force applied
+through <code class="docutils literal notranslate"><span class="pre">MarkerNodePosition</span></code> + <code class="docutils literal notranslate"><span class="pre">LoadForceVector</span></code> is 3D. A local position in a 2D object is given
+as a 3D vector.</p></li>
+</ul>
+<section id="references-in-comments">
+<h3>References in comments<a class="headerlink" href="#references-in-comments" title="Link to this heading"></a></h3>
+<p>A comment that explains why code is the way it is cites the <strong>issue</strong> (<code class="docutils literal notranslate"><span class="pre">#2411</span></code>), not a step of the
+revision plan: comments stay for years, issue numbers are stable and the issue names its plan step.
+Plan steps are cited in issues and commit messages as “revision2026 step R4.10.3” (see
+<a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/docs/revision/exudynRevisionInfo2026.md"><code class="docutils literal notranslate"><span class="pre">exudynRevisionInfo2026.md</span></code></a> §1).</p>
+</section>
+<section id="documentation-says-what-is-not-what-it-was">
+<h3>Documentation says what IS, not what it was<a class="headerlink" href="#documentation-says-what-is-not-what-it-was" title="Link to this heading"></a></h3>
+<p>This holds for every text a reader meets — a manual page, a docstring, the <code class="docutils literal notranslate"><span class="pre">Details:</span></code> header of a
+model or an example, a figure caption — and it is the rule the maintainer gave on 2026-09-24
+(#2646):</p>
+<ul class="simple">
+<li><p><strong>describe the thing, not its history.</strong> A reader of <em>Building Exudyn from source</em> wants to know
+how to build, not that it used to be described in three places. A reader of a test model wants
+to know <strong>what the model computes</strong>, not what the file was called before.</p></li>
+<li><p><strong>never open a section with history.</strong> If the first sentence is about a change, the reader has to
+read past it to reach the subject.</p></li>
+<li><p><strong>cite the issue, not the plan step</strong>, for the same reason as in a comment — and the issue number
+is a link a reader of the documentation can actually follow, which is why it stays.</p></li>
+<li><p><strong>a reason for a change, where it helps, goes last and stays short</strong> — one clause after the
+informative text, not before it.</p></li>
+<li><p>What changed between releases is said <strong>once</strong>, for users, in
+<a class="reference internal" href="../manual/revisions.html#sec-revisions"><span class="std std-ref">Revisions</span></a>. That is where a restructuring belongs, not in the pages it restructured.</p></li>
+</ul>
+</section>
+</section>
+<section id="file-headers">
+<h2>7. File headers<a class="headerlink" href="#file-headers" title="Link to this heading"></a></h2>
+<p><strong>C++</strong> — Doxygen-style block at the top of the file:</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="cm">/** ***********************************************************************************************</span>
+<span class="cm">* @class        Vector</span>
+<span class="cm">* @brief        A templated vector class ...</span>
+<span class="cm">* @details      Details: ...</span>
+<span class="cm">*</span>
+<span class="cm">* @author       Gerstmayr Johannes</span>
+<span class="cm">* @date         2018-04-30 (generated)</span>
+<span class="cm">* @date         2024-01-15 (last modified)</span>
+<span class="cm">* @pre          ...</span>
+<span class="cm">* @copyright    This file is part of Exudyn. Exudyn is free software: ... see 'LICENSE.txt'</span>
+<span class="cm">* @todo         ...</span>
+<span class="cm">*</span>
+<span class="cm">* *** Example code ***</span>
+<span class="cm">* @code{.cpp}</span>
+<span class="cm">* ...</span>
+<span class="cm">* @endcode</span>
+<span class="cm">************************************************************************************************ */</span>
+</pre></div>
+</div>
+<p><strong>Python</strong> — banner comment:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1">#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++</span>
+<span class="c1"># This is an EXUDYN python utility library</span>
+<span class="c1">#</span>
+<span class="c1"># Details:  ...</span>
+<span class="c1">#</span>
+<span class="c1"># Author:   Johannes Gerstmayr</span>
+<span class="c1"># Date:     2020-03-10 (created)</span>
+<span class="c1"># Copyright:This file is part of Exudyn. Exudyn is free software: ... see 'LICENSE.txt'</span>
+<span class="c1">#</span>
+<span class="c1">#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++</span>
+</pre></div>
+</div>
+</section>
+<section id="deprecated-and-in-transition">
+<h2>8. Deprecated and in transition<a class="headerlink" href="#deprecated-and-in-transition" title="Link to this heading"></a></h2>
+<p>These rules are documented in <code class="docutils literal notranslate"><span class="pre">introduction.tex</span></code> but are <strong>not</strong> consistently followed in the tree.
+Do not enforce them retroactively, and do not introduce them into files that lack them.</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>rule</p></th>
+<th class="head"><p>status</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Doxygen comment style (<code class="docutils literal notranslate"><span class="pre">//!</span></code>, <code class="docutils literal notranslate"><span class="pre">&#64;todo</span></code>, <code class="docutils literal notranslate"><span class="pre">&#64;test</span></code>, <code class="docutils literal notranslate"><span class="pre">&#64;bug</span></code>)</p></td>
+<td><p><strong>deprecated, and the toolchain is gone.</strong> <code class="docutils literal notranslate"><span class="pre">docs/doxygen/</span></code> was removed 2026-09-10 — it broke on project size, the PDF path never worked, and graph generation had already been switched off. So nothing consumes these comments any more. New code need not adopt the style; existing blocks stay until a dedicated cleanup step. For the architectural overview doxygen was once expected to give, see <a class="reference internal" href="ARCHITECTURE.html"><span class="std std-doc">ARCHITECTURE.md</span></a>.</p></td>
+</tr>
+<tr class="row-odd"><td><p>“Add a complete unit test to every function” (LEST)</p></td>
+<td><p>not obeyed. The LEST tests are gated on <code class="docutils literal notranslate"><span class="pre">PERFORM_UNIT_TESTS</span></code>, enabled only for Python 3.7, so they run nowhere.</p></td>
+</tr>
+<tr class="row-even"><td><p>The <code class="docutils literal notranslate"><span class="pre">#**</span></code> doc-comment convention in <code class="docutils literal notranslate"><span class="pre">python/exudyn/</span></code></p></td>
+<td><p><strong>replaced 2026-09-15</strong> by Google-style docstrings: summary, then <code class="docutils literal notranslate"><span class="pre">Args:</span></code>, <code class="docutils literal notranslate"><span class="pre">Returns:</span></code>, <code class="docutils literal notranslate"><span class="pre">Note:</span></code>, <code class="docutils literal notranslate"><span class="pre">Example:</span></code>, each section’s text indented by four spaces. <code class="docutils literal notranslate"><span class="pre">author</span></code>, <code class="docutils literal notranslate"><span class="pre">date</span></code>, <code class="docutils literal notranslate"><span class="pre">status</span></code> and <code class="docutils literal notranslate"><span class="pre">public=False</span></code> go into <code class="docutils literal notranslate"><span class="pre">&#64;docmeta(...)</span></code> (<code class="docutils literal notranslate"><span class="pre">exudyn/docmeta.py</span></code>), a MainSystem method is marked <code class="docutils literal notranslate"><span class="pre">&#64;extends(exudyn.MainSystem)</span></code>. Every module in <code class="docutils literal notranslate"><span class="pre">python/exudyn</span></code> has an <code class="docutils literal notranslate"><span class="pre">__all__</span></code> listing its public names (top-level functions, classes and assigned names not starting with <code class="docutils literal notranslate"><span class="pre">_</span></code>, except <code class="docutils literal notranslate"><span class="pre">&#64;docmeta(public=False)</span></code>); <code class="docutils literal notranslate"><span class="pre">python</span> <span class="pre">tools/checkAll.py</span> <span class="pre">--write</span></code> updates it after adding a function, and CI fails if it is incomplete. The text is Markdown: <code class="docutils literal notranslate"><span class="pre">code</span></code> in backquotes, <code class="docutils literal notranslate"><span class="pre">$...$</span></code> math, <code class="docutils literal notranslate"><span class="pre">[Key]</span></code> for a citation, <code class="docutils literal notranslate"><span class="pre">[text](#label)</span></code> for a reference (<code class="docutils literal notranslate"><span class="pre">[Section](#sec:...)</span></code>, an abbreviation as <code class="docutils literal notranslate"><span class="pre">[HT](#HT)</span></code>), <code class="docutils literal notranslate"><span class="pre">**bold**</span></code>, <code class="docutils literal notranslate"><span class="pre">*italics*</span></code>, UTF-8 characters instead of LaTeX accents; no LaTeX macros outside math.</p></td>
+</tr>
+</tbody>
+</table>
+<p><strong>The operative rule when editing an existing file: follow that file’s local style.</strong> A consistent
+file beats a globally consistent repository during a migration.</p>
+</section>
+<section id="adding-a-new-item-node-object-marker-load-sensor">
+<h2>9. Adding a new item (node, object, marker, load, sensor)<a class="headerlink" href="#adding-a-new-item-node-object-marker-load-sensor" title="Link to this heading"></a></h2>
+<p><a class="reference internal" href="NEW_ITEM.html"><span class="std std-doc">NEW_ITEM.md</span></a>: the definition, what the generator writes, the C++ to write, what to run.</p>
+</section>
+<section id="reporting-an-error-from-c">
+<h2>10. Reporting an error from C++<a class="headerlink" href="#reporting-an-error-from-c" title="Link to this heading"></a></h2>
+<blockquote>
+<div><p>Not a transcription of <code class="docutils literal notranslate"><span class="pre">introduction.tex</span></code>: this section is written here and nowhere else
+. The C++ side of it lives in the comments of
+<code class="docutils literal notranslate"><span class="pre">src/Utilities/ReleaseAssert.h</span></code> and <code class="docutils literal notranslate"><span class="pre">src/Main/Stdoutput.h</span></code>, which say the same thing to
+someone reading the code; this is the version for someone about to write a check.</p>
+</div></blockquote>
+<p>An Exudyn error carries a <strong>type</strong>, not only a message. The type is what lets a user write
+<code class="docutils literal notranslate"><span class="pre">except</span> <span class="pre">exudyn.NotImplementedFeatureError</span></code> instead of matching on message text, and it is what
+tells them whether the mistake was theirs.</p>
+<section id="which-helper">
+<h3>10.1 Which helper<a class="headerlink" href="#which-helper" title="Link to this heading"></a></h3>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>helper</p></th>
+<th class="head"><p>what it does</p></th>
+<th class="head"><p>throws?</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">CHECKandTHROW(condition,</span> <span class="pre">message[,</span> <span class="pre">class])</span></code></p></td>
+<td><p>a condition that must hold</p></td>
+<td><p>yes, if false</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">CHECKandTHROWstring(message[,</span> <span class="pre">class])</span></code></p></td>
+<td><p>an unconditional throw: a <code class="docutils literal notranslate"><span class="pre">default:</span></code> branch, an unreachable case</p></td>
+<td><p>always</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">CHECKandTHROWcond(condition)</span></code></p></td>
+<td><p>a condition with no message; always <code class="docutils literal notranslate"><span class="pre">ExudynInternalError</span></code></p></td>
+<td><p>yes, if false</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">PyError(message[,</span> <span class="pre">PyErrorType])</span></code></p></td>
+<td><p>prints a <strong>User ERROR</strong> block with the Python file and line, then throws</p></td>
+<td><p>always</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">SysError(message[,</span> <span class="pre">PyErrorType])</span></code></p></td>
+<td><p>prints a <strong>SYSTEM ERROR</strong> block, then throws; defaults to <code class="docutils literal notranslate"><span class="pre">internalError</span></code></p></td>
+<td><p>always</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">PyWarning(message)</span></code></p></td>
+<td><p>prints a warning</p></td>
+<td><p>no</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">PyDeprecated(message)</span></code></p></td>
+<td><p>a real Python <code class="docutils literal notranslate"><span class="pre">DeprecationWarning</span></code>, shown once per call site</p></td>
+<td><p>no</p></td>
+</tr>
+</tbody>
+</table>
+<p><strong>The three <code class="docutils literal notranslate"><span class="pre">CHECKandTHROW*</span></code> macros are compiled out</strong> in <code class="docutils literal notranslate"><span class="pre">exudynCPPfast</span></code>
+(<code class="docutils literal notranslate"><span class="pre">__FAST_EXUDYN_LINALG</span></code>). <code class="docutils literal notranslate"><span class="pre">PyError</span></code> and <code class="docutils literal notranslate"><span class="pre">SysError</span></code> are not. So a validation the user must get in
+<strong>every</strong> module — a parameter check at the Python boundary — belongs in <code class="docutils literal notranslate"><span class="pre">PyError</span></code>,
+not in a macro. A macro is for a check that protects the computation and may cost a comparison
+per element.</p>
+<p><strong>The helper does not decide the type.</strong> The same macro states a user’s index mistake in one
+place and an Exudyn invariant in the next; that is measured, not assumed (<code class="docutils literal notranslate"><span class="pre">tools/errorTriage.py</span></code>).
+Choose the type from what the check <em>means</em>.</p>
+</section>
+<section id="which-type">
+<h3>10.2 Which type<a class="headerlink" href="#which-type" title="Link to this heading"></a></h3>
+<p>The nine classes are declared in <code class="docutils literal notranslate"><span class="pre">src/Utilities/ReleaseAssert.h</span></code>. Each derives from
+<code class="docutils literal notranslate"><span class="pre">ExudynError</span></code> <strong>and</strong> from the Python built-in that fits, so <code class="docutils literal notranslate"><span class="pre">except</span> <span class="pre">exudyn.ExudynError</span></code> catches
+everything Exudyn raises while an existing <code class="docutils literal notranslate"><span class="pre">except</span> <span class="pre">IndexError</span></code> keeps working.</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>ask yourself</p></th>
+<th class="head"><p>class</p></th>
+<th class="head"><p><code class="docutils literal notranslate"><span class="pre">PyErrorType</span></code></p></th>
+<th class="head"><p>Python base</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>the object cannot be that parameter at all</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">ExudynTypeError</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">typeError</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">TypeError</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p>the kind is right and the value is not (size, shape, range)</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">ExudynValueError</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">valueError</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">ValueError</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p>an index outside its range</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">ExudynIndexError</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">indexError</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">IndexError</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p>the model as built is illegal, or is being used in the wrong order</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">ExudynModelError</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">modelError</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">ValueError</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p>the solver cannot continue: singular, no convergence, divergence</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">ExudynSolverError</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">solverError</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">RuntimeError</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p>this feature or this combination does not exist (yet)</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">ExudynNotImplementedError</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">notImplementedError</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">NotImplementedError</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p>division by zero, root of a negative number</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">ExudynArithmeticError</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">arithmeticError</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">ArithmeticError</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p>an Exudyn invariant broke — <strong>our</strong> bug, not theirs</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">ExudynInternalError</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">internalError</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">RuntimeError</span></code></p></td>
+</tr>
+</tbody>
+</table>
+<p><code class="docutils literal notranslate"><span class="pre">ExudynError</span></code> itself is the root and is never raised directly.</p>
+<p>Three of these earn their place by what they save a user:</p>
+<ul class="simple">
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">ExudynNotImplementedError</span></code></strong> answers <em>“is this my mistake, a bug, or simply not there?”</em> —
+the question that otherwise costs an email.</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">ExudynModelError</span></code></strong> is for the model checked as a whole, typically at <code class="docutils literal notranslate"><span class="pre">Assemble()</span></code>. A message
+naming an invalid marker number is still a model error, not an index error: the number is the
+symptom, the model is what broke.</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">ExudynInternalError</span></code></strong> means <em>please report this</em>. Do not use it for anything a user can
+provoke from Python.</p></li>
+</ul>
+</section>
+<section id="when-to-write-no-type-at-all">
+<h3>10.3 When to write no type at all<a class="headerlink" href="#when-to-write-no-type-at-all" title="Link to this heading"></a></h3>
+<p>Leave a <code class="docutils literal notranslate"><span class="pre">CHECKandTHROW*</span></code> <strong>untyped</strong> when the honest answer is <code class="docutils literal notranslate"><span class="pre">ExudynInternalError</span></code>. The
+untyped form is the default form and means <code class="docutils literal notranslate"><span class="pre">ExudynInternalError</span></code> at every macro site, so
+writing it out by hand adds a diff and changes nothing. The same holds for <code class="docutils literal notranslate"><span class="pre">SysError</span></code>, which already defaults to it.</p>
+<p>This does <strong>not</strong> hold for <code class="docutils literal notranslate"><span class="pre">PyError</span></code>, whose default is <code class="docutils literal notranslate"><span class="pre">runtimeError</span></code>. A <code class="docutils literal notranslate"><span class="pre">PyError</span></code> without a type
+is a site not yet decided.</p>
+<p>Also leave the type off where the code genuinely does not know it — a <code class="docutils literal notranslate"><span class="pre">catch</span></code> that restates
+someone else’s exception. Putting a confident name on a lost type is worse than <code class="docutils literal notranslate"><span class="pre">RuntimeError</span></code>.</p>
+</section>
+<section id="two-traps-that-do-not-announce-themselves">
+<h3>10.4 Two traps that do not announce themselves<a class="headerlink" href="#two-traps-that-do-not-announce-themselves" title="Link to this heading"></a></h3>
+<p><strong>Catch order.</strong> <code class="docutils literal notranslate"><span class="pre">EXUexception</span></code> is a macro for <code class="docutils literal notranslate"><span class="pre">std::runtime_error</span></code>, and every Exudyn class
+derives from it. So in any <code class="docutils literal notranslate"><span class="pre">try</span></code> block, <code class="docutils literal notranslate"><span class="pre">catch</span> <span class="pre">(const</span> <span class="pre">ExudynError&amp;)</span></code> and
+<code class="docutils literal notranslate"><span class="pre">catch</span> <span class="pre">(const</span> <span class="pre">py::builtin_exception&amp;)</span></code> must come <strong>before</strong> <code class="docutils literal notranslate"><span class="pre">catch</span> <span class="pre">(const</span> <span class="pre">EXUexception&amp;)</span></code>, or the
+base catch takes it first and the type is silently flattened back to <code class="docutils literal notranslate"><span class="pre">RuntimeError</span></code>. This has
+been found four times (#2432, #2516).</p>
+<p><strong>Registration.</strong> A class added to <code class="docutils literal notranslate"><span class="pre">ReleaseAssert.h</span></code> and not added to the registration block of
+<code class="docutils literal notranslate"><span class="pre">src/Pymodules/PybindModule.cpp</span></code> <strong>compiles perfectly</strong> and arrives in Python as a plain
+<code class="docutils literal notranslate"><span class="pre">RuntimeError</span></code>, because pybind11 translates it with its built-in <code class="docutils literal notranslate"><span class="pre">std::runtime_error</span></code> rule. The
+opposite direction does not compile, so only this one needs saying. In that block the base must
+be registered first: pybind11 tries translators in reverse order of registration.
+<code class="docutils literal notranslate"><span class="pre">python/testing/test_exceptions.py::test_everyCppClassIsRegistered</span></code> compares the two lists.</p>
+</section>
+<section id="deprecating-something">
+<h3>10.5 Deprecating something<a class="headerlink" href="#deprecating-something" title="Link to this heading"></a></h3>
+<p>Use <code class="docutils literal notranslate"><span class="pre">PyDeprecated(source,</span> <span class="pre">name,</span> <span class="pre">message)</span></code>, never <code class="docutils literal notranslate"><span class="pre">PyWarning</span></code>; from Python, <code class="docutils literal notranslate"><span class="pre">exu.special.deprecations.Warn(source,</span> <span class="pre">name,</span> <span class="pre">message)</span></code>. <code class="docutils literal notranslate"><span class="pre">source</span></code> is <code class="docutils literal notranslate"><span class="pre">simulationSettings</span></code>, <code class="docutils literal notranslate"><span class="pre">visualizationSettings</span></code>, <code class="docutils literal notranslate"><span class="pre">items</span></code> or <code class="docutils literal notranslate"><span class="pre">functions</span></code>, <code class="docutils literal notranslate"><span class="pre">name</span></code> the deprecated
+name. It raises a real Python <code class="docutils literal notranslate"><span class="pre">DeprecationWarning</span></code>, so <code class="docutils literal notranslate"><span class="pre">-W</span> <span class="pre">error::DeprecationWarning</span></code> finds every use before a release
+removes the old name; each name warns once per session (<code class="docutils literal notranslate"><span class="pre">exu.special.deprecations.warnOnce</span> <span class="pre">=</span> <span class="pre">False</span></code>: on every use), and
+every use is counted in <code class="docutils literal notranslate"><span class="pre">exu.sys['deprecationUse'][source][name]</span></code> (<code class="docutils literal notranslate"><span class="pre">recordUse</span></code>), which is what a test reads (#2804,
+#2806). The warning is raised where the user’s script calls into Exudyn - <code class="docutils literal notranslate"><span class="pre">mbs.AddObject(...)</span></code>, the setter of a setting -
+so it names the line that wrote the name.</p>
+<p>A <strong>setting</strong> (<code class="docutils literal notranslate"><span class="pre">simulationSettings</span></code>, <code class="docutils literal notranslate"><span class="pre">visualizationSettings</span></code>) is renamed or moved in its definition
+file: the new member takes the place of the old, and the old name stays as a
+<code class="docutils literal notranslate"><span class="pre">StructureParameter(...,</span> <span class="pre">cFlags=SFDeprecated,</span> <span class="pre">deprecated=Deprecated(since,</span> <span class="pre">expires),</span> <span class="pre">defaultValue=NoDefaultValue,</span> <span class="pre">description=r'&lt;new&gt;')</span></code>; <code class="docutils literal notranslate"><span class="pre">&lt;new&gt;</span></code> is the new name if the member stays in
+its structure, else its path from the top structure (<code class="docutils literal notranslate"><span class="pre">view0.scene.drawWorldBasis</span></code>). The generator
+writes the forwarding, the warning and the line of the reference manual (#2588). An <strong>item
+parameter</strong> is renamed the same way, with <code class="docutils literal notranslate"><span class="pre">ItemParameter(...,</span> <span class="pre">deprecated=Deprecated(...),</span> <span class="pre">description=r'&lt;new</span> <span class="pre">name&gt;')</span></code> - see <code class="docutils literal notranslate"><span class="pre">definitions/README.md</span></code>, <em>Members</em> (#2589). An item parameter that <strong>stays</strong> but is
+deprecated - there is no new name, as for <code class="docutils literal notranslate"><span class="pre">rotationMarker0/1</span></code>, whose rotation moves to the markers - keeps its
+definition and gets <code class="docutils literal notranslate"><span class="pre">deprecated=Deprecated(since,</span> <span class="pre">expires,</span> <span class="pre">advice='&lt;what</span> <span class="pre">to</span> <span class="pre">do</span> <span class="pre">instead&gt;')</span></code>: the generated
+<code class="docutils literal notranslate"><span class="pre">SetWithDictionary</span></code> and <code class="docutils literal notranslate"><span class="pre">SetParameter</span></code> warn when it is set other than its default, the page lists it below the table, and
+<code class="docutils literal notranslate"><span class="pre">exudev</span> <span class="pre">scripts</span></code> reports it (#2804, #2805). The library itself uses no deprecated name.</p>
+<p>A <strong>function of the Python library</strong> is decorated with <code class="docutils literal notranslate"><span class="pre">&#64;Deprecated(since,</span> <span class="pre">expires,</span> <span class="pre">use='...')</span></code> from
+<code class="docutils literal notranslate"><span class="pre">exudyn.misc.deprecation</span></code>, and its docstring starts with <code class="docutils literal notranslate"><span class="pre">DEPRECATED</span></code>; an <strong>argument</strong> is reported where the function sees
+it, with <code class="docutils literal notranslate"><span class="pre">DeprecatedArgument(name,</span> <span class="pre">since,</span> <span class="pre">expires,</span> <span class="pre">use='...')</span></code>. A <strong>function of the C++ module</strong> gets
+<code class="docutils literal notranslate"><span class="pre">deprecated=Deprecated(since,</span> <span class="pre">expires)</span></code> in its <code class="docutils literal notranslate"><span class="pre">DefPyFunctionAccess</span></code> of <code class="docutils literal notranslate"><span class="pre">definitions/pybind*.py</span></code>, beside the
+<code class="docutils literal notranslate"><span class="pre">PyDeprecated</span></code> call in C++. <code class="docutils literal notranslate"><span class="pre">expires</span></code> is a year, five years after the deprecation unless decided otherwise.
+<code class="docutils literal notranslate"><span class="pre">tools/checkDeprecations.py</span></code> (in <code class="docutils literal notranslate"><span class="pre">exudev</span> <span class="pre">generate</span> <span class="pre">--all-checks</span></code>) fails for a deprecation whose year has come - it is
+removed then - and for one said in a text but not declared; the list of all of them is
+<code class="docutils literal notranslate"><span class="pre">docs/generated/deprecations.md</span></code> (#2807).</p>
+</section>
+<section id="writing-the-message">
+<h3>10.6 Writing the message<a class="headerlink" href="#writing-the-message" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p>Say what is wrong and what to change, not that something is wrong.</p></li>
+<li><p>Put the information <strong>into the exception</strong>, which is
+the <strong>only</strong> thing the console shows: <code class="docutils literal notranslate"><span class="pre">PyError</span></code> and <code class="docutils literal notranslate"><span class="pre">SysError</span></code> write their block to the log
+file and never to the console, because the exception already carries the same message and the
+same location, and because a <em>caught</em> exception must not flood the terminal of a GUI or a
+parameter variation that handles its own errors. So <code class="docutils literal notranslate"><span class="pre">str(exception)</span></code> has to be worth reading.</p></li>
+<li><p>The location in both is the outermost frame outside the <code class="docutils literal notranslate"><span class="pre">exudyn</span></code> package, so a solver-time
+error names the user’s own line and not <code class="docutils literal notranslate"><span class="pre">solver.py</span></code>.</p></li>
+</ul>
+</section>
+<section id="which-channel-gets-what">
+<h3>10.7 Which channel gets what<a class="headerlink" href="#which-channel-gets-what" title="Link to this heading"></a></h3>
+<p>There are three channels and one rule per kind of message.
+All of them write the same text, from <code class="docutils literal notranslate"><span class="pre">ErrorMessageBlock</span></code> — do not add a sentence to one of
+them.</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p></p></th>
+<th class="head"><p>console</p></th>
+<th class="head"><p><code class="docutils literal notranslate"><span class="pre">pout</span></code> log file (<code class="docutils literal notranslate"><span class="pre">exu.SetWriteToFile</span></code>)</p></th>
+<th class="head"><p>solver file</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><strong>error</strong> — <code class="docutils literal notranslate"><span class="pre">PyError</span></code>, <code class="docutils literal notranslate"><span class="pre">SysError</span></code>, <strong>and any macro throw</strong></p></td>
+<td><p>never</p></td>
+<td><p>always</p></td>
+<td><p>always</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>warning</strong> — <code class="docutils literal notranslate"><span class="pre">PyWarning</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">writeToConsole</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">writeToFile</span></code></p></td>
+<td><p>only where the call passes the file</p></td>
+</tr>
+<tr class="row-even"><td><p><strong>solver progress</strong> — <code class="docutils literal notranslate"><span class="pre">VerboseWrite</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">verboseMode</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">writeToFile</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">verboseModeFile</span></code></p></td>
+</tr>
+</tbody>
+</table>
+<p><strong>An error never goes to the console</strong>, because the exception already carries the same message
+and the same location, and a <em>caught</em> exception would otherwise flood the terminal of a GUI or a
+parameter variation that handles its own errors (§10.6).</p>
+<p><strong>An error always reaches every open log file, and you do not write it.</strong> <code class="docutils literal notranslate"><span class="pre">PyError</span></code> and
+<code class="docutils literal notranslate"><span class="pre">SysError</span></code> used to take an <code class="docutils literal notranslate"><span class="pre">std::ofstream&amp;</span></code>; they no longer do. The solver file is written by
+<code class="docutils literal notranslate"><span class="pre">CSolverBase::SolveSystem</span></code>, which catches what ends a run where the file is known — so a
+<code class="docutils literal notranslate"><span class="pre">CHECKandTHROW</span></code>, which can pass no file at all and is 1100+ call sites, reaches the file exactly
+like a <code class="docutils literal notranslate"><span class="pre">PyError</span></code>. Before R6.8 that depended on which helper a check happened to be written with.</p>
+<p><code class="docutils literal notranslate"><span class="pre">PyWarning</span></code> keeps its <code class="docutils literal notranslate"><span class="pre">std::ofstream&amp;</span></code> overload: a warning throws nothing, so that catch can
+never see it, and passing the file is the only way a warning reaches the solver log.</p>
+<p><code class="docutils literal notranslate"><span class="pre">exudyn.config.suppressWarnings</span></code> suppresses a warning on <strong>both</strong> channels, deliberately: a
+warning the user switched off should not fill the log file either.</p>
+<ul class="simple">
+<li><p>Name the function: <code class="docutils literal notranslate"><span class="pre">MainSystem::GetObject:</span> <span class="pre">access</span> <span class="pre">to</span> <span class="pre">invalid</span> <span class="pre">object</span> <span class="pre">number</span> <span class="pre">7</span></code>.</p></li>
+<li><p>Do not write <code class="docutils literal notranslate"><span class="pre">ERROR:</span></code> or <code class="docutils literal notranslate"><span class="pre">Python</span> <span class="pre">ERROR:</span></code> — the helper adds the heading.</p></li>
+</ul>
+</section>
+<section id="checking-what-is-where">
+<h3>10.7 Checking what is where<a class="headerlink" href="#checking-what-is-where" title="Link to this heading"></a></h3>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">python</span> <span class="n">tools</span><span class="o">/</span><span class="n">errorTriage</span><span class="o">.</span><span class="n">py</span>                 <span class="n">every</span> <span class="n">call</span> <span class="n">site</span><span class="p">,</span> <span class="n">by</span> <span class="n">area</span><span class="p">,</span> <span class="n">helper</span> <span class="ow">and</span> <span class="n">kind</span>
+<span class="n">python</span> <span class="n">tools</span><span class="o">/</span><span class="n">errorTriage</span><span class="o">.</span><span class="n">py</span> <span class="o">--</span><span class="n">sites</span> <span class="n">UNPLACED</span> <span class="n">the</span> <span class="n">ones</span> <span class="n">the</span> <span class="n">rules</span> <span class="n">cannot</span> <span class="n">decide</span>
+<span class="n">python</span> <span class="n">tools</span><span class="o">/</span><span class="n">errorTriage</span><span class="o">.</span><span class="n">py</span> <span class="o">--</span><span class="n">csv</span> <span class="n">FILE</span>       <span class="n">one</span> <span class="n">row</span> <span class="n">per</span> <span class="n">site</span><span class="p">,</span> <span class="k">for</span> <span class="n">reading</span> <span class="n">through</span>
+</pre></div>
+</div>
+<p>The tool classifies by text patterns, so it is repeatable rather than always right — its
+purpose is that a number in a plan can be re-derived.</p>
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="ARCHITECTURE.html" class="btn btn-neutral float-left" title="Exudyn C++ architecture" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="WORKFLOW.html" class="btn btn-neutral float-right" title="Development workflow" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

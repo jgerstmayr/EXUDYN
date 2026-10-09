@@ -1,0 +1,449 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Module: shells &mdash; Exudyn1.13.3 1.13.3 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=3ee1c6c6" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/rtd_sphinx_search.min.css" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/custom.css?v=e2783f0e" />
+
+  
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=b8a3e558"></script>
+      <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../../_static/copybutton.js?v=f281be69"></script>
+      <script src="../../../_static/js/rtd_search_config.js"></script>
+      <script src="../../../_static/js/rtd_sphinx_search.min.js"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+    <link rel="next" title="Module: signalProcessing" href="signalProcessing.html" />
+    <link rel="prev" title="Module: robotics.utilities" href="robotics.utilities.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            Exudyn1.13.3
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Exudyn User Manual</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../README.html">Exudyn</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../manual/gettingStarted.html">Installation and getting started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../manual/introduction.html">Overview on Exudyn</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../manual/introductionBasics.html">Exudyn basics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../manual/tutorial.html">Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../manual/GUI.html">Renderer, graphics and visualization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../manual/performanceErrors.html">Performance, errors and solver failures</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../manual/introductionAdvanced.html">Advanced topics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../manual/notation.html">Notation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../manual/theory.html">Theory and formulations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../manual/solver.html">Solvers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../cInterface/cInterfaceIndex.html">Python-C++ command interface</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Reference Manual</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../items/itemsIndex.html">Items reference manual</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="utilitiesIndex.html">Python Utility Functions</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="advancedUtilities.html">Module: advancedUtilities</a></li>
+<li class="toctree-l2"><a class="reference internal" href="artificialIntelligence.html">Module: artificialIntelligence</a></li>
+<li class="toctree-l2"><a class="reference internal" href="basicUtilities.html">Module: basicUtilities</a></li>
+<li class="toctree-l2"><a class="reference internal" href="beams.html">Module: beams</a></li>
+<li class="toctree-l2"><a class="reference internal" href="demos.html">Module: demos</a></li>
+<li class="toctree-l2"><a class="reference internal" href="FEM.html">Module: FEM</a></li>
+<li class="toctree-l2"><a class="reference internal" href="graphics.html">Module: graphics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="graphicsDataUtilities.html">Module: graphicsDataUtilities</a></li>
+<li class="toctree-l2"><a class="reference internal" href="misc.GUI.html">Module: misc.GUI</a></li>
+<li class="toctree-l2"><a class="reference internal" href="misc.settingsUtilities.html">Module: misc.settingsUtilities</a></li>
+<li class="toctree-l2"><a class="reference internal" href="interactive.html">Module: interactive</a></li>
+<li class="toctree-l2"><a class="reference internal" href="kinematicTree.html">Module: kinematicTree</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lieGroupBasics.html">Module: lieGroupBasics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="misc.mainSystemExtensions.html">Module: misc.mainSystemExtensions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="particles.html">Module: particles</a></li>
+<li class="toctree-l2"><a class="reference internal" href="physics.html">Module: physics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="plot.html">Module: plot</a></li>
+<li class="toctree-l2"><a class="reference internal" href="processing.html">Module: processing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rigidBodyUtilities.html">Module: rigidBodyUtilities</a></li>
+<li class="toctree-l2"><a class="reference internal" href="robotics.html">Module: robotics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="robotics.rosInterface.html">Module: robotics.rosInterface</a></li>
+<li class="toctree-l2"><a class="reference internal" href="robotics.future.html">Module: robotics.future</a></li>
+<li class="toctree-l2"><a class="reference internal" href="robotics.models.html">Module: robotics.models</a></li>
+<li class="toctree-l2"><a class="reference internal" href="robotics.mobile.html">Module: robotics.mobile</a></li>
+<li class="toctree-l2"><a class="reference internal" href="robotics.motion.html">Module: robotics.motion</a></li>
+<li class="toctree-l2"><a class="reference internal" href="robotics.special.html">Module: robotics.special</a></li>
+<li class="toctree-l2"><a class="reference internal" href="robotics.utilities.html">Module: robotics.utilities</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Module: shells</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#function-unitvector">Function: _UnitVector</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#function-addnodeconstraints">Function: AddNodeConstraints</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#function-addsphericaljointtoground">Function: AddSphericalJointToGround</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#function-addclamptoground">Function: AddClampToGround</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#function-thinplateshapefunctionderivatives">Function: _ThinPlateShapeFunctionDerivatives</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#function-creatempczeromarker">Function: _CreateMPCZeroMarker</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#function-addslopedeviationconstraint">Function: _AddSlopeDeviationConstraint</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#function-addslopeconformityconstraints">Function: AddSlopeConformityConstraints</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#function-adddistributedclamptoedge">Function: AddDistributedClampToEdge</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#function-applyedgeload">Function: ApplyEdgeLoad</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#function-addrotationalspringdamper">Function: AddRotationalSpringDamper</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#function-addedgespringdamper">Function: AddEdgeSpringDamper</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#class-shellmesh-in-module-shells">CLASS ShellMesh (in module shells)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#class-surfacemap-in-module-shells">CLASS SurfaceMap (in module shells)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="signalProcessing.html">Module: signalProcessing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="solver.html">Module: solver</a></li>
+<li class="toctree-l2"><a class="reference internal" href="utilities.html">Module: utilities</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../structures/structuresIndex.html">Structures and Settings</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../references.html">References</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Developer documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../dev/README.html">Exudyn developer documentation</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">How-to notes</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../howTo/condaEnvironments.html">Conda environments for Exudyn</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../howTo/sphinxDocs.html">Building the documentation</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Examples, models and issues</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../examples/examplesIndex.html">Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../testModels/testModelsIndex.html">TestModels</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../abbreviations.html">List of Abbreviations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../manual/revisions.html">Revisions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../CHANGELOG.html">Changelog</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../trackerlog.html">Issue tracker</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">Exudyn1.13.3</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="utilitiesIndex.html">Python Utility Functions</a></li>
+      <li class="breadcrumb-item active">Module: shells</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../../_sources/docs/generated/pythonUtilities/shells.md.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <!-- GENERATED by tools/generators/utilityDocsEmitter.py from the docstrings of python/exudyn - do not edit -->
+<section class="tex2jax_ignore mathjax_ignore" id="module-shells">
+<span id="sec-module-shells"></span><h1>Module: shells<a class="headerlink" href="#module-shells" title="Link to this heading"></a></h1>
+<p>Shells and plates utility functions, e.g. for creation of plate / shell mesh.</p>
+<ul class="simple">
+<li><p><strong>Author</strong>: Johannes Gerstmayr</p></li>
+<li><p><strong>Date</strong>: 2026-01-11 (created)</p></li>
+<li><p><strong>Notes</strong>: For a list of plot colors useful for matplotlib, see also utilities.PlotLineCode(…) Extended ShellMesh class with symbolic slope computation via vertexMapping. Copied from ANCFThinPlatePrecurved.py; intended to replace exudyn.shells.ShellMesh once merged into the Exudyn library.</p></li>
+</ul>
+<section id="function-unitvector">
+<span id="sec-shells-unitvector"></span><h2>Function: _UnitVector<a class="headerlink" href="#function-unitvector" title="Link to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/shells.py#L499"><code class="docutils literal notranslate"><span class="pre">_UnitVector(v)</span></code></a></p>
+<ul class="simple">
+<li><p><strong>function description</strong>: Return the unit vector of v; raises ValueError if v is near-zero.</p></li>
+</ul>
+</section>
+<section id="function-addnodeconstraints">
+<span id="sec-shells-addnodeconstraints"></span><h2>Function: AddNodeConstraints<a class="headerlink" href="#function-addnodeconstraints" title="Link to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/shells.py#L730"><code class="docutils literal notranslate"><span class="pre">AddNodeConstraints(mbs,</span> <span class="pre">nodeNumber,</span> <span class="pre">dofs,</span> <span class="pre">refNodeNumber</span> <span class="pre">=</span> <span class="pre">None)</span></code></a></p>
+<ul class="simple">
+<li><p><strong>function description</strong>: Constrain selected DOFs (0-8) of an ANCF plate node, to its reference value or to the same DOF of another node. Mirrors the GenerateStraightBeam pattern: one NodePointGround placed at the node’s reference position, one shared ground marker, one CoordinateConstraint per DOF.  MarkerNodeCoordinate returns ODE2 displacement (without reference values), so default offset=0 pins each displacement to zero = node stays at its reference configuration.</p></li>
+<li><p><strong>input</strong>:</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">mbs</span></code>: the MainSystem</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">nodeNumber</span></code>: the NodePointSlope12 node</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">dofs</span></code>: the coordinates of the node to constrain, 0-2 position, 3-5 slope x, 6-8 slope y</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">refNodeNumber</span></code>: None - each selected coordinate keeps its reference value (ground); a node number - each selected coordinate equals the same coordinate of this node (C1 node-to-node connection)</p></li>
+</ul>
+</li>
+<li><p><strong>output</strong>: list of CoordinateConstraint object indices.</p></li>
+</ul>
+<p>Relevant Examples (Ex) and TestModels (TM) with weblink to github: <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/ANCFThinPlateRevisionTest.py"><code class="docutils literal notranslate"><span class="pre">ANCFThinPlateRevisionTest.py</span></code></a> (TM)</p>
+</section>
+<section id="function-addsphericaljointtoground">
+<span id="sec-shells-addsphericaljointtoground"></span><h2>Function: AddSphericalJointToGround<a class="headerlink" href="#function-addsphericaljointtoground" title="Link to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/shells.py#L769"><code class="docutils literal notranslate"><span class="pre">AddSphericalJointToGround(mbs,</span> <span class="pre">nodeNumber)</span></code></a></p>
+<ul class="simple">
+<li><p><strong>function description</strong>: Pin an ANCF node to ground: fix translations (DOF 0,1,2), slopes free.</p></li>
+</ul>
+</section>
+<section id="function-addclamptoground">
+<span id="sec-shells-addclamptoground"></span><h2>Function: AddClampToGround<a class="headerlink" href="#function-addclamptoground" title="Link to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/shells.py#L774"><code class="docutils literal notranslate"><span class="pre">AddClampToGround(mbs,</span> <span class="pre">nodeNumber,</span> <span class="pre">fixedConstraints</span> <span class="pre">=</span> <span class="pre">None)</span></code></a></p>
+<ul class="simple">
+<li><p><strong>function description</strong>: Clamp an ANCF plate node to ground using a 9-element binary constraint vector. fixedConstraints: list/array of 9 values (0 or 1), one per DOF in the order [x, y, z,  sx_x, sx_y, sx_z,  sy_x, sy_y, sy_z]. A value of 1 fixes that DOF to its reference value; 0 leaves it free. Mirrors the fixedConstraintsNode0 convention of GenerateStraightLineANCFCable2D. Default (None): fix all 9 DOFs – equivalent to [1,1,1, 1,1,1, 1,1,1]. For a flat plate in the xy-plane (clamped left edge), the physically consistent choice that mirrors the 2D cable [1,1,0,1] convention is [1,1,1, 0,1,1, 1,0,1]: positions fixed, transverse slope components fixed (zero rotation), axial slope components (sx_x and sy_y, both = 1 in reference) left free to allow boundary stretching.</p></li>
+</ul>
+</section>
+<section id="function-thinplateshapefunctionderivatives">
+<span id="sec-shells-thinplateshapefunctionderivatives"></span><h2>Function: _ThinPlateShapeFunctionDerivatives<a class="headerlink" href="#function-thinplateshapefunctionderivatives" title="Link to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/shells.py#L797"><code class="docutils literal notranslate"><span class="pre">_ThinPlateShapeFunctionDerivatives(xi,</span> <span class="pre">eta,</span> <span class="pre">scaleX,</span> <span class="pre">scaleY)</span></code></a></p>
+<ul class="simple">
+<li><p><strong>function description</strong>: First derivatives (d/dxi, d/deta) of the 12 ANCFThinPlate shape functions. Transcribed from CObjectANCFThinPlate::ComputeShapeFunctions_xy (C++), including the per-node slope scaling (slopesScalingX/Y parameters of the element). Node order: n0=(-1,-1), n1=(+1,-1), n2=(+1,+1), n3=(-1,+1); per node the SF order is [position, slopeX, slopeY]. Returns (sf_xi, sf_eta): two numpy arrays of length 12.</p></li>
+</ul>
+</section>
+<section id="function-creatempczeromarker">
+<span id="sec-shells-creatempczeromarker"></span><h2>Function: _CreateMPCZeroMarker<a class="headerlink" href="#function-creatempczeromarker" title="Link to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/shells.py#L850"><code class="docutils literal notranslate"><span class="pre">_CreateMPCZeroMarker(mbs,</span> <span class="pre">nCoords</span> <span class="pre">=</span> <span class="pre">36)</span></code></a></p>
+<ul class="simple">
+<li><p><strong>function description</strong>: Return a marker whose coordinate vector is clamped to zero. Used as marker0 in ObjectConnectorCoordinateVector MPCs so Exudyn does not warn about two identical markers (self-constraint via markerNumbers=[m, m]). One ground node can be shared by many element constraints in the same mbs.</p></li>
+</ul>
+</section>
+<section id="function-addslopedeviationconstraint">
+<span id="sec-shells-addslopedeviationconstraint"></span><h2>Function: _AddSlopeDeviationConstraint<a class="headerlink" href="#function-addslopedeviationconstraint" title="Link to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/shells.py#L869"><code class="docutils literal notranslate"><span class="pre">_AddSlopeDeviationConstraint(mbs,</span> <span class="pre">elem,</span> <span class="pre">rowFunc,</span> <span class="pre">groundMarker</span> <span class="pre">=</span> <span class="pre">None,</span> <span class="pre">nodalCoords</span> <span class="pre">=</span> <span class="pre">(-1.0,</span> <span class="pre">+1.0),</span> <span class="pre">components</span> <span class="pre">=</span> <span class="pre">(0,</span> <span class="pre">1,</span> <span class="pre">2))</span></code></a></p>
+<ul class="simple">
+<li><p><strong>function description</strong>: Add a linear MPC forcing the slope functional rowFunc(s) to equal the linear interpolation of its values at the edge ends, at the 2 interior Gauss points. rowFunc(s) must return the 12 shape-function-derivative coefficients of the constrained (transverse) slope at edge coordinate s in [-1, +1]. Returns the constraint object index.</p></li>
+</ul>
+</section>
+<section id="function-addslopeconformityconstraints">
+<span id="sec-shells-addslopeconformityconstraints"></span><h2>Function: AddSlopeConformityConstraints<a class="headerlink" href="#function-addslopeconformityconstraints" title="Link to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/shells.py#L908"><code class="docutils literal notranslate"><span class="pre">AddSlopeConformityConstraints(mbs,</span> <span class="pre">plateMesh,</span> <span class="pre">direction</span> <span class="pre">=</span> <span class="pre">'x',</span> <span class="pre">components</span> <span class="pre">=</span> <span class="pre">(0,</span> <span class="pre">1,</span> <span class="pre">2))</span></code></a></p>
+<ul class="simple">
+<li><p><strong>function description</strong>: Suppress the non-conforming transverse-slope modes of ALL plate elements. The blended (ACM-type) ANCFThinPlate basis interpolates the transverse slope r_,x along edge lines NON-conformingly: between the nodes it deviates from the linear nodal interpolation by contributions of the far-node DOFs.  This deviation is CONSTANT in xi (the eta-nonlinear terms of sf_,xi carry only constant-in-xi factors), so constraining it on ONE face per element removes it from the whole element; analogously for r_,y in eta. Effect: with direction=’x’, the membrane strain field of a beam-like strip (ny=1) reproduces ANCFCable2D EXACTLY (verified: identical L2/max membrane error vs fine cable reference), eliminating the spurious self-equilibrated strain oscillations across the width at clamps and inter-element lines. CAUTION: this stiffens the element (removes the non-conforming modes that contribute to 2D bending/twist softness).  Intended for beam-like verification/benchmark setups, not for general shell meshes. Do NOT combine with AddDistributedClampToEdge on the same elements (duplicate equations -&gt; singular Jacobian). LIMITATION: direction=’both’ creates REDUNDANT constraints (singular Jacobian) on meshes with ny&gt;=2 (rank check: the y-direction rows of stacked element rows become dependent); use ‘both’ only for ny=1 (and ‘y’+nx&gt;=2 analogously untested) – for the beam-like strip use the default ‘x’.</p></li>
+<li><p><strong>input</strong>:</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">mbs</span></code>: the MainSystem</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">plateMesh</span></code>: the ShellMesh whose elements are constrained</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">direction</span></code>: ‘x’ (constrain r_,x along eta), ‘y’ (r_,y along xi), or ‘both’</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">components</span></code>: slope vector components to constrain (default all)</p></li>
+</ul>
+</li>
+<li><p><strong>output</strong>: list of constraint object indices.</p></li>
+</ul>
+</section>
+<section id="function-adddistributedclamptoedge">
+<span id="sec-shells-adddistributedclamptoedge"></span><h2>Function: AddDistributedClampToEdge<a class="headerlink" href="#function-adddistributedclamptoedge" title="Link to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/shells.py#L962"><code class="docutils literal notranslate"><span class="pre">AddDistributedClampToEdge(mbs,</span> <span class="pre">plateMesh,</span> <span class="pre">edgeKey,</span> <span class="pre">components</span> <span class="pre">=</span> <span class="pre">(0,</span> <span class="pre">1,</span> <span class="pre">2))</span></code></a></p>
+<ul class="simple">
+<li><p><strong>function description</strong>: Constrain the TRANSVERSE slope field along a clamped edge at the 2 interior Gauss points of every edge element (‘distributed clamp’). Background: nodal clamps (AddClampToGround) fix the edge POSITION field completely (it is conforming), but the transverse slope r_,n along the edge is the classic ACM-type NON-CONFORMING field: between the nodes it receives contributions from the interior/far-node DOFs of the edge element, so the clamp condition is violated mid-edge.  This produces a spurious self-equilibrated strain oscillation across the clamped edge (boundary layer). Constraint formulation (per edge element, per Gauss point +-1/sqrt(3), per component): the transverse slope at the interior edge point must equal the LINEAR interpolation of the two nodal transverse slopes, r_,n(s*) - [(1-s*)/2 r_,n(-1) + (1+s*)/2 r_,n(+1)] = 0. This kills exactly the non-conforming deviation while leaving the nodal slope DOFs (e.g. free axial stretch sx_x of a clamp like [1,1,1, 0,1,1, 1,0,1]) untouched – mirroring an ideal 1D (cable-like) clamp.  Since the transverse slope is cubic along the edge, 2 interior points reduce it exactly to the linear nodal interpolation.  Each constraint is a LINEAR multipoint constraint on the element’s 36 ODE2 coordinates (MarkerObjectODE2Coordinates + ObjectConnectorCoordinateVector with exact constant Jacobian). NOTE: this makes the strain AT the clamp face exact (matches an ideal 1D clamp), but the suppressed non-conforming mode reappears at the next inter-element line (overall L2 error barely changes).  To suppress the non-conformity in the WHOLE mesh (e.g. to reproduce ANCFCable2D exactly with a beam-like strip), use AddSlopeConformityConstraints instead – but do not combine both on the same elements (duplicate equations -&gt; singular Jacobian).</p></li>
+<li><p><strong>input</strong>:</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">mbs</span></code>: the MainSystem</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">plateMesh</span></code>: the ShellMesh of the edge</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">edgeKey</span></code>: ‘left’/’right’/’bottom’/’top’ – should also be nodally clamped</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">components</span></code>: vector components (0=x, 1=y, 2=z) of the transverse slope to constrain; default all three.</p></li>
+</ul>
+</li>
+<li><p><strong>output</strong>: list of constraint object indices.</p></li>
+</ul>
+</section>
+<section id="function-applyedgeload">
+<span id="sec-shells-applyedgeload"></span><h2>Function: ApplyEdgeLoad<a class="headerlink" href="#function-applyedgeload" title="Link to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/shells.py#L1034"><code class="docutils literal notranslate"><span class="pre">ApplyEdgeLoad(mbs,</span> <span class="pre">plateMesh,</span> <span class="pre">edgeKey,</span> <span class="pre">loadVector</span> <span class="pre">=</span> <span class="pre">None,</span> <span class="pre">torqueVector</span> <span class="pre">=</span> <span class="pre">None,</span> <span class="pre">distributed</span> <span class="pre">=</span> <span class="pre">False)</span></code></a></p>
+<ul class="simple">
+<li><p><strong>function description</strong>: Apply a uniformly distributed force/torque along one plate edge. Accepts the TOTAL load/torque; the force is distributed in one of two ways: distributed=False (default, nodal): Trapezoidal rule on the edge nodes: corner nodes receive 1x the per-element base, interior nodes receive 2x, so the sum equals the total exactly.  NOTE: nodal point forces are NOT work-equivalent to a uniform line load on the cubic (Hermite) edge interpolation – the slope-conjugate load components are missing, which excites a spurious Saint-Venant boundary layer (local membrane/bending oscillation across the width) at the loaded edge. distributed=True (consistent line load): Work-equivalent uniform line load: per edge element, the force is applied at the 2 Gauss points of the edge (local coordinate +-1/sqrt(3)) via MarkerBodyPosition with weight 1/2 each.  Since the edge field is cubic and the load direction is constant, 2-point Gauss integration of f = int S^T(edge) q ds is EXACT – including the Hermite slope-conjugate components that nodal forces miss.  Use this to reproduce ideal beam-like load introduction (e.g. matching an ANCFCable2D tip load on a beam-like strip). Torques are always applied nodally (trapezoidal rule).</p></li>
+<li><p><strong>input</strong>:</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">mbs</span></code>: the MainSystem</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">plateMesh</span></code>: the ShellMesh of the edge</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">edgeKey</span></code>: the edge, ‘left’, ‘right’, ‘bottom’ or ‘top’ of plateMesh.boundaryNodeNumbers</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">loadVector</span></code>: 3-component total force  [N]   or None</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">torqueVector</span></code>: 3-component total torque [N·m] or None</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">distributed</span></code>: if True, apply force as consistent line load (see above)</p></li>
+</ul>
+</li>
+</ul>
+</section>
+<section id="function-addrotationalspringdamper">
+<span id="sec-shells-addrotationalspringdamper"></span><h2>Function: AddRotationalSpringDamper<a class="headerlink" href="#function-addrotationalspringdamper" title="Link to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/shells.py#L1124"><code class="docutils literal notranslate"><span class="pre">AddRotationalSpringDamper(mbs,</span> <span class="pre">nodeA,</span> <span class="pre">nodeB,</span> <span class="pre">dofs,</span> <span class="pre">stiffness,</span> <span class="pre">damping</span> <span class="pre">=</span> <span class="pre">0.0)</span></code></a></p>
+<ul class="simple">
+<li><p><strong>function description</strong>: Add a CoordinateSpringDamper on each selected DOF between nodeA and nodeB. Used to add a rotational spring/damper at an ANCF plate hinge: dofs=[3,4,5]  resists relative rotation about the y-edge-axis (sx slopes). dofs=[6,7,8]  resists relative twist about the x-edge-axis (sy slopes).</p></li>
+<li><p><strong>input</strong>:</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">mbs</span></code>: the MainSystem</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">nodeA</span></code>: the first node</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">nodeB</span></code>: the second node</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">dofs</span></code>: the node coordinates to couple</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">stiffness</span></code>: the stiffness of each CoordinateSpringDamper</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">damping</span></code>: the damping of each CoordinateSpringDamper</p></li>
+</ul>
+</li>
+<li><p><strong>output</strong>: list of CoordinateSpringDamper object indices.</p></li>
+</ul>
+</section>
+<section id="function-addedgespringdamper">
+<span id="sec-shells-addedgespringdamper"></span><h2>Function: AddEdgeSpringDamper<a class="headerlink" href="#function-addedgespringdamper" title="Link to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/shells.py#L1155"><code class="docutils literal notranslate"><span class="pre">AddEdgeSpringDamper(mbs,</span> <span class="pre">nodesA,</span> <span class="pre">nodesB,</span> <span class="pre">dofs,</span> <span class="pre">totalStiffness,</span> <span class="pre">totalDamping</span> <span class="pre">=</span> <span class="pre">0.0)</span></code></a></p>
+<ul class="simple">
+<li><p><strong>function description</strong>: Distribute a total rotational spring-damper along matching edge node lists. Mirrors ApplyEdgeLoad: distributes totalStiffness via the trapezoidal rule so that the effective stiffness per unit length is uniform regardless of mesh refinement.  Corner nodes (first/last) receive 1x the base weight; interior nodes receive 2x, giving the correct trapezoidal integration.</p></li>
+<li><p><strong>input</strong>:</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">mbs</span></code>: the MainSystem</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">nodesA</span></code>: list of node numbers on side A of the hinge (e.g. plate1 right edge)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">nodesB</span></code>: list of node numbers on side B of the hinge (e.g. plate2 left edge)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">dofs</span></code>: DOF indices to couple, e.g. [3,4,5] for x-slope (bending hinge)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">totalStiffness</span></code>: total rotational stiffness [Nm/rad] of the whole hinge</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">totalDamping</span></code>: total rotational damping   [Nm·s/rad] of the whole hinge</p></li>
+</ul>
+</li>
+<li><p><strong>output</strong>: list of all CoordinateSpringDamper object indices.</p></li>
+</ul>
+</section>
+<section id="class-shellmesh-in-module-shells">
+<span id="sec-module-shells-class-shellmesh"></span><h2>CLASS ShellMesh (in module shells)<a class="headerlink" href="#class-shellmesh-in-module-shells" title="Link to this heading"></a></h2>
+<p><strong>class description</strong>: class for generation, representation of plate and shell meshes; creaton of Exudyn elements</p>
+<section id="class-function-init">
+<span id="sec-shells-shellmesh-init"></span><h3>Class function: <strong>init</strong><a class="headerlink" href="#class-function-init" title="Link to this heading"></a></h3>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/shells.py#L49"><code class="docutils literal notranslate"><span class="pre">__init__(self,</span> <span class="pre">vertices</span> <span class="pre">=</span> <span class="pre">[[-1,-1,0],[</span> <span class="pre">1,-1,0],[</span> <span class="pre">1,</span> <span class="pre">1,0],[-1,</span> <span class="pre">1,0]],</span> <span class="pre">numberOfElementsX</span> <span class="pre">=</span> <span class="pre">1,</span> <span class="pre">numberOfElementsY</span> <span class="pre">=</span> <span class="pre">1,</span> <span class="pre">youngsModulus</span> <span class="pre">=</span> <span class="pre">None,</span> <span class="pre">poissonsRatio</span> <span class="pre">=</span> <span class="pre">None,</span> <span class="pre">density</span> <span class="pre">=</span> <span class="pre">None,</span> <span class="pre">thickness</span> <span class="pre">=</span> <span class="pre">None,</span> <span class="pre">massProportionalDamping</span> <span class="pre">=</span> <span class="pre">0.,</span> <span class="pre">thicknessAtNodes</span> <span class="pre">=</span> <span class="pre">None,</span> <span class="pre">thicknessFunction</span> <span class="pre">=</span> <span class="pre">None,</span> <span class="pre">stiffnessProportionalDamping</span> <span class="pre">=</span> <span class="pre">0.,</span> <span class="pre">surfaceMap</span> <span class="pre">=</span> <span class="pre">None)</span></code></a></p>
+<ul class="simple">
+<li><p><strong>class function description</strong>: initialize rectangular shell mesh with geometry, discretization and physics parameters</p></li>
+<li><p><strong>input</strong>:</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">vertices</span></code>: list of four 3D vectors (numpy array or list), sorted [bottom-left, bottom-right, top-right, top-left]; defining the reference positions of the corner nodes; if further transformations are added, use unit coordinates!</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">numberOfElementsX</span></code>: number of elements in x-direction</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">numberOfElementsY</span></code>: number of elements in y-direction</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">youngsModulus</span></code>: Young’s modulus; used for calculation of membrane and bending stiffness</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">poissonsRatio</span></code>: Poisson’s ratio for inplane shear deformation</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">density</span></code>: average density of plate/shell</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">thickness</span></code>: thickness of plate/shell</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">massProportionalDamping</span></code>: damping parameter which introduces damping proportional to distributed mass</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">thicknessAtNodes</span></code>: optional thickness at each node, in the order of the nodes; interpolated bilinearly in each element</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">thicknessFunction</span></code>: optional function f(x, y) of the thickness at the global x and y of a point, which must accept exu.symbolic.Real; its value and its gradients along the slopes of each node give 12 thickness values per element</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">stiffnessProportionalDamping</span></code>: Kelvin-Voigt damping coefficient [s] of the membrane and the bending stiffness</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">surfaceMap</span></code>: optional function f(x, y) -&gt; [X, Y, Z] that maps the positions (x, y) of the nodes in the rectangle of the vertices onto a surface, e.g. SurfaceMap.Cylinder(…); the slopes of the nodes follow from its derivatives</p></li>
+</ul>
+</li>
+<li><p><strong>notes</strong>: x-axis is aligned with bottom (y=min) and top (y=max); y-axis is aligned with left (x=min) and right (x=max)</p></li>
+</ul>
+<p>Relevant Examples (Ex) and TestModels (TM) with weblink to github: <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/ANCFThinPlateRevisionTest.py"><code class="docutils literal notranslate"><span class="pre">ANCFThinPlateRevisionTest.py</span></code></a> (TM), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/ANCFThinPlateTests.py"><code class="docutils literal notranslate"><span class="pre">ANCFThinPlateTests.py</span></code></a> (TM), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/energiesFlexibleBodiesTest.py"><code class="docutils literal notranslate"><span class="pre">energiesFlexibleBodiesTest.py</span></code></a> (TM)</p>
+</section>
+</section>
+<section id="class-surfacemap-in-module-shells">
+<span id="sec-module-shells-class-surfacemap"></span><h2>CLASS SurfaceMap (in module shells)<a class="headerlink" href="#class-surfacemap-in-module-shells" title="Link to this heading"></a></h2>
+<p><strong>class description</strong>: Maps of a rectangle onto a surface, for ShellMesh(surfaceMap=…): each static method returns a function f(x, y) -&gt; [X, Y, Z] of the position (x, y) in the rectangle of the vertices of the mesh. A map written by the user has the same form. It is called with exu.symbolic.Real values for x and y, so that the slopes of the nodes follow exactly from its derivatives: use exu.symbolic.sin, exu.symbolic.cos and the other functions of exu.symbolic, which take floats as well; a map that computes with numpy (BezierStrip, ConeFrustum, Cylinder) gets its slopes by central differences.</p>
+<section id="class-function-skewparallelogram">
+<span id="sec-shells-surfacemap-skewparallelogram"></span><h3>Class function: SkewParallelogram<a class="headerlink" href="#class-function-skewparallelogram" title="Link to this heading"></a></h3>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/shells.py#L521"><code class="docutils literal notranslate"><span class="pre">SkewParallelogram(skewY</span> <span class="pre">=</span> <span class="pre">0.0,</span> <span class="pre">skewX</span> <span class="pre">=</span> <span class="pre">0.0)</span></code></a></p>
+<ul class="simple">
+<li><p><strong>class function description</strong>: Skew a rectangle into a parallelogram. skewY: adds x += skewY<em>y  (shear x with y). skewX: adds y += skewX</em>x  (shear y with x).</p></li>
+</ul>
+</section>
+<section id="class-function-trapezoid">
+<span id="sec-shells-surfacemap-trapezoid"></span><h3>Class function: Trapezoid<a class="headerlink" href="#class-function-trapezoid" title="Link to this heading"></a></h3>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/shells.py#L531"><code class="docutils literal notranslate"><span class="pre">Trapezoid(Lx,</span> <span class="pre">Ly,</span> <span class="pre">topScale</span> <span class="pre">=</span> <span class="pre">1.0,</span> <span class="pre">aboutMidline</span> <span class="pre">=</span> <span class="pre">True)</span></code></a></p>
+<ul class="simple">
+<li><p><strong>class function description</strong>: Trapezoid by scaling x-span linearly with y. topScale&lt;1: narrower at top; topScale&gt;1: wider at top. aboutMidline=True keeps the plate centreline fixed.</p></li>
+</ul>
+</section>
+<section id="class-function-curvededge">
+<span id="sec-shells-surfacemap-curvededge"></span><h3>Class function: CurvedEdge<a class="headerlink" href="#class-function-curvededge" title="Link to this heading"></a></h3>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/shells.py#L549"><code class="docutils literal notranslate"><span class="pre">CurvedEdge(Lx,</span> <span class="pre">Ly,</span> <span class="pre">amp</span> <span class="pre">=</span> <span class="pre">0.0,</span> <span class="pre">mode</span> <span class="pre">=</span> <span class="pre">'top',</span> <span class="pre">shape</span> <span class="pre">=</span> <span class="pre">'sin',</span> <span class="pre">aboutMidline</span> <span class="pre">=</span> <span class="pre">True)</span></code></a></p>
+<ul class="simple">
+<li><p><strong>class function description</strong>: Curve one edge by an x-shift that varies with y (and x). mode:  ‘top’ or ‘bottom’ — where the curvature reaches full amplitude. shape: ‘sin’ (sinusoidal in x) or ‘parabola’. amp:   maximum x-shift [m].</p></li>
+</ul>
+</section>
+<section id="class-function-outofplanewarp">
+<span id="sec-shells-surfacemap-outofplanewarp"></span><h3>Class function: OutOfPlaneWarp<a class="headerlink" href="#class-function-outofplanewarp" title="Link to this heading"></a></h3>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/shells.py#L575"><code class="docutils literal notranslate"><span class="pre">OutOfPlaneWarp(Lx,</span> <span class="pre">Ly,</span> <span class="pre">amp</span> <span class="pre">=</span> <span class="pre">0.0)</span></code></a></p>
+<ul class="simple">
+<li><p><strong>class function description</strong>: Initial out-of-plane warp vanishing at all four boundaries: z = amp * sin(pi<em>x/Lx) * sin(pi</em>y/Ly).</p></li>
+</ul>
+</section>
+<section id="class-function-bezierstrip">
+<span id="sec-shells-surfacemap-bezierstrip"></span><h3>Class function: BezierStrip<a class="headerlink" href="#class-function-bezierstrip" title="Link to this heading"></a></h3>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/shells.py#L588"><code class="docutils literal notranslate"><span class="pre">BezierStrip(P0,</span> <span class="pre">P1,</span> <span class="pre">P2,</span> <span class="pre">P3,</span> <span class="pre">Lx,</span> <span class="pre">Ly,</span> <span class="pre">up</span> <span class="pre">=</span> <span class="pre">(0,</span> <span class="pre">0,</span> <span class="pre">1),</span> <span class="pre">useArcLength</span> <span class="pre">=</span> <span class="pre">True,</span> <span class="pre">nArc</span> <span class="pre">=</span> <span class="pre">400)</span></code></a></p>
+<ul class="simple">
+<li><p><strong>class function description</strong>: Map a plate onto a cubic Bezier centerline strip. x in [0, Lx] follows the curve (optionally by arc-length). y in [0, Ly] offsets across the strip width.</p></li>
+</ul>
+</section>
+<section id="class-function-conefrustum">
+<span id="sec-shells-surfacemap-conefrustum"></span><h3>Class function: ConeFrustum<a class="headerlink" href="#class-function-conefrustum" title="Link to this heading"></a></h3>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/shells.py#L653"><code class="docutils literal notranslate"><span class="pre">ConeFrustum(Lx,</span> <span class="pre">Ly,</span> <span class="pre">r0,</span> <span class="pre">r1,</span> <span class="pre">phiDeg</span> <span class="pre">=</span> <span class="pre">20.0,</span> <span class="pre">thetaCenterDeg</span> <span class="pre">=</span> <span class="pre">0.0,</span> <span class="pre">centered</span> <span class="pre">=</span> <span class="pre">True,</span> <span class="pre">yMode</span> <span class="pre">=</span> <span class="pre">&quot;arclength&quot;)</span></code></a></p>
+<ul class="simple">
+<li><p><strong>class function description</strong>: Map a rectangle onto a conical frustum mantle. x in [0,Lx] along the axis; y in [0,Ly] around the circumference. r0, r1: radii at x=0 and x=Lx. phiDeg: angular extent [deg].</p></li>
+</ul>
+</section>
+<section id="class-function-cylinder">
+<span id="sec-shells-surfacemap-cylinder"></span><h3>Class function: Cylinder<a class="headerlink" href="#class-function-cylinder" title="Link to this heading"></a></h3>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/shells.py#L680"><code class="docutils literal notranslate"><span class="pre">Cylinder(Lx,</span> <span class="pre">Ly,</span> <span class="pre">R,</span> <span class="pre">phiDeg</span> <span class="pre">=</span> <span class="pre">90.0,</span> <span class="pre">thetaCenterDeg</span> <span class="pre">=</span> <span class="pre">0.0,</span> <span class="pre">centered</span> <span class="pre">=</span> <span class="pre">False,</span> <span class="pre">yMode</span> <span class="pre">=</span> <span class="pre">'arclength')</span></code></a></p>
+<ul class="simple">
+<li><p><strong>class function description</strong>: Map a rectangle onto a cylindrical mantle (special case of ConeFrustum with r0=r1=R).</p></li>
+</ul>
+</section>
+<section id="class-function-hemisphericalshell">
+<span id="sec-shells-surfacemap-hemisphericalshell"></span><h3>Class function: HemisphericalShell<a class="headerlink" href="#class-function-hemisphericalshell" title="Link to this heading"></a></h3>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/shells.py#L688"><code class="docutils literal notranslate"><span class="pre">HemisphericalShell(Lx,</span> <span class="pre">Ly,</span> <span class="pre">R,</span> <span class="pre">alpha,</span> <span class="pre">center</span> <span class="pre">=</span> <span class="pre">(0.0,0.0,0.0),</span> <span class="pre">thetaOffset</span> <span class="pre">=</span> <span class="pre">0.0,</span> <span class="pre">thetaRange</span> <span class="pre">=</span> <span class="pre">None)</span></code></a></p>
+<ul class="simple">
+<li><p><strong>class function description</strong>: Map a rectangle onto a hemispherical shell with a circular apex cutout. R: radius. alpha: cutout angle from +z axis [rad]. x maps to azimuthal angle; y maps from cutout edge (y=0) to equator (y=Ly).</p></li>
+</ul>
+</section>
+<section id="class-function-toroidalpanel">
+<span id="sec-shells-surfacemap-toroidalpanel"></span><h3>Class function: ToroidalPanel<a class="headerlink" href="#class-function-toroidalpanel" title="Link to this heading"></a></h3>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/shells.py#L713"><code class="docutils literal notranslate"><span class="pre">ToroidalPanel(Lx,</span> <span class="pre">Ly,</span> <span class="pre">r1</span> <span class="pre">=</span> <span class="pre">1.5,</span> <span class="pre">r2</span> <span class="pre">=</span> <span class="pre">0.5)</span></code></a></p>
+<ul class="simple">
+<li><p><strong>class function description</strong>: Map a rectangle onto a toroidal panel. x -&gt; meridional angle q1 in [-pi/2, pi/2]; y -&gt; azimuthal angle q2 in [0, pi/2].</p></li>
+</ul>
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="robotics.utilities.html" class="btn btn-neutral float-left" title="Module: robotics.utilities" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="signalProcessing.html" class="btn btn-neutral float-right" title="Module: signalProcessing" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

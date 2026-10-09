@@ -1,0 +1,787 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Advanced topics &mdash; Exudyn1.13.3 1.13.3 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=3ee1c6c6" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/rtd_sphinx_search.min.css" />
+      <link rel="stylesheet" type="text/css" href="../../_static/custom.css?v=e2783f0e" />
+
+  
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=b8a3e558"></script>
+      <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../_static/copybutton.js?v=f281be69"></script>
+      <script src="../../_static/js/rtd_search_config.js"></script>
+      <script src="../../_static/js/rtd_sphinx_search.min.js"></script>
+      <script>window.MathJax = {"loader": {"load": ["[tex]/mathtools"]}, "tex": {"packages": {"[+]": ["mathtools"]}, "macros": {"ANCFdk": "{\\LU{0}{\\dv_k}}", "ANCFdkO": "{\\LU{0}{\\dv_{0,k}}}", "ANCFdkOtp": "{\\LU{0}{\\dv_{0,k}\\tp}}", "ANCFdkt": "{\\LU{0}{\\dot\\dv_k}}", "Am": "{\\mathbf{A}}", "Dm": "{\\mathbf{D}}", "Em": "{\\mathbf{E}}", "Gm": "{\\mathbf{G}}", "Im": "{\\mathbf{I}}", "ImThree": "{\\mathbf{I}_{3 \\times 3}}", "Jm": "{\\mathbf{J}}", "Km": "{\\mathbf{K}}", "Mm": "{\\mathbf{M}}", "Pm": "{\\mathbf{P}}", "Rm": "{\\mathbf{R}}", "Sm": "{\\mathbf{S}}", "Tm": "{\\mathbf{T}}", "av": "{\\mathbf{a}}", "bv": "{\\mathbf{b}}", "cv": "{\\mathbf{c}}", "diffANCF": ["{\\frac{\\partial #1}{\\partial \\qv_{ANCF}}}", 1], "diffANCFdk": "{\\diffANCFmI{\\ANCFdk}}", "diffANCFmI": ["{\\frac{\\partial #1}{\\partial \\qv_{ANCF,m1}}}", 1], "diffANCFmIt": ["{\\frac{\\partial #1}{\\partial \\dot \\qv_{ANCF,m1}}}", 1], "diffANCFt": ["{\\frac{\\partial #1}{\\partial \\dot \\qv_{ANCF}}}", 1], "diffmI": ["{\\frac{\\partial #1}{\\partial \\qv_{m1}}}", 1], "diffmIt": ["{\\frac{\\partial #1}{\\partial \\dot \\qv_{m1}}}", 1], "diffmOI": ["{\\frac{\\partial #1}{\\partial \\qv_{m0,m1}}}", 1], "diffmOIt": ["{\\frac{\\partial #1}{\\partial \\dot \\qv_{m0,m1}}}", 1], "diffmOt": ["{\\frac{\\partial #1}{\\partial \\dot \\qv_{m0}}}", 1], "dv": "{\\mathbf{d}}", "ev": "{\\mathbf{e}}", "fv": "{\\mathbf{f}}", "gv": "{\\mathbf{g}}", "hv": "{\\mathbf{h}}", "nv": "{\\mathbf{n}}", "pv": "{\\mathbf{p}}", "qv": "{\\mathbf{q}}", "rv": "{\\mathbf{r}}", "sv": "{\\mathbf{s}}", "tv": "{\\mathbf{t}}", "uv": "{\\mathbf{u}}", "vv": "{\\mathbf{v}}", "xv": "{\\mathbf{x}}", "yv": "{\\mathbf{y}}", "zv": "{\\mathbf{z}}", "vspace": ["{}", 1], "ra": "{\\rightarrow}", "Rcal": "{\\mathbb{R}}", "Ccal": "{\\mathbb{C}}", "Ncal": "{\\mathbb{N}}", "Rot": "{\\mathbf{A}}", "dd": "{\\mathrm{d}}", "ps": "{p_\\mathrm{s}}", "co": "{\\mathrm{c}}", "si": "{\\mathrm{s}}", "tp": "{^\\mathrm{T}}", "diag": "{\\mathrm{diag}}", "vec": "{\\mathrm{vec}}", "Null": "{\\mathbf{0}}", "varepsilonDot": "{\\boldsymbol{\\varepsilon}}", "talpha": "{\\boldsymbol{\\alpha}}", "tbeta": "{\\boldsymbol{\\beta}}", "tgamma": "{\\boldsymbol{\\gamma}}", "tchi": "{\\boldsymbol{\\chi}}", "tdelta": "{\\boldsymbol{\\delta}}", "teps": "{\\boldsymbol{\\varepsilon}}", "tepsDot": "{\\boldsymbol{\\dot \\varepsilon}}", "teta": "{\\boldsymbol{\\eta}}", "tkappa": "{\\boldsymbol{\\kappa}}", "tkappaDot": "{\\boldsymbol{\\dot \\kappa}}", "tphi": "{\\boldsymbol{\\phi}}", "boldVarPhi": "{\\boldsymbol{\\varphi}}", "tPhi": "{\\boldsymbol{\\Phi}}", "ttheta": "{\\boldsymbol{\\theta}}", "tTheta": "{\\boldsymbol{\\Theta}}", "tlambda": "{\\boldsymbol{\\lambda}}", "tnu": "{\\boldsymbol{\\nu}}", "tmu": "{\\boldsymbol{\\mu}}", "tpsi": "{\\boldsymbol{\\psi}}", "tPsi": "{\\boldsymbol{\\Psi}}", "ttau": "{\\boldsymbol{\\tau}}", "tsigma": "{\\boldsymbol{\\sigma}}", "txi": "{\\boldsymbol{\\xi}}", "tzeta": "{\\boldsymbol{\\zeta}}", "tomega": "{\\boldsymbol{\\omega}}", "tOmega": "{\\boldsymbol{\\Omega}}", "vareps": "{\\varepsilon}", "myoverline": ["\\overline{#1}", 1], "pluseq": "\\mathrel{+}=", "LU": ["{\\prescript{#1}{}{#2}\\,}", 2], "LUX": ["{\\prescript{#1}{}{#2}#3\\,}", 3], "LUR": ["{\\prescript{#1}{}{#2}_{#3}\\,}", 3], "LURU": ["{\\prescript{#1}{}{#2}_{#3}^{#4}\\,}", 4], "LLdot": ["{\\prescript{}{#1}{\\dot{#2}}_{#3}\\,}", 3], "vr": ["{\\left[ \\begin{array}{c} { #1}\\vspace{0.04cm} \\\\ { #2}\\vspace{0.04cm} \\\\ { #3} \\end{array} \\right]}", 3], "mr": ["{\\left[ \\begin{array}{ccc} #1 & #2 & #3 \\vspace{0.04cm}\\\\ #4 & #5 & #6 \\vspace{0.04cm}\\\\ #7 & #8 & #9  \\end{array} \\right]}", 9], "vp": ["{\\left[ \\begin{array}{c} { #1} \\vspace{0.04cm}\\\\ { #2} \\end{array} \\right]}", 2], "mp": ["{\\left[ \\begin{array}{cc} #1 & #2 \\vspace{0.04cm}\\\\ #3 & #4 \\end{array} \\right]}", 4], "mfour": ["{\\left[ \\begin{array}{cccc} { #1} \\\\ { #2} \\\\ { #3} \\\\ { #4} \\end{array} \\right]}", 4], "vfour": ["{\\left[ \\begin{array}{c} { #1} \\\\ { #2} \\\\ { #3} \\\\ { #4} \\end{array} \\right]}", 4], "vrRow": ["{[#1,\\, #2,\\, #3]}", 3], "vsix": ["{\\left[ \\begin{array}{c} { #1} \\\\ { #2} \\\\ { #3} \\\\ { #4} \\\\ { #5} \\\\ { #6} \\end{array} \\right]}", 6], "vsixb": ["{\\begin{array}{c} { #1} \\\\ { #2} \\\\ { #3} \\\\ { #4} \\\\ { #5} \\\\ { #6} \\end{array} }", 6], "vsixs": ["{ \\begin{array}{c} { #1} \\\\ { #2} \\\\ { #3} \\\\ { #4} \\\\ { #5} \\\\ { #6} \\end{array} }", 6], "SO": "{q}", "FO": "{y}", "AE": "{\\lambda}", "SYS": "{s}", "SON": "{$2^\\mathrm{nd}$ order differential equations}", "FON": "{$1^\\mathrm{st}$ order differential equations}", "AEN": "{algebraic equations}", "Bm": "{\\mathbf{B}}", "Cm": "{\\mathbf{C}}", "Fm": "{\\mathbf{F}}", "SYSN": "{system equations}", "cIni": "{_\\mathrm{ini}}", "cRef": "{_\\mathrm{ref}}", "cCur": "{_\\mathrm{cur}}", "cVis": "{_\\mathrm{vis}}", "cSOS": "{_\\mathrm{start\\;of\\;step}}", "cConfig": "{_\\mathrm{config}}", "pLoc": "{\\mathbf{b}}", "pLocB": "{\\,^{b}{\\mathbf{v}}}", "pRef": "{\\mathbf{r}}", "pRefG": "{\\,^{0}{\\mathbf{r}}}", "indf": "{_\\mathrm{f}}", "indt": "{_\\mathrm{t}}", "indr": "{_\\mathrm{r}}", "indtt": "{_\\mathrm{tt}}", "indrr": "{_\\mathrm{rr}}", "indff": "{_\\mathrm{ff}}", "indtf": "{_\\mathrm{tf}}", "indrf": "{_\\mathrm{rf}}", "indtr": "{_\\mathrm{tr}}", "omegaBDtilde": "{\\LU{b}{\\tilde \\tomega_\\mathrm{bd}}}", "indrigid": "{_\\mathrm{rigid}}", "indred": "{_\\mathrm{red}}", "induser": "{_\\mathrm{user}}", "indu": "{_\\mathrm{u}}", "termA": ["{\\color{blue}{#1}}", 1], "termB": ["{\\color{red}{#1}}", 1], "termC": ["{\\color{green}{#1}}", 1], "acc": "{\\ddot{\\mathbf{q}}}", "GA": "{G\\alpha}", "Hm": "{\\mathbf{H}}", "ImTwo": "{\\mathbf{I}_{2 \\times 2}}", "Lm": "{\\mathbf{L}}", "Qm": "{\\mathbf{Q}}", "Vm": "{\\mathbf{V}}", "Wm": "{\\mathbf{W}}", "Xm": "{\\mathbf{X}}", "Ym": "{\\mathbf{Y}}", "aalg": "{\\mathbf{a}}", "iv": "{\\mathbf{i}}", "jv": "{\\mathbf{j}}", "kv": "{\\mathbf{k}}", "lv": "{\\mathbf{l}}", "mv": "{\\mathbf{m}}", "ov": "{\\mathbf{o}}", "vel": "{\\mathbf{v}}", "wv": "{\\mathbf{w}}"}}, "options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+      <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-mml-chtml.js"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="The command line: python -m exudyn" href="commandLine.html" />
+    <link rel="prev" title="Performance, errors and solver failures" href="performanceErrors.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            Exudyn1.13.3
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Exudyn User Manual</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../README.html">Exudyn</a></li>
+<li class="toctree-l1"><a class="reference internal" href="gettingStarted.html">Installation and getting started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="introduction.html">Overview on Exudyn</a></li>
+<li class="toctree-l1"><a class="reference internal" href="introductionBasics.html">Exudyn basics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorial.html">Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="GUI.html">Renderer, graphics and visualization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="performanceErrors.html">Performance, errors and solver failures</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Advanced topics</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#graphics-pipeline">Graphics pipeline</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#raytracing">Raytracing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#graphicsdata">GraphicsData</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#bodygraphicsdata">BodyGraphicsData</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#graphicsdata-line">GraphicsData: Line</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#graphicsdata-lines">GraphicsData: Lines</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#graphicsdata-circle">GraphicsData: Circle</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#graphicsdata-text">GraphicsData: Text</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#graphicsdata-spheres">GraphicsData: Spheres</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#graphicsdata-trianglelist">GraphicsData: TriangleList</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#graphicsdata-an-example-of-all-types">GraphicsData: an example of all types</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#contact-problems">Contact problems</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#interaction-with-julia">Interaction with Julia</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#the-c-core">The C++ core</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#interaction-with-other-codes">Interaction with other codes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#ros">ROS</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#tools-that-are-not-part-of-a-model">Tools that are not part of a model</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="commandLine.html">The command line: <code class="docutils literal notranslate"><span class="pre">python</span> <span class="pre">-m</span> <span class="pre">exudyn</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="resultsMonitor.html">The results monitor</a></li>
+<li class="toctree-l3"><a class="reference internal" href="userSettings.html">User settings that persist between runs</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="notation.html">Notation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="theory.html">Theory and formulations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="solver.html">Solvers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../generated/cInterface/cInterfaceIndex.html">Python-C++ command interface</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Reference Manual</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../generated/items/itemsIndex.html">Items reference manual</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../generated/pythonUtilities/utilitiesIndex.html">Python Utility Functions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../generated/structures/structuresIndex.html">Structures and Settings</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../generated/references.html">References</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Developer documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../dev/README.html">Exudyn developer documentation</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">How-to notes</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../howTo/condaEnvironments.html">Conda environments for Exudyn</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../howTo/sphinxDocs.html">Building the documentation</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Examples, models and issues</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../generated/examples/examplesIndex.html">Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../generated/testModels/testModelsIndex.html">TestModels</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../generated/abbreviations.html">List of Abbreviations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="revisions.html">Revisions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../CHANGELOG.html">Changelog</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../generated/trackerlog.html">Issue tracker</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">Exudyn1.13.3</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Advanced topics</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../_sources/docs/manual/introductionAdvanced.md.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section class="tex2jax_ignore mathjax_ignore" id="advanced-topics">
+<span id="sec-overview-advanced"></span><h1>Advanced topics<a class="headerlink" href="#advanced-topics" title="Link to this heading"></a></h1>
+<p>This section covers some advanced topics, which may be only relevant for a smaller group of people.
+Functionality may be extended but also removed in future</p>
+<section id="graphics-pipeline">
+<span id="sec-overview-basics-graphicspipeline"></span><h2>Graphics pipeline<a class="headerlink" href="#graphics-pipeline" title="Link to this heading"></a></h2>
+<p>There are basically two loops during simulation, which feed the graphics pipeline.
+The solver runs a loop:</p>
+<ul class="simple">
+<li><p>compute step (or set up initial values)</p></li>
+<li><p>finish computation step; results are in current state</p></li>
+<li><p>copy current state to visualization state (thread safe)</p></li>
+<li><p>signal graphics pipeline that new visualization data is available</p></li>
+<li><p>the renderer may update the visualization depending on <code class="docutils literal notranslate"><span class="pre">graphicsUpdateInterval</span></code> in  <code class="docutils literal notranslate"><span class="pre">visualizationSettings.general</span></code></p></li>
+</ul>
+<p>The openGL graphics thread (=separate thread) runs the following loop:</p>
+<ul class="simple">
+<li><p>render openGL scene with a given graphicsData structure (containing lines, faces, text, …)</p></li>
+<li><p>go idle for some milliseconds</p></li>
+<li><p>check if openGL rendering needs an update (e.g. due to user interaction)</p></li>
+<li><p><span class="math notranslate nohighlight">\(\ra\)</span> if update is needed, the visualization of all items is updated – stored in a graphicsData structure)</p></li>
+<li><p>check if new visualization data is available and the time since last update is larger than a presribed value, the graphicsData structure is updated with the new visualization state</p></li>
+</ul>
+</section>
+<section id="raytracing">
+<span id="sec-overview-basics-raytracing"></span><h2>Raytracing<a class="headerlink" href="#raytracing" title="Link to this heading"></a></h2>
+<p>For offscreen rendering (e.g. on a supercomputer without and video adapter), for offscreen AI-research on multiple cores, and in order to compensate the limited functionality (but high compatibility) of OpenGL 1.3, an option for CPU-based software rendering (raytracing) has been added.
+This allows to include shadows and transparency correctly, with additional support for reflections, refraction, emission, fog and materials.
+In the future, textures may be added as well.</p>
+<figure class="align-default" id="id1">
+<span id="fig-raytracerdemo"></span><a class="reference internal image-reference" href="../../_images/raytracerDemo.jpg"><img alt="../../_images/raytracerDemo.jpg" src="../../_images/raytracerDemo.jpg" width="400" />
+</a>
+<figcaption>
+<p><span class="caption-number">Fig. 7 </span><span class="caption-text">Example image of raytraced renderer view.</span><a class="headerlink" href="#id1" title="Link to this image"></a></p>
+</figcaption>
+</figure>
+<p>The basic things to know are:</p>
+<ul class="simple">
+<li><p>Raytracing settings are collected in <code class="docutils literal notranslate"><span class="pre">SC.visualizationSettings.raytracer</span></code> (in the following, we omit ‘SC.visualizationSettings’).</p></li>
+<li><p>Raytracing is activated by setting <code class="docutils literal notranslate"><span class="pre">raytracer.enable=True</span></code>. Please make sure that you start with small render window sizes / complexity first.</p></li>
+<li><p>The render window size is adjusted by <code class="docutils literal notranslate"><span class="pre">window.renderWindowSize</span></code>. Be careful with this settings.</p></li>
+<li><p>Adjust the <code class="docutils literal notranslate"><span class="pre">raytracer.numberOfThreads</span></code> for optimal performance, use <code class="docutils literal notranslate"><span class="pre">raytracer.verbose</span></code> to see render times for different settings. For testing, use <code class="docutils literal notranslate"><span class="pre">raytracer.imageSizeFactor&gt;1</span></code> to decrease the raytracer’s resolution (with same image size), while <code class="docutils literal notranslate"><span class="pre">openGL.multiSampling</span></code> will increase the resolution (anti-aliasing). Note that switching from <code class="docutils literal notranslate"><span class="pre">openGL.multiSampling=1</span></code> and <code class="docutils literal notranslate"><span class="pre">raytracer.imageSizeFactor=4</span></code> to <code class="docutils literal notranslate"><span class="pre">openGL.multiSampling=3</span></code> and <code class="docutils literal notranslate"><span class="pre">raytracer.imageSizeFactor=1</span></code> increases computational costs by a factor <span class="math notranslate nohighlight">\(4\times 4\times 3\times 3 = 144\)</span>. Use only one light, if sufficient (set <code class="docutils literal notranslate"><span class="pre">openGL.light1.enable=False</span></code>).</p></li>
+<li><p>Scene, lights, shadow, clipping plane, etc. settings are taken form OpenGL settings and directly used in the software renderer, like <code class="docutils literal notranslate"><span class="pre">openGL.light0.position</span></code>, the <code class="docutils literal notranslate"><span class="pre">shadow</span></code> of each light, <code class="docutils literal notranslate"><span class="pre">openGL.perspective</span></code>, <code class="docutils literal notranslate"><span class="pre">openGL.clippingPlaneNormal</span></code>, <code class="docutils literal notranslate"><span class="pre">openGL.showLines</span></code>, etc.;</p></li>
+<li><p>some settings are in general, like <code class="docutils literal notranslate"><span class="pre">general.backgroundColor</span></code> or <code class="docutils literal notranslate"><span class="pre">general.drawWorldBasis</span></code>;</p></li>
+<li><p>In order to see the advantages of the software renderer, materials have to be used, see below.</p></li>
+</ul>
+<p><strong>Materials</strong>:</p>
+<ul class="simple">
+<li><p>Materials have the type <code class="docutils literal notranslate"><span class="pre">VSettingsMaterial</span></code>, see description in <a class="reference internal" href="../generated/structures/VisualizationSettings.html#sec-vsettingsmaterial"><span class="std std-ref">VSettingsMaterial</span></a>, for adjusting color, reflectivity, shininess, alpha-transparency, etc.;</p></li>
+<li><p>Materials can only be used within triangulated geometries (GraphicsData <code class="docutils literal notranslate"><span class="pre">TriangleList</span></code>) using a material-flag in the color, like <code class="docutils literal notranslate"><span class="pre">graphics.Sphere(...,</span> <span class="pre">color=graphics.material.chrome)</span></code>. In the RGBA color, the alpha-channel is replaced by a material index which starts at 1000 (where 1000 represents material index 0). Note that in the regular OpenGL-rendering, alpha<span class="math notranslate nohighlight">\(&gt;\)</span>1 is equivalent to alpha<span class="math notranslate nohighlight">\(=\)</span>1. The first 10 materials are linked to <code class="docutils literal notranslate"><span class="pre">raytracer.material0</span> <span class="pre">...</span> <span class="pre">raytracer.material9</span></code>.</p></li>
+<li><p>The material’s <code class="docutils literal notranslate"><span class="pre">baseColor</span></code> is used if the color red-channel is set to <span class="math notranslate nohighlight">\(-1\)</span>. Note that this allows to globally change the color of objects by changing <code class="docutils literal notranslate"><span class="pre">baseColor</span></code> in the material settings in <code class="docutils literal notranslate"><span class="pre">visualizationSettings</span></code>. Summarizing, using <code class="docutils literal notranslate"><span class="pre">color=[1,0,0,graphics.material.indexSteel]</span></code> chooses red color with steel material settings, while <code class="docutils literal notranslate"><span class="pre">color=[-1,-1,-1,graphics.material.indexSteel]</span></code> will use the color of steel (but will be black for OpenGL renderer), identical with <code class="docutils literal notranslate"><span class="pre">color=graphics.material.steel</span></code>.</p></li>
+<li><p>The setting <code class="docutils literal notranslate"><span class="pre">backgroundColorReflections</span></code> can be used to represent the background which is used for rendering, while the background is independently set to black or white. Otherwise, black background leads to black regions on highly reflective objects or very light regions for white backgrounds.</p></li>
+<li><p>System text messages (solver, version, etc.) are overlayed over raytracing and can be turned off using the settings in <code class="docutils literal notranslate"><span class="pre">general.showComputationInfo</span></code> and similar. However, note that <strong>item texts are currently not shown</strong> in raytracer, affecting node numbers, etc.!</p></li>
+</ul>
+<p><strong>Limitations and risks</strong>:</p>
+<ul class="simple">
+<li><p>Raytracing is CPU-based and therefore slow. Do not use very high resolution (4K) together with multisampling <span class="math notranslate nohighlight">\(&gt;1\)</span>. Start with small render window sizes (e.g. 600 <span class="math notranslate nohighlight">\(\times\)</span> 400)</p></li>
+<li><p>Raytracing usually uses multithreading with speedups <span class="math notranslate nohighlight">\(&gt;10\)</span> on 16 cores. However, this cannot be combined with multithreaded simulations. It is therefore recommended to use raytracing in the solution viewer, not during simulation.</p></li>
+<li><p>If software rendering of a single frame gets to long (&gt;4 seconds), timeouts become active and it may occasionally not work. There are some options to compensate, see above.</p></li>
+<li><p>In general, it is <strong>recommended to start with default settings and experiment</strong> with changes using the visualization settings dialog.</p></li>
+</ul>
+<p>To add raytracing to your project, give the triangles a material, e.g. <code class="docutils literal notranslate"><span class="pre">color=graphics.color.dodgerblue[0:3]+[graphics.material.indexChrome]</span></code>, and set <code class="docutils literal notranslate"><span class="pre">view0.camera.useRaytracer</span> <span class="pre">=</span> <span class="pre">True</span></code> before <code class="docutils literal notranslate"><span class="pre">mbs.SolutionViewer()</span></code>; the example at the end of <a class="reference internal" href="#sec-graphicsdata"><span class="std std-ref">GraphicsData</span></a> does so and shows the image.</p>
+</section>
+<section id="graphicsdata">
+<span id="sec-graphicsdata"></span><h2>GraphicsData<a class="headerlink" href="#graphicsdata" title="Link to this heading"></a></h2>
+<p>All graphics objects are defined by a <code class="docutils literal notranslate"><span class="pre">GraphicsData</span></code> structure.
+Note that currently the visualization is based on a very simple and ancient OpenGL implementation, as there is currently no simple platform independent alternative. However, most of the heavy load triangle-based operations are implemented in C++ and are realized by very efficient OpenGL commands. However, note that the number of triangles to represent the object should be kept in a feasible range (<span class="math notranslate nohighlight">\(&lt;1000000\)</span>) in order to obtain a fast response of the renderer.</p>
+<p>Many objects include a <code class="docutils literal notranslate"><span class="pre">GraphicsData</span></code> dictionary structure for definition of attached visualization of the object.
+Note that objects expect a list of <code class="docutils literal notranslate"><span class="pre">GraphicsData</span></code>, which can be produced with <code class="docutils literal notranslate"><span class="pre">exudyn.graphics.</span> <span class="pre">...</span></code> functions (until Exudyn 1.8.33 with <code class="docutils literal notranslate"><span class="pre">GraphicsData...(...)</span></code>, which are now deprecated).
+Note that if reading out the <code class="docutils literal notranslate"><span class="pre">GraphicsData</span></code> from the object again, it usually has a different structure sorted by types of <code class="docutils literal notranslate"><span class="pre">GraphicsData</span></code>.
+Typically, you can use primitives (cube, sphere, …) or <a class="reference internal" href="../generated/abbreviations.html#stl"><span class="std std-ref">STL</span></a> data to define the objects appearance.
+<code class="docutils literal notranslate"><span class="pre">GraphicsData</span></code> dictionaries can be created with functions provided in the utility module <code class="docutils literal notranslate"><span class="pre">exudyn.graphics</span></code>, see <a class="reference internal" href="../generated/pythonUtilities/graphics.html#sec-module-graphics"><span class="std std-ref">Module: graphics</span></a>.</p>
+<p><code class="docutils literal notranslate"><span class="pre">GraphicsData</span></code> can be transformed into points and triangles (mesh) and can be used for contact computation, as well.
+<strong>NOTE</strong> that for correct rendering and correct contact computations, all triangle nodes must follow a strict local order and triangle normals – if defined – must point outwards, see <a class="reference internal" href="#fig-trianglenormals"><span class="std std-numref">Fig. 8</span></a>.</p>
+<figure class="align-default" id="id2">
+<span id="fig-trianglenormals"></span><a class="reference internal image-reference" href="../../_images/triangleNormal.png"><img alt="../../_images/triangleNormal.png" src="../../_images/triangleNormal.png" width="250" />
+</a>
+<figcaption>
+<p><span class="caption-number">Fig. 8 </span><span class="caption-text">Definition of triangle normals and outside/inside regions in Exudyn</span><a class="headerlink" href="#id2" title="Link to this image"></a></p>
+</figcaption>
+</figure>
+<p>The normal to a triangle with vertex positions <span class="math notranslate nohighlight">\(\pv_0\)</span>, <span class="math notranslate nohighlight">\(\pv_1\)</span>, <span class="math notranslate nohighlight">\(\pv_2\)</span> is computed from cross product as <span class="math notranslate nohighlight">\(\nv = \frac{(\pv_1-\pv_0) \times (\pv_2-\pv_0)}{|(\pv_1-\pv_0) \times (\pv_2-\pv_0)|}\)</span>;
+the normal <span class="math notranslate nohighlight">\(\nv\)</span> then points to the outside region of the mesh or body; the direction of <span class="math notranslate nohighlight">\(\nv\)</span> just depends on the ordering of the vertex points (interchange of two points changes the normal direction); correct normals are needed for contact computations as well as for correct shading effects in visualization.</p>
+<section id="bodygraphicsdata">
+<span id="sec-bodygraphicsdata"></span><h3>BodyGraphicsData<a class="headerlink" href="#bodygraphicsdata" title="Link to this heading"></a></h3>
+<p><code class="docutils literal notranslate"><span class="pre">BodyGraphicsData</span></code> contains a list of <code class="docutils literal notranslate"><span class="pre">GraphicsData</span></code> items, i.e. <code class="docutils literal notranslate"><span class="pre">bodyGraphicsData</span> <span class="pre">=</span> <span class="pre">[graphicsItem1,</span> <span class="pre">graphicsItem2,</span> <span class="pre">...]</span></code>. Every single <code class="docutils literal notranslate"><span class="pre">graphicsItem</span></code> may be defined as one of the following structures using a specific ‘type’.
+The following sections show the different possible types of <code class="docutils literal notranslate"><span class="pre">GraphicsData</span></code>.
+Points, normals, colors, triangles and edges are given as <strong>rows</strong> - one row per point, color, triangle or edge,
+as a list of lists or a 2D numpy array - and the functions of <code class="docutils literal notranslate"><span class="pre">exudyn.graphics</span></code> return them so; a flat list of the
+same numbers is read as well. A script that indexes such a list as flat reshapes it first, e.g.
+<code class="docutils literal notranslate"><span class="pre">np.array(g['points']).reshape(-1,3)</span></code>, which works for both forms.</p>
+</section>
+<section id="graphicsdata-line">
+<h3>GraphicsData: Line<a class="headerlink" href="#graphicsdata-line" title="Link to this heading"></a></h3>
+<p>GraphicsData <code class="docutils literal notranslate"><span class="pre">'type'</span> <span class="pre">=</span> <span class="pre">'Line'</span></code> draws a polygonal line between all specified points:</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p><strong>Name</strong></p></th>
+<th class="head"><p><strong>type</strong></p></th>
+<th class="head"><p><strong>default value</strong></p></th>
+<th class="head"><p><strong>description</strong></p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>color</p></td>
+<td><p>list</p></td>
+<td><p>[0,0,0,1]</p></td>
+<td><p>list of 4 floats to define RGB-color and transparency</p></td>
+</tr>
+<tr class="row-odd"><td><p>data</p></td>
+<td><p>array</p></td>
+<td><p>mandatory</p></td>
+<td><p>the points of the polygonal line as rows of x,y,z coordinates</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="graphicsdata-lines">
+<h3>GraphicsData: Lines<a class="headerlink" href="#graphicsdata-lines" title="Link to this heading"></a></h3>
+<p>GraphicsData <code class="docutils literal notranslate"><span class="pre">'type':</span> <span class="pre">'Lines'</span></code> draws a list of <span class="math notranslate nohighlight">\(n\)</span> lines, straight with 2 points each or quadratic (curved) with 3 points each:</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p><strong>Name</strong></p></th>
+<th class="head"><p><strong>type</strong></p></th>
+<th class="head"><p><strong>default value</strong></p></th>
+<th class="head"><p><strong>description</strong></p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>points</p></td>
+<td><p>array</p></td>
+<td><p>mandatory</p></td>
+<td><p>the line points as rows of x,y,z coordinates, <span class="math notranslate nohighlight">\(2n \times 3\)</span> for straight lines and <span class="math notranslate nohighlight">\(3n \times 3\)</span> for quadratic ones (a flat list of the same numbers is read as well); a quadratic line is given by its end points and then its mid point</p></td>
+</tr>
+<tr class="row-odd"><td><p>colors</p></td>
+<td><p>array</p></td>
+<td><p>mandatory</p></td>
+<td><p>the RGBA colors of the line points as rows, <span class="math notranslate nohighlight">\(2n \times 4\)</span> or <span class="math notranslate nohighlight">\(3n \times 4\)</span> (or flat)</p></td>
+</tr>
+<tr class="row-even"><td><p>shape</p></td>
+<td><p>string</p></td>
+<td><p>‘linear’</p></td>
+<td><p>‘linear’ for straight lines, ‘quadratic’ for curved ones, each a quadratic curve through its three points; they are kept as they are and split into straight lines when drawn, with the settings of that moment: as many segments as the angle between the curve’s end tangents needs against <code class="docutils literal notranslate"><span class="pre">visualizationSettings.openGL.advanced.curvedTriangleTilingAngle</span></code>, at most <code class="docutils literal notranslate"><span class="pre">curvedTriangleMaxTiling</span></code>; <code class="docutils literal notranslate"><span class="pre">graphics.Lines(...,</span> <span class="pre">shape='quadratic')</span></code> builds such a polyline from the points along the curve</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="graphicsdata-circle">
+<h3>GraphicsData: Circle<a class="headerlink" href="#graphicsdata-circle" title="Link to this heading"></a></h3>
+<p>GraphicsData <code class="docutils literal notranslate"><span class="pre">'type'</span> <span class="pre">=</span> <span class="pre">'Circle'</span></code> draws a polygonal line between all specified points:</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p><strong>Name</strong></p></th>
+<th class="head"><p><strong>type</strong></p></th>
+<th class="head"><p><strong>default value</strong></p></th>
+<th class="head"><p><strong>description</strong></p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>color</p></td>
+<td><p>list</p></td>
+<td><p>[0,0,0,1]</p></td>
+<td><p>list of 4 floats to define RGB-color and transparency</p></td>
+</tr>
+<tr class="row-odd"><td><p>radius</p></td>
+<td><p>float</p></td>
+<td><p>mandatory</p></td>
+<td><p>radius of circle</p></td>
+</tr>
+<tr class="row-even"><td><p>position</p></td>
+<td><p>list</p></td>
+<td><p>mandatory</p></td>
+<td><p>list of float triples of x,y,z coordinates of center point of the circle</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="graphicsdata-text">
+<h3>GraphicsData: Text<a class="headerlink" href="#graphicsdata-text" title="Link to this heading"></a></h3>
+<p>GraphicsData <code class="docutils literal notranslate"><span class="pre">'type'</span> <span class="pre">=</span> <span class="pre">'Text'</span></code> places the given text (mono-space font) at position:</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p><strong>Name</strong></p></th>
+<th class="head"><p><strong>type</strong></p></th>
+<th class="head"><p><strong>default value</strong></p></th>
+<th class="head"><p><strong>description</strong></p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>color</p></td>
+<td><p>list</p></td>
+<td><p>[0,0,0,1]</p></td>
+<td><p>list of 4 floats to define RGB-color and transparency</p></td>
+</tr>
+<tr class="row-odd"><td><p>text</p></td>
+<td><p>string</p></td>
+<td><p>mandatory</p></td>
+<td><p>text to be displayed, using UTF-8 encoding (see <a class="reference internal" href="GUI.html#sec-utf8"><span class="std std-ref">Character encoding: UTF-8</span></a>); multiline texts can be written with line breaks</p></td>
+</tr>
+<tr class="row-even"><td><p>position</p></td>
+<td><p>list</p></td>
+<td><p>mandatory</p></td>
+<td><p>list of float triples of [x,y,z] coordinates of the left upper position of the text; e.g. position=[20,10,0]</p></td>
+</tr>
+<tr class="row-odd"><td><p>fontSize</p></td>
+<td><p>float</p></td>
+<td><p>0</p></td>
+<td><p>scalar fontSize or 0 for default; default font size in Exudyn is 12 (visualizationSettings.view0.window.globalFontSize); display scaling increases font size</p></td>
+</tr>
+<tr class="row-even"><td><p>offset</p></td>
+<td><p>list</p></td>
+<td><p>[0,0]</p></td>
+<td><p>offset in X/Y screen plane provided as list of 2 float values; this offset is not rotated with the model view and given relative to font size (offset [1,1] equals offset of one character to the right and up)</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="graphicsdata-spheres">
+<h3>GraphicsData: Spheres<a class="headerlink" href="#graphicsdata-spheres" title="Link to this heading"></a></h3>
+<p>GraphicsData <code class="docutils literal notranslate"><span class="pre">'type'</span> <span class="pre">=</span> <span class="pre">'Spheres'</span></code> draws <span class="math notranslate nohighlight">\(n\)</span> spheres; the OpenGL renderer draws them with the given resolution, the raytracer intersects them exactly. <code class="docutils literal notranslate"><span class="pre">graphics.Sphere</span></code> returns this type for a whole sphere, <code class="docutils literal notranslate"><span class="pre">graphics.Spheres</span></code> for many at once (particles, point clouds); a sphere with edges, a part of a sphere or a hollow one is a <code class="docutils literal notranslate"><span class="pre">TriangleList</span></code>. The functions of <code class="docutils literal notranslate"><span class="pre">exudyn.graphics</span></code> that need triangles (<code class="docutils literal notranslate"><span class="pre">MergeTriangleLists</span></code>, <code class="docutils literal notranslate"><span class="pre">ExportSTL</span></code>, …) convert spheres with <code class="docutils literal notranslate"><span class="pre">graphics.SpheresToTriangleList</span></code>, and <code class="docutils literal notranslate"><span class="pre">graphics.Move</span></code> with a rotation matrix that scales unequally (an ellipsoid) as well:</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p><strong>Name</strong></p></th>
+<th class="head"><p><strong>type</strong></p></th>
+<th class="head"><p><strong>default value</strong></p></th>
+<th class="head"><p><strong>description</strong></p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>points</p></td>
+<td><p>array</p></td>
+<td><p>mandatory</p></td>
+<td><p>the centers as rows [x,y,z], <span class="math notranslate nohighlight">\(n \times 3\)</span></p></td>
+</tr>
+<tr class="row-odd"><td><p>radii</p></td>
+<td><p>list or float</p></td>
+<td><p>0.1</p></td>
+<td><p>one radius for all spheres, or a list of <span class="math notranslate nohighlight">\(n\)</span> radii</p></td>
+</tr>
+<tr class="row-even"><td><p>colors</p></td>
+<td><p>array</p></td>
+<td><p>[0,0,0,1]</p></td>
+<td><p>one RGBA color [R,G,B,A] for all spheres, or one row [R,G,B,A] per sphere, <span class="math notranslate nohighlight">\(n \times 4\)</span>; a material index in A as for <code class="docutils literal notranslate"><span class="pre">TriangleList</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p>resolution</p></td>
+<td><p>int</p></td>
+<td><p>8</p></td>
+<td><p>number of segments of a half circle when drawn by OpenGL, rounded down to a power of 2</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="graphicsdata-trianglelist">
+<h3>GraphicsData: TriangleList<a class="headerlink" href="#graphicsdata-trianglelist" title="Link to this heading"></a></h3>
+<p>GraphicsData <code class="docutils literal notranslate"><span class="pre">'type'</span> <span class="pre">=</span> <span class="pre">'TriangleList'</span></code> draws a mesh with flat triangles for given points and connectivity; triangles may look smoothened by using appropriate normals; edges may be added optionally:</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p><strong>Name</strong></p></th>
+<th class="head"><p><strong>type</strong></p></th>
+<th class="head"><p><strong>default value</strong></p></th>
+<th class="head"><p><strong>description</strong></p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>points</p></td>
+<td><p>array</p></td>
+<td><p>mandatory</p></td>
+<td><p>the points (vertices) as rows [x,y,z], <span class="math notranslate nohighlight">\(n \times 3\)</span>, <span class="math notranslate nohighlight">\(n\)</span> being the number of points</p></td>
+</tr>
+<tr class="row-odd"><td><p>colors</p></td>
+<td><p>array</p></td>
+<td><p>[]</p></td>
+<td><p>the RGBA color of each point as rows [R,G,B,A], <span class="math notranslate nohighlight">\(n \times 4\)</span>; if field ‘colors’ does not exist, default colors will be used</p></td>
+</tr>
+<tr class="row-even"><td><p>normals</p></td>
+<td><p>array</p></td>
+<td><p>[]</p></td>
+<td><p>the normal at each point as rows [nx,ny,nz], <span class="math notranslate nohighlight">\(n \times 3\)</span>; if field ‘normals’ does not exist, the normals of the flat triangles are used, and for 6-node triangles at each point the mean of the normals of the geometry of the triangles sharing it</p></td>
+</tr>
+<tr class="row-odd"><td><p>triangles</p></td>
+<td><p>array</p></td>
+<td><p>[]</p></td>
+<td><p>the triangles as rows of 3 point indices (=connectivity), <span class="math notranslate nohighlight">\(n_{trig} \times 3\)</span>, counter-clockwise seen from outside; point indices start with 0 and must be <span class="math notranslate nohighlight">\(&lt;\)</span> the number of points; mandatory if there are no triangles6</p></td>
+</tr>
+<tr class="row-even"><td><p>triangles6</p></td>
+<td><p>array</p></td>
+<td><p>[]</p></td>
+<td><p>rows [c0,c1,c2, m01,m12,m20] of 6 point indices, <span class="math notranslate nohighlight">\(n_{trig6} \times 6\)</span>, of 6-node (quadratic, curved) triangles: the corners counter-clockwise seen from outside, then the mid-side nodes between the corners 0-1, 1-2 and 2-0 (<code class="docutils literal notranslate"><span class="pre">graphics.FromPointsAndTrigs</span></code> with 6 indices per row, <code class="docutils literal notranslate"><span class="pre">graphics.NGsolveMesh2PointsAndTrigs(...,</span> <span class="pre">triangles6=True)</span></code>); they are kept as they are and split into flat triangles when drawn (OpenGL, raytracer; <code class="docutils literal notranslate"><span class="pre">SC.renderer.GetGraphicsData()</span></code> returns them as they are, or refined once), with the settings of that moment: each edge subdivided until the angle between its end tangents, and between the given normals of its nodes, is below <code class="docutils literal notranslate"><span class="pre">visualizationSettings.openGL.advanced.curvedTriangleTilingAngle</span></code>, at most <code class="docutils literal notranslate"><span class="pre">curvedTriangleMaxTiling</span></code> times, the inside following the three edges - a surface curved in one direction is not subdivided along the other</p></td>
+</tr>
+<tr class="row-odd"><td><p>edges</p></td>
+<td><p>array</p></td>
+<td><p>[]</p></td>
+<td><p>the edges drawn on the triangle mesh as rows of 2 point indices, <span class="math notranslate nohighlight">\(n_{lines} \times 2\)</span></p></td>
+</tr>
+<tr class="row-even"><td><p>edges3</p></td>
+<td><p>array</p></td>
+<td><p>[]</p></td>
+<td><p>quadratic (curved) edges, rows [p0, p1, m01] of three point indices: the end points, then the mid point - the order of <code class="docutils literal notranslate"><span class="pre">triangles6</span></code>; for feature edges on a surface of 6-node triangles, such as the rim of a cylinder; drawn as the quadratic lines of <code class="docutils literal notranslate"><span class="pre">Lines</span></code>, in <code class="docutils literal notranslate"><span class="pre">edgeColor</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p>edgeColor</p></td>
+<td><p>list</p></td>
+<td><p>[0,0,0,1]</p></td>
+<td><p>list of 4 floats to define RGB-color and transparency of edges</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="graphicsdata-an-example-of-all-types">
+<span id="sec-graphicsdata-example"></span><h3>GraphicsData: an example of all types<a class="headerlink" href="#graphicsdata-an-example-of-all-types" title="Link to this heading"></a></h3>
+<p>One model with each type of <code class="docutils literal notranslate"><span class="pre">GraphicsData</span></code> - as a dictionary, and as the functions of <code class="docutils literal notranslate"><span class="pre">exudyn.graphics</span></code> return it -
+and a chrome sphere, drawn with the raytracer. More are in the Python examples and in <code class="docutils literal notranslate"><span class="pre">graphics.py</span></code>, see Section
+<a class="reference internal" href="../generated/pythonUtilities/graphics.html#sec-module-graphics"><span class="std std-ref">Module: graphics</span></a>.</p>
+<!-- GENERATED by tools/generators/notebookEmitter.py from python/Notebooks/snippets/graphics.ipynb - do not edit -->
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">exudyn</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">exu</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">exudyn.utilities</span><span class="w"> </span><span class="kn">import</span> <span class="o">*</span>   <span class="c1">#includes itemInterface, the Create functions</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">exudyn.graphics</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">graphics</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">exudyn.interactive</span><span class="w"> </span><span class="kn">import</span> <span class="nf">ShowImage</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+
+<span class="n">SC</span> <span class="o">=</span> <span class="n">exu</span><span class="o">.</span><span class="nc">SystemContainer</span><span class="p">()</span>
+<span class="n">mbs</span> <span class="o">=</span> <span class="n">SC</span><span class="o">.</span><span class="nf">AddSystem</span><span class="p">()</span>
+</pre></div>
+</div>
+<p><strong>Line</strong>: a polygonal line through the points, here as a dictionary - a red square with side length 1 -, drawn by a
+ground:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">graphicsData</span> <span class="o">=</span> <span class="p">{</span><span class="s1">'type'</span><span class="p">:</span><span class="s1">'Line'</span><span class="p">,</span>
+                <span class="s1">'color'</span><span class="p">:</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">],</span> <span class="c1">#red</span>
+                <span class="s1">'data'</span><span class="p">:</span> <span class="p">[[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span>
+                         <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span>
+                         <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span>
+                         <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span>
+                         <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]]}</span>
+
+<span class="n">vGround</span> <span class="o">=</span> <span class="nc">VObjectGround</span><span class="p">(</span><span class="n">graphicsData</span><span class="o">=</span><span class="p">[</span><span class="n">graphicsData</span><span class="p">])</span>
+<span class="n">oGround</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">AddObject</span><span class="p">(</span><span class="nc">ObjectGround</span><span class="p">(</span><span class="n">referencePosition</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span>
+                                     <span class="n">visualization</span><span class="o">=</span><span class="n">vGround</span><span class="p">))</span>
+</pre></div>
+</div>
+<p>The same, much shorter, with <code class="docutils literal notranslate"><span class="pre">graphics.Lines</span></code>:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">gSquare</span> <span class="o">=</span> <span class="n">graphics</span><span class="o">.</span><span class="nf">Lines</span><span class="p">([[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">],[</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">],[</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">],[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">],[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]],</span>
+                         <span class="nc">color</span><span class="o">=</span><span class="n">graphics</span><span class="o">.</span><span class="nc">color</span><span class="o">.</span><span class="n">red</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><strong>Lines</strong>: separate lines, straight with two points each or quadratic (curved) with three - the end points, then the
+mid point:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">gLShape</span> <span class="o">=</span> <span class="p">{</span><span class="s1">'type'</span><span class="p">:</span><span class="s1">'Lines'</span><span class="p">,</span>
+           <span class="s1">'points'</span><span class="p">:</span> <span class="p">[[</span><span class="mi">0</span><span class="p">,</span><span class="o">-</span><span class="mf">0.3</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="o">-</span><span class="mf">0.3</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span>  <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="o">-</span><span class="mf">0.3</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="o">-</span><span class="mf">1.3</span><span class="p">,</span><span class="mi">0</span><span class="p">]],</span> <span class="c1">#two lines: an L-shape with side length 1</span>
+           <span class="s1">'colors'</span><span class="p">:</span> <span class="p">[[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">]]</span><span class="o">*</span><span class="mi">4</span><span class="p">}</span>                          <span class="c1">#blue</span>
+<span class="n">gArc</span> <span class="o">=</span> <span class="p">{</span><span class="s1">'type'</span><span class="p">:</span><span class="s1">'Lines'</span><span class="p">,</span> <span class="s1">'shape'</span><span class="p">:</span><span class="s1">'quadratic'</span><span class="p">,</span>                 <span class="c1">#a quarter circle, approximately</span>
+        <span class="s1">'points'</span><span class="p">:</span> <span class="p">[[</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="mf">0.7071</span><span class="p">,</span><span class="mf">0.7071</span><span class="p">,</span><span class="mi">0</span><span class="p">]],</span>     <span class="c1">#end points, then the mid point</span>
+        <span class="s1">'colors'</span><span class="p">:</span> <span class="p">[[</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">]]</span><span class="o">*</span><span class="mi">3</span><span class="p">}</span>
+</pre></div>
+</div>
+<p><strong>Circle</strong> and <strong>Text</strong>:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">gCircle</span> <span class="o">=</span> <span class="p">{</span><span class="s1">'type'</span><span class="p">:</span><span class="s1">'Circle'</span><span class="p">,</span>
+           <span class="s1">'color'</span><span class="p">:</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">],</span>  <span class="c1">#blue</span>
+           <span class="s1">'radius'</span><span class="p">:</span> <span class="mf">0.5</span><span class="p">,</span>
+           <span class="s1">'position'</span><span class="p">:[</span><span class="mf">0.5</span><span class="p">,</span><span class="mf">0.5</span><span class="p">,</span><span class="mi">0</span><span class="p">]}</span>
+<span class="n">gText</span> <span class="o">=</span> <span class="n">graphics</span><span class="o">.</span><span class="nf">Text</span><span class="p">(</span><span class="n">point</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mf">1.2</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span> <span class="n">text</span><span class="o">=</span><span class="s1">'GraphicsData'</span><span class="p">,</span> <span class="nc">color</span><span class="o">=</span><span class="n">graphics</span><span class="o">.</span><span class="nc">color</span><span class="o">.</span><span class="n">black</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><strong>Spheres</strong>: many spheres in one item, with a radius and a color each:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">gSpheres</span> <span class="o">=</span> <span class="n">graphics</span><span class="o">.</span><span class="nf">Spheres</span><span class="p">(</span><span class="n">points</span><span class="o">=</span><span class="p">[[</span><span class="mf">1.5</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">],[</span><span class="mf">1.5</span><span class="p">,</span><span class="mf">0.5</span><span class="p">,</span><span class="mi">0</span><span class="p">]],</span> <span class="n">radii</span><span class="o">=</span><span class="p">[</span><span class="mf">0.1</span><span class="p">,</span><span class="mf">0.2</span><span class="p">],</span>
+                            <span class="n">colors</span><span class="o">=</span><span class="p">[</span><span class="n">graphics</span><span class="o">.</span><span class="nc">color</span><span class="o">.</span><span class="n">red</span><span class="p">,</span> <span class="n">graphics</span><span class="o">.</span><span class="nc">color</span><span class="o">.</span><span class="n">green</span><span class="p">])</span>
+</pre></div>
+</div>
+<p><strong>TriangleList</strong>: points and triangles - here a tetrahedron, its triangles counter-clockwise seen from outside -, and
+what most functions of <code class="docutils literal notranslate"><span class="pre">exudyn.graphics</span></code> return, such as a brick with its edges:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">gTetrahedron</span> <span class="o">=</span> <span class="n">graphics</span><span class="o">.</span><span class="nf">FromPointsAndTrigs</span><span class="p">(</span><span class="n">points</span><span class="o">=</span><span class="p">[[</span><span class="mi">2</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">],[</span><span class="mf">2.6</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">],[</span><span class="mi">2</span><span class="p">,</span><span class="mf">0.6</span><span class="p">,</span><span class="mi">0</span><span class="p">],[</span><span class="mi">2</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mf">0.6</span><span class="p">]],</span>
+                                           <span class="n">triangles</span><span class="o">=</span><span class="p">[[</span><span class="mi">0</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">1</span><span class="p">],[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">3</span><span class="p">],[</span><span class="mi">0</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">2</span><span class="p">],[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">]],</span>
+                                           <span class="nc">color</span><span class="o">=</span><span class="n">graphics</span><span class="o">.</span><span class="nc">color</span><span class="o">.</span><span class="n">orange</span><span class="p">)</span>
+<span class="n">gBrick</span> <span class="o">=</span> <span class="n">graphics</span><span class="o">.</span><span class="nf">Brick</span><span class="p">(</span><span class="n">centerPoint</span><span class="o">=</span><span class="p">[</span><span class="mf">2.3</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mf">0.15</span><span class="p">],</span> <span class="n">size</span><span class="o">=</span><span class="p">[</span><span class="mf">0.6</span><span class="p">,</span><span class="mf">0.4</span><span class="p">,</span><span class="mf">0.3</span><span class="p">],</span> <span class="nc">color</span><span class="o">=</span><span class="n">graphics</span><span class="o">.</span><span class="nc">color</span><span class="o">.</span><span class="n">steelblue</span><span class="p">,</span>
+                        <span class="n">addEdges</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><strong>Raytracing</strong>: a material instead of the alpha value of a color - a chrome sphere - is what the raytracer shows
+with reflections; the OpenGL renderer draws it in its color:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">gSphere</span> <span class="o">=</span> <span class="n">graphics</span><span class="o">.</span><span class="nf">Sphere</span><span class="p">(</span><span class="n">point</span><span class="o">=</span><span class="p">[</span><span class="mf">0.5</span><span class="p">,</span><span class="mf">0.5</span><span class="p">,</span><span class="mf">0.4</span><span class="p">],</span> <span class="n">radius</span><span class="o">=</span><span class="mf">0.3</span><span class="p">,</span>
+                          <span class="nc">color</span><span class="o">=</span><span class="n">graphics</span><span class="o">.</span><span class="nc">color</span><span class="o">.</span><span class="n">dodgerblue</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">3</span><span class="p">]</span><span class="o">+</span><span class="p">[</span><span class="n">graphics</span><span class="o">.</span><span class="nc">material</span><span class="o">.</span><span class="n">indexChrome</span><span class="p">],</span>
+                          <span class="n">nTiles</span><span class="o">=</span><span class="mi">32</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>All of them on a second ground, on a checkerboard, and the model drawn with the raytracer:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">gFloor</span> <span class="o">=</span> <span class="n">graphics</span><span class="o">.</span><span class="nf">CheckerBoard</span><span class="p">(</span><span class="n">point</span><span class="o">=</span><span class="p">[</span><span class="mf">1.2</span><span class="p">,</span><span class="mf">0.5</span><span class="p">,</span><span class="o">-</span><span class="mf">0.01</span><span class="p">],</span> <span class="n">size</span><span class="o">=</span><span class="mf">3.5</span><span class="p">,</span> <span class="n">nTiles</span><span class="o">=</span><span class="mi">8</span><span class="p">)</span>
+<span class="n">mbs</span><span class="o">.</span><span class="nf">CreateGround</span><span class="p">(</span><span class="n">graphicsDataList</span><span class="o">=</span><span class="p">[</span><span class="n">gFloor</span><span class="p">,</span> <span class="n">gSquare</span><span class="p">,</span> <span class="n">gLShape</span><span class="p">,</span> <span class="n">gArc</span><span class="p">,</span> <span class="n">gCircle</span><span class="p">,</span> <span class="n">gText</span><span class="p">,</span> <span class="n">gSpheres</span><span class="p">,</span>
+                                   <span class="n">gTetrahedron</span><span class="p">,</span> <span class="n">gBrick</span><span class="p">,</span> <span class="n">gSphere</span><span class="p">])</span>
+<span class="n">mbs</span><span class="o">.</span><span class="nf">Assemble</span><span class="p">()</span>
+
+<span class="n">SC</span><span class="o">.</span><span class="nf">visualizationSettings</span><span class="o">.</span><span class="n">openGL</span><span class="o">.</span><span class="n">multiSampling</span> <span class="o">=</span> <span class="mi">1</span>
+<span class="n">SC</span><span class="o">.</span><span class="nf">visualizationSettings</span><span class="o">.</span><span class="n">openGL</span><span class="o">.</span><span class="n">light1</span><span class="o">.</span><span class="n">enable</span> <span class="o">=</span> <span class="kc">False</span>
+<span class="n">SC</span><span class="o">.</span><span class="nf">visualizationSettings</span><span class="o">.</span><span class="n">raytracer</span><span class="o">.</span><span class="n">numberOfThreads</span> <span class="o">=</span> <span class="mi">8</span> <span class="c1">#adjust to your number of threads</span>
+<span class="n">SC</span><span class="o">.</span><span class="nf">visualizationSettings</span><span class="o">.</span><span class="n">openGL</span><span class="o">.</span><span class="n">lineWidth</span> <span class="o">=</span> <span class="mi">3</span>
+<span class="n">SC</span><span class="o">.</span><span class="nf">visualizationSettings</span><span class="o">.</span><span class="n">general</span><span class="o">.</span><span class="n">showSolverInformation</span> <span class="o">=</span> <span class="kc">False</span>
+<span class="n">SC</span><span class="o">.</span><span class="nf">visualizationSettings</span><span class="o">.</span><span class="n">view0</span><span class="o">.</span><span class="n">window</span><span class="o">.</span><span class="n">showComputationInfo</span> <span class="o">=</span> <span class="kc">False</span>
+<span class="n">SC</span><span class="o">.</span><span class="nf">visualizationSettings</span><span class="o">.</span><span class="n">view0</span><span class="o">.</span><span class="n">scene</span><span class="o">.</span><span class="n">drawCoordinateSystem</span> <span class="o">=</span> <span class="kc">False</span>
+<span class="n">view</span> <span class="o">=</span> <span class="nf">RotationMatrixZ</span><span class="p">(</span><span class="o">-</span><span class="mf">0.3</span><span class="p">)</span> <span class="o">@</span> <span class="nf">RotationMatrixX</span><span class="p">(</span><span class="mf">0.5</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">-</span><span class="mf">0.8</span><span class="p">)</span> <span class="c1">#the view from the front and above, z up</span>
+<span class="n">image</span> <span class="o">=</span> <span class="nf">ShowImage</span><span class="p">(</span><span class="n">SC</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="p">[</span><span class="mi">1280</span><span class="p">,</span><span class="mi">800</span><span class="p">],</span> <span class="n">modelRotation</span><span class="o">=</span><span class="n">view</span><span class="p">)</span>
+</pre></div>
+</div>
+<a class="reference internal image-reference" href="../../_images/graphics_0.png"><img alt="../../_images/graphics_0.png" src="../../_images/graphics_0.png" style="width: 640px;" />
+</a>
+<p>In a script, <code class="docutils literal notranslate"><span class="pre">SC.visualizationSettings.view0.camera.useRaytracer</span> <span class="pre">=</span> <span class="pre">True</span></code> before <code class="docutils literal notranslate"><span class="pre">mbs.SolutionViewer()</span></code> (or
+<code class="docutils literal notranslate"><span class="pre">SC.renderer.Start()</span></code>) draws the render window with the raytracer; start with a small window, or with
+<code class="docutils literal notranslate"><span class="pre">raytracer.imageSizeFactor</span> <span class="pre">=</span> <span class="pre">3</span></code>, which reduces the resolution.</p>
+<div class="notebookorigin docutils container">
+<p><code class="docutils literal notranslate"><span class="pre">python/Notebooks/snippets/graphics.ipynb</span></code></p>
+</div>
+</section>
+</section>
+<section id="contact-problems">
+<span id="sec-overview-advanced-contact"></span><h2>Contact problems<a class="headerlink" href="#contact-problems" title="Link to this heading"></a></h2>
+<p>Since Q4 2021 a contact module is available in Exudyn.
+This separate module <code class="docutils literal notranslate"><span class="pre">GeneralContact</span></code> [<strong>still under development, consider with care!</strong>] is highly optimized and implemented with parallelization (multi-threaded) for certain types of contact elements.</p>
+<figure class="align-default" id="id3">
+<span id="fig-contactexamples"></span><a class="reference internal image-reference" href="../../_images/contactTests.png"><img alt="../../_images/contactTests.png" src="../../_images/contactTests.png" width="450" />
+</a>
+<figcaption>
+<p><span class="caption-number">Fig. 9 </span><span class="caption-text">Some tests and examples using <code class="docutils literal notranslate"><span class="pre">GeneralContact</span></code></span><a class="headerlink" href="#id3" title="Link to this image"></a></p>
+</figcaption>
+</figure>
+<figure class="align-default">
+<a class="reference internal image-reference" href="../../_images/contactTests2.jpg"><img alt="../../_images/contactTests2.jpg" src="../../_images/contactTests2.jpg" width="450" />
+</a>
+</figure>
+<p><strong>Note</strong>:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">GeneralContact</span></code> is (in most cases) restricted to dynamic simulation (explicit or implicit [<strong>still under development, consider with care!</strong>] ) if friction is used; without friction, it also works in the static case</p></li>
+<li><p>in addition to <code class="docutils literal notranslate"><span class="pre">GeneralContact</span></code> there are special objects, in particular for rolling and simple 1D contacts, that are available as single objects, cf. <code class="docutils literal notranslate"><span class="pre">ObjectConnectorRollingDiscPenalty</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">GeneralContact</span></code> is recommended to be used for large numbers of contacts, while the single objects are integrated more directly into mbs.</p></li>
+</ul>
+<p>Currently, <code class="docutils literal notranslate"><span class="pre">GeneralContact</span></code> includes:</p>
+<ul class="simple">
+<li><p>Sphere-Sphere contact (attached to any marker); may represent circle-circle contact in 2D</p></li>
+<li><p>Triangles mounted on rigid bodies, in contact with Spheres [only explicit]</p></li>
+<li><p>ANCFCable2D contacting with spheres (which then represent circles in 2D) [partially implicit, needs revision]</p></li>
+</ul>
+<p>For details on the contact formulations, see <a class="reference internal" href="theoryContact.html#seccontacttheory"><span class="std std-ref">Modeling of contact in Exudyn</span></a>.</p>
+</section>
+<section id="interaction-with-julia">
+<span id="sec-overview-advanced-julia"></span><h2>Interaction with Julia<a class="headerlink" href="#interaction-with-julia" title="Link to this heading"></a></h2>
+<p>The scientific community gets increasingly interested into the language Julia.
+There is a very simple interoperability with julia – at least from julia to Python – which has been tests.
+The other way – calling Python from julia – is also possible, but it is left to the reader.</p>
+<p>After installing julia (tested on Windows 10 with julia 1.6.7), you need to add Python accessibility via <code class="docutils literal notranslate"><span class="pre">PyCall</span></code>
+in <strong>julia</strong>:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span>  <span class="n">using</span> <span class="n">Pkg</span>
+  <span class="n">Pkg</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="s2">"PyCall"</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Ideally, you have a certain Python installation where Exudyn is already installed (and for the following examples, you also need <code class="docutils literal notranslate"><span class="pre">matplotlib</span></code>). Find the according Python path in any <strong>Python</strong> console:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span>  <span class="kn">import</span><span class="w"> </span><span class="nn">sys</span>
+  <span class="nb">print</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">executable</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Use this path and adapt the following <strong>julia</strong> script (‘raw’ allows to use single backslash) in <strong>julia</strong>:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span>  <span class="n">ENV</span><span class="p">[</span><span class="s2">"PYTHON"</span><span class="p">]</span><span class="o">=</span><span class="n">raw</span><span class="s2">"C:\Users\username\.conda\envs</span><span class="se">\v</span><span class="s2">envP38\python.exe"</span>
+  <span class="n">Pkg</span><span class="o">.</span><span class="n">build</span><span class="p">(</span><span class="s2">"PyCall"</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Now we can interact with Python, using Python objects in <strong>julia</strong> almost natively, try:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span>  <span class="n">py</span><span class="s2">"""</span>
+<span class="s2">  import exudyn</span>
+<span class="s2">  from exudyn.demos import *</span>
+
+<span class="s2">  Demo1()</span>
+<span class="s2">  """</span>
+</pre></div>
+</div>
+<p>This will run the very simple Exudyn <code class="docutils literal notranslate"><span class="pre">Demo1</span></code>.
+As <code class="docutils literal notranslate"><span class="pre">exudyn</span></code> is now imported into this Python session, you can access it, e.g., <code class="docutils literal notranslate"><span class="pre">py&quot;exudyn&quot;.Help()</span></code>
+will write the help message.</p>
+<p>To show the interoperability with julia, test the following example (similar to <code class="docutils literal notranslate"><span class="pre">Demo1</span></code>) in <strong>julia</strong>:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span>  <span class="n">py</span><span class="s2">"""</span>
+<span class="s2">  import exudyn as exu               #EXUDYN package including C++ core part</span>
+<span class="s2">  import exudyn.itemInterface as eii #conversion of data to exudyn dictionaries</span>
+
+<span class="s2">  SC = exu.SystemContainer()         #container of systems</span>
+<span class="s2">  mbs = SC.AddSystem()               #add a new system to work with</span>
+
+<span class="s2">  nMP = mbs.AddNode(eii.NodePoint2D(referenceCoordinates=[0,0]))</span>
+<span class="s2">  mbs.AddObject(eii.ObjectMassPoint2D(mass=10, nodeNumber=nMP ))</span>
+<span class="s2">  mMP = mbs.AddMarker(eii.MarkerNodePosition(nodeNumber = nMP))</span>
+<span class="s2">  mbs.AddLoad(eii.Force(markerNumber = mMP, loadVector=[0.001,0,0]))</span>
+
+<span class="s2">  #add a sensor:</span>
+<span class="s2">  s = mbs.AddSensor(eii.SensorNode(nodeNumber=nMP,</span>
+<span class="s2">                    outputVariableType=exu.OutputVariableType.Position,</span>
+<span class="s2">                    storeInternal=True))</span>
+
+<span class="s2">  mbs.Assemble()                     #assemble system and solve</span>
+<span class="s2">  simulationSettings = exu.SimulationSettings()</span>
+<span class="s2">  simulationSettings.timeIntegration.verboseMode=1 #provide some output</span>
+<span class="s2">  simulationSettings.solution.file.name = 'solution/demo1.txt'</span>
+
+<span class="s2">  mbs.SolveDynamic(simulationSettings)</span>
+<span class="s2">  print('results can be found in local directory: solution/demo1.txt')</span>
+<span class="s2">  """</span>
+</pre></div>
+</div>
+<p>We can access Python variables from julia via <code class="docutils literal notranslate"><span class="pre">py&quot;...&quot;</span></code> to read out, e.g., <code class="docutils literal notranslate"><span class="pre">mbs</span></code>:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span>  <span class="n">py</span><span class="s2">"mbs"</span><span class="o">.</span><span class="nf">systemData</span><span class="o">.</span><span class="nf">Info</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>We can use variables (or objects) directly in julia, e.g.,</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span>  <span class="n">mbs</span><span class="o">=</span><span class="n">py</span><span class="s2">"mbs"</span>
+  <span class="nb">print</span><span class="p">(</span><span class="n">mbs</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Finally, we can also plot values via <code class="docutils literal notranslate"><span class="pre">PlotSensor</span></code> (<code class="docutils literal notranslate"><span class="pre">matplotlib</span></code> in the background):</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span>  <span class="n">eplt</span><span class="o">=</span><span class="n">pyimport</span><span class="p">(</span><span class="s2">"exudyn.plot"</span><span class="p">)</span>
+  <span class="n">eplt</span><span class="o">.</span><span class="nf">PlotSensor</span><span class="p">(</span><span class="n">py</span><span class="s2">"mbs"</span><span class="p">,</span> <span class="n">py</span><span class="s2">"s"</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>We could also access the stored sensor data in julia, using</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span>  <span class="n">x</span> <span class="o">=</span> <span class="n">py</span><span class="s2">"mbs"</span><span class="o">.</span><span class="nf">GetSensorStoredData</span><span class="p">(</span><span class="n">py</span><span class="s2">"s"</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>and we could just print (or use) the first 10 rows of this data generated on the Python side, using it in <strong>julia</strong>:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span>  <span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">:</span><span class="mi">10</span><span class="p">,:]</span>
+</pre></div>
+</div>
+<p><strong>NOTE</strong> the 1-based indexing in julia, which highlights the limitations of this approach.</p>
+<p>To finally check if the GLFW renderer also runs via julia, just use:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span>  <span class="n">py</span><span class="s2">"""</span>
+<span class="s2">  from exudyn.demos import *</span>
+<span class="s2">  Demo2()</span>
+<span class="s2">  """</span>
+</pre></div>
+</div>
+<p>For the full range of possibilities, see <a class="reference external" href="https://github.com/JuliaPy/PyCall.jl">github.com/JuliaPy/PyCall.jl</a>.</p>
+</section>
+<section id="the-c-core">
+<span id="sec-advanced-cppcore"></span><span id="sec-overview-advanced-interactwithcodes"></span><h2>The C++ core<a class="headerlink" href="#the-c-core" title="Link to this heading"></a></h2>
+<p>The computation happens in C++: <code class="docutils literal notranslate"><span class="pre">mbs.AddObject(...)</span></code> creates an object on the C++ side from a
+validated dictionary, <code class="docutils literal notranslate"><span class="pre">mbs.SolveDynamic(...)</span></code> runs a C++ solver, and Python holds the model and
+reads the results. Nothing of that needs to be known to use Exudyn - but two questions come up
+often enough to say where they are answered, both in the
+<a class="reference internal" href="../dev/README.html"><span class="std std-doc">developer documentation</span></a>, which is part of this documentation:</p>
+<ul class="simple">
+<li><p><em>How is the C++ side organised, and where do I start reading?</em> -
+<a class="reference internal" href="../dev/ARCHITECTURE.html"><span class="std std-doc">C++ architecture</span></a>: the item abstraction, the split into computational,
+main and visualization classes, what each directory under <code class="docutils literal notranslate"><span class="pre">src/</span></code> is, and what happens when
+<code class="docutils literal notranslate"><span class="pre">mbs.AddObject(...)</span></code> is called.</p></li>
+<li><p><em>I want to add my own item in C++.</em> - <a class="reference internal" href="../dev/CODING_STYLE.html"><span class="std std-doc">coding style</span></a>, section 9: the two
+worked cases (a body and a connector), and the advice that comes before them - write it in
+Python first, with user functions, and go to C++ when that works and is too slow.</p></li>
+</ul>
+<p>Those pages say what the C++ side is and how to work on it, and that is as far as prose goes: for
+a deeper understanding of the core, and for any low-level change, it is inevitable to visit and
+study the <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN">GitHub project</a> itself - the sources, the
+generators that write parts of them, and the history that says why something is the way it is.</p>
+<p>Building Exudyn from source is <a class="reference internal" href="gettingStartedInstall.html#sec-install-installinstructions"><span class="std std-ref">Installation instructions</span></a>.</p>
+</section>
+<section id="interaction-with-other-codes">
+<h2>Interaction with other codes<a class="headerlink" href="#interaction-with-other-codes" title="Link to this heading"></a></h2>
+<p>Interaction with other codes and computers (E.g., MATLAB or other C++ codes, or other Python versions)
+is possible.
+To connect to any other code, it is convenient to use a TCP/IP connection. This is enabled via
+the <code class="docutils literal notranslate"><span class="pre">exudyn.utilities</span></code> functions</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">CreateTCPIPconnection</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">TCPIPsendReceive</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">CloseTCPIPconnection</span></code></p></li>
+</ul>
+<p>Basically, data can be transmitted in both directions, e.g., within a preStepUserFunction. In Examples, you can find
+TCPIPexudynMatlab.py which shows a basic example for such a connectivity.</p>
+</section>
+<section id="ros">
+<span id="sec-overview-advanced-ros"></span><h2>ROS<a class="headerlink" href="#ros" title="Link to this heading"></a></h2>
+<p>Basic interaction with ROS has been tested. However, make sure to use Python 3, as there is no (and will never be any) Python 2
+support for Exudyn.</p>
+</section>
+<section id="tools-that-are-not-part-of-a-model">
+<span id="sec-overview-advanced-tools"></span><h2>Tools that are not part of a model<a class="headerlink" href="#tools-that-are-not-part-of-a-model" title="Link to this heading"></a></h2>
+<p>Three things that are used beside a model rather than inside one: the command line of
+the installed package, the results monitor, which watches a running simulation
+from a second process, and the settings that persist between runs.</p>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="commandLine.html">The command line: <code class="docutils literal notranslate"><span class="pre">python</span> <span class="pre">-m</span> <span class="pre">exudyn</span></code></a><ul>
+<li class="toctree-l2"><a class="reference internal" href="commandLine.html#info-what-to-put-in-a-bug-report"><code class="docutils literal notranslate"><span class="pre">info</span></code> — what to put in a bug report</a></li>
+<li class="toctree-l2"><a class="reference internal" href="commandLine.html#plot-a-figure-without-writing-a-script"><code class="docutils literal notranslate"><span class="pre">plot</span></code> — a figure without writing a script</a></li>
+<li class="toctree-l2"><a class="reference internal" href="commandLine.html#demo-does-this-installation-work"><code class="docutils literal notranslate"><span class="pre">demo</span></code> — does this installation work?</a></li>
+<li class="toctree-l2"><a class="reference internal" href="commandLine.html#dialogs-look-a-setting-up-before-writing-the-model"><code class="docutils literal notranslate"><span class="pre">dialogs</span></code> — look a setting up before writing the model</a></li>
+<li class="toctree-l2"><a class="reference internal" href="commandLine.html#monitor-the-results-monitor"><code class="docutils literal notranslate"><span class="pre">monitor</span></code> — the results monitor</a></li>
+<li class="toctree-l2"><a class="reference internal" href="commandLine.html#why-this-is-not-simply-exudyn">Why this is not simply <code class="docutils literal notranslate"><span class="pre">exudyn</span> <span class="pre">...</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="resultsMonitor.html">The results monitor</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="resultsMonitor.html#three-ways-to-call-it">Three ways to call it</a></li>
+<li class="toctree-l2"><a class="reference internal" href="resultsMonitor.html#finding-the-file">Finding the file</a></li>
+<li class="toctree-l2"><a class="reference internal" href="resultsMonitor.html#choosing-what-is-drawn">Choosing what is drawn</a></li>
+<li class="toctree-l2"><a class="reference internal" href="resultsMonitor.html#the-control-panel">The control panel</a></li>
+<li class="toctree-l2"><a class="reference internal" href="resultsMonitor.html#settings-that-survive">Settings that survive</a></li>
+<li class="toctree-l2"><a class="reference internal" href="resultsMonitor.html#in-a-script-in-a-test-on-a-server">In a script, in a test, on a server</a></li>
+<li class="toctree-l2"><a class="reference internal" href="resultsMonitor.html#every-option">Every option</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="userSettings.html">User settings that persist between runs</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="userSettings.html#what-happens-when-the-file-is-there">What happens when the file is there</a></li>
+<li class="toctree-l2"><a class="reference internal" href="userSettings.html#storing-from-the-dialog">Storing from the dialog</a></li>
+<li class="toctree-l2"><a class="reference internal" href="userSettings.html#placing-a-dialog-and-a-window-from-a-script">Placing a dialog, and a window, from a script</a></li>
+<li class="toctree-l2"><a class="reference internal" href="userSettings.html#the-plot-windows-of-plotsensor">The plot windows of PlotSensor</a></li>
+<li class="toctree-l2"><a class="reference internal" href="userSettings.html#remembering-a-dialog-its-columns-and-its-font">Remembering a dialog, its columns and its font</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="performanceErrors.html" class="btn btn-neutral float-left" title="Performance, errors and solver failures" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="commandLine.html" class="btn btn-neutral float-right" title="The command line: python -m exudyn" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

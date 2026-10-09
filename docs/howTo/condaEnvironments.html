@@ -1,0 +1,403 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Conda environments for Exudyn &mdash; Exudyn1.13.3 1.13.3 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=3ee1c6c6" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/rtd_sphinx_search.min.css" />
+      <link rel="stylesheet" type="text/css" href="../../_static/custom.css?v=e2783f0e" />
+
+  
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=b8a3e558"></script>
+      <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../_static/copybutton.js?v=f281be69"></script>
+      <script src="../../_static/js/rtd_search_config.js"></script>
+      <script src="../../_static/js/rtd_sphinx_search.min.js"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Building the documentation" href="sphinxDocs.html" />
+    <link rel="prev" title="Contributing to Exudyn" href="../../CONTRIBUTING.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            Exudyn1.13.3
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Exudyn User Manual</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../README.html">Exudyn</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../manual/gettingStarted.html">Installation and getting started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../manual/introduction.html">Overview on Exudyn</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../manual/introductionBasics.html">Exudyn basics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../manual/tutorial.html">Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../manual/GUI.html">Renderer, graphics and visualization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../manual/performanceErrors.html">Performance, errors and solver failures</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../manual/introductionAdvanced.html">Advanced topics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../manual/notation.html">Notation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../manual/theory.html">Theory and formulations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../manual/solver.html">Solvers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../generated/cInterface/cInterfaceIndex.html">Python-C++ command interface</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Reference Manual</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../generated/items/itemsIndex.html">Items reference manual</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../generated/pythonUtilities/utilitiesIndex.html">Python Utility Functions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../generated/structures/structuresIndex.html">Structures and Settings</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../generated/references.html">References</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Developer documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../dev/README.html">Exudyn developer documentation</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">How-to notes</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Conda environments for Exudyn</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#dependency-policy">Dependency policy</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#the-standard-environment">The standard environment</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#documentation-toolchain-only">Documentation toolchain only</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#optional-packages-via-the-exudyn-extras">Optional packages via the Exudyn extras</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#spyder-kernel-versions">Spyder kernel versions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#useful-conda-commands">Useful conda commands</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#manylinux-wheels-auditwheel">manylinux wheels (auditwheel)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="sphinxDocs.html">Building the documentation</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Examples, models and issues</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../generated/examples/examplesIndex.html">Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../generated/testModels/testModelsIndex.html">TestModels</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../generated/abbreviations.html">List of Abbreviations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../manual/revisions.html">Revisions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../CHANGELOG.html">Changelog</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../generated/trackerlog.html">Issue tracker</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">Exudyn1.13.3</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Conda environments for Exudyn</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../_sources/docs/howTo/condaEnvironments.md.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section class="tex2jax_ignore mathjax_ignore" id="conda-environments-for-exudyn">
+<h1>Conda environments for Exudyn<a class="headerlink" href="#conda-environments-for-exudyn" title="Link to this heading"></a></h1>
+<p>Notes on creating and maintaining conda environments for Exudyn — for development, for
+documentation generation, and for running the examples.</p>
+<ul class="simple">
+<li><p><strong>Author</strong>: Johannes Gerstmayr</p></li>
+<li><p><strong>Date</strong>: 2026-09-09</p></li>
+</ul>
+<p>For basic setup of Anaconda or Miniconda itself, see the Exudyn documentation.</p>
+<section id="dependency-policy">
+<h2>Dependency policy<a class="headerlink" href="#dependency-policy" title="Link to this heading"></a></h2>
+<p><strong>numpy is the only hard requirement</strong> — it follows from the nature of the C++/Python coupling.
+Everything else is optional: installing Exudyn pulls the minimum, and functions needing more raise
+at the point of use. The lists below are therefore <em>conveniences for running examples</em>, not
+install requirements.</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>package</p></th>
+<th class="head"><p>needed for</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>numpy</p></td>
+<td><p>required, always</p></td>
+</tr>
+<tr class="row-odd"><td><p>scipy</p></td>
+<td><p>FEM, eigenvalue computations, sparse solvers — <strong>pin to 1.15.2</strong>, see note below</p></td>
+</tr>
+<tr class="row-even"><td><p>matplotlib</p></td>
+<td><p>plotting in examples and <code class="docutils literal notranslate"><span class="pre">exudyn.plot</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p>ngsolve, h5py</p></td>
+<td><p>FEM mesh import and <code class="docutils literal notranslate"><span class="pre">FEMinterface</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p>numpy-stl</p></td>
+<td><p>STL import/export</p></td>
+</tr>
+<tr class="row-odd"><td><p>numba</p></td>
+<td><p>a few accelerated example kernels</p></td>
+</tr>
+<tr class="row-even"><td><p>torch, stable-baselines3</p></td>
+<td><p>reinforcement learning examples</p></td>
+</tr>
+<tr class="row-odd"><td><p>mpi4py</p></td>
+<td><p>parallel parameter-variation examples</p></td>
+</tr>
+<tr class="row-even"><td><p>tqdm, psutil</p></td>
+<td><p>progress bars and process info in <code class="docutils literal notranslate"><span class="pre">exudyn.processing</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p>ipywidgets, ipykernel</p></td>
+<td><p>Jupyter notebook usage</p></td>
+</tr>
+<tr class="row-even"><td><p>spyder-kernels</p></td>
+<td><p>Spyder integration (version must match Spyder, see below)</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="the-standard-environment">
+<h2>The standard environment<a class="headerlink" href="#the-standard-environment" title="Link to this heading"></a></h2>
+<p><code class="docutils literal notranslate"><span class="pre">venvExuP313</span></code> is the reference environment: it runs Exudyn, the generators, the tests and the
+documentation build. Its packages are not listed here but in <code class="docutils literal notranslate"><span class="pre">pyproject.toml</span></code>, as dependency
+groups (PEP 735), so this recipe cannot fall behind:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>conda<span class="w"> </span>create<span class="w"> </span>-n<span class="w"> </span>venvExuP313<span class="w"> </span><span class="nv">python</span><span class="o">=</span><span class="m">3</span>.13<span class="w"> </span>-y
+conda<span class="w"> </span>activate<span class="w"> </span>venvExuP313
+<span class="nb">cd</span><span class="w"> </span>EXUDYN_git<span class="w">                                 </span><span class="c1">#the repository root, where pyproject.toml is</span>
+python<span class="w"> </span>-m<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span>--upgrade<span class="w"> </span>pip<span class="w">           </span><span class="c1">#dependency groups need pip &gt;= 25.1</span>
+pip<span class="w"> </span>install<span class="w"> </span>--group<span class="w"> </span>dev<span class="w">                       </span><span class="c1">#docs, lint, build, test and IDE tools, scipy pin, jinja2, griffe</span>
+pip<span class="w"> </span>wheel<span class="w"> </span>.<span class="w"> </span>-w<span class="w"> </span>dist<span class="w"> </span>--no-deps<span class="w">                 </span><span class="c1">#build Exudyn</span>
+pip<span class="w"> </span>install<span class="w"> </span>--pre<span class="w"> </span>--find-links<span class="o">=</span>dist<span class="w"> </span><span class="s2">"exudyn[tests]"</span><span class="w">   </span><span class="c1">#the local wheel plus what TestModels/ needs</span>
+</pre></div>
+</div>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>group</p></th>
+<th class="head"><p>contains</p></th>
+<th class="head"><p>used by</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">docs</span></code></p></td>
+<td><p>sphinx and its theme and extensions</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">sphinx-build</span></code>, the CI <code class="docutils literal notranslate"><span class="pre">docs</span></code> jobs, readthedocs</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">pdf</span></code></p></td>
+<td><p>nothing from pip; the flow charts are committed as PDF and SVG</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">exudev</span> <span class="pre">docs</span> <span class="pre">--pdf</span></code>, which needs a LaTeX installation; <code class="docutils literal notranslate"><span class="pre">exudev</span> <span class="pre">figures</span></code>, which compiles a changed flow chart, too</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">lint</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">pydoclint</span></code> (pinned; the baseline holds its messages)</p></td>
+<td><p>CI <code class="docutils literal notranslate"><span class="pre">check_docstrings</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">build</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">setuptools&gt;=77</span></code>, <code class="docutils literal notranslate"><span class="pre">wheel</span></code>, <code class="docutils literal notranslate"><span class="pre">pybind11&lt;3.0</span></code>, <code class="docutils literal notranslate"><span class="pre">tomli</span></code>, <code class="docutils literal notranslate"><span class="pre">cibuildwheel</span></code></p></td>
+<td><p>a direct <code class="docutils literal notranslate"><span class="pre">python</span> <span class="pre">setup.py</span> <span class="pre">bdist_wheel</span></code>, which has no build isolation; a local CI-identical wheel</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">test</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">pytest</span></code>, <code class="docutils literal notranslate"><span class="pre">pytest-xdist</span></code>, <code class="docutils literal notranslate"><span class="pre">quickjs</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">pytest</span> <span class="pre">-n</span> <span class="pre">8</span></code>; the suite itself runs without them</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">ide</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">spyder-kernels</span></code>, <code class="docutils literal notranslate"><span class="pre">ipykernel</span></code>, <code class="docutils literal notranslate"><span class="pre">ipywidgets</span></code></p></td>
+<td><p>Spyder and Jupyter</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">dev</span></code></p></td>
+<td><p>all of the above, plus <code class="docutils literal notranslate"><span class="pre">scipy==1.15.2</span></code> (any scipy on macOS and Python 3.14+), <code class="docutils literal notranslate"><span class="pre">jinja2</span></code>, <code class="docutils literal notranslate"><span class="pre">griffe</span></code></p></td>
+<td><p>the development environment</p></td>
+</tr>
+</tbody>
+</table>
+<p>Groups are never published with the wheel, unlike the extras (<code class="docutils literal notranslate"><span class="pre">exudyn[tests]</span></code> etc.) below, which
+users see. A single group can be installed alone, e.g. <code class="docutils literal notranslate"><span class="pre">pip</span> <span class="pre">install</span> <span class="pre">--group</span> <span class="pre">docs</span></code>.</p>
+<blockquote>
+<div><p><strong>Why <code class="docutils literal notranslate"><span class="pre">pybind11</span></code> in <code class="docutils literal notranslate"><span class="pre">build</span></code>?</strong> It is declared in <code class="docutils literal notranslate"><span class="pre">build-system.requires</span></code>, so <code class="docutils literal notranslate"><span class="pre">pip</span> <span class="pre">wheel</span> <span class="pre">.</span></code> and
+<code class="docutils literal notranslate"><span class="pre">python</span> <span class="pre">-m</span> <span class="pre">build</span></code> install it themselves under build isolation. A direct
+<code class="docutils literal notranslate"><span class="pre">python</span> <span class="pre">setup.py</span> <span class="pre">bdist_wheel</span></code> does <strong>not</strong> use build isolation, so there it has to be present in
+the environment.</p>
+</div></blockquote>
+<blockquote>
+<div><p><strong>Why scipy 1.15.2?</strong> scipy 1.18.0 slows the Exudyn test suite from ~22 s to over 10 minutes,
+apparently in the eigensolver path. The pin is in
+the <code class="docutils literal notranslate"><span class="pre">dev</span></code> group; <code class="docutils literal notranslate"><span class="pre">exudyn[tests]</span></code> itself does not pin scipy. It does not apply on macOS and on Python 3.14 and later,
+where scipy 1.15.2 has no wheel and <code class="docutils literal notranslate"><span class="pre">pip</span> <span class="pre">install</span> <span class="pre">--group</span> <span class="pre">dev</span></code> would fail (#2886); there the suite may be slower.</p>
+</div></blockquote>
+<blockquote>
+<div><p><strong>Linux: jagged fonts in the dialogs?</strong> The <code class="docutils literal notranslate"><span class="pre">tk</span></code> package of the Anaconda channel is built without Xft, so tkinter
+draws its fonts without anti-aliasing and in few sizes; the dialogs of Exudyn say so once when they open. The
+Xft build of conda-forge draws them smoothly:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>conda<span class="w"> </span>install<span class="w"> </span>-c<span class="w"> </span>conda-forge<span class="w"> </span><span class="s2">"tk=*=xft_*"</span>
+</pre></div>
+</div>
+<p>A system Python (<code class="docutils literal notranslate"><span class="pre">apt</span> <span class="pre">install</span> <span class="pre">python3-tk</span></code>) has Xft already (#2890).</p>
+</div></blockquote>
+<blockquote>
+<div><p><strong>spyder-kernels</strong> in the <code class="docutils literal notranslate"><span class="pre">ide</span></code> group is <code class="docutils literal notranslate"><span class="pre">3.*</span></code>, matching Spyder 6; for an older Spyder see the
+table below and install the matching version afterwards.</p>
+</div></blockquote>
+<p>Test environments per Python version are named <code class="docutils literal notranslate"><span class="pre">venvP310</span></code> … <code class="docutils literal notranslate"><span class="pre">venvP314</span></code> and carry an Exudyn build
+for that version. <code class="docutils literal notranslate"><span class="pre">--py</span> <span class="pre">all</span></code> of <code class="docutils literal notranslate"><span class="pre">exudev</span></code> means these five; a newer Python is used when named, e.g.
+<code class="docutils literal notranslate"><span class="pre">--py</span> <span class="pre">315</span></code> with <code class="docutils literal notranslate"><span class="pre">venvP315</span></code> (3.15 and 3.16 are accepted), until wheels are built for it (#2891).</p>
+<section id="documentation-toolchain-only">
+<h3>Documentation toolchain only<a class="headerlink" href="#documentation-toolchain-only" title="Link to this heading"></a></h3>
+<p>If an existing environment only needs the docs tools added, from the repository root:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>--group<span class="w"> </span>docs
+</pre></div>
+</div>
+<p>Build the HTML documentation from the repository root:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sphinx-build<span class="w"> </span>-b<span class="w"> </span>html<span class="w"> </span>.<span class="w"> </span>_build<span class="w"> </span>-E
+</pre></div>
+</div>
+</section>
+<section id="optional-packages-via-the-exudyn-extras">
+<span id="sec-install-extras"></span><h3>Optional packages via the Exudyn extras<a class="headerlink" href="#optional-packages-via-the-exudyn-extras" title="Link to this heading"></a></h3>
+<p>The optional dependencies are declared in <code class="docutils literal notranslate"><span class="pre">pyproject.toml</span></code>, so they can be installed by name
+instead of being listed by hand:</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>command</p></th>
+<th class="head"><p>installs</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">pip</span> <span class="pre">install</span> <span class="pre">exudyn[basic]</span></code></p></td>
+<td><p>what most models need: scipy (eigenvalues, sparse matrices, FEM) and matplotlib (plots, <code class="docutils literal notranslate"><span class="pre">PlotSensor</span></code>) - <strong>recommended to start with</strong></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">pip</span> <span class="pre">install</span> <span class="pre">exudyn[tests]</span></code></p></td>
+<td><p>the above plus exactly what <code class="docutils literal notranslate"><span class="pre">TestModels/</span></code> needs: h5py, networkx, psutil, ngsolve</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">pip</span> <span class="pre">install</span> <span class="pre">exudyn[common]</span></code></p></td>
+<td><p>the above plus what frequently used features need: numpy-stl (STL import), tqdm (optimization progress), ffmpeg-python (video export; the program itself: <code class="docutils literal notranslate"><span class="pre">conda</span> <span class="pre">install</span> <span class="pre">ffmpeg</span></code>) - <strong>to use most features</strong></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">pip</span> <span class="pre">install</span> <span class="pre">exudyn[all]</span></code></p></td>
+<td><p>the above plus everything else the package and the Examples refer to: pymeshlab, roboticstoolbox-python, spatialmath-python, numba, dispy, mpi4py</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">pip</span> <span class="pre">install</span> <span class="pre">exudyn[rl]</span></code></p></td>
+<td><p>reinforcement learning: torch, stable-baselines3, gymnasium, gym, tensorboard</p></td>
+</tr>
+</tbody>
+</table>
+<p><code class="docutils literal notranslate"><span class="pre">[rl]</span></code> is deliberately <strong>not</strong> part of <code class="docutils literal notranslate"><span class="pre">[all]</span></code>: torch is multi-GB and the CPU/CUDA choice is made
+with an <code class="docutils literal notranslate"><span class="pre">--index-url</span></code>, which cannot be expressed in wheel metadata. For a CUDA build, install it
+separately first:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>torch<span class="w"> </span>torchvision<span class="w"> </span>torchaudio<span class="w"> </span>--index-url<span class="w"> </span>https://download.pytorch.org/whl/cu118
+pip<span class="w"> </span>install<span class="w"> </span>stable-baselines3<span class="o">[</span>extra<span class="o">]</span>
+</pre></div>
+</div>
+<p>The <code class="docutils literal notranslate"><span class="pre">--index-url</span></code> above selects the CUDA 11.8 build of PyTorch; drop it for a CPU-only install.</p>
+<p>These lists are not maintained by hand. <code class="docutils literal notranslate"><span class="pre">python</span> <span class="pre">tools/checkExtras.py</span></code> scans every import in
+<code class="docutils literal notranslate"><span class="pre">exudyn/</span></code>, <code class="docutils literal notranslate"><span class="pre">TestModels/</span></code> and <code class="docutils literal notranslate"><span class="pre">Examples/</span></code> and fails if one of them is installed by no extra, so the
+table above cannot silently fall behind the code; CI runs it as the <code class="docutils literal notranslate"><span class="pre">check_extras</span></code> job.</p>
+</section>
+</section>
+<section id="spyder-kernel-versions">
+<h2>Spyder kernel versions<a class="headerlink" href="#spyder-kernel-versions" title="Link to this heading"></a></h2>
+<p><code class="docutils literal notranslate"><span class="pre">spyder-kernels</span></code> must match the Spyder version, or the console fails to start:</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Anaconda / Spyder</p></th>
+<th class="head"><p>spyder-kernels</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Anaconda 2023-07 / Spyder 5.4</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">spyder-kernels=2.4</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p>Anaconda 2023-09 / Spyder 5.5, 5.5.1</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">spyder-kernels=2.5</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p>Anaconda 2025-06 / Spyder 6.0.7</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">spyder-kernels=3.0</span></code></p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="useful-conda-commands">
+<h2>Useful conda commands<a class="headerlink" href="#useful-conda-commands" title="Link to this heading"></a></h2>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>conda<span class="w"> </span>activate<span class="w"> </span>ENVNAME<span class="w">              </span><span class="c1"># activate an environment</span>
+conda<span class="w"> </span>deactivate<span class="w">                    </span><span class="c1"># leave it</span>
+
+conda<span class="w"> </span>env<span class="w"> </span>list<span class="w">                      </span><span class="c1"># list all environments</span>
+conda<span class="w"> </span>list<span class="w">                          </span><span class="c1"># list packages in the active environment</span>
+
+conda<span class="w"> </span>install<span class="w"> </span>numpy<span class="w">                 </span><span class="c1"># install into the active environment</span>
+conda<span class="w"> </span>install<span class="w"> </span>-n<span class="w"> </span>ENVNAME<span class="w"> </span>numpy<span class="w">      </span><span class="c1"># install into a named environment</span>
+conda<span class="w"> </span>update<span class="w"> </span>numpy<span class="w">                  </span><span class="c1"># update in the active environment</span>
+conda<span class="w"> </span>remove<span class="w"> </span>--name<span class="w"> </span>ENVNAME<span class="w"> </span>numpy<span class="w">   </span><span class="c1"># remove a package</span>
+
+conda<span class="w"> </span>remove<span class="w"> </span>--name<span class="w"> </span>ENVNAME<span class="w"> </span>--all<span class="w"> </span>-y<span class="w">   </span><span class="c1"># delete an entire environment</span>
+conda<span class="w"> </span>update<span class="w"> </span>-n<span class="w"> </span>base<span class="w"> </span>-c<span class="w"> </span>defaults<span class="w"> </span>conda<span class="w"> </span>-y<span class="w">   </span><span class="c1"># update conda itself</span>
+</pre></div>
+</div>
+</section>
+<section id="manylinux-wheels-auditwheel">
+<h2>manylinux wheels (auditwheel)<a class="headerlink" href="#manylinux-wheels-auditwheel" title="Link to this heading"></a></h2>
+<p>Now normally done with Docker; kept here for reference.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>auditwheel<span class="w"> </span>patchelf
+
+auditwheel<span class="w"> </span>repair<span class="w"> </span>/mnt/c/DATA/cpp/Exudyn_git/dist/exudyn-1.10.19.dev1-cp314-cp314-linux_x86_64.whl
+<span class="c1"># produces e.g. exudyn-1.10.19.dev1-cp314-cp314-manylinux_2_34_x86_64.whl</span>
+</pre></div>
+</div>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="../../CONTRIBUTING.html" class="btn btn-neutral float-left" title="Contributing to Exudyn" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="sphinxDocs.html" class="btn btn-neutral float-right" title="Building the documentation" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

@@ -1,0 +1,616 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>parameterConversionTest.py &mdash; Exudyn1.13.3 1.13.3 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=3ee1c6c6" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/rtd_sphinx_search.min.css" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/custom.css?v=e2783f0e" />
+
+  
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=b8a3e558"></script>
+      <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../../_static/copybutton.js?v=f281be69"></script>
+      <script src="../../../_static/js/rtd_search_config.js"></script>
+      <script src="../../../_static/js/rtd_sphinx_search.min.js"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+    <link rel="next" title="typeInformationTest.py" href="typeInformationTest.html" />
+    <link rel="prev" title="pendulumFriction.py" href="pendulumFriction.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            Exudyn1.13.3
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Exudyn User Manual</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../README.html">Exudyn</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../manual/gettingStarted.html">Installation and getting started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../manual/introduction.html">Overview on Exudyn</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../manual/introductionBasics.html">Exudyn basics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../manual/tutorial.html">Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../manual/GUI.html">Renderer, graphics and visualization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../manual/performanceErrors.html">Performance, errors and solver failures</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../manual/introductionAdvanced.html">Advanced topics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../manual/notation.html">Notation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../manual/theory.html">Theory and formulations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../manual/solver.html">Solvers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../cInterface/cInterfaceIndex.html">Python-C++ command interface</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Reference Manual</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../items/itemsIndex.html">Items reference manual</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../pythonUtilities/utilitiesIndex.html">Python Utility Functions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../structures/structuresIndex.html">Structures and Settings</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../references.html">References</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Developer documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../dev/README.html">Exudyn developer documentation</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">How-to notes</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../howTo/condaEnvironments.html">Conda environments for Exudyn</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../howTo/sphinxDocs.html">Building the documentation</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Examples, models and issues</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../examples/examplesIndex.html">Examples</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="testModelsIndex.html">TestModels</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="ANCFCable2DBendingTest.html">ANCFCable2DBendingTest.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="CartesianSpringDamperTest.html">CartesianSpringDamperTest.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="CoordinateSpringDamperTest.html">CoordinateSpringDamperTest.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="GraphicsDataTest.html">GraphicsDataTest.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="MathematicalPendulumTest.html">MathematicalPendulumTest.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="RigidPendulumTest.html">RigidPendulumTest.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="SliderCrank2DTest.html">SliderCrank2DTest.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="SlidingJoint2DTest.html">SlidingJoint2DTest.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="SpringDamperMesh.html">SpringDamperMesh.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="SwitchingConstraintsTest.html">SwitchingConstraintsTest.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="abaqusImportTest.html">abaqusImportTest.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="allExudynModulesTest.html">allExudynModulesTest.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="appendSystemTest.html">appendSystemTest.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ANCFBeamTest.html">ANCFBeamTest.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ANCFcable2DuserFunction.html">ANCFcable2DuserFunction.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ANCFCableBeamDampingTest.html">ANCFCableBeamDampingTest.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ANCFbeltDrive.html">ANCFbeltDrive.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ANCFcontactCircleTest.html">ANCFcontactCircleTest.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ANCFcontactFrictionTest.html">ANCFcontactFrictionTest.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ANCFgeneralContactCircle.html">ANCFgeneralContactCircle.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ANCFmovingRigidBodyTest.html">ANCFmovingRigidBodyTest.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ANCFslidingAndALEjointTest.html">ANCFslidingAndALEjointTest.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ballBearingTest.html">ballBearingTest.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="bricardMechanism.html">bricardMechanism.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="carRollingDiscTest.html">carRollingDiscTest.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="compareAbaqusAnsysRotorEigenfrequencies.html">compareAbaqusAnsysRotorEigenfrequencies.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="compareFullModifiedNewton.html">compareFullModifiedNewton.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="complexEigenvaluesTest.html">complexEigenvaluesTest.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="computeODE2AEeigenvaluesTest.html">computeODE2AEeigenvaluesTest.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="computeODE2EigenvaluesTest.html">computeODE2EigenvaluesTest.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="connectorGravityTest.html">connectorGravityTest.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="connectorOutputVariablesTest.html">connectorOutputVariablesTest.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="connectorRigidBodySpringDamperTest.html">connectorRigidBodySpringDamperTest.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="contactCoordinateTest.html">contactCoordinateTest.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="contactCurveExample.html">contactCurveExample.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="contactSphereSphereTest.html">contactSphereSphereTest.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="contactSphereSphereTestEAPM.html">contactSphereSphereTestEAPM.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ConvexContactTest.html">ConvexContactTest.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="coordinateSpringDamperExt.html">coordinateSpringDamperExt.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="coordinateVectorConstraint.html">coordinateVectorConstraint.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="coordinateVectorConstraintGenericODE2.html">coordinateVectorConstraintGenericODE2.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="createKinematicTreeTest.html">createKinematicTreeTest.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="createFunctionsTest.html">createFunctionsTest.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="createRollingDiscPenaltyTest.html">createRollingDiscPenaltyTest.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="createRollingDiscTest.html">createRollingDiscTest.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="createSphereQuadContact.html">createSphereQuadContact.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="createSphereQuadContact2.html">createSphereQuadContact2.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="createSphereTriangleContact.html">createSphereTriangleContact.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="deleteItemsTest.html">deleteItemsTest.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="distanceSensor.html">distanceSensor.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="driveTrainTest.html">driveTrainTest.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="explicitLieGroupIntegratorPythonTest.html">explicitLieGroupIntegratorPythonTest.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="explicitLieGroupIntegratorTest.html">explicitLieGroupIntegratorTest.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="explicitLieGroupMBSTest.html">explicitLieGroupMBSTest.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="fourBarMechanismTest.html">fourBarMechanismTest.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="fourBarMechanismIftomm.html">fourBarMechanismIftomm.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generalContactCylinderTest.html">generalContactCylinderTest.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generalContactCylinderTrigsTest.html">generalContactCylinderTrigsTest.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generalContactFrictionTests.html">generalContactFrictionTests.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generalContactImplicit1.html">generalContactImplicit1.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generalContactImplicit2.html">generalContactImplicit2.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generalContactSpheresTest.html">generalContactSpheresTest.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="genericJointUserFunctionTest.html">genericJointUserFunctionTest.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="genericODE2test.html">genericODE2test.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="geneticOptimizationTest.html">geneticOptimizationTest.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="geometricallyExactBeam2Dtest.html">geometricallyExactBeam2Dtest.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="geometricallyExactBeamTest.html">geometricallyExactBeamTest.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gridGeomExactBeam2D.html">gridGeomExactBeam2D.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="heavyTop.html">heavyTop.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="hydraulicActuatorSimpleTest.html">hydraulicActuatorSimpleTest.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="jointArgsTest.html">jointArgsTest.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="kinematicTreeAndMBStest.html">kinematicTreeAndMBStest.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="kinematicTreeConstraintTest.html">kinematicTreeConstraintTest.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="symbolicUserFunctionCopyTest.html">symbolicUserFunctionCopyTest.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="flexiblePendulumBeamComparison.html">flexiblePendulumBeamComparison.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="geometricallyExactBeamMarkerTest.html">geometricallyExactBeamMarkerTest.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="geometricallyExactBeamJacobianTest.html">geometricallyExactBeamJacobianTest.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="geometricallyExactBeamCurvedTest.html">geometricallyExactBeamCurvedTest.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="geometricallyExactBeamRightAngleFrame.html">geometricallyExactBeamRightAngleFrame.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rightAngleFrame.html">rightAngleFrame.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="energiesFlexibleBodiesTest.html">energiesFlexibleBodiesTest.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="accessFunctionsTest.html">accessFunctionsTest.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="computeItemTest.html">computeItemTest.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="emptySystemTest.html">emptySystemTest.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="homogeneousTransformationParameterTest.html">homogeneousTransformationParameterTest.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="simulationSettingsDeprecationTest.html">simulationSettingsDeprecationTest.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="simulationSettingsRenamesTest.html">simulationSettingsRenamesTest.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="itemParameterRenamesTest.html">itemParameterRenamesTest.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="binarySolutionFileTest.html">binarySolutionFileTest.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rotationMarkerDeprecationTest.html">rotationMarkerDeprecationTest.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="contactFrictionCircleCable2DnoFrictionTest.html">contactFrictionCircleCable2DnoFrictionTest.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="systemContainerLifetimeTest.html">systemContainerLifetimeTest.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="contactCurveCirclesFrictionTest.html">contactCurveCirclesFrictionTest.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="coordinateSpringDamperExtVelocityOffsetTest.html">coordinateSpringDamperExtVelocityOffsetTest.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="fileHeaderThreadsTest.html">fileHeaderThreadsTest.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="connectorFrameOutputsTest.html">connectorFrameOutputsTest.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="createLinearSpringDamperTest.html">createLinearSpringDamperTest.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="initialAccelerationsTest.html">initialAccelerationsTest.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="genericODE2matrixFormatsTest.html">genericODE2matrixFormatsTest.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="restartFileTest.html">restartFileTest.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="createItemNumbersTest.html">createItemNumbersTest.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="libraryDeprecationTest.html">libraryDeprecationTest.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="homogeneousTransformationInterfaceTest.html">homogeneousTransformationInterfaceTest.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="homogeneousTransformationTest.html">homogeneousTransformationTest.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="inspectTest.html">inspectTest.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="energiesTest.html">energiesTest.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="geometricallyExactBeamOutputTest.html">geometricallyExactBeamOutputTest.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="geometricallyExactBeamElbowCantilever.html">geometricallyExactBeamElbowCantilever.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="geometricallyExactBeamMassTest.html">geometricallyExactBeamMassTest.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="geometricallyExactBeam2DquadraticTest.html">geometricallyExactBeam2DquadraticTest.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="genericODE1duplicateNodeTest.html">genericODE1duplicateNodeTest.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="contactSphereTorusMomentumTest.html">contactSphereTorusMomentumTest.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="explicitSolversPostNewtonTest.html">explicitSolversPostNewtonTest.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="contactComparisonTest.html">contactComparisonTest.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generalContactTriangleMomentumTest.html">generalContactTriangleMomentumTest.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="inactiveConnectorForceTest.html">inactiveConnectorForceTest.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ANCFThinPlateRevisionTest.html">ANCFThinPlateRevisionTest.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="kinematicTreePrismaticJacobianTest.html">kinematicTreePrismaticJacobianTest.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="kinematicTreeTest.html">kinematicTreeTest.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="kinematicTreeUserFunctionTest.html">kinematicTreeUserFunctionTest.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="laserScannerTest.html">laserScannerTest.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="linearFEMgenericODE2.html">linearFEMgenericODE2.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="loadUserFunctionTest.html">loadUserFunctionTest.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="LShapeGeomExactBeam2D.html">LShapeGeomExactBeam2D.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mainSystemExtensionsTests.html">mainSystemExtensionsTests.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mainSystemUserFunctionsTest.html">mainSystemUserFunctionsTest.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="manualExplicitIntegrator.html">manualExplicitIntegrator.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="matrixContainerTest.html">matrixContainerTest.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mecanumWheelRollingDiscTest.html">mecanumWheelRollingDiscTest.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="movingGroundRobotTest.html">movingGroundRobotTest.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="NGsolveCMStest.html">NGsolveCMStest.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="objectFFRFreducedOrderAccelerations.html">objectFFRFreducedOrderAccelerations.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="objectFFRFreducedOrderTest.html">objectFFRFreducedOrderTest.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="objectFFRFTest.html">objectFFRFTest.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="objectFFRFTest2.html">objectFFRFTest2.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="objectGenericODE2Test.html">objectGenericODE2Test.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="PARTS_ATEs_moving.html">PARTS_ATEs_moving.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pendulumFriction.html">pendulumFriction.py</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">parameterConversionTest.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="typeInformationTest.html">typeInformationTest.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="exceptionTypesTest.html">exceptionTypesTest.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pickleCopyMbs.html">pickleCopyMbs.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="plotSensorTest.html">plotSensorTest.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="postNewtonStepContactTest.html">postNewtonStepContactTest.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="raytracerNOGLFWtest.html">raytracerNOGLFWtest.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="reevingSystemSpringsTest.html">reevingSystemSpringsTest.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="relativeRotationTranslationMechanism.html">relativeRotationTranslationMechanism.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="resultsMonitorTest.html">resultsMonitorTest.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="revoluteJointPrismaticJointTest.html">revoluteJointPrismaticJointTest.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rigidBody2Dtest.html">rigidBody2Dtest.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rigidBodyAsUserFunctionTest.html">rigidBodyAsUserFunctionTest.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rigidBodyCOMtest.html">rigidBodyCOMtest.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rigidBodySpringDamperIntrinsic.html">rigidBodySpringDamperIntrinsic.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rollingCoinTest.html">rollingCoinTest.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rollingDiscTangentialForces.html">rollingDiscTangentialForces.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rollingCoinPenaltyTest.html">rollingCoinPenaltyTest.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rotatingTableTest.html">rotatingTableTest.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="scissorPrismaticRevolute2D.html">scissorPrismaticRevolute2D.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="sensorUserFunctionTest.html">sensorUserFunctionTest.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="serialRobotTest.html">serialRobotTest.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="sliderCrank3Dbenchmark.html">sliderCrank3Dbenchmark.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="sliderCrank3Dtest.html">sliderCrank3Dtest.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="sliderCrankFloatingTest.html">sliderCrankFloatingTest.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="solverExplicitODE1ODE2test.html">solverExplicitODE1ODE2test.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="sparseMatrixSpringDamperTest.html">sparseMatrixSpringDamperTest.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="sphereTriangleTest2.html">sphereTriangleTest2.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="sphericalJointTest.html">sphericalJointTest.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="springDamperUserFunctionTest.html">springDamperUserFunctionTest.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="stiffFlyballGovernor.html">stiffFlyballGovernor.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="superElementRigidJointTest.html">superElementRigidJointTest.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="symbolicUserFunctionTest.html">symbolicUserFunctionTest.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="symbolicModuleTest.html">symbolicModuleTest.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="taskmanagerTest.html">taskmanagerTest.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="velocityVerletTest.html">velocityVerletTest.py</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../abbreviations.html">List of Abbreviations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../manual/revisions.html">Revisions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../CHANGELOG.html">Changelog</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../trackerlog.html">Issue tracker</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">Exudyn1.13.3</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="testModelsIndex.html">TestModels</a></li>
+      <li class="breadcrumb-item active">parameterConversionTest.py</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../../_sources/docs/generated/testModels/parameterConversionTest.md.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <!-- GENERATED by tools/generators/examplesDocsEmitter.py from python/ - do not edit -->
+<section class="tex2jax_ignore mathjax_ignore" id="parameterconversiontest-py">
+<span id="testmodels-parameterconversiontest"></span><h1>parameterConversionTest.py<a class="headerlink" href="#parameterconversiontest-py" title="Link to this heading"></a></h1>
+<p>You can view and download this file on Github: <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/tree/master/python/TestModels/parameterConversionTest.py">parameterConversionTest.py</a></p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos">  1</span><span class="c1">#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++</span>
+<span class="linenos">  2</span><span class="c1"># This is an EXUDYN example</span>
+<span class="linenos">  3</span><span class="c1">#</span>
+<span class="linenos">  4</span><span class="c1"># Details:  Behaviour record of the Python/C++ parameter conversion:</span>
+<span class="linenos">  5</span><span class="c1">#           a fixed set of probe values is written into every parameter of every item and of the</span>
+<span class="linenos">  6</span><span class="c1">#           simulation and visualization settings, through each access path, and the outcome is</span>
+<span class="linenos">  7</span><span class="c1">#           compared with parameterConversionTestReference.txt. An outcome is the exception type</span>
+<span class="linenos">  8</span><span class="c1">#           or the type, shape and value that reads back; the error messages are not recorded.</span>
+<span class="linenos">  9</span><span class="c1">#           Set recordReference = True to rewrite the reference after an intended change.</span>
+<span class="linenos"> 10</span><span class="c1">#</span>
+<span class="linenos"> 11</span><span class="c1"># Author:   Johannes Gerstmayr, Claude-JG</span>
+<span class="linenos"> 12</span><span class="c1"># Date:     2026-09-14</span>
+<span class="linenos"> 13</span><span class="c1">#</span>
+<span class="linenos"> 14</span><span class="c1"># Copyright:This file is part of Exudyn. Exudyn is free software. You can redistribute it and/or modify it under the terms of the Exudyn license. See 'LICENSE.txt' for more details.</span>
+<span class="linenos"> 15</span><span class="c1">#</span>
+<span class="linenos"> 16</span><span class="c1">#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++</span>
+<span class="linenos"> 17</span>
+<span class="linenos"> 18</span><span class="kn">import</span><span class="w"> </span><span class="nn">exudyn</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">exu</span>
+<span class="linenos"> 19</span><span class="kn">import</span><span class="w"> </span><span class="nn">exudyn.itemInterface</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">itemInterface</span>
+<span class="linenos"> 20</span><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="linenos"> 21</span><span class="kn">import</span><span class="w"> </span><span class="nn">contextlib</span>
+<span class="linenos"> 22</span><span class="kn">import</span><span class="w"> </span><span class="nn">inspect</span>
+<span class="linenos"> 23</span><span class="kn">import</span><span class="w"> </span><span class="nn">io</span>
+<span class="linenos"> 24</span><span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="linenos"> 25</span><span class="kn">import</span><span class="w"> </span><span class="nn">warnings</span>
+<span class="linenos"> 26</span>
+<span class="linenos"> 27</span><span class="n">recordReference</span> <span class="o">=</span> <span class="kc">False</span> <span class="c1">#True: write the reference file instead of comparing</span>
+<span class="linenos"> 28</span>
+<span class="linenos"> 29</span><span class="n">testIsActive</span> <span class="o">=</span> <span class="n">exu</span><span class="o">.</span><span class="n">sys</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'testIsActive'</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
+<span class="linenos"> 30</span>
+<span class="linenos"> 31</span><span class="c1">#next to this file; runTestSuite.py executes the models from their own directory</span>
+<span class="linenos"> 32</span><span class="n">referenceFile</span> <span class="o">=</span> <span class="s1">'parameterConversionTestReference.txt'</span>
+<span class="linenos"> 33</span><span class="k">if</span> <span class="s1">'__file__'</span> <span class="ow">in</span> <span class="nb">globals</span><span class="p">()</span> <span class="ow">and</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="vm">__file__</span><span class="p">)</span> <span class="o">==</span> <span class="s1">'parameterConversionTest.py'</span><span class="p">:</span>
+<span class="linenos"> 34</span>    <span class="n">referenceFile</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="vm">__file__</span><span class="p">)),</span> <span class="n">referenceFile</span><span class="p">)</span>
+<span class="linenos"> 35</span>
+<span class="linenos"> 36</span><span class="c1">#probe values: name, value; the same set for every parameter, whatever its type</span>
+<span class="linenos"> 37</span><span class="n">probes</span> <span class="o">=</span> <span class="p">[(</span><span class="s1">'neg'</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">),</span> <span class="p">(</span><span class="s1">'zero'</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="p">(</span><span class="s1">'int2'</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span> <span class="p">(</span><span class="s1">'real'</span><span class="p">,</span> <span class="mf">2.5</span><span class="p">),</span> <span class="p">(</span><span class="s1">'str'</span><span class="p">,</span> <span class="s1">'x'</span><span class="p">),</span> <span class="p">(</span><span class="s1">'bool'</span><span class="p">,</span> <span class="kc">True</span><span class="p">),</span>
+<span class="linenos"> 38</span>          <span class="p">(</span><span class="s1">'list2'</span><span class="p">,</span> <span class="p">[</span><span class="mf">1.</span><span class="p">,</span> <span class="mf">2.</span><span class="p">]),</span> <span class="p">(</span><span class="s1">'list3'</span><span class="p">,</span> <span class="p">[</span><span class="mf">1.</span><span class="p">,</span> <span class="mf">2.</span><span class="p">,</span> <span class="mf">3.</span><span class="p">]),</span> <span class="p">(</span><span class="s1">'list4'</span><span class="p">,</span> <span class="p">[</span><span class="mf">1.</span><span class="p">,</span> <span class="mf">2.</span><span class="p">,</span> <span class="mf">3.</span><span class="p">,</span> <span class="mf">4.</span><span class="p">]),</span>
+<span class="linenos"> 39</span>          <span class="p">(</span><span class="s1">'numpy3'</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">1.</span><span class="p">,</span> <span class="mf">2.</span><span class="p">,</span> <span class="mf">3.</span><span class="p">])),</span> <span class="p">(</span><span class="s1">'matrix2'</span><span class="p">,</span> <span class="p">[[</span><span class="mf">1.</span><span class="p">,</span> <span class="mf">0.</span><span class="p">],</span> <span class="p">[</span><span class="mf">0.</span><span class="p">,</span> <span class="mf">1.</span><span class="p">]]),</span>
+<span class="linenos"> 40</span>          <span class="p">(</span><span class="s1">'nodeIndex'</span><span class="p">,</span> <span class="n">exu</span><span class="o">.</span><span class="n">NodeIndex</span><span class="p">(</span><span class="mi">0</span><span class="p">)),</span> <span class="p">(</span><span class="s1">'objectIndex'</span><span class="p">,</span> <span class="n">exu</span><span class="o">.</span><span class="n">ObjectIndex</span><span class="p">(</span><span class="mi">0</span><span class="p">)),</span>
+<span class="linenos"> 41</span>          <span class="p">(</span><span class="s1">'markerList'</span><span class="p">,</span> <span class="p">[</span><span class="n">exu</span><span class="o">.</span><span class="n">MarkerIndex</span><span class="p">(</span><span class="mi">0</span><span class="p">),</span> <span class="n">exu</span><span class="o">.</span><span class="n">MarkerIndex</span><span class="p">(</span><span class="mi">1</span><span class="p">)]),</span> <span class="p">(</span><span class="s1">'none'</span><span class="p">,</span> <span class="kc">None</span><span class="p">)]</span>
+<span class="linenos"> 42</span>
+<span class="linenos"> 43</span><span class="n">itemKinds</span> <span class="o">=</span> <span class="p">[</span><span class="s1">'Node'</span><span class="p">,</span> <span class="s1">'Object'</span><span class="p">,</span> <span class="s1">'Marker'</span><span class="p">,</span> <span class="s1">'Load'</span><span class="p">,</span> <span class="s1">'Sensor'</span><span class="p">]</span>
+<span class="linenos"> 44</span>
+<span class="linenos"> 45</span><span class="c1">#about 38000 probes end in an error, and every C++ user error is printed and written to the log</span>
+<span class="linenos"> 46</span><span class="c1">#file (260000 lines); both are switched off while probing (#2895)</span>
+<span class="linenos"> 47</span><span class="n">writeErrorsToLogFile</span> <span class="o">=</span> <span class="n">exu</span><span class="o">.</span><span class="n">special</span><span class="o">.</span><span class="n">exceptions</span><span class="o">.</span><span class="n">writeErrorsToLogFile</span>
+<span class="linenos"> 48</span><span class="n">exu</span><span class="o">.</span><span class="n">special</span><span class="o">.</span><span class="n">exceptions</span><span class="o">.</span><span class="n">writeErrorsToLogFile</span> <span class="o">=</span> <span class="kc">False</span>
+<span class="linenos"> 49</span><span class="c1">#every C++ user error also asks inspect.getframeinfo for file and line (Stdoutput.cpp,</span>
+<span class="linenos"> 50</span><span class="c1">#PyGetCurrentFileInformation), which scans sys.modules and reads the source: inside the suite,</span>
+<span class="linenos"> 51</span><span class="c1">#after scipy, matplotlib and ngsolve were imported, probing took 9 s instead of 1 s (#2423).</span>
+<span class="linenos"> 52</span><span class="c1">#The messages are not recorded, so the file name is taken from the frame directly while probing</span>
+<span class="linenos"> 53</span><span class="n">inspectGetFrameInfo</span> <span class="o">=</span> <span class="n">inspect</span><span class="o">.</span><span class="n">getframeinfo</span>
+<span class="linenos"> 54</span><span class="n">inspect</span><span class="o">.</span><span class="n">getframeinfo</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">frame</span><span class="p">,</span> <span class="n">context</span><span class="o">=</span><span class="mi">1</span><span class="p">:</span> <span class="nb">type</span><span class="p">(</span><span class="s1">'FrameInfo'</span><span class="p">,</span> <span class="p">(),</span> <span class="p">{</span><span class="s1">'filename'</span><span class="p">:</span> <span class="n">frame</span><span class="o">.</span><span class="n">f_code</span><span class="o">.</span><span class="n">co_filename</span><span class="p">})</span>
+<span class="linenos"> 55</span><span class="n">printToConsole</span> <span class="o">=</span> <span class="n">exu</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">printToConsole</span>
+<span class="linenos"> 56</span><span class="n">exu</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">printToConsole</span> <span class="o">=</span> <span class="kc">False</span>
+<span class="linenos"> 57</span>
+<span class="linenos"> 58</span><span class="k">def</span><span class="w"> </span><span class="nf">Outcome</span><span class="p">(</span><span class="n">function</span><span class="p">):</span>
+<span class="linenos"> 59</span><span class="w">    </span><span class="sd">"""exception class name, or type/shape/value of what function() returns"""</span>
+<span class="linenos"> 60</span>    <span class="k">with</span> <span class="n">contextlib</span><span class="o">.</span><span class="n">redirect_stdout</span><span class="p">(</span><span class="n">io</span><span class="o">.</span><span class="n">StringIO</span><span class="p">()):</span>
+<span class="linenos"> 61</span>        <span class="k">try</span><span class="p">:</span>
+<span class="linenos"> 62</span>            <span class="k">return</span> <span class="n">Describe</span><span class="p">(</span><span class="n">function</span><span class="p">())</span>
+<span class="linenos"> 63</span>        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+<span class="linenos"> 64</span>            <span class="k">return</span> <span class="s1">'!'</span> <span class="o">+</span> <span class="nb">type</span><span class="p">(</span><span class="n">e</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span>
+<span class="linenos"> 65</span>
+<span class="linenos"> 66</span><span class="k">def</span><span class="w"> </span><span class="nf">Describe</span><span class="p">(</span><span class="n">value</span><span class="p">):</span>
+<span class="linenos"> 67</span>    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">):</span>
+<span class="linenos"> 68</span>        <span class="n">text</span> <span class="o">=</span> <span class="s1">'numpy'</span> <span class="o">+</span> <span class="s1">'x'</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">n</span><span class="p">)</span> <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="n">value</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span> <span class="o">+</span> <span class="n">value</span><span class="o">.</span><span class="n">dtype</span><span class="o">.</span><span class="n">kind</span>
+<span class="linenos"> 69</span>        <span class="k">if</span> <span class="n">value</span><span class="o">.</span><span class="n">size</span> <span class="o">&lt;=</span> <span class="mi">4</span><span class="p">:</span>
+<span class="linenos"> 70</span>            <span class="n">text</span> <span class="o">+=</span> <span class="s1">'='</span> <span class="o">+</span> <span class="s1">'['</span> <span class="o">+</span> <span class="s1">','</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="nb">round</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">x</span><span class="p">),</span> <span class="mi">6</span><span class="p">))</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">value</span><span class="o">.</span><span class="n">flatten</span><span class="p">())</span> <span class="o">+</span> <span class="s1">']'</span>
+<span class="linenos"> 71</span>        <span class="k">return</span> <span class="n">text</span>
+<span class="linenos"> 72</span>    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="p">(</span><span class="nb">list</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">)):</span>
+<span class="linenos"> 73</span>        <span class="n">text</span> <span class="o">=</span> <span class="nb">type</span><span class="p">(</span><span class="n">value</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">value</span><span class="p">))</span>
+<span class="linenos"> 74</span>        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">value</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="mi">4</span> <span class="ow">and</span> <span class="nb">all</span><span class="p">(</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">,</span> <span class="nb">bool</span><span class="p">))</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">value</span><span class="p">):</span>
+<span class="linenos"> 75</span>            <span class="n">text</span> <span class="o">+=</span> <span class="s1">'='</span> <span class="o">+</span> <span class="s1">'['</span> <span class="o">+</span> <span class="s1">','</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="nb">round</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">x</span><span class="p">),</span> <span class="mi">6</span><span class="p">))</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">value</span><span class="p">)</span> <span class="o">+</span> <span class="s1">']'</span>
+<span class="linenos"> 76</span>        <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="n">value</span><span class="p">):</span>
+<span class="linenos"> 77</span>            <span class="n">text</span> <span class="o">+=</span> <span class="s1">':'</span> <span class="o">+</span> <span class="nb">type</span><span class="p">(</span><span class="n">value</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span><span class="o">.</span><span class="vm">__name__</span>
+<span class="linenos"> 78</span>        <span class="k">return</span> <span class="n">text</span>
+<span class="linenos"> 79</span>    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="p">(</span><span class="nb">bool</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">)):</span>
+<span class="linenos"> 80</span>        <span class="k">return</span> <span class="nb">type</span><span class="p">(</span><span class="n">value</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span> <span class="o">+</span> <span class="s1">'='</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="nb">round</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">value</span><span class="p">),</span> <span class="mi">6</span><span class="p">))</span>
+<span class="linenos"> 81</span>    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+<span class="linenos"> 82</span>        <span class="k">return</span> <span class="s1">'str='</span> <span class="o">+</span> <span class="n">value</span><span class="p">[:</span><span class="mi">10</span><span class="p">]</span>
+<span class="linenos"> 83</span>    <span class="k">return</span> <span class="nb">type</span><span class="p">(</span><span class="n">value</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span>
+<span class="linenos"> 84</span>
+<span class="linenos"> 85</span><span class="c1">#++++++++++++++++++++++++++++++++++++++++++++++++++</span>
+<span class="linenos"> 86</span><span class="c1">#items: three paths per parameter</span>
+<span class="linenos"> 87</span><span class="c1">#  set  - mbs.Set&lt;Kind&gt;Parameter on an item created from the default dict</span>
+<span class="linenos"> 88</span><span class="c1">#  dict - mbs.Add&lt;Kind&gt; with the default dict, this parameter replaced (no Python checks)</span>
+<span class="linenos"> 89</span><span class="c1">#  class- the itemInterface class with this parameter, then mbs.Add&lt;Kind&gt;</span>
+<span class="linenos"> 90</span><span class="c1">#the default dict is built from the class signature, because some classes reject their own</span>
+<span class="linenos"> 91</span><span class="c1">#defaults (e.g. MarkerNodeCoordinate: coordinate=InvalidIndex() fails CheckForValidUInt)</span>
+<span class="linenos"> 92</span><span class="n">records</span> <span class="o">=</span> <span class="p">{}</span>
+<span class="linenos"> 93</span>
+<span class="linenos"> 94</span><span class="k">def</span><span class="w"> </span><span class="nf">SetRangeChecks</span><span class="p">(</span><span class="n">active</span><span class="p">):</span>
+<span class="linenos"> 95</span><span class="w">    </span><span class="sd">"""exudyn.special.exceptions.parameterRangeChecks (#2464)"""</span>
+<span class="linenos"> 96</span>    <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">exu</span><span class="o">.</span><span class="n">special</span><span class="o">.</span><span class="n">exceptions</span><span class="p">,</span> <span class="s1">'parameterRangeChecks'</span><span class="p">):</span>
+<span class="linenos"> 97</span>        <span class="n">exu</span><span class="o">.</span><span class="n">special</span><span class="o">.</span><span class="n">exceptions</span><span class="o">.</span><span class="n">parameterRangeChecks</span> <span class="o">=</span> <span class="n">active</span>
+<span class="linenos"> 98</span>
+<span class="linenos"> 99</span><span class="k">def</span><span class="w"> </span><span class="nf">Record</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">row</span><span class="p">):</span>
+<span class="linenos">100</span>    <span class="n">records</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="s1">' '</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">row</span><span class="p">),</span> <span class="p">[])</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
+<span class="linenos">101</span>
+<span class="linenos">102</span><span class="k">def</span><span class="w"> </span><span class="nf">DefaultDict</span><span class="p">(</span><span class="n">itemClass</span><span class="p">,</span> <span class="n">typeKey</span><span class="p">,</span> <span class="n">itemType</span><span class="p">):</span>
+<span class="linenos">103</span>    <span class="n">d</span> <span class="o">=</span> <span class="p">{</span><span class="n">typeKey</span><span class="p">:</span> <span class="n">itemType</span><span class="p">}</span>
+<span class="linenos">104</span>    <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">parameter</span> <span class="ow">in</span> <span class="n">inspect</span><span class="o">.</span><span class="n">signature</span><span class="p">(</span><span class="n">itemClass</span><span class="p">)</span><span class="o">.</span><span class="n">parameters</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+<span class="linenos">105</span>        <span class="k">if</span> <span class="n">name</span> <span class="o">==</span> <span class="s1">'visualization'</span><span class="p">:</span>
+<span class="linenos">106</span>            <span class="k">for</span> <span class="n">vName</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">parameter</span><span class="o">.</span><span class="n">default</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+<span class="linenos">107</span>                <span class="n">d</span><span class="p">[</span><span class="s1">'V'</span> <span class="o">+</span> <span class="n">vName</span><span class="p">]</span> <span class="o">=</span> <span class="n">value</span>
+<span class="linenos">108</span>        <span class="k">elif</span> <span class="n">name</span> <span class="o">!=</span> <span class="s1">'name'</span><span class="p">:</span>
+<span class="linenos">109</span>            <span class="n">d</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">parameter</span><span class="o">.</span><span class="n">default</span>
+<span class="linenos">110</span>    <span class="k">return</span> <span class="n">d</span>
+<span class="linenos">111</span>
+<span class="linenos">112</span><span class="k">for</span> <span class="n">className</span><span class="p">,</span> <span class="n">itemClass</span> <span class="ow">in</span> <span class="n">inspect</span><span class="o">.</span><span class="n">getmembers</span><span class="p">(</span><span class="n">itemInterface</span><span class="p">,</span> <span class="n">inspect</span><span class="o">.</span><span class="n">isclass</span><span class="p">):</span>
+<span class="linenos">113</span>    <span class="n">kind</span> <span class="o">=</span> <span class="p">[</span><span class="n">k</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">itemKinds</span> <span class="k">if</span> <span class="n">className</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="n">k</span><span class="p">)]</span>
+<span class="linenos">114</span>    <span class="k">if</span> <span class="ow">not</span> <span class="n">kind</span> <span class="ow">or</span> <span class="n">className</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">'V'</span><span class="p">):</span>
+<span class="linenos">115</span>        <span class="k">continue</span>
+<span class="linenos">116</span>    <span class="k">if</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">itemClass</span><span class="p">,</span> <span class="s1">'_is_protocol'</span><span class="p">,</span> <span class="kc">False</span><span class="p">):</span>
+<span class="linenos">117</span>        <span class="k">continue</span>    <span class="c1">#the Protocol of a user function is a type, not an item: ObjectGround... (#2664)</span>
+<span class="linenos">118</span>    <span class="n">kind</span> <span class="o">=</span> <span class="n">kind</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+<span class="linenos">119</span>    <span class="n">typeKey</span> <span class="o">=</span> <span class="n">kind</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">+</span> <span class="s1">'Type'</span>
+<span class="linenos">120</span>    <span class="n">itemType</span> <span class="o">=</span> <span class="n">className</span><span class="p">[</span><span class="nb">len</span><span class="p">(</span><span class="n">kind</span><span class="p">):]</span>
+<span class="linenos">121</span>    <span class="nf">Add</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">mbs</span><span class="p">,</span> <span class="n">item</span><span class="p">:</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">mbs</span><span class="p">,</span> <span class="s1">'Add'</span> <span class="o">+</span> <span class="n">kind</span><span class="p">)(</span><span class="n">item</span><span class="p">)</span>
+<span class="linenos">122</span>    <span class="n">defaults</span> <span class="o">=</span> <span class="n">DefaultDict</span><span class="p">(</span><span class="n">itemClass</span><span class="p">,</span> <span class="n">typeKey</span><span class="p">,</span> <span class="n">itemType</span><span class="p">)</span>
+<span class="linenos">123</span>
+<span class="linenos">124</span>    <span class="n">SC</span> <span class="o">=</span> <span class="n">exu</span><span class="o">.</span><span class="nc">SystemContainer</span><span class="p">()</span>
+<span class="linenos">125</span>    <span class="n">mbs</span> <span class="o">=</span> <span class="n">SC</span><span class="o">.</span><span class="nf">AddSystem</span><span class="p">()</span>
+<span class="linenos">126</span>    <span class="n">Record</span><span class="p">(</span><span class="n">className</span> <span class="o">+</span> <span class="s1">' defaults'</span><span class="p">,</span> <span class="p">[</span><span class="n">Outcome</span><span class="p">(</span><span class="k">lambda</span><span class="p">:</span> <span class="nf">Add</span><span class="p">(</span><span class="n">mbs</span><span class="p">,</span> <span class="nb">dict</span><span class="p">(</span><span class="n">defaults</span><span class="p">))),</span>
+<span class="linenos">127</span>                                     <span class="n">Outcome</span><span class="p">(</span><span class="k">lambda</span><span class="p">:</span> <span class="nf">Add</span><span class="p">(</span><span class="n">SC</span><span class="o">.</span><span class="nf">AddSystem</span><span class="p">(),</span> <span class="n">itemClass</span><span class="p">()))])</span>
+<span class="linenos">128</span>    <span class="c1">#the base item is created with range checks switched off, because some defaults violate their</span>
+<span class="linenos">129</span>    <span class="c1">#range (e.g. coordinate=InvalidIndex() for a UInt, #2426); a default that is rejected when written</span>
+<span class="linenos">130</span>    <span class="c1">#back with checks on is replaced by 1 in the dict and class paths, so those paths probe one</span>
+<span class="linenos">131</span>    <span class="c1">#parameter at a time instead of failing on another one.</span>
+<span class="linenos">132</span>    <span class="n">mbs</span> <span class="o">=</span> <span class="n">SC</span><span class="o">.</span><span class="nf">AddSystem</span><span class="p">()</span>
+<span class="linenos">133</span>    <span class="k">with</span> <span class="n">contextlib</span><span class="o">.</span><span class="n">redirect_stdout</span><span class="p">(</span><span class="n">io</span><span class="o">.</span><span class="n">StringIO</span><span class="p">()):</span>
+<span class="linenos">134</span>        <span class="k">try</span><span class="p">:</span>
+<span class="linenos">135</span>            <span class="n">SetRangeChecks</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
+<span class="linenos">136</span>            <span class="n">index</span> <span class="o">=</span> <span class="nf">Add</span><span class="p">(</span><span class="n">mbs</span><span class="p">,</span> <span class="nb">dict</span><span class="p">(</span><span class="n">defaults</span><span class="p">))</span>
+<span class="linenos">137</span>        <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+<span class="linenos">138</span>            <span class="k">continue</span>
+<span class="linenos">139</span>        <span class="k">finally</span><span class="p">:</span>
+<span class="linenos">140</span>            <span class="n">SetRangeChecks</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+<span class="linenos">141</span>    <span class="n">members</span> <span class="o">=</span> <span class="p">[</span><span class="n">m</span> <span class="k">for</span> <span class="n">m</span> <span class="ow">in</span> <span class="n">defaults</span> <span class="k">if</span> <span class="n">m</span> <span class="o">!=</span> <span class="n">typeKey</span><span class="p">]</span>
+<span class="linenos">142</span>    <span class="n">fixes</span> <span class="o">=</span> <span class="p">{}</span>
+<span class="linenos">143</span>    <span class="k">for</span> <span class="n">member</span> <span class="ow">in</span> <span class="n">members</span><span class="p">:</span>
+<span class="linenos">144</span>        <span class="c1">#every parameter, the deprecated names included: their warnings are expected and kept off the console (#2873)</span>
+<span class="linenos">145</span>        <span class="k">with</span> <span class="n">contextlib</span><span class="o">.</span><span class="n">redirect_stdout</span><span class="p">(</span><span class="n">io</span><span class="o">.</span><span class="n">StringIO</span><span class="p">()),</span> <span class="n">warnings</span><span class="o">.</span><span class="n">catch_warnings</span><span class="p">():</span>
+<span class="linenos">146</span>            <span class="n">warnings</span><span class="o">.</span><span class="n">simplefilter</span><span class="p">(</span><span class="s1">'ignore'</span><span class="p">,</span> <span class="ne">DeprecationWarning</span><span class="p">)</span>
+<span class="linenos">147</span>            <span class="k">try</span><span class="p">:</span>
+<span class="linenos">148</span>                <span class="nb">getattr</span><span class="p">(</span><span class="n">mbs</span><span class="p">,</span> <span class="s1">'Set'</span> <span class="o">+</span> <span class="n">kind</span> <span class="o">+</span> <span class="s1">'Parameter'</span><span class="p">)(</span><span class="n">index</span><span class="p">,</span> <span class="n">member</span><span class="p">,</span> <span class="n">defaults</span><span class="p">[</span><span class="n">member</span><span class="p">])</span>
+<span class="linenos">149</span>            <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+<span class="linenos">150</span>                <span class="k">try</span><span class="p">:</span>
+<span class="linenos">151</span>                    <span class="nb">getattr</span><span class="p">(</span><span class="n">mbs</span><span class="p">,</span> <span class="s1">'Set'</span> <span class="o">+</span> <span class="n">kind</span> <span class="o">+</span> <span class="s1">'Parameter'</span><span class="p">)(</span><span class="n">index</span><span class="p">,</span> <span class="n">member</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="linenos">152</span>                    <span class="n">fixes</span><span class="p">[</span><span class="n">member</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
+<span class="linenos">153</span>                <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+<span class="linenos">154</span>                    <span class="k">pass</span>
+<span class="linenos">155</span>    <span class="n">defaults</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">fixes</span><span class="p">)</span>
+<span class="linenos">156</span>    <span class="n">classFixes</span> <span class="o">=</span> <span class="p">{</span><span class="n">m</span><span class="p">:</span> <span class="n">v</span> <span class="k">for</span> <span class="n">m</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">fixes</span><span class="o">.</span><span class="n">items</span><span class="p">()</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">m</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">'V'</span><span class="p">)}</span>
+<span class="linenos">157</span>
+<span class="linenos">158</span>    <span class="k">for</span> <span class="n">member</span> <span class="ow">in</span> <span class="n">members</span><span class="p">:</span>
+<span class="linenos">159</span>        <span class="n">GetParameter</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">mbs</span><span class="p">,</span> <span class="n">i</span><span class="p">:</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">mbs</span><span class="p">,</span> <span class="s1">'Get'</span> <span class="o">+</span> <span class="n">kind</span> <span class="o">+</span> <span class="s1">'Parameter'</span><span class="p">)(</span><span class="n">i</span><span class="p">,</span> <span class="n">member</span><span class="p">)</span>
+<span class="linenos">160</span>        <span class="c1">#left out of the dict: the default is kept ('str=default'), a must-be-given parameter raises</span>
+<span class="linenos">161</span>        <span class="k">def</span><span class="w"> </span><span class="nf">RunOmit</span><span class="p">():</span>
+<span class="linenos">162</span>            <span class="n">mbs2</span> <span class="o">=</span> <span class="n">SC</span><span class="o">.</span><span class="nf">AddSystem</span><span class="p">()</span>
+<span class="linenos">163</span>            <span class="n">value</span> <span class="o">=</span> <span class="n">Describe</span><span class="p">(</span><span class="n">GetParameter</span><span class="p">(</span><span class="n">mbs2</span><span class="p">,</span> <span class="nf">Add</span><span class="p">(</span><span class="n">mbs2</span><span class="p">,</span> <span class="p">{</span><span class="n">m</span><span class="p">:</span> <span class="n">v</span> <span class="k">for</span> <span class="n">m</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">defaults</span><span class="o">.</span><span class="n">items</span><span class="p">()</span> <span class="k">if</span> <span class="n">m</span> <span class="o">!=</span> <span class="n">member</span><span class="p">})))</span>
+<span class="linenos">164</span>            <span class="n">mbs3</span> <span class="o">=</span> <span class="n">SC</span><span class="o">.</span><span class="nf">AddSystem</span><span class="p">()</span>
+<span class="linenos">165</span>            <span class="k">return</span> <span class="s1">'default'</span> <span class="k">if</span> <span class="n">value</span> <span class="o">==</span> <span class="n">Describe</span><span class="p">(</span><span class="n">GetParameter</span><span class="p">(</span><span class="n">mbs3</span><span class="p">,</span> <span class="nf">Add</span><span class="p">(</span><span class="n">mbs3</span><span class="p">,</span> <span class="nb">dict</span><span class="p">(</span><span class="n">defaults</span><span class="p">))))</span> <span class="k">else</span> <span class="n">value</span>
+<span class="linenos">166</span>        <span class="n">Record</span><span class="p">(</span><span class="n">className</span> <span class="o">+</span> <span class="s1">'.'</span> <span class="o">+</span> <span class="n">member</span> <span class="o">+</span> <span class="s1">' omit'</span><span class="p">,</span> <span class="p">[</span><span class="n">Outcome</span><span class="p">(</span><span class="n">RunOmit</span><span class="p">)])</span>
+<span class="linenos">167</span>        <span class="k">for</span> <span class="n">path</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">'set'</span><span class="p">,</span> <span class="s1">'dict'</span><span class="p">,</span> <span class="s1">'class'</span><span class="p">]:</span>
+<span class="linenos">168</span>            <span class="n">row</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="linenos">169</span>            <span class="k">for</span> <span class="n">probeName</span><span class="p">,</span> <span class="n">probe</span> <span class="ow">in</span> <span class="n">probes</span><span class="p">:</span>
+<span class="linenos">170</span>                <span class="k">if</span> <span class="n">path</span> <span class="o">==</span> <span class="s1">'set'</span><span class="p">:</span>
+<span class="linenos">171</span>                    <span class="k">def</span><span class="w"> </span><span class="nf">Run</span><span class="p">():</span>
+<span class="linenos">172</span>                        <span class="nb">getattr</span><span class="p">(</span><span class="n">mbs</span><span class="p">,</span> <span class="s1">'Set'</span> <span class="o">+</span> <span class="n">kind</span> <span class="o">+</span> <span class="s1">'Parameter'</span><span class="p">)(</span><span class="n">index</span><span class="p">,</span> <span class="n">member</span><span class="p">,</span> <span class="n">probe</span><span class="p">)</span>
+<span class="linenos">173</span>                        <span class="k">return</span> <span class="n">GetParameter</span><span class="p">(</span><span class="n">mbs</span><span class="p">,</span> <span class="n">index</span><span class="p">)</span>
+<span class="linenos">174</span>                <span class="k">elif</span> <span class="n">path</span> <span class="o">==</span> <span class="s1">'dict'</span><span class="p">:</span>
+<span class="linenos">175</span>                    <span class="k">def</span><span class="w"> </span><span class="nf">Run</span><span class="p">():</span>
+<span class="linenos">176</span>                        <span class="n">mbs2</span> <span class="o">=</span> <span class="n">SC</span><span class="o">.</span><span class="nf">AddSystem</span><span class="p">()</span>
+<span class="linenos">177</span>                        <span class="k">return</span> <span class="n">GetParameter</span><span class="p">(</span><span class="n">mbs2</span><span class="p">,</span> <span class="nf">Add</span><span class="p">(</span><span class="n">mbs2</span><span class="p">,</span> <span class="nb">dict</span><span class="p">(</span><span class="n">defaults</span><span class="p">,</span> <span class="o">**</span><span class="p">{</span><span class="n">member</span><span class="p">:</span> <span class="n">probe</span><span class="p">})))</span>
+<span class="linenos">178</span>                <span class="k">else</span><span class="p">:</span>
+<span class="linenos">179</span>                    <span class="k">def</span><span class="w"> </span><span class="nf">Run</span><span class="p">():</span>
+<span class="linenos">180</span>                        <span class="k">if</span> <span class="n">member</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="s1">'V'</span> <span class="ow">and</span> <span class="n">member</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span> <span class="ow">in</span> <span class="n">inspect</span><span class="o">.</span><span class="n">signature</span><span class="p">(</span><span class="n">itemClass</span><span class="p">)</span><span class="o">.</span><span class="n">parameters</span><span class="p">[</span><span class="s1">'visualization'</span><span class="p">]</span><span class="o">.</span><span class="n">default</span><span class="p">:</span>
+<span class="linenos">181</span>                            <span class="n">visualization</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">inspect</span><span class="o">.</span><span class="n">signature</span><span class="p">(</span><span class="n">itemClass</span><span class="p">)</span><span class="o">.</span><span class="n">parameters</span><span class="p">[</span><span class="s1">'visualization'</span><span class="p">]</span><span class="o">.</span><span class="n">default</span><span class="p">)</span>
+<span class="linenos">182</span>                            <span class="n">visualization</span><span class="p">[</span><span class="n">member</span><span class="p">[</span><span class="mi">1</span><span class="p">:]]</span> <span class="o">=</span> <span class="n">probe</span>
+<span class="linenos">183</span>                            <span class="n">item</span> <span class="o">=</span> <span class="n">itemClass</span><span class="p">(</span><span class="n">visualization</span><span class="o">=</span><span class="n">visualization</span><span class="p">,</span> <span class="o">**</span><span class="n">classFixes</span><span class="p">)</span>
+<span class="linenos">184</span>                        <span class="k">else</span><span class="p">:</span>
+<span class="linenos">185</span>                            <span class="n">item</span> <span class="o">=</span> <span class="n">itemClass</span><span class="p">(</span><span class="o">**</span><span class="nb">dict</span><span class="p">(</span><span class="n">classFixes</span><span class="p">,</span> <span class="o">**</span><span class="p">{</span><span class="n">member</span><span class="p">:</span> <span class="n">probe</span><span class="p">}))</span>
+<span class="linenos">186</span>                        <span class="n">mbs2</span> <span class="o">=</span> <span class="n">SC</span><span class="o">.</span><span class="nf">AddSystem</span><span class="p">()</span>
+<span class="linenos">187</span>                        <span class="k">return</span> <span class="n">GetParameter</span><span class="p">(</span><span class="n">mbs2</span><span class="p">,</span> <span class="nf">Add</span><span class="p">(</span><span class="n">mbs2</span><span class="p">,</span> <span class="n">item</span><span class="p">))</span>
+<span class="linenos">188</span>                <span class="n">row</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">Outcome</span><span class="p">(</span><span class="n">Run</span><span class="p">))</span>
+<span class="linenos">189</span>            <span class="n">Record</span><span class="p">(</span><span class="n">className</span> <span class="o">+</span> <span class="s1">'.'</span> <span class="o">+</span> <span class="n">member</span> <span class="o">+</span> <span class="s1">' '</span> <span class="o">+</span> <span class="n">path</span><span class="p">,</span> <span class="n">row</span><span class="p">)</span>
+<span class="linenos">190</span>    <span class="n">SC</span><span class="o">.</span><span class="nf">Reset</span><span class="p">()</span>
+<span class="linenos">191</span>
+<span class="linenos">192</span><span class="c1">#++++++++++++++++++++++++++++++++++++++++++++++++++</span>
+<span class="linenos">193</span><span class="c1">#structures: attribute set on every leaf of simulationSettings and visualizationSettings</span>
+<span class="linenos">194</span><span class="c1">#the leaves are taken from GetDictionary(), which also skips the deprecated members</span>
+<span class="linenos">195</span><span class="k">def</span><span class="w"> </span><span class="nf">Leaves</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">dictionary</span><span class="p">,</span> <span class="n">path</span><span class="p">):</span>
+<span class="linenos">196</span>    <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">dictionary</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+<span class="linenos">197</span>        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
+<span class="linenos">198</span>            <span class="k">yield from</span> <span class="n">Leaves</span><span class="p">(</span><span class="nb">getattr</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">name</span><span class="p">),</span> <span class="n">value</span><span class="p">,</span> <span class="n">path</span> <span class="o">+</span> <span class="s1">'.'</span> <span class="o">+</span> <span class="n">name</span><span class="p">)</span>
+<span class="linenos">199</span>        <span class="k">else</span><span class="p">:</span>
+<span class="linenos">200</span>            <span class="k">yield</span> <span class="n">obj</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">path</span> <span class="o">+</span> <span class="s1">'.'</span> <span class="o">+</span> <span class="n">name</span><span class="p">,</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
+<span class="linenos">201</span>
+<span class="linenos">202</span><span class="n">SC</span> <span class="o">=</span> <span class="n">exu</span><span class="o">.</span><span class="nc">SystemContainer</span><span class="p">()</span>
+<span class="linenos">203</span><span class="k">for</span> <span class="n">rootName</span><span class="p">,</span> <span class="n">root</span> <span class="ow">in</span> <span class="p">[(</span><span class="s1">'SimulationSettings'</span><span class="p">,</span> <span class="n">exu</span><span class="o">.</span><span class="nc">SimulationSettings</span><span class="p">()),</span> <span class="p">(</span><span class="s1">'VisualizationSettings'</span><span class="p">,</span> <span class="n">SC</span><span class="o">.</span><span class="nf">visualizationSettings</span><span class="p">)]:</span>
+<span class="linenos">204</span>    <span class="n">saved</span> <span class="o">=</span> <span class="n">root</span><span class="o">.</span><span class="nf">GetDictionary</span><span class="p">()</span>
+<span class="linenos">205</span>    <span class="k">for</span> <span class="n">owner</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">path</span><span class="p">,</span> <span class="n">original</span> <span class="ow">in</span> <span class="nb">list</span><span class="p">(</span><span class="n">Leaves</span><span class="p">(</span><span class="n">root</span><span class="p">,</span> <span class="n">saved</span><span class="p">,</span> <span class="n">rootName</span><span class="p">)):</span>
+<span class="linenos">206</span>        <span class="n">keys</span> <span class="o">=</span> <span class="n">path</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">'.'</span><span class="p">)[</span><span class="mi">1</span><span class="p">:]</span>
+<span class="linenos">207</span>        <span class="k">for</span> <span class="n">access</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">'attribute'</span><span class="p">,</span> <span class="s1">'dict'</span><span class="p">]:</span>
+<span class="linenos">208</span>            <span class="n">row</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="linenos">209</span>            <span class="k">for</span> <span class="n">probeName</span><span class="p">,</span> <span class="n">probe</span> <span class="ow">in</span> <span class="n">probes</span><span class="p">:</span>
+<span class="linenos">210</span>                <span class="k">def</span><span class="w"> </span><span class="nf">Run</span><span class="p">():</span>
+<span class="linenos">211</span>                    <span class="k">if</span> <span class="n">access</span> <span class="o">==</span> <span class="s1">'attribute'</span><span class="p">:</span>
+<span class="linenos">212</span>                        <span class="nb">setattr</span><span class="p">(</span><span class="n">owner</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">probe</span><span class="p">)</span>
+<span class="linenos">213</span>                    <span class="k">else</span><span class="p">:</span> <span class="c1">#SetDictionary with this leaf replaced</span>
+<span class="linenos">214</span>                        <span class="n">d</span> <span class="o">=</span> <span class="n">root</span><span class="o">.</span><span class="nf">GetDictionary</span><span class="p">()</span>
+<span class="linenos">215</span>                        <span class="n">sub</span> <span class="o">=</span> <span class="n">d</span>
+<span class="linenos">216</span>                        <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">keys</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]:</span>
+<span class="linenos">217</span>                            <span class="n">sub</span> <span class="o">=</span> <span class="n">sub</span><span class="p">[</span><span class="n">key</span><span class="p">]</span>
+<span class="linenos">218</span>                        <span class="n">sub</span><span class="p">[</span><span class="n">keys</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]]</span> <span class="o">=</span> <span class="n">probe</span>
+<span class="linenos">219</span>                        <span class="n">root</span><span class="o">.</span><span class="nf">SetDictionary</span><span class="p">(</span><span class="n">d</span><span class="p">)</span>
+<span class="linenos">220</span>                    <span class="k">return</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">owner</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
+<span class="linenos">221</span>                <span class="n">row</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">Outcome</span><span class="p">(</span><span class="n">Run</span><span class="p">))</span>
+<span class="linenos">222</span>                <span class="k">with</span> <span class="n">contextlib</span><span class="o">.</span><span class="n">redirect_stdout</span><span class="p">(</span><span class="n">io</span><span class="o">.</span><span class="n">StringIO</span><span class="p">()):</span>
+<span class="linenos">223</span>                    <span class="n">root</span><span class="o">.</span><span class="nf">SetDictionary</span><span class="p">(</span><span class="n">saved</span><span class="p">)</span> <span class="c1">#restore everything, whatever the probe left behind</span>
+<span class="linenos">224</span>            <span class="n">Record</span><span class="p">(</span><span class="n">path</span> <span class="o">+</span> <span class="s1">' '</span> <span class="o">+</span> <span class="n">access</span><span class="p">,</span> <span class="n">row</span><span class="p">)</span>
+<span class="linenos">225</span>
+<span class="linenos">226</span><span class="c1">#++++++++++++++++++++++++++++++++++++++++++++++++++</span>
+<span class="linenos">227</span><span class="n">inspect</span><span class="o">.</span><span class="n">getframeinfo</span> <span class="o">=</span> <span class="n">inspectGetFrameInfo</span>
+<span class="linenos">228</span><span class="n">exu</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">printToConsole</span> <span class="o">=</span> <span class="n">printToConsole</span>
+<span class="linenos">229</span><span class="n">exu</span><span class="o">.</span><span class="n">special</span><span class="o">.</span><span class="n">exceptions</span><span class="o">.</span><span class="n">writeErrorsToLogFile</span> <span class="o">=</span> <span class="n">writeErrorsToLogFile</span>
+<span class="linenos">230</span>
+<span class="linenos">231</span><span class="c1">#++++++++++++++++++++++++++++++++++++++++++++++++++</span>
+<span class="linenos">232</span><span class="c1">#text: one block per distinct outcome row, followed by the parameters that share it, one line</span>
+<span class="linenos">233</span><span class="c1">#per owner: '  ObjectMassPoint: mass(dict,set) nodeNumber(class)'</span>
+<span class="linenos">234</span><span class="k">def</span><span class="w"> </span><span class="nf">SplitKey</span><span class="p">(</span><span class="n">key</span><span class="p">):</span> <span class="c1">#'ObjectMassPoint.mass set' -&gt; owner, member, path</span>
+<span class="linenos">235</span>    <span class="n">name</span><span class="p">,</span> <span class="n">path</span> <span class="o">=</span> <span class="n">key</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">' '</span><span class="p">)</span>
+<span class="linenos">236</span>    <span class="k">if</span> <span class="s1">'.'</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">name</span><span class="p">:</span> <span class="c1">#'ObjectMassPoint defaults'</span>
+<span class="linenos">237</span>        <span class="k">return</span> <span class="n">name</span><span class="p">,</span> <span class="s1">''</span><span class="p">,</span> <span class="n">path</span>
+<span class="linenos">238</span>    <span class="n">owner</span><span class="p">,</span> <span class="n">member</span> <span class="o">=</span> <span class="n">name</span><span class="o">.</span><span class="n">rsplit</span><span class="p">(</span><span class="s1">'.'</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="linenos">239</span>    <span class="k">return</span> <span class="n">owner</span><span class="p">,</span> <span class="n">member</span><span class="p">,</span> <span class="n">path</span>
+<span class="linenos">240</span>
+<span class="linenos">241</span><span class="n">lines</span> <span class="o">=</span> <span class="p">[</span><span class="s1">'#probes: '</span> <span class="o">+</span> <span class="s1">' '</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">p</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">probes</span><span class="p">)]</span>
+<span class="linenos">242</span><span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">records</span><span class="p">):</span>
+<span class="linenos">243</span>    <span class="n">lines</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">''</span><span class="p">)</span>
+<span class="linenos">244</span>    <span class="n">lines</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">'outcome: '</span> <span class="o">+</span> <span class="n">row</span><span class="p">)</span>
+<span class="linenos">245</span>    <span class="n">owners</span> <span class="o">=</span> <span class="p">{}</span>
+<span class="linenos">246</span>    <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">records</span><span class="p">[</span><span class="n">row</span><span class="p">]:</span>
+<span class="linenos">247</span>        <span class="n">owner</span><span class="p">,</span> <span class="n">member</span><span class="p">,</span> <span class="n">path</span> <span class="o">=</span> <span class="n">SplitKey</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
+<span class="linenos">248</span>        <span class="n">owners</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="n">owner</span><span class="p">,</span> <span class="p">{})</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="n">member</span><span class="p">,</span> <span class="p">[])</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
+<span class="linenos">249</span>    <span class="k">for</span> <span class="n">owner</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">owners</span><span class="p">):</span>
+<span class="linenos">250</span>        <span class="n">lines</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">'  '</span> <span class="o">+</span> <span class="n">owner</span> <span class="o">+</span> <span class="s1">': '</span> <span class="o">+</span> <span class="s1">' '</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">member</span> <span class="o">+</span> <span class="s1">'('</span> <span class="o">+</span> <span class="s1">','</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">sorted</span><span class="p">(</span><span class="n">paths</span><span class="p">))</span> <span class="o">+</span> <span class="s1">')'</span>
+<span class="linenos">251</span>                                                     <span class="k">for</span> <span class="n">member</span><span class="p">,</span> <span class="n">paths</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">owners</span><span class="p">[</span><span class="n">owner</span><span class="p">]</span><span class="o">.</span><span class="n">items</span><span class="p">())))</span>
+<span class="linenos">252</span><span class="n">text</span> <span class="o">=</span> <span class="s1">'</span><span class="se">\n</span><span class="s1">'</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">lines</span><span class="p">)</span> <span class="o">+</span> <span class="s1">'</span><span class="se">\n</span><span class="s1">'</span>
+<span class="linenos">253</span>
+<span class="linenos">254</span><span class="n">numberOfDifferences</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="linenos">255</span><span class="k">if</span> <span class="n">recordReference</span><span class="p">:</span>
+<span class="linenos">256</span>    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">referenceFile</span><span class="p">,</span> <span class="s1">'w'</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s1">'utf8'</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+<span class="linenos">257</span>        <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">text</span><span class="p">)</span>
+<span class="linenos">258</span>    <span class="n">exu</span><span class="o">.</span><span class="nf">Print</span><span class="p">(</span><span class="s1">'parameterConversionTest: reference written, '</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">records</span><span class="p">))</span> <span class="o">+</span> <span class="s1">' outcome rows'</span><span class="p">)</span>
+<span class="linenos">259</span><span class="k">else</span><span class="p">:</span>
+<span class="linenos">260</span>    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">referenceFile</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s1">'utf8'</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+<span class="linenos">261</span>        <span class="n">reference</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+<span class="linenos">262</span>    <span class="k">def</span><span class="w"> </span><span class="nf">Parse</span><span class="p">(</span><span class="n">t</span><span class="p">):</span>
+<span class="linenos">263</span>        <span class="n">outcome</span> <span class="o">=</span> <span class="p">{}</span>
+<span class="linenos">264</span>        <span class="n">row</span> <span class="o">=</span> <span class="s1">''</span>
+<span class="linenos">265</span>        <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">t</span><span class="o">.</span><span class="n">splitlines</span><span class="p">():</span>
+<span class="linenos">266</span>            <span class="k">if</span> <span class="n">line</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">'outcome: '</span><span class="p">):</span>
+<span class="linenos">267</span>                <span class="n">row</span> <span class="o">=</span> <span class="n">line</span><span class="p">[</span><span class="nb">len</span><span class="p">(</span><span class="s1">'outcome: '</span><span class="p">):]</span>
+<span class="linenos">268</span>            <span class="k">elif</span> <span class="n">line</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">'  '</span><span class="p">):</span>
+<span class="linenos">269</span>                <span class="n">owner</span><span class="p">,</span> <span class="n">members</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">': '</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="linenos">270</span>                <span class="k">for</span> <span class="n">entry</span> <span class="ow">in</span> <span class="n">members</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">' '</span><span class="p">):</span>
+<span class="linenos">271</span>                    <span class="n">member</span><span class="p">,</span> <span class="n">paths</span> <span class="o">=</span> <span class="n">entry</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">'('</span><span class="p">)</span>
+<span class="linenos">272</span>                    <span class="k">for</span> <span class="n">path</span> <span class="ow">in</span> <span class="n">paths</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">','</span><span class="p">):</span>
+<span class="linenos">273</span>                        <span class="n">outcome</span><span class="p">[(</span><span class="n">owner</span> <span class="o">+</span> <span class="s1">'.'</span> <span class="o">+</span> <span class="n">member</span> <span class="k">if</span> <span class="n">member</span> <span class="k">else</span> <span class="n">owner</span><span class="p">)</span> <span class="o">+</span> <span class="s1">' '</span> <span class="o">+</span> <span class="n">path</span><span class="p">]</span> <span class="o">=</span> <span class="n">row</span>
+<span class="linenos">274</span>        <span class="k">return</span> <span class="n">outcome</span>
+<span class="linenos">275</span>    <span class="n">new</span><span class="p">,</span> <span class="n">old</span> <span class="o">=</span> <span class="n">Parse</span><span class="p">(</span><span class="n">text</span><span class="p">),</span> <span class="n">Parse</span><span class="p">(</span><span class="n">reference</span><span class="p">)</span>
+<span class="linenos">276</span>    <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">new</span><span class="p">)</span> <span class="o">|</span> <span class="nb">set</span><span class="p">(</span><span class="n">old</span><span class="p">)):</span>
+<span class="linenos">277</span>        <span class="k">if</span> <span class="n">new</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">key</span><span class="p">)</span> <span class="o">!=</span> <span class="n">old</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">key</span><span class="p">):</span>
+<span class="linenos">278</span>            <span class="n">numberOfDifferences</span> <span class="o">+=</span> <span class="mi">1</span>
+<span class="linenos">279</span>            <span class="k">if</span> <span class="n">numberOfDifferences</span> <span class="o">&lt;=</span> <span class="mi">20</span><span class="p">:</span>
+<span class="linenos">280</span>                <span class="n">exu</span><span class="o">.</span><span class="nf">Print</span><span class="p">(</span><span class="s1">'parameterConversionTest: '</span> <span class="o">+</span> <span class="n">key</span> <span class="o">+</span> <span class="s1">'</span><span class="se">\n</span><span class="s1">  reference: '</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">old</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">key</span><span class="p">))</span> <span class="o">+</span> <span class="s1">'</span><span class="se">\n</span><span class="s1">  now:       '</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">new</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">key</span><span class="p">)))</span>
+<span class="linenos">281</span>    <span class="n">exu</span><span class="o">.</span><span class="nf">Print</span><span class="p">(</span><span class="s1">'parameterConversionTest: '</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">new</span><span class="p">))</span> <span class="o">+</span> <span class="s1">' parameter paths, '</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">numberOfDifferences</span><span class="p">)</span> <span class="o">+</span> <span class="s1">' differences'</span><span class="p">)</span>
+<span class="linenos">282</span>
+<span class="linenos">283</span><span class="n">exu</span><span class="o">.</span><span class="n">sys</span><span class="p">[</span><span class="s1">'testResult'</span><span class="p">]</span> <span class="o">=</span> <span class="n">numberOfDifferences</span>
+</pre></div>
+</div>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="pendulumFriction.html" class="btn btn-neutral float-left" title="pendulumFriction.py" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="typeInformationTest.html" class="btn btn-neutral float-right" title="typeInformationTest.py" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

@@ -1,0 +1,553 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Data structures &mdash; Exudyn1.13.3 1.13.3 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=3ee1c6c6" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/rtd_sphinx_search.min.css" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/custom.css?v=e2783f0e" />
+
+  
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=b8a3e558"></script>
+      <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../../_static/copybutton.js?v=f281be69"></script>
+      <script src="../../../_static/js/rtd_search_config.js"></script>
+      <script src="../../../_static/js/rtd_sphinx_search.min.js"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+    <link rel="next" title="Type definitions" href="TypeDefinitions.html" />
+    <link rel="prev" title="GeneralContact" href="GeneralContact.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            Exudyn1.13.3
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Exudyn User Manual</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../../README.html">Exudyn</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../manual/gettingStarted.html">Installation and getting started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../manual/introduction.html">Overview on Exudyn</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../manual/introductionBasics.html">Exudyn basics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../manual/tutorial.html">Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../manual/GUI.html">Renderer, graphics and visualization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../manual/performanceErrors.html">Performance, errors and solver failures</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../manual/introductionAdvanced.html">Advanced topics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../manual/notation.html">Notation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../manual/theory.html">Theory and formulations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../manual/solver.html">Solvers</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="cInterfaceIndex.html">Python-C++ command interface</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="GeneralInformation.html">General information</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Exudyn.html">Exudyn module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="SystemContainer.html">SystemContainer</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Renderer.html">Renderer</a></li>
+<li class="toctree-l2"><a class="reference internal" href="MainSystem.html">MainSystem</a></li>
+<li class="toctree-l2"><a class="reference internal" href="SystemData.html">SystemData</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Symbolic.html">Symbolic</a></li>
+<li class="toctree-l2"><a class="reference internal" href="GeneralContact.html">GeneralContact</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Data structures</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#matrixcontainer">MatrixContainer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#ht">HT</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#graphicsmateriallist">GraphicsMaterialList</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#vector3dlist">Vector3DList</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#vector2dlist">Vector2DList</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#vector6dlist">Vector6DList</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#matrix3dlist">Matrix3DList</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#matrix6dlist">Matrix6DList</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="TypeDefinitions.html">Type definitions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="EnvironmentVariables.html">Environment variables</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Reference Manual</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../items/itemsIndex.html">Items reference manual</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../pythonUtilities/utilitiesIndex.html">Python Utility Functions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../structures/structuresIndex.html">Structures and Settings</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../references.html">References</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Developer documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../dev/README.html">Exudyn developer documentation</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">How-to notes</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../howTo/condaEnvironments.html">Conda environments for Exudyn</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../howTo/sphinxDocs.html">Building the documentation</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Examples, models and issues</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../examples/examplesIndex.html">Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../testModels/testModelsIndex.html">TestModels</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../abbreviations.html">List of Abbreviations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../manual/revisions.html">Revisions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../CHANGELOG.html">Changelog</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../trackerlog.html">Issue tracker</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">Exudyn1.13.3</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="cInterfaceIndex.html">Python-C++ command interface</a></li>
+      <li class="breadcrumb-item active">Data structures</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../../_sources/docs/generated/cInterface/DataStructures.md.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <!-- GENERATED by tools/generators/pybindEmitter.py from definitions/ - do not edit -->
+<section class="tex2jax_ignore mathjax_ignore" id="data-structures">
+<span id="sec-cinterface-datastructures"></span><h1>Data structures<a class="headerlink" href="#data-structures" title="Link to this heading"></a></h1>
+<p>This section describes a set of special data structures which are used in the Python-C++ interface,
+such as a MatrixContainer for dense/sparse matrices or a list of 3D vectors.
+Note that there are many native data types, such as lists, dicts and numpy arrays (e.g., 3D vectors),
+which are not described here as they are native to Pybind11, but can be passed as arguments when appropriate.</p>
+<section id="matrixcontainer">
+<span id="sec-matrixcontainer"></span><h2>MatrixContainer<a class="headerlink" href="#matrixcontainer" title="Link to this heading"></a></h2>
+<p>The MatrixContainer is a versatile representation for dense and sparse matrices. NOTE: if the MatrixContainer is constructed from a numpy array or a list of lists, both representing a dense matrix, it will go into dense mode; if it is initialized with a scipy sparse csr matrix, it will go into sparse mode. Examples:</p>
+<p>Example notebook <code class="docutils literal notranslate"><span class="pre">python/Notebooks/reference/matrixContainer.ipynb</span></code>; it needs scipy:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1">#Create empty MatrixContainer:</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">scipy.sparse</span><span class="w"> </span><span class="kn">import</span> <span class="n">csr_matrix</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">exudyn</span><span class="w"> </span><span class="kn">import</span> <span class="nc">MatrixContainer</span>
+<span class="n">mc</span> <span class="o">=</span> <span class="nc">MatrixContainer</span><span class="p">()</span> <span class="c1">#empty matrix, dense mode</span>
+
+<span class="c1">#Create MatrixContainer with dense matrix:</span>
+<span class="c1">#container can be initialized with a dense matrix, using list of lists or a numpy array, e.g.:</span>
+<span class="n">matrix</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">eye</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
+<span class="c1">#stores matrices internally in dense mode:</span>
+<span class="n">mcDense1</span> <span class="o">=</span> <span class="nc">MatrixContainer</span><span class="p">(</span><span class="n">matrix</span><span class="p">)</span>
+<span class="n">mcDense2</span> <span class="o">=</span> <span class="nc">MatrixContainer</span><span class="p">([[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">],[</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">]])</span>
+
+<span class="c1">#container can be initialized with a scipy csr sparse matrix, then being stored as sparse matrix</span>
+<span class="n">mcSparse</span> <span class="o">=</span> <span class="nc">MatrixContainer</span><span class="p">(</span><span class="n">csr_matrix</span><span class="p">(</span><span class="n">matrix</span><span class="p">))</span>
+
+<span class="c1">#Set with dense pyArray (a numpy array):</span>
+<span class="n">pyArray</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">matrix</span><span class="p">)</span>
+<span class="n">mc</span><span class="o">.</span><span class="nf">SetWithDenseMatrix</span><span class="p">(</span><span class="n">pyArray</span><span class="p">,</span> <span class="n">useDenseMatrix</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span>
+
+<span class="c1">#Set empty matrix:</span>
+<span class="n">mc</span><span class="o">.</span><span class="nf">SetWithDenseMatrix</span><span class="p">([[]],</span> <span class="n">useDenseMatrix</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span>
+
+<span class="c1">#Set with list of lists, stored as sparse matrix:</span>
+<span class="n">mc</span><span class="o">.</span><span class="nf">SetWithDenseMatrix</span><span class="p">([[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">],[</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">]],</span> <span class="n">useDenseMatrix</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span>
+
+<span class="c1">#Set with sparse triplets (list of lists or numpy array):</span>
+<span class="n">mc</span><span class="o">.</span><span class="nf">SetWithSparseMatrix</span><span class="p">([[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mf">13.3</span><span class="p">],[</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mf">4.2</span><span class="p">],[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mf">42.</span><span class="p">]],</span>
+                       <span class="n">numberOfRows</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">numberOfColumns</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span>
+                       <span class="n">useDenseMatrix</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="n">mc</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>[[13.3  0.   0. ]
+ [ 0.   4.2 42. ]]
+</pre></div>
+</div>
+<p>With a scipy matrix, and triplets added later:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1">#Set with scipy matrix:</span>
+<span class="c1">#WARNING: only use csr_matrix</span>
+<span class="c1">#         csc_matrix would basically run, but gives the transposed!!!</span>
+<span class="n">spmat</span> <span class="o">=</span> <span class="n">csr_matrix</span><span class="p">(</span><span class="n">matrix</span><span class="p">)</span>
+<span class="n">mc</span><span class="o">.</span><span class="nf">SetWithSparseMatrix</span><span class="p">(</span><span class="n">spmat</span><span class="p">)</span> <span class="c1">#takes rows and column format automatically</span>
+
+<span class="c1">#initialize and add triplets later on</span>
+<span class="n">mc</span><span class="o">.</span><span class="nf">Initialize</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="n">useDenseMatrix</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="n">mc</span><span class="o">.</span><span class="nf">AddSparseMatrix</span><span class="p">(</span><span class="n">spmat</span><span class="p">,</span> <span class="n">factor</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="c1">#can also add smaller matrix</span>
+<span class="n">mc</span><span class="o">.</span><span class="nf">AddSparseMatrix</span><span class="p">(</span><span class="n">csr_matrix</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">eye</span><span class="p">(</span><span class="mi">2</span><span class="p">)),</span> <span class="n">factor</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">'mc='</span><span class="p">,</span><span class="n">mc</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>mc= {'numberOfRows': 3, 'numberOfColumns': 3, 'triplets': array([[0. , 0. , 1. ],
+       [1. , 1. , 1. ],
+       [2. , 2. , 1. ],
+       [0. , 0. , 0.5],
+       [1. , 1. , 0.5]])}
+</pre></div>
+</div>
+<p>The class <strong>MatrixContainer</strong> has the following <strong>functions and structures</strong>:</p>
+<ul class="simple">
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">Initialize(numberOfRows,</span> <span class="pre">numberOfColumns,</span> <span class="pre">useDenseMatrix</span> <span class="pre">=</span> <span class="pre">True)</span></code></strong>: initialize MatrixContainer with number of rows and columns and set dense/sparse mode</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">SetWithDenseMatrix(pyArray,</span> <span class="pre">useDenseMatrix</span> <span class="pre">=</span> <span class="pre">False,</span> <span class="pre">factor</span> <span class="pre">=</span> <span class="pre">1.)</span></code></strong>: set MatrixContainer with dense numpy array of size (n x m); array (=matrix) contains values and matrix size information; if useDenseMatrix=True, matrix will be stored internally as dense matrix, otherwise it will be converted and stored as sparse matrix (which may speed up computations for larger problems); pyArray is multiplied with given factor</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">SetWithSparseMatrix(sparseMatrix,</span> <span class="pre">numberOfRows</span> <span class="pre">=</span> <span class="pre">invalid</span> <span class="pre">(-1),</span> <span class="pre">numberOfColumns</span> <span class="pre">=</span> <span class="pre">invalid</span> <span class="pre">(-1),</span> <span class="pre">useDenseMatrix</span> <span class="pre">=</span> <span class="pre">False,</span> <span class="pre">factor</span> <span class="pre">=</span> <span class="pre">1.)</span></code></strong>: set with scipy sparse csr_matrix (NOT: csc_matrix!) or with internal sparse triplet format (denoted as CSR): ‘sparseMatrix’ either contains a scipy matrix create with csr_matrix or a list of lists of sparse triplets (row, col, value) or the list of lists converted into numpy array; numberOfRowsInit and numberOfColumnsInit denote the size of the matrices, which are ignored in case of a scipy sparse matrix; if useDenseMatrix=True, matrix will be converted and stored internally as dense matrix, otherwise it will be stored as sparse matrix triplets; the values of sparseMatrix are multiplied with the given factor before storing</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">AddSparseMatrix(sparseMatrix,</span> <span class="pre">factor</span> <span class="pre">=</span> <span class="pre">1.)</span></code></strong>: add scipy sparse csr_matrix with factor to already initilized MatrixContainer; sparseMatrix must contain according scipy csr format, otherwise the behavior is undefined! This function allows to efficiently add submatrices to the MatrixContainer</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">GetPythonObject()</span></code></strong>: convert MatrixContainer to numpy array (dense) or dictionary (sparse): containing nr. of rows, nr. of columns, numpy matrix with sparse triplets</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">Convert2DenseMatrix()</span></code></strong>: convert MatrixContainer to dense numpy array (SLOW and may fail for too large sparse matrices)</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">UseDenseMatrix()</span></code></strong>: returns True if dense matrix is used, otherwise False</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">SetAllZero()</span></code></strong>: Set all values to zero; dense mode: set all matrix entries to zero (slow); sparse mode: set number of triplets to zero (fast)</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">SetWithSparseMatrixCSR(numberOfRowsInit,</span> <span class="pre">numberOfColumnsInit,</span> <span class="pre">pyArrayCSR,</span> <span class="pre">useDenseMatrix</span> <span class="pre">=</span> <span class="pre">False,</span> <span class="pre">factor</span> <span class="pre">=</span> <span class="pre">1.)</span></code></strong>: DEPRECATED: set with sparse CSR matrix format: numpy array ‘pyArrayCSR’ contains sparse triplet (row, col, value) per row; numberOfRows and numberOfColumns given extra; if useDenseMatrix=True, matrix will be converted and stored internally as dense matrix, otherwise it will be stored as sparse matrix; the values of pyArrayCSR are multiplied by the given factor; removed in 2029</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">__repr__()</span></code></strong>: return the string representation of the MatrixContainer</p></li>
+</ul>
+</section>
+<section id="ht">
+<span id="sec-ht"></span><h2>HT<a class="headerlink" href="#ht" title="Link to this heading"></a></h2>
+<p>The HT is a homogeneous transformation - a rotation matrix A and a translation p, the 4x4 matrix [A p; 0 1] -, the frame of a rigid body, marker or joint, and the place for transformations of rigid bodies: it converts from and to the coordinates of the rigid body nodes (Euler parameters, Tait-Bryan angles Rxyz, rotation vector), composes, inverts and interpolates. It is the C++ class of Exudyn, faster than the 4x4 numpy arrays of exudyn.rigidBodyUtilities: it stores the 12 numbers it needs, and a transformation without rotation (identity, SetTranslation, a unit matrix) skips the rotation in its products. The Set functions return the HT itself, so that they chain. Examples:</p>
+<p>Example notebook <code class="docutils literal notranslate"><span class="pre">python/Notebooks/reference/HT.ipynb</span></code>:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">exudyn</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">exu</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">exudyn.rigidBodyUtilities</span><span class="w"> </span><span class="kn">import</span> <span class="nf">RotationMatrixZ</span>
+<span class="n">H0</span> <span class="o">=</span> <span class="n">exu</span><span class="o">.</span><span class="nc">HT</span><span class="p">()</span>                                              <span class="c1">#identity</span>
+<span class="n">H1</span> <span class="o">=</span> <span class="n">exu</span><span class="o">.</span><span class="nc">HT</span><span class="p">(</span><span class="n">rotation</span><span class="o">=</span><span class="nf">RotationMatrixZ</span><span class="p">(</span><span class="mf">0.5</span><span class="p">),</span> <span class="n">translation</span><span class="o">=</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">])</span>
+<span class="n">H2</span> <span class="o">=</span> <span class="n">exu</span><span class="o">.</span><span class="nc">HT</span><span class="p">(</span><span class="n">translation</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">0</span><span class="p">])</span>                           <span class="c1">#translation only</span>
+<span class="n">H3</span> <span class="o">=</span> <span class="n">exu</span><span class="o">.</span><span class="nc">HT</span><span class="p">(</span><span class="n">Rxyz</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mf">0.5</span><span class="p">],</span> <span class="n">translation</span><span class="o">=</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">])</span>           <span class="c1">#the same as H1, from Tait-Bryan angles</span>
+<span class="n">H4</span> <span class="o">=</span> <span class="n">exu</span><span class="o">.</span><span class="nc">HT</span><span class="p">()</span><span class="o">.</span><span class="nf">SetRotationAxis</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">/</span><span class="mi">4</span><span class="p">)</span>            <span class="c1">#the Set functions return the HT</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">H3</span> <span class="o">==</span> <span class="n">H1</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>True
+</pre></div>
+</div>
+<p>Read and write access to the parts:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">A</span> <span class="o">=</span> <span class="n">H1</span><span class="o">.</span><span class="n">rotation</span>                                            <span class="c1">#3x3 numpy array</span>
+<span class="n">p</span> <span class="o">=</span> <span class="n">H1</span><span class="o">.</span><span class="n">translation</span>                                         <span class="c1">#numpy array [1,0,0]</span>
+<span class="n">H1</span><span class="o">.</span><span class="n">translation</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">]</span>                                   <span class="c1">#writing a part keeps the other</span>
+<span class="n">H1</span><span class="o">.</span><span class="n">rotation</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">eye</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>                                    <span class="c1">#a unit matrix: H1.HasNoRotation() is True</span>
+<span class="n">A</span><span class="p">,</span> <span class="n">p</span> <span class="o">=</span> <span class="n">H3</span><span class="o">.</span><span class="nf">Get</span><span class="p">()</span>                                            <span class="c1">#both parts</span>
+<span class="n">H3</span><span class="o">.</span><span class="nf">Set</span><span class="p">(</span><span class="n">rotationVector</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mf">0.5</span><span class="p">])</span>                           <span class="c1">#only the rotation; the translation stays</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">H1</span><span class="o">.</span><span class="nf">HasNoRotation</span><span class="p">(),</span> <span class="n">H3</span><span class="o">.</span><span class="n">translation</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>True [1. 0. 0.]
+</pre></div>
+</div>
+<p>Composition, points, inverse, numpy: an HT is indexed and multiplied like its 4x4 matrix.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">H</span> <span class="o">=</span> <span class="n">H3</span> <span class="o">*</span> <span class="n">H2</span>                                                <span class="c1">#first H2, then H3: an HT</span>
+<span class="n">x</span> <span class="o">=</span> <span class="n">H3</span> <span class="o">*</span> <span class="p">[</span><span class="mf">0.1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span>                                         <span class="c1">#a point transformed, a numpy array</span>
+<span class="n">Hinv</span> <span class="o">=</span> <span class="n">H</span><span class="o">.</span><span class="nf">Inverse</span><span class="p">()</span>
+<span class="n">H44</span> <span class="o">=</span> <span class="n">H</span><span class="o">.</span><span class="nf">HT44</span><span class="p">()</span>                                             <span class="c1">#4x4 numpy array; also np.array(H)</span>
+<span class="n">H5</span> <span class="o">=</span> <span class="n">exu</span><span class="o">.</span><span class="nc">HT</span><span class="p">(</span><span class="n">H44</span><span class="p">)</span>                                           <span class="c1">#from a 4x4 matrix, or its 16 values as a sensor stores them</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">H</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">3</span><span class="p">,</span><span class="mi">3</span><span class="p">],</span> <span class="p">(</span><span class="n">H</span> <span class="o">@</span> <span class="n">Hinv</span><span class="p">)</span><span class="o">.</span><span class="nf">HasNoRotation</span><span class="p">()</span> <span class="ow">or</span> <span class="n">np</span><span class="o">.</span><span class="n">allclose</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">H</span> <span class="o">@</span> <span class="n">Hinv</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">eye</span><span class="p">(</span><span class="mi">4</span><span class="p">)))</span>
+</pre></div>
+</div>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>[1.08775826 0.04794255 0.        ] [0.04114892 1.75516512 0.        ] True
+</pre></div>
+</div>
+<p>The frame of H2 seen from H3, frames in between, and the motion vector of the screw motion:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">Hrel</span> <span class="o">=</span> <span class="n">H3</span><span class="o">.</span><span class="nf">Relative</span><span class="p">(</span><span class="n">H2</span><span class="p">)</span>                                     <span class="c1">#H3.Inverse()*H2</span>
+<span class="n">Hhalf</span> <span class="o">=</span> <span class="n">H3</span><span class="o">.</span><span class="nf">InterpolateSE3</span><span class="p">(</span><span class="n">H2</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">)</span>                         <span class="c1">#halfway, a screw motion</span>
+<span class="n">v</span> <span class="o">=</span> <span class="n">Hrel</span><span class="o">.</span><span class="nf">LogSE3</span><span class="p">()</span>                                          <span class="c1">#the motion vector [U, Omega] of the screw motion</span>
+<span class="n">Hquarter</span> <span class="o">=</span> <span class="n">H3</span> <span class="o">*</span> <span class="n">exu</span><span class="o">.</span><span class="nc">HT</span><span class="p">()</span><span class="o">.</span><span class="nf">SetExpSE3</span><span class="p">(</span><span class="mf">0.25</span><span class="o">*</span><span class="n">v</span><span class="p">)</span>                 <span class="c1">#a quarter of the way, as InterpolateSE3(H2, 0.25)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="nf">round</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>
+</pre></div>
+</div>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>[-0.4791  2.2082  0.      0.      0.     -0.5   ]
+</pre></div>
+</div>
+<p>The coordinates of the rigid body nodes, both ways:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">q7</span> <span class="o">=</span> <span class="n">H3</span><span class="o">.</span><span class="nf">GetCoordinatesEP</span><span class="p">()</span>                                 <span class="c1">#[x,y,z, ep0,ep1,ep2,ep3] for NodeRigidBodyEP</span>
+<span class="n">q6</span> <span class="o">=</span> <span class="n">H3</span><span class="o">.</span><span class="nf">GetCoordinatesRxyz</span><span class="p">()</span>                               <span class="c1">#[x,y,z, rotX,rotY,rotZ] for NodeRigidBodyRxyz</span>
+<span class="n">ep</span> <span class="o">=</span> <span class="n">H3</span><span class="o">.</span><span class="nf">GetEP</span><span class="p">()</span>                                            <span class="c1">#only the rotation, as Euler parameters</span>
+<span class="n">H6</span> <span class="o">=</span> <span class="n">exu</span><span class="o">.</span><span class="nc">HT</span><span class="p">()</span><span class="o">.</span><span class="nf">SetCoordinatesRotationVector</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mf">0.5</span><span class="p">])</span>
+<span class="n">angle</span> <span class="o">=</span> <span class="n">H6</span><span class="o">.</span><span class="nf">RotationAngle</span><span class="p">()</span>                                 <span class="c1">#0.5</span>
+<span class="n">axis</span> <span class="o">=</span> <span class="n">H6</span><span class="o">.</span><span class="nf">RotationAxis</span><span class="p">()</span>                                   <span class="c1">#[0,0,1]</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="nf">round</span><span class="p">(</span><span class="n">q7</span><span class="p">,</span> <span class="mi">4</span><span class="p">),</span> <span class="n">angle</span><span class="p">,</span> <span class="n">axis</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>[1.     0.     0.     0.9689 0.     0.     0.2474] 0.4999999999999999 [0. 0. 1.]
+</pre></div>
+</div>
+<p>The class <strong>HT</strong> has the following <strong>functions and structures</strong>:</p>
+<ul class="simple">
+<li><p>HT(rotation=None, translation=None, eulerParameters=None, Rxyz=None, rotationVector=None): the rotation from at most one of a 3x3 matrix, Euler parameters, Tait-Bryan angles Rxyz and a rotation vector, the translation, each None for the unit rotation or zero; or HT(H44) from a 4x4 matrix or its 16 values row by row</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">rotation</span></code></strong>: the 3x3 rotation matrix as numpy array; setting it keeps the translation</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">translation</span></code></strong>: the translation as numpy array; setting it keeps the rotation</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">Get()</span></code></strong>: [rotation, translation] as numpy arrays</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">Set(rotation</span> <span class="pre">=</span> <span class="pre">None,</span> <span class="pre">translation</span> <span class="pre">=</span> <span class="pre">None,</span> <span class="pre">eulerParameters</span> <span class="pre">=</span> <span class="pre">None,</span> <span class="pre">Rxyz</span> <span class="pre">=</span> <span class="pre">None,</span> <span class="pre">rotationVector</span> <span class="pre">=</span> <span class="pre">None)</span></code></strong>: set the parts given, a part that is None stays: the rotation from at most one of a 3x3 matrix, Euler parameters, Tait-Bryan angles Rxyz and a rotation vector, and the translation; returns the HT</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">SetIdentity()</span></code></strong>: set the identity: unit rotation, zero translation; returns the HT</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">SetTranslation(translation)</span></code></strong>: set a translation and the unit rotation; returns the HT</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">SetRotationX(angle)</span></code></strong>: set a rotation about the x-axis by angle (in radians) and zero translation; returns the HT</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">SetRotationY(angle)</span></code></strong>: set a rotation about the y-axis by angle (in radians) and zero translation; returns the HT</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">SetRotationZ(angle)</span></code></strong>: set a rotation about the z-axis by angle (in radians) and zero translation; returns the HT</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">SetRotationAxis(axis,</span> <span class="pre">angle)</span></code></strong>: set a rotation by angle (in radians) about axis, a 3D vector of any length but zero, and zero translation; returns the HT</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">GetEP()</span></code></strong>: the rotation as the 4 Euler parameters [ep0,ep1,ep2,ep3], the rotation parameters of NodeRigidBodyEP, a numpy array</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">GetRxyz()</span></code></strong>: the rotation as the 3 Tait-Bryan angles [rotX,rotY,rotZ] (rotation about x, then y, then z), the rotation parameters of NodeRigidBodyRxyz, a numpy array</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">GetRotationVector()</span></code></strong>: the rotation as rotation vector (axis times angle), the rotation parameters of NodeRigidBodyRotVecLG, a numpy array</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">GetCoordinatesEP()</span></code></strong>: the 7 coordinates of NodeRigidBodyEP: the translation and the Euler parameters, e.g. for referenceCoordinates, a numpy array</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">GetCoordinatesRxyz()</span></code></strong>: the 6 coordinates of NodeRigidBodyRxyz: the translation and the Tait-Bryan angles, a numpy array</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">GetCoordinatesRotationVector()</span></code></strong>: the 6 coordinates of NodeRigidBodyRotVecLG: the translation and the rotation vector, a numpy array</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">SetCoordinatesEP(coordinates)</span></code></strong>: set from the 7 coordinates of NodeRigidBodyEP, translation and Euler parameters, as given by GetCoordinates… or by a node; returns the HT</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">SetCoordinatesRxyz(coordinates)</span></code></strong>: set from the 6 coordinates of NodeRigidBodyRxyz, translation and Tait-Bryan angles, as given by GetCoordinates… or by a node; returns the HT</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">SetCoordinatesRotationVector(coordinates)</span></code></strong>: set from the 6 coordinates of NodeRigidBodyRotVecLG, translation and rotation vector, as given by GetCoordinates… or by a node; returns the HT</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">RotationAngle()</span></code></strong>: the angle of the rotation in radians, 0 to pi: the length of the rotation vector</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">RotationAxis(raiseError</span> <span class="pre">=</span> <span class="pre">True)</span></code></strong>: the unit axis of the rotation, from the rotation vector; for no rotation an error, or [0,0,0] if raiseError=False</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">Relative(other)</span></code></strong>: the frame of other seen from this one, H.Inverse()*other, without computing the inverse: what a joint computes between the frames of its two markers</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">InterpolateSO3(other,</span> <span class="pre">factor)</span></code></strong>: the transformation between this one (factor=0) and other (factor=1): the translation linear and the rotation on SO(3), about one fixed axis with the angle in proportion</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">InterpolateSE3(other,</span> <span class="pre">factor)</span></code></strong>: the transformation between this one (factor=0) and other (factor=1) on SE(3): a screw motion, in which translation and rotation are coupled, as a rigid body moves with constant twist</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">LogSE3()</span></code></strong>: the logarithm on SE(3): the motion vector [U, Omega], 6 components as numpy array, from which SetExpSE3 gives this HT back; Omega is the rotation vector, U the translation in the coordinates of the screw motion</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">SetExpSE3(vector)</span></code></strong>: set from the exponential map on SE(3) of the motion vector [U, Omega], 6 components: the screw motion of constant twist; returns the HT</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">LogR3xSO3()</span></code></strong>: the logarithm on R3xSO(3): the translation and the rotation vector, each on its own, 6 components as numpy array - the same numbers as GetCoordinatesRotationVector()</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">SetExpR3xSO3(vector)</span></code></strong>: set from the exponential map on R3xSO(3) of [U, Omega], 6 components: the translation U and the rotation of the rotation vector Omega, each on its own; returns the HT</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">HT44()</span></code></strong>: the 4x4 matrix [A p; 0 1] as numpy array</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">Inverse()</span></code></strong>: the inverse transformation [A^T, -A^T p], an HT</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">Invert()</span></code></strong>: invert the transformation in place</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">RotateVector(vector)</span></code></strong>: the rotated vector A*v, without the translation</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">RotateVectorTransposed(vector)</span></code></strong>: the vector rotated back, A^T*v</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">HasNoRotation()</span></code></strong>: True if the rotation is the unit matrix - set without rotation (identity, SetTranslation, a product of such) or given as the exact unit matrix from Python -, which its products then skip; a unit matrix computed in C++ is not checked</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">__mul__(other)</span></code></strong>: H1<em>H2, the composition of two transformations, an HT; H</em>v, the transformed point A*v+p of a 3D vector, a numpy array</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">__eq__(other)</span></code></strong>: True if rotation and translation are equal, component by component</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">__matmul__(other)</span></code></strong>: H1&#64;H2, the composition of two transformations as H1*H2, an HT; H&#64;x for any other x as numpy computes it with the 4x4 matrix, e.g. H&#64;[x,y,z,1]</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">__copy__()</span></code></strong>: a copy, for copy.copy(H)</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">__deepcopy__(memo)</span></code></strong>: a copy, for copy.deepcopy(H) and objects holding an HT</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">...</span> <span class="pre">=</span> <span class="pre">data[index]key</span></code></strong>: H[key]: numpy indexing of the 4x4 matrix [A p; 0 1], e.g. H[0:3,3] for the translation; the result is a copy</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">data[index]=</span> <span class="pre">...key,</span> <span class="pre">value</span></code></strong>: H[key] = value: numpy indexing of the 4x4 matrix for writing the rotation and the translation, e.g. H[0:3,3] = p; writing the last row [0,0,0,1] raises</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">__array__(dtype</span> <span class="pre">=</span> <span class="pre">None,</span> <span class="pre">copy</span> <span class="pre">=</span> <span class="pre">None)</span></code></strong>: the 4x4 matrix [A p; 0 1] as numpy array, for np.array(H) and wherever numpy takes the HT</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">__repr__()</span></code></strong>: the string representation of the HT</p></li>
+</ul>
+</section>
+<section id="graphicsmateriallist">
+<span id="sec-graphicsmateriallist"></span><h2>GraphicsMaterialList<a class="headerlink" href="#graphicsmateriallist" title="Link to this heading"></a></h2>
+<p>The GraphicsMaterialList contains the list of materials (material properties) for visualization; currently, only the raytracer uses materials. Materials can be accessed via the variable materials in renderer of SystemContainer.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1">#access material 0:</span>
+<span class="n">mat0</span> <span class="o">=</span> <span class="n">SC</span><span class="o">.</span><span class="n">renderer</span><span class="o">.</span><span class="n">materials</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+<span class="c1">#convert into dictionary for easier processing:</span>
+<span class="n">matDict</span> <span class="o">=</span> <span class="n">mat0</span><span class="o">.</span><span class="nf">GetDictionary</span><span class="p">()</span>
+<span class="n">matDict</span><span class="p">[</span><span class="s1">'alpha'</span><span class="p">]</span> <span class="o">=</span> <span class="mf">0.5</span>
+<span class="c1">#change material (e.g., using a data base):</span>
+<span class="n">mat0</span><span class="o">.</span><span class="nf">SetDictionary</span><span class="p">(</span><span class="n">matDict</span><span class="p">)</span>
+<span class="c1">#or directly update material</span>
+<span class="n">mat0</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="s1">'new name'</span>
+<span class="n">mat0</span><span class="o">.</span><span class="n">emission</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.8</span><span class="p">,</span><span class="mf">0.6</span><span class="p">,</span><span class="mf">0.</span><span class="p">]</span>
+
+<span class="c1">#update material in renderer:</span>
+<span class="n">SC</span><span class="o">.</span><span class="n">renderer</span><span class="o">.</span><span class="n">materials</span><span class="o">.</span><span class="nf">Set</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="n">mat0</span><span class="p">)</span>
+<span class="c1">#update material directly with dictionary:</span>
+<span class="n">SC</span><span class="o">.</span><span class="n">renderer</span><span class="o">.</span><span class="n">materials</span><span class="o">.</span><span class="nf">Set</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="n">matDict</span><span class="p">)</span>
+
+<span class="c1">#create new material:</span>
+<span class="n">mat10</span> <span class="o">=</span> <span class="n">SC</span><span class="o">.</span><span class="n">renderer</span><span class="o">.</span><span class="n">materials</span><span class="o">.</span><span class="nf">New</span><span class="p">()</span>
+<span class="n">mat10</span><span class="o">.</span><span class="n">reflectivity</span> <span class="o">=</span> <span class="mf">0.8</span>
+<span class="n">SC</span><span class="o">.</span><span class="n">renderer</span><span class="o">.</span><span class="n">materials</span><span class="o">.</span><span class="nf">Append</span><span class="p">(</span><span class="n">mat10</span><span class="p">)</span> <span class="c1">#returns index of mat10</span>
+
+<span class="c1">#10 default graphics materials in Exudyn, with their default color and some properties;</span>
+<span class="c1">#note the increased computational costs for reflection and transparency:</span>
+<span class="c1">#  0 default:     steel blue</span>
+<span class="c1">#  1 matt:        green</span>
+<span class="c1">#  2 steel:       grey (reflection)</span>
+<span class="c1">#  3 plastic:     red (reflection)</span>
+<span class="c1">#  4 chrome:      light grey (reflection)</span>
+<span class="c1">#  5 shiny:       orange (reflection)</span>
+<span class="c1">#  6 transparent: (transparency, slight refraction)</span>
+<span class="c1">#  7 glass:       light grey (reflection, transparency, refraction)</span>
+<span class="c1">#  8 mirror:      light grey (reflection)</span>
+<span class="c1">#  9 emission:    light yellow</span>
+<span class="n">SC2</span> <span class="o">=</span> <span class="n">exu</span><span class="o">.</span><span class="nc">SystemContainer</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">([</span><span class="n">SC2</span><span class="o">.</span><span class="n">renderer</span><span class="o">.</span><span class="n">materials</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">name</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">10</span><span class="p">)])</span>
+</pre></div>
+</div>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>['default', 'matt', 'steel', 'plastic', 'chrome', 'shiny', 'transparent', 'glass', 'mirror', 'emission']
+</pre></div>
+</div>
+<div class="notebookorigin docutils container">
+<p><code class="docutils literal notranslate"><span class="pre">python/Notebooks/reference/systemContainer.ipynb</span></code></p>
+</div>
+<p>The class <strong>GraphicsMaterialList</strong> has the following <strong>functions and structures</strong>:</p>
+<ul class="simple">
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">Reset()</span></code></strong>: reset materials to 10 default materials</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">Append(material)</span></code></strong>: add single material as dict or VSettingsMaterial to list; returns index of newly added material</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">New()</span></code></strong>: Get new default material, which can be modified or appended to materials list</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">Set(indexOrName,</span> <span class="pre">material)</span></code></strong>: set material with index ‘materialIndex’ as dict or VSettingsMaterial</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">Get(indexOrName)</span></code></strong>: get material with index ‘materialIndex’ as VSettingsMaterial</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">GetDict(indexOrName)</span></code></strong>: get material with index ‘materialIndex’ as dict</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">len(data)</span></code></strong>: return length of the Vector3DList, using len(data) where data is the Vector3DList</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">...</span> <span class="pre">=</span> <span class="pre">data[index]</span></code></strong>: get reference access of material with ‘index’ as VSettingsMaterial</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">__repr__()</span></code></strong>: return the string representation of the GraphicsMaterialList</p></li>
+</ul>
+</section>
+<section id="vector3dlist">
+<h2>Vector3DList<a class="headerlink" href="#vector3dlist" title="Link to this heading"></a></h2>
+<p>The Vector3DList is used to represent lists of 3D vectors. This is used to transfer such lists from Python to C++.</p>
+<p>Usage:</p>
+<ul class="simple">
+<li><p>Create empty <code class="docutils literal notranslate"><span class="pre">Vector3DList</span></code> with <code class="docutils literal notranslate"><span class="pre">x</span> <span class="pre">=</span> <span class="pre">Vector3DList()</span></code></p></li>
+<li><p>Create <code class="docutils literal notranslate"><span class="pre">Vector3DList</span></code> with list of numpy arrays:<code class="docutils literal notranslate"><span class="pre">x</span> <span class="pre">=</span> <span class="pre">Vector3DList([</span> <span class="pre">numpy.array([1.,2.,3.]),</span> <span class="pre">numpy.array([4.,5.,6.])</span> <span class="pre">])</span></code></p></li>
+<li><p>Create <code class="docutils literal notranslate"><span class="pre">Vector3DList</span></code> with list of lists <code class="docutils literal notranslate"><span class="pre">x</span> <span class="pre">=</span> <span class="pre">Vector3DList([[1.,2.,3.],</span> <span class="pre">[4.,5.,6.]])</span></code></p></li>
+<li><p>Append item: <code class="docutils literal notranslate"><span class="pre">x.Append([0.,2.,4.])</span></code></p></li>
+<li><p>Convert into list of numpy arrays: <code class="docutils literal notranslate"><span class="pre">x.GetPythonObject()</span></code></p></li>
+</ul>
+<p>The class <strong>Vector3DList</strong> has the following <strong>functions and structures</strong>:</p>
+<ul class="simple">
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">Append(pyArray)</span></code></strong>: add single array or list to Vector3DList; array or list must have appropriate dimension!</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">GetPythonObject()</span></code></strong>: convert Vector3DList into (copied) list of numpy arrays</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">len(data)</span></code></strong>: return length of the Vector3DList, using len(data) where data is the Vector3DList</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">data[index]=</span> <span class="pre">...</span></code></strong>: set list item ‘index’ with data, write: data[index] = …</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">...</span> <span class="pre">=</span> <span class="pre">data[index]</span></code></strong>: get copy of list item with ‘index’ as vector</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">__copy__()</span></code></strong>: copy method to be used for copy.copy(…); in fact does already deep copy</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">__deepcopy__()</span></code></strong>: deepcopy method to be used for copy.copy(…)</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">__repr__()</span></code></strong>: return the string representation of the Vector3DList data, e.g.: print(data)</p></li>
+</ul>
+</section>
+<section id="vector2dlist">
+<h2>Vector2DList<a class="headerlink" href="#vector2dlist" title="Link to this heading"></a></h2>
+<p>The Vector2DList is used to represent lists of 2D vectors. This is used to transfer such lists from Python to C++.</p>
+<p>Usage:</p>
+<ul class="simple">
+<li><p>Create empty <code class="docutils literal notranslate"><span class="pre">Vector2DList</span></code> with <code class="docutils literal notranslate"><span class="pre">x</span> <span class="pre">=</span> <span class="pre">Vector2DList()</span></code></p></li>
+<li><p>Create <code class="docutils literal notranslate"><span class="pre">Vector2DList</span></code> with list of numpy arrays:</p></li>
+</ul>
+<p><code class="docutils literal notranslate"><span class="pre">x</span> <span class="pre">=</span> <span class="pre">Vector2DList([</span> <span class="pre">numpy.array([1.,2.]),</span> <span class="pre">numpy.array([4.,5.])</span> <span class="pre">])</span></code></p>
+<ul class="simple">
+<li><p>Create <code class="docutils literal notranslate"><span class="pre">Vector2DList</span></code> with list of lists <code class="docutils literal notranslate"><span class="pre">x</span> <span class="pre">=</span> <span class="pre">Vector2DList([[1.,2.],</span> <span class="pre">[4.,5.]])</span></code></p></li>
+<li><p>Append item: <code class="docutils literal notranslate"><span class="pre">x.Append([0.,2.])</span></code></p></li>
+<li><p>Convert into list of numpy arrays: <code class="docutils literal notranslate"><span class="pre">x.GetPythonObject()</span></code></p></li>
+<li><p>similar to Vector3DList !</p></li>
+</ul>
+<p>The class <strong>Vector2DList</strong> has the following <strong>functions and structures</strong>:</p>
+<ul class="simple">
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">Append(pyArray)</span></code></strong>: add single array or list to Vector2DList; array or list must have appropriate dimension!</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">GetPythonObject()</span></code></strong>: convert Vector2DList into (copied) list of numpy arrays</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">len(data)</span></code></strong>: return length of the Vector2DList, using len(data) where data is the Vector2DList</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">data[index]=</span> <span class="pre">...</span></code></strong>: set list item ‘index’ with data, write: data[index] = …</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">...</span> <span class="pre">=</span> <span class="pre">data[index]</span></code></strong>: get copy of list item with ‘index’ as vector</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">__copy__()</span></code></strong>: copy method to be used for copy.copy(…); in fact does already deep copy</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">__deepcopy__()</span></code></strong>: deepcopy method to be used for copy.copy(…)</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">__repr__()</span></code></strong>: return the string representation of the Vector2DList data, e.g.: print(data)</p></li>
+</ul>
+</section>
+<section id="vector6dlist">
+<h2>Vector6DList<a class="headerlink" href="#vector6dlist" title="Link to this heading"></a></h2>
+<p>The Vector6DList is used to represent lists of 6D vectors. This is used to transfer such lists from Python to C++.</p>
+<p>Usage:</p>
+<ul class="simple">
+<li><p>Create empty <code class="docutils literal notranslate"><span class="pre">Vector6DList</span></code> with <code class="docutils literal notranslate"><span class="pre">x</span> <span class="pre">=</span> <span class="pre">Vector6DList()</span></code></p></li>
+<li><p>Convert into list of numpy arrays: <code class="docutils literal notranslate"><span class="pre">x.GetPythonObject()</span></code></p></li>
+<li><p>similar to Vector3DList !</p></li>
+</ul>
+<p>The class <strong>Vector6DList</strong> has the following <strong>functions and structures</strong>:</p>
+<ul class="simple">
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">Append(pyArray)</span></code></strong>: add single array or list to Vector6DList; array or list must have appropriate dimension!</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">GetPythonObject()</span></code></strong>: convert Vector6DList into (copied) list of numpy arrays</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">len(data)</span></code></strong>: return length of the Vector6DList, using len(data) where data is the Vector6DList</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">data[index]=</span> <span class="pre">...</span></code></strong>: set list item ‘index’ with data, write: data[index] = …</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">...</span> <span class="pre">=</span> <span class="pre">data[index]</span></code></strong>: get copy of list item with ‘index’ as vector</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">__copy__()</span></code></strong>: copy method to be used for copy.copy(…); in fact does already deep copy</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">__deepcopy__()</span></code></strong>: deepcopy method to be used for copy.copy(…)</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">__repr__()</span></code></strong>: return the string representation of the Vector6DList data, e.g.: print(data)</p></li>
+</ul>
+</section>
+<section id="matrix3dlist">
+<h2>Matrix3DList<a class="headerlink" href="#matrix3dlist" title="Link to this heading"></a></h2>
+<p>The Matrix3DList is used to represent lists of 3D Matrices. . This is used to transfer such lists from Python to C++.</p>
+<p>Usage:</p>
+<ul class="simple">
+<li><p>Create empty <code class="docutils literal notranslate"><span class="pre">Matrix3DList</span></code> with <code class="docutils literal notranslate"><span class="pre">x</span> <span class="pre">=</span> <span class="pre">Matrix3DList()</span></code></p></li>
+<li><p>Create <code class="docutils literal notranslate"><span class="pre">Matrix3DList</span></code> with list of numpy arrays:</p></li>
+</ul>
+<p><code class="docutils literal notranslate"><span class="pre">x</span> <span class="pre">=</span> <span class="pre">Matrix3DList([</span> <span class="pre">numpy.eye(3),</span> <span class="pre">numpy.array([[1.,2.,3.],[4.,5.,6.],[7.,8.,9.]])</span> <span class="pre">])</span></code></p>
+<ul class="simple">
+<li><p>Create <code class="docutils literal notranslate"><span class="pre">Matrix3DList</span></code> with one matrix <code class="docutils literal notranslate"><span class="pre">x</span> <span class="pre">=</span> <span class="pre">Matrix3DList(13.*numpy.eye(3))</span></code></p></li>
+<li><p>Append item: <code class="docutils literal notranslate"><span class="pre">x.Append(numpy.eye(3))</span></code></p></li>
+<li><p>Convert into list of numpy arrays: <code class="docutils literal notranslate"><span class="pre">x.GetPythonObject()</span></code></p></li>
+<li><p>similar to Vector3DList !</p></li>
+</ul>
+<p>The class <strong>Matrix3DList</strong> has the following <strong>functions and structures</strong>:</p>
+<ul class="simple">
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">Append(pyArray)</span></code></strong>: add single 3D array or list of lists to Matrix3DList; array or lists must have appropriate dimension!</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">GetPythonObject()</span></code></strong>: convert Matrix3DList into (copied) list of 3x3 numpy arrays</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">len(data)</span></code></strong>: return length of the Matrix3DList, using len(data) where data is the Matrix3DList</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">data[index]=</span> <span class="pre">...</span></code></strong>: set list item ‘index’ with matrix, write: data[index] = …</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">...</span> <span class="pre">=</span> <span class="pre">data[index]</span></code></strong>: get copy of list item with ‘index’ as matrix</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">__repr__()</span></code></strong>: return the string representation of the Matrix3DList data, e.g.: print(data)</p></li>
+</ul>
+</section>
+<section id="matrix6dlist">
+<h2>Matrix6DList<a class="headerlink" href="#matrix6dlist" title="Link to this heading"></a></h2>
+<p>The Matrix6DList is used to represent lists of 6D Matrices. . This is used to transfer such lists from Python to C++.</p>
+<p>Usage:</p>
+<ul class="simple">
+<li><p>Create empty <code class="docutils literal notranslate"><span class="pre">Matrix6DList</span></code> with <code class="docutils literal notranslate"><span class="pre">x</span> <span class="pre">=</span> <span class="pre">Matrix6DList()</span></code></p></li>
+<li><p>Create <code class="docutils literal notranslate"><span class="pre">Matrix6DList</span></code> with list of numpy arrays:</p></li>
+</ul>
+<p><code class="docutils literal notranslate"><span class="pre">x</span> <span class="pre">=</span> <span class="pre">Matrix6DList([</span> <span class="pre">numpy.eye(6),</span> <span class="pre">2*numpy.eye(6)</span> <span class="pre">])</span></code></p>
+<ul class="simple">
+<li><p>Append item: <code class="docutils literal notranslate"><span class="pre">x.Append(numpy.eye(6))</span></code></p></li>
+<li><p>Convert into list of numpy arrays: <code class="docutils literal notranslate"><span class="pre">x.GetPythonObject()</span></code></p></li>
+<li><p>similar to Matrix3DList !</p></li>
+</ul>
+<p>The class <strong>Matrix6DList</strong> has the following <strong>functions and structures</strong>:</p>
+<ul class="simple">
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">Append(pyArray)</span></code></strong>: add single 6D array or list of lists to Matrix6DList; array or lists must have appropriate dimension!</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">GetPythonObject()</span></code></strong>: convert Matrix6DList into (copied) list of 6x6 numpy arrays</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">len(data)</span></code></strong>: return length of the Matrix6DList, using len(data) where data is the Matrix6DList</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">data[index]=</span> <span class="pre">...</span></code></strong>: set list item ‘index’ with matrix, write: data[index] = …</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">...</span> <span class="pre">=</span> <span class="pre">data[index]</span></code></strong>: get copy of list item with ‘index’ as matrix</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">__repr__()</span></code></strong>: return the string representation of the Matrix6DList data, e.g.: print(data)</p></li>
+</ul>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="GeneralContact.html" class="btn btn-neutral float-left" title="GeneralContact" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="TypeDefinitions.html" class="btn btn-neutral float-right" title="Type definitions" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

@@ -1,0 +1,397 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Items reference manual &mdash; Exudyn1.13.3 1.13.3 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=3ee1c6c6" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/rtd_sphinx_search.min.css" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/custom.css?v=e2783f0e" />
+
+  
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=b8a3e558"></script>
+      <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../../_static/copybutton.js?v=f281be69"></script>
+      <script src="../../../_static/js/rtd_search_config.js"></script>
+      <script src="../../../_static/js/rtd_sphinx_search.min.js"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+    <link rel="next" title="Node" href="nodeIndex.html" />
+    <link rel="prev" title="Environment variables" href="../cInterface/EnvironmentVariables.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            Exudyn1.13.3
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Exudyn User Manual</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../README.html">Exudyn</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../manual/gettingStarted.html">Installation and getting started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../manual/introduction.html">Overview on Exudyn</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../manual/introductionBasics.html">Exudyn basics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../manual/tutorial.html">Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../manual/GUI.html">Renderer, graphics and visualization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../manual/performanceErrors.html">Performance, errors and solver failures</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../manual/introductionAdvanced.html">Advanced topics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../manual/notation.html">Notation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../manual/theory.html">Theory and formulations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../manual/solver.html">Solvers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../cInterface/cInterfaceIndex.html">Python-C++ command interface</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Reference Manual</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Items reference manual</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="nodeIndex.html">Node</a></li>
+<li class="toctree-l2"><a class="reference internal" href="objectBodyIndex.html">Object (Body)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="objectSuperElementIndex.html">Object (SuperElement)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="objectObjectIndex.html">Object (Object)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="objectFiniteElementIndex.html">Object (FiniteElement)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="objectConnectorIndex.html">Object (Connector)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="objectConstraintIndex.html">Object (Constraint)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="objectJointIndex.html">Object (Joint)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="markerIndex.html">Marker</a></li>
+<li class="toctree-l2"><a class="reference internal" href="loadIndex.html">Load</a></li>
+<li class="toctree-l2"><a class="reference internal" href="sensorIndex.html">Sensor</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#parameter-changes">Parameter changes</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../pythonUtilities/utilitiesIndex.html">Python Utility Functions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../structures/structuresIndex.html">Structures and Settings</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../references.html">References</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Developer documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../dev/README.html">Exudyn developer documentation</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">How-to notes</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../howTo/condaEnvironments.html">Conda environments for Exudyn</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../howTo/sphinxDocs.html">Building the documentation</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Examples, models and issues</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../examples/examplesIndex.html">Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../testModels/testModelsIndex.html">TestModels</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../abbreviations.html">List of Abbreviations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../manual/revisions.html">Revisions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../CHANGELOG.html">Changelog</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../trackerlog.html">Issue tracker</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">Exudyn1.13.3</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Items reference manual</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../../_sources/docs/generated/items/itemsIndex.md.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <!-- GENERATED by tools/generators/itemDocsEmitter.py from definitions/ - do not edit -->
+<section class="tex2jax_ignore mathjax_ignore" id="items-reference-manual">
+<span id="sec-item-reference-manual"></span><h1>Items reference manual<a class="headerlink" href="#items-reference-manual" title="Link to this heading"></a></h1>
+<p>Reference manual for: objects, nodes, markers, loads and sensors</p>
+<p>This chapter includes the reference manual for all objects (bodies/constraints), nodes, markers, loads and sensors (<strong>= items</strong>).
+For description of types (e.g., the meaning of <code class="docutils literal notranslate"><span class="pre">Vector3D</span></code> or <code class="docutils literal notranslate"><span class="pre">NumpyMatrix</span></code>), see <a class="reference internal" href="../../manual/notation.html#sec-typesdescriptions"><span class="std std-ref">Common types</span></a>.</p>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="nodeIndex.html">Node</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="nodeGeneral.html">General info for all nodes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="NodePoint.html">NodePoint</a></li>
+<li class="toctree-l2"><a class="reference internal" href="NodePoint2D.html">NodePoint2D</a></li>
+<li class="toctree-l2"><a class="reference internal" href="NodeRigidBodyEP.html">NodeRigidBodyEP</a></li>
+<li class="toctree-l2"><a class="reference internal" href="NodeRigidBodyRxyz.html">NodeRigidBodyRxyz</a></li>
+<li class="toctree-l2"><a class="reference internal" href="NodeRigidBodyRotVecLG.html">NodeRigidBodyRotVecLG</a></li>
+<li class="toctree-l2"><a class="reference internal" href="NodeRigidBody2D.html">NodeRigidBody2D</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Node1D.html">Node1D</a></li>
+<li class="toctree-l2"><a class="reference internal" href="NodePoint2DSlope1.html">NodePoint2DSlope1</a></li>
+<li class="toctree-l2"><a class="reference internal" href="NodePointSlope1.html">NodePointSlope1</a></li>
+<li class="toctree-l2"><a class="reference internal" href="NodePointSlope12.html">NodePointSlope12</a></li>
+<li class="toctree-l2"><a class="reference internal" href="NodePointSlope23.html">NodePointSlope23</a></li>
+<li class="toctree-l2"><a class="reference internal" href="NodeGenericODE2.html">NodeGenericODE2</a></li>
+<li class="toctree-l2"><a class="reference internal" href="NodeGenericODE1.html">NodeGenericODE1</a></li>
+<li class="toctree-l2"><a class="reference internal" href="NodeGenericAE.html">NodeGenericAE</a></li>
+<li class="toctree-l2"><a class="reference internal" href="NodeGenericData.html">NodeGenericData</a></li>
+<li class="toctree-l2"><a class="reference internal" href="NodePointGround.html">NodePointGround</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="objectBodyIndex.html">Object (Body)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="objectBodyGeneral.html">General info for all bodies</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ObjectGround.html">ObjectGround</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ObjectMassPoint.html">ObjectMassPoint</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ObjectMassPoint2D.html">ObjectMassPoint2D</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ObjectMass1D.html">ObjectMass1D</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ObjectRotationalMass1D.html">ObjectRotationalMass1D</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ObjectRigidBody.html">ObjectRigidBody</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ObjectRigidBody2D.html">ObjectRigidBody2D</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="objectSuperElementIndex.html">Object (SuperElement)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="objectSuperElementGeneral.html">General info for all super elements</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ObjectGenericODE2.html">ObjectGenericODE2</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ObjectKinematicTree.html">ObjectKinematicTree</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ObjectFFRF.html">ObjectFFRF</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ObjectFFRFreducedOrder.html">ObjectFFRFreducedOrder</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="objectObjectIndex.html">Object (Object)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="objectObjectGeneral.html">General info for all objects</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ObjectGenericODE1.html">ObjectGenericODE1</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="objectFiniteElementIndex.html">Object (FiniteElement)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="objectFiniteElementGeneral.html">General info for all finite elements</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ObjectANCFCable.html">ObjectANCFCable</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ObjectANCFCable2D.html">ObjectANCFCable2D</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ObjectALEANCFCable2D.html">ObjectALEANCFCable2D</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ObjectANCFBeam.html">ObjectANCFBeam</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ObjectBeamGeometricallyExact2D.html">ObjectBeamGeometricallyExact2D</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ObjectBeamGeometricallyExact.html">ObjectBeamGeometricallyExact</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ObjectANCFThinPlate.html">ObjectANCFThinPlate</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="objectConnectorIndex.html">Object (Connector)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="objectConnectorGeneral.html">General info for all connectors</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ObjectConnectorSpringDamper.html">ObjectConnectorSpringDamper</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ObjectConnectorCartesianSpringDamper.html">ObjectConnectorCartesianSpringDamper</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ObjectConnectorRigidBodySpringDamper.html">ObjectConnectorRigidBodySpringDamper</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ObjectConnectorLinearSpringDamper.html">ObjectConnectorLinearSpringDamper</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ObjectConnectorTorsionalSpringDamper.html">ObjectConnectorTorsionalSpringDamper</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ObjectConnectorCoordinateSpringDamper.html">ObjectConnectorCoordinateSpringDamper</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ObjectConnectorCoordinateSpringDamperExt.html">ObjectConnectorCoordinateSpringDamperExt</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ObjectConnectorGravity.html">ObjectConnectorGravity</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ObjectConnectorHydraulicActuatorSimple.html">ObjectConnectorHydraulicActuatorSimple</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ObjectConnectorReevingSystemSprings.html">ObjectConnectorReevingSystemSprings</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ObjectConnectorRollingDiscPenalty.html">ObjectConnectorRollingDiscPenalty</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ObjectContactConvexRoll.html">ObjectContactConvexRoll</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ObjectContactCoordinate.html">ObjectContactCoordinate</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ObjectContactCircleCable2D.html">ObjectContactCircleCable2D</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ObjectContactFrictionCircleCable2D.html">ObjectContactFrictionCircleCable2D</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ObjectContactSphereSphere.html">ObjectContactSphereSphere</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ObjectContactSphereTorus.html">ObjectContactSphereTorus</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ObjectContactSphereTriangle.html">ObjectContactSphereTriangle</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ObjectContactCurveCircles.html">ObjectContactCurveCircles</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="objectConstraintIndex.html">Object (Constraint)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="objectConstraintGeneral.html">General info for all constraints</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ObjectConnectorDistance.html">ObjectConnectorDistance</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ObjectConnectorCoordinate.html">ObjectConnectorCoordinate</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ObjectConnectorCoordinateVector.html">ObjectConnectorCoordinateVector</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="objectJointIndex.html">Object (Joint)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="objectJointGeneral.html">General info for all joints</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ObjectJointGeneric.html">ObjectJointGeneric</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ObjectJointRevoluteZ.html">ObjectJointRevoluteZ</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ObjectJointPrismaticX.html">ObjectJointPrismaticX</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ObjectJointSpherical.html">ObjectJointSpherical</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ObjectJointRollingDisc.html">ObjectJointRollingDisc</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ObjectJointRevolute2D.html">ObjectJointRevolute2D</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ObjectJointPrismatic2D.html">ObjectJointPrismatic2D</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ObjectJointSliding.html">ObjectJointSliding</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ObjectJointSliding2D.html">ObjectJointSliding2D</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ObjectJointALEMoving2D.html">ObjectJointALEMoving2D</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="markerIndex.html">Marker</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="markerGeneral.html">General info for all markers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="MarkerBodyMass.html">MarkerBodyMass</a></li>
+<li class="toctree-l2"><a class="reference internal" href="MarkerBodyPosition.html">MarkerBodyPosition</a></li>
+<li class="toctree-l2"><a class="reference internal" href="MarkerBodyRigid.html">MarkerBodyRigid</a></li>
+<li class="toctree-l2"><a class="reference internal" href="MarkerNodePosition.html">MarkerNodePosition</a></li>
+<li class="toctree-l2"><a class="reference internal" href="MarkerNodeRigid.html">MarkerNodeRigid</a></li>
+<li class="toctree-l2"><a class="reference internal" href="MarkerNodeCoordinate.html">MarkerNodeCoordinate</a></li>
+<li class="toctree-l2"><a class="reference internal" href="MarkerNodeCoordinates.html">MarkerNodeCoordinates</a></li>
+<li class="toctree-l2"><a class="reference internal" href="MarkerNodeODE1Coordinate.html">MarkerNodeODE1Coordinate</a></li>
+<li class="toctree-l2"><a class="reference internal" href="MarkerNodeRotationCoordinate.html">MarkerNodeRotationCoordinate</a></li>
+<li class="toctree-l2"><a class="reference internal" href="MarkerBodiesRelativeTranslationCoordinate.html">MarkerBodiesRelativeTranslationCoordinate</a></li>
+<li class="toctree-l2"><a class="reference internal" href="MarkerBodiesRelativeRotationCoordinate.html">MarkerBodiesRelativeRotationCoordinate</a></li>
+<li class="toctree-l2"><a class="reference internal" href="MarkerSuperElementPosition.html">MarkerSuperElementPosition</a></li>
+<li class="toctree-l2"><a class="reference internal" href="MarkerSuperElementRigid.html">MarkerSuperElementRigid</a></li>
+<li class="toctree-l2"><a class="reference internal" href="MarkerKinematicTreeRigid.html">MarkerKinematicTreeRigid</a></li>
+<li class="toctree-l2"><a class="reference internal" href="MarkerObjectODE2Coordinates.html">MarkerObjectODE2Coordinates</a></li>
+<li class="toctree-l2"><a class="reference internal" href="MarkerBodyCable2DShape.html">MarkerBodyCable2DShape</a></li>
+<li class="toctree-l2"><a class="reference internal" href="MarkerBodyCable2DCoordinates.html">MarkerBodyCable2DCoordinates</a></li>
+<li class="toctree-l2"><a class="reference internal" href="MarkerBodyBeamShape.html">MarkerBodyBeamShape</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="loadIndex.html">Load</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="loadGeneral.html">General info for all loads</a></li>
+<li class="toctree-l2"><a class="reference internal" href="LoadForceVector.html">LoadForceVector</a></li>
+<li class="toctree-l2"><a class="reference internal" href="LoadTorqueVector.html">LoadTorqueVector</a></li>
+<li class="toctree-l2"><a class="reference internal" href="LoadMassProportional.html">LoadMassProportional</a></li>
+<li class="toctree-l2"><a class="reference internal" href="LoadCoordinate.html">LoadCoordinate</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="sensorIndex.html">Sensor</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="sensorGeneral.html">General info for all sensors</a></li>
+<li class="toctree-l2"><a class="reference internal" href="SensorNode.html">SensorNode</a></li>
+<li class="toctree-l2"><a class="reference internal" href="SensorObject.html">SensorObject</a></li>
+<li class="toctree-l2"><a class="reference internal" href="SensorBody.html">SensorBody</a></li>
+<li class="toctree-l2"><a class="reference internal" href="SensorSuperElement.html">SensorSuperElement</a></li>
+<li class="toctree-l2"><a class="reference internal" href="SensorKinematicTree.html">SensorKinematicTree</a></li>
+<li class="toctree-l2"><a class="reference internal" href="SensorMarker.html">SensorMarker</a></li>
+<li class="toctree-l2"><a class="reference internal" href="SensorLoad.html">SensorLoad</a></li>
+<li class="toctree-l2"><a class="reference internal" href="SensorUserFunction.html">SensorUserFunction</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<section id="parameter-changes">
+<h2>Parameter changes<a class="headerlink" href="#parameter-changes" title="Link to this heading"></a></h2>
+<p>The item parameters that were renamed or are deprecated; each still works and gives a <code class="docutils literal notranslate"><span class="pre">DeprecationWarning</span></code>, and the page of the item lists it below its parameters:</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="ObjectALEANCFCable2D.html#sec-item-objectaleancfcable2d"><span class="std std-ref">ObjectALEANCFCable2D</span></a>: <code class="docutils literal notranslate"><span class="pre">physicsAddALEvariation</span></code> → <code class="docutils literal notranslate"><span class="pre">addALEvariation</span></code> (changed in version 1.12.258, removed in 2031)</p></li>
+<li><p><a class="reference internal" href="ObjectALEANCFCable2D.html#sec-item-objectaleancfcable2d"><span class="std std-ref">ObjectALEANCFCable2D</span></a>: <code class="docutils literal notranslate"><span class="pre">physicsAxialDamping</span></code> → <code class="docutils literal notranslate"><span class="pre">axialDamping</span></code> (changed in version 1.12.258, removed in 2031)</p></li>
+<li><p><a class="reference internal" href="ObjectALEANCFCable2D.html#sec-item-objectaleancfcable2d"><span class="std std-ref">ObjectALEANCFCable2D</span></a>: <code class="docutils literal notranslate"><span class="pre">physicsAxialStiffness</span></code> → <code class="docutils literal notranslate"><span class="pre">axialStiffness</span></code> (changed in version 1.12.258, removed in 2031)</p></li>
+<li><p><a class="reference internal" href="ObjectALEANCFCable2D.html#sec-item-objectaleancfcable2d"><span class="std std-ref">ObjectALEANCFCable2D</span></a>: <code class="docutils literal notranslate"><span class="pre">physicsBendingDamping</span></code> → <code class="docutils literal notranslate"><span class="pre">bendingDamping</span></code> (changed in version 1.12.258, removed in 2031)</p></li>
+<li><p><a class="reference internal" href="ObjectALEANCFCable2D.html#sec-item-objectaleancfcable2d"><span class="std std-ref">ObjectALEANCFCable2D</span></a>: <code class="docutils literal notranslate"><span class="pre">physicsBendingStiffness</span></code> → <code class="docutils literal notranslate"><span class="pre">bendingStiffness</span></code> (changed in version 1.12.258, removed in 2031)</p></li>
+<li><p><a class="reference internal" href="ObjectALEANCFCable2D.html#sec-item-objectaleancfcable2d"><span class="std std-ref">ObjectALEANCFCable2D</span></a>: <code class="docutils literal notranslate"><span class="pre">physicsLength</span></code> → <code class="docutils literal notranslate"><span class="pre">length</span></code> (changed in version 1.12.258, removed in 2031)</p></li>
+<li><p><a class="reference internal" href="ObjectALEANCFCable2D.html#sec-item-objectaleancfcable2d"><span class="std std-ref">ObjectALEANCFCable2D</span></a>: <code class="docutils literal notranslate"><span class="pre">physicsMassPerLength</span></code> → <code class="docutils literal notranslate"><span class="pre">massPerLength</span></code> (changed in version 1.12.258, removed in 2031)</p></li>
+<li><p><a class="reference internal" href="ObjectALEANCFCable2D.html#sec-item-objectaleancfcable2d"><span class="std std-ref">ObjectALEANCFCable2D</span></a>: <code class="docutils literal notranslate"><span class="pre">physicsMovingMassFactor</span></code> → <code class="docutils literal notranslate"><span class="pre">movingMassFactor</span></code> (changed in version 1.12.258, removed in 2031)</p></li>
+<li><p><a class="reference internal" href="ObjectALEANCFCable2D.html#sec-item-objectaleancfcable2d"><span class="std std-ref">ObjectALEANCFCable2D</span></a>: <code class="docutils literal notranslate"><span class="pre">physicsReferenceAxialStrain</span></code> → <code class="docutils literal notranslate"><span class="pre">referenceAxialStrain</span></code> (changed in version 1.12.258, removed in 2031)</p></li>
+<li><p><a class="reference internal" href="ObjectALEANCFCable2D.html#sec-item-objectaleancfcable2d"><span class="std std-ref">ObjectALEANCFCable2D</span></a>: <code class="docutils literal notranslate"><span class="pre">physicsReferenceCurvature</span></code> → <code class="docutils literal notranslate"><span class="pre">referenceCurvature</span></code> (changed in version 1.12.258, removed in 2031)</p></li>
+<li><p><a class="reference internal" href="ObjectALEANCFCable2D.html#sec-item-objectaleancfcable2d"><span class="std std-ref">ObjectALEANCFCable2D</span></a>: <code class="docutils literal notranslate"><span class="pre">physicsUseCouplingTerms</span></code> → <code class="docutils literal notranslate"><span class="pre">useCouplingTerms</span></code> (changed in version 1.12.258, removed in 2031)</p></li>
+<li><p><a class="reference internal" href="ObjectANCFBeam.html#sec-item-objectancfbeam"><span class="std std-ref">ObjectANCFBeam</span></a>: <code class="docutils literal notranslate"><span class="pre">physicsLength</span></code> → <code class="docutils literal notranslate"><span class="pre">length</span></code> (changed in version 1.12.258, removed in 2031)</p></li>
+<li><p><a class="reference internal" href="ObjectANCFCable.html#sec-item-objectancfcable"><span class="std std-ref">ObjectANCFCable</span></a>: <code class="docutils literal notranslate"><span class="pre">physicsAxialDamping</span></code> → <code class="docutils literal notranslate"><span class="pre">axialDamping</span></code> (changed in version 1.12.258, removed in 2031)</p></li>
+<li><p><a class="reference internal" href="ObjectANCFCable.html#sec-item-objectancfcable"><span class="std std-ref">ObjectANCFCable</span></a>: <code class="docutils literal notranslate"><span class="pre">physicsAxialStiffness</span></code> → <code class="docutils literal notranslate"><span class="pre">axialStiffness</span></code> (changed in version 1.12.258, removed in 2031)</p></li>
+<li><p><a class="reference internal" href="ObjectANCFCable.html#sec-item-objectancfcable"><span class="std std-ref">ObjectANCFCable</span></a>: <code class="docutils literal notranslate"><span class="pre">physicsBendingDamping</span></code> → <code class="docutils literal notranslate"><span class="pre">bendingDamping</span></code> (changed in version 1.12.258, removed in 2031)</p></li>
+<li><p><a class="reference internal" href="ObjectANCFCable.html#sec-item-objectancfcable"><span class="std std-ref">ObjectANCFCable</span></a>: <code class="docutils literal notranslate"><span class="pre">physicsBendingStiffness</span></code> → <code class="docutils literal notranslate"><span class="pre">bendingStiffness</span></code> (changed in version 1.12.258, removed in 2031)</p></li>
+<li><p><a class="reference internal" href="ObjectANCFCable.html#sec-item-objectancfcable"><span class="std std-ref">ObjectANCFCable</span></a>: <code class="docutils literal notranslate"><span class="pre">physicsLength</span></code> → <code class="docutils literal notranslate"><span class="pre">length</span></code> (changed in version 1.12.258, removed in 2031)</p></li>
+<li><p><a class="reference internal" href="ObjectANCFCable.html#sec-item-objectancfcable"><span class="std std-ref">ObjectANCFCable</span></a>: <code class="docutils literal notranslate"><span class="pre">physicsMassPerLength</span></code> → <code class="docutils literal notranslate"><span class="pre">massPerLength</span></code> (changed in version 1.12.258, removed in 2031)</p></li>
+<li><p><a class="reference internal" href="ObjectANCFCable.html#sec-item-objectancfcable"><span class="std std-ref">ObjectANCFCable</span></a>: <code class="docutils literal notranslate"><span class="pre">physicsReferenceAxialStrain</span></code> → <code class="docutils literal notranslate"><span class="pre">referenceAxialStrain</span></code> (changed in version 1.12.258, removed in 2031)</p></li>
+<li><p><a class="reference internal" href="ObjectANCFCable2D.html#sec-item-objectancfcable2d"><span class="std std-ref">ObjectANCFCable2D</span></a>: <code class="docutils literal notranslate"><span class="pre">physicsAxialDamping</span></code> → <code class="docutils literal notranslate"><span class="pre">axialDamping</span></code> (changed in version 1.12.258, removed in 2031)</p></li>
+<li><p><a class="reference internal" href="ObjectANCFCable2D.html#sec-item-objectancfcable2d"><span class="std std-ref">ObjectANCFCable2D</span></a>: <code class="docutils literal notranslate"><span class="pre">physicsAxialStiffness</span></code> → <code class="docutils literal notranslate"><span class="pre">axialStiffness</span></code> (changed in version 1.12.258, removed in 2031)</p></li>
+<li><p><a class="reference internal" href="ObjectANCFCable2D.html#sec-item-objectancfcable2d"><span class="std std-ref">ObjectANCFCable2D</span></a>: <code class="docutils literal notranslate"><span class="pre">physicsBendingDamping</span></code> → <code class="docutils literal notranslate"><span class="pre">bendingDamping</span></code> (changed in version 1.12.258, removed in 2031)</p></li>
+<li><p><a class="reference internal" href="ObjectANCFCable2D.html#sec-item-objectancfcable2d"><span class="std std-ref">ObjectANCFCable2D</span></a>: <code class="docutils literal notranslate"><span class="pre">physicsBendingStiffness</span></code> → <code class="docutils literal notranslate"><span class="pre">bendingStiffness</span></code> (changed in version 1.12.258, removed in 2031)</p></li>
+<li><p><a class="reference internal" href="ObjectANCFCable2D.html#sec-item-objectancfcable2d"><span class="std std-ref">ObjectANCFCable2D</span></a>: <code class="docutils literal notranslate"><span class="pre">physicsLength</span></code> → <code class="docutils literal notranslate"><span class="pre">length</span></code> (changed in version 1.12.258, removed in 2031)</p></li>
+<li><p><a class="reference internal" href="ObjectANCFCable2D.html#sec-item-objectancfcable2d"><span class="std std-ref">ObjectANCFCable2D</span></a>: <code class="docutils literal notranslate"><span class="pre">physicsMassPerLength</span></code> → <code class="docutils literal notranslate"><span class="pre">massPerLength</span></code> (changed in version 1.12.258, removed in 2031)</p></li>
+<li><p><a class="reference internal" href="ObjectANCFCable2D.html#sec-item-objectancfcable2d"><span class="std std-ref">ObjectANCFCable2D</span></a>: <code class="docutils literal notranslate"><span class="pre">physicsReferenceAxialStrain</span></code> → <code class="docutils literal notranslate"><span class="pre">referenceAxialStrain</span></code> (changed in version 1.12.258, removed in 2031)</p></li>
+<li><p><a class="reference internal" href="ObjectANCFCable2D.html#sec-item-objectancfcable2d"><span class="std std-ref">ObjectANCFCable2D</span></a>: <code class="docutils literal notranslate"><span class="pre">physicsReferenceCurvature</span></code> → <code class="docutils literal notranslate"><span class="pre">referenceCurvature</span></code> (changed in version 1.12.258, removed in 2031)</p></li>
+<li><p><a class="reference internal" href="ObjectANCFThinPlate.html#sec-item-objectancfthinplate"><span class="std std-ref">ObjectANCFThinPlate</span></a>: <code class="docutils literal notranslate"><span class="pre">physicsCurvatureCoefficients</span></code> → <code class="docutils literal notranslate"><span class="pre">curvatureCoefficients</span></code> (changed in version 1.12.258, removed in 2031)</p></li>
+<li><p><a class="reference internal" href="ObjectANCFThinPlate.html#sec-item-objectancfthinplate"><span class="std std-ref">ObjectANCFThinPlate</span></a>: <code class="docutils literal notranslate"><span class="pre">physicsDensity</span></code> → <code class="docutils literal notranslate"><span class="pre">density</span></code> (changed in version 1.12.258, removed in 2031)</p></li>
+<li><p><a class="reference internal" href="ObjectANCFThinPlate.html#sec-item-objectancfthinplate"><span class="std std-ref">ObjectANCFThinPlate</span></a>: <code class="docutils literal notranslate"><span class="pre">physicsMassProportionalDamping</span></code> → <code class="docutils literal notranslate"><span class="pre">massProportionalDamping</span></code> (changed in version 1.12.258, removed in 2031)</p></li>
+<li><p><a class="reference internal" href="ObjectANCFThinPlate.html#sec-item-objectancfthinplate"><span class="std std-ref">ObjectANCFThinPlate</span></a>: <code class="docutils literal notranslate"><span class="pre">physicsStrainCoefficients</span></code> → <code class="docutils literal notranslate"><span class="pre">strainCoefficients</span></code> (changed in version 1.12.258, removed in 2031)</p></li>
+<li><p><a class="reference internal" href="ObjectANCFThinPlate.html#sec-item-objectancfthinplate"><span class="std std-ref">ObjectANCFThinPlate</span></a>: <code class="docutils literal notranslate"><span class="pre">physicsThickness</span></code> → <code class="docutils literal notranslate"><span class="pre">thickness</span></code> (changed in version 1.12.258, removed in 2031)</p></li>
+<li><p><a class="reference internal" href="ObjectBeamGeometricallyExact.html#sec-item-objectbeamgeometricallyexact"><span class="std std-ref">ObjectBeamGeometricallyExact</span></a>: <code class="docutils literal notranslate"><span class="pre">physicsLength</span></code> → <code class="docutils literal notranslate"><span class="pre">length</span></code> (changed in version 1.12.258, removed in 2031)</p></li>
+<li><p><a class="reference internal" href="ObjectBeamGeometricallyExact2D.html#sec-item-objectbeamgeometricallyexact2d"><span class="std std-ref">ObjectBeamGeometricallyExact2D</span></a>: <code class="docutils literal notranslate"><span class="pre">physicsAxialDamping</span></code> → <code class="docutils literal notranslate"><span class="pre">axialDamping</span></code> (changed in version 1.12.258, removed in 2031)</p></li>
+<li><p><a class="reference internal" href="ObjectBeamGeometricallyExact2D.html#sec-item-objectbeamgeometricallyexact2d"><span class="std std-ref">ObjectBeamGeometricallyExact2D</span></a>: <code class="docutils literal notranslate"><span class="pre">physicsAxialStiffness</span></code> → <code class="docutils literal notranslate"><span class="pre">axialStiffness</span></code> (changed in version 1.12.258, removed in 2031)</p></li>
+<li><p><a class="reference internal" href="ObjectBeamGeometricallyExact2D.html#sec-item-objectbeamgeometricallyexact2d"><span class="std std-ref">ObjectBeamGeometricallyExact2D</span></a>: <code class="docutils literal notranslate"><span class="pre">physicsBendingDamping</span></code> → <code class="docutils literal notranslate"><span class="pre">bendingDamping</span></code> (changed in version 1.12.258, removed in 2031)</p></li>
+<li><p><a class="reference internal" href="ObjectBeamGeometricallyExact2D.html#sec-item-objectbeamgeometricallyexact2d"><span class="std std-ref">ObjectBeamGeometricallyExact2D</span></a>: <code class="docutils literal notranslate"><span class="pre">physicsBendingStiffness</span></code> → <code class="docutils literal notranslate"><span class="pre">bendingStiffness</span></code> (changed in version 1.12.258, removed in 2031)</p></li>
+<li><p><a class="reference internal" href="ObjectBeamGeometricallyExact2D.html#sec-item-objectbeamgeometricallyexact2d"><span class="std std-ref">ObjectBeamGeometricallyExact2D</span></a>: <code class="docutils literal notranslate"><span class="pre">physicsCrossSectionInertia</span></code> → <code class="docutils literal notranslate"><span class="pre">crossSectionInertia</span></code> (changed in version 1.12.258, removed in 2031)</p></li>
+<li><p><a class="reference internal" href="ObjectBeamGeometricallyExact2D.html#sec-item-objectbeamgeometricallyexact2d"><span class="std std-ref">ObjectBeamGeometricallyExact2D</span></a>: <code class="docutils literal notranslate"><span class="pre">physicsLength</span></code> → <code class="docutils literal notranslate"><span class="pre">length</span></code> (changed in version 1.12.258, removed in 2031)</p></li>
+<li><p><a class="reference internal" href="ObjectBeamGeometricallyExact2D.html#sec-item-objectbeamgeometricallyexact2d"><span class="std std-ref">ObjectBeamGeometricallyExact2D</span></a>: <code class="docutils literal notranslate"><span class="pre">physicsMassPerLength</span></code> → <code class="docutils literal notranslate"><span class="pre">massPerLength</span></code> (changed in version 1.12.258, removed in 2031)</p></li>
+<li><p><a class="reference internal" href="ObjectBeamGeometricallyExact2D.html#sec-item-objectbeamgeometricallyexact2d"><span class="std std-ref">ObjectBeamGeometricallyExact2D</span></a>: <code class="docutils literal notranslate"><span class="pre">physicsReferenceCurvature</span></code> → <code class="docutils literal notranslate"><span class="pre">referenceCurvature</span></code> (changed in version 1.12.258, removed in 2031)</p></li>
+<li><p><a class="reference internal" href="ObjectBeamGeometricallyExact2D.html#sec-item-objectbeamgeometricallyexact2d"><span class="std std-ref">ObjectBeamGeometricallyExact2D</span></a>: <code class="docutils literal notranslate"><span class="pre">physicsShearDamping</span></code> → <code class="docutils literal notranslate"><span class="pre">shearDamping</span></code> (changed in version 1.12.258, removed in 2031)</p></li>
+<li><p><a class="reference internal" href="ObjectBeamGeometricallyExact2D.html#sec-item-objectbeamgeometricallyexact2d"><span class="std std-ref">ObjectBeamGeometricallyExact2D</span></a>: <code class="docutils literal notranslate"><span class="pre">physicsShearStiffness</span></code> → <code class="docutils literal notranslate"><span class="pre">shearStiffness</span></code> (changed in version 1.12.258, removed in 2031)</p></li>
+<li><p><a class="reference internal" href="ObjectConnectorCoordinate.html#sec-item-objectconnectorcoordinate"><span class="std std-ref">ObjectConnectorCoordinate</span></a>: <code class="docutils literal notranslate"><span class="pre">factorValue1</span></code> → <code class="docutils literal notranslate"><span class="pre">factor1</span></code> (changed in version 1.12.258, removed in 2031)</p></li>
+<li><p><a class="reference internal" href="ObjectConnectorCoordinateSpringDamperExt.html#sec-item-objectconnectorcoordinatespringdamperext"><span class="std std-ref">ObjectConnectorCoordinateSpringDamperExt</span></a>: <code class="docutils literal notranslate"><span class="pre">fDynamicFriction</span></code> → <code class="docutils literal notranslate"><span class="pre">dynamicFrictionForce</span></code> (changed in version 1.12.258, removed in 2031)</p></li>
+<li><p><a class="reference internal" href="ObjectConnectorCoordinateSpringDamperExt.html#sec-item-objectconnectorcoordinatespringdamperext"><span class="std std-ref">ObjectConnectorCoordinateSpringDamperExt</span></a>: <code class="docutils literal notranslate"><span class="pre">fStaticFrictionOffset</span></code> → <code class="docutils literal notranslate"><span class="pre">staticFrictionOffsetForce</span></code> (changed in version 1.12.258, removed in 2031)</p></li>
+<li><p><a class="reference internal" href="ObjectConnectorCoordinateSpringDamperExt.html#sec-item-objectconnectorcoordinatespringdamperext"><span class="std std-ref">ObjectConnectorCoordinateSpringDamperExt</span></a>: <code class="docutils literal notranslate"><span class="pre">fViscousFriction</span></code> → <code class="docutils literal notranslate"><span class="pre">viscousFrictionFactor</span></code> (changed in version 1.12.258, removed in 2031)</p></li>
+<li><p><a class="reference internal" href="ObjectConnectorRigidBodySpringDamper.html#sec-item-objectconnectorrigidbodyspringdamper"><span class="std std-ref">ObjectConnectorRigidBodySpringDamper</span></a>: <code class="docutils literal notranslate"><span class="pre">intrinsicFormulation</span></code> → <code class="docutils literal notranslate"><span class="pre">useIntrinsicFormulation</span></code> (changed in version 1.12.258, removed in 2031)</p></li>
+<li><p><a class="reference internal" href="ObjectConnectorRigidBodySpringDamper.html#sec-item-objectconnectorrigidbodyspringdamper"><span class="std std-ref">ObjectConnectorRigidBodySpringDamper</span></a>: <code class="docutils literal notranslate"><span class="pre">rotationMarker0</span></code> is deprecated (since 1.12.244, removed in 2031): give the rotation to marker 0 as its localHT, e.g. MarkerBodyRigid(bodyNumber=b, localHT=exu.HT(rotation=A, translation=p))</p></li>
+<li><p><a class="reference internal" href="ObjectConnectorRigidBodySpringDamper.html#sec-item-objectconnectorrigidbodyspringdamper"><span class="std std-ref">ObjectConnectorRigidBodySpringDamper</span></a>: <code class="docutils literal notranslate"><span class="pre">rotationMarker1</span></code> is deprecated (since 1.12.244, removed in 2031): give the rotation to marker 1 as its localHT, e.g. MarkerBodyRigid(bodyNumber=b, localHT=exu.HT(rotation=A, translation=p))</p></li>
+<li><p><a class="reference internal" href="ObjectConnectorRollingDiscPenalty.html#sec-item-objectconnectorrollingdiscpenalty"><span class="std std-ref">ObjectConnectorRollingDiscPenalty</span></a>: <code class="docutils literal notranslate"><span class="pre">rollingFrictionViscous</span></code> → <code class="docutils literal notranslate"><span class="pre">rollingViscousFriction</span></code> (changed in version 1.12.258, removed in 2031)</p></li>
+<li><p><a class="reference internal" href="ObjectConnectorTorsionalSpringDamper.html#sec-item-objectconnectortorsionalspringdamper"><span class="std std-ref">ObjectConnectorTorsionalSpringDamper</span></a>: <code class="docutils literal notranslate"><span class="pre">rotationMarker0</span></code> is deprecated (since 1.12.244, removed in 2031): give the rotation to marker 0 as its localHT, e.g. MarkerBodyRigid(bodyNumber=b, localHT=exu.HT(rotation=A, translation=p))</p></li>
+<li><p><a class="reference internal" href="ObjectConnectorTorsionalSpringDamper.html#sec-item-objectconnectortorsionalspringdamper"><span class="std std-ref">ObjectConnectorTorsionalSpringDamper</span></a>: <code class="docutils literal notranslate"><span class="pre">rotationMarker1</span></code> is deprecated (since 1.12.244, removed in 2031): give the rotation to marker 1 as its localHT, e.g. MarkerBodyRigid(bodyNumber=b, localHT=exu.HT(rotation=A, translation=p))</p></li>
+<li><p><a class="reference internal" href="ObjectContactSphereTorus.html#sec-item-objectcontactspheretorus"><span class="std std-ref">ObjectContactSphereTorus</span></a>: <code class="docutils literal notranslate"><span class="pre">radiusSphere</span></code> → <code class="docutils literal notranslate"><span class="pre">sphereRadius</span></code> (changed in version 1.12.258, removed in 2031)</p></li>
+<li><p><a class="reference internal" href="ObjectContactSphereTriangle.html#sec-item-objectcontactspheretriangle"><span class="std std-ref">ObjectContactSphereTriangle</span></a>: <code class="docutils literal notranslate"><span class="pre">radiusSphere</span></code> → <code class="docutils literal notranslate"><span class="pre">sphereRadius</span></code> (changed in version 1.12.258, removed in 2031)</p></li>
+<li><p><a class="reference internal" href="ObjectFFRFreducedOrder.html#sec-item-objectffrfreducedorder"><span class="std std-ref">ObjectFFRFreducedOrder</span></a>: <code class="docutils literal notranslate"><span class="pre">physicsCenterOfMass</span></code> → <code class="docutils literal notranslate"><span class="pre">centerOfMass</span></code> (changed in version 1.12.258, removed in 2031)</p></li>
+<li><p><a class="reference internal" href="ObjectFFRFreducedOrder.html#sec-item-objectffrfreducedorder"><span class="std std-ref">ObjectFFRFreducedOrder</span></a>: <code class="docutils literal notranslate"><span class="pre">physicsCenterOfMassTilde</span></code> → <code class="docutils literal notranslate"><span class="pre">centerOfMassTilde</span></code> (changed in version 1.12.258, removed in 2031)</p></li>
+<li><p><a class="reference internal" href="ObjectFFRFreducedOrder.html#sec-item-objectffrfreducedorder"><span class="std std-ref">ObjectFFRFreducedOrder</span></a>: <code class="docutils literal notranslate"><span class="pre">physicsInertia</span></code> → <code class="docutils literal notranslate"><span class="pre">inertia</span></code> (changed in version 1.12.258, removed in 2031)</p></li>
+<li><p><a class="reference internal" href="ObjectFFRFreducedOrder.html#sec-item-objectffrfreducedorder"><span class="std std-ref">ObjectFFRFreducedOrder</span></a>: <code class="docutils literal notranslate"><span class="pre">physicsMass</span></code> → <code class="docutils literal notranslate"><span class="pre">mass</span></code> (changed in version 1.12.258, removed in 2031)</p></li>
+<li><p><a class="reference internal" href="ObjectJointGeneric.html#sec-item-objectjointgeneric"><span class="std std-ref">ObjectJointGeneric</span></a>: <code class="docutils literal notranslate"><span class="pre">rotationMarker0</span></code> is deprecated (since 1.12.244, removed in 2031): give the rotation to marker 0 as its localHT, e.g. MarkerBodyRigid(bodyNumber=b, localHT=exu.HT(rotation=A, translation=p))</p></li>
+<li><p><a class="reference internal" href="ObjectJointGeneric.html#sec-item-objectjointgeneric"><span class="std std-ref">ObjectJointGeneric</span></a>: <code class="docutils literal notranslate"><span class="pre">rotationMarker1</span></code> is deprecated (since 1.12.244, removed in 2031): give the rotation to marker 1 as its localHT, e.g. MarkerBodyRigid(bodyNumber=b, localHT=exu.HT(rotation=A, translation=p))</p></li>
+<li><p><a class="reference internal" href="ObjectJointPrismaticX.html#sec-item-objectjointprismaticx"><span class="std std-ref">ObjectJointPrismaticX</span></a>: <code class="docutils literal notranslate"><span class="pre">rotationMarker0</span></code> is deprecated (since 1.12.244, removed in 2031): give the rotation to marker 0 as its localHT, e.g. MarkerBodyRigid(bodyNumber=b, localHT=exu.HT(rotation=A, translation=p))</p></li>
+<li><p><a class="reference internal" href="ObjectJointPrismaticX.html#sec-item-objectjointprismaticx"><span class="std std-ref">ObjectJointPrismaticX</span></a>: <code class="docutils literal notranslate"><span class="pre">rotationMarker1</span></code> is deprecated (since 1.12.244, removed in 2031): give the rotation to marker 1 as its localHT, e.g. MarkerBodyRigid(bodyNumber=b, localHT=exu.HT(rotation=A, translation=p))</p></li>
+<li><p><a class="reference internal" href="ObjectJointRevoluteZ.html#sec-item-objectjointrevolutez"><span class="std std-ref">ObjectJointRevoluteZ</span></a>: <code class="docutils literal notranslate"><span class="pre">rotationMarker0</span></code> is deprecated (since 1.12.244, removed in 2031): give the rotation to marker 0 as its localHT, e.g. MarkerBodyRigid(bodyNumber=b, localHT=exu.HT(rotation=A, translation=p))</p></li>
+<li><p><a class="reference internal" href="ObjectJointRevoluteZ.html#sec-item-objectjointrevolutez"><span class="std std-ref">ObjectJointRevoluteZ</span></a>: <code class="docutils literal notranslate"><span class="pre">rotationMarker1</span></code> is deprecated (since 1.12.244, removed in 2031): give the rotation to marker 1 as its localHT, e.g. MarkerBodyRigid(bodyNumber=b, localHT=exu.HT(rotation=A, translation=p))</p></li>
+<li><p><a class="reference internal" href="ObjectJointSliding2D.html#sec-item-objectjointsliding2d"><span class="std std-ref">ObjectJointSliding2D</span></a>: <code class="docutils literal notranslate"><span class="pre">classicalFormulation</span></code> → <code class="docutils literal notranslate"><span class="pre">useClassicalFormulation</span></code> (changed in version 1.12.258, removed in 2031)</p></li>
+<li><p><a class="reference internal" href="ObjectMass1D.html#sec-item-objectmass1d"><span class="std std-ref">ObjectMass1D</span></a>: <code class="docutils literal notranslate"><span class="pre">physicsMass</span></code> → <code class="docutils literal notranslate"><span class="pre">mass</span></code> (changed in version 1.12.258, removed in 2031)</p></li>
+<li><p><a class="reference internal" href="ObjectMassPoint.html#sec-item-objectmasspoint"><span class="std std-ref">ObjectMassPoint</span></a>: <code class="docutils literal notranslate"><span class="pre">physicsMass</span></code> → <code class="docutils literal notranslate"><span class="pre">mass</span></code> (changed in version 1.12.258, removed in 2031)</p></li>
+<li><p><a class="reference internal" href="ObjectMassPoint2D.html#sec-item-objectmasspoint2d"><span class="std std-ref">ObjectMassPoint2D</span></a>: <code class="docutils literal notranslate"><span class="pre">physicsMass</span></code> → <code class="docutils literal notranslate"><span class="pre">mass</span></code> (changed in version 1.12.258, removed in 2031)</p></li>
+<li><p><a class="reference internal" href="ObjectRigidBody.html#sec-item-objectrigidbody"><span class="std std-ref">ObjectRigidBody</span></a>: <code class="docutils literal notranslate"><span class="pre">physicsCenterOfMass</span></code> → <code class="docutils literal notranslate"><span class="pre">centerOfMass</span></code> (changed in version 1.12.258, removed in 2031)</p></li>
+<li><p><a class="reference internal" href="ObjectRigidBody.html#sec-item-objectrigidbody"><span class="std std-ref">ObjectRigidBody</span></a>: <code class="docutils literal notranslate"><span class="pre">physicsInertia</span></code> → <code class="docutils literal notranslate"><span class="pre">inertia</span></code> (changed in version 1.12.258, removed in 2031)</p></li>
+<li><p><a class="reference internal" href="ObjectRigidBody.html#sec-item-objectrigidbody"><span class="std std-ref">ObjectRigidBody</span></a>: <code class="docutils literal notranslate"><span class="pre">physicsMass</span></code> → <code class="docutils literal notranslate"><span class="pre">mass</span></code> (changed in version 1.12.258, removed in 2031)</p></li>
+<li><p><a class="reference internal" href="ObjectRigidBody2D.html#sec-item-objectrigidbody2d"><span class="std std-ref">ObjectRigidBody2D</span></a>: <code class="docutils literal notranslate"><span class="pre">physicsCenterOfMass</span></code> → <code class="docutils literal notranslate"><span class="pre">centerOfMass</span></code> (changed in version 1.12.258, removed in 2031)</p></li>
+<li><p><a class="reference internal" href="ObjectRigidBody2D.html#sec-item-objectrigidbody2d"><span class="std std-ref">ObjectRigidBody2D</span></a>: <code class="docutils literal notranslate"><span class="pre">physicsInertia</span></code> → <code class="docutils literal notranslate"><span class="pre">inertia</span></code> (changed in version 1.12.258, removed in 2031)</p></li>
+<li><p><a class="reference internal" href="ObjectRigidBody2D.html#sec-item-objectrigidbody2d"><span class="std std-ref">ObjectRigidBody2D</span></a>: <code class="docutils literal notranslate"><span class="pre">physicsMass</span></code> → <code class="docutils literal notranslate"><span class="pre">mass</span></code> (changed in version 1.12.258, removed in 2031)</p></li>
+<li><p><a class="reference internal" href="ObjectRotationalMass1D.html#sec-item-objectrotationalmass1d"><span class="std std-ref">ObjectRotationalMass1D</span></a>: <code class="docutils literal notranslate"><span class="pre">physicsInertia</span></code> → <code class="docutils literal notranslate"><span class="pre">inertia</span></code> (changed in version 1.12.258, removed in 2031)</p></li>
+</ul>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="../cInterface/EnvironmentVariables.html" class="btn btn-neutral float-left" title="Environment variables" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="nodeIndex.html" class="btn btn-neutral float-right" title="Node" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

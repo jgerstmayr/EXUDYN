@@ -1,0 +1,606 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Manual GUI check before a release &mdash; Exudyn1.13.3 1.13.3 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=3ee1c6c6" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/rtd_sphinx_search.min.css" />
+      <link rel="stylesheet" type="text/css" href="../../_static/custom.css?v=e2783f0e" />
+
+  
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=b8a3e558"></script>
+      <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../_static/copybutton.js?v=f281be69"></script>
+      <script src="../../_static/js/rtd_search_config.js"></script>
+      <script src="../../_static/js/rtd_sphinx_search.min.js"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Deprecations" href="../generated/deprecations.html" />
+    <link rel="prev" title="How to set up a new item" href="NEW_ITEM.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            Exudyn1.13.3
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Exudyn User Manual</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../README.html">Exudyn</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../manual/gettingStarted.html">Installation and getting started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../manual/introduction.html">Overview on Exudyn</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../manual/introductionBasics.html">Exudyn basics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../manual/tutorial.html">Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../manual/GUI.html">Renderer, graphics and visualization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../manual/performanceErrors.html">Performance, errors and solver failures</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../manual/introductionAdvanced.html">Advanced topics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../manual/notation.html">Notation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../manual/theory.html">Theory and formulations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../manual/solver.html">Solvers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../generated/cInterface/cInterfaceIndex.html">Python-C++ command interface</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Reference Manual</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../generated/items/itemsIndex.html">Items reference manual</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../generated/pythonUtilities/utilitiesIndex.html">Python Utility Functions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../generated/structures/structuresIndex.html">Structures and Settings</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../generated/references.html">References</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Developer documentation</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="README.html">Exudyn developer documentation</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="GETTING_STARTED.html">Getting started as a developer</a></li>
+<li class="toctree-l2"><a class="reference internal" href="BUILD.html">Building Exudyn from source</a></li>
+<li class="toctree-l2"><a class="reference internal" href="GIT.html">Working with git in this repository</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ARCHITECTURE.html">Exudyn C++ architecture</a></li>
+<li class="toctree-l2"><a class="reference internal" href="CODING_STYLE.html">Exudyn coding style and conventions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="WORKFLOW.html">Development workflow</a></li>
+<li class="toctree-l2"><a class="reference internal" href="NEW_ITEM.html">How to set up a new item</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Manual GUI check before a release</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#preparation-5-min">0. Preparation (5 min)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#render-window-mouse-and-view-keys-15-min">1. Render window: mouse and view keys (15 min)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#render-window-item-keys-simulation-keys-raytracer-views-10-min">2. Render window: item keys, simulation keys, raytracer, views (10 min)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#dialogs-from-the-render-window-15-min">3. Dialogs from the render window (15 min)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#solutionviewer-and-plotsensor-7-min">4. SolutionViewer and PlotSensor (7 min)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#animatemodes-5-min">5. AnimateModes (5 min)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#quitting-3-min">6. Quitting (3 min)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#optional-if-time-is-left">7. Optional, if time is left</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#finish">8. Finish</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#platform-notes">Platform notes</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../generated/deprecations.html">Deprecations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../definitions/README.html">definitions/ — the item and structure definitions as Python</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../tools/generators/README.html">tools/generators/ — the new generator code</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../tools/exudev/README.html"><code class="docutils literal notranslate"><span class="pre">exudev</span></code> — the Exudyn maintainer driver</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../CONTRIBUTING.html">Contributing to Exudyn</a></li>
+<li class="toctree-l2"><a class="reference internal" href="README.html#repository-layout">Repository layout</a></li>
+<li class="toctree-l2"><a class="reference internal" href="README.html#building-and-running">Building and running</a></li>
+<li class="toctree-l2"><a class="reference internal" href="README.html#how-to-notes">How-to notes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="README.html#invariants">Invariants</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">How-to notes</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../howTo/condaEnvironments.html">Conda environments for Exudyn</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../howTo/sphinxDocs.html">Building the documentation</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Examples, models and issues</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../generated/examples/examplesIndex.html">Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../generated/testModels/testModelsIndex.html">TestModels</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../generated/abbreviations.html">List of Abbreviations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../manual/revisions.html">Revisions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../CHANGELOG.html">Changelog</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../generated/trackerlog.html">Issue tracker</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">Exudyn1.13.3</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="README.html">Exudyn developer documentation</a></li>
+      <li class="breadcrumb-item active">Manual GUI check before a release</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../_sources/docs/dev/GUI_MANUAL_CHECK.md.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section class="tex2jax_ignore mathjax_ignore" id="manual-gui-check-before-a-release">
+<span id="sec-dev-guimanualcheck"></span><h1>Manual GUI check before a release<a class="headerlink" href="#manual-gui-check-before-a-release" title="Link to this heading"></a></h1>
+<p>The tests check what the renderer draws (graphics data per item, low-resolution raytracer images,
+#2704). <strong>Nothing automatic checks that a person can use the render window and the dialogs</strong>: keys,
+mouse, tkinter windows, focus, fonts, window placement. That is this list.</p>
+<ul class="simple">
+<li><p><strong>Once per release on each of Windows, Ubuntu and macOS</strong>; one person, about one hour.</p></li>
+<li><p>Do only what is written; if something looks wrong, note it and go on.</p></li>
+<li><p>Not checked here: what each setting draws (automatic). Checked here: that the <strong>key or the dialog
+reaches the renderer</strong> - one or two settings per path.</p></li>
+</ul>
+<section id="preparation-5-min">
+<h2>0. Preparation (5 min)<a class="headerlink" href="#preparation-5-min" title="Link to this heading"></a></h2>
+<ol class="arabic simple">
+<li><p>Install the release candidate wheel into a clean environment (<code class="docutils literal notranslate"><span class="pre">pip</span> <span class="pre">install</span> <span class="pre">exudyn-&lt;version&gt;-...whl</span></code>).</p></li>
+<li><p>Run <code class="docutils literal notranslate"><span class="pre">python</span> <span class="pre">-m</span> <span class="pre">exudyn</span> <span class="pre">info</span></code> and paste the output into the report.</p></li>
+<li><p><strong>Back up <code class="docutils literal notranslate"><span class="pre">~/.exudyn/config.json</span></code></strong> if it exists, then delete it, so that you test the defaults.
+Some checks below write this file; restore your backup at the end.</p></li>
+<li><p>Copy <code class="docutils literal notranslate"><span class="pre">python/testing/guiManualCheckModel.py</span></code>, <code class="docutils literal notranslate"><span class="pre">python/Examples/nMassOscillatorEigenmodes.py</span></code> and
+<code class="docutils literal notranslate"><span class="pre">python/Examples/graphicsCurvedShapes.py</span></code> into an empty working directory, and run everything from there in a
+terminal (not from an IDE): images and files are written relative to it.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">python</span> <span class="pre">-m</span> <span class="pre">exudyn</span> <span class="pre">demo</span> <span class="pre">2</span></code> - the renderer opens, the demo runs, the window closes (<code class="docutils literal notranslate"><span class="pre">demo</span></code> alone is demo 1,
+without graphics). If this fails, stop here and report it.</p></li>
+</ol>
+<p><strong>Which model</strong>: sections 1 to 4 and 6 use <code class="docutils literal notranslate"><span class="pre">guiManualCheckModel.py</span></code>, K13 <code class="docutils literal notranslate"><span class="pre">graphicsCurvedShapes.py</span></code>,
+section 5 <code class="docutils literal notranslate"><span class="pre">nMassOscillatorEigenmodes.py</span></code>, O3 <code class="docutils literal notranslate"><span class="pre">mouseInteractionExample.py</span></code>; each section says it again.</p>
+<p><strong>Model used</strong>: <code class="docutils literal notranslate"><span class="pre">guiManualCheckModel.py</span></code> - a mass point with spring-damper and force, and a 3D double
+pendulum of two rigid bodies with revolute joints; it has at least one node, body, connector,
+marker, load and sensor, and a sensor trace; the red mass is drawn as its node, the orange sphere on
+the second link with <code class="docutils literal notranslate"><span class="pre">general.sphereTiling</span></code>. It opens the renderer and <strong>waits</strong>; SPACE starts a
+real-time simulation of 120 s, Q stops it, then SolutionViewer and PlotSensor follow; the script
+ends when the plot windows are closed.</p>
+<p>Report each check as <strong>OK / FAIL / n.a.</strong> with the ID; for a FAIL, one line on what happened.</p>
+</section>
+<section id="render-window-mouse-and-view-keys-15-min">
+<h2>1. Render window: mouse and view keys (15 min)<a class="headerlink" href="#render-window-mouse-and-view-keys-15-min" title="Link to this heading"></a></h2>
+<p><code class="docutils literal notranslate"><span class="pre">python</span> <span class="pre">guiManualCheckModel.py</span></code> - the window opens, the model is not moving yet.</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>ID</p></th>
+<th class="head"><p>action</p></th>
+<th class="head"><p>expected</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>R1</p></td>
+<td><p>look at the window after start</p></td>
+<td><p>model fully visible (zoom all), help hint shown for ~5 s, window title and status text readable (display scaling!)</p></td>
+</tr>
+<tr class="row-odd"><td><p>R2</p></td>
+<td><p>left mouse: press, drag, release</p></td>
+<td><p>model moves with the mouse in the screen plane</p></td>
+</tr>
+<tr class="row-even"><td><p>R3</p></td>
+<td><p>right mouse: press, drag, release</p></td>
+<td><p>model rotates about the screen axes; release stops it</p></td>
+</tr>
+<tr class="row-odd"><td><p>R4</p></td>
+<td><p>mouse wheel up/down; with CTRL</p></td>
+<td><p>zoom in/out; CTRL gives small steps</p></td>
+</tr>
+<tr class="row-even"><td><p>R5</p></td>
+<td><p>left <strong>click</strong> (no drag) on the red mass; then on empty space</p></td>
+<td><p>status line <em>Selected item: …</em>; item highlighted for ~2 s; empty space: <em>no item selected</em></p></td>
+</tr>
+<tr class="row-odd"><td><p>R6</p></td>
+<td><p>right <strong>click</strong> (no drag) on a pendulum link</p></td>
+<td><p>read-only dialog <em>properties of &lt;…&gt;</em> opens with the item dictionary; ESCAPE closes it; render window still reacts afterwards</p></td>
+</tr>
+<tr class="row-even"><td><p>R7</p></td>
+<td><p>keys <code class="docutils literal notranslate"><span class="pre">A</span></code>, <code class="docutils literal notranslate"><span class="pre">.</span></code> / <code class="docutils literal notranslate"><span class="pre">,</span></code> (and keypad <code class="docutils literal notranslate"><span class="pre">+</span></code> / <code class="docutils literal notranslate"><span class="pre">-</span></code> if present)</p></td>
+<td><p>zoom all, zoom in, zoom out</p></td>
+</tr>
+<tr class="row-odd"><td><p>R8</p></td>
+<td><p>cursor keys; CTRL+cursor; SHIFT+cursor; ALT+LEFT/RIGHT</p></td>
+<td><p>move; small move; rotate about screen x/y; rotate about screen z</p></td>
+</tr>
+<tr class="row-even"><td><p>R9</p></td>
+<td><p>keypad 2/8, 4/6, 7/9 (if a keypad exists); same with CTRL</p></td>
+<td><p>rotation about 1, 2, 3 axis; CTRL: small rotation</p></td>
+</tr>
+<tr class="row-odd"><td><p>R10</p></td>
+<td><p>CTRL+1 … CTRL+7, then SHIFT+CTRL+1</p></td>
+<td><p>the standard views (1-2 plane, 1-3, 2-3, …, 3D view); SHIFT: the same plane from behind; a message names the view</p></td>
+</tr>
+<tr class="row-even"><td><p>R11</p></td>
+<td><p>pan with left mouse so that the pendulum joint is at the window center, press <code class="docutils literal notranslate"><span class="pre">O</span></code>, then rotate with right mouse</p></td>
+<td><p>message <em>Set rotationCenterPoint …</em>; the model now rotates about the new center</p></td>
+</tr>
+<tr class="row-odd"><td><p>R12</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">R</span></code>, wait 3 s, <code class="docutils literal notranslate"><span class="pre">R</span></code> again</p></td>
+<td><p>automatic rotation of the view starts and stops</p></td>
+</tr>
+<tr class="row-even"><td><p>R13</p></td>
+<td><p>F3, then left-click twice at two points (after CTRL+1)</p></td>
+<td><p>mouse coordinates in the status line; second click shows <code class="docutils literal notranslate"><span class="pre">lastPos</span></code> and <code class="docutils literal notranslate"><span class="pre">dist</span></code>; F3 again switches off</p></td>
+</tr>
+<tr class="row-odd"><td><p>R14</p></td>
+<td><p>CTRL+F3 (macOS: n.a. if the system shortcut <em>Move focus to the Dock</em> is on; then V, <strong>store model view</strong>)</p></td>
+<td><p>status line shows zoom / rotation / center; the console prints a <code class="docutils literal notranslate"><span class="pre">SC.renderer.SetModelView(...)</span></code> line</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="render-window-item-keys-simulation-keys-raytracer-views-10-min">
+<h2>2. Render window: item keys, simulation keys, raytracer, views (10 min)<a class="headerlink" href="#render-window-item-keys-simulation-keys-raytracer-views-10-min" title="Link to this heading"></a></h2>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>ID</p></th>
+<th class="head"><p>action</p></th>
+<th class="head"><p>expected</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>K1</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">N</span></code>, <code class="docutils literal notranslate"><span class="pre">B</span></code>, <code class="docutils literal notranslate"><span class="pre">C</span></code>, <code class="docutils literal notranslate"><span class="pre">M</span></code>, <code class="docutils literal notranslate"><span class="pre">L</span></code>, <code class="docutils literal notranslate"><span class="pre">S</span></code> - each pressed twice; then <code class="docutils literal notranslate"><span class="pre">B</span></code> (bodies off) and <code class="docutils literal notranslate"><span class="pre">M</span></code> twice</p></td>
+<td><p>nodes / bodies / connectors / markers / loads / sensors disappear and reappear; a message says <em>show …: off/on</em>; the markers sit inside the bodies and are seen with the bodies off</p></td>
+</tr>
+<tr class="row-odd"><td><p>K2</p></td>
+<td><p>CTRL+<code class="docutils literal notranslate"><span class="pre">N</span></code>, CTRL+<code class="docutils literal notranslate"><span class="pre">B</span></code>, CTRL+<code class="docutils literal notranslate"><span class="pre">C</span></code>, CTRL+<code class="docutils literal notranslate"><span class="pre">M</span></code>, CTRL+<code class="docutils literal notranslate"><span class="pre">L</span></code>, CTRL+<code class="docutils literal notranslate"><span class="pre">S</span></code></p></td>
+<td><p>the numbers of that item kind appear/disappear; text readable, not hidden behind the bodies</p></td>
+</tr>
+<tr class="row-even"><td><p>K3</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">T</span></code> pressed repeatedly (6-7 times)</p></td>
+<td><p>cycles through transparent faces / face edges only / faces with edges / … and back to the start; message states the mode</p></td>
+</tr>
+<tr class="row-odd"><td><p>K4</p></td>
+<td><p><strong>SPACE</strong></p></td>
+<td><p>simulation starts in real time; the sensor trace of the pendulum tip is drawn</p></td>
+</tr>
+<tr class="row-even"><td><p>K5</p></td>
+<td><p>SPACE again, wait, SPACE</p></td>
+<td><p>simulation pauses and continues (message <em>switch pause on/off</em>)</p></td>
+</tr>
+<tr class="row-odd"><td><p>K6</p></td>
+<td><p>during simulation: <code class="docutils literal notranslate"><span class="pre">1</span></code>, <code class="docutils literal notranslate"><span class="pre">5</span></code>, <code class="docutils literal notranslate"><span class="pre">2</span></code></p></td>
+<td><p>update interval 20 ms (smooth), 100 s (frozen), 100 ms (default) - message each time</p></td>
+</tr>
+<tr class="row-even"><td><p>K7</p></td>
+<td><p>CTRL+R, rotate a little, CTRL+R</p></td>
+<td><p>raytraced image (shadows, slower update) with the sensor trace, then back to OpenGL</p></td>
+</tr>
+<tr class="row-odd"><td><p>K8</p></td>
+<td><p><strong>CTRL+V</strong></p></td>
+<td><p>a second window (view 1) opens and shows the running model; mouse and keys work in it independently; CTRL+R there only affects that window</p></td>
+</tr>
+<tr class="row-even"><td><p>K9</p></td>
+<td><p>in the view 1 window: <code class="docutils literal notranslate"><span class="pre">Q</span></code></p></td>
+<td><p>only view 1 closes, the simulation continues in the main window</p></td>
+</tr>
+<tr class="row-odd"><td><p>K10</p></td>
+<td><p>F2, then <code class="docutils literal notranslate"><span class="pre">N</span></code>, then F2, then <code class="docutils literal notranslate"><span class="pre">N</span></code></p></td>
+<td><p>message <em>ignore keys mode switched on</em>, the first <code class="docutils literal notranslate"><span class="pre">N</span></code> ignored; after F2 again (<em>… off</em>) <code class="docutils literal notranslate"><span class="pre">N</span></code> works</p></td>
+</tr>
+<tr class="row-even"><td><p>K11</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">Q</span></code></p></td>
+<td><p>simulation stops; console prints <em>simulation finished …</em>; the window stays and can still be rotated</p></td>
+</tr>
+<tr class="row-odd"><td><p>K12</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">V</span></code>: <code class="docutils literal notranslate"><span class="pre">openGL.light0.shadow</span></code> = <code class="docutils literal notranslate"><span class="pre">0.4</span></code>, <code class="docutils literal notranslate"><span class="pre">openGL.light0.useCameraFrame</span></code> = <code class="docutils literal notranslate"><span class="pre">True</span></code>, <code class="docutils literal notranslate"><span class="pre">view0.camera.modelCentricView</span></code> = <code class="docutils literal notranslate"><span class="pre">False</span></code>; close the dialog, rotate and zoom with the mouse</p></td>
+<td><p>the shadow of the pendulum stays where the light puts it and follows the view smoothly - it does not flicker or appear and vanish with the view (#2308); set the three back</p></td>
+</tr>
+<tr class="row-even"><td><p>K13</p></td>
+<td><p>run <code class="docutils literal notranslate"><span class="pre">graphicsCurvedShapes.py</span></code> (its own window): look at the rows; <code class="docutils literal notranslate"><span class="pre">V</span></code>: <code class="docutils literal notranslate"><span class="pre">openGL.advanced.curvedTriangleTilingAngle</span></code> = <code class="docutils literal notranslate"><span class="pre">90</span></code>, then <code class="docutils literal notranslate"><span class="pre">5</span></code>, then back to <code class="docutils literal notranslate"><span class="pre">15</span></code>; <code class="docutils literal notranslate"><span class="pre">T</span></code> until face edges show; CTRL+R and back; SPACE</p></td>
+<td><p>the curved row (y=0) is smooth where the flat row (y=-3) shows facets, the red rims lie on the cylinder and the vase; at 90 the coarse elements show, at 5 a fine split - at once, without restarting; the face edges of the curved shapes are curved; the raytraced image shows the same shapes; the body at x=12 rotates with its rims and ring (#2709)</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="dialogs-from-the-render-window-15-min">
+<h2>3. Dialogs from the render window (15 min)<a class="headerlink" href="#dialogs-from-the-render-window-15-min" title="Link to this heading"></a></h2>
+<p>Still in phase 3 of the model (after K11), or start the model again.</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>ID</p></th>
+<th class="head"><p>action</p></th>
+<th class="head"><p>expected</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>D1</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">H</span></code></p></td>
+<td><p>help window with mouse and key table; text readable, scrollable, ESCAPE closes it</p></td>
+</tr>
+<tr class="row-odd"><td><p>D2</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">X</span></code>, type <code class="docutils literal notranslate"><span class="pre">print(mbs)</span></code>, CTRL+RETURN</p></td>
+<td><p>command window opens (may be <strong>behind</strong> the render window - note it); the console shows the system summary</p></td>
+</tr>
+<tr class="row-even"><td><p>D3</p></td>
+<td><p>in the command window: <code class="docutils literal notranslate"><span class="pre">x</span> <span class="pre">=</span> <span class="pre">42</span></code>, CTRL+RETURN; then <code class="docutils literal notranslate"><span class="pre">print(x)</span></code>, CTRL+RETURN; ESCAPE</p></td>
+<td><p>prints 42 (assignments survive); window closes</p></td>
+</tr>
+<tr class="row-odd"><td><p>D4</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">X</span></code> then <code class="docutils literal notranslate"><span class="pre">1/0</span></code>, CTRL+RETURN</p></td>
+<td><p>error printed in the console, the dialog and the renderer survive</p></td>
+</tr>
+<tr class="row-even"><td><p>V1</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">V</span></code></p></td>
+<td><p>visualization settings dialog: tree with columns Name / Value / Type / Description, readable font, sensible column widths; render window blocked or updated while it is open (both are acceptable, note which)</p></td>
+</tr>
+<tr class="row-odd"><td><p>V2</p></td>
+<td><p>open <code class="docutils literal notranslate"><span class="pre">nodes</span></code>, click the value of <code class="docutils literal notranslate"><span class="pre">show</span></code>, choose <code class="docutils literal notranslate"><span class="pre">False</span></code></p></td>
+<td><p>nodes disappear <strong>in the render window</strong> immediately; the row is marked as changed</p></td>
+</tr>
+<tr class="row-even"><td><p>V3</p></td>
+<td><p>double-click the same <code class="docutils literal notranslate"><span class="pre">nodes.show</span></code> value</p></td>
+<td><p>toggles back to <code class="docutils literal notranslate"><span class="pre">True</span></code>; nodes reappear</p></td>
+</tr>
+<tr class="row-odd"><td><p>V4</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">nodes.defaultSize</span></code>: type <code class="docutils literal notranslate"><span class="pre">0.25</span></code>, RETURN</p></td>
+<td><p>the red mass (a node) grows in the render window</p></td>
+</tr>
+<tr class="row-even"><td><p>V5</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">nodes.tiling</span></code>: type <code class="docutils literal notranslate"><span class="pre">2</span></code>, RETURN; <code class="docutils literal notranslate"><span class="pre">general.sphereTiling</span></code>: type <code class="docutils literal notranslate"><span class="pre">2</span></code>, RETURN</p></td>
+<td><p>first the red mass, then the orange sphere and the joint spheres become visibly coarse; set both back with <strong>undo</strong></p></td>
+</tr>
+<tr class="row-odd"><td><p>V6</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">connectors.showJointAxes</span></code> = <code class="docutils literal notranslate"><span class="pre">True</span></code>; <code class="docutils literal notranslate"><span class="pre">bodies.showNumbers</span></code> = <code class="docutils literal notranslate"><span class="pre">True</span></code></p></td>
+<td><p>joint axes drawn; body numbers shown</p></td>
+</tr>
+<tr class="row-even"><td><p>V6a</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">connectors.drawSimplified</span></code>, <code class="docutils literal notranslate"><span class="pre">markers.drawSimplified</span></code>, <code class="docutils literal notranslate"><span class="pre">loads.drawSimplified</span></code>, <code class="docutils literal notranslate"><span class="pre">sensors.drawSimplified</span></code> = <code class="docutils literal notranslate"><span class="pre">False</span></code> (default <code class="docutils literal notranslate"><span class="pre">True</span></code>), then back</p></td>
+<td><p>the spring windings become a tube; markers, loads and sensors drawn with their full symbols; back to lines and simple symbols</p></td>
+</tr>
+<tr class="row-odd"><td><p>V7</p></td>
+<td><p>enter an invalid value, e.g. <code class="docutils literal notranslate"><span class="pre">abc</span></code> into <code class="docutils literal notranslate"><span class="pre">nodes.defaultSize</span></code>; then <code class="docutils literal notranslate"><span class="pre">-1</span></code> into <code class="docutils literal notranslate"><span class="pre">general.circleTiling</span></code></p></td>
+<td><p>value rejected with a message, old value kept, dialog survives</p></td>
+</tr>
+<tr class="row-even"><td><p>V8</p></td>
+<td><p>enum: <code class="docutils literal notranslate"><span class="pre">contour.outputVariable</span></code> - pick <code class="docutils literal notranslate"><span class="pre">Displacement</span></code> from the list; <code class="docutils literal notranslate"><span class="pre">contour.outputVariableComponent</span></code> = <code class="docutils literal notranslate"><span class="pre">1</span></code></p></td>
+<td><p>combo box shows short names (no <code class="docutils literal notranslate"><span class="pre">OutputVariableType.</span></code> prefix); bodies get a contour color and a color bar appears; set back to <code class="docutils literal notranslate"><span class="pre">_None</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p>V9</p></td>
+<td><p>hover over a row and over a folder (wait 0.5 s)</p></td>
+<td><p>tooltip with the description (folder: its class description); tooltip is <strong>in front</strong> of the dialog</p></td>
+</tr>
+<tr class="row-even"><td><p>V10</p></td>
+<td><p>CTRL+F, type <code class="docutils literal notranslate"><span class="pre">trace</span></code>; RETURN; F3</p></td>
+<td><p>hits drop-down enabled; RETURN jumps to the first hit, F3 to the next</p></td>
+</tr>
+<tr class="row-odd"><td><p>V11</p></td>
+<td><p>select a row, press <strong>copy line</strong>, paste into an editor</p></td>
+<td><p>e.g. <code class="docutils literal notranslate"><span class="pre">SC.visualizationSettings.nodes.defaultSize</span> <span class="pre">=</span> <span class="pre">0.2</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p>V12</p></td>
+<td><p><strong>diff to default</strong>, <strong>changes since start</strong></p></td>
+<td><p>each opens a window <strong>in front of</strong> the dialog, listing exactly the changes made so far as code lines</p></td>
+</tr>
+<tr class="row-odd"><td><p>V13</p></td>
+<td><p><strong>undo</strong> (twice), <strong>revert</strong>, <strong>reset</strong></p></td>
+<td><p>undo steps back whole states; revert returns to the state when the dialog opened; reset to defaults - render window follows each</p></td>
+</tr>
+<tr class="row-even"><td><p>V14</p></td>
+<td><p>change <code class="docutils literal notranslate"><span class="pre">general.backgroundColor</span></code> to <code class="docutils literal notranslate"><span class="pre">[0.9,0.9,1,1]</span></code>, press <strong>store settings</strong>; in the window that lists what will be written, press <strong>store</strong></p></td>
+<td><p>the list shows the change; console says <em>stored 1 setting(s) in …config.json</em></p></td>
+</tr>
+<tr class="row-odd"><td><p>V15</p></td>
+<td><p>move/resize the dialog, press <strong>store positions</strong>, then <strong>store</strong> in the list; close with ESCAPE; <code class="docutils literal notranslate"><span class="pre">V</span></code> again</p></td>
+<td><p>the dialog reopens at the stored position and size</p></td>
+</tr>
+<tr class="row-even"><td><p>V16</p></td>
+<td><p>CTRL+mouse wheel over the tree</p></td>
+<td><p>font size changes, row height and columns follow</p></td>
+</tr>
+<tr class="row-odd"><td><p>V17</p></td>
+<td><p>close the dialog with <strong>close</strong>, then <code class="docutils literal notranslate"><span class="pre">Q</span></code> / ESCAPE to leave phase 3</p></td>
+<td><p>render window closes; SolutionViewer (next section) starts</p></td>
+</tr>
+</tbody>
+</table>
+<p>(After V14: the next start of any model uses the stored background color - confirmed at S1. Delete
+the file again at the end.)</p>
+</section>
+<section id="solutionviewer-and-plotsensor-7-min">
+<h2>4. SolutionViewer and PlotSensor (7 min)<a class="headerlink" href="#solutionviewer-and-plotsensor-7-min" title="Link to this heading"></a></h2>
+<p>The model continues with <code class="docutils literal notranslate"><span class="pre">mbs.SolutionViewer()</span></code> automatically.</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>ID</p></th>
+<th class="head"><p>action</p></th>
+<th class="head"><p>expected</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>S1</p></td>
+<td><p>look at the renderer and the dialog</p></td>
+<td><p>renderer reopens <strong>with the previous view</strong> and the background color stored in V14; dialog with sliders <em>Solution steps</em>, <em>Increment</em>, <em>update period</em>, run modes, record, <em>Make mp4</em></p></td>
+</tr>
+<tr class="row-odd"><td><p>S2</p></td>
+<td><p>let it run; then <strong>Static</strong>; drag the <em>Solution steps</em> slider</p></td>
+<td><p>animation plays; in static mode the model follows the slider</p></td>
+</tr>
+<tr class="row-even"><td><p>S3</p></td>
+<td><p><em>Increment</em> to 10; <em>update period</em> to max</p></td>
+<td><p>animation faster (skips frames) / slower</p></td>
+</tr>
+<tr class="row-odd"><td><p>S4</p></td>
+<td><p><strong>One cycle</strong>, <strong>Run</strong></p></td>
+<td><p>plays once and stops</p></td>
+</tr>
+<tr class="row-even"><td><p>S5</p></td>
+<td><p>keys in the render window during the viewer (<code class="docutils literal notranslate"><span class="pre">B</span></code>, <code class="docutils literal notranslate"><span class="pre">V</span></code>)</p></td>
+<td><p>still work; <code class="docutils literal notranslate"><span class="pre">V</span></code> opens the settings dialog (SPACE pauses a simulation, not the viewer: use <strong>Stop</strong>)</p></td>
+</tr>
+<tr class="row-odd"><td><p>S6</p></td>
+<td><p><em>Record frames</em>, run one cycle, <em>No recording</em></p></td>
+<td><p>images <code class="docutils literal notranslate"><span class="pre">frame00000.png</span></code>, … appear in the subfolder <code class="docutils literal notranslate"><span class="pre">images</span></code> of the working directory, whose absolute path the first frame prints, and they show the scene (not black); a failed write is reported in the console and in the render window; (<em>Make mp4</em> only if ffmpeg is installed - optional, see the section <em>Generating animations</em> of the GUI chapter)</p></td>
+</tr>
+<tr class="row-even"><td><p>S7</p></td>
+<td><p>close the dialog (window close button, or <code class="docutils literal notranslate"><span class="pre">q</span></code> / ESCAPE in the dialog)</p></td>
+<td><p>dialog and renderer close, script continues</p></td>
+</tr>
+<tr class="row-odd"><td><p>P1</p></td>
+<td><p>PlotSensor windows</p></td>
+<td><p>two matplotlib figures: tip position x/y/z with legend and axis labels, and the spring force; windows can be zoomed, panned and closed; the script ends after closing them</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="animatemodes-5-min">
+<h2>5. AnimateModes (5 min)<a class="headerlink" href="#animatemodes-5-min" title="Link to this heading"></a></h2>
+<p><code class="docutils literal notranslate"><span class="pre">python</span> <span class="pre">nMassOscillatorEigenmodes.py</span></code></p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>ID</p></th>
+<th class="head"><p>action</p></th>
+<th class="head"><p>expected</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>A1</p></td>
+<td><p>dialog and renderer open</p></td>
+<td><p>dialog with <em>Mode shape</em>, <em>Contour plot</em>, <em>Amplitude</em> (+ positive/negative), <em>update period</em>, run modes, mesh/faces, recording; renderer shows the masses</p></td>
+</tr>
+<tr class="row-odd"><td><p>A2</p></td>
+<td><p><strong>Run</strong>; move the <em>Mode shape</em> slider; move <em>Amplitude</em>; switch <em>negative</em></p></td>
+<td><p>mode animates; the mode changes; amplitude grows/shrinks; motion inverts</p></td>
+</tr>
+<tr class="row-even"><td><p>A3</p></td>
+<td><p><em>Contour plot</em> = <em>Displacement</em>; <em>Static continuous</em></p></td>
+<td><p>each mass in one color (it only translates), the colors differ between the masses, with a color bar; the deformed shape stands still</p></td>
+</tr>
+<tr class="row-odd"><td><p>A4</p></td>
+<td><p>close the dialog with <code class="docutils literal notranslate"><span class="pre">q</span></code> in the dialog</p></td>
+<td><p>dialog and renderer close, script ends without error or hang</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="quitting-3-min">
+<h2>6. Quitting (3 min)<a class="headerlink" href="#quitting-3-min" title="Link to this heading"></a></h2>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>ID</p></th>
+<th class="head"><p>action</p></th>
+<th class="head"><p>expected</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Q1</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">python</span> <span class="pre">guiManualCheckModel.py</span> <span class="pre">quitdialog</span></code>, SPACE, wait &gt; 10 s, <strong>ESCAPE</strong></p></td>
+<td><p>dialog <em>WARNING - long running simulation!</em> in front; <strong>No</strong> keeps running; ESCAPE again, <strong>Yes</strong> stops the solver and closes the window; the script continues (SolutionViewer) or ends without hanging</p></td>
+</tr>
+<tr class="row-odd"><td><p>Q2</p></td>
+<td><p>in the SolutionViewer of the same run: close the render window with the window close button</p></td>
+<td><p>viewer stops, no hang, no crash of the Python process</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="optional-if-time-is-left">
+<h2>7. Optional, if time is left<a class="headerlink" href="#optional-if-time-is-left" title="Link to this heading"></a></h2>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>ID</p></th>
+<th class="head"><p>action</p></th>
+<th class="head"><p>expected</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>O1</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">python</span> <span class="pre">-m</span> <span class="pre">exudyn</span> <span class="pre">dialogs</span> <span class="pre">vis</span></code>, <code class="docutils literal notranslate"><span class="pre">...</span> <span class="pre">sim</span></code>, <code class="docutils literal notranslate"><span class="pre">...</span> <span class="pre">help</span></code></p></td>
+<td><p>the dialogs without a model; closing <em>vis</em> prints the changed settings as code</p></td>
+</tr>
+<tr class="row-odd"><td><p>O2</p></td>
+<td><p>3D mouse / 6-axis joystick (3Dconnexion) connected before the renderer starts</p></td>
+<td><p>message <em>found 6-axis joystick …</em>; the device moves and rotates the view (<code class="docutils literal notranslate"><span class="pre">interactive.useJoystickInput</span></code>, on by default)</p></td>
+</tr>
+<tr class="row-even"><td><p>O3</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">python/Examples/mouseInteractionExample.py</span></code></p></td>
+<td><p>drag the chain with the mouse; F2 / key user function works</p></td>
+</tr>
+<tr class="row-odd"><td><p>O4</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">python</span> <span class="pre">-m</span> <span class="pre">exudyn</span> <span class="pre">monitor</span> <span class="pre">--last</span></code> while a model writes sensor files</p></td>
+<td><p>results monitor opens and updates</p></td>
+</tr>
+<tr class="row-even"><td><p>O5</p></td>
+<td><p>display scaling 150-200 % (Windows) / HiDPI (Ubuntu, macOS Retina)</p></td>
+<td><p>texts in the render window and the dialogs readable and not blurred; adjust <code class="docutils literal notranslate"><span class="pre">dialogs.fontScaling</span></code> in V</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="finish">
+<h2>8. Finish<a class="headerlink" href="#finish" title="Link to this heading"></a></h2>
+<ol class="arabic simple">
+<li><p>Delete <code class="docutils literal notranslate"><span class="pre">~/.exudyn/config.json</span></code> and restore your backup.</p></li>
+<li><p>Send the report: <code class="docutils literal notranslate"><span class="pre">python</span> <span class="pre">-m</span> <span class="pre">exudyn</span> <span class="pre">info</span></code> output, platform (OS version, X11/Wayland on Ubuntu,
+Intel/ARM on macOS, display scaling), the list of IDs with OK / FAIL / n.a., and screenshots of
+anything that looked wrong.</p></li>
+</ol>
+</section>
+<section id="platform-notes">
+<h2>Platform notes<a class="headerlink" href="#platform-notes" title="Link to this heading"></a></h2>
+<ul class="simple">
+<li><p><strong>macOS</strong> always renders single-threaded: dialogs run inside the renderer’s idle loop, so the
+render window does <strong>not</strong> update while a dialog is open - that is expected. There is no keypad on
+most keyboards: R9 is <em>n.a.</em>, use SHIFT+cursor (R8). CTRL means the <strong>control</strong> key, not CMD.</p></li>
+<li><p><strong>Ubuntu</strong>: note whether the session is X11 or Wayland. tkinter dialogs may open behind the render
+window (D2, V1) - note it, it is known; a dialog that cannot be brought to front at all is a FAIL.</p></li>
+<li><p><strong>Windows</strong>: check at least once with display scaling &gt; 100 % (O5), because DPI awareness is set
+differently with and without the render window (#2634).</p></li>
+</ul>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="NEW_ITEM.html" class="btn btn-neutral float-left" title="How to set up a new item" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="../generated/deprecations.html" class="btn btn-neutral float-right" title="Deprecations" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

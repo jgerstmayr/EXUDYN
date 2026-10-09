@@ -1,0 +1,236 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>General info for all loads &mdash; Exudyn1.13.3 1.13.3 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=3ee1c6c6" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/rtd_sphinx_search.min.css" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/custom.css?v=e2783f0e" />
+
+  
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=b8a3e558"></script>
+      <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../../_static/copybutton.js?v=f281be69"></script>
+      <script src="../../../_static/js/rtd_search_config.js"></script>
+      <script src="../../../_static/js/rtd_sphinx_search.min.js"></script>
+      <script>window.MathJax = {"loader": {"load": ["[tex]/mathtools"]}, "tex": {"packages": {"[+]": ["mathtools"]}, "macros": {"ANCFdk": "{\\LU{0}{\\dv_k}}", "ANCFdkO": "{\\LU{0}{\\dv_{0,k}}}", "ANCFdkOtp": "{\\LU{0}{\\dv_{0,k}\\tp}}", "ANCFdkt": "{\\LU{0}{\\dot\\dv_k}}", "Am": "{\\mathbf{A}}", "Dm": "{\\mathbf{D}}", "Em": "{\\mathbf{E}}", "Gm": "{\\mathbf{G}}", "Im": "{\\mathbf{I}}", "ImThree": "{\\mathbf{I}_{3 \\times 3}}", "Jm": "{\\mathbf{J}}", "Km": "{\\mathbf{K}}", "Mm": "{\\mathbf{M}}", "Pm": "{\\mathbf{P}}", "Rm": "{\\mathbf{R}}", "Sm": "{\\mathbf{S}}", "Tm": "{\\mathbf{T}}", "av": "{\\mathbf{a}}", "bv": "{\\mathbf{b}}", "cv": "{\\mathbf{c}}", "diffANCF": ["{\\frac{\\partial #1}{\\partial \\qv_{ANCF}}}", 1], "diffANCFdk": "{\\diffANCFmI{\\ANCFdk}}", "diffANCFmI": ["{\\frac{\\partial #1}{\\partial \\qv_{ANCF,m1}}}", 1], "diffANCFmIt": ["{\\frac{\\partial #1}{\\partial \\dot \\qv_{ANCF,m1}}}", 1], "diffANCFt": ["{\\frac{\\partial #1}{\\partial \\dot \\qv_{ANCF}}}", 1], "diffmI": ["{\\frac{\\partial #1}{\\partial \\qv_{m1}}}", 1], "diffmIt": ["{\\frac{\\partial #1}{\\partial \\dot \\qv_{m1}}}", 1], "diffmOI": ["{\\frac{\\partial #1}{\\partial \\qv_{m0,m1}}}", 1], "diffmOIt": ["{\\frac{\\partial #1}{\\partial \\dot \\qv_{m0,m1}}}", 1], "diffmOt": ["{\\frac{\\partial #1}{\\partial \\dot \\qv_{m0}}}", 1], "dv": "{\\mathbf{d}}", "ev": "{\\mathbf{e}}", "fv": "{\\mathbf{f}}", "gv": "{\\mathbf{g}}", "hv": "{\\mathbf{h}}", "nv": "{\\mathbf{n}}", "pv": "{\\mathbf{p}}", "qv": "{\\mathbf{q}}", "rv": "{\\mathbf{r}}", "sv": "{\\mathbf{s}}", "tv": "{\\mathbf{t}}", "uv": "{\\mathbf{u}}", "vv": "{\\mathbf{v}}", "xv": "{\\mathbf{x}}", "yv": "{\\mathbf{y}}", "zv": "{\\mathbf{z}}", "vspace": ["{}", 1], "ra": "{\\rightarrow}", "Rcal": "{\\mathbb{R}}", "Ccal": "{\\mathbb{C}}", "Ncal": "{\\mathbb{N}}", "Rot": "{\\mathbf{A}}", "dd": "{\\mathrm{d}}", "ps": "{p_\\mathrm{s}}", "co": "{\\mathrm{c}}", "si": "{\\mathrm{s}}", "tp": "{^\\mathrm{T}}", "diag": "{\\mathrm{diag}}", "vec": "{\\mathrm{vec}}", "Null": "{\\mathbf{0}}", "varepsilonDot": "{\\boldsymbol{\\varepsilon}}", "talpha": "{\\boldsymbol{\\alpha}}", "tbeta": "{\\boldsymbol{\\beta}}", "tgamma": "{\\boldsymbol{\\gamma}}", "tchi": "{\\boldsymbol{\\chi}}", "tdelta": "{\\boldsymbol{\\delta}}", "teps": "{\\boldsymbol{\\varepsilon}}", "tepsDot": "{\\boldsymbol{\\dot \\varepsilon}}", "teta": "{\\boldsymbol{\\eta}}", "tkappa": "{\\boldsymbol{\\kappa}}", "tkappaDot": "{\\boldsymbol{\\dot \\kappa}}", "tphi": "{\\boldsymbol{\\phi}}", "boldVarPhi": "{\\boldsymbol{\\varphi}}", "tPhi": "{\\boldsymbol{\\Phi}}", "ttheta": "{\\boldsymbol{\\theta}}", "tTheta": "{\\boldsymbol{\\Theta}}", "tlambda": "{\\boldsymbol{\\lambda}}", "tnu": "{\\boldsymbol{\\nu}}", "tmu": "{\\boldsymbol{\\mu}}", "tpsi": "{\\boldsymbol{\\psi}}", "tPsi": "{\\boldsymbol{\\Psi}}", "ttau": "{\\boldsymbol{\\tau}}", "tsigma": "{\\boldsymbol{\\sigma}}", "txi": "{\\boldsymbol{\\xi}}", "tzeta": "{\\boldsymbol{\\zeta}}", "tomega": "{\\boldsymbol{\\omega}}", "tOmega": "{\\boldsymbol{\\Omega}}", "vareps": "{\\varepsilon}", "myoverline": ["\\overline{#1}", 1], "pluseq": "\\mathrel{+}=", "LU": ["{\\prescript{#1}{}{#2}\\,}", 2], "LUX": ["{\\prescript{#1}{}{#2}#3\\,}", 3], "LUR": ["{\\prescript{#1}{}{#2}_{#3}\\,}", 3], "LURU": ["{\\prescript{#1}{}{#2}_{#3}^{#4}\\,}", 4], "LLdot": ["{\\prescript{}{#1}{\\dot{#2}}_{#3}\\,}", 3], "vr": ["{\\left[ \\begin{array}{c} { #1}\\vspace{0.04cm} \\\\ { #2}\\vspace{0.04cm} \\\\ { #3} \\end{array} \\right]}", 3], "mr": ["{\\left[ \\begin{array}{ccc} #1 & #2 & #3 \\vspace{0.04cm}\\\\ #4 & #5 & #6 \\vspace{0.04cm}\\\\ #7 & #8 & #9  \\end{array} \\right]}", 9], "vp": ["{\\left[ \\begin{array}{c} { #1} \\vspace{0.04cm}\\\\ { #2} \\end{array} \\right]}", 2], "mp": ["{\\left[ \\begin{array}{cc} #1 & #2 \\vspace{0.04cm}\\\\ #3 & #4 \\end{array} \\right]}", 4], "mfour": ["{\\left[ \\begin{array}{cccc} { #1} \\\\ { #2} \\\\ { #3} \\\\ { #4} \\end{array} \\right]}", 4], "vfour": ["{\\left[ \\begin{array}{c} { #1} \\\\ { #2} \\\\ { #3} \\\\ { #4} \\end{array} \\right]}", 4], "vrRow": ["{[#1,\\, #2,\\, #3]}", 3], "vsix": ["{\\left[ \\begin{array}{c} { #1} \\\\ { #2} \\\\ { #3} \\\\ { #4} \\\\ { #5} \\\\ { #6} \\end{array} \\right]}", 6], "vsixb": ["{\\begin{array}{c} { #1} \\\\ { #2} \\\\ { #3} \\\\ { #4} \\\\ { #5} \\\\ { #6} \\end{array} }", 6], "vsixs": ["{ \\begin{array}{c} { #1} \\\\ { #2} \\\\ { #3} \\\\ { #4} \\\\ { #5} \\\\ { #6} \\end{array} }", 6], "SO": "{q}", "FO": "{y}", "AE": "{\\lambda}", "SYS": "{s}", "SON": "{$2^\\mathrm{nd}$ order differential equations}", "FON": "{$1^\\mathrm{st}$ order differential equations}", "AEN": "{algebraic equations}", "Bm": "{\\mathbf{B}}", "Cm": "{\\mathbf{C}}", "Fm": "{\\mathbf{F}}", "SYSN": "{system equations}", "cIni": "{_\\mathrm{ini}}", "cRef": "{_\\mathrm{ref}}", "cCur": "{_\\mathrm{cur}}", "cVis": "{_\\mathrm{vis}}", "cSOS": "{_\\mathrm{start\\;of\\;step}}", "cConfig": "{_\\mathrm{config}}", "pLoc": "{\\mathbf{b}}", "pLocB": "{\\,^{b}{\\mathbf{v}}}", "pRef": "{\\mathbf{r}}", "pRefG": "{\\,^{0}{\\mathbf{r}}}", "indf": "{_\\mathrm{f}}", "indt": "{_\\mathrm{t}}", "indr": "{_\\mathrm{r}}", "indtt": "{_\\mathrm{tt}}", "indrr": "{_\\mathrm{rr}}", "indff": "{_\\mathrm{ff}}", "indtf": "{_\\mathrm{tf}}", "indrf": "{_\\mathrm{rf}}", "indtr": "{_\\mathrm{tr}}", "omegaBDtilde": "{\\LU{b}{\\tilde \\tomega_\\mathrm{bd}}}", "indrigid": "{_\\mathrm{rigid}}", "indred": "{_\\mathrm{red}}", "induser": "{_\\mathrm{user}}", "indu": "{_\\mathrm{u}}", "termA": ["{\\color{blue}{#1}}", 1], "termB": ["{\\color{red}{#1}}", 1], "termC": ["{\\color{green}{#1}}", 1], "acc": "{\\ddot{\\mathbf{q}}}", "GA": "{G\\alpha}", "Hm": "{\\mathbf{H}}", "ImTwo": "{\\mathbf{I}_{2 \\times 2}}", "Lm": "{\\mathbf{L}}", "Qm": "{\\mathbf{Q}}", "Vm": "{\\mathbf{V}}", "Wm": "{\\mathbf{W}}", "Xm": "{\\mathbf{X}}", "Ym": "{\\mathbf{Y}}", "aalg": "{\\mathbf{a}}", "iv": "{\\mathbf{i}}", "jv": "{\\mathbf{j}}", "kv": "{\\mathbf{k}}", "lv": "{\\mathbf{l}}", "mv": "{\\mathbf{m}}", "ov": "{\\mathbf{o}}", "vel": "{\\mathbf{v}}", "wv": "{\\mathbf{w}}"}}, "options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+      <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-mml-chtml.js"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+    <link rel="next" title="LoadForceVector" href="LoadForceVector.html" />
+    <link rel="prev" title="Load" href="loadIndex.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            Exudyn1.13.3
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Exudyn User Manual</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../README.html">Exudyn</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../manual/gettingStarted.html">Installation and getting started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../manual/introduction.html">Overview on Exudyn</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../manual/introductionBasics.html">Exudyn basics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../manual/tutorial.html">Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../manual/GUI.html">Renderer, graphics and visualization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../manual/performanceErrors.html">Performance, errors and solver failures</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../manual/introductionAdvanced.html">Advanced topics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../manual/notation.html">Notation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../manual/theory.html">Theory and formulations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../manual/solver.html">Solvers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../cInterface/cInterfaceIndex.html">Python-C++ command interface</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Reference Manual</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="itemsIndex.html">Items reference manual</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="nodeIndex.html">Node</a></li>
+<li class="toctree-l2"><a class="reference internal" href="objectBodyIndex.html">Object (Body)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="objectSuperElementIndex.html">Object (SuperElement)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="objectObjectIndex.html">Object (Object)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="objectFiniteElementIndex.html">Object (FiniteElement)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="objectConnectorIndex.html">Object (Connector)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="objectConstraintIndex.html">Object (Constraint)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="objectJointIndex.html">Object (Joint)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="markerIndex.html">Marker</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="loadIndex.html">Load</a><ul class="current">
+<li class="toctree-l3 current"><a class="current reference internal" href="#">General info for all loads</a></li>
+<li class="toctree-l3"><a class="reference internal" href="LoadForceVector.html">LoadForceVector</a></li>
+<li class="toctree-l3"><a class="reference internal" href="LoadTorqueVector.html">LoadTorqueVector</a></li>
+<li class="toctree-l3"><a class="reference internal" href="LoadMassProportional.html">LoadMassProportional</a></li>
+<li class="toctree-l3"><a class="reference internal" href="LoadCoordinate.html">LoadCoordinate</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="sensorIndex.html">Sensor</a></li>
+<li class="toctree-l2"><a class="reference internal" href="itemsIndex.html#parameter-changes">Parameter changes</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../pythonUtilities/utilitiesIndex.html">Python Utility Functions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../structures/structuresIndex.html">Structures and Settings</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../references.html">References</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Developer documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../dev/README.html">Exudyn developer documentation</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">How-to notes</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../howTo/condaEnvironments.html">Conda environments for Exudyn</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../howTo/sphinxDocs.html">Building the documentation</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Examples, models and issues</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../examples/examplesIndex.html">Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../testModels/testModelsIndex.html">TestModels</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../abbreviations.html">List of Abbreviations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../manual/revisions.html">Revisions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../CHANGELOG.html">Changelog</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../trackerlog.html">Issue tracker</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">Exudyn1.13.3</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="itemsIndex.html">Items reference manual</a></li>
+          <li class="breadcrumb-item"><a href="loadIndex.html">Load</a></li>
+      <li class="breadcrumb-item active">General info for all loads</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../../_sources/docs/generated/items/loadGeneral.md.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <!-- GENERATED by tools/generators/itemDocsEmitter.py from definitions/ - do not edit -->
+<section class="tex2jax_ignore mathjax_ignore" id="general-info-for-all-loads">
+<h1>General info for all loads<a class="headerlink" href="#general-info-for-all-loads" title="Link to this heading"></a></h1>
+<section id="how-a-load-acts">
+<h2>How a load acts<a class="headerlink" href="#how-a-load-acts" title="Link to this heading"></a></h2>
+<p>A load acts through a marker: the marker locates it - a point of a body, a node, a coordinate - and
+provides the Jacobian that takes the load to the coordinates of the body or node. For a force
+<span class="math notranslate nohighlight">\(\LU{0}{\fv}\)</span> at a position marker this is the virtual work <span class="math notranslate nohighlight">\(\delta W = \delta \LU{0}{\pv}\tp
+\LU{0}{\fv}\)</span>, which gives the generalized forces</p>
+<div class="math notranslate nohighlight">
+\[
+\Qm = \LU{0}{\Jm_{pos}}\tp\, \LU{0}{\fv}, \quad \LU{0}{\Jm_{pos}} = \frac{\partial \LU{0}{\pv}}{\partial \qv} ;
+\]</div>
+<p>a torque uses the rotation Jacobian <span class="math notranslate nohighlight">\(\LU{0}{\Jm_{rot}} = \partial \LU{0}{\tomega} / \partial
+\dot\qv\)</span> the same way. The Jacobians are global, so a load given in a local frame is transformed
+into the global frame first. Each load page gives its formula.</p>
+</section>
+<section id="global-and-body-fixed-loads">
+<h2>Global and body-fixed loads<a class="headerlink" href="#global-and-body-fixed-loads" title="Link to this heading"></a></h2>
+<p>A force or a torque is given in the global frame, or with <code class="docutils literal notranslate"><span class="pre">bodyFixed</span> <span class="pre">=</span> <span class="pre">True</span></code> in the frame of its
+marker, where it turns with the body or node - a follower load. A body-fixed load needs a marker
+with an orientation: <code class="docutils literal notranslate"><span class="pre">MarkerBodyRigid</span></code> on a body, <code class="docutils literal notranslate"><span class="pre">MarkerNodeRigid</span></code> on a node; a point node has no
+orientation and takes only global loads.</p>
+</section>
+<section id="loads-that-change-in-time">
+<h2>Loads that change in time<a class="headerlink" href="#loads-that-change-in-time" title="Link to this heading"></a></h2>
+<p>A load is constant, unless</p>
+<ul class="simple">
+<li><p>a user function gives it: <code class="docutils literal notranslate"><span class="pre">loadVectorUserFunction(mbs,</span> <span class="pre">t,</span> <span class="pre">loadVector)</span></code> or
+<code class="docutils literal notranslate"><span class="pre">loadUserFunction(mbs,</span> <span class="pre">t,</span> <span class="pre">load)</span></code>, called at every evaluation with the current time, replaces the
+value of the load;</p></li>
+<li><p>a <code class="docutils literal notranslate"><span class="pre">preStepUserFunction</span></code> of <code class="docutils literal notranslate"><span class="pre">mbs</span></code> changes it before every step, with <code class="docutils literal notranslate"><span class="pre">mbs.SetLoadParameter</span></code>.</p></li>
+</ul>
+</section>
+<section id="loads-in-static-computations">
+<h2>Loads in static computations<a class="headerlink" href="#loads-in-static-computations" title="Link to this heading"></a></h2>
+<p>The static solver increases the loads over its load steps (<code class="docutils literal notranslate"><span class="pre">staticSolver.numberOfLoadSteps</span></code>):
+every load is multiplied by the <strong>load factor</strong> of the current step, which reaches one in the last
+step. A load with a user function is <strong>not</strong> multiplied: its value is used as the function returns
+it, and the function gets the quasi-time of the load step (<code class="docutils literal notranslate"><span class="pre">staticSolver.loadStepDuration</span></code>), which
+it has to use itself to increase the load.</p>
+</section>
+<section id="creating-loads">
+<h2>Creating loads<a class="headerlink" href="#creating-loads" title="Link to this heading"></a></h2>
+<p><code class="docutils literal notranslate"><span class="pre">mbs.CreateForce</span></code> and <code class="docutils literal notranslate"><span class="pre">mbs.CreateTorque</span></code> add the marker and the load in one call - for a force a
+<code class="docutils literal notranslate"><span class="pre">MarkerBodyPosition</span></code>, or a <code class="docutils literal notranslate"><span class="pre">MarkerBodyRigid</span></code> if it is body-fixed; for a torque a <code class="docutils literal notranslate"><span class="pre">MarkerBodyRigid</span></code> -
+unless a marker is given instead of a body; and the
+<code class="docutils literal notranslate"><span class="pre">gravity</span></code> argument of <code class="docutils literal notranslate"><span class="pre">CreateMassPoint</span></code> and <code class="docutils literal notranslate"><span class="pre">CreateRigidBody</span></code> adds a <code class="docutils literal notranslate"><span class="pre">MarkerBodyMass</span></code> with a
+<code class="docutils literal notranslate"><span class="pre">LoadMassProportional</span></code>.</p>
+</section>
+<section id="drawing">
+<span id="sec-drawing-loads"></span><h2>Drawing<a class="headerlink" href="#drawing" title="Link to this heading"></a></h2>
+<p>A load on a marker with a position is drawn if <code class="docutils literal notranslate"><span class="pre">loads.show</span></code> and its own <code class="docutils literal notranslate"><span class="pre">show</span></code> are True: an arrow at the
+marker, of length <code class="docutils literal notranslate"><span class="pre">loads.defaultSize</span></code> - a fraction of <code class="docutils literal notranslate"><span class="pre">openGL.advanced.initialMaxSceneSize</span></code> if -1 -, or, with
+<code class="docutils literal notranslate"><span class="pre">loads.fixedLoadSize</span></code> False, of the length of the load times <code class="docutils literal notranslate"><span class="pre">loads.loadSizeFactor</span></code>; lines with
+<code class="docutils literal notranslate"><span class="pre">loads.drawSimplified</span></code>, otherwise a 3D arrow of radius <code class="docutils literal notranslate"><span class="pre">loads.defaultRadius</span></code> (<code class="docutils literal notranslate"><span class="pre">general.axesTiling</span></code>), in
+<code class="docutils literal notranslate"><span class="pre">loads.defaultColor</span></code>. With <code class="docutils literal notranslate"><span class="pre">loads.drawWithUserFunction</span></code>, the value of the user function is drawn - of a symbolic one
+always, of a Python one only with <code class="docutils literal notranslate"><span class="pre">general.useMultiThreadedRendering</span></code> False, as the render thread cannot call Python.
+<code class="docutils literal notranslate"><span class="pre">loads.showNumbers</span></code> writes its number. A load on a coordinate draws nothing.</p>
+<p>The settings: <a class="reference internal" href="../structures/VisualizationSettings.html#sec-vsettingsloads"><span class="std std-ref"><code class="docutils literal notranslate"><span class="pre">loads.show</span></code></span></a>, <a class="reference internal" href="../structures/VisualizationSettings.html#sec-vsettingsloads"><span class="std std-ref"><code class="docutils literal notranslate"><span class="pre">loads.defaultSize</span></code></span></a>, <a class="reference internal" href="../structures/VisualizationSettings.html#sec-vsettingsloads"><span class="std std-ref"><code class="docutils literal notranslate"><span class="pre">loads.defaultRadius</span></code></span></a>, <a class="reference internal" href="../structures/VisualizationSettings.html#sec-vsettingsloads"><span class="std std-ref"><code class="docutils literal notranslate"><span class="pre">loads.defaultColor</span></code></span></a>, <a class="reference internal" href="../structures/VisualizationSettings.html#sec-vsettingsloads"><span class="std std-ref"><code class="docutils literal notranslate"><span class="pre">loads.drawSimplified</span></code></span></a>, <a class="reference internal" href="../structures/VisualizationSettings.html#sec-vsettingsloads"><span class="std std-ref"><code class="docutils literal notranslate"><span class="pre">loads.fixedLoadSize</span></code></span></a>, <a class="reference internal" href="../structures/VisualizationSettings.html#sec-vsettingsloads"><span class="std std-ref"><code class="docutils literal notranslate"><span class="pre">loads.loadSizeFactor</span></code></span></a>, <a class="reference internal" href="../structures/VisualizationSettings.html#sec-vsettingsloads"><span class="std std-ref"><code class="docutils literal notranslate"><span class="pre">loads.drawWithUserFunction</span></code></span></a>, <a class="reference internal" href="../structures/VisualizationSettings.html#sec-vsettingsloads"><span class="std std-ref"><code class="docutils literal notranslate"><span class="pre">loads.showNumbers</span></code></span></a>, <a class="reference internal" href="../structures/VisualizationSettings.html#sec-vsettingsgeneral"><span class="std std-ref"><code class="docutils literal notranslate"><span class="pre">general.axesTiling</span></code></span></a>, <a class="reference internal" href="../structures/VisualizationSettings.html#sec-vsettingsgeneral"><span class="std std-ref"><code class="docutils literal notranslate"><span class="pre">general.useMultiThreadedRendering</span></code></span></a>, <a class="reference internal" href="../structures/VisualizationSettings.html#sec-vsettingsopengladvanced"><span class="std std-ref"><code class="docutils literal notranslate"><span class="pre">openGL.advanced.initialMaxSceneSize</span></code></span></a>.</p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="loadIndex.html" class="btn btn-neutral float-left" title="Load" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="LoadForceVector.html" class="btn btn-neutral float-right" title="LoadForceVector" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

@@ -1,0 +1,690 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Solvers &mdash; Exudyn1.13.3 1.13.3 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=3ee1c6c6" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/rtd_sphinx_search.min.css" />
+      <link rel="stylesheet" type="text/css" href="../../_static/custom.css?v=e2783f0e" />
+
+  
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=b8a3e558"></script>
+      <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../_static/copybutton.js?v=f281be69"></script>
+      <script src="../../_static/js/rtd_search_config.js"></script>
+      <script src="../../_static/js/rtd_sphinx_search.min.js"></script>
+      <script>window.MathJax = {"loader": {"load": ["[tex]/mathtools"]}, "tex": {"packages": {"[+]": ["mathtools"]}, "macros": {"ANCFdk": "{\\LU{0}{\\dv_k}}", "ANCFdkO": "{\\LU{0}{\\dv_{0,k}}}", "ANCFdkOtp": "{\\LU{0}{\\dv_{0,k}\\tp}}", "ANCFdkt": "{\\LU{0}{\\dot\\dv_k}}", "Am": "{\\mathbf{A}}", "Dm": "{\\mathbf{D}}", "Em": "{\\mathbf{E}}", "Gm": "{\\mathbf{G}}", "Im": "{\\mathbf{I}}", "ImThree": "{\\mathbf{I}_{3 \\times 3}}", "Jm": "{\\mathbf{J}}", "Km": "{\\mathbf{K}}", "Mm": "{\\mathbf{M}}", "Pm": "{\\mathbf{P}}", "Rm": "{\\mathbf{R}}", "Sm": "{\\mathbf{S}}", "Tm": "{\\mathbf{T}}", "av": "{\\mathbf{a}}", "bv": "{\\mathbf{b}}", "cv": "{\\mathbf{c}}", "diffANCF": ["{\\frac{\\partial #1}{\\partial \\qv_{ANCF}}}", 1], "diffANCFdk": "{\\diffANCFmI{\\ANCFdk}}", "diffANCFmI": ["{\\frac{\\partial #1}{\\partial \\qv_{ANCF,m1}}}", 1], "diffANCFmIt": ["{\\frac{\\partial #1}{\\partial \\dot \\qv_{ANCF,m1}}}", 1], "diffANCFt": ["{\\frac{\\partial #1}{\\partial \\dot \\qv_{ANCF}}}", 1], "diffmI": ["{\\frac{\\partial #1}{\\partial \\qv_{m1}}}", 1], "diffmIt": ["{\\frac{\\partial #1}{\\partial \\dot \\qv_{m1}}}", 1], "diffmOI": ["{\\frac{\\partial #1}{\\partial \\qv_{m0,m1}}}", 1], "diffmOIt": ["{\\frac{\\partial #1}{\\partial \\dot \\qv_{m0,m1}}}", 1], "diffmOt": ["{\\frac{\\partial #1}{\\partial \\dot \\qv_{m0}}}", 1], "dv": "{\\mathbf{d}}", "ev": "{\\mathbf{e}}", "fv": "{\\mathbf{f}}", "gv": "{\\mathbf{g}}", "hv": "{\\mathbf{h}}", "nv": "{\\mathbf{n}}", "pv": "{\\mathbf{p}}", "qv": "{\\mathbf{q}}", "rv": "{\\mathbf{r}}", "sv": "{\\mathbf{s}}", "tv": "{\\mathbf{t}}", "uv": "{\\mathbf{u}}", "vv": "{\\mathbf{v}}", "xv": "{\\mathbf{x}}", "yv": "{\\mathbf{y}}", "zv": "{\\mathbf{z}}", "vspace": ["{}", 1], "ra": "{\\rightarrow}", "Rcal": "{\\mathbb{R}}", "Ccal": "{\\mathbb{C}}", "Ncal": "{\\mathbb{N}}", "Rot": "{\\mathbf{A}}", "dd": "{\\mathrm{d}}", "ps": "{p_\\mathrm{s}}", "co": "{\\mathrm{c}}", "si": "{\\mathrm{s}}", "tp": "{^\\mathrm{T}}", "diag": "{\\mathrm{diag}}", "vec": "{\\mathrm{vec}}", "Null": "{\\mathbf{0}}", "varepsilonDot": "{\\boldsymbol{\\varepsilon}}", "talpha": "{\\boldsymbol{\\alpha}}", "tbeta": "{\\boldsymbol{\\beta}}", "tgamma": "{\\boldsymbol{\\gamma}}", "tchi": "{\\boldsymbol{\\chi}}", "tdelta": "{\\boldsymbol{\\delta}}", "teps": "{\\boldsymbol{\\varepsilon}}", "tepsDot": "{\\boldsymbol{\\dot \\varepsilon}}", "teta": "{\\boldsymbol{\\eta}}", "tkappa": "{\\boldsymbol{\\kappa}}", "tkappaDot": "{\\boldsymbol{\\dot \\kappa}}", "tphi": "{\\boldsymbol{\\phi}}", "boldVarPhi": "{\\boldsymbol{\\varphi}}", "tPhi": "{\\boldsymbol{\\Phi}}", "ttheta": "{\\boldsymbol{\\theta}}", "tTheta": "{\\boldsymbol{\\Theta}}", "tlambda": "{\\boldsymbol{\\lambda}}", "tnu": "{\\boldsymbol{\\nu}}", "tmu": "{\\boldsymbol{\\mu}}", "tpsi": "{\\boldsymbol{\\psi}}", "tPsi": "{\\boldsymbol{\\Psi}}", "ttau": "{\\boldsymbol{\\tau}}", "tsigma": "{\\boldsymbol{\\sigma}}", "txi": "{\\boldsymbol{\\xi}}", "tzeta": "{\\boldsymbol{\\zeta}}", "tomega": "{\\boldsymbol{\\omega}}", "tOmega": "{\\boldsymbol{\\Omega}}", "vareps": "{\\varepsilon}", "myoverline": ["\\overline{#1}", 1], "pluseq": "\\mathrel{+}=", "LU": ["{\\prescript{#1}{}{#2}\\,}", 2], "LUX": ["{\\prescript{#1}{}{#2}#3\\,}", 3], "LUR": ["{\\prescript{#1}{}{#2}_{#3}\\,}", 3], "LURU": ["{\\prescript{#1}{}{#2}_{#3}^{#4}\\,}", 4], "LLdot": ["{\\prescript{}{#1}{\\dot{#2}}_{#3}\\,}", 3], "vr": ["{\\left[ \\begin{array}{c} { #1}\\vspace{0.04cm} \\\\ { #2}\\vspace{0.04cm} \\\\ { #3} \\end{array} \\right]}", 3], "mr": ["{\\left[ \\begin{array}{ccc} #1 & #2 & #3 \\vspace{0.04cm}\\\\ #4 & #5 & #6 \\vspace{0.04cm}\\\\ #7 & #8 & #9  \\end{array} \\right]}", 9], "vp": ["{\\left[ \\begin{array}{c} { #1} \\vspace{0.04cm}\\\\ { #2} \\end{array} \\right]}", 2], "mp": ["{\\left[ \\begin{array}{cc} #1 & #2 \\vspace{0.04cm}\\\\ #3 & #4 \\end{array} \\right]}", 4], "mfour": ["{\\left[ \\begin{array}{cccc} { #1} \\\\ { #2} \\\\ { #3} \\\\ { #4} \\end{array} \\right]}", 4], "vfour": ["{\\left[ \\begin{array}{c} { #1} \\\\ { #2} \\\\ { #3} \\\\ { #4} \\end{array} \\right]}", 4], "vrRow": ["{[#1,\\, #2,\\, #3]}", 3], "vsix": ["{\\left[ \\begin{array}{c} { #1} \\\\ { #2} \\\\ { #3} \\\\ { #4} \\\\ { #5} \\\\ { #6} \\end{array} \\right]}", 6], "vsixb": ["{\\begin{array}{c} { #1} \\\\ { #2} \\\\ { #3} \\\\ { #4} \\\\ { #5} \\\\ { #6} \\end{array} }", 6], "vsixs": ["{ \\begin{array}{c} { #1} \\\\ { #2} \\\\ { #3} \\\\ { #4} \\\\ { #5} \\\\ { #6} \\end{array} }", 6], "SO": "{q}", "FO": "{y}", "AE": "{\\lambda}", "SYS": "{s}", "SON": "{$2^\\mathrm{nd}$ order differential equations}", "FON": "{$1^\\mathrm{st}$ order differential equations}", "AEN": "{algebraic equations}", "Bm": "{\\mathbf{B}}", "Cm": "{\\mathbf{C}}", "Fm": "{\\mathbf{F}}", "SYSN": "{system equations}", "cIni": "{_\\mathrm{ini}}", "cRef": "{_\\mathrm{ref}}", "cCur": "{_\\mathrm{cur}}", "cVis": "{_\\mathrm{vis}}", "cSOS": "{_\\mathrm{start\\;of\\;step}}", "cConfig": "{_\\mathrm{config}}", "pLoc": "{\\mathbf{b}}", "pLocB": "{\\,^{b}{\\mathbf{v}}}", "pRef": "{\\mathbf{r}}", "pRefG": "{\\,^{0}{\\mathbf{r}}}", "indf": "{_\\mathrm{f}}", "indt": "{_\\mathrm{t}}", "indr": "{_\\mathrm{r}}", "indtt": "{_\\mathrm{tt}}", "indrr": "{_\\mathrm{rr}}", "indff": "{_\\mathrm{ff}}", "indtf": "{_\\mathrm{tf}}", "indrf": "{_\\mathrm{rf}}", "indtr": "{_\\mathrm{tr}}", "omegaBDtilde": "{\\LU{b}{\\tilde \\tomega_\\mathrm{bd}}}", "indrigid": "{_\\mathrm{rigid}}", "indred": "{_\\mathrm{red}}", "induser": "{_\\mathrm{user}}", "indu": "{_\\mathrm{u}}", "termA": ["{\\color{blue}{#1}}", 1], "termB": ["{\\color{red}{#1}}", 1], "termC": ["{\\color{green}{#1}}", 1], "acc": "{\\ddot{\\mathbf{q}}}", "GA": "{G\\alpha}", "Hm": "{\\mathbf{H}}", "ImTwo": "{\\mathbf{I}_{2 \\times 2}}", "Lm": "{\\mathbf{L}}", "Qm": "{\\mathbf{Q}}", "Vm": "{\\mathbf{V}}", "Wm": "{\\mathbf{W}}", "Xm": "{\\mathbf{X}}", "Ym": "{\\mathbf{Y}}", "aalg": "{\\mathbf{a}}", "iv": "{\\mathbf{i}}", "jv": "{\\mathbf{j}}", "kv": "{\\mathbf{k}}", "lv": "{\\mathbf{l}}", "mv": "{\\mathbf{m}}", "ov": "{\\mathbf{o}}", "vel": "{\\mathbf{v}}", "wv": "{\\mathbf{w}}"}}, "options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+      <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-mml-chtml.js"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Python-C++ command interface" href="../generated/cInterface/cInterfaceIndex.html" />
+    <link rel="prev" title="Modeling of contact in Exudyn" href="theoryContact.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            Exudyn1.13.3
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Exudyn User Manual</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../README.html">Exudyn</a></li>
+<li class="toctree-l1"><a class="reference internal" href="gettingStarted.html">Installation and getting started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="introduction.html">Overview on Exudyn</a></li>
+<li class="toctree-l1"><a class="reference internal" href="introductionBasics.html">Exudyn basics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorial.html">Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="GUI.html">Renderer, graphics and visualization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="performanceErrors.html">Performance, errors and solver failures</a></li>
+<li class="toctree-l1"><a class="reference internal" href="introductionAdvanced.html">Advanced topics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="notation.html">Notation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="theory.html">Theory and formulations</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Solvers</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#solvers-in-exudyn">Solvers in Exudyn</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#system-equations-of-motion">System equations of motion</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#general-solver-structure">General solver structure</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#explicit-solvers">Explicit solvers</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#explicit-runge-kutta-method">Explicit Runge-Kutta method</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#automatic-step-size-control">Automatic step size control</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#stability-limit">Stability limit</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#explicit-lie-group-integrators">Explicit Lie group integrators</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#constraints-with-explicit-solvers">Constraints with explicit solvers</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#implicit-trapezoidal-rule-based-newmark-and-generalized-alpha-solver">Implicit trapezoidal rule-based, Newmark and Generalized-alpha solver</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#newmark-and-generalized-alpha-method">Newmark and Generalized-alpha method</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#parameter-selection-for-generalized-alpha">Parameter selection for Generalized-alpha</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#newton-iteration">Newton iteration</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#initial-accelerations">Initial accelerations</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#optimization-and-parameter-variation">Optimization and parameter variation</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#parameter-variation">Parameter variation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#genetic-optimization">Genetic optimization</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../generated/cInterface/cInterfaceIndex.html">Python-C++ command interface</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Reference Manual</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../generated/items/itemsIndex.html">Items reference manual</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../generated/pythonUtilities/utilitiesIndex.html">Python Utility Functions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../generated/structures/structuresIndex.html">Structures and Settings</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../generated/references.html">References</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Developer documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../dev/README.html">Exudyn developer documentation</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">How-to notes</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../howTo/condaEnvironments.html">Conda environments for Exudyn</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../howTo/sphinxDocs.html">Building the documentation</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Examples, models and issues</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../generated/examples/examplesIndex.html">Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../generated/testModels/testModelsIndex.html">TestModels</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../generated/abbreviations.html">List of Abbreviations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="revisions.html">Revisions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../CHANGELOG.html">Changelog</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../generated/trackerlog.html">Issue tracker</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">Exudyn1.13.3</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Solvers</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../_sources/docs/manual/solver.md.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section class="tex2jax_ignore mathjax_ignore" id="solvers">
+<span id="sec-solvers"></span><h1>Solvers<a class="headerlink" href="#solvers" title="Link to this heading"></a></h1>
+<p>This section provides and overview on most important solvers. Explicit and implicit dynamic solvers, as well as optimizers are described in more detail.</p>
+<section id="solvers-in-exudyn">
+<h2>Solvers in Exudyn<a class="headerlink" href="#solvers-in-exudyn" title="Link to this heading"></a></h2>
+<p>The user has a couple of basic solvers available in Exudyn , see <a class="reference internal" href="#fig-available-solvers"><span class="std std-numref">Fig. 29</span></a>:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">mbs.SolveStatic(...)</span></code>: compute static solution for given problem (may also be used to compute kinematic behavior by prescribing joint motion)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">mbs.SolveDynamic(...)</span></code>: time integration of equations of motion</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">mbs.ComputeLinearizedSystem(...)</span></code>: computes the linearized system of equations and returns mass, stiffness, damping matrices</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">mbs.ComputeODE2Eigenvalues(...)</span></code>: computes the eigenvalues of the linearized system of equations; only possible if no algebraic constraints in system; uses scipy to compute eigenvalues</p></li>
+</ul>
+<figure class="align-default" id="id1">
+<span id="fig-available-solvers"></span><a class="reference internal image-reference" href="../../_images/solversAvailableSolvers.svg"><img alt="../../_images/solversAvailableSolvers.svg" src="../../_images/solversAvailableSolvers.svg" width="650" />
+</a>
+<figcaption>
+<p><span class="caption-number">Fig. 29 </span><span class="caption-text">Basic and advanced solvers in Exudyn ; advanced solvers build upon any basic solver to perform more sophisticated operations</span><a class="headerlink" href="#id1" title="Link to this image"></a></p>
+</figcaption>
+</figure>
+<p>There are advanced solvers, like in <code class="docutils literal notranslate"><span class="pre">exudyn.processing</span></code>:</p>
+<ul class="simple">
+<li><p><strong>Optimization</strong>:</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">GeneticOptimization(...)</span></code>: find optimum for given set of parameter ranges using genetic optimization; works in parallel</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">Minimize(...)</span></code>: find optimum with <code class="docutils literal notranslate"><span class="pre">scipy.optimize.minimize(...)</span></code></p></li>
+</ul>
+</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">ParameterVariation(...)</span></code>: compute a series of simulations for given set(s) of parameters; works in parallel</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">ComputeSensitivities(...)</span></code>: compute sensitivities for certain parameters; works in parallel</p></li>
+</ul>
+<p>The advanced methods are build upon the basic solvers and essentially run single simulations in the background, see the according examples.</p>
+<p>The basic solvers need a <code class="docutils literal notranslate"><span class="pre">MainSystem</span></code>, usually denoted as <code class="docutils literal notranslate"><span class="pre">mbs</span></code>, to be solved. Furthermore, a couple of options are usually to be given, which are explained shortly:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">simulationSettings</span></code>: This is a big structure, containing all solver options; note that only the according options for <code class="docutils literal notranslate"><span class="pre">staticSolver</span></code> or <code class="docutils literal notranslate"><span class="pre">timeIntegration</span></code> are used. Look at the detailed description of these options in <a class="reference internal" href="../generated/structures/SimulationSettings.html#sec-simulationsettingsmain"><span class="std std-ref">Simulation settings</span></a>. These settings influence the output rate and output quantity of the solution, solver reporting, accuracy, solver type, etc. Specifically, the <code class="docutils literal notranslate"><span class="pre">verboseMode</span></code> may be increased (2-4) to see the behavior of the solver and intermediate quantities.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">solverType</span></code>: Only for <code class="docutils literal notranslate"><span class="pre">mbs.SolveDynamic(...)</span></code>: This is a simpler access to the solverType given in the internal structure of</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">timeIntegration.generalizedAlpha</span></code> and</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">simulationSettings.timeIntegration.solverType</span></code>.</p></li>
+</ul>
+</li>
+</ul>
+<p>The function <code class="docutils literal notranslate"><span class="pre">mbs.SolveDynamic(...)</span></code> sets the according variables internally. For available solver types, see the description of <code class="docutils literal notranslate"><span class="pre">exudyn.DynamicSolverType</span></code> in <a class="reference internal" href="../generated/cInterface/TypeDefinitions.html#sec-dynamicsolvertype"><span class="std std-ref">DynamicSolverType</span></a>.</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">storeSolver</span></code>: if <code class="docutils literal notranslate"><span class="pre">True</span></code>, the solver is stored in <code class="docutils literal notranslate"><span class="pre">mbs.sys['staticSolver']</span></code> or <code class="docutils literal notranslate"><span class="pre">mbs.sys['dynamicSolver']</span></code> and also solver settings are stored in <code class="docutils literal notranslate"><span class="pre">mbs.sys['simulationSettings']</span></code>. After the solver has finished, <code class="docutils literal notranslate"><span class="pre">mbs.sys['staticSolver']</span></code> can be used to retrieve additional information on convergence, system matrices, etc. (see the solver structure).</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">showHints</span></code>: This shows a lot of possible solutions in case of no convergence</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">showCausingItems</span></code>: This shows a potential causing item if the linear solver failed; the item number is computed from the coordinate number that caused problems (e.g., a row that became zero during factorization); note that this item may not be the real cause in your problem</p></li>
+</ul>
+<section id="system-equations-of-motion">
+<h3>System equations of motion<a class="headerlink" href="#system-equations-of-motion" title="Link to this heading"></a></h3>
+<p>The system equations of motion in Exudyn follow the notations of <a class="reference internal" href="notation.html#sec-nomenclatureeom"><span class="std std-ref">Nomenclature for system equations of motion and solvers</span></a> and are represented as</p>
+<div class="math notranslate nohighlight" id="equation-eq-system-eom">
+<span class="eqno">(34)<a class="headerlink" href="#equation-eq-system-eom" title="Link to this equation"></a></span>\[\begin{split}
+\begin{aligned}
+  \Mm \ddot \qv + \frac{\partial \gv}{\partial \qv^\mathrm{T}} \tlambda_q +
+                  \frac{\partial \gv}{\partial \dot \qv^\mathrm{T}} \tlambda_{\dot q}
+                  &amp; = &amp;\fv_\SO(\qv, \dot \qv, t) \\
+  \dot \yv + \frac{\partial \gv}{\partial \yv^\mathrm{T}} \tlambda &amp; = &amp;\fv_\FO(\yv, t) \\
+  \gv(\qv, \dot \qv, \yv, \tlambda, t) &amp;= 0 \, .
+\end{aligned}
+\end{split}\]</div>
+<p>Here, we introduce different Lagrange multipliers <span class="math notranslate nohighlight">\(\tlambda_q\)</span> and <span class="math notranslate nohighlight">\(\tlambda_{\dot q}\)</span> which have equal sizes as <span class="math notranslate nohighlight">\(\tlambda\)</span>, while those <span class="math notranslate nohighlight">\(\lambda_i\)</span> which belong to holonomic constraints, are included in <span class="math notranslate nohighlight">\(\tlambda_q\)</span> and <span class="math notranslate nohighlight">\(\tlambda_i\)</span> belonging to non-holonomic constraints, are included in <span class="math notranslate nohighlight">\(\tlambda_{\dot q}\)</span>, whereas other components in <span class="math notranslate nohighlight">\(\tlambda_q\)</span> or <span class="math notranslate nohighlight">\(\tlambda_{\dot q}\)</span> are zero.</p>
+<p>It may help to know that for linear mechanical the term <span class="math notranslate nohighlight">\(\fv_\SO\)</span> becomes</p>
+<div class="math notranslate nohighlight">
+\[
+  \fv^{lin}_\SO = \fv_a - \Km \qv - \Dm \dot \qv
+\]</div>
+<p>in which <span class="math notranslate nohighlight">\(\fv^a\)</span> represents applied forces and stiffness matrix <span class="math notranslate nohighlight">\(\Km\)</span> and damping matrix <span class="math notranslate nohighlight">\(\Dm\)</span> become part of the system Jacobian for time integration.</p>
+</section>
+</section>
+<section id="general-solver-structure">
+<h2>General solver structure<a class="headerlink" href="#general-solver-structure" title="Link to this heading"></a></h2>
+<p>The description of solvers in this section follows the nomenclature given in <a class="reference internal" href="notation.html#sec-generalnotation"><span class="std std-ref">Notation</span></a>.
+Both in the static as well as in the dynamic case, the solvers run in a loop to solve a nonlinear system of (differential and/or algebraic) equations over a given time or load interval. Explicit solvers only perform a factorization of the mass matrix, but the <code class="docutils literal notranslate"><span class="pre">Newton</span></code> loop, see <a class="reference internal" href="#fig-solver-newton-iteration"><span class="std std-numref">Fig. 34</span></a>, is replaced by an explicit computation of the time step according to a given Runge-Kutta tableau.</p>
+<p>In case of an implicit time integration, <a class="reference internal" href="#fig-solver-time-integration"><span class="std std-numref">Fig. 30</span></a> shows the basic loops for the solution process. The inner loops are shown in <a class="reference internal" href="#fig-solver-solve-steps"><span class="std std-numref">Fig. 32</span></a> and <a class="reference internal" href="#fig-solver-discontinuous-iteration"><span class="std std-numref">Fig. 33</span></a>.
+The static solver behaves very similar, while no velocities or accelerations need to be solved and time is replaced by load steps.</p>
+<p>Settings for the solver substructures, like timer, output, iterations, etc., are described in Sections <a class="reference internal" href="../generated/structures/CSolverStructures.html#sec-csolvertimer"><span class="std std-ref">CSolverTimer</span></a> – <a class="reference internal" href="../generated/structures/CSolverStructures.html#sec-solveroutputdata"><span class="std std-ref">SolverOutputData</span></a>.
+The description of interfaces for solvers starts in <a class="reference internal" href="../generated/structures/MainSolver.html#sec-mainsolverstatic"><span class="std std-ref">MainSolverStatic</span></a>.</p>
+<figure class="align-default" id="id2">
+<span id="fig-solver-time-integration"></span><a class="reference internal image-reference" href="../../_images/solverTimeIntegration.svg"><img alt="../../_images/solverTimeIntegration.svg" src="../../_images/solverTimeIntegration.svg" width="350" />
+</a>
+<figcaption>
+<p><span class="caption-number">Fig. 30 </span><span class="caption-text">Basic solver flow chart for SolveSystem(). This flow chart is the same for static solver and for time integration.</span><a class="headerlink" href="#id2" title="Link to this image"></a></p>
+</figcaption>
+</figure>
+<figure class="align-default" id="id3">
+<span id="fig-solver-initialize-solver"></span><a class="reference internal image-reference" href="../../_images/solverInitializeSolver.svg"><img alt="../../_images/solverInitializeSolver.svg" src="../../_images/solverInitializeSolver.svg" width="400" />
+</a>
+<figcaption>
+<p><span class="caption-number">Fig. 31 </span><span class="caption-text">Basic solver flow chart for function InitializeSolver().</span><a class="headerlink" href="#id3" title="Link to this image"></a></p>
+</figcaption>
+</figure>
+<figure class="align-default" id="id4">
+<span id="fig-solver-solve-steps"></span><a class="reference internal image-reference" href="../../_images/solverSolveSteps.svg"><img alt="../../_images/solverSolveSteps.svg" src="../../_images/solverSolveSteps.svg" width="550" />
+</a>
+<figcaption>
+<p><span class="caption-number">Fig. 32 </span><span class="caption-text">Flow chart for SolveSteps(), which is the inner loop of the solver.</span><a class="headerlink" href="#id4" title="Link to this image"></a></p>
+</figcaption>
+</figure>
+<figure class="align-default" id="id5">
+<span id="fig-solver-discontinuous-iteration"></span><a class="reference internal image-reference" href="../../_images/solverDiscontinuousIteration.svg"><img alt="../../_images/solverDiscontinuousIteration.svg" src="../../_images/solverDiscontinuousIteration.svg" width="550" />
+</a>
+<figcaption>
+<p><span class="caption-number">Fig. 33 </span><span class="caption-text">Solver flow chart for DiscontinuousIteration(), which is run for every solved step inside the static/dynamic solvers. If the DiscontinuousIteration() returns False, SolveSteps() will try to reduce the step size.</span><a class="headerlink" href="#id5" title="Link to this image"></a></p>
+</figcaption>
+</figure>
+<figure class="align-default" id="id6">
+<span id="fig-solver-newton-iteration"></span><a class="reference internal image-reference" href="../../_images/solverNewton.svg"><img alt="../../_images/solverNewton.svg" height="880" src="../../_images/solverNewton.svg" />
+</a>
+<figcaption>
+<p><span class="caption-number">Fig. 34 </span><span class="caption-text">Solver flow chart for Newton(), which is run inside the DiscontinuousIteration(). The shown case is valid for residualMode = 0.</span><a class="headerlink" href="#id6" title="Link to this image"></a></p>
+</figcaption>
+</figure>
+</section>
+<section id="explicit-solvers">
+<span id="sec-explicitsolver"></span><h2>Explicit solvers<a class="headerlink" href="#explicit-solvers" title="Link to this heading"></a></h2>
+<p>Explicit solvers are in general only applicable for systems without constraints (i.e., no joints!). However, some solvers accept simple <code class="docutils literal notranslate"><span class="pre">CoordinateConstraint</span></code>, e.g., fixing coordinates to the ground.
+Nevertheless, for constraint-free systems, e.g., with penalty constraints, can be solved for very high order and with great efficiency.
+A list of explicit solvers is available, see <a class="reference internal" href="../generated/cInterface/TypeDefinitions.html#sec-dynamicsolvertype"><span class="std std-ref">DynamicSolverType</span></a>, for an overview of all implicit and explicit solvers.</p>
+<p>The solution vector <span class="math notranslate nohighlight">\(\txi\)</span> (denoted as <span class="math notranslate nohighlight">\(y\)</span> in the literature <a class="reference internal" href="../generated/references.html#ref-hairer1987"><span class="std std-ref">Hairer1987</span></a>), which is defined as</p>
+<div class="math notranslate nohighlight">
+\[
+  \txi = [\qv\tp \;\; \dot \qv\tp \;\; \yv\tp ]\tp
+\]</div>
+<p>and which includes <a class="reference internal" href="../generated/abbreviations.html#ode2"><span class="std std-ref">ODE2</span></a> coordinates and velocities and <a class="reference internal" href="../generated/abbreviations.html#ode1"><span class="std std-ref">ODE1</span></a> coordinates. All coordinates are computed without reference values.</p>
+<p>The <a class="reference internal" href="../generated/abbreviations.html#ode1"><span class="std std-ref">ODE1</span></a> and <a class="reference internal" href="../generated/abbreviations.html#ode2"><span class="std std-ref">ODE2</span></a> equations of <a class="reference internal" href="#equation-eq-systemeom">(35)</a>, with <span class="math notranslate nohighlight">\(\tlambda=0\)</span>, are written in explicit form and converted to first order equations,</p>
+<div class="math notranslate nohighlight" id="equation-eq-systemeom">
+<span class="eqno">(35)<a class="headerlink" href="#equation-eq-systemeom" title="Link to this equation"></a></span>\[\begin{split}
+\begin{aligned}
+  \dot \qv &amp;= \vel \\
+  \dot \vel &amp; = &amp;\Mm^{-1} \fv_\SO(\qv, \vel, t) \\
+  \dot \yv &amp; = &amp;\fv_\FO(\yv, t) \\
+\end{aligned}
+\end{split}\]</div>
+<p>The system first order differential equations for explicit solvers thus read</p>
+<div class="math notranslate nohighlight">
+\[
+  \dot \txi = \fv_e (\txi, t)
+\]</div>
+<section id="explicit-runge-kutta-method">
+<span id="sec-rungekuttamethod"></span><h3>Explicit Runge-Kutta method<a class="headerlink" href="#explicit-runge-kutta-method" title="Link to this heading"></a></h3>
+<p>Explicit time integration methods seek the solution <span class="math notranslate nohighlight">\(\txi_{t+h}\)</span> at time <span class="math notranslate nohighlight">\(t+h\)</span> for given initial value <span class="math notranslate nohighlight">\(\txi_{t}\)</span> (at the beginning of one step <span class="math notranslate nohighlight">\(t\)</span> or at the beginning of the simulation, <span class="math notranslate nohighlight">\(t=0\)</span>),</p>
+<div class="math notranslate nohighlight">
+\[
+  \txi_{t+h} = \txi_{t} + \Delta \txi\, .
+\]</div>
+<p>For any given Runge-Kutta method, the integration of one step with step size <span class="math notranslate nohighlight">\(h\)</span> is performed by an approximation</p>
+<div class="math notranslate nohighlight" id="equation-s-stage-quadrature">
+<span class="eqno">(36)<a class="headerlink" href="#equation-s-stage-quadrature" title="Link to this equation"></a></span>\[
+  \Delta \txi = \int _{t}^{t+h}\fv_e(\tau ,\txi(\tau ))d\tau \approx h\left[b_{1} \fv_e(t,\txi(t))+b_{2} \fv_e(t+c_{2} h,\txi(t+c_{2} h))+ \ldots +b_{s} \fv_e(t+\txi_{s} h,u(t+\txi_{s} h))\right]
+\]</div>
+<p>in which <span class="math notranslate nohighlight">\(t + c_{i}h\)</span> is the time for stage <span class="math notranslate nohighlight">\(i\)</span> and <span class="math notranslate nohighlight">\(b_i\)</span> the according weight given in the integration formula.
+Stages are within one step (therefor called one-step-methods), where <span class="math notranslate nohighlight">\(c_i=0\)</span> represents the beginning of the step and <span class="math notranslate nohighlight">\(c_i=1\)</span> the end.
+Note that <span class="math notranslate nohighlight">\(c_{1}= 0\)</span> for explicit integration formulas.</p>
+<p>The unknown solution vectors <span class="math notranslate nohighlight">\(\txi\)</span> at the stages are abbreviated by</p>
+<div class="math notranslate nohighlight">
+\[
+  \gv_{i} \approx \txi(t+c_{i} h)
+\]</div>
+<p>and computed by explicit integration (quadrature) formulas of lower order (<span class="math notranslate nohighlight">\(g_i\)</span> not to be mixed up with algebraic equations!),</p>
+<div class="math notranslate nohighlight" id="equation-eq-expl-rk-stages">
+<span class="eqno">(37)<a class="headerlink" href="#equation-eq-expl-rk-stages" title="Link to this equation"></a></span>\[\begin{split}
+  \begin{array}{l}
+  {\gv_{1} =\txi_t} \\
+  {\gv_{2} =\txi_t+ha_{21} \fv_e(t,\gv_{1} )} \\
+  {\gv_{3} =\txi_t+h\left[a_{31} \fv_e(t,\gv_{1} )+a_{32} \fv_e(t+c_{2} h,\gv_{2} )\right]} \\
+  {{\rm \; \; \; \; \; \; }\vdots } \\
+  {\gv_{s} =\txi_t+h\left[a_{s1} \fv_e(t,\gv_{1} )+a_{s2} \fv_e(t+c_{2} h,\gv_{2} )+ \ldots +a_{s,s-1} \fv_e(t+c_{s-1} h,\gv_{s-1} )\right]} \end{array}
+\end{split}\]</div>
+<p>After all vectors <span class="math notranslate nohighlight">\(\gv_i\)</span> have been consecutively evaluated, the step is updated by <a class="reference internal" href="#equation-s-stage-quadrature">(36)</a>.</p>
+<p>For exemplary tableaus of explicit and implicit Runge-Kutta methods, see the references of the
+method in <code class="docutils literal notranslate"><span class="pre">exudyn.utilities</span></code> and the standard literature on Runge-Kutta schemes.</p>
+</section>
+<section id="automatic-step-size-control">
+<h3>Automatic step size control<a class="headerlink" href="#automatic-step-size-control" title="Link to this heading"></a></h3>
+<p>Advanced solvers, such as <code class="docutils literal notranslate"><span class="pre">ODE23</span></code> and <code class="docutils literal notranslate"><span class="pre">DOPRI5</span></code>, include automatic step size control (activated with
+<code class="docutils literal notranslate"><span class="pre">timeIntegration.automaticStepSize</span> <span class="pre">=</span> <span class="pre">True</span></code> in simulationSettings).</p>
+<p>We estimate the error of a time step with current step size <span class="math notranslate nohighlight">\(h\)</span> by
+using an embedded Runge-Kutta formula, which includes two approximations <a class="reference internal" href="#equation-s-stage-quadrature">(36)</a> of order <span class="math notranslate nohighlight">\(p\)</span> and <span class="math notranslate nohighlight">\(\hat p = p-1\)</span>, which is obtained by using two different integration formulas with common coefficients <span class="math notranslate nohighlight">\(c_i\)</span>, but two sets of weights <span class="math notranslate nohighlight">\(b_i\)</span> and <span class="math notranslate nohighlight">\(\hat b_i\)</span>, leading to two approximations <span class="math notranslate nohighlight">\(\txi\)</span> and <span class="math notranslate nohighlight">\(\hat \txi\)</span>. These so-called embedded Runge-Kutta formulas are widely used, for details see Hairer et al. <a class="reference internal" href="../generated/references.html#ref-hairer1987"><span class="std std-ref">Hairer1987</span></a>.</p>
+<p>The according apporximations <span class="math notranslate nohighlight">\(\txi\)</span> and <span class="math notranslate nohighlight">\(\hat \txi\)</span> are used to estimate an error</p>
+<div class="math notranslate nohighlight">
+\[
+  e_j=|\xi_j- \hat \xi_j|
+\]</div>
+<p>for every component <span class="math notranslate nohighlight">\(j\)</span> of the solution vector <span class="math notranslate nohighlight">\(\txi\)</span>.
+A scaling is used for every component of the solution vector, evaluating at the beginning (<span class="math notranslate nohighlight">\(0\)</span>) and end (<span class="math notranslate nohighlight">\(1\)</span>) of the time step:</p>
+<div class="math notranslate nohighlight">
+\[
+  s_j = a_{tol} + r_{tol} \cdot \mathrm{max}(|\xi_{0j}|, |\xi_{1j}|)
+\]</div>
+<p>Then the relative, scaled, scalar error for the step, which needs to fulfill <span class="math notranslate nohighlight">\(err \le 1\)</span>, is computed as</p>
+<div class="math notranslate nohighlight">
+\[
+  err = \sqrt{\frac 1 n \sum_{j=1}^n \left( \frac{\xi_{1j} - \hat \xi_{1j}}{s_j} \right)^2}
+\]</div>
+<p>The optimal step size then reads</p>
+<div class="math notranslate nohighlight">
+\[
+  h_{opt} = h \cdot \left(\frac{1}{err} \right)^{(1/(q+1))}
+\]</div>
+<p>Currently we use the suggested step size as</p>
+<div class="math notranslate nohighlight">
+\[
+  h_{new} = \mathrm{min}\left(h_{max}, \mathrm{min}\left(h \cdot f_{maxInc},  \mathrm{max}(h_{min}, f_{sfty} \cdot h_{opt}) \right) \right)
+\]</div>
+<p>With the maximum step size <span class="math notranslate nohighlight">\(h_{max} = \frac{t_{start} - t_{end}}{n_{steps}}\)</span> and the minimum step size <span class="math notranslate nohighlight">\(h_{min}\)</span>, given in the <code class="docutils literal notranslate"><span class="pre">timeIntegration</span></code>
+<code class="docutils literal notranslate"><span class="pre">simulationSettings</span></code>.
+The factor <span class="math notranslate nohighlight">\(f_{maxInc}\)</span> limits the increase of the current step size <span class="math notranslate nohighlight">\(h\)</span>, the factor <span class="math notranslate nohighlight">\(f_{sfty}\)</span> is a safety factor for limiting the chosen step size relative to the optimal one in order to avoid frequent step rejections.
+If <span class="math notranslate nohighlight">\(h_{new} \le h\)</span>, the current step is accepted, otherwise the step is recomputed with <span class="math notranslate nohighlight">\(h_{new}\)</span>.
+For more details, see Hairer et al. <a class="reference internal" href="../generated/references.html#ref-hairer1987"><span class="std std-ref">Hairer1987</span></a>.</p>
+</section>
+<section id="stability-limit">
+<h3>Stability limit<a class="headerlink" href="#stability-limit" title="Link to this heading"></a></h3>
+<p>Note that there are hard limitations for every explicit integration method regarding the step size. Especially for stiff systems (basically with high stiffness parameters and small masses, but also with restrictions to damping), the <strong>step size</strong> <span class="math notranslate nohighlight">\(h\)</span> <strong>has an upper limit</strong>: <span class="math notranslate nohighlight">\(h &lt; h_{lim}\)</span>. Above that limit the method is inherently unstable, which needs to be considered both for constant and automatic step size selection.</p>
+</section>
+<section id="explicit-lie-group-integrators">
+<h3>Explicit Lie group integrators<a class="headerlink" href="#explicit-lie-group-integrators" title="Link to this heading"></a></h3>
+<p>All explicit solvers including the automatic step size solvers (DOPRI5, ODE23) have been equiped with Lie group integration functionality, see Holzinger et al. <a class="reference internal" href="../generated/references.html#ref-holzingerarnoldgerst2023"><span class="std std-ref">HolzingerArnoldGerst2023</span></a>.</p>
+<p>Basically, the integration formulas, see <a class="reference internal" href="#sec-rungekuttamethod"><span class="std std-ref">Explicit Runge-Kutta method</span></a> are extended for special rotation parameters.
+Lie group integration is currently only available for <code class="docutils literal notranslate"><span class="pre">NodeRigidBodyRotVecLG</span></code> used in <code class="docutils literal notranslate"><span class="pre">ObjectRigidBody</span></code> (3D rigid body).
+<code class="docutils literal notranslate"><span class="pre">FFRFreducedOrder</span></code> will be extended to such nodes in the near future.
+To get Lie group integrators running with rigid body models, all 3D node types need to be set to <code class="docutils literal notranslate"><span class="pre">NodeRigidBodyRotVecLG</span></code> and
+set <code class="docutils literal notranslate"><span class="pre">explicit.useLieGroupIntegration</span> <span class="pre">=</span> <span class="pre">True</span></code>.</p>
+</section>
+<section id="constraints-with-explicit-solvers">
+<h3>Constraints with explicit solvers<a class="headerlink" href="#constraints-with-explicit-solvers" title="Link to this heading"></a></h3>
+<p>Explicit solvers generally do not solve for algebraic constraints, except for very simple <code class="docutils literal notranslate"><span class="pre">CoordinateConstraint</span></code>.
+All connectors having the additional <code class="docutils literal notranslate"><span class="pre">type=Constraint</span></code>, see the according object in <a class="reference internal" href="../generated/items/ObjectConnectorSpringDamper.html#sec-item-objectconnectorspringdamper"><span class="std std-ref">ObjectConnectorSpringDamper</span></a>ff.,
+are in general not solvable by explicit solvers.
+Currently, only <code class="docutils literal notranslate"><span class="pre">CoordinateConstraint</span></code> with one coordinate fixed to ground can be accounted for,
+if <code class="docutils literal notranslate"><span class="pre">explicit.eliminateConstraints</span> <span class="pre">==</span> <span class="pre">True</span></code>.
+However, this offers the great flexibility to compute finite elements (imported meshes or ANCF beams) to be (partially) fixed to ground.
+A <code class="docutils literal notranslate"><span class="pre">CoordinateConstraint</span></code> that fixes a coordinate with index <span class="math notranslate nohighlight">\(j\)</span> to ground leads to the simple algebraic <a class="reference internal" href="../generated/abbreviations.html#ode2"><span class="std std-ref">ODE2</span></a> equation</p>
+<div class="math notranslate nohighlight">
+\[
+  g_j(\qv) = 0 \quad \Leftrightarrow \quad  q_j = 0
+\]</div>
+<p>which can be solved by the implemented explicit solvers by just setting <span class="math notranslate nohighlight">\(q_j = 0\)</span> previously to every computation and <span class="math notranslate nohighlight">\(\dot q_j = 0\)</span> after every <a class="reference internal" href="../generated/abbreviations.html#rhs"><span class="std std-ref">RHS</span></a> evaluation.</p>
+<p>NOTE that, if <code class="docutils literal notranslate"><span class="pre">explicit.eliminateConstraints</span> <span class="pre">==</span> <span class="pre">False</span></code>, constraints are ignored by the explicit solver (and all algebraic variables are set to zero). This may be wanted (e.g. to investigate the free motion of bodies), but in general leads to wrong and meaningless solution.</p>
+</section>
+</section>
+<section id="implicit-trapezoidal-rule-based-newmark-and-generalized-alpha-solver">
+<span id="sec-implicittrapezoidalsolver"></span><h2>Implicit trapezoidal rule-based, Newmark and Generalized-alpha solver<a class="headerlink" href="#implicit-trapezoidal-rule-based-newmark-and-generalized-alpha-solver" title="Link to this heading"></a></h2>
+<p>This solver represents a class of solvers, which are – in the undamped case – based on the implicit trapezoidal rule (in the view of Runge-Kutta methods). The interpolation of the quantities for one step includes the start and the end value of the time step, thus being called trapezoidal integration rule. In some special cases in Newmark’s method <a class="reference internal" href="../generated/references.html#ref-newmark1959"><span class="std std-ref">Newmark1959</span></a>, the interpolation might only depend on the start value or the end value.</p>
+<p>For now, all implemented solvers can be viewed as a generalization of Newmark’s method, but there are called differently in the solver interfaces</p>
+<ul class="simple">
+<li><p><strong>Implicit trapezoidal rule</strong> (Newmark with <span class="math notranslate nohighlight">\(\beta = \frac 1 4\)</span> and <span class="math notranslate nohighlight">\(\gamma = \frac 1 2\)</span>)</p></li>
+<li><p><strong>Newmark’s method</strong> <a class="reference internal" href="../generated/references.html#ref-newmark1959"><span class="std std-ref">Newmark1959</span></a></p></li>
+<li><p><strong>Generalized</strong>-<span class="math notranslate nohighlight">\(\alpha\)</span> <strong>method</strong> (<span class="math notranslate nohighlight">\(=\)</span> generalized Newmark method with additional parameters), see Chung and Hulbert <a class="reference internal" href="../generated/references.html#ref-chung1993"><span class="std std-ref">Chung1993</span></a> for the original method and Arnold and Brüls <a class="reference internal" href="../generated/references.html#ref-arnold2007"><span class="std std-ref">Arnold2007</span></a> for the application to multibody system dynamics.</p></li>
+</ul>
+<section id="newmark-and-generalized-alpha-method">
+<h3>Newmark and Generalized-alpha method<a class="headerlink" href="#newmark-and-generalized-alpha-method" title="Link to this heading"></a></h3>
+<p>Newmark’s method has two parameters <span class="math notranslate nohighlight">\(\beta\)</span> and <span class="math notranslate nohighlight">\(\gamma\)</span>.
+The main ideas are given in the following.
+First, displacements and velocities are linearly interpolated using the accelerations <span class="math notranslate nohighlight">\(\ddot \qv\)</span> of the beginning of the time step (subindex ‘0’) and the end of the time step (subindex ‘T’).
+The <span class="math notranslate nohighlight">\(2^\mathrm{nd}\)</span> order differential equations displacements and velocities and for <span class="math notranslate nohighlight">\(1^\mathrm{st}\)</span> order differential equations coordinates are given by (definition of <span class="math notranslate nohighlight">\(\aalg\)</span> will become clear later):</p>
+<div class="math notranslate nohighlight" id="equation-eq-newmark-interpolation">
+<span class="eqno">(38)<a class="headerlink" href="#equation-eq-newmark-interpolation" title="Link to this equation"></a></span>\[\begin{split}
+\begin{aligned}
+  \qv_T &amp; = &amp;      \qv_0 + h \dot \qv_0 + h^2 (\frac 1 2 -\beta) \aalg_0 + h^2 \beta \aalg_T\\
+  \dot \qv_T &amp; = &amp; \dot \qv_0 + h (1-\gamma) \aalg_0 + h\gamma \aalg_T\\
+  \yv_T &amp; = &amp; \yv_0 + h (1-\gamma_\FO) \vel^0_\FO + h\gamma_\FO \vel^T_\FO
+\end{aligned}
+\end{split}\]</div>
+<p>Hereafter, the system equations are solved at the end of the time step (<span class="math notranslate nohighlight">\(T\)</span>) for the unknown accelerations as well as for <span class="math notranslate nohighlight">\(1^\mathrm{st}\)</span> order differential equations and algebraic equations coordinates.</p>
+<p>Remarks:</p>
+<ul class="simple">
+<li><p>The system of equations may be solved for accelerations <span class="math notranslate nohighlight">\(\ddot \qv\)</span>, but also for displacements <span class="math notranslate nohighlight">\(\qv\)</span> or even velocities as unknowns while the remaining quantities are reconstructed from <a class="reference internal" href="#equation-eq-newmark-interpolation">(38)</a>. In case of displacements as unknowns, a scaling of the Jacobian is necessary, see later.</p></li>
+<li><p>For consistency reasons, one may set <span class="math notranslate nohighlight">\(\gamma_\FO = \gamma\)</span>, but <strong>currently we use</strong> <span class="math notranslate nohighlight">\(\gamma_T = \frac 1 2\)</span>, leading to no numerical damping for <a class="reference internal" href="../generated/abbreviations.html#ode1"><span class="std std-ref">ODE1</span></a> variables <span class="math notranslate nohighlight">\(\yv\)</span>.</p></li>
+<li><p>In the extension to the so-called generalized-<span class="math notranslate nohighlight">\(\alpha\)</span> method <a class="reference internal" href="../generated/references.html#ref-chung1993"><span class="std std-ref">Chung1993</span></a>, algorithmic accelerations <span class="math notranslate nohighlight">\(\aalg\)</span> are used in <a class="reference internal" href="#equation-eq-newmark-interpolation">(38)</a>.</p></li>
+<li><p>Algorithmic accelerations are no longer equivalent to the time derivatives of displacements, <span class="math notranslate nohighlight">\(\aalg \neq \ddot \qv\)</span>; thus, both sets of variables are used independently. In case of Newmark or the implicit trapezoidal rule just use <span class="math notranslate nohighlight">\(\aalg = \ddot \qv\)</span>.</p></li>
+<li><p>Implicit solvers are also available with Lie groups, if according rigid body nodes (<code class="docutils literal notranslate"><span class="pre">NodeRigidBodyRotVecLG</span></code>) are used, for theory see Holzinger et al. <a class="reference internal" href="../generated/references.html#ref-holzingerarnoldgerst2023"><span class="std std-ref">HolzingerArnoldGerst2023</span></a>.</p></li>
+</ul>
+<p>For generalized-<span class="math notranslate nohighlight">\(\alpha\)</span>, the algorithmic accelerations <span class="math notranslate nohighlight">\(\aalg\)</span> are computed from the recurrence relation</p>
+<div class="math notranslate nohighlight">
+\[
+   (1-\alpha_m)\av_T + \alpha_m \av_0 = (1-\alpha_f) \ddot \uv_T + \alpha_f \ddot \uv_0
+\]</div>
+<p>which can be resolved for the unknown <span class="math notranslate nohighlight">\(\av_T\)</span>,</p>
+<div class="math notranslate nohighlight">
+\[
+  \av_T = \frac{(1-\alpha_f) \ddot \uv_T + \alpha_f \ddot \uv_0 - \alpha_m \av_0}{(1-\alpha_m)}
+\]</div>
+<p>For the first step, one can simply use <span class="math notranslate nohighlight">\(\aalg_0 = \ddot \qv_0\)</span>.</p>
+</section>
+<section id="parameter-selection-for-generalized-alpha">
+<span id="sec-parametersgeneralizedalpha"></span><h3>Parameter selection for Generalized-alpha<a class="headerlink" href="#parameter-selection-for-generalized-alpha" title="Link to this heading"></a></h3>
+<p>Compared to alternative implicit integration methods (including the Newmark method), the generalized-<span class="math notranslate nohighlight">\(\alpha\)</span> integrator’s parameters break down to one single parameter <span class="math notranslate nohighlight">\(\rho_\infty\)</span>, which allows to chose numerical damping in a practical way.</p>
+<p>Based on a simple single DOF mass-spring-damper model <a class="reference internal" href="../generated/references.html#ref-bauchau2011"><span class="std std-ref">Bauchau2011</span></a>, having the eigen frequency <span class="math notranslate nohighlight">\(\omega = 2\pi f\)</span> with frequency <span class="math notranslate nohighlight">\(f\)</span> and period <span class="math notranslate nohighlight">\(T=1/f\)</span>, the spectral radius <span class="math notranslate nohighlight">\(\rho\)</span> for the integrator defines the amount of damping for a given step size <span class="math notranslate nohighlight">\(h\)</span> related to <span class="math notranslate nohighlight">\(T\)</span>, thus using the dimensionless step size <span class="math notranslate nohighlight">\(\bar h=h/T\)</span>.</p>
+<p>In <a class="reference internal" href="#fig-spectralradius"><span class="std std-numref">Fig. 35</span></a> the spectral radius is shown versus <span class="math notranslate nohighlight">\(\bar h\)</span> for various spectral radii at infinity <span class="math notranslate nohighlight">\(\rho_\infty\)</span>.
+Here, <span class="math notranslate nohighlight">\(\rho_\infty\)</span> specifies the numerical damping of very time step for large step sizes (or very high frequencies). An amount of <span class="math notranslate nohighlight">\(\rho_\infty=0.9\)</span> means that high frequency parts of the system ((<span class="math notranslate nohighlight">\(\bar h \gg 1\)</span>); high compared to the step rate) are damped to <span class="math notranslate nohighlight">\(90\%\)</span> in every step, reducing an initial value <span class="math notranslate nohighlight">\(1\)</span> to <span class="math notranslate nohighlight">\(2.66e-5\)</span> after 100 steps, which is already much larger than usual physical damping in many cases.</p>
+<p>Furthermore, low frequency parts of the system (<span class="math notranslate nohighlight">\(\bar h \ll 1\)</span>) receive almost no numerical damping, see again <a class="reference internal" href="#fig-spectralradius"><span class="std std-numref">Fig. 35</span></a>.
+Exemplarily, consider <span class="math notranslate nohighlight">\(\rho\)</span> a low frequency situation with different <span class="math notranslate nohighlight">\(\rho_\infty\)</span>:</p>
+<ul class="simple">
+<li><p><span class="math notranslate nohighlight">\(\rho(\bar h=0.01, \rho_\infty=0.9) = 1 - 1.13\cdot 10^{-9}\)</span></p></li>
+<li><p><span class="math notranslate nohighlight">\(\rho(\bar h=0.01, \rho_\infty=0.6) = 1 - 1.22\cdot 10^{-7}\)</span></p></li>
+</ul>
+<p>which shows that numerical damping is very low for moderately small step sizes (100 steps for one oscillation).</p>
+<p>Obviously, <span class="math notranslate nohighlight">\(\rho_\infty\)</span> does not have a large influence for very high or low frequencies in the system as long as it is <span class="math notranslate nohighlight">\(\neq 1\)</span> and we could even use <span class="math notranslate nohighlight">\(\rho_\infty=0\)</span>.
+Regarding differential algebraic equations (DAEs), <span class="math notranslate nohighlight">\(\rho_\infty&lt;1\)</span> allows to integrate index 3 DAEs. Typically a value of <span class="math notranslate nohighlight">\(\rho_\infty=0.7\)</span> leads to a stable integration, but values depend on the structure of the multibody system.</p>
+<p>Once having chosen <span class="math notranslate nohighlight">\(\rho_\infty\)</span>, all other parameters follow automatically <a class="reference internal" href="../generated/references.html#ref-chung1993"><span class="std std-ref">Chung1993</span></a>, regarding the <span class="math notranslate nohighlight">\(\alpha\)</span>s</p>
+<div class="math notranslate nohighlight">
+\[
+  \alpha_m = \frac{2 \rho_\infty - 1}{\rho_\infty + 1}, \quad
+  \alpha_f = \frac{\rho_\infty}{\rho_\infty + 1}
+\]</div>
+<p>and Newmarks’s parameters,</p>
+<div class="math notranslate nohighlight">
+\[
+  \gamma = \frac{1}{2} - \alpha_m + \alpha_f, \quad
+  \beta = \frac{1}{4}(1- \alpha_m + \alpha_f)^2
+\]</div>
+<figure class="align-default" id="id7">
+<span id="fig-spectralradius"></span><a class="reference internal image-reference" href="../../_images/spectralRadiusZeta0.png"><img alt="../../_images/spectralRadiusZeta0.png" src="../../_images/spectralRadiusZeta0.png" width="400" />
+</a>
+<figcaption>
+<p><span class="caption-number">Fig. 35 </span><span class="caption-text">Spectral radius for generalized-<span class="math notranslate nohighlight">\(\alpha\)</span> method depending on dimensionless step size <span class="math notranslate nohighlight">\(\bar h=h/T\)</span>, in which <span class="math notranslate nohighlight">\(T\)</span> is the period of an equivalent single DOF mass-spring-damper system.</span><a class="headerlink" href="#id7" title="Link to this image"></a></p>
+</figcaption>
+</figure>
+</section>
+<section id="newton-iteration">
+<h3>Newton iteration<a class="headerlink" href="#newton-iteration" title="Link to this heading"></a></h3>
+<p>Thus, the residuals at the end of the time step (<span class="math notranslate nohighlight">\(T\)</span>) read (put all terms to <a class="reference internal" href="../generated/abbreviations.html#lhs"><span class="std std-ref">LHS</span></a>):</p>
+<div class="math notranslate nohighlight" id="equation-eq-generalizedalphares">
+<span class="eqno">(39)<a class="headerlink" href="#equation-eq-generalizedalphares" title="Link to this equation"></a></span>\[\begin{split}
+\begin{aligned}
+  \rv^\GA_\SO &amp;= \Mm \ddot \qv_T + \frac{\partial \gv}{\partial \qv^\mathrm{T}} \tlambda_T - \fv_\SO(\qv_T, \dot \qv_T, t) = 0\\
+  \rv^\GA_\FO &amp;= \dot \yv_T + \frac{\partial \gv}{\partial \yv^\mathrm{T}} \tlambda_T - \fv_\FO(\yv_T, t) = 0\\
+  \rv^\GA_\AE &amp;= \gv(\qv_T, \dot \qv_T, \yv_T, \tlambda_T, t) = 0
+\end{aligned}
+\end{split}\]</div>
+<p>We consider two options for <span class="math notranslate nohighlight">\(2^\mathrm{nd}\)</span> order differential equations: (A) solve for unknown accelerations <span class="math notranslate nohighlight">\(\acc_T\)</span>,  or (B) for unknown displacements <span class="math notranslate nohighlight">\(\qv_T\)</span>.</p>
+<section id="a-solve-for-unknown-accelerations">
+<h4>(A) Solve for unknown accelerations<a class="headerlink" href="#a-solve-for-unknown-accelerations" title="Link to this heading"></a></h4>
+<p>The unknowns for the Newton method then are</p>
+<div class="math notranslate nohighlight" id="equation-eq-newton-unknowns1">
+<span class="eqno">(40)<a class="headerlink" href="#equation-eq-newton-unknowns1" title="Link to this equation"></a></span>\[
+  \txi^\GA_{k+1} = \vr{\acc_T}{\yv_T}{\tlambda_T}
+\]</div>
+<p>and at the beginning of the step, we have</p>
+<div class="math notranslate nohighlight" id="equation-eq-newton-unknowns2">
+<span class="eqno">(41)<a class="headerlink" href="#equation-eq-newton-unknowns2" title="Link to this equation"></a></span>\[
+  \txi^\GA_{k} = \vr{\acc_0}{\yv_0}{\tlambda_0}
+\]</div>
+<p>For the Newton method, we need to compute an update for the unknowns of <a class="reference internal" href="#equation-eq-newton-unknowns1">(40)</a>, using the previous residual <span class="math notranslate nohighlight">\(\rv_{k}\)</span> and the inverse of the Jacobian <span class="math notranslate nohighlight">\(\Jm_{k}\)</span> of Newton iteration <span class="math notranslate nohighlight">\(k\)</span>,</p>
+<div class="math notranslate nohighlight">
+\[
+  \txi^\GA_{k+1} = \txi^\GA_{k} - \Jm^{-1} \left( \txi^\GA_{k} \right) \cdot \rv^\GA \left( \txi^\GA_{k} \right)
+\]</div>
+<p>The Jacobian has the following <span class="math notranslate nohighlight">\(3 \times 3\)</span> structure,</p>
+<div class="math notranslate nohighlight">
+\[
+  \Jm = \mr{\Jm_{\SO\SO}}{\Jm_{\SO\FO}}{\Jm_{\SO\AE}}
+           {\Jm_{\FO\SO}}{\Jm_{\FO\FO}}{\Jm_{\FO\AE}}
+           {\Jm_{\AE\SO}}{\Jm_{\AE\FO}}{\Jm_{\AE\AE}}
+      = \mr{\Jm_{\SO\SO}}{\Null}{\Jm_{\SO\AE}}
+           {\Null}{\Jm_{\FO\FO}}{\Jm_{\FO\AE}}
+           {\Jm_{\AE\SO}}{\Jm_{\AE\FO}}{\Jm_{\AE\AE}}
+\]</div>
+<p>in which we consider <span class="math notranslate nohighlight">\(\Jm_{\FO\SO}\)</span> and <span class="math notranslate nohighlight">\(\Jm_{\SO\FO}\)</span> to vanish in the current implementations, which means that coupling of <a class="reference internal" href="../generated/abbreviations.html#ode1"><span class="std std-ref">ODE1</span></a> and <a class="reference internal" href="../generated/abbreviations.html#ode2"><span class="std std-ref">ODE2</span></a> coordinates is only possible due to algebraic equations.</p>
+<p>The remaining terms in the Jacobian are currently (or by default settings) evaluated as:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{aligned}
+  \Jm_{\SO\SO}&amp;=\frac{\partial \rv^\GA_\SO}{\partial \acc}
+               = \frac{\partial \rv^\GA_\SO}{\partial \qv} \frac{\partial \qv}{\partial \acc}
+                 + \frac{\partial \rv^\GA_\SO}{\partial \dot \qv} \frac{\partial \dot \qv}{\partial \acc}
+               = h^2 \beta \Km + h \gamma \Dm
+ \\
+  \Jm_{\SO\AE}&amp;=\frac{\partial \rv^\GA_\SO}{\partial \tlambda}
+               = \frac{\partial \gv}{\partial \qv} \quad (\mbox{or } \frac{\partial \gv}{\partial \dot \qv} \mbox{ for constraints at velocity level)} \\
+  \Jm_{\FO\FO}&amp;=\frac{\partial \rv^\GA_\FO}{\partial \yv} \\
+  \Jm_{\AE\SO}&amp;=\frac{\partial \rv^\GA_\AE}{\partial \acc}
+               = \frac{\partial \gv}{\partial \acc}
+               = \frac{\partial \gv}{\partial \qv} \frac{\partial \qv}{\partial \acc} +
+                 \frac{\partial \gv}{\partial \dot \qv} \frac{\partial \dot \qv}{\partial \acc}
+               = h^2 \beta \frac{\partial \gv}{\partial \qv}
+                 + h \gamma \frac{\partial \gv}{\partial \dot \qv}
+ \\
+  \Jm_{\AE\FO}&amp;=\frac{\partial \rv^\GA_\AE}{\partial \yv} \\
+  \Jm_{\AE\AE}&amp;=\frac{\partial \rv^\GA_\AE}{\partial \tlambda}
+               = \frac{\partial \gv}{\partial \tlambda}
+\end{aligned}
+\end{split}\]</div>
+<p>Note that some parts of the Jacobian are <strong>neglected</strong>, such as mass matrix and constraint Jacobian terms in <span class="math notranslate nohighlight">\(\Jm_{\SO\SO}\)</span>, which are usually of minor influence. Furthermore, Jacobians for state-dependent loads are neglected except for system-wide numerical Jacobians or if <code class="docutils literal notranslate"><span class="pre">computeLoadsJacobian</span></code> in static or time integration solvers is set True.</p>
+<p>Once an update <span class="math notranslate nohighlight">\(\qv^\mathrm{Newton}_{k+1}\)</span> has been computed, the interpolation formulas <a class="reference internal" href="#equation-eq-newmark-interpolation">(38)</a> need to be evaluated before the next residual and Jacobian can be computed.</p>
+</section>
+<section id="b-solve-for-unknown-displacements">
+<h4>(B) Solve for unknown displacements<a class="headerlink" href="#b-solve-for-unknown-displacements" title="Link to this heading"></a></h4>
+<p>This approach is similar to the previous approach and follows exactly the algorithm given by Arnold and Brüls <a class="reference internal" href="../generated/references.html#ref-arnold2007"><span class="std std-ref">Arnold2007</span></a>, however, extended for <a class="reference internal" href="../generated/abbreviations.html#ode1"><span class="std std-ref">ODE1</span></a> variables, which are integrated by the (undamped) trapezoidal rule.
+Documentation will be added lateron.</p>
+</section>
+</section>
+<section id="initial-accelerations">
+<h3>Initial accelerations<a class="headerlink" href="#initial-accelerations" title="Link to this heading"></a></h3>
+<p>For the solvers based on the implicit trapezoidal rule, initial accelerations are necessary in order to significantly increase the accuracy
+of the first time step.
+For this reason, the constraints <span class="math notranslate nohighlight">\(\gv(\qv_0, \dot \qv_0, \yv_0, \tlambda_0, t) = 0\)</span> in <a class="reference internal" href="#equation-eq-system-eom">(34)</a> are differentiated w.r.t. time,</p>
+<div class="math notranslate nohighlight" id="equation-eq-initialaccelerationsvel">
+<span class="eqno">(42)<a class="headerlink" href="#equation-eq-initialaccelerationsvel" title="Link to this equation"></a></span>\[
+  \dot \gv(\qv_0, \dot \qv_0, \yv_0, \tlambda_0, t) =
+  \frac{\partial \gv}{\partial \qv} \dot \qv_0 +
+  \frac{\partial \gv}{\partial \dot \qv}\ddot \qv_0 +
+  \frac{\partial \gv}{\partial \yv} \dot \yv_0 +
+  \frac{\partial \gv}{\partial \tlambda} \dot \tlambda +
+  \frac{\partial \gv}{\partial t} = 0 \, .
+\]</div>
+<p>Currently, we assume <span class="math notranslate nohighlight">\(\frac{\partial \gv}{\partial \tlambda} = 0\)</span> for all further derivations on initial accelerations.
+For velocity level constraints, <a class="reference internal" href="#equation-eq-initialaccelerationsvel">(42)</a> is used to extract initial accelerations <span class="math notranslate nohighlight">\(\ddot \qv_0\)</span>,</p>
+<div class="math notranslate nohighlight">
+\[
+  \frac{\partial \gv}{\partial \dot \qv}\ddot \qv_0 =
+    -\frac{\partial \gv}{\partial \qv} \dot \qv_0
+    -\frac{\partial \gv}{\partial \yv} \dot \yv_0
+    -  \frac{\partial \gv}{\partial t} \, .
+\]</div>
+<p>Finally, the equations for the computation of the initial accelerations read for velocity level constraints,
+note that <span class="math notranslate nohighlight">\(\yv_{init}\)</span> are the nodal initial values for <span class="math notranslate nohighlight">\(\yv\)</span>,</p>
+<div class="math notranslate nohighlight" id="equation-eq-initialaccelerationsvelb">
+<span class="eqno">(43)<a class="headerlink" href="#equation-eq-initialaccelerationsvelb" title="Link to this equation"></a></span>\[
+  \mr{\Mm}{\Null}{\frac{\partial \gv}{\partial \dot \qv^\mathrm{T}}}
+     {\Null}{\Im}{\Null}
+     {\frac{\partial \gv}{\partial \dot \qv}}{\Null}{\Null}
+     \vr{\ddot \qv_0}{\yv_0}{\tlambda_0}
+   = \vr{\fv_\SO(\qv_T, \dot \qv_T, t)}{\yv_{init}}
+        {-\frac{\partial \gv}{\partial \qv} \dot \qv_0-\frac{\partial \gv}{\partial \yv} \dot \yv_0 - \frac{\partial \gv}{\partial t}}  \, ,
+\]</div>
+<p>The term <span class="math notranslate nohighlight">\(\frac{\partial \gv}{\partial t}\)</span> can only occur in case of user functions and therefore currently not implemented, and the <a class="reference internal" href="../generated/abbreviations.html#ode1"><span class="std std-ref">ODE1</span></a> term <span class="math notranslate nohighlight">\(\frac{\partial \gv}{\partial \yv} = 0\)</span> is not used yet in constraints.</p>
+<p>For position level constraints, we assume <span class="math notranslate nohighlight">\(\frac{\partial \gv}{\partial \dot \qv} = 0\)</span> and <span class="math notranslate nohighlight">\(\frac{\partial \gv}{\partial \yv} = 0\)</span> in <a class="reference internal" href="#equation-eq-initialaccelerationsvel">(42)</a> and perform a second derivation w.r.t. time,</p>
+<div class="math notranslate nohighlight" id="equation-eq-initialaccelerationspos">
+<span class="eqno">(44)<a class="headerlink" href="#equation-eq-initialaccelerationspos" title="Link to this equation"></a></span>\[
+  \ddot \gv(\qv_0, \dot \qv_0, \yv_0, \tlambda_0, t) =
+  \frac{\partial^2 \gv}{\partial \qv^2} \dot \qv_0^2 +
+  2 \frac{\partial^2 \gv}{\partial \qv \partial t} \dot \qv_0 +
+  \frac{\partial \gv}{\partial \qv} \ddot \qv_0 +
+  \frac{\partial^2 \gv}{\partial t^2} = 0 \, .
+\]</div>
+<p>For position level constraints, <a class="reference internal" href="#equation-eq-initialaccelerationspos">(44)</a> is used to extract initial accelerations <span class="math notranslate nohighlight">\(\ddot \qv_0\)</span>,</p>
+<div class="math notranslate nohighlight">
+\[
+  \frac{\partial \gv}{\partial \qv} \ddot \qv_0 =
+  - 2 \frac{\partial^2 \gv}{\partial \qv \partial t} \dot \qv_0
+  - \frac{\partial^2 \gv}{\partial \qv^2} \dot \qv_0^2
+  - \frac{\partial^2 \gv}{\partial t^2} \, .
+\]</div>
+<p>Finally, the equations for the computation of the initial accelerations for position level constraints read</p>
+<div class="math notranslate nohighlight" id="equation-eq-initialaccelerationsposb">
+<span class="eqno">(45)<a class="headerlink" href="#equation-eq-initialaccelerationsposb" title="Link to this equation"></a></span>\[
+  \mr{\Mm}{\Null}{\frac{\partial \gv}{\partial \qv^\mathrm{T}}}
+     {\Null}{\Im}{\Null}
+     {\frac{\partial \gv}{\partial \qv} }{\Null}{\Null}
+     \vr{\ddot \qv_0}{\yv_0}{\tlambda_0}
+   = \vr{\fv_\SO(\qv_T, \dot \qv_T, t)}{\yv_{init}}
+        {- 2 \frac{\partial^2 \gv}{\partial \qv \partial t} \dot \qv_0 - \frac{\partial^2 \gv}{\partial \qv^2} \dot \qv_0^2  - \frac{\partial^2 \gv}{\partial t^2}}  \, ,
+\]</div>
+<p>The linear system of equations, either <a class="reference internal" href="#equation-eq-initialaccelerationsvelb">(43)</a> or <a class="reference internal" href="#equation-eq-initialaccelerationsposb">(45)</a>, is solved prior to an implicit time integration if</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">simulationSettings.timeIntegration.generalizedAlpha.computeInitialAccelerations</span> <span class="pre">=</span> <span class="pre">True</span></code>,</p></li>
+</ul>
+<p>which is the default value.</p>
+</section>
+</section>
+<section id="optimization-and-parameter-variation">
+<h2>Optimization and parameter variation<a class="headerlink" href="#optimization-and-parameter-variation" title="Link to this heading"></a></h2>
+<p>The real benefit of powerful multi-body simulation emerges only if combined with modern but also simple analysis and evaluation methods.
+Therefore, Exudyn has been integrated into the Python language, which offers a virtually unlimited number of methods of post-processing, evaluation and optimization.
+In this section, two methods that are directly integrated into Exudyn are revisited.</p>
+<p>Both write their results to the file given as <code class="docutils literal notranslate"><span class="pre">resultsFile</span></code> while they run, and such a run is
+usually long. <code class="docutils literal notranslate"><span class="pre">python</span> <span class="pre">-m</span> <span class="pre">exudyn</span> <span class="pre">monitor</span> <span class="pre">--last</span></code> shows that file as it grows, see
+<a class="reference internal" href="resultsMonitor.html#sec-resultsmonitor"><span class="std std-ref">The results monitor</span></a>.</p>
+<section id="parameter-variation">
+<span id="sec-parametervariation"></span><h3>Parameter variation<a class="headerlink" href="#parameter-variation" title="Link to this heading"></a></h3>
+<p>Parameter variation is one of the simplest tools to evaluate the dependency of the solution of a problem on certain parameters. This usually requires the computation of an objective (goal, result) value for a single computation (e.g, some error norm, maximum vibration amplitude, maximum stress, maximum deflection, etc.) for every computation. Furthermore, it needs to be run for a set of parameters, e.g., using a <code class="docutils literal notranslate"><span class="pre">for</span></code> loop.
+While this could be done manually in Exudyn , it is recommended to use built-in functions, which simplify evaluation and postprocessing and directly enable parallelization.
+The according function <code class="docutils literal notranslate"><span class="pre">ParameterVariation(...)</span></code>, see <a class="reference internal" href="../generated/pythonUtilities/processing.html#sec-processing-parametervariation"><span class="std std-ref">Function: ParameterVariation</span></a>, performs a set of multi-dimensional parameter variations using a dictionary that describes the variation of parameters. See also <code class="docutils literal notranslate"><span class="pre">parameterVariationExample.py</span></code> in the <code class="docutils literal notranslate"><span class="pre">Examples</span></code> folder for a simple example showing a 2D parameter variation. The function <code class="docutils literal notranslate"><span class="pre">ParameterVariation(...)</span></code> requires the <code class="docutils literal notranslate"><span class="pre">multiprocessing</span></code> Python module which enables simple multi-threaded parallelism and has been tested for up to 80 cores on the LEO4 supercomputer at the University of Innsbruck, achieving a speedup of 50 as compared to a serial computation.</p>
+</section>
+<section id="genetic-optimization">
+<span id="sec-optimization"></span><h3>Genetic optimization<a class="headerlink" href="#genetic-optimization" title="Link to this heading"></a></h3>
+<p>In engineering, we often need to find a set of unknown, independent parameters <span class="math notranslate nohighlight">\(\xv \in \Rcal^n\)</span>, <span class="math notranslate nohighlight">\(\xv\)</span> being denoted as design variables and <span class="math notranslate nohighlight">\(\Rcal^n\)</span> as design space. Sometimes, the design space is further subjected to constraints <span class="math notranslate nohighlight">\(\gv(\xv)=0\)</span> as well as inequalities <span class="math notranslate nohighlight">\(\hv(x) \le 0\)</span>, which are not considered here. For simple solutions for constrained optimization problems using penalty methods, see the introductory literature <a class="reference internal" href="../generated/references.html#ref-kiusalaas2013"><span class="std std-ref">Kiusalaas2013</span></a>.</p>
+<p>Optimization problems are written in general in the form</p>
+<div class="math notranslate nohighlight">
+\[
+  \min\limits_{\xv} f(\xv), \quad \xv \in \Rcal^n \, ,
+\]</div>
+<p>where <span class="math notranslate nohighlight">\(f(\xv)\)</span> denotes the <em>objective function</em> (=<em>fitness function</em>). If we would like to maximize a function <span class="math notranslate nohighlight">\(\bar f(\xv)\)</span>, simply set <span class="math notranslate nohighlight">\(f(\xv)=-\bar f(\xv)\)</span>.</p>
+<p>In engineering, the optimization problem could seek model parameters, e.g., the geometric dimensions and inertia parameters of a slider crank mechanism, in order to achieve smallest possible forces at the supports.
+Another example is the identification of unknown physical parameters, such as stiffness, damping of friction. This can be achieved by comparing measurement and simulation data (e.g., accelerations measured at relevant parts of a machine). Lets assume that <span class="math notranslate nohighlight">\(\epsilon(t)\)</span> is an error computed in every time step of a computation, then we can set the objective (=fitness) function, e.g., as</p>
+<div class="math notranslate nohighlight">
+\[
+  f(x) = \frac 1 T \sqrt{\int_{t=0}^T \epsilon(t)^2 dt}
+\]</div>
+<p>as the integral over the error <span class="math notranslate nohighlight">\(\epsilon\)</span> between measurement and simulation data.
+In general, a parameter variation would be sufficient to compute sufficient computations for all combinations within the design space, however, a 3D design space with 100 variations into every direction (e.g., varying the unknown damping coefficient between 1 and 100, etc.) would already require 1000.000 computations, which in an ideal case of 1 second/computation leads to almost 2 weeks of computation time.</p>
+<p>As an alternative stochastic methods can be use to compute only the objective function for a smaller set of randomly generated design variables, which usually show regions with better parameters (lower <span class="math notranslate nohighlight">\(f\)</span>) in scatter plots.</p>
+<p><strong>Genetic algorithms</strong>[Goldberg1989; Whitley1994] can significantly reduce the necessary amount of objective function evaluations in order to perform the optimization. Genetic identification algorithms have been already successfully applied to multibody system dynamics<a class="reference internal" href="../generated/references.html#ref-eder2014"><span class="std std-ref">Eder2014</span></a>.</p>
+<p>The general structure of a (canonical) genetic algorithm is depicted in <a class="reference internal" href="#fig-geneticoptimization"><span class="std std-numref">Fig. 36</span></a>.</p>
+<figure class="align-default" id="id8">
+<span id="fig-geneticoptimization"></span><a class="reference internal image-reference" href="../../_images/geneticOptimization.svg"><img alt="../../_images/geneticOptimization.svg" src="../../_images/geneticOptimization.svg" width="300" />
+</a>
+<figcaption>
+<p><span class="caption-number">Fig. 36 </span><span class="caption-text">Basic solver flow chart genetic algorithm / optimization.</span><a class="headerlink" href="#id8" title="Link to this image"></a></p>
+</figcaption>
+</figure>
+<p>For details, see the cited literature. Here, we focus on the implementation of the function
+<code class="docutils literal notranslate"><span class="pre">GeneticOptimization(...)</span></code>, see <a class="reference internal" href="../generated/pythonUtilities/processing.html#sec-processing-geneticoptimization"><span class="std std-ref">Function: GeneticOptimization</span></a>.
+The initial population (step 1) is created with <code class="docutils literal notranslate"><span class="pre">initialPopulationSize</span></code> individuals with uniformly distributed random design variables <span class="math notranslate nohighlight">\([\xv_0, \ldots, \xv_{n_{pi}-1}]\)</span>  (<span class="math notranslate nohighlight">\(\xv_i=[x_{i0}, x_{i1}, \ldots]\)</span> being a set of genes, with single genes <span class="math notranslate nohighlight">\(x_{i0}\)</span>, <span class="math notranslate nohighlight">\(x_{i1}\)</span>, …) in the search space, which is given in the dictionary <code class="docutils literal notranslate"><span class="pre">parameters</span></code>. Herafter (steps 2-6), we iteratively process a population for a certain <code class="docutils literal notranslate"><span class="pre">numberOfGenerations</span></code> generations.</p>
+<p>In step 3, the surviving individuals <span class="math notranslate nohighlight">\(S_s\)</span> with best fitness (smallest value from evaluation of <code class="docutils literal notranslate"><span class="pre">objectiveFunction</span></code>) are selected and considered further in the optimization. If the <code class="docutils literal notranslate"><span class="pre">distanceFactor</span></code> is used, the surviving individuals must be located within a certain distance (measured relative to the range of the search space) to all other surviving individuals. This option guarantees the search within several local minima, while a conventional search often converges to one single minimum.
+Crossover (step 4)  is performed using a crossover of all available parameters of two randomly selected parents when generating children from the surviving individuals. The crossover of genes is performed only for a part of the new population, defined by <code class="docutils literal notranslate"><span class="pre">crossoverAmount</span></code>.</p>
+<p>Finally, in step 5, we apply mutation to all genes, which extends the search to the surrounding design space of the individuals created by crossover. The mutation could be performed by means of certain distribution functions in order to focus on the currently best search regions. However, in the current implementation of <code class="docutils literal notranslate"><span class="pre">GeneticOptimization(...)</span></code> we simply use a uniform random variable to distribute the genes over a certain percentage of the design space, which is reduced in every generation defined by the <code class="docutils literal notranslate"><span class="pre">rangeReductionFactor</span></code> <span class="math notranslate nohighlight">\(r_r\)</span>. This allows us to restrict further search to a smaller subregion of the design space and in general allows a reduction of search space by means of <span class="math notranslate nohighlight">\(r_r^{n_g}\)</span>. In the ideal case, using sufficiently large population sizes and being lucky with the found random values, a range reduction factor <span class="math notranslate nohighlight">\(r_r=0.7\)</span> reduces the search space by a factor of <span class="math notranslate nohighlight">\(100\)</span> after every 13 generations, allowing to obtain 4 digits of accuracy for design variables after 26 generations for suitable optimization problems.</p>
+<p>It should be noted that still this optimization method is based on random values and thus may fail occasionally for any problem case. In order to get reproducible results, set <code class="docutils literal notranslate"><span class="pre">randomizerInitialization</span></code> to any integer value (simply: 0) in order to get identical results for repeated runs. Setting the latter variable guarantees that the Python (numpy) randomizer creates the same series of random values for initial population, mutation, etc.</p>
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="theoryContact.html" class="btn btn-neutral float-left" title="Modeling of contact in Exudyn" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="../generated/cInterface/cInterfaceIndex.html" class="btn btn-neutral float-right" title="Python-C++ command interface" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

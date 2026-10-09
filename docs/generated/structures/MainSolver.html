@@ -1,0 +1,1088 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MainSolver &mdash; Exudyn1.13.3 1.13.3 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=3ee1c6c6" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/rtd_sphinx_search.min.css" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/custom.css?v=e2783f0e" />
+
+  
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=b8a3e558"></script>
+      <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../../_static/copybutton.js?v=f281be69"></script>
+      <script src="../../../_static/js/rtd_search_config.js"></script>
+      <script src="../../../_static/js/rtd_sphinx_search.min.js"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+    <link rel="next" title="PyStructuralElementsDataStructures" href="PyStructuralElementsDataStructures.html" />
+    <link rel="prev" title="CSolverStructures" href="CSolverStructures.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            Exudyn1.13.3
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Exudyn User Manual</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../README.html">Exudyn</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../manual/gettingStarted.html">Installation and getting started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../manual/introduction.html">Overview on Exudyn</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../manual/introductionBasics.html">Exudyn basics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../manual/tutorial.html">Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../manual/GUI.html">Renderer, graphics and visualization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../manual/performanceErrors.html">Performance, errors and solver failures</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../manual/introductionAdvanced.html">Advanced topics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../manual/notation.html">Notation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../manual/theory.html">Theory and formulations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../manual/solver.html">Solvers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../cInterface/cInterfaceIndex.html">Python-C++ command interface</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Reference Manual</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../items/itemsIndex.html">Items reference manual</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../pythonUtilities/utilitiesIndex.html">Python Utility Functions</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="structuresIndex.html">Structures and Settings</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="SimulationSettings.html">SimulationSettings</a></li>
+<li class="toctree-l2"><a class="reference internal" href="VisualizationSettings.html">VisualizationSettings</a></li>
+<li class="toctree-l2"><a class="reference internal" href="CSolverStructures.html">CSolverStructures</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">MainSolver</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#mainsolverstatic">MainSolverStatic</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#mainsolverimplicitsecondorder">MainSolverImplicitSecondOrder</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#mainsolverexplicit">MainSolverExplicit</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="PyStructuralElementsDataStructures.html">PyStructuralElementsDataStructures</a></li>
+<li class="toctree-l2"><a class="reference internal" href="BeamSectionGeometry.html">BeamSectionGeometry</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../references.html">References</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Developer documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../dev/README.html">Exudyn developer documentation</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">How-to notes</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../howTo/condaEnvironments.html">Conda environments for Exudyn</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../howTo/sphinxDocs.html">Building the documentation</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Examples, models and issues</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../examples/examplesIndex.html">Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../testModels/testModelsIndex.html">TestModels</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../abbreviations.html">List of Abbreviations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../manual/revisions.html">Revisions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../CHANGELOG.html">Changelog</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../trackerlog.html">Issue tracker</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">Exudyn1.13.3</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="structuresIndex.html">Structures and Settings</a></li>
+      <li class="breadcrumb-item active">MainSolver</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../../_sources/docs/generated/structures/MainSolver.md.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <!-- GENERATED by tools/generators/structureDocsEmitter.py from definitions/ - do not edit -->
+<section class="tex2jax_ignore mathjax_ignore" id="mainsolver">
+<h1>MainSolver<a class="headerlink" href="#mainsolver" title="Link to this heading"></a></h1>
+<section id="mainsolverstatic">
+<span id="sec-mainsolverstatic"></span><h2>MainSolverStatic<a class="headerlink" href="#mainsolverstatic" title="Link to this heading"></a></h2>
+<p>PyBind interface (trampoline) class for static solver. With this interface, the static solver and its substructures can be accessed via Python. NOTE that except from SolveSystem(…), these functions are only intended for experienced users and they need to be handled with care, as unexpected crashes may happen if used inappropriate. Furthermore, the functions have a lot of overhead (performance much lower than internal solver) due to Python interfaces, and should thus be used for small systems. To access the solver in Python, write:</p>
+<p><code class="docutils literal notranslate"><span class="pre">solver</span> <span class="pre">=</span> <span class="pre">MainSolverStatic()</span></code></p>
+<p>and hereafter you can access all data and functions via ‘solver’.</p>
+<p>MainSolverStatic has the following items:</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>name</p></th>
+<th class="head"><p>type / return type</p></th>
+<th class="head"><p>default / arguments</p></th>
+<th class="head"><p>description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">conv</span></code></p></td>
+<td><p>SolverConvergenceData</p></td>
+<td><p></p></td>
+<td><p>all information about tolerances, errors and residua</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">it</span></code></p></td>
+<td><p>SolverIterationData</p></td>
+<td><p></p></td>
+<td><p>all information about iterations (steps, discontinuous iteration, newton,…)</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">newton</span></code></p></td>
+<td><p>NewtonSettings</p></td>
+<td><p></p></td>
+<td><p>copy of newton settings from timeint or staticSolver</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">output</span></code></p></td>
+<td><p>SolverOutputData</p></td>
+<td><p></p></td>
+<td><p>output modes and timers for exporting solver information and solution</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">timer</span></code></p></td>
+<td><p>CSolverTimer</p></td>
+<td><p></p></td>
+<td><p>timer which measures the CPU time of solver sub functions</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">CheckInitialized(...)</span></code></p></td>
+<td><p>bool</p></td>
+<td><p>mainSystem</p></td>
+<td><p>check if MainSolver and MainSystem are correctly initialized ==&gt; otherwise raise SysError</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">ComputeAlgebraicEquations(...)</span></code></p></td>
+<td><p>void</p></td>
+<td><p>mainSystem, velocityLevel=False</p></td>
+<td><p>compute the algebraic equations in systemResidual in range(nODE2+nODE1, nODE2+nODE1+nAE)</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">ComputeJacobianAE(...)</span></code></p></td>
+<td><p>void</p></td>
+<td><p>mainSystem, scalarFactor_ODE2=1., scalarFactor_ODE2_t=0., scalarFactor_ODE1=1., velocityLevel=False</p></td>
+<td><p>add jacobian of algebraic equations (multiplied with factor) to systemJacobian in cSolver; the scalarFactors are scaling the derivatives w.r.t. <a class="reference internal" href="../abbreviations.html#ode2"><span class="std std-ref">ODE2</span></a> coordinates, ODE2_t (velocity) coordinates and ODE1 coordinates; if velocityLevel == true, the constraints are evaluated at velocity level; the scalar factors scalarFactor_ODE2=0 and scalarFactor_ODE2 are used for the same ODE2 block in the jacobian</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">ComputeJacobianODE1RHS(...)</span></code></p></td>
+<td><p>void</p></td>
+<td><p>mainSystem, scalarFactor_ODE2=1., scalarFactor_ODE2_t=0., scalarFactor_ODE1=1.</p></td>
+<td><p>ADD jacobian of ODE1RHS (multiplied with factors for ODE2 and ODE1 coordinates) to the according rows (nODE2:nODE2+nODE1) of the exising systemJacobian in cSolver; it requires a prior call to ComputeJacobianODE2RHS(…); the scalar factors scalarFactor_ODE2=0 and scalarFactor_ODE2 are used for the same ODE2 block in the jacobian</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">ComputeJacobianODE2RHS(...)</span></code></p></td>
+<td><p>void</p></td>
+<td><p>mainSystem, scalarFactor_ODE2=1., scalarFactor_ODE2_t=0., scalarFactor_ODE1=1., computeLoadsJacobian=0</p></td>
+<td><p>set systemJacobian to zero, size = (nODE2+nODE1+nAE) x (nODE2+nODE1+nAE), and add jacobian (multiplied with factors for ODE2 and ODE1 coordinates) of ODE2RHS to systemJacobian in cSolver; using (scalarFactor_ODE2=-1,scalarFactor_ODE2=0) gives the stiffness matrix (=derivatives of ODE2 coords) in the nODE2 x nODE2 part, while using (scalarFactor_ODE2=0,scalarFactor_ODE2=-1) gives the damping matrix (= derivatives of ODE2 velocity coordinates) in the same part; a superposition of these two parts makes sense for implicit solvers; if , Index computeLoadsJacobian=0, loads are not considered in the Jacobian computation; for , Index computeLoadsJacobian=1 the ODE2 and ODE1 derivatives of loads are included and for , Index computeLoadsJacobian=2, also the ODE2_t dependencies are added</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">ComputeLoadFactor(...)</span></code></p></td>
+<td><p>Real</p></td>
+<td><p>simulationSettings</p></td>
+<td><p>for static solver, this is a factor in interval [0,1]; MUST be overwritten</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">ComputeMassMatrix(...)</span></code></p></td>
+<td><p>void</p></td>
+<td><p>mainSystem, scalarFactor=1.</p></td>
+<td><p>compute systemMassMatrix (multiplied with factor) in cSolver and return mass nODE2 x nODE2 matrix</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">ComputeNewtonJacobian(...)</span></code></p></td>
+<td><p>void</p></td>
+<td><p>mainSystem, simulationSettings</p></td>
+<td><p>compute jacobian for newton method of given solver method; store result in systemJacobian</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">ComputeNewtonResidual(...)</span></code></p></td>
+<td><p>Real</p></td>
+<td><p>mainSystem, simulationSettings</p></td>
+<td><p>compute residual for Newton method (e.g. static or time step); store residual vector in systemResidual and return scalar residual (specific computation may depend on solver types)</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">ComputeNewtonUpdate(...)</span></code></p></td>
+<td><p>void</p></td>
+<td><p>mainSystem, simulationSettings, initial=True</p></td>
+<td><p>compute update for currentState from newtonSolution (decrement from residual and jacobian); if initial, this is for the initial update with newtonSolution=0</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">ComputeODE2RHS(...)</span></code></p></td>
+<td><p>void</p></td>
+<td><p>mainSystem</p></td>
+<td><p>compute the RHS of <a class="reference internal" href="../abbreviations.html#ode2"><span class="std std-ref">ODE2</span></a> equations in systemResidual in range(0,nODE2)</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">DiscontinuousIteration(...)</span></code></p></td>
+<td><p>bool</p></td>
+<td><p>mainSystem, simulationSettings</p></td>
+<td><p>perform discontinuousIteration for static step / time step; CALLS ComputeNewtonResidual</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">FinalizeSolver(...)</span></code></p></td>
+<td><p>void</p></td>
+<td><p>mainSystem, simulationSettings</p></td>
+<td><p>write concluding information (timer statistics, messages) and close files</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">FinishStep(...)</span></code></p></td>
+<td><p>void</p></td>
+<td><p>mainSystem, simulationSettings</p></td>
+<td><p>finish static step / time step; write output of results to file</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">GetAEsize()</span></code></p></td>
+<td><p>Index</p></td>
+<td><p></p></td>
+<td><p>number of algebraic equations in solver</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">GetDataSize()</span></code></p></td>
+<td><p>Index</p></td>
+<td><p></p></td>
+<td><p>number of data (history) variables in solver</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">GetErrorString()</span></code></p></td>
+<td><p>std::string</p></td>
+<td><p></p></td>
+<td><p>return error string if solver has not been successful</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">GetNewtonSolution()</span></code></p></td>
+<td><p>NumpyVector</p></td>
+<td><p></p></td>
+<td><p>get locally stored / last computed solution (=increment) of Newton</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">GetODE1size()</span></code></p></td>
+<td><p>Index</p></td>
+<td><p></p></td>
+<td><p>number of <a class="reference internal" href="../abbreviations.html#ode1"><span class="std std-ref">ODE1</span></a> equations in solver (not yet implemented)</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">GetODE2size()</span></code></p></td>
+<td><p>Index</p></td>
+<td><p></p></td>
+<td><p>number of <a class="reference internal" href="../abbreviations.html#ode2"><span class="std std-ref">ODE2</span></a> equations in solver</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">GetSimulationEndTime(...)</span></code></p></td>
+<td><p>Real</p></td>
+<td><p>simulationSettings</p></td>
+<td><p>compute simulation end time (depends on static or time integration solver)</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">GetSolverName()</span></code></p></td>
+<td><p>std::string</p></td>
+<td><p></p></td>
+<td><p>get solver name - needed for output file header and visualization window</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">GetSystemJacobian()</span></code></p></td>
+<td><p>NumpyMatrix</p></td>
+<td><p></p></td>
+<td><p>get locally stored / last computed system jacobian of solver</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">GetSystemMassMatrix()</span></code></p></td>
+<td><p>NumpyMatrix</p></td>
+<td><p></p></td>
+<td><p>get locally stored / last computed mass matrix of solver</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">GetSystemResidual()</span></code></p></td>
+<td><p>NumpyVector</p></td>
+<td><p></p></td>
+<td><p>get locally stored / last computed system residual</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">HasAutomaticStepSizeControl(...)</span></code></p></td>
+<td><p>bool</p></td>
+<td><p>mainSystem, simulationSettings</p></td>
+<td><p>return true, if solver supports automatic stepsize control, otherwise false</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">IncreaseStepSize(...)</span></code></p></td>
+<td><p>void</p></td>
+<td><p>mainSystem, simulationSettings</p></td>
+<td><p>increase step size if convergence is good</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">InitializeSolver(...)</span></code></p></td>
+<td><p>bool</p></td>
+<td><p>mainSystem, simulationSettings</p></td>
+<td><p>initialize solverSpecific,data,it,conv; set/compute initial conditions (solver-specific!); initialize output files</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">InitializeSolverData(...)</span></code></p></td>
+<td><p>void</p></td>
+<td><p>mainSystem, simulationSettings</p></td>
+<td><p>initialize all data,it,conv; called from InitializeSolver()</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">InitializeSolverInitialConditions(...)</span></code></p></td>
+<td><p>void</p></td>
+<td><p>mainSystem, simulationSettings</p></td>
+<td><p>set/compute initial conditions (solver-specific!); called from InitializeSolver()</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">InitializeSolverOutput(...)</span></code></p></td>
+<td><p>void</p></td>
+<td><p>mainSystem, simulationSettings</p></td>
+<td><p>initialize output files; called from InitializeSolver()</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">InitializeSolverPreChecks(...)</span></code></p></td>
+<td><p>bool</p></td>
+<td><p>mainSystem, simulationSettings</p></td>
+<td><p>check if system is solvable; initialize dense/sparse computation modes</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">InitializeStep(...)</span></code></p></td>
+<td><p>void</p></td>
+<td><p>mainSystem, simulationSettings</p></td>
+<td><p>initialize static step / time step; Python-functions; do some outputs, checks, etc.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">IsStaticSolver()</span></code></p></td>
+<td><p>bool</p></td>
+<td><p></p></td>
+<td><p>return true, if static solver; needs to be overwritten in derived class</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">IsVerboseCheck(...)</span></code></p></td>
+<td><p>bool</p></td>
+<td><p>level</p></td>
+<td><p>return true, if file or console output is at or above the given level</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">loadStepGeometricFactor</span></code></p></td>
+<td><p>Real</p></td>
+<td><p></p></td>
+<td><p>multiplicative load step factor; this factor is computed from loadStepGeometric parameters in SolveSystem(…)</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">Newton(...)</span></code></p></td>
+<td><p>bool</p></td>
+<td><p>mainSystem, simulationSettings</p></td>
+<td><p>perform Newton method for given solver method</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">PostInitializeSolverSpecific(...)</span></code></p></td>
+<td><p>void</p></td>
+<td><p>mainSystem, simulationSettings</p></td>
+<td><p>post-initialize for solver specific tasks; called at the end of InitializeSolver</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">PreInitializeSolverSpecific(...)</span></code></p></td>
+<td><p>void</p></td>
+<td><p>mainSystem, simulationSettings</p></td>
+<td><p>pre-initialize for solver specific tasks; called at beginning of InitializeSolver, right after Solver data reset</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">ReduceStepSize(...)</span></code></p></td>
+<td><p>bool</p></td>
+<td><p>mainSystem, simulationSettings, severity</p></td>
+<td><p>reduce step size (1..normal, 2..severe problems); return true, if reduction was successful</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">SetSystemJacobian(...)</span></code></p></td>
+<td><p>void</p></td>
+<td><p>systemJacobian</p></td>
+<td><p>set locally stored system jacobian of solver; must have size nODE2+nODE1+nAE</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">SetSystemMassMatrix(...)</span></code></p></td>
+<td><p>void</p></td>
+<td><p>systemMassMatrix</p></td>
+<td><p>set locally stored mass matrix of solver; must have size nODE2+nODE1+nAE</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">SetSystemResidual(...)</span></code></p></td>
+<td><p>void</p></td>
+<td><p>systemResidual</p></td>
+<td><p>set locally stored system residual; must have size nODE2+nODE1+nAE</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">SolveSteps(...)</span></code></p></td>
+<td><p>bool</p></td>
+<td><p>mainSystem, simulationSettings</p></td>
+<td><p>main solver part: calls multiple InitializeStep(…)/ DiscontinuousIteration(…)/ FinishStep(…); do step reduction if necessary; return true if success, false else</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">SolveSystem(...)</span></code></p></td>
+<td><p>bool</p></td>
+<td><p>mainSystem, simulationSettings</p></td>
+<td><p>solve System: InitializeSolver, SolveSteps, FinalizeSolver</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">UpdateCurrentTime(...)</span></code></p></td>
+<td><p>void</p></td>
+<td><p>mainSystem, simulationSettings</p></td>
+<td><p>update currentTime (and load factor); MUST be overwritten in special solver class</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">VerboseWrite(...)</span></code></p></td>
+<td><p>void</p></td>
+<td><p>level, str</p></td>
+<td><p>write to console and/or file in case of level</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">WriteCoordinatesToFile(...)</span></code></p></td>
+<td><p>void</p></td>
+<td><p>mainSystem, simulationSettings</p></td>
+<td><p>write unique coordinates solution file</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">WriteSolutionFileHeader(...)</span></code></p></td>
+<td><p>void</p></td>
+<td><p>mainSystem, simulationSettings</p></td>
+<td><p>write unique file header, depending on static/ dynamic simulation</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="mainsolverimplicitsecondorder">
+<span id="sec-mainsolverimplicitsecondorder"></span><h2>MainSolverImplicitSecondOrder<a class="headerlink" href="#mainsolverimplicitsecondorder" title="Link to this heading"></a></h2>
+<p>PyBind interface (trampoline) class for dynamic implicit solver. Note that this solver includes the classical Newmark method (set useNewmark True; with option of index 2 reduction) as well as the generalized-alpha method. With the interface, the dynamic implicit solver and its substructures can be accessed via Python. NOTE that except from SolveSystem(…), these functions are only intended for experienced users and they need to be handled with care, as unexpected crashes may happen if used inappropriate. Furthermore, the functions have a lot of overhead (still fast, but performance much lower than internal solver) due to Python interfaces, and should thus be used for small systems. To access the solver in Python, write:</p>
+<p><code class="docutils literal notranslate"><span class="pre">solver</span> <span class="pre">=</span> <span class="pre">MainSolverImplicitSecondOrder()</span></code></p>
+<p>and hereafter you can access all data and functions via ‘solver’.
+In this solver, user functions are possible to extend the solver at certain parts, while keeping the overal C++ performance. User functions, which are added with SetUserFunction…(…), have the arguments (MainSolver, MainSystem, simulationSettings), except for ComputeNewtonUpdate which adds the initial flag as an additional argument and ComputeNewtonResidual, which returns the scalar residual.</p>
+<p>MainSolverImplicitSecondOrder has the following items:</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>name</p></th>
+<th class="head"><p>type / return type</p></th>
+<th class="head"><p>default / arguments</p></th>
+<th class="head"><p>description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">conv</span></code></p></td>
+<td><p>SolverConvergenceData</p></td>
+<td><p></p></td>
+<td><p>all information about tolerances, errors and residua</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">it</span></code></p></td>
+<td><p>SolverIterationData</p></td>
+<td><p></p></td>
+<td><p>all information about iterations (steps, discontinuous iteration, newton,…)</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">newton</span></code></p></td>
+<td><p>NewtonSettings</p></td>
+<td><p></p></td>
+<td><p>copy of newton settings from timeint or staticSolver</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">output</span></code></p></td>
+<td><p>SolverOutputData</p></td>
+<td><p></p></td>
+<td><p>output modes and timers for exporting solver information and solution</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">timer</span></code></p></td>
+<td><p>CSolverTimer</p></td>
+<td><p></p></td>
+<td><p>timer which measures the CPU time of solver sub functions; note that solver structures can only be written indirectly, e.g., timer=dynamicSolver.timer; timer.useTimer = False; dynamicSolver.timer=timer; however, dynamicSolver.timer.useTimer cannot be written.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">alphaF</span></code></p></td>
+<td><p>Real</p></td>
+<td><p></p></td>
+<td><p>copy of parameter in timeIntegration.generalizedAlpha</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">alphaM</span></code></p></td>
+<td><p>Real</p></td>
+<td><p></p></td>
+<td><p>copy of parameter in timeIntegration.generalizedAlpha</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">CheckInitialized(...)</span></code></p></td>
+<td><p>bool</p></td>
+<td><p>mainSystem</p></td>
+<td><p>check if MainSolver and MainSystem are correctly initialized ==&gt; otherwise raise SysError</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">ComputeAlgebraicEquations(...)</span></code></p></td>
+<td><p>void</p></td>
+<td><p>mainSystem, velocityLevel=False</p></td>
+<td><p>compute the algebraic equations in systemResidual in range(nODE2+nODE1, nODE2+nODE1+nAE)</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">ComputeJacobianAE(...)</span></code></p></td>
+<td><p>void</p></td>
+<td><p>mainSystem, scalarFactor_ODE2=1., scalarFactor_ODE2_t=0., scalarFactor_ODE1=1., velocityLevel=False</p></td>
+<td><p>add jacobian of algebraic equations (multiplied with factor) to systemJacobian in cSolver; the scalarFactors are scaling the derivatives w.r.t. <a class="reference internal" href="../abbreviations.html#ode2"><span class="std std-ref">ODE2</span></a> coordinates, ODE2_t (velocity) coordinates and ODE1 coordinates; if velocityLevel == true, the constraints are evaluated at velocity level; the scalar factors scalarFactor_ODE2=0 and scalarFactor_ODE2 are used for the same ODE2 block in the jacobian</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">ComputeJacobianODE1RHS(...)</span></code></p></td>
+<td><p>void</p></td>
+<td><p>mainSystem, scalarFactor_ODE2=1., scalarFactor_ODE2_t=0., scalarFactor_ODE1=1.</p></td>
+<td><p>ADD jacobian of ODE1RHS (multiplied with factors for ODE2 and ODE1 coordinates) to the according rows (nODE2:nODE2+nODE1) of the exising systemJacobian in cSolver; it requires a prior call to ComputeJacobianODE2RHS(…); the scalar factors scalarFactor_ODE2=0 and scalarFactor_ODE2 are used for the same ODE2 block in the jacobian</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">ComputeJacobianODE2RHS(...)</span></code></p></td>
+<td><p>void</p></td>
+<td><p>mainSystem, scalarFactor_ODE2=1., scalarFactor_ODE2_t=0., scalarFactor_ODE1=1., computeLoadsJacobian=0</p></td>
+<td><p>set systemJacobian to zero, size = (nODE2+nODE1+nAE) x (nODE2+nODE1+nAE), and add jacobian (multiplied with factors for ODE2 and ODE1 coordinates) of ODE2RHS to systemJacobian in cSolver; using (scalarFactor_ODE2=-1,scalarFactor_ODE2=0) gives the stiffness matrix (=derivatives of ODE2 coords) in the nODE2 x nODE2 part, while using (scalarFactor_ODE2=0,scalarFactor_ODE2=-1) gives the damping matrix (= derivatives of ODE2 velocity coordinates) in the same part; a superposition of these two parts makes sense for implicit solvers; if , Index computeLoadsJacobian=0, loads are not considered in the Jacobian computation; for , Index computeLoadsJacobian=1 the ODE2 and ODE1 derivatives of loads are included and for , Index computeLoadsJacobian=2, also the ODE2_t dependencies are added</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">ComputeLoadFactor(...)</span></code></p></td>
+<td><p>Real</p></td>
+<td><p>simulationSettings</p></td>
+<td><p>for static solver, this is a factor in interval [0,1]; MUST be overwritten</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">ComputeMassMatrix(...)</span></code></p></td>
+<td><p>void</p></td>
+<td><p>mainSystem, scalarFactor=1.</p></td>
+<td><p>compute systemMassMatrix (multiplied with factor) in cSolver and return mass nODE2 x nODE2 matrix</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">ComputeNewtonJacobian(...)</span></code></p></td>
+<td><p>void</p></td>
+<td><p>mainSystem, simulationSettings</p></td>
+<td><p>compute jacobian for newton method of given solver method; store result in systemJacobian</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">ComputeNewtonResidual(...)</span></code></p></td>
+<td><p>Real</p></td>
+<td><p>mainSystem, simulationSettings</p></td>
+<td><p>compute residual for Newton method (e.g. static or time step); store residual vector in systemResidual and return scalar residual (specific computation may depend on solver types)</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">ComputeNewtonUpdate(...)</span></code></p></td>
+<td><p>void</p></td>
+<td><p>mainSystem, simulationSettings, initial=True</p></td>
+<td><p>compute update for currentState from newtonSolution (decrement from residual and jacobian); if initial, this is for the initial update with newtonSolution=0</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">ComputeODE1RHS(...)</span></code></p></td>
+<td><p>void</p></td>
+<td><p>mainSystem</p></td>
+<td><p>compute the RHS of <a class="reference internal" href="../abbreviations.html#ode1"><span class="std std-ref">ODE1</span></a> equations in systemResidual in range(0,nODE1)</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">ComputeODE2RHS(...)</span></code></p></td>
+<td><p>void</p></td>
+<td><p>mainSystem</p></td>
+<td><p>compute the RHS of <a class="reference internal" href="../abbreviations.html#ode2"><span class="std std-ref">ODE2</span></a> equations in systemResidual in range(0,nODE2)</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">DiscontinuousIteration(...)</span></code></p></td>
+<td><p>bool</p></td>
+<td><p>mainSystem, simulationSettings</p></td>
+<td><p>perform discontinuousIteration for static step / time step; CALLS ComputeNewtonResidual</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">factJacAlgorithmic</span></code></p></td>
+<td><p>Real</p></td>
+<td><p></p></td>
+<td><p>locally computed parameter from generalizedAlpha parameters</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">FinalizeSolver(...)</span></code></p></td>
+<td><p>void</p></td>
+<td><p>mainSystem, simulationSettings</p></td>
+<td><p>write concluding information (timer statistics, messages) and close files</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">FinishStep(...)</span></code></p></td>
+<td><p>void</p></td>
+<td><p>mainSystem, simulationSettings</p></td>
+<td><p>finish static step / time step; write output of results to file</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">GetAAlgorithmic()</span></code></p></td>
+<td><p>NumpyVector</p></td>
+<td><p></p></td>
+<td><p>get locally stored / last computed algorithmic accelerations</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">GetAEsize()</span></code></p></td>
+<td><p>Index</p></td>
+<td><p></p></td>
+<td><p>number of algebraic equations in solver</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">GetDataSize()</span></code></p></td>
+<td><p>Index</p></td>
+<td><p></p></td>
+<td><p>number of data (history) variables in solver</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">GetErrorString()</span></code></p></td>
+<td><p>std::string</p></td>
+<td><p></p></td>
+<td><p>return error string if solver has not been successful</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">GetNewtonSolution()</span></code></p></td>
+<td><p>NumpyVector</p></td>
+<td><p></p></td>
+<td><p>get locally stored / last computed solution (=increment) of Newton</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">GetODE1size()</span></code></p></td>
+<td><p>Index</p></td>
+<td><p></p></td>
+<td><p>number of <a class="reference internal" href="../abbreviations.html#ode1"><span class="std std-ref">ODE1</span></a> equations in solver (not yet implemented)</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">GetODE2size()</span></code></p></td>
+<td><p>Index</p></td>
+<td><p></p></td>
+<td><p>number of <a class="reference internal" href="../abbreviations.html#ode2"><span class="std std-ref">ODE2</span></a> equations in solver</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">GetSimulationEndTime(...)</span></code></p></td>
+<td><p>Real</p></td>
+<td><p>simulationSettings</p></td>
+<td><p>compute simulation end time (depends on static or time integration solver)</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">GetSolverName()</span></code></p></td>
+<td><p>std::string</p></td>
+<td><p></p></td>
+<td><p>get solver name - needed for output file header and visualization window</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">GetStartOfStepStateAAlgorithmic()</span></code></p></td>
+<td><p>NumpyVector</p></td>
+<td><p></p></td>
+<td><p>get locally stored / last computed algorithmic accelerations at start of step</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">GetSystemJacobian()</span></code></p></td>
+<td><p>NumpyMatrix</p></td>
+<td><p></p></td>
+<td><p>get locally stored / last computed system jacobian of solver</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">GetSystemMassMatrix()</span></code></p></td>
+<td><p>NumpyMatrix</p></td>
+<td><p></p></td>
+<td><p>get locally stored / last computed mass matrix of solver</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">GetSystemResidual()</span></code></p></td>
+<td><p>NumpyVector</p></td>
+<td><p></p></td>
+<td><p>get locally stored / last computed system residual</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">HasAutomaticStepSizeControl(...)</span></code></p></td>
+<td><p>bool</p></td>
+<td><p>mainSystem, simulationSettings</p></td>
+<td><p>return true, if solver supports automatic stepsize control, otherwise false</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">IncreaseStepSize(...)</span></code></p></td>
+<td><p>void</p></td>
+<td><p>mainSystem, simulationSettings</p></td>
+<td><p>increase step size if convergence is good</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">InitializeSolver(...)</span></code></p></td>
+<td><p>bool</p></td>
+<td><p>mainSystem, simulationSettings</p></td>
+<td><p>initialize solverSpecific,data,it,conv; set/compute initial conditions (solver-specific!); initialize output files</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">InitializeSolverData(...)</span></code></p></td>
+<td><p>void</p></td>
+<td><p>mainSystem, simulationSettings</p></td>
+<td><p>initialize all data,it,conv; called from InitializeSolver()</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">InitializeSolverInitialConditions(...)</span></code></p></td>
+<td><p>void</p></td>
+<td><p>mainSystem, simulationSettings</p></td>
+<td><p>set/compute initial conditions (solver-specific!); called from InitializeSolver()</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">InitializeSolverOutput(...)</span></code></p></td>
+<td><p>void</p></td>
+<td><p>mainSystem, simulationSettings</p></td>
+<td><p>initialize output files; called from InitializeSolver()</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">InitializeSolverPreChecks(...)</span></code></p></td>
+<td><p>bool</p></td>
+<td><p>mainSystem, simulationSettings</p></td>
+<td><p>check if system is solvable; initialize dense/sparse computation modes</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">InitializeStep(...)</span></code></p></td>
+<td><p>void</p></td>
+<td><p>mainSystem, simulationSettings</p></td>
+<td><p>initialize static step / time step; Python-functions; do some outputs, checks, etc.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">IsStaticSolver()</span></code></p></td>
+<td><p>bool</p></td>
+<td><p></p></td>
+<td><p>return true, if static solver; needs to be overwritten in derived class</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">IsVerboseCheck(...)</span></code></p></td>
+<td><p>bool</p></td>
+<td><p>level</p></td>
+<td><p>return true, if file or console output is at or above the given level</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">newmarkBeta</span></code></p></td>
+<td><p>Real</p></td>
+<td><p></p></td>
+<td><p>copy of parameter in timeIntegration.generalizedAlpha</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">newmarkGamma</span></code></p></td>
+<td><p>Real</p></td>
+<td><p></p></td>
+<td><p>copy of parameter in timeIntegration.generalizedAlpha</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">Newton(...)</span></code></p></td>
+<td><p>bool</p></td>
+<td><p>mainSystem, simulationSettings</p></td>
+<td><p>perform Newton method for given solver method</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">PostInitializeSolverSpecific(...)</span></code></p></td>
+<td><p>void</p></td>
+<td><p>mainSystem, simulationSettings</p></td>
+<td><p>post-initialize for solver specific tasks; called at the end of InitializeSolver</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">PostNewton(...)</span></code></p></td>
+<td><p>Real</p></td>
+<td><p>mainSystem, simulationSettings</p></td>
+<td><p>call PostNewton for all relevant objects (contact, friction, … iterations); returns error for discontinuous iteration</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">PreInitializeSolverSpecific(...)</span></code></p></td>
+<td><p>void</p></td>
+<td><p>mainSystem, simulationSettings</p></td>
+<td><p>pre-initialize for solver specific tasks; called at beginning of InitializeSolver, right after Solver data reset</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">ReduceStepSize(...)</span></code></p></td>
+<td><p>bool</p></td>
+<td><p>mainSystem, simulationSettings, severity</p></td>
+<td><p>reduce step size (1..normal, 2..severe problems); return true, if reduction was successful</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">SetSystemJacobian(...)</span></code></p></td>
+<td><p>void</p></td>
+<td><p>systemJacobian</p></td>
+<td><p>set locally stored system jacobian of solver; must have size nODE2+nODE1+nAE</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">SetSystemMassMatrix(...)</span></code></p></td>
+<td><p>void</p></td>
+<td><p>systemMassMatrix</p></td>
+<td><p>set locally stored mass matrix of solver; must have size nODE2+nODE1+nAE</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">SetSystemResidual(...)</span></code></p></td>
+<td><p>void</p></td>
+<td><p>systemResidual</p></td>
+<td><p>set locally stored system residual; must have size nODE2+nODE1+nAE</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">SetUserFunctionComputeNewtonJacobian(...)</span></code></p></td>
+<td><p>void</p></td>
+<td><p>mainSystem, userFunction</p></td>
+<td><p>set user function</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">SetUserFunctionComputeNewtonResidual(...)</span></code></p></td>
+<td><p>void</p></td>
+<td><p>mainSystem, userFunction</p></td>
+<td><p>set user function</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">SetUserFunctionComputeNewtonUpdate(...)</span></code></p></td>
+<td><p>void</p></td>
+<td><p>mainSystem, userFunction</p></td>
+<td><p>set user function</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">SetUserFunctionDiscontinuousIteration(...)</span></code></p></td>
+<td><p>void</p></td>
+<td><p>mainSystem, userFunction</p></td>
+<td><p>set user function</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">SetUserFunctionFinishStep(...)</span></code></p></td>
+<td><p>void</p></td>
+<td><p>mainSystem, userFunction</p></td>
+<td><p>set user function</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">SetUserFunctionInitializeStep(...)</span></code></p></td>
+<td><p>void</p></td>
+<td><p>mainSystem, userFunction</p></td>
+<td><p>set user function</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">SetUserFunctionNewton(...)</span></code></p></td>
+<td><p>void</p></td>
+<td><p>mainSystem, userFunction</p></td>
+<td><p>set user function</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">SetUserFunctionPostNewton(...)</span></code></p></td>
+<td><p>void</p></td>
+<td><p>mainSystem, userFunction</p></td>
+<td><p>set user function</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">SetUserFunctionUpdateCurrentTime(...)</span></code></p></td>
+<td><p>void</p></td>
+<td><p>mainSystem, userFunction</p></td>
+<td><p>set user function</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">SolveSteps(...)</span></code></p></td>
+<td><p>bool</p></td>
+<td><p>mainSystem, simulationSettings</p></td>
+<td><p>main solver part: calls multiple InitializeStep(…)/ DiscontinuousIteration(…)/ FinishStep(…); do step reduction if necessary; return true if success, false else</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">SolveSystem(...)</span></code></p></td>
+<td><p>bool</p></td>
+<td><p>mainSystem, simulationSettings</p></td>
+<td><p>solve System: InitializeSolver, SolveSteps, FinalizeSolver</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">spectralRadius</span></code></p></td>
+<td><p>Real</p></td>
+<td><p></p></td>
+<td><p>copy of parameter in timeIntegration.generalizedAlpha</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">UpdateCurrentTime(...)</span></code></p></td>
+<td><p>void</p></td>
+<td><p>mainSystem, simulationSettings</p></td>
+<td><p>update currentTime (and load factor); MUST be overwritten in special solver class</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">VerboseWrite(...)</span></code></p></td>
+<td><p>void</p></td>
+<td><p>level, str</p></td>
+<td><p>write to console and/or file in case of level</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">WriteCoordinatesToFile(...)</span></code></p></td>
+<td><p>void</p></td>
+<td><p>mainSystem, simulationSettings</p></td>
+<td><p>write unique coordinates solution file</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">WriteSolutionFileHeader(...)</span></code></p></td>
+<td><p>void</p></td>
+<td><p>mainSystem, simulationSettings</p></td>
+<td><p>write unique file header, depending on static/ dynamic simulation</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="mainsolverexplicit">
+<span id="sec-mainsolverexplicit"></span><h2>MainSolverExplicit<a class="headerlink" href="#mainsolverexplicit" title="Link to this heading"></a></h2>
+<p>PyBind interface (trampoline) class for dynamic explicit solver. Note that this solver includes the 1st order explicit Euler scheme and the 4th order Runge-Kutta scheme with 5th order error estimation (DOPRI5). With the interface, the solver and its substructures can be accessed via Python. NOTE that except from SolveSystem(…), these functions are only intended for experienced users and they need to be handled with care, as unexpected crashes may happen if used inappropriate. Furthermore, the functions have a lot of overhead (still fast, but performance much lower than internal solver) due to Python interfaces, and should thus be used for small systems. To access the solver in Python, write</p>
+<p><code class="docutils literal notranslate"><span class="pre">solver</span> <span class="pre">=</span> <span class="pre">MainSolverExplicit()</span></code></p>
+<p>and hereafter you can access all data and functions via ‘solver’.
+In this solver, no user functions are possible, but you can use SolverImplicitSecondOrder instead (turning off Newton gives explicit scheme …).</p>
+<p>MainSolverExplicit has the following items:</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>name</p></th>
+<th class="head"><p>type / return type</p></th>
+<th class="head"><p>default / arguments</p></th>
+<th class="head"><p>description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">conv</span></code></p></td>
+<td><p>SolverConvergenceData</p></td>
+<td><p></p></td>
+<td><p>all information about tolerances, errors and residua</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">it</span></code></p></td>
+<td><p>SolverIterationData</p></td>
+<td><p></p></td>
+<td><p>all information about iterations (steps, discontinuous iteration, newton,…)</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">output</span></code></p></td>
+<td><p>SolverOutputData</p></td>
+<td><p></p></td>
+<td><p>output modes and timers for exporting solver information and solution</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">timer</span></code></p></td>
+<td><p>CSolverTimer</p></td>
+<td><p></p></td>
+<td><p>timer which measures the CPU time of solver sub functions</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">ComputeLoadFactor(...)</span></code></p></td>
+<td><p>Real</p></td>
+<td><p>simulationSettings</p></td>
+<td><p>for static solver, this is a factor in interval [0,1]; MUST be overwritten</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">ComputeMassMatrix(...)</span></code></p></td>
+<td><p>void</p></td>
+<td><p>mainSystem, scalarFactor=1.</p></td>
+<td><p>compute systemMassMatrix (multiplied with factor) in cSolver and return mass matrix</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">ComputeNewtonJacobian(...)</span></code></p></td>
+<td><p>void</p></td>
+<td><p>mainSystem, simulationSettings</p></td>
+<td><p>compute jacobian for newton method of given solver method; store result in systemJacobian</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">ComputeNewtonResidual(...)</span></code></p></td>
+<td><p>Real</p></td>
+<td><p>mainSystem, simulationSettings</p></td>
+<td><p>compute residual for Newton method (e.g. static or time step); store residual vector in systemResidual and return scalar residual (specific computation may depend on solver types)</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">ComputeNewtonUpdate(...)</span></code></p></td>
+<td><p>void</p></td>
+<td><p>mainSystem, simulationSettings, initial=True</p></td>
+<td><p>compute update for currentState from newtonSolution (decrement from residual and jacobian); if initial, this is for the initial update with newtonSolution=0</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">ComputeODE1RHS(...)</span></code></p></td>
+<td><p>void</p></td>
+<td><p>mainSystem</p></td>
+<td><p>compute the RHS of <a class="reference internal" href="../abbreviations.html#ode1"><span class="std std-ref">ODE1</span></a> equations in systemResidual in range(0,nODE1)</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">ComputeODE2RHS(...)</span></code></p></td>
+<td><p>void</p></td>
+<td><p>mainSystem</p></td>
+<td><p>compute the RHS of <a class="reference internal" href="../abbreviations.html#ode2"><span class="std std-ref">ODE2</span></a> equations in systemResidual in range(0,nODE2)</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">DiscontinuousIteration(...)</span></code></p></td>
+<td><p>bool</p></td>
+<td><p>mainSystem, simulationSettings</p></td>
+<td><p>perform discontinuousIteration for static step / time step; CALLS ComputeNewtonResidual</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">FinalizeSolver(...)</span></code></p></td>
+<td><p>void</p></td>
+<td><p>mainSystem, simulationSettings</p></td>
+<td><p>write concluding information (timer statistics, messages) and close files</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">FinishStep(...)</span></code></p></td>
+<td><p>void</p></td>
+<td><p>mainSystem, simulationSettings</p></td>
+<td><p>finish static step / time step; write output of results to file</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">GetAEsize()</span></code></p></td>
+<td><p>Index</p></td>
+<td><p></p></td>
+<td><p>number of algebraic equations in solver</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">GetDataSize()</span></code></p></td>
+<td><p>Index</p></td>
+<td><p></p></td>
+<td><p>number of data (history) variables in solver</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">GetErrorString()</span></code></p></td>
+<td><p>std::string</p></td>
+<td><p></p></td>
+<td><p>return error string if solver has not been successful</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">GetMethodOrder()</span></code></p></td>
+<td><p>Index</p></td>
+<td><p></p></td>
+<td><p>return order of method (higher value in methods with automatic step size, e.g., DOPRI5=5)</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">GetNumberOfStages()</span></code></p></td>
+<td><p>Index</p></td>
+<td><p></p></td>
+<td><p>return number of stages in current method</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">GetODE1size()</span></code></p></td>
+<td><p>Index</p></td>
+<td><p></p></td>
+<td><p>number of <a class="reference internal" href="../abbreviations.html#ode1"><span class="std std-ref">ODE1</span></a> equations in solver (not yet implemented)</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">GetODE2size()</span></code></p></td>
+<td><p>Index</p></td>
+<td><p></p></td>
+<td><p>number of <a class="reference internal" href="../abbreviations.html#ode2"><span class="std std-ref">ODE2</span></a> equations in solver</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">GetSimulationEndTime(...)</span></code></p></td>
+<td><p>Real</p></td>
+<td><p>simulationSettings</p></td>
+<td><p>compute simulation end time (depends on static or time integration solver)</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">GetSolverName()</span></code></p></td>
+<td><p>std::string</p></td>
+<td><p></p></td>
+<td><p>get solver name - needed for output file header and visualization window</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">GetSystemMassMatrix()</span></code></p></td>
+<td><p>NumpyMatrix</p></td>
+<td><p></p></td>
+<td><p>get locally stored / last computed mass matrix of solver</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">GetSystemResidual()</span></code></p></td>
+<td><p>NumpyVector</p></td>
+<td><p></p></td>
+<td><p>get locally stored / last computed system residual</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">HasAutomaticStepSizeControl(...)</span></code></p></td>
+<td><p>bool</p></td>
+<td><p>mainSystem, simulationSettings</p></td>
+<td><p>return true, if solver supports automatic stepsize control, otherwise false</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">IncreaseStepSize(...)</span></code></p></td>
+<td><p>void</p></td>
+<td><p>mainSystem, simulationSettings</p></td>
+<td><p>increase step size if convergence is good</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">InitializeSolver(...)</span></code></p></td>
+<td><p>bool</p></td>
+<td><p>mainSystem, simulationSettings</p></td>
+<td><p>initialize solverSpecific,data,it,conv; set/compute initial conditions (solver-specific!); initialize output files</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">InitializeSolverData(...)</span></code></p></td>
+<td><p>void</p></td>
+<td><p>mainSystem, simulationSettings</p></td>
+<td><p>initialize all data,it,conv; called from InitializeSolver()</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">InitializeSolverInitialConditions(...)</span></code></p></td>
+<td><p>void</p></td>
+<td><p>mainSystem, simulationSettings</p></td>
+<td><p>set/compute initial conditions (solver-specific!); called from InitializeSolver()</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">InitializeSolverOutput(...)</span></code></p></td>
+<td><p>void</p></td>
+<td><p>mainSystem, simulationSettings</p></td>
+<td><p>initialize output files; called from InitializeSolver()</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">InitializeSolverPreChecks(...)</span></code></p></td>
+<td><p>bool</p></td>
+<td><p>mainSystem, simulationSettings</p></td>
+<td><p>check if system is solvable; initialize dense/sparse computation modes</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">InitializeStep(...)</span></code></p></td>
+<td><p>void</p></td>
+<td><p>mainSystem, simulationSettings</p></td>
+<td><p>initialize static step / time step; Python-functions; do some outputs, checks, etc.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">IsStaticSolver()</span></code></p></td>
+<td><p>bool</p></td>
+<td><p></p></td>
+<td><p>return true, if static solver; needs to be overwritten in derived class</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">IsVerboseCheck(...)</span></code></p></td>
+<td><p>bool</p></td>
+<td><p>level</p></td>
+<td><p>return true, if file or console output is at or above the given level</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">Newton(...)</span></code></p></td>
+<td><p>bool</p></td>
+<td><p>mainSystem, simulationSettings</p></td>
+<td><p>perform Newton method for given solver method</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">PostInitializeSolverSpecific(...)</span></code></p></td>
+<td><p>void</p></td>
+<td><p>mainSystem, simulationSettings</p></td>
+<td><p>post-initialize for solver specific tasks; called at the end of InitializeSolver</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">PreInitializeSolverSpecific(...)</span></code></p></td>
+<td><p>void</p></td>
+<td><p>mainSystem, simulationSettings</p></td>
+<td><p>pre-initialize for solver specific tasks; called at beginning of InitializeSolver, right after Solver data reset</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">ReduceStepSize(...)</span></code></p></td>
+<td><p>bool</p></td>
+<td><p>mainSystem, simulationSettings, severity</p></td>
+<td><p>reduce step size (1..normal, 2..severe problems); return true, if reduction was successful</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">SetSystemMassMatrix(...)</span></code></p></td>
+<td><p>void</p></td>
+<td><p>systemMassMatrix</p></td>
+<td><p>set locally stored mass matrix of solver; must have size nODE2+nODE1+nAE</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">SetSystemResidual(...)</span></code></p></td>
+<td><p>void</p></td>
+<td><p>systemResidual</p></td>
+<td><p>set locally stored system residual; must have size nODE2+nODE1+nAE</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">SolveSteps(...)</span></code></p></td>
+<td><p>bool</p></td>
+<td><p>mainSystem, simulationSettings</p></td>
+<td><p>main solver part: calls multiple InitializeStep(…)/ DiscontinuousIteration(…)/ FinishStep(…); do step reduction if necessary; return true if success, false else</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">SolveSystem(...)</span></code></p></td>
+<td><p>bool</p></td>
+<td><p>mainSystem, simulationSettings</p></td>
+<td><p>solve System: InitializeSolver, SolveSteps, FinalizeSolver</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">UpdateCurrentTime(...)</span></code></p></td>
+<td><p>void</p></td>
+<td><p>mainSystem, simulationSettings</p></td>
+<td><p>update currentTime (and load factor); MUST be overwritten in special solver class</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">VerboseWrite(...)</span></code></p></td>
+<td><p>void</p></td>
+<td><p>level, str</p></td>
+<td><p>write to console and/or file in case of level</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">WriteCoordinatesToFile(...)</span></code></p></td>
+<td><p>void</p></td>
+<td><p>mainSystem, simulationSettings</p></td>
+<td><p>write unique coordinates solution file</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">WriteSolutionFileHeader(...)</span></code></p></td>
+<td><p>void</p></td>
+<td><p>mainSystem, simulationSettings</p></td>
+<td><p>write unique file header, depending on static/ dynamic simulation</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="CSolverStructures.html" class="btn btn-neutral float-left" title="CSolverStructures" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="PyStructuralElementsDataStructures.html" class="btn btn-neutral float-right" title="PyStructuralElementsDataStructures" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

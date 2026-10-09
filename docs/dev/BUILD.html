@@ -1,0 +1,382 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Building Exudyn from source &mdash; Exudyn1.13.3 1.13.3 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=3ee1c6c6" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/rtd_sphinx_search.min.css" />
+      <link rel="stylesheet" type="text/css" href="../../_static/custom.css?v=e2783f0e" />
+
+  
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=b8a3e558"></script>
+      <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../_static/copybutton.js?v=f281be69"></script>
+      <script src="../../_static/js/rtd_search_config.js"></script>
+      <script src="../../_static/js/rtd_sphinx_search.min.js"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Working with git in this repository" href="GIT.html" />
+    <link rel="prev" title="Getting started as a developer" href="GETTING_STARTED.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            Exudyn1.13.3
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Exudyn User Manual</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../README.html">Exudyn</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../manual/gettingStarted.html">Installation and getting started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../manual/introduction.html">Overview on Exudyn</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../manual/introductionBasics.html">Exudyn basics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../manual/tutorial.html">Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../manual/GUI.html">Renderer, graphics and visualization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../manual/performanceErrors.html">Performance, errors and solver failures</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../manual/introductionAdvanced.html">Advanced topics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../manual/notation.html">Notation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../manual/theory.html">Theory and formulations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../manual/solver.html">Solvers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../generated/cInterface/cInterfaceIndex.html">Python-C++ command interface</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Reference Manual</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../generated/items/itemsIndex.html">Items reference manual</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../generated/pythonUtilities/utilitiesIndex.html">Python Utility Functions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../generated/structures/structuresIndex.html">Structures and Settings</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../generated/references.html">References</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Developer documentation</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="README.html">Exudyn developer documentation</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="GETTING_STARTED.html">Getting started as a developer</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Building Exudyn from source</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#what-a-build-is-and-the-one-command">What a build is, and the one command</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#what-you-need-on-every-platform">What you need, on every platform</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#windows">Windows</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#linux">Linux</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#macos">macOS</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#when-the-build-works-and-the-import-does-not">When the build works and the import does not</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#debugging-the-c-from-a-python-run">Debugging the C++ from a Python run</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#cleaning-up">Cleaning up</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="GIT.html">Working with git in this repository</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ARCHITECTURE.html">Exudyn C++ architecture</a></li>
+<li class="toctree-l2"><a class="reference internal" href="CODING_STYLE.html">Exudyn coding style and conventions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="WORKFLOW.html">Development workflow</a></li>
+<li class="toctree-l2"><a class="reference internal" href="NEW_ITEM.html">How to set up a new item</a></li>
+<li class="toctree-l2"><a class="reference internal" href="GUI_MANUAL_CHECK.html">Manual GUI check before a release</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../generated/deprecations.html">Deprecations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../definitions/README.html">definitions/ — the item and structure definitions as Python</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../tools/generators/README.html">tools/generators/ — the new generator code</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../tools/exudev/README.html"><code class="docutils literal notranslate"><span class="pre">exudev</span></code> — the Exudyn maintainer driver</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../CONTRIBUTING.html">Contributing to Exudyn</a></li>
+<li class="toctree-l2"><a class="reference internal" href="README.html#repository-layout">Repository layout</a></li>
+<li class="toctree-l2"><a class="reference internal" href="README.html#building-and-running">Building and running</a></li>
+<li class="toctree-l2"><a class="reference internal" href="README.html#how-to-notes">How-to notes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="README.html#invariants">Invariants</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">How-to notes</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../howTo/condaEnvironments.html">Conda environments for Exudyn</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../howTo/sphinxDocs.html">Building the documentation</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Examples, models and issues</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../generated/examples/examplesIndex.html">Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../generated/testModels/testModelsIndex.html">TestModels</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../generated/abbreviations.html">List of Abbreviations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../manual/revisions.html">Revisions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../CHANGELOG.html">Changelog</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../generated/trackerlog.html">Issue tracker</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">Exudyn1.13.3</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="README.html">Exudyn developer documentation</a></li>
+      <li class="breadcrumb-item active">Building Exudyn from source</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../_sources/docs/dev/BUILD.md.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section class="tex2jax_ignore mathjax_ignore" id="building-exudyn-from-source">
+<span id="sec-dev-build"></span><h1>Building Exudyn from source<a class="headerlink" href="#building-exudyn-from-source" title="Link to this heading"></a></h1>
+<p>This is the one description of building Exudyn from source. You need it if you want to <strong>change
+the C++ core</strong>, or if there is <strong>no wheel for your platform</strong>. To <em>use</em> Exudyn,
+<code class="docutils literal notranslate"><span class="pre">pip</span> <span class="pre">install</span> <span class="pre">exudyn</span></code> is enough; see <a class="reference internal" href="../manual/gettingStartedInstall.html#sec-install-installinstructions"><span class="std std-ref">Installation instructions</span></a>.</p>
+<p>If you have not cloned the repository yet, start at
+<a class="reference internal" href="GETTING_STARTED.html"><span class="std std-doc">GETTING_STARTED.md</span></a>, which goes from <em>nothing</em> to a build and a passing test
+run in order.</p>
+<hr class="docutils" />
+<section id="what-a-build-is-and-the-one-command">
+<h2>What a build is, and the one command<a class="headerlink" href="#what-a-build-is-and-the-one-command" title="Link to this heading"></a></h2>
+<p><code class="docutils literal notranslate"><span class="pre">setup.py</span></code> in the repository root compiles the C++ sources listed in <code class="docutils literal notranslate"><span class="pre">sources.json</span></code> into the
+<code class="docutils literal notranslate"><span class="pre">exudynCPP</span></code> extension module and packs it, together with the Python package under <code class="docutils literal notranslate"><span class="pre">python/exudyn</span></code>,
+into a wheel. <strong>About a minute</strong> on a normal machine — that speed is a feature of the project, not
+an accident, and it is one of the invariants (see <a class="reference internal" href="README.html"><span class="std std-doc">README.md</span></a>).</p>
+<p>Most of the time you do not type any of the platform commands below:</p>
+<div class="highlight-powershell notranslate"><div class="highlight"><pre><span></span><span class="n">python</span> <span class="n">tools</span><span class="p">/</span><span class="n">exudev</span> <span class="n">build</span> <span class="p">-</span><span class="n">-env</span> <span class="n">venvExuP313</span>
+</pre></div>
+</div>
+<p>builds the wheel, installs it into that environment and then <strong>checks that the installed version is
+the one just built</strong> — the failure mode this guards against is testing yesterday’s binary. The rest
+of this page is what that driver does, and what to do when it does not work.</p>
+</section>
+<section id="what-you-need-on-every-platform">
+<h2>What you need, on every platform<a class="headerlink" href="#what-you-need-on-every-platform" title="Link to this heading"></a></h2>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p></p></th>
+<th class="head"><p></p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><strong>Python</strong></p></td>
+<td><p>3.10 – 3.14, <strong>64 bit</strong>. There is no 32-bit build.</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>A C++17 compiler</strong></p></td>
+<td><p>Visual Studio 2022 on Windows, GCC on Linux, clang (Xcode command line tools) on macOS.</p></td>
+</tr>
+<tr class="row-even"><td><p><strong>numpy</strong></p></td>
+<td><p>in the environment you build into; <code class="docutils literal notranslate"><span class="pre">wheel</span></code> as well if you build wheels by hand.</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>The repository</strong></p></td>
+<td><p>see <a class="reference internal" href="GETTING_STARTED.html"><span class="std std-doc">GETTING_STARTED.md</span></a>.</p></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Nothing else.</strong> pybind11, GLFW, Eigen and LEST are <strong>vendored</strong> in <code class="docutils literal notranslate"><span class="pre">include/</span></code>, and the GLFW import
+library for Windows is in <code class="docutils literal notranslate"><span class="pre">libs/</span></code>. What is <em>not</em> vendored, and what the platform sections below are
+about, are the <strong>OpenGL and X11 development packages on Linux</strong>.</p>
+<p>The environments the project builds and tests against are in
+<a class="reference internal" href="../howTo/condaEnvironments.html"><span class="std std-doc">condaEnvironments.md</span></a>. Conda is a recommendation, not a
+requirement: any Python of a supported version works.</p>
+<section id="the-two-commands-that-are-the-same-everywhere">
+<h3>The two commands that are the same everywhere<a class="headerlink" href="#the-two-commands-that-are-the-same-everywhere" title="Link to this heading"></a></h3>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python<span class="w"> </span>-m<span class="w"> </span>pip<span class="w"> </span>wheel<span class="w"> </span>.<span class="w"> </span>-w<span class="w"> </span>dist<span class="w"> </span>--no-deps
+pip<span class="w"> </span>install<span class="w"> </span>--force-reinstall<span class="w"> </span>--no-deps<span class="w"> </span>dist/&lt;the<span class="w"> </span>wheel<span class="w"> </span>that<span class="w"> </span>was<span class="w"> </span>built&gt;
+</pre></div>
+</div>
+<p>The wheel’s name carries the Python tag (<code class="docutils literal notranslate"><span class="pre">cp313</span></code>), and <strong>it must match the interpreter you install
+it into</strong>. <code class="docutils literal notranslate"><span class="pre">--force-reinstall</span> <span class="pre">--no-deps</span></code> installs exactly that file and nothing else; installing by
+name, or with <code class="docutils literal notranslate"><span class="pre">--find-links</span></code>, may quietly pick an older wheel out of <code class="docutils literal notranslate"><span class="pre">dist/</span></code>.</p>
+<p>Close Spyder, Jupyter or any other process that has Exudyn imported before installing over it —
+on Windows the file is locked, on Linux the old module stays loaded in that process.</p>
+<p>To remove it again: <code class="docutils literal notranslate"><span class="pre">pip</span> <span class="pre">uninstall</span> <span class="pre">-y</span> <span class="pre">exudyn</span></code>.</p>
+</section>
+</section>
+<hr class="docutils" />
+<section id="windows">
+<h2>Windows<a class="headerlink" href="#windows" title="Link to this heading"></a></h2>
+<p>With the environment active — an Anaconda prompt, or <code class="docutils literal notranslate"><span class="pre">conda</span> <span class="pre">activate</span> <span class="pre">venvExuP313</span></code> — from the
+repository root:</p>
+<div class="highlight-powershell notranslate"><div class="highlight"><pre><span></span><span class="n">python</span> <span class="n">-m</span> <span class="n">pip</span> <span class="n">wheel</span> <span class="p">.</span> <span class="n">-w</span> <span class="n">dist</span> <span class="p">-</span><span class="n">-no-deps</span>
+<span class="n">pip</span> <span class="n">install</span> <span class="p">-</span><span class="n">-force-reinstall</span> <span class="p">-</span><span class="n">-no-deps</span> <span class="n">dist</span><span class="p">\</span><span class="n">exudyn</span><span class="p">-</span><span class="n">1</span><span class="p">.</span><span class="n">12</span><span class="p">.</span><span class="n">61</span><span class="p">.</span><span class="n">dev1-cp313-cp313-win_amd64</span><span class="p">.</span><span class="n">whl</span>
+</pre></div>
+</div>
+<p>The compiler is Visual Studio 2022; which components it needs is in
+<a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/docs/howTo/visualStudio2022.md">visualStudio2022.md</a>.
+VS2019 is <strong>not</strong> supported: it has problems with Eigen and produces wrong results with the sparse
+solver.</p>
+<p>For building and debugging <em>inside</em> Visual Studio rather than with <code class="docutils literal notranslate"><span class="pre">pip</span> <span class="pre">wheel</span></code>, see
+<a class="reference internal" href="GETTING_STARTED.html"><span class="std std-doc">GETTING_STARTED.md</span></a> — <code class="docutils literal notranslate"><span class="pre">tools/setupLocalWorkspace.py</span></code> creates the solution.</p>
+</section>
+<section id="linux">
+<h2>Linux<a class="headerlink" href="#linux" title="Link to this heading"></a></h2>
+<p>The build is the same; what is different is that the OpenGL and X11 development packages have to
+be installed. On a fresh Ubuntu:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sudo<span class="w"> </span>apt-get<span class="w"> </span>update
+sudo<span class="w"> </span>apt<span class="w"> </span>install<span class="w"> </span>python3-pip
+pip3<span class="w"> </span>install<span class="w"> </span>numpy
+
+<span class="c1">#graphics: OpenGL, GLFW and X11 development packages</span>
+sudo<span class="w"> </span>apt-get<span class="w"> </span>install<span class="w"> </span>freeglut3<span class="w"> </span>freeglut3-dev<span class="w"> </span>mesa-common-dev<span class="w"> </span>libglfw3<span class="w"> </span>libglfw3-dev<span class="w"> </span><span class="se">\</span>
+<span class="w">                     </span>libx11-dev<span class="w"> </span>xorg-dev<span class="w"> </span>libglu1-mesa<span class="w"> </span>libglu1-mesa-dev<span class="w"> </span>libgl1-mesa-dev
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">libglfw.so</span></code> and <code class="docutils literal notranslate"><span class="pre">libGL.so</span></code> are then in <code class="docutils literal notranslate"><span class="pre">/usr/lib/x86_64-linux-gnu</span></code>. Graphics can also be switched
+off entirely in <code class="docutils literal notranslate"><span class="pre">src/Utilities/BasicDefinitions.h</span></code> (<code class="docutils literal notranslate"><span class="pre">USE_GLFW_GRAPHICS</span></code>), which removes the need for
+all of the above — useful on a compute cluster.</p>
+<p>Then:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python3<span class="w"> </span>-m<span class="w"> </span>pip<span class="w"> </span>wheel<span class="w"> </span>.<span class="w"> </span>-w<span class="w"> </span>dist<span class="w"> </span>--no-deps
+pip3<span class="w"> </span>install<span class="w"> </span>--force-reinstall<span class="w"> </span>--no-deps<span class="w"> </span>dist/exudyn-*-cp313-cp313-linux_x86_64.whl
+</pre></div>
+</div>
+<p>Use <code class="docutils literal notranslate"><span class="pre">pip3</span></code>/<code class="docutils literal notranslate"><span class="pre">python3</span></code> <strong>consistently</strong>; mixing them with <code class="docutils literal notranslate"><span class="pre">pip</span></code>/<code class="docutils literal notranslate"><span class="pre">python</span></code> is the most common way to end
+up with the module installed for an interpreter you are not running.</p>
+<section id="a-specific-gcc-version">
+<h3>A specific GCC version<a class="headerlink" href="#a-specific-gcc-version" title="Link to this heading"></a></h3>
+<p>The GCC version Python was built with is printed when <code class="docutils literal notranslate"><span class="pre">python3</span></code> starts, and a module built with a
+very different one can fail to load. To install and select another:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sudo<span class="w"> </span>apt<span class="w"> </span>install<span class="w"> </span>software-properties-common
+sudo<span class="w"> </span>add-apt-repository<span class="w"> </span>ppa:ubuntu-toolchain-r/test
+sudo<span class="w"> </span>apt<span class="w"> </span>install<span class="w"> </span>gcc-9<span class="w"> </span>g++-9
+<span class="nb">export</span><span class="w"> </span><span class="nv">CC</span><span class="o">=</span>gcc-9
+<span class="nb">export</span><span class="w"> </span><span class="nv">CXX</span><span class="o">=</span>g++-9
+</pre></div>
+</div>
+</section>
+<section id="wsl">
+<h3>WSL<a class="headerlink" href="#wsl" title="Link to this heading"></a></h3>
+<p>Building inside WSL <strong>on a Windows directory</strong> fails on file permissions: right-click the
+repository folder → <em>Properties</em> → <em>Security</em>, and give <em>Authenticated Users</em> full control.</p>
+<p>Under WSLg only the software OpenGL works, so set <code class="docutils literal notranslate"><span class="pre">export</span> <span class="pre">LIBGL_ALWAYS_SOFTWARE=1</span></code> (in <code class="docutils literal notranslate"><span class="pre">.bashrc</span></code>)
+if the render window stays black.</p>
+</section>
+<section id="other-linux-platforms">
+<h3>Other Linux platforms<a class="headerlink" href="#other-linux-platforms" title="Link to this heading"></a></h3>
+<p>Exudyn compiles on a <strong>RaspberryPi 4b</strong> (Ubuntu Mate, Python 3.8) with the same
+<code class="docutils literal notranslate"><span class="pre">pip</span> <span class="pre">wheel</span> <span class="pre">.</span> <span class="pre">-w</span> <span class="pre">dist</span> <span class="pre">--no-deps</span></code>, uses all cores, and is fast enough to be interesting for a
+realtime application — with a fan.</p>
+<p>The <strong>release</strong> wheels for Linux are not built this way: they are built in the manylinux docker
+image, so that they run on distributions older than the build machine. That is
+<code class="docutils literal notranslate"><span class="pre">exudev</span> <span class="pre">linux</span></code>; see <a class="reference internal" href="../../tools/exudev/README.html"><span class="std std-doc"><code class="docutils literal notranslate"><span class="pre">tools/exudev/README.md</span></code></span></a>.</p>
+</section>
+</section>
+<section id="macos">
+<h2>macOS<a class="headerlink" href="#macos" title="Link to this heading"></a></h2>
+<p>Less frequently tested than Windows and Linux, but the wheels on PyPI are built for it and
+compiling from source works, GLFW included. Requirements are a Python of a supported version
+(Miniconda is the usual way) and the Xcode command line tools for the compiler.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python<span class="w"> </span>-m<span class="w"> </span>pip<span class="w"> </span>wheel<span class="w"> </span>.<span class="w"> </span>-w<span class="w"> </span>dist<span class="w"> </span>--no-deps
+pip<span class="w"> </span>install<span class="w"> </span>--force-reinstall<span class="w"> </span>--no-deps<span class="w"> </span>dist/&lt;the<span class="w"> </span>wheel<span class="w"> </span>that<span class="w"> </span>was<span class="w"> </span>built&gt;
+</pre></div>
+</div>
+<p>About 75 seconds on an Apple M1 with parallel compilation.</p>
+<p>What is different on macOS, and is not a build problem:</p>
+<ul>
+<li><p>the <strong>renderer is single-threaded</strong> — GLFW cannot render from a second thread there. A script
+therefore has to hand the renderer time itself:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">SC</span><span class="o">.</span><span class="n">renderer</span><span class="o">.</span><span class="nf">Start</span><span class="p">()</span>
+<span class="n">SC</span><span class="o">.</span><span class="n">renderer</span><span class="o">.</span><span class="nf">DoIdleTasks</span><span class="p">()</span>
+</pre></div>
+</div>
+</li>
+<li><p><strong>multiprocessing</strong> and the progress bars that use it do not work in all cases;</p></li>
+<li><p>the <strong>fast module is not built</strong> on macOS (<code class="docutils literal notranslate"><span class="pre">universal2</span></code> compiles both architectures in one pass,
+and AVX2 does not exist on ARM); <code class="docutils literal notranslate"><span class="pre">exudev</span> <span class="pre">build</span> <span class="pre">--fast</span></code> says so and continues.</p></li>
+</ul>
+</section>
+<section id="when-the-build-works-and-the-import-does-not">
+<h2>When the build works and the import does not<a class="headerlink" href="#when-the-build-works-and-the-import-does-not" title="Link to this heading"></a></h2>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="ne">ImportError</span><span class="p">:</span> <span class="o">.../</span><span class="n">exudyn</span><span class="o">.</span><span class="n">cpython</span><span class="o">-</span><span class="mi">313</span><span class="o">-</span><span class="n">x86_64</span><span class="o">-</span><span class="n">linux</span><span class="o">-</span><span class="n">gnu</span><span class="o">.</span><span class="n">so</span><span class="p">:</span> <span class="n">undefined</span> <span class="n">symbol</span><span class="p">:</span> <span class="o">...</span>
+</pre></div>
+</div>
+<p>An undefined symbol at <strong>import</strong> time is a compile-time mistake that the linker of a shared object
+does not catch — most often a <code class="docutils literal notranslate"><span class="pre">static</span> <span class="pre">const</span></code> used as a template argument, which needs to be
+<code class="docutils literal notranslate"><span class="pre">constexpr</span></code>.
+<a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/docs/howTo/gccVsMsvcTraps.md">gccVsMsvcTraps.md</a>
+collects that one and its relatives.</p>
+<p>For the Windows side of <em>“it built but it does not work”</em>, see
+<a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/docs/howTo/buildQuirks.md">buildQuirks.md</a>.</p>
+<p>If <code class="docutils literal notranslate"><span class="pre">import</span> <span class="pre">exudyn</span></code> reports the <strong>wrong version</strong>, the wheel was installed into a different
+interpreter than the one running: <code class="docutils literal notranslate"><span class="pre">python</span> <span class="pre">-m</span> <span class="pre">exudyn</span> <span class="pre">info</span></code> prints which Python, which Exudyn and
+from where.</p>
+</section>
+<section id="debugging-the-c-from-a-python-run">
+<h2>Debugging the C++ from a Python run<a class="headerlink" href="#debugging-the-c-from-a-python-run" title="Link to this heading"></a></h2>
+<p>On <strong>Windows this is what Visual Studio 2022 is for</strong>: mixed Python/native debugging, a breakpoint
+in the C++ hit from a Python model, which is the project’s most valuable development capability.
+<code class="docutils literal notranslate"><span class="pre">tools/setupLocalWorkspace.py</span></code> creates <code class="docutils literal notranslate"><span class="pre">exudyn.sln</span></code> and the scratch file <code class="docutils literal notranslate"><span class="pre">python/pytest.py</span></code> for it;
+see <a class="reference internal" href="GETTING_STARTED.html"><span class="std std-doc">GETTING_STARTED.md</span></a>.</p>
+<p>On <strong>Linux</strong>, build with debug information and run under gdb:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nv">CFLAGS</span><span class="o">=</span><span class="s1">'-Wall -O0 -g'</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>pip<span class="w"> </span>wheel<span class="w"> </span>.<span class="w"> </span>-w<span class="w"> </span>dist<span class="w"> </span>--no-deps
+sudo<span class="w"> </span>apt-get<span class="w"> </span>install<span class="w"> </span>gdb
+gdb<span class="w"> </span>python3
+<span class="o">(</span>gdb<span class="o">)</span><span class="w"> </span>run<span class="w"> </span>myModel.py
+</pre></div>
+</div>
+<p>For Python-level debugging, <code class="docutils literal notranslate"><span class="pre">python3</span> <span class="pre">-m</span> <span class="pre">pdb</span> <span class="pre">myModel.py</span></code>.</p>
+</section>
+<section id="cleaning-up">
+<h2>Cleaning up<a class="headerlink" href="#cleaning-up" title="Link to this heading"></a></h2>
+<div class="highlight-powershell notranslate"><div class="highlight"><pre><span></span><span class="n">python</span> <span class="n">tools</span><span class="p">/</span><span class="n">exudev</span> <span class="n">clean</span>          <span class="c">#the build directories and eggs of this platform; keeps dist/</span>
+</pre></div>
+</div>
+<p>or by hand:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>rm<span class="w"> </span>-r<span class="w"> </span>build<span class="w"> </span>dist<span class="w"> </span>exudyn.egg-info<span class="w"> </span>.eggs
+</pre></div>
+</div>
+<p>The package tree under <code class="docutils literal notranslate"><span class="pre">build/lib.*</span></code> is removed <strong>before every build</strong>: setuptools copies the
+wheel from it, and a module deleted from <code class="docutils literal notranslate"><span class="pre">python/exudyn</span></code> would otherwise survive there and be
+packed into the wheel (#2560).</p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="GETTING_STARTED.html" class="btn btn-neutral float-left" title="Getting started as a developer" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="GIT.html" class="btn btn-neutral float-right" title="Working with git in this repository" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

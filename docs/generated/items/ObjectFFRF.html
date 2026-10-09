@@ -1,0 +1,770 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ObjectFFRF &mdash; Exudyn1.13.3 1.13.3 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=3ee1c6c6" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/rtd_sphinx_search.min.css" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/custom.css?v=e2783f0e" />
+
+  
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=b8a3e558"></script>
+      <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../../_static/copybutton.js?v=f281be69"></script>
+      <script src="../../../_static/js/rtd_search_config.js"></script>
+      <script src="../../../_static/js/rtd_sphinx_search.min.js"></script>
+      <script>window.MathJax = {"loader": {"load": ["[tex]/mathtools"]}, "tex": {"packages": {"[+]": ["mathtools"]}, "macros": {"ANCFdk": "{\\LU{0}{\\dv_k}}", "ANCFdkO": "{\\LU{0}{\\dv_{0,k}}}", "ANCFdkOtp": "{\\LU{0}{\\dv_{0,k}\\tp}}", "ANCFdkt": "{\\LU{0}{\\dot\\dv_k}}", "Am": "{\\mathbf{A}}", "Dm": "{\\mathbf{D}}", "Em": "{\\mathbf{E}}", "Gm": "{\\mathbf{G}}", "Im": "{\\mathbf{I}}", "ImThree": "{\\mathbf{I}_{3 \\times 3}}", "Jm": "{\\mathbf{J}}", "Km": "{\\mathbf{K}}", "Mm": "{\\mathbf{M}}", "Pm": "{\\mathbf{P}}", "Rm": "{\\mathbf{R}}", "Sm": "{\\mathbf{S}}", "Tm": "{\\mathbf{T}}", "av": "{\\mathbf{a}}", "bv": "{\\mathbf{b}}", "cv": "{\\mathbf{c}}", "diffANCF": ["{\\frac{\\partial #1}{\\partial \\qv_{ANCF}}}", 1], "diffANCFdk": "{\\diffANCFmI{\\ANCFdk}}", "diffANCFmI": ["{\\frac{\\partial #1}{\\partial \\qv_{ANCF,m1}}}", 1], "diffANCFmIt": ["{\\frac{\\partial #1}{\\partial \\dot \\qv_{ANCF,m1}}}", 1], "diffANCFt": ["{\\frac{\\partial #1}{\\partial \\dot \\qv_{ANCF}}}", 1], "diffmI": ["{\\frac{\\partial #1}{\\partial \\qv_{m1}}}", 1], "diffmIt": ["{\\frac{\\partial #1}{\\partial \\dot \\qv_{m1}}}", 1], "diffmOI": ["{\\frac{\\partial #1}{\\partial \\qv_{m0,m1}}}", 1], "diffmOIt": ["{\\frac{\\partial #1}{\\partial \\dot \\qv_{m0,m1}}}", 1], "diffmOt": ["{\\frac{\\partial #1}{\\partial \\dot \\qv_{m0}}}", 1], "dv": "{\\mathbf{d}}", "ev": "{\\mathbf{e}}", "fv": "{\\mathbf{f}}", "gv": "{\\mathbf{g}}", "hv": "{\\mathbf{h}}", "nv": "{\\mathbf{n}}", "pv": "{\\mathbf{p}}", "qv": "{\\mathbf{q}}", "rv": "{\\mathbf{r}}", "sv": "{\\mathbf{s}}", "tv": "{\\mathbf{t}}", "uv": "{\\mathbf{u}}", "vv": "{\\mathbf{v}}", "xv": "{\\mathbf{x}}", "yv": "{\\mathbf{y}}", "zv": "{\\mathbf{z}}", "vspace": ["{}", 1], "ra": "{\\rightarrow}", "Rcal": "{\\mathbb{R}}", "Ccal": "{\\mathbb{C}}", "Ncal": "{\\mathbb{N}}", "Rot": "{\\mathbf{A}}", "dd": "{\\mathrm{d}}", "ps": "{p_\\mathrm{s}}", "co": "{\\mathrm{c}}", "si": "{\\mathrm{s}}", "tp": "{^\\mathrm{T}}", "diag": "{\\mathrm{diag}}", "vec": "{\\mathrm{vec}}", "Null": "{\\mathbf{0}}", "varepsilonDot": "{\\boldsymbol{\\varepsilon}}", "talpha": "{\\boldsymbol{\\alpha}}", "tbeta": "{\\boldsymbol{\\beta}}", "tgamma": "{\\boldsymbol{\\gamma}}", "tchi": "{\\boldsymbol{\\chi}}", "tdelta": "{\\boldsymbol{\\delta}}", "teps": "{\\boldsymbol{\\varepsilon}}", "tepsDot": "{\\boldsymbol{\\dot \\varepsilon}}", "teta": "{\\boldsymbol{\\eta}}", "tkappa": "{\\boldsymbol{\\kappa}}", "tkappaDot": "{\\boldsymbol{\\dot \\kappa}}", "tphi": "{\\boldsymbol{\\phi}}", "boldVarPhi": "{\\boldsymbol{\\varphi}}", "tPhi": "{\\boldsymbol{\\Phi}}", "ttheta": "{\\boldsymbol{\\theta}}", "tTheta": "{\\boldsymbol{\\Theta}}", "tlambda": "{\\boldsymbol{\\lambda}}", "tnu": "{\\boldsymbol{\\nu}}", "tmu": "{\\boldsymbol{\\mu}}", "tpsi": "{\\boldsymbol{\\psi}}", "tPsi": "{\\boldsymbol{\\Psi}}", "ttau": "{\\boldsymbol{\\tau}}", "tsigma": "{\\boldsymbol{\\sigma}}", "txi": "{\\boldsymbol{\\xi}}", "tzeta": "{\\boldsymbol{\\zeta}}", "tomega": "{\\boldsymbol{\\omega}}", "tOmega": "{\\boldsymbol{\\Omega}}", "vareps": "{\\varepsilon}", "myoverline": ["\\overline{#1}", 1], "pluseq": "\\mathrel{+}=", "LU": ["{\\prescript{#1}{}{#2}\\,}", 2], "LUX": ["{\\prescript{#1}{}{#2}#3\\,}", 3], "LUR": ["{\\prescript{#1}{}{#2}_{#3}\\,}", 3], "LURU": ["{\\prescript{#1}{}{#2}_{#3}^{#4}\\,}", 4], "LLdot": ["{\\prescript{}{#1}{\\dot{#2}}_{#3}\\,}", 3], "vr": ["{\\left[ \\begin{array}{c} { #1}\\vspace{0.04cm} \\\\ { #2}\\vspace{0.04cm} \\\\ { #3} \\end{array} \\right]}", 3], "mr": ["{\\left[ \\begin{array}{ccc} #1 & #2 & #3 \\vspace{0.04cm}\\\\ #4 & #5 & #6 \\vspace{0.04cm}\\\\ #7 & #8 & #9  \\end{array} \\right]}", 9], "vp": ["{\\left[ \\begin{array}{c} { #1} \\vspace{0.04cm}\\\\ { #2} \\end{array} \\right]}", 2], "mp": ["{\\left[ \\begin{array}{cc} #1 & #2 \\vspace{0.04cm}\\\\ #3 & #4 \\end{array} \\right]}", 4], "mfour": ["{\\left[ \\begin{array}{cccc} { #1} \\\\ { #2} \\\\ { #3} \\\\ { #4} \\end{array} \\right]}", 4], "vfour": ["{\\left[ \\begin{array}{c} { #1} \\\\ { #2} \\\\ { #3} \\\\ { #4} \\end{array} \\right]}", 4], "vrRow": ["{[#1,\\, #2,\\, #3]}", 3], "vsix": ["{\\left[ \\begin{array}{c} { #1} \\\\ { #2} \\\\ { #3} \\\\ { #4} \\\\ { #5} \\\\ { #6} \\end{array} \\right]}", 6], "vsixb": ["{\\begin{array}{c} { #1} \\\\ { #2} \\\\ { #3} \\\\ { #4} \\\\ { #5} \\\\ { #6} \\end{array} }", 6], "vsixs": ["{ \\begin{array}{c} { #1} \\\\ { #2} \\\\ { #3} \\\\ { #4} \\\\ { #5} \\\\ { #6} \\end{array} }", 6], "SO": "{q}", "FO": "{y}", "AE": "{\\lambda}", "SYS": "{s}", "SON": "{$2^\\mathrm{nd}$ order differential equations}", "FON": "{$1^\\mathrm{st}$ order differential equations}", "AEN": "{algebraic equations}", "Bm": "{\\mathbf{B}}", "Cm": "{\\mathbf{C}}", "Fm": "{\\mathbf{F}}", "SYSN": "{system equations}", "cIni": "{_\\mathrm{ini}}", "cRef": "{_\\mathrm{ref}}", "cCur": "{_\\mathrm{cur}}", "cVis": "{_\\mathrm{vis}}", "cSOS": "{_\\mathrm{start\\;of\\;step}}", "cConfig": "{_\\mathrm{config}}", "pLoc": "{\\mathbf{b}}", "pLocB": "{\\,^{b}{\\mathbf{v}}}", "pRef": "{\\mathbf{r}}", "pRefG": "{\\,^{0}{\\mathbf{r}}}", "indf": "{_\\mathrm{f}}", "indt": "{_\\mathrm{t}}", "indr": "{_\\mathrm{r}}", "indtt": "{_\\mathrm{tt}}", "indrr": "{_\\mathrm{rr}}", "indff": "{_\\mathrm{ff}}", "indtf": "{_\\mathrm{tf}}", "indrf": "{_\\mathrm{rf}}", "indtr": "{_\\mathrm{tr}}", "omegaBDtilde": "{\\LU{b}{\\tilde \\tomega_\\mathrm{bd}}}", "indrigid": "{_\\mathrm{rigid}}", "indred": "{_\\mathrm{red}}", "induser": "{_\\mathrm{user}}", "indu": "{_\\mathrm{u}}", "termA": ["{\\color{blue}{#1}}", 1], "termB": ["{\\color{red}{#1}}", 1], "termC": ["{\\color{green}{#1}}", 1], "acc": "{\\ddot{\\mathbf{q}}}", "GA": "{G\\alpha}", "Hm": "{\\mathbf{H}}", "ImTwo": "{\\mathbf{I}_{2 \\times 2}}", "Lm": "{\\mathbf{L}}", "Qm": "{\\mathbf{Q}}", "Vm": "{\\mathbf{V}}", "Wm": "{\\mathbf{W}}", "Xm": "{\\mathbf{X}}", "Ym": "{\\mathbf{Y}}", "aalg": "{\\mathbf{a}}", "iv": "{\\mathbf{i}}", "jv": "{\\mathbf{j}}", "kv": "{\\mathbf{k}}", "lv": "{\\mathbf{l}}", "mv": "{\\mathbf{m}}", "ov": "{\\mathbf{o}}", "vel": "{\\mathbf{v}}", "wv": "{\\mathbf{w}}"}}, "options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+      <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-mml-chtml.js"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+    <link rel="next" title="ObjectFFRFreducedOrder" href="ObjectFFRFreducedOrder.html" />
+    <link rel="prev" title="ObjectKinematicTree" href="ObjectKinematicTree.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            Exudyn1.13.3
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Exudyn User Manual</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../README.html">Exudyn</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../manual/gettingStarted.html">Installation and getting started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../manual/introduction.html">Overview on Exudyn</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../manual/introductionBasics.html">Exudyn basics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../manual/tutorial.html">Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../manual/GUI.html">Renderer, graphics and visualization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../manual/performanceErrors.html">Performance, errors and solver failures</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../manual/introductionAdvanced.html">Advanced topics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../manual/notation.html">Notation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../manual/theory.html">Theory and formulations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../manual/solver.html">Solvers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../cInterface/cInterfaceIndex.html">Python-C++ command interface</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Reference Manual</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="itemsIndex.html">Items reference manual</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="nodeIndex.html">Node</a></li>
+<li class="toctree-l2"><a class="reference internal" href="objectBodyIndex.html">Object (Body)</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="objectSuperElementIndex.html">Object (SuperElement)</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="objectSuperElementGeneral.html">General info for all super elements</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ObjectGenericODE2.html">ObjectGenericODE2</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ObjectKinematicTree.html">ObjectKinematicTree</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">ObjectFFRF</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ObjectFFRFreducedOrder.html">ObjectFFRFreducedOrder</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="objectObjectIndex.html">Object (Object)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="objectFiniteElementIndex.html">Object (FiniteElement)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="objectConnectorIndex.html">Object (Connector)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="objectConstraintIndex.html">Object (Constraint)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="objectJointIndex.html">Object (Joint)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="markerIndex.html">Marker</a></li>
+<li class="toctree-l2"><a class="reference internal" href="loadIndex.html">Load</a></li>
+<li class="toctree-l2"><a class="reference internal" href="sensorIndex.html">Sensor</a></li>
+<li class="toctree-l2"><a class="reference internal" href="itemsIndex.html#parameter-changes">Parameter changes</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../pythonUtilities/utilitiesIndex.html">Python Utility Functions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../structures/structuresIndex.html">Structures and Settings</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../references.html">References</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Developer documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../dev/README.html">Exudyn developer documentation</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">How-to notes</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../howTo/condaEnvironments.html">Conda environments for Exudyn</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../howTo/sphinxDocs.html">Building the documentation</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Examples, models and issues</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../examples/examplesIndex.html">Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../testModels/testModelsIndex.html">TestModels</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../abbreviations.html">List of Abbreviations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../manual/revisions.html">Revisions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../CHANGELOG.html">Changelog</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../trackerlog.html">Issue tracker</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">Exudyn1.13.3</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="itemsIndex.html">Items reference manual</a></li>
+          <li class="breadcrumb-item"><a href="objectSuperElementIndex.html">Object (SuperElement)</a></li>
+      <li class="breadcrumb-item active">ObjectFFRF</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../../_sources/docs/generated/items/ObjectFFRF.md.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <!-- GENERATED by tools/generators/itemDocsEmitter.py from definitions/ - do not edit -->
+<section class="tex2jax_ignore mathjax_ignore" id="objectffrf">
+<span id="sec-item-objectffrf"></span><h1>ObjectFFRF<a class="headerlink" href="#objectffrf" title="Link to this heading"></a></h1>
+<p>This object is used to represent equations modelled by the <a class="reference internal" href="../abbreviations.html#ffrf"><span class="std std-ref">FFRF</span></a>. It contains a RigidBodyNode (always node 0) and a list of other nodes representing the finite element nodes used in the <a class="reference internal" href="../abbreviations.html#ffrf"><span class="std std-ref">FFRF</span></a>. Note that temporary matrices and vectors are subject of change in future. NOTE: Usually you SHOULD NOT USE THIS OBJECT - use the much more efficient ObjectFFRFreducedOrder object with modal reduction instead.</p>
+<p>Authors: Gerstmayr Johannes, Zwölfer Andreas</p>
+<section id="interface">
+<h2>Interface<a class="headerlink" href="#interface" title="Link to this heading"></a></h2>
+<ul class="simple">
+<li><p>Body markers that can be placed on it: <a class="reference internal" href="MarkerBodyMass.html#sec-item-markerbodymass"><span class="std std-ref">MarkerBodyMass</span></a>, <a class="reference internal" href="MarkerBodyPosition.html#sec-item-markerbodyposition"><span class="std std-ref">MarkerBodyPosition</span></a>, <a class="reference internal" href="MarkerBodyRigid.html#sec-item-markerbodyrigid"><span class="std std-ref">MarkerBodyRigid</span></a>, <a class="reference internal" href="MarkerSuperElementPosition.html#sec-item-markersuperelementposition"><span class="std std-ref">MarkerSuperElementPosition</span></a>, <a class="reference internal" href="MarkerSuperElementRigid.html#sec-item-markersuperelementrigid"><span class="std std-ref">MarkerSuperElementRigid</span></a></p></li>
+<li><p>Nodes: see the detailed description</p></li>
+</ul>
+</section>
+<section id="parameters">
+<h2>Parameters<a class="headerlink" href="#parameters" title="Link to this heading"></a></h2>
+<p>The parameters of the item; in a dictionary, its type is ‘FFRF’:</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>name</p></th>
+<th class="head"><p>type</p></th>
+<th class="head"><p>size</p></th>
+<th class="head"><p>default</p></th>
+<th class="head"><p>description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><strong>name</strong></p></td>
+<td><p>String</p></td>
+<td><p></p></td>
+<td><p>‘’</p></td>
+<td><p>objects’s unique name</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>nodeNumbers</strong></p></td>
+<td><p>ArrayNodeIndex</p></td>
+<td><p></p></td>
+<td><p>[]</p></td>
+<td><p>(symbol: <span class="math notranslate nohighlight">\(\mathbf{n}\indf = [n_0,\,\ldots,\,n_{n_\mathrm{nf}}]\tp\)</span>) node numbers which provide the coordinates for the object (consecutively as provided in this list); the <span class="math notranslate nohighlight">\((n_\mathrm{nf}+1)\)</span> nodes represent the nodes of the FE mesh (except for node 0); the global nodal position needs to be reconstructed from the rigid-body motion of the reference frame</p></td>
+</tr>
+<tr class="row-even"><td><p><strong>massMatrixFF</strong></p></td>
+<td><p>PyMatrixContainer</p></td>
+<td><p></p></td>
+<td><p>[]</p></td>
+<td><p>(symbol: <span class="math notranslate nohighlight">\(\LU{b}{\Mm} \in \Rcal^{n\indf \times n\indf}\)</span>) body-fixed and ONLY flexible coordinates part of mass matrix of object given in Python numpy format (sparse (CSR) or dense, converted to sparse matrix); internally data is stored in triplet format</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>stiffnessMatrixFF</strong></p></td>
+<td><p>PyMatrixContainer</p></td>
+<td><p></p></td>
+<td><p>[]</p></td>
+<td><p>(symbol: <span class="math notranslate nohighlight">\(\LU{b}{\Km} \in \Rcal^{n\indf \times n\indf}\)</span>) body-fixed and ONLY flexible coordinates part of stiffness matrix of object in Python numpy format (sparse (CSR) or dense, converted to sparse matrix); internally data is stored in triplet format</p></td>
+</tr>
+<tr class="row-even"><td><p><strong>dampingMatrixFF</strong></p></td>
+<td><p>PyMatrixContainer</p></td>
+<td><p></p></td>
+<td><p>[]</p></td>
+<td><p>(symbol: <span class="math notranslate nohighlight">\(\LU{b}{\Dm} \in \Rcal^{n\indf \times n\indf}\)</span>) body-fixed and ONLY flexible coordinates part of damping matrix of object in Python numpy format (sparse (CSR) or dense, converted to sparse matrix); internally data is stored in triplet format</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>forceVector</strong></p></td>
+<td><p>NumpyVector</p></td>
+<td><p></p></td>
+<td><p>[]</p></td>
+<td><p>(symbol: <span class="math notranslate nohighlight">\(\LU{0}{\fv} = [\LU{0}{\fv\indr},\; \LU{0}{\fv\indf}]\tp \in \Rcal^{n_c}\)</span>) generalized, force vector added to RHS; the rigid body part <span class="math notranslate nohighlight">\(\fv_r\)</span> is directly applied to rigid body coordinates while the flexible part <span class="math notranslate nohighlight">\(\fv\indf\)</span> is transformed from global to local coordinates; note that this force vector only allows to add gravity forces for bodies with <a class="reference internal" href="../abbreviations.html#com"><span class="std std-ref">COM</span></a> at the origin of the reference frame</p></td>
+</tr>
+<tr class="row-even"><td><p><strong>forceUserFunction</strong></p></td>
+<td><p>ObjectFFRFForceUserFunction</p></td>
+<td><p></p></td>
+<td><p>0</p></td>
+<td><p>(symbol: <span class="math notranslate nohighlight">\(\fv_{user} = [\LU{0}{\fv_{\mathrm{r},user}},\; \LU{b}{\fv_{\mathrm{f},user}}]\tp \in \Rcal^{n_c}\)</span>) A Python user function which computes the generalized user force vector for the <a class="reference internal" href="../abbreviations.html#ode2"><span class="std std-ref">ODE2</span></a> equations; note the different coordinate systems for rigid body and flexible part; The function args are mbs, time, objectNumber, coordinates q (without reference values) and coordinate velocities q_t; see description below</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>massMatrixUserFunction</strong></p></td>
+<td><p>ObjectFFRFMassMatrixUserFunction</p></td>
+<td><p></p></td>
+<td><p>0</p></td>
+<td><p>(symbol: <span class="math notranslate nohighlight">\(\Mm_{user} \in \Rcal^{n_c\times n_c}\)</span>) A Python user function which computes the TOTAL mass matrix (including reference node) and adds the local constant mass matrix; note the different coordinate systems as described in the <a class="reference internal" href="../abbreviations.html#ffrf"><span class="std std-ref">FFRF</span></a> mass matrix; see description below</p></td>
+</tr>
+<tr class="row-even"><td><p><strong>computeFFRFterms</strong></p></td>
+<td><p>Bool</p></td>
+<td><p></p></td>
+<td><p>True</p></td>
+<td><p>flag decides whether the standard <a class="reference internal" href="../abbreviations.html#ffrf"><span class="std std-ref">FFRF</span></a> terms are computed; use this flag for user-defined definition of <a class="reference internal" href="../abbreviations.html#ffrf"><span class="std std-ref">FFRF</span></a> terms in mass matrix and quadratic velocity vector</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>coordinateIndexPerNode</strong></p></td>
+<td><p>ArrayIndex</p></td>
+<td><p></p></td>
+<td><p>[]</p></td>
+<td><p>this list contains the local coordinate index for every node, which is needed, e.g., for markers; the list is generated automatically every time parameters have been changed</p></td>
+</tr>
+<tr class="row-even"><td><p><strong>objectIsInitialized</strong></p></td>
+<td><p>Bool</p></td>
+<td><p></p></td>
+<td><p>False</p></td>
+<td><p>ALWAYS set to False! flag used to correctly initialize all <a class="reference internal" href="../abbreviations.html#ffrf"><span class="std std-ref">FFRF</span></a> matrices; as soon as this flag is False, internal (constant) <a class="reference internal" href="../abbreviations.html#ffrf"><span class="std std-ref">FFRF</span></a> matrices are recomputed during Assemble()</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>mass</strong></p></td>
+<td><p>UReal</p></td>
+<td><p></p></td>
+<td><p>0.</p></td>
+<td><p>(symbol: <span class="math notranslate nohighlight">\(m\)</span>) total mass [SI:kg] of <a class="reference internal" href="../abbreviations.html#ffrf"><span class="std std-ref">FFRF</span></a> object, auto-computed from mass matrix <span class="math notranslate nohighlight">\(\LU{b}{\Mm}\)</span></p></td>
+</tr>
+<tr class="row-even"><td><p><strong>inertia</strong></p></td>
+<td><p>Matrix3D</p></td>
+<td><p>9</p></td>
+<td><p>[[1,0,0], [0,1,0], [0,0,1]]</p></td>
+<td><p>(symbol: <span class="math notranslate nohighlight">\(J_r \in \Rcal^{3 \times 3}\)</span>) inertia tensor [SI:kgm<span class="math notranslate nohighlight">\(^2\)</span>] of rigid body w.r.t. to the reference point of the body, auto-computed from the mass matrix <span class="math notranslate nohighlight">\(\LU{b}{\Mm}\)</span></p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>centerOfMass</strong></p></td>
+<td><p>Vector3D</p></td>
+<td><p>3</p></td>
+<td><p>[0.,0.,0.]</p></td>
+<td><p>(symbol: <span class="math notranslate nohighlight">\(\LU{b}{\bv}_{COM}\)</span>) local position of center of mass (<a class="reference internal" href="../abbreviations.html#com"><span class="std std-ref">COM</span></a>); auto-computed from mass matrix <span class="math notranslate nohighlight">\(\LU{b}{\Mm}\)</span></p></td>
+</tr>
+<tr class="row-even"><td><p><strong>PHItTM</strong></p></td>
+<td><p>NumpyMatrix</p></td>
+<td><p></p></td>
+<td><p>[]</p></td>
+<td><p>(symbol: <span class="math notranslate nohighlight">\(\tPhi\indt\tp \in \Rcal^{n\indf \times 3}\)</span>) projector matrix; may be removed in future</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>referencePositions</strong></p></td>
+<td><p>NumpyVector</p></td>
+<td><p></p></td>
+<td><p>[]</p></td>
+<td><p>(symbol: <span class="math notranslate nohighlight">\(\xv\cRef \in \Rcal^{n\indf}\)</span>) vector containing the reference positions of all flexible nodes</p></td>
+</tr>
+<tr class="row-even"><td><p><strong>tempVector</strong></p></td>
+<td><p>NumpyVector</p></td>
+<td><p></p></td>
+<td><p>[]</p></td>
+<td><p>(symbol: <span class="math notranslate nohighlight">\(\vv_{temp} \in \Rcal^{n\indf}\)</span>) temporary vector</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>tempCoordinates</strong></p></td>
+<td><p>NumpyVector</p></td>
+<td><p></p></td>
+<td><p>[]</p></td>
+<td><p>(symbol: <span class="math notranslate nohighlight">\(\cv_{temp} \in \Rcal^{n\indf}\)</span>) temporary vector containing coordinates</p></td>
+</tr>
+<tr class="row-even"><td><p><strong>tempCoordinates_t</strong></p></td>
+<td><p>NumpyVector</p></td>
+<td><p></p></td>
+<td><p>[]</p></td>
+<td><p>(symbol: <span class="math notranslate nohighlight">\(\dot \cv_{temp} \in \Rcal^{n\indf}\)</span>) temporary vector containing velocity coordinates</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>tempRefPosSkew</strong></p></td>
+<td><p>NumpyMatrix</p></td>
+<td><p></p></td>
+<td><p>[]</p></td>
+<td><p>(symbol: <span class="math notranslate nohighlight">\(\tilde\pv\indf \in \Rcal^{n\indf \times 3}\)</span>) temporary matrix with skew symmetric local (deformed) node positions</p></td>
+</tr>
+<tr class="row-even"><td><p><strong>tempVelSkew</strong></p></td>
+<td><p>NumpyMatrix</p></td>
+<td><p></p></td>
+<td><p>[]</p></td>
+<td><p>(symbol: <span class="math notranslate nohighlight">\(\dot{\tilde\cv}\indf \in \Rcal^{n\indf \times 3}\)</span>) temporary matrix with skew symmetric local node velocities</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>visualization</strong></p></td>
+<td><p>VObjectFFRF</p></td>
+<td><p></p></td>
+<td><p></p></td>
+<td><p>parameters for visualization of item</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="visualization-parameters">
+<h2>Visualization parameters<a class="headerlink" href="#visualization-parameters" title="Link to this heading"></a></h2>
+<p>The parameters of <code class="docutils literal notranslate"><span class="pre">VObjectFFRF</span></code>, given as <code class="docutils literal notranslate"><span class="pre">visualization</span></code>:</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>name</p></th>
+<th class="head"><p>type</p></th>
+<th class="head"><p>size</p></th>
+<th class="head"><p>default</p></th>
+<th class="head"><p>description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><strong>show</strong></p></td>
+<td><p>Bool</p></td>
+<td><p></p></td>
+<td><p>True</p></td>
+<td><p>set true, if item is shown in visualization and false if it is not shown; use visualizationSettings.bodies.deformationScaleFactor to draw scaled (local) deformations; the reference frame node is shown with additional letters RF</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>color</strong></p></td>
+<td><p>Float4</p></td>
+<td><p>4</p></td>
+<td><p>[-1.,-1.,-1.,-1.]</p></td>
+<td><p>RGBA color for object; 4th value is alpha-transparency; R=-1.f means, that default color is used</p></td>
+</tr>
+<tr class="row-even"><td><p><strong>triangleMesh</strong></p></td>
+<td><p>NumpyMatrixI</p></td>
+<td><p></p></td>
+<td><p>[]</p></td>
+<td><p>a matrix of node numbers referring to the mesh nodes of the object, one triangle per row: 3 columns for flat triangles, or 6 for 6-node triangles drawn curved - the corners counterclockwise seen from outside, then the mid nodes of the edges 0-1, 1-2 and 2-0, as in GraphicsData triangles6; the mesh uses the nodes to visualize the underlying object; contour plot colors are still computed in the local frame!</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>showNodes</strong></p></td>
+<td><p>Bool</p></td>
+<td><p></p></td>
+<td><p>False</p></td>
+<td><p>set true, nodes are drawn uniquely via the mesh, eventually using the floating reference frame, even in the visualization of the node is show=False; node numbers are shown with indicator ‘NF’</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="drawing">
+<h2>Drawing<a class="headerlink" href="#drawing" title="Link to this heading"></a></h2>
+<p>Drawn as <a class="reference internal" href="objectSuperElementGeneral.html#sec-drawing-objectssuperelement"><span class="std std-ref">all super elements</span></a>; its <code class="docutils literal notranslate"><span class="pre">triangleMesh</span></code> on the nodes, deformed with <code class="docutils literal notranslate"><span class="pre">bodies.deformationScaleFactor</span></code>, and with <code class="docutils literal notranslate"><span class="pre">showNodes</span></code> its nodes.</p>
+<p>Settings beyond those of all super elements: <a class="reference internal" href="../structures/VisualizationSettings.html#sec-vsettingsnodes"><span class="std std-ref"><code class="docutils literal notranslate"><span class="pre">nodes.defaultSize</span></code></span></a>, <a class="reference internal" href="../structures/VisualizationSettings.html#sec-vsettingsnodes"><span class="std std-ref"><code class="docutils literal notranslate"><span class="pre">nodes.drawNodesAsPoint</span></code></span></a>, <a class="reference internal" href="../structures/VisualizationSettings.html#sec-vsettingsnodes"><span class="std std-ref"><code class="docutils literal notranslate"><span class="pre">nodes.show</span></code></span></a>, <a class="reference internal" href="../structures/VisualizationSettings.html#sec-vsettingsnodes"><span class="std std-ref"><code class="docutils literal notranslate"><span class="pre">nodes.showNumbers</span></code></span></a>, <a class="reference internal" href="../structures/VisualizationSettings.html#sec-vsettingsnodes"><span class="std std-ref"><code class="docutils literal notranslate"><span class="pre">nodes.tiling</span></code></span></a>, <a class="reference internal" href="../structures/VisualizationSettings.html#sec-vsettingsopengladvanced"><span class="std std-ref"><code class="docutils literal notranslate"><span class="pre">openGL.advanced.initialMaxSceneSize</span></code></span></a>.</p>
+</section>
+<section id="output-variables">
+<h2>Output variables<a class="headerlink" href="#output-variables" title="Link to this heading"></a></h2>
+<p>Available as <code class="docutils literal notranslate"><span class="pre">OutputVariableType</span></code> in sensors, <code class="docutils literal notranslate"><span class="pre">Get...Output()</span></code> and other functions:</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>output variable</p></th>
+<th class="head"><p>symbol</p></th>
+<th class="head"><p>description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Coordinates</p></td>
+<td><p></p></td>
+<td><p>all <a class="reference internal" href="../abbreviations.html#ode2"><span class="std std-ref">ODE2</span></a> coordinates</p></td>
+</tr>
+<tr class="row-odd"><td><p>Coordinates_t</p></td>
+<td><p></p></td>
+<td><p>all <a class="reference internal" href="../abbreviations.html#ode2"><span class="std std-ref">ODE2</span></a> velocity coordinates</p></td>
+</tr>
+<tr class="row-even"><td><p>Coordinates_tt</p></td>
+<td><p></p></td>
+<td><p>all <a class="reference internal" href="../abbreviations.html#ode2"><span class="std std-ref">ODE2</span></a> acceleration coordinates</p></td>
+</tr>
+<tr class="row-odd"><td><p>Force</p></td>
+<td><p></p></td>
+<td><p>generalized forces for all coordinates (residual of all forces except mass*accleration; corresponds to ComputeODE2LHS)</p></td>
+</tr>
+<tr class="row-even"><td><p>KineticEnergy</p></td>
+<td><p><span class="math notranslate nohighlight">\(T = \frac{1}{2} \dot\qv\tp \Mm\, \dot\qv\)</span></p></td>
+<td><p>kinetic energy from the mass matrix of the current state and the velocities of the nodes; current configuration only; localPosition must be <span class="math notranslate nohighlight">\([0,0,0]\)</span></p></td>
+</tr>
+<tr class="row-odd"><td><p>PotentialEnergy</p></td>
+<td><p><span class="math notranslate nohighlight">\(V = \frac{1}{2} \qv_\mathrm{f}\tp \Km_{\mathrm{ff}}\, \qv_\mathrm{f} - \fv\tp \qv\)</span></p></td>
+<td><p>elastic energy of the flexible coordinates and the potential of the constant force vector; raises for a forceUserFunction; localPosition must be <span class="math notranslate nohighlight">\([0,0,0]\)</span></p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="detailed-description">
+<span id="description-objectffrf"></span><h2>Detailed description<a class="headerlink" href="#detailed-description" title="Link to this heading"></a></h2>
+<section id="additional-output-variables-for-superelement-node-access">
+<h3>Additional output variables for superelement node access<a class="headerlink" href="#additional-output-variables-for-superelement-node-access" title="Link to this heading"></a></h3>
+<p>Functions like <code class="docutils literal notranslate"><span class="pre">GetObjectOutputSuperElement(...)</span></code>, see <a class="reference internal" href="../cInterface/MainSystem.html#sec-mainsystem-object"><span class="std std-ref">MainSystem: Object</span></a>,
+or <code class="docutils literal notranslate"><span class="pre">SensorSuperElement</span></code>, see <a class="reference internal" href="../cInterface/MainSystem.html#sec-mainsystem-sensor"><span class="std std-ref">MainSystem: Sensor</span></a>, directly access special output variables
+(<code class="docutils literal notranslate"><span class="pre">OutputVariableType</span></code>) of the mesh nodes <span class="math notranslate nohighlight">\(n_i\)</span> of the superelement.
+Additionally, the contour drawing of the object can make use the <code class="docutils literal notranslate"><span class="pre">OutputVariableType</span></code> of the meshnodes.</p>
+</section>
+<section id="super-element-output-variables">
+<span id="sec-objectffrf-superelementoutput"></span><h3>Super element output variables<a class="headerlink" href="#super-element-output-variables" title="Link to this heading"></a></h3>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>super element output variables</p></th>
+<th class="head"><p>symbol</p></th>
+<th class="head"><p>description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Position</p></td>
+<td><p><span class="math notranslate nohighlight">\(\LU{0}{\pv}\cConfig(n_i) = \LU{0}{\pRef\cConfig} + \LU{0b}{\Rot}\cConfig \LU{b}{\pv}\cConfig(n_i)\)</span></p></td>
+<td><p>global position of mesh node <span class="math notranslate nohighlight">\(n_i\)</span> including rigid body motion and flexible deformation</p></td>
+</tr>
+<tr class="row-odd"><td><p>Displacement</p></td>
+<td><p><span class="math notranslate nohighlight">\(\LU{0}{\cv}\cConfig(n_i) = \LU{0}{\pv\cConfig(n_i)} - \LU{0}{\pv\cRef(n_i)}\)</span></p></td>
+<td><p>global displacement of mesh node <span class="math notranslate nohighlight">\(n_i\)</span> including rigid body motion and flexible deformation</p></td>
+</tr>
+<tr class="row-even"><td><p>Velocity</p></td>
+<td><p><span class="math notranslate nohighlight">\(\LU{0}{\vv}\cConfig(n_i) = \LU{0}{\dot \pRef\cConfig} + \LU{0b}{\Rot}\cConfig (\LU{b}{\dot \qv\indf}\cConfig(n_i) + \LU{b}{\tomega}\cConfig \times \LU{b}{\pv}\cConfig(n_i))\)</span></p></td>
+<td><p>global velocity of mesh node <span class="math notranslate nohighlight">\(n_i\)</span> including rigid body motion and flexible deformation</p></td>
+</tr>
+<tr class="row-odd"><td><p>Acceleration</p></td>
+<td><p><span class="math notranslate nohighlight">\(\begin{array}{l} \LU{0}{\av}\cConfig(n_i) = \LU{0}{\ddot \pRef\cConfig}\cConfig \\ + \LU{0b}{\Rot}\cConfig \LU{b}{\ddot \qv\indf}\cConfig(n_i) \\ + 2\LU{0}{\tomega}\cConfig \times \LU{0b}{\Rot}\cConfig \LU{b}{\dot \qv\indf}\cConfig(n_i) \\ + \LU{0}{\talpha}\cConfig \times \LU{0}{\pv}\cConfig(n_i) \\ + \LU{0}{\tomega}\cConfig \times (\LU{0}{\tomega}\cConfig \times \LU{0}{\pv}\cConfig(n_i)) \end{array}\)</span></p></td>
+<td><p>global acceleration of mesh node <span class="math notranslate nohighlight">\(n_i\)</span> including rigid body motion and flexible deformation; note that <span class="math notranslate nohighlight">\(\LU{0}{\pv}\cConfig(n_i) = \LU{0b}{\Rot} \LU{b}{\pv}\cConfig(n_i)\)</span></p></td>
+</tr>
+<tr class="row-even"><td><p>DisplacementLocal</p></td>
+<td><p><span class="math notranslate nohighlight">\(\LU{b}{\dv}\cConfig(n_i) = \LU{b}{\pv}\cConfig(n_i) - \LU{b}{\xv}\cRef(n_i)\)</span></p></td>
+<td><p>local displacement of mesh node <span class="math notranslate nohighlight">\(n_i\)</span>, representing the flexible deformation within the body frame; note that <span class="math notranslate nohighlight">\(\LU{0}{\uv}\cConfig \neq \LU{0b}{\Rot}\LU{b}{\dv}\cConfig\)</span> !</p></td>
+</tr>
+<tr class="row-odd"><td><p>VelocityLocal</p></td>
+<td><p><span class="math notranslate nohighlight">\(\LU{b}{\dot \qv\indf}\cConfig(n_i)\)</span></p></td>
+<td><p>local velocity of mesh node <span class="math notranslate nohighlight">\(n_i\)</span>, representing the rate of flexible deformation within the body frame</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="definition-of-quantities">
+<h3>Definition of quantities<a class="headerlink" href="#definition-of-quantities" title="Link to this heading"></a></h3>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>intermediate variables</p></th>
+<th class="head"><p>symbol</p></th>
+<th class="head"><p>description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>object coordinates</p></td>
+<td><p><span class="math notranslate nohighlight">\(\qv = [\qv\indt\tp,\;\qv\indr\tp,\;\qv\indf\tp]\tp\)</span></p></td>
+<td><p>object coordinates</p></td>
+</tr>
+<tr class="row-odd"><td><p>rigid body coordinates</p></td>
+<td><p><span class="math notranslate nohighlight">\(\qv\indrigid = [\qv\indt\tp,\;\qv\indr\tp]\tp =  [q_0,\,q_1,\,q_2,\,\psi_0,\,\psi_1,\,\psi_2,\,\psi_3]\tp\)</span></p></td>
+<td><p>rigid body coordinates in case of Euler parameters</p></td>
+</tr>
+<tr class="row-even"><td><p>reference frame (rigid body) position</p></td>
+<td><p><span class="math notranslate nohighlight">\(\LU{0}{\pRef\cConfig} = \LU{0}{\qv_\mathrm{t,config}}+\LU{0}{\qv_\mathrm{t,ref}}\)</span></p></td>
+<td><p>global position of underlying rigid body node <span class="math notranslate nohighlight">\(n_0\)</span> which defines the reference frame origin</p></td>
+</tr>
+<tr class="row-odd"><td><p>reference frame (rigid body) orientation</p></td>
+<td><p><span class="math notranslate nohighlight">\(\LU{0b}{\Rot(\ttheta)}\cConfig\)</span></p></td>
+<td><p>transformation matrix for transformation of local (reference frame) to global coordinates, given by underlying rigid body node <span class="math notranslate nohighlight">\(n_0\)</span></p></td>
+</tr>
+<tr class="row-even"><td><p>local nodal position</p></td>
+<td><p><span class="math notranslate nohighlight">\(\LU{b}{\pv^{(i)}} = \LU{b}{\xv^{(i)}}\cRef + \LU{b}{\qv\indf^{(i)}} \)</span></p></td>
+<td><p>vector of body-fixed (local) position of node <span class="math notranslate nohighlight">\((i)\)</span>, including flexible part</p></td>
+</tr>
+<tr class="row-odd"><td><p>local nodal positions</p></td>
+<td><p><span class="math notranslate nohighlight">\(\LU{b}{\pv} = \LU{b}{\xv}\cRef + \LU{b}{\qv\indf}\)</span></p></td>
+<td><p>vector of all body-fixed (local) nodal positions including flexible part</p></td>
+</tr>
+<tr class="row-even"><td><p>rotation coordinates</p></td>
+<td><p><span class="math notranslate nohighlight">\(\ttheta\cCur = [\psi_0,\,\psi_1,\,\psi_2,\,\psi_3]\tp\cRef + [\psi_0,\,\psi_1,\,\psi_2,\,\psi_3]\cCur\tp\)</span></p></td>
+<td><p>rigid body coordinates in case of Euler parameters</p></td>
+</tr>
+<tr class="row-odd"><td><p>flexible coordinates</p></td>
+<td><p><span class="math notranslate nohighlight">\(\LU{b}{\qv\indf}\)</span></p></td>
+<td><p>flexible, body-fixed coordinates</p></td>
+</tr>
+<tr class="row-even"><td><p>transformation of flexible coordinates</p></td>
+<td><p><span class="math notranslate nohighlight">\(\LU{0b}{\Am_{bd}} = \mathrm{diag}([\LU{0b}{\Am},\;\ldots,\;\LU{0b}{\Am})\)</span></p></td>
+<td><p>block diagonal transformation matrix, which transforms all flexible coordinates from local to global coordinates</p></td>
+</tr>
+</tbody>
+</table>
+<p>The derivations follow Zwölfer and Gerstmayr <a class="reference internal" href="../references.html#ref-zwoelfergerstmayr2021"><span class="std std-ref">ZwoelferGerstmayr2021</span></a> with only small modifications in the notation.</p>
+</section>
+<section id="nodal-coordinates">
+<h3>Nodal coordinates<a class="headerlink" href="#nodal-coordinates" title="Link to this heading"></a></h3>
+<p>Consider an object with <span class="math notranslate nohighlight">\(n = 1 + n_\mathrm{nf}\)</span> nodes, <span class="math notranslate nohighlight">\(n_\mathrm{nf}\)</span> being the number of ‘flexible’ nodes and one additional node is the rigid body node for the reference frame.
+The list if node numbers is <span class="math notranslate nohighlight">\([n_0,\,\ldots,\,n_{n_\mathrm{nf}}]\)</span> and the according numbers of
+nodal coordinates are <span class="math notranslate nohighlight">\([n_{c_0},\,\ldots,\,n_{c_n}]\)</span>, where <span class="math notranslate nohighlight">\(n_0\)</span> denotes the rigid body node.
+This gives <span class="math notranslate nohighlight">\(n_c\)</span> total nodal coordinates,</p>
+<div class="math notranslate nohighlight">
+\[
+n_c = \sum_{i=0}^{n_\mathrm{nf}} n_{c_i} \, ,
+\]</div>
+<p>whereof the number of flexible coordinates is</p>
+<div class="math notranslate nohighlight">
+\[
+n\indf = 3 \cdot n_\mathrm{nf} \, .
+\]</div>
+<p>The total number of equations (=coordinates) of the object is <span class="math notranslate nohighlight">\(n_c\)</span>.
+The first node <span class="math notranslate nohighlight">\(n_0\)</span> represents the rigid body motion of the underlying reference frame with <span class="math notranslate nohighlight">\(n_{c\indr} = n_{c_0}\)</span> coordinates  (e.g.,
+<span class="math notranslate nohighlight">\(n_{c\indr}=6\)</span> coordinates for Euler angles and <span class="math notranslate nohighlight">\(n_{c\indr}=7\)</span> coordinates in case of Euler parameters; currently only the Euler parameter
+case is implemented.).</p>
+</section>
+<section id="kinematics">
+<h3>Kinematics<a class="headerlink" href="#kinematics" title="Link to this heading"></a></h3>
+<p>We assume a finite element mesh with
+The kinematics of the <a class="reference internal" href="../abbreviations.html#ffrf"><span class="std std-ref">FFRF</span></a> is based on a splitting of
+translational (<span class="math notranslate nohighlight">\(\cv_t \in \Rcal^{n\indf}\)</span>), rotational (<span class="math notranslate nohighlight">\(\cv\indr \in \Rcal^{n\indf}\)</span>) and flexible (<span class="math notranslate nohighlight">\(\cv\indf \in \Rcal^{n\indf}\)</span>) nodal displacements,</p>
+<div class="math notranslate nohighlight" id="equation-eq-objectffrf-coordinatessplitting">
+<span class="eqno">(59)<a class="headerlink" href="#equation-eq-objectffrf-coordinatessplitting" title="Link to this equation"></a></span>\[
+\LU{0}{\cv} = \LU{0}{\cv\indt} + \LU{0}{\cv\indr} + \LU{0}{\cv\indf} \, .
+\]</div>
+<p>which are written in global coordinates in <a class="reference internal" href="#equation-eq-objectffrf-coordinatessplitting">(59)</a> but will be transformed to other coordinates later on.</p>
+<p>In the present formulation of <code class="docutils literal notranslate"><span class="pre">ObjectFFRF</span></code>, we use the following set of object coordinates (unknowns)</p>
+<div class="math notranslate nohighlight">
+\[
+\qv = \left[\LU{0}{\qv\indt\tp} \;\; \ttheta\tp \;\; \LU{b}{\qv\indf\tp} \right]\tp \in \Rcal^{n_c}
+\]</div>
+<p>with <span class="math notranslate nohighlight">\(\LU{0}{\qv}\indt \in \Rcal^{3}\)</span>, <span class="math notranslate nohighlight">\(\ttheta \in \Rcal^{4}\)</span> and <span class="math notranslate nohighlight">\(\LU{b}{\qv}\indf \in \Rcal^{n\indf}\)</span>.
+Note that parts of the coordinates <span class="math notranslate nohighlight">\(\qv\)</span> can be already interpreted in specific coordinate systems, which is therefore added.</p>
+<p>With the relations</p>
+<div class="math notranslate nohighlight" id="equation-eq-objectffrf-phit">
+<span class="eqno">(60)<a class="headerlink" href="#equation-eq-objectffrf-phit" title="Link to this equation"></a></span>\[\begin{split}
+\begin{aligned}
+\tPhi\indt &amp;= \left[\ImThree ,\; \ldots ,\; \ImThree \right]\tp \in \Rcal^{n\indf \times 3} \, ,\\
+\LU{0}{\cv\indt} &amp;= \tPhi\indt \LU{0}{\qv\indt} \, ,\\
+\LU{0}{\cv\indr} &amp;= \left(\LU{0b}{\Am_{bd}} - \Im_{bd}\right) \LU{b}{\xv\cRef} \, ,\\
+\LU{0}{\cv\indf} &amp;= \LU{0b}{\Am_{bd}} \LU{b}{\qv\indf} \, , \mathrm{and}\\
+\Im_{bd} &amp;= \mathrm{diag}(\ImThree, \; \ldots ,\; \ImThree) \in \Rcal^{n\indf \times n\indf}  \, ,
+\end{aligned}
+\end{split}\]</div>
+<p>we obtain the total relation of (global) nodal displacements to the object coordinates</p>
+<div class="math notranslate nohighlight">
+\[
+\LU{0}{\cv} = \tPhi\indt \LU{0}{\qv\indt} + \left(\LU{0b}{\Am_{bd}} - \Im_{bd}\right) \LU{b}{\xv\cRef} + \LU{0b}{\Am_{bd}} \LU{b}{\qv\indf} \, .
+\]</div>
+<p>On velocity level, we have</p>
+<div class="math notranslate nohighlight">
+\[
+\LU{0}{\dot \cv} = \Lm \dot \qv \, ,
+\]</div>
+<p>with the matrix <span class="math notranslate nohighlight">\(\Lm \in \Rcal^{n\indf \times n_c}\)</span></p>
+<div class="math notranslate nohighlight">
+\[
+\Lm = \left[\tPhi\indt ,\;\; -\LU{0b}{\Am_{bd}} \LU{b}{\tilde \pv} \LU{b}{\Gm} ,\;\; \LU{0b}{\Am_{bd}} \right]
+\]</div>
+<p>with the rotation parameters specific matrix <span class="math notranslate nohighlight">\(\LU{b}{\Gm}\)</span>, implicitly defined in the rigid body node by the relation <span class="math notranslate nohighlight">\(\LU{b}{\tomega} = \LU{b}{\Gm} \dot \ttheta\)</span>
+and the body-fixed nodal position vector (for node <span class="math notranslate nohighlight">\(i\)</span>)</p>
+<div class="math notranslate nohighlight">
+\[
+\LU{b}{\pv} = \LU{b}{\xv\cRef} + \LU{b}{\qv\indf}, \quad \LU{b}{\pv^{(i)}} = \LU{b}{\xv^{(i)}\cRef} + \LU{b}{\qv_{\mathrm{f},i}^{(i)}}
+\]</div>
+<p>and the special tilde matrix for vectors <span class="math notranslate nohighlight">\(\pv \in \Rcal^{3 {n_\mathrm{nf}}}\)</span>,</p>
+<div class="math notranslate nohighlight" id="equation-eq-objectffrf-specialtilde">
+<span class="eqno">(61)<a class="headerlink" href="#equation-eq-objectffrf-specialtilde" title="Link to this equation"></a></span>\[
+\LU{b}{\tilde \pv} = \vr{\LU{b}{\tilde\pv^{(i)}}}{\vdots}{\LU{b}{\tilde\pv^{(i)}}} \in \Rcal^{3{n_\mathrm{nf}} \times 3} \, .
+\]</div>
+<p>with the tilde operator for a <span class="math notranslate nohighlight">\(\pv^{(i)} \in \Rcal^{3}\)</span> defined in the common notations section.</p>
+</section>
+<section id="equations-of-motion">
+<h3>Equations of motion<a class="headerlink" href="#equations-of-motion" title="Link to this heading"></a></h3>
+<p>We use the Lagrange equations extended for constraint <span class="math notranslate nohighlight">\(\gv\)</span>,</p>
+<div class="math notranslate nohighlight">
+\[
+\frac{d}{dt} \left( \frac{\partial T}{\partial \dot \qv\tp} \right) - \frac{\partial T}{\partial \qv\tp}
++ \frac{\partial V}{\partial \qv\tp} + \frac{\partial \tlambda\tp \gv}{\partial \qv\tp} = \frac{\partial W}{\partial \qv\tp}
+\]</div>
+<p>with the quantities</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{aligned}
+T(\LU{0}{\dot \cv(\qv, \dot \qv)}) &amp;= \frac{1}{2}\LU{0}{\dot \cv\tp} \LU{0}{\Mm}  \LU{0}{\dot \cv}
+= \frac{1}{2}\LU{0}{\dot \cv\tp} \LU{0b}{\Am_{bd}} \LU{b}{\Mm} \LU{0b}{\Am_{bd}}\tp  \LU{0}{\dot \cv}
+= \frac{1}{2}\LU{0}{\dot \cv\tp} \LU{b}{\Mm}  \LU{0}{\dot \cv}\\
+V(\LU{0}{\qv\indf}) &amp;= \frac{1}{2}\LU{b}{\qv\indf\tp} \LU{b}{\Km}  \LU{b}{\qv\indf}  \\
+\delta W(\LU{0}{\cv(\qv)},t) &amp;= \LU{b}{\delta \cv \tp} \fv  \\
+\gv(\qv, t) &amp;= \Null  \\
+\end{aligned}
+\end{split}\]</div>
+<p>Note that <span class="math notranslate nohighlight">\(\LU{b}{\Mm}\)</span> and <span class="math notranslate nohighlight">\(\LU{b}{\Km}\)</span> are the conventional finite element mass an stiffness
+matrices defined in the body frame.</p>
+<p>Elementary differentiation rules of the Lagrange equations lead to</p>
+<div class="math notranslate nohighlight" id="equation-eq-objectffrf-leq">
+<span class="eqno">(62)<a class="headerlink" href="#equation-eq-objectffrf-leq" title="Link to this equation"></a></span>\[
+\Lm\tp \Mm \Lm \ddot \qv + \Lm\tp \Mm \dot \Lm \dot \qv + \hat \Km \qv + \frac{\partial \gv}{\partial \qv\tp} \tlambda = \Lm\tp \fv
+\]</div>
+<p>with <span class="math notranslate nohighlight">\(\Mm = \LU{b}{\Mm}\)</span> and <span class="math notranslate nohighlight">\(\hat \Km\)</span> becoming obvious in <a class="reference internal" href="#equation-eq-objectffrf-eom">(63)</a>.
+Note that <a class="reference internal" href="#equation-eq-objectffrf-leq">(62)</a> is given in global coordinates for the translational part, in terms of rotation parameters
+for the rotation part and in body-fixed coordinates for the flexible part of the equations.</p>
+<p>In case that <code class="docutils literal notranslate"><span class="pre">computeFFRFterms</span> <span class="pre">=</span> <span class="pre">True</span></code>, <a class="reference internal" href="#equation-eq-objectffrf-leq">(62)</a> can be transformed into the equations of motion,</p>
+<div class="math notranslate nohighlight" id="equation-eq-objectffrf-eom">
+<span class="eqno">(63)<a class="headerlink" href="#equation-eq-objectffrf-eom" title="Link to this equation"></a></span>\[
+\left(\Mm_{user}(mbs, t, i_N, \qv,\dot \qv) + \mr{\Mm\indtt}{\Mm\indtr}{\Mm\indtf} {}{\Mm\indrr}{\Mm\indrf}
+{\mathrm{sym.}}{}{\LU{b}{\Mm}} \right) \ddot \qv +
+\mr{0}{0}{0} {0}{0}{0} {0}{0}{\LU{b}{\Dm}} \dot \qv + \mr{0}{0}{0} {0}{0}{0} {0}{0}{\LU{b}{\Km}} \qv =
+\fv_{v}(\qv,\dot \qv) + \vp{\fv\indr}{\LURU{0b}{\Am}{bd}{\mathrm{T}} \fv\indf} + \fv_{user}(mbs, t, i_N, \qv, \dot \qv)
+\]</div>
+<p>in which <code class="docutils literal notranslate"><span class="pre">iN</span></code> represents the itemNumber (=objectNumber of ObjectFFRF in mbs) in the user function.
+The mass terms are given as</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{aligned}
+\Mm\indtt &amp;= \tPhi\indt\tp \LU{b}{\Mm} \tPhi\indt,\\
+\Mm\indtr &amp;= -\LU{0b}{\Rot} \tPhi\indt\tp \LU{b}{\Mm} \LU{b}{\tilde \pv} \LU{b}{\Gm} ,\\
+\Mm\indtf &amp;= \LU{0b}{\Rot} \tPhi\indt\tp \LU{b}{\Mm} ,\\
+\Mm\indrr &amp;= \LU{b}{\Gm}\tp \LU{b}{\tilde \pv\tp} \LU{b}{\Mm} \LU{b}{\tilde \pv} \LU{b}{\Gm} ,\\
+\Mm\indrf &amp;= - \LU{b}{\Gm}\tp \LU{b}{\tilde \pv\tp} \LU{b}{\Mm} \, .
+\end{aligned}
+\end{split}\]</div>
+<p>In case that <code class="docutils literal notranslate"><span class="pre">computeFFRFterms</span> <span class="pre">=</span> <span class="pre">False</span></code>, the mass terms <span class="math notranslate nohighlight">\(\Mm\indtt, \Mm\indtr, \Mm\indtf, \Mm\indrr,
+\Mm\indrf, \LU{b}{\Mm}\)</span> in <a class="reference internal" href="#equation-eq-objectffrf-eom">(63)</a> are set to zero (and not computed) and
+the quadratic velocity vector <span class="math notranslate nohighlight">\(\fv_{v} = \Null\)</span>.
+Note that the user functions <span class="math notranslate nohighlight">\(\fv_{user}(mbs, t, i_N, \qv,\dot \qv)\)</span> and <span class="math notranslate nohighlight">\(\Mm_{user}(mbs, t, i_N, \qv,\dot \qv)\)</span> may be empty (=0).
+The detailed equations of motion for this element can be found in <a class="reference internal" href="../references.html#ref-zwoelfergerstmayr2020"><span class="std std-ref">ZwoelferGerstmayr2020</span></a>.</p>
+<p>The quadratic velocity vector follows as</p>
+<div class="math notranslate nohighlight">
+\[
+\fv_{v}(\qv,\dot \qv) = \vr
+{-\LU{0b}{\Rot} \tPhi\indt\tp \LU{b}{\Mm}\left( \omegaBDtilde \omegaBDtilde \LU{b}{\pv} +
+2 \omegaBDtilde \LU{b}{\dot \qv}\indf -
+\LU{b}{\tilde \pv} \LU{b}{\dot \Gm} \dot \ttheta \right)}
+{\LU{b}{\Gm}\tp \LU{b}{\tilde \pv\tp} \LU{b}{\Mm} \left( \omegaBDtilde \omegaBDtilde \LU{b}{\pv} +
+2 \omegaBDtilde \LU{b}{\dot \qv}\indf -
+\LU{b}{\tilde \pv} \LU{b}{\dot \Gm} \dot \ttheta \right)}
+{-\LU{b}{\Mm} \left( \omegaBDtilde \omegaBDtilde \LU{b}{\pv} +
+2 \omegaBDtilde \LU{b}{\dot \qv}\indf -
+\LU{b}{\tilde \pv} \LU{b}{\dot \Gm} \dot \ttheta \right)}
+\]</div>
+<p>with the special matrix</p>
+<div class="math notranslate nohighlight">
+\[
+\omegaBDtilde = \mathrm{diag}\left(\LU{b}{\tilde \tomega_\mathrm{bd}}, \; \ldots ,\; \LU{b}{\tilde \tomega_\mathrm{bd}}  \right)
+\in \Rcal^{n\indf \times n\indf}
+\]</div>
+<p>CoordinateLoads are added for each <a class="reference internal" href="../abbreviations.html#ode2"><span class="std std-ref">ODE2</span></a> coordinate on the RHS of the latter equation.</p>
+<p>If the rigid body node is using Euler parameters <span class="math notranslate nohighlight">\(\ttheta = [\theta_0,\,\theta_1,\,\theta_2,\,\theta_3]\tp\)</span>, an <strong>additional constraint</strong> (constraint nr. 0) is
+added automatically for the Euler parameter norm, reading</p>
+<div class="math notranslate nohighlight">
+\[
+1 - \sum_{i=0}^{3} \theta_i^2 = 0.
+\]</div>
+<p>In order to suppress the rigid body motion of the mesh nodes, you should apply a ObjectConnectorCoordinateVector object with the following constraint
+equations which impose constraints of a so-called Tisserand frame, giving 3 constraints for the position of the center of mass</p>
+<div class="math notranslate nohighlight">
+\[
+\Phi\indt\tp \LU{b}{\Mm} \qv\indf = 0
+\]</div>
+<p>and 3 constraints for the rotation,</p>
+<div class="math notranslate nohighlight">
+\[
+\tilde\xv_{f}\tp \LU{b}{\Mm} \qv\indf = 0
+\]</div>
+</section>
+<section id="marker-interfaces">
+<h3>Marker interfaces<a class="headerlink" href="#marker-interfaces" title="Link to this heading"></a></h3>
+<p><code class="docutils literal notranslate"><span class="pre">MarkerSuperElementPosition</span></code> and <code class="docutils literal notranslate"><span class="pre">MarkerSuperElementRigid</span></code> act on the <strong>mesh nodes</strong> - the nodes of
+the finite element mesh, moved with the reference frame -, averaged with the weights of the marker;
+they are the markers for forces, connectors and joints on the flexible body. The general body markers
+<code class="docutils literal notranslate"><span class="pre">MarkerBodyPosition</span></code> and <code class="docutils literal notranslate"><span class="pre">MarkerBodyRigid</span></code> act on the <strong>reference frame</strong> only, the rigid body node 0,
+and not on the deformation. <code class="docutils literal notranslate"><span class="pre">MarkerBodyMass</span></code> applies a load proportional to the total mass at the
+center of mass <code class="docutils literal notranslate"><span class="pre">centerOfMass</span></code>, through the coordinates of the reference frame only: the
+flexible coordinates get no share of it.</p>
+<p>This object has no MiniExample, because it needs a finite element mesh; a complete model is
+<code class="docutils literal notranslate"><span class="pre">NGsolveFFRF.py</span></code>, with the mesh from NGsolve; it is in the examples below.</p>
+<p><strong>Userfunction</strong>: <code class="docutils literal notranslate"><span class="pre">forceUserFunction(mbs,</span> <span class="pre">t,</span> <span class="pre">itemNumber,</span> <span class="pre">q,</span> <span class="pre">q_t)</span></code>
+A user function, which computes a force vector depending on current time and states of object. Can be used to create any kind of mechanical system by using the object states.</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>arguments / return</p></th>
+<th class="head"><p>type or size</p></th>
+<th class="head"><p>description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">mbs</span></code></p></td>
+<td><p>MainSystem</p></td>
+<td><p>provides MainSystem mbs to which object belongs</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">t</span></code></p></td>
+<td><p>Real</p></td>
+<td><p>current time in mbs</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">itemNumber</span></code></p></td>
+<td><p>Index</p></td>
+<td><p>integer number of the object in mbs, allowing easy access to all object data via mbs.GetObjectParameter(itemNumber, …)</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">q</span></code></p></td>
+<td><p>Vector <span class="math notranslate nohighlight">\(\in \Rcal^n_c\)</span></p></td>
+<td><p>object coordinates (nodal displacement coordinates of rigid body and mesh nodes) in current configuration, without reference values</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">q_t</span></code></p></td>
+<td><p>Vector <span class="math notranslate nohighlight">\(\in \Rcal^n_c\)</span></p></td>
+<td><p>object velocity coordinates (time derivative of <code class="docutils literal notranslate"><span class="pre">q</span></code>) in current configuration</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>return value</strong></p></td>
+<td><p>Vector <span class="math notranslate nohighlight">\(\in \Rcal^{n_c}\)</span></p></td>
+<td><p>returns force vector for object</p></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Userfunction</strong>: <code class="docutils literal notranslate"><span class="pre">massMatrixUserFunction(mbs,</span> <span class="pre">t,</span> <span class="pre">itemNumber,</span> <span class="pre">q,</span> <span class="pre">q_t)</span></code>
+A user function, which computes a mass matrix depending on current time and states of object. Can be used to create any kind of mechanical system by using the object states.</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>arguments / return</p></th>
+<th class="head"><p>type or size</p></th>
+<th class="head"><p>description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">mbs</span></code></p></td>
+<td><p>MainSystem</p></td>
+<td><p>provides MainSystem mbs to which object belongs</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">t</span></code></p></td>
+<td><p>Real</p></td>
+<td><p>current time in mbs</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">itemNumber</span></code></p></td>
+<td><p>Index</p></td>
+<td><p>integer number of the object in mbs, allowing easy access to all object data via mbs.GetObjectParameter(itemNumber, …)</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">q</span></code></p></td>
+<td><p>Vector <span class="math notranslate nohighlight">\(\in \Rcal^n_c\)</span></p></td>
+<td><p>object coordinates (nodal displacement coordinates of rigid body and mesh nodes) in current configuration, without reference values</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">q_t</span></code></p></td>
+<td><p>Vector <span class="math notranslate nohighlight">\(\in \Rcal^n_c\)</span></p></td>
+<td><p>object velocity coordinates (time derivative of <code class="docutils literal notranslate"><span class="pre">q</span></code>) in current configuration</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>return value</strong></p></td>
+<td><p>NumpyMatrix <span class="math notranslate nohighlight">\(\in \Rcal^{n_c \times n_c}\)</span></p></td>
+<td><p>returns mass matrix for object</p></td>
+</tr>
+</tbody>
+</table>
+<p>Examples (Ex) and TestModels (TM) that show this item, with weblink to github: <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/NGsolveFFRF.py"><code class="docutils literal notranslate"><span class="pre">NGsolveFFRF.py</span></code></a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/objectFFRFTest.py"><code class="docutils literal notranslate"><span class="pre">objectFFRFTest.py</span></code></a> (TM), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/objectFFRFTest2.py"><code class="docutils literal notranslate"><span class="pre">objectFFRFTest2.py</span></code></a> (TM)</p>
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="ObjectKinematicTree.html" class="btn btn-neutral float-left" title="ObjectKinematicTree" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="ObjectFFRFreducedOrder.html" class="btn btn-neutral float-right" title="ObjectFFRFreducedOrder" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

@@ -1,0 +1,268 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>The command line: python -m exudyn &mdash; Exudyn1.13.3 1.13.3 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=3ee1c6c6" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/rtd_sphinx_search.min.css" />
+      <link rel="stylesheet" type="text/css" href="../../_static/custom.css?v=e2783f0e" />
+
+  
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=b8a3e558"></script>
+      <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../_static/copybutton.js?v=f281be69"></script>
+      <script src="../../_static/js/rtd_search_config.js"></script>
+      <script src="../../_static/js/rtd_sphinx_search.min.js"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="The results monitor" href="resultsMonitor.html" />
+    <link rel="prev" title="Advanced topics" href="introductionAdvanced.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            Exudyn1.13.3
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Exudyn User Manual</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../README.html">Exudyn</a></li>
+<li class="toctree-l1"><a class="reference internal" href="gettingStarted.html">Installation and getting started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="introduction.html">Overview on Exudyn</a></li>
+<li class="toctree-l1"><a class="reference internal" href="introductionBasics.html">Exudyn basics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorial.html">Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="GUI.html">Renderer, graphics and visualization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="performanceErrors.html">Performance, errors and solver failures</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="introductionAdvanced.html">Advanced topics</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="introductionAdvanced.html#graphics-pipeline">Graphics pipeline</a></li>
+<li class="toctree-l2"><a class="reference internal" href="introductionAdvanced.html#raytracing">Raytracing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="introductionAdvanced.html#graphicsdata">GraphicsData</a></li>
+<li class="toctree-l2"><a class="reference internal" href="introductionAdvanced.html#contact-problems">Contact problems</a></li>
+<li class="toctree-l2"><a class="reference internal" href="introductionAdvanced.html#interaction-with-julia">Interaction with Julia</a></li>
+<li class="toctree-l2"><a class="reference internal" href="introductionAdvanced.html#the-c-core">The C++ core</a></li>
+<li class="toctree-l2"><a class="reference internal" href="introductionAdvanced.html#interaction-with-other-codes">Interaction with other codes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="introductionAdvanced.html#ros">ROS</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="introductionAdvanced.html#tools-that-are-not-part-of-a-model">Tools that are not part of a model</a><ul class="current">
+<li class="toctree-l3 current"><a class="current reference internal" href="#">The command line: <code class="docutils literal notranslate"><span class="pre">python</span> <span class="pre">-m</span> <span class="pre">exudyn</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="resultsMonitor.html">The results monitor</a></li>
+<li class="toctree-l3"><a class="reference internal" href="userSettings.html">User settings that persist between runs</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="notation.html">Notation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="theory.html">Theory and formulations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="solver.html">Solvers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../generated/cInterface/cInterfaceIndex.html">Python-C++ command interface</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Reference Manual</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../generated/items/itemsIndex.html">Items reference manual</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../generated/pythonUtilities/utilitiesIndex.html">Python Utility Functions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../generated/structures/structuresIndex.html">Structures and Settings</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../generated/references.html">References</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Developer documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../dev/README.html">Exudyn developer documentation</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">How-to notes</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../howTo/condaEnvironments.html">Conda environments for Exudyn</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../howTo/sphinxDocs.html">Building the documentation</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Examples, models and issues</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../generated/examples/examplesIndex.html">Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../generated/testModels/testModelsIndex.html">TestModels</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../generated/abbreviations.html">List of Abbreviations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="revisions.html">Revisions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../CHANGELOG.html">Changelog</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../generated/trackerlog.html">Issue tracker</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">Exudyn1.13.3</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="introductionAdvanced.html">Advanced topics</a></li>
+      <li class="breadcrumb-item active">The command line: <code class="docutils literal notranslate"><span class="pre">python</span> <span class="pre">-m</span> <span class="pre">exudyn</span></code></li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../_sources/docs/manual/commandLine.md.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section class="tex2jax_ignore mathjax_ignore" id="the-command-line-python-m-exudyn">
+<span id="sec-commandline"></span><h1>The command line: <code class="docutils literal notranslate"><span class="pre">python</span> <span class="pre">-m</span> <span class="pre">exudyn</span></code><a class="headerlink" href="#the-command-line-python-m-exudyn" title="Link to this heading"></a></h1>
+<p>Some things are wanted from a shell rather than from a script: <em>what did I actually install?</em>,
+<em>show me that sensor file</em>, <em>is this installation working at all?</em>. The installed package answers
+them directly:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">python</span> <span class="o">-</span><span class="n">m</span> <span class="n">exudyn</span> <span class="o">&lt;</span><span class="n">command</span><span class="o">&gt;</span> <span class="p">[</span><span class="n">options</span><span class="p">]</span>
+</pre></div>
+</div>
+<p>There are five commands. Each one parses its own options, so <code class="docutils literal notranslate"><span class="pre">python</span> <span class="pre">-m</span> <span class="pre">exudyn</span> <span class="pre">&lt;command&gt;</span> <span class="pre">--help</span></code>
+is the authoritative list — this page describes what the commands are <em>for</em>, not every flag they
+take.</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>command</p></th>
+<th class="head"><p>what it does</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">monitor</span></code></p></td>
+<td><p>live view of a results file while it is being written, see <a class="reference internal" href="resultsMonitor.html#sec-resultsmonitor"><span class="std std-ref">The results monitor</span></a></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">plot</span></code></p></td>
+<td><p>one static plot of sensor or solution files, then exit</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">info</span></code></p></td>
+<td><p>version, location and environment of this installation</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">demo</span></code></p></td>
+<td><p>run a built-in demo model</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">dialogs</span></code></p></td>
+<td><p>browse the settings, or the key bindings, in a dialog</p></td>
+</tr>
+</tbody>
+</table>
+<p><code class="docutils literal notranslate"><span class="pre">python</span> <span class="pre">-m</span> <span class="pre">exudyn</span> <span class="pre">--version</span></code> prints the version string alone, which is convenient in scripts.</p>
+<section id="info-what-to-put-in-a-bug-report">
+<h2><code class="docutils literal notranslate"><span class="pre">info</span></code> — what to put in a bug report<a class="headerlink" href="#info-what-to-put-in-a-bug-report" title="Link to this heading"></a></h2>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">python</span> <span class="o">-</span><span class="n">m</span> <span class="n">exudyn</span> <span class="n">info</span>
+</pre></div>
+</div>
+<p>prints the Exudyn version and the build it comes from, the path of the installed package, which
+compiled module is loaded (<code class="docutils literal notranslate"><span class="pre">EXUDYN_MODULE</span></code>), the output directory, the Python version and platform,
+and which of numpy, scipy, matplotlib, networkx, NGsolve and pytest are installed.</p>
+<p>That block answers most of the questions a bug report otherwise needs a conversation about, so
+<strong>paste it into an issue</strong> rather than describing the installation in prose.</p>
+</section>
+<section id="plot-a-figure-without-writing-a-script">
+<h2><code class="docutils literal notranslate"><span class="pre">plot</span></code> — a figure without writing a script<a class="headerlink" href="#plot-a-figure-without-writing-a-script" title="Link to this heading"></a></h2>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">python</span> <span class="o">-</span><span class="n">m</span> <span class="n">exudyn</span> <span class="n">plot</span> <span class="n">solution</span><span class="o">/</span><span class="n">sensorPosition</span><span class="o">.</span><span class="n">txt</span>
+<span class="n">python</span> <span class="o">-</span><span class="n">m</span> <span class="n">exudyn</span> <span class="n">plot</span> <span class="n">s0</span><span class="o">.</span><span class="n">txt</span> <span class="n">s1</span><span class="o">.</span><span class="n">txt</span> <span class="o">--</span><span class="n">columns</span> <span class="mi">0</span><span class="p">,</span><span class="mi">1</span> <span class="o">--</span><span class="n">save</span> <span class="n">position</span><span class="o">.</span><span class="n">png</span>
+</pre></div>
+</div>
+<p>Without <code class="docutils literal notranslate"><span class="pre">--columns</span></code>, every column except time is drawn over time. <code class="docutils literal notranslate"><span class="pre">--save</span></code> writes the figure
+(<code class="docutils literal notranslate"><span class="pre">.png</span></code>, <code class="docutils literal notranslate"><span class="pre">.pdf</span></code>, <code class="docutils literal notranslate"><span class="pre">.svg</span></code>) instead of, or in addition to, showing it; a run that only saves needs no
+window and works over SSH.</p>
+</section>
+<section id="demo-does-this-installation-work">
+<h2><code class="docutils literal notranslate"><span class="pre">demo</span></code> — does this installation work?<a class="headerlink" href="#demo-does-this-installation-work" title="Link to this heading"></a></h2>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">python</span> <span class="o">-</span><span class="n">m</span> <span class="n">exudyn</span> <span class="n">demo</span>          <span class="c1">#a simple model with the renderer</span>
+<span class="n">python</span> <span class="o">-</span><span class="n">m</span> <span class="n">exudyn</span> <span class="n">demo</span> <span class="mi">2</span>
+</pre></div>
+</div>
+<p>The two demos of <code class="docutils literal notranslate"><span class="pre">exudyn.demos</span></code>. If these run, the compiled module, numpy, matplotlib and the
+renderer are in order — which is the first thing to establish when something else does not work.</p>
+</section>
+<section id="dialogs-look-a-setting-up-before-writing-the-model">
+<h2><code class="docutils literal notranslate"><span class="pre">dialogs</span></code> — look a setting up before writing the model<a class="headerlink" href="#dialogs-look-a-setting-up-before-writing-the-model" title="Link to this heading"></a></h2>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">python</span> <span class="o">-</span><span class="n">m</span> <span class="n">exudyn</span> <span class="n">dialogs</span> <span class="n">vis</span>      <span class="c1">#the visualization settings</span>
+<span class="n">python</span> <span class="o">-</span><span class="n">m</span> <span class="n">exudyn</span> <span class="n">dialogs</span> <span class="n">sim</span>      <span class="c1">#the simulation settings</span>
+<span class="n">python</span> <span class="o">-</span><span class="n">m</span> <span class="n">exudyn</span> <span class="n">dialogs</span> <span class="n">help</span>     <span class="c1">#the keyboard and mouse commands of the renderer</span>
+</pre></div>
+</div>
+<p>The settings dialog used to be reachable only by pressing <strong>V</strong> in the render window, which is no
+help to somebody who has not written the model yet. It is the same dialog: the tree of every
+setting with its type and its description, <strong>CTRL-F</strong> to find one by name, and <em>copy line</em> to take
+the Python statement that sets it. <code class="docutils literal notranslate"><span class="pre">vis</span></code> and <code class="docutils literal notranslate"><span class="pre">sim</span></code> are the short forms of <code class="docutils literal notranslate"><span class="pre">visualizationSettings</span></code>
+and <code class="docutils literal notranslate"><span class="pre">simulationSettings</span></code>.</p>
+<p>The structures it shows are fresh ones, so what you see are the defaults a model starts from —
+nothing here is attached to a renderer, and closing the dialog changes no file. What the browsing
+is <em>for</em> is printed when you close it: the settings you changed, as the lines that set them, ready
+to paste into a script.</p>
+</section>
+<section id="monitor-the-results-monitor">
+<h2><code class="docutils literal notranslate"><span class="pre">monitor</span></code> — the results monitor<a class="headerlink" href="#monitor-the-results-monitor" title="Link to this heading"></a></h2>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">python</span> <span class="o">-</span><span class="n">m</span> <span class="n">exudyn</span> <span class="n">monitor</span> <span class="o">--</span><span class="n">last</span>
+</pre></div>
+</div>
+<p>attaches to the most recently written results file. The monitor has a page of its own:
+<a class="reference internal" href="resultsMonitor.html#sec-resultsmonitor"><span class="std std-ref">The results monitor</span></a>.</p>
+</section>
+<section id="why-this-is-not-simply-exudyn">
+<h2>Why this is not simply <code class="docutils literal notranslate"><span class="pre">exudyn</span> <span class="pre">...</span></code><a class="headerlink" href="#why-this-is-not-simply-exudyn" title="Link to this heading"></a></h2>
+<p>A console script would put the name <code class="docutils literal notranslate"><span class="pre">exudyn</span></code> on the <code class="docutils literal notranslate"><span class="pre">PATH</span></code> of every environment the package is
+installed into. That is a promise about a name, and the set of commands is young, so the
+installation deliberately makes no such promise yet: <code class="docutils literal notranslate"><span class="pre">python</span> <span class="pre">-m</span> <span class="pre">exudyn</span></code> costs a few characters more
+and can change without breaking anybody’s shell.</p>
+<p>The commands live in a plain dictionary inside <code class="docutils literal notranslate"><span class="pre">exudyn/__main__.py</span></code>, and each one imports what it
+needs only when it is called — an unused command costs nothing at startup, and the table is the
+place where a plugin can add its own command later.</p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="introductionAdvanced.html" class="btn btn-neutral float-left" title="Advanced topics" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="resultsMonitor.html" class="btn btn-neutral float-right" title="The results monitor" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

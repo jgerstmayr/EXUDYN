@@ -1,0 +1,28 @@
+for installation use:
+  pip install exudyn
+
+pre-compiled binaries are available via pypi.org
+
+for installation of pre-release versions, which is in line with 
+the latest code on GitHub, use:
+  pip install exudyn --pre
+
+for building wheel, go to 'main' folder and inside a Python shell, type:
+  python setup.py bdist_wheel
+
+For detailed, platform-specific installation instructions, see:
+Documentation on ReadTheDocs:
+https://exudyn.readthedocs.io/en/latest/docs/RST/Exudyn.html
+
+PDF documentation:
+https://github.com/jgerstmayr/EXUDYN/tree/master/docs/theDoc/theDoc.pdf
+
+For Examples see: 
+https://exudyn.readthedocs.io/en/latest/docs/RST/ExamplesIndex.html
+https://exudyn.readthedocs.io/en/latest/docs/RST/TestModelsIndex.html
+
+or 
+
+https://github.com/jgerstmayr/EXUDYN/tree/master/main/pythonDev/Examples
+https://github.com/jgerstmayr/EXUDYN/tree/master/main/pythonDev/TestModels
+

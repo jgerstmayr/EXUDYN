@@ -1,0 +1,308 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Exudyn basics &mdash; Exudyn1.13.3 1.13.3 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=3ee1c6c6" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/rtd_sphinx_search.min.css" />
+      <link rel="stylesheet" type="text/css" href="../../_static/custom.css?v=e2783f0e" />
+
+  
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=b8a3e558"></script>
+      <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../_static/copybutton.js?v=f281be69"></script>
+      <script src="../../_static/js/rtd_search_config.js"></script>
+      <script src="../../_static/js/rtd_sphinx_search.min.js"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Tutorial" href="tutorial.html" />
+    <link rel="prev" title="Overview on Exudyn" href="introduction.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            Exudyn1.13.3
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Exudyn User Manual</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../README.html">Exudyn</a></li>
+<li class="toctree-l1"><a class="reference internal" href="gettingStarted.html">Installation and getting started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="introduction.html">Overview on Exudyn</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Exudyn basics</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#interaction-with-the-exudyn-module">Interaction with the Exudyn module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#simulation-settings">Simulation settings</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#generating-output-and-results">Generating output and results</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#continuing-a-simulation-from-its-restart-file">Continuing a simulation from its restart file</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#seeing-the-model">Seeing the model</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#examples-test-models-and-test-suite">Examples, test models and test suite</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="tutorial.html">Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="GUI.html">Renderer, graphics and visualization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="performanceErrors.html">Performance, errors and solver failures</a></li>
+<li class="toctree-l1"><a class="reference internal" href="introductionAdvanced.html">Advanced topics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="notation.html">Notation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="theory.html">Theory and formulations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="solver.html">Solvers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../generated/cInterface/cInterfaceIndex.html">Python-C++ command interface</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Reference Manual</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../generated/items/itemsIndex.html">Items reference manual</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../generated/pythonUtilities/utilitiesIndex.html">Python Utility Functions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../generated/structures/structuresIndex.html">Structures and Settings</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../generated/references.html">References</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Developer documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../dev/README.html">Exudyn developer documentation</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">How-to notes</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../howTo/condaEnvironments.html">Conda environments for Exudyn</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../howTo/sphinxDocs.html">Building the documentation</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Examples, models and issues</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../generated/examples/examplesIndex.html">Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../generated/testModels/testModelsIndex.html">TestModels</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../generated/abbreviations.html">List of Abbreviations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="revisions.html">Revisions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../CHANGELOG.html">Changelog</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../generated/trackerlog.html">Issue tracker</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">Exudyn1.13.3</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Exudyn basics</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../_sources/docs/manual/introductionBasics.md.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section class="tex2jax_ignore mathjax_ignore" id="exudyn-basics">
+<span id="sec-overview-basics"></span><h1>Exudyn basics<a class="headerlink" href="#exudyn-basics" title="Link to this heading"></a></h1>
+<p>What every model needs: how the module is used, how the solver is told what to do, where the results
+go, and how to look at the model while it runs.</p>
+<ul class="simple">
+<li><p>Interaction with the Exudyn module</p></li>
+<li><p>Simulation settings</p></li>
+<li><p>Generating output and results</p></li>
+<li><p>Seeing the model</p></li>
+<li><p>Examples, test models and test suite</p></li>
+</ul>
+<p>Everything about the renderer and about drawing is in <a class="reference internal" href="GUI.html#sec-graphicsvisualization"><span class="std std-ref">Renderer, graphics and visualization</span></a>; what to do
+when a solver fails or a model is slow is in <a class="reference internal" href="performanceErrors.html#sec-performance-errors"><span class="std std-ref">Performance, errors and solver failures</span></a>.</p>
+<section id="interaction-with-the-exudyn-module">
+<span id="sec-overview-basics-interactionmodule"></span><h2>Interaction with the Exudyn module<a class="headerlink" href="#interaction-with-the-exudyn-module" title="Link to this heading"></a></h2>
+<p>It is important that the Exudyn module is basically a state machine, where you create items on the C++ side using the Python interface. This helps you to easily set up models using many other Python modules (numpy, sympy, matplotlib, …) while the computation will be performed in the end on the C++ side in a very efficient manner.</p>
+<p><strong>Where do objects live?</strong>
+Whenever a system container is created with <code class="docutils literal notranslate"><span class="pre">SC</span> <span class="pre">=</span> <span class="pre">exu.SystemContainer()</span></code>, the structure <code class="docutils literal notranslate"><span class="pre">SC</span></code> becomes a variable in the Python interpreter, but it is managed inside the C++ code and it can be modified via the Python interface.
+Usually, the system container will hold at least one system, usually called <code class="docutils literal notranslate"><span class="pre">mbs</span></code>.
+Commands such as <code class="docutils literal notranslate"><span class="pre">mbs.AddNode(...)</span></code> add objects to the system <code class="docutils literal notranslate"><span class="pre">mbs</span></code>.
+The system will be prepared for simulation by <code class="docutils literal notranslate"><span class="pre">mbs.Assemble()</span></code> and can be solved (e.g., using <code class="docutils literal notranslate"><span class="pre">mbs.SolveDynamic(...)</span></code>) and evaluated hereafter using the results files.
+Using <code class="docutils literal notranslate"><span class="pre">mbs.Reset()</span></code> will clear the system and allows to set up a new system. Items can be modified (<code class="docutils literal notranslate"><span class="pre">ModifyObject(...)</span></code>) after first initialization, even during simulation.</p>
+</section>
+<section id="simulation-settings">
+<span id="sec-overview-basics-simulationsettings"></span><h2>Simulation settings<a class="headerlink" href="#simulation-settings" title="Link to this heading"></a></h2>
+<p>The simulation settings consists of a couple of substructures, e.g., for <code class="docutils literal notranslate"><span class="pre">solution</span></code>, <code class="docutils literal notranslate"><span class="pre">staticSolver</span></code>, <code class="docutils literal notranslate"><span class="pre">timeIntegration</span></code> as well as a couple of general options – for details see <a class="reference internal" href="../generated/structures/SimulationSettings.html#sec-solutionsettings"><span class="std std-ref">SolutionSettings</span></a> and <a class="reference internal" href="../generated/structures/SimulationSettings.html#sec-simulationsettingsmain"><span class="std std-ref">Simulation settings</span></a>.</p>
+<p>Simulation settings are needed for every solver. They contain solver-specific parameters (e.g., the way how load steps are applied), information on how solution files are written, and very specific control parameters, e.g., for the Newton solver.</p>
+<p>There are many of them, so the fastest way to answer <em>what is this setting called</em> is to look at the
+whole tree with its types and descriptions, without a model and without a renderer:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">python</span> <span class="o">-</span><span class="n">m</span> <span class="n">exudyn</span> <span class="n">dialogs</span> <span class="n">sim</span>
+</pre></div>
+</div>
+<p><strong>CTRL-F</strong> finds a setting by name and <em>copy line</em> gives the Python statement that sets it, ready to
+paste into the script; see <a class="reference internal" href="commandLine.html#sec-commandline"><span class="std std-ref">The command line: python -m exudyn</span></a>.</p>
+<p>The simulation settings structure is created, and its values are modified, e.g.:</p>
+<!-- GENERATED by tools/generators/notebookEmitter.py from python/Notebooks/snippets/solving.ipynb - do not edit -->
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">simulationSettings</span> <span class="o">=</span> <span class="n">exu</span><span class="o">.</span><span class="nc">SimulationSettings</span><span class="p">()</span>
+
+<span class="n">tEnd</span> <span class="o">=</span> <span class="mi">10</span> <span class="c1">#10 seconds of simulation time:</span>
+<span class="n">h</span> <span class="o">=</span> <span class="mf">0.01</span>  <span class="c1">#step size (gives 1000 steps)</span>
+<span class="n">simulationSettings</span><span class="o">.</span><span class="n">timeIntegration</span><span class="o">.</span><span class="n">endTime</span> <span class="o">=</span> <span class="n">tEnd</span>
+<span class="c1">#steps for time integration must be integer:</span>
+<span class="n">simulationSettings</span><span class="o">.</span><span class="n">timeIntegration</span><span class="o">.</span><span class="n">numberOfSteps</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">tEnd</span><span class="o">/</span><span class="n">h</span><span class="p">)</span>
+<span class="c1">#assigns a new tolerance for Newton's method:</span>
+<span class="n">simulationSettings</span><span class="o">.</span><span class="n">timeIntegration</span><span class="o">.</span><span class="n">newton</span><span class="o">.</span><span class="n">relativeTolerance</span> <span class="o">=</span> <span class="mf">1e-9</span>
+<span class="c1">#write some output while the solver is active (SLOWER):</span>
+<span class="n">simulationSettings</span><span class="o">.</span><span class="n">timeIntegration</span><span class="o">.</span><span class="n">verboseMode</span> <span class="o">=</span> <span class="mi">2</span>
+<span class="c1">#write solution every 0.1 seconds:</span>
+<span class="n">simulationSettings</span><span class="o">.</span><span class="n">solution</span><span class="o">.</span><span class="n">file</span><span class="o">.</span><span class="n">writePeriod</span> <span class="o">=</span> <span class="mf">0.1</span>
+<span class="c1">#use sparse matrix storage and solver (package Eigen):</span>
+<span class="n">simulationSettings</span><span class="o">.</span><span class="n">linearSolver</span><span class="o">.</span><span class="n">solverType</span> <span class="o">=</span> <span class="n">exu</span><span class="o">.</span><span class="nc">LinearSolverType</span><span class="o">.</span><span class="n">EigenSparse</span>
+</pre></div>
+</div>
+<div class="notebookorigin docutils container">
+<p><code class="docutils literal notranslate"><span class="pre">python/Notebooks/snippets/solving.ipynb</span></code></p>
+</div>
+</section>
+<section id="generating-output-and-results">
+<h2>Generating output and results<a class="headerlink" href="#generating-output-and-results" title="Link to this heading"></a></h2>
+<p>The solvers provide a number of options in <code class="docutils literal notranslate"><span class="pre">solution</span></code> to generate a solution file. As a default, exporting the solution of all system coordinates (on position, velocity, … level) to the solution file is activated with a writing period of 0.01 seconds.</p>
+<p>Typical output settings are:</p>
+<!-- GENERATED by tools/generators/notebookEmitter.py from python/Notebooks/snippets/solving.ipynb - do not edit -->
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1">#create a new simulationSettings structure:</span>
+<span class="n">simulationSettings</span> <span class="o">=</span> <span class="n">exu</span><span class="o">.</span><span class="nc">SimulationSettings</span><span class="p">()</span>
+
+<span class="c1">#activate writing to solution file:</span>
+<span class="n">simulationSettings</span><span class="o">.</span><span class="n">solution</span><span class="o">.</span><span class="n">file</span><span class="o">.</span><span class="n">write</span> <span class="o">=</span> <span class="kc">True</span>
+<span class="c1">#write results every 1ms:</span>
+<span class="n">simulationSettings</span><span class="o">.</span><span class="n">solution</span><span class="o">.</span><span class="n">file</span><span class="o">.</span><span class="n">writePeriod</span> <span class="o">=</span> <span class="mf">0.001</span>
+
+<span class="c1">#assign new filename to solution file</span>
+<span class="n">simulationSettings</span><span class="o">.</span><span class="n">solution</span><span class="o">.</span><span class="n">file</span><span class="o">.</span><span class="n">name</span><span class="o">=</span> <span class="s2">"myOutput.txt"</span>
+
+<span class="c1">#do not export certain coordinates:</span>
+<span class="n">simulationSettings</span><span class="o">.</span><span class="n">solution</span><span class="o">.</span><span class="n">file</span><span class="o">.</span><span class="n">export</span><span class="o">.</span><span class="n">dataCoordinates</span> <span class="o">=</span> <span class="kc">False</span>
+</pre></div>
+</div>
+<div class="notebookorigin docutils container">
+<p><code class="docutils literal notranslate"><span class="pre">python/Notebooks/snippets/solving.ipynb</span></code></p>
+</div>
+<p>Furthermore, you can use sensors to record particular information, e.g., the displacement of a body’s local
+position, forces or joint data. For viewing sensor results, use the <code class="docutils literal notranslate"><span class="pre">PlotSensor</span></code> function of the
+<code class="docutils literal notranslate"><span class="pre">exudyn.plot</span></code> tool, see the rigid body and joints tutorial.
+Finally, the render window allows to show traces (trajectories) of position sensors, sensor vector quantities (e.g., velocity vectors),
+or triads given by rotation matrices. For further information, see the <code class="docutils literal notranslate"><span class="pre">sensors.traces</span></code> structure of <code class="docutils literal notranslate"><span class="pre">VisualizationSettings</span></code>, <a class="reference internal" href="../generated/structures/VisualizationSettings.html#sec-vsettingstraces"><span class="std std-ref">VSettingsTraces</span></a>.</p>
+<section id="continuing-a-simulation-from-its-restart-file">
+<h3>Continuing a simulation from its restart file<a class="headerlink" href="#continuing-a-simulation-from-its-restart-file" title="Link to this heading"></a></h3>
+<p>A long dynamic simulation can be stopped and continued, e.g. a job on a cluster with a time limit, or a run
+stopped by <code class="docutils literal notranslate"><span class="pre">exudyn.special.solver.timeout</span></code>. With <code class="docutils literal notranslate"><span class="pre">solution.restart.write</span> <span class="pre">=</span> <span class="pre">True</span></code> the solver writes the restart file
+<code class="docutils literal notranslate"><span class="pre">solution.restart.name</span></code> every <code class="docutils literal notranslate"><span class="pre">solution.restart.writePeriod</span></code> and at the end; with
+<code class="docutils literal notranslate"><span class="pre">solution.restart.continueIfAvailable</span> <span class="pre">=</span> <span class="pre">True</span></code> the same script, started again, continues from that file if it exists:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">simulationSettings</span><span class="o">.</span><span class="n">solution</span><span class="o">.</span><span class="n">restart</span><span class="o">.</span><span class="n">write</span> <span class="o">=</span> <span class="kc">True</span>
+<span class="n">simulationSettings</span><span class="o">.</span><span class="n">solution</span><span class="o">.</span><span class="n">restart</span><span class="o">.</span><span class="n">writePeriod</span> <span class="o">=</span> <span class="mi">10</span>      <span class="c1">#seconds of simulated time</span>
+<span class="n">simulationSettings</span><span class="o">.</span><span class="n">solution</span><span class="o">.</span><span class="n">restart</span><span class="o">.</span><span class="n">continueIfAvailable</span> <span class="o">=</span> <span class="kc">True</span>
+<span class="n">mbs</span><span class="o">.</span><span class="nf">SolveDynamic</span><span class="p">(</span><span class="n">simulationSettings</span><span class="p">)</span>    <span class="c1">#continues where the previous run left its restart file</span>
+</pre></div>
+</div>
+<p>The file holds the state - time, coordinates, velocities, accelerations, the algorithmic accelerations of the
+generalized-alpha method - and what the solver carries from step to step, so that the continued run computes what an
+uninterrupted one would: exactly, for the explicit solvers and for the implicit ones with
+<code class="docutils literal notranslate"><span class="pre">timeIntegration.newton.useModifiedNewton</span> <span class="pre">=</span> <span class="pre">False</span></code>; with the modified Newton method the Jacobian is computed again at
+the restart, and the results differ within the Newton tolerance. The solution and sensor files are shortened to what
+was written up to the restart state and continued; sensors with <code class="docutils literal notranslate"><span class="pre">storeInternal</span></code> hold only the values after the
+restart. The model is the script’s: it is built again, with its user functions and their Python state, and a restart
+file that does not fit it - other numbers of coordinates or items, another solver - raises an error. The static solver
+writes no restart file.</p>
+</section>
+</section>
+<section id="seeing-the-model">
+<span id="sec-overview-basics-seeingthemodel"></span><h2>Seeing the model<a class="headerlink" href="#seeing-the-model" title="Link to this heading"></a></h2>
+<p>A model is drawn by the renderer, which is started and stopped around the solver:</p>
+<!-- GENERATED by tools/generators/notebookEmitter.py from python/Notebooks/snippets/solving.ipynb - do not edit -->
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">SC</span><span class="o">.</span><span class="n">renderer</span><span class="o">.</span><span class="nf">Start</span><span class="p">()</span>               <span class="c1">#open the window</span>
+<span class="n">mbs</span><span class="o">.</span><span class="nf">SolveDynamic</span><span class="p">(</span><span class="n">simulationSettings</span><span class="p">)</span>
+<span class="n">SC</span><span class="o">.</span><span class="n">renderer</span><span class="o">.</span><span class="nf">DoIdleTasks</span><span class="p">()</span>         <span class="c1">#wait for a key press, so the window stays</span>
+<span class="n">SC</span><span class="o">.</span><span class="n">renderer</span><span class="o">.</span><span class="nf">Stop</span><span class="p">()</span>                <span class="c1">#close it</span>
+</pre></div>
+</div>
+<div class="notebookorigin docutils container">
+<p><code class="docutils literal notranslate"><span class="pre">python/Notebooks/snippets/solving.ipynb</span></code></p>
+</div>
+<p>The window, what it shows, how to save an image or an animation from it and how to
+draw geometry of your own are in <a class="reference internal" href="GUI.html#sec-graphicsvisualization"><span class="std std-ref">Renderer, graphics and visualization</span></a>.</p>
+</section>
+<section id="examples-test-models-and-test-suite">
+<span id="sec-overview-basics-examplestestsuite"></span><h2>Examples, test models and test suite<a class="headerlink" href="#examples-test-models-and-test-suite" title="Link to this heading"></a></h2>
+<p>The main collection of examples and models is available under</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">python/Examples</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">python/TestModels</span></code></p></li>
+</ul>
+<p>You can use these examples to build up your own realistic models of multibody systems.
+Very often, these models show the way which already works. Alternative ways may exist, but
+sometimes there are limitations in the underlying C++ code, such that they won’t work as you expect.</p>
+<p>We would like to note that, even that some examples and test models contain comparison to
+papers of the literature or analytical solutions, there are many models which may not contain real
+mechanical values and these models may not be converged in space or time
+(in order to keep running our test suite in less than a minute).</p>
+<p>Finally, note that the <code class="docutils literal notranslate"><span class="pre">python/TestModels</span></code> are often only intended to preserve functionality
+in the Python and C++ code (e.g., if global methods are changed), but they should not be misinterpreted as validation of the
+implemented methods. The <code class="docutils literal notranslate"><span class="pre">TestModels</span></code> are used in the Exudyn <strong>TestSuite</strong> <code class="docutils literal notranslate"><span class="pre">testing/runTestSuite.py</span></code>
+which is run after a full build of Python versions. Output for very version is written
+to <code class="docutils literal notranslate"><span class="pre">python/logs/testmodels</span></code> containing the Exudyn version and Python version. At the end of these
+files, a summary is included to show if all models completed successfully (which means that a certain error level is achieved, which is rather small and different for the models).
+There are also performance tests (e.g., if a certain implementation leads to a significant drop of performance).
+However, the output of the performance tests is not stored on github.</p>
+<p>We are trying hard to achieve error-free algorithms of physically correct models, but there may always be some errors in the code.</p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="introduction.html" class="btn btn-neutral float-left" title="Overview on Exudyn" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="tutorial.html" class="btn btn-neutral float-right" title="Tutorial" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

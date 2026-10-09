@@ -1,0 +1,615 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>definitions/ — the item and structure definitions as Python &mdash; Exudyn1.13.3 1.13.3 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=3ee1c6c6" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/rtd_sphinx_search.min.css" />
+      <link rel="stylesheet" type="text/css" href="../_static/custom.css?v=e2783f0e" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=b8a3e558"></script>
+      <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../_static/copybutton.js?v=f281be69"></script>
+      <script src="../_static/js/rtd_search_config.js"></script>
+      <script src="../_static/js/rtd_sphinx_search.min.js"></script>
+      <script>window.MathJax = {"loader": {"load": ["[tex]/mathtools"]}, "tex": {"packages": {"[+]": ["mathtools"]}, "macros": {"ANCFdk": "{\\LU{0}{\\dv_k}}", "ANCFdkO": "{\\LU{0}{\\dv_{0,k}}}", "ANCFdkOtp": "{\\LU{0}{\\dv_{0,k}\\tp}}", "ANCFdkt": "{\\LU{0}{\\dot\\dv_k}}", "Am": "{\\mathbf{A}}", "Dm": "{\\mathbf{D}}", "Em": "{\\mathbf{E}}", "Gm": "{\\mathbf{G}}", "Im": "{\\mathbf{I}}", "ImThree": "{\\mathbf{I}_{3 \\times 3}}", "Jm": "{\\mathbf{J}}", "Km": "{\\mathbf{K}}", "Mm": "{\\mathbf{M}}", "Pm": "{\\mathbf{P}}", "Rm": "{\\mathbf{R}}", "Sm": "{\\mathbf{S}}", "Tm": "{\\mathbf{T}}", "av": "{\\mathbf{a}}", "bv": "{\\mathbf{b}}", "cv": "{\\mathbf{c}}", "diffANCF": ["{\\frac{\\partial #1}{\\partial \\qv_{ANCF}}}", 1], "diffANCFdk": "{\\diffANCFmI{\\ANCFdk}}", "diffANCFmI": ["{\\frac{\\partial #1}{\\partial \\qv_{ANCF,m1}}}", 1], "diffANCFmIt": ["{\\frac{\\partial #1}{\\partial \\dot \\qv_{ANCF,m1}}}", 1], "diffANCFt": ["{\\frac{\\partial #1}{\\partial \\dot \\qv_{ANCF}}}", 1], "diffmI": ["{\\frac{\\partial #1}{\\partial \\qv_{m1}}}", 1], "diffmIt": ["{\\frac{\\partial #1}{\\partial \\dot \\qv_{m1}}}", 1], "diffmOI": ["{\\frac{\\partial #1}{\\partial \\qv_{m0,m1}}}", 1], "diffmOIt": ["{\\frac{\\partial #1}{\\partial \\dot \\qv_{m0,m1}}}", 1], "diffmOt": ["{\\frac{\\partial #1}{\\partial \\dot \\qv_{m0}}}", 1], "dv": "{\\mathbf{d}}", "ev": "{\\mathbf{e}}", "fv": "{\\mathbf{f}}", "gv": "{\\mathbf{g}}", "hv": "{\\mathbf{h}}", "nv": "{\\mathbf{n}}", "pv": "{\\mathbf{p}}", "qv": "{\\mathbf{q}}", "rv": "{\\mathbf{r}}", "sv": "{\\mathbf{s}}", "tv": "{\\mathbf{t}}", "uv": "{\\mathbf{u}}", "vv": "{\\mathbf{v}}", "xv": "{\\mathbf{x}}", "yv": "{\\mathbf{y}}", "zv": "{\\mathbf{z}}", "vspace": ["{}", 1], "ra": "{\\rightarrow}", "Rcal": "{\\mathbb{R}}", "Ccal": "{\\mathbb{C}}", "Ncal": "{\\mathbb{N}}", "Rot": "{\\mathbf{A}}", "dd": "{\\mathrm{d}}", "ps": "{p_\\mathrm{s}}", "co": "{\\mathrm{c}}", "si": "{\\mathrm{s}}", "tp": "{^\\mathrm{T}}", "diag": "{\\mathrm{diag}}", "vec": "{\\mathrm{vec}}", "Null": "{\\mathbf{0}}", "varepsilonDot": "{\\boldsymbol{\\varepsilon}}", "talpha": "{\\boldsymbol{\\alpha}}", "tbeta": "{\\boldsymbol{\\beta}}", "tgamma": "{\\boldsymbol{\\gamma}}", "tchi": "{\\boldsymbol{\\chi}}", "tdelta": "{\\boldsymbol{\\delta}}", "teps": "{\\boldsymbol{\\varepsilon}}", "tepsDot": "{\\boldsymbol{\\dot \\varepsilon}}", "teta": "{\\boldsymbol{\\eta}}", "tkappa": "{\\boldsymbol{\\kappa}}", "tkappaDot": "{\\boldsymbol{\\dot \\kappa}}", "tphi": "{\\boldsymbol{\\phi}}", "boldVarPhi": "{\\boldsymbol{\\varphi}}", "tPhi": "{\\boldsymbol{\\Phi}}", "ttheta": "{\\boldsymbol{\\theta}}", "tTheta": "{\\boldsymbol{\\Theta}}", "tlambda": "{\\boldsymbol{\\lambda}}", "tnu": "{\\boldsymbol{\\nu}}", "tmu": "{\\boldsymbol{\\mu}}", "tpsi": "{\\boldsymbol{\\psi}}", "tPsi": "{\\boldsymbol{\\Psi}}", "ttau": "{\\boldsymbol{\\tau}}", "tsigma": "{\\boldsymbol{\\sigma}}", "txi": "{\\boldsymbol{\\xi}}", "tzeta": "{\\boldsymbol{\\zeta}}", "tomega": "{\\boldsymbol{\\omega}}", "tOmega": "{\\boldsymbol{\\Omega}}", "vareps": "{\\varepsilon}", "myoverline": ["\\overline{#1}", 1], "pluseq": "\\mathrel{+}=", "LU": ["{\\prescript{#1}{}{#2}\\,}", 2], "LUX": ["{\\prescript{#1}{}{#2}#3\\,}", 3], "LUR": ["{\\prescript{#1}{}{#2}_{#3}\\,}", 3], "LURU": ["{\\prescript{#1}{}{#2}_{#3}^{#4}\\,}", 4], "LLdot": ["{\\prescript{}{#1}{\\dot{#2}}_{#3}\\,}", 3], "vr": ["{\\left[ \\begin{array}{c} { #1}\\vspace{0.04cm} \\\\ { #2}\\vspace{0.04cm} \\\\ { #3} \\end{array} \\right]}", 3], "mr": ["{\\left[ \\begin{array}{ccc} #1 & #2 & #3 \\vspace{0.04cm}\\\\ #4 & #5 & #6 \\vspace{0.04cm}\\\\ #7 & #8 & #9  \\end{array} \\right]}", 9], "vp": ["{\\left[ \\begin{array}{c} { #1} \\vspace{0.04cm}\\\\ { #2} \\end{array} \\right]}", 2], "mp": ["{\\left[ \\begin{array}{cc} #1 & #2 \\vspace{0.04cm}\\\\ #3 & #4 \\end{array} \\right]}", 4], "mfour": ["{\\left[ \\begin{array}{cccc} { #1} \\\\ { #2} \\\\ { #3} \\\\ { #4} \\end{array} \\right]}", 4], "vfour": ["{\\left[ \\begin{array}{c} { #1} \\\\ { #2} \\\\ { #3} \\\\ { #4} \\end{array} \\right]}", 4], "vrRow": ["{[#1,\\, #2,\\, #3]}", 3], "vsix": ["{\\left[ \\begin{array}{c} { #1} \\\\ { #2} \\\\ { #3} \\\\ { #4} \\\\ { #5} \\\\ { #6} \\end{array} \\right]}", 6], "vsixb": ["{\\begin{array}{c} { #1} \\\\ { #2} \\\\ { #3} \\\\ { #4} \\\\ { #5} \\\\ { #6} \\end{array} }", 6], "vsixs": ["{ \\begin{array}{c} { #1} \\\\ { #2} \\\\ { #3} \\\\ { #4} \\\\ { #5} \\\\ { #6} \\end{array} }", 6], "SO": "{q}", "FO": "{y}", "AE": "{\\lambda}", "SYS": "{s}", "SON": "{$2^\\mathrm{nd}$ order differential equations}", "FON": "{$1^\\mathrm{st}$ order differential equations}", "AEN": "{algebraic equations}", "Bm": "{\\mathbf{B}}", "Cm": "{\\mathbf{C}}", "Fm": "{\\mathbf{F}}", "SYSN": "{system equations}", "cIni": "{_\\mathrm{ini}}", "cRef": "{_\\mathrm{ref}}", "cCur": "{_\\mathrm{cur}}", "cVis": "{_\\mathrm{vis}}", "cSOS": "{_\\mathrm{start\\;of\\;step}}", "cConfig": "{_\\mathrm{config}}", "pLoc": "{\\mathbf{b}}", "pLocB": "{\\,^{b}{\\mathbf{v}}}", "pRef": "{\\mathbf{r}}", "pRefG": "{\\,^{0}{\\mathbf{r}}}", "indf": "{_\\mathrm{f}}", "indt": "{_\\mathrm{t}}", "indr": "{_\\mathrm{r}}", "indtt": "{_\\mathrm{tt}}", "indrr": "{_\\mathrm{rr}}", "indff": "{_\\mathrm{ff}}", "indtf": "{_\\mathrm{tf}}", "indrf": "{_\\mathrm{rf}}", "indtr": "{_\\mathrm{tr}}", "omegaBDtilde": "{\\LU{b}{\\tilde \\tomega_\\mathrm{bd}}}", "indrigid": "{_\\mathrm{rigid}}", "indred": "{_\\mathrm{red}}", "induser": "{_\\mathrm{user}}", "indu": "{_\\mathrm{u}}", "termA": ["{\\color{blue}{#1}}", 1], "termB": ["{\\color{red}{#1}}", 1], "termC": ["{\\color{green}{#1}}", 1], "acc": "{\\ddot{\\mathbf{q}}}", "GA": "{G\\alpha}", "Hm": "{\\mathbf{H}}", "ImTwo": "{\\mathbf{I}_{2 \\times 2}}", "Lm": "{\\mathbf{L}}", "Qm": "{\\mathbf{Q}}", "Vm": "{\\mathbf{V}}", "Wm": "{\\mathbf{W}}", "Xm": "{\\mathbf{X}}", "Ym": "{\\mathbf{Y}}", "aalg": "{\\mathbf{a}}", "iv": "{\\mathbf{i}}", "jv": "{\\mathbf{j}}", "kv": "{\\mathbf{k}}", "lv": "{\\mathbf{l}}", "mv": "{\\mathbf{m}}", "ov": "{\\mathbf{o}}", "vel": "{\\mathbf{v}}", "wv": "{\\mathbf{w}}"}}, "options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+      <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-mml-chtml.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="tools/generators/ — the new generator code" href="../tools/generators/README.html" />
+    <link rel="prev" title="Deprecations" href="../docs/generated/deprecations.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            Exudyn1.13.3
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Exudyn User Manual</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../README.html">Exudyn</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../docs/manual/gettingStarted.html">Installation and getting started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../docs/manual/introduction.html">Overview on Exudyn</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../docs/manual/introductionBasics.html">Exudyn basics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../docs/manual/tutorial.html">Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../docs/manual/GUI.html">Renderer, graphics and visualization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../docs/manual/performanceErrors.html">Performance, errors and solver failures</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../docs/manual/introductionAdvanced.html">Advanced topics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../docs/manual/notation.html">Notation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../docs/manual/theory.html">Theory and formulations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../docs/manual/solver.html">Solvers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../docs/generated/cInterface/cInterfaceIndex.html">Python-C++ command interface</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Reference Manual</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../docs/generated/items/itemsIndex.html">Items reference manual</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../docs/generated/pythonUtilities/utilitiesIndex.html">Python Utility Functions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../docs/generated/structures/structuresIndex.html">Structures and Settings</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../docs/generated/references.html">References</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Developer documentation</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="../docs/dev/README.html">Exudyn developer documentation</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../docs/dev/GETTING_STARTED.html">Getting started as a developer</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../docs/dev/BUILD.html">Building Exudyn from source</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../docs/dev/GIT.html">Working with git in this repository</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../docs/dev/ARCHITECTURE.html">Exudyn C++ architecture</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../docs/dev/CODING_STYLE.html">Exudyn coding style and conventions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../docs/dev/WORKFLOW.html">Development workflow</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../docs/dev/NEW_ITEM.html">How to set up a new item</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../docs/dev/GUI_MANUAL_CHECK.html">Manual GUI check before a release</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../docs/generated/deprecations.html">Deprecations</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">definitions/ — the item and structure definitions as Python</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#files">Files</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#members">Members</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#the-function-library-itemfunctions-py">The function library (<code class="docutils literal notranslate"><span class="pre">itemFunctions.py</span></code>)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#writing-a-description">Writing a description</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#the-page-of-an-item">The page of an item</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../tools/generators/README.html">tools/generators/ — the new generator code</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tools/exudev/README.html"><code class="docutils literal notranslate"><span class="pre">exudev</span></code> — the Exudyn maintainer driver</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../CONTRIBUTING.html">Contributing to Exudyn</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../docs/dev/README.html#repository-layout">Repository layout</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../docs/dev/README.html#building-and-running">Building and running</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../docs/dev/README.html#how-to-notes">How-to notes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../docs/dev/README.html#invariants">Invariants</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">How-to notes</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../docs/howTo/condaEnvironments.html">Conda environments for Exudyn</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../docs/howTo/sphinxDocs.html">Building the documentation</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Examples, models and issues</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../docs/generated/examples/examplesIndex.html">Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../docs/generated/testModels/testModelsIndex.html">TestModels</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../docs/generated/abbreviations.html">List of Abbreviations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../docs/manual/revisions.html">Revisions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../CHANGELOG.html">Changelog</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../docs/generated/trackerlog.html">Issue tracker</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">Exudyn1.13.3</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../docs/dev/README.html">Exudyn developer documentation</a></li>
+      <li class="breadcrumb-item active">definitions/ — the item and structure definitions as Python</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/definitions/README.md.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section class="tex2jax_ignore mathjax_ignore" id="definitions-the-item-and-structure-definitions-as-python">
+<h1>definitions/ — the item and structure definitions as Python<a class="headerlink" href="#definitions-the-item-and-structure-definitions-as-python" title="Link to this heading"></a></h1>
+<p><strong>The input of the code generators.</strong> Every item, every settings structure and every pybind
+binding is defined here as Python, and <code class="docutils literal notranslate"><span class="pre">tools/regenerate.py</span></code> writes the C++, the Python interface
+and the reference manual from it.</p>
+<p>A new item, step by step: <a class="reference internal" href="../docs/dev/NEW_ITEM.html"><span class="std std-doc">docs/dev/NEW_ITEM.md</span></a>.</p>
+<p>To change an item or a structure, edit the file here and run <code class="docutils literal notranslate"><span class="pre">python</span> <span class="pre">tools/regenerate.py</span> <span class="pre">--check</span></code>
+(in <code class="docutils literal notranslate"><span class="pre">venvExuP313</span></code>): it validates the definitions and regenerates everything. The generators read
+these files through <code class="docutils literal notranslate"><span class="pre">tools/generators/definitionLoader.py</span></code>; the <code class="docutils literal notranslate"><span class="pre">pybind*.py</span></code> files are replayed
+by <code class="docutils literal notranslate"><span class="pre">tools/generators/pybindEmitter.py</span></code>.</p>
+<p><strong>Order matters</strong> within and across the files: classes are generated in the order they appear,
+and structures written into one C++ header (<code class="docutils literal notranslate"><span class="pre">appendToFile</span></code>) depend on it.</p>
+<section id="files">
+<h2>Files<a class="headerlink" href="#files" title="Link to this heading"></a></h2>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>file</p></th>
+<th class="head"><p>written by</p></th>
+<th class="head"><p>what it is</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">definitionTypes.py</span></code></p></td>
+<td><p>hand</p></td>
+<td><p>the single vocabulary: types, flags, destinations, default values, the member constructors, the function-library resolution</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">itemFunctions.py</span></code></p></td>
+<td><p>hand</p></td>
+<td><p>the function declaration library: one entry per shared declaration of a function that items override</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">outputVariableTypes.py</span></code></p></td>
+<td><p>hand</p></td>
+<td><p>the <code class="docutils literal notranslate"><span class="pre">OutputVariableType</span></code> registrator: names and bit positions, generates <code class="docutils literal notranslate"><span class="pre">src/Autogenerated/OutputVariableTypes.h</span></code> and the Python enum</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">enumTypes.py</span></code></p></td>
+<td><p>hand</p></td>
+<td><p>the enum registrator for the other enums shared by C++ and Python (<code class="docutils literal notranslate"><span class="pre">ConfigurationType</span></code>, <code class="docutils literal notranslate"><span class="pre">NodeType</span></code>, …): values, descriptions, string functions; generates <code class="docutils literal notranslate"><span class="pre">src/Autogenerated/EnumTypes.h</span></code> and the Python enums</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">outputVariableDescriptions.py</span></code></p></td>
+<td><p>hand</p></td>
+<td><p>the output-variable texts shared by four or more items</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">itemDefsNodes.py</span></code>, <code class="docutils literal notranslate"><span class="pre">itemDefsObjects.py</span></code>, <code class="docutils literal notranslate"><span class="pre">itemDefsMarkers.py</span></code>, <code class="docutils literal notranslate"><span class="pre">itemDefsLoads.py</span></code>, <code class="docutils literal notranslate"><span class="pre">itemDefsSensors.py</span></code></p></td>
+<td><p>hand</p></td>
+<td><p>one <code class="docutils literal notranslate"><span class="pre">ItemDefinition(...)</span></code> per item</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">descriptionChecks.json</span></code></p></td>
+<td><p>tool</p></td>
+<td><p>which item descriptions were checked against their implementation, by whom, when, and the fingerprint of the implementation then; written by <code class="docutils literal notranslate"><span class="pre">tools/checkDescriptions.py</span> <span class="pre">--mark</span></code> (#2717)</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">itemKindDefinitions.py</span></code></p></td>
+<td><p>hand</p></td>
+<td><p>one <code class="docutils literal notranslate"><span class="pre">ItemKindDefinition(...)</span></code> per kind of item: the page of the kind, with the general section every item of the kind refers to</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">structureDefs*.py</span></code></p></td>
+<td><p>hand</p></td>
+<td><p>one <code class="docutils literal notranslate"><span class="pre">StructureDefinition(...)</span></code> per settings / solver / system structure</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">pybindTypes.py</span></code></p></td>
+<td><p>hand</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">PybindInterface</span></code>, the recorder of the hand-written Python interface declarations, with its call vocabulary and the shared stub type names</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">pybindModule.py</span></code>, <code class="docutils literal notranslate"><span class="pre">pybindSystemContainer.py</span></code>, <code class="docutils literal notranslate"><span class="pre">pybindRenderer.py</span></code>, <code class="docutils literal notranslate"><span class="pre">pybindMainSystem.py</span></code>, <code class="docutils literal notranslate"><span class="pre">pybindSystemData.py</span></code>, <code class="docutils literal notranslate"><span class="pre">pybindSymbolic.py</span></code>, <code class="docutils literal notranslate"><span class="pre">pybindGeneralContact.py</span></code>, <code class="docutils literal notranslate"><span class="pre">pybindDataStructures.py</span></code>, <code class="docutils literal notranslate"><span class="pre">pybindEnums.py</span></code>, <code class="docutils literal notranslate"><span class="pre">pybindGeneralInformation.py</span></code></p></td>
+<td><p>hand</p></td>
+<td><p>the hand-written Python interface (functions and classes whose C++ binding is not generated from an item or structure), in declaration calls on <code class="docutils literal notranslate"><span class="pre">pb</span></code>; order matters, as the calls are replayed in order</p></td>
+</tr>
+</tbody>
+</table>
+<p><code class="docutils literal notranslate"><span class="pre">definitionTypes.py</span></code> is grouped in three blocks by where a name is used: <strong>SHARED</strong> (types, default
+values, sentinels), <strong>ITEMS</strong>, <strong>STRUCTURES</strong>.</p>
+</section>
+<section id="members">
+<h2>Members<a class="headerlink" href="#members" title="Link to this heading"></a></h2>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">ItemParameter</span><span class="p">(</span><span class="nb">type</span><span class="o">=</span><span class="n">TReal</span><span class="p">(</span><span class="n">minimum</span><span class="o">=</span><span class="mi">0</span><span class="p">),</span> <span class="n">destination</span><span class="o">=</span><span class="n">DestComp</span><span class="o">+</span><span class="n">DestParam</span><span class="p">,</span> <span class="n">pythonName</span><span class="o">=</span><span class="s1">'mass'</span><span class="p">,</span>
+    <span class="n">defaultValue</span><span class="o">=</span><span class="mf">0.</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="sa">r</span><span class="s1">'$m$mass [SI:kg] of mass point'</span><span class="p">)</span>
+<span class="n">ItemFunction</span><span class="p">(</span><span class="nb">type</span><span class="o">=</span><span class="n">Tvoid</span><span class="p">,</span> <span class="n">destination</span><span class="o">=</span><span class="n">DestComp</span><span class="p">,</span> <span class="n">pythonName</span><span class="o">=</span><span class="s1">'ComputeContactForces'</span><span class="p">,</span>
+    <span class="n">description</span><span class="o">=</span><span class="s1">'...'</span><span class="p">,</span> <span class="n">cFlags</span><span class="o">=</span><span class="n">CFConst</span><span class="p">,</span> <span class="n">args</span><span class="o">=</span><span class="s1">'...'</span><span class="p">)</span>
+<span class="n">ItemFunctionDef</span><span class="p">(</span><span class="s1">'ComputeODE2LHS'</span><span class="p">)</span>
+<span class="n">ItemFunctionDef</span><span class="p">(</span><span class="s1">'GetNumberOfNodes'</span><span class="p">,</span> <span class="n">implementation</span><span class="o">=</span><span class="s1">'return 1;'</span><span class="p">)</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">type</span></code>, <code class="docutils literal notranslate"><span class="pre">destination</span></code>, <code class="docutils literal notranslate"><span class="pre">pythonName</span></code>, <code class="docutils literal notranslate"><span class="pre">description</span></code> and — for parameters — <code class="docutils literal notranslate"><span class="pre">defaultValue</span></code> are
+<strong>required</strong>; a forgotten one raises during generation. Where a parameter genuinely has no
+default, write <code class="docutils literal notranslate"><span class="pre">defaultValue=NoDefaultValue</span></code>.</p></li>
+<li><p>Default values are real values (<code class="docutils literal notranslate"><span class="pre">True</span></code>, <code class="docutils literal notranslate"><span class="pre">0.</span></code>, <code class="docutils literal notranslate"><span class="pre">1e-8</span></code>); C++ constants and constructor calls are
+<code class="docutils literal notranslate"><span class="pre">CppValue</span></code>s (<code class="docutils literal notranslate"><span class="pre">DVInvalidIndex</span></code>, <code class="docutils literal notranslate"><span class="pre">DVDefaultColor</span></code>, <code class="docutils literal notranslate"><span class="pre">DVZeroVector3D</span></code>).</p></li>
+<li><p><strong>A frame</strong> is one parameter of type <code class="docutils literal notranslate"><span class="pre">THomogeneousTransformation</span></code> (e.g. <code class="docutils literal notranslate"><span class="pre">referenceHT</span></code>), which C++
+stores, and optionally its parts: a <code class="docutils literal notranslate"><span class="pre">TVectorND(3)</span></code> and a <code class="docutils literal notranslate"><span class="pre">TMatrixND(3,</span> <span class="pre">3)</span></code> parameter with
+<code class="docutils literal notranslate"><span class="pre">partOfHT='referenceHT'</span></code>, which are not stored but read and write their share of the HT. All
+three default to <code class="docutils literal notranslate"><span class="pre">CppValue(&lt;C++</span> <span class="pre">default&gt;,</span> <span class="pre">'None',</span> <span class="pre">...)</span></code>: <code class="docutils literal notranslate"><span class="pre">None</span></code> is “not given”; the dictionary
+holds all three, and an HT and a part given together must agree (<code class="docutils literal notranslate"><span class="pre">EPyUtils::HTFromDictionary</span></code>,
+#2793).</p></li>
+<li><p><strong>A renamed parameter</strong> keeps its old name as <code class="docutils literal notranslate"><span class="pre">ItemParameter(type=&lt;as</span> <span class="pre">the</span> <span class="pre">new</span> <span class="pre">one&gt;,</span> <span class="pre">destination=&lt;as</span> <span class="pre">the</span> <span class="pre">new</span> <span class="pre">one&gt;,</span> <span class="pre">pythonName='&lt;old&gt;',</span> <span class="pre">deprecated=Deprecated('&lt;version&gt;',</span> <span class="pre">&lt;year&gt;),</span> <span class="pre">defaultValue=NoDefaultValue,</span> <span class="pre">description=r'&lt;new&gt;')</span></code>. It is not stored: the dictionary,
+<code class="docutils literal notranslate"><span class="pre">Get</span></code>/<code class="docutils literal notranslate"><span class="pre">SetObjectParameter</span></code> and the keyword of the Python item class forward it to the new one with
+a <code class="docutils literal notranslate"><span class="pre">DeprecationWarning</span></code>, tested after every current name; the page lists it below the table (#2589).</p></li>
+<li><p><strong>A deprecated parameter that stays</strong> - no new name to forward to (<code class="docutils literal notranslate"><span class="pre">rotationMarker0/1</span></code> of the joints) - keeps its
+definition and adds <code class="docutils literal notranslate"><span class="pre">deprecated=Deprecated('&lt;version&gt;',</span> <span class="pre">&lt;year&gt;,</span> <span class="pre">advice='&lt;what</span> <span class="pre">to</span> <span class="pre">do</span> <span class="pre">instead&gt;')</span></code>: it is stored and
+works as before, setting it other than its default warns, the page lists it below the table with the advice, and
+<code class="docutils literal notranslate"><span class="pre">exudev</span> <span class="pre">scripts</span></code> reports it (#2804, #2805).</p></li>
+<li><p>A function with <code class="docutils literal notranslate"><span class="pre">implementation=None</span></code> is a declaration whose body is in the hand-written <code class="docutils literal notranslate"><span class="pre">.cpp</span></code>;
+<code class="docutils literal notranslate"><span class="pre">''</span></code> is an empty body. <code class="docutils literal notranslate"><span class="pre">isVirtual</span></code> defaults to <code class="docutils literal notranslate"><span class="pre">True</span></code>.</p></li>
+</ul>
+</section>
+<section id="the-function-library-itemfunctions-py">
+<h2>The function library (<code class="docutils literal notranslate"><span class="pre">itemFunctions.py</span></code>)<a class="headerlink" href="#the-function-library-itemfunctions-py" title="Link to this heading"></a></h2>
+<p>An item does not restate a declaration it shares with other items: it writes
+<code class="docutils literal notranslate"><span class="pre">ItemFunctionDef(name)</span></code> and the declaration comes from the library.</p>
+<ul class="simple">
+<li><p>An entry is found by the item’s <code class="docutils literal notranslate"><span class="pre">classType</span></code>, its <code class="docutils literal notranslate"><span class="pre">cParentClass</span></code> and the function name. Both keys
+are <strong><code class="docutils literal notranslate"><span class="pre">None</span></code> unless the declaration really depends on them</strong> — <code class="docutils literal notranslate"><span class="pre">sharedFunctions</span></code> holds the ones
+that are the same for every item type, then one list per item type; inside a list, entries with
+no parent first, then grouped by parent.</p></li>
+<li><p>Where a name is still not unique, the use site says which with <code class="docutils literal notranslate"><span class="pre">destination=</span></code>, <code class="docutils literal notranslate"><span class="pre">cFlags=</span></code> or
+<code class="docutils literal notranslate"><span class="pre">args=</span></code>. These default to <code class="docutils literal notranslate"><span class="pre">None</span></code>, so a forgotten one <strong>raises and lists the alternatives</strong>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">description=</span></code> at the use site overrides the library text. Use it only where the text is
+genuinely item-specific.</p></li>
+<li><p>Only functions that <strong>override</strong> a parent’s virtual function belong in the library. Functions
+new in one item are written out with <code class="docutils literal notranslate"><span class="pre">ItemFunction(...)</span></code>.</p></li>
+<li><p>The library states what the C++ base headers (<code class="docutils literal notranslate"><span class="pre">src/System/CObject*.h</span></code>, <code class="docutils literal notranslate"><span class="pre">CNode*.h</span></code>, <code class="docutils literal notranslate"><span class="pre">CMarker*.h</span></code>,
+…) declare. <strong>Change both together</strong> - <code class="docutils literal notranslate"><span class="pre">tools/generators/definitionValidator.py</span></code>, run by
+<code class="docutils literal notranslate"><span class="pre">tools/regenerate.py</span></code>, fails when they disagree.</p></li>
+</ul>
+</section>
+<section id="writing-a-description">
+<h2>Writing a description<a class="headerlink" href="#writing-a-description" title="Link to this heading"></a></h2>
+<p><strong>Read this before writing or changing a description.</strong> A description is not free text: it is the
+source of a page of the reference manual, and it is converted, checked and published. The rules are
+here and nowhere else - a definition file’s header points at this section, and so does <code class="docutils literal notranslate"><span class="pre">CLAUDE.md</span></code>.</p>
+<p>These are the fields that are descriptions, and all of them are converted the same way, by
+<code class="docutils literal notranslate"><span class="pre">ConvertText</span></code> in <code class="docutils literal notranslate"><span class="pre">tools/generators/latexToMarkdown.py</span></code>:</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>field</p></th>
+<th class="head"><p>where</p></th>
+<th class="head"><p>becomes</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">overallDescription</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">ItemDefinition</span></code></p></td>
+<td><p>the brief description of an item: the paragraph under its heading, the docstring of its Python class and the comment of its C++ classes</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">detailedDescription</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">ItemDefinition</span></code></p></td>
+<td><p>the full description of an item, after the generated part of its page - the long text, with its own headings</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">overallDescription</span></code>, <code class="docutils literal notranslate"><span class="pre">detailedDescription</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">ItemKindDefinition</span></code></p></td>
+<td><p>the paragraph of the page of a kind of item, and its page <em>General info for all …</em>; a heading there is written with <code class="docutils literal notranslate"><span class="pre">##</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">classDescription</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">StructureDefinition</span></code></p></td>
+<td><p>the paragraph under the structure’s heading</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">description</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">ItemParameter</span></code>, <code class="docutils literal notranslate"><span class="pre">ItemFunction</span></code>, <code class="docutils literal notranslate"><span class="pre">StructureParameter</span></code>, <code class="docutils literal notranslate"><span class="pre">StructureFunction</span></code></p></td>
+<td><p>one cell of the parameter table</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">description</span></code></p></td>
+<td><p>the <code class="docutils literal notranslate"><span class="pre">pb....(...)</span></code> calls of the <code class="docutils literal notranslate"><span class="pre">pybind*.py</span></code> files</p></td>
+<td><p>the text of the Python-C++ interface pages, and the docstring of the function</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">sectionText</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">StructureDefinition</span></code></p></td>
+<td><p>the heading and the paragraph that open the section a group of structures forms</p></td>
+</tr>
+</tbody>
+</table>
+<p><code class="docutils literal notranslate"><span class="pre">miniExample</span></code> is not a description: it is Python, it is run by the test suite, and it is published
+as a code block.</p>
+<section id="the-text">
+<h3>The text<a class="headerlink" href="#the-text" title="Link to this heading"></a></h3>
+<p>The text is <strong>Markdown</strong> - MyST Markdown, as the hand-written chapters in <code class="docutils literal notranslate"><span class="pre">docs/manual/</span></code> are - with
+<strong>LaTeX for the mathematics</strong>. Nothing else is supported: a construct that works in LaTeX but is
+not in the list below reaches the page as itself and is a defect.</p>
+<ul>
+<li><p><strong>Write a description that carries mathematics or a backslash as a raw string</strong>, <code class="docutils literal notranslate"><span class="pre">r'...'</span></code> or
+<code class="docutils literal notranslate"><span class="pre">r&quot;&quot;&quot;...&quot;&quot;&quot;</span></code>. Python reads <code class="docutils literal notranslate"><span class="pre">'\theta'</span></code> as a tab followed by <code class="docutils literal notranslate"><span class="pre">heta</span></code>; <code class="docutils literal notranslate"><span class="pre">r'\theta'</span></code> is the six
+characters MathJax needs. This is the one mistake that is silent, so it is the one rule with no
+exception, and <code class="docutils literal notranslate"><span class="pre">tools/checkDefinitions.py</span></code> enforces it on the literal’s own spelling. A text of
+several lines is one <code class="docutils literal notranslate"><span class="pre">r&quot;&quot;&quot;...&quot;&quot;&quot;</span></code>, not a chain of one-line strings joined by <code class="docutils literal notranslate"><span class="pre">+</span></code>.</p></li>
+<li><p><strong>Mathematics</strong> is <code class="docutils literal notranslate"><span class="pre">$...$</span></code> inline and <code class="docutils literal notranslate"><span class="pre">$$...$$</span></code> on its own lines, with the macros that <code class="docutils literal notranslate"><span class="pre">conf.py</span></code>
+declares - <code class="docutils literal notranslate"><span class="pre">\LU{0}{\pv}</span></code>, <code class="docutils literal notranslate"><span class="pre">\Rcal</span></code>, <code class="docutils literal notranslate"><span class="pre">\eqDot</span></code>. <code class="docutils literal notranslate"><span class="pre">tools/checkMathMacros.py</span></code> fails on a macro it does
+not know, so a typo in one is found. Display mathematics stands on its own lines between <code class="docutils literal notranslate"><span class="pre">$$</span></code>
+and <code class="docutils literal notranslate"><span class="pre">$$</span></code>; several aligned equations go inside <code class="docutils literal notranslate"><span class="pre">\begin{aligned}</span> <span class="pre">...</span> <span class="pre">\end{aligned}</span></code>. A label goes
+after the closing <code class="docutils literal notranslate"><span class="pre">$$</span></code>, <code class="docutils literal notranslate"><span class="pre">$$</span> <span class="pre">(eq-objectground-position)</span></code>, and is referenced as any other target.</p></li>
+<li><p><strong>A heading</strong> is the Markdown heading it becomes, and the level is fixed by the page it lands in:
+<code class="docutils literal notranslate"><span class="pre">####</span> <span class="pre">Equations</span> <span class="pre">of</span> <span class="pre">motion</span></code> inside <code class="docutils literal notranslate"><span class="pre">detailedDescription</span></code>, which sits under the item’s <em>DESCRIPTION</em> heading,
+and <code class="docutils literal notranslate"><span class="pre">##</span> <span class="pre">Title</span></code> inside <code class="docutils literal notranslate"><span class="pre">sectionText</span></code>, which sits under the page title. Where something refers to a
+heading, the MyST target goes on the line above it: <code class="docutils literal notranslate"><span class="pre">(sec-objectjointgeneric-quantities)=</span></code>.
+Use the recurring title where it fits - the list is <code class="docutils literal notranslate"><span class="pre">RECURRING_HEADINGS</span></code> in
+<code class="docutils literal notranslate"><span class="pre">tools/checkDefinitions.py</span></code>, which rejects both a wrong level and a recurring title spelled
+differently.</p></li>
+<li><p><strong>Inline code</strong> - a parameter name, a Python call, a type - is a backtick span, <code class="docutils literal notranslate"><span class="pre">mbs.Assemble()</span></code>. <code class="docutils literal notranslate"><span class="pre">tools/checkDefinitions.py</span></code> rejects a <code class="docutils literal notranslate"><span class="pre">\texttt{...}</span></code> outside mathematics.</p></li>
+<li><p><strong>A list</strong> is <code class="docutils literal notranslate"><span class="pre">\bi</span> <span class="pre">...</span> <span class="pre">\item</span> <span class="pre">...</span> <span class="pre">\ei</span></code> (bulleted) or <code class="docutils literal notranslate"><span class="pre">\ben</span> <span class="pre">...</span> <span class="pre">\item</span> <span class="pre">...</span> <span class="pre">\een</span></code> (numbered).</p></li>
+<li><p><strong>An abbreviation</strong> is <code class="docutils literal notranslate"><span class="pre">ABRV:ODE2</span></code> - no backslash, no braces - which links to the list of
+abbreviations. The key ends where the word ends. The keys are the <code class="docutils literal notranslate"><span class="pre">abbreviations</span></code> dict in
+<code class="docutils literal notranslate"><span class="pre">tools/generators/examplesDocsEmitter.py</span></code>, which also writes the list; add one there before using
+it. <code class="docutils literal notranslate"><span class="pre">tools/checkDefinitions.py</span></code> names the file and the line of a key that does not exist.</p></li>
+<li><p><strong>A reference</strong> is a Markdown link to the target: <code class="docutils literal notranslate"><span class="pre">[](#sec-item-objectground)</span></code> for a section. A
+<strong>figure</strong> is referenced by its number, <code class="docutils literal notranslate"><span class="pre">{numref}`fig-objectspheresphrecontact`</span></code> (<em>Fig. 12.3</em>): an
+empty link would print the caption, and a caption with math stays LaTeX source there in the PDF.
+Leave the text of a section link empty and the page supplies the heading, or write your own,
+<code class="docutils literal notranslate"><span class="pre">[the</span> <span class="pre">ground</span> <span class="pre">object](#sec-item-objectground)</span></code>. The target name is lower case with <code class="docutils literal notranslate"><span class="pre">-</span></code> between the
+parts, and it must sit on a <strong>heading</strong> or a <strong>named figure</strong>; a target above a paragraph resolves
+in no link at all. A section target goes on the line above its heading,
+<code class="docutils literal notranslate"><span class="pre">(sec-item-objectground)=</span></code>.</p></li>
+<li><p><strong>A reference to an equation</strong> is the role, <code class="docutils literal notranslate"><span class="pre">{eq}`eq-objectground-position`</span></code>, and not a link.
+The two render the same number in the HTML, but the LaTeX writer gives a link to an equation an
+anchor that does not match the label it writes on the equation itself, so all 42 of them came out
+of the PDF as undefined references. <code class="docutils literal notranslate"><span class="pre">tools/checkDefinitions.py</span></code> rejects a link whose target is an
+equation label.</p></li>
+<li><p><strong>An example or test model</strong> is named, <code class="docutils literal notranslate"><span class="pre">`NGsolveFFRF.py`</span></code>, and listed in the field <code class="docutils literal notranslate"><span class="pre">examples</span></code>,
+which puts it on the page with its github link; it is not linked by its page, <code class="docutils literal notranslate"><span class="pre">[](#examples-...)</span></code>.
+The PDF leaves those pages out, so the link is unresolved there; <code class="docutils literal notranslate"><span class="pre">tools/checkDefinitions.py</span></code>
+rejects it (#2758).</p></li>
+<li><p><strong>A citation</strong> is <code class="docutils literal notranslate"><span class="pre">[CITE:ZwoelferGerstmayr2021]</span></code>, with a key of <code class="docutils literal notranslate"><span class="pre">docs/bibliographyDoc.bib</span></code>. The
+converter drops the marker and <code class="docutils literal notranslate"><span class="pre">conf.py</span></code> does the rest: it appends a Markdown link definition for
+every key of the bibliography, so <code class="docutils literal notranslate"><span class="pre">[Key]</span></code> becomes a link into the generated references page. The
+marker is there to be checked - <code class="docutils literal notranslate"><span class="pre">tools/checkDefinitions.py</span></code> rejects a <code class="docutils literal notranslate"><span class="pre">CITE:</span></code> key the
+bibliography does not have, and a key written <strong>without</strong> the marker - and a <code class="docutils literal notranslate"><span class="pre">[CITE:</span></code> left in a
+generated page is a conversion that did not happen. Without it nothing could be told apart: a
+description is full of square brackets that are not citations (<code class="docutils literal notranslate"><span class="pre">[SI:kg]</span></code>, <code class="docutils literal notranslate"><span class="pre">[0,0,0]</span></code>).</p></li>
+<li><p><strong>A table</strong> is a Markdown pipe table, written where it belongs in the text:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">|</span> <span class="n">intermediate</span> <span class="n">variables</span> <span class="o">|</span> <span class="n">symbol</span> <span class="o">|</span> <span class="n">description</span> <span class="o">|</span>
+<span class="o">|---|---|---|</span>
+<span class="o">|</span> <span class="n">body</span><span class="s1">'s reference point | $\pRefG$ | position of the body'</span><span class="n">s</span> <span class="n">reference</span> <span class="n">point</span> <span class="o">|</span>
+</pre></div>
+</div>
+<p>The header row says what the columns are - <em>intermediate variables | symbol | description</em> for the
+quantities of an item, <em>output variables | symbol | formula</em>, <em>input parameter | symbol |
+description</em> - and a cell may hold mathematics, a link or inline code, as any other text may.
+A <code class="docutils literal notranslate"><span class="pre">|</span></code> inside a cell is written <code class="docutils literal notranslate"><span class="pre">\|</span></code>; inside <code class="docutils literal notranslate"><span class="pre">$...$</span></code> it needs nothing.</p>
+</li>
+<li><p><strong>A user function</strong> is not written in the description at all: it is an ordinary Python
+function, in the definition file, immediately above the <code class="docutils literal notranslate"><span class="pre">definitions.append(...)</span></code> it belongs
+to, and the parameter is given it by object. The block of the page - the signature line, the
+prose, the table of the arguments and the return value - is generated from it
+(<code class="docutils literal notranslate"><span class="pre">tools/generators/userFunctionModel.py</span></code>, called by <code class="docutils literal notranslate"><span class="pre">itemDocsEmitter.UserFunctionDocumentation</span></code>):</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">ObjectGround_graphicsDataUserFunction</span><span class="p">(</span><span class="n">mbs</span><span class="p">:</span> <span class="nc">MainSystem</span><span class="p">,</span>
+                                          <span class="n">itemNumber</span><span class="p">:</span> <span class="n">Index</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">BodyGraphicsData</span><span class="p">:</span>
+<span class="w">    </span><span class="sa">r</span><span class="sd">"""A user function, which is called by the visualization thread ...</span>
+
+<span class="sd">    the details, in as many lines as it takes</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        mbs: provides reference to mbs, which can be used in the user function</span>
+<span class="sd">        itemNumber: integer number of the object in mbs</span>
+<span class="sd">    Returns:</span>
+<span class="sd">        list of `GraphicsData` dictionaries, see Section [](#sec-graphicsdata)</span>
+<span class="sd">    """</span>
+
+<span class="o">...</span> <span class="n">ItemParameter</span><span class="p">(</span><span class="o">...</span><span class="p">,</span> <span class="n">pythonName</span><span class="o">=</span><span class="s1">'graphicsDataUserFunction'</span><span class="p">,</span>
+                  <span class="n">userFunction</span><span class="o">=</span><span class="n">ObjectGround_graphicsDataUserFunction</span><span class="p">,</span>
+                  <span class="n">userFunctionExample</span><span class="o">=</span><span class="sa">r</span><span class="s1">'''&lt;the Python script shown under the block&gt;'''</span><span class="p">),</span>
+</pre></div>
+</div>
+<p>The <strong>first line</strong> of the docstring is the summary and what follows it the details; both are
+Markdown, by the rules of this section, and their line breaks are kept. Only <code class="docutils literal notranslate"><span class="pre">Args:</span></code> and
+<code class="docutils literal notranslate"><span class="pre">Returns:</span></code> are read. The def is named <code class="docutils literal notranslate"><span class="pre">&lt;Item&gt;_&lt;parameter&gt;</span></code> because four items have a
+<code class="docutils literal notranslate"><span class="pre">forceUserFunction</span></code>; <strong>the name the page prints is the parameter’s <code class="docutils literal notranslate"><span class="pre">pythonName</span></code></strong>. The
+annotation types - <code class="docutils literal notranslate"><span class="pre">Real</span></code>, <code class="docutils literal notranslate"><span class="pre">Index</span></code>, <code class="docutils literal notranslate"><span class="pre">Bool</span></code>, <code class="docutils literal notranslate"><span class="pre">MainSystem</span></code>, <code class="docutils literal notranslate"><span class="pre">np.ndarray</span></code> and the rest - are names
+in <code class="docutils literal notranslate"><span class="pre">definitions/definitionTypes.py</span></code>, so the file stays ordinary, importable Python. Nothing is
+executed: the source is read with <code class="docutils literal notranslate"><span class="pre">ast</span></code>, and an annotation reaches the page <strong>as it is
+written</strong>.</p>
+<p><strong>The def is the signature.</strong> The parameter has no <code class="docutils literal notranslate"><span class="pre">type=</span></code>: <code class="docutils literal notranslate"><span class="pre">ItemDefinition</span></code> gives it the type
+<code class="docutils literal notranslate"><span class="pre">PyFunction&lt;Item&gt;&lt;Parameter&gt;</span></code> and enters the <code class="docutils literal notranslate"><span class="pre">std::function</span></code> of the def’s annotations into
+<code class="docutils literal notranslate"><span class="pre">definitionTypes.userFunctionSignatures</span></code> (<code class="docutils literal notranslate"><span class="pre">UserFunctionSignature</span></code>, the table
+<code class="docutils literal notranslate"><span class="pre">definitionTypes.annotationToCpp</span></code>); the C++ member, the Python interface and the symbolic user
+functions are generated from it, user functions with the same signature sharing one member of
+the symbolic set (#2664). What is still checked: that the docstring describes every argument -
+<code class="docutils literal notranslate"><span class="pre">tools/checkDefinitions.py</span></code> reports it with the file and the line, and the generator refuses to
+emit. A size is in the annotation where it is fixed (<code class="docutils literal notranslate"><span class="pre">Vector3D</span></code>), else a formula in the
+argument’s line; <code class="docutils literal notranslate"><span class="pre">py::object</span></code> stands for <code class="docutils literal notranslate"><span class="pre">BodyGraphicsData</span></code> and <code class="docutils literal notranslate"><span class="pre">MatrixContainer</span></code>.</p>
+<p>The <strong>size</strong> of an argument belongs in its <code class="docutils literal notranslate"><span class="pre">Args:</span></code> line, as a formula -
+<code class="docutils literal notranslate"><span class="pre">q:</span> <span class="pre">generalized</span> <span class="pre">coordinates,</span> <span class="pre">$\qv</span> <span class="pre">\in</span> <span class="pre">\Rcal^{n_{ODE2}}$</span></code> - and not in its type, because a
+formula renders in a table cell and not inside a code block. That is what lets the arguments
+be a real signature.</p>
+<p><strong>What a user gets from the def</strong>: <code class="docutils literal notranslate"><span class="pre">python/exudyn/itemInterface.py</span></code> carries a
+<code class="docutils literal notranslate"><span class="pre">Protocol</span></code> per user function - <code class="docutils literal notranslate"><span class="pre">class</span> <span class="pre">ObjectGroundGraphicsDataUserFunction(Protocol)</span></code> with a typed
+<code class="docutils literal notranslate"><span class="pre">__call__</span></code> and the docstring - and the parameter of the item class is annotated with it, so an
+editor completes the arguments of the function being written and marks a wrong one. A Protocol is
+never instantiated and nothing inherits from it: it costs nothing at runtime.</p>
+<p>The user functions still written as a hand-made block in a description are being converted
+item by item (#2664); a new one is written as a def.</p>
+</li>
+<li><p><strong>A figure</strong> that belongs to an item is <code class="docutils literal notranslate"><span class="pre">\addExampleImage{RevoluteJointZ}</span></code>, which shows
+<code class="docutils literal notranslate"><span class="pre">docs/figures/RevoluteJointZ.png</span></code>.</p></li>
+<li><p><strong>A comment</strong> is <code class="docutils literal notranslate"><span class="pre">&lt;!--</span> <span class="pre">like</span> <span class="pre">this</span> <span class="pre">--&gt;</span></code>, on a line of its own or after text, and the
+converter removes it so that it never reaches the page. A run of comment lines is one comment,
+which is what a commented-out table or figure wants to be. <strong>A <code class="docutils literal notranslate"><span class="pre">%</span></code> is a comment only inside
+mathematics</strong>, where MathJax and LaTeX are the ones that read it; anywhere else it is rejected,
+because the converter strips a <code class="docutils literal notranslate"><span class="pre">%</span></code> before the mathematics is protected and would take the rest
+of the line with it.</p></li>
+</ul>
+</section>
+<section id="how-to-check-what-you-wrote">
+<h3>How to check what you wrote<a class="headerlink" href="#how-to-check-what-you-wrote" title="Link to this heading"></a></h3>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">python</span> <span class="n">tools</span><span class="o">/</span><span class="n">regenerate</span><span class="o">.</span><span class="n">py</span> <span class="o">--</span><span class="n">check</span>          <span class="c1"># in venvExuP313: converts and regenerates</span>
+<span class="n">exudev</span> <span class="n">generate</span> <span class="o">--</span><span class="nb">all</span><span class="o">-</span><span class="n">checks</span>                <span class="c1"># the same, plus the eight checks</span>
+<span class="n">exudev</span> <span class="n">docs</span>                                 <span class="c1"># the HTML, strict: a reference to nothing fails</span>
+</pre></div>
+</div>
+<p>Then read the page: <code class="docutils literal notranslate"><span class="pre">docs/generated/items/&lt;Item&gt;.md</span></code> for an item, <code class="docutils literal notranslate"><span class="pre">docs/generated/structures/</span></code> for
+a structure, <code class="docutils literal notranslate"><span class="pre">docs/generated/cInterface/</span></code> for a <code class="docutils literal notranslate"><span class="pre">pybind*</span></code> text. A macro that is none of the above is
+carried through silently, so the page is the only place a mistake shows.</p>
+</section>
+<section id="a-description-checked-against-its-implementation">
+<h3>A description checked against its implementation<a class="headerlink" href="#a-description-checked-against-its-implementation" title="Link to this heading"></a></h3>
+<p>An item description is checked once against the C++ - the coordinates, the output variables it declares and those
+the code computes, what the equations say - and the check is recorded, with a fingerprint of the implementation:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">python</span> <span class="n">tools</span><span class="o">/</span><span class="n">checkDescriptions</span><span class="o">.</span><span class="n">py</span>                      <span class="c1"># how many items of each kind are checked</span>
+<span class="n">python</span> <span class="n">tools</span><span class="o">/</span><span class="n">checkDescriptions</span><span class="o">.</span><span class="n">py</span> <span class="o">--</span><span class="n">mark</span> <span class="nc">NodePoint</span>     <span class="c1"># record the check of an item, after reading both</span>
+<span class="n">python</span> <span class="n">tools</span><span class="o">/</span><span class="n">checkDescriptions</span><span class="o">.</span><span class="n">py</span> <span class="o">--</span><span class="n">check</span>              <span class="c1"># in exudev generate --all-checks</span>
+</pre></div>
+</div>
+<p>The fingerprint covers the hand-written source of the item (<code class="docutils literal notranslate"><span class="pre">src/Impl&lt;Kind&gt;s/C&lt;Item&gt;.cpp</span></code>, and its functions in the
+shared sources, such as <code class="docutils literal notranslate"><span class="pre">CLoad.cpp</span></code>, <code class="docutils literal notranslate"><span class="pre">CSensor.cpp</span></code>, <code class="docutils literal notranslate"><span class="pre">evaluateUserFunctions.cpp</span></code>) and its generated header without
+comments, so a change of a description leaves
+it, and a change of the code does not: <code class="docutils literal notranslate"><span class="pre">--check</span></code> then names the item with the old and the new fingerprint, until
+its description has been looked at again and <code class="docutils literal notranslate"><span class="pre">--mark</span></code> records the new state (#2717).</p>
+</section>
+</section>
+<section id="the-page-of-an-item">
+<h2>The page of an item<a class="headerlink" href="#the-page-of-an-item" title="Link to this heading"></a></h2>
+<p>What a reference page of an item contains, and who writes it. Say only what is the item’s own: what
+all items of a kind share is the general section of the kind in <code class="docutils literal notranslate"><span class="pre">itemKindDefinitions.py</span></code>, published
+on the page <em>General info for all …</em> of the kind in the <a class="reference internal" href="../docs/generated/items/itemsIndex.html#sec-item-reference-manual"><span class="std std-ref">items reference manual</span></a> -
+link it, do not repeat it.</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>part</p></th>
+<th class="head"><p>source</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>title and <code class="docutils literal notranslate"><span class="pre">overallDescription</span></code></p></td>
+<td><p>written: one or two sentences, what it is and what it is for</p></td>
+</tr>
+<tr class="row-odd"><td><p>the image below it</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">image='itemImages/ObjectGround.png'</span></code>, a file in <code class="docutils literal notranslate"><span class="pre">docs/figures/</span></code>; the item images are drawn by <code class="docutils literal notranslate"><span class="pre">tools/itemImages/itemImages.py</span></code>, one hand-written scene each (#2830)</p></td>
+</tr>
+<tr class="row-even"><td><p><strong>Simpler</strong>: the Create functions that add the item</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">createFunctions=['CreateRigidBody']</span></code>, objects and loads; the one place a page names them</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>Interface</strong></p></td>
+<td><p>generated from the declared types: <code class="docutils literal notranslate"><span class="pre">itemTypes</span></code>, <code class="docutils literal notranslate"><span class="pre">requestedTypes</span></code>, <code class="docutils literal notranslate"><span class="pre">accessFunctionTypes</span></code>, and <code class="docutils literal notranslate"><span class="pre">requestedNodeTypes</span></code> of a node marker (which also generates the check of <code class="docutils literal notranslate"><span class="pre">Assemble</span></code> and the answer of <code class="docutils literal notranslate"><span class="pre">mbs.Inspect</span></code>, #2817)</p></td>
+</tr>
+<tr class="row-even"><td><p><strong>Parameters</strong>, <strong>Visualization parameters</strong>, <strong>Output variables</strong></p></td>
+<td><p>generated from the <code class="docutils literal notranslate"><span class="pre">description</span></code> of each member</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>Drawing</strong></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">drawing=r'...'</span></code>, what the item draws beyond the drawing of its kind (<code class="docutils literal notranslate"><span class="pre">drawing</span></code> and <code class="docutils literal notranslate"><span class="pre">drawingSettings</span></code> of the kind in <code class="docutils literal notranslate"><span class="pre">itemKindDefinitions.py</span></code>, which the page links), or <code class="docutils literal notranslate"><span class="pre">'The</span> <span class="pre">item</span> <span class="pre">draws</span> <span class="pre">nothing.'</span></code>; <code class="docutils literal notranslate"><span class="pre">drawingSettings=['general.cylinderTiling',</span> <span class="pre">...]</span></code>, the visualization settings its drawing reads beyond those of its kind - <code class="docutils literal notranslate"><span class="pre">test_itemDrawing.py</span></code> compares them with the C++ (#2840)</p></td>
+</tr>
+<tr class="row-even"><td><p><strong>Detailed description</strong></p></td>
+<td><p>written, <code class="docutils literal notranslate"><span class="pre">detailedDescription</span></code>, headings by kind (below)</p></td>
+</tr>
+<tr class="row-odd"><td><p>user functions</p></td>
+<td><p>generated from the <code class="docutils literal notranslate"><span class="pre">def</span></code> (#2664)</p></td>
+</tr>
+<tr class="row-even"><td><p><strong>Mini example</strong></p></td>
+<td><p>written, <code class="docutils literal notranslate"><span class="pre">miniExample</span></code> (below)</p></td>
+</tr>
+<tr class="row-odd"><td><p>examples, test models</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">examples=['Examples/notebooks/tutorialRigidBodyCreate.py',</span> <span class="pre">...]</span></code>, relative to <code class="docutils literal notranslate"><span class="pre">python/</span></code>, chosen for the basic items and all sensors; without it, every script that names the item</p></td>
+</tr>
+</tbody>
+</table>
+<section id="the-detailed-description-by-kind">
+<h3>The detailed description, by kind<a class="headerlink" href="#the-detailed-description-by-kind" title="Link to this heading"></a></h3>
+<p>A heading used on several pages is spelled as in <code class="docutils literal notranslate"><span class="pre">RECURRING_HEADINGS</span></code> of <code class="docutils literal notranslate"><span class="pre">tools/checkDefinitions.py</span></code>;
+the headings are not enforced, a page of an unusual item may deviate.</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>kind</p></th>
+<th class="head"><p>headings</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>node</p></td>
+<td><p><em>Coordinates</em> (table: index, symbol, kind, meaning, frame), <em>Configuration</em>, <em>Frame and interpretation</em> (which objects read the node differently), <em>Action on the equations of motion</em>; constraints and singularities where there are any. A generic node: one sentence - the object defines the meaning</p></td>
+</tr>
+<tr class="row-odd"><td><p>body</p></td>
+<td><p><em>Definition of quantities</em>, <em>Equations of motion</em>, <em>Marker interfaces</em> - the Jacobians of this body only</p></td>
+</tr>
+<tr class="row-even"><td><p>finite element</p></td>
+<td><p><em>Nodes and coordinates</em>, <em>Kinematics and interpolation</em>, <em>Strains</em>, <em>Mass matrix</em>, <em>Elastic forces</em>, <em>Limitations</em>, <em>Marker interfaces</em>; <code class="docutils literal notranslate"><span class="pre">ObjectANCFCable2D</span></code> is the model page</p></td>
+</tr>
+<tr class="row-odd"><td><p>super element</p></td>
+<td><p><em>Definition of quantities</em>, <em>Equations of motion</em>, <em>Marker interfaces</em>, where they apply</p></td>
+</tr>
+<tr class="row-even"><td><p>connector</p></td>
+<td><p><em>Definition of quantities</em>, <em>Geometric relations</em>, <em>Connector forces</em>; the step to the generalized forces is in the general section</p></td>
+</tr>
+<tr class="row-odd"><td><p>constraint, joint</p></td>
+<td><p><em>Definition of quantities</em>, <em>Geometric relations</em>, <em>Connector constraint equations</em> (index 3, and index 2 where there is one), <em>Post Newton Step</em> where there is one; what the multipliers are, in which frame</p></td>
+</tr>
+<tr class="row-even"><td><p>marker</p></td>
+<td><p><em>Marker quantities</em> (table, with frames), <em>Jacobians</em></p></td>
+</tr>
+<tr class="row-odd"><td><p>load</p></td>
+<td><p><em>Generalized forces</em>: the load, its frame, <span class="math notranslate nohighlight">\(\Qm = \Jm\tp\fv\)</span> with the transformation</p></td>
+</tr>
+<tr class="row-even"><td><p>sensor</p></td>
+<td><p><em>Measures</em>, and details only where there are any; no equations</p></td>
+</tr>
+</tbody>
+</table>
+<p>Rules:</p>
+<ul class="simple">
+<li><p><strong>Every vector has its frame</strong> (<code class="docutils literal notranslate"><span class="pre">notation.md</span></code>: <span class="math notranslate nohighlight">\(\LU{0}{\pv}\)</span>, <span class="math notranslate nohighlight">\(\LU{b}{\pv}\)</span>).</p></li>
+<li><p><strong>The equations are those of the C++</strong> (<code class="docutils literal notranslate"><span class="pre">src/Impl&lt;Kind&gt;s/C&lt;Item&gt;.cpp</span></code>), read, not recalled.</p></li>
+<li><p><strong>A defect found while writing</strong> is said on the page with its issue number, and raised as an issue;
+it is not fixed as part of the text.</p></li>
+</ul>
+</section>
+<section id="the-mini-example">
+<h3>The mini example<a class="headerlink" href="#the-mini-example" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p>the shortest model that shows the item in its typical use - 5 to 25 lines;</p></li>
+<li><p>runs after the lines the generator puts in front of it: <code class="docutils literal notranslate"><span class="pre">SC</span></code>, <code class="docutils literal notranslate"><span class="pre">mbs</span></code>, <code class="docutils literal notranslate"><span class="pre">oGround</span></code>, <code class="docutils literal notranslate"><span class="pre">nGround</span></code>
+(<code class="docutils literal notranslate"><span class="pre">tools/generators/miniExampleEmitter.py</span></code>);</p></li>
+<li><p>the item and what it is combined with are created by their class names, not by Create functions;</p></li>
+<li><p>it solves, and sets <code class="docutils literal notranslate"><span class="pre">exu.sys['testResult']</span></code>; the comment states the expected value - an analytical
+one where the model has one;</p></li>
+<li><p>the reference value goes into <code class="docutils literal notranslate"><span class="pre">MiniExamplesReferenceSolution</span></code> of <code class="docutils literal notranslate"><span class="pre">python/testing/runTestSuiteRefSol.py</span></code>;
+<code class="docutils literal notranslate"><span class="pre">runTestSuite.py</span></code> runs every mini example.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">miniExamplePerformanceTest={'numberOfSteps':</span> <span class="pre">n}</span></code> is the length of its <strong>performance run</strong>
+(<code class="docutils literal notranslate"><span class="pre">python/testing/runMiniExamplePerformance.py</span></code>, #2745): the mini example solved once more with a
+200 times smaller step size for <code class="docutils literal notranslate"><span class="pre">n</span></code> steps, about 2 s of solver time in the full run, a tenth in the
+regular run; <code class="docutils literal notranslate"><span class="pre">{'skip':</span> <span class="pre">True}</span></code> where a dynamic solve of the model makes no sense. <code class="docutils literal notranslate"><span class="pre">--calibrate</span></code> prints
+new values when a model or the machine changes.</p></li>
+</ul>
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="../docs/generated/deprecations.html" class="btn btn-neutral float-left" title="Deprecations" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="../tools/generators/README.html" class="btn btn-neutral float-right" title="tools/generators/ — the new generator code" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

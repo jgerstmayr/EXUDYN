@@ -1,0 +1,633 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ObjectRigidBody &mdash; Exudyn1.13.3 1.13.3 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=3ee1c6c6" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/rtd_sphinx_search.min.css" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/custom.css?v=e2783f0e" />
+
+  
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=b8a3e558"></script>
+      <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../../_static/copybutton.js?v=f281be69"></script>
+      <script src="../../../_static/js/rtd_search_config.js"></script>
+      <script src="../../../_static/js/rtd_sphinx_search.min.js"></script>
+      <script>window.MathJax = {"loader": {"load": ["[tex]/mathtools"]}, "tex": {"packages": {"[+]": ["mathtools"]}, "macros": {"ANCFdk": "{\\LU{0}{\\dv_k}}", "ANCFdkO": "{\\LU{0}{\\dv_{0,k}}}", "ANCFdkOtp": "{\\LU{0}{\\dv_{0,k}\\tp}}", "ANCFdkt": "{\\LU{0}{\\dot\\dv_k}}", "Am": "{\\mathbf{A}}", "Dm": "{\\mathbf{D}}", "Em": "{\\mathbf{E}}", "Gm": "{\\mathbf{G}}", "Im": "{\\mathbf{I}}", "ImThree": "{\\mathbf{I}_{3 \\times 3}}", "Jm": "{\\mathbf{J}}", "Km": "{\\mathbf{K}}", "Mm": "{\\mathbf{M}}", "Pm": "{\\mathbf{P}}", "Rm": "{\\mathbf{R}}", "Sm": "{\\mathbf{S}}", "Tm": "{\\mathbf{T}}", "av": "{\\mathbf{a}}", "bv": "{\\mathbf{b}}", "cv": "{\\mathbf{c}}", "diffANCF": ["{\\frac{\\partial #1}{\\partial \\qv_{ANCF}}}", 1], "diffANCFdk": "{\\diffANCFmI{\\ANCFdk}}", "diffANCFmI": ["{\\frac{\\partial #1}{\\partial \\qv_{ANCF,m1}}}", 1], "diffANCFmIt": ["{\\frac{\\partial #1}{\\partial \\dot \\qv_{ANCF,m1}}}", 1], "diffANCFt": ["{\\frac{\\partial #1}{\\partial \\dot \\qv_{ANCF}}}", 1], "diffmI": ["{\\frac{\\partial #1}{\\partial \\qv_{m1}}}", 1], "diffmIt": ["{\\frac{\\partial #1}{\\partial \\dot \\qv_{m1}}}", 1], "diffmOI": ["{\\frac{\\partial #1}{\\partial \\qv_{m0,m1}}}", 1], "diffmOIt": ["{\\frac{\\partial #1}{\\partial \\dot \\qv_{m0,m1}}}", 1], "diffmOt": ["{\\frac{\\partial #1}{\\partial \\dot \\qv_{m0}}}", 1], "dv": "{\\mathbf{d}}", "ev": "{\\mathbf{e}}", "fv": "{\\mathbf{f}}", "gv": "{\\mathbf{g}}", "hv": "{\\mathbf{h}}", "nv": "{\\mathbf{n}}", "pv": "{\\mathbf{p}}", "qv": "{\\mathbf{q}}", "rv": "{\\mathbf{r}}", "sv": "{\\mathbf{s}}", "tv": "{\\mathbf{t}}", "uv": "{\\mathbf{u}}", "vv": "{\\mathbf{v}}", "xv": "{\\mathbf{x}}", "yv": "{\\mathbf{y}}", "zv": "{\\mathbf{z}}", "vspace": ["{}", 1], "ra": "{\\rightarrow}", "Rcal": "{\\mathbb{R}}", "Ccal": "{\\mathbb{C}}", "Ncal": "{\\mathbb{N}}", "Rot": "{\\mathbf{A}}", "dd": "{\\mathrm{d}}", "ps": "{p_\\mathrm{s}}", "co": "{\\mathrm{c}}", "si": "{\\mathrm{s}}", "tp": "{^\\mathrm{T}}", "diag": "{\\mathrm{diag}}", "vec": "{\\mathrm{vec}}", "Null": "{\\mathbf{0}}", "varepsilonDot": "{\\boldsymbol{\\varepsilon}}", "talpha": "{\\boldsymbol{\\alpha}}", "tbeta": "{\\boldsymbol{\\beta}}", "tgamma": "{\\boldsymbol{\\gamma}}", "tchi": "{\\boldsymbol{\\chi}}", "tdelta": "{\\boldsymbol{\\delta}}", "teps": "{\\boldsymbol{\\varepsilon}}", "tepsDot": "{\\boldsymbol{\\dot \\varepsilon}}", "teta": "{\\boldsymbol{\\eta}}", "tkappa": "{\\boldsymbol{\\kappa}}", "tkappaDot": "{\\boldsymbol{\\dot \\kappa}}", "tphi": "{\\boldsymbol{\\phi}}", "boldVarPhi": "{\\boldsymbol{\\varphi}}", "tPhi": "{\\boldsymbol{\\Phi}}", "ttheta": "{\\boldsymbol{\\theta}}", "tTheta": "{\\boldsymbol{\\Theta}}", "tlambda": "{\\boldsymbol{\\lambda}}", "tnu": "{\\boldsymbol{\\nu}}", "tmu": "{\\boldsymbol{\\mu}}", "tpsi": "{\\boldsymbol{\\psi}}", "tPsi": "{\\boldsymbol{\\Psi}}", "ttau": "{\\boldsymbol{\\tau}}", "tsigma": "{\\boldsymbol{\\sigma}}", "txi": "{\\boldsymbol{\\xi}}", "tzeta": "{\\boldsymbol{\\zeta}}", "tomega": "{\\boldsymbol{\\omega}}", "tOmega": "{\\boldsymbol{\\Omega}}", "vareps": "{\\varepsilon}", "myoverline": ["\\overline{#1}", 1], "pluseq": "\\mathrel{+}=", "LU": ["{\\prescript{#1}{}{#2}\\,}", 2], "LUX": ["{\\prescript{#1}{}{#2}#3\\,}", 3], "LUR": ["{\\prescript{#1}{}{#2}_{#3}\\,}", 3], "LURU": ["{\\prescript{#1}{}{#2}_{#3}^{#4}\\,}", 4], "LLdot": ["{\\prescript{}{#1}{\\dot{#2}}_{#3}\\,}", 3], "vr": ["{\\left[ \\begin{array}{c} { #1}\\vspace{0.04cm} \\\\ { #2}\\vspace{0.04cm} \\\\ { #3} \\end{array} \\right]}", 3], "mr": ["{\\left[ \\begin{array}{ccc} #1 & #2 & #3 \\vspace{0.04cm}\\\\ #4 & #5 & #6 \\vspace{0.04cm}\\\\ #7 & #8 & #9  \\end{array} \\right]}", 9], "vp": ["{\\left[ \\begin{array}{c} { #1} \\vspace{0.04cm}\\\\ { #2} \\end{array} \\right]}", 2], "mp": ["{\\left[ \\begin{array}{cc} #1 & #2 \\vspace{0.04cm}\\\\ #3 & #4 \\end{array} \\right]}", 4], "mfour": ["{\\left[ \\begin{array}{cccc} { #1} \\\\ { #2} \\\\ { #3} \\\\ { #4} \\end{array} \\right]}", 4], "vfour": ["{\\left[ \\begin{array}{c} { #1} \\\\ { #2} \\\\ { #3} \\\\ { #4} \\end{array} \\right]}", 4], "vrRow": ["{[#1,\\, #2,\\, #3]}", 3], "vsix": ["{\\left[ \\begin{array}{c} { #1} \\\\ { #2} \\\\ { #3} \\\\ { #4} \\\\ { #5} \\\\ { #6} \\end{array} \\right]}", 6], "vsixb": ["{\\begin{array}{c} { #1} \\\\ { #2} \\\\ { #3} \\\\ { #4} \\\\ { #5} \\\\ { #6} \\end{array} }", 6], "vsixs": ["{ \\begin{array}{c} { #1} \\\\ { #2} \\\\ { #3} \\\\ { #4} \\\\ { #5} \\\\ { #6} \\end{array} }", 6], "SO": "{q}", "FO": "{y}", "AE": "{\\lambda}", "SYS": "{s}", "SON": "{$2^\\mathrm{nd}$ order differential equations}", "FON": "{$1^\\mathrm{st}$ order differential equations}", "AEN": "{algebraic equations}", "Bm": "{\\mathbf{B}}", "Cm": "{\\mathbf{C}}", "Fm": "{\\mathbf{F}}", "SYSN": "{system equations}", "cIni": "{_\\mathrm{ini}}", "cRef": "{_\\mathrm{ref}}", "cCur": "{_\\mathrm{cur}}", "cVis": "{_\\mathrm{vis}}", "cSOS": "{_\\mathrm{start\\;of\\;step}}", "cConfig": "{_\\mathrm{config}}", "pLoc": "{\\mathbf{b}}", "pLocB": "{\\,^{b}{\\mathbf{v}}}", "pRef": "{\\mathbf{r}}", "pRefG": "{\\,^{0}{\\mathbf{r}}}", "indf": "{_\\mathrm{f}}", "indt": "{_\\mathrm{t}}", "indr": "{_\\mathrm{r}}", "indtt": "{_\\mathrm{tt}}", "indrr": "{_\\mathrm{rr}}", "indff": "{_\\mathrm{ff}}", "indtf": "{_\\mathrm{tf}}", "indrf": "{_\\mathrm{rf}}", "indtr": "{_\\mathrm{tr}}", "omegaBDtilde": "{\\LU{b}{\\tilde \\tomega_\\mathrm{bd}}}", "indrigid": "{_\\mathrm{rigid}}", "indred": "{_\\mathrm{red}}", "induser": "{_\\mathrm{user}}", "indu": "{_\\mathrm{u}}", "termA": ["{\\color{blue}{#1}}", 1], "termB": ["{\\color{red}{#1}}", 1], "termC": ["{\\color{green}{#1}}", 1], "acc": "{\\ddot{\\mathbf{q}}}", "GA": "{G\\alpha}", "Hm": "{\\mathbf{H}}", "ImTwo": "{\\mathbf{I}_{2 \\times 2}}", "Lm": "{\\mathbf{L}}", "Qm": "{\\mathbf{Q}}", "Vm": "{\\mathbf{V}}", "Wm": "{\\mathbf{W}}", "Xm": "{\\mathbf{X}}", "Ym": "{\\mathbf{Y}}", "aalg": "{\\mathbf{a}}", "iv": "{\\mathbf{i}}", "jv": "{\\mathbf{j}}", "kv": "{\\mathbf{k}}", "lv": "{\\mathbf{l}}", "mv": "{\\mathbf{m}}", "ov": "{\\mathbf{o}}", "vel": "{\\mathbf{v}}", "wv": "{\\mathbf{w}}"}}, "options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+      <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-mml-chtml.js"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+    <link rel="next" title="ObjectRigidBody2D" href="ObjectRigidBody2D.html" />
+    <link rel="prev" title="ObjectRotationalMass1D" href="ObjectRotationalMass1D.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            Exudyn1.13.3
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Exudyn User Manual</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../README.html">Exudyn</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../manual/gettingStarted.html">Installation and getting started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../manual/introduction.html">Overview on Exudyn</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../manual/introductionBasics.html">Exudyn basics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../manual/tutorial.html">Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../manual/GUI.html">Renderer, graphics and visualization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../manual/performanceErrors.html">Performance, errors and solver failures</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../manual/introductionAdvanced.html">Advanced topics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../manual/notation.html">Notation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../manual/theory.html">Theory and formulations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../manual/solver.html">Solvers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../cInterface/cInterfaceIndex.html">Python-C++ command interface</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Reference Manual</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="itemsIndex.html">Items reference manual</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="nodeIndex.html">Node</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="objectBodyIndex.html">Object (Body)</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="objectBodyGeneral.html">General info for all bodies</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ObjectGround.html">ObjectGround</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ObjectMassPoint.html">ObjectMassPoint</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ObjectMassPoint2D.html">ObjectMassPoint2D</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ObjectMass1D.html">ObjectMass1D</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ObjectRotationalMass1D.html">ObjectRotationalMass1D</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">ObjectRigidBody</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ObjectRigidBody2D.html">ObjectRigidBody2D</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="objectSuperElementIndex.html">Object (SuperElement)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="objectObjectIndex.html">Object (Object)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="objectFiniteElementIndex.html">Object (FiniteElement)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="objectConnectorIndex.html">Object (Connector)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="objectConstraintIndex.html">Object (Constraint)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="objectJointIndex.html">Object (Joint)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="markerIndex.html">Marker</a></li>
+<li class="toctree-l2"><a class="reference internal" href="loadIndex.html">Load</a></li>
+<li class="toctree-l2"><a class="reference internal" href="sensorIndex.html">Sensor</a></li>
+<li class="toctree-l2"><a class="reference internal" href="itemsIndex.html#parameter-changes">Parameter changes</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../pythonUtilities/utilitiesIndex.html">Python Utility Functions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../structures/structuresIndex.html">Structures and Settings</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../references.html">References</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Developer documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../dev/README.html">Exudyn developer documentation</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">How-to notes</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../howTo/condaEnvironments.html">Conda environments for Exudyn</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../howTo/sphinxDocs.html">Building the documentation</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Examples, models and issues</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../examples/examplesIndex.html">Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../testModels/testModelsIndex.html">TestModels</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../abbreviations.html">List of Abbreviations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../manual/revisions.html">Revisions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../CHANGELOG.html">Changelog</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../trackerlog.html">Issue tracker</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">Exudyn1.13.3</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="itemsIndex.html">Items reference manual</a></li>
+          <li class="breadcrumb-item"><a href="objectBodyIndex.html">Object (Body)</a></li>
+      <li class="breadcrumb-item active">ObjectRigidBody</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../../_sources/docs/generated/items/ObjectRigidBody.md.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <!-- GENERATED by tools/generators/itemDocsEmitter.py from definitions/ - do not edit -->
+<section class="tex2jax_ignore mathjax_ignore" id="objectrigidbody">
+<span id="sec-item-objectrigidbody"></span><h1>ObjectRigidBody<a class="headerlink" href="#objectrigidbody" title="Link to this heading"></a></h1>
+<p>A 3D rigid body which is attached to a 3D rigid body node. The rotation parametrization of the rigid body follows the rotation parametrization of the node. Use Euler parameters in the general case (no singularities) in combination with implicit solvers (GeneralizedAlpha or TrapezoidalIndex2), Tait-Bryan angles for special cases, e.g., rotors where no singularities occur if you rotate about <span class="math notranslate nohighlight">\(x\)</span> or <span class="math notranslate nohighlight">\(z\)</span> axis, or use Lie-group formulation with rotation vector together with explicit solvers. REMARK: Use the class <code class="docutils literal notranslate"><span class="pre">RigidBodyInertia</span></code>, see <a class="reference internal" href="../pythonUtilities/rigidBodyUtilities.html#sec-rigidbodyutilities-rigidbodyinertia-init"><span class="std std-ref">Class function: init</span></a> of <code class="docutils literal notranslate"><span class="pre">exudyn.rigidBodyUtilities</span></code> to handle inertia, <a class="reference internal" href="../abbreviations.html#com"><span class="std std-ref">COM</span></a> and mass.</p>
+<a class="reference internal image-reference" href="../../../_images/ObjectRigidBody.png"><img alt="../../../_images/ObjectRigidBody.png" src="../../../_images/ObjectRigidBody.png" width="500" />
+</a>
+<p><strong>Simpler</strong>: <a class="reference internal" href="../cInterface/MainSystem.html#sec-mainsystemextensions-createrigidbody"><span class="std std-ref"><code class="docutils literal notranslate"><span class="pre">mbs.CreateRigidBody</span></code></span></a> adds this item, with what it needs, in one call.</p>
+<section id="interface">
+<h2>Interface<a class="headerlink" href="#interface" title="Link to this heading"></a></h2>
+<ul class="simple">
+<li><p>Python names: <code class="docutils literal notranslate"><span class="pre">ObjectRigidBody</span></code> or <code class="docutils literal notranslate"><span class="pre">RigidBody</span></code>, and <code class="docutils literal notranslate"><span class="pre">VRigidBody</span></code> for its visualization</p></li>
+<li><p>Nodes it takes: <a class="reference internal" href="NodeRigidBodyEP.html#sec-item-noderigidbodyep"><span class="std std-ref">NodeRigidBodyEP</span></a>, <a class="reference internal" href="NodeRigidBodyRxyz.html#sec-item-noderigidbodyrxyz"><span class="std std-ref">NodeRigidBodyRxyz</span></a>, <a class="reference internal" href="NodeRigidBodyRotVecLG.html#sec-item-noderigidbodyrotveclg"><span class="std std-ref">NodeRigidBodyRotVecLG</span></a></p></li>
+<li><p>Body markers that can be placed on it: <a class="reference internal" href="MarkerBodyMass.html#sec-item-markerbodymass"><span class="std std-ref">MarkerBodyMass</span></a>, <a class="reference internal" href="MarkerBodyPosition.html#sec-item-markerbodyposition"><span class="std std-ref">MarkerBodyPosition</span></a>, <a class="reference internal" href="MarkerBodyRigid.html#sec-item-markerbodyrigid"><span class="std std-ref">MarkerBodyRigid</span></a></p></li>
+</ul>
+</section>
+<section id="parameters">
+<h2>Parameters<a class="headerlink" href="#parameters" title="Link to this heading"></a></h2>
+<p>The parameters of the item; in a dictionary, its type is ‘RigidBody’:</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>name</p></th>
+<th class="head"><p>type</p></th>
+<th class="head"><p>size</p></th>
+<th class="head"><p>default</p></th>
+<th class="head"><p>description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><strong>name</strong></p></td>
+<td><p>String</p></td>
+<td><p></p></td>
+<td><p>‘’</p></td>
+<td><p>objects’s unique name</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>mass</strong></p></td>
+<td><p>UReal</p></td>
+<td><p></p></td>
+<td><p>0.</p></td>
+<td><p>(symbol: <span class="math notranslate nohighlight">\(m\)</span>) mass [SI:kg] of rigid body</p></td>
+</tr>
+<tr class="row-even"><td><p><strong>inertia</strong></p></td>
+<td><p>Vector6D</p></td>
+<td><p>6</p></td>
+<td><p>[0.,0.,0., 0.,0.,0.]</p></td>
+<td><p>(symbol: <span class="math notranslate nohighlight">\(\LU{b}{\jv_6}\)</span>) inertia components [SI:kgm<span class="math notranslate nohighlight">\(^2\)</span>]: <span class="math notranslate nohighlight">\([J_{xx}, J_{yy}, J_{zz}, J_{yz}, J_{xz}, J_{xy}]\)</span> in body-fixed coordinate system and w.r.t. to the reference point of the body, NOT necessarily w.r.t. to <a class="reference internal" href="../abbreviations.html#com"><span class="std std-ref">COM</span></a>; use the class RigidBodyInertia of exudynRigidBodyUtilities.py to handle inertia, <a class="reference internal" href="../abbreviations.html#com"><span class="std std-ref">COM</span></a> and mass</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>centerOfMass</strong></p></td>
+<td><p>Vector3D</p></td>
+<td><p>3</p></td>
+<td><p>[0.,0.,0.]</p></td>
+<td><p>(symbol: <span class="math notranslate nohighlight">\(\LU{b}{\bv_{COM}}\)</span>) local position of <a class="reference internal" href="../abbreviations.html#com"><span class="std std-ref">COM</span></a> relative to the body’s reference point; if the vector of the <a class="reference internal" href="../abbreviations.html#com"><span class="std std-ref">COM</span></a> is [0,0,0], the computation will not consider additional terms for the <a class="reference internal" href="../abbreviations.html#com"><span class="std std-ref">COM</span></a> and it is faster</p></td>
+</tr>
+<tr class="row-even"><td><p><strong>nodeNumber</strong></p></td>
+<td><p>NodeIndex</p></td>
+<td><p></p></td>
+<td><p>invalid (-1)</p></td>
+<td><p>(symbol: <span class="math notranslate nohighlight">\(n0\)</span>) node number (type NodeIndex) for rigid body node</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>visualization</strong></p></td>
+<td><p>VObjectRigidBody</p></td>
+<td><p></p></td>
+<td><p></p></td>
+<td><p>parameters for visualization of item</p></td>
+</tr>
+</tbody>
+</table>
+<p>Renamed parameters, still taken with a <code class="docutils literal notranslate"><span class="pre">DeprecationWarning</span></code>: <code class="docutils literal notranslate"><span class="pre">physicsMass</span></code> (deprecated since 1.12.258, removed in 2031): use <code class="docutils literal notranslate"><span class="pre">mass</span></code>; <code class="docutils literal notranslate"><span class="pre">physicsInertia</span></code> (deprecated since 1.12.258, removed in 2031): use <code class="docutils literal notranslate"><span class="pre">inertia</span></code>; <code class="docutils literal notranslate"><span class="pre">physicsCenterOfMass</span></code> (deprecated since 1.12.258, removed in 2031): use <code class="docutils literal notranslate"><span class="pre">centerOfMass</span></code>.</p>
+</section>
+<section id="visualization-parameters">
+<h2>Visualization parameters<a class="headerlink" href="#visualization-parameters" title="Link to this heading"></a></h2>
+<p>The parameters of <code class="docutils literal notranslate"><span class="pre">VObjectRigidBody</span></code>, given as <code class="docutils literal notranslate"><span class="pre">visualization</span></code>:</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>name</p></th>
+<th class="head"><p>type</p></th>
+<th class="head"><p>size</p></th>
+<th class="head"><p>default</p></th>
+<th class="head"><p>description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><strong>show</strong></p></td>
+<td><p>Bool</p></td>
+<td><p></p></td>
+<td><p>True</p></td>
+<td><p>set true, if item is shown in visualization and false if it is not shown</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>graphicsDataUserFunction</strong></p></td>
+<td><p>ObjectRigidBodyGraphicsDataUserFunction</p></td>
+<td><p></p></td>
+<td><p>0</p></td>
+<td><p>A Python function which returns a bodyGraphicsData object, which is a list of graphics data in a dictionary computed by the user function; the graphics elements need to be defined in the local body coordinates and are transformed by mbs to global coordinates</p></td>
+</tr>
+<tr class="row-even"><td><p><strong>graphicsData</strong></p></td>
+<td><p>BodyGraphicsData</p></td>
+<td><p></p></td>
+<td><p></p></td>
+<td><p>Structure contains data for body visualization; data is defined in special list / dictionary structure</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="drawing">
+<h2>Drawing<a class="headerlink" href="#drawing" title="Link to this heading"></a></h2>
+<p>Drawn as <a class="reference internal" href="objectBodyGeneral.html#sec-drawing-objectsbody"><span class="std std-ref">all bodies</span></a>; its <code class="docutils literal notranslate"><span class="pre">graphicsData</span></code> in the body frame, and what its <code class="docutils literal notranslate"><span class="pre">graphicsDataUserFunction</span></code> returns; with a contour plot (<code class="docutils literal notranslate"><span class="pre">contour.rigidBodiesColored</span></code>) colored by the value at the reference point.</p>
+</section>
+<section id="output-variables">
+<h2>Output variables<a class="headerlink" href="#output-variables" title="Link to this heading"></a></h2>
+<p>Available as <code class="docutils literal notranslate"><span class="pre">OutputVariableType</span></code> in sensors, <code class="docutils literal notranslate"><span class="pre">Get...Output()</span></code> and other functions:</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>output variable</p></th>
+<th class="head"><p>symbol</p></th>
+<th class="head"><p>description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Position</p></td>
+<td><p><span class="math notranslate nohighlight">\(\LU{0}{\pv}\cConfig(\pLocB) = \LU{0}{\pRef}\cConfig + \LU{0}{\pRef}\cRef + \LU{0b}{\Rot}\pLocB\)</span></p></td>
+<td><p>global position vector of body-fixed point given by local position vector <span class="math notranslate nohighlight">\(\pLocB\)</span></p></td>
+</tr>
+<tr class="row-odd"><td><p>Displacement</p></td>
+<td><p><span class="math notranslate nohighlight">\(\LU{0}{\uv}\cConfig + \LU{0b}{\Rot}\pLocB\)</span></p></td>
+<td><p>global displacement vector of body-fixed point given by local position vector <span class="math notranslate nohighlight">\(\pLocB\)</span></p></td>
+</tr>
+<tr class="row-even"><td><p>Velocity</p></td>
+<td><p><span class="math notranslate nohighlight">\(\LU{0}{\vv}\cConfig(\pLocB) = \LU{0}{\dot\uv}\cConfig + \LU{0b}{\Rot}(\LU{b}{\tomega} \times \pLocB\cConfig)\)</span></p></td>
+<td><p>global velocity vector of body-fixed point given by local position vector <span class="math notranslate nohighlight">\(\pLocB\)</span></p></td>
+</tr>
+<tr class="row-odd"><td><p>VelocityLocal</p></td>
+<td><p><span class="math notranslate nohighlight">\(\LU{b}{\vv}\cConfig(\pLocB) = \LU{b0}{\Rot} \LU{0}{\vv}\cConfig(\pLocB)\)</span></p></td>
+<td><p>local (body-fixed) velocity vector of body-fixed point given by local position vector <span class="math notranslate nohighlight">\(\pLocB\)</span></p></td>
+</tr>
+<tr class="row-even"><td><p>RotationMatrix</p></td>
+<td><p><span class="math notranslate nohighlight">\(\mathrm{vec}(\LU{0b}{\Rot})=[A_{00},\,A_{01},\,A_{02},\,A_{10},\,\ldots,\,A_{21},\,A_{22}]\cConfig\tp\)</span></p></td>
+<td><p>vector with 9 components of the rotation matrix (row-major format)</p></td>
+</tr>
+<tr class="row-odd"><td><p>Rotation</p></td>
+<td><p></p></td>
+<td><p>vector with 3 components of the Euler angles in xyz-sequence (R=Rx<em>Ry</em>Rz), recomputed from rotation matrix</p></td>
+</tr>
+<tr class="row-even"><td><p>AngularVelocity</p></td>
+<td><p><span class="math notranslate nohighlight">\(\LU{0}{\tomega}\cConfig\)</span></p></td>
+<td><p>global 3D angular velocity vector of body</p></td>
+</tr>
+<tr class="row-odd"><td><p>AngularVelocityLocal</p></td>
+<td><p><span class="math notranslate nohighlight">\(\LU{b}{\tomega}\cConfig\)</span></p></td>
+<td><p>local (body-fixed) 3D angular velocity vector of body</p></td>
+</tr>
+<tr class="row-even"><td><p>Acceleration</p></td>
+<td><p><span class="math notranslate nohighlight">\(\LU{0}{\av}\cConfig(\pLocB) = \LU{0}{\ddot\uv} + \LU{0}{\talpha} \times (\LU{0b}{\Rot} \pLocB) + \LU{0}{\tomega} \times ( \LU{0}{\tomega} \times(\LU{0b}{\Rot} \pLocB))\)</span></p></td>
+<td><p>global acceleration vector of body-fixed point given by local position vector <span class="math notranslate nohighlight">\(\pLocB\)</span></p></td>
+</tr>
+<tr class="row-odd"><td><p>AccelerationLocal</p></td>
+<td><p><span class="math notranslate nohighlight">\(\LU{b}{\av}\cConfig(\pLocB) = \LU{b0}{\Rot} \LU{0}{\av}\cConfig(\pLocB)\)</span></p></td>
+<td><p>local (body-fixed) acceleration vector of body-fixed point given by local position vector <span class="math notranslate nohighlight">\(\pLocB\)</span></p></td>
+</tr>
+<tr class="row-even"><td><p>AngularAcceleration</p></td>
+<td><p><span class="math notranslate nohighlight">\(\LU{0}{\talpha}\cConfig\)</span></p></td>
+<td><p>angular acceleration vector of body</p></td>
+</tr>
+<tr class="row-odd"><td><p>AngularAccelerationLocal</p></td>
+<td><p><span class="math notranslate nohighlight">\(\LU{b}{\talpha}\cConfig = \LU{b0}{\Rot} \LU{0}{\talpha}\cConfig\)</span></p></td>
+<td><p>local angular acceleration vector of body</p></td>
+</tr>
+<tr class="row-even"><td><p>KineticEnergy</p></td>
+<td><p><span class="math notranslate nohighlight">\(T = \frac{1}{2} m\, \LU{0}{\vv}\tp\LU{0}{\vv} + m\, \LU{0}{\vv}\tp (\LU{0}{\tomega} \times \LU{0b}{\Rot}\LU{b}{\bv_{COM}}) + \frac{1}{2} \LU{b}{\tomega}\tp \LU{b}{\Jm} \LU{b}{\tomega}\)</span></p></td>
+<td><p>kinetic energy of the body, with the velocity <span class="math notranslate nohighlight">\(\LU{0}{\vv}\)</span> of its reference point and the inertia w.r.t. it; localPosition must be <span class="math notranslate nohighlight">\([0,0,0]\)</span></p></td>
+</tr>
+<tr class="row-odd"><td><p>PotentialEnergy</p></td>
+<td><p><span class="math notranslate nohighlight">\(V = 0\)</span></p></td>
+<td><p>the body has no elastic energy; gravity and other loads are not part of it (see exudyn.advancedUtilities.LoadPotentialEnergy) - the value stays the same when a body gets a built-in gravity; localPosition must be <span class="math notranslate nohighlight">\([0,0,0]\)</span></p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="detailed-description">
+<span id="description-objectrigidbody"></span><h2>Detailed description<a class="headerlink" href="#detailed-description" title="Link to this heading"></a></h2>
+<section id="definition-of-quantities">
+<h3>Definition of quantities<a class="headerlink" href="#definition-of-quantities" title="Link to this heading"></a></h3>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>intermediate variables</p></th>
+<th class="head"><p>symbol</p></th>
+<th class="head"><p>description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>inertia tensor</p></td>
+<td><p><span class="math notranslate nohighlight">\(\LU{b}{\Jm} = \LU{b}{\mr{J_{xx}}{J_{xy}}{J_{xz}} {J_{xy}}{J_{yy}}{J_{yz}} {J_{xz}}{J_{yz}}{J_{zz}}}\)</span></p></td>
+<td><p>symmetric inertia tensor, based on components of <span class="math notranslate nohighlight">\(\LU{b}{\jv_6}\)</span>, in body-fixed (local) coordinates and w.r.t. body’s reference point</p></td>
+</tr>
+<tr class="row-odd"><td><p>reference coordinates</p></td>
+<td><p><span class="math notranslate nohighlight">\(\qv\cRef = [\pRef\tp\cRef,\,\tpsi\tp\cRef]\tp\)</span></p></td>
+<td><p>defines reference configuration, <strong>DIFFERENT</strong> meaning from body’s reference point!</p></td>
+</tr>
+<tr class="row-even"><td><p>(relative) current coordinates</p></td>
+<td><p><span class="math notranslate nohighlight">\(\qv\cCur = [\pRef\tp\cCur,\,\tpsi\tp\cCur]\tp\)</span></p></td>
+<td><p>unknowns in solver; <strong>relative</strong> to the reference coordinates; current coordinates at initial configuration = initial coordinates <span class="math notranslate nohighlight">\(\qv\cIni\)</span></p></td>
+</tr>
+<tr class="row-odd"><td><p>current velocity coordinates</p></td>
+<td><p><span class="math notranslate nohighlight">\(\dot \qv\cCur = [\vv\tp\cCur,\,\dot \tpsi\tp\cCur]\tp = [\dot \pv\tp\cCur,\,\dot \ttheta\tp\cCur]\tp\)</span></p></td>
+<td><p>current velocity coordinates</p></td>
+</tr>
+<tr class="row-even"><td><p>body’s reference point</p></td>
+<td><p><span class="math notranslate nohighlight">\(\pRefG\cConfig + \pRefG\cRef = \LU{0}{\pv}(n_0)\cConfig\)</span></p></td>
+<td><p>position of <strong>body’s reference point</strong> provided by node <span class="math notranslate nohighlight">\(n_0\)</span> in any configuration except for reference; if <span class="math notranslate nohighlight">\(\LU{b}{\bv_{COM}}==[0,\;0,\;0]\tp\)</span>, this position becomes equal to the <a class="reference internal" href="../abbreviations.html#com"><span class="std std-ref">COM</span></a> position</p></td>
+</tr>
+<tr class="row-odd"><td><p>reference body’s reference point</p></td>
+<td><p><span class="math notranslate nohighlight">\(\pRefG\cRef = \LU{0}{\pv}(n_0)\cRef\)</span></p></td>
+<td><p>position of <strong>body’s reference point</strong> in reference configuration</p></td>
+</tr>
+<tr class="row-even"><td><p>body’s reference point displacement</p></td>
+<td><p><span class="math notranslate nohighlight">\(\LU{0}{\uv}\cConfig = \pRefG\cConfig = [q_0,\;q_1,\;q_2]\cConfig\tp = \LU{0}{\uv}(n_0)\cConfig\)</span></p></td>
+<td><p>displacement of <strong>body’s reference point</strong> which is provided by node <span class="math notranslate nohighlight">\(n_0\)</span> in any configuration</p></td>
+</tr>
+<tr class="row-odd"><td><p>body’s reference point velocity</p></td>
+<td><p><span class="math notranslate nohighlight">\(\LU{0}{\vv}\cConfig = \dot \pRefG\cConfig = [\dot q_0,\;\dot q_1,\;\dot q_2]\cConfig\tp = \LU{0}{\vv}(n_0)\cConfig\)</span></p></td>
+<td><p>velocity of <strong>body’s reference point</strong> which is provided by node <span class="math notranslate nohighlight">\(n_0\)</span> in any configuration</p></td>
+</tr>
+<tr class="row-even"><td><p>body’s reference point acceleration</p></td>
+<td><p><span class="math notranslate nohighlight">\(\LU{0}{\av}\cConfig = [\ddot q_0,\;\ddot q_1,\;\ddot q_2]\cConfig\tp\)</span></p></td>
+<td><p>acceleration of <strong>body’s reference point</strong> which is provided by node <span class="math notranslate nohighlight">\(n_0\)</span> in any configuration</p></td>
+</tr>
+<tr class="row-odd"><td><p>rotation coordinates</p></td>
+<td><p><span class="math notranslate nohighlight">\(\ttheta_{\mathrm{config}} = \tpsi(n_0)\cRef + \tpsi(n_0)\cConfig\)</span></p></td>
+<td><p>(total) rotation parameters of body as provided by node <span class="math notranslate nohighlight">\(n_0\)</span> in any configuration</p></td>
+</tr>
+<tr class="row-even"><td><p>rotation parameters</p></td>
+<td><p><span class="math notranslate nohighlight">\(\ttheta_{\mathrm{config}} = \tpsi(n_0)\cRef + \tpsi(n_0)\cConfig\)</span></p></td>
+<td><p>(total) rotation parameters of body as provided by node <span class="math notranslate nohighlight">\(n_0\)</span> in any configuration</p></td>
+</tr>
+<tr class="row-odd"><td><p>body rotation matrix</p></td>
+<td><p><span class="math notranslate nohighlight">\(\LU{0b}{\Rot}\cConfig = \LU{0b}{\Rot}(n_0)\cConfig\)</span></p></td>
+<td><p>rotation matrix which transforms local to global coordinates as given by node</p></td>
+</tr>
+<tr class="row-even"><td><p>local position</p></td>
+<td><p><span class="math notranslate nohighlight">\(\pLocB = [\LU{b}{b_0},\,\LU{b}{b_1},\,\LU{b}{b_2}]\tp\)</span></p></td>
+<td><p>local position as used by markers or sensors</p></td>
+</tr>
+<tr class="row-odd"><td><p>angular velocity</p></td>
+<td><p><span class="math notranslate nohighlight">\(\LU{0}{\tomega}\cConfig = \LU{0}{[\omega_0(n_0),\,\omega_1(n_0),\,\omega_2(n_0)]}\cConfig\tp\)</span></p></td>
+<td><p>global angular velocity of body as provided by node <span class="math notranslate nohighlight">\(n_0\)</span> in any configuration</p></td>
+</tr>
+<tr class="row-even"><td><p>local angular velocity</p></td>
+<td><p><span class="math notranslate nohighlight">\(\LU{b}{\tomega}\cConfig\)</span></p></td>
+<td><p>local angular velocity of body as provided by node <span class="math notranslate nohighlight">\(n_0\)</span> in any configuration</p></td>
+</tr>
+<tr class="row-odd"><td><p>body angular acceleration</p></td>
+<td><p><span class="math notranslate nohighlight">\(\LU{0}{\talpha}\cConfig = \LU{0}{\dot \tomega}\cConfig\)</span></p></td>
+<td><p>angular acceleratoin of body as provided by node <span class="math notranslate nohighlight">\(n_0\)</span> in any configuration</p></td>
+</tr>
+<tr class="row-even"><td><p>applied forces</p></td>
+<td><p><span class="math notranslate nohighlight">\(\LU{0}{\fv}_a = [f_0,\;f_1,\;f_2]\tp\)</span></p></td>
+<td><p>calculated from loads, connectors, …</p></td>
+</tr>
+<tr class="row-odd"><td><p>applied torques</p></td>
+<td><p><span class="math notranslate nohighlight">\(\LU{0}{\ttau}_a = [\tau_0,\;\tau_1,\;\tau_2]\tp\)</span></p></td>
+<td><p>calculated from loads, connectors, …</p></td>
+</tr>
+<tr class="row-even"><td><p>constraint reaction forces</p></td>
+<td><p><span class="math notranslate nohighlight">\(\LU{0}{\fv}_\lambda = [f_{\lambda 0},\;f_{\lambda 1},\;f_{\lambda 2}]\tp\)</span></p></td>
+<td><p>calculated from joints or constraint)</p></td>
+</tr>
+<tr class="row-odd"><td><p>constraint reaction torques</p></td>
+<td><p><span class="math notranslate nohighlight">\(\LU{0}{\ttau}_\lambda = [\tau_{\lambda 0},\;\tau_{\lambda 1},\;\tau_{\lambda 2}]\tp\)</span></p></td>
+<td><p>calculated from joints or constraints</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="rotation-parametrization">
+<h3>Rotation parametrization<a class="headerlink" href="#rotation-parametrization" title="Link to this heading"></a></h3>
+<p>The equations of motion of the rigid body build upon a specific parameterization of the rigid body coordinates.
+Rigid body coordinates are defined by the underlying node given by <code class="docutils literal notranslate"><span class="pre">nodeNumber</span></code> <span class="math notranslate nohighlight">\(n0\)</span>.
+Appropriate nodes are</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">NodeRigidBodyEP</span></code> (Euler parameters)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">NodeRigidBodyRxyz</span></code> (Euler angles / Tait Bryan angles)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">NodeRigidBodyRotVecLG</span></code> (Rotation vector with Lie group integration option)</p></li>
+</ul>
+<p>Note that all operations for rotation parameters, such as the computation of the rotation matrix, must be performed with the
+rotation parameters <span class="math notranslate nohighlight">\(\ttheta\)</span>, see table above, which are the sum of reference and current coordinates.</p>
+<p>The angular velocity in body-fixed coordinates is related to the rotation parameters by means of a matrix <span class="math notranslate nohighlight">\(\LU{b}{\Gm_{rp}}\)</span>,</p>
+<div class="math notranslate nohighlight" id="equation-eq-objectrigidbody-omegalocal">
+<span class="eqno">(47)<a class="headerlink" href="#equation-eq-objectrigidbody-omegalocal" title="Link to this equation"></a></span>\[
+\LU{b}{\tomega} = \LU{b}{\Gm_{rp}} \dot \ttheta = \LU{b}{\Gm_{rp}} \dot \tpsi \, ,
+\]</div>
+<p>and is specific for any rotation parametrization <span class="math notranslate nohighlight">\(rp\)</span>.
+The angular velocity in global coordinates is related to the rotation parameters by means of a matrix <span class="math notranslate nohighlight">\(\LU{0}{\Gm_{rp}}\)</span>,</p>
+<div class="math notranslate nohighlight" id="equation-eq-objectrigidbody-omega">
+<span class="eqno">(48)<a class="headerlink" href="#equation-eq-objectrigidbody-omega" title="Link to this equation"></a></span>\[
+\LU{0}{\tomega} = \LU{0}{\Gm_{rp}} \dot \ttheta\, .
+\]</div>
+<p>The local angular accelerations follow as</p>
+<div class="math notranslate nohighlight" id="equation-eq-objectrigidbody-alpha">
+<span class="eqno">(49)<a class="headerlink" href="#equation-eq-objectrigidbody-alpha" title="Link to this equation"></a></span>\[
+\LU{b}{\talpha} = \LU{b}{\dot \tomega}= \LU{b}{\Gm_{rp}} \ddot \ttheta + \LU{b}{\dot \Gm_{rp}} \dot \ttheta \, ,
+\]</div>
+<p>remember that derivatives for angular velocities can also be done in the local frame. In case of Euler parameters and the Lie-group rotation vector we find that
+<span class="math notranslate nohighlight">\(\LU{b}{\dot \Gm_{rp}} \dot \ttheta = \Null\)</span>.</p>
+</section>
+<section id="equations-of-motion-for-com">
+<h3>Equations of motion for <a class="reference internal" href="../abbreviations.html#com"><span class="std std-ref">COM</span></a><a class="headerlink" href="#equations-of-motion-for-com" title="Link to this heading"></a></h3>
+<p>The equations of motion for a rigid body, the so-called Newton-Euler equations, can be written for the special case of the reference point <span class="math notranslate nohighlight">\(=\)</span> <a class="reference internal" href="../abbreviations.html#com"><span class="std std-ref">COM</span></a> and split for translations and rotations, using a coordinate-free notation,</p>
+<div class="math notranslate nohighlight" id="equation-eq-objectrigidbody-eomcom0">
+<span class="eqno">(50)<a class="headerlink" href="#equation-eq-objectrigidbody-eomcom0" title="Link to this equation"></a></span>\[
+\mp{m \ImThree}{\Null}{\Null}{\Jm} \vp{\av_{COM}}{\talpha} = \vp{\Null}{-\tilde \tomega \Jm \tomega} + \vp{\fv_a}{\ttau_a} + \vp{\fv_\lambda}{\ttau_\lambda}
+\]</div>
+<p>with the <span class="math notranslate nohighlight">\(3\times 3\)</span> unit matrix <span class="math notranslate nohighlight">\(\ImThree\)</span> and forces <span class="math notranslate nohighlight">\(\fv\)</span> resp. torques <span class="math notranslate nohighlight">\(\ttau\)</span> as discribed in the table above.
+A change of the reference point, using the vector <span class="math notranslate nohighlight">\(\bv_{COM}\)</span> from the body’s reference point <span class="math notranslate nohighlight">\(\pv\)</span> to the <a class="reference internal" href="../abbreviations.html#com"><span class="std std-ref">COM</span></a> position, is simple by replacing <a class="reference internal" href="../abbreviations.html#com"><span class="std std-ref">COM</span></a> accelerations using the common relation known from Euler</p>
+<div class="math notranslate nohighlight">
+\[
+\av_{COM} =  \av + \tilde \talpha \bv_{COM} + \tilde \tomega \tilde \tomega \bv_{COM} \, ,
+\]</div>
+<p>which is inserted into the first line of <a class="reference internal" href="#equation-eq-objectrigidbody-eomcom0">(50)</a>. Additionally, the second line of <a class="reference internal" href="#equation-eq-objectrigidbody-eomcom0">(50)</a>
+(second Euler equation related to rate of angular momentum) is rewritten for an arbitrary reference point, <span class="math notranslate nohighlight">\(\bv_{COM}\)</span> denoting the vector from the body reference point to <a class="reference internal" href="../abbreviations.html#com"><span class="std std-ref">COM</span></a>, using the well known relation</p>
+<div class="math notranslate nohighlight">
+\[
+m \tilde \bv_{COM} \talpha +  \Jm \talpha + \tilde \tomega \Jm \tomega = \ttau_a + \ttau_\lambda
+\]</div>
+</section>
+<section id="equations-of-motion-for-arbitrary-reference-point">
+<h3>Equations of motion for arbitrary reference point<a class="headerlink" href="#equations-of-motion-for-arbitrary-reference-point" title="Link to this heading"></a></h3>
+<p>This immediately leads to the equations of motion for the rigid body with respect to an arbitrary reference point (<span class="math notranslate nohighlight">\(\neq\)</span> <a class="reference internal" href="../abbreviations.html#com"><span class="std std-ref">COM</span></a>),
+see e.g. <a class="reference internal" href="../references.html#ref-woernle2016"><span class="std std-ref">woernle2016</span></a>(page 258ff.), which have the general coordinate-free form</p>
+<div class="math notranslate nohighlight" id="equation-eq-objectrigidbody-eomarbitrary">
+<span class="eqno">(51)<a class="headerlink" href="#equation-eq-objectrigidbody-eomarbitrary" title="Link to this equation"></a></span>\[
+\mp{m \ImThree}{-m \tilde \bv_{COM}}{m \tilde \bv_{COM}}{\Jm} \vp{\av}{\talpha} =
+\vp{-m \tilde \tomega \tilde \tomega \bv_{COM} }{-\tilde \tomega \Jm \tomega} + \vp{\fv_a}{\ttau_a} + \vp{\fv_\lambda}{\ttau_\lambda} \, ,
+\]</div>
+<p>in which <span class="math notranslate nohighlight">\(\Jm\)</span> is the inertia tensor w.r.t. the chosen reference point (which has local coordinates <span class="math notranslate nohighlight">\(\LU{b}{[0,0,0]\tp}\)</span>).
+<a class="reference internal" href="#equation-eq-objectrigidbody-eomarbitrary">(51)</a> can be written in the global frame (0),</p>
+<div class="math notranslate nohighlight" id="equation-eq-objectrigidbody-eomglobal">
+<span class="eqno">(52)<a class="headerlink" href="#equation-eq-objectrigidbody-eomglobal" title="Link to this equation"></a></span>\[
+\mp{m \ImThree}{-m \LU{0}{\tilde \bv_{COM}}} {m \LU{0}{\tilde \bv_{COM}}}{\LU{0}{\Jm}} \vp{\LU{0}{\av}}{\LU{0}{\talpha}} =
+\vp{-m \LU{0}{\tilde \tomega} \LU{0}{\tilde \tomega} \LU{0}{\bv_{COM}} }
+{-\LU{0}{\tilde \tomega} \LU{0}{\Jm} \LU{0}{\tomega}} + \vp{\LU{0}{\fv_a}}{\LU{0}{\ttau_a}} + \vp{\LU{0}{\fv_\lambda}}{\LU{0}{\ttau_\lambda}} \, .
+\]</div>
+<p>Expressing the translational part (first line) of <a class="reference internal" href="#equation-eq-objectrigidbody-eomglobal">(52)</a> in the global frame (0), using local coordinates (b) for
+quantities that are constant in the body-fixed frame, <span class="math notranslate nohighlight">\(\LU{b}{\Jm}\)</span> and <span class="math notranslate nohighlight">\(\LU{b}{\bv_{COM}}\)</span>, thus expressing also the
+angular velocity <span class="math notranslate nohighlight">\(\LU{b}{\tomega}\)</span> in the body-fixed frame,
+applying <a class="reference internal" href="#equation-eq-objectrigidbody-omegalocal">(47)</a> and <a class="reference internal" href="#equation-eq-objectrigidbody-alpha">(49)</a>, and using the relations</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{aligned}
+\LU{0}{\tilde \tomega}  \LU{0}{\tilde \tomega} \LU{0}{\bv_{COM}}
+&amp;= \LU{0b}{\Rot} \LU{b}{\tilde \tomega} \LU{b}{\tilde \tomega} \LU{b}{\bv_{COM}} = - \LU{0b}{\Rot} \LU{b}{\tilde \tomega} \LU{b}{\tilde \bv_{COM}} \LU{b}{\tomega}
+= -\LU{0b}{\Rot} \LU{b}{\tilde \tomega} \LU{b}{\tilde \bv_{COM}} \LU{b}{\Gm_{rp}} \dot \ttheta \, , \\
+-m \LU{0}{\tilde \bv_{COM}} \LU{0}{\tilde \talpha}
+&amp;= -m \LU{0b}{\Rot} \LU{b}{\tilde \bv_{COM}} \LU{b}{\tilde \talpha}
+= -m \LU{0b}{\Rot} \LU{b}{\tilde \bv_{COM}} \left( \LU{b}{\Gm_{rp}} \ddot \ttheta + \LU{b}{\dot \Gm_{rp}} \dot \ttheta \right) \, ,
+\end{aligned}
+\end{split}\]</div>
+<p>we obtain</p>
+<div class="math notranslate nohighlight" id="equation-eq-objectrigidbody-eom">
+<span class="eqno">(53)<a class="headerlink" href="#equation-eq-objectrigidbody-eom" title="Link to this equation"></a></span>\[\begin{split}
+\begin{aligned}
+&amp;&amp;\mp{m \ImThree}  {-m \LU{0b}{\Rot} \LU{b}{\tilde \bv_{COM}}\LU{b}{\Gm_{rp}}}  {m \LU{b}{\Gm_{rp}\tp} \LU{b}{\tilde \bv_{COM}}\LU{0b}{\Rot\tp}}  {\LU{b}{\Gm_{rp}\tp}\LU{b}{\Jm}\LU{b}{\Gm_{rp}}}
+\vp{\LU{0}{\av}}{\ddot \ttheta} \\
+&amp;&amp;= \vp{m \LU{0b}{\Rot} \LU{b}{\tilde \tomega} \LU{b}{\tilde \bv_{COM}} \LU{b}{\tomega}  + m \LU{0b}{\Rot} \LU{b}{\tilde \bv_{COM}}\LU{b}{\dot \Gm_{rp}} \dot \ttheta}
+{-\LU{b}{\Gm_{rp}\tp}\LU{b}{\tilde \tomega} \LU{b}{\Jm} \LU{b}{\tomega} - \LU{b}{\Gm_{rp}\tp} \LU{b}{\Jm} \LU{b}{\dot \Gm_{rp}} \dot \ttheta} +
+\vp{\LU{0}{\fv}_a}{\LU{0}{\Gm_{rp}\tp}\LU{0}{\ttau}_a} + \vp{\LU{0}{\fv}_\lambda}{\fv_{\theta,\lambda}}
+\end{aligned}
+\end{split}\]</div>
+<p>with constraint reaction forces <span class="math notranslate nohighlight">\(\fv_{\theta,\lambda}\)</span> for the rotation parameters.
+Note that
+the last line has been pre-multiplied with <span class="math notranslate nohighlight">\(\LU{b}{\Gm_{rp}\tp}\)</span> (in order to make the mass matrix symmetric) and that
+<span class="math notranslate nohighlight">\(\LU{b}{\dot \Gm_{rp}} \dot \ttheta = \Null\)</span> in case of Euler parameters and the Lie-group rotation vector .</p>
+</section>
+<section id="euler-parameters">
+<h3>Euler parameters<a class="headerlink" href="#euler-parameters" title="Link to this heading"></a></h3>
+<p>In case of Euler parameters, a constraint equation is automatically added, reading for the index 3 case</p>
+<div class="math notranslate nohighlight" id="equation-eq-objectrigidbody-eulerparameters">
+<span class="eqno">(54)<a class="headerlink" href="#equation-eq-objectrigidbody-eulerparameters" title="Link to this equation"></a></span>\[
+g_\theta(\ttheta) = \theta_0^2 + \theta_1^2 + \theta_2^2 + \theta_3^2 - 1 = 0
+\]</div>
+<p>and for the index 2 case</p>
+<div class="math notranslate nohighlight" id="equation-eq-objectrigidbody-eulerparametersvel">
+<span class="eqno">(55)<a class="headerlink" href="#equation-eq-objectrigidbody-eulerparametersvel" title="Link to this equation"></a></span>\[
+\dot g_\theta(\ttheta) = 2 \theta_0 \dot \theta_0 + 2 \theta_1 \dot \theta_1 + 2 \theta_2 \dot \theta_2 + 2 \theta_3 \dot \theta_3 = 0
+\]</div>
+<p>Given a Lagrange parameter (algebraic variable) <span class="math notranslate nohighlight">\(\lambda_\theta\)</span> related to the Euler parameter constraint <a class="reference internal" href="#equation-eq-objectrigidbody-eulerparameters">(54)</a>, the constraint reaction forces in <a class="reference internal" href="#equation-eq-objectrigidbody-eom">(53)</a> then read</p>
+<div class="math notranslate nohighlight">
+\[
+\fv_{\theta,\lambda} = \frac{\partial g_\theta}{\ttheta\tp} \lambda_\theta = [2\theta_0,\; 2\theta_1,\; 2\theta_2,\; 2\theta_3]\tp
+\]</div>
+</section>
+<section id="marker-interfaces">
+<h3>Marker interfaces<a class="headerlink" href="#marker-interfaces" title="Link to this heading"></a></h3>
+<p>A local position <span class="math notranslate nohighlight">\(\pLocB\)</span> of the body moves with the velocity
+<span class="math notranslate nohighlight">\(\LU{0}{\vv} + \LU{0b}{\Rot} (\LU{b}{\tomega} \times \pLocB)\)</span>, which gives, with the velocity
+transformations of the node, the position and rotation Jacobians</p>
+<div class="math notranslate nohighlight">
+\[
+\LU{0}{\Jm_{pos}} = \frac{\partial \LU{0}{\vv}(\pLocB)}{\partial \dot\qv} = \left[ \ImThree ,\; -\LU{0b}{\Rot} \LU{b}{\tilde \pv}_{\mathrm{loc}} \LU{b}{\Gm} \right] , \quad
+\LU{0}{\Jm_{rot}} = \frac{\partial \LU{0}{\tomega}}{\partial \dot\qv} = \left[ \Null ,\; \LU{0}{\Gm} \right] ,
+\]</div>
+<p>with <span class="math notranslate nohighlight">\(\LU{b}{\tilde \pv}_{\mathrm{loc}}\)</span> the skew-symmetric matrix of <span class="math notranslate nohighlight">\(\pLocB\)</span>; a force at the local
+position then acts on the rotation coordinates with the moment it has about the reference point.
+The mass-weighted Jacobian of a mass-proportional load is <span class="math notranslate nohighlight">\(m\)</span> times the position Jacobian of the
+center of mass.</p>
+<p><strong>Userfunction</strong>: <code class="docutils literal notranslate"><span class="pre">graphicsDataUserFunction(mbs,</span> <span class="pre">itemNumber)</span></code>
+A user function, which is called by the visualization thread in order to draw user-defined objects.
+The function can be used to generate any <code class="docutils literal notranslate"><span class="pre">BodyGraphicsData</span></code>, see Section <a class="reference internal" href="../../manual/introductionAdvanced.html#sec-graphicsdata"><span class="std std-ref">GraphicsData</span></a>.
+Use <code class="docutils literal notranslate"><span class="pre">exudyn.graphics</span></code> functions, see Section <a class="reference internal" href="../pythonUtilities/graphics.html#sec-module-graphics"><span class="std std-ref">Module: graphics</span></a>, to create more complicated objects.
+Note that <code class="docutils literal notranslate"><span class="pre">graphicsDataUserFunction</span></code> needs to copy lots of data and is therefore
+inefficient and only designed to enable simpler tests, but not large scale problems.</p>
+<p>For an example for <code class="docutils literal notranslate"><span class="pre">graphicsDataUserFunction</span></code> see ObjectGround, <a class="reference internal" href="ObjectGround.html#sec-item-objectground"><span class="std std-ref">ObjectGround</span></a>.</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>arguments / return</p></th>
+<th class="head"><p>type or size</p></th>
+<th class="head"><p>description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">mbs</span></code></p></td>
+<td><p>MainSystem</p></td>
+<td><p>provides reference to mbs, which can be used in user function to access all data of the object</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">itemNumber</span></code></p></td>
+<td><p>Index</p></td>
+<td><p>integer number of the object in mbs, allowing easy access</p></td>
+</tr>
+<tr class="row-even"><td><p><strong>return value</strong></p></td>
+<td><p>BodyGraphicsData</p></td>
+<td><p>list of <code class="docutils literal notranslate"><span class="pre">GraphicsData</span></code> dictionaries, see Section <a class="reference internal" href="../../manual/introductionAdvanced.html#sec-graphicsdata"><span class="std std-ref">GraphicsData</span></a></p></td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+<section id="mini-example">
+<span id="miniexample-objectrigidbody"></span><h2>Mini example<a class="headerlink" href="#mini-example" title="Link to this heading"></a></h2>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1">#a rigid body thrown with a spin about a principal axis, under gravity</span>
+<span class="n">inertia</span> <span class="o">=</span> <span class="nc">InertiaCuboid</span><span class="p">(</span><span class="n">density</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span> <span class="n">sideLengths</span><span class="o">=</span><span class="p">[</span><span class="mf">0.4</span><span class="p">,</span><span class="mf">0.2</span><span class="p">,</span><span class="mf">0.1</span><span class="p">])</span>
+<span class="n">node</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">AddNode</span><span class="p">(</span><span class="nc">NodeRigidBodyEP</span><span class="p">(</span><span class="n">referenceCoordinates</span><span class="o">=</span><span class="p">[</span><span class="mf">0.5</span><span class="p">,</span><span class="mf">0.2</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span><span class="o">+</span><span class="n">eulerParameters0</span><span class="p">,</span>
+                                   <span class="n">initialVelocities</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">5</span><span class="p">]</span><span class="o">+</span><span class="nb">list</span><span class="p">(</span><span class="nf">AngularVelocity2EulerParameters_t</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">],</span> <span class="n">eulerParameters0</span><span class="p">))))</span>
+<span class="n">body</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">AddObject</span><span class="p">(</span><span class="nc">ObjectRigidBody</span><span class="p">(</span><span class="n">nodeNumber</span><span class="o">=</span><span class="n">node</span><span class="p">,</span> <span class="n">mass</span><span class="o">=</span><span class="n">inertia</span><span class="o">.</span><span class="nf">Mass</span><span class="p">(),</span>
+                                     <span class="n">inertia</span><span class="o">=</span><span class="n">inertia</span><span class="o">.</span><span class="nf">GetInertia6D</span><span class="p">()))</span>
+<span class="n">mMass</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">AddMarker</span><span class="p">(</span><span class="nc">MarkerBodyMass</span><span class="p">(</span><span class="n">bodyNumber</span><span class="o">=</span><span class="n">body</span><span class="p">))</span>
+<span class="n">mbs</span><span class="o">.</span><span class="nf">AddLoad</span><span class="p">(</span><span class="nc">LoadMassProportional</span><span class="p">(</span><span class="n">markerNumber</span><span class="o">=</span><span class="n">mMass</span><span class="p">,</span> <span class="n">loadVector</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="o">-</span><span class="mf">9.81</span><span class="p">]))</span>
+
+<span class="n">mbs</span><span class="o">.</span><span class="nf">Assemble</span><span class="p">()</span>
+<span class="n">mbs</span><span class="o">.</span><span class="nf">SolveDynamic</span><span class="p">()</span>
+
+<span class="c1">#z = v0*t - g/2*t^2, and the angle about z is omega*t, at t=1</span>
+<span class="n">p</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">GetNodeOutput</span><span class="p">(</span><span class="n">node</span><span class="p">,</span> <span class="n">exu</span><span class="o">.</span><span class="nc">OutputVariableType</span><span class="o">.</span><span class="n">Position</span><span class="p">)</span>
+<span class="n">angle</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">GetNodeOutput</span><span class="p">(</span><span class="n">node</span><span class="p">,</span> <span class="n">exu</span><span class="o">.</span><span class="nc">OutputVariableType</span><span class="o">.</span><span class="n">Rotation</span><span class="p">)[</span><span class="mi">2</span><span class="p">]</span>
+<span class="n">exu</span><span class="o">.</span><span class="n">sys</span><span class="p">[</span><span class="s1">'testResult'</span><span class="p">]</span> <span class="o">=</span> <span class="n">p</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">+</span> <span class="n">angle</span> <span class="c1">#0.095 + 1</span>
+</pre></div>
+</div>
+<p>Examples (Ex) and TestModels (TM) that show this item, with weblink to github: <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/notebooks/tutorialRigidBody.py"><code class="docutils literal notranslate"><span class="pre">tutorialRigidBody.py</span></code></a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/notebooks/tutorialRigidBodyCreate.py"><code class="docutils literal notranslate"><span class="pre">tutorialRigidBodyCreate.py</span></code></a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/fourBarMechanism3D.py"><code class="docutils literal notranslate"><span class="pre">fourBarMechanism3D.py</span></code></a> (Ex)</p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="ObjectRotationalMass1D.html" class="btn btn-neutral float-left" title="ObjectRotationalMass1D" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="ObjectRigidBody2D.html" class="btn btn-neutral float-right" title="ObjectRigidBody2D" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

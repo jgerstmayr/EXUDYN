@@ -1,0 +1,1170 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Modeling of contact in Exudyn &mdash; Exudyn1.13.3 1.13.3 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=3ee1c6c6" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/rtd_sphinx_search.min.css" />
+      <link rel="stylesheet" type="text/css" href="../../_static/custom.css?v=e2783f0e" />
+
+  
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=b8a3e558"></script>
+      <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../_static/copybutton.js?v=f281be69"></script>
+      <script src="../../_static/js/rtd_search_config.js"></script>
+      <script src="../../_static/js/rtd_sphinx_search.min.js"></script>
+      <script>window.MathJax = {"loader": {"load": ["[tex]/mathtools"]}, "tex": {"packages": {"[+]": ["mathtools"]}, "macros": {"ANCFdk": "{\\LU{0}{\\dv_k}}", "ANCFdkO": "{\\LU{0}{\\dv_{0,k}}}", "ANCFdkOtp": "{\\LU{0}{\\dv_{0,k}\\tp}}", "ANCFdkt": "{\\LU{0}{\\dot\\dv_k}}", "Am": "{\\mathbf{A}}", "Dm": "{\\mathbf{D}}", "Em": "{\\mathbf{E}}", "Gm": "{\\mathbf{G}}", "Im": "{\\mathbf{I}}", "ImThree": "{\\mathbf{I}_{3 \\times 3}}", "Jm": "{\\mathbf{J}}", "Km": "{\\mathbf{K}}", "Mm": "{\\mathbf{M}}", "Pm": "{\\mathbf{P}}", "Rm": "{\\mathbf{R}}", "Sm": "{\\mathbf{S}}", "Tm": "{\\mathbf{T}}", "av": "{\\mathbf{a}}", "bv": "{\\mathbf{b}}", "cv": "{\\mathbf{c}}", "diffANCF": ["{\\frac{\\partial #1}{\\partial \\qv_{ANCF}}}", 1], "diffANCFdk": "{\\diffANCFmI{\\ANCFdk}}", "diffANCFmI": ["{\\frac{\\partial #1}{\\partial \\qv_{ANCF,m1}}}", 1], "diffANCFmIt": ["{\\frac{\\partial #1}{\\partial \\dot \\qv_{ANCF,m1}}}", 1], "diffANCFt": ["{\\frac{\\partial #1}{\\partial \\dot \\qv_{ANCF}}}", 1], "diffmI": ["{\\frac{\\partial #1}{\\partial \\qv_{m1}}}", 1], "diffmIt": ["{\\frac{\\partial #1}{\\partial \\dot \\qv_{m1}}}", 1], "diffmOI": ["{\\frac{\\partial #1}{\\partial \\qv_{m0,m1}}}", 1], "diffmOIt": ["{\\frac{\\partial #1}{\\partial \\dot \\qv_{m0,m1}}}", 1], "diffmOt": ["{\\frac{\\partial #1}{\\partial \\dot \\qv_{m0}}}", 1], "dv": "{\\mathbf{d}}", "ev": "{\\mathbf{e}}", "fv": "{\\mathbf{f}}", "gv": "{\\mathbf{g}}", "hv": "{\\mathbf{h}}", "nv": "{\\mathbf{n}}", "pv": "{\\mathbf{p}}", "qv": "{\\mathbf{q}}", "rv": "{\\mathbf{r}}", "sv": "{\\mathbf{s}}", "tv": "{\\mathbf{t}}", "uv": "{\\mathbf{u}}", "vv": "{\\mathbf{v}}", "xv": "{\\mathbf{x}}", "yv": "{\\mathbf{y}}", "zv": "{\\mathbf{z}}", "vspace": ["{}", 1], "ra": "{\\rightarrow}", "Rcal": "{\\mathbb{R}}", "Ccal": "{\\mathbb{C}}", "Ncal": "{\\mathbb{N}}", "Rot": "{\\mathbf{A}}", "dd": "{\\mathrm{d}}", "ps": "{p_\\mathrm{s}}", "co": "{\\mathrm{c}}", "si": "{\\mathrm{s}}", "tp": "{^\\mathrm{T}}", "diag": "{\\mathrm{diag}}", "vec": "{\\mathrm{vec}}", "Null": "{\\mathbf{0}}", "varepsilonDot": "{\\boldsymbol{\\varepsilon}}", "talpha": "{\\boldsymbol{\\alpha}}", "tbeta": "{\\boldsymbol{\\beta}}", "tgamma": "{\\boldsymbol{\\gamma}}", "tchi": "{\\boldsymbol{\\chi}}", "tdelta": "{\\boldsymbol{\\delta}}", "teps": "{\\boldsymbol{\\varepsilon}}", "tepsDot": "{\\boldsymbol{\\dot \\varepsilon}}", "teta": "{\\boldsymbol{\\eta}}", "tkappa": "{\\boldsymbol{\\kappa}}", "tkappaDot": "{\\boldsymbol{\\dot \\kappa}}", "tphi": "{\\boldsymbol{\\phi}}", "boldVarPhi": "{\\boldsymbol{\\varphi}}", "tPhi": "{\\boldsymbol{\\Phi}}", "ttheta": "{\\boldsymbol{\\theta}}", "tTheta": "{\\boldsymbol{\\Theta}}", "tlambda": "{\\boldsymbol{\\lambda}}", "tnu": "{\\boldsymbol{\\nu}}", "tmu": "{\\boldsymbol{\\mu}}", "tpsi": "{\\boldsymbol{\\psi}}", "tPsi": "{\\boldsymbol{\\Psi}}", "ttau": "{\\boldsymbol{\\tau}}", "tsigma": "{\\boldsymbol{\\sigma}}", "txi": "{\\boldsymbol{\\xi}}", "tzeta": "{\\boldsymbol{\\zeta}}", "tomega": "{\\boldsymbol{\\omega}}", "tOmega": "{\\boldsymbol{\\Omega}}", "vareps": "{\\varepsilon}", "myoverline": ["\\overline{#1}", 1], "pluseq": "\\mathrel{+}=", "LU": ["{\\prescript{#1}{}{#2}\\,}", 2], "LUX": ["{\\prescript{#1}{}{#2}#3\\,}", 3], "LUR": ["{\\prescript{#1}{}{#2}_{#3}\\,}", 3], "LURU": ["{\\prescript{#1}{}{#2}_{#3}^{#4}\\,}", 4], "LLdot": ["{\\prescript{}{#1}{\\dot{#2}}_{#3}\\,}", 3], "vr": ["{\\left[ \\begin{array}{c} { #1}\\vspace{0.04cm} \\\\ { #2}\\vspace{0.04cm} \\\\ { #3} \\end{array} \\right]}", 3], "mr": ["{\\left[ \\begin{array}{ccc} #1 & #2 & #3 \\vspace{0.04cm}\\\\ #4 & #5 & #6 \\vspace{0.04cm}\\\\ #7 & #8 & #9  \\end{array} \\right]}", 9], "vp": ["{\\left[ \\begin{array}{c} { #1} \\vspace{0.04cm}\\\\ { #2} \\end{array} \\right]}", 2], "mp": ["{\\left[ \\begin{array}{cc} #1 & #2 \\vspace{0.04cm}\\\\ #3 & #4 \\end{array} \\right]}", 4], "mfour": ["{\\left[ \\begin{array}{cccc} { #1} \\\\ { #2} \\\\ { #3} \\\\ { #4} \\end{array} \\right]}", 4], "vfour": ["{\\left[ \\begin{array}{c} { #1} \\\\ { #2} \\\\ { #3} \\\\ { #4} \\end{array} \\right]}", 4], "vrRow": ["{[#1,\\, #2,\\, #3]}", 3], "vsix": ["{\\left[ \\begin{array}{c} { #1} \\\\ { #2} \\\\ { #3} \\\\ { #4} \\\\ { #5} \\\\ { #6} \\end{array} \\right]}", 6], "vsixb": ["{\\begin{array}{c} { #1} \\\\ { #2} \\\\ { #3} \\\\ { #4} \\\\ { #5} \\\\ { #6} \\end{array} }", 6], "vsixs": ["{ \\begin{array}{c} { #1} \\\\ { #2} \\\\ { #3} \\\\ { #4} \\\\ { #5} \\\\ { #6} \\end{array} }", 6], "SO": "{q}", "FO": "{y}", "AE": "{\\lambda}", "SYS": "{s}", "SON": "{$2^\\mathrm{nd}$ order differential equations}", "FON": "{$1^\\mathrm{st}$ order differential equations}", "AEN": "{algebraic equations}", "Bm": "{\\mathbf{B}}", "Cm": "{\\mathbf{C}}", "Fm": "{\\mathbf{F}}", "SYSN": "{system equations}", "cIni": "{_\\mathrm{ini}}", "cRef": "{_\\mathrm{ref}}", "cCur": "{_\\mathrm{cur}}", "cVis": "{_\\mathrm{vis}}", "cSOS": "{_\\mathrm{start\\;of\\;step}}", "cConfig": "{_\\mathrm{config}}", "pLoc": "{\\mathbf{b}}", "pLocB": "{\\,^{b}{\\mathbf{v}}}", "pRef": "{\\mathbf{r}}", "pRefG": "{\\,^{0}{\\mathbf{r}}}", "indf": "{_\\mathrm{f}}", "indt": "{_\\mathrm{t}}", "indr": "{_\\mathrm{r}}", "indtt": "{_\\mathrm{tt}}", "indrr": "{_\\mathrm{rr}}", "indff": "{_\\mathrm{ff}}", "indtf": "{_\\mathrm{tf}}", "indrf": "{_\\mathrm{rf}}", "indtr": "{_\\mathrm{tr}}", "omegaBDtilde": "{\\LU{b}{\\tilde \\tomega_\\mathrm{bd}}}", "indrigid": "{_\\mathrm{rigid}}", "indred": "{_\\mathrm{red}}", "induser": "{_\\mathrm{user}}", "indu": "{_\\mathrm{u}}", "termA": ["{\\color{blue}{#1}}", 1], "termB": ["{\\color{red}{#1}}", 1], "termC": ["{\\color{green}{#1}}", 1], "acc": "{\\ddot{\\mathbf{q}}}", "GA": "{G\\alpha}", "Hm": "{\\mathbf{H}}", "ImTwo": "{\\mathbf{I}_{2 \\times 2}}", "Lm": "{\\mathbf{L}}", "Qm": "{\\mathbf{Q}}", "Vm": "{\\mathbf{V}}", "Wm": "{\\mathbf{W}}", "Xm": "{\\mathbf{X}}", "Ym": "{\\mathbf{Y}}", "aalg": "{\\mathbf{a}}", "iv": "{\\mathbf{i}}", "jv": "{\\mathbf{j}}", "kv": "{\\mathbf{k}}", "lv": "{\\mathbf{l}}", "mv": "{\\mathbf{m}}", "ov": "{\\mathbf{o}}", "vel": "{\\mathbf{v}}", "wv": "{\\mathbf{w}}"}}, "options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+      <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-mml-chtml.js"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Solvers" href="solver.html" />
+    <link rel="prev" title="Model order reduction and component mode synthesis" href="theoryModal.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            Exudyn1.13.3
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Exudyn User Manual</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../README.html">Exudyn</a></li>
+<li class="toctree-l1"><a class="reference internal" href="gettingStarted.html">Installation and getting started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="introduction.html">Overview on Exudyn</a></li>
+<li class="toctree-l1"><a class="reference internal" href="introductionBasics.html">Exudyn basics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorial.html">Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="GUI.html">Renderer, graphics and visualization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="performanceErrors.html">Performance, errors and solver failures</a></li>
+<li class="toctree-l1"><a class="reference internal" href="introductionAdvanced.html">Advanced topics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="notation.html">Notation</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="theory.html">Theory and formulations</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="theoryMultibody.html">Introduction to multibody systems</a></li>
+<li class="toctree-l2"><a class="reference internal" href="theoryDynamics.html">Dynamics: mechanical principles</a></li>
+<li class="toctree-l2"><a class="reference internal" href="theoryRotations.html">Frames, rotations and coordinate systems</a></li>
+<li class="toctree-l2"><a class="reference internal" href="theoryFEM.html">Finite elements</a></li>
+<li class="toctree-l2"><a class="reference internal" href="theoryModal.html">Model order reduction and component mode synthesis</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Modeling of contact in Exudyn</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#contact-of-meshed-rigid-bodies">Contact of meshed rigid bodies</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#regularized-friction">Regularized friction</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#sphere-sphere-contact-equations">Sphere-sphere contact: equations</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#sphere-triangle-contact-equations">Sphere-triangle contact: equations</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#contact-relations-for-ancf-cable-g-i-marker-m0-and-sphere-g-j-marker-m1">Contact relations for ANCF cable <span class="math notranslate nohighlight">\(g_i\)</span> (marker <span class="math notranslate nohighlight">\(m0\)</span>) and sphere <span class="math notranslate nohighlight">\(g_j\)</span> (marker <span class="math notranslate nohighlight">\(m1\)</span>)</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="solver.html">Solvers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../generated/cInterface/cInterfaceIndex.html">Python-C++ command interface</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Reference Manual</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../generated/items/itemsIndex.html">Items reference manual</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../generated/pythonUtilities/utilitiesIndex.html">Python Utility Functions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../generated/structures/structuresIndex.html">Structures and Settings</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../generated/references.html">References</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Developer documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../dev/README.html">Exudyn developer documentation</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">How-to notes</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../howTo/condaEnvironments.html">Conda environments for Exudyn</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../howTo/sphinxDocs.html">Building the documentation</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Examples, models and issues</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../generated/examples/examplesIndex.html">Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../generated/testModels/testModelsIndex.html">TestModels</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../generated/abbreviations.html">List of Abbreviations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="revisions.html">Revisions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../CHANGELOG.html">Changelog</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../generated/trackerlog.html">Issue tracker</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">Exudyn1.13.3</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="theory.html">Theory and formulations</a></li>
+      <li class="breadcrumb-item active">Modeling of contact in Exudyn</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../_sources/docs/manual/theoryContact.md.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section class="tex2jax_ignore mathjax_ignore" id="modeling-of-contact-in-exudyn">
+<span id="seccontacttheory"></span><h1>Modeling of contact in Exudyn<a class="headerlink" href="#modeling-of-contact-in-exudyn" title="Link to this heading"></a></h1>
+<p>The <code class="docutils literal notranslate"><span class="pre">GeneralContact</span></code> module, see <a class="reference internal" href="../generated/cInterface/GeneralContact.html#sec-generalcontact"><span class="std std-ref">GeneralContact</span></a>,  which is</p>
+<ul class="simple">
+<li><p><strong>still under developement, consider with care!</strong></p></li>
+</ul>
+<p>provides a simple, efficient and versatile interface to a general contact module. The movivation for this module is based on the need for simple contact modeling in robotics, but also for the efficient modeling of beam-cylinder or beam-beam contact, as well as contact between deformable meshes (not yet available).</p>
+<p>Note that there are currently only simplistic contact models, such as linear contact and simple damping, which are not representing realistic Hertzian contact (which will be implemented in near future). Furthermore, read the notes in <code class="docutils literal notranslate"><span class="pre">GeneralContact</span></code> carefully, how stiffness and damping is realized – e.g., stiffness may be a serial spring against the other object, while damping is implemented as parallel damper.</p>
+<figure class="align-default" id="id1">
+<span id="fig-available-contact"></span><a class="reference internal image-reference" href="../../_images/contactAvailable.svg"><img alt="../../_images/contactAvailable.svg" src="../../_images/contactAvailable.svg" width="650" />
+</a>
+<figcaption>
+<p><span class="caption-number">Fig. 26 </span><span class="caption-text">Contact: possible coupling of geometrical objects in Exudyn.</span><a class="headerlink" href="#id1" title="Link to this image"></a></p>
+</figcaption>
+</figure>
+<p>The implemented and possible couplings of contact objects are:</p>
+<ul class="simple">
+<li><p>simulate spherical particles; in 2D, spheres are represented as circles</p></li>
+<li><p>simulate clustered spherical [circular] particles which consist of rigid bodies made of a cluster of spheres; several contact spheres are attached to one rigid body by using rigid body markers; in 2D, spheres are represented as circles</p></li>
+<li><p>simulate the contact of spheres with triangular meshes, e.g., in order to provide some limitations of the range of motion for your objects</p></li>
+<li><p>simulate the contact between arbitrarily shaped rigid bodies</p></li>
+<li><p>simulate the contact between rolls (spheres) and ANCF cable elements; to enable cable-cable contact, spheres must be attached and distributed along the cable elements</p></li>
+</ul>
+<p>In all use cases, explicit integrators are much faster and they are recommended, as long as your problem allows to do so.</p>
+<section id="contact-of-meshed-rigid-bodies">
+<h2>Contact of meshed rigid bodies<a class="headerlink" href="#contact-of-meshed-rigid-bodies" title="Link to this heading"></a></h2>
+<p>Case 4) is more involved and needs further explanations (which more or less also applies to case 4). The geometry is approximated by a mesh consisting of flat triangles, which are attached to a rigid body (marker). The triangles obtain a contact stiffness against spheres. There are special cases, depending if the sphere gets in contact with the triangle plane or with the triangle edge. Having contact with edges, usually involves several triangles at the same time (specifically at vertices), which leads to higher contact stiffness as compared to a planar contact. Nevertheless, for flat planes, contact computation takes care, that contact stiffness is constant in the whole plane, independently of the number of involved triangles.
+In order to realize contact between meshed rigid bodies, both body-attached meshes are added via the <code class="docutils literal notranslate"><span class="pre">GeneralContact</span></code> function</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">AddTrianglesRigidBodyBased(...)</span></code></p></li>
+</ul>
+<p>In addition, all mesh vertices are added as spheres with markers using</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">AddSphereWithMarker(...)</span></code></p></li>
+</ul>
+<p>However, as we need a certain finite radius of the spheres, the mesh must be shrinked for this purpuse (and it needs to have according thickness). Shrinking of the (consistent) triangular mesh can be done by the utility function of <code class="docutils literal notranslate"><span class="pre">exudyn.graphicsDataUtilities</span></code></p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"> <span class="pre">ShrinkMeshNormalToSurface(...)</span></code>;</p></li>
+<li><p>in order to reduce artifacts at object edges, it is recommended to refine the mesh, using the utility function <code class="docutils literal notranslate"><span class="pre">RefineMesh(...)</span></code></p></li>
+</ul>
+<p>According examples can be found in test models, but there will be a more convenient function for contact of meshes attached to rigid bodies in the future.</p>
+<p>All contacts can be created in a <code class="docutils literal notranslate"><span class="pre">GeneralContact</span></code> object – which is not a regular object in mbs – created by</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">gContact</span> <span class="pre">=</span> <span class="pre">mbs.AddGeneralContact()</span></code></p></li>
+</ul>
+<p>Note that one can create several, independent contact objects.
+Hereafter, spheres, triangles, … are added with appropriate functions, see <a class="reference internal" href="../generated/cInterface/GeneralContact.html#sec-generalcontact"><span class="std std-ref">GeneralContact</span></a>.
+Note that triangles need to be correctly numbered (see correct normals in <a class="reference internal" href="introductionAdvanced.html#fig-trianglenormals"><span class="std std-numref">Fig. 8</span></a>),
+which defines inside/outside of a triangluar mesh.</p>
+</section>
+<section id="regularized-friction">
+<h2>Regularized friction<a class="headerlink" href="#regularized-friction" title="Link to this heading"></a></h2>
+<p>Within a regularized friction law, similar to a well known law attributed to Haff-Werner, the friction force <span class="math notranslate nohighlight">\(\fv_f\)</span> is computed from static (dry) friction coefficient <span class="math notranslate nohighlight">\(\mu_s\)</span> and the friction regularization velocity (global regularization coefficient stored in <code class="docutils literal notranslate"><span class="pre">GeneralContact.frictionProportionalZone</span></code>) <span class="math notranslate nohighlight">\(v_{\mu,reg}\)</span></p>
+<div class="math notranslate nohighlight" id="equation-eq-generalcontactregularizedfriction">
+<span class="eqno">(32)<a class="headerlink" href="#equation-eq-generalcontactregularizedfriction" title="Link to this equation"></a></span>\[\begin{split}
+\begin{aligned}
+  v_t &amp;= |\LU{0}{\vv_t}|, \\
+  \fv_f(v_t, |f_c|, \mu_s, v_{\mu,reg}, v_t, \LU{0}{\vv_t} ) &amp;=
+  \begin{cases}
+    \frac{\mu_s \cdot |f_c|}{v_{\mu,reg}}\LU{0}{\vv_t}, \quad \mathrm{if} \quad v_t &lt; v_{\mu,reg} \\
+    \mu_s \cdot |f_c| \frac{\LU{0}{\vv_t}}{v_t} , \quad \mathrm{else}
+  \end{cases}
+\end{aligned}
+\end{split}\]</div>
+<p><strong>Note</strong> that the following equations represent the computed contact relations in high detail, but minor cases and flags, such as the <code class="docutils literal notranslate"><span class="pre">intraSpheresContact</span></code> are not described here, but must be carefully considered in the description of <code class="docutils literal notranslate"><span class="pre">GeneralContact</span></code>, see <a class="reference internal" href="../generated/cInterface/GeneralContact.html#sec-generalcontact"><span class="std std-ref">GeneralContact</span></a>.</p>
+</section>
+<section id="sphere-sphere-contact-equations">
+<span id="seccontactspheresphere"></span><h2>Sphere-sphere contact: equations<a class="headerlink" href="#sphere-sphere-contact-equations" title="Link to this heading"></a></h2>
+<p>The contact model between two spheres follows a penalty formulation, using a spring and optional damper to model the contact.
+Currently, only linear springs are utilized, however, the user is free to modify the equations in the code to model any nonlinear case as well.
+The equations for sphere-sphere contact in contact normal direction are very similar to the <code class="docutils literal notranslate"><span class="pre">ObjectConnectorSpringDamper</span></code>, see <a class="reference internal" href="../generated/items/ObjectConnectorSpringDamper.html#sec-item-objectconnectorspringdamper"><span class="std std-ref">ObjectConnectorSpringDamper</span></a>.
+Every sphere is attached to a position-based marker  (which can be attached itself to position nodes, rigid body nodes, point masses, rigid bodies as well as flexible bodies. NOTE, that in case of implicit integration, flexible bodies are not fully implemented!).
+In C++, the sphere attached to marker 0 is denoted as <code class="docutils literal notranslate"><span class="pre">sphereI</span></code> and
+the sphere attached to marker 1 is denoted as <code class="docutils literal notranslate"><span class="pre">sphereJ</span></code>.
+Input parameters for this contact model are</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>intermediate variables</p></th>
+<th class="head"><p>symbol</p></th>
+<th class="head"><p>description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>sphere <span class="math notranslate nohighlight">\(i\)</span> radius</p></td>
+<td><p><span class="math notranslate nohighlight">\(r_i\)</span></p></td>
+<td><p>radius of sphere <span class="math notranslate nohighlight">\(i\)</span>, attached to marker 0</p></td>
+</tr>
+<tr class="row-odd"><td><p>sphere <span class="math notranslate nohighlight">\(j\)</span> radius</p></td>
+<td><p><span class="math notranslate nohighlight">\(r_j\)</span></p></td>
+<td><p>radius of sphere <span class="math notranslate nohighlight">\(j\)</span>, attached to marker 1</p></td>
+</tr>
+<tr class="row-even"><td><p>sphere <span class="math notranslate nohighlight">\(i\)</span> contact stiffness</p></td>
+<td><p><span class="math notranslate nohighlight">\(k_i\)</span></p></td>
+<td><p>N/m</p></td>
+</tr>
+<tr class="row-odd"><td><p>sphere <span class="math notranslate nohighlight">\(j\)</span> contact stiffness</p></td>
+<td><p><span class="math notranslate nohighlight">\(k_j\)</span></p></td>
+<td><p>N/m</p></td>
+</tr>
+<tr class="row-even"><td><p>sphere <span class="math notranslate nohighlight">\(i\)</span> contact damping</p></td>
+<td><p><span class="math notranslate nohighlight">\(d_i\)</span></p></td>
+<td><p>N/m</p></td>
+</tr>
+<tr class="row-odd"><td><p>sphere <span class="math notranslate nohighlight">\(j\)</span> contact damping</p></td>
+<td><p><span class="math notranslate nohighlight">\(d_j\)</span></p></td>
+<td><p>N/m</p></td>
+</tr>
+<tr class="row-even"><td><p>friction pairing coefficient</p></td>
+<td><p><span class="math notranslate nohighlight">\(\mu_{ij}\)</span></p></td>
+<td><p>the friction coefficient stored in the the friction pairings matrix, resulting from the friction indices of spheres <span class="math notranslate nohighlight">\(i\)</span> and <span class="math notranslate nohighlight">\(j\)</span></p></td>
+</tr>
+</tbody>
+</table>
+<p>Marker positions and velocities are given by the relations:</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>intermediate variables</p></th>
+<th class="head"><p>symbol</p></th>
+<th class="head"><p>description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>sphere <span class="math notranslate nohighlight">\(i\)</span> position</p></td>
+<td><p><span class="math notranslate nohighlight">\(\LU{0}{\pv}_{m0}\)</span></p></td>
+<td><p>current global position which is provided by marker m0</p></td>
+</tr>
+<tr class="row-odd"><td><p>sphere <span class="math notranslate nohighlight">\(j\)</span> position</p></td>
+<td><p><span class="math notranslate nohighlight">\(\LU{0}{\pv}_{m1}\)</span></p></td>
+<td><p>current global position which is provided by marker m1</p></td>
+</tr>
+<tr class="row-even"><td><p>marker m0 position Jacobian</p></td>
+<td><p><span class="math notranslate nohighlight">\(\LU{0}{\Jm_{pos,m0}}\)</span></p></td>
+<td><p>with interpretation as variation of the position <span class="math notranslate nohighlight">\(\delta \LU{0}{\pv}_{m0} = \LU{0}{\Jm_{pos,m0}} \delta \qv_{m0}\)</span>; assuming that <span class="math notranslate nohighlight">\(\qv_{m0}\)</span> represents the generalized coordinates of marker <span class="math notranslate nohighlight">\(m0\)</span></p></td>
+</tr>
+<tr class="row-odd"><td><p>marker m1 position Jacobian</p></td>
+<td><p><span class="math notranslate nohighlight">\(\LU{0}{\Jm_{pos,m1}}\)</span></p></td>
+<td><p>with interpretation as variation of the position <span class="math notranslate nohighlight">\(\delta \LU{0}{\pv}_{m1} = \LU{0}{\Jm_{pos,m1}} \delta \qv_{m1}\)</span>; assuming that <span class="math notranslate nohighlight">\(\qv_{m0}\)</span> represents the generalized coordinates of marker <span class="math notranslate nohighlight">\(m0\)</span></p></td>
+</tr>
+<tr class="row-even"><td><p>sphere <span class="math notranslate nohighlight">\(i\)</span> velocity</p></td>
+<td><p><span class="math notranslate nohighlight">\(\LU{0}{\vv}_{i}\)</span></p></td>
+<td><p>current global velocity which is provided by marker m0</p></td>
+</tr>
+<tr class="row-odd"><td><p>sphere <span class="math notranslate nohighlight">\(j\)</span> velocity</p></td>
+<td><p><span class="math notranslate nohighlight">\(\LU{0}{\vv}_{j}\)</span></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p>relative position</p></td>
+<td><p><span class="math notranslate nohighlight">\(\LU{0}{\nv}\)</span></p></td>
+<td><p><span class="math notranslate nohighlight">\(\LU{0}{\pv}_{j} - \LU{0}{\pv}_{i}\)</span></p></td>
+</tr>
+<tr class="row-odd"><td><p>Distance<span class="math notranslate nohighlight">\(^*\)</span></p></td>
+<td><p><span class="math notranslate nohighlight">\(L = \vert\LU{0}{\nv}\vert\)</span></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p>unit vector<span class="math notranslate nohighlight">\(^*\)</span></p></td>
+<td><p><span class="math notranslate nohighlight">\(\LU{0}{\nv_0} = \frac{1}{L} \LU{0}{\nv}\)</span></p></td>
+<td><p>vector in contact normal direction</p></td>
+</tr>
+<tr class="row-odd"><td><p>gap<span class="math notranslate nohighlight">\(^*\)</span></p></td>
+<td><p><span class="math notranslate nohighlight">\(g = L - (r_i + r_j)\)</span></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p>penetration<span class="math notranslate nohighlight">\(^*\)</span></p></td>
+<td><p><span class="math notranslate nohighlight">\(p  = -g = r_i + r_j - L\)</span></p></td>
+<td><p></p></td>
+</tr>
+</tbody>
+</table>
+<p>In case of rigid bodies and non-zero friction, we also compute angular velocities and orientation,</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>intermediate variables: rigid bodies and friction</p></th>
+<th class="head"><p>symbol</p></th>
+<th class="head"><p>description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>sphere <span class="math notranslate nohighlight">\(i\)</span> angular velocity</p></td>
+<td><p><span class="math notranslate nohighlight">\(\LU{m0}{\tomega}_{i}\)</span></p></td>
+<td><p>current local angular velocity provided by marker <span class="math notranslate nohighlight">\(m0\)</span></p></td>
+</tr>
+<tr class="row-odd"><td><p>marker <span class="math notranslate nohighlight">\(m0\)</span> orientation</p></td>
+<td><p><span class="math notranslate nohighlight">\(\LU{0,m0}{\Am}\)</span></p></td>
+<td><p>transformation from marker m0 (body-fixed) to global coordinates</p></td>
+</tr>
+<tr class="row-even"><td><p>sphere <span class="math notranslate nohighlight">\(j\)</span> angular velocity</p></td>
+<td><p><span class="math notranslate nohighlight">\(\LU{m1}{\tomega}_{j}\)</span></p></td>
+<td><p>current local angular velocity provided by marker <span class="math notranslate nohighlight">\(m1\)</span></p></td>
+</tr>
+<tr class="row-odd"><td><p>marker <span class="math notranslate nohighlight">\(m1\)</span> orientation</p></td>
+<td><p><span class="math notranslate nohighlight">\(\LU{0,m1}{\Am}\)</span></p></td>
+<td><p>transformation from marker m0 (body-fixed) to global coordinates</p></td>
+</tr>
+<tr class="row-even"><td><p>marker <span class="math notranslate nohighlight">\(m0\)</span> rotation Jacobian</p></td>
+<td><p><span class="math notranslate nohighlight">\(\LU{0}{\Jm_{rot,m0}}\)</span></p></td>
+<td><p>with interpretation as derivative of the global angular velocity <span class="math notranslate nohighlight">\(\LU{0}{\tomega}_{m0} = \LU{0}{\Jm_{rot,m0}} \dot \qv_{m0}\)</span>; assuming that <span class="math notranslate nohighlight">\(\dot \qv_{m0}\)</span> represents the generalized velocities of marker <span class="math notranslate nohighlight">\(m0\)</span></p></td>
+</tr>
+<tr class="row-odd"><td><p>marker <span class="math notranslate nohighlight">\(m1\)</span> rotation Jacobian</p></td>
+<td><p><span class="math notranslate nohighlight">\(\LU{0}{\Jm_{rot,m1}}\)</span></p></td>
+<td><p>with interpretation as derivative of the global angular velocity <span class="math notranslate nohighlight">\(\LU{0}{\tomega}_{m1} = \LU{0}{\Jm_{rot,m1}} \dot \qv_{m1}\)</span>; assuming that <span class="math notranslate nohighlight">\(\dot \qv_{m1}\)</span> represents the generalized velocities of marker <span class="math notranslate nohighlight">\(m1\)</span></p></td>
+</tr>
+</tbody>
+</table>
+<p>Contact between spheres with global index <span class="math notranslate nohighlight">\(g_i\)</span> and another sphere with global index <span class="math notranslate nohighlight">\(g_j\)</span> is active, if</p>
+<ul class="simple">
+<li><p>Bounding box of sphere <span class="math notranslate nohighlight">\(g_j\)</span> intersects with a box in the searchtree which also intersects with bounding box of sphere <span class="math notranslate nohighlight">\(g_i\)</span> AND</p></li>
+<li><p>if Bounding box of sphere <span class="math notranslate nohighlight">\(g_j\)</span> intersects with bounding box of sphere <span class="math notranslate nohighlight">\(g_i\)</span> AND</p></li>
+<li><p>if the condition <span class="math notranslate nohighlight">\(L^2 &lt; \left(r_i + r_j\right)^2\)</span> holds OR if <span class="math notranslate nohighlight">\(g_j\)</span> belongs to the active set of <span class="math notranslate nohighlight">\(g_i\)</span> (computed in PostNewtonStep).</p></li>
+</ul>
+<p>Note that quantities <span class="math notranslate nohighlight">\(^*\)</span> are only computed if contact is active.</p>
+<section id="contact-relations-for-sphere-g-i-marker-m0-and-sphere-g-j-marker-m1">
+<h3>Contact relations for sphere <span class="math notranslate nohighlight">\(g_i\)</span> (marker <span class="math notranslate nohighlight">\(m0\)</span>) and sphere <span class="math notranslate nohighlight">\(g_j\)</span> (marker <span class="math notranslate nohighlight">\(m1\)</span>)<a class="headerlink" href="#contact-relations-for-sphere-g-i-marker-m0-and-sphere-g-j-marker-m1" title="Link to this heading"></a></h3>
+<p>If contact is active, we compute the global position of the contact point (considering also penetration, a more consistent contact point would be <span class="math notranslate nohighlight">\(\LU{0}{\pv_{c}^*} = \LU{0}{\pv_{m0}} + (r_i - \frac{p}{2}) \cdot \nv_0\)</span>, subtracting the half penetration.), (note that we have to consider the penetration when computing the contact points, attributing penetration equally to both sides; we introduce therefore the modified radii <span class="math notranslate nohighlight">\(r_i^* = r_i-\frac{p}{2}\)</span> and <span class="math notranslate nohighlight">\(r_j^* = r_j-\frac{p}{2}\)</span>.)</p>
+<div class="math notranslate nohighlight">
+\[
+  \LU{0}{\pv_{c}} = \LU{0}{\pv_{m0}} + r_i^* \cdot \nv_0 \, ,
+\]</div>
+<figure class="align-default" id="id2">
+<span id="fig-contact-spheres"></span><a class="reference internal image-reference" href="../../_images/generalContactSpheres.svg"><img alt="../../_images/generalContactSpheres.svg" src="../../_images/generalContactSpheres.svg" width="400" />
+</a>
+<figcaption>
+<p><span class="caption-number">Fig. 27 </span><span class="caption-text">Geometrical relations for contact of two spheres <span class="math notranslate nohighlight">\(i\)</span> and <span class="math notranslate nohighlight">\(j\)</span> with according markers <span class="math notranslate nohighlight">\(m0\)</span> and <span class="math notranslate nohighlight">\(m1\)</span>.</span><a class="headerlink" href="#id2" title="Link to this image"></a></p>
+</figcaption>
+</figure>
+<p>the velocities of the spheres at the contact point (In case of no friction, the angular velocities are not included in these relations),</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{aligned}
+  \LU{0}{\vv_{c,i}} &amp;= \LU{0}{\vv_i} + \left( \LU{0,m0}{\Am} \LU{m0}{\tomega}_{i} \right) \times
+               \left( \LU{0}{\pv_c} - \LU{0}{\pv_i} \right)
+              = \LU{0}{\vv_i} + r_i^* \cdot \left( \LU{0,m0}{\Am} \LU{m0}{\tomega}_{i} \right) \times \LU{0}{\nv_0}, \\
+  \LU{0}{\vv_{c,j}} &amp;= \LU{0}{\vv_j} + \left( \LU{0,m1}{\Am} \LU{m1}{\tomega}_{j} \right) \times
+               \left( \LU{0}{\pv_c} - \LU{0}{\pv_j} \right)
+              = \LU{0}{\vv_j} - r_j^* \cdot \left( \LU{0,m1}{\Am} \LU{m1}{\tomega}_{j} \right) \times \LU{0}{\nv_0},
+\end{aligned}
+\end{split}\]</div>
+<p>the velocity in contact normal direction, which can be computed from sphere’s center points,</p>
+<div class="math notranslate nohighlight">
+\[
+  v_n = \LU{0}{\nv_0\tp} \left( \LU{0}{\vv_j} - \LU{0}{\vv_i} \right)
+      = \LU{0}{\nv_0\tp} \left( \LU{0}{\vv_{c,j}} - \LU{0}{\vv_{c,i}} \right)
+  \, ,
+\]</div>
+<p>the velocity in tangential direction, considering the tangential velocities,</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{aligned}
+  \LU{0}{\vv_t} &amp;= \LU{0}{\vv_{c,j}} - \LU{0}{\vv_{c,i}} - v_n \cdot \LU{0}{\nv_0}
+  = \left( \Im - \LU{0}{\nv_0} \otimes \LU{0}{\nv_0}\right) \left(\LU{0}{\vv_{c,j}} - \LU{0}{\vv_{c,i}} \right), \\
+  &amp;= \left( \Im - \LU{0}{\nv_0} \otimes \LU{0}{\nv_0}\right)
+  \left( \LU{0}{\vv_j} + r_j^* \cdot \LU{0}{\tilde \nv_0} \LU{0,m1}{\Am} \LU{m1}{\tomega}_{j}
+        -\LU{0}{\vv_i} + r_i^* \cdot \LU{0}{\tilde \nv_0} \LU{0,m0}{\Am} \LU{m0}{\tomega}_{i} \right) \\
+  &amp;= \left( \Im - \LU{0}{\nv_0} \otimes \LU{0}{\nv_0}\right)
+  \left( \LU{0}{\vv_j} + r_j^* \cdot \LU{0}{\tilde \nv_0} \LU{0}{\tomega}_{j}
+        -\LU{0}{\vv_i} + r_i^* \cdot \LU{0}{\tilde \nv_0} \LU{0}{\tomega}_{i} \right)
+  \, ,
+\end{aligned}
+\end{split}\]</div>
+<p>the effective contact stiffness coefficient based on the stiffness <span class="math notranslate nohighlight">\(k_i\)</span> of sphere <span class="math notranslate nohighlight">\(i\)</span> and stiffness <span class="math notranslate nohighlight">\(k_j\)</span> of sphere <span class="math notranslate nohighlight">\(j\)</span>,</p>
+<div class="math notranslate nohighlight">
+\[
+  k_c = \frac{k_i \cdot k_j}{k_i + k_j} \, ,
+\]</div>
+<p>and the effective contact damping coefficient (Note that this simplicial damping law is used according to the idea of parallel dampers, because serial dampers would not allow to adjust damping for different particles) based on the damping <span class="math notranslate nohighlight">\(k_i\)</span> of sphere <span class="math notranslate nohighlight">\(i\)</span> and damping <span class="math notranslate nohighlight">\(k_j\)</span> of sphere <span class="math notranslate nohighlight">\(j\)</span></p>
+<div class="math notranslate nohighlight">
+\[
+  d_c = d_i + d_j \, .
+\]</div>
+<p>The contact force (negative contact pressure) is computed from gap <span class="math notranslate nohighlight">\(g\)</span> and normal velocity <span class="math notranslate nohighlight">\(v_n\)</span>,</p>
+<div class="math notranslate nohighlight">
+\[
+  f_c = k_c \cdot g + d_c \cdot v_n \, ,
+\]</div>
+<p>and the total vectorial contact force is computed with the help of <a class="reference internal" href="#equation-eq-generalcontactregularizedfriction">(32)</a>, defining the friction force <span class="math notranslate nohighlight">\(\fv_f(v_t, |f_c|, \mu_s, v_{\mu,reg}, v_t, \LU{0}{\vv_t} )\)</span>,</p>
+<div class="math notranslate nohighlight">
+\[
+  \LU{0}{\fv_c} = f_c \cdot \nv_0 + \fv_f
+  \, .
+\]</div>
+<p>The torque due to friction for sphere <span class="math notranslate nohighlight">\(i\)</span> and sphere <span class="math notranslate nohighlight">\(j\)</span> results into (note that both signs are the same and that <span class="math notranslate nohighlight">\(\LU{0}{\fv_f}\)</span> could be replaced by <span class="math notranslate nohighlight">\(\fv_c\)</span>)</p>
+<div class="math notranslate nohighlight">
+\[
+  \LU{0}{\ttau_{f,i}} = (-r_i^* \cdot \nv_0) \times \LU{0}{\fv_f}, \quad
+  \LU{0}{\ttau_{f,j}} = (-r_j^* \cdot \nv_0) \times \LU{0}{\fv_f}
+  \, .
+\]</div>
+</section>
+<section id="generalized-forces-due-to-contact">
+<h3>Generalized forces due to contact<a class="headerlink" href="#generalized-forces-due-to-contact" title="Link to this heading"></a></h3>
+<p>Based on the contact pressure and the friction forces, forces and torques are applied via the markers’ Jacobians, resulting in generalized forces to whatever the marker is attached to.</p>
+<p>The generalized forces to the marker <span class="math notranslate nohighlight">\(m0\)</span> and <span class="math notranslate nohighlight">\(m1\)</span> (sphere <span class="math notranslate nohighlight">\(i\)</span> and <span class="math notranslate nohighlight">\(j\)</span>) are computed as</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{aligned}
+  \fv_{m0,LHS} = -\LU{0}{\Jm_{pos,m0}\tp} \LU{0}{\fv_c} +
+                 \LU{0}{\Jm_{rot,m0}\tp} \LU{0}{\ttau_{f,i}}, \\
+  \fv_{m1,LHS} = \LU{0}{\Jm_{pos,m1}\tp} \LU{0}{\fv_c} +
+                 \LU{0}{\Jm_{rot,m1}\tp} \LU{0}{\ttau_{f,j}} \, .
+\end{aligned}
+\end{split}\]</div>
+</section>
+<section id="jacobi-matrix-for-sphere-g-i-and-sphere-g-j">
+<h3>Jacobi matrix for sphere <span class="math notranslate nohighlight">\(g_i\)</span> and sphere <span class="math notranslate nohighlight">\(g_j\)</span><a class="headerlink" href="#jacobi-matrix-for-sphere-g-i-and-sphere-g-j" title="Link to this heading"></a></h3>
+<p>For implicit time integration, the (contact) Jacobian (Here, we only consider the local Jacobian related to the coordinates underlying the two markers <span class="math notranslate nohighlight">\(m0\)</span> and <span class="math notranslate nohighlight">\(m1\)</span>; in the implementation, the parts of the Jacobian are added to the sparse system) represents the derivative of the generalized forces</p>
+<div class="math notranslate nohighlight">
+\[
+  \fv_{LHS} = \vp{\fv_{m0,LHS}}{\fv_{m1,LHS}}
+\]</div>
+<p>with respect to the generalized coordinates affected by the two markers,</p>
+<div class="math notranslate nohighlight">
+\[
+  \qv = \vp{\qv_{m0}}{\qv_{m1}} \, .
+\]</div>
+<p>The Jacobian thus reads (<strong>NOTE</strong> that only terms marked in <strong>green</strong> are currently fully implemented and terms in <strong>blue</strong> are approximated, while other terms are neglected)</p>
+<div class="math notranslate nohighlight">
+\[
+  \termA{ \Jm_{c}  = \frac{\partial \fv_{LHS}}{\partial \qv}
+           = \mp{\frac{\partial \left(-\LU{0}{\Jm_{pos,m0}\tp} \LU{0}{\fv_c} + \LU{0}{\Jm_{rot,m0}\tp} \LU{0}{\ttau_{f,i}}\right)}{\partial \qv_{m0}}}
+                {\frac{\partial \left(-\LU{0}{\Jm_{pos,m0}\tp} \LU{0}{\fv_c} + \LU{0}{\Jm_{rot,m0}\tp} \LU{0}{\ttau_{f,i}}\right)}{\partial \qv_{m1}}}
+                {\frac{\partial \left( \LU{0}{\Jm_{pos,m1}\tp} \LU{0}{\fv_c} + \LU{0}{\Jm_{rot,m1}\tp} \LU{0}{\ttau_{f,j}}\right)}{\partial \qv_{m0}}}
+                {\frac{\partial \left( \LU{0}{\Jm_{pos,m1}\tp} \LU{0}{\fv_c} + \LU{0}{\Jm_{rot,m1}\tp} \LU{0}{\ttau_{f,j}}\right)}{\partial \qv_{m1}}}}
+\]</div>
+<p>The single terms may be expressed as</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{aligned}
+  &amp;&amp;\termA{\frac{\partial \left(-\LU{0}{\Jm_{pos,m0}\tp} \LU{0}{\fv_c} + \LU{0}{\Jm_{rot,m0}\tp} \LU{0}{\ttau_{f,i}}\right)}{\partial \qv_{m0,1}} } = \\
+  &amp;&amp;-\frac{\partial \LU{0}{\Jm_{pos,m0}\tp}}{\partial \qv_{m0,1}} \LU{0}{\fv_c}
+  \termC{-\LU{0}{\Jm_{pos,m0}\tp}} \termA{\frac{\partial \LU{0}{\fv_c}}{\partial \qv_{m0,1}}}
+  +\frac{\partial \LU{0}{\Jm_{rot,m0}\tp}}{\partial \qv_{m0,1}} \LU{0}{\ttau_{f,i}}
+  +\termC{\LU{0}{\Jm_{rot,m0}\tp}} \termA{\frac{\partial \LU{0}{\ttau_{f,i}}}{\partial \qv_{m0,1}}}
+  \, ,
+\end{aligned}
+\end{split}\]</div>
+<p>and similar for <span class="math notranslate nohighlight">\(m_1\)</span>.
+In order to simplify implementation (avoiding arrays with 3 indices) and improve computational efficiency,
+derivatives of Jacobians are realized as</p>
+<div class="math notranslate nohighlight">
+\[
+  \frac{\partial \LU{0}{\Jm_{pos,m0}\tp}}{\partial \qv_{m0}} \LU{0}{\fv_c} =
+  \frac{\partial \LU{0}{\Jm_{pos,m0}\tp} \LU{0}{\bar \fv_c}}{\partial \qv_{m0}}
+  \, ,
+\]</div>
+<p>in which <span class="math notranslate nohighlight">\(\LU{0}{\bar \fv_c} = \LU{0}{\fv_c}\)</span>, but assumed to be a constant and not depending on <span class="math notranslate nohighlight">\(\qv\)</span> in the computation of derivatives.
+Note that derivatives for position Jacobians, e.g., <span class="math notranslate nohighlight">\(\frac{\partial \LU{0}{\Jm_{pos,m0}\tp} \LU{0}{\bar \fv_c}}{\partial \qv_{m0}}\)</span> or rotation
+Jacobians are provided by the according markers (will be described there in the near future).</p>
+<p>For the jacobians, we need to compute the derivatives of the following terms (terms that are implemented are marked in green; black terms are not implemented or unused) (to keep derivations short, we use <span class="math notranslate nohighlight">\(\LU{0}{\Jm_{pos}}\)</span>, which represents <span class="math notranslate nohighlight">\(-\LU{0}{\Jm_{pos,m0}}\)</span> in case of
+<span class="math notranslate nohighlight">\(\frac{\partial }{\partial \qv_{m0}}\)</span> and <span class="math notranslate nohighlight">\(\LU{0}{\Jm_{pos,m1}}\)</span> in case of <span class="math notranslate nohighlight">\(\frac{\partial }{\partial \qv_{m1}}\)</span>):</p>
+<ul class="simple">
+<li><p><span class="math notranslate nohighlight">\(L = \left(\LU{0}{\nv}\!\tp\LU{0}{\nv}\right)^\frac{1}{2}\)</span>:</p></li>
+</ul>
+<div class="math notranslate nohighlight">
+\[
+    \termC{\diffmOI{L} =
+    \diffmOI{\left(\LU{0}{\nv}\!\tp\LU{0}{\nv}\right)^\frac{1}{2} } =
+    \frac{1}{L}\left(\LU{0}{\nv}\!\tp \diffmOI{\LU{0}{\nv}} \right) =
+    \frac{1}{L}\left(\LU{0}{\nv}\!\tp \LU{0}{\Jm_{pos}} \right) =
+    \left(\LU{0}{\nv_0}\!\tp \LU{0}{\Jm_{pos}} \right) }
+\]</div>
+<ul class="simple">
+<li><p><span class="math notranslate nohighlight">\(L^{-1} = \left(\LU{0}{\nv}\!\tp\LU{0}{\nv}\right)^{-\frac{1}{2}}\)</span>:</p></li>
+</ul>
+<div class="math notranslate nohighlight">
+\[
+    \termC{\diffmOI{L^{-1}} =
+    \diffmOI{\left(\LU{0}{\nv}\!\tp\LU{0}{\nv}\right)^{-\frac{1}{2}} } =
+    -\frac{1}{ L^3}\left(\LU{0}{\nv}\!\tp \diffmOI{\LU{0}{\nv}} \right) =
+    -\frac{1}{ L^2}\left(\LU{0}{\nv_0}\!\tp \LU{0}{\Jm_{pos}} \right) }
+\]</div>
+<ul class="simple">
+<li><p><span class="math notranslate nohighlight">\(\LU{0}{\nv} = \LU{0}{\pv}_{j} - \LU{0}{\pv}_{i}\)</span>:</p></li>
+</ul>
+<div class="math notranslate nohighlight">
+\[
+    \termC{\diffmOI{\LU{0}{\nv}} = \LU{0}{\Jm_{pos}} }
+\]</div>
+<ul class="simple">
+<li><p><span class="math notranslate nohighlight">\(\LU{0}{\nv_0} = \frac{1}{L} \LU{0}{\nv}\)</span>: (NOTE: dyadic product <span class="math notranslate nohighlight">\(\otimes\)</span>)</p></li>
+</ul>
+<div class="math notranslate nohighlight">
+\[
+    \termC{\diffmOI{\LU{0}{\nv_0}} =
+        -\frac{1}{L^3}\left(\LU{0}{\nv}\otimes \LU{0}{\nv} \right) \LU{0}{\Jm_{pos}}
+        +\frac{1}{L} \LU{0}{\Jm_{pos}}
+        =
+        \frac{1}{L}\left(\Im - \LU{0}{\nv_0}\otimes \LU{0}{\nv_0} \right) \LU{0}{\Jm_{pos}}
+        }
+\]</div>
+<ul class="simple">
+<li><p><span class="math notranslate nohighlight">\(g = L - r_i + r_j\)</span>:</p></li>
+</ul>
+<div class="math notranslate nohighlight">
+\[
+    \termC{\diffmOI{g} = \LU{0}{\nv_0}\!\tp \LU{0}{\Jm_{pos}} }
+\]</div>
+<ul class="simple">
+<li><p><span class="math notranslate nohighlight">\(v_n = \left( \LU{0}{\vv}_j - \LU{0}{\vv}_i \right)\tp \LU{0}{\nv_0}\)</span> (<strong>NOTE</strong>: only valid in case that markers are attached to node or body reference point!!!):</p></li>
+</ul>
+<div class="math notranslate nohighlight">
+\[
+    \termC{\diffmOI{v_n} =
+    \left( \LU{0}{\vv}_j - \LU{0}{\vv}_i \right)\tp \left(
+     \frac{1}{L}\left(\Im - \LU{0}{\nv_0}\otimes \LU{0}{\nv_0} \right) \LU{0}{\Jm_{pos}}
+       \right)  }
+\]</div>
+<div class="math notranslate nohighlight">
+\[
+    \termC{
+    \diffmOIt{v_n} = \LU{0}{\nv_0\tp} \LU{0}{\Jm_{pos}} }
+\]</div>
+<ul class="simple">
+<li><p><span class="math notranslate nohighlight">\(f_c = k_c \cdot g + d_c \cdot v_n\)</span>:</p></li>
+</ul>
+<div class="math notranslate nohighlight">
+\[
+    \termA{\diffmOI{f_c} } =
+    \termC{k_c \diffmOI{g} + d_c \diffmOI{v_n} } =
+    \termC{k_c \cdot \LU{0}{\nv_0}\!\tp \LU{0}{\Jm_{pos}} + d_c \cdot \left( \LU{0}{\vv}_j - \LU{0}{\vv}_i \right)\tp \left(
+     \frac{1}{L}\left(\Im - \LU{0}{\nv_0}\otimes \LU{0}{\nv_0} \right) \LU{0}{\Jm_{pos}} \right)}
+\]</div>
+<div class="math notranslate nohighlight">
+\[
+    \diffmOIt{f_c} =
+     \termC{d_c \diffmOIt{v_n} =  d_c \LU{0}{\nv_0\tp} \LU{0}{\Jm_{pos}} }
+\]</div>
+<ul class="simple">
+<li><p><span class="math notranslate nohighlight">\(\LU{0}{\vv_t} = \LU{0}{\vv_{c,j}} - \LU{0}{\vv_{c,i}} - v_n \cdot \LU{0}{\nv_0}=
+\left( \Im - \LU{0}{\nv_0} \otimes \LU{0}{\nv_0}\right) \left( \LU{0}{\vv_j} -\LU{0}{\vv_i} \right)
+      + r_j^* \cdot \LU{0}{\tilde \nv_0} \LU{0}{\tomega}_{j}
+      + r_i^* \cdot \LU{0}{\tilde \nv_0} \LU{0}{\tomega}_{i}\)</span>:</p></li>
+</ul>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{aligned}
+    \diffmOI{\LU{0}{\vv_t}} &amp;=
+    -\LU{0}{\nv_0} \otimes \left( \LU{0}{\vv}_j - \LU{0}{\vv}_i \right) \left(\frac{1}{L}\left(\Im - \LU{0}{\nv}\otimes \LU{0}{\nv} \right) \LU{0}{\Jm_{pos}}        \right)\\
+    &amp;&amp; -v_n \left(\frac{1}{L}\left(\Im - \LU{0}{\nv}\otimes \LU{0}{\nv} \right) \LU{0}{\Jm_{pos}}        \right)
+    -v_n \cdot \left(\frac{1}{L}\left(\Im - \LU{0}{\nv_0}\otimes \LU{0}{\nv_0} \right) \LU{0}{\Jm_{pos}}
+        \right) \\
+    &amp;&amp; + r_{i,j} \cdot \left( -\frac{1}{L}\LU{0}{\tilde \tomega}_{i,j}\left(\Im - \LU{0}{\nv_0}\otimes \LU{0}{\nv_0} \right)  + \LU{0}{\tilde \nv_0} \diffmOI{\LU{0}{\tomega}_{i,j}} \right)
+\end{aligned}
+\end{split}\]</div>
+<ul class="simple">
+<li><p>velocity coordinate derivatives for <span class="math notranslate nohighlight">\(\LU{0}{\vv_t}\)</span>:</p></li>
+</ul>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{aligned}
+    \termC{\frac{\partial \LU{0}{\vv_t}}{\partial \dot \qv_{m0}} } &amp;= \termC{
+    \left( \Im - \LU{0}{\nv_0} \otimes \LU{0}{\nv_0}\right) \left(-\LU{0}{\Jm_{pos,m0}} \right)
+    + r_i^* \cdot \LU{0}{\tilde \nv_0} \LU{0}{\Jm_{rot,m0}}
+    } \, ,
+    \\
+    \termC{\frac{\partial \LU{0}{\vv_t}}{\partial \dot \qv_{m1}} } &amp;= \termC{
+    \left( \Im - \LU{0}{\nv_0} \otimes \LU{0}{\nv_0}\right) \left(\LU{0}{\Jm_{pos,m1}} \right)
+    + r_j^* \cdot \LU{0}{\tilde \nv_0} \LU{0}{\Jm_{rot,m1}} }
+\end{aligned}
+\end{split}\]</div>
+<p>The contact force reads (note that because <span class="math notranslate nohighlight">\(f_c\)</span> is always negative, the sign of regularization term is negative),</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+  \LU{0}{\fv_c} = f_c \cdot \LU{0}{\nv_0} + \fv_f
+                =
+              \begin{cases}
+                f_c \left(\LU{0}{\nv_0} - \frac{\mu_s}{v_{\mu,reg}}\LU{0}{\vv_t} \right), \quad \mathrm{if} \quad |\LU{0}{\vv_t}| &lt; v_{\mu,reg} \\
+                f_c \cdot \LU{0}{\nv_0} + \fv_f, \quad \mbox{else with $\fv_f = const.$}
+              \end{cases}
+\end{split}\]</div>
+<p>Thus we introduce a factor <span class="math notranslate nohighlight">\(\delta_f\)</span>, which is <span class="math notranslate nohighlight">\(\delta_f=1\)</span> in the regularized small velocity state, and in the saturated (constant) friction force we use <span class="math notranslate nohighlight">\(\delta_f=0\)</span>.
+Thus, the jacobian of the contact force <span class="math notranslate nohighlight">\(\LU{0}{\fv_c}\)</span> reads (note the diadic product <span class="math notranslate nohighlight">\(\otimes\)</span>),</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{aligned}
+ \termC{ \diffmOI{\LU{0}{\fv_c}} } &amp;=
+   \termC{\left(\LU{0}{\nv_0} - \delta_f \frac{\mu_s}{v_{\mu,reg}}\LU{0}{\vv_t} \right) \otimes \diffmOI{f_c}+
+  f_c \left(\diffmOI{\LU{0}{\nv_0}} - \delta_f \frac{\mu_s}{v_{\mu,reg}} \diffmOI{\LU{0}{\vv_t}} \right) } \\
+  &amp;= \termC{\left(\LU{0}{\nv_0} - \delta_f \frac{\mu_s}{v_{\mu,reg}}\LU{0}{\vv_t} \right)
+         \left( k_c \diffmOI{g} + d_c \diffmOI{v_n} \right) +
+        f_c \left(\diffmOI{\LU{0}{\nv_0}} - \delta_f \frac{\mu_s}{v_{\mu,reg}} \diffmOI{\LU{0}{\vv_t}} \right)
+        } \\
+  &amp;=
+  \termC{\left(\LU{0}{\nv_0} - \delta_f \frac{\mu_s}{v_{\mu,reg}}\LU{0}{\vv_t} \right) \otimes
+         \left(k_c \cdot \LU{0}{\nv_0\tp} + d_c \cdot \left( \LU{0}{\vv}_j - \LU{0}{\vv}_i \right)\tp
+         \left( \frac{1}{L}\left(\Im - \LU{0}{\nv_0}\otimes \LU{0}{\nv_0} \right)  \right) \right)
+         \LU{0}{\Jm_{pos}}  + f_c \cdot \left( \ldots \right)
+        }
+\end{aligned}
+\end{split}\]</div>
+<p>The jacobian for the contact force <span class="math notranslate nohighlight">\(\LU{0}{\fv_c}\)</span> w.r.t. velocity marker coordinates reads, note that <span class="math notranslate nohighlight">\(\LU{0}{\nv_0} \otimes \LU{0}{\nv_0} - \Im = -\left( \Im - \LU{0}{\nv_0} \otimes \LU{0}{\nv_0} \right)\)</span>,</p>
+<div class="math notranslate nohighlight">
+\[
+  \termC{ \frac{\partial \LU{0}{\fv_c}}{\partial \dot \qv_{m0,1}} =
+  \left(\LU{0}{\nv_0} - \delta_f \frac{\mu_s}{v_{\mu,reg}}\LU{0}{\vv_t} \right) \otimes \frac{\partial \LU{0}{f_c}}{\partial \dot \qv_{m0,1}} -
+  f_c \cdot \left(\delta_f \frac{\mu_s}{v_{\mu,reg}} \frac{\partial \LU{0}{\vv_t}}{\partial \dot \qv_{m0,1}} \right) }
+\]</div>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{aligned}
+  \termC{ \frac{\partial \LU{0}{\fv_c}}{\partial \dot \qv_{m0}} }
+  &amp;=   \termC{ -d_c \left(\LU{0}{\nv_0} - \delta_f \frac{\mu_s}{v_{\mu,reg}}\LU{0}{\vv_t} \right) \otimes
+  \left( \LU{0}{\nv_0\tp} \LU{0}{\Jm_{pos,m0}}\right) - } \\
+  &amp;&amp;
+  \termC{ f_c \cdot \delta_f \frac{\mu_s}{v_{\mu,reg}}
+  \left( -\left( \Im - \LU{0}{\nv_0} \otimes \LU{0}{\nv_0} \right)
+  \LU{0}{\Jm_{pos,m0}} + r_i^* \cdot \LU{0}{\tilde \nv_0} \LU{0}{\Jm_{rot,m0}} \right)
+  }
+ \\
+  \termC{ \frac{\partial \LU{0}{\fv_c}}{\partial \dot \qv_{m1}} }
+  &amp;=   \termC{ d_c \left(\LU{0}{\nv_0} - \delta_f \frac{\mu_s}{v_{\mu,reg}}\LU{0}{\vv_t} \right) \otimes
+  \left( \LU{0}{\nv_0\tp} \LU{0}{\Jm_{pos,m1}}\right) - } \\
+  &amp;&amp;
+  \termC{ f_c \cdot \delta_f \frac{\mu_s}{v_{\mu,reg}}
+  \left( \left( \Im - \LU{0}{\nv_0} \otimes \LU{0}{\nv_0} \right)
+  \LU{0}{\Jm_{pos,m1}} + r_j^* \cdot \LU{0}{\tilde \nv_0} \LU{0}{\Jm_{rot,m1}} \right)
+  }
+\end{aligned}
+\end{split}\]</div>
+<p>The jacobians for torques are computed for the case that friction is in the regularized small velocity state (<span class="math notranslate nohighlight">\(\delta_f=1\)</span>), while otherwise derivatives of <span class="math notranslate nohighlight">\(\LU{0}{\ttau_{f,(i,j)}}\)</span> are zero,</p>
+<div class="math notranslate nohighlight">
+\[
+  \LU{0}{\ttau_{f,i}} = (-r_i^* \cdot \LU{0}{\nv_0}) \times \left( -f_c \cdot\delta_f \frac{\mu_s}{v_{\mu,reg}}\LU{0}{\vv_t} \right), \quad
+  \LU{0}{\ttau_{f,j}} = (-r_j^* \cdot \LU{0}{\nv_0}) \times \left( -f_c \cdot\delta_f \frac{\mu_s}{v_{\mu,reg}}\LU{0}{\vv_t} \right)
+\]</div>
+<p>in case of no friction or constant friction forces, <span class="math notranslate nohighlight">\(\delta_f=0\)</span>.
+The jacobians follow from (accordingly for <span class="math notranslate nohighlight">\(\ttau_{f,i}\)</span>, <span class="math notranslate nohighlight">\(\ttau_{f,j}\)</span> and derivatives w.r.t <span class="math notranslate nohighlight">\(\qv_{m0,1}\)</span>):</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{aligned}
+    \frac{\partial \LU{0}{\ttau_{f,(i,j)}}}{\partial \qv_{m0,1}}
+    &amp;=\frac{\partial \left(-r_ {(i,j)} \cdot \LU{0}{\nv_0} \right) \times \left( -f_c \cdot \delta_f \frac{\mu_s}{v_{\mu,reg}}\LU{0}{\vv_t} \right) }{\partial \qv_{m0,1}} \\
+   &amp;= \left(-r_ {(i,j)} \frac{\partial \LU{0}{\nv_0}}{\partial \qv_{m0,1}}\right) \times \left( -f_c \cdot \delta_f \frac{\mu_s}{v_{\mu,reg}}\LU{0}{\vv_t} \right) +
+    \left(-r_ {(i,j)} \cdot \LU{0}{\nv_0} \right) \times \left( -f_c \cdot \delta_f \frac{\mu_s}{v_{\mu,reg}} \frac{\partial \LU{0}{\vv_t}}{\partial \qv_{m0,1}}\right) + \diffmOI{f_c} (...)
+ \\
+   &amp;= \left( -f_c \cdot \delta_f \frac{\mu_s}{v_{\mu,reg}}\LU{0}{\tilde \vv_t} \right) \left(r_ {(i,j)} \frac{\partial \LU{0}{\nv_0}}{\partial \qv_{m0,1}} \right) +
+    \left(-r_ {(i,j)} \cdot \LU{0}{\tilde \nv_0} \right) \left( -f_c \cdot \delta_f \frac{\mu_s}{v_{\mu,reg}} \frac{\partial \LU{0}{\vv_t}}{\partial \qv_{m0,1}}\right) + \diffmOI{f_c} (...)
+\end{aligned}
+\end{split}\]</div>
+<p>and (note that <span class="math notranslate nohighlight">\(\LU{0}{\tilde \nv_0} \LU{0}{\nv_0} = \Null\)</span>),</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{aligned}
+    \termC{ \frac{\partial \LU{0}{\ttau_{f,(i,j)}}}{\partial \dot \qv_{m0}}  }
+   &amp;=\termC{\left(-r_ {(i,j)} \cdot \LU{0}{\tilde \nv_0} \right) \left( -f_c \cdot \delta_f \frac{\mu_s}{v_{\mu,reg}} \frac{\partial \LU{0}{\vv_t}}{\partial    \dot \qv_{m0}} - \diffmOt{f_c} \cdot \delta_f \frac{\mu_s}{v_{\mu,reg}} \LU{0}{\vv_t} \right)  }\\
+   &amp;=\termC{ \left(r_ {(i,j)} \cdot \LU{0}{\tilde \nv_0} \right) \left( f_c \cdot \delta_f \frac{\mu_s}{v_{\mu,reg}}
+    \left( - \LU{0}{\Jm_{pos,m0}}
+    + r_i^* \cdot \LU{0}{\tilde \nv_0} \LU{0}{\Jm_{rot,m0}} \right)  - d_c\delta_f \frac{\mu_s}{v_{\mu,reg}} \cdot \LU{0}{\vv_t} \otimes (\LU{0}{\nv_0} \LU{0}{\Jm_{pos,m0}} ) \right)
+    }
+\end{aligned}
+\end{split}\]</div>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{aligned}
+    \termC{ \frac{\partial \LU{0}{\ttau_{f,(i,j)}}}{\partial \dot \qv_{m1}} }
+   &amp;=\termC{\left(-r_ {(i,j)} \cdot \tilde \nv_0 \right) \left( -f_c \cdot \delta_f \frac{\mu_s}{v_{\mu,reg}} \frac{\partial \LU{0}{\vv_t}}{\partial    \dot \qv_{m1}} - \diffmIt{f_c} \cdot \delta_f \frac{\mu_s}{v_{\mu,reg}} \LU{0}{\vv_t}  \right)  }\\
+   &amp;=\termC{ \left(r_ {(i,j)} \cdot \tilde \nv_0 \right) \left(f_c \cdot \delta_f \frac{\mu_s}{v_{\mu,reg}}
+    \left( \LU{0}{\Jm_{pos,m1}}
+    + r_j^* \cdot \LU{0}{\tilde \nv_0} \LU{0}{\Jm_{rot,m1}} \right) + d_c\delta_f \frac{\mu_s}{v_{\mu,reg}} \cdot \LU{0}{\vv_t} \otimes (\LU{0}{\nv_0} \LU{0}{\Jm_{pos,m1}} ) \right)
+    }
+\end{aligned}
+\end{split}\]</div>
+</section>
+</section>
+<section id="sphere-triangle-contact-equations">
+<span id="seccontactspheretriangle"></span><h2>Sphere-triangle contact: equations<a class="headerlink" href="#sphere-triangle-contact-equations" title="Link to this heading"></a></h2>
+<p>The sphere-triangle contact model follows a penalty formulation, using a spring and optional damper to model the unilateral contact behavior. Note that the model can be used for for planar (2D) contact between circles and lineas accordingly, where triangles are placed perpendicular to the <span class="math notranslate nohighlight">\(X-Y\)</span> plane, representing lines for the contact with circles.
+Currently, only linear springs are utilized, however, the user is free to modify the equations in the code to model any nonlinear</p>
+<p>The spheres are attached to a position-based marker, as they are the same spheres as in the sphere-sphere contact.
+The triangles currently may only be attached to a rigid body (but may be attached to three position-based markers in the future).
+In C++, the sphere attached to marker 0 is denoted as <code class="docutils literal notranslate"><span class="pre">sphereI</span></code> with index <span class="math notranslate nohighlight">\(i\)</span> and the triangle attached to a rigid body is denoted as <code class="docutils literal notranslate"><span class="pre">trigJ</span></code> and becomes contact object with index <span class="math notranslate nohighlight">\(j\)</span>.</p>
+<p>Input parameters for this contact model are</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>intermediate variables</p></th>
+<th class="head"><p>symbol</p></th>
+<th class="head"><p>description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>sphere <span class="math notranslate nohighlight">\(i\)</span> position</p></td>
+<td><p><span class="math notranslate nohighlight">\(\LU{0}{\pv_{s,i}}\)</span></p></td>
+<td><p>global position of sphere <span class="math notranslate nohighlight">\(i\)</span></p></td>
+</tr>
+<tr class="row-odd"><td><p>sphere <span class="math notranslate nohighlight">\(i\)</span> radius</p></td>
+<td><p><span class="math notranslate nohighlight">\(r_i\)</span></p></td>
+<td><p>radius of sphere <span class="math notranslate nohighlight">\(i\)</span>, attached to marker 0</p></td>
+</tr>
+<tr class="row-even"><td><p>sphere <span class="math notranslate nohighlight">\(i\)</span> contact stiffness</p></td>
+<td><p><span class="math notranslate nohighlight">\(k_i\)</span></p></td>
+<td><p>N/m</p></td>
+</tr>
+<tr class="row-odd"><td><p>sphere <span class="math notranslate nohighlight">\(i\)</span> contact damping</p></td>
+<td><p><span class="math notranslate nohighlight">\(d_i\)</span></p></td>
+<td><p>N/m</p></td>
+</tr>
+<tr class="row-even"><td><p>triangle <span class="math notranslate nohighlight">\(j\)</span> points</p></td>
+<td><p><span class="math notranslate nohighlight">\(\LU{0}{\pv_{t,j,k}}\)</span></p></td>
+<td><p>global position of vertex <span class="math notranslate nohighlight">\(k\)</span> of triangle <span class="math notranslate nohighlight">\(j\)</span></p></td>
+</tr>
+<tr class="row-odd"><td><p>triangle <span class="math notranslate nohighlight">\(j\)</span> contact stiffness</p></td>
+<td><p><span class="math notranslate nohighlight">\(k_j\)</span></p></td>
+<td><p>N/m</p></td>
+</tr>
+<tr class="row-even"><td><p>triangle <span class="math notranslate nohighlight">\(j\)</span> contact damping</p></td>
+<td><p><span class="math notranslate nohighlight">\(d_j\)</span></p></td>
+<td><p>N/m</p></td>
+</tr>
+<tr class="row-odd"><td><p>friction pairing coefficient</p></td>
+<td><p><span class="math notranslate nohighlight">\(\mu_{ij}\)</span></p></td>
+<td><p>the friction coefficient stored in the the friction pairings matrix, resulting from the friction indices of spheres <span class="math notranslate nohighlight">\(i\)</span> and <span class="math notranslate nohighlight">\(j\)</span></p></td>
+</tr>
+</tbody>
+</table>
+<p>The main geometrical contact parameters are computed from a function, which computes the projected point on the triangle <span class="math notranslate nohighlight">\(j\)</span> with the minimal distance to the sphere’s position <span class="math notranslate nohighlight">\(\LU{0}{\pv_{s,i}}\)</span>. The triangle <span class="math notranslate nohighlight">\(j\)</span> is given by the vertices (<span class="math notranslate nohighlight">\(\LU{0}{\pv_{t,j,0}}\)</span>, <span class="math notranslate nohighlight">\(\LU{0}{\pv_{t,j,1}}\)</span>, <span class="math notranslate nohighlight">\(\LU{0}{\pv_{t,j,2}}\)</span>).
+As a result, we obtain the closest (projected) point on the triangle <span class="math notranslate nohighlight">\(\LU{0}{\pv_{p}}\)</span>, which is either inside the triangle or on one of the (closest) edges, potentially also at a vertex. If the projected point is inside the triangle, the flag <code class="docutils literal notranslate"><span class="pre">inside</span></code> becomes true and the closest distance is the normal distance to the plane, otherwise the flag is false.
+The function for the minimal distance reads</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">[pp,</span> <span class="pre">inside]</span> <span class="pre">=</span> <span class="pre">MinDistTP(pt0,</span> <span class="pre">pt1,</span> <span class="pre">pt2,</span> <span class="pre">ps)</span></code></p></li>
+</ul>
+<p>We compute the vector between the two points,</p>
+<div class="math notranslate nohighlight">
+\[
+  \LU{0}{\tdelta_p} = \LU{0}{\pv_{p}} - \LU{0}{\pv_{s,i}}
+\]</div>
+<p>and the distance</p>
+<div class="math notranslate nohighlight">
+\[
+  d = |\LU{0}{\tdelta_p}|
+\]</div>
+<p>Contact is only considered, if <span class="math notranslate nohighlight">\(d &lt; r\)</span>.</p>
+<p>In case of contact, we compute the normalized vector</p>
+<div class="math notranslate nohighlight">
+\[
+  \LU{0}{\tdelta_{p0}} = \frac{1}{d} \LU{0}{\tdelta_{p}}
+\]</div>
+<p>as well as the penetration</p>
+<div class="math notranslate nohighlight">
+\[
+  \Delta = r_i - d
+\]</div>
+<p>In the case of a linear model, the normal contact force results as</p>
+<div class="math notranslate nohighlight">
+\[
+  f_n = -k \cdot \Delta^p - d \cdot \dot \Delta
+\]</div>
+<p>in which <span class="math notranslate nohighlight">\(p\)</span> is the exponent of the penetration, which is set to <span class="math notranslate nohighlight">\(1\)</span> by default, but could have different values according to the geometry (however, this has to be adjusted in the C++ part).</p>
+<p>For tangential contact and damping, the relative velocity has to be computed.
+The velocity of the sphere at the contact point reads</p>
+<div class="math notranslate nohighlight">
+\[
+  \LU{0}{\pv_{sp}} = \left( \LU{0s}{\Am} \LU{s}{\tomega_s} \right) \times \left( \LU{0}{\pv_{p}} - \LU{0}{\pv_{s,i}}  \right)
+  + \LU{0}{\vv_{s,i}}
+\]</div>
+<p>Here, <span class="math notranslate nohighlight">\(\LU{0}{\vv_{s,i}}\)</span> is the sphere’s velocity at the midpoint.
+The velocity of the rigid body (at which the triangle is attached) at the contact point reads</p>
+<div class="math notranslate nohighlight">
+\[
+  \LU{0}{\pv_{tp}} = \left( \LU{0r}{\Am} \LU{r}{\tomega_r} \right) \times \left( \LU{0}{\pv_{p}} - \LU{0}{\pv_r}  \right)
+  + \LU{0}{\vv_{r}}
+\]</div>
+<p>in which <span class="math notranslate nohighlight">\(\LU{0}{\vv_{r}}\)</span> is the rigid body’s velocity at the reference point and <span class="math notranslate nohighlight">\(\LU{0}{\pv_r}\)</span> is the rigid body’s reference point.</p>
+<p>From the latter two quantities, we are able to compute the penetration velocity</p>
+<div class="math notranslate nohighlight">
+\[
+  \dot \Delta = \LU{0}{\tdelta_{p0}\tp} \left( \LU{0}{\pv_{sp}} - \LU{0}{\pv_{tp}} \right)
+\]</div>
+<p>The tangent velocity vector is then computed as</p>
+<div class="math notranslate nohighlight">
+\[
+  \LU{0}{\tdelta_{vt}} = \left( \LU{0}{\pv_{sp}} - \LU{0}{\pv_{tp}} \right) - \dot \Delta \LU{0}{\tdelta_{p0}}
+\]</div>
+<p>The friction model follows again <a class="reference internal" href="#equation-eq-generalcontactregularizedfriction">(32)</a>, defining the friction force <span class="math notranslate nohighlight">\(\LU{0}{\fv_f}(v_t, |f_c|, \mu_s, v_{\mu,reg}, v_t, \LU{0}{\vv_t} )\)</span>, and resulting in the contact force</p>
+<div class="math notranslate nohighlight">
+\[
+  \LU{0}{\fv_c} = f_c \cdot \LU{0}{\tdelta_{p0}} + \LU{0}{\fv_f}
+  \, .
+\]</div>
+<p>The torque due to friction for sphere marker <span class="math notranslate nohighlight">\(i\)</span> and for triangle <span class="math notranslate nohighlight">\(j\)</span> rigid body results into (note that both signs are the same and that <span class="math notranslate nohighlight">\(\LU{0}{\fv_f}\)</span> could be replaced by <span class="math notranslate nohighlight">\(\LU{0}{\fv_c}\)</span>)</p>
+<div class="math notranslate nohighlight">
+\[
+  \LU{0}{\ttau_{f,i}} = \LU{0}{\tdelta_p} \times \LU{0}{\fv_f}, \quad
+  \LU{0}{\ttau_{f,j}} = \left(  \LU{0}{\pv_{p}} - \LU{0}{\pv_r} \right) \times \LU{0}{\fv_f}
+  \, .
+\]</div>
+<p>Jacobians for the derivative of contact forces w.r.t. marker positions and rotations only include the main dependencies of normal and tangential forces.</p>
+</section>
+<section id="contact-relations-for-ancf-cable-g-i-marker-m0-and-sphere-g-j-marker-m1">
+<h2>Contact relations for ANCF cable <span class="math notranslate nohighlight">\(g_i\)</span> (marker <span class="math notranslate nohighlight">\(m0\)</span>) and sphere <span class="math notranslate nohighlight">\(g_j\)</span> (marker <span class="math notranslate nohighlight">\(m1\)</span>)<a class="headerlink" href="#contact-relations-for-ancf-cable-g-i-marker-m0-and-sphere-g-j-marker-m1" title="Link to this heading"></a></h2>
+<p>If contact is active, we have two relative axial reference coordinates <span class="math notranslate nohighlight">\(s_0\)</span> and <span class="math notranslate nohighlight">\(s_1\)</span>, which define start and end location at the beam, for which the span in between intersects with the circle, see <a class="reference internal" href="#fig-contact-ancf2dcircle"><span class="std std-numref">Fig. 28</span></a>.
+The intersection points are either computed based on the exact 6th order polynomial equations or using a set of linear segments for interpolation.
+In this model, due to the active set strategy, the reference coordinates spanning <span class="math notranslate nohighlight">\([s_0,\, s_1]\)</span> are kept fixed, even though that they would change during Newton iterations.</p>
+<figure class="align-default" id="id3">
+<span id="fig-contact-ancf2dcircle"></span><img alt="../../_images/generalContactANCF2Dcircle.svg" src="../../_images/generalContactANCF2Dcircle.svg" />
+<figcaption>
+<p><span class="caption-number">Fig. 28 </span><span class="caption-text">Geometrical relations for contact of ANCFCable2D <span class="math notranslate nohighlight">\(i\)</span> and circle <span class="math notranslate nohighlight">\(j\)</span> with according marker <span class="math notranslate nohighlight">\(m1\)</span>;
+case a) shows a cable with nodes <span class="math notranslate nohighlight">\(n_0\)</span> and <span class="math notranslate nohighlight">\(n_1\)</span>, partially penetrating at the midspan of the cable;
+case b) shows the case of a cable where node <span class="math notranslate nohighlight">\(n_0\)</span> is inside the cable.</span><a class="headerlink" href="#id3" title="Link to this image"></a></p>
+</figcaption>
+</figure>
+<p>Normal contact and tangential friction forces are then computed based on integrals over the coordinates <span class="math notranslate nohighlight">\([s_0,\, s_1]\)</span>.
+The integration is performed over <span class="math notranslate nohighlight">\(n_{ip}\)</span> integration points <span class="math notranslate nohighlight">\(x_k \in [x_{i0},\, x_{i1},\, \ldots]\)</span>. In case of a 3 point Lobatto integration, we chose the integration points</p>
+<div class="math notranslate nohighlight">
+\[
+  x_k \in [s_0, (s_0+s_1)/2, s_1] \, .
+\]</div>
+<p>According weights are</p>
+<div class="math notranslate nohighlight">
+\[
+  w_k \in [1/3, 4/3, 1/3] \, .
+\]</div>
+<p>The ANCF cable provides the global position of an integration point <span class="math notranslate nohighlight">\(k \in \{i0,\, i1,\, \ldots\}\)</span> via</p>
+<div class="math notranslate nohighlight">
+\[
+  \LU{0}{\rv(x_{k})} = \LU{0}{\Sm(x_{k})} \qv
+\]</div>
+<p>with ANCF shape function matrix <span class="math notranslate nohighlight">\(\Sm\)</span> and current ANCF coordinates <span class="math notranslate nohighlight">\(\qv\)</span>.
+Note that in the simplified case with linear segments, <span class="math notranslate nohighlight">\(\LU{0}{\rv(x_{k})}\)</span> is computed from linear interpolation of the segment which is attached to the cable.
+The velocity is computed in the same way,</p>
+<div class="math notranslate nohighlight">
+\[
+  \LU{0}{\dot \rv(x_{k})} = \LU{0}{\Sm(x_{k})} \dot\qv
+\]</div>
+<p>again using linear interpolation of the velocities along the straight segment, if linear segments are used.</p>
+<p>In order to perform the integration of contact forces due to penetration as well as tangential (friction) forces, we iterate over all integration points, and sum up the according generalized forces on the cable and the circle marker object.</p>
+<p>The integration factor for integration point <span class="math notranslate nohighlight">\(k\)</span> follows from</p>
+<div class="math notranslate nohighlight">
+\[
+  f_k = \frac{s_1 - s_0}{2} w_k \, ,
+\]</div>
+<p>assuming axial stretch of the cable element being moderately small.
+The vector <span class="math notranslate nohighlight">\(\ANCFdk\)</span> which points from the center of the circle to the cable (integration) point reads</p>
+<div class="math notranslate nohighlight">
+\[
+  \ANCFdk = \LU{0}{\rv(x_{k})} - \LU{0}{\pv_j}
+\]</div>
+<p>The velocity of the circle at the contact integration point <span class="math notranslate nohighlight">\(k\)</span> follows as</p>
+<div class="math notranslate nohighlight">
+\[
+  \LU{0}{\vv_{c,k}} = \LU{0}{\vv_j} + \left( \LU{0,m0}{\Am} \LU{m0}{\tomega}_{j} \right) \times \ANCFdk
+\]</div>
+<p>The distance <span class="math notranslate nohighlight">\(L\)</span> between cable and circle center point, gap <span class="math notranslate nohighlight">\(g\)</span> and the contact normal vector read</p>
+<div class="math notranslate nohighlight">
+\[
+  L_k = |\ANCFdk|, \quad g= L_k - (r + h_{1/2}), \quad \LU{0}{\dv_{0,k}} = \frac{1}{L_k} \ANCFdk
+\]</div>
+<p>with the half height of the ANCF element <span class="math notranslate nohighlight">\(h_{1/2}\)</span>, which gives additional penetration. Note that this height is added on the side of the circle, which virtually represents a larger circle, behaving slightly different from a cable with thickness <span class="math notranslate nohighlight">\(h\)</span>.</p>
+<p>The velocity in contact normal direction reads (note that we use the velocity of the circle’s center point),</p>
+<div class="math notranslate nohighlight">
+\[
+  v_n = \LU{0}{\dv_{0,k}} \left( \LU{0}{\dot \rv(x_{k})} - \LU{0}{\vv}_j \right)
+\]</div>
+<p>The contact force (tension! is always negative) follows in the simplistic case of a linear contact model as</p>
+<div class="math notranslate nohighlight" id="equation-eq-generalcontactasfc">
+<span class="eqno">(33)<a class="headerlink" href="#equation-eq-generalcontactasfc" title="Link to this equation"></a></span>\[
+  f_{c,k} = k_c \cdot g  + d \cdot v_n
+\]</div>
+<p>with contact stiffness <span class="math notranslate nohighlight">\(k_c\)</span> and contact normal damping <span class="math notranslate nohighlight">\(d_c\)</span>.</p>
+<p>In case of tangential friction, the tangential velocity reads</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{aligned}
+  \vv_{t,k} &amp;= \LU{0}{\dot \rv(x_{k})} - \LU{0}{\vv}_{c,k} - v_n \cdot \LU{0}{\dv_{0,k}}
+  = \LU{0}{\dot \rv(x_{k})} - \LU{0}{\vv_j} - \left( \LU{0,m0}{\Am} \LU{m0}{\tomega}_{j} \right) \times \ANCFdk - v_n \cdot \LU{0}{\dv_{0,k}} \\
+  &amp;= -\left(\LU{0}{\dv_{0,k}} \otimes \LU{0}{\dv_{0,k}} -\Im \right) \left( \LU{0}{\dot \rv(x_{k})} - \LU{0}{\vv}_{c,k} \right)
+      +\LU{0}{\tilde \dv_k} \LU{0,m0}{\Am} \LU{m0}{\tomega}_{j}
+\end{aligned}
+\end{split}\]</div>
+<p>and the friction force is computed from <a class="reference internal" href="#equation-eq-generalcontactregularizedfriction">(32)</a> using the contact pressure <span class="math notranslate nohighlight">\(-f_{c,k}\)</span> from <a class="reference internal" href="#equation-eq-generalcontactasfc">(33)</a>, while otherwise <span class="math notranslate nohighlight">\(\LU{0}{\fv_f} = \Null\)</span>.</p>
+<p>The force vector for the contact point for integration point <span class="math notranslate nohighlight">\(k\)</span>, including integration weight <span class="math notranslate nohighlight">\(f_k\)</span> (this is done, because all further terms are proportional to <span class="math notranslate nohighlight">\(\fv_k\)</span>.) thus reads</p>
+<div class="math notranslate nohighlight">
+\[
+  \LU{0}{\fv_k} = f_k \cdot \left(f_{c,k} \cdot \LU{0}{\dv_{0,k}} + \LU{0}{\fv_f} \right)
+\]</div>
+<p>The total force and torque on the circle <span class="math notranslate nohighlight">\(j\)</span> is found by summation over all integration points <span class="math notranslate nohighlight">\(k\)</span>,</p>
+<div class="math notranslate nohighlight">
+\[
+  \LU{0}{\fv_{circ}} = \sum_k \LU{0}{\fv_{circ,k}}  = \sum_k \LU{0}{\fv_k}, \quad
+  \LU{0}{\tv_{circ}} = \sum_k \LU{0}{\tv_{circ,k}}  = \sum_k \left( r_j \cdot \LU{0}{\dv_{0,k}} \right) \times \LU{0}{\fv_k}
+\]</div>
+<p>and the contribution to the generalized forces of the ANCF cable element (with generalized coordinates <span class="math notranslate nohighlight">\(\qv_{ANCF}\)</span>) read</p>
+<div class="math notranslate nohighlight">
+\[
+  \fv_{ANCF} = \sum_k \fv_{ANCF,k} = \sum_k \LU{0}{\Sm(x_{k})\tp} \cdot \LU{0}{\fv_k}
+\]</div>
+<p>The generalized <a class="reference internal" href="../generated/abbreviations.html#lhs"><span class="std std-ref">LHS</span></a> forces for marker <span class="math notranslate nohighlight">\(m1\)</span> (with generalized coordinates <span class="math notranslate nohighlight">\(\qv_{m1}\)</span>) thus read</p>
+<div class="math notranslate nohighlight">
+\[
+  \fv_{m1,LHS} = \LU{0}{\Jm_{pos,m1}\tp} \LU{0}{\fv_{circ}} +
+                 \LU{0}{\Jm_{rot,m1}\tp} \LU{0}{\tv_{circ}} \, .
+\]</div>
+<p>The Jacobian matrix for the circle-ANCF contact on position level thus reads (terms that are implemented are marked in green; black terms are not implemented or unused),</p>
+<div class="math notranslate nohighlight">
+\[
+  \termA{
+  \Jm_{c}  = \mp{\diffANCF{ \LU{0}{\fv_{ANCF}} }}
+                {\diffmI{   \LU{0}{\fv_{ANCF}} }}
+                {-\diffANCF{ \left( \LU{0}{\Jm_{pos,m1}\tp} \LU{0}{\fv_{circ}} + \LU{0}{\Jm_{rot,m1}\tp} \LU{0}{\tv_{circ}}\right)}}
+                {\diffmI{ \left( \LU{0}{\Jm_{pos,m1}\tp} \LU{0}{\fv_{circ}} + \LU{0}{\Jm_{rot,m1}\tp} \LU{0}{\tv_{circ}}\right)}}
+                }
+\]</div>
+<p>and on velocity level, it follows as</p>
+<div class="math notranslate nohighlight">
+\[
+  \termA{
+  \Jm_{c}  = \mp{\diffANCFt{ \LU{0}{\fv_{ANCF}} }}
+                {\diffmIt{   \LU{0}{\fv_{ANCF}} }}
+                {-\diffANCFt{ \left( \LU{0}{\Jm_{pos,m1}\tp} \LU{0}{\fv_{circ}} + \LU{0}{\Jm_{rot,m1}\tp} \LU{0}{\tv_{circ}}\right)}}
+                {\diffmIt{ \left( \LU{0}{\Jm_{pos,m1}\tp} \LU{0}{\fv_{circ}} + \LU{0}{\Jm_{rot,m1}\tp} \LU{0}{\tv_{circ}}\right)}}
+                }
+\]</div>
+<p>For the calculation of the jacobian, the derivatives of the following terms are needed:</p>
+<ul class="simple">
+<li><p><span class="math notranslate nohighlight">\(\ANCFdk = \LU{0}{\rv(x_{k})} - \LU{0}{\pv_j} \)</span>:</p></li>
+</ul>
+<div class="math notranslate nohighlight">
+\[
+    \diffANCF{\ANCFdk} = \diffANCF{\LU{0}{\rv(x_{k})} - \LU{0}{\pv_j} }
+    = \LU{0}{\Sm(x_{k})}
+\]</div>
+<div class="math notranslate nohighlight">
+\[
+    \diffmI{\ANCFdk} = \diffmI{\LU{0}{\rv(x_{k})} - \LU{0}{\pv_j} }
+    = -\LU{0}{\Jm_{pos,m1}}
+\]</div>
+<ul class="simple">
+<li><p><span class="math notranslate nohighlight">\(\ANCFdkt = \LU{0}{\dot \rv(x_{k})} - \LU{0}{\dot \vv_j} \)</span>:</p></li>
+</ul>
+<div class="math notranslate nohighlight">
+\[
+    \diffANCFt{\ANCFdkt} = \diffANCF{\LU{0}{\dot \rv(x_{k})} - \LU{0}{\vv_j} }
+    = \LU{0}{\Sm(x_{k})}
+\]</div>
+<div class="math notranslate nohighlight">
+\[
+    \diffmIt{\ANCFdkt} = \diffmI{\LU{0}{\dot \rv(x_{k})} - \LU{0}{\vv_j} }
+    = -\LU{0}{\Jm_{pos,m1}}
+\]</div>
+<ul class="simple">
+<li><p><span class="math notranslate nohighlight">\(L_k = |\ANCFdk| = \left(\LU{0}{\dv_k\tp} \ANCFdk \right) ^{1/2}\)</span>:</p></li>
+</ul>
+<div class="math notranslate nohighlight">
+\[
+    \diffANCFmI{ |\ANCFdk| } = \frac{1}{L_k}\left(\LU{0}{\dv_k\tp} \diffANCFdk \right) =
+    \ANCFdkOtp \diffANCFdk
+\]</div>
+<ul class="simple">
+<li><p><span class="math notranslate nohighlight">\(L_k^{-1} = \left(\LU{0}{\dv_k\tp} \ANCFdk \right) ^{-1/2}\)</span> (note different sign as in <span class="math notranslate nohighlight">\(L\)</span>-term due to <span class="math notranslate nohighlight">\(-1/2\)</span>):</p></li>
+</ul>
+<div class="math notranslate nohighlight">
+\[
+    \diffANCFmI{ L_k^{-1} } = \diffANCFmI{\left(\LU{0}{\dv_k\tp} \ANCFdk \right) ^{-1/2} } =
+    -\frac{1}{L_k}\left(\ANCFdkOtp \diffANCFdk \right)
+\]</div>
+<ul class="simple">
+<li><p><span class="math notranslate nohighlight">\(\ANCFdkO = \frac{1}{L_k} \ANCFdk\)</span>:</p></li>
+</ul>
+<div class="math notranslate nohighlight">
+\[
+    \diffANCFmI{ \ANCFdkO } = \diffANCFmI{\frac{1}{L_k} \ANCFdk } =
+    - \frac{1}{L_k^2}\ANCFdk \otimes \left(\ANCFdkOtp \diffANCFdk \right)
+    + \frac{1}{L_k} \diffANCFdk = \frac{1}{L_k} \left(\Im - \ANCFdkO \otimes \ANCFdkO \right) \diffANCFdk
+\]</div>
+<ul class="simple">
+<li><p><span class="math notranslate nohighlight">\(g= L_k - (r + h_{1/2})\)</span>:</p></li>
+</ul>
+<div class="math notranslate nohighlight">
+\[
+    \diffANCFmI{ g } = \diffANCFmI{ L_k } =
+    \ANCFdkOtp \diffANCFdk
+\]</div>
+<ul class="simple">
+<li><p>velocity at circle contact point <span class="math notranslate nohighlight">\(k\)</span>: <span class="math notranslate nohighlight">\(\LU{0}{\vv_{c,k}} = \LU{0}{\vv_j} + \left( \LU{0,m1}{\Am} \LU{m1}{\tomega}_{j} \right) \times \ANCFdk = \LU{0}{\vv_j} - \LU{0}{\tilde \dv_k} \LU{0,m1}{\Am} \LU{m1}{\tomega}_{j} \)</span>:</p></li>
+</ul>
+<div class="math notranslate nohighlight">
+\[
+    \diffmIt{ \LU{0}{\vv_{c,k}} } =\LU{0}{\Jm_{pos,m1}}  - \LU{0}{\tilde \dv_k} \LU{0}{\Jm_{rot,m1}}
+\]</div>
+<ul class="simple">
+<li><p><span class="math notranslate nohighlight">\(v_n = \ANCFdkO \left( \LU{0}{\dot \rv(x_{k})} - \LU{0}{\vv}_{c,k} \right)\)</span>: (the approximate sign is used, because <span class="math notranslate nohighlight">\(\LU{0}{\vv}_{c,k}\)</span> includes a normal component if ANCF cable is not fully tangential, which is not considered here.)</p></li>
+</ul>
+<div class="math notranslate nohighlight">
+\[
+    \diffANCFmIt{ v_n } = \ANCFdkO \diffANCFt{\left( \LU{0}{\dot \rv(x_{k})} - \LU{0}{\vv}_{c,k} \right) }
+    \approx
+        \ANCFdkOtp \diffANCFdk
+\]</div>
+<ul class="simple">
+<li><p><span class="math notranslate nohighlight">\(\vv_{t,k} = \LU{0}{\dot \rv(x_{k})} - \LU{0}{\vv}_j - v_n \cdot \ANCFdkO =
+\left(\Im - \ANCFdkO \otimes \ANCFdkO \right) \left( \LU{0}{\dot \rv(x_{k})} - \LU{0}{\vv_j} \right)
+    +\LU{0}{\tilde \dv_k} \LU{0}{\tomega}_{j} \)</span>:</p></li>
+</ul>
+<div class="math notranslate nohighlight">
+\[
+    \diffANCFt{\vv_{t,k} } = \left(\Im - \ANCFdkO \otimes \ANCFdkO \right) \LU{0}{\Sm(x_{k})}
+\]</div>
+<div class="math notranslate nohighlight">
+\[
+    \diffmIt{\vv_{t,k} } = -\left(\Im - \ANCFdkO \otimes \ANCFdkO \right) \LU{0}{\Jm_{pos,m1}} + \LU{0}{\tilde \dv_k} \LU{0}{\Jm_{rot,m1}}
+\]</div>
+<ul class="simple">
+<li><p><span class="math notranslate nohighlight">\(f_{c,k} = k_c \cdot g  + d_c \cdot v_n\)</span>:</p></li>
+</ul>
+<div class="math notranslate nohighlight">
+\[
+    \termA{ \diffANCF{ f_{c,k} } } = \termC{ k_c \cdot \diffANCF{ g } }  + d_c \cdot \diffANCF{ v_n }
+    \approx \termC{ k_c \cdot \LU{0}{\dv_{k,0}\tp} \LU{0}{\Sm(x_{k})} }
+\]</div>
+<div class="math notranslate nohighlight">
+\[
+    \termA{ \diffmI{ f_{c,k} } } = \termC{ k_c \cdot \diffmI{ p } }  + d_c \cdot \diffmI{ v_n }
+    \approx \termC{ -k_c \cdot \LU{0}{\dv_{k,0}\tp} \LU{0}{\Jm_{pos,m1}} }
+\]</div>
+<div class="math notranslate nohighlight">
+\[
+    \termC{\diffANCFt{ f_{c,k} } = d_c \cdot \diffANCFt{ v_n } = d_c \cdot \ANCFdkO \LU{0}{\Sm(x_{k})} }
+\]</div>
+<div class="math notranslate nohighlight">
+\[
+    \termC{\diffmIt{ f_{c,k} } = d_c \cdot \diffmIt{ v_n } = -d_c \cdot \ANCFdkO \LU{0}{\Jm_{pos,m1}} }
+\]</div>
+<p>The contact force reads (note that because <span class="math notranslate nohighlight">\(f_c\)</span> is always negative, the sign of regularization term is negative),</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+  \LU{0}{\fv_k} = f_k \cdot \left( f_{c,k} \cdot \ANCFdkO + \fv_f \right)
+                =
+              \begin{cases}
+                f_k \cdot f_{c,k} \left(\ANCFdkO - \frac{\mu_s}{v_{\mu,reg}}\LU{0}{\vv_t} \right), \quad \mathrm{if} \quad |\LU{0}{\vv_t}| &lt; v_{\mu,reg} \\
+                f_k \cdot \left( f_{c,k} \cdot \ANCFdkO + \fv_f \right), \quad \mbox{else with $\fv_f = const.$}
+              \end{cases}
+\end{split}\]</div>
+<p>We introduce a factor <span class="math notranslate nohighlight">\(\delta_f\)</span>, which is <span class="math notranslate nohighlight">\(\delta_f=1\)</span> in the regularized small velocity state, and in the saturated (constant) friction force we use <span class="math notranslate nohighlight">\(\delta_f=0\)</span>. Thus, the derivative of <span class="math notranslate nohighlight">\(\fv_f\)</span>, using <span class="math notranslate nohighlight">\(|f_{c,k}| = -f_{c,k}\)</span>, reads:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{aligned}
+    \termA{ \diffANCFmIt{\fv_f} } &amp;= \termA{ \delta_f \frac{\mu_s}{v_{\mu,reg}} \diffANCFmIt{ (-f_{c,k} \LU{0}{\vv_t}) } } \approx
+    \termC{ -\delta_f f_{c,k} \frac{\mu_s}{v_{\mu,reg}} \diffANCFmIt{ \LU{0}{\vv_t} } } \\
+    \termC{ \diffANCFt{\fv_f} } &amp;\approx&amp; \termC{ -\delta_f f_{c,k} \frac{\mu_s}{v_{\mu,reg}} \left(\Im - \ANCFdkO \otimes \ANCFdkO \right) \LU{0}{\Sm(x_{k})} } \\
+    \termC{ \diffmIt{\fv_f} } &amp;\approx&amp; \termC{ -\delta_f f_{c,k} \frac{\mu_s}{v_{\mu,reg}} \left(-\left(\Im - \ANCFdkO \otimes \ANCFdkO \right) \LU{0}{\Jm_{pos,m1}} + \LU{0}{\tilde \dv_k} \LU{0}{\Jm_{rot,m1}} \right) }
+\end{aligned}
+\end{split}\]</div>
+<p>The term <span class="math notranslate nohighlight">\(\LU{0}{\fv_k}\)</span> gives:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{aligned}
+    \termA{\frac{\partial \LU{0}{\fv_k}}{\partial \qv_{ANCF,m1}} } &amp;=
+    \termC{f_k \cdot} \left(\termA{ \left(\ANCFdkO - \frac{\mu_s}{v_{\mu,reg}}\LU{0}{\vv_t} \right) \otimes \frac{\partial f_{c,k}}{\partial \qv_{ANCF,m1}} } +
+    f_{c,k} \cdot \frac{\partial \ANCFdkO}{\partial \qv_{ANCF,m1}} +
+    \diffANCFmI{\LU{0}{\fv_f}} \right) \\
+    &amp;\approx&amp; \termC{f_k \cdot k_c \cdot \left( \left(\ANCFdkO - \frac{\mu_s}{v_{\mu,reg}}\LU{0}{\vv_t} \right) \otimes \ANCFdkO \diffANCFmI{\LU{0}{\dv_{k}}} \right) }
+\end{aligned}
+\end{split}\]</div>
+<p>and the velocity terms yield</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{aligned}
+    \termA{\diffANCFt{\LU{0}{\fv_k}} } &amp;=
+    \termC{f_k \cdot \left(d_c \cdot \left(\ANCFdkO - \frac{\mu_s}{v_{\mu,reg}}\LU{0}{\vv_t} \right) \otimes \diffANCFt{v_n}  +
+    \diffANCFt{\LU{0}{\fv_f}} \right) } \\
+    &amp;\approx&amp; \termC{f_k \cdot \left( d_c \cdot \left(\ANCFdkO - \frac{\mu_s}{v_{\mu,reg}}\LU{0}{\vv_t} \right) \otimes \ANCFdkO -
+    \delta_f f_{c,k} \frac{\mu_s}{v_{\mu,reg}} \left(\Im - \ANCFdkO \otimes \ANCFdkO \right) \right)\diffANCFt{\ANCFdkt}  }
+\end{aligned}
+\end{split}\]</div>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{aligned}
+    \termA{\diffmIt{\LU{0}{\fv_k}} } &amp;=
+    \termC{f_k \cdot \left(d_c \cdot \left(\ANCFdkO - \frac{\mu_s}{v_{\mu,reg}}\LU{0}{\vv_t} \right) \otimes \diffmIt{v_n}  +
+    \diffmIt{\LU{0}{\fv_f}} \right) } \\
+    &amp;\approx&amp; \termC{f_k \cdot \left( \left( d_c \cdot \left(\ANCFdkO - \frac{\mu_s}{v_{\mu,reg}}\LU{0}{\vv_t} \right) \otimes \ANCFdkO  -
+    \delta_f f_{c,k} \frac{\mu_s}{v_{\mu,reg}} \left(\Im - \ANCFdkO \otimes \ANCFdkO\right) \right) \diffmIt{\ANCFdkt}\right.  }\\
+    &amp;&amp; \termC{\left.  + \delta_f f_{c,k} \frac{\mu_s}{v_{\mu,reg}} \LU{0}{\tilde \dv_k} \LU{0}{\Jm_{rot,m1}} \right) }
+\end{aligned}
+\end{split}\]</div>
+<p>The single jacobian terms w.r.t. <span class="math notranslate nohighlight">\(\qv_{ANCF}\)</span> and <span class="math notranslate nohighlight">\(\qv_{m1}\)</span> may be expressed as</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{aligned}
+  &amp;&amp;\termA{\frac{\partial \left( \LU{0}{\Jm_{pos,m1}\tp} \LU{0}{\fv_{circ}} + \LU{0}{\Jm_{rot,m1}\tp} \LU{0}{\tv_{circ}}\right)}{\partial \qv_{ANCF,m1}}} = \\
+  &amp;&amp;\frac{\partial \LU{0}{\Jm_{pos,m1}\tp}}{\partial \qv_{ANCF,m1}} \LU{0}{\fv_{circ}}
+  +\termC{\LU{0}{\Jm_{pos,m1}\tp}} \termA{\frac{\partial \LU{0}{\fv_{circ}}}{\partial \qv_{ANCF,m1}}}
+  +\frac{\partial \LU{0}{\Jm_{rot,m1}\tp}}{\partial \qv_{m0,1}} \LU{0}{\tv_{circ}}
+  +\termC{\LU{0}{\Jm_{rot,m1}\tp}} \termA{\frac{\partial \LU{0}{\tv_{circ}}}{\partial \qv_{ANCF,m1}}}
+\end{aligned}
+\end{split}\]</div>
+<p>Note that similar relations follow for the time derivatives <span class="math notranslate nohighlight">\(\frac{\partial}{\partial \dot \qv_{ANCF,m1}}\left( \right) \)</span>.</p>
+<p>The derivatives of <span class="math notranslate nohighlight">\(\LU{0}{\fv_{ANCF}}\)</span>, <span class="math notranslate nohighlight">\(\LU{0}{\fv_{circ}}\)</span>, and</p>
+<div class="math notranslate nohighlight">
+\[
+  \LU{0}{\tv_{circ}} = \sum_k r_j \cdot  \ANCFdkO \times \LU{0}{\fv_k} =
+                       \sum_k r_j \cdot  \LU{0}{\tilde \dv_{0,k}} \LU{0}{\fv_k}
+\]</div>
+<p>follow from</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{aligned}
+  \diffANCFmI{\LU{0}{\fv_{ANCF}} } &amp;= \termC{\sum_k \LU{0}{\Sm(x_{k})\tp}} \termA{\frac{\partial \LU{0}{\fv_k}}{\partial \qv_{ANCF,m1}}}, \\
+  \termA{\diffANCFmI{ \LU{0}{\fv_{circ}} } } &amp;= \termA{ \sum_k \diffANCFmI{ \LU{0}{\fv_k} } }, \\
+  \termA{\frac{\partial  \LU{0}{\tv_{circ}} }{\partial \qv_{ANCF,m1}}} &amp;\approx&amp;
+  \sum_k \left( \termC{r_j \cdot  \LU{0}{\tilde \dv_{0,k}} } \termA{\diffANCFmI{\LU{0}{\fv_k}} } -
+                r_j \cdot \LU{0}{\tilde \fv_k} \diffANCFmI{\LU{0}{\dv_{0,k}} } \right)
+\end{aligned}
+\end{split}\]</div>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="theoryModal.html" class="btn btn-neutral float-left" title="Model order reduction and component mode synthesis" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="solver.html" class="btn btn-neutral float-right" title="Solvers" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
