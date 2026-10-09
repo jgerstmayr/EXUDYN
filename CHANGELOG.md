@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.12 | Metheney | 363 | 1.12.458 |
+| 1.12 | Metheney | 364 | 1.12.459 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
 | 1.9 | Krall | 235 | 1.9.234 |
@@ -29,6 +29,10 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.12 - Metheney (current)
 
+- **1.12.459** `FIX` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` macOS: after Q or ESCAPE in the SolutionViewer, its window and a 'tk' window stay visible and empty (#2906)
+  - description: macOS GUI check 2026-10-08, S7: after Q or Escape in the dialog, the SolutionViewer and a tk window remain visible but empty. Cocoa removes a destroyed GLFW window only when its events are processed, and a destroyed Tk window stays until Tk processes its events; the 'tk' window is the root left by the failed dialog of R6 (\#2904). revision2026b step RG2.4.6.3
+  - **notes:** macOS: the render window and the SolutionViewer leave the screen when they are closed; confirmed on the Mac
+  - date resolved: **2026-10-09 08:25**, date raised: 2026-10-08
 - **1.12.458** `FIX` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` the test suite of the GitHub wheels cannot fail: cibuildwheel test-command without --exit-code (#2907)
   - description: The test-command of \[tool.cibuildwheel\] (Linux, macOS, Windows) runs runTestSuite.py -quiet -local without --exit-code, so a failing test suite leaves the wheel job of .github/workflows/wheels.yml green; the GitLab job passes it. Maintainer 2026-10-09: 'yes, add the --exit-code'. revision2026b step RG10.24
   - **notes:** The test suite run by the GitHub wheel builds (cibuildwheel) passes --exit-code, so a failing suite fails the wheel job

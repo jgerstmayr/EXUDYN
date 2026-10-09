@@ -182,8 +182,8 @@ the GUI check")* **The integration round before 1.13.**
           frames, found by the GUI check agent on Ubuntu: `saveImageAsData` of a view was never initialized, and a nonzero
           value kept every recorded frame in memory instead of writing it; a `RedrawAndGetImage()` no longer counts a
           frame number or prints a file name.
-    - **RG2.4.6** — [log](exudynRevisionLog2026b.md#rg2-4-6) the manual GUI check of 1.12.451 on macOS (2026-10-08); on
-      Windows no further errors. Changed 2026-10-08, **to be checked again on the Mac**:
+    - **RG2.4.6** **DONE 2026-10-09** — [log](exudynRevisionLog2026b.md#rg2-4-6-1) the manual GUI check of 1.12.451 on
+      macOS (2026-10-08); on Windows no further errors; the three fixes below confirmed on the Mac 2026-10-09:
         - **RG2.4.6.1** (#2904) R6: the properties dialog of a right click failed for a sensor - an empty value
           (`fileName` '') made `TkinterEditDictionary.GetDictionary` fail on every platform; the error names its reason;
         - **RG2.4.6.2** (#2905) K5: real-time mode - a pause no longer counts, the simulation continues where it was; the
@@ -2287,7 +2287,6 @@ issue and a short title only. The open issues that are not steps are in the trac
 | RG1.2 | - | retroactive tags for the past releases whose commits can be identified |
 | RG1.3 | - | a second internal repository for development-only Python |
 | RG1.4 | - | **the 1.13 release** - the first public one after the revision |
-| RG2.4 | - | the manual GUI check, once per release and platform (list and model done) |
 | RG4.1 | - | the Windows/Linux differences in contact and friction; RG4.1.2 the five macOS-only models, RG4.1.3 the math library |
 | RG5.1 | - | a maintained micro-benchmark of the linear algebra, inside Exudyn (from #2397); RG5.1.1 the no-rotation flag of the HT |
 | RG4.20.5 | #2218, #2219, #2226, #2229, #2230 | `ObjectANCFThinPlate`: rotation, symmetric slopes, slope scaling, two test problems |

@@ -16891,3 +16891,13 @@ was more the idea to do before the GUI check. Mark as closed. PDF is checked.")*
 - On the question whether a trial run of GitHub CI on a `release/1.13` branch is needed: the workflows run AFTER a push
   and do not refuse it, so a failure on `master` would be public; the order proposed instead is master first, the tag
   and the PyPI upload only after the wheels are green (see the answer in the session, to be decided for RG1.1).
+
+<a id="rg2-4-6-1"></a>
+### RG2.4.6 — confirmed on the Mac; the manual GUI check of 1.13 done (2026-10-09, #2906)
+
+*(Maintainer 2026-10-09: "The MacOS tests now show that the previous errors are resolved. The matplotlib window could
+still crash, but this seems to be on another side and is something that we won't resolve from the Exudyn side.")*
+
+- R6, K5, S7 confirmed on macOS; #2906 resolved. The manual GUI check (RG2.4) is done for 1.13 on Windows, Ubuntu and
+  macOS; it is repeated at the next release.
+- The matplotlib window (macosx backend) may still crash on closing: outside Exudyn, not pursued.
