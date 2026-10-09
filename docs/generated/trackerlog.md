@@ -8,10 +8,10 @@ Every entry carries the **type** of the issue, then its **priority** and its **e
 
 General information on current version:
 
-- Exudyn version = 1.13.0
+- Exudyn version = 1.13.2
 - last change = 2026-10-09
-- Number of issues = 2911
-- Number of resolved issues = 2776 (0 in current version)
+- Number of issues = 2915
+- Number of resolved issues = 2779 (2 in current version)
 
 ## Resolved issues and resolved bugs before version 1.13
 
@@ -9039,6 +9039,9 @@ The following list contains the issues which have been **RESOLVED** in the accor
 
 ## Open issues
 
+- `TESTING` <span class="textorange">`NORMAL`</span> `MEDIUM EFF` `raised by: Claude-JG` the cable run of perfAccessFunctionsAD is ill-conditioned: its result moves by 20% with the Newton settings (#2914)
+  - description: perfAccessFunctionsAD:cable-n200-implicit (200 ANCF cable elements, axialStiffness 1000, massPerLength 1, on spring-dampers) gives 0.004663 with the default modified Newton, 0.005112 with full Newton, 0.005388 with relativeTolerance 1e-10 and 0.005266 with both (15 s instead of 0.6 s); the fast module differs by 8.4e-7. A performance run should judge a converged result: choose parameters (stiffness, mass, step size) for which the Newton settings do not move it, then re-record its reference and timing
+  - date raised: 2026-10-09
 - `CHANGE` `HIGH EFF` `raised by: Claude-JG` joints and their Jacobians on homogeneous transformations (#2884)
   - description: The constraint equations of the joints become functions of the relative transformation H0^-1 H1 of the two marker frames, and their Jacobians follow systematically from the relative twist - one implementation for JointGeneric, JointRevoluteZ, JointPrismaticX, the 2D joints and the rolling disc instead of one each. Successor of \#2745 (the marker interface of RG14.2). revision2026b step RG14.3
   - date raised: 2026-10-07

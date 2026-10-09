@@ -1,0 +1,13 @@
+{
+  "number": 2914,
+  "title": "the cable run of perfAccessFunctionsAD is ill-conditioned: its result moves by 20% with the Newton settings",
+  "author": "Claude-JG",
+  "status": "RAISED",
+  "type": "TESTING",
+  "priority": "NORMAL",
+  "effort": "MEDIUM",
+  "description": "perfAccessFunctionsAD:cable-n200-implicit (200 ANCF cable elements, axialStiffness 1000, massPerLength 1, on spring-dampers) gives 0.004663 with the default modified Newton, 0.005112 with full Newton, 0.005388 with relativeTolerance 1e-10 and 0.005266 with both (15 s instead of 0.6 s); the fast module differs by 8.4e-7. A performance run should judge a converged result: choose parameters (stiffness, mass, step size) for which the Newton settings do not move it, then re-record its reference and timing",
+  "dateRaised": "2026-10-09",
+  "deadline": "2027-04-07",
+  "file": "python/PerformanceModels/perfAccessFunctionsAD.py"
+}

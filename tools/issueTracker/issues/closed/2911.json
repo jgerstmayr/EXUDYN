@@ -1,0 +1,17 @@
+{
+  "number": 2911,
+  "title": "test models that count refused input fail under exudynCPPfast",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "TESTING",
+  "priority": "HIGH",
+  "effort": "LOW",
+  "description": "the fast-module suite of the 1.13 release: createItemNumbersTest raised (the Create functions skip the item-kind checks in exudynCPPfast, so a node reaches AddMarker and raises ExudynTypeError instead of ValueError), homogeneousTransformationInterfaceTest counted 3 must-raise cases that raise nothing there, ANCFThinPlateRevisionTest failed testInvalidIntegrationModeRaises; these cases are judged only in the regular module, as symbolicModuleTest does ('[FAST]' in exu.config.Version(True))",
+  "dateRaised": "2026-10-09",
+  "deadline": "2027-04-07",
+  "dateResolved": "2026-10-09 13:04",
+  "resolvedAuthor": "Claude-JG",
+  "file": "python/TestModels/createItemNumbersTest.py",
+  "releaseNotes": "createItemNumbersTest, homogeneousTransformationInterfaceTest and ANCFThinPlateRevisionTest judge refused input only in the regular module; exudynCPPfast skips these checks by design. revision2026b step RG2.7",
+  "resolvedInVersion": "1.13.0"
+}

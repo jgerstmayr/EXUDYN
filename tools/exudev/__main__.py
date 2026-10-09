@@ -25,6 +25,7 @@
 import argparse
 import os
 import sys
+import time
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
@@ -501,11 +502,15 @@ def Main():
         print('exudev: nothing to do')
         return 0
 
+    startTime = time.time()
     returnCode = runner.RunSteps(steps, options)
 
+    #only a compile of THIS run that wrote something is worth pointing to; a failing test or an
+    #empty file from an earlier build is not where the cause is (#2913)
     if returnCode != 0 and options.command in ['build', 'release'] and not options.verbose:
         outputFile = os.path.join(runner.RepositoryRoot(), 'setuppy.output.txt')
-        if os.path.isfile(outputFile):
+        if (os.path.isfile(outputFile) and os.path.getsize(outputFile) > 0
+                and os.path.getmtime(outputFile) >= startTime):
             print('compiler output: ' + outputFile + '   (re-run with --verbose to see it live)')
 
     return returnCode

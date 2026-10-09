@@ -162,6 +162,8 @@ class TestANCFThinPlateElement(unittest.TestCase):
             self.assertAlmostEqual(deflections[integrationMode] / reference, 1., delta=1e-6)
         self.assertEqual(deflections[1], deflections[2])
 
+    @unittest.skipIf('[FAST]' in exu.config.Version(True),
+                     'exudynCPPfast compiles the error checks away by design (#2911)')
     def testInvalidIntegrationModeRaises(self):
         """useReducedOrderIntegration = 3 must stop the solver with an error."""
         systemContainer, mbs, built, tipNodes = CreateStrip(numberOfElements=2, integrationMode=3)

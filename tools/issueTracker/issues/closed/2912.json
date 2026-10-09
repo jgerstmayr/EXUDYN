@@ -1,0 +1,17 @@
+{
+  "number": 2912,
+  "title": "the AVX2 reference set is stale - 26 test models and 4 mini examples fail under exudynCPPfast",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "TESTING",
+  "priority": "HIGH",
+  "effort": "LOW",
+  "description": "AVX2ReferenceSolutionUpdate (recorded 2026-09-17) was not renewed when the regular reference values moved (modified Newton default #2815 and others), so the fast-module suite of the 1.13 release failed on 3.10 and 3.13; re-recorded from the fast logs of cp310 and cp313, which agree to the last digit",
+  "dateRaised": "2026-10-09",
+  "deadline": "2027-04-07",
+  "dateResolved": "2026-10-09 13:04",
+  "resolvedAuthor": "Claude-JG",
+  "file": "python/testing/runTestSuiteRefSol.py",
+  "releaseNotes": "the AVX2 reference set re-recorded from the fast-module suite on cp310 and cp313 (identical); contactFrictionCircleCable2DnoFrictionTest takes 1000 steps, so Newton converges and both modules agree; the mini example ObjectConnectorRigidBodySpringDamper has one value for both modules; runPerformanceTests.py applies the AVX2 set to its single runs. revision2026b step RG2.7",
+  "resolvedInVersion": "1.13.1"
+}

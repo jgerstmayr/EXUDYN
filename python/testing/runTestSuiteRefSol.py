@@ -120,7 +120,7 @@ def TestExamplesReferenceSolution():
         'itemParameterRenamesTest.py':66, #new 2026-10-04: every renamed item parameter forwards in the dictionary, Get and SetObjectParameter (#2814)
         'binarySolutionFileTest.py':0.1888874815147666, #new 2026-10-04: the binary solution file as float or double by solution.precision (#2816)
         'rotationMarkerDeprecationTest.py':-0.13402861946207856, #new 2026-10-03: rotationMarker0/1 against localHT of the markers, the deprecation warning once per session (#2745, #2801)
-        'contactFrictionCircleCable2DnoFrictionTest.py':18.22385932515495, #new 2026-10-05: no tangential force without a friction model, whatever the slip state (#1290)
+        'contactFrictionCircleCable2DnoFrictionTest.py':0.8052196344904814, #new 2026-10-05: no tangential force without a friction model, whatever the slip state (#1290); 1000 steps 2026-10-09 (#2912)
         'systemContainerLifetimeTest.py':-3.809999999999995, #new 2026-10-05: the MainSystem of AddSystem and GetSystem keeps its SystemContainer alive (#2851)
         'contactCurveCirclesFrictionTest.py':8.399999999953684, #new 2026-10-07: friction and output variables of ObjectContactCurveCircles (#2867)
         'coordinateSpringDamperExtVelocityOffsetTest.py':0.6999999999999977, #new 2026-10-07: velocityOffset in the damper force (#2867)
@@ -447,7 +447,7 @@ def MiniExamplesReferenceSolution():
         'ObjectANCFCable.py':-0.5013058140308919, #added 2023-10-15
         'ObjectConnectorSpringDamper.py':0.9733828995763039, #until 2022-01-25 (before analytical Jac for SpringDamper):0.9733828995759499,
         'ObjectConnectorCartesianSpringDamper.py':-0.0009999999999750209,
-        'ObjectConnectorRigidBodySpringDamper.py':-0.534929955894111,
+        'ObjectConnectorRigidBodySpringDamper.py':-0.5349299510886986, #2026-10-01: Jacobian by AD (#2745); the same in exudynCPPfast since 2026-10-09 (#2912)
         'ObjectConnectorLinearSpringDamper.py':0.0004999866342440002, #previously had error, did not run
         'ObjectConnectorTorsionalSpringDamper.py':0.0004999866342439527,
         'ObjectConnectorCoordinateSpringDamper.py':0.0019995154213252597,
@@ -543,10 +543,6 @@ def MiniExamplesReferenceSolution():
     if 'experimentalNewSolver' in exu.sys: #needs some corrected results
         refSol['ObjectConnectorRigidBodySpringDamper.py'] = -0.5349299542344889 #diff to other solvers: 3.6e-9
 
-    if 'AVX2' not in exu.config.Version(True): #for nonAVX2 versions in Windows as well as other platforms
-        #a build without AVX leads to a different solution: since 2022-07-11 (StateVector with ResizableVectorParallel)
-        refSol['ObjectConnectorRigidBodySpringDamper.py'] = -0.5349299510886986 #2026-10-01: Jacobian by AD (#2745), before -0.534929955894111
-
     
     return refSol
 
@@ -629,46 +625,58 @@ def PerformanceTestsReferenceSolution():
 #fix, or removed by choosing model parameters that do not amplify roundoff - see phase R10.
 #Ordered by drift, largest first, so the worst offenders are the work list.
 #
-#Recorded 2026-09-17 on Windows cp313 with exudynCPPfast (AVX2). The module reports its vector
-#extensions in exudyn.config.Version(True); testRunnerTools.ModuleUsesAVX2() reads that.
+#Recorded 2026-10-09 on Windows with the exudynCPPfast (AVX2) of 1.13.0 - cp310 and cp313 give identical values. The
+#first record (2026-09-17) was not renewed when the regular values above moved (the modified Newton default #2815,
+#the deterministic joint setup #2502, ...), so the fast-module suite of the 1.13 release failed on stale entries (#2912).
+#Re-record from the '_fast' logs whenever the regular values move. The module reports its vector extensions in
+#exudyn.config.Version(True); testRunnerTools.ModuleUsesAVX2() reads that.
 def AVX2ReferenceSolutionUpdate():
 
     refSolAVX2 = {
         'generalContactFrictionTests.py':         12.030182715125177,        #drift 7.5e-03
         'generalContactCylinderTest.py':          12.246626442545603,        #drift 4.2e-05
-        'sphereTriangleTest2.py':                 4.356119232231812,         #drift 3.6e-05
+        'sphereTriangleTest2.py':                 4.356200309682842,         #drift 3.6e-05
         'generalContactImplicit1.py':             0.775815593379039,         #drift 5.3e-08
-        'ANCFbeltDrive.py':                       -0.0011715990134242293,    #drift 1.0e-08; added 2026-09-17 with #2495
-        'contactSphereSphereTest.py':             0.5348463536059522,        #drift 3.3e-09
-        'rollingDiscTangentialForces.py':         1.0342017388721547,        #drift 1.6e-09
-        'ObjectConnectorRigidBodySpringDamper.py':-0.5349299545315868,       #drift 1.4e-09
+        'explicitSolversPostNewtonTest.py':       4.563482014200204,         #drift 1.2e-08
+        'ANCFbeltDrive.py':                       -0.0011715990134242293,    #drift 1.0e-08
+        'geometricallyExactBeamRightAngleFrame.py':3.306181719810549,         #drift 6.2e-09
+        'sliderCrank3Dbenchmark.py':              7.256859914928583,         #drift 2.2e-09
+        'computeItemTest.py':                     71.26280786775806,         #drift 2.0e-09
+        'bricardMechanism.py':                    4.1721896493074,           #drift 1.7e-09
         'coordinateSpringDamperExt.py':           17.084935539925155,        #drift 5.8e-10
-        #re-measured 2026-09-18 with the deterministic joint setup of #2502;
-        #the Python-side change moves the fast module exactly as it moves the regular one
-        'sliderCrank3Dbenchmark.py':              7.256859912756364,         #drift 2.9e-10
-        'rigidBodySpringDamperIntrinsic.py':      0.5472368463500469,        #drift 5.2e-11
-        'createSphereTriangleContact.py':         4.8409602192504355,        #drift 3.9e-11
-        'fourBarMechanismIftomm.py':              0.1721665271840173,        #drift 6.2e-12
-        'ballBearingTest.py':                     0.037852414023965573,      #drift 5.5e-12
+        'geometricallyExactBeamMassTest.py':      2.994207078782524,         #drift 3.6e-10
+        'createSphereQuadContact.py':             1.1243944166809874,        #drift 3.0e-10
+        'rollingDiscTangentialForces.py':         1.0342017404283694,        #drift 1.4e-10
+        'createSphereTriangleContact.py':         4.8402440583486355,        #drift 3.2e-11
+        'heavyTop.py':                            33.423125751778265,        #drift 3.0e-11
+        'rigidBodySpringDamperIntrinsic.py':      0.5472368463089948,        #drift 2.2e-11
+        'contactSphereTorusMomentumTest.py':      4.227231105387477,         #drift 1.1e-11
+        'ballBearingTest.py':                     0.03785241402659421,       #drift 6.7e-12
         'solverExplicitODE1ODE2test.py':          3.3767933275970896,        #drift 5.2e-12
         'connectorRigidBodySpringDamperTest.py':  0.1827622474318292,        #drift 3.7e-12
         'ANCFgeneralContactCircle.py':            -0.5816542531620952,       #drift 3.7e-12
-        'createSphereQuadContact.py':             1.124377662163088,         #drift 2.6e-12
+        'ObjectContactFrictionCircleCable2D.py':  -0.09630714358841744,      #drift 2.3e-12
+        'genericODE2matrixFormatsTest.py':        2.089237240674427,         #drift 1.9e-12
         'rollingCoinPenaltyTest.py':              0.03489603106689881,       #drift 9.7e-13
-        'bricardMechanism.py':                    4.172189649307425,         #drift 9.2e-13
-        'mainSystemExtensionsTests.py':           57.64639446941554,         #drift 8.7e-13
         'rollingCoinTest.py':                     1.063438118935288,         #drift 8.3e-13
-        'revoluteJointPrismaticJointTest.py':     1.2538806799249347,        #drift 7.6e-13
         'generalContactSpheresTest.py':           -1.1138547720263723,       #drift 6.3e-13
-        'heavyTop.py':                            33.42312575174431,         #drift 5.0e-13
-        'createKinematicTreeTest.py':             3.340830142730491,         #drift 2.4e-13
+        'revoluteJointPrismaticJointTest.py':     1.2538806799245639,        #drift 4.6e-13
+        'fourBarMechanismIftomm.py':              0.17216652718431757,       #drift 4.6e-13
+        'sphericalJointTest.py':                  4.4090804465751265,        #drift 2.8e-13
         'ConvexContactTest.py':                   0.011770267410694153,      #drift 2.0e-13
-        'scissorPrismaticRevolute2D.py':          27.20255648904422,         #drift 1.6e-13
+        'generalContactTriangleMomentumTest.py':  4.035299999516489,         #drift 1.9e-13
+        'ObjectJointGeneric.py':                  -3.1340201968524144,       #drift 1.8e-13
+        'scissorPrismaticRevolute2D.py':          27.202556489044206,        #drift 1.7e-13
         'createSphereQuadContact2.py':            0.15616582432927872,       #drift 1.6e-13
+        'ObjectJointSpherical.py':                -0.003786192183744071,     #drift 8.8e-14
+        'mainSystemExtensionsTests.py':           57.64639446941541,         #drift 8.5e-14
+        'geometricallyExactBeam2DquadraticTest.py':0.742630092671325,         #drift 8.3e-14
         'genericODE2test.py':                     0.036045463499024655,      #drift 8.0e-14
+        'createKinematicTreeTest.py':             3.340830142730534,         #drift 7.4e-14
         'ANCFcable2DuserFunction.py':             0.6015588367721263,        #drift 7.1e-14
-        'sphericalJointTest.py':                  4.409080446575089,         #drift 6.5e-14
-        'generalContactCylinderTrigsTest.py':     5.486908430912642,         #drift 6.2e-14
+        'ANCFBeamTest.py':                        1.0104863120355412,        #drift 6.0e-14
+        #a single run of runPerformanceTests.py: its result moves by 20% with the Newton tolerance (#2914)
+        'perfAccessFunctionsAD:cable-n200-implicit': 0.004662459533372243,  #drift 8.4e-07
         }
 
     return refSolAVX2

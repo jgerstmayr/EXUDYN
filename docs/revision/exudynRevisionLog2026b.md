@@ -16955,3 +16955,48 @@ check and fix all such "o, "a and "u in the document.")*
 - **#2910**: `pip install -i https://pypi.org/project/ exudyn` is not an index (the simple index is
   `https://pypi.org/simple`). The troubleshooting line says what it is for: a new version that does not show up because
   of a cached index or a configured mirror - `pip install --no-cache-dir --index-url https://pypi.org/simple -U exudyn`.
+
+<a id="rg2-7"></a>
+### RG2.7 — the fast-module suite of the 1.13 release (2026-10-09, #2911, #2912)
+
+*(Maintainer 2026-10-09: "The build was running. It gave failures (e.g. "FAILED: 30 reproducible test(s)") ... Please
+fix everything accordingly. You can do the re-run, so you can also check it afterwards.")*
+
+`exudev release --tag` passed steps 1-53 and stopped at step 54, `runTestSuite.py --fast-module` in venvP310: 26 test
+models and 4 mini examples failed. The fast module had last run the whole suite at 1.11.159. The values of exudynCPPfast
+are deterministic: cp310 and cp313 agree to the last digit, apart from two models that are within their tolerance.
+
+- **#2911**, three models that count refused input: the fast module skips the checks of the Create functions and compiles
+  the C++ argument checks away, which is its trade. `createItemNumbersTest` raised (a node reached `AddMarker` and raised
+  `ExudynTypeError`, not the `ValueError` of the Python check). `homogeneousTransformationInterfaceTest` counted 3
+  must-raise cases that raise nothing there, and `ANCFThinPlateRevisionTest` failed `testInvalidIntegrationModeRaises`.
+  These cases are judged only in the regular module (`'[FAST]' in exu.config.Version(True)`, as in
+  `symbolicModuleTest`); the results are unchanged.
+- **#2912**, the AVX2 reference set: `AVX2ReferenceSolutionUpdate()`, recorded 2026-09-17, was not renewed when the
+  regular values moved (the modified Newton default #2815 and others), so most of its entries were the old regular
+  values. It is re-recorded from the exact `RESULT =` lines of the two fast logs (the overview table prints 16 digits,
+  not enough). An entry exists where the fast value differs from the regular one by more than the tolerance: 42 models
+  (33 before), most of them in the last digits (drift 6e-14 to 1e-8), and the old large ones
+  (`generalContactFrictionTests` 7.5e-3, `generalContactCylinderTest` 4.2e-5, `sphereTriangleTest2` 3.6e-5).
+  - `contactFrictionCircleCable2DnoFrictionTest` (new 2026-10-05) gave 36.2 in the fast module and 18.2 in the regular
+    one: with 100 steps Newton failed in about 20 steps and the result depended on the rounding. With 1000 steps
+    Newton converges in every step and both modules agree to 2e-14. The new reference is 0.8052196344904814, and the claim of the model is
+    unchanged: no tangential force and no difference between friction coefficients 0 and 0.5.
+  - the mini example `ObjectConnectorRigidBodySpringDamper` had two values, one for a module "with AVX2" (stale since
+    #2745) and one for a module without. Both modules now give -0.5349299510886986 to 6e-16, so it has one value, and
+    the switch on `'AVX2' in exu.config.Version(True)` is gone. The AVX2 set is the one mechanism for this.
+  - `runPerformanceTests.py --fast-module` failed `perfAccessFunctionsAD:cable-n200-implicit` by 8.4e-7. It now applies
+    the AVX2 set to the single runs it names, and the set holds that run. Its value is not a converged result: it is
+    0.004663 with modified Newton, 0.005112 with full Newton, 0.005388 with relativeTolerance 1e-10, and 0.005266
+    with both, which takes 15 s instead of 0.6 s. Raised as #2914 (RG2.8).
+- Measured after the fix: fast suite cp310 and cp313, regular suite cp310 and cp313, fast performance tests cp313 and the
+  examples cp312 pass.
+
+<a id="rg10-25"></a>
+### RG10.25 — the compiler output only when there is one (2026-10-09, #2913)
+
+*(Maintainer 2026-10-09: "It says "compiler output: C:\DATA\cpp\EXUDYN_git\setuppy.output.txt", but the file is
+empty.")*
+
+- `exudev` printed the pointer after any failing `build` or `release`, also when a test suite failed and the file was
+  empty or from an earlier build. It now prints it only when the file was written during this run and is not empty.

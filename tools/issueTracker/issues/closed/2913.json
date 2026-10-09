@@ -1,0 +1,17 @@
+{
+  "number": 2913,
+  "title": "exudev points to an empty setuppy.output.txt when a test fails",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "BUG",
+  "priority": "NORMAL",
+  "effort": "LOW",
+  "description": "after any failing build or release step exudev printed 'compiler output: setuppy.output.txt' - also when a test suite failed and the file was empty or from an earlier build; it now names the file only if this run wrote something into it",
+  "dateRaised": "2026-10-09",
+  "deadline": "2027-04-07",
+  "dateResolved": "2026-10-09 13:04",
+  "resolvedAuthor": "Claude-JG",
+  "file": "tools/exudev/__main__.py",
+  "releaseNotes": "exudev names setuppy.output.txt after a failed build or release only if this run wrote something into it. revision2026b step RG10.25",
+  "resolvedInVersion": "1.13.2"
+}

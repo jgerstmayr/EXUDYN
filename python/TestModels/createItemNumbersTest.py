@@ -90,6 +90,10 @@ marker = mbs.GetMarker(mbs.GetObject(oConstraint)['markerNumbers'][1])
 Check(int(marker['nodeNumber']) == int(n1) and marker['coordinate'] == 1, 'CreateCoordinateConstraint of a cable: ' + str(marker))
 
 #%%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#ONLY the regular module refuses the wrong kind of item: exudynCPPfast skips the checks of the Create functions by
+#design, so there a wrong item is not refused, or fails later with another error (#2911)
+hasItemChecks = '[FAST]' not in exu.config.Version(True)
+
 #a rigid body, connected as a body, through its node (where accepted) or through a marker
 def RigidBody(kind, Connect):
     """the position and the rotation matrix of a rigid body after 0.2 s, which Connect(mbs, oGround, item) connects"""
@@ -138,7 +142,7 @@ for (name, Connect) in rigidBodyConnections.items():
     Check(all(np.linalg.norm(result-results[0]) < 1e-10 for result in results), name + ': ' + str([list(r[:3]) for r in results]))
     u += np.sum(results[0][:3])
     exu.Print(name, results[0][:3])
-    if name not in takesNode:
+    if name not in takesNode and hasItemChecks:
         try:
             RigidBody('node', Connect)
             Check(False, name + ' accepts a node')
@@ -155,18 +159,19 @@ nMass = mbs.GetObject(oMass)['nodeNumber']
 mNode = mbs.AddMarker(MarkerNodeRigid(nodeNumber=mbs.CreateRigidBody(inertia=InertiaSphere(1,0.1), returnDict=True)['nodeNumber']))
 mbs.CreateSphereTriangleContact(itemNumbers=[mNode, oGround], sphereRadius=0.1, contactStiffness=1e4)
 mbs.CreateSphereQuadContact(itemNumbers=[nMass, oGround], sphereRadius=0.1, contactStiffness=1e4)
-for itemNumbers in [[oGround, nMass], [oMass, mNode]]:
+if hasItemChecks:
+    for itemNumbers in [[oGround, nMass], [oMass, mNode]]:
+        try:
+            mbs.CreateSphereQuadContact(itemNumbers=itemNumbers, sphereRadius=0.1, contactStiffness=1e4)
+            Check(False, 'the quad accepts ' + str(itemNumbers[1]))
+        except ValueError: #the wrong kind of item
+            pass
+    #a node needs no local position
     try:
-        mbs.CreateSphereQuadContact(itemNumbers=itemNumbers, sphereRadius=0.1, contactStiffness=1e4)
-        Check(False, 'the quad accepts ' + str(itemNumbers[1]))
-    except ValueError: #the wrong kind of item
+        mbs.CreateSpringDamper(itemNumbers=[oGround, nMass], localPosition1=[1,0,0])
+        Check(False, 'a node with a local position')
+    except ValueError:
         pass
-#a node needs no local position
-try:
-    mbs.CreateSpringDamper(itemNumbers=[oGround, nMass], localPosition1=[1,0,0])
-    Check(False, 'a node with a local position')
-except ValueError:
-    pass
 
 #%%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #bodyNumbers is the deprecated name of itemNumbers; bodyOrNodeList is not accepted, nor two names at once

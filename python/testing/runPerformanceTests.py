@@ -228,6 +228,10 @@ allRuns = []        #every single simulation run of every model (#2460)
 
 from runTestSuiteRefSol import PerformanceTestsReferenceSolution
 performanceTestRefSol = PerformanceTestsReferenceSolution()
+if testRunnerTools.ModuleUsesAVX2(): #the second reference set of the test suite, for the runs it names (#2912)
+    from runTestSuiteRefSol import AVX2ReferenceSolutionUpdate
+    performanceTestRefSol.update({name: value for name, value in AVX2ReferenceSolutionUpdate().items()
+                                  if name in performanceTestRefSol})
 
 #the reference list IS the run manifest here too, so check it against the folder before
 #running anything - the same check runTestSuite.py makes over TestModels/, made possible for

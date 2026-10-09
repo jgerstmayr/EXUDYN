@@ -22,6 +22,10 @@ import numpy as np
 
 testIsActive = exu.sys.get('testIsActive', False)
 
+#ONLY the regular module raises for invalid input: exudynCPPfast compiles these checks away by design, so the
+#must-raise cases below are not judged there (#2911)
+hasRangeChecks = '[FAST]' not in exu.config.Version(True)
+
 errors = 0
 def Check(value, reference, tolerance=1e-12, what=''):
     global errors
@@ -86,11 +90,12 @@ H3 = exu.HT().SetRotationAxis([0, 3, 4], 0.8) #the Set functions return the HT
 Check(H3.RotationAngle(), 0.8, what='RotationAngle')
 Check(H3.RotationAxis(), [0, 0.6, 0.8], what='RotationAxis')
 Check(exu.HT().RotationAxis(raiseError=False), [0, 0, 0], what='RotationAxis of no rotation')
-try:
-    exu.HT().RotationAxis()
-    errors += 1 #must raise
-except Exception:
-    pass
+if hasRangeChecks:
+    try:
+        exu.HT().RotationAxis()
+        errors += 1 #must raise
+    except Exception:
+        pass
 
 #a copy of an HT (#2824)
 H5 = exu.HT(H)
@@ -105,11 +110,12 @@ Check(H[2][3], p[2], what='H[2][3]')
 H6 = exu.HT(H)
 H6[0:3,3] = [1, 2, 3]
 Check(H6.translation, [1, 2, 3], what='H[0:3,3] = value')
-try:
-    H6[3,3] = 2
-    errors += 1 #the last row must raise
-except Exception:
-    pass
+if hasRangeChecks:
+    try:
+        H6[3,3] = 2
+        errors += 1 #the last row must raise
+    except Exception:
+        pass
 Check((H @ H1).HT44(), H.HT44() @ H1.HT44(), what='H@H1')
 Check(H @ [0.1, 0.2, 0.3, 1], H.HT44() @ [0.1, 0.2, 0.3, 1], what='H@x')
 Check(copy.deepcopy([H])[0].HT44(), H.HT44(), what='deepcopy')
@@ -119,11 +125,12 @@ H4 = exu.HT().SetRotationZ(0.5).Set(translation=[1, 2, 3])
 Check(H4.HT44(), HTtranslate([1, 2, 3]) @ HTrotateZ(0.5), what='chained Set')
 if exu.HT(rotation=np.eye(3), translation=[1, 0, 0]).HasNoRotation() is not True or H4.HasNoRotation():
     errors += 1
-try:
-    exu.HT(Rxyz=[0, 0, 1], rotationVector=[0, 0, 1])
-    errors += 1 #two rotations must raise
-except Exception:
-    pass
+if hasRangeChecks:
+    try:
+        exu.HT(Rxyz=[0, 0, 1], rotationVector=[0, 0, 1])
+        errors += 1 #two rotations must raise
+    except Exception:
+        pass
 
 exu.Print('homogeneousTransformationInterfaceTest: errors', errors)
 u = errors + np.sum(H.GetCoordinatesEP()) + np.sum(HhalfSE3.HT44()) + H3.RotationAngle()

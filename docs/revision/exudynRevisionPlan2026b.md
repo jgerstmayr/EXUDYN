@@ -406,6 +406,18 @@ matplotlib**: a test model that fails for a missing package of the `[tests]` ext
     - **RG2.6.2** (#591) `ObjectFFRF`: the force vector and the gravity forces against the paper;
     - **RG2.6.3** (#2326) `sliderCrank3Dbenchmark.py` adapted to the revised IFToMM model.
 
+<a id="rg2-7"></a>
+**RG2.7** **DONE 2026-10-09** (#2911, #2912) — [log](exudynRevisionLog2026b.md#rg2-7) *(group RG2; maintainer 2026-10-09,
+after "exudev release --tag" stopped at the fast-module suite: "Please fix everything accordingly")* **The fast-module
+suite passes again**: the test models judge refused input only in the regular module (#2911); the AVX2 reference set is
+re-recorded from cp310 and cp313, `contactFrictionCircleCable2DnoFrictionTest` takes 1000 steps, the mini example
+`ObjectConnectorRigidBodySpringDamper` has one value for both modules, and `runPerformanceTests.py` applies the AVX2 set
+to its single runs (#2912).
+
+<a id="rg2-8"></a>
+**RG2.8** *(group RG2; found with RG2.7, 2026-10-09)* **A converged cable run in `perfAccessFunctionsAD`** (#2914): its
+result moves by 20% with the Newton settings; parameters for which it does not, then a new reference and timing.
+
 ## RG3 — Docs
 
 The documentation is Markdown, built with Sphinx and published for every release since
@@ -1571,6 +1583,11 @@ maintainer: "yes, add issues and a step and complete it right now")* **What the 
 **RG10.24** **DONE 2026-10-09** (#2907) — [log](exudynRevisionLog2026b.md#rg10-24) *(group RG10; maintainer 2026-10-09: "yes,
 add the --exit-code")* **The test suite of the GitHub wheels can fail**: the `test-command` of `[tool.cibuildwheel]`
 passes `--exit-code` on Linux, macOS and Windows, as the GitLab job does.
+
+<a id="rg10-25"></a>
+**RG10.25** **DONE 2026-10-09** (#2913) — [log](exudynRevisionLog2026b.md#rg10-25) *(group RG10; maintainer 2026-10-09: "It
+says compiler output: setuppy.output.txt, but the file is empty")* **exudev names the compiler output only when there
+is one**: written by this run and not empty.
 
 ## RG11 — Misc
 

@@ -67,7 +67,7 @@ def Run(frictionCoefficient):
     mbs.SetPostStepUserFunction(PostStep)
 
     simulationSettings = exu.SimulationSettings()
-    simulationSettings.timeIntegration.numberOfSteps = 100
+    simulationSettings.timeIntegration.numberOfSteps = 1000 #100 steps did not resolve the contact: Newton failed and the result depended on the rounding (#2912)
     simulationSettings.timeIntegration.endTime = 0.1
     simulationSettings.timeIntegration.verboseMode = 0
     simulationSettings.solution.file.write = False
