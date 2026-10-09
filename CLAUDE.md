@@ -150,7 +150,7 @@ for approval. Details and the commit tiers are in [docs/dev/WORKFLOW.md](docs/de
 ## Ask before
 
 - Any minor or major version bump (`exudev issue bump`). Micro bumps happen automatically on
-  `ResolveIssue`. 1.12 is internal (D16); the next one is the **1.13** release, and 2.0 is
+  `ResolveIssue`. 1.12 is internal (D16), 1.13 is released (2026-10-09, docs/dev/RELEASE.md), and 2.0 is
   reserved for the work of revision2026b groups RG8 and RG9 (D15).
 - Deleting or moving tracked files.
 - Anything under `.github/workflows/`.

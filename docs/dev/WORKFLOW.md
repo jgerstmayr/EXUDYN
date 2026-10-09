@@ -282,9 +282,8 @@ So the manual, the landing page and the {ref}`revisions chapter <sec-revisions>`
 version only ever grows, a reader comparing the two still gets the order right.
 
 **1.12 is not a public release** (decision D16): it marks the completion of the 2026 revision
-and stays internal — no PyPI wheels, no GitHub release. **1.13** is the first release that
-is published, after the integration round of the colleagues, the documentation review and the
-macOS wheels.
+and stays internal — no PyPI wheels, no GitHub release. **1.13** is the first published release
+after 1.11; how a release is made is in [RELEASE.md](RELEASE.md).
 
 ### Release mode vs development mode
 
@@ -306,7 +305,7 @@ Two things follow from a switch:
   exact version. A development build therefore cannot reach users by accident.
 
 Use development mode for ordinary work: outside Python 3.13 it builds one module instead of two
-and is roughly 2× faster. Switch to release only when producing a release.
+and is roughly 2× faster. Switch to release only when producing a release ([RELEASE.md](RELEASE.md)).
 
 **Starting a release is the maintainer's decision**, and it is one command:
 
@@ -320,13 +319,11 @@ issues as its baseline, and the micro version restarts at 0. Claude asks first, 
 
 ## 4. Branches and remotes
 
-Full picture in plan §2a. The short version, which is what matters day to day:
-
 | branch | purpose |
 |---|---|
-| `master` | read-only mirror of public GitHub `master`, frozen at 1.11.0 — **never commit here** |
-| `v2-dev` | the working branch of the 2026 revision; the name is historical (the revision was planned as 1.11 → 2.0 and completes as 1.12) |
-| `release/*` | release preparation |
+| `master` | the releases, on GitHub and on the internal GitLab; it only moves at a release, by a fast-forward to the release commit - **never commit here** |
+| `v2-dev` | the working branch; the name is historical (the 2026 revision was planned as 1.11 → 2.0) |
+| `release/*` | a rehearsal of a release on GitHub, deleted afterwards ([RELEASE.md](RELEASE.md)) |
 
 ```
 origin  →  git@<internal-gitlab>:<group>/exudyn.git   internal   (v2-dev tracks origin/v2-dev)
@@ -334,15 +331,14 @@ github  →  git@github.com:jgerstmayr/EXUDYN.git     public     (master tracks 
 ```
 
 `origin` is the internal server, so a bare `git push` from `v2-dev` syncs there — the safe default,
-and the normal thing to do. The internal repository carries **full history**; this clone is still
-`--depth 1` and stays small.
+and the normal thing to do. The internal repository carries **full history**.
 
 - Work on `v2-dev`; never commit on `master`.
-- Push `v2-dev` to `origin` freely.
-- **Nothing reaches GitHub before the 1.13 release.** 1.12 marks the completion of the 2026
-  revision and stays internal: no PyPI wheels, no GitHub release, no promotion (decision D16).
-  `tools/hooks/pre-push` enforces this, but
-  only where `core.hooksPath` is set — see [GETTING_STARTED.md](GETTING_STARTED.md), and tell anyone you add to the server.
+- Push `v2-dev` to `origin` freely. It does not go to GitHub: `tools/hooks/pre-push` refuses any
+  push to GitHub but `master`, `release/*` and tags, where `core.hooksPath` is set — see
+  [GETTING_STARTED.md](GETTING_STARTED.md), and tell anyone you add to the server.
+- `master` and the tags reach GitHub at a release, in the order of [RELEASE.md](RELEASE.md): `master`
+  first, the tag and PyPI only after GitHub CI is green.
 - Claude never pushes to any remote, under any circumstances, and announces network access first.
 
 ## 5. Testing
@@ -517,19 +513,16 @@ exemption.
 
 ## 6. Continuous integration
 
-GitHub Actions only fire on pushes to `master` and on pull requests, so **while `master` is frozen
-at 1.11.0 nothing runs there**. `.gitlab-ci.yml` covers the gap.
-
 | leg | how it is covered |
 |---|---|
+| **all four platforms**: Windows, Linux x86_64 and ARM, macOS; cp310–314 | GitHub Actions `wheels.yml`, on a push to `master`, a pull request, or *Run workflow* - at a release, and in its rehearsal on a `release/*` branch ([RELEASE.md](RELEASE.md)) |
 | **Linux x86_64, cp310–314** | `.gitlab-ci.yml`, on the internal GitLab's shared Docker runners |
-| **Windows x64** | this development machine; `exudev release` (or `exudev build --complete`) weekly |
-| **macOS** | a real Mac, at milestones |
-| **Linux aarch64** | not covered until GitHub CI resumes — accepted gap |
-| **docs** | `docs` job builds sphinx with `-W`; it does **not** deploy |
+| **Windows x64** | this development machine; `exudev build --complete` weekly, `exudev release` at a release |
+| **macOS** | GitHub CI; a real Mac for the manual check of the dialogs ([GUI_MANUAL_CHECK.md](GUI_MANUAL_CHECK.md)) |
+| **docs** | GitLab's `docs` job builds sphinx with `-W` and does not deploy; GitHub Pages and Read the Docs build from `master` |
 
-**Nothing is triggered by an ordinary push.** Pipelines start from the weekly schedule, the
-*Run pipeline* button, or a tag. The schedule itself lives in the GitLab UI, not in the file:
+**Nothing is triggered by an ordinary push to `v2-dev`.** GitLab pipelines start from the weekly
+schedule, the *Run pipeline* button, or a tag. The schedule itself lives in the GitLab UI, not in the file:
 **Settings → CI/CD → Schedules**, target branch `v2-dev`. If that schedule is deleted, CI silently
 stops and the repository looks exactly the same — worth checking if the pipeline list goes quiet.
 

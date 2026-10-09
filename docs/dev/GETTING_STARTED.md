@@ -56,9 +56,8 @@ password — that is a GitHub rule, not an Exudyn one.
 Co-developers at the institute clone the **internal** repository instead, which carries the working
 branch and the full history; ask the maintainer for the URL. The GitHub clone is the right one for
 everybody else. Which branch is which, and what may be pushed where, is in
-[WORKFLOW.md](WORKFLOW.md) §4 — the short version is that **nothing reaches GitHub before the
-1.13 release**. Until then a GitHub clone is the 1.11 tree, which has neither this page nor the
-`tools/exudev` driver it uses.
+[WORKFLOW.md](WORKFLOW.md) §4 — the short version is that GitHub carries the releases (`master`)
+and the internal server the working branch `v2-dev`.
 ```
 
 A directory named after the repository is fine anywhere; the project itself puts no constraint on

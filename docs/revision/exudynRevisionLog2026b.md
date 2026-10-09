@@ -17058,3 +17058,49 @@ again the tmp/github folder.")*
   `artificialIntelligence.py` without stable-baselines3. Not explained: why the Windows jobs of the first run (1.13.3)
   passed.
 - Linux ARM, whose tests ran on CI for the first time, passed with `UnresolvedOnMacOS()` (#2919).
+
+<a id="rg10-28"></a>
+### RG10.28 — how a release is made; the 1.13 release (2026-10-09, #2921)
+
+*(Maintainer 2026-10-09: "write the commands step-by-step for release / push / tag ... summarize the problems of getting
+the release to GitHub ... if there are ways to test on Github on other branches ... suggest such a way", then, with
+1.13.6 on PyPI: "complete the steps and integrate the tmp file into the docs.")*
+
+**The release.** 1.13 "Newborn" was published as **1.13.6** on 2026-10-09. `master` was fast-forwarded on GitHub and
+GitLab from the 1.11.0 commit to the release commit, the tag `v1.13.6` was pushed to both, and the 20 wheels of GitHub CI
+(Windows, Linux x86-64 and ARM, macOS, cp310-314) went to PyPI. The GitHub release carries `dist/RELEASE_NOTES.md` and the
+pdf. Afterwards `exudev issue mode --dev`.
+
+**Six versions on the way**. Each round on GitHub cost a fix, a version number and a new tag; none of the tags before
+`v1.13.6` was pushed.
+- 1.13.0, the local release run: the fast-module suite failed on a stale AVX2 reference set and on three models that
+  count refused input (#2911, #2912; RG2.7). exudev pointed to an empty compiler log (#2913).
+- 1.13.2: the build in Docker rewrote the two stub files with other line endings, so `release --tag` did not tag
+  (#2915, open). After `git push github master`, GitHub showed the stale `README.md` and the PyPI text, which is in every
+  wheel, linked to the deleted `theDoc.pdf` (#2917, RG3.44). The push also warned about a 57 MB `theDoc.synctex` in the
+  history (#2916, open). GitHub Actions were disabled, then limited to the account's own actions, which blocks
+  `actions/checkout`.
+- 1.13.3, the first GitHub CI run: Linux ARM did not compile, because exudynCPPfast got `-mavx2 -mfma`; a release
+  version builds it for every Python version (#2918). macOS failed its suite on two platform differences (#2919). Both
+  are in RG10.26.
+- 1.13.5, the second CI run: the Windows jobs failed, because the Python of the cibuildwheel tests has no tkinter (#2920,
+  RG10.27).
+- 1.13.6: all 20 jobs green. an older twine rejected the Metadata-Version 2.4 of the wheels; a current twine accepted them.
+
+**The pattern.** The four platforms were tested *as a release* for the first time on the day of the release. Everything
+that differs between a development build and a release build, and everything only GitHub has (ARM, macOS, the test
+environment of cibuildwheel, the Actions settings), was seen there first.
+
+**What is written down now.**
+- `docs/dev/RELEASE.md`, in the developer documentation after WORKFLOW:
+  - what starts what: the GitHub workflows run on a push to `master` and by hand, not on a tag; GitLab runs on a tag; Read the Docs builds `master`;
+  - the permission GitHub Actions need;
+  - the commands in six stages, with the local fast-forward `git push . "vX.Y.Z^{commit}:master"`, which refuses anything else and leaves the working tree alone;
+  - the rehearsal on a `release/*` branch - the pre-push hook lets `release/*` through - with *Run workflow* for `wheels` only;
+  - twine >= 6.1 and `.pypirc`;
+  - the traps.
+- The branch model, as it is after 1.13, in WORKFLOW.md §4 (master = the releases on both remotes, moved only by a
+  fast-forward; `release/*` = the rehearsal) and §6 (GitHub CI covers all four platforms). GIT.md, GETTING_STARTED.md,
+  the message of `tools/hooks/pre-push` and CLAUDE.md no longer say "until the 1.13 release".
+- The follow-ups are RG10.29 (#2915, #2916, #2922-#2927) and RG2.8 (#2914). The working notes were
+  `tmp/githubHowTo.md`.

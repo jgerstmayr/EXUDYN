@@ -23,9 +23,10 @@ github  →  git@github.com:jgerstmayr/EXUDYN.git    (master tracks github/maste
 ```
 
 **Work on `v2-dev`.** A bare `git push` from it goes to `origin`, the internal server, which is the
-safe default and the normal thing to do. **Nothing reaches GitHub before the 1.13 release**
-(decision D16); `tools/hooks/pre-push` refuses it, but only where `core.hooksPath` is set — which
-is why that is step 4 of [GETTING_STARTED.md](GETTING_STARTED.md).
+safe default and the normal thing to do. GitHub receives `master` and the tags at a release, and a
+`release/*` branch for its rehearsal ([RELEASE.md](RELEASE.md)); `tools/hooks/pre-push` refuses
+anything else, but only where `core.hooksPath` is set — which is why that is step 4 of
+[GETTING_STARTED.md](GETTING_STARTED.md).
 
 ## The everyday loop
 
@@ -137,7 +138,7 @@ that edits it creates a conflict for everybody.
 | want to undo the last commit but keep the work | `git reset --soft HEAD~1` |
 | a file you did not mean to add | `git restore --staged <file>` |
 | your working tree is a mess | `git stash`, do the urgent thing, `git stash pop` |
-| a push is refused by the hook | read the message; it is refusing a push of the working branch to the public remote, which is the rule of decision D16 |
+| a push is refused by the hook | read the message; it is refusing a push of the working branch to the public remote: only `master`, `release/*` and tags go there |
 
 `git reset --hard` and `git push --force` throw work away. Before either one, `git log --oneline`
 and be sure of what you are pointing at; a commit that is lost from a branch is still reachable

@@ -1,0 +1,13 @@
+{
+  "number": 2925,
+  "title": "the links of the landing pages and the PyPI description are not checked",
+  "author": "Claude-JG",
+  "status": "RAISED",
+  "type": "CHECK",
+  "priority": "NORMAL",
+  "effort": "LOW",
+  "description": "1.13.2 could not be published because the PyPI description (inline in pyproject.toml, part of every wheel) and the stale README.md linked to the deleted docs/theDoc/theDoc.pdf (#2917). A check in the commit gate: every repository path linked from README.rst and [project.readme] exists, and the readme text renders without warnings (docutils)",
+  "dateRaised": "2026-10-09",
+  "deadline": "2027-04-07",
+  "file": "pyproject.toml"
+}

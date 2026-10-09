@@ -1,0 +1,17 @@
+{
+  "number": 2921,
+  "title": "the release procedure is not written down: GitHub, tags, CI, PyPI, the branch model after 1.13",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "DOCU",
+  "priority": "HIGH",
+  "effort": "LOW",
+  "description": "maintainer 2026-10-09, after the 1.13 release: write the commands for release / push / tag step by step, summarize the problems, suggest how to test on GitHub earlier, and integrate it into the developer documentation. WORKFLOW.md §4 and §6, GIT.md, GETTING_STARTED.md and the pre-push hook still describe master as frozen at 1.11.0 until the 1.13 release",
+  "dateRaised": "2026-10-09",
+  "deadline": "2027-04-07",
+  "dateResolved": "2026-10-09 21:39",
+  "resolvedAuthor": "Claude-JG",
+  "file": "docs/dev/RELEASE.md",
+  "releaseNotes": "docs/dev/RELEASE.md says how a release is made: what starts what on GitHub, GitLab and Read the Docs, the commands in order, the rehearsal on a release/* branch, the traps; the branch model after 1.13 in WORKFLOW.md, GIT.md and GETTING_STARTED.md. revision2026b step RG10.28",
+  "resolvedInVersion": "1.13.7"
+}

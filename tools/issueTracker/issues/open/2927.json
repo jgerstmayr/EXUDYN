@@ -1,0 +1,13 @@
+{
+  "number": 2927,
+  "title": "twine is not part of the development environment",
+  "author": "Claude-JG",
+  "status": "RAISED",
+  "type": "IMPROVEMENT",
+  "priority": "LOW",
+  "effort": "LOW",
+  "description": "the 1.13 upload needed twine >= 6.1 and pkginfo >= 1.12 for Metadata-Version 2.4 (License-Expression, License-File); an older twine in the base environment reported the fields as malformed. A dependency group 'release' with twine>=6.1, used by docs/dev/RELEASE.md",
+  "dateRaised": "2026-10-09",
+  "deadline": "2027-04-07",
+  "file": "pyproject.toml"
+}

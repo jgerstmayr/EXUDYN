@@ -8,10 +8,10 @@ Every entry carries the **type** of the issue, then its **priority** and its **e
 
 General information on current version:
 
-- Exudyn version = 1.13.6
+- Exudyn version = 1.13.7.dev1
 - last change = 2026-10-09
-- Number of issues = 2921
-- Number of resolved issues = 2783 (6 in current version)
+- Number of issues = 2928
+- Number of resolved issues = 2784 (7 in current version)
 
 ## Resolved issues and resolved bugs before version 1.13
 
@@ -9039,6 +9039,24 @@ The following list contains the issues which have been **RESOLVED** in the accor
 
 ## Open issues
 
+- `IMPROVEMENT` <span class="textblue">`LOW`</span> `LOW EFF` `raised by: Claude-JG` twine is not part of the development environment (#2927)
+  - description: the 1.13 upload needed twine \>= 6.1 and pkginfo \>= 1.12 for Metadata-Version 2.4 (License-Expression, License-File); an older twine in the base environment reported the fields as malformed. A dependency group 'release' with twine\>=6.1, used by docs/dev/RELEASE.md
+  - date raised: 2026-10-09
+- `TESTING` <span class="textorange">`NORMAL`</span> `LOW EFF` `raised by: Claude-JG` the fast-module suite runs only at a release, and its reference set goes stale (#2926)
+  - description: AVX2ReferenceSolutionUpdate() was recorded 2026-09-17 and not renewed when the regular values moved; the first release run of 1.13 found 26 + 4 failures (\#2912). 'exudev test --fast' (cp313 builds the fast module also in dev mode) belongs into the weekly routine with the complete build, and a reference change should say whether the fast set moves too
+  - date raised: 2026-10-09
+- `CHECK` <span class="textorange">`NORMAL`</span> `LOW EFF` `raised by: Claude-JG` the links of the landing pages and the PyPI description are not checked (#2925)
+  - description: 1.13.2 could not be published because the PyPI description (inline in pyproject.toml, part of every wheel) and the stale README.md linked to the deleted docs/theDoc/theDoc.pdf (\#2917). A check in the commit gate: every repository path linked from README.rst and \[project.readme\] exists, and the readme text renders without warnings (docutils)
+  - date raised: 2026-10-09
+- `CHANGE` <span class="textorange">`NORMAL`</span> `LOW EFF` `raised by: Claude-JG` what the release notes of a minor release contain (#2924)
+  - description: WriteReleaseNotes cuts the section of the current release from CHANGELOG.md: for 1.13 the issues resolved after the bump - the fixes of the release itself (\#2911-\#2920), not the revision 1.11 -\> 1.13 behind it. Decide (maintainer): the revisions chapter, the issues since the last published version, or a hand-written summary plus the list
+  - date raised: 2026-10-09
+- `IMPROVEMENT` <span class="textorange">`NORMAL`</span> `LOW EFF` `raised by: Claude-JG` the test logs carry the home directory of the account, which the pre-commit hook refuses (#2923)
+  - description: the release logs of 1.13.3 had C:\\Users\\\<account\> in 'first module location=' and in tracebacks; they were committed only after writing it as %USERPROFILE% by hand. The runners should write the home directory as %USERPROFILE% (Windows) or ~ themselves
+  - date raised: 2026-10-09
+- `IMPROVEMENT` <span class="textorange">`NORMAL`</span> `MEDIUM EFF` `raised by: Claude-JG` GitHub CI as a release build before the release: a rehearsal input and a weekly run (#2922)
+  - description: the rehearsal on a release/\* branch (docs/dev/RELEASE.md) builds as a release only from the commit after 'exudev issue mode --release'; a dev version builds exudynCPPfast for cp313 only, so the Linux ARM failure of 1.13 (\#2918) shows there for one version. A workflow\_dispatch input that builds the fast module for every version (setup.py reads EXUDYN\_COMPILE\_EXUDYN\_FAST, but the dev rule overrides it), and a weekly scheduled run on a release/\* branch to catch changes on the GitHub side (runner image, Python patch release, numpy)
+  - date raised: 2026-10-09
 - `CHECK` <span class="textorange">`NORMAL`</span> `LOW EFF` `raised by: Claude-JG` a 57 MB LaTeX build file in the history: ignore \*.synctex and refuse large files at commit (#2916)
   - description: docs/theDoc/theDoc.synctex (56.8 MB, uncompressed SyncTeX of a LaTeX run) was committed with 8c0044f4 (revision2026 step R7.1.5) and deleted with f6c93a52 (R7.1.7); pushing master for 1.13 made GitHub warn (GH001, above the recommended 50 MB). It stays in the history - removing it would rewrite the published history. .gitignore has \*.synctex.gz but not \*.synctex; add it, and let the commit gate refuse a new tracked file above a few MB
   - date raised: 2026-10-09

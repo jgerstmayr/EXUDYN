@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.13 | Newborn | 7 | 1.13.6 |
+| 1.13 | Newborn | 8 | 1.13.7 |
 | 1.12 | Metheney | 367 | 1.12.462 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
@@ -30,6 +30,10 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.13 - Newborn (current)
 
+- **1.13.7** `DOCU` `HIGH` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` the release procedure is not written down: GitHub, tags, CI, PyPI, the branch model after 1.13 (#2921)
+  - description: maintainer 2026-10-09, after the 1.13 release: write the commands for release / push / tag step by step, summarize the problems, suggest how to test on GitHub earlier, and integrate it into the developer documentation. WORKFLOW.md §4 and §6, GIT.md, GETTING\_STARTED.md and the pre-push hook still describe master as frozen at 1.11.0 until the 1.13 release
+  - **notes:** docs/dev/RELEASE.md says how a release is made: what starts what on GitHub, GitLab and Read the Docs, the commands in order, the rehearsal on a release/\* branch, the traps; the branch model after 1.13 in WORKFLOW.md, GIT.md and GETTING\_STARTED.md. revision2026b step RG10.28
+  - date resolved: **2026-10-09 21:39**, date raised: 2026-10-09
 - **1.13.6** `TESTING` `HIGH` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` allExudynModulesTest fails where Python has no tkinter: the Windows jobs of GitHub CI (#2920)
   - description: GitHub CI of 1.13.5, windows-2025, cp313 (Python 3.13.12, the interpreter cibuildwheel installs for its tests): 'Failed to execute ...exudyn/misc/GUI.py: No module named tkinter', so the model returns 0 and --exit-code fails all Windows wheel jobs; the other 15 jobs passed. tkinter is optional for Exudyn - only the dialogs need it, and every other module imports GUI.py lazily
   - **notes:** allExudynModulesTest skips GUI.py where Python has no tkinter, which only the dialogs need; the Windows jobs of GitHub CI pass again. revision2026b step RG10.27

@@ -1607,6 +1607,25 @@ GitHub wheels of all platforms.
 "Now the windows builds failed (all 15 others are green!)")* **The module test without tkinter**:
 `allExudynModulesTest` skips `GUI.py` where Python has no tkinter. Released as 1.13.6.
 
+<a id="rg10-28"></a>
+**RG10.28** **DONE 2026-10-09** (#2921) — [log](exudynRevisionLog2026b.md#rg10-28) *(group RG10; maintainer 2026-10-09,
+after 1.13.6 was on PyPI: "complete the steps and integrate the tmp file into the docs")* **How a release is made**:
+`docs/dev/RELEASE.md` - what starts what, the commands in order, the rehearsal on a `release/*` branch, the traps;
+the branch model after 1.13 in WORKFLOW.md §4 and §6, GIT.md, GETTING_STARTED.md and the pre-push hook. Back to
+development mode.
+
+<a id="rg10-29"></a>
+**RG10.29** *(group RG10; found with the 1.13 release, 2026-10-09)* **What the 1.13 release left to do**:
+    - **RG10.29.1** (#2915) the release run dirties the working tree (the stubs, line endings only), so it does not tag;
+    - **RG10.29.2** (#2916) `*.synctex` ignored, and the commit gate refuses a new tracked file above a few MB;
+    - **RG10.29.3** (#2922) GitHub CI as a release build before the release: a `workflow_dispatch` input that builds
+      the fast module for every version, and a weekly run on a `release/*` branch;
+    - **RG10.29.4** (#2923) the runners write the home directory as `%USERPROFILE%` / `~` into the logs;
+    - **RG10.29.5** (#2924) what the release notes of a minor release contain - a decision of the maintainer;
+    - **RG10.29.6** (#2925) a check of the links of `README.rst` and of the PyPI description;
+    - **RG10.29.7** (#2926) the fast-module suite in the weekly routine, and its reference set renewed with the regular one;
+    - **RG10.29.8** (#2927) a dependency group `release` with twine >= 6.1.
+
 ## RG11 — Misc
 
 What belongs to no group yet. Three of a kind here are a reason to propose a group of their own.
