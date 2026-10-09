@@ -1,0 +1,17 @@
+{
+  "number": 2938,
+  "title": "exudev scripts --fix rewrites only renamed settings and arguments; most findings could be fixed automatically",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "IMPROVEMENT",
+  "priority": "HIGH",
+  "effort": "MEDIUM",
+  "description": "maintainer 2026-10-10: the scripts checker reports but does not fix problems yet, as far as possible. --fix rewrites renamed settings, item parameters and Create arguments (#2813, #2814, #2863); the missing imports of a star import, the names that moved to another module, the removed vector helpers and GraphicsData aliases, the deprecated module functions and SystemContainer methods, the submodules not loaded and the old default solution file names are only reported",
+  "dateRaised": "2026-10-10",
+  "deadline": "2027-04-08",
+  "dateResolved": "2026-10-10 00:28",
+  "resolvedAuthor": "Claude-JG",
+  "file": "tools/checkUserScripts.py",
+  "releaseNotes": "exudev scripts --fix rewrites in place what it can: the imports a star import no longer provides and of moved names and submodules, the removed vector helpers, GraphicsData aliases and colors, the deprecated module functions and SystemContainer methods, the old default solution file; a deprecated argument whose replacement takes another value is converted (eulerParametersRef). What needs a decision stays reported. revision2026c step RG10.31",
+  "resolvedInVersion": "1.13.19"
+}

@@ -207,6 +207,26 @@ removedVisualizationParameters[('ObjectConnectorCoordinateVector', 'color')] = _
 removedVisualizationParameters[('ObjectConnectorGravity', 'drawSize')] = 'the connector is drawn as a line; leave drawSize out (#2843)'
 
 
+#WHAT --fix WRITES INSTEAD OF A REMOVED NAME (#2938): the name replaced, the call left as it is
+removedNameRenames = {'NormL2': 'np.linalg.norm', 'VSum': 'np.sum', 'VMult': 'np.dot', 'Vec2Tilde': 'Skew',
+                      'Tilde2Vec': 'Skew2Vec', 'eye2D': 'np.eye(2)', 'eye3D': 'np.eye(3)'}
+#a deprecated argument whose replacement takes another value: --fix converts the value as well (#2938)
+argumentValueFixes = {'eulerParametersRef': ('EulerParameters2RotationMatrix({})', 'EulerParameters2RotationMatrix')}
+#the deprecated functions of the module that --fix rewrites: the receiver form takes the first argument as the object
+#(exu.SolveDynamic(mbs, s) -> mbs.SolveDynamic(s)), the renderer form needs the one SystemContainer of the script, the
+#config form is a statement 'exu.SetOutputPrecision(8)' -> 'exu.config.outputPrecision = 8'
+moduleFunctionFixes = {'SolveStatic': ('receiver', 'SolveStatic'), 'SolveDynamic': ('receiver', 'SolveDynamic'),
+                       'ComputeODE2Eigenvalues': ('receiver', 'ComputeODE2Eigenvalues'),
+                       'StartRenderer': ('renderer', 'Start'), 'StopRenderer': ('renderer', 'Stop'),
+                       'DoRendererIdleTasks': ('renderer', 'DoIdleTasks'), 'IsRendererActive': ('renderer', 'IsActive'),
+                       'SetOutputPrecision': ('config', 'outputPrecision'),
+                       'SetLinalgOutputFormatPython': ('config', 'linalgOutputFormatPython'),
+                       'SetPrintDelayMilliSeconds': ('config', 'printDelayMilliSeconds'),
+                       'SuppressWarnings': ('config', 'suppressWarnings'),
+                       'SetWriteToConsole': ('config', 'printToConsole'),
+                       'InfoStat': ('special', 'InfoStat')}
+
+
 #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #what definitions/ says is deprecated
 def DeprecatedFunctions():
@@ -443,10 +463,82 @@ def IsLocal(name):
     return name != '' and '/' not in name and chr(92) not in name
 
 
-def CheckTree(tree, tables, fixes=None):
-    """the findings of one parsed script: [(line, text)]; fixes, if a list, receives (attribute node, number of
-    trailing names to replace, the names to write instead) for every renamed setting (#2813)"""
+def CheckTree(tree, tables, fixes=None, source=None):
+    """the findings of one parsed script: [(line, text)]; fixes, if a list, receives what --fix rewrites: (attribute
+    node, number of trailing names to replace, the names to write instead) for a renamed setting (#2813), ('span', line,
+    start, end, text) and ('range', line, start, endLine, end, text) for a replacement, ('import', line of code) for an
+    import to add; the fixes that rewrite a call need the source (#2938)"""
     findings = []
+    parents = {}
+    for parent in ast.walk(tree):
+        for child in ast.iter_child_nodes(parent):
+            parents[id(child)] = parent
+    moduleBound = ScopeBindings(tree)
+    #the one SystemContainer of the script, which a module function of the renderer becomes a method of
+    containers = set(node.targets[0].id for node in tree.body if isinstance(node, ast.Assign) and len(node.targets) == 1
+                     and isinstance(node.targets[0], ast.Name) and isinstance(node.value, ast.Call)
+                     and getattr(node.value.func, 'attr', getattr(node.value.func, 'id', '')) == 'SystemContainer')
+    container = next(iter(containers)) if len(containers) == 1 else None
+
+    def Fix(*fix):
+        if fixes is not None:
+            fixes.append(fix)
+
+    def Replace(node, text):
+        Fix('range', node.lineno, node.col_offset, node.end_lineno, node.end_col_offset, text)
+
+    def Import(name, line):
+        """an import of the line, unless the script binds the name already"""
+        if name not in moduleBound:
+            Fix('import', line)
+
+    def Segment(node):
+        return ast.get_source_segment(source, node) if source is not None else None
+
+    def Arguments(call):
+        """the source of each argument of a call, keywords as 'name=value'; None if there are * or ** arguments"""
+        if source is None or any(isinstance(a, ast.Starred) for a in call.args) or any(k.arg is None for k in call.keywords):
+            return None
+        return [Segment(a) for a in call.args] + [k.arg + '=' + Segment(k.value) for k in call.keywords]
+
+    def CallOf(node):
+        parent = parents.get(id(node))
+        return parent if isinstance(parent, ast.Call) and parent.func is node else None
+
+    def Parenthesized(text):
+        return text if re.fullmatch(r'[\w.]+', text) else '(' + text + ')'
+
+    def FixRemovedName(node, name):
+        """a removed name: a GraphicsData alias, a vector helper; the call rewritten where its form changes"""
+        use = removedNames[name]
+        call = CallOf(node)
+        if use.startswith('graphics.'):
+            Replace(node, use.split('(')[0])
+            Import('graphics', 'import exudyn.graphics as graphics')
+        elif name in removedNameRenames:
+            Replace(node, removedNameRenames[name])
+            if removedNameRenames[name].startswith('np.'):
+                Import('np', 'import numpy as np')
+            elif not set(starModules) & {'exudyn.utilities', 'exudyn.rigidBodyUtilities'}:
+                Import(removedNameRenames[name], 'from exudyn.rigidBodyUtilities import ' + removedNameRenames[name])
+        elif call is not None and name in ['VAdd', 'VSub', 'ScalarMult', 'DiagonalMatrix'] \
+                and Arguments(call) is not None:
+            a = Arguments(call)
+            text = None
+            if name in ['VAdd', 'VSub'] and len(a) == 2 and not call.keywords:
+                text = '(np.array(' + a[0] + ') ' + ('+' if name == 'VAdd' else '-') + ' np.array(' + a[1] + '))'
+            elif name == 'ScalarMult' and len(a) == 2 and not call.keywords:
+                text = Parenthesized(a[0]) + '*np.array(' + a[1] + ')'
+            elif name == 'DiagonalMatrix':       #DiagonalMatrix(rowsColumns, value=1)
+                values = dict(zip(['rowsColumns', 'value'], [Segment(x) for x in call.args]))
+                values.update((k.arg, Segment(k.value)) for k in call.keywords)
+                if set(values) <= {'rowsColumns', 'value'} and 'rowsColumns' in values:
+                    text = 'np.eye(' + values['rowsColumns'] + ')'
+                    if 'value' in values:
+                        text = Parenthesized(values['value']) + '*' + text
+            if text is not None:
+                Replace(call, text)
+                Import('np', 'import numpy as np')
     unbound = set(id(node) for node in UnboundLoads(tree))
     starModules = [node.module for node in ast.walk(tree)
                    if isinstance(node, ast.ImportFrom) and (node.module or '').startswith('exudyn')
@@ -478,13 +570,25 @@ def CheckTree(tree, tables, fixes=None):
             if starImport and node.id in formerStarNames:
                 Report(node.lineno, ('star', node.id), "'" + node.id + "' no longer comes with "
                        "'from " + starModules[0] + " import *'; add: " + formerStarNames[node.id])
+                Fix('import', formerStarNames[node.id])
             elif ('exudyn.utilities' in starModules and node.id in utilitiesNames
                   and utilitiesNames[node.id][0] not in starModules):
                 Report(node.lineno, ('utilities', node.id), "'" + node.id + "' no longer comes with "
                        "'from exudyn.utilities import *'; use: " + utilitiesNames[node.id][1])
+                use = utilitiesNames[node.id][1]
+                call = CallOf(node)
+                if use.startswith('from '):
+                    Fix('import', use)
+                elif node.id.startswith('color4') and use.startswith('graphics.color.'):
+                    Replace(node, use.split(' ')[0])
+                    Import('graphics', 'import exudyn.graphics as graphics')
+                elif use.startswith('mbs.') and call is not None and call.args and Arguments(call) is not None:
+                    a = Arguments(call)              #DrawSystemGraph(mbs, ...) -> mbs.DrawSystemGraph(...)
+                    Replace(call, Parenthesized(a[0]) + '.' + node.id + '(' + ', '.join(a[1:]) + ')')
             elif node.id in removedNames:
                 Report(node.lineno, ('removed', node.id), "'" + node.id + "' is removed; use "
                        + removedNames[node.id])
+                FixRemovedName(node, node.id)
 
         elif isinstance(node, ast.Attribute):
             chain = AttributeChain(node)
@@ -493,6 +597,7 @@ def CheckTree(tree, tables, fixes=None):
             if chain[-1] in removedNames and len(chain) == 2 and chain[0] in exudynAliases | {'eii'}:
                 Report(node.lineno, ('removed', chain[-1]), "'" + '.'.join(chain) + "' is removed; use "
                        + removedNames[chain[-1]])
+                FixRemovedName(node, chain[-1])
             if len(chain) >= 3:
                 pair = (chain[-2], chain[-1])
                 if pair in tables['settings']:
@@ -524,17 +629,40 @@ def CheckTree(tree, tables, fixes=None):
                 if ('module', chain[1]) in tables['functions']:
                     Report(node.lineno, ('function', chain[1]), "'" + '.'.join(chain)
                            + "' is deprecated: " + tables['functions'][('module', chain[1])])
+                    (form, newName) = moduleFunctionFixes.get(chain[1], (None, None))
+                    call = CallOf(node)
+                    arguments = Arguments(call) if call is not None else None
+                    if form == 'receiver' and call is not None and call.args and arguments is not None:
+                        Replace(call, Parenthesized(arguments[0]) + '.' + newName + '(' + ', '.join(arguments[1:]) + ')')
+                    elif form == 'renderer' and container is not None:
+                        Replace(node, container + '.renderer.' + newName)
+                    elif form == 'special':
+                        Replace(node, chain[0] + '.special.' + newName)
+                    elif form == 'config' and call is not None and arguments is not None and len(arguments) == 1 \
+                            and not call.keywords and isinstance(parents.get(id(call)), ast.Expr):
+                        Replace(parents[id(call)], chain[0] + '.config.' + newName + ' = ' + arguments[0])
             if len(chain) >= 2 and chain[0] in exudynAliases and chain[1] in tables['submodules'] \
                     and chain[1] not in importedSubmodules:
                 Report(node.lineno, ('submodule', chain[1]), "'" + chain[0] + '.' + chain[1]
                        + "' is used, but 'import exudyn' does not load it; add: import exudyn."
                        + chain[1])
+                Fix('import', 'import exudyn.' + chain[1])
             if len(chain) >= 2 and chain[0] not in exudynAliases:
                 receivers = ['renderer'] if chain[-2] == 'renderer' else ['SystemContainer', 'MainSystem']
                 for receiver in receivers:
                     if (receiver, chain[-1]) in tables['functions']:
                         Report(node.lineno, ('method', receiver, chain[-1]), "'" + '.'.join(chain[-2:])
                                + "' is deprecated: " + tables['functions'][(receiver, chain[-1])])
+                        advice = tables['functions'][(receiver, chain[-1])]
+                        method = re.match(r'use SC\.renderer\.(\w+)\(', advice)
+                        call = CallOf(node)
+                        if receiver == 'SystemContainer' and method is not None and chain[-2] != 'renderer':
+                            #SC.GetRenderState() -> SC.renderer.GetState(): the name after the object replaced
+                            Fix('range', node.value.end_lineno, node.value.end_col_offset, node.end_lineno,
+                                node.end_col_offset, '.renderer.' + method.group(1))
+                        elif (receiver == 'MainSystem' and method is not None and container is not None
+                              and call is not None and not call.args and not call.keywords):
+                            Replace(call, container + '.renderer.' + method.group(1) + '()')
                         break
 
         elif isinstance(node, ast.Call) and (tables.get('itemParameters') or tables.get('library')):
@@ -552,7 +680,15 @@ def CheckTree(tree, tables, fixes=None):
                            + ('; use ' + use if use else ''))
                     if fixes is not None and use.isidentifier():  #a renamed argument (#2863)
                         for keyword in node.keywords:
-                            if keyword.arg == argument:
+                            if keyword.arg != argument:
+                                continue
+                            if argument in argumentValueFixes:   #the value converted too (#2938)
+                                (template, function) = argumentValueFixes[argument]
+                                if source is not None:
+                                    Replace(keyword, use + '=' + template.format(Segment(keyword.value)))
+                                    if not set(starModules) & {'exudyn.utilities', 'exudyn.rigidBodyUtilities'}:
+                                        Import(function, 'from exudyn.rigidBodyUtilities import ' + function)
+                            else:
                                 fixes.append(('span', keyword.lineno, keyword.col_offset,
                                               keyword.col_offset + len(argument), use))
             #a deprecated item parameter as keyword of its item class (#2805)
@@ -617,6 +753,9 @@ def CheckTree(tree, tables, fixes=None):
         if isinstance(node, ast.Constant) and isinstance(node.value, str)                 and node.value in formerDefaultFiles and node.value not in written                 and id(node) not in insideTargets:
             Report(node.lineno, ('default', node.value), "'" + node.value + "' is not where Exudyn "
                    "writes it any more; the default is '" + formerDefaultFiles[node.value] + "'")
+            text = Segment(node)
+            if text is not None and len(text) >= 2 and text[0] in '\'"' and text[-1] == text[0]:
+                Replace(node, text[0] + formerDefaultFiles[node.value] + text[0])
 
     return sorted(findings)
 
@@ -630,26 +769,65 @@ def ItemParameterFinding(where, entry):
 
 
 def ApplyFixes(source, fixes):
-    """the source with the renamed settings and item parameters rewritten: a fix replaces the last names of an
-    attribute chain, on one line, or a span of a line - the keyword of an item class, the key of an item dictionary;
-    the columns of the ast are UTF-8 bytes"""
-    lines = source.split('\n')
-    edits = {}
+    """the source with the fixes of CheckTree applied: a renamed setting replaces the last names of an attribute chain
+    (on one line); a 'span' or 'range' replaces the text between two positions; an 'import' adds a line after the
+    imports at the top - after the star import from exudyn, if there is one, else after the last import - unless the
+    script has that line already. The columns of the ast are UTF-8 bytes. Overlapping replacements: the first is
+    kept, the other is left for the next pass"""
+    data = source.encode('utf-8')
+    lineStarts = [0]
+    for (k, byte) in enumerate(data):
+        if byte == 10:
+            lineStarts.append(k + 1)
+
+    def Offset(line, column):
+        return lineStarts[line - 1] + column if line - 1 < len(lineStarts) else len(data)
+
+    edits = []                                 #(start, end, text)
+    imports = []
+    existing = [line.strip() for line in source.split('\n')]
     for fix in fixes:
-        if fix[0] == 'span':                       #(span, line, start, end, text): a name replaced in place
-            edits[(fix[1], fix[2])] = (fix[3], fix[4])
-            continue
-        (node, count, names) = fix
-        base = node
-        for i in range(count):
-            base = base.value
-        if base.end_lineno != node.end_lineno:
-            continue                                #a chain over two lines is left to the user
-        edits[(node.end_lineno, base.end_col_offset)] = (node.end_col_offset, '.' + '.'.join(names))
-    for ((lineNumber, start), (end, text)) in sorted(edits.items(), reverse=True):
-        line = lines[lineNumber - 1].encode('utf-8')
-        lines[lineNumber - 1] = (line[:start] + text.encode('utf-8') + line[end:]).decode('utf-8')
-    return '\n'.join(lines)
+        if fix[0] == 'span':                   #(span, line, start, end, text)
+            edits.append((Offset(fix[1], fix[2]), Offset(fix[1], fix[3]), fix[4]))
+        elif fix[0] == 'range':                #(range, line, start, endLine, end, text)
+            edits.append((Offset(fix[1], fix[2]), Offset(fix[3], fix[4]), fix[5]))
+        elif fix[0] == 'import':
+            if fix[1] not in imports and fix[1] not in existing:
+                imports.append(fix[1])
+        else:
+            (node, count, names) = fix
+            base = node
+            for i in range(count):
+                base = base.value
+            if base.end_lineno != node.end_lineno:
+                continue                        #a chain over two lines is left to the user
+            edits.append((Offset(node.end_lineno, base.end_col_offset), Offset(node.end_lineno, node.end_col_offset),
+                          '.' + '.'.join(names)))
+    if imports:
+        tree = ast.parse(source)
+        top = [node for node in tree.body if isinstance(node, (ast.Import, ast.ImportFrom))]
+        star = [node for node in top if isinstance(node, ast.ImportFrom) and (node.module or '').startswith('exudyn')
+                and any(alias.name == '*' for alias in node.names)]
+        if star:
+            at = Offset(star[0].end_lineno + 1, 0)
+        elif top:
+            at = Offset(top[-1].end_lineno + 1, 0)
+        elif tree.body:                         #no import at the top: before the first statement after a docstring
+            first = tree.body[1] if (len(tree.body) > 1 and isinstance(tree.body[0], ast.Expr)
+                                     and isinstance(tree.body[0].value, ast.Constant)) else tree.body[0]
+            at = Offset(first.lineno, 0)
+        else:
+            at = len(data)
+        prefix = '' if at == 0 or data[at - 1:at] == b'\n' else '\n'
+        edits.append((at, at, prefix + ''.join(line + '  #added by exudev scripts --fix\n' for line in imports)))
+    applied = []
+    for (start, end, text) in sorted(edits, key=lambda e: (e[0], e[1])):
+        if applied and start < applied[-1][1]:
+            continue                            #overlaps the one before: left for the next pass
+        applied.append((start, end, text))
+    for (start, end, text) in reversed(applied):
+        data = data[:start] + text.encode('utf-8') + data[end:]
+    return data.decode('utf-8')
 
 
 #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -719,6 +897,23 @@ def RunScripts(scripts, timeout=120, solverTimeout=2, keep=False):
     return results
 
 
+def FixSource(source, tree, tables, path='<script>'):
+    """(the fixed source, its tree, the number of fixes): the fixes applied in up to three passes, since a fix inside
+    another one (a removed helper in the argument of a deprecated function) waits for the next pass; a fixed source
+    that does not parse raises before anything is written"""
+    nFixed = 0
+    for attempt in range(3):
+        fixes = []
+        CheckTree(tree, tables, fixes, source)
+        fixed = ApplyFixes(source, fixes) if fixes else source
+        if fixed == source:
+            break
+        newTree = ast.parse(fixed, filename=path)
+        nFixed += len(fixes)
+        (source, tree) = (fixed, newTree)
+    return (source, tree, nFixed)
+
+
 def PythonFiles(paths):
     files = []
     for path in paths:
@@ -734,8 +929,8 @@ def main():
                                      'version has to change; it parses the scripts and never runs them')
     parser.add_argument('paths', nargs='+', help='folders (searched recursively) or .py files')
     parser.add_argument('--check', action='store_true', help='exit 1 if anything was found')
-    parser.add_argument('--fix', action='store_true', help='rewrite the renamed settings and item parameters in place; what cannot be '
-                        'rewritten automatically is still reported')
+    parser.add_argument('--fix', action='store_true', help='rewrite in place what can be rewritten - renamed settings, item parameters and arguments, missing '
+                        'imports, removed and deprecated names and functions (#2938); what cannot is still reported')
     parser.add_argument('--run', action='store_true', help='also run each script, in a copy of its folder, without '
                         'windows, with a timeout (#2713); a script that names a path outside its folder is not run')
     parser.add_argument('--timeout', type=float, default=120, help='seconds a script may run with --run (default 120)')
@@ -772,16 +967,11 @@ def main():
             continue
         checked += 1
         if args.fix:
-            fixes = []
-            CheckTree(tree, tables, fixes)
-            if fixes:
-                fixed = ApplyFixes(source, fixes)
-                if fixed != source:
-                    newline = '\r\n' if '\r\n' in io.open(path, encoding='utf-8', errors='replace', newline='').read() else '\n'
-                    io.open(path, 'w', encoding='utf-8', newline='').write(fixed.replace('\n', newline))
-                    print(shown + ': ' + str(len(fixes)) + ' rename(s) rewritten')
-                    source = fixed
-                    tree = ast.parse(source, filename=path)
+            (source, tree, nFixed) = FixSource(source, tree, tables, path)
+            if nFixed:
+                newline = '\r\n' if '\r\n' in io.open(path, encoding='utf-8', errors='replace', newline='').read() else '\n'
+                io.open(path, 'w', encoding='utf-8', newline='').write(source.replace('\n', newline))
+                print(shown + ': ' + str(nFixed) + ' fix(es) written')
         if args.run:
             outside = PathsOutsideTheFolder(tree)
             if outside:

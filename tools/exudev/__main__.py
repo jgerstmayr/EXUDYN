@@ -403,9 +403,12 @@ def BuildParsers():
                     'that a star import no longer provides, removed names and settings, deprecated '
                     'functions and settings with their replacement, submodules used without their '
                     'import, and files written beside the script instead of into a directory. '
-                    'Nothing is run and nothing is changed (#2712, #2718).')
+                    'Nothing is run and, without --fix, nothing is changed (#2712, #2718).')
     scripts.add_argument('paths', nargs='+', help='folders (searched recursively) or .py files')
     scripts.add_argument('--check', action='store_true', help='fail if anything was found')
+    scripts.add_argument('--fix', action='store_true', help='rewrite the scripts IN PLACE where it can - renamed settings '
+                         'and arguments, missing imports, removed and deprecated names and functions -, then report what '
+                         'is left (#2938); keep a copy or commit first')
     scripts.add_argument('--run', action='store_true', help='also run each script, in a copy of its folder, without '
                          'windows and with a timeout; a script that names a path outside its folder is not run (#2713)')
     scripts.add_argument('--timeout', type=float, default=120, help='seconds a script may run with --run (default 120)')

@@ -129,3 +129,51 @@ ready, move the open steps of revision2026b to revision2026c, possibly keeping t
   - The pre-commit hook refuses a new file above 6 MB: build output, or deliberate - then `--no-verify`. The largest
     tracked files are matrices of an example of up to 10 MB.
   - Tested with a staged 7 MB file: refused, with its name and size.
+
+<a id="rg10-31"></a>
+### RG10.31.1 to RG10.31.4 — exudev scripts --fix rewrites what it can decide (2026-10-10, #2938)
+
+*(Maintainer 2026-10-10: "The exudev scripts checker reports, but does not fix problems yet (at least as far as
+possible). In some cases, it would be probably possible to automatically fix ... Ask for decisions in the chat.")*
+
+- `exudev scripts` had no `--fix` at all. `tools/checkUserScripts.py --fix` rewrote only the renamed settings, item
+  parameters and Create arguments (#2813, #2814, #2863). The driver now passes `--fix`.
+- `--fix` now also writes:
+  - the imports a star import no longer provides (`import numpy as np`, `from math import sin`, ...), the imports of
+    the names that moved to another module, and `import exudyn.<submodule>`. Each import line goes after the star
+    import from exudyn, marked `#added by exudev scripts --fix`, and only if the script has neither the line nor the
+    name;
+  - the removed vector helpers:
+    - `NormL2`, `VSum`, `VMult`, `Vec2Tilde`, `Tilde2Vec`, `eye2D`, `eye3D` renamed;
+    - `VAdd(a, b)` → `(np.array(a) + np.array(b))`, `ScalarMult(s, v)` → `s*np.array(v)`, `DiagonalMatrix(n, value=x)`
+      → `x*np.eye(n)`;
+  - the `GraphicsData...` aliases → `graphics....`, and `color4red` → `graphics.color.red`;
+  - `DrawSystemGraph(mbs, ...)` → `mbs.DrawSystemGraph(...)`, and the same for the other functions that became
+    methods of the MainSystem;
+  - the deprecated module functions:
+    - `exu.SolveDynamic(mbs, s)` → `mbs.SolveDynamic(s)`, and `SolveStatic`, `ComputeODE2Eigenvalues`;
+    - `exu.StartRenderer()` → `SC.renderer.Start()` and the other renderer functions, if the script has exactly one
+      SystemContainer;
+    - `exu.SetOutputPrecision(8)` → `exu.config.outputPrecision = 8` and the other settings functions;
+    - `exu.InfoStat` → `exu.special.InfoStat`;
+  - the deprecated SystemContainer methods: `SC.GetRenderState()` → `SC.renderer.GetState()` and the others, and
+    `mbs.WaitForUserToContinue()` → `SC.renderer.DoIdleTasks()`;
+  - the old default solution file `'coordinatesSolution.txt'` → `'solution/coordinatesSolution.txt'`.
+- A call is rewritten from the source of its arguments (`ast.get_source_segment`). One with `*` or `**` arguments, or
+  keywords where positions are expected, is left reported.
+- Replacements that overlap - a helper inside the argument of another - are done in up to three passes. A fixed source
+  that does not parse raises before anything is written.
+- **A bug of the renames of #2863**: a deprecated argument whose replacement takes another value was renamed with its
+  value. `eulerParametersRef=ep` became `rotationMatrixRef=ep`: Euler parameters given as a rotation matrix. Now
+  `rotationMatrixRef=EulerParameters2RotationMatrix(ep)`, from the table `argumentValueFixes`.
+- Measured on copies of `python/Examples` and `python/TestModels` (378 scripts): 56 findings before `--fix`, 8 after.
+  The rest:
+  - `MecanumXYphi2WheelVelocities`, `BrickXYZ`, `rotationMarker0` - deprecated with another interface;
+  - the deliberate deprecation tests.
+- A script with every kind of finding, fixed: 26 fixes, nothing left to report, and it runs until `DrawSystemGraph`,
+  which needs networkx. Three tests in `test_checkUserScripts.py`.
+- Open, by decision of the maintainer (RG10.31.5 to RG10.31.8):
+  - files written beside the script;
+  - statements and arguments without effect;
+  - library functions whose arguments change (`BrickXYZ` → `Brick`);
+  - in place or with a backup.

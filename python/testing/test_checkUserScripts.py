@@ -239,3 +239,80 @@ def testRunningScriptsInACopy(tmp_path):
     assert results['broken.py'][0] == 'failed' and 'broken script' in results['broken.py'][1]
     assert results['needs.py'] == ('needs', 'aPackageThatIsNotInstalled')
     assert not (folder / 'written.txt').exists()
+
+
+def testWhatFixRewrites(tables):
+    """--fix (#2938): the missing imports of a star import, the removed vector helpers and GraphicsData aliases, the
+    colors, the deprecated module functions and SystemContainer methods, the old default solution file, and a function
+    that became one of the MainSystem; afterwards nothing is left to report"""
+    source = ('import exudyn as exu\n'
+              'from exudyn.utilities import *\n'
+              '\n'
+              'SC = exu.SystemContainer()\n'
+              'mbs = SC.AddSystem()\n'
+              'exu.SetOutputPrecision(8)\n'
+              'v = VAdd([1,2,3], [4,5,6])\n'
+              'w = ScalarMult(a+b, v)\n'
+              'n = NormL2(VSub(v, w))\n'
+              'A = DiagonalMatrix(3, value=2.)\n'
+              'B = eye3D\n'
+              's = np.zeros(3) + sin(0.1)\n'
+              'g = GraphicsDataOrthoCubePoint(size=[1,1,1], color=color4red)\n'
+              'exu.StartRenderer()\n'
+              'state = SC.GetRenderState()\n'
+              'exu.SolveDynamic(mbs, sims)\n'
+              'mbs.WaitForUserToContinue()\n'
+              "data = np.loadtxt('coordinatesSolution.txt')\n"
+              'DrawSystemGraph(mbs, useItemNames=True)\n')
+    (fixed, tree, nFixed) = checker.FixSource(source, ast.parse(source), tables)
+    assert fixed == ('import exudyn as exu\n'
+                     'from exudyn.utilities import *\n'
+                     'import numpy as np  #added by exudev scripts --fix\n'
+                     'import exudyn.graphics as graphics  #added by exudev scripts --fix\n'
+                     'from math import sin  #added by exudev scripts --fix\n'
+                     '\n'
+                     'SC = exu.SystemContainer()\n'
+                     'mbs = SC.AddSystem()\n'
+                     'exu.config.outputPrecision = 8\n'
+                     'v = (np.array([1,2,3]) + np.array([4,5,6]))\n'
+                     'w = (a+b)*np.array(v)\n'
+                     'n = np.linalg.norm((np.array(v) - np.array(w)))\n'
+                     'A = 2.*np.eye(3)\n'
+                     'B = np.eye(3)\n'
+                     's = np.zeros(3) + sin(0.1)\n'
+                     'g = graphics.Brick(size=[1,1,1], color=graphics.color.red)\n'
+                     'SC.renderer.Start()\n'
+                     'state = SC.renderer.GetState()\n'
+                     'mbs.SolveDynamic(sims)\n'
+                     'SC.renderer.DoIdleTasks()\n'
+                     "data = np.loadtxt('solution/coordinatesSolution.txt')\n"
+                     'mbs.DrawSystemGraph(useItemNames=True)\n')
+    assert nFixed > 0 and Findings(fixed, tables) == []
+
+
+def testFixLeavesWhatItCannotDecide(tables):
+    """without one SystemContainer the renderer functions stay, a keyword call of VAdd stays, and an import the script
+    has already is not added twice"""
+    source = ('import exudyn as exu\n'
+              'import numpy as np\n'
+              'from exudyn.utilities import *\n'
+              'exu.StartRenderer()\n'
+              'v = VAdd(v0=[1], v1=[2])\n'
+              'x = np.zeros(3)\n')
+    (fixed, tree, nFixed) = checker.FixSource(source, ast.parse(source), tables)
+    assert fixed == source
+    assert len(Findings(fixed, tables)) == 2
+
+
+def testADeprecatedArgumentWithAnotherValueIsConverted(tables):
+    """eulerParametersRef of AddObjectFFRFreducedOrderWithUserFunctions becomes rotationMatrixRef with the matrix of
+    the Euler parameters, not the Euler parameters themselves; eulerParametersRef of AddObjectFFRF is not deprecated"""
+    source = ('import exudyn as exu\n'
+              'o1 = cms.AddObjectFFRFreducedOrderWithUserFunctions(exu, mbs, eulerParametersRef=ep0)\n'
+              'o2 = ffrf.AddObjectFFRF(exu, mbs, eulerParametersRef=ep0)\n')
+    (fixed, tree, nFixed) = checker.FixSource(source, ast.parse(source), tables)
+    assert fixed == ('import exudyn as exu\n'
+                     'from exudyn.rigidBodyUtilities import EulerParameters2RotationMatrix  #added by exudev scripts --fix\n'
+                     'o1 = cms.AddObjectFFRFreducedOrderWithUserFunctions(exu, mbs, '
+                     'rotationMatrixRef=EulerParameters2RotationMatrix(ep0))\n'
+                     'o2 = ffrf.AddObjectFFRF(exu, mbs, eulerParametersRef=ep0)\n')
