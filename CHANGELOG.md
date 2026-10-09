@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.12 | Metheney | 362 | 1.12.457 |
+| 1.12 | Metheney | 363 | 1.12.458 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
 | 1.9 | Krall | 235 | 1.9.234 |
@@ -29,6 +29,10 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.12 - Metheney (current)
 
+- **1.12.458** `FIX` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` the test suite of the GitHub wheels cannot fail: cibuildwheel test-command without --exit-code (#2907)
+  - description: The test-command of \[tool.cibuildwheel\] (Linux, macOS, Windows) runs runTestSuite.py -quiet -local without --exit-code, so a failing test suite leaves the wheel job of .github/workflows/wheels.yml green; the GitLab job passes it. Maintainer 2026-10-09: 'yes, add the --exit-code'. revision2026b step RG10.24
+  - **notes:** The test suite run by the GitHub wheel builds (cibuildwheel) passes --exit-code, so a failing suite fails the wheel job
+  - date resolved: **2026-10-09 08:14**, date raised: 2026-10-09
 - **1.12.457** `FIX` `HIGH EFF` `resolved by: Claude-JG` linux (#2140)
   - description: fix graphics-related crashes on linux versions, in particular when closing renderer and with mbs.SolutionViewer()
   - **notes:** No more crashes of the renderer or the SolutionViewer on Linux: a larger number of tests by the maintainer could not reproduce them

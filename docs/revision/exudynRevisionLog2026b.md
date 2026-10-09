@@ -16875,3 +16875,19 @@ was more the idea to do before the GUI check. Mark as closed. PDF is checked.")*
   took its place.
 - The PDF of the documentation is checked; of the conditions of RG1.4 the review of the documentation by somebody
   else, the macOS re-check of RG2.4.6 and the release path remain.
+
+<a id="rg10-24"></a>
+### RG10.24 — `--exit-code` for the test suite of the GitHub wheels (2026-10-09, #2907)
+
+*(Maintainer 2026-10-09, on the question whether the GitHub workflows need an update before 1.13: "yes, add the
+--exit-code".)*
+
+- `.github/workflows/wheels.yml` needs no change: Python 3.10-3.14 on Linux x86_64 and ARM, Windows and macOS, pinned
+  actions; it builds and tests through cibuildwheel, whose `test-command` is in `pyproject.toml`. Those three commands
+  ran `runTestSuite.py -quiet -local` without `--exit-code`, so a failing suite left the wheel job green; the GitLab job
+  passes it (`tools/ci/buildManylinux.sh`). Now all three do; the known differences (`UnresolvedOnLinux`,
+  `UnresolvedOnMacOS`, the sensitive tests) stay out of the exit code as everywhere. `WORKFLOW.md` says so.
+- `documentation.yaml` (GitHub Pages) needs no change either.
+- On the question whether a trial run of GitHub CI on a `release/1.13` branch is needed: the workflows run AFTER a push
+  and do not refuse it, so a failure on `master` would be public; the order proposed instead is master first, the tag
+  and the PyPI upload only after the wheels are green (see the answer in the session, to be decided for RG1.1).

@@ -1556,6 +1556,11 @@ maintainer: "yes, add issues and a step and complete it right now")* **What the 
     - **RG10.23.3** (#2903) `spotReinforcementLearning.py` imports `spotModel`, the model of its folder; the rotted
       exemption of `exudynCPP` in `checkExtras.py` is gone.
 
+<a id="rg10-24"></a>
+**RG10.24** **DONE 2026-10-09** (#2907) — [log](exudynRevisionLog2026b.md#rg10-24) *(group RG10; maintainer 2026-10-09: "yes,
+add the --exit-code")* **The test suite of the GitHub wheels can fail**: the `test-command` of `[tool.cibuildwheel]`
+passes `--exit-code` on Linux, macOS and Windows, as the GitLab job does.
+
 ## RG11 — Misc
 
 What belongs to no group yet. Three of a kind here are a reason to propose a group of their own.

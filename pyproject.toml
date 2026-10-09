@@ -262,16 +262,16 @@ test-requires = ["numpy", "matplotlib", "scipy"]
 
 [tool.cibuildwheel.linux]
 before-all = "dnf install -y epel-release && dnf install -y mesa-libGL-devel mesa-libGLU-devel glfw-devel freeglut-devel libX11-devel"
-test-command = "cd {project}/python/testing && python runTestSuite.py -quiet -local"
+test-command = "cd {project}/python/testing && python runTestSuite.py -quiet -local --exit-code"
 
 [tool.cibuildwheel.macos]
 archs = ["universal2"]
 environment = { MACOSX_DEPLOYMENT_TARGET = "11.0" }
-test-command = "cd {project}/python/testing && python runTestSuite.py -quiet -local"
+test-command = "cd {project}/python/testing && python runTestSuite.py -quiet -local --exit-code"
 
 [tool.cibuildwheel.windows]
 #re-enabled 2026-08-05 after a strange exit code on Windows had disabled it since 2024-10-09
-test-command = "cd /d {project}/python/testing && python runTestSuite.py -quiet -local"
+test-command = "cd /d {project}/python/testing && python runTestSuite.py -quiet -local --exit-code"
 
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #Build switches, read by setup.py. These are the DEFAULTS; they are never rewritten during a

@@ -474,7 +474,8 @@ inside their tolerance). Use `--parallel` while developing, and the serial run f
 it, and without it CI cannot fail at all. `runTestExamples.py` and `runPerformanceTests.py` got
 theirs in #2504; until then they always returned 0 and a caller had
 to read the summary out of the log. The `exudev` driver passes the flag always, with no way to
-turn it off.
+turn it off, and so do the CI jobs: `.gitlab-ci.yml` through `tools/ci/buildManylinux.sh`, the GitHub
+wheels through the `test-command` of `[tool.cibuildwheel]` in `pyproject.toml` (#2907).
 
 Two of the three mean *nothing NEW broke* rather than *everything passed*. For the examples the
 exclusions are `testRunnerTools.KnownExampleFailures()` - five today, three of them missing an
