@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.13 | Newborn | 8 | 1.13.7 |
+| 1.13 | Newborn | 9 | 1.13.8 |
 | 1.12 | Metheney | 367 | 1.12.462 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
@@ -30,6 +30,10 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.13 - Newborn (current)
 
+- **1.13.8** `CHANGE` `HIGH` `MEDIUM EFF` `raised by: Claude-JG` `resolved by: Claude-JG` revision plan 2026b closed; plan 2026c with markers OPEN\_RG/CLOSED\_RG and a checking tool (#2929)
+  - description: maintainer 2026-10-10: plan 2026b got messy - keep the short information in the plan and move the rest to the log; a new plan 2026c whose steps start with \*\*OPEN\_RGx.y\*\* or \*\*CLOSED\_RGx.y\*\* and a title saying what is done, four fixed sections (how to, next steps, open steps, groups), the open steps and the groups written by a tool docs/revision/planManager.py that also checks the plan (order, duplicates, headings, references, next steps) and adds and changes steps; the open steps of 2026b moved, groups 12 to 18 into misc
+  - **notes:** revision plan 2026b closed (one line per step, the texts in its log); plan 2026c with steps as headings \*\*OPEN\_RGx.y\*\* / \*\*CLOSED\_RGx.y\*\*, four fixed sections, and docs/revision/planManager.py to check it, write its generated parts and add and change steps; the open steps carried over, groups 12 to 18 into misc. revision2026c step RG10.30
+  - date resolved: **2026-10-09 22:50**, date raised: 2026-10-09
 - **1.13.7** `DOCU` `HIGH` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` the release procedure is not written down: GitHub, tags, CI, PyPI, the branch model after 1.13 (#2921)
   - description: maintainer 2026-10-09, after the 1.13 release: write the commands for release / push / tag step by step, summarize the problems, suggest how to test on GitHub earlier, and integrate it into the developer documentation. WORKFLOW.md §4 and §6, GIT.md, GETTING\_STARTED.md and the pre-push hook still describe master as frozen at 1.11.0 until the 1.13 release
   - **notes:** docs/dev/RELEASE.md says how a release is made: what starts what on GitHub, GitLab and Read the Docs, the commands in order, the rehearsal on a release/\* branch, the traps; the branch model after 1.13 in WORKFLOW.md, GIT.md and GETTING\_STARTED.md. revision2026b step RG10.28

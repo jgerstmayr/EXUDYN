@@ -1,7 +1,8 @@
 # Exudyn Revision 2026 — general information
 
 General information on the 2026 restructuring of Exudyn — planned as 1.11.0 → 2.0 and
-completed as **1.12** (D15) — and on the work that continues in **revision2026b**: how the
+completed as **1.12** (D15) — and on the work that continues in **revision2026b** (closed 2026-10-10) and
+**revision2026c** (open, [`exudynRevisionPlan2026c.md`](exudynRevisionPlan2026c.md)): how the
 revision documents work, the
 repository, the measured facts, the decisions and their reasons, rules, and the material that goes
 into the user documentation. Written to be loaded as standing context in a Claude Code session.
@@ -43,8 +44,9 @@ The revision has **three documents**:
   `R4.10.3a`. A number is given when the step is planned and never changes; steps are appended to
   their phase.
 - **Citing**: in issues and commit messages **always with the prefix** — "revision2026 step
-  R4.10.3" for the finished plan, "revision2026b step RG8.1" or "revision2026b group RG1" for
-  the one that continues. A bare `R3.4` is ambiguous: both documents have one. A fact of §3 is cited as "revision2026 fact 19". `revision2026` is
+  R4.10.3" for the finished plan, "revision2026b step RG8.1" for the second (closed 2026-10-10), "revision2026c
+  step RG8.1" or "revision2026c group RG1" for the open one; groups RG1 to RG11 and their steps keep their numbers
+  from b to c. A bare `R3.4` is ambiguous: both documents have one. A fact of §3 is cited as "revision2026 fact 19". `revision2026` is
   the name of this revision (one word, so it can be searched); a later one would be `revision2028`.
 - **In code** (package, definitions, generators, TestModels, C++) a comment cites the **issue number**
   (`#2411`), not the plan step: comments live for years, issue numbers are stable references.
@@ -110,7 +112,7 @@ Where the code lives, which branch is which, and how they relate. Established 20
 
 | branch | purpose | pushed to |
 |---|---|---|
-| `master` | mirrors public GitHub `master`; stays at 1.11.0 | GitHub, only at the 1.13 release (revision2026b step RG1.1) |
+| `master` | the releases; fast-forwarded to 1.13.6 on 2026-10-09 (revision2026b step RG1.1) and only at a release since (`docs/dev/RELEASE.md`) | GitHub and internal `origin` |
 | `v2-dev` | **all revision work**; the name is historical (the revision was planned as 2.0); may carry `WIP:` sync commits | internal `origin` |
 | `release/*` | release preparation | GitHub |
 
