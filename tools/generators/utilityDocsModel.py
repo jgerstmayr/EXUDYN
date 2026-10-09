@@ -236,8 +236,22 @@ def GetFunctionArguments(functionLine, infoText):
     
     s = functionLine.strip()
     functionName = s.split('(')[0]
-    s = s[len(functionName)+1:-1] #omit function name + '(' + ':' at end
-    s = s.strip()[:-1] #omit ')' at end
+    #the arguments end at the parenthesis that closes the first one; what follows up to the ':' is the return
+    #annotation, '-> exudyn.ObjectIndex' - cutting a fixed last character took its 'x' instead of ')' (#2909)
+    depth = 0
+    closing = len(s) - 1
+    for (index, character) in enumerate(s):
+        if character == '(':
+            depth += 1
+        elif character == ')':
+            depth -= 1
+            if depth == 0:
+                closing = index
+                break
+    returnAnnotation = s[closing+1:].strip()
+    returnAnnotation = returnAnnotation[:-1].strip() if returnAnnotation.endswith(':') else returnAnnotation
+    returnAnnotation = returnAnnotation[2:].strip() if returnAnnotation.startswith('->') else ''
+    s = s[len(functionName)+1:closing]
     #argList = s.split(',') #does not work for default values with lists x=[1,2]
     argList = SplitStringWithCommas(s)
     for val in argList:
@@ -256,7 +270,7 @@ def GetFunctionArguments(functionLine, infoText):
                     print('  ... further WARNINGS suppressed')
         defaultArgumentsList+=[defaultArg]
         
-    return [functionName,argumentsList,defaultArgumentsList]
+    return [functionName,argumentsList,defaultArgumentsList,returnAnnotation]
 
 #*****************************************************
 #parse the comment header of a module (Details, Author, ...)
@@ -393,8 +407,9 @@ def _DocstringItem(node, summaryTag, fileLines, fileName):
         while functionLine.strip()[-1] != ':':
             lineIndex += 1
             functionLine += fileLines[lineIndex] + '\n'
-        [functionName, argumentsList, defaultArgumentsList] = GetFunctionArguments(functionLine, fileName)
+        [functionName, argumentsList, defaultArgumentsList, returnAnnotation] = GetFunctionArguments(functionLine, fileName)
         item['functionName'] = functionName
+        item['returnAnnotation'] = returnAnnotation
         item['lineNumber'] = node.lineno - 1
         item['argumentsList'] = argumentsList
         item['defaultArgumentsList'] = defaultArgumentsList
@@ -509,6 +524,8 @@ def FunctionDescription2Markdown(functionDict, moduleNamePython, pythonFileName,
         default = functionDict['defaultArgumentsList'][index]
         arguments += [argument + (' = ' + default if len(default) != 0 else '')]
     signature = functionName + '(' + ', '.join(arguments) + ')'
+    if functionDict.get('returnAnnotation', ''):
+        signature += ' -> ' + functionDict['returnAnnotation']
 
     #the MainSystem extensions are documented under the class they are added to, not under the
     #module they live in, and their labels say so

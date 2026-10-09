@@ -635,6 +635,12 @@ the messages of `exudyn.interactive` when ffmpeg is missing; no Homebrew needed 
 PDF before 1.13)* **LaTeX umlauts in the text**: Gr\"ubler, Br{\"u}ls, Sch\"oberl, Zw\"olfer, Pl\"ucker written as letters
 (13 places, the manual and two module headers); `tools/checkMathMacros.py --check` refuses a LaTeX accent in text.
 
+<a id="rg3-43"></a>
+**RG3.43** **DONE 2026-10-09** (#2909, #2910) — [log](exudynRevisionLog2026b.md#rg3-43) *(group RG3; maintainer 2026-10-09,
+from the PDF checks)* **Return annotations in the signatures, and the index URL of pip**: the generated signatures ended
+in `-> exudyn.ObjectInde)`, `-> boo)`, `-> lis)` (34 functions) - the annotation is parsed and written as it is; the
+installation page names a valid index, `https://pypi.org/simple`.
+
 ## RG4 — Implementation problems and bugs
 
 Problems that are real, reproducible, and too deep to fix in passing. They are recorded here

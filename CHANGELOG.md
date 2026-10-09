@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.12 | Metheney | 365 | 1.12.460 |
+| 1.12 | Metheney | 367 | 1.12.462 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
 | 1.9 | Krall | 235 | 1.9.234 |
@@ -29,6 +29,14 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.12 - Metheney (current)
 
+- **1.12.462** `DOCU` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` installation page: pip install -i https://pypi.org/project/ exudyn is not a valid index URL (#2910)
+  - description: PDF check 2026-10-09. The simple index of PyPI is https://pypi.org/simple. revision2026b step RG3.43
+  - **notes:** The installation page names a valid package index for pip, https://pypi.org/simple
+  - date resolved: **2026-10-09 11:33**, date raised: 2026-10-09
+- **1.12.461** <span class="textred">`BUG`</span> `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` generated signatures end in -\> exudyn.ObjectInde) - the return annotation loses its last letter (#2909)
+  - description: PDF check 2026-10-09: 'exudyn.ObjectInde)' in PDF and online, multiple times: CreateGround(mbs, ...) -\> exudyn.ObjectInde). GetFunctionArguments cuts the def line at a fixed place. revision2026b step RG3.43
+  - **notes:** The function signatures of the documentation show return annotations completely, e.g. CreateGround(...) -\> exudyn.ObjectIndex
+  - date resolved: **2026-10-09 11:33**, date raised: 2026-10-09
 - **1.12.460** `DOCU` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` LaTeX umlauts in the manual: Gr"ubler-Kutzbach, Br"uls (#2908)
   - description: The maintainer, checking the PDF before 1.13 (2026-10-09): 'In the docs/theory section I found a couple of Gr”ubler-Kutzbach typos to be fixed. Please check and fix all such "o, "a and "u in the document.' Leftovers of the LaTeX conversion in theoryMultibody.md, solver.md, introduction.md and the module headers of FEM.py and kinematicTree.py (generated pages). revision2026b step RG3.42
   - **notes:** The manual writes Grübler, Brüls, Schöberl, Zwölfer and Plücker with their letters instead of LaTeX accents, and the documentation check refuses a LaTeX accent in text

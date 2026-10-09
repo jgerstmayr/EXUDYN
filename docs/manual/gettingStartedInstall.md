@@ -60,7 +60,8 @@ build from source as described in {ref}`sec-dev-build`.
   e.g. `apt install python3-pip`.
 - **manylinux not supported**: Red Hat, CentOS, Rocky Linux and similar systems usually support manylinux2014, which
   Exudyn's wheels accept since 1.7.116; otherwise build from source, see {ref}`sec-dev-build`.
-- **The index is not updated**: `pip install -i https://pypi.org/project/ exudyn`.
+- **A new version does not show up** (a cached index, or a mirror configured for pip): `pip install --no-cache-dir
+  --index-url https://pypi.org/simple -U exudyn` asks pypi.org itself.
 - **sudo**: the commands on this page are written without `sudo`. The package manager of Linux (`apt ...`) needs it;
   pip needs it only when it installs into the global Python of the system, which should be avoided - use a conda or
   virtual environment instead.

@@ -1,0 +1,16 @@
+{
+  "number": 2909,
+  "title": "generated signatures end in -> exudyn.ObjectInde) - the return annotation loses its last letter",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "BUG",
+  "effort": "LOW",
+  "description": "PDF check 2026-10-09: 'exudyn.ObjectInde)' in PDF and online, multiple times: CreateGround(mbs, ...) -> exudyn.ObjectInde). GetFunctionArguments cuts the def line at a fixed place. revision2026b step RG3.43",
+  "dateRaised": "2026-10-09",
+  "deadline": "2027-04-07",
+  "dateResolved": "2026-10-09 11:33",
+  "resolvedAuthor": "Claude-JG",
+  "file": "tools/generators/utilityDocsModel.py",
+  "releaseNotes": "The function signatures of the documentation show return annotations completely, e.g. CreateGround(...) -> exudyn.ObjectIndex",
+  "resolvedInVersion": "1.12.461"
+}

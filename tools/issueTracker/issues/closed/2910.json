@@ -1,0 +1,16 @@
+{
+  "number": 2910,
+  "title": "installation page: pip install -i https://pypi.org/project/ exudyn is not a valid index URL",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "DOCU",
+  "effort": "LOW",
+  "description": "PDF check 2026-10-09. The simple index of PyPI is https://pypi.org/simple. revision2026b step RG3.43",
+  "dateRaised": "2026-10-09",
+  "deadline": "2027-04-07",
+  "dateResolved": "2026-10-09 11:33",
+  "resolvedAuthor": "Claude-JG",
+  "file": "docs/manual/gettingStartedInstall.md",
+  "releaseNotes": "The installation page names a valid package index for pip, https://pypi.org/simple",
+  "resolvedInVersion": "1.12.462"
+}

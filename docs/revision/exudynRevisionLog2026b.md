@@ -16937,3 +16937,21 @@ check and fix all such "o, "a and "u in the document.")*
   `documentationImpact2026.md`.
 - `tools/checkMathMacros.py --check` (`RenderingTraps`) refuses a LaTeX accent (`\"` before a letter or a brace) in
   text outside code and math; it found all 12 of the manual and the generated pages before the fix.
+
+<a id="rg3-43"></a>
+### RG3.43 — return annotations in the signatures; the index URL of pip (2026-10-09, #2909, #2910)
+
+*(Maintainer 2026-10-09: "A few remaining things popped up from the PDF checks - add as issue and resolve:
+"exudyn.ObjectInde)" in PDF and online, multiple times: Function: CreateGround ... -> exudyn.ObjectInde) ... "pip install
+-i https://pypi.org/project/ exudyn" is not a valid index URL.")*
+
+- **#2909**: `utilityDocsModel.GetFunctionArguments` cut the def line at fixed places - the last character before the
+  ':' as the ')' - which held until functions got return annotations (#2821 added 32 to the MainSystem extensions):
+  then it cut the last letter of the annotation, and the renderer appended ')'. It now finds the parenthesis that
+  closes the arguments, keeps what follows as the return annotation, and `FunctionToMarkdown` writes
+  `name(arguments) -> annotation`. 34 signatures in `MainSystem.md`, `interactive.md`, `plot.md` and `solver.md`
+  changed (`-> exudyn.ObjectIndex`, `-> bool`, `-> list`, ...); a trailing ', ' before ')' of a multi-line signature
+  went with it.
+- **#2910**: `pip install -i https://pypi.org/project/ exudyn` is not an index (the simple index is
+  `https://pypi.org/simple`). The troubleshooting line says what it is for: a new version that does not show up because
+  of a cached index or a configured mirror - `pip install --no-cache-dir --index-url https://pypi.org/simple -U exudyn`.
