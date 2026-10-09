@@ -1,0 +1,17 @@
+{
+  "number": 2939,
+  "title": "exudev scripts --fix: delete what has no effect, rewrite BrickXYZ, keep a backup",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "IMPROVEMENT",
+  "priority": "NORMAL",
+  "effort": "LOW",
+  "description": "the maintainer's decisions of 2026-10-10 on what --fix leaves open (#2938): files written beside the script stay reported only; dummy and removed settings, removed arguments and visualization parameters of items that draw nothing are deleted, AttachToRenderEngine/DetachFromRenderEngine kept; graphics.BrickXYZ rewritten to graphics.Brick from its corners; the original kept as .bak beside the script",
+  "dateRaised": "2026-10-10",
+  "deadline": "2027-04-08",
+  "dateResolved": "2026-10-10 00:41",
+  "resolvedAuthor": "Claude-JG",
+  "file": "tools/checkUserScripts.py",
+  "releaseNotes": "exudev scripts --fix deletes what has no effect any more (dummy and removed settings, removed arguments, visualization parameters of items that draw nothing; AttachToRenderEngine and DetachFromRenderEngine stay), rewrites graphics.BrickXYZ to graphics.Brick, and keeps the original as .py.bak; files written beside the script stay reported. revision2026c step RG10.31",
+  "resolvedInVersion": "1.13.20"
+}

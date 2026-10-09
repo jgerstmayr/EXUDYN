@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.13 | Newborn | 20 | 1.13.19 |
+| 1.13 | Newborn | 21 | 1.13.20 |
 | 1.12 | Metheney | 367 | 1.12.462 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
@@ -30,6 +30,10 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.13 - Newborn (current)
 
+- **1.13.20** `IMPROVEMENT` `NORMAL` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` exudev scripts --fix: delete what has no effect, rewrite BrickXYZ, keep a backup (#2939)
+  - description: the maintainer's decisions of 2026-10-10 on what --fix leaves open (\#2938): files written beside the script stay reported only; dummy and removed settings, removed arguments and visualization parameters of items that draw nothing are deleted, AttachToRenderEngine/DetachFromRenderEngine kept; graphics.BrickXYZ rewritten to graphics.Brick from its corners; the original kept as .bak beside the script
+  - **notes:** exudev scripts --fix deletes what has no effect any more (dummy and removed settings, removed arguments, visualization parameters of items that draw nothing; AttachToRenderEngine and DetachFromRenderEngine stay), rewrites graphics.BrickXYZ to graphics.Brick, and keeps the original as .py.bak; files written beside the script stay reported. revision2026c step RG10.31
+  - date resolved: **2026-10-10 00:41**, date raised: 2026-10-10
 - **1.13.19** `IMPROVEMENT` `HIGH` `MEDIUM EFF` `raised by: Claude-JG` `resolved by: Claude-JG` exudev scripts --fix rewrites only renamed settings and arguments; most findings could be fixed automatically (#2938)
   - description: maintainer 2026-10-10: the scripts checker reports but does not fix problems yet, as far as possible. --fix rewrites renamed settings, item parameters and Create arguments (\#2813, \#2814, \#2863); the missing imports of a star import, the names that moved to another module, the removed vector helpers and GraphicsData aliases, the deprecated module functions and SystemContainer methods, the submodules not loaded and the old default solution file names are only reported
   - **notes:** exudev scripts --fix rewrites in place what it can: the imports a star import no longer provides and of moved names and submodules, the removed vector helpers, GraphicsData aliases and colors, the deprecated module functions and SystemContainer methods, the old default solution file; a deprecated argument whose replacement takes another value is converted (eulerParametersRef). What needs a decision stays reported. revision2026c step RG10.31

@@ -505,6 +505,70 @@ def CheckTree(tree, tables, fixes=None, source=None):
         parent = parents.get(id(node))
         return parent if isinstance(parent, ast.Call) and parent.func is node else None
 
+    sourceLines = source.split('\n') if source is not None else []
+
+    def StandsAlone(statement):
+        """True if nothing but the statement and a comment is on its lines"""
+        before = sourceLines[statement.lineno - 1].encode('utf-8')[:statement.col_offset].decode('utf-8', 'replace')
+        after = sourceLines[statement.end_lineno - 1].encode('utf-8')[statement.end_col_offset:].decode('utf-8', 'replace')
+        return before.strip() == '' and (after.strip() == '' or after.strip().startswith('#'))
+
+    def DeleteStatement(node):
+        """the statement node belongs to deleted with its lines - or replaced by 'pass' if it is the only one of its
+        block; nothing if it shares a line with another statement (#2938)"""
+        while node is not None and not isinstance(node, ast.stmt):
+            node = parents.get(id(node))
+        if node is None or source is None or not StandsAlone(node):
+            return
+        parent = parents.get(id(node))
+        block = next((getattr(parent, field) for field in ['body', 'orelse', 'finalbody']
+                      if node in getattr(parent, field, [])), [node, None])
+        if len(block) == 1:
+            Replace(node, 'pass')
+        else:
+            Fix('range', node.lineno, 0, node.end_lineno + 1, 0, '')
+
+    def DeleteItem(items, k):
+        """item k of a list of argument nodes (or of (key, value) pairs) deleted with its comma"""
+        (first, last) = items[k] if isinstance(items[k], tuple) else (items[k], items[k])
+        if k > 0:
+            previous = items[k - 1][1] if isinstance(items[k - 1], tuple) else items[k - 1]
+            Fix('range', previous.end_lineno, previous.end_col_offset, last.end_lineno, last.end_col_offset, '')
+        elif k + 1 < len(items):
+            following = items[k + 1][0] if isinstance(items[k + 1], tuple) else items[k + 1]
+            Fix('range', first.lineno, first.col_offset, following.lineno, following.col_offset, '')
+        else:
+            Fix('range', first.lineno, first.col_offset, last.end_lineno, last.end_col_offset, '')
+
+    def DeleteArgument(call, keyword):
+        items = sorted(list(call.args) + list(call.keywords), key=lambda n: (n.lineno, n.col_offset))
+        DeleteItem(items, items.index(keyword))
+
+    def FixBrickXYZ(call):
+        """BrickXYZ(x0, y0, z0, x1, y1, z1, ...) -> Brick(centerPoint=..., size=..., ...) (#2938)"""
+        names = ['xMin', 'yMin', 'zMin', 'xMax', 'yMax', 'zMax', 'color', 'addNormals', 'addEdges', 'edgeColor', 'addFaces']
+        if Arguments(call) is None or len(call.args) > len(names):
+            return
+        values = dict(zip(names, call.args))
+        values.update((k.arg, k.value) for k in call.keywords)
+        if not all(name in values for name in names[:6]) or not set(values) <= set(names):
+            return
+
+        def Combined(a, b, minus):
+            try:
+                (x, y) = (ast.literal_eval(values[a]), ast.literal_eval(values[b]))
+                return repr(y - x if minus else 0.5 * (x + y))
+            except (ValueError, TypeError, SyntaxError):
+                (x, y) = (Parenthesized(Segment(values[a])), Parenthesized(Segment(values[b])))
+                return y + '-' + x if minus else '0.5*(' + x + '+' + y + ')'
+        axes = [('xMin', 'xMax'), ('yMin', 'yMax'), ('zMin', 'zMax')]
+        center = '[' + ', '.join(Combined(a, b, False) for (a, b) in axes) + ']'
+        size = '[' + ', '.join(Combined(a, b, True) for (a, b) in axes) + ']'
+        rest = [name + '=' + Segment(values[name]) for name in names[6:] if name in values]
+        function = Segment(call.func)
+        Replace(call, function[:-len('BrickXYZ')] + 'Brick(centerPoint=' + center + ', size=' + size
+                + ''.join(', ' + r for r in rest) + ')')
+
     def Parenthesized(text):
         return text if re.fullmatch(r'[\w.]+', text) else '(' + text + ')'
 
@@ -609,6 +673,8 @@ def CheckTree(tree, tables, fixes=None, source=None):
                     advice = ('it has no effect; remove it' if use.endswith('.dummy') else 'use ' + use)
                     Report(node.lineno, ('setting',) + pair, "'" + '.'.join(pair) + "' is deprecated"
                            + (' since ' + version if version else '') + '; ' + advice)
+                    if use.endswith('.dummy') and isinstance(parents.get(id(node)), ast.Assign):
+                        DeleteStatement(node)
                     if fixes is not None and not use.endswith('.dummy'):
                         if '.' not in use:                  #a rename in its own structure
                             fixes.append((node, 1, [use]))
@@ -617,6 +683,8 @@ def CheckTree(tree, tables, fixes=None, source=None):
                 if pair in removedSettings:
                     Report(node.lineno, ('removedSetting',) + pair, "'" + '.'.join(pair)
                            + "' is removed; use " + removedSettings[pair])
+                    if isinstance(parents.get(id(node)), ast.Assign):
+                        DeleteStatement(node)
             topLevel = getattr(DeprecatedSettings, 'topLevel', {})
             if (len(chain) >= 2 and chain[-1] in topLevel and chain[-2] != 'config'
                     and chain[-2] not in getattr(DeprecatedSettings, 'structureMembers', set())):
@@ -673,6 +741,8 @@ def CheckTree(tree, tables, fixes=None, source=None):
                 (use, since, expires) = library['functions'][className]
                 Report(node.lineno, ('library', className), "'" + className + "' is deprecated since " + since
                        + ' and removed in ' + expires + ('; use ' + use if use else ''))
+                if className == 'BrickXYZ' and fixes is not None:
+                    FixBrickXYZ(node)
             for (owner, argument, use, since, expires) in library['arguments']:
                 if owner in (None, className) and any(keyword.arg == argument for keyword in node.keywords):
                     Report(node.lineno, ('libraryArgument', className, argument), className + '(' + argument
@@ -697,6 +767,8 @@ def CheckTree(tree, tables, fixes=None, source=None):
                 if entry is not None:
                     Report(keyword.value.lineno, ('itemParameter', className, keyword.arg),
                            ItemParameterFinding(className + '(' + keyword.arg + '=...)', entry))
+                    if entry[1] == '' and className.startswith('V') and fixes is not None:
+                        DeleteArgument(node, keyword)          #a visualization parameter that does nothing (#2938)
                     if fixes is not None and entry[0].startswith('use ') and entry[1] != '': #a renamed parameter (#2814)
                         fixes.append(('span', keyword.lineno, keyword.col_offset, keyword.col_offset + len(keyword.arg),
                                       entry[0][len('use '):]))
@@ -714,6 +786,9 @@ def CheckTree(tree, tables, fixes=None, source=None):
                     if entry is not None:
                         Report(value.lineno, ('itemParameter', typeName, key),
                                ItemParameterFinding("'" + key + "' of " + typeName.split(':')[1], entry))
+                        if entry[1] == '' and key.startswith('V') and fixes is not None:
+                            pairs = list(zip(node.keys, node.values))
+                            DeleteItem(pairs, keys.index(key))  #a visualization parameter that does nothing (#2938)
                         keyNode = node.keys[keys.index(key)]
                         if fixes is not None and entry[0].startswith('use ') and entry[1] != '' and keyNode.lineno == keyNode.end_lineno:
                             fixes.append(('span', keyNode.lineno, keyNode.col_offset + 1, keyNode.end_col_offset - 1,
@@ -725,6 +800,8 @@ def CheckTree(tree, tables, fixes=None, source=None):
             if fixes is not None and node.arg in removedKeywordRenames:
                 fixes.append(('span', node.lineno, node.col_offset, node.col_offset + len(node.arg),
                               removedKeywordRenames[node.arg]))
+            elif isinstance(parents.get(id(node)), ast.Call):
+                DeleteArgument(parents[id(node)], node)        #an argument that does nothing any more (#2938)
 
     #WHERE THE FILES GO (#2718): a file named without a directory is written where the script runs,
     #and the default solution files are in solution/ now, so a script that reads one of them by its
@@ -969,9 +1046,12 @@ def main():
         if args.fix:
             (source, tree, nFixed) = FixSource(source, tree, tables, path)
             if nFixed:
-                newline = '\r\n' if '\r\n' in io.open(path, encoding='utf-8', errors='replace', newline='').read() else '\n'
+                original = io.open(path, encoding='utf-8', errors='replace', newline='').read()
+                if not os.path.exists(path + '.bak'):          #the original kept once, beside the script (#2938)
+                    shutil.copy2(path, path + '.bak')
+                newline = '\r\n' if '\r\n' in original else '\n'
                 io.open(path, 'w', encoding='utf-8', newline='').write(source.replace('\n', newline))
-                print(shown + ': ' + str(nFixed) + ' fix(es) written')
+                print(shown + ': ' + str(nFixed) + ' fix(es) written; the original is ' + os.path.basename(path) + '.bak')
         if args.run:
             outside = PathsOutsideTheFolder(tree)
             if outside:

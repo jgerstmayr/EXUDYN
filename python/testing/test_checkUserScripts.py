@@ -316,3 +316,49 @@ def testADeprecatedArgumentWithAnotherValueIsConverted(tables):
                      'o1 = cms.AddObjectFFRFreducedOrderWithUserFunctions(exu, mbs, '
                      'rotationMatrixRef=EulerParameters2RotationMatrix(ep0))\n'
                      'o2 = ffrf.AddObjectFFRF(exu, mbs, eulerParametersRef=ep0)\n')
+
+
+def testFixDeletesWhatHasNoEffect(tables):
+    """--fix (#2938, the maintainer's decision): a dummy or removed setting, a removed argument and a visualization
+    parameter of an item that draws nothing are deleted - the statement with its line, the argument with its comma -,
+    'pass' where the statement was the only one of its block; AttachToRenderEngine stays; BrickXYZ becomes Brick"""
+    source = ('import exudyn as exu\n'
+              'import exudyn.graphics as graphics\n'
+              'SC = exu.SystemContainer()\n'
+              'SC.visualizationSettings.openGL.light0ambient = 0.5  #old\n'
+              'if True:\n'
+              '    SC.visualizationSettings.interactive.openVR = True\n'
+              'n = mbs.AddNode(Node1D(visualization=VNode1D(show=False)))\n'
+              'v = VCoordinateVectorConstraint(show=False, color=[1,0,0,1])\n'
+              "mbs.AddObject({'objectType': 'ConnectorGravity', 'markerNumbers': [0,1], 'VdrawSize': 0.1})\n"
+              'c = ObjectContactConvexRoll(markerNumbers=[0,1], rBoundingSphere=0.1, contactStiffness=1e4)\n'
+              'SC.AttachToRenderEngine()\n'
+              'b1 = graphics.BrickXYZ(0, 0, 0, 1, 2, 0.5, color=graphics.color.red)\n'
+              'b2 = graphics.BrickXYZ(x0, y0, 0, x1, y1, 1)\n')
+    (fixed, tree, nFixed) = checker.FixSource(source, ast.parse(source), tables)
+    assert fixed == ('import exudyn as exu\n'
+                     'import exudyn.graphics as graphics\n'
+                     'SC = exu.SystemContainer()\n'
+                     'if True:\n'
+                     '    pass\n'
+                     'n = mbs.AddNode(Node1D(visualization=VNode1D()))\n'
+                     'v = VCoordinateVectorConstraint()\n'
+                     "mbs.AddObject({'objectType': 'ConnectorGravity', 'markerNumbers': [0,1]})\n"
+                     'c = ObjectContactConvexRoll(markerNumbers=[0,1], contactStiffness=1e4)\n'
+                     'SC.AttachToRenderEngine()\n'
+                     'b1 = graphics.Brick(centerPoint=[0.5, 1.0, 0.25], size=[1, 2, 0.5], color=graphics.color.red)\n'
+                     'b2 = graphics.Brick(centerPoint=[0.5*(x0+x1), 0.5*(y0+y1), 0.5], size=[x1-x0, y1-y0, 1])\n')
+    assert [text for text in Findings(fixed, tables)] == ["'SC.AttachToRenderEngine' is deprecated: "
+                                                         + tables['functions'][('SystemContainer', 'AttachToRenderEngine')]]
+
+
+def testFixKeepsTheOriginalAsBackup(tmp_path, tables):
+    """the command line writes the fixed script in place and keeps the original as .bak, once"""
+    import subprocess
+    import sys
+    script = tmp_path / 'old.py'
+    script.write_text('import exudyn as exu\nfrom exudyn.utilities import *\nx = np.zeros(3)\n')
+    subprocess.run([sys.executable, os.path.join(root, 'tools', 'checkUserScripts.py'), str(tmp_path), '--fix'],
+                   capture_output=True, text=True, check=True)
+    assert 'import numpy as np' in script.read_text()
+    assert (tmp_path / 'old.py.bak').read_text() == 'import exudyn as exu\nfrom exudyn.utilities import *\nx = np.zeros(3)\n'

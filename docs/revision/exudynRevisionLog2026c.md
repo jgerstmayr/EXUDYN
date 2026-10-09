@@ -177,3 +177,28 @@ possible). In some cases, it would be probably possible to automatically fix ...
   - statements and arguments without effect;
   - library functions whose arguments change (`BrickXYZ` → `Brick`);
   - in place or with a backup.
+
+<a id="rg10-31-5"></a>
+### RG10.31.5 to RG10.31.8 — the decisions on what --fix leaves open (2026-10-10, #2939)
+
+*(Maintainer 2026-10-10, asked in the chat:)*
+
+| question | decision |
+|---|---|
+| files written without a directory | report only |
+| statements and arguments that have no effect | "basically delete them", but keep `SC.AttachToRenderEngine` and `SC.DetachFromRenderEngine`, which should do something |
+| deprecated library functions whose arguments change | rewrite `BrickXYZ` |
+| how `--fix` writes | in place, with a `.bak` |
+
+- Deleted by `--fix`:
+  - a standalone assignment to a dummy setting (`openGL.light0ambient`) or a removed one (`interactive.openVR`), with
+    its line; `pass` if it was the only statement of its block; nothing if it shares a line;
+  - a removed argument (`rBoundingSphere`), with its comma;
+  - a visualization parameter of an item that draws nothing - `VNode1D(show=False)` and the key `'Vshow'` / `'VdrawSize'`
+    of an item dictionary.
+- `AttachToRenderEngine`, `DetachFromRenderEngine` and `renderer.Detach` stay as they are, and stay reported.
+- `graphics.BrickXYZ(x0, y0, z0, x1, y1, z1, ...)` → `graphics.Brick(centerPoint=[...], size=[...], ...)`: computed
+  where the corners are numbers, written as expressions where they are not; the other arguments are kept.
+- The original of a fixed script is kept once as `<script>.py.bak`; an existing `.bak` is not overwritten.
+- On the copies of the examples and test models: 6 findings left, all deprecations without a one-to-one replacement
+  (`MecanumXYphi2WheelVelocities`, `rotationMarker0/1`). Two more tests.
