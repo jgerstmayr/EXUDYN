@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.13 | Newborn | 6 | 1.13.5 |
+| 1.13 | Newborn | 7 | 1.13.6 |
 | 1.12 | Metheney | 367 | 1.12.462 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
@@ -30,6 +30,10 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.13 - Newborn (current)
 
+- **1.13.6** `TESTING` `HIGH` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` allExudynModulesTest fails where Python has no tkinter: the Windows jobs of GitHub CI (#2920)
+  - description: GitHub CI of 1.13.5, windows-2025, cp313 (Python 3.13.12, the interpreter cibuildwheel installs for its tests): 'Failed to execute ...exudyn/misc/GUI.py: No module named tkinter', so the model returns 0 and --exit-code fails all Windows wheel jobs; the other 15 jobs passed. tkinter is optional for Exudyn - only the dialogs need it, and every other module imports GUI.py lazily
+  - **notes:** allExudynModulesTest skips GUI.py where Python has no tkinter, which only the dialogs need; the Windows jobs of GitHub CI pass again. revision2026b step RG10.27
+  - date resolved: **2026-10-09 20:38**, date raised: 2026-10-09
 - **1.13.5** `TESTING` `HIGH` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` the GitHub macOS test jobs fail on two platform differences, and Linux ARM has no list (#2919)
   - description: GitHub CI of 1.13.3, macos-15 ARM: geometricallyExactBeamRightAngleFrame (rel. 3.9e-10, cp313 and cp314) and objectFFRFreducedOrderTest (rel. 1.3e-08, cp314 only) differ beyond the tolerance and are not in UnresolvedOnMacOS, so --exit-code fails the job. Linux ARM (aarch64) was judged with UnresolvedOnLinux although it is arm64 and fuses a\*b+c into FMA as macOS ARM does
   - **notes:** the test suite on macOS ARM accepts two more known platform differences (geometricallyExactBeamRightAngleFrame, objectFFRFreducedOrderTest on cp314), and Linux ARM is judged with the same list. revision2026b step RG10.26
