@@ -498,8 +498,9 @@ about a third of the suite and would gut the gate.
 ### The third list: known platform differences
 
 `UnresolvedOnLinux()` holds tests that fail on Linux against the Windows reference values for a
-**reproducible** reason that has not been found yet — currently eight contact and friction models,
-measured 2026-09-10. They are excluded from the exit code **on Linux only**; on Windows they must
+**reproducible** reason that has not been found yet — three contact models since the math functions are the
+portable ones (#2954), which removed the nine whose differences came from the math library of the platform. They are
+excluded from the exit code **on Linux only**; on Windows they must
 still pass, since that is where the reference values come from. Marked `L` in the overview table,
 against `*` for sensitive.
 
@@ -508,8 +509,6 @@ these have a cause and are scheduled for investigation. The
 list should shrink, and every entry removed is a real fix — treat it as a debt register, not an
 exemption.
 
-`sphereTriangleTest.py` is in that list but is not like the others: reference 3.8226, Linux
-59370.97. Four orders of magnitude is a divergence, not an accuracy difference.
 
 ## 6. Continuous integration
 

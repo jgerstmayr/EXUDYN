@@ -1,0 +1,16 @@
+{
+  "number": 2955,
+  "title": "the manylinux build repairs and tests the first wheel of dist/manylinux, not the one it built",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "BUG",
+  "effort": "LOW",
+  "description": "buildManylinux.sh selects the raw and the repaired wheel with 'ls dist/manylinux/exu*cp313-linux*.whl | head -n 1', alphabetically: with an older wheel in dist/manylinux (exudyn-1.13.3), the local 'exudev linux' repaired and tested 1.13.3 instead of 1.13.42.dev1 and reported the failures of an old module; GitLab starts from a clean checkout and is not affected. The wheels are selected by the version of version.txt",
+  "dateRaised": "2026-10-10",
+  "deadline": "2027-04-08",
+  "dateResolved": "2026-10-10 19:34",
+  "resolvedAuthor": "Claude-JG",
+  "file": "tools/ci/buildManylinux.sh",
+  "releaseNotes": "the manylinux build repairs and tests the wheel of the version in version.txt, not the alphabetically first wheel of dist/manylinux",
+  "resolvedInVersion": "1.13.44"
+}

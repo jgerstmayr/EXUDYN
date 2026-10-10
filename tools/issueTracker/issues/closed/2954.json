@@ -1,0 +1,16 @@
+{
+  "number": 2954,
+  "title": "the portable math functions by default, and the reference values recorded with them",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "CHANGE",
+  "effort": "MEDIUM",
+  "description": "revision2026c step RG4.1.3.4 (maintainer 2026-10-10: good to go, as it resolves the Linux differences): EXUDYN_PORTABLE_MATH is defined in BasicDefinitions.h unless EXUDYN_LIBRARY_MATH is set; the reference values of the test models, mini examples, fast module and performance tests that move are recorded again; UnresolvedOnLinux() loses the models that agree now; UnresolvedOnMacOS() stays until the measurement on macOS ARM",
+  "dateRaised": "2026-10-10",
+  "deadline": "2027-04-08",
+  "dateResolved": "2026-10-10 19:34",
+  "resolvedAuthor": "Claude-JG",
+  "file": "src/Utilities/BasicDefinitions.h",
+  "releaseNotes": "the math functions of Exudyn are the portable ones by default (EXUDYN_PORTABLE_MATH; EXUDYN_LIBRARY_MATH selects the library to compare with): results agree between Windows and Linux to the last bit in all but three test models; 53 reference values, 16 of the fast module and one performance reference recorded again, UnresolvedOnLinux() reduced from twelve to three models",
+  "resolvedInVersion": "1.13.43"
+}

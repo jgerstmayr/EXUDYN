@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.13 | Newborn | 43 | 1.13.42 |
+| 1.13 | Newborn | 45 | 1.13.44 |
 | 1.12 | Metheney | 367 | 1.12.462 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
@@ -30,6 +30,14 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.13 - Newborn (current)
 
+- **1.13.44** <span class="textred">`BUG`</span> `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` the manylinux build repairs and tests the first wheel of dist/manylinux, not the one it built (#2955)
+  - description: buildManylinux.sh selects the raw and the repaired wheel with 'ls dist/manylinux/exu\*cp313-linux\*.whl \| head -n 1', alphabetically: with an older wheel in dist/manylinux (exudyn-1.13.3), the local 'exudev linux' repaired and tested 1.13.3 instead of 1.13.42.dev1 and reported the failures of an old module; GitLab starts from a clean checkout and is not affected. The wheels are selected by the version of version.txt
+  - **notes:** the manylinux build repairs and tests the wheel of the version in version.txt, not the alphabetically first wheel of dist/manylinux
+  - date resolved: **2026-10-10 19:34**, date raised: 2026-10-10
+- **1.13.43** `CHANGE` `MEDIUM EFF` `raised by: Claude-JG` `resolved by: Claude-JG` the portable math functions by default, and the reference values recorded with them (#2954)
+  - description: revision2026c step RG4.1.3.4 (maintainer 2026-10-10: good to go, as it resolves the Linux differences): EXUDYN\_PORTABLE\_MATH is defined in BasicDefinitions.h unless EXUDYN\_LIBRARY\_MATH is set; the reference values of the test models, mini examples, fast module and performance tests that move are recorded again; UnresolvedOnLinux() loses the models that agree now; UnresolvedOnMacOS() stays until the measurement on macOS ARM
+  - **notes:** the math functions of Exudyn are the portable ones by default (EXUDYN\_PORTABLE\_MATH; EXUDYN\_LIBRARY\_MATH selects the library to compare with): results agree between Windows and Linux to the last bit in all but three test models; 53 reference values, 16 of the fast module and one performance reference recorded again, UnresolvedOnLinux() reduced from twelve to three models
+  - date resolved: **2026-10-10 19:34**, date raised: 2026-10-10
 - **1.13.42** `CHANGE` `MEDIUM EFF` `raised by: Claude-JG` `resolved by: Claude-JG` the math functions of Exudyn in a small namespace EM, used without it where a file calls many, and a check that refuses the library functions (#2953)
   - description: revision2026c step RG4.1.3.6 (maintainer 2026-10-10): EXUmath::Sin, ... become EM::Sin, ... (Exudyn math functions, the 14 functions only); a .cpp file with more than five calls says 'using namespace EM;' and calls Sin(...), the headers of basic math, kinematics and Lie groups keep EM::; tools/checkMathFunctions.py in exudev generate --all-checks refuses a call of sin, std::sin, ... in src/ outside the graphics and the tests
   - **notes:** the math functions of the C++ code are EM::Sin, ... - the namespace EM holds only these 14; a .cpp file with more than five calls uses them without it - and tools/checkMathFunctions.py, part of exudev generate --all-checks, refuses a call of the library's sin, std::sin, ... outside the graphics and the tests

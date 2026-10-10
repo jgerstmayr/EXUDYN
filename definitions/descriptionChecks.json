@@ -149,7 +149,7 @@
   "NodePoint2DSlope1": {
    "checked": "2026-10-10",
    "by": "Claude-JG",
-   "fingerprint": "ddc7ee232b9b"
+   "fingerprint": "4d762a62188f"
   },
   "NodePointGround": {
    "checked": "2026-10-06",
@@ -189,7 +189,7 @@
   "NodeRigidBodyRxyz": {
    "checked": "2026-10-10",
    "by": "Claude-JG",
-   "fingerprint": "7eaf2e5f5e64"
+   "fingerprint": "43b37a1518e6"
   },
   "ObjectALEANCFCable2D": {
    "checked": "2026-10-06",
@@ -209,7 +209,7 @@
   "ObjectANCFCable2D": {
    "checked": "2026-10-10",
    "by": "Claude-JG",
-   "fingerprint": "dcff3f1c9e8e"
+   "fingerprint": "a2e5528869b2"
   },
   "ObjectANCFThinPlate": {
    "checked": "2026-10-07",
@@ -224,7 +224,7 @@
   "ObjectBeamGeometricallyExact2D": {
    "checked": "2026-10-10",
    "by": "Claude-JG",
-   "fingerprint": "ebb2b8c6697a"
+   "fingerprint": "eefe21c7ba21"
   },
   "ObjectConnectorCartesianSpringDamper": {
    "checked": "2026-10-06",
@@ -434,12 +434,12 @@
   "ObjectRigidBody": {
    "checked": "2026-10-10",
    "by": "Claude-JG",
-   "fingerprint": "be9c0e3906f3"
+   "fingerprint": "90562353163f"
   },
   "ObjectRigidBody2D": {
    "checked": "2026-10-10",
    "by": "Claude-JG",
-   "fingerprint": "acbab60351c5"
+   "fingerprint": "a952f4afcb54"
   },
   "ObjectRotationalMass1D": {
    "checked": "2026-10-06",

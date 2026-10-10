@@ -49,9 +49,9 @@ The title of each says what it does; the sentence after it, why it comes now.
 
 1. **Check the SolutionViewer on screen** (#2930, #2931): the PreStepUserFunction example on Windows, the space key on
    macOS - both changed without a screen.
-2. **Measure the math library on macOS ARM** (RG4.1.3, `mathFunctionsPlatform.py`, `test_mathFunctionsPlatform.py`),
-   then **decide whether `EXUDYN_PORTABLE_MATH` becomes the default** (RG4.1.3.4) - it removes the largest platform
-   differences, and the references are recorded again with it.
+2. **Run the suite and the math check on macOS ARM** (RG4.1.3, `mathFunctionsPlatform.py`,
+   `test_mathFunctionsPlatform.py`): the portable math functions are the default now; the fingerprint test shows whether
+   ARM computes the same bits, and `UnresolvedOnMacOS()` shrinks with the result.
 3. **Rehearse the next release on a `release/*` branch** with *build as a release* - the first run of cibuildwheel
    4.3.0 and of cp315 on GitHub.
 4. **The quick old issues** (RG11.8) - each small and without a decision.
@@ -68,7 +68,7 @@ The title of each says what it does; the sentence after it, why it comes now.
   - RG2.8 Choose parameters for a converged cable run in perfAccessFunctionsAD
   - RG2.9 Add three old test models (3 open sub-steps)
 - **RG4** Implementation problems and bugs
-  - RG4.1 Remove the platform differences of the contact and friction models by finding their causes (3 open sub-steps)
+  - RG4.1 Remove the platform differences of the contact and friction models by finding their causes (2 open sub-steps)
   - RG4.20 Port the revision of ObjectANCFThinPlate and complete the element (1 open sub-step)
   - RG4.21 Flag the constraints that depend on velocities or time, and add their term to the initial accelerations
   - RG4.22 Add a 3D sliding joint with rotation, tested with the ANCF cable and beam
@@ -114,7 +114,7 @@ The title of each says what it does; the sentence after it, why it comes now.
 | RG1 | OPEN | 2 | Release and publication |
 | RG2 | OPEN | 5 | Testing and verification |
 | RG3 | CLOSED | 0 | Docs |
-| RG4 | OPEN | 10 | Implementation problems and bugs |
+| RG4 | OPEN | 9 | Implementation problems and bugs |
 | RG5 | OPEN | 8 | Performance |
 | RG6 | OPEN | 4 | Graphics and rendering |
 | RG7 | CLOSED | 0 | Python user items |
@@ -233,9 +233,9 @@ CLOSED 2026-10-10 (#2948): `EXUmath::Portable`, the same bits on Windows x64 and
 
 CLOSED 2026-10-10 (#2949): 173+74 calls through `EXUmath`; switch off bit-identical; switch on removes 6 of the Linux/macOS differences, `generalContactCylinderTest` stays; no time cost measured. [log](exudynRevisionLog2026c.md#rg4-1-3-3)
 
-##### **OPEN_RG4.1.3.4** Decide whether EXUDYN_PORTABLE_MATH becomes the default, and re-record the references with it
+##### **CLOSED_RG4.1.3.4** Make EXUDYN_PORTABLE_MATH the default and record the references with it
 
-A decision of the maintainer: with the switch, 56 of 267 results move on Windows (17 beyond their tolerance), so the reference values, `AVX2ReferenceSolutionUpdate()`, `UnresolvedOnLinux()` and `UnresolvedOnMacOS()` are recorded again, after a measurement on macOS ARM (`mathFunctionsPlatform.py`, the fingerprint test). Left for the other causes: `generalContactCylinderTest` (differs also with the switch), and the models that differ with numpy 2.2 against 2.4 (`createSphereTriangleContact`, `createSphereQuadContact`, `ANCFbeltDrive`, ... - the same values with and without the switch).
+CLOSED 2026-10-10 (#2954, maintainer: good to go): 53 suite values, 16 of the fast module and perfRigidPendulum recorded again; `UnresolvedOnLinux()` from 12 to 3; macOS ARM measured on Monday. [log](exudynRevisionLog2026c.md#rg4-1-3-4)
 
 ##### **CLOSED_RG4.1.3.5** Time the library, the portable functions and what Exudyn calls in the experimental function
 
@@ -476,6 +476,10 @@ CLOSED 2026-10-10 (#2927): dependency group `release` (twine>=6.1, pkginfo>=1.12
 #### **CLOSED_RG10.29.9** Add Python 3.15 to GitHub CI, the version matrix and the documentation
 
 CLOSED 2026-10-10 (#2928): cp315 in GitHub CI (cibuildwheel 4.3.0), GitLab, the exudev matrix and the documentation.
+
+#### **CLOSED_RG10.29.10** Repair and test the manylinux wheel of this version, not the first one in dist/manylinux
+
+CLOSED 2026-10-10 (#2955): `buildManylinux.sh` selects the wheels by version.txt. [log](exudynRevisionLog2026c.md#rg4-1-3-4)
 
 ### **CLOSED_RG10.30** Manage the revision plan with planManager.py
 

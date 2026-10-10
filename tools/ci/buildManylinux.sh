@@ -77,12 +77,15 @@ rm -rf build/*linux* .eggs ./*.egg-info
 "$pyBin/pip" install -U pip setuptools
 "$pyBin/pip" wheel . -v -w dist/manylinux --no-cache-dir --no-deps
 
-rawWheel="$(ls dist/manylinux/exu*"${pyTag}"-linux*.whl | head -n 1)"
+#the wheels of THIS version: dist/manylinux keeps those of earlier builds, and the first one in alphabetical order
+#was an old one (#2955)
+version="$(tr -d '[:space:]' < version.txt)"
+rawWheel="$(ls dist/manylinux/exudyn-"${version}"-*"${pyTag}"-linux*.whl | head -n 1)"
 echo "=== raw wheel: $rawWheel"
 auditwheel show "$rawWheel"
 auditwheel repair "$rawWheel" -w dist/manylinux
 
-repairedWheel="$(ls dist/manylinux/exu*"${pyTag}"*manylinux*.whl | head -n 1)"
+repairedWheel="$(ls dist/manylinux/exudyn-"${version}"-*"${pyTag}"*manylinux*.whl | head -n 1)"
 echo "=== repaired wheel: $repairedWheel"
 
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++

@@ -29,8 +29,9 @@
   `sin`: the switch `EXUDYN_PORTABLE_MATH` of `BasicDefinitions.h` makes them the portable functions, which give the
   same results on every platform (#2949, #2953).
   - A `.cpp` file with more than five calls - item implementations usually - writes `using namespace EM;` after its
-    includes and calls `Sin(phi)`; a file with fewer, and every header (the basic math, the kinematics, the Lie
-    groups), writes `EM::Sin(phi)`. A header never says `using namespace EM;`.
+    first `#include`, before any code (gcc looks up a name in a template where the template stands), and calls
+    `Sin(phi)`; a file with fewer, and every header (the basic math, the kinematics, the Lie groups), writes
+    `EM::Sin(phi)`. A header never says `using namespace EM;`.
   - `std::sqrt`, `std::fmod` and `std::abs` stay - they are exact or correctly rounded everywhere. The graphics
     (`src/Graphics`) and the tests (`src/Tests`) may call the library.
   - `tools/checkMathFunctions.py`, part of `exudev generate --all-checks`, refuses a call of the library elsewhere.

@@ -623,3 +623,47 @@ the mentioned check needs to be added".)*
   in a header. Comments, strings, declarations of overloads (`static SReal sin(`) and class functions (`SR::sin`) are
   not calls. Its first run found nothing the routing of #2949 had missed. pytest `test_checkMathFunctions.py`.
 - `CODING_STYLE.md` §1 states the rule.
+
+<a id="rg4-1-3-4"></a>
+### RG4.1.3.4 — the portable math functions by default (2026-10-10, #2954, #2955)
+
+*(Maintainer 2026-10-10: "I will have the Mac on Monday again, but we are good to go to switch to EM::... functions, as
+we see that at least it resolves linux problems, right?")*
+- `BasicDefinitions.h` defines `EXUDYN_PORTABLE_MATH` unless `EXUDYN_LIBRARY_MATH` is set (by the compiler, e.g.
+  `EXUDYN_EXTRA_COMPILE_ARGS=-DEXUDYN_LIBRARY_MATH`), which gives the library functions to compare with. Both modules
+  build with it; `config.Version(True)` says `PORTABLEMATH`.
+- **Recorded again on Windows**: 53 values of the test models and mini examples (the three tests whose result is an error
+  against 0 keep 0), the 16 entries of `AVX2ReferenceSolutionUpdate()` from the `_fast` log, and `perfRigidPendulum`
+  (rel. 2.1e-6, a long implicit run; the other performance results stay within their tolerance). Both suites and the
+  performance tests pass. The largest moves:
+
+  | model | rel. | reference before | portable |
+  |---|---|---|---|
+  | generalContactFrictionTests.py | 2.1e-04 | 12.022654145378834 | 12.025130873085953 |
+  | sphereTriangleTest2.py | 3.0e-05 | 4.35616383223589 | 4.356293935400209 |
+  | generalContactCylinderTest.py | 1.3e-05 | 12.24658398056691 | 12.246428561485022 |
+  | driveTrainTest.py | 1.2e-08 | -9.26985560534277e-08 | -9.269855494320467e-08 |
+  | kinematicTreeAndMBStest.py | 3.3e-09 | 263.88120463802585 | 263.88120375754687 |
+  | geometricallyExactBeamRightAngleFrame.py | 7.0e-10 | 3.306181713660017 | 3.306181715978533 |
+  | generalContactImplicit1.py | 5.2e-10 | 0.7758155402165082 | 0.7758155406175806 |
+  | rigidBodySpringDamperIntrinsic.py | 7.6e-11 | 0.5472368462870515 | 0.5472368463287056 |
+  | computeItemTest.py | 5.5e-11 | 71.26280786574209 | 71.26280786962762 |
+  | fourBarMechanismIftomm.py | 2.8e-11 | 0.1721665271838613 | 0.17216652718868367 |
+  | connectorRigidBodySpringDamperTest.py | 2.0e-11 | 0.18276224743555652 | 0.18276224743194636 |
+  | ballBearingTest.py | 1.4e-11 | 0.037852414033278825 | 0.03785241403274696 |
+  | serialRobotTest.py | 1.6e-12 | 0.7681856909844541 | 0.7681856909831933 |
+  | geometricallyExactBeam2DquadraticTest.py | 8.9e-13 | 0.7426300926712416 | 0.7426300926718995 |
+
+  The other 39 move by less than 1e-12; all are in the git history of `runTestSuiteRefSol.py`.
+- **Linux, measured**: manylinux_2_28 in docker (cp313, numpy 2.5.3, scipy 1.15.2 - what GitLab runs) and WSL (glibc
+  2.39, numpy 2.2.4): 3 models differ from Windows, both times the same three - `generalContactCylinderTest`
+  (abs. 1.1e-4, rel. 8.7e-6) and the Create* contacts `createSphereQuadContact` and `createSphereTriangleContact`.
+  `UnresolvedOnLinux()` keeps these three and loses the other nine; WORKFLOW.md §8 says so.
+- **macOS / Linux ARM**: `UnresolvedOnMacOS()` is unchanged until the maintainer measures on macOS ARM (Monday).
+- **#2955, found on the way**: the local manylinux build repaired and tested the alphabetically first wheel of
+  `dist/manylinux` - `exudyn-1.13.3` - instead of the one it had built, and reported twelve failures of that old
+  module. `buildManylinux.sh` selects both wheels by the version of `version.txt`. GitLab starts from a clean
+  checkout and was not affected.
+- **The build of #2953 (d6c8a5f7) did not compile on Linux**: gcc looks up a name in a template where the template
+  stands, and two files had templates before their `using namespace EM;`. The directive is now after the first
+  `#include` of the six files (CODING_STYLE.md §1); MSVC (`/Zc:twoPhase-`) had accepted it.
