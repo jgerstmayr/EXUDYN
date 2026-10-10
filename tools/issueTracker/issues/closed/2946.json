@@ -1,0 +1,17 @@
+{
+  "number": 2946,
+  "title": "exudev scripts --fix: rotationMarker0/1 into the localHT of the marker; string node types; the removed HT shortcut",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "IMPROVEMENT",
+  "priority": "NORMAL",
+  "effort": "MEDIUM",
+  "description": "maintainer 2026-10-10: rotationMarker0/1 of a joint or rigid spring-damper must be a rigid marker, so the rotation can go into its localHT; problems only where the marker is used more than once - try the fix, then check and fix the lecture files by hand. Found on the lectures: AddRigidBody took nodeType=str(exu.NodeType.X), which CreateRigidBody refuses, and rigidBodyUtilities.HT (removed by #2781) was not known to the checker",
+  "dateRaised": "2026-10-10",
+  "deadline": "2027-04-08",
+  "dateResolved": "2026-10-10 13:38",
+  "resolvedAuthor": "Claude-JG",
+  "file": "tools/checkUserScripts.py",
+  "releaseNotes": "exudev scripts --fix moves rotationMarker0/1 into the localHT of a marker the script creates for this item only, gives CreateRigidBody the NodeType itself instead of a string, and renames the removed rigidBodyUtilities.HT to HomogeneousTransformation. revision2026c step RG10.31.14",
+  "resolvedInVersion": "1.13.27"
+}

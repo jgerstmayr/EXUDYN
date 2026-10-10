@@ -505,6 +505,10 @@ CLOSED 2026-10-10 (#2944): arguments renamed, rotationParameters as the rotation
 
 CLOSED 2026-10-10 (#2945): the markers read with `mbs.GetObject(joint)['markerNumbers']`; a function of the script with a library name is not the library's.
 
+#### **CLOSED_RG10.31.14** Move rotationMarker0/1 into the localHT of the marker, give CreateRigidBody the NodeType itself, and rename the removed HT
+
+CLOSED 2026-10-10 (#2946): where the marker is created in the script and used by this item only; the lecture files that are left fixed by hand.
+
 ## **OPEN_RG11** Misc
 
 What belongs to no group, including what was left of revision2026b groups 12 to 18. Put off, by decision of

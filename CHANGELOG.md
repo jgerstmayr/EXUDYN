@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.13 | Newborn | 27 | 1.13.26 |
+| 1.13 | Newborn | 28 | 1.13.27 |
 | 1.12 | Metheney | 367 | 1.12.462 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
@@ -30,6 +30,10 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.13 - Newborn (current)
 
+- **1.13.27** `IMPROVEMENT` `NORMAL` `MEDIUM EFF` `raised by: Claude-JG` `resolved by: Claude-JG` exudev scripts --fix: rotationMarker0/1 into the localHT of the marker; string node types; the removed HT shortcut (#2946)
+  - description: maintainer 2026-10-10: rotationMarker0/1 of a joint or rigid spring-damper must be a rigid marker, so the rotation can go into its localHT; problems only where the marker is used more than once - try the fix, then check and fix the lecture files by hand. Found on the lectures: AddRigidBody took nodeType=str(exu.NodeType.X), which CreateRigidBody refuses, and rigidBodyUtilities.HT (removed by \#2781) was not known to the checker
+  - **notes:** exudev scripts --fix moves rotationMarker0/1 into the localHT of a marker the script creates for this item only, gives CreateRigidBody the NodeType itself instead of a string, and renames the removed rigidBodyUtilities.HT to HomogeneousTransformation. revision2026c step RG10.31.14
+  - date resolved: **2026-10-10 13:38**, date raised: 2026-10-10
 - **1.13.26** `IMPROVEMENT` `NORMAL` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` exudev scripts --fix: AddRevoluteJoint, AddPrismaticJoint and CSRtoScipySparseCSR (#2945)
   - description: maintainer 2026-10-10: also rewrite AddRevoluteJoint (to mbs.CreateRevoluteJoint, which returns the joint instead of \[joint, marker0, marker1\]) and CSRtoScipySparseCSR; the lecture scripts call CSRtoScipySparseCSR(fem.GetMassMatrix(sparse=True)), and one defines a function of that name itself, which the checker reported as the deprecated one
   - **notes:** exudev scripts --fix replaces AddRevoluteJoint and AddPrismaticJoint by mbs.CreateRevoluteJoint/CreatePrismaticJoint (markers read from the joint) and drops CSRtoScipySparseCSR around the matrices of the FEM interface; a function the script defines itself is not taken for the library's. revision2026c step RG10.31.13

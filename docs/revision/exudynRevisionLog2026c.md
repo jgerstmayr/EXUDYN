@@ -317,3 +317,54 @@ Also the args are slightly different.")*
   no longer taken for the one of the library.
 - `rotationMarker0/1` is not done: the rotation has to go into the localHT of the marker. Which marker that is, and
   whether it has a localHT, is known only when the script runs - see the question to the maintainer.
+
+<a id="rg10-31-14"></a>
+### RG10.31.14 — rotationMarker0/1, string node types, the removed HT; the lectures (2026-10-10, #2946)
+
+*(Maintainer 2026-10-10: "If a rotationMarker is used, or in a GenericJoint, it MUST be a rigid body marker, so it can
+always be put into localHT of the marker. Problems would occur, if the marker is used multiple times. So, I suggest to
+try the fix and then you could check (and fix) these files manually.")*
+
+- **`rotationMarker<k>=A`** of a joint or rigid spring-damper:
+  - goes into the localHT of marker k where the script creates that marker as `MarkerBodyRigid`/`MarkerNodeRigid` -
+    inline in `markerNumbers`, or in the assignment that reaches the item (the last before it in the same function);
+  - conditions: between that assignment and the next one of the name, the item is its only use (a variable used again
+    for the next marker is fine), and every name of `A` is set before the marker and not again until the item;
+  - `localPosition=p` → `localHT=exu.HT(rotation=A, translation=p)`, an existing localHT → `exu.HT(old)*exu.HT(rotation=A)`;
+  - a unit matrix `np.eye(3)` is just removed;
+  - checked numerically: a sample with a GenericJoint and a TorsionalSpringDamper gives the same coordinates before
+    and after, to 1e-10.
+- **Found when the lecture scripts were run after `--fix`:**
+  - `AddRigidBody` also took `nodeType=str(exu.NodeType.X)` and the string `'NodeType.X'`, and the rewrite passed them
+    on to `CreateRigidBody`, which refuses them (`invalid nodeType`, PARSimulation). `--fix` now writes the NodeType
+    itself, also in a `CreateRigidBody` an earlier `--fix` wrote - 26 files of the lectures repaired that way;
+  - `rigidBodyUtilities.HT`, the shortcut removed by #2781, was unknown to the checker. `HT(A, r)` →
+    `HomogeneousTransformation(A, r)`, and `from exudyn.rigidBodyUtilities import HT` → `... import
+    HomogeneousTransformation as HT`; `exu.HT`, the class, is left alone.
+- **The lectures** (`C:\DATA\teaching\Innsbruck`, outside the repository; each original kept as `.py.bak`), on the
+  maintainer's request. `--fix` was run on `Maschinendynamik_WS2019` and `AngewandteRobotikBA2020`. The
+  `rotationMarker` uses it could not move were done by hand:
+  - `ExudynSimulation/MobileRobot.py`: the wheel axle marker gets `localHT=exu.HT(rotation=initialRotation, ...)`; it is
+    also appended to a list that nothing reads;
+  - `ExudynSimulation/PARSimulation.py`: the torsional spring-dampers of the robot joints use the joint markers. Since
+    #2804 those carry the rotations in their localHT, so the joints' `rotationMarker0/1` are the unit matrix, and
+    `rot0`/`rot1` are gone;
+  - `Vorbereitung/ExudynModel.py`, `V2`, `V3`: the wheel motor (TorsionalSpringDamper) and the brake joint use the
+    markers of the wheel's revolute joint, instead of the axle and wheel markers turned by the joint's
+    `rotationMarker0/1`.
+
+    A torsional spring-damper uses only the orientation of its markers, so this is the frame the scripts meant.
+    Since `AddRevoluteJoint` keeps the rotation in the marker (#2804), the old form had turned the motor to the z-axis
+    of the axle marker - a change of behaviour that came before this fix.
+- **After the fixes:**
+  - `AngewandteRobotikBA2020`: no finding left;
+  - `Maschinendynamik_WS2019`: only sensor files written beside the script, reported by decision.
+- **Run in copies** (`--run`, timeout 60 s):
+  - every script that fails also fails as its original `.bak`, there earlier: none of the failures comes from a fix;
+  - the failures that are left come from the scripts or the run, not the fixes:
+    - APIs of Exudyn 1.0 (`SC.TimeIntegrationSolve`, `preStepPyExecute`, `dryFriction`);
+    - data files that are not there;
+    - `fig.gca(projection='3d')` of matplotlib < 3.6;
+    - `useIndex2Constraints` without Newmark;
+    - the solver timeout of 2 s of `--run` cutting real-time simulations short;
+  - `PARSimulation`, `Example_HT` and `PAR_UE1_Loesung2025` run now.

@@ -107,6 +107,8 @@ removedNames = {
     'eye3D':          'np.eye(3)',
     'LoadImage':      'SC.renderer.GetGraphicsData(), which exudyn.plot.PlotImage draws directly (#2700)',
     'InitializeFromRestartFile': 'nothing yet: it never worked (it raised "not fully implemented"); a restart is #2850',
+    'HT':             'HomogeneousTransformation(A, r) of exudyn.rigidBodyUtilities, the 4x4 matrix (the shortcut is '
+                      'removed, #2781); exu.HT is the class of homogeneous transformations',
     }
 for (alias, name) in [('GraphicsDataOrthoCubePoint', 'Brick'), ('GraphicsDataCube', 'Cuboid'),
                       ('GraphicsDataOrthoCube', 'BrickXYZ'), ('GraphicsDataSphere', 'Sphere'),
@@ -208,7 +210,7 @@ removedVisualizationParameters[('ObjectConnectorGravity', 'drawSize')] = 'the co
 
 
 #WHAT --fix WRITES INSTEAD OF A REMOVED NAME (#2938): the name replaced, the call left as it is
-removedNameRenames = {'NormL2': 'np.linalg.norm', 'VSum': 'np.sum', 'VMult': 'np.dot', 'Vec2Tilde': 'Skew',
+removedNameRenames = {'HT': 'HomogeneousTransformation', 'NormL2': 'np.linalg.norm', 'VSum': 'np.sum', 'VMult': 'np.dot', 'Vec2Tilde': 'Skew',
                       'Tilde2Vec': 'Skew2Vec', 'eye2D': 'np.eye(2)', 'eye3D': 'np.eye(3)'}
 #AddRigidBody(mainSys, inertia, ...) -> mainSys.CreateRigidBody(...) (#2944): its arguments in order, the names
 #CreateRigidBody gives them, and the conversion of rotationParameters to a rotation matrix per node type
@@ -562,6 +564,16 @@ def CheckTree(tree, tables, fixes=None, source=None):
         items = sorted(list(call.args) + list(call.keywords), key=lambda n: (n.lineno, n.col_offset))
         DeleteItem(items, items.index(keyword))
 
+    def NodeTypeText(node):
+        """the text of a nodeType argument as a NodeType: AddRigidBody also took str(exu.NodeType.X) and the string
+        'NodeType.X', which CreateRigidBody refuses (#2946); None if it is neither"""
+        if isinstance(node, ast.Call) and getattr(node.func, 'id', '') == 'str' and len(node.args) == 1 and not node.keywords:
+            return Segment(node.args[0])
+        if isinstance(node, ast.Constant) and isinstance(node.value, str) and re.fullmatch(r'(exudyn\.)?NodeType\.\w+', node.value):
+            alias = 'exu' if 'exu' in exudynAliases else sorted(exudynAliases)[0]
+            return alias + '.NodeType.' + node.value.split('.')[-1]
+        return None
+
     def IsEmptyList(node):
         return isinstance(node, (ast.List, ast.Tuple)) and len(node.elts) == 0
 
@@ -586,13 +598,17 @@ def CheckTree(tree, tables, fixes=None, source=None):
             if name == 'rotationParameters':
                 if 'rotationMatrix' in values and not IsEmptyList(values['rotationMatrix']):
                     return
-                nodeType = Segment(values['nodeType']) if 'nodeType' in values else 'RotationEulerParameters'
+                nodeType = (NodeTypeText(values['nodeType']) or Segment(values['nodeType'])) if 'nodeType' in values \
+                    else 'RotationEulerParameters'
                 function = next((f for (key, f) in rotationParametersToMatrix.items() if nodeType.endswith(key)), None)
                 if function is None:
                     return                           #a node type that is no literal: the user decides
                 if not set(starModules) & {'exudyn.utilities', 'exudyn.rigidBodyUtilities'}:
                     Import(function, 'from exudyn.rigidBodyUtilities import ' + function)
                 parts.append('referenceRotationMatrix=' + function + '(' + Segment(values[name]) + ')')
+                continue
+            if name == 'nodeType' and NodeTypeText(values[name]) is not None:
+                parts.append('nodeType=' + NodeTypeText(values[name]))
                 continue
             parts.append(createRigidBodyArguments[name] + '=' + Segment(values[name]))
         system = Parenthesized(Segment(values['mainSys']))
@@ -668,6 +684,84 @@ def CheckTree(tree, tables, fixes=None, source=None):
         if len(call.args) == 1 and not call.keywords and isinstance(call.args[0], ast.Call) \
                 and getattr(call.args[0].func, 'attr', '') in femSparseGetters:
             Replace(call, Segment(call.args[0]))
+
+    def EnclosingScope(node):
+        while node is not None and not isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef, ast.Lambda, ast.Module)):
+            node = parents.get(id(node))
+        return node
+
+    def FixRotationMarker(item, keyword, k):
+        """rotationMarker<k>=A of a joint or rigid spring-damper -> the rotation in the localHT of marker k, where that
+        marker is a MarkerBodyRigid or MarkerNodeRigid created in the script - inline in markerNumbers, or as
+        'm = mbs.AddMarker(MarkerBodyRigid(...))' in the same scope, used by this item only, with every name of A defined
+        before it; then the keyword goes. A unit matrix np.eye(3) just goes. Anything else stays reported (#2946)"""
+        if source is None:
+            return
+        rotation = keyword.value
+        if Segment(rotation).replace(' ', '') in ['np.eye(3)', 'numpy.eye(3)', 'np.identity(3)']:
+            DeleteArgument(item, keyword)
+            return
+        markers = next((kw.value for kw in item.keywords if kw.arg == 'markerNumbers'), None)
+        if not isinstance(markers, (ast.List, ast.Tuple)) or len(markers.elts) != 2:
+            return
+        marker = markers.elts[k]
+        definition = None                       #the MarkerBodyRigid(...) / MarkerNodeRigid(...) call
+        if isinstance(marker, ast.Call) and getattr(marker.func, 'attr', '') == 'AddMarker' and marker.args:
+            definition = marker.args[0]
+            statementLine = item.lineno
+        elif isinstance(marker, ast.Name):
+            #the assignment that reaches the item: the last one before it in the same function; between it and the next
+            #assignment of the name, the item is its only use - a variable used again for another marker is fine
+            name = marker.id
+            scope = EnclosingScope(item)
+            stores = sorted([n for n in ast.walk(tree) if isinstance(n, ast.Name) and n.id == name
+                             and isinstance(n.ctx, ast.Store) and EnclosingScope(n) is scope], key=lambda n: n.lineno)
+            before = [n for n in stores if n.lineno < item.lineno]
+            if not before:
+                return
+            reaching = before[-1]
+            after = [n.lineno for n in stores if n.lineno > reaching.lineno]
+            end = after[0] if after else 10**9
+            loads = [n for n in ast.walk(tree) if isinstance(n, ast.Name) and n.id == name and isinstance(n.ctx, ast.Load)
+                     and reaching.lineno <= n.lineno < end]
+            if len(loads) != 1 or loads[0] is not marker:
+                return                          #a marker used more than once: the user decides
+            assignment = parents.get(id(reaching))
+            if not (isinstance(assignment, ast.Assign) and len(assignment.targets) == 1
+                    and isinstance(assignment.value, ast.Call) and getattr(assignment.value.func, 'attr', '') == 'AddMarker'
+                    and assignment.value.args and assignment.lineno < item.lineno):
+                return
+            definition = assignment.value.args[0]
+            statementLine = assignment.lineno
+        if not (isinstance(definition, ast.Call)
+                and getattr(definition.func, 'attr', getattr(definition.func, 'id', '')) in ['MarkerBodyRigid', 'MarkerNodeRigid']):
+            return
+        #every name of the rotation must be known where the marker is made, and not change until the item
+        for n in ast.walk(rotation):
+            if isinstance(n, ast.Name):
+                lines = [s.lineno for s in ast.walk(tree) if isinstance(s, ast.Name) and s.id == n.id
+                         and isinstance(s.ctx, ast.Store)]
+                if lines and (min(lines) >= statementLine or any(statementLine <= x < item.lineno for x in lines)):
+                    return
+        alias = 'exu' if 'exu' in exudynAliases else sorted(exudynAliases)[0]
+        if 'exu' not in exudynAliases and 'exudyn' not in moduleBound:
+            Fix('import', 'import exudyn')
+        values = dict((kw.arg, kw) for kw in definition.keywords)
+        if 'localHT' in values:
+            Replace(values['localHT'].value, alias + '.HT(' + Segment(values['localHT'].value) + ')*' + alias
+                    + '.HT(rotation=' + Segment(rotation) + ')')
+        elif 'localPosition' in values:
+            Replace(values['localPosition'], 'localHT=' + alias + '.HT(rotation=' + Segment(rotation) + ', translation='
+                    + Segment(values['localPosition'].value) + ')')
+        elif not definition.args or getattr(definition.func, 'attr', getattr(definition.func, 'id', '')) == 'MarkerNodeRigid':
+            last = (list(definition.args) + list(definition.keywords))[-1] if (definition.args or definition.keywords) else None
+            text = 'localHT=' + alias + '.HT(rotation=' + Segment(rotation) + ')'
+            if last is None:
+                return
+            Fix('range', last.end_lineno, last.end_col_offset, last.end_lineno, last.end_col_offset, ', ' + text)
+        else:
+            return
+        DeleteArgument(item, keyword)
 
     def FixCornersToBrick(call, functionName):
         """a box or rectangle given by its corners as graphics.Brick(centerPoint=..., size=...) (#2938, #2941):
@@ -799,7 +893,8 @@ def CheckTree(tree, tables, fixes=None, source=None):
             chain = AttributeChain(node)
             if chain is None:
                 continue
-            if chain[-1] in removedNames and len(chain) == 2 and chain[0] in exudynAliases | {'eii'}:
+            if chain[-1] in removedNames and len(chain) == 2 and chain[0] in exudynAliases | {'eii'} \
+                    and chain[-1] != 'HT':          #exu.HT is the class, not the removed shortcut
                 Report(node.lineno, ('removed', chain[-1]), "'" + '.'.join(chain) + "' is removed; use "
                        + removedNames[chain[-1]])
                 FixRemovedName(node, chain[-1])
@@ -878,6 +973,13 @@ def CheckTree(tree, tables, fixes=None, source=None):
             className = getattr(node.func, 'attr', getattr(node.func, 'id', ''))
             #a deprecated function or argument of the library (#2807)
             library = tables.get('library') or {'functions': {}, 'arguments': []}
+            if className == 'CreateRigidBody':
+                for keyword in node.keywords:
+                    if keyword.arg == 'nodeType' and isinstance(keyword.value, (ast.Call, ast.Constant)) \
+                            and NodeTypeText(keyword.value) is not None:
+                        Report(keyword.value.lineno, ('nodeTypeString', keyword.value.lineno), 'CreateRigidBody(nodeType=...)'
+                               ' takes the NodeType itself, not a string; use ' + NodeTypeText(keyword.value))
+                        Replace(keyword.value, NodeTypeText(keyword.value))
             #a function the script defines itself, called by its name, is not the one of the library (#2945)
             ownFunction = isinstance(node.func, ast.Name) and className in definedFunctions
             if className in library['functions'] and not ownFunction:
@@ -918,6 +1020,9 @@ def CheckTree(tree, tables, fixes=None, source=None):
                            ItemParameterFinding(className + '(' + keyword.arg + '=...)', entry))
                     if entry[1] == '' and className.startswith('V') and fixes is not None:
                         DeleteArgument(node, keyword)          #a visualization parameter that does nothing (#2938)
+                    if fixes is not None and keyword.arg in ['rotationMarker0', 'rotationMarker1'] and 'localHT' in entry[0] \
+                            and entry[1] != '':
+                        FixRotationMarker(node, keyword, int(keyword.arg[-1]))
                     if fixes is not None and entry[0].startswith('use ') and entry[1] != '': #a renamed parameter (#2814)
                         fixes.append(('span', keyword.lineno, keyword.col_offset, keyword.col_offset + len(keyword.arg),
                                       entry[0][len('use '):]))
@@ -942,6 +1047,14 @@ def CheckTree(tree, tables, fixes=None, source=None):
                         if fixes is not None and entry[0].startswith('use ') and entry[1] != '' and keyNode.lineno == keyNode.end_lineno:
                             fixes.append(('span', keyNode.lineno, keyNode.col_offset + 1, keyNode.end_col_offset - 1,
                                           entry[0][len('use '):]))   #inside the quotes
+
+        elif isinstance(node, ast.ImportFrom) and node.module in ['exudyn.rigidBodyUtilities', 'exudyn.utilities']:
+            #'from exudyn.rigidBodyUtilities import HT': the shortcut is removed (#2781); the import keeps the name
+            for alias in node.names:
+                if alias.name == 'HT':
+                    Report(node.lineno, ('removed', 'HT'), "'HT' is removed; use " + removedNames['HT'])
+                    if alias.asname is None and hasattr(alias, 'end_col_offset'):
+                        Replace(alias, 'HomogeneousTransformation as HT')
 
         elif isinstance(node, ast.keyword) and node.arg in removedKeywords:
             Report(node.value.lineno, ('keyword', node.arg), "argument '" + node.arg

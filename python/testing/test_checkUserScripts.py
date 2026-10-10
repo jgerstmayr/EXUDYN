@@ -436,3 +436,51 @@ def testFixReplacesTheAddJointsAndTheOldSparseConversion(tables):
                      'm = fem.GetMassMatrix(sparse=True)\n')
     own = 'import exudyn as exu\ndef CSRtoScipySparseCSR(x): return x\nm = CSRtoScipySparseCSR(a)\n'
     assert Findings(own, tables) == [] and checker.FixSource(own, ast.parse(own), tables)[0] == own
+
+
+def testFixMovesRotationMarkerIntoTheLocalHTOfItsMarker(tables):
+    """--fix (#2946): rotationMarker<k> goes into the localHT of marker k where the script creates that marker -
+    inline, or once and used by this item only, with the rotation known before it -; a unit matrix just goes; a marker
+    used twice stays reported"""
+    source = ('import exudyn as exu\n'
+              'A = RotationMatrixZ(0.3)\n'
+              'mG = mbs.AddMarker(MarkerBodyRigid(bodyNumber=g, localPosition=[0,0,0]))\n'
+              'mB = mbs.AddMarker(MarkerBodyRigid(bodyNumber=b, localPosition=[-0.5,0,0]))\n'
+              'mbs.AddObject(GenericJoint(markerNumbers=[mG, mB], rotationMarker0=np.eye(3), rotationMarker1=A))\n'
+              'mbs.AddObject(TorsionalSpringDamper(markerNumbers=[mbs.AddMarker(MarkerBodyRigid(bodyNumber=g)), mC], '
+              'rotationMarker0=A))\n'
+              'mD = mbs.AddMarker(MarkerBodyRigid(bodyNumber=b))\n'
+              'mbs.AddObject(GenericJoint(markerNumbers=[mD, mC], rotationMarker0=A))\n'
+              'mbs.AddObject(GenericJoint(markerNumbers=[mD, mC]))\n')
+    (fixed, tree, nFixed) = checker.FixSource(source, ast.parse(source), tables)
+    assert fixed == ('import exudyn as exu\n'
+                     'A = RotationMatrixZ(0.3)\n'
+                     'mG = mbs.AddMarker(MarkerBodyRigid(bodyNumber=g, localPosition=[0,0,0]))\n'
+                     'mB = mbs.AddMarker(MarkerBodyRigid(bodyNumber=b, localHT=exu.HT(rotation=A, translation=[-0.5,0,0])))\n'
+                     'mbs.AddObject(GenericJoint(markerNumbers=[mG, mB]))\n'
+                     'mbs.AddObject(TorsionalSpringDamper(markerNumbers=[mbs.AddMarker(MarkerBodyRigid(bodyNumber=g, '
+                     'localHT=exu.HT(rotation=A))), mC]))\n'
+                     'mD = mbs.AddMarker(MarkerBodyRigid(bodyNumber=b))\n'
+                     'mbs.AddObject(GenericJoint(markerNumbers=[mD, mC], rotationMarker0=A))\n'
+                     'mbs.AddObject(GenericJoint(markerNumbers=[mD, mC]))\n')
+
+
+def testFixGivesCreateRigidBodyTheNodeTypeItself(tables):
+    """AddRigidBody also took str(exu.NodeType.X) and 'NodeType.X', which CreateRigidBody refuses: --fix writes the
+    NodeType itself, also in a CreateRigidBody an earlier --fix wrote (#2946); a marker variable used again for the next
+    marker is fixed where the item is its only use"""
+    source = ('import exudyn as exu\n'
+              'b = mbs.CreateRigidBody(inertia=i, nodeType=str(exu.NodeType.RotationEulerParameters))\n'
+              "c = mbs.CreateRigidBody(inertia=i, nodeType='NodeType.RotationRxyz')\n"
+              'm = mbs.AddMarker(MarkerBodyRigid(bodyNumber=b))\n'
+              'mbs.AddObject(GenericJoint(markerNumbers=[m, g]))\n'
+              'm = mbs.AddMarker(MarkerBodyRigid(bodyNumber=c, localPosition=[1,0,0]))\n'
+              'mbs.AddObject(GenericJoint(markerNumbers=[g, m], rotationMarker1=A))\n')
+    (fixed, tree, nFixed) = checker.FixSource(source, ast.parse(source), tables)
+    assert fixed == ('import exudyn as exu\n'
+                     'b = mbs.CreateRigidBody(inertia=i, nodeType=exu.NodeType.RotationEulerParameters)\n'
+                     'c = mbs.CreateRigidBody(inertia=i, nodeType=exu.NodeType.RotationRxyz)\n'
+                     'm = mbs.AddMarker(MarkerBodyRigid(bodyNumber=b))\n'
+                     'mbs.AddObject(GenericJoint(markerNumbers=[m, g]))\n'
+                     'm = mbs.AddMarker(MarkerBodyRigid(bodyNumber=c, localHT=exu.HT(rotation=A, translation=[1,0,0])))\n'
+                     'mbs.AddObject(GenericJoint(markerNumbers=[g, m]))\n')
