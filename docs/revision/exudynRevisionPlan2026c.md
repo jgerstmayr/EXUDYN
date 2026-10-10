@@ -68,7 +68,7 @@ The title of each says what it does; the sentence after it, why it comes now.
   - RG2.8 Choose parameters for a converged cable run in perfAccessFunctionsAD
   - RG2.9 Add three old test models (3 open sub-steps)
 - **RG4** Implementation problems and bugs
-  - RG4.1 Remove the platform differences of the contact and friction models by finding their causes (2 open sub-steps)
+  - RG4.1 Remove the platform differences of the contact and friction models by finding their causes (3 open sub-steps)
   - RG4.20 Port the revision of ObjectANCFThinPlate and complete the element (1 open sub-step)
   - RG4.21 Flag the constraints that depend on velocities or time, and add their term to the initial accelerations
   - RG4.22 Add a 3D sliding joint with rotation, tested with the ANCF cable and beam
@@ -114,7 +114,7 @@ The title of each says what it does; the sentence after it, why it comes now.
 | RG1 | OPEN | 2 | Release and publication |
 | RG2 | OPEN | 5 | Testing and verification |
 | RG3 | CLOSED | 0 | Docs |
-| RG4 | OPEN | 9 | Implementation problems and bugs |
+| RG4 | OPEN | 10 | Implementation problems and bugs |
 | RG5 | OPEN | 8 | Performance |
 | RG6 | OPEN | 4 | Graphics and rendering |
 | RG7 | CLOSED | 0 | Python user items |
@@ -244,6 +244,22 @@ CLOSED 2026-10-10 (#2952): implementation `exudyn` of `EvaluateMathFunction`; `m
 ##### **CLOSED_RG4.1.3.6** Call the math functions as EM::Sin, or Sin with using namespace EM, and refuse the library functions in a check
 
 CLOSED 2026-10-10 (#2953): namespace EM with the 14 functions; `tools/checkMathFunctions.py` in the commit gate. [log](exudynRevisionLog2026c.md#rg4-1-3-6)
+
+##### **OPEN_RG4.1.3.7** Give Python the portable math functions and use them for initial values and test results
+
+#2956. The three models left in `UnresolvedOnLinux()` differ because of Python, not the C++ code:
+- `createSphereQuadContact` and `createSphereTriangleContact` compute their initial velocities with `math.sin`/`cos`;
+  `2*sin(4*pi/3)` is `-0x1.bb67ae8584ca9p+0` on Windows and `...ca8p+0` with glibc. `generalContactCylinderTest`
+  computes points with `math.sin`/`cos` and uses `RotationMatrixX` (numpy).
+- Measured 2026-10-10, Windows (1.13.44.dev1) against WSL (1.13.42.dev1, both portable math): with `sin`/`cos` replaced
+  by `float(exu.symbolic.sin(x))`, which calls `EM::Sin`, the final ODE2 coordinates are bit-identical in all three
+  models. The test result still differs by 1 ULP, from `np.linalg.norm` (numpy 2.4.6 vs 2.2.4); `sqrt(math.fsum(x*x))`
+  agrees.
+- Proposal, for decision:
+  - a small pybind submodule, e.g. `exudyn.math`, with `sin`, `cos`, ... of `EM`, taking a float or a numpy array;
+  - `rigidBodyUtilities` (`RotationMatrixX`, ...) and the test models call it;
+  - a platform-independent norm for test results.
+- The Windows references of the affected models change (`generalContactCylinderTest` by rel. 4e-5).
 
 ### **OPEN_RG4.20** Port the revision of ObjectANCFThinPlate and complete the element
 

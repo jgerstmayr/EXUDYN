@@ -10,7 +10,7 @@ General information on current version:
 
 - Exudyn version = 1.13.44.dev1
 - last change = 2026-10-10
-- Number of issues = 2956
+- Number of issues = 2957
 - Number of resolved issues = 2821 (44 in current version)
 
 ## Resolved issues and resolved bugs before version 1.13
@@ -9039,6 +9039,9 @@ The following list contains the issues which have been **RESOLVED** in the accor
 
 ## Open issues
 
+- `EXTENSION` `MEDIUM EFF` `raised by: Claude-JG` The portable math functions of Exudyn for Python: initial conditions computed with math.sin or numpy differ per platform (#2956)
+  - description: The three models left in UnresolvedOnLinux() after \#2954 compute their initial values in Python with math.sin/math.cos (createSphereQuadContact, createSphereTriangleContact: initial velocities 2\*sin(cnt\*pi/3); generalContactCylinderTest: points on a cylinder and RotationMatrixX, i.e. numpy). glibc and the MSVC UCRT round 2\*sin(4\*pi/3) differently by 1 ULP (-0x1.bb67ae8584ca9p+0 vs ...ca8p+0). With sin/cos replaced by float(exu.symbolic.sin(x)) (EM::Sin), Windows and WSL compute bit-identical ODE2 coordinates in all three models (sha256 equal); the only remaining difference is 1 ULP in np.linalg.norm of the test result (numpy 2.4.6 vs 2.2.4, SIMD summation), while sqrt(math.fsum(x\*x)) agrees. Needed: a documented, vectorized way to call EM::Sin, ... from Python (e.g. a small pybind submodule exudyn.math with sin, cos, ... taking float or numpy arrays), used by rigidBodyUtilities (RotationMatrixX, ...) and by test models; and a platform-independent norm for test results. Changes the Windows references of the affected models (generalContactCylinderTest rel. 4e-5).
+  - date raised: 2026-10-10
 - `TESTING` <span class="textorange">`NORMAL`</span> `MEDIUM EFF` `raised by: Claude-JG` the cable run of perfAccessFunctionsAD is ill-conditioned: its result moves by 20% with the Newton settings (#2914)
   - description: perfAccessFunctionsAD:cable-n200-implicit (200 ANCF cable elements, axialStiffness 1000, massPerLength 1, on spring-dampers) gives 0.004663 with the default modified Newton, 0.005112 with full Newton, 0.005388 with relativeTolerance 1e-10 and 0.005266 with both (15 s instead of 0.6 s); the fast module differs by 8.4e-7. A performance run should judge a converged result: choose parameters (stiffness, mass, step size) for which the Newton settings do not move it, then re-record its reference and timing
   - date raised: 2026-10-09
