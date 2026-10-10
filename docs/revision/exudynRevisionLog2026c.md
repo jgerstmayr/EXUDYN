@@ -667,3 +667,38 @@ we see that at least it resolves linux problems, right?")*
 - **The build of #2953 (d6c8a5f7) did not compile on Linux**: gcc looks up a name in a template where the template
   stands, and two files had templates before their `using namespace EM;`. The directive is now after the first
   `#include` of the six files (CODING_STYLE.md §1); MSVC (`/Zc:twoPhase-`) had accepted it.
+
+<a id="rg11-10-1"></a>
+### RG11.10.1 — the kinematics functions of rigidBodyUtilities compared (2026-10-10, #2957)
+*(Maintainer 2026-10-10: the kinematics functions of rigidBodyUtilities - rotation matrices, Gram-Schmidt, basis
+vectors, skew matrices, Euler parameters - come from C++ through pybind, defined in the definition files; not the
+homogeneous transformations, T66 and RigidBodyInertia. "Start with RG11.10.1 and put the comparison on
+tmp/compareRBU.md")*
+- `tmp/compareRBU.md` (not tracked): 29 functions in five tables - the files using each, what it does now, the C++
+  function, the interface wanted - and nine decisions D1-D9 with a recommendation each. `RigidBodyMath.h` and
+  `BasicLinalg.h` have 22 of them; missing in C++: `AngularVelocity2EulerParameters_t`, `AngularVelocity2RotXYZ_t`,
+  `RotXYZ2EulerParameters`, `RotationMatrix2RotZYZ`, `RotationMatrix2D`, `RotationVector2G`/`GLocal`, the 4x4 case of
+  `Skew2Vec`, the matrix case of `ComputeSkewMatrix`.
+- Found: `RotationVector2RotationMatrix` computes `1-cos(phi)` where the node `NodeRigidBodyRotVecLG` computes
+  `2 sin^2(phi/2)`; `RotationMatrix2EulerParameters` normalizes, `RotationMatrix2EP` does not;
+  `RotationVector2GLocal` names its argument `eulerParameters`; `AngularVelocity2RotXYZ_t` and `ComputeSkewMatrix`
+  print instead of raising. The decisions are taken in RG11.10.4.
+
+<a id="rg11-10-2"></a>
+### RG11.10.2 and RG11.10.3 — exudyn.cMath (2026-10-10, #2958, #2959)
+- **The pattern of a C++ submodule** (for `cUtilities` the same in RG11.10.4): a definition file of its own,
+  `definitions/pybindCMath.py`, with `pb` (the page) and `cMathModule` (the functions). `pybindEmitter.py` replays it:
+  the C++ bindings into `pybind_manual_classes.h`, inside a block in which `m` is the compiled submodule
+  `exudyn._cMath`; the page `docs/generated/cInterface/CMath.md`; the stub `stubCMath.pyi`, which
+  `createStubFiles.py` writes to `python/exudyn/cMath.pyi` (tier 1 in `regenerate.py`). `python/exudyn/cMath.py`
+  takes the compiled functions and adds `pi`; `import exudyn` imports it. The compiled submodule has a leading
+  underscore so that the star import of `__init__.py` does not put it where the Python module belongs.
+- **cMath**: `sin`, ..., `cbrt` (the 14 functions of `EM`) and `sqrt`; a float gives a float, a list or an array an
+  array of the same shape (`py::vectorize`); `atan2(y, x)` as in `math`.
+- **Measured** (Windows, `mathFunctionsPlatform.py --timing`, ns per value): on arrays as fast as numpy (sin 5.2 vs
+  4.9, exp 1.8 vs 1.8, cbrt 4.0 vs 7.7, tanh 6.5 vs 3.7). One call per float: 200 ns, `math.sin` 34 ns - the call of a
+  pybind function costs 155 ns. Through `py::vectorize` a float took 530 ns; a float overload registered before the
+  vectorized one takes it at once.
+- `python/testing/test_cMath.py`: the bits of all 15 functions equal `EvaluateMathFunction(..., 'exudyn')` on the
+  arguments of the platform check, as array and one float at a time; shapes, lists, broadcasting; `__all__`, `pi` and
+  the stub agree.

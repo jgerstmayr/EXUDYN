@@ -78,14 +78,14 @@ stages = [
     Stage('tools/generators/pybindEmitter.py',
           ['definitions', G + 'MainSystemExt.md', G + 'MainSystemCreateExt.md', 'python/Notebooks/reference'],
           [A + 'pybind_manual_classes.h', A + 'OutputVariableTypes.h', A + 'EnumTypes.h',
-           G + 'stubAutoBindings.pyi', G + 'stubSymbolic.pyi', G + 'stubEnums.pyi',
+           G + 'stubAutoBindings.pyi', G + 'stubSymbolic.pyi', G + 'stubCMath.pyi', G + 'stubEnums.pyi',
            #Markdown; confHelper.py is not documentation but data
            #for conf.py, and lives with the other generator data
            'docs/generated/cInterface', G + 'confHelper.py']),
     Stage('tools/generators/createStubFiles.py',
           ['tools/generators/stubHeader.pyi', G + 'stubEnums.pyi', G + 'stubSystemStructures.pyi',
-           G + 'stubAutoBindings.pyi', G + 'stubAutoBindingsExt.pyi', G + 'stubSymbolic.pyi'],
-          ['python/exudyn/__init__.pyi', 'python/exudyn/symbolic.pyi']),
+           G + 'stubAutoBindings.pyi', G + 'stubAutoBindingsExt.pyi', G + 'stubSymbolic.pyi', G + 'stubCMath.pyi'],
+          ['python/exudyn/__init__.pyi', 'python/exudyn/symbolic.pyi', 'python/exudyn/cMath.pyi']),
     #the example and test model pages, and the abbreviations: what doc2rst.py did besides
     #converting LaTeX, which is why it outlived it
     #the references page and the citation keys conf.py needs to turn [Key2021] into a link

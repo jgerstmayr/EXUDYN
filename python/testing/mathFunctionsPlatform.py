@@ -10,6 +10,7 @@
 #             python mathFunctionsPlatform.py                       #this platform: not correctly rounded, needs mpmath
 #             python mathFunctionsPlatform.py --implementation stdNoFMA3
 #             python mathFunctionsPlatform.py --compare a.npz b.npz #where two platforms differ
+#             python mathFunctionsPlatform.py --timing              #the time per value, also of exudyn.cMath
 #           The arguments come from numpy's PCG64 with a fixed seed and are the same on every platform. The values go
 #           to python/logs/tmp/mathFunctions_<platform>_<module>_<implementation>.npz (or --out); EXUDYN_MODULE=fast
 #           evaluates in exudynCPPfast.
@@ -133,7 +134,7 @@ if __name__ == '__main__':
     parser.add_argument('--out', default='', help='the file the values go to (.npz)')
     parser.add_argument('--no-reference', action='store_true', help='do not compare with mpmath')
     parser.add_argument('--compare', nargs=2, metavar='FILE', help='compare two files of this script, nothing else')
-    parser.add_argument('--timing', action='store_true', help='the time per evaluation of std, portable and exudyn (what the C++ code calls), nothing else')
+    parser.add_argument('--timing', action='store_true', help='the time per evaluation of std, portable and exudyn (what the C++ code calls), and from Python of exudyn.cMath, numpy and math; nothing else')
     args = parser.parse_args()
 
     if args.timing:
@@ -147,6 +148,33 @@ if __name__ == '__main__':
                 t[implementation] = min(exu.experimental.EvaluateMathFunction(name, x, y, implementation, 20)[1]
                                         for i in range(5)) * 1e9
             print('%-7s %9.2f %9.2f %9.2f %7.2f' % (name, t['std'], t['portable'], t['exudyn'], t['portable'] / t['std']))
+
+        #the same from Python: exudyn.cMath and numpy on the array of arguments, and one call per value of cMath and
+        #math, which is how a script calls them (#2959)
+        import time
+        import exudyn.cMath as cMath
+        numpyNames = {'asin': 'arcsin', 'acos': 'arccos', 'atan': 'arctan', 'atan2': 'arctan2', 'pow': 'power'}
+        def Fastest(f):
+            times = []
+            for i in range(5):
+                start = time.perf_counter()
+                f()
+                times.append(time.perf_counter() - start)
+            return min(times)
+        print('\nns per value from Python: on the array of arguments, and one call per value (1)')
+        print('%-7s %9s %9s %9s %9s' % ('', 'cMath', 'numpy', 'cMath(1)', 'math(1)'))
+        for name in [n for n in args.functions.split(',') if n != 'fmod']:
+            (x, y) = Arguments(name, args.count)
+            (fc, fn, fm) = (getattr(cMath, name), getattr(np, numpyNames.get(name, name)), getattr(math, name))
+            (xs, ys) = (x[:2000].tolist(), y[:2000].tolist())
+            if len(y):
+                t = [Fastest(lambda: fc(x, y)) / len(x), Fastest(lambda: fn(x, y)) / len(x),
+                     Fastest(lambda: [fc(a, b) for (a, b) in zip(xs, ys)]) / len(xs),
+                     Fastest(lambda: [fm(a, b) for (a, b) in zip(xs, ys)]) / len(xs)]
+            else:
+                t = [Fastest(lambda: fc(x)) / len(x), Fastest(lambda: fn(x)) / len(x),
+                     Fastest(lambda: [fc(a) for a in xs]) / len(xs), Fastest(lambda: [fm(a) for a in xs]) / len(xs)]
+            print('%-7s %9.2f %9.2f %9.2f %9.2f' % tuple([name] + [v * 1e9 for v in t]))
         sys.exit(0)
 
     if args.compare:

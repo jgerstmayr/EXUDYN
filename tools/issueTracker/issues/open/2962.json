@@ -1,0 +1,11 @@
+{
+  "number": 2962,
+  "title": "The Python library of Exudyn takes its math functions from exudyn.cMath",
+  "author": "Claude-JG",
+  "status": "RAISED",
+  "type": "CHANGE",
+  "effort": "MEDIUM",
+  "description": "revision2026c step RG11.10.6: graphics, beams, lieGroupBasics, robotics, machines and the other modules (about 150 numpy calls and the imports from math), graphics included because its triangles reach the general contact.",
+  "dateRaised": "2026-10-10",
+  "deadline": "2027-04-08"
+}

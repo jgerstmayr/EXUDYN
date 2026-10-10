@@ -1,0 +1,11 @@
+{
+  "number": 2960,
+  "title": "exudyn.cUtilities: the kinematics functions of rigidBodyUtilities in C++",
+  "author": "Claude-JG",
+  "status": "RAISED",
+  "type": "EXTENSION",
+  "effort": "MEDIUM",
+  "description": "revision2026c step RG11.10.4: the functions approved in RG11.10.1, bound from RigidBodyMath.h, the missing ones written there; a test compares them with the Python implementation to 1-2 ULP.",
+  "dateRaised": "2026-10-10",
+  "deadline": "2027-04-08"
+}

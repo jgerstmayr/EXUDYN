@@ -243,7 +243,7 @@ auto-regenerate-baseline = false
 #tools/ci/ruffBaseline.txt; a new one fails the check. See tools/checkPython.py.
 [tool.ruff]
 #the generated stub files are not source: they are checked against the module itself instead
-extend-exclude = ["python/exudyn/__init__.pyi", "python/exudyn/symbolic.pyi"]
+extend-exclude = ["python/exudyn/__init__.pyi", "python/exudyn/symbolic.pyi", "python/exudyn/cMath.pyi"]
 target-version = "py310"    #same floor as project.requires-python
 
 [tool.ruff.lint]

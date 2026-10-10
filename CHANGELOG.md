@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.13 | Newborn | 45 | 1.13.44 |
+| 1.13 | Newborn | 48 | 1.13.47 |
 | 1.12 | Metheney | 367 | 1.12.462 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
@@ -30,6 +30,18 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.13 - Newborn (current)
 
+- **1.13.47** `EXTENSION` `MEDIUM EFF` `raised by: Claude-JG` `resolved by: Claude-JG` exudyn.cMath: the portable math functions of Exudyn for floats and numpy arrays (#2959)
+  - description: revision2026c step RG11.10.3: sin, cos, tan, asin, acos, atan, atan2, exp, log, pow, sinh, cosh, tanh, cbrt (EM, \#2953) and sqrt, for a float or a numpy array (loop in C++); test: the same bits as experimental.EvaluateMathFunction(implementation='exudyn'); timing against math and numpy.
+  - **notes:** exudyn.cMath: sin, cos, tan, asin, acos, atan, atan2, exp, log, pow, sinh, cosh, tanh, cbrt and sqrt of the C++ code, the same bits on every platform, for a float or a numpy array; and pi (revision2026c step RG11.10.3)
+  - date resolved: **2026-10-10 22:33**, date raised: 2026-10-10
+- **1.13.46** `EXTENSION` `MEDIUM EFF` `raised by: Claude-JG` `resolved by: Claude-JG` The submodules exudyn.cMath and exudyn.cUtilities: compiled functions declared in definitions/, with a Python module each (#2958)
+  - description: revision2026c step RG11.10.2: a pybind submodule per name, declared in a definition file of its own (documentation page and stub generated), and a Python module python/exudyn/\<name\>.py that takes the compiled functions and may add Python ones; exudyn imports both.
+  - **notes:** New submodule exudyn.cMath: compiled functions declared in definitions/pybindCMath.py, with its documentation page and stub, and a Python module that may add Python functions (revision2026c step RG11.10.2)
+  - date resolved: **2026-10-10 22:33**, date raised: 2026-10-10
+- **1.13.45** `DOCU` `raised by: Claude-JG` `resolved by: Claude-JG` Compare the interfaces of the kinematics functions of rigidBodyUtilities with the C++ functions and the interface wanted (#2957)
+  - description: revision2026c step RG11.10.1: one table, one row per kinematics function of rigidBodyUtilities (basis vectors, GramSchmidt, Skew, Euler parameters, rotation vector, RotXYZ, RotZYZ, RotationMatrixX/Y/Z/2D; not HT, T66, RigidBodyInertia): arguments and return now, the C++ function (RigidBodyMath.h, BasicLinalg.h), the interface wanted (numpy in and out); for the maintainer's decision, in tmp/compareRBU.md.
+  - **notes:** The kinematics functions of rigidBodyUtilities compared with the C++ functions and the interface wanted, for the maintainer's decision (revision2026c step RG11.10.1)
+  - date resolved: **2026-10-10 22:33**, date raised: 2026-10-10
 - **1.13.44** <span class="textred">`BUG`</span> `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` the manylinux build repairs and tests the first wheel of dist/manylinux, not the one it built (#2955)
   - description: buildManylinux.sh selects the raw and the repaired wheel with 'ls dist/manylinux/exu\*cp313-linux\*.whl \| head -n 1', alphabetically: with an older wheel in dist/manylinux (exudyn-1.13.3), the local 'exudev linux' repaired and tested 1.13.3 instead of 1.13.42.dev1 and reported the failures of an old module; GitLab starts from a clean checkout and is not affected. The wheels are selected by the version of version.txt
   - **notes:** the manylinux build repairs and tests the wheel of the version in version.txt, not the alphabetically first wheel of dist/manylinux

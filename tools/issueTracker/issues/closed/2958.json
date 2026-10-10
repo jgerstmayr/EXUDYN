@@ -1,0 +1,15 @@
+{
+  "number": 2958,
+  "title": "The submodules exudyn.cMath and exudyn.cUtilities: compiled functions declared in definitions/, with a Python module each",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "EXTENSION",
+  "effort": "MEDIUM",
+  "description": "revision2026c step RG11.10.2: a pybind submodule per name, declared in a definition file of its own (documentation page and stub generated), and a Python module python/exudyn/<name>.py that takes the compiled functions and may add Python ones; exudyn imports both.",
+  "dateRaised": "2026-10-10",
+  "deadline": "2027-04-08",
+  "dateResolved": "2026-10-10 22:33",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "New submodule exudyn.cMath: compiled functions declared in definitions/pybindCMath.py, with its documentation page and stub, and a Python module that may add Python functions (revision2026c step RG11.10.2)",
+  "resolvedInVersion": "1.13.46"
+}

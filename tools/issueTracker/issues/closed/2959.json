@@ -1,0 +1,15 @@
+{
+  "number": 2959,
+  "title": "exudyn.cMath: the portable math functions of Exudyn for floats and numpy arrays",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "EXTENSION",
+  "effort": "MEDIUM",
+  "description": "revision2026c step RG11.10.3: sin, cos, tan, asin, acos, atan, atan2, exp, log, pow, sinh, cosh, tanh, cbrt (EM, #2953) and sqrt, for a float or a numpy array (loop in C++); test: the same bits as experimental.EvaluateMathFunction(implementation='exudyn'); timing against math and numpy.",
+  "dateRaised": "2026-10-10",
+  "deadline": "2027-04-08",
+  "dateResolved": "2026-10-10 22:33",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "exudyn.cMath: sin, cos, tan, asin, acos, atan, atan2, exp, log, pow, sinh, cosh, tanh, cbrt and sqrt of the C++ code, the same bits on every platform, for a float or a numpy array; and pi (revision2026c step RG11.10.3)",
+  "resolvedInVersion": "1.13.47"
+}

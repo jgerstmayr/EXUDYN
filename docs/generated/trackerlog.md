@@ -8,10 +8,10 @@ Every entry carries the **type** of the issue, then its **priority** and its **e
 
 General information on current version:
 
-- Exudyn version = 1.13.44.dev1
+- Exudyn version = 1.13.47.dev1
 - last change = 2026-10-10
-- Number of issues = 2957
-- Number of resolved issues = 2821 (44 in current version)
+- Number of issues = 2965
+- Number of resolved issues = 2824 (47 in current version)
 
 ## Resolved issues and resolved bugs before version 1.13
 
@@ -9039,6 +9039,21 @@ The following list contains the issues which have been **RESOLVED** in the accor
 
 ## Open issues
 
+- `CHANGE` `raised by: Claude-JG` A check that the Python library, test models and examples call no math function of math or numpy (#2964)
+  - description: revision2026c step RG11.10.8: tools/checkPythonMath.py in exudev generate --all-checks refuses from math import sin..., math.sin(, np.sin(, ..., math.pow, np.power and \*\* with an exponent that is not a whole number (x\*\*0.5: the library's pow, differs per platform; use sqrt); whole exponents (x\*\*2) reported only until RG11.10.7 shows whether they move a result; sqrt, pi, fsum allowed; pytest as for checkMathFunctions.
+  - date raised: 2026-10-10
+- `TESTING` `MEDIUM EFF` `raised by: Claude-JG` Test models and examples take their math functions from exudyn.cMath, and the test result a norm that is the same on every platform (#2963)
+  - description: revision2026c step RG11.10.7: the imports from math in the test models (about 37 files) and examples; the result norm e.g. sqrt(math.fsum(x\*x)) instead of np.linalg.norm; references recorded again; UnresolvedOnLinux() empty, which closes \#2956.
+  - date raised: 2026-10-10
+- `CHANGE` `MEDIUM EFF` `raised by: Claude-JG` The Python library of Exudyn takes its math functions from exudyn.cMath (#2962)
+  - description: revision2026c step RG11.10.6: graphics, beams, lieGroupBasics, robotics, machines and the other modules (about 150 numpy calls and the imports from math), graphics included because its triangles reach the general contact.
+  - date raised: 2026-10-10
+- `CHANGE` `MEDIUM EFF` `raised by: Claude-JG` rigidBodyUtilities calls exudyn.cUtilities and takes sin, cos from exudyn.cMath (#2961)
+  - description: revision2026c step RG11.10.5: names and arguments stay; each docstring names the C++ function it calls; HT and T66 stay in Python with cMath; the references that move are recorded again.
+  - date raised: 2026-10-10
+- `EXTENSION` `MEDIUM EFF` `raised by: Claude-JG` exudyn.cUtilities: the kinematics functions of rigidBodyUtilities in C++ (#2960)
+  - description: revision2026c step RG11.10.4: the functions approved in RG11.10.1, bound from RigidBodyMath.h, the missing ones written there; a test compares them with the Python implementation to 1-2 ULP.
+  - date raised: 2026-10-10
 - `EXTENSION` `MEDIUM EFF` `raised by: Claude-JG` The portable math functions of Exudyn for Python: initial conditions computed with math.sin or numpy differ per platform (#2956)
   - description: The three models left in UnresolvedOnLinux() after \#2954 compute their initial values in Python with math.sin/math.cos (createSphereQuadContact, createSphereTriangleContact: initial velocities 2\*sin(cnt\*pi/3); generalContactCylinderTest: points on a cylinder and RotationMatrixX, i.e. numpy). glibc and the MSVC UCRT round 2\*sin(4\*pi/3) differently by 1 ULP (-0x1.bb67ae8584ca9p+0 vs ...ca8p+0). With sin/cos replaced by float(exu.symbolic.sin(x)) (EM::Sin), Windows and WSL compute bit-identical ODE2 coordinates in all three models (sha256 equal); the only remaining difference is 1 ULP in np.linalg.norm of the test result (numpy 2.4.6 vs 2.2.4, SIMD summation), while sqrt(math.fsum(x\*x)) agrees. Needed: a documented, vectorized way to call EM::Sin, ... from Python (e.g. a small pybind submodule exudyn.math with sin, cos, ... taking float or numpy arrays), used by rigidBodyUtilities (RotationMatrixX, ...) and by test models; and a platform-independent norm for test results. Changes the Windows references of the affected models (generalContactCylinderTest rel. 4e-5).
   - date raised: 2026-10-10
