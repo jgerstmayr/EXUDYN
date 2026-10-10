@@ -237,3 +237,20 @@ addEdges=True.")*
   `import exudyn.graphics as graphics` is added if missing.
 - A brick with size 0 in z and no faces gives 8 points and 12 edges (4 of them of length 0), and it draws as the
   rectangle; checked as ground graphics. One more test.
+
+<a id="rg10-31-10"></a>
+### RG10.31.10 — what the exit code of exudev scripts --check means (2026-10-10, #2942)
+
+*(Maintainer 2026-10-10: "when running the check script, it gives an error: .\exudev.bat scripts --check
+..\..\teaching\Innsbruck\Maschinendynamik_WS2019\")*
+
+- Measured: no exception. The run checked 79 scripts of the lecture (16 other .py files skipped) and found 504
+  findings in 75 of them; with `--check` that is exit code 1, as designed. `conda run` then printed
+  `ERROR conda.cli.main_run:execute(125): ... failed. (See above for error)`, and the summary said `FAILED`. Together
+  they read as a crash of the tool.
+- Now:
+  - the checker ends with `--check: the scripts need changes (504 finding(s)) - exit code 1; --fix rewrites what can be
+    rewritten`;
+  - the summary of `exudev scripts` says `FAILED: scripts need changes`;
+  - every exudev step that runs through `conda run` and fails says below conda's line that it only passes on the
+    exit code.

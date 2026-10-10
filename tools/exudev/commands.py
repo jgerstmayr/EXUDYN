@@ -1059,8 +1059,11 @@ def Scripts(options):
         argv += ['--fix']
     if options.run:
         argv += ['--run', '--timeout', str(options.timeout)]
+    #with --check, exit code 1 means the scripts need changes - a verdict on them, not a failure of the tool (#2942)
     return [Step(('fix and check' if options.fix else 'check') + ' user scripts (' + environment + ')',
-                 argv=runner.InEnvironment(environment, argv, options), cwd=root)]
+                 argv=runner.InEnvironment(environment, argv, options), cwd=root,
+                 verdict=lambda step, code: 'ok' if code == 0 else ('FAILED: scripts need changes' if code == 1
+                                                                    else 'FAILED'))]
 
 
 def Notebooks(options):

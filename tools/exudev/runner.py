@@ -375,6 +375,12 @@ def RunSteps(steps, options):
 
         #a verdict that BEGINS with 'ok' is a success that has something to say - e.g.
         #'ok, TIER 1 DRIFT' (#2563): it is printed in the summary but does not stop the run
+        if not verdict.startswith('ok') and verdict != 'skipped' and argv[1:2] == ['run'] \
+                and 'conda' in os.path.basename(argv[0]).lower():
+            #conda run adds 'ERROR conda.cli.main_run ... failed' to every exit code but 0; it is not an error of its
+            #own, which a reader cannot know (#2942)
+            print('(the "ERROR conda.cli.main_run" line only passes on the exit code ' + str(returnCode)
+                  + '; the output above says why)')
         if not verdict.startswith('ok') and verdict != 'skipped' and step.check:
             print('*** stopped: "' + step.label + '" returned ' + str(returnCode))
             break

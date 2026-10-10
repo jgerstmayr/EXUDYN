@@ -489,6 +489,10 @@ CLOSED 2026-10-10 (#2939): in place, the original kept once as `<script>.py.bak`
 
 CLOSED 2026-10-10 (#2941): the rectangle with size 0 in z, `addFaces=False, addEdges=True`, its color as `edgeColor`.
 
+#### **CLOSED_RG10.31.10** Say that --check failed because the scripts need changes, not because of an error
+
+CLOSED 2026-10-10 (#2942): a closing line of the checker, the verdict 'FAILED: scripts need changes', and a note for conda's ERROR line in every exudev step.
+
 ## **OPEN_RG11** Misc
 
 What belongs to no group, including what was left of revision2026b groups 12 to 18. Put off, by decision of

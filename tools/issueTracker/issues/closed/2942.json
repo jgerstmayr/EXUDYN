@@ -1,0 +1,17 @@
+{
+  "number": 2942,
+  "title": "exudev scripts --check looks like it failed with an error when it only found something",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "IMPROVEMENT",
+  "priority": "NORMAL",
+  "effort": "LOW",
+  "description": "maintainer 2026-10-10: '.\\exudev.bat scripts --check ..\\..\\teaching\\Innsbruck\\Maschinendynamik_WS2019\\' gives an error. Measured: no exception - 79 scripts checked, 504 findings, and --check returns 1 as designed; conda run then prints 'ERROR conda.cli.main_run:execute(125): ... failed. (See above for error)' and the summary FAILED, which read as a crash of the tool",
+  "dateRaised": "2026-10-10",
+  "deadline": "2027-04-08",
+  "dateResolved": "2026-10-10 11:03",
+  "resolvedAuthor": "Claude-JG",
+  "file": "tools/exudev/runner.py",
+  "releaseNotes": "exudev scripts --check says that it failed because the scripts need changes (a closing line, the verdict 'FAILED: scripts need changes'), and every exudev step explains conda's ERROR line as the passed-on exit code. revision2026c step RG10.31.10",
+  "resolvedInVersion": "1.13.23"
+}

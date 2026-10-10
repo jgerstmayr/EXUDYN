@@ -1102,7 +1102,13 @@ def main():
         print('ran ' + str(len(results)) + ' scripts in a copy: ' + str(counts['ran']) + ' ran, ' + str(counts['failed'])
               + ' failed, ' + str(counts['timeout']) + ' timed out, ' + str(counts['needs']) + ' need a package; '
               + str(len(notRun)) + ' not run for a path outside their folder')
-    return 1 if args.check and (total != 0 or unreadable or failedRuns) else 0
+    failing = args.check and (total != 0 or unreadable or failedRuns)
+    if failing:     #--check: say that the exit code is the verdict on the scripts, not an error of the tool (#2942)
+        print('--check: the scripts need changes (' + str(total) + ' finding(s)' + (', ' + str(len(unreadable))
+              + " that do not parse" if unreadable else '') + (', ' + str(failedRuns) + ' failed run(s)' if failedRuns
+                                                               else '') + ') - exit code 1'
+              + ('; --fix rewrites what can be rewritten' if total and not args.fix else ''))
+    return 1 if failing else 0
 
 
 if __name__ == '__main__':
