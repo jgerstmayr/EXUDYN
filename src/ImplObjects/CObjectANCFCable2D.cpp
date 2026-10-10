@@ -950,7 +950,7 @@ void CObjectANCFCable2DBase::GetOutputVariableBody(OutputVariableType variableTy
 		Real x = localPosition[0]; //only x-coordinate
 		Vector2D vRef = ComputeSlopeVector(x, configuration);
 
-		Real phi = atan2(vRef[1], vRef[0]); //slope vector [1,0] is defined as zero angle (atan2(0,1) == 0.)
+		Real phi = EXUmath::Atan2(vRef[1], vRef[0]); //slope vector [1,0] is defined as zero angle (atan2(0,1) == 0.)
 		value.CopyFrom(Vector1D(phi)); break;
 	}
 	case OutputVariableType::Director1: {
@@ -1143,8 +1143,8 @@ Matrix3D CObjectANCFCable2DBase::GetRotationMatrix(const Vector3D& localPosition
 	Vector2D vRef = ComputeSlopeVector(x, configuration);
 
 	//compute angle from slope vector
-	Real phi = atan2(vRef[1], vRef[0]); //slope vector [1,0] is defined as zero angle (atan2(0,1) == 0.)
-	return Matrix3D(3, 3, { cos(phi),-sin(phi),0.,  sin(phi),cos(phi),0., 0.,0.,1. });
+	Real phi = EXUmath::Atan2(vRef[1], vRef[0]); //slope vector [1,0] is defined as zero angle (atan2(0,1) == 0.)
+	return Matrix3D(3, 3, { EXUmath::Cos(phi),-EXUmath::Sin(phi),0.,  EXUmath::Sin(phi),EXUmath::Cos(phi),0., 0.,0.,1. });
 }
 
 //! return configuration dependent angular velocity of node; returns always a 3D Vector

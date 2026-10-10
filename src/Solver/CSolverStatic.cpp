@@ -115,7 +115,7 @@ void CSolverStatic::PostInitializeSolverSpecific(CSystem& computationalSystem, c
 		it.numberOfSteps = 2; 
 		PyWarning("loadStepGeometric must have at least 2 load steps; performing 2 load steps", file.solverFile); 
 	}
-	loadStepGeometricFactor = pow(staticSettings.loadStepGeometricRange, 1. / (it.numberOfSteps - 1)); //multiplicative load step factor
+	loadStepGeometricFactor = EXUmath::Pow(staticSettings.loadStepGeometricRange, 1. / (it.numberOfSteps - 1)); //multiplicative load step factor
 
 	//loadStepGeometricFactor = pow(staticSettings.loadStepGeometricRange, 1. / it.numberOfSteps); //old solver multiplicative load step factor
 	//set already in InitializeSolver(...); it.currentTime = 0;  //1. / it.numberOfSteps; //this is the initial load step factor for writing the initial values; range [0,1], which is increased at end of step; used to scale loads arithmetically/geometrically
@@ -182,7 +182,7 @@ Real CSolverStatic::ComputeNewtonResidual(CSystem& computationalSystem, const Si
 	{
 		timer.massMatrix -= EXUstd::GetTimeInSeconds();
 
-		Real currentODE2stabilizer = (1. - pow(ComputeLoadFactor(simulationSettings), 2))*staticSettings.stabilizerODE2term;
+		Real currentODE2stabilizer = (1. - EXUmath::Pow(ComputeLoadFactor(simulationSettings), 2))*staticSettings.stabilizerODE2term;
 
 		STARTTIMER(timer.massMatrix);
 		data.systemMassMatrix->SetNumberOfRowsAndColumns(data.nODE2, data.nODE2);
@@ -272,7 +272,7 @@ void CSolverStatic::ComputeNewtonJacobian(CSystem& computationalSystem, const Si
 	//pout << "stabilizerODE2term=" << simulationSettings.staticSolver.stabilizerODE2term << "\n";
 	if (simulationSettings.staticSolver.stabilizerODE2term != 0.)
 	{
-		Real currentODE2stabilizer = (1. - pow(ComputeLoadFactor(simulationSettings), 2))*simulationSettings.staticSolver.stabilizerODE2term;
+		Real currentODE2stabilizer = (1. - EXUmath::Pow(ComputeLoadFactor(simulationSettings), 2))*simulationSettings.staticSolver.stabilizerODE2term;
 		//TemporaryComputationData tempCompData;
 
 		STARTTIMER(timer.massMatrix);

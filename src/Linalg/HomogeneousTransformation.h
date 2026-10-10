@@ -120,21 +120,21 @@ public:
 	//! set a rotation around x-axis and zero translation
 	void SetRotationX(T angleRad)
 	{
-		T c = cos(angleRad), s = sin(angleRad);
+		T c = EXUmath::Cos(angleRad), s = EXUmath::Sin(angleRad);
 		SetRotation(ConstSizeMatrixBase<T, 9>(3, 3, { (T)1., (T)0., (T)0., (T)0., c, -s, (T)0., s, c }));
 	}
 
 	//! set a rotation around y-axis and zero translation
 	void SetRotationY(T angleRad)
 	{
-		T c = cos(angleRad), s = sin(angleRad);
+		T c = EXUmath::Cos(angleRad), s = EXUmath::Sin(angleRad);
 		SetRotation(ConstSizeMatrixBase<T, 9>(3, 3, { c, (T)0., s, (T)0., (T)1., (T)0., -s, (T)0., c }));
 	}
 
 	//! set a rotation around z-axis and zero translation
 	void SetRotationZ(T angleRad)
 	{
-		T c = cos(angleRad), s = sin(angleRad);
+		T c = EXUmath::Cos(angleRad), s = EXUmath::Sin(angleRad);
 		SetRotation(ConstSizeMatrixBase<T, 9>(3, 3, { c, -s, (T)0., s, c, (T)0., (T)0., (T)0., (T)1. }));
 	}
 

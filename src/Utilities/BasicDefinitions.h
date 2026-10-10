@@ -106,6 +106,8 @@
 	#define SinglePrecision // added from SH. needed to switch between double/float AVX instructions
 #endif // DoublePrecision
 
+//#define EXUDYN_PORTABLE_MATH	//!< the transcendental functions (EXUmath::Sin, ...) from EXUmath::Portable, the functions of musl libc, instead of the C++ library: the same results on every platform (#2949); also set by the compiler, e.g. EXUDYN_EXTRA_COMPILE_ARGS=-DEXUDYN_PORTABLE_MATH
+
 
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 //MULTITHREADED computation using ngsolve taskmanager; thanks to Joachim Sch�berl
@@ -275,6 +277,9 @@ namespace EXUstd {
 		s += " AVX512";
 	#elif defined(use_AVX2)
 		s += " AVX2";
+	#endif
+	#ifdef EXUDYN_PORTABLE_MATH
+		s += " PORTABLEMATH";
 	#endif
 	#ifdef DoublePrecision
 		s += " FLOAT64";

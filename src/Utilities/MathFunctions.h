@@ -19,6 +19,7 @@
 #include <chrono>
 #include <string>
 #include <vector>
+#include <type_traits>
 #include "Utilities/BasicDefinitions.h"
 
 //! a loop the compiler shall not vectorize: one call per value, as the code calls the functions at one point;
@@ -51,6 +52,40 @@ namespace EXUmath {
 		double Tanh(double x);
 		double Cbrt(double x);
 	} //namespace Portable
+
+	//! THE TRANSCENDENTAL FUNCTIONS OF EXUDYN: the C++ code calls EXUmath::Sin, ... instead of std::sin, ..., so that
+	//! one switch decides where they come from (#2949): the C++ library of the platform, or with EXUDYN_PORTABLE_MATH
+	//! (BasicDefinitions.h) the functions of Portable, which give the same bits on every platform. A double argument
+	//! goes to these; any other type - AutoDiff, a symbolic expression - to its own overload, found by argument
+	//! dependent lookup; fmod and sqrt are exact or correctly rounded everywhere and stay std::fmod, std::sqrt
+#ifdef EXUDYN_PORTABLE_MATH
+#define EXU_MATH_FUNCTION1(NAME, STDNAME) inline double NAME(double x) { return Portable::NAME(x); }
+#define EXU_MATH_FUNCTION2(NAME, STDNAME) inline double NAME(double x, double y) { return Portable::NAME(x, y); }
+#else
+#define EXU_MATH_FUNCTION1(NAME, STDNAME) inline double NAME(double x) { return std::STDNAME(x); }
+#define EXU_MATH_FUNCTION2(NAME, STDNAME) inline double NAME(double x, double y) { return std::STDNAME(x, y); }
+#endif
+#define EXU_MATH_GENERIC1(NAME, STDNAME) template<class T, typename std::enable_if<!std::is_arithmetic<T>::value, int>::type = 0> 	inline auto NAME(const T& x) { using std::STDNAME; return STDNAME(x); }
+#define EXU_MATH_GENERIC2(NAME, STDNAME) template<class T1, class T2, typename std::enable_if<!std::is_arithmetic<T1>::value || 	!std::is_arithmetic<T2>::value, int>::type = 0> inline auto NAME(const T1& x, const T2& y) { using std::STDNAME; return STDNAME(x, y); }
+
+	EXU_MATH_FUNCTION1(Sin, sin)		EXU_MATH_GENERIC1(Sin, sin)
+	EXU_MATH_FUNCTION1(Cos, cos)		EXU_MATH_GENERIC1(Cos, cos)
+	EXU_MATH_FUNCTION1(Tan, tan)		EXU_MATH_GENERIC1(Tan, tan)
+	EXU_MATH_FUNCTION1(Asin, asin)		EXU_MATH_GENERIC1(Asin, asin)
+	EXU_MATH_FUNCTION1(Acos, acos)		EXU_MATH_GENERIC1(Acos, acos)
+	EXU_MATH_FUNCTION1(Atan, atan)		EXU_MATH_GENERIC1(Atan, atan)
+	EXU_MATH_FUNCTION2(Atan2, atan2)	EXU_MATH_GENERIC2(Atan2, atan2)
+	EXU_MATH_FUNCTION1(Exp, exp)		EXU_MATH_GENERIC1(Exp, exp)
+	EXU_MATH_FUNCTION1(Log, log)		EXU_MATH_GENERIC1(Log, log)
+	EXU_MATH_FUNCTION2(Pow, pow)		EXU_MATH_GENERIC2(Pow, pow)
+	EXU_MATH_FUNCTION1(Sinh, sinh)		EXU_MATH_GENERIC1(Sinh, sinh)
+	EXU_MATH_FUNCTION1(Cosh, cosh)		EXU_MATH_GENERIC1(Cosh, cosh)
+	EXU_MATH_FUNCTION1(Tanh, tanh)		EXU_MATH_GENERIC1(Tanh, tanh)
+	EXU_MATH_FUNCTION1(Cbrt, cbrt)		EXU_MATH_GENERIC1(Cbrt, cbrt)
+#undef EXU_MATH_FUNCTION1
+#undef EXU_MATH_FUNCTION2
+#undef EXU_MATH_GENERIC1
+#undef EXU_MATH_GENERIC2
 
 	//! the names EvaluateMathFunction knows; atan2, pow and fmod take two arguments; sqrt is correctly rounded on every
 	//! platform (IEEE 754) and is the control

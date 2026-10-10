@@ -68,14 +68,14 @@ Matrix3D CNodePoint2DSlope1::GetRotationMatrix(ConfigurationType configuration) 
 	if (!(configuration == ConfigurationType::Reference))
 	{
 		LinkedDataVector v = GetCoordinateVector(configuration);
-		phi = atan2(vRef[3] + v[3], vRef[2] + v[2]); //slope vector [1,0] is defined as zero angle
+		phi = EXUmath::Atan2(vRef[3] + v[3], vRef[2] + v[2]); //slope vector [1,0] is defined as zero angle
 	}
 	else
 	{ //Reference configuration:
-		phi = atan2(vRef[3], vRef[2]); //slope vector [0,1] is defined as zero angle
+		phi = EXUmath::Atan2(vRef[3], vRef[2]); //slope vector [0,1] is defined as zero angle
 	}
 	//phi is the total angle
-	return Matrix3D(3,3,{ cos(phi),-sin(phi),0.,  sin(phi),cos(phi),0., 0.,0.,1.});
+	return Matrix3D(3,3,{ EXUmath::Cos(phi),-EXUmath::Sin(phi),0.,  EXUmath::Sin(phi),EXUmath::Cos(phi),0., 0.,0.,1.});
 }
 
 //! AUTO:  return configuration dependent velocity of node; returns always a 3D Vector

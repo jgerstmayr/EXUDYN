@@ -35,7 +35,7 @@ TReal CObjectContactSphereTorus::ComputeContactForces(TReal gap, const SlimVecto
 	Real d1 = parameters.contactDamping;
 	Real n = parameters.contactStiffnessExponent;
 	TReal deltaExp = -gap; // overwrite this in case that n != 1 holds (see following line)
-	if (n != 1) { deltaExp = EXUstd::SignReal(deltaExp) * pow(fabs(deltaExp), n); } // also respect sign
+	if (n != 1) { deltaExp = EXUstd::SignReal(deltaExp) * EXUmath::Pow(fabs(deltaExp), n); } // also respect sign
 	// at first, just use the easierst spring damper model (damping acts against n0 for sphere 1 if deltaVnormal is positive)
 	TReal fDamp = - d1 * deltaVnormal;
 	TReal contactForce = k1 * deltaExp + fDamp;

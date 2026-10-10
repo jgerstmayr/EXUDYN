@@ -109,7 +109,7 @@ Vector3D CObjectBeamGeometricallyExact2D::MapCoordinatesQuadratic(const ConstSiz
 
 Matrix2D CObjectBeamGeometricallyExact2D::GetRotationMatrix2D(Real theta) const
 {
-    return Matrix2D(2, 2, { cos(theta), -sin(theta), sin(theta), cos(theta) }); // rotation about z-axis
+    return Matrix2D(2, 2, { EXUmath::Cos(theta), -EXUmath::Sin(theta), EXUmath::Sin(theta), EXUmath::Cos(theta) }); // rotation about z-axis
 }
 
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -253,7 +253,7 @@ void CObjectBeamGeometricallyExact2D::ComputeGeneralizedStrains(Real x, TReal& t
     theta = 0;
     if (!parameters.includeReferenceRotations)
     {
-        theta = atan2(slopeVectorRef[1], slopeVectorRef[0]); //this is the reference rotation at x!
+        theta = EXUmath::Atan2(slopeVectorRef[1], slopeVectorRef[0]); //this is the reference rotation at x!
         theta -= pRef[2]; //ideally, we would set pRef[2] to 0 => but it is added in pTotal[2] later! => substract here!
     }
 
@@ -266,8 +266,8 @@ void CObjectBeamGeometricallyExact2D::ComputeGeneralizedStrains(Real x, TReal& t
     theta_x = slopeVectorTotal[2] - parameters.referenceCurvature; //in precurved case, reference values shall not contribute to curvature
 
     //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-    TReal cosTheta = cos(theta);
-    TReal sinTheta = sin(theta);
+    TReal cosTheta = EXUmath::Cos(theta);
+    TReal sinTheta = EXUmath::Sin(theta);
     const SlimVectorBase<Real, 3>& RS = slopeVectorRef;
     gamma1 = cosTheta * (RS[0] + u1_x - cosTheta) + sinTheta * (RS[1] + u2_x - sinTheta);
     
@@ -686,8 +686,8 @@ Matrix3D CObjectBeamGeometricallyExact2D::GetRotationMatrix(const Vector3D& loca
 {
 	Real phi = GetRotation(localPosition, configuration);
 
-	return Matrix3D(3, 3, { cos(phi), -sin(phi), 0,
-							sin(phi),  cos(phi), 0,
+	return Matrix3D(3, 3, { EXUmath::Cos(phi), -EXUmath::Sin(phi), 0,
+							EXUmath::Sin(phi),  EXUmath::Cos(phi), 0,
 							0,          0,         1 }); //rotation about z-axis, stored in 3D matrix
 }
 
@@ -720,7 +720,7 @@ Real CObjectBeamGeometricallyExact2D::GetRotation(const Vector3D& localPosition,
             CSVector3D qNode2(((CNodeODE2*)GetCNode(2))->GetReferenceCoordinateVector(), 0);
             referenceSlopeVector += Vector2D({ SV_x[2] * qNode2[0], SV_x[2] * qNode2[1] });
         }
-        phi = atan2(referenceSlopeVector[1], referenceSlopeVector[0]);
+        phi = EXUmath::Atan2(referenceSlopeVector[1], referenceSlopeVector[0]);
 	}
 
 	if (configuration != ConfigurationType::Reference)
@@ -862,8 +862,8 @@ void VisualizationObjectBeamGeometricallyExact2D::UpdateGraphics(const Visualiza
 					//ry[1] = cObject->ComputeSlopeVector(x, ConfigurationType::Visualization);
 					phi[0] = cObject->GetRotation(x - deltaX, ConfigurationType::Visualization);
 					phi[1] = cObject->GetRotation(x, ConfigurationType::Visualization);
-					ry[0] = Vector2D({ cos(phi[0]), sin(phi[0]) });
-					ry[1] = Vector2D({ cos(phi[1]), sin(phi[1]) });
+					ry[0] = Vector2D({ EXUmath::Cos(phi[0]), EXUmath::Sin(phi[0]) });
+					ry[1] = Vector2D({ EXUmath::Cos(phi[1]), EXUmath::Sin(phi[1]) });
 					Float2 n0[2];
 					n0[0] = Float2({ -(float)ry[0][1], (float)ry[0][0] });
 					n0[1] = Float2({ -(float)ry[1][1], (float)ry[1][0] });

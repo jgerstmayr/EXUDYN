@@ -71,7 +71,7 @@ private: //make protected if derived class shall be created
 		}
 		catch (const std::bad_alloc& e) {
 			pout << "Allocation failed: " << e.what() << '\n';
-			pout << "requested memory = " << sizeof(T)*numberOfItemsNew / pow(2, 20) << " MB, number of items = " << numberOfItemsNew << "\n";
+			pout << "requested memory = " << sizeof(T)*numberOfItemsNew / EXUmath::Pow(2, 20) << " MB, number of items = " << numberOfItemsNew << "\n";
 
 			CHECKandTHROWstring("ResizableArray: Allocation failed");
 		}

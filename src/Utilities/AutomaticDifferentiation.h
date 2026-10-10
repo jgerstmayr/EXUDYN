@@ -447,7 +447,7 @@ namespace EXUmath
 	AutoDiff<nDiff, TReal> log(AutoDiff<nDiff, TReal> x)
 	{
 		AutoDiff<nDiff, TReal> res;
-		res.Value() = log(x.Value());
+		res.Value() = EXUmath::Log(x.Value());
 		for (int k = 0; k < nDiff; k++)
 			res.DValue(k) = x.DValue(k) / x.Value();
 		return res;
@@ -458,7 +458,7 @@ namespace EXUmath
 	inline AutoDiff<nDiff, TReal> exp(AutoDiff<nDiff, TReal> x)
 	{
 		AutoDiff<nDiff, TReal> res;
-		res.Value() = exp(x.Value());
+		res.Value() = EXUmath::Exp(x.Value());
 		for (int k = 0; k < nDiff; k++)
 			res.DValue(k) = x.DValue(k) * res.Value();
 		return res;
@@ -469,8 +469,8 @@ namespace EXUmath
 	inline AutoDiff<nDiff, TReal> pow(AutoDiff<nDiff, TReal> x, SCAL2 exponent)
 	{
 		AutoDiff<nDiff, TReal> res;
-		res.Value() = pow(x.Value(), exponent);
-		TReal base_pow_exponent_minus_one = std::pow(x.Value(), exponent - 1);
+		res.Value() = EXUmath::Pow(x.Value(), exponent);
+		TReal base_pow_exponent_minus_one = EXUmath::Pow(x.Value(), exponent - 1);
 
 		for (int k = 0; k < nDiff; ++k)
 			res.DValue(k) = exponent * base_pow_exponent_minus_one * x.DValue(k);
@@ -485,10 +485,10 @@ namespace EXUmath
 		CHECKandTHROW(x.Value() > 0, "AutoDiff::pow: Base x must be positive for general exponent y.");
 
 		AutoDiff<nDiff, TReal> res;
-		res.Value() = pow(x.Value(), y.Value());
+		res.Value() = EXUmath::Pow(x.Value(), y.Value());
 
-		TReal x_pow_y_minus_one = pow(x.Value(), y.Value() - 1);
-		TReal x_pow_y_ln_x = res.Value() * std::log(x.Value());
+		TReal x_pow_y_minus_one = EXUmath::Pow(x.Value(), y.Value() - 1);
+		TReal x_pow_y_ln_x = res.Value() * EXUmath::Log(x.Value());
 
 		for (int i = 0; i < nDiff; ++i) {
 			res.DValue(i) = y.DValue(i) * x_pow_y_ln_x + y.Value() * x_pow_y_minus_one * x.DValue(i);
@@ -502,8 +502,8 @@ namespace EXUmath
 	inline AutoDiff<nDiff, TReal> sin(AutoDiff<nDiff, TReal> x)
 	{
 		AutoDiff<nDiff, TReal> res;
-		res.Value() = sin(x.Value());
-		TReal c = cos(x.Value());
+		res.Value() = EXUmath::Sin(x.Value());
+		TReal c = EXUmath::Cos(x.Value());
 		for (int k = 0; k < nDiff; k++)
 			res.DValue(k) = x.DValue(k) * c;
 		return res;
@@ -514,8 +514,8 @@ namespace EXUmath
 	inline AutoDiff<nDiff, TReal> cos(AutoDiff<nDiff, TReal> x)
 	{
 		AutoDiff<nDiff, TReal> res;
-		res.Value() = cos(x.Value());
-		TReal ms = -sin(x.Value());
+		res.Value() = EXUmath::Cos(x.Value());
+		TReal ms = -EXUmath::Sin(x.Value());
 		for (int k = 0; k < nDiff; k++)
 			res.DValue(k) = x.DValue(k) * ms;
 		return res;
@@ -525,7 +525,7 @@ namespace EXUmath
 	template <int nDiff, typename TReal>
 	inline AutoDiff<nDiff, TReal> tan(AutoDiff<nDiff, TReal> x)
 	{
-		return sin(x) / cos(x);
+		return EXUmath::Sin(x) / EXUmath::Cos(x);
 	}
 
 	using std::atan;
@@ -533,7 +533,7 @@ namespace EXUmath
 	inline AutoDiff<nDiff, TReal> atan(AutoDiff<nDiff, TReal> x)
 	{
 		AutoDiff<nDiff> res;
-		double a = atan(x.Value());
+		double a = EXUmath::Atan(x.Value());
 		res.Value() = a;
 		for (int k = 0; k < nDiff; k++)
 			res.DValue(k) = x.DValue(k) / (1 + x.Value()*x.Value());
@@ -548,7 +548,7 @@ namespace EXUmath
 		AutoDiff<nDiff, TReal> res;
 		const TReal xv = x.Value();
 		const TReal yv = y.Value();
-		res.Value() = atan2(yv, xv);
+		res.Value() = EXUmath::Atan2(yv, xv);
 		const TReal denominator = xv * xv + yv * yv;
 		for (int k = 0; k < nDiff; k++)
 		{
@@ -563,7 +563,7 @@ namespace EXUmath
 	inline AutoDiff<nDiff, TReal> asin(const AutoDiff<nDiff, TReal>& x)
 	{
 		AutoDiff<nDiff, TReal> res;
-		res.Value() = asin(x.Value());
+		res.Value() = EXUmath::Asin(x.Value());
 		const TReal factor = 1. / std::sqrt(1. - x.Value() * x.Value());
 		for (int k = 0; k < nDiff; k++) { res.DValue(k) = factor * x.DValue(k); }
 		return res;

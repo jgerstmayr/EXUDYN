@@ -192,7 +192,7 @@ void CObjectContactFrictionCircleCable2D::ComputeODE2LHS(Vector& ode2Lhs, const 
 						//compute 
 						Vector3D nLocal = Vector3D({ n[0],n[1],0. })*markerData0.orientation; //compute n in local circle coordinates
 						//Real circlePos = parameters.circleRadius*atan2(markerData0.orientation(1, 0), markerData0.orientation(0, 0)); //atan2(e0y, e0x) = phi
-						Real circlePos = parameters.circleRadius*atan2(nLocal[1], nLocal[0]); //atan2(e0y, e0x) = phi
+						Real circlePos = parameters.circleRadius*EXUmath::Atan2(nLocal[1], nLocal[0]); //atan2(e0y, e0x) = phi
 						Vector2D p0({ markerData1.vectorValue[i * 2], markerData1.vectorValue[i * 2 + 1] });	 //markerdata.value stores the x/y positions of the contact points
 						Vector2D p1({ markerData1.vectorValue[i * 2 + 2], markerData1.vectorValue[i * 2 + 1 + 2] }); //markerdata.value stores the x/y positions of the contact points
 						
@@ -370,7 +370,7 @@ Real CObjectContactFrictionCircleCable2D::PostNewtonStep(const MarkerDataStructu
 				{
 					Vector3D nLocal = Vector3D({ n[0],n[1],0. })*markerData0.orientation; //compute n in local circle coordinates
 					//Real circlePos = parameters.circleRadius*atan2(markerData0.orientation(1, 0), markerData0.orientation(0, 0)); //atan2(e0y, e0x) = phi
-					Real circlePos = parameters.circleRadius*atan2(nLocal[1], nLocal[0]); //atan2(e0y, e0x) = phi
+					Real circlePos = parameters.circleRadius*EXUmath::Atan2(nLocal[1], nLocal[0]); //atan2(e0y, e0x) = phi
 					Vector2D p0({ markerData1.vectorValue[i * 2], markerData1.vectorValue[i * 2 + 1] });	 //markerdata.value stores the x/y positions of the contact points
 					Vector2D p1({ markerData1.vectorValue[i * 2 + 2], markerData1.vectorValue[i * 2 + 1 + 2] }); //markerdata.value stores the x/y positions of the contact points
 #ifdef CObjectContactFrictionCircleCable2DuseL
@@ -541,7 +541,7 @@ void CObjectContactFrictionCircleCable2D::GetOutputVariableConnector(OutputVaria
 					//compute 
 					Vector3D nLocal = Vector3D({ n[0],n[1],0. })*markerData0.orientation; //compute n in local circle coordinates
 					//Real circlePos = parameters.circleRadius*atan2(markerData0.orientation(1, 0), markerData0.orientation(0, 0)); //atan2(e0y, e0x) = phi
-					Real circlePos = parameters.circleRadius*atan2(nLocal[1], nLocal[0]); //atan2(e0y, e0x) = phi
+					Real circlePos = parameters.circleRadius*EXUmath::Atan2(nLocal[1], nLocal[0]); //atan2(e0y, e0x) = phi
 					Vector2D p0({ markerData1.vectorValue[i * 2], markerData1.vectorValue[i * 2 + 1] });	 //markerdata.value stores the x/y positions of the contact points
 					Vector2D p1({ markerData1.vectorValue[i * 2 + 2], markerData1.vectorValue[i * 2 + 1 + 2] }); //markerdata.value stores the x/y positions of the contact points
 #ifdef CObjectContactFrictionCircleCable2DuseL

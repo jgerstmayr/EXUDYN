@@ -48,10 +48,10 @@ SlimVectorBase<DReal3, 3> RotationVectorGTv(const ConstSizeVectorBase<DReal3, 3>
 		ConstSizeMatrixBase<DReal3, 9> vTilde(3, 3, {    0.,-rot[2], rot[1],
 													 rot[2],      0,-rot[0],
 													-rot[1], rot[0],      0 });
-		DReal3 sAngle = sin(angle);
+		DReal3 sAngle = EXUmath::Sin(angle);
 		mat += (sAngle / angle)*vTilde;
 
-		DReal3 sAngle2 = sin(0.5*angle);
+		DReal3 sAngle2 = EXUmath::Sin(0.5*angle);
 		mat += (2. * sAngle2 * sAngle2 / (angle * angle))*vTilde*vTilde;
 
 		return v*mat; //mat.T * v

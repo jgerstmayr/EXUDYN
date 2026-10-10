@@ -470,3 +470,53 @@ differently. Results:
   On Windows the portable sin/cos/tan take 1.6 times the time of the UCRT, a few ns per call; on Linux they are faster
   than glibc. A model spends far more per step elsewhere; step 3 measures what it costs there.
 - Not ported: fmod and sqrt, which are exact or correctly rounded everywhere, and functions Exudyn does not call.
+
+<a id="rg4-1-3-3"></a>
+### RG4.1.3.3 — the math calls through EXUmath, and the suite with portable functions (2026-10-10, #2949)
+
+- **The switch**: `EXUmath::Sin`, ..., `Cbrt` in `MathFunctions.h` call `std::sin`, ... or, with `EXUDYN_PORTABLE_MATH`
+  (a commented `#define` in `BasicDefinitions.h`, like `DoublePrecision`; for an experiment
+  `EXUDYN_EXTRA_COMPILE_ARGS=-DEXUDYN_PORTABLE_MATH`), `EXUmath::Portable`. A double goes to these; any other type -
+  `AutoDiff`, a symbolic real - to its own overload through argument dependent lookup (a template enabled for
+  non-arithmetic types only, so that `Pow(x, 2)` with an int still takes the double version). `GetPlatformString()`, and
+  so `exudyn.config.Version(True)`, says `PORTABLEMATH`. `CODING_STYLE.md` §1 says to use them.
+- **The calls**: 247 in 33 files of `src/` routed by a script that skips comments, strings and declarations
+  (`Real sin(`, `AutoDiff<...> sin(`, `static SReal sin(`); `src/Graphics`, `src/Tests` and the generated files keep
+  the library. **With the switch off the results are bit-identical**: 267 of 267 RESULT values of the suite (test
+  models and mini examples) equal those before.
+- **With the switch on** (Windows; Linux in WSL, glibc 2.39, numpy 2.2.4 there and 2.4.6 on Windows), RESULT values
+  of the suite:
+  - Windows, library against portable: 56 of 267 differ, 17 beyond their tolerance - the contact models by 1e-5..2e-4
+    (`generalContactFrictionTests` 2.1e-4, `sphereTriangleTest2` 3e-5, `generalContactCylinderTest` 1.3e-5): the math
+    library alone moves them as far as Linux does.
+  - Windows against Linux: 83 differ with the library, 46 with the portable functions on both.
+  - The models of `UnresolvedOnLinux()` and `UnresolvedOnMacOS()` (relative difference Windows/Linux):
+
+    | model | library | portable |
+    |---|---|---|
+    | generalContactFrictionTests | 1.9e-04 | **0** |
+    | sphereTriangleTest2 | 2.4e-05 | **0** |
+    | rigidBodySpringDamperIntrinsic | 8.2e-11 | **0** |
+    | generalContactImplicit1 | 8.4e-11 | **0** |
+    | computeItemTest | 2.3e-11 | **0** |
+    | geometricallyExactBeamRightAngleFrame | 1.3e-16 | **0** |
+    | generalContactCylinderTest | 1.5e-06 | 8.7e-06 |
+    | createSphereQuadContact | 1.1e-07 | 1.1e-07 |
+    | createSphereTriangleContact | 3.0e-10 | 3.0e-10 |
+    | ANCFbeltDrive | 1.0e-10 | 1.0e-10 |
+    | ANCFgeneralContactCircle | 3.2e-12 | 3.2e-12 |
+    | objectFFRFreducedOrderTest | 7.0e-13 | 7.0e-13 |
+    | coordinateSpringDamperExt, rollingDiscTangentialForces, contactSphereSphereTest, sliderCrank3Dbenchmark, ANCFcontactCircleTest, connectorGravityTest, ANCFslidingAndALEjointTest | 0 | 0 |
+
+  - **The math library is the cause of the large contact differences**: with the same functions on both platforms
+    the friction model, the sphere-triangle contact and four more agree to the last bit.
+  - `generalContactCylinderTest` differs with the switch as well: another cause.
+  - The ones with the same difference with and without the switch do not depend on the C++ math: their values come
+    from the Python side (the Create functions, numpy 2.2 against 2.4, cf. #2502). A Linux environment with numpy 2.4
+    decides it.
+  - The last row agrees in WSL also with the library; GitLab (manylinux_2_28, its own glibc) and macOS see them differ
+    - consistent with different versions of libm.
+- **Time**: the performance tests, twice each on Windows, without other load: library 49.6 s / 51.8 s, portable
+  50.4 s / 50.0 s - no difference beyond the noise of ±5 %.
+- **Not done here** (RG4.1.3.4, the maintainer's decision): the switch on by default. It moves 56 results, so every
+  reference set is recorded again, and macOS ARM has to be measured first.

@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.13 | Newborn | 36 | 1.13.35 |
+| 1.13 | Newborn | 37 | 1.13.36 |
 | 1.12 | Metheney | 367 | 1.12.462 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
@@ -30,6 +30,10 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.13 - Newborn (current)
 
+- **1.13.36** `TESTING` `MEDIUM EFF` `raised by: Claude-JG` `resolved by: Claude-JG` the math calls of Exudyn through EXUmath, switched to the portable functions by EXUDYN\_PORTABLE\_MATH (#2949)
+  - description: revision2026c step RG4.1.3.3: the transcendental functions of the C++ code (sin, cos, ..., not the graphics) go through EXUmath::Sin, ..., which call the C++ library or, with the macro EXUDYN\_PORTABLE\_MATH, EXUmath::Portable; the test suite with the switch on Windows and Linux shows which entries of UnresolvedOnLinux() the math library causes, and what the switch costs in time
+  - **notes:** the transcendental functions of the C++ code go through EXUmath::Sin, Cos, ..., which call the C++ library, or the portable functions with the switch EXUDYN\_PORTABLE\_MATH (BasicDefinitions.h, off; exudyn.config.Version(True) says PORTABLEMATH); off, every result is unchanged; on, on Windows and Linux, the friction and contact models generalContactFrictionTests, sphereTriangleTest2, generalContactImplicit1 and three more agree to the last bit, at no measurable cost in time
+  - date resolved: **2026-10-10 16:03**, date raised: 2026-10-10
 - **1.13.35** `TESTING` `MEDIUM EFF` `raised by: Claude-JG` `resolved by: Claude-JG` portable implementations of the math functions, their speed and their results (#2948)
   - description: revision2026c step RG4.1.3.2: the double precision functions of musl libc 1.2.5 (MIT; fdlibm/FreeBSD and Arm optimized-routines) ported to C++ as EXUmath::Portable::Sin, ... without the FMA code paths, so that they give the same bits on every platform; exudyn.experimental.EvaluateMathFunction(..., implementation='portable') evaluates and times them; compared with the library of each platform and with correctly rounded values (mpmath), and timed against it
   - **notes:** EXUmath::Portable::Sin, Cos, ... (src/Utilities/PortableMath.cpp): the double precision math functions of musl libc 1.2.5, ported to C++ without their FMA code paths; they give the same bits on Windows and Linux and in both modules, within one ULP (two for sinh, tanh) of the correctly rounded value, at 0.4-1.7 times the time of the platform library; implementation 'portable' of exudyn.experimental.EvaluateMathFunction

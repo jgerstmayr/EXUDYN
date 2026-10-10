@@ -113,7 +113,7 @@ void CObjectConnectorGravity::GetOutputVariableConnector(OutputVariableType vari
 		Real r = parameters.minDistanceRegularization;
 		Real energy;
 		if (L > r) { energy = -c / L; }
-		else { energy = -c / r * (1. + 0.25*EXUstd::pi - atan((2.*L - r) / r)); }
+		else { energy = -c / r * (1. + 0.25*EXUstd::pi - EXUmath::Atan((2.*L - r) / r)); }
 		value.SetVector({ parameters.activeConnector ? energy : 0. }); break; }
 	default:
 		SysError("CObjectConnectorGravity::GetOutputVariable failed"); //error should not occur, because types are checked!

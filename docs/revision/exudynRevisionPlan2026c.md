@@ -231,9 +231,13 @@ CLOSED 2026-10-10 (#2947): Windows and Linux differ by 1-3 ULP in 0.1-55 % of th
 
 CLOSED 2026-10-10 (#2948): `EXUmath::Portable`, the same bits on Windows x64 and Linux x86-64, in both modules; 0.4-1.7 times the time of the library.
 
-##### **OPEN_RG4.1.3.3** Route the math calls of Exudyn through EXUmath with the switch EXUDYN_PORTABLE_MATH and rerun the suites
+##### **CLOSED_RG4.1.3.3** Route the math calls of Exudyn through EXUmath with the switch EXUDYN_PORTABLE_MATH and rerun the suites
 
-With the switch on both platforms, the entries of `UnresolvedOnLinux()` that vanish were caused by the math library (maintainer 2026-10-10: "use the new functions in exudyn, possibly with a macro constant as with the Real and other definitions").
+CLOSED 2026-10-10 (#2949): 173+74 calls through `EXUmath`; switch off bit-identical; switch on removes 6 of the Linux/macOS differences, `generalContactCylinderTest` stays; no time cost measured. [log](exudynRevisionLog2026c.md#rg4-1-3-3)
+
+##### **OPEN_RG4.1.3.4** Decide whether EXUDYN_PORTABLE_MATH becomes the default, and re-record the references with it
+
+A decision of the maintainer: with the switch, 56 of 267 results move on Windows (17 beyond their tolerance), so the reference values, `AVX2ReferenceSolutionUpdate()`, `UnresolvedOnLinux()` and `UnresolvedOnMacOS()` are recorded again, after a measurement on macOS ARM (`mathFunctionsPlatform.py`, the fingerprint test). Left for the other causes: `generalContactCylinderTest` (differs also with the switch), and the models that differ with numpy 2.2 against 2.4 (`createSphereTriangleContact`, `createSphereQuadContact`, `ANCFbeltDrive`, ... - the same values with and without the switch).
 
 ### **OPEN_RG4.20** Port the revision of ObjectANCFThinPlate and complete the element
 

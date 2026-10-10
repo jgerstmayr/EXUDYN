@@ -37,7 +37,7 @@ namespace ExuPhysics {
 			Real s = EXUstd::SignReal(vel);
 			Real v = fabs(vel) - regVel;
 			if (expVel != 0) {
-				result = s * (muDynamic + muStaticOffset * exp(-v / expVel) + muViscous * v);
+				result = s * (muDynamic + muStaticOffset * EXUmath::Exp(-v / expVel) + muViscous * v);
 			}
 			else
 			{

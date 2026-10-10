@@ -167,7 +167,7 @@ protected:
 			}
 			catch (const std::bad_alloc& e) {
 				pout << "Allocation failed: " << e.what() << '\n';
-				pout << "requested memory = " << sizeof(T)*numberOfItems / pow(2, 20) << " MB, number of items = " << numberOfItems << "\n";
+				pout << "requested memory = " << sizeof(T)*numberOfItems / EXUmath::Pow(2, 20) << " MB, number of items = " << numberOfItems << "\n";
 
 				CHECKandTHROWstring("VectorBase::Allocation failed");
 			}
@@ -188,7 +188,7 @@ protected:
 			if (!data)
 			{
 				pout << "Aligned Allocation failed!" << '\n';
-				pout << "requested memory = " << sizeof(T) * numberOfItems / pow(2, 20) << " MB, number of items = " << numberOfItems << "\n";
+				pout << "requested memory = " << sizeof(T) * numberOfItems / EXUmath::Pow(2, 20) << " MB, number of items = " << numberOfItems << "\n";
 
 				CHECKandTHROWstring("VectorBase::Allocation failed");
 				//throw std::bad_alloc(); //not needed as _aligned_malloc and posix_memalign are C-standard functions which do not throw exceptions!

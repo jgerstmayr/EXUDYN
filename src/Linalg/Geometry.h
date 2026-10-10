@@ -544,10 +544,10 @@ namespace EGeometry {
 		{
 			Real phiA = x[0];
 			Real phiB = x[1];
-			Real sinPhiA = sin(phiA);
-			Real sinPhiB = sin(phiB);
-			Real cosPhiA = cos(phiA);
-			Real cosPhiB = cos(phiB);
+			Real sinPhiA = EXUmath::Sin(phiA);
+			Real sinPhiB = EXUmath::Sin(phiB);
+			Real cosPhiA = EXUmath::Cos(phiA);
+			Real cosPhiB = EXUmath::Cos(phiB);
 			//residual:
 			rA = RA * (tA*cosPhiA - caseA * nA * sinPhiA);
 			rB = RB * (tB*cosPhiB - caseB * nB * sinPhiB);

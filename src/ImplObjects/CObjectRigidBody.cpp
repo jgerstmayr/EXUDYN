@@ -44,9 +44,9 @@ static void RigidBodyRotationMatrixAD(bool eulerParameters, const TReal* theta, 
 	}
 	else
 	{
-		TReal c0 = cos(theta[0]), s0 = sin(theta[0]);
-		TReal c1 = cos(theta[1]), s1 = sin(theta[1]);
-		TReal c2 = cos(theta[2]), s2 = sin(theta[2]);
+		TReal c0 = EXUmath::Cos(theta[0]), s0 = EXUmath::Sin(theta[0]);
+		TReal c1 = EXUmath::Cos(theta[1]), s1 = EXUmath::Sin(theta[1]);
+		TReal c2 = EXUmath::Cos(theta[2]), s2 = EXUmath::Sin(theta[2]);
 		A(0, 0) = c1 * c2; A(0, 1) = -c1 * s2; A(0, 2) = s1;
 		A(1, 0) = s0 * s1 * c2 + c0 * s2; A(1, 1) = -s0 * s1 * s2 + c0 * c2; A(1, 2) = -s0 * c1;
 		A(2, 0) = -c0 * s1 * c2 + s0 * s2; A(2, 1) = c0 * s1 * s2 + s0 * c2; A(2, 2) = c0 * c1;

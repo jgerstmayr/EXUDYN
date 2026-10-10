@@ -27,6 +27,7 @@
 
 #include "Utilities/ReleaseAssert.h"
 #include "Utilities/BasicDefinitions.h" //defines Real
+#include "Utilities/MathFunctions.h" //EXUmath::Sin, ...: the transcendental functions of Exudyn (#2949)
 
 //macro, because types are checked, not variables; alternative?
 #define ISCPPTYPE(_type1,_type2) (std::type_index(typeid(_type1)) == std::type_index(typeid(_type2)))

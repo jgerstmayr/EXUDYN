@@ -41,7 +41,7 @@ Real CObjectContactCoordinate::ComputeContactForce(Real gap, Real gap_t) const
 	{
 		const Real& k = parameters.contactStiffness;
 		Real deltaExp = -gap;
-		if (parameters.contactStiffnessExponent != 1.) { deltaExp = EXUstd::SignReal(deltaExp) * pow(fabs(deltaExp), parameters.contactStiffnessExponent); }
+		if (parameters.contactStiffnessExponent != 1.) { deltaExp = EXUstd::SignReal(deltaExp) * EXUmath::Pow(fabs(deltaExp), parameters.contactStiffnessExponent); }
 		Real fNormal = k * deltaExp - parameters.contactDamping * gap_t;
 		if (parameters.impactModel != 0)
 		{

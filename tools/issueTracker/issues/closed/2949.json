@@ -1,0 +1,16 @@
+{
+  "number": 2949,
+  "title": "the math calls of Exudyn through EXUmath, switched to the portable functions by EXUDYN_PORTABLE_MATH",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "TESTING",
+  "effort": "MEDIUM",
+  "description": "revision2026c step RG4.1.3.3: the transcendental functions of the C++ code (sin, cos, ..., not the graphics) go through EXUmath::Sin, ..., which call the C++ library or, with the macro EXUDYN_PORTABLE_MATH, EXUmath::Portable; the test suite with the switch on Windows and Linux shows which entries of UnresolvedOnLinux() the math library causes, and what the switch costs in time",
+  "dateRaised": "2026-10-10",
+  "deadline": "2027-04-08",
+  "dateResolved": "2026-10-10 16:03",
+  "resolvedAuthor": "Claude-JG",
+  "file": "src/Utilities/MathFunctions.h",
+  "releaseNotes": "the transcendental functions of the C++ code go through EXUmath::Sin, Cos, ..., which call the C++ library, or the portable functions with the switch EXUDYN_PORTABLE_MATH (BasicDefinitions.h, off; exudyn.config.Version(True) says PORTABLEMATH); off, every result is unchanged; on, on Windows and Linux, the friction and contact models generalContactFrictionTests, sphereTriangleTest2, generalContactImplicit1 and three more agree to the last bit, at no measurable cost in time",
+  "resolvedInVersion": "1.13.36"
+}

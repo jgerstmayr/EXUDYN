@@ -25,8 +25,8 @@ static auto RigidBody2DPositionAD(const Vector3D& localPosition)
 	return [localPosition](const auto* q, auto* p)
 	{
 		using std::sin; using std::cos;
-		p[0] = q[0] + cos(q[2]) * localPosition[0] - sin(q[2]) * localPosition[1];
-		p[1] = q[1] + sin(q[2]) * localPosition[0] + cos(q[2]) * localPosition[1];
+		p[0] = q[0] + EXUmath::Cos(q[2]) * localPosition[0] - EXUmath::Sin(q[2]) * localPosition[1];
+		p[1] = q[1] + EXUmath::Sin(q[2]) * localPosition[0] + EXUmath::Cos(q[2]) * localPosition[1];
 		p[2] = 0. * q[0] + localPosition[2];
 	};
 }
@@ -37,8 +37,8 @@ static auto RigidBody2DRotationAD()
 	return [](const auto* q, auto& A)
 	{
 		using std::sin; using std::cos;
-		A(0, 0) = cos(q[2]); A(0, 1) = -sin(q[2]); A(0, 2) = 0. * q[2];
-		A(1, 0) = sin(q[2]); A(1, 1) = cos(q[2]); A(1, 2) = 0. * q[2];
+		A(0, 0) = EXUmath::Cos(q[2]); A(0, 1) = -EXUmath::Sin(q[2]); A(0, 2) = 0. * q[2];
+		A(1, 0) = EXUmath::Sin(q[2]); A(1, 1) = EXUmath::Cos(q[2]); A(1, 2) = 0. * q[2];
 		A(2, 0) = 0. * q[2]; A(2, 1) = 0. * q[2]; A(2, 2) = 0. * q[2] + 1.;
 	};
 }
@@ -94,8 +94,8 @@ void CObjectRigidBody2D::ComputeMassMatrix(EXUmath::MatrixContainer& massMatrixC
 
 		//–m * A * \tilde \bar u_{ COM } \bar G
 		Real phi = GetCNode(0)->GetCurrentCoordinate(2) + GetCNode(0)->GetCoordinateVector(ConfigurationType::Reference)[2];
-		Real sinPhi = sin(phi);
-		Real cosPhi = cos(phi);
+		Real sinPhi = EXUmath::Sin(phi);
+		Real cosPhi = EXUmath::Cos(phi);
 		Matrix2D A(2, 2, { cosPhi, -sinPhi, sinPhi, cosPhi });
 
 		Vector2D mAuTildeTG = m * (A * Vector2D({ -com.Y(), com.X() }));
@@ -127,8 +127,8 @@ void CObjectRigidBody2D::ComputeODE2LHS(Vector& ode2Lhs, Index objectNumber) con
 	{
 		//–m * A * \tilde \bar u_{ COM } \bar G
 		Real phi = GetCNode(0)->GetCurrentCoordinate(2) + GetCNode(0)->GetCoordinateVector(ConfigurationType::Reference)[2];
-		Real sinPhi = sin(phi);
-		Real cosPhi = cos(phi);
+		Real sinPhi = EXUmath::Sin(phi);
+		Real cosPhi = EXUmath::Cos(phi);
 		Matrix2D A(2, 2, { cosPhi, -sinPhi, sinPhi, cosPhi });
 
 		Real omegaSquared = EXUstd::Square( ((CNodeODE2*)GetCNode(0))->GetCurrentCoordinate_t(2) );
@@ -154,8 +154,8 @@ void CObjectRigidBody2D::GetPositionJacobian(const Vector3D& localPosition, Matr
 	//this function relates a 3D translatory velocity to the time derivative of all coordinates: v_trans = Jac*q_dot
 	Real phi = GetCNode(0)->GetCurrentCoordinate(2) + GetCNode(0)->GetCoordinateVector(ConfigurationType::Reference)[2];
 
-	Real dAvxdphi = -sin(phi) * localPosition[0] - cos(phi) * localPosition[1];   //d(Av)x/dphi
-	Real dAvydphi = cos(phi) * localPosition[0] - sin(phi) * localPosition[1];   //d(Av)x/dphi
+	Real dAvxdphi = -EXUmath::Sin(phi) * localPosition[0] - EXUmath::Cos(phi) * localPosition[1];   //d(Av)x/dphi
+	Real dAvydphi = EXUmath::Cos(phi) * localPosition[0] - EXUmath::Sin(phi) * localPosition[1];   //d(Av)x/dphi
 	value.SetMatrix(3, 3, { 1.,0.,dAvxdphi, 0.,1.,dAvydphi, 0.,0.,0. }); //a 3D Vector (e.g. 3D ForceVector), acts in the (x,y)-plane on three coordinates (x,y,phi)
 }
 
@@ -196,8 +196,8 @@ bool CObjectRigidBody2D::GetJacobianTransposedTimesVectorDerivative(const Vector
 	//        1.*f[0]+       0.*f[1]+ 0.*f[2],
 	//	      0.*f[0]+       1.*f[1]+ 0.*f[2],
 	//	dAvxdphi*f[0]+ dAvydphi*f[1]+ 0.*f[2] }); 
-	Real d2Avxdphi2 = -cos(phi) * localPosition[0] + sin(phi) * localPosition[1];   
-	Real d2Avydphi2 = -sin(phi) * localPosition[0] - cos(phi) * localPosition[1];   
+	Real d2Avxdphi2 = -EXUmath::Cos(phi) * localPosition[0] + EXUmath::Sin(phi) * localPosition[1];   
+	Real d2Avydphi2 = -EXUmath::Sin(phi) * localPosition[0] - EXUmath::Cos(phi) * localPosition[1];   
 
 	//d(jacT*f)/dq:
 	value.SetMatrix(3, 3, {
@@ -226,8 +226,8 @@ void CObjectRigidBody2D::GetMassWeightedPositionJacobian(Matrix& value) const
 		value.SetNumberOfRowsAndColumns(3, 3);
 
 		Real phi = GetCNode(0)->GetCurrentCoordinate(2) + GetCNode(0)->GetCoordinateVector(ConfigurationType::Reference)[2];
-		Real sinPhi = sin(phi);
-		Real cosPhi = cos(phi);
+		Real sinPhi = EXUmath::Sin(phi);
+		Real cosPhi = EXUmath::Cos(phi);
 		Matrix2D A(2, 2, { cosPhi, -sinPhi, sinPhi, cosPhi });
 
 		//A*(-m*uLocalTilde)*Glocal, see ObjectRigidBody

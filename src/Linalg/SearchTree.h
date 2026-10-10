@@ -892,13 +892,13 @@ public:
 		Index targetBins = EXUstd::Maximum(1, nItems);
 
 		// Compute scaling factors
-		T scaleX = sizeX / std::cbrt(volume);
-		T scaleY = sizeY / std::cbrt(volume);
-		T scaleZ = sizeZ / std::cbrt(volume);
+		T scaleX = sizeX / EXUmath::Cbrt(volume);
+		T scaleY = sizeY / EXUmath::Cbrt(volume);
+		T scaleZ = sizeZ / EXUmath::Cbrt(volume);
 
 		// Compute unbounded bin sizes based on relative volume
 		T totalScale = scaleX * scaleY * scaleZ;
-		T scaleFactor = std::pow((T)targetBins / totalScale, (T)(1.0 / 3.0));
+		T scaleFactor = EXUmath::Pow((T)targetBins / totalScale, (T)(1.0 / 3.0));
 
 		// Initial floating bin counts
 		T binX = scaleX * scaleFactor;
