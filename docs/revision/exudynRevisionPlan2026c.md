@@ -497,6 +497,10 @@ CLOSED 2026-10-10 (#2942): a closing line of the checker, the verdict 'FAILED: s
 
 CLOSED 2026-10-10 (#2943): the step reads its output through a filter without that line; every verdict starting with FAILED sets the exit code of exudev.
 
+#### **CLOSED_RG10.31.12** Replace AddRigidBody by mbs.CreateRigidBody and read the node from the body
+
+CLOSED 2026-10-10 (#2944): arguments renamed, rotationParameters as the rotation matrix of the node type; `[n, b] =` and `rb[0]`/`rb[1]` read the node with `mbs.GetObject(b)['nodeNumber']`.
+
 ## **OPEN_RG11** Misc
 
 What belongs to no group, including what was left of revision2026b groups 12 to 18. Put off, by decision of

@@ -210,6 +210,17 @@ removedVisualizationParameters[('ObjectConnectorGravity', 'drawSize')] = 'the co
 #WHAT --fix WRITES INSTEAD OF A REMOVED NAME (#2938): the name replaced, the call left as it is
 removedNameRenames = {'NormL2': 'np.linalg.norm', 'VSum': 'np.sum', 'VMult': 'np.dot', 'Vec2Tilde': 'Skew',
                       'Tilde2Vec': 'Skew2Vec', 'eye2D': 'np.eye(2)', 'eye3D': 'np.eye(3)'}
+#AddRigidBody(mainSys, inertia, ...) -> mainSys.CreateRigidBody(...) (#2944): its arguments in order, the names
+#CreateRigidBody gives them, and the conversion of rotationParameters to a rotation matrix per node type
+addRigidBodyArguments = ['mainSys', 'inertia', 'nodeType', 'position', 'velocity', 'rotationMatrix', 'rotationParameters',
+                         'angularVelocity', 'gravity', 'graphicsDataList']
+createRigidBodyArguments = {'inertia': 'inertia', 'nodeType': 'nodeType', 'position': 'referencePosition',
+                            'velocity': 'initialVelocity', 'rotationMatrix': 'referenceRotationMatrix',
+                            'angularVelocity': 'initialAngularVelocity', 'gravity': 'gravity',
+                            'graphicsDataList': 'graphicsDataList'}
+rotationParametersToMatrix = {'RotationEulerParameters': 'EulerParameters2RotationMatrix',
+                              'RotationRxyz': 'RotXYZ2RotationMatrix',
+                              'RotationRotationVector': 'RotationVector2RotationMatrix'}
 #a deprecated argument whose replacement takes another value: --fix converts the value as well (#2938)
 argumentValueFixes = {'eulerParametersRef': ('EulerParameters2RotationMatrix({})', 'EulerParameters2RotationMatrix')}
 #the deprecated functions of the module that --fix rewrites: the receiver form takes the first argument as the object
@@ -544,6 +555,76 @@ def CheckTree(tree, tables, fixes=None, source=None):
         items = sorted(list(call.args) + list(call.keywords), key=lambda n: (n.lineno, n.col_offset))
         DeleteItem(items, items.index(keyword))
 
+    def IsEmptyList(node):
+        return isinstance(node, (ast.List, ast.Tuple)) and len(node.elts) == 0
+
+    def FixAddRigidBody(call):
+        """AddRigidBody(mbs, inertia, ...) -> mbs.CreateRigidBody(inertia=..., referencePosition=..., ...) (#2944); the
+        returned [nodeNumber, bodyNumber] becomes the body, and the node is read from it with mbs.GetObject(body)
+        ['nodeNumber']: for '[n, b] = AddRigidBody(...)', for 'rb = AddRigidBody(...)' used only as rb[0] and rb[1], and
+        for a call whose result is not used; any other use stays reported"""
+        names = addRigidBodyArguments
+        if Arguments(call) is None or len(call.args) > len(names):
+            return
+        values = dict(zip(names, call.args))
+        values.update((k.arg, k.value) for k in call.keywords)
+        if 'mainSys' not in values or 'inertia' not in values or not set(values) <= set(names):
+            return
+        parts = []
+        for name in names[1:]:
+            if name not in values:
+                continue
+            if name in ['rotationMatrix', 'rotationParameters'] and IsEmptyList(values[name]):
+                continue
+            if name == 'rotationParameters':
+                if 'rotationMatrix' in values and not IsEmptyList(values['rotationMatrix']):
+                    return
+                nodeType = Segment(values['nodeType']) if 'nodeType' in values else 'RotationEulerParameters'
+                function = next((f for (key, f) in rotationParametersToMatrix.items() if nodeType.endswith(key)), None)
+                if function is None:
+                    return                           #a node type that is no literal: the user decides
+                if not set(starModules) & {'exudyn.utilities', 'exudyn.rigidBodyUtilities'}:
+                    Import(function, 'from exudyn.rigidBodyUtilities import ' + function)
+                parts.append('referenceRotationMatrix=' + function + '(' + Segment(values[name]) + ')')
+                continue
+            parts.append(createRigidBodyArguments[name] + '=' + Segment(values[name]))
+        system = Parenthesized(Segment(values['mainSys']))
+        created = system + '.CreateRigidBody(' + ', '.join(parts) + ')'
+
+        parent = parents.get(id(call))
+        if isinstance(parent, ast.Expr):
+            Replace(call, created)
+            return
+        if not (isinstance(parent, ast.Assign) and len(parent.targets) == 1 and parent.value is call):
+            return
+        target = parent.targets[0]
+        if isinstance(target, (ast.Tuple, ast.List)) and len(target.elts) == 2 \
+                and all(isinstance(e, ast.Name) for e in target.elts):
+            (node, body) = (target.elts[0].id, target.elts[1].id)
+            if not StandsAlone(parent):
+                return
+            if body == '_':
+                Replace(parent, node + ' = ' + system + '.GetObject(' + created + ")['nodeNumber']")
+                return
+            Replace(parent, body + ' = ' + created)
+            if node != '_':
+                line = sourceLines[parent.lineno - 1]
+                indent = line[:len(line) - len(line.lstrip())]
+                Fix('range', parent.end_lineno + 1, 0, parent.end_lineno + 1, 0,
+                    indent + node + ' = ' + system + '.GetObject(' + body + ")['nodeNumber']\n")
+        elif isinstance(target, ast.Name):
+            name = target.id
+            stores = [n for n in ast.walk(tree) if isinstance(n, ast.Name) and n.id == name and isinstance(n.ctx, ast.Store)]
+            loads = [n for n in ast.walk(tree) if isinstance(n, ast.Name) and n.id == name and isinstance(n.ctx, ast.Load)]
+            subscripts = [parents.get(id(n)) for n in loads]
+            if len(stores) != 1 or not all(isinstance(s, ast.Subscript) and isinstance(s.slice, ast.Constant)
+                                           and s.slice.value in [0, 1] and isinstance(s.ctx, ast.Load)
+                                           for s in subscripts):
+                return
+            Replace(call, created)
+            for s in subscripts:
+                Replace(s, name if s.slice.value == 1 else system + '.GetObject(' + name + ")['nodeNumber']")
+
     def FixCornersToBrick(call, functionName):
         """a box or rectangle given by its corners as graphics.Brick(centerPoint=..., size=...) (#2938, #2941):
         BrickXYZ(x0, y0, z0, x1, y1, z1, ...) keeps its other arguments; GraphicsDataOrthoCubeLines(x0, y0, z0, x1, y1,
@@ -759,6 +840,8 @@ def CheckTree(tree, tables, fixes=None, source=None):
                        + ' and removed in ' + expires + ('; use ' + use if use else ''))
                 if className in ['BrickXYZ', 'GraphicsDataOrthoCubeLines', 'GraphicsDataRectangle'] and fixes is not None:
                     FixCornersToBrick(node, className)
+                elif className == 'AddRigidBody' and fixes is not None:
+                    FixAddRigidBody(node)
             for (owner, argument, use, since, expires) in library['arguments']:
                 if owner in (None, className) and any(keyword.arg == argument for keyword in node.keywords):
                     Report(node.lineno, ('libraryArgument', className, argument), className + '(' + argument

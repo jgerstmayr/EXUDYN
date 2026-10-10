@@ -1,0 +1,17 @@
+{
+  "number": 2944,
+  "title": "exudev scripts --fix: AddRigidBody to mbs.CreateRigidBody",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "IMPROVEMENT",
+  "priority": "NORMAL",
+  "effort": "LOW",
+  "description": "maintainer 2026-10-10: many old scripts use AddRigidBody, to be replaced by CreateRigidBody; the return values differ ([nodeNumber, bodyNumber] against the body) - the node read with mbs.GetObject(body)['nodeNumber'] - and the arguments are named differently",
+  "dateRaised": "2026-10-10",
+  "deadline": "2027-04-08",
+  "dateResolved": "2026-10-10 12:54",
+  "resolvedAuthor": "Claude-JG",
+  "file": "tools/checkUserScripts.py",
+  "releaseNotes": "exudev scripts --fix replaces AddRigidBody by mbs.CreateRigidBody with the arguments renamed and rotationParameters converted; the node of the returned list is read with mbs.GetObject(body)['nodeNumber']. revision2026c step RG10.31.12",
+  "resolvedInVersion": "1.13.25"
+}

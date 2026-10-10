@@ -267,3 +267,32 @@ addEdges=True.")*
 - **A bug of #2942**: `RunSteps` counted a step as failed only for the verdict `'FAILED'`. With
   `'FAILED: scripts need changes'`, `exudev scripts --check` ended with exit code 0. Every verdict that starts with
   `FAILED` now sets exit code 1. Measured on the lecture: exit code 1, the output without conda's line.
+
+<a id="rg10-31-12"></a>
+### RG10.31.12 — AddRigidBody to mbs.CreateRigidBody (2026-10-10, #2944)
+
+*(Maintainer 2026-10-10: "many of my old scripts contain AddRigidBody, which shall be replaced in CreateRigidBody. The
+only thing are the return values ... get the node number from the body with mbs.GetObject(objectIndex)['nodeNumber'].
+Also the args are slightly different.")*
+
+- `AddRigidBody(mainSys, inertia, nodeType, position, velocity, rotationMatrix, rotationParameters, angularVelocity,
+  gravity, graphicsDataList)`, positional or by keyword, becomes `mainSys.CreateRigidBody(inertia=..., nodeType=...,
+  referencePosition=..., initialVelocity=..., referenceRotationMatrix=..., initialAngularVelocity=..., gravity=...,
+  graphicsDataList=...)`. Empty `rotationMatrix=[]` and `rotationParameters=[]` are left out.
+- `rotationParameters` becomes a rotation matrix of the node type: `EulerParameters2RotationMatrix`,
+  `RotXYZ2RotationMatrix`, `RotationVector2RotationMatrix`. A node type that is not written as a literal leaves the
+  call reported.
+- The result, `[nodeNumber, bodyNumber]` before and the body now:
+  - `[n, b] = AddRigidBody(...)` (or `n, b = ...`) → `b = mbs.CreateRigidBody(...)` and, in the next line with the same
+    indentation, `n = mbs.GetObject(b)['nodeNumber']`; with `_` for one of them only the other;
+  - `rb = AddRigidBody(...)` used only as `rb[0]` and `rb[1]` → `rb` is the body, `rb[0]` →
+    `mbs.GetObject(rb)['nodeNumber']`, `rb[1]` → `rb`;
+  - a call whose result is not used is replaced as it is;
+  - any other use stays reported.
+- A sample script with all forms runs after the fix. On copies of the two lecture folders - already fixed by the
+  maintainer, with 74 `.bak` files -, 35 scripts held 75 calls of `AddRigidBody`; none is left after `--fix`. Their
+  findings go from 179 to 54:
+  - sensor files written beside the script (reported, by decision);
+  - `rotationMarker0/1`;
+  - `CSRtoScipySparseCSR`;
+  - `AddRevoluteJoint`.

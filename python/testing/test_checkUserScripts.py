@@ -378,3 +378,36 @@ def testFixDrawsRectanglesAndCubeLinesAsBricks(tables):
                      'g = graphics.Brick(centerPoint=[0.0, 0.0, 0], size=[2, 4, 0], addFaces=False, addEdges=True, '
                      'edgeColor=[1,0,0,1])\n'
                      'h = graphics.Brick(centerPoint=[0.5*(0+a), 0.5, 0.5], size=[a-0, 1, 1], addFaces=False, addEdges=True)\n')
+
+
+def testFixReplacesAddRigidBodyByCreateRigidBody(tables):
+    """--fix (#2944): AddRigidBody becomes mbs.CreateRigidBody with its arguments renamed; the node of the returned
+    [node, body] is read with mbs.GetObject(body)['nodeNumber'], also where the list is used as rb[0] and rb[1];
+    rotationParameters become a rotation matrix of the node type; a result used otherwise stays reported"""
+    source = ('import exudyn as exu\n'
+              'from exudyn.utilities import *\n'
+              '[n0, b0] = AddRigidBody(mainSys=mbs, inertia=i0, position=[1,0,0], gravity=g)\n'
+              'if True:\n'
+              '    n1, b1 = AddRigidBody(mbs, i0, exu.NodeType.RotationRxyz, [2,0,0], [0,0,0], [], [0,0,0.3])  #c\n'
+              'rb = AddRigidBody(mbs, i0)\n'
+              'm = MarkerNodeRigid(nodeNumber=rb[0])\n'
+              'b = MarkerBodyRigid(bodyNumber=rb[1])\n'
+              'AddRigidBody(mbs, i0, position=[4,0,0])\n'
+              'items = AddRigidBody(mbs, i0)\n'
+              'print(items)\n')
+    (fixed, tree, nFixed) = checker.FixSource(source, ast.parse(source), tables)
+    assert fixed == ('import exudyn as exu\n'
+                     'from exudyn.utilities import *\n'
+                     'b0 = mbs.CreateRigidBody(inertia=i0, referencePosition=[1,0,0], gravity=g)\n'
+                     "n0 = mbs.GetObject(b0)['nodeNumber']\n"
+                     'if True:\n'
+                     '    b1 = mbs.CreateRigidBody(inertia=i0, nodeType=exu.NodeType.RotationRxyz, referencePosition=[2,0,0], '
+                     'initialVelocity=[0,0,0], referenceRotationMatrix=RotXYZ2RotationMatrix([0,0,0.3]))  #c\n'
+                     "    n1 = mbs.GetObject(b1)['nodeNumber']\n"
+                     'rb = mbs.CreateRigidBody(inertia=i0)\n'
+                     "m = MarkerNodeRigid(nodeNumber=mbs.GetObject(rb)['nodeNumber'])\n"
+                     'b = MarkerBodyRigid(bodyNumber=rb)\n'
+                     'mbs.CreateRigidBody(inertia=i0, referencePosition=[4,0,0])\n'
+                     'items = AddRigidBody(mbs, i0)\n'
+                     'print(items)\n')
+    assert len(Findings(fixed, tables)) == 1
