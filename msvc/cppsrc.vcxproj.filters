@@ -369,6 +369,9 @@
     <ClCompile Include="..\src\ImplObjects\CObjectConnectorHydraulicActuatorSimple.cpp">
       <Filter>CPPitems</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\Utilities\PortableMath.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
     <ClCompile Include="..\src\Utilities\Threading.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
@@ -1335,6 +1338,9 @@
       <Filter>HPPobjects</Filter>
     </ClInclude>
     <ClInclude Include="..\src\Utilities\AdvancedMath.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Utilities\MathFunctions.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
     <ClInclude Include="..\src\Utilities\Physics.h">

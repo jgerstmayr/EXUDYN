@@ -1,0 +1,16 @@
+{
+  "number": 2947,
+  "title": "the results of the math library functions on each platform, as Exudyn's C++ calls them",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "TESTING",
+  "effort": "MEDIUM",
+  "description": "revision2026c step RG4.1.3.1: evidence for the platform differences (RG4.1). exudyn.experimental.EvaluateMathFunction(name, x, y, implementation, repetitions) evaluates sin, cos, tan, asin, acos, atan, atan2, exp, log, pow, sinh, cosh, tanh, cbrt, fmod and sqrt (the control) in the compiled module; python/testing/mathFunctionsPlatform.py writes the bit patterns of a fixed input set to a JSON file, compares two such files (Windows, Linux, macOS) and, with mpmath, counts the results that are not correctly rounded",
+  "dateRaised": "2026-10-10",
+  "deadline": "2027-04-08",
+  "dateResolved": "2026-10-10 15:33",
+  "resolvedAuthor": "Claude-JG",
+  "file": "src/Utilities/MathFunctions.h",
+  "releaseNotes": "exudyn.experimental.EvaluateMathFunction evaluates and times sin, cos, tan, asin, acos, atan, atan2, exp, log, pow, sinh, cosh, tanh, cbrt, fmod and sqrt as the compiled module calls them; python/testing/mathFunctionsPlatform.py writes their values for fixed arguments, counts the ones that are not correctly rounded and compares two platforms: Windows and Linux differ in every transcendental function by 1-3 ULP for 0.1-55 % of the arguments",
+  "resolvedInVersion": "1.13.34"
+}

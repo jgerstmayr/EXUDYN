@@ -87,6 +87,8 @@ exemptImports = {
     'pyansys':       'imported inside GenerateStressModesFromPyAnsys() only, behind a flag that '
                      'is False; the distribution was renamed to ansys-mapdl-reader and pulling '
                      'it into [tests] would be a large dependency for dead code',
+    'mpmath':        'python/testing/mathFunctionsPlatform.py computes the correctly rounded values with it '
+                     'if it is there and says how to install it otherwise; a development tool (#2947)',
     'mkl':           'optional performance tweak in a try/except with a working fallback; which '
                      'MKL build is correct depends on the BLAS the environment already has',
     'definitionTypes': 'a module of definitions/, the generators\' input, which is not a package '

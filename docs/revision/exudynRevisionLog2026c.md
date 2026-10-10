@@ -401,3 +401,72 @@ stays open: a decision of the maintainer.
   `repair-wheel-command = ""` keeps the Windows wheels as cibuildwheel 3 built them. The local manylinux image has no
   cp315 (`/opt/python`: cp38-cp314); RELEASE.md names the `docker pull` among the traps. The first CI run with 4.3.0
   is the test of the cibuildwheel upgrade.
+
+<a id="rg4-1-3-1"></a>
+### RG4.1.3.1, RG4.1.3.2 — the math library of each platform, and portable functions (2026-10-10, #2947, #2948)
+
+*(Maintainer 2026-10-10: "Start with OPEN_RG4.1.3 ... using the exudyn.experimental add a function that evaluates, and
+I could run on the different platforms ... before changing a lot in the code, make some experiments. substeps would be
+1) evidence of differences 2) performance tests of overloads (and checking the results) 3) use the new functions in
+exudyn, possibly with a macro constant as with the Real and other definitions in Exudyn.")*
+
+**The tool.** `exudyn.experimental.EvaluateMathFunction(name, x, y, implementation, repetitions)` evaluates a function
+in the compiled module (`src/Utilities/MathFunctions.h`), one call per value in a loop that is not vectorized, as the
+code calls it; `python/testing/mathFunctionsPlatform.py` evaluates all of them on fixed arguments (5000 per range, the
+ranges the code uses), writes the values to `python/logs/tmp/mathFunctions_<platform>_<module>_<implementation>.npz`,
+counts the values that are not correctly rounded (mpmath, 120 bits, if installed), compares two files (`--compare`)
+and times std against portable (`--timing`). **The arguments must be the same bits everywhere**: the first version
+made them with `10**rng.uniform(...)`, and numpy's power differs between the platforms too - sqrt then "differed" in
+142 values. They are now integers of 53 bits times 2^-53 and single numpy operations, and the files carry them, so a
+comparison of different arguments is refused.
+
+**1. Evidence** (Windows 11 / MSVC 14.43 / UCRT, and Ubuntu 24.04 in WSL / gcc / glibc 2.39; cp313, regular module):
+
+| function | values | not correctly rounded: Windows | Linux | Windows ≠ Linux | max ULP |
+|---|---|---|---|---|---|
+| sin | 25000 | 640 | 23 | 631 | 1 |
+| cos | 25000 | 603 | 34 | 603 | 1 |
+| tan | 25000 | 899 | 49 | 910 | 1 |
+| asin | 20000 | 2858 | 9 | 2855 | 1 |
+| acos | 20000 | 434 | 14 | 442 | 1 |
+| atan | 20000 | 570 | 13 | 575 | 1 |
+| atan2 | 20000 | 18 | 22 | 28 | 1 |
+| exp | 20000 | 99 | 11 | 100 | 1 |
+| log | 15000 | 11 | 7 | 16 | 1 |
+| pow | 20000 | 5 | 19 | 18 | 1 |
+| sinh | 20000 | 1403 | 4813 | 5101 | 2 |
+| cosh | 20000 | 1651 | 2374 | 2611 | 1 |
+| tanh | 20000 | 561 | 4367 | 4298 | 2 |
+| cbrt | 15000 | 4403 | 7775 | 8309 | 3 |
+| fmod, sqrt | 25000 | 0 | 0 | 0 | 0 |
+
+- Every transcendental function differs between the two platforms, in 0.1 % (atan2) to 55 % (cbrt) of the arguments, by
+  one ULP and up to three; sqrt and fmod, which IEEE 754 makes exact or correctly rounded, do not.
+- **The UCRT of Windows depends on the CPU**: it has an FMA3 code path, chosen at run time. With it switched off
+  (`_set_FMA3_enable(0)`, implementation `stdNoFMA3`) sin, cos, tan, asin, acos, atan, exp, sinh, cosh and tanh differ in
+  up to 3 % of the values. Two Windows computers, one without FMA3 (before Haswell), can give different results.
+- Vectorized loops (`stdLoop`) and the fast module (AVX2) give the same values as the scalar regular module, on both
+  platforms.
+
+**2. Portable functions.** `src/Utilities/PortableMath.cpp`, `EXUmath::Portable::Sin`, ...: the double precision
+functions of musl libc 1.2.5 (MIT; fdlibm/FreeBSD msun, and Arm's optimized routines for exp, log, pow), downloaded
+from git.musl-libc.org and ported by a script (C99 to C++, names, one namespace per file; algorithms and constants
+unchanged). musl's `__FP_FAST_FMA` paths, which gcc takes on ARM64, are switched off - otherwise ARM would compute
+differently. Results:
+- **The same bits on Windows x64 and Linux x86-64**, in all 16 x 20000 values, and the same in the fast module (AVX2,
+  /arch:AVX2 without contraction). `test_mathFunctionsPlatform.py` holds a fingerprint of them; macOS ARM is not
+  measured yet - the test and the script run there.
+- Accuracy like the libraries: at most one ULP from the correctly rounded value (two for sinh and tanh); exp, log and
+  pow are correctly rounded in all but 8-17 of 15000-20000 values.
+- Time per evaluation (ns, the fastest of 5 x 20 runs):
+
+  | | sin | cos | tan | asin | atan | atan2 | exp | log | pow | sinh | tanh | cbrt |
+  |---|---|---|---|---|---|---|---|---|---|---|---|---|
+  | Windows UCRT | 4.8 | 4.8 | 5.6 | 3.3 | 4.3 | 8.7 | 1.8 | 2.6 | 7.8 | 6.4 | 5.0 | 10.4 |
+  | Windows portable | 7.5 | 8.0 | 9.1 | 2.6 | 3.6 | 11.8 | 1.7 | 2.6 | 9.0 | 8.8 | 7.2 | 3.8 |
+  | Linux glibc | 8.2 | 8.5 | 9.8 | 3.1 | 5.6 | 12.0 | 2.3 | 2.2 | 6.4 | 8.2 | 6.9 | 6.5 |
+  | Linux portable | 6.9 | 7.0 | 8.2 | 2.6 | 3.9 | 10.7 | 1.6 | 2.3 | 7.7 | 6.7 | 7.1 | 3.6 |
+
+  On Windows the portable sin/cos/tan take 1.6 times the time of the UCRT, a few ns per call; on Linux they are faster
+  than glibc. A model spends far more per step elsewhere; step 3 measures what it costs there.
+- Not ported: fmod and sqrt, which are exact or correctly rounded everywhere, and functions Exudyn does not call.

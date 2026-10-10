@@ -1,0 +1,16 @@
+{
+  "number": 2948,
+  "title": "portable implementations of the math functions, their speed and their results",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "TESTING",
+  "effort": "MEDIUM",
+  "description": "revision2026c step RG4.1.3.2: the double precision functions of musl libc 1.2.5 (MIT; fdlibm/FreeBSD and Arm optimized-routines) ported to C++ as EXUmath::Portable::Sin, ... without the FMA code paths, so that they give the same bits on every platform; exudyn.experimental.EvaluateMathFunction(..., implementation='portable') evaluates and times them; compared with the library of each platform and with correctly rounded values (mpmath), and timed against it",
+  "dateRaised": "2026-10-10",
+  "deadline": "2027-04-08",
+  "dateResolved": "2026-10-10 15:33",
+  "resolvedAuthor": "Claude-JG",
+  "file": "src/Utilities/PortableMath.cpp",
+  "releaseNotes": "EXUmath::Portable::Sin, Cos, ... (src/Utilities/PortableMath.cpp): the double precision math functions of musl libc 1.2.5, ported to C++ without their FMA code paths; they give the same bits on Windows and Linux and in both modules, within one ULP (two for sinh, tanh) of the correctly rounded value, at 0.4-1.7 times the time of the platform library; implementation 'portable' of exudyn.experimental.EvaluateMathFunction",
+  "resolvedInVersion": "1.13.35"
+}

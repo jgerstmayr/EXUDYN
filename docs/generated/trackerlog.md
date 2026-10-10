@@ -8,10 +8,10 @@ Every entry carries the **type** of the issue, then its **priority** and its **e
 
 General information on current version:
 
-- Exudyn version = 1.13.33.dev1
+- Exudyn version = 1.13.35.dev1
 - last change = 2026-10-10
 - Number of issues = 2949
-- Number of resolved issues = 2810 (33 in current version)
+- Number of resolved issues = 2812 (35 in current version)
 
 ## Resolved issues and resolved bugs before version 1.13
 
@@ -9039,12 +9039,6 @@ The following list contains the issues which have been **RESOLVED** in the accor
 
 ## Open issues
 
-- `TESTING` `MEDIUM EFF` `raised by: Claude-JG` portable implementations of the math functions, their speed and their results (#2948)
-  - description: revision2026c step RG4.1.3.2: the double precision functions of musl libc 1.2.5 (MIT; fdlibm/FreeBSD and Arm optimized-routines) ported to C++ as EXUmath::Portable::Sin, ... without the FMA code paths, so that they give the same bits on every platform; exudyn.experimental.EvaluateMathFunction(..., implementation='portable') evaluates and times them; compared with the library of each platform and with correctly rounded values (mpmath), and timed against it
-  - date raised: 2026-10-10
-- `TESTING` `MEDIUM EFF` `raised by: Claude-JG` the results of the math library functions on each platform, as Exudyn's C++ calls them (#2947)
-  - description: revision2026c step RG4.1.3.1: evidence for the platform differences (RG4.1). exudyn.experimental.EvaluateMathFunction(name, x, y, implementation, repetitions) evaluates sin, cos, tan, asin, acos, atan, atan2, exp, log, pow, sinh, cosh, tanh, cbrt, fmod and sqrt (the control) in the compiled module; python/testing/mathFunctionsPlatform.py writes the bit patterns of a fixed input set to a JSON file, compares two such files (Windows, Linux, macOS) and, with mpmath, counts the results that are not correctly rounded
-  - date raised: 2026-10-10
 - `CHANGE` <span class="textorange">`NORMAL`</span> `LOW EFF` `raised by: Claude-JG` what the release notes of a minor release contain (#2924)
   - description: WriteReleaseNotes cuts the section of the current release from CHANGELOG.md: for 1.13 the issues resolved after the bump - the fixes of the release itself (\#2911-\#2920), not the revision 1.11 -\> 1.13 behind it. Decide (maintainer): the revisions chapter, the issues since the last published version, or a hand-written summary plus the list
   - date raised: 2026-10-09

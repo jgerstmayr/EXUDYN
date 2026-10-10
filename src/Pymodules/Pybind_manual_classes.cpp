@@ -403,6 +403,7 @@ void PyDoRendererIdleTasks(Real waitSeconds, bool deprecationWarning = false)
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 #include "Main/Experimental.h"
+#include "Utilities/MathFunctions.h"	//exudyn.experimental.EvaluateMathFunction (#2947)
 PyExperimental pyExperimental;	//! for experimental things, not to be used by common user
 PySpecial pySpecial;			//! special features; affects exudyn globally; treat with care
 bool EXUstd::ParameterRangeChecksActive() { return pySpecial.exceptions.parameterRangeChecks; }
@@ -527,6 +528,21 @@ void Init_Pybind_manual_classes(py::module& m) {
 		//.def_readwrite("useEigenFullPivotLUsolver", &Experimental::useEigenFullPivotLUsolver)//, "switch to special solver")
 		.def_readwrite("eigenFullPivotLUsolverDebugLevel", &PyExperimental::eigenFullPivotLUsolverDebugLevel)//, "debug level for solver")
 		.def_readwrite("markerSuperElementRigidTexpSO3", &PyExperimental::markerSuperElementRigidTexpSO3)//, "debug level for solver")
+		//the math library as the C++ code calls it, to compare the platforms (#2947)
+		.def("EvaluateMathFunction", [](const PyExperimental&, const std::string& name, const std::vector<Real>& x,
+			const std::vector<Real>& y, const std::string& implementation, Index repetitions) {
+				std::vector<Real> result;
+				Real seconds = EXUmath::EvaluateMathFunction(name, x, y, implementation, repetitions, result);
+				if (seconds < 0)
+				{
+					auto Join = [](const std::vector<std::string>& names) { std::string s; for (auto& n : names) { s += (s.size() ? ", " : "") + n; } return s; };
+					PyError("EvaluateMathFunction: unknown function '" + name + "' (" + Join(EXUmath::MathFunctionNames())
+						+ ") or implementation '" + implementation + "' (" + Join(EXUmath::MathFunctionImplementations())
+						+ "), or y not of the size of x for atan2, pow, fmod", PyErrorType::valueError);
+				}
+				return py::make_tuple(py::array_t<Real>(result.size(), result.data()), seconds);
+			}, py::arg("name"), py::arg("x"), py::arg("y") = std::vector<Real>(), py::arg("implementation") = "std",
+			py::arg("repetitions") = 1)
 
 		//representation:
 		.def("__repr__", [](const PyExperimental& item) {

@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.13 | Newborn | 34 | 1.13.33 |
+| 1.13 | Newborn | 36 | 1.13.35 |
 | 1.12 | Metheney | 367 | 1.12.462 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
@@ -30,6 +30,14 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.13 - Newborn (current)
 
+- **1.13.35** `TESTING` `MEDIUM EFF` `raised by: Claude-JG` `resolved by: Claude-JG` portable implementations of the math functions, their speed and their results (#2948)
+  - description: revision2026c step RG4.1.3.2: the double precision functions of musl libc 1.2.5 (MIT; fdlibm/FreeBSD and Arm optimized-routines) ported to C++ as EXUmath::Portable::Sin, ... without the FMA code paths, so that they give the same bits on every platform; exudyn.experimental.EvaluateMathFunction(..., implementation='portable') evaluates and times them; compared with the library of each platform and with correctly rounded values (mpmath), and timed against it
+  - **notes:** EXUmath::Portable::Sin, Cos, ... (src/Utilities/PortableMath.cpp): the double precision math functions of musl libc 1.2.5, ported to C++ without their FMA code paths; they give the same bits on Windows and Linux and in both modules, within one ULP (two for sinh, tanh) of the correctly rounded value, at 0.4-1.7 times the time of the platform library; implementation 'portable' of exudyn.experimental.EvaluateMathFunction
+  - date resolved: **2026-10-10 15:33**, date raised: 2026-10-10
+- **1.13.34** `TESTING` `MEDIUM EFF` `raised by: Claude-JG` `resolved by: Claude-JG` the results of the math library functions on each platform, as Exudyn's C++ calls them (#2947)
+  - description: revision2026c step RG4.1.3.1: evidence for the platform differences (RG4.1). exudyn.experimental.EvaluateMathFunction(name, x, y, implementation, repetitions) evaluates sin, cos, tan, asin, acos, atan, atan2, exp, log, pow, sinh, cosh, tanh, cbrt, fmod and sqrt (the control) in the compiled module; python/testing/mathFunctionsPlatform.py writes the bit patterns of a fixed input set to a JSON file, compares two such files (Windows, Linux, macOS) and, with mpmath, counts the results that are not correctly rounded
+  - **notes:** exudyn.experimental.EvaluateMathFunction evaluates and times sin, cos, tan, asin, acos, atan, atan2, exp, log, pow, sinh, cosh, tanh, cbrt, fmod and sqrt as the compiled module calls them; python/testing/mathFunctionsPlatform.py writes their values for fixed arguments, counts the ones that are not correctly rounded and compares two platforms: Windows and Linux differ in every transcendental function by 1-3 ULP for 0.1-55 % of the arguments
+  - date resolved: **2026-10-10 15:33**, date raised: 2026-10-10
 - **1.13.33** `IMPROVEMENT` `NORMAL` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` Python 3.15: GitHub CI, the version matrix and the documentation (#2928)
   - description: the cp315 wheel of 1.13.6 was built by hand on Windows (Python 3.15.0rc3, numpy 2.5.3) and passes the test suite of both modules; GitHub CI builds cp310-cp314 only (matrix python-version and cibuildwheel 3.4.1), the installation page and README.rst say 3.10 - 3.14, venvP315 is not part of the exudev version matrix. Add 3.15 once cibuildwheel and numpy support it in a final release
   - **notes:** Python 3.15: GitHub CI builds cp310-cp315 with cibuildwheel 4.3.0 (Windows wheels unrepaired as before), GitLab CI and the exudev version matrix include 3.15, and the classifiers and the documentation say 3.10-3.15

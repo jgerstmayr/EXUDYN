@@ -240,6 +240,7 @@
     <ClCompile Include="..\src\System\MainObject.cpp" />
     <ClCompile Include="..\src\Tests\UnitTestBase.cpp" />
     <ClCompile Include="..\src\Utilities\BasicFunctions.cpp" />
+    <ClCompile Include="..\src\Utilities\PortableMath.cpp" />
     <ClCompile Include="..\src\Utilities\Threading.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -641,6 +642,7 @@
     <ClInclude Include="..\src\Tests\UnitTestBase.h" />
     <ClInclude Include="..\src\Utilities\AdvancedMath.h" />
     <ClInclude Include="..\src\Utilities\AdvancedStuff.h" />
+    <ClInclude Include="..\src\Utilities\MathFunctions.h" />
     <ClInclude Include="..\src\Utilities\AutomaticDifferentiation.h" />
     <ClInclude Include="..\src\Utilities\BasicDefinitions.h" />
     <ClInclude Include="..\src\Utilities\BasicFunctions.h" />

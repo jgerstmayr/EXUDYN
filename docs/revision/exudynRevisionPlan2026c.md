@@ -68,7 +68,7 @@ The title of each says what it does; the sentence after it, why it comes now.
   - RG2.8 Choose parameters for a converged cable run in perfAccessFunctionsAD
   - RG2.9 Add three old test models (3 open sub-steps)
 - **RG4** Implementation problems and bugs
-  - RG4.1 Remove the platform differences of the contact and friction models by finding their causes (2 open sub-steps)
+  - RG4.1 Remove the platform differences of the contact and friction models by finding their causes (3 open sub-steps)
   - RG4.20 Port the revision of ObjectANCFThinPlate and complete the element (1 open sub-step)
   - RG4.21 Flag the constraints that depend on velocities or time, and add their term to the initial accelerations
   - RG4.22 Add a 3D sliding joint with rotation, tested with the ANCF cable and beam
@@ -116,7 +116,7 @@ The title of each says what it does; the sentence after it, why it comes now.
 | RG1 | OPEN | 2 | Release and publication |
 | RG2 | OPEN | 5 | Testing and verification |
 | RG3 | CLOSED | 0 | Docs |
-| RG4 | OPEN | 9 | Implementation problems and bugs |
+| RG4 | OPEN | 10 | Implementation problems and bugs |
 | RG5 | OPEN | 8 | Performance |
 | RG6 | OPEN | 4 | Graphics and rendering |
 | RG7 | CLOSED | 0 | Python user items |
@@ -222,6 +222,18 @@ build (since #2869) reduced the macOS differences from 8 to 3 models.
   uninitialized. Test: a switch that fills default-constructed linalg objects with NaN; on Linux valgrind or
   `-fsanitize=memory` on the affected models;
 - not checked yet: the iteration order of unordered containers and unstable sorts with equal keys.
+
+##### **CLOSED_RG4.1.3.1** Measure the math library of each platform with exudyn.experimental.EvaluateMathFunction
+
+CLOSED 2026-10-10 (#2947): Windows and Linux differ by 1-3 ULP in 0.1-55 % of the arguments of every transcendental function; sqrt and fmod agree.
+
+##### **CLOSED_RG4.1.3.2** Port the math functions of musl libc and compare their results and speed
+
+CLOSED 2026-10-10 (#2948): `EXUmath::Portable`, the same bits on Windows x64 and Linux x86-64, in both modules; 0.4-1.7 times the time of the library.
+
+##### **OPEN_RG4.1.3.3** Route the math calls of Exudyn through EXUmath with the switch EXUDYN_PORTABLE_MATH and rerun the suites
+
+With the switch on both platforms, the entries of `UnresolvedOnLinux()` that vanish were caused by the math library (maintainer 2026-10-10: "use the new functions in exudyn, possibly with a macro constant as with the Real and other definitions").
 
 ### **OPEN_RG4.20** Port the revision of ObjectANCFThinPlate and complete the element
 

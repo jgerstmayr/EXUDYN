@@ -138,6 +138,7 @@
         "src/System/evaluateUserFunctions.cpp",
         "src/Tests/UnitTestBase.cpp",
         "src/Utilities/BasicFunctions.cpp",
+        "src/Utilities/PortableMath.cpp",
         "src/Utilities/Threading.cpp"
     ],
     "minimal": [
@@ -194,6 +195,7 @@
         "src/System/evaluateUserFunctions.cpp",
         "src/Tests/UnitTestBase.cpp",
         "src/Utilities/BasicFunctions.cpp",
+        "src/Utilities/PortableMath.cpp",
         "src/Utilities/Threading.cpp"
     ]
 }
