@@ -2,12 +2,16 @@
   "number": 2924,
   "title": "what the release notes of a minor release contain",
   "author": "Claude-JG",
-  "status": "RAISED",
+  "status": "RESOLVED",
   "type": "CHANGE",
   "priority": "NORMAL",
   "effort": "LOW",
   "description": "WriteReleaseNotes cuts the section of the current release from CHANGELOG.md: for 1.13 the issues resolved after the bump - the fixes of the release itself (#2911-#2920), not the revision 1.11 -> 1.13 behind it. Decide (maintainer): the revisions chapter, the issues since the last published version, or a hand-written summary plus the list",
   "dateRaised": "2026-10-09",
   "deadline": "2027-04-07",
-  "file": "tools/exudev/commands.py"
+  "dateResolved": "2026-10-10 17:42",
+  "resolvedAuthor": "Claude-JG",
+  "file": "tools/exudev/commands.py",
+  "releaseNotes": "the release notes of a release are a title and three lines: the revisions chapter for what changes for a model, the issue tracker for the issues resolved since the previous release, and the install command - no details and no summary",
+  "resolvedInVersion": "1.13.40"
 }

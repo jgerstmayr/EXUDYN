@@ -705,6 +705,29 @@ void GeneralMatrixEigenSparse::Solve(const Vector& rhs, Vector& solution)
 }
 
 //! return a dense matrix from any other matrix: requires a copy - SLOW!
+void GeneralMatrixEigenSparse::GetSparseEntries(std::vector<Index>& rows, std::vector<Index>& columns,
+	std::vector<Real>& values) const
+{
+	rows.clear(); columns.clear(); values.clear();
+	if (IsMatrixBuiltFromTriplets()) //the matrix, as MultiplyWithFactor changes it and not the triplets
+	{
+		for (Index k = 0; k < (Index)matrix.outerSize(); k++)
+		{
+			for (EigenSparseMatrix::InnerIterator it(matrix, k); it; ++it)
+			{
+				rows.push_back((Index)it.row()); columns.push_back((Index)it.col()); values.push_back(it.value());
+			}
+		}
+	}
+	else
+	{
+		for (const auto& item : triplets)
+		{
+			rows.push_back((Index)item.row()); columns.push_back((Index)item.col()); values.push_back(item.value());
+		}
+	}
+}
+
 ResizableMatrix GeneralMatrixEigenSparse::GetEXUdenseMatrix() const
 {
 	ResizableMatrix denseMatrix(NumberOfRows(), NumberOfColumns());

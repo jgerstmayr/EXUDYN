@@ -453,6 +453,7 @@ TString                            = TypeSpec('String')
 TFloat4                            = TypeSpec('Float4')
 TNumpyVector                       = TypeSpec('NumpyVector')
 TNumpyMatrix                       = TypeSpec('NumpyMatrix')
+TPyObject                          = TypeSpec('PyObject')      #any Python object: GetSystemJacobian gives a numpy array or a scipy matrix (#1529)
 TOutputVariableType                = TypeSpec('OutputVariableType')
 TResizableVector                   = TypeSpec('ResizableVector')
 

@@ -550,3 +550,56 @@ also at the last step without the SolutionViewer.)*
   focal plane with perspective 0.5 are at least half of those of the orthographic image.
 - `raytracerNOGLFWtest.py` (perspective 1) changes from 0.28161678591179 to 0.28013531271596: 625 pixels, the edges of
   the three bricks nearest to the camera, which were missing and are now drawn (compared image by image).
+
+<a id="rg4-1-3-5"></a>
+### RG4.1.3.5 — the native and the portable functions timed in the experimental function (2026-10-10, #2952)
+
+*(Maintainer 2026-10-10: "I think it is required to measure the performance of these functions for the native and the
+modified (musl lib) variant directly, within the experimental function ... if we only need a few functions from musl
+lib, we finally should only include these ones directly in the exudyn code (mentioning the source).")*
+- `EvaluateMathFunction(name, x, y, implementation, repetitions)` returns the time per evaluation, and times inside
+  the compiled module: `std` is the library, `portable` the musl functions, and the new `exudyn` is `EXUmath::Sin`,
+  ... - what the C++ code calls, the library or, with `EXUDYN_PORTABLE_MATH`, the portable functions.
+  `mathFunctionsPlatform.py --timing` prints the three (the fastest of 5 x 20 evaluations of the check's arguments).
+- Windows, ns per evaluation, regular module (the fast module within 0.3 ns of it):
+
+  | | sin | cos | tan | asin | acos | atan | atan2 | exp | log | pow | sinh | cosh | tanh | cbrt |
+  |---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
+  | std | 4.9 | 4.8 | 5.6 | 3.2 | 3.0 | 4.6 | 8.5 | 1.7 | 2.5 | 7.6 | 5.8 | 4.7 | 5.0 | 10.1 |
+  | portable | 7.8 | 8.1 | 9.0 | 2.5 | 2.6 | 3.8 | 11.5 | 1.7 | 2.5 | 8.7 | 7.7 | 3.7 | 6.9 | 3.8 |
+  | exudyn, switch off | 4.8 | 4.8 | 5.6 | 3.2 | 3.0 | 5.1 | 8.4 | 1.8 | 2.5 | 7.6 | 5.7 | 4.8 | 5.0 | 10.3 |
+  | exudyn, switch on (sin to exp) | 8.1 | 8.2 | | | | | 11.1 | 1.7 | | 8.6 | | | | |
+
+  The wrapper costs nothing (exudyn = std with the switch off, = portable with it on). The Linux numbers are in the
+  entry of RG4.1.3.1: there the portable functions are faster than glibc.
+- **Only what Exudyn needs is in the code**: `PortableMath.cpp` holds the 14 functions `src/` calls through `EXUmath`
+  (all of them are called, from 2 call sites for acos to 77 for sin), the kernels they share (`__sin`, `__cos`,
+  `__tan`, `__rem_pio2`, `__rem_pio2_large`, `__expo2`, `expm1` for the hyperbolic functions), the tables of exp, log
+  and pow, and musl's error helpers; its header names musl 1.2.5, the files and the three licences.
+
+<a id="rg10-29-5"></a>
+### RG10.29.5 — the release notes are three lines (2026-10-10, #2924)
+
+*(Maintainer 2026-10-10: "only short notes, refering to the issues and revision section, but no details and even no
+summary (I would agree with three lines of text on the changes). The changes are obvious from the issues.")*
+`WriteReleaseNotes` writes `dist/RELEASE_NOTES.md` - the body of the GitHub release and the message of the tag - as a
+title and three lines: the revisions chapter for what changes for a model script, the issue tracker for the issues
+resolved since the previous tag (`git tag --sort=-v:refname`, e.g. "since 1.13.6"), and the install command. It no
+longer cuts the section of `CHANGELOG.md`, which after a minor bump holds only the issues since the bump.
+
+<a id="rg11-8-5"></a>
+### RG11.8.5 — sparse system matrices for Python (2026-10-10, #1529)
+
+*(Maintainer 2026-10-10: "RG11.8.5: I follow your proposal.")*
+- `GetSystemJacobian(sparse=False)` and `GetSystemMassMatrix(sparse=False)` of the static, implicit and explicit
+  solvers: with `sparse=True` a `scipy.sparse.csr_matrix`, built in C++ from the entries that are not zero
+  (`GeneralMatrix::GetSparseEntries`: the built Eigen matrix, or its triplets before it is built - a position may come
+  twice, `csr_matrix` adds them up) - no dense matrix on the way, which needed n² memory (20 GB for 50 000
+  coordinates). With a dense solver, `sparse=True` converts its matrix. scipy is imported only then; without it the
+  error says so. The return type of the definitions is `PyObject` (`py::object`, stub `Any`).
+- `ComputeODE2Eigenvalues(useSparseSolver=True)` computes and exports the matrices sparse (the solver switched to
+  `EigenSparse` for the computation) whenever the eigenvalues go to `eigsh`: without algebraic equations, with
+  `constrainedCoordinates` or with `ignoreAlgebraicEquations`; the nullspace projection and the complex eigenvalues
+  stay dense. `ComputeLinearizedSystem(..., useSparseMatrices=True)` returns M, K, D sparse.
+- Test model `sparseSystemMatricesTest.py`: a chain of 30 mass points, sparse = dense for both solver types and the
+  linearized system (88 entries of K instead of 8100), the first five eigenvalues of `eigsh` equal to `eigh`.

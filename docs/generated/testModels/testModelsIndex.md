@@ -97,6 +97,7 @@ simulationSettingsRenamesTest
 itemParameterRenamesTest
 binarySolutionFileTest
 solutionFileWithoutCoordinatesTest
+sparseSystemMatricesTest
 rotationMarkerDeprecationTest
 contactFrictionCircleCable2DnoFrictionTest
 systemContainerLifetimeTest

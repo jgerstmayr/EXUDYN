@@ -1114,56 +1114,28 @@ def testTheGeneratedPagesAreCheckedAgainstTheStore(tracker, tmp_path):
 
 
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-#the release path. The notes of a release are CUT from CHANGELOG.md, so
-#that the release notes of each issue live in the tracker and nowhere else.
+#the release path. The notes of a release are a few lines that point to the revisions chapter and to the
+#issues (#2924): what changed is in the issues and their release notes, in the tracker and nowhere else.
 
-def testTheReleaseNotesAreTheCurrentSectionOfTheChangelog(tmp_path, monkeypatch):
+def testTheReleaseNotesPointToTheRevisionsAndTheIssues(tmp_path, monkeypatch):
     commands = ExudevCommands()
     monkeypatch.setattr(commands.runner, 'RepositoryRoot', lambda: str(tmp_path))
-    monkeypatch.setattr(commands.runner, 'RepositoryVersion', lambda: '1.12.3')
-
-    (tmp_path / 'CHANGELOG.md').write_text(
-        '# Changelog\n\nsome prose\n\n'
-        '## Version 1.12 - Metheney (current)\n\n'
-        '- **1.12.3** `FIX` the newest thing (#99)\n'
-        '- **1.12.2** `DOCU` something else (#98)\n\n'
-        '## Version 1.11 - McLaughlin\n\n'
-        '- **1.11.235** `DOCU` the previous release (#2576)\n', encoding='utf-8')
+    monkeypatch.setattr(commands.runner, 'RepositoryVersion', lambda: '1.14.0')
+    monkeypatch.setattr(commands, 'PreviousReleaseTag', lambda: 'v1.13.6')
 
     assert commands.WriteReleaseNotes() == 0
 
     notes = (tmp_path / 'dist' / 'RELEASE_NOTES.md').read_text(encoding='utf-8')
-    assert notes.startswith('# Exudyn 1.12.3')
-    assert 'Version 1.12 - Metheney' in notes
-    assert 'the newest thing' in notes and 'something else' in notes
-    #and it stops at the previous release: that one has been published already
-    assert '1.11.235' not in notes and 'McLaughlin' not in notes
+    assert notes.startswith('# Exudyn 1.14.0')
+    assert 'docs/manual/revisions.html' in notes and 'trackerlog.html' in notes
+    assert 'since 1.13.6' in notes and 'exudyn==1.14.0' in notes
+    assert len([line for line in notes.splitlines() if line.strip()]) <= 4      #a title and three lines
 
 
-def testTheReleaseNotesRunToTheEndOfAChangelogWithOneRelease(tmp_path, monkeypatch):
-    """the boundary the cut always hits: CHANGELOG.md holds
-    the current release and nothing after it, so there is no second '## Version ' to stop at
-    """
+def testTheReleaseNotesWithoutAPreviousTag():
     commands = ExudevCommands()
-    monkeypatch.setattr(commands.runner, 'RepositoryRoot', lambda: str(tmp_path))
-    monkeypatch.setattr(commands.runner, 'RepositoryVersion', lambda: '1.12.3')
-
-    (tmp_path / 'CHANGELOG.md').write_text(
-        '# Changelog' + chr(10)*2 + 'some prose' + chr(10)*2
-        + '| release | name |' + chr(10) + '|---|---|' + chr(10)
-        + '| 1.12 | Metheney |' + chr(10) + '| 1.11 | McLaughlin |' + chr(10)*2
-        + '## Version 1.12 - Metheney (current)' + chr(10)*2
-        + '- **1.12.3** `FIX` the newest thing (#99)' + chr(10)
-        + '- **1.12.2** `DOCU` something else (#98)' + chr(10),
-        encoding='utf-8')
-
-    assert commands.WriteReleaseNotes() == 0
-
-    notes = (tmp_path / 'dist' / 'RELEASE_NOTES.md').read_text(encoding='utf-8')
-    assert notes.startswith('# Exudyn 1.12.3')
-    assert 'the newest thing' in notes and 'something else' in notes
-    #the table above the release block is prose, not release notes
-    assert 'McLaughlin' not in notes
+    notes = commands.ReleaseNotesText('1.14.0', None)
+    assert 'the resolved issues' in notes and 'since' not in notes
 
 
 def testTheReleaseTagIsTheVersion(monkeypatch):

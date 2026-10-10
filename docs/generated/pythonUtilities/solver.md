@@ -146,10 +146,18 @@ Most of the solvers are implemented inside the C++ core.
 
 
 
+(sec-solver-usesparselinearsolver)=
+## Function: UseSparseLinearSolver
+
+[`UseSparseLinearSolver(simulationSettings, sparse)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/solver.py#L409)
+
+- **function description**: with sparse, set simulationSettings.linearSolver.solverType to EigenSparse, so that the solver computes sparse system matrices (#1529); returns the type before, which the caller restores
+
+
 (sec-solver-computelinearizedsystem)=
 ## Function: ComputeLinearizedSystem
 
-[`ComputeLinearizedSystem(mbs, simulationSettings = None, projectIntoConstraintNullspace = False, singularValuesTolerance = 1e-12, returnConstraintJacobian = False, returnConstraintNullspace = False, autoAssemble = True) -> list`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/solver.py#L410)
+[`ComputeLinearizedSystem(mbs, simulationSettings = None, projectIntoConstraintNullspace = False, singularValuesTolerance = 1e-12, returnConstraintJacobian = False, returnConstraintNullspace = False, autoAssemble = True, useSparseMatrices = False) -> list`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/solver.py#L418)
 
 - **function description**: compute linearized system of equations for ODE2 part of mbs, not considering the effects of algebraic constraints; for computation of eigenvalues and advanced computation with constrained systems, see ComputeODE2Eigenvalues; the current implementation is also able to project into the constrained space, however, this currently does not generally work with non-holonomic systems
 - **input**:
@@ -160,7 +168,8 @@ Most of the solvers are implemented inside the C++ core.
   - `returnConstraintJacobian`: if True, the returned list contains [M, K, D, C, N] where C is the constraint jacobian and N is the nullspace matrix (may be empty)
   - `returnConstraintNullspace`: if True, the returned list contains [M, K, D, C, N] where C is the constraint jacobian (may be empty) and N is the nullspace matrix
   - `autoAssemble`: if True: if mbs.systemIsConsistent=False (system is not assembled), call mbs.Assemble() before solver calls
-- **output**: (type: [ArrayLike, ArrayLike, ArrayLike]) [M, K, D]; list containing numpy mass matrix M, stiffness matrix K and damping matrix D; for constraints, see options with arguments above, return values may change to [M, K, D, C, N]
+  - `useSparseMatrices`: if True, the matrices are computed with the sparse solver and returned as scipy.sparse.csr_matrix, without dense matrices on the way - for large systems; needs scipy; not together with projectIntoConstraintNullspace or returnConstraintNullspace, which need a dense singular value decomposition
+- **output**: (type: [ArrayLike, ArrayLike, ArrayLike]) [M, K, D]; list containing numpy mass matrix M, stiffness matrix K and damping matrix D (scipy.sparse.csr_matrix with useSparseMatrices=True); for constraints, see options with arguments above, return values may change to [M, K, D, C, N]
 - **notes**: consider paper of Agundez, Vallejo, Freire, Mikkola, "The dependent coordinates in the linearization of constrained multibody systems: Handling and elimination", https://www.sciencedirect.com/science/article/pii/S0020740324000791
 
 *example*:
@@ -197,13 +206,13 @@ Most of the solvers are implemented inside the C++ core.
 (sec-solver-computeode2eigenvalues)=
 ## Function: ComputeODE2Eigenvalues
 
-[`ComputeODE2Eigenvalues(mbs, simulationSettings = None, useSparseSolver = False, numberOfEigenvalues = 0, constrainedCoordinates = [], convert2Frequencies = False, useAbsoluteValues = True, computeComplexEigenvalues = False, ignoreAlgebraicEquations = False, singularValuesTolerance = 1e-12, autoAssemble = True) -> list`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/solver.py#L544)
+[`ComputeODE2Eigenvalues(mbs, simulationSettings = None, useSparseSolver = False, numberOfEigenvalues = 0, constrainedCoordinates = [], convert2Frequencies = False, useAbsoluteValues = True, computeComplexEigenvalues = False, ignoreAlgebraicEquations = False, singularValuesTolerance = 1e-12, autoAssemble = True) -> list`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/solver.py#L559)
 
-- **function description**: compute eigenvalues for unconstrained ODE2 part of mbs, which represent the square of the eigenfrequencies (in radiant) of the undamped system; the computation may include constraints in case that ignoreAlgebraicEquations=False (however, this currently does not generally work with non-holonomic systems); for algebraic constraints, however, a dense singular value decomposition of the constraint jacobian is used for the nullspace projection; the computation is done for the initial values of the mbs, independently of previous computations. If you would like to use the current state for the eigenvalue computation, you need to copy the current state to the initial state (using GetSystemState, SetSystemState, see {ref}`sec-mbs-systemdata`); note that mass and stiffness matrices are computed in dense mode so far, while eigenvalues are computed according to useSparseSolver.
+- **function description**: compute eigenvalues for unconstrained ODE2 part of mbs, which represent the square of the eigenfrequencies (in radiant) of the undamped system; the computation may include constraints in case that ignoreAlgebraicEquations=False (however, this currently does not generally work with non-holonomic systems); for algebraic constraints, however, a dense singular value decomposition of the constraint jacobian is used for the nullspace projection; the computation is done for the initial values of the mbs, independently of previous computations. If you would like to use the current state for the eigenvalue computation, you need to copy the current state to the initial state (using GetSystemState, SetSystemState, see {ref}`sec-mbs-systemdata`); with useSparseSolver=True, mass and stiffness matrices are computed and exported as sparse matrices (unless computeComplexEigenvalues or the projection of algebraic equations needs them dense).
 - **input**:
   - `mbs`: the MainSystem containing the assembled system
   - `simulationSettings`: specific simulation settings used for computation of jacobian (e.g., sparse mode in static solver enables sparse computation)
-  - `useSparseSolver`: if False (only for small systems), all eigenvalues are computed in dense mode (slow for large systems!); if True, only the numberOfEigenvalues are computed (numberOfEigenvalues must be set!); Currently, the matrices are exported only in DENSE MODE from mbs, which means that intermediate matrices may become huge for more than 5000 coordinates! NOTE that the sparsesolver accuracy is much less than the dense solver
+  - `useSparseSolver`: if False (only for small systems), all eigenvalues are computed in dense mode (slow for large systems!); if True, only the numberOfEigenvalues are computed (numberOfEigenvalues must be set!), and mass and stiffness matrices are computed with the sparse solver and exported as scipy sparse matrices, without dense matrices on the way; NOTE that the sparsesolver accuracy is much less than the dense solver
   - `numberOfEigenvalues`: number of eigenvalues and eivenvectors to be computed; if numberOfEigenvalues==0, all eigenvalues will be computed (may be impossible for larger or sparse problems!)
   - `constrainedCoordinates`: if this list is non-empty (and there are no algebraic equations or ignoreAlgebraicEquations=True), the integer indices represent constrained coordinates of the system, which are fixed during eigenvalue/vector computation; according rows/columns of mass and stiffness matrices are erased; in this case, algebraic equations of the system are ignored
   - `convert2Frequencies`: if True, the square root is computed for eigenvalues, they are converted into frequencies (Hz), and the output is [eigenFrequencies, eigenVectors]
@@ -258,7 +267,7 @@ Most of the solvers are implemented inside the C++ core.
 (sec-solver-computesystemdegreeoffreedom)=
 ## Function: ComputeSystemDegreeOfFreedom
 
-[`ComputeSystemDegreeOfFreedom(mbs, simulationSettings = None, threshold = 1e-12, verbose = False, useSVD = False, autoAssemble = True) -> dict`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/solver.py#L790)
+[`ComputeSystemDegreeOfFreedom(mbs, simulationSettings = None, threshold = 1e-12, verbose = False, useSVD = False, autoAssemble = True) -> dict`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/solver.py#L816)
 
 - **function description**: compute system DOF numerically, considering Grübler-Kutzbach formula as well as redundant constraints; uses numpy matrix rank or singular value decomposition of scipy (useSVD=True)
 - **input**:
@@ -304,7 +313,7 @@ Most of the solvers are implemented inside the C++ core.
 (sec-solver-checksolverinfostatistics)=
 ## Function: CheckSolverInfoStatistics
 
-[`CheckSolverInfoStatistics(solverName, infoStat, numberOfEvaluations)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/solver.py#L920)
+[`CheckSolverInfoStatistics(solverName, infoStat, numberOfEvaluations)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/solver.py#L946)
 
 - **function description**: helper function for solvers to check e.g. if high number of memory allocations happened during simulation This can happen, if large amount of sensors are attached and output is written in every time step
 - **input**: stat=exudyn.special.InfoStat() from previous step, numberOfEvaluations is a counter which is proportional to number of RHS evaluations in method

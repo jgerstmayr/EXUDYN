@@ -85,3 +85,12 @@ def testThePortableFunctionsAreWithinTwoUlpOfTheLibrary():
         (portable, _) = exu.experimental.EvaluateMathFunction(name, x, y, 'portable')
         (library, _) = exu.experimental.EvaluateMathFunction(name, x, y, 'std')
         assert mathFunctionsPlatform.UlpDistance(portable, library).max() <= (4 if name == 'cbrt' else 2), name
+
+
+def testExudynCallsTheLibraryOrThePortableFunctions():
+    #'exudyn' is what the C++ code calls: the library, or the portable functions with EXUDYN_PORTABLE_MATH (#2949)
+    other = 'portable' if 'PORTABLEMATH' in exu.config.Version(True) else 'std'
+    for name in ['sin', 'atan2', 'pow', 'tanh']:
+        (x, y) = mathFunctionsPlatform.Arguments(name, 100)
+        (values, seconds) = exu.experimental.EvaluateMathFunction(name, x, y, 'exudyn', 2)
+        assert np.array_equal(values, exu.experimental.EvaluateMathFunction(name, x, y, other)[0]) and seconds > 0, name

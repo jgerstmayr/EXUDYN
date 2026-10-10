@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.13 | Newborn | 39 | 1.13.38 |
+| 1.13 | Newborn | 42 | 1.13.41 |
 | 1.12 | Metheney | 367 | 1.12.462 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
@@ -30,6 +30,18 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.13 - Newborn (current)
 
+- **1.13.41** `TESTING` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` time the math functions as Exudyn's C++ calls them, beside the library and the portable ones (#2952)
+  - description: revision2026c step RG4.1.3.5 (maintainer 2026-10-10: measure the performance of the native and the musl variant directly within the experimental function): implementation 'exudyn' of exudyn.experimental.EvaluateMathFunction evaluates EXUmath::Sin, ..., i.e. the library or, with EXUDYN\_PORTABLE\_MATH, the portable functions; mathFunctionsPlatform.py --timing shows std, portable and exudyn
+  - **notes:** exudyn.experimental.EvaluateMathFunction(..., implementation='exudyn') evaluates and times what the C++ code of Exudyn calls (EXUmath::Sin, ...); mathFunctionsPlatform.py --timing shows the library, the portable functions and this side by side
+  - date resolved: **2026-10-10 17:42**, date raised: 2026-10-10
+- **1.13.40** `CHANGE` `NORMAL` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` what the release notes of a minor release contain (#2924)
+  - description: WriteReleaseNotes cuts the section of the current release from CHANGELOG.md: for 1.13 the issues resolved after the bump - the fixes of the release itself (\#2911-\#2920), not the revision 1.11 -\> 1.13 behind it. Decide (maintainer): the revisions chapter, the issues since the last published version, or a hand-written summary plus the list
+  - **notes:** the release notes of a release are a title and three lines: the revisions chapter for what changes for a model, the issue tracker for the issues resolved since the previous release, and the install command - no details and no summary
+  - date resolved: **2026-10-10 17:42**, date raised: 2026-10-09
+- **1.13.39** `EXTENSION` `MEDIUM EFF` `resolved by: Claude-JG` solver (#1529)
+  - description: solver functions GetSystemJacobian() and GetSystemMassMatrix() need to be extended with arg sparseTriplets=False; if True, it will return CSR sparse triplets, useful for large matrices, e.g. in eigenvalue computation in linearized system
+  - **notes:** the solvers' GetSystemJacobian(sparse=True) and GetSystemMassMatrix(sparse=True) return a scipy.sparse.csr\_matrix, built without a dense matrix, for large systems; ComputeODE2Eigenvalues(useSparseSolver=True) uses them, and ComputeLinearizedSystem(useSparseMatrices=True) returns sparse M, K, D
+  - date resolved: **2026-10-10 17:42**, date raised: 2023-04-26
 - **1.13.38** <span class="textred">`BUG`</span> `MEDIUM EFF` `raised by: Claude-JG` `resolved by: Claude-JG` the raytracer draws the sensor traces only in parts (#2951)
   - description: tmp/ex02b\_exudyn\_bewegtes\_KS.py: the position traces and triads of vs.sensors.traces are fully visible in OpenGL, but the raytraced image shows only parts of them, also at the last step without the SolutionViewer
   - **notes:** the raytracer draws lines - sensor traces, line graphics - in front of the focal plane of a perspective, model-centric view; its near plane was placed for the camera-centric view and cut them

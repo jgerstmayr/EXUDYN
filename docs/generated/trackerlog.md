@@ -8,10 +8,10 @@ Every entry carries the **type** of the issue, then its **priority** and its **e
 
 General information on current version:
 
-- Exudyn version = 1.13.38.dev1
+- Exudyn version = 1.13.41.dev1
 - last change = 2026-10-10
-- Number of issues = 2952
-- Number of resolved issues = 2815 (38 in current version)
+- Number of issues = 2953
+- Number of resolved issues = 2818 (41 in current version)
 
 ## Resolved issues and resolved bugs before version 1.13
 
@@ -9039,9 +9039,6 @@ The following list contains the issues which have been **RESOLVED** in the accor
 
 ## Open issues
 
-- `CHANGE` <span class="textorange">`NORMAL`</span> `LOW EFF` `raised by: Claude-JG` what the release notes of a minor release contain (#2924)
-  - description: WriteReleaseNotes cuts the section of the current release from CHANGELOG.md: for 1.13 the issues resolved after the bump - the fixes of the release itself (\#2911-\#2920), not the revision 1.11 -\> 1.13 behind it. Decide (maintainer): the revisions chapter, the issues since the last published version, or a hand-written summary plus the list
-  - date raised: 2026-10-09
 - `TESTING` <span class="textorange">`NORMAL`</span> `MEDIUM EFF` `raised by: Claude-JG` the cable run of perfAccessFunctionsAD is ill-conditioned: its result moves by 20% with the Newton settings (#2914)
   - description: perfAccessFunctionsAD:cable-n200-implicit (200 ANCF cable elements, axialStiffness 1000, massPerLength 1, on spring-dampers) gives 0.004663 with the default modified Newton, 0.005112 with full Newton, 0.005388 with relativeTolerance 1e-10 and 0.005266 with both (15 s instead of 0.6 s); the fast module differs by 8.4e-7. A performance run should judge a converged result: choose parameters (stiffness, mass, step size) for which the Newton settings do not move it, then re-record its reference and timing
   - date raised: 2026-10-09
@@ -9330,10 +9327,6 @@ The following list contains the issues which have been **RESOLVED** in the accor
   - description: fully add Jacobian functionality for ODE1 loads and add test for ODE1 loads or recycle one
   - **remarks:** planned as revision2026b step RG4.23 (triage 2026-10-07)
   - date raised: 2023-05-01
-- `EXTENSION` `MEDIUM EFF` solver (#1529)
-  - description: solver functions GetSystemJacobian() and GetSystemMassMatrix() need to be extended with arg sparseTriplets=False; if True, it will return CSR sparse triplets, useful for large matrices, e.g. in eigenvalue computation in linearized system
-  - **remarks:** planned as revision2026b step RG18.1 (triage 2026-10-07)
-  - date raised: 2023-04-26
 - `CHANGE` `LOW EFF` StaticSolver (#1493)
   - description: add exception in case that Lie group nodes are used with static solver, which cannot work
   - **remarks:** planned as revision2026b step RG18.1 (triage 2026-10-07)

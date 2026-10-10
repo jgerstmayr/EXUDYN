@@ -80,6 +80,7 @@ names = {
         'Int': 'Index',
         'JointTypeList': 'std::vector<Joint::Type>',
         'NumpyVector': 'py::array_t<Real>', 'NumpyMatrix': 'py::array_t<Real>', 'NumpyMatrixI': 'py::array_t<Index>',
+        'PyObject': 'py::object',
         #lists of fixed-size vectors and matrices are exchanged through their Py... wrapper classes
         'Vector2DList': 'PyVector2DList', 'Vector3DList': 'PyVector3DList', 'Vector6DList': 'PyVector6DList',
         'Matrix3DList': 'PyMatrix3DList',
@@ -92,7 +93,7 @@ names = {
     },
     'stub': {
         'ArrayIndex': 'List[int]', 'ArrayFloat': 'List[float]', 'Index2': 'Tuple[int,int]',
-        'void': 'None', 'std::string': 'str',
+        'void': 'None', 'std::string': 'str', 'PyObject': 'Any',
         'HomogeneousTransformation': 'Any',         #a 4x4 array, its 16 values or an exu.HT (#2793)
         'HomogeneousTransformationList': 'Any',     #a list of them (#2798)
     },
@@ -112,7 +113,7 @@ exceptions = {
         'NumpyVector': 'Vector', 'NumpyMatrix': 'Matrix',
     },
     ('cppStorage', 'structures'): {
-        'NumpyVector': 'py::array_t<Real>', 'NumpyMatrix': 'py::array_t<Real>',
+        'NumpyVector': 'py::array_t<Real>', 'NumpyMatrix': 'py::array_t<Real>', 'PyObject': 'py::object',
     },
 }
 

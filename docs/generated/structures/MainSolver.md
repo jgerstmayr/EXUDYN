@@ -44,8 +44,8 @@ MainSolverStatic has the following items:
 | `GetODE2size()` | Index |  | number of {ref}`ODE2 <ODE2>` equations in solver |
 | `GetSimulationEndTime(...)` | Real | simulationSettings | compute simulation end time (depends on static or time integration solver) |
 | `GetSolverName()` | std::string |  | get solver name - needed for output file header and visualization window |
-| `GetSystemJacobian()` | NumpyMatrix |  | get locally stored / last computed system jacobian of solver |
-| `GetSystemMassMatrix()` | NumpyMatrix |  | get locally stored / last computed mass matrix of solver |
+| `GetSystemJacobian(...)` | PyObject | sparse=False | get locally stored / last computed system jacobian of solver, as numpy array; with sparse=True as scipy.sparse.csr_matrix, built from the entries that are not zero without a dense copy - for large systems, with the sparse solver (linearSolver.solverType EigenSparse); needs scipy |
+| `GetSystemMassMatrix(...)` | PyObject | sparse=False | get locally stored / last computed mass matrix of solver, as numpy array; with sparse=True as scipy.sparse.csr_matrix, built from the entries that are not zero without a dense copy - for large systems, with the sparse solver (linearSolver.solverType EigenSparse); needs scipy |
 | `GetSystemResidual()` | NumpyVector |  | get locally stored / last computed system residual |
 | `HasAutomaticStepSizeControl(...)` | bool | mainSystem, simulationSettings | return true, if solver supports automatic stepsize control, otherwise false |
 | `IncreaseStepSize(...)` | void | mainSystem, simulationSettings | increase step size if convergence is good |
@@ -124,8 +124,8 @@ MainSolverImplicitSecondOrder has the following items:
 | `GetSimulationEndTime(...)` | Real | simulationSettings | compute simulation end time (depends on static or time integration solver) |
 | `GetSolverName()` | std::string |  | get solver name - needed for output file header and visualization window |
 | `GetStartOfStepStateAAlgorithmic()` | NumpyVector |  | get locally stored / last computed algorithmic accelerations at start of step |
-| `GetSystemJacobian()` | NumpyMatrix |  | get locally stored / last computed system jacobian of solver |
-| `GetSystemMassMatrix()` | NumpyMatrix |  | get locally stored / last computed mass matrix of solver |
+| `GetSystemJacobian(...)` | PyObject | sparse=False | get locally stored / last computed system jacobian of solver, as numpy array; with sparse=True as scipy.sparse.csr_matrix, built from the entries that are not zero without a dense copy - for large systems, with the sparse solver (linearSolver.solverType EigenSparse); needs scipy |
+| `GetSystemMassMatrix(...)` | PyObject | sparse=False | get locally stored / last computed mass matrix of solver, as numpy array; with sparse=True as scipy.sparse.csr_matrix, built from the entries that are not zero without a dense copy - for large systems, with the sparse solver (linearSolver.solverType EigenSparse); needs scipy |
 | `GetSystemResidual()` | NumpyVector |  | get locally stored / last computed system residual |
 | `HasAutomaticStepSizeControl(...)` | bool | mainSystem, simulationSettings | return true, if solver supports automatic stepsize control, otherwise false |
 | `IncreaseStepSize(...)` | void | mainSystem, simulationSettings | increase step size if convergence is good |
@@ -206,7 +206,7 @@ MainSolverExplicit has the following items:
 | `GetODE2size()` | Index |  | number of {ref}`ODE2 <ODE2>` equations in solver |
 | `GetSimulationEndTime(...)` | Real | simulationSettings | compute simulation end time (depends on static or time integration solver) |
 | `GetSolverName()` | std::string |  | get solver name - needed for output file header and visualization window |
-| `GetSystemMassMatrix()` | NumpyMatrix |  | get locally stored / last computed mass matrix of solver |
+| `GetSystemMassMatrix(...)` | PyObject | sparse=False | get locally stored / last computed mass matrix of solver, as numpy array; with sparse=True as scipy.sparse.csr_matrix, built from the entries that are not zero without a dense copy - for large systems, with the sparse solver (linearSolver.solverType EigenSparse); needs scipy |
 | `GetSystemResidual()` | NumpyVector |  | get locally stored / last computed system residual |
 | `HasAutomaticStepSizeControl(...)` | bool | mainSystem, simulationSettings | return true, if solver supports automatic stepsize control, otherwise false |
 | `IncreaseStepSize(...)` | void | mainSystem, simulationSettings | increase step size if convergence is good |

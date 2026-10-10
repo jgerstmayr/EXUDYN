@@ -128,16 +128,41 @@ void MainSolverBase::InitializeCheckInitialized(const MainSystem& mainSystem)
 
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 //access to solver.data vectors
-  //! get locally stored / last computed system jacobian of solver
-py::array_t<Real> MainSolverBase::GetSystemJacobian() const
+//! a system matrix for Python: a dense numpy array, or with sparse a scipy.sparse.csr_matrix built from the entries
+//! that are not zero, without a dense copy - for systems too large for one (#1529); scipy is needed only then
+static py::object SystemMatrixToPython(const GeneralMatrix& matrix, bool sparse, const char* functionName)
 {
-	return EPyUtils::ToPython(this->GetCSolver().data.systemJacobian->GetEXUdenseMatrix());
+	if (!sparse) { return EPyUtils::ToPython(matrix.GetEXUdenseMatrix()); }
+
+	py::module scipySparse;
+	try { scipySparse = py::module::import("scipy.sparse"); }
+	catch (const py::error_already_set&)
+	{
+		PyError(STDstring(functionName) + "(sparse=True) returns a scipy.sparse.csr_matrix and needs scipy, which is not "
+			"installed: pip install scipy; or use sparse=False for a numpy array", PyErrorType::modelError);
+		return py::none();
+	}
+	std::vector<Index> rows, columns;
+	std::vector<Real> values;
+	matrix.GetSparseEntries(rows, columns, values);
+	py::array_t<Real> pyValues((py::ssize_t)values.size(), values.data());
+	py::array_t<Index> pyRows((py::ssize_t)rows.size(), rows.data());
+	py::array_t<Index> pyColumns((py::ssize_t)columns.size(), columns.data());
+	//csr_matrix adds up entries of the same position, as the triplets of a matrix not yet built have them
+	return scipySparse.attr("csr_matrix")(py::make_tuple(pyValues, py::make_tuple(pyRows, pyColumns)),
+		py::arg("shape") = py::make_tuple(matrix.NumberOfRows(), matrix.NumberOfColumns()));
+}
+
+//! get locally stored / last computed system jacobian of solver
+py::object MainSolverBase::GetSystemJacobian(bool sparse) const
+{
+	return SystemMatrixToPython(*this->GetCSolver().data.systemJacobian, sparse, "GetSystemJacobian");
 }
 
 //! get locally stored / last computed mass matrix of solver
-py::array_t<Real> MainSolverBase::GetSystemMassMatrix() const
+py::object MainSolverBase::GetSystemMassMatrix(bool sparse) const
 {
-	return EPyUtils::ToPython(this->GetCSolver().data.systemMassMatrix->GetEXUdenseMatrix());
+	return SystemMatrixToPython(*this->GetCSolver().data.systemMassMatrix, sparse, "GetSystemMassMatrix");
 }
 
 //! get locally stored / last computed system residual

@@ -120,6 +120,7 @@ def TestExamplesReferenceSolution():
         'itemParameterRenamesTest.py':66, #new 2026-10-04: every renamed item parameter forwards in the dictionary, Get and SetObjectParameter (#2814)
         'binarySolutionFileTest.py':0.1888874815147666, #new 2026-10-04: the binary solution file as float or double by solution.precision (#2816)
         'solutionFileWithoutCoordinatesTest.py':53, #new 2026-10-10: a model without coordinates writes and reads a solution file with the time only (#2950)
+        'sparseSystemMatricesTest.py':0.2334531495931824, #new 2026-10-10: GetSystemJacobian/GetSystemMassMatrix(sparse=True), ComputeLinearizedSystem(useSparseMatrices=True) and sparse eigenvalues against the dense ones (#1529)
         'rotationMarkerDeprecationTest.py':-0.13402861946207856, #new 2026-10-03: rotationMarker0/1 against localHT of the markers, the deprecation warning once per session (#2745, #2801)
         'contactFrictionCircleCable2DnoFrictionTest.py':0.8052196344904814, #new 2026-10-05: no tangential force without a friction model, whatever the slip state (#1290); 1000 steps 2026-10-09 (#2912)
         'systemContainerLifetimeTest.py':-3.809999999999995, #new 2026-10-05: the MainSystem of AddSystem and GetSystem keeps its SystemContainer alive (#2851)

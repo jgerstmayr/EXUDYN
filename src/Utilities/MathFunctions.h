@@ -99,10 +99,11 @@ namespace EXUmath {
 	//! the implementations EvaluateMathFunction knows: "std" = the C++ library, one call per value; "stdLoop" = the same in
 	//! a loop the compiler may vectorize; "stdNoFMA3" = "std" with the FMA3 code path of the MSVC UCRT switched off
 	//! (Windows x64 only: the UCRT chooses its implementation by the CPU, _set_FMA3_enable); "portable" = the functions
-	//! of namespace Portable, with std::fmod and std::sqrt, which are exact or correctly rounded everywhere (#2948)
+	//! of namespace Portable, with std::fmod and std::sqrt, which are exact or correctly rounded everywhere (#2948);
+	//! "exudyn" = EXUmath::Sin, ..., what the C++ code of Exudyn calls: the library, or Portable with EXUDYN_PORTABLE_MATH
 	inline const std::vector<std::string>& MathFunctionImplementations()
 	{
-		static const std::vector<std::string> names = { "std", "stdLoop", "portable"
+		static const std::vector<std::string> names = { "std", "stdLoop", "portable", "exudyn"
 #if defined(_MSC_VER) && defined(_M_X64)
 			, "stdNoFMA3"
 #endif
@@ -163,30 +164,30 @@ namespace EXUmath {
 			return false;
 		}
 
-		//! evaluate with the portable functions, one call per value
+		//! evaluate with the portable functions (exudynMath = false) or with EXUmath::Sin, ... (true), one call per value
 		inline bool EvaluatePortable(const std::string& name, const std::vector<Real>& x, const std::vector<Real>& y,
-			std::vector<Real>& result)
+			std::vector<Real>& result, bool exudynMath)
 		{
-#define EXU_MATH_CASE1(NAME, CALL) if (name == NAME) { LoopScalar([](Real a) { return CALL; }, x, result); return true; }
-#define EXU_MATH_CASE2(NAME, CALL) if (name == NAME) { LoopScalar2([](Real a, Real b) { return CALL; }, x, y, result); return true; }
-			EXU_MATH_CASE1("sin", Portable::Sin(a))
-			EXU_MATH_CASE1("cos", Portable::Cos(a))
-			EXU_MATH_CASE1("tan", Portable::Tan(a))
-			EXU_MATH_CASE1("asin", Portable::Asin(a))
-			EXU_MATH_CASE1("acos", Portable::Acos(a))
-			EXU_MATH_CASE1("atan", Portable::Atan(a))
-			EXU_MATH_CASE2("atan2", Portable::Atan2(a, b))
-			EXU_MATH_CASE1("exp", Portable::Exp(a))
-			EXU_MATH_CASE1("log", Portable::Log(a))
-			EXU_MATH_CASE2("pow", Portable::Pow(a, b))
-			EXU_MATH_CASE1("sinh", Portable::Sinh(a))
-			EXU_MATH_CASE1("cosh", Portable::Cosh(a))
-			EXU_MATH_CASE1("tanh", Portable::Tanh(a))
-			EXU_MATH_CASE1("cbrt", Portable::Cbrt(a))
-			EXU_MATH_CASE2("fmod", std::fmod(a, b))
-			EXU_MATH_CASE1("sqrt", std::sqrt(a))
+#define EXU_MATH_CASE1(NAME, FUNCTION) if (name == NAME) { if (exudynMath) { LoopScalar([](Real a) { return EXUmath::FUNCTION(a); }, x, result); } 			else { LoopScalar([](Real a) { return Portable::FUNCTION(a); }, x, result); } return true; }
+#define EXU_MATH_CASE2(NAME, FUNCTION) if (name == NAME) { if (exudynMath) { LoopScalar2([](Real a, Real b) { return EXUmath::FUNCTION(a, b); }, x, y, result); } 			else { LoopScalar2([](Real a, Real b) { return Portable::FUNCTION(a, b); }, x, y, result); } return true; }
+			EXU_MATH_CASE1("sin", Sin)
+			EXU_MATH_CASE1("cos", Cos)
+			EXU_MATH_CASE1("tan", Tan)
+			EXU_MATH_CASE1("asin", Asin)
+			EXU_MATH_CASE1("acos", Acos)
+			EXU_MATH_CASE1("atan", Atan)
+			EXU_MATH_CASE2("atan2", Atan2)
+			EXU_MATH_CASE1("exp", Exp)
+			EXU_MATH_CASE1("log", Log)
+			EXU_MATH_CASE2("pow", Pow)
+			EXU_MATH_CASE1("sinh", Sinh)
+			EXU_MATH_CASE1("cosh", Cosh)
+			EXU_MATH_CASE1("tanh", Tanh)
+			EXU_MATH_CASE1("cbrt", Cbrt)
 #undef EXU_MATH_CASE1
 #undef EXU_MATH_CASE2
+			if (name == "fmod") { LoopScalar2([](Real a, Real b) { return std::fmod(a, b); }, x, y, result); return true; }
+			if (name == "sqrt") { LoopScalar([](Real a) { return std::sqrt(a); }, x, result); return true; }
 			return false;
 		}
 	} //namespace MathFunctionsInternal
@@ -203,7 +204,8 @@ namespace EXUmath {
 		if (repetitions < 1) { repetitions = 1; }
 
 		bool scalar = true;
-		const bool portable = (implementation == "portable");
+		const bool exudynMath = (implementation == "exudyn");
+		const bool portable = (implementation == "portable") || exudynMath;
 		if (implementation == "stdLoop") { scalar = false; }
 		else if (implementation != "std" && implementation != "stdNoFMA3" && !portable) { return -1; }
 #if defined(_MSC_VER) && defined(_M_X64)
@@ -217,7 +219,7 @@ namespace EXUmath {
 		auto start = std::chrono::steady_clock::now();
 		for (Index i = 0; i < repetitions && known; i++)
 		{
-			known = portable ? MathFunctionsInternal::EvaluatePortable(name, x, y, result)
+			known = portable ? MathFunctionsInternal::EvaluatePortable(name, x, y, result, exudynMath)
 				: MathFunctionsInternal::EvaluateStd(name, x, y, result, scalar);
 		}
 		auto end = std::chrono::steady_clock::now();

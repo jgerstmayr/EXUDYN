@@ -331,10 +331,10 @@ public: //
 		return GetCSolver().data.nData;
 	}
 
-	//! get locally stored / last computed system jacobian of solver
-	virtual py::array_t<Real> GetSystemJacobian() const;
-	//! get locally stored / last computed mass matrix of solver
-	virtual py::array_t<Real> GetSystemMassMatrix() const;
+	//! get locally stored / last computed system jacobian of solver: a numpy array, or with sparse a scipy.sparse.csr_matrix
+	virtual py::object GetSystemJacobian(bool sparse = false) const;
+	//! get locally stored / last computed mass matrix of solver: a numpy array, or with sparse a scipy.sparse.csr_matrix
+	virtual py::object GetSystemMassMatrix(bool sparse = false) const;
 	//! get locally stored / last computed system residual
 	virtual py::array_t<Real> GetSystemResidual() const;
 	//! get locally stored / last computed solution (=increment) of Newton

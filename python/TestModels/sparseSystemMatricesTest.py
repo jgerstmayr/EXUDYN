@@ -1,0 +1,76 @@
+#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+# This is an EXUDYN example
+#
+# Details:  System matrices as scipy sparse matrices, for systems too large for dense ones (#1529): the solver's
+#           GetSystemJacobian(sparse=True) and GetSystemMassMatrix(sparse=True), ComputeLinearizedSystem with
+#           useSparseMatrices=True and ComputeODE2Eigenvalues with useSparseSolver=True give the values of the dense
+#           matrices, for a chain of mass points between springs.
+#
+# Author:   Johannes Gerstmayr
+# Date:     2026-10-10
+#
+# Copyright:This file is part of Exudyn. Exudyn is free software. You can redistribute it and/or modify it under the terms of the Exudyn license. See 'LICENSE.txt' for more details.
+#
+#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+import exudyn as exu
+import numpy as np
+import scipy.sparse
+import exudyn.utilities #noqa: F401 - the MainSystem functions ComputeLinearizedSystem, ComputeODE2Eigenvalues
+
+SC = exu.SystemContainer()
+mbs = SC.AddSystem()
+
+#a chain of n mass points in x-direction, between springs; fixed at both ends by the ground
+n = 30
+oGround = mbs.CreateGround()
+bodies = [oGround]
+for i in range(n):
+    bodies.append(mbs.CreateMassPoint(referencePosition=[i+1, 0, 0], mass=1+0.1*i))
+bodies.append(oGround)
+for i in range(n+1):
+    mbs.CreateSpringDamper(itemNumbers=[bodies[i], bodies[i+1]],
+                           localPosition0=[n+1 if i == n else 0, 0, 0] if bodies[i] == oGround else [0, 0, 0],
+                           localPosition1=[n+1, 0, 0] if (i == n) else [0, 0, 0],
+                           stiffness=1000, damping=1)
+mbs.Assemble()
+
+errors = 0
+
+#the solver: dense and sparse matrices
+for linearSolverType in [exu.LinearSolverType.EXUdense, exu.LinearSolverType.EigenSparse]:
+    simulationSettings = exu.SimulationSettings()
+    simulationSettings.linearSolver.solverType = linearSolverType
+    solver = exu.MainSolverStatic()
+    solver.InitializeSolver(mbs, simulationSettings)
+    solver.ComputeMassMatrix(mbs)
+    solver.ComputeJacobianODE2RHS(mbs, scalarFactor_ODE2=-1, scalarFactor_ODE2_t=0, scalarFactor_ODE1=0)
+    for (dense, sparse) in [(solver.GetSystemMassMatrix(), solver.GetSystemMassMatrix(sparse=True)),
+                            (solver.GetSystemJacobian(), solver.GetSystemJacobian(sparse=True))]:
+        if not scipy.sparse.issparse(sparse) or np.abs(sparse.toarray() - dense).max() > 1e-12:
+            errors += 1
+    solver.FinalizeSolver(mbs, simulationSettings)
+
+#the linearized system
+[M, K, D] = mbs.ComputeLinearizedSystem()
+[Ms, Ks, Ds] = mbs.ComputeLinearizedSystem(useSparseMatrices=True)
+for (dense, sparse) in [(M, Ms), (K, Ks), (D, Ds)]:
+    if not scipy.sparse.issparse(sparse) or np.abs(sparse.toarray() - dense).max() > 1e-12:
+        errors += 1
+exu.Print('nonzero entries of K:', Ks.nnz, 'of', 3*n*3*n)
+
+#the eigenvalues of the motion in x: the coordinates in y and z are constrained
+constrained = [3*i+1 for i in range(n)] + [3*i+2 for i in range(n)]
+[eigenValues, eigenVectors] = mbs.ComputeODE2Eigenvalues(constrainedCoordinates=constrained)
+[eigenValuesSparse, eigenVectorsSparse] = mbs.ComputeODE2Eigenvalues(constrainedCoordinates=constrained,
+                                                                     useSparseSolver=True, numberOfEigenvalues=5)
+exu.Print('eigenvalues dense :', eigenValues[0:5])
+exu.Print('eigenvalues sparse:', eigenValuesSparse)
+if np.abs(eigenValuesSparse - eigenValues[0:5]).max() > 1e-8*eigenValues[4]:
+    errors += 1
+
+exu.Print('sparseSystemMatricesTest: errors', errors)
+u = errors + np.sum(eigenValues[0:5])/1000 #the dense ones: eigsh (ARPACK) agrees to about 1e-8 only
+exu.Print('solution of sparseSystemMatricesTest=', u)
+
+exu.sys['testResult'] = u

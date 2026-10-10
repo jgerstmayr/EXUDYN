@@ -22,7 +22,7 @@ from exudyn.misc.extensionRegistry import extends
 __all__ = [
     'solverCheckMemoryAllocations', 'solverCheckMemoryAllocationsThreshold', 'SolverErrorMessage',
     'SolveStatic', 'SolveDynamic', 'SolverSuccess', 'DeactivateWritingOfSolvers',
-    'RestoreSimulationSettings', 'ComputeLinearizedSystem', 'ComputeODE2Eigenvalues',
+    'RestoreSimulationSettings', 'UseSparseLinearSolver', 'ComputeLinearizedSystem', 'ComputeODE2Eigenvalues',
     'ComputeSystemDegreeOfFreedom', 'CheckSolverInfoStatistics',
     ]
 
@@ -406,6 +406,14 @@ def RestoreSimulationSettings(simulationSettings, store):
     simulationSettings.solution.sensors.active = store['sensorsStoreAndWriteFilesOld']
     
 
+def UseSparseLinearSolver(simulationSettings, sparse):
+    """with sparse, set simulationSettings.linearSolver.solverType to EigenSparse, so that the solver computes sparse system
+    matrices (#1529); returns the type before, which the caller restores"""
+    stored = simulationSettings.linearSolver.solverType
+    if sparse and stored not in [exudyn.LinearSolverType.EigenSparse, exudyn.LinearSolverType.EigenSparseSymmetric]:
+        simulationSettings.linearSolver.solverType = exudyn.LinearSolverType.EigenSparse
+    return stored
+
 @extends(exudyn.MainSystem)
 def ComputeLinearizedSystem(mbs, 
                             simulationSettings = None,
@@ -414,6 +422,7 @@ def ComputeLinearizedSystem(mbs,
                             returnConstraintJacobian = False,
                             returnConstraintNullspace = False,
                             autoAssemble = True,
+                            useSparseMatrices = False,
                             ) -> list:
     r"""compute linearized system of equations for ODE2 part of mbs, not considering the effects of algebraic constraints; for computation of eigenvalues and advanced computation with constrained systems, see ComputeODE2Eigenvalues; the current implementation is also able to project into the constrained space, however, this currently does not generally work with non-holonomic systems
 
@@ -425,9 +434,10 @@ def ComputeLinearizedSystem(mbs,
         returnConstraintJacobian: if True, the returned list contains [M, K, D, C, N] where C is the constraint jacobian and N is the nullspace matrix (may be empty)
         returnConstraintNullspace: if True, the returned list contains [M, K, D, C, N] where C is the constraint jacobian (may be empty) and N is the nullspace matrix
         autoAssemble: if True: if mbs.systemIsConsistent=False (system is not assembled), call mbs.Assemble() before solver calls
+        useSparseMatrices: if True, the matrices are computed with the sparse solver and returned as scipy.sparse.csr_matrix, without dense matrices on the way - for large systems; needs scipy; not together with projectIntoConstraintNullspace or returnConstraintNullspace, which need a dense singular value decomposition
 
     Returns:
-        :[ArrayLike, ArrayLike, ArrayLike]: [M, K, D]; list containing numpy mass matrix M, stiffness matrix K and damping matrix D; for constraints, see options with arguments above, return values may change to [M, K, D, C, N]
+        :[ArrayLike, ArrayLike, ArrayLike]: [M, K, D]; list containing numpy mass matrix M, stiffness matrix K and damping matrix D (scipy.sparse.csr_matrix with useSparseMatrices=True); for constraints, see options with arguments above, return values may change to [M, K, D, C, N]
 
     Note:
         consider paper of Agundez, Vallejo, Freire, Mikkola, "The dependent coordinates in the linearization of constrained multibody systems: Handling and elimination", https://www.sciencedirect.com/science/article/pii/S0020740324000791
@@ -457,9 +467,13 @@ def ComputeLinearizedSystem(mbs,
         exu.Print('M=\n',M,'\nK=\n',K,'\nD=\n',D)
     """
     if simulationSettings is None: simulationSettings = exudyn.SimulationSettings()
+    if useSparseMatrices and (projectIntoConstraintNullspace or returnConstraintNullspace):
+        raise ValueError('ComputeLinearizedSystem: useSparseMatrices=True cannot be combined with projectIntoConstraintNullspace '
+                         'or returnConstraintNullspace, which need a dense singular value decomposition')
 
     #do not overide sensor files or solution files ...
     store = DeactivateWritingOfSolvers(simulationSettings)
+    linearSolverTypeStored = UseSparseLinearSolver(simulationSettings, useSparseMatrices)
 
     if not mbs.systemIsConsistent and autoAssemble:
         exudyn.Print('WARNING: ComputeLinearizedSystem: mbs.systemIsConsistent=False, therefore calling mbs.Assemble() before solving; to avoid this, set autoAssemble=False')
@@ -478,7 +492,7 @@ def ComputeLinearizedSystem(mbs,
         exudyn.Print('WARNING: ComputeLinearizedSystem: not implemented for ODE1 coordinates; results may be wrong')
 
     staticSolver.ComputeMassMatrix(mbs)
-    Mode2 = staticSolver.GetSystemMassMatrix()[0:nODE2,0:nODE2]
+    Mode2 = staticSolver.GetSystemMassMatrix(sparse=useSparseMatrices)[0:nODE2,0:nODE2]
 
     staticSolver.ComputeJacobianODE2RHS(mbs,scalarFactor_ODE2=-1,
                                         scalarFactor_ODE2_t=0, 
@@ -490,19 +504,20 @@ def ComputeLinearizedSystem(mbs,
                                        scalarFactor_ODE1=0., #could be 1 to include ODE1 part
                                        velocityLevel=False)          
 
-    jacobian = staticSolver.GetSystemJacobian() #read out stored jacobian
+    jacobian = staticSolver.GetSystemJacobian(sparse=useSparseMatrices) #read out stored jacobian
 
     Kode2 = jacobian[0:nODE2,0:nODE2]    #obtain ODE2 part from jacobian == stiffness matrix
 
     staticSolver.ComputeJacobianODE2RHS(mbs,scalarFactor_ODE2=0,
                                         scalarFactor_ODE2_t=-1, 
                                         scalarFactor_ODE1=0)    #reset jacobian
-    jacobian_t = staticSolver.GetSystemJacobian() #read out stored jacobian
+    jacobian_t = staticSolver.GetSystemJacobian(sparse=useSparseMatrices) #read out stored jacobian
     
     Dode2 = jacobian_t[0:nODE2,0:nODE2] #obtain ODE2_t part from jacobian == damping matrix
 
     staticSolver.FinalizeSolver(mbs, simulationSettings) #close files, etc.
     RestoreSimulationSettings(simulationSettings, store)
+    simulationSettings.linearSolver.solverType = linearSolverTypeStored
 
     #include constraints:
     listCN = []
@@ -549,12 +564,12 @@ def ComputeODE2Eigenvalues(mbs,
                            ignoreAlgebraicEquations=False, singularValuesTolerance=1e-12,
                            autoAssemble = True,
                            ) -> list:
-    r"""compute eigenvalues for unconstrained ODE2 part of mbs, which represent the square of the eigenfrequencies (in radiant) of the undamped system; the computation may include constraints in case that ignoreAlgebraicEquations=False (however, this currently does not generally work with non-holonomic systems); for algebraic constraints, however, a dense singular value decomposition of the constraint jacobian is used for the nullspace projection; the computation is done for the initial values of the mbs, independently of previous computations. If you would like to use the current state for the eigenvalue computation, you need to copy the current state to the initial state (using GetSystemState, SetSystemState, see [Section](#sec:mbs:systemData)); note that mass and stiffness matrices are computed in dense mode so far, while eigenvalues are computed according to useSparseSolver.
+    r"""compute eigenvalues for unconstrained ODE2 part of mbs, which represent the square of the eigenfrequencies (in radiant) of the undamped system; the computation may include constraints in case that ignoreAlgebraicEquations=False (however, this currently does not generally work with non-holonomic systems); for algebraic constraints, however, a dense singular value decomposition of the constraint jacobian is used for the nullspace projection; the computation is done for the initial values of the mbs, independently of previous computations. If you would like to use the current state for the eigenvalue computation, you need to copy the current state to the initial state (using GetSystemState, SetSystemState, see [Section](#sec:mbs:systemData)); with useSparseSolver=True, mass and stiffness matrices are computed and exported as sparse matrices (unless computeComplexEigenvalues or the projection of algebraic equations needs them dense).
 
     Args:
         mbs: the MainSystem containing the assembled system
         simulationSettings: specific simulation settings used for computation of jacobian (e.g., sparse mode in static solver enables sparse computation)
-        useSparseSolver: if False (only for small systems), all eigenvalues are computed in dense mode (slow for large systems!); if True, only the numberOfEigenvalues are computed (numberOfEigenvalues must be set!); Currently, the matrices are exported only in DENSE MODE from mbs, which means that intermediate matrices may become huge for more than 5000 coordinates! NOTE that the sparsesolver accuracy is much less than the dense solver
+        useSparseSolver: if False (only for small systems), all eigenvalues are computed in dense mode (slow for large systems!); if True, only the numberOfEigenvalues are computed (numberOfEigenvalues must be set!), and mass and stiffness matrices are computed with the sparse solver and exported as scipy sparse matrices, without dense matrices on the way; NOTE that the sparsesolver accuracy is much less than the dense solver
         numberOfEigenvalues: number of eigenvalues and eivenvectors to be computed; if numberOfEigenvalues==0, all eigenvalues will be computed (may be impossible for larger or sparse problems!)
         constrainedCoordinates: if this list is non-empty (and there are no algebraic equations or ignoreAlgebraicEquations=True), the integer indices represent constrained coordinates of the system, which are fixed during eigenvalue/vector computation; according rows/columns of mass and stiffness matrices are erased; in this case, algebraic equations of the system are ignored
         convert2Frequencies: if True, the square root is computed for eigenvalues, they are converted into frequencies (Hz), and the output is [eigenFrequencies, eigenVectors]
@@ -608,6 +623,12 @@ def ComputeODE2Eigenvalues(mbs,
         exudyn.Print('WARNING: ComputeODE2Eigenvalues: mbs.systemIsConsistent=False, therefore calling mbs.Assemble() before solving; to avoid this, set autoAssemble=False')
         mbs.Assemble()
 
+    #sparse matrices where the eigenvalues are computed with eigsh (#1529); the projection into the nullspace of the
+    #constraints and the complex eigenvalues work on dense matrices
+    sparseMatrices = (useSparseSolver and not computeComplexEigenvalues
+                      and (constrainedCoordinates != [] or ignoreAlgebraicEquations or mbs.systemData.AEsize() == 0))
+    linearSolverTypeStored = UseSparseLinearSolver(simulationSettings, sparseMatrices)
+
     try:
         from scipy.linalg import eigh, eig, svd  #eigh for symmetric matrices, positive definite; eig for standard eigen value problems
         from scipy.sparse.linalg import eigsh #eigh for symmetric matrices, positive definite
@@ -628,7 +649,7 @@ def ComputeODE2Eigenvalues(mbs,
         exudyn.Print('WARNING: ComputeODE2Eigenvalues: not implemented for ODE1 coordinates; results may be wrong')
 
     staticSolver.ComputeMassMatrix(mbs)
-    Mode2 = staticSolver.GetSystemMassMatrix()
+    Mode2 = staticSolver.GetSystemMassMatrix(sparse=sparseMatrices)[0:nODE2,0:nODE2]
 
     #compute ODE2 part of jacobian ==> stored internally in solver
     staticSolver.ComputeJacobianODE2RHS(mbs,scalarFactor_ODE2=-1,
@@ -640,7 +661,7 @@ def ComputeODE2Eigenvalues(mbs,
                                        scalarFactor_ODE1=0., #could be 1 to include ODE1 part
                                        velocityLevel=False)          
     
-    jacobian = staticSolver.GetSystemJacobian() #read out stored jacobian; includes ODE2, ODE1 and nAE part
+    jacobian = staticSolver.GetSystemJacobian(sparse=sparseMatrices) #read out stored jacobian; includes ODE2, ODE1 and nAE part
 
     #obtain ODE2 part from jacobian == stiffness matrix
     Kode2 = jacobian[0:nODE2,0:nODE2]
@@ -657,7 +678,11 @@ def ComputeODE2Eigenvalues(mbs,
         Dode2 = jacobianD[0:nODE2,0:nODE2]
 
     remappingIndices = np.arange(nODE2) #maps new coordinates to original (full) ones
-    if constrainedCoordinates != []:
+    if constrainedCoordinates != [] and sparseMatrices:
+        remappingIndices = np.delete(remappingIndices, constrainedCoordinates)
+        Mode2 = Mode2[remappingIndices][:, remappingIndices]
+        Kode2 = Kode2[remappingIndices][:, remappingIndices]
+    elif constrainedCoordinates != []:
         Mode2 = np.delete(np.delete(Mode2, constrainedCoordinates, 0), constrainedCoordinates, 1)
         Kode2 = np.delete(np.delete(Kode2, constrainedCoordinates, 0), constrainedCoordinates, 1)
         if computeComplexEigenvalues:
@@ -667,6 +692,7 @@ def ComputeODE2Eigenvalues(mbs,
 
     staticSolver.FinalizeSolver(mbs, simulationSettings) #close files, etc.
     RestoreSimulationSettings(simulationSettings, store)
+    simulationSettings.linearSolver.solverType = linearSolverTypeStored
 
     if nAE != 0 and not ignoreAlgebraicEquations and constrainedCoordinates != []:
         raise ValueError('ComputeODE2Eigenvalues: in case of algebraic equations, either ignoreAlgebraicEquations=True or constrainedCoordinates=[]')

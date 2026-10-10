@@ -42,7 +42,8 @@ upload touch a remote; each push to GitHub needs the 2FA.
    anything is tagged or published.
 
 ### 2. Build and tag
-4. The release notes, cut from `CHANGELOG.md`, and the pdf of the documentation:
+4. The release notes - three lines that point to the revisions chapter and to the issues resolved since the last
+   published version, no details and no summary (#2924) - and the pdf of the documentation:
    ```powershell
    exudev docs --pdf
    python -c "import sys; sys.path[:0]=['tools/exudev','tools']; import commands; commands.WriteReleaseNotes()"

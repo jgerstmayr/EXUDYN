@@ -207,6 +207,21 @@ public:
 	//! return a dense matrix from any other matrix: requires a copy - SLOW!
 	virtual ResizableMatrix GetEXUdenseMatrix() const = 0;
 
+	//! the entries that are not zero, as (row, column, value), without a dense copy of a sparse matrix; a position may
+	//! come more than once (triplets not yet summed up), its values then add up (#1529)
+	virtual void GetSparseEntries(std::vector<Index>& rows, std::vector<Index>& columns, std::vector<Real>& values) const
+	{
+		ResizableMatrix dense = GetEXUdenseMatrix();
+		rows.clear(); columns.clear(); values.clear();
+		for (Index i = 0; i < dense.NumberOfRows(); i++)
+		{
+			for (Index j = 0; j < dense.NumberOfColumns(); j++)
+			{
+				if (dense(i, j) != 0.) { rows.push_back(i); columns.push_back(j); values.push_back(dense(i, j)); }
+			}
+		}
+	}
+
 	//! function overwritten in derived class to print matrix
 	virtual void PrintMatrix(std::ostream& os) const = 0;
 
@@ -585,6 +600,9 @@ public:
 
 	//! return a dense matrix from any other matrix: requires a copy - SLOW!
 	virtual ResizableMatrix GetEXUdenseMatrix() const;
+
+	//! the entries of the built matrix, or the triplets before it is built (#1529)
+	virtual void GetSparseEntries(std::vector<Index>& rows, std::vector<Index>& columns, std::vector<Real>& values) const;
 
 	//! function to print matrix
 	virtual void PrintMatrix(std::ostream& os) const

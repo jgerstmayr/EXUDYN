@@ -133,20 +133,20 @@ if __name__ == '__main__':
     parser.add_argument('--out', default='', help='the file the values go to (.npz)')
     parser.add_argument('--no-reference', action='store_true', help='do not compare with mpmath')
     parser.add_argument('--compare', nargs=2, metavar='FILE', help='compare two files of this script, nothing else')
-    parser.add_argument('--timing', action='store_true', help='the time per evaluation of std and portable, nothing else')
+    parser.add_argument('--timing', action='store_true', help='the time per evaluation of std, portable and exudyn (what the C++ code calls), nothing else')
     args = parser.parse_args()
 
     if args.timing:
         #the fastest of five runs of 20 repetitions each, in ns per evaluation; the arguments are those of the check
         print('ns per evaluation, ' + exu._compiledModuleName + ', ' + PlatformTag())
-        print('%-7s %9s %9s %7s' % ('', 'std', 'portable', 'ratio'))
+        print('%-7s %9s %9s %9s %7s' % ('', 'std', 'portable', 'exudyn', 'ratio'))
         for name in args.functions.split(','):
             (x, y) = Arguments(name, args.count)
             t = {}
-            for implementation in ['std', 'portable']:
+            for implementation in ['std', 'portable', 'exudyn']:
                 t[implementation] = min(exu.experimental.EvaluateMathFunction(name, x, y, implementation, 20)[1]
                                         for i in range(5)) * 1e9
-            print('%-7s %9.2f %9.2f %7.2f' % (name, t['std'], t['portable'], t['portable'] / t['std']))
+            print('%-7s %9.2f %9.2f %9.2f %7.2f' % (name, t['std'], t['portable'], t['exudyn'], t['portable'] / t['std']))
         sys.exit(0)
 
     if args.compare:

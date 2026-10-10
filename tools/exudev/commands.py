@@ -581,40 +581,45 @@ def ReleaseNotesPath():
     return os.path.join(runner.RepositoryRoot(), 'dist', 'RELEASE_NOTES.md')
 
 
+def PreviousReleaseTag():
+    """the newest tag vX.Y.Z before the one of this version, e.g. 'v1.13.6', or None without git or tags"""
+    current = ReleaseTagName()
+    try:
+        result = subprocess.run(['git', 'tag', '--list', 'v*', '--sort=-v:refname'], cwd=runner.RepositoryRoot(),
+                                capture_output=True, text=True)
+    except OSError:
+        return None
+    if result.returncode != 0:
+        return None
+    tags = [tag.strip() for tag in result.stdout.splitlines() if tag.strip() and tag.strip() != current]
+    return tags[0] if tags else None
+
+
+def ReleaseNotesText(version, previousTag):
+    """The notes of a release, for the GitHub release and the tag: a few lines that point to the revisions chapter and to
+    the issues, nothing more (maintainer 2026-10-10, #2924: "only short notes, referring to the issues and revision
+    section, but no details and even no summary"). What changed is in the issues; their release notes are in the
+    issue tracker and nowhere else."""
+    since = ('the issues resolved since ' + previousTag[1:]) if previousTag else 'the resolved issues'
+    return ('# Exudyn ' + version + '\n\n'
+            + 'What changes for a model script: the [revisions chapter]('
+            + 'https://exudyn.readthedocs.io/en/latest/docs/manual/revisions.html).\n'
+            + 'All changes are ' + since + ', each with its release note, in the [issue tracker]('
+            + 'https://exudyn.readthedocs.io/en/latest/docs/generated/trackerlog.html).\n'
+            + 'Install with `pip install exudyn==' + version + '`; the documentation is on '
+            + '[Read the Docs](https://exudyn.readthedocs.io/).\n')
+
+
 def WriteReleaseNotes():
-    """The section of CHANGELOG.md that belongs to the current release, as its own file: that is
-    what goes into the body of a GitHub release and into an announcement. It is CUT from the
-    changelog rather than written again - the release notes of each issue are in the tracker and
-    nowhere else."""
-    changelog = os.path.join(runner.RepositoryRoot(), 'CHANGELOG.md')
-    if not os.path.isfile(changelog):
-        raise SystemExit('exudev release: no CHANGELOG.md; any tracker verb writes it')
-
-    with io.open(changelog, encoding='utf-8') as file:
-        lines = file.read().split('\n')
-
-    start = None
-    section = []
-    for line in lines:
-        if line.startswith('## Version '):
-            if start is not None:
-                break
-            start = line
-            continue
-        if start is not None:
-            section.append(line)
-
+    """dist/RELEASE_NOTES.md: the body of the GitHub release and the message of the tag (ReleaseNotesText, #2924)"""
     version = runner.RepositoryVersion()
-    text = ('# Exudyn ' + version + '\n\n'
-            + (start.replace('## ', '') + '\n\n' if start else '')
-            + '\n'.join(section).strip() + '\n')
+    text = ReleaseNotesText(version, PreviousReleaseTag())
 
     os.makedirs(os.path.dirname(ReleaseNotesPath()), exist_ok=True)
     with io.open(ReleaseNotesPath(), 'w', encoding='utf-8', newline='\n') as file:
         file.write(text)
 
-    print('release notes for ' + version + ': ' + ReleaseNotesPath() + ' ('
-          + str(len(section)) + ' lines from CHANGELOG.md)')
+    print('release notes for ' + version + ': ' + ReleaseNotesPath())
     return 0
 
 
@@ -672,8 +677,7 @@ def Release(options):
 
     steps += [Step('write the release notes',
                     action=WriteReleaseNotes,
-                    note='cut the section of CHANGELOG.md that belongs to this release into '
-                         'dist/RELEASE_NOTES.md')]
+                    note='three lines to the revisions chapter and the issues into dist/RELEASE_NOTES.md (#2924)')]
 
     if options.tag:
         steps += [Step('tag the release',
