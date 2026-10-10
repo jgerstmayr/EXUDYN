@@ -11,11 +11,12 @@
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 import numpy as np
-from math import sin, cos
+from exudyn.cMath import sin, cos
 import exudyn
 from exudyn.misc.mainSystemExtensions import CreateDistanceSensor
 import exudyn.graphics as graphics
 from exudyn.rigidBodyUtilities import HT2translation, HT2rotationMatrix
+import exudyn.cMath as cMath #the math functions of the C++ code, the same bits on every platform (#2962)
 
 #public API of this module; kept complete by tools/checkAll.py (#2444)
 __all__ = [
@@ -332,7 +333,7 @@ def GetURDFrobotData(robot,
                 meshSetList.append(ms) #for debugging
                 
                 
-                if np.linalg.norm(mesh.transform_matrix()-np.eye(4)) != 0:
+                if cMath.norm(mesh.transform_matrix()-np.eye(4)) != 0:
                     if verbose > 1: exudyn.Print('mesh',i,'has additional transformation')
                 # if mesh.has_face_color(): #only in case of .obj files! use: convert3d.org/dae-to-obj
                 #     if verbose > 0: exudyn.Print('link',i,'scene',j,'has colored faces')

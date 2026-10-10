@@ -2,9 +2,13 @@
   "number": 2964,
   "title": "A check that the Python library, test models and examples call no math function of math or numpy",
   "author": "Claude-JG",
-  "status": "RAISED",
+  "status": "RESOLVED",
   "type": "CHANGE",
   "description": "revision2026c step RG11.10.8: tools/checkPythonMath.py in exudev generate --all-checks refuses from math import sin..., math.sin(, np.sin(, ..., math.pow, np.power and ** with an exponent that is not a whole number (x**0.5: the library's pow, differs per platform; use sqrt); whole exponents (x**2) reported only until RG11.10.7 shows whether they move a result; sqrt, pi, fsum allowed; pytest as for checkMathFunctions.",
   "dateRaised": "2026-10-10",
-  "deadline": "2027-04-08"
+  "deadline": "2027-04-08",
+  "dateResolved": "2026-10-10 23:58",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "tools/checkPythonMath.py refuses math and numpy functions, np.linalg.norm(x) and non-integer powers in the Python library and the test models (revision2026c step RG11.10.8)",
+  "resolvedInVersion": "1.13.53"
 }

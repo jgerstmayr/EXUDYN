@@ -17,7 +17,7 @@ import exudyn
 import exudyn.graphics as graphics
 
 import numpy as np
-from math import sqrt, sin, cos
+from exudyn.cMath import sqrt, sin, cos
 
 testIsActive = exu.sys.get('testIsActive', False)
 

@@ -12,7 +12,7 @@
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 import numpy as np
-from math import sin, cos, pi
+from exudyn.cMath import sin, cos, pi
 from enum import Enum
 import copy 
 

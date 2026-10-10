@@ -28,7 +28,9 @@ from exudyn.misc.deprecation import Deprecated #the deprecations of the library 
 import numpy as np #LoadSolutionFile
 import copy as copy #to be able to copy e.g. lists
 import functools
-from math import radians, pi, sin, cos, tan, asin #, acos
+from math import radians
+from exudyn.cMath import pi, sin, cos, tan, asin #, acos
+import exudyn.cMath as cMath #the math functions of the C++ code, the same bits on every platform (#2962)
 
 #public API of this module; kept complete by tools/checkAll.py (#2444)
 __all__ = [
@@ -757,10 +759,10 @@ def Brick(centerPoint=[0,0,0], size=[0.1,0.1,0.1], color=[0.,0.,0.,1.], addNorma
         vv = vv.flatten()
     
         #sphere points (unit sphere)
-        ux = np.cos(uu)
-        uy = np.sin(uu)
-        vx = np.sin(vv)
-        vz = np.cos(vv)
+        ux = cMath.cos(uu)
+        uy = cMath.sin(uu)
+        vx = cMath.sin(vv)
+        vz = cMath.cos(vv)
         xSphere = np.zeros_like(uu)
         ySphere = np.zeros_like(uu)
         zSphere = np.zeros_like(uu)
@@ -770,7 +772,7 @@ def Brick(centerPoint=[0,0,0], size=[0.1,0.1,0.1], color=[0.,0.,0.,1.], addNorma
         fact = 1/(abs(cos(pi/4))**pot + abs(sin(pi/4))**pot)
         addedRN = min(roundness,0.2) #added rounding at corner
         if roundness > 0.2:
-            addedRN = roundness**0.5 * 0.2**0.5
+            addedRN = cMath.sqrt(roundness) * cMath.sqrt(0.2)
         factMax = 1/(abs(cos(pi/4)) + abs(sin(pi/4)))
         for i in range(len(xSphere)):
             phiu = uu[i]
@@ -843,7 +845,7 @@ def _QuadraticPatch(PointAndNormal, nu, nv, closedU, closedV, offset=0):
         return offset + (j % mv if closedV else j)*mu + (i % mu if closedU else i)
 
     def Coincide(i, j):
-        return np.linalg.norm(points[i-offset] - points[j-offset]) <= 1e-12*(1. + np.linalg.norm(points[i-offset]))
+        return cMath.norm(points[i-offset] - points[j-offset]) <= 1e-12*(1. + cMath.norm(points[i-offset]))
 
     triangles6 = []
     for ej in range(nv):
@@ -862,7 +864,7 @@ def _QuadraticPatch(PointAndNormal, nu, nv, closedU, closedV, offset=0):
     for t in triangles6:
         (pa, pb, pc) = (points[t[0]-offset], points[t[1]-offset], points[t[2]-offset])
         cross = np.cross(pb - pa, pc - pa)
-        if np.linalg.norm(cross) > 1e-12*max(1., np.linalg.norm(pb - pa)**2):
+        if cMath.norm(cross) > 1e-12*max(1., cMath.norm(pb - pa)**2):
             if cross @ (normals[t[0]-offset] + normals[t[1]-offset] + normals[t[2]-offset]) < 0:
                 triangles6 = [[t[0], t[2], t[1], t[5], t[4], t[3]] for t in triangles6]
             break
@@ -919,7 +921,7 @@ def Cylinder(pAxis=[0,0,0], vAxis=[0,0,1], radius=0.1, color=[0.,0.,0.,1.], nTil
         nTiles = 3
 
     if radiusInner is not None: #simple alternative to draw hollow cylinder
-        vLen = np.linalg.norm(vAxis)
+        vLen = cMath.norm(vAxis)
         contour=[[ 0.  ,radius],
                  [ vLen,radius],
                  [ vLen,radiusInner],
@@ -1078,10 +1080,10 @@ def Tube(points, axes, radius=0.1, color=[0.,0.,0.,1.], nTiles = 16):
 
     #create frames; frames shall not change too much, as this causes artifacts...
     # Start frame
-    z0 = axes[0] / np.linalg.norm(axes[0])
+    z0 = axes[0] / cMath.norm(axes[0])
     up = np.array([0, 0, 1]) if abs(z0[2]) < 0.9 else np.array([1, 0, 0])
     x0 = np.cross(up, z0)
-    x0 /= np.linalg.norm(x0)
+    x0 /= cMath.norm(x0)
     y0 = np.cross(z0, x0)
     frames.append((x0, y0, z0))
 
@@ -1090,14 +1092,14 @@ def Tube(points, axes, radius=0.1, color=[0.,0.,0.,1.], nTiles = 16):
     prev_z = z0
 
     for i in range(1, n):
-        z = axes[i] / np.linalg.norm(axes[i])
+        z = axes[i] / cMath.norm(axes[i])
         v = np.cross(prev_z, z)
-        if np.linalg.norm(v) < 1e-6:#directions are nearly aligned
+        if cMath.norm(v) < 1e-6:#directions are nearly aligned
             x = prev_x
             y = prev_y
         else:
-            v /= np.linalg.norm(v)
-            angle = np.arccos(np.clip(np.dot(prev_z, z), -1.0, 1.0))
+            v /= cMath.norm(v)
+            angle = cMath.acos(np.clip(np.dot(prev_z, z), -1.0, 1.0))
             R = RotationVector2RotationMatrix(angle*v)
             x = R @ prev_x
             y = R @ prev_y
@@ -1111,7 +1113,7 @@ def Tube(points, axes, radius=0.1, color=[0.,0.,0.,1.], nTiles = 16):
     ne = _NumberOfQuadraticElements(nTiles)
     def RingPointAndNormal(i, angle):
         [x, y, z] = frames[i]
-        normal = np.cos(angle) * x + np.sin(angle) * y
+        normal = cMath.cos(angle) * x + cMath.sin(angle) * y
         return (np.array(points[i]) + radius * normal, normal)
     def PointAndNormal(u, v):
         angle = 2 * np.pi * u
@@ -1174,8 +1176,8 @@ def Torus(point, axis, radiusMajor=0.5, radiusMinor=0.1, color=[0., 0., 0., 1.],
         def PointAndNormal(u, v):
             phi = 2*np.pi*u
             theta = minorAngleStart + (minorAngleEnd-minorAngleStart)*v
-            localNormal = np.array([np.cos(phi)*np.cos(theta), np.sin(phi)*np.cos(theta), np.sin(theta)])
-            center = np.array([np.cos(phi)*radiusMajor, np.sin(phi)*radiusMajor, 0.])
+            localNormal = np.array([cMath.cos(phi)*cMath.cos(theta), cMath.sin(phi)*cMath.cos(theta), cMath.sin(theta)])
+            center = np.array([cMath.cos(phi)*radiusMajor, cMath.sin(phi)*radiusMajor, 0.])
             return (A @ (center + radiusMinor*localNormal) + point, invertSign*(A @ localNormal))
         (vertices, normals, triangles6, Index) = _QuadraticPatch(PointAndNormal, neMajor, neMinor, True, not isOpen)
         return {'type':'TriangleList', 'colors':np.array(list(color)*len(vertices)),
@@ -1190,8 +1192,8 @@ def Torus(point, axis, radiusMajor=0.5, radiusMinor=0.1, color=[0., 0., 0., 1.],
 
     for i in range(nTilesMajor):
         phi = 2 * np.pi * i / nTilesMajor  # major angle
-        center = np.array([np.cos(phi) * radiusMajor,
-                           np.sin(phi) * radiusMajor,
+        center = np.array([cMath.cos(phi) * radiusMajor,
+                           cMath.sin(phi) * radiusMajor,
                            0.0])  # center of the tube ring
 
         for j in range(nTilesMinor1):
@@ -1199,9 +1201,9 @@ def Torus(point, axis, radiusMajor=0.5, radiusMinor=0.1, color=[0., 0., 0., 1.],
 
             # minor circle point in local frame
             local_normal = np.array([
-                np.cos(phi) * np.cos(theta),
-                np.sin(phi) * np.cos(theta),
-                np.sin(theta)
+                cMath.cos(phi) * cMath.cos(theta),
+                cMath.sin(phi) * cMath.cos(theta),
+                cMath.sin(theta)
             ])
 
             local_pos = center + radiusMinor * local_normal
@@ -1263,7 +1265,7 @@ def RigidLink(p0,p1,axis0=[0,0,0], axis1=[0,0,0], radius=[0.1,0.1],
     data1 = {}
     data2 = {}
 
-    if np.linalg.norm(axis0) == 0:
+    if cMath.norm(axis0) == 0:
         data1 = _SphereTriangleList(p0, radius[0], color, nTiles) #merged into the triangles of the link
     else:
         a0=ebu.Normalize(a0)
@@ -1271,7 +1273,7 @@ def RigidLink(p0,p1,axis0=[0,0,0], axis1=[0,0,0], radius=[0.1,0.1],
                                      list(width[0]*np.array(a0)), 
                                      radius[0], color, nTiles)
         
-    if np.linalg.norm(axis1) == 0:
+    if cMath.norm(axis1) == 0:
         data2 = _SphereTriangleList(p1, radius[1], color, nTiles) #merged into the triangles of the link
     else:
         a1=ebu.Normalize(a1)
@@ -1345,7 +1347,7 @@ def SolidOfRevolution(pAxis, vAxis, contour, color=[0.,0.,0.,1.], nTiles = 16, s
         nc = ebu.Normalize([-vc[1],vc[0]])
         contourNormals += [nc]
 
-    if np.linalg.norm(np.array(contour[0]) - np.array(contour[-1])) < 1e-10:
+    if cMath.norm(np.array(contour[0]) - np.array(contour[-1])) < 1e-10:
         contourNormals += [contourNormals[0]] #closed curve: normal for last point same as first
     else:
         contourNormals += [contourNormals[-1]] #normal for last point same as previous
@@ -1354,7 +1356,7 @@ def SolidOfRevolution(pAxis, vAxis, contour, color=[0.,0.,0.,1.], nTiles = 16, s
         contourNormalsAvg = [contourNormals[0]]
         contourNormalsNext = []
         for j in range(len(contour)-1):
-            if np.arccos(np.array(contourNormals[j]) @ np.array(contourNormals[j+1])) < smoothingAngle:
+            if cMath.acos(np.array(contourNormals[j]) @ np.array(contourNormals[j+1])) < smoothingAngle:
                 ns = ebu.Normalize(np.array(contourNormals[j]) + np.array(contourNormals[j+1])) #not fully correct, but sufficient
                 contourNormalsAvg += [list(ns)]
                 contourNormalsNext += [list(ns)]
@@ -1389,7 +1391,7 @@ def SolidOfRevolution(pAxis, vAxis, contour, color=[0.,0.,0.,1.], nTiles = 16, s
         pc1 = np.array(contour[j+1])
         nc0 = np.array(contourNormals[j])
         nc1 = np.array(contourNormalsNext[j]) if smoothContour else nc0
-        ncMid = np.array(ebu.Normalize(list(nc0 + nc1))) if np.linalg.norm(nc0 + nc1) > 1e-12 else nc0
+        ncMid = np.array(ebu.Normalize(list(nc0 + nc1))) if cMath.norm(nc0 + nc1) > 1e-12 else nc0
 
         def PointAndNormal(u, v):
             k = u*mRing
@@ -1454,7 +1456,7 @@ def Arrow(pAxis, vAxis, radius, color=[0.,0.,0.,1.], headFactor = 2, headStretch
     Returns:
         graphicsData dictionary, to be used in visualization of EXUDYN objects
     """
-    L = np.linalg.norm(vAxis)
+    L = cMath.norm(vAxis)
     rHead = radius * headFactor
     xHead = L - headStretch*rHead
     contour=[[0,0],[0,radius],[xHead,radius],[xHead,rHead],[L,0]]
@@ -1867,7 +1869,7 @@ def LinkedCylinders(point0, point1, axisCylinder, radius0, radius1,
         return Cylinder(pAxis=pAxis, vAxis=axis, radius=max(r0,r1),
                         color=color, nTiles=nTiles, addEdges=addEdges)
 
-    height = np.linalg.norm(axis)
+    height = cMath.norm(axis)
 
     # 2D centers in the local plane
     c0 = np.array([0.0, 0.0])
@@ -1875,7 +1877,7 @@ def LinkedCylinders(point0, point1, axisCylinder, radius0, radius1,
 
     # belt-drive angle for external tangents (open belt): beta = asin((r1 - r0)/L), clamped to [-1,1]
     m = np.clip((radius1 - radius0) / max(L, 1e-16), -1.0, 1.0)
-    theta = float(np.arccos(m))  # robust, unambiguous
+    theta = float(cMath.acos(m))  # robust, unambiguous
 
     # tangent point angles (upper and lower) on each circle
     theta0_u = np.pi - theta
@@ -1897,7 +1899,7 @@ def LinkedCylinders(point0, point1, axisCylinder, radius0, radius1,
         segs = []
         for e in range(ne):
             angles = [a0 + delta*e/ne, a0 + delta*(e+1)/ne, a0 + delta*(e+0.5)/ne]
-            nodes = [np.array([np.cos(a), np.sin(a)]) for a in angles]
+            nodes = [np.array([cMath.cos(a), cMath.sin(a)]) for a in angles]
             segs += [[center + r*n for n in nodes] + [outward*n for n in nodes]]
         return segs
 
@@ -1907,8 +1909,8 @@ def LinkedCylinders(point0, point1, axisCylinder, radius0, radius1,
     loops = []
     arc1 = ArcSegments(c1, radius1, theta1_l, (theta1_u - theta1_l) % (2*np.pi), 1)
     arc0 = ArcSegments(c0, radius0, theta0_u, (theta0_l - theta0_u) % (2*np.pi), 1)
-    normalUpper = np.array([np.cos(theta0_u), np.sin(theta0_u)])
-    normalLower = np.array([np.cos(theta0_l), np.sin(theta0_l)])
+    normalUpper = np.array([cMath.cos(theta0_u), cMath.sin(theta0_u)])
+    normalLower = np.array([cMath.cos(theta0_l), cMath.sin(theta0_l)])
     loops += [arc1 + [StraightSegment(arc1[-1][1], arc0[0][0], normalUpper)]
               + arc0 + [StraightSegment(arc0[-1][1], arc1[0][0], normalLower)]]
     for (center, rInner, rOuter) in [(c0, radiusInner0, radius0), (c1, radiusInner1, radius1)]:
@@ -1929,7 +1931,7 @@ def LinkedCylinders(point0, point1, axisCylinder, radius0, radius1,
             segmentMid[(iNext, iFirst+k)] = seg[2]
 
     def IsStraight(seg):
-        return np.linalg.norm(seg[2] - 0.5*(seg[0] + seg[1])) <= 1e-14*(1. + np.linalg.norm(seg[0]))
+        return cMath.norm(seg[2] - 0.5*(seg[0] + seg[1])) <= 1e-14*(1. + cMath.norm(seg[0]))
 
     e3 = rot[:, 2]
     def Point3D(p2D, z):
@@ -2005,7 +2007,7 @@ def _LinkedCylindersFlat(c1, radius0, radius1, theta, radiusInner0, radiusInner1
         step = delta / nSeg
         for i in range(nSeg + addLastVertex):
             a = a0 + step * i
-            out.append([center[0] + r*np.cos(a), center[1] + r*np.sin(a)])
+            out.append([center[0] + r*cMath.cos(a), center[1] + r*cMath.sin(a)])
         return nSeg
 
     # assemble 2D outline in CCW order:
@@ -2094,13 +2096,13 @@ def BallBearingRings(axis, outsideDiameter, boreDiameter, width,
     """
     outsideRadius = 0.5*outsideDiameter
     boreRadius = 0.5*boreDiameter
-    axis0 = np.array(axis)/np.linalg.norm(axis)
+    axis0 = np.array(axis)/cMath.norm(axis)
 
     #ring graphics:
     deltaSpaceInner = innerGrooveTorusRadius - innerRingShoulderRadius
     deltaSpaceOuter = outerRingShoulderRadius - outerGrooveTorusRadius
-    phiInner = np.arcsin(deltaSpaceInner/innerGrooveRadius)
-    phiOuter = np.arcsin(deltaSpaceOuter/outerGrooveRadius)
+    phiInner = cMath.asin(deltaSpaceInner/innerGrooveRadius)
+    phiOuter = cMath.asin(deltaSpaceOuter/outerGrooveRadius)
 
     if (np.isnan(phiInner)):
         raise ValueError('graphics.BallBearingRings: illegal bearing dimensions, thus groove cannot be calculated; '+
@@ -2254,7 +2256,7 @@ def ToothedRack(module, nTeeth, width, toothHeight, rackBaseHeight,
     Returns:
         single graphics data for gear
     """
-    from math import tan
+    from exudyn.cMath import tan
 
     p = module*pi
     length = nTeeth*p
@@ -3025,7 +3027,7 @@ def FromPyMeshlabFile(fileName, defaultColor=color.defaultBody,
     mesh = ms.current_mesh()
     
     
-    if np.linalg.norm(mesh.transform_matrix()-np.eye(4)) != 0:
+    if cMath.norm(mesh.transform_matrix()-np.eye(4)) != 0:
         if verbose >= 1: 
             exudyn.Print('FromPyMeshlabFile: mesh has transformation')
 
@@ -3172,7 +3174,7 @@ def AddEdgesAndSmoothenNormals(graphicsData, edgeColor = color.black, edgeAngle 
         this function is suitable for STL import; it assumes that all colors in graphicsData are the same and only takes the first color!
     """
     graphicsData = _Flat(graphicsData)
-    from math import acos # ,sin, cos
+    from exudyn.cMath import acos # ,sin, cos
 
     oldColors = copy.copy(graphicsData['colors']) #2022-12-06: accepts now all colors; graphicsData['colors'][0:4]    
     [points, trigs]=ToPointsAndTrigs(graphicsData)
@@ -3204,7 +3206,7 @@ def AddEdgesAndSmoothenNormals(graphicsData, edgeColor = color.black, edgeAngle 
     colors = np.array(colors)
     pMax = np.max(points, axis=0)
     pMin = np.min(points, axis=0)
-    maxDim = np.linalg.norm(pMax-pMin)
+    maxDim = cMath.norm(pMax-pMin)
     if maxDim == 0: maxDim = 1.
 
     points = maxDim * np.round(points*(1./maxDim),roundDigits)

@@ -127,7 +127,7 @@ def PrintFindings(title, items):
 
 
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-#stubtest half: compare python/exudyn/__init__.pyi, symbolic.pyi and cMath.pyi against the imported module
+#stubtest half: compare python/exudyn/__init__.pyi, symbolic.pyi, cMath.pyi and cUtilities.pyi against the imported module
 stubtestNoiseFile = os.path.join(repositoryRoot, 'tools', 'ci', 'stubtestNoise.txt')
 stubtestBaselineFile = os.path.join(repositoryRoot, 'tools', 'ci', 'stubtestBaseline.txt')
 mypyConfigFile = os.path.join(repositoryRoot, 'tools', 'ci', 'mypyStubtest.ini')

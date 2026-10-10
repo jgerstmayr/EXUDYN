@@ -702,3 +702,33 @@ tmp/compareRBU.md")*
 - `python/testing/test_cMath.py`: the bits of all 15 functions equal `EvaluateMathFunction(..., 'exudyn')` on the
   arguments of the platform check, as array and one float at a time; shapes, lists, broadcasting; `__all__`, `pi` and
   the stub agree.
+
+<a id="rg11-10-4"></a>
+### RG11.10.4 to RG11.10.8 — cUtilities, and cMath in the Python library and the test models (2026-10-11, #2956, #2960-#2964)
+*(Maintainer 2026-10-11, on tmp/compareRBU.md: D1 cUtilities returns a (3,3) array; D2 keep the normalization; D3 the
+function of NodeRigidBodyRotVecLG; D4 raise; D5 RotationVector2G/GLocal stay Python; D6 Skew also for 3n vectors and
+3n x m matrices, Skew2Vec 3x3 and 4x4; D7 an issue; D8 flip=False; D9 ExpSO3 and LogSO3 in cUtilities. On speed: cMath
+is for initial values and test models, users may take math and numpy as before.)*
+- **cUtilities** (#2960): 28 functions in `src/Pymodules/PyCUtilities.h`, declared in `definitions/pybindCUtilities.py`
+  like cMath; `pybindEmitter.py` and `createStubFiles.py` take the list `cSubmodules` of `definitions/pybindTypes.py`.
+  New in `RigidBodyMath.h`: `AngularVelocity2RotXYZ_t`, `RotXYZ2EP`, `RotationMatrix2RotZYZ`. Against the Python
+  functions, 300 random inputs: equal to rel. 1.2e-15 (Skew, EP2G, EP2Glocal, EP2RotationMatrix bit-identical).
+  `ComputeOrthonormalBasisVectors` and `GramSchmidt` return the vectors as ROWS of a (3,3) array, so that
+  `[v0, n1, n2] = ...` and `np.array(...)` keep working; no caller had to change. `AngularVelocity2RotXYZ_t` raises
+  for |cos(rot[1])| < 1e-14 - cos(pi/2) is 6e-17 in floats, so the old test `== 0` never fired. Test model
+  `cUtilitiesTest.py`: orthogonality, inverses, G matrices against central differences, the cross product, what is
+  refused; its result sums the values of all functions.
+- **rigidBodyUtilities** (#2961): the kinematics functions call cUtilities, docstrings say so; `**(1/3)` of the
+  inertia is `cbrt`. The suite passed without a new reference.
+- **The library** (#2962): `tools/checkPythonMath.py` found 405 places; rewritten by a script (`from math import` ->
+  `from exudyn.cMath import`, `np.sin(` -> `cMath.sin(`, `x**0.5` -> `cMath.sqrt(x)`), the constants of
+  `basicUtilities` by hand (`math.sqrt`, correctly rounded). `np.linalg.norm(x)` with one argument sums in an order of
+  the BLAS library (the 1 ULP of #2956): `cMath.norm`, in Python, `math.fsum` of the squares. `lieGroupBasics.ExpSO3`
+  and `LogSO3` call cUtilities.
+- **Test models** (#2963): 88 changed. Recorded again on Windows: 24 references (largest: `generalContactCylinderTest`
+  rel. 3.9e-5, `ANCFbeltDrive` rel. 8.9e-6, the others below 5e-12) and 7 of the fast module. WSL (glibc 2.39, numpy
+  2.2.4, the build of this state): all 177 test models agree; the three of `UnresolvedOnLinux()` to the last bit, so
+  the list is empty (#2956). The manylinux docker was not run. `python/Examples` stay as they are.
+- **The check** (#2964), in `--all-checks`: imports and calls of math and numpy functions, single-argument
+  `np.linalg.norm`, `**` with an exponent that is not whole; `#checkPythonMath: allowed` on a line exempts it (a
+  `symbolic.Real` in `symbolicUserFunctionTest.py`). 310 whole exponents (`x**2`) are reported only.

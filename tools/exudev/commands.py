@@ -253,6 +253,7 @@ def Generate(options):
                   (['python', 'tools/checkEncoding.py', '--check'],          'checkEncoding'),
                   (['python', 'tools/checkMathMacros.py', '--check'],       'checkMathMacros'),
                   (['python', 'tools/checkMathFunctions.py', '--check'],    'checkMathFunctions'),   #EM::Sin, ..., not the library (#2953)
+                  (['python', 'tools/checkPythonMath.py', '--check'],       'checkPythonMath'),      #exudyn.cMath, not math or numpy (#2964)
                   (['python', 'tools/checkDefinitions.py', '--check'],     'checkDefinitions'),
                   (['python', 'tools/checkDescriptions.py', '--check'],    'checkDescriptions'),   #the checked descriptions of the items (#2717)
                   (['python', 'tools/checkHeadings.py', '--check'],       'checkHeadings'),

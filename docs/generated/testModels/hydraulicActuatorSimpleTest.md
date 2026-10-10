@@ -23,11 +23,12 @@ You can view and download this file on Github: [hydraulicActuatorSimpleTest.py](
 import exudyn as exu
 from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
 import exudyn.graphics as graphics
+from exudyn import cMath #the math functions of the C++ code, the same bits on every platform
 
 testIsActive = exu.sys.get('testIsActive', False)
 
 import numpy as np
-from math import sin, cos, sqrt,pi
+from exudyn.cMath import sin, cos, sqrt, pi
 
 SC = exu.SystemContainer()
 mbs = SC.AddSystem()
@@ -179,8 +180,8 @@ exu.Print('velocity=', mbs.GetSensorValues(sVelocity))
 #compute error for test suite:
 sol2 = mbs.systemData.GetODE2Coordinates(); 
 sol1 = mbs.systemData.GetODE1Coordinates(); 
-u = np.linalg.norm(sol2); 
-u += np.linalg.norm(sol1)*1e-6;
+u = cMath.norm(sol2); 
+u += cMath.norm(sol1)*1e-6;
 exu.Print('solution of hydraulicActuatorSimpleTest =',u)
 
 exu.sys['testResult'] = u

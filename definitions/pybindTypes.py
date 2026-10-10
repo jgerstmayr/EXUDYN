@@ -49,6 +49,11 @@ class PybindInterface:
         return Record
 
 
+#the submodules of compiled functions with a Python module each, exudyn.cMath, ... (#2958, #2960): (name, definition
+#file); the file holds 'pb' (the page) and 'module' (the functions), whose C++ bindings go into the compiled submodule
+#exudyn._<name> and whose stubs into python/exudyn/<name>.pyi
+cSubmodules = [('cMath', 'pybindCMath'), ('cUtilities', 'pybindCUtilities')]
+
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #itemDict = 'dict'               #stub type for item classes (in fact convertable to dict)
 itemDict = 'Any'                #stub type for item classes (in fact convertable to dict)

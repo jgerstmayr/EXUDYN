@@ -1,0 +1,15 @@
+{
+  "number": 2960,
+  "title": "exudyn.cUtilities: the kinematics functions of rigidBodyUtilities in C++",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "EXTENSION",
+  "effort": "MEDIUM",
+  "description": "revision2026c step RG11.10.4: the functions approved in RG11.10.1, bound from RigidBodyMath.h, the missing ones written there; a test compares them with the Python implementation to 1-2 ULP.",
+  "dateRaised": "2026-10-10",
+  "deadline": "2027-04-08",
+  "dateResolved": "2026-10-10 23:58",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "New submodule exudyn.cUtilities: the kinematics functions of rigid bodies in C++ (rotation matrices, Euler parameters, Tait-Bryan and zyz angles, rotation vectors, ExpSO3, LogSO3, skew matrices, basis vectors), the same bits on every platform (revision2026c step RG11.10.4)",
+  "resolvedInVersion": "1.13.49"
+}

@@ -26,7 +26,7 @@ import numpy as np
 from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
 import exudyn.graphics as graphics
 from exudyn.beams import *
-from math import sin, cos, sqrt, pi
+from exudyn.cMath import sin, cos, sqrt, pi
 
 testIsActive = exu.sys.get('testIsActive', False)
 

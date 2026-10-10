@@ -28,6 +28,7 @@ import numpy as np
 from exudyn.FEM import *
 import os   #the mesh file is checked for existence, not loaded speculatively (#2469)
 import time
+from exudyn import cMath #the math functions of the C++ code, the same bits on every platform
 
 testIsActive = exu.sys.get('testIsActive', False)
 
@@ -283,7 +284,7 @@ if not testIsActive:
     SC.renderer.DoIdleTasks()
     SC.renderer.Stop() #safely close rendering window!
 
-result = np.linalg.norm(uTip)
+result = cMath.norm(uTip)
 exu.Print('solution of NGsolveCMStest=',result)
 
 #%%++++++++++++++++++++++++++++++++++++++++++++++++++++

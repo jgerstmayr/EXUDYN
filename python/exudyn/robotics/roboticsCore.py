@@ -29,6 +29,7 @@ import exudyn.rigidBodyUtilities as erb
 import exudyn.graphics as graphics
 
 from copy import copy, deepcopy
+import exudyn.cMath as cMath #the math functions of the C++ code, the same bits on every platform (#2962)
 
 
 #public API of this module; kept complete by tools/checkAll.py (#2444)
@@ -352,7 +353,7 @@ class Robot:
         if  self.links[i].parent != i-1:
             self.isSerialRobot = False
         
-        if not self.isSerialRobot and (np.linalg.norm(self.tool.HT.HT44() - np.eye(4)) >= 1e-15
+        if not self.isSerialRobot and (cMath.norm(self.tool.HT.HT44() - np.eye(4)) >= 1e-15
             or self.tool.visualization.graphicsData != []):
             exudyn.Print('Warning: class Robot: tool defined in kinematic tree; currently tool is only allowed for serial robots')
 
@@ -1002,7 +1003,7 @@ class Robot:
             Amat = link.preHT.rotation
             vVec = link.preHT.translation
             X=erb.RotationTranslation2T66Inverse(A=Amat, v=vVec)
-            if np.linalg.norm(link.localHT.HT44() - np.eye(4)) > 1e-15:
+            if cMath.norm(link.localHT.HT44() - np.eye(4)) > 1e-15:
                 raise ValueError('GetKinematicTree66(): not implemented for links with localHT other than the identity')
             
             transformations += [X] #defines transformation to joint in parent link
@@ -1054,7 +1055,7 @@ class Robot:
                                                       radius=r, color=color)]
 
             #draw body as cylinder:
-            if np.linalg.norm(np.array(p1) - p0) > 1e-15:
+            if cMath.norm(np.array(p1) - p0) > 1e-15:
                 graphicsList += [exudyn.graphics.Cylinder(pAxis=p1, vAxis=(np.array(p0) - p1), 
                                                       radius=0.5*wL, color=color)]
         
@@ -1121,10 +1122,10 @@ def StdDH2HT(DHparameters):
 #    return erb.HTrotateZ(theta) @ erb.HTtranslate([0,0,d]) @ erb.HTtranslate([a,0,0]) @ erb.HTrotateX(alpha)
     #optimized version:
     [theta, d, a, alpha] = DHparameters
-    ct = np.cos(theta)
-    st = np.sin(theta)
-    ca = np.cos(alpha)
-    sa = np.sin(alpha)
+    ct = cMath.cos(theta)
+    st = cMath.sin(theta)
+    ca = cMath.cos(alpha)
+    sa = cMath.sin(alpha)
     return exudyn.HT(rotation=[[ct,-st*ca, st*sa],
                                [st, ct*ca,-ct*sa],
                                [ 0, sa   , ca   ]], translation=[a*ct, a*st, d])

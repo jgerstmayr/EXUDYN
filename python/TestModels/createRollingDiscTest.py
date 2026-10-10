@@ -15,6 +15,7 @@ from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
 import exudyn.graphics as graphics
 
 import numpy as np
+from exudyn import cMath #the math functions of the C++ code, the same bits on every platform
 
 testIsActive = exu.sys.get('testIsActive', False)
 
@@ -68,7 +69,7 @@ mbs.SolveDynamic(simulationSettings)
 
 p0=mbs.GetObjectOutputBody(oDisc, exu.OutputVariableType.Position)
 
-u = np.linalg.norm(p0)
+u = cMath.norm(p0)
 exu.Print('solution of createRollingDisc=',u) 
 
 exu.sys['testResult'] = u

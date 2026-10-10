@@ -25,6 +25,7 @@ from exudyn.utilities import (MarkerNodePosition, LoadForceVector, MarkerNodeCoo
                               CoordinateConstraint)
 from exudyn.shells import ShellMesh, SurfaceMap, AddNodeConstraints
 from exudyn.utilities import MarkerBodyMass, LoadMassProportional
+from exudyn import cMath #the math functions of the C++ code, the same bits on every platform
 
 #material and strip geometry (Poisson ratio 0: plate strip = Euler-Bernoulli beam)
 youngsModulus = 2.1e11
@@ -187,8 +188,8 @@ class TestANCFThinPlateElement(unittest.TestCase):
         for nodeNumber in range(mbs.systemData.NumberOfNodes()):
             referenceCoordinates = np.array(mbs.GetNodeParameter(nodeNumber, 'referenceCoordinates'))
             arcAngle = stretch * referenceCoordinates[0] / radius
-            position = np.array([radius * np.sin(arcAngle), referenceCoordinates[1], radius * (1 - np.cos(arcAngle))])
-            slopeX = stretch * np.array([np.cos(arcAngle), 0, np.sin(arcAngle)])
+            position = np.array([radius * cMath.sin(arcAngle), referenceCoordinates[1], radius * (1 - cMath.cos(arcAngle))])
+            slopeX = stretch * np.array([cMath.cos(arcAngle), 0, cMath.sin(arcAngle)])
             firstIndex = mbs.GetNodeODE2Index(nodeNumber)
             coordinates[firstIndex:firstIndex + 3] = position - referenceCoordinates[0:3]
             coordinates[firstIndex + 3:firstIndex + 6] = slopeX - referenceCoordinates[3:6]
@@ -209,7 +210,7 @@ class TestANCFThinPlateElement(unittest.TestCase):
         rotationAngle = 1.0
         systemContainer, mbs, built, tipNodes = CreateStrip(numberOfElements=4)
         groundNode = mbs.AddNode(NodePointGround())
-        targetSlope = [np.cos(rotationAngle), 0., np.sin(rotationAngle)]
+        targetSlope = [cMath.cos(rotationAngle), 0., cMath.sin(rotationAngle)]
         for nodeNumber in tipNodes:
             referenceCoordinates = mbs.GetNodeParameter(nodeNumber, 'referenceCoordinates')
             for component in range(3):
@@ -220,8 +221,8 @@ class TestANCFThinPlateElement(unittest.TestCase):
         mbs.Assemble()
         mbs.SolveStatic(StaticSettings(numberOfBendingLoadSteps))
         tipPosition = np.mean([mbs.GetNodeOutput(nodeNumber, exu.OutputVariableType.Position) for nodeNumber in tipNodes], axis=0)
-        exactTipPosition = stripLength / rotationAngle * np.array([np.sin(rotationAngle), 1 - np.cos(rotationAngle)])
-        arcError = np.linalg.norm(tipPosition[[0, 2]] - exactTipPosition)
+        exactTipPosition = stripLength / rotationAngle * np.array([cMath.sin(rotationAngle), 1 - cMath.cos(rotationAngle)])
+        arcError = cMath.norm(tipPosition[[0, 2]] - exactTipPosition)
         print(f'\n    tip position error {arcError:.2e} m', end='')
         self.assertLess(arcError, 1e-5)
         for elementNumber in built['elements']:
@@ -335,8 +336,8 @@ class TestANCFThinPlateDamping(unittest.TestCase):
         """In a finitely rotated configuration, a rigid angular velocity produces no damping force (strain
         rates vanish), while a bending velocity does; also no elastic force change for rigid rotation."""
         rotationAngle = 1.0
-        rotationMatrix = np.array([[np.cos(rotationAngle), 0, np.sin(rotationAngle)], [0, 1, 0],
-                                   [-np.sin(rotationAngle), 0, np.cos(rotationAngle)]])
+        rotationMatrix = np.array([[cMath.cos(rotationAngle), 0, cMath.sin(rotationAngle)], [0, 1, 0],
+                                   [-cMath.sin(rotationAngle), 0, cMath.cos(rotationAngle)]])
         mbs, stiffnessMatrix, dampingMatrix = self.DampingMatrix(1e-3, -1.)
         coordinates, rigidVelocities = RigidMotionVectors(mbs, rotationMatrix, np.array([0.3, -0.5, 0.7]))
         mbs, stiffnessMatrix, dampingMatrix = self.DampingMatrix(1e-3, -1., coordinates)
@@ -345,13 +346,13 @@ class TestANCFThinPlateDamping(unittest.TestCase):
             referenceCoordinates = np.array(mbs.GetNodeParameter(nodeNumber, 'referenceCoordinates'))
             firstIndex = mbs.GetNodeODE2Index(nodeNumber)
             bendingVelocities[firstIndex:firstIndex + 3] = rotationMatrix @ np.array([0, 0, referenceCoordinates[0]**2])
-        rigidForce = np.linalg.norm(dampingMatrix @ rigidVelocities)
-        bendingForce = np.linalg.norm(dampingMatrix @ bendingVelocities)
+        rigidForce = cMath.norm(dampingMatrix @ rigidVelocities)
+        bendingForce = cMath.norm(dampingMatrix @ bendingVelocities)
         print(f'\n    |D v_rigid| = {rigidForce:.3e}, |D v_bending| = {bendingForce:.3e}, '
-              f'|K v_rigid|/|K v_bending| = {np.linalg.norm(stiffnessMatrix @ rigidVelocities) / np.linalg.norm(stiffnessMatrix @ bendingVelocities):.3e}', end='')
+              f'|K v_rigid|/|K v_bending| = {cMath.norm(stiffnessMatrix @ rigidVelocities) / cMath.norm(stiffnessMatrix @ bendingVelocities):.3e}', end='')
         self.assertGreater(bendingForce, 1.)
         self.assertLess(rigidForce / bendingForce, 1e-9)
-        self.assertLess(np.linalg.norm(stiffnessMatrix @ rigidVelocities) / np.linalg.norm(stiffnessMatrix @ bendingVelocities), 1e-9)
+        self.assertLess(cMath.norm(stiffnessMatrix @ rigidVelocities) / cMath.norm(stiffnessMatrix @ bendingVelocities), 1e-9)
 
     def testBendingDampingParameterRule(self):
         """Flat strip: out-of-plane velocity w = x^2 only strains in bending, in-plane velocity u = x only in the
@@ -368,8 +369,8 @@ class TestANCFThinPlateDamping(unittest.TestCase):
                 bendingVelocities[firstIndex + 5] = 2 * referenceCoordinates[0]         #w_x = 2x
                 stretchVelocities[firstIndex] = referenceCoordinates[0]                 #u = x
                 stretchVelocities[firstIndex + 3] = 1.                                  #u_x = 1
-            bendingForce = np.linalg.norm(dampingMatrix @ bendingVelocities)
-            stretchForce = np.linalg.norm(dampingMatrix @ stretchVelocities)
+            bendingForce = cMath.norm(dampingMatrix @ bendingVelocities)
+            stretchForce = cMath.norm(dampingMatrix @ stretchVelocities)
             print(f'\n    beta_epsilon = {membraneDamping}, beta_kappa = {bendingDamping}: '
                   f'|D v_bending| = {bendingForce:.3e}, |D v_stretch| = {stretchForce:.3e}', end='')
             self.assertEqual(bendingForce > 1e-6, bendingDamped)
@@ -464,7 +465,7 @@ class TestShellsModule(unittest.TestCase):
                 nodeNumber = plate.nodeNumbers[indexY * (numberOfElementsX + 1) + indexX]
                 position = np.array(mbs.GetNodeParameter(nodeNumber, 'referenceCoordinates'))[0:3]
                 expected = origin + [indexX * lengthX / numberOfElementsX, indexY * lengthY / numberOfElementsY, 0]
-                self.assertLess(np.linalg.norm(position - expected), 1e-12)
+                self.assertLess(cMath.norm(position - expected), 1e-12)
 
     def testHemisphericalMapNodesOnSphere(self):
         """SurfaceMap.HemisphericalShell: all nodes on the sphere of radius R, both slope vectors tangent to it."""
@@ -479,10 +480,10 @@ class TestShellsModule(unittest.TestCase):
         for nodeNumber in plate.nodeNumbers:
             referenceCoordinates = np.array(mbs.GetNodeParameter(nodeNumber, 'referenceCoordinates'))
             position = referenceCoordinates[0:3]
-            radiusError = max(radiusError, abs(np.linalg.norm(position) - radius))
+            radiusError = max(radiusError, abs(cMath.norm(position) - radius))
             for slope in [referenceCoordinates[3:6], referenceCoordinates[6:9]]:
-                if np.linalg.norm(slope) > 0:       #degenerate slope at the pole
-                    normalSlopeComponent = max(normalSlopeComponent, abs(slope @ position) / (np.linalg.norm(slope) * radius))
+                if cMath.norm(slope) > 0:       #degenerate slope at the pole
+                    normalSlopeComponent = max(normalSlopeComponent, abs(slope @ position) / (cMath.norm(slope) * radius))
         print(f'\n    radius error {radiusError:.2e}, normal slope component {normalSlopeComponent:.2e}', end='')
         self.assertLess(radiusError, 1e-12)
         self.assertLess(normalSlopeComponent, 1e-12)
@@ -492,7 +493,7 @@ class TestShellsModule(unittest.TestCase):
         function of the global x and y: the gradients along the node slopes give 12 thickness values per element, and
         the tip deflection is the one of the tapered cantilever (#2864)."""
         angle = np.pi / 6
-        axis, across = np.array([np.cos(angle), np.sin(angle), 0.]), np.array([-np.sin(angle), np.cos(angle), 0.])
+        axis, across = np.array([cMath.cos(angle), cMath.sin(angle), 0.]), np.array([-cMath.sin(angle), cMath.cos(angle), 0.])
         def ThicknessFunction(x, y):
             return stripThickness * (1 - 0.5 * (x * axis[0] + y * axis[1]) / stripLength)
         systemContainer = exu.SystemContainer()

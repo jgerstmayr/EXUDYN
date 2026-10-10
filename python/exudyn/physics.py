@@ -13,7 +13,7 @@
 
 #import numpy as np
 import numpy as np
-from math import exp
+from exudyn.cMath import exp
 
 #public API of this module; kept complete by tools/checkAll.py (#2444)
 __all__ = [

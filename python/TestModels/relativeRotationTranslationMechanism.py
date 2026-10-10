@@ -14,9 +14,10 @@
 
 import exudyn as exu
 from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
-from math import cos
+from exudyn.cMath import cos
 import exudyn.graphics as graphics
 import numpy as np
+from exudyn import cMath #the math functions of the C++ code, the same bits on every platform
 
 testIsActive = exu.sys.get('testIsActive', False)
 
@@ -71,7 +72,7 @@ for i in range(4):
 
     #axis = [0,0,1]
     axis = np.array(axisList[i]) #global axis!
-    axis = axis/np.linalg.norm(axis)
+    axis = axis/cMath.norm(axis)
     #print('axis=',axis)
 
     ### create and add rigid body to mbs
@@ -229,7 +230,7 @@ if not testIsActive:
         mbs.PlotSensor(sensorList)
 
 #%%++++
-testError = np.linalg.norm(mbs.systemData.GetODE2Coordinates())
+testError = cMath.norm(mbs.systemData.GetODE2Coordinates())
 exu.Print('solution of relativeRotationTranslationMechanism=',testError)
 
 #%%++++++++++++++++++++++++++++++++++++++++++++++++++++

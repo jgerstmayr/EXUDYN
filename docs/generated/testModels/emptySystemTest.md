@@ -25,6 +25,7 @@ You can view and download this file on Github: [emptySystemTest.py](https://gith
 import exudyn as exu
 from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
 import numpy as np
+from exudyn import cMath #the math functions of the C++ code, the same bits on every platform
 
 testIsActive = exu.sys.get('testIsActive', False)
 
@@ -40,7 +41,7 @@ for linearSolverType in [exu.LinearSolverType.EXUdense, exu.LinearSolverType.Eig
             mbs.variables['steps'] += 1
             return True
         mbs.SetPreStepUserFunction(PreStepUserFunction)
-        sensor = mbs.AddSensor(SensorUserFunction(sensorUserFunction=lambda mbs, t, sensorNumbers, factors, configuration: [np.sin(t)],
+        sensor = mbs.AddSensor(SensorUserFunction(sensorUserFunction=lambda mbs, t, sensorNumbers, factors, configuration: [cMath.sin(t)],
                                                   storeInternal=True))
         mbs.Assemble()
         assert len(mbs.systemData.GetODE2Coordinates()) == 0

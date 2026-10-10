@@ -17,6 +17,7 @@ import exudyn as exu
 from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
 
 import numpy as np
+from exudyn import cMath #the math functions of the C++ code, the same bits on every platform
 
 testIsActive = exu.sys.get('testIsActive', False)
 esym = exu.symbolic
@@ -54,7 +55,7 @@ isSymbolic = mbsCopy.GetLoadParameter(load, 'loadVectorUserFunction')['type'] ==
 
 pOriginal = Solve(mbs)
 pCopy = Solve(mbsCopy)
-exu.Print('copy is symbolic:', isSymbolic, ', difference to the original:', np.linalg.norm(pCopy - pOriginal))
+exu.Print('copy is symbolic:', isSymbolic, ', difference to the original:', cMath.norm(pCopy - pOriginal))
 
 testResult = sum(pCopy) + (0 if isSymbolic else 1)
 exu.Print('solution of symbolicUserFunctionCopyTest=', testResult)

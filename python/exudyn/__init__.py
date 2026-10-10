@@ -176,12 +176,14 @@ except ImportError:
     #for run inside Visual Studio (exudynCPP lies in Release or Debug folders):
     from solver import SolveStatic, SolveDynamic, SolverSuccess, ComputeLinearizedSystem, ComputeSystemDegreeOfFreedom, ComputeODE2Eigenvalues #noqa: F401 - re-export, available as exu.SolveDynamic etc.
 
-#exudyn.cMath: the math functions of the C++ code, the same bits on every platform (#2958)
+#exudyn.cMath and exudyn.cUtilities: the math and kinematics functions of the C++ code, the same bits on every platform
+#(#2958, #2960)
 try:
-    from . import cMath #noqa: F401 - re-export, available as exudyn.cMath
+    from . import cMath, cUtilities #noqa: F401 - re-export, available as exudyn.cMath, exudyn.cUtilities
 except ImportError:
     #for run inside Visual Studio (exudynCPP lies in Release or Debug folders):
     import cMath #noqa: F401
+    import cUtilities #noqa: F401
 
 #use exudyn.demos.Demo1() from 1.9.137 onwards!
 try:

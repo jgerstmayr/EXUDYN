@@ -21,6 +21,7 @@ You can view and download this file on Github: [sparseMatrixSpringDamperTest.py]
 
 import exudyn as exu           #c++ bibliothek, liest Dictionaries
 from exudyn.itemInterface import *     # conversion of data to exudyn dictionaries C interface
+from exudyn import cMath #the math functions of the C++ code, the same bits on every platform
 
 testIsActive = exu.sys.get('testIsActive', False)
 
@@ -28,7 +29,7 @@ SC = exu.SystemContainer()
 mbs = SC.AddSystem()
 
 
-sqrt2 = 2**0.5
+sqrt2 = cMath.sqrt(2)
 nBodies = 72
 nBodies2 = 6
 

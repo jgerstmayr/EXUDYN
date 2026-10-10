@@ -29,6 +29,7 @@ import exudyn as exu
 from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
 
 import numpy as np
+from exudyn import cMath #the math functions of the C++ code, the same bits on every platform
 
 testIsActive = exu.sys.get('testIsActive', False)
 
@@ -44,7 +45,7 @@ def Bend(force):
     nodes = []
     for i in range(nElements+1):
         phi = np.pi/4*i/nElements
-        nodes.append(mbs.AddNode(NodeRigidBodyEP(referenceCoordinates=[R*np.sin(phi), R*(1-np.cos(phi)), 0]
+        nodes.append(mbs.AddNode(NodeRigidBodyEP(referenceCoordinates=[R*cMath.sin(phi), R*(1-cMath.cos(phi)), 0]
                                                  + list(RotationMatrix2EulerParameters(RotationMatrixZ(phi))))))
     section = exu.BeamSection()
     section.stiffnessMatrix = np.diag([E*A, G*A, G*A, G*J, E*I, E*I])

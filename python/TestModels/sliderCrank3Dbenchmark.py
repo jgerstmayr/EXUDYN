@@ -19,7 +19,8 @@ from exudyn.lieGroupIntegration import *
 import numpy as np
 from numpy import linalg as LA
 
-from math import pi, sin, cos
+from exudyn.cMath import pi, sin, cos
+from exudyn import cMath #the math functions of the C++ code, the same bits on every platform
 
 testIsActive = exu.sys.get('testIsActive', False)
 
@@ -297,7 +298,7 @@ w1 = mbs.GetNodeOutput(n1, exu.OutputVariableType.AngularVelocity)
 exu.Print('solution of 3D slidercrank iftomm benchmark=',p1, r1,v1,v1,w1)
 exu.Print('slider pos =', mbs.GetNodeOutput(n2, exu.OutputVariableType.Position))
 
-u = np.linalg.norm(p1) + np.linalg.norm(r1) + np.linalg.norm(v1) + np.linalg.norm(w1)
+u = cMath.norm(p1) + cMath.norm(r1) + cMath.norm(v1) + cMath.norm(w1)
 exu.Print('error norm=', u)
 exu.sys['testResult'] = u
 

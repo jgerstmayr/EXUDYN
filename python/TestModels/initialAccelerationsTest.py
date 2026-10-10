@@ -18,6 +18,7 @@
 import exudyn as exu
 from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
 import numpy as np
+from exudyn import cMath #the math functions of the C++ code, the same bits on every platform
 
 testIsActive = exu.sys.get('testIsActive', False)
 
@@ -46,10 +47,10 @@ u = 0
 for linearSolverType in [exu.LinearSolverType.EXUdense, exu.LinearSolverType.EigenSparse]:
     (a, multipliers) = InitialAccelerations(True, linearSolverType)
     exu.Print(linearSolverType, ': initial accelerations', a, ', expected', expected, ', multiplier', multipliers)
-    u += int(np.linalg.norm(a - expected) < 1e-8) + int(abs(abs(multipliers[0]) - 2*v**2/L) < 1e-8) + a[0] + 0.1*a[1]
+    u += int(cMath.norm(a - expected) < 1e-8) + int(abs(abs(multipliers[0]) - 2*v**2/L) < 1e-8) + a[0] + 0.1*a[1]
 (a, multipliers) = InitialAccelerations(False)
 exu.Print('without computeInitialAccelerations:', a)
-u += int(np.linalg.norm(a) == 0)
+u += int(cMath.norm(a) == 0)
 
 exu.Print('solution of initialAccelerationsTest=', u)
 

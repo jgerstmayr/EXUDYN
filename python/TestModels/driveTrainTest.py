@@ -20,6 +20,7 @@ import exudyn.graphics as graphics
 from exudyn.FEM import *
 
 import numpy as np
+from exudyn import cMath #the math functions of the C++ code, the same bits on every platform
 
 testIsActive = exu.sys.get('testIsActive', False)
 
@@ -118,10 +119,10 @@ for i in range(4):
     v2 = np.array([0,0,0])
     offsetPiston=0
     if i==1 or i==3:
-        phi2=np.arctan2(0.5*L0,L1) #additional conrod angle
+        phi2=cMath.atan2(0.5*L0,L1) #additional conrod angle
         A2 = RotationMatrixZ(phi2) #additional transformation of conrod
         v2 = A@np.array([-0.5*L0,-0.25*L0,0])
-        offsetPiston = L1*(1.-np.cos(phi2)) + 0.5*L0
+        offsetPiston = L1*(1.-cMath.cos(phi2)) + 0.5*L0
 
     offZ = 0    
     if i < 2:

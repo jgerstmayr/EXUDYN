@@ -23,10 +23,11 @@ You can view and download this file on Github: [ANCFBeamTest.py](https://github.
 
 import exudyn as exu
 from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
-from math import sin, cos
+from exudyn.cMath import sin, cos
 import exudyn.graphics as graphics
 
 import numpy as np
+from exudyn import cMath #the math functions of the C++ code, the same bits on every platform
 
 testIsActive = exu.sys.get('testIsActive', False)
 
@@ -291,7 +292,7 @@ for case in caseList:
     if case != 1:
         errorFact *= 100
 
-    testErrorSum += np.linalg.norm(uTip)
+    testErrorSum += cMath.norm(uTip)
 
     
     

@@ -19,6 +19,7 @@
 import exudyn as exu
 from exudyn.utilities import *
 import numpy as np
+from exudyn import cMath #the math functions of the C++ code, the same bits on every platform
 
 testIsActive = exu.sys.get('testIsActive', False)
 
@@ -29,7 +30,7 @@ hasRangeChecks = '[FAST]' not in exu.config.Version(True)
 errors = 0
 def Check(value, reference, tolerance=1e-12, what=''):
     global errors
-    if np.linalg.norm(np.array(value, dtype=float) - np.array(reference, dtype=float)) > tolerance:
+    if cMath.norm(np.array(value, dtype=float) - np.array(reference, dtype=float)) > tolerance:
         errors += 1
         exu.Print('homogeneousTransformationInterfaceTest: failed', what, value, reference)
 

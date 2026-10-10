@@ -25,6 +25,7 @@ import exudyn as exu
 from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
 import exudyn.graphics as graphics
 import numpy as np
+from exudyn import cMath #the math functions of the C++ code, the same bits on every platform
 
 testIsActive = exu.sys.get('testIsActive', False)
 
@@ -52,7 +53,7 @@ simulationSettings.timeIntegration.endTime = 2
 mbs.SolveDynamic(simulationSettings = simulationSettings)
 
 #mbs.SolutionViewer()
-testError = np.linalg.norm(mbs.systemData.GetODE2Coordinates())
+testError = cMath.norm(mbs.systemData.GetODE2Coordinates())
 exu.Print('solution of mainSystemExtensions test MP=',testError)
 testErrorTotal += testError
 
@@ -82,7 +83,7 @@ simulationSettings.timeIntegration.endTime = 2
 
 mbs.SolveDynamic(simulationSettings = simulationSettings)
 
-testError = np.linalg.norm(mbs.systemData.GetODE2Coordinates())
+testError = cMath.norm(mbs.systemData.GetODE2Coordinates())
 exu.Print('solution of mainSystemExtensions test RB=',testError)
 testErrorTotal += testError
 
@@ -117,7 +118,7 @@ SC.visualizationSettings.nodes.drawNodesAsPoint=False
 mbs.SolveDynamic(simulationSettings = simulationSettings)
 
 #mbs.SolutionViewer()
-testError = np.linalg.norm(mbs.systemData.GetODE2Coordinates())
+testError = cMath.norm(mbs.systemData.GetODE2Coordinates())
 exu.Print('solution of mainSystemExtensions test SD=',testError)
 testErrorTotal += testError
 
@@ -153,7 +154,7 @@ SC.visualizationSettings.nodes.drawNodesAsPoint=False
 mbs.SolveDynamic(simulationSettings = simulationSettings)
 
 # mbs.SolutionViewer()
-testError = np.linalg.norm(mbs.systemData.GetODE2Coordinates())
+testError = cMath.norm(mbs.systemData.GetODE2Coordinates())
 exu.Print('solution of mainSystemExtensions test CSD=',testError)
 testErrorTotal += testError
 
@@ -184,7 +185,7 @@ simulationSettings.timeIntegration.endTime = 2
 
 mbs.SolveDynamic(simulationSettings = simulationSettings)
 
-testError = np.linalg.norm(mbs.systemData.GetODE2Coordinates())
+testError = cMath.norm(mbs.systemData.GetODE2Coordinates())
 exu.Print('solution of mainSystemExtensions test RJ=',testError)
 testErrorTotal += testError
 
@@ -217,7 +218,7 @@ simulationSettings.timeIntegration.endTime = 2
 
 mbs.SolveDynamic(simulationSettings = simulationSettings)
 
-testError = np.linalg.norm(mbs.systemData.GetODE2Coordinates())
+testError = cMath.norm(mbs.systemData.GetODE2Coordinates())
 exu.Print('solution of mainSystemExtensions test PJ=',testError)
 testErrorTotal += testError
 
@@ -250,7 +251,7 @@ simulationSettings.timeIntegration.endTime = 2
 
 mbs.SolveDynamic(simulationSettings = simulationSettings)
 
-testError = np.linalg.norm(mbs.systemData.GetODE2Coordinates())
+testError = cMath.norm(mbs.systemData.GetODE2Coordinates())
 testErrorTotal += testError
 exu.Print('solution of mainSystemExtensions test SJ=',testError)
 
@@ -301,7 +302,7 @@ simulationSettings.timeIntegration.endTime = 2
 mbs.SolveDynamic(simulationSettings = simulationSettings)
 # mbs.SolutionViewer()
 
-testError = np.linalg.norm(mbs.systemData.GetODE2Coordinates())
+testError = cMath.norm(mbs.systemData.GetODE2Coordinates())
 testErrorTotal += testError
 exu.Print('solution of mainSystemExtensions test GJ=',testError)
 
@@ -335,7 +336,7 @@ mbs.Assemble()
 # exu.Print('eigenvalues=\n',eigenvalues)
 # exu.Print('eigenvectors=\n',eigenvectors)
 
-testError = 1e-3*np.linalg.norm(eigenvalues)
+testError = 1e-3*cMath.norm(eigenvalues)
 exu.Print('solution of mainSystemExtensions test LinEig=',testError)
 testErrorTotal += testError
 
@@ -429,7 +430,7 @@ mbs.SolveDynamic(simulationSettings = simulationSettings)
 SC.visualizationSettings.nodes.drawNodesAsPoint=False
 #mbs.SolutionViewer()
 
-testError = np.linalg.norm(mbs.systemData.GetODE2Coordinates())
+testError = cMath.norm(mbs.systemData.GetODE2Coordinates())
 testErrorTotal += testError
 exu.Print('solution of mainSystemExtensions test DC=',testError)
 

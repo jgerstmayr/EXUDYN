@@ -16,6 +16,7 @@ from exudyn.misc.docmeta import docmeta
 import numpy as np
 import exudyn.robotics as rob
 from exudyn.rigidBodyUtilities import RotationMatrix2RotZYZ, HT2rotationMatrix, HTtranslate
+import exudyn.cMath as cMath #the math functions of the C++ code, the same bits on every platform (#2962)
 
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #            Interaction with Toolbox by Peter Corke
@@ -113,10 +114,10 @@ def ComputeIK3R(robotDic, HT):
     # calculations following the steps by De Luca / Standard geometric approach
     # calculations for theta 1
     if Px**2+Py**2 > ZERO:
-        qSolutions[0, 0] = np.arctan2(Py, Px)
-        qSolutions[1, 0] = np.arctan2(-Py, -Px)
-        qSolutions[2, 0] = np.arctan2(Py, Px)
-        qSolutions[3, 0] = np.arctan2(-Py, -Px)
+        qSolutions[0, 0] = cMath.atan2(Py, Px)
+        qSolutions[1, 0] = cMath.atan2(-Py, -Px)
+        qSolutions[2, 0] = cMath.atan2(Py, Px)
+        qSolutions[3, 0] = cMath.atan2(-Py, -Px)
     else:
         print('infinite solutions for th1,it is undefined but here set to 0')
     
@@ -127,11 +128,11 @@ def ComputeIK3R(robotDic, HT):
         #print(Dhelp)
         if np.abs(Dhelp)<=1:
            if i <= 1:
-                qSolutions[i,2] = np.arctan2(np.sqrt((1-Dhelp**2)), Dhelp)
-                qSolutions[i,1] = np.arctan2(Pz-HT01[2][3], np.sqrt((Px)**2+(Py)**2))-np.arctan2(a3*np.sin(qSolutions[i,2]), a2+a3*np.cos(qSolutions[i,2]))
+                qSolutions[i,2] = cMath.atan2(np.sqrt((1-Dhelp**2)), Dhelp)
+                qSolutions[i,1] = cMath.atan2(Pz-HT01[2][3], np.sqrt((Px)**2+(Py)**2))-cMath.atan2(a3*cMath.sin(qSolutions[i,2]), a2+a3*cMath.cos(qSolutions[i,2]))
            else:
-                qSolutions[i, 2] = np.arctan2(-np.sqrt((1-Dhelp**2)), Dhelp)
-                qSolutions[i,1] = np.arctan2(Pz-HT01[2][3], np.sqrt((Px)**2+(Py)**2))-np.arctan2(a3*np.sin(qSolutions[i,2]), a2+a3*np.cos(qSolutions[i,2]))
+                qSolutions[i, 2] = cMath.atan2(-np.sqrt((1-Dhelp**2)), Dhelp)
+                qSolutions[i,1] = cMath.atan2(Pz-HT01[2][3], np.sqrt((Px)**2+(Py)**2))-cMath.atan2(a3*cMath.sin(qSolutions[i,2]), a2+a3*cMath.cos(qSolutions[i,2]))
            if i==1 or i==3:
                 qSolutions[i,1]=np.pi-qSolutions[i,1]
                 qSolutions[i,2]=-qSolutions[i,2]
@@ -206,8 +207,8 @@ def ComputeIKPuma560(robotDic, HT):
     r = np.sqrt(Px**2 + Py**2)
 
 
-    theta1_1 = np.arctan2(Py, Px) + np.pi - np.arcsin(d3/r) # base left
-    theta1_2 = np.arctan2(Py, Px) + np.arcsin(d3/r)         # base right
+    theta1_1 = cMath.atan2(Py, Px) + np.pi - cMath.asin(d3/r) # base left
+    theta1_2 = cMath.atan2(Py, Px) + cMath.asin(d3/r)         # base right
 
     #
     # Solve for theta(2)
@@ -218,43 +219,43 @@ def ComputeIKPuma560(robotDic, HT):
     # theta(2) uses equations 50 and 51, p.40, based on the configuration
     # parameter n2
 
-    V114_1 = Px*np.cos(theta1_1) + Py*np.sin(theta1_1)
+    V114_1 = Px*cMath.cos(theta1_1) + Py*cMath.sin(theta1_1)
     r_1 = np.sqrt(V114_1**2 + Pz**2)
-    Psi_1 = np.arccos((a2**2-d4**2-a3**2+V114_1**2+Pz**2)/(2.0*a2*r_1))
-    theta2_11 = np.arctan2(Pz, V114_1) + Psi_1
+    Psi_1 = cMath.acos((a2**2-d4**2-a3**2+V114_1**2+Pz**2)/(2.0*a2*r_1))
+    theta2_11 = cMath.atan2(Pz, V114_1) + Psi_1
 
-    V114_1 = Px*np.cos(theta1_1) + Py*np.sin(theta1_1)
+    V114_1 = Px*cMath.cos(theta1_1) + Py*cMath.sin(theta1_1)
     r_1 = np.sqrt(V114_1**2 + Pz**2)
-    Psi_1 = np.arccos((a2**2-d4**2-a3**2+V114_1**2+Pz**2)/(2.0*a2*r_1))
-    theta2_12 = np.arctan2(Pz, V114_1) - Psi_1
+    Psi_1 = cMath.acos((a2**2-d4**2-a3**2+V114_1**2+Pz**2)/(2.0*a2*r_1))
+    theta2_12 = cMath.atan2(Pz, V114_1) - Psi_1
 
-    V114_2 = Px*np.cos(theta1_2) + Py*np.sin(theta1_2)
+    V114_2 = Px*cMath.cos(theta1_2) + Py*cMath.sin(theta1_2)
     r_2 = np.sqrt(V114_2**2 + Pz**2)
-    Psi_2 = np.arccos((a2**2-d4**2-a3**2+V114_2**2+Pz**2)/(2.0*a2*r_2))
-    theta2_21 = np.arctan2(Pz, V114_2) + Psi_2
+    Psi_2 = cMath.acos((a2**2-d4**2-a3**2+V114_2**2+Pz**2)/(2.0*a2*r_2))
+    theta2_21 = cMath.atan2(Pz, V114_2) + Psi_2
 
-    V114_2 = Px*np.cos(theta1_2) + Py*np.sin(theta1_2)
+    V114_2 = Px*cMath.cos(theta1_2) + Py*cMath.sin(theta1_2)
     r_2 = np.sqrt(V114_2**2 + Pz**2)
-    Psi_2 = np.arccos((a2**2-d4**2-a3**2+V114_2**2+Pz**2)/(2.0*a2*r_2))
-    theta2_22 = np.arctan2(Pz, V114_2) - Psi_2
+    Psi_2 = cMath.acos((a2**2-d4**2-a3**2+V114_2**2+Pz**2)/(2.0*a2*r_2))
+    theta2_22 = cMath.atan2(Pz, V114_2) - Psi_2
 
     # Solve for theta(3)
     # theta(3) uses equation 57, p. 40.
-    num = np.cos(theta2_11)*V114_1+np.sin(theta2_11)*Pz-a2
-    den = np.cos(theta2_11)*Pz - np.sin(theta2_11)*V114_1
-    theta3_11= np.arctan2(a3, d4) - np.arctan2(num, den)
+    num = cMath.cos(theta2_11)*V114_1+cMath.sin(theta2_11)*Pz-a2
+    den = cMath.cos(theta2_11)*Pz - cMath.sin(theta2_11)*V114_1
+    theta3_11= cMath.atan2(a3, d4) - cMath.atan2(num, den)
 
-    num = np.cos(theta2_12)*V114_1+np.sin(theta2_12)*Pz-a2
-    den = np.cos(theta2_12)*Pz - np.sin(theta2_12)*V114_1
-    theta3_12= np.arctan2(a3, d4) - np.arctan2(num, den)
+    num = cMath.cos(theta2_12)*V114_1+cMath.sin(theta2_12)*Pz-a2
+    den = cMath.cos(theta2_12)*Pz - cMath.sin(theta2_12)*V114_1
+    theta3_12= cMath.atan2(a3, d4) - cMath.atan2(num, den)
 
-    num = np.cos(theta2_21)*V114_2+np.sin(theta2_21)*Pz-a2
-    den = np.cos(theta2_21)*Pz - np.sin(theta2_21)*V114_2
-    theta3_21= np.arctan2(a3, d4) - np.arctan2(num, den)
+    num = cMath.cos(theta2_21)*V114_2+cMath.sin(theta2_21)*Pz-a2
+    den = cMath.cos(theta2_21)*Pz - cMath.sin(theta2_21)*V114_2
+    theta3_21= cMath.atan2(a3, d4) - cMath.atan2(num, den)
 
-    num = np.cos(theta2_22)*V114_2+np.sin(theta2_22)*Pz-a2
-    den = np.cos(theta2_22)*Pz - np.sin(theta2_22)*V114_2
-    theta3_22= np.arctan2(a3, d4) - np.arctan2(num, den)
+    num = cMath.cos(theta2_22)*V114_2+cMath.sin(theta2_22)*Pz-a2
+    den = cMath.cos(theta2_22)*Pz - cMath.sin(theta2_22)*V114_2
+    theta3_22= cMath.atan2(a3, d4) - cMath.atan2(num, den)
 
     qSolution =      [[theta1_1, theta2_11, theta3_11]]
     qSolution.append([theta1_1, theta2_12, theta3_12])
@@ -356,9 +357,9 @@ def ComputeIKUR(robotDic, HTdes):
         elif np.abs(d4/R+1) < ZERO:
             psi2 = -np.pi/2
         else:
-            psi2= np.arccos(d4/(np.sqrt(HT05[0]**2+HT05[1]**2)))  # cos in paper, sin in kunzer
+            psi2= cMath.acos(d4/(np.sqrt(HT05[0]**2+HT05[1]**2)))  # cos in paper, sin in kunzer
 
-        psi1= np.arctan2(HT05[1], HT05[0])
+        psi1= cMath.atan2(HT05[1], HT05[0])
         theta1_1 = np.pi/2+psi1+psi2
         theta1_2 = np.pi/2+psi1-psi2
         Solutions[0:4, 0]= theta1_1
@@ -367,8 +368,8 @@ def ComputeIKUR(robotDic, HTdes):
 
 
     # Solve for theta(5) wrist flippt, wrist not flipped
-    Pnum1 = (Px*np.sin(theta1_1)-Py*np.cos(theta1_1)-d4)
-    Pnum2 = (Px*np.sin(theta1_2)-Py*np.cos(theta1_2)-d4)
+    Pnum1 = (Px*cMath.sin(theta1_1)-Py*cMath.cos(theta1_1)-d4)
+    Pnum2 = (Px*cMath.sin(theta1_2)-Py*cMath.cos(theta1_2)-d4)
     if np.abs(Pnum1) <= np.abs(d6) or np.abs(Pnum2) <= np.abs(d6):
         if np.abs((Pnum1/d6)-1) < ZERO or np.abs((Pnum2/d6)-1) < ZERO:  # Solutions near zero
             # print(np.abs((Pnum1/d6)-1))
@@ -378,11 +379,11 @@ def ComputeIKUR(robotDic, HTdes):
             Solutions[0:8, 4]= np.pi
         else:
             # with theta1_1
-            Solutions[0:2, 4]= np.arccos((Px*np.sin(theta1_1)-Py*np.cos(theta1_1)-d4)/d6)
-            Solutions[2:4, 4]= -np.arccos((Px*np.sin(theta1_1)-Py*np.cos(theta1_1)-d4)/d6)
+            Solutions[0:2, 4]= cMath.acos((Px*cMath.sin(theta1_1)-Py*cMath.cos(theta1_1)-d4)/d6)
+            Solutions[2:4, 4]= -cMath.acos((Px*cMath.sin(theta1_1)-Py*cMath.cos(theta1_1)-d4)/d6)
             # with theta1_2
-            Solutions[4:6, 4]= np.arccos((Px*np.sin(theta1_2)-Py*np.cos(theta1_2)-d4)/d6)
-            Solutions[6:8, 4]= -np.arccos((Px*np.sin(theta1_2)-Py*np.cos(theta1_2)-d4)/d6)
+            Solutions[4:6, 4]= cMath.acos((Px*cMath.sin(theta1_2)-Py*cMath.cos(theta1_2)-d4)/d6)
+            Solutions[6:8, 4]= -cMath.acos((Px*cMath.sin(theta1_2)-Py*cMath.cos(theta1_2)-d4)/d6)
     else:
         # print('No solution for theta 5')
         SolWarning[1] = ['No solution for theta 5']
@@ -391,7 +392,7 @@ def ComputeIKUR(robotDic, HTdes):
 
     # Solve for theta(6)
     for i in range(8):
-        if np.abs(np.sin(Solutions[i, 4])) < ZERO:
+        if np.abs(cMath.sin(Solutions[i, 4])) < ZERO:
             # print('Joint axes 2,3,4,6 are aligned->too many degrees of feedom theta6=arbitrary 0')
             SolWarning[2] = ['Joint axes 2,3,4,6 are aligned->too many degrees of feedom theta6=arbitrary 0']
             Solutions[i, 5]= 0
@@ -400,8 +401,8 @@ def ComputeIKUR(robotDic, HTdes):
             HTinv = np.linalg.inv(HTdes)
             # with theta1_1 -> theta51_1 and theta51_2
             for i in range(8):
-                Solutions[i, 5] = (np.arctan2((-HTinv[1][0]*np.sin(Solutions[i, 0])+HTinv[1][1]*np.cos(Solutions[i, 0]))/np.sin(Solutions[i, 4]),
-                                           (HTinv[0][0]*np.sin(Solutions[i, 0])-HTinv[0][1]*np.cos(Solutions[i, 0]))/np.sin(Solutions[i, 4]))
+                Solutions[i, 5] = (cMath.atan2((-HTinv[1][0]*cMath.sin(Solutions[i, 0])+HTinv[1][1]*cMath.cos(Solutions[i, 0]))/cMath.sin(Solutions[i, 4]),
+                                           (HTinv[0][0]*cMath.sin(Solutions[i, 0])-HTinv[0][1]*cMath.cos(Solutions[i, 0]))/cMath.sin(Solutions[i, 4]))
                                 )
 
 
@@ -412,10 +413,10 @@ def ComputeIKUR(robotDic, HTdes):
             T45 = rob.DH2HT([Solutions[i, 4]]+robotDic['links'][4]['stdDH'][1:4])
             T56 = rob.DH2HT([Solutions[i, 5]]+robotDic['links'][5]['stdDH'][1:4])
             T14 = np.linalg.inv(T01) @ HTdes @ np.linalg.inv(T45 @ T56)
-            argumentCosine= ((np.linalg.norm(T14[0:2, 3]))**2-a2**2-a3**2) / (2*(a2)*(a3))
+            argumentCosine= ((cMath.norm(T14[0:2, 3]))**2-a2**2-a3**2) / (2*(a2)*(a3))
             print(argumentCosine)
             if argumentCosine <= 1 and argumentCosine >= -1:
-                solTheta3= np.arccos(argumentCosine)
+                solTheta3= cMath.acos(argumentCosine)
 
                 if i % 2 == 0:
                     Solutions[i, 2]= solTheta3
@@ -423,7 +424,7 @@ def ComputeIKUR(robotDic, HTdes):
                     Solutions[i, 2] = -solTheta3
 
                 # Solve for theta(2)
-                Solutions[i, 1] = np.arctan2(-T14[1][3], -T14[0][3])-np.arcsin(-(a3)*np.sin(Solutions[i, 2])/(np.linalg.norm(T14[0:2, 3])))
+                Solutions[i, 1] = cMath.atan2(-T14[1][3], -T14[0][3])-cMath.asin(-(a3)*cMath.sin(Solutions[i, 2])/(cMath.norm(T14[0:2, 3])))
                 # T14[1][3] not totaly clear, schould be [2][3]
 
 
@@ -434,7 +435,7 @@ def ComputeIKUR(robotDic, HTdes):
                     T45 = rob.DH2HT([Solutions[i, 4]]+robotDic['links'][4]['stdDH'][1:4])
                     T56 = rob.DH2HT([Solutions[i, 5]]+robotDic['links'][5]['stdDH'][1:4])
                     T34 = np.linalg.inv(T03) @ HTdes @ np.linalg.inv(T45 @ T56)
-                    Solutions[i, 3]= np.arctan2(T34[1][0], T34[0][0])
+                    Solutions[i, 3]= cMath.atan2(T34[1][0], T34[0][0])
             else:
                 # print('No Solutions for theta 2, theta 3 and theta 4') # solutions not existing
                 SolWarning[3] = ['No Solutions for theta 2, theta 3 and theta 4']

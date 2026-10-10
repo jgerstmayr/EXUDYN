@@ -98,6 +98,7 @@ itemParameterRenamesTest
 binarySolutionFileTest
 solutionFileWithoutCoordinatesTest
 sparseSystemMatricesTest
+cUtilitiesTest
 rotationMarkerDeprecationTest
 contactFrictionCircleCable2DnoFrictionTest
 systemContainerLifetimeTest

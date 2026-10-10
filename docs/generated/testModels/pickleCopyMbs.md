@@ -25,7 +25,7 @@ import exudyn as exu
 from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
 import numpy as np
 import exudyn.graphics as graphics
-from math import sin, cos
+from exudyn.cMath import sin, cos
 import copy 
 
 testIsActive = exu.sys.get('testIsActive', False)

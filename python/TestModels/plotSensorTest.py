@@ -15,8 +15,9 @@ import exudyn as exu
 from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
 import exudyn.graphics as graphics
 
-from math import sin, cos, pi
+from exudyn.cMath import sin, cos, pi
 import numpy as np
+from exudyn import cMath #the math functions of the C++ code, the same bits on every platform
 
 testIsActive = exu.sys.get('testIsActive', False)
 
@@ -59,7 +60,7 @@ oRJ = mbs.AddObject(ObjectJointRevoluteZ(markerNumbers = [mGround, mPos0],
                                   visualization=VObjectJointRevoluteZ(axisRadius=0.5*d, axisLength=1.2*d) )) 
     
 def UFload(mbs,t,load):
-    return [0,load[1]*np.cos(t*2*np.pi),0]
+    return [0,load[1]*cMath.cos(t*2*np.pi),0]
 
 lForce = mbs.AddLoad(LoadForceVector(markerNumber=mPosLast, loadVector=[0,2,0], loadVectorUserFunction=UFload))
 

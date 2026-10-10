@@ -2,10 +2,14 @@
   "number": 2963,
   "title": "Test models and examples take their math functions from exudyn.cMath, and the test result a norm that is the same on every platform",
   "author": "Claude-JG",
-  "status": "RAISED",
+  "status": "RESOLVED",
   "type": "TESTING",
   "effort": "MEDIUM",
   "description": "revision2026c step RG11.10.7: the imports from math in the test models (about 37 files) and examples; the result norm e.g. sqrt(math.fsum(x*x)) instead of np.linalg.norm; references recorded again; UnresolvedOnLinux() empty, which closes #2956.",
   "dateRaised": "2026-10-10",
-  "deadline": "2027-04-08"
+  "deadline": "2027-04-08",
+  "dateResolved": "2026-10-10 23:58",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "The test models take their math functions from exudyn.cMath and exudyn.cMath.norm, which gives the same bits on every platform (revision2026c step RG11.10.7)",
+  "resolvedInVersion": "1.13.52"
 }

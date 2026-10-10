@@ -24,6 +24,7 @@ from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
 import exudyn.graphics as graphics
 
 import numpy as np
+from exudyn import cMath #the math functions of the C++ code, the same bits on every platform
 
 testIsActive = exu.sys.get('testIsActive', False)
 
@@ -81,7 +82,7 @@ fdyn=np.array([0,0,10])
 
 def Sweep(t, t1, f0, f1):
     k = (f1-f0)/t1
-    return np.sin(2*np.pi*(f0+k*0.5*t)*t) #take care of factor 0.5 in k*0.5*t, in order to obtain correct frequencies!!!
+    return cMath.sin(2*np.pi*(f0+k*0.5*t)*t) #take care of factor 0.5 in k*0.5*t, in order to obtain correct frequencies!!!
 
 def UFgenericODE2(mbs, t, itemIndex, q, q_t):
     #f = np.sin(t*2*np.pi*10)*fdyn
@@ -118,7 +119,7 @@ u1 = mbs.GetNodeOutput(n1, exu.OutputVariableType.Coordinates)
 u2 = mbs.GetNodeOutput(n2, exu.OutputVariableType.Coordinates)
 #exu.Print("u2 =", u2)
 
-u=np.linalg.norm(u1) + np.linalg.norm(u2)
+u=cMath.norm(u1) + cMath.norm(u2)
 exu.Print('solution of genericODE2test=',u)
 
 exu.sys['testResult'] = u

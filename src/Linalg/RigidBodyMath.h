@@ -734,6 +734,54 @@ namespace RigidBodyMath {
 		}
 	}
 
+	//! time derivative of the Tait-Bryan angles rot (xyz) from the global angular velocity: G^-1*omega; singular at
+	//! cos(rot[1]) = 0, which the caller checks (#2960)
+	inline Vector3D AngularVelocity2RotXYZ_t(const Vector3D& angularVelocity, const Vector3D& rot)
+	{
+		Real sPsi = EM::Sin(rot[0]);
+		Real cPsi = EM::Cos(rot[0]);
+		Real sTheta = EM::Sin(rot[1]);
+		Real cTheta = EM::Cos(rot[1]);
+		Real f = 1. / cTheta;
+		Matrix3D GInv(3, 3, { f*cTheta, f*(sPsi*sTheta), f*(-cPsi*sTheta),
+							  0.,       f*(cPsi*cTheta), f*(sPsi*cTheta),
+							  0.,       f*(-sPsi),       f*cPsi });
+		return GInv * angularVelocity;
+	}
+
+	//! Euler parameters from the Tait-Bryan angles rot (xyz), see [Henderson1977]; entry 0 is the scalar part (#2960)
+	inline Vector4D RotXYZ2EP(const Vector3D& rot)
+	{
+		Real cPsi = EM::Cos(0.5*rot[0]);
+		Real cTheta = EM::Cos(0.5*rot[1]);
+		Real cPhi = EM::Cos(0.5*rot[2]);
+		Real sPsi = EM::Sin(0.5*rot[0]);
+		Real sTheta = EM::Sin(0.5*rot[1]);
+		Real sPhi = EM::Sin(0.5*rot[2]);
+		return Vector4D({ -sPsi*sTheta*sPhi + cPsi*cTheta*cPhi,
+						   sPsi*cTheta*cPhi + sTheta*sPhi*cPsi,
+						  -sPsi*sPhi*cTheta + sTheta*cPsi*cPhi,
+						   sPsi*sTheta*cPhi + sPhi*cPsi*cTheta });
+	}
+
+	//! Euler angles zyz (A = Az*Ay*Az) of a rotation matrix, after Paul, p. 69 (tested against P. Corke, Robotics,
+	//! Vision and Control); flip chooses the first angle in quadrant 2 or 3 (#2960)
+	inline Vector3D RotationMatrix2RotZYZ(const Matrix3D& R, bool flip)
+	{
+		Vector3D angles({ 0., 0., 0. });
+		Real eps = 1e-14;
+		Real sp = 0.;
+		Real cp = 1.;
+		if (!(fabs(R(0, 2)) < eps && fabs(R(1, 2)) < eps)) //not singular
+		{
+			angles[0] = flip ? EM::Atan2(-R(1, 2), -R(0, 2)) : EM::Atan2(R(1, 2), R(0, 2));
+			sp = EM::Sin(angles[0]);
+			cp = EM::Cos(angles[0]);
+		}
+		angles[1] = EM::Atan2(cp*R(0, 2) + sp*R(1, 2), R(2, 2));
+		angles[2] = EM::Atan2(-sp*R(0, 0) + cp*R(1, 0), -sp*R(0, 1) + cp*R(1, 1));
+		return angles;
+	}
 
 } //namespace RigidBodyMath
 

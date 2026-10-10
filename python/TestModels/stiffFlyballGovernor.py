@@ -21,6 +21,7 @@ from exudyn.lieGroupIntegration import *
 
 import numpy as np
 from numpy import linalg as LA
+from exudyn import cMath #the math functions of the C++ code, the same bits on every platform
 
 testIsActive = exu.sys.get('testIsActive', False)
 
@@ -104,8 +105,8 @@ inertiaList=[InertiaCuboid(density=density, sideLengths=[widthShaft,widthShaft,l
 
 refPosList=[[0,0,lengthShaft/2], # shaft
             [0,0,sSlider], # slider
-            [ xAB/2 + (lengthRod/2-refRod[0])*np.cos(beta0), 0, lengthShaft - (lengthRod/2-refRod[0])*np.sin(beta0)], # rodAC
-            [-xAB/2 - (lengthRod/2-refRod[0])*np.cos(beta0), 0, lengthShaft - (lengthRod/2-refRod[0])*np.sin(beta0)]] # rodBD
+            [ xAB/2 + (lengthRod/2-refRod[0])*cMath.cos(beta0), 0, lengthShaft - (lengthRod/2-refRod[0])*cMath.sin(beta0)], # rodAC
+            [-xAB/2 - (lengthRod/2-refRod[0])*cMath.cos(beta0), 0, lengthShaft - (lengthRod/2-refRod[0])*cMath.sin(beta0)]] # rodBD
 
 refVelList = [[0., 0., 0.], # shaft
               [0., 0., 0.], # slider

@@ -27,7 +27,8 @@ from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
 import exudyn.graphics as graphics
 
 import numpy as np
-from math import pi, sin, cos, exp, sqrt
+from exudyn.cMath import pi, sin, cos, exp, sqrt
+from exudyn import cMath #the math functions of the C++ code, the same bits on every platform
 
 testIsActive = exu.sys.get('testIsActive', False)
 testIsActive = True #without test
@@ -217,7 +218,7 @@ for mode in range(2):
         SC.renderer.Stop() #safely close rendering window!
     
     sol2 = mbs.systemData.GetODE2Coordinates(); 
-    u = np.linalg.norm(sol2); 
+    u = cMath.norm(sol2); 
     exu.Print("rotatingTableTest mode",mode, "=", u)
     uTest += u
 

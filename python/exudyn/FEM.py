@@ -20,6 +20,7 @@ from exudyn.basicUtilities import CreateDirectoryForFile #every writer creates i
 import exudyn.itemInterface as eii
 #from exudyn.utilities import 
 from exudyn.advancedUtilities import IsListOrArray, RoundMatrix, PlotLineCode, IsValidURealInt
+import exudyn.cMath as cMath #the math functions of the C++ code, the same bits on every platform (#2962)
 from exudyn.rigidBodyUtilities import GetRigidBodyNode, AngularVelocity2EulerParameters_t, EulerParameters2GLocal, \
              RotationVector2GLocal, RotXYZ2GLocal, RotXYZ2GLocal_t, ComputeSkewMatrix, Skew, eulerParameters0, \
              StrNodeType2NodeType, RigidBodyInertia
@@ -3096,7 +3097,7 @@ class FEMinterface:
         """
         cnt = 0
         v0 = np.array(p2) - np.array(p1)
-        lAxis = np.linalg.norm(v0)
+        lAxis = cMath.norm(v0)
         if lAxis != 0:
             v0 = v0/lAxis
             
@@ -3112,7 +3113,7 @@ class FEMinterface:
                 
                 if s <= lAxis+tolerance and s >= -tolerance:
                     pp = p1 + s*v0 #projected point
-                    r = np.linalg.norm(p-pp) #shortest distance to axis
+                    r = cMath.norm(p-pp) #shortest distance to axis
                     if abs(r-radius) <= tolerance:
                         nodeList += [cnt]
                 cnt+=1
@@ -4040,7 +4041,7 @@ class FEMinterface:
                             if RBE3secondMomentOfAreaWeighting:
                                 W += -BNWlist[k][j]*pRot@pRot
                             else:
-                                W += BNWlist[k][j]*(np.linalg.norm(p)**2)*np.eye(3) #could be easier to just sum up terms, but for consistency, it is also computed as matrix
+                                W += BNWlist[k][j]*(cMath.norm(p)**2)*np.eye(3) #could be easier to just sum up terms, but for consistency, it is also computed as matrix
     
                         WposRot = block_diag(np.eye(dim3D), W)
                         WposRotInv = np.eye(6) #old mode

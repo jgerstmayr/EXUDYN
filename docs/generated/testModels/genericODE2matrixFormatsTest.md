@@ -25,6 +25,7 @@ You can view and download this file on Github: [genericODE2matrixFormatsTest.py]
 import exudyn as exu
 from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
 import numpy as np
+from exudyn import cMath #the math functions of the C++ code, the same bits on every platform
 
 testIsActive = exu.sys.get('testIsActive', False)
 
@@ -73,12 +74,12 @@ for sparseMatrices in [False, True]:
     for linearSolverType in [exu.LinearSolverType.EXUdense, exu.LinearSolverType.EigenSparse]:
         results.append(Run(sparseMatrices, linearSolverType))
         exu.Print('sparse matrices', sparseMatrices, ',', linearSolverType, ':', results[-1])
-difference = max(np.linalg.norm(result - results[0]) for result in results)
+difference = max(cMath.norm(result - results[0]) for result in results)
 static = Run(True, exu.LinearSolverType.EigenSparse, static=True)
 staticExpected = force/k*np.arange(1, n+1) #springs in series: each spring carries the force
 exu.Print('largest difference of the combinations', difference, ', static', static, ', expected', staticExpected)
 
-u = np.sum(results[0]) + int(difference < 1e-12) + int(np.linalg.norm(static - staticExpected) < 1e-8) #within the Newton tolerance
+u = np.sum(results[0]) + int(difference < 1e-12) + int(cMath.norm(static - staticExpected) < 1e-8) #within the Newton tolerance
 exu.Print('solution of genericODE2matrixFormatsTest=', u)
 
 exu.sys['testResult'] = u

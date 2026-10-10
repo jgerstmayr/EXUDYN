@@ -19,6 +19,7 @@ from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
 import exudyn.graphics as graphics
 
 import numpy as np
+from exudyn import cMath #the math functions of the C++ code, the same bits on every platform
 
 testIsActive = exu.sys.get('testIsActive', False)
 
@@ -30,7 +31,7 @@ g = [0,0,-9.81]     #gravity in m/s^2
 m = 1               #mass in kg
 r = 0.01            #radius of disc in m
 w = 0.001           #width of disc in m, just for drawing
-p0 = [r*np.sin(phi0),0,r*np.cos(phi0)] #origin of disc center point at reference, such that initial contact point is at [0,0,0]
+p0 = [r*cMath.sin(phi0),0,r*cMath.cos(phi0)] #origin of disc center point at reference, such that initial contact point is at [0,0,0]
 initialRotation = RotationMatrixY(phi0)
 
 omega0 = [0,0,1800/180*np.pi]                   #initial angular velocity around z-axis

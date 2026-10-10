@@ -17,6 +17,7 @@ import exudyn.graphics as graphics
 from exudyn.FEM import *
 
 import numpy as np
+from exudyn import cMath #the math functions of the C++ code, the same bits on every platform
 
 testIsActive = exu.sys.get('testIsActive', False)
 
@@ -64,7 +65,7 @@ zeroZoneFriction = 1e-3 #zero-zone for velocity in friction
 fFriction = 1          #friction force (norm); acts against velocity
 #user function for friction against velocity vector, including zeroZone
 def UserFunctionSpringDamper(mbs, t, itemIndex, u, v, k, d, offset):
-    vNorm = np.linalg.norm(v)
+    vNorm = cMath.norm(v)
     f=[v[0],v[1],v[2]]
     if abs(vNorm) < offset[0]:
         f = ((offset[1]/offset[0])*np.array(f))
@@ -123,7 +124,7 @@ exu.Print("p0=", p0)
 
 p0 = mbs.GetSensorValues(sPos) #obtain values from marker
 exu.Print("p0=", p0, '(marker)')
-u=np.linalg.norm(p0)
+u=cMath.norm(p0)
 exu.Print('solution of pendulumFriction=',u)
 
 exu.sys['testResult'] = u

@@ -20,6 +20,7 @@ import exudyn as exu
 from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
 
 import numpy as np
+from exudyn import cMath #the math functions of the C++ code, the same bits on every platform
 
 testIsActive = exu.sys.get('testIsActive', False)
 
@@ -60,8 +61,8 @@ Out = lambda mbs, e, t, x=0: mbs.GetObjectOutputBody(e, t, localPosition=[x, 0, 
 #(1) tip moments, one at a time, given in the frame of the tip: constant along the beam
 for torque in [[0, 0, 0.5*EIz/L], [0.4*GJ/L, 0, 0]]:
     (mbs, elements, nodes) = Cantilever([0, 0, 0], torque)
-    errorMoment = max(np.linalg.norm(Out(mbs, e, exu.OutputVariableType.TorqueLocal) - torque) for e in elements)
-    errorCurvature = max(np.linalg.norm(Out(mbs, e, exu.OutputVariableType.CurvatureLocal) - np.array(torque)/[GJ, EIy, EIz]) for e in elements)
+    errorMoment = max(cMath.norm(Out(mbs, e, exu.OutputVariableType.TorqueLocal) - torque) for e in elements)
+    errorCurvature = max(cMath.norm(Out(mbs, e, exu.OutputVariableType.CurvatureLocal) - np.array(torque)/[GJ, EIy, EIz]) for e in elements)
     exu.Print('tip moment', torque, ': largest error of TorqueLocal', errorMoment, ', of CurvatureLocal', errorCurvature)
     testResult += sum(Out(mbs, elements[-1], exu.OutputVariableType.CurvatureLocal))
 
@@ -72,7 +73,7 @@ for nElements in [32, 8]:
     errorForce = 0
     for e in elements:
         rotation = Out(mbs, e, exu.OutputVariableType.RotationMatrix).reshape(3, 3)
-        errorForce = max(errorForce, np.linalg.norm(rotation @ Out(mbs, e, exu.OutputVariableType.ForceLocal) - force))
+        errorForce = max(errorForce, cMath.norm(rotation @ Out(mbs, e, exu.OutputVariableType.ForceLocal) - force))
     exu.Print(nElements, 'elements, tip force: largest error of the section force, rotated to global', errorForce)
 testResult += sum(Out(mbs, elements[0], exu.OutputVariableType.TorqueLocal))
 testResult += sum(Out(mbs, elements[0], exu.OutputVariableType.StrainLocal))
@@ -82,7 +83,7 @@ errorEnds = 0
 for (x, node) in [(-0.5*L/nElements, nodes[-2]), (0.5*L/nElements, nodes[-1])]:
     for outputVariable in [exu.OutputVariableType.Position, exu.OutputVariableType.RotationMatrix,
                            exu.OutputVariableType.AngularVelocity]:
-        errorEnds = max(errorEnds, np.linalg.norm(Out(mbs, elements[-1], outputVariable, x) - mbs.GetNodeOutput(node, outputVariable)))
+        errorEnds = max(errorEnds, cMath.norm(Out(mbs, elements[-1], outputVariable, x) - mbs.GetNodeOutput(node, outputVariable)))
 exu.Print('element ends against the nodes: largest difference', errorEnds)
 rotation = Out(mbs, elements[-1], exu.OutputVariableType.Rotation, 0.5*L/nElements)
 testResult += sum(rotation)

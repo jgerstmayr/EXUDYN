@@ -23,11 +23,12 @@ import exudyn as exu
 from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
 from exudyn.beams import GenerateBeamElementsAlongLine
 import exudyn.graphics as graphics
+from exudyn import cMath #the math functions of the C++ code, the same bits on every platform
 
 testIsActive = exu.sys.get('testIsActive', False)
 
 import numpy as np
-from math import sin, cos, sqrt,pi
+from exudyn.cMath import sin, cos, sqrt, pi
 
 SC = exu.SystemContainer()
 mbs = SC.AddSystem()
@@ -251,7 +252,7 @@ s5 = (mbs.GetSensorValues(sVelocitySphere))
 
 exu.Print('sensors=',s1,s2,s3,s4,s5,'\n')
 
-u = np.linalg.norm(s1) + np.linalg.norm(s2) + np.linalg.norm(s3) + np.linalg.norm(s4) + np.linalg.norm(s5)
+u = cMath.norm(s1) + cMath.norm(s2) + cMath.norm(s3) + cMath.norm(s4) + cMath.norm(s5)
 
 exu.Print('solution of distanceSensor=',u)
 exu.sys['testResult'] = u

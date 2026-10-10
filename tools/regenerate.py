@@ -47,6 +47,7 @@ tier1Paths = [
     'python/exudyn/__init__.pyi',
     'python/exudyn/symbolic.pyi',
     'python/exudyn/cMath.pyi',
+    'python/exudyn/cUtilities.pyi',
     'tools/generators/generated',
     'python/MiniExamples',
     ]

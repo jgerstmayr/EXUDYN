@@ -23,6 +23,7 @@ from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
 import numpy as np
 import os
 import shutil
+from exudyn import cMath #the math functions of the C++ code, the same bits on every platform
 
 testIsActive = exu.sys.get('testIsActive', False)
 
@@ -114,7 +115,7 @@ for solverType in [exu.DynamicSolverType.GeneralizedAlpha, exu.DynamicSolverType
     Check(0.4 - 1e-10 <= restartTime < 0.42, 'restart time ' + str(restartTime))
     rowsContinued = [Rows(directory + name) for name in ['continued.txt', 'sensorTip.txt', 'sensorBall.txt']]
 
-    Check(np.linalg.norm(qContinued - qFull) == 0, str(solverType) + ': final state differs by ' + str(np.linalg.norm(qContinued - qFull)))
+    Check(cMath.norm(qContinued - qFull) == 0, str(solverType) + ': final state differs by ' + str(cMath.norm(qContinued - qFull)))
     for (full, continued, name) in zip(rowsFull, rowsContinued, ['solution', 'sensor tip', 'sensor ball']):
         Check(full == continued, str(solverType) + ': ' + name + ' file: ' + str(len(full)) + ' rows against ' + str(len(continued)))
     u += np.sum(qFull)
@@ -127,12 +128,12 @@ try:
 except Exception as error:
     Check('does not fit' in str(error), str(error))
 (mbs, q) = Run(exu.DynamicSolverType.RK44, 'atEnd.txt', continueIfAvailable=True)
-Check(np.linalg.norm(q - qFull) == 0 and abs(mbs.sys['dynamicSolver'].output.restartTime - 1) < 1e-12, 'continued at the end time')
+Check(cMath.norm(q - qFull) == 0 and abs(mbs.sys['dynamicSolver'].output.restartTime - 1) < 1e-12, 'continued at the end time')
 
 #without a restart file, the simulation starts at its start time
 RemoveRestartFiles()
 (mbs, q) = Run(exu.DynamicSolverType.RK44, 'fresh.txt', continueIfAvailable=True)
-Check(mbs.sys['dynamicSolver'].output.restartTime == -1 and np.linalg.norm(q - qFull) == 0, 'without a restart file')
+Check(mbs.sys['dynamicSolver'].output.restartTime == -1 and cMath.norm(q - qFull) == 0, 'without a restart file')
 
 exu.Print('restartFileTest: errors', errors)
 #what the test checks is the equality within one platform (errors); the final state itself differs between platforms

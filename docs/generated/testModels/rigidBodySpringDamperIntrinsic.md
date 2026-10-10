@@ -24,6 +24,7 @@ from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
 import exudyn.graphics as graphics
 
 import numpy as np
+from exudyn import cMath #the math functions of the C++ code, the same bits on every platform
 
 testIsActive = exu.sys.get('testIsActive', False)
 
@@ -164,7 +165,7 @@ exu.Print("omega3=", omega3)
 
 
 #+++++++++++++++++++++++++++++++++++++++++++++
-u=np.linalg.norm(p1) + np.linalg.norm(p2) + np.linalg.norm(0.01*omega3)
+u=cMath.norm(p1) + cMath.norm(p2) + cMath.norm(0.01*omega3)
 exu.Print('solution of rigidBodySpringDamperIntrinsic test=',u)
 
 exu.sys['testResult'] = u

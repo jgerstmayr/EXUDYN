@@ -20,9 +20,11 @@ import exudyn.itemInterface as eii
 import exudyn as exu 
 import exudyn.graphics as graphics
 from exudyn.advancedUtilities import ExpectedType, RaiseTypeError, IsValidBool, IsValidRealInt, IsVector, IsSquareMatrix, IsValidObjectIndex
-from math import sin, cos #, sqrt, atan2
+import exudyn.cUtilities as cu #the kinematics functions below compute in C++ (#2961)
+from exudyn.cMath import sin, cos, cbrt #the same bits on every platform (#2959)
 
 import copy
+import exudyn.cMath as cMath #the math functions of the C++ code, the same bits on every platform (#2962)
 
 #public API of this module; kept complete by tools/checkAll.py (#2444)
 __all__ = [
@@ -50,132 +52,54 @@ eulerParameters0 = [1.,0.,0.,0.] #Euler parameters for case where rotation angle
 
 #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 def ComputeOrthonormalBasisVectors(vector0):
-    """compute orthogonal basis vectors (normal1, normal2) for given vector0 (non-unique solution!); the length of vector0 must not be 1; if vector0 == [0,0,0], then any normal basis is returned
+    """compute orthogonal basis vectors (normal1, normal2) for given vector0 (non-unique solution!); vector0 need not have unit length; if vector0 == [0,0,0], then the x and y axes are returned as normals; computed in C++ by exudyn.cUtilities.ComputeOrthonormalBasisVectors
 
     Returns:
-        returns [vector0normalized, normal1, normal2], in which vector0normalized is the normalized vector0 (has unit length); all vectors in numpy array format
+        3x3 numpy array with the rows [vector0normalized, normal1, normal2], in which vector0normalized is the normalized vector0 (has unit length); unpacked as `[v0, n1, n2] = ComputeOrthonormalBasisVectors(vector0)`
     """
-    v = np.array([vector0[0],vector0[1],vector0[2]])
-
-    L0 = np.linalg.norm(v)
-    if L0 == 0:
-        n1 = np.array([1,0,0])
-        n2 = np.array([0,1,0])
-    else:
-        v = (1. / L0)*v;
-    
-        if (abs(v[0]) > 0.5) and (abs(v[1]) < 0.1) and (abs(v[2]) < 0.1):
-            n1 = np.array([0., 1., 0.])
-        else:
-            n1 = np.array([1., 0., 0.])
-    
-        h = np.dot(n1, v);
-        n1 -= h * v;
-        n1 = (1/np.linalg.norm(n1))*n1;
-        n2 = np.cross(v,n1)
-
-    return [v, n1, n2]
+    return cu.ComputeOrthonormalBasisVectors(vector0)
 
 #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 def ComputeOrthonormalBasis(vector0):
-    """compute orthogonal basis, in which the normalized vector0 is the first column and the other columns are normals to vector0 (non-unique solution!); the length of vector0 must not be 1; if vector0 == [0,0,0], then any normal basis is returned
+    """compute orthogonal basis, in which the normalized vector0 is the first column and the other columns are normals to vector0 (non-unique solution!); vector0 need not have unit length; if vector0 == [0,0,0], then the unit matrix is returned; computed in C++ by exudyn.cUtilities.ComputeOrthonormalBasis
 
     Returns:
         returns A, a rotation matrix, in which the first column is parallel to vector0; A is a 2D numpy array
     """
-    return np.vstack(ComputeOrthonormalBasisVectors(vector0)).T
+    return cu.ComputeOrthonormalBasis(vector0)
     
 
 #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 def GramSchmidt(vector0, vector1):
-    """compute Gram-Schmidt projection of given 3D vector 1 on vector 0 and return normalized triad (vector0, vector1, vector0 x vector1)
+    """compute Gram-Schmidt projection of given 3D vector 1 on vector 0 and return normalized triad (vector0, vector1, vector0 x vector1) as the rows of a 3x3 numpy array, unpacked as `[v0, v1, v2] = GramSchmidt(vector0, vector1)`; a zero vector or parallel vectors raise a ValueError; computed in C++ by exudyn.cUtilities.GramSchmidt
     """
-
-    v0 = np.array([vector0[0],vector0[1],vector0[2]])
-    L0 = np.linalg.norm(v0)
-    v0 = (1. / L0)*v0;
-    
-    v1 = np.array([vector1[0],vector1[1],vector1[2]])
-    L1 = np.linalg.norm(v1)
-    v1 = (1. / L1)*v1;
-    
-    h = np.dot(v1, v0);
-    v1 -= h * v0;
-    v1 = (1/np.linalg.norm(v1))*v1;
-    n2 = np.cross(v0,v1)
-
-    return [v0, v1, n2]
+    return cu.GramSchmidt(vector0, vector1)
 
 
 #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 def Skew(vector):
-    """compute skew symmetric 3x3-matrix from 3x1- or 1x3-vector
+    """compute skew symmetric 3x3-matrix from a 3D vector, also of shape (3,1) or (1,3), which gives the cross product: Skew(a) @ b = a x b; for a vector of 3n components or a matrix of 3n rows, see ComputeSkewMatrix; computed in C++ by exudyn.cUtilities.Skew
     """
-    skewsymmetricMatrix = np.array([[ 0.,       -vector[2], vector[1]], 
-                                    [ vector[2], 0.,       -vector[0]],
-                                    [-vector[1], vector[0], 0.]])
-    return skewsymmetricMatrix
+    return cu.Skew(vector)
 
 #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 def Skew2Vec(skew):
-    """convert skew symmetric matrix m to vector
+    """convert skew symmetric 3x3 matrix to 3D vector; for a 4x4 matrix of the Lie algebra se(3), the 6 values [u, w] with the translational part u (last column) and w the vector of the skew symmetric part; other shapes raise a ValueError; computed in C++ by exudyn.cUtilities.Skew2Vec
     """
-    shape = skew.shape
-    if shape == (3,3):
-        w1 = skew[2][1]
-        w2 = skew[0][2]
-        w3 = -skew[0][1]
-        vec = np.array([w1, w2, w3])
-    if shape == (4,4):
-        w1 = skew[2][1]
-        w2 = skew[0][2]
-        w3 = -skew[0][1]
-        u1 = skew[0][3]
-        u2 = skew[1][3]
-        u3 = skew[2][3]
-        vec = np.array([u1, u2, u3, w1, w2, w3])       
-    return vec
+    return cu.Skew2Vec(skew)
 
 
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 def ComputeSkewMatrix(v):
-    """compute skew matrix from vector or matrix; used for ObjectFFRF and CMS implementation
+    """compute skew matrix from vector or matrix; used for ObjectFFRF and CMS implementation; computed in C++ by exudyn.cUtilities.Skew
 
     Args:
         a vector v in np.array format, containing 3*n components or a matrix with m columns of same shape
 
     Returns:
-        if v is a vector, output is (3*n x 3) skew matrix in np.array format; if v is a (n x m) matrix, the output is a (3*n x m) skew matrix in np.array format
+        if v is a vector, output is (3*n x 3) skew matrix in np.array format; if v is a (3*n x m) matrix, the output is a (3*n x 3*m) skew matrix in np.array format; other shapes raise a ValueError
     """
-    if type(v) == list or v.ndim == 1:
-        n = int(len(v)/3) #number of nodes
-        sm = np.zeros((3*n,3))
-
-        for i in range(n):
-            off = 3*i
-            x=v[off+0]
-            y=v[off+1]
-            z=v[off+2]
-            mLoc = np.array([[0,-z,y],[z,0,-x],[-y,x,0]])
-            sm[off:off+3,:] = mLoc[:,:]
-    
-        return sm
-    elif v.ndim==2: #dim=2
-        (nRows,nCols) = v.shape
-        n = int(nRows/3) #number of nodes
-        sm = np.zeros((3*n,3*nCols))
-
-        for j in range(nCols):
-            for i in range(n):
-                off = 3*i
-                x=v[off+0,j]
-                y=v[off+1,j]
-                z=v[off+2,j]
-                mLoc = np.array([[0,-z,y],[z,0,-x],[-y,x,0]])
-                sm[off:off+3,3*j:3*j+3] = mLoc[:,:]
-    else: 
-        exu.Print("ERROR: wrong dimension in ComputeSkewMatrix(...)")
-    return sm
+    return cu.Skew(v)
 
 #tests for ComputeSkewMatrix
 #x = np.array([1,2,3,4,5,6])
@@ -209,7 +133,7 @@ def ComputeSkewMatrix(v):
 
 #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 def EulerParameters2G(eulerParameters):
-    r"""convert Euler parameters (ep) to G-matrix (=$\partial \tomega  / \partial \pv_t$)
+    r"""convert Euler parameters (ep) to G-matrix (=$\partial \tomega  / \partial \pv_t$); computed in C++ by exudyn.cUtilities.EulerParameters2G
 
     Args:
         vector of 4 eulerParameters as list or np.array
@@ -217,13 +141,10 @@ def EulerParameters2G(eulerParameters):
     Returns:
         3x4 matrix G as np.array
     """
-    ep = eulerParameters
-    return np.array([[-2.*ep[1], 2.*ep[0],-2.*ep[3], 2.*ep[2]],
-                     [-2.*ep[2], 2.*ep[3], 2.*ep[0],-2.*ep[1]],
-                     [-2.*ep[3],-2.*ep[2], 2.*ep[1], 2.*ep[0]] ])
+    return cu.EulerParameters2G(eulerParameters)
 
 def EulerParameters2GLocal(eulerParameters):
-    r"""convert Euler parameters (ep) to local G-matrix (=$\partial \LU{b}{\tomega} / \partial \pv_t$)
+    r"""convert Euler parameters (ep) to local G-matrix (=$\partial \LU{b}{\tomega} / \partial \pv_t$); computed in C++ by exudyn.cUtilities.EulerParameters2GLocal
 
     Args:
         vector of 4 eulerParameters as list or np.array
@@ -231,13 +152,10 @@ def EulerParameters2GLocal(eulerParameters):
     Returns:
         3x4 matrix G as np.array
     """
-    ep = eulerParameters
-    return np.array([[-2.*ep[1], 2.*ep[0], 2.*ep[3],-2.*ep[2]],
-                     [-2.*ep[2],-2.*ep[3], 2.*ep[0], 2.*ep[1]],
-                     [-2.*ep[3], 2.*ep[2],-2.*ep[1], 2.*ep[0]] ])
+    return cu.EulerParameters2GLocal(eulerParameters)
 
 def EulerParameters2RotationMatrix(eulerParameters):
-    """compute rotation matrix from eulerParameters
+    """compute rotation matrix from eulerParameters; computed in C++ by exudyn.cUtilities.EulerParameters2RotationMatrix
 
     Args:
         vector of 4 eulerParameters as list or np.array
@@ -245,14 +163,11 @@ def EulerParameters2RotationMatrix(eulerParameters):
     Returns:
         3x3 rotation matrix as np.array
     """
-    ep = eulerParameters
-    return np.array([[-2.0*ep[3]*ep[3] - 2.0*ep[2]*ep[2] + 1.0, -2.0*ep[3]*ep[0] + 2.0*ep[2]*ep[1], 2.0*ep[3]*ep[1] + 2.0*ep[2]*ep[0]],
-                     [ 2.0*ep[3]*ep[0] + 2.0*ep[2]*ep[1], -2.0*ep[3]*ep[3] - 2.0*ep[1]*ep[1] + 1.0, 2.0*ep[3]*ep[2] - 2.0*ep[1]*ep[0]],
-                     [-2.0*ep[2]*ep[0] + 2.0*ep[3]*ep[1], 2.0*ep[3]*ep[2] + 2.0*ep[1]*ep[0], -2.0*ep[2]*ep[2] - 2.0*ep[1]*ep[1] + 1.0] ])
+    return cu.EulerParameters2RotationMatrix(eulerParameters)
 
 #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 def RotationMatrix2EulerParameters(rotationMatrix):
-    """compute Euler parameters from given rotation matrix
+    """compute Euler parameters from given rotation matrix; computed in C++ by exudyn.cUtilities.RotationMatrix2EulerParameters
 
     Args:
         3x3 rotation matrix as list of lists or as np.array
@@ -260,47 +175,12 @@ def RotationMatrix2EulerParameters(rotationMatrix):
     Returns:
         vector of 4 eulerParameters as np.array
     """
-    A=np.array(rotationMatrix)
-    trace = A[0,0] + A[1,1] + A[2,2] + 1.0
-    M_EPSILON = 1e-15 #small number to avoid division by zero
-
-    if (abs(trace) > M_EPSILON):
-        s = 0.5 / np.sqrt(abs(trace))
-        ep0 = 0.25 / s
-        ep1 = (A[2,1] - A[1,2]) * s
-        ep2 = (A[0,2] - A[2,0]) * s
-        ep3 = (A[1,0] - A[0,1]) * s
-    else:
-        if (A[0,0] > A[1,1]) and (A[0,0] > A[2,2]):
-            s = 2.0 * np.sqrt(abs(1.0 + A[0,0] - A[1,1] - A[2,2]))
-            ep1 = 0.25 * s
-            ep2 = (A[0,1] + A[1,0]) / s
-            ep3 = (A[0,2] + A[2,0]) / s
-            ep0 = (A[1,2] - A[2,1]) / s
-        elif A[1,1] > A[2,2]:
-            s = 2.0 * np.sqrt(abs(1.0 + A[1,1] - A[0,0] - A[2,2]))
-            ep1 = (A[0,1] + A[1,0]) / s
-            ep2 = 0.25 * s
-            ep3 = (A[1,2] + A[2,1]) / s
-            ep0 = (A[0,2] - A[2,0]) / s
-        else:
-            s = 2.0 * np.sqrt(abs(1.0 + A[2,2] - A[0,0] - A[1,1]));
-            ep1 = (A[0,2] + A[2,0]) / s
-            ep2 = (A[1,2] + A[2,1]) / s
-            ep3 = 0.25 * s
-            ep0 = (A[0,1] - A[1,0]) / s
-
-    ep=np.array([ep0,ep1,ep2,ep3])
-    #normalize Euler parameters, if rotation matrix is inaccurate; otherwise, may lead to errors in checkPreAssemble
-    epNorm = np.linalg.norm(ep)
-    if epNorm != 0.:
-        ep *= 1./epNorm
-    return ep
+    return cu.RotationMatrix2EulerParameters(rotationMatrix)
 
 #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 def AngularVelocity2EulerParameters_t(angularVelocity, eulerParameters):
     r"""compute time derivative of Euler parameters from (global) angular velocity vector
-    note that for Euler parameters $\pv$, we have $\tomega=\Gm \dot \pv$ ==> $\Gm^T \tomega = \Gm^T\cdot \Gm\cdot \dot \pv$ ==> $\Gm^T \Gm=4(\Im_{4 \times 4} - \pv\cdot \pv^T)\dot\pv = 4 (\Im_{4x4}) \dot \pv$
+    note that for Euler parameters $\pv$, we have $\tomega=\Gm \dot \pv$ ==> $\Gm^T \tomega = \Gm^T\cdot \Gm\cdot \dot \pv$ ==> $\Gm^T \Gm=4(\Im_{4 \times 4} - \pv\cdot \pv^T)\dot\pv = 4 (\Im_{4x4}) \dot \pv$; computed in C++ by exudyn.cUtilities.AngularVelocity2EulerParameters_t
 
     Args:
         angularVelocity: 3D vector of angular velocity in global frame, as lists or as np.array
@@ -309,16 +189,14 @@ def AngularVelocity2EulerParameters_t(angularVelocity, eulerParameters):
     Returns:
         vector of time derivatives of 4 eulerParameters as np.array
     """
-    
-    GT = np.transpose(EulerParameters2G(eulerParameters))
-    return 0.25*(GT.dot(angularVelocity))
+    return cu.AngularVelocity2EulerParameters_t(angularVelocity, eulerParameters)
 
 
 #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #            ROTATION VECTOR
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 def RotationVector2RotationMatrix(rotationVector):
-    r"""rotaton matrix from rotation vector, see appendix B in [Simo1988]
+    r"""rotaton matrix from rotation vector, see appendix B in [Simo1988]; computed in C++ by exudyn.cUtilities.RotationVector2RotationMatrix
 
     Args:
         3D rotation vector as list or np.array
@@ -329,23 +207,11 @@ def RotationVector2RotationMatrix(rotationVector):
     Note:
         gets inaccurate for very large rotations, $\phi \\gg 2*\pi$
     """
-    phi = np.linalg.norm(rotationVector)
-    if phi == 0.:
-        R = np.eye(3)
-    else:
-        if phi > 2*np.pi: 
-            phi = phi % (2 * np.pi)
-        OmegaSkew = Skew(rotationVector)
-        alpha = np.sin(phi)/phi
-        beta = 2*(1-np.cos(phi))/phi**2 #the loss of digits in 1-np.cos(phi) is compensated by OmegaSkew@OmegaSkew
-        R = np.eye(3) + alpha*OmegaSkew + 0.5*beta*np.matmul(OmegaSkew, OmegaSkew)
-
-    
-    return R  
+    return cu.RotationVector2RotationMatrix(rotationVector)
 
 
 def RotationMatrix2RotationVector(rotationMatrix):
-    """compute rotation vector from rotation matrix
+    """compute rotation vector from rotation matrix; computed in C++ by exudyn.cUtilities.RotationMatrix2RotationVector
 
     Args:
         3x3 rotation matrix as list of lists or as np.array
@@ -353,18 +219,7 @@ def RotationMatrix2RotationVector(rotationMatrix):
     Returns:
         vector of 3 components of rotation vector as np.array
     """
-    ep = RotationMatrix2EulerParameters(rotationMatrix)
-    
-    n = ep[1:]
-    norm = np.linalg.norm(n)
-    
-    #phi = 2.*acos(ep[0])
-    phi = 2.*np.arctan2(norm, ep[0])
-    
-    if norm != 0.:
-        n = (1./norm)*n
-
-    return phi*n
+    return cu.RotationMatrix2RotationVector(rotationMatrix)
     
     # # compute a  rotation vector from given rotation matrix according to 
     # # 2015 - Sonneville - A geometrical local frame approach for flexible multibody systems, p45
@@ -382,7 +237,7 @@ def RotationMatrix2RotationVector(rotationMatrix):
 
 
 def ComputeRotationAxisFromRotationVector(rotationVector):
-    """compute rotation axis from given rotation vector
+    """compute rotation axis from given rotation vector; computed in C++ by exudyn.cUtilities.ComputeRotationAxisFromRotationVector
 
     Args:
         3D rotation vector as np.array
@@ -390,22 +245,11 @@ def ComputeRotationAxisFromRotationVector(rotationVector):
     Returns:
         3D vector as np.array representing the rotation axis
     """
-    
-    # compute rotation angle
-    rotationAngle = np.linalg.norm(rotationVector)
-    
-    # compute rotation axis
-    if rotationAngle == 0.0:
-        rotationAxis = np.zeros(3)
-    else:
-        rotationAxis = rotationVector/rotationAngle
-    
-    # return rotation axis 
-    return rotationAxis
+    return cu.ComputeRotationAxisFromRotationVector(rotationVector)
 
 
 def RotationVector2G(rotationVector):
-    r"""convert rotation vector (parameters) (v) to G-matrix (=$\partial \tomega  / \partial \dot \vv$)
+    r"""G-matrix of the rotation vector as the Lie group node NodeRigidBodyRotVecLG uses it, whose velocity coordinates are the local angular velocity: $\tomega = \Gm \LU{b}{\tomega}$, so G is the rotation matrix
 
     Args:
         vector of rotation vector (len=3) as list or np.array
@@ -415,8 +259,8 @@ def RotationVector2G(rotationVector):
     """
     return RotationVector2RotationMatrix(rotationVector)
 
-def RotationVector2GLocal(eulerParameters):
-    r"""convert rotation vector (parameters) (v) to local G-matrix (=$\partial \LU{b}{\tomega}   / \partial \vv_t$)
+def RotationVector2GLocal(rotationVector):
+    r"""local G-matrix of the rotation vector as the Lie group node NodeRigidBodyRotVecLG uses it, whose velocity coordinates are the local angular velocity: the unit matrix
 
     Args:
         vector of rotation vector (len=3) as list or np.array
@@ -434,7 +278,7 @@ def RotationVector2GLocal(eulerParameters):
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 def RotXYZ2RotationMatrix(rot):
-    """compute rotation matrix from consecutive xyz [Rots](#Rot) (Tait-Bryan angles); A=Ax*Ay*Az; rot=[rotX, rotY, rotZ]
+    """compute rotation matrix from consecutive xyz [Rots](#Rot) (Tait-Bryan angles); A=Ax*Ay*Az; rot=[rotX, rotY, rotZ]; computed in C++ by exudyn.cUtilities.RotXYZ2RotationMatrix
 
     Args:
         3D vector of Tait-Bryan rotation parameters [X,Y,Z] in radiant
@@ -442,19 +286,10 @@ def RotXYZ2RotationMatrix(rot):
     Returns:
         3x3 rotation matrix as np.array
     """
-    c0 = np.cos(rot[0])
-    s0 = np.sin(rot[0])
-    c1 = np.cos(rot[1])
-    s1 = np.sin(rot[1])
-    c2 = np.cos(rot[2])
-    s2 = np.sin(rot[2])
-    
-    return np.array([[ c1*c2           ,-c1*s2           , s1    ],
-                     [ s0*s1*c2 + c0*s2,-s0*s1*s2 + c0*c2,-s0*c1 ],
-                     [-c0*s1*c2 + s0*s2, c0*s1*s2 + s0*c2, c0*c1 ]]);
+    return cu.RotXYZ2RotationMatrix(rot)
 
 def RotationMatrix2RotXYZ(rotationMatrix):
-    """convert rotation matrix to xyz Euler angles (Tait-Bryan angles);  A=Ax*Ay*Az;
+    """convert rotation matrix to xyz Euler angles (Tait-Bryan angles);  A=Ax*Ay*Az;; computed in C++ by exudyn.cUtilities.RotationMatrix2RotXYZ
 
     Args:
         3x3 rotation matrix as list of lists or np.array
@@ -467,21 +302,7 @@ def RotationMatrix2RotXYZ(rotationMatrix):
         `RotationMatrix2RotXYZ( RotXYZ2RotationMatrix(rot) )` may fail, but
         `RotXYZ2RotationMatrix( RotationMatrix2RotXYZ( RotXYZ2RotationMatrix(rot) ) )` works always
     """
-    R=np.array(rotationMatrix)
-    #rot=np.array([0,0,0])
-    rot=np.zeros(3)
-    absC1 = np.sqrt((-R[1,2])**2+R[2,2]**2)
-    rot[1] = np.arctan2(R[0,2], absC1)
-    if absC1 > 1e-14:
-        rot[0] = np.arctan2(-R[1,2], R[2,2])
-        rot[2] = np.arctan2(-R[0,1], R[0,0])
-    else: #rot[0] and rot[2] represent same axes, set one of them zero!
-        rot[0] = 0.
-        #c1=0,s0=0,c0=1
-        #s0*s1*c2 + c0*s2,-s0*s1*s2 + c0*c2 => c0*s2, c0*c2
-        rot[2] = np.arctan2(R[1,0], R[1,1])
-        
-    return rot
+    return cu.RotationMatrix2RotXYZ(rotationMatrix)
 
 # #OLD, problems at rot[1]=pi/2: rotation represents different rotation matrix
 # def RotationMatrix2RotXYZ(rotationMatrix):
@@ -495,7 +316,7 @@ def RotationMatrix2RotXYZ(rotationMatrix):
 
 
 def RotXYZ2G(rot):
-    r"""compute (global-frame) G-matrix for xyz Euler angles (Tait-Bryan angles) ($\LU{0}{\Gm} = \partial \LU{0}{\tomega}  / \partial \dot \ttheta$)
+    r"""compute (global-frame) G-matrix for xyz Euler angles (Tait-Bryan angles) ($\LU{0}{\Gm} = \partial \LU{0}{\tomega}  / \partial \dot \ttheta$); computed in C++ by exudyn.cUtilities.RotXYZ2G
 
     Args:
         3D vector of Tait-Bryan rotation parameters [X,Y,Z] in radiant
@@ -503,17 +324,10 @@ def RotXYZ2G(rot):
     Returns:
         3x3 matrix G as np.array
     """
-    c0 = cos(rot[0])
-    s0 = sin(rot[0])
-    c1 = cos(rot[1])
-    s1 = sin(rot[1])
-
-    return np.array([[1, 0, s1],
-                     [0, c0, -c1*s0],
-                     [0, s0,  c0*c1 ]])
+    return cu.RotXYZ2G(rot)
 
 def RotXYZ2G_t(rot, rot_t):
-    r"""compute time derivative of (global-frame) G-matrix for xyz Euler angles (Tait-Bryan angles) ($\LU{0}{\Gm} = \partial \LU{0}{\tomega}  / \partial \dot \ttheta$)
+    r"""compute time derivative of (global-frame) G-matrix for xyz Euler angles (Tait-Bryan angles) ($\LU{0}{\Gm} = \partial \LU{0}{\tomega}  / \partial \dot \ttheta$); computed in C++ by exudyn.cUtilities.RotXYZ2G_t
 
     Args:
         rot: 3D vector of Tait-Bryan rotation parameters [X,Y,Z] in radiant
@@ -522,18 +336,11 @@ def RotXYZ2G_t(rot, rot_t):
     Returns:
         3x3 matrix G_t as np.array
     """
-    c0 = cos(rot[0])
-    s0 = sin(rot[0])
-    c1 = cos(rot[1])
-    s1 = sin(rot[1])
-
-    return np.array([[0, 0, rot_t[1]*c1],
-                     [0, -rot_t[0]*s0, rot_t[1]*s0*s1 - rot_t[0]*c0*c1],
-                     [0, rot_t[0]*c0, -rot_t[0]*c1*s0 - rot_t[1]*c0*s1]])
+    return cu.RotXYZ2G_t(rot, rot_t)
 
 
 def RotXYZ2GLocal(rot):
-    r"""compute local (body-fixed) G-matrix for xyz Euler angles (Tait-Bryan angles) ($\LU{b}{\Gm} = \partial \LU{b}{\tomega}  / \partial \ttheta_t$)
+    r"""compute local (body-fixed) G-matrix for xyz Euler angles (Tait-Bryan angles) ($\LU{b}{\Gm} = \partial \LU{b}{\tomega}  / \partial \ttheta_t$); computed in C++ by exudyn.cUtilities.RotXYZ2GLocal
 
     Args:
         3D vector of Tait-Bryan rotation parameters [X,Y,Z] in radiant
@@ -541,17 +348,10 @@ def RotXYZ2GLocal(rot):
     Returns:
         3x3 matrix GLocal as np.array
     """
-    c1 = cos(rot[1])
-    s1 = sin(rot[1])
-    c2 = cos(rot[2])
-    s2 = sin(rot[2])
-
-    return np.array([[ c1*c2, s2, 0],
-                     [-c1*s2, c2, 0],
-                     [ s1,     0,  1]])
+    return cu.RotXYZ2GLocal(rot)
 
 def RotXYZ2GLocal_t(rot, rot_t):
-    r"""compute time derivative of (body-fixed) G-matrix for xyz Euler angles (Tait-Bryan angles) ($\LU{b}{\Gm} = \partial \LU{b}{\tomega}  / \partial \ttheta_t$)
+    r"""compute time derivative of (body-fixed) G-matrix for xyz Euler angles (Tait-Bryan angles) ($\LU{b}{\Gm} = \partial \LU{b}{\tomega}  / \partial \ttheta_t$); computed in C++ by exudyn.cUtilities.RotXYZ2GLocal_t
 
     Args:
         rot: 3D vector of Tait-Bryan rotation parameters [X,Y,Z] in radiant
@@ -560,14 +360,7 @@ def RotXYZ2GLocal_t(rot, rot_t):
     Returns:
         3x3 matrix GLocal_t as np.array
     """
-    c1 = cos(rot[1])
-    s1 = sin(rot[1])
-    c2 = cos(rot[2])
-    s2 = sin(rot[2])
-
-    return np.array([[-rot_t[2]*c1*s2 - rot_t[1]*c2*s1, rot_t[2]*c2, 0],
-                     [ rot_t[1]*s2*s1 - rot_t[2]*c2*c1, -rot_t[2]*s2, 0],
-                     [ rot_t[1]*c1, 0, 0 ]])
+    return cu.RotXYZ2GLocal_t(rot, rot_t)
 
 
 
@@ -575,30 +368,20 @@ def RotXYZ2GLocal_t(rot, rot_t):
 
 
 def AngularVelocity2RotXYZ_t(angularVelocity, rotation):
-    """compute time derivatives of angles RotXYZ from (global) angular velocity vector and given rotation
+    """compute time derivatives of angles RotXYZ from (global) angular velocity vector and given rotation; computed in C++ by exudyn.cUtilities.AngularVelocity2RotXYZ_t
 
     Args:
         angularVelocity: global angular velocity vector as list or np.array
         rotation: 3D vector of Tait-Bryan rotation parameters [X,Y,Z] in radiant
 
     Returns:
-        time derivative of vector of Tait-Bryan rotation parameters [X,Y,Z] (in radiant) as np.array
+        time derivative of vector of Tait-Bryan rotation parameters [X,Y,Z] (in radiant) as np.array; at the singularity |cos(rotation[1])| < 1e-14 a ValueError is raised
     """
-    psi = rotation[0]
-    theta = rotation[1]
-    #phi = rotation[2] #not needed
-    cTheta = np.cos(theta)
-    if cTheta == 0:
-        exu.Print('AngularVelocity2RotXYZ_t: not possible for rotation[1] == pi/2, 3*pi/2, ...')
-
-    GInv = (1/cTheta)*np.array([[np.cos(theta), np.sin(psi)*np.sin(theta),-np.cos(psi)*np.sin(theta)],
-                                [0            , np.cos(psi)*np.cos(theta)   , np.sin(psi)*np.cos(theta)],
-                                [0            ,-np.sin(psi)              , np.cos(psi)]])
-    return np.dot(GInv,angularVelocity)
+    return cu.AngularVelocity2RotXYZ_t(angularVelocity, rotation)
   
     
 def RotXYZ2EulerParameters(alpha):
-    """compute four Euler parameters from given RotXYZ angles, see [Henderson1977]
+    """compute four Euler parameters from given RotXYZ angles, see [Henderson1977]; computed in C++ by exudyn.cUtilities.RotXYZ2EulerParameters
 
     Args:
         alpha: 3D vector as np.array containing RotXYZ angles
@@ -607,23 +390,7 @@ def RotXYZ2EulerParameters(alpha):
         4D vector as np.array containing four Euler parameters
         entry zero of output represent the scalar part of Euler parameters
     """
-    psi   = alpha[0]
-    theta = alpha[1]
-    phi   = alpha[2]   
-    u = 0.5*psi
-    v = 0.5*theta
-    w = 0.5*phi    
-    cPsi   = np.cos(u)
-    cTheta = np.cos(v)
-    cPhi   = np.cos(w)    
-    sPsi   = np.sin(u)
-    sTheta = np.sin(v)
-    sPhi   = np.sin(w)    
-    q0 = -sPsi*sTheta*sPhi + cPsi*cTheta*cPhi
-    q1 =  sPsi*cTheta*cPhi + sTheta*sPhi*cPsi    
-    q2 = -sPsi*sPhi*cTheta + sTheta*cPsi*cPhi 
-    q3 =  sPsi*sTheta*cPhi + sPhi*cPsi*cTheta 
-    return np.array([q0, q1, q2, q3])
+    return cu.RotXYZ2EulerParameters(alpha)
 
 
 #%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -631,8 +398,8 @@ def RotXYZ2EulerParameters(alpha):
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 @docmeta(author='Martin Sereinig')
-def RotationMatrix2RotZYZ(rotationMatrix, flip):
-    """convert rotation matrix to zyz Euler angles;  A=Az*Ay*Az;
+def RotationMatrix2RotZYZ(rotationMatrix, flip=False):
+    """convert rotation matrix to zyz Euler angles;  A=Az*Ay*Az;; computed in C++ by exudyn.cUtilities.RotationMatrix2RotZYZ
 
     Args:
         rotationMatrix: 3x3 rotation matrix as list of lists or np.array
@@ -644,43 +411,14 @@ def RotationMatrix2RotZYZ(rotationMatrix, flip):
     Note:
         tested (compared with Robotics, Vision and Control book of P. Corke)
     """
-    R=np.array(rotationMatrix)
-    # Method as per Paul, p 69.
-    # euler = [phi theta psi]
-    eulangles = np.zeros([3])
-    eps = 10**(-14)
-
-    if abs(R[0, 2]) < eps and abs(R[1, 2]) < eps:
-        # singularity
-        eulangles[0] = 0
-        sp = 0
-        cp = 1
-        eulangles[1] = np.arctan2(
-            cp*R[0, 2] + sp*R[1, 2], R[2, 2])
-        eulangles[2] = np.arctan2(-sp * R[0, 0] + cp *
-                                  R[1, 0], -sp*R[0, 1] + cp*R[1, 1])
-    else:
-        # non singular
-        # Only positive phi is returned.
-        if flip:
-            eulangles[0] = np.arctan2(-R[1, 2], -R[0, 2])
-        else:
-            eulangles[0] = np.arctan2(R[1, 2], R[0, 2])
-
-        sp = np.sin(eulangles[0])
-        cp = np.cos(eulangles[0])
-        eulangles[1] = np.arctan2(
-            cp*R[0, 2] + sp*R[1, 2], R[2, 2])
-        eulangles[2] = np.arctan2(-sp * R[0, 0] + cp *
-                                  R[1, 0], -sp*R[0, 1] + cp*R[1, 1])
-    return eulangles
+    return cu.RotationMatrix2RotZYZ(rotationMatrix, flip)
 
 
 
 #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 def RotationMatrixX(angleRad):
-    """compute rotation matrix w.r.t. X-axis (first axis)
+    """compute rotation matrix w.r.t. X-axis (first axis); computed in C++ by exudyn.cUtilities.RotationMatrixX
 
     Args:
         angle around X-axis in radiant
@@ -688,12 +426,10 @@ def RotationMatrixX(angleRad):
     Returns:
         3x3 rotation matrix as np.array
     """
-    return np.array([[1, 0, 0],
-                     [0, np.cos(angleRad),-np.sin(angleRad)],
-                     [0, np.sin(angleRad), np.cos(angleRad)] ])
+    return cu.RotationMatrixX(angleRad)
 
 def RotationMatrixY(angleRad):
-    """compute rotation matrix w.r.t. Y-axis (second axis)
+    """compute rotation matrix w.r.t. Y-axis (second axis); computed in C++ by exudyn.cUtilities.RotationMatrixY
 
     Args:
         angle around Y-axis in radiant
@@ -701,12 +437,10 @@ def RotationMatrixY(angleRad):
     Returns:
         3x3 rotation matrix as np.array
     """
-    return np.array([ [ np.cos(angleRad), 0, np.sin(angleRad)],
-                      [0,        1, 0],
-                      [-np.sin(angleRad),0, np.cos(angleRad)] ])
+    return cu.RotationMatrixY(angleRad)
 
 def RotationMatrixZ(angleRad):
-    """compute rotation matrix w.r.t. Z-axis (third axis)
+    """compute rotation matrix w.r.t. Z-axis (third axis); computed in C++ by exudyn.cUtilities.RotationMatrixZ
 
     Args:
         angle around Z-axis in radiant
@@ -714,12 +448,10 @@ def RotationMatrixZ(angleRad):
     Returns:
         3x3 rotation matrix as np.array
     """
-    return np.array([ [np.cos(angleRad),-np.sin(angleRad), 0],
-                      [np.sin(angleRad), np.cos(angleRad), 0],
-                      [0,        0,        1] ]);
+    return cu.RotationMatrixZ(angleRad)
 
 def RotationMatrix2D(angleRad):
-    """compute 2D rotation matrix
+    """compute 2D rotation matrix; computed in C++ by exudyn.cUtilities.RotationMatrix2D
 
     Args:
         angle around out-of-plane axis in radiant
@@ -727,8 +459,7 @@ def RotationMatrix2D(angleRad):
     Returns:
         2x2 rotation matrix as np.array
     """
-    return np.array([ [np.cos(angleRad),-np.sin(angleRad)],
-                      [np.sin(angleRad), np.cos(angleRad)] ]);
+    return cu.RotationMatrix2D(angleRad)
 
     
 #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -1110,9 +841,9 @@ class RigidBodyInertia:
         if (Ix + Iy < Iz) or (Ix + Iz < Iy) or (Iy + Iz < Ix):
             exu.Print('WARNING: RigidBodyInertia: inertiaTensor does not fulfill triangle inequality! This may lead to unphysical and numerically unstable results!')
 
-        norm = np.linalg.norm(inertiaTensor)
+        norm = cMath.norm(inertiaTensor)
         if norm != 0: #in case of mass point, this shall be possible
-            if np.linalg.norm(inertiaTensor - inertiaTensor.T)/norm > 1e-14:
+            if cMath.norm(inertiaTensor - inertiaTensor.T)/norm > 1e-14:
                 exu.Print('WARNING: RigidBodyInertia: inertiaTensor seems to be unsymmetric; This may lead to unphysical and numerically unstable results!')
             
         self.mass = mass
@@ -1207,7 +938,7 @@ class RigidBodyInertia:
         Note:
             only allowed if COM=0 !
         """
-        if np.linalg.norm(self.com) != 0:
+        if cMath.norm(self.com) != 0:
             exu.Print("ERROR: RigidBodyInertia.Rotated only allowed in case of com=0")
             return 0
         try:
@@ -1299,7 +1030,7 @@ class RigidBodyInertia:
         elif typeName == 'InertiaMassPoint':
             mass=self.data['mass']
             #V=4./3.*np.pi*r**3 => m/rho = V => r
-            r = (mass/2000*0.75/np.pi)**(1/3) #approximation for radius with rho=2000
+            r = cbrt(mass/2000*0.75/np.pi) #approximation for radius with rho=2000
             gData = graphics.Sphere(point=com, radius=r, nTiles=nTiles, color=color0) #size is not known
     
         elif typeName == 'InertiaSphere':
@@ -1614,7 +1345,7 @@ def AddRigidBody(mainSys, inertia,
                                                    nodeNumber=nodeNumber, 
                                                    visualization=eii.VObjectRigidBody(graphicsData=graphicsDataList)))
     
-    if np.linalg.norm(gravity) != 0.:
+    if cMath.norm(gravity) != 0.:
         markerNumber = mainSys.AddMarker(eii.MarkerBodyMass(bodyNumber=bodyNumber))
         mainSys.AddLoad(eii.LoadMassProportional(markerNumber=markerNumber, loadVector=gravity))
     
@@ -1627,7 +1358,7 @@ def _MarkerWithRotation(mbs, marker, rotation):
     rotationMarker0/1 (#2745, #2804); returns (marker, rotationMarker): the marker itself and the unit matrix for a unit
     rotation, a copy with the composed localHT and the unit matrix for a rigid marker with localHT, and the marker with
     the rotation only for a marker without localHT"""
-    if np.linalg.norm(np.array(rotation) - np.eye(3)) == 0:
+    if cMath.norm(np.array(rotation) - np.eye(3)) == 0:
         return (marker, np.eye(3))
     data = mbs.GetMarker(marker)
     if 'localHT' not in data:
@@ -1644,7 +1375,7 @@ def _RotationMarkerArgs(rotation0, rotation1):
     alone (#2820)"""
     args = {}
     for (name, rotation) in [('rotationMarker0', rotation0), ('rotationMarker1', rotation1)]:
-        if np.linalg.norm(np.array(rotation) - np.eye(3)) != 0:
+        if cMath.norm(np.array(rotation) - np.eye(3)) != 0:
             args[name] = rotation
     return args
 

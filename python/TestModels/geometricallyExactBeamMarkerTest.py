@@ -19,6 +19,7 @@ import exudyn as exu
 from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
 
 import numpy as np
+from exudyn import cMath #the math functions of the C++ code, the same bits on every platform
 
 testIsActive = exu.sys.get('testIsActive', False)
 
@@ -102,7 +103,7 @@ for (name, solve) in [('pendulum', lambda through: Pendulum(through)),
                       ('cantilever, element middle', lambda through: Cantilever('middle', through))]:
     pElements = solve(True)
     pNodes = solve(False)
-    exu.Print(name + ': tip', pElements.round(8), ', difference element loads - node loads:', np.linalg.norm(pElements - pNodes))
+    exu.Print(name + ': tip', pElements.round(8), ', difference element loads - node loads:', cMath.norm(pElements - pNodes))
     testResult += sum(pElements)
 
 exu.Print('solution of geometricallyExactBeamMarkerTest=', testResult)

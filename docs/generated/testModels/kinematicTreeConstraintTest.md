@@ -25,10 +25,11 @@ import exudyn.graphics as graphics
 from exudyn.FEM import *
 
 import numpy as np
+from exudyn import cMath #the math functions of the C++ code, the same bits on every platform
 
 testIsActive = exu.sys.get('testIsActive', False)
 
-from math import pi, sin, cos#, sqrt
+from exudyn.cMath import pi, sin, cos#, sqrt
 from copy import copy, deepcopy
 from exudyn.rigidBodyUtilities import Skew, Skew2Vec
 from exudyn.robotics import *
@@ -182,10 +183,10 @@ if testIsActive or True:
     for i in range(len(sMBS)):
         v = mbs.GetSensorValues(sMBS[i])
         exu.Print('sensor MBS '+str(i)+'=',v)
-        u += np.linalg.norm(v)
+        u += cMath.norm(v)
         v = mbs.GetSensorValues(sKT[i])
         exu.Print('sensor KT '+str(i)+' =',v)
-        u += np.linalg.norm(v)
+        u += cMath.norm(v)
 
 exu.Print("solution of kinematicTreeConstraintTest=", u)
 exu.sys['testResult'] = u #1.8135975385993548 

@@ -12,7 +12,7 @@ Lie group methods and formulas for Lie group integration.
 (sec-liegroupbasics-sinc)=
 ## Function: Sinc
 
-[`Sinc(x)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/lieGroupBasics.py#L45)
+[`Sinc(x)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/lieGroupBasics.py#L47)
 
 - **function description**: compute the cardinal sine function in radians
 - **input**: scalar float or int value
@@ -23,7 +23,7 @@ Lie group methods and formulas for Lie group integration.
 (sec-liegroupbasics-cot)=
 ## Function: Cot
 
-[`Cot(x)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/lieGroupBasics.py#L63)
+[`Cot(x)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/lieGroupBasics.py#L65)
 
 - **function description**: compute the cotangent function cot(x)=1/tan(x) in radians
 - **input**: scalar float or int value
@@ -34,7 +34,7 @@ Lie group methods and formulas for Lie group integration.
 (sec-liegroupbasics-r3xso3matrix2rotationmatrix)=
 ## Function: R3xSO3Matrix2RotationMatrix
 
-[`R3xSO3Matrix2RotationMatrix(G)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/lieGroupBasics.py#L76)
+[`R3xSO3Matrix2RotationMatrix(G)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/lieGroupBasics.py#L78)
 
 - **function description**: computes 3x3 rotation matrix from 7x7 R3xSO(3) matrix, see [Bruels2011]
 - **input**:
@@ -46,7 +46,7 @@ Lie group methods and formulas for Lie group integration.
 (sec-liegroupbasics-r3xso3matrix2translation)=
 ## Function: R3xSO3Matrix2Translation
 
-[`R3xSO3Matrix2Translation(G)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/lieGroupBasics.py#L89)
+[`R3xSO3Matrix2Translation(G)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/lieGroupBasics.py#L91)
 
 - **function description**: computes translation part of R3xSO(3) matrix, see [Bruels2011]
 - **input**:
@@ -58,7 +58,7 @@ Lie group methods and formulas for Lie group integration.
 (sec-liegroupbasics-r3xso3matrix)=
 ## Function: R3xSO3Matrix
 
-[`R3xSO3Matrix(x, R)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/lieGroupBasics.py#L102)
+[`R3xSO3Matrix(x, R)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/lieGroupBasics.py#L104)
 
 - **function description**: builds 7x7 matrix as element of the Lie group R3xSO(3), see [Bruels2011]
 - **input**:
@@ -71,21 +71,21 @@ Lie group methods and formulas for Lie group integration.
 (sec-liegroupbasics-expso3)=
 ## Function: ExpSO3
 
-[`ExpSO3(Omega)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/lieGroupBasics.py#L131)
+[`ExpSO3(Omega)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/lieGroupBasics.py#L133)
 
-- **function description**: compute the matrix exponential map on the Lie group SO(3), see [Mueller2017]
+- **function description**: compute the matrix exponential map on the Lie group SO(3), see [Mueller2017]; computed in C++ by exudyn.cUtilities.ExpSO3
 - **input**: 3D rotation vector as np.array
 - **output**: 3x3 matrix as np.array
 - **author**: Stefan Holzinger
 
 
-Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`LieGroupIntegrationUnitTests.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/LieGroupIntegrationUnitTests.py) (TM)
+Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`cUtilitiesTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/cUtilitiesTest.py) (TM), [`LieGroupIntegrationUnitTests.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/LieGroupIntegrationUnitTests.py) (TM)
 
 
 (sec-liegroupbasics-exps3)=
 ## Function: ExpS3
 
-[`ExpS3(Omega)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/lieGroupBasics.py#L148)
+[`ExpS3(Omega)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/lieGroupBasics.py#L146)
 
 - **function description**: compute the quaternion exponential map on the Lie group S(3), see [Terze2016; Mueller2017]
 - **input**: 3D rotation vector as np.array
@@ -96,19 +96,22 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`LieGroupInt
 (sec-liegroupbasics-logso3)=
 ## Function: LogSO3
 
-[`LogSO3(R)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/lieGroupBasics.py#L165)
+[`LogSO3(R)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/lieGroupBasics.py#L163)
 
-- **function description**: compute the matrix logarithmic map on the Lie group SO(3)
+- **function description**: compute the matrix logarithmic map on the Lie group SO(3); computed in C++ by exudyn.cUtilities.LogSO3
 - **input**: 3x3 rotation matrix as np.array
 - **output**: 3x3 skew symmetric matrix as np.array
 - **author**: Johannes Gerstmayr
 - **notes**: improved accuracy for very small angles as well as angles phi close to pi AS WELL AS at phi=pi
 
 
+Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`cUtilitiesTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/cUtilitiesTest.py) (TM)
+
+
 (sec-liegroupbasics-texpso3)=
 ## Function: TExpSO3
 
-[`TExpSO3(Omega)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/lieGroupBasics.py#L209)
+[`TExpSO3(Omega)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/lieGroupBasics.py#L196)
 
 - **function description**: compute the tangent operator corresponding to ExpSO3, see [Bruels2011]
 - **input**: 3D rotation vector as np.array
@@ -119,7 +122,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`LieGroupInt
 (sec-liegroupbasics-texpso3inv)=
 ## Function: TExpSO3Inv
 
-[`TExpSO3Inv(Omega)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/lieGroupBasics.py#L237)
+[`TExpSO3Inv(Omega)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/lieGroupBasics.py#L224)
 
 - **function description**: compute the inverse of the tangent operator TExpSO3, see [Sonneville2014] this function was improved, see coordinateMaps.pdf by Stefan Holzinger
 - **input**: 3D rotation vector as np.array
@@ -130,7 +133,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`LieGroupInt
 (sec-liegroupbasics-expse3)=
 ## Function: ExpSE3
 
-[`ExpSE3(x)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/lieGroupBasics.py#L266)
+[`ExpSE3(x)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/lieGroupBasics.py#L253)
 
 - **function description**: compute the matrix exponential map on the Lie group SE(3), see [Bruels2011]
 - **input**: 6D incremental motion vector as np.array
@@ -144,7 +147,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`serialRobot
 (sec-liegroupbasics-logse3)=
 ## Function: LogSE3
 
-[`LogSE3(H)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/lieGroupBasics.py#L283)
+[`LogSE3(H)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/lieGroupBasics.py#L270)
 
 - **function description**: compute the matrix logarithm on the Lie group SE(3), see [Sonneville2014]
 - **input**: 4x4 homogeneous transformation matrix as np.array
@@ -158,7 +161,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`serialRobot
 (sec-liegroupbasics-texpse3)=
 ## Function: TExpSE3
 
-[`TExpSE3(x)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/lieGroupBasics.py#L304)
+[`TExpSE3(x)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/lieGroupBasics.py#L291)
 
 - **function description**: compute the tangent operator corresponding to ExpSE3, see [Bruels2011]
 - **input**: 6D incremental motion vector as np.array
@@ -170,7 +173,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`serialRobot
 (sec-liegroupbasics-texpse3inv)=
 ## Function: TExpSE3Inv
 
-[`TExpSE3Inv(x)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/lieGroupBasics.py#L357)
+[`TExpSE3Inv(x)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/lieGroupBasics.py#L344)
 
 - **function description**: compute the inverse of tangent operator TExpSE3, see [Sonneville2014]
 - **input**: 6D incremental motion vector as np.array
@@ -182,7 +185,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`serialRobot
 (sec-liegroupbasics-expr3xso3)=
 ## Function: ExpR3xSO3
 
-[`ExpR3xSO3(x)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/lieGroupBasics.py#L397)
+[`ExpR3xSO3(x)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/lieGroupBasics.py#L384)
 
 - **function description**: compute the matrix exponential map on the Lie group R3xSO(3), see [Bruels2011]
 - **input**: 6D incremental motion vector as np.array
@@ -193,7 +196,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`serialRobot
 (sec-liegroupbasics-texpr3xso3)=
 ## Function: TExpR3xSO3
 
-[`TExpR3xSO3(x)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/lieGroupBasics.py#L413)
+[`TExpR3xSO3(x)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/lieGroupBasics.py#L400)
 
 - **function description**: compute the tangent operator corresponding to ExpR3xSO3, see [Bruels2011]
 - **input**: 6D incremental motion vector as np.array
@@ -204,7 +207,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`serialRobot
 (sec-liegroupbasics-texpr3xso3inv)=
 ## Function: TExpR3xSO3Inv
 
-[`TExpR3xSO3Inv(x)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/lieGroupBasics.py#L428)
+[`TExpR3xSO3Inv(x)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/lieGroupBasics.py#L415)
 
 - **function description**: compute the inverse of tangent operator TExpR3xSO3
 - **input**: 6D incremental motion vector as np.array
@@ -215,7 +218,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`serialRobot
 (sec-liegroupbasics-compositionruledirectproductr3ands3)=
 ## Function: CompositionRuleDirectProductR3AndS3
 
-[`CompositionRuleDirectProductR3AndS3(q0, incrementalMotionVector)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/lieGroupBasics.py#L455)
+[`CompositionRuleDirectProductR3AndS3(q0, incrementalMotionVector)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/lieGroupBasics.py#L442)
 
 - **function description**: compute composition operation for pairs in the Lie group R3xS3
 - **input**:
@@ -228,7 +231,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`serialRobot
 (sec-liegroupbasics-compositionrulesemidirectproductr3ands3)=
 ## Function: CompositionRuleSemiDirectProductR3AndS3
 
-[`CompositionRuleSemiDirectProductR3AndS3(q0, incrementalMotionVector)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/lieGroupBasics.py#L482)
+[`CompositionRuleSemiDirectProductR3AndS3(q0, incrementalMotionVector)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/lieGroupBasics.py#L469)
 
 - **function description**: compute composition operation for pairs in the Lie group R3 semiTimes S3 (corresponds to SE(3))
 - **input**:
@@ -241,7 +244,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`serialRobot
 (sec-liegroupbasics-compositionruledirectproductr3andr3rotvec)=
 ## Function: CompositionRuleDirectProductR3AndR3RotVec
 
-[`CompositionRuleDirectProductR3AndR3RotVec(q0, incrementalMotionVector)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/lieGroupBasics.py#L510)
+[`CompositionRuleDirectProductR3AndR3RotVec(q0, incrementalMotionVector)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/lieGroupBasics.py#L497)
 
 - **function description**: compute composition operation for pairs in the group obtained from the direct product of R3 and R3, see [HolzingerGerstmayr2020] the rotation vector is used as rotation parametrizations this composition operation can be used in formulations which represent the translational velocities in the global (inertial) frame
 - **input**:
@@ -254,7 +257,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`serialRobot
 (sec-liegroupbasics-compositionrulesemidirectproductr3andr3rotvec)=
 ## Function: CompositionRuleSemiDirectProductR3AndR3RotVec
 
-[`CompositionRuleSemiDirectProductR3AndR3RotVec(q0, incrementalMotionVector)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/lieGroupBasics.py#L539)
+[`CompositionRuleSemiDirectProductR3AndR3RotVec(q0, incrementalMotionVector)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/lieGroupBasics.py#L526)
 
 - **function description**: compute composition operation for pairs in the group obtained from the direct product of R3 and R3. the rotation vector is used as rotation parametrizations this composition operation can be used in formulations which represent the translational velocities in the local (body-attached) frame
 - **input**:
@@ -267,7 +270,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`serialRobot
 (sec-liegroupbasics-compositionruledirectproductr3andr3rotxyzangles)=
 ## Function: CompositionRuleDirectProductR3AndR3RotXYZAngles
 
-[`CompositionRuleDirectProductR3AndR3RotXYZAngles(q0, incrementalMotionVector)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/lieGroupBasics.py#L569)
+[`CompositionRuleDirectProductR3AndR3RotXYZAngles(q0, incrementalMotionVector)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/lieGroupBasics.py#L556)
 
 - **function description**: compute composition operation for pairs in the group obtained from the direct product of R3 and R3. Cardan-Tait/Bryan (CTB) angles are used as rotation parametrizations this composition operation can be used in formulations which represent the translational velocities in the global (inertial) frame
 - **input**:
@@ -280,7 +283,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`serialRobot
 (sec-liegroupbasics-compositionrulesemidirectproductr3andr3rotxyzangles)=
 ## Function: CompositionRuleSemiDirectProductR3AndR3RotXYZAngles
 
-[`CompositionRuleSemiDirectProductR3AndR3RotXYZAngles(q0, incrementalMotionVector)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/lieGroupBasics.py#L598)
+[`CompositionRuleSemiDirectProductR3AndR3RotXYZAngles(q0, incrementalMotionVector)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/lieGroupBasics.py#L585)
 
 - **function description**: compute composition operation for pairs in the group obtained from the direct product of R3 and R3. Cardan-Tait/Bryan (CTB) angles are used as rotation parametrizations this composition operation can be used in formulations which represent the translational velocities in the local (body-attached) frame
 - **input**:
@@ -293,7 +296,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`serialRobot
 (sec-liegroupbasics-compositionruleforeulerparameters)=
 ## Function: CompositionRuleForEulerParameters
 
-[`CompositionRuleForEulerParameters(q, p)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/lieGroupBasics.py#L628)
+[`CompositionRuleForEulerParameters(q, p)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/lieGroupBasics.py#L615)
 
 - **function description**: compute composition operation for Euler parameters (unit quaternions) this composition operation is quaternion multiplication, see [Terze2016]
 - **input**:
@@ -306,7 +309,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`serialRobot
 (sec-liegroupbasics-compositionruleforrotationvectors)=
 ## Function: CompositionRuleForRotationVectors
 
-[`CompositionRuleForRotationVectors(v0, Omega)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/lieGroupBasics.py#L649)
+[`CompositionRuleForRotationVectors(v0, Omega)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/lieGroupBasics.py#L636)
 
 - **function description**: compute composition operation for rotation vectors v0 and Omega, see [Holzinger2021] The composed vector is NOT mapped into the principal range: its norm lies in [0, 2*pi] and may therefore exceed pi. It always describes the correct rotation - ExpSO3 of it is the intended rotation matrix - but it need not be the shortest representative of it. Composing pi*n with itself, for example, gives a vector of norm 2*pi rather than 0; both are the identity rotation. This matches the C++ implementation EXUlie::CompositionRotationVector (src/Linalg/RigidBodyMath.h), which is the verified one used by the Lie group integrator, and is a deliberate decision (#2494): the formulas accept and pass on such noise rather than snapping to a boundary, which keeps every existing result unchanged. A caller who needs the principal range must map it - for a norm w > pi, use (2*pi - w) about the negated axis. Note also that accuracy degrades towards w = 2*pi, which is the singularity of the tangent operator: TExpSO3Inv() returns entries of order 1e15 there. How much is lost depends on the axis - composing pi*n with itself is exact to about 1e-15 for n = [1,1,1]/sqrt(3) and to about 4e-8 for n = [0,0,1].
 - **input**:
@@ -322,7 +325,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`LieGroupInt
 (sec-liegroupbasics-compositionrulerotxyzanglesrotationvector)=
 ## Function: CompositionRuleRotXYZAnglesRotationVector
 
-[`CompositionRuleRotXYZAnglesRotationVector(alpha0, Omega)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/lieGroupBasics.py#L696)
+[`CompositionRuleRotXYZAnglesRotationVector(alpha0, Omega)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/lieGroupBasics.py#L683)
 
 - **function description**: compute composition operation for RotXYZ angles, see [Holzinger2021]
 - **input**:

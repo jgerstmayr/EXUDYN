@@ -20,6 +20,7 @@ import exudyn as exu
 from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
 
 import numpy as np
+from exudyn import cMath #the math functions of the C++ code, the same bits on every platform
 
 testIsActive = exu.sys.get('testIsActive', False)
 
@@ -77,7 +78,7 @@ for nodeType in ['EP', 'Rxyz']:
     for (velocity, inertiaFactor) in [(False, 1), (True, 1e6)]:
         JAnalytic = Jacobian(nodeType, False, velocity, inertiaFactor)
         JNumerical = Jacobian(nodeType, True, velocity, inertiaFactor)
-        difference = np.linalg.norm(JAnalytic-JNumerical)/np.linalg.norm(JNumerical)
+        difference = cMath.norm(JAnalytic-JNumerical)/cMath.norm(JNumerical)
         exu.Print(nodeType, 'velocities' if velocity else 'coordinates', ': relative difference analytic - numerical Jacobian', difference)
         passed += difference < 1e-5
 

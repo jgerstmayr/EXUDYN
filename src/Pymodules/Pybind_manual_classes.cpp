@@ -404,6 +404,7 @@ void PyDoRendererIdleTasks(Real waitSeconds, bool deprecationWarning = false)
 
 #include "Main/Experimental.h"
 #include "Utilities/MathFunctions.h"	//exudyn.experimental.EvaluateMathFunction (#2947)
+#include "Pymodules/PyCUtilities.h"	//exudyn.cUtilities (#2960)
 PyExperimental pyExperimental;	//! for experimental things, not to be used by common user
 PySpecial pySpecial;			//! special features; affects exudyn globally; treat with care
 bool EXUstd::ParameterRangeChecksActive() { return pySpecial.exceptions.parameterRangeChecks; }

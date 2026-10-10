@@ -25,7 +25,8 @@
 import numpy as np #LoadSolutionFile
 from exudyn.misc.deprecation import Deprecated #the deprecations of the library (#2807)
 import copy as copy #to be able to copy e.g. lists
-from math import pi, sin, cos
+from exudyn.cMath import pi, sin, cos
+import exudyn.cMath as cMath #the math functions of the C++ code, the same bits on every platform (#2962)
 
 #public API of this module; kept complete by tools/checkAll.py (#2444)
 __all__ = [
@@ -121,7 +122,7 @@ def ComputeTriangleNormal(p0,p1,p2):
     v1 = np.array(p2) - np.array(p0)
 
     n = np.cross(v0,v1)
-    ln = np.linalg.norm(n)
+    ln = cMath.norm(n)
     if ln != 0.:
         n /= ln
     return n
@@ -135,7 +136,7 @@ def ComputeTriangleArea(p0,p1,p2):
     Returns:
         area as float
     """
-    return 0.5*np.linalg.norm(np.cross(np.array(p1) - np.array(p0), np.array(p2) - np.array(p0)))
+    return 0.5*cMath.norm(np.cross(np.array(p1) - np.array(p0), np.array(p2) - np.array(p0)))
 
 
 def Compute6NodeTrigsNormals(elementNodes):
@@ -200,7 +201,7 @@ def Compute6NodeTrigsNormals(elementNodes):
         
         # Compute the normal as the cross product of the tangents
         normal = np.cross(t_xi, t_eta)
-        norm = np.linalg.norm(normal)
+        norm = cMath.norm(normal)
         normal = normal/norm if norm > 0 else normal
 
         normals[i] = normal
@@ -245,7 +246,7 @@ def RefineMesh(points, triangles):
             #go through all triangles at one point, if new (refined) trig exists, it contains the new point:
             for (i, ti2) in enumerate(trigsPerPoint[trig[j]]):
                 for pointIndex in triangles2[ti2]:
-                    if np.linalg.norm(pointNew-points2[pointIndex]) <= 1e-12:
+                    if cMath.norm(pointNew-points2[pointIndex]) <= 1e-12:
                         found = pointIndex
 
             if found==-1:

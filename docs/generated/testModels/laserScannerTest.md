@@ -26,7 +26,8 @@ import exudyn.graphics as graphics
 from exudyn.robotics.utilities import AddLidar
 
 import numpy as np
-from math import sin, cos, tan
+from exudyn.cMath import sin, cos, tan
+from exudyn import cMath #the math functions of the C++ code, the same bits on every platform
 
 testIsActive = exu.sys.get('testIsActive', False)
 #testIsActive = True
@@ -196,8 +197,8 @@ for iWheel in range(nWheels):
     rCyl = 0.1*rWheel
     for i in range(nCyl): #draw cylinders on wheels
         iPhi = i/nCyl*2*np.pi
-        pAxis = np.array([0,rWheel*np.sin(iPhi),-rWheel*np.cos(iPhi)])
-        vAxis = [0.5*wWheel*np.cos(frictionAngle),0.5*wWheel*np.sin(frictionAngle),0]
+        pAxis = np.array([0,rWheel*cMath.sin(iPhi),-rWheel*cMath.cos(iPhi)])
+        vAxis = [0.5*wWheel*cMath.cos(frictionAngle),0.5*wWheel*cMath.sin(frictionAngle),0]
         vAxis2 = RotationMatrixX(iPhi)@vAxis
         rColor = graphics.color.grey
         if i >= nCyl/2: rColor = graphics.color.darkgrey

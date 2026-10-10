@@ -1,0 +1,15 @@
+{
+  "number": 2961,
+  "title": "rigidBodyUtilities calls exudyn.cUtilities and takes sin, cos from exudyn.cMath",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "CHANGE",
+  "effort": "MEDIUM",
+  "description": "revision2026c step RG11.10.5: names and arguments stay; each docstring names the C++ function it calls; HT and T66 stay in Python with cMath; the references that move are recorded again.",
+  "dateRaised": "2026-10-10",
+  "deadline": "2027-04-08",
+  "dateResolved": "2026-10-10 23:58",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "rigidBodyUtilities computes its kinematics functions in C++ through exudyn.cUtilities; ComputeOrthonormalBasisVectors and GramSchmidt return a 3x3 array of the vectors as rows, wrong sizes and singular inputs raise a ValueError, RotationMatrix2RotZYZ has flip=False (revision2026c step RG11.10.5)",
+  "resolvedInVersion": "1.13.50"
+}

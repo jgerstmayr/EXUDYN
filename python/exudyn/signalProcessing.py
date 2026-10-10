@@ -16,6 +16,7 @@ from exudyn.misc.docmeta import docmeta
 import numpy as np
 import exudyn
 from exudyn.advancedUtilities import IsListOrArray
+import exudyn.cMath as cMath #the math functions of the C++ code, the same bits on every platform (#2962)
 
 #public API of this module; kept complete by tools/checkAll.py (#2444)
 __all__ = [
@@ -267,7 +268,7 @@ if __name__ == '__main__':
     #%%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     #create 1D signal
     t = np.linspace(1,10,40)
-    x = np.sin(t)
+    x = cMath.sin(t)
     
     #coarsen
     t2 = np.linspace(0,11,15)
@@ -282,8 +283,8 @@ if __name__ == '__main__':
     
     #create 2D signal
     t = np.linspace(1,10,40)
-    x = np.sin(t)
-    y = np.cos(t)
+    x = cMath.sin(t)
+    y = cMath.cos(t)
     data = np.vstack((t,np.vstack((x,y)))).T
     
     #coarsen, data is 2D

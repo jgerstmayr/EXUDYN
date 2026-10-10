@@ -15,6 +15,7 @@ import exudyn as exu
 from exudyn.utilities import *
 import exudyn.graphics as graphics
 import numpy as np
+from exudyn import cMath #the math functions of the C++ code, the same bits on every platform
 
 #import exudyn.rigidBodyUtilities as erb
 #from exudyn.rigidBodyUtilities import HT0, HT2rotationMatrix, HT2translation
@@ -173,7 +174,7 @@ if not testIsActive:
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 ode2 = mbs.systemData.GetODE2Coordinates()
 
-u = np.linalg.norm(ode2)
+u = cMath.norm(ode2)
 exu.Print('solution of createKinematicTreeTest=',u) 
 
 exu.sys['testResult'] = u

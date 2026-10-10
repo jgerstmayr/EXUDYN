@@ -21,9 +21,10 @@ You can view and download this file on Github: [createSphereQuadContact2.py](htt
 
 import exudyn as exu
 from exudyn.utilities import *
-from math import sin, cos
+from exudyn.cMath import sin, cos
 import exudyn.graphics as graphics
 import numpy as np
+from exudyn import cMath #the math functions of the C++ code, the same bits on every platform
 
 testIsActive = exu.sys.get('testIsActive', False)
 #testIsActive = True
@@ -192,7 +193,7 @@ if not testIsActive:
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 ode2 = mbs.systemData.GetODE2Coordinates()
 
-testSolution += 0.1*np.linalg.norm(ode2)
+testSolution += 0.1*cMath.norm(ode2)
 
 
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++

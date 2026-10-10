@@ -2,7 +2,7 @@
 # This is an EXUDYN definition file
 #
 # Details:  the submodule exudyn.cMath: the math functions of the C++ code for Python (#2958, #2959);
-#           pb holds the page, cMathModule the functions, whose C++ bindings go into
+#           pb holds the page, module the functions, whose C++ bindings go into
 #           pybind_manual_classes.h (the compiled submodule exudyn._cMath) and whose stubs go into
 #           python/exudyn/cMath.pyi. python/exudyn/cMath.py takes the compiled functions and adds pi.
 #           The calls are recorded by PybindInterface (pybindTypes.py) and replayed by
@@ -21,18 +21,18 @@
 from pybindTypes import *
 
 pb = PybindInterface()
-cMathModule = PybindInterface()
+module = PybindInterface()
 
 #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 pb.CreateNewRSTfile('CMath')
 
-pb.AddDocu(r"""The submodule `exudyn.cMath` gives Python the math functions the C++ code of Exudyn computes with. They give the same bits on every platform: Exudyn compiles portable implementations of them (from musl libc), while the functions of `math` and `numpy` come from the library of each platform and differ in the last bit between Windows, Linux and macOS for some arguments. A value that enters a simulation - an initial velocity, a rotation, a point of a geometry - therefore gives the same results everywhere if it is computed with `exudyn.cMath`. Each function takes a float, which gives a float, or a list or numpy array, which gives a numpy array of the same shape; the two arguments of `atan2` and `pow` are broadcast like numpy does. `sqrt` is correctly rounded on every platform, also in `math` and `numpy`; it is here so that one import serves. Python's `x**0.5` and `x**y` call the library's `pow` and differ per platform: use `sqrt`, or `pow` of this module.""",
+pb.AddDocu(r"""The submodule `exudyn.cMath` gives Python the math functions the C++ code of Exudyn computes with. They give the same bits on every platform: Exudyn compiles portable implementations of them (from musl libc), while the functions of `math` and `numpy` come from the library of each platform and differ in the last bit between Windows, Linux and macOS for some arguments. A value that enters a simulation - an initial velocity, a rotation, a point of a geometry - therefore gives the same results everywhere if it is computed with `exudyn.cMath`. A call with one float takes about 0.2 microseconds, against 0.03 of `math.sin`; on arrays the functions are as fast as numpy. Scripts may use `math` and `numpy` as before; the Python library of Exudyn and its test models use `exudyn.cMath`. Each function takes a float, which gives a float, or a list or numpy array, which gives a numpy array of the same shape; the two arguments of `atan2` and `pow` are broadcast like numpy does. `sqrt` is correctly rounded on every platform, also in `math` and `numpy`; it is here so that one import serves. Python's `x**0.5` and `x**y` call the library's `pow` and differ per platform: use `sqrt`, or `pow` of this module. A complex array is not supported: it loses its imaginary part, with the ComplexWarning of numpy.""",
             section='exudyn.cMath', sectionLevel=1, sectionLabel='sec-exudyn-cmath')
 
-cMathModule.AddDocu(r"""Usage: `from exudyn.cMath import sin, cos, pi`, or `import exudyn.cMath as cm` and `cm.sin(x)`. The functions are:""")
+module.AddDocu(r"""Usage: `from exudyn.cMath import sin, cos, pi`, or `import exudyn.cMath as cm` and `cm.sin(x)`. The functions are:""")
 
 #the compiled submodule; 'm' is the submodule in this block, so that the declarations below bind into it
-cMathModule.CppCode('        {\n        py::module cMathSubmodule = m.def_submodule("_cMath", "the compiled functions of exudyn.cMath");\n'
+module.CppCode('        {\n        py::module cMathSubmodule = m.def_submodule("_cMath", "the compiled functions of exudyn.cMath");\n'
                     '        {\n        py::module& m = cMathSubmodule;\n')
 
 #name, C++ function, description of the argument range
@@ -61,8 +61,8 @@ returnType = 'Union[float, NDArray]'
 scalarOverload = '        m.def("{name}", []({arguments}) {{ return {call}; }}, {pyArgs});\n'
 
 for (name, cName, description) in functions1:
-    cMathModule.CppCode(scalarOverload.format(name=name, arguments='Real x', call=cName + '(x)', pyArgs='py::arg("x")'))
-    cMathModule.DefPyFunctionAccess(cClass='', pyName=name, cName='py::vectorize([](Real x) { return ' + cName + '(x); })',
+    module.CppCode(scalarOverload.format(name=name, arguments='Real x', call=cName + '(x)', pyArgs='py::arg("x")'))
+    module.DefPyFunctionAccess(cClass='', pyName=name, cName='py::vectorize([](Real x) { return ' + cName + '(x); })',
                                     isLambdaFunction=True,
                                     description=description + '; calls ' + cName + ' of the C++ code',
                                     argList=['x'],
@@ -72,9 +72,9 @@ for (name, cName, description) in functions1:
 
 for (name, cName, description) in functions2:
     (a0, a1) = ('y', 'x') if name == 'atan2' else ('x', 'y')
-    cMathModule.CppCode(scalarOverload.format(name=name, arguments='Real ' + a0 + ', Real ' + a1, call=cName + '(' + a0 + ', ' + a1 + ')',
+    module.CppCode(scalarOverload.format(name=name, arguments='Real ' + a0 + ', Real ' + a1, call=cName + '(' + a0 + ', ' + a1 + ')',
                                               pyArgs='py::arg("' + a0 + '"), py::arg("' + a1 + '")'))
-    cMathModule.DefPyFunctionAccess(cClass='', pyName=name, cName='py::vectorize([](Real ' + a0 + ', Real ' + a1 + ') { return ' + cName + '(' + a0 + ', ' + a1 + '); })',
+    module.DefPyFunctionAccess(cClass='', pyName=name, cName='py::vectorize([](Real ' + a0 + ', Real ' + a1 + ') { return ' + cName + '(' + a0 + ', ' + a1 + '); })',
                                     isLambdaFunction=True,
                                     description=description + '; calls ' + cName + ' of the C++ code',
                                     argList=[a0, a1],
@@ -82,8 +82,16 @@ for (name, cName, description) in functions2:
                                     returnType=returnType,
                                     )
 
-cMathModule.CppCode('        }\n        }\n')
+module.CppCode('        }\n        }\n')
 
-cMathModule.DefDataAccess('pi', 'the float closest to pi, the same as math.pi; defined in python/exudyn/cMath.py',
+module.DefDataAccess('pi', 'the float closest to pi, the same as math.pi; defined in python/exudyn/cMath.py',
                           dataType='float', isTopLevel=True)
-cMathModule.DefFinishTable()
+module.BeginCppWrittenByHand() #defined in python/exudyn/cMath.py
+module.DefPyFunctionAccess(cClass='', pyName='norm', cName='',
+                           description='the Euclidean norm of a vector, or the Frobenius norm of a matrix: the square root of the sum of the squares, added by math.fsum without rounding before the end; numpy.linalg.norm sums in an order that depends on the BLAS library and the CPU (#2963); defined in python/exudyn/cMath.py',
+                           argList=['x'],
+                           argTypes=['ArrayLike'],
+                           returnType='float',
+                           )
+module.EndCppWrittenByHand()
+module.DefFinishTable()

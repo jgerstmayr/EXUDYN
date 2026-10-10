@@ -11,12 +11,13 @@
 # Notes:    For a list of plot colors useful for matplotlib, see also utilities.PlotLineCode(...)
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-from math import sin, cos, pi, asin, atan2 #, sqrt, acos
+from exudyn.cMath import sin, cos, pi, asin, atan2 #, sqrt, acos
 import copy 
 import numpy as np #for loading
 import exudyn #for sensor index
 import exudyn.itemInterface as eii
 from exudyn.misc.deprecation import Deprecated #the deprecations of the library (#2807)
+import exudyn.cMath as cMath #the math functions of the C++ code, the same bits on every platform (#2962)
 
 
 #public API of this module; kept complete by tools/checkAll.py (#2444)
@@ -228,7 +229,7 @@ def GenerateStraightBeam(mbs, positionOfNode0, positionOfNode1, numberOfElements
 
     # length of one element, calculated from first and last node position:
     vDiff = np.array(positionOfNode1)-np.array(positionOfNode0)
-    lDiff = np.linalg.norm(vDiff)
+    lDiff = cMath.norm(vDiff)
     if (numberOfElements <= 0 or numberOfElements != int(numberOfElements)): 
         raise ValueError('GenerateStraightBeam: number of elements must be integer, non-zero and positive')
 
@@ -285,7 +286,7 @@ def GenerateStraightBeam(mbs, positionOfNode0, positionOfNode1, numberOfElements
         oBeam=mbs.AddObject(beamTemplate)
         beamObjectList+=[oBeam]
 
-        if np.linalg.norm(gravity) != 0:
+        if cMath.norm(gravity) != 0:
             mBodyMassLast = mbs.AddMarker(eii.MarkerBodyMass(bodyNumber=oBeam))
             lLoadLast=mbs.AddLoad(eii.Gravity(markerNumber=mBodyMassLast,loadVector=gravity))
             loadList+=[lLoadLast]
@@ -375,8 +376,8 @@ def GenerateCircularArcANCFCable2D(mbs, positionOfNode0, radius, startAngle, arc
         arcSign = -1.
 
     # slope vector of first node
-    cableSlopeVec = np.array([ np.cos(startAngle),np.sin(startAngle),0.])
-    cableNormal =   np.array([-np.sin(startAngle),np.cos(startAngle),0.])
+    cableSlopeVec = np.array([ cMath.cos(startAngle),cMath.sin(startAngle),0.])
+    cableNormal =   np.array([-cMath.sin(startAngle),cMath.cos(startAngle),0.])
     
     #center point of circle for creation of arc:
     pCenter = arcSign*radius*cableNormal + np.array(positionOfNode0)
@@ -401,9 +402,9 @@ def GenerateCircularArcANCFCable2D(mbs, positionOfNode0, radius, startAngle, arc
     for i in range(numberOfElements): 
         phi = (i+1)*arcAngle/float(numberOfElements)
         #new node:
-        pArc = pCenter + arcSign*radius*np.sin(phi)*cableSlopeVec - arcSign*radius*np.cos(phi)*cableNormal
+        pArc = pCenter + arcSign*radius*cMath.sin(phi)*cableSlopeVec - arcSign*radius*cMath.cos(phi)*cableNormal
         #new slope:
-        vArc = np.cos(phi)*cableSlopeVec + np.sin(phi)*cableNormal
+        vArc = cMath.cos(phi)*cableSlopeVec + cMath.sin(phi)*cableNormal
         # exudyn.Print('pArc'+str(i)+'=',pArc)
         # exudyn.Print('vArc'+str(i)+'=',vArc)
         
@@ -428,13 +429,13 @@ def GenerateCircularArcANCFCable2D(mbs, positionOfNode0, radius, startAngle, arc
         oCable=mbs.AddObject(cableTemplate)
         cableObjectList+=[oCable]
 
-        if np.linalg.norm(massProportionalLoad) != 0:
+        if cMath.norm(massProportionalLoad) != 0:
             mBodyMassLast = mbs.AddMarker(eii.MarkerBodyMass(bodyNumber=oCable))
             lLoadLast=mbs.AddLoad(eii.Gravity(markerNumber=mBodyMassLast,loadVector=massProportionalLoad))
             loadList+=[lLoadLast]
         
     
-    if (np.linalg.norm(list(fixedConstraintsNode0)+list(fixedConstraintsNode1)) ) != 0:
+    if (cMath.norm(list(fixedConstraintsNode0)+list(fixedConstraintsNode1)) ) != 0:
         # ground "node" at 0,0,0:
         nGround = mbs.AddNode(eii.NodePointGround(referenceCoordinates=[0,0,0])) 
         # add marker to ground "node": 
@@ -565,7 +566,7 @@ def CreateReevingCurve(circleList, drawingLinesPerCircle = 64, numberOfANCFnodes
         if r0 < 0. or r1 < 0.: continue
     
         vv = pos1-pos0
-        L = np.linalg.norm(vv)
+        L = cMath.norm(vv)
         if L==0: 
             raise ValueError('CreateReevingCurve: distance of circles is zero')
         vv0 = (1./L)*vv
@@ -606,7 +607,7 @@ def CreateReevingCurve(circleList, drawingLinesPerCircle = 64, numberOfANCFnodes
         #only add this line, if not excluded!
         if not ((removeFirstLine and i==1) or
                 (removeLastLine and i==len(circleListExt)-1)):
-            segmentLength = np.linalg.norm(p1-p0)
+            segmentLength = cMath.norm(p1-p0)
             if segmentLength == 0.:
                 exudyn.Print('WARNING: CreateReevingCurve: curve seems to be degenerated, check location of circles')
             curve2D += [{'type':'LINE', 'point0':p0, 'point1':p1}]
@@ -642,7 +643,7 @@ def CreateReevingCurve(circleList, drawingLinesPerCircle = 64, numberOfANCFnodes
             p1 = item['point1']
             lineData+=list(p0)+[0]
             lineData+=list(p1)+[0]
-            L = np.linalg.norm(p1-p0)
+            L = cMath.norm(p1-p0)
             startCoord = arcCoord  #this is the arcCoordinate of the start of this line/curve
             endCoord = arcCoord+L  #this is the arcCoordinate of the end of this line/curve
             while nextArcCoord <= endCoord*(1.+tol):
@@ -665,8 +666,8 @@ def CreateReevingCurve(circleList, drawingLinesPerCircle = 64, numberOfANCFnodes
                 arcSign = -1.
     
             # slope vector of first node
-            vv0 = np.array([ np.cos(startAngle),np.sin(startAngle)])
-            nv0=   np.array([-np.sin(startAngle),np.cos(startAngle)])
+            vv0 = np.array([ cMath.cos(startAngle),cMath.sin(startAngle)])
+            nv0=   np.array([-cMath.sin(startAngle),cMath.cos(startAngle)])
     
             #center point of circle for creation of arc:
             pCenter = arcSign*r*nv0 + p0
@@ -676,7 +677,7 @@ def CreateReevingCurve(circleList, drawingLinesPerCircle = 64, numberOfANCFnodes
             for i in range(nARC):
                 phi = (i+1)*arcAngle/float(nARC)
                 #new node:
-                pArc = pCenter + arcSign*r*np.sin(phi)*vv0 - arcSign*r*np.cos(phi)*nv0
+                pArc = pCenter + arcSign*r*cMath.sin(phi)*vv0 - arcSign*r*cMath.cos(phi)*nv0
                 lineData+=list(pArc)+[0]
             
             L = abs(r*arcAngle)
@@ -685,8 +686,8 @@ def CreateReevingCurve(circleList, drawingLinesPerCircle = 64, numberOfANCFnodes
             while nextArcCoord <= endCoord*(1.+tol):
                 phi = (nextArcCoord-startCoord)/L*arcAngle
     
-                pArc = pCenter + arcSign*r*np.sin(phi)*vv0 - arcSign*r*np.cos(phi)*nv0
-                vArc = np.cos(phi)*vv0 + np.sin(phi)*nv0
+                pArc = pCenter + arcSign*r*cMath.sin(phi)*vv0 - arcSign*r*cMath.cos(phi)*nv0
+                vArc = cMath.cos(phi)*vv0 + cMath.sin(phi)*nv0
     
                 ancfPointsSlopes+=[list(pArc)+list(vArc)]
                 if nextArcCoord != 0:
@@ -770,20 +771,20 @@ def PointsAndSlopes2ANCFCable2D(mbs, ancfPointsSlopes, elementLengths, cableTemp
         oCable=mbs.AddObject(cableTemplate)
         cableObjectList+=[oCable]
 
-        if np.linalg.norm(massProportionalLoad) != 0:
+        if cMath.norm(massProportionalLoad) != 0:
             mBodyMassLast = mbs.AddMarker(eii.MarkerBodyMass(bodyNumber=oCable))
             lLoadLast=mbs.AddLoad(eii.Gravity(markerNumber=mBodyMassLast,loadVector=massProportionalLoad))
             loadList+=[lLoadLast]
         
     
-    if (np.linalg.norm(list(fixedConstraintsNode0)+list(fixedConstraintsNode1)) ) != 0:
+    if (cMath.norm(list(fixedConstraintsNode0)+list(fixedConstraintsNode1)) ) != 0:
         # ground "node" at 0,0,0:
         nGround = mbs.AddNode(eii.NodePointGround(referenceCoordinates=[0,0,0])) 
         # add marker to ground "node": 
         mGround = mbs.AddMarker(eii.MarkerNodeCoordinate(nodeNumber = nGround, coordinate=0))
     
         if (firstNodeIsLastNode and
-            np.linalg.norm(fixedConstraintsNode1)  != 0):
+            cMath.norm(fixedConstraintsNode1)  != 0):
             raise ValueError('PointsAndSlopes2ANCFCable2D: fixedConstraintsNode1 must be [0,0,0,0] in case t firstNodeIsLastNode==True')
 
         for j in range(4):            

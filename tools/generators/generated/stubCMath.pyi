@@ -45,3 +45,6 @@ def pow(x: ArrayLike, y: ArrayLike) -> Union[float, NDArray]:
     ...
 pi:float
 """the float closest to pi, the same as math.pi; defined in python/exudyn/cMath.py."""
+def norm(x: ArrayLike) -> float: 
+    """The Euclidean norm of a vector, or the Frobenius norm of a matrix: the square root of the sum of the squares, added by math.fsum without rounding before the end; numpy.linalg.norm sums in an order that depends on the BLAS library and the CPU (#2963); defined in python/exudyn/cMath.py."""
+    ...

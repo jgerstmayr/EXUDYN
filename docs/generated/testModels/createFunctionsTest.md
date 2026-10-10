@@ -24,6 +24,7 @@ from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
 import exudyn.graphics as graphics
 
 import numpy as np
+from exudyn import cMath #the math functions of the C++ code, the same bits on every platform
 
 testIsActive = exu.sys.get('testIsActive', False)
 
@@ -95,14 +96,14 @@ loadMassPoint = mbs.CreateForce(itemNumber=oMass, loadVector=[10,0,0])
 loadRigidBody = mbs.CreateForce(itemNumber=oBody, localPosition=[0,0,0], loadVector=[10,0,0])
 
 def UFforce(mbs, t, loadVector):
-    return (10+5*np.sin(t*10*2*np.pi))*np.array([0,5,0])
+    return (10+5*cMath.sin(t*10*2*np.pi))*np.array([0,5,0])
 
 mbs.CreateForce(itemNumber=oBody,
                 localPosition=[0,1.2,0.5], #position at body
                 loadVectorUserFunction=UFforce)
 
 def UserFunctionTorque(mbs, t, loadVector):
-    return np.cos(t*2*np.pi)*np.array(loadVector)
+    return cMath.cos(t*2*np.pi)*np.array(loadVector)
 
 #add torque with user function
 mbs.CreateTorque(itemNumber=oBody, loadVector=[5,0,0], 
@@ -242,7 +243,7 @@ if not testIsActive:
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 ode2 = mbs.systemData.GetODE2Coordinates()
 
-u = 0.01*np.linalg.norm(ode2)
+u = 0.01*cMath.norm(ode2)
 exu.Print('solution of createFunctionsTest=',u) 
 
 exu.sys['testResult'] = u

@@ -12,7 +12,7 @@
 # Utility functions and structures for Exudyn
 
 import numpy as np #LoadSolutionFile
-from math import sin, pi #for animation
+from exudyn.cMath import sin, pi #for animation
 #import time        
 import copy           #copy numpy objects
 import sys

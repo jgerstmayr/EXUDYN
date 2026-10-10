@@ -26,6 +26,7 @@ from exudyn.robotics import *
 
 import numpy as np
 from exudyn.misc.deprecation import Deprecated #the deprecations of the library (#2807)
+import exudyn.cMath as cMath #the math functions of the C++ code, the same bits on every platform (#2962)
 
 #public API of this module; kept complete by tools/checkAll.py (#2444)
 __all__ = [
@@ -221,13 +222,13 @@ def MobileRobot2MBS(mbs, mobileRobot, markerGround, flagGraphicsRollers=True, *a
             iPhi = i/nCyl*2*np.pi
             # drawing as cylinders
             if flagGraphicsRollers: # draw as cylinders
-                pAxle = np.array([0,-(param['r']-param['rRoll'])*np.sin(iPhi), - (param['r']-param['rRoll'])*np.cos(iPhi)])    
+                pAxle = np.array([0,-(param['r']-param['rRoll'])*cMath.sin(iPhi), - (param['r']-param['rRoll'])*cMath.cos(iPhi)])    
                 vAxle = RotationMatrixX(-iPhi ) @  RotationMatrixZ(frictionAngle) @ [0.5*param['lRoll'],0,0]
                 graphicsWheel += [graphics.SolidOfRevolution(pAxis=pAxle, vAxis=vAxle, contour=contour, color=graphics.color.blue[0:3]+[1],# color=graphics.color.blue[0:3] +[alpha], 
                                                 nTiles = 16)]        
             else:
-                pAxle = np.array([0,rWheel*np.sin(iPhi),-rWheel*np.cos(iPhi)])
-                vAxle = [0.5*wWheel*np.cos(frictionAngle+np.pi/2),0.5*wWheel*np.sin(frictionAngle+np.pi/2),0]
+                pAxle = np.array([0,rWheel*cMath.sin(iPhi),-rWheel*cMath.cos(iPhi)])
+                vAxle = [0.5*wWheel*cMath.cos(frictionAngle+np.pi/2),0.5*wWheel*cMath.sin(frictionAngle+np.pi/2),0]
                 vAxle2 = RotationMatrixX(iPhi)@vAxle
                 rColor = graphics.color.grey
                 if i >= nCyl/2: rColor = graphics.color.darkgrey
@@ -499,8 +500,8 @@ def GeneratrixRoll(u, param):
         parametric equation, x,y are the generatrix of the roll in
         its local frame with the axis of rotation x, see [Gfrerrer2008].
     """
-    x = param['dRoll']*np.cos(param['delta'])**2/np.sin(param['delta']) * np.tan(u) + param['r'] *np.sin(param['delta'])*np.sin(u);
-    y = np.sqrt(np.cos(param['delta'])**2 * np.tan(u)**2 + 1) * (param['r']*np.cos(u)- param['dRoll']);
+    x = param['dRoll']*cMath.cos(param['delta'])**2/cMath.sin(param['delta']) * cMath.tan(u) + param['r'] *cMath.sin(param['delta'])*cMath.sin(u);
+    y = np.sqrt(cMath.cos(param['delta'])**2 * cMath.tan(u)**2 + 1) * (param['r']*cMath.cos(u)- param['dRoll']);
     return x, y
 
 @docmeta(author='Peter Manzl')

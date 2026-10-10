@@ -22,11 +22,12 @@ You can view and download this file on Github: [reevingSystemSpringsTest.py](htt
 import exudyn as exu
 from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
 import exudyn.graphics as graphics
+from exudyn import cMath #the math functions of the C++ code, the same bits on every platform
 
 testIsActive = exu.sys.get('testIsActive', False)
 
 import numpy as np
-from math import sin, cos, sqrt,pi
+from exudyn.cMath import sin, cos, sqrt, pi
 
 SC = exu.SystemContainer()
 mbs = SC.AddSystem()
@@ -88,7 +89,7 @@ for i, pos in enumerate(posList):
     sheavesRadii += [r]
 
     if i != 0:
-        Lref += np.linalg.norm(np.array(pos)-pLast)
+        Lref += cMath.norm(np.array(pos)-pLast)
     if i > 0 and i < len(posList)-1:
         #note that in this test example, Lref is slightly too long, leading to negative spring forces (compression) if not treated nonlinearly with default settings in ReevingSystemSprings
         Lref += r*pi #0.8*r*pi would always lead to tension
@@ -202,7 +203,7 @@ if True:
 
 #compute error for test suite:
 sol2 = mbs.systemData.GetODE2Coordinates(); 
-u = np.linalg.norm(sol2); 
+u = cMath.norm(sol2); 
 exu.Print('solution of ReevingSystemSprings=',u)
 
 exu.sys['testResult'] = u

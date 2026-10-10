@@ -10,7 +10,7 @@ The utilities contains general helper functions for the robotics module
 (sec-utilities-addlidar)=
 ## Function: AddLidar
 
-[`AddLidar(mbs, generalContactIndex, positionOrMarker, minDistance = 0, maxDistance = 1e7, cylinderRadius = 0, lineLength = 1, numberOfSensors = 100, angleStart = 0, angleEnd = 2*np.pi, inclination = 0, rotation = np.eye(3), selectedTypeIndex = exudyn.ContactTypeIndex.IndexEndOfEnumList, storeInternal = False, fileName = '', measureVelocity = False, addGraphicsObject = True, drawDisplaced = True, color = [1.0, 0.0, 0.0, 1.0])`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/utilities.py#L25)
+[`AddLidar(mbs, generalContactIndex, positionOrMarker, minDistance = 0, maxDistance = 1e7, cylinderRadius = 0, lineLength = 1, numberOfSensors = 100, angleStart = 0, angleEnd = 2*np.pi, inclination = 0, rotation = np.eye(3), selectedTypeIndex = exudyn.ContactTypeIndex.IndexEndOfEnumList, storeInternal = False, fileName = '', measureVelocity = False, addGraphicsObject = True, drawDisplaced = True, color = [1.0, 0.0, 0.0, 1.0])`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/utilities.py#L26)
 
 - **function description**: Function to add many distance sensors to represent Lidar; sensors can be either placed on absolute position or attached to rigid body marker
 - **input**:
@@ -42,7 +42,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`mobileMecan
 (sec-utilities-getroboticstoolboxinternalmodel)=
 ## Function: GetRoboticsToolboxInternalModel
 
-[`GetRoboticsToolboxInternalModel(modelName = '', ignoreURDFerrors = True)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/utilities.py#L88)
+[`GetRoboticsToolboxInternalModel(modelName = '', ignoreURDFerrors = True)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/utilities.py#L89)
 
 - **function description**: Interface to roboticstoolbox (RTB) for loading internal robot models. Function retrieves internal model available from roboticstoolbox.models.URDF, usually stored in site-packages/rtbdata/xacro/. See the github project of roboticstoolbox-python of P. Corke and J. Haviland for more details. The model name is the short name used internally in the RTB. For available names, see the list roboticstoolbox.models.URDF.__all__ !
 - **input**:
@@ -58,7 +58,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`serialRobot
 (sec-utilities-loadurdfrobot)=
 ## Function: LoadURDFrobot
 
-[`LoadURDFrobot(urdfFilePath, urdfBasePath, gripperLinks = None, manufacturer = '')`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/utilities.py#L166)
+[`LoadURDFrobot(urdfFilePath, urdfBasePath, gripperLinks = None, manufacturer = '')`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/utilities.py#L167)
 
 - **function description**: Interface to roboticstoolbox (RTB) of P. Corke and J. Haviland. Use this function for loading urdf/xacro files.
 - **input**:
@@ -72,7 +72,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`serialRobot
 (sec-utilities-geturdfrobotdata)=
 ## Function: GetURDFrobotData
 
-[`GetURDFrobotData(robot, urdf = None, linkColorList = None, staticJointValues = None, returnStaticGraphicsList = False, exportMesh = False, verbose = 1)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/utilities.py#L212)
+[`GetURDFrobotData(robot, urdf = None, linkColorList = None, staticJointValues = None, returnStaticGraphicsList = False, exportMesh = False, verbose = 1)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/utilities.py#L213)
 
 - **function description**: Interface to roboticstoolbox (RTB) of P. Corke and J. Haviland and Pymeshlab to import robot model and visualization into a struture readable by Exudyn. NOTE that this function is to be seen as a starting point for import, while some models have to be imported differently, in particular for joints that are not revolute or prismatic (in this case, copy function into local file and modify)!
 - **input**:

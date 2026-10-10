@@ -14,6 +14,7 @@ import exudyn as exu
 from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
 import exudyn.graphics as graphics
 import numpy as np
+from exudyn import cMath #the math functions of the C++ code, the same bits on every platform
 
 testIsActive = exu.sys.get('testIsActive', False)
 
@@ -144,7 +145,7 @@ comOut3 = mbs.GetObjectOutputBody(oRigid3, variableType = exu.OutputVariableType
 exu.Print('phis=',phi, phi2, phi3, ', err=', abs(phi2-phi3) )
 exu.Print('coms=',comOut, comOut2, comOut3, ', err=', comOut3-comOut2)
 
-u = (phi+phi2+phi3+np.linalg.norm(comOut)+np.linalg.norm(comOut2)+np.linalg.norm(comOut3))
+u = (phi+phi2+phi3+cMath.norm(comOut)+cMath.norm(comOut2)+cMath.norm(comOut3))
 
 exu.Print('solution of rigidBody2Dtest =', u)
 exu.sys['testResult'] = u

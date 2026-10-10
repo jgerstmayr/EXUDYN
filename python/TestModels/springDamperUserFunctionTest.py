@@ -14,6 +14,7 @@ import exudyn as exu
 from exudyn.itemInterface import *
 
 import numpy as np
+from exudyn import cMath #the math functions of the C++ code, the same bits on every platform
 
 testIsActive = exu.sys.get('testIsActive', False)
 
@@ -46,7 +47,7 @@ def springForce(mbs, t, itemIndex, u, v, k, d, offset): #changed 2023-01-21:, mu
 #linear frequency sweep in time interval [0, t1] and frequency interval [f0,f1];
 def Sweep(t, t1, f0, f1):
     k = (f1-f0)/t1
-    return np.sin(2*np.pi*(f0+k*0.5*t)*t) #take care of factor 0.5 in k*0.5*t, in order to obtain correct frequencies!!!
+    return cMath.sin(2*np.pi*(f0+k*0.5*t)*t) #take care of factor 0.5 in k*0.5*t, in order to obtain correct frequencies!!!
 
 #user function for load
 def userLoad(mbs, t, load):

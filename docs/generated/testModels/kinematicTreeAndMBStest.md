@@ -25,6 +25,7 @@ import exudyn.graphics as graphics
 from exudyn.FEM import *
 
 import numpy as np
+from exudyn import cMath #the math functions of the C++ code, the same bits on every platform
 
 testIsActive = exu.sys.get('testIsActive', False)
 #the result is too sensitive to small (1e-15) disturbances to be judged against the default
@@ -33,7 +34,7 @@ testIsActive = exu.sys.get('testIsActive', False)
 #(#2632, #2634)
 exu.sys['testTolerance'] = 5e-6
 
-from math import pi, sin, cos#, sqrt
+from exudyn.cMath import pi, sin, cos#, sqrt
 from copy import copy, deepcopy
 from exudyn.rigidBodyUtilities import Skew, Skew2Vec
 from exudyn.robotics import *
@@ -343,11 +344,11 @@ if case == '3Dmechanism' or performTest:
                 v = mbs.GetSensorValues(sMBS[i])
                 if printSensors:
                     exu.Print('sensor MBS '+str(i)+'=',list(v))
-                u += np.linalg.norm(v)
+                u += cMath.norm(v)
                 v = mbs.GetSensorValues(sKT[i])
                 if printSensors:
                     exu.Print('sensor KT '+str(i)+' =',list(v))
-                u += np.linalg.norm(v)
+                u += cMath.norm(v)
 
             exu.Print("solution of kinematicTreeAndMBStest 1=", u)
             exu.sys['testResult'] += u
@@ -484,11 +485,11 @@ if case == 'invertedPendulum' or performTest:
             v = mbs.GetSensorValues(sMBS[i])
             if printSensors:
                 exu.Print('sensor MBS '+str(i)+'=',v)
-            u += np.linalg.norm(v)
+            u += cMath.norm(v)
             v = mbs.GetSensorValues(sKT[i])
             if printSensors:
                 exu.Print('sensor KT '+str(i)+' =',v)
-            u += np.linalg.norm(v)
+            u += cMath.norm(v)
     
         exu.Print("solution of kinematicTreeAndMBStest 2=", u)
         exu.sys['testResult'] += u
@@ -642,11 +643,11 @@ if case == 'treeStructure' or performTest:
             v = mbs.GetSensorValues(sMBS[i])
             if printSensors:
                 exu.Print('sensor MBS '+str(i)+'=',v)
-            u += np.linalg.norm(v)
+            u += cMath.norm(v)
             v = mbs.GetSensorValues(sKT[i])
             if printSensors:
                 exu.Print('sensor KT '+str(i)+' =',v)
-            u += np.linalg.norm(v)
+            u += cMath.norm(v)
     
         exu.Print("solution of kinematicTreeAndMBStest 3=", u)
         exu.sys['testResult'] += u

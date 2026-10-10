@@ -25,6 +25,7 @@ from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
 import exudyn.graphics as graphics
 
 import numpy as np
+from exudyn import cMath #the math functions of the C++ code, the same bits on every platform
 
 testIsActive = exu.sys.get('testIsActive', False)
 
@@ -202,7 +203,7 @@ for method in methods:
     pos=mbs.GetSensorValues(sPos) 
     coords=mbs.GetSensorValues(sCoords) 
     
-    err += np.linalg.norm(coords)+np.linalg.norm(pos)
+    err += cMath.norm(coords)+cMath.norm(pos)
     exu.Print(str(method)+",h=",h,":\n  omega =", omega, "\n  coords=", coords)
     if method == exu.DynamicSolverType.DOPRI5:
         nsteps = mbs.sys['dynamicSolver'].it.currentStepIndex-1 #total number of steps of automatic stepsize constrol

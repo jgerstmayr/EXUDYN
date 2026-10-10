@@ -498,8 +498,8 @@ about a third of the suite and would gut the gate.
 ### The third list: known platform differences
 
 `UnresolvedOnLinux()` holds tests that fail on Linux against the Windows reference values for a
-**reproducible** reason that has not been found yet — three contact models since the math functions are the
-portable ones (#2954), which removed the nine whose differences came from the math library of the platform. They are
+**reproducible** reason that has not been found yet. It is empty: the portable math functions (#2954) removed nine
+entries, `exudyn.cMath` in the initial values of the test models the last three (#2963). An entry is
 excluded from the exit code **on Linux only**; on Windows they must
 still pass, since that is where the reference values come from. Marked `L` in the overview table,
 against `*` for sensitive.

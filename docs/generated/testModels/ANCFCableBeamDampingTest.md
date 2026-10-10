@@ -21,6 +21,7 @@ import numpy as np
 from exudyn.utilities import *
 from exudyn.beams import GenerateBeamElementsAlongLine
 import exudyn.graphics as graphics
+from exudyn import cMath #the math functions of the C++ code, the same bits on every platform
 
 testIsActive = exu.sys.get('testIsActive', False)
 testIsActive = True
@@ -76,7 +77,7 @@ sectionGeometry = exu.BeamSectionGeometry()
 lp = exu.Vector2DList()
 phi = 2*np.pi/nTiles
 for i in range(nTiles):
-    lp.Append([cableRadius*np.cos(i*phi), cableRadius*np.sin(i*phi)])
+    lp.Append([cableRadius*cMath.cos(i*phi), cableRadius*cMath.sin(i*phi)])
 sectionGeometry.polygonalPoints = lp
 
 #%% set up system container (once for all tests)
@@ -200,8 +201,8 @@ for loadCase, loadVector in enumerate(loadVectorList):
                        )
 
     #for test suite:
-    solution += np.linalg.norm(mbs.GetSensorValues(sCable2D))
-    solution += np.linalg.norm(mbs.GetSensorValues(sBeam))
+    solution += cMath.norm(mbs.GetSensorValues(sCable2D))
+    solution += cMath.norm(mbs.GetSensorValues(sBeam))
 
 exu.Print('ANCFCableBeamDampingTest: solution=', solution)
 

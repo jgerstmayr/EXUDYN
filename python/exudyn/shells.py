@@ -33,6 +33,7 @@ import numpy as np
 import exudyn as exu
 import exudyn.itemInterface as eii
 from exudyn.basicUtilities import Normalize
+import exudyn.cMath as cMath #the math functions of the C++ code, the same bits on every platform (#2962)
 
 
 #public API of this module; kept complete by tools/checkAll.py (#2444)
@@ -236,9 +237,9 @@ class ShellMesh:
             # compute tangent along parametric y-direction: dr/dy = d(v)/d(y)
             slopeY   = np.array([_diff(v[0], y), _diff(v[1], y), _diff(v[2], y)])
 
-            if np.linalg.norm(slopeX) == 0.0:
+            if cMath.norm(slopeX) == 0.0:
                 slopeX = _numeric_slope(pos, 0)
-            if np.linalg.norm(slopeY) == 0.0:
+            if cMath.norm(slopeY) == 0.0:
                 slopeY = _numeric_slope(pos, 1)
 
             # override parametric position with the physically mapped 3D position
@@ -499,7 +500,7 @@ _aspectTol = 1e-6    # minimum |sx x sy| / max(|sx x sy|) for ill-conditioned ch
 def _UnitVector(v):
     """Return the unit vector of v; raises ValueError if v is near-zero."""
     v = np.array(v, dtype=float).reshape(3)
-    n = float(np.linalg.norm(v))
+    n = float(cMath.norm(v))
     if n < _zeroTol:
         raise ValueError("vector must be non-zero")
     return v / n
@@ -608,7 +609,7 @@ class SurfaceMap:
 
         if useArcLength:
             ts = np.linspace(0.0, 1.0, int(nArc))
-            v  = np.array([np.linalg.norm(dCdT(t)) for t in ts], dtype=float)
+            v  = np.array([cMath.norm(dCdT(t)) for t in ts], dtype=float)
             s  = np.zeros_like(ts)
             for i in range(1, len(ts)):
                 s[i] = s[i-1] + 0.5*(ts[i]-ts[i-1])*(v[i]+v[i-1])
@@ -632,15 +633,15 @@ class SurfaceMap:
             t  = tOfX(x)
             p  = C(t)
             T  = dCdT(t)
-            nT = float(np.linalg.norm(T))
+            nT = float(cMath.norm(T))
             if nT < _zeroTol:
-                t2 = min(1.0, max(0.0, t+1e-6)); T = dCdT(t2); nT = float(np.linalg.norm(T))
+                t2 = min(1.0, max(0.0, t+1e-6)); T = dCdT(t2); nT = float(cMath.norm(T))
             if nT < _zeroTol:
                 T = np.array([1.0, 0.0, 0.0]); nT = 1.0
             T  = T / nT
-            N  = np.cross(up, T); nN = float(np.linalg.norm(N))
+            N  = np.cross(up, T); nN = float(cMath.norm(N))
             if nN < _zeroTol:
-                N = np.cross(np.array([0.0,1.0,0.0]), T); nN = float(np.linalg.norm(N))
+                N = np.cross(np.array([0.0,1.0,0.0]), T); nN = float(cMath.norm(N))
             if nN < _zeroTol:
                 N = np.array([0.0,1.0,0.0]); nN = 1.0
             N  = N / nN
@@ -672,7 +673,7 @@ class SurfaceMap:
             return thetaCenter + (float(y)-yc)/rx
         def f(x, y):
             r  = rOfX(x); th = thetaOfXy(x,y)
-            return [float(x), float(r*np.cos(th)), float(r*np.sin(th))]
+            return [float(x), float(r*cMath.cos(th)), float(r*cMath.sin(th))]
         return f
 
 

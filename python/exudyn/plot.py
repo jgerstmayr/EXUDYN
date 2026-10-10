@@ -20,6 +20,7 @@ from exudyn.basicUtilities import OutputFilePath #merge with exudyn.config.outpu
 from exudyn.basicUtilities import CreateDirectoryForFile #every writer creates its directory (#2493)
 from exudyn.basicUtilities import UIWindowSuppressed #exudyn.special.userInterface (#2477)
 import copy
+import exudyn.cMath as cMath #the math functions of the C++ code, the same bits on every platform (#2962)
 
 #public API of this module; kept complete by tools/checkAll.py (#2444)
 __all__ = [
@@ -830,7 +831,7 @@ def PlotSensor(mbs, sensorNumbers=[], components=0, xLabel=None, yLabel=None, la
             nValues = len(data)
             yData = np.zeros(nValues)
             for rowNorm in range(nValues):
-                yData[rowNorm] = np.linalg.norm(data[rowNorm,1:])
+                yData[rowNorm] = cMath.norm(data[rowNorm,1:])
 
         #+++++++++++++++++++++++++++++++++++        
         #add factor and offset if defined:
@@ -1060,7 +1061,7 @@ def __ImageDataFromGraphicsData(graphicsData, trianglesAsLines, circleSegments):
         if nSegments <= 0:
             nSegments = circleSegments
         phi = np.linspace(0., 2.*np.pi, int(nSegments)+1)
-        points = np.column_stack([center[0] + radius*np.sin(phi), center[1] + radius*np.cos(phi),
+        points = np.column_stack([center[0] + radius*cMath.sin(phi), center[1] + radius*cMath.cos(phi),
                                   np.full(len(phi), center[2])])
         listLines += [list(points.flatten())]
         listLineColors += [tuple(color)]

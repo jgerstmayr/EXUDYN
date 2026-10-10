@@ -13,7 +13,9 @@
 
 import exudyn as exu
 import numpy as np
-from math import radians, cos, sin, sqrt, tan, atan, atan2, pi
+from math import radians
+from exudyn.cMath import cos, sin, sqrt, tan, atan, atan2, pi
+import exudyn.cMath as cMath #the math functions of the C++ code, the same bits on every platform (#2962)
 
 #public API of this module; kept complete by tools/checkAll.py (#2444)
 __all__ = [
@@ -47,7 +49,7 @@ def InvInvolute(y, warn=True):
     if abs(y) > 2:
         x0 = atan(y)
     else:
-        x0 = np.cbrt(3*y) - 2./5.*y  #numpy cubic root also includes negative case!
+        x0 = cMath.cbrt(3*y) - 2./5.*y  #numpy cubic root also includes negative case!
     
     converged = False
     maxIt = 10
@@ -143,8 +145,8 @@ class InvoluteGear:
         Returns:
             2x2 rotation matrix as np.array
         """
-        return np.array([ [np.cos(angleRad),-np.sin(angleRad)],
-                          [np.sin(angleRad), np.cos(angleRad)] ]);
+        return np.array([ [cMath.cos(angleRad),-cMath.sin(angleRad)],
+                          [cMath.sin(angleRad), cMath.cos(angleRad)] ]);
     
     def PolarToCartesian(self, polarCoordinates):
         """convert polarCoordinates as [radius,angle] into Cartesian coordinates [x,y]
@@ -268,7 +270,7 @@ class InvoluteGear:
         gearFixed = []
         pLast = gear[0,:]
         for p in gear[1:]:
-            if np.linalg.norm(p-pLast) >= self.tolerance:
+            if cMath.norm(p-pLast) >= self.tolerance:
                 gearFixed.append(p)
                 pLast = p
         
@@ -333,7 +335,7 @@ def GetBallBearingData(axis, outsideDiameter, boreDiameter, width, nBalls,
     if innerEdgeChamfer is None:
         innerEdgeChamfer=radiusBalls/8
     
-    lenAxis = np.linalg.norm(axis)
+    lenAxis = cMath.norm(axis)
     vAxis0 = np.array(axis)/lenAxis
     innerGrooveTorusRadius = radiusCage+innerGrooveRadius-radiusBalls
     outerGrooveTorusRadius = radiusCage+radiusBalls-outerGrooveRadius
@@ -518,7 +520,7 @@ if __name__ == '__main__':
 
     if False:
         for i in range(40):
-            x = 2**(-i/2)
+            x = cMath.pow(2, -i/2)
             exudyn.Print('x=', x,'Inv=', Involute(x), ', Approx Inv=', ApproxInvolute(x), ', diff=', ApproxInvolute(x)-Involute(x), 'err term=', (62/2835)*x**9)  
             #==> error term < diff for x<0.02
 

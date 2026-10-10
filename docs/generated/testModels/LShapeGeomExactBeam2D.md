@@ -30,7 +30,7 @@ from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
 import exudyn.graphics as graphics
 
 import numpy as np
-from math import sin, cos, pi
+from exudyn.cMath import sin, cos, pi
 
 testIsActive = exu.sys.get('testIsActive', False)
 

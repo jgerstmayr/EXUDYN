@@ -29,6 +29,7 @@ import exudyn as exu
 from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
 import numpy as np
 import warnings
+from exudyn import cMath #the math functions of the C++ code, the same bits on every platform
 
 testIsActive = exu.sys.get('testIsActive', False)
 
@@ -76,7 +77,7 @@ massPointConnections = {
 u = 0
 for (name, Connect) in massPointConnections.items():
     results = [MassPoint(kind, Connect) for kind in ['body', 'node', 'marker']]
-    Check(np.linalg.norm(results[1]-results[0]) < 1e-12 and np.linalg.norm(results[2]-results[0]) < 1e-12, name + ': ' + str(results))
+    Check(cMath.norm(results[1]-results[0]) < 1e-12 and cMath.norm(results[2]-results[0]) < 1e-12, name + ': ' + str(results))
     u += np.sum(results[0])
     exu.Print(name, results[0])
 
@@ -148,7 +149,7 @@ for (name, Connect) in rigidBodyConnections.items():
                 kind = 'body'
             return Connect0(mbs, g, item, kind)
     results = [RigidBody(kind, Connect) for kind in kinds]
-    Check(all(np.linalg.norm(result-results[0]) < 1e-10 for result in results), name + ': ' + str([list(r[:3]) for r in results]))
+    Check(all(cMath.norm(result-results[0]) < 1e-10 for result in results), name + ': ' + str([list(r[:3]) for r in results]))
     u += np.sum(results[0][:3])
     exu.Print(name, results[0][:3])
     if name not in takesNode and hasItemChecks:
@@ -194,8 +195,8 @@ with warnings.catch_warnings(record=True) as caught:
 deprecations.warnOnce = warnOnceStored
 caught = [str(entry.message) for entry in caught if issubclass(entry.category, DeprecationWarning)]
 Check(len(caught) == 2 and 'use itemNumbers' in caught[0] and 'use itemNumber' in caught[1], 'warnings: ' + str(caught))
-Check(np.linalg.norm(resultOld - MassPoint('body', massPointConnections['CreateSpringDamper'])) == 0, 'bodyNumbers')
-Check(np.linalg.norm(forceOld - MassPoint('body', massPointConnections['CreateForce'])) == 0, 'bodyNumber')
+Check(cMath.norm(resultOld - MassPoint('body', massPointConnections['CreateSpringDamper'])) == 0, 'bodyNumbers')
+Check(cMath.norm(forceOld - MassPoint('body', massPointConnections['CreateForce'])) == 0, 'bodyNumber')
 for (arguments, text) in [({'bodyOrNodeList': [oGround, oMass]}, 'use itemNumbers'),
                           ({'itemNumbers': [oGround, oMass], 'bodyNumbers': [oGround, oMass]}, 'use itemNumbers only')]:
     try:

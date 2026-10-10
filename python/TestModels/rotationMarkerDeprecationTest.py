@@ -22,6 +22,7 @@ from exudyn.utilities import *
 import numpy as np
 import warnings
 import os
+from exudyn import cMath #the math functions of the C++ code, the same bits on every platform
 
 testIsActive = exu.sys.get('testIsActive', False)
 
@@ -86,8 +87,8 @@ for connector in [False, True]:
     qRotationMarker = Simulate(False, connector)
     if ItemUses() != used + 2: #rotationMarker0 and rotationMarker1
         errors += 1
-    exu.Print('connector' if connector else 'joint', ': difference localHT - rotationMarker =', np.linalg.norm(qLocalHT - qRotationMarker))
-    if np.linalg.norm(qLocalHT - qRotationMarker) > 1e-10:
+    exu.Print('connector' if connector else 'joint', ': difference localHT - rotationMarker =', cMath.norm(qLocalHT - qRotationMarker))
+    if cMath.norm(qLocalHT - qRotationMarker) > 1e-10:
         errors += 1
     u += np.sum(qLocalHT)
 

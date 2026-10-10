@@ -25,6 +25,7 @@ import exudyn.graphics as graphics
 from exudyn.FEM import *
 
 import numpy as np
+from exudyn import cMath #the math functions of the C++ code, the same bits on every platform
 
 testIsActive = exu.sys.get('testIsActive', False)
 
@@ -46,8 +47,8 @@ mPosLast = mbs.AddMarker(MarkerBodyRigid(bodyNumber = oGround,
 oRB = -1 #for output value
 
 def UFgenericJoint(mbs, t, itemIndex, param):
-    phiZ = -2*pi*0.5*(1.-np.cos(t*2*pi / 4)) / nBodies
-    phiX = -0.5*pi*0.5*(1.-np.cos(t*2*pi / 4)) / nBodies
+    phiZ = -2*pi*0.5*(1.-cMath.cos(t*2*pi / 4)) / nBodies
+    phiX = -0.5*pi*0.5*(1.-cMath.cos(t*2*pi / 4)) / nBodies
     #exu.Print("phi=", phi)
     return [0,0,0, phiX,0,phiZ]
 

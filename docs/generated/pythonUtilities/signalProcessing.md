@@ -12,7 +12,7 @@ and for filtering result data.
 (sec-signalprocessing-filtersensoroutput)=
 ## Function: FilterSensorOutput
 
-[`FilterSensorOutput(signal, filterWindow = 5, polyOrder = 3, derivative = 0, centralDifferentiate = True)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/signalProcessing.py#L25)
+[`FilterSensorOutput(signal, filterWindow = 5, polyOrder = 3, derivative = 0, centralDifferentiate = True)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/signalProcessing.py#L26)
 
 - **function description**: filter output of sensors (using numpy savgol filter) as well as numerical differentiation to compute derivative of signal
 - **input**:
@@ -30,7 +30,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`ANCFoutputT
 (sec-signalprocessing-filtersignal)=
 ## Function: FilterSignal
 
-[`FilterSignal(signal, samplingRate = -1, filterWindow = 5, polyOrder = 3, derivative = 0, centralDifferentiate = True)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/signalProcessing.py#L83)
+[`FilterSignal(signal, samplingRate = -1, filterWindow = 5, polyOrder = 3, derivative = 0, centralDifferentiate = True)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/signalProcessing.py#L84)
 
 - **function description**: filter 1D signal (using numpy savgol filter) as well as numerical differentiation to compute derivative of signal
 - **input**:
@@ -49,7 +49,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`objectFFRFr
 (sec-signalprocessing-computefft)=
 ## Function: ComputeFFT
 
-[`ComputeFFT(time, data)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/signalProcessing.py#L132)
+[`ComputeFFT(time, data)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/signalProcessing.py#L133)
 
 - **function description**: computes fast-fourier-transform (FFT) resulting in frequency, magnitude and phase of signal data using numpy.fft of numpy
 - **input**: time ... time vector in SECONDS in numpy format, having constant sampling rate (not checked!) data ... data vector in numpy format
@@ -64,7 +64,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`nMassOscill
 (sec-signalprocessing-getinterpolatedsignalvalue)=
 ## Function: GetInterpolatedSignalValue
 
-[`GetInterpolatedSignalValue(time, dataArray, timeArray = [], dataArrayIndex = -1, timeArrayIndex = -1, rangeWarning = True, tolerance = 1e-6)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/signalProcessing.py#L171)
+[`GetInterpolatedSignalValue(time, dataArray, timeArray = [], dataArrayIndex = -1, timeArrayIndex = -1, rangeWarning = True, tolerance = 1e-6)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/signalProcessing.py#L172)
 
 - **function description**: Interpolate signal having time values with constant sampling rate in timeArray and according data in dataArray
 - **input**:

@@ -23,6 +23,7 @@ import exudyn as exu
 from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
 import exudyn.graphics as graphics
 import numpy as np
+from exudyn import cMath #the math functions of the C++ code, the same bits on every platform
 
 testIsActive = exu.sys.get('testIsActive', False)
 
@@ -122,8 +123,8 @@ for iWheel in range(nWheels):
     phiZwheelLeft = 0
     phiZwheelRight = 0
     if rSteering != 0:
-        phiZwheelLeft = np.arctan(lCar/rSteering) #5/180*np.pi   #steering angle
-        phiZwheelRight = np.arctan(lCar/(wCar+rSteering)) #5/180*np.pi   #steering angle
+        phiZwheelLeft = cMath.atan(lCar/rSteering) #5/180*np.pi   #steering angle
+        phiZwheelRight = cMath.atan(lCar/(wCar+rSteering)) #5/180*np.pi   #steering angle
 
     initialRotationWheelLeft = RotationMatrixZ(phiZwheelLeft)
     initialRotationWheelRight = RotationMatrixZ(phiZwheelRight)

@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.13 | Newborn | 48 | 1.13.47 |
+| 1.13 | Newborn | 54 | 1.13.53 |
 | 1.12 | Metheney | 367 | 1.12.462 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
@@ -30,6 +30,30 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.13 - Newborn (current)
 
+- **1.13.53** `CHANGE` `raised by: Claude-JG` `resolved by: Claude-JG` A check that the Python library, test models and examples call no math function of math or numpy (#2964)
+  - description: revision2026c step RG11.10.8: tools/checkPythonMath.py in exudev generate --all-checks refuses from math import sin..., math.sin(, np.sin(, ..., math.pow, np.power and \*\* with an exponent that is not a whole number (x\*\*0.5: the library's pow, differs per platform; use sqrt); whole exponents (x\*\*2) reported only until RG11.10.7 shows whether they move a result; sqrt, pi, fsum allowed; pytest as for checkMathFunctions.
+  - **notes:** tools/checkPythonMath.py refuses math and numpy functions, np.linalg.norm(x) and non-integer powers in the Python library and the test models (revision2026c step RG11.10.8)
+  - date resolved: **2026-10-10 23:58**, date raised: 2026-10-10
+- **1.13.52** `TESTING` `MEDIUM EFF` `raised by: Claude-JG` `resolved by: Claude-JG` Test models and examples take their math functions from exudyn.cMath, and the test result a norm that is the same on every platform (#2963)
+  - description: revision2026c step RG11.10.7: the imports from math in the test models (about 37 files) and examples; the result norm e.g. sqrt(math.fsum(x\*x)) instead of np.linalg.norm; references recorded again; UnresolvedOnLinux() empty, which closes \#2956.
+  - **notes:** The test models take their math functions from exudyn.cMath and exudyn.cMath.norm, which gives the same bits on every platform (revision2026c step RG11.10.7)
+  - date resolved: **2026-10-10 23:58**, date raised: 2026-10-10
+- **1.13.51** `CHANGE` `MEDIUM EFF` `raised by: Claude-JG` `resolved by: Claude-JG` The Python library of Exudyn takes its math functions from exudyn.cMath (#2962)
+  - description: revision2026c step RG11.10.6: graphics, beams, lieGroupBasics, robotics, machines and the other modules (about 150 numpy calls and the imports from math), graphics included because its triangles reach the general contact.
+  - **notes:** The Python library of Exudyn takes sin, cos, ..., sqrt and norm from exudyn.cMath instead of math and numpy (revision2026c step RG11.10.6)
+  - date resolved: **2026-10-10 23:58**, date raised: 2026-10-10
+- **1.13.50** `CHANGE` `MEDIUM EFF` `raised by: Claude-JG` `resolved by: Claude-JG` rigidBodyUtilities calls exudyn.cUtilities and takes sin, cos from exudyn.cMath (#2961)
+  - description: revision2026c step RG11.10.5: names and arguments stay; each docstring names the C++ function it calls; HT and T66 stay in Python with cMath; the references that move are recorded again.
+  - **notes:** rigidBodyUtilities computes its kinematics functions in C++ through exudyn.cUtilities; ComputeOrthonormalBasisVectors and GramSchmidt return a 3x3 array of the vectors as rows, wrong sizes and singular inputs raise a ValueError, RotationMatrix2RotZYZ has flip=False (revision2026c step RG11.10.5)
+  - date resolved: **2026-10-10 23:58**, date raised: 2026-10-10
+- **1.13.49** `EXTENSION` `MEDIUM EFF` `raised by: Claude-JG` `resolved by: Claude-JG` exudyn.cUtilities: the kinematics functions of rigidBodyUtilities in C++ (#2960)
+  - description: revision2026c step RG11.10.4: the functions approved in RG11.10.1, bound from RigidBodyMath.h, the missing ones written there; a test compares them with the Python implementation to 1-2 ULP.
+  - **notes:** New submodule exudyn.cUtilities: the kinematics functions of rigid bodies in C++ (rotation matrices, Euler parameters, Tait-Bryan and zyz angles, rotation vectors, ExpSO3, LogSO3, skew matrices, basis vectors), the same bits on every platform (revision2026c step RG11.10.4)
+  - date resolved: **2026-10-10 23:58**, date raised: 2026-10-10
+- **1.13.48** `EXTENSION` `MEDIUM EFF` `raised by: Claude-JG` `resolved by: Claude-JG` The portable math functions of Exudyn for Python: initial conditions computed with math.sin or numpy differ per platform (#2956)
+  - description: The three models left in UnresolvedOnLinux() after \#2954 compute their initial values in Python with math.sin/math.cos (createSphereQuadContact, createSphereTriangleContact: initial velocities 2\*sin(cnt\*pi/3); generalContactCylinderTest: points on a cylinder and RotationMatrixX, i.e. numpy). glibc and the MSVC UCRT round 2\*sin(4\*pi/3) differently by 1 ULP (-0x1.bb67ae8584ca9p+0 vs ...ca8p+0). With sin/cos replaced by float(exu.symbolic.sin(x)) (EM::Sin), Windows and WSL compute bit-identical ODE2 coordinates in all three models (sha256 equal); the only remaining difference is 1 ULP in np.linalg.norm of the test result (numpy 2.4.6 vs 2.2.4, SIMD summation), while sqrt(math.fsum(x\*x)) agrees. Needed: a documented, vectorized way to call EM::Sin, ... from Python (e.g. a small pybind submodule exudyn.math with sin, cos, ... taking float or numpy arrays), used by rigidBodyUtilities (RotationMatrixX, ...) and by test models; and a platform-independent norm for test results. Changes the Windows references of the affected models (generalContactCylinderTest rel. 4e-5).
+  - **notes:** The test models compute their initial values with exudyn.cMath, so that generalContactCylinderTest, createSphereTriangleContact and createSphereQuadContact agree on Windows and Linux to the last bit; UnresolvedOnLinux() is empty (revision2026c steps RG4.1.3.7, RG11.10.7)
+  - date resolved: **2026-10-10 23:58**, date raised: 2026-10-10
 - **1.13.47** `EXTENSION` `MEDIUM EFF` `raised by: Claude-JG` `resolved by: Claude-JG` exudyn.cMath: the portable math functions of Exudyn for floats and numpy arrays (#2959)
   - description: revision2026c step RG11.10.3: sin, cos, tan, asin, acos, atan, atan2, exp, log, pow, sinh, cosh, tanh, cbrt (EM, \#2953) and sqrt, for a float or a numpy array (loop in C++); test: the same bits as experimental.EvaluateMathFunction(implementation='exudyn'); timing against math and numpy.
   - **notes:** exudyn.cMath: sin, cos, tan, asin, acos, atan, atan2, exp, log, pow, sinh, cosh, tanh, cbrt and sqrt of the C++ code, the same bits on every platform, for a float or a numpy array; and pi (revision2026c step RG11.10.3)

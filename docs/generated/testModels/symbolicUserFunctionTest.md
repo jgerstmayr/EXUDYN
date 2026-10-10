@@ -24,6 +24,7 @@ sys.exudynFast = True
 import exudyn as exu
 from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
 import exudyn.graphics as graphics
+from exudyn import cMath #the math functions of the C++ code, the same bits on every platform
 
 testIsActive = exu.sys.get('testIsActive', True)
 
@@ -42,18 +43,18 @@ if useSymbolicUF:
     def springForceUserFunction(mbs, t, itemNumber, deltaL, deltaL_t, stiffness, damping, force):
         #f0 = damping*deltaL_t + stiffness*deltaL + force #linear
         #fact = esym.variables.Get('flag') #potential way to couple behaviour to external triggers
-        f0 = 10*damping*deltaL_t + stiffness*esym.sign(deltaL) * (esym.abs(deltaL))**1.2 + force
+        f0 = 10*damping*deltaL_t + stiffness*esym.sign(deltaL) * (esym.abs(deltaL))**1.2 + force #checkPythonMath: allowed - a symbolic.Real, computed in C++
         return f0
     
     def UFload(mbs, t, load):
         return load*esym.sin(10*(2*pi)*t)
 else:
     def springForceUserFunction(mbs, t, itemNumber, deltaL, deltaL_t, stiffness, damping, force):
-        f0 = 10*damping*deltaL_t + stiffness*np.sign(deltaL) * (np.abs(deltaL))**1.2 + force
+        f0 = 10*damping*deltaL_t + stiffness*np.sign(deltaL) * cMath.pow((np.abs(deltaL)), 1.2) + force
         return f0
     
     def UFload(mbs, t, load):
-        return load*np.sin(10*(2*pi)*t)
+        return load*cMath.sin(10*(2*pi)*t)
 
 # no user function:    
 # UFload=0
@@ -114,7 +115,7 @@ if not testIsActive:
 
 n = mbs.GetObject(oMassPoint)['nodeNumber']
 p = mbs.GetNodeOutput(n, exu.OutputVariableType.Position)
-u = np.linalg.norm(p)
+u = cMath.norm(p)
 
 #every user function can be made symbolic, also one whose signature an earlier item has (#2664): the coordinate
 #spring-damper shares it with the spring-damper, the torque and the mass-proportional load with the force vector
@@ -127,7 +128,7 @@ symbolicCoordinate = CreateSymbolicUserFunction(mbs, UFcoordinate, 'springForceU
 uErrors = abs(symbolicCoordinate.Evaluate(mbs, 0., 0, 0.1, 0.2, 100., 2., 0.05) - UFcoordinate(mbs, 0., 0, 0.1, 0.2, 100., 2., 0.05))
 for itemTypeName in ['LoadTorqueVector', 'LoadMassProportional']:
     symbolicVector = CreateSymbolicUserFunction(mbs, UFvector, 'loadVectorUserFunction', itemTypeName=itemTypeName)
-    uErrors += np.linalg.norm(np.array(symbolicVector.Evaluate(mbs, 2., [1., 2., 3.])) - UFvector(mbs, 2., [1., 2., 3.]))
+    uErrors += cMath.norm(np.array(symbolicVector.Evaluate(mbs, 2., [1., 2., 3.])) - UFvector(mbs, 2., [1., 2., 3.]))
 exu.Print('symbolic user functions with a shared signature, errors:', uErrors)
 u += uErrors
 

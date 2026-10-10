@@ -25,6 +25,7 @@ import exudyn as exu
 from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
 import exudyn.graphics as graphics
 import numpy as np
+from exudyn import cMath #the math functions of the C++ code, the same bits on every platform
 
 testIsActive = exu.sys.get('testIsActive', False)
 
@@ -170,7 +171,7 @@ if False:
     mbs.SolutionViewer()
 
 #%%++++
-testResult = np.linalg.norm(mbs.systemData.GetODE2Coordinates())
+testResult = cMath.norm(mbs.systemData.GetODE2Coordinates())
 testResult += dof['degreeOfFreedom'] + dof['redundantConstraints'] + eigenValues[0]
 exu.Print('solution of bricardMechanism test=',testResult)
 

@@ -13,7 +13,7 @@
 import exudyn as exu
 from exudyn.itemInterface import *
 
-from math import pi, atan2
+from exudyn.cMath import pi, atan2
 
 testIsActive = exu.sys.get('testIsActive', False)
 

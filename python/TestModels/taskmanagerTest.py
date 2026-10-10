@@ -16,6 +16,7 @@ from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
 import exudyn.graphics as graphics
 
 import numpy as np
+from exudyn import cMath #the math functions of the C++ code, the same bits on every platform
 
 testIsActive = exu.sys.get('testIsActive', False)
 
@@ -41,7 +42,7 @@ def springForce(mbs, t, itemIndex, u, v, k, d, offset): #changed 2023-01-21:, mu
 
 #user function for load
 def userLoadVector(mbs, t, loadVector):
-    return np.sin(4*pi*t)*np.array(loadVector)
+    return cMath.sin(4*pi*t)*np.array(loadVector)
 
 nMasses = 1
 caseConstraints = 0

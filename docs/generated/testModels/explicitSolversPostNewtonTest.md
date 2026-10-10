@@ -35,6 +35,7 @@ import exudyn as exu
 from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
 
 import numpy as np
+from exudyn import cMath #the math functions of the C++ code, the same bits on every platform
 
 testIsActive = exu.sys.get('testIsActive', False)
 
@@ -114,7 +115,7 @@ def StickSlip(solverType):
     mbs.AddObject(ObjectConnectorCoordinateSpringDamperExt(markerNumbers=[mGround, mMass], nodeNumber=nData, stiffness=0,
                   damping=0, dynamicFrictionForce=2, staticFrictionOffsetForce=0.5, stickingStiffness=1e4,
                   stickingDamping=100, frictionProportionalZone=0))
-    mbs.AddLoad(LoadCoordinate(markerNumber=mMass, load=0, loadUserFunction=lambda mbs, t, load: 3*np.sin(2*np.pi*t)))
+    mbs.AddLoad(LoadCoordinate(markerNumber=mMass, load=0, loadUserFunction=lambda mbs, t, load: 3*cMath.sin(2*np.pi*t)))
     Solve(mbs, 2, 4000, solverType)
     return float(np.atleast_1d(mbs.GetNodeOutput(node, exu.OutputVariableType.Coordinates))[0])
 

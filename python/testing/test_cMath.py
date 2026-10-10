@@ -3,7 +3,8 @@
 #
 # Details:  exudyn.cMath (#2958, #2959): its functions give the bits of what the C++ code calls (EM::Sin, ...,
 #           experimental.EvaluateMathFunction with implementation 'exudyn'), a float for a float and an array of the
-#           same shape for a list or an array, and the module has what its __all__ and its stub say.
+#           same shape for a list or an array, and norm the same bits for any order; exudyn.cMath and exudyn.cUtilities
+#           have what their __all__ and their stubs say.
 #
 # Author:   Johannes Gerstmayr
 # Date:     2026-10-10 (created)
@@ -22,6 +23,7 @@ import pytest
 
 import exudyn as exu
 import exudyn.cMath as cMath
+import exudyn.cUtilities as cUtilities
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import mathFunctionsPlatform                                                    # noqa: E402
@@ -53,13 +55,25 @@ def testListsShapesAndBroadcasting():
     assert cMath.atan2(1., 0.) == pytest.approx(math.pi / 2) and cMath.atan2(y=1., x=-1.) == pytest.approx(0.75 * math.pi)
 
 
-def testTheModuleHasWhatItsStubSays():
-    assert cMath.pi == math.pi
-    assert exu.cMath is cMath
-    assert sorted(cMath.__all__) == sorted(functionNames + ['pi'])
-    stubFile = os.path.join(os.path.dirname(cMath.__file__), 'cMath.pyi')
+def testNormIsTheSameEverywhere():
+    #math.fsum adds without rounding: the order of the values does not change a bit
+    values = np.array([1e-8, 3., -4., 1e8, 0.1, -12.5])
+    assert cMath.norm(values) == cMath.norm(values[::-1]) == cMath.norm(values.reshape(2, 3).tolist())
+    assert cMath.norm([3, 4]) == 5. and cMath.norm([]) == 0.
+    assert cMath.norm(values) == pytest.approx(np.linalg.norm(values), rel=1e-15)
+
+
+@pytest.mark.parametrize('module', [cMath, cUtilities])
+def testTheModuleHasWhatItsStubSays(module):
+    name = module.__name__.split('.')[-1]
+    assert getattr(exu, name) is module
+    if module is cMath:
+        assert cMath.pi == math.pi
+        assert sorted(cMath.__all__) == sorted(functionNames + ['pi', 'norm'])
+    stubFile = os.path.join(os.path.dirname(module.__file__), name + '.pyi')
     with open(stubFile, 'r', encoding='utf8') as file:
         tree = ast.parse(file.read())
     stubNames = {node.name for node in tree.body if isinstance(node, ast.FunctionDef)}
     stubNames |= {node.target.id for node in tree.body if isinstance(node, ast.AnnAssign)}
-    assert stubNames == set(cMath.__all__)
+    assert stubNames == set(module.__all__)
+    assert all(callable(getattr(module, n)) or n == 'pi' for n in module.__all__)

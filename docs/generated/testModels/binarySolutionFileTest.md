@@ -26,6 +26,7 @@ import exudyn as exu
 from exudyn.utilities import *
 import numpy as np
 import os
+from exudyn import cMath #the math functions of the C++ code, the same bits on every platform
 
 testIsActive = exu.sys.get('testIsActive', False)
 
@@ -53,7 +54,7 @@ for precision in [6, 12]:
     solution = LoadSolutionFile(fileName, verbose=False)
     lastRow = solution['data'][-1, 1:4]                     #time, then the three coordinates of the node
     exact = mbs.GetNodeOutput(nNode, exu.OutputVariableType.Coordinates)
-    results[precision] = (np.linalg.norm(lastRow - exact), os.path.getsize(fileName), lastRow)
+    results[precision] = (cMath.norm(lastRow - exact), os.path.getsize(fileName), lastRow)
 
 (errorFloat, sizeFloat, rowFloat) = results[6]
 (errorDouble, sizeDouble, rowDouble) = results[12]

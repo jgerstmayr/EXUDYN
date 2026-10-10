@@ -1,0 +1,10 @@
+{
+  "number": 2965,
+  "title": "exudyn.cUtilities: the time derivatives of the Euler parameter functions",
+  "author": "Claude-JG",
+  "status": "RAISED",
+  "type": "EXTENSION",
+  "description": "Decision D7 of revision2026c step RG11.10.1 (tmp/compareRBU.md, maintainer 2026-10-11: not now, an issue): RigidBodyMath has EP2RotationMatrix_t, EP_t2G_t and EP_t2Glocal_t, which neither rigidBodyUtilities nor exudyn.cUtilities offers; when wanted, add them to definitions/pybindCUtilities.py and PyCUtilities.h, with a check in cUtilitiesTest.py.",
+  "dateRaised": "2026-10-10",
+  "deadline": "2027-04-08"
+}

@@ -11,7 +11,7 @@ and will be moved in other robotics libraries in future
 (sec-future-makecorkerobot)=
 ## Function: MakeCorkeRobot
 
-[`MakeCorkeRobot(robotDic)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/future.py#L34)
+[`MakeCorkeRobot(robotDic)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/future.py#L35)
 
 - **function description**: makeCorkeRobot, creates robot using the peter corke toolbox using standard (stdDH) or modified (modKKDH) Denavid Hartenberg parameters
 - **input**:
@@ -25,7 +25,7 @@ and will be moved in other robotics libraries in future
 (sec-future-computeik3r)=
 ## Function: ComputeIK3R
 
-[`ComputeIK3R(robotDic, HT)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/future.py#L87)
+[`ComputeIK3R(robotDic, HT)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/future.py#L88)
 
 - **function description**: calculates the analytical inverse kinematics for 3R elbow type serial robot manipulator
 - **input**:
@@ -40,7 +40,7 @@ and will be moved in other robotics libraries in future
 (sec-future-computeikpuma560)=
 ## Function: ComputeIKPuma560
 
-[`ComputeIKPuma560(robotDic, HT)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/future.py#L163)
+[`ComputeIKPuma560(robotDic, HT)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/future.py#L164)
 
 - **function description**: calculates the analytical inverse kinematics for Puma560 serial 6R robotDic manipulator
 - **input**:
@@ -55,7 +55,7 @@ and will be moved in other robotics libraries in future
 (sec-future-computeikur)=
 ## Function: ComputeIKUR
 
-[`ComputeIKUR(robotDic, HTdes)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/future.py#L293)
+[`ComputeIKUR(robotDic, HTdes)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/future.py#L294)
 
 - **function description**: calculates the analytical inverse kinematics for UR type serial 6R robot manipulator without sperical wrist
 - **input**:

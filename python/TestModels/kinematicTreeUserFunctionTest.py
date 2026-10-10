@@ -16,6 +16,7 @@
 import exudyn as exu
 from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
 import numpy as np
+from exudyn import cMath #the math functions of the C++ code, the same bits on every platform
 
 testIsActive = exu.sys.get('testIsActive', False)
 
@@ -58,7 +59,7 @@ mbs.SolveDynamic(simulationSettings)
 qControl = mbs.GetNodeOutput(nControl, exu.OutputVariableType.Coordinates)
 qUser = mbs.GetNodeOutput(nUser, exu.OutputVariableType.Coordinates)
 exu.Print('q control=', qControl, ', q user function=', qUser)
-result = np.sum(qControl) + (1 if np.linalg.norm(qControl - qUser) > 1e-10 else 0) #the second part must be zero
+result = np.sum(qControl) + (1 if cMath.norm(qControl - qUser) > 1e-10 else 0) #the second part must be zero
 
 exu.Print('kinematicTreeUserFunctionTest result=', result)
 exu.sys['testResult'] = result

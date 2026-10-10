@@ -17,6 +17,7 @@ import exudyn as exu
 from exudyn.itemInterface import *
 from exudyn.utilities import CreateSymbolicUserFunction
 from math import pi
+from exudyn import cMath #the math functions of the C++ code, the same bits on every platform
 
 testIsActive = exu.sys.get('testIsActive', False)
 #testIsActive = True
@@ -43,8 +44,8 @@ for case in cases:
     else:
         #general load changing over time (rotating)
         def UFload(mbs, t, loadVector):
-            return [np.sin(2*(2*pi)*t) * loadVector[0], 
-                    np.cos(2*(2*pi)*t) * loadVector[0], 
+            return [cMath.sin(2*(2*pi)*t) * loadVector[0], 
+                    cMath.cos(2*(2*pi)*t) * loadVector[0], 
                     0]
     
     oGround = mbs.CreateGround()
@@ -102,7 +103,7 @@ for case in cases:
     if not testIsActive:
         SC.renderer.Stop() #safely close rendering window!
     
-    result += np.linalg.norm(mbs.GetSensorValues(sMass))
+    result += cMath.norm(mbs.GetSensorValues(sMass))
 
 
 

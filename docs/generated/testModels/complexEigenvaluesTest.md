@@ -26,6 +26,7 @@ from math import sqrt
 import exudyn.graphics as graphics
 import numpy as np
 import sys
+from exudyn import cMath #the math functions of the C++ code, the same bits on every platform
 
 testIsActive = exu.sys.get('testIsActive', False)
 
@@ -46,7 +47,7 @@ omega = omega0*np.sqrt(1-dRel**2) #eigen frequency of damped system
 #decay = q_k+1 / q_k = np.exp(-2*pi/np.sqrt(1/dRel**2-1))
 #D = 1/np.sqrt(4*pi**2/(np.log(decay)**2)+1)
 
-exu.Print('dRel =',dRel, ', decay=',np.exp(-2*pi/np.sqrt(1/dRel**2-1)))
+exu.Print('dRel =',dRel, ', decay=',cMath.exp(-2*pi/np.sqrt(1/dRel**2-1)))
 
 u0=-0.08            #initial displacement
 v0=1                #initial velocity

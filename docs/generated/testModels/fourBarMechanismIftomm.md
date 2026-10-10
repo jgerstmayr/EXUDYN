@@ -23,8 +23,9 @@ import exudyn as exu
 from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
 import exudyn.graphics as graphics
 
-from math import sin, cos, pi
+from exudyn.cMath import sin, cos, pi
 import numpy as np
+from exudyn import cMath #the math functions of the C++ code, the same bits on every platform
 
 testIsActive = exu.sys.get('testIsActive', False)
 
@@ -117,7 +118,7 @@ if addSensors:
             v = mbs.GetSensorValues(sensorNumbers[i*3+1])
             omega = mbs.GetSensorValues(sensorNumbers[i*3+2])[2]
             
-            T += 0.5*np.linalg.norm(v)**2 * mass + 0.5*J*omega**2 + h*(-g[1])*mass
+            T += 0.5*cMath.norm(v)**2 * mass + 0.5*J*omega**2 + h*(-g[1])*mass
         return [T - 3.5*mass*(-g[1]) - 1.5] #1.5 is initial kinetic energy
         
     sUser = mbs.AddSensor(SensorUserFunction(sensorNumbers=listSensors,

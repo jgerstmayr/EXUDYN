@@ -27,6 +27,7 @@ import exudyn.graphics
 from exudyn.basicUtilities import Normalize
 
 from exudyn.rigidBodyUtilities import _MarkerWithRotation, _RotationMarkerArgs
+import exudyn.cMath as cMath #the math functions of the C++ code, the same bits on every platform (#2962)
 from exudyn.rigidBodyUtilities import ComputeOrthonormalBasis, \
     RotationMatrix2EulerParameters, AngularVelocity2EulerParameters_t, RotationMatrix2RotXYZ, AngularVelocity2RotXYZ_t, \
     RotationMatrix2RotationVector
@@ -676,11 +677,11 @@ def MainSystemCreateRigidBody(mbs,
                 raise ValueError('MainSystem.CreateRigidBody(...): in case of 2D rigid body, initialVelocity must not have a Z-component')
             if (abs(initialAngularVelocity[0]) + abs(initialAngularVelocity[1])) > 1e-14:
                 raise ValueError('MainSystem.CreateRigidBody(...): in case of 2D rigid body, initialAngularVelocity must only have a Z-component')
-            if np.linalg.norm(inertia.com) > 1e-14:
+            if cMath.norm(inertia.com) > 1e-14:
                 raise ValueError('MainSystem.CreateRigidBody(...): in case of 2D rigid body, the center of mass in inertia must be [0,0,0] (will be fixed in future)')
 
 
-        referenceRot = np.arctan2(A[1,0],A[0,0])
+        referenceRot = cMath.atan2(A[1,0],A[0,0])
     
         initCoordinates = [0.,0.,0.]
         if IsNotNone(initialDisplacement) or IsNotNone(initialRotationMatrix):
@@ -693,7 +694,7 @@ def MainSystemCreateRigidBody(mbs,
                 A0 = np.array(initialRotationMatrix)
                 if (abs(A0[2,0]) + abs(A0[2,1]) + abs(A0[0,2]) + abs(A0[1,2]) + abs(A0[2,2]-1)) > 1e-13:
                     raise ValueError('MainSystem.CreateRigidBody(...): in case of 2D rigid body, initialRotationMatrix must only have a rotation around Z-axis')
-                phi0 = np.arctan2(A0[1,0],A0[0,0]) - referenceRot
+                phi0 = cMath.atan2(A0[1,0],A0[0,0]) - referenceRot
                 initCoordinates[2] = phi0
             
         nodeItem = eii.NodeRigidBody2D(name = nodeName,
@@ -713,7 +714,7 @@ def MainSystemCreateRigidBody(mbs,
     if returnDict:
         rDict = {'nodeNumber':nodeNumber, 'bodyNumber': bodyNumber}
 
-    if np.linalg.norm(gravity) != 0.:
+    if cMath.norm(gravity) != 0.:
         markerNumber = mbs.AddMarker(eii.MarkerBodyMass(bodyNumber=bodyNumber))
         loadNumber = mbs.AddLoad(eii.LoadMassProportional(markerNumber=markerNumber, loadVector=gravity))
 
@@ -825,7 +826,7 @@ def MainSystemCreateSpringDamper(mbs,
                                                         getPosition=True, getRotationMatrix=False, useRigidMarker=False)
         
     if IsNone(referenceLength): #automatically compute reference length
-        referenceLength = np.linalg.norm(np.array(p1)-p0)
+        referenceLength = cMath.norm(np.array(p1)-p0)
     
     oConnector = mbs.AddObject(eii.ObjectConnectorSpringDamper(name=name,markerNumbers = [mBody0,mBody1],
                                                                       referenceLength = referenceLength,
@@ -1269,7 +1270,7 @@ def MainSystemCreateLinearSpringDamper(mbs,
     if not exudyn.__useExudynFast:
         if not isinstance(name, str):
             RaiseTypeError(where=where, argumentName='name', received = name, expectedType = ExpectedType.String)
-        if not IsVector(axis, 3) or np.linalg.norm(axis) == 0:
+        if not IsVector(axis, 3) or cMath.norm(axis) == 0:
             RaiseTypeError(where=where, argumentName='axis', received = axis, expectedType = 'a vector of length 3, not zero')
         if not IsValidURealInt(stiffness):
             RaiseTypeError(where=where, argumentName='stiffness', received = stiffness, expectedType = ExpectedType.UReal)
@@ -1290,7 +1291,7 @@ def MainSystemCreateLinearSpringDamper(mbs,
     [p0, A0, p1, A1, mBody0, mBody1, pPosition] = JointPreCheckCalcBodyMarkers(where, mbs, name, itemNumbers, position, show, useGlobalFrame)
 
     vAxis = np.array(axis, dtype=float) if useGlobalFrame else _MatVec3(A0, axis)
-    vAxis = vAxis / np.linalg.norm(vAxis)
+    vAxis = vAxis / cMath.norm(vAxis)
 
     mName0 = 'Marker0:'+name if name != '' else ''
     mName1 = 'Marker1:'+name if name != '' else ''
@@ -1818,7 +1819,7 @@ def MainSystemCreateDistanceConstraint(mbs, name='',
     [mBody0, mBody1, p0, p1, A0, A1] = GetMarkersPosRot(mbs, name, itemNumbers, localPosition0, localPosition1,
                                                         getPosition=IsNone(distance))
     if IsNone(distance): #automatically compute distance
-        distance = np.linalg.norm(np.array(p1)-p0)
+        distance = cMath.norm(np.array(p1)-p0)
     
     if distance != 0:
         oJoint = mbs.AddObject(eii.ObjectConnectorDistance(name=name,markerNumbers=[mBody0,mBody1], distance=distance,
@@ -2823,13 +2824,13 @@ def MainSystemCreateKinematicTree(mbs,
                                                   color=jointColors[i])
                 graphicsDataList[i].append(gJoint)
 
-            if np.linalg.norm(v) > 0:
+            if cMath.norm(v) > 0:
                 #links:
                 if linkRoundness < 1:
                     axis0 = Normalize(v)
                     axis2 = np.cross(axis0, parentAxis)
                     axis1 = -np.cross(axis0, axis2)
-                    lenV = np.linalg.norm(v) #will always have some extension
+                    lenV = cMath.norm(v) #will always have some extension
                     gLink = exudyn.graphics.Brick(centerPoint=[0.5*lenV,0,0],
                                                   size=[lenV + 1.6*jointRadius, jointWidth, 2*jointRadius],
                                                   color=linkColor,

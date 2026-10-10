@@ -16,6 +16,7 @@ import exudyn as exu
 from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
 import exudyn.graphics as graphics
 from exudyn.FEM import *
+from exudyn import cMath #the math functions of the C++ code, the same bits on every platform
 
 testIsActive = exu.sys.get('testIsActive', False)
 #testIsActive = True #without test
@@ -190,7 +191,7 @@ exu.Print('uTip=',list(sensorValues))
 #regular:       uTip= [-0.07561723475265847, -0.42046930823607603, 0.0001934540937925318]
 #user function: uTip= [-0.07561723475266069, -0.42046930823609246, 0.00019345409379260147]
 
-result = np.linalg.norm(sensorValues)
+result = cMath.norm(sensorValues)
 exu.Print('solution of linearFEMgenericODE2=',result)
 
 exu.sys['testResult'] = result

@@ -26,6 +26,7 @@ import exudyn as exu
 from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
 
 import numpy as np
+from exudyn import cMath #the math functions of the C++ code, the same bits on every platform
 
 testIsActive = exu.sys.get('testIsActive', False)
 
@@ -81,7 +82,7 @@ def ForceOutputs(build, active):
     outputs = {}
     for variableType in forceTypes:
         try:
-            outputs[variableType] = np.linalg.norm(mbs.GetObjectOutput(connector, variableType))
+            outputs[variableType] = cMath.norm(mbs.GetObjectOutput(connector, variableType))
         except Exception:
             pass    #the connector does not have this output variable
     return outputs

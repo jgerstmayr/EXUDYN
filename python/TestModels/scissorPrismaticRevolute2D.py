@@ -13,6 +13,7 @@
 import exudyn as exu
 from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
 import exudyn.graphics as graphics
+from exudyn import cMath #the math functions of the C++ code, the same bits on every platform
 
 testIsActive = exu.sys.get('testIsActive', False)
 
@@ -31,7 +32,7 @@ r = 0.05 #just for graphics
 nL = (n+0.5)*L
 graphicsBackground = graphics.Lines([[-L*1.5,-L*1.5,0], [1.5*nL,-L*1.5,0], [1.5*nL,nL,0], [-L*1.5,nL,0], [-L*1.5,-L*1.5,0]], color=graphics.color.lightgrey) #for appropriate zoom
 graphicscube = graphics.Lines([[-L,-0.5*b,0], [L,-0.5*b,0], [L,0.5*b,0], [-L,0.5*b,0], [-L,-0.5*b,0]], color=graphics.color.steelblue) #graphics.Sphere(point=[0,0,0], radius=r, color=[1.,0.2,0.2,1], nTiles = 8)
-graphicscube2 = graphics.Lines([[-L,-0.5*b,0], [n*L*2**0.5,-0.5*b,0], [n*L*2**0.5,0.5*b,0], [-L,0.5*b,0], [-L,-0.5*b,0]], color=graphics.color.steelblue) #graphics.Sphere(point=[0,0,0], radius=r, color=[1.,0.2,0.2,1], nTiles = 8)
+graphicscube2 = graphics.Lines([[-L,-0.5*b,0], [n*L*cMath.sqrt(2),-0.5*b,0], [n*L*cMath.sqrt(2),0.5*b,0], [-L,0.5*b,0], [-L,-0.5*b,0]], color=graphics.color.steelblue) #graphics.Sphere(point=[0,0,0], radius=r, color=[1.,0.2,0.2,1], nTiles = 8)
 #add ground object and mass point:
 
 pi = 3.1415926535897932384626
@@ -138,7 +139,7 @@ for case in range(2):
             mbs.AddObject(ObjectConnectorCartesianSpringDamper(markerNumbers=[mBodyDCOM, mGround], stiffness = [k, k, k], damping=[d,d,d]))
     
         if addPrismaticJoint and i>0:
-            mBodyDact = mbs.AddMarker(MarkerBodyRigid(bodyNumber=oBodyD, localPosition=[ i*L*2**0.5,0,0]))
+            mBodyDact = mbs.AddMarker(MarkerBodyRigid(bodyNumber=oBodyD, localPosition=[ i*L*cMath.sqrt(2),0,0]))
             mbs.AddObject(PrismaticJoint2D(markerNumbers=[mBodyVCOM, mBodyDact], axisMarker0=[1,0,0], normalMarker1=[0,1,0], constrainRotation=False))
     
         

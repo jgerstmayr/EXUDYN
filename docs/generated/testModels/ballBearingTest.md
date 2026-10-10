@@ -23,6 +23,7 @@ import exudyn as exu
 from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
 import exudyn.graphics as graphics
 import numpy as np
+from exudyn import cMath #the math functions of the C++ code, the same bits on every platform
 
 testIsActive = exu.sys.get('testIsActive', False)
 testIsActive = True #do test
@@ -221,7 +222,7 @@ if not testIsActive:
     SC.renderer.Stop()               #safely close rendering window!
 
 #%%++++
-testError = 0.01*np.linalg.norm(mbs.systemData.GetODE2Coordinates())
+testError = 0.01*cMath.norm(mbs.systemData.GetODE2Coordinates())
 exu.Print('solution of ballBearingTest=',testError)
 
 #%%++++++++++++++++++++++++++++++++++++++++++++++++++++

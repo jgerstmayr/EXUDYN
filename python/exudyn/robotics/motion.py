@@ -16,6 +16,7 @@ import numpy as np
 
 from copy import copy
 import exudyn
+import exudyn.cMath as cMath #the math functions of the C++ code, the same bits on every platform (#2962)
 
 #public API of this module; kept complete by tools/checkAll.py (#2444)
 __all__ = [
@@ -168,7 +169,7 @@ class ProfileConstantAcceleration:
                           initialTime=initialTime, 
                           finalTime=initialTime+self.duration,
                           accelerationTimes=[0.5*self.duration]*len(aMax), 
-                          maxVelocities=abs(aMax * distances)**0.5,
+                          maxVelocities=cMath.sqrt(abs(aMax * distances)),
                           maxAccelerations=aMax)
 
 class ProfileLinearAccelerationsList:

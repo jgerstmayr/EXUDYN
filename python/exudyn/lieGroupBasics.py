@@ -17,12 +17,14 @@
 
 from exudyn.misc.docmeta import docmeta
 import numpy as np
-from numpy.linalg import norm
-from math import sin, cos, tan, atan2, sqrt
+from exudyn.cMath import norm #the same bits on every platform (#2962)
+from exudyn.cMath import sin, cos, tan, atan2, sqrt
 
 #import exudyn as exu
+import exudyn.cMath as cMath #the math functions of the C++ code, the same bits on every platform (#2962)
+import exudyn.cUtilities as cu #ExpSO3, LogSO3 in C++ (#2962)
 from exudyn.rigidBodyUtilities import EulerParameters2RotationMatrix, RotXYZ2RotationMatrix, HT2rotationMatrix, HT2translation, \
-            HomogeneousTransformation, Skew, Skew2Vec, ComputeRotationAxisFromRotationVector, RotationMatrix2EulerParameters
+            HomogeneousTransformation, Skew, Skew2Vec, ComputeRotationAxisFromRotationVector
 
 
 # +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -129,7 +131,7 @@ def R3xSO3Matrix(x,R):
 
 @docmeta(author='Stefan Holzinger')
 def ExpSO3(Omega):
-    """compute the matrix exponential map on the Lie group SO(3), see [Mueller2017]
+    """compute the matrix exponential map on the Lie group SO(3), see [Mueller2017]; computed in C++ by exudyn.cUtilities.ExpSO3
 
     Args:
         3D rotation vector as np.array
@@ -137,11 +139,7 @@ def ExpSO3(Omega):
     Returns:
         3x3 matrix as np.array
     """
-    phi = norm(Omega)
-    I = np.eye(3)
-    OmegaSkew = Skew(Omega)
-    R = I + Sinc(phi)*OmegaSkew + 0.5*(Sinc(0.5*phi)**2)*np.matmul(OmegaSkew, OmegaSkew)
-    return R  
+    return cu.ExpSO3(Omega)
 
 
 @docmeta(author='Stefan Holzinger')
@@ -163,7 +161,7 @@ def ExpS3(Omega):
 
 @docmeta(author='Johannes Gerstmayr')
 def LogSO3(R):
-    """compute the matrix logarithmic map on the Lie group SO(3)
+    """compute the matrix logarithmic map on the Lie group SO(3); computed in C++ by exudyn.cUtilities.LogSO3
 
     Args:
         3x3 rotation matrix as np.array
@@ -174,18 +172,7 @@ def LogSO3(R):
     Note:
         improved accuracy for very small angles as well as angles phi close to pi AS WELL AS at phi=pi
     """
-    ep = RotationMatrix2EulerParameters(R)
-    
-    n = ep[1:]
-    norm = np.linalg.norm(n)
-    
-    #phi = 2.*acos(ep[0])
-    phi = 2.*np.arctan2(norm, ep[0])
-    
-    if norm != 0.:
-        n = (1./norm)*n
-
-    return Skew(phi*n)
+    return cu.LogSO3(R)
     
 
 
@@ -322,25 +309,25 @@ def TExpSE3(x):
     
     # coefficient f2, see Phd thesis Stefan Hante, Table. 1, page 121
     if phi >= 1e-2:
-        f2 = (np.cos(phi) - 1) / phi**2
+        f2 = (cMath.cos(phi) - 1) / phi**2
     else:
         f2 = -0.5 + (1/24)*phi**2 - (1/720)*phi**4
 
     # coefficient f3, see Phd thesis Stefan Hante, Table. 1, page 121
     if phi >= 1e-4:
-        f3 = (phi - np.sin(phi)) / phi**3
+        f3 = (phi - cMath.sin(phi)) / phi**3
     else:
         f3 = 1/6 - (1/24)*phi**2 - (1/720)*phi**4     
 
     # coefficient f4, see Phd thesis Stefan Hante, Table. 1, page 121
     if phi >= 1e-1:
-        f4 = (2 - 2*np.cos(phi) - phi*np.sin(phi)) / phi**4
+        f4 = (2 - 2*cMath.cos(phi) - phi*cMath.sin(phi)) / phi**4
     else:
         f4 = 1/12 - (1/180)*phi**2 + (1/6720)*phi**4 - (1/453600)*phi**6
         
     # coefficient f5, see Phd thesis Stefan Hante, Table. 1, page 121
     if phi >= 1e-1:
-        f5 = ( phi*(2 + np.cos(phi)) - 3*np.sin(phi)) / phi**5
+        f5 = ( phi*(2 + cMath.cos(phi)) - 3*cMath.sin(phi)) / phi**5
     else:
         f5 = 1/60 - (1/1260)*phi**2 + (1/60480)*phi**4 - (1/4989600)*phi**6     
     
@@ -381,7 +368,7 @@ def TExpSE3Inv(x):
     
     # coefficient f8, see Phd thesis Stefan Hante, Table. 1, page 121
     if phi >= 2e-1:
-        f8 = (phi*np.sin(phi) + 4*np.cos(phi) + phi**2 - 4) / (4*np.sin(phiOverTwo)**2 * phi**4)
+        f8 = (phi*cMath.sin(phi) + 4*cMath.cos(phi) + phi**2 - 4) / (4*cMath.sin(phiOverTwo)**2 * phi**4)
     else:
         f8 = 1/360 + (1/7560)*phi**2 + (1/201600)*phi**4 + (1/5987520)*phi**6 + (691/130767436800)*phi**8
     

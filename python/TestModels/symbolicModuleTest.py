@@ -12,6 +12,7 @@
 import exudyn as exu
 from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
 import exudyn.graphics as graphics
+from exudyn import cMath #the math functions of the C++ code, the same bits on every platform
 
 testIsActive = exu.sys.get('testIsActive', True)
 
@@ -274,7 +275,7 @@ if vectorTests:
             else:
                 w = np.array([4.2,-1.2])
                 d = 3.3*v+a*w+(v@w)*v
-                x[0] += np.linalg.norm(d)
+                x[0] += cMath.norm(d)
                 x[1] += (v == v ).all()
                 x[1] += (v == Vector([1,2.1]) ).all()
                 x[1] += (v != Vector([1,2.1]) ).any()
@@ -403,7 +404,7 @@ if vectorTests:
         for i in range(len(result[0])):
             res = [result[0][i],result[1][i]]
             s = 'correct'
-            sumResults += np.linalg.norm(res[0])
+            sumResults += cMath.norm(res[0])
             #if (res[0] != res[1]).any():  #problem with 1e-16 errors
             wrong = False
             #the tolerance is RELATIVE to the magnitude being compared; with the absolute 1e-15 that
@@ -412,8 +413,8 @@ if vectorTests:
             #numpy sum. It did pass under numpy 2.4.6 and failed under 2.2.4 with a difference of
             #1.78e-15, on a byte-identical exudyn binary (#2501). A real symbolic/numeric mismatch
             #is O(1); the few ulp of a different summation order are not what this test is about.
-            scale = max(np.linalg.norm(res[0]), np.linalg.norm(res[1]), 1.)
-            if np.linalg.norm(res[0] - res[1]) > 1e-14*scale:
+            scale = max(cMath.norm(res[0]), cMath.norm(res[1]), 1.)
+            if cMath.norm(res[0] - res[1]) > 1e-14*scale:
                 s = '\\diff:\n'
                 s += str(res[0]-res[1])
                 cntWrong+=1
@@ -440,8 +441,8 @@ def ExtendedSymbolicChecks():
     for value in [0.3, 1.7, -0.8]:
         x = SymReal('x', value)
         cases = [(x*x*x, 3*value**2),
-                 (esym.sin(x)*esym.cos(x), math.cos(2*value)),
-                 (esym.exp(x)/x, math.exp(value)/value - math.exp(value)/value**2),
+                 (esym.sin(x)*esym.cos(x), cMath.cos(2*value)),
+                 (esym.exp(x)/x, cMath.exp(value)/value - cMath.exp(value)/value**2),
                  (esym.sqrt(x*x+1), value/math.sqrt(value**2+1)),
                  ]
         for (f, analytic) in cases:
@@ -458,7 +459,7 @@ def ExtendedSymbolicChecks():
         #the derivative follows the variable, just as the value does
         f = esym.sin(x*x)
         x.SetValue(0.5)
-        wrong += Check(abs(f.Diff(x) - math.cos(0.25)*1.) < 1e-12, 'Diff after SetValue')
+        wrong += Check(abs(f.Diff(x) - cMath.cos(0.25)*1.) < 1e-12, 'Diff after SetValue')
 
         #a variable the expression does not contain contributes nothing
         y = SymReal('y', value)

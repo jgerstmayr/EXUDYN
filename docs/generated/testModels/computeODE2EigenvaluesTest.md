@@ -22,6 +22,7 @@ You can view and download this file on Github: [computeODE2EigenvaluesTest.py](h
 import exudyn as exu
 from exudyn.itemInterface import *
 import numpy as np
+from exudyn import cMath #the math functions of the C++ code, the same bits on every platform
 
 
 SC = exu.SystemContainer()
@@ -91,7 +92,7 @@ exu.Print("eigenvalues=",omegaNumerical) #exclude 3 rigid body modes
 beta = [4.730040744862704, 7.853204624095838, 10.99560783800167, 14.13716549125746, 17.27875965739948, 20.42035224562606, 23.56194490204046, 26.70353755550819, 29.84513020910325]
 omega = np.zeros(nEig)
 for i in range(nEig):
-    omega[i] = ((beta[i]/L)**4 * (EI/rhoA))**0.5
+    omega[i] = cMath.sqrt(((beta[i]/L)**4 * (EI/rhoA)))
 
 exu.Print('omega analytical =',omega)
 u = omega[0]-omegaNumerical[0]

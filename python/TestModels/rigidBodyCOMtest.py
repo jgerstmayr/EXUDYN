@@ -16,6 +16,7 @@ import exudyn.graphics as graphics
 from exudyn.FEM import *
 
 import numpy as np
+from exudyn import cMath #the math functions of the C++ code, the same bits on every platform
 
 testIsActive = exu.sys.get('testIsActive', False)
 
@@ -53,7 +54,7 @@ for case in range(2):
     #exu.Print("RBinertia orig =", RBinertia)
     RBinertia = RBinertia.Translated(com) #this includes the correct terms in inertia
 
-    if np.linalg.norm(RBinertia.com) != 0 and i==1:
+    if cMath.norm(RBinertia.com) != 0 and i==1:
         exu.Print("AddRigidBody COM=", RBinertia.com)
         exu.Print("inertia6D=", RBinertia.GetInertia6D())
     #exu.Print("RBinertia trans=", RBinertia)
@@ -147,7 +148,7 @@ p1=mbs.GetObjectOutputBody(objectList[1], exu.OutputVariableType.Displacement, m
 #h=0.00001:p0-p1= [ 2.64592348e-10 -5.90557048e-11  4.66975986e-10]
 
 #+++++++++++++++++++++++++++++++++++++++++++++
-u=np.linalg.norm(p0) + np.linalg.norm(p1)
+u=cMath.norm(p0) + cMath.norm(p1)
 exu.Print('solution of rigidBodyCOMtest=',u)
 
 exu.sys['testResult'] = u

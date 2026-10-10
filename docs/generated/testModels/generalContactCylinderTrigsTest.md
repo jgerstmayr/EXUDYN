@@ -23,6 +23,7 @@ import exudyn as exu
 from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
 import exudyn.graphics as graphics
 import numpy as np
+from exudyn import cMath #the math functions of the C++ code, the same bits on every platform
 
 testIsActive = exu.sys.get('testIsActive', False)
 
@@ -175,7 +176,7 @@ q += mbs.GetSensorValues(sOmega)
 q += mbs.GetSensorValues(sRot)
 #print('q=', q)
 
-u = np.linalg.norm(q)
+u = cMath.norm(q)
 exu.Print('solution of generalContactCylinderTest =',u)
 
 exu.sys['testResult'] = u

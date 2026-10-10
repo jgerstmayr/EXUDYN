@@ -23,6 +23,7 @@ import exudyn as exu
 from exudyn.itemInterface import *
 
 import numpy as np
+from exudyn import cMath #the math functions of the C++ code, the same bits on every platform
 
 testIsActive = exu.sys.get('testIsActive', False)
 
@@ -50,8 +51,8 @@ L1 = 38e-3 #mm
 L2 = 29e-3 #mm
 L3 = 8e-3 #mm
 L4 = 10e-3 #mm
-psi = np.arctan(L3/L1) #11.9°
-CE = L3/np.sin(psi) #38.8e-3 mm
+psi = cMath.atan(L3/L1) #11.9°
+CE = L3/cMath.sin(psi) #38.8e-3 mm
 
 
 
@@ -86,8 +87,8 @@ def To3D(p): #convert numpy 2D vector to 3D list
 
 
 def RotZVec(angleRad,vec):
-    Rz=np.array([ [np.cos(angleRad),-np.sin(angleRad)],
-                      [np.sin(angleRad), np.cos(angleRad)] ])
+    Rz=np.array([ [cMath.cos(angleRad),-cMath.sin(angleRad)],
+                      [cMath.sin(angleRad), cMath.cos(angleRad)] ])
     return np.dot(Rz,np.array(vec)); 
 
 
@@ -119,13 +120,13 @@ def SixBarLinkage(P00,theta,alphaMean): #compute one six-bar linkage (P00: ideal
     P2=[L1+L2,0]
     P3=[L1,L3]
     P4=[L1+L2,L3]
-    P5=[L1+CE*np.cos(alphaMean-psi),L3+CE*np.sin(alphaMean-psi)]
-    P6=[L1+L2+CE*np.cos(alphaMean-psi),L3+CE*np.sin(alphaMean-psi)]
-    P7=[L1+CE*np.cos(alphaMean-psi)+L2*np.cos(alphaMean),L3+CE*np.sin(alphaMean-psi)+L2*np.sin(alphaMean)]
-    P8=[CE*np.cos(alphaMean-psi),CE*np.sin(alphaMean-psi)]
-    P9=[CE*np.cos(alphaMean-psi)+L2*np.cos(alphaMean),CE*np.sin(alphaMean-psi)+L2*np.sin(alphaMean)]
-    P10=[L1*np.cos(alphaMean),L1*np.sin(alphaMean)]
-    P11=[(L1+L2)*np.cos(alphaMean),(L1+L2)*np.sin(alphaMean)]    
+    P5=[L1+CE*cMath.cos(alphaMean-psi),L3+CE*cMath.sin(alphaMean-psi)]
+    P6=[L1+L2+CE*cMath.cos(alphaMean-psi),L3+CE*cMath.sin(alphaMean-psi)]
+    P7=[L1+CE*cMath.cos(alphaMean-psi)+L2*cMath.cos(alphaMean),L3+CE*cMath.sin(alphaMean-psi)+L2*cMath.sin(alphaMean)]
+    P8=[CE*cMath.cos(alphaMean-psi),CE*cMath.sin(alphaMean-psi)]
+    P9=[CE*cMath.cos(alphaMean-psi)+L2*cMath.cos(alphaMean),CE*cMath.sin(alphaMean-psi)+L2*cMath.sin(alphaMean)]
+    P10=[L1*cMath.cos(alphaMean),L1*cMath.sin(alphaMean)]
+    P11=[(L1+L2)*cMath.cos(alphaMean),(L1+L2)*cMath.sin(alphaMean)]    
     
     PList=[P01,P1,P2,P3,P4,P5,P6,P7,P8,P9,P10,P11]
     
@@ -160,17 +161,17 @@ def SixBarLinkage(P00,theta,alphaMean): #compute one six-bar linkage (P00: ideal
     graphicsCE1 = {'type':'Line', 'color':[0.1,0.1,0.8,1], 'data':ad+[0]+ bd+[0]+ cd+[0]+ dd+[0]+ ed+[0]} #background
     
     ad=list(RotZVec((alphaMean-psi),[0,-bLength]))
-    bd=list(RotZVec((alphaMean-psi),[L2*np.cos(psi),L2*np.sin(psi)-bLength]))
-    cd=list(RotZVec((alphaMean-psi),[L2*np.cos(psi),L2*np.sin(psi)+bLength]))
+    bd=list(RotZVec((alphaMean-psi),[L2*cMath.cos(psi),L2*cMath.sin(psi)-bLength]))
+    cd=list(RotZVec((alphaMean-psi),[L2*cMath.cos(psi),L2*cMath.sin(psi)+bLength]))
     dd=list(RotZVec((alphaMean-psi),[0,bLength]))
     ed=list(RotZVec((alphaMean-psi),[0,-bLength]))  
     graphicsL21 = {'type':'Line', 'color':[0.1,0.1,0.8,1], 'data':ad+[0]+ bd+[0]+ cd+[0]+ dd+[0]+ ed+[0]} #background
     
-    ad=list(RotZVec(0,[-CE*np.cos(psi),-CE*np.sin(psi)-bLength]))
+    ad=list(RotZVec(0,[-CE*cMath.cos(psi),-CE*cMath.sin(psi)-bLength]))
     bd=list(RotZVec(0,[0,-bLength]))
     cd=list(RotZVec(0,[0,bLength]))
-    dd=list(RotZVec(0,[-CE*np.cos(psi),-CE*np.sin(psi)+bLength]))
-    ed=list(RotZVec(0,[-CE*np.cos(psi),-CE*np.sin(psi)-bLength]))    
+    dd=list(RotZVec(0,[-CE*cMath.cos(psi),-CE*cMath.sin(psi)+bLength]))
+    ed=list(RotZVec(0,[-CE*cMath.cos(psi),-CE*cMath.sin(psi)-bLength]))    
     graphicsCE2 = {'type':'Line', 'color':[0.1,0.1,0.8,1],'data':ad+[0]+ bd+[0]+ cd+[0]+ dd+[0]+ ed+[0]}
 
     ad=list(RotZVec(0,[0,-bLength]))
@@ -265,15 +266,15 @@ def ATC(A,B,C):
     AC=(np.array(C)-np.array(A))
     
 #    offsetAngle=np.arcsin( np.dot(np.array(e1),AB)/(np.linalg.norm(np.array(e1)*np.linalg.norm(AB))))
-    offsetAngle=np.arctan2(AB[1],AB[0])
+    offsetAngle=cMath.atan2(AB[1],AB[0])
 
-    a=np.linalg.norm(np.array(C)-np.array(B))
-    b=np.linalg.norm(np.array(C)-np.array(A))
-    c=np.linalg.norm(np.array(B)-np.array(A))
+    a=cMath.norm(np.array(C)-np.array(B))
+    b=cMath.norm(np.array(C)-np.array(A))
+    c=cMath.norm(np.array(B)-np.array(A))
     
-    alpha=np.arccos((np.square(b)+np.square(c)-np.square(a))/(2*b*c))
-    beta=np.arccos((np.square(a)+np.square(c)-np.square(b))/(2*a*c))
-    gamma=np.arccos((np.square(a)+np.square(b)-np.square(c))/(2*a*b))
+    alpha=cMath.acos((np.square(b)+np.square(c)-np.square(a))/(2*b*c))
+    beta=cMath.acos((np.square(a)+np.square(c)-np.square(b))/(2*a*c))
+    gamma=cMath.acos((np.square(a)+np.square(b)-np.square(c))/(2*a*b))
     
     s1=SixBarLinkage(A,offsetAngle,alpha)
     s2=SixBarLinkage(B,np.pi-beta+offsetAngle,beta)
@@ -392,7 +393,7 @@ P0=n1["coordinatePoints"][0]
 
 #Johannes:
 def userLoad(mbs, t, loadVector):
-    f=0.01+0.99*(1-np.cos((t/0.05)*np.pi)) #use small initial value for solver
+    f=0.01+0.99*(1-cMath.cos((t/0.05)*np.pi)) #use small initial value for solver
     if t>8:
         f = 1
     return [f*loadVector[0], f*loadVector[1], f*loadVector[2]]

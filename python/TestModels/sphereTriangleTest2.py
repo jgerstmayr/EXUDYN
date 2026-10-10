@@ -14,6 +14,7 @@ import exudyn as exu
 from exudyn.utilities import *
 import exudyn.graphics as graphics
 import numpy as np
+from exudyn import cMath #the math functions of the C++ code, the same bits on every platform
 
 testIsActive = exu.sys.get('testIsActive', False)
 #testIsActive = True
@@ -241,7 +242,7 @@ for solverNum, solver in enumerate(solverList):
     ode2 = mbs.systemData.GetODE2Coordinates()
     listSolutions.append(ode2)
     
-    testSolution += np.linalg.norm(ode2)
+    testSolution += cMath.norm(ode2)
 
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 exu.Print('solution of sphereTriangleTest2=',testSolution) 

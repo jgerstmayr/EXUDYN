@@ -21,6 +21,7 @@
 import exudyn as exu
 from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
 import numpy as np
+from exudyn import cMath #the math functions of the C++ code, the same bits on every platform
 
 testIsActive = exu.sys.get('testIsActive', False)
 
@@ -65,7 +66,7 @@ simulationSettings.timeIntegration.numberOfSteps = 100
 simulationSettings.timeIntegration.endTime = 1
 mbs.SolveDynamic(simulationSettings)
 rim = mbs.GetSensorValues(sRim)
-exu.Print('position of the rim after 1 s:', rim, ', expected', 0.2*np.array([np.cos(1.2), np.sin(1.2), 0]))
+exu.Print('position of the rim after 1 s:', rim, ', expected', 0.2*np.array([cMath.cos(1.2), cMath.sin(1.2), 0]))
 
 #(2) the tip deflection, F L^3/(3 EI) = 0.01/3 for the Euler-Bernoulli beam
 (mbs, nTip) = CableModel(offset=0)

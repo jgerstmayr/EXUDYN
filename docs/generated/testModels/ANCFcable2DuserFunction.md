@@ -25,11 +25,12 @@ from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
 import exudyn.graphics as graphics
 
 import numpy as np
+from exudyn import cMath #the math functions of the C++ code, the same bits on every platform
 
 testIsActive = exu.sys.get('testIsActive', False)
 
 from exudyn.beams import *
-from math import atan
+from exudyn.cMath import atan
 
 #create an environment for mini example
 SC = exu.SystemContainer()
@@ -55,7 +56,7 @@ def bendingMomentUserFunction(mbs, t, itemNumber, axialPositionNormalized, curva
 #reduce stiffness over time
 def axialForceUserFunction(mbs, t, itemNumber, axialPositionNormalized, axialStrain, axialStrain_t, axialStrainRef, axialStiffness, axialDamping,
             curvature, curvature_t, curvatureRef):
-    fact = max(0.02,(2-t**0.5)) #make axial stiffness it softer over time
+    fact = max(0.02,(2-cMath.sqrt(t))) #make axial stiffness it softer over time
     return fact*axialStiffness*(axialStrain-axialStrainRef) + axialDamping*axialStrain_t
 
 #create ANCF cable object:

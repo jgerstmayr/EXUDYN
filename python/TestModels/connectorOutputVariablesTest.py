@@ -26,6 +26,7 @@ from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
 from exudyn.beams import GenerateBeamElementsAlongLine
 
 import numpy as np
+from exudyn import cMath #the math functions of the C++ code, the same bits on every platform
 
 testIsActive = exu.sys.get('testIsActive', False)
 
@@ -83,7 +84,7 @@ def Planar(addJoint):
 (mbs, node, oRevolute) = Planar(lambda mbs, m0, m1: mbs.AddObject(ObjectJointRevolute2D(markerNumbers=[m0, m1])))
 displacement = mbs.GetObjectOutput(oRevolute, OV.Displacement)
 exu.Print('revolute joint: displacement', displacement)
-testResult += np.linalg.norm(displacement)
+testResult += cMath.norm(displacement)
 
 #(3) prismatic joint along x with the rotation constrained: x = F_x/(2m) t^2 = 0.5 at t = 1
 (mbs, node, oJoint) = Planar(lambda mbs, m0, m1: mbs.AddObject(ObjectJointPrismatic2D(

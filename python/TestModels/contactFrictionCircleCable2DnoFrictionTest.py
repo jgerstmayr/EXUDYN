@@ -17,6 +17,7 @@
 import exudyn as exu
 from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
 import numpy as np
+from exudyn import cMath #the math functions of the C++ code, the same bits on every platform
 
 testIsActive = exu.sys.get('testIsActive', False)
 
@@ -67,7 +68,7 @@ def Run(frictionCoefficient):
 
 (q0, tangential0) = Run(0.)
 (q1, tangential1) = Run(0.5)
-difference = np.linalg.norm(q1 - q0)
+difference = cMath.norm(q1 - q0)
 exu.Print('contact without friction: tangential forces', tangential0, tangential1, ', difference of the motion', difference)
 
 u = np.sum(q0) + 1e3*(difference + tangential0 + tangential1)

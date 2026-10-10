@@ -20,6 +20,7 @@ import os   #for the output file paths
 import numpy as np
 import exudyn
 from exudyn.itemInterface import MarkerBodyRigid, VMarkerBodyRigid, SensorUserFunction
+import exudyn.cMath as cMath #the math functions of the C++ code, the same bits on every platform (#2962)
 from exudyn.misc.deprecation import Deprecated #the deprecations of the library (#2807)
 
 #public API of this module; kept complete by tools/checkAll.py (#2444)
@@ -37,7 +38,7 @@ __all__ = [
 #define some constants which would require external libraries
 #pi = 3.1415926535897932 #define pi in order to avoid importing large libraries; identical to from math import pi
 pi = math.pi
-sqrt2 = 2.**0.5
+sqrt2 = math.sqrt(2.)
 g = 9.81 #gravity constant
 
 
@@ -114,16 +115,16 @@ def Normalize(v):
         callers append the result to lists of normals
     """
     v = np.array(v, dtype=float)
-    norm = np.linalg.norm(v)
+    norm = cMath.norm(v)
     if norm != 0:
         v /= norm
     return v.tolist()
 
 #integration points per integration order (1, 3, ...); for interval [-1,1]
 gaussIntegrationPoints=[[0],
-                        [-(1. / 3.)**0.5, (1. / 3.)**0.5],
-                        [-(3. / 5.)**0.5, 0., (3. / 5.)**0.5],
-                        [-(3. / 7. + (120.)**0.5 / 35.)**0.5, -(3. / 7. - (120.)**0.5 / 35.)**0.5, (3. / 7. - (120.)**0.5 / 35.)**0.5, (3. / 7. + (120.)**0.5 / 35.)**0.5],
+                        [-math.sqrt(1. / 3.), math.sqrt(1. / 3.)],
+                        [-math.sqrt(3. / 5.), 0., math.sqrt(3. / 5.)],
+                        [-math.sqrt(3. / 7. + math.sqrt(120.) / 35.), -math.sqrt(3. / 7. - math.sqrt(120.) / 35.), math.sqrt(3. / 7. - math.sqrt(120.) / 35.), math.sqrt(3. / 7. + math.sqrt(120.) / 35.)],
                         [-0.906179845938664, -0.5384693101056831, 0., 0.5384693101056831, 0.906179845938664],
                         ]
 
@@ -131,7 +132,7 @@ gaussIntegrationPoints=[[0],
 gaussIntegrationWeights=[[2],
                          [1., 1.],
                          [5. / 9., 8. / 9., 5. / 9.],
-                         [1. / 2. - 5. / (3.*(120.)**0.5), 1. / 2. + 5. / (3.*(120.)**0.5), 1. / 2. + 5. / (3.*(120.)**0.5), 1. / 2. - 5. / (3.*(120.)**0.5)],
+                         [1. / 2. - 5. / (3.*math.sqrt(120.)), 1. / 2. + 5. / (3.*math.sqrt(120.)), 1. / 2. + 5. / (3.*math.sqrt(120.)), 1. / 2. - 5. / (3.*math.sqrt(120.))],
                          [0.23692688505618914, 0.47862867049936636, 0.5688888888888889, 0.47862867049936636, 0.23692688505618914],
                          ]
 
@@ -168,7 +169,7 @@ def GaussIntegrate(functionOfX, integrationOrder, a, b):
 #integration points per integration order (1, 3, ...); for interval [-1,1]
 lobattoIntegrationPoints=[[-1.,1.],
                           [-1., 0., 1.],
-                          [-1., -(1./5.)**0.5, (1./5.)**0.5, 1.]]
+                          [-1., -math.sqrt(1./5.), math.sqrt(1./5.), 1.]]
 
 #integration weights per integration order (1, 3, ...); for interval [-1,1]
 lobattoIntegrationWeights=[[ 1., 1.],
@@ -313,7 +314,7 @@ def GetJointArgs(mbs, markerNumber0=None, markerNumber1=None,
     from exudyn.rigidBodyUtilities import _MarkerWithRotation
     (existingTurned, rotationMarkerRemaining) = _MarkerWithRotation(mbs, existingMarker, rotationMarkerThis)
     args = {'markerNumbers': [existingTurned, markerNumberNew] if markerNumber0 is not None else [markerNumberNew, existingTurned]}
-    if np.linalg.norm(rotationMarkerRemaining - np.eye(3)) != 0: #a marker without localHT: only the deprecated way remains
+    if cMath.norm(rotationMarkerRemaining - np.eye(3)) != 0: #a marker without localHT: only the deprecated way remains
         args['rotationMarker0' if markerNumber0 is not None else 'rotationMarker1'] = rotationMarkerRemaining
     return args
 
