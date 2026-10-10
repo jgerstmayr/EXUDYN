@@ -12,7 +12,7 @@ two modes are in [WORKFLOW.md](WORKFLOW.md) §3, the remotes in §4.
 | development | branch `v2-dev`, on the internal GitLab (`origin`) | every day |
 | releases | branch `master`, on GitHub (`github`) **and** GitLab (`origin`) | a release only; always a fast-forward to the release commit |
 | release tag | `vX.Y.Z` on the release commit, on both remotes | the maintainer, **after** GitHub CI is green |
-| GitHub CI `wheels.yml` | 20 jobs: Windows, Linux x86-64, Linux ARM, macOS (universal2), Python 3.10-3.14 each; cibuildwheel builds and runs the test suite with `--exit-code`; the artifact `merged-wheels` holds all wheels | a push to `master`, a pull request, or *Run workflow* - **not** a tag |
+| GitHub CI `wheels.yml` | 24 jobs: Windows, Linux x86-64, Linux ARM, macOS (universal2), Python 3.10-3.15 each; cibuildwheel builds and runs the test suite with `--exit-code`; the artifact `merged-wheels` holds all wheels | a push to `master`, a pull request, or *Run workflow* - **not** a tag |
 | GitHub Pages `documentation.yaml` | the HTML documentation on jgerstmayr.github.io | a push to `master`, or *Run workflow* |
 | Read the Docs | `latest` from `master` | a push to `master`; other branches and tags only as configured in the Read the Docs project (*Versions*, *Automation rules*) |
 | GitLab CI `.gitlab-ci.yml` | Linux x86-64 wheels and tests | a tag, the schedule, or *Run pipeline* - **not** a branch push |
@@ -38,7 +38,7 @@ upload touch a remote; each push to GitHub needs the 2FA.
    exudev issue bump --minor
    ```
    Regenerate, the four gates, commit.
-3. **Rehearse on GitHub** from that commit, see {ref}`below <rehearse-on-github>`. It runs the 20 wheel jobs before
+3. **Rehearse on GitHub** from that commit, see {ref}`below <rehearse-on-github>`. It runs the 24 wheel jobs before
    anything is tagged or published.
 
 ### 2. Build and tag
@@ -74,14 +74,14 @@ upload touch a remote; each push to GitHub needs the 2FA.
    ```
 
 ### 4. Wait for green, collect the wheels
-8. All 20 jobs of `wheels` green. If one fails: its log and the test log (artifact `uploaddata-tests-*`) to
+8. All 24 jobs of `wheels` green. If one fails: its log and the test log (artifact `uploaddata-tests-*`) to
    `tmp/GitHub`, fix on `v2-dev`, resolve the issue, `git tag -d vX.Y.Z` (it was never pushed), and steps 4-7
    again with the new version.
 9. Download `merged-wheels` and take the wheels of exactly this version:
    ```powershell
    Remove-Item distPyPI\*.whl -ErrorAction SilentlyContinue
    Copy-Item <unzipped>\merged-artifacts\exudyn-X.Y.Z-*.whl distPyPI\
-   dir distPyPI                       # 20 wheels: win_amd64, manylinux x86_64, manylinux aarch64, macosx
+   dir distPyPI                       # 24 wheels: win_amd64, manylinux x86_64, manylinux aarch64, macosx
    ```
    `distPyPI/` is ignored by git. One source per platform; a local wheel from `dist/` is uploadable only in
    its `manylinux` and `win_amd64` forms - PyPI refuses `linux_x86_64`.
@@ -94,7 +94,8 @@ upload touch a remote; each push to GitHub needs the 2FA.
     twine upload --skip-existing distPyPI/*.whl
     ```
     twine needs version 6.1 or newer (and pkginfo 1.12 or newer): the wheels carry Metadata-Version 2.4
-    (`License-Expression`, `License-File`), which an older twine reports as "unrecognized or malformed".
+    (`License-Expression`, `License-File`), which an older twine reports as "unrecognized or malformed". The
+    dependency group `release` of `pyproject.toml` has both: `pip install --group release` (pip 25.1 or newer).
     It reads the API token from `%USERPROFILE%\.pypirc` (`username = __token__`, `password = pypi-...`), or
     from `--config-file <path>`; `--verbose` shows which file and which URL it uses.
 11. *Releases → Draft a new release* on GitHub, from tag `vX.Y.Z`: the body is `dist/RELEASE_NOTES.md`, the
@@ -119,7 +120,8 @@ A branch on GitHub runs the wheels workflow by hand, on the exact commit, and pu
 ```powershell
 git push github v2-dev:release/X.Y          # the pre-push hook lets release/* through to GitHub
 ```
-*Actions → wheels → Run workflow*, branch `release/X.Y`. Fix and push again until all 20 jobs are green, then
+*Actions → wheels → Run workflow*, branch `release/X.Y`, with *build as a release* checked. Fix and push again until
+all 24 jobs are green, then
 ```powershell
 git push github --delete release/X.Y
 ```
@@ -127,9 +129,12 @@ git push github --delete release/X.Y
 - Start **only `wheels`** there. *Deploy GitHub Pages*, started by hand on that branch, would publish its
   documentation.
 - Read the Docs builds `master` only, unless the branch is activated as a version in the Read the Docs project.
-- Run from the commit after `exudev issue mode --release` (step 2), the rehearsal builds exactly as the
-  release does: a development version builds `exudynCPPfast` for Python 3.13 only, a release version for every
-  version (WORKFLOW.md §3). Its wheels are the release wheels if that commit becomes the release commit.
+- *Build as a release* sets `EXUDYN_RELEASE_BUILD=1`, and `setup.py` then builds `exudynCPPfast` for every Python
+  version, as for a release version; a development version otherwise builds it for Python 3.13 only (WORKFLOW.md §3,
+  #2922). So a rehearsal can run from any commit, also before `exudev issue mode --release`; run from the commit
+  after it (step 2), its wheels are the release wheels if that commit becomes the release commit.
+- The same workflow runs **weekly on `master`** (Monday, 03:17 UTC), the last release: a red run there is a change on
+  GitHub's side - the runner image, a Python patch release, a package - and shows before the next release does.
 - The metadata of the wheels, which PyPI shows as the project description, can be read in the rehearsal
   artifacts before anything is uploaded.
 
@@ -145,5 +150,6 @@ A rehearsal costs one manual run and no version number. Everything it finds woul
 | `exudynCPPfast` exists only on x86-64 Windows and Linux (no macOS, no Linux ARM) | its compiler options are x86-64 ones; setup.py decides where it is built |
 | the test suite in CI runs with `--exit-code`; the reference values are the Windows ones | known platform differences are in `UnresolvedOnLinux()` and `UnresolvedOnMacOS()`, the latter also for Linux ARM ([WORKFLOW.md](WORKFLOW.md) §5) |
 | the Python of the cibuildwheel tests on Windows has no tkinter | a test that needs the dialogs skips them where tkinter is missing |
-| the fast-module suite has a reference set of its own (`AVX2ReferenceSolutionUpdate()`) | renew it whenever the regular values move; `exudev test --fast` shows it |
+| the fast-module suite has a reference set of its own (`AVX2ReferenceSolutionUpdate()`) | renew it whenever the regular values move ([WORKFLOW.md](WORKFLOW.md) §8, *What is in a log*); the weekly `exudev build --complete --fast` and `exudev test --fast` show it |
+| `exudev linux` runs in the local copy of the manylinux image, which docker does not renew | after a new Python version (cp315, #2928) `docker pull quay.io/pypa/manylinux_2_28_x86_64` once; `/opt/python` of the image lists the versions it has |
 | a large file pushed once stays in the history (GitHub warns above 50 MB, refuses above 100 MB) | build output stays out of the repository (`.gitignore`) |

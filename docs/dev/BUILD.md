@@ -32,7 +32,7 @@ of this page is what that driver does, and what to do when it does not work.
 
 | | |
 |---|---|
-| **Python** | 3.10 – 3.14, **64 bit**. There is no 32-bit build. |
+| **Python** | 3.10 – 3.15, **64 bit**. There is no 32-bit build. |
 | **A C++17 compiler** | Visual Studio 2022 on Windows, GCC on Linux, clang (Xcode command line tools) on macOS. |
 | **numpy** | in the environment you build into; `wheel` as well if you build wheels by hand. |
 | **The repository** | see [GETTING_STARTED.md](GETTING_STARTED.md). |

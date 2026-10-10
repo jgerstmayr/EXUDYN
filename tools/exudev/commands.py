@@ -256,6 +256,7 @@ def Generate(options):
                   (['python', 'tools/checkDescriptions.py', '--check'],    'checkDescriptions'),   #the checked descriptions of the items (#2717)
                   (['python', 'tools/checkHeadings.py', '--check'],       'checkHeadings'),
                   (['python', 'tools/checkTocs.py', '--check'],           'checkTocs'),
+                  (['python', 'tools/checkLandingPages.py', '--check'],   'checkLandingPages'),   #the links of README.rst and the PyPI description (#2925)
                   (['python', 'tools/checkIssues.py', '--check'],           'checkIssues'),
                   (['python', 'tools/checkDeprecations.py', '--check'],     'checkDeprecations'),
                   (['python', 'tools/buildFigures.py', '--check'],          'buildFigures (check)'),
@@ -472,9 +473,8 @@ def Complete(options):
             for pythonTag in FastModuleVersions(versions):
                 steps += Test(OptionsWith(options, py=pythonTag, fast=True, subset=False,
                                           parallel=None, overwrite_log=True, local=False, extra=[]))
-            steps += Performance(OptionsWith(options, py=versions[-2] if len(versions) > 1
-                                             else versions[0], fast=True, overwrite_log=True,
-                                             machine_id=None, extra=[]))
+            steps += Performance(OptionsWith(options, py=FastModuleVersions(versions)[-1], fast=True,
+                                             overwrite_log=True, machine_id=None, extra=[]))
 
         steps += Examples(OptionsWith(options, py=None, serial=False, parallel=None,
                                       timeout=None, overwrite_log=True, extra=[]))
@@ -492,7 +492,10 @@ def Complete(options):
 #%%******************************************************************************************************
 def FastModuleVersions(versions):
     """Which versions get a fast-module test run: the oldest and the second newest, as decided for
-    the release matrix."""
+    the release matrix. A development version has the fast module for Python 3.13 only (setup.py),
+    so the weekly 'build --complete --fast' tests it there (#2926)."""
+    if runner.IsDevelopmentVersion():
+        return [tag for tag in versions if tag == 'P313']
     if len(versions) < 2:
         return list(versions)
 
@@ -734,7 +737,7 @@ def Test(options):
 
 #%%******************************************************************************************************
 #pytest and pytest-xdist are development tools (CLAUDE.md rule 6) and are installed in the development
-#environment only; the version matrix venvP310..venvP314 does not have them
+#environment only; the version matrix venvP310..venvP315 does not have them
 pytestEnvironment = 'venvExuP313'
 
 #the graphics tests: what the renderer would draw, as data and as small raytraced images (#2704, #2751)

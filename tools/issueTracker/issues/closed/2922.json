@@ -2,12 +2,16 @@
   "number": 2922,
   "title": "GitHub CI as a release build before the release: a rehearsal input and a weekly run",
   "author": "Claude-JG",
-  "status": "RAISED",
+  "status": "RESOLVED",
   "type": "IMPROVEMENT",
   "priority": "NORMAL",
   "effort": "MEDIUM",
   "description": "the rehearsal on a release/* branch (docs/dev/RELEASE.md) builds as a release only from the commit after 'exudev issue mode --release'; a dev version builds exudynCPPfast for cp313 only, so the Linux ARM failure of 1.13 (#2918) shows there for one version. A workflow_dispatch input that builds the fast module for every version (setup.py reads EXUDYN_COMPILE_EXUDYN_FAST, but the dev rule overrides it), and a weekly scheduled run on a release/* branch to catch changes on the GitHub side (runner image, Python patch release, numpy)",
   "dateRaised": "2026-10-09",
   "deadline": "2027-04-07",
-  "file": ".github/workflows/wheels.yml"
+  "dateResolved": "2026-10-10 15:15",
+  "resolvedAuthor": "Claude-JG",
+  "file": ".github/workflows/wheels.yml",
+  "releaseNotes": "a rehearsal of a release on GitHub builds as a release: EXUDYN_RELEASE_BUILD=1 makes setup.py build the fast module for every Python version also in a development version; Run workflow of wheels.yml has the input 'build as a release'; the workflow runs weekly on master",
+  "resolvedInVersion": "1.13.28"
 }

@@ -21,7 +21,7 @@ If you only want to *use* Exudyn, you do not need any of this: `pip install exud
 
 - **git**. On Windows, [Git for Windows](https://git-scm.com/download/win) brings both the `git`
   command and the *Git Bash* shell.
-- **A Python of a supported version**, 3.10 – 3.14, 64 bit. Anaconda or Miniconda is what the
+- **A Python of a supported version**, 3.10 – 3.15, 64 bit. Anaconda or Miniconda is what the
   project uses, because the per-version test matrix is conda environments; any other Python of the
   right version works for a single build.
 - **A C++17 compiler**: Visual Studio 2022 on Windows, GCC on Linux, the Xcode command line tools
@@ -79,7 +79,7 @@ active: on Windows the *Anaconda Prompt* (or a shell after `conda init`), elsewh
 `conda init`.
 
 That one environment covers the generators, the documentation build, the checking tools and the
-test suite. The per-version environments `venvP310` … `venvP314` exist only for the release test
+test suite. The per-version environments `venvP310` … `venvP315` exist only for the release test
 matrix and are not needed to start.
 
 The recipe in full — what each package is for, the package→feature map and the scipy pin — is in

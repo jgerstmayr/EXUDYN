@@ -6,7 +6,7 @@
 
 Exudyn is a Python package with a compiled core, so what you need is a Python it was built for.
 
-**Wheels are published for Python 3.10, 3.11, 3.12, 3.13 and 3.14**, on Windows, Linux and
+**Wheels are published for Python 3.10, 3.11, 3.12, 3.13, 3.14 and 3.15**, on Windows, Linux and
 MacOS. Newer Python versions are usually added in line with the Python release cycle (every
 October).
 

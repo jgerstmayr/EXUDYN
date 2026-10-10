@@ -2,12 +2,16 @@
   "number": 2923,
   "title": "the test logs carry the home directory of the account, which the pre-commit hook refuses",
   "author": "Claude-JG",
-  "status": "RAISED",
+  "status": "RESOLVED",
   "type": "IMPROVEMENT",
   "priority": "NORMAL",
   "effort": "LOW",
   "description": "the release logs of 1.13.3 had C:\\Users\\<account> in 'first module location=' and in tracebacks; they were committed only after writing it as %USERPROFILE% by hand. The runners should write the home directory as %USERPROFILE% (Windows) or ~ themselves",
   "dateRaised": "2026-10-09",
   "deadline": "2027-04-07",
-  "file": "python/testing/testRunnerTools.py"
+  "dateResolved": "2026-10-10 15:15",
+  "resolvedAuthor": "Claude-JG",
+  "file": "python/testing/testRunnerTools.py",
+  "releaseNotes": "the test runners write the home directory into their logs as %USERPROFILE% (Windows) or ~ (testRunnerTools.WithoutHomeDirectory), so the logs can be committed as written",
+  "resolvedInVersion": "1.13.29"
 }

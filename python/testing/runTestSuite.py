@@ -654,7 +654,10 @@ exu.config.printToConsole = True
 #previous one, which slowly filled the log directories.
 localFileName = localFileName+'.txt'
 
+from exudyn.basicUtilities import OutputFilePath
+logFilePath = OutputFilePath(logFileName, 'runTestSuite') #where the C++ writer put it (#2500)
 exu.SetWriteToFile(filename='', flagWriteToFile=False, flagAppend=False) #stop writing to file, close file
+testRunnerTools.HideHomeDirectoryInLog(logFilePath) #the logs are committed (#2923)
 exu.config.outputDirectory = '' #global setting, must not outlive the run (#2418)
 
 #write summary for github actions

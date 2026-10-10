@@ -368,3 +368,36 @@ try the fix and then you could check (and fix) these files manually.")*
     - `useIndex2Constraints` without Newmark;
     - the solver timeout of 2 s of `--run` cutting real-time simulations short;
   - `PARSimulation`, `Example_HT` and `PAR_UE1_Loesung2025` run now.
+
+<a id="rg10-29-3"></a>
+### RG10.29.3, .4, .6-.9 — the release tooling after 1.13 (2026-10-10, #2922, #2923, #2925-#2928)
+
+*(Maintainer 2026-10-10: "Also do RG10.29.")* RG10.29.5 (#2924, what the release notes of a minor release contain)
+stays open: a decision of the maintainer.
+
+- **#2922, a rehearsal as a release build**: `setup.py` builds the fast module for every Python version when
+  `EXUDYN_RELEASE_BUILD=1`, also for a `.dev` version. `wheels.yml` has the input *build as a release* for *Run
+  workflow*, passed to setup.py (into the manylinux container through `CIBW_ENVIRONMENT_PASS_LINUX`), and a weekly
+  schedule (Monday 03:17 UTC). A schedule of GitHub always runs on the default branch, so the weekly run builds
+  `master`, the last release - which is what catches a change on GitHub's side. Not run here: it needs a push.
+- **#2923, the home directory in the logs**: `testRunnerTools.WithoutHomeDirectory` writes the home directory as
+  `%USERPROFILE%` (Windows, either slash, any case) or `~`, a longer account name with the same beginning untouched; the
+  three runners rewrite their log after closing it. Tests in `test_runnerLogs.py`.
+- **#2925, the links of the landing pages**: `tools/checkLandingPages.py`, in `exudev generate --all-checks`. README.rst
+  and the text of `[project.readme]` are parsed with docutils (a warning is a finding); a relative link must name a
+  file of the repository and is not allowed at all in the PyPI text; a link to `github.com/jgerstmayr/EXUDYN/blob/...`
+  or to `exudyn.readthedocs.io/en/<version>/<page>.html` must name an existing file or page source. No network. Both
+  texts pass; the tests feed it the link of #2917 (`docs/theDoc/theDoc.pdf`).
+- **#2926, the fast-module suite weekly**: the weekly routine is `exudev build --complete --fast`; in a development
+  version it runs the fast-module suite and performance run on Python 3.13, the one version that has the module
+  (`FastModuleVersions`), instead of failing on 3.10. WORKFLOW.md says that a reference value that moves is
+  re-recorded in `AVX2ReferenceSolutionUpdate()` in the same commit, or the commit says that the fast value stayed.
+- **#2927**: dependency group `release` with `twine>=6.1` and `pkginfo>=1.12`; RELEASE.md names it.
+- **#2928, Python 3.15**: the condition of the issue holds - cibuildwheel 4.3.0 (2026-10-05) builds cp315 without the
+  prerelease switch (its prerelease gate is cp316 now), and numpy 2.5.3, scipy 1.18.1 and matplotlib 3.11.2 have cp315
+  wheels (PyPI, queried 2026-10-10). `wheels.yml` builds cp310-cp315 with cibuildwheel 4.3.0 (24 jobs), the GitLab
+  matrix has cp315, `exudev`'s version matrix is P310-P315, the classifiers, README.rst, the PyPI text and the
+  developer documentation say 3.10-3.15. cibuildwheel 4 repairs Windows wheels with delvewheel by default;
+  `repair-wheel-command = ""` keeps the Windows wheels as cibuildwheel 3 built them. The local manylinux image has no
+  cp315 (`/opt/python`: cp38-cp314); RELEASE.md names the `docker pull` among the traps. The first CI run with 4.3.0
+  is the test of the cibuildwheel upgrade.

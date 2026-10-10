@@ -368,7 +368,10 @@ if __name__ == '__main__': #include to avoid potential problems with multiproces
         exu.Print('')
         exu.Print('FAILED: ' + str(len(unexpectedFailures)) + ' unexpected example failure(s)')
 
+from exudyn.basicUtilities import OutputFilePath
+logFilePath = OutputFilePath(logFileName, 'runTestExamples') #where the C++ writer put it (#2500)
 exu.SetWriteToFile(filename='', flagWriteToFile=False, flagAppend=False) #stop writing to file, close file
+testRunnerTools.HideHomeDirectoryInLog(logFilePath) #the logs are committed (#2923)
 
 if __name__ == '__main__':
     if useExitCode:

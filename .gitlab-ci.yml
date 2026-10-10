@@ -36,7 +36,7 @@ wheels_linux:
   image: quay.io/pypa/manylinux_2_28_x86_64
   parallel:
     matrix:
-      - PYTAG: [cp310, cp311, cp312, cp313, cp314]
+      - PYTAG: [cp310, cp311, cp312, cp313, cp314, cp315]
   variables:
     # regular runs do not exercise the __FAST_EXUDYN_LINALG binary, and skipping it roughly
     # halves compile time; release builds must NOT set this

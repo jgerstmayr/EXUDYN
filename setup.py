@@ -424,11 +424,17 @@ ext_modules = [
     ),
 ]
 
+#EXUDYN_RELEASE_BUILD=1 builds a development version the way a release is built - the fast module for every Python
+#version - so that the rehearsal of a release on GitHub sees what the release will see (#2922)
+releaseBuild = os.environ.get('EXUDYN_RELEASE_BUILD', '').strip().lower() in ('1', 'true', 'yes', 'on')
+if releaseBuild:
+    print('setup.py: EXUDYN_RELEASE_BUILD -> built as a release')
+
 if config['compileExudynFast']:
     #a development version builds the fast module for ONE Python version only, to keep the wheel
     #matrix affordable; 3.13 is the most used version (maintainer decision 2026-09-16, #2466 -
     #it was 3.10 before). A release version builds it for every Python version.
-    if not (pyVersionString == '3.13') and isDevelopmentVersion:
+    if not (pyVersionString == '3.13') and isDevelopmentVersion and not releaseBuild:
         config['compileExudynFast'] = False
 
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -983,6 +989,7 @@ setup(
         "Programming Language :: Python :: 3.12",
         "Programming Language :: Python :: 3.13",
         "Programming Language :: Python :: 3.14",
+        "Programming Language :: Python :: 3.15",
         "Intended Audience :: Science/Research",
         #"License :: OSI Approved :: BSD License", #deprecated since 2025-10!
         "Operating System :: Microsoft :: Windows", #allow Windows 11

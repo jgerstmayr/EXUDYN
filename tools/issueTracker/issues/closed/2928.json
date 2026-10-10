@@ -2,12 +2,16 @@
   "number": 2928,
   "title": "Python 3.15: GitHub CI, the version matrix and the documentation",
   "author": "Claude-JG",
-  "status": "RAISED",
+  "status": "RESOLVED",
   "type": "IMPROVEMENT",
   "priority": "NORMAL",
   "effort": "LOW",
   "description": "the cp315 wheel of 1.13.6 was built by hand on Windows (Python 3.15.0rc3, numpy 2.5.3) and passes the test suite of both modules; GitHub CI builds cp310-cp314 only (matrix python-version and cibuildwheel 3.4.1), the installation page and README.rst say 3.10 - 3.14, venvP315 is not part of the exudev version matrix. Add 3.15 once cibuildwheel and numpy support it in a final release",
   "dateRaised": "2026-10-09",
   "deadline": "2027-04-07",
-  "file": ".github/workflows/wheels.yml"
+  "dateResolved": "2026-10-10 15:15",
+  "resolvedAuthor": "Claude-JG",
+  "file": ".github/workflows/wheels.yml",
+  "releaseNotes": "Python 3.15: GitHub CI builds cp310-cp315 with cibuildwheel 4.3.0 (Windows wheels unrepaired as before), GitLab CI and the exudev version matrix include 3.15, and the classifiers and the documentation say 3.10-3.15",
+  "resolvedInVersion": "1.13.33"
 }

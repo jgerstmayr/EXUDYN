@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.13 | Newborn | 28 | 1.13.27 |
+| 1.13 | Newborn | 34 | 1.13.33 |
 | 1.12 | Metheney | 367 | 1.12.462 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
@@ -30,6 +30,30 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.13 - Newborn (current)
 
+- **1.13.33** `IMPROVEMENT` `NORMAL` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` Python 3.15: GitHub CI, the version matrix and the documentation (#2928)
+  - description: the cp315 wheel of 1.13.6 was built by hand on Windows (Python 3.15.0rc3, numpy 2.5.3) and passes the test suite of both modules; GitHub CI builds cp310-cp314 only (matrix python-version and cibuildwheel 3.4.1), the installation page and README.rst say 3.10 - 3.14, venvP315 is not part of the exudev version matrix. Add 3.15 once cibuildwheel and numpy support it in a final release
+  - **notes:** Python 3.15: GitHub CI builds cp310-cp315 with cibuildwheel 4.3.0 (Windows wheels unrepaired as before), GitLab CI and the exudev version matrix include 3.15, and the classifiers and the documentation say 3.10-3.15
+  - date resolved: **2026-10-10 15:15**, date raised: 2026-10-09
+- **1.13.32** `IMPROVEMENT` `LOW` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` twine is not part of the development environment (#2927)
+  - description: the 1.13 upload needed twine \>= 6.1 and pkginfo \>= 1.12 for Metadata-Version 2.4 (License-Expression, License-File); an older twine in the base environment reported the fields as malformed. A dependency group 'release' with twine\>=6.1, used by docs/dev/RELEASE.md
+  - **notes:** dependency group release in pyproject.toml with twine\>=6.1 and pkginfo\>=1.12, for the upload of wheels with Metadata-Version 2.4
+  - date resolved: **2026-10-10 15:15**, date raised: 2026-10-09
+- **1.13.31** `TESTING` `NORMAL` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` the fast-module suite runs only at a release, and its reference set goes stale (#2926)
+  - description: AVX2ReferenceSolutionUpdate() was recorded 2026-09-17 and not renewed when the regular values moved; the first release run of 1.13 found 26 + 4 failures (\#2912). 'exudev test --fast' (cp313 builds the fast module also in dev mode) belongs into the weekly routine with the complete build, and a reference change should say whether the fast set moves too
+  - **notes:** the weekly exudev build --complete --fast runs the fast-module suite on Python 3.13 in a development version, the one version with the fast module; WORKFLOW.md: a reference value that moves is re-recorded in AVX2ReferenceSolutionUpdate() in the same commit
+  - date resolved: **2026-10-10 15:15**, date raised: 2026-10-09
+- **1.13.30** `CHECK` `NORMAL` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` the links of the landing pages and the PyPI description are not checked (#2925)
+  - description: 1.13.2 could not be published because the PyPI description (inline in pyproject.toml, part of every wheel) and the stale README.md linked to the deleted docs/theDoc/theDoc.pdf (\#2917). A check in the commit gate: every repository path linked from README.rst and \[project.readme\] exists, and the readme text renders without warnings (docutils)
+  - **notes:** tools/checkLandingPages.py, part of exudev generate --all-checks: README.rst and the PyPI description render with docutils without a warning, their links into the repository and into the documentation name existing files and pages, and the PyPI description has no relative link
+  - date resolved: **2026-10-10 15:15**, date raised: 2026-10-09
+- **1.13.29** `IMPROVEMENT` `NORMAL` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` the test logs carry the home directory of the account, which the pre-commit hook refuses (#2923)
+  - description: the release logs of 1.13.3 had C:\\Users\\\<account\> in 'first module location=' and in tracebacks; they were committed only after writing it as %USERPROFILE% by hand. The runners should write the home directory as %USERPROFILE% (Windows) or ~ themselves
+  - **notes:** the test runners write the home directory into their logs as %USERPROFILE% (Windows) or ~ (testRunnerTools.WithoutHomeDirectory), so the logs can be committed as written
+  - date resolved: **2026-10-10 15:15**, date raised: 2026-10-09
+- **1.13.28** `IMPROVEMENT` `NORMAL` `MEDIUM EFF` `raised by: Claude-JG` `resolved by: Claude-JG` GitHub CI as a release build before the release: a rehearsal input and a weekly run (#2922)
+  - description: the rehearsal on a release/\* branch (docs/dev/RELEASE.md) builds as a release only from the commit after 'exudev issue mode --release'; a dev version builds exudynCPPfast for cp313 only, so the Linux ARM failure of 1.13 (\#2918) shows there for one version. A workflow\_dispatch input that builds the fast module for every version (setup.py reads EXUDYN\_COMPILE\_EXUDYN\_FAST, but the dev rule overrides it), and a weekly scheduled run on a release/\* branch to catch changes on the GitHub side (runner image, Python patch release, numpy)
+  - **notes:** a rehearsal of a release on GitHub builds as a release: EXUDYN\_RELEASE\_BUILD=1 makes setup.py build the fast module for every Python version also in a development version; Run workflow of wheels.yml has the input 'build as a release'; the workflow runs weekly on master
+  - date resolved: **2026-10-10 15:15**, date raised: 2026-10-09
 - **1.13.27** `IMPROVEMENT` `NORMAL` `MEDIUM EFF` `raised by: Claude-JG` `resolved by: Claude-JG` exudev scripts --fix: rotationMarker0/1 into the localHT of the marker; string node types; the removed HT shortcut (#2946)
   - description: maintainer 2026-10-10: rotationMarker0/1 of a joint or rigid spring-damper must be a rigid marker, so the rotation can go into its localHT; problems only where the marker is used more than once - try the fix, then check and fix the lecture files by hand. Found on the lectures: AddRigidBody took nodeType=str(exu.NodeType.X), which CreateRigidBody refuses, and rigidBodyUtilities.HT (removed by \#2781) was not known to the checker
   - **notes:** exudev scripts --fix moves rotationMarker0/1 into the localHT of a marker the script creates for this item only, gives CreateRigidBody the NodeType itself instead of a string, and renames the removed rigidBodyUtilities.HT to HomogeneousTransformation. revision2026c step RG10.31.14

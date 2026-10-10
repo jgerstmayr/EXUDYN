@@ -234,11 +234,11 @@ def testIssueHtmlWritesTheOverviewAlone(tmp_path, monkeypatch):
 
 #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 def testNewerPythonsAreAcceptedWhenNamedButNotInAll():
-    """#2891: --py 315 / 3.16 select venvP315 / venvP316; 'all' stays the version matrix 3.10-3.14"""
+    """#2891: --py 316 selects venvP316; 'all' is the version matrix 3.10-3.15 (#2928)"""
     assert runner.NormalizePythonVersions('315') == ['P315']
     assert runner.NormalizePythonVersions('3.16,P313') == ['P316', 'P313']
     assert runner.EnvironmentName('P315') == 'venvP315'
-    assert runner.NormalizePythonVersions('all') == ['P310', 'P311', 'P312', 'P313', 'P314']
+    assert runner.NormalizePythonVersions('all') == ['P310', 'P311', 'P312', 'P313', 'P314', 'P315']
     with pytest.raises(SystemExit):
         runner.NormalizePythonVersions('317')
 

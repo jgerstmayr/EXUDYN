@@ -8,10 +8,10 @@ Every entry carries the **type** of the issue, then its **priority** and its **e
 
 General information on current version:
 
-- Exudyn version = 1.13.27.dev1
+- Exudyn version = 1.13.33.dev1
 - last change = 2026-10-10
-- Number of issues = 2947
-- Number of resolved issues = 2804 (27 in current version)
+- Number of issues = 2949
+- Number of resolved issues = 2810 (33 in current version)
 
 ## Resolved issues and resolved bugs before version 1.13
 
@@ -9039,26 +9039,14 @@ The following list contains the issues which have been **RESOLVED** in the accor
 
 ## Open issues
 
-- `IMPROVEMENT` <span class="textorange">`NORMAL`</span> `LOW EFF` `raised by: Claude-JG` Python 3.15: GitHub CI, the version matrix and the documentation (#2928)
-  - description: the cp315 wheel of 1.13.6 was built by hand on Windows (Python 3.15.0rc3, numpy 2.5.3) and passes the test suite of both modules; GitHub CI builds cp310-cp314 only (matrix python-version and cibuildwheel 3.4.1), the installation page and README.rst say 3.10 - 3.14, venvP315 is not part of the exudev version matrix. Add 3.15 once cibuildwheel and numpy support it in a final release
-  - date raised: 2026-10-09
-- `IMPROVEMENT` <span class="textblue">`LOW`</span> `LOW EFF` `raised by: Claude-JG` twine is not part of the development environment (#2927)
-  - description: the 1.13 upload needed twine \>= 6.1 and pkginfo \>= 1.12 for Metadata-Version 2.4 (License-Expression, License-File); an older twine in the base environment reported the fields as malformed. A dependency group 'release' with twine\>=6.1, used by docs/dev/RELEASE.md
-  - date raised: 2026-10-09
-- `TESTING` <span class="textorange">`NORMAL`</span> `LOW EFF` `raised by: Claude-JG` the fast-module suite runs only at a release, and its reference set goes stale (#2926)
-  - description: AVX2ReferenceSolutionUpdate() was recorded 2026-09-17 and not renewed when the regular values moved; the first release run of 1.13 found 26 + 4 failures (\#2912). 'exudev test --fast' (cp313 builds the fast module also in dev mode) belongs into the weekly routine with the complete build, and a reference change should say whether the fast set moves too
-  - date raised: 2026-10-09
-- `CHECK` <span class="textorange">`NORMAL`</span> `LOW EFF` `raised by: Claude-JG` the links of the landing pages and the PyPI description are not checked (#2925)
-  - description: 1.13.2 could not be published because the PyPI description (inline in pyproject.toml, part of every wheel) and the stale README.md linked to the deleted docs/theDoc/theDoc.pdf (\#2917). A check in the commit gate: every repository path linked from README.rst and \[project.readme\] exists, and the readme text renders without warnings (docutils)
-  - date raised: 2026-10-09
+- `TESTING` `MEDIUM EFF` `raised by: Claude-JG` portable implementations of the math functions, their speed and their results (#2948)
+  - description: revision2026c step RG4.1.3.2: the double precision functions of musl libc 1.2.5 (MIT; fdlibm/FreeBSD and Arm optimized-routines) ported to C++ as EXUmath::Portable::Sin, ... without the FMA code paths, so that they give the same bits on every platform; exudyn.experimental.EvaluateMathFunction(..., implementation='portable') evaluates and times them; compared with the library of each platform and with correctly rounded values (mpmath), and timed against it
+  - date raised: 2026-10-10
+- `TESTING` `MEDIUM EFF` `raised by: Claude-JG` the results of the math library functions on each platform, as Exudyn's C++ calls them (#2947)
+  - description: revision2026c step RG4.1.3.1: evidence for the platform differences (RG4.1). exudyn.experimental.EvaluateMathFunction(name, x, y, implementation, repetitions) evaluates sin, cos, tan, asin, acos, atan, atan2, exp, log, pow, sinh, cosh, tanh, cbrt, fmod and sqrt (the control) in the compiled module; python/testing/mathFunctionsPlatform.py writes the bit patterns of a fixed input set to a JSON file, compares two such files (Windows, Linux, macOS) and, with mpmath, counts the results that are not correctly rounded
+  - date raised: 2026-10-10
 - `CHANGE` <span class="textorange">`NORMAL`</span> `LOW EFF` `raised by: Claude-JG` what the release notes of a minor release contain (#2924)
   - description: WriteReleaseNotes cuts the section of the current release from CHANGELOG.md: for 1.13 the issues resolved after the bump - the fixes of the release itself (\#2911-\#2920), not the revision 1.11 -\> 1.13 behind it. Decide (maintainer): the revisions chapter, the issues since the last published version, or a hand-written summary plus the list
-  - date raised: 2026-10-09
-- `IMPROVEMENT` <span class="textorange">`NORMAL`</span> `LOW EFF` `raised by: Claude-JG` the test logs carry the home directory of the account, which the pre-commit hook refuses (#2923)
-  - description: the release logs of 1.13.3 had C:\\Users\\\<account\> in 'first module location=' and in tracebacks; they were committed only after writing it as %USERPROFILE% by hand. The runners should write the home directory as %USERPROFILE% (Windows) or ~ themselves
-  - date raised: 2026-10-09
-- `IMPROVEMENT` <span class="textorange">`NORMAL`</span> `MEDIUM EFF` `raised by: Claude-JG` GitHub CI as a release build before the release: a rehearsal input and a weekly run (#2922)
-  - description: the rehearsal on a release/\* branch (docs/dev/RELEASE.md) builds as a release only from the commit after 'exudev issue mode --release'; a dev version builds exudynCPPfast for cp313 only, so the Linux ARM failure of 1.13 (\#2918) shows there for one version. A workflow\_dispatch input that builds the fast module for every version (setup.py reads EXUDYN\_COMPILE\_EXUDYN\_FAST, but the dev rule overrides it), and a weekly scheduled run on a release/\* branch to catch changes on the GitHub side (runner image, Python patch release, numpy)
   - date raised: 2026-10-09
 - `TESTING` <span class="textorange">`NORMAL`</span> `MEDIUM EFF` `raised by: Claude-JG` the cable run of perfAccessFunctionsAD is ill-conditioned: its result moves by 20% with the Newton settings (#2914)
   - description: perfAccessFunctionsAD:cable-n200-implicit (200 ANCF cable elements, axialStiffness 1000, massPerLength 1, on spring-dampers) gives 0.004663 with the default modified Newton, 0.005112 with full Newton, 0.005388 with relativeTolerance 1e-10 and 0.005266 with both (15 s instead of 0.6 s); the fast module differs by 8.4e-7. A performance run should judge a converged result: choose parameters (stiffness, mass, step size) for which the Newton settings do not move it, then re-record its reference and timing

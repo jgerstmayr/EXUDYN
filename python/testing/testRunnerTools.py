@@ -206,6 +206,37 @@ def ResolveLogFile(logFileName, allowOverwrite=False, overwriteFlagName='--overw
 
 
 #%%******************************************************************************************************
+def WithoutHomeDirectory(text):
+    """
+    The text with the home directory of this account written as %USERPROFILE% (Windows) or ~ (#2923).
+
+    The logs are committed, and a path under the home directory - the first module location, a
+    traceback - carries the account name, which the pre-commit hook refuses. The same rule as
+    'python -m exudyn info' (#2695); on Windows also with forward slashes and in any case.
+    """
+    import re
+    home = os.path.expanduser('~')
+    if home in ('', os.sep, '~'):
+        return text
+    if sys.platform == 'win32':
+        pattern = re.escape(home.replace('\\', '/')).replace('/', r'[\\/]')
+        return re.sub(pattern + r'(?![A-Za-z0-9_.-])', '%USERPROFILE%', text, flags=re.IGNORECASE)
+    return re.sub(re.escape(home.rstrip('/')) + r'(?![A-Za-z0-9_.-])', '~', text)
+
+
+def HideHomeDirectoryInLog(logFileName):
+    """write the home directory in the closed log file as %USERPROFILE% or ~ (WithoutHomeDirectory, #2923)"""
+    if not os.path.isfile(logFileName):
+        return
+    with open(logFileName, encoding='utf-8', errors='surrogateescape', newline='') as f:
+        text = f.read()
+    hidden = WithoutHomeDirectory(text)
+    if hidden != text:
+        with open(logFileName, 'w', encoding='utf-8', errors='surrogateescape', newline='') as f:
+            f.write(hidden)
+
+
+#%%******************************************************************************************************
 def PackageVersionReport(packages=None):
     """
     Multi-line report of the installed versions of the packages the tests depend on.

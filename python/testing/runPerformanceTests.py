@@ -369,7 +369,10 @@ exu.Print('Reference value (i9, 2023-12, Linux  )= 42 - 44 seconds (regular) / 3
 exu.Print('****************************************************')
 
     
+from exudyn.basicUtilities import OutputFilePath
+logFilePath = OutputFilePath(logFileName, 'runPerformanceTests') #where the C++ writer put it (#2500)
 exu.SetWriteToFile(filename='', flagWriteToFile=False, flagAppend=False) #stop writing to file, close file
+testRunnerTools.HideHomeDirectoryInLog(logFilePath) #the logs are committed (#2923)
 
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #the exit code (#2504). Until this existed the runner ALWAYS returned 0,

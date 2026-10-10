@@ -16,7 +16,7 @@ Python is **not** on `PATH` under a plain shell. Use the named conda environment
 packages are the dependency groups in `pyproject.toml` (`pip install --group dev`, pip >= 25.1) plus
 the `[tests]` extra of the locally built wheel; the recipe is in
 [`docs/howTo/condaEnvironments.md`](../howTo/condaEnvironments.md). The
-driver `exudev` selects the environment itself – `--py P310`…`P314`, `--py all`, or
+driver `exudev` selects the environment itself – `--py P310`…`P315`, `--py all`, or
 `--env NAME` – so nothing has to be activated by hand; see
 [`tools/exudev/README.md`](../../tools/exudev/README.md).
 
@@ -515,9 +515,9 @@ exemption.
 
 | leg | how it is covered |
 |---|---|
-| **all four platforms**: Windows, Linux x86_64 and ARM, macOS; cp310–314 | GitHub Actions `wheels.yml`, on a push to `master`, a pull request, or *Run workflow* - at a release, and in its rehearsal on a `release/*` branch ([RELEASE.md](RELEASE.md)) |
-| **Linux x86_64, cp310–314** | `.gitlab-ci.yml`, on the internal GitLab's shared Docker runners |
-| **Windows x64** | this development machine; `exudev build --complete` weekly, `exudev release` at a release |
+| **all four platforms**: Windows, Linux x86_64 and ARM, macOS; cp310–315 | GitHub Actions `wheels.yml`, on a push to `master`, a pull request, weekly on `master`, or *Run workflow* - at a release, and in its rehearsal on a `release/*` branch as a release build ([RELEASE.md](RELEASE.md), #2922) |
+| **Linux x86_64, cp310–315** | `.gitlab-ci.yml`, on the internal GitLab's shared Docker runners |
+| **Windows x64** | this development machine; `exudev build --complete --fast` weekly - with the fast module, which a development version has for Python 3.13 only - and `exudev release` at a release |
 | **macOS** | GitHub CI; a real Mac for the manual check of the dialogs ([GUI_MANUAL_CHECK.md](GUI_MANUAL_CHECK.md)) |
 | **docs** | GitLab's `docs` job builds sphinx with `-W` and does not deploy; GitHub Pages and Read the Docs build from `master` |
 
@@ -573,7 +573,7 @@ passes or fails - the log *is* the result.
 |---|---|---|
 | **sync** | `v2-dev` only, knowingly non-working, to move work between machines | none — but the message must be prefixed `WIP:` and say what is broken |
 | **normal** | the default for every real change | all four gates in §8 |
-| **release** | a minor version advance, i.e. an Exudyn *Release* | §8 plus the full `Examples` run, the wheel matrix across P310–P314, and maintainer sign-off |
+| **release** | a minor version advance, i.e. an Exudyn *Release* | §8 plus the full `Examples` run, the wheel matrix across P310–P315, and maintainer sign-off |
 
 ## 8. The four gates for a normal commit
 
@@ -764,6 +764,12 @@ file gets a `_fast` suffix, so the two runs do not overwrite each other. If the 
 be loaded — no AVX2 on this CPU, or it is not in the installed package — the run **stops** rather
 than quietly testing the regular module under a fast-module log name.
 
+**A reference value that moves, moves in both sets.** When a value of `TestExamplesReferenceSolution()` changes,
+run `exudev test --fast` as well, and in the same commit re-record the entries of `AVX2ReferenceSolutionUpdate()`
+from the `_fast` log, or say in the commit that the fast values stayed. The set recorded on 2026-09-17 was not
+renewed when the regular values moved, and the fast-module suite of the 1.13 release failed on 30 stale entries
+(#2912, #2926). The weekly `exudev build --complete --fast` runs it.
+
 ### Release testing matrix
 
 Decided 2026-09-16, adjusted to the two variants of step R2.10:
@@ -771,7 +777,7 @@ Decided 2026-09-16, adjusted to the two variants of step R2.10:
 | what | against which Python versions |
 |---|---|
 | full `runTestSuite.py`, default module | every supported version |
-| full `runTestSuite.py --fast-module` | the **oldest** and the **second newest** (today 3.10 and 3.13) |
+| full `runTestSuite.py --fast-module` | the **oldest** and the **second newest** (today 3.10 and 3.14); in a development version 3.13, the one with the fast module |
 | examples | one version, default module |
 | `runPerformanceTests.py` | `--fast-module`, plus one default-module run to compare against |
 

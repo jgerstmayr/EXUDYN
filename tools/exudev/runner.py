@@ -29,10 +29,10 @@ import sys
 import time
 
 #the conda environments, see docs/howTo/condaEnvironments.md
-allPythonVersions = ['P310', 'P311', 'P312', 'P313', 'P314']   #the version matrix, which 'all' means
+allPythonVersions = ['P310', 'P311', 'P312', 'P313', 'P314', 'P315']   #the version matrix, which 'all' means
 #newer Pythons, accepted when named (--py 315 -> venvP315) but not part of 'all' until wheels are built
 #for them (#2891)
-newerPythonVersions = ['P315', 'P316']
+newerPythonVersions = ['P316']
 generatorEnvironment = 'venvExuP313'     #generators, documentation and the checking tools
 
 onWindows = (sys.platform == 'win32')

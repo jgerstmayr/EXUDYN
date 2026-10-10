@@ -2,12 +2,16 @@
   "number": 2926,
   "title": "the fast-module suite runs only at a release, and its reference set goes stale",
   "author": "Claude-JG",
-  "status": "RAISED",
+  "status": "RESOLVED",
   "type": "TESTING",
   "priority": "NORMAL",
   "effort": "LOW",
   "description": "AVX2ReferenceSolutionUpdate() was recorded 2026-09-17 and not renewed when the regular values moved; the first release run of 1.13 found 26 + 4 failures (#2912). 'exudev test --fast' (cp313 builds the fast module also in dev mode) belongs into the weekly routine with the complete build, and a reference change should say whether the fast set moves too",
   "dateRaised": "2026-10-09",
   "deadline": "2027-04-07",
-  "file": "docs/dev/WORKFLOW.md"
+  "dateResolved": "2026-10-10 15:15",
+  "resolvedAuthor": "Claude-JG",
+  "file": "docs/dev/WORKFLOW.md",
+  "releaseNotes": "the weekly exudev build --complete --fast runs the fast-module suite on Python 3.13 in a development version, the one version with the fast module; WORKFLOW.md: a reference value that moves is re-recorded in AVX2ReferenceSolutionUpdate() in the same commit",
+  "resolvedInVersion": "1.13.31"
 }
