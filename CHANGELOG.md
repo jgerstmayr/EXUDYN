@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.13 | Newborn | 24 | 1.13.23 |
+| 1.13 | Newborn | 25 | 1.13.24 |
 | 1.12 | Metheney | 367 | 1.12.462 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
@@ -30,6 +30,10 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.13 - Newborn (current)
 
+- **1.13.24** <span class="textred">`BUG`</span> `HIGH` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` exudev scripts --check still shows conda's ERROR line, and exited 0 with the new verdict (#2943)
+  - description: maintainer 2026-10-10, after \#2942: the output still shows 'ERROR conda.cli.main\_run ... failed'. Found while fixing it: the verdict 'FAILED: scripts need changes' of \#2942 is not equal to 'FAILED', so exudev ended with exit code 0 although a step failed
+  - **notes:** exudev scripts --check shows its output without conda's ERROR line, and exudev exits with 1 for every verdict starting with FAILED (the verdict of \#2942 had exited 0). revision2026c step RG10.31.11
+  - date resolved: **2026-10-10 11:18**, date raised: 2026-10-10
 - **1.13.23** `IMPROVEMENT` `NORMAL` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` exudev scripts --check looks like it failed with an error when it only found something (#2942)
   - description: maintainer 2026-10-10: '.\\exudev.bat scripts --check ..\\..\\teaching\\Innsbruck\\Maschinendynamik\_WS2019\\' gives an error. Measured: no exception - 79 scripts checked, 504 findings, and --check returns 1 as designed; conda run then prints 'ERROR conda.cli.main\_run:execute(125): ... failed. (See above for error)' and the summary FAILED, which read as a crash of the tool
   - **notes:** exudev scripts --check says that it failed because the scripts need changes (a closing line, the verdict 'FAILED: scripts need changes'), and every exudev step explains conda's ERROR line as the passed-on exit code. revision2026c step RG10.31.10

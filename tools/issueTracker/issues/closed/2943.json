@@ -1,0 +1,17 @@
+{
+  "number": 2943,
+  "title": "exudev scripts --check still shows conda's ERROR line, and exited 0 with the new verdict",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "BUG",
+  "priority": "HIGH",
+  "effort": "LOW",
+  "description": "maintainer 2026-10-10, after #2942: the output still shows 'ERROR conda.cli.main_run ... failed'. Found while fixing it: the verdict 'FAILED: scripts need changes' of #2942 is not equal to 'FAILED', so exudev ended with exit code 0 although a step failed",
+  "dateRaised": "2026-10-10",
+  "deadline": "2027-04-08",
+  "dateResolved": "2026-10-10 11:18",
+  "resolvedAuthor": "Claude-JG",
+  "file": "tools/exudev/runner.py",
+  "releaseNotes": "exudev scripts --check shows its output without conda's ERROR line, and exudev exits with 1 for every verdict starting with FAILED (the verdict of #2942 had exited 0). revision2026c step RG10.31.11",
+  "resolvedInVersion": "1.13.24"
+}

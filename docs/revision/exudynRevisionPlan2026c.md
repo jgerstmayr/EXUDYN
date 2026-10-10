@@ -493,6 +493,10 @@ CLOSED 2026-10-10 (#2941): the rectangle with size 0 in z, `addFaces=False, addE
 
 CLOSED 2026-10-10 (#2942): a closing line of the checker, the verdict 'FAILED: scripts need changes', and a note for conda's ERROR line in every exudev step.
 
+#### **CLOSED_RG10.31.11** Drop conda's ERROR line from the scripts check and keep its exit code
+
+CLOSED 2026-10-10 (#2943): the step reads its output through a filter without that line; every verdict starting with FAILED sets the exit code of exudev.
+
 ## **OPEN_RG11** Misc
 
 What belongs to no group, including what was left of revision2026b groups 12 to 18. Put off, by decision of

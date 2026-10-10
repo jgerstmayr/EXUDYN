@@ -1062,6 +1062,7 @@ def Scripts(options):
     #with --check, exit code 1 means the scripts need changes - a verdict on them, not a failure of the tool (#2942)
     return [Step(('fix and check' if options.fix else 'check') + ' user scripts (' + environment + ')',
                  argv=runner.InEnvironment(environment, argv, options), cwd=root,
+                 lineFilter=runner.WithoutCondaError(),
                  verdict=lambda step, code: 'ok' if code == 0 else ('FAILED: scripts need changes' if code == 1
                                                                     else 'FAILED'))]
 

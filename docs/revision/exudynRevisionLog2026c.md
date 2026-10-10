@@ -254,3 +254,16 @@ addEdges=True.")*
   - the summary of `exudev scripts` says `FAILED: scripts need changes`;
   - every exudev step that runs through `conda run` and fails says below conda's line that it only passes on the
     exit code.
+
+<a id="rg10-31-11"></a>
+### RG10.31.11 — conda's line gone from the scripts check, and its exit code kept (2026-10-10, #2943)
+
+*(Maintainer 2026-10-10, after RG10.31.10: the output of `exudev scripts --check` on the lecture still ends with
+`ERROR conda.cli.main_run ... failed`.)*
+
+- The explaining note of #2942 stays for every other exudev step. The scripts step instead reads its output through
+  `runner.WithoutCondaError`, a line filter that passes every line except conda's. Its `tailLength = 0`, so a failure
+  does not repeat the last lines; `RunFiltered` takes `tailLength` from the filter.
+- **A bug of #2942**: `RunSteps` counted a step as failed only for the verdict `'FAILED'`. With
+  `'FAILED: scripts need changes'`, `exudev scripts --check` ended with exit code 0. Every verdict that starts with
+  `FAILED` now sets exit code 1. Measured on the lecture: exit code 1, the output without conda's line.

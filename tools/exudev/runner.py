@@ -376,7 +376,7 @@ def RunSteps(steps, options):
         #a verdict that BEGINS with 'ok' is a success that has something to say - e.g.
         #'ok, TIER 1 DRIFT' (#2563): it is printed in the summary but does not stop the run
         if not verdict.startswith('ok') and verdict != 'skipped' and argv[1:2] == ['run'] \
-                and 'conda' in os.path.basename(argv[0]).lower():
+                and 'conda' in os.path.basename(argv[0]).lower() and step.lineFilter is None:
             #conda run adds 'ERROR conda.cli.main_run ... failed' to every exit code but 0; it is not an error of its
             #own, which a reader cannot know (#2942)
             print('(the "ERROR conda.cli.main_run" line only passes on the exit code ' + str(returnCode)
@@ -389,7 +389,7 @@ def RunSteps(steps, options):
 
     if interrupted:
         return 130
-    if [entry for entry in results if entry[1] == 'FAILED']:
+    if [entry for entry in results if entry[1].startswith('FAILED')]:
         return 1
     if [entry for entry in results if entry[1] == 'unknown']:
         return 2
@@ -398,6 +398,19 @@ def RunSteps(steps, options):
 
 
 #%%******************************************************************************************************
+class WithoutCondaError:
+    """A line filter that shows the output as it is, without the line 'ERROR conda.cli.main_run ... failed' that
+    conda run adds to every exit code but 0: for a step whose exit code 1 is a verdict - scripts that need changes - and
+    not an error (#2942). Its output is shown in full, so nothing is repeated when it fails."""
+    tailLength = 0
+
+    def Line(self, text):
+        return None if text.startswith('ERROR conda.cli.main_run') else text
+
+    def Done(self):
+        pass
+
+
 def RunFiltered(argv, cwd, environment, lineFilter, tailLength=60):
     """Run a command whose output is read line by line: what lineFilter.Line returns is printed (a
     text starting with a carriage return rewrites the current line), and if the command fails, its
@@ -420,7 +433,7 @@ def RunFiltered(argv, cwd, environment, lineFilter, tailLength=60):
         process.kill()
         raise
     lineFilter.Done()
-    if returnCode != 0:
+    if returnCode != 0 and getattr(lineFilter, 'tailLength', tailLength):
         print('')
         print('--- the last ' + str(len(tail)) + ' lines of the output ---')
         for line in tail:
