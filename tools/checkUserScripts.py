@@ -218,6 +218,12 @@ createRigidBodyArguments = {'inertia': 'inertia', 'nodeType': 'nodeType', 'posit
                             'velocity': 'initialVelocity', 'rotationMatrix': 'referenceRotationMatrix',
                             'angularVelocity': 'initialAngularVelocity', 'gravity': 'gravity',
                             'graphicsDataList': 'graphicsDataList'}
+#AddRevoluteJoint and AddPrismaticJoint (#2945): their arguments in order, and the names of the Create function
+addJointArguments = ['mbs', 'body0', 'body1', 'point', 'axis', 'useGlobalFrame', 'showJoint', 'axisRadius', 'axisLength']
+createJointArguments = {'point': 'position', 'axis': 'axis', 'useGlobalFrame': 'useGlobalFrame', 'showJoint': 'show',
+                        'axisRadius': 'axisRadius', 'axisLength': 'axisLength'}
+#functions of the FEM interface whose sparse matrix is a scipy matrix since 1.9: CSRtoScipySparseCSR of it is the matrix
+femSparseGetters = ['GetMassMatrix', 'GetStiffnessMatrix']
 rotationParametersToMatrix = {'RotationEulerParameters': 'EulerParameters2RotationMatrix',
                               'RotationRxyz': 'RotXYZ2RotationMatrix',
                               'RotationRotationVector': 'RotationVector2RotationMatrix'}
@@ -485,6 +491,7 @@ def CheckTree(tree, tables, fixes=None, source=None):
         for child in ast.iter_child_nodes(parent):
             parents[id(child)] = parent
     moduleBound = ScopeBindings(tree)
+    definedFunctions = set(n.name for n in ast.walk(tree) if isinstance(n, (ast.FunctionDef, ast.AsyncFunctionDef)))
     #the one SystemContainer of the script, which a module function of the renderer becomes a method of
     containers = set(node.targets[0].id for node in tree.body if isinstance(node, ast.Assign) and len(node.targets) == 1
                      and isinstance(node.targets[0], ast.Name) and isinstance(node.value, ast.Call)
@@ -589,8 +596,14 @@ def CheckTree(tree, tables, fixes=None, source=None):
                 continue
             parts.append(createRigidBodyArguments[name] + '=' + Segment(values[name]))
         system = Parenthesized(Segment(values['mainSys']))
-        created = system + '.CreateRigidBody(' + ', '.join(parts) + ')'
+        FixResultList(call, system + '.CreateRigidBody(' + ', '.join(parts) + ')', system, 1,
+                      {0: "{system}.GetObject({name})['nodeNumber']"})
 
+    def FixResultList(call, created, system, keep, others):
+        """a call that returned a list and is replaced by one that returns its entry 'keep': '[a, b] = F(...)' (or 'a, b =')
+        gets 'b = created' and a line per other entry, written from others[k] with {system} and {name}; 'r = F(...)' used
+        only as r[k] gets r[keep] -> r and r[k] -> others[k]; a result that is not used is replaced as it is; any other
+        use is left (#2944, #2945)"""
         parent = parents.get(id(call))
         if isinstance(parent, ast.Expr):
             Replace(call, created)
@@ -598,32 +611,63 @@ def CheckTree(tree, tables, fixes=None, source=None):
         if not (isinstance(parent, ast.Assign) and len(parent.targets) == 1 and parent.value is call):
             return
         target = parent.targets[0]
-        if isinstance(target, (ast.Tuple, ast.List)) and len(target.elts) == 2 \
+        size = 1 + len(others)
+        if isinstance(target, (ast.Tuple, ast.List)) and len(target.elts) == size \
                 and all(isinstance(e, ast.Name) for e in target.elts):
-            (node, body) = (target.elts[0].id, target.elts[1].id)
+            names = [e.id for e in target.elts]
             if not StandsAlone(parent):
                 return
-            if body == '_':
-                Replace(parent, node + ' = ' + system + '.GetObject(' + created + ")['nodeNumber']")
+            kept = names[keep]
+            if kept == '_':                  #the entry the call returns now is not used: one other, assigned directly
+                used = [k for k in range(size) if k != keep and names[k] != '_']
+                if len(used) != 1:
+                    return
+                Replace(parent, names[used[0]] + ' = ' + others[used[0]].format(system=system, name=created))
                 return
-            Replace(parent, body + ' = ' + created)
-            if node != '_':
-                line = sourceLines[parent.lineno - 1]
-                indent = line[:len(line) - len(line.lstrip())]
-                Fix('range', parent.end_lineno + 1, 0, parent.end_lineno + 1, 0,
-                    indent + node + ' = ' + system + '.GetObject(' + body + ")['nodeNumber']\n")
+            Replace(parent, kept + ' = ' + created)
+            line = sourceLines[parent.lineno - 1]
+            indent = line[:len(line) - len(line.lstrip())]
+            added = ''.join(indent + names[k] + ' = ' + others[k].format(system=system, name=kept) + '\n'
+                            for k in range(size) if k != keep and names[k] != '_')
+            if added:
+                Fix('range', parent.end_lineno + 1, 0, parent.end_lineno + 1, 0, added)
         elif isinstance(target, ast.Name):
             name = target.id
             stores = [n for n in ast.walk(tree) if isinstance(n, ast.Name) and n.id == name and isinstance(n.ctx, ast.Store)]
             loads = [n for n in ast.walk(tree) if isinstance(n, ast.Name) and n.id == name and isinstance(n.ctx, ast.Load)]
             subscripts = [parents.get(id(n)) for n in loads]
             if len(stores) != 1 or not all(isinstance(s, ast.Subscript) and isinstance(s.slice, ast.Constant)
-                                           and s.slice.value in [0, 1] and isinstance(s.ctx, ast.Load)
+                                           and s.slice.value in range(size) and isinstance(s.ctx, ast.Load)
                                            for s in subscripts):
                 return
             Replace(call, created)
             for s in subscripts:
-                Replace(s, name if s.slice.value == 1 else system + '.GetObject(' + name + ")['nodeNumber']")
+                Replace(s, name if s.slice.value == keep else others[s.slice.value].format(system=system, name=name))
+
+    def FixAddJoint(call, functionName):
+        """AddRevoluteJoint/AddPrismaticJoint(mbs, body0, body1, point, axis, ...) -> mbs.CreateRevoluteJoint(itemNumbers=
+        [body0, body1], position=point, axis=axis, ...); of the returned [joint, marker0, marker1] the joint stays, the
+        markers are read with mbs.GetObject(joint)['markerNumbers'] (#2945)"""
+        names = addJointArguments
+        if Arguments(call) is None or len(call.args) > len(names):
+            return
+        values = dict(zip(names, call.args))
+        values.update((k.arg, k.value) for k in call.keywords)
+        if not all(n in values for n in names[:5]) or not set(values) <= set(names):
+            return
+        parts = ['itemNumbers=[' + Segment(values['body0']) + ', ' + Segment(values['body1']) + ']']
+        parts += [createJointArguments[n] + '=' + Segment(values[n]) for n in names[3:] if n in values]
+        system = Parenthesized(Segment(values['mbs']))
+        created = system + '.' + functionName.replace('Add', 'Create', 1) + '(' + ', '.join(parts) + ')'
+        FixResultList(call, created, system, 0, {1: "{system}.GetObject({name})['markerNumbers'][0]",
+                                                 2: "{system}.GetObject({name})['markerNumbers'][1]"})
+
+    def FixCSRtoScipySparseCSR(call):
+        """CSRtoScipySparseCSR(fem.GetMassMatrix(sparse=True)) -> fem.GetMassMatrix(sparse=True), which is a scipy matrix
+        since 1.9; for any other argument the matrix may be one or sparse triplets, and the call stays reported (#2945)"""
+        if len(call.args) == 1 and not call.keywords and isinstance(call.args[0], ast.Call) \
+                and getattr(call.args[0].func, 'attr', '') in femSparseGetters:
+            Replace(call, Segment(call.args[0]))
 
     def FixCornersToBrick(call, functionName):
         """a box or rectangle given by its corners as graphics.Brick(centerPoint=..., size=...) (#2938, #2941):
@@ -834,7 +878,9 @@ def CheckTree(tree, tables, fixes=None, source=None):
             className = getattr(node.func, 'attr', getattr(node.func, 'id', ''))
             #a deprecated function or argument of the library (#2807)
             library = tables.get('library') or {'functions': {}, 'arguments': []}
-            if className in library['functions']:
+            #a function the script defines itself, called by its name, is not the one of the library (#2945)
+            ownFunction = isinstance(node.func, ast.Name) and className in definedFunctions
+            if className in library['functions'] and not ownFunction:
                 (use, since, expires) = library['functions'][className]
                 Report(node.lineno, ('library', className), "'" + className + "' is deprecated since " + since
                        + ' and removed in ' + expires + ('; use ' + use if use else ''))
@@ -842,6 +888,10 @@ def CheckTree(tree, tables, fixes=None, source=None):
                     FixCornersToBrick(node, className)
                 elif className == 'AddRigidBody' and fixes is not None:
                     FixAddRigidBody(node)
+                elif className in ['AddRevoluteJoint', 'AddPrismaticJoint'] and fixes is not None:
+                    FixAddJoint(node, className)
+                elif className == 'CSRtoScipySparseCSR' and fixes is not None:
+                    FixCSRtoScipySparseCSR(node)
             for (owner, argument, use, since, expires) in library['arguments']:
                 if owner in (None, className) and any(keyword.arg == argument for keyword in node.keywords):
                     Report(node.lineno, ('libraryArgument', className, argument), className + '(' + argument

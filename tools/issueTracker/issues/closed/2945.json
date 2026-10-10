@@ -1,0 +1,17 @@
+{
+  "number": 2945,
+  "title": "exudev scripts --fix: AddRevoluteJoint, AddPrismaticJoint and CSRtoScipySparseCSR",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "IMPROVEMENT",
+  "priority": "NORMAL",
+  "effort": "LOW",
+  "description": "maintainer 2026-10-10: also rewrite AddRevoluteJoint (to mbs.CreateRevoluteJoint, which returns the joint instead of [joint, marker0, marker1]) and CSRtoScipySparseCSR; the lecture scripts call CSRtoScipySparseCSR(fem.GetMassMatrix(sparse=True)), and one defines a function of that name itself, which the checker reported as the deprecated one",
+  "dateRaised": "2026-10-10",
+  "deadline": "2027-04-08",
+  "dateResolved": "2026-10-10 13:05",
+  "resolvedAuthor": "Claude-JG",
+  "file": "tools/checkUserScripts.py",
+  "releaseNotes": "exudev scripts --fix replaces AddRevoluteJoint and AddPrismaticJoint by mbs.CreateRevoluteJoint/CreatePrismaticJoint (markers read from the joint) and drops CSRtoScipySparseCSR around the matrices of the FEM interface; a function the script defines itself is not taken for the library's. revision2026c step RG10.31.13",
+  "resolvedInVersion": "1.13.26"
+}

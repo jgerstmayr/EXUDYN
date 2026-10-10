@@ -501,6 +501,10 @@ CLOSED 2026-10-10 (#2943): the step reads its output through a filter without th
 
 CLOSED 2026-10-10 (#2944): arguments renamed, rotationParameters as the rotation matrix of the node type; `[n, b] =` and `rb[0]`/`rb[1]` read the node with `mbs.GetObject(b)['nodeNumber']`.
 
+#### **CLOSED_RG10.31.13** Replace AddRevoluteJoint and AddPrismaticJoint by the Create functions, and drop CSRtoScipySparseCSR around the FEM matrices
+
+CLOSED 2026-10-10 (#2945): the markers read with `mbs.GetObject(joint)['markerNumbers']`; a function of the script with a library name is not the library's.
+
 ## **OPEN_RG11** Misc
 
 What belongs to no group, including what was left of revision2026b groups 12 to 18. Put off, by decision of

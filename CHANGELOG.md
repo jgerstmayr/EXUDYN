@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.13 | Newborn | 26 | 1.13.25 |
+| 1.13 | Newborn | 27 | 1.13.26 |
 | 1.12 | Metheney | 367 | 1.12.462 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
@@ -30,6 +30,10 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.13 - Newborn (current)
 
+- **1.13.26** `IMPROVEMENT` `NORMAL` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` exudev scripts --fix: AddRevoluteJoint, AddPrismaticJoint and CSRtoScipySparseCSR (#2945)
+  - description: maintainer 2026-10-10: also rewrite AddRevoluteJoint (to mbs.CreateRevoluteJoint, which returns the joint instead of \[joint, marker0, marker1\]) and CSRtoScipySparseCSR; the lecture scripts call CSRtoScipySparseCSR(fem.GetMassMatrix(sparse=True)), and one defines a function of that name itself, which the checker reported as the deprecated one
+  - **notes:** exudev scripts --fix replaces AddRevoluteJoint and AddPrismaticJoint by mbs.CreateRevoluteJoint/CreatePrismaticJoint (markers read from the joint) and drops CSRtoScipySparseCSR around the matrices of the FEM interface; a function the script defines itself is not taken for the library's. revision2026c step RG10.31.13
+  - date resolved: **2026-10-10 13:05**, date raised: 2026-10-10
 - **1.13.25** `IMPROVEMENT` `NORMAL` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` exudev scripts --fix: AddRigidBody to mbs.CreateRigidBody (#2944)
   - description: maintainer 2026-10-10: many old scripts use AddRigidBody, to be replaced by CreateRigidBody; the return values differ (\[nodeNumber, bodyNumber\] against the body) - the node read with mbs.GetObject(body)\['nodeNumber'\] - and the arguments are named differently
   - **notes:** exudev scripts --fix replaces AddRigidBody by mbs.CreateRigidBody with the arguments renamed and rotationParameters converted; the node of the returned list is read with mbs.GetObject(body)\['nodeNumber'\]. revision2026c step RG10.31.12

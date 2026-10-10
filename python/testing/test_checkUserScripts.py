@@ -411,3 +411,28 @@ def testFixReplacesAddRigidBodyByCreateRigidBody(tables):
                      'items = AddRigidBody(mbs, i0)\n'
                      'print(items)\n')
     assert len(Findings(fixed, tables)) == 1
+
+
+def testFixReplacesTheAddJointsAndTheOldSparseConversion(tables):
+    """--fix (#2945): AddRevoluteJoint/AddPrismaticJoint become the Create functions, the markers of the returned
+    [joint, marker0, marker1] are read from the joint; CSRtoScipySparseCSR of a matrix of the FEM interface is the
+    matrix; a CSRtoScipySparseCSR the script defines itself is neither reported nor changed"""
+    source = ('import exudyn as exu\n'
+              'from exudyn.utilities import *\n'
+              'j, m0, m1 = AddRevoluteJoint(mbs=mbs, body0=g, body1=b, point=[0,0,0], axis=[0,0,1], showJoint=False)\n'
+              'p = AddPrismaticJoint(mbs, b, g, [1,0,0], [1,0,0])\n'
+              'q = mbs.GetObject(p[0])\n'
+              'r = p[2]\n'
+              'm = CSRtoScipySparseCSR(fem.GetMassMatrix(sparse=True))\n')
+    (fixed, tree, nFixed) = checker.FixSource(source, ast.parse(source), tables)
+    assert fixed == ('import exudyn as exu\n'
+                     'from exudyn.utilities import *\n'
+                     'j = mbs.CreateRevoluteJoint(itemNumbers=[g, b], position=[0,0,0], axis=[0,0,1], show=False)\n'
+                     "m0 = mbs.GetObject(j)['markerNumbers'][0]\n"
+                     "m1 = mbs.GetObject(j)['markerNumbers'][1]\n"
+                     'p = mbs.CreatePrismaticJoint(itemNumbers=[b, g], position=[1,0,0], axis=[1,0,0])\n'
+                     'q = mbs.GetObject(p)\n'
+                     "r = mbs.GetObject(p)['markerNumbers'][1]\n"
+                     'm = fem.GetMassMatrix(sparse=True)\n')
+    own = 'import exudyn as exu\ndef CSRtoScipySparseCSR(x): return x\nm = CSRtoScipySparseCSR(a)\n'
+    assert Findings(own, tables) == [] and checker.FixSource(own, ast.parse(own), tables)[0] == own

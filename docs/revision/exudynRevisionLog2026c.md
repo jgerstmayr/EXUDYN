@@ -296,3 +296,24 @@ Also the args are slightly different.")*
   - `rotationMarker0/1`;
   - `CSRtoScipySparseCSR`;
   - `AddRevoluteJoint`.
+
+<a id="rg10-31-13"></a>
+### RG10.31.13 — AddRevoluteJoint, AddPrismaticJoint, CSRtoScipySparseCSR (2026-10-10, #2945)
+
+*(Maintainer 2026-10-10: "yes, do these 3 as well" - AddRevoluteJoint, CSRtoScipySparseCSR and rotationMarker0/1.)*
+
+- `AddRevoluteJoint` / `AddPrismaticJoint(mbs, body0, body1, point, axis, useGlobalFrame, showJoint, axisRadius,
+  axisLength)` → `mbs.CreateRevoluteJoint` / `CreatePrismaticJoint(itemNumbers=[body0, body1], position=point, axis=axis,
+  useGlobalFrame=..., show=showJoint, ...)`.
+  - Of the returned `[joint, marker0, marker1]` the joint stays; the markers are read with
+    `mbs.GetObject(joint)['markerNumbers'][0/1]`, as new lines after `j, m0, m1 = ...` or in place of `p[1]`, `p[2]`.
+  - The handling of the results is one function, `FixResultList`, shared with `AddRigidBody` (#2944).
+  - A fixed sample with both joints runs.
+- `CSRtoScipySparseCSR(fem.GetMassMatrix(sparse=True))` (and `GetStiffnessMatrix`) → the matrix itself, a scipy
+  matrix since 1.9 - the form of all six uses in the lectures. For any other argument it stays reported:
+  `SparseTripletsToScipySparseCSR` refuses a scipy matrix, which the old function passed through.
+- **A false finding**: `AuswertungShell.py` of the lecture defines its own `CSRtoScipySparseCSR`, and the checker
+  reported its calls as the deprecated library function. A function the script defines itself, called by its name, is
+  no longer taken for the one of the library.
+- `rotationMarker0/1` is not done: the rotation has to go into the localHT of the marker. Which marker that is, and
+  whether it has a localHT, is known only when the script runs - see the question to the maintainer.
