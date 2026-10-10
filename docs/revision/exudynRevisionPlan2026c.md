@@ -318,6 +318,10 @@ raytracer for curved geometry and curved Hex20 faces (#2709).
 
 #2204 (visibility at a larger zoom), #2194 (`zNear`, `zFar` offsets).
 
+#### **CLOSED_RG6.8.9** Draw the lines of the raytracer in front of the focal plane of a model-centric perspective view
+
+CLOSED 2026-10-10 (#2951): the sensor traces were cut at z = -0.1; pytest `testRaytracerTracesInPerspective`. [log](exudynRevisionLog2026c.md#rg6-8-9)
+
 ### **OPEN_RG6.11** Draw textures from numpy arrays in triangle lists
 
 #2155 (a texture from an RGB/RGBA array with a reference number), #2154 (triangle lists with that number and texture
@@ -342,6 +346,10 @@ CLOSED 2026-10-10 (#2931): the space key starts in Continuous run and stops in S
 #### **CLOSED_RG6.18.3** Switch a running SolutionViewer from Static to Continuous run with the first space key
 
 CLOSED 2026-10-10 (#2940): running in Static or One cycle, space switches to Continuous run and keeps running; the Run button's own space binding ends with 'break'; to be checked on screen.
+
+#### **CLOSED_RG6.18.4** Read a solution file with the time column only, for a model without coordinates
+
+CLOSED 2026-10-10 (#2950): `LoadSolutionFile` always returns a matrix; test model `solutionFileWithoutCoordinatesTest.py`. [log](exudynRevisionLog2026c.md#rg6-18-4)
 
 ## **CLOSED_RG7** Python user items
 

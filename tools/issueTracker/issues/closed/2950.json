@@ -1,0 +1,16 @@
+{
+  "number": 2950,
+  "title": "LoadSolutionFile and the SolutionViewer fail for a model without coordinates",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "BUG",
+  "effort": "LOW",
+  "description": "a model of ground objects moved by a PreStepUserFunction (tmp/ex02b_exudyn_bewegtes_KS.py) writes a solution file with the time column only; np.loadtxt returns a 1D array, so LoadSolutionFile and the SolutionViewer fail unless a mass point is added; also a file with one data row",
+  "dateRaised": "2026-10-10",
+  "deadline": "2027-04-08",
+  "dateResolved": "2026-10-10 16:49",
+  "resolvedAuthor": "Claude-JG",
+  "file": "python/exudyn/basicUtilities.py",
+  "releaseNotes": "LoadSolutionFile reads a solution file with the time column only - of a model without coordinates, such as ground objects moved by a PreStepUserFunction - and a file with one row as a matrix, so the SolutionViewer shows such a model",
+  "resolvedInVersion": "1.13.37"
+}

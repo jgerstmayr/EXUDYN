@@ -496,3 +496,42 @@ def testConnectorLinesAndSensorLoad():
     SC.visualizationSettings.connectors.drawSimplified = False
     rods = graphicsRegression.Fingerprint(SC.renderer.GetGraphicsData(), perItem=True)['groups']
     assert 'triangles' in rods['Object ' + str(int(oDistance))]
+
+
+def testRaytracerTracesInPerspective():
+    """the raytracer draws the sensor traces in a perspective, model-centric view also in front of the focal plane,
+    as OpenGL does (#2951): before, every line nearer to the camera than z = -0.1 was cut"""
+    from exudyn.utilities import SensorBody
+    pixels = {}
+    for perspective in [0., 0.5]:
+        SC = exu.SystemContainer()
+        mbs = SC.AddSystem()
+        mbs.CreateGround(graphicsDataList=[graphics.CheckerBoard(point=[0, 0, 0], size=3, nTiles=6)])
+        oMoving = mbs.CreateGround(graphicsDataList=[graphics.Sphere(radius=0.05, color=graphics.color.blue)])
+        def PreStepUserFunction(mbs, t):
+            mbs.SetObjectParameter(oMoving, 'referenceHT', exu.HT(translation=[np.cos(2*np.pi*t), np.sin(2*np.pi*t), 0.5]))
+            return True
+        mbs.SetPreStepUserFunction(PreStepUserFunction)
+        sPos = mbs.AddSensor(SensorBody(bodyNumber=oMoving, storeInternal=True,
+                                        outputVariableType=exu.OutputVariableType.Position))
+        mbs.Assemble()
+        simulationSettings = exu.SimulationSettings()
+        simulationSettings.timeIntegration.numberOfSteps = 100
+        simulationSettings.timeIntegration.endTime = 1
+        simulationSettings.solution.file.write = False
+        mbs.SolveDynamic(simulationSettings)
+
+        vs = SC.visualizationSettings
+        vs.view0.window.renderWindowSize = [240, 240]
+        vs.raytracer.advanced.showText = False
+        vs.view0.scene.drawWorldBasis = False
+        vs.view0.scene.drawCoordinateSystem = 0
+        vs.view0.camera.perspective = perspective
+        vs.sensors.traces.listOfPositionSensors = [sPos]
+        vs.sensors.traces.showPositionTrace = True
+        vs.sensors.traces.traceColors = [1, 0, 0, 1]
+        vs.sensors.traces.lineWidth = 3
+        SC.renderer.ZoomAll()
+        image = SC.renderer.RedrawAndGetImage(useRaytracer=True).astype(int)
+        pixels[perspective] = int(((image[:, :, 0] > 180) & (image[:, :, 1] < 80) & (image[:, :, 2] < 80)).sum())
+    assert pixels[0.] > 300 and pixels[0.5] > 0.5*pixels[0.], pixels

@@ -276,7 +276,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`beltDriveAL
 (sec-basicutilities-numpyint8arraytostring)=
 ## Function: NumpyInt8ArrayToString
 
-[`NumpyInt8ArrayToString(npArray)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/basicUtilities.py#L676)
+[`NumpyInt8ArrayToString(npArray)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/basicUtilities.py#L677)
 
 - **function description**: simple conversion of int8 arrays into strings (not highly efficient, so use only for short strings)
 
@@ -284,7 +284,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`beltDriveAL
 (sec-basicutilities-binaryreadindex)=
 ## Function: BinaryReadIndex
 
-[`BinaryReadIndex(file, intType)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/basicUtilities.py#L685)
+[`BinaryReadIndex(file, intType)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/basicUtilities.py#L686)
 
 - **function description**: read single Index from current file position in binary solution file
 
@@ -292,7 +292,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`beltDriveAL
 (sec-basicutilities-binaryreadreal)=
 ## Function: BinaryReadReal
 
-[`BinaryReadReal(file, realType)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/basicUtilities.py#L693)
+[`BinaryReadReal(file, realType)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/basicUtilities.py#L694)
 
 - **function description**: read single Real from current file position in binary solution file
 
@@ -300,7 +300,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`beltDriveAL
 (sec-basicutilities-binaryreadstring)=
 ## Function: BinaryReadString
 
-[`BinaryReadString(file, intType)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/basicUtilities.py#L701)
+[`BinaryReadString(file, intType)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/basicUtilities.py#L702)
 
 - **function description**: read string from current file position in binary solution file
 
@@ -308,7 +308,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`beltDriveAL
 (sec-basicutilities-binaryreadarrayindex)=
 ## Function: BinaryReadArrayIndex
 
-[`BinaryReadArrayIndex(file, intType)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/basicUtilities.py#L709)
+[`BinaryReadArrayIndex(file, intType)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/basicUtilities.py#L710)
 
 - **function description**: read Index array from current file position in binary solution file
 
@@ -316,7 +316,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`beltDriveAL
 (sec-basicutilities-binaryreadrealvector)=
 ## Function: BinaryReadRealVector
 
-[`BinaryReadRealVector(file, intType, realType)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/basicUtilities.py#L717)
+[`BinaryReadRealVector(file, intType, realType)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/basicUtilities.py#L718)
 
 - **function description**: read Real vector from current file position in binary solution file
 - **output**: return data as numpy array, or False if no data read
@@ -325,7 +325,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`beltDriveAL
 (sec-basicutilities-loadbinarysolutionfile)=
 ## Function: LoadBinarySolutionFile
 
-[`LoadBinarySolutionFile(fileName, maxRows = -1, verbose = True)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/basicUtilities.py#L731)
+[`LoadBinarySolutionFile(fileName, maxRows = -1, verbose = True)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/basicUtilities.py#L732)
 
 - **function description**: read BINARY coordinates solution file (exported during static or dynamic simulation with option exu.SimulationSettings().solution.file.name='...') into dictionary
 - **input**:
@@ -338,7 +338,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`beltDriveAL
 (sec-basicutilities-recoversolutionfile)=
 ## Function: RecoverSolutionFile
 
-[`RecoverSolutionFile(fileName, newFileName, verbose = 0)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/basicUtilities.py#L916)
+[`RecoverSolutionFile(fileName, newFileName, verbose = 0)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/basicUtilities.py#L917)
 
 - **function description**: recover solution file with last row not completely written (e.g., if crashed, interrupted or no flush file option set)
 - **input**:
@@ -351,15 +351,18 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`beltDriveAL
 (sec-basicutilities-setsolutionstate)=
 ## Function: SetSolutionState
 
-[`SetSolutionState(mbs, solution, row, configuration = exudyn.ConfigurationType.Current, sendRedrawSignal = True)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/basicUtilities.py#L975)
+[`SetSolutionState(mbs, solution, row, configuration = exudyn.ConfigurationType.Current, sendRedrawSignal = True)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/basicUtilities.py#L976)
 
 - **function description**: load selected row of solution dictionary (previously loaded with LoadSolutionFile) into specific state; flag sendRedrawSignal is only used if configuration = exudyn.ConfigurationType.Visualization
+
+
+Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`solutionFileWithoutCoordinatesTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/solutionFileWithoutCoordinatesTest.py) (TM)
 
 
 (sec-basicutilities-animatesolution)=
 ## Function: AnimateSolution
 
-[`AnimateSolution(mbs, solution, rowIncrement = 1, timeout = 0.04, createImages = False, runLoop = False)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/basicUtilities.py#L1001)
+[`AnimateSolution(mbs, solution, rowIncrement = 1, timeout = 0.04, createImages = False, runLoop = False)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/basicUtilities.py#L1002)
 
 - **function description**: This function is not further maintaned and should only be used if you do not have tkinter (like on some MacOS versions); use exudyn.interactive.SolutionViewer() instead! AnimateSolution consecutively load the rows of a solution file and visualize the result
 - **input**:

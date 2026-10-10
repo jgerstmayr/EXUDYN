@@ -576,6 +576,9 @@ void Raytracer::RasterizeLine(const RTVector3D& p0, const RTVector3D& p1, const 
 	const RTfloat p = isStaticObject ? 0 : RTS.perspectiveFactor;
 	bool usePerspective = (p > perspectiveFactorLimit);
 	const RTfloat dist = usePerspective ? (RTS.zoom / p) : 0.0f;
+	//the eye: at z = dist in front of the focal plane for the model-centric view, at the origin for the camera-centric
+	//one, as ToPerspectiveRay puts it; the depth of a line is interpolated with the distance from it (#2951)
+	const RTfloat eyeZ = (usePerspective && RTS.modelCentricView) ? dist : 0.0f;
 	//DELETE:
 	//RTfloat projectionNearMinPlane = RTS.projectionNearMin; //needed for projection, not for the clipping of screen
 	//if (RTS.nearFarPlaneOffset[2] == 1.f)
@@ -641,8 +644,8 @@ void Raytracer::RasterizeLine(const RTVector3D& p0, const RTVector3D& p1, const 
 	if (usePerspective)
 	{
 		//adjust linear interpolation to correct interpolation of zDepth and color
-		RTfloat w0 = dist - s0[2]; //distance from eye to p0
-		RTfloat w1 = dist - s1[2]; //distance from eye to p1
+		RTfloat w0 = eyeZ - s0[2]; //distance from eye to p0
+		RTfloat w1 = eyeZ - s1[2]; //distance from eye to p1
 
 		//safety for short distances (usually not relevant)
 		if (w0 < 0.001f) { w0 = 0.001f; }
@@ -684,7 +687,7 @@ void Raytracer::RasterizeLine(const RTVector3D& p0, const RTVector3D& p1, const 
 			RTfloat currentInvW = (1.f - t) * invW0 + t * invW1;
 			currentW = 1.0f / currentInvW;
 			//perspective-correct world Z
-			z = dist - currentW;
+			z = eyeZ - currentW;
 		}
 
 		if (RTS.useClippingPlane && !isStaticObject)
@@ -1453,7 +1456,14 @@ void Raytracer::SoftwareRenderer(Index viewID, VisualizationSystemContainerBase*
 		//NOTE: nearPlane is defined from perspective of camera (goes [0,0,-1]), however
 		//      zDepths are given from perspective of model (opposite direction, +Z!)
 		RTfloat nearPlaneZ = std::numeric_limits<RTfloat>::max(); //used for cutting view at screen
-		if (RTS.perspectiveFactor > perspectiveFactorLimit) { nearPlaneZ = -RTS.projectionNearMin; } //negative for RasterizeLines
+		//the near plane of the lines lies projectionNearMin in front of the eye, which is at z = zoom/perspective for the
+		//model-centric view and at the origin for the camera-centric one, as in ToPerspectiveRay; at -projectionNearMin
+		//for both, the model-centric view cut every line in front of the focal plane - the sensor traces (#2951)
+		if (RTS.perspectiveFactor > perspectiveFactorLimit)
+		{
+			RTfloat eyeZ = settingsView.camera.modelCentricView ? EXUstd::Maximum(1e-6f, RTS.zoom / RTS.perspectiveFactor) : 0.f;
+			nearPlaneZ = eyeZ - RTS.projectionNearMin; //zDepths grow towards the eye
+		}
 		if (RTS.nearFarPlaneOffset[2] == 1.f) { nearPlaneZ = -RTS.nearFarPlaneOffset[0]; } //negative nearPlane gives larger zDepth! 
 
 		//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++

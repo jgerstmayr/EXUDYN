@@ -520,3 +520,33 @@ differently. Results:
   50.4 s / 50.0 s - no difference beyond the noise of ±5 %.
 - **Not done here** (RG4.1.3.4, the maintainer's decision): the switch on by default. It moves 56 results, so every
   reference set is recorded again, and macOS ARM has to be measured first.
+
+<a id="rg6-18-4"></a>
+### RG6.18.4 — a solution file without coordinates (2026-10-10, #2950)
+
+*(Maintainer 2026-10-10, with `tmp/ex02b_exudyn_bewegtes_KS.py`: the SolutionViewer reads the file only after a
+`CreateMassPoint` is added, otherwise it is one column and not loaded as a matrix.)* A model of ground objects moved by
+a PreStepUserFunction has no coordinates; its solution file holds the time only, and `np.loadtxt` returned a vector,
+so `np.size(data, 1)` failed. `LoadSolutionFile` reads with `ndmin=2` - also a file with a single row. The binary
+file was read correctly already. Test model `solutionFileWithoutCoordinatesTest.py`: text and binary file, 11 rows of
+one column, `SetSolutionState` for every row.
+
+<a id="rg6-8-9"></a>
+### RG6.8.9 — the raytracer cut the lines in front of the focal plane (2026-10-10, #2951)
+
+*(Maintainer 2026-10-10, same script: the raytracer shows only parts of the sensor traces, which OpenGL shows fully;
+also at the last step without the SolutionViewer.)*
+- The lines - sensor traces, line graphics, the basis lines of the items - are rasterized after the raytracing and
+  tested against its depth buffer and a near plane. The near plane was `-projectionNearMin` (-0.1) for every perspective
+  view, which is right for the camera-centric view, whose eye is at the origin; in the default model-centric view the
+  eye is at `zoom/perspective` in front of the focal plane, so every line point nearer to the camera than the focal
+  plane was dropped. In the example, the screw trace rises above the ground: in a view from above all of it vanished,
+  in an inclined view the parts in front of the focal plane.
+- The near plane is now `projectionNearMin` in front of the eye of either view, and the depth of a line is interpolated
+  from the distance to that eye (it used `zoom/perspective` also in the camera-centric view). Triangles were not
+  affected: they are raytraced from the eye.
+- Measured: rendered offline at perspective 0, 0.1, 0.3, 0.5: before, no trace at 0.1-0.5 in the top view; after, the
+  traces and triads are complete. pytest `testRaytracerTracesInPerspective`: the red pixels of a trace above the
+  focal plane with perspective 0.5 are at least half of those of the orthographic image.
+- `raytracerNOGLFWtest.py` (perspective 1) changes from 0.28161678591179 to 0.28013531271596: 625 pixels, the edges of
+  the three bricks nearest to the camera, which were missing and are now drawn (compared image by image).

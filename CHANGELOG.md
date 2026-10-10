@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.13 | Newborn | 37 | 1.13.36 |
+| 1.13 | Newborn | 39 | 1.13.38 |
 | 1.12 | Metheney | 367 | 1.12.462 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
@@ -30,6 +30,14 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.13 - Newborn (current)
 
+- **1.13.38** <span class="textred">`BUG`</span> `MEDIUM EFF` `raised by: Claude-JG` `resolved by: Claude-JG` the raytracer draws the sensor traces only in parts (#2951)
+  - description: tmp/ex02b\_exudyn\_bewegtes\_KS.py: the position traces and triads of vs.sensors.traces are fully visible in OpenGL, but the raytraced image shows only parts of them, also at the last step without the SolutionViewer
+  - **notes:** the raytracer draws lines - sensor traces, line graphics - in front of the focal plane of a perspective, model-centric view; its near plane was placed for the camera-centric view and cut them
+  - date resolved: **2026-10-10 16:49**, date raised: 2026-10-10
+- **1.13.37** <span class="textred">`BUG`</span> `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` LoadSolutionFile and the SolutionViewer fail for a model without coordinates (#2950)
+  - description: a model of ground objects moved by a PreStepUserFunction (tmp/ex02b\_exudyn\_bewegtes\_KS.py) writes a solution file with the time column only; np.loadtxt returns a 1D array, so LoadSolutionFile and the SolutionViewer fail unless a mass point is added; also a file with one data row
+  - **notes:** LoadSolutionFile reads a solution file with the time column only - of a model without coordinates, such as ground objects moved by a PreStepUserFunction - and a file with one row as a matrix, so the SolutionViewer shows such a model
+  - date resolved: **2026-10-10 16:49**, date raised: 2026-10-10
 - **1.13.36** `TESTING` `MEDIUM EFF` `raised by: Claude-JG` `resolved by: Claude-JG` the math calls of Exudyn through EXUmath, switched to the portable functions by EXUDYN\_PORTABLE\_MATH (#2949)
   - description: revision2026c step RG4.1.3.3: the transcendental functions of the C++ code (sin, cos, ..., not the graphics) go through EXUmath::Sin, ..., which call the C++ library or, with the macro EXUDYN\_PORTABLE\_MATH, EXUmath::Portable; the test suite with the switch on Windows and Linux shows which entries of UnresolvedOnLinux() the math library causes, and what the switch costs in time
   - **notes:** the transcendental functions of the C++ code go through EXUmath::Sin, Cos, ..., which call the C++ library, or the portable functions with the switch EXUDYN\_PORTABLE\_MATH (BasicDefinitions.h, off; exudyn.config.Version(True) says PORTABLEMATH); off, every result is unchanged; on, on Windows and Linux, the friction and contact models generalContactFrictionTests, sphereTriangleTest2, generalContactImplicit1 and three more agree to the last bit, at no measurable cost in time

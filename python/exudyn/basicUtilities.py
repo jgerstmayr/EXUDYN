@@ -585,7 +585,8 @@ def LoadSolutionFile(fileName, safeMode=False, maxRows=-1, verbose=True, hasHead
 
     #read DATA
     if not safeMode:
-        data = np.loadtxt(fileName, comments='#', delimiter=',')
+        #ndmin=2: a model without coordinates writes the time only, and a file may have one row (#2950)
+        data = np.loadtxt(fileName, comments='#', delimiter=',', ndmin=2)
     else:
         #alternative, but needs factor 5 times the memory of data loaded:
         #  data = np.genfromtxt(fileName,comments='#',delimiter=',',invalid_raise=False)

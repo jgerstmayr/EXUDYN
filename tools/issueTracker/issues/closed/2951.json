@@ -1,0 +1,16 @@
+{
+  "number": 2951,
+  "title": "the raytracer draws the sensor traces only in parts",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "BUG",
+  "effort": "MEDIUM",
+  "description": "tmp/ex02b_exudyn_bewegtes_KS.py: the position traces and triads of vs.sensors.traces are fully visible in OpenGL, but the raytraced image shows only parts of them, also at the last step without the SolutionViewer",
+  "dateRaised": "2026-10-10",
+  "deadline": "2027-04-08",
+  "dateResolved": "2026-10-10 16:49",
+  "resolvedAuthor": "Claude-JG",
+  "file": "src/Graphics/Raytracer.cpp",
+  "releaseNotes": "the raytracer draws lines - sensor traces, line graphics - in front of the focal plane of a perspective, model-centric view; its near plane was placed for the camera-centric view and cut them",
+  "resolvedInVersion": "1.13.38"
+}
