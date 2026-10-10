@@ -53,14 +53,19 @@ namespace EXUmath {
 		double Cbrt(double x);
 	} //namespace Portable
 
-	//! THE TRANSCENDENTAL FUNCTIONS OF EXUDYN: the C++ code calls EXUmath::Sin, ... instead of std::sin, ..., so that
-	//! one switch decides where they come from (#2949): the C++ library of the platform, or with EXUDYN_PORTABLE_MATH
+} //namespace EXUmath
+
+//! the 14 math functions of Exudyn and nothing else, so that "using namespace EM;" brings in only these (#2953)
+namespace EM {
+	//! THE TRANSCENDENTAL FUNCTIONS OF EXUDYN, namespace EM ("Exudyn math functions", #2953): the C++ code calls
+	//! EM::Sin, ... - or Sin, ... in a file with 'using namespace EM;' - instead of std::sin, ..., so that one switch
+	//! decides where they come from (#2949): the C++ library of the platform, or with EXUDYN_PORTABLE_MATH
 	//! (BasicDefinitions.h) the functions of Portable, which give the same bits on every platform. A double argument
 	//! goes to these; any other type - AutoDiff, a symbolic expression - to its own overload, found by argument
 	//! dependent lookup; fmod and sqrt are exact or correctly rounded everywhere and stay std::fmod, std::sqrt
 #ifdef EXUDYN_PORTABLE_MATH
-#define EXU_MATH_FUNCTION1(NAME, STDNAME) inline double NAME(double x) { return Portable::NAME(x); }
-#define EXU_MATH_FUNCTION2(NAME, STDNAME) inline double NAME(double x, double y) { return Portable::NAME(x, y); }
+#define EXU_MATH_FUNCTION1(NAME, STDNAME) inline double NAME(double x) { return EXUmath::Portable::NAME(x); }
+#define EXU_MATH_FUNCTION2(NAME, STDNAME) inline double NAME(double x, double y) { return EXUmath::Portable::NAME(x, y); }
 #else
 #define EXU_MATH_FUNCTION1(NAME, STDNAME) inline double NAME(double x) { return std::STDNAME(x); }
 #define EXU_MATH_FUNCTION2(NAME, STDNAME) inline double NAME(double x, double y) { return std::STDNAME(x, y); }
@@ -86,6 +91,9 @@ namespace EXUmath {
 #undef EXU_MATH_FUNCTION2
 #undef EXU_MATH_GENERIC1
 #undef EXU_MATH_GENERIC2
+} //namespace EM
+
+namespace EXUmath {
 
 	//! the names EvaluateMathFunction knows; atan2, pow and fmod take two arguments; sqrt is correctly rounded on every
 	//! platform (IEEE 754) and is the control
@@ -100,7 +108,7 @@ namespace EXUmath {
 	//! a loop the compiler may vectorize; "stdNoFMA3" = "std" with the FMA3 code path of the MSVC UCRT switched off
 	//! (Windows x64 only: the UCRT chooses its implementation by the CPU, _set_FMA3_enable); "portable" = the functions
 	//! of namespace Portable, with std::fmod and std::sqrt, which are exact or correctly rounded everywhere (#2948);
-	//! "exudyn" = EXUmath::Sin, ..., what the C++ code of Exudyn calls: the library, or Portable with EXUDYN_PORTABLE_MATH
+	//! "exudyn" = EM::Sin, ..., what the C++ code of Exudyn calls: the library, or Portable with EXUDYN_PORTABLE_MATH
 	inline const std::vector<std::string>& MathFunctionImplementations()
 	{
 		static const std::vector<std::string> names = { "std", "stdLoop", "portable", "exudyn"
@@ -164,12 +172,12 @@ namespace EXUmath {
 			return false;
 		}
 
-		//! evaluate with the portable functions (exudynMath = false) or with EXUmath::Sin, ... (true), one call per value
+		//! evaluate with the portable functions (exudynMath = false) or with EM::Sin, ... (true), one call per value
 		inline bool EvaluatePortable(const std::string& name, const std::vector<Real>& x, const std::vector<Real>& y,
 			std::vector<Real>& result, bool exudynMath)
 		{
-#define EXU_MATH_CASE1(NAME, FUNCTION) if (name == NAME) { if (exudynMath) { LoopScalar([](Real a) { return EXUmath::FUNCTION(a); }, x, result); } 			else { LoopScalar([](Real a) { return Portable::FUNCTION(a); }, x, result); } return true; }
-#define EXU_MATH_CASE2(NAME, FUNCTION) if (name == NAME) { if (exudynMath) { LoopScalar2([](Real a, Real b) { return EXUmath::FUNCTION(a, b); }, x, y, result); } 			else { LoopScalar2([](Real a, Real b) { return Portable::FUNCTION(a, b); }, x, y, result); } return true; }
+#define EXU_MATH_CASE1(NAME, FUNCTION) if (name == NAME) { if (exudynMath) { LoopScalar([](Real a) { return EM::FUNCTION(a); }, x, result); } 			else { LoopScalar([](Real a) { return Portable::FUNCTION(a); }, x, result); } return true; }
+#define EXU_MATH_CASE2(NAME, FUNCTION) if (name == NAME) { if (exudynMath) { LoopScalar2([](Real a, Real b) { return EM::FUNCTION(a, b); }, x, y, result); } 			else { LoopScalar2([](Real a, Real b) { return Portable::FUNCTION(a, b); }, x, y, result); } return true; }
 			EXU_MATH_CASE1("sin", Sin)
 			EXU_MATH_CASE1("cos", Cos)
 			EXU_MATH_CASE1("tan", Tan)

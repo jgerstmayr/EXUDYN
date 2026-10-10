@@ -33,7 +33,7 @@ bool CObjectContactConvexRollRootOfPolynomialWarned = false;
 */ 
 Real CObjectContactConvexRoll::PolynomialRollXOfAngle(const Vector& poly, const Vector& dpoly, Real lRoller, Real angy) const
 {
-    Real k = EXUmath::Tan(angy); // the tangent should be equal to k, therefore it is the offset for the desired Root
+    Real k = EM::Tan(angy); // the tangent should be equal to k, therefore it is the offset for the desired Root
     Real x_0 = 0; // toDo: Starting Value of the Newton method using a second order polynomioal to decrease the number of steps
     Real xBoundary[2] = {-lRoller/2, lRoller/2}; 
     Real kBoundary[2];   // as only strictly convex bodies of revolution are covered in the formulation, the gradient can only increase monotoniously
@@ -99,13 +99,13 @@ Vector3D CObjectContactConvexRoll::FindContactPoint(const Matrix3D& Rotm, const 
 {
 	Vector3D pContact = Vector3D({ 0,0,0 }); // initialize 
 	// calculate euler angles for z-y-x rotation
-	Real angy = EXUmath::Atan2(-Rotm[2][0], sqrt(fabs(1 - Rotm(2,0) * Rotm(2,0))));
-	Real angx = EXUmath::Atan2(Rotm[2][1], Rotm[2][2]);
+	Real angy = EM::Atan2(-Rotm[2][0], sqrt(fabs(1 - Rotm(2,0) * Rotm(2,0))));
+	Real angx = EM::Atan2(Rotm[2][1], Rotm[2][2]);
 	Real xContact = PolynomialRollXOfAngle(GetCoefficientsHullDerivative(), GetCoefficientsHullDDerivative(), lRoller, angy);
 	Real rContact = ExuMath::Polyval(poly, xContact);
 	pContact[0] = xContact;
-	pContact[1] = rContact * EXUmath::Sin(-angx); // geometrical considerations of local frame 
-	pContact[2] = -rContact * EXUmath::Cos(-angx);
+	pContact[1] = rContact * EM::Sin(-angx); // geometrical considerations of local frame 
+	pContact[2] = -rContact * EM::Cos(-angx);
 	return pContact;  // returns the point closest to the ground, therefore pContact[2] < 0 => contact occures
 }
 

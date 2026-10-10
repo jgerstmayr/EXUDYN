@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.13 | Newborn | 42 | 1.13.41 |
+| 1.13 | Newborn | 43 | 1.13.42 |
 | 1.12 | Metheney | 367 | 1.12.462 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
@@ -30,6 +30,10 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.13 - Newborn (current)
 
+- **1.13.42** `CHANGE` `MEDIUM EFF` `raised by: Claude-JG` `resolved by: Claude-JG` the math functions of Exudyn in a small namespace EM, used without it where a file calls many, and a check that refuses the library functions (#2953)
+  - description: revision2026c step RG4.1.3.6 (maintainer 2026-10-10): EXUmath::Sin, ... become EM::Sin, ... (Exudyn math functions, the 14 functions only); a .cpp file with more than five calls says 'using namespace EM;' and calls Sin(...), the headers of basic math, kinematics and Lie groups keep EM::; tools/checkMathFunctions.py in exudev generate --all-checks refuses a call of sin, std::sin, ... in src/ outside the graphics and the tests
+  - **notes:** the math functions of the C++ code are EM::Sin, ... - the namespace EM holds only these 14; a .cpp file with more than five calls uses them without it - and tools/checkMathFunctions.py, part of exudev generate --all-checks, refuses a call of the library's sin, std::sin, ... outside the graphics and the tests
+  - date resolved: **2026-10-10 18:51**, date raised: 2026-10-10
 - **1.13.41** `TESTING` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` time the math functions as Exudyn's C++ calls them, beside the library and the portable ones (#2952)
   - description: revision2026c step RG4.1.3.5 (maintainer 2026-10-10: measure the performance of the native and the musl variant directly within the experimental function): implementation 'exudyn' of exudyn.experimental.EvaluateMathFunction evaluates EXUmath::Sin, ..., i.e. the library or, with EXUDYN\_PORTABLE\_MATH, the portable functions; mathFunctionsPlatform.py --timing shows std, portable and exudyn
   - **notes:** exudyn.experimental.EvaluateMathFunction(..., implementation='exudyn') evaluates and times what the C++ code of Exudyn calls (EXUmath::Sin, ...); mathFunctionsPlatform.py --timing shows the library, the portable functions and this side by side

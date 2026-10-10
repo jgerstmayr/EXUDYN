@@ -932,8 +932,8 @@ void VisualizationObjectANCFCable::UpdateGraphics(const VisualizationSettings& v
 		for (Index j = 0; j < tilingCyl; j++)
 		{
 			Real x = 2. * EXUstd::pi * (Real)j / (Real)tilingCyl;
-			sinVec[j] = EXUmath::Sin(x);
-			cosVec[j] = EXUmath::Cos(x);
+			sinVec[j] = EM::Sin(x);
+			cosVec[j] = EM::Cos(x);
 		}
 	}
 

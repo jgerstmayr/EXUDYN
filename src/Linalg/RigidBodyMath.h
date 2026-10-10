@@ -330,8 +330,8 @@ namespace RigidBodyMath {
 	//! get rotation matrix around X-axis (inefficient, use only for test purposes)
 	inline Matrix3D RotationMatrixX(Real angleRad)
 	{
-		Real c = EXUmath::Cos(angleRad);
-		Real s = EXUmath::Sin(angleRad);
+		Real c = EM::Cos(angleRad);
+		Real s = EM::Sin(angleRad);
 		return Matrix3D(3, 3, { 
 			1., 0., 0.,
 			0., c, -s,
@@ -341,8 +341,8 @@ namespace RigidBodyMath {
 	//! get rotation matrix around Y-axis (inefficient, use only for test purposes)
 	inline Matrix3D RotationMatrixY(Real angleRad)
 	{
-		Real c = EXUmath::Cos(angleRad);
-		Real s = EXUmath::Sin(angleRad);
+		Real c = EM::Cos(angleRad);
+		Real s = EM::Sin(angleRad);
 		return Matrix3D(3, 3, { 
 			 c , 0.,  s,
 			 0., 1.,  0.,
@@ -352,8 +352,8 @@ namespace RigidBodyMath {
 	//! get rotation matrix around Z-axis (inefficient, use only for test purposes)
 	inline Matrix3D RotationMatrixZ(Real angleRad)
 	{
-		Real c = EXUmath::Cos(angleRad);
-		Real s = EXUmath::Sin(angleRad);
+		Real c = EM::Cos(angleRad);
+		Real s = EM::Sin(angleRad);
 		return Matrix3D(3, 3, {
 			c, -s,  0.,
 			s,  c,  0.,
@@ -367,12 +367,12 @@ namespace RigidBodyMath {
 		//Real psi = rot[0];
 		//Real theta = rot[1];
 		//Real phi = rot[2];
-		Real c0 = EXUmath::Cos(rot[0]);
-		Real s0 = EXUmath::Sin(rot[0]);
-		Real c1 = EXUmath::Cos(rot[1]);
-		Real s1 = EXUmath::Sin(rot[1]);
-		Real c2 = EXUmath::Cos(rot[2]);
-		Real s2 = EXUmath::Sin(rot[2]);
+		Real c0 = EM::Cos(rot[0]);
+		Real s0 = EM::Sin(rot[0]);
+		Real c1 = EM::Cos(rot[1]);
+		Real s1 = EM::Sin(rot[1]);
+		Real c2 = EM::Cos(rot[2]);
+		Real s2 = EM::Sin(rot[2]);
 
 		return Matrix3D(3,3,{ c1*c2,-c1 * s2,s1, 
 			                  s0*s1*c2 + c0 * s2, -s0 * s1*s2 + c0 * c2,-s0 * c1,
@@ -390,17 +390,17 @@ namespace RigidBodyMath {
 		SlimVectorBase<TReal, 3> rot;
 
 		TReal absC1 = sqrt(EXUstd::Square(-R(1, 2)) + EXUstd::Square(R(2, 2)) );
-		rot[1] = EXUmath::Atan2(R(0, 2), absC1);
+		rot[1] = EM::Atan2(R(0, 2), absC1);
 		if (absC1 > 1e-14)
 		{
-			rot[0] = EXUmath::Atan2(-R(1, 2), R(2, 2));
-			rot[2] = EXUmath::Atan2(-R(0, 1), R(0, 0));
+			rot[0] = EM::Atan2(-R(1, 2), R(2, 2));
+			rot[2] = EM::Atan2(-R(0, 1), R(0, 0));
 		}
 		else //c1 = 0, s0 = 0, c0 = 1:  #rot[0] and rot[2] represent same axes, set one of them zero!
 		{
 			rot[0] = (TReal)0.;
 			//s0*s1*c2 + c0 * s2, -s0 * s1*s2 + c0 * c2 = > c0*s2, c0*c2
-			rot[2] = EXUmath::Atan2(R(1, 0), R(1, 1));
+			rot[2] = EM::Atan2(R(1, 0), R(1, 1));
 		}
 
 		//Vector3D rot;
@@ -416,10 +416,10 @@ namespace RigidBodyMath {
 	template<class TVector>
 	inline ConstSizeMatrix<3*maxRotCoordinates> RotXYZ2GTemplate(const TVector& rot)
 	{
-		Real c0 = EXUmath::Cos(rot[0]);
-		Real s0 = EXUmath::Sin(rot[0]);
-		Real c1 = EXUmath::Cos(rot[1]);
-		Real s1 = EXUmath::Sin(rot[1]);
+		Real c0 = EM::Cos(rot[0]);
+		Real s0 = EM::Sin(rot[0]);
+		Real c1 = EM::Cos(rot[1]);
+		Real s1 = EM::Sin(rot[1]);
 
 		return ConstSizeMatrix<3*maxRotCoordinates>(3, 3, 
 			{ 1, 0, s1,
@@ -431,10 +431,10 @@ namespace RigidBodyMath {
 	template<class TVector1, class TVector2>
 	inline ConstSizeMatrix<3*maxRotCoordinates> RotXYZ2G_tTemplate(const TVector1& rot, const TVector2& rot_t)
 	{
-		Real c0 = EXUmath::Cos(rot[0]);
-		Real s0 = EXUmath::Sin(rot[0]);
-		Real c1 = EXUmath::Cos(rot[1]);
-		Real s1 = EXUmath::Sin(rot[1]);
+		Real c0 = EM::Cos(rot[0]);
+		Real s0 = EM::Sin(rot[0]);
+		Real c1 = EM::Cos(rot[1]);
+		Real s1 = EM::Sin(rot[1]);
 
 		return ConstSizeMatrix<3*maxRotCoordinates>(3, 3,
 			{ 0, 0, rot_t[1]*c1,
@@ -448,10 +448,10 @@ namespace RigidBodyMath {
 	template<class TVector>
 	inline ConstSizeMatrix<3*maxRotCoordinates> RotXYZ2GlocalTemplate(const TVector& rot)
 	{
-		Real c1 = EXUmath::Cos(rot[1]);
-		Real s1 = EXUmath::Sin(rot[1]);
-		Real c2 = EXUmath::Cos(rot[2]);
-		Real s2 = EXUmath::Sin(rot[2]);
+		Real c1 = EM::Cos(rot[1]);
+		Real s1 = EM::Sin(rot[1]);
+		Real c2 = EM::Cos(rot[2]);
+		Real s2 = EM::Sin(rot[2]);
 
 		return ConstSizeMatrix<3*maxRotCoordinates>(3, 3, 
 			{ c1*c2, s2, 0,
@@ -463,10 +463,10 @@ namespace RigidBodyMath {
 	template<class TVector1, class TVector2>
 	inline ConstSizeMatrix<3*maxRotCoordinates> RotXYZ2Glocal_tTemplate(const TVector1& rot, const TVector2& rot_t)
 	{
-		Real c1 = EXUmath::Cos(rot[1]);
-		Real s1 = EXUmath::Sin(rot[1]);
-		Real c2 = EXUmath::Cos(rot[2]);
-		Real s2 = EXUmath::Sin(rot[2]);
+		Real c1 = EM::Cos(rot[1]);
+		Real s1 = EM::Sin(rot[1]);
+		Real c2 = EM::Cos(rot[2]);
+		Real s2 = EM::Sin(rot[2]);
 
 		return ConstSizeMatrix<3*maxRotCoordinates>(3, 3, 
 			{ -rot_t[2]*c1*s2 - rot_t[1]*c2*s1, rot_t[2]*c2, 0,
@@ -478,10 +478,10 @@ namespace RigidBodyMath {
 	template<class TVector>
 	inline ConstSizeMatrix<maxRotCoordinates*maxRotCoordinates> RotXYZGTv_qTemplate(const TVector& rot, const Vector3D& v)
 	{
-		Real c0 = EXUmath::Cos(rot[0]);
-		Real s0 = EXUmath::Sin(rot[0]);
-		Real c1 = EXUmath::Cos(rot[1]);
-		Real s1 = EXUmath::Sin(rot[1]);
+		Real c0 = EM::Cos(rot[0]);
+		Real s0 = EM::Sin(rot[0]);
+		Real c1 = EM::Cos(rot[1]);
+		Real s1 = EM::Sin(rot[1]);
 
 		//G^T
 		//return ConstSizeMatrix<3 * maxRotCoordinates>(3, 3,
@@ -504,10 +504,10 @@ namespace RigidBodyMath {
 	template<class TVector>
 	inline ConstSizeMatrix<maxRotCoordinates*maxRotCoordinates> RotXYZGlocalTv_qTemplate(const TVector& rot, const Vector3D& v)
 	{
-		Real c1 = EXUmath::Cos(rot[1]);
-		Real s1 = EXUmath::Sin(rot[1]);
-		Real c2 = EXUmath::Cos(rot[2]);
-		Real s2 = EXUmath::Sin(rot[2]);
+		Real c1 = EM::Cos(rot[1]);
+		Real s1 = EM::Sin(rot[1]);
+		Real c2 = EM::Cos(rot[2]);
+		Real s2 = EM::Sin(rot[2]);
 
 		//Glocal^T
 		//return ConstSizeMatrix<3 * maxRotCoordinates>(3, 3,
@@ -597,13 +597,13 @@ namespace RigidBodyMath {
 			Matrix3D mat(EXUmath::unitMatrix3D);
 			Matrix3D vTilde(Vector2SkewMatrix(v));
 
-			Real sAngle = EXUmath::Sin(angle);
+			Real sAngle = EM::Sin(angle);
 			mat += (sAngle / angle)*vTilde;
 
 			//Real cAngle = cos(angle);
 			//mat += ((1. - cAngle) / (angle * angle))*vTilde*vTilde; //very inaccurate around angle=0
 
-			Real sAngle2 = EXUmath::Sin(0.5*angle);
+			Real sAngle2 = EM::Sin(0.5*angle);
 			mat += (2. * sAngle2 * sAngle2 / (angle * angle))*vTilde*vTilde;
 
 			return mat;
@@ -624,8 +624,8 @@ namespace RigidBodyMath {
 	{
 		return ConstSizeMatrixBase<T, 9>(3, 3, 
 			{ 1, 0, 0,
-			  0, EXUmath::Cos(phi),-EXUmath::Sin(phi),
-			  0, EXUmath::Sin(phi), EXUmath::Cos(phi) });
+			  0, EM::Cos(phi),-EM::Sin(phi),
+			  0, EM::Sin(phi), EM::Cos(phi) });
 	}
 
 	//! compute rotation matrix from single rotation around axis 2 (y-axis)
@@ -633,9 +633,9 @@ namespace RigidBodyMath {
 	inline ConstSizeMatrixBase<T, 9> RotationMatrix2(T phi)
 	{
 		return ConstSizeMatrixBase<T, 9>(3, 3,
-			{ EXUmath::Cos(phi), 0, EXUmath::Sin(phi),
+			{ EM::Cos(phi), 0, EM::Sin(phi),
 			  0,        1, 0,
-			  -EXUmath::Sin(phi),0, EXUmath::Cos(phi) });
+			  -EM::Sin(phi),0, EM::Cos(phi) });
 	}
 
 	//! compute rotation matrix from single rotation around axis 3 (z-axis)
@@ -643,8 +643,8 @@ namespace RigidBodyMath {
 	inline ConstSizeMatrixBase<T, 9> RotationMatrix3(T phi)
 	{
 		return ConstSizeMatrixBase<T, 9>(3, 3,
-			{ EXUmath::Cos(phi),-EXUmath::Sin(phi), 0,
-			  EXUmath::Sin(phi), EXUmath::Cos(phi), 0,
+			{ EM::Cos(phi),-EM::Sin(phi), 0,
+			  EM::Sin(phi), EM::Cos(phi), 0,
 			  0,	    0,        1 });
 	}
 
@@ -769,7 +769,7 @@ namespace EXUlie {
 		RigidBodyMath::RotationMatrix2EP(R, ep0, n[0], n[1], n[2]);
 		T norm = n.GetL2Norm();
 
-		T phi = (T)2. * EXUmath::Atan2(norm, ep0);
+		T phi = (T)2. * EM::Atan2(norm, ep0);
 		if (norm != 0.) { n = ((T)1. / norm) * n; }
 
 		return RigidBodyMath::Vector2SkewMatrix(phi * n);
@@ -805,7 +805,7 @@ namespace EXUlie {
 		RigidBodyMath::RotationMatrix2EP(R, ep0, n[0], n[1], n[2]);
 		T norm = n.GetL2Norm();
 
-		T phi = (T)2. * EXUmath::Atan2(norm, ep0);
+		T phi = (T)2. * EM::Atan2(norm, ep0);
 		if (norm != 0.) { n = ((T)1. / norm) * n; }
 
 		return phi * n;
@@ -832,7 +832,7 @@ namespace EXUlie {
 			}
 			else
 			{
-				t2 = ((T)1. / (phi2)) * (1 - (EXUmath::Sin(phi) / phi)); //sinc not needed here, because phi >= 0.01
+				t2 = ((T)1. / (phi2)) * (1 - (EM::Sin(phi) / phi)); //sinc not needed here, because phi >= 0.01
 			}
 			Rot += t1 * rotSkew;
 			Rot += t2 * rotSkew * rotSkew;
@@ -909,13 +909,13 @@ namespace EXUlie {
 	{
 		T w1Half = (T)0.5 * v0.GetL2Norm();
 		T w2Half = (T)0.5 * Omega.GetL2Norm();
-		T c0 = EXUmath::Cos(w1Half);
-		T c1 = EXUmath::Cos(w2Half);
+		T c0 = EM::Cos(w1Half);
+		T c1 = EM::Cos(w2Half);
 		T s0 = EXUmath::Sinc(w1Half);
 		T s1 = EXUmath::Sinc(w2Half);
 		T x = c0 * c1 - (T)0.25 * s0 * s1 * (v0 * Omega);
 		T xTemp = sqrt(fabs(1 - EXUstd::Square(x))); //fabs added, because term may be slightly smaller than zero
-		T w = EXUstd::pi - (T)2. * EXUmath::Atan2(x, xTemp);
+		T w = EXUstd::pi - (T)2. * EM::Atan2(x, xTemp);
 		SlimVectorBase<T,3> rho = s0 * c1 * v0 + c0 * s1 * Omega + (T)0.5 * s0 * s1 * v0.CrossProduct(Omega);
 		SlimVectorBase<T,3> n;
 		RotationVector2RotationAxis(rho, n);
@@ -1046,7 +1046,7 @@ namespace EXUlie {
 		// coefficient f2, see Phd thesis Stefan Hante, Table. 1, page 121
 		if (phi >= (T)1e-2)
 		{
-			f2 = (EXUmath::Cos(phi) - 1) / phiSquared;
+			f2 = (EM::Cos(phi) - 1) / phiSquared;
 		}
 		else
 		{
@@ -1056,7 +1056,7 @@ namespace EXUlie {
 		// coefficient f3, see Phd thesis Stefan Hante, Table. 1, page 121
 		if (phi >= 1e-4)
 		{
-			f3 = (phi - EXUmath::Sin(phi)) / (phi * phiSquared);
+			f3 = (phi - EM::Sin(phi)) / (phi * phiSquared);
 		}
 		else
 		{
@@ -1066,7 +1066,7 @@ namespace EXUlie {
 		// coefficient f4, see Phd thesis Stefan Hante, Table. 1, page 121
 		if (phi >= 1e-1)
 		{
-			f4 = (2 - 2 * EXUmath::Cos(phi) - phi * EXUmath::Sin(phi)) / (phiSquared * phiSquared);
+			f4 = (2 - 2 * EM::Cos(phi) - phi * EM::Sin(phi)) / (phiSquared * phiSquared);
 		}
 		else
 		{
@@ -1076,7 +1076,7 @@ namespace EXUlie {
 		// coefficient f5, see Phd thesis Stefan Hante, Table. 1, page 121
 		if (phi >= 1e-1)
 		{
-			f5 = (phi * (2 + EXUmath::Cos(phi)) - 3 * EXUmath::Sin(phi)) / (phi * phiSquared * phiSquared);
+			f5 = (phi * (2 + EM::Cos(phi)) - 3 * EM::Sin(phi)) / (phi * phiSquared * phiSquared);
 		}
 		else
 		{
@@ -1155,7 +1155,7 @@ namespace EXUlie {
 		// coefficient f8, see Phd thesis Stefan Hante, Table. 1, page 121
 		if (phi >= 2e-1)
 		{
-			f8 = (phi * EXUmath::Sin(phi) + 4 * EXUmath::Cos(phi) + phiSquared - 4) / (4 * EXUstd::Square(EXUmath::Sin(0.5 * phi)) * EXUstd::Square(phiSquared));
+			f8 = (phi * EM::Sin(phi) + 4 * EM::Cos(phi) + phiSquared - 4) / (4 * EXUstd::Square(EM::Sin(0.5 * phi)) * EXUstd::Square(phiSquared));
 		}
 		else
 		{

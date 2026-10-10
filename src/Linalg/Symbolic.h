@@ -549,8 +549,8 @@ public:
 
 	virtual void Destroy() { if (operand) { operand->DecreaseReferenceCounter(); if (operand->ReferenceCounter() == 0) { operand->Destroy(); delete operand; deleteCount++; } } }
 
-	virtual Real Evaluate() const override { return EXUmath::Exp(operand->Evaluate()); }
-	virtual double Diff(ExpressionNamedReal* var) const override { return EXUmath::Exp(operand->Evaluate()) * operand->Diff(var); }
+	virtual Real Evaluate() const override { return EM::Exp(operand->Evaluate()); }
+	virtual double Diff(ExpressionNamedReal* var) const override { return EM::Exp(operand->Evaluate()) * operand->Diff(var); }
 	virtual STDstring ToString() const override { return "exp(" + operand->ToString() + ")"; }
 };
 
@@ -562,7 +562,7 @@ public:
 
 	virtual void Destroy() { if (operand) { operand->DecreaseReferenceCounter(); if (operand->ReferenceCounter() == 0) { operand->Destroy(); delete operand; deleteCount++; } } }
 
-	virtual Real Evaluate() const override { return EXUmath::Log(operand->Evaluate()); }
+	virtual Real Evaluate() const override { return EM::Log(operand->Evaluate()); }
 	virtual double Diff(ExpressionNamedReal* var) const override { return (1 / operand->Evaluate()) * operand->Diff(var); }
 	virtual STDstring ToString() const override { return "log(" + operand->ToString() + ")"; }
 };
@@ -576,8 +576,8 @@ public:
 
 	virtual void Destroy() { if (operand) { operand->DecreaseReferenceCounter(); if (operand->ReferenceCounter() == 0) { operand->Destroy(); delete operand; deleteCount++; } } }
 
-	virtual Real Evaluate() const override { return EXUmath::Sin(operand->Evaluate()); }
-	virtual double Diff(ExpressionNamedReal* var) const override { return EXUmath::Cos(operand->Evaluate()) * operand->Diff(var); }	
+	virtual Real Evaluate() const override { return EM::Sin(operand->Evaluate()); }
+	virtual double Diff(ExpressionNamedReal* var) const override { return EM::Cos(operand->Evaluate()) * operand->Diff(var); }	
 	virtual STDstring ToString() const override { return "sin(" + operand->ToString() + ")"; }
 };
 
@@ -589,8 +589,8 @@ public:
 
 	virtual void Destroy() { if (operand) { operand->DecreaseReferenceCounter(); if (operand->ReferenceCounter() == 0) { operand->Destroy(); delete operand; deleteCount++; } } }
 
-	virtual Real Evaluate() const override { return EXUmath::Cos(operand->Evaluate()); }
-	virtual double Diff(ExpressionNamedReal* var) const override { return -EXUmath::Sin(operand->Evaluate()) * operand->Diff(var); }
+	virtual Real Evaluate() const override { return EM::Cos(operand->Evaluate()); }
+	virtual double Diff(ExpressionNamedReal* var) const override { return -EM::Sin(operand->Evaluate()) * operand->Diff(var); }
 	virtual STDstring ToString() const override { return "cos(" + operand->ToString() + ")"; }
 };
 
@@ -602,10 +602,10 @@ public:
 
 	virtual void Destroy() { if (operand) { operand->DecreaseReferenceCounter(); if (operand->ReferenceCounter() == 0) { operand->Destroy(); delete operand; deleteCount++; } } }
 
-	virtual Real Evaluate() const override { return EXUmath::Tan(operand->Evaluate()); }
+	virtual Real Evaluate() const override { return EM::Tan(operand->Evaluate()); }
 	virtual double Diff(ExpressionNamedReal* var) const override 
 	{
-		return (1 + EXUstd::Square(EXUmath::Tan(operand->Evaluate())) ) * operand->Diff(var);
+		return (1 + EXUstd::Square(EM::Tan(operand->Evaluate())) ) * operand->Diff(var);
 	}
 	virtual STDstring ToString() const override { return "tan(" + operand->ToString() + ")"; }
 };
@@ -618,7 +618,7 @@ public:
 
 	virtual void Destroy() { if (operand) { operand->DecreaseReferenceCounter(); if (operand->ReferenceCounter() == 0) { operand->Destroy(); delete operand; deleteCount++; } } }
 
-	virtual Real Evaluate() const override { return EXUmath::Asin(operand->Evaluate()); }
+	virtual Real Evaluate() const override { return EM::Asin(operand->Evaluate()); }
 	virtual double Diff(ExpressionNamedReal* var) const override 
 	{
 		double val = operand->Evaluate();
@@ -638,7 +638,7 @@ public:
 
 	virtual void Destroy() { if (operand) { operand->DecreaseReferenceCounter(); if (operand->ReferenceCounter() == 0) { operand->Destroy(); delete operand; deleteCount++; } } }
 
-	virtual Real Evaluate() const override { return EXUmath::Acos(operand->Evaluate()); }
+	virtual Real Evaluate() const override { return EM::Acos(operand->Evaluate()); }
 	virtual double Diff(ExpressionNamedReal* var) const override 
 	{
 		double val = operand->Evaluate();
@@ -658,7 +658,7 @@ public:
 
 	virtual void Destroy() { if (operand) { operand->DecreaseReferenceCounter(); if (operand->ReferenceCounter() == 0) { operand->Destroy(); delete operand; deleteCount++; } } }
 
-	virtual Real Evaluate() const override { return EXUmath::Atan(operand->Evaluate()); }
+	virtual Real Evaluate() const override { return EM::Atan(operand->Evaluate()); }
 	virtual double Diff(ExpressionNamedReal* var) const override 
 	{
 		return operand->Diff(var) / (1 + EXUstd::Square(operand->Evaluate()));
@@ -676,8 +676,8 @@ public:
 
 	virtual void Destroy() { if (operand) { operand->DecreaseReferenceCounter(); if (operand->ReferenceCounter() == 0) { operand->Destroy(); delete operand; deleteCount++; } } }
 
-	virtual Real Evaluate() const override { return EXUmath::Sinh(operand->Evaluate()); }
-	virtual double Diff(ExpressionNamedReal* var) const override { return EXUmath::Cosh(operand->Evaluate()) * operand->Diff(var); }
+	virtual Real Evaluate() const override { return EM::Sinh(operand->Evaluate()); }
+	virtual double Diff(ExpressionNamedReal* var) const override { return EM::Cosh(operand->Evaluate()) * operand->Diff(var); }
 	virtual STDstring ToString() const override { return "sinh(" + operand->ToString() + ")"; }
 };
 
@@ -689,8 +689,8 @@ public:
 
 	virtual void Destroy() { if (operand) { operand->DecreaseReferenceCounter(); if (operand->ReferenceCounter() == 0) { operand->Destroy(); delete operand; deleteCount++; } } }
 
-	virtual Real Evaluate() const override { return EXUmath::Cosh(operand->Evaluate()); }
-	virtual double Diff(ExpressionNamedReal* var) const override { return EXUmath::Sinh(operand->Evaluate()) * operand->Diff(var); }
+	virtual Real Evaluate() const override { return EM::Cosh(operand->Evaluate()); }
+	virtual double Diff(ExpressionNamedReal* var) const override { return EM::Sinh(operand->Evaluate()) * operand->Diff(var); }
 	virtual STDstring ToString() const override { return "cosh(" + operand->ToString() + ")"; }
 };
 
@@ -702,8 +702,8 @@ public:
 
 	virtual void Destroy() { if (operand) { operand->DecreaseReferenceCounter(); if (operand->ReferenceCounter() == 0) { operand->Destroy(); delete operand; deleteCount++; } } }
 
-	virtual Real Evaluate() const override { return EXUmath::Tanh(operand->Evaluate()); }
-	virtual double Diff(ExpressionNamedReal* var) const override { return (1 - EXUstd::Square(EXUmath::Tanh(operand->Evaluate()))) * operand->Diff(var); }
+	virtual Real Evaluate() const override { return EM::Tanh(operand->Evaluate()); }
+	virtual double Diff(ExpressionNamedReal* var) const override { return (1 - EXUstd::Square(EM::Tanh(operand->Evaluate()))) * operand->Diff(var); }
 	virtual STDstring ToString() const override { return "tanh(" + operand->ToString() + ")"; }
 };
 
@@ -777,7 +777,7 @@ public:
 		if (exponent) { exponent->DecreaseReferenceCounter(); if (exponent->ReferenceCounter() == 0) { exponent->Destroy(); delete exponent; deleteCount++; } }
 	}
 
-	virtual Real Evaluate() const override { return EXUmath::Pow(base->Evaluate(), exponent->Evaluate()); }
+	virtual Real Evaluate() const override { return EM::Pow(base->Evaluate(), exponent->Evaluate()); }
 
 	virtual double Diff(ExpressionNamedReal* var) const override 
 	{
@@ -786,8 +786,8 @@ public:
 
 		if (baseVal <= 0) { return std::numeric_limits<Real>::quiet_NaN(); }
 
-		return exponentVal * EXUmath::Pow(baseVal, exponentVal - 1) * base->Diff(var) +
-			EXUmath::Log(baseVal) * EXUmath::Pow(baseVal, exponentVal) * exponent->Diff(var);
+		return exponentVal * EM::Pow(baseVal, exponentVal - 1) * base->Diff(var) +
+			EM::Log(baseVal) * EM::Pow(baseVal, exponentVal) * exponent->Diff(var);
 	}
 
 	virtual STDstring ToString() const override { return "pow(" + base->ToString() + ", " + exponent->ToString() + ")"; }
@@ -805,7 +805,7 @@ public:
 		if (arg2) { arg2->DecreaseReferenceCounter(); if (arg2->ReferenceCounter() == 0) { arg2->Destroy(); delete arg2; deleteCount++; } }
 	}
 
-	virtual Real Evaluate() const override { return EXUmath::Atan2(arg1->Evaluate(), arg2->Evaluate()); }
+	virtual Real Evaluate() const override { return EM::Atan2(arg1->Evaluate(), arg2->Evaluate()); }
 	virtual double Diff(ExpressionNamedReal* var) const override
 	{
 		double arg1Val = arg1->Evaluate();
@@ -1491,7 +1491,7 @@ public:
 	// Overloaded exp function
 	template<typename RealType>
 	static SReal exp(const RealType& x) {
-		if (!recordExpressions) { return EXUmath::Exp(Number2Real(x)); }
+		if (!recordExpressions) { return EM::Exp(Number2Real(x)); }
 		ExpressionBase::NewCount()++;
 		return new ExpressionExp(GetFunctionExpression(x));
 	}
@@ -1499,7 +1499,7 @@ public:
 	// Overloaded log function
 	template<typename RealType>
 	static SReal log(const RealType& x) {
-		if (!recordExpressions) { return EXUmath::Log(Number2Real(x)); }
+		if (!recordExpressions) { return EM::Log(Number2Real(x)); }
 		ExpressionBase::NewCount()++;
 		return new ExpressionLog(GetFunctionExpression(x));
 	}
@@ -1512,7 +1512,7 @@ public:
 	// Overloaded sin function
 	template<typename RealType>
 	static SReal sin(const RealType& x) {
-		if (!recordExpressions) { return EXUmath::Sin(Number2Real(x)); }
+		if (!recordExpressions) { return EM::Sin(Number2Real(x)); }
 		ExpressionBase::NewCount()++;
 		return new ExpressionSin(GetFunctionExpression(x));
 	}
@@ -1520,7 +1520,7 @@ public:
 	// Overloaded cos function
 	template<typename RealType>
 	static SReal cos(const RealType& x) {
-		if (!recordExpressions) { return EXUmath::Cos(Number2Real(x)); }
+		if (!recordExpressions) { return EM::Cos(Number2Real(x)); }
 		ExpressionBase::NewCount()++;
 		return new ExpressionCos(GetFunctionExpression(x));
 	}
@@ -1528,7 +1528,7 @@ public:
 	// Overloaded tan function
 	template<typename RealType>
 	static SReal tan(const RealType& x) {
-		if (!recordExpressions) { return EXUmath::Tan(Number2Real(x)); }
+		if (!recordExpressions) { return EM::Tan(Number2Real(x)); }
 		ExpressionBase::NewCount()++;
 		return new ExpressionTan(GetFunctionExpression(x));
 	}
@@ -1536,7 +1536,7 @@ public:
 	// Overloaded asin function
 	template<typename RealType>
 	static SReal asin(const RealType& x) {
-		if (!recordExpressions) { return EXUmath::Asin(Number2Real(x)); }
+		if (!recordExpressions) { return EM::Asin(Number2Real(x)); }
 		ExpressionBase::NewCount()++;
 		return new ExpressionASin(GetFunctionExpression(x));
 	}
@@ -1544,7 +1544,7 @@ public:
 	// Overloaded acos function
 	template<typename RealType>
 	static SReal acos(const RealType& x) {
-		if (!recordExpressions) { return EXUmath::Acos(Number2Real(x)); }
+		if (!recordExpressions) { return EM::Acos(Number2Real(x)); }
 		ExpressionBase::NewCount()++;
 		return new ExpressionACos(GetFunctionExpression(x));
 	}
@@ -1552,7 +1552,7 @@ public:
 	// Overloaded atan function
 	template<typename RealType>
 	static SReal atan(const RealType& x) {
-		if (!recordExpressions) { return EXUmath::Atan(Number2Real(x)); }
+		if (!recordExpressions) { return EM::Atan(Number2Real(x)); }
 		ExpressionBase::NewCount()++;
 		return new ExpressionATan(GetFunctionExpression(x));
 	}
@@ -1561,7 +1561,7 @@ public:
 	// Overloaded sin function
 	template<typename RealType>
 	static SReal sinh(const RealType& x) {
-		if (!recordExpressions) { return EXUmath::Sinh(Number2Real(x)); }
+		if (!recordExpressions) { return EM::Sinh(Number2Real(x)); }
 		ExpressionBase::NewCount()++;
 		return new ExpressionSinh(GetFunctionExpression(x));
 	}
@@ -1569,7 +1569,7 @@ public:
 	// Overloaded cos function
 	template<typename RealType>
 	static SReal cosh(const RealType& x) {
-		if (!recordExpressions) { return EXUmath::Cosh(Number2Real(x)); }
+		if (!recordExpressions) { return EM::Cosh(Number2Real(x)); }
 		ExpressionBase::NewCount()++;
 		return new ExpressionCosh(GetFunctionExpression(x));
 	}
@@ -1577,7 +1577,7 @@ public:
 	// Overloaded tan function
 	template<typename RealType>
 	static SReal tanh(const RealType& x) {
-		if (!recordExpressions) { return EXUmath::Tanh(Number2Real(x)); }
+		if (!recordExpressions) { return EM::Tanh(Number2Real(x)); }
 		ExpressionBase::NewCount()++;
 		return new ExpressionTanh(GetFunctionExpression(x));
 	}
@@ -1612,7 +1612,7 @@ public:
 	// Overloaded pow function
 	template<typename RealType, typename RealTypeExp>
 	static SReal pow(const RealType& base, const RealTypeExp& exponent) {
-		if (!recordExpressions) { return EXUmath::Pow(Number2Real(base), Number2Real(exponent)); }
+		if (!recordExpressions) { return EM::Pow(Number2Real(base), Number2Real(exponent)); }
 		ExpressionBase::NewCount()++;
 		return new ExpressionPower(GetFunctionExpression(base), GetFunctionExpression(exponent));
 	}
@@ -1620,7 +1620,7 @@ public:
 	// Overloaded atan2 function
 	template<typename RealTypeArg1, typename RealTypeArg2>
 	static SReal atan2(const RealTypeArg1& arg1, const RealTypeArg2& arg2) {
-		if (!recordExpressions) { return EXUmath::Atan2(Number2Real(arg1), Number2Real(arg2)); }
+		if (!recordExpressions) { return EM::Atan2(Number2Real(arg1), Number2Real(arg2)); }
 		ExpressionBase::NewCount()++;
 		return new ExpressionAtan2(GetFunctionExpression(arg1), GetFunctionExpression(arg2));
 	}

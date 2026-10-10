@@ -54,7 +54,7 @@ Vector2D CObjectConnectorRollingDiscPenalty::ComputeSlipForce(const CObjectConne
 		else
 		{
 			Real phi = parameters.dryFrictionAngle;
-			Matrix2D rotFriction(2, 2, { EXUmath::Cos(phi),-EXUmath::Sin(phi),EXUmath::Sin(phi),EXUmath::Cos(phi) });
+			Matrix2D rotFriction(2, 2, { EM::Cos(phi),-EM::Sin(phi),EM::Sin(phi),EM::Cos(phi) });
 			slipForce = rotFriction.GetTransposed() * (frictionMatrix * (rotFriction * slipForce));
 		}
 	}

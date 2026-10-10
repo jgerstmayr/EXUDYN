@@ -176,7 +176,7 @@ protected:
 			}
 			catch (const std::bad_alloc& e) {
 				pout << "Allocation failed: " << e.what() << '\n';
-				pout << "requested memory = " << (8. * numberOfRowsInit*numberOfColumnsInit) / EXUmath::Pow(2, 20) << " MB, rows = " << numberOfRowsInit << ", columns = " << numberOfColumnsInit << "\n";
+				pout << "requested memory = " << (8. * numberOfRowsInit*numberOfColumnsInit) / EM::Pow(2, 20) << " MB, rows = " << numberOfRowsInit << ", columns = " << numberOfColumnsInit << "\n";
 				
 				CHECKandTHROWstring("MatrixBase::Allocation failed");
 				return false; //no success

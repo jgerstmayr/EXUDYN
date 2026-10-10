@@ -32,7 +32,7 @@ Real CObjectConnectorReevingSystemSprings::ComputeForce(Real L, Real L0, Real L_
 
         if (parameters.regularizationForce > 0 && F < 0)
         {
-            F = parameters.regularizationForce * EXUmath::Tanh(F / parameters.regularizationForce);
+            F = parameters.regularizationForce * EM::Tanh(F / parameters.regularizationForce);
         }
         return F;
 	}
@@ -103,7 +103,7 @@ void CObjectConnectorReevingSystemSprings::ComputeReevingGeometry(const MarkerDa
 				Vector3D lastNB0 = aA.CrossProduct(lastRB0);
 
 				Vector3D rA0 = (1. / RA) * rA;
-				Real phi = EXUmath::Atan2(lastNB0*rA0, lastRB0*rA0); //atan2(y,x) = atan(y/x)
+				Real phi = EM::Atan2(lastNB0*rA0, lastRB0*rA0); //atan2(y,x) = atan(y/x)
 				if (phi < 0) { phi += 2.*EXUstd::pi; }
 
 				actualLength += phi * RA;
@@ -371,7 +371,7 @@ void VisualizationObjectConnectorReevingSystemSprings::UpdateGraphics(const Visu
 				Vector3D lastNB0 = aA.CrossProduct(lastRB0);
 
 				Vector3D rA0 = (1. / RA) * rA;
-				Real phi = EXUmath::Atan2(lastNB0*rA0, lastRB0*rA0);
+				Real phi = EM::Atan2(lastNB0*rA0, lastRB0*rA0);
 				if (phi < 0) { phi += 2.*EXUstd::pi; }
 
 				//the arc on sheave A, from where the last span ends to where the next one starts
@@ -379,7 +379,7 @@ void VisualizationObjectConnectorReevingSystemSprings::UpdateGraphics(const Visu
 				for (Index j = 1; j <= nTile; j++)
 				{
 					Real phi1 = (j * phi) / (Real)nTile;
-					rope.push_back(pA + RA * (lastRB0 * EXUmath::Cos(phi1) + lastNB0 * EXUmath::Sin(phi1)));
+					rope.push_back(pA + RA * (lastRB0 * EM::Cos(phi1) + lastNB0 * EM::Sin(phi1)));
 				}
 			}
 			//the free span from sheave A to sheave B

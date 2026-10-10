@@ -241,6 +241,10 @@ A decision of the maintainer: with the switch, 56 of 267 results move on Windows
 
 CLOSED 2026-10-10 (#2952): implementation `exudyn` of `EvaluateMathFunction`; `mathFunctionsPlatform.py --timing`. [log](exudynRevisionLog2026c.md#rg4-1-3-5)
 
+##### **CLOSED_RG4.1.3.6** Call the math functions as EM::Sin, or Sin with using namespace EM, and refuse the library functions in a check
+
+CLOSED 2026-10-10 (#2953): namespace EM with the 14 functions; `tools/checkMathFunctions.py` in the commit gate. [log](exudynRevisionLog2026c.md#rg4-1-3-6)
+
 ### **OPEN_RG4.20** Port the revision of ObjectANCFThinPlate and complete the element
 
 The port of a colleague's revision was done in revision2026b (#2857, #2858, #2859, #2864).

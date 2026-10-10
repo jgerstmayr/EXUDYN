@@ -121,7 +121,7 @@ void CObjectJointPrismatic2D::GetOutputVariableConnector(OutputVariableType vari
 		case OutputVariableType::Rotation: //the rotation of marker 1 relative to marker 0 about z (#2735)
 		{
 			Matrix3D A01 = A0.GetTransposed() * A1;
-			value.SetVector({ EXUmath::Atan2(A01(1, 0), A01(0, 0)) });
+			value.SetVector({ EM::Atan2(A01(1, 0), A01(0, 0)) });
 			break;
 		}
 		default:

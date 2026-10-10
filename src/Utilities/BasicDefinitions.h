@@ -106,7 +106,7 @@
 	#define SinglePrecision // added from SH. needed to switch between double/float AVX instructions
 #endif // DoublePrecision
 
-//#define EXUDYN_PORTABLE_MATH	//!< the transcendental functions (EXUmath::Sin, ...) from EXUmath::Portable, the functions of musl libc, instead of the C++ library: the same results on every platform (#2949); also set by the compiler, e.g. EXUDYN_EXTRA_COMPILE_ARGS=-DEXUDYN_PORTABLE_MATH
+//#define EXUDYN_PORTABLE_MATH	//!< the transcendental functions (EM::Sin, ...) from EXUmath::Portable, the functions of musl libc, instead of the C++ library: the same results on every platform (#2949); also set by the compiler, e.g. EXUDYN_EXTRA_COMPILE_ARGS=-DEXUDYN_PORTABLE_MATH
 
 
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++

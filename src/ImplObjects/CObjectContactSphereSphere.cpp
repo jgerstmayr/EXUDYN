@@ -34,7 +34,7 @@ TReal CObjectContactSphereSphere::ComputeContactForces(TReal gap, const SlimVect
 	Real d1 = parameters.contactDamping;
 	Real n = parameters.contactStiffnessExponent;
 	TReal deltaExp = -gap; // overwrite this in case that n != 1 holds (see following line)
-	if (n != 1) { deltaExp = EXUstd::SignReal(deltaExp) * EXUmath::Pow(fabs(deltaExp), n); } // also respect sign
+	if (n != 1) { deltaExp = EXUstd::SignReal(deltaExp) * EM::Pow(fabs(deltaExp), n); } // also respect sign
 	// at first, just use the easierst spring damper model (damping acts against n0 for sphere 1 if deltaVnormal is positive)
 	TReal fDamp = - d1 * deltaVnormal;
 	TReal contactForce = k1 * deltaExp + fDamp;
@@ -46,7 +46,7 @@ TReal CObjectContactSphereSphere::ComputeContactForces(TReal gap, const SlimVect
 			Real k2 = k1 * (1. / (1. - parameters.contactPlasticityRatio));
 			Real f0 = parameters.constantPullOffForce;
 			TReal deltaPlasticExp = data[dataIndexDeltaPlastic]; // overwrite this in case that n != 1 holds (see following line)
-			if (n != 1) { deltaPlasticExp = EXUstd::SignReal(deltaPlasticExp) * EXUmath::Pow(fabs(deltaPlasticExp), n); }  // also respect sign
+			if (n != 1) { deltaPlasticExp = EXUstd::SignReal(deltaPlasticExp) * EM::Pow(fabs(deltaPlasticExp), n); }  // also respect sign
 			if ((k2 * (deltaExp - deltaPlasticExp)) >= (k1 * deltaExp))
 			{
 				contactForce = k1 * deltaExp; // loading process (overwrite primarily computed contactForce)
@@ -56,7 +56,7 @@ TReal CObjectContactSphereSphere::ComputeContactForces(TReal gap, const SlimVect
 				Real kAdh = parameters.adhesionCoefficient;
 				Real x = parameters.adhesionExponent;
 				Real deltaAdhExp = -gap; // overwrite this in case that x != 1 holds (see following line)
-				if (n != 1) { deltaAdhExp = EXUstd::SignReal(deltaAdhExp) * EXUmath::Pow(fabs(deltaAdhExp), x); }  // also respect sign
+				if (n != 1) { deltaAdhExp = EXUstd::SignReal(deltaAdhExp) * EM::Pow(fabs(deltaAdhExp), x); }  // also respect sign
 				if (((k1 * deltaExp) > (k2 * (deltaExp - deltaPlasticExp))) && ((k2 * (deltaExp - deltaPlasticExp)) > (-kAdh * deltaAdhExp)))
 				{
 					contactForce = k2 * (deltaExp - deltaPlasticExp); // unloading process (overwrite primarily computed contactForce)
@@ -292,7 +292,7 @@ Real CObjectContactSphereSphere::PostNewtonStep(const MarkerDataStructure& marke
 	Real deltaPlastic = 0;
 	if (currentGap < 0 && parameters.contactPlasticityRatio != 0.)
 	{
-		if (parameters.contactStiffnessExponent != 1.) { deltaPlastic = EXUmath::Pow(parameters.contactPlasticityRatio, 1. / parameters.contactStiffnessExponent) * (-currentGap); }
+		if (parameters.contactStiffnessExponent != 1.) { deltaPlastic = EM::Pow(parameters.contactPlasticityRatio, 1. / parameters.contactStiffnessExponent) * (-currentGap); }
 		else { deltaPlastic = parameters.contactPlasticityRatio * (-currentGap); }
 
 		deltaPlastic = EXUstd::Maximum(deltaPlastic, dataStartofStepState[dataIndexDeltaPlastic]); //here we need start of step, as we do not consider values of previous iterations!

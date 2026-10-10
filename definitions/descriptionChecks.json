@@ -24,7 +24,7 @@
   "MarkerBodiesRelativeRotationCoordinate": {
    "checked": "2026-10-10",
    "by": "Claude-JG",
-   "fingerprint": "a4b1c6d57745"
+   "fingerprint": "e8f2c696bc7d"
   },
   "MarkerBodiesRelativeTranslationCoordinate": {
    "checked": "2026-10-06",
@@ -149,7 +149,7 @@
   "NodePoint2DSlope1": {
    "checked": "2026-10-10",
    "by": "Claude-JG",
-   "fingerprint": "359fedbceef9"
+   "fingerprint": "ddc7ee232b9b"
   },
   "NodePointGround": {
    "checked": "2026-10-06",
@@ -174,7 +174,7 @@
   "NodeRigidBody2D": {
    "checked": "2026-10-10",
    "by": "Claude-JG",
-   "fingerprint": "f959c8e860b7"
+   "fingerprint": "fd9d76662d3e"
   },
   "NodeRigidBodyEP": {
    "checked": "2026-10-06",
@@ -184,12 +184,12 @@
   "NodeRigidBodyRotVecLG": {
    "checked": "2026-10-10",
    "by": "Claude-JG",
-   "fingerprint": "93f58938f86c"
+   "fingerprint": "621a61cab3a3"
   },
   "NodeRigidBodyRxyz": {
    "checked": "2026-10-10",
    "by": "Claude-JG",
-   "fingerprint": "99a5d45ce8b0"
+   "fingerprint": "7eaf2e5f5e64"
   },
   "ObjectALEANCFCable2D": {
    "checked": "2026-10-06",
@@ -204,12 +204,12 @@
   "ObjectANCFCable": {
    "checked": "2026-10-10",
    "by": "Claude-JG",
-   "fingerprint": "bbc8fb158f25"
+   "fingerprint": "4a2a43fb5b55"
   },
   "ObjectANCFCable2D": {
    "checked": "2026-10-10",
    "by": "Claude-JG",
-   "fingerprint": "9952400a68a3"
+   "fingerprint": "dcff3f1c9e8e"
   },
   "ObjectANCFThinPlate": {
    "checked": "2026-10-07",
@@ -224,7 +224,7 @@
   "ObjectBeamGeometricallyExact2D": {
    "checked": "2026-10-10",
    "by": "Claude-JG",
-   "fingerprint": "92afb6bb5795"
+   "fingerprint": "ebb2b8c6697a"
   },
   "ObjectConnectorCartesianSpringDamper": {
    "checked": "2026-10-06",
@@ -259,7 +259,7 @@
   "ObjectConnectorGravity": {
    "checked": "2026-10-10",
    "by": "Claude-JG",
-   "fingerprint": "ee48b3bc2e2a"
+   "fingerprint": "e186aa48676f"
   },
   "ObjectConnectorHydraulicActuatorSimple": {
    "checked": "2026-10-06",
@@ -274,7 +274,7 @@
   "ObjectConnectorReevingSystemSprings": {
    "checked": "2026-10-10",
    "by": "Claude-JG",
-   "fingerprint": "6ac5550348a9"
+   "fingerprint": "95c77c878740"
   },
   "ObjectConnectorRigidBodySpringDamper": {
    "checked": "2026-10-06",
@@ -284,7 +284,7 @@
   "ObjectConnectorRollingDiscPenalty": {
    "checked": "2026-10-10",
    "by": "Claude-JG",
-   "fingerprint": "c375d29ef098"
+   "fingerprint": "d4ebed8eeb64"
   },
   "ObjectConnectorSpringDamper": {
    "checked": "2026-10-06",
@@ -304,12 +304,12 @@
   "ObjectContactConvexRoll": {
    "checked": "2026-10-10",
    "by": "Claude-JG",
-   "fingerprint": "dce2bbb797a2"
+   "fingerprint": "7acc529af70e"
   },
   "ObjectContactCoordinate": {
    "checked": "2026-10-10",
    "by": "Claude-JG",
-   "fingerprint": "3ae83a1ebef6"
+   "fingerprint": "1bf78ddf1112"
   },
   "ObjectContactCurveCircles": {
    "checked": "2026-10-07",
@@ -319,22 +319,22 @@
   "ObjectContactFrictionCircleCable2D": {
    "checked": "2026-10-10",
    "by": "Claude-JG",
-   "fingerprint": "66211cdf793e"
+   "fingerprint": "3d7da19af3e0"
   },
   "ObjectContactSphereSphere": {
    "checked": "2026-10-10",
    "by": "Claude-JG",
-   "fingerprint": "931e68882826"
+   "fingerprint": "41b897a5784e"
   },
   "ObjectContactSphereTorus": {
    "checked": "2026-10-10",
    "by": "Claude-JG",
-   "fingerprint": "4af72db29a80"
+   "fingerprint": "461c10787010"
   },
   "ObjectContactSphereTriangle": {
    "checked": "2026-10-10",
    "by": "Claude-JG",
-   "fingerprint": "af5df6620079"
+   "fingerprint": "a863a9068c59"
   },
   "ObjectFFRF": {
    "checked": "2026-10-06",
@@ -374,7 +374,7 @@
   "ObjectJointPrismatic2D": {
    "checked": "2026-10-10",
    "by": "Claude-JG",
-   "fingerprint": "4bcf0ddf4f16"
+   "fingerprint": "282d5c26e567"
   },
   "ObjectJointPrismaticX": {
    "checked": "2026-10-06",
@@ -434,12 +434,12 @@
   "ObjectRigidBody": {
    "checked": "2026-10-10",
    "by": "Claude-JG",
-   "fingerprint": "362556c49475"
+   "fingerprint": "be9c0e3906f3"
   },
   "ObjectRigidBody2D": {
    "checked": "2026-10-10",
    "by": "Claude-JG",
-   "fingerprint": "e823a7c98681"
+   "fingerprint": "acbab60351c5"
   },
   "ObjectRotationalMass1D": {
    "checked": "2026-10-06",

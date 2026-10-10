@@ -603,3 +603,23 @@ longer cuts the section of `CHANGELOG.md`, which after a minor bump holds only t
   stay dense. `ComputeLinearizedSystem(..., useSparseMatrices=True)` returns M, K, D sparse.
 - Test model `sparseSystemMatricesTest.py`: a chain of 30 mass points, sparse = dense for both solver types and the
   linearized system (88 entries of K instead of 8100), the first five eigenvalues of `eigsh` equal to `eigh`.
+
+<a id="rg4-1-3-6"></a>
+### RG4.1.3.6 — the namespace EM, and the check (2026-10-10, #2953)
+
+*(Maintainer 2026-10-10: "Use a separate small EM "Exudyn Mathfunctions" namespace. In files where several such
+functions are used, the functions are used without the namespace ... In sparse usage (lets say up to 5 such functions in
+a .cpp file), EM::Sin is good to go ... Also in some basic math, kinematics and lie group header files, keep the
+namespace. In item code implementations, readability might be improved when using it without the namespace. Certainly,
+the mentioned check needs to be added".)*
+- `namespace EM` holds the 14 functions and nothing else, so `using namespace EM;` brings in only these; the
+  portable functions, the evaluator and the rest stay in `EXUmath`.
+- The 247 calls: six `.cpp` files with more than five calls (`CObjectRigidBody2D` 22, `CObjectBeamGeometricallyExact2D`
+  16, `CNodeRigidBodyRxyz` 10, `CNodePoint2DSlope1`, `CObjectANCFCable2D`, `CObjectRigidBody` 6 each) say
+  `using namespace EM;` after their includes and call `Sin(...)`; the other `.cpp` files and all headers write
+  `EM::Sin(...)`. The suite gives the same 269 results to the last bit.
+- `tools/checkMathFunctions.py`, in `exudev generate --all-checks`: a call of `sin`, `std::sin`, `::sin`, ... in `src/`
+  (not in `src/Graphics`, `src/Tests` and the two files that implement them) is refused, as is `using namespace EM;`
+  in a header. Comments, strings, declarations of overloads (`static SReal sin(`) and class functions (`SR::sin`) are
+  not calls. Its first run found nothing the routing of #2949 had missed. pytest `test_checkMathFunctions.py`.
+- `CODING_STYLE.md` §1 states the rule.

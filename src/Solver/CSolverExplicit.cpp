@@ -478,7 +478,7 @@ bool CSolverExplicitTimeInt::Newton(CSystem& computationalSystem, const Simulati
 
 		//stepsize control according to Hairer, Norsett and Wanner I, p. 168:
 		Real h = it.currentStepSize;
-		Real hOpt = h * EXUmath::Pow((1. / err), 1. / (rk.orderMethod)); //rk.orderMethod = q+1 in Hairer, Norsett and Wanner
+		Real hOpt = h * EM::Pow((1. / err), 1. / (rk.orderMethod)); //rk.orderMethod = q+1 in Hairer, Norsett and Wanner
 
 		Real hMax = EXUstd::Minimum(it.maxStepSize, h * simulationSettings.timeIntegration.stepSizeMaxIncrease);
 		Real hMin = it.minStepSize;

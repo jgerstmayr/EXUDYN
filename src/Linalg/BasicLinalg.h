@@ -109,12 +109,12 @@ namespace EXUmath {
 	inline T Sinc(T x)
 	{
 		if (x == 0.) { return 1.; }
-		else { return EXUmath::Sin(x) / x; }
+		else { return EM::Sin(x) / x; }
 	}
 
 	//! compute cot(x) = 1./tan(x); fails for x=0
 	template <class T>
-	Real Cot(T x) { return(1. / EXUmath::Tan(x)); }
+	Real Cot(T x) { return(1. / EM::Tan(x)); }
 
 	inline Vector3D GetUnitVector(Index i)
 	{

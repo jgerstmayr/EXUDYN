@@ -60,7 +60,7 @@ Matrix3D CNodeRigidBody2D::GetRotationMatrix(ConfigurationType configuration) co
 	{
 		phi += GetCoordinateVector(configuration)[2];
 	}
-	return Matrix3D(3,3,{ EXUmath::Cos(phi),-EXUmath::Sin(phi),0.,  EXUmath::Sin(phi),EXUmath::Cos(phi),0., 0.,0.,1.});
+	return Matrix3D(3,3,{ EM::Cos(phi),-EM::Sin(phi),0.,  EM::Sin(phi),EM::Cos(phi),0., 0.,0.,1.});
 }
 
 //! AUTO:  return configuration dependent angular velocity of node; returns always a 3D Vector
