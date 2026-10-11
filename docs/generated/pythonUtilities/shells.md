@@ -3,16 +3,18 @@
 (sec-module-shells)=
 # Module: shells
 
-Shells and plates utility functions, e.g. for creation of plate / shell mesh.
+Shells and plates: ShellMesh creates a mesh of ObjectANCFThinPlate elements on NodePointSlope12 nodes,
+flat or mapped onto a surface (SurfaceMap), with constant or varying thickness; and functions for the
+boundary conditions, edge loads and springs of such a mesh. The slopes of a mapped mesh follow from the
+derivatives of the map, computed with exu.symbolic; a component of the map may be a plain float.
 
-- **Author**: Johannes Gerstmayr
+- **Author**: Johannes Gerstmayr, Michael Pieber (symbolic and numeric mappings)
 - **Date**: 2026-01-11 (created)
-- **Notes**: For a list of plot colors useful for matplotlib, see also utilities.PlotLineCode(...) Extended ShellMesh class with symbolic slope computation via vertexMapping. Copied from ANCFThinPlatePrecurved.py; intended to replace exudyn.shells.ShellMesh once merged into the Exudyn library.
 
 (sec-shells--unitvector)=
 ## Function: _UnitVector
 
-[`_UnitVector(v)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/shells.py#L500)
+[`_UnitVector(v)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/shells.py#L480)
 
 - **function description**: Return the unit vector of v; raises ValueError if v is near-zero.
 
@@ -20,9 +22,9 @@ Shells and plates utility functions, e.g. for creation of plate / shell mesh.
 (sec-shells-addnodeconstraints)=
 ## Function: AddNodeConstraints
 
-[`AddNodeConstraints(mbs, nodeNumber, dofs, refNodeNumber = None)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/shells.py#L731)
+[`AddNodeConstraints(mbs, nodeNumber, dofs, refNodeNumber = None)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/shells.py#L801)
 
-- **function description**: Constrain selected DOFs (0-8) of an ANCF plate node, to its reference value or to the same DOF of another node. Mirrors the GenerateStraightBeam pattern: one NodePointGround placed at the node's reference position, one shared ground marker, one CoordinateConstraint per DOF.  MarkerNodeCoordinate returns ODE2 displacement (without reference values), so default offset=0 pins each displacement to zero = node stays at its reference configuration.
+- **function description**: constrain selected coordinates (0-8) of an ANCF plate node to their reference values, or to the same coordinates of another node; one CoordinateConstraint per coordinate, to a NodePointGround at the reference position of the node
 - **input**:
   - `mbs`: the MainSystem
   - `nodeNumber`: the NodePointSlope12 node
@@ -37,23 +39,32 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`ANCFThinPla
 (sec-shells-addsphericaljointtoground)=
 ## Function: AddSphericalJointToGround
 
-[`AddSphericalJointToGround(mbs, nodeNumber)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/shells.py#L770)
+[`AddSphericalJointToGround(mbs, nodeNumber)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/shells.py#L836)
 
-- **function description**: Pin an ANCF node to ground: fix translations (DOF 0,1,2), slopes free.
+- **function description**: pin an ANCF plate node to the ground: its position (coordinates 0-2) fixed, its slopes free
+- **input**:
+  - `mbs`: the MainSystem
+  - `nodeNumber`: the NodePointSlope12 node
+- **output**: list of CoordinateConstraint object indices
 
 
 (sec-shells-addclamptoground)=
 ## Function: AddClampToGround
 
-[`AddClampToGround(mbs, nodeNumber, fixedConstraints = None)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/shells.py#L775)
+[`AddClampToGround(mbs, nodeNumber, fixedConstraints = None)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/shells.py#L849)
 
-- **function description**: Clamp an ANCF plate node to ground using a 9-element binary constraint vector. fixedConstraints: list/array of 9 values (0 or 1), one per DOF in the order [x, y, z,  sx_x, sx_y, sx_z,  sy_x, sy_y, sy_z]. A value of 1 fixes that DOF to its reference value; 0 leaves it free. Mirrors the fixedConstraintsNode0 convention of GenerateStraightLineANCFCable2D. Default (None): fix all 9 DOFs -- equivalent to [1,1,1, 1,1,1, 1,1,1]. For a flat plate in the xy-plane (clamped left edge), the physically consistent choice that mirrors the 2D cable [1,1,0,1] convention is [1,1,1, 0,1,1, 1,0,1]: positions fixed, transverse slope components fixed (zero rotation), axial slope components (sx_x and sy_y, both = 1 in reference) left free to allow boundary stretching.
+- **function description**: clamp an ANCF plate node to the ground: the selected coordinates keep their reference values
+- **input**:
+  - `mbs`: the MainSystem
+  - `nodeNumber`: the NodePointSlope12 node
+  - `fixedConstraints`: 9 values 0 or 1, one per coordinate in the order [x, y, z, sx_x, sx_y, sx_z, sy_x, sy_y, sy_z]: 1 fixes the coordinate, 0 leaves it free, as fixedConstraintsNode0 of GenerateStraightLineANCFCable2D; None fixes all 9. For a flat plate in the xy-plane clamped at its left edge, [1,1,1, 0,1,1, 1,0,1] fixes the positions and the transverse slope components and leaves the axial ones (sx_x, sy_y) free, so that the boundary can stretch
+- **output**: list of CoordinateConstraint object indices
 
 
 (sec-shells--thinplateshapefunctionderivatives)=
 ## Function: _ThinPlateShapeFunctionDerivatives
 
-[`_ThinPlateShapeFunctionDerivatives(xi, eta, scaleX, scaleY)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/shells.py#L798)
+[`_ThinPlateShapeFunctionDerivatives(xi, eta, scaleX, scaleY)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/shells.py#L871)
 
 - **function description**: First derivatives (d/dxi, d/deta) of the 12 ANCFThinPlate shape functions. Transcribed from CObjectANCFThinPlate::ComputeShapeFunctions_xy (C++), including the per-node slope scaling (slopesScalingX/Y parameters of the element). Node order: n0=(-1,-1), n1=(+1,-1), n2=(+1,+1), n3=(-1,+1); per node the SF order is [position, slopeX, slopeY]. Returns (sf_xi, sf_eta): two numpy arrays of length 12.
 
@@ -61,7 +72,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`ANCFThinPla
 (sec-shells--creatempczeromarker)=
 ## Function: _CreateMPCZeroMarker
 
-[`_CreateMPCZeroMarker(mbs, nCoords = 36)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/shells.py#L851)
+[`_CreateMPCZeroMarker(mbs, nCoords = 36)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/shells.py#L924)
 
 - **function description**: Return a marker whose coordinate vector is clamped to zero. Used as marker0 in ObjectConnectorCoordinateVector MPCs so Exudyn does not warn about two identical markers (self-constraint via markerNumbers=[m, m]). One ground node can be shared by many element constraints in the same mbs.
 
@@ -69,7 +80,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`ANCFThinPla
 (sec-shells--addslopedeviationconstraint)=
 ## Function: _AddSlopeDeviationConstraint
 
-[`_AddSlopeDeviationConstraint(mbs, elem, rowFunc, groundMarker = None, nodalCoords = (-1.0, +1.0), components = (0, 1, 2))`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/shells.py#L870)
+[`_AddSlopeDeviationConstraint(mbs, elem, rowFunc, groundMarker = None, nodalCoords = (-1.0, +1.0), components = (0, 1, 2))`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/shells.py#L943)
 
 - **function description**: Add a linear MPC forcing the slope functional rowFunc(s) to equal the linear interpolation of its values at the edge ends, at the 2 interior Gauss points. rowFunc(s) must return the 12 shape-function-derivative coefficients of the constrained (transverse) slope at edge coordinate s in [-1, +1]. Returns the constraint object index.
 
@@ -77,7 +88,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`ANCFThinPla
 (sec-shells-addslopeconformityconstraints)=
 ## Function: AddSlopeConformityConstraints
 
-[`AddSlopeConformityConstraints(mbs, plateMesh, direction = 'x', components = (0, 1, 2))`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/shells.py#L909)
+[`AddSlopeConformityConstraints(mbs, plateMesh, direction = 'x', components = (0, 1, 2))`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/shells.py#L982)
 
 - **function description**: Suppress the non-conforming transverse-slope modes of ALL plate elements. The blended (ACM-type) ANCFThinPlate basis interpolates the transverse slope r_,x along edge lines NON-conformingly: between the nodes it deviates from the linear nodal interpolation by contributions of the far-node DOFs.  This deviation is CONSTANT in xi (the eta-nonlinear terms of sf_,xi carry only constant-in-xi factors), so constraining it on ONE face per element removes it from the whole element; analogously for r_,y in eta. Effect: with direction='x', the membrane strain field of a beam-like strip (ny=1) reproduces ANCFCable2D EXACTLY (verified: identical L2/max membrane error vs fine cable reference), eliminating the spurious self-equilibrated strain oscillations across the width at clamps and inter-element lines. CAUTION: this stiffens the element (removes the non-conforming modes that contribute to 2D bending/twist softness).  Intended for beam-like verification/benchmark setups, not for general shell meshes. Do NOT combine with AddDistributedClampToEdge on the same elements (duplicate equations -> singular Jacobian). LIMITATION: direction='both' creates REDUNDANT constraints (singular Jacobian) on meshes with ny>=2 (rank check: the y-direction rows of stacked element rows become dependent); use 'both' only for ny=1 (and 'y'+nx>=2 analogously untested) -- for the beam-like strip use the default 'x'.
 - **input**:
@@ -91,7 +102,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`ANCFThinPla
 (sec-shells-adddistributedclamptoedge)=
 ## Function: AddDistributedClampToEdge
 
-[`AddDistributedClampToEdge(mbs, plateMesh, edgeKey, components = (0, 1, 2))`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/shells.py#L963)
+[`AddDistributedClampToEdge(mbs, plateMesh, edgeKey, components = (0, 1, 2))`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/shells.py#L1036)
 
 - **function description**: Constrain the TRANSVERSE slope field along a clamped edge at the 2 interior Gauss points of every edge element ('distributed clamp'). Background: nodal clamps (AddClampToGround) fix the edge POSITION field completely (it is conforming), but the transverse slope r_,n along the edge is the classic ACM-type NON-CONFORMING field: between the nodes it receives contributions from the interior/far-node DOFs of the edge element, so the clamp condition is violated mid-edge.  This produces a spurious self-equilibrated strain oscillation across the clamped edge (boundary layer). Constraint formulation (per edge element, per Gauss point +-1/sqrt(3), per component): the transverse slope at the interior edge point must equal the LINEAR interpolation of the two nodal transverse slopes, r_,n(s*) - [(1-s*)/2 r_,n(-1) + (1+s*)/2 r_,n(+1)] = 0. This kills exactly the non-conforming deviation while leaving the nodal slope DOFs (e.g. free axial stretch sx_x of a clamp like [1,1,1, 0,1,1, 1,0,1]) untouched -- mirroring an ideal 1D (cable-like) clamp.  Since the transverse slope is cubic along the edge, 2 interior points reduce it exactly to the linear nodal interpolation.  Each constraint is a LINEAR multipoint constraint on the element's 36 ODE2 coordinates (MarkerObjectODE2Coordinates + ObjectConnectorCoordinateVector with exact constant Jacobian). NOTE: this makes the strain AT the clamp face exact (matches an ideal 1D clamp), but the suppressed non-conforming mode reappears at the next inter-element line (overall L2 error barely changes).  To suppress the non-conformity in the WHOLE mesh (e.g. to reproduce ANCFCable2D exactly with a beam-like strip), use AddSlopeConformityConstraints instead -- but do not combine both on the same elements (duplicate equations -> singular Jacobian).
 - **input**:
@@ -105,7 +116,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`ANCFThinPla
 (sec-shells-applyedgeload)=
 ## Function: ApplyEdgeLoad
 
-[`ApplyEdgeLoad(mbs, plateMesh, edgeKey, loadVector = None, torqueVector = None, distributed = False)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/shells.py#L1035)
+[`ApplyEdgeLoad(mbs, plateMesh, edgeKey, loadVector = None, torqueVector = None, distributed = False)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/shells.py#L1108)
 
 - **function description**: Apply a uniformly distributed force/torque along one plate edge. Accepts the TOTAL load/torque; the force is distributed in one of two ways: distributed=False (default, nodal): Trapezoidal rule on the edge nodes: corner nodes receive 1x the per-element base, interior nodes receive 2x, so the sum equals the total exactly.  NOTE: nodal point forces are NOT work-equivalent to a uniform line load on the cubic (Hermite) edge interpolation -- the slope-conjugate load components are missing, which excites a spurious Saint-Venant boundary layer (local membrane/bending oscillation across the width) at the loaded edge. distributed=True (consistent line load): Work-equivalent uniform line load: per edge element, the force is applied at the 2 Gauss points of the edge (local coordinate +-1/sqrt(3)) via MarkerBodyPosition with weight 1/2 each.  Since the edge field is cubic and the load direction is constant, 2-point Gauss integration of f = int S^T(edge) q ds is EXACT -- including the Hermite slope-conjugate components that nodal forces miss.  Use this to reproduce ideal beam-like load introduction (e.g. matching an ANCFCable2D tip load on a beam-like strip). Torques are always applied nodally (trapezoidal rule).
 - **input**:
@@ -120,7 +131,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`ANCFThinPla
 (sec-shells-addrotationalspringdamper)=
 ## Function: AddRotationalSpringDamper
 
-[`AddRotationalSpringDamper(mbs, nodeA, nodeB, dofs, stiffness, damping = 0.0)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/shells.py#L1125)
+[`AddRotationalSpringDamper(mbs, nodeA, nodeB, dofs, stiffness, damping = 0.0)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/shells.py#L1198)
 
 - **function description**: Add a CoordinateSpringDamper on each selected DOF between nodeA and nodeB. Used to add a rotational spring/damper at an ANCF plate hinge: dofs=[3,4,5]  resists relative rotation about the y-edge-axis (sx slopes). dofs=[6,7,8]  resists relative twist about the x-edge-axis (sy slopes).
 - **input**:
@@ -136,7 +147,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`ANCFThinPla
 (sec-shells-addedgespringdamper)=
 ## Function: AddEdgeSpringDamper
 
-[`AddEdgeSpringDamper(mbs, nodesA, nodesB, dofs, totalStiffness, totalDamping = 0.0)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/shells.py#L1156)
+[`AddEdgeSpringDamper(mbs, nodesA, nodesB, dofs, totalStiffness, totalDamping = 0.0)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/shells.py#L1229)
 
 - **function description**: Distribute a total rotational spring-damper along matching edge node lists. Mirrors ApplyEdgeLoad: distributes totalStiffness via the trapezoidal rule so that the effective stiffness per unit length is uniform regardless of mesh refinement.  Corner nodes (first/last) receive 1x the base weight; interior nodes receive 2x, giving the correct trapezoidal integration.
 - **input**:
@@ -152,13 +163,13 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`ANCFThinPla
 (sec-module-shells-class-shellmesh)=
 ## CLASS ShellMesh (in module shells)
 
-**class description**: class for generation, representation of plate and shell meshes; creaton of Exudyn elements
+**class description**: a mesh of plates or shells: the nodes and ObjectANCFThinPlate elements of a rectangle, flat or mapped onto a surface
 
 
 (sec-shells-shellmesh---init--)=
 ### Class function: __init__
 
-[`__init__(self, vertices = [[-1,-1,0],[ 1,-1,0],[ 1, 1,0],[-1, 1,0]], numberOfElementsX = 1, numberOfElementsY = 1, youngsModulus = None, poissonsRatio = None, density = None, thickness = None, massProportionalDamping = 0., thicknessAtNodes = None, thicknessFunction = None, stiffnessProportionalDamping = 0., surfaceMap = None)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/shells.py#L50)
+[`__init__(self, vertices = [[-1,-1,0],[ 1,-1,0],[ 1, 1,0],[-1, 1,0]], numberOfElementsX = 1, numberOfElementsY = 1, youngsModulus = None, poissonsRatio = None, density = None, thickness = None, massProportionalDamping = 0., thicknessAtNodes = None, thicknessFunction = None, stiffnessProportionalDamping = 0., surfaceMap = None)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/shells.py#L35)
 
 - **class function description**: initialize rectangular shell mesh with geometry, discretization and physics parameters
 - **input**:
@@ -189,70 +200,138 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`ANCFThinPla
 (sec-shells-surfacemap-skewparallelogram)=
 ### Class function: SkewParallelogram
 
-[`SkewParallelogram(skewY = 0.0, skewX = 0.0)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/shells.py#L522)
+[`SkewParallelogram(skewY = 0.0, skewX = 0.0)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/shells.py#L502)
 
-- **class function description**: Skew a rectangle into a parallelogram. skewY: adds x += skewY*y  (shear x with y). skewX: adds y += skewX*x  (shear y with x).
+- **class function description**: skew the rectangle into a parallelogram
+- **input**:
+  - `skewY`: shear of x with y: x + skewY*y
+  - `skewX`: shear of y with x: y + skewX*x
+- **output**: the map f(x, y) -> [X, Y, Z]
 
 
 (sec-shells-surfacemap-trapezoid)=
 ### Class function: Trapezoid
 
-[`Trapezoid(Lx, Ly, topScale = 1.0, aboutMidline = True)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/shells.py#L532)
+[`Trapezoid(Lx, Ly, topScale = 1.0, aboutMidline = True)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/shells.py#L518)
 
-- **class function description**: Trapezoid by scaling x-span linearly with y. topScale<1: narrower at top; topScale>1: wider at top. aboutMidline=True keeps the plate centreline fixed.
+- **class function description**: a trapezoid: the width in x scaled linearly with y
+- **input**:
+  - `Lx`: length of the rectangle in x
+  - `Ly`: length of the rectangle in y (> 0)
+  - `topScale`: the scale of the width at the top, y = Ly: < 1 narrower, > 1 wider
+  - `aboutMidline`: True keeps the centre line x = Lx/2 fixed
+- **output**: the map f(x, y) -> [X, Y, Z]
 
 
 (sec-shells-surfacemap-curvededge)=
 ### Class function: CurvedEdge
 
-[`CurvedEdge(Lx, Ly, amp = 0.0, mode = 'top', shape = 'sin', aboutMidline = True)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/shells.py#L550)
+[`CurvedEdge(Lx, Ly, amp = 0.0, mode = 'top', shape = 'sin', aboutMidline = True)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/shells.py#L544)
 
-- **class function description**: Curve one edge by an x-shift that varies with y (and x). mode:  'top' or 'bottom' — where the curvature reaches full amplitude. shape: 'sin' (sinusoidal in x) or 'parabola'. amp:   maximum x-shift [m].
+- **class function description**: curve one edge by a shift in x that grows with y and varies with x
+- **input**:
+  - `Lx`: length of the rectangle in x
+  - `Ly`: length of the rectangle in y (> 0)
+  - `amp`: the largest shift in x
+  - `mode`: 'top' or 'bottom': the edge at which the shift is largest
+  - `shape`: 'sin' (sinusoidal in x) or 'parabola'
+  - `aboutMidline`: True keeps the mean shift zero
+- **output**: the map f(x, y) -> [X, Y, Z]
 
 
 (sec-shells-surfacemap-outofplanewarp)=
 ### Class function: OutOfPlaneWarp
 
-[`OutOfPlaneWarp(Lx, Ly, amp = 0.0)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/shells.py#L576)
+[`OutOfPlaneWarp(Lx, Ly, amp = 0.0)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/shells.py#L579)
 
-- **class function description**: Initial out-of-plane warp vanishing at all four boundaries: z = amp * sin(pi*x/Lx) * sin(pi*y/Ly).
+- **class function description**: an initial warp out of the plane, zero at the four edges: z = amp*sin(pi*x/Lx)*sin(pi*y/Ly)
+- **input**:
+  - `Lx`: length of the rectangle in x (> 0)
+  - `Ly`: length of the rectangle in y (> 0)
+  - `amp`: the largest out-of-plane displacement
+- **output**: the map f(x, y) -> [X, Y, Z]
 
 
 (sec-shells-surfacemap-bezierstrip)=
 ### Class function: BezierStrip
 
-[`BezierStrip(P0, P1, P2, P3, Lx, Ly, up = (0, 0, 1), useArcLength = True, nArc = 400)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/shells.py#L589)
+[`BezierStrip(P0, P1, P2, P3, Lx, Ly, up = (0, 0, 1), useArcLength = True, nArc = 400)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/shells.py#L600)
 
-- **class function description**: Map a plate onto a cubic Bezier centerline strip. x in [0, Lx] follows the curve (optionally by arc-length). y in [0, Ly] offsets across the strip width.
+- **class function description**: a strip along a cubic Bezier curve: x in [0, Lx] follows the curve, y in [0, Ly] goes across the strip
+- **input**:
+  - `P0`: the first control point of the curve (3D), its start
+  - `P1`: the second control point
+  - `P2`: the third control point
+  - `P3`: the fourth control point, the end of the curve
+  - `Lx`: length of the rectangle in x (> 0)
+  - `Ly`: length of the rectangle in y (> 0), the width of the strip
+  - `up`: the direction that, with the tangent, gives the direction across the strip
+  - `useArcLength`: True: x is the arc length along the curve; False: x/Lx is the curve parameter
+  - `nArc`: number of points for the arc length
+- **output**: the map f(x, y) -> [X, Y, Z]
 
 
 (sec-shells-surfacemap-conefrustum)=
 ### Class function: ConeFrustum
 
-[`ConeFrustum(Lx, Ly, r0, r1, phiDeg = 20.0, thetaCenterDeg = 0.0, centered = True, yMode = "arclength")`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/shells.py#L654)
+[`ConeFrustum(Lx, Ly, r0, r1, phiDeg = 20.0, thetaCenterDeg = 0.0, centered = True, yMode = "arclength")`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/shells.py#L678)
 
-- **class function description**: Map a rectangle onto a conical frustum mantle. x in [0,Lx] along the axis; y in [0,Ly] around the circumference. r0, r1: radii at x=0 and x=Lx. phiDeg: angular extent [deg].
+- **class function description**: the mantle of a conical frustum about the x-axis: x in [0, Lx] along the axis, y in [0, Ly] around it
+- **input**:
+  - `Lx`: length of the rectangle in x (> 0)
+  - `Ly`: length of the rectangle in y (> 0)
+  - `r0`: the radius at x = 0 (> 0)
+  - `r1`: the radius at x = Lx (> 0)
+  - `phiDeg`: the angle the mantle spans, in degrees (non-zero), for yMode 'angle'
+  - `thetaCenterDeg`: the angle of its centre, in degrees
+  - `centered`: True: y = Ly/2 lies at thetaCenterDeg; False: y = 0
+  - `yMode`: 'arclength': y is the arc length on the mantle; 'angle': y/Ly is the fraction of phiDeg
+- **output**: the map f(x, y) -> [X, Y, Z]
 
 
 (sec-shells-surfacemap-cylinder)=
 ### Class function: Cylinder
 
-[`Cylinder(Lx, Ly, R, phiDeg = 90.0, thetaCenterDeg = 0.0, centered = False, yMode = 'arclength')`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/shells.py#L681)
+[`Cylinder(Lx, Ly, R, phiDeg = 90.0, thetaCenterDeg = 0.0, centered = False, yMode = 'arclength')`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/shells.py#L717)
 
-- **class function description**: Map a rectangle onto a cylindrical mantle (special case of ConeFrustum with r0=r1=R).
+- **class function description**: the mantle of a cylinder of radius R about the x-axis: ConeFrustum with r0 = r1 = R
+- **input**:
+  - `Lx`: length of the rectangle in x (> 0), along the axis
+  - `Ly`: length of the rectangle in y (> 0), around the axis
+  - `R`: the radius (> 0)
+  - `phiDeg`: as for ConeFrustum
+  - `thetaCenterDeg`: as for ConeFrustum
+  - `centered`: as for ConeFrustum
+  - `yMode`: as for ConeFrustum
+- **output**: the map f(x, y) -> [X, Y, Z]
 
 
 (sec-shells-surfacemap-hemisphericalshell)=
 ### Class function: HemisphericalShell
 
-[`HemisphericalShell(Lx, Ly, R, alpha, center = (0.0,0.0,0.0), thetaOffset = 0.0, thetaRange = None)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/shells.py#L689)
+[`HemisphericalShell(Lx, Ly, R, alpha, center = (0.0,0.0,0.0), thetaOffset = 0.0, thetaRange = None)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/shells.py#L738)
 
-- **class function description**: Map a rectangle onto a hemispherical shell with a circular apex cutout. R: radius. alpha: cutout angle from +z axis [rad]. x maps to azimuthal angle; y maps from cutout edge (y=0) to equator (y=Ly).
+- **class function description**: a hemispherical shell with a circular cutout at the apex: x goes around the z-axis, y from the cutout (y = 0) to the equator (y = Ly)
+- **input**:
+  - `Lx`: length of the rectangle in x (> 0)
+  - `Ly`: length of the rectangle in y (> 0)
+  - `R`: the radius (> 0)
+  - `alpha`: the angle of the cutout from the z-axis, in radians, in [0, pi/2)
+  - `center`: the centre of the sphere
+  - `thetaOffset`: the angle about the z-axis at x = 0, in radians
+  - `thetaRange`: the angle x = Lx spans, in radians; None: 2 pi
+- **output**: the map f(x, y) -> [X, Y, Z]
 
 
 (sec-shells-surfacemap-toroidalpanel)=
 ### Class function: ToroidalPanel
 
-[`ToroidalPanel(Lx, Ly, r1 = 1.5, r2 = 0.5)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/shells.py#L714)
+[`ToroidalPanel(Lx, Ly, r1 = 1.5, r2 = 0.5)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/shells.py#L775)
 
-- **class function description**: Map a rectangle onto a toroidal panel. x -> meridional angle q1 in [-pi/2, pi/2]; y -> azimuthal angle q2 in [0, pi/2].
+- **class function description**: a panel of a torus: x gives the meridional angle in [-pi/2, pi/2], y the azimuthal angle in [0, pi/2]
+- **input**:
+  - `Lx`: length of the rectangle in x
+  - `Ly`: length of the rectangle in y
+  - `r1`: the major radius of the torus
+  - `r2`: the minor radius of the torus
+- **output**: the map f(x, y) -> [X, Y, Z]

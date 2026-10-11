@@ -72,11 +72,11 @@ protected:
 
 public:
     //! get an exact clone of *this, must be implemented in all derived classes! Necessary for better handling in ObjectContainer
-    virtual CObjectBody* GetClone() const { return new CObjectBody(*this); }
+    virtual CObjectBody* GetClone() const override { return new CObjectBody(*this); }
 
     virtual CObjectType GetType() const override { return CObjectType::Body; }
 
-	virtual void Print(std::ostream& os) const;
+	virtual void Print(std::ostream& os) const override;
 
 	//! local to global coordinates are available in CSystemData
 	virtual void GetODE2LocalToGlobalCoordinates(ArrayIndex& ltg) const;
@@ -242,7 +242,7 @@ class CObjectSuperElement : public CObjectBody
 public:
 	static const Index nDim3D = 3;
 	//! get an exact clone of *this, must be implemented in all derived classes! Necessary for better handling in ObjectContainer
-	virtual CObjectSuperElement* GetClone() const { return new CObjectSuperElement(*this); }
+	virtual CObjectSuperElement* GetClone() const override { return new CObjectSuperElement(*this); }
 
 	virtual CObjectType GetType() const override { return (CObjectType)((Index)CObjectType::Body + (Index)CObjectType::SuperElement); }
 

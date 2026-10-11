@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-10-04  13:22:27 (last modified)
+* @date         2026-10-12  00:21:22 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -87,14 +87,14 @@ public: // AUTO:
     void SetVisualizationObjectJointGeneric(VisualizationObjectJointGeneric* pVisualizationObjectJointGeneric) { visualizationObjectJointGeneric = pVisualizationObjectJointGeneric; }
 
     //! AUTO: Get const pointer to computational base class object
-    virtual CObject* GetCObject() const { return cObjectJointGeneric; }
+    virtual CObject* GetCObject() const override { return cObjectJointGeneric; }
     //! AUTO: Set pointer to computational base class object (do this only in object factory; type is NOT CHECKED!!!)
-    virtual void SetCObject(CObject* pCObject) { cObjectJointGeneric = (CObjectJointGeneric*)pCObject; }
+    virtual void SetCObject(CObject* pCObject) override { cObjectJointGeneric = (CObjectJointGeneric*)pCObject; }
 
     //! AUTO: Get const pointer to visualization base class object
-    virtual VisualizationObject* GetVisualizationObject() const { return visualizationObjectJointGeneric; }
+    virtual VisualizationObject* GetVisualizationObject() const override { return visualizationObjectJointGeneric; }
     //! AUTO: Set pointer to visualization base class object (do this only in object factory; type is NOT CHECKED!!!)
-    virtual void SetVisualizationObject(VisualizationObject* pVisualizationObject) { visualizationObjectJointGeneric = (VisualizationObjectJointGeneric*)pVisualizationObject; }
+    virtual void SetVisualizationObject(VisualizationObject* pVisualizationObject) override { visualizationObjectJointGeneric = (VisualizationObjectJointGeneric*)pVisualizationObject; }
 
     //! AUTO:  Get type name of object (without keyword 'Object'...!); could also be realized via a string -> type conversion?
     virtual const char* GetTypeName() const override

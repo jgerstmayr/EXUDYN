@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-09-25  18:46:50 (last modified)
+* @date         2026-10-12  00:21:22 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -62,21 +62,21 @@ public: // AUTO:
     //! AUTO:  Write (Reference) access to:RGBA color for object; 4th value is alpha-transparency; R=-1.f means, that default color is used
     void SetColor(const Float4& value) { color = value; }
     //! AUTO:  Read (Reference) access to:RGBA color for object; 4th value is alpha-transparency; R=-1.f means, that default color is used
-    const Float4& GetColor() const { return color; }
+    const Float4& GetColor() const override { return color; }
     //! AUTO:  Read (Reference) access to:RGBA color for object; 4th value is alpha-transparency; R=-1.f means, that default color is used
     Float4& GetColor() { return color; }
 
     //! AUTO:  Write (Reference) access to:unused in KinematicTree
     void SetTriangleMesh(const MatrixI& value) { triangleMesh = value; }
     //! AUTO:  Read (Reference) access to:unused in KinematicTree
-    const MatrixI& GetTriangleMesh() const { return triangleMesh; }
+    const MatrixI& GetTriangleMesh() const override { return triangleMesh; }
     //! AUTO:  Read (Reference) access to:unused in KinematicTree
     MatrixI& GetTriangleMesh() { return triangleMesh; }
 
     //! AUTO:  Write (Reference) access to:unused in KinematicTree
     void SetShowNodes(const bool& value) { showNodes = value; }
     //! AUTO:  Read (Reference) access to:unused in KinematicTree
-    const bool& GetShowNodes() const { return showNodes; }
+    const bool& GetShowNodes() const override { return showNodes; }
     //! AUTO:  Read (Reference) access to:unused in KinematicTree
     bool& GetShowNodes() { return showNodes; }
 

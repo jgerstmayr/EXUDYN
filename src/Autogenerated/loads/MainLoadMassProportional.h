@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-09-18  21:48:31 (last modified)
+* @date         2026-10-12  00:21:22 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -87,14 +87,14 @@ public: // AUTO:
     void SetVisualizationLoadMassProportional(VisualizationLoadMassProportional* pVisualizationLoadMassProportional) { visualizationLoadMassProportional = pVisualizationLoadMassProportional; }
 
     //! AUTO: Get const pointer to computational base class object
-    virtual CLoad* GetCLoad() const { return cLoadMassProportional; }
+    virtual CLoad* GetCLoad() const override { return cLoadMassProportional; }
     //! AUTO: Set pointer to computational base class object (do this only in object factory; type is NOT CHECKED!!!)
-    virtual void SetCLoad(CLoad* pCLoad) { cLoadMassProportional = (CLoadMassProportional*)pCLoad; }
+    virtual void SetCLoad(CLoad* pCLoad) override { cLoadMassProportional = (CLoadMassProportional*)pCLoad; }
 
     //! AUTO: Get const pointer to visualization base class object
-    virtual VisualizationLoad* GetVisualizationLoad() const { return visualizationLoadMassProportional; }
+    virtual VisualizationLoad* GetVisualizationLoad() const override { return visualizationLoadMassProportional; }
     //! AUTO: Set pointer to visualization base class object (do this only in object factory; type is NOT CHECKED!!!)
-    virtual void SetVisualizationLoad(VisualizationLoad* pVisualizationLoad) { visualizationLoadMassProportional = (VisualizationLoadMassProportional*)pVisualizationLoad; }
+    virtual void SetVisualizationLoad(VisualizationLoad* pVisualizationLoad) override { visualizationLoadMassProportional = (VisualizationLoadMassProportional*)pVisualizationLoad; }
 
     //! AUTO:  Get type name of load (without keyword 'Load'...!); could also be realized via a string -> type conversion?
     virtual const char* GetTypeName() const override

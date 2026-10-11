@@ -34,6 +34,7 @@ The parameters of the item; in a dictionary, its type is 'ConnectorRigidBodySpri
 | **rotationMarker0** | Matrix3D | 9 | [[1,0,0], [0,1,0], [0,0,1]] | local rotation matrix for marker 0; stiffness, damping, etc. components are measured in local coordinates relative to rotationMarker0 |
 | **rotationMarker1** | Matrix3D | 9 | [[1,0,0], [0,1,0], [0,0,1]] | local rotation matrix for marker 1; stiffness, damping, etc. components are measured in local coordinates relative to rotationMarker1 |
 | **offset** | Vector6D | 6 | [0.,0.,0.,0.,0.,0.] | translational and rotational offset considered in the spring force calculation |
+| **velocityOffset** | Vector6D | 6 | [0.,0.,0.,0.,0.,0.] | translational and angular velocity offset in joint 0 coordinates, subtracted from the relative velocities in the damper force; e.g. to drive a damper with a velocity instead of a user function (#1631) |
 | **useIntrinsicFormulation** | Bool |  | False | if True, the joint uses the intrinsic formulation, which is independent on order of markers, using a mid-point and mid-rotation for evaluation and application of connector forces and torques; this uses a Lie group formulation; in this case, the force/torque vector is computed from the stiffness matrix times the 6-vector of the SE3 matrix logarithm between the two marker positions/rotations, see the equations |
 | **activeConnector** | Bool |  | True | flag, which determines, if the connector is active; used to deactivate (temporarily) a connector or constraint |
 | **springForceTorqueUserFunction** | ObjectConnectorRigidBodySpringDamperSpringForceTorqueUserFunction |  | 0 | (symbol: $\mathrm{UF} \in \Rcal^6$) A Python function which computes the 6D force-torque vector (3D force + 3D torque) between the two rigid body markers, if activeConnector=True; see description below |
@@ -90,6 +91,7 @@ Available as `OutputVariableType` in sensors, `Get...Output()` and other functio
 | stiffness | $\kv \in \mathbb{R}^{6\times 6}$ | stiffness in $J0$ coordinates |
 | damping | $\dv \in \mathbb{R}^{6\times 6}$ | damping in $J0$ coordinates |
 | offset | $\LUR{J0}{\vv}{\mathrm{off}} \in \mathbb{R}^{6}$ | offset in $J0$ coordinates |
+| velocityOffset | $\LUR{J0}{\vv}{\mathrm{v,off}} \in \mathbb{R}^{6}$ | velocity and angular velocity offset in $J0$ coordinates |
 | rotationMarker0 | $\LU{m0,J0}{\Rot}$ | rotation matrix which transforms from joint 0 into marker 0 coordinates |
 | rotationMarker1 | $\LU{m1,J1}{\Rot}$ | rotation matrix which transforms from joint 1 into marker 1 coordinates |
 | markerNumbers[0] | $m0$ | global marker number m0 |
@@ -117,8 +119,12 @@ If `activeConnector = True`, the vector spring force is computed as
 
 $$
 \vp{\LU{J0}{\fv_{SD}}}{\LU{J0}{\mv_{SD}}} = \kv \left( \vp{\LU{J0}{\Delta\pv}}{\LU{J0}{\ttheta}} - \LUR{J0}{\vv}{\mathrm{off}}\right) +
-\dv \vp{\LU{J0}{\Delta\vv}}{\LU{J0}{\Delta\omega}}
+\dv \left( \vp{\LU{J0}{\Delta\vv}}{\LU{J0}{\Delta\omega}} - \LUR{J0}{\vv}{\mathrm{v,off}}\right)
 $$
+
+The velocity offset drives a damper with a velocity, e.g. instead of a user function. As the offset, it is not
+subtracted from the arguments of a user function, which reads it with `mbs.GetObjectParameter(itemNumber,
+'velocityOffset')`.
 
 For the application of joint forces to markers, $[\LU{J0}{\fv_{SD}},\,\LU{J0}{\mv_{SD}}]\tp$ is transformed into global coordinates.
 if `activeConnector = False`, $\LU{J0}{\fv_{SD}}$ and  $\LU{J0}{\mv_{SD}}$ are set to zero.

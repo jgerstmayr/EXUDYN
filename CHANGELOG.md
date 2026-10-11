@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.13 | Newborn | 65 | 1.13.64 |
+| 1.13 | Newborn | 69 | 1.13.69 |
 | 1.12 | Metheney | 367 | 1.12.462 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
@@ -30,6 +30,22 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.13 - Newborn (current)
 
+- **1.13.69** `CHANGE` `raised by: Claude-JG` `resolved by: Claude-JG` Mark the overriding virtual functions outside src/Linalg with override, the generated ones in the generator (#2967)
+  - description: Follow-up of \#123 (src/Linalg done): gcc -Wsuggest-override (syntax-only compile of every source in WSL, gcc 13.3) reports 455 places in 112 files: 4 in each generated Main\*/Visu\* item header (itemHeaderEmitter.py), CNode.h 22, CObjectConnector.h 7, VisualizationSystemContainer.h 5, CObjectBody.h 3, MainSolver.h 9, CSolverExplicit.h 2, ...; proposal: emit override in itemHeaderEmitter, add it by hand in the rest, and add -Wsuggest-override to the Linux build so that a new one is seen.
+  - **notes:** Every overriding virtual function of the C++ code is marked override, the generated ones by the generators; the unix build warns of a missing one (revision2026c step RG11.8.1.3)
+  - date resolved: **2026-10-12 00:30**, date raised: 2026-10-11
+- **1.13.68** `EXTENSION` `LOW EFF` `resolved by: Claude-JG` shells (#2349)
+  - description: adjust comments to fit to internal exudyn format
+  - **notes:** The module exudyn.shells has the header and docstrings of the other modules: what it is, Args and Returns (revision2026c step RG11.8.13)
+  - date resolved: **2026-10-12 00:30**, date raised: 2026-08-05
+- **1.13.67** `EXTENSION` `LOW EFF` `resolved by: Claude-JG` velocityOffset (#1631)
+  - description: add to CartesianSpringDamper, RigidBodySpringDamper
+  - **notes:** CartesianSpringDamper and RigidBodySpringDamper have velocityOffset (revision2026c step RG11.9)
+  - date resolved: **2026-10-12 00:30**, date raised: 2023-06-26
+- **1.13.65** `EXTENSION` `MEDIUM EFF` `resolved by: Claude-JG` velocityOffset (#829)
+  - description: add velocity offset to all spring dampers in order to replace many user functions with preStepUserFunctions
+  - **notes:** CoordinateSpringDamper, CartesianSpringDamper and RigidBodySpringDamper have velocityOffset, so a damper is driven with a velocity instead of a user function (revision2026c step RG11.9)
+  - date resolved: **2026-10-12 00:30**, date raised: 2021-12-15
 - **1.13.64** `EXTENSION` `raised by: Claude-JG` `resolved by: Claude-JG` Python user items: concept, measurement and plan (#2971)
   - description: revision2026c group RG7 (maintainer 2026-10-11): user node (position, orientation), user body, user marker, user joint and user connector on two markers, the user constraint extended, no user load; which items a new object needs; the cost of a call into Python; a documentation section on how each kind of item works, with an example per user item. Concept and measurement in tmp/PythonUserItems/concept.md, for decision.
   - **notes:** The design of the Python user items, with the decisions and measurements, is in docs/dev/design/pythonUserItems.md; the steps are planned (revision2026c step RG7.1)

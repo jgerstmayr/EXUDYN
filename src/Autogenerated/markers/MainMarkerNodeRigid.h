@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-10-03  20:38:37 (last modified)
+* @date         2026-10-12  00:21:22 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -87,14 +87,14 @@ public: // AUTO:
     void SetVisualizationMarkerNodeRigid(VisualizationMarkerNodeRigid* pVisualizationMarkerNodeRigid) { visualizationMarkerNodeRigid = pVisualizationMarkerNodeRigid; }
 
     //! AUTO: Get const pointer to computational base class object
-    virtual CMarker* GetCMarker() const { return cMarkerNodeRigid; }
+    virtual CMarker* GetCMarker() const override { return cMarkerNodeRigid; }
     //! AUTO: Set pointer to computational base class object (do this only in object factory; type is NOT CHECKED!!!)
-    virtual void SetCMarker(CMarker* pCMarker) { cMarkerNodeRigid = (CMarkerNodeRigid*)pCMarker; }
+    virtual void SetCMarker(CMarker* pCMarker) override { cMarkerNodeRigid = (CMarkerNodeRigid*)pCMarker; }
 
     //! AUTO: Get const pointer to visualization base class object
-    virtual VisualizationMarker* GetVisualizationMarker() const { return visualizationMarkerNodeRigid; }
+    virtual VisualizationMarker* GetVisualizationMarker() const override { return visualizationMarkerNodeRigid; }
     //! AUTO: Set pointer to visualization base class object (do this only in object factory; type is NOT CHECKED!!!)
-    virtual void SetVisualizationMarker(VisualizationMarker* pVisualizationMarker) { visualizationMarkerNodeRigid = (VisualizationMarkerNodeRigid*)pVisualizationMarker; }
+    virtual void SetVisualizationMarker(VisualizationMarker* pVisualizationMarker) override { visualizationMarkerNodeRigid = (VisualizationMarkerNodeRigid*)pVisualizationMarker; }
 
     //! AUTO:  Check consistency prior to CSystem::Assemble(); needs to find all possible violations such that Assemble() would fail
     virtual bool CheckPreAssembleConsistency(const MainSystem& mainSystem, STDstring& errorString) const override;

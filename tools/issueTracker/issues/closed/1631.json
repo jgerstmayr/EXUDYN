@@ -1,0 +1,15 @@
+{
+  "number": 1631,
+  "title": "velocityOffset",
+  "author": "JG",
+  "status": "RESOLVED",
+  "type": "EXTENSION",
+  "effort": "LOW",
+  "description": "add to CartesianSpringDamper, RigidBodySpringDamper",
+  "dateRaised": "2023-06-26",
+  "deadline": "2023-12-23",
+  "dateResolved": "2026-10-12 00:30",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "CartesianSpringDamper and RigidBodySpringDamper have velocityOffset (revision2026c step RG11.9)",
+  "resolvedInVersion": "1.13.67"
+}

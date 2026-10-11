@@ -59,7 +59,7 @@ private:
 
 public:
     //! get an exact clone of *this, must be implemented in all derived classes! Necessary for better handling in ObjectContainer
-    virtual CObjectConnector* GetClone() const { return new CObjectConnector(*this); }
+    virtual CObjectConnector* GetClone() const override { return new CObjectConnector(*this); }
 
 	//! the connector interface (#2745): a connector on it computes its right-hand side here, by the L2 chain of its kind of
 	//! markers (ConnectorODE2LHSPositionMarkers, ...), into localODE2Lhs [marker 0, marker 1]; false: the system takes the
@@ -129,7 +129,7 @@ public:
 
     virtual const char* GetName() const { return "CObjectConnector"; }
 
-    virtual void Print(std::ostream& os) const {
+    virtual void Print(std::ostream& os) const override {
         os << "CObjectConnector:";
         CObject::Print(os);
     }
@@ -232,18 +232,18 @@ protected:
 
 public:
 	//! get an exact clone of *this, must be implemented in all derived classes! Necessary for better handling in ObjectContainer
-	virtual CObjectConnector* GetClone() const { return new CObjectConnector(*this); }
-	virtual const char* GetName() const { return "CObjectConnector"; }
+	virtual CObjectConnector* GetClone() const override { return new CObjectConnector(*this); }
+	virtual const char* GetName() const override { return "CObjectConnector"; }
 
-	virtual void Print(std::ostream& os) const {
+	virtual void Print(std::ostream& os) const override {
 		os << "CObjectConstraint:";
 		CObject::Print(os);
 	}
 
-	virtual CObjectType GetCObjectType() const { return (CObjectType)((Index)CObjectType::Connector + (Index)CObjectType::Constraint); }
+	virtual CObjectType GetCObjectType() const override { return (CObjectType)((Index)CObjectType::Connector + (Index)CObjectType::Constraint); }
 	
 	//! Return true, if connector does not use algebraic equations ==> springs, damper, etc.
-	virtual bool IsPenaltyConnector() const { return false; }
+	virtual bool IsPenaltyConnector() const override { return false; }
 
 	//NOT USED ANY MORE ==> UsesVelocityLevel//! Return true, if constraint implements velocity level equations (e.g. for Index reduction)
 	//virtual bool HasVelocityEquations() const { return false; }

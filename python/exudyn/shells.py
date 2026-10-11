@@ -1,31 +1,16 @@
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 # This is an EXUDYN python utility library
 #
-# Details:  Shells and plates utility functions, e.g. for creation of plate / shell mesh.
+# Details:  Shells and plates: ShellMesh creates a mesh of ObjectANCFThinPlate elements on NodePointSlope12 nodes,
+#           flat or mapped onto a surface (SurfaceMap), with constant or varying thickness; and functions for the
+#           boundary conditions, edge loads and springs of such a mesh. The slopes of a mapped mesh follow from the
+#           derivatives of the map, computed with exu.symbolic; a component of the map may be a plain float.
 #
-# Author:   Johannes Gerstmayr
+# Author:   Johannes Gerstmayr, Michael Pieber (symbolic and numeric mappings)
 # Date:     2026-01-11 (created)
-#
-# Updated: 2026-03-24 (Michael Pieber): Added comments and helper functions for mixed symbolic/numeric mappings.
-#
 #
 # Copyright:This file is part of Exudyn. Exudyn is free software. You can redistribute it and/or modify it under the terms of the Exudyn license. See 'LICENSE.txt' for more details.
 #
-# Notes:    For a list of plot colors useful for matplotlib, see also utilities.PlotLineCode(...)
-# Extended ShellMesh class with symbolic slope computation via vertexMapping.
-# Copied from ANCFThinPlatePrecurved.py; intended to replace exudyn.shells.ShellMesh
-# once merged into the Exudyn library.
-#
-# Differences vs. ANCFThinPlatePrecurved.py:
-#   1. ApplyVertexMapping uses helper functions _eval/_diff instead of calling
-#      .Evaluate()/.Diff() directly. This allows the vertexMapping to return
-#      plain Python floats or numpy scalars (non-symbolic) for components that
-#      do not depend on the symbolic variable.
-#      ANCFThinPlatePrecurved.py assumes ALL components of vertexMapping's
-#      return value are always exu.symbolic.Real objects.
-#   2. vertexMapping docstring is more explicit: "must accept exu.symbolic.Real".
-#   3. ApplyVertexMapping has an explanatory docstring.
-#   4. Minor formatting/spacing differences; logic is otherwise identical.
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 from exudyn.misc.docmeta import docmeta
@@ -45,7 +30,7 @@ __all__ = [
 
 
 class ShellMesh:
-    """class for generation, representation of plate and shell meshes; creaton of Exudyn elements
+    """a mesh of plates or shells: the nodes and ObjectANCFThinPlate elements of a rectangle, flat or mapped onto a surface
     """
     def __init__(self,
                  vertices=[[-1,-1,0],[ 1,-1,0],[ 1, 1,0],[-1, 1,0]],
@@ -114,7 +99,6 @@ class ShellMesh:
         # optional curved-geometry mapping F([x,y,z]) -> [x',y',z'];
         # must accept exu.symbolic.Real arguments so that automatic differentiation
         # can compute the tangent slopes dr/dx and dr/dy analytically.
-        # ANCFThinPlatePrecurved.py has the same attribute but without this note.
         self.vertexMapping = None       #function F([x0,y0,z0]) -> [x1,y1,z1] transforming vertices; must accept exu.symbolic.Real
         if surfaceMap is not None:      #the map of (x, y) as a vertex mapping
             def MapOfPosition(position):
@@ -195,12 +179,10 @@ class ShellMesh:
         self.nodeReferencePositionsUnmapped = []
 
         # --- helper: evaluate a symbolic Real or fall back to plain float ---
-        # ANCFThinPlatePrecurved.py calls v[k].Evaluate() directly (no fallback).
         def _eval(val):
             return val.Evaluate() if hasattr(val, 'Evaluate') else float(val)
 
         # --- helper: differentiate a symbolic Real or return 0.0 for plain floats ---
-        # ANCFThinPlatePrecurved.py calls v[k].Diff(var) directly (no fallback).
         def _diff(val, var):
             return val.Diff(var) if hasattr(val, 'Diff') else 0.0
 
@@ -248,7 +230,6 @@ class ShellMesh:
             # normalize tangents to unit length (required by NodePointSlope12 convention)
             # NOTE: normalization means the reference slopes are unit tangent vectors,
             # NOT the actual partial derivatives dr/dx (which have magnitude |dr/dx|).
-            # This is consistent with ANCFThinPlatePrecurved.py which also normalizes.
             self.nodeSlopesX.append(np.array(Normalize(slopeX)))
             self.nodeSlopesY.append(np.array(Normalize(slopeY)))
 
@@ -305,16 +286,15 @@ class ShellMesh:
 
     @docmeta(public=False)
     def CreateANCFThinPlateElements(self, mbs, VthicknessFactor=1.0, useReducedOrderIntegration=0):
-        """Generate all Exudyn nodes (NodePointSlope12) and elements (ObjectANCFThinPlate)
-        and add them to mbs.  Populates nodeNumbers, elementNumbers, boundaryNodeNumbers.
-        Input:  mbs                         -- Exudyn multibody system
-                VthicknessFactor            -- optional uniform thickness scaling factor (>= 0)
-                useReducedOrderIntegration  -- integration mode passed to ObjectANCFThinPlate:
-                                               0 = full Gauss (order 9, 5x5 pts), safe baseline
-                                               1 = Lobatto SRI (Ntarladima/Pieber/Gerstmayr 2023):
-                                                   membrane: Lobatto order 3 (3x3 pts at {-1,0,+1}),
-                                                   bending:  Gauss order 3 (2x2 pts at {+-1/sqrt(3)});
-                                                   eliminates membrane locking via disjoint point sets
+        """add the nodes (NodePointSlope12) and the elements (ObjectANCFThinPlate) of the mesh to mbs; fills
+        nodeNumbers, elementNumbers and boundaryNodeNumbers
+
+        Args:
+            mbs: the MainSystem
+            VthicknessFactor: factor of the drawn thickness (>= 0)
+            useReducedOrderIntegration: the integration rule of ObjectANCFThinPlate: 0 = Gauss 5 x 5; 1 and 2 =
+                Lobatto 3 x 3 for the membrane and Gauss 2 x 2 for the bending, which avoids membrane locking
+                (Ntarladima, Pieber, Gerstmayr 2023)
         """
         tf = float(VthicknessFactor)
         if tf < 0.0:
@@ -520,9 +500,15 @@ class SurfaceMap:
 
     @staticmethod
     def SkewParallelogram(skewY=0.0, skewX=0.0):
-        """Skew a rectangle into a parallelogram.
-        skewY: adds x += skewY*y  (shear x with y).
-        skewX: adds y += skewX*x  (shear y with x)."""
+        """skew the rectangle into a parallelogram
+
+        Args:
+            skewY: shear of x with y: x + skewY*y
+            skewX: shear of y with x: y + skewX*x
+
+        Returns:
+            the map f(x, y) -> [X, Y, Z]
+        """
         def f(x, y):
             return [x + skewY * y, y + skewX * x, 0.0]
         return f
@@ -530,9 +516,17 @@ class SurfaceMap:
 
     @staticmethod
     def Trapezoid(Lx, Ly, topScale=1.0, aboutMidline=True):
-        """Trapezoid by scaling x-span linearly with y.
-        topScale<1: narrower at top; topScale>1: wider at top.
-        aboutMidline=True keeps the plate centreline fixed."""
+        """a trapezoid: the width in x scaled linearly with y
+
+        Args:
+            Lx: length of the rectangle in x
+            Ly: length of the rectangle in y (> 0)
+            topScale: the scale of the width at the top, y = Ly: < 1 narrower, > 1 wider
+            aboutMidline: True keeps the centre line x = Lx/2 fixed
+
+        Returns:
+            the map f(x, y) -> [X, Y, Z]
+        """
         Lx = float(Lx); Ly = float(Ly)
         if Ly <= 0:
             raise ValueError("Ly must be > 0")
@@ -548,10 +542,19 @@ class SurfaceMap:
 
     @staticmethod
     def CurvedEdge(Lx, Ly, amp=0.0, mode='top', shape='sin', aboutMidline=True):
-        """Curve one edge by an x-shift that varies with y (and x).
-        mode:  'top' or 'bottom' — where the curvature reaches full amplitude.
-        shape: 'sin' (sinusoidal in x) or 'parabola'.
-        amp:   maximum x-shift [m]."""
+        """curve one edge by a shift in x that grows with y and varies with x
+
+        Args:
+            Lx: length of the rectangle in x
+            Ly: length of the rectangle in y (> 0)
+            amp: the largest shift in x
+            mode: 'top' or 'bottom': the edge at which the shift is largest
+            shape: 'sin' (sinusoidal in x) or 'parabola'
+            aboutMidline: True keeps the mean shift zero
+
+        Returns:
+            the map f(x, y) -> [X, Y, Z]
+        """
         Lx = float(Lx); Ly = float(Ly); amp = float(amp)
         if Ly <= 0:
             raise ValueError("Ly must be > 0")
@@ -574,8 +577,16 @@ class SurfaceMap:
 
     @staticmethod
     def OutOfPlaneWarp(Lx, Ly, amp=0.0):
-        """Initial out-of-plane warp vanishing at all four boundaries:
-        z = amp * sin(pi*x/Lx) * sin(pi*y/Ly)."""
+        """an initial warp out of the plane, zero at the four edges: z = amp*sin(pi*x/Lx)*sin(pi*y/Ly)
+
+        Args:
+            Lx: length of the rectangle in x (> 0)
+            Ly: length of the rectangle in y (> 0)
+            amp: the largest out-of-plane displacement
+
+        Returns:
+            the map f(x, y) -> [X, Y, Z]
+        """
         Lx = float(Lx); Ly = float(Ly); amp = float(amp)
         if Lx <= 0 or Ly <= 0:
             raise ValueError("Lx and Ly must be > 0")
@@ -587,9 +598,22 @@ class SurfaceMap:
 
     @staticmethod
     def BezierStrip(P0, P1, P2, P3, Lx, Ly, up=(0, 0, 1), useArcLength=True, nArc=400):
-        """Map a plate onto a cubic Bezier centerline strip.
-        x in [0, Lx] follows the curve (optionally by arc-length).
-        y in [0, Ly] offsets across the strip width."""
+        """a strip along a cubic Bezier curve: x in [0, Lx] follows the curve, y in [0, Ly] goes across the strip
+
+        Args:
+            P0: the first control point of the curve (3D), its start
+            P1: the second control point
+            P2: the third control point
+            P3: the fourth control point, the end of the curve
+            Lx: length of the rectangle in x (> 0)
+            Ly: length of the rectangle in y (> 0), the width of the strip
+            up: the direction that, with the tangent, gives the direction across the strip
+            useArcLength: True: x is the arc length along the curve; False: x/Lx is the curve parameter
+            nArc: number of points for the arc length
+
+        Returns:
+            the map f(x, y) -> [X, Y, Z]
+        """
         P0 = np.array(P0, dtype=float).reshape(3)
         P1 = np.array(P1, dtype=float).reshape(3)
         P2 = np.array(P2, dtype=float).reshape(3)
@@ -653,9 +677,21 @@ class SurfaceMap:
     @staticmethod
     def ConeFrustum(Lx, Ly, r0, r1, phiDeg=20.0, thetaCenterDeg=0.0,
                        centered=True, yMode="arclength"):
-        """Map a rectangle onto a conical frustum mantle.
-        x in [0,Lx] along the axis; y in [0,Ly] around the circumference.
-        r0, r1: radii at x=0 and x=Lx. phiDeg: angular extent [deg]."""
+        """the mantle of a conical frustum about the x-axis: x in [0, Lx] along the axis, y in [0, Ly] around it
+
+        Args:
+            Lx: length of the rectangle in x (> 0)
+            Ly: length of the rectangle in y (> 0)
+            r0: the radius at x = 0 (> 0)
+            r1: the radius at x = Lx (> 0)
+            phiDeg: the angle the mantle spans, in degrees (non-zero), for yMode 'angle'
+            thetaCenterDeg: the angle of its centre, in degrees
+            centered: True: y = Ly/2 lies at thetaCenterDeg; False: y = 0
+            yMode: 'arclength': y is the arc length on the mantle; 'angle': y/Ly is the fraction of phiDeg
+
+        Returns:
+            the map f(x, y) -> [X, Y, Z]
+        """
         Lx=float(Lx); Ly=float(Ly); r0=float(r0); r1=float(r1)
         if Lx<=0 or Ly<=0: raise ValueError("Lx and Ly must be > 0")
         if r0<=0 or r1<=0: raise ValueError("r0 and r1 must be > 0")
@@ -679,7 +715,20 @@ class SurfaceMap:
 
     @staticmethod
     def Cylinder(Lx, Ly, R, phiDeg=90.0, thetaCenterDeg=0.0, centered=False, yMode='arclength'):
-        """Map a rectangle onto a cylindrical mantle (special case of ConeFrustum with r0=r1=R)."""
+        """the mantle of a cylinder of radius R about the x-axis: ConeFrustum with r0 = r1 = R
+
+        Args:
+            Lx: length of the rectangle in x (> 0), along the axis
+            Ly: length of the rectangle in y (> 0), around the axis
+            R: the radius (> 0)
+            phiDeg: as for ConeFrustum
+            thetaCenterDeg: as for ConeFrustum
+            centered: as for ConeFrustum
+            yMode: as for ConeFrustum
+
+        Returns:
+            the map f(x, y) -> [X, Y, Z]
+        """
         return SurfaceMap.ConeFrustum(Lx=Lx, Ly=Ly, r0=R, r1=R,
                               phiDeg=phiDeg, thetaCenterDeg=thetaCenterDeg,
                               centered=centered, yMode=yMode)
@@ -688,9 +737,21 @@ class SurfaceMap:
     @staticmethod
     def HemisphericalShell(Lx, Ly, R, alpha, center=(0.0,0.0,0.0), thetaOffset=0.0,
                                thetaRange=None):
-        """Map a rectangle onto a hemispherical shell with a circular apex cutout.
-        R: radius. alpha: cutout angle from +z axis [rad].
-        x maps to azimuthal angle; y maps from cutout edge (y=0) to equator (y=Ly)."""
+        """a hemispherical shell with a circular cutout at the apex: x goes around the z-axis, y from the cutout
+        (y = 0) to the equator (y = Ly)
+
+        Args:
+            Lx: length of the rectangle in x (> 0)
+            Ly: length of the rectangle in y (> 0)
+            R: the radius (> 0)
+            alpha: the angle of the cutout from the z-axis, in radians, in [0, pi/2)
+            center: the centre of the sphere
+            thetaOffset: the angle about the z-axis at x = 0, in radians
+            thetaRange: the angle x = Lx spans, in radians; None: 2 pi
+
+        Returns:
+            the map f(x, y) -> [X, Y, Z]
+        """
         Lx=float(Lx); Ly=float(Ly); R=float(R); alpha=float(alpha)
         thetaOffset=float(thetaOffset)
         center=np.array(center,dtype=float).reshape(3)
@@ -712,8 +773,17 @@ class SurfaceMap:
 
     @staticmethod
     def ToroidalPanel(Lx, Ly, r1=1.5, r2=0.5):
-        """Map a rectangle onto a toroidal panel.
-        x -> meridional angle q1 in [-pi/2, pi/2]; y -> azimuthal angle q2 in [0, pi/2]."""
+        """a panel of a torus: x gives the meridional angle in [-pi/2, pi/2], y the azimuthal angle in [0, pi/2]
+
+        Args:
+            Lx: length of the rectangle in x
+            Ly: length of the rectangle in y
+            r1: the major radius of the torus
+            r2: the minor radius of the torus
+
+        Returns:
+            the map f(x, y) -> [X, Y, Z]
+        """
         Lx=float(Lx); Ly=float(Ly); r1=float(r1); r2=float(r2)
         q1Min=-np.pi/2.0; q1Range=np.pi; q2Min=0.0; q2Range=np.pi/2.0
         def f(x, y):
@@ -729,13 +799,9 @@ class SurfaceMap:
 #   0,1,2 = position r;  3,4,5 = x-slope sx;  6,7,8 = y-slope sy
 
 def AddNodeConstraints(mbs, nodeNumber, dofs, refNodeNumber=None):
-    """Constrain selected DOFs (0-8) of an ANCF plate node, to its reference value or to the same DOF of another node.
-
-    Mirrors the GenerateStraightBeam pattern: one NodePointGround placed at the
-    node's reference position, one shared ground marker, one CoordinateConstraint
-    per DOF.  MarkerNodeCoordinate returns ODE2 displacement (without reference
-    values), so default offset=0 pins each displacement to zero = node stays at
-    its reference configuration.
+    """constrain selected coordinates (0-8) of an ANCF plate node to their reference values, or to the same
+    coordinates of another node; one CoordinateConstraint per coordinate, to a NodePointGround at the reference
+    position of the node
 
     Args:
         mbs: the MainSystem
@@ -768,25 +834,32 @@ def AddNodeConstraints(mbs, nodeNumber, dofs, refNodeNumber=None):
 
 
 def AddSphericalJointToGround(mbs, nodeNumber):
-    """Pin an ANCF node to ground: fix translations (DOF 0,1,2), slopes free."""
+    """pin an ANCF plate node to the ground: its position (coordinates 0-2) fixed, its slopes free
+
+    Args:
+        mbs: the MainSystem
+        nodeNumber: the NodePointSlope12 node
+
+    Returns:
+        list of CoordinateConstraint object indices
+    """
     return AddNodeConstraints(mbs, nodeNumber, dofs=[0,1,2])
 
 
 def AddClampToGround(mbs, nodeNumber, fixedConstraints=None):
-    """Clamp an ANCF plate node to ground using a 9-element binary constraint vector.
+    """clamp an ANCF plate node to the ground: the selected coordinates keep their reference values
 
-    fixedConstraints: list/array of 9 values (0 or 1), one per DOF in the order
-        [x, y, z,  sx_x, sx_y, sx_z,  sy_x, sy_y, sy_z].
-        A value of 1 fixes that DOF to its reference value; 0 leaves it free.
-        Mirrors the fixedConstraintsNode0 convention of GenerateStraightLineANCFCable2D.
+    Args:
+        mbs: the MainSystem
+        nodeNumber: the NodePointSlope12 node
+        fixedConstraints: 9 values 0 or 1, one per coordinate in the order [x, y, z, sx_x, sx_y, sx_z, sy_x, sy_y, sy_z]:
+            1 fixes the coordinate, 0 leaves it free, as fixedConstraintsNode0 of GenerateStraightLineANCFCable2D;
+            None fixes all 9. For a flat plate in the xy-plane clamped at its left edge, [1,1,1, 0,1,1, 1,0,1] fixes
+            the positions and the transverse slope components and leaves the axial ones (sx_x, sy_y) free, so that
+            the boundary can stretch
 
-        Default (None): fix all 9 DOFs -- equivalent to [1,1,1, 1,1,1, 1,1,1].
-
-        For a flat plate in the xy-plane (clamped left edge), the physically
-        consistent choice that mirrors the 2D cable [1,1,0,1] convention is
-        [1,1,1, 0,1,1, 1,0,1]: positions fixed, transverse slope components
-        fixed (zero rotation), axial slope components (sx_x and sy_y, both = 1
-        in reference) left free to allow boundary stretching.
+    Returns:
+        list of CoordinateConstraint object indices
     """
     if fixedConstraints is None:
         dofs = range(9)

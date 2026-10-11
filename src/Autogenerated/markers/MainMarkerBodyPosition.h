@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-10-02  07:45:50 (last modified)
+* @date         2026-10-12  00:21:22 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -86,14 +86,14 @@ public: // AUTO:
     void SetVisualizationMarkerBodyPosition(VisualizationMarkerBodyPosition* pVisualizationMarkerBodyPosition) { visualizationMarkerBodyPosition = pVisualizationMarkerBodyPosition; }
 
     //! AUTO: Get const pointer to computational base class object
-    virtual CMarker* GetCMarker() const { return cMarkerBodyPosition; }
+    virtual CMarker* GetCMarker() const override { return cMarkerBodyPosition; }
     //! AUTO: Set pointer to computational base class object (do this only in object factory; type is NOT CHECKED!!!)
-    virtual void SetCMarker(CMarker* pCMarker) { cMarkerBodyPosition = (CMarkerBodyPosition*)pCMarker; }
+    virtual void SetCMarker(CMarker* pCMarker) override { cMarkerBodyPosition = (CMarkerBodyPosition*)pCMarker; }
 
     //! AUTO: Get const pointer to visualization base class object
-    virtual VisualizationMarker* GetVisualizationMarker() const { return visualizationMarkerBodyPosition; }
+    virtual VisualizationMarker* GetVisualizationMarker() const override { return visualizationMarkerBodyPosition; }
     //! AUTO: Set pointer to visualization base class object (do this only in object factory; type is NOT CHECKED!!!)
-    virtual void SetVisualizationMarker(VisualizationMarker* pVisualizationMarker) { visualizationMarkerBodyPosition = (VisualizationMarkerBodyPosition*)pVisualizationMarker; }
+    virtual void SetVisualizationMarker(VisualizationMarker* pVisualizationMarker) override { visualizationMarkerBodyPosition = (VisualizationMarkerBodyPosition*)pVisualizationMarker; }
 
     //! AUTO:  Get type name of marker (without keyword 'Marker'...!); could also be realized via a string -> type conversion?
     virtual const char* GetTypeName() const override

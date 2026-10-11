@@ -30,8 +30,9 @@ void CObjectConnectorCartesianSpringDamper::ComputeSpringForce(const SlimVectorB
 	vPos = (position1 - position0);
 	for (Index i = 0; i < 3; i++) { vPos[i] -= parameters.offset[i]; } //the offset is Real, also with automatic differentiation
 
-	//unit direction and relative velocity of spring-damper
+	//relative velocity of spring-damper, less the velocity offset (#1631)
 	vVel = (velocity1 - velocity0);
+	for (Index i = 0; i < 3; i++) { vVel[i] -= parameters.velocityOffset[i]; }
 
 	fVec.SetAll(0.);
 	if (parameters.activeConnector)

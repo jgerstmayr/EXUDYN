@@ -101,7 +101,7 @@ public:
 	//! compute derivative of left-hand-side (LHS) w.r.t q of second order ordinary differential equations (ODE) 
 	//! combined computation w.r.t. ODE2 and ODE2\_t variables jacobian has dimension GetODE2Size() x GetODE2Size(); this is the local tangent stiffness matrix;
 	virtual void ComputeJacobianODE2_ODE2(EXUmath::MatrixContainer& jacobianODE2, JacobianTemp& temp, Real factorODE2, Real factorODE2_t,
-		Index objectNumber, const ArrayIndex& ltg) const;
+		Index objectNumber, const ArrayIndex& ltg) const override;
 
 
     //!  Flags to determine, which output variables are available (displacment, velocity, stress, ...)
@@ -138,7 +138,7 @@ public:
 	virtual Vector3D GetAngularVelocityLocal(const Vector3D& localPosition, ConfigurationType configuration = ConfigurationType::Current) const override
 	{ return GetAngularVelocity(localPosition, configuration); }
 
-	virtual Vector3D GetLocalCenterOfMass() const { return Vector3D({ 0.5*GetLength(), 0., 0.}); }
+	virtual Vector3D GetLocalCenterOfMass() const override { return Vector3D({ 0.5*GetLength(), 0., 0.}); }
 
 	//!  Get type of object, e.g. to categorize and distinguish during assembly and computation
     virtual CObjectType GetType() const override

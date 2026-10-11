@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-10-03  18:17:13 (last modified)
+* @date         2026-10-12  00:21:22 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -87,14 +87,14 @@ public: // AUTO:
     void SetVisualizationObjectANCFBeam(VisualizationObjectANCFBeam* pVisualizationObjectANCFBeam) { visualizationObjectANCFBeam = pVisualizationObjectANCFBeam; }
 
     //! AUTO: Get const pointer to computational base class object
-    virtual CObject* GetCObject() const { return cObjectANCFBeam; }
+    virtual CObject* GetCObject() const override { return cObjectANCFBeam; }
     //! AUTO: Set pointer to computational base class object (do this only in object factory; type is NOT CHECKED!!!)
-    virtual void SetCObject(CObject* pCObject) { cObjectANCFBeam = (CObjectANCFBeam*)pCObject; }
+    virtual void SetCObject(CObject* pCObject) override { cObjectANCFBeam = (CObjectANCFBeam*)pCObject; }
 
     //! AUTO: Get const pointer to visualization base class object
-    virtual VisualizationObject* GetVisualizationObject() const { return visualizationObjectANCFBeam; }
+    virtual VisualizationObject* GetVisualizationObject() const override { return visualizationObjectANCFBeam; }
     //! AUTO: Set pointer to visualization base class object (do this only in object factory; type is NOT CHECKED!!!)
-    virtual void SetVisualizationObject(VisualizationObject* pVisualizationObject) { visualizationObjectANCFBeam = (VisualizationObjectANCFBeam*)pVisualizationObject; }
+    virtual void SetVisualizationObject(VisualizationObject* pVisualizationObject) override { visualizationObjectANCFBeam = (VisualizationObjectANCFBeam*)pVisualizationObject; }
 
     void SetInternalBeamSection(const py::object& pyObject); //! AUTO: special function which writes pyObject into local data
     PyBeamSection GetInternalBeamSection() const; //! AUTO: special function which returns BeamSection converted from local data

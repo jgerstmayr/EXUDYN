@@ -37,7 +37,7 @@ void CObjectConnectorCoordinateSpringDamper::ComputeSpringForce(TReal value0, TR
 		if (!parameters.springForceUserFunction)
 		{
 			//compute resulting force vector:
-			force = parameters.stiffness * (relPos - parameters.offset) + parameters.damping * relVel;
+			force = parameters.stiffness * (relPos - parameters.offset) + parameters.damping * (relVel - parameters.velocityOffset); //(#829)
 			//if (parameters.dryFriction != 0.)
 			//{
 			//	if (fabs(relVel) < parameters.dryFrictionProportionalZone)

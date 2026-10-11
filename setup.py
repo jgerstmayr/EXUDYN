@@ -564,6 +564,7 @@ class BuildExt(_build_ext):
          '-Wno-array-bounds', #warnings in ConstSizeMatrix
          '-Wno-template-id-cdtor', #C++20 warnings for templates
  		 '-Wall',
+         '-Wsuggest-override', #a virtual function that overrides one without saying so (#2967)
          '-g0', #deactivate debug information (overrides default -g flags), decreases files size from 38MB to 2.6 MB in Python 3.6 version
          '-ffp-contract=off', #no a*b+c fused into one FMA: on arm64 (Apple silicon, Linux aarch64) FMA is baseline and
                               #clang/gcc contract by default, which moved results against Windows (MSVC does not contract);

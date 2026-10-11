@@ -10,7 +10,7 @@ and hereafter you can access all data and functions via 'solver'.
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2026-09-25 (last modfied)
+* @date         AUTO: 2026-10-12 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -56,9 +56,9 @@ public: // AUTO:
   }
 
   //! AUTO: Set function (needed in pybind) for: index-array contains 4 integers: nODE2, nODE1, nAE and nData of initialization: this guaranties, that no function is called with wrong system sizes; DO not change these variables: can easily lead to crash! 
-  void PySetInitializedSystemSizes(const std::array<Index,4>& initializedSystemSizesInit) { initializedSystemSizes = initializedSystemSizesInit; }
+  void PySetInitializedSystemSizes(const std::array<Index,4>& initializedSystemSizesInit) override { initializedSystemSizes = initializedSystemSizesInit; }
   //! AUTO: Read (Copy) access to: index-array contains 4 integers: nODE2, nODE1, nAE and nData of initialization: this guaranties, that no function is called with wrong system sizes; DO not change these variables: can easily lead to crash! 
-  std::array<Index,4> PyGetInitializedSystemSizes() const { return std::array<Index,4>(initializedSystemSizes); }
+  std::array<Index,4> PyGetInitializedSystemSizes() const override { return std::array<Index,4>(initializedSystemSizes); }
 
   //! AUTO: Set function (needed in pybind) for: multiplicative load step factor; this factor is computed from loadStepGeometric parameters in SolveSystem(...)
   void PySetLoadStepGeometricFactor(const Real& loadStepGeometricFactorInit) { cSolver.loadStepGeometricFactor = loadStepGeometricFactorInit; }
@@ -71,7 +71,7 @@ public: // AUTO:
   }
 
   //! AUTO: print function used in ostream operator (print is virtual and can thus be overloaded)
-  virtual void Print(std::ostream& os) const
+  virtual void Print(std::ostream& os) const override
   {
     os << "MainSolverStatic" << ":\n";
     os << ":"; 
@@ -99,7 +99,7 @@ and hereafter you can access all data and functions via 'solver'.
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2026-09-25 (last modfied)
+* @date         AUTO: 2026-10-12 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -168,9 +168,9 @@ public: // AUTO:
   //! AUTO: get locally stored / last computed algorithmic accelerations at start of step
   py::array_t<Real> GetStartOfStepStateAAlgorithmic();
   //! AUTO: Set function (needed in pybind) for: index-array contains 4 integers: nODE2, nODE1, nAE and nData of initialization: this guaranties, that no function is called with wrong system sizes; DO not change these variables: can easily lead to crash! 
-  void PySetInitializedSystemSizes(const std::array<Index,4>& initializedSystemSizesInit) { initializedSystemSizes = initializedSystemSizesInit; }
+  void PySetInitializedSystemSizes(const std::array<Index,4>& initializedSystemSizesInit) override { initializedSystemSizes = initializedSystemSizesInit; }
   //! AUTO: Read (Copy) access to: index-array contains 4 integers: nODE2, nODE1, nAE and nData of initialization: this guaranties, that no function is called with wrong system sizes; DO not change these variables: can easily lead to crash! 
-  std::array<Index,4> PyGetInitializedSystemSizes() const { return std::array<Index,4>(initializedSystemSizes); }
+  std::array<Index,4> PyGetInitializedSystemSizes() const override { return std::array<Index,4>(initializedSystemSizes); }
 
   //! AUTO: Set function (needed in pybind) for: copy of parameter in timeIntegration.generalizedAlpha
   void PySetNewmarkBeta(const Real& newmarkBetaInit) { GetCSolverImplicitSecondOrder().newmarkBeta = newmarkBetaInit; }
@@ -233,7 +233,7 @@ public: // AUTO:
   Real PyGetSpectralRadius() const { return Real(GetCSolverImplicitSecondOrder().spectralRadius); }
 
   //! AUTO: print function used in ostream operator (print is virtual and can thus be overloaded)
-  virtual void Print(std::ostream& os) const
+  virtual void Print(std::ostream& os) const override
   {
     os << "MainSolverImplicitSecondOrder" << ":\n";
     os << ":"; 
@@ -265,7 +265,7 @@ and hereafter you can access all data and functions via 'solver'.
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2026-09-25 (last modfied)
+* @date         AUTO: 2026-10-12 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -310,14 +310,14 @@ public: // AUTO:
   }
 
   //! AUTO: Set function (needed in pybind) for: index-array contains 4 integers: nODE2, nODE1, nAE and nData of initialization: this guaranties, that no function is called with wrong system sizes; DO not change these variables: can easily lead to crash! 
-  void PySetInitializedSystemSizes(const std::array<Index,4>& initializedSystemSizesInit) { initializedSystemSizes = initializedSystemSizesInit; }
+  void PySetInitializedSystemSizes(const std::array<Index,4>& initializedSystemSizesInit) override { initializedSystemSizes = initializedSystemSizesInit; }
   //! AUTO: Read (Copy) access to: index-array contains 4 integers: nODE2, nODE1, nAE and nData of initialization: this guaranties, that no function is called with wrong system sizes; DO not change these variables: can easily lead to crash! 
-  std::array<Index,4> PyGetInitializedSystemSizes() const { return std::array<Index,4>(initializedSystemSizes); }
+  std::array<Index,4> PyGetInitializedSystemSizes() const override { return std::array<Index,4>(initializedSystemSizes); }
 
   //! AUTO: constructor, in order to set valid state (settings not initialized at beginning)
    MainSolverExplicit();
   //! AUTO: print function used in ostream operator (print is virtual and can thus be overloaded)
-  virtual void Print(std::ostream& os) const
+  virtual void Print(std::ostream& os) const override
   {
     os << "MainSolverExplicit" << ":\n";
     os << ":"; 

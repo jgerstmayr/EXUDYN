@@ -6583,13 +6583,14 @@ definitions.append(ItemDefinition(
     If `activeConnector = True`, the spring force vector is computed as
 
     $$
-                        \LU{0}{\fv_{SD}} = \diag(\kv)\cdot(\Delta\! \LU{0}{\pv}-\LU{0}{\vv_{\mathrm{off}}}) + \diag(\dv) \cdot \Delta\! \LU{0}{\vv} \, .
+                        \LU{0}{\fv_{SD}} = \diag(\kv)\cdot(\Delta\! \LU{0}{\pv}-\LU{0}{\vv_{\mathrm{off}}}) + \diag(\dv) \cdot (\Delta\! \LU{0}{\vv} - \LU{0}{\vv_{\mathrm{v,off}}}) \, ,
                         $$
 
+    with the velocity offset $\vv_{\mathrm{v,off}}$, e.g. the velocity a damper is driven with.
     If the springForceUserFunction $\mathrm{UF}$ is defined, $\fv_{SD}$ instead becomes ($t$ is current time)
 
     $$
-                        \LU{0}{\fv_{SD}} = \mathrm{UF}(mbs, t, i_N, \Delta\! \LU{0}{\pv}, \Delta\! \LU{0}{\vv}, \kv, \dv, \vv_{\mathrm{off}}) \, ,
+                        \LU{0}{\fv_{SD}} = \mathrm{UF}(mbs, t, i_N, \Delta\! \LU{0}{\pv} - \vv_{\mathrm{off}}, \Delta\! \LU{0}{\vv} - \vv_{\mathrm{v,off}}, \kv, \dv, \vv_{\mathrm{off}}) \, ,
                         $$
 
     and `iN` represents the itemNumber (=objectNumber).
@@ -6715,6 +6716,10 @@ definitions.append(ItemDefinition(
             pythonName='offset',
             defaultValue=DVZeroVector3D,
             description=r'$\vv_{\mathrm{off}}$offset between two springs'),
+        ItemParameter(type=TVectorND(3), destination=DestComp+DestParam,
+            pythonName='velocityOffset',
+            defaultValue=DVZeroVector3D,
+            description=r'$\vv_{\mathrm{v,off}}$velocity offset of the dampers, subtracted from the relative velocity, e.g. to drive a damper with a velocity instead of a user function (#1631)'),
         ItemParameter(destination=DestComp+DestParam,
             pythonName='springForceUserFunction',
             defaultValue=0,
@@ -6883,6 +6888,7 @@ definitions.append(ItemDefinition(
     | stiffness | $\kv \in \mathbb{R}^{6\times 6}$ | stiffness in $J0$ coordinates |
     | damping | $\dv \in \mathbb{R}^{6\times 6}$ | damping in $J0$ coordinates |
     | offset | $\LUR{J0}{\vv}{\mathrm{off}} \in \mathbb{R}^{6}$ | offset in $J0$ coordinates |
+    | velocityOffset | $\LUR{J0}{\vv}{\mathrm{v,off}} \in \mathbb{R}^{6}$ | velocity and angular velocity offset in $J0$ coordinates |
     | rotationMarker0 | $\LU{m0,J0}{\Rot}$ | rotation matrix which transforms from joint 0 into marker 0 coordinates |
     | rotationMarker1 | $\LU{m1,J1}{\Rot}$ | rotation matrix which transforms from joint 1 into marker 1 coordinates |
     | markerNumbers[0] | $m0$ | global marker number m0 |
@@ -6917,8 +6923,12 @@ definitions.append(ItemDefinition(
 
     $$
                         \vp{\LU{J0}{\fv_{SD}}}{\LU{J0}{\mv_{SD}}} = \kv \left( \vp{\LU{J0}{\Delta\pv}}{\LU{J0}{\ttheta}} - \LUR{J0}{\vv}{\mathrm{off}}\right) + 
-                                    \dv \vp{\LU{J0}{\Delta\vv}}{\LU{J0}{\Delta\omega}}
+                                    \dv \left( \vp{\LU{J0}{\Delta\vv}}{\LU{J0}{\Delta\omega}} - \LUR{J0}{\vv}{\mathrm{v,off}}\right)
                         $$
+
+    The velocity offset drives a damper with a velocity, e.g. instead of a user function. As the offset, it is not
+    subtracted from the arguments of a user function, which reads it with `mbs.GetObjectParameter(itemNumber,
+    'velocityOffset')`.
 
     For the application of joint forces to markers, $[\LU{J0}{\fv_{SD}},\,\LU{J0}{\mv_{SD}}]\tp$ is transformed into global coordinates.
     if `activeConnector = False`, $\LU{J0}{\fv_{SD}}$ and  $\LU{J0}{\mv_{SD}}$ are set to zero.
@@ -7005,6 +7015,10 @@ definitions.append(ItemDefinition(
             pythonName='offset',
             defaultValue='Vector6D({0.,0.,0.,0.,0.,0.})',
             description=r'translational and rotational offset considered in the spring force calculation'),
+        ItemParameter(type=TVectorND(6), destination=DestComp+DestParam,
+            pythonName='velocityOffset',
+            defaultValue='Vector6D({0.,0.,0.,0.,0.,0.})',
+            description=r'translational and angular velocity offset in joint 0 coordinates, subtracted from the relative velocities in the damper force; e.g. to drive a damper with a velocity instead of a user function (#1631)'),
         ItemParameter(type=TBool, destination=DestComp+DestParam,
             pythonName='useIntrinsicFormulation',
             defaultValue=False,
@@ -7688,10 +7702,12 @@ definitions.append(ItemDefinition(
     If `activeConnector = True`, the scalar spring force vector is computed as
 
     $$
-                        f_{SD} = k \left( \Delta q - l_\mathrm{off} \right) + d \cdot \Delta v % + f_\mathrm{friction}
+                        f_{SD} = k \left( \Delta q - l_\mathrm{off} \right) + d \left( \Delta v - v_\mathrm{off} \right) % + f_\mathrm{friction}
                         $$
 
-    If the springForceUserFunction $\mathrm{UF}$ is defined, $\fv_{SD}$ instead becomes ($t$ is current time)
+    If the springForceUserFunction $\mathrm{UF}$ is defined, $\fv_{SD}$ instead becomes ($t$ is current time); as the
+    offset, the velocity offset is not subtracted from its arguments, and the user function reads it with
+    `mbs.GetObjectParameter(itemNumber, 'velocityOffset')`
 
     $$
                         f_{SD} = \mathrm{UF}(mbs, t, i_N, \Delta q, \Delta v, k, d, l_\mathrm{off})%, f_\mu, v_\mu)
@@ -7771,6 +7787,10 @@ definitions.append(ItemDefinition(
             pythonName='offset',
             defaultValue=0.,
             description=r"""$l_\mathrm{off}$offset between two coordinates (reference length of springs), see equation"""),
+        ItemParameter(type=TReal, destination=DestComp+DestParam,
+            pythonName='velocityOffset',
+            defaultValue=0.,
+            description=r"""$v_\mathrm{off}$velocity offset of the damper, subtracted from the relative velocity, see equation; e.g. to drive a damper with a velocity instead of a user function (#829)"""),
         ItemParameter(type=TBool, destination=DestComp+DestParam,
             pythonName='activeConnector',
             defaultValue=True,

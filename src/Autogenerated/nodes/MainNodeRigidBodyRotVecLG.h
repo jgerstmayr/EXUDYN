@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes, Holzinger Stefan
 * @date         2019-07-01 (generated)
-* @date         2026-10-11  11:30:41 (last modified)
+* @date         2026-10-12  00:21:22 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -95,14 +95,14 @@ public: // AUTO:
     void SetVisualizationNodeRigidBodyRotVecLG(VisualizationNodeRigidBodyRotVecLG* pVisualizationNodeRigidBodyRotVecLG) { visualizationNodeRigidBodyRotVecLG = pVisualizationNodeRigidBodyRotVecLG; }
 
     //! AUTO: Get const pointer to computational base class object
-    virtual CNode* GetCNode() const { return cNodeRigidBodyRotVecLG; }
+    virtual CNode* GetCNode() const override { return cNodeRigidBodyRotVecLG; }
     //! AUTO: Set pointer to computational base class object (do this only in object factory; type is NOT CHECKED!!!)
-    virtual void SetCNode(CNode* pCNode) { cNodeRigidBodyRotVecLG = (CNodeRigidBodyRotVecLG*)pCNode; }
+    virtual void SetCNode(CNode* pCNode) override { cNodeRigidBodyRotVecLG = (CNodeRigidBodyRotVecLG*)pCNode; }
 
     //! AUTO: Get const pointer to visualization base class object
-    virtual VisualizationNode* GetVisualizationNode() const { return visualizationNodeRigidBodyRotVecLG; }
+    virtual VisualizationNode* GetVisualizationNode() const override { return visualizationNodeRigidBodyRotVecLG; }
     //! AUTO: Set pointer to visualization base class object (do this only in object factory; type is NOT CHECKED!!!)
-    virtual void SetVisualizationNode(VisualizationNode* pVisualizationNode) { visualizationNodeRigidBodyRotVecLG = (VisualizationNodeRigidBodyRotVecLG*)pVisualizationNode; }
+    virtual void SetVisualizationNode(VisualizationNode* pVisualizationNode) override { visualizationNodeRigidBodyRotVecLG = (VisualizationNodeRigidBodyRotVecLG*)pVisualizationNode; }
 
     //! AUTO: Write (Reference) access to parameters
     virtual MainNodeRigidBodyRotVecLGParameters& GetParameters() { return parameters; }

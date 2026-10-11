@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-09-18  21:48:31 (last modified)
+* @date         2026-10-12  00:21:22 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -95,14 +95,14 @@ public: // AUTO:
     void SetVisualizationNodeRigidBodyEP(VisualizationNodeRigidBodyEP* pVisualizationNodeRigidBodyEP) { visualizationNodeRigidBodyEP = pVisualizationNodeRigidBodyEP; }
 
     //! AUTO: Get const pointer to computational base class object
-    virtual CNode* GetCNode() const { return cNodeRigidBodyEP; }
+    virtual CNode* GetCNode() const override { return cNodeRigidBodyEP; }
     //! AUTO: Set pointer to computational base class object (do this only in object factory; type is NOT CHECKED!!!)
-    virtual void SetCNode(CNode* pCNode) { cNodeRigidBodyEP = (CNodeRigidBodyEP*)pCNode; }
+    virtual void SetCNode(CNode* pCNode) override { cNodeRigidBodyEP = (CNodeRigidBodyEP*)pCNode; }
 
     //! AUTO: Get const pointer to visualization base class object
-    virtual VisualizationNode* GetVisualizationNode() const { return visualizationNodeRigidBodyEP; }
+    virtual VisualizationNode* GetVisualizationNode() const override { return visualizationNodeRigidBodyEP; }
     //! AUTO: Set pointer to visualization base class object (do this only in object factory; type is NOT CHECKED!!!)
-    virtual void SetVisualizationNode(VisualizationNode* pVisualizationNode) { visualizationNodeRigidBodyEP = (VisualizationNodeRigidBodyEP*)pVisualizationNode; }
+    virtual void SetVisualizationNode(VisualizationNode* pVisualizationNode) override { visualizationNodeRigidBodyEP = (VisualizationNodeRigidBodyEP*)pVisualizationNode; }
 
     //! AUTO: Write (Reference) access to parameters
     virtual MainNodeRigidBodyEPParameters& GetParameters() { return parameters; }

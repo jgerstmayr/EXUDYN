@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-10-03  18:09:00 (last modified)
+* @date         2026-10-12  00:21:22 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -86,14 +86,14 @@ public: // AUTO:
     void SetVisualizationObjectJointSliding2D(VisualizationObjectJointSliding2D* pVisualizationObjectJointSliding2D) { visualizationObjectJointSliding2D = pVisualizationObjectJointSliding2D; }
 
     //! AUTO: Get const pointer to computational base class object
-    virtual CObject* GetCObject() const { return cObjectJointSliding2D; }
+    virtual CObject* GetCObject() const override { return cObjectJointSliding2D; }
     //! AUTO: Set pointer to computational base class object (do this only in object factory; type is NOT CHECKED!!!)
-    virtual void SetCObject(CObject* pCObject) { cObjectJointSliding2D = (CObjectJointSliding2D*)pCObject; }
+    virtual void SetCObject(CObject* pCObject) override { cObjectJointSliding2D = (CObjectJointSliding2D*)pCObject; }
 
     //! AUTO: Get const pointer to visualization base class object
-    virtual VisualizationObject* GetVisualizationObject() const { return visualizationObjectJointSliding2D; }
+    virtual VisualizationObject* GetVisualizationObject() const override { return visualizationObjectJointSliding2D; }
     //! AUTO: Set pointer to visualization base class object (do this only in object factory; type is NOT CHECKED!!!)
-    virtual void SetVisualizationObject(VisualizationObject* pVisualizationObject) { visualizationObjectJointSliding2D = (VisualizationObjectJointSliding2D*)pVisualizationObject; }
+    virtual void SetVisualizationObject(VisualizationObject* pVisualizationObject) override { visualizationObjectJointSliding2D = (VisualizationObjectJointSliding2D*)pVisualizationObject; }
 
     //! AUTO:  Check consistency prior to CSystem::Assemble(); needs to find all possible violations such that Assemble() would fail
     virtual bool CheckPreAssembleConsistency(const MainSystem& mainSystem, STDstring& errorString) const override;

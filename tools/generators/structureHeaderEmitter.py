@@ -27,6 +27,10 @@ from structureModel import *                                            # noqa: 
 import typeModel as tm                                                  # noqa: E402
 
 
+
+#the Py access functions that a hand-written parent class declares virtual, by parent class (#2967)
+overriddenPyAccess = {'MainSolverBase': ['InitializedSystemSizes']}
+
 def CppPath(path):
     """a path of Python member names with the C++ names of the members: a member whose C++ name differs - explicit,
     a keyword of C++, is explicitSettings (#2813) - is written with it"""
@@ -493,8 +497,10 @@ def StructureCppHeader(parseInfo):
                 setFunction.append('void ')
                 getReturnStr = typeCastStr
                 
+                #a parent class that declares the access functions virtual: they override it (#2967)
+                strOverride = 'override ' if functionStr in overriddenPyAccess.get(Header(parseInfo, 'parentClass'), []) else ''
                 if not typeWithGetSetFunction:
-                    setFunction.append('PySet' + functionStr + '(const ' + typeCastStr + refChar + ' ' + paramStrPure + 'Init) ')
+                    setFunction.append('PySet' + functionStr + '(const ' + typeCastStr + refChar + ' ' + paramStrPure + 'Init) ' + strOverride)
                     setFunction.append('{ '+paramAccessStr + ' = ' + paramSetStr + '; }\n')
                 else:
                     paramInitStr = paramAccessStr+ '= '+'(const ' + typeStr+ '&)' + paramStrPure + 'Init'
@@ -520,7 +526,7 @@ def StructureCppHeader(parseInfo):
                 s+='  //! AUTO: Read (Copy) access to: ' + Str2Doxygen(ParameterDescription(parameter)) + '\n'
 
                 getFunction.append(getReturnStr + ' ')
-                getFunction.append('PyGet' + functionStr + '() const ')
+                getFunction.append('PyGet' + functionStr + '() const ' + strOverride)
                 getFunction.append('{ '+lineBreakIDP+deprecationWarning+'return ' + typeCastStr + '('+ paramAccessStr + '); '+lineBreakIDP+'}\n')
                 s+= '  '+getFunction[0] + getFunction[1] + getFunction[2]*(1-IDPNS)+';\n'*IDPNS #spaces/linebreaks included
 
@@ -652,7 +658,8 @@ def StructureCppHeader(parseInfo):
 #       Header(parseInfo, 'class') + '& object);\n')
 
     s+='  //! AUTO: print function used in ostream operator (print is virtual and can thus be overloaded)\n'
-    s+='  virtual void Print(std::ostream& os) const\n'
+    #a structure with a parent class overrides its Print (#2967)
+    s+='  virtual void Print(std::ostream& os) const' + ' override'*(len(Header(parseInfo, 'parentClass')) != 0) + '\n'
     s+='  {\n'
     s+='    os << "' + Header(parseInfo, 'class') + '" << ":\\n";\n'
     if len(Header(parseInfo, 'parentClass')) != 0:

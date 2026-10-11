@@ -139,13 +139,13 @@ public:
 
 
 	//! list of GraphicsData of all visualizationSystems; linked from glfwclient!
-	ResizableArray<GraphicsData*>& GetGraphicsDataList() { return graphicsDataList; }
+	ResizableArray<GraphicsData*>& GetGraphicsDataList() override { return graphicsDataList; }
 	const ResizableArray<GraphicsData*>& GetGraphicsDataList() const { return graphicsDataList; }
 
-	VisualizationSettings& GetVisualizationSettings() { return settings; }
+	VisualizationSettings& GetVisualizationSettings() override { return settings; }
 	const VisualizationSettings& GetVisualizationSettings() const { return settings; }
 
-	RenderState& GetRenderState(Index viewID) { return renderViewDataArray[viewID].renderState; }
+	RenderState& GetRenderState(Index viewID) override { return renderViewDataArray[viewID].renderState; }
 	const RenderState& GetRenderState(Index viewID) const { return renderViewDataArray[viewID].renderState; }
 
 	RenderViewDataVSC& GetRenderViewData(Index viewID) 
@@ -259,7 +259,7 @@ public:
 	}
 
 	//! width and height of image in ImageData()
-	virtual SlimVectorBase<Index, 2>* GetImageDataSize(Index viewID)
+	virtual SlimVectorBase<Index, 2>* GetImageDataSize(Index viewID) override
 	{
 		CHECKandTHROW(viewID < MAX_VIEWS_GLFW, "GetImageDataSize: illegal viewID");
 		return &renderViewDataArray[viewID].imageDataSize;
@@ -296,7 +296,7 @@ public:
 	//! copy materials before using them in drawing
 	virtual void CopyMaterialsFromVisualizationSettings() override;
 
-	virtual Float4 ColorBarColor(float minVal, float maxVal, float value, float alpha = 1.f)
+	virtual Float4 ColorBarColor(float minVal, float maxVal, float value, float alpha = 1.f) override
 	{
 		const Float4& color0 = settings.contour.advanced.contourColor0;
 		const Float4& color1 = settings.contour.advanced.contourColor1;

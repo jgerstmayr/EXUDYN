@@ -50,7 +50,7 @@ public:
 		writeAppend = false;
 	} 
 	//! override overflow in std::stringbuf; alternative: virtual int sync(); ==> this solution does not work!
-	virtual int overflow(int c = EOF);
+	virtual int overflow(int c = EOF) override;
 
 	//! special overflow with option to flush, ignoring char
 	virtual int overflowFlush(int c = EOF, bool flushOnly=false, bool clearBuffer=false);

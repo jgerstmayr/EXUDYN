@@ -4,7 +4,7 @@
 *
 * @author       Manzl Peter
 * @date         2019-07-01 (generated)
-* @date         2026-09-26  09:02:59 (last modified)
+* @date         2026-10-12  00:21:22 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -86,14 +86,14 @@ public: // AUTO:
     void SetVisualizationObjectContactConvexRoll(VisualizationObjectContactConvexRoll* pVisualizationObjectContactConvexRoll) { visualizationObjectContactConvexRoll = pVisualizationObjectContactConvexRoll; }
 
     //! AUTO: Get const pointer to computational base class object
-    virtual CObject* GetCObject() const { return cObjectContactConvexRoll; }
+    virtual CObject* GetCObject() const override { return cObjectContactConvexRoll; }
     //! AUTO: Set pointer to computational base class object (do this only in object factory; type is NOT CHECKED!!!)
-    virtual void SetCObject(CObject* pCObject) { cObjectContactConvexRoll = (CObjectContactConvexRoll*)pCObject; }
+    virtual void SetCObject(CObject* pCObject) override { cObjectContactConvexRoll = (CObjectContactConvexRoll*)pCObject; }
 
     //! AUTO: Get const pointer to visualization base class object
-    virtual VisualizationObject* GetVisualizationObject() const { return visualizationObjectContactConvexRoll; }
+    virtual VisualizationObject* GetVisualizationObject() const override { return visualizationObjectContactConvexRoll; }
     //! AUTO: Set pointer to visualization base class object (do this only in object factory; type is NOT CHECKED!!!)
-    virtual void SetVisualizationObject(VisualizationObject* pVisualizationObject) { visualizationObjectContactConvexRoll = (VisualizationObjectContactConvexRoll*)pVisualizationObject; }
+    virtual void SetVisualizationObject(VisualizationObject* pVisualizationObject) override { visualizationObjectContactConvexRoll = (VisualizationObjectContactConvexRoll*)pVisualizationObject; }
 
     //! AUTO:  Check consistency prior to CSystem::Assemble(); needs to find all possible violations such that Assemble() would fail
     virtual bool CheckPreAssembleConsistency(const MainSystem& mainSystem, STDstring& errorString) const override;

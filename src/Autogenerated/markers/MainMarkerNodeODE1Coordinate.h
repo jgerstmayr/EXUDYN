@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-10-11  13:58:58 (last modified)
+* @date         2026-10-12  00:21:22 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -86,14 +86,14 @@ public: // AUTO:
     void SetVisualizationMarkerNodeODE1Coordinate(VisualizationMarkerNodeODE1Coordinate* pVisualizationMarkerNodeODE1Coordinate) { visualizationMarkerNodeODE1Coordinate = pVisualizationMarkerNodeODE1Coordinate; }
 
     //! AUTO: Get const pointer to computational base class object
-    virtual CMarker* GetCMarker() const { return cMarkerNodeODE1Coordinate; }
+    virtual CMarker* GetCMarker() const override { return cMarkerNodeODE1Coordinate; }
     //! AUTO: Set pointer to computational base class object (do this only in object factory; type is NOT CHECKED!!!)
-    virtual void SetCMarker(CMarker* pCMarker) { cMarkerNodeODE1Coordinate = (CMarkerNodeODE1Coordinate*)pCMarker; }
+    virtual void SetCMarker(CMarker* pCMarker) override { cMarkerNodeODE1Coordinate = (CMarkerNodeODE1Coordinate*)pCMarker; }
 
     //! AUTO: Get const pointer to visualization base class object
-    virtual VisualizationMarker* GetVisualizationMarker() const { return visualizationMarkerNodeODE1Coordinate; }
+    virtual VisualizationMarker* GetVisualizationMarker() const override { return visualizationMarkerNodeODE1Coordinate; }
     //! AUTO: Set pointer to visualization base class object (do this only in object factory; type is NOT CHECKED!!!)
-    virtual void SetVisualizationMarker(VisualizationMarker* pVisualizationMarker) { visualizationMarkerNodeODE1Coordinate = (VisualizationMarkerNodeODE1Coordinate*)pVisualizationMarker; }
+    virtual void SetVisualizationMarker(VisualizationMarker* pVisualizationMarker) override { visualizationMarkerNodeODE1Coordinate = (VisualizationMarkerNodeODE1Coordinate*)pVisualizationMarker; }
 
     //! AUTO:  Get type name of marker (without keyword 'Marker'...!); could also be realized via a string -> type conversion?
     virtual const char* GetTypeName() const override

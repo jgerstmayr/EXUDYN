@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-10-02  12:15:38 (last modified)
+* @date         2026-10-12  00:27:46 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -35,6 +35,7 @@ public: // AUTO:
     Vector3D stiffness;                           //!< AUTO: stiffness [SI:N/m] of springs; act against relative displacements in 0, 1, and 2-direction
     Vector3D damping;                             //!< AUTO: damping [SI:N/(m s)] of dampers; act against relative velocities in 0, 1, and 2-direction
     Vector3D offset;                              //!< AUTO: offset between two springs
+    Vector3D velocityOffset;                      //!< AUTO: velocity offset of the dampers, subtracted from the relative velocity, e.g. to drive a damper with a velocity instead of a user function (#1631)
     PythonUserFunctionBase< std::function<StdVector3D(const MainSystem&,Real,Index,StdVector3D,StdVector3D,StdVector3D,StdVector3D,StdVector3D)> > springForceUserFunction;//!< AUTO: A Python function which computes the 3D force vector between the two marker points, if activeConnector=True; see description below
     bool activeConnector;                         //!< AUTO: flag, which determines, if the connector is active; used to deactivate (temporarily) a connector or constraint
     //! AUTO: default constructor with parameter initialization
@@ -44,6 +45,7 @@ public: // AUTO:
         stiffness = Vector3D({0.,0.,0.});
         damping = Vector3D({0.,0.,0.});
         offset = Vector3D({0.,0.,0.});
+        velocityOffset = Vector3D({0.,0.,0.});
         springForceUserFunction = 0;
         activeConnector = true;
     };

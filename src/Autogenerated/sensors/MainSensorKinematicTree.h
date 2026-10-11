@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-10-01  00:12:29 (last modified)
+* @date         2026-10-12  00:21:22 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -86,14 +86,14 @@ public: // AUTO:
     void SetVisualizationSensorKinematicTree(VisualizationSensorKinematicTree* pVisualizationSensorKinematicTree) { visualizationSensorKinematicTree = pVisualizationSensorKinematicTree; }
 
     //! AUTO: Get const pointer to computational base class object
-    virtual CSensor* GetCSensor() const { return cSensorKinematicTree; }
+    virtual CSensor* GetCSensor() const override { return cSensorKinematicTree; }
     //! AUTO: Set pointer to computational base class object (do this only in object factory; type is NOT CHECKED!!!)
-    virtual void SetCSensor(CSensor* pCSensor) { cSensorKinematicTree = (CSensorKinematicTree*)pCSensor; }
+    virtual void SetCSensor(CSensor* pCSensor) override { cSensorKinematicTree = (CSensorKinematicTree*)pCSensor; }
 
     //! AUTO: Get const pointer to visualization base class object
-    virtual VisualizationSensor* GetVisualizationSensor() const { return visualizationSensorKinematicTree; }
+    virtual VisualizationSensor* GetVisualizationSensor() const override { return visualizationSensorKinematicTree; }
     //! AUTO: Set pointer to visualization base class object (do this only in object factory; type is NOT CHECKED!!!)
-    virtual void SetVisualizationSensor(VisualizationSensor* pVisualizationSensor) { visualizationSensorKinematicTree = (VisualizationSensorKinematicTree*)pVisualizationSensor; }
+    virtual void SetVisualizationSensor(VisualizationSensor* pVisualizationSensor) override { visualizationSensorKinematicTree = (VisualizationSensorKinematicTree*)pVisualizationSensor; }
 
     //! AUTO:  Get type name of sensor (without keyword 'Sensor'...!)
     virtual const char* GetTypeName() const override

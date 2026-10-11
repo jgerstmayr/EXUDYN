@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-10-03  18:08:00 (last modified)
+* @date         2026-10-12  00:21:22 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -87,14 +87,14 @@ public: // AUTO:
     void SetVisualizationObjectMassPoint(VisualizationObjectMassPoint* pVisualizationObjectMassPoint) { visualizationObjectMassPoint = pVisualizationObjectMassPoint; }
 
     //! AUTO: Get const pointer to computational base class object
-    virtual CObject* GetCObject() const { return cObjectMassPoint; }
+    virtual CObject* GetCObject() const override { return cObjectMassPoint; }
     //! AUTO: Set pointer to computational base class object (do this only in object factory; type is NOT CHECKED!!!)
-    virtual void SetCObject(CObject* pCObject) { cObjectMassPoint = (CObjectMassPoint*)pCObject; }
+    virtual void SetCObject(CObject* pCObject) override { cObjectMassPoint = (CObjectMassPoint*)pCObject; }
 
     //! AUTO: Get const pointer to visualization base class object
-    virtual VisualizationObject* GetVisualizationObject() const { return visualizationObjectMassPoint; }
+    virtual VisualizationObject* GetVisualizationObject() const override { return visualizationObjectMassPoint; }
     //! AUTO: Set pointer to visualization base class object (do this only in object factory; type is NOT CHECKED!!!)
-    virtual void SetVisualizationObject(VisualizationObject* pVisualizationObject) { visualizationObjectMassPoint = (VisualizationObjectMassPoint*)pVisualizationObject; }
+    virtual void SetVisualizationObject(VisualizationObject* pVisualizationObject) override { visualizationObjectMassPoint = (VisualizationObjectMassPoint*)pVisualizationObject; }
 
     //! AUTO:  Get type name of object; could also be realized via a string -> type conversion?
     virtual const char* GetTypeName() const override

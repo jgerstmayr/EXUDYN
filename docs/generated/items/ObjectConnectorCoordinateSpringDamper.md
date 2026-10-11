@@ -24,6 +24,7 @@ The parameters of the item; in a dictionary, its type is 'ConnectorCoordinateSpr
 | **stiffness** | Real |  | 0. | (symbol: $k$) stiffness [SI:N/m] of spring; acts against relative value of coordinates |
 | **damping** | Real |  | 0. | (symbol: $d$) damping [SI:N/(m s)] of damper; acts against relative velocity of coordinates |
 | **offset** | Real |  | 0. | (symbol: $l_\mathrm{off}$) offset between two coordinates (reference length of springs), see equation |
+| **velocityOffset** | Real |  | 0. | (symbol: $v_\mathrm{off}$) velocity offset of the damper, subtracted from the relative velocity, see equation; e.g. to drive a damper with a velocity instead of a user function (#829) |
 | **activeConnector** | Bool |  | True | flag, which determines, if the connector is active; used to deactivate (temporarily) a connector or constraint |
 | **springForceUserFunction** | ObjectConnectorCoordinateSpringDamperSpringForceUserFunction |  | 0 | (symbol: $\mathrm{UF} \in \Rcal$) A Python function which defines the spring force with 8 parameters, see equations section / see description below |
 | **visualization** | VObjectConnectorCoordinateSpringDamper |  |  | parameters for visualization of item |
@@ -87,10 +88,12 @@ $$
 If `activeConnector = True`, the scalar spring force vector is computed as
 
 $$
-f_{SD} = k \left( \Delta q - l_\mathrm{off} \right) + d \cdot \Delta v
+f_{SD} = k \left( \Delta q - l_\mathrm{off} \right) + d \left( \Delta v - v_\mathrm{off} \right)
 $$
 
-If the springForceUserFunction $\mathrm{UF}$ is defined, $\fv_{SD}$ instead becomes ($t$ is current time)
+If the springForceUserFunction $\mathrm{UF}$ is defined, $\fv_{SD}$ instead becomes ($t$ is current time); as the
+offset, the velocity offset is not subtracted from its arguments, and the user function reads it with
+`mbs.GetObjectParameter(itemNumber, 'velocityOffset')`
 
 $$
 f_{SD} = \mathrm{UF}(mbs, t, i_N, \Delta q, \Delta v, k, d, l_\mathrm{off})

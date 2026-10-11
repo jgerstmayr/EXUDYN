@@ -4,7 +4,7 @@
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2026-09-25 (last modfied)
+* @date         AUTO: 2026-10-12 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -61,7 +61,7 @@ public: // AUTO:
   py::array_t<Real> PyGetStiffnessMatrix() const { return EPyUtils::ToPython(stiffnessMatrix); }
 
   //! AUTO: print function used in ostream operator (print is virtual and can thus be overloaded)
-  virtual void Print(std::ostream& os) const
+  virtual void Print(std::ostream& os) const override
   {
     os << "PyBeamSection" << ":\n";
     os << ":"; 

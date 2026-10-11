@@ -8,10 +8,10 @@ Every entry carries the **type** of the issue, then its **priority** and its **e
 
 General information on current version:
 
-- Exudyn version = 1.13.64.dev1
+- Exudyn version = 1.13.69.dev1
 - last change = 2026-10-12
 - Number of issues = 2986
-- Number of resolved issues = 2841 (64 in current version)
+- Number of resolved issues = 2846 (69 in current version)
 
 ## Resolved issues and resolved bugs before version 1.13
 
@@ -9081,9 +9081,6 @@ The following list contains the issues which have been **RESOLVED** in the accor
 - `EXTENSION` `MEDIUM EFF` `raised by: Claude-JG` Python user items: the common pattern and the user types (#2972)
   - description: revision2026c step RG7.2 (docs/dev/design/pythonUserItems.md 5.6, 8): naming, the arguments of every user function, how C++ calls them; OutputVariableType::UserType0-3, Node::UserType0-3, Marker::UserType0-3 with a registry of display names and Python aliases (exu.OutputVariableType.xyz = ... works).
   - date raised: 2026-10-12
-- `CHANGE` `raised by: Claude-JG` Mark the overriding virtual functions outside src/Linalg with override, the generated ones in the generator (#2967)
-  - description: Follow-up of \#123 (src/Linalg done): gcc -Wsuggest-override (syntax-only compile of every source in WSL, gcc 13.3) reports 455 places in 112 files: 4 in each generated Main\*/Visu\* item header (itemHeaderEmitter.py), CNode.h 22, CObjectConnector.h 7, VisualizationSystemContainer.h 5, CObjectBody.h 3, MainSolver.h 9, CSolverExplicit.h 2, ...; proposal: emit override in itemHeaderEmitter, add it by hand in the rest, and add -Wsuggest-override to the Linux build so that a new one is seen.
-  - date raised: 2026-10-11
 - `EXTENSION` `raised by: Claude-JG` exudyn.cUtilities: the time derivatives of the Euler parameter functions (#2965)
   - description: Decision D7 of revision2026c step RG11.10.1 (tmp/compareRBU.md, maintainer 2026-10-11: not now, an issue): RigidBodyMath has EP2RotationMatrix\_t, EP\_t2G\_t and EP\_t2Glocal\_t, which neither rigidBodyUtilities nor exudyn.cUtilities offers; when wanted, add them to definitions/pybindCUtilities.py and PyCUtilities.h, with a check in cUtilitiesTest.py.
   - date raised: 2026-10-10
@@ -9102,10 +9099,6 @@ The following list contains the issues which have been **RESOLVED** in the accor
 - `TESTING` <span class="textblue">`LOW`</span> `HIGH EFF` `raised by: Claude-JG` the ROS examples were last tested in 2023 and nobody can run them (#2511)
   - description: ROSMassPoint.py; ROSTurtle.py and ROSMobileManipulator.py were written and tested in 2023 against ROS1 noetic. They have not been run since: the maintainer has no ROS installation; and ExampleSkipReason() skips anything importing rospy; so the automated example run never touches them either. Their supplementary files - the ROS nodes; the launch file and the STL geometry - had been in an Examples/supplementary folder that no longer exists; the headers still pointed at it until revision2026 step R5.18.4 moved them to python/Examples/testData/ROS/ and said so. Each file now carries a STATUS note: it is a working illustration of how the coupling is put together; not something that runs unchanged - topic names; message types and the node layout have to be adapted to the installation and the ROS version. ROS1 noetic reached end of life in May 2025; so the open question is whether these should be ported to ROS2 or marked historical. Needs somebody with a ROS installation.
   - date raised: 2026-09-18
-- `EXTENSION` `LOW EFF` shells (#2349)
-  - description: adjust comments to fit to internal exudyn format
-  - **remarks:** planned as revision2026b step RG18.1 (triage 2026-10-07)
-  - date raised: 2026-08-05
 - `EXTENSION` `MEDIUM EFF` itemInterface (#2342)
   - description: replace CopyDictLevel1 with function that takes visualization and VItemClass in all self.visualization inits and either call VItemClass(\*\*visualization) if visualization is a dict, or store VItemClass object; this would enable to accept visualization as dict with only non-default values set; add try-except for dict-based call
   - **remarks:** planned as revision2026b step RG12.44 (triage 2026-10-07)
@@ -9355,10 +9348,6 @@ The following list contains the issues which have been **RESOLVED** in the accor
   - description: split into internal and external licenses
   - **remarks:** kept open as an idea, no plan step (triage 2026-10-07, revision2026b group RG18)
   - date raised: 2023-10-29
-- `EXTENSION` `LOW EFF` velocityOffset (#1631)
-  - description: add to CartesianSpringDamper, RigidBodySpringDamper
-  - **remarks:** planned as revision2026b step RG18.2 (triage 2026-10-07)
-  - date raised: 2023-06-26
 - `EXTENSION` `HIGH EFF` KinematicTree (#1549)
   - description: consider extension w.r.t. rigid body node at basis (Lie group node in explicit integration...); add baseNode (default=invalid), inertia could be added via a separate rigid body?
   - **remarks:** kept open as an idea, no plan step (triage 2026-10-07, revision2026b group RG18)
@@ -9391,10 +9380,6 @@ The following list contains the issues which have been **RESOLVED** in the accor
   - description: turn on/off scaling in interface to test symmetric solver speedup
   - **remarks:** kept open as an idea, no plan step (triage 2026-10-07, revision2026b group RG18)
   - date raised: 2022-07-11
-- `EXTENSION` `MEDIUM EFF` ContactFrictionCircleCable2D (#1189)
-  - description: add velocity offset to MarkerCable2DShape
-  - **remarks:** planned as revision2026b step RG18.2 (triage 2026-10-07)
-  - date raised: 2022-07-08
 - `EXTENSION` <span class="textorange">`NORMAL`</span> `HIGH EFF` c++ user elements (#1140)
   - description: add auto registration for C++ user items
   - **remarks:** planned as revision2026b step RG8.1 (triage 2026-10-07)
@@ -9492,10 +9477,6 @@ The following list contains the issues which have been **RESOLVED** in the accor
 - `EXTENSION` `HIGH EFF` GeneralContact rolling pivoting (#833)
   - description: add rolling and pivoting (drilling, boring) friction to spheres and triangles
   - date raised: 2021-12-17
-- `EXTENSION` `MEDIUM EFF` velocityOffset (#829)
-  - description: add velocity offset to all spring dampers in order to replace many user functions with preStepUserFunctions
-  - **remarks:** planned as revision2026b step RG18.2 (triage 2026-10-07)
-  - date raised: 2021-12-15
 - `EXTENSION` `MEDIUM EFF` MatrixContainer (#782)
   - description: add SetWithNGsolveSparseMatrix; add an interface to directly convert from NGsolve matrix, also converting coordinate storage xxyyzz
   - **remarks:** planned as revision2026b step RG12.46 (triage 2026-10-07)

@@ -821,3 +821,26 @@ items can still be dropped; go with the user rigid body.)*
   per function plus the call site and the declaration.
 - Steps RG7.2-RG7.9 (#2972-#2979), RG9.7 for the general markers on flexible bodies (#2980), and the new group RG12
   Symbolic with RG12.1-RG12.5 (#2981-#2985).
+
+<a id="rg11-9"></a>
+### RG11.8.1.3, RG11.8.13 and RG11.9 — override in all of src, exudyn.shells, the velocity offsets (2026-10-12, #829, #1189, #1631, #2349, #2967)
+*(Maintainer 2026-10-12: RG11.8.1 without interaction, itemHeaderEmitter writes override; velocityOffset in the
+Cartesian, rigid-body and coordinate spring-dampers, not in ObjectContactFrictionCircleCable2D; #2349 probably done.)*
+- **#2967**: itemHeaderEmitter writes `override` for the accessors of the C and Visualization classes in every Main
+  class and for the getters of color, triangle mesh and showNodes that VisualizationObjectSuperElement declares pure
+  virtual (`overriddenGetters`); structureHeaderEmitter for `Print` of a structure with a parent and for the access
+  functions that MainSolverBase declares virtual (`overriddenPyAccess`). By hand: 45 declarations in CNode.h,
+  CObjectConnector.h, CObjectBody.h, VisualizationObject.h, VisualizationSystemContainer.h, CSolverExplicit.h,
+  CSolverImplicitSecondOrder.h, CObjectANCFCable2DBase.h and Stdoutput.h. The syntax-only scan with gcc 13.3 reports
+  none in src now, and setup.py adds `-Wsuggest-override` to the unix flags, so a new one is seen.
+- **#2349**: partly done before - the docstrings of ShellMesh's constructor and of four functions had Args and
+  Returns. The file header described how the file came about (copied from a test script, the differences to it); it
+  now says what the module is. Comments that compared with that script are gone; CreateANCFThinPlateElements,
+  AddSphericalJointToGround, AddClampToGround and the nine SurfaceMap functions have Args and Returns.
+- **#829, #1631**: `velocityOffset` of CoordinateSpringDamper (scalar), CartesianSpringDamper (3 components) and
+  RigidBodySpringDamper (6, in joint 0 coordinates), subtracted from the relative velocity in the damper force. A user
+  function gets it as each item treats its offset: CartesianSpringDamper subtracts both from the arguments,
+  CoordinateSpringDamper and RigidBodySpringDamper neither, the user function reads them with GetObjectParameter.
+  Test model springDamperVelocityOffsetTest.py: dampers without springs drive the masses to the velocity offsets,
+  against v(t) = vOff (1 - exp(-d t/m)) to 1e-4 (generalized-alpha, 1000 steps). #1189 closed: not for
+  ObjectContactFrictionCircleCable2D.

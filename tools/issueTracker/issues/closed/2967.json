@@ -2,9 +2,13 @@
   "number": 2967,
   "title": "Mark the overriding virtual functions outside src/Linalg with override, the generated ones in the generator",
   "author": "Claude-JG",
-  "status": "RAISED",
+  "status": "RESOLVED",
   "type": "CHANGE",
   "description": "Follow-up of #123 (src/Linalg done): gcc -Wsuggest-override (syntax-only compile of every source in WSL, gcc 13.3) reports 455 places in 112 files: 4 in each generated Main*/Visu* item header (itemHeaderEmitter.py), CNode.h 22, CObjectConnector.h 7, VisualizationSystemContainer.h 5, CObjectBody.h 3, MainSolver.h 9, CSolverExplicit.h 2, ...; proposal: emit override in itemHeaderEmitter, add it by hand in the rest, and add -Wsuggest-override to the Linux build so that a new one is seen.",
   "dateRaised": "2026-10-11",
-  "deadline": "2027-04-09"
+  "deadline": "2027-04-09",
+  "dateResolved": "2026-10-12 00:30",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "Every overriding virtual function of the C++ code is marked override, the generated ones by the generators; the unix build warns of a missing one (revision2026c step RG11.8.1.3)",
+  "resolvedInVersion": "1.13.69"
 }

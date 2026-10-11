@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-10-03  18:08:00 (last modified)
+* @date         2026-10-12  00:21:22 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -87,14 +87,14 @@ public: // AUTO:
     void SetVisualizationObjectRotationalMass1D(VisualizationObjectRotationalMass1D* pVisualizationObjectRotationalMass1D) { visualizationObjectRotationalMass1D = pVisualizationObjectRotationalMass1D; }
 
     //! AUTO: Get const pointer to computational base class object
-    virtual CObject* GetCObject() const { return cObjectRotationalMass1D; }
+    virtual CObject* GetCObject() const override { return cObjectRotationalMass1D; }
     //! AUTO: Set pointer to computational base class object (do this only in object factory; type is NOT CHECKED!!!)
-    virtual void SetCObject(CObject* pCObject) { cObjectRotationalMass1D = (CObjectRotationalMass1D*)pCObject; }
+    virtual void SetCObject(CObject* pCObject) override { cObjectRotationalMass1D = (CObjectRotationalMass1D*)pCObject; }
 
     //! AUTO: Get const pointer to visualization base class object
-    virtual VisualizationObject* GetVisualizationObject() const { return visualizationObjectRotationalMass1D; }
+    virtual VisualizationObject* GetVisualizationObject() const override { return visualizationObjectRotationalMass1D; }
     //! AUTO: Set pointer to visualization base class object (do this only in object factory; type is NOT CHECKED!!!)
-    virtual void SetVisualizationObject(VisualizationObject* pVisualizationObject) { visualizationObjectRotationalMass1D = (VisualizationObjectRotationalMass1D*)pVisualizationObject; }
+    virtual void SetVisualizationObject(VisualizationObject* pVisualizationObject) override { visualizationObjectRotationalMass1D = (VisualizationObjectRotationalMass1D*)pVisualizationObject; }
 
     //! AUTO:  Get type name of object; could also be realized via a string -> type conversion?
     virtual const char* GetTypeName() const override

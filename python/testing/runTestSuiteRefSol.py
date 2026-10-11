@@ -127,6 +127,7 @@ def TestExamplesReferenceSolution():
         'cUtilitiesTest.py':70.25112145133696, #new 2026-10-11: the kinematics functions of exudyn.cUtilities by what they mean, and what they refuse (#2960)
         'markerNodeCoordinateReferenceTest.py':16.65, #new 2026-10-11: MarkerNodeCoordinate(includeReferenceCoordinate=True), CreateCoordinateConstraint(includeReferenceCoordinates), MarkerNodeCoordinates(includeReferenceCoordinates=False) (#990)
         'coSimulationTest.py':0.07053481177618996, #new 2026-10-11: an implicit and an explicit system coupled in the PreStepUserFunction, against one system (#1912)
+        'springDamperVelocityOffsetTest.py':2.287839441565404, #new 2026-10-12: velocityOffset of the coordinate, Cartesian and rigid-body spring-dampers against the exact solution (#829, #1631)
         'rotationMarkerDeprecationTest.py':-0.1340286194620787, #new 2026-10-03: rotationMarker0/1 against localHT of the markers, the deprecation warning once per session (#2745, #2801)
         'contactFrictionCircleCable2DnoFrictionTest.py':0.8052196344904814, #new 2026-10-05: no tangential force without a friction model, whatever the slip state (#1290); 1000 steps 2026-10-09 (#2912)
         'systemContainerLifetimeTest.py':-3.809999999999995, #new 2026-10-05: the MainSystem of AddSystem and GetSystem keeps its SystemContainer alive (#2851)

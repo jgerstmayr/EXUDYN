@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-10-04  17:26:47 (last modified)
+* @date         2026-10-12  00:21:22 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -87,14 +87,14 @@ public: // AUTO:
     void SetVisualizationLoadCoordinate(VisualizationLoadCoordinate* pVisualizationLoadCoordinate) { visualizationLoadCoordinate = pVisualizationLoadCoordinate; }
 
     //! AUTO: Get const pointer to computational base class object
-    virtual CLoad* GetCLoad() const { return cLoadCoordinate; }
+    virtual CLoad* GetCLoad() const override { return cLoadCoordinate; }
     //! AUTO: Set pointer to computational base class object (do this only in object factory; type is NOT CHECKED!!!)
-    virtual void SetCLoad(CLoad* pCLoad) { cLoadCoordinate = (CLoadCoordinate*)pCLoad; }
+    virtual void SetCLoad(CLoad* pCLoad) override { cLoadCoordinate = (CLoadCoordinate*)pCLoad; }
 
     //! AUTO: Get const pointer to visualization base class object
-    virtual VisualizationLoad* GetVisualizationLoad() const { return visualizationLoadCoordinate; }
+    virtual VisualizationLoad* GetVisualizationLoad() const override { return visualizationLoadCoordinate; }
     //! AUTO: Set pointer to visualization base class object (do this only in object factory; type is NOT CHECKED!!!)
-    virtual void SetVisualizationLoad(VisualizationLoad* pVisualizationLoad) { visualizationLoadCoordinate = (VisualizationLoadCoordinate*)pVisualizationLoad; }
+    virtual void SetVisualizationLoad(VisualizationLoad* pVisualizationLoad) override { visualizationLoadCoordinate = (VisualizationLoadCoordinate*)pVisualizationLoad; }
 
     //! AUTO:  Get type name of load (without keyword 'Load'...!); could also be realized via a string -> type conversion?
     virtual const char* GetTypeName() const override

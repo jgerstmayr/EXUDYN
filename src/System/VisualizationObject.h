@@ -68,7 +68,7 @@ class VisualizationObjectSuperElement: public VisualizationObject
 public:
 	//! compute graphics update by adding graphics items to graphicsData in VisualizationSystem
 	//implementation in VisuNodePoint
-	virtual void UpdateGraphics(const VisualizationSettings& visualizationSettings, VisualizationSystem* vSystem, Index itemNumber);
+	virtual void UpdateGraphics(const VisualizationSettings& visualizationSettings, VisualizationSystem* vSystem, Index itemNumber) override;
 
 	virtual const bool& GetShowNodes() const = 0;
 	//{ 
@@ -83,7 +83,7 @@ public:
 	//};
 
 	//! print function, used mainly for debug reasons and to be shown in Python
-	virtual void Print(std::ostream& os) const {
+	virtual void Print(std::ostream& os) const override {
 		os << "VisualizationSuperElement(";
 		os << ")";
 	}

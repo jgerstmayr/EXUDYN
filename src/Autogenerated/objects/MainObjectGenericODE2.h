@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-09-25  09:23:36 (last modified)
+* @date         2026-10-12  00:21:22 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -87,14 +87,14 @@ public: // AUTO:
     void SetVisualizationObjectGenericODE2(VisualizationObjectGenericODE2* pVisualizationObjectGenericODE2) { visualizationObjectGenericODE2 = pVisualizationObjectGenericODE2; }
 
     //! AUTO: Get const pointer to computational base class object
-    virtual CObject* GetCObject() const { return cObjectGenericODE2; }
+    virtual CObject* GetCObject() const override { return cObjectGenericODE2; }
     //! AUTO: Set pointer to computational base class object (do this only in object factory; type is NOT CHECKED!!!)
-    virtual void SetCObject(CObject* pCObject) { cObjectGenericODE2 = (CObjectGenericODE2*)pCObject; }
+    virtual void SetCObject(CObject* pCObject) override { cObjectGenericODE2 = (CObjectGenericODE2*)pCObject; }
 
     //! AUTO: Get const pointer to visualization base class object
-    virtual VisualizationObject* GetVisualizationObject() const { return visualizationObjectGenericODE2; }
+    virtual VisualizationObject* GetVisualizationObject() const override { return visualizationObjectGenericODE2; }
     //! AUTO: Set pointer to visualization base class object (do this only in object factory; type is NOT CHECKED!!!)
-    virtual void SetVisualizationObject(VisualizationObject* pVisualizationObject) { visualizationObjectGenericODE2 = (VisualizationObjectGenericODE2*)pVisualizationObject; }
+    virtual void SetVisualizationObject(VisualizationObject* pVisualizationObject) override { visualizationObjectGenericODE2 = (VisualizationObjectGenericODE2*)pVisualizationObject; }
 
     //! AUTO:  Get type name of object; could also be realized via a string -> type conversion?
     virtual const char* GetTypeName() const override

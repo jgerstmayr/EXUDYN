@@ -227,9 +227,9 @@
    "fingerprint": "eefe21c7ba21"
   },
   "ObjectConnectorCartesianSpringDamper": {
-   "checked": "2026-10-06",
+   "checked": "2026-10-12",
    "by": "Claude-JG",
-   "fingerprint": "4324900c2121"
+   "fingerprint": "1c45fc353ace"
   },
   "ObjectConnectorCoordinate": {
    "checked": "2026-10-06",
@@ -237,9 +237,9 @@
    "fingerprint": "1624741b11d5"
   },
   "ObjectConnectorCoordinateSpringDamper": {
-   "checked": "2026-10-06",
+   "checked": "2026-10-12",
    "by": "Claude-JG",
-   "fingerprint": "de7831cecbc0"
+   "fingerprint": "27931b62a13a"
   },
   "ObjectConnectorCoordinateSpringDamperExt": {
    "checked": "2026-10-07",
@@ -277,9 +277,9 @@
    "fingerprint": "95c77c878740"
   },
   "ObjectConnectorRigidBodySpringDamper": {
-   "checked": "2026-10-06",
+   "checked": "2026-10-12",
    "by": "Claude-JG",
-   "fingerprint": "cd2692b7c563"
+   "fingerprint": "770f923ce0d0"
   },
   "ObjectConnectorRollingDiscPenalty": {
    "checked": "2026-10-10",

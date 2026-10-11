@@ -82,7 +82,7 @@ public:
 	virtual void ComputeNewtonJacobian(CSystem& computationalSystem, const SimulationSettings& simulationSettings) override;
 
 	//! finalize algorithmic accelerations in generalized alpha method
-	virtual void FinalizeNewton(CSystem& computationalSystem, const SimulationSettings& simulationSettings);
+	virtual void FinalizeNewton(CSystem& computationalSystem, const SimulationSettings& simulationSettings) override;
 
 	////! apply composition rule to currentODE2 o incrementODE2 for given set of nodes
 	//virtual void UpdateDataCoordinatesLieGroupIntegrator(CSystem& computationalSystem, const ArrayIndex& lieGroupNodes, 

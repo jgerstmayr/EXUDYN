@@ -4134,6 +4134,8 @@ class ObjectConnectorCartesianSpringDamper:
 
         offset: offset between two springs; type: [float,float,float]
 
+        velocityOffset: velocity offset of the dampers, subtracted from the relative velocity, e.g. to drive a damper with a velocity instead of a user function (#1631); type: [float,float,float]
+
         springForceUserFunction: A Python function which computes the 3D force vector between the two marker points, if activeConnector=True; see description below; type: ObjectConnectorCartesianSpringDamperSpringForceUserFunction
 
         activeConnector: flag, which determines, if the connector is active; used to deactivate (temporarily) a connector or constraint; type: bool
@@ -4146,12 +4148,13 @@ class ObjectConnectorCartesianSpringDamper:
         Requested Marker type: ``Position``
 
     """
-    def __init__(self, name = '', markerNumbers = [ exudyn.InvalidIndex(), exudyn.InvalidIndex() ], stiffness = [0.,0.,0.], damping = [0.,0.,0.], offset = [0.,0.,0.], springForceUserFunction: Union[ObjectConnectorCartesianSpringDamperSpringForceUserFunction, int] = 0, activeConnector = True, visualization = {'show': True, 'drawSize': -1., 'color': [-1.,-1.,-1.,-1.]}):
+    def __init__(self, name = '', markerNumbers = [ exudyn.InvalidIndex(), exudyn.InvalidIndex() ], stiffness = [0.,0.,0.], damping = [0.,0.,0.], offset = [0.,0.,0.], velocityOffset = [0.,0.,0.], springForceUserFunction: Union[ObjectConnectorCartesianSpringDamperSpringForceUserFunction, int] = 0, activeConnector = True, visualization = {'show': True, 'drawSize': -1., 'color': [-1.,-1.,-1.,-1.]}):
         self.name = name
         self.markerNumbers = copy.copy(markerNumbers)
         self.stiffness = np.array(stiffness)
         self.damping = np.array(damping)
         self.offset = np.array(offset)
+        self.velocityOffset = np.array(velocityOffset)
         self.springForceUserFunction = springForceUserFunction
         self.activeConnector = activeConnector
         self.visualization = CopyDictLevel1(visualization)
@@ -4163,6 +4166,7 @@ class ObjectConnectorCartesianSpringDamper:
         yield 'stiffness', self.stiffness
         yield 'damping', self.damping
         yield 'offset', self.offset
+        yield 'velocityOffset', self.velocityOffset
         yield 'springForceUserFunction', self.springForceUserFunction
         yield 'activeConnector', self.activeConnector
         yield 'Vshow', dict(self.visualization)["show"]
@@ -4222,6 +4226,8 @@ class ObjectConnectorRigidBodySpringDamper:
 
         offset: translational and rotational offset considered in the spring force calculation; type: array_like
 
+        velocityOffset: translational and angular velocity offset in joint 0 coordinates, subtracted from the relative velocities in the damper force; e.g. to drive a damper with a velocity instead of a user function (#1631); type: array_like
+
         useIntrinsicFormulation: if True, the joint uses the intrinsic formulation, which is independent on order of markers, using a mid-point and mid-rotation for evaluation and application of connector forces and torques; this uses a Lie group formulation; in this case, the force/torque vector is computed from the stiffness matrix times the 6-vector of the SE3 matrix logarithm between the two marker positions/rotations, see the equations; type: bool
 
         activeConnector: flag, which determines, if the connector is active; used to deactivate (temporarily) a connector or constraint; type: bool
@@ -4242,7 +4248,7 @@ class ObjectConnectorRigidBodySpringDamper:
         Requested Node type: ``GenericData``
 
     """
-    def __init__(self, name = '', markerNumbers = [ exudyn.InvalidIndex(), exudyn.InvalidIndex() ], nodeNumber = exudyn.InvalidIndex(), stiffness = IIDiagMatrix(rowsColumns=6,value=0.), damping = IIDiagMatrix(rowsColumns=6,value=0.), rotationMarker0 = IIDiagMatrix(rowsColumns=3,value=1), rotationMarker1 = IIDiagMatrix(rowsColumns=3,value=1), offset = [0.,0.,0.,0.,0.,0.], useIntrinsicFormulation = False, activeConnector = True, springForceTorqueUserFunction: Union[ObjectConnectorRigidBodySpringDamperSpringForceTorqueUserFunction, int] = 0, postNewtonStepUserFunction: Union[ObjectConnectorRigidBodySpringDamperPostNewtonStepUserFunction, int] = 0, intrinsicFormulation = None, visualization = {'show': True, 'drawSize': -1., 'color': [-1.,-1.,-1.,-1.]}):
+    def __init__(self, name = '', markerNumbers = [ exudyn.InvalidIndex(), exudyn.InvalidIndex() ], nodeNumber = exudyn.InvalidIndex(), stiffness = IIDiagMatrix(rowsColumns=6,value=0.), damping = IIDiagMatrix(rowsColumns=6,value=0.), rotationMarker0 = IIDiagMatrix(rowsColumns=3,value=1), rotationMarker1 = IIDiagMatrix(rowsColumns=3,value=1), offset = [0.,0.,0.,0.,0.,0.], velocityOffset = [0.,0.,0.,0.,0.,0.], useIntrinsicFormulation = False, activeConnector = True, springForceTorqueUserFunction: Union[ObjectConnectorRigidBodySpringDamperSpringForceTorqueUserFunction, int] = 0, postNewtonStepUserFunction: Union[ObjectConnectorRigidBodySpringDamperPostNewtonStepUserFunction, int] = 0, intrinsicFormulation = None, visualization = {'show': True, 'drawSize': -1., 'color': [-1.,-1.,-1.,-1.]}):
         self.name = name
         self.markerNumbers = copy.copy(markerNumbers)
         self.nodeNumber = nodeNumber
@@ -4251,6 +4257,7 @@ class ObjectConnectorRigidBodySpringDamper:
         self.rotationMarker0 = np.array(rotationMarker0)
         self.rotationMarker1 = np.array(rotationMarker1)
         self.offset = np.array(offset)
+        self.velocityOffset = np.array(velocityOffset)
         self.useIntrinsicFormulation = useIntrinsicFormulation
         self.activeConnector = activeConnector
         self.springForceTorqueUserFunction = springForceTorqueUserFunction
@@ -4268,6 +4275,7 @@ class ObjectConnectorRigidBodySpringDamper:
         yield 'rotationMarker0', self.rotationMarker0
         yield 'rotationMarker1', self.rotationMarker1
         yield 'offset', self.offset
+        yield 'velocityOffset', self.velocityOffset
         yield 'useIntrinsicFormulation', self.useIntrinsicFormulation
         yield 'activeConnector', self.activeConnector
         yield 'springForceTorqueUserFunction', self.springForceTorqueUserFunction
@@ -4528,6 +4536,8 @@ class ObjectConnectorCoordinateSpringDamper:
 
         offset: offset between two coordinates (reference length of springs), see equation; type: float
 
+        velocityOffset: velocity offset of the damper, subtracted from the relative velocity, see equation; e.g. to drive a damper with a velocity instead of a user function (#829); type: float
+
         activeConnector: flag, which determines, if the connector is active; used to deactivate (temporarily) a connector or constraint; type: bool
 
         springForceUserFunction: A Python function which defines the spring force with 8 parameters, see equations section / see description below; type: ObjectConnectorCoordinateSpringDamperSpringForceUserFunction
@@ -4540,12 +4550,13 @@ class ObjectConnectorCoordinateSpringDamper:
         Requested Marker type: ``Coordinate``
 
     """
-    def __init__(self, name = '', markerNumbers = [ exudyn.InvalidIndex(), exudyn.InvalidIndex() ], stiffness = 0., damping = 0., offset = 0., activeConnector = True, springForceUserFunction: Union[ObjectConnectorCoordinateSpringDamperSpringForceUserFunction, int] = 0, visualization = {'show': True, 'drawSize': -1., 'color': [-1.,-1.,-1.,-1.]}):
+    def __init__(self, name = '', markerNumbers = [ exudyn.InvalidIndex(), exudyn.InvalidIndex() ], stiffness = 0., damping = 0., offset = 0., velocityOffset = 0., activeConnector = True, springForceUserFunction: Union[ObjectConnectorCoordinateSpringDamperSpringForceUserFunction, int] = 0, visualization = {'show': True, 'drawSize': -1., 'color': [-1.,-1.,-1.,-1.]}):
         self.name = name
         self.markerNumbers = copy.copy(markerNumbers)
         self.stiffness = stiffness
         self.damping = damping
         self.offset = offset
+        self.velocityOffset = velocityOffset
         self.activeConnector = activeConnector
         self.springForceUserFunction = springForceUserFunction
         self.visualization = CopyDictLevel1(visualization)
@@ -4557,6 +4568,7 @@ class ObjectConnectorCoordinateSpringDamper:
         yield 'stiffness', self.stiffness
         yield 'damping', self.damping
         yield 'offset', self.offset
+        yield 'velocityOffset', self.velocityOffset
         yield 'activeConnector', self.activeConnector
         yield 'springForceUserFunction', self.springForceUserFunction
         yield 'Vshow', dict(self.visualization)["show"]

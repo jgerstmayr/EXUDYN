@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-09-28  00:33:57 (last modified)
+* @date         2026-10-12  00:21:22 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -86,14 +86,14 @@ public: // AUTO:
     void SetVisualizationSensorLoad(VisualizationSensorLoad* pVisualizationSensorLoad) { visualizationSensorLoad = pVisualizationSensorLoad; }
 
     //! AUTO: Get const pointer to computational base class object
-    virtual CSensor* GetCSensor() const { return cSensorLoad; }
+    virtual CSensor* GetCSensor() const override { return cSensorLoad; }
     //! AUTO: Set pointer to computational base class object (do this only in object factory; type is NOT CHECKED!!!)
-    virtual void SetCSensor(CSensor* pCSensor) { cSensorLoad = (CSensorLoad*)pCSensor; }
+    virtual void SetCSensor(CSensor* pCSensor) override { cSensorLoad = (CSensorLoad*)pCSensor; }
 
     //! AUTO: Get const pointer to visualization base class object
-    virtual VisualizationSensor* GetVisualizationSensor() const { return visualizationSensorLoad; }
+    virtual VisualizationSensor* GetVisualizationSensor() const override { return visualizationSensorLoad; }
     //! AUTO: Set pointer to visualization base class object (do this only in object factory; type is NOT CHECKED!!!)
-    virtual void SetVisualizationSensor(VisualizationSensor* pVisualizationSensor) { visualizationSensorLoad = (VisualizationSensorLoad*)pVisualizationSensor; }
+    virtual void SetVisualizationSensor(VisualizationSensor* pVisualizationSensor) override { visualizationSensorLoad = (VisualizationSensorLoad*)pVisualizationSensor; }
 
     //! AUTO:  Get type name of sensor (without keyword 'Sensor'...!)
     virtual const char* GetTypeName() const override

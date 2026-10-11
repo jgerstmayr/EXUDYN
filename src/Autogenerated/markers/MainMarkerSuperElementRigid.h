@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-10-03  00:32:23 (last modified)
+* @date         2026-10-12  00:21:22 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -87,14 +87,14 @@ public: // AUTO:
     void SetVisualizationMarkerSuperElementRigid(VisualizationMarkerSuperElementRigid* pVisualizationMarkerSuperElementRigid) { visualizationMarkerSuperElementRigid = pVisualizationMarkerSuperElementRigid; }
 
     //! AUTO: Get const pointer to computational base class object
-    virtual CMarker* GetCMarker() const { return cMarkerSuperElementRigid; }
+    virtual CMarker* GetCMarker() const override { return cMarkerSuperElementRigid; }
     //! AUTO: Set pointer to computational base class object (do this only in object factory; type is NOT CHECKED!!!)
-    virtual void SetCMarker(CMarker* pCMarker) { cMarkerSuperElementRigid = (CMarkerSuperElementRigid*)pCMarker; }
+    virtual void SetCMarker(CMarker* pCMarker) override { cMarkerSuperElementRigid = (CMarkerSuperElementRigid*)pCMarker; }
 
     //! AUTO: Get const pointer to visualization base class object
-    virtual VisualizationMarker* GetVisualizationMarker() const { return visualizationMarkerSuperElementRigid; }
+    virtual VisualizationMarker* GetVisualizationMarker() const override { return visualizationMarkerSuperElementRigid; }
     //! AUTO: Set pointer to visualization base class object (do this only in object factory; type is NOT CHECKED!!!)
-    virtual void SetVisualizationMarker(VisualizationMarker* pVisualizationMarker) { visualizationMarkerSuperElementRigid = (VisualizationMarkerSuperElementRigid*)pVisualizationMarker; }
+    virtual void SetVisualizationMarker(VisualizationMarker* pVisualizationMarker) override { visualizationMarkerSuperElementRigid = (VisualizationMarkerSuperElementRigid*)pVisualizationMarker; }
 
     //! AUTO:  Get type name of marker (without keyword 'Marker'...!); could also be realized via a string -> type conversion?
     virtual const char* GetTypeName() const override

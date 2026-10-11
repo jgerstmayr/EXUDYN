@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-09-25  09:23:36 (last modified)
+* @date         2026-10-12  00:21:22 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -95,14 +95,14 @@ public: // AUTO:
     void SetVisualizationNodePoint2D(VisualizationNodePoint2D* pVisualizationNodePoint2D) { visualizationNodePoint2D = pVisualizationNodePoint2D; }
 
     //! AUTO: Get const pointer to computational base class object
-    virtual CNode* GetCNode() const { return cNodePoint2D; }
+    virtual CNode* GetCNode() const override { return cNodePoint2D; }
     //! AUTO: Set pointer to computational base class object (do this only in object factory; type is NOT CHECKED!!!)
-    virtual void SetCNode(CNode* pCNode) { cNodePoint2D = (CNodePoint2D*)pCNode; }
+    virtual void SetCNode(CNode* pCNode) override { cNodePoint2D = (CNodePoint2D*)pCNode; }
 
     //! AUTO: Get const pointer to visualization base class object
-    virtual VisualizationNode* GetVisualizationNode() const { return visualizationNodePoint2D; }
+    virtual VisualizationNode* GetVisualizationNode() const override { return visualizationNodePoint2D; }
     //! AUTO: Set pointer to visualization base class object (do this only in object factory; type is NOT CHECKED!!!)
-    virtual void SetVisualizationNode(VisualizationNode* pVisualizationNode) { visualizationNodePoint2D = (VisualizationNodePoint2D*)pVisualizationNode; }
+    virtual void SetVisualizationNode(VisualizationNode* pVisualizationNode) override { visualizationNodePoint2D = (VisualizationNodePoint2D*)pVisualizationNode; }
 
     //! AUTO: Write (Reference) access to parameters
     virtual MainNodePoint2DParameters& GetParameters() { return parameters; }

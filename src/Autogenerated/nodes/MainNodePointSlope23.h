@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-09-28  00:22:26 (last modified)
+* @date         2026-10-12  00:21:22 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -95,14 +95,14 @@ public: // AUTO:
     void SetVisualizationNodePointSlope23(VisualizationNodePointSlope23* pVisualizationNodePointSlope23) { visualizationNodePointSlope23 = pVisualizationNodePointSlope23; }
 
     //! AUTO: Get const pointer to computational base class object
-    virtual CNode* GetCNode() const { return cNodePointSlope23; }
+    virtual CNode* GetCNode() const override { return cNodePointSlope23; }
     //! AUTO: Set pointer to computational base class object (do this only in object factory; type is NOT CHECKED!!!)
-    virtual void SetCNode(CNode* pCNode) { cNodePointSlope23 = (CNodePointSlope23*)pCNode; }
+    virtual void SetCNode(CNode* pCNode) override { cNodePointSlope23 = (CNodePointSlope23*)pCNode; }
 
     //! AUTO: Get const pointer to visualization base class object
-    virtual VisualizationNode* GetVisualizationNode() const { return visualizationNodePointSlope23; }
+    virtual VisualizationNode* GetVisualizationNode() const override { return visualizationNodePointSlope23; }
     //! AUTO: Set pointer to visualization base class object (do this only in object factory; type is NOT CHECKED!!!)
-    virtual void SetVisualizationNode(VisualizationNode* pVisualizationNode) { visualizationNodePointSlope23 = (VisualizationNodePointSlope23*)pVisualizationNode; }
+    virtual void SetVisualizationNode(VisualizationNode* pVisualizationNode) override { visualizationNodePointSlope23 = (VisualizationNodePointSlope23*)pVisualizationNode; }
 
     //! AUTO: Write (Reference) access to parameters
     virtual MainNodePointSlope23Parameters& GetParameters() { return parameters; }

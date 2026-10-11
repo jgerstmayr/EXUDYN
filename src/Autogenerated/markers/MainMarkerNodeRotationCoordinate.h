@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-10-04  17:26:47 (last modified)
+* @date         2026-10-12  00:21:22 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -86,14 +86,14 @@ public: // AUTO:
     void SetVisualizationMarkerNodeRotationCoordinate(VisualizationMarkerNodeRotationCoordinate* pVisualizationMarkerNodeRotationCoordinate) { visualizationMarkerNodeRotationCoordinate = pVisualizationMarkerNodeRotationCoordinate; }
 
     //! AUTO: Get const pointer to computational base class object
-    virtual CMarker* GetCMarker() const { return cMarkerNodeRotationCoordinate; }
+    virtual CMarker* GetCMarker() const override { return cMarkerNodeRotationCoordinate; }
     //! AUTO: Set pointer to computational base class object (do this only in object factory; type is NOT CHECKED!!!)
-    virtual void SetCMarker(CMarker* pCMarker) { cMarkerNodeRotationCoordinate = (CMarkerNodeRotationCoordinate*)pCMarker; }
+    virtual void SetCMarker(CMarker* pCMarker) override { cMarkerNodeRotationCoordinate = (CMarkerNodeRotationCoordinate*)pCMarker; }
 
     //! AUTO: Get const pointer to visualization base class object
-    virtual VisualizationMarker* GetVisualizationMarker() const { return visualizationMarkerNodeRotationCoordinate; }
+    virtual VisualizationMarker* GetVisualizationMarker() const override { return visualizationMarkerNodeRotationCoordinate; }
     //! AUTO: Set pointer to visualization base class object (do this only in object factory; type is NOT CHECKED!!!)
-    virtual void SetVisualizationMarker(VisualizationMarker* pVisualizationMarker) { visualizationMarkerNodeRotationCoordinate = (VisualizationMarkerNodeRotationCoordinate*)pVisualizationMarker; }
+    virtual void SetVisualizationMarker(VisualizationMarker* pVisualizationMarker) override { visualizationMarkerNodeRotationCoordinate = (VisualizationMarkerNodeRotationCoordinate*)pVisualizationMarker; }
 
     //! AUTO:  Get type name of marker (without keyword 'Marker'...!); could also be realized via a string -> type conversion?
     virtual const char* GetTypeName() const override

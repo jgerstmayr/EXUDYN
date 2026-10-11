@@ -30,6 +30,7 @@ The parameters of the item; in a dictionary, its type is 'ConnectorCartesianSpri
 | **stiffness** | Vector3D | 3 | [0.,0.,0.] | (symbol: $\kv$) stiffness [SI:N/m] of springs; act against relative displacements in 0, 1, and 2-direction |
 | **damping** | Vector3D | 3 | [0.,0.,0.] | (symbol: $\dv$) damping [SI:N/(m s)] of dampers; act against relative velocities in 0, 1, and 2-direction |
 | **offset** | Vector3D | 3 | [0.,0.,0.] | (symbol: $\vv_{\mathrm{off}}$) offset between two springs |
+| **velocityOffset** | Vector3D | 3 | [0.,0.,0.] | (symbol: $\vv_{\mathrm{v,off}}$) velocity offset of the dampers, subtracted from the relative velocity, e.g. to drive a damper with a velocity instead of a user function (#1631) |
 | **springForceUserFunction** | ObjectConnectorCartesianSpringDamperSpringForceUserFunction |  | 0 | (symbol: $\mathrm{UF} \in \Rcal^3$) A Python function which computes the 3D force vector between the two marker points, if activeConnector=True; see description below |
 | **activeConnector** | Bool |  | True | flag, which determines, if the connector is active; used to deactivate (temporarily) a connector or constraint |
 | **visualization** | VObjectConnectorCartesianSpringDamper |  |  | parameters for visualization of item |
@@ -95,13 +96,14 @@ $$
 If `activeConnector = True`, the spring force vector is computed as
 
 $$
-\LU{0}{\fv_{SD}} = \diag(\kv)\cdot(\Delta\! \LU{0}{\pv}-\LU{0}{\vv_{\mathrm{off}}}) + \diag(\dv) \cdot \Delta\! \LU{0}{\vv} \, .
+\LU{0}{\fv_{SD}} = \diag(\kv)\cdot(\Delta\! \LU{0}{\pv}-\LU{0}{\vv_{\mathrm{off}}}) + \diag(\dv) \cdot (\Delta\! \LU{0}{\vv} - \LU{0}{\vv_{\mathrm{v,off}}}) \, ,
 $$
 
+with the velocity offset $\vv_{\mathrm{v,off}}$, e.g. the velocity a damper is driven with.
 If the springForceUserFunction $\mathrm{UF}$ is defined, $\fv_{SD}$ instead becomes ($t$ is current time)
 
 $$
-\LU{0}{\fv_{SD}} = \mathrm{UF}(mbs, t, i_N, \Delta\! \LU{0}{\pv}, \Delta\! \LU{0}{\vv}, \kv, \dv, \vv_{\mathrm{off}}) \, ,
+\LU{0}{\fv_{SD}} = \mathrm{UF}(mbs, t, i_N, \Delta\! \LU{0}{\pv} - \vv_{\mathrm{off}}, \Delta\! \LU{0}{\vv} - \vv_{\mathrm{v,off}}, \kv, \dv, \vv_{\mathrm{off}}) \, ,
 $$
 
 and `iN` represents the itemNumber (=objectNumber).

@@ -101,6 +101,7 @@ sparseSystemMatricesTest
 cUtilitiesTest
 markerNodeCoordinateReferenceTest
 coSimulationTest
+springDamperVelocityOffsetTest
 rotationMarkerDeprecationTest
 contactFrictionCircleCable2DnoFrictionTest
 systemContainerLifetimeTest

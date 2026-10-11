@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-10-02  12:15:38 (last modified)
+* @date         2026-10-12  00:27:46 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -35,6 +35,7 @@ public: // AUTO:
     Real stiffness;                               //!< AUTO: stiffness [SI:N/m] of spring; acts against relative value of coordinates
     Real damping;                                 //!< AUTO: damping [SI:N/(m s)] of damper; acts against relative velocity of coordinates
     Real offset;                                  //!< AUTO: offset between two coordinates (reference length of springs), see equation
+    Real velocityOffset;                          //!< AUTO: velocity offset of the damper, subtracted from the relative velocity, see equation; e.g. to drive a damper with a velocity instead of a user function (#829)
     bool activeConnector;                         //!< AUTO: flag, which determines, if the connector is active; used to deactivate (temporarily) a connector or constraint
     PythonUserFunctionBase< std::function<Real(const MainSystem&,Real,Index,Real,Real,Real,Real,Real)> > springForceUserFunction;//!< AUTO: A Python function which defines the spring force with 8 parameters, see equations section / see description below
     //! AUTO: default constructor with parameter initialization
@@ -44,6 +45,7 @@ public: // AUTO:
         stiffness = 0.;
         damping = 0.;
         offset = 0.;
+        velocityOffset = 0.;
         activeConnector = true;
         springForceUserFunction = 0;
     };

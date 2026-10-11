@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-10-03  18:17:13 (last modified)
+* @date         2026-10-12  00:21:22 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -86,14 +86,14 @@ public: // AUTO:
     void SetVisualizationObjectContactSphereTorus(VisualizationObjectContactSphereTorus* pVisualizationObjectContactSphereTorus) { visualizationObjectContactSphereTorus = pVisualizationObjectContactSphereTorus; }
 
     //! AUTO: Get const pointer to computational base class object
-    virtual CObject* GetCObject() const { return cObjectContactSphereTorus; }
+    virtual CObject* GetCObject() const override { return cObjectContactSphereTorus; }
     //! AUTO: Set pointer to computational base class object (do this only in object factory; type is NOT CHECKED!!!)
-    virtual void SetCObject(CObject* pCObject) { cObjectContactSphereTorus = (CObjectContactSphereTorus*)pCObject; }
+    virtual void SetCObject(CObject* pCObject) override { cObjectContactSphereTorus = (CObjectContactSphereTorus*)pCObject; }
 
     //! AUTO: Get const pointer to visualization base class object
-    virtual VisualizationObject* GetVisualizationObject() const { return visualizationObjectContactSphereTorus; }
+    virtual VisualizationObject* GetVisualizationObject() const override { return visualizationObjectContactSphereTorus; }
     //! AUTO: Set pointer to visualization base class object (do this only in object factory; type is NOT CHECKED!!!)
-    virtual void SetVisualizationObject(VisualizationObject* pVisualizationObject) { visualizationObjectContactSphereTorus = (VisualizationObjectContactSphereTorus*)pVisualizationObject; }
+    virtual void SetVisualizationObject(VisualizationObject* pVisualizationObject) override { visualizationObjectContactSphereTorus = (VisualizationObjectContactSphereTorus*)pVisualizationObject; }
 
     //! AUTO:  Check consistency prior to CSystem::Assemble(); needs to find all possible violations such that Assemble() would fail
     virtual bool CheckPreAssembleConsistency(const MainSystem& mainSystem, STDstring& errorString) const override;

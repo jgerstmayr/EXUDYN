@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-10-07  00:51:49 (last modified)
+* @date         2026-10-12  00:21:22 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -86,14 +86,14 @@ public: // AUTO:
     void SetVisualizationObjectANCFThinPlate(VisualizationObjectANCFThinPlate* pVisualizationObjectANCFThinPlate) { visualizationObjectANCFThinPlate = pVisualizationObjectANCFThinPlate; }
 
     //! AUTO: Get const pointer to computational base class object
-    virtual CObject* GetCObject() const { return cObjectANCFThinPlate; }
+    virtual CObject* GetCObject() const override { return cObjectANCFThinPlate; }
     //! AUTO: Set pointer to computational base class object (do this only in object factory; type is NOT CHECKED!!!)
-    virtual void SetCObject(CObject* pCObject) { cObjectANCFThinPlate = (CObjectANCFThinPlate*)pCObject; }
+    virtual void SetCObject(CObject* pCObject) override { cObjectANCFThinPlate = (CObjectANCFThinPlate*)pCObject; }
 
     //! AUTO: Get const pointer to visualization base class object
-    virtual VisualizationObject* GetVisualizationObject() const { return visualizationObjectANCFThinPlate; }
+    virtual VisualizationObject* GetVisualizationObject() const override { return visualizationObjectANCFThinPlate; }
     //! AUTO: Set pointer to visualization base class object (do this only in object factory; type is NOT CHECKED!!!)
-    virtual void SetVisualizationObject(VisualizationObject* pVisualizationObject) { visualizationObjectANCFThinPlate = (VisualizationObjectANCFThinPlate*)pVisualizationObject; }
+    virtual void SetVisualizationObject(VisualizationObject* pVisualizationObject) override { visualizationObjectANCFThinPlate = (VisualizationObjectANCFThinPlate*)pVisualizationObject; }
 
     //! AUTO:  Get type name of object; could also be realized via a string -> type conversion?
     virtual const char* GetTypeName() const override

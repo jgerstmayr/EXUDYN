@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-09-25  09:23:36 (last modified)
+* @date         2026-10-12  00:27:46 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -87,14 +87,14 @@ public: // AUTO:
     void SetVisualizationObjectConnectorCoordinateSpringDamper(VisualizationObjectConnectorCoordinateSpringDamper* pVisualizationObjectConnectorCoordinateSpringDamper) { visualizationObjectConnectorCoordinateSpringDamper = pVisualizationObjectConnectorCoordinateSpringDamper; }
 
     //! AUTO: Get const pointer to computational base class object
-    virtual CObject* GetCObject() const { return cObjectConnectorCoordinateSpringDamper; }
+    virtual CObject* GetCObject() const override { return cObjectConnectorCoordinateSpringDamper; }
     //! AUTO: Set pointer to computational base class object (do this only in object factory; type is NOT CHECKED!!!)
-    virtual void SetCObject(CObject* pCObject) { cObjectConnectorCoordinateSpringDamper = (CObjectConnectorCoordinateSpringDamper*)pCObject; }
+    virtual void SetCObject(CObject* pCObject) override { cObjectConnectorCoordinateSpringDamper = (CObjectConnectorCoordinateSpringDamper*)pCObject; }
 
     //! AUTO: Get const pointer to visualization base class object
-    virtual VisualizationObject* GetVisualizationObject() const { return visualizationObjectConnectorCoordinateSpringDamper; }
+    virtual VisualizationObject* GetVisualizationObject() const override { return visualizationObjectConnectorCoordinateSpringDamper; }
     //! AUTO: Set pointer to visualization base class object (do this only in object factory; type is NOT CHECKED!!!)
-    virtual void SetVisualizationObject(VisualizationObject* pVisualizationObject) { visualizationObjectConnectorCoordinateSpringDamper = (VisualizationObjectConnectorCoordinateSpringDamper*)pVisualizationObject; }
+    virtual void SetVisualizationObject(VisualizationObject* pVisualizationObject) override { visualizationObjectConnectorCoordinateSpringDamper = (VisualizationObjectConnectorCoordinateSpringDamper*)pVisualizationObject; }
 
     //! AUTO:  Get type name of node (without keyword 'Object'...!); could also be realized via a string -> type conversion?
     virtual const char* GetTypeName() const override
@@ -110,6 +110,7 @@ public: // AUTO:
         if (EPyUtils::DictItemExists(d, "stiffness")) { EPyUtils::FromPython(d["stiffness"], cObjectConnectorCoordinateSpringDamper->GetParameters().stiffness, "ObjectConnectorCoordinateSpringDamper.stiffness"); }
         if (EPyUtils::DictItemExists(d, "damping")) { EPyUtils::FromPython(d["damping"], cObjectConnectorCoordinateSpringDamper->GetParameters().damping, "ObjectConnectorCoordinateSpringDamper.damping"); }
         if (EPyUtils::DictItemExists(d, "offset")) { EPyUtils::FromPython(d["offset"], cObjectConnectorCoordinateSpringDamper->GetParameters().offset, "ObjectConnectorCoordinateSpringDamper.offset"); }
+        if (EPyUtils::DictItemExists(d, "velocityOffset")) { EPyUtils::FromPython(d["velocityOffset"], cObjectConnectorCoordinateSpringDamper->GetParameters().velocityOffset, "ObjectConnectorCoordinateSpringDamper.velocityOffset"); }
         if (EPyUtils::DictItemExists(d, "activeConnector")) { EPyUtils::FromPython(d["activeConnector"], cObjectConnectorCoordinateSpringDamper->GetParameters().activeConnector, "ObjectConnectorCoordinateSpringDamper.activeConnector"); }
         if (EPyUtils::DictItemExists(d, "springForceUserFunction")) { cObjectConnectorCoordinateSpringDamper->GetParameters().springForceUserFunction = d["springForceUserFunction"]; }
         if (EPyUtils::DictItemExists(d, "name")) { EPyUtils::FromPython(d["name"], name); }
@@ -128,6 +129,7 @@ public: // AUTO:
         d["stiffness"] = (Real)cObjectConnectorCoordinateSpringDamper->GetParameters().stiffness;
         d["damping"] = (Real)cObjectConnectorCoordinateSpringDamper->GetParameters().damping;
         d["offset"] = (Real)cObjectConnectorCoordinateSpringDamper->GetParameters().offset;
+        d["velocityOffset"] = (Real)cObjectConnectorCoordinateSpringDamper->GetParameters().velocityOffset;
         d["activeConnector"] = (bool)cObjectConnectorCoordinateSpringDamper->GetParameters().activeConnector;
         d["springForceUserFunction"] = (py::object)cObjectConnectorCoordinateSpringDamper->GetParameters().springForceUserFunction;
         d["name"] = (std::string)name;
@@ -145,6 +147,7 @@ public: // AUTO:
         else if (parameterName.compare("stiffness") == 0) { return py::cast((Real)cObjectConnectorCoordinateSpringDamper->GetParameters().stiffness); } //! AUTO: get parameter
         else if (parameterName.compare("damping") == 0) { return py::cast((Real)cObjectConnectorCoordinateSpringDamper->GetParameters().damping); } //! AUTO: get parameter
         else if (parameterName.compare("offset") == 0) { return py::cast((Real)cObjectConnectorCoordinateSpringDamper->GetParameters().offset); } //! AUTO: get parameter
+        else if (parameterName.compare("velocityOffset") == 0) { return py::cast((Real)cObjectConnectorCoordinateSpringDamper->GetParameters().velocityOffset); } //! AUTO: get parameter
         else if (parameterName.compare("activeConnector") == 0) { return py::cast((bool)cObjectConnectorCoordinateSpringDamper->GetParameters().activeConnector); } //! AUTO: get parameter
         else if (parameterName.compare("springForceUserFunction") == 0) { return cObjectConnectorCoordinateSpringDamper->GetParameters().springForceUserFunction.GetPythonDictionary(); } //! AUTO: get parameter
         else if (parameterName.compare("Vshow") == 0) { return py::cast((bool)visualizationObjectConnectorCoordinateSpringDamper->GetShow()); } //! AUTO: get parameter
@@ -163,6 +166,7 @@ public: // AUTO:
         else if (parameterName.compare("stiffness") == 0) { EPyUtils::FromPython(value, cObjectConnectorCoordinateSpringDamper->GetParameters().stiffness, "ObjectConnectorCoordinateSpringDamper.stiffness"); } //! AUTO: set parameter
         else if (parameterName.compare("damping") == 0) { EPyUtils::FromPython(value, cObjectConnectorCoordinateSpringDamper->GetParameters().damping, "ObjectConnectorCoordinateSpringDamper.damping"); } //! AUTO: set parameter
         else if (parameterName.compare("offset") == 0) { EPyUtils::FromPython(value, cObjectConnectorCoordinateSpringDamper->GetParameters().offset, "ObjectConnectorCoordinateSpringDamper.offset"); } //! AUTO: set parameter
+        else if (parameterName.compare("velocityOffset") == 0) { EPyUtils::FromPython(value, cObjectConnectorCoordinateSpringDamper->GetParameters().velocityOffset, "ObjectConnectorCoordinateSpringDamper.velocityOffset"); } //! AUTO: set parameter
         else if (parameterName.compare("activeConnector") == 0) { EPyUtils::FromPython(value, cObjectConnectorCoordinateSpringDamper->GetParameters().activeConnector, "ObjectConnectorCoordinateSpringDamper.activeConnector"); } //! AUTO: set parameter
         else if (parameterName.compare("springForceUserFunction") == 0) { cObjectConnectorCoordinateSpringDamper->GetParameters().springForceUserFunction = value; } //! AUTO: set parameter
         else if (parameterName.compare("Vshow") == 0) { EPyUtils::FromPython(value, visualizationObjectConnectorCoordinateSpringDamper->GetShow(), "ObjectConnectorCoordinateSpringDamper.Vshow"); } //! AUTO: set parameter

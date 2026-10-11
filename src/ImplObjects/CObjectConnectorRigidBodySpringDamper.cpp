@@ -94,6 +94,7 @@ void CObjectConnectorRigidBodySpringDamper::ComputeSpringForceTorque(const Marke
 		if (!parameters.springForceTorqueUserFunction)
 		{
 			for (Index i = 0; i < 6; i++) { uLoc6D[i] -= parameters.offset[i]; }
+			for (Index i = 0; i < 6; i++) { vLoc6D[i] -= parameters.velocityOffset[i]; } //(#1631)
 			for (Index i = 0; i < 6; i++) //stiffness * u + damping * v
 			{
 				TReal springForce = parameters.stiffness(i, 0) * uLoc6D[0];

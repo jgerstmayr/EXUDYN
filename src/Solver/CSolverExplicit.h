@@ -119,13 +119,13 @@ public:
 		Real suggestedStepSize = -1.) override;
 
 	//! return true, if solver supports automatic stepsize control
-	virtual bool HasAutomaticStepSizeControl() const;
+	virtual bool HasAutomaticStepSizeControl() const override;
 
 	//! update currentTime (and load factor); MUST be overwritten in special solver class
 	virtual void UpdateCurrentTime(CSystem& computationalSystem, const SimulationSettings& simulationSettings) override;
 
 	//! replace Newton of solver by explicit integration scheme!
-	virtual bool Newton(CSystem& computationalSystem, const SimulationSettings& simulationSettings);
+	virtual bool Newton(CSystem& computationalSystem, const SimulationSettings& simulationSettings) override;
 
 	//NOT NEEDED, because no Newton performed:
 	////! compute residual for Newton method (e.g. static or time step); store result vector in systemResidual and return scalar residual

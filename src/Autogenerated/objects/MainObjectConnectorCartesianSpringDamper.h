@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-09-18  21:48:31 (last modified)
+* @date         2026-10-12  00:27:46 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -87,14 +87,14 @@ public: // AUTO:
     void SetVisualizationObjectConnectorCartesianSpringDamper(VisualizationObjectConnectorCartesianSpringDamper* pVisualizationObjectConnectorCartesianSpringDamper) { visualizationObjectConnectorCartesianSpringDamper = pVisualizationObjectConnectorCartesianSpringDamper; }
 
     //! AUTO: Get const pointer to computational base class object
-    virtual CObject* GetCObject() const { return cObjectConnectorCartesianSpringDamper; }
+    virtual CObject* GetCObject() const override { return cObjectConnectorCartesianSpringDamper; }
     //! AUTO: Set pointer to computational base class object (do this only in object factory; type is NOT CHECKED!!!)
-    virtual void SetCObject(CObject* pCObject) { cObjectConnectorCartesianSpringDamper = (CObjectConnectorCartesianSpringDamper*)pCObject; }
+    virtual void SetCObject(CObject* pCObject) override { cObjectConnectorCartesianSpringDamper = (CObjectConnectorCartesianSpringDamper*)pCObject; }
 
     //! AUTO: Get const pointer to visualization base class object
-    virtual VisualizationObject* GetVisualizationObject() const { return visualizationObjectConnectorCartesianSpringDamper; }
+    virtual VisualizationObject* GetVisualizationObject() const override { return visualizationObjectConnectorCartesianSpringDamper; }
     //! AUTO: Set pointer to visualization base class object (do this only in object factory; type is NOT CHECKED!!!)
-    virtual void SetVisualizationObject(VisualizationObject* pVisualizationObject) { visualizationObjectConnectorCartesianSpringDamper = (VisualizationObjectConnectorCartesianSpringDamper*)pVisualizationObject; }
+    virtual void SetVisualizationObject(VisualizationObject* pVisualizationObject) override { visualizationObjectConnectorCartesianSpringDamper = (VisualizationObjectConnectorCartesianSpringDamper*)pVisualizationObject; }
 
     //! AUTO:  Get type name of node (without keyword 'Object'...!); could also be realized via a string -> type conversion?
     virtual const char* GetTypeName() const override
@@ -110,6 +110,7 @@ public: // AUTO:
         if (EPyUtils::DictItemExists(d, "stiffness")) { EPyUtils::FromPython(d["stiffness"], cObjectConnectorCartesianSpringDamper->GetParameters().stiffness); }
         if (EPyUtils::DictItemExists(d, "damping")) { EPyUtils::FromPython(d["damping"], cObjectConnectorCartesianSpringDamper->GetParameters().damping); }
         if (EPyUtils::DictItemExists(d, "offset")) { EPyUtils::FromPython(d["offset"], cObjectConnectorCartesianSpringDamper->GetParameters().offset); }
+        if (EPyUtils::DictItemExists(d, "velocityOffset")) { EPyUtils::FromPython(d["velocityOffset"], cObjectConnectorCartesianSpringDamper->GetParameters().velocityOffset); }
         if (EPyUtils::DictItemExists(d, "springForceUserFunction")) { cObjectConnectorCartesianSpringDamper->GetParameters().springForceUserFunction = d["springForceUserFunction"]; }
         if (EPyUtils::DictItemExists(d, "activeConnector")) { EPyUtils::FromPython(d["activeConnector"], cObjectConnectorCartesianSpringDamper->GetParameters().activeConnector, "ObjectConnectorCartesianSpringDamper.activeConnector"); }
         if (EPyUtils::DictItemExists(d, "name")) { EPyUtils::FromPython(d["name"], name); }
@@ -128,6 +129,7 @@ public: // AUTO:
         d["stiffness"] = EPyUtils::ToPython(cObjectConnectorCartesianSpringDamper->GetParameters().stiffness);
         d["damping"] = EPyUtils::ToPython(cObjectConnectorCartesianSpringDamper->GetParameters().damping);
         d["offset"] = EPyUtils::ToPython(cObjectConnectorCartesianSpringDamper->GetParameters().offset);
+        d["velocityOffset"] = EPyUtils::ToPython(cObjectConnectorCartesianSpringDamper->GetParameters().velocityOffset);
         d["springForceUserFunction"] = (py::object)cObjectConnectorCartesianSpringDamper->GetParameters().springForceUserFunction;
         d["activeConnector"] = (bool)cObjectConnectorCartesianSpringDamper->GetParameters().activeConnector;
         d["name"] = (std::string)name;
@@ -145,6 +147,7 @@ public: // AUTO:
         else if (parameterName.compare("stiffness") == 0) { return EPyUtils::ToPython(cObjectConnectorCartesianSpringDamper->GetParameters().stiffness); } //! AUTO: get parameter
         else if (parameterName.compare("damping") == 0) { return EPyUtils::ToPython(cObjectConnectorCartesianSpringDamper->GetParameters().damping); } //! AUTO: get parameter
         else if (parameterName.compare("offset") == 0) { return EPyUtils::ToPython(cObjectConnectorCartesianSpringDamper->GetParameters().offset); } //! AUTO: get parameter
+        else if (parameterName.compare("velocityOffset") == 0) { return EPyUtils::ToPython(cObjectConnectorCartesianSpringDamper->GetParameters().velocityOffset); } //! AUTO: get parameter
         else if (parameterName.compare("springForceUserFunction") == 0) { return cObjectConnectorCartesianSpringDamper->GetParameters().springForceUserFunction.GetPythonDictionary(); } //! AUTO: get parameter
         else if (parameterName.compare("activeConnector") == 0) { return py::cast((bool)cObjectConnectorCartesianSpringDamper->GetParameters().activeConnector); } //! AUTO: get parameter
         else if (parameterName.compare("Vshow") == 0) { return py::cast((bool)visualizationObjectConnectorCartesianSpringDamper->GetShow()); } //! AUTO: get parameter
@@ -163,6 +166,7 @@ public: // AUTO:
         else if (parameterName.compare("stiffness") == 0) { EPyUtils::FromPython(value, cObjectConnectorCartesianSpringDamper->GetParameters().stiffness); } //! AUTO: set parameter
         else if (parameterName.compare("damping") == 0) { EPyUtils::FromPython(value, cObjectConnectorCartesianSpringDamper->GetParameters().damping); } //! AUTO: set parameter
         else if (parameterName.compare("offset") == 0) { EPyUtils::FromPython(value, cObjectConnectorCartesianSpringDamper->GetParameters().offset); } //! AUTO: set parameter
+        else if (parameterName.compare("velocityOffset") == 0) { EPyUtils::FromPython(value, cObjectConnectorCartesianSpringDamper->GetParameters().velocityOffset); } //! AUTO: set parameter
         else if (parameterName.compare("springForceUserFunction") == 0) { cObjectConnectorCartesianSpringDamper->GetParameters().springForceUserFunction = value; } //! AUTO: set parameter
         else if (parameterName.compare("activeConnector") == 0) { EPyUtils::FromPython(value, cObjectConnectorCartesianSpringDamper->GetParameters().activeConnector, "ObjectConnectorCartesianSpringDamper.activeConnector"); } //! AUTO: set parameter
         else if (parameterName.compare("Vshow") == 0) { EPyUtils::FromPython(value, visualizationObjectConnectorCartesianSpringDamper->GetShow(), "ObjectConnectorCartesianSpringDamper.Vshow"); } //! AUTO: set parameter

@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-10-07  00:51:49 (last modified)
+* @date         2026-10-12  00:21:22 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -86,14 +86,14 @@ public: // AUTO:
     void SetVisualizationObjectContactCircleCable2D(VisualizationObjectContactCircleCable2D* pVisualizationObjectContactCircleCable2D) { visualizationObjectContactCircleCable2D = pVisualizationObjectContactCircleCable2D; }
 
     //! AUTO: Get const pointer to computational base class object
-    virtual CObject* GetCObject() const { return cObjectContactCircleCable2D; }
+    virtual CObject* GetCObject() const override { return cObjectContactCircleCable2D; }
     //! AUTO: Set pointer to computational base class object (do this only in object factory; type is NOT CHECKED!!!)
-    virtual void SetCObject(CObject* pCObject) { cObjectContactCircleCable2D = (CObjectContactCircleCable2D*)pCObject; }
+    virtual void SetCObject(CObject* pCObject) override { cObjectContactCircleCable2D = (CObjectContactCircleCable2D*)pCObject; }
 
     //! AUTO: Get const pointer to visualization base class object
-    virtual VisualizationObject* GetVisualizationObject() const { return visualizationObjectContactCircleCable2D; }
+    virtual VisualizationObject* GetVisualizationObject() const override { return visualizationObjectContactCircleCable2D; }
     //! AUTO: Set pointer to visualization base class object (do this only in object factory; type is NOT CHECKED!!!)
-    virtual void SetVisualizationObject(VisualizationObject* pVisualizationObject) { visualizationObjectContactCircleCable2D = (VisualizationObjectContactCircleCable2D*)pVisualizationObject; }
+    virtual void SetVisualizationObject(VisualizationObject* pVisualizationObject) override { visualizationObjectContactCircleCable2D = (VisualizationObjectContactCircleCable2D*)pVisualizationObject; }
 
     //! AUTO:  Check consistency prior to CSystem::Assemble(); needs to find all possible violations such that Assemble() would fail
     virtual bool CheckPreAssembleConsistency(const MainSystem& mainSystem, STDstring& errorString) const override;

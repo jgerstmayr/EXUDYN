@@ -148,17 +148,17 @@ public:
         globalODE2CoordinateIndex = EXUstd::InvalidIndex; //mark that globalODE2CoordinateIndex cannot be accessed
     }
     //! get an exact clone of *this, must be implemented in all derived classes! Necessary for better handling in ObjectContainer
-    virtual CNodeODE2* GetClone() const { return new CNodeODE2(*this); }
+    virtual CNodeODE2* GetClone() const override { return new CNodeODE2(*this); }
 
-    virtual void Print(std::ostream& os) const {
+    virtual void Print(std::ostream& os) const override {
         os << "CNodeODE2(ODE2Index=" << globalODE2CoordinateIndex << ", size=" << GetNumberOfODE2Coordinates() << "):";
         CNode::Print(os);
     }
 
-    virtual CNodeGroup GetNodeGroup() const { return CNodeGroup::ODE2variables; }
-    virtual void SetGlobalODE2CoordinateIndex(Index globalIndex) { globalODE2CoordinateIndex = globalIndex; }
+    virtual CNodeGroup GetNodeGroup() const override { return CNodeGroup::ODE2variables; }
+    virtual void SetGlobalODE2CoordinateIndex(Index globalIndex) override { globalODE2CoordinateIndex = globalIndex; }
 
-    virtual Index GetGlobalODE2CoordinateIndex() const {
+    virtual Index GetGlobalODE2CoordinateIndex() const override {
         return globalODE2CoordinateIndex;
     }
 
@@ -351,17 +351,17 @@ public:
 		globalODE1CoordinateIndex = EXUstd::InvalidIndex; //mark that globalODE1CoordinateIndex cannot be accessed
 	}
 	//! get an exact clone of *this, must be implemented in all derived classes! Necessary for better handling in ObjectContainer
-	virtual CNodeODE1* GetClone() const { return new CNodeODE1(*this); }
+	virtual CNodeODE1* GetClone() const override { return new CNodeODE1(*this); }
 
-	virtual void Print(std::ostream& os) const {
+	virtual void Print(std::ostream& os) const override {
 		os << "CNodeODE1(ODE1Index=" << globalODE1CoordinateIndex << ", size=" << GetNumberOfODE1Coordinates() << "):";
 		CNode::Print(os);
 	}
 
-	virtual CNodeGroup GetNodeGroup() const { return CNodeGroup::ODE1variables; }
-	virtual void SetGlobalODE1CoordinateIndex(Index globalIndex) { globalODE1CoordinateIndex = globalIndex; }
+	virtual CNodeGroup GetNodeGroup() const override { return CNodeGroup::ODE1variables; }
+	virtual void SetGlobalODE1CoordinateIndex(Index globalIndex) override { globalODE1CoordinateIndex = globalIndex; }
 
-	virtual Index GetGlobalODE1CoordinateIndex() const {
+	virtual Index GetGlobalODE1CoordinateIndex() const override {
 		return globalODE1CoordinateIndex;
 	}
 
@@ -433,17 +433,17 @@ public:
 		globalAEcoordinateIndex = EXUstd::InvalidIndex; //mark that globalAEcoordinateIndex cannot be accessed
 	}
 	//! get an exact clone of *this, must be implemented in all derived classes! Necessary for better handling in ObjectContainer
-	virtual CNodeAE* GetClone() const { return new CNodeAE(*this); }
+	virtual CNodeAE* GetClone() const override { return new CNodeAE(*this); }
 
-	virtual void Print(std::ostream& os) const {
+	virtual void Print(std::ostream& os) const override {
 		os << "CNodeAE(AEIndex=" << globalAEcoordinateIndex << ", size=" << GetNumberOfAECoordinates() << "):";
 		CNode::Print(os);
 	}
 
-	virtual CNodeGroup GetNodeGroup() const { return CNodeGroup::AEvariables; }
-	virtual void SetGlobalAECoordinateIndex(Index globalIndex) { globalAEcoordinateIndex = globalIndex; }
+	virtual CNodeGroup GetNodeGroup() const override { return CNodeGroup::AEvariables; }
+	virtual void SetGlobalAECoordinateIndex(Index globalIndex) override { globalAEcoordinateIndex = globalIndex; }
 
-	virtual Index GetGlobalAECoordinateIndex() const {
+	virtual Index GetGlobalAECoordinateIndex() const override {
 		return globalAEcoordinateIndex;
 	}
 
@@ -515,9 +515,9 @@ public:
 	//}
 
 	//! get an exact clone of *this, must be implemented in all derived classes! Necessary for better handling in ObjectContainer
-	virtual CNodeRigidBody* GetClone() const { return new CNodeRigidBody(*this); }
+	virtual CNodeRigidBody* GetClone() const override { return new CNodeRigidBody(*this); }
 
-	virtual void Print(std::ostream& os) const {
+	virtual void Print(std::ostream& os) const override {
 		os << "CNodeRigidBody(ODE2Index=" << globalODE2CoordinateIndex << ", size=" << GetNumberOfODE2Coordinates() << ", ";
 		CNode::Print(os);
 	}
@@ -574,17 +574,17 @@ public:
 		globalDataCoordinateIndex = EXUstd::InvalidIndex; //mark that globalDataCoordinateIndex cannot be accessed
 	}
 	//! get an exact clone of *this, must be implemented in all derived classes! Necessary for better handling in ObjectContainer
-	virtual CNodeData* GetClone() const { return new CNodeData(*this); }
+	virtual CNodeData* GetClone() const override { return new CNodeData(*this); }
 
-	virtual void Print(std::ostream& os) const {
+	virtual void Print(std::ostream& os) const override {
 		os << "CNodeData(DataIndex=" << globalDataCoordinateIndex << ", size=" << GetNumberOfDataCoordinates() << "):";
 		CNode::Print(os);
 	}
 
-	virtual CNodeGroup GetNodeGroup() const { return CNodeGroup::DataVariables; }
-	virtual void SetGlobalDataCoordinateIndex(Index globalIndex) { globalDataCoordinateIndex = globalIndex; }
+	virtual CNodeGroup GetNodeGroup() const override { return CNodeGroup::DataVariables; }
+	virtual void SetGlobalDataCoordinateIndex(Index globalIndex) override { globalDataCoordinateIndex = globalIndex; }
 
-	virtual Index GetGlobalDataCoordinateIndex() const {
+	virtual Index GetGlobalDataCoordinateIndex() const override {
 		return globalDataCoordinateIndex;
 	}
 
