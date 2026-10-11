@@ -1,0 +1,10 @@
+{
+  "number": 2980,
+  "title": "General markers for curves, surfaces and volumes instead of the Cable2D markers",
+  "author": "Claude-JG",
+  "status": "RAISED",
+  "type": "CHANGE",
+  "description": "revision2026c step RG9.7 (maintainer 2026-10-11; docs/dev/design/pythonUserItems.md 5.3): MarkerBodyCable2DShape and MarkerBodyCable2DCoordinates serve ObjectANCFCable2D only; a marker that gives the shape of a body, positions at varying local coordinates and their Jacobians, so that contact and sliding joints work on beams, plates, shells and general flexible surfaces.",
+  "dateRaised": "2026-10-12",
+  "deadline": "2027-04-10"
+}

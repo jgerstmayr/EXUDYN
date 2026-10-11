@@ -1,0 +1,11 @@
+{
+  "number": 2985,
+  "title": "Symbolic: complete tests of the symbolic user functions",
+  "author": "Claude-JG",
+  "status": "RAISED",
+  "type": "TESTING",
+  "effort": "MEDIUM",
+  "description": "revision2026c step RG12.5: check which symbolic user functions have tests (symbolicUserFunctionTest, symbolicModuleTest, symbolicUserFunctionCopyTest, ...) and add the missing ones, every signature against its Python version.",
+  "dateRaised": "2026-10-12",
+  "deadline": "2027-04-10"
+}

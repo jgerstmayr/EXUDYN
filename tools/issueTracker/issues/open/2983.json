@@ -1,0 +1,10 @@
+{
+  "number": 2983,
+  "title": "Symbolic: design of improved user function interfaces, with the dense linear algebra",
+  "author": "Claude-JG",
+  "status": "RAISED",
+  "type": "EXTENSION",
+  "description": "revision2026c step RG12.3: a design of the symbolic user functions with vectors and matrices as first-class arguments and the dense linear algebra fully in symbolic, for decision.",
+  "dateRaised": "2026-10-12",
+  "deadline": "2027-04-10"
+}

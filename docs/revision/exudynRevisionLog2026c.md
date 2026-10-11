@@ -803,3 +803,21 @@ proposed; MarkerNodeCoordinates gets the parameter too, default True; the chapte
   notebook part `module` (generalInformation.ipynb) shows `config.Version`, `special.solver.timeout`,
   `special.userInterface.suppressPlots`, `cMath.sin`/`cos`/`norm` and `cUtilities.RotationMatrixZ`/
   `RotationMatrix2EulerParameters`, run by tools/runNotebooks.py.
+
+<a id="rg7-1"></a>
+### RG7.1 — the plan of the Python user items (2026-10-12, #2971)
+*(Maintainer 2026-10-11: before the C++ user items; user node, body, marker, constraint, joint, connector, no user
+load; a documentation section per kind with an example. 2026-10-12: the design document under docs/dev/design with
+its measurement script; four user types; the connector gets its markers as Python objects; the ANCF cable minimal;
+symbolic in a group of its own (RG12) that blocks RG7.8; the overhead of the user functions checked, so that the user
+items can still be dropped; go with the user rigid body.)*
+- The design, with the decisions and the measurements, is
+  [docs/dev/design/pythonUserItems.md](../dev/design/pythonUserItems.md); `measureUserFunctions.py` next to it. Two
+  rounds: the first concept was revised by the maintainer's decisions (ObjectGenericODE2 is a superelement, so the user
+  body is a new item treated as a finite element; nodes second; the user connector calls marker functions; user types
+  for output variables, nodes and markers with names; SensorUserFunction with itemNumbers).
+- Measured: a call into Python costs 0.16 us more than C++ for floats, 0.72 us with small numpy arrays, a symbolic
+  user function 0.04 us. The code of a user function is mostly generated; by hand about 8 lines of evaluation wrapper
+  per function plus the call site and the declaration.
+- Steps RG7.2-RG7.9 (#2972-#2979), RG9.7 for the general markers on flexible bodies (#2980), and the new group RG12
+  Symbolic with RG12.1-RG12.5 (#2981-#2985).

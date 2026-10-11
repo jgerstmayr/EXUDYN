@@ -1,0 +1,11 @@
+{
+  "number": 2979,
+  "title": "Documentation: how items work, and user items",
+  "author": "Claude-JG",
+  "status": "RAISED",
+  "type": "DOCU",
+  "effort": "MEDIUM",
+  "description": "revision2026c step RG7.9 (docs/dev/design/pythonUserItems.md 1): a section that explains how each kind of item works conceptually and how a user item of that kind is set up, with one example per user item.",
+  "dateRaised": "2026-10-12",
+  "deadline": "2027-04-10"
+}

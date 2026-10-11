@@ -1,0 +1,11 @@
+{
+  "number": 2981,
+  "title": "Symbolic: the status of exudyn.symbolic and its user functions",
+  "author": "Claude-JG",
+  "status": "RAISED",
+  "type": "DOCU",
+  "effort": "MEDIUM",
+  "description": "revision2026c step RG12.1 (maintainer 2026-10-12): what exists - expression types, vectors, matrices, the user functions per item, what is missing (dense linear algebra), how they are created (CreateSymbolicUserFunction) and where the interface is awkward.",
+  "dateRaised": "2026-10-12",
+  "deadline": "2027-04-10"
+}

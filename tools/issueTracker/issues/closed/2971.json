@@ -2,9 +2,13 @@
   "number": 2971,
   "title": "Python user items: concept, measurement and plan",
   "author": "Claude-JG",
-  "status": "RAISED",
+  "status": "RESOLVED",
   "type": "EXTENSION",
   "description": "revision2026c group RG7 (maintainer 2026-10-11): user node (position, orientation), user body, user marker, user joint and user connector on two markers, the user constraint extended, no user load; which items a new object needs; the cost of a call into Python; a documentation section on how each kind of item works, with an example per user item. Concept and measurement in tmp/PythonUserItems/concept.md, for decision.",
   "dateRaised": "2026-10-11",
-  "deadline": "2027-04-09"
+  "deadline": "2027-04-09",
+  "dateResolved": "2026-10-12 00:13",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "The design of the Python user items, with the decisions and measurements, is in docs/dev/design/pythonUserItems.md; the steps are planned (revision2026c step RG7.1)",
+  "resolvedInVersion": "1.13.64"
 }

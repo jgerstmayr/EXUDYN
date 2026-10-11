@@ -11,11 +11,12 @@ Developer-facing notes. Users start at [`README.rst`](https://github.com/jgerstm
 | [WORKFLOW.md](WORKFLOW.md) | issue tracker, versioning, the four commit gates |
 | [NEW_ITEM.md](NEW_ITEM.md) | how to set up a new item: the definition, what is generated, the C++, what to run |
 | [RELEASE.md](RELEASE.md) | how a release reaches GitHub, PyPI and the documentation: the commands in order, the rehearsal on GitHub, the traps |
+| [design/pythonUserItems.md](design/pythonUserItems.md) | the design of the Python user items: what each kind of item needs, the decisions, measurements |
 | [GUI_MANUAL_CHECK.md](GUI_MANUAL_CHECK.md) | the manual check of the render window and the dialogs before a release, per platform |
 | [../../definitions/README.md](../../definitions/README.md) | the item and structure definitions as Python, and the function declaration library |
 | [../../tools/generators/README.md](../../tools/generators/README.md) | the new generator code and how to re-emit the definitions |
 | [exudynRevisionInfo2026.md](https://github.com/jgerstmayr/EXUDYN/blob/master/docs/revision/exudynRevisionInfo2026.md) | general information on the v1.11.0 → v2.0 restructuring: rules, facts, decisions |
-| [exudynRevisionPlan2026c.md](https://github.com/jgerstmayr/EXUDYN/blob/master/docs/revision/exudynRevisionPlan2026c.md) | **the plan that is open**, by group RG1 ... RG11; checked and partly written by `docs/revision/planManager.py` |
+| [exudynRevisionPlan2026c.md](https://github.com/jgerstmayr/EXUDYN/blob/master/docs/revision/exudynRevisionPlan2026c.md) | **the plan that is open**, by group RG1 ... RG12; checked and partly written by `docs/revision/planManager.py` |
 | [exudynRevisionPlan2026b.md](https://github.com/jgerstmayr/EXUDYN/blob/master/docs/revision/exudynRevisionPlan2026b.md) | the second plan, closed 2026-10-10 - one line per step |
 | [exudynRevisionPlan2026.md](https://github.com/jgerstmayr/EXUDYN/blob/master/docs/revision/exudynRevisionPlan2026.md) | the finished plan of the 2026 revision, phases R0 ... R11 — a record; the revision completed as 1.12 |
 | [exudynRevisionLog2026c.md](https://github.com/jgerstmayr/EXUDYN/blob/master/docs/revision/exudynRevisionLog2026c.md) / [exudynRevisionLog2026b.md](https://github.com/jgerstmayr/EXUDYN/blob/master/docs/revision/exudynRevisionLog2026b.md) / [exudynRevisionLog2026.md](https://github.com/jgerstmayr/EXUDYN/blob/master/docs/revision/exudynRevisionLog2026.md) | what each closed step actually turned out to be — the first is where the work of revision2026c is written up, the other two are closed with their plans |
@@ -35,6 +36,7 @@ Developer-facing notes. Users start at [`README.rst`](https://github.com/jgerstm
 /docs/dev/RELEASE
 /docs/dev/NEW_ITEM
 /docs/dev/GUI_MANUAL_CHECK
+/docs/dev/design/pythonUserItems
 /docs/generated/deprecations
 /definitions/README
 /tools/generators/README

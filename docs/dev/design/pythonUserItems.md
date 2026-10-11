@@ -1,0 +1,233 @@
+# Python user items: proposal and evaluation
+
+The design of the Python user items (revision2026c group RG7, #2971), written 2026-10-11 and revised with the
+maintainer's decisions of 2026-10-11 and 2026-10-12. Measured from `definitions/itemDefs*.py` (the declared types and
+functions of every item) and with [measureUserFunctions.py](measureUserFunctions.py), next to this document (the cost
+of a call into Python). The steps are in the plan, group RG7.
+
+## 1. The goal
+
+- **Python user items**: item types whose behaviour a user writes in Python, through a small, fixed interface per
+  kind of item. They come **before** the compiled C++ user items (RG8), and they define them: the Python interface of
+  a user connector is the interface a compiled connector has to implement.
+- **The documentation**: a new section that explains how each kind of item works conceptually - what a node, body,
+  marker, connector, constraint, load and sensor give to and take from the solver - and how a user item of that kind
+  is set up, with one example per kind.
+
+## 2. What exists
+
+| kind | generic or user part that exists | what it covers |
+|---|---|---|
+| node | `NodeGenericODE2`, `NodeGenericODE1`, `NodeGenericAE`, `NodeGenericData` | coordinates only: no position, no orientation (types `GenericODE2`, ...); markers can only take its coordinates |
+| object (body) | `ObjectGenericODE2`: `forceUserFunction`, `massMatrixUserFunction`, `jacobianUserFunction`; `ObjectGenericODE1`: `rhsUserFunction` | the equations of motion of any coordinates; markers reach it as a superelement (mesh nodes) or through its coordinates (`MarkerObjectODE2Coordinates`) |
+| connector | `springForceUserFunction` or `springTorqueUserFunction` of 6 spring-dampers; `springForceTorqueUserFunction` of RigidBodySpringDamper | the force law of a given connector, not its kinematics: the markers and the force direction stay those of the item |
+| constraint | `ObjectConnectorCoordinateVector`: `constraintUserFunction`, `jacobianUserFunction` | any equations of the coordinates of two `Coordinates` markers; `offsetUserFunction` of CoordinateConstraint and JointGeneric |
+| load | `loadVectorUserFunction` / `loadUserFunction` of all 4 loads | the value of the load over time |
+| sensor | `SensorUserFunction` | a value computed from other sensors |
+| other | `graphicsDataUserFunction` (Ground, RigidBody, RigidBody2D, GenericODE2), `PreStepUserFunction`, `PostNewtonUserFunction`, `SystemJacobianUserFunction` | drawing; the solver loop |
+
+Altogether 16 nodes, 18 markers, 4 loads, 8 sensors, 51 objects; 34 user-function parameters in 24 items.
+
+## 3. What an item of each kind gives the solver (C++)
+
+The functions of representative items, from their definitions (generated declarations plus hand-written code):
+
+| kind | example | functions | what they are |
+|---|---|---|---|
+| node, position | NodePoint | 13 | coordinates (reference, initial), `GetPosition`, `GetVelocity`, `GetAcceleration`, `GetPositionJacobian`, output variables |
+| node, rigid | NodeRigidBodyEP | 38 | + `GetRotationMatrix`, `GetAngularVelocity(Local)`, `GetRotationJacobian`, `GetG`, `GetGlocal`, `GetG_t`, `GetGlocal_t`, `GetGTv_q`, `GetGlocalTv_q` (derivatives for the Jacobians), algebraic equation of the Euler parameters |
+| body, point | ObjectMassPoint | 22 | `ComputeMassMatrix`, `ComputeODE2LHS`, the ACCESS FUNCTIONS for markers (`GetAccessFunctionTypes`, `GetPositionJacobian`, `GetMassWeightedPositionJacobian`), `GetPosition/Velocity/Displacement` at a local position, output variables |
+| body, rigid | ObjectRigidBody | 36 | + rotation, angular velocity, `GetRotationJacobian`, `GetKinematicsRigid`, `AddForceTorque` (#2745) |
+| marker, position | MarkerBodyPosition | 14 | `ComputeMarkerData` (value, velocity, Jacobian), `ComputeMarkerDataJacobianDerivative`, `AddGeneralizedForce` |
+| marker, rigid | MarkerNodeRigid | 16 | + rotation matrix, angular velocity, `GetKinematicsRigid`, `AddGeneralizedForceTorque` |
+| connector | ConnectorSpringDamper | 20 | `GetRequestedMarkerType`, `ComputeODE2LHSConnector` (from marker data), `ComputeJacobianODE2Connector`, output variables |
+| constraint | JointSpherical | 21 | `GetAlgebraicEquationsSize`, `ComputeAlgebraicEquations`, `ComputeJacobianAE`, reaction forces |
+| load | LoadForceVector | 10 | `GetRequestedMarkerType`, `GetLoadVector`, body-fixed flag |
+| sensor | SensorUserFunction | 12 | `GetSensorValues`, file and storage flags |
+
+The links between the kinds are declared by type flags: a node is `Position`, `Orientation`, `RigidBody`, ...; a
+marker `Position`, `Orientation`, `Coordinate(s)`, `BodyMass`, ...; a connector or load requests marker types; a body
+offers access functions (`TranslationalVelocity_qt`, `AngularVelocity_qt`, `DisplacementMassIntegral_q`), from which the
+markers on it are allowed (`CSystem.cpp:292-355`).
+
+## 4. What a totally new object needs
+
+If a new kind of body is added - in C++ or as a Python user item - it needs, besides its equations of motion:
+
+- **nodes**: none new if its coordinates fit an existing node (NodeGenericODE2 for any coordinates; position or rigid
+  nodes if markers shall attach to them directly). A new node only for new kinematics on the node level.
+- **markers**: none new if it provides the access functions of a body - position, velocity and position Jacobian at a
+  local position, and for rigid markers rotation, angular velocity and rotation Jacobian. Then MarkerBodyPosition,
+  MarkerBodyRigid and MarkerBodyMass work, and through them every connector, joint and load. A new marker only for a
+  new kind of attachment (a beam's shape, a surface).
+- **loads**: none: loads act through markers.
+- **sensors**: none: SensorBody reads the output variables of the body, SensorMarker the markers.
+- **graphics, output variables, documentation, a mini example, a test model**.
+
+So the BODY ACCESS FUNCTIONS are the key interface: a user body with them is complete.
+
+## 5. The user items, with the maintainer's decisions (2026-10-11, 2026-10-12)
+
+### 5.1 User body: a finite element first, a rigid body as a check
+
+ObjectGenericODE2 is a SUPERELEMENT: markers reach it only at its mesh nodes (MarkerSuperElementPosition/Rigid), not at
+a local position, so it cannot be measured or loaded where a body can. The user body is a new item, **treated as a
+finite element**: it takes existing nodes - position nodes, rigid nodes, slope nodes - and gives the body interface,
+so MarkerBodyPosition/Rigid/Mass, SensorBody, the loads and every connector work on it at once:
+
+| user function | what it returns | needed for |
+|---|---|---|
+| `massMatrix(mbs, t, itemNumber, q)` | M (n x n) | every solver; may be constant (flag) |
+| `force(mbs, t, itemNumber, q, q_t)` | the generalized forces, `ODE2LHS` | every solver |
+| `jacobian(...)`, optional | dF/dq, dF/dq_t | implicit solvers; else numerical |
+| `position(mbs, itemNumber, q, localPosition)`, `velocity(... q_t ...)` | position and velocity of a material point | position markers, sensors, loads, drawing |
+| `positionJacobian(mbs, itemNumber, q, localPosition)` | d p / d q (3 x n) | position markers: forces into the coordinates |
+| optional `rotationMatrix`, `angularVelocityLocal`, `rotationJacobian` at a local position | | rigid markers (beams, rigid bodies) |
+| optional `outputVariable(mbs, itemNumber, type, localPosition, q, q_t)` | strains, stresses, ... with the user types of 5.6 | SensorBody, contour colours |
+
+A **user rigid body**, a replica of ObjectRigidBody on a rigid node, is the first check: it gives the same results
+as the built-in one. Most users will write finite elements; the user body is the central item of the extension.
+
+### 5.2 User nodes: second
+
+ANCF elements need special nodes (slopes); with a user node and the existing position/rigid interfaces of nodes and
+bodies, an element can be written at once. Functions: the number of ODE2 coordinates, `position(q)`,
+`velocity(q, q_t)`, `positionJacobian(q)`; for orientation `rotationMatrix(q)`, `angularVelocityLocal(q, q_t)`,
+`Glocal(q)`, and the derivatives `Glocal_t`, `d(Glocal^T v)/dq`, numerically if not given. The existing
+NodePoint2DSlope1 and NodePointSlope1/12/23 show the pattern; NodePointSlope123 (full gradients, 12 coordinates) does
+not exist - a natural first user node (example 3 in section 6).
+
+### 5.3 Markers, and a step for the C++ side
+
+Contact and sliding on flexible bodies need markers that can move along the body: MarkerBodyCable2DShape and
+MarkerBodyCable2DCoordinates serve ObjectANCFCable2D only. **Proposed new step (C++, outside RG7, e.g. in RG9)**:
+revise the Cable2D markers into a general form for curves (beams), surfaces (plates, shells) and volumes - a marker that
+gives the shape of a body, positions at varying local coordinates and their Jacobians - so that contact and sliding
+joints work on any flexible body. The user markers (position, orientation, coordinates; on a node or a body) follow the
+same interface: value, velocity, Jacobian with respect to the coordinates.
+
+### 5.4 Connector: a user connector that calls the marker functions
+
+A force-torque function of the relative motion exists already (`springForceTorqueUserFunction` of
+ObjectConnectorRigidBodySpringDamper). The new user connector instead gets ACCESS TO ITS MARKERS: the user function
+receives, per marker, an object with the functions of the marker - position and velocity (at the marker, or for a
+shape marker at a local coordinate), rotation, angular velocity, the Jacobians - and returns the generalized forces
+(e.g. `ApplyForce(marker, force)`, `ApplyTorque(marker, torque)`, or the force vectors per marker), optionally the
+Jacobian. More overhead per call, but it can do what the data of a marker allow: search the closest point on a cable,
+slide along a curve, contact with friction on a surface. Decided 2026-10-12: Python objects per call - a fixed set of
+marker quantities passed as arrays cannot reach shape markers at varying local coordinates.
+
+### 5.5 Parallel computation
+
+Items with Python user functions are computed serially (one Python call at a time, the GIL), as the existing user
+functions are. Items whose user functions are all symbolic (`exudyn.symbolic`) are evaluated in C++ and can run in
+parallel and be drawn directly by the graphics. The symbolic user functions have an awkward interface - the first
+design, before some symbolic methods existed - and are revised first in a group of their own (RG12: status, user
+function interfaces, dense linear algebra, access to the MainSystem and the items, tests); the symbolic user items
+(RG7.8) wait for it.
+
+### 5.6 User types: output variables, node and marker types
+
+A new item needs types of its own: an output variable (a strain of a new element), a node type (the slopes of a user
+node), a marker type. The enumerations are bit sets in C++: OutputVariableType uses bits 0-35 of 64, Node::Type bits
+0-18 and Marker::Type bits 0-22 of 32. Proposal:
+- **C++**: `OutputVariableType::UserType0` ... `UserType3` (bits 36-39), `Node::UserType0..3`, `Marker::UserType0..3`
+  (maintainer 2026-10-12: four are enough to start; beyond them, a user item reuses an existing type); each kind of
+  item can declare them like any type.
+- **The name**: a pybind enum value cannot be renamed, but it can get a display name and an alias: a registry
+  `exu.special.userTypes.SetName(exu.OutputVariableType.UserType0, 'BendingStrain')` gives
+  - the text wherever Exudyn writes the type (sensor file header, `PlotSensor` labels, `str()`, `GetDictionary`) - C++
+    asks the registry where it writes the type name;
+  - an alias in Python, `exu.OutputVariableType.BendingStrain`, set as an attribute of the enum class - this works
+    (checked by the maintainer: `exu.OutputVariableType.xyz = exu.OutputVariableType.Position`);
+  - reading back: a dictionary or a sensor with 'BendingStrain' resolves to UserType0.
+- Node and marker user types take the same registry; which items accept which user type is declared by the user item
+  (its requested node and marker types), so the checks of CSystem work unchanged.
+
+### 5.7 User sensor: items as well as sensors
+
+SensorUserFunction takes `sensorNumbers` only, so it reaches other items only through code. Proposal: a second array
+`itemNumbers` (one of the two must be empty); the non-empty one is passed to the user function as a list of ints
+(`mbs, t, numbers, factors, configuration`), and the user function reads what it needs from the items via mbs - which
+is why every user function gets mbs. Which kind of item the numbers are is the user's to know.
+
+### 5.8 Not needed, or existing
+
+- **user load**: not needed - loads have user functions for their value and act through markers; a user marker gives
+  new points of action.
+- **user constraint**: ObjectConnectorCoordinateVector exists for `Coordinates` markers; the user JOINT extends it to
+  position and orientation markers: `constraint(...)` with n equations of the marker quantities, `jacobian(...)`,
+  reaction forces; C++ applies the chain rule with the marker Jacobians.
+
+**How a user item is written**: as an item with user-function parameters, like every existing user function, not as a
+Python class derived from a C++ class: items stay validated dicts (the C++/Python split), the functions can be symbolic
+(5.5), pickling and `GetObject` work as for any item.
+
+## 6. Examples that go beyond the present user functions
+
+Each is a test model AND a check of the concept: it needs the new interface, and it has a result to compare with.
+
+| # | example | user items | what it checks | compared with |
+|---|---|---|---|---|
+| 1 | rigid body as a user body | user body (rigid interface) | the body interface: mass, forces, rigid markers, SensorBody, loads | ObjectRigidBody, to rounding |
+| 2 | ANCF cable 2D as a user finite element, MINIMAL: one integration rule, no extensions, few output variables - as much as shows the problems (maintainer 2026-10-12) | user body on NodePoint2DSlope1 | position and positionJacobian at a local position, MarkerBodyPosition anywhere, a load at mid-span | ObjectANCFCable2D: static deflection, eigenfrequencies |
+| 3 | fully parametrized ANCF beam (12 coordinates per node) | user node NodePointSlope123, user body | a new node type, a node user type (5.6), rigid markers on a flexible body | analytic deflection; convergence |
+| 4 | linear tetrahedral element in 3D | user body on NodePoint | a solid finite element; a user output variable 'Stress' (5.6) with SensorBody | FEM.py / ObjectFFRF result, analytic bar |
+| 5 | sphere rolling on a flexible cable, closest point searched along the cable | user connector with marker access (5.4), shape marker | a connector calling marker functions at varying local coordinates | ObjectContactCircleCable2D in 2D |
+| 6 | screw joint (rotation coupled to translation) between two rigid bodies | user joint | equations of marker positions and rotations, reaction forces | analytic: pitch times angle |
+| 7 | kinetic energy of a group of bodies | user sensor with itemNumbers (5.7) | items reached via mbs | the sum of SensorBody outputs |
+| 8 | examples 1 and 2 with symbolic user functions | symbolic | parallel evaluation and speed (5.5) | the Python version, results and time |
+
+## 7. Measurement: the cost of a call into Python
+
+`measureUserFunctions.py`: a chain of 100 mass points on coordinate springs, 2000 steps of explicit RK44 (5 evaluations
+per step, no Jacobian), Windows, Python 3.13, 1.13.63.dev1:
+
+| variant | time | per step and spring | per call, more than C++ |
+|---|---|---|---|
+| C++ spring | 0.199 s | 1.00 us | - |
+| Python `springForceUserFunction` (floats in, float out) | 0.357 s | 1.78 us | **0.16 us** |
+| symbolic user function | 0.241 s | 1.20 us | 0.04 us |
+| one ObjectGenericODE2 per mass point (numpy array of 1 in and out) | 0.917 s | 4.58 us | **0.72 us** (2 allocations per call) |
+| one ObjectGenericODE2 for all 100 coordinates (`-K @ q`) | 0.232 s | 1.16 us | 23 us per call for 100 coordinates |
+
+Conclusions:
+- A call into Python costs 0.2-0.7 us, more with numpy arrays; a Python user item of a few vectors costs about
+  1-2 us per evaluation. A model of a few thousand Python user items runs, a model of millions does not - that is what
+  the compiled items (RG8) and the symbolic user functions are for.
+- A Jacobian by numerical differentiation costs (n+1) evaluations per item and Newton step; for implicit solvers an
+  analytic Jacobian function (or a symbolic user function) matters more than the call itself.
+- Symbolic user functions are as fast as C++ within 20 %: where a user item's functions can be symbolic, it should
+  accept them.
+
+### 7.1 The code a user function takes
+
+Checked 2026-10-12 (maintainer: user functions affect a lot of code; the user items must stay possible to abandon if
+the overhead grows too large). Most of it is generated:
+- `UserFunction` occurs 1205 times in 54 hand-written files of src/ and 632 times in 73 generated ones; 23 distinct
+  function signatures are instantiated (`PythonUserFunctionsTemplates.h`, generated), and the symbolic transfer of every
+  user function is generated as well (`PySymbolicUserFunctionSet.h`, 337 lines).
+- Per user function, written by hand: its declaration with signature and documentation in the definition file, one
+  evaluation wrapper of about 8 lines (`src/System/evaluateUserFunctions.cpp`: the call inside
+  `UserFunctionExceptionHandling`), and the call site in the item's computation.
+- So a user body with six user functions costs about 150 hand-written lines of C++ plus its definition; every new
+  signature adds one template instantiation, which is build time, not run time. Each step of RG7 measures what it
+  added, so that the user items can still be dropped.
+
+## 8. Proposed steps (RG7)
+
+1. **RG7.1** This concept and the measurement (revised with the decisions; for the plan).
+2. **RG7.2** The common pattern: naming, the arguments of every user function (`mbs, t, itemNumber`, ...), symbolic
+   user functions, how the C++ side calls them; the user types and their names (5.6).
+3. **RG7.3** User body as a finite element (5.1); example 1 first (the user rigid body), then example 2 (minimal)
+   and example 4.
+4. **RG7.4** User nodes (5.2); example 3.
+5. **RG7.5** User markers and the user connector with marker access (5.3, 5.4); example 5.
+6. **RG7.6** User joint (5.8); example 6.
+7. **RG7.7** User sensor with itemNumbers (5.7); example 7.
+8. **RG7.8** Symbolic user items in parallel and in the graphics (5.5); example 8 - after the symbolic revision (RG12).
+9. **RG7.9** The documentation section "How items work, and user items": the concept per kind, one example per user
+   item.
+
+Outside RG7: **the revision of the Cable2D markers into general markers for curves, surfaces and volumes** (5.3), a
+C++ step in RG9; and **the symbolic user functions** (5.5), group RG12.

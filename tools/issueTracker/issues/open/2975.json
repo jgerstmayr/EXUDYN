@@ -1,0 +1,10 @@
+{
+  "number": 2975,
+  "title": "User markers and a user connector with access to its markers",
+  "author": "Claude-JG",
+  "status": "RAISED",
+  "type": "EXTENSION",
+  "description": "revision2026c step RG7.5 (docs/dev/design/pythonUserItems.md 5.3, 5.4): user markers (position, orientation, coordinates; on a node or a body); a user connector whose user function gets the functions of its markers as Python objects per call and returns the forces; example 5: a sphere rolling on a flexible cable.",
+  "dateRaised": "2026-10-12",
+  "deadline": "2027-04-10"
+}

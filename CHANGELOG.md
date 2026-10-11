@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.13 | Newborn | 64 | 1.13.63 |
+| 1.13 | Newborn | 65 | 1.13.64 |
 | 1.12 | Metheney | 367 | 1.12.462 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
@@ -30,6 +30,10 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.13 - Newborn (current)
 
+- **1.13.64** `EXTENSION` `raised by: Claude-JG` `resolved by: Claude-JG` Python user items: concept, measurement and plan (#2971)
+  - description: revision2026c group RG7 (maintainer 2026-10-11): user node (position, orientation), user body, user marker, user joint and user connector on two markers, the user constraint extended, no user load; which items a new object needs; the cost of a call into Python; a documentation section on how each kind of item works, with an example per user item. Concept and measurement in tmp/PythonUserItems/concept.md, for decision.
+  - **notes:** The design of the Python user items, with the decisions and measurements, is in docs/dev/design/pythonUserItems.md; the steps are planned (revision2026c step RG7.1)
+  - date resolved: **2026-10-12 00:13**, date raised: 2026-10-11
 - **1.13.63** `DOCU` `raised by: Claude-JG` `resolved by: Claude-JG` The page Exudyn module functions: its title, the chapter Python-C++ interface, and short examples of special, cMath and cUtilities (#2970)
   - description: Maintainer 2026-10-11: the chapter is 'Python-C++ interface', the page 'Exudyn module functions'; the notebook part at the start of the page shows in a few lines exudyn.config, two uses of exudyn.special, of exudyn.cMath and one or two of exudyn.cUtilities.
   - **notes:** The documentation chapter is 'Python-C++ interface', its page 'Exudyn module functions' starts with short examples of config, special, cMath and cUtilities (revision2026c step RG11.10.12)

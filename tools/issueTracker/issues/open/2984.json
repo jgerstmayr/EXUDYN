@@ -1,0 +1,10 @@
+{
+  "number": 2984,
+  "title": "Symbolic: access to the MainSystem and the item functions",
+  "author": "Claude-JG",
+  "status": "RAISED",
+  "type": "EXTENSION",
+  "description": "revision2026c step RG12.4: inside a symbolic user function, read what the system has - e.g. the current position of a node, a sensor value - as symbolic expressions evaluated in C++.",
+  "dateRaised": "2026-10-12",
+  "deadline": "2027-04-10"
+}

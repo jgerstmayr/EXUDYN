@@ -8,10 +8,10 @@ Every entry carries the **type** of the issue, then its **priority** and its **e
 
 General information on current version:
 
-- Exudyn version = 1.13.63.dev1
-- last change = 2026-10-11
-- Number of issues = 2972
-- Number of resolved issues = 2840 (63 in current version)
+- Exudyn version = 1.13.64.dev1
+- last change = 2026-10-12
+- Number of issues = 2986
+- Number of resolved issues = 2841 (64 in current version)
 
 ## Resolved issues and resolved bugs before version 1.13
 
@@ -9039,9 +9039,48 @@ The following list contains the issues which have been **RESOLVED** in the accor
 
 ## Open issues
 
-- `EXTENSION` `raised by: Claude-JG` Python user items: concept, measurement and plan (#2971)
-  - description: revision2026c group RG7 (maintainer 2026-10-11): user node (position, orientation), user body, user marker, user joint and user connector on two markers, the user constraint extended, no user load; which items a new object needs; the cost of a call into Python; a documentation section on how each kind of item works, with an example per user item. Concept and measurement in tmp/PythonUserItems/concept.md, for decision.
-  - date raised: 2026-10-11
+- `TESTING` `MEDIUM EFF` `raised by: Claude-JG` Symbolic: complete tests of the symbolic user functions (#2985)
+  - description: revision2026c step RG12.5: check which symbolic user functions have tests (symbolicUserFunctionTest, symbolicModuleTest, symbolicUserFunctionCopyTest, ...) and add the missing ones, every signature against its Python version.
+  - date raised: 2026-10-12
+- `EXTENSION` `raised by: Claude-JG` Symbolic: access to the MainSystem and the item functions (#2984)
+  - description: revision2026c step RG12.4: inside a symbolic user function, read what the system has - e.g. the current position of a node, a sensor value - as symbolic expressions evaluated in C++.
+  - date raised: 2026-10-12
+- `EXTENSION` `raised by: Claude-JG` Symbolic: design of improved user function interfaces, with the dense linear algebra (#2983)
+  - description: revision2026c step RG12.3: a design of the symbolic user functions with vectors and matrices as first-class arguments and the dense linear algebra fully in symbolic, for decision.
+  - date raised: 2026-10-12
+- `CHANGE` `MEDIUM EFF` `raised by: Claude-JG` Symbolic: the user function interfaces as they are (#2982)
+  - description: revision2026c step RG12.2: the interface of the symbolic user functions per signature - arguments, return types, how they are transferred to C++ - measured against the Python user functions.
+  - date raised: 2026-10-12
+- `DOCU` `MEDIUM EFF` `raised by: Claude-JG` Symbolic: the status of exudyn.symbolic and its user functions (#2981)
+  - description: revision2026c step RG12.1 (maintainer 2026-10-12): what exists - expression types, vectors, matrices, the user functions per item, what is missing (dense linear algebra), how they are created (CreateSymbolicUserFunction) and where the interface is awkward.
+  - date raised: 2026-10-12
+- `CHANGE` `raised by: Claude-JG` General markers for curves, surfaces and volumes instead of the Cable2D markers (#2980)
+  - description: revision2026c step RG9.7 (maintainer 2026-10-11; docs/dev/design/pythonUserItems.md 5.3): MarkerBodyCable2DShape and MarkerBodyCable2DCoordinates serve ObjectANCFCable2D only; a marker that gives the shape of a body, positions at varying local coordinates and their Jacobians, so that contact and sliding joints work on beams, plates, shells and general flexible surfaces.
+  - date raised: 2026-10-12
+- `DOCU` `MEDIUM EFF` `raised by: Claude-JG` Documentation: how items work, and user items (#2979)
+  - description: revision2026c step RG7.9 (docs/dev/design/pythonUserItems.md 1): a section that explains how each kind of item works conceptually and how a user item of that kind is set up, with one example per user item.
+  - date raised: 2026-10-12
+- `EXTENSION` `MEDIUM EFF` `raised by: Claude-JG` Symbolic user items: parallel evaluation and graphics (#2978)
+  - description: revision2026c step RG7.8 (docs/dev/design/pythonUserItems.md 5.5): user items whose user functions are all symbolic run in parallel and are drawn directly; example 8; waits for the revision of the symbolic user functions (group RG12).
+  - date raised: 2026-10-12
+- `EXTENSION` `raised by: Claude-JG` SensorUserFunction with itemNumbers (#2977)
+  - description: revision2026c step RG7.7 (docs/dev/design/pythonUserItems.md 5.7): a second array itemNumbers, one of the two arrays empty; the non-empty one goes to the user function, which reads the items via mbs; example 7: kinetic energy of a group of bodies.
+  - date raised: 2026-10-12
+- `EXTENSION` `MEDIUM EFF` `raised by: Claude-JG` User joint on two position and orientation markers (#2976)
+  - description: revision2026c step RG7.6 (docs/dev/design/pythonUserItems.md 5.8): n constraint equations of the marker quantities, Jacobian (or numerical), reaction forces, chain rule with the marker Jacobians in C++; example 6: a screw joint.
+  - date raised: 2026-10-12
+- `EXTENSION` `raised by: Claude-JG` User markers and a user connector with access to its markers (#2975)
+  - description: revision2026c step RG7.5 (docs/dev/design/pythonUserItems.md 5.3, 5.4): user markers (position, orientation, coordinates; on a node or a body); a user connector whose user function gets the functions of its markers as Python objects per call and returns the forces; example 5: a sphere rolling on a flexible cable.
+  - date raised: 2026-10-12
+- `EXTENSION` `raised by: Claude-JG` User nodes with position and orientation interfaces (#2974)
+  - description: revision2026c step RG7.4 (docs/dev/design/pythonUserItems.md 5.2): number of coordinates, position, velocity, position Jacobian; rotation matrix, local angular velocity, Glocal and its derivatives (numerical if not given); example 3: a fully parametrized ANCF node (NodePointSlope123) and beam.
+  - date raised: 2026-10-12
+- `EXTENSION` `raised by: Claude-JG` User body as a finite element, first the user rigid body (#2973)
+  - description: revision2026c step RG7.3 (docs/dev/design/pythonUserItems.md 5.1): a new item on existing nodes with mass, forces, optional Jacobian and the body access functions (position, velocity, position Jacobian at a local position, optionally rotation), so that the body markers, SensorBody, loads and connectors work; example 1: a replica of ObjectRigidBody; then example 2 (minimal ANCF cable 2D) and example 4 (linear tetrahedron).
+  - date raised: 2026-10-12
+- `EXTENSION` `MEDIUM EFF` `raised by: Claude-JG` Python user items: the common pattern and the user types (#2972)
+  - description: revision2026c step RG7.2 (docs/dev/design/pythonUserItems.md 5.6, 8): naming, the arguments of every user function, how C++ calls them; OutputVariableType::UserType0-3, Node::UserType0-3, Marker::UserType0-3 with a registry of display names and Python aliases (exu.OutputVariableType.xyz = ... works).
+  - date raised: 2026-10-12
 - `CHANGE` `raised by: Claude-JG` Mark the overriding virtual functions outside src/Linalg with override, the generated ones in the generator (#2967)
   - description: Follow-up of \#123 (src/Linalg done): gcc -Wsuggest-override (syntax-only compile of every source in WSL, gcc 13.3) reports 455 places in 112 files: 4 in each generated Main\*/Visu\* item header (itemHeaderEmitter.py), CNode.h 22, CObjectConnector.h 7, VisualizationSystemContainer.h 5, CObjectBody.h 3, MainSolver.h 9, CSolverExplicit.h 2, ...; proposal: emit override in itemHeaderEmitter, add it by hand in the rest, and add -Wsuggest-override to the Linux build so that a new one is seen.
   - date raised: 2026-10-11
