@@ -83,6 +83,8 @@ The title of each says what it does; the sentence after it, why it comes now.
   - RG6.8 Fix the remaining graphics problems with a test each (1 open sub-step)
   - RG6.11 Draw textures from numpy arrays in triangle lists
   - RG6.12 Add a ruler to the renderer and orient imported triangles consistently
+- **RG7** Python user items
+  - RG7.1 Plan the Python user items: what exists, what each kind needs, the cost of a call into Python
 - **RG8** Compiled C++ user items
   - RG8.1 Move the item registry into one exported translation unit so that plugins share it
   - RG8.2 Check an ABI fingerprint when a plugin registers, and refuse a mismatch with a message
@@ -118,7 +120,7 @@ The title of each says what it does; the sentence after it, why it comes now.
 | RG4 | OPEN | 9 | Implementation problems and bugs |
 | RG5 | OPEN | 8 | Performance |
 | RG6 | OPEN | 4 | Graphics and rendering |
-| RG7 | CLOSED | 0 | Python user items |
+| RG7 | OPEN | 1 | Python user items |
 | RG8 | OPEN | 10 | Compiled C++ user items |
 | RG9 | OPEN | 3 | Structural core improvements |
 | RG10 | CLOSED | 0 | Tooling and process |
@@ -362,9 +364,16 @@ CLOSED 2026-10-10 (#2940): running in Static or One cycle, space switches to Con
 
 CLOSED 2026-10-10 (#2950): `LoadSolutionFile` always returns a matrix; test model `solutionFileWithoutCoordinatesTest.py`. [log](exudynRevisionLog2026c.md#rg6-18-4)
 
-## **CLOSED_RG7** Python user items
+## **OPEN_RG7** Python user items
 
-Items whose behaviour is written in Python, and where the line runs against compiled user items (RG8). No step yet.
+Items whose behaviour is written in Python, and where the line runs against compiled user items (RG8).
+
+### **OPEN_RG7.1** Plan the Python user items: what exists, what each kind needs, the cost of a call into Python
+
+#2971. Maintainer 2026-10-11: before the C++ user items; generic nodes, objects and the user sensor exist; proposed
+user node (position, orientation), body, marker, constraint (extended), joint and connector on two markers, no user
+load; the user items show what a compiled item needs; a documentation section on how each kind works, with an example
+per user item. Concept, measurement and the proposed further steps in `tmp/PythonUserItems/concept.md`, for decision.
 
 ## **OPEN_RG8** Compiled C++ user items
 
