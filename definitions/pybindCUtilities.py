@@ -25,8 +25,6 @@ pb = PybindInterface()
 module = PybindInterface()
 
 #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-pb.CreateNewRSTfile('CUtilities')
-
 pb.AddDocu(r"""The submodule `exudyn.cUtilities` gives Python the kinematics functions of the C++ code of Exudyn: rotation matrices, Euler parameters, Tait-Bryan angles, rotation vectors, skew matrices and basis vectors. They compute with the math functions of `exudyn.cMath` and give the same bits on every platform. `exudyn.rigidBodyUtilities` calls them under the same names; the documentation there says which. A vector is given as list or numpy array, also of shape (3,1) or (1,3); a matrix as list of lists or numpy array; the result is a numpy array. A wrong size raises a `ValueError`.""",
             section='exudyn.cUtilities', sectionLevel=1, sectionLabel='sec-exudyn-cutilities')
 

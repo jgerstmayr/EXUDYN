@@ -144,14 +144,14 @@ __version__:str
 """contains the current version of the Exudyn package."""
 config:Config
 """global config settings, like precision, print behavior, warnings, etc."""
-experimental:Experimental
-"""Experimental features, not intended for regular users; for available features, see the C++ code class PyExperimental"""
-special:Special
-"""special attributes and functions, such as global (solver) flags or helper functions; not intended for regular users; for available features, see the C++ code class PySpecial"""
 variables:dict
 """this dictionary may be used by the user to store exudyn-wide data in order to avoid global Python variables; usage: exu.variables['myvar'] = 42; can be used in particular to exchange data between different mbs or between packages by importing exudyn.variables wherever needed."""
 sys:dict
 """this dictionary is used and reserved by the system, e.g., for testsuite, graphics or system function to store module-wide data in order to avoid global Python variables; the variable exu.sys['renderState'] contains the last render state after SC.renderer.Stop() and can be used for subsequent simulations."""
+special:Special
+"""special attributes and functions, such as global (solver) flags or helper functions; not intended for regular users; for available features, see the C++ code class PySpecial"""
+experimental:Experimental
+"""Experimental features, not intended for regular users; for available features, see the C++ code class PyExperimental"""
 from exudyn.interactive import SolutionViewer as _SolutionViewer
 from exudyn.misc.mainSystemExtensions import MainSystemCreateGround as _MainSystemCreateGround
 from exudyn.misc.mainSystemExtensions import MainSystemCreateMassPoint as _MainSystemCreateMassPoint
@@ -684,31 +684,31 @@ class HT:
         ...
     @overload
     def Set(self, rotation: ArrayLike=None, translation: ArrayLike=None, eulerParameters: ArrayLike=None, Rxyz: ArrayLike=None, rotationVector: ArrayLike=None) -> HT: 
-        """Set the parts given, a part that is None stays: the rotation from at most one of a 3x3 matrix, Euler parameters, Tait-Bryan angles Rxyz and a rotation vector, and the translation; returns the HT."""
+        """Set the parts given, a part that is None stays: the rotation from at most one of a 3x3 matrix, Euler parameters, Tait-Bryan angles Rxyz and a rotation vector, and the translation; returns the HT (`returns a reference`)."""
         ...
     @overload
     def SetIdentity(self) -> HT: 
-        """Set the identity: unit rotation, zero translation; returns the HT."""
+        """Set the identity: unit rotation, zero translation; returns the HT (`returns a reference`)."""
         ...
     @overload
     def SetTranslation(self, translation: ArrayLike) -> HT: 
-        """Set a translation and the unit rotation; returns the HT."""
+        """Set a translation and the unit rotation; returns the HT (`returns a reference`)."""
         ...
     @overload
     def SetRotationX(self, angle: float) -> HT: 
-        """Set a rotation about the x-axis by angle (in radians) and zero translation; returns the HT."""
+        """Set a rotation about the x-axis by angle (in radians) and zero translation; returns the HT (`returns a reference`)."""
         ...
     @overload
     def SetRotationY(self, angle: float) -> HT: 
-        """Set a rotation about the y-axis by angle (in radians) and zero translation; returns the HT."""
+        """Set a rotation about the y-axis by angle (in radians) and zero translation; returns the HT (`returns a reference`)."""
         ...
     @overload
     def SetRotationZ(self, angle: float) -> HT: 
-        """Set a rotation about the z-axis by angle (in radians) and zero translation; returns the HT."""
+        """Set a rotation about the z-axis by angle (in radians) and zero translation; returns the HT (`returns a reference`)."""
         ...
     @overload
     def SetRotationAxis(self, axis: ArrayLike, angle: float) -> HT: 
-        """Set a rotation by angle (in radians) about axis, a 3D vector of any length but zero, and zero translation; returns the HT."""
+        """Set a rotation by angle (in radians) about axis, a 3D vector of any length but zero, and zero translation; returns the HT (`returns a reference`)."""
         ...
     @overload
     def GetEP(self) -> ArrayLike: 
@@ -738,21 +738,21 @@ class HT:
     def SetCoordinatesEP(self, coordinates: ArrayLike) -> HT: 
         """Set from the 7 coordinates of NodeRigidBodyEP, translation and Euler parameters, as given by GetCoordinates...
         
-        or by a node; returns the HT
+        or by a node; returns the HT (`returns a reference`)
         """
         ...
     @overload
     def SetCoordinatesRxyz(self, coordinates: ArrayLike) -> HT: 
         """Set from the 6 coordinates of NodeRigidBodyRxyz, translation and Tait-Bryan angles, as given by GetCoordinates...
         
-        or by a node; returns the HT
+        or by a node; returns the HT (`returns a reference`)
         """
         ...
     @overload
     def SetCoordinatesRotationVector(self, coordinates: ArrayLike) -> HT: 
         """Set from the 6 coordinates of NodeRigidBodyRotVecLG, translation and rotation vector, as given by GetCoordinates...
         
-        or by a node; returns the HT
+        or by a node; returns the HT (`returns a reference`)
         """
         ...
     @overload
@@ -781,7 +781,7 @@ class HT:
         ...
     @overload
     def SetExpSE3(self, vector: ArrayLike) -> HT: 
-        """Set from the exponential map on SE(3) of the motion vector [U, Omega], 6 components: the screw motion of constant twist; returns the HT."""
+        """Set from the exponential map on SE(3) of the motion vector [U, Omega], 6 components: the screw motion of constant twist; returns the HT (`returns a reference`)."""
         ...
     @overload
     def LogR3xSO3(self) -> ArrayLike: 
@@ -789,7 +789,7 @@ class HT:
         ...
     @overload
     def SetExpR3xSO3(self, vector: ArrayLike) -> HT: 
-        """Set from the exponential map on R3xSO(3) of [U, Omega], 6 components: the translation U and the rotation of the rotation vector Omega, each on its own; returns the HT."""
+        """Set from the exponential map on R3xSO(3) of [U, Omega], 6 components: the translation U and the rotation of the rotation vector Omega, each on its own; returns the HT (`returns a reference`)."""
         ...
     @overload
     def HT44(self) -> ArrayLike: 
@@ -2879,7 +2879,7 @@ class GeneralContact:
     verboseMode:int
     """default = 0; verboseMode = 1 or higher outputs useful information on the contact creation and computation."""
     visualization:VisuGeneralContact
-    """access visualization data structure."""
+    """access visualization data structure  (``returns a reference``)."""
     resetSearchTreeInterval:int
     """(default=10000) number of search tree updates (contact computation steps) after which the search tree cells are re-created; this costs some time, will free memory in cells that are not needed any more."""
     sphereSphereContact:bool
@@ -3502,11 +3502,11 @@ class MainSystem:
         ...
     @overload
     def AddGeneralContact(self) -> GeneralContact: 
-        """Add a new general contact, used to enable efficient contact computation between objects (nodes or markers)."""
+        """Add a new general contact, used to enable efficient contact computation between objects (nodes or markers) (`returns a reference`)."""
         ...
     @overload
     def GetGeneralContact(self, generalContactNumber: int) -> GeneralContact: 
-        """Get read/write access to GeneralContact with index generalContactNumber stored in mbs; Examples shows how to access the GeneralContact object added with last AddGeneralContact() command:.
+        """Get read/write access to GeneralContact with index generalContactNumber stored in mbs; Examples shows how to access the GeneralContact object added with last AddGeneralContact() command: (`returns a reference`).
         
         Examples:
             gc=mbs.GetGeneralContact(mbs.NumberOfGeneralContacts()-1)
@@ -3537,13 +3537,13 @@ class MainSystem:
     interactiveMode:bool
     """set this flag to True in order to invoke a Assemble() command in every system modification, e.g., AddNode, AddObject, ModifyNode, ...; this helps that the system can be visualized in interactive mode."""
     variables:dict
-    """this dictionary may be used by the user to store model-specific data, in order to avoid global Python variables in complex models; mbs.variables['myvar'] = 42."""
+    """this dictionary may be used by the user to store model-specific data, in order to avoid global Python variables in complex models; mbs.variables['myvar'] = 42  (``returns a reference``)."""
     sys:dict
-    """this dictionary is used by exudyn Python libraries, e.g., solvers, to avoid global Python variables."""
+    """this dictionary is used by exudyn Python libraries, e.g., solvers, to avoid global Python variables  (``returns a reference``)."""
     solverSignalJacobianUpdate:bool
     """this flag is used by solvers to decide, whether the jacobian should be updated; at beginning of simulation and after jacobian computation, this flag is set automatically to False; use this flag to indicate system changes, e.g., during time integration."""
     systemData:SystemData
-    """Access to SystemData structure; enables access to number of nodes, objects, ... and to (current, initial, reference, ...) state variables (ODE2, AE, Data,...)."""
+    """Access to SystemData structure; enables access to number of nodes, objects, ... and to (current, initial, reference, ...) state variables (ODE2, AE, Data,...) (``returns a reference``)."""
     @overload
     def AddNode(self, pyObject: Any) -> NodeIndex: 
         """Add a node with nodeDefinition from Python node class; returns (global) node index (type NodeIndex) of newly added node; use int(nodeIndex) to convert to int, if needed (but not recommended in order not to mix up index types of nodes, objects, markers, ...).
@@ -4141,7 +4141,7 @@ class Renderer:
         """Returns the number of rendered OpenGL images; can be used to determine if image has been drawn by comparing to previous counter; also shows that first image has been drawn (needed for zoom all)."""
         ...
     materials:GraphicsMaterialList
-    """GraphicsMaterialList used for raytracer (possibly for OpenGL in future); list can be accessed with [] operator, reset and extended. Note that after Reset() there are at least 10 materials available, which are copied from visualizationSettings.raytracer.materials which are synced continuously."""
+    """GraphicsMaterialList used for raytracer (possibly for OpenGL in future); list can be accessed with [] operator, reset and extended. Note that after Reset() there are at least 10 materials available, which are copied from visualizationSettings.raytracer.materials which are synced continuously (``returns a reference``)."""
 
 
 class SystemContainer:
@@ -4158,13 +4158,13 @@ class SystemContainer:
         ...
     @overload
     def AddSystem(self) -> MainSystem: 
-        """Add a new computational system; the returned MainSystem keeps the system container alive."""
+        """Add a new computational system; the returned MainSystem keeps the system container alive (`returns a reference`)."""
         ...
     @overload
     def AppendSystem(self, mainSystem: MainSystem) -> int: 
         """Append an existing MainSystem - a copy, or the system of another container - to the system container; returns its index in the container.
         
-        The container keeps the system alive but does not own it: SC.Reset() and the end of the container leave it to its owner, and the system of another container gets that container back (#2842)
+        The container keeps the system alive but does not own it: SC.Reset() and the end of the container leave it to its owner, and the system of another container gets that container back (#2842) (`returns a reference`)
         """
         ...
     @overload
@@ -4227,6 +4227,54 @@ class SystemContainer:
     """Structure representing the settings for renderer; for details of visualizationSettings see Section Structures and Settings."""
 
 
+class Config:
+    """global config settings, like precision, print behavior, warnings, etc."""
+    suppressWarnings:int
+    """flag to suppress all warnings (default=False)."""
+    outputDirectory:str
+    """directory which is prepended to all files written by the solver: the coordinates solution file, the solver information file, sensor files and exported images; default='' (files are written exactly as given). An absolute file name together with a non-empty outputDirectory raises an error when the file is opened. NOTE: this setting is global and stays active as long as the exudyn module is loaded, so running two models one after the other in the same process will put both outputs into the same directory; normally you should specify the output folder directly in the file names and use this setting only for a test runner or a batch script. The rule is: everything WRITTEN as output of a run follows the setting, while a file is READ from there only if its name comes from Exudyn itself. Writing: the coordinates solution file, the solver information file, sensor files, exported images, the exudyn.Print log (SetWriteToFile), the figure saved by PlotSensor and the results file of ParameterVariation/GeneticOptimization. Reading: SolutionViewer (name taken from the simulation settings) and PlotSensor for a sensor given by its number (name taken from the sensor). NOT affected: a file name you pass yourself, e.g. to LoadSolutionFile, LoadBinarySolutionFile, RecoverSolutionFile or PlotSensor as a string, and all model data such as mesh import, FEMinterface/ObjectFFRFreducedOrderInterface SaveToFile/LoadFromFile and SaveDictToHDF5/LoadDictFromHDF5; use exudyn.basicUtilities.OutputFilePath(fileName, callerInfo) in your script if you want those in the output directory as well."""
+    outputPrecision:int
+    """change precision (number of digits) in C++ and Python output."""
+    linalgOutputFormatPython:int
+    """True (default): use Python format for output of vectors and matrices; False: use Matlab format."""
+    printDelayMilliSeconds:int
+    """add some delay (in milliSeconds) to printing to console (exudyn.Print), in order to let console (e.g., Spyder) process the output; default = 0."""
+    printFlushAlways:bool
+    """flush always buffers when using exudyn.Print(...) to write to file or console; this is needed if you are streaming text or showing counters in parameter variation; default=False."""
+    printToConsole:bool
+    """enables or disables writing to console with exudyn.Print(...); default=True."""
+    @property
+    def printToFile(self) -> bool:
+        """flag that shows if writing to file with exudyn.Print(...) is enabled; flag is readonly."""
+        ...
+    @property
+    def printFileName(self) -> str:
+        """file name for writing to file with exudyn.Print(...), as resolved when the file was opened: it is relative to config.outputDirectory, which is prepended by SetWriteToFile(...); flag is readonly."""
+        ...
+    @property
+    def printToFileAppend(self) -> bool:
+        """flag that shows if append mode is used for writing to file with exudyn.Print(...); flag is readonly."""
+        ...
+    @overload
+    def Version(self, addDetails=False) -> str: 
+        """Get Exudyn built version as string (if addDetails=True, adds more information on compilation Python version, platform, etc.; the Python micro version may differ from that you are working with; AVX2 shows that you are running a AVX2 compiled version)."""
+        ...
+    @overload
+    def GetDictionary(self) -> dict: 
+        """All settings of `exudyn.config` as a dictionary, the way a settings structure gives them; `printToFile`, `printFileName` and `printToFileAppend` are in it but only report what the output is doing."""
+        ...
+    @overload
+    def SetDictionary(self, values) -> None: 
+        """Set the settings named in the dictionary and leave the others; a name that `exudyn.config` does not have, and one of the three that only report, is ignored."""
+        ...
+    @overload
+    def GetDefaults(self) -> dict: 
+        """The defaults of `exudyn.config`: what Exudyn started with, taken while the module was imported and before a script, an override setting or an environment variable could change one.
+        
+        This is what tells a setting somebody chose from one nobody touched, which is how `overrideSettings.Store(config=...)` knows what to store. They cannot be constructed - `exudyn.config` reads global state, so a second one reports the current values - so they are taken once
+        """
+        ...
+
 class SpecialSolver:
     """special solver attributes and functions; not intended for regular users; for available features, see the C++ code class PySpecialSolver"""
     timeout:float
@@ -4282,68 +4330,6 @@ class SpecialDeprecations:
         """Report the use of a deprecated name from Python, as the C++ side does: a DeprecationWarning, once per session unless warnOnce is False, and a count in exudyn.sys[deprecationUse]; stackLevel=2 attributes the warning to the caller of the function that calls Warn."""
         ...
 
-class Config:
-    """global config settings, like precision, print behavior, warnings, etc."""
-    suppressWarnings:int
-    """flag to suppress all warnings (default=False)."""
-    outputDirectory:str
-    """directory which is prepended to all files written by the solver: the coordinates solution file, the solver information file, sensor files and exported images; default='' (files are written exactly as given). An absolute file name together with a non-empty outputDirectory raises an error when the file is opened. NOTE: this setting is global and stays active as long as the exudyn module is loaded, so running two models one after the other in the same process will put both outputs into the same directory; normally you should specify the output folder directly in the file names and use this setting only for a test runner or a batch script. The rule is: everything WRITTEN as output of a run follows the setting, while a file is READ from there only if its name comes from Exudyn itself. Writing: the coordinates solution file, the solver information file, sensor files, exported images, the exudyn.Print log (SetWriteToFile), the figure saved by PlotSensor and the results file of ParameterVariation/GeneticOptimization. Reading: SolutionViewer (name taken from the simulation settings) and PlotSensor for a sensor given by its number (name taken from the sensor). NOT affected: a file name you pass yourself, e.g. to LoadSolutionFile, LoadBinarySolutionFile, RecoverSolutionFile or PlotSensor as a string, and all model data such as mesh import, FEMinterface/ObjectFFRFreducedOrderInterface SaveToFile/LoadFromFile and SaveDictToHDF5/LoadDictFromHDF5; use exudyn.basicUtilities.OutputFilePath(fileName, callerInfo) in your script if you want those in the output directory as well."""
-    outputPrecision:int
-    """change precision (number of digits) in C++ and Python output."""
-    linalgOutputFormatPython:int
-    """True (default): use Python format for output of vectors and matrices; False: use Matlab format."""
-    printDelayMilliSeconds:int
-    """add some delay (in milliSeconds) to printing to console (exudyn.Print), in order to let console (e.g., Spyder) process the output; default = 0."""
-    printFlushAlways:bool
-    """flush always buffers when using exudyn.Print(...) to write to file or console; this is needed if you are streaming text or showing counters in parameter variation; default=False."""
-    printToConsole:bool
-    """enables or disables writing to console with exudyn.Print(...); default=True."""
-    @property
-    def printToFile(self) -> bool:
-        """flag that shows if writing to file with exudyn.Print(...) is enabled; flag is readonly."""
-        ...
-    @property
-    def printFileName(self) -> str:
-        """file name for writing to file with exudyn.Print(...), as resolved when the file was opened: it is relative to config.outputDirectory, which is prepended by SetWriteToFile(...); flag is readonly."""
-        ...
-    @property
-    def printToFileAppend(self) -> bool:
-        """flag that shows if append mode is used for writing to file with exudyn.Print(...); flag is readonly."""
-        ...
-    @overload
-    def Version(self, addDetails=False) -> str: 
-        """Get Exudyn built version as string (if addDetails=True, adds more information on compilation Python version, platform, etc.; the Python micro version may differ from that you are working with; AVX2 shows that you are running a AVX2 compiled version)."""
-        ...
-    @overload
-    def GetDictionary(self) -> dict: 
-        """All settings of `exudyn.config` as a dictionary, the way a settings structure gives them; `printToFile`, `printFileName` and `printToFileAppend` are in it but only report what the output is doing."""
-        ...
-    @overload
-    def SetDictionary(self, values) -> None: 
-        """Set the settings named in the dictionary and leave the others; a name that `exudyn.config` does not have, and one of the three that only report, is ignored."""
-        ...
-    @overload
-    def GetDefaults(self) -> dict: 
-        """The defaults of `exudyn.config`: what Exudyn started with, taken while the module was imported and before a script, an override setting or an environment variable could change one.
-        
-        This is what tells a setting somebody chose from one nobody touched, which is how `overrideSettings.Store(config=...)` knows what to store. They cannot be constructed - `exudyn.config` reads global state, so a second one reports the current values - so they are taken once
-        """
-        ...
-
-class Experimental:
-    """Experimental features, not intended for regular users; for available features, see the C++ code class PyExperimental"""
-    eigenFullPivotLUsolverDebugLevel:int
-    """debug output of the EigenDense solver with full pivoting: 0 (default) = none, 1 = rank and information, 2 = also the matrices."""
-    markerSuperElementRigidTexpSO3:int
-    """if nonzero (default), MarkerSuperElementRigid uses the additional tangent operator TexpSO3 of the rotation parameters."""
-    @overload
-    def EvaluateMathFunction(self, name: str, x: ArrayLike, y: ArrayLike=[], implementation: str='std', repetitions: int=1) -> Tuple[ArrayLike, float]: 
-        """Evaluate a function of the math library the way the C++ code of Exudyn calls it, to compare the platforms (#2947): name is one of sin, cos, tan, asin, acos, atan, atan2, exp, log, pow, sinh, cosh, tanh, cbrt, fmod, sqrt; y is the second argument of atan2, pow and fmod, of the size of x; implementation is std (the C++ library, one call per value), stdLoop (in a loop the compiler may vectorize), portable (the functions of musl libc compiled into Exudyn, the same bits on every platform, #2948), exudyn (EM::Sin, ..., what the C++ code of Exudyn calls: the library, or portable with the switch EXUDYN_PORTABLE_MATH) or, on Windows x64, stdNoFMA3 (the UCRT without its FMA3 code path); the evaluation is repeated repetitions times for a timing.
-        
-        Returns the values as numpy array and the time per evaluation in seconds. python/testing/mathFunctionsPlatform.py compares the platforms with it
-        """
-        ...
-
 class Special:
     """special attributes and functions, such as global (solver) flags or helper functions; not intended for regular users; for available features, see the C++ code class PySpecial"""
     @overload
@@ -4368,3 +4354,17 @@ class Special:
     """flags that stop Exudyn from opening windows; meant for automated runs (test runners, CI, AI-assisted development), where a window that waits for a human stops everything; not intended for regular users; for available features, see the C++ code class PySpecialUserInterface."""
     deprecations:SpecialDeprecations
     """how a deprecated name - a setting, an item parameter, a function - is reported: a DeprecationWarning once per session and name, or on every use, and a count of every use in the dictionary exudyn.sys[deprecationUse], by source (simulationSettings, visualizationSettings, items, functions) and name; see the C++ code class PySpecialDeprecations."""
+
+class Experimental:
+    """Experimental features, not intended for regular users; for available features, see the C++ code class PyExperimental"""
+    eigenFullPivotLUsolverDebugLevel:int
+    """debug output of the EigenDense solver with full pivoting: 0 (default) = none, 1 = rank and information, 2 = also the matrices."""
+    markerSuperElementRigidTexpSO3:int
+    """if nonzero (default), MarkerSuperElementRigid uses the additional tangent operator TexpSO3 of the rotation parameters."""
+    @overload
+    def EvaluateMathFunction(self, name: str, x: ArrayLike, y: ArrayLike=[], implementation: str='std', repetitions: int=1) -> Tuple[ArrayLike, float]: 
+        """Evaluate a function of the math library the way the C++ code of Exudyn calls it, to compare the platforms (#2947): name is one of sin, cos, tan, asin, acos, atan, atan2, exp, log, pow, sinh, cosh, tanh, cbrt, fmod, sqrt; y is the second argument of atan2, pow and fmod, of the size of x; implementation is std (the C++ library, one call per value), stdLoop (in a loop the compiler may vectorize), portable (the functions of musl libc compiled into Exudyn, the same bits on every platform, #2948), exudyn (EM::Sin, ..., what the C++ code of Exudyn calls: the library, or portable with the switch EXUDYN_PORTABLE_MATH) or, on Windows x64, stdNoFMA3 (the UCRT without its FMA3 code path); the evaluation is repeated repetitions times for a timing.
+        
+        Returns the values as numpy array and the time per evaluation in seconds. python/testing/mathFunctionsPlatform.py compares the platforms with it
+        """
+        ...

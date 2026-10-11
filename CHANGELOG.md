@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.13 | Newborn | 57 | 1.13.56 |
+| 1.13 | Newborn | 60 | 1.13.59 |
 | 1.12 | Metheney | 367 | 1.12.462 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
@@ -30,6 +30,18 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.13 - Newborn (current)
 
+- **1.13.59** `DOCU` `raised by: Claude-JG` `resolved by: Claude-JG` The page Module functions: exudyn.cMath and exudyn.cUtilities in it, the sections ordered by importance (#2968)
+  - description: Maintainer 2026-10-11: cMath and cUtilities go into the module page, in the order exudyn.config, exudyn.variables and exudyn.sys, exudyn.special, exudyn.cMath, exudyn.cUtilities, exudyn.experimental; 'Module functions' at the level of SystemContainer, not parallel to exudyn.config.
+  - **notes:** The page Module functions has the sections exudyn.config, exudyn.variables and exudyn.sys, exudyn.special, exudyn.cMath, exudyn.cUtilities, exudyn.experimental (revision2026c step RG11.10.11)
+  - date resolved: **2026-10-11 14:03**, date raised: 2026-10-11
+- **1.13.58** `EXTENSION` `HIGH` `LOW EFF` `resolved by: Claude-JG` Reference and copy (#1061)
+  - description: add information to theDoc regarding copying and referencing objects, such as mbs, GetObject(...), etc.; add info into description C/R into generatePyBindings?
+  - **notes:** The manual says in a short table what is a copy and what a reference; functions and members bound as references are marked 'returns a reference' (revision2026c step RG11.8.3)
+  - date resolved: **2026-10-11 14:03**, date raised: 2022-04-30
+- **1.13.57** `EXTENSION` `HIGH` `LOW EFF` `resolved by: Claude-JG` MarkerNodeCoordinate (#990)
+  - description: add option addReferenceCoordinates=False to include reference value in coordinate
+  - **notes:** MarkerNodeCoordinate and MarkerNodeODE1Coordinate have includeReferenceCoordinate (default False): the marker gives the coordinate including its reference value, e.g. an absolute position; CreateCoordinateConstraint has includeReferenceCoordinates=\[False, False\] (revision2026c step RG11.8.2)
+  - date resolved: **2026-10-11 14:03**, date raised: 2022-03-16
 - **1.13.56** `CHANGE` `LOW EFF` `resolved by: Claude-JG` StaticSolver (#1493)
   - description: add exception in case that Lie group nodes are used with static solver, which cannot work
   - **notes:** SolveStatic refuses Lie group nodes (NodeRigidBodyRotVecLG) with a NotImplementedFeatureError naming the node, instead of a Newton iteration that cannot converge (revision2026c step RG11.8.4)

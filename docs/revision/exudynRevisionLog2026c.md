@@ -748,3 +748,28 @@ checks of the dynamic solvers where it makes sense; the other sub-steps of RG11.
   static solver does not need, so only the loop over the node types is the same. `ComputeLinearizedSystem` uses the
   static solver without `SolveSteps` and is not refused. geometricallyExactBeamTest.py said in a comment that the
   static case does not work with NodeRigidBodyRotVecLG. The node's description says so now.
+
+<a id="rg11-8-2"></a>
+### RG11.8.2, RG11.8.3 and the page Module functions (2026-10-11, #990, #1061, #2968)
+*(Maintainer 2026-10-11: RG11.8.2 as suggested, CreateCoordinateConstraint with includeReferenceCoordinates=[bool,
+bool], both False; RG11.8.3 one short table, `returns a reference` in typewriter font; cMath and cUtilities into the
+module page, ordered config, variables and sys, special, cMath, cUtilities, experimental, with "Module functions" at
+the level of SystemContainer.)*
+- **#990**: `includeReferenceCoordinate` of MarkerNodeCoordinate and MarkerNodeODE1Coordinate adds the reference value of
+  the coordinate in both code paths of the marker - `ComputeMarkerData` and the connector interface (#2745); a ground
+  node gives its reference coordinate (0 if it has none for that index). MarkerNodeCoordinates includes the reference
+  values already, so the evaluation's plural flag was not needed. Test model `markerNodeCoordinateReferenceTest.py`:
+  a mass point held at the absolute position 2.5, and a spring of length 2 between a ground node at 1 and a mass point
+  at 3, both exact to 1e-12.
+- **#1061**: the eight rows were measured in Python (`is` and changing the returned object) before writing them. The
+  tag comes from the binding: `pybindEmitter.MarkReferences` adds it to a function with
+  `py::return_value_policy::reference(_internal)` and to the member a `CppCode` binds with it; the scalar members of
+  GeneralContact (`isActive`, `verboseMode`) are copied by Python and get none. Members that pybind returns by reference
+  without an explicit policy - `SC.visualizationSettings` - are in the table, not tagged.
+- **#2968**: `pybindModule.py` has the sections in the new order, in two NoStub blocks (config, then special and
+  experimental, with variables and sys between them); the new steering call `CSubmodulesHere` replays the definition
+  files of cSubmodules there, with a Replay of their own. The page title is "Module functions"; `CMath.md` and
+  `CUtilities.md` are no longer written and were removed; README.rst links the new place.
+- **Tests of cMath and cUtilities** (maintainer's question): `python/testing/test_cMath.py` (bits against
+  `EvaluateMathFunction`, shapes, norm, both stubs), `python/TestModels/cUtilitiesTest.py`, and
+  `test_checkPythonMath.py` for the check - no new step needed.

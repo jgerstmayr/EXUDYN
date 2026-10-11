@@ -460,31 +460,31 @@ class HT:
         ...
     @overload
     def Set(self, rotation: ArrayLike=None, translation: ArrayLike=None, eulerParameters: ArrayLike=None, Rxyz: ArrayLike=None, rotationVector: ArrayLike=None) -> HT: 
-        """Set the parts given, a part that is None stays: the rotation from at most one of a 3x3 matrix, Euler parameters, Tait-Bryan angles Rxyz and a rotation vector, and the translation; returns the HT."""
+        """Set the parts given, a part that is None stays: the rotation from at most one of a 3x3 matrix, Euler parameters, Tait-Bryan angles Rxyz and a rotation vector, and the translation; returns the HT (`returns a reference`)."""
         ...
     @overload
     def SetIdentity(self) -> HT: 
-        """Set the identity: unit rotation, zero translation; returns the HT."""
+        """Set the identity: unit rotation, zero translation; returns the HT (`returns a reference`)."""
         ...
     @overload
     def SetTranslation(self, translation: ArrayLike) -> HT: 
-        """Set a translation and the unit rotation; returns the HT."""
+        """Set a translation and the unit rotation; returns the HT (`returns a reference`)."""
         ...
     @overload
     def SetRotationX(self, angle: float) -> HT: 
-        """Set a rotation about the x-axis by angle (in radians) and zero translation; returns the HT."""
+        """Set a rotation about the x-axis by angle (in radians) and zero translation; returns the HT (`returns a reference`)."""
         ...
     @overload
     def SetRotationY(self, angle: float) -> HT: 
-        """Set a rotation about the y-axis by angle (in radians) and zero translation; returns the HT."""
+        """Set a rotation about the y-axis by angle (in radians) and zero translation; returns the HT (`returns a reference`)."""
         ...
     @overload
     def SetRotationZ(self, angle: float) -> HT: 
-        """Set a rotation about the z-axis by angle (in radians) and zero translation; returns the HT."""
+        """Set a rotation about the z-axis by angle (in radians) and zero translation; returns the HT (`returns a reference`)."""
         ...
     @overload
     def SetRotationAxis(self, axis: ArrayLike, angle: float) -> HT: 
-        """Set a rotation by angle (in radians) about axis, a 3D vector of any length but zero, and zero translation; returns the HT."""
+        """Set a rotation by angle (in radians) about axis, a 3D vector of any length but zero, and zero translation; returns the HT (`returns a reference`)."""
         ...
     @overload
     def GetEP(self) -> ArrayLike: 
@@ -514,21 +514,21 @@ class HT:
     def SetCoordinatesEP(self, coordinates: ArrayLike) -> HT: 
         """Set from the 7 coordinates of NodeRigidBodyEP, translation and Euler parameters, as given by GetCoordinates...
         
-        or by a node; returns the HT
+        or by a node; returns the HT (`returns a reference`)
         """
         ...
     @overload
     def SetCoordinatesRxyz(self, coordinates: ArrayLike) -> HT: 
         """Set from the 6 coordinates of NodeRigidBodyRxyz, translation and Tait-Bryan angles, as given by GetCoordinates...
         
-        or by a node; returns the HT
+        or by a node; returns the HT (`returns a reference`)
         """
         ...
     @overload
     def SetCoordinatesRotationVector(self, coordinates: ArrayLike) -> HT: 
         """Set from the 6 coordinates of NodeRigidBodyRotVecLG, translation and rotation vector, as given by GetCoordinates...
         
-        or by a node; returns the HT
+        or by a node; returns the HT (`returns a reference`)
         """
         ...
     @overload
@@ -557,7 +557,7 @@ class HT:
         ...
     @overload
     def SetExpSE3(self, vector: ArrayLike) -> HT: 
-        """Set from the exponential map on SE(3) of the motion vector [U, Omega], 6 components: the screw motion of constant twist; returns the HT."""
+        """Set from the exponential map on SE(3) of the motion vector [U, Omega], 6 components: the screw motion of constant twist; returns the HT (`returns a reference`)."""
         ...
     @overload
     def LogR3xSO3(self) -> ArrayLike: 
@@ -565,7 +565,7 @@ class HT:
         ...
     @overload
     def SetExpR3xSO3(self, vector: ArrayLike) -> HT: 
-        """Set from the exponential map on R3xSO(3) of [U, Omega], 6 components: the translation U and the rotation of the rotation vector Omega, each on its own; returns the HT."""
+        """Set from the exponential map on R3xSO(3) of [U, Omega], 6 components: the translation U and the rotation of the rotation vector Omega, each on its own; returns the HT (`returns a reference`)."""
         ...
     @overload
     def HT44(self) -> ArrayLike: 

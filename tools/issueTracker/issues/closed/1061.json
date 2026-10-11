@@ -2,12 +2,15 @@
   "number": 1061,
   "title": "Reference and copy",
   "author": "JG",
-  "status": "RAISED",
+  "status": "RESOLVED",
   "type": "EXTENSION",
   "priority": "HIGH",
   "effort": "LOW",
   "description": "add information to theDoc regarding copying and referencing objects, such as mbs, GetObject(...), etc.; add info into description C/R into generatePyBindings?",
   "dateRaised": "2022-04-30",
   "deadline": "2022-06-29",
-  "workingRemarks": "planned as revision2026b step RG18.1 (triage 2026-10-07)"
+  "dateResolved": "2026-10-11 14:03",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "The manual says in a short table what is a copy and what a reference; functions and members bound as references are marked 'returns a reference' (revision2026c step RG11.8.3)",
+  "resolvedInVersion": "1.13.58"
 }

@@ -295,25 +295,19 @@ pb.DefPyFunctionAccess(cClass='', pyName='config.GetDefaults', cName='unused',
                         )
 pb.EndCppWrittenByHand()
 
-pb.AddDocu('', section='exudyn.experimental', sectionLevel=1, sectionLabel='sec-exudyn-experimental')
-#++++++++++
-pb.CppCode('        m.attr("experimental") = py::cast(&pyExperimental);\n') 
-pb.DefDataAccess('experimental','Experimental features, not intended for regular users; for available features, see the C++ code class PyExperimental',
-                       dataType='Experimental', isTopLevel = True)
+pb.EndNoStub()
 
-pb.DefDataAccess('experimental.eigenFullPivotLUsolverDebugLevel','debug output of the EigenDense solver with full pivoting: 0 (default) = none, 1 = rank and information, 2 = also the matrices',
-                       dataType='int', isTopLevel = True)
-pb.DefDataAccess('experimental.markerSuperElementRigidTexpSO3','if nonzero (default), MarkerSuperElementRigid uses the additional tangent operator TexpSO3 of the rotation parameters',
-                       dataType='int', isTopLevel = True)
-pb.BeginCppWrittenByHand() #pybindings added only in C++
-pb.DefPyFunctionAccess(cClass='', pyName='experimental.EvaluateMathFunction', cName='unused',
-                        description='evaluate a function of the math library the way the C++ code of Exudyn calls it, to compare the platforms (#2947): name is one of sin, cos, tan, asin, acos, atan, atan2, exp, log, pow, sinh, cosh, tanh, cbrt, fmod, sqrt; y is the second argument of atan2, pow and fmod, of the size of x; implementation is std (the C++ library, one call per value), stdLoop (in a loop the compiler may vectorize), portable (the functions of musl libc compiled into Exudyn, the same bits on every platform, #2948), exudyn (EM::Sin, ..., what the C++ code of Exudyn calls: the library, or portable with the switch EXUDYN_PORTABLE_MATH) or, on Windows x64, stdNoFMA3 (the UCRT without its FMA3 code path); the evaluation is repeated repetitions times for a timing. Returns the values as numpy array and the time per evaluation in seconds. python/testing/mathFunctionsPlatform.py compares the platforms with it',
-                        argList=['name', 'x', 'y', 'implementation', 'repetitions'],
-                        defaultArgs=['', '', '[]', "'std'", '1'],
-                        argTypes=['str', 'ArrayLike', 'ArrayLike', 'str', 'int'],
-                        returnType='Tuple[ArrayLike, float]',
-                        )
-pb.EndCppWrittenByHand()
+pb.AddDocu('', section='exudyn.variables and exudyn.sys', sectionLevel=1, sectionLabel='sec-exudyn-variables')
+pb.CppCode('        m.attr("variables") = exudynVariables;\n') 
+pb.DefDataAccess('variables','this dictionary may be used by the user to store exudyn-wide data in order to avoid global Python variables; usage: exu.variables["myvar"] = 42; can be used in particular to exchange data between different mbs or between packages by importing exudyn.variables wherever needed.',
+                       dataType='dict', isTopLevel = True)
+
+pb.CppCode('        m.attr("sys") = exudynSystemVariables;\n') 
+pb.DefDataAccess('sys',"this dictionary is used and reserved by the system, e.g., for testsuite, graphics or system function to store module-wide data in order to avoid global Python variables; the variable exu.sys['renderState'] contains the last render state after SC.renderer.Stop() and can be used for subsequent simulations ",
+                       dataType='dict', isTopLevel = True)
+
+
+pb.BeginNoStub() #exudyn.special and exudyn.experimental, as exudyn.config above
 
 pb.AddDocu('', section='exudyn.special', sectionLevel=1, sectionLabel='sec-exudyn-special')
 pb.CppCode('        m.attr("special") = py::cast(&pySpecial);\n') 
@@ -412,17 +406,30 @@ pb.DefPyFunctionAccess(cClass='', pyName='special.deprecations.Warn', cName='unu
                         )
 pb.EndCppWrittenByHand()
 
+#the submodules exudyn.cMath and exudyn.cUtilities (definitions/pybindCMath.py, pybindCUtilities.py; #2958, #2960)
+pb.CSubmodulesHere()
+
+pb.AddDocu('', section='exudyn.experimental', sectionLevel=1, sectionLabel='sec-exudyn-experimental')
+#++++++++++
+pb.CppCode('        m.attr("experimental") = py::cast(&pyExperimental);\n') 
+pb.DefDataAccess('experimental','Experimental features, not intended for regular users; for available features, see the C++ code class PyExperimental',
+                       dataType='Experimental', isTopLevel = True)
+
+pb.DefDataAccess('experimental.eigenFullPivotLUsolverDebugLevel','debug output of the EigenDense solver with full pivoting: 0 (default) = none, 1 = rank and information, 2 = also the matrices',
+                       dataType='int', isTopLevel = True)
+pb.DefDataAccess('experimental.markerSuperElementRigidTexpSO3','if nonzero (default), MarkerSuperElementRigid uses the additional tangent operator TexpSO3 of the rotation parameters',
+                       dataType='int', isTopLevel = True)
+pb.BeginCppWrittenByHand() #pybindings added only in C++
+pb.DefPyFunctionAccess(cClass='', pyName='experimental.EvaluateMathFunction', cName='unused',
+                        description='evaluate a function of the math library the way the C++ code of Exudyn calls it, to compare the platforms (#2947): name is one of sin, cos, tan, asin, acos, atan, atan2, exp, log, pow, sinh, cosh, tanh, cbrt, fmod, sqrt; y is the second argument of atan2, pow and fmod, of the size of x; implementation is std (the C++ library, one call per value), stdLoop (in a loop the compiler may vectorize), portable (the functions of musl libc compiled into Exudyn, the same bits on every platform, #2948), exudyn (EM::Sin, ..., what the C++ code of Exudyn calls: the library, or portable with the switch EXUDYN_PORTABLE_MATH) or, on Windows x64, stdNoFMA3 (the UCRT without its FMA3 code path); the evaluation is repeated repetitions times for a timing. Returns the values as numpy array and the time per evaluation in seconds. python/testing/mathFunctionsPlatform.py compares the platforms with it',
+                        argList=['name', 'x', 'y', 'implementation', 'repetitions'],
+                        defaultArgs=['', '', '[]', "'std'", '1'],
+                        argTypes=['str', 'ArrayLike', 'ArrayLike', 'str', 'int'],
+                        returnType='Tuple[ArrayLike, float]',
+                        )
+pb.EndCppWrittenByHand()
+
 pb.EndNoStub()
-
-pb.AddDocu('', section='exudyn.variables and exudyn.sys', sectionLevel=1, sectionLabel='sec-exudyn-variables')
-pb.CppCode('        m.attr("variables") = exudynVariables;\n') 
-pb.DefDataAccess('variables','this dictionary may be used by the user to store exudyn-wide data in order to avoid global Python variables; usage: exu.variables["myvar"] = 42; can be used in particular to exchange data between different mbs or between packages by importing exudyn.variables wherever needed.',
-                       dataType='dict', isTopLevel = True)
-
-pb.CppCode('        m.attr("sys") = exudynSystemVariables;\n') 
-pb.DefDataAccess('sys',"this dictionary is used and reserved by the system, e.g., for testsuite, graphics or system function to store module-wide data in order to avoid global Python variables; the variable exu.sys['renderState'] contains the last render state after SC.renderer.Stop() and can be used for subsequent simulations ",
-                       dataType='dict', isTopLevel = True)
-
 
 pb.DefPyFinishClass('')
 

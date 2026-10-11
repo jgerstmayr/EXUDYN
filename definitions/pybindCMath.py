@@ -24,8 +24,6 @@ pb = PybindInterface()
 module = PybindInterface()
 
 #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-pb.CreateNewRSTfile('CMath')
-
 pb.AddDocu(r"""The submodule `exudyn.cMath` gives Python the math functions the C++ code of Exudyn computes with: `sin`, `cos`, ..., `sqrt` and `norm`, which give the same bits on every platform. It is for the test models of Exudyn, which use it, and for everybody who wants a model to give the same results on every platform; other scripts may use `math` and `numpy` as before.""",
             section='exudyn.cMath', sectionLevel=1, sectionLabel='sec-exudyn-cmath')
 

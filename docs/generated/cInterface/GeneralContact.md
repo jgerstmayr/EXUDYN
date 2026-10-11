@@ -28,7 +28,7 @@ The class **GeneralContact** has the following **functions and structures**:
 - **`Reset(freeMemory = True)`**: remove all contact objects and reset contact parameters
 - **`isActive`**: default = True (compute contact); if isActive=False, no contact computation is performed for this contact set
 - **`verboseMode`**: default = 0; verboseMode = 1 or higher outputs useful information on the contact creation and computation
-- **`visualization`**: access visualization data structure
+- **`visualization`**: access visualization data structure  (`returns a reference`)
 - **`resetSearchTreeInterval`**: (default=10000) number of search tree updates (contact computation steps) after which the search tree cells are re-created; this costs some time, will free memory in cells that are not needed any more
 - **`sphereSphereContact`**: activate/deactivate contact between spheres
 - **`sphereSphereFrictionRecycle`**: False: compute static friction force based on tangential velocity; True: recycle friction from previous PostNewton step, which greatly improves convergence, but may lead to unphysical artifacts; will be solved in future by step reduction

@@ -152,6 +152,19 @@ del SC                             #references to SystemContainer deleted; the c
 #at this point, mbs and SC are not available any more (data will be cleaned up by Python)
 ```
 
+In short (#1061); a function or member marked `returns a reference` in the following sections is one:
+
+| what | gives |
+|---|---|
+| `SC.AddSystem()`, `SC.GetSystem(i)` | a reference to the MainSystem that `SC` holds |
+| `mbs.systemData`, `SC.visualizationSettings`, `SC.renderer` | a reference |
+| a sub-structure, e.g. `simulationSettings.timeIntegration` | a reference into the settings |
+| `s2 = simulationSettings` | a reference, as every assignment in Python |
+| `copy.copy(simulationSettings)`, `copy.deepcopy(...)` | a copy |
+| `mbs.GetObject(i)`, `mbs.GetNode(i)`, ... and every other dictionary | a copy: change an item with `mbs.SetObjectParameter(...)` |
+| `mbs.systemData.GetODE2Coordinates()`, `mbs.GetSensorStoredData(...)`, ... | a copy of the values |
+| an item given to `mbs.AddObject(...)`, `mbs.AddNode(...)`, ... | copied into the system: changing it later changes nothing |
+
 (sec-cinterface-exceptions)=
 ### Exceptions and Error Messages
 

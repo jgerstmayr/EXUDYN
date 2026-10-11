@@ -12,8 +12,6 @@ Renderer
 MainSystem
 SystemData
 Symbolic
-CMath
-CUtilities
 GeneralContact
 DataStructures
 TypeDefinitions

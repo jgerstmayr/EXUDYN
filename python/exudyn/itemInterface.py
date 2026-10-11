@@ -7367,16 +7367,19 @@ class MarkerNodeCoordinate:
 
         coordinate: coordinate of node to which marker is attached to; type: int
 
+        includeReferenceCoordinate: if True, the value of the marker is the coordinate plus its reference value, e.g. the absolute position of a NodePoint coordinate, as for the coordinate of a NodePointGround; if False, the coordinate alone, as the displacement of a NodePoint; the velocity and the Jacobian are the same in both cases (#990); type: bool
+
         visualization: visualization data, see VMarkerNodeCoordinate
 
     Notes:
         Marker has/provides the following types: ``Node``, ``Coordinate``
 
     """
-    def __init__(self, name = '', nodeNumber = exudyn.InvalidIndex(), coordinate = exudyn.InvalidIndex(), visualization = {}):
+    def __init__(self, name = '', nodeNumber = exudyn.InvalidIndex(), coordinate = exudyn.InvalidIndex(), includeReferenceCoordinate = False, visualization = {}):
         self.name = name
         self.nodeNumber = nodeNumber
         self.coordinate = coordinate
+        self.includeReferenceCoordinate = includeReferenceCoordinate
         self.visualization = CopyDictLevel1(visualization)
 
     def __iter__(self):
@@ -7384,6 +7387,7 @@ class MarkerNodeCoordinate:
         yield 'name', self.name
         yield 'nodeNumber', self.nodeNumber
         yield 'coordinate', self.coordinate
+        yield 'includeReferenceCoordinate', self.includeReferenceCoordinate
 
     def __repr__(self):
         return str(dict(self))
@@ -7449,16 +7453,19 @@ class MarkerNodeODE1Coordinate:
 
         coordinate: coordinate of node to which marker is attached to; type: int
 
+        includeReferenceCoordinate: if True, the value of the marker is the coordinate plus its reference value, e.g. the absolute position of a NodePoint coordinate, as for the coordinate of a NodePointGround; if False, the coordinate alone, as the displacement of a NodePoint; the velocity and the Jacobian are the same in both cases (#990); type: bool
+
         visualization: visualization data, see VMarkerNodeODE1Coordinate
 
     Notes:
         Marker has/provides the following types: ``Node``, ``Coordinate``
 
     """
-    def __init__(self, name = '', nodeNumber = exudyn.InvalidIndex(), coordinate = exudyn.InvalidIndex(), visualization = {}):
+    def __init__(self, name = '', nodeNumber = exudyn.InvalidIndex(), coordinate = exudyn.InvalidIndex(), includeReferenceCoordinate = False, visualization = {}):
         self.name = name
         self.nodeNumber = nodeNumber
         self.coordinate = coordinate
+        self.includeReferenceCoordinate = includeReferenceCoordinate
         self.visualization = CopyDictLevel1(visualization)
 
     def __iter__(self):
@@ -7466,6 +7473,7 @@ class MarkerNodeODE1Coordinate:
         yield 'name', self.name
         yield 'nodeNumber', self.nodeNumber
         yield 'coordinate', self.coordinate
+        yield 'includeReferenceCoordinate', self.includeReferenceCoordinate
 
     def __repr__(self):
         return str(dict(self))

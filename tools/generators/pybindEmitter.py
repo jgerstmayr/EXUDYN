@@ -23,6 +23,7 @@
 
 import importlib
 import io
+import re
 import os
 import sys
 
@@ -88,6 +89,25 @@ def ModuleObjectStubs(entries):
     return stub
 
 
+referenceTag = ' (`returns a reference`)'
+scalarTypes = ['bool', 'int', 'float', 'str']
+
+
+def MarkReferences(name, args, kwargs, referencedMember):
+    """WHAT IS A REFERENCE, SAID BY THE BINDING ITSELF (#1061): a function bound with py::return_value_policy::reference,
+    and a member bound by def_readwrite with it, get the tag `returns a reference` in their description, so that the
+    documentation cannot drift from the binding; a member of a scalar type is copied by Python anyway and gets none"""
+    if name == 'DefPyFunctionAccess' and 'return_value_policy::reference' in kwargs.get('options', ''):
+        if 'description' in kwargs:
+            kwargs = dict(kwargs, description=kwargs['description'] + referenceTag)
+        else:
+            args = args[:3] + (args[3] + referenceTag,) + tuple(args[4:])
+    elif (name == 'DefDataAccess' and referencedMember is not None and args[0].split('.')[-1] == referencedMember
+          and kwargs.get('dataType', '') not in scalarTypes):
+        args = (args[0], args[1] + referenceTag) + tuple(args[2:])
+    return (args, kwargs)
+
+
 class Replay:
     """replays recorded declaration calls into a DeclarationWriter; keeps the stub sections"""
     def __init__(self):
@@ -95,15 +115,22 @@ class Replay:
         self.savedCpp = None
         self.savedStub = None
         self.noStubEntries = None   #the declarations of a NoStub section, see ModuleObjectStubs
+        self.submodulesHook = None  #called by CSubmodulesHere with the writer
 
     def __call__(self, calls, writer):
+        referencedMember = None #the member a CppCode just bound with return_value_policy::reference
         for name, args, kwargs in calls:
+            (args, kwargs) = MarkReferences(name, args, kwargs, referencedMember)
+            referencedMember = None
             if self.noStubEntries is not None and name in ['DefDataAccess', 'DefPyFunctionAccess']:
                 self.noStubEntries.append((name, args, kwargs))
             if name in declarationCalls:
                 getattr(writer, name)(*args, **kwargs)
             elif name == 'CppCode':
                 writer.sPy += args[0]
+                match = re.search(r'\.def_readwrite\("(\w+)".*return_value_policy::reference', args[0])
+                if match:
+                    referencedMember = match.group(1)
             elif name == 'StubCode':
                 writer.sPyi += args[0]
             elif name == 'ResetMarkdown':
@@ -129,6 +156,8 @@ class Replay:
                 writerFinish = DeclarationWriter()
                 writerFinish.DefPyFinishClass(args[0])
                 writer.sPy += writerFinish.PyStr()
+            elif name == 'CSubmodulesHere':
+                self.submodulesHook(writer)
             elif name == 'ExtensionMarkdown':
                 with open(paths.generatedDir+args[0]+'.md', 'r', encoding='utf8') as f:
                     writer.sMarkdown += '\n' + f.read()
@@ -141,14 +170,12 @@ class Replay:
 #because the LaTeX sections inside it start one level below the chapter
 markdownPageTitles = {
     'GeneralInformation': 'General information',
-    'Exudyn': 'Exudyn module',
+    'Exudyn': 'Module functions',
     'SystemContainer': 'SystemContainer',
     'Renderer': 'Renderer',
     'MainSystem': 'MainSystem',
     'SystemData': 'SystemData',
     'Symbolic': 'Symbolic',
-    'CMath': 'exudyn.cMath',
-    'CUtilities': 'exudyn.cUtilities',
     'GeneralContact': 'GeneralContact',
     'DataStructures': 'Data structures',
     'TypeDefinitions': 'Type definitions',
@@ -225,6 +252,24 @@ def main():
     writer.CreateNewPage('GeneralInformation')
     writer.sMarkdown = writerMain.sMarkdown
 
+    #the submodules cMath, cUtilities (#2958, #2960), replayed where pybindModule says CSubmodulesHere: their C++ bindings
+    #go into the main file, each inside a block that binds into the compiled submodule exudyn._<name>, their documentation
+    #becomes sections of the module page, their stubs a file each, for python/exudyn/<name>.pyi
+    stubsOfSubmodules = {}
+    def ReplaySubmodules(writer):
+        for (submoduleName, definitionName) in cSubmodules:
+            definition = Declarations(definitionName)
+            replaySubmodule = Replay() #a state of its own: the module page is inside a BeginNoStub block
+            replaySubmodule(definition.pb.calls, writer)
+            writerSubmodule = DeclarationWriter()
+            replaySubmodule(definition.module.calls, writerSubmodule)
+            writer.sPy += writerSubmodule.sPy
+            writer.sMarkdown += '\n' + writerSubmodule.sMarkdown #a paragraph of its own
+            #one signature per function: the @overload the writer adds for the module functions of symbolic (float and
+            #symbolic.Real) would be a single overload here, which a type checker refuses
+            stubsOfSubmodules[submoduleName] = writerSubmodule.sPyi.replace('@overload\n', '')
+    replay.submodulesHook = ReplaySubmodules
+
     for name in ['pybindModule', 'pybindSystemContainer', 'pybindRenderer', 'pybindMainSystem', 'pybindSystemData']:
         replay(Declarations(name).pb.calls, writer)
 
@@ -235,20 +280,6 @@ def main():
     replay(symbolic.symbolicModule.calls, writerSym)
     writerSym.sPyi = writerSym.sPyi.replace('symbolic.','')
     writer.sMarkdown += writerSym.sMarkdown
-
-    #the submodules cMath, cUtilities (#2958, #2960): their C++ bindings go into the main file, each inside a block that
-    #binds into the compiled submodule exudyn._<name>; their stubs into a file each, for python/exudyn/<name>.pyi
-    stubsOfSubmodules = {}
-    for (submoduleName, definitionName) in cSubmodules:
-        definition = Declarations(definitionName)
-        replay(definition.pb.calls, writer)
-        writerSubmodule = DeclarationWriter()
-        replay(definition.module.calls, writerSubmodule)
-        writer.sPy += writerSubmodule.sPy
-        writer.sMarkdown += '\n' + writerSubmodule.sMarkdown #a paragraph of its own
-        #one signature per function: the @overload the writer adds for the module functions of symbolic (float and
-        #symbolic.Real) would be a single overload here, which a type checker refuses
-        stubsOfSubmodules[submoduleName] = writerSubmodule.sPyi.replace('@overload\n', '')
 
     for name in ['pybindGeneralContact', 'pybindDataStructures']:
         replay(Declarations(name).pb.calls, writer)

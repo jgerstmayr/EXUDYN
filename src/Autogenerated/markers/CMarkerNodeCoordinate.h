@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-10-01  07:22:29 (last modified)
+* @date         2026-10-11  13:58:58 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -29,11 +29,13 @@ class CMarkerNodeCoordinateParameters // AUTO:
 public: // AUTO:
     Index nodeNumber;                             //!< AUTO: node number to which marker is attached to
     Index coordinate;                             //!< AUTO: must be >= 0; coordinate of node to which marker is attached to
+    bool includeReferenceCoordinate;              //!< AUTO: if True, the value of the marker is the coordinate plus its reference value, e.g. the absolute position of a NodePoint coordinate, as for the coordinate of a NodePointGround; if False, the coordinate alone, as the displacement of a NodePoint; the velocity and the Jacobian are the same in both cases (#990)
     //! AUTO: default constructor with parameter initialization
     CMarkerNodeCoordinateParameters()
     {
         nodeNumber = EXUstd::InvalidIndex;
         coordinate = EXUstd::InvalidIndex;
+        includeReferenceCoordinate = false;
     };
 };
 

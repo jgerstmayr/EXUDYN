@@ -21,6 +21,15 @@ void CMarkerNodeODE1Coordinate::GetPosition(const CSystemData& cSystemData, Vect
 	position = Vector3D(0.);
 }
 
+//! the reference value of the coordinate with includeReferenceCoordinate, otherwise 0 (#990); a node without coordinates of
+//! this kind - NodePointGround - gives its reference coordinate as well, or 0 if it has none for this index
+static Real ReferenceValue(const CNode* node, Index coordinate, bool includeReferenceCoordinate)
+{
+	if (!includeReferenceCoordinate) { return 0.; }
+	LinkedDataVector reference = node->GetReferenceCoordinateVector();
+	return (coordinate < reference.NumberOfItems()) ? reference[coordinate] : 0.;
+}
+
 void CMarkerNodeODE1Coordinate::ComputeMarkerData(const CSystemData& cSystemData, bool computeJacobian, MarkerData& markerData) const
 {
 	//A marker 'NodeCoordinate' must be attached to the ODE1 part of a node
@@ -30,7 +39,8 @@ void CMarkerNodeODE1Coordinate::ComputeMarkerData(const CSystemData& cSystemData
 	if (n) //access to GetCurrentCoordinateVector only if not ground node (which has no real coordinates, but it is allows to constrain to a ground node 'coordinate' being always zero
 	{
 		markerData.velocityAvailable = false; //never available for ODE2
-		markerData.vectorValue.SetVector({ cSystemData.GetCNodes()[parameters.nodeNumber]->GetCurrentCoordinateVector()[parameters.coordinate] }); //works for all coordinates
+		markerData.vectorValue.SetVector({ cSystemData.GetCNodes()[parameters.nodeNumber]->GetCurrentCoordinateVector()[parameters.coordinate]
+			+ ReferenceValue(cSystemData.GetCNodes()[parameters.nodeNumber], parameters.coordinate, parameters.includeReferenceCoordinate) }); //works for all coordinates
 
 		if (computeJacobian)
 		{
@@ -45,7 +55,8 @@ void CMarkerNodeODE1Coordinate::ComputeMarkerData(const CSystemData& cSystemData
 		markerData.velocityAvailable = false;
 		//markerData.value = 0;
 		//markerData.value_t = 0; //set this also for ground markers, because it could be asked for in connector!!!!
-		markerData.vectorValue.SetVector({ 0. });   //indicates that value is zero
+		markerData.vectorValue.SetVector({ ReferenceValue(cSystemData.GetCNodes()[parameters.nodeNumber], parameters.coordinate,
+			parameters.includeReferenceCoordinate) });   //zero, or the reference coordinate of the ground node
 		markerData.jacobian.SetNumberOfRowsAndColumns(0, 0); //this signals the connector/system not to apply any load or Lagrange multiplier
 	}
 }

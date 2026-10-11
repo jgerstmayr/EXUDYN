@@ -94,6 +94,20 @@ The following code snippets and comments should explain this behavior:
 
 pb.AddDocuNotebook('python/Notebooks/reference/generalInformation.ipynb', part='copy')
 
+pb.AddDocu(r"""In short (#1061); a function or member marked `returns a reference` in the following sections is one:
+
+| what | gives |
+|---|---|
+| `SC.AddSystem()`, `SC.GetSystem(i)` | a reference to the MainSystem that `SC` holds |
+| `mbs.systemData`, `SC.visualizationSettings`, `SC.renderer` | a reference |
+| a sub-structure, e.g. `simulationSettings.timeIntegration` | a reference into the settings |
+| `s2 = simulationSettings` | a reference, as every assignment in Python |
+| `copy.copy(simulationSettings)`, `copy.deepcopy(...)` | a copy |
+| `mbs.GetObject(i)`, `mbs.GetNode(i)`, ... and every other dictionary | a copy: change an item with `mbs.SetObjectParameter(...)` |
+| `mbs.systemData.GetODE2Coordinates()`, `mbs.GetSensorStoredData(...)`, ... | a copy of the values |
+| an item given to `mbs.AddObject(...)`, `mbs.AddNode(...)`, ... | copied into the system: changing it later changes nothing |
+""")
+
 #+++++++++++++++++++++++++++++++++++
 #EXCEPTIONS
 pb.AddDocu(r"""There are several levels of type and argument checks, leading to different types of errors and exceptions. The according error messages are non-unique, because they may be raised in Python modules or in C++, and they may be raised on different levels of the code. Error messages depend on Python version and on your iPython console. Very often the exception may be called `ValueError`, but it mustnot mean that it is a wrong error, but it could also be, e.g., a wrong order of function calls.""",

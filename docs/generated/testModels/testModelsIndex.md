@@ -99,6 +99,7 @@ binarySolutionFileTest
 solutionFileWithoutCoordinatesTest
 sparseSystemMatricesTest
 cUtilitiesTest
+markerNodeCoordinateReferenceTest
 rotationMarkerDeprecationTest
 contactFrictionCircleCable2DnoFrictionTest
 systemContainerLifetimeTest

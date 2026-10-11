@@ -33,6 +33,7 @@ steeringCalls = {
     'EndStubSection': 'close the stub text of one class; the sections are written in reverse order',
     'CppFinishClass': 'finish the pybind class definition only, without the documentation side',
     'ExtensionMarkdown': 'append a generated Markdown file (MainSystem extensions, written by mainSystemExtensionDocsEmitter.py)',
+    'CSubmodulesHere': 'replay the submodules of cSubmodules here: their documentation as sections of this page (#2958)',
     }
 
 

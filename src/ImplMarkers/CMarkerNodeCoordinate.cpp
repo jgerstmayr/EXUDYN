@@ -29,6 +29,15 @@ void CMarkerNodeCoordinate::GetPosition(const CSystemData& cSystemData, Vector3D
 //	velocity = ((CNodeODE2*)(cSystemData.GetCNodes()[parameters.nodeNumber]))->GetVelocity(configuration);
 //}
 
+//! the reference value of the coordinate with includeReferenceCoordinate, otherwise 0 (#990); a node without coordinates of
+//! this kind - NodePointGround - gives its reference coordinate as well, or 0 if it has none for this index
+static Real ReferenceValue(const CNode* node, Index coordinate, bool includeReferenceCoordinate)
+{
+	if (!includeReferenceCoordinate) { return 0.; }
+	LinkedDataVector reference = node->GetReferenceCoordinateVector();
+	return (coordinate < reference.NumberOfItems()) ? reference[coordinate] : 0.;
+}
+
 void CMarkerNodeCoordinate::ComputeMarkerData(const CSystemData& cSystemData, bool computeJacobian, MarkerData& markerData) const
 {
 	//A marker 'NodeCoordinate' must be attached to the ODE2 part of a node
@@ -47,7 +56,8 @@ void CMarkerNodeCoordinate::ComputeMarkerData(const CSystemData& cSystemData, bo
 		{
 			markerData.velocityAvailable = false;
 		}
-		markerData.vectorValue.SetVector({ cSystemData.GetCNodes()[parameters.nodeNumber]->GetCurrentCoordinateVector()[parameters.coordinate] }); //works for all coordinates
+		markerData.vectorValue.SetVector({ cSystemData.GetCNodes()[parameters.nodeNumber]->GetCurrentCoordinateVector()[parameters.coordinate]
+			+ ReferenceValue(cSystemData.GetCNodes()[parameters.nodeNumber], parameters.coordinate, parameters.includeReferenceCoordinate) }); //works for all coordinates
 
 		if (computeJacobian)
 		{
@@ -62,7 +72,8 @@ void CMarkerNodeCoordinate::ComputeMarkerData(const CSystemData& cSystemData, bo
 		markerData.velocityAvailable = true;
 		//markerData.value = 0;
 		//markerData.value_t = 0; //set this also for ground markers, because it could be asked for in connector!!!!
-		markerData.vectorValue.SetVector({ 0. });   //indicates that value is zero
+		markerData.vectorValue.SetVector({ ReferenceValue(cSystemData.GetCNodes()[parameters.nodeNumber], parameters.coordinate,
+			parameters.includeReferenceCoordinate) });   //zero, or the reference coordinate of the ground node
 		markerData.vectorValue_t.SetVector({ 0. }); //set this also for ground markers, because it could be asked for in connector!!!!
 		markerData.jacobian.SetNumberOfRowsAndColumns(0, 0); //this signals the connector/system not to apply any load or Lagrange multiplier
 	}
@@ -76,12 +87,13 @@ Index CMarkerNodeCoordinate::GetKinematicsCoordinate(const CSystemData& cSystemD
 	Index n = node->GetNumberOfODE2Coordinates();
 	if (n == 0)
 	{
-		kinematics.value = 0.;
+		kinematics.value = ReferenceValue(node, parameters.coordinate, parameters.includeReferenceCoordinate);
 		kinematics.value_t = 0.;
 		return 0;
 	}
 	CHECKandTHROW((Index)node->GetNodeGroup() & (Index)CNodeGroup::ODE2variables, "MarkerNodeCoordinate::GetKinematicsCoordinate: the marker provides no velocity");
-	kinematics.value = node->GetCurrentCoordinateVector()[parameters.coordinate];
+	kinematics.value = node->GetCurrentCoordinateVector()[parameters.coordinate]
+		+ ReferenceValue(node, parameters.coordinate, parameters.includeReferenceCoordinate);
 	kinematics.value_t = ((const CNodeODE2*)node)->GetCurrentCoordinateVector_t()[parameters.coordinate];
 	return n;
 }

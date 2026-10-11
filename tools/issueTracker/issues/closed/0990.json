@@ -1,0 +1,16 @@
+{
+  "number": 990,
+  "title": "MarkerNodeCoordinate",
+  "author": "JG",
+  "status": "RESOLVED",
+  "type": "EXTENSION",
+  "priority": "HIGH",
+  "effort": "LOW",
+  "description": "add option addReferenceCoordinates=False to include reference value in coordinate",
+  "dateRaised": "2022-03-16",
+  "deadline": "2022-05-15",
+  "dateResolved": "2026-10-11 14:03",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "MarkerNodeCoordinate and MarkerNodeODE1Coordinate have includeReferenceCoordinate (default False): the marker gives the coordinate including its reference value, e.g. an absolute position; CreateCoordinateConstraint has includeReferenceCoordinates=[False, False] (revision2026c step RG11.8.2)",
+  "resolvedInVersion": "1.13.57"
+}

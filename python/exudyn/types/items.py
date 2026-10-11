@@ -1550,6 +1550,7 @@ items = {
       'name': {'type': 'String', 'size': '', 'range': '', 'default': '', 'mustBeGiven': False, 'description': "marker's unique name"},
       'nodeNumber': {'type': 'NodeIndex', 'size': '', 'range': '', 'default': 'exudyn.InvalidIndex()', 'mustBeGiven': False, 'description': 'node number to which marker is attached to'},
       'coordinate': {'type': 'UInt', 'size': '', 'range': '>= 0', 'default': 'exudyn.InvalidIndex()', 'mustBeGiven': True, 'description': 'coordinate of node to which marker is attached to'},
+      'includeReferenceCoordinate': {'type': 'bool', 'size': '', 'range': '', 'default': 'False', 'mustBeGiven': False, 'description': 'if True, the value of the marker is the coordinate plus its reference value, e.g. the absolute position of a NodePoint coordinate, as for the coordinate of a NodePointGround; if False, the coordinate alone, as the displacement of a NodePoint; the velocity and the Jacobian are the same in both cases (#990)'},
     },
     'visualization': {
     },
@@ -1573,6 +1574,7 @@ items = {
       'name': {'type': 'String', 'size': '', 'range': '', 'default': '', 'mustBeGiven': False, 'description': "marker's unique name"},
       'nodeNumber': {'type': 'NodeIndex', 'size': '', 'range': '', 'default': 'exudyn.InvalidIndex()', 'mustBeGiven': False, 'description': 'node number to which marker is attached to'},
       'coordinate': {'type': 'UInt', 'size': '', 'range': '>= 0', 'default': 'exudyn.InvalidIndex()', 'mustBeGiven': True, 'description': 'coordinate of node to which marker is attached to'},
+      'includeReferenceCoordinate': {'type': 'bool', 'size': '', 'range': '', 'default': 'False', 'mustBeGiven': False, 'description': 'if True, the value of the marker is the coordinate plus its reference value, e.g. the absolute position of a NodePoint coordinate, as for the coordinate of a NodePointGround; if False, the coordinate alone, as the displacement of a NodePoint; the velocity and the Jacobian are the same in both cases (#990)'},
     },
     'visualization': {
     },

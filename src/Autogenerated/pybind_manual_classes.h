@@ -233,10 +233,80 @@
         m.def("SetWriteToConsole", &PySetWriteToConsole, "DEPRECATED; set flag to write (True) or not write to console; default = True; removed in 2029", py::arg("flag"));
         m.def("InvalidIndex", &GetInvalidIndex, "This function provides the invalid index, which may depend on the kind of 32-bit, 64-bit signed or unsigned integer; e.g., node index or item index in list; currently, the InvalidIndex() gives -1, but it may be changed in future versions, therefore you should use this function");
         m.attr("config") = py::cast(&pyConfig);
-        m.attr("experimental") = py::cast(&pyExperimental);
-        m.attr("special") = py::cast(&pySpecial);
         m.attr("variables") = exudynVariables;
         m.attr("sys") = exudynSystemVariables;
+        m.attr("special") = py::cast(&pySpecial);
+        {
+        py::module cMathSubmodule = m.def_submodule("_cMath", "the compiled functions of exudyn.cMath");
+        {
+        py::module& m = cMathSubmodule;
+        m.def("sin", [](Real x) { return EM::Sin(x); }, py::arg("x"));
+        m.def("sin", py::vectorize([](Real x) { return EM::Sin(x); }), "sine of x (in radians); calls EM::Sin of the C++ code", py::arg("x"));
+        m.def("cos", [](Real x) { return EM::Cos(x); }, py::arg("x"));
+        m.def("cos", py::vectorize([](Real x) { return EM::Cos(x); }), "cosine of x (in radians); calls EM::Cos of the C++ code", py::arg("x"));
+        m.def("tan", [](Real x) { return EM::Tan(x); }, py::arg("x"));
+        m.def("tan", py::vectorize([](Real x) { return EM::Tan(x); }), "tangent of x (in radians); calls EM::Tan of the C++ code", py::arg("x"));
+        m.def("asin", [](Real x) { return EM::Asin(x); }, py::arg("x"));
+        m.def("asin", py::vectorize([](Real x) { return EM::Asin(x); }), "arc sine of x in [-1,1], in [-pi/2, pi/2]; calls EM::Asin of the C++ code", py::arg("x"));
+        m.def("acos", [](Real x) { return EM::Acos(x); }, py::arg("x"));
+        m.def("acos", py::vectorize([](Real x) { return EM::Acos(x); }), "arc cosine of x in [-1,1], in [0, pi]; calls EM::Acos of the C++ code", py::arg("x"));
+        m.def("atan", [](Real x) { return EM::Atan(x); }, py::arg("x"));
+        m.def("atan", py::vectorize([](Real x) { return EM::Atan(x); }), "arc tangent of x, in [-pi/2, pi/2]; calls EM::Atan of the C++ code", py::arg("x"));
+        m.def("exp", [](Real x) { return EM::Exp(x); }, py::arg("x"));
+        m.def("exp", py::vectorize([](Real x) { return EM::Exp(x); }), "exponential function of x; calls EM::Exp of the C++ code", py::arg("x"));
+        m.def("log", [](Real x) { return EM::Log(x); }, py::arg("x"));
+        m.def("log", py::vectorize([](Real x) { return EM::Log(x); }), "natural logarithm of x; calls EM::Log of the C++ code", py::arg("x"));
+        m.def("sinh", [](Real x) { return EM::Sinh(x); }, py::arg("x"));
+        m.def("sinh", py::vectorize([](Real x) { return EM::Sinh(x); }), "hyperbolic sine of x; calls EM::Sinh of the C++ code", py::arg("x"));
+        m.def("cosh", [](Real x) { return EM::Cosh(x); }, py::arg("x"));
+        m.def("cosh", py::vectorize([](Real x) { return EM::Cosh(x); }), "hyperbolic cosine of x; calls EM::Cosh of the C++ code", py::arg("x"));
+        m.def("tanh", [](Real x) { return EM::Tanh(x); }, py::arg("x"));
+        m.def("tanh", py::vectorize([](Real x) { return EM::Tanh(x); }), "hyperbolic tangent of x; calls EM::Tanh of the C++ code", py::arg("x"));
+        m.def("cbrt", [](Real x) { return EM::Cbrt(x); }, py::arg("x"));
+        m.def("cbrt", py::vectorize([](Real x) { return EM::Cbrt(x); }), "cube root of x, also for a negative x; calls EM::Cbrt of the C++ code", py::arg("x"));
+        m.def("sqrt", [](Real x) { return std::sqrt(x); }, py::arg("x"));
+        m.def("sqrt", py::vectorize([](Real x) { return std::sqrt(x); }), "square root of x; correctly rounded on every platform; calls std::sqrt of the C++ code", py::arg("x"));
+        m.def("atan2", [](Real y, Real x) { return EM::Atan2(y, x); }, py::arg("y"), py::arg("x"));
+        m.def("atan2", py::vectorize([](Real y, Real x) { return EM::Atan2(y, x); }), "arc tangent of y/x in [-pi, pi], with the quadrant of the point (x, y); y is the FIRST argument, as in math.atan2; calls EM::Atan2 of the C++ code", py::arg("y"), py::arg("x"));
+        m.def("pow", [](Real x, Real y) { return EM::Pow(x, y); }, py::arg("x"), py::arg("y"));
+        m.def("pow", py::vectorize([](Real x, Real y) { return EM::Pow(x, y); }), "x to the power y; calls EM::Pow of the C++ code", py::arg("x"), py::arg("y"));
+        }
+        }
+        {
+        py::module cUtilitiesSubmodule = m.def_submodule("_cUtilities", "the compiled functions of exudyn.cUtilities");
+        {
+        py::module& m = cUtilitiesSubmodule;
+        m.def("ComputeOrthonormalBasisVectors", &PyCUtilities::ComputeOrthonormalBasisVectors, "the normalized vector0 and two normals to it, as the rows of a 3x3 array (unpacked as [v0, n1, n2] = ...); the normals are not unique; for vector0 = [0,0,0] the rows are vector0 and the x and y axes; computed by EXUmath::ComputeOrthogonalBasisVectors of the C++ code", py::arg("vector0"));
+        m.def("ComputeOrthonormalBasis", &PyCUtilities::ComputeOrthonormalBasis, "the rotation matrix whose columns are the rows of ComputeOrthonormalBasisVectors(vector0): the first column is parallel to vector0; computed by EXUmath::ComputeOrthogonalBasisVectors of the C++ code", py::arg("vector0"));
+        m.def("GramSchmidt", &PyCUtilities::GramSchmidt, "the normalized vector0, the normalized part of vector1 normal to vector0, and their cross product, as the rows of a 3x3 array; zero or parallel vectors raise a ValueError; computed by GramSchmidt of PyCUtilities.h of the C++ code", py::arg("vector0"), py::arg("vector1"));
+        m.def("Skew", &PyCUtilities::Skew, "the skew symmetric 3x3 matrix of a 3D vector, which gives the cross product: Skew(a) @ b = a x b; for a vector of 3n components the n skew matrices one below the other (3n x 3); for a matrix of 3n rows and m columns the skew matrices of its columns side by side (3n x 3m), as needed for the floating frame of reference formulation; computed by Skew of PyCUtilities.h of the C++ code", py::arg("vector"));
+        m.def("Skew2Vec", &PyCUtilities::Skew2Vec, "the vector of a skew symmetric 3x3 matrix; for a 4x4 matrix of the Lie algebra se(3) the 6 values [u, w], u the translational part (last column) and w the vector of the skew part; computed by Skew2Vec of PyCUtilities.h of the C++ code", py::arg("skew"));
+        m.def("EulerParameters2G", &PyCUtilities::EulerParameters2G, "the 3x4 matrix G of Euler parameters, $\tomega = \Gm \dot \pv$ with the global angular velocity; computed by RigidBodyMath::EP2G of the C++ code", py::arg("eulerParameters"));
+        m.def("EulerParameters2GLocal", &PyCUtilities::EulerParameters2GLocal, "the 3x4 matrix G of Euler parameters for the local (body-fixed) angular velocity, $\LU{b}{\tomega} = \LU{b}{\Gm} \dot \pv$; computed by RigidBodyMath::EP2Glocal of the C++ code", py::arg("eulerParameters"));
+        m.def("EulerParameters2RotationMatrix", &PyCUtilities::EulerParameters2RotationMatrix, "the rotation matrix of 4 Euler parameters; computed by RigidBodyMath::EP2RotationMatrix of the C++ code", py::arg("eulerParameters"));
+        m.def("RotationMatrix2EulerParameters", &PyCUtilities::RotationMatrix2EulerParameters, "the 4 Euler parameters of a rotation matrix, normalized, so that an inaccurate rotation matrix gives unit Euler parameters; computed by RigidBodyMath::RotationMatrix2EP of the C++ code", py::arg("rotationMatrix"));
+        m.def("AngularVelocity2EulerParameters_t", &PyCUtilities::AngularVelocity2EulerParameters_t, "the time derivative of the Euler parameters from the global angular velocity, $\dot \pv = \frac{1}{4}\Gm\tp \tomega$, for unit Euler parameters; computed by RigidBodyMath::EP2G of the C++ code", py::arg("angularVelocity"), py::arg("eulerParameters"));
+        m.def("RotationVector2RotationMatrix", &PyCUtilities::RotationVector2RotationMatrix, "the rotation matrix of a rotation vector, the same as NodeRigidBodyRotVecLG computes; computed by RigidBodyMath::RotationVector2RotationMatrix of the C++ code", py::arg("rotationVector"));
+        m.def("RotationMatrix2RotationVector", &PyCUtilities::RotationMatrix2RotationVector, "the rotation vector of a rotation matrix, with an angle in [0, pi]; computed by EXUlie::LogSO3Vector of the C++ code", py::arg("rotationMatrix"));
+        m.def("ComputeRotationAxisFromRotationVector", &PyCUtilities::ComputeRotationAxisFromRotationVector, "the unit rotation axis of a rotation vector; zero for the zero vector; computed by EXUlie::RotationVector2RotationAxis of the C++ code", py::arg("rotationVector"));
+        m.def("ExpSO3", &PyCUtilities::ExpSO3, "the exponential map of the Lie group SO(3): the rotation matrix of a rotation vector, computed with the sinc function; computed by EXUlie::ExpSO3 of the C++ code", py::arg("rotationVector"));
+        m.def("LogSO3", &PyCUtilities::LogSO3, "the logarithmic map of the Lie group SO(3): the skew symmetric matrix of the rotation vector of a rotation matrix; computed by EXUlie::LogSO3 of the C++ code", py::arg("rotationMatrix"));
+        m.def("RotXYZ2RotationMatrix", &PyCUtilities::RotXYZ2RotationMatrix, "the rotation matrix of the Tait-Bryan angles rot = [rotX, rotY, rotZ] (in radians), A = Ax*Ay*Az; computed by RigidBodyMath::RotXYZ2RotationMatrix of the C++ code", py::arg("rot"));
+        m.def("RotationMatrix2RotXYZ", &PyCUtilities::RotationMatrix2RotXYZ, "the Tait-Bryan angles [rotX, rotY, rotZ] of a rotation matrix; at the singularity rotY = pi/2, -pi/2, ... rotX is set 0; computed by RigidBodyMath::RotationMatrix2RotXYZ of the C++ code", py::arg("rotationMatrix"));
+        m.def("RotXYZ2G", &PyCUtilities::RotXYZ2G, "the 3x3 matrix G of Tait-Bryan angles, $\LU{0}{\tomega} = \Gm \dot \ttheta$ with the global angular velocity; computed by RigidBodyMath::RotXYZ2GTemplate of the C++ code", py::arg("rot"));
+        m.def("RotXYZ2G_t", &PyCUtilities::RotXYZ2G_t, "the time derivative of RotXYZ2G, for the angles rot and their time derivatives rot_t; computed by RigidBodyMath::RotXYZ2G_tTemplate of the C++ code", py::arg("rot"), py::arg("rot_t"));
+        m.def("RotXYZ2GLocal", &PyCUtilities::RotXYZ2GLocal, "the 3x3 matrix G of Tait-Bryan angles for the local (body-fixed) angular velocity, $\LU{b}{\tomega} = \LU{b}{\Gm} \dot \ttheta$; computed by RigidBodyMath::RotXYZ2GlocalTemplate of the C++ code", py::arg("rot"));
+        m.def("RotXYZ2GLocal_t", &PyCUtilities::RotXYZ2GLocal_t, "the time derivative of RotXYZ2GLocal, for the angles rot and their time derivatives rot_t; computed by RigidBodyMath::RotXYZ2Glocal_tTemplate of the C++ code", py::arg("rot"), py::arg("rot_t"));
+        m.def("AngularVelocity2RotXYZ_t", &PyCUtilities::AngularVelocity2RotXYZ_t, "the time derivative of the Tait-Bryan angles rotation from the global angular velocity; a ValueError at the singularity, |cos(rotation[1])| < 1e-14; computed by RigidBodyMath::AngularVelocity2RotXYZ_t of the C++ code", py::arg("angularVelocity"), py::arg("rotation"));
+        m.def("RotXYZ2EulerParameters", &PyCUtilities::RotXYZ2EulerParameters, "the 4 Euler parameters of the Tait-Bryan angles alpha, see [CITE:Henderson1977]; entry 0 is the scalar part; computed by RigidBodyMath::RotXYZ2EP of the C++ code", py::arg("alpha"));
+        m.def("RotationMatrix2RotZYZ", &PyCUtilities::RotationMatrix2RotZYZ, "the Euler angles [Z, Y, Z] (in radians) of a rotation matrix, A = Az*Ay*Az; flip chooses the first angle in quadrant 2 or 3; computed by RigidBodyMath::RotationMatrix2RotZYZ of the C++ code", py::arg("rotationMatrix"), py::arg("flip") = false);
+        m.def("RotationMatrixX", &PyCUtilities::RotationMatrixX, "the rotation matrix of a rotation by angleRad (in radians) about the x-axis; computed by RigidBodyMath::RotationMatrixX of the C++ code", py::arg("angleRad"));
+        m.def("RotationMatrixY", &PyCUtilities::RotationMatrixY, "the rotation matrix of a rotation by angleRad (in radians) about the y-axis; computed by RigidBodyMath::RotationMatrixY of the C++ code", py::arg("angleRad"));
+        m.def("RotationMatrixZ", &PyCUtilities::RotationMatrixZ, "the rotation matrix of a rotation by angleRad (in radians) about the z-axis; computed by RigidBodyMath::RotationMatrixZ of the C++ code", py::arg("angleRad"));
+        m.def("RotationMatrix2D", &PyCUtilities::RotationMatrix2D, "the 2x2 rotation matrix of a rotation by angleRad (in radians) in the plane; computed by RotationMatrix2D of PyCUtilities.h of the C++ code", py::arg("angleRad"));
+        }
+        }
+        m.attr("experimental") = py::cast(&pyExperimental);
 
     py::class_<MainRenderer>(m, "Renderer")
         .def(py::init(&MainRenderer::ForbidConstructor))
@@ -290,8 +360,8 @@
         .def("GetPreNewtonResidualUserFunction", &MainSystem::PyGetPreNewtonResidualUserFunction, "Returns the preNewtonResidualUserFunction.", py::arg("asDict") = false)
         .def("SetSystemJacobianUserFunction", &MainSystem::PySetSystemJacobianUserFunction, "Sets a user function SystemJacobianUserFunction(mbs, t, factorODE2, factorODE2_t, factorODE1) executed after computation of the Newton jacobian of a static solver or an implicit timeintegrator; The function shall return additional terms for the jacobian at RHS, e.g., related to dependencies that are added by the user in the PreNewtonResidualUserFunction; RHS means that for a spring with stiffness K, the jacobian would be -K as it is computed for the RHS, see the RHS-LHS convention. If you like to completely replace the jacobian, consider using the solver's user function SetUserFunctionComputeNewtonJacobian which can be used to replace the jacobian computation; the factors factorODE2, factorODE2_t, factorODE1 must be multiplied with quantities related to ODE2 coordinates (like stiffness terms), ODE2_t velocity coordinates (like damping terms) and ODE1 quantities. The functions returns a MatrixContainer, for which the sparse format is recommended for efficiency reasons.", py::arg("value"))
         .def("GetSystemJacobianUserFunction", &MainSystem::PyGetSystemJacobianUserFunction, "Returns the systemJacobianUserFunction.", py::arg("asDict") = false)
-        .def("AddGeneralContact", &MainSystem::AddGeneralContact, "add a new general contact, used to enable efficient contact computation between objects (nodes or markers)", py::return_value_policy::reference_internal)
-        .def("GetGeneralContact", &MainSystem::GetGeneralContact, "get read/write access to GeneralContact with index generalContactNumber stored in mbs; Examples shows how to access the GeneralContact object added with last AddGeneralContact() command:", py::return_value_policy::reference_internal, py::arg("generalContactNumber"))
+        .def("AddGeneralContact", &MainSystem::AddGeneralContact, "add a new general contact, used to enable efficient contact computation between objects (nodes or markers) (`returns a reference`)", py::return_value_policy::reference_internal)
+        .def("GetGeneralContact", &MainSystem::GetGeneralContact, "get read/write access to GeneralContact with index generalContactNumber stored in mbs; Examples shows how to access the GeneralContact object added with last AddGeneralContact() command: (`returns a reference`)", py::return_value_policy::reference_internal, py::arg("generalContactNumber"))
         .def("DeleteGeneralContact", &MainSystem::DeleteGeneralContact, "delete GeneralContact with index generalContactNumber in mbs; other general contacts are resorted (index changes!)", py::arg("generalContactNumber"))
         .def("NumberOfGeneralContacts", &MainSystem::NumberOfGeneralContacts, "Return number of GeneralContact objects in mbs")
         .def("GetAvailableFactoryItems", &MainSystem::GetAvailableFactoryItems, "get all available items to be added (nodes, objects, etc.); this is useful in particular in case of additional user elements to check if they are available; the available items are returned as dictionary, containing lists of strings for Node, Object, etc.")
@@ -432,76 +502,6 @@
         .def("GetNodeLTGData", &MainSystemData::PyGetNodeLocalToGlobalData, "get node local-to-global coordinate mapping (list of global coordinate indices) for Data coordinates; only available after Assemble()", py::arg("nodeNumber"))
         ; // end of SystemData pybind definitions
 
-        {
-        py::module cMathSubmodule = m.def_submodule("_cMath", "the compiled functions of exudyn.cMath");
-        {
-        py::module& m = cMathSubmodule;
-        m.def("sin", [](Real x) { return EM::Sin(x); }, py::arg("x"));
-        m.def("sin", py::vectorize([](Real x) { return EM::Sin(x); }), "sine of x (in radians); calls EM::Sin of the C++ code", py::arg("x"));
-        m.def("cos", [](Real x) { return EM::Cos(x); }, py::arg("x"));
-        m.def("cos", py::vectorize([](Real x) { return EM::Cos(x); }), "cosine of x (in radians); calls EM::Cos of the C++ code", py::arg("x"));
-        m.def("tan", [](Real x) { return EM::Tan(x); }, py::arg("x"));
-        m.def("tan", py::vectorize([](Real x) { return EM::Tan(x); }), "tangent of x (in radians); calls EM::Tan of the C++ code", py::arg("x"));
-        m.def("asin", [](Real x) { return EM::Asin(x); }, py::arg("x"));
-        m.def("asin", py::vectorize([](Real x) { return EM::Asin(x); }), "arc sine of x in [-1,1], in [-pi/2, pi/2]; calls EM::Asin of the C++ code", py::arg("x"));
-        m.def("acos", [](Real x) { return EM::Acos(x); }, py::arg("x"));
-        m.def("acos", py::vectorize([](Real x) { return EM::Acos(x); }), "arc cosine of x in [-1,1], in [0, pi]; calls EM::Acos of the C++ code", py::arg("x"));
-        m.def("atan", [](Real x) { return EM::Atan(x); }, py::arg("x"));
-        m.def("atan", py::vectorize([](Real x) { return EM::Atan(x); }), "arc tangent of x, in [-pi/2, pi/2]; calls EM::Atan of the C++ code", py::arg("x"));
-        m.def("exp", [](Real x) { return EM::Exp(x); }, py::arg("x"));
-        m.def("exp", py::vectorize([](Real x) { return EM::Exp(x); }), "exponential function of x; calls EM::Exp of the C++ code", py::arg("x"));
-        m.def("log", [](Real x) { return EM::Log(x); }, py::arg("x"));
-        m.def("log", py::vectorize([](Real x) { return EM::Log(x); }), "natural logarithm of x; calls EM::Log of the C++ code", py::arg("x"));
-        m.def("sinh", [](Real x) { return EM::Sinh(x); }, py::arg("x"));
-        m.def("sinh", py::vectorize([](Real x) { return EM::Sinh(x); }), "hyperbolic sine of x; calls EM::Sinh of the C++ code", py::arg("x"));
-        m.def("cosh", [](Real x) { return EM::Cosh(x); }, py::arg("x"));
-        m.def("cosh", py::vectorize([](Real x) { return EM::Cosh(x); }), "hyperbolic cosine of x; calls EM::Cosh of the C++ code", py::arg("x"));
-        m.def("tanh", [](Real x) { return EM::Tanh(x); }, py::arg("x"));
-        m.def("tanh", py::vectorize([](Real x) { return EM::Tanh(x); }), "hyperbolic tangent of x; calls EM::Tanh of the C++ code", py::arg("x"));
-        m.def("cbrt", [](Real x) { return EM::Cbrt(x); }, py::arg("x"));
-        m.def("cbrt", py::vectorize([](Real x) { return EM::Cbrt(x); }), "cube root of x, also for a negative x; calls EM::Cbrt of the C++ code", py::arg("x"));
-        m.def("sqrt", [](Real x) { return std::sqrt(x); }, py::arg("x"));
-        m.def("sqrt", py::vectorize([](Real x) { return std::sqrt(x); }), "square root of x; correctly rounded on every platform; calls std::sqrt of the C++ code", py::arg("x"));
-        m.def("atan2", [](Real y, Real x) { return EM::Atan2(y, x); }, py::arg("y"), py::arg("x"));
-        m.def("atan2", py::vectorize([](Real y, Real x) { return EM::Atan2(y, x); }), "arc tangent of y/x in [-pi, pi], with the quadrant of the point (x, y); y is the FIRST argument, as in math.atan2; calls EM::Atan2 of the C++ code", py::arg("y"), py::arg("x"));
-        m.def("pow", [](Real x, Real y) { return EM::Pow(x, y); }, py::arg("x"), py::arg("y"));
-        m.def("pow", py::vectorize([](Real x, Real y) { return EM::Pow(x, y); }), "x to the power y; calls EM::Pow of the C++ code", py::arg("x"), py::arg("y"));
-        }
-        }
-        {
-        py::module cUtilitiesSubmodule = m.def_submodule("_cUtilities", "the compiled functions of exudyn.cUtilities");
-        {
-        py::module& m = cUtilitiesSubmodule;
-        m.def("ComputeOrthonormalBasisVectors", &PyCUtilities::ComputeOrthonormalBasisVectors, "the normalized vector0 and two normals to it, as the rows of a 3x3 array (unpacked as [v0, n1, n2] = ...); the normals are not unique; for vector0 = [0,0,0] the rows are vector0 and the x and y axes; computed by EXUmath::ComputeOrthogonalBasisVectors of the C++ code", py::arg("vector0"));
-        m.def("ComputeOrthonormalBasis", &PyCUtilities::ComputeOrthonormalBasis, "the rotation matrix whose columns are the rows of ComputeOrthonormalBasisVectors(vector0): the first column is parallel to vector0; computed by EXUmath::ComputeOrthogonalBasisVectors of the C++ code", py::arg("vector0"));
-        m.def("GramSchmidt", &PyCUtilities::GramSchmidt, "the normalized vector0, the normalized part of vector1 normal to vector0, and their cross product, as the rows of a 3x3 array; zero or parallel vectors raise a ValueError; computed by GramSchmidt of PyCUtilities.h of the C++ code", py::arg("vector0"), py::arg("vector1"));
-        m.def("Skew", &PyCUtilities::Skew, "the skew symmetric 3x3 matrix of a 3D vector, which gives the cross product: Skew(a) @ b = a x b; for a vector of 3n components the n skew matrices one below the other (3n x 3); for a matrix of 3n rows and m columns the skew matrices of its columns side by side (3n x 3m), as needed for the floating frame of reference formulation; computed by Skew of PyCUtilities.h of the C++ code", py::arg("vector"));
-        m.def("Skew2Vec", &PyCUtilities::Skew2Vec, "the vector of a skew symmetric 3x3 matrix; for a 4x4 matrix of the Lie algebra se(3) the 6 values [u, w], u the translational part (last column) and w the vector of the skew part; computed by Skew2Vec of PyCUtilities.h of the C++ code", py::arg("skew"));
-        m.def("EulerParameters2G", &PyCUtilities::EulerParameters2G, "the 3x4 matrix G of Euler parameters, $\tomega = \Gm \dot \pv$ with the global angular velocity; computed by RigidBodyMath::EP2G of the C++ code", py::arg("eulerParameters"));
-        m.def("EulerParameters2GLocal", &PyCUtilities::EulerParameters2GLocal, "the 3x4 matrix G of Euler parameters for the local (body-fixed) angular velocity, $\LU{b}{\tomega} = \LU{b}{\Gm} \dot \pv$; computed by RigidBodyMath::EP2Glocal of the C++ code", py::arg("eulerParameters"));
-        m.def("EulerParameters2RotationMatrix", &PyCUtilities::EulerParameters2RotationMatrix, "the rotation matrix of 4 Euler parameters; computed by RigidBodyMath::EP2RotationMatrix of the C++ code", py::arg("eulerParameters"));
-        m.def("RotationMatrix2EulerParameters", &PyCUtilities::RotationMatrix2EulerParameters, "the 4 Euler parameters of a rotation matrix, normalized, so that an inaccurate rotation matrix gives unit Euler parameters; computed by RigidBodyMath::RotationMatrix2EP of the C++ code", py::arg("rotationMatrix"));
-        m.def("AngularVelocity2EulerParameters_t", &PyCUtilities::AngularVelocity2EulerParameters_t, "the time derivative of the Euler parameters from the global angular velocity, $\dot \pv = \frac{1}{4}\Gm\tp \tomega$, for unit Euler parameters; computed by RigidBodyMath::EP2G of the C++ code", py::arg("angularVelocity"), py::arg("eulerParameters"));
-        m.def("RotationVector2RotationMatrix", &PyCUtilities::RotationVector2RotationMatrix, "the rotation matrix of a rotation vector, the same as NodeRigidBodyRotVecLG computes; computed by RigidBodyMath::RotationVector2RotationMatrix of the C++ code", py::arg("rotationVector"));
-        m.def("RotationMatrix2RotationVector", &PyCUtilities::RotationMatrix2RotationVector, "the rotation vector of a rotation matrix, with an angle in [0, pi]; computed by EXUlie::LogSO3Vector of the C++ code", py::arg("rotationMatrix"));
-        m.def("ComputeRotationAxisFromRotationVector", &PyCUtilities::ComputeRotationAxisFromRotationVector, "the unit rotation axis of a rotation vector; zero for the zero vector; computed by EXUlie::RotationVector2RotationAxis of the C++ code", py::arg("rotationVector"));
-        m.def("ExpSO3", &PyCUtilities::ExpSO3, "the exponential map of the Lie group SO(3): the rotation matrix of a rotation vector, computed with the sinc function; computed by EXUlie::ExpSO3 of the C++ code", py::arg("rotationVector"));
-        m.def("LogSO3", &PyCUtilities::LogSO3, "the logarithmic map of the Lie group SO(3): the skew symmetric matrix of the rotation vector of a rotation matrix; computed by EXUlie::LogSO3 of the C++ code", py::arg("rotationMatrix"));
-        m.def("RotXYZ2RotationMatrix", &PyCUtilities::RotXYZ2RotationMatrix, "the rotation matrix of the Tait-Bryan angles rot = [rotX, rotY, rotZ] (in radians), A = Ax*Ay*Az; computed by RigidBodyMath::RotXYZ2RotationMatrix of the C++ code", py::arg("rot"));
-        m.def("RotationMatrix2RotXYZ", &PyCUtilities::RotationMatrix2RotXYZ, "the Tait-Bryan angles [rotX, rotY, rotZ] of a rotation matrix; at the singularity rotY = pi/2, -pi/2, ... rotX is set 0; computed by RigidBodyMath::RotationMatrix2RotXYZ of the C++ code", py::arg("rotationMatrix"));
-        m.def("RotXYZ2G", &PyCUtilities::RotXYZ2G, "the 3x3 matrix G of Tait-Bryan angles, $\LU{0}{\tomega} = \Gm \dot \ttheta$ with the global angular velocity; computed by RigidBodyMath::RotXYZ2GTemplate of the C++ code", py::arg("rot"));
-        m.def("RotXYZ2G_t", &PyCUtilities::RotXYZ2G_t, "the time derivative of RotXYZ2G, for the angles rot and their time derivatives rot_t; computed by RigidBodyMath::RotXYZ2G_tTemplate of the C++ code", py::arg("rot"), py::arg("rot_t"));
-        m.def("RotXYZ2GLocal", &PyCUtilities::RotXYZ2GLocal, "the 3x3 matrix G of Tait-Bryan angles for the local (body-fixed) angular velocity, $\LU{b}{\tomega} = \LU{b}{\Gm} \dot \ttheta$; computed by RigidBodyMath::RotXYZ2GlocalTemplate of the C++ code", py::arg("rot"));
-        m.def("RotXYZ2GLocal_t", &PyCUtilities::RotXYZ2GLocal_t, "the time derivative of RotXYZ2GLocal, for the angles rot and their time derivatives rot_t; computed by RigidBodyMath::RotXYZ2Glocal_tTemplate of the C++ code", py::arg("rot"), py::arg("rot_t"));
-        m.def("AngularVelocity2RotXYZ_t", &PyCUtilities::AngularVelocity2RotXYZ_t, "the time derivative of the Tait-Bryan angles rotation from the global angular velocity; a ValueError at the singularity, |cos(rotation[1])| < 1e-14; computed by RigidBodyMath::AngularVelocity2RotXYZ_t of the C++ code", py::arg("angularVelocity"), py::arg("rotation"));
-        m.def("RotXYZ2EulerParameters", &PyCUtilities::RotXYZ2EulerParameters, "the 4 Euler parameters of the Tait-Bryan angles alpha, see [CITE:Henderson1977]; entry 0 is the scalar part; computed by RigidBodyMath::RotXYZ2EP of the C++ code", py::arg("alpha"));
-        m.def("RotationMatrix2RotZYZ", &PyCUtilities::RotationMatrix2RotZYZ, "the Euler angles [Z, Y, Z] (in radians) of a rotation matrix, A = Az*Ay*Az; flip chooses the first angle in quadrant 2 or 3; computed by RigidBodyMath::RotationMatrix2RotZYZ of the C++ code", py::arg("rotationMatrix"), py::arg("flip") = false);
-        m.def("RotationMatrixX", &PyCUtilities::RotationMatrixX, "the rotation matrix of a rotation by angleRad (in radians) about the x-axis; computed by RigidBodyMath::RotationMatrixX of the C++ code", py::arg("angleRad"));
-        m.def("RotationMatrixY", &PyCUtilities::RotationMatrixY, "the rotation matrix of a rotation by angleRad (in radians) about the y-axis; computed by RigidBodyMath::RotationMatrixY of the C++ code", py::arg("angleRad"));
-        m.def("RotationMatrixZ", &PyCUtilities::RotationMatrixZ, "the rotation matrix of a rotation by angleRad (in radians) about the z-axis; computed by RigidBodyMath::RotationMatrixZ of the C++ code", py::arg("angleRad"));
-        m.def("RotationMatrix2D", &PyCUtilities::RotationMatrix2D, "the 2x2 rotation matrix of a rotation by angleRad (in radians) in the plane; computed by RotationMatrix2D of PyCUtilities.h of the C++ code", py::arg("angleRad"));
-        }
-        }
 
     py::class_<PyGeneralContact>(m, "GeneralContact")
         .def(py::init(&PyGeneralContact::ForbidConstructor))
@@ -578,19 +578,19 @@
         .def_property("translation", &PyHT::GetTranslationPy, &PyHT::SetTranslationPy)
         .def("Get", &PyHT::GetPy, "[rotation, translation] as numpy arrays")
         .def("Set", [](PyHT& item, const py::object& rotation, const py::object& translation, const py::object& eulerParameters, const py::object& Rxyz, const py::object& rotationVector) -> PyHT& {
-            item.SetPy(rotation, translation, eulerParameters, Rxyz, rotationVector); return item; }, "set the parts given, a part that is None stays: the rotation from at most one of a 3x3 matrix, Euler parameters, Tait-Bryan angles Rxyz and a rotation vector, and the translation; returns the HT", py::return_value_policy::reference_internal, py::arg("rotation") = py::none(), py::arg("translation") = py::none(), py::arg("eulerParameters") = py::none(), py::arg("Rxyz") = py::none(), py::arg("rotationVector") = py::none())
+            item.SetPy(rotation, translation, eulerParameters, Rxyz, rotationVector); return item; }, "set the parts given, a part that is None stays: the rotation from at most one of a 3x3 matrix, Euler parameters, Tait-Bryan angles Rxyz and a rotation vector, and the translation; returns the HT (`returns a reference`)", py::return_value_policy::reference_internal, py::arg("rotation") = py::none(), py::arg("translation") = py::none(), py::arg("eulerParameters") = py::none(), py::arg("Rxyz") = py::none(), py::arg("rotationVector") = py::none())
         .def("SetIdentity", [](PyHT& item) -> PyHT& {
-            item.SetIdentity(); return item; }, "set the identity: unit rotation, zero translation; returns the HT", py::return_value_policy::reference_internal)
+            item.SetIdentity(); return item; }, "set the identity: unit rotation, zero translation; returns the HT (`returns a reference`)", py::return_value_policy::reference_internal)
         .def("SetTranslation", [](PyHT& item, const py::object& translation) -> PyHT& {
-            item.SetTranslationOnlyPy(translation); return item; }, "set a translation and the unit rotation; returns the HT", py::return_value_policy::reference_internal, py::arg("translation"))
+            item.SetTranslationOnlyPy(translation); return item; }, "set a translation and the unit rotation; returns the HT (`returns a reference`)", py::return_value_policy::reference_internal, py::arg("translation"))
         .def("SetRotationX", [](PyHT& item, Real angle) -> PyHT& {
-            item.SetRotationX(angle); return item; }, "set a rotation about the x-axis by angle (in radians) and zero translation; returns the HT", py::return_value_policy::reference_internal, py::arg("angle"))
+            item.SetRotationX(angle); return item; }, "set a rotation about the x-axis by angle (in radians) and zero translation; returns the HT (`returns a reference`)", py::return_value_policy::reference_internal, py::arg("angle"))
         .def("SetRotationY", [](PyHT& item, Real angle) -> PyHT& {
-            item.SetRotationY(angle); return item; }, "set a rotation about the y-axis by angle (in radians) and zero translation; returns the HT", py::return_value_policy::reference_internal, py::arg("angle"))
+            item.SetRotationY(angle); return item; }, "set a rotation about the y-axis by angle (in radians) and zero translation; returns the HT (`returns a reference`)", py::return_value_policy::reference_internal, py::arg("angle"))
         .def("SetRotationZ", [](PyHT& item, Real angle) -> PyHT& {
-            item.SetRotationZ(angle); return item; }, "set a rotation about the z-axis by angle (in radians) and zero translation; returns the HT", py::return_value_policy::reference_internal, py::arg("angle"))
+            item.SetRotationZ(angle); return item; }, "set a rotation about the z-axis by angle (in radians) and zero translation; returns the HT (`returns a reference`)", py::return_value_policy::reference_internal, py::arg("angle"))
         .def("SetRotationAxis", [](PyHT& item, const py::object& axis, Real angle) -> PyHT& {
-            item.SetRotationAxisPy(axis, angle); return item; }, "set a rotation by angle (in radians) about axis, a 3D vector of any length but zero, and zero translation; returns the HT", py::return_value_policy::reference_internal, py::arg("axis"), py::arg("angle"))
+            item.SetRotationAxisPy(axis, angle); return item; }, "set a rotation by angle (in radians) about axis, a 3D vector of any length but zero, and zero translation; returns the HT (`returns a reference`)", py::return_value_policy::reference_internal, py::arg("axis"), py::arg("angle"))
         .def("GetEP", &PyHT::GetEPPy, "the rotation as the 4 Euler parameters [ep0,ep1,ep2,ep3], the rotation parameters of NodeRigidBodyEP, a numpy array")
         .def("GetRxyz", &PyHT::GetRxyzPy, "the rotation as the 3 Tait-Bryan angles [rotX,rotY,rotZ] (rotation about x, then y, then z), the rotation parameters of NodeRigidBodyRxyz, a numpy array")
         .def("GetRotationVector", &PyHT::GetRotationVectorPy, "the rotation as rotation vector (axis times angle), the rotation parameters of NodeRigidBodyRotVecLG, a numpy array")
@@ -598,11 +598,11 @@
         .def("GetCoordinatesRxyz", &PyHT::GetCoordinatesRxyzPy, "the 6 coordinates of NodeRigidBodyRxyz: the translation and the Tait-Bryan angles, a numpy array")
         .def("GetCoordinatesRotationVector", &PyHT::GetCoordinatesRotationVectorPy, "the 6 coordinates of NodeRigidBodyRotVecLG: the translation and the rotation vector, a numpy array")
         .def("SetCoordinatesEP", [](PyHT& item, const py::object& coordinates) -> PyHT& {
-            item.SetCoordinatesPy(coordinates, 0); return item; }, "set from the 7 coordinates of NodeRigidBodyEP, translation and Euler parameters, as given by GetCoordinates... or by a node; returns the HT", py::return_value_policy::reference_internal, py::arg("coordinates"))
+            item.SetCoordinatesPy(coordinates, 0); return item; }, "set from the 7 coordinates of NodeRigidBodyEP, translation and Euler parameters, as given by GetCoordinates... or by a node; returns the HT (`returns a reference`)", py::return_value_policy::reference_internal, py::arg("coordinates"))
         .def("SetCoordinatesRxyz", [](PyHT& item, const py::object& coordinates) -> PyHT& {
-            item.SetCoordinatesPy(coordinates, 1); return item; }, "set from the 6 coordinates of NodeRigidBodyRxyz, translation and Tait-Bryan angles, as given by GetCoordinates... or by a node; returns the HT", py::return_value_policy::reference_internal, py::arg("coordinates"))
+            item.SetCoordinatesPy(coordinates, 1); return item; }, "set from the 6 coordinates of NodeRigidBodyRxyz, translation and Tait-Bryan angles, as given by GetCoordinates... or by a node; returns the HT (`returns a reference`)", py::return_value_policy::reference_internal, py::arg("coordinates"))
         .def("SetCoordinatesRotationVector", [](PyHT& item, const py::object& coordinates) -> PyHT& {
-            item.SetCoordinatesPy(coordinates, 2); return item; }, "set from the 6 coordinates of NodeRigidBodyRotVecLG, translation and rotation vector, as given by GetCoordinates... or by a node; returns the HT", py::return_value_policy::reference_internal, py::arg("coordinates"))
+            item.SetCoordinatesPy(coordinates, 2); return item; }, "set from the 6 coordinates of NodeRigidBodyRotVecLG, translation and rotation vector, as given by GetCoordinates... or by a node; returns the HT (`returns a reference`)", py::return_value_policy::reference_internal, py::arg("coordinates"))
         .def("RotationAngle", &PyHT::RotationAnglePy, "the angle of the rotation in radians, 0 to pi: the length of the rotation vector")
         .def("RotationAxis", &PyHT::RotationAxisPy, "the unit axis of the rotation, from the rotation vector; for no rotation an error, or [0,0,0] if raiseError=False", py::arg("raiseError") = true)
         .def("Relative", &PyHT::Relative, "the frame of other seen from this one, H.Inverse()*other, without computing the inverse: what a joint computes between the frames of its two markers", py::arg("other"))
@@ -610,10 +610,10 @@
         .def("InterpolateSE3", &PyHT::InterpolateSE3, "the transformation between this one (factor=0) and other (factor=1) on SE(3): a screw motion, in which translation and rotation are coupled, as a rigid body moves with constant twist", py::arg("other"), py::arg("factor"))
         .def("LogSE3", &PyHT::LogSE3Py, "the logarithm on SE(3): the motion vector [U, Omega], 6 components as numpy array, from which SetExpSE3 gives this HT back; Omega is the rotation vector, U the translation in the coordinates of the screw motion")
         .def("SetExpSE3", [](PyHT& item, const py::object& vector) -> PyHT& {
-            item.SetExpSE3Py(vector); return item; }, "set from the exponential map on SE(3) of the motion vector [U, Omega], 6 components: the screw motion of constant twist; returns the HT", py::return_value_policy::reference_internal, py::arg("vector"))
+            item.SetExpSE3Py(vector); return item; }, "set from the exponential map on SE(3) of the motion vector [U, Omega], 6 components: the screw motion of constant twist; returns the HT (`returns a reference`)", py::return_value_policy::reference_internal, py::arg("vector"))
         .def("LogR3xSO3", &PyHT::LogR3xSO3Py, "the logarithm on R3xSO(3): the translation and the rotation vector, each on its own, 6 components as numpy array - the same numbers as GetCoordinatesRotationVector()")
         .def("SetExpR3xSO3", [](PyHT& item, const py::object& vector) -> PyHT& {
-            item.SetExpR3xSO3Py(vector); return item; }, "set from the exponential map on R3xSO(3) of [U, Omega], 6 components: the translation U and the rotation of the rotation vector Omega, each on its own; returns the HT", py::return_value_policy::reference_internal, py::arg("vector"))
+            item.SetExpR3xSO3Py(vector); return item; }, "set from the exponential map on R3xSO(3) of [U, Omega], 6 components: the translation U and the rotation of the rotation vector Omega, each on its own; returns the HT (`returns a reference`)", py::return_value_policy::reference_internal, py::arg("vector"))
         .def("HT44", &PyHT::GetHT44Py, "the 4x4 matrix [A p; 0 1] as numpy array")
         .def("Inverse", &PyHT::GetInversePy, "the inverse transformation [A^T, -A^T p], an HT")
         .def("Invert", &PyHT::Invert, "invert the transformation in place")

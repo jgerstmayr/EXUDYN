@@ -22,6 +22,7 @@ The parameters of the item; in a dictionary, its type is 'NodeODE1Coordinate':
 | **name** | String |  | '' | marker's unique name |
 | **nodeNumber** | NodeIndex |  | invalid (-1) | node number to which marker is attached to |
 | **coordinate** | UInt |  | invalid (-1) | coordinate of node to which marker is attached to; **must be given**: the default is only a placeholder |
+| **includeReferenceCoordinate** | bool |  | False | if True, the value of the marker is the coordinate plus its reference value, e.g. the absolute position of a NodePoint coordinate, as for the coordinate of a NodePointGround; if False, the coordinate alone, as the displacement of a NodePoint; the velocity and the Jacobian are the same in both cases (#990) |
 | **visualization** | VMarkerNodeODE1Coordinate |  |  | parameters for visualization of item |
 
 ## Visualization parameters
@@ -39,6 +40,7 @@ The item draws nothing.
 | quantity | symbol | as computed |
 |---|---|---|
 | coordinate | $c = y_i$ | the **current** {ref}`ODE1 <ODE1>` coordinate `coordinate` $= i$ of the node |
+| | $c = y\cRef_i + y_i$ | with `includeReferenceCoordinate = True`: the coordinate **including** its reference value |
 
 There is no velocity: an {ref}`ODE1 <ODE1>` coordinate has no time derivative of its own in the solver.
 

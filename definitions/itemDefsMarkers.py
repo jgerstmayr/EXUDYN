@@ -538,16 +538,17 @@ definitions.append(ItemDefinition(
 
     | quantity | symbol | as computed |
     |---|---|---|
-    | coordinate | $c = q_i$ | the **current** ABRV:ODE2 coordinate `coordinate` $= i$ of the node, **without** its reference value |
+    | coordinate | $c = q_i$ | the **current** ABRV:ODE2 coordinate `coordinate` $= i$ of the node, **without** its reference value (default) |
+    | | $c = q\cRef_i + q_i$ | with `includeReferenceCoordinate = True`: the coordinate **including** its reference value |
     | its velocity | $\dot c = \dot q_i$ | the time derivative of that coordinate |
 
     #### Jacobians
 
     $\Jm = \ev_i\tp$, a row of the unit matrix: a force $f$ acts on coordinate $i$ only, $Q_i = f$.
 
-    On a node without ABRV:ODE2 coordinates - `NodePointGround` - the coordinate is zero and the
-    Jacobian empty, so nothing acts: this is the ground side of a `CoordinateSpringDamper` or a
-    `CoordinateConstraint`.
+    On a node without ABRV:ODE2 coordinates - `NodePointGround` - the coordinate is zero, or its reference
+    coordinate with `includeReferenceCoordinate = True`, and the Jacobian empty, so nothing acts: this is the ground
+    side of a `CoordinateSpringDamper` or a `CoordinateConstraint`.
     """,
     mainParentClass=MainParentClassMainMarker,
     visuParentClass=VisuParentClassVisualizationMarker,
@@ -564,6 +565,10 @@ definitions.append(ItemDefinition(
             pythonName='coordinate',
             defaultValue=DVInvalidIndex,
             description=r'coordinate of node to which marker is attached to'),
+        ItemParameter(type=Tbool, destination=DestComp+DestParam,
+            pythonName='includeReferenceCoordinate',
+            defaultValue=False,
+            description=r'if True, the value of the marker is the coordinate plus its reference value, e.g. the absolute position of a NodePoint coordinate, as for the coordinate of a NodePointGround; if False, the coordinate alone, as the displacement of a NodePoint; the velocity and the Jacobian are the same in both cases (#990)'),
         ItemFunctionDef('GetNodeNumber',
             implementation='return parameters.nodeNumber;'),
         ItemFunctionDef('SetNodeNumber',
@@ -696,6 +701,7 @@ definitions.append(ItemDefinition(
     | quantity | symbol | as computed |
     |---|---|---|
     | coordinate | $c = y_i$ | the **current** ABRV:ODE1 coordinate `coordinate` $= i$ of the node |
+    | | $c = y\cRef_i + y_i$ | with `includeReferenceCoordinate = True`: the coordinate **including** its reference value |
 
     There is no velocity: an ABRV:ODE1 coordinate has no time derivative of its own in the solver.
 
@@ -719,6 +725,10 @@ definitions.append(ItemDefinition(
             pythonName='coordinate',
             defaultValue=DVInvalidIndex,
             description=r'coordinate of node to which marker is attached to'),
+        ItemParameter(type=Tbool, destination=DestComp+DestParam,
+            pythonName='includeReferenceCoordinate',
+            defaultValue=False,
+            description=r'if True, the value of the marker is the coordinate plus its reference value, e.g. the absolute position of a NodePoint coordinate, as for the coordinate of a NodePointGround; if False, the coordinate alone, as the displacement of a NodePoint; the velocity and the Jacobian are the same in both cases (#990)'),
         ItemFunctionDef('GetNodeNumber',
             implementation='return parameters.nodeNumber;'),
         ItemFunctionDef('SetNodeNumber',

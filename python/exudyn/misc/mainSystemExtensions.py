@@ -1850,7 +1850,9 @@ def MainSystemCreateCoordinateConstraint(mbs, name='',
                                         velocityLevel = False,
                                         offsetUserFunction = 0,
                                         offsetUserFunction_t = 0,
-                                        show=True, drawSize=-1., color=exudyn.graphics.color.default, factorValue1=None, bodyNumbers=None, bodyOrNodeList=None) -> exudyn.ObjectIndex:
+                                        show=True, drawSize=-1., color=exudyn.graphics.color.default,
+                                        includeReferenceCoordinates=[False, False],
+                                        factorValue1=None, bodyNumbers=None, bodyOrNodeList=None) -> exudyn.ObjectIndex:
     """Create coordinate constraint between two bodies or nodes, or one of them and the ground; markers and NodePointGround are automatically created when needed
 
     Args:
@@ -1866,6 +1868,8 @@ def MainSystemCreateCoordinateConstraint(mbs, name='',
         show: if True, connector visualization is drawn
         drawSize: general drawing size of node
         color: color of connector
+        includeReferenceCoordinates: a list of two bools, one per item: True constrains the coordinate including its
+            reference value, e.g. the absolute position instead of the displacement (MarkerNodeCoordinate, #990)
         factorValue1: deprecated name of factor1
         bodyNumbers: deprecated name of itemNumbers
         bodyOrNodeList: not accepted, a TypeError: the items are given in itemNumbers
@@ -1919,6 +1923,10 @@ def MainSystemCreateCoordinateConstraint(mbs, name='',
             RaiseTypeError(where=where, argumentName='drawSize', received = drawSize, expectedType = ExpectedType.Real)
         if not IsVector(color, 4):
             RaiseTypeError(where=where, argumentName='color', received = color, expectedType = ExpectedType.Vector, dim=4)
+        if (not isinstance(includeReferenceCoordinates, (list, tuple)) or len(includeReferenceCoordinates) != 2
+                or not all(IsValidBool(flag) for flag in includeReferenceCoordinates)):
+            RaiseTypeError(where=where, argumentName='includeReferenceCoordinates', received = includeReferenceCoordinates,
+                           expectedType = 'list of 2 bools')
 
     errStr = 'ERROR in ' + where + ': '
     kinds = ['ground' if item is None else ItemKind(item) for item in itemNumbers]
@@ -1933,7 +1941,8 @@ def MainSystemCreateCoordinateConstraint(mbs, name='',
         coordinate = coordinates[i]
         if kind == 'ground':
             nPointGround = mbs.AddNode(eii.NodePointGround(visualization=eii.VNodePointGround(show=False)))
-            markerNumbers[i] = mbs.AddMarker(eii.MarkerNodeCoordinate(name=markerName, nodeNumber=nPointGround, coordinate=0))
+            markerNumbers[i] = mbs.AddMarker(eii.MarkerNodeCoordinate(name=markerName, nodeNumber=nPointGround, coordinate=0,
+                                                                      includeReferenceCoordinate=bool(includeReferenceCoordinates[i])))
             continue
 
         if not IsInteger(coordinate):
@@ -1952,7 +1961,8 @@ def MainSystemCreateCoordinateConstraint(mbs, name='',
                 nodeCoordinate -= numberOfCoordinates
             if node is None:
                 raise ValueError(errStr+f'itemNumbers[{i}] = {item}: the body has no coordinate {coordinate}')
-        markerNumbers[i] = mbs.AddMarker(eii.MarkerNodeCoordinate(name=markerName, nodeNumber=node, coordinate=nodeCoordinate))
+        markerNumbers[i] = mbs.AddMarker(eii.MarkerNodeCoordinate(name=markerName, nodeNumber=node, coordinate=nodeCoordinate,
+                                                                  includeReferenceCoordinate=bool(includeReferenceCoordinates[i])))
 
     #now we should have two markers
     oJoint = mbs.AddObject(eii.ObjectConnectorCoordinate( name=name,

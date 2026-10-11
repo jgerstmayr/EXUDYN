@@ -8,10 +8,10 @@ Every entry carries the **type** of the issue, then its **priority** and its **e
 
 General information on current version:
 
-- Exudyn version = 1.13.56.dev1
+- Exudyn version = 1.13.59.dev1
 - last change = 2026-10-11
-- Number of issues = 2968
-- Number of resolved issues = 2833 (56 in current version)
+- Number of issues = 2969
+- Number of resolved issues = 2836 (59 in current version)
 
 ## Resolved issues and resolved bugs before version 1.13
 
@@ -9381,10 +9381,6 @@ The following list contains the issues which have been **RESOLVED** in the accor
   - description: add BeamSectionGeometry to 2D beam elements
   - **remarks:** kept open as an idea, no plan step (triage 2026-10-07, revision2026b group RG18)
   - date raised: 2022-05-09
-- `EXTENSION` <span class="textred">`HIGH`</span> `LOW EFF` Reference and copy (#1061)
-  - description: add information to theDoc regarding copying and referencing objects, such as mbs, GetObject(...), etc.; add info into description C/R into generatePyBindings?
-  - **remarks:** planned as revision2026b step RG18.1 (triage 2026-10-07)
-  - date raised: 2022-04-30
 - `EXTENSION` `MEDIUM EFF` ObjectConnectorCoordinateVector (#1032)
   - description: cleanup, consider better UF and check implementation with theory (jac?)
   - **remarks:** kept open as an idea, no plan step (triage 2026-10-07, revision2026b group RG18)
@@ -9393,10 +9389,6 @@ The following list contains the issues which have been **RESOLVED** in the accor
   - description: Test improved contact integration method with resolution of switching and correction of integration of discontinuous forces; compare to switching point resolution
   - **remarks:** kept open as an idea, no plan step (triage 2026-10-07, revision2026b group RG18)
   - date raised: 2022-03-26
-- `EXTENSION` <span class="textred">`HIGH`</span> `LOW EFF` MarkerNodeCoordinate (#990)
-  - description: add option addReferenceCoordinates=False to include reference value in coordinate
-  - **remarks:** planned as revision2026b step RG18.1 (triage 2026-10-07)
-  - date raised: 2022-03-16
 - `EXTENSION` `MEDIUM EFF` ComputeConstraintJacobianDerivative (#988)
   - description: make sparse version similar to numerically differentiated single objects in JacobianODE2RHS
   - **remarks:** kept open as an idea, no plan step (triage 2026-10-07, revision2026b group RG18)

@@ -201,31 +201,31 @@ The class **HT** has the following **functions and structures**:
 - **`rotation`**: the 3x3 rotation matrix as numpy array; setting it keeps the translation
 - **`translation`**: the translation as numpy array; setting it keeps the rotation
 - **`Get()`**: [rotation, translation] as numpy arrays
-- **`Set(rotation = None, translation = None, eulerParameters = None, Rxyz = None, rotationVector = None)`**: set the parts given, a part that is None stays: the rotation from at most one of a 3x3 matrix, Euler parameters, Tait-Bryan angles Rxyz and a rotation vector, and the translation; returns the HT
-- **`SetIdentity()`**: set the identity: unit rotation, zero translation; returns the HT
-- **`SetTranslation(translation)`**: set a translation and the unit rotation; returns the HT
-- **`SetRotationX(angle)`**: set a rotation about the x-axis by angle (in radians) and zero translation; returns the HT
-- **`SetRotationY(angle)`**: set a rotation about the y-axis by angle (in radians) and zero translation; returns the HT
-- **`SetRotationZ(angle)`**: set a rotation about the z-axis by angle (in radians) and zero translation; returns the HT
-- **`SetRotationAxis(axis, angle)`**: set a rotation by angle (in radians) about axis, a 3D vector of any length but zero, and zero translation; returns the HT
+- **`Set(rotation = None, translation = None, eulerParameters = None, Rxyz = None, rotationVector = None)`**: set the parts given, a part that is None stays: the rotation from at most one of a 3x3 matrix, Euler parameters, Tait-Bryan angles Rxyz and a rotation vector, and the translation; returns the HT (`returns a reference`)
+- **`SetIdentity()`**: set the identity: unit rotation, zero translation; returns the HT (`returns a reference`)
+- **`SetTranslation(translation)`**: set a translation and the unit rotation; returns the HT (`returns a reference`)
+- **`SetRotationX(angle)`**: set a rotation about the x-axis by angle (in radians) and zero translation; returns the HT (`returns a reference`)
+- **`SetRotationY(angle)`**: set a rotation about the y-axis by angle (in radians) and zero translation; returns the HT (`returns a reference`)
+- **`SetRotationZ(angle)`**: set a rotation about the z-axis by angle (in radians) and zero translation; returns the HT (`returns a reference`)
+- **`SetRotationAxis(axis, angle)`**: set a rotation by angle (in radians) about axis, a 3D vector of any length but zero, and zero translation; returns the HT (`returns a reference`)
 - **`GetEP()`**: the rotation as the 4 Euler parameters [ep0,ep1,ep2,ep3], the rotation parameters of NodeRigidBodyEP, a numpy array
 - **`GetRxyz()`**: the rotation as the 3 Tait-Bryan angles [rotX,rotY,rotZ] (rotation about x, then y, then z), the rotation parameters of NodeRigidBodyRxyz, a numpy array
 - **`GetRotationVector()`**: the rotation as rotation vector (axis times angle), the rotation parameters of NodeRigidBodyRotVecLG, a numpy array
 - **`GetCoordinatesEP()`**: the 7 coordinates of NodeRigidBodyEP: the translation and the Euler parameters, e.g. for referenceCoordinates, a numpy array
 - **`GetCoordinatesRxyz()`**: the 6 coordinates of NodeRigidBodyRxyz: the translation and the Tait-Bryan angles, a numpy array
 - **`GetCoordinatesRotationVector()`**: the 6 coordinates of NodeRigidBodyRotVecLG: the translation and the rotation vector, a numpy array
-- **`SetCoordinatesEP(coordinates)`**: set from the 7 coordinates of NodeRigidBodyEP, translation and Euler parameters, as given by GetCoordinates... or by a node; returns the HT
-- **`SetCoordinatesRxyz(coordinates)`**: set from the 6 coordinates of NodeRigidBodyRxyz, translation and Tait-Bryan angles, as given by GetCoordinates... or by a node; returns the HT
-- **`SetCoordinatesRotationVector(coordinates)`**: set from the 6 coordinates of NodeRigidBodyRotVecLG, translation and rotation vector, as given by GetCoordinates... or by a node; returns the HT
+- **`SetCoordinatesEP(coordinates)`**: set from the 7 coordinates of NodeRigidBodyEP, translation and Euler parameters, as given by GetCoordinates... or by a node; returns the HT (`returns a reference`)
+- **`SetCoordinatesRxyz(coordinates)`**: set from the 6 coordinates of NodeRigidBodyRxyz, translation and Tait-Bryan angles, as given by GetCoordinates... or by a node; returns the HT (`returns a reference`)
+- **`SetCoordinatesRotationVector(coordinates)`**: set from the 6 coordinates of NodeRigidBodyRotVecLG, translation and rotation vector, as given by GetCoordinates... or by a node; returns the HT (`returns a reference`)
 - **`RotationAngle()`**: the angle of the rotation in radians, 0 to pi: the length of the rotation vector
 - **`RotationAxis(raiseError = True)`**: the unit axis of the rotation, from the rotation vector; for no rotation an error, or [0,0,0] if raiseError=False
 - **`Relative(other)`**: the frame of other seen from this one, H.Inverse()*other, without computing the inverse: what a joint computes between the frames of its two markers
 - **`InterpolateSO3(other, factor)`**: the transformation between this one (factor=0) and other (factor=1): the translation linear and the rotation on SO(3), about one fixed axis with the angle in proportion
 - **`InterpolateSE3(other, factor)`**: the transformation between this one (factor=0) and other (factor=1) on SE(3): a screw motion, in which translation and rotation are coupled, as a rigid body moves with constant twist
 - **`LogSE3()`**: the logarithm on SE(3): the motion vector [U, Omega], 6 components as numpy array, from which SetExpSE3 gives this HT back; Omega is the rotation vector, U the translation in the coordinates of the screw motion
-- **`SetExpSE3(vector)`**: set from the exponential map on SE(3) of the motion vector [U, Omega], 6 components: the screw motion of constant twist; returns the HT
+- **`SetExpSE3(vector)`**: set from the exponential map on SE(3) of the motion vector [U, Omega], 6 components: the screw motion of constant twist; returns the HT (`returns a reference`)
 - **`LogR3xSO3()`**: the logarithm on R3xSO(3): the translation and the rotation vector, each on its own, 6 components as numpy array - the same numbers as GetCoordinatesRotationVector()
-- **`SetExpR3xSO3(vector)`**: set from the exponential map on R3xSO(3) of [U, Omega], 6 components: the translation U and the rotation of the rotation vector Omega, each on its own; returns the HT
+- **`SetExpR3xSO3(vector)`**: set from the exponential map on R3xSO(3) of [U, Omega], 6 components: the translation U and the rotation of the rotation vector Omega, each on its own; returns the HT (`returns a reference`)
 - **`HT44()`**: the 4x4 matrix [A p; 0 1] as numpy array
 - **`Inverse()`**: the inverse transformation [A^T, -A^T p], an HT
 - **`Invert()`**: invert the transformation in place

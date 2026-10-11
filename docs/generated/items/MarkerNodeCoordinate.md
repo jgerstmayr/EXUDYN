@@ -22,6 +22,7 @@ The parameters of the item; in a dictionary, its type is 'NodeCoordinate':
 | **name** | String |  | '' | marker's unique name |
 | **nodeNumber** | NodeIndex |  | invalid (-1) | node number to which marker is attached to |
 | **coordinate** | UInt |  | invalid (-1) | coordinate of node to which marker is attached to; **must be given**: the default is only a placeholder |
+| **includeReferenceCoordinate** | bool |  | False | if True, the value of the marker is the coordinate plus its reference value, e.g. the absolute position of a NodePoint coordinate, as for the coordinate of a NodePointGround; if False, the coordinate alone, as the displacement of a NodePoint; the velocity and the Jacobian are the same in both cases (#990) |
 | **visualization** | VMarkerNodeCoordinate |  |  | parameters for visualization of item |
 
 ## Visualization parameters
@@ -38,16 +39,17 @@ The item draws nothing.
 
 | quantity | symbol | as computed |
 |---|---|---|
-| coordinate | $c = q_i$ | the **current** {ref}`ODE2 <ODE2>` coordinate `coordinate` $= i$ of the node, **without** its reference value |
+| coordinate | $c = q_i$ | the **current** {ref}`ODE2 <ODE2>` coordinate `coordinate` $= i$ of the node, **without** its reference value (default) |
+| | $c = q\cRef_i + q_i$ | with `includeReferenceCoordinate = True`: the coordinate **including** its reference value |
 | its velocity | $\dot c = \dot q_i$ | the time derivative of that coordinate |
 
 ### Jacobians
 
 $\Jm = \ev_i\tp$, a row of the unit matrix: a force $f$ acts on coordinate $i$ only, $Q_i = f$.
 
-On a node without {ref}`ODE2 <ODE2>` coordinates - `NodePointGround` - the coordinate is zero and the
-Jacobian empty, so nothing acts: this is the ground side of a `CoordinateSpringDamper` or a
-`CoordinateConstraint`.
+On a node without {ref}`ODE2 <ODE2>` coordinates - `NodePointGround` - the coordinate is zero, or its reference
+coordinate with `includeReferenceCoordinate = True`, and the Jacobian empty, so nothing acts: this is the ground
+side of a `CoordinateSpringDamper` or a `CoordinateConstraint`.
 
 (miniexample-markernodecoordinate)=
 ## Mini example
