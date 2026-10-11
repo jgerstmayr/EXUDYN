@@ -1,0 +1,14 @@
+{
+  "number": 2966,
+  "title": "Reproducible results: the revisions chapter, the landing page and a section 'Why own math in Exudyn?' of exudyn.cMath",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "DOCU",
+  "description": "Maintainer 2026-10-11: exudyn.cMath is mostly for tests and for people who want reproducible results on all platforms; a remark in the revisions chapter and a very short note on the landing page, both pointing to a short section of the cMath page that says why Exudyn has its own math functions. The examples stay as they are.",
+  "dateRaised": "2026-10-11",
+  "deadline": "2027-04-09",
+  "dateResolved": "2026-10-11 11:09",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "The cMath page says why Exudyn has its own math functions; the revisions chapter and the landing page point to it (revision2026c step RG11.10.10)",
+  "resolvedInVersion": "1.13.54"
+}

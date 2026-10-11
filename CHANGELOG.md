@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.13 | Newborn | 54 | 1.13.53 |
+| 1.13 | Newborn | 55 | 1.13.54 |
 | 1.12 | Metheney | 367 | 1.12.462 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
@@ -30,6 +30,10 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.13 - Newborn (current)
 
+- **1.13.54** `DOCU` `raised by: Claude-JG` `resolved by: Claude-JG` Reproducible results: the revisions chapter, the landing page and a section 'Why own math in Exudyn?' of exudyn.cMath (#2966)
+  - description: Maintainer 2026-10-11: exudyn.cMath is mostly for tests and for people who want reproducible results on all platforms; a remark in the revisions chapter and a very short note on the landing page, both pointing to a short section of the cMath page that says why Exudyn has its own math functions. The examples stay as they are.
+  - **notes:** The cMath page says why Exudyn has its own math functions; the revisions chapter and the landing page point to it (revision2026c step RG11.10.10)
+  - date resolved: **2026-10-11 11:09**, date raised: 2026-10-11
 - **1.13.53** `CHANGE` `raised by: Claude-JG` `resolved by: Claude-JG` A check that the Python library, test models and examples call no math function of math or numpy (#2964)
   - description: revision2026c step RG11.10.8: tools/checkPythonMath.py in exudev generate --all-checks refuses from math import sin..., math.sin(, np.sin(, ..., math.pow, np.power and \*\* with an exponent that is not a whole number (x\*\*0.5: the library's pow, differs per platform; use sqrt); whole exponents (x\*\*2) reported only until RG11.10.7 shows whether they move a result; sqrt, pi, fsum allowed; pytest as for checkMathFunctions.
   - **notes:** tools/checkPythonMath.py refuses math and numpy functions, np.linalg.norm(x) and non-integer powers in the Python library and the test models (revision2026c step RG11.10.8)

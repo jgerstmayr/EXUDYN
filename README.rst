@@ -48,11 +48,13 @@ workflows, documentation, tests and examples.
 .. the line below is written by tools/issueTracker/issueTracker.py; everything else in this
 .. file is hand-written (decision D11)
 
-+  Exudyn version = 1.13.53.dev1 (Newborn)
++  Exudyn version = 1.13.54.dev1 (Newborn)
 +  **University of Innsbruck**, Department of Mechatronics, Innsbruck, Austria
 
 .. |pic7| image:: docs/figures/ExudynLOGO1.9.jpg
    :width: 300
+
+**Reproducible results**: Exudyn computes ``sin``, ``exp``, ... with its own portable functions, so a model gives the same results on every platform; ``exudyn.cMath`` gives them to Python, see `why own math in Exudyn <https://exudyn.readthedocs.io/en/latest/docs/generated/cInterface/CMath.html#why-own-math-in-exudyn>`_.
 
 **Update on Exudyn V1.12**: a revision of the whole project - star imports now export only what a module defines (add ``import numpy as np`` and friends to older scripts), ``python -m exudyn info`` reports an installation, exceptions say what kind of problem they are, the documentation is Markdown and there is a ``CHANGELOG.md``; the wheels and the documentation are built by GitHub CI. The full list is in the `revisions chapter <https://exudyn.readthedocs.io/en/latest/docs/manual/revisions.html>`_.
 

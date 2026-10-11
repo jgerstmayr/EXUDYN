@@ -712,3 +712,7 @@ CLOSED 2026-10-11 (#2964): `tools/checkPythonMath.py` in `--all-checks`, also si
 #### **OPEN_RG11.10.9** Add the time derivatives of the Euler parameter functions to cUtilities, when wanted
 
 #2965. Decision D7: `EP2RotationMatrix_t`, `EP_t2G_t`, `EP_t2Glocal_t` exist in C++ only; not now.
+
+#### **CLOSED_RG11.10.10** Say in the revisions chapter and on the landing page why Exudyn has its own math functions
+
+CLOSED 2026-10-11 (#2966, maintainer: cMath is for tests and for reproducible results; the examples stay as they are): a section 'Why own math in Exudyn?' on the cMath page, a remark in the revisions chapter, one line in README.rst.

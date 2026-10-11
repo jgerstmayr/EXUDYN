@@ -14,6 +14,19 @@ there are two of them, *revision2026* - finished, and what version 1.12 is - and
 [developer documentation](../dev/README.md), together with the standing information document
 that holds the measured facts and the decisions.
 
+(sec-revisions-after-1-13)=
+## After version 1.13
+
+**Reproducible results on every platform.** The C++ code computes `sin`, `exp`, `atan2`, ... with its own portable
+functions instead of those of the platform's library, which round some results differently; `exudyn.cMath` gives the
+same functions to Python, and the test models use it for their initial values. The test models give the same results
+on Windows and Linux to the last bit; models with contact or friction change slightly against 1.13. See
+{ref}`sec-exudyn-cmath-why` (#2954, #2959, #2963).
+
+**`exudyn.cUtilities`** computes the rotation and kinematics functions of `exudyn.rigidBodyUtilities` in C++, which
+calls it: `ComputeOrthonormalBasisVectors` and `GramSchmidt` return a 3x3 array of the vectors as rows (unpacked as
+before), and a wrong size or a singular input raises a `ValueError` (#2960, #2961).
+
 (sec-revisions-1-13)=
 (sec-revisions-1-12)=
 ## Version 1.13
