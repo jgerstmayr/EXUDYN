@@ -158,7 +158,7 @@ class ExpressionOperatorPlus: public ExpressionBase
 public:
 	ExpressionOperatorPlus(ExpressionBase* l, ExpressionBase* r) : ExpressionBase(), left(l), right(r) {}
 
-	virtual void Destroy()
+	virtual void Destroy() override
 	{
 		if (left) { left->DecreaseReferenceCounter(); if (left->ReferenceCounter() == 0) { left->Destroy(); delete left; deleteCount++; } }
 		if (right) { right->DecreaseReferenceCounter(); if (right->ReferenceCounter() == 0) { right->Destroy(); delete right; deleteCount++; } }
@@ -182,7 +182,7 @@ class ExpressionOperatorMinus: public ExpressionBase {
 public:
 	ExpressionOperatorMinus(ExpressionBase* l, ExpressionBase* r) : ExpressionBase(), left(l), right(r) {}
 
-	virtual void Destroy()
+	virtual void Destroy() override
 	{
 		if (left) { left->DecreaseReferenceCounter(); if (left->ReferenceCounter() == 0) { left->Destroy(); delete left; deleteCount++; } }
 		if (right) { right->DecreaseReferenceCounter(); if (right->ReferenceCounter() == 0) { right->Destroy(); delete right; deleteCount++; } }
@@ -205,7 +205,7 @@ class ExpressionOperatorMul: public ExpressionBase
 public:
 	ExpressionOperatorMul(ExpressionBase* l, ExpressionBase* r) : ExpressionBase(), left(l), right(r) {}
 
-	virtual void Destroy()
+	virtual void Destroy() override
 	{
 		if (left) { left->DecreaseReferenceCounter(); if (left->ReferenceCounter() == 0) { left->Destroy(); delete left; deleteCount++; } }
 		if (right) { right->DecreaseReferenceCounter(); if (right->ReferenceCounter() == 0) { right->Destroy(); delete right; deleteCount++; } }
@@ -230,7 +230,7 @@ class ExpressionOperatorDiv: public ExpressionBase {
 public:
 	ExpressionOperatorDiv(ExpressionBase* l, ExpressionBase* r) : ExpressionBase(), left(l), right(r) {}
 
-	virtual void Destroy()
+	virtual void Destroy() override
 	{
 		if (left) { left->DecreaseReferenceCounter(); if (left->ReferenceCounter() == 0) { left->Destroy(); delete left; deleteCount++; } }
 		if (right) { right->DecreaseReferenceCounter(); if (right->ReferenceCounter() == 0) { right->Destroy(); delete right; deleteCount++; } }
@@ -264,7 +264,7 @@ class ExpressionOperatorEQ: public ExpressionBase {
 public:
 	ExpressionOperatorEQ(ExpressionBase* l, ExpressionBase* r) : ExpressionBase(), left(l), right(r) {}
 
-	virtual void Destroy()
+	virtual void Destroy() override
 	{
 		if (left) { left->DecreaseReferenceCounter(); if (left->ReferenceCounter() == 0) { left->Destroy(); delete left; deleteCount++; } }
 		if (right) { right->DecreaseReferenceCounter(); if (right->ReferenceCounter() == 0) { right->Destroy(); delete right; deleteCount++; } }
@@ -284,7 +284,7 @@ class ExpressionOperatorNEQ: public ExpressionBase {
 public:
 	ExpressionOperatorNEQ(ExpressionBase* l, ExpressionBase* r) : ExpressionBase(), left(l), right(r) {}
 
-	virtual void Destroy()
+	virtual void Destroy() override
 	{
 		if (left) { left->DecreaseReferenceCounter(); if (left->ReferenceCounter() == 0) { left->Destroy(); delete left; deleteCount++; } }
 		if (right) { right->DecreaseReferenceCounter(); if (right->ReferenceCounter() == 0) { right->Destroy(); delete right; deleteCount++; } }
@@ -304,7 +304,7 @@ class ExpressionOperatorGT: public ExpressionBase {
 public:
 	ExpressionOperatorGT(ExpressionBase* l, ExpressionBase* r) : ExpressionBase(), left(l), right(r) {}
 
-	virtual void Destroy()
+	virtual void Destroy() override
 	{
 		if (left) { left->DecreaseReferenceCounter(); if (left->ReferenceCounter() == 0) { left->Destroy(); delete left; deleteCount++; } }
 		if (right) { right->DecreaseReferenceCounter(); if (right->ReferenceCounter() == 0) { right->Destroy(); delete right; deleteCount++; } }
@@ -324,7 +324,7 @@ class ExpressionOperatorGE: public ExpressionBase {
 public:
 	ExpressionOperatorGE(ExpressionBase* l, ExpressionBase* r) : ExpressionBase(), left(l), right(r) {}
 
-	virtual void Destroy()
+	virtual void Destroy() override
 	{
 		if (left) { left->DecreaseReferenceCounter(); if (left->ReferenceCounter() == 0) { left->Destroy(); delete left; deleteCount++; } }
 		if (right) { right->DecreaseReferenceCounter(); if (right->ReferenceCounter() == 0) { right->Destroy(); delete right; deleteCount++; } }
@@ -344,7 +344,7 @@ class ExpressionOperatorLE: public ExpressionBase {
 public:
 	ExpressionOperatorLE(ExpressionBase* l, ExpressionBase* r) : ExpressionBase(), left(l), right(r) {}
 
-	virtual void Destroy()
+	virtual void Destroy() override
 	{
 		if (left) { left->DecreaseReferenceCounter(); if (left->ReferenceCounter() == 0) { left->Destroy(); delete left; deleteCount++; } }
 		if (right) { right->DecreaseReferenceCounter(); if (right->ReferenceCounter() == 0) { right->Destroy(); delete right; deleteCount++; } }
@@ -364,7 +364,7 @@ class ExpressionOperatorLT: public ExpressionBase {
 public:
 	ExpressionOperatorLT(ExpressionBase* l, ExpressionBase* r) : ExpressionBase(), left(l), right(r) {}
 
-	virtual void Destroy()
+	virtual void Destroy() override
 	{
 		if (left) { left->DecreaseReferenceCounter(); if (left->ReferenceCounter() == 0) { left->Destroy(); delete left; deleteCount++; } }
 		if (right) { right->DecreaseReferenceCounter(); if (right->ReferenceCounter() == 0) { right->Destroy(); delete right; deleteCount++; } }
@@ -386,7 +386,7 @@ class ExpressionUnaryPlus: public ExpressionBase {
 public:
 	ExpressionUnaryPlus(ExpressionBase* op) : ExpressionBase(), operand(op) {}
 
-	virtual void Destroy()
+	virtual void Destroy() override
 	{
 		if (operand) { operand->DecreaseReferenceCounter(); if (operand->ReferenceCounter() == 0) { operand->Destroy(); delete operand; deleteCount++; } }
 	}
@@ -406,7 +406,7 @@ class ExpressionUnaryMinus: public ExpressionBase {
 public:
 	ExpressionUnaryMinus(ExpressionBase* op) : ExpressionBase(), operand(op) {}
 
-	virtual void Destroy()
+	virtual void Destroy() override
 	{
 		if (operand) { operand->DecreaseReferenceCounter(); if (operand->ReferenceCounter() == 0) { operand->Destroy(); delete operand; deleteCount++; } }
 	}
@@ -431,7 +431,7 @@ class ExpressionIsFinite: public ExpressionBase
 public:
 	ExpressionIsFinite(ExpressionBase* op) : ExpressionBase(), operand(op) {}
 
-	virtual void Destroy() { if (operand) { operand->DecreaseReferenceCounter(); if (operand->ReferenceCounter() == 0) { operand->Destroy(); delete operand; deleteCount++; } } }
+	virtual void Destroy() override { if (operand) { operand->DecreaseReferenceCounter(); if (operand->ReferenceCounter() == 0) { operand->Destroy(); delete operand; deleteCount++; } } }
 
 	virtual Real Evaluate() const override { return std::isfinite(operand->Evaluate()); }
 	virtual Real Diff(ExpressionNamedReal* var) const override { CHECKandTHROWstring("Symbolic::isfinite::Diff(...): not possible"); return 0.; }
@@ -444,7 +444,7 @@ class ExpressionAbs: public ExpressionBase
 public:
 	ExpressionAbs(ExpressionBase* op) : ExpressionBase(), operand(op) {}
 
-	virtual void Destroy() { if (operand) { operand->DecreaseReferenceCounter(); if (operand->ReferenceCounter() == 0) { operand->Destroy(); delete operand; deleteCount++; } } }
+	virtual void Destroy() override { if (operand) { operand->DecreaseReferenceCounter(); if (operand->ReferenceCounter() == 0) { operand->Destroy(); delete operand; deleteCount++; } } }
 
 	virtual Real Evaluate() const override { return std::fabs(operand->Evaluate()); }
 	virtual Real Diff(ExpressionNamedReal* var) const override {
@@ -461,7 +461,7 @@ class ExpressionSign: public ExpressionBase
 public:
 	ExpressionSign(ExpressionBase* op) : ExpressionBase(), operand(op) {}
 
-	virtual void Destroy() { if (operand) { operand->DecreaseReferenceCounter(); if (operand->ReferenceCounter() == 0) { operand->Destroy(); delete operand; deleteCount++; } } }
+	virtual void Destroy() override { if (operand) { operand->DecreaseReferenceCounter(); if (operand->ReferenceCounter() == 0) { operand->Destroy(); delete operand; deleteCount++; } } }
 
 	virtual Real Evaluate() const override { return EXUstd::SignReal(operand->Evaluate()); }
 	virtual Real Diff(ExpressionNamedReal* var) const override { return 0.; }
@@ -475,7 +475,7 @@ class ExpressionNot : public ExpressionBase
 public:
 	ExpressionNot(ExpressionBase* op) : ExpressionBase(), operand(op) {}
 
-	virtual void Destroy() { if (operand) { operand->DecreaseReferenceCounter(); if (operand->ReferenceCounter() == 0) { operand->Destroy(); delete operand; deleteCount++; } } }
+	virtual void Destroy() override { if (operand) { operand->DecreaseReferenceCounter(); if (operand->ReferenceCounter() == 0) { operand->Destroy(); delete operand; deleteCount++; } } }
 
 	virtual Real Evaluate() const override { return !(operand->Evaluate()); }
 	virtual Real Diff(ExpressionNamedReal* var) const override { CHECKandTHROWstring("Symbolic::not::Diff(...): not possible"); return 0.; }
@@ -488,7 +488,7 @@ class ExpressionRound: public ExpressionBase
 public:
 	ExpressionRound(ExpressionBase* op) : ExpressionBase(), operand(op) {}
 
-	virtual void Destroy() { if (operand) { operand->DecreaseReferenceCounter(); if (operand->ReferenceCounter() == 0) { operand->Destroy(); delete operand; deleteCount++; } } }
+	virtual void Destroy() override { if (operand) { operand->DecreaseReferenceCounter(); if (operand->ReferenceCounter() == 0) { operand->Destroy(); delete operand; deleteCount++; } } }
 
 	virtual Real Evaluate() const override { return std::round(operand->Evaluate()); }
 	virtual Real Diff(ExpressionNamedReal* var) const override { CHECKandTHROWstring("Symbolic::round::Diff(...): not possible"); return 0.; }
@@ -501,7 +501,7 @@ class ExpressionCeil: public ExpressionBase
 public:
 	ExpressionCeil(ExpressionBase* op) : ExpressionBase(), operand(op) {}
 
-	virtual void Destroy() { if (operand) { operand->DecreaseReferenceCounter(); if (operand->ReferenceCounter() == 0) { operand->Destroy(); delete operand; deleteCount++; } } }
+	virtual void Destroy() override { if (operand) { operand->DecreaseReferenceCounter(); if (operand->ReferenceCounter() == 0) { operand->Destroy(); delete operand; deleteCount++; } } }
 
 	virtual Real Evaluate() const override { return std::ceil(operand->Evaluate()); }
 	virtual Real Diff(ExpressionNamedReal* var) const override { CHECKandTHROWstring("Symbolic::ceil::Diff(...): not possible"); return 0.; }
@@ -514,7 +514,7 @@ class ExpressionFloor: public ExpressionBase
 public:
 	ExpressionFloor(ExpressionBase* op) : ExpressionBase(), operand(op) {}
 
-	virtual void Destroy() { if (operand) { operand->DecreaseReferenceCounter(); if (operand->ReferenceCounter() == 0) { operand->Destroy(); delete operand; deleteCount++; } } }
+	virtual void Destroy() override { if (operand) { operand->DecreaseReferenceCounter(); if (operand->ReferenceCounter() == 0) { operand->Destroy(); delete operand; deleteCount++; } } }
 
 	virtual Real Evaluate() const override { return std::floor(operand->Evaluate()); }
 	virtual Real Diff(ExpressionNamedReal* var) const override { CHECKandTHROWstring("Symbolic::floor::Diff(...): not possible"); return 0.; }
@@ -529,7 +529,7 @@ class ExpressionSqrt: public ExpressionBase
 public:
 	ExpressionSqrt(ExpressionBase* op) : ExpressionBase(), operand(op) {}
 
-	virtual void Destroy() { if (operand) { operand->DecreaseReferenceCounter(); if (operand->ReferenceCounter() == 0) { operand->Destroy(); delete operand; deleteCount++; } } }
+	virtual void Destroy() override { if (operand) { operand->DecreaseReferenceCounter(); if (operand->ReferenceCounter() == 0) { operand->Destroy(); delete operand; deleteCount++; } } }
 
 	virtual Real Evaluate() const override { return std::sqrt(operand->Evaluate()); }
 	virtual double Diff(ExpressionNamedReal* var) const override 
@@ -547,7 +547,7 @@ class ExpressionExp: public ExpressionBase
 public:
 	ExpressionExp(ExpressionBase* op) : ExpressionBase(), operand(op) {}
 
-	virtual void Destroy() { if (operand) { operand->DecreaseReferenceCounter(); if (operand->ReferenceCounter() == 0) { operand->Destroy(); delete operand; deleteCount++; } } }
+	virtual void Destroy() override { if (operand) { operand->DecreaseReferenceCounter(); if (operand->ReferenceCounter() == 0) { operand->Destroy(); delete operand; deleteCount++; } } }
 
 	virtual Real Evaluate() const override { return EM::Exp(operand->Evaluate()); }
 	virtual double Diff(ExpressionNamedReal* var) const override { return EM::Exp(operand->Evaluate()) * operand->Diff(var); }
@@ -560,7 +560,7 @@ class ExpressionLog: public ExpressionBase
 public:
 	ExpressionLog(ExpressionBase* op) : ExpressionBase(), operand(op) {}
 
-	virtual void Destroy() { if (operand) { operand->DecreaseReferenceCounter(); if (operand->ReferenceCounter() == 0) { operand->Destroy(); delete operand; deleteCount++; } } }
+	virtual void Destroy() override { if (operand) { operand->DecreaseReferenceCounter(); if (operand->ReferenceCounter() == 0) { operand->Destroy(); delete operand; deleteCount++; } } }
 
 	virtual Real Evaluate() const override { return EM::Log(operand->Evaluate()); }
 	virtual double Diff(ExpressionNamedReal* var) const override { return (1 / operand->Evaluate()) * operand->Diff(var); }
@@ -574,7 +574,7 @@ class ExpressionSin: public ExpressionBase
 public:
 	ExpressionSin(ExpressionBase* op) : ExpressionBase(), operand(op) {}
 
-	virtual void Destroy() { if (operand) { operand->DecreaseReferenceCounter(); if (operand->ReferenceCounter() == 0) { operand->Destroy(); delete operand; deleteCount++; } } }
+	virtual void Destroy() override { if (operand) { operand->DecreaseReferenceCounter(); if (operand->ReferenceCounter() == 0) { operand->Destroy(); delete operand; deleteCount++; } } }
 
 	virtual Real Evaluate() const override { return EM::Sin(operand->Evaluate()); }
 	virtual double Diff(ExpressionNamedReal* var) const override { return EM::Cos(operand->Evaluate()) * operand->Diff(var); }	
@@ -587,7 +587,7 @@ class ExpressionCos: public ExpressionBase
 public:
 	ExpressionCos(ExpressionBase* op) : ExpressionBase(), operand(op) {}
 
-	virtual void Destroy() { if (operand) { operand->DecreaseReferenceCounter(); if (operand->ReferenceCounter() == 0) { operand->Destroy(); delete operand; deleteCount++; } } }
+	virtual void Destroy() override { if (operand) { operand->DecreaseReferenceCounter(); if (operand->ReferenceCounter() == 0) { operand->Destroy(); delete operand; deleteCount++; } } }
 
 	virtual Real Evaluate() const override { return EM::Cos(operand->Evaluate()); }
 	virtual double Diff(ExpressionNamedReal* var) const override { return -EM::Sin(operand->Evaluate()) * operand->Diff(var); }
@@ -600,7 +600,7 @@ class ExpressionTan: public ExpressionBase
 public:
 	ExpressionTan(ExpressionBase* op) : ExpressionBase(), operand(op) {}
 
-	virtual void Destroy() { if (operand) { operand->DecreaseReferenceCounter(); if (operand->ReferenceCounter() == 0) { operand->Destroy(); delete operand; deleteCount++; } } }
+	virtual void Destroy() override { if (operand) { operand->DecreaseReferenceCounter(); if (operand->ReferenceCounter() == 0) { operand->Destroy(); delete operand; deleteCount++; } } }
 
 	virtual Real Evaluate() const override { return EM::Tan(operand->Evaluate()); }
 	virtual double Diff(ExpressionNamedReal* var) const override 
@@ -616,7 +616,7 @@ class ExpressionASin: public ExpressionBase
 public:
 	ExpressionASin(ExpressionBase* op) : ExpressionBase(), operand(op) {}
 
-	virtual void Destroy() { if (operand) { operand->DecreaseReferenceCounter(); if (operand->ReferenceCounter() == 0) { operand->Destroy(); delete operand; deleteCount++; } } }
+	virtual void Destroy() override { if (operand) { operand->DecreaseReferenceCounter(); if (operand->ReferenceCounter() == 0) { operand->Destroy(); delete operand; deleteCount++; } } }
 
 	virtual Real Evaluate() const override { return EM::Asin(operand->Evaluate()); }
 	virtual double Diff(ExpressionNamedReal* var) const override 
@@ -636,7 +636,7 @@ class ExpressionACos: public ExpressionBase
 public:
 	ExpressionACos(ExpressionBase* op) : ExpressionBase(), operand(op) {}
 
-	virtual void Destroy() { if (operand) { operand->DecreaseReferenceCounter(); if (operand->ReferenceCounter() == 0) { operand->Destroy(); delete operand; deleteCount++; } } }
+	virtual void Destroy() override { if (operand) { operand->DecreaseReferenceCounter(); if (operand->ReferenceCounter() == 0) { operand->Destroy(); delete operand; deleteCount++; } } }
 
 	virtual Real Evaluate() const override { return EM::Acos(operand->Evaluate()); }
 	virtual double Diff(ExpressionNamedReal* var) const override 
@@ -656,7 +656,7 @@ class ExpressionATan: public ExpressionBase
 public:
 	ExpressionATan(ExpressionBase* op) : ExpressionBase(), operand(op) {}
 
-	virtual void Destroy() { if (operand) { operand->DecreaseReferenceCounter(); if (operand->ReferenceCounter() == 0) { operand->Destroy(); delete operand; deleteCount++; } } }
+	virtual void Destroy() override { if (operand) { operand->DecreaseReferenceCounter(); if (operand->ReferenceCounter() == 0) { operand->Destroy(); delete operand; deleteCount++; } } }
 
 	virtual Real Evaluate() const override { return EM::Atan(operand->Evaluate()); }
 	virtual double Diff(ExpressionNamedReal* var) const override 
@@ -674,7 +674,7 @@ class ExpressionSinh: public ExpressionBase
 public:
 	ExpressionSinh(ExpressionBase* op) : ExpressionBase(), operand(op) {}
 
-	virtual void Destroy() { if (operand) { operand->DecreaseReferenceCounter(); if (operand->ReferenceCounter() == 0) { operand->Destroy(); delete operand; deleteCount++; } } }
+	virtual void Destroy() override { if (operand) { operand->DecreaseReferenceCounter(); if (operand->ReferenceCounter() == 0) { operand->Destroy(); delete operand; deleteCount++; } } }
 
 	virtual Real Evaluate() const override { return EM::Sinh(operand->Evaluate()); }
 	virtual double Diff(ExpressionNamedReal* var) const override { return EM::Cosh(operand->Evaluate()) * operand->Diff(var); }
@@ -687,7 +687,7 @@ class ExpressionCosh: public ExpressionBase
 public:
 	ExpressionCosh(ExpressionBase* op) : ExpressionBase(), operand(op) {}
 
-	virtual void Destroy() { if (operand) { operand->DecreaseReferenceCounter(); if (operand->ReferenceCounter() == 0) { operand->Destroy(); delete operand; deleteCount++; } } }
+	virtual void Destroy() override { if (operand) { operand->DecreaseReferenceCounter(); if (operand->ReferenceCounter() == 0) { operand->Destroy(); delete operand; deleteCount++; } } }
 
 	virtual Real Evaluate() const override { return EM::Cosh(operand->Evaluate()); }
 	virtual double Diff(ExpressionNamedReal* var) const override { return EM::Sinh(operand->Evaluate()) * operand->Diff(var); }
@@ -700,7 +700,7 @@ class ExpressionTanh: public ExpressionBase
 public:
 	ExpressionTanh(ExpressionBase* op) : ExpressionBase(), operand(op) {}
 
-	virtual void Destroy() { if (operand) { operand->DecreaseReferenceCounter(); if (operand->ReferenceCounter() == 0) { operand->Destroy(); delete operand; deleteCount++; } } }
+	virtual void Destroy() override { if (operand) { operand->DecreaseReferenceCounter(); if (operand->ReferenceCounter() == 0) { operand->Destroy(); delete operand; deleteCount++; } } }
 
 	virtual Real Evaluate() const override { return EM::Tanh(operand->Evaluate()); }
 	virtual double Diff(ExpressionNamedReal* var) const override { return (1 - EXUstd::Square(EM::Tanh(operand->Evaluate()))) * operand->Diff(var); }
@@ -713,7 +713,7 @@ class ExpressionASinh: public ExpressionBase
 public:
 	ExpressionASinh(ExpressionBase* op) : ExpressionBase(), operand(op) {}
 
-	virtual void Destroy() { if (operand) { operand->DecreaseReferenceCounter(); if (operand->ReferenceCounter() == 0) { operand->Destroy(); delete operand; deleteCount++; } } }
+	virtual void Destroy() override { if (operand) { operand->DecreaseReferenceCounter(); if (operand->ReferenceCounter() == 0) { operand->Destroy(); delete operand; deleteCount++; } } }
 
 	virtual Real Evaluate() const override { return std::asinh(operand->Evaluate()); }
 	virtual double Diff(ExpressionNamedReal* var) const override 
@@ -729,7 +729,7 @@ class ExpressionACosh: public ExpressionBase
 public:
 	ExpressionACosh(ExpressionBase* op) : ExpressionBase(), operand(op) {}
 
-	virtual void Destroy() { if (operand) { operand->DecreaseReferenceCounter(); if (operand->ReferenceCounter() == 0) { operand->Destroy(); delete operand; deleteCount++; } } }
+	virtual void Destroy() override { if (operand) { operand->DecreaseReferenceCounter(); if (operand->ReferenceCounter() == 0) { operand->Destroy(); delete operand; deleteCount++; } } }
 
 	virtual Real Evaluate() const override { return std::acosh(operand->Evaluate()); }
 	virtual double Diff(ExpressionNamedReal* var) const override 
@@ -747,7 +747,7 @@ class ExpressionATanh: public ExpressionBase
 public:
 	ExpressionATanh(ExpressionBase* op) : ExpressionBase(), operand(op) {}
 
-	virtual void Destroy() { if (operand) { operand->DecreaseReferenceCounter(); if (operand->ReferenceCounter() == 0) { operand->Destroy(); delete operand; deleteCount++; } } }
+	virtual void Destroy() override { if (operand) { operand->DecreaseReferenceCounter(); if (operand->ReferenceCounter() == 0) { operand->Destroy(); delete operand; deleteCount++; } } }
 
 	virtual Real Evaluate() const override { return std::atanh(operand->Evaluate()); }
 	virtual double Diff(ExpressionNamedReal* var) const override 
@@ -771,7 +771,7 @@ public:
 	ExpressionPower(ExpressionBase* baseExpr, ExpressionBase* exponentExpr)
 		: base(baseExpr), exponent(exponentExpr) {}
 
-	virtual void Destroy()
+	virtual void Destroy() override
 	{
 		if (base) { base->DecreaseReferenceCounter(); if (base->ReferenceCounter() == 0) { base->Destroy(); delete base; deleteCount++; } }
 		if (exponent) { exponent->DecreaseReferenceCounter(); if (exponent->ReferenceCounter() == 0) { exponent->Destroy(); delete exponent; deleteCount++; } }
@@ -799,7 +799,7 @@ public:
 	ExpressionAtan2(ExpressionBase* baseExpr, ExpressionBase* exponentExpr)
 		: arg1(baseExpr), arg2(exponentExpr) {}
 
-	virtual void Destroy()
+	virtual void Destroy() override
 	{
 		if (arg1) { arg1->DecreaseReferenceCounter(); if (arg1->ReferenceCounter() == 0) { arg1->Destroy(); delete arg1; deleteCount++; } }
 		if (arg2) { arg2->DecreaseReferenceCounter(); if (arg2->ReferenceCounter() == 0) { arg2->Destroy(); delete arg2; deleteCount++; } }
@@ -824,7 +824,7 @@ public:
 	ExpressionMod(ExpressionBase* baseExpr, ExpressionBase* exponentExpr)
 		: arg1(baseExpr), arg2(exponentExpr) {}
 
-	virtual void Destroy()
+	virtual void Destroy() override
 	{
 		if (arg1) { arg1->DecreaseReferenceCounter(); if (arg1->ReferenceCounter() == 0) { arg1->Destroy(); delete arg1; deleteCount++; } }
 		if (arg2) { arg2->DecreaseReferenceCounter(); if (arg2->ReferenceCounter() == 0) { arg2->Destroy(); delete arg2; deleteCount++; } }
@@ -841,7 +841,7 @@ public:
 	ExpressionMin(ExpressionBase* baseExpr, ExpressionBase* exponentExpr)
 		: arg1(baseExpr), arg2(exponentExpr) {}
 
-	virtual void Destroy()
+	virtual void Destroy() override
 	{
 		if (arg1) { arg1->DecreaseReferenceCounter(); if (arg1->ReferenceCounter() == 0) { arg1->Destroy(); delete arg1; deleteCount++; } }
 		if (arg2) { arg2->DecreaseReferenceCounter(); if (arg2->ReferenceCounter() == 0) { arg2->Destroy(); delete arg2; deleteCount++; } }
@@ -858,7 +858,7 @@ public:
 	ExpressionMax(ExpressionBase* baseExpr, ExpressionBase* exponentExpr)
 		: arg1(baseExpr), arg2(exponentExpr) {}
 
-	virtual void Destroy()
+	virtual void Destroy() override
 	{
 		if (arg1) { arg1->DecreaseReferenceCounter(); if (arg1->ReferenceCounter() == 0) { arg1->Destroy(); delete arg1; deleteCount++; } }
 		if (arg2) { arg2->DecreaseReferenceCounter(); if (arg2->ReferenceCounter() == 0) { arg2->Destroy(); delete arg2; deleteCount++; } }
@@ -887,7 +887,7 @@ public:
 		ExpressionBase* ifTrueInit, ExpressionBase* ifFalseInit) : ExpressionBase(),
 		condition(conditionInit), ifTrue(ifTrueInit), ifFalse(ifFalseInit) {}
 
-	virtual void Destroy()
+	virtual void Destroy() override
 	{
 		if (condition) { condition->DecreaseReferenceCounter(); if (condition->ReferenceCounter() == 0) { condition->Destroy(); delete condition; deleteCount++; } }
 		if (ifTrue) { ifTrue->DecreaseReferenceCounter(); if (ifTrue->ReferenceCounter() == 0) { ifTrue->Destroy(); delete ifTrue; deleteCount++; } }
@@ -938,7 +938,7 @@ public:
 	//	NewCount()++;
 	//	return new ExpressionReal(*this);
 	//}
-	virtual void Destroy()
+	virtual void Destroy() override
 	{
 	}
 	virtual Real Evaluate() const override {

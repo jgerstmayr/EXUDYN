@@ -874,6 +874,23 @@ bool CSolverBase::SolveSteps(CSystem& computationalSystem, const SimulationSetti
 {
 	if (IsVerbose(2)) { Verbose(2, "\nStart steps solving loop\n"); }
 
+	//THE STATIC SOLVER CANNOT SOLVE FOR LIE GROUP NODES (#1493): it adds the Newton increment to the coordinates, while the
+	//rotation of a Lie group node (NodeRigidBodyRotVecLG) is updated by composition, which only the dynamic solvers do;
+	//the Newton iteration diverged or stopped at a wrong state. The Jacobian alone - ComputeLinearizedSystem - is not this path
+	if (IsStaticSolver())
+	{
+		const auto& cNodes = computationalSystem.GetSystemData().GetCNodes();
+		for (Index i = 0; i < cNodes.NumberOfItems(); i++)
+		{
+			if (EXUstd::IsOfType(cNodes[i]->GetType(), Node::LieGroupWithDirectUpdate))
+			{
+				PyError("SolveStatic: node " + EXUstd::ToString(i) + " is a Lie group node (e.g. NodeRigidBodyRotVecLG), whose "
+					"rotation the static solver cannot update; use a node with Euler parameters (NodeRigidBodyEP) or Tait-Bryan "
+					"angles (NodeRigidBodyRxyz), or SolveDynamic", PyErrorType::notImplementedError);
+			}
+		}
+	}
+
 	if (it.automaticStepSize) { it.currentStepSize = it.initialStepSize; }
 	else { it.currentStepSize = it.maxStepSize; }//initial value for step size
 

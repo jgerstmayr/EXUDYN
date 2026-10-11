@@ -306,7 +306,7 @@ public:
 		FreeMemory();
 	}
 
-	virtual void AllocateMemory(Index numberOfRealsInit)
+	virtual void AllocateMemory(Index numberOfRealsInit) override
 	{
 		if (numberOfRealsInit > maxLocalSize)
 		{
@@ -320,7 +320,7 @@ public:
 	}
 
 	//! only free memory, if allocated on heap
-	virtual void FreeMemory()
+	virtual void FreeMemory() override
 	{
 		if (this->maxNumberOfItems > maxLocalSize)
 		{

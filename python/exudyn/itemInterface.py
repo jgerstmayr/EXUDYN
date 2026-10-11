@@ -1404,7 +1404,7 @@ class VNodeRigidBodyRotVecLG:
 class NodeRigidBodyRotVecLG:
     r"""A 3D rigid body node based on rotation vector and Lie group methods for rigid bodies.
     
-    The node has 3 displacement coordinates and three rotation coordinates and can be used in combination with explicit Lie Group time integration methods.
+    The node has 3 displacement coordinates and three rotation coordinates and can be used in combination with explicit Lie Group time integration methods and the implicit generalized-alpha solver; the static solver cannot update its rotation and refuses it (#1493).
     
     Args:
         name: node's unique name; type: str

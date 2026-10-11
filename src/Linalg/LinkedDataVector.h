@@ -132,7 +132,7 @@ public:
     // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     // MEMBER FUNCTIONS
     // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-	virtual VectorType GetType() const { return VectorType::LinkedDataVector; }
+	virtual VectorType GetType() const override { return VectorType::LinkedDataVector; }
 
 	//! set vector to values given by initializer list; used to modify data which the LinkedDataVectorBase is linked to
 	void SetVector(std::initializer_list<T> listOfReals)

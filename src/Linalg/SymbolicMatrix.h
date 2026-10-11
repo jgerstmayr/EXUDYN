@@ -564,7 +564,7 @@ public:
 		//return m(row,column);
 		return operand->EvaluateComponent(row, column);
 	}
-	virtual Real Diff(ExpressionNamedReal* var) const { CHECKandTHROWstring("Symbolic::operator[]::Diff(matrix, matrix): not implemented"); return 0.; }
+	virtual Real Diff(ExpressionNamedReal* var) const override { CHECKandTHROWstring("Symbolic::operator[]::Diff(matrix, matrix): not implemented"); return 0.; }
 	virtual STDstring ToString() const override
 	{
 		return operand->ToString() + "[" + indexRow->ToString() +"," + indexColumn->ToString() + "]";

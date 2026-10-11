@@ -684,7 +684,7 @@ definitions.append(ItemDefinition(
 """,
     author=r'Gerstmayr Johannes, Holzinger Stefan',
     cParentClass=ParentClassCNodeRigidBody,
-    overallDescription=r'A 3D rigid body node based on rotation vector and Lie group methods for rigid bodies. The node has 3 displacement coordinates and three rotation coordinates and can be used in combination with explicit Lie Group time integration methods.',
+    overallDescription=r'A 3D rigid body node based on rotation vector and Lie group methods for rigid bodies. The node has 3 displacement coordinates and three rotation coordinates and can be used in combination with explicit Lie Group time integration methods and the implicit generalized-alpha solver; the static solver cannot update its rotation and refuses it (#1493).',
     classType=ClassTypeNode,
     miniExample=r"""    #a rigid body spinning about its z-axis, integrated with the Lie group integrator of the explicit solver
     node = mbs.AddNode(NodeRigidBodyRotVecLG(referenceCoordinates=[0.5,0.2,0.1, 0,0,0],

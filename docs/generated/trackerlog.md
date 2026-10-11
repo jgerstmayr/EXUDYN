@@ -8,10 +8,10 @@ Every entry carries the **type** of the issue, then its **priority** and its **e
 
 General information on current version:
 
-- Exudyn version = 1.13.54.dev1
+- Exudyn version = 1.13.56.dev1
 - last change = 2026-10-11
-- Number of issues = 2967
-- Number of resolved issues = 2831 (54 in current version)
+- Number of issues = 2968
+- Number of resolved issues = 2833 (56 in current version)
 
 ## Resolved issues and resolved bugs before version 1.13
 
@@ -9039,6 +9039,9 @@ The following list contains the issues which have been **RESOLVED** in the accor
 
 ## Open issues
 
+- `CHANGE` `raised by: Claude-JG` Mark the overriding virtual functions outside src/Linalg with override, the generated ones in the generator (#2967)
+  - description: Follow-up of \#123 (src/Linalg done): gcc -Wsuggest-override (syntax-only compile of every source in WSL, gcc 13.3) reports 455 places in 112 files: 4 in each generated Main\*/Visu\* item header (itemHeaderEmitter.py), CNode.h 22, CObjectConnector.h 7, VisualizationSystemContainer.h 5, CObjectBody.h 3, MainSolver.h 9, CSolverExplicit.h 2, ...; proposal: emit override in itemHeaderEmitter, add it by hand in the rest, and add -Wsuggest-override to the Linux build so that a new one is seen.
+  - date raised: 2026-10-11
 - `EXTENSION` `raised by: Claude-JG` exudyn.cUtilities: the time derivatives of the Euler parameter functions (#2965)
   - description: Decision D7 of revision2026c step RG11.10.1 (tmp/compareRBU.md, maintainer 2026-10-11: not now, an issue): RigidBodyMath has EP2RotationMatrix\_t, EP\_t2G\_t and EP\_t2Glocal\_t, which neither rigidBodyUtilities nor exudyn.cUtilities offers; when wanted, add them to definitions/pybindCUtilities.py and PyCUtilities.h, with a check in cUtilitiesTest.py.
   - date raised: 2026-10-10
@@ -9330,10 +9333,6 @@ The following list contains the issues which have been **RESOLVED** in the accor
   - description: fully add Jacobian functionality for ODE1 loads and add test for ODE1 loads or recycle one
   - **remarks:** planned as revision2026b step RG4.23 (triage 2026-10-07)
   - date raised: 2023-05-01
-- `CHANGE` `LOW EFF` StaticSolver (#1493)
-  - description: add exception in case that Lie group nodes are used with static solver, which cannot work
-  - **remarks:** planned as revision2026b step RG18.1 (triage 2026-10-07)
-  - date raised: 2023-04-06
 - `EXTENSION` `MEDIUM EFF` CoordinateSpringDamperExt (#1415)
   - description: add flag for stepSizeRecommendation, where 0 is no recommendation, -1 is automatic and \>0 is a directly recommended step size
   - **remarks:** kept open as an idea, no plan step (triage 2026-10-07, revision2026b group RG18)
@@ -9555,10 +9554,6 @@ The following list contains the issues which have been **RESOLVED** in the accor
   - description: check Vector operator\[\], and ConstVector performance regarding inlining
   - **remarks:** planned as revision2026b step RG5.1.4 (triage 2026-10-07)
   - date raised: 2019-05-21
-- `CHANGE` `LOW EFF` Linalg Override (#123)
-  - description: Add override statement to all derived classes in linalg for safety
-  - **remarks:** planned as revision2026b step RG18.1 (triage 2026-10-07)
-  - date raised: 2019-05-13
 
 ## Known bugs
 

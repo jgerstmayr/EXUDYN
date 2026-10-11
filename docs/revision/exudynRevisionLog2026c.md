@@ -732,3 +732,19 @@ is for initial values and test models, users may take math and numpy as before.)
 - **The check** (#2964), in `--all-checks`: imports and calls of math and numpy functions, single-argument
   `np.linalg.norm`, `**` with an exponent that is not whole; `#checkPythonMath: allowed` on a line exempts it (a
   `symbolic.Real` in `symbolicUserFunctionTest.py`). 310 whole exponents (`x**2`) are reported only.
+
+<a id="rg11-8-1"></a>
+### RG11.8.1 and RG11.8.4 — override in src/Linalg, and Lie group nodes in the static solver (2026-10-11, #123, #1493)
+*(Maintainer 2026-10-11: RG11.8.1 now, the libraries identified first; RG11.8.4 can be implemented at once, reusing the
+checks of the dynamic solvers where it makes sense; the other sub-steps of RG11.8 evaluated first.)*
+- **How the places were found**: every source of `sources.json` compiled syntax-only by gcc 13.3 in WSL with
+  `-Wsuggest-override` (the pybind11 headers of venvExuP313, which venvP313 in WSL does not have). A build with
+  `EXUDYN_EXTRA_COMPILE_ARGS=-Wsuggest-override` reports nothing, because setup.py reuses the object files when only the
+  extra arguments change. `override` was added after the parameter list and `const`, in the style the files already
+  use (`virtual ... override`); the second scan finds none in src/Linalg.
+- **The rest of src** (#2967): 455 places in 112 files, most of them 4 in every generated item header.
+- **#1493**: `CSolverBase::SolveSteps` refuses, for the static solver, a node of type `LieGroupWithDirectUpdate`
+  (NodeRigidBodyRotVecLG), with `NotImplementedFeatureError`; the dynamic solvers sort such nodes into lists, which the
+  static solver does not need, so only the loop over the node types is the same. `ComputeLinearizedSystem` uses the
+  static solver without `SolveSteps` and is not refused. geometricallyExactBeamTest.py said in a comment that the
+  static case does not work with NodeRigidBodyRotVecLG. The node's description says so now.

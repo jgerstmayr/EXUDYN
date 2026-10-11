@@ -45,11 +45,11 @@ public:
 	}
 	virtual void Destroy() override {}
 
-	virtual ResizableConstVector Evaluate() const
+	virtual ResizableConstVector Evaluate() const override
 	{
 		return vector;
 	}
-	virtual STDstring ToString() const
+	virtual STDstring ToString() const override
 	{
 		return vector.ToString();
 	}
@@ -152,7 +152,7 @@ public:
 		//released: the destructor calls Destroy() again after SymbolicRealVector::Destroy() did, which freed them twice (#2876)
 		exprList.SetNumberOfItems(0);
 	}
-	virtual ResizableConstVector Evaluate() const
+	virtual ResizableConstVector Evaluate() const override
 	{
 		ResizableConstVector result(exprList.NumberOfItems());
 		for (Index i = 0; i < exprList.NumberOfItems(); i++)
@@ -161,7 +161,7 @@ public:
 		}
 		return result;
 	}
-	virtual STDstring ToString() const
+	virtual STDstring ToString() const override
 	{
 		STDstring str = "[";
 		char sep = ' ';
@@ -188,7 +188,7 @@ class VectorExpressionOperatorPlus: public VectorExpressionBase
 public:
 	VectorExpressionOperatorPlus(VectorExpressionBase* l, VectorExpressionBase* r) : VectorExpressionBase(), left(l), right(r) {}
 
-	virtual void Destroy()
+	virtual void Destroy() override
 	{
 		if (left) { left->DecreaseReferenceCounter(); if (left->ReferenceCounter() == 0) { left->Destroy(); delete left; VectorExpressionBase::deleteCount++; } }
 		if (right) { right->DecreaseReferenceCounter(); if (right->ReferenceCounter() == 0) { right->Destroy(); delete right; VectorExpressionBase::deleteCount++; } }
@@ -216,7 +216,7 @@ class VectorExpressionOperatorMinus: public VectorExpressionBase
 public:
 	VectorExpressionOperatorMinus(VectorExpressionBase* l, VectorExpressionBase* r) : VectorExpressionBase(), left(l), right(r) {}
 
-	virtual void Destroy()
+	virtual void Destroy() override
 	{
 		if (left) { left->DecreaseReferenceCounter(); if (left->ReferenceCounter() == 0) { left->Destroy(); delete left; VectorExpressionBase::deleteCount++; } }
 		if (right) { right->DecreaseReferenceCounter(); if (right->ReferenceCounter() == 0) { right->Destroy(); delete right; VectorExpressionBase::deleteCount++; } }
@@ -245,7 +245,7 @@ class VectorExpressionOperatorMultScalarVector: public VectorExpressionBase
 public:
 	VectorExpressionOperatorMultScalarVector(ExpressionBase* l, VectorExpressionBase* r) : VectorExpressionBase(), left(l), right(r) {}
 
-	virtual void Destroy()
+	virtual void Destroy() override
 	{
 		if (left) { left->DecreaseReferenceCounter(); if (left->ReferenceCounter() == 0) { left->Destroy(); delete left; ExpressionBase::deleteCount++; } }
 		if (right) { right->DecreaseReferenceCounter(); if (right->ReferenceCounter() == 0) { right->Destroy(); delete right; VectorExpressionBase::deleteCount++; } }
@@ -270,7 +270,7 @@ class VectorExpressionOperatorMultMatrix : public VectorExpressionBase
 public:
 	VectorExpressionOperatorMultMatrix(MatrixExpressionBase* l, VectorExpressionBase* r) : VectorExpressionBase(), left(l), right(r) {}
 
-	virtual void Destroy()
+	virtual void Destroy() override
 	{
 		if (left) { left->DecreaseReferenceCounter(); if (left->ReferenceCounter() == 0) { left->Destroy(); delete left; MatrixExpressionBase::deleteCount++; } }
 		if (right) { right->DecreaseReferenceCounter(); if (right->ReferenceCounter() == 0) { right->Destroy(); delete right; VectorExpressionBase::deleteCount++; } }
@@ -298,7 +298,7 @@ class VectorExpressionOperatorMultMatrixTransposed : public VectorExpressionBase
 public:
 	VectorExpressionOperatorMultMatrixTransposed(MatrixExpressionBase* l, VectorExpressionBase* r) : VectorExpressionBase(), left(l), right(r) {}
 
-	virtual void Destroy()
+	virtual void Destroy() override
 	{
 		if (left) { left->DecreaseReferenceCounter(); if (left->ReferenceCounter() == 0) { left->Destroy(); delete left; MatrixExpressionBase::deleteCount++; } }
 		if (right) { right->DecreaseReferenceCounter(); if (right->ReferenceCounter() == 0) { right->Destroy(); delete right; VectorExpressionBase::deleteCount++; } }
@@ -327,7 +327,7 @@ class VectorExpressionUnaryPlus: public VectorExpressionBase {
 public:
 	VectorExpressionUnaryPlus(VectorExpressionBase* op) : VectorExpressionBase(), operand(op) {}
 
-	virtual void Destroy()
+	virtual void Destroy() override
 	{
 		if (operand) { operand->DecreaseReferenceCounter(); if (operand->ReferenceCounter() == 0) { operand->Destroy(); delete operand; VectorExpressionBase::deleteCount++; } }
 	}
@@ -346,7 +346,7 @@ class VectorExpressionUnaryMinus: public VectorExpressionBase {
 public:
 	VectorExpressionUnaryMinus(VectorExpressionBase* op) : VectorExpressionBase(), operand(op) {}
 
-	virtual void Destroy()
+	virtual void Destroy() override
 	{
 		if (operand) { operand->DecreaseReferenceCounter(); if (operand->ReferenceCounter() == 0) { operand->Destroy(); delete operand; VectorExpressionBase::deleteCount++; } }
 	}
@@ -366,7 +366,7 @@ class VectorExpressionMultComponents : public VectorExpressionBase
 public:
 	VectorExpressionMultComponents(VectorExpressionBase* l, VectorExpressionBase* r) : VectorExpressionBase(), left(l), right(r) {}
 
-	virtual void Destroy()
+	virtual void Destroy() override
 	{
 		if (left) { left->DecreaseReferenceCounter(); if (left->ReferenceCounter() == 0) { left->Destroy(); delete left; VectorExpressionBase::deleteCount++; } }
 		if (right) { right->DecreaseReferenceCounter(); if (right->ReferenceCounter() == 0) { right->Destroy(); delete right; VectorExpressionBase::deleteCount++; } }
@@ -403,7 +403,7 @@ class VectorExpressionOperatorMultVectorVector: public ExpressionBase
 public:
 	VectorExpressionOperatorMultVectorVector(VectorExpressionBase* l, VectorExpressionBase* r) : ExpressionBase(), left(l), right(r) {}
 
-	virtual void Destroy()
+	virtual void Destroy() override
 	{
 		if (left) { left->DecreaseReferenceCounter(); if (left->ReferenceCounter() == 0) { left->Destroy(); delete left; VectorExpressionBase::deleteCount++; } }
 		if (right) { right->DecreaseReferenceCounter(); if (right->ReferenceCounter() == 0) { right->Destroy(); delete right; VectorExpressionBase::deleteCount++; } }
@@ -420,7 +420,7 @@ public:
 
 		//return left->Evaluate() * right->Evaluate();
 	}
-	virtual Real Diff(ExpressionNamedReal* var) const { CHECKandTHROWstring("Symbolic::operator*::Diff(vector, vector): not implemented"); return 0.; }
+	virtual Real Diff(ExpressionNamedReal* var) const override { CHECKandTHROWstring("Symbolic::operator*::Diff(vector, vector): not implemented"); return 0.; }
 	virtual STDstring ToString() const override
 	{
 		return "(" + left->ToString() + " * " + right->ToString() + ")";
@@ -433,7 +433,7 @@ class VectorExpressionNormL2: public ExpressionBase
 public:
 	VectorExpressionNormL2(VectorExpressionBase* op) : ExpressionBase(), operand(op) {}
 
-	virtual void Destroy() 
+	virtual void Destroy() override 
 	{ 
 		if (operand) { operand->DecreaseReferenceCounter(); if (operand->ReferenceCounter() == 0) { operand->Destroy(); delete operand; VectorExpressionBase::deleteCount++; } }
 	}
@@ -442,7 +442,7 @@ public:
 	{ 
 		return operand->Evaluate().GetL2Norm(); 
 	}
-	virtual Real Diff(ExpressionNamedReal* var) const { CHECKandTHROWstring("Symbolic::Vector::NormL2(vector): not implemented"); return 0.; }
+	virtual Real Diff(ExpressionNamedReal* var) const override { CHECKandTHROWstring("Symbolic::Vector::NormL2(vector): not implemented"); return 0.; }
 	virtual STDstring ToString() const override { return "NormL2(" + operand->ToString() + ")"; }
 };
 
@@ -455,7 +455,7 @@ public:
 	VectorExpressionOperatorBracket(VectorExpressionBase* op, ExpressionBase* i) : 
 		ExpressionBase(), operand(op), index(i) {}
 
-	virtual void Destroy()
+	virtual void Destroy() override
 	{
 		if (operand) { operand->DecreaseReferenceCounter(); if (operand->ReferenceCounter() == 0) { operand->Destroy(); delete operand; VectorExpressionBase::deleteCount++; } }
 		if (index) { index->DecreaseReferenceCounter(); if (index->ReferenceCounter() == 0) { index->Destroy(); delete index; ExpressionBase::deleteCount++; } }
@@ -470,7 +470,7 @@ public:
 		CHECKandTHROW((i >= 0) && (i < v.NumberOfItems()), "VectorExpressionBase::operator[] index out of range");
 		return v[i];
 	}
-	virtual Real Diff(ExpressionNamedReal* var) const { CHECKandTHROWstring("Symbolic::operator[]::Diff(vector, vector): not implemented"); return 0.; }
+	virtual Real Diff(ExpressionNamedReal* var) const override { CHECKandTHROWstring("Symbolic::operator[]::Diff(vector, vector): not implemented"); return 0.; }
 	virtual STDstring ToString() const override
 	{
 		return operand->ToString() + "[" + index->ToString() + "]";
@@ -483,7 +483,7 @@ class VectorExpressionOperatorEQ: public ExpressionBase
 public:
 	VectorExpressionOperatorEQ(VectorExpressionBase* l, VectorExpressionBase* r) : ExpressionBase(), left(l), right(r) {}
 
-	virtual void Destroy()
+	virtual void Destroy() override
 	{
 		if (left) { left->DecreaseReferenceCounter(); if (left->ReferenceCounter() == 0) { left->Destroy(); delete left; VectorExpressionBase::deleteCount++; } }
 		if (right) { right->DecreaseReferenceCounter(); if (right->ReferenceCounter() == 0) { right->Destroy(); delete right; VectorExpressionBase::deleteCount++; } }
@@ -493,7 +493,7 @@ public:
 	{
 		return Real(left->Evaluate() == right->Evaluate());
 	}
-	virtual Real Diff(ExpressionNamedReal* var) const { CHECKandTHROWstring("Symbolic::operator==::Diff(...): not possible"); return 0.; }
+	virtual Real Diff(ExpressionNamedReal* var) const override { CHECKandTHROWstring("Symbolic::operator==::Diff(...): not possible"); return 0.; }
 	virtual STDstring ToString() const override {
 		return "(" + left->ToString() + " == " + right->ToString() + ")";
 	}
@@ -505,7 +505,7 @@ class VectorExpressionOperatorNEQ: public ExpressionBase
 public:
 	VectorExpressionOperatorNEQ(VectorExpressionBase* l, VectorExpressionBase* r) : ExpressionBase(), left(l), right(r) {}
 
-	virtual void Destroy()
+	virtual void Destroy() override
 	{
 		if (left) { left->DecreaseReferenceCounter(); if (left->ReferenceCounter() == 0) { left->Destroy(); delete left; VectorExpressionBase::deleteCount++; } }
 		if (right) { right->DecreaseReferenceCounter(); if (right->ReferenceCounter() == 0) { right->Destroy(); delete right; VectorExpressionBase::deleteCount++; } }
@@ -514,7 +514,7 @@ public:
 	virtual Real Evaluate() const override {
 		return Real(!(left->Evaluate() == right->Evaluate()));
 	}
-	virtual Real Diff(ExpressionNamedReal* var) const { CHECKandTHROWstring("Symbolic::operator!=::Diff(...): not possible"); return 0.; }
+	virtual Real Diff(ExpressionNamedReal* var) const override { CHECKandTHROWstring("Symbolic::operator!=::Diff(...): not possible"); return 0.; }
 	virtual STDstring ToString() const override {
 		return "(" + left->ToString() + " != " + right->ToString() + ")";
 	}

@@ -1,0 +1,15 @@
+{
+  "number": 1493,
+  "title": "StaticSolver",
+  "author": "JG",
+  "status": "RESOLVED",
+  "type": "CHANGE",
+  "effort": "LOW",
+  "description": "add exception in case that Lie group nodes are used with static solver, which cannot work",
+  "dateRaised": "2023-04-06",
+  "deadline": "2023-10-03",
+  "dateResolved": "2026-10-11 11:29",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "SolveStatic refuses Lie group nodes (NodeRigidBodyRotVecLG) with a NotImplementedFeatureError naming the node, instead of a Newton iteration that cannot converge (revision2026c step RG11.8.4)",
+  "resolvedInVersion": "1.13.56"
+}

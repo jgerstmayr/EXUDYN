@@ -252,7 +252,7 @@ public:
     GeneralMatrixEXUdense() { SetMatrixIsFactorized(false); UseEigenSolverType() = 0; PivotThreshold() = 0.; }
 
 	//! information on storage type
-	virtual LinearSolverType GetSystemMatrixType() const { return (useEigenSolverType == 0) ? LinearSolverType::EXUdense : LinearSolverType::EigenDense; };
+	virtual LinearSolverType GetSystemMatrixType() const override { return (useEigenSolverType == 0) ? LinearSolverType::EXUdense : LinearSolverType::EigenDense; };
 
 	//! get (read) matrix as dense exudyn Matrix; this function should be used rarly, as it disables the compatibility to other matrix formats
 	const ResizableMatrix& GetMatrixEXUdense() const { return matrix; }
@@ -266,38 +266,38 @@ public:
     Index& UseEigenSolverType() { return useEigenSolverType; }
 
 	//helper functions for matrix:
-	virtual void SetNumberOfRowsAndColumns(Index numberOfRowsInit, Index numberOfColumnsInit)
+	virtual void SetNumberOfRowsAndColumns(Index numberOfRowsInit, Index numberOfColumnsInit) override
 	{
 		SetMatrixIsFactorized(false);
 		matrix.SetNumberOfRowsAndColumns(numberOfRowsInit, numberOfColumnsInit);
 	}
 
 	//! get number of columns
-	virtual Index NumberOfRows() const { return matrix.NumberOfRows(); }
+	virtual Index NumberOfRows() const override { return matrix.NumberOfRows(); }
 	//! get number of rows
-	virtual Index NumberOfColumns() const { return matrix.NumberOfColumns(); }
+	virtual Index NumberOfColumns() const override { return matrix.NumberOfColumns(); }
 
 	//! set all matrix items to zero (in dense matrix, all entries are set 0, in sparse matrix, the vector of items is erased)
-	virtual void SetAllZero()
+	virtual void SetAllZero() override
 	{
 		SetMatrixIsFactorized(false);
 		matrix.SetAll(0.);
 	}
 	//! multiply matrix entries with factor
-	virtual void MultiplyWithFactor(Real factor)
+	virtual void MultiplyWithFactor(Real factor) override
 	{
 		SetMatrixIsFactorized(false);
 		matrix *= factor;
 	}
 	//! set the matrix with a dense matrix
-	virtual void SetMatrix(const Matrix& otherMatrix)
+	virtual void SetMatrix(const Matrix& otherMatrix) override
 	{
 		SetMatrixIsFactorized(false);
 		matrix.CopyFrom(otherMatrix);
 	}
 
 	//! add a diagonal (or unit) matrix located at a certain (rowOffset, columnOffset) position
-	virtual void AddDiagonalMatrix(Real diagValue, Index numberOfRowsColumns, Index rowOffset = 0, Index columnOffset = 0)
+	virtual void AddDiagonalMatrix(Real diagValue, Index numberOfRowsColumns, Index rowOffset = 0, Index columnOffset = 0) override
 	{
 		SetMatrixIsFactorized(false);
 		for (Index i = 0; i < numberOfRowsColumns; i++)
@@ -309,14 +309,14 @@ public:
 	//! add (possibly) smaller factor*Matrix to this matrix, transforming the row indices of the submatrix with LTGrows and the column indices with LTGcolumns; 
 	//! in case of sparse matrices, only non-zero values are considered for the triplets (row,col,value)
 	//! the offsets are with respect to the indices calculated from the LTGrows/columns transformation
-	virtual void AddSubmatrix(const Matrix& submatrix, Real factor, const ArrayIndex& LTGrows, const ArrayIndex& LTGcolumns, Index rowOffset = 0, Index columnOffset = 0)
+	virtual void AddSubmatrix(const Matrix& submatrix, Real factor, const ArrayIndex& LTGrows, const ArrayIndex& LTGcolumns, Index rowOffset = 0, Index columnOffset = 0) override
 	{
 		SetMatrixIsFactorized(false);
 		matrix.AddSubmatrix(submatrix, factor, LTGrows, LTGcolumns, rowOffset, columnOffset);
 	}
 
 	//! add sparse triplets to dense matrix
-	virtual void AddSparseTriplets(const SparseTripletVector& otherTriplets)
+	virtual void AddSparseTriplets(const SparseTripletVector& otherTriplets) override
 	{
 		SetMatrixIsFactorized(false);
 		for (const SparseTriplet& triplet : otherTriplets)
@@ -328,7 +328,7 @@ public:
 	//! add (possibly) smaller factor*Transposed(Matrix) to this matrix, transforming the row indices of the submatrix with LTGrows and the column indices with LTGcolumns; 
 	//! in case of sparse matrices, only non-zero values are considered for the triplets (row,col,value)
 	//! the offsets are with respect to the indices calculated from the LTGrows/columns transformation
-	virtual void AddSubmatrixTransposed(const Matrix& submatrix, Real factor, const ArrayIndex& LTGrows, const ArrayIndex& LTGcolumns, Index rowOffset = 0, Index columnOffset = 0)
+	virtual void AddSubmatrixTransposed(const Matrix& submatrix, Real factor, const ArrayIndex& LTGrows, const ArrayIndex& LTGcolumns, Index rowOffset = 0, Index columnOffset = 0) override
 	{
 		SetMatrixIsFactorized(false);
 		matrix.AddSubmatrixTransposed(submatrix, factor, LTGrows, LTGcolumns, rowOffset, columnOffset);
@@ -336,7 +336,7 @@ public:
 
 	//! add (possibly) smaller factor*Matrix to this matrix; 
 	//! in case of sparse matrices, only non-zero values are considered for the triplets (row,col,value)
-	virtual void AddSubmatrixWithFactor(const Matrix& submatrix, Real factor, Index rowOffset = 0, Index columnOffset = 0)
+	virtual void AddSubmatrixWithFactor(const Matrix& submatrix, Real factor, Index rowOffset = 0, Index columnOffset = 0) override
 	{
 		SetMatrixIsFactorized(false);
 		matrix.AddSubmatrixWithFactor(submatrix, factor, rowOffset, columnOffset);
@@ -344,7 +344,7 @@ public:
 
 	//! add (possibly) smaller factor*Transposed(Matrix) to this matrix; 
 	//! in case of sparse matrices, only non-zero values are considered for the triplets (row,col,value)
-	virtual void AddSubmatrixTransposedWithFactor(const Matrix& submatrix, Real factor, Index rowOffset = 0, Index columnOffset = 0)
+	virtual void AddSubmatrixTransposedWithFactor(const Matrix& submatrix, Real factor, Index rowOffset = 0, Index columnOffset = 0) override
 	{
 		SetMatrixIsFactorized(false);
 		matrix.AddSubmatrixTransposedWithFactor(submatrix, factor, rowOffset, columnOffset);
@@ -352,7 +352,7 @@ public:
 
 
 	//! add possibly smaller matrix to this matrix; in case of sparse matrices, only the triplets (row,col,value) are added
-	virtual void AddSubmatrix(const GeneralMatrix& submatrix, Index rowOffset = 0, Index columnOffset = 0)
+	virtual void AddSubmatrix(const GeneralMatrix& submatrix, Index rowOffset = 0, Index columnOffset = 0) override
 	{
 		CHECKandTHROW((GetSystemMatrixType() == submatrix.GetSystemMatrixType()), "GeneralMatrixEXUdense::AddSubmatrix: invalid SystemMatrixType!");
 		SetMatrixIsFactorized(false);
@@ -362,7 +362,7 @@ public:
 
 
 	//! add column 'vector' at 'column'; used to add a couple of entries during jacobian computation; filters zeros in sparse mode
-	virtual void AddColumnVector(Index column, const Vector& vector, Index rowOffset = 0)
+	virtual void AddColumnVector(Index column, const Vector& vector, Index rowOffset = 0) override
 	{
         matrix.AddColumnVector(column, vector, rowOffset);
 		//if (!rowOffset)
@@ -382,53 +382,53 @@ public:
 	}
 
     //! add factor*(vectorAdd-vectorSub) at 'column'; used for numerical jacobians
-    virtual void AddColumnVectorDiff(Index column, const Vector& vectorAdd, const Vector& vectorSub, Real factor, Index rowOffset = 0)
+    virtual void AddColumnVectorDiff(Index column, const Vector& vectorAdd, const Vector& vectorSub, Real factor, Index rowOffset = 0) override
     {
             matrix.AddColumnVectorDiff(column, vectorAdd, vectorSub, factor, rowOffset);
     }
 
 	//! After filling the matrix, it is finalized for further operations (matrix*vector, factorization, ...)
-	virtual void FinalizeMatrix() 
+	virtual void FinalizeMatrix() override 
 	{
 		SetMatrixIsFactorized(false);
 	}
 
 	//! factorize matrix (invert, SparseLU, etc.);
 	//! return -1 if success, causing index otherwise
-    virtual Index FactorizeNew(); //removed 2023-06-11: switched to Eigen:FullPivLU; bool ignoreRedundantEquation = false, Index redundantEquationsStart = 0);
+    virtual Index FactorizeNew() override; //removed 2023-06-11: switched to Eigen:FullPivLU; bool ignoreRedundantEquation = false, Index redundantEquationsStart = 0);
 
 	//! multiply matrix with vector: solution = A*x
-	virtual void MultMatrixVector(const Vector& x, Vector& solution)
+	virtual void MultMatrixVector(const Vector& x, Vector& solution) override
 	{
 		if (IsMatrixIsFactorized()) { SysError("GeneralMatrixEXUdense::MultMatrixVector(...): matrix is already factorized ==> use Solve(...)!"); }
 		EXUmath::MultMatrixVector(matrix, x, solution);
 	}
 
 	//! multiply matrix with vector and add to solution: solution += A*x
-	virtual void MultMatrixVectorAdd(const Vector& x, Vector& solution)
+	virtual void MultMatrixVectorAdd(const Vector& x, Vector& solution) override
 	{
 		if (IsMatrixIsFactorized()) { SysError("GeneralMatrixEXUdense::MultMatrixVectorAdd(...): matrix is already factorized ==> use Solve(...)!"); }
 		EXUmath::MultMatrixVectorAdd(matrix, x, solution);
 	}
 
 	//! multiply transposed(matrix) with vector: solution = A^T*x
-	virtual void MultMatrixTransposedVector(const Vector& x, Vector& solution)
+	virtual void MultMatrixTransposedVector(const Vector& x, Vector& solution) override
 	{
 		if (IsMatrixIsFactorized()) { SysError("GeneralMatrixEXUdense::MultMatrixTransposedVector(...): matrix is already factorized ==> use Solve(...)!"); }
 		EXUmath::MultMatrixTransposedVector(matrix, x, solution);
 	}
 
 	//!after factorization of matrix (=A), solve provides a solution vector (=x) for A*x = rhs ==> soluation = A^{-1}*rhs
-    virtual void Solve(const Vector& rhs, Vector& solution);
+    virtual void Solve(const Vector& rhs, Vector& solution) override;
 
 	//! return a dense matrix from any other matrix: requires a copy - SLOW!
-	virtual ResizableMatrix GetEXUdenseMatrix() const
+	virtual ResizableMatrix GetEXUdenseMatrix() const override
 	{
 		return matrix;
 	}
 
 	//! function to print matrix
-	virtual void PrintMatrix(std::ostream& os) const
+	virtual void PrintMatrix(std::ostream& os) const override
 	{
 		os << matrix;
 	}
@@ -479,7 +479,7 @@ public:
 	}
 
 	//! information on storage type
-	virtual LinearSolverType GetSystemMatrixType() const 
+	virtual LinearSolverType GetSystemMatrixType() const override 
 	{
 		if (!isSymmetric) { return LinearSolverType::EigenSparse; }
 		else { return LinearSolverType::EigenSparseSymmetric; }
@@ -490,18 +490,18 @@ public:
 	virtual bool IsMatrixBuiltFromTriplets() const { return matrixBuiltFromTriplets; }
 
 	//! flag to check if is symmetric:
-	virtual void AssumeSymmetric(bool flag = true) 
+	virtual void AssumeSymmetric(bool flag = true) override 
 	{ 
 #if !defined(USE_SYMMETRIC_SOLVER)
 		CHECKandTHROW(flag == false, "LinearSolver::EigenSparseSymmetric: (yet) not available; use EigenSparse");
 #endif
 		isSymmetric = flag; 
 	}
-	virtual bool IsSymmetric() const { return isSymmetric; }
+	virtual bool IsSymmetric() const override { return isSymmetric; }
 
 	//! reuse pattern for faster computation [experimental]
-	virtual void SetReuseAnalyzedPattern(bool flag) { reuseAnalyzedPattern = flag; }
-	virtual bool GetReuseAnalyzedPattern() const { return reuseAnalyzedPattern; }
+	virtual void SetReuseAnalyzedPattern(bool flag) override { reuseAnalyzedPattern = flag; }
+	virtual bool GetReuseAnalyzedPattern() const override { return reuseAnalyzedPattern; }
 
 	//! get (read) matrix as dense exudyn Matrix
 	const SparseTripletVector& GetSparseTriplets() const { return triplets; }
@@ -515,7 +515,7 @@ public:
 	}
 
 	//helper functions for matrix:
-	virtual void SetNumberOfRowsAndColumns(Index numberOfRowsInit, Index numberOfColumnsInit)
+	virtual void SetNumberOfRowsAndColumns(Index numberOfRowsInit, Index numberOfColumnsInit) override
 	{
 		SetMatrixIsFactorized(false);
 		SetMatrixBuiltFromTriplets(false);
@@ -525,87 +525,87 @@ public:
 	}
 
 	//! get number of columns
-	virtual Index NumberOfRows() const { return numberOfRows; }
+	virtual Index NumberOfRows() const override { return numberOfRows; }
 	//! get number of rows
-	virtual Index NumberOfColumns() const { return numberOfColumns; }
+	virtual Index NumberOfColumns() const override { return numberOfColumns; }
 
 	//! set all matrix items to zero (in dense matrix, all entries are set 0, in sparse matrix, the vector of items is erased)
-	virtual void SetAllZero();
+	virtual void SetAllZero() override;
 
 	//! reset matrices and free memory
 	virtual void Reset();
 
 	//! multiply either triplets or matrix entries with factor
-	virtual void MultiplyWithFactor(Real factor);
+	virtual void MultiplyWithFactor(Real factor) override;
 	
 	//! set the matrix with a dense matrix; do not use this function for computational tasks, as it will drop performance significantly
-	virtual void SetMatrix(const Matrix& otherMatrix);
+	virtual void SetMatrix(const Matrix& otherMatrix) override;
 
 	//! add a diagonal (or unit) matrix located at a certain (rowOffset, columnOffset) position
-	virtual void AddDiagonalMatrix(Real diagValue, Index numberOfRowsColumns, Index rowOffset = 0, Index columnOffset = 0);
+	virtual void AddDiagonalMatrix(Real diagValue, Index numberOfRowsColumns, Index rowOffset = 0, Index columnOffset = 0) override;
 
 	//! add (possibly) smaller factor*Matrix to this matrix, transforming the row indices of the submatrix with LTGrows and the column indices with LTGcolumns; 
 	//! in case of sparse matrices, only non-zero values are considered for the triplets (row,col,value)
 	//! the offsets are with respect to the indices calculated from the LTGrows/columns transformation
-	virtual void AddSubmatrix(const Matrix& submatrix, Real factor, const ArrayIndex& LTGrows, const ArrayIndex& LTGcolumns, Index rowOffset = 0, Index columnOffset = 0);
+	virtual void AddSubmatrix(const Matrix& submatrix, Real factor, const ArrayIndex& LTGrows, const ArrayIndex& LTGcolumns, Index rowOffset = 0, Index columnOffset = 0) override;
 
 	//! add sparse triplets to sparse matrix
-	virtual void AddSparseTriplets(const SparseTripletVector& otherTriplets);
+	virtual void AddSparseTriplets(const SparseTripletVector& otherTriplets) override;
 
 	//! add (possibly) smaller factor*Transposed(Matrix) to this matrix, transforming the row indices of the submatrix with LTGrows and the column indices with LTGcolumns; 
 	//! in case of sparse matrices, only non-zero values are considered for the triplets (row,col,value)
 	//! the offsets are with respect to the indices calculated from the LTGrows/columns transformation
-	virtual void AddSubmatrixTransposed(const Matrix& submatrix, Real factor, const ArrayIndex& LTGrows, const ArrayIndex& LTGcolumns, Index rowOffset = 0, Index columnOffset = 0);
+	virtual void AddSubmatrixTransposed(const Matrix& submatrix, Real factor, const ArrayIndex& LTGrows, const ArrayIndex& LTGcolumns, Index rowOffset = 0, Index columnOffset = 0) override;
 
 	//! add (possibly) smaller factor*Matrix to this matrix; 
 	//! in case of sparse matrices, only non-zero values are considered for the triplets (row,col,value)
-	virtual void AddSubmatrixWithFactor(const Matrix& submatrix, Real factor, Index rowOffset = 0, Index columnOffset = 0);
+	virtual void AddSubmatrixWithFactor(const Matrix& submatrix, Real factor, Index rowOffset = 0, Index columnOffset = 0) override;
 
 	//! add (possibly) smaller factor*Transposed(Matrix) to this matrix; 
 	//! in case of sparse matrices, only non-zero values are considered for the triplets (row,col,value)
-	virtual void AddSubmatrixTransposedWithFactor(const Matrix& submatrix, Real factor, Index rowOffset = 0, Index columnOffset = 0);
+	virtual void AddSubmatrixTransposedWithFactor(const Matrix& submatrix, Real factor, Index rowOffset = 0, Index columnOffset = 0) override;
 
 	//! add possibly GeneralMatrix to this matrix; in case of sparse matrices, only the triplets (row,col,value) are added
 	//! matrix types of submatrix and *this must be same
 	//! operations must be both in triplet mode!
-	virtual void AddSubmatrix(const GeneralMatrix& submatrix, Index rowOffset = 0, Index columnOffset = 0);
+	virtual void AddSubmatrix(const GeneralMatrix& submatrix, Index rowOffset = 0, Index columnOffset = 0) override;
 
 	//! add column vector 'vec' at 'column'; used to add a couple of entries during jacobian computation; filters zeros in sparse mode
-	virtual void AddColumnVector(Index column, const Vector& vec, Index rowOffset = 0);
+	virtual void AddColumnVector(Index column, const Vector& vec, Index rowOffset = 0) override;
 
     //! add factor*(vectorAdd-vectorSub) at 'column'; used for numerical jacobians
-    virtual void AddColumnVectorDiff(Index column, const Vector& vectorAdd, const Vector& vectorSub, Real factor, Index rowOffset = 0);
+    virtual void AddColumnVectorDiff(Index column, const Vector& vectorAdd, const Vector& vectorSub, Real factor, Index rowOffset = 0) override;
     
     //! After filling the matrix, it is finalized for further operations (matrix*vector, factorization, ...)
-	virtual void FinalizeMatrix();
+	virtual void FinalizeMatrix() override;
 
 	//! factorize matrix (invert, SparseLU, etc.);
 	//! return -1 if success, causing index otherwise
-    virtual Index FactorizeNew(); // bool ignoreRedundantEquation = false, Index redundantEquationsStart = 0);
+    virtual Index FactorizeNew() override; // bool ignoreRedundantEquation = false, Index redundantEquationsStart = 0);
 
 	//! multiply matrix with vector: solution = A*x
 	//! this leads to memory allocation in case that the matrix is built from triplets
-	virtual void MultMatrixVector(const Vector& x, Vector& solution);
+	virtual void MultMatrixVector(const Vector& x, Vector& solution) override;
 
 	//! multiply matrix with vector and add to solution: solution += A*x
 	//! this leads to memory allocation in case that the matrix is built from triplets
-	virtual void MultMatrixVectorAdd(const Vector& x, Vector& solution);
+	virtual void MultMatrixVectorAdd(const Vector& x, Vector& solution) override;
 
 	//! multiply transposed(matrix) with vector: solution = A^T*x
 	//! this leads to memory allocation in case that the matrix is built from triplets
-	virtual void MultMatrixTransposedVector(const Vector& x, Vector& solution);
+	virtual void MultMatrixTransposedVector(const Vector& x, Vector& solution) override;
 
 	//! after factorization of matrix (=A), solve provides a solution vector (=x) for A*x = rhs ==> soluation = A^{-1}*rhs
-	virtual void Solve(const Vector& rhs, Vector& solution);
+	virtual void Solve(const Vector& rhs, Vector& solution) override;
 
 	//! return a dense matrix from any other matrix: requires a copy - SLOW!
-	virtual ResizableMatrix GetEXUdenseMatrix() const;
+	virtual ResizableMatrix GetEXUdenseMatrix() const override;
 
 	//! the entries of the built matrix, or the triplets before it is built (#1529)
-	virtual void GetSparseEntries(std::vector<Index>& rows, std::vector<Index>& columns, std::vector<Real>& values) const;
+	virtual void GetSparseEntries(std::vector<Index>& rows, std::vector<Index>& columns, std::vector<Real>& values) const override;
 
 	//! function to print matrix
-	virtual void PrintMatrix(std::ostream& os) const
+	virtual void PrintMatrix(std::ostream& os) const override
 	{
 		os << GetEXUdenseMatrix();
 	}

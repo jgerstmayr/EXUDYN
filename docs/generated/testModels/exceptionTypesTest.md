@@ -120,6 +120,20 @@ def MarkerDoesNotExist():
     localMbs.Assemble()
 
 
+@Case('a Lie group node, static solver', 'runs a static solution of a rigid body with NodeRigidBodyRotVecLG')
+def LieGroupNodeInStaticSolver():
+    localSC = exu.SystemContainer()
+    localMbs = localSC.AddSystem()
+    localMbs.CreateRigidBody(inertia=InertiaCuboid(density=1000, sideLengths=[1, 0.1, 0.1]),
+                             nodeType=exu.NodeType.RotationRotationVector, gravity=[0, -9.81, 0])
+    localMbs.Assemble()
+
+    simulationSettings = exu.SimulationSettings()
+    simulationSettings.solution.file.write = False
+    simulationSettings.staticSolver.verboseMode = 0
+    localMbs.SolveStatic(simulationSettings)
+
+
 @Case('a system the solver cannot solve', 'runs a static solution of a body that is not held')
 def SolverCannotSolve():
     localSC = exu.SystemContainer()
