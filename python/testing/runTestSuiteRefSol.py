@@ -128,6 +128,7 @@ def TestExamplesReferenceSolution():
         'markerNodeCoordinateReferenceTest.py':16.65, #new 2026-10-11: MarkerNodeCoordinate(includeReferenceCoordinate=True), CreateCoordinateConstraint(includeReferenceCoordinates), MarkerNodeCoordinates(includeReferenceCoordinates=False) (#990)
         'coSimulationTest.py':0.07053481177618996, #new 2026-10-11: an implicit and an explicit system coupled in the PreStepUserFunction, against one system (#1912)
         'springDamperVelocityOffsetTest.py':2.287839441565404, #new 2026-10-12: velocityOffset of the coordinate, Cartesian and rigid-body spring-dampers against the exact solution (#829, #1631)
+        'userRigidBodyTest.py':13.475755021376353, #new 2026-10-12: ObjectUserBody as a rigid body on NodeRigidBodyRxyz against ObjectRigidBody, and what it refuses (#2986)
         'rotationMarkerDeprecationTest.py':-0.1340286194620787, #new 2026-10-03: rotationMarker0/1 against localHT of the markers, the deprecation warning once per session (#2745, #2801)
         'contactFrictionCircleCable2DnoFrictionTest.py':0.8052196344904814, #new 2026-10-05: no tangential force without a friction model, whatever the slip state (#1290); 1000 steps 2026-10-09 (#2912)
         'systemContainerLifetimeTest.py':-3.809999999999995, #new 2026-10-05: the MainSystem of AddSystem and GetSystem keeps its SystemContainer alive (#2851)
@@ -452,6 +453,7 @@ def MiniExamplesReferenceSolution():
         'ObjectConnectorCoordinate.py':0.04999999999999982,
         'ObjectGenericODE2.py':1.0039999999354785,
         'ObjectGenericODE1.py':-0.8206847097689384,
+        'ObjectUserBody.py':-4.904999999999998, #new 2026-10-12 (#2986)
         'ObjectJointRevoluteZ.py':0.49999999999999795,
         'ObjectKinematicTree.py':-3.134018551808591,
         'ObjectMass1D.py':2.0,

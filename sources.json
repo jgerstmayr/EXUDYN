@@ -102,6 +102,7 @@
         "src/ImplObjects/CObjectRigidBody2D.cpp",
         "src/ImplObjects/CObjectRotationalMass1D.cpp",
         "src/ImplObjects/CObjectSuperElement.cpp",
+        "src/ImplObjects/CObjectUserBody.cpp",
         "src/Linalg/LinearSolver.cpp",
         "src/Linalg/Matrix.cpp",
         "src/Linalg/Symbolic.cpp",

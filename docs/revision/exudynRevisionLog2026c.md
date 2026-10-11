@@ -844,3 +844,32 @@ Cartesian, rigid-body and coordinate spring-dampers, not in ObjectContactFrictio
   Test model springDamperVelocityOffsetTest.py: dampers without springs drive the masses to the velocity offsets,
   against v(t) = vOff (1 - exp(-d t/m)) to 1e-4 (generalized-alpha, 1000 steps). #1189 closed: not for
   ObjectContactFrictionCircleCable2D.
+
+<a id="rg7-3-1"></a>
+### RG7.3.1 — ObjectUserBody, the user rigid body (2026-10-12, #2986)
+*(Maintainer 2026-10-12: go with the first steps to make a user rigid body; the user items may still be dropped, so the
+code they add is measured.)*
+- **The item**: ObjectUserBody (definitions/itemDefsObjects.py, src/ImplObjects/CObjectUserBody.cpp) on any number of
+  ODE2 nodes. User functions: `massMatrixUserFunction` (required, checked at Assemble), `forceUserFunction`,
+  `positionUserFunction`, `positionJacobianUserFunction`, `rotationMatrixUserFunction`, `rotationJacobianUserFunction`
+  (the three matrix functions share one def), and `graphicsDataUserFunction`. Every one gets the TOTAL coordinates
+  (reference plus displacement), as a finite element computes a point; the coordinates are lists, as for
+  ObjectGenericODE2. C++ forms the velocity and the angular velocity from the Jacobians, the displacement from the
+  reference configuration, `GetJacobianTransposedTimesVectorDerivative` by central differences of the Jacobian user
+  functions, and the Jacobian of the equations numerically. The access function types derive from the declared access
+  functions: MarkerBodyPosition and MarkerBodyRigid; a function a marker needs and the body was not given raises a
+  ValueError with its name when it is evaluated - checked in the test model.
+- **The renderer thread** may not call Python (VisualizationSystem::UpdateGraphicsData). The access functions in the
+  visualization configuration ask `PyGILState_Check()`: without the GIL they read src/System/VisualizationAccessCache.h,
+  which registers a local position it does not know; `VisualizationObjectUserBody::CallUserFunction`, called in the
+  computation thread when the renderer requests the user function drawing (its HasUserFunction is always true), fills
+  the cache and draws the graphics of the user function. A marker or connector is drawn a frame late; velocities and
+  displacements in the renderer thread are zero.
+- **Test model** userRigidBodyTest.py: a body on NodeRigidBodyRxyz with M = diag(m I, G^T J G) and the quadratic
+  velocity terms G^T (J G_t theta_t + omega x J omega), written with exudyn.cUtilities, beside ObjectRigidBody, both
+  under gravity, a CartesianSpringDamper at a point off the center of mass and a LoadTorqueVector on MarkerBodyRigid;
+  position, displacement, velocity, rotation matrix, angular velocities and kinetic energy agree to 4.5e-14 after
+  500 generalized-alpha steps. Mini example: a mass point as a user body.
+- **Code added** (design 7.1): by hand 500 lines of C++ (CObjectUserBody.cpp 304, VisualizationAccessCache.h 97,
+  evaluation wrappers 53, CallUserFunction 20, the consistency check 27) and 276 lines of definition; generated 493
+  lines of headers plus the factory, the Python interface and the page. Nothing in the existing items changed.

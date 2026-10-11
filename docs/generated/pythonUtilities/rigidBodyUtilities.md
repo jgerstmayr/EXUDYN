@@ -272,7 +272,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`cUtilitiesT
 - **output**: 3x3 matrix GLocal as np.array
 
 
-Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`cUtilitiesTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/cUtilitiesTest.py) (TM)
+Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`cUtilitiesTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/cUtilitiesTest.py) (TM), [`userRigidBodyTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/userRigidBodyTest.py) (TM)
 
 
 (sec-rigidbodyutilities-rotxyz2glocal-t)=
@@ -287,7 +287,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`cUtilitiesT
 - **output**: 3x3 matrix GLocal_t as np.array
 
 
-Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`cUtilitiesTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/cUtilitiesTest.py) (TM)
+Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`cUtilitiesTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/cUtilitiesTest.py) (TM), [`userRigidBodyTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/userRigidBodyTest.py) (TM)
 
 
 (sec-rigidbodyutilities-angularvelocity2rotxyz-t)=

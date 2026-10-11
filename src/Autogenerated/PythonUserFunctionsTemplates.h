@@ -11,6 +11,8 @@ template class PythonUserFunctionBase<std::function<StdVector(const MainSystem&,
 template class PythonUserFunctionBase<std::function<py::object(const MainSystem&,Real,Index,StdVector,StdVector)>>;
 template class PythonUserFunctionBase<std::function<py::object(const MainSystem&,Real,Index,StdVector,StdVector,Real,Real)>>;
 template class PythonUserFunctionBase<std::function<StdVector(const MainSystem&,Real,Index,StdVector)>>;
+template class PythonUserFunctionBase<std::function<StdVector3D(const MainSystem&,Real,Index,StdVector3D,StdVector)>>;
+template class PythonUserFunctionBase<std::function<py::object(const MainSystem&,Real,Index,StdVector3D,StdVector)>>;
 template class PythonUserFunctionBase<std::function<NumpyMatrix(const MainSystem&,Real,Index,StdVector,StdVector)>>;
 template class PythonUserFunctionBase<std::function<Real(const MainSystem&,Real,Index,Real,Real,Real,Real,Real,Real,Real,Real,Real)>>;
 template class PythonUserFunctionBase<std::function<Real(const MainSystem&,Real,Index,Real,Real,Real,Real,Real)>>;

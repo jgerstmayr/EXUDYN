@@ -14,4 +14,5 @@ ObjectMass1D
 ObjectRotationalMass1D
 ObjectRigidBody
 ObjectRigidBody2D
+ObjectUserBody
 ```

@@ -2004,6 +2004,284 @@ oGenericODE1 = mbs.AddObject(ObjectGenericODE1(nodeNumbers=[nODE1],
     ))
 
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#++++++++++++++++   ObjectUserBody   ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+def ObjectUserBody_massMatrixUserFunction(mbs: MainSystem, t: Real, itemNumber: Index,
+                                          q: Vector, q_t: Vector) -> MatrixContainer:
+    r"""A user function, which computes the mass matrix of the body.
+
+    Args:
+        mbs: provides MainSystem mbs to which object belongs
+        t: current time in mbs
+        itemNumber: integer number $i_N$ of the object in mbs, allowing easy access to all object data via mbs.GetObjectParameter(itemNumber, ...)
+        q: $\in \Rcal^n$ object coordinates, the coordinates of its nodes in their order, INCLUDING their reference values
+        q_t: $\in \Rcal^n$ object velocity coordinates
+    Returns:
+        $\in \Rcal^{n \times n}$ the mass matrix, as numpy array, list of lists or exu.MatrixContainer
+    """
+
+def ObjectUserBody_forceUserFunction(mbs: MainSystem, t: Real, itemNumber: Index, q: Vector,
+                                     q_t: Vector) -> Vector:
+    r"""A user function, which computes the generalized forces of the body: elastic forces, the quadratic velocity terms of a rigid body, damping; on the right-hand side, $\Mm \ddot\qv = \fv$.
+
+    Args:
+        mbs: provides MainSystem mbs to which object belongs
+        t: current time in mbs
+        itemNumber: integer number $i_N$ of the object in mbs, allowing easy access to all object data via mbs.GetObjectParameter(itemNumber, ...)
+        q: $\in \Rcal^n$ object coordinates, INCLUDING their reference values
+        q_t: $\in \Rcal^n$ object velocity coordinates
+    Returns:
+        $\in \Rcal^{n}$ the generalized force vector
+    """
+
+def ObjectUserBody_positionUserFunction(mbs: MainSystem, t: Real, itemNumber: Index,
+                                        localPosition: Vector3D, q: Vector) -> Vector3D:
+    r"""A user function, which computes the global position of the material point at localPosition: the position interface of the body.
+
+    Args:
+        mbs: provides MainSystem mbs to which object belongs
+        t: current time in mbs
+        itemNumber: integer number $i_N$ of the object in mbs
+        localPosition: $\in \Rcal^3$ the local position of the point, in the coordinates the body defines (e.g. body-fixed, or the element coordinates of a finite element)
+        q: $\in \Rcal^n$ object coordinates, INCLUDING their reference values, of the configuration asked for
+    Returns:
+        $\in \Rcal^{3}$ the global position of the point
+    """
+
+def ObjectUserBody_matrixUserFunction(mbs: MainSystem, t: Real, itemNumber: Index,
+                                      localPosition: Vector3D, q: Vector) -> MatrixContainer:
+    r"""A user function of the interface of the body that returns a matrix at localPosition: the position Jacobian $\Jm_{pos} = \partial \vv / \partial \dot\qv$ (3 x n), the rotation matrix (3 x 3) or the rotation Jacobian $\Jm_{rot} = \partial \LU{0}{\tomega} / \partial \dot\qv$ (3 x n, global angular velocity).
+
+    Args:
+        mbs: provides MainSystem mbs to which object belongs
+        t: current time in mbs
+        itemNumber: integer number $i_N$ of the object in mbs
+        localPosition: $\in \Rcal^3$ the local position of the point
+        q: $\in \Rcal^n$ object coordinates, INCLUDING their reference values, of the configuration asked for
+    Returns:
+        the matrix, as numpy array or list of lists
+    """
+
+definitions.append(ItemDefinition(
+    className='ObjectUserBody',
+    drawing=r'What its `graphicsDataUserFunction` returns, in global coordinates; nothing without it.',
+    drawingSettings=[],
+    addIncludesC=r"""#include "System/VisualizationAccessCache.h"
+class MainSystem; //AUTO; for std::function / userFunction; avoid including MainSystem.h
+""",
+    addProtectedC=r"""    mutable VisualizationAccessCache visualizationCache; //positions and rotations for a renderer thread, which may not call Python
+    mutable Index ownObjectNumber = -1; //the number of this object in the system, for the user functions of the access functions
+""",
+    cParentClass=ParentClassCObjectBody,
+    overallDescription=r"""A body whose equations of motion and whose position, and optionally orientation, at a local position are computed by Python user functions: a user finite element or a user rigid body on existing nodes. As it provides the access functions of a body, the body markers (MarkerBodyPosition, MarkerBodyRigid), SensorBody, the loads on these markers and every connector work on it.""",
+    classType=ClassTypeObject,
+    detailedDescription=r"""    #### Coordinates
+
+    The object coordinates $\qv \in \Rcal^n$ are the ABRV:ODE2 coordinates of its nodes, in the order of
+    `nodeNumbers`, **including** their reference values; every user function gets the same $\qv$, so that
+    a point is computed from the total coordinates as a finite element does. The user functions get $\qv$, $\dot\qv$
+    and the local position as lists; `np.array(q)` makes an array of one.
+
+    #### Equations of motion
+
+    $$
+    \Mm(\qv)\, \ddot\qv = \fv(t, \qv, \dot\qv) + \fv_{loads} \, ,
+    $$
+
+    with $\Mm$ from `massMatrixUserFunction` and $\fv$ from `forceUserFunction` (zero without it). The
+    Jacobian of the left-hand side is computed numerically, as for every item without an analytic one.
+
+    #### Interface of the body
+
+    | function | gives | needed for |
+    |---|---|---|
+    | `positionUserFunction` | $\LU{0}{\pv}(\pLocB, \qv)$ | positions of markers, sensors and the drawing |
+    | `positionJacobianUserFunction` | $\Jm_{pos}(\pLocB, \qv) = \partial \LU{0}{\pv} / \partial \qv$ | MarkerBodyPosition, MarkerBodyRigid: forces into the coordinates |
+    | `rotationMatrixUserFunction` | $\LU{0b}{\Rot}(\pLocB, \qv)$ | MarkerBodyRigid, optional |
+    | `rotationJacobianUserFunction` | $\Jm_{rot}(\pLocB, \qv) = \partial \LU{0}{\tomega} / \partial \dot\qv$ | MarkerBodyRigid: torques, optional |
+
+    The velocity is $\LU{0}{\vv} = \Jm_{pos} \dot\qv$, the global angular velocity
+    $\LU{0}{\tomega} = \Jm_{rot} \dot\qv$ and the local one $\LU{b}{\tomega} = \LU{b0}{\Rot}\LU{0}{\tomega}$; the derivative
+    of $\Jm_{pos}\tp \fv + \Jm_{rot}\tp \mv$ with respect to $\qv$, which the Jacobians of connectors need, is computed
+    by central differences of the Jacobian user functions. A marker that needs a function the body is not given
+    raises when it is evaluated.
+
+    The user functions are called serially, one Python call at a time. A renderer that runs in a thread of its
+    own may not call Python: it draws markers and connectors on the body with the positions and rotation matrices
+    that the computation thread computes for it, a frame later.
+    """,
+    miniExample=r"""    #a mass point as a user body on a NodePoint: M = m*I, the position of every point is q
+    m = 2
+    node = mbs.AddNode(NodePoint(referenceCoordinates=[1,0,0]))
+    def UFmass(mbs, t, itemNumber, q, q_t):
+        return m*np.eye(3)
+    def UFposition(mbs, t, itemNumber, localPosition, q):
+        return q
+    def UFpositionJacobian(mbs, t, itemNumber, localPosition, q):
+        return np.eye(3)
+    #a point does not rotate; with these, rigid markers and the rotation outputs work on it
+    def UFrotationMatrix(mbs, t, itemNumber, localPosition, q):
+        return np.eye(3)
+    def UFrotationJacobian(mbs, t, itemNumber, localPosition, q):
+        return np.zeros((3,3))
+    body = mbs.AddObject(ObjectUserBody(nodeNumbers=[node], massMatrixUserFunction=UFmass,
+                                        positionUserFunction=UFposition,
+                                        positionJacobianUserFunction=UFpositionJacobian,
+                                        rotationMatrixUserFunction=UFrotationMatrix,
+                                        rotationJacobianUserFunction=UFrotationJacobian))
+    marker = mbs.AddMarker(MarkerBodyPosition(bodyNumber=body))
+    mbs.AddLoad(LoadForceVector(markerNumber=marker, loadVector=[0,-m*9.81,0]))
+
+    mbs.Assemble()
+    mbs.SolveDynamic()
+
+    #free fall: y = -g/2*t^2 at t=1
+    exu.sys['testResult'] = mbs.GetObjectOutputBody(body, exu.OutputVariableType.Position, localPosition=[0,0,0])[1] #-4.905
+    """,
+    miniExamplePerformanceTest={'numberOfSteps': 1000},
+    mainParentClass=MainParentClassMainObjectBody,
+    objectType=ObjectTypeBody,
+    outputVariables=[
+        ItemOutputVariable(OVPosition, r"""$\LU{0}{\pv}\cConfig(\pLocB)$global position of the point at localPosition, from positionUserFunction"""),
+        ItemOutputVariable(OVDisplacement, r"""$\LU{0}{\pv}\cConfig(\pLocB) - \LU{0}{\pv}\cRef(\pLocB)$global displacement of the point at localPosition"""),
+        ItemOutputVariable(OVVelocity, r"""$\LU{0}{\vv}\cConfig(\pLocB) = \Jm_{pos}\dot\qv\cConfig$global velocity of the point at localPosition"""),
+        ItemOutputVariable(OVRotationMatrix, r"""$\mathrm{vec}(\LU{0b}{\Rot})\cConfig$rotation matrix at localPosition, from rotationMatrixUserFunction, row by row"""),
+        ItemOutputVariable(OVAngularVelocity, r"""$\LU{0}{\tomega}\cConfig = \Jm_{rot}\dot\qv\cConfig$global angular velocity at localPosition"""),
+        ItemOutputVariable(OVAngularVelocityLocal, r"""$\LU{b}{\tomega}\cConfig = \LU{b0}{\Rot}\LU{0}{\tomega}\cConfig$local angular velocity at localPosition"""),
+        ItemOutputVariable(OVCoordinates, r'all ABRV:ODE2 (displacement) coordinates of the nodes'),
+        ItemOutputVariable(OVCoordinates_t, OVDVelocityCoordinatesODE2),
+        ItemOutputVariable(OVKineticEnergy, r"""$T = \frac{1}{2} \dot\qv\tp \Mm\, \dot\qv$kinetic energy from the mass matrix of the current state; current configuration only; localPosition must be $[0,0,0]$"""),
+        ],
+    visuParentClass=VisuParentClassVisualizationObject,
+    members=[
+        ItemParameter(type=TString, destination=DestMain, fromParent=True,
+            pythonName='name',
+            defaultValue=NoDefaultValue,
+            description=r"objects's unique name"),
+        ItemParameter(type=TArrayIndex(ItemNode), destination=DestComp+DestParam,
+            pythonName='nodeNumbers',
+            defaultValue='ArrayIndex()',
+            description=r"""$\mathbf{n}_n = [n_0,\,\ldots,\,n_n]\tp$the nodes whose ABRV:ODE2 coordinates are the coordinates of the body, in this order"""),
+        ItemParameter(destination=DestComp+DestParam,
+            pythonName='massMatrixUserFunction',
+            defaultValue=0,
+            description=r"""$\Mm(\qv) \in \Rcal^{n\times n}$A Python user function which computes the mass matrix; it must be given""",
+            userFunction=ObjectUserBody_massMatrixUserFunction),
+        ItemParameter(destination=DestComp+DestParam,
+            pythonName='forceUserFunction',
+            defaultValue=0,
+            description=r"""$\fv \in \Rcal^{n}$A Python user function which computes the generalized forces on the right-hand side; zero if not given""",
+            userFunction=ObjectUserBody_forceUserFunction),
+        ItemParameter(destination=DestComp+DestParam,
+            pythonName='positionUserFunction',
+            defaultValue=0,
+            description=r"""$\LU{0}{\pv}(\pLocB, \qv)$A Python user function which computes the global position of the point at localPosition""",
+            userFunction=ObjectUserBody_positionUserFunction),
+        ItemParameter(destination=DestComp+DestParam,
+            pythonName='positionJacobianUserFunction',
+            defaultValue=0,
+            description=r"""$\Jm_{pos}(\pLocB, \qv) \in \Rcal^{3\times n}$A Python user function which computes the position Jacobian at localPosition""",
+            userFunction=ObjectUserBody_matrixUserFunction),
+        ItemParameter(destination=DestComp+DestParam,
+            pythonName='rotationMatrixUserFunction',
+            defaultValue=0,
+            description=r"""$\LU{0b}{\Rot}(\pLocB, \qv) \in \Rcal^{3\times 3}$A Python user function which computes the rotation matrix at localPosition; optional, for rigid markers""",
+            userFunction=ObjectUserBody_matrixUserFunction),
+        ItemParameter(destination=DestComp+DestParam,
+            pythonName='rotationJacobianUserFunction',
+            defaultValue=0,
+            description=r"""$\Jm_{rot}(\pLocB, \qv) \in \Rcal^{3\times n}$A Python user function which computes the rotation Jacobian (of the global angular velocity) at localPosition; optional, for rigid markers""",
+            userFunction=ObjectUserBody_matrixUserFunction),
+        ItemFunction(type=TBool, destination=DestComp, cFlags=CFConst,
+            pythonName='PotentialEnergyAvailable', implementation='return false;',
+            description=r'no PotentialEnergy: the user function defines the forces'),
+        ItemFunction(type=TBool, destination=DestComp, cFlags=CFConst,
+            pythonName='HasUserFunction', implementation='return true;',
+            description=r'the user functions are called serially'),
+        ItemFunctionDef('ComputeMassMatrix'),
+        ItemFunctionDef('ComputeODE2LHS'),
+        ItemFunctionDef('GetAvailableJacobians',
+            implementation='return (JacobianType::Type)(JacobianType::ODE2_ODE2 + JacobianType::ODE2_ODE2_t);'),
+        ItemAccessFunctionTypes(),
+        ItemFunctionDef('GetPositionJacobian'),
+        ItemFunctionDef('GetRotationJacobian'),
+        ItemFunctionDef('GetJacobianTransposedTimesVectorDerivative'),
+        ItemFunctionDef('GetOutputVariableBody'),
+        ItemFunctionDef('GetPosition'),
+        ItemFunctionDef('GetDisplacement'),
+        ItemFunctionDef('GetVelocity'),
+        ItemFunctionDef('GetRotationMatrix'),
+        ItemFunctionDef('GetAngularVelocity'),
+        ItemFunctionDef('GetAngularVelocityLocal'),
+        ItemFunctionDef('GetLocalCenterOfMass',
+            implementation='return Vector3D({0.,0.,0.});'),
+        ItemFunction(type='const char*', destination=DestMain, cFlags=CFConst,
+            pythonName='GetTypeName',
+            implementation='return "UserBody";',
+            description=r'Get type name of object; could also be realized via a string -> type conversion?'),
+        ItemFunctionDef('GetNodeNumber',
+            implementation='return parameters.nodeNumbers[localIndex];'),
+        ItemFunctionDef('SetNodeNumber',
+            implementation='parameters.nodeNumbers[localIndex]=nodeNumber;'),
+        ItemFunctionDef('GetNumberOfNodes',
+            implementation='return parameters.nodeNumbers.NumberOfItems();'),
+        ItemFunctionDef('GetODE2Size'),
+        ItemRequestedTypes('Node', []),
+        ItemFunction(type=TCObjectType, destination=DestComp, cFlags=CFConst,
+            pythonName='GetType',
+            implementation='return (CObjectType)((Index)CObjectType::Body + (Index)CObjectType::MultiNoded);',
+            description=r'Get type of object, e.g. to categorize and distinguish during assembly and computation'),
+        ItemFunctionDef('HasConstantMassMatrix',
+            implementation='return false;'),
+        ItemFunctionDef('CheckPreAssembleConsistency'),
+        ItemFunction(type=Tvoid, destination=DestComp, cFlags=CFConst, isVirtual=False,
+            pythonName='ComputeObjectCoordinates',
+            args='StdVector& coordinates, StdVector& coordinates_t, ConfigurationType configuration',
+            description=r'the object coordinates including the reference values, and the velocity coordinates (zero in the reference configuration)'),
+        ItemFunction(type=TIndex, destination=DestComp, cFlags=CFConst, isVirtual=False,
+            pythonName='GetObjectNumber',
+            description=r'the number of this object in the system, which the user functions of the access functions get'),
+        ItemFunction(type=TBool, destination=DestComp, cFlags=CFConst, isVirtual=False,
+            pythonName='PythonCallPossible',
+            description=r'false in a thread that does not hold the Python GIL, the renderer thread; implemented in evaluateUserFunctions.cpp'),
+        ItemFunction(type=Tvoid, destination=DestComp, cFlags=CFConst, isVirtual=False,
+            pythonName='UpdateVisualizationCache',
+            description=r'compute the positions and rotations, which the renderer thread asked for, in the visualization configuration; called in the computation thread'),
+        ItemFunction(type=Tvoid, destination=DestComp, cFlags=CFConst, isVirtual=False,
+            pythonName='EvaluatePosition',
+            args='Vector3D& position, Real t, const Vector3D& localPosition, const StdVector& coordinates',
+            description=r'call of positionUserFunction; implemented in evaluateUserFunctions.cpp'),
+        ItemFunction(type=Tvoid, destination=DestComp, cFlags=CFConst, isVirtual=False,
+            pythonName='EvaluateMatrix',
+            args='Index which, Matrix& value, Real t, const Vector3D& localPosition, const StdVector& coordinates',
+            description=r'call of positionJacobianUserFunction (which=0), rotationMatrixUserFunction (1) or rotationJacobianUserFunction (2), with the size checked; implemented in evaluateUserFunctions.cpp'),
+        ItemFunction(type=Tvoid, destination=DestComp, cFlags=CFConst, isVirtual=False,
+            pythonName='EvaluateUserFunctionForce',
+            args='Vector& force, Real t, Index objectNumber, const StdVector& coordinates, const StdVector& coordinates_t',
+            description=r'call of forceUserFunction; implemented in evaluateUserFunctions.cpp'),
+        ItemFunction(type=Tvoid, destination=DestComp, cFlags=CFConst, isVirtual=False,
+            pythonName='EvaluateUserFunctionMassMatrix',
+            args='EXUmath::MatrixContainer& massMatrix, Real t, Index objectNumber, const StdVector& coordinates, const StdVector& coordinates_t, const ArrayIndex& ltg',
+            description=r'call of massMatrixUserFunction; implemented in evaluateUserFunctions.cpp'),
+        ItemParameter(type=TBool, destination=DestVisu, fromParent=True,
+            pythonName='show',
+            defaultValue=True,
+            description=r'set true, if item is shown in visualization and false if it is not shown'),
+        ItemFunctionDef('UpdateGraphics'),
+        ItemFunctionDef('CallUserFunction'),
+        ItemFunctionDef('HasUserFunction',
+            destination=DestVisu,
+            implementation='return true;'),
+        ItemParameter(destination=DestVisu,
+            pythonName='graphicsDataUserFunction',
+            defaultValue=0,
+            description=r'A Python function which returns a list of graphics data in global coordinates, see ObjectGenericODE2; the only drawing of the body',
+            userFunction=ObjectGenericODE2_graphicsDataUserFunction),
+        ],
+    ))
+
+#++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #++++++++++++++++   ObjectKinematicTree   +++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 

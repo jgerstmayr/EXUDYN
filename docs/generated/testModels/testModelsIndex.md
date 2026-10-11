@@ -102,6 +102,7 @@ cUtilitiesTest
 markerNodeCoordinateReferenceTest
 coSimulationTest
 springDamperVelocityOffsetTest
+userRigidBodyTest
 rotationMarkerDeprecationTest
 contactFrictionCircleCable2DnoFrictionTest
 systemContainerLifetimeTest

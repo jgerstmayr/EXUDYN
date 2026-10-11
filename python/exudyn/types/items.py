@@ -424,6 +424,27 @@ items = {
     'visualization': {
     },
   },
+  'ObjectUserBody': {
+    'kind': 'Object',
+    'types': ['Body', 'MultiNoded'],
+    'requestedNodeTypes': [],
+    'accessFunctionTypes': ['TranslationalVelocity_qt', 'AngularVelocity_qt', 'JacobianTtimesVector_q'],
+    'outputVariables': ['Position', 'Displacement', 'Velocity', 'RotationMatrix', 'HomogeneousTransformation', 'AngularVelocity', 'AngularVelocityLocal', 'Coordinates', 'Coordinates_t', 'KineticEnergy'],
+    'parameters': {
+      'name': {'type': 'String', 'size': '', 'range': '', 'default': '', 'mustBeGiven': False, 'description': "objects's unique name"},
+      'nodeNumbers': {'type': 'ArrayNodeIndex', 'size': '', 'range': '', 'default': '[]', 'mustBeGiven': False, 'description': 'the nodes whose ODE2 coordinates are the coordinates of the body, in this order'},
+      'massMatrixUserFunction': {'type': 'ObjectUserBodyMassMatrixUserFunction', 'size': '', 'range': '', 'default': '0', 'mustBeGiven': False, 'description': 'A Python user function which computes the mass matrix; it must be given'},
+      'forceUserFunction': {'type': 'ObjectUserBodyForceUserFunction', 'size': '', 'range': '', 'default': '0', 'mustBeGiven': False, 'description': 'A Python user function which computes the generalized forces on the right-hand side; zero if not given'},
+      'positionUserFunction': {'type': 'ObjectUserBodyPositionUserFunction', 'size': '', 'range': '', 'default': '0', 'mustBeGiven': False, 'description': 'A Python user function which computes the global position of the point at localPosition'},
+      'positionJacobianUserFunction': {'type': 'ObjectUserBodyPositionJacobianUserFunction', 'size': '', 'range': '', 'default': '0', 'mustBeGiven': False, 'description': 'A Python user function which computes the position Jacobian at localPosition'},
+      'rotationMatrixUserFunction': {'type': 'ObjectUserBodyRotationMatrixUserFunction', 'size': '', 'range': '', 'default': '0', 'mustBeGiven': False, 'description': 'A Python user function which computes the rotation matrix at localPosition; optional, for rigid markers'},
+      'rotationJacobianUserFunction': {'type': 'ObjectUserBodyRotationJacobianUserFunction', 'size': '', 'range': '', 'default': '0', 'mustBeGiven': False, 'description': 'A Python user function which computes the rotation Jacobian (of the global angular velocity) at localPosition; optional, for rigid markers'},
+    },
+    'visualization': {
+      'show': {'type': 'Bool', 'size': '', 'range': '', 'default': 'True', 'mustBeGiven': False, 'description': 'set true, if item is shown in visualization and false if it is not shown'},
+      'graphicsDataUserFunction': {'type': 'ObjectUserBodyGraphicsDataUserFunction', 'size': '', 'range': '', 'default': '0', 'mustBeGiven': False, 'description': 'A Python function which returns a list of graphics data in global coordinates, see ObjectGenericODE2; the only drawing of the body'},
+    },
+  },
   'ObjectKinematicTree': {
     'kind': 'Object',
     'types': ['Body', 'MultiNoded', 'SuperElement', 'KinematicTree'],

@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.13 | Newborn | 69 | 1.13.69 |
+| 1.13 | Newborn | 70 | 1.13.70 |
 | 1.12 | Metheney | 367 | 1.12.462 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
@@ -30,6 +30,10 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.13 - Newborn (current)
 
+- **1.13.70** `EXTENSION` `MEDIUM EFF` `raised by: Claude-JG` `resolved by: Claude-JG` ObjectUserBody: a body of Python user functions, the user rigid body (#2986)
+  - description: revision2026c step RG7.3.1 (\#2973, design 5.1): ObjectUserBody on any ODE2 nodes, with mass matrix, forces, position, rotation matrix and the two Jacobians as Python user functions of the total coordinates, so that body markers, SensorBody, loads and connectors work; the derivative of the projected forces by central differences; the renderer thread gets positions and rotations from a cache that the computation thread fills; test model userRigidBodyTest.py, a replica of ObjectRigidBody on NodeRigidBodyRxyz.
+  - **notes:** ObjectUserBody: a body whose mass matrix, forces, positions, rotation matrices and Jacobians are Python user functions of the total coordinates; body markers, SensorBody, loads and connectors work on it; test model userRigidBodyTest.py replicates ObjectRigidBody
+  - date resolved: **2026-10-12 01:22**, date raised: 2026-10-12
 - **1.13.69** `CHANGE` `raised by: Claude-JG` `resolved by: Claude-JG` Mark the overriding virtual functions outside src/Linalg with override, the generated ones in the generator (#2967)
   - description: Follow-up of \#123 (src/Linalg done): gcc -Wsuggest-override (syntax-only compile of every source in WSL, gcc 13.3) reports 455 places in 112 files: 4 in each generated Main\*/Visu\* item header (itemHeaderEmitter.py), CNode.h 22, CObjectConnector.h 7, VisualizationSystemContainer.h 5, CObjectBody.h 3, MainSolver.h 9, CSolverExplicit.h 2, ...; proposal: emit override in itemHeaderEmitter, add it by hand in the rest, and add -Wsuggest-override to the Linux build so that a new one is seen.
   - **notes:** Every overriding virtual function of the C++ code is marked override, the generated ones by the generators; the unix build warns of a missing one (revision2026c step RG11.8.1.3)

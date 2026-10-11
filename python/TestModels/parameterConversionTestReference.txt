@@ -22,6 +22,7 @@ outcome: !ExudynTypeError !ExudynTypeError !ExudynTypeError !ExudynTypeError !Ex
   ObjectGround: referenceHT(set)
   ObjectJointALEMoving2D: nodeNumbers(class,dict,set)
   ObjectKinematicTree: jointHTs(set)
+  ObjectUserBody: nodeNumbers(class,dict,set)
   SensorUserFunction: sensorNumbers(class,dict,set)
   SimulationSettings.linearSolver: solverType(attribute,dict)
   SimulationSettings.timeIntegration: solverType(attribute,dict)
@@ -354,6 +355,7 @@ outcome: !ExudynTypeError int=0.0 !ExudynTypeError !ExudynTypeError !ExudynTypeE
   ObjectKinematicTree: forceUserFunction(class,dict,set)
   ObjectRigidBody: VgraphicsDataUserFunction(class,dict,set)
   ObjectRigidBody2D: VgraphicsDataUserFunction(class,dict,set)
+  ObjectUserBody: VgraphicsDataUserFunction(class,dict,set) forceUserFunction(class,dict,set) massMatrixUserFunction(class,dict,set) positionJacobianUserFunction(class,dict,set) positionUserFunction(class,dict,set) rotationJacobianUserFunction(class,dict,set) rotationMatrixUserFunction(class,dict,set)
   SensorUserFunction: sensorUserFunction(class,dict,set)
 
 outcome: !ExudynValueError
@@ -738,6 +740,7 @@ outcome: ObjectIndex ObjectIndex
   ObjectRigidBody: (defaults)
   ObjectRigidBody2D: (defaults)
   ObjectRotationalMass1D: (defaults)
+  ObjectUserBody: (defaults)
 
 outcome: ObjectIndex ObjectIndex ObjectIndex !ExudynTypeError !ExudynTypeError ObjectIndex !ExudynTypeError !ExudynTypeError !ExudynTypeError !ExudynTypeError !ExudynTypeError !ExudynTypeError ObjectIndex !ExudynTypeError !ExudynTypeError
   MarkerBodyBeamShape: bodyNumber(class,dict,set)
@@ -848,6 +851,7 @@ outcome: bool=1.0 bool=0.0 bool=1.0 bool=1.0 !ExudynTypeError bool=1.0 !ExudynTy
   ObjectRigidBody: Vshow(class,dict,set)
   ObjectRigidBody2D: Vshow(class,dict,set)
   ObjectRotationalMass1D: Vshow(class,dict,set)
+  ObjectUserBody: Vshow(class,dict,set)
   SensorBody: Vshow(class,dict,set) storeInternal(class,dict,set) writeToFile(class,dict,set)
   SensorKinematicTree: Vshow(class,dict,set) storeInternal(class,dict,set) writeToFile(class,dict,set)
   SensorLoad: Vshow(class,dict,set) storeInternal(class,dict,set) writeToFile(class,dict,set)
@@ -1185,6 +1189,7 @@ outcome: str=default
   ObjectRigidBody: VgraphicsData(omit) VgraphicsDataUserFunction(omit) Vshow(omit) centerOfMass(omit) inertia(omit) mass(omit) nodeNumber(omit) physicsCenterOfMass(omit) physicsInertia(omit)
   ObjectRigidBody2D: VgraphicsData(omit) VgraphicsDataUserFunction(omit) Vshow(omit) centerOfMass(omit) inertia(omit) mass(omit) nodeNumber(omit) physicsCenterOfMass(omit)
   ObjectRotationalMass1D: VgraphicsData(omit) Vshow(omit) inertia(omit) nodeNumber(omit) referencePosition(omit) referenceRotation(omit)
+  ObjectUserBody: VgraphicsDataUserFunction(omit) Vshow(omit) forceUserFunction(omit) massMatrixUserFunction(omit) nodeNumbers(omit) positionJacobianUserFunction(omit) positionUserFunction(omit) rotationJacobianUserFunction(omit) rotationMatrixUserFunction(omit)
   SensorBody: Vshow(omit) bodyNumber(omit) fileName(omit) localPosition(omit) outputVariableType(omit) storeInternal(omit) writeToFile(omit)
   SensorKinematicTree: Vshow(omit) fileName(omit) localPosition(omit) objectNumber(omit) outputVariableType(omit) storeInternal(omit) writeToFile(omit)
   SensorLoad: Vshow(omit) fileName(omit) loadNumber(omit) storeInternal(omit) writeToFile(omit)

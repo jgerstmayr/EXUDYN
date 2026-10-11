@@ -397,6 +397,12 @@ Node::UserType0-3, Marker::UserType0-3 with display names and Python aliases (de
 connectors work (design 5.1). First a replica of ObjectRigidBody; then a minimal ANCF cable 2D (one integration rule,
 few output variables) and a linear tetrahedron. Measure the code each user function adds (design 7.1).
 
+#### **CLOSED_RG7.3.1** Add ObjectUserBody and the user rigid body
+
+CLOSED 2026-10-12 (#2986, maintainer 2026-10-12: go with the user rigid body): ObjectUserBody with seven user functions,
+the renderer thread served by a cache; test model userRigidBodyTest.py agrees with ObjectRigidBody to 5e-14.
+[log](exudynRevisionLog2026c.md#rg7-3-1)
+
 ### **OPEN_RG7.4** Add user nodes with position and orientation interfaces
 
 #2974. Design 5.2; example: a fully parametrized ANCF node and beam.

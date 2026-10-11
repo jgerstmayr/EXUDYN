@@ -27,6 +27,9 @@ on Windows and Linux to the last bit; models with contact or friction change sli
 calls it: `ComputeOrthonormalBasisVectors` and `GramSchmidt` return a 3x3 array of the vectors as rows (unpacked as
 before), and a wrong size or a singular input raises a `ValueError` (#2960, #2961).
 
+**`ObjectUserBody`**, a body whose mass matrix, forces, positions, rotations and Jacobians are Python user
+functions; body markers, sensors, loads and connectors work on it, see {ref}`sec-item-objectuserbody` (#2986).
+
 (sec-revisions-1-13)=
 (sec-revisions-1-12)=
 ## Version 1.13

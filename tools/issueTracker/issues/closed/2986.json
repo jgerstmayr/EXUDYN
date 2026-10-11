@@ -1,0 +1,15 @@
+{
+  "number": 2986,
+  "title": "ObjectUserBody: a body of Python user functions, the user rigid body",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "EXTENSION",
+  "effort": "MEDIUM",
+  "description": "revision2026c step RG7.3.1 (#2973, design 5.1): ObjectUserBody on any ODE2 nodes, with mass matrix, forces, position, rotation matrix and the two Jacobians as Python user functions of the total coordinates, so that body markers, SensorBody, loads and connectors work; the derivative of the projected forces by central differences; the renderer thread gets positions and rotations from a cache that the computation thread fills; test model userRigidBodyTest.py, a replica of ObjectRigidBody on NodeRigidBodyRxyz.",
+  "dateRaised": "2026-10-12",
+  "deadline": "2027-04-10",
+  "dateResolved": "2026-10-12 01:22",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "ObjectUserBody: a body whose mass matrix, forces, positions, rotation matrices and Jacobians are Python user functions of the total coordinates; body markers, SensorBody, loads and connectors work on it; test model userRigidBodyTest.py replicates ObjectRigidBody",
+  "resolvedInVersion": "1.13.70"
+}

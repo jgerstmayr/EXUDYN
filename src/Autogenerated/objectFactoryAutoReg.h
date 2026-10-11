@@ -335,6 +335,17 @@ bool MainObjectGenericODE1IsRegistered = ClassFactoryItemsSystemData<MainObject>
 		return object;
 	});
 
+bool MainObjectUserBodyIsRegistered = ClassFactoryItemsSystemData<MainObject>::Get().RegisterClass("UserBody", [](CSystemData* cSystemData)
+	{ //AUTO: 
+		CObject* cObject = new CObjectUserBody();
+		cObject->SetCSystemData(cSystemData);
+		MainObject* object = new MainObjectUserBody(); //new main object
+		object->SetCObject(cObject);
+		VisualizationObjectUserBody* vObject = new VisualizationObjectUserBody();
+		object->SetVisualizationObject(vObject);
+		return object;
+	});
+
 bool MainObjectKinematicTreeIsRegistered = ClassFactoryItemsSystemData<MainObject>::Get().RegisterClass("KinematicTree", [](CSystemData* cSystemData)
 	{ //AUTO: 
 		CObject* cObject = new CObjectKinematicTree();
