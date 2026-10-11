@@ -64,11 +64,11 @@ exu.demos.Demo1(showAll=False)
 ```
 
 ```text
-1.12.284.dev1; Python3.13.15; Windows x86_64 FLOAT64
+1.13.59.dev1; Python3.13.15; Windows x86_64 PORTABLEMATH FLOAT64
 +++++++++++++++++++++++++++++++
-EXUDYN V1.12.284.dev1 solver: implicit second order time integration
+EXUDYN V1.13.59.dev1 solver: implicit second order time integration
 STEP100, t = 1s, timeToGo = 0s, Nit/step = 1
-Solver terminated successfully after 0.0003146 seconds.
+Solver terminated successfully after 0.0003141 seconds.
 ```
 
 Understanding the usage of functions for python object `SystemContainer` of the module `exudyn`, the following examples might help:

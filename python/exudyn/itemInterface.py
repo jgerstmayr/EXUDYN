@@ -7406,12 +7406,14 @@ class VMarkerNodeCoordinates:
 class MarkerNodeCoordinates:
     """A node-Marker attached to all ODE2 coordinates of a node.
     
-    IN CONTRAST to MarkerNodeCoordinate, the marker coordinates INCLUDE the reference values! For ODE1 coordinates use ``MarkerNodeODE1Coordinates``.
+    IN CONTRAST to MarkerNodeCoordinate, the marker coordinates INCLUDE the reference values by default (``includeReferenceCoordinates``)! For ODE1 coordinates use ``MarkerNodeODE1Coordinates``.
     
     Args:
         name: marker's unique name; type: str
 
         nodeNumber: node number to which marker is attached to; type: NodeIndex
+
+        includeReferenceCoordinates: if True (default), the values of the marker are the coordinates plus their reference values, e.g. the absolute position of a NodePoint; if False, the coordinates alone, as the displacement of a NodePoint, as for MarkerNodeCoordinate; the velocities and the Jacobian are the same in both cases (#990); type: bool
 
         visualization: visualization data, see VMarkerNodeCoordinates
 
@@ -7419,15 +7421,17 @@ class MarkerNodeCoordinates:
         Marker has/provides the following types: ``Node``, ``Coordinate``
 
     """
-    def __init__(self, name = '', nodeNumber = exudyn.InvalidIndex(), visualization = {}):
+    def __init__(self, name = '', nodeNumber = exudyn.InvalidIndex(), includeReferenceCoordinates = True, visualization = {}):
         self.name = name
         self.nodeNumber = nodeNumber
+        self.includeReferenceCoordinates = includeReferenceCoordinates
         self.visualization = CopyDictLevel1(visualization)
 
     def __iter__(self):
         yield 'markerType', 'NodeCoordinates'
         yield 'name', self.name
         yield 'nodeNumber', self.nodeNumber
+        yield 'includeReferenceCoordinates', self.includeReferenceCoordinates
 
     def __repr__(self):
         return str(dict(self))

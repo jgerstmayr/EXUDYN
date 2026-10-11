@@ -1,7 +1,7 @@
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 # This is an EXUDYN definition file
 #
-# Details:  the introduction of the Python-C++ command interface chapter (documentation only).
+# Details:  the introduction of the Python-C++ interface chapter (documentation only).
 #           The calls are recorded by PybindInterface (pybindTypes.py) and replayed by
 #           tools/generators/pybindEmitter.py into pybind_manual_classes.h, the stub fragments and
 #           the Python-C++ interface documentation.
@@ -20,7 +20,7 @@ from pybindTypes import *
 
 pb = PybindInterface()
 
-pb.AddDocu('',section='Python-C++ command interface', sectionLevel=0, sectionLabel='sec:PCpp:command:interface')
+pb.AddDocu('',section='Python-C++ interface', sectionLevel=0, sectionLabel='sec:PCpp:command:interface')
 pb.ResetMarkdown() #the chapter heading lives in the index page
 
 pb.AddDocu(r"""This chapter lists the basic interface functions which can be used to set up a Exudyn model in Python.""")

@@ -442,7 +442,7 @@ class DeclarationWriter:
         self.sPy += '\n'
         sectionName = pyClass
         if (cClass == ''):
-            sectionName = 'Module functions' #the exudyn module itself; its groups follow as sections
+            sectionName = 'Exudyn module functions' #the exudyn module itself; its groups follow as sections
 
         if (cClass != ''):
             self.sPy += '    py::class_<' + cClass + '>(m, "' + pyClass + '")\n'

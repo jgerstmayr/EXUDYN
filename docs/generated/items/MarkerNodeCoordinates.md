@@ -6,7 +6,7 @@
 (sec-item-markernodecoordinates)=
 # MarkerNodeCoordinates
 
-A node-Marker attached to all {ref}`ODE2 <ODE2>` coordinates of a node. IN CONTRAST to MarkerNodeCoordinate, the marker coordinates INCLUDE the reference values! For {ref}`ODE1 <ODE1>` coordinates use `MarkerNodeODE1Coordinates`.
+A node-Marker attached to all {ref}`ODE2 <ODE2>` coordinates of a node. IN CONTRAST to MarkerNodeCoordinate, the marker coordinates INCLUDE the reference values by default (`includeReferenceCoordinates`)! For {ref}`ODE1 <ODE1>` coordinates use `MarkerNodeODE1Coordinates`.
 
 ## Interface
 
@@ -21,6 +21,7 @@ The parameters of the item; in a dictionary, its type is 'NodeCoordinates':
 |---|---|---|---|---|
 | **name** | String |  | '' | marker's unique name |
 | **nodeNumber** | NodeIndex |  | invalid (-1) | node number to which marker is attached to |
+| **includeReferenceCoordinates** | bool |  | True | if True (default), the values of the marker are the coordinates plus their reference values, e.g. the absolute position of a NodePoint; if False, the coordinates alone, as the displacement of a NodePoint, as for MarkerNodeCoordinate; the velocities and the Jacobian are the same in both cases (#990) |
 | **visualization** | VMarkerNodeCoordinates |  |  | parameters for visualization of item |
 
 ## Visualization parameters
@@ -37,10 +38,11 @@ The item draws nothing.
 
 | quantity | symbol | as computed |
 |---|---|---|
-| coordinates | $\cv = \qv\cRef + \qv$ | **all** {ref}`ODE2 <ODE2>` coordinates of the node, **including** their reference values |
+| coordinates | $\cv = \qv\cRef + \qv$ | **all** {ref}`ODE2 <ODE2>` coordinates of the node, **including** their reference values (default) |
+| | $\cv = \qv$ | with `includeReferenceCoordinates = False`: the coordinates alone |
 | their velocities | $\dot\cv = \dot\qv$ | the time derivatives |
 
-Unlike `MarkerNodeCoordinate`, the values include the reference values.
+Unlike `MarkerNodeCoordinate`, the values include the reference values by default.
 
 ### Jacobians
 
@@ -73,4 +75,4 @@ exu.sys['testResult'] = mbs.GetNodeOutput(nB, exu.OutputVariableType.Displacemen
 ```
 
 
-Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`coordinateVectorConstraint.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/coordinateVectorConstraint.py) (TM), [`coordinateVectorConstraintGenericODE2.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/coordinateVectorConstraintGenericODE2.py) (TM), [`rigidBodyAsUserFunctionTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/rigidBodyAsUserFunctionTest.py) (TM)
+Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`coordinateVectorConstraint.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/coordinateVectorConstraint.py) (TM), [`coordinateVectorConstraintGenericODE2.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/coordinateVectorConstraintGenericODE2.py) (TM), [`markerNodeCoordinateReferenceTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/markerNodeCoordinateReferenceTest.py) (TM), [`rigidBodyAsUserFunctionTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/rigidBodyAsUserFunctionTest.py) (TM)

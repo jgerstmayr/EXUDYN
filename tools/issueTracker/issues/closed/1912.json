@@ -1,0 +1,15 @@
+{
+  "number": 1912,
+  "title": "co-simulation",
+  "author": "JG",
+  "status": "RESOLVED",
+  "type": "EXAMPLE",
+  "effort": "MEDIUM",
+  "description": "add simple model of two mass-spring-dampers to show simulator coupling of two implicit-explicit mbs, similar to issue 1905",
+  "dateRaised": "2024-10-26",
+  "deadline": "2025-04-24",
+  "dateResolved": "2026-10-11 16:49",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "Test model coSimulationTest.py: an implicit and an explicit system coupled in the PreStepUserFunction, against the same model as one system (revision2026c step RG11.8.7)",
+  "resolvedInVersion": "1.13.61"
+}

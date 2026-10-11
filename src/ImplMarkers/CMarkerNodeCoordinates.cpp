@@ -44,7 +44,10 @@ void CMarkerNodeCoordinates::ComputeMarkerData(const CSystemData& cSystemData, b
 		}
 		markerData.vectorValue.CopyFrom(((CNodeODE2*)(cSystemData.GetCNodes()[parameters.nodeNumber]))->GetCurrentCoordinateVector());
 		//markerData.vectorValue += ((CNodeODE2*)(cSystemData.GetCNodes()[parameters.nodeNumber]))->GetReferenceCoordinateVector(); //leads to memory allocation!
-		markerData.vectorValue.MultAdd(1., ((CNodeODE2*)(cSystemData.GetCNodes()[parameters.nodeNumber]))->GetReferenceCoordinateVector()); //no memory allocation
+		if (parameters.includeReferenceCoordinates) //the default; False gives the coordinates alone, as MarkerNodeCoordinate (#990)
+		{
+			markerData.vectorValue.MultAdd(1., ((CNodeODE2*)(cSystemData.GetCNodes()[parameters.nodeNumber]))->GetReferenceCoordinateVector()); //no memory allocation
+		}
 
 		if (computeJacobian)
 		{

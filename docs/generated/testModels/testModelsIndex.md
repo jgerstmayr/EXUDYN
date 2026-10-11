@@ -100,6 +100,7 @@ solutionFileWithoutCoordinatesTest
 sparseSystemMatricesTest
 cUtilitiesTest
 markerNodeCoordinateReferenceTest
+coSimulationTest
 rotationMarkerDeprecationTest
 contactFrictionCircleCable2DnoFrictionTest
 systemContainerLifetimeTest

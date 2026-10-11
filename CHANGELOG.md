@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.13 | Newborn | 60 | 1.13.59 |
+| 1.13 | Newborn | 64 | 1.13.63 |
 | 1.12 | Metheney | 367 | 1.12.462 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
@@ -30,6 +30,22 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.13 - Newborn (current)
 
+- **1.13.63** `DOCU` `raised by: Claude-JG` `resolved by: Claude-JG` The page Exudyn module functions: its title, the chapter Python-C++ interface, and short examples of special, cMath and cUtilities (#2970)
+  - description: Maintainer 2026-10-11: the chapter is 'Python-C++ interface', the page 'Exudyn module functions'; the notebook part at the start of the page shows in a few lines exudyn.config, two uses of exudyn.special, of exudyn.cMath and one or two of exudyn.cUtilities.
+  - **notes:** The documentation chapter is 'Python-C++ interface', its page 'Exudyn module functions' starts with short examples of config, special, cMath and cUtilities (revision2026c step RG11.10.12)
+  - date resolved: **2026-10-11 16:49**, date raised: 2026-10-11
+- **1.13.62** `EXTENSION` `raised by: Claude-JG` `resolved by: Claude-JG` MarkerNodeCoordinates: includeReferenceCoordinates, default True (#2969)
+  - description: Follow-up of \#990 (maintainer 2026-10-11): the plural marker gets the parameter as well, default True as it always included the reference values; False gives the coordinates alone, as MarkerNodeCoordinate.
+  - **notes:** MarkerNodeCoordinates has includeReferenceCoordinates (default True); False gives the coordinates alone (revision2026c step RG11.8.2.3)
+  - date resolved: **2026-10-11 16:49**, date raised: 2026-10-11
+- **1.13.61** `EXAMPLE` `MEDIUM EFF` `resolved by: Claude-JG` co-simulation (#1912)
+  - description: add simple model of two mass-spring-dampers to show simulator coupling of two implicit-explicit mbs, similar to issue 1905
+  - **notes:** Test model coSimulationTest.py: an implicit and an explicit system coupled in the PreStepUserFunction, against the same model as one system (revision2026c step RG11.8.7)
+  - date resolved: **2026-10-11 16:49**, date raised: 2024-10-26
+- **1.13.60** `EXTENSION` `LOW EFF` `resolved by: Claude-JG` static members (#1614)
+  - description: LinearSolver GeneralMatrixEXUdense::FactorizeNew has static ResizableMatrix m, which should be turned into class members; add reset method to free memory at solver finalization
+  - **notes:** The dense solver keeps the temporaries of its factorization with the matrix instead of in static variables: no allocation at a repeated factorization, freed with the matrix (cleanUpMemory), not shared between solvers (revision2026c step RG11.8.6)
+  - date resolved: **2026-10-11 16:49**, date raised: 2023-06-11
 - **1.13.59** `DOCU` `raised by: Claude-JG` `resolved by: Claude-JG` The page Module functions: exudyn.cMath and exudyn.cUtilities in it, the sections ordered by importance (#2968)
   - description: Maintainer 2026-10-11: cMath and cUtilities go into the module page, in the order exudyn.config, exudyn.variables and exudyn.sys, exudyn.special, exudyn.cMath, exudyn.cUtilities, exudyn.experimental; 'Module functions' at the level of SystemContainer, not parallel to exudyn.config.
   - **notes:** The page Module functions has the sections exudyn.config, exudyn.variables and exudyn.sys, exudyn.special, exudyn.cMath, exudyn.cUtilities, exudyn.experimental (revision2026c step RG11.10.11)

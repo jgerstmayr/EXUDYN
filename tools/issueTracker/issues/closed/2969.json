@@ -1,0 +1,14 @@
+{
+  "number": 2969,
+  "title": "MarkerNodeCoordinates: includeReferenceCoordinates, default True",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "EXTENSION",
+  "description": "Follow-up of #990 (maintainer 2026-10-11): the plural marker gets the parameter as well, default True as it always included the reference values; False gives the coordinates alone, as MarkerNodeCoordinate.",
+  "dateRaised": "2026-10-11",
+  "deadline": "2027-04-09",
+  "dateResolved": "2026-10-11 16:49",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "MarkerNodeCoordinates has includeReferenceCoordinates (default True); False gives the coordinates alone (revision2026c step RG11.8.2.3)",
+  "resolvedInVersion": "1.13.62"
+}

@@ -773,3 +773,33 @@ the level of SystemContainer.)*
 - **Tests of cMath and cUtilities** (maintainer's question): `python/testing/test_cMath.py` (bits against
   `EvaluateMathFunction`, shapes, norm, both stubs), `python/TestModels/cUtilitiesTest.py`, and
   `test_checkPythonMath.py` for the check - no new step needed.
+
+<a id="rg11-8-6"></a>
+### RG11.8.6, RG11.8.7, MarkerNodeCoordinates and the page Exudyn module functions (2026-10-11, #1614, #1912, #2969, #2970)
+*(Maintainer 2026-10-11: FactorizeNew - the temporaries as members of GeneralMatrixEXUdense, with the option for
+clean-up, because for n < 20, which is frequent, an allocation per factorization counts; coSimulationTest.py as
+proposed; MarkerNodeCoordinates gets the parameter too, default True; the chapter is 'Python-C++ interface', the page
+'Exudyn module functions', with short examples of special, cMath and cUtilities.)*
+- **#1614, the evaluation**: `GeneralMatrixEXUdense::FactorizeNew` kept `static ResizableMatrix m` and
+  `static ArrayIndex rows` for `InvertSpecial` with `LinearSolverType::EXUdense`, the default: the n x n temporary of
+  the largest system stayed allocated until Python ended, and two solvers in two threads shared it. FactorizeNew is
+  called only on the three dense matrices of `SolverLocalData` - `systemJacobian` in the Newton step
+  (CSolverBase.cpp:1509) and the implicit solver (CSolverImplicitSecondOrder.cpp:202), `systemMassMatrix` in the
+  explicit solver (CSolverExplicit.cpp:113, 666) - and in the C++ unit tests. `SimulationSettings.cleanUpMemory`
+  replaces these matrices (`SolverLocalData::CleanUpMemory`), which frees whatever they hold.
+- **#1614, the change**: `inverseTemporary` and `rowSwapsTemporary` are members of `GeneralMatrixEXUdense`: allocated at
+  the first factorization of a size and reused, freed with the matrix. One temporary per dense matrix instead of one
+  shared by all; CObjectKinematicTree has its own already.
+- **#1912**: `coSimulationTest.py` - m0 = 1 on k0 = 100 (generalized-alpha), m1 = 0.5 on k1 = 50 to m0 (RK44,
+  `MainSolverExplicit.SolveSteps` in the PreStepUserFunction of mbs0, with the offset of the spring set to the position
+  of m0 and the spring force given back as a LoadCoordinate). Against one system (a tenth of the step size): error
+  2.50e-4 with h = 1e-3, 1.25e-4 with h/2, ratio 1.996 - first order, as a staggered coupling is; the test fails if the
+  ratio leaves [1.8, 2.2].
+- **#2969**: `MarkerNodeCoordinates.includeReferenceCoordinates`, default True, so every model stays the same; the test
+  model ties the displacements of two planar mass points at x = 4 and x = 7 with it.
+- **#2970**: the title comes from `markdownPageTitles` (pybindEmitter.py) and from DefPyStartClass of the module
+  (autoGenerateHelper.py), which DropRepeatedTitle then drops; the chapter heading is written by pybindEmitter itself
+  (the AddDocu in pybindGeneralInformation.py is reset by ResetMarkdown), so both are 'Python-C++ interface' now. The
+  notebook part `module` (generalInformation.ipynb) shows `config.Version`, `special.solver.timeout`,
+  `special.userInterface.suppressPlots`, `cMath.sin`/`cos`/`norm` and `cUtilities.RotationMatrixZ`/
+  `RotationMatrix2EulerParameters`, run by tools/runNotebooks.py.

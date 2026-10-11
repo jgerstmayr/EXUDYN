@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-10-04  17:26:47 (last modified)
+* @date         2026-10-11  16:46:35 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -38,7 +38,7 @@ public: // AUTO:
 
 /** ***********************************************************************************************
 * @class        MainMarkerNodeCoordinates
-* @brief        A node-Marker attached to all ABRV:ODE2 coordinates of a node. IN CONTRAST to MarkerNodeCoordinate, the marker coordinates INCLUDE the reference values! For ABRV:ODE1 coordinates use `MarkerNodeODE1Coordinates`.
+* @brief        A node-Marker attached to all ABRV:ODE2 coordinates of a node. IN CONTRAST to MarkerNodeCoordinate, the marker coordinates INCLUDE the reference values by default (`includeReferenceCoordinates`)! For ABRV:ODE1 coordinates use `MarkerNodeODE1Coordinates`.
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
@@ -109,6 +109,7 @@ public: // AUTO:
     virtual void SetWithDictionary(const py::dict& d) override
     {
         if (EPyUtils::DictItemExists(d, "nodeNumber")) { EPyUtils::ItemIndexFromPython<NodeIndex>(d["nodeNumber"], cMarkerNodeCoordinates->GetParameters().nodeNumber); }
+        if (EPyUtils::DictItemExists(d, "includeReferenceCoordinates")) { EPyUtils::FromPython(d["includeReferenceCoordinates"], cMarkerNodeCoordinates->GetParameters().includeReferenceCoordinates, "MarkerNodeCoordinates.includeReferenceCoordinates"); }
         if (EPyUtils::DictItemExists(d, "name")) { EPyUtils::FromPython(d["name"], name); }
     }
 
@@ -118,6 +119,7 @@ public: // AUTO:
         auto d = py::dict();
         d["markerType"] = (std::string)GetTypeName();
         d["nodeNumber"] = (NodeIndex)cMarkerNodeCoordinates->GetParameters().nodeNumber;
+        d["includeReferenceCoordinates"] = (bool)cMarkerNodeCoordinates->GetParameters().includeReferenceCoordinates;
         d["name"] = (std::string)name;
         return d;
     }
@@ -127,6 +129,7 @@ public: // AUTO:
     {
         if (parameterName.compare("name") == 0) { return py::cast((std::string)name); } //! AUTO: get parameter
         else if (parameterName.compare("nodeNumber") == 0) { return py::cast((NodeIndex)cMarkerNodeCoordinates->GetParameters().nodeNumber); } //! AUTO: get parameter
+        else if (parameterName.compare("includeReferenceCoordinates") == 0) { return py::cast((bool)cMarkerNodeCoordinates->GetParameters().includeReferenceCoordinates); } //! AUTO: get parameter
         else {PyError(STDstring("MarkerNodeCoordinates::GetParameter(...): illegal parameter name ")+parameterName+" cannot be read", PyErrorType::valueError);} // AUTO: add warning for user
         return py::object();
     }
@@ -137,6 +140,7 @@ public: // AUTO:
     {
         if (parameterName.compare("name") == 0) { EPyUtils::FromPython(value, name); } //! AUTO: set parameter
         else if (parameterName.compare("nodeNumber") == 0) { EPyUtils::ItemIndexFromPython<NodeIndex>(value, cMarkerNodeCoordinates->GetParameters().nodeNumber); } //! AUTO: set parameter
+        else if (parameterName.compare("includeReferenceCoordinates") == 0) { EPyUtils::FromPython(value, cMarkerNodeCoordinates->GetParameters().includeReferenceCoordinates, "MarkerNodeCoordinates.includeReferenceCoordinates"); } //! AUTO: set parameter
         else {PyError(STDstring("MarkerNodeCoordinates::SetParameter(...): illegal parameter name ")+parameterName+" cannot be modified", PyErrorType::valueError);} // AUTO: add warning for user
     }
 

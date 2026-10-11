@@ -1,10 +1,10 @@
 /** ***********************************************************************************************
 * @class        VisualizationMarkerNodeCoordinates
-* @brief        A node-Marker attached to all ABRV:ODE2 coordinates of a node. IN CONTRAST to MarkerNodeCoordinate, the marker coordinates INCLUDE the reference values! For ABRV:ODE1 coordinates use `MarkerNodeODE1Coordinates`.
+* @brief        A node-Marker attached to all ABRV:ODE2 coordinates of a node. IN CONTRAST to MarkerNodeCoordinate, the marker coordinates INCLUDE the reference values by default (`includeReferenceCoordinates`)! For ABRV:ODE1 coordinates use `MarkerNodeODE1Coordinates`.
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-10-04  17:26:47 (last modified)
+* @date         2026-10-11  16:46:35 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:

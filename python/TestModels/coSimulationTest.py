@@ -1,0 +1,124 @@
+#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+# This is an EXUDYN example
+#
+# Details:  Co-simulation of two systems (#1912): mbs0 - a mass m0 on a spring to the ground - is solved implicitly
+#           (generalized-alpha), mbs1 - a mass m1 on a spring to m0 - explicitly (RK44). In each step of mbs0, its
+#           PreStepUserFunction gives the position of m0 to mbs1, advances mbs1 by one step and gives the spring force
+#           back to m0 as a load. The same model as one system is the reference; the coupling error is of first order
+#           in the step size.
+#
+# Author:   Johannes Gerstmayr
+# Date:     2026-10-11
+#
+# Copyright:This file is part of Exudyn. Exudyn is free software. You can redistribute it and/or modify it under the terms of the Exudyn license. See 'LICENSE.txt' for more details.
+#
+#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+import exudyn as exu
+from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
+
+m0 = 1.
+k0 = 100.
+m1 = 0.5
+k1 = 50.
+x1Initial = 0.1      #initial displacement of m1
+tEnd = 1.
+stepSize = 1e-3
+
+
+def CoSimulation(stepSize):
+    """the coupled systems; returns the final displacements of m0 and m1"""
+    SC = exu.SystemContainer()
+    mbs0 = SC.AddSystem()
+    mbs1 = SC.AddSystem()
+
+    #mbs0: m0 on a spring to the ground, and the force of the spring of m1 as a load
+    ground0 = mbs0.AddMarker(MarkerNodeCoordinate(nodeNumber=mbs0.AddNode(NodePointGround()), coordinate=0))
+    n0 = mbs0.AddNode(Node1D(referenceCoordinates=[0]))
+    mbs0.AddObject(Mass1D(nodeNumber=n0, mass=m0))
+    marker0 = mbs0.AddMarker(MarkerNodeCoordinate(nodeNumber=n0, coordinate=0))
+    mbs0.AddObject(CoordinateSpringDamper(markerNumbers=[ground0, marker0], stiffness=k0))
+    couplingLoad = mbs0.AddLoad(LoadCoordinate(markerNumber=marker0, load=0))
+    mbs0.Assemble()
+
+    #mbs1: m1 on a spring to the position of m0, which is the offset of the spring to the ground
+    ground1 = mbs1.AddMarker(MarkerNodeCoordinate(nodeNumber=mbs1.AddNode(NodePointGround()), coordinate=0))
+    n1 = mbs1.AddNode(Node1D(referenceCoordinates=[0], initialCoordinates=[x1Initial]))
+    mbs1.AddObject(Mass1D(nodeNumber=n1, mass=m1))
+    marker1 = mbs1.AddMarker(MarkerNodeCoordinate(nodeNumber=n1, coordinate=0))
+    spring1 = mbs1.AddObject(CoordinateSpringDamper(markerNumbers=[ground1, marker1], stiffness=k1))
+    mbs1.Assemble()
+
+    simulationSettings1 = exu.SimulationSettings()
+    simulationSettings1.timeIntegration.solverType = exu.DynamicSolverType.RK44
+    simulationSettings1.timeIntegration.numberOfSteps = 1
+    simulationSettings1.timeIntegration.endTime = stepSize
+    simulationSettings1.timeIntegration.verboseMode = 0
+    simulationSettings1.solution.file.write = False
+    explicitSolver = exu.MainSolverExplicit()
+    explicitSolver.InitializeSolver(mbs1, simulationSettings1)
+
+    def PreStepUserFunction(mbs, t):
+        #the step of mbs0 goes from t-stepSize to t: mbs1 makes the same step with the position of m0 at its start
+        x0 = mbs0.GetNodeOutput(n0, exu.OutputVariableType.Coordinates)
+        mbs1.SetObjectParameter(spring1, 'offset', x0)
+        explicitSolver.it.startTime = t - stepSize
+        explicitSolver.it.endTime = t
+        explicitSolver.SolveSteps(mbs1, simulationSettings1)
+        x1 = mbs1.GetNodeOutput(n1, exu.OutputVariableType.Coordinates)
+        mbs0.SetLoadParameter(couplingLoad, 'load', k1*(x1 - x0))
+        return True
+
+    mbs0.SetPreStepUserFunction(PreStepUserFunction)
+
+    simulationSettings0 = exu.SimulationSettings()
+    simulationSettings0.timeIntegration.numberOfSteps = int(round(tEnd/stepSize))
+    simulationSettings0.timeIntegration.endTime = tEnd
+    simulationSettings0.timeIntegration.verboseMode = 0
+    simulationSettings0.solution.file.write = False
+    mbs0.SolveDynamic(simulationSettings0)
+    explicitSolver.FinalizeSolver(mbs1, simulationSettings1)
+
+    return (mbs0.GetNodeOutput(n0, exu.OutputVariableType.Coordinates),
+            mbs1.GetNodeOutput(n1, exu.OutputVariableType.Coordinates))
+
+
+def Monolithic(stepSize):
+    """the same model as one system; returns the final displacements of m0 and m1"""
+    SC = exu.SystemContainer()
+    mbs = SC.AddSystem()
+    ground = mbs.AddMarker(MarkerNodeCoordinate(nodeNumber=mbs.AddNode(NodePointGround()), coordinate=0))
+    n0 = mbs.AddNode(Node1D(referenceCoordinates=[0]))
+    n1 = mbs.AddNode(Node1D(referenceCoordinates=[0], initialCoordinates=[x1Initial]))
+    mbs.AddObject(Mass1D(nodeNumber=n0, mass=m0))
+    mbs.AddObject(Mass1D(nodeNumber=n1, mass=m1))
+    marker0 = mbs.AddMarker(MarkerNodeCoordinate(nodeNumber=n0, coordinate=0))
+    marker1 = mbs.AddMarker(MarkerNodeCoordinate(nodeNumber=n1, coordinate=0))
+    mbs.AddObject(CoordinateSpringDamper(markerNumbers=[ground, marker0], stiffness=k0))
+    mbs.AddObject(CoordinateSpringDamper(markerNumbers=[marker0, marker1], stiffness=k1))
+    mbs.Assemble()
+
+    simulationSettings = exu.SimulationSettings()
+    simulationSettings.timeIntegration.numberOfSteps = int(round(tEnd/stepSize))
+    simulationSettings.timeIntegration.endTime = tEnd
+    simulationSettings.timeIntegration.verboseMode = 0
+    simulationSettings.solution.file.write = False
+    mbs.SolveDynamic(simulationSettings)
+    return (mbs.GetNodeOutput(n0, exu.OutputVariableType.Coordinates),
+            mbs.GetNodeOutput(n1, exu.OutputVariableType.Coordinates))
+
+
+(x0, x1) = CoSimulation(stepSize)
+(x0Ref, x1Ref) = Monolithic(stepSize/10)
+error = abs(x0 - x0Ref) + abs(x1 - x1Ref)
+(x0Half, x1Half) = CoSimulation(stepSize/2)
+errorHalf = abs(x0Half - x0Ref) + abs(x1Half - x1Ref)
+exu.Print('co-simulation   x0, x1 =', x0, x1)
+exu.Print('one system      x0, x1 =', x0Ref, x1Ref)
+exu.Print('coupling error with step size h and h/2:', error, errorHalf, '; ratio', error/errorHalf, '(first order: 2)')
+
+errors = int(not (1.8 < error/errorHalf < 2.2)) #the coupling error is of first order
+u = errors + x0 + x1 + error
+exu.Print('solution of coSimulationTest=', u)
+
+exu.sys['testResult'] = u

@@ -2,7 +2,7 @@
 # This is an EXUDYN definition file
 #
 # Details:  the environment variables that change what the module does (documentation only); the last page
-#           of the Python-C++ command interface, after the type definitions (#2680).
+#           of the Python-C++ interface, after the type definitions (#2680).
 #           The calls are recorded by PybindInterface (pybindTypes.py) and replayed by
 #           tools/generators/pybindEmitter.py into pybind_manual_classes.h, the stub fragments and
 #           the Python-C++ interface documentation.

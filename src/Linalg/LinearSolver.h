@@ -241,6 +241,11 @@ class GeneralMatrixEXUdense : public GeneralMatrix
 private:
     Index useEigenSolverType;                               //!< use Eigen solver
     ResizableMatrix matrix;                                 //!< internal dense matrix storage:
+    //! THE TEMPORARIES OF THE FACTORIZATION (#1614): kept with the matrix, so that a repeated factorization of the same
+    //! size allocates nothing - which counts for small systems; freed with the matrix, e.g. by
+    //! SimulationSettings.cleanUpMemory, which replaces the solver's matrices (SolverLocalData::CleanUpMemory)
+    ResizableMatrix inverseTemporary;                       //!< the unit matrix InvertSpecial starts from
+    ArrayIndex rowSwapsTemporary;                           //!< the row swaps of InvertSpecial
 #ifdef USE_EIGEN_DENSE_SOLVER
     Eigen::FullPivLU<Eigen::MatrixXd> eigenLUfullPivot;     //!< Full Pivot LU factorization using Eigen
     Eigen::PartialPivLU<Eigen::MatrixXd> eigenLU;           //!< LU factorization using Eigen

@@ -605,7 +605,7 @@ definitions.append(ItemDefinition(
     className='MarkerNodeCoordinates',
     drawing=r'The item draws nothing.',
     cParentClass=ParentClassCMarker,
-    overallDescription=r"""A node-Marker attached to all ABRV:ODE2 coordinates of a node. IN CONTRAST to MarkerNodeCoordinate, the marker coordinates INCLUDE the reference values! For ABRV:ODE1 coordinates use `MarkerNodeODE1Coordinates`.""",
+    overallDescription=r"""A node-Marker attached to all ABRV:ODE2 coordinates of a node. IN CONTRAST to MarkerNodeCoordinate, the marker coordinates INCLUDE the reference values by default (`includeReferenceCoordinates`)! For ABRV:ODE1 coordinates use `MarkerNodeODE1Coordinates`.""",
     classType=ClassTypeMarker,
     miniExample=r"""    #all coordinates of two nodes, tied by a coordinate vector constraint X1 qB - X0 qA = offset; the
     #coordinates INCLUDE the reference values, so qB - qA = [1,0,0] keeps the two points where they are
@@ -630,10 +630,11 @@ definitions.append(ItemDefinition(
 
     | quantity | symbol | as computed |
     |---|---|---|
-    | coordinates | $\cv = \qv\cRef + \qv$ | **all** ABRV:ODE2 coordinates of the node, **including** their reference values |
+    | coordinates | $\cv = \qv\cRef + \qv$ | **all** ABRV:ODE2 coordinates of the node, **including** their reference values (default) |
+    | | $\cv = \qv$ | with `includeReferenceCoordinates = False`: the coordinates alone |
     | their velocities | $\dot\cv = \dot\qv$ | the time derivatives |
 
-    Unlike `MarkerNodeCoordinate`, the values include the reference values.
+    Unlike `MarkerNodeCoordinate`, the values include the reference values by default.
 
     #### Jacobians
 
@@ -652,6 +653,10 @@ definitions.append(ItemDefinition(
             pythonName='nodeNumber',
             defaultValue=DVInvalidIndex,
             description=r'node number to which marker is attached to'),
+        ItemParameter(type=Tbool, destination=DestComp+DestParam,
+            pythonName='includeReferenceCoordinates',
+            defaultValue=True,
+            description=r'if True (default), the values of the marker are the coordinates plus their reference values, e.g. the absolute position of a NodePoint; if False, the coordinates alone, as the displacement of a NodePoint, as for MarkerNodeCoordinate; the velocities and the Jacobian are the same in both cases (#990)'),
         ItemFunctionDef('GetNodeNumber',
             implementation='return parameters.nodeNumber;'),
         ItemFunctionDef('SetNodeNumber',

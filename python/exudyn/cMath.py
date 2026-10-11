@@ -5,7 +5,7 @@
 #           C++), which give the same bits on every platform, for a float or a numpy array. The functions are
 #           compiled (the submodule exudyn._cMath, declared in definitions/pybindCMath.py, which also writes
 #           their documentation and cMath.pyi); this module takes them and adds pi and norm. Documented in the
-#           Python-C++ command interface, page exudyn.cMath.
+#           Python-C++ interface, page Exudyn module functions.
 #
 # Authors:  Johannes Gerstmayr
 # Date:     2026-10-10

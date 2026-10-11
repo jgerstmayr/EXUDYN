@@ -8,10 +8,10 @@ Every entry carries the **type** of the issue, then its **priority** and its **e
 
 General information on current version:
 
-- Exudyn version = 1.13.59.dev1
+- Exudyn version = 1.13.63.dev1
 - last change = 2026-10-11
-- Number of issues = 2969
-- Number of resolved issues = 2836 (59 in current version)
+- Number of issues = 2971
+- Number of resolved issues = 2840 (63 in current version)
 
 ## Resolved issues and resolved bugs before version 1.13
 
@@ -9232,10 +9232,6 @@ The following list contains the issues which have been **RESOLVED** in the accor
   - description: add autodiff Jacobian
   - **remarks:** kept open as an idea, no plan step (triage 2026-10-07, revision2026b group RG18)
   - date raised: 2024-11-02
-- `EXAMPLE` `MEDIUM EFF` co-simulation (#1912)
-  - description: add simple model of two mass-spring-dampers to show simulator coupling of two implicit-explicit mbs, similar to issue 1905
-  - **remarks:** planned as revision2026b step RG18.1 (triage 2026-10-07)
-  - date raised: 2024-10-26
 - `CHECK` `HIGH EFF` total coordinates (#1910)
   - description: consider a solver option which continuously provides total coordinates during iterations which could be used in user functions or globally and also be linked instead of copied; add an exception if the respective option is not switched on; by default, only add an empty Vector currentState.ODE2CoordsTotal
   - **remarks:** kept open as an idea, no plan step (triage 2026-10-07, revision2026b group RG18)
@@ -9321,10 +9317,6 @@ The following list contains the issues which have been **RESOLVED** in the accor
   - description: add to CartesianSpringDamper, RigidBodySpringDamper
   - **remarks:** planned as revision2026b step RG18.2 (triage 2026-10-07)
   - date raised: 2023-06-26
-- `EXTENSION` `LOW EFF` static members (#1614)
-  - description: LinearSolver GeneralMatrixEXUdense::FactorizeNew has static ResizableMatrix m, which should be turned into class members; add reset method to free memory at solver finalization
-  - **remarks:** planned as revision2026b step RG18.1 (triage 2026-10-07)
-  - date raised: 2023-06-11
 - `EXTENSION` `HIGH EFF` KinematicTree (#1549)
   - description: consider extension w.r.t. rigid body node at basis (Lie group node in explicit integration...); add baseNode (default=invalid), inertia could be added via a separate rigid body?
   - **remarks:** kept open as an idea, no plan step (triage 2026-10-07, revision2026b group RG18)

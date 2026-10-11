@@ -1562,6 +1562,7 @@ items = {
     'parameters': {
       'name': {'type': 'String', 'size': '', 'range': '', 'default': '', 'mustBeGiven': False, 'description': "marker's unique name"},
       'nodeNumber': {'type': 'NodeIndex', 'size': '', 'range': '', 'default': 'exudyn.InvalidIndex()', 'mustBeGiven': False, 'description': 'node number to which marker is attached to'},
+      'includeReferenceCoordinates': {'type': 'bool', 'size': '', 'range': '', 'default': 'True', 'mustBeGiven': False, 'description': 'if True (default), the values of the marker are the coordinates plus their reference values, e.g. the absolute position of a NodePoint; if False, the coordinates alone, as the displacement of a NodePoint, as for MarkerNodeCoordinate; the velocities and the Jacobian are the same in both cases (#990)'},
     },
     'visualization': {
     },

@@ -29,10 +29,7 @@ Index GeneralMatrixEXUdense::FactorizeNew() //bool ignoreRedundantEquation, Inde
 
     if (useEigenSolverType == 0)
     {
-        static ResizableMatrix m; //temporary matrix!
-        static ArrayIndex rows;
-        //rv = matrix.InvertSpecial(m, rows, ignoreRedundantEquation, redundantEquationsStart, pivotThreshold);
-        rv = matrix.InvertSpecial(m, rows, false, 0, PivotThreshold());
+        rv = matrix.InvertSpecial(inverseTemporary, rowSwapsTemporary, false, 0, PivotThreshold()); //members, not static (#1614)
     }
     else
     {

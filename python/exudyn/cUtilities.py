@@ -5,8 +5,8 @@
 #           Tait-Bryan angles, rotation vectors, skew matrices, basis vectors), the same bits on every platform. The
 #           functions are compiled (the submodule exudyn._cUtilities, src/Pymodules/PyCUtilities.h, declared in
 #           definitions/pybindCUtilities.py, which also writes their documentation and cUtilities.pyi); this module takes
-#           them. exudyn.rigidBodyUtilities calls them under the same names. Documented in the Python-C++ command
-#           interface, page exudyn.cUtilities.
+#           them. exudyn.rigidBodyUtilities calls them under the same names. Documented in the Python-C++
+#           interface, page Exudyn module functions.
 #
 # Authors:  Johannes Gerstmayr
 # Date:     2026-10-11

@@ -1,0 +1,14 @@
+{
+  "number": 2970,
+  "title": "The page Exudyn module functions: its title, the chapter Python-C++ interface, and short examples of special, cMath and cUtilities",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "DOCU",
+  "description": "Maintainer 2026-10-11: the chapter is 'Python-C++ interface', the page 'Exudyn module functions'; the notebook part at the start of the page shows in a few lines exudyn.config, two uses of exudyn.special, of exudyn.cMath and one or two of exudyn.cUtilities.",
+  "dateRaised": "2026-10-11",
+  "deadline": "2027-04-09",
+  "dateResolved": "2026-10-11 16:49",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "The documentation chapter is 'Python-C++ interface', its page 'Exudyn module functions' starts with short examples of config, special, cMath and cUtilities (revision2026c step RG11.10.12)",
+  "resolvedInVersion": "1.13.63"
+}

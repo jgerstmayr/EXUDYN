@@ -5,7 +5,8 @@
 #           its reference value, so a constraint or a spring acts on absolute positions instead of displacements:
 #           a mass point with reference position 2 is held at the absolute position 2.5 by
 #           CreateCoordinateConstraint(includeReferenceCoordinates=[False, True], offset=2.5), and a second one
-#           hangs on a CoordinateSpringDamper between a ground node at x=1 and its own absolute position.
+#           hangs on a CoordinateSpringDamper between a ground node at x=1 and its own absolute position;
+#           MarkerNodeCoordinates with includeReferenceCoordinates=False ties displacements instead of positions.
 #
 # Author:   Johannes Gerstmayr
 # Date:     2026-10-11
@@ -16,6 +17,7 @@
 
 import exudyn as exu
 from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
+import numpy as np
 
 SC = exu.SystemContainer()
 mbs = SC.AddSystem()
@@ -42,6 +44,22 @@ for coordinate in [1, 2]:
     mbs.AddObject(CoordinateConstraint(markerNumbers=[mbs.AddMarker(MarkerNodeCoordinate(nodeNumber=nGround, coordinate=0)),
                                                       mbs.AddMarker(MarkerNodeCoordinate(nodeNumber=node1, coordinate=coordinate))]))
 
+#MarkerNodeCoordinates with includeReferenceCoordinates=False: a coordinate vector constraint ties the DISPLACEMENTS of
+#two planar mass points at x=4 and x=7, the second one on a spring to the ground in x and held in y
+nC = mbs.AddNode(NodePoint2D(referenceCoordinates=[4, 0]))
+nD = mbs.AddNode(NodePoint2D(referenceCoordinates=[7, 0]))
+mbs.AddObject(MassPoint2D(nodeNumber=nC, mass=1))
+mbs.AddObject(MassPoint2D(nodeNumber=nD, mass=1))
+mC = mbs.AddMarker(MarkerNodeCoordinates(nodeNumber=nC, includeReferenceCoordinates=False))
+mD = mbs.AddMarker(MarkerNodeCoordinates(nodeNumber=nD, includeReferenceCoordinates=False))
+mbs.AddObject(ObjectConnectorCoordinateVector(markerNumbers=[mC, mD], scalingMarker0=np.eye(2), scalingMarker1=np.eye(2)))
+mDx = mbs.AddMarker(MarkerNodeCoordinate(nodeNumber=nD, coordinate=0))
+mbs.AddObject(CoordinateSpringDamper(markerNumbers=[mbs.AddMarker(MarkerNodeCoordinate(nodeNumber=nGround, coordinate=0)), mDx],
+                                     stiffness=k))
+mbs.AddObject(CoordinateConstraint(markerNumbers=[mbs.AddMarker(MarkerNodeCoordinate(nodeNumber=nGround, coordinate=0)),
+                                                  mbs.AddMarker(MarkerNodeCoordinate(nodeNumber=nD, coordinate=1))]))
+mbs.AddLoad(LoadCoordinate(markerNumber=mbs.AddMarker(MarkerNodeCoordinate(nodeNumber=nC, coordinate=0)), load=F))
+
 mbs.Assemble()
 simulationSettings = exu.SimulationSettings()
 simulationSettings.solution.file.write = False
@@ -53,8 +71,13 @@ x1 = mbs.GetNodeOutput(node1, exu.OutputVariableType.Position)[0]
 exu.Print('position of the held mass point:', x0, '(2.5)')
 exu.Print('position of the mass point on the spring:', x1, '(3 + F/k = 3.05)')
 
-errors = int(abs(x0 - 2.5) > 1e-12) + int(abs(x1 - (3 + F/k)) > 1e-12)
-u = errors + x0 + x1
+xC = mbs.GetNodeOutput(nC, exu.OutputVariableType.Position)[0]
+xD = mbs.GetNodeOutput(nD, exu.OutputVariableType.Position)[0]
+exu.Print('positions of the two planar mass points:', xC, xD, '(4.05, 7.05: the same displacement)')
+
+errors = (int(abs(x0 - 2.5) > 1e-12) + int(abs(x1 - (3 + F/k)) > 1e-12)
+          + int(abs(xC - (4 + F/k)) > 1e-12) + int(abs(xD - (7 + F/k)) > 1e-12))
+u = errors + x0 + x1 + xC + xD
 exu.Print('solution of markerNodeCoordinateReferenceTest=', u)
 
 exu.sys['testResult'] = u
