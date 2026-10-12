@@ -717,9 +717,15 @@ def ItemCppHeaders(definition):
     outputVariableNames = OutputVariableNames(definition)
     if len(outputVariableNames) != 0:
         if (Header(definition, 'classType') == 'Object') | (Header(definition, 'classType') == 'Node'):
+            #a variable with a condition is provided only where the condition holds (#2989)
+            conditions = {entry['outputVariable'].name: entry.get('condition') for entry in definition.get('outputVariables', [])}
             sList[indexComp] += space4+'virtual OutputVariableType GetOutputVariableTypes() const override\n    {\n        return (OutputVariableType)('
             for outputVariableName in outputVariableNames:
-                sList[indexComp] += '\n            (Index64)OutputVariableType::' + outputVariableName + ' +'
+                if conditions.get(outputVariableName) is None:
+                    sList[indexComp] += '\n            (Index64)OutputVariableType::' + outputVariableName + ' +'
+                else:
+                    sList[indexComp] += ('\n            ((' + conditions[outputVariableName] + ') ? (Index64)OutputVariableType::'
+                                         + outputVariableName + ' : (Index64)0) +')
             sList[indexComp] = sList[indexComp][0:len(sList[indexComp])-1]
             sList[indexComp] += ');\n    }\n\n'
         else:

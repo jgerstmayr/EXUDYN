@@ -30,6 +30,9 @@ before), and a wrong size or a singular input raises a `ValueError` (#2960, #296
 **`ObjectUserBody`**, a body whose mass matrix, forces, positions, rotations and Jacobians are Python user
 functions; body markers, sensors, loads and connectors work on it, see {ref}`sec-item-objectuserbody` (#2986).
 
+**User types**: `OutputVariableType`, `NodeType` and `MarkerType` have `UserType0` to `UserType3` for user items, which
+`exu.special.userTypes.SetName` names, see {ref}`sec-exudyn-special-usertypes` (#2989).
+
 (sec-revisions-1-13)=
 (sec-revisions-1-12)=
 ## Version 1.13

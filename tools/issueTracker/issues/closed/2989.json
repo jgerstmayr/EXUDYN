@@ -1,0 +1,15 @@
+{
+  "number": 2989,
+  "title": "User types UserType0-3 of OutputVariableType, NodeType and MarkerType with names",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "EXTENSION",
+  "effort": "MEDIUM",
+  "description": "revision2026c step RG7.2.1 (#2972, design 5.6): four user types in each of the three enumerations; exudyn.special.userTypes.SetName/GetName/Reset gives one a name, which the C++ string functions write and which becomes an alias of the value and its str(); ObjectUserBody.outputVariableUserFunction provides the user output variables (conditional output variables in the definitions); test model userTypesTest.py.",
+  "dateRaised": "2026-10-12",
+  "deadline": "2027-04-10",
+  "dateResolved": "2026-10-12 07:53",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "OutputVariableType, NodeType and MarkerType have UserType0 to UserType3; exu.special.userTypes.SetName names one - sensor files, messages and str() write the name, and it becomes an alias of the value; ObjectUserBody.outputVariableUserFunction provides the user output variables",
+  "resolvedInVersion": "1.13.75"
+}

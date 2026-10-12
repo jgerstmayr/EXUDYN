@@ -23,12 +23,13 @@ class OutputVariable:
     Python and in the documentation, and whether it can be evaluated in the reference
     configuration."""
 
-    def __init__(self, name, bit, description, referenceConfiguration=False, reserved=False):
+    def __init__(self, name, bit, description, referenceConfiguration=False, reserved=False, userType=None):
         self.name = name
         self.bit = bit
         self.description = description
         self.referenceConfiguration = referenceConfiguration
         self.reserved = reserved
+        self.userType = userType #index 0-3 of a user type, whose name the user sets (#2989)
 
 
 #the listing order is the order in which the variables appear in Python and in the generated
@@ -118,7 +119,7 @@ outputVariableTypes = [
     OutputVariable('HomogeneousTransformationLocal', 35,
                    'measure the homogeneous transformation of a frame relative to another, e.g., of joint frame J1 in joint frame J0: the 4x4 matrix [A p; 0 1] with the relative rotation matrix A and the relative position p in the first frame; returned and stored as HomogeneousTransformation',
                    referenceConfiguration=True),
-    ]
+    ] + [OutputVariable('UserType' + str(i), 36 + i, 'a type for a user item, e.g. a strain of a user element; its name is set with exudyn.special.userTypes.SetName, which also adds it as an alias of this value', userType=i) for i in range(4)]
 
 #bits allocated to variables that were considered and are not implemented. They are listed so
 #that the numbers are never handed out again; the emitter writes them as a comment.

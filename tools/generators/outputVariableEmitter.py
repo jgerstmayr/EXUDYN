@@ -88,6 +88,8 @@ def EmitHeader():
     s += '#ifndef OUTPUTVARIABLETYPES__H\n'
     s += '#define OUTPUTVARIABLETYPES__H\n'
     s += '\n'
+    s += '#include "Main/UserTypes.h"\n'
+    s += '\n'
     s += '//! OutputVariable used for output data in objects, nodes, loads, ...\n'
     s += '//! the type is a 64 bit mask: types can be combined, e.g. for the variables an item\n'
     s += '//! provides. All cases are independent of 2D/3D, which the item itself knows.\n'
@@ -124,8 +126,12 @@ def EmitHeader():
     s += '    {\n'
     s += '    case OutputVariableType::_None: return "_None";\n'
     for variable in variables:
-        s += ('    case OutputVariableType::' + variable.name + ': return "'
-              + variable.name + '";\n')
+        if variable.userType is not None: #the name the user set (#2989)
+            s += ('    case OutputVariableType::' + variable.name + ': return UserTypes::Name(UserTypes::OutputVariable, '
+                  + str(variable.userType) + ');\n')
+        else:
+            s += ('    case OutputVariableType::' + variable.name + ': return "'
+                  + variable.name + '";\n')
     s += '    default: SysError("GetOutputVariableTypeString: invalid variable type");\n'
     s += '        return "Invalid";\n'
     s += '    }\n'

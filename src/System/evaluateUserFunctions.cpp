@@ -301,6 +301,18 @@ void CObjectUserBody::EvaluateUserFunctionForce(Vector& force, Real t, Index obj
 	}, "ObjectUserBody::forceUserFunction");
 }
 
+void CObjectUserBody::EvaluateUserFunctionOutputVariable(Vector& value, Real t, OutputVariableType variableType, const Vector3D& localPosition,
+	const StdVector& coordinates, const StdVector& coordinates_t) const
+{
+	Vector result;
+	UserFunctionExceptionHandling([&] //lambda function to add consistent try{..} catch(...) block
+	{
+		result = (Vector)(parameters.outputVariableUserFunction.userFunction((const MainSystem&)cSystemData->GetMainSystemBacklink(), t, GetObjectNumber(),
+			variableType, localPosition, coordinates, coordinates_t));
+	}, "ObjectUserBody::outputVariableUserFunction");
+	value.CopyFrom(result); //a copy: value may be a resizable vector, whose memory a move would exchange
+}
+
 void CObjectUserBody::EvaluateUserFunctionMassMatrix(EXUmath::MatrixContainer& massMatrix, Real t, Index objectNumber,
 	const StdVector& coordinates, const StdVector& coordinates_t, const ArrayIndex& ltg) const
 {
@@ -328,10 +340,12 @@ void CObjectUserBody::EvaluateMatrix(Index which, Matrix& value, Real t, const V
 	const auto& function = (which == 0) ? parameters.positionJacobianUserFunction :
 		((which == 1) ? parameters.rotationMatrixUserFunction : parameters.rotationJacobianUserFunction);
 	if (!(function)) { PyError(STDstring("ObjectUserBody: ") + names[which] + " is not given, but a marker, load, sensor or output needs it", PyErrorType::valueError); }
+	Matrix result;
 	UserFunctionExceptionHandling([&] //lambda function to add consistent try{..} catch(...) block
 	{
-		value = EPyUtils::NumPy2Matrix(py::cast<py::array_t<Real>>(function.userFunction((const MainSystem&)cSystemData->GetMainSystemBacklink(), t, GetObjectNumber(), localPosition, coordinates)));
+		result = EPyUtils::NumPy2Matrix(py::cast<py::array_t<Real>>(function.userFunction((const MainSystem&)cSystemData->GetMainSystemBacklink(), t, GetObjectNumber(), localPosition, coordinates)));
 	}, names[which]);
+	value = (const Matrix&)result; //a copy: value may be a ResizableMatrix, whose memory a move would exchange
 	Index columns = (which == 1) ? 3 : (Index)coordinates.size();
 	if (!(value.NumberOfRows() == 3 && value.NumberOfColumns() == columns)) { PyError(STDstring("ObjectUserBody: ") + names[which] + " returned a matrix of size ("
 		+ EXUstd::ToString(value.NumberOfRows()) + " x " + EXUstd::ToString(value.NumberOfColumns()) + "), but (3 x " + EXUstd::ToString(columns) + ") is needed", PyErrorType::valueError); }

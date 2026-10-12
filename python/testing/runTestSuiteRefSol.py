@@ -131,6 +131,7 @@ def TestExamplesReferenceSolution():
         'userRigidBodyTest.py':13.475755021376353, #new 2026-10-12: ObjectUserBody as a rigid body on NodeRigidBodyRxyz against ObjectRigidBody, and what it refuses (#2986)
         'userANCFCable2DTest.py':7.797666638067246, #new 2026-10-12: the 2D ANCF cable as ObjectUserBody against ObjectANCFCable2D (#2987)
         'userTetrahedronTest.py':264.5322453238412, #new 2026-10-12: the linear tetrahedron as ObjectUserBody, nonlinear patch test against the exact solution (#2988)
+        'userTypesTest.py':2.0, #new 2026-10-12: the user types of OutputVariableType, NodeType, MarkerType, their names and aliases, ObjectUserBody.outputVariableUserFunction (#2989)
         'rotationMarkerDeprecationTest.py':-0.1340286194620787, #new 2026-10-03: rotationMarker0/1 against localHT of the markers, the deprecation warning once per session (#2745, #2801)
         'contactFrictionCircleCable2DnoFrictionTest.py':0.8052196344904814, #new 2026-10-05: no tangential force without a friction model, whatever the slip state (#1290); 1000 steps 2026-10-09 (#2912)
         'systemContainerLifetimeTest.py':-3.809999999999995, #new 2026-10-05: the MainSystem of AddSystem and GetSystem keeps its SystemContainer alive (#2851)

@@ -605,6 +605,9 @@
     <ClInclude Include="..\src\Main\OutputVariable.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
+    <ClInclude Include="..\src\Main\UserTypes.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
     <ClInclude Include="..\src\Main\Stdoutput.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>

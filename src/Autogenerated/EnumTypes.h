@@ -17,6 +17,7 @@
 #include <ostream>
 #include "Utilities/ReleaseAssert.h"
 #include "Utilities/BasicDefinitions.h"
+#include "Main/UserTypes.h"
 
 namespace Node {
     //! node types are used for integrity checks to verify that a node is suitable for an object; bit 11 was LieGroupWithDataCoordinates (never used)
@@ -39,7 +40,11 @@ namespace Node {
         GenericData = 1 << 15,              //!< node with general data variables
         PointSlope1 = 1 << 16,              //!< node with 1 slope vector
         PointSlope12 = 1 << 17,             //!< node with 2 slope vectors in x and y direction
-        PointSlope23 = 1 << 18              //!< node with 2 slope vectors in y and z direction
+        PointSlope23 = 1 << 18,             //!< node with 2 slope vectors in y and z direction
+        UserType0 = 1 << 19,                //!< a type for a user item, e.g. a strain of a user element; its name is set with exudyn.special.userTypes.SetName, which also adds it as an alias of this value
+        UserType1 = 1 << 20,                //!< a type for a user item, e.g. a strain of a user element; its name is set with exudyn.special.userTypes.SetName, which also adds it as an alias of this value
+        UserType2 = 1 << 21,                //!< a type for a user item, e.g. a strain of a user element; its name is set with exudyn.special.userTypes.SetName, which also adds it as an alias of this value
+        UserType3 = 1 << 22                 //!< a type for a user item, e.g. a strain of a user element; its name is set with exudyn.special.userTypes.SetName, which also adds it as an alias of this value
     };
 
     //! transform type into string (e.g. for error messages); this is slow and cannot be used during computation!
@@ -65,6 +70,10 @@ namespace Node {
         if (var & PointSlope1) { t += "PointSlope1"; }
         if (var & PointSlope12) { t += "PointSlope12"; }
         if (var & PointSlope23) { t += "PointSlope23"; }
+        if (var & UserType0) { t += UserTypes::Name(UserTypes::Node, 0); }
+        if (var & UserType1) { t += UserTypes::Name(UserTypes::Node, 1); }
+        if (var & UserType2) { t += UserTypes::Name(UserTypes::Node, 2); }
+        if (var & UserType3) { t += UserTypes::Name(UserTypes::Node, 3); }
         if (t.length() == 0) { CHECKandTHROWstring("Node::GetTypeString(...) called for invalid type!"); }
         return t;
     }
@@ -96,7 +105,11 @@ namespace Marker {
         HasPostNewton = 1 << 19,               //!< the PostNewton function has to be called
         Beam2DShape = 1 << 20,                 //!< access to 2D beam shape
         Beam3DShape = 1 << 21,                 //!< access to 3D beam shape
-        EndOfEnumList = 1 << 22                //!< the (2^i) maximum of the list
+        UserType0 = 1 << 23,                   //!< a type for a user item, e.g. a strain of a user element; its name is set with exudyn.special.userTypes.SetName, which also adds it as an alias of this value
+        UserType1 = 1 << 24,                   //!< a type for a user item, e.g. a strain of a user element; its name is set with exudyn.special.userTypes.SetName, which also adds it as an alias of this value
+        UserType2 = 1 << 25,                   //!< a type for a user item, e.g. a strain of a user element; its name is set with exudyn.special.userTypes.SetName, which also adds it as an alias of this value
+        UserType3 = 1 << 26,                   //!< a type for a user item, e.g. a strain of a user element; its name is set with exudyn.special.userTypes.SetName, which also adds it as an alias of this value
+        EndOfEnumList = 1 << 27                //!< the (2^i) maximum of the list
     };
 
     //! transform type into string (e.g. for error messages); this is slow and cannot be used during computation!
@@ -123,6 +136,10 @@ namespace Marker {
         if (var & ODE1) { t += "ODE1"; }
         if (var & Beam2DShape) { t += "Beam2DShape"; }
         if (var & Beam3DShape) { t += "Beam3DShape"; }
+        if (var & UserType0) { t += UserTypes::Name(UserTypes::Marker, 0); }
+        if (var & UserType1) { t += UserTypes::Name(UserTypes::Marker, 1); }
+        if (var & UserType2) { t += UserTypes::Name(UserTypes::Marker, 2); }
+        if (var & UserType3) { t += UserTypes::Name(UserTypes::Marker, 3); }
         if (t.length() == 0) { CHECKandTHROWstring("Marker::GetTypeString(...) called for invalid type!"); }
         return t;
     }

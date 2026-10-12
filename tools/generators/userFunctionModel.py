@@ -197,6 +197,7 @@ annotationToPython = {'MainSystem': 'exudyn.MainSystem',
                       'BodyGraphicsData': 'list',
                       'MatrixContainer': 'exudyn.MatrixContainer',
                       'ConfigurationType': 'exudyn.ConfigurationType',
+                      'OutputVariableType': 'exudyn.OutputVariableType',
                       }
 
 

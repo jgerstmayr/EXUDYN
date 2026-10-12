@@ -556,6 +556,11 @@ protected:
 	{
 		argRealList[argIndex++].GetReal()->SetExpressionNamedReal(arg);
 	}
+	//! an OutputVariableType as the Real of its value, as an Index is passed (#2989)
+	void processArgument(OutputVariableType arg, ResizableArray<SymbolicGeneric>& argRealList, Index& argIndex)
+	{
+		argRealList[argIndex++].GetReal()->SetExpressionNamedReal((Real)(Index64)arg);
+	}
 	void processArgument(const ResizableConstVector& arg, ResizableArray<SymbolicGeneric>& argRealList, Index& argIndex)
 	{
 		argRealList[argIndex++].GetVector()->SetExpressionNamedVector(arg);

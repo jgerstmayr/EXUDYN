@@ -269,6 +269,16 @@ void CObjectUserBody::GetOutputVariableBody(OutputVariableType variableType, con
 		CheckEnergyLocalPosition(localPosition, "ObjectUserBody");
 		value.SetVector({ ComputeKineticEnergyFromMassMatrix(configuration, objectNumber, "ObjectUserBody") });
 		break;
+	case OutputVariableType::UserType0:
+	case OutputVariableType::UserType1:
+	case OutputVariableType::UserType2:
+	case OutputVariableType::UserType3: {
+		if (configuration == ConfigurationType::Visualization && !PythonCallPossible()) { value.SetVector({ 0. }); break; }
+		StdVector q, q_t;
+		ComputeObjectCoordinates(q, q_t, configuration);
+		EvaluateUserFunctionOutputVariable(value, ConfigurationTime(GetCSystemData(), configuration), variableType, localPosition, q, q_t);
+		break;
+	}
 	default:
 		SysError("CObjectUserBody::GetOutputVariableBody failed"); //error should not occur, because types are checked!
 	}

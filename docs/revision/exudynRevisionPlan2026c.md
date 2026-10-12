@@ -84,7 +84,6 @@ The title of each says what it does; the sentence after it, why it comes now.
   - RG6.11 Draw textures from numpy arrays in triangle lists
   - RG6.12 Add a ruler to the renderer and orient imported triangles consistently
 - **RG7** Python user items
-  - RG7.2 Set up the common pattern of the user items and the user types
   - RG7.4 Add user nodes with position and orientation interfaces
   - RG7.5 Add user markers and a user connector with access to its markers
   - RG7.6 Add a user joint on two position and orientation markers
@@ -132,7 +131,7 @@ The title of each says what it does; the sentence after it, why it comes now.
 | RG4 | OPEN | 9 | Implementation problems and bugs |
 | RG5 | OPEN | 8 | Performance |
 | RG6 | OPEN | 4 | Graphics and rendering |
-| RG7 | OPEN | 7 | Python user items |
+| RG7 | OPEN | 6 | Python user items |
 | RG8 | OPEN | 10 | Compiled C++ user items |
 | RG9 | OPEN | 4 | Structural core improvements |
 | RG10 | CLOSED | 0 | Tooling and process |
@@ -385,10 +384,16 @@ Items whose behaviour is written in Python, and where the line runs against comp
 
 CLOSED 2026-10-12 (#2971, maintainer 2026-10-11/12: the decisions are in the design document): [docs/dev/design/pythonUserItems.md](../dev/design/pythonUserItems.md), with the measurement script next to it. [log](exudynRevisionLog2026c.md#rg7-1)
 
-### **OPEN_RG7.2** Set up the common pattern of the user items and the user types
+### **CLOSED_RG7.2** Set up the common pattern of the user items and the user types
 
-#2972. Naming, the arguments of every user function, how C++ calls them; OutputVariableType::UserType0-3,
-Node::UserType0-3, Marker::UserType0-3 with display names and Python aliases (design 5.6).
+CLOSED 2026-10-12 (#2972): the pattern as ObjectUserBody built it is design 5.9 (names, arguments, returns, how C++
+calls them, threads, conditional output variables); the user types are RG7.2.1. [log](exudynRevisionLog2026c.md#rg7-2)
+
+#### **CLOSED_RG7.2.1** Add the user types and their names
+
+CLOSED 2026-10-12 (#2989, maintainer 2026-10-12: four user types): UserType0-3 of OutputVariableType, NodeType and
+MarkerType, exu.special.userTypes, ObjectUserBody.outputVariableUserFunction; test model userTypesTest.py.
+[log](exudynRevisionLog2026c.md#rg7-2)
 
 ### **CLOSED_RG7.3** Add the user body as a finite element, first the user rigid body
 

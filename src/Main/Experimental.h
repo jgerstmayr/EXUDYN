@@ -18,6 +18,7 @@
 
 #include "Tests/UnitTestBase.h" //for unit tests
 #include <set>
+#include "Main/UserTypes.h"
 
 
 //to use, do 
@@ -271,6 +272,36 @@ public:
 
 };
 
+//! the names of the user types, exudyn.special.userTypes (#2989); the names are kept in UserTypes::RegisteredName,
+//! the functions SetName, GetName and Reset are bound in Pybind_manual_classes.cpp
+class PySpecialUserTypes
+{
+public:
+    void Initialize() {}
+
+    //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+    virtual void Print(std::ostream& os) const
+    {
+        const char* kinds[UserTypes::numberOfKinds] = { "OutputVariableType", "NodeType", "MarkerType" };
+        for (Index kind = 0; kind < UserTypes::numberOfKinds; kind++)
+        {
+            for (Index index = 0; index < UserTypes::numberOfUserTypes; index++)
+            {
+                if (!UserTypes::RegisteredName(kind, index).empty())
+                {
+                    os << "  " << kinds[kind] << ".UserType" << index << " = " << UserTypes::RegisteredName(kind, index) << "\n";
+                }
+            }
+        }
+    }
+
+    friend std::ostream& operator<<(std::ostream& os, const PySpecialUserTypes& item)
+    {
+        item.Print(os);
+        return os;
+    }
+};
+
 //!class with according structure in PybindModule.cpp which can be accessed from Python and inside C++
 //!used for special features and global settings
 class PySpecial
@@ -281,6 +312,7 @@ public:
     PySpecialUserInterface userInterface;
     PySpecialBeams beams;
     PySpecialDeprecations deprecations;
+    PySpecialUserTypes userTypes;
 
     PySpecial()
     {
@@ -294,6 +326,7 @@ public:
         userInterface.Initialize();
         beams.Initialize();
         deprecations.Initialize();
+        userTypes.Initialize();
     }
 
     //! put RunCppUnitTests into special class
@@ -317,6 +350,7 @@ public:
         os << "userInterface:\n" << userInterface;
         os << "beams:\n" << beams;
         os << "deprecations:\n" << deprecations;
+        os << "userTypes:\n" << userTypes;
         //os << "  InfoStat() = " << InfoStat(false) << "\n";
         os << "\n";
     }

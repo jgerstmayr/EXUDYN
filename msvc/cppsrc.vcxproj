@@ -594,6 +594,7 @@
     <ClInclude Include="..\src\Main\MainSystemData.h" />
     <ClInclude Include="..\src\Main\MarkerData.h" />
     <ClInclude Include="..\src\Main\OutputVariable.h" />
+    <ClInclude Include="..\src\Main\UserTypes.h" />
     <ClInclude Include="..\src\Main\rendererPythonInterface.h" />
     <ClInclude Include="..\src\Main\Stdoutput.h" />
     <ClInclude Include="..\src\Main\StructuralElementsDataStructures.h" />

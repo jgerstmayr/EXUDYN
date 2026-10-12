@@ -105,6 +105,7 @@ springDamperVelocityOffsetTest
 userRigidBodyTest
 userANCFCable2DTest
 userTetrahedronTest
+userTypesTest
 rotationMarkerDeprecationTest
 contactFrictionCircleCable2DnoFrictionTest
 systemContainerLifetimeTest

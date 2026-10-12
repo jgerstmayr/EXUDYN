@@ -8,10 +8,10 @@ Every entry carries the **type** of the issue, then its **priority** and its **e
 
 General information on current version:
 
-- Exudyn version = 1.13.73.dev1
+- Exudyn version = 1.13.75.dev1
 - last change = 2026-10-12
-- Number of issues = 2989
-- Number of resolved issues = 2850 (73 in current version)
+- Number of issues = 2990
+- Number of resolved issues = 2852 (75 in current version)
 
 ## Resolved issues and resolved bugs before version 1.13
 
@@ -9074,9 +9074,6 @@ The following list contains the issues which have been **RESOLVED** in the accor
   - date raised: 2026-10-12
 - `EXTENSION` `raised by: Claude-JG` User nodes with position and orientation interfaces (#2974)
   - description: revision2026c step RG7.4 (docs/dev/design/pythonUserItems.md 5.2): number of coordinates, position, velocity, position Jacobian; rotation matrix, local angular velocity, Glocal and its derivatives (numerical if not given); example 3: a fully parametrized ANCF node (NodePointSlope123) and beam.
-  - date raised: 2026-10-12
-- `EXTENSION` `MEDIUM EFF` `raised by: Claude-JG` Python user items: the common pattern and the user types (#2972)
-  - description: revision2026c step RG7.2 (docs/dev/design/pythonUserItems.md 5.6, 8): naming, the arguments of every user function, how C++ calls them; OutputVariableType::UserType0-3, Node::UserType0-3, Marker::UserType0-3 with a registry of display names and Python aliases (exu.OutputVariableType.xyz = ... works).
   - date raised: 2026-10-12
 - `EXTENSION` `raised by: Claude-JG` exudyn.cUtilities: the time derivatives of the Euler parameter functions (#2965)
   - description: Decision D7 of revision2026c step RG11.10.1 (tmp/compareRBU.md, maintainer 2026-10-11: not now, an issue): RigidBodyMath has EP2RotationMatrix\_t, EP\_t2G\_t and EP\_t2Glocal\_t, which neither rigidBodyUtilities nor exudyn.cUtilities offers; when wanted, add them to definitions/pybindCUtilities.py and PyCUtilities.h, with a check in cUtilitiesTest.py.

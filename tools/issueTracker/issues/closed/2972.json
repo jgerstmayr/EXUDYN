@@ -2,10 +2,14 @@
   "number": 2972,
   "title": "Python user items: the common pattern and the user types",
   "author": "Claude-JG",
-  "status": "RAISED",
+  "status": "RESOLVED",
   "type": "EXTENSION",
   "effort": "MEDIUM",
   "description": "revision2026c step RG7.2 (docs/dev/design/pythonUserItems.md 5.6, 8): naming, the arguments of every user function, how C++ calls them; OutputVariableType::UserType0-3, Node::UserType0-3, Marker::UserType0-3 with a registry of display names and Python aliases (exu.OutputVariableType.xyz = ... works).",
   "dateRaised": "2026-10-12",
-  "deadline": "2027-04-10"
+  "deadline": "2027-04-10",
+  "dateResolved": "2026-10-12 07:53",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "the common pattern of the user items, written down as ObjectUserBody built it (names, arguments, returns, how C++ calls them, threads, conditional output variables), and the user types (#2989)",
+  "resolvedInVersion": "1.13.74"
 }

@@ -406,6 +406,35 @@ pb.DefPyFunctionAccess(cClass='', pyName='special.deprecations.Warn', cName='unu
                         )
 pb.EndCppWrittenByHand()
 
+pb.AddDocu('', section='exudyn.special.userTypes', sectionLevel=2, sectionLabel='sec-exudyn-special-usertypes')
+pb.DefDataAccess('special.userTypes','the names of the user types: OutputVariableType, NodeType and MarkerType have the values UserType0 to UserType3 for user items, e.g. a strain of a user element; a name set here is written wherever Exudyn writes the type - the header of a sensor file and so the labels of PlotSensor, messages, str() - and becomes an alias of the value, e.g. exudyn.OutputVariableType.BendingStrain; the name property of the value stays UserType0; see the C++ code class PySpecialUserTypes',
+                        dataType='SpecialUserTypes', isTopLevel = True)
+
+pb.BeginCppWrittenByHand() #bound in Pybind_manual_classes.cpp (#2989)
+pb.DefPyFunctionAccess(cClass='', pyName='special.userTypes.SetName', cName='unused',
+                        description='give userType, UserType0 to UserType3 of OutputVariableType, NodeType or MarkerType, a name, which must be a Python name and not yet a name of the enumeration; a new name replaces the previous one and its alias',
+                        argList=['userType', 'name'],
+                        defaultArgs=['', ''],
+                        argTypes=['OutputVariableType | NodeType | MarkerType', 'str'],
+                        returnType='None',
+                        example=r"""exu.special.userTypes.SetName(exu.OutputVariableType.UserType0, 'BendingStrain')\\exu.OutputVariableType.BendingStrain #the same value as UserType0""",
+                        )
+pb.DefPyFunctionAccess(cClass='', pyName='special.userTypes.GetName', cName='unused',
+                        description='the name of userType: the name that was set, or UserType0, ...',
+                        argList=['userType'],
+                        defaultArgs=[''],
+                        argTypes=['OutputVariableType | NodeType | MarkerType'],
+                        returnType='str',
+                        )
+pb.DefPyFunctionAccess(cClass='', pyName='special.userTypes.Reset', cName='unused',
+                        description='remove all names of the user types and their aliases',
+                        argList=[],
+                        defaultArgs=[],
+                        argTypes=[],
+                        returnType='None',
+                        )
+pb.EndCppWrittenByHand()
+
 #the submodules exudyn.cMath and exudyn.cUtilities (definitions/pybindCMath.py, pybindCUtilities.py; #2958, #2960)
 pb.CSubmodulesHere()
 

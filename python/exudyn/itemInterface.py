@@ -24,11 +24,11 @@ __all__ = [
     'ObjectGenericODE1RhsUserFunction', 'ObjectUserBodyMassMatrixUserFunction',
     'ObjectUserBodyForceUserFunction', 'ObjectUserBodyPositionUserFunction',
     'ObjectUserBodyPositionJacobianUserFunction', 'ObjectUserBodyRotationMatrixUserFunction',
-    'ObjectUserBodyRotationJacobianUserFunction', 'ObjectUserBodyGraphicsDataUserFunction',
-    'ObjectKinematicTreeForceUserFunction', 'ObjectFFRFForceUserFunction',
-    'ObjectFFRFMassMatrixUserFunction', 'ObjectFFRFreducedOrderForceUserFunction',
-    'ObjectFFRFreducedOrderMassMatrixUserFunction', 'ObjectANCFCable2DAxialForceUserFunction',
-    'ObjectANCFCable2DBendingMomentUserFunction',
+    'ObjectUserBodyRotationJacobianUserFunction', 'ObjectUserBodyOutputVariableUserFunction',
+    'ObjectUserBodyGraphicsDataUserFunction', 'ObjectKinematicTreeForceUserFunction',
+    'ObjectFFRFForceUserFunction', 'ObjectFFRFMassMatrixUserFunction',
+    'ObjectFFRFreducedOrderForceUserFunction', 'ObjectFFRFreducedOrderMassMatrixUserFunction',
+    'ObjectANCFCable2DAxialForceUserFunction', 'ObjectANCFCable2DBendingMomentUserFunction',
     'ObjectConnectorSpringDamperSpringForceUserFunction',
     'ObjectConnectorCartesianSpringDamperSpringForceUserFunction',
     'ObjectConnectorRigidBodySpringDamperSpringForceTorqueUserFunction',
@@ -208,6 +208,7 @@ userFunctionArgsDict = {'MainSystem,preStepUserFunction': [['MainSystem', 'Real'
         'ObjectUserBody,positionJacobianUserFunction': [['MainSystem', 'Real', 'Index', 'StdVector3D', 'StdVector'], ['mbs', 't', 'itemNumber', 'localPosition', 'q'], ['py::object'], ['ObjectUserBodyPositionJacobianUserFunction']],
         'ObjectUserBody,rotationMatrixUserFunction': [['MainSystem', 'Real', 'Index', 'StdVector3D', 'StdVector'], ['mbs', 't', 'itemNumber', 'localPosition', 'q'], ['py::object'], ['ObjectUserBodyRotationMatrixUserFunction']],
         'ObjectUserBody,rotationJacobianUserFunction': [['MainSystem', 'Real', 'Index', 'StdVector3D', 'StdVector'], ['mbs', 't', 'itemNumber', 'localPosition', 'q'], ['py::object'], ['ObjectUserBodyRotationJacobianUserFunction']],
+        'ObjectUserBody,outputVariableUserFunction': [['MainSystem', 'Real', 'Index', 'OutputVariableType', 'StdVector3D', 'StdVector', 'StdVector'], ['mbs', 't', 'itemNumber', 'outputVariableType', 'localPosition', 'q', 'q_t'], ['StdVector'], ['ObjectUserBodyOutputVariableUserFunction']],
         'ObjectUserBody,graphicsDataUserFunction': [['MainSystem', 'Index'], ['mbs', 'itemNumber'], ['py::object'], ['ObjectUserBodyGraphicsDataUserFunction']],
         'ObjectKinematicTree,forceUserFunction': [['MainSystem', 'Real', 'Index', 'StdVector', 'StdVector'], ['mbs', 't', 'itemNumber', 'q', 'q_t'], ['StdVector'], ['ObjectKinematicTreeForceUserFunction']],
         'ObjectFFRF,forceUserFunction': [['MainSystem', 'Real', 'Index', 'StdVector', 'StdVector'], ['mbs', 't', 'itemNumber', 'q', 'q_t'], ['StdVector'], ['ObjectFFRFForceUserFunction']],
@@ -516,6 +517,29 @@ class ObjectUserBodyRotationJacobianUserFunction(Protocol):
         exudyn.MatrixContainer: the matrix, as numpy array or list of lists
     """
     def __call__(self, mbs: exudyn.MainSystem, t: float, itemNumber: int, localPosition: np.ndarray, q: np.ndarray) -> exudyn.MatrixContainer: ...
+
+class ObjectUserBodyOutputVariableUserFunction(Protocol):
+    """A user function, which computes the output variables UserType0 to UserType3 of the body at localPosition, e.g. strains or stresses of a user element; name them with exudyn.special.userTypes.SetName.
+    
+    Args:
+        mbs (exudyn.MainSystem): provides MainSystem mbs to which object belongs
+
+        t (float): time of the configuration asked for
+
+        itemNumber (int): integer number :math:`i_N` of the object in mbs
+
+        outputVariableType (exudyn.OutputVariableType): the output variable asked for, UserType0 to UserType3
+
+        localPosition (np.ndarray): the local position of the point
+
+        q (np.ndarray): object coordinates, INCLUDING their reference values, of the configuration asked for
+
+        q_t (np.ndarray): object velocity coordinates of the configuration asked for
+
+    Returns:
+        np.ndarray: the value as a vector of any size, the same size for every call with the same outputVariableType
+    """
+    def __call__(self, mbs: exudyn.MainSystem, t: float, itemNumber: int, outputVariableType: exudyn.OutputVariableType, localPosition: np.ndarray, q: np.ndarray, q_t: np.ndarray) -> np.ndarray: ...
 
 class ObjectUserBodyGraphicsDataUserFunction(Protocol):
     """A user function, which is called by the visualization thread in order to draw user-defined objects.
@@ -2913,13 +2937,15 @@ class ObjectUserBody:
 
         rotationJacobianUserFunction: A Python user function which computes the rotation Jacobian (of the global angular velocity) at localPosition; optional, for rigid markers; type: ObjectUserBodyRotationJacobianUserFunction
 
+        outputVariableUserFunction: A Python user function which computes the output variables UserType0 to UserType3 at localPosition; optional; type: ObjectUserBodyOutputVariableUserFunction
+
         visualization: visualization data, see VObjectUserBody
 
     Notes:
         Object has/provides the following types: ``Body``, ``MultiNoded``
 
     """
-    def __init__(self, name = '', nodeNumbers = [], massMatrixUserFunction: Union[ObjectUserBodyMassMatrixUserFunction, int] = 0, forceUserFunction: Union[ObjectUserBodyForceUserFunction, int] = 0, positionUserFunction: Union[ObjectUserBodyPositionUserFunction, int] = 0, positionJacobianUserFunction: Union[ObjectUserBodyPositionJacobianUserFunction, int] = 0, rotationMatrixUserFunction: Union[ObjectUserBodyRotationMatrixUserFunction, int] = 0, rotationJacobianUserFunction: Union[ObjectUserBodyRotationJacobianUserFunction, int] = 0, visualization = {'show': True, 'graphicsDataUserFunction': 0}):
+    def __init__(self, name = '', nodeNumbers = [], massMatrixUserFunction: Union[ObjectUserBodyMassMatrixUserFunction, int] = 0, forceUserFunction: Union[ObjectUserBodyForceUserFunction, int] = 0, positionUserFunction: Union[ObjectUserBodyPositionUserFunction, int] = 0, positionJacobianUserFunction: Union[ObjectUserBodyPositionJacobianUserFunction, int] = 0, rotationMatrixUserFunction: Union[ObjectUserBodyRotationMatrixUserFunction, int] = 0, rotationJacobianUserFunction: Union[ObjectUserBodyRotationJacobianUserFunction, int] = 0, outputVariableUserFunction: Union[ObjectUserBodyOutputVariableUserFunction, int] = 0, visualization = {'show': True, 'graphicsDataUserFunction': 0}):
         self.name = name
         self.nodeNumbers = copy.copy(nodeNumbers)
         self.massMatrixUserFunction = massMatrixUserFunction
@@ -2928,6 +2954,7 @@ class ObjectUserBody:
         self.positionJacobianUserFunction = positionJacobianUserFunction
         self.rotationMatrixUserFunction = rotationMatrixUserFunction
         self.rotationJacobianUserFunction = rotationJacobianUserFunction
+        self.outputVariableUserFunction = outputVariableUserFunction
         self.visualization = CopyDictLevel1(visualization)
 
     def __iter__(self):
@@ -2940,6 +2967,7 @@ class ObjectUserBody:
         yield 'positionJacobianUserFunction', self.positionJacobianUserFunction
         yield 'rotationMatrixUserFunction', self.rotationMatrixUserFunction
         yield 'rotationJacobianUserFunction', self.rotationJacobianUserFunction
+        yield 'outputVariableUserFunction', self.outputVariableUserFunction
         yield 'Vshow', dict(self.visualization)["show"]
         yield 'VgraphicsDataUserFunction', dict(self.visualization)["graphicsDataUserFunction"]
 

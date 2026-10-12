@@ -290,6 +290,14 @@ class OutputVariableType(Enum):
     """measure the homogeneous transformation of a node, body point or marker: its rotation matrix A and position p as the 4x4 matrix [A p; 0 1]; the Get...Output functions return it as exu.HT, a sensor stores its 16 components row by row; every item with Position and RotationMatrix provides it"""
     HomogeneousTransformationLocal = int
     """measure the homogeneous transformation of a frame relative to another, e.g., of joint frame J1 in joint frame J0: the 4x4 matrix [A p; 0 1] with the relative rotation matrix A and the relative position p in the first frame; returned and stored as HomogeneousTransformation"""
+    UserType0 = int
+    """a type for a user item, e.g. a strain of a user element; its name is set with exudyn.special.userTypes.SetName, which also adds it as an alias of this value"""
+    UserType1 = int
+    """a type for a user item, e.g. a strain of a user element; its name is set with exudyn.special.userTypes.SetName, which also adds it as an alias of this value"""
+    UserType2 = int
+    """a type for a user item, e.g. a strain of a user element; its name is set with exudyn.special.userTypes.SetName, which also adds it as an alias of this value"""
+    UserType3 = int
+    """a type for a user item, e.g. a strain of a user element; its name is set with exudyn.special.userTypes.SetName, which also adds it as an alias of this value"""
 
 
 class InspectType(Enum):
@@ -417,6 +425,14 @@ class NodeType(Enum):
     """node with 2 slope vectors in x and y direction"""
     PointSlope23 = int
     """node with 2 slope vectors in y and z direction"""
+    UserType0 = int
+    """a type for a user item, e.g. a strain of a user element; its name is set with exudyn.special.userTypes.SetName, which also adds it as an alias of this value"""
+    UserType1 = int
+    """a type for a user item, e.g. a strain of a user element; its name is set with exudyn.special.userTypes.SetName, which also adds it as an alias of this value"""
+    UserType2 = int
+    """a type for a user item, e.g. a strain of a user element; its name is set with exudyn.special.userTypes.SetName, which also adds it as an alias of this value"""
+    UserType3 = int
+    """a type for a user item, e.g. a strain of a user element; its name is set with exudyn.special.userTypes.SetName, which also adds it as an alias of this value"""
 
 
 class MarkerType(Enum):
@@ -467,6 +483,14 @@ class MarkerType(Enum):
     """access to 2D beam shape"""
     Beam3DShape = int
     """access to 3D beam shape"""
+    UserType0 = int
+    """a type for a user item, e.g. a strain of a user element; its name is set with exudyn.special.userTypes.SetName, which also adds it as an alias of this value"""
+    UserType1 = int
+    """a type for a user item, e.g. a strain of a user element; its name is set with exudyn.special.userTypes.SetName, which also adds it as an alias of this value"""
+    UserType2 = int
+    """a type for a user item, e.g. a strain of a user element; its name is set with exudyn.special.userTypes.SetName, which also adds it as an alias of this value"""
+    UserType3 = int
+    """a type for a user item, e.g. a strain of a user element; its name is set with exudyn.special.userTypes.SetName, which also adds it as an alias of this value"""
 
 
 class JointType(Enum):
@@ -4330,6 +4354,26 @@ class SpecialDeprecations:
         """Report the use of a deprecated name from Python, as the C++ side does: a DeprecationWarning, once per session unless warnOnce is False, and a count in exudyn.sys[deprecationUse]; stackLevel=2 attributes the warning to the caller of the function that calls Warn."""
         ...
 
+class SpecialUserTypes:
+    """the names of the user types: OutputVariableType, NodeType and MarkerType have the values UserType0 to UserType3 for user items, e.g. a strain of a user element; a name set here is written wherever Exudyn writes the type - the header of a sensor file and so the labels of PlotSensor, messages, str() - and becomes an alias of the value, e.g. exudyn.OutputVariableType.BendingStrain; the name property of the value stays UserType0; see the C++ code class PySpecialUserTypes"""
+    @overload
+    def SetName(self, userType: OutputVariableType | NodeType | MarkerType, name: str) -> None: 
+        """Give userType, UserType0 to UserType3 of OutputVariableType, NodeType or MarkerType, a name, which must be a Python name and not yet a name of the enumeration; a new name replaces the previous one and its alias.
+        
+        Examples:
+            exu.special.userTypes.SetName(exu.OutputVariableType.UserType0, 'BendingStrain')
+            exu.OutputVariableType.BendingStrain #the same value as UserType0
+        """
+        ...
+    @overload
+    def GetName(self, userType: OutputVariableType | NodeType | MarkerType) -> str: 
+        """The name of userType: the name that was set, or UserType0, ..."""
+        ...
+    @overload
+    def Reset(self) -> None: 
+        """Remove all names of the user types and their aliases."""
+        ...
+
 class Special:
     """special attributes and functions, such as global (solver) flags or helper functions; not intended for regular users; for available features, see the C++ code class PySpecial"""
     @overload
@@ -4354,6 +4398,8 @@ class Special:
     """flags that stop Exudyn from opening windows; meant for automated runs (test runners, CI, AI-assisted development), where a window that waits for a human stops everything; not intended for regular users; for available features, see the C++ code class PySpecialUserInterface."""
     deprecations:SpecialDeprecations
     """how a deprecated name - a setting, an item parameter, a function - is reported: a DeprecationWarning once per session and name, or on every use, and a count of every use in the dictionary exudyn.sys[deprecationUse], by source (simulationSettings, visualizationSettings, items, functions) and name; see the C++ code class PySpecialDeprecations."""
+    userTypes:SpecialUserTypes
+    """the names of the user types: OutputVariableType, NodeType and MarkerType have the values UserType0 to UserType3 for user items, e.g. a strain of a user element; a name set here is written wherever Exudyn writes the type - the header of a sensor file and so the labels of PlotSensor, messages, str() - and becomes an alias of the value, e.g. exudyn.OutputVariableType.BendingStrain; the name property of the value stays UserType0; see the C++ code class PySpecialUserTypes."""
 
 class Experimental:
     """Experimental features, not intended for regular users; for available features, see the C++ code class PyExperimental"""

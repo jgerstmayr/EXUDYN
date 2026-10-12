@@ -13,6 +13,7 @@ public:
     std::function<StdVector(const MainSystem&,Real,Index,StdVector)> objectGenericODE1RhsUserFunction;
     std::function<StdVector3D(const MainSystem&,Real,Index,StdVector3D,StdVector)> objectUserBodyPositionUserFunction;
     std::function<py::object(const MainSystem&,Real,Index,StdVector3D,StdVector)> objectUserBodyPositionJacobianUserFunction;
+    std::function<StdVector(const MainSystem&,Real,Index,OutputVariableType,StdVector3D,StdVector,StdVector)> objectUserBodyOutputVariableUserFunction;
     std::function<NumpyMatrix(const MainSystem&,Real,Index,StdVector,StdVector)> objectFFRFMassMatrixUserFunction;
     std::function<Real(const MainSystem&,Real,Index,Real,Real,Real,Real,Real,Real,Real,Real,Real)> objectANCFCable2DAxialForceUserFunction;
     std::function<Real(const MainSystem&,Real,Index,Real,Real,Real,Real,Real)> objectConnectorSpringDamperSpringForceUserFunction;
@@ -92,6 +93,13 @@ public:
             objectUserBodyPositionUserFunction = [this](const MainSystem& mainSystem, Real arg0, Index arg1, StdVector3D arg2, StdVector arg3)
                 {
                     return this->EvaluateStdVector3D(mainSystem, arg0, arg1, arg2, arg3);
+                };
+        }
+        else if (itemTypeName == "ObjectUserBody" && userFunctionName == "outputVariableUserFunction")
+        {            //define the user function as lambda function of this
+            objectUserBodyOutputVariableUserFunction = [this](const MainSystem& mainSystem, Real arg0, Index arg1, OutputVariableType arg2, StdVector3D arg3, StdVector arg4, StdVector arg5)
+                {
+                    return this->EvaluateStdVector(mainSystem, arg0, arg1, arg2, arg3, arg4, arg5);
                 };
         }
         else if (itemTypeName == "ObjectKinematicTree" && userFunctionName == "forceUserFunction")
@@ -297,6 +305,10 @@ public:
         else if constexpr (std::is_same_v<UFT, std::function<py::object(const MainSystem&,Real,Index,StdVector3D,StdVector)>>)
 		{
 			return objectUserBodyPositionJacobianUserFunction;
+		}
+        else if constexpr (std::is_same_v<UFT, std::function<StdVector(const MainSystem&,Real,Index,OutputVariableType,StdVector3D,StdVector,StdVector)>>)
+		{
+			return objectUserBodyOutputVariableUserFunction;
 		}
         else if constexpr (std::is_same_v<UFT, std::function<NumpyMatrix(const MainSystem&,Real,Index,StdVector,StdVector)>>)
 		{

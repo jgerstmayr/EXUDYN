@@ -475,6 +475,89 @@ void EPyUtils::SetConfigFromDictionary(ExudynConfig& config, const py::dict& val
 
 
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+//the user types (#2989)
+
+//! the Python class of each kind of user type
+static py::object UserTypeClass(Index kind)
+{
+	if (kind == UserTypes::OutputVariable) { return py::type::of<OutputVariableType>(); }
+	if (kind == UserTypes::Node) { return py::type::of<Node::Type>(); }
+	return py::type::of<Marker::Type>();
+}
+
+//! true if value is UserType0 to UserType3 of OutputVariableType, NodeType or MarkerType, with its kind and index
+static bool UserTypeOf(const py::object& value, Index& kind, Index& index)
+{
+	Index64 bits;
+	Index64 userType0;
+	if (py::isinstance<OutputVariableType>(value)) { kind = UserTypes::OutputVariable; bits = (Index64)py::cast<OutputVariableType>(value); userType0 = (Index64)OutputVariableType::UserType0; }
+	else if (py::isinstance<Node::Type>(value)) { kind = UserTypes::Node; bits = (Index64)py::cast<Node::Type>(value); userType0 = (Index64)Node::UserType0; }
+	else if (py::isinstance<Marker::Type>(value)) { kind = UserTypes::Marker; bits = (Index64)py::cast<Marker::Type>(value); userType0 = (Index64)Marker::UserType0; }
+	else { return false; }
+	for (index = 0; index < UserTypes::numberOfUserTypes; index++)
+	{
+		if (bits == (userType0 << index)) { return true; }
+	}
+	return false;
+}
+
+//! str() of the enumeration writes the name of a user type; set once per class, the first time a name is set
+static void SetUserTypeStr(const py::object& typeClass)
+{
+	if (py::hasattr(typeClass, "_userTypeStr")) { return; }
+	py::object original = typeClass.attr("__str__");
+	STDstring className = py::cast<STDstring>(typeClass.attr("__name__"));
+	typeClass.attr("__str__") = py::cpp_function([original, className](const py::object& self) -> py::object {
+		Index kind, index;
+		if (UserTypeOf(self, kind, index)) { return py::str(className + "." + UserTypes::Name(kind, index)); }
+		return original(self);
+		}, py::is_method(typeClass));
+	typeClass.attr("_userTypeStr") = true;
+}
+
+//! give a user type a name, which is also an alias of the value in its Python class
+static void SetUserTypeName(const py::object& userType, const STDstring& name)
+{
+	Index kind, index;
+	if (!UserTypeOf(userType, kind, index))
+	{
+		PyError("special.userTypes.SetName: userType must be UserType0 to UserType3 of OutputVariableType, NodeType or MarkerType", PyErrorType::valueError);
+	}
+	py::object typeClass = UserTypeClass(kind);
+	STDstring& registered = UserTypes::RegisteredName(kind, index);
+	if (!py::cast<bool>(py::str(name).attr("isidentifier")()))
+	{
+		PyError("special.userTypes.SetName: '" + name + "' is not a Python name", PyErrorType::valueError);
+	}
+	if (name != registered && py::hasattr(typeClass, name.c_str()))
+	{
+		PyError("special.userTypes.SetName: '" + name + "' is already a name of " + py::cast<STDstring>(typeClass.attr("__name__")), PyErrorType::valueError);
+	}
+	if (!registered.empty() && registered != name) { py::delattr(typeClass, registered.c_str()); }
+	py::setattr(typeClass, name.c_str(), userType);
+	registered = name;
+	SetUserTypeStr(typeClass);
+}
+
+//! remove all names of the user types and their aliases
+static void ResetUserTypeNames()
+{
+	for (Index kind = 0; kind < UserTypes::numberOfKinds; kind++)
+	{
+		for (Index index = 0; index < UserTypes::numberOfUserTypes; index++)
+		{
+			STDstring& registered = UserTypes::RegisteredName(kind, index);
+			if (!registered.empty())
+			{
+				py::object typeClass = UserTypeClass(kind);
+				if (py::hasattr(typeClass, registered.c_str())) { py::delattr(typeClass, registered.c_str()); }
+				registered.clear();
+			}
+		}
+	}
+}
+
+//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 void Init_Pybind_manual_classes(py::module& m) {
 	py::dict exudynVariables; //!< global dictionary which can be used by the user to store local variables
@@ -622,6 +705,24 @@ void Init_Pybind_manual_classes(py::module& m) {
 			}, "return the string representation of SpecialDeprecations class")
 		;
 
+	//Python version of SpecialUserTypes class (#2989)
+	py::class_<PySpecialUserTypes>(m, "SpecialUserTypes", "the names of the user types UserType0-3 of OutputVariableType, NodeType and MarkerType")
+		.def(py::init<>())
+		.def("SetName", [](const PySpecialUserTypes&, const py::object& userType, const STDstring& name) { SetUserTypeName(userType, name); },
+			"give userType, UserType0 to UserType3 of OutputVariableType, NodeType or MarkerType, a name: it is written wherever Exudyn writes the type (sensor files, messages, str()), and it becomes an alias of the value, e.g. exudyn.OutputVariableType.BendingStrain; a new name replaces the previous one",
+			py::arg("userType"), py::arg("name"))
+		.def("GetName", [](const PySpecialUserTypes&, const py::object& userType) {
+			Index kind, index;
+			if (!UserTypeOf(userType, kind, index)) { PyError("special.userTypes.GetName: userType must be UserType0 to UserType3 of OutputVariableType, NodeType or MarkerType", PyErrorType::valueError); }
+			return STDstring(UserTypes::Name(kind, index));
+			}, "the name of userType: the name that was set, or UserType0, ...", py::arg("userType"))
+		.def("Reset", [](const PySpecialUserTypes&) { ResetUserTypeNames(); },
+			"remove all names and aliases of the user types")
+		.def("__repr__", [](const PySpecialUserTypes& item) {
+		return STDstring(EXUstd::ToString(item));
+			}, "return the string representation of SpecialUserTypes class")
+		;
+
 	//Python version of Special class
 	py::class_<PySpecial>(m, "Special", "Special features, to be handled with care")
 		.def(py::init<>())
@@ -631,6 +732,7 @@ void Init_Pybind_manual_classes(py::module& m) {
 		.def_readwrite("userInterface", &PySpecial::userInterface)
 		.def_readwrite("beams", &PySpecial::beams)
 		.def_readwrite("deprecations", &PySpecial::deprecations)
+		.def_readwrite("userTypes", &PySpecial::userTypes)
 		.def_property_readonly("currentRendererSystemContainer", [](const PySpecial&) -> py::object {
 			//py::cast of the POINTER returns the Python object that already wraps it, so a script
 			//gets the very SystemContainer it created; None when no renderer is attached

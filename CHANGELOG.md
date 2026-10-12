@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.13 | Newborn | 73 | 1.13.73 |
+| 1.13 | Newborn | 75 | 1.13.75 |
 | 1.12 | Metheney | 367 | 1.12.462 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
@@ -30,6 +30,14 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.13 - Newborn (current)
 
+- **1.13.75** `EXTENSION` `MEDIUM EFF` `raised by: Claude-JG` `resolved by: Claude-JG` User types UserType0-3 of OutputVariableType, NodeType and MarkerType with names (#2989)
+  - description: revision2026c step RG7.2.1 (\#2972, design 5.6): four user types in each of the three enumerations; exudyn.special.userTypes.SetName/GetName/Reset gives one a name, which the C++ string functions write and which becomes an alias of the value and its str(); ObjectUserBody.outputVariableUserFunction provides the user output variables (conditional output variables in the definitions); test model userTypesTest.py.
+  - **notes:** OutputVariableType, NodeType and MarkerType have UserType0 to UserType3; exu.special.userTypes.SetName names one - sensor files, messages and str() write the name, and it becomes an alias of the value; ObjectUserBody.outputVariableUserFunction provides the user output variables
+  - date resolved: **2026-10-12 07:53**, date raised: 2026-10-12
+- **1.13.74** `EXTENSION` `MEDIUM EFF` `raised by: Claude-JG` `resolved by: Claude-JG` Python user items: the common pattern and the user types (#2972)
+  - description: revision2026c step RG7.2 (docs/dev/design/pythonUserItems.md 5.6, 8): naming, the arguments of every user function, how C++ calls them; OutputVariableType::UserType0-3, Node::UserType0-3, Marker::UserType0-3 with a registry of display names and Python aliases (exu.OutputVariableType.xyz = ... works).
+  - **notes:** the common pattern of the user items, written down as ObjectUserBody built it (names, arguments, returns, how C++ calls them, threads, conditional output variables), and the user types (\#2989)
+  - date resolved: **2026-10-12 07:53**, date raised: 2026-10-12
 - **1.13.73** `TESTING` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` User finite element: the linear tetrahedron as ObjectUserBody (#2988)
   - description: revision2026c step RG7.3.3 (\#2973, design 5.1, example 4): the linear tetrahedron with the Saint Venant-Kirchhoff material and the consistent mass matrix as ObjectUserBody on four NodePoint nodes; test model userTetrahedronTest.py, the patch test in uniaxial tension against the exact nonlinear homogeneous solution, and the kinetic energy of a cube in uniform motion.
   - **notes:** test model userTetrahedronTest.py: the linear tetrahedron with Saint Venant-Kirchhoff material as ObjectUserBody passes the nonlinear patch test

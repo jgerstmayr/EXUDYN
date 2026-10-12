@@ -79,6 +79,14 @@ class OutputVariableType(Enum):
     """measure the homogeneous transformation of a node, body point or marker: its rotation matrix A and position p as the 4x4 matrix [A p; 0 1]; the Get...Output functions return it as exu.HT, a sensor stores its 16 components row by row; every item with Position and RotationMatrix provides it"""
     HomogeneousTransformationLocal = int
     """measure the homogeneous transformation of a frame relative to another, e.g., of joint frame J1 in joint frame J0: the 4x4 matrix [A p; 0 1] with the relative rotation matrix A and the relative position p in the first frame; returned and stored as HomogeneousTransformation"""
+    UserType0 = int
+    """a type for a user item, e.g. a strain of a user element; its name is set with exudyn.special.userTypes.SetName, which also adds it as an alias of this value"""
+    UserType1 = int
+    """a type for a user item, e.g. a strain of a user element; its name is set with exudyn.special.userTypes.SetName, which also adds it as an alias of this value"""
+    UserType2 = int
+    """a type for a user item, e.g. a strain of a user element; its name is set with exudyn.special.userTypes.SetName, which also adds it as an alias of this value"""
+    UserType3 = int
+    """a type for a user item, e.g. a strain of a user element; its name is set with exudyn.special.userTypes.SetName, which also adds it as an alias of this value"""
 
 class InspectType(Enum):
     """The enumeration type InspectType selects what mbs.Inspect(itemIndex, what) reports about an item; each answer is a list of the enumeration types Exudyn exports, the flags of C++ split into their single members."""
@@ -201,6 +209,14 @@ class NodeType(Enum):
     """node with 2 slope vectors in x and y direction"""
     PointSlope23 = int
     """node with 2 slope vectors in y and z direction"""
+    UserType0 = int
+    """a type for a user item, e.g. a strain of a user element; its name is set with exudyn.special.userTypes.SetName, which also adds it as an alias of this value"""
+    UserType1 = int
+    """a type for a user item, e.g. a strain of a user element; its name is set with exudyn.special.userTypes.SetName, which also adds it as an alias of this value"""
+    UserType2 = int
+    """a type for a user item, e.g. a strain of a user element; its name is set with exudyn.special.userTypes.SetName, which also adds it as an alias of this value"""
+    UserType3 = int
+    """a type for a user item, e.g. a strain of a user element; its name is set with exudyn.special.userTypes.SetName, which also adds it as an alias of this value"""
 
 class MarkerType(Enum):
     """The enumeration type MarkerType lists the properties of a marker as bits; a connector or load requests a combination of them (GetRequestedMarkerType), which the marker type must contain."""
@@ -250,6 +266,14 @@ class MarkerType(Enum):
     """access to 2D beam shape"""
     Beam3DShape = int
     """access to 3D beam shape"""
+    UserType0 = int
+    """a type for a user item, e.g. a strain of a user element; its name is set with exudyn.special.userTypes.SetName, which also adds it as an alias of this value"""
+    UserType1 = int
+    """a type for a user item, e.g. a strain of a user element; its name is set with exudyn.special.userTypes.SetName, which also adds it as an alias of this value"""
+    UserType2 = int
+    """a type for a user item, e.g. a strain of a user element; its name is set with exudyn.special.userTypes.SetName, which also adds it as an alias of this value"""
+    UserType3 = int
+    """a type for a user item, e.g. a strain of a user element; its name is set with exudyn.special.userTypes.SetName, which also adds it as an alias of this value"""
 
 class JointType(Enum):
     """The enumeration type  JointType is used for defining joint types, used in KinematicTree."""

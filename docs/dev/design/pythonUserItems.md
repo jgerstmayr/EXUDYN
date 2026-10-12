@@ -129,20 +129,30 @@ function interfaces, dense linear algebra, access to the MainSystem and the item
 ### 5.6 User types: output variables, node and marker types
 
 A new item needs types of its own: an output variable (a strain of a new element), a node type (the slopes of a user
-node), a marker type. The enumerations are bit sets in C++: OutputVariableType uses bits 0-35 of 64, Node::Type bits
-0-18 and Marker::Type bits 0-22 of 32. Proposal:
-- **C++**: `OutputVariableType::UserType0` ... `UserType3` (bits 36-39), `Node::UserType0..3`, `Marker::UserType0..3`
-  (maintainer 2026-10-12: four are enough to start; beyond them, a user item reuses an existing type); each kind of
-  item can declare them like any type.
-- **The name**: a pybind enum value cannot be renamed, but it can get a display name and an alias: a registry
-  `exu.special.userTypes.SetName(exu.OutputVariableType.UserType0, 'BendingStrain')` gives
-  - the text wherever Exudyn writes the type (sensor file header, `PlotSensor` labels, `str()`, `GetDictionary`) - C++
-    asks the registry where it writes the type name;
-  - an alias in Python, `exu.OutputVariableType.BendingStrain`, set as an attribute of the enum class - this works
-    (checked by the maintainer: `exu.OutputVariableType.xyz = exu.OutputVariableType.Position`);
-  - reading back: a dictionary or a sensor with 'BendingStrain' resolves to UserType0.
-- Node and marker user types take the same registry; which items accept which user type is declared by the user item
-  (its requested node and marker types), so the checks of CSystem work unchanged.
+node), a marker type. The enumerations are bit sets; each has four user types (maintainer 2026-10-12: four are enough
+to start; beyond them, a user item reuses an existing type), declared like any value in `definitions/outputVariableTypes.py`
+and `definitions/enumTypes.py` (#2989):
+
+| enumeration | built-in bits | UserType0-3 |
+|---|---|---|
+| OutputVariableType (64 bits) | 0-35 | 36-39 |
+| Node::Type (32 bits) | 0-18 | 19-22 |
+| Marker::Type (32 bits) | 0-21 | 23-26 (EndOfEnumList 27; AccessFunctionType shares the bits and uses 29-31) |
+
+- **The name**: a pybind enum value cannot be renamed; `exu.special.userTypes.SetName(exu.OutputVariableType.UserType0,
+  'BendingStrain')` keeps the name in `src/Main/UserTypes.h` (header only, without pybind11) and
+  - the generated string functions (`GetOutputVariableTypeString`, `Node::GetTypeString`, `Marker::GetTypeString`)
+    write it, so the header of a sensor file - and so the labels of `PlotSensor` - and the messages say BendingStrain;
+  - it is set as an attribute of the enum class, `exu.OutputVariableType.BendingStrain`, the same value as UserType0;
+    a dictionary or a sensor given that value has the user type;
+  - `str()` of the value writes it (the class gets its own `__str__` the first time a name is set); `.name` stays
+    UserType0;
+  - a new name replaces the previous one and its alias; a name that is not a Python name or already a name of the
+    enumeration is refused; `Reset()` removes all, `GetName()` reads one.
+- Which items provide or accept a user type is declared by the user item: ObjectUserBody provides the four user output
+  variables when `outputVariableUserFunction` is given (a conditional output variable of the definition,
+  `ItemOutputVariable(..., condition=...)`); a user node or marker will declare its node or marker type, so the checks of
+  CSystem work unchanged.
 
 ### 5.7 User sensor: items as well as sensors
 
@@ -162,6 +172,26 @@ is why every user function gets mbs. Which kind of item the numbers are is the u
 **How a user item is written**: as an item with user-function parameters, like every existing user function, not as a
 Python class derived from a C++ class: items stay validated dicts (the C++/Python split), the functions can be symbolic
 (5.5), pickling and `GetObject` work as for any item.
+
+### 5.9 The common pattern of a user item (as built with ObjectUserBody, #2972, #2986)
+
+- **Names**: a user function is a parameter `<what>UserFunction` (`massMatrixUserFunction`, `positionUserFunction`);
+  its def in the definition file carries the annotations, from which the std::function, the Python Protocol and the
+  argument table of the page are derived. Functions with the same signature and meaning share one def.
+- **Arguments**: `mbs, t, itemNumber` first, always - the time of the configuration asked for, the number of the item;
+  then what the function is about (`localPosition`, `outputVariableType`); then the coordinates `q`, `q_t` of the item
+  as lists, INCLUDING the reference values, so that a point is computed from total coordinates as in a finite element.
+- **Returns**: a vector or a matrix as list or numpy array; a matrix of fixed meaning is checked for its size, and a
+  wrong size raises a ValueError with the name of the function.
+- **C++**: the item computes what it can from the user functions - velocities from the Jacobians, displacements from the
+  reference configuration, the derivative of the projected forces by central differences, the Jacobian of the
+  equations numerically. Each call is a wrapper in `src/System/evaluateUserFunctions.cpp` inside
+  `UserFunctionExceptionHandling`; a function that is needed and not given is reported with PyError, which also runs in
+  the fast module; the item number for the access functions is found once in the list of objects.
+- **Threads**: `HasUserFunction` is true, so the item is computed serially. The renderer thread may not call Python:
+  the access functions ask `PyGILState_Check()` and, without the GIL, read a cache (`VisualizationAccessCache`) that
+  the computation thread fills in `CallUserFunction`, which the renderer requests.
+- **Output variables** the item provides only with a user function are conditional in the definition.
 
 ## 6. Examples that go beyond the present user functions
 
@@ -213,6 +243,10 @@ the overhead grows too large). Most of it is generated:
 - So a user body with six user functions costs about 150 hand-written lines of C++ plus its definition; every new
   signature adds one template instantiation, which is build time, not run time. Each step of RG7 measures what it
   added, so that the user items can still be dropped.
+- Measured for ObjectUserBody with eight user functions (RG7.3.1, RG7.2): about 520 hand-written lines of C++ - the
+  item 315, the renderer cache 97, the wrappers 63, the drawing 20, the consistency check 27 - and 300 lines of
+  definition; the user types add 45 lines of header, 100 of binding and the generator lines for the user types and the
+  conditional output variables. The ANCF cable and the tetrahedron needed no C++ at all.
 
 ## 8. Proposed steps (RG7)
 

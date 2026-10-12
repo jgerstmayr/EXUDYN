@@ -33,13 +33,19 @@
 
 
 class EnumValue:
-    def __init__(self, name, value, description, python=True, stringText=None, stringIf=''):
+    def __init__(self, name, value, description, python=True, stringText=None, stringIf='', userType=None):
         self.name = name
         self.value = value
         self.description = description
         self.python = python
         self.stringText = stringText
         self.stringIf = stringIf
+        self.userType = userType #index 0-3 of a user type, whose name the user sets (#2989)
+
+
+#the four user types of a bit enumeration from bit firstBit on (#2989)
+def UserTypeValues(firstBit):
+    return [EnumValue('UserType' + str(i), firstBit + i, 'a type for a user item, e.g. a strain of a user element; its name is set with exudyn.special.userTypes.SetName, which also adds it as an alias of this value', userType=i) for i in range(4)]
 
 
 class EnumType:
@@ -137,7 +143,7 @@ enumTypes = [
               EnumValue('PointSlope1', 16, 'node with 1 slope vector'),
               EnumValue('PointSlope12', 17, 'node with 2 slope vectors in x and y direction'),
               EnumValue('PointSlope23', 18, 'node with 2 slope vectors in y and z direction'),
-              ],
+              ] + UserTypeValues(19),
              bits=True, stringFunction='GetTypeString',
              cppNote='node types are used for integrity checks to verify that a node is suitable for an object; bit 11 was LieGroupWithDataCoordinates (never used)'),
     EnumType('MarkerType', 'Marker::Type',
@@ -165,7 +171,8 @@ enumTypes = [
               EnumValue('HasPostNewton', 19, 'the PostNewton function has to be called', stringText=''),
               EnumValue('Beam2DShape', 20, 'access to 2D beam shape'),
               EnumValue('Beam3DShape', 21, 'access to 3D beam shape'),
-              EnumValue('EndOfEnumList', 22, 'the (2^i) maximum of the list', python=False, stringText=''),
+              ] + UserTypeValues(23) + [
+              EnumValue('EndOfEnumList', 27, 'the (2^i) maximum of the list', python=False, stringText=''),
               ],
              bits=True, stringFunction='GetTypeString',
              cppNote='markers transfer observable and controllable quantities into object/node coordinates; available types are e.g. Node: 2+4+16, Body: 1+4+16; SuperElementAlternativeRotationMode of AccessFunctionType uses bit 31'),

@@ -13,6 +13,8 @@
 #ifndef OUTPUTVARIABLETYPES__H
 #define OUTPUTVARIABLETYPES__H
 
+#include "Main/UserTypes.h"
+
 //! OutputVariable used for output data in objects, nodes, loads, ...
 //! the type is a 64 bit mask: types can be combined, e.g. for the variables an item
 //! provides. All cases are independent of 2D/3D, which the item itself knows.
@@ -52,6 +54,10 @@ enum class OutputVariableType : Index64 {
     PotentialEnergy                = 1ull << 33, //!< measure potential (=elastic) energy of a body or connector, position independent
     HomogeneousTransformation      = 1ull << 34, //!< measure the homogeneous transformation of a node, body point or marker: its rotation matrix A and position p as the 4x4 matrix [A p; 0 1]; the Get...Output functions return it as exu.HT, a sensor stores its 16 components row by row; every item with Position and RotationMatrix provides it
     HomogeneousTransformationLocal = 1ull << 35, //!< measure the homogeneous transformation of a frame relative to another, e.g., of joint frame J1 in joint frame J0: the 4x4 matrix [A p; 0 1] with the relative rotation matrix A and the relative position p in the first frame; returned and stored as HomogeneousTransformation
+    UserType0                      = 1ull << 36, //!< a type for a user item, e.g. a strain of a user element; its name is set with exudyn.special.userTypes.SetName, which also adds it as an alias of this value
+    UserType1                      = 1ull << 37, //!< a type for a user item, e.g. a strain of a user element; its name is set with exudyn.special.userTypes.SetName, which also adds it as an alias of this value
+    UserType2                      = 1ull << 38, //!< a type for a user item, e.g. a strain of a user element; its name is set with exudyn.special.userTypes.SetName, which also adds it as an alias of this value
+    UserType3                      = 1ull << 39, //!< a type for a user item, e.g. a strain of a user element; its name is set with exudyn.special.userTypes.SetName, which also adds it as an alias of this value
 
     //bits below are ALLOCATED and must not be reused:
     //Strain                       = 1ull << 26, //!< considered for finite elements or fluids; never implemented
@@ -121,6 +127,10 @@ inline const char* GetOutputVariableTypeString(OutputVariableType var)
     case OutputVariableType::PotentialEnergy: return "PotentialEnergy";
     case OutputVariableType::HomogeneousTransformation: return "HomogeneousTransformation";
     case OutputVariableType::HomogeneousTransformationLocal: return "HomogeneousTransformationLocal";
+    case OutputVariableType::UserType0: return UserTypes::Name(UserTypes::OutputVariable, 0);
+    case OutputVariableType::UserType1: return UserTypes::Name(UserTypes::OutputVariable, 1);
+    case OutputVariableType::UserType2: return UserTypes::Name(UserTypes::OutputVariable, 2);
+    case OutputVariableType::UserType3: return UserTypes::Name(UserTypes::OutputVariable, 3);
     default: SysError("GetOutputVariableTypeString: invalid variable type");
         return "Invalid";
     }

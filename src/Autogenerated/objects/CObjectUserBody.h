@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-10-12  01:12:52 (last modified)
+* @date         2026-10-12  07:18:49 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -39,6 +39,7 @@ public: // AUTO:
     PythonUserFunctionBase< std::function<py::object(const MainSystem&,Real,Index,StdVector3D,StdVector)> > positionJacobianUserFunction;//!< AUTO: A Python user function which computes the position Jacobian at localPosition
     PythonUserFunctionBase< std::function<py::object(const MainSystem&,Real,Index,StdVector3D,StdVector)> > rotationMatrixUserFunction;//!< AUTO: A Python user function which computes the rotation matrix at localPosition; optional, for rigid markers
     PythonUserFunctionBase< std::function<py::object(const MainSystem&,Real,Index,StdVector3D,StdVector)> > rotationJacobianUserFunction;//!< AUTO: A Python user function which computes the rotation Jacobian (of the global angular velocity) at localPosition; optional, for rigid markers
+    PythonUserFunctionBase< std::function<StdVector(const MainSystem&,Real,Index,OutputVariableType,StdVector3D,StdVector,StdVector)> > outputVariableUserFunction;//!< AUTO: A Python user function which computes the output variables UserType0 to UserType3 at localPosition; optional
     //! AUTO: default constructor with parameter initialization
     CObjectUserBodyParameters()
     {
@@ -49,6 +50,7 @@ public: // AUTO:
         positionJacobianUserFunction = 0;
         rotationMatrixUserFunction = 0;
         rotationJacobianUserFunction = 0;
+        outputVariableUserFunction = 0;
     };
 };
 
@@ -206,6 +208,9 @@ public: // AUTO:
     //! AUTO:  call of positionJacobianUserFunction (which=0), rotationMatrixUserFunction (1) or rotationJacobianUserFunction (2), with the size checked; implemented in evaluateUserFunctions.cpp
     void EvaluateMatrix(Index which, Matrix& value, Real t, const Vector3D& localPosition, const StdVector& coordinates) const;
 
+    //! AUTO:  call of outputVariableUserFunction; implemented in evaluateUserFunctions.cpp
+    void EvaluateUserFunctionOutputVariable(Vector& value, Real t, OutputVariableType variableType, const Vector3D& localPosition, const StdVector& coordinates, const StdVector& coordinates_t) const;
+
     //! AUTO:  call of forceUserFunction; implemented in evaluateUserFunctions.cpp
     void EvaluateUserFunctionForce(Vector& force, Real t, Index objectNumber, const StdVector& coordinates, const StdVector& coordinates_t) const;
 
@@ -224,7 +229,11 @@ public: // AUTO:
             (Index64)OutputVariableType::AngularVelocityLocal +
             (Index64)OutputVariableType::Coordinates +
             (Index64)OutputVariableType::Coordinates_t +
-            (Index64)OutputVariableType::KineticEnergy );
+            (Index64)OutputVariableType::KineticEnergy +
+            ((parameters.outputVariableUserFunction) ? (Index64)OutputVariableType::UserType0 : (Index64)0) +
+            ((parameters.outputVariableUserFunction) ? (Index64)OutputVariableType::UserType1 : (Index64)0) +
+            ((parameters.outputVariableUserFunction) ? (Index64)OutputVariableType::UserType2 : (Index64)0) +
+            ((parameters.outputVariableUserFunction) ? (Index64)OutputVariableType::UserType3 : (Index64)0) );
     }
 
 };

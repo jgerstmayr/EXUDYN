@@ -67,6 +67,10 @@ The class **OutputVariableType** has the following **functions and structures**:
 - **`PotentialEnergy`**: measure potential (=elastic) energy of a body or connector, position independent
 - **`HomogeneousTransformation`**: measure the homogeneous transformation of a node, body point or marker: its rotation matrix A and position p as the 4x4 matrix [A p; 0 1]; the Get...Output functions return it as exu.HT, a sensor stores its 16 components row by row; every item with Position and RotationMatrix provides it
 - **`HomogeneousTransformationLocal`**: measure the homogeneous transformation of a frame relative to another, e.g., of joint frame J1 in joint frame J0: the 4x4 matrix [A p; 0 1] with the relative rotation matrix A and the relative position p in the first frame; returned and stored as HomogeneousTransformation
+- **`UserType0`**: a type for a user item, e.g. a strain of a user element; its name is set with exudyn.special.userTypes.SetName, which also adds it as an alias of this value
+- **`UserType1`**: a type for a user item, e.g. a strain of a user element; its name is set with exudyn.special.userTypes.SetName, which also adds it as an alias of this value
+- **`UserType2`**: a type for a user item, e.g. a strain of a user element; its name is set with exudyn.special.userTypes.SetName, which also adds it as an alias of this value
+- **`UserType3`**: a type for a user item, e.g. a strain of a user element; its name is set with exudyn.special.userTypes.SetName, which also adds it as an alias of this value
 
 
 (sec-inspecttype)=
@@ -169,6 +173,10 @@ The class **NodeType** has the following **functions and structures**:
 - **`PointSlope1`**: node with 1 slope vector
 - **`PointSlope12`**: node with 2 slope vectors in x and y direction
 - **`PointSlope23`**: node with 2 slope vectors in y and z direction
+- **`UserType0`**: a type for a user item, e.g. a strain of a user element; its name is set with exudyn.special.userTypes.SetName, which also adds it as an alias of this value
+- **`UserType1`**: a type for a user item, e.g. a strain of a user element; its name is set with exudyn.special.userTypes.SetName, which also adds it as an alias of this value
+- **`UserType2`**: a type for a user item, e.g. a strain of a user element; its name is set with exudyn.special.userTypes.SetName, which also adds it as an alias of this value
+- **`UserType3`**: a type for a user item, e.g. a strain of a user element; its name is set with exudyn.special.userTypes.SetName, which also adds it as an alias of this value
 
 
 (sec-markertype)=
@@ -202,6 +210,10 @@ The class **MarkerType** has the following **functions and structures**:
 - **`HasPostNewton`**: the PostNewton function has to be called
 - **`Beam2DShape`**: access to 2D beam shape
 - **`Beam3DShape`**: access to 3D beam shape
+- **`UserType0`**: a type for a user item, e.g. a strain of a user element; its name is set with exudyn.special.userTypes.SetName, which also adds it as an alias of this value
+- **`UserType1`**: a type for a user item, e.g. a strain of a user element; its name is set with exudyn.special.userTypes.SetName, which also adds it as an alias of this value
+- **`UserType2`**: a type for a user item, e.g. a strain of a user element; its name is set with exudyn.special.userTypes.SetName, which also adds it as an alias of this value
+- **`UserType3`**: a type for a user item, e.g. a strain of a user element; its name is set with exudyn.special.userTypes.SetName, which also adds it as an alias of this value
 
 
 (sec-jointtype)=

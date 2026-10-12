@@ -141,6 +141,22 @@ The class **exudyn** has the following **functions and structures**:
 - **`special.deprecations.Reset()`**: forget which names were warned about in this session, so that each one warns once more
 - **`special.deprecations.Warn(source, name, message, stackLevel = 2)`**: report the use of a deprecated name from Python, as the C++ side does: a DeprecationWarning, once per session unless warnOnce is False, and a count in exudyn.sys[deprecationUse]; stackLevel=2 attributes the warning to the caller of the function that calls Warn
 
+(sec-exudyn-special-usertypes)=
+### exudyn.special.userTypes
+
+- **`special.userTypes`**: the names of the user types: OutputVariableType, NodeType and MarkerType have the values UserType0 to UserType3 for user items, e.g. a strain of a user element; a name set here is written wherever Exudyn writes the type - the header of a sensor file and so the labels of PlotSensor, messages, str() - and becomes an alias of the value, e.g. exudyn.OutputVariableType.BendingStrain; the name property of the value stays UserType0; see the C++ code class PySpecialUserTypes
+- **`special.userTypes.SetName(userType, name)`**: give userType, UserType0 to UserType3 of OutputVariableType, NodeType or MarkerType, a name, which must be a Python name and not yet a name of the enumeration; a new name replaces the previous one and its alias
+
+  *Example*:
+
+  ```python
+  exu.special.userTypes.SetName(exu.OutputVariableType.UserType0, 'BendingStrain')
+  exu.OutputVariableType.BendingStrain #the same value as UserType0
+  ```
+
+- **`special.userTypes.GetName(userType)`**: the name of userType: the name that was set, or UserType0, ...
+- **`special.userTypes.Reset()`**: remove all names of the user types and their aliases
+
 (sec-exudyn-cmath)=
 ## exudyn.cMath
 

@@ -889,3 +889,34 @@ code they add is measured.)*
   exact homogeneous one, a E (a^2 - 1)/2 = P with the lateral stretch from S22 = 0, to 2e-16 at the nodes and at a point
   inside each element; a cube in uniform motion has the kinetic energy 1/2 rho V v^2 to 1e-13.
 - **#2973** resolved with these: the three examples of design 5.1 (rigid body, cable, tetrahedron) work.
+
+<a id="rg7-2"></a>
+### RG7.2 and RG7.2.1 — the common pattern of the user items, the user types (2026-10-12, #2972, #2989)
+*(Maintainer 2026-10-12: four user types are enough; the alias works, `exu.OutputVariableType.xyz =
+exu.OutputVariableType.Position`; the user types after the cable and the tetrahedron.)*
+- **#2972**: the pattern is written down as built, design section 5.9 (docs/dev/design/pythonUserItems.md): names
+  `<what>UserFunction`, arguments `mbs, t, itemNumber`, then the subject, then `q, q_t` as lists with the reference
+  values; checked sizes; wrappers in evaluateUserFunctions.cpp; PyError for a missing function; serial computation and
+  the renderer cache; conditional output variables. Section 5.6 says what the user types are now, 7.1 what they cost.
+- **#2989**, the enumerations: `UserType0`-`UserType3` declared in definitions/outputVariableTypes.py (bits 36-39) and
+  definitions/enumTypes.py (Node::Type bits 19-22, Marker::Type bits 23-26, EndOfEnumList moved from 22 to 27; it is
+  used nowhere). The generated string functions call `UserTypes::Name(kind, index)` of the new header
+  src/Main/UserTypes.h (no pybind11, as the generated headers include it), which returns the registered name or
+  UserType0.
+- **exu.special.userTypes** (Experimental.h, Pybind_manual_classes.cpp, documented in pybindModule.py): `SetName(type,
+  name)` checks that the value is a user type, that the name is a Python name and not yet one of the enumeration,
+  removes the previous alias, sets the new one on the class and gives the class a `__str__` that writes the name;
+  `GetName`, `Reset`. `.name` of the value stays UserType0 (pybind11 cannot rename it).
+- **ObjectUserBody.outputVariableUserFunction**(mbs, t, itemNumber, outputVariableType, localPosition, q, q_t): the
+  body provides UserType0-3 only when it is given. For that, `ItemOutputVariable` takes a `condition` (a C++ expression),
+  which itemHeaderEmitter puts into GetOutputVariableTypes; the annotation `OutputVariableType` was added to the user
+  function defs, and the symbolic user functions receive it as the Real of its value (SymbolicUtilities.h).
+- **Test model** userTypesTest.py: names, aliases, `str()`, a rename, what SetName refuses, a SensorBody with the
+  named user type - its file header says `#OutputVariableType = BendingStrain`, the values are those of the user
+  function - the message of a body without the function names the type, and Reset leaves the plain user types for the
+  models that run after it.
+- **A fix of RG7.3.1 (#2986)**: with the new build, the test suite crashed with a heap corruption (0xc0000374) some
+  models after userRigidBodyTest.py, not in a run of the model alone. EvaluateMatrix MOVED the matrix of the user
+  function into `value`, which is the ResizableMatrix of the marker temporaries: the move exchanged the memory but not
+  the allocated size the ResizableMatrix keeps, so the next resize wrote past the buffer. Found by leaving out the user
+  models one by one; `value` is now copied, and the user output variables are copied likewise.

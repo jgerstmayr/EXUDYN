@@ -506,6 +506,10 @@ class ConfigurationType:
     """exudyn.ConfigurationType"""
 
 
+class OutputVariableType:
+    """exudyn.OutputVariableType"""
+
+
 #numpy is imported for np.ndarray in an annotation; it is the package's only mandatory dependency
 _ndarray = np.ndarray
 
@@ -678,7 +682,7 @@ def ItemParameter(type=Required, destination=Required, pythonName=Required,
 annotationToCpp = {'MainSystem': 'const MainSystem&', 'Real': 'Real', 'Index': 'Index', 'Bool': 'bool',
                    'Vector': 'StdVector', 'Vector2D': 'StdVector2D', 'Vector3D': 'StdVector3D', 'Vector6D': 'StdVector6D',
                    'Matrix3D': 'StdMatrix3D', 'Matrix6D': 'StdMatrix6D', 'NumpyMatrix': 'NumpyMatrix',
-                   'Array': 'StdArrayIndex', 'ConfigurationType': 'ConfigurationType',
+                   'Array': 'StdArrayIndex', 'ConfigurationType': 'ConfigurationType', 'OutputVariableType': 'OutputVariableType',
                    'BodyGraphicsData': 'py::object', 'MatrixContainer': 'py::object'}
 
 
@@ -707,13 +711,15 @@ def ItemFunction(type=Required, destination=Required, pythonName=Required,
 
 
 #%%************************************************************************************************
-def ItemOutputVariable(outputVariable, description):
+def ItemOutputVariable(outputVariable, description, condition=None):
     """One output variable an item provides. outputVariable is a constant from
     outputVariableTypes.py (OVPosition, OVForceLocal, ...), so a typo is a NameError here rather
     than a key that silently never matches; description is the text shown in the reference
-    tables, and may be one of the shared texts in outputVariableDescriptions.py."""
+    tables, and may be one of the shared texts in outputVariableDescriptions.py. condition: a C++
+    expression of the computational object; the item provides the variable only where it is true,
+    e.g. where a user function is given (#2989)."""
 
-    return {'outputVariable': outputVariable, 'description': description}
+    return {'outputVariable': outputVariable, 'description': description, 'condition': condition}
 
 
 #%%************************************************************************************************

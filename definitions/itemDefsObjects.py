@@ -2063,6 +2063,23 @@ def ObjectUserBody_matrixUserFunction(mbs: MainSystem, t: Real, itemNumber: Inde
         the matrix, as numpy array or list of lists
     """
 
+def ObjectUserBody_outputVariableUserFunction(mbs: MainSystem, t: Real, itemNumber: Index,
+                                              outputVariableType: OutputVariableType, localPosition: Vector3D,
+                                              q: Vector, q_t: Vector) -> Vector:
+    r"""A user function, which computes the output variables UserType0 to UserType3 of the body at localPosition, e.g. strains or stresses of a user element; name them with exudyn.special.userTypes.SetName.
+
+    Args:
+        mbs: provides MainSystem mbs to which object belongs
+        t: time of the configuration asked for
+        itemNumber: integer number $i_N$ of the object in mbs
+        outputVariableType: the output variable asked for, UserType0 to UserType3
+        localPosition: $\in \Rcal^3$ the local position of the point
+        q: $\in \Rcal^n$ object coordinates, INCLUDING their reference values, of the configuration asked for
+        q_t: $\in \Rcal^n$ object velocity coordinates of the configuration asked for
+    Returns:
+        the value as a vector of any size, the same size for every call with the same outputVariableType
+    """
+
 definitions.append(ItemDefinition(
     className='ObjectUserBody',
     drawing=r'What its `graphicsDataUserFunction` returns, in global coordinates; nothing without it.',
@@ -2106,6 +2123,13 @@ class MainSystem; //AUTO; for std::function / userFunction; avoid including Main
     of $\Jm_{pos}\tp \fv + \Jm_{rot}\tp \mv$ with respect to $\qv$, which the Jacobians of connectors need, is computed
     by central differences of the Jacobian user functions. A marker that needs a function the body is not given
     raises when it is evaluated.
+
+    #### User output variables
+
+    With `outputVariableUserFunction`, the body provides the output variables `UserType0` to `UserType3` at a local
+    position, e.g. the strains of a user element; `exu.special.userTypes.SetName(exu.OutputVariableType.UserType0,
+    'BendingStrain')` names one, so that sensor files and messages write the name and `exu.OutputVariableType.BendingStrain`
+    is the same value.
 
     The user functions are called serially, one Python call at a time. A renderer that runs in a thread of its
     own may not call Python: it draws markers and connectors on the body with the positions and rotation matrices
@@ -2152,7 +2176,8 @@ class MainSystem; //AUTO; for std::function / userFunction; avoid including Main
         ItemOutputVariable(OVCoordinates, r'all ABRV:ODE2 (displacement) coordinates of the nodes'),
         ItemOutputVariable(OVCoordinates_t, OVDVelocityCoordinatesODE2),
         ItemOutputVariable(OVKineticEnergy, r"""$T = \frac{1}{2} \dot\qv\tp \Mm\, \dot\qv$kinetic energy from the mass matrix of the current state; current configuration only; localPosition must be $[0,0,0]$"""),
-        ],
+        ] + [ItemOutputVariable(outputVariable, 'from outputVariableUserFunction, if it is given', condition='parameters.outputVariableUserFunction')
+             for outputVariable in [OVUserType0, OVUserType1, OVUserType2, OVUserType3]],
     visuParentClass=VisuParentClassVisualizationObject,
     members=[
         ItemParameter(type=TString, destination=DestMain, fromParent=True,
@@ -2193,6 +2218,11 @@ class MainSystem; //AUTO; for std::function / userFunction; avoid including Main
             defaultValue=0,
             description=r"""$\Jm_{rot}(\pLocB, \qv) \in \Rcal^{3\times n}$A Python user function which computes the rotation Jacobian (of the global angular velocity) at localPosition; optional, for rigid markers""",
             userFunction=ObjectUserBody_matrixUserFunction),
+        ItemParameter(destination=DestComp+DestParam,
+            pythonName='outputVariableUserFunction',
+            defaultValue=0,
+            description=r"""A Python user function which computes the output variables UserType0 to UserType3 at localPosition; optional""",
+            userFunction=ObjectUserBody_outputVariableUserFunction),
         ItemFunction(type=TBool, destination=DestComp, cFlags=CFConst,
             pythonName='PotentialEnergyAvailable', implementation='return false;',
             description=r'no PotentialEnergy: the user function defines the forces'),
@@ -2256,6 +2286,10 @@ class MainSystem; //AUTO; for std::function / userFunction; avoid including Main
             pythonName='EvaluateMatrix',
             args='Index which, Matrix& value, Real t, const Vector3D& localPosition, const StdVector& coordinates',
             description=r'call of positionJacobianUserFunction (which=0), rotationMatrixUserFunction (1) or rotationJacobianUserFunction (2), with the size checked; implemented in evaluateUserFunctions.cpp'),
+        ItemFunction(type=Tvoid, destination=DestComp, cFlags=CFConst, isVirtual=False,
+            pythonName='EvaluateUserFunctionOutputVariable',
+            args='Vector& value, Real t, OutputVariableType variableType, const Vector3D& localPosition, const StdVector& coordinates, const StdVector& coordinates_t',
+            description=r'call of outputVariableUserFunction; implemented in evaluateUserFunctions.cpp'),
         ItemFunction(type=Tvoid, destination=DestComp, cFlags=CFConst, isVirtual=False,
             pythonName='EvaluateUserFunctionForce',
             args='Vector& force, Real t, Index objectNumber, const StdVector& coordinates, const StdVector& coordinates_t',

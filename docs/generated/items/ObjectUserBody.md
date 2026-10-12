@@ -27,6 +27,7 @@ The parameters of the item; in a dictionary, its type is 'UserBody':
 | **positionJacobianUserFunction** | ObjectUserBodyPositionJacobianUserFunction |  | 0 | (symbol: $\Jm_{pos}(\pLocB, \qv) \in \Rcal^{3\times n}$) A Python user function which computes the position Jacobian at localPosition |
 | **rotationMatrixUserFunction** | ObjectUserBodyRotationMatrixUserFunction |  | 0 | (symbol: $\LU{0b}{\Rot}(\pLocB, \qv) \in \Rcal^{3\times 3}$) A Python user function which computes the rotation matrix at localPosition; optional, for rigid markers |
 | **rotationJacobianUserFunction** | ObjectUserBodyRotationJacobianUserFunction |  | 0 | (symbol: $\Jm_{rot}(\pLocB, \qv) \in \Rcal^{3\times n}$) A Python user function which computes the rotation Jacobian (of the global angular velocity) at localPosition; optional, for rigid markers |
+| **outputVariableUserFunction** | ObjectUserBodyOutputVariableUserFunction |  | 0 | A Python user function which computes the output variables UserType0 to UserType3 at localPosition; optional |
 | **visualization** | VObjectUserBody |  |  | parameters for visualization of item |
 
 ## Visualization parameters
@@ -60,6 +61,10 @@ Available as `OutputVariableType` in sensors, `Get...Output()` and other functio
 | Coordinates |  | all {ref}`ODE2 <ODE2>` (displacement) coordinates of the nodes |
 | Coordinates_t |  | all {ref}`ODE2 <ODE2>` velocity coordinates |
 | KineticEnergy | $T = \frac{1}{2} \dot\qv\tp \Mm\, \dot\qv$ | kinetic energy from the mass matrix of the current state; current configuration only; localPosition must be $[0,0,0]$ |
+| UserType0 |  | from outputVariableUserFunction, if it is given |
+| UserType1 |  | from outputVariableUserFunction, if it is given |
+| UserType2 |  | from outputVariableUserFunction, if it is given |
+| UserType3 |  | from outputVariableUserFunction, if it is given |
 
 (description-objectuserbody)=
 ## Detailed description
@@ -94,6 +99,13 @@ $\LU{0}{\tomega} = \Jm_{rot} \dot\qv$ and the local one $\LU{b}{\tomega} = \LU{b
 of $\Jm_{pos}\tp \fv + \Jm_{rot}\tp \mv$ with respect to $\qv$, which the Jacobians of connectors need, is computed
 by central differences of the Jacobian user functions. A marker that needs a function the body is not given
 raises when it is evaluated.
+
+### User output variables
+
+With `outputVariableUserFunction`, the body provides the output variables `UserType0` to `UserType3` at a local
+position, e.g. the strains of a user element; `exu.special.userTypes.SetName(exu.OutputVariableType.UserType0,
+'BendingStrain')` names one, so that sensor files and messages write the name and `exu.OutputVariableType.BendingStrain`
+is the same value.
 
 The user functions are called serially, one Python call at a time. A renderer that runs in a thread of its
 own may not call Python: it draws markers and connectors on the body with the positions and rotation matrices
@@ -171,6 +183,20 @@ A user function of the interface of the body that returns a matrix at localPosit
 | `q` | Vector $\in \Rcal^n$ | object coordinates, INCLUDING their reference values, of the configuration asked for |
 | **return value** | MatrixContainer | the matrix, as numpy array or list of lists |
 
+**Userfunction**: `outputVariableUserFunction(mbs, t, itemNumber, outputVariableType, localPosition, q, q_t)`
+A user function, which computes the output variables UserType0 to UserType3 of the body at localPosition, e.g. strains or stresses of a user element; name them with exudyn.special.userTypes.SetName.
+
+| arguments / return | type or size | description |
+|---|---|---|
+| `mbs` | MainSystem | provides MainSystem mbs to which object belongs |
+| `t` | Real | time of the configuration asked for |
+| `itemNumber` | Index | integer number $i_N$ of the object in mbs |
+| `outputVariableType` | OutputVariableType | the output variable asked for, UserType0 to UserType3 |
+| `localPosition` | Vector3D $\in \Rcal^3$ | the local position of the point |
+| `q` | Vector $\in \Rcal^n$ | object coordinates, INCLUDING their reference values, of the configuration asked for |
+| `q_t` | Vector $\in \Rcal^n$ | object velocity coordinates of the configuration asked for |
+| **return value** | Vector | the value as a vector of any size, the same size for every call with the same outputVariableType |
+
 **Userfunction**: `graphicsDataUserFunction(mbs, itemNumber)`
 A user function, which is called by the visualization thread in order to draw user-defined objects.
 The function can be used to generate any `BodyGraphicsData`, see Section [](#sec-graphicsdata).
@@ -221,4 +247,4 @@ exu.sys['testResult'] = mbs.GetObjectOutputBody(body, exu.OutputVariableType.Pos
 ```
 
 
-Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`userANCFCable2DTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/userANCFCable2DTest.py) (TM), [`userRigidBodyTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/userRigidBodyTest.py) (TM), [`userTetrahedronTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/userTetrahedronTest.py) (TM)
+Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`userANCFCable2DTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/userANCFCable2DTest.py) (TM), [`userRigidBodyTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/userRigidBodyTest.py) (TM), [`userTetrahedronTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/userTetrahedronTest.py) (TM), [`userTypesTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/userTypesTest.py) (TM)

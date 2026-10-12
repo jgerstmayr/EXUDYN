@@ -102,6 +102,7 @@ exudyn.SpecialDeprecations
 exudyn.SpecialExceptions
 exudyn.SpecialSolver
 exudyn.SpecialUserInterface
+exudyn.SpecialUserTypes
 exudyn.StaticSolverSettings
 exudyn.StaticSolverSettings.constrainODE1coordinates
 exudyn.SystemContainer

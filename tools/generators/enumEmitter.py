@@ -109,6 +109,9 @@ def StringFunctionText(enum, indent):
         for value in enum.values:
             if value.value is None:
                 s += indent + '    if (var == ' + value.name + ') { t = "_None/Undefined"; }\n'
+            elif value.userType is not None: #the name the user set (#2989)
+                s += (indent + '    if (var & ' + value.name + ') { t += UserTypes::Name(UserTypes::' + enum.Namespace() + ', '
+                      + str(value.userType) + '); }\n')
             elif value.stringText != '':
                 text = value.stringText if value.stringText is not None else value.name[len(enum.stringPrefix):]
                 condition = 'var & ' + value.name
@@ -153,6 +156,7 @@ def EmitHeader():
     s += '#include <ostream>\n'
     s += '#include "Utilities/ReleaseAssert.h"\n'
     s += '#include "Utilities/BasicDefinitions.h"\n'
+    s += '#include "Main/UserTypes.h"\n'
 
     namespaces = []
     for enum in enumTypes:
