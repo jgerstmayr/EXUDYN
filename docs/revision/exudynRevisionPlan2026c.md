@@ -68,7 +68,7 @@ The title of each says what it does; the sentence after it, why it comes now.
   - RG2.8 Choose parameters for a converged cable run in perfAccessFunctionsAD
   - RG2.9 Add three old test models (3 open sub-steps)
 - **RG4** Implementation problems and bugs
-  - RG4.1 Remove the platform differences of the contact and friction models by finding their causes (2 open sub-steps)
+  - RG4.1 Remove the platform differences of the contact and friction models by finding their causes (3 open sub-steps)
   - RG4.20 Port the revision of ObjectANCFThinPlate and complete the element (1 open sub-step)
   - RG4.21 Flag the constraints that depend on velocities or time, and add their term to the initial accelerations
   - RG4.22 Add a 3D sliding joint with rotation, tested with the ANCF cable and beam
@@ -128,7 +128,7 @@ The title of each says what it does; the sentence after it, why it comes now.
 | RG1 | OPEN | 2 | Release and publication |
 | RG2 | OPEN | 5 | Testing and verification |
 | RG3 | CLOSED | 0 | Docs |
-| RG4 | OPEN | 9 | Implementation problems and bugs |
+| RG4 | OPEN | 10 | Implementation problems and bugs |
 | RG5 | OPEN | 8 | Performance |
 | RG6 | OPEN | 4 | Graphics and rendering |
 | RG7 | OPEN | 6 | Python user items |
@@ -263,6 +263,19 @@ CLOSED 2026-10-10 (#2953): namespace EM with the 14 functions; `tools/checkMathF
 ##### **CLOSED_RG4.1.3.7** Give Python the portable math functions and use them for initial values and test results
 
 CLOSED 2026-10-11 (#2956): math.sin and numpy in the initial values; done in RG11.10, `UnresolvedOnLinux()` empty. [log](exudynRevisionLog2026c.md#rg11-10-4)
+
+##### **OPEN_RG4.1.3.8** Let Eigen multiply and add on arm64 instead of fusing, and verify it on macOS ARM
+
+#2990. The macOS ARM run of 1.13.75 fails in six test models (createSphereQuadContact, createSphereTriangleContact,
+sphereTriangleTest2, sliderCrank3Dbenchmark, and the listed ANCFgeneralContactCircle and
+geometricallyExactBeamRightAngleFrame), all solved with `LinearSolverType.EigenSparse`. The dumps of the Mac agent
+(tmp/MacOS/MacAgentResponse, `dumpRun.py`) against the same script on Windows: the inputs - initial and reference
+coordinates, every item, the numbers numpy computes in sliderCrank3Dbenchmark - are the same bits, the explicit solve
+of sphereTriangleTest2 too; the implicit solves part by one ulp in some step. Eigen's NEON packets fuse a*b+c
+(`vfmaq_f64` under `__ARM_FEATURE_FMA`) whatever `-ffp-contract=off` says. LinearSolver.h undefines the macro around
+the Eigen includes; done on Windows (no change there), open until the Mac run confirms; then `UnresolvedOnMacOS()`
+shrinks. The same holds for the fast module, whose `-mfma` makes Eigen's AVX packets fuse (`__FMA__`) - a separate
+decision, as that module is meant to be fast.
 
 ### **OPEN_RG4.20** Port the revision of ObjectANCFThinPlate and complete the element
 

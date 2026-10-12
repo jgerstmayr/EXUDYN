@@ -1,0 +1,11 @@
+{
+  "number": 2990,
+  "title": "Eigen without fused multiply-add on arm64, so that the solvers give the bits of x86-64",
+  "author": "Claude-JG",
+  "status": "RAISED",
+  "type": "CHANGE",
+  "effort": "LOW",
+  "description": "revision2026c step RG4.1.3.8: the macOS ARM run of 1.13.75 (tmp/MacOS) fails in six test models, all with LinearSolverType.EigenSparse; the dumps of the Mac agent show identical inputs, a bit-identical explicit solve and a first difference of one ulp in an implicit step. Eigen's NEON packets fuse a*b+c (vfmaq_f64 under __ARM_FEATURE_FMA) whatever -ffp-contract says; without the macro they multiply and add, as SSE2 does on x86-64. Undefine it around the Eigen includes of LinearSolver.h; to be verified on macOS ARM.",
+  "dateRaised": "2026-10-12",
+  "deadline": "2027-04-10"
+}

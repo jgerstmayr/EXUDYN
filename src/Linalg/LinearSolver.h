@@ -31,12 +31,22 @@
 #ifdef USE_EIGEN
     #define USE_EIGEN_SPARSE_SOLVER
     #define USE_EIGEN_DENSE_SOLVER
+	//on arm64, Eigen's NEON packets fuse a*b+c into one instruction (vfmaq_f64) whatever -ffp-contract says; without
+	//__ARM_FEATURE_FMA they multiply and add, as Eigen does with SSE2 on x86-64, so that the solvers give the same bits (#2990)
+#if defined(__aarch64__) && defined(__ARM_FEATURE_FMA)
+	#undef __ARM_FEATURE_FMA
+	#define EXUDYN_RESTORE_ARM_FEATURE_FMA
+#endif
     #include "../Eigen/Sparse"
 	#include "../Eigen/Dense"
 	//#include "Eigen/SuperLUSupport"
 	#include "../Eigen/SparseLU"
 #ifdef USE_SYMMETRIC_SOLVER
 	#include "../Eigen/SparseCholesky"
+#endif
+#ifdef EXUDYN_RESTORE_ARM_FEATURE_FMA
+	#define __ARM_FEATURE_FMA 1
+	#undef EXUDYN_RESTORE_ARM_FEATURE_FMA
 #endif
 	//#include <Eigen/Core>
 //#ifdef EIGEN_HAS_OPENMP

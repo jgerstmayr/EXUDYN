@@ -10,7 +10,7 @@ General information on current version:
 
 - Exudyn version = 1.13.75.dev1
 - last change = 2026-10-12
-- Number of issues = 2990
+- Number of issues = 2991
 - Number of resolved issues = 2852 (75 in current version)
 
 ## Resolved issues and resolved bugs before version 1.13
@@ -9039,6 +9039,9 @@ The following list contains the issues which have been **RESOLVED** in the accor
 
 ## Open issues
 
+- `CHANGE` `LOW EFF` `raised by: Claude-JG` Eigen without fused multiply-add on arm64, so that the solvers give the bits of x86-64 (#2990)
+  - description: revision2026c step RG4.1.3.8: the macOS ARM run of 1.13.75 (tmp/MacOS) fails in six test models, all with LinearSolverType.EigenSparse; the dumps of the Mac agent show identical inputs, a bit-identical explicit solve and a first difference of one ulp in an implicit step. Eigen's NEON packets fuse a\*b+c (vfmaq\_f64 under \_\_ARM\_FEATURE\_FMA) whatever -ffp-contract says; without the macro they multiply and add, as SSE2 does on x86-64. Undefine it around the Eigen includes of LinearSolver.h; to be verified on macOS ARM.
+  - date raised: 2026-10-12
 - `TESTING` `MEDIUM EFF` `raised by: Claude-JG` Symbolic: complete tests of the symbolic user functions (#2985)
   - description: revision2026c step RG12.5: check which symbolic user functions have tests (symbolicUserFunctionTest, symbolicModuleTest, symbolicUserFunctionCopyTest, ...) and add the missing ones, every signature against its Python version.
   - date raised: 2026-10-12
