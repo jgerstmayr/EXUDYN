@@ -2,9 +2,13 @@
   "number": 2973,
   "title": "User body as a finite element, first the user rigid body",
   "author": "Claude-JG",
-  "status": "RAISED",
+  "status": "RESOLVED",
   "type": "EXTENSION",
   "description": "revision2026c step RG7.3 (docs/dev/design/pythonUserItems.md 5.1): a new item on existing nodes with mass, forces, optional Jacobian and the body access functions (position, velocity, position Jacobian at a local position, optionally rotation), so that the body markers, SensorBody, loads and connectors work; example 1: a replica of ObjectRigidBody; then example 2 (minimal ANCF cable 2D) and example 4 (linear tetrahedron).",
   "dateRaised": "2026-10-12",
-  "deadline": "2027-04-10"
+  "deadline": "2027-04-10",
+  "dateResolved": "2026-10-12 07:13",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "the user body: ObjectUserBody (#2986) with three examples as test models - a rigid body, the 2D ANCF cable and the linear tetrahedron",
+  "resolvedInVersion": "1.13.71"
 }

@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.13 | Newborn | 70 | 1.13.70 |
+| 1.13 | Newborn | 73 | 1.13.73 |
 | 1.12 | Metheney | 367 | 1.12.462 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
@@ -30,6 +30,18 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.13 - Newborn (current)
 
+- **1.13.73** `TESTING` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` User finite element: the linear tetrahedron as ObjectUserBody (#2988)
+  - description: revision2026c step RG7.3.3 (\#2973, design 5.1, example 4): the linear tetrahedron with the Saint Venant-Kirchhoff material and the consistent mass matrix as ObjectUserBody on four NodePoint nodes; test model userTetrahedronTest.py, the patch test in uniaxial tension against the exact nonlinear homogeneous solution, and the kinetic energy of a cube in uniform motion.
+  - **notes:** test model userTetrahedronTest.py: the linear tetrahedron with Saint Venant-Kirchhoff material as ObjectUserBody passes the nonlinear patch test
+  - date resolved: **2026-10-12 07:13**, date raised: 2026-10-12
+- **1.13.72** `TESTING` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` User finite element: the 2D ANCF cable as ObjectUserBody (#2987)
+  - description: revision2026c step RG7.3.2 (\#2973, design 5.1, example 2): a minimal 2D ANCF cable element as ObjectUserBody on NodePoint2DSlope1 - mass matrix, axial strain and curvature with the integration rules of ObjectANCFCable2D, position and position Jacobian; test model userANCFCable2DTest.py, a cantilever against ObjectANCFCable2D.
+  - **notes:** test model userANCFCable2DTest.py: the 2D ANCF cable element as ObjectUserBody agrees with ObjectANCFCable2D
+  - date resolved: **2026-10-12 07:13**, date raised: 2026-10-12
+- **1.13.71** `EXTENSION` `raised by: Claude-JG` `resolved by: Claude-JG` User body as a finite element, first the user rigid body (#2973)
+  - description: revision2026c step RG7.3 (docs/dev/design/pythonUserItems.md 5.1): a new item on existing nodes with mass, forces, optional Jacobian and the body access functions (position, velocity, position Jacobian at a local position, optionally rotation), so that the body markers, SensorBody, loads and connectors work; example 1: a replica of ObjectRigidBody; then example 2 (minimal ANCF cable 2D) and example 4 (linear tetrahedron).
+  - **notes:** the user body: ObjectUserBody (\#2986) with three examples as test models - a rigid body, the 2D ANCF cable and the linear tetrahedron
+  - date resolved: **2026-10-12 07:13**, date raised: 2026-10-12
 - **1.13.70** `EXTENSION` `MEDIUM EFF` `raised by: Claude-JG` `resolved by: Claude-JG` ObjectUserBody: a body of Python user functions, the user rigid body (#2986)
   - description: revision2026c step RG7.3.1 (\#2973, design 5.1): ObjectUserBody on any ODE2 nodes, with mass matrix, forces, position, rotation matrix and the two Jacobians as Python user functions of the total coordinates, so that body markers, SensorBody, loads and connectors work; the derivative of the projected forces by central differences; the renderer thread gets positions and rotations from a cache that the computation thread fills; test model userRigidBodyTest.py, a replica of ObjectRigidBody on NodeRigidBodyRxyz.
   - **notes:** ObjectUserBody: a body whose mass matrix, forces, positions, rotation matrices and Jacobians are Python user functions of the total coordinates; body markers, SensorBody, loads and connectors work on it; test model userRigidBodyTest.py replicates ObjectRigidBody

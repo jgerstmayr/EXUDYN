@@ -873,3 +873,19 @@ code they add is measured.)*
 - **Code added** (design 7.1): by hand 500 lines of C++ (CObjectUserBody.cpp 304, VisualizationAccessCache.h 97,
   evaluation wrappers 53, CallUserFunction 20, the consistency check 27) and 276 lines of definition; generated 493
   lines of headers plus the factory, the Python interface and the page. Nothing in the existing items changed.
+
+<a id="rg7-3-2"></a>
+### RG7.3.2 and RG7.3.3 — the ANCF cable and the tetrahedron as user elements, RG7.3 closed (2026-10-12, #2973, #2987, #2988)
+*(Maintainer 2026-10-12: the ANCF cable 2D minimal; the cable and the linear tetrahedron now, then the user types.)*
+- Both are test models only: ObjectUserBody needed no change, so the C++ code of RG7.3 is that of RG7.3.1.
+- **#2987** userANCFCable2DTest.py: the element in 60 lines of Python - cubic Hermite shape functions as 2 x 8
+  matrices, the consistent mass matrix (Gauss order 7), the axial strain |r'| - 1 (order 9) and the curvature
+  (r' x r'')/|r'|^2 (order 5), as ObjectANCFCable2D integrates them, position and position Jacobian. A cantilever of four
+  elements, clamped by coordinate constraints, under a tip force on MarkerBodyPosition: positions and velocities agree
+  with ObjectANCFCable2D to 7e-14 after 200 steps (1.5 s, most of it the Python forces under the numerical Jacobian).
+- **#2988** userTetrahedronTest.py: Saint Venant-Kirchhoff (Green strain, P = F S), consistent mass rho V/20 (1 + delta),
+  position at the coordinates of the unit tetrahedron. A unit cube of six tetrahedra on its diagonal in uniaxial
+  tension, held by the fewest constraints and loaded by the consistent forces of its face: the static solution is the
+  exact homogeneous one, a E (a^2 - 1)/2 = P with the lateral stretch from S22 = 0, to 2e-16 at the nodes and at a point
+  inside each element; a cube in uniform motion has the kinetic energy 1/2 rho V v^2 to 1e-13.
+- **#2973** resolved with these: the three examples of design 5.1 (rigid body, cable, tetrahedron) work.

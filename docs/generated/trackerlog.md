@@ -8,10 +8,10 @@ Every entry carries the **type** of the issue, then its **priority** and its **e
 
 General information on current version:
 
-- Exudyn version = 1.13.70.dev1
+- Exudyn version = 1.13.73.dev1
 - last change = 2026-10-12
-- Number of issues = 2987
-- Number of resolved issues = 2847 (70 in current version)
+- Number of issues = 2989
+- Number of resolved issues = 2850 (73 in current version)
 
 ## Resolved issues and resolved bugs before version 1.13
 
@@ -9074,9 +9074,6 @@ The following list contains the issues which have been **RESOLVED** in the accor
   - date raised: 2026-10-12
 - `EXTENSION` `raised by: Claude-JG` User nodes with position and orientation interfaces (#2974)
   - description: revision2026c step RG7.4 (docs/dev/design/pythonUserItems.md 5.2): number of coordinates, position, velocity, position Jacobian; rotation matrix, local angular velocity, Glocal and its derivatives (numerical if not given); example 3: a fully parametrized ANCF node (NodePointSlope123) and beam.
-  - date raised: 2026-10-12
-- `EXTENSION` `raised by: Claude-JG` User body as a finite element, first the user rigid body (#2973)
-  - description: revision2026c step RG7.3 (docs/dev/design/pythonUserItems.md 5.1): a new item on existing nodes with mass, forces, optional Jacobian and the body access functions (position, velocity, position Jacobian at a local position, optionally rotation), so that the body markers, SensorBody, loads and connectors work; example 1: a replica of ObjectRigidBody; then example 2 (minimal ANCF cable 2D) and example 4 (linear tetrahedron).
   - date raised: 2026-10-12
 - `EXTENSION` `MEDIUM EFF` `raised by: Claude-JG` Python user items: the common pattern and the user types (#2972)
   - description: revision2026c step RG7.2 (docs/dev/design/pythonUserItems.md 5.6, 8): naming, the arguments of every user function, how C++ calls them; OutputVariableType::UserType0-3, Node::UserType0-3, Marker::UserType0-3 with a registry of display names and Python aliases (exu.OutputVariableType.xyz = ... works).

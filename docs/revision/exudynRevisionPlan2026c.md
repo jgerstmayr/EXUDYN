@@ -85,7 +85,6 @@ The title of each says what it does; the sentence after it, why it comes now.
   - RG6.12 Add a ruler to the renderer and orient imported triangles consistently
 - **RG7** Python user items
   - RG7.2 Set up the common pattern of the user items and the user types
-  - RG7.3 Add the user body as a finite element, first the user rigid body
   - RG7.4 Add user nodes with position and orientation interfaces
   - RG7.5 Add user markers and a user connector with access to its markers
   - RG7.6 Add a user joint on two position and orientation markers
@@ -133,7 +132,7 @@ The title of each says what it does; the sentence after it, why it comes now.
 | RG4 | OPEN | 9 | Implementation problems and bugs |
 | RG5 | OPEN | 8 | Performance |
 | RG6 | OPEN | 4 | Graphics and rendering |
-| RG7 | OPEN | 8 | Python user items |
+| RG7 | OPEN | 7 | Python user items |
 | RG8 | OPEN | 10 | Compiled C++ user items |
 | RG9 | OPEN | 4 | Structural core improvements |
 | RG10 | CLOSED | 0 | Tooling and process |
@@ -391,17 +390,26 @@ CLOSED 2026-10-12 (#2971, maintainer 2026-10-11/12: the decisions are in the des
 #2972. Naming, the arguments of every user function, how C++ calls them; OutputVariableType::UserType0-3,
 Node::UserType0-3, Marker::UserType0-3 with display names and Python aliases (design 5.6).
 
-### **OPEN_RG7.3** Add the user body as a finite element, first the user rigid body
+### **CLOSED_RG7.3** Add the user body as a finite element, first the user rigid body
 
-#2973. Mass, forces, optional Jacobian and the body access functions, so that body markers, SensorBody, loads and
-connectors work (design 5.1). First a replica of ObjectRigidBody; then a minimal ANCF cable 2D (one integration rule,
-few output variables) and a linear tetrahedron. Measure the code each user function adds (design 7.1).
+CLOSED 2026-10-12 (#2973): ObjectUserBody (RG7.3.1) and its three examples, the rigid body, the ANCF cable and the linear
+tetrahedron, each agreeing with a reference to 1e-13. [log](exudynRevisionLog2026c.md#rg7-3-2)
 
 #### **CLOSED_RG7.3.1** Add ObjectUserBody and the user rigid body
 
 CLOSED 2026-10-12 (#2986, maintainer 2026-10-12: go with the user rigid body): ObjectUserBody with seven user functions,
 the renderer thread served by a cache; test model userRigidBodyTest.py agrees with ObjectRigidBody to 5e-14.
 [log](exudynRevisionLog2026c.md#rg7-3-1)
+
+#### **CLOSED_RG7.3.2** Write the 2D ANCF cable as a user element
+
+CLOSED 2026-10-12 (#2987, maintainer 2026-10-12: minimal): test model userANCFCable2DTest.py, a cantilever of four
+user elements against ObjectANCFCable2D. [log](exudynRevisionLog2026c.md#rg7-3-2)
+
+#### **CLOSED_RG7.3.3** Write the linear tetrahedron as a user element
+
+CLOSED 2026-10-12 (#2988): test model userTetrahedronTest.py, Saint Venant-Kirchhoff material, the nonlinear patch test
+against the exact solution. [log](exudynRevisionLog2026c.md#rg7-3-2)
 
 ### **OPEN_RG7.4** Add user nodes with position and orientation interfaces
 

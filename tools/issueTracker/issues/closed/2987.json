@@ -1,0 +1,15 @@
+{
+  "number": 2987,
+  "title": "User finite element: the 2D ANCF cable as ObjectUserBody",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "TESTING",
+  "effort": "LOW",
+  "description": "revision2026c step RG7.3.2 (#2973, design 5.1, example 2): a minimal 2D ANCF cable element as ObjectUserBody on NodePoint2DSlope1 - mass matrix, axial strain and curvature with the integration rules of ObjectANCFCable2D, position and position Jacobian; test model userANCFCable2DTest.py, a cantilever against ObjectANCFCable2D.",
+  "dateRaised": "2026-10-12",
+  "deadline": "2027-04-10",
+  "dateResolved": "2026-10-12 07:13",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "test model userANCFCable2DTest.py: the 2D ANCF cable element as ObjectUserBody agrees with ObjectANCFCable2D",
+  "resolvedInVersion": "1.13.72"
+}

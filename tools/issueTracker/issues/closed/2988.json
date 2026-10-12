@@ -1,0 +1,15 @@
+{
+  "number": 2988,
+  "title": "User finite element: the linear tetrahedron as ObjectUserBody",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "TESTING",
+  "effort": "LOW",
+  "description": "revision2026c step RG7.3.3 (#2973, design 5.1, example 4): the linear tetrahedron with the Saint Venant-Kirchhoff material and the consistent mass matrix as ObjectUserBody on four NodePoint nodes; test model userTetrahedronTest.py, the patch test in uniaxial tension against the exact nonlinear homogeneous solution, and the kinetic energy of a cube in uniform motion.",
+  "dateRaised": "2026-10-12",
+  "deadline": "2027-04-10",
+  "dateResolved": "2026-10-12 07:13",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "test model userTetrahedronTest.py: the linear tetrahedron with Saint Venant-Kirchhoff material as ObjectUserBody passes the nonlinear patch test",
+  "resolvedInVersion": "1.13.73"
+}

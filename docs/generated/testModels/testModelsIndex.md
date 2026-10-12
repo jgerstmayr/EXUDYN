@@ -103,6 +103,8 @@ markerNodeCoordinateReferenceTest
 coSimulationTest
 springDamperVelocityOffsetTest
 userRigidBodyTest
+userANCFCable2DTest
+userTetrahedronTest
 rotationMarkerDeprecationTest
 contactFrictionCircleCable2DnoFrictionTest
 systemContainerLifetimeTest
