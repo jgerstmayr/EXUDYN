@@ -105,6 +105,8 @@ springDamperVelocityOffsetTest
 userRigidBodyTest
 userANCFCable2DTest
 userTetrahedronTest
+graphicsDataErrorsTest
+solverFailureMessageTest
 userTypesTest
 rotationMarkerDeprecationTest
 contactFrictionCircleCable2DnoFrictionTest

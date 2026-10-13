@@ -611,7 +611,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`computeItem
 (sec-advancedutilities-systemenergy-computesystemenergies)=
 ### Class function: ComputeSystemEnergies
 
-[`ComputeSystemEnergies(self, configuration = exudyn.ConfigurationType.Current)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/advancedUtilities.py#L1196)
+[`ComputeSystemEnergies(self, configuration = exudyn.ConfigurationType.Current)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/advancedUtilities.py#L1197)
 
 - **class function description**: [kinetic, potential of the objects, potential of the loads, total] in the given configuration; the kinetic energy of bodies computed from their mass matrix is available in the current configuration only
 

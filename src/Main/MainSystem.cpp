@@ -33,6 +33,7 @@
 #include "System/versionCpp.h"
 
 #include "Main/Experimental.h"
+#include "Graphics/BodyGraphicsDataPython.h" //GraphicsDataContext (#2304)
 extern PySpecial pySpecial;			//! special features; affects exudyn globally; treat with care
 
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -1035,6 +1036,7 @@ void MainSystem::PyModifyObject(const py::object& itemIndex, py::dict d)
 	if (EXUstd::IndexIsInRange(itemNumber, 0, mainSystemData.GetMainObjects().NumberOfItems()))
 	{
 		SystemHasChanged();
+		GraphicsDataContext context("ModifyObject (object " + EXUstd::ToString(itemNumber) + ")"); //names it in errors of its graphics data (#2304)
 		mainSystemData.GetMainObjects().GetItem(itemNumber)->SetWithDictionary(d);
 		InteractiveModeActions();
 	}
@@ -1590,6 +1592,7 @@ void MainSystem::PySetObjectParameter(const py::object& itemIndex, const STDstri
 	Index itemNumber = EPyUtils::ItemIndexFromPython<ObjectIndex>(itemIndex);
 	if (EXUstd::IndexIsInRange(itemNumber, 0, mainSystemData.GetMainObjects().NumberOfItems()))
 	{
+		GraphicsDataContext context("SetObjectParameter (object " + EXUstd::ToString(itemNumber) + ", " + parameterName + ")"); //names it in errors of its graphics data (#2304)
 		mainSystemData.GetMainObjects().GetItem(itemNumber)->SetParameter(parameterName, value);
 	}
 	else

@@ -1,0 +1,83 @@
+#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+# This is an EXUDYN example
+#
+# Details:  What graphics data refuses, and how the message says where (#2304, #2305): an error names the item -
+#           AddObject, ModifyObject, SetObjectParameter or the graphicsDataUserFunction of an object, with its
+#           number and type - and the entry of the list, graphicsData[i]; a point, position or radius that is
+#           not-a-number or infinite is refused for every type of graphics data.
+#
+# Author:   Johannes Gerstmayr
+# Date:     2026-10-13
+#
+# Copyright:This file is part of Exudyn. Exudyn is free software. You can redistribute it and/or modify it under the terms of the Exudyn license. See 'LICENSE.txt' for more details.
+#
+#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+import exudyn as exu
+from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
+import exudyn.graphics as graphics
+import numpy as np
+
+SC = exu.SystemContainer()
+mbs = SC.AddSystem()
+nan = float('nan')
+checks = [] #(name, passed)
+
+def Refused(name, function, expected):
+    """function must raise a ValueError whose message contains every text of expected"""
+    try:
+        function()
+        checks.append((name, False))
+        exu.Print(name + ': not refused')
+    except ValueError as e:
+        message = str(e)
+        passed = all(text in message for text in expected)
+        checks.append((name, passed))
+        if not passed:
+            exu.Print(name + ': message is', message)
+
+#which item and which entry: the second entry of an AddObject is wrong
+Refused('AddObject, entry', lambda: mbs.AddObject(ObjectGround(visualization=VObjectGround(
+    graphicsData=[graphics.Sphere(radius=0.1), {'type': 'Line', 'data': [0, 0, 0]}]))),
+    ['AddObject (object 0, Ground)', 'graphicsData[1]', 'GraphicsData Line'])
+
+#not-a-number or infinity, for each type of graphics data
+brick = graphics.Brick(size=[1, 1, 1])
+brick['points'] = np.full((len(brick['points']), 3), nan)
+invalid = [('Line', {'type': 'Line', 'data': [0, 0, 0, nan, 1, 1]}),
+           ('Lines', {'type': 'Lines', 'points': [[0, 0, 0], [1, np.inf, 0]], 'colors': [[0, 0, 0, 1], [0, 0, 0, 1]]}),
+           ('Circle', {'type': 'Circle', 'radius': nan, 'position': [0, 0, 0]}),
+           ('Circle', {'type': 'Circle', 'radius': 1, 'position': [0, nan, 0]}),
+           ('Text', {'type': 'Text', 'text': 'A', 'position': [np.inf, 0, 0]}),
+           ('Spheres', {'type': 'Spheres', 'points': [[0, 0, 0]], 'radii': [nan]}),
+           ('TriangleList', brick)]
+for (name, data) in invalid:
+    Refused(name + ' not finite', lambda: mbs.AddObject(ObjectGround(visualization=VObjectGround(graphicsData=[data]))),
+            ['graphicsData[0]', 'not-a-number (nan) or infinity'])
+
+#ModifyObject and SetObjectParameter of an object that exists
+oGround = mbs.AddObject(ObjectGround(visualization=VObjectGround(graphicsData=[graphics.Sphere(radius=0.1)])))
+Refused('ModifyObject', lambda: mbs.ModifyObject(oGround, {'VgraphicsData': [{'type': 'Circle', 'radius': 1}]}),
+        ['ModifyObject (object ' + str(oGround) + ')', 'graphicsData[0]', "must contain 'position'"])
+Refused('SetObjectParameter', lambda: mbs.SetObjectParameter(oGround, 'VgraphicsData', [{'type': 'Unknown'}]),
+        ['SetObjectParameter (object ' + str(oGround) + ', VgraphicsData)', 'graphicsData[0]', "type 'Unknown' not supported"])
+
+#a graphicsDataUserFunction is called when the graphics is built; the visualization does not stop at an error in it,
+#it writes the message - e.g. 'graphicsDataUserFunction of object 1, graphicsData[1]: GraphicsData Text: ...' - and
+#draws the rest, so the message is not read back here
+def UFgraphics(mbs, itemNumber):
+    return [graphics.Sphere(radius=0.1), {'type': 'Text', 'text': 'A', 'position': [0, 0, 0]}]
+oUser = mbs.AddObject(ObjectGround(visualization=VObjectGround(graphicsDataUserFunction=UFgraphics)))
+mbs.Assemble()
+
+#the valid graphics data are still accepted
+checks.append(('valid graphics', len(SC.renderer.GetGraphicsData()) > 0))
+
+for (name, passed) in checks:
+    if not passed:
+        exu.Print('FAILED:', name)
+exu.Print(sum(passed for (name, passed) in checks), 'of', len(checks), 'checks passed')
+u = sum(passed for (name, passed) in checks)
+exu.Print('solution of graphicsDataErrorsTest=', u)
+
+exu.sys['testResult'] = u

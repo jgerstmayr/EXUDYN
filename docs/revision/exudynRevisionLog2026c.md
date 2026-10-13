@@ -920,3 +920,29 @@ exu.OutputVariableType.Position`; the user types after the cable and the tetrahe
   function into `value`, which is the ResizableMatrix of the marker temporaries: the move exchanged the memory but not
   the allocated size the ResizableMatrix keeps, so the next resize wrote past the buffer. Found by leaving out the user
   models one by one; `value` is now copied, and the user output variables are copied likewise.
+
+<a id="rg11-8-16"></a>
+### RG11.8.12, RG11.8.16 and RG11.8.18 — graphics data errors, the message of a failed solve, Inspect instead of try (2026-10-13, #1977, #2304, #2305, #2991)
+*(Maintainer 2026-10-13: both fixes yes; SystemEnergy should ask mbs.Inspect, and look for the same construct
+elsewhere; the output of userRigidBodyTest.py "missing rotationMatrixUserFunction refused: 1" asked about.)*
+- **#1977** (solver.py): `_SolverFailed` builds the block of `SolverErrorMessage` once. A solve that stops by itself
+  raises `SolverError('SolveDynamic terminated: ' + the solver's error string + block)`; an exception from inside the
+  solve keeps its type and message and gets the block as a note (`add_note`, Python 3.11; printed on 3.10). Nothing
+  is printed any more, as errors go into the exception (CODING_STYLE 10.6). The FAQ example of the old printed
+  output is replaced by the current one. Test model solverFailureMessageTest.py: Newton failure with and without
+  showHints, a user function error with its note, a singular static system.
+- **#2304, #2305** (VisualizationSystemContainer.cpp): every error of `PyWriteBodyGraphicsDataList` goes through
+  `GraphicsDataError`, which puts the item - set by a `GraphicsDataContext` in AddObject, ModifyObject,
+  SetObjectParameter, the five `CallUserFunction` and per link of KinematicTree - and the entry `graphicsData[i]`
+  before the message. Not-a-number and infinity are refused in Line, Lines, Circle (position, radius), Text and the
+  radii of Spheres, as they were in TriangleList and the points of Spheres. An error in a graphicsDataUserFunction does
+  not stop the visualization, it is written with the same text. Test model graphicsDataErrorsTest.py.
+- **#2991**: `SystemEnergy` takes body or not from `mbs.Inspect(object, InspectType.ObjectType)` and the energies
+  from `InspectType.OutputVariables`, which lists an energy only where it can be computed; only for an energy not
+  listed it reads it once, to report the reason of a NotImplementedError in `.unavailable`. ComputeSystemEnergies uses
+  the stored kind instead of trying the body function first. A search of python/exudyn for a try/except around an
+  output function found one more: `CreateDistanceSensor` tried the position of its marker, it now asks Inspect.
+  energiesTest.py gives the same output.
+- **userRigidBodyTest.py**: "refused: 1" was the check passing - a rigid marker on a user body without
+  rotationMatrixUserFunction must be refused; the line now says so. The block "DYNAMIC SOLVER FAILED" it printed is
+  gone with #1977.

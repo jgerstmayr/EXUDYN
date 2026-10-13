@@ -2,11 +2,14 @@
   "number": 2305,
   "title": "graphics",
   "author": "JG",
-  "status": "RAISED",
+  "status": "RESOLVED",
   "type": "EXTENSION",
   "effort": "LOW",
   "description": "Add error checks for isfinite for all point data imported in PyWriteBodyGraphicsDataList",
   "dateRaised": "2026-02-15",
   "deadline": "2026-08-14",
-  "workingRemarks": "planned as revision2026b step RG18.1 (triage 2026-10-07)"
+  "dateResolved": "2026-10-13 20:09",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "points, positions and radii of all graphics data that are not-a-number or infinite are refused",
+  "resolvedInVersion": "1.13.78"
 }

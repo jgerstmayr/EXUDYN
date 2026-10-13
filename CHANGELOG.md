@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.13 | Newborn | 75 | 1.13.75 |
+| 1.13 | Newborn | 79 | 1.13.79 |
 | 1.12 | Metheney | 367 | 1.12.462 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
@@ -30,6 +30,22 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.13 - Newborn (current)
 
+- **1.13.79** `CHANGE` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` SystemEnergy and CreateDistanceSensor ask mbs.Inspect instead of trying the output functions (#2991)
+  - description: revision2026c step RG11.8.18 (maintainer 2026-10-13): advancedUtilities.SystemEnergy found bodies and their energies by calling GetObjectOutputBody and GetObjectOutput in try/except, and ComputeSystemEnergies tried the body function first for every object; mbs.Inspect(object, InspectType.ObjectType) says whether it is a body and InspectType.OutputVariables which energies it gives with its parameters. The only other such construct in the library, CreateDistanceSensor, tried GetMarkerOutput(Position) of a marker.
+  - **notes:** SystemEnergy and CreateDistanceSensor ask mbs.Inspect for the kind of an object and the output variables it provides instead of trying the output functions
+  - date resolved: **2026-10-13 20:09**, date raised: 2026-10-13
+- **1.13.78** `EXTENSION` `LOW EFF` `resolved by: Claude-JG` graphics (#2305)
+  - description: Add error checks for isfinite for all point data imported in PyWriteBodyGraphicsDataList
+  - **notes:** points, positions and radii of all graphics data that are not-a-number or infinite are refused
+  - date resolved: **2026-10-13 20:09**, date raised: 2026-02-15
+- **1.13.77** `EXTENSION` `LOW EFF` `resolved by: Claude-JG` graphics (#2304)
+  - description: add hints (object type, etc.) to PyWriteBodyGraphicsDataList in VisualizationSystemContainer to simplify error localisation
+  - **notes:** an error in graphics data names the item (AddObject, ModifyObject, SetObjectParameter, graphicsDataUserFunction of an object, link of KinematicTree) and the entry graphicsData\[i\]
+  - date resolved: **2026-10-13 20:09**, date raised: 2026-02-15
+- **1.13.76** `CHANGE` `MEDIUM EFF` `resolved by: Claude-JG` solver (#1977)
+  - description: check if solver can raise full solver error message in exception, in order to alleviate tracing during automated code evaluation in SolveStatic and SolveDynamic
+  - **notes:** the exception of a failed SolveDynamic or SolveStatic carries the whole message: SolverError with what the solver reports and the reasons and solutions (showHints=True); an exception from inside the solve keeps its type and gets them as a note
+  - date resolved: **2026-10-13 20:09**, date raised: 2025-03-30
 - **1.13.75** `EXTENSION` `MEDIUM EFF` `raised by: Claude-JG` `resolved by: Claude-JG` User types UserType0-3 of OutputVariableType, NodeType and MarkerType with names (#2989)
   - description: revision2026c step RG7.2.1 (\#2972, design 5.6): four user types in each of the three enumerations; exudyn.special.userTypes.SetName/GetName/Reset gives one a name, which the C++ string functions write and which becomes an alias of the value and its str(); ObjectUserBody.outputVariableUserFunction provides the user output variables (conditional output variables in the definitions); test model userTypesTest.py.
   - **notes:** OutputVariableType, NodeType and MarkerType have UserType0 to UserType3; exu.special.userTypes.SetName names one - sensor files, messages and str() write the name, and it becomes an alias of the value; ObjectUserBody.outputVariableUserFunction provides the user output variables

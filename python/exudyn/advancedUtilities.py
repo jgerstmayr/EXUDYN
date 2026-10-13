@@ -1161,28 +1161,29 @@ class SystemEnergy:
         self.potentialObjects = []
         self.loads = []
         self.unavailable = []
+        self.isBody = {} #by object: True for a body, whose outputs are read with GetObjectOutputBody
         KE = exudyn.OutputVariableType.KineticEnergy
         PE = exudyn.OutputVariableType.PotentialEnergy
         for i in range(mbs.systemData.NumberOfObjects()):
             o = exudyn.ObjectIndex(i)
-            objectType = mbs.GetObject(o)['objectType']
-            if objectType == 'Ground':
-                continue
-            for (variable, target, isBody) in [(KE, self.kineticObjects, True), (PE, self.potentialObjects, True),
-                                               (PE, self.potentialObjects, False)]:
+            isBody = exudyn.ObjectType.Body in mbs.Inspect(o, exudyn.InspectType.ObjectType)
+            GetOutput = mbs.GetObjectOutputBody if isBody else mbs.GetObjectOutput
+            #Inspect lists an energy only where it can be computed with the current parameters
+            available = mbs.Inspect(o, exudyn.InspectType.OutputVariables)
+            for (variable, target) in [(KE, self.kineticObjects), (PE, self.potentialObjects)]:
+                if variable in available:
+                    target.append(o)
+                    self.isBody[o] = isBody
+                    continue
+                #not listed: the type has no such energy (ValueError), or has it but not with these parameters - then
+                #reading it raises NotImplementedError with the reason, which is what .unavailable reports
                 try:
-                    if isBody:
-                        mbs.GetObjectOutputBody(o, variable)
-                    else:
-                        mbs.GetObjectOutput(o, variable)
-                    if o not in target:
-                        target.append(o)
-                except NotImplementedError as error: #declared, and not available with these parameters
+                    GetOutput(o, variable)
+                except NotImplementedError as error:
                     if not skipUnavailable:
                         raise
-                    if (o, variable) not in [(u[0], u[2]) for u in self.unavailable]:
-                        self.unavailable.append((o, objectType, variable, str(error).splitlines()[0]))
-                except Exception: #the type does not have this energy at all
+                    self.unavailable.append((o, mbs.GetObject(o)['objectType'], variable, str(error).splitlines()[0]))
+                except ValueError:
                     pass
         for i in range(mbs.systemData.NumberOfLoads()):
             load = exudyn.LoadIndex(i)
@@ -1200,13 +1201,12 @@ class SystemEnergy:
         mbs = self.mbs
         KE = exudyn.OutputVariableType.KineticEnergy
         PE = exudyn.OutputVariableType.PotentialEnergy
-        kinetic = sum(float(mbs.GetObjectOutputBody(o, KE, configuration=configuration)) for o in self.kineticObjects)
-        potential = 0.
-        for o in self.potentialObjects:
-            try:
-                potential += float(mbs.GetObjectOutputBody(o, PE, configuration=configuration))
-            except Exception:
-                potential += float(mbs.GetObjectOutput(o, PE, configuration=configuration))
+        def Energy(o, variable):
+            if self.isBody[o]:
+                return float(mbs.GetObjectOutputBody(o, variable, configuration=configuration))
+            return float(mbs.GetObjectOutput(o, variable, configuration=configuration))
+        kinetic = sum(Energy(o, KE) for o in self.kineticObjects)
+        potential = sum(Energy(o, PE) for o in self.potentialObjects)
         loads = sum(LoadPotentialEnergy(mbs, load, configuration) for load in self.loads)
         return [kinetic, potential, loads, kinetic + potential + loads]
 

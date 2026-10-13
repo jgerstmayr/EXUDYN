@@ -128,7 +128,7 @@ which is by default rather low (1e-10) -- in order to achieve accurate results f
 - **static solver**: system is (nearly) **kinematic**:
   - a static solution can be achieved using `stabilizerODE2term`, which adds mass-proportional stiffness terms during load steps $< 1$; see also hints for singular Jacobians below
 
-- very small loads or even **zero loads** do not converge: `SolveDynamic` or `SolveStatic` **terminated due to errors**
+- very small loads or even **zero loads** do not converge: `SolveDynamic` or `SolveStatic` **terminated**
   - the reason is the nonlinearity of formulations (nonlinear kinematics, nonlinear beam, etc.) and round off errors, which restrict Newton to achieve desired tolerances
   - adjust (increase) `.newton.relativeTolerance` / `.newton.absoluteTolerance` in static solver or in time integration
   - in many cases, especially for static problems, the `.newton.residualMode = 1` evaluates the increments; the nonlinear problems is assumed to be converged, if increments are within given absolute/relative tolerances; this also works usually better for kinematic solutions

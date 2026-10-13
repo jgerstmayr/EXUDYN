@@ -81,58 +81,34 @@ is what most answers need to start from, see {ref}`sec-commandline`.
 
  **Typical solver errors**:
 
-- Consider the  example for a mixed error message comes from the solver when called for a (possibly empty) `mbs` with no prior call to `mbs.Assemble()`:
+- A failed `SolveDynamic` or `SolveStatic` raises an exception that carries the whole message (#1977):
 
-  ```
-    import exudyn as exu
-    from exudyn.utilities import *
-    SC = exu.SystemContainer()
-    mbs = SC.AddSystem()
-    sims=exu.SimulationSettings()
-    mbs.SolveDynamic(sims)
-  ```
+  - if the solver stops by itself - the Newton iteration does not converge, the step size reached its minimum - it
+    raises `exudyn.SolverError` with what the solver reports, e.g.
 
-- This will results in error messages similar to:
-
-  ```
-    =========================================
-    User ERROR [file 'C:\Users\username\.conda\envs\venvP39\lib\site-packages\exudyn\solver.py', line 245]:
-    Solver: system is inconsistent and cannot be solved (call Assemble() and check error messages)
-    =========================================
-
-    =========================================
-    SYSTEM ERROR [file 'C:\Users\username\.conda\envs\venvP39\lib\site-packages\exudyn\solver.py', line 245]:
-    EXUDYN raised internal error in 'CSolverBase::InitializeSolver':
-    Exudyn: parsing of Python file terminated due to Python (user) error
-    =========================================
-
+    ```
+    exudyn.SolverError: SolveDynamic terminated: reduction of step size reached minimum step size; discontinuous iteration was not successful
     ******************************
     DYNAMIC SOLVER FAILED:
       use showHints=True to show helpful information
     ******************************
+    ```
 
-    Traceback (most recent call last):
-
-      File "C:\Users\username\AppData\Local\Temp\ipykernel_24988\3348856385.py", line 1, in <module>
-        mbs.SolveDynamic(sims)
-
-      File "C:\Users\username\.conda\envs\venvP39\lib\site-packages\exudyn\solver.py", line 255, in SolveDynamic
-        raise ValueError("SolveDynamic terminated")
-
-    ValueError: SolveDynamic terminated
-  ```
-  - it seems clear that you should read this error from top as it indicates that you just forgot to call `mbs.Assemble()`
+  - an error inside the solve - a user function, a singular system Jacobian, an inconsistent model - keeps its type
+    and its message, and the same block is attached as a note, which Python shows below the traceback;
+  - `showHints=True` adds the possible reasons and solutions to the block; `mbs.sys['dynamicSolver']` or
+    `mbs.sys['staticSolver']` keeps the solver for a closer look.
 
 - WSL/Ubuntu: render window crashes after left or right mouse click:
 
   - This happens, in some (all?) Linux installations during mouse selection
   - workaround: setting `SC.visualizationSettings.interactive.advanced.selectionLeftMouse = False` and `SC.visualizationSettings.interactive.advanced.selectionRightMouse = False` removes the option to select with mouse, but avoids crashes
 
-- `SolveDynamic` or `SolveStatic` **terminated due to errors**:
+- `SolveDynamic` or `SolveStatic` **terminated**:
 
   - use flag `showHints = True` in `SolveDynamic` or `SolveStatic`
 
-- Very simple example **without loads** leads to error: `SolveDynamic` or `SolveStatic` **terminated due to errors**:
+- Very simple example **without loads** leads to error: `SolveDynamic` or `SolveStatic` **terminated**:
 
   - see also 'Convergence problems', {ref}`sec-overview-basics-convergenceproblems`
   - may be caused due to nonlinearity of formulation and round off errors, which restrict Newton to achieve desired tolerances; adjust  `.newton.relativeTolerance` / `.newton.absoluteTolerance` in static solver or in time integration

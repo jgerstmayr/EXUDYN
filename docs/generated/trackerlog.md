@@ -8,10 +8,10 @@ Every entry carries the **type** of the issue, then its **priority** and its **e
 
 General information on current version:
 
-- Exudyn version = 1.13.75.dev1
-- last change = 2026-10-12
-- Number of issues = 2991
-- Number of resolved issues = 2852 (75 in current version)
+- Exudyn version = 1.13.79.dev1
+- last change = 2026-10-13
+- Number of issues = 2992
+- Number of resolved issues = 2856 (79 in current version)
 
 ## Resolved issues and resolved bugs before version 1.13
 
@@ -9120,14 +9120,6 @@ The following list contains the issues which have been **RESOLVED** in the accor
   - description: Extend SlidingJoint for rotation case
   - **remarks:** planned as revision2026b step RG4.22 (triage 2026-10-07)
   - date raised: 2026-03-02
-- `EXTENSION` `LOW EFF` graphics (#2305)
-  - description: Add error checks for isfinite for all point data imported in PyWriteBodyGraphicsDataList
-  - **remarks:** planned as revision2026b step RG18.1 (triage 2026-10-07)
-  - date raised: 2026-02-15
-- `EXTENSION` `LOW EFF` graphics (#2304)
-  - description: add hints (object type, etc.) to PyWriteBodyGraphicsDataList in VisualizationSystemContainer to simplify error localisation
-  - **remarks:** planned as revision2026b step RG18.1 (triage 2026-10-07)
-  - date raised: 2026-02-15
 - `EXTENSION` `MEDIUM EFF` graphics (#2281)
   - description: add functionality to make consistent triangles with same orientation (all computed normals are outbound or inbound); used to heal imported geometries
   - **remarks:** planned as revision2026b step RG6.12 (triage 2026-10-07)
@@ -9244,10 +9236,6 @@ The following list contains the issues which have been **RESOLVED** in the accor
   - description: add force sensor option for single-noded bodies and bodies which do not share nodes (mass points, rigid bodies, ffrf); for rigid bodies, obtains force and torque; for FFRF, it is generalized force; implement in a way that the contributions of loads are computed like in GeneralContact - based on a flag -, as soon as a BodySensor measures a force or torque
   - **remarks:** kept open as an idea, no plan step (triage 2026-10-07, revision2026b group RG18)
   - date raised: 2025-04-15
-- `CHANGE` `MEDIUM EFF` solver (#1977)
-  - description: check if solver can raise full solver error message in exception, in order to alleviate tracing during automated code evaluation in SolveStatic and SolveDynamic
-  - **remarks:** planned as revision2026b step RG18.1 (triage 2026-10-07)
-  - date raised: 2025-03-30
 - `EXTENSION` `MEDIUM EFF` URDF (#1941)
   - description: include parent names and create correct parent indices in URDF files by using link name lists; store list of base link names as well and do reordering
   - **remarks:** planned as revision2026b step RG12.45 (triage 2026-10-07)

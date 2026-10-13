@@ -1,0 +1,88 @@
+#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+# This is an EXUDYN example
+#
+# Details:  The exception of a failed SolveDynamic or SolveStatic carries the whole message (#1977): a solver that
+#           stops without an exception raises SolverError with what the solver reports and, with showHints=True,
+#           the possible reasons and solutions; an exception from inside the solve - here from a user function -
+#           keeps its type and message and carries the hints as a note (Python 3.11 and later).
+#
+# Author:   Johannes Gerstmayr
+# Date:     2026-10-13
+#
+# Copyright:This file is part of Exudyn. Exudyn is free software. You can redistribute it and/or modify it under the terms of the Exudyn license. See 'LICENSE.txt' for more details.
+#
+#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+import exudyn as exu
+from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
+import sys
+
+SC = exu.SystemContainer()
+checks = [] #(name, passed)
+
+#a stiff spring and two Newton iterations without step reduction: the Newton iteration does not converge
+mbs = SC.AddSystem()
+oGround = mbs.CreateGround()
+body = mbs.CreateMassPoint(referencePosition=[1, 0, 0], mass=1, gravity=[0, -9.81, 0])
+mbs.CreateSpringDamper(itemNumbers=[oGround, body], stiffness=1e6)
+mbs.Assemble()
+
+simulationSettings = exu.SimulationSettings()
+simulationSettings.timeIntegration.verboseMode = 0
+simulationSettings.timeIntegration.numberOfSteps = 10
+simulationSettings.timeIntegration.endTime = 10
+simulationSettings.timeIntegration.adaptiveStep = False
+simulationSettings.timeIntegration.newton.maxIterations = 2
+simulationSettings.timeIntegration.newton.useModifiedNewton = False
+
+for showHints in [False, True]:
+    try:
+        mbs.SolveDynamic(simulationSettings, showHints=showHints)
+        checks.append(('Newton fails, showHints=' + str(showHints), False))
+    except exu.SolverError as e:
+        message = str(e)
+        expected = ['SolveDynamic terminated', 'reduction of step size reached minimum step size', 'DYNAMIC SOLVER FAILED']
+        expected += ['POSSIBLE REASONS', 'POSSIBLE SOLUTIONS'] if showHints else ['use showHints=True']
+        checks.append(('Newton fails, showHints=' + str(showHints), all(text in message for text in expected)))
+
+#an error inside the solve keeps its type and message; the hints are a note of it
+mbs2 = SC.AddSystem()
+oGround2 = mbs2.CreateGround()
+body2 = mbs2.CreateMassPoint(referencePosition=[1, 0, 0], mass=1)
+def UFforce(mbs, t, loadVector):
+    raise ValueError('the user function refuses')
+mbs2.AddLoad(LoadForceVector(markerNumber=mbs2.AddMarker(MarkerBodyPosition(bodyNumber=body2)),
+                             loadVector=[0, 1, 0], loadVectorUserFunction=UFforce))
+mbs2.Assemble()
+simulationSettings2 = exu.SimulationSettings()
+simulationSettings2.timeIntegration.verboseMode = 0
+try:
+    mbs2.SolveDynamic(simulationSettings2)
+    checks.append(('user function error', False))
+except ValueError as e:
+    checks.append(('user function error', 'the user function refuses' in str(e)))
+    if sys.version_info >= (3, 11):
+        checks.append(('note with the hints', any('DYNAMIC SOLVER FAILED' in note for note in getattr(e, '__notes__', []))))
+
+#SolveStatic in the same way
+mbs3 = SC.AddSystem()
+oGround3 = mbs3.CreateGround()
+body3 = mbs3.CreateMassPoint(referencePosition=[1, 0.2, 0.1], mass=1)
+mbs3.CreateSpringDamper(itemNumbers=[oGround3, body3], stiffness=100)
+mbs3.Assemble()
+simulationSettings3 = exu.SimulationSettings()
+simulationSettings3.staticSolver.verboseMode = 0
+try:
+    mbs3.SolveStatic(simulationSettings3, showHints=True)
+    checks.append(('SolveStatic singular', False))
+except exu.SolverError as e:
+    checks.append(('SolveStatic singular', 'singular' in str(e)))
+
+for (name, passed) in checks:
+    if not passed:
+        exu.Print('FAILED:', name)
+exu.Print(sum(passed for (name, passed) in checks), 'of', len(checks), 'checks passed')
+u = sum(passed for (name, passed) in checks) - len(checks) #0 if all passed, on every Python version
+exu.Print('solution of solverFailureMessageTest=', u)
+
+exu.sys['testResult'] = u

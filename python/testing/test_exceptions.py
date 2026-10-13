@@ -334,7 +334,7 @@ def test_aSolverFailureReachesTheSolverFile(tmp_path):
 def test_aSingularJacobianIsAFailedStepWithAdaptiveSteps(tmp_path, adaptiveStep):
     """#1337: with adaptive steps a singular Jacobian fails the step, which is reduced; a singularity of the system
     stays and ends at the minimum step size, with the message in the solver file and the causing row; without
-    adaptive steps it raises at once, with the message"""
+    adaptive steps it raises at once; in both cases the exception says why (#1977)"""
     from exudyn.itemInterface import NodePoint, ObjectMassPoint, MarkerNodeCoordinate, LoadCoordinate
 
     systemContainer = exu.SystemContainer()
@@ -354,7 +354,7 @@ def test_aSingularJacobianIsAFailedStepWithAdaptiveSteps(tmp_path, adaptiveStep)
 
     with pytest.raises(exu.SolverError) as caught:
         mbs.SolveStatic(simulationSettings)
-    assert ("singular" in str(caught.value)) == (not adaptiveStep)
+    assert "singular" in str(caught.value)
     assert mbs.sys['staticSolver'].conv.linearSolverFailed
     assert mbs.sys['staticSolver'].conv.linearSolverCausingRow == 0
 

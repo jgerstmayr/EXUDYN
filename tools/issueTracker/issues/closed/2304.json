@@ -1,0 +1,15 @@
+{
+  "number": 2304,
+  "title": "graphics",
+  "author": "JG",
+  "status": "RESOLVED",
+  "type": "EXTENSION",
+  "effort": "LOW",
+  "description": "add hints (object type, etc.) to PyWriteBodyGraphicsDataList in VisualizationSystemContainer to simplify error localisation",
+  "dateRaised": "2026-02-15",
+  "deadline": "2026-08-14",
+  "dateResolved": "2026-10-13 20:09",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "an error in graphics data names the item (AddObject, ModifyObject, SetObjectParameter, graphicsDataUserFunction of an object, link of KinematicTree) and the entry graphicsData[i]",
+  "resolvedInVersion": "1.13.77"
+}

@@ -31,6 +31,18 @@
 namespace py = pybind11;            //! namespace 'py' used throughout in code
 
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+//! the item whose graphics data is read, while it lives, e.g. "AddObject (object 3, RigidBody)": an error in the
+//! graphics data names it, and the entry of the list (#2304)
+class GraphicsDataContext
+{
+public:
+	GraphicsDataContext(const STDstring& context);
+	~GraphicsDataContext();
+private:
+	STDstring previous;
+};
+
+//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 //! python function to read BodyGraphicsData from dictionary, e.g. for body or ground graphics
 bool PyWriteBodyGraphicsDataList(const py::dict& d, const char* item, BodyGraphicsData& data);
 

@@ -1,0 +1,15 @@
+{
+  "number": 2991,
+  "title": "SystemEnergy and CreateDistanceSensor ask mbs.Inspect instead of trying the output functions",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "CHANGE",
+  "effort": "LOW",
+  "description": "revision2026c step RG11.8.18 (maintainer 2026-10-13): advancedUtilities.SystemEnergy found bodies and their energies by calling GetObjectOutputBody and GetObjectOutput in try/except, and ComputeSystemEnergies tried the body function first for every object; mbs.Inspect(object, InspectType.ObjectType) says whether it is a body and InspectType.OutputVariables which energies it gives with its parameters. The only other such construct in the library, CreateDistanceSensor, tried GetMarkerOutput(Position) of a marker.",
+  "dateRaised": "2026-10-13",
+  "deadline": "2027-04-11",
+  "dateResolved": "2026-10-13 20:09",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "SystemEnergy and CreateDistanceSensor ask mbs.Inspect for the kind of an object and the output variables it provides instead of trying the output functions",
+  "resolvedInVersion": "1.13.79"
+}

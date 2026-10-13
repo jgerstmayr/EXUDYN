@@ -55,6 +55,7 @@ void VisualizationObjectGround::CallUserFunction(const VisualizationSettings& vi
 	refPos3DF.CopyFrom(refPos3D); // ({ (float)pos3D[0], (float)pos3D[1], (float)pos3D[2] });
 
 	BodyGraphicsData bodyGraphicsData;
+	GraphicsDataContext context("graphicsDataUserFunction of object " + EXUstd::ToString(itemNumber)); //names it in errors of the graphics data (#2304)
 	PyWriteBodyGraphicsDataList(pyBodyGraphicsData, bodyGraphicsData);
 	EXUvis::AddBodyGraphicsData(bodyGraphicsData, vSystem->graphicsData, refPos3DF, EXUmath::unitMatrix3DF, Index2ItemID(itemNumber, ItemType::Object, vSystem->GetSystemID()));
 
@@ -77,6 +78,7 @@ void VisualizationObjectRigidBody::CallUserFunction(const VisualizationSettings&
 	Matrix3DF A; A.CopyFrom(cObject->GetRotationMatrix(Vector3D(0.), ConfigurationType::Visualization));
 
 	BodyGraphicsData bodyGraphicsData;
+	GraphicsDataContext context("graphicsDataUserFunction of object " + EXUstd::ToString(itemNumber)); //names it in errors of the graphics data (#2304)
 	PyWriteBodyGraphicsDataList(pyBodyGraphicsData, bodyGraphicsData);
 	EXUvis::AddBodyGraphicsData(bodyGraphicsData, vSystem->graphicsData, refPos3DF, A, Index2ItemID(itemNumber, ItemType::Object, vSystem->GetSystemID()));
 
@@ -99,6 +101,7 @@ void VisualizationObjectRigidBody2D::CallUserFunction(const VisualizationSetting
 	Matrix3DF A; A.CopyFrom(cObject->GetRotationMatrix(Vector3D(0.), ConfigurationType::Visualization));
 
 	BodyGraphicsData bodyGraphicsData;
+	GraphicsDataContext context("graphicsDataUserFunction of object " + EXUstd::ToString(itemNumber)); //names it in errors of the graphics data (#2304)
 	PyWriteBodyGraphicsDataList(pyBodyGraphicsData, bodyGraphicsData);
 	EXUvis::AddBodyGraphicsData(bodyGraphicsData, vSystem->graphicsData, refPos3DF, A, Index2ItemID(itemNumber, ItemType::Object, vSystem->GetSystemID()));
 
@@ -118,6 +121,7 @@ void VisualizationObjectGenericODE2::CallUserFunction(const VisualizationSetting
 	Float3 refPos3DF = Float3(0);
 
 	BodyGraphicsData bodyGraphicsData;
+	GraphicsDataContext context("graphicsDataUserFunction of object " + EXUstd::ToString(itemNumber)); //names it in errors of the graphics data (#2304)
 	PyWriteBodyGraphicsDataList(pyBodyGraphicsData, bodyGraphicsData);
 	EXUvis::AddBodyGraphicsData(bodyGraphicsData, vSystem->graphicsData, refPos3DF, EXUmath::unitMatrix3DF, Index2ItemID(itemNumber, ItemType::Object, vSystem->GetSystemID()));
 
@@ -137,6 +141,7 @@ void VisualizationObjectUserBody::CallUserFunction(const VisualizationSettings& 
 	}, "VisualizationObjectUserBody::CallUserFunction");
 
 	BodyGraphicsData bodyGraphicsData;
+	GraphicsDataContext context("graphicsDataUserFunction of object " + EXUstd::ToString(itemNumber)); //names it in errors of the graphics data (#2304)
 	PyWriteBodyGraphicsDataList(pyBodyGraphicsData, bodyGraphicsData);
 	EXUvis::AddBodyGraphicsData(bodyGraphicsData, vSystem->graphicsData, Float3(0), EXUmath::unitMatrix3DF, Index2ItemID(itemNumber, ItemType::Object, vSystem->GetSystemID()));
 }

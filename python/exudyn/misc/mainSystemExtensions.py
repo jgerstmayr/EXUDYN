@@ -3415,13 +3415,11 @@ def CreateDistanceSensor(mbs, generalContactIndex,
         p0list = list(positionOrMarker)
     elif type(positionOrMarker)==exudyn.MarkerIndex:
         markerNumber = float(int(positionOrMarker))
-        try:
-            p0list = mbs.GetMarkerOutput(markerNumber=positionOrMarker,
-                                         variableType=exudyn.OutputVariableType.Position, 
-                                         configuration=exudyn.ConfigurationType.Reference)
-            p0list = list(p0list)
-        except exudyn.ExudynError:
-            p0list = [0,0,0] #this was just a trial, otherwise initialize with zeros (e.g. for special objects where this does not work)
+        #the reference position of the marker, if it has one; else zeros
+        if exudyn.OutputVariableType.Position in mbs.Inspect(positionOrMarker, exudyn.InspectType.OutputVariables):
+            p0list = list(mbs.GetMarkerOutput(markerNumber=positionOrMarker,
+                                              variableType=exudyn.OutputVariableType.Position,
+                                              configuration=exudyn.ConfigurationType.Reference))
     else:
         raise ValueError('CreateDistanceSensor: positionOrMarker must be either MarkerIndex or 3D position as list or numpy.array')
 

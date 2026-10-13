@@ -553,6 +553,28 @@ static bool PyReadNumbers(const py::object& value, std::vector<T>& values)
 	return true;
 }
 
+//the item whose graphics data is read, and the entry of its list that is read (#2304); one Python call at a time
+static STDstring graphicsDataContext;
+static Index graphicsDataEntry = -1;
+
+GraphicsDataContext::GraphicsDataContext(const STDstring& context) : previous(graphicsDataContext) { graphicsDataContext = context; }
+GraphicsDataContext::~GraphicsDataContext() { graphicsDataContext = previous; }
+
+//! an error in graphics data, with the item and the entry of the list it is in
+static void GraphicsDataError(const STDstring& message, PyErrorType errorType)
+{
+	STDstring where = graphicsDataContext;
+	if (graphicsDataEntry >= 0) { where += (where.empty() ? "" : ", ") + STDstring("graphicsData[") + EXUstd::ToString(graphicsDataEntry) + "]"; }
+	PyError((where.empty() ? STDstring() : where + ": ") + message, errorType);
+}
+
+//! false if a point of the graphics data is not-a-number or infinite (#2305)
+static bool GraphicsPointsAreFinite(const std::vector<float>& values)
+{
+	for (float value : values) { if (!std::isfinite(value)) { return false; } }
+	return true;
+}
+
 //! object graphics data for ground objects, rigid bodies and mass points
 bool PyWriteBodyGraphicsDataList(const py::dict& d, const char* item, BodyGraphicsData& data)
 {
@@ -571,14 +593,17 @@ bool PyWriteBodyGraphicsDataList(const py::dict& d, const char* item, BodyGraphi
 //! python function to read BodyGraphicsData from py::object, which must be a list of graphicsData dictionaries
 bool PyWriteBodyGraphicsDataList(const py::object object, BodyGraphicsData& data, bool eraseData)
 {
+	graphicsDataEntry = -1;
 	if (eraseData) { data.FlushData(); }
 
 	if (EPyUtils::IsPyTypeListOrArray(object)) //must be a list of graphicsData dictionaries
 	{
 		py::list list = (py::list)(object);
 
+		graphicsDataEntry = -1;
 		for (auto graphicsItem : list)
 		{
+			graphicsDataEntry++;
 			//now read out dictionaries, containing graphics structures:
 			//{'type':'Line', 'color':[1,0,0,1], 'data':[x1,y1,z1, x2,y2,z2, ...]}
 			//{'type':'Circle', 'color':[1,0,0,1], 'radius': r, 'position': [x,y,z], 'normal': [x,y,z]}
@@ -607,15 +632,15 @@ bool PyWriteBodyGraphicsDataList(const py::object object, BodyGraphicsData& data
 								if (EPyUtils::IsPyTypeListOrArray(gColor)) 
 								{
 									std::vector<float> stdColorList; //flat, or as rows (#2709)
-									if (!PyReadNumbers(gColor, stdColorList)) { PyError("GraphicsData: expected a list or numpy array of numbers, flat or as rows", PyErrorType::valueError); return false; }
+									if (!PyReadNumbers(gColor, stdColorList)) { GraphicsDataError("GraphicsData: expected a list or numpy array of numbers, flat or as rows", PyErrorType::valueError); return false; }
 
 									if (stdColorList.size() == 4)
 									{
 										line.color1 = line.color2 = Float4(stdColorList);
 									}
-									else { PyError("GraphicsData Line: color must be a float list or numpy array with 4 components", PyErrorType::valueError); return false; }
+									else { GraphicsDataError("GraphicsData Line: color must be a float list or numpy array with 4 components", PyErrorType::valueError); return false; }
 								}
-								else { PyError("GraphicsData Line: color must be a float list or numpy array with 4 components", PyErrorType::valueError); return false; }
+								else { GraphicsDataError("GraphicsData Line: color must be a float list or numpy array with 4 components", PyErrorType::valueError); return false; }
 							}
 							if (gDict.contains("data"))
 							{
@@ -623,13 +648,14 @@ bool PyWriteBodyGraphicsDataList(const py::object object, BodyGraphicsData& data
 								if (EPyUtils::IsPyTypeListOrArray(gData)) 
 								{
 									std::vector<float> gd; //flat, or as rows (#2709)
-									if (!PyReadNumbers(gData, gd)) { PyError("GraphicsData: expected a list or numpy array of numbers, flat or as rows", PyErrorType::valueError); return false; }
+									if (!PyReadNumbers(gData, gd)) { GraphicsDataError("GraphicsData: expected a list or numpy array of numbers, flat or as rows", PyErrorType::valueError); return false; }
 
 									Index n = (Index)gd.size() / 3;
 									if (n * 3 != (Index)gd.size() || n < 2)
 									{
-										PyError("GraphicsData Line: data must be a float list or numpy array with exactly 3*n components and n > 1", PyErrorType::valueError); return false;
+										GraphicsDataError("GraphicsData Line: data must be a float list or numpy array with exactly 3*n components and n > 1", PyErrorType::valueError); return false;
 									}
+									if (!GraphicsPointsAreFinite(gd)) { GraphicsDataError("GraphicsData Line: data contains not-a-number (nan) or infinity", PyErrorType::valueError); return false; }
 
 									for (Index k = 1; k < n; k++)
 									{
@@ -638,10 +664,10 @@ bool PyWriteBodyGraphicsDataList(const py::object object, BodyGraphicsData& data
 										data.glLines.Append(line);
 									}
 								}
-								else { PyError("GraphicsData Line: data must be a float list or numpy array with 3*n components", PyErrorType::valueError); return false; }
+								else { GraphicsDataError("GraphicsData Line: data must be a float list or numpy array with 3*n components", PyErrorType::valueError); return false; }
 
 							}
-							else { PyError("GraphicsData Line: must contain 'data' with (x1,y1,z1,...) line coordinates ", PyErrorType::valueError); return false; }
+							else { GraphicsDataError("GraphicsData Line: must contain 'data' with (x1,y1,z1,...) line coordinates ", PyErrorType::valueError); return false; }
 						} //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 						else if (pyTypeStr == "Lines")
 						{
@@ -653,7 +679,7 @@ bool PyWriteBodyGraphicsDataList(const py::object object, BodyGraphicsData& data
 								if (shape == "quadratic") { nPointsPerLine = 3; }
 								else if (shape != "linear")
 								{
-									PyError("GraphicsData Lines: shape must be 'linear' or 'quadratic', but got '" + shape + "'", PyErrorType::valueError); return false;
+									GraphicsDataError("GraphicsData Lines: shape must be 'linear' or 'quadratic', but got '" + shape + "'", PyErrorType::valueError); return false;
 								}
 							}
 							STDstring perLine = EXUstd::ToString(nPointsPerLine);
@@ -662,25 +688,26 @@ bool PyWriteBodyGraphicsDataList(const py::object object, BodyGraphicsData& data
 							std::vector<float> stdColorsList;
 							if (!gDict.contains("points"))
 							{
-								PyError("GraphicsData Lines: must contain 'points', " + perLine + " points per line", PyErrorType::valueError); return false;
+								GraphicsDataError("GraphicsData Lines: must contain 'points', " + perLine + " points per line", PyErrorType::valueError); return false;
 							}
 							if (!PyReadNumbers(gDict["points"], stdPointsList))
 							{
-								PyError("GraphicsData Lines: points must be a float list or numpy array, with rows of 3 floats or flat", PyErrorType::valueError); return false;
+								GraphicsDataError("GraphicsData Lines: points must be a float list or numpy array, with rows of 3 floats or flat", PyErrorType::valueError); return false;
 							}
 							Index nLines = (Index)stdPointsList.size() / (3 * nPointsPerLine);
 							if (nLines * 3 * nPointsPerLine != (Index)stdPointsList.size() || nLines < 1)
 							{
-								PyError("GraphicsData Lines: for n lines, points must contain " + perLine + "*n points of 3 floats, n > 0", PyErrorType::valueError); return false;
+								GraphicsDataError("GraphicsData Lines: for n lines, points must contain " + perLine + "*n points of 3 floats, n > 0", PyErrorType::valueError); return false;
 							}
+							if (!GraphicsPointsAreFinite(stdPointsList)) { GraphicsDataError("GraphicsData Lines: points contain not-a-number (nan) or infinity", PyErrorType::valueError); return false; }
 
 							if (!gDict.contains("colors"))
 							{
-								PyError("GraphicsData Lines: must contain 'colors', 4 floats per point", PyErrorType::valueError); return false;
+								GraphicsDataError("GraphicsData Lines: must contain 'colors', 4 floats per point", PyErrorType::valueError); return false;
 							}
 							if (!PyReadNumbers(gDict["colors"], stdColorsList) || (Index)stdColorsList.size() != nLines * nPointsPerLine * 4)
 							{
-								PyError("GraphicsData Lines: for n lines, colors must contain " + perLine + "*n colors of 4 floats, with rows of 4 floats or flat", PyErrorType::valueError); return false;
+								GraphicsDataError("GraphicsData Lines: for n lines, colors must contain " + perLine + "*n colors of 4 floats, with rows of 4 floats or flat", PyErrorType::valueError); return false;
 							}
 
 							auto Point = [&stdPointsList](Index i) { return Float3({ stdPointsList[3 * i], stdPointsList[3 * i + 1], stdPointsList[3 * i + 2] }); };
@@ -724,15 +751,15 @@ bool PyWriteBodyGraphicsDataList(const py::object object, BodyGraphicsData& data
 								if (EPyUtils::IsPyTypeListOrArray(gColor)) 
 								{
 									std::vector<float> stdColorList; //flat, or as rows (#2709)
-									if (!PyReadNumbers(gColor, stdColorList)) { PyError("GraphicsData: expected a list or numpy array of numbers, flat or as rows", PyErrorType::valueError); return false; }
+									if (!PyReadNumbers(gColor, stdColorList)) { GraphicsDataError("GraphicsData: expected a list or numpy array of numbers, flat or as rows", PyErrorType::valueError); return false; }
 
 									if (stdColorList.size() == 4)
 									{
 										circle.color = Float4(stdColorList);
 									}
-									else { PyError("GraphicsData Circle: color must be a float list or numpy array with 4 components", PyErrorType::valueError); return false; }
+									else { GraphicsDataError("GraphicsData Circle: color must be a float list or numpy array with 4 components", PyErrorType::valueError); return false; }
 								}
-								else { PyError("GraphicsData Circle: color must be a float list or numpy array with 4 components", PyErrorType::valueError); return false; }
+								else { GraphicsDataError("GraphicsData Circle: color must be a float list or numpy array with 4 components", PyErrorType::valueError); return false; }
 							}
 
 							if (gDict.contains("radius"))
@@ -741,11 +768,12 @@ bool PyWriteBodyGraphicsDataList(const py::object object, BodyGraphicsData& data
 								if (py::isinstance<py::float_>(gData) || py::isinstance<py::int_>(gData)) //must be a scalar value
 								{
 									circle.radius = (py::float_)(gData);
+									if (!std::isfinite(circle.radius)) { GraphicsDataError("GraphicsData Circle: radius is not-a-number (nan) or infinity", PyErrorType::valueError); return false; }
 								}
-								else { PyError("GraphicsData Circle: radius must be a scalar value", PyErrorType::valueError); return false; }
+								else { GraphicsDataError("GraphicsData Circle: radius must be a scalar value", PyErrorType::valueError); return false; }
 
 							}
-							else { PyError("GraphicsData Circle: must contain 'radius'", PyErrorType::valueError); return false; }
+							else { GraphicsDataError("GraphicsData Circle: must contain 'radius'", PyErrorType::valueError); return false; }
 
 							if (gDict.contains("position"))
 							{
@@ -753,19 +781,20 @@ bool PyWriteBodyGraphicsDataList(const py::object object, BodyGraphicsData& data
 								if (EPyUtils::IsPyTypeListOrArray(gData))  //must be a list of 3 coordinates
 								{
 									std::vector<float> gd; //flat, or as rows (#2709)
-									if (!PyReadNumbers(gData, gd)) { PyError("GraphicsData: expected a list or numpy array of numbers, flat or as rows", PyErrorType::valueError); return false; }
+									if (!PyReadNumbers(gData, gd)) { GraphicsDataError("GraphicsData: expected a list or numpy array of numbers, flat or as rows", PyErrorType::valueError); return false; }
 
 									if (gd.size() != 3)
 									{
-										PyError("GraphicsData Circle: position must be a float list or numpy array with 3 components", PyErrorType::valueError); return false;
+										GraphicsDataError("GraphicsData Circle: position must be a float list or numpy array with 3 components", PyErrorType::valueError); return false;
 									}
 
 									circle.point = Float3(gd);
+									if (circle.point.HasInvalid()) { GraphicsDataError("GraphicsData Circle: position contains not-a-number (nan) or infinity", PyErrorType::valueError); return false; }
 								}
-								else { PyError("GraphicsData Circle: position must be a float list or numpy array with 3 components", PyErrorType::valueError); return false; }
+								else { GraphicsDataError("GraphicsData Circle: position must be a float list or numpy array with 3 components", PyErrorType::valueError); return false; }
 
 							}
-							else { PyError("GraphicsData Circle: must contain 'position'", PyErrorType::valueError); return false; }
+							else { GraphicsDataError("GraphicsData Circle: must contain 'position'", PyErrorType::valueError); return false; }
 
 							data.glCirclesXY.Append(circle);
 
@@ -785,7 +814,7 @@ bool PyWriteBodyGraphicsDataList(const py::object object, BodyGraphicsData& data
 								{
 									text.fontSize = (py::float_)(gData);
 								}
-								else { PyError("GraphicsData Text: 'fontSize' must be of type float or int", PyErrorType::typeError); return false; }
+								else { GraphicsDataError("GraphicsData Text: 'fontSize' must be of type float or int", PyErrorType::typeError); return false; }
 							}
 
 							if (gDict.contains("offset"))
@@ -794,16 +823,16 @@ bool PyWriteBodyGraphicsDataList(const py::object object, BodyGraphicsData& data
 								if (EPyUtils::IsPyTypeListOrArray(gData))
 								{
 									std::vector<float> stdOffsetList; //flat, or as rows (#2709)
-									if (!PyReadNumbers(gData, stdOffsetList)) { PyError("GraphicsData: expected a list or numpy array of numbers, flat or as rows", PyErrorType::valueError); return false; }
+									if (!PyReadNumbers(gData, stdOffsetList)) { GraphicsDataError("GraphicsData: expected a list or numpy array of numbers, flat or as rows", PyErrorType::valueError); return false; }
 
 									if (stdOffsetList.size() == 2)
 									{
 										text.offsetX = stdOffsetList[0];
 										text.offsetY = stdOffsetList[1];
 									}
-									else { PyError("GraphicsData Text: offset must be a float list or numpy array with 2 components", PyErrorType::valueError); return false; }
+									else { GraphicsDataError("GraphicsData Text: offset must be a float list or numpy array with 2 components", PyErrorType::valueError); return false; }
 								}
-								else { PyError("GraphicsData Text: offset must be a float list or numpy array with 2 components", PyErrorType::valueError); return false; }
+								else { GraphicsDataError("GraphicsData Text: offset must be a float list or numpy array with 2 components", PyErrorType::valueError); return false; }
 							}
 
 							if (gDict.contains("color"))
@@ -812,15 +841,15 @@ bool PyWriteBodyGraphicsDataList(const py::object object, BodyGraphicsData& data
 								if (EPyUtils::IsPyTypeListOrArray(gColor)) 
 								{
 									std::vector<float> stdColorList; //flat, or as rows (#2709)
-									if (!PyReadNumbers(gColor, stdColorList)) { PyError("GraphicsData: expected a list or numpy array of numbers, flat or as rows", PyErrorType::valueError); return false; }
+									if (!PyReadNumbers(gColor, stdColorList)) { GraphicsDataError("GraphicsData: expected a list or numpy array of numbers, flat or as rows", PyErrorType::valueError); return false; }
 
 									if (stdColorList.size() == 4)
 									{
 										text.color = Float4(stdColorList);
 									}
-									else { PyError("GraphicsData Text: color must be a float list or numpy array with 4 components", PyErrorType::valueError); return false; }
+									else { GraphicsDataError("GraphicsData Text: color must be a float list or numpy array with 4 components", PyErrorType::valueError); return false; }
 								}
-								else { PyError("GraphicsData Text: color must be a float list or numpy array with 4 components", PyErrorType::valueError); return false; }
+								else { GraphicsDataError("GraphicsData Text: color must be a float list or numpy array with 4 components", PyErrorType::valueError); return false; }
 							}
 
 							if (gDict.contains("position"))
@@ -829,19 +858,20 @@ bool PyWriteBodyGraphicsDataList(const py::object object, BodyGraphicsData& data
 								if (EPyUtils::IsPyTypeListOrArray(gData))  //must be a list of 3 coordinates
 								{
 									std::vector<float> gd; //flat, or as rows (#2709)
-									if (!PyReadNumbers(gData, gd)) { PyError("GraphicsData: expected a list or numpy array of numbers, flat or as rows", PyErrorType::valueError); return false; }
+									if (!PyReadNumbers(gData, gd)) { GraphicsDataError("GraphicsData: expected a list or numpy array of numbers, flat or as rows", PyErrorType::valueError); return false; }
 
 									if (gd.size() != 3)
 									{
-										PyError("GraphicsData Text: position must be a float list or numpy array with 3 components", PyErrorType::valueError); return false;
+										GraphicsDataError("GraphicsData Text: position must be a float list or numpy array with 3 components", PyErrorType::valueError); return false;
 									}
 
 									text.point = Float3(gd);
+									if (text.point.HasInvalid()) { GraphicsDataError("GraphicsData Text: position contains not-a-number (nan) or infinity", PyErrorType::valueError); return false; }
 
 								}
-								else { PyError("GraphicsData Text: position must be a float list or numpy array with 3 components", PyErrorType::valueError); return false; }
+								else { GraphicsDataError("GraphicsData Text: position must be a float list or numpy array with 3 components", PyErrorType::valueError); return false; }
 							}
-							else { PyError("GraphicsData Text: must contain 'position'", PyErrorType::valueError); return false; }
+							else { GraphicsDataError("GraphicsData Text: must contain 'position'", PyErrorType::valueError); return false; }
 
 							if (gDict.contains("text"))
 							{
@@ -856,37 +886,37 @@ bool PyWriteBodyGraphicsDataList(const py::object object, BodyGraphicsData& data
 
 									data.glTexts.Append(text);
 								}
-								else { PyError("GraphicsData Text: 'text' must be of type string", PyErrorType::typeError); return false; }
+								else { GraphicsDataError("GraphicsData Text: 'text' must be of type string", PyErrorType::typeError); return false; }
 
 							}
-							else { PyError("GraphicsData Text: must contain 'text' providing a string", PyErrorType::valueError); return false; }
+							else { GraphicsDataError("GraphicsData Text: must contain 'text' providing a string", PyErrorType::valueError); return false; }
 
 						} //end Text ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 						else if (pyTypeStr == "Spheres")
 						{
 							//{'type':'Spheres', 'points':[x0,y0,z0, ...], 'radii':[r0, ...] or r, 'colors':[R0,G0,B0,A0, ...] or [R,G,B,A],
 							// 'resolution': nTiles} (#2709)
-							if (!gDict.contains("points")) { PyError("GraphicsData Spheres: must contain 'points' with 3*n coordinates of the centers", PyErrorType::valueError); return false; }
+							if (!gDict.contains("points")) { GraphicsDataError("GraphicsData Spheres: must contain 'points' with 3*n coordinates of the centers", PyErrorType::valueError); return false; }
 							std::vector<float> points;
-							if (!PyReadNumbers(gDict["points"], points)) { PyError("GraphicsData Spheres: 'points' must be a list or numpy array, with rows of 3 floats or flat", PyErrorType::valueError); return false; }
+							if (!PyReadNumbers(gDict["points"], points)) { GraphicsDataError("GraphicsData Spheres: 'points' must be a list or numpy array, with rows of 3 floats or flat", PyErrorType::valueError); return false; }
 							Index n = (Index)points.size() / 3;
-							if (n * 3 != (Index)points.size()) { PyError("GraphicsData Spheres: 'points' must have 3*n components", PyErrorType::valueError); return false; }
+							if (n * 3 != (Index)points.size()) { GraphicsDataError("GraphicsData Spheres: 'points' must have 3*n components", PyErrorType::valueError); return false; }
 
 							std::vector<float> radii(1, 0.1f);
 							if (gDict.contains("radii"))
 							{
 								py::object gRadii = gDict["radii"];
 								if (py::isinstance<py::float_>(gRadii) || py::isinstance<py::int_>(gRadii)) { radii[0] = py::cast<float>(gRadii); }
-								else if (!PyReadNumbers(gRadii, radii)) { PyError("GraphicsData Spheres: 'radii' must be a float or a list or numpy array of floats", PyErrorType::valueError); return false; }
+								else if (!PyReadNumbers(gRadii, radii)) { GraphicsDataError("GraphicsData Spheres: 'radii' must be a float or a list or numpy array of floats", PyErrorType::valueError); return false; }
 							}
-							if (radii.size() != 1 && (Index)radii.size() != n) { PyError("GraphicsData Spheres: 'radii' must be one value or one per point", PyErrorType::valueError); return false; }
+							if (radii.size() != 1 && (Index)radii.size() != n) { GraphicsDataError("GraphicsData Spheres: 'radii' must be one value or one per point", PyErrorType::valueError); return false; }
 
 							std::vector<float> colors({ EXUvis::defaultColorFloat4[0], EXUvis::defaultColorFloat4[1], EXUvis::defaultColorFloat4[2], EXUvis::defaultColorFloat4[3] });
 							if (gDict.contains("colors") && !PyReadNumbers(gDict["colors"], colors))
 							{
-								PyError("GraphicsData Spheres: 'colors' must be a list or numpy array, with rows of 4 floats or flat", PyErrorType::valueError); return false;
+								GraphicsDataError("GraphicsData Spheres: 'colors' must be a list or numpy array, with rows of 4 floats or flat", PyErrorType::valueError); return false;
 							}
-							if (colors.size() != 4 && (Index)colors.size() != 4 * n) { PyError("GraphicsData Spheres: 'colors' must be one RGBA color or one per point", PyErrorType::valueError); return false; }
+							if (colors.size() != 4 && (Index)colors.size() != 4 * n) { GraphicsDataError("GraphicsData Spheres: 'colors' must be one RGBA color or one per point", PyErrorType::valueError); return false; }
 
 							//a resolution < 0, the default of graphics.Spheres, takes general.sphereTiling when drawn (#2877)
 							Index resolution = glSphereResolutionFromSettings;
@@ -900,8 +930,9 @@ bool PyWriteBodyGraphicsDataList(const py::object object, BodyGraphicsData& data
 								GLSphere sphere;
 								sphere.itemID = -1;
 								sphere.point = Float3({ points[3 * i], points[3 * i + 1], points[3 * i + 2] });
-								if (sphere.point.HasInvalid()) { PyError("GraphicsData Spheres: 'points' contain not-a-number (nan) or infinity", PyErrorType::valueError); return false; }
+								if (sphere.point.HasInvalid()) { GraphicsDataError("GraphicsData Spheres: 'points' contain not-a-number (nan) or infinity", PyErrorType::valueError); return false; }
 								sphere.radius = radii.size() == 1 ? radii[0] : radii[i];
+								if (!std::isfinite(sphere.radius)) { GraphicsDataError("GraphicsData Spheres: 'radii' contain not-a-number (nan) or infinity", PyErrorType::valueError); return false; }
 								Index c = colors.size() == 4 ? 0 : 4 * i;
 								sphere.color = Float4({ colors[c], colors[c + 1], colors[c + 2], colors[c + 3] });
 								sphere.resolution = resolution;
@@ -926,7 +957,7 @@ bool PyWriteBodyGraphicsDataList(const py::object object, BodyGraphicsData& data
 								if (EPyUtils::IsPyTypeListOrArray(gDictList)) 
 								{
 									std::vector<float> stdGList; //flat, or as rows (#2709)
-									if (!PyReadNumbers(gDictList, stdGList)) { PyError("GraphicsData: expected a list or numpy array of numbers, flat or as rows", PyErrorType::valueError); return false; }
+									if (!PyReadNumbers(gDictList, stdGList)) { GraphicsDataError("GraphicsData: expected a list or numpy array of numbers, flat or as rows", PyErrorType::valueError); return false; }
 
 									if ((stdGList.size() % 3) == 0)
 									{
@@ -935,17 +966,17 @@ bool PyWriteBodyGraphicsDataList(const py::object object, BodyGraphicsData& data
 										for (Index i = 0; i < n; i++)
 										{
 											points[i] = Float3({ stdGList[i * 3],stdGList[i * 3 + 1],stdGList[i * 3 + 2] });
-											if (points[i].HasInvalid()) { PyError("GraphicsData::TriangleList::points contain not-a-number (nan) or infinity", PyErrorType::valueError); return false; }
+											if (points[i].HasInvalid()) { GraphicsDataError("GraphicsData::TriangleList::points contain not-a-number (nan) or infinity", PyErrorType::valueError); return false; }
 											//pout << "p" << i << " = " << points[i] << "\n";
 										}
 									}
-									else { PyError("GraphicsData::TriangleList::points must be a float list or numpy array with 3*n components, n being the number of points", PyErrorType::valueError); return false; }
+									else { GraphicsDataError("GraphicsData::TriangleList::points must be a float list or numpy array with 3*n components, n being the number of points", PyErrorType::valueError); return false; }
 								}
-								else { PyError("GraphicsData::TriangleList::points must be a float list or numpy array", PyErrorType::valueError); return false; }
+								else { GraphicsDataError("GraphicsData::TriangleList::points must be a float list or numpy array", PyErrorType::valueError); return false; }
 							}
 							else
 							{
-								PyError("GraphicsData::TriangleList must contain 'points' being a float list or numpy array with n*(x,y,z)-components, n being the number of points", PyErrorType::valueError);
+								GraphicsDataError("GraphicsData::TriangleList must contain 'points' being a float list or numpy array with n*(x,y,z)-components, n being the number of points", PyErrorType::valueError);
 							}
 
 							if (gDict.contains("colors"))
@@ -954,7 +985,7 @@ bool PyWriteBodyGraphicsDataList(const py::object object, BodyGraphicsData& data
 								if (EPyUtils::IsPyTypeListOrArray(gDictList)) 
 								{
 									std::vector<float> stdGList; //flat, or as rows (#2709)
-									if (!PyReadNumbers(gDictList, stdGList)) { PyError("GraphicsData: expected a list or numpy array of numbers, flat or as rows", PyErrorType::valueError); return false; }
+									if (!PyReadNumbers(gDictList, stdGList)) { GraphicsDataError("GraphicsData: expected a list or numpy array of numbers, flat or as rows", PyErrorType::valueError); return false; }
 
 									if ((stdGList.size() % 4) == 0 && (int)(stdGList.size() / 4) == points.NumberOfItems())
 									{
@@ -965,9 +996,9 @@ bool PyWriteBodyGraphicsDataList(const py::object object, BodyGraphicsData& data
 											colors[i] = Float4({ stdGList[i * 4], stdGList[i * 4 + 1], stdGList[i * 4 + 2], stdGList[i * 4 + 3] });
 										}
 									}
-									else { PyError("GraphicsData::TriangleList::colors must be a float list or numpy array with 4*n components (R,G,B,A), n being the identical to the number of points", PyErrorType::valueError); return false; }
+									else { GraphicsDataError("GraphicsData::TriangleList::colors must be a float list or numpy array with 4*n components (R,G,B,A), n being the identical to the number of points", PyErrorType::valueError); return false; }
 								}
-								else { PyError("GraphicsData::TriangleList::colors must be a float list or numpy array", PyErrorType::valueError); return false; }
+								else { GraphicsDataError("GraphicsData::TriangleList::colors must be a float list or numpy array", PyErrorType::valueError); return false; }
 							}
 							else
 							{   //set default color
@@ -982,7 +1013,7 @@ bool PyWriteBodyGraphicsDataList(const py::object object, BodyGraphicsData& data
 								if (EPyUtils::IsPyTypeListOrArray(gDictList)) 
 								{
 									std::vector<float> stdGList; //flat, or as rows (#2709)
-									if (!PyReadNumbers(gDictList, stdGList)) { PyError("GraphicsData: expected a list or numpy array of numbers, flat or as rows", PyErrorType::valueError); return false; }
+									if (!PyReadNumbers(gDictList, stdGList)) { GraphicsDataError("GraphicsData: expected a list or numpy array of numbers, flat or as rows", PyErrorType::valueError); return false; }
 
 									if ((stdGList.size() % 3) == 0 && (int)(stdGList.size() / 3) == points.NumberOfItems())
 									{
@@ -993,9 +1024,9 @@ bool PyWriteBodyGraphicsDataList(const py::object object, BodyGraphicsData& data
 											normals[i] = Float3({ stdGList[i * 3],stdGList[i * 3 + 1],stdGList[i * 3 + 2] });
 										}
 									}
-									else { PyError("GraphicsData::TriangleList::normals must be a float list or numpy array with 3*n components (nx,ny,nz), n being the identical to the number of points", PyErrorType::valueError); return false; }
+									else { GraphicsDataError("GraphicsData::TriangleList::normals must be a float list or numpy array with 3*n components (nx,ny,nz), n being the identical to the number of points", PyErrorType::valueError); return false; }
 								}
-								else { PyError("GraphicsData::TriangleList::normals must be a float list or numpy array", PyErrorType::valueError); return false; }
+								else { GraphicsDataError("GraphicsData::TriangleList::normals must be a float list or numpy array", PyErrorType::valueError); return false; }
 							}
 							else
 							{   //set default normal
@@ -1010,7 +1041,7 @@ bool PyWriteBodyGraphicsDataList(const py::object object, BodyGraphicsData& data
 								if (EPyUtils::IsPyTypeListOrArray(gDictList)) 
 								{
 									std::vector<Index> stdGList; //flat, or as rows (#2709)
-									if (!PyReadNumbers(gDictList, stdGList)) { PyError("GraphicsData: expected a list or numpy array of numbers, flat or as rows", PyErrorType::valueError); return false; }
+									if (!PyReadNumbers(gDictList, stdGList)) { GraphicsDataError("GraphicsData: expected a list or numpy array of numbers, flat or as rows", PyErrorType::valueError); return false; }
 
 									if ((stdGList.size() % 3) == 0)
 									{
@@ -1032,7 +1063,7 @@ bool PyWriteBodyGraphicsDataList(const py::object object, BodyGraphicsData& data
 												}
 												else
 												{
-													PyError(STDstring("GraphicsData::TriangleList::triangles: point indices need to be in range [0, points.size()-1], but got index: ") + EXUstd::ToString(ind), PyErrorType::indexError); return false;
+													GraphicsDataError(STDstring("GraphicsData::TriangleList::triangles: point indices need to be in range [0, points.size()-1], but got index: ") + EXUstd::ToString(ind), PyErrorType::indexError); return false;
 												}
 											}
 											if (!normalsDefined)
@@ -1051,20 +1082,20 @@ bool PyWriteBodyGraphicsDataList(const py::object object, BodyGraphicsData& data
 											//pout << "trig" << i << " = " << trig.points[0] << "," << trig.points[0] << "," << trig.points[0] << "\n";
 										}
 									}
-									else { PyError("GraphicsData::TriangleList::triangles must be a float list or numpy array with 3*n components, n being the number of triangles", PyErrorType::valueError); return false; }
+									else { GraphicsDataError("GraphicsData::TriangleList::triangles must be a float list or numpy array with 3*n components, n being the number of triangles", PyErrorType::valueError); return false; }
 								}
-								else { PyError("GraphicsData::TriangleList::triangles must be a float list or numpy array", PyErrorType::valueError); return false; }
+								else { GraphicsDataError("GraphicsData::TriangleList::triangles must be a float list or numpy array", PyErrorType::valueError); return false; }
 							}
 							else if (!gDict.contains("triangles6"))
 							{
-								PyError("GraphicsData::TriangleList must contain 'triangles' being a float list or numpy array with n*(point0,point1,point2)-components, n being the number of triangles; point0, point1, point2 ... point indices of one triangle; or 'triangles6' with 6 indices per triangle", PyErrorType::valueError);
+								GraphicsDataError("GraphicsData::TriangleList must contain 'triangles' being a float list or numpy array with n*(point0,point1,point2)-components, n being the number of triangles; point0, point1, point2 ... point indices of one triangle; or 'triangles6' with 6 indices per triangle", PyErrorType::valueError);
 							}
 
 							if (gDict.contains("triangles6")) //6-node quadratic triangles: corners counter-clockwise, then the mid-side nodes 01, 12, 20 (#2709)
 							{
 								std::vector<Index> indices;
-								if (!PyReadNumbers(gDict["triangles6"], indices)) { PyError("GraphicsData::TriangleList::triangles6 must be a list or numpy array, with rows of 6 indices or flat", PyErrorType::valueError); return false; }
-								if ((indices.size() % 6) != 0) { PyError("GraphicsData::TriangleList::triangles6 must be an int list or numpy array with 6*n components, n being the number of triangles", PyErrorType::valueError); return false; }
+								if (!PyReadNumbers(gDict["triangles6"], indices)) { GraphicsDataError("GraphicsData::TriangleList::triangles6 must be a list or numpy array, with rows of 6 indices or flat", PyErrorType::valueError); return false; }
+								if ((indices.size() % 6) != 0) { GraphicsDataError("GraphicsData::TriangleList::triangles6 must be an int list or numpy array with 6*n components, n being the number of triangles", PyErrorType::valueError); return false; }
 								Index np = points.NumberOfItems();
 								GLTriangle6 trig6;
 								trig6.itemID = -1;
@@ -1073,7 +1104,7 @@ bool PyWriteBodyGraphicsDataList(const py::object object, BodyGraphicsData& data
 								Index nTrigs6 = (Index)indices.size() / 6;
 								for (Index ind : indices)
 								{
-									if (!EXUstd::IndexIsInRange(ind, 0, np)) { PyError(STDstring("GraphicsData::TriangleList::triangles6: point indices need to be in range [0, points.size()-1], but got index: ") + EXUstd::ToString(ind), PyErrorType::indexError); return false; }
+									if (!EXUstd::IndexIsInRange(ind, 0, np)) { GraphicsDataError(STDstring("GraphicsData::TriangleList::triangles6: point indices need to be in range [0, points.size()-1], but got index: ") + EXUstd::ToString(ind), PyErrorType::indexError); return false; }
 								}
 								//without normals: at a point the mean of the normals of the geometry of the triangles that share it, so
 								//that the shading is smooth across the elements, whose geometric normals jump at their edges
@@ -1113,15 +1144,15 @@ bool PyWriteBodyGraphicsDataList(const py::object object, BodyGraphicsData& data
 								if (EPyUtils::IsPyTypeListOrArray(gColor)) 
 								{
 									std::vector<float> stdColorList; //flat, or as rows (#2709)
-									if (!PyReadNumbers(gColor, stdColorList)) { PyError("GraphicsData: expected a list or numpy array of numbers, flat or as rows", PyErrorType::valueError); return false; }
+									if (!PyReadNumbers(gColor, stdColorList)) { GraphicsDataError("GraphicsData: expected a list or numpy array of numbers, flat or as rows", PyErrorType::valueError); return false; }
 
 									if (stdColorList.size() == 4)
 									{
 										edgeColor = Float4(stdColorList);
 									}
-									else { PyError("GraphicsData TriangleList: edgeColor must be a float list or numpy array with 4 components", PyErrorType::valueError); return false; }
+									else { GraphicsDataError("GraphicsData TriangleList: edgeColor must be a float list or numpy array with 4 components", PyErrorType::valueError); return false; }
 								}
-								else { PyError("GraphicsData TriangleList: edgeColor must be a float list or numpy array with 4 components", PyErrorType::valueError); return false; }
+								else { GraphicsDataError("GraphicsData TriangleList: edgeColor must be a float list or numpy array with 4 components", PyErrorType::valueError); return false; }
 							}
 
 							if (gDict.contains("edges"))
@@ -1131,16 +1162,16 @@ bool PyWriteBodyGraphicsDataList(const py::object object, BodyGraphicsData& data
 								py::object gData = gDict["edges"]; //this is necessary to make isinstance work
 								if (EPyUtils::IsPyTypeListOrArray(gData)) 
 								{
-									if (!PyReadNumbers(gData, stdEdgesList)) { PyError("GraphicsData TriangleList: 'edges' must be a list or numpy array, with rows of 2 indices or flat", PyErrorType::valueError); return false; }
+									if (!PyReadNumbers(gData, stdEdgesList)) { GraphicsDataError("GraphicsData TriangleList: 'edges' must be a list or numpy array, with rows of 2 indices or flat", PyErrorType::valueError); return false; }
 
 									nEdges = (Index)stdEdgesList.size() / 2;
 
 									if (nEdges * 2 != (Index)stdEdgesList.size())
 									{
-										PyError("GraphicsData TriangleList: for n edges, points must be an int vector with exactly 2*n components", PyErrorType::valueError); return false;
+										GraphicsDataError("GraphicsData TriangleList: for n edges, points must be an int vector with exactly 2*n components", PyErrorType::valueError); return false;
 									}
 								}
-								else { PyError("GraphicsData TriangleList: 'edges' must be a list with 2*n integer values", PyErrorType::valueError); return false; }
+								else { GraphicsDataError("GraphicsData TriangleList: 'edges' must be a list with 2*n integer values", PyErrorType::valueError); return false; }
 
 								GLLine line; line.itemID = -1;
 								line.color1 = edgeColor;
@@ -1158,7 +1189,7 @@ bool PyWriteBodyGraphicsDataList(const py::object object, BodyGraphicsData& data
 								std::vector<int> stdEdgesList;
 								if (!PyReadNumbers(gDict["edges3"], stdEdgesList) || stdEdgesList.size() % 3 != 0)
 								{
-									PyError("GraphicsData TriangleList: 'edges3' must be a list or numpy array with 3*n integers, flat or with rows of 3", PyErrorType::valueError); return false;
+									GraphicsDataError("GraphicsData TriangleList: 'edges3' must be a list or numpy array with 3*n integers, flat or with rows of 3", PyErrorType::valueError); return false;
 								}
 								GLLine3 edge; edge.itemID = -1;
 								edge.colors = { edgeColor, edgeColor, edgeColor };
@@ -1169,7 +1200,7 @@ bool PyWriteBodyGraphicsDataList(const py::object object, BodyGraphicsData& data
 										Index index = stdEdgesList[3 * k + j];
 										if (!EXUstd::IndexIsInRange(index, 0, points.NumberOfItems()))
 										{
-											PyError("GraphicsData TriangleList: 'edges3' contains the point index " + EXUstd::ToString(index) + ", but there are " + EXUstd::ToString(points.NumberOfItems()) + " points", PyErrorType::valueError); return false;
+											GraphicsDataError("GraphicsData TriangleList: 'edges3' contains the point index " + EXUstd::ToString(index) + ", but there are " + EXUstd::ToString(points.NumberOfItems()) + " points", PyErrorType::valueError); return false;
 										}
 										edge.points[j] = points[index];
 									}
@@ -1187,20 +1218,21 @@ bool PyWriteBodyGraphicsDataList(const py::object object, BodyGraphicsData& data
 						} //end triangles +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 						else
 						{
-							PyError(STDstring("GraphicsData type '") + pyTypeStr + "' not supported", PyErrorType::valueError);
+							GraphicsDataError(STDstring("GraphicsData type '") + pyTypeStr + "' not supported", PyErrorType::valueError);
 						}
 					} //if (py::isinstance<py::str>(pyType))
 				} //gDict.contains("type")
 				else
 				{
-					PyError("GraphicsData must contain a 'type'", PyErrorType::valueError); return false;
+					GraphicsDataError("GraphicsData must contain a 'type'", PyErrorType::valueError); return false;
 				}
 			}
 		}//for-loop graphics items
+		graphicsDataEntry = -1;
 	}
 	else 
 	{ 
-		PyError("GraphicsData must be of type list: [graphicsDict1, graphicsDict2, ...]", PyErrorType::typeError); return false; 
+		GraphicsDataError("GraphicsData must be of type list: [graphicsDict1, graphicsDict2, ...]", PyErrorType::typeError); return false; 
 	}
 	return true;
 }
@@ -1423,6 +1455,7 @@ bool PyWriteBodyGraphicsDataListOfLists(const py::object object, BodyGraphicsDat
 				BodyGraphicsData oneData;
 				Index i = data.Append(oneData);
 
+				GraphicsDataContext context(graphicsDataContext + (graphicsDataContext.empty() ? "" : ", ") + "link " + EXUstd::ToString(i));
 				PyWriteBodyGraphicsDataList(pyObject, data[i], false);
 			}
 		}, "Exception raised when writing BodyGraphicsDataList: check format");

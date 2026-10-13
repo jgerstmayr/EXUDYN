@@ -126,7 +126,7 @@ try:
     mbs2.SolveDynamic(simulationSettings)
 except ValueError as e:
     refused = int('rotationMatrixUserFunction is not given' in str(e))
-exu.Print('missing rotationMatrixUserFunction refused:', refused)
+exu.Print('a rigid marker without rotationMatrixUserFunction is refused, as it must be:', bool(refused))
 
 u += int(difference > 1e-8) + (1 - refused)
 exu.Print('solution of userRigidBodyTest=', u)
