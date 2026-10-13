@@ -783,6 +783,94 @@ namespace RigidBodyMath {
 		return angles;
 	}
 
+	//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+	//the symmetric basis of two non-parallel vectors, the frame of two slope vectors (#2228, docs/dev/design/symmetricBasis.md);
+	//templated on the number type, so that automatic differentiation takes them
+
+	//! the symmetric basis of the non-parallel vectors a, b: with the unit vectors ah, bh, c = ah.bh, ku = 1/|ah+bh| =
+	//! 1/sqrt(2+2c), kv = 1/|ah-bh| = 1/sqrt(2-2c) and p, m = (ku +- kv)/sqrt(2): e1 = p ah + m bh, e2 = m ah + p bh in the
+	//! plane of a and b at 45 degrees to their bisector, e3 = e1 x e2 = 2 ku kv (ah x bh); orthonormal, symmetric in a and
+	//! b, independent of their lengths, the rotation of the polar decomposition of [ah, bh]
+	template<class TReal>
+	inline void SymmetricBasis(const TReal* a, const TReal* b, TReal* e1, TReal* e2, TReal* e3)
+	{
+		using std::sqrt;
+		const Real sqrt1_2 = 0.70710678118654752440;
+		TReal ra = 1. / sqrt(a[0] * a[0] + a[1] * a[1] + a[2] * a[2]);
+		TReal rb = 1. / sqrt(b[0] * b[0] + b[1] * b[1] + b[2] * b[2]);
+		TReal ah[3] = { ra * a[0], ra * a[1], ra * a[2] };
+		TReal bh[3] = { rb * b[0], rb * b[1], rb * b[2] };
+		TReal c = ah[0] * bh[0] + ah[1] * bh[1] + ah[2] * bh[2];
+		TReal ku = 1. / sqrt(2. + 2. * c);
+		TReal kv = 1. / sqrt(2. - 2. * c);
+		TReal p = sqrt1_2 * (ku + kv);
+		TReal m = sqrt1_2 * (ku - kv);
+		TReal k3 = 2. * ku * kv;
+		for (Index i = 0; i < 3; i++)
+		{
+			e1[i] = p * ah[i] + m * bh[i];
+			e2[i] = m * ah[i] + p * bh[i];
+		}
+		e3[0] = k3 * (ah[1] * bh[2] - ah[2] * bh[1]);
+		e3[1] = k3 * (ah[2] * bh[0] - ah[0] * bh[2]);
+		e3[2] = k3 * (ah[0] * bh[1] - ah[1] * bh[0]);
+	}
+
+	//! the rotation Jacobian G (3 x 6) of SymmetricBasis(a, b): omega = G [a_t; b_t], omega the global angular velocity.
+	//! From ei_t = omega x ei: omega = (e3.e2_t) e1 - (e3.e1_t) e2 - (e1.e2_t) e3, and each of the three rows reduces to
+	//! dot products, with d(x/|x|) = (I - xh xh^T) dx/|x|, e3 normal to ah, bh, uh, vh and e1.uh = e1.vh = 1/sqrt(2)
+	template<class TReal>
+	inline void SymmetricBasisRotationJacobian(const TReal* a, const TReal* b, TReal G[3][6])
+	{
+		using std::sqrt;
+		const Real sqrt1_2 = 0.70710678118654752440;
+		TReal la = sqrt(a[0] * a[0] + a[1] * a[1] + a[2] * a[2]);
+		TReal lb = sqrt(b[0] * b[0] + b[1] * b[1] + b[2] * b[2]);
+		TReal ra = 1. / la;
+		TReal rb = 1. / lb;
+		TReal ah[3] = { ra * a[0], ra * a[1], ra * a[2] };
+		TReal bh[3] = { rb * b[0], rb * b[1], rb * b[2] };
+		TReal c = ah[0] * bh[0] + ah[1] * bh[1] + ah[2] * bh[2];
+		TReal ku = 1. / sqrt(2. + 2. * c);
+		TReal kv = 1. / sqrt(2. - 2. * c);
+		TReal uh[3], vh[3], e1[3], e2[3], e3[3];
+		for (Index i = 0; i < 3; i++)
+		{
+			uh[i] = ku * (ah[i] + bh[i]);
+			vh[i] = kv * (ah[i] - bh[i]);
+			e1[i] = sqrt1_2 * (uh[i] + vh[i]);
+			e2[i] = sqrt1_2 * (uh[i] - vh[i]);
+		}
+		e3[0] = e1[1] * e2[2] - e1[2] * e2[1];
+		e3[1] = e1[2] * e2[0] - e1[0] * e2[2];
+		e3[2] = e1[0] * e2[1] - e1[1] * e2[0];
+
+		//dot products of the projections: vh.ah = (1-c) kv, vh.bh = -(1-c) kv, uh.ah = uh.bh = (1+c) ku
+		TReal vhah = (1. - c) * kv;
+		TReal uhah = (1. + c) * ku;
+		for (Index i = 0; i < 3; i++)
+		{
+			//rows of e3.e1_t and e3.e2_t: e3.uh_t = ku (e3.a_t/|a| + e3.b_t/|b|), e3.vh_t = kv (e3.a_t/|a| - e3.b_t/|b|)
+			TReal e3uhA = ku * ra * e3[i], e3uhB = ku * rb * e3[i];
+			TReal e3vhA = kv * ra * e3[i], e3vhB = -kv * rb * e3[i];
+			TReal e3e1A = sqrt1_2 * (e3uhA + e3vhA), e3e1B = sqrt1_2 * (e3uhB + e3vhB);
+			TReal e3e2A = sqrt1_2 * (e3uhA - e3vhA), e3e2B = sqrt1_2 * (e3uhB - e3vhB);
+			//row of e1.e2_t = (e1.uh_t - e1.vh_t)/sqrt(2), e1.uh_t = vh.(ah_t + bh_t) ku/sqrt(2), e1.vh_t = uh.(ah_t - bh_t) kv/sqrt(2),
+			//x.ah_t = (x - (x.ah) ah).a_t/|a|
+			TReal vhaI = ra * (vh[i] - vhah * ah[i]);
+			TReal vhbI = rb * (vh[i] + vhah * bh[i]);
+			TReal uhaI = ra * (uh[i] - uhah * ah[i]);
+			TReal uhbI = rb * (uh[i] - uhah * bh[i]);
+			TReal e1e2A = 0.5 * (ku * vhaI - kv * uhaI);
+			TReal e1e2B = 0.5 * (ku * vhbI + kv * uhbI);
+			for (Index r = 0; r < 3; r++)
+			{
+				G[r][i] = e1[r] * e3e2A - e2[r] * e3e1A - e3[r] * e1e2A;
+				G[r][3 + i] = e1[r] * e3e2B - e2[r] * e3e1B - e3[r] * e1e2B;
+			}
+		}
+	}
+
 } //namespace RigidBodyMath
 
 

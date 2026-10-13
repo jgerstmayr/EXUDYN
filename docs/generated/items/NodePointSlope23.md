@@ -101,11 +101,16 @@ All nine coordinates are global (absolute nodal coordinates). The node is used b
 
 ### Rotation
 
-`MarkerNodeRigid` and the output variables of the rotation take the orthonormal frame of the slopes:
-$\rv_z$ normalized is its $z$-axis, $\rv_y$ orthogonalized against it and normalized its $y$-axis, and the
-$x$-axis is their cross product. The angular velocity $\tomega$ and the rotation Jacobian
-$\Jm_{rot} = \partial \tomega / \partial \dot \qv$ are the derivatives of this frame, so joints and torques act
-consistently with it (#2763).
+`MarkerNodeRigid` and the output variables of the rotation take the frame of the slopes $\av = \rv_y$,
+$\bv = \rv_z$, the symmetric basis of the
+two slopes: with the unit slopes $\hat\av$, $\hat\bv$, the two in-plane axes are
+$(\hat\uv \pm \hat\vv)/\sqrt 2$ with $\hat\uv$, $\hat\vv$ the normalized sum and difference of $\hat\av$ and $\hat\bv$ - at
+45 degrees to their bisector, the first as close to $\hat\av$ as the second to $\hat\bv$ -, and the third axis is their
+cross product. The frame is symmetric in the two slopes, independent of their lengths, and the rotation of the polar
+decomposition of $[\hat\av, \hat\bv]$ (#2228).
+Its first two axes are the $y$- and $z$-axis, the third the $x$-axis. The angular velocity $\tomega$ and the
+rotation Jacobian $\Jm_{rot} = \partial \tomega / \partial \dot \qv$ are the derivatives of this frame, so joints
+and torques act consistently with it.
 
 ### Action on the equations of motion
 
@@ -143,4 +148,4 @@ exu.sys['testResult'] = mbs.GetNodeOutput(n1, exu.OutputVariableType.Displacemen
 ```
 
 
-Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`ANCFBeamEigTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/ANCFBeamEigTest.py) (TM), [`ANCFBeamTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/ANCFBeamTest.py) (TM), [`ANCFCableBeamDampingTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/ANCFCableBeamDampingTest.py) (TM), [`energiesFlexibleBodiesTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/energiesFlexibleBodiesTest.py) (TM), [`geometricallyExactBeamTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/geometricallyExactBeamTest.py) (TM), [`rightAngleFrame.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/rightAngleFrame.py) (TM)
+Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`ANCFBeamEigTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/ANCFBeamEigTest.py) (TM), [`ANCFBeamGeometricallyExactComparisonTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/ANCFBeamGeometricallyExactComparisonTest.py) (TM), [`ANCFBeamTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/ANCFBeamTest.py) (TM), [`ANCFCableBeamDampingTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/ANCFCableBeamDampingTest.py) (TM), [`energiesFlexibleBodiesTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/energiesFlexibleBodiesTest.py) (TM), [`geometricallyExactBeamTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/geometricallyExactBeamTest.py) (TM), [`rightAngleFrame.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/rightAngleFrame.py) (TM)

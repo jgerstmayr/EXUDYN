@@ -8,10 +8,10 @@ Every entry carries the **type** of the issue, then its **priority** and its **e
 
 General information on current version:
 
-- Exudyn version = 1.13.81.dev1
+- Exudyn version = 1.13.82.dev1
 - last change = 2026-10-13
 - Number of issues = 2992
-- Number of resolved issues = 2858 (81 in current version)
+- Number of resolved issues = 2859 (82 in current version)
 
 ## Resolved issues and resolved bugs before version 1.13
 
@@ -9152,10 +9152,6 @@ The following list contains the issues which have been **RESOLVED** in the accor
 - `TESTING` `MEDIUM EFF` ANCFThinPlate (#2229)
   - description: add cylindrical test problem; compare to ANCFCable2D
   - **remarks:** planned as revision2026b step RG4.20.5 (triage 2026-10-07)
-  - date raised: 2026-01-18
-- `EXTENSION` `LOW EFF` Symmetric basis (#2228)
-  - description: add a function to compute a basis for two given non-parallel vectors; the average of the two vectors is computed from averaging normalized vectors (=mid axis) and according projections; used for NodeSlope12
-  - **remarks:** planned as revision2026b step RG18.1 (triage 2026-10-07)
   - date raised: 2026-01-18
 - `EXTENSION` `MEDIUM EFF` ANCFThinPlate (#2226)
   - description: compute optimal slopes scaling in ShellMesh functionality

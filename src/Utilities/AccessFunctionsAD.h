@@ -25,6 +25,8 @@
 
 #include "Utilities/AutomaticDifferentiation.h"
 #include "Linalg/ConstSizeMatrix.h"
+#include "Linalg/RigidBodyMath.h" //SymmetricBasis, the frame of two slopes (#2228)
+#include <type_traits>
 
 namespace AccessFunctionsAD {
 
@@ -163,54 +165,74 @@ namespace AccessFunctionsAD {
 	}
 
 	//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-	//the frame of two slopes, s = [y, z] (NodePointSlope23, ObjectANCFBeam; #2763): z normalized, y orthogonalized
-	//against it, x = y x z - EXUmath::OrthogonalBasisFromVectorsZY; the rotation Jacobian, the angular velocity and the
-	//derivative of the transposed Jacobian times a torque are its derivatives, so all agree with the rotation matrix
+	//the frame of two slopes s = [s0, s1], the symmetric basis e1, e2, e3 of RigidBodyMath::SymmetricBasis (#2228): the
+	//slopes x, y of NodePointSlope12 and ObjectANCFThinPlate give the columns [e1, e2, e3], the slopes y, z of
+	//NodePointSlope23 and ObjectANCFBeam the columns [e3, e1, e2] (x = y x z); the angular velocity, the rotation
+	//Jacobian and its derivative do not depend on the order of the columns
 
-	//! the rotation matrix of the slopes s = [y, z], the operations of EXUmath::OrthogonalBasisFromVectorsZY written out,
-	//! so that they also take the nested automatic differentiation
-	template<class TReal>
+	//! which slopes s holds
+	enum class SlopesFrame { XY, YZ };
+
+	//! the rotation matrix of the slopes s
+	template<SlopesFrame frame, class TReal>
 	inline void SlopesRotation(const TReal* s, ConstSizeMatrixBase<TReal, 9>& A)
 	{
-		using std::sqrt;
-		TReal z[3] = { s[3], s[4], s[5] };
-		TReal zNorm = sqrt(z[0] * z[0] + z[1] * z[1] + z[2] * z[2]);
-		for (Index c = 0; c < 3; c++) { z[c] = z[c] / zNorm; }
-		TReal h = s[0] * z[0] + s[1] * z[1] + s[2] * z[2];
-		TReal y[3] = { s[0] - h * z[0], s[1] - h * z[1], s[2] - h * z[2] };
-		TReal yNorm = sqrt(y[0] * y[0] + y[1] * y[1] + y[2] * y[2]);
-		for (Index c = 0; c < 3; c++) { y[c] = y[c] / yNorm; }
-		const TReal x[3] = { y[1] * z[2] - y[2] * z[1], y[2] * z[0] - y[0] * z[2], y[0] * z[1] - y[1] * z[0] };
+		TReal e1[3], e2[3], e3[3];
+		RigidBodyMath::SymmetricBasis(&s[0], &s[3], e1, e2, e3);
 		A.SetNumberOfRowsAndColumns(3, 3);
-		for (Index r = 0; r < 3; r++) { A(r, 0) = x[r]; A(r, 1) = y[r]; A(r, 2) = z[r]; }
+		for (Index r = 0; r < 3; r++)
+		{
+			if (frame == SlopesFrame::XY) { A(r, 0) = e1[r]; A(r, 1) = e2[r]; A(r, 2) = e3[r]; }
+			else { A(r, 0) = e3[r]; A(r, 1) = e1[r]; A(r, 2) = e2[r]; }
+		}
 	}
 
-	//! d(omega)/d(s_t), 3 x 6: column j is the axial vector of dA/ds_j A^T
+	//! the rotation matrix of the slopes s, for Real
+	template<SlopesFrame frame>
+	inline Matrix3D SlopesRotationMatrix(const Real* s)
+	{
+		ConstSizeMatrixBase<Real, 9> A;
+		SlopesRotation<frame>(s, A);
+		Matrix3D rotation;
+		rotation.CopyFrom(A);
+		return rotation;
+	}
+
+	//! d(omega)/d(s_t), 3 x 6, in closed form (RigidBodyMath::SymmetricBasisRotationJacobian)
 	inline void SlopesRotationJacobian(const Real* s, Matrix& value)
 	{
-		RotationJacobian<6>(s, 6, 0, [](const auto* ss, auto& A) { SlopesRotation(ss, A); }, value);
+		Real G[3][6];
+		RigidBodyMath::SymmetricBasisRotationJacobian(&s[0], &s[3], G);
+		value.SetNumberOfRowsAndColumns(3, 6);
+		for (Index r = 0; r < 3; r++)
+		{
+			for (Index j = 0; j < 6; j++) { value(r, j) = G[r][j]; }
+		}
 	}
 
-	//! the angular velocity of the slopes s at the rates s_t, J_rot s_t
+	//! the angular velocity of the slopes s at the rates s_t, G s_t
 	inline Vector3D SlopesAngularVelocity(const Real* s, const Real* s_t)
 	{
-		Matrix jacobian;
-		SlopesRotationJacobian(s, jacobian);
+		Real G[3][6];
+		RigidBodyMath::SymmetricBasisRotationJacobian(&s[0], &s[3], G);
 		Vector3D omega(0.);
 		for (Index r = 0; r < 3; r++)
 		{
-			for (Index j = 0; j < 6; j++) { omega[r] += jacobian(r, j) * s_t[j]; }
+			for (Index j = 0; j < 6; j++) { omega[r] += G[r][j] * s_t[j]; }
 		}
 		return omega;
 	}
 
-	//! d(J_rot^T torque)/ds, 6 x 6
+	//! d(G^T torque)/ds, 6 x 6, by automatic differentiation of the closed-form G
 	inline void SlopesRotationJacobianTTimesTorqueDerivative(const Real* s, const Vector3D& torque, Matrix& value)
 	{
-		Vector6D torqueOnly({ 0., 0., 0., torque[0], torque[1], torque[2] });
-		JacobianTransposedTimesVectorDerivative<6>(s, 6, 0,
-			[](const auto* ss, auto* p) { for (Index i = 0; i < 3; i++) { p[i] = 0. * ss[0]; } }, //no position: no force acts
-			[](const auto* ss, auto& A) { SlopesRotation(ss, A); }, true, torqueOnly, value);
+		Derivative<6>(s, 6, 0, 6, [&torque](const auto* ss, auto* g)
+		{
+			using TReal = typename std::remove_const<typename std::remove_reference<decltype(ss[0])>::type>::type;
+			TReal G[3][6];
+			RigidBodyMath::SymmetricBasisRotationJacobian(&ss[0], &ss[3], G);
+			for (Index j = 0; j < 6; j++) { g[j] = torque[0] * G[0][j] + torque[1] * G[1][j] + torque[2] * G[2][j]; }
+		}, value);
 	}
 
 } //namespace AccessFunctionsAD

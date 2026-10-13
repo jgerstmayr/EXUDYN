@@ -109,6 +109,8 @@ graphicsDataErrorsTest
 solverFailureMessageTest
 sensorUserFunctionItemsTest
 userFunctionTimerTest
+ANCFBeamGeometricallyExactComparisonTest
+ANCFThinPlateRotationTest
 userTypesTest
 rotationMarkerDeprecationTest
 contactFrictionCircleCable2DnoFrictionTest

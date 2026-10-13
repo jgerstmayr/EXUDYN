@@ -28,7 +28,7 @@ import exudyn.cMath as cMath #the math functions of the C++ code, the same bits 
 
 #public API of this module; kept complete by tools/checkAll.py (#2444)
 __all__ = [
-    'eulerParameters0', 'ComputeOrthonormalBasisVectors', 'ComputeOrthonormalBasis', 'GramSchmidt',
+    'eulerParameters0', 'ComputeOrthonormalBasisVectors', 'ComputeOrthonormalBasis', 'GramSchmidt', 'SymmetricBasis', 'SymmetricBasisRotationJacobian',
     'Skew', 'Skew2Vec', 'ComputeSkewMatrix', 'EulerParameters2G', 'EulerParameters2GLocal',
     'EulerParameters2RotationMatrix', 'RotationMatrix2EulerParameters',
     'AngularVelocity2EulerParameters_t', 'RotationVector2RotationMatrix',
@@ -74,6 +74,34 @@ def GramSchmidt(vector0, vector1):
     """compute Gram-Schmidt projection of given 3D vector 1 on vector 0 and return normalized triad (vector0, vector1, vector0 x vector1) as the rows of a 3x3 numpy array, unpacked as `[v0, v1, v2] = GramSchmidt(vector0, vector1)`; a zero vector or parallel vectors raise a ValueError; computed in C++ by exudyn.cUtilities.GramSchmidt
     """
     return cu.GramSchmidt(vector0, vector1)
+
+
+#%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+def SymmetricBasis(vector0, vector1):
+    """the rotation matrix of the symmetric basis of two non-parallel vectors, the frame of the slope nodes and of the ANCF beam and plate: its first two columns lie in the plane of the vectors at 45 degrees to their bisector, the first as close to vector0 as the second to vector1, the third is their cross product; symmetric in the two vectors, independent of their lengths, and the rotation of the polar decomposition of the normalized vectors; zero or parallel vectors raise a ValueError; computed in C++ by exudyn.cUtilities.SymmetricBasis
+
+    Args:
+        vector0: the first vector, 3D
+        vector1: the second vector, 3D, not parallel to vector0
+
+    Returns:
+        the 3x3 rotation matrix [e1, e2, e3] (columns) as numpy array
+    """
+    return cu.SymmetricBasis(vector0, vector1)
+
+
+#%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+def SymmetricBasisRotationJacobian(vector0, vector1):
+    """the 3x6 rotation Jacobian G of SymmetricBasis(vector0, vector1): the global angular velocity of the basis is G @ [vector0_t, vector1_t] for the time derivatives of the two vectors; computed in C++ by exudyn.cUtilities.SymmetricBasisRotationJacobian
+
+    Args:
+        vector0: the first vector, 3D
+        vector1: the second vector, 3D, not parallel to vector0
+
+    Returns:
+        the 3x6 matrix G as numpy array
+    """
+    return cu.SymmetricBasisRotationJacobian(vector0, vector1)
 
 
 #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++

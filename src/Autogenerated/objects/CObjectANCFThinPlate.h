@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-10-07  00:51:49 (last modified)
+* @date         2026-10-13  22:49:59 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -114,7 +114,7 @@ public: // AUTO:
     //! AUTO:  Flags to determine, which access (forces, moments, connectors, ...) to object are possible
     virtual AccessFunctionType GetAccessFunctionTypes() const override
     {
-        return (AccessFunctionType)((Index)AccessFunctionType::TranslationalVelocity_qt + (Index)AccessFunctionType::JacobianTtimesVector_q + (Index)AccessFunctionType::DisplacementMassIntegral_q);
+        return (AccessFunctionType)((Index)AccessFunctionType::TranslationalVelocity_qt + (Index)AccessFunctionType::AngularVelocity_qt + (Index)AccessFunctionType::JacobianTtimesVector_q + (Index)AccessFunctionType::DisplacementMassIntegral_q);
     }
 
     //! AUTO:  the position Jacobian d(v)/d(q_t) at localPosition, 3 x n
@@ -123,11 +123,11 @@ public: // AUTO:
     //! AUTO:  the mass-weighted position Jacobian int(rho J_pos dV), 3 x n
     virtual void GetMassWeightedPositionJacobian(Matrix& value) const override;
 
+    //! AUTO:  the rotation Jacobian d(omega)/d(q_t), omega global, 3 x n
+    virtual void GetRotationJacobian(const Vector3D& localPosition, Matrix& value) const override;
+
     //! AUTO:  d(J_pos^T force + J_rot^T torque)/dq at localPosition, n x n; false if it is zero
-    virtual bool GetJacobianTransposedTimesVectorDerivative(const Vector3D& localPosition, const Vector6D& forceTorque, Matrix& value) const override
-    {
-        return false; //markers act at the midsurface, where the position is linear in the coordinates and there is no rotation (#2744)
-    }
+    virtual bool GetJacobianTransposedTimesVectorDerivative(const Vector3D& localPosition, const Vector6D& forceTorque, Matrix& value) const override;
 
     //! AUTO:  false if the access functions are not defined at localPosition, with the reason
     virtual bool IsValidLocalPosition(const Vector3D& localPosition, STDstring& reason) const override
@@ -156,8 +156,14 @@ public: // AUTO:
     //! AUTO:  return the (global) acceleration of 'localPosition' according to configuration type
     Vector3D GetAcceleration(const Vector3D& localPosition, ConfigurationType configuration = ConfigurationType::Current) const;
 
+    //! AUTO:  return configuration dependent rotation matrix of node; returns always a 3D matrix
+    virtual Matrix3D GetRotationMatrix(const Vector3D& localPosition, ConfigurationType configuration = ConfigurationType::Current) const override;
+
     //! AUTO:  return configuration dependent angular velocity of node; returns always a 3D Vector, independent of 2D or 3D object; for rigid bodies, the argument localPosition has no effect
     virtual Vector3D GetAngularVelocity(const Vector3D& localPosition, ConfigurationType configuration = ConfigurationType::Current) const override;
+
+    //! AUTO:  return configuration dependent local (=body-fixed) angular velocity of node; in 2D case, this is the same as the global angular velocity; returns always a 3D Vector
+    virtual Vector3D GetAngularVelocityLocal(const Vector3D& localPosition, ConfigurationType configuration = ConfigurationType::Current) const override;
 
     //! AUTO:  return the local position of the center of mass, needed for equations of motion and for massProportionalLoad
     virtual Vector3D GetLocalCenterOfMass() const override
@@ -270,6 +276,10 @@ public: // AUTO:
             (Index64)OutputVariableType::Velocity +
             (Index64)OutputVariableType::Director1 +
             (Index64)OutputVariableType::Director2 +
+            (Index64)OutputVariableType::RotationMatrix +
+            (Index64)OutputVariableType::HomogeneousTransformation +
+            (Index64)OutputVariableType::AngularVelocity +
+            (Index64)OutputVariableType::AngularVelocityLocal +
             (Index64)OutputVariableType::StrainLocal +
             (Index64)OutputVariableType::CurvatureLocal +
             (Index64)OutputVariableType::ForceLocal +

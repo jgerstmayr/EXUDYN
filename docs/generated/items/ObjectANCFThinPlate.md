@@ -14,7 +14,7 @@ OBJECT UNDER CONSTRUCTION: A 3D thin Kirchhoff plate finite element based on the
 ## Interface
 
 - Nodes it takes: [](#sec-item-nodepointslope12)
-- Body markers that can be placed on it: [](#sec-item-markerbodymass), [](#sec-item-markerbodyposition)
+- Body markers that can be placed on it: [](#sec-item-markerbodymass), [](#sec-item-markerbodyposition), [](#sec-item-markerbodyrigid)
 
 ## Parameters
 
@@ -68,6 +68,9 @@ Available as `OutputVariableType` in sensors, `Get...Output()` and other functio
 | Velocity | $\LU{0}{\vv(x,y,z)} = \LU{0}{\dot \rv(x,y,z)}$ | global velocity vector of local position |
 | Director1 | $\rv_x(x,y,z)$ | (axial) slope vector of local position (at $z$=0) |
 | Director2 | $\rv_y(x,y,z)$ | (axial) slope vector of local position (at $z$=0) |
+| RotationMatrix | $\LU{0b}{\Am}$ | rotation matrix of the frame of the slopes $\rv_x$, $\rv_y$ at the mid-surface point of the local position, their symmetric basis; its third axis is the normal; in vector form (row-major) |
+| AngularVelocity | $\LU{0}{\tomega}$ | global angular velocity of the frame of the slopes at the mid-surface point of the local position |
+| AngularVelocityLocal | $\LU{b}{\tomega}$ | local angular velocity of the frame of the slopes at the mid-surface point of the local position |
 | StrainLocal | $[\varepsilon_{11},\, \varepsilon_{22},\, 0,\, 0,\, 0,\, \gamma_{12}]\tp$ | strains at the thickness coordinate $\zeta$ of the local position, $\teps - \zeta\,\frac{h}{2}\,\tkappa$, relative to the reference configuration |
 | CurvatureLocal | $[\kappa_{xx},\, \kappa_{yy},\, \kappa_{xy}]\tp$ | curvatures of the mid-surface relative to the reference configuration, positive where the surface bends towards its normal |
 | ForceLocal | $[N_{xx},\, N_{yy},\, N_{xy}]\tp$ | membrane force resultants per length in the local frame, from the membrane strains relative to the reference configuration |

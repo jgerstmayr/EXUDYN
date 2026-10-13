@@ -703,8 +703,8 @@ items = {
     'kind': 'Object',
     'types': ['Body', 'MultiNoded'],
     'requestedNodeTypes': ['Position', 'PointSlope12'],
-    'accessFunctionTypes': ['TranslationalVelocity_qt', 'JacobianTtimesVector_q', 'DisplacementMassIntegral_q'],
-    'outputVariables': ['Position', 'Displacement', 'Velocity', 'Director1', 'Director2', 'StrainLocal', 'CurvatureLocal', 'ForceLocal', 'TorqueLocal', 'StressLocal', 'Acceleration', 'KineticEnergy', 'PotentialEnergy'],
+    'accessFunctionTypes': ['TranslationalVelocity_qt', 'AngularVelocity_qt', 'JacobianTtimesVector_q', 'DisplacementMassIntegral_q'],
+    'outputVariables': ['Position', 'Displacement', 'Velocity', 'Director1', 'Director2', 'RotationMatrix', 'HomogeneousTransformation', 'AngularVelocity', 'AngularVelocityLocal', 'StrainLocal', 'CurvatureLocal', 'ForceLocal', 'TorqueLocal', 'StressLocal', 'Acceleration', 'KineticEnergy', 'PotentialEnergy'],
     'parameters': {
       'name': {'type': 'String', 'size': '', 'range': '', 'default': '', 'mustBeGiven': False, 'description': "objects's unique name"},
       'thickness': {'type': 'NumpyVector', 'size': '', 'range': '', 'default': '[]', 'mustBeGiven': False, 'description': '[SI:m] thickness of the plate: one value for a constant thickness; 4 values, the thicknesses at the nodes in their order, interpolated bilinearly; or 12 values :math:`[h_0,\\, h_{,s,0},\\, h_{,t,0},\\, \\ldots,\\, h_3,\\, h_{,s,3},\\, h_{,t,3}]`, the thickness and its gradients along the slopes of each node, interpolated with the 12 shape functions of the position; with 4 or 12 values, the stiffness is computed from the local thickness, see strainCoefficients'},

@@ -5353,10 +5353,10 @@ definitions.append(ItemDefinition(
     #### Marker interfaces
 
     The position Jacobian is the interpolation above at the local position, so a force may act at any
-    point of the cross section. The rotation of the cross section is the orthonormal frame of the slopes
-    $\rv_{,y}$ and $\rv_{,z}$ at $x$: $\rv_{,z}$ normalized is its $z$-axis, $\rv_{,y}$ orthogonalized against it and
-    normalized its $y$-axis (the output variable `Rotation`). The angular velocity $\tomega$ and the rotation Jacobian
-    $\Jm_{rot} = \partial \tomega / \partial \dot \qv$ are the derivatives of this frame (#2763), so a torque or a rigid
+    point of the cross section. The rotation of the cross section is the frame of the slopes $\rv_{,y}$ and $\rv_{,z}$
+    at $x$, as for `NodePointSlope23`: their symmetric basis, symmetric in the two slopes and independent of their
+    lengths (#2228; the output variable `Rotation`). The angular velocity $\tomega$ and the rotation Jacobian
+    $\Jm_{rot} = \partial \tomega / \partial \dot \qv$ are the derivatives of this frame, so a torque or a rigid
     marker may act on the element. The position is linear in the coordinates; the derivative of the transposed
     rotation Jacobian times a torque is computed by automatic differentiation.
 
@@ -6234,6 +6234,9 @@ definitions.append(ItemDefinition(
         ItemOutputVariable(OVVelocity, r"""$\LU{0}{\vv(x,y,z)} = \LU{0}{\dot \rv(x,y,z)}$global velocity vector of local position"""),
         ItemOutputVariable(OVDirector1, r"""$\rv_x(x,y,z)$(axial) slope vector of local position (at $z$=0)"""),
         ItemOutputVariable(OVDirector2, r"""$\rv_y(x,y,z)$(axial) slope vector of local position (at $z$=0)"""),
+        ItemOutputVariable(OVRotationMatrix, r"""$\LU{0b}{\Am}$rotation matrix of the frame of the slopes $\rv_x$, $\rv_y$ at the mid-surface point of the local position, their symmetric basis; its third axis is the normal; in vector form (row-major)"""),
+        ItemOutputVariable(OVAngularVelocity, r"""$\LU{0}{\tomega}$global angular velocity of the frame of the slopes at the mid-surface point of the local position"""),
+        ItemOutputVariable(OVAngularVelocityLocal, r"""$\LU{b}{\tomega}$local angular velocity of the frame of the slopes at the mid-surface point of the local position"""),
         ItemOutputVariable(OVStrainLocal, r"""$[\varepsilon_{11},\, \varepsilon_{22},\, 0,\, 0,\, 0,\, \gamma_{12}]\tp$ strains at the thickness coordinate $\zeta$ of the local position, $\teps - \zeta\,\frac{h}{2}\,\tkappa$, relative to the reference configuration"""),
         ItemOutputVariable(OVCurvatureLocal, r'$[\kappa_{xx},\, \kappa_{yy},\, \kappa_{xy}]\tp$ curvatures of the mid-surface relative to the reference configuration, positive where the surface bends towards its normal'),
         ItemOutputVariable(OVForceLocal, r"""$[N_{xx},\, N_{yy},\, N_{xy}]\tp$ membrane force resultants per length in the local frame, from the membrane strains relative to the reference configuration"""),
@@ -6329,8 +6332,8 @@ definitions.append(ItemDefinition(
         ItemAccessFunctionTypes(),
         ItemFunctionDef('GetPositionJacobian'),
         ItemFunctionDef('GetMassWeightedPositionJacobian'),
-        ItemFunctionDef('GetJacobianTransposedTimesVectorDerivative',
-            implementation='return false; //markers act at the midsurface, where the position is linear in the coordinates and there is no rotation (#2744)'),
+        ItemFunctionDef('GetRotationJacobian'),
+        ItemFunctionDef('GetJacobianTransposedTimesVectorDerivative'),
         ItemFunctionDef('IsValidLocalPosition',
             implementation='if (localPosition[2] == 0.) { return true; } reason = "it acts at the plate midsurface only, localPosition[2] = 0"; return false;'),
         ItemFunctionDef('GetOutputVariableBody'),
@@ -6347,7 +6350,9 @@ definitions.append(ItemDefinition(
             pythonName='GetAcceleration',
             args='const Vector3D& localPosition, ConfigurationType configuration = ConfigurationType::Current',
             description=r"return the (global) acceleration of 'localPosition' according to configuration type"),
+        ItemFunctionDef('GetRotationMatrix'),
         ItemFunctionDef('GetAngularVelocity'),
+        ItemFunctionDef('GetAngularVelocityLocal'),
         ItemFunctionDef('GetLocalCenterOfMass',
             implementation='return Vector3D({0.,0.,0.});'),
         ItemFunction(type='const char*', destination=DestMain, cFlags=CFConst,

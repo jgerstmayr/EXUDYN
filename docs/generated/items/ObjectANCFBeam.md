@@ -115,10 +115,10 @@ the curvature and the axial and shear terms, and with a Lobatto rule for the cro
 ### Marker interfaces
 
 The position Jacobian is the interpolation above at the local position, so a force may act at any
-point of the cross section. The rotation of the cross section is the orthonormal frame of the slopes
-$\rv_{,y}$ and $\rv_{,z}$ at $x$: $\rv_{,z}$ normalized is its $z$-axis, $\rv_{,y}$ orthogonalized against it and
-normalized its $y$-axis (the output variable `Rotation`). The angular velocity $\tomega$ and the rotation Jacobian
-$\Jm_{rot} = \partial \tomega / \partial \dot \qv$ are the derivatives of this frame (#2763), so a torque or a rigid
+point of the cross section. The rotation of the cross section is the frame of the slopes $\rv_{,y}$ and $\rv_{,z}$
+at $x$, as for `NodePointSlope23`: their symmetric basis, symmetric in the two slopes and independent of their
+lengths (#2228; the output variable `Rotation`). The angular velocity $\tomega$ and the rotation Jacobian
+$\Jm_{rot} = \partial \tomega / \partial \dot \qv$ are the derivatives of this frame, so a torque or a rigid
 marker may act on the element. The position is linear in the coordinates; the derivative of the transposed
 rotation Jacobian times a torque is computed by automatic differentiation.
 
@@ -157,4 +157,4 @@ exu.sys['testResult'] = mbs.GetNodeOutput(n1, exu.OutputVariableType.Displacemen
 ```
 
 
-Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`ANCFBeamEigTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/ANCFBeamEigTest.py) (TM), [`ANCFBeamTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/ANCFBeamTest.py) (TM), [`ANCFCableBeamDampingTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/ANCFCableBeamDampingTest.py) (TM), [`energiesFlexibleBodiesTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/energiesFlexibleBodiesTest.py) (TM), [`geometricallyExactBeamTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/geometricallyExactBeamTest.py) (TM), [`rightAngleFrame.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/rightAngleFrame.py) (TM)
+Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`ANCFBeamEigTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/ANCFBeamEigTest.py) (TM), [`ANCFBeamGeometricallyExactComparisonTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/ANCFBeamGeometricallyExactComparisonTest.py) (TM), [`ANCFBeamTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/ANCFBeamTest.py) (TM), [`ANCFCableBeamDampingTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/ANCFCableBeamDampingTest.py) (TM), [`energiesFlexibleBodiesTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/energiesFlexibleBodiesTest.py) (TM), [`geometricallyExactBeamTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/geometricallyExactBeamTest.py) (TM), [`rightAngleFrame.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/rightAngleFrame.py) (TM)

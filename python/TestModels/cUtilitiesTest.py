@@ -94,11 +94,33 @@ Close(cu.ComputeOrthonormalBasis(v), B.T, 'ComputeOrthonormalBasis')
 [v0, v1, v2] = cu.GramSchmidt(v, w)
 Close(np.array([v0 @ v1, v0 @ v2, v1 @ v2, v1 @ v1]), [0, 0, 0, 1], 'GramSchmidt')
 
+#the symmetric basis of two vectors (#2228): orthonormal, symmetric, independent of the lengths, the rotation of the polar
+#decomposition of the unit vectors, a and b themselves where they are orthogonal; its rotation Jacobian G is the
+#derivative of the basis
+S = cu.SymmetricBasis(v, w)
+Close(S.T @ S, np.eye(3), 'SymmetricBasis orthonormal')
+Close(np.cross(S[:, 0], S[:, 1]), S[:, 2], 'SymmetricBasis right-handed')
+Close(cu.SymmetricBasis(w, v)[:, 0], S[:, 1], 'SymmetricBasis symmetric')
+Close(cu.SymmetricBasis(3.7*v, 0.2*np.array(w)), S, 'SymmetricBasis independent of the lengths')
+ah = v/cMath.norm(v)
+bh = np.array(w)/cMath.norm(w)
+nh = np.cross(ah, bh)/cMath.norm(np.cross(ah, bh))
+(U, s, Vt) = np.linalg.svd(np.column_stack([ah, bh, nh]))
+Close(U @ Vt, S, 'SymmetricBasis is the polar rotation', 1e-13)
+Close(cu.SymmetricBasis([2, 0, 0], [0, 0.5, 0]), np.eye(3), 'SymmetricBasis of orthogonal vectors')
+G = cu.SymmetricBasisRotationJacobian(v, w)
+(v_t, w_t, epsilon) = (np.array([0.1, 0.4, -0.3]), np.array([-0.2, 0.3, 0.6]), 1e-6)
+S_t = (cu.SymmetricBasis(v + epsilon*v_t, np.array(w) + epsilon*w_t) - cu.SymmetricBasis(v - epsilon*v_t, np.array(w) - epsilon*w_t))/(2*epsilon)
+W = S_t @ S.T
+Close(G @ np.concatenate([v_t, w_t]), [W[2, 1], W[0, 2], W[1, 0]], 'SymmetricBasisRotationJacobian', 1e-9)
+
 #what they refuse
 for (name, Call) in [('Skew of 4 values', lambda: cu.Skew([1, 2, 3, 4])),
                      ('Skew2Vec of a 2x2 matrix', lambda: cu.Skew2Vec(np.eye(2))),
                      ('GramSchmidt of parallel vectors', lambda: cu.GramSchmidt(v, 2*v)),
                      ('GramSchmidt of a zero vector', lambda: cu.GramSchmidt([0, 0, 0], v)),
+                     ('SymmetricBasis of parallel vectors', lambda: cu.SymmetricBasis(v, -2*v)),
+                     ('SymmetricBasisRotationJacobian of a zero vector', lambda: cu.SymmetricBasisRotationJacobian(v, [0, 0, 0])),
                      ('AngularVelocity2RotXYZ_t at the singularity', lambda: cu.AngularVelocity2RotXYZ_t(w, [0, np.pi/2, 0])),
                      ('RotXYZ2RotationMatrix of 4 values', lambda: cu.RotXYZ2RotationMatrix([1, 2, 3, 4])),
                      ('RotationMatrix2RotXYZ of a 3x2 matrix', lambda: cu.RotationMatrix2RotXYZ(np.zeros((3, 2))))]:

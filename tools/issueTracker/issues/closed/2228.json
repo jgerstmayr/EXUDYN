@@ -1,0 +1,15 @@
+{
+  "number": 2228,
+  "title": "Symmetric basis",
+  "author": "JG",
+  "status": "RESOLVED",
+  "type": "EXTENSION",
+  "effort": "LOW",
+  "description": "add a function to compute a basis for two given non-parallel vectors; the average of the two vectors is computed from averaging normalized vectors (=mid axis) and according projections; used for NodeSlope12",
+  "dateRaised": "2026-01-18",
+  "deadline": "2026-07-17",
+  "dateResolved": "2026-10-13 23:23",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "the frame of two slopes is their symmetric basis (RigidBodyMath::SymmetricBasis, exudyn.cUtilities and rigidBodyUtilities.SymmetricBasis), with a closed-form rotation Jacobian and its derivative by AutoDiff: NodePointSlope12, NodePointSlope23, ObjectANCFBeam, and ObjectANCFThinPlate, which gets a rotation for MarkerBodyRigid",
+  "resolvedInVersion": "1.13.82"
+}

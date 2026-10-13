@@ -2,8 +2,14 @@
 
 The frame of a node with two slope vectors - NodePointSlope12 now, and the other 3D nodes with two slopes - as an
 average of both slopes, with its rotation Jacobian and the derivative the implicit solvers need (#2228, revision2026c
-step RG11.8.8). The Python reference and its checks are [symmetricBasis.py](symmetricBasis.py), next to this document;
-the functions move to `exudyn.rigidBodyUtilities` and, with the derivative, to C++ when the concept is decided.
+step RG11.8.8). The Python reference and its checks are [symmetricBasis.py](symmetricBasis.py), next to this document.
+
+Decided 2026-10-13: the symmetric basis, combined form (section 5). It is implemented as the templates
+`RigidBodyMath::SymmetricBasis` and `RigidBodyMath::SymmetricBasisRotationJacobian` (src/Linalg/RigidBodyMath.h),
+bound as `exudyn.cUtilities.SymmetricBasis` and `SymmetricBasisRotationJacobian`; the frame, angular velocity,
+rotation Jacobian and the derivative of its transpose times a torque (automatic differentiation of the closed-form
+Jacobian) of NodePointSlope12, NodePointSlope23, ObjectANCFBeam and ObjectANCFThinPlate are in
+`AccessFunctionsAD` (src/Utilities/AccessFunctionsAD.h). Section 1 describes the state before.
 
 ## 1. What the node computes now
 

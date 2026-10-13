@@ -13,8 +13,8 @@ You can view and download this file on Github: [userFunctionTimerTest.py](https:
 # Details:  The solver timer userFunctions (#2007): with simulationSettings.show.computationTime, the solver measures
 #           the time spent in the user functions of items and of the system - here a spring-damper with a Python
 #           force and a preStep function - and lists it under the CPU-time statistics; a model without user
-#           functions has zero there, and without computationTime nothing is measured. Only the flags are tested,
-#           as times differ from run to run.
+#           functions has zero there, and without computationTime nothing is measured; neither does exudynCPPfast,
+#           which has no solver timers. Only the flags are tested, as times differ from run to run.
 #
 # Author:   Johannes Gerstmayr
 # Date:     2026-10-13
@@ -53,9 +53,10 @@ def UserFunctionTime(withUserFunctions, computationTime):
     timer = mbs.sys['dynamicSolver'].timer
     return (timer.userFunctions, timer.total)
 
+fastModule = '[FAST]' in exu.config.Version(True) #exudynCPPfast measures no timers
 checks = []
 (time, total) = UserFunctionTime(True, True)
-checks.append(('measured with user functions', 0 < time < total))
+checks.append(('measured with user functions (none in the fast module)', (0 < time < total) if not fastModule else time == 0))
 (time, total) = UserFunctionTime(False, True)
 checks.append(('zero without user functions', time == 0))
 (time, total) = UserFunctionTime(True, False)

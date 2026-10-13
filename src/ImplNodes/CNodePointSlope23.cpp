@@ -61,122 +61,66 @@ void CNodePointSlope23::GetPositionJacobian(Matrix& value) const
 }
 
 
+//! the slope coordinates s = [slope0, slope1] (coordinates 3-8), reference + configuration
+static void NodePointSlope23Slopes(const CNodePointSlope23& node, ConfigurationType configuration, Real* s)
+{
+	LinkedDataVector reference(node.GetReferenceCoordinateVector());
+	for (Index i = 0; i < 6; i++) { s[i] = reference[3 + i]; }
+	if (configuration != ConfigurationType::Reference)
+	{
+		LinkedDataVector q(node.GetCoordinateVector(configuration));
+		for (Index i = 0; i < 6; i++) { s[i] += q[3 + i]; }
+	}
+}
+
+//! the frame of the slopes y, z: columns [e3, e1, e2], x = y x z, the symmetric basis of RigidBodyMath::SymmetricBasis (#2228)
 Matrix3D CNodePointSlope23::GetRotationMatrix(ConfigurationType configuration) const
 {
-	//slope vector = pRef' + u'
-	ConstSizeVector<nODE2coordinates> q;
-	q.CopyFrom(GetCoordinateVector(ConfigurationType::Reference));
-	if (!(configuration == ConfigurationType::Reference))
-	{
-		q += GetCoordinateVector(configuration);
-	}
-
-	Matrix3D A;
-	EXUmath::OrthogonalBasisFromVectorsZY(Vector3D({ q[3],q[4],q[5] }), Vector3D({ q[6],q[7],q[8] }), A);
-
-	return A;
+	Real s[6];
+	NodePointSlope23Slopes(*this, configuration, s);
+	return AccessFunctionsAD::SlopesRotationMatrix<AccessFunctionsAD::SlopesFrame::YZ>(s);
 }
 
-//! local function for AutoDiff in GetRotationMatrix_t
-template <class TReal>
-void CNodePointSlope23FRot(const ConstSizeVectorBase<TReal, 6>& q, ConstSizeVectorBase<TReal, 9>& f)
-{
-	ConstSizeMatrixBase<TReal, 9> A;
-	EXUmath::OrthogonalBasisFromVectorsZY(SlimVectorBase< TReal, 3>({ q[0],q[1],q[2] }),
-		SlimVectorBase< TReal, 3>({ q[3],q[4],q[5] }), A);
-	f.CopyFrom(LinkedDataVectorBase<TReal>(A.GetDataPointer(), 9));
-};
-
+//! A_t = skew(omega) A, consistent with GetRotationMatrix and GetAngularVelocity
 Matrix3D CNodePointSlope23::GetRotationMatrix_t(ConfigurationType configuration) const
 {
-	//CHECKandTHROWstring("CNodePointSlope23::GetRotationMatrix_t: not implemented!");
-	const Index nqSlope = 6;
-	const Index dimRot = 9; //number of entries in rotation matrix A
-	ConstSizeVector<nODE2coordinates> q0;
-	q0.CopyFrom(GetCoordinateVector(ConfigurationType::Reference));
-	if (!(configuration == ConfigurationType::Reference))
-	{
-		q0 += GetCoordinateVector(configuration);
-	}
-
-	ConstSizeVector<nqSlope> q23(LinkedDataVector(q0), 3); //fetch q_Y and q_Z from q0
-	ConstSizeVector<nqSlope> q23_t(GetCoordinateVector_t(configuration), 3);
-
-	bool doNumDiff = false;
-	if (doNumDiff)
-	{
-		auto fRot = [](const ConstSizeVector<6>& q23, ConstSizeVector<9>& f) //-> void
-		{
-			Matrix3D A;
-			EXUmath::OrthogonalBasisFromVectorsZY(Vector3D({ q23[0],q23[1],q23[2] }), Vector3D({ q23[3],q23[4],q23[5] }), A);
-			f.CopyFrom(LinkedDataVector(A.GetDataPointer(), 9));
-		};
-
-		ConstSizeMatrix<nqSlope*dimRot> jacobian;
-		ConstSizeVector<dimRot> tempF0;
-		ConstSizeVector<dimRot> tempF1;
-		//EXUmath::NumDiff(fRotTest, dimRot, q, tempF0, tempF1, jacobian);
-		EXUmath::NumDiffVectors<CSVector6D, CSVector9D, ConstSizeMatrix<6 * 9>, dimRot>(fRot, q23, tempF0, tempF1, jacobian);
-
-		Matrix3D Ap(3, 3);
-		LinkedDataVector result(Ap.GetDataPointer(), 9);
-		EXUmath::MultMatrixVectorTemplate<ConstSizeMatrix<nqSlope*dimRot>, ConstSizeVector<nqSlope>, LinkedDataVector>(jacobian, q23_t, result);
-
-		return Ap;
-	}
-	else
-	{
-		ConstSizeMatrix<nqSlope*dimRot> jacobian;
-		EXUmath::AutoDiffVectors<dimRot, nqSlope>(CNodePointSlope23FRot<EXUmath::AutoDiff<nqSlope, Real>>, q23, jacobian);
-		Matrix3D Ap(3, 3);
-		LinkedDataVector result(Ap.GetDataPointer(), 9);
-		EXUmath::MultMatrixVectorTemplate<ConstSizeMatrix<nqSlope*dimRot>, ConstSizeVector<nqSlope>, LinkedDataVector>(jacobian, q23_t, result);
-
-		return Ap;
-	}
-
+	return RigidBodyMath::Vector2SkewMatrix(GetAngularVelocity(configuration)) * GetRotationMatrix(configuration);
 }
 
-//! the angular velocity of the frame of the slopes, omega = J_rot q_t, consistent with GetRotationMatrix (#2763)
+//! the angular velocity of the frame of the slopes, omega = G s_t, consistent with GetRotationMatrix (#2228)
 Vector3D CNodePointSlope23::GetAngularVelocity(ConfigurationType configuration) const
 {
-	ConstSizeVector<nODE2coordinates> q;
-	q.CopyFrom(GetCoordinateVector(ConfigurationType::Reference));
-	if (!(configuration == ConfigurationType::Reference))
-	{
-		q += GetCoordinateVector(configuration);
-	}
+	Real s[6];
+	NodePointSlope23Slopes(*this, configuration, s);
 	LinkedDataVector q_t(GetCoordinateVector_t(configuration));
-	return AccessFunctionsAD::SlopesAngularVelocity(&q[3], &q_t[3]);
+	return AccessFunctionsAD::SlopesAngularVelocity(s, &q_t[3]);
 }
 
-//! AUTO:  return configuration dependent velocity of node; returns always a 3D Vector
+//! the angular velocity in the frame of the slopes
 Vector3D CNodePointSlope23::GetAngularVelocityLocal(ConfigurationType configuration) const
 {
 	return GetRotationMatrix(configuration).GetTransposed() * GetAngularVelocity(configuration);
 }
 
-//! d(omega)/d(q_t), 3 x 9: the derivative of the frame of the slopes, consistent with GetRotationMatrix (#2763)
+//! d(omega)/d(q_t), 3 x 9: the rotation Jacobian of the symmetric basis on the slope coordinates (#2228)
 void CNodePointSlope23::GetRotationJacobian(Matrix& value) const
 {
-	ConstSizeVector<nODE2coordinates> q;
-	q.CopyFrom(GetReferenceCoordinateVector());
-	q += GetCurrentCoordinateVector();
+	Real s[6];
+	NodePointSlope23Slopes(*this, ConfigurationType::Current, s);
 	Matrix slopesJacobian;
-	AccessFunctionsAD::SlopesRotationJacobian(&q[3], slopesJacobian);
+	AccessFunctionsAD::SlopesRotationJacobian(s, slopesJacobian);
 	value.SetNumberOfRowsAndColumns(3, nODE2coordinates);
 	value.SetAll(0.);
 	value.SetSubmatrix(slopesJacobian, 0, 3);
 }
 
-//! d(J_rot^T vector)/dq, 9 x 9, in the current configuration (#2763)
+//! d(J_rot^T vector)/dq, 9 x 9, in the current configuration (#2228)
 void CNodePointSlope23::GetRotationJacobianTTimesVector_q(const Vector3D& vector, Matrix& jacobian_q) const
 {
-	ConstSizeVector<nODE2coordinates> q;
-	q.CopyFrom(GetReferenceCoordinateVector());
-	q += GetCurrentCoordinateVector();
+	Real s[6];
+	NodePointSlope23Slopes(*this, ConfigurationType::Current, s);
 	Matrix slopesDerivative;
-	AccessFunctionsAD::SlopesRotationJacobianTTimesTorqueDerivative(&q[3], vector, slopesDerivative);
+	AccessFunctionsAD::SlopesRotationJacobianTTimesTorqueDerivative(s, vector, slopesDerivative);
 	jacobian_q.SetNumberOfRowsAndColumns(nODE2coordinates, nODE2coordinates);
 	jacobian_q.SetAll(0.);
 	jacobian_q.SetSubmatrix(slopesDerivative, 3, 3);

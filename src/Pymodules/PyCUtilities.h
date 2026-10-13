@@ -130,6 +130,39 @@ namespace PyCUtilities {
 		return RowsToNumPy(v0, v1, v0.CrossProduct(v1));
 	}
 
+	//! the two vectors, checked to be neither zero nor parallel
+	inline void GetTwoVectors(const py::object& vector0, const py::object& vector1, const char* functionName, Vector3D& v0, Vector3D& v1)
+	{
+		v0 = GetVector<3>(vector0, functionName, "vector0");
+		v1 = GetVector<3>(vector1, functionName, "vector1");
+		Real L0 = v0.GetL2Norm();
+		Real L1 = v1.GetL2Norm();
+		if (L0 == 0. || L1 == 0.) { PyError(STDstring(functionName) + ": vector0 and vector1 must not be zero", PyErrorType::valueError); }
+		if (v0.CrossProduct(v1).GetL2Norm() <= 1e-14 * L0 * L1) { PyError(STDstring(functionName) + ": vector0 and vector1 must not be parallel", PyErrorType::valueError); }
+	}
+
+	//! the symmetric basis of two non-parallel vectors, the columns e1, e2, e3 of a rotation matrix (#2228)
+	inline py::array_t<Real> SymmetricBasis(const py::object& vector0, const py::object& vector1)
+	{
+		Vector3D v0, v1;
+		GetTwoVectors(vector0, vector1, "SymmetricBasis", v0, v1);
+		Vector3D e1, e2, e3;
+		RigidBodyMath::SymmetricBasis(v0.GetDataPointer(), v1.GetDataPointer(), e1.GetDataPointer(), e2.GetDataPointer(), e3.GetDataPointer());
+		return ToNumPy(Matrix3D(3, 3, { e1[0], e2[0], e3[0], e1[1], e2[1], e3[1], e1[2], e2[2], e3[2] }));
+	}
+
+	//! the rotation Jacobian G (3 x 6) of SymmetricBasis: omega = G [vector0_t; vector1_t] (#2228)
+	inline py::array_t<Real> SymmetricBasisRotationJacobian(const py::object& vector0, const py::object& vector1)
+	{
+		Vector3D v0, v1;
+		GetTwoVectors(vector0, vector1, "SymmetricBasisRotationJacobian", v0, v1);
+		Real G[3][6];
+		RigidBodyMath::SymmetricBasisRotationJacobian(v0.GetDataPointer(), v1.GetDataPointer(), G);
+		ConstSizeMatrix<18> jacobian(3, 6);
+		for (Index r = 0; r < 3; r++) { for (Index j = 0; j < 6; j++) { jacobian(r, j) = G[r][j]; } }
+		return ToNumPy(jacobian);
+	}
+
 	//! the skew matrix of a 3D vector; for a vector of 3n components the n skew matrices one below the other, (3n,3);
 	//! for a matrix of shape (3n,m) the skew matrices of its columns side by side, (3n,3m)
 	inline py::array_t<Real> Skew(const py::object& vector)

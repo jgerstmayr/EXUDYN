@@ -1411,15 +1411,17 @@ definitions.append(ItemDefinition(
 
     #### Rotation
 
-    `MarkerNodeRigid` and the output variables of the rotation take an orthonormal frame of the slopes:
-    $\rv_x$ normalized is its $x$-axis, $\rv_y$ orthogonalized against it and normalized its $y$-axis, and the
-    $z$-axis - the normal of the surface - is their cross product. The angular velocity $\tomega$ and the rotation
-    Jacobian are not the derivatives of this frame but the least-squares fit
-    $\tomega = \left(-\tilde\rv_x\tilde\rv_x - \tilde\rv_y\tilde\rv_y\right)^{-1}\left(\tilde\rv_x\dot\rv_x + \tilde\rv_y\dot\rv_y\right)$,
-    symmetric in the two slopes; the two agree for slopes that keep their lengths and their right angle (#2219).
-    The derivative of $\Jm_{rot}\tp\vv$ with respect to the coordinates is not implemented: a connector whose
-    Jacobian needs it, e.g. a `RigidBodySpringDamper` at the node with an implicit solver, raises an error; a torque
-    and a joint do not need it.
+    `MarkerNodeRigid` and the output variables of the rotation take the frame of the slopes $\av = \rv_x$,
+    $\bv = \rv_y$, the symmetric basis of the
+    two slopes: with the unit slopes $\hat\av$, $\hat\bv$, the two in-plane axes are
+    $(\hat\uv \pm \hat\vv)/\sqrt 2$ with $\hat\uv$, $\hat\vv$ the normalized sum and difference of $\hat\av$ and $\hat\bv$ - at
+    45 degrees to their bisector, the first as close to $\hat\av$ as the second to $\hat\bv$ -, and the third axis is their
+    cross product. The frame is symmetric in the two slopes, independent of their lengths, and the rotation of the polar
+    decomposition of $[\hat\av, \hat\bv]$ (#2228).
+    Its first two axes are the $x$- and $y$-axis, the third - the normal of the surface - the $z$-axis.
+    The angular velocity $\tomega$, the rotation Jacobian $\Jm_{rot} = \partial \tomega / \partial \dot \qv$ (in
+    closed form) and the derivative of $\Jm_{rot}\tp\vv$ with respect to the coordinates (by automatic
+    differentiation) are the derivatives of this frame, so joints, torques and connectors act consistently with it.
 
     #### Action on the equations of motion
 
@@ -1575,11 +1577,16 @@ definitions.append(ItemDefinition(
 
     #### Rotation
 
-    `MarkerNodeRigid` and the output variables of the rotation take the orthonormal frame of the slopes:
-    $\rv_z$ normalized is its $z$-axis, $\rv_y$ orthogonalized against it and normalized its $y$-axis, and the
-    $x$-axis is their cross product. The angular velocity $\tomega$ and the rotation Jacobian
-    $\Jm_{rot} = \partial \tomega / \partial \dot \qv$ are the derivatives of this frame, so joints and torques act
-    consistently with it (#2763).
+    `MarkerNodeRigid` and the output variables of the rotation take the frame of the slopes $\av = \rv_y$,
+    $\bv = \rv_z$, the symmetric basis of the
+    two slopes: with the unit slopes $\hat\av$, $\hat\bv$, the two in-plane axes are
+    $(\hat\uv \pm \hat\vv)/\sqrt 2$ with $\hat\uv$, $\hat\vv$ the normalized sum and difference of $\hat\av$ and $\hat\bv$ - at
+    45 degrees to their bisector, the first as close to $\hat\av$ as the second to $\hat\bv$ -, and the third axis is their
+    cross product. The frame is symmetric in the two slopes, independent of their lengths, and the rotation of the polar
+    decomposition of $[\hat\av, \hat\bv]$ (#2228).
+    Its first two axes are the $y$- and $z$-axis, the third the $x$-axis. The angular velocity $\tomega$ and the
+    rotation Jacobian $\Jm_{rot} = \partial \tomega / \partial \dot \qv$ are the derivatives of this frame, so joints
+    and torques act consistently with it.
 
     #### Action on the equations of motion
 

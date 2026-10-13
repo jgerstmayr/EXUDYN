@@ -41,9 +41,9 @@ def TestExamplesReferenceSolution():
         'abaqusImportTest.py': 0.0005885208722206048,               #new 2023-04-20; 5 modes as 8 modes have sensitive "half mode included"
         'allExudynModulesTest.py': 1.0,                               #new 2026-02-03; test all modules (if some major error is contained...)
         'appendSystemTest.py': 6.274157091191782,                     #new 2026-10-04: SC.AppendSystem of a copy and of the system of another container, deleted once (#2842)
-        'ANCFBeamTest.py': 1.0104863120355159, #2026-10-11: initial values from exudyn.cMath and cUtilities (#2962, #2963); before 1.010486312035481;new 2023-04-04, after resolving local kappa bug; 2026-10-02: the rotation of the slope nodes consistent (#2763), -2.6e-10
+        'ANCFBeamTest.py': 1.010486312300453, #2026-10-13: the frame of the slopes is their symmetric basis (#2228), +2.6e-10; before 1.0104863120355159; 2026-10-11: initial values from exudyn.cMath and cUtilities (#2962, #2963); before 1.010486312035481;new 2023-04-04, after resolving local kappa bug; 2026-10-02: the rotation of the slope nodes consistent (#2763), -2.6e-10
         'ANCFcable2DuserFunction.py': 0.6015588367721794, #2026-10-11: initial values from exudyn.cMath and cUtilities (#2962, #2963); before 0.6015588367721973;new 2023-12-13
-        'ANCFCableBeamDampingTest.py': 0.1899233557201726,          #new 2026-03-25, checking damping between ANCFCable2D and ANCFBeam; 2026-10-02: the rotation of the slope nodes consistent (#2763)
+        'ANCFCableBeamDampingTest.py': 0.18992335574301988, #2026-10-13: the symmetric basis of the slopes (#2228), +2.3e-11; before 0.1899233557201726; new 2026-03-25, checking damping between ANCFCable2D and ANCFBeam; 2026-10-02: the rotation of the slope nodes consistent (#2763)
         'ANCFbeltDrive.py': -0.0011715990134787968, #2026-10-11: initial values from exudyn.cMath and cUtilities (#2962, #2963); before -0.0011715885324992126;new 2026-09-17: the model was retuned (16 elements
                                                                 #per section, tEnd=0.1) and the result now comes from the
                                                                 #sensor rather than an ODE2 coordinate (#2368)
@@ -135,6 +135,8 @@ def TestExamplesReferenceSolution():
         'solverFailureMessageTest.py':0, #new 2026-10-13: the exception of a failed solve carries the whole message (#1977)
         'sensorUserFunctionItemsTest.py':7.537499976593686, #new 2026-10-13: SensorUserFunction with itemNumbers, the kinetic energy of a group of bodies (#2977)
         'userFunctionTimerTest.py':3, #new 2026-10-13: the solver timer userFunctions, flags only (#2007)
+        'ANCFBeamGeometricallyExactComparisonTest.py':5.9995017472560175, #new 2026-10-13: ObjectANCFBeam against ObjectBeamGeometricallyExact, tip torque on node and element (#2228)
+        'ANCFThinPlateRotationTest.py':0.009394817004517305, #new 2026-10-13: the frame of ObjectANCFThinPlate and NodePointSlope12, torque on element and node (#2228)
         'userTypesTest.py':2.0, #new 2026-10-12: the user types of OutputVariableType, NodeType, MarkerType, their names and aliases, ObjectUserBody.outputVariableUserFunction (#2989)
         'rotationMarkerDeprecationTest.py':-0.1340286194620787, #new 2026-10-03: rotationMarker0/1 against localHT of the markers, the deprecation warning once per session (#2745, #2801)
         'contactFrictionCircleCable2DnoFrictionTest.py':0.8052196344904814, #new 2026-10-05: no tangential force without a friction model, whatever the slip state (#1290); 1000 steps 2026-10-09 (#2912)
@@ -474,7 +476,7 @@ def MiniExamplesReferenceSolution():
         'ObjectANCFBeam.py':-0.3381249577076517,
         'ObjectBeamGeometricallyExact2D.py':-0.3381249616596102,
         'ObjectBeamGeometricallyExact.py':-0.33812496093079464,
-        'ObjectANCFThinPlate.py':-0.06987478663348738, #2026-10-05: material curvature measure, Gauss 5x5 (#2857); before -0.06987553667440825
+        'ObjectANCFThinPlate.py':-0.06986346700419381, #2026-10-13: the clamping joints act on the symmetric basis of the slopes (#2228), before -0.06987478663348738; 2026-10-05: material curvature measure, Gauss 5x5 (#2857); before -0.06987553667440825
         'ObjectALEANCFCable2D.py':0.2500092945807542,
         'ObjectJointALEMoving2D.py':0.7249978132591198,
         'ObjectConnectorCoordinateSpringDamperExt.py':0.050495049504950505,
@@ -536,7 +538,7 @@ def MiniExamplesReferenceSolution():
         'NodePoint2DSlope1.py':-0.3333332497979799,
         'NodePointGround.py':0.10000000000000009,
         'NodePointSlope1.py':-0.3333332497979799,
-        'NodePointSlope12.py':-0.06987478663348738, #2026-10-05: material curvature measure, Gauss 5x5 (#2857); before -0.06987553667440825
+        'NodePointSlope12.py':-0.06986346700419381, #2026-10-13: the clamping joints act on the symmetric basis of the slopes (#2228), before -0.06987478663348738; 2026-10-05: material curvature measure, Gauss 5x5 (#2857); before -0.06987553667440825
         'NodePointSlope23.py':-0.3381249577076517,
         'NodeRigidBody2D.py':3.0,
         'NodeRigidBodyEP.py':1.5707880511569134,
@@ -679,7 +681,8 @@ def AVX2ReferenceSolutionUpdate():
         'genericODE2test.py':                     0.03604546349916921,      #drift 8.0e-14
         'createKinematicTreeTest.py':             3.340830142730632,         #drift 7.4e-14
         'ANCFcable2DuserFunction.py':             0.6015588367721516,        #drift 7.1e-14
-        'ANCFBeamTest.py':                        1.0104863120354557,        #drift 6.0e-14
+        'ANCFBeamTest.py':                        1.0104863123003804,        #2026-10-13: the symmetric basis of the slopes (#2228)
+        'userRigidBodyTest.py':                   13.4757550213763,          #drift 5.3e-14 (#2986)
         #a single run of runPerformanceTests.py: its result moves by 20% with the Newton tolerance (#2914)
         'perfAccessFunctionsAD:cable-n200-implicit': 0.004662459533372243,  #drift 8.4e-07
         }

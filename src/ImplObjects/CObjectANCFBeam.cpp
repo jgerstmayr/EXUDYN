@@ -1214,9 +1214,9 @@ Matrix3D CObjectANCFBeam::GetRotationMatrix(const Vector3D& localPosition, Confi
 	Vector3D slopeZ;
 	ComputeSlopeVectors(x, configuration, slopeX, slopeY, slopeZ);
 
-	Matrix3D A;
-	EXUmath::OrthogonalBasisFromVectorsZY(slopeY, slopeZ, A);
-	return A;
+	//the symmetric basis of the slopes y, z, as of NodePointSlope23 (#2228)
+	const Real s[6] = { slopeY[0], slopeY[1], slopeY[2], slopeZ[0], slopeZ[1], slopeZ[2] };
+	return AccessFunctionsAD::SlopesRotationMatrix<AccessFunctionsAD::SlopesFrame::YZ>(s);
 }
 
 HomogeneousTransformation CObjectANCFBeam::GetLocalPositionFrame(const Vector3D& localPosition,

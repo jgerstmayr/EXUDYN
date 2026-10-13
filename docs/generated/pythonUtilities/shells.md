@@ -188,7 +188,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`ANCFThinPla
 - **notes**: x-axis is aligned with bottom (y=min) and top (y=max); y-axis is aligned with left (x=min) and right (x=max)
 
 
-Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`ANCFThinPlateRevisionTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/ANCFThinPlateRevisionTest.py) (TM), [`ANCFThinPlateTests.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/ANCFThinPlateTests.py) (TM), [`energiesFlexibleBodiesTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/energiesFlexibleBodiesTest.py) (TM)
+Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`ANCFThinPlateRevisionTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/ANCFThinPlateRevisionTest.py) (TM), [`ANCFThinPlateRotationTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/ANCFThinPlateRotationTest.py) (TM), [`ANCFThinPlateTests.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/ANCFThinPlateTests.py) (TM), [`energiesFlexibleBodiesTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/energiesFlexibleBodiesTest.py) (TM)
 
 
 (sec-module-shells-class-surfacemap)=

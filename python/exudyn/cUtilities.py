@@ -19,7 +19,8 @@ from exudyn import _compiledModule
 
 #public API of this module; kept complete by tools/checkAll.py (#2444)
 __all__ = [
-    'ComputeOrthonormalBasisVectors', 'ComputeOrthonormalBasis', 'GramSchmidt', 'Skew', 'Skew2Vec',
+    'ComputeOrthonormalBasisVectors', 'ComputeOrthonormalBasis', 'GramSchmidt', 'SymmetricBasis',
+    'SymmetricBasisRotationJacobian', 'Skew', 'Skew2Vec',
     'EulerParameters2G', 'EulerParameters2GLocal', 'EulerParameters2RotationMatrix',
     'RotationMatrix2EulerParameters', 'AngularVelocity2EulerParameters_t', 'RotationVector2RotationMatrix',
     'RotationMatrix2RotationVector', 'ComputeRotationAxisFromRotationVector', 'ExpSO3', 'LogSO3',
@@ -33,6 +34,8 @@ _cUtilities = _compiledModule._cUtilities
 ComputeOrthonormalBasisVectors = _cUtilities.ComputeOrthonormalBasisVectors
 ComputeOrthonormalBasis = _cUtilities.ComputeOrthonormalBasis
 GramSchmidt = _cUtilities.GramSchmidt
+SymmetricBasis = _cUtilities.SymmetricBasis
+SymmetricBasisRotationJacobian = _cUtilities.SymmetricBasisRotationJacobian
 Skew = _cUtilities.Skew
 Skew2Vec = _cUtilities.Skew2Vec
 EulerParameters2G = _cUtilities.EulerParameters2G

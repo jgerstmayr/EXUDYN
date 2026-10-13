@@ -3,7 +3,7 @@
 from typing import Union
 from numpy.typing import ArrayLike, NDArray
 
-__all__ = ['ComputeOrthonormalBasisVectors', 'ComputeOrthonormalBasis', 'GramSchmidt', 'Skew', 'Skew2Vec', 'EulerParameters2G', 'EulerParameters2GLocal', 'EulerParameters2RotationMatrix', 'RotationMatrix2EulerParameters', 'AngularVelocity2EulerParameters_t', 'RotationVector2RotationMatrix', 'RotationMatrix2RotationVector', 'ComputeRotationAxisFromRotationVector', 'ExpSO3', 'LogSO3', 'RotXYZ2RotationMatrix', 'RotationMatrix2RotXYZ', 'RotXYZ2G', 'RotXYZ2G_t', 'RotXYZ2GLocal', 'RotXYZ2GLocal_t', 'AngularVelocity2RotXYZ_t', 'RotXYZ2EulerParameters', 'RotationMatrix2RotZYZ', 'RotationMatrixX', 'RotationMatrixY', 'RotationMatrixZ', 'RotationMatrix2D']
+__all__ = ['ComputeOrthonormalBasisVectors', 'ComputeOrthonormalBasis', 'GramSchmidt', 'SymmetricBasis', 'SymmetricBasisRotationJacobian', 'Skew', 'Skew2Vec', 'EulerParameters2G', 'EulerParameters2GLocal', 'EulerParameters2RotationMatrix', 'RotationMatrix2EulerParameters', 'AngularVelocity2EulerParameters_t', 'RotationVector2RotationMatrix', 'RotationMatrix2RotationVector', 'ComputeRotationAxisFromRotationVector', 'ExpSO3', 'LogSO3', 'RotXYZ2RotationMatrix', 'RotationMatrix2RotXYZ', 'RotXYZ2G', 'RotXYZ2G_t', 'RotXYZ2GLocal', 'RotXYZ2GLocal_t', 'AngularVelocity2RotXYZ_t', 'RotXYZ2EulerParameters', 'RotationMatrix2RotZYZ', 'RotationMatrixX', 'RotationMatrixY', 'RotationMatrixZ', 'RotationMatrix2D']
 
 def ComputeOrthonormalBasisVectors(vector0: ArrayLike) -> NDArray: 
     """The normalized vector0 and two normals to it, as the rows of a 3x3 array (unpacked as [v0, n1, n2] = ...); the normals are not unique; for vector0 = [0,0,0] the rows are vector0 and the x and y axes; computed by EXUmath::ComputeOrthogonalBasisVectors of the C++ code."""
@@ -13,6 +13,12 @@ def ComputeOrthonormalBasis(vector0: ArrayLike) -> NDArray:
     ...
 def GramSchmidt(vector0: ArrayLike, vector1: ArrayLike) -> NDArray: 
     """The normalized vector0, the normalized part of vector1 normal to vector0, and their cross product, as the rows of a 3x3 array; zero or parallel vectors raise a ValueError; computed by GramSchmidt of PyCUtilities.h of the C++ code."""
+    ...
+def SymmetricBasis(vector0: ArrayLike, vector1: ArrayLike) -> NDArray: 
+    """The rotation matrix of the symmetric basis of two non-parallel vectors (#2228): its first two columns lie in the plane of the vectors at 45 degrees to their bisector, the first as close to vector0 as the second to vector1, the third is their cross product; symmetric in the two vectors, independent of their lengths, the rotation of the polar decomposition of the normalized vectors; the frame of the slope nodes and of ObjectANCFBeam and ObjectANCFThinPlate; zero or parallel vectors raise a ValueError; computed by RigidBodyMath::SymmetricBasis of the C++ code."""
+    ...
+def SymmetricBasisRotationJacobian(vector0: ArrayLike, vector1: ArrayLike) -> NDArray: 
+    """The 3x6 rotation Jacobian G of SymmetricBasis(vector0, vector1): the global angular velocity of the basis is G @ [vector0_t, vector1_t], for the time derivatives of the two vectors; computed by RigidBodyMath::SymmetricBasisRotationJacobian of the C++ code."""
     ...
 def Skew(vector: ArrayLike) -> NDArray: 
     """The skew symmetric 3x3 matrix of a 3D vector, which gives the cross product: Skew(a) @ b = a x b; for a vector of 3n components the n skew matrices one below the other (3n x 3); for a matrix of 3n rows and m columns the skew matrices of its columns side by side (3n x 3m), as needed for the floating frame of reference formulation; computed by Skew of PyCUtilities.h of the C++ code."""

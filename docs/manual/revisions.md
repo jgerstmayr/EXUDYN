@@ -41,6 +41,11 @@ printed (#1977); an error in graphics data names the item and the entry of the l
 every type of graphics data (#2304, #2305). With `show.computationTime`, the CPU-time statistics list the time spent
 in user functions (#2007).
 
+**The frame of two slopes** - of NodePointSlope12 and NodePointSlope23, ObjectANCFBeam and ObjectANCFThinPlate - is
+their symmetric basis, `exudyn.rigidBodyUtilities.SymmetricBasis`: symmetric in the two slopes and independent of
+their lengths, with a consistent angular velocity and rotation Jacobian; ObjectANCFThinPlate has a rotation, so
+MarkerBodyRigid acts on it. Models with rigid markers on these items change slightly (#2228).
+
 (sec-revisions-1-13)=
 (sec-revisions-1-12)=
 ## Version 1.13

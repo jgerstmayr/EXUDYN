@@ -972,3 +972,45 @@ efficient, a Python version in docs/dev/design first.)*
   its rotation from Gram-Schmidt and its angular velocity from a least squares fit, which agree for a rigid motion only
   - up to 130 % apart for deforming slopes; the derivative of its rotation Jacobian is not implemented. Proposed: C++
   templated, the derivative by AutoDiff, then the node; the step stays open for the decision.
+
+<a id="rg11-8-8"></a>
+### RG11.8.8 — the symmetric basis of two slopes, for the slope nodes, the ANCF beam and the ANCF plate (2026-10-13, #2228)
+*(Maintainer 2026-10-13: the symmetric basis, combined; the Jacobian needs a few divisions more, not measured; in C++
+as a template for automatic differentiation; used in ObjectANCFThinPlate and NodePointSlope12, and in ObjectANCFBeam
+and NodePointSlope23 instead of the Gram-Schmidt functions of AccessFunctionsAD.h; the ANCF beam tested again, against
+the geometrically exact beam.)*
+- **The functions** (src/Linalg/RigidBodyMath.h): `SymmetricBasis(a, b, e1, e2, e3)` in the combined form of design
+  section 5 (4 square roots), `SymmetricBasisRotationJacobian(a, b, G)` in closed form (dot products, 3 x 6), both
+  templated on the number type; bound as `exudyn.cUtilities.SymmetricBasis`, `SymmetricBasisRotationJacobian` and
+  called by `exudyn.rigidBodyUtilities` under the same names. They agree with the Python reference
+  (docs/dev/design/symmetricBasis.py) to 2e-13 on random pairs; cUtilitiesTest.py checks orthonormality, symmetry,
+  length independence, the polar rotation (SVD), G against the numerical derivative, and the refusal of parallel or
+  zero vectors.
+- **AccessFunctionsAD.h**: `SlopesRotation<SlopesFrame::XY or YZ>` places e1, e2, e3 as the columns of the node or
+  element ([e1, e2, e3] for the slopes x, y; [e3, e1, e2] for y, z); `SlopesRotationJacobian` and
+  `SlopesAngularVelocity` use the closed-form G; `SlopesRotationJacobianTTimesTorqueDerivative` differentiates G^T
+  torque by AutoDiff with 6 directions - single level, where the Gram-Schmidt version needed nested AutoDiff of the
+  rotation matrix. The three `EXUmath::OrthogonalBasisFromVectorsXY/ZY` of BasicLinalg.h had no other user and are
+  removed.
+- **NodePointSlope12**: rotation matrix, angular velocity, rotation Jacobian, `GetRotationMatrix_t` (= skew(omega) A)
+  and the until now missing `GetRotationJacobianTTimesVector_q` - all of one frame; before, Gram-Schmidt for the
+  rotation and a least squares angular velocity. **NodePointSlope23** the same code. **ObjectANCFBeam**
+  `GetRotationMatrix` takes the symmetric basis; its rotation Jacobian and derivative went through AccessFunctionsAD
+  already. **ObjectANCFThinPlate** gets `GetRotationMatrix`, `GetAngularVelocity` (was not implemented),
+  `GetAngularVelocityLocal`, `GetRotationJacobian`, `GetJacobianTransposedTimesVectorDerivative` for a torque, and the
+  output variables RotationMatrix, AngularVelocity, AngularVelocityLocal: the slopes at a mid-surface point through the
+  inverse Jacobian of the reference geometry, as GetSlopes; MarkerBodyRigid now acts on the plate.
+- **References**: ANCFBeamTest.py +2.6e-10, ANCFCableBeamDampingTest.py +2.3e-11, the mini examples NodePointSlope12
+  and ObjectANCFThinPlate 1.1e-5 (0.016 %: the clamping GenericJoints act on the symmetric frame).
+- **ANCFBeamGeometricallyExactComparisonTest.py** (new): the cantilever of ANCFBeamTest case 2 with 8 elements of each
+  kind. Static general bending: tip displacement within 8.8e-5, rotation matrix within 3.7e-6. A large twist and
+  bending torque through MarkerBodyRigid on the last element: within 7.7e-3 and 8.1e-3; refining from 8 to 32 elements
+  the displacement difference falls quadratically (7.7e-3, 1.9e-3, 4.8e-4), the rotation linearly. The cross section
+  penalty factor matters: with 10 the slopes shear by 0.2 degrees at that twist, and the symmetric frame and a
+  Gram-Schmidt frame differ from the rigid cross section of the geometrically exact beam by the whole or half of it;
+  with 100 both agree with each other and with the geometrically exact beam; the test uses 100. Dynamic: the frame and
+  angular velocity of the element end are those of the end node, exactly.
+- **ANCFThinPlateRotationTest.py** (new): a torque at a corner of a clamped strip through MarkerNodeRigid and through
+  MarkerBodyRigid on the element corner gives the same solution to the bit; the frame of the element at the corner is
+  that of the node, its third axis the normal; dynamic, the angular velocity of the element frame is the time
+  derivative of its rotation matrix (1.8e-10).

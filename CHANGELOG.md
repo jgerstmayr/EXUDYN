@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.13 | Newborn | 81 | 1.13.81 |
+| 1.13 | Newborn | 82 | 1.13.82 |
 | 1.12 | Metheney | 367 | 1.12.462 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
@@ -30,6 +30,10 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.13 - Newborn (current)
 
+- **1.13.82** `EXTENSION` `LOW EFF` `resolved by: Claude-JG` Symmetric basis (#2228)
+  - description: add a function to compute a basis for two given non-parallel vectors; the average of the two vectors is computed from averaging normalized vectors (=mid axis) and according projections; used for NodeSlope12
+  - **notes:** the frame of two slopes is their symmetric basis (RigidBodyMath::SymmetricBasis, exudyn.cUtilities and rigidBodyUtilities.SymmetricBasis), with a closed-form rotation Jacobian and its derivative by AutoDiff: NodePointSlope12, NodePointSlope23, ObjectANCFBeam, and ObjectANCFThinPlate, which gets a rotation for MarkerBodyRigid
+  - date resolved: **2026-10-13 23:23**, date raised: 2026-01-18
 - **1.13.81** `EXTENSION` `raised by: Claude-JG` `resolved by: Claude-JG` SensorUserFunction with itemNumbers (#2977)
   - description: revision2026c step RG7.7 (docs/dev/design/pythonUserItems.md 5.7): a second array itemNumbers, one of the two arrays empty; the non-empty one goes to the user function, which reads the items via mbs; example 7: kinetic energy of a group of bodies.
   - **notes:** SensorUserFunction.itemNumbers: the user function gets item numbers instead of sensor numbers and reads the items through mbs
