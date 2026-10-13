@@ -34,6 +34,7 @@
 	//on arm64, Eigen's NEON packets fuse a*b+c into one instruction (vfmaq_f64) whatever -ffp-contract says; without
 	//__ARM_FEATURE_FMA they multiply and add, as Eigen does with SSE2 on x86-64, so that the solvers give the same bits (#2990)
 #if defined(__aarch64__) && defined(__ARM_FEATURE_FMA)
+	#include <arm_neon.h> //first with the macro: clang's arm_neon.h declares vfmaq_f32 only with it, but uses it in any case
 	#undef __ARM_FEATURE_FMA
 	#define EXUDYN_RESTORE_ARM_FEATURE_FMA
 #endif

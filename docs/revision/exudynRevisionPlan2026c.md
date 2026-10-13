@@ -277,6 +277,14 @@ the Eigen includes; done on Windows (no change there), open until the Mac run co
 shrinks. The same holds for the fast module, whose `-mfma` makes Eigen's AVX packets fuse (`__FMA__`) - a separate
 decision, as that module is meant to be fast.
 
+2026-10-13, the Mac run of the change (tmp/MacOS/MacAgentResponse2): clang's arm_neon.h needs the macro, so it is
+included before the macro is undefined. With that, sliderCrank3Dbenchmark is bit-identical with Windows and
+ANCFgeneralContactCircle passes; 7 of the 8 entries of `UnresolvedOnMacOS()` pass. Four models still differ:
+createSphereQuadContact, createSphereTriangleContact and sphereTriangleTest2 (EigenSparse; from step 13, resp. after step
+50, by one ulp in 32 of 49 coordinates at once) and geometricallyExactBeamRightAngleFrame (static, EigenSparse). Next:
+the same dumps with `LinearSolverType.EXUdense` on both platforms (`tmp/MacOS/dumpRun2.py`, `compareDumps2.py`, the
+Windows dumps in `WindowsReference2.zip`) - identical then means the rest is in Eigen too.
+
 ### **OPEN_RG4.20** Port the revision of ObjectANCFThinPlate and complete the element
 
 The port of a colleague's revision was done in revision2026b (#2857, #2858, #2859, #2864).
