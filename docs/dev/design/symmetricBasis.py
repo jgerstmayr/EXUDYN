@@ -115,6 +115,18 @@ def OmegaOfBasis(Basis, a, b, a_t, b_t, epsilon=1e-7):
     W = A_t @ A.T
     return np.array([W[2, 1], W[0, 2], W[1, 0]])
 
+def PolarRotationAB(a, b):
+    """the polar rotation of [a, b] itself, not normalized: [a, b] S^(-1/2) with S = [a, b]^T [a, b] (2 x 2) and
+    sqrt(S) = (S + d I)/t, d = sqrt(det S), t = sqrt(tr S + 2d) - 2 square roots; the rotation R of F = R U for the
+    in-plane deformation gradient F = [a, b] of slopes that are orthonormal in the reference configuration"""
+    saa, sab, sbb = a @ a, a @ b, b @ b
+    d = np.sqrt(saa*sbb - sab**2)
+    t = np.sqrt(saa + sbb + 2*d)
+    k = t/((saa + d)*(sbb + d) - sab**2)
+    e1 = k*((sbb + d)*a - sab*b)
+    e2 = k*(-sab*a + (saa + d)*b)
+    return np.column_stack([e1, e2, np.cross(e1, e2)])
+
 def PolarRotation(a, b):
     """the rotation of the polar decomposition of [ah, bh, n], n the unit normal"""
     ah = a/np.linalg.norm(a)
@@ -144,6 +156,11 @@ if __name__ == '__main__':
         Record('symmetric: e1(b,a) = e2(a,b)', np.abs(B[:, 0] - A[:, 1]).max())
         Record('independent of |a|, |b|', np.abs(SymmetricBasis(3.7*a, 0.2*b) - A).max())
         Record('equal to the polar rotation', np.abs(PolarRotation(a, b) - A).max())
+        P = PolarRotationAB(a, b)
+        Record('polar of [a,b]: orthonormal', np.abs(P.T @ P - np.eye(3)).max())
+        Record('polar of [a,b]: symmetric, e1(b,a) = e2(a,b)', np.abs(PolarRotationAB(b, a)[:, 0] - P[:, 1]).max())
+        Record('polar of [a,b]: equal to the symmetric basis for |a| = |b|',
+               np.abs(PolarRotationAB(a/np.linalg.norm(a), b/np.linalg.norm(b)) - A).max())
         G = SymmetricBasisRotationJacobian(a, b)
         omega = G @ np.concatenate([a_t, b_t])
         Record('G against the numerical derivative', np.abs(omega - OmegaOfBasis(SymmetricBasis, a, b, a_t, b_t)).max()
