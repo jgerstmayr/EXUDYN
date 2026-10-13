@@ -433,8 +433,9 @@ void CSensorUserFunction::EvaluateUserFunction(Vector& sensorValues, const MainS
 {
 	UserFunctionExceptionHandling([&] //lambda function to add consistent try{..} catch(...) block
 	{
-		//user function args:(deltaL, deltaL_t, Real stiffness, Real damping, Real springForce)
-		sensorValues = parameters.sensorUserFunction.userFunction((const MainSystem&)mainSystem, t, parameters.sensorNumbers, parameters.factors, configuration);
+		//the item numbers, if given, else the sensor numbers (#2977)
+		const ArrayIndex& numbers = parameters.itemNumbers.NumberOfItems() ? parameters.itemNumbers : parameters.sensorNumbers;
+		sensorValues = parameters.sensorUserFunction.userFunction((const MainSystem&)mainSystem, t, numbers, parameters.factors, configuration);
 	}, "SensorUserFunction::sensorUserFunction");
 }
 

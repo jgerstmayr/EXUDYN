@@ -16,6 +16,7 @@
 
 #include "Utilities/ReleaseAssert.h"
 #include "Utilities/BasicDefinitions.h" //defines Real
+#include "Utilities/AdvancedStuff.h" //GetTimeInSeconds, for UserFunctionTimer
 #include <pybind11/pybind11.h>
 namespace py = pybind11;            //! namespace 'py' used throughout in code
 
@@ -46,10 +47,31 @@ void VisualizationExceptionHandling(Tfunction&& f)
 }
 
 
+//! the time spent in user functions (#2007), which the solver reads into its timer userFunctions: summed by
+//! UserFunctionExceptionHandling while active, for the outermost call only (a user function may call one); per
+//! thread, the solver sets and reads it in the computation thread
+struct UserFunctionTimer
+{
+	static inline thread_local bool active = false;
+	static inline thread_local Real time = 0.;
+	static inline thread_local Index depth = 0;
+
+	//! times the scope it lives in, if it is the outermost user function
+	struct Scope
+	{
+		bool timed;
+		Scope() : timed(active && depth == 0) { depth++; if (timed) { time -= EXUstd::GetTimeInSeconds(); } }
+		~Scope() { depth--; if (timed) { time += EXUstd::GetTimeInSeconds(); } }
+	};
+};
+
 template <typename Tfunction>
 //void UserFunctionExceptionHandling(Tfunction&& f, STDstring functionName)
 void UserFunctionExceptionHandling(Tfunction&& f, const char* functionName)
 {
+#ifndef __FAST_EXUDYN_LINALG
+	UserFunctionTimer::Scope timerScope;
+#endif
 #ifdef __PYTHON_USERFUNCTION_CATCH__
 	try
 	{

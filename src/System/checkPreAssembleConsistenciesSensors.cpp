@@ -202,7 +202,13 @@ bool MainSensorMarker::CheckPreAssembleConsistency(const MainSystem& mainSystem,
 //	return true;
 //}
 
-//bool MainSensorUserFunction::CheckPreAssembleConsistency(const MainSystem& mainSystem, STDstring& errorString) const
-//{
-//	return true;
-//}
+bool MainSensorUserFunction::CheckPreAssembleConsistency(const MainSystem& mainSystem, STDstring& errorString) const
+{
+	const CSensorUserFunctionParameters& parameters = ((const CSensorUserFunction*)GetCSensor())->GetParameters();
+	if (parameters.sensorNumbers.NumberOfItems() != 0 && parameters.itemNumbers.NumberOfItems() != 0)
+	{
+		errorString = "SensorUserFunction: sensorNumbers and itemNumbers are both given; the user function gets one list, so give at most one of them";
+		return false;
+	}
+	return true;
+}

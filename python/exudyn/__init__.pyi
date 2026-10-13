@@ -2375,6 +2375,8 @@ class CSolverTimer:
     """total time measured between start and end of computation (static/dynamics)."""
     totalJacobian: float
     """time for all jacobian computations."""
+    userFunctions: float
+    """time spent in user functions of items and of the system (e.g. preStep), called in the computation thread; within the other timers (not counted in sum)."""
     useTimer: bool
     """flag to decide, whether the timer is used (true) or not."""
     visualization: float

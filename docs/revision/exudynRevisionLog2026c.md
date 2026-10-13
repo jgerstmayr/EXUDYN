@@ -946,3 +946,29 @@ elsewhere; the output of userRigidBodyTest.py "missing rotationMatrixUserFunctio
 - **userRigidBodyTest.py**: "refused: 1" was the check passing - a rigid marker on a user body without
   rotationMatrixUserFunction must be refused; the line now says so. The block "DYNAMIC SOLVER FAILED" it printed is
   gone with #1977.
+
+<a id="rg7-7"></a>
+### RG7.7, RG11.8.17 and the concept of RG11.8.8 — item numbers for SensorUserFunction, the user function timer, the symmetric basis (2026-10-13, #2007, #2228, #2977)
+*(Maintainer 2026-10-13: RG7.7 now; RG11.8.17 in an appropriate way, the timers cost little against a Python call;
+RG11.8.8 a concept: the average frame of two slopes for NodePointSlope12 and other nodes, with the derivative,
+efficient, a Python version in docs/dev/design first.)*
+- **#2977**: `SensorUserFunction.itemNumbers` (an ArrayIndex of any kind of item); `CSensorUserFunction::
+  EvaluateUserFunction` passes it instead of sensorNumbers when given, and `MainSensorUserFunction::
+  CheckPreAssembleConsistency` refuses both. The argument of the user function is called `numbers` now - positional,
+  so existing functions work. Test model sensorUserFunctionItemsTest.py: the kinetic energy of a mass point, a rigid
+  body and a 1D mass against the exact value (4e-8: the generalized-alpha method dissipates a little of the rotation),
+  and the refusal.
+- **#2007**: `UserFunctionTimer` (ExceptionsTemplates.h): `UserFunctionExceptionHandling`, through which every user
+  function is called, times the outermost call (a user function may call another) while the solver has set it
+  active - `timer.Reset` with `show.computationTime`; thread_local, so worker threads are not counted, and not in the
+  fast module. `CSolverTimer.userFunctions` (definitions/structureDefsSolverData.py) is read at the end of the solve
+  and listed as `(userFunctions) = x% (within the timers above)`, not counted in the sum, as it overlaps ODE2RHS,
+  Python, ... In a spring-damper with a Python force, 2000 steps: 33 % of the measured time. Test model
+  userFunctionTimerTest.py checks the flags only.
+- **#2228, concept**: docs/dev/design/symmetricBasis.md and symmetricBasis.py. The basis $e_1, e_2 = (\hat u \pm \hat
+  v)/\sqrt 2$ of the normalized sum and difference of the unit slopes is orthonormal, symmetric, independent of the
+  slope lengths, and equal to the rotation of the polar decomposition (checked to round-off); its rotation Jacobian
+  in closed form from dot products, checked against the numerical derivative. Found on the way: NodePointSlope12 takes
+  its rotation from Gram-Schmidt and its angular velocity from a least squares fit, which agree for a rigid motion only
+  - up to 130 % apart for deforming slopes; the derivative of its rotation Jacobian is not implemented. Proposed: C++
+  templated, the derivative by AutoDiff, then the node; the step stays open for the decision.

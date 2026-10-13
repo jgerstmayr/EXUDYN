@@ -107,6 +107,8 @@ userANCFCable2DTest
 userTetrahedronTest
 graphicsDataErrorsTest
 solverFailureMessageTest
+sensorUserFunctionItemsTest
+userFunctionTimerTest
 userTypesTest
 rotationMarkerDeprecationTest
 contactFrictionCircleCable2DnoFrictionTest

@@ -6,7 +6,7 @@
 (sec-item-sensoruserfunction)=
 # SensorUserFunction
 
-A sensor defined by a user function. The sensor is intended to collect sensor values of a list of given sensors and recombine the output into a new value for output or control purposes. It is also possible to use this sensor without any dependence on other sensors in order to generate output for, e.g., any quantities in mbs or solvers.
+A sensor defined by a user function. The sensor is intended to collect sensor values of a list of given sensors, or values of a list of items, and recombine them into a new value for output or control purposes. It is also possible to use this sensor without any dependence on other sensors in order to generate output for, e.g., any quantities in mbs or solvers.
 
 ## Parameters
 
@@ -16,6 +16,7 @@ The parameters of the item; in a dictionary, its type is 'UserFunction':
 |---|---|---|---|---|
 | **name** | String |  | '' | sensor's unique name |
 | **sensorNumbers** | ArraySensorIndex |  | [] | (symbol: $\mathbf{n}_s = [s_0,\,\ldots,\,s_n]\tp$) optional list of $n$ sensor numbers for use in user function |
+| **itemNumbers** | ArrayIndex |  | [] | (symbol: $\mathbf{n}_i = [i_0,\,\ldots,\,i_n]\tp$) optional list of $n$ item numbers (objects, nodes, markers, loads) for use in the user function, which gets them instead of sensorNumbers; sensorNumbers must then be empty |
 | **factors** | Vector |  | [] | (symbol: $\mathbf{f}_s = [f_0,\,\ldots,\,f_m]\tp$) optional list of $m$ factors which can be used, e.g., for weighting sensor values |
 | **writeToFile** | Bool |  | True | True: write sensor output to file; flag is ignored (interpreted as False), if fileName='' |
 | **fileName** | String |  | '' | directory and file name for sensor file output; empty: no file is written; a relative name is placed in `exudyn.config.outputDirectory` if that is set; the directory is created if it does not exist |
@@ -34,12 +35,16 @@ The item draws nothing.
 ## Detailed description
 
 The sensor collects data via a user function, which completely describes the output itself.
+The user function gets the `sensorNumbers`, or the `itemNumbers` if those are given - at most one of the two
+lists may be non-empty. The item numbers are plain integers of any kind of item - objects, nodes, markers, loads -
+which the user function reads through mbs, e.g. `mbs.GetObjectOutputBody(numbers[i], ...)`; which kind they are is
+the user's to know.
 Note that the sensorNumbers and factors need to be consistent.
 The return value of the user function is a list of `float` numbers which cast to a `std::vector` in pybind.
 This list can have arbitrary dimension, but should be kept constant during simulation.
 
-**Userfunction**: `sensorUserFunction(mbs, t, sensorNumbers, factors, configuration)`
-A user function, which computes a sensor output from other sensor outputs (or from generic time dependent functions).
+**Userfunction**: `sensorUserFunction(mbs, t, numbers, factors, configuration)`
+A user function, which computes a sensor output from other sensor outputs, from items of the system, or from generic time dependent functions.
 The configuration in general will be the exudyn.ConfigurationType.Current, but others could be used as well except for SensorMarker.
 
 The user function arguments are as follows:
@@ -48,7 +53,7 @@ The user function arguments are as follows:
 |---|---|---|
 | `mbs` | MainSystem | provides MainSystem mbs to which object belongs |
 | `t` | Real | current time in mbs |
-| `sensorNumbers` | Array $\in \Ncal^n$ | list of sensor numbers |
+| `numbers` | Array $\in \Ncal^n$ | list of the sensor numbers, or of the item numbers if itemNumbers is given |
 | `factors` | Vector $\in \Rcal^n$ | list of factors that can be freely used for the user function |
 | `configuration` | ConfigurationType | usually the exudyn.ConfigurationType.Current, but could also be different in user defined functions. |
 | **return value** | Vector $\in \Rcal^{n_r}$ | returns list or numpy array of sensor output values; size $n_r$ is implicitly defined by the returned list and may not be changed during simulation. |

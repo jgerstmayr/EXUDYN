@@ -43,6 +43,7 @@ CSolverTimer has the following items:
 | `ToString()` | String |  | converts the current timings to a string |
 | `total` | Real | 0. | total time measured between start and end of computation (static/dynamics) |
 | `totalJacobian` | Real | 0. | time for all jacobian computations |
+| `userFunctions` | Real | 0. | time spent in user functions of items and of the system (e.g. preStep), called in the computation thread; within the other timers (not counted in sum) |
 | `useTimer` | bool | True | flag to decide, whether the timer is used (true) or not |
 | `visualization` | Real | 0. | time spent for visualization in computation thread |
 | `writeSolution` | Real | 0. | time for writing solution |

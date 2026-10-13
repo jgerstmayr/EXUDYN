@@ -4,7 +4,7 @@
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2026-10-05 (last modfied)
+* @date         AUTO: 2026-10-13 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -45,6 +45,7 @@ public: // AUTO:
   Real realtimeIdleCPU;                           //!< AUTO: time waited for next frame to compute and draw if timeIntegration.realtime.active is True
   Real total;                                     //!< AUTO: total time measured between start and end of computation (static/dynamics)
   Real totalJacobian;                             //!< AUTO: time for all jacobian computations
+  Real userFunctions;                             //!< AUTO: time spent in user functions of items and of the system (e.g. preStep), called in the computation thread; within the other timers (not counted in sum)
   bool useTimer;                                  //!< AUTO: flag to decide, whether the timer is used (true) or not
   Real visualization;                             //!< AUTO: time spent for visualization in computation thread
   Real writeSolution;                             //!< AUTO: time for writing solution
@@ -73,6 +74,7 @@ public: // AUTO:
     realtimeIdleCPU = 0.;
     total = 0.;
     totalJacobian = 0.;
+    userFunctions = 0.;
     useTimer = true;
     visualization = 0.;
     writeSolution = 0.;
@@ -121,6 +123,7 @@ public: // AUTO:
     os << "  realtimeIdleCPU = " << realtimeIdleCPU << "\n";
     os << "  total = " << total << "\n";
     os << "  totalJacobian = " << totalJacobian << "\n";
+    os << "  userFunctions = " << userFunctions << "\n";
     os << "  useTimer = " << useTimer << "\n";
     os << "  visualization = " << visualization << "\n";
     os << "  writeSolution = " << writeSolution << "\n";
@@ -142,7 +145,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2026-10-05 (last modfied)
+* @date         AUTO: 2026-10-13 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -259,7 +262,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2026-10-05 (last modfied)
+* @date         AUTO: 2026-10-13 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -366,7 +369,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2026-10-05 (last modfied)
+* @date         AUTO: 2026-10-13 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -455,7 +458,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2026-10-05 (last modfied)
+* @date         AUTO: 2026-10-13 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -578,7 +581,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2026-10-05 (last modfied)
+* @date         AUTO: 2026-10-13 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:

@@ -235,7 +235,7 @@ userFunctionArgsDict = {'MainSystem,preStepUserFunction': [['MainSystem', 'Real'
         'LoadTorqueVector,loadVectorUserFunction': [['MainSystem', 'Real', 'StdVector3D'], ['mbs', 't', 'loadVector'], ['StdVector3D'], ['LoadTorqueVectorLoadVectorUserFunction']],
         'LoadMassProportional,loadVectorUserFunction': [['MainSystem', 'Real', 'StdVector3D'], ['mbs', 't', 'loadVector'], ['StdVector3D'], ['LoadMassProportionalLoadVectorUserFunction']],
         'LoadCoordinate,loadUserFunction': [['MainSystem', 'Real', 'Real'], ['mbs', 't', 'load'], ['Real'], ['LoadCoordinateLoadUserFunction']],
-        'SensorUserFunction,sensorUserFunction': [['MainSystem', 'Real', 'StdArrayIndex', 'StdVector', 'ConfigurationType'], ['mbs', 't', 'sensorNumbers', 'factors', 'configuration'], ['StdVector'], ['SensorUserFunctionSensorUserFunction']]}
+        'SensorUserFunction,sensorUserFunction': [['MainSystem', 'Real', 'StdArrayIndex', 'StdVector', 'ConfigurationType'], ['mbs', 't', 'numbers', 'factors', 'configuration'], ['StdVector'], ['SensorUserFunctionSensorUserFunction']]}
 
 
 class ObjectGroundGraphicsDataUserFunction(Protocol):
@@ -1251,7 +1251,7 @@ class LoadCoordinateLoadUserFunction(Protocol):
     def __call__(self, mbs: exudyn.MainSystem, t: float, load: float) -> float: ...
 
 class SensorUserFunctionSensorUserFunction(Protocol):
-    """A user function, which computes a sensor output from other sensor outputs (or from generic time dependent functions).
+    """A user function, which computes a sensor output from other sensor outputs, from items of the system, or from generic time dependent functions.
     
     The configuration in general will be the exudyn.ConfigurationType.Current, but others could be used as well except for SensorMarker.
     
@@ -1262,7 +1262,7 @@ class SensorUserFunctionSensorUserFunction(Protocol):
 
         t (float): current time in mbs
 
-        sensorNumbers (np.ndarray): list of sensor numbers
+        numbers (np.ndarray): list of the sensor numbers, or of the item numbers if itemNumbers is given
 
         factors (np.ndarray): list of factors that can be freely used for the user function
 
@@ -1271,7 +1271,7 @@ class SensorUserFunctionSensorUserFunction(Protocol):
     Returns:
         np.ndarray: returns list or numpy array of sensor output values; size :math:`n_r` is implicitly defined by the returned list and may not be changed during simulation.
     """
-    def __call__(self, mbs: exudyn.MainSystem, t: float, sensorNumbers: np.ndarray, factors: np.ndarray, configuration: exudyn.ConfigurationType) -> np.ndarray: ...
+    def __call__(self, mbs: exudyn.MainSystem, t: float, numbers: np.ndarray, factors: np.ndarray, configuration: exudyn.ConfigurationType) -> np.ndarray: ...
 
 #+++++++++++++++++++++++++++++++
 #NODE
@@ -8936,12 +8936,14 @@ class VSensorUserFunction:
 class SensorUserFunction:
     """A sensor defined by a user function.
     
-    The sensor is intended to collect sensor values of a list of given sensors and recombine the output into a new value for output or control purposes. It is also possible to use this sensor without any dependence on other sensors in order to generate output for, e.g., any quantities in mbs or solvers.
+    The sensor is intended to collect sensor values of a list of given sensors, or values of a list of items, and recombine them into a new value for output or control purposes. It is also possible to use this sensor without any dependence on other sensors in order to generate output for, e.g., any quantities in mbs or solvers.
     
     Args:
         name: sensor's unique name; type: str
 
         sensorNumbers: optional list of :math:`n` sensor numbers for use in user function; type: ArraySensorIndex
+
+        itemNumbers: optional list of :math:`n` item numbers (objects, nodes, markers, loads) for use in the user function, which gets them instead of sensorNumbers; sensorNumbers must then be empty; type: array_like
 
         factors: optional list of :math:`m` factors which can be used, e.g., for weighting sensor values; type: array_like
 
@@ -8956,9 +8958,10 @@ class SensorUserFunction:
         visualization: visualization data, see VSensorUserFunction
 
     """
-    def __init__(self, name = '', sensorNumbers = [], factors = [], writeToFile = True, fileName = '', sensorUserFunction: Union[SensorUserFunctionSensorUserFunction, int] = 0, storeInternal = False, visualization = {}):
+    def __init__(self, name = '', sensorNumbers = [], itemNumbers = [], factors = [], writeToFile = True, fileName = '', sensorUserFunction: Union[SensorUserFunctionSensorUserFunction, int] = 0, storeInternal = False, visualization = {}):
         self.name = name
         self.sensorNumbers = copy.copy(sensorNumbers)
+        self.itemNumbers = copy.copy(itemNumbers)
         self.factors = np.array(factors)
         self.writeToFile = writeToFile
         self.fileName = fileName
@@ -8970,6 +8973,7 @@ class SensorUserFunction:
         yield 'sensorType', 'UserFunction'
         yield 'name', self.name
         yield 'sensorNumbers', self.sensorNumbers
+        yield 'itemNumbers', self.itemNumbers
         yield 'factors', self.factors
         yield 'writeToFile', self.writeToFile
         yield 'fileName', self.fileName

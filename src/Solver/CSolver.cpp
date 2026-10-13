@@ -66,6 +66,7 @@ STDstring CSolverTimer::ToString() const
 		if (errorEstimator / sum > limit) ostr <<  "  errorEstimator    = " << errorEstimator / sum << "%\n";
 		if (postNewton / sum > limit) ostr <<	   "  postNewton    = " << postNewton / sum << "%\n";
 		if (python / sum > limit) ostr <<		   "  Python          = " << python / sum << "%\n";
+		if (userFunctions / sum > limit) ostr <<   "  (userFunctions)   = " << userFunctions / sum << "% (within the timers above)\n";
 		if (realtimeIdleCPU / sum > limit) ostr << "  realtimeIdleCPU   = " << realtimeIdleCPU / sum << "%\n";
 		if (writeSolution / sum > limit) ostr <<   "  writeSolution     = " << writeSolution / sum << "%\n";
 		if (overhead / sum > limit) ostr <<        "  overhead          = " << overhead / sum << "%\n";

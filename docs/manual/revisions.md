@@ -33,6 +33,14 @@ functions; body markers, sensors, loads and connectors work on it, see {ref}`sec
 **User types**: `OutputVariableType`, `NodeType` and `MarkerType` have `UserType0` to `UserType3` for user items, which
 `exu.special.userTypes.SetName` names, see {ref}`sec-exudyn-special-usertypes` (#2989).
 
+**`SensorUserFunction.itemNumbers`**: the user function gets item numbers instead of sensor numbers and reads the
+items through mbs, e.g. the energy of a group of bodies (#2977).
+
+**Messages**: the exception of a failed `SolveDynamic` or `SolveStatic` carries the whole message, and nothing is
+printed (#1977); an error in graphics data names the item and the entry of the list, and not-a-number is refused in
+every type of graphics data (#2304, #2305). With `show.computationTime`, the CPU-time statistics list the time spent
+in user functions (#2007).
+
 (sec-revisions-1-13)=
 (sec-revisions-1-12)=
 ## Version 1.13

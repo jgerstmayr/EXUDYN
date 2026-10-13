@@ -8,10 +8,10 @@ Every entry carries the **type** of the issue, then its **priority** and its **e
 
 General information on current version:
 
-- Exudyn version = 1.13.79.dev1
+- Exudyn version = 1.13.81.dev1
 - last change = 2026-10-13
 - Number of issues = 2992
-- Number of resolved issues = 2856 (79 in current version)
+- Number of resolved issues = 2858 (81 in current version)
 
 ## Resolved issues and resolved bugs before version 1.13
 
@@ -9066,9 +9066,6 @@ The following list contains the issues which have been **RESOLVED** in the accor
 - `EXTENSION` `MEDIUM EFF` `raised by: Claude-JG` Symbolic user items: parallel evaluation and graphics (#2978)
   - description: revision2026c step RG7.8 (docs/dev/design/pythonUserItems.md 5.5): user items whose user functions are all symbolic run in parallel and are drawn directly; example 8; waits for the revision of the symbolic user functions (group RG12).
   - date raised: 2026-10-12
-- `EXTENSION` `raised by: Claude-JG` SensorUserFunction with itemNumbers (#2977)
-  - description: revision2026c step RG7.7 (docs/dev/design/pythonUserItems.md 5.7): a second array itemNumbers, one of the two arrays empty; the non-empty one goes to the user function, which reads the items via mbs; example 7: kinetic energy of a group of bodies.
-  - date raised: 2026-10-12
 - `EXTENSION` `MEDIUM EFF` `raised by: Claude-JG` User joint on two position and orientation markers (#2976)
   - description: revision2026c step RG7.6 (docs/dev/design/pythonUserItems.md 5.8): n constraint equations of the marker quantities, Jacobian (or numerical), reaction forces, chain rule with the marker Jacobians in C++; example 6: a screw joint.
   - date raised: 2026-10-12
@@ -9228,10 +9225,6 @@ The following list contains the issues which have been **RESOLVED** in the accor
   - description: add read/write dict access for new structures SC.renderer and exudyn.config
   - **remarks:** planned as revision2026b step RG12.44 (triage 2026-10-07)
   - date raised: 2025-06-02
-- `EXTENSION` `MEDIUM EFF` solver timers (#2007)
-  - description: add special timer for Python user functions, as solver timer for python does not include user functions
-  - **remarks:** planned as revision2026b step RG18.1 (triage 2026-10-07)
-  - date raised: 2025-05-10
 - `EXTENSION` `MEDIUM EFF` Body force sensor (#1989)
   - description: add force sensor option for single-noded bodies and bodies which do not share nodes (mass points, rigid bodies, ffrf); for rigid bodies, obtains force and torque; for FFRF, it is generalized force; implement in a way that the contributions of loads are computed like in GeneralContact - based on a flag -, as soon as a BodySensor measures a force or torque
   - **remarks:** kept open as an idea, no plan step (triage 2026-10-07, revision2026b group RG18)

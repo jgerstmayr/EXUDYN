@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.13 | Newborn | 79 | 1.13.79 |
+| 1.13 | Newborn | 81 | 1.13.81 |
 | 1.12 | Metheney | 367 | 1.12.462 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
@@ -30,6 +30,14 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.13 - Newborn (current)
 
+- **1.13.81** `EXTENSION` `raised by: Claude-JG` `resolved by: Claude-JG` SensorUserFunction with itemNumbers (#2977)
+  - description: revision2026c step RG7.7 (docs/dev/design/pythonUserItems.md 5.7): a second array itemNumbers, one of the two arrays empty; the non-empty one goes to the user function, which reads the items via mbs; example 7: kinetic energy of a group of bodies.
+  - **notes:** SensorUserFunction.itemNumbers: the user function gets item numbers instead of sensor numbers and reads the items through mbs
+  - date resolved: **2026-10-13 20:52**, date raised: 2026-10-12
+- **1.13.80** `EXTENSION` `MEDIUM EFF` `resolved by: Claude-JG` solver timers (#2007)
+  - description: add special timer for Python user functions, as solver timer for python does not include user functions
+  - **notes:** with show.computationTime, the solver measures the time spent in user functions (timer.userFunctions) and lists it in the CPU-time statistics
+  - date resolved: **2026-10-13 20:52**, date raised: 2025-05-10
 - **1.13.79** `CHANGE` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` SystemEnergy and CreateDistanceSensor ask mbs.Inspect instead of trying the output functions (#2991)
   - description: revision2026c step RG11.8.18 (maintainer 2026-10-13): advancedUtilities.SystemEnergy found bodies and their energies by calling GetObjectOutputBody and GetObjectOutput in try/except, and ComputeSystemEnergies tried the body function first for every object; mbs.Inspect(object, InspectType.ObjectType) says whether it is a body and InspectType.OutputVariables which energies it gives with its parameters. The only other such construct in the library, CreateDistanceSensor, tried GetMarkerOutput(Position) of a marker.
   - **notes:** SystemEnergy and CreateDistanceSensor ask mbs.Inspect for the kind of an object and the output variables it provides instead of trying the output functions

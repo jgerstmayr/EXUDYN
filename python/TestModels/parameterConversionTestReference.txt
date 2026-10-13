@@ -81,6 +81,7 @@ outcome: !ExudynTypeError !ExudynTypeError !ExudynTypeError !ExudynTypeError !Ex
   ObjectJointSliding: constrainRotations(class,dict,set) constrainTranslations(class,dict,set)
   ObjectJointSpherical: constrainedAxes(class,dict,set)
   ObjectKinematicTree: linkParents(class,dict,set)
+  SensorUserFunction: itemNumbers(class,dict,set)
   VisualizationSettings.sensors.traces: listOfPositionSensors(attribute,dict) listOfTriadSensors(attribute,dict) listOfVectorSensors(attribute,dict)
   VisualizationSettings.view0.window: renderWindowPosition(attribute,dict) renderWindowSize(attribute,dict)
   VisualizationSettings.view1.window: renderWindowPosition(attribute,dict) renderWindowSize(attribute,dict)
@@ -1197,7 +1198,7 @@ outcome: str=default
   SensorNode: Vshow(omit) fileName(omit) nodeNumber(omit) outputVariableType(omit) storeInternal(omit) writeToFile(omit)
   SensorObject: Vshow(omit) fileName(omit) objectNumber(omit) outputVariableType(omit) storeInternal(omit) writeToFile(omit)
   SensorSuperElement: Vshow(omit) bodyNumber(omit) fileName(omit) outputVariableType(omit) storeInternal(omit) writeToFile(omit)
-  SensorUserFunction: factors(omit) fileName(omit) sensorNumbers(omit) sensorUserFunction(omit) storeInternal(omit) writeToFile(omit)
+  SensorUserFunction: factors(omit) fileName(omit) itemNumbers(omit) sensorNumbers(omit) sensorUserFunction(omit) storeInternal(omit) writeToFile(omit)
 
 outcome: str=float=0.0
   ObjectALEANCFCable2D: physicsAxialDamping(omit) physicsAxialStiffness(omit) physicsBendingDamping(omit) physicsBendingStiffness(omit) physicsLength(omit) physicsMassPerLength(omit) physicsReferenceAxialStrain(omit) physicsReferenceCurvature(omit)

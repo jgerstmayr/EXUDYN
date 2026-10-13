@@ -1931,6 +1931,7 @@ items = {
     'parameters': {
       'name': {'type': 'String', 'size': '', 'range': '', 'default': '', 'mustBeGiven': False, 'description': "sensor's unique name"},
       'sensorNumbers': {'type': 'ArraySensorIndex', 'size': '', 'range': '', 'default': '[]', 'mustBeGiven': False, 'description': 'optional list of :math:`n` sensor numbers for use in user function'},
+      'itemNumbers': {'type': 'ArrayIndex', 'size': '', 'range': '', 'default': '[]', 'mustBeGiven': False, 'description': 'optional list of :math:`n` item numbers (objects, nodes, markers, loads) for use in the user function, which gets them instead of sensorNumbers; sensorNumbers must then be empty'},
       'factors': {'type': 'Vector', 'size': '', 'range': '', 'default': '[]', 'mustBeGiven': False, 'description': 'optional list of :math:`m` factors which can be used, e.g., for weighting sensor values'},
       'writeToFile': {'type': 'Bool', 'size': '', 'range': '', 'default': 'True', 'mustBeGiven': False, 'description': "True: write sensor output to file; flag is ignored (interpreted as False), if fileName=''"},
       'fileName': {'type': 'String', 'size': '', 'range': '', 'default': '', 'mustBeGiven': False, 'description': 'directory and file name for sensor file output; empty: no file is written; a relative name is placed in ``exudyn.config.outputDirectory`` if that is set; the directory is created if it does not exist'},

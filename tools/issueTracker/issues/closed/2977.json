@@ -2,9 +2,13 @@
   "number": 2977,
   "title": "SensorUserFunction with itemNumbers",
   "author": "Claude-JG",
-  "status": "RAISED",
+  "status": "RESOLVED",
   "type": "EXTENSION",
   "description": "revision2026c step RG7.7 (docs/dev/design/pythonUserItems.md 5.7): a second array itemNumbers, one of the two arrays empty; the non-empty one goes to the user function, which reads the items via mbs; example 7: kinetic energy of a group of bodies.",
   "dateRaised": "2026-10-12",
-  "deadline": "2027-04-10"
+  "deadline": "2027-04-10",
+  "dateResolved": "2026-10-13 20:52",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "SensorUserFunction.itemNumbers: the user function gets item numbers instead of sensor numbers and reads the items through mbs",
+  "resolvedInVersion": "1.13.81"
 }

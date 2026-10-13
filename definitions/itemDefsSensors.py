@@ -730,9 +730,9 @@ definitions.append(ItemDefinition(
 #++++++++++++++++   SensorUserFunction   ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-def SensorUserFunction_sensorUserFunction(mbs: MainSystem, t: Real, sensorNumbers: Array,
+def SensorUserFunction_sensorUserFunction(mbs: MainSystem, t: Real, numbers: Array,
                                           factors: Vector, configuration: ConfigurationType) -> Vector:
-    r"""A user function, which computes a sensor output from other sensor outputs (or from generic time dependent functions).
+    r"""A user function, which computes a sensor output from other sensor outputs, from items of the system, or from generic time dependent functions.
 
     The configuration in general will be the exudyn.ConfigurationType.Current, but others could be used as well except for SensorMarker.
 
@@ -741,7 +741,7 @@ def SensorUserFunction_sensorUserFunction(mbs: MainSystem, t: Real, sensorNumber
     Args:
         mbs: provides MainSystem mbs to which object belongs
         t: current time in mbs
-        sensorNumbers: $\in \Ncal^n$ list of sensor numbers
+        numbers: $\in \Ncal^n$ list of the sensor numbers, or of the item numbers if itemNumbers is given
         factors: $\in \Rcal^n$ list of factors that can be freely used for the user function
         configuration: usually the exudyn.ConfigurationType.Current, but could also be different in user defined functions.
     Returns:
@@ -752,7 +752,7 @@ definitions.append(ItemDefinition(
     className='SensorUserFunction',
     drawing=r'The item draws nothing.',
     cParentClass=ParentClassCSensor,
-    overallDescription=r'A sensor defined by a user function. The sensor is intended to collect sensor values of a list of given sensors and recombine the output into a new value for output or control purposes. It is also possible to use this sensor without any dependence on other sensors in order to generate output for, e.g., any quantities in mbs or solvers.',
+    overallDescription=r'A sensor defined by a user function. The sensor is intended to collect sensor values of a list of given sensors, or values of a list of items, and recombine them into a new value for output or control purposes. It is also possible to use this sensor without any dependence on other sensors in order to generate output for, e.g., any quantities in mbs or solvers.',
     classType=ClassTypeSensor,
     miniExample=r"""    #a value computed from other sensors: the distance between two mass points
     nA = mbs.AddNode(NodePoint(referenceCoordinates=[0,0,0], initialVelocities=[-1,0,0]))
@@ -777,6 +777,10 @@ definitions.append(ItemDefinition(
     miniExamplePerformanceTest={'numberOfSteps': 1443940},
     examples=['TestModels/sensorUserFunctionTest.py'],
     detailedDescription=r"""    The sensor collects data via a user function, which completely describes the output itself.
+    The user function gets the `sensorNumbers`, or the `itemNumbers` if those are given - at most one of the two
+    lists may be non-empty. The item numbers are plain integers of any kind of item - objects, nodes, markers, loads -
+    which the user function reads through mbs, e.g. `mbs.GetObjectOutputBody(numbers[i], ...)`; which kind they are is
+    the user's to know.
     Note that the sensorNumbers and factors need to be consistent. 
     The return value of the user function is a list of `float` numbers which cast to a `std::vector` in pybind.
     This list can have arbitrary dimension, but should be kept constant during simulation.
@@ -793,6 +797,10 @@ definitions.append(ItemDefinition(
             pythonName='sensorNumbers',
             defaultValue='ArrayIndex()',
             description=r"""$\mathbf{n}_s = [s_0,\,\ldots,\,s_n]\tp$optional list of $n$ sensor numbers for use in user function"""),
+        ItemParameter(type=TArrayIndex, destination=DestComp+DestParam,
+            pythonName='itemNumbers',
+            defaultValue='ArrayIndex()',
+            description=r"""$\mathbf{n}_i = [i_0,\,\ldots,\,i_n]\tp$optional list of $n$ item numbers (objects, nodes, markers, loads) for use in the user function, which gets them instead of sensorNumbers; sensorNumbers must then be empty"""),
         ItemParameter(type=TVector, destination=DestComp+DestParam,
             pythonName='factors',
             defaultValue='Vector()',
@@ -852,6 +860,7 @@ if False:
             implementation='return parameters.sensorNumbers.NumberOfItems();'),
         ItemFunctionDef('SetSensorNumber',
             implementation='parameters.sensorNumbers[localIndex] = sensorNumber;'),
+        ItemFunctionDef('CheckPreAssembleConsistency'),
         ItemFunction(type=TSensorType, destination=DestComp, cFlags=CFConst,
             pythonName='GetType',
             implementation='return SensorType::UserFunction;',

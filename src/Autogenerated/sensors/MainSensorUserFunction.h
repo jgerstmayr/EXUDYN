@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-10-12  00:21:23 (last modified)
+* @date         2026-10-13  20:33:49 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -39,7 +39,7 @@ public: // AUTO:
 
 /** ***********************************************************************************************
 * @class        MainSensorUserFunction
-* @brief        A sensor defined by a user function. The sensor is intended to collect sensor values of a list of given sensors and recombine the output into a new value for output or control purposes. It is also possible to use this sensor without any dependence on other sensors in order to generate output for, e.g., any quantities in mbs or solvers.
+* @brief        A sensor defined by a user function. The sensor is intended to collect sensor values of a list of given sensors, or values of a list of items, and recombine them into a new value for output or control purposes. It is also possible to use this sensor without any dependence on other sensors in order to generate output for, e.g., any quantities in mbs or solvers.
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
@@ -96,6 +96,9 @@ public: // AUTO:
     //! AUTO: Set pointer to visualization base class object (do this only in object factory; type is NOT CHECKED!!!)
     virtual void SetVisualizationSensor(VisualizationSensor* pVisualizationSensor) override { visualizationSensorUserFunction = (VisualizationSensorUserFunction*)pVisualizationSensor; }
 
+    //! AUTO:  Check consistency prior to CSystem::Assemble(); needs to find all possible violations such that Assemble() would fail
+    virtual bool CheckPreAssembleConsistency(const MainSystem& mainSystem, STDstring& errorString) const override;
+
     //! AUTO:  Get type name of sensor (without keyword 'Sensor'...!)
     virtual const char* GetTypeName() const override
     {
@@ -107,6 +110,7 @@ public: // AUTO:
     virtual void SetWithDictionary(const py::dict& d) override
     {
         if (EPyUtils::DictItemExists(d, "sensorNumbers")) { EPyUtils::ItemIndexFromPython<SensorIndex>(d["sensorNumbers"], cSensorUserFunction->GetParameters().sensorNumbers); }
+        if (EPyUtils::DictItemExists(d, "itemNumbers")) { EPyUtils::FromPython(d["itemNumbers"], cSensorUserFunction->GetParameters().itemNumbers, "SensorUserFunction.itemNumbers"); }
         if (EPyUtils::DictItemExists(d, "factors")) { EPyUtils::FromPython(d["factors"], cSensorUserFunction->GetParameters().factors, "SensorUserFunction.factors"); }
         if (EPyUtils::DictItemExists(d, "writeToFile")) { EPyUtils::FromPython(d["writeToFile"], cSensorUserFunction->GetParameters().writeToFile, "SensorUserFunction.writeToFile"); }
         if (EPyUtils::DictItemExists(d, "fileName")) { EPyUtils::FromPython(d["fileName"], cSensorUserFunction->GetParameters().fileName); }
@@ -121,6 +125,7 @@ public: // AUTO:
         auto d = py::dict();
         d["sensorType"] = (std::string)GetTypeName();
         d["sensorNumbers"] = EPyUtils::ItemIndexToPython<SensorIndex>(cSensorUserFunction->GetParameters().sensorNumbers);
+        d["itemNumbers"] = EPyUtils::ToPythonMember(cSensorUserFunction->GetParameters().itemNumbers);
         d["factors"] = EPyUtils::ToPython(cSensorUserFunction->GetParameters().factors);
         d["writeToFile"] = (bool)cSensorUserFunction->GetParameters().writeToFile;
         d["fileName"] = (std::string)cSensorUserFunction->GetParameters().fileName;
@@ -135,6 +140,7 @@ public: // AUTO:
     {
         if (parameterName.compare("name") == 0) { return py::cast((std::string)name); } //! AUTO: get parameter
         else if (parameterName.compare("sensorNumbers") == 0) { return py::cast(EPyUtils::ItemIndexToPython<SensorIndex>(cSensorUserFunction->GetParameters().sensorNumbers)); } //! AUTO: get parameter
+        else if (parameterName.compare("itemNumbers") == 0) { return py::cast(EPyUtils::ToPythonMember(cSensorUserFunction->GetParameters().itemNumbers)); } //! AUTO: get parameter
         else if (parameterName.compare("factors") == 0) { return EPyUtils::ToPython(cSensorUserFunction->GetParameters().factors); } //! AUTO: get parameter
         else if (parameterName.compare("writeToFile") == 0) { return py::cast((bool)cSensorUserFunction->GetParameters().writeToFile); } //! AUTO: get parameter
         else if (parameterName.compare("fileName") == 0) { return py::cast((std::string)cSensorUserFunction->GetParameters().fileName); } //! AUTO: get parameter
@@ -150,6 +156,7 @@ public: // AUTO:
     {
         if (parameterName.compare("name") == 0) { EPyUtils::FromPython(value, name); } //! AUTO: set parameter
         else if (parameterName.compare("sensorNumbers") == 0) { EPyUtils::ItemIndexFromPython<SensorIndex>(value, cSensorUserFunction->GetParameters().sensorNumbers); } //! AUTO: set parameter
+        else if (parameterName.compare("itemNumbers") == 0) { EPyUtils::FromPython(value, cSensorUserFunction->GetParameters().itemNumbers, "SensorUserFunction.itemNumbers"); } //! AUTO: set parameter
         else if (parameterName.compare("factors") == 0) { EPyUtils::FromPython(value, cSensorUserFunction->GetParameters().factors, "SensorUserFunction.factors"); } //! AUTO: set parameter
         else if (parameterName.compare("writeToFile") == 0) { EPyUtils::FromPython(value, cSensorUserFunction->GetParameters().writeToFile, "SensorUserFunction.writeToFile"); } //! AUTO: set parameter
         else if (parameterName.compare("fileName") == 0) { EPyUtils::FromPython(value, cSensorUserFunction->GetParameters().fileName); } //! AUTO: set parameter

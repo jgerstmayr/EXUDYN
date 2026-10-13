@@ -12,6 +12,7 @@ Developer-facing notes. Users start at [`README.rst`](https://github.com/jgerstm
 | [NEW_ITEM.md](NEW_ITEM.md) | how to set up a new item: the definition, what is generated, the C++, what to run |
 | [RELEASE.md](RELEASE.md) | how a release reaches GitHub, PyPI and the documentation: the commands in order, the rehearsal on GitHub, the traps |
 | [design/pythonUserItems.md](design/pythonUserItems.md) | the design of the Python user items: what each kind of item needs, the decisions, measurements |
+| [design/symmetricBasis.md](design/symmetricBasis.md) | the symmetric frame of two slope vectors and its rotation Jacobian, for NodePointSlope12 (concept, with a Python reference) |
 | [GUI_MANUAL_CHECK.md](GUI_MANUAL_CHECK.md) | the manual check of the render window and the dialogs before a release, per platform |
 | [../../definitions/README.md](../../definitions/README.md) | the item and structure definitions as Python, and the function declaration library |
 | [../../tools/generators/README.md](../../tools/generators/README.md) | the new generator code and how to re-emit the definitions |
@@ -37,6 +38,7 @@ Developer-facing notes. Users start at [`README.rst`](https://github.com/jgerstm
 /docs/dev/NEW_ITEM
 /docs/dev/GUI_MANUAL_CHECK
 /docs/dev/design/pythonUserItems
+/docs/dev/design/symmetricBasis
 /docs/generated/deprecations
 /definitions/README
 /tools/generators/README

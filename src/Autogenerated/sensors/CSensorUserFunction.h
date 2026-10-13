@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-09-28  00:34:30 (last modified)
+* @date         2026-10-13  20:33:49 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -31,6 +31,7 @@ class CSensorUserFunctionParameters // AUTO:
 {
 public: // AUTO:
     ArrayIndex sensorNumbers;                     //!< AUTO: optional list of \f$n\f$ sensor numbers for use in user function
+    ArrayIndex itemNumbers;                       //!< AUTO: optional list of \f$n\f$ item numbers (objects, nodes, markers, loads) for use in the user function, which gets them instead of sensorNumbers; sensorNumbers must then be empty
     Vector factors;                               //!< AUTO: optional list of \f$m\f$ factors which can be used, e.g., for weighting sensor values
     bool writeToFile;                             //!< AUTO: True: write sensor output to file; flag is ignored (interpreted as False), if fileName=''
     std::string fileName;                         //!< AUTO: directory and file name for sensor file output; empty: no file is written; a relative name is placed in `exudyn.config.outputDirectory` if that is set; the directory is created if it does not exist
@@ -40,6 +41,7 @@ public: // AUTO:
     CSensorUserFunctionParameters()
     {
         sensorNumbers = ArrayIndex();
+        itemNumbers = ArrayIndex();
         factors = Vector();
         writeToFile = true;
         fileName = "";
@@ -51,7 +53,7 @@ public: // AUTO:
 
 /** ***********************************************************************************************
 * @class        CSensorUserFunction
-* @brief        A sensor defined by a user function. The sensor is intended to collect sensor values of a list of given sensors and recombine the output into a new value for output or control purposes. It is also possible to use this sensor without any dependence on other sensors in order to generate output for, e.g., any quantities in mbs or solvers.
+* @brief        A sensor defined by a user function. The sensor is intended to collect sensor values of a list of given sensors, or values of a list of items, and recombine them into a new value for output or control purposes. It is also possible to use this sensor without any dependence on other sensors in order to generate output for, e.g., any quantities in mbs or solvers.
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)

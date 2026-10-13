@@ -639,6 +639,8 @@ bool CSolverBase::SolveSystem(CSystem& computationalSystem, const SimulationSett
 
 		globalTimers.Reset();
 		timer.Reset(simulationSettings.show.computationTime);
+		UserFunctionTimer::time = 0.; //(#2007)
+		UserFunctionTimer::active = timer.useTimer;
 		timer.total = -EXUstd::GetTimeInSeconds();
 		output.cpuSolverStartTime = -timer.total; //exactly the same!
 		pausedSeconds = 0.;
@@ -652,6 +654,8 @@ bool CSolverBase::SolveSystem(CSystem& computationalSystem, const SimulationSett
 			}, "CSolverBase::SolveSteps");
 		}
 		timer.total += EXUstd::GetTimeInSeconds();
+		timer.userFunctions = UserFunctionTimer::time;
+		UserFunctionTimer::active = false;
 		output.finishedSuccessfully = success;
 
 		SolverExceptionHandling([&]
