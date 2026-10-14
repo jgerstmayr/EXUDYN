@@ -1014,3 +1014,33 @@ the geometrically exact beam.)*
   MarkerBodyRigid on the element corner gives the same solution to the bit; the frame of the element at the corner is
   that of the node, its third axis the normal; dynamic, the angular velocity of the element frame is the time
   derivative of its rotation matrix (1.8e-10).
+
+<a id="rg11-8-19"></a>
+### RG11.8.19, RG4.20.5.1, RG11.8.14 and RG11.8.15 — the strains of the ANCF beam, the slope scaling of ShellMesh, the mecanum test, a container without renderer (2026-10-14, #948, #2226, #2259, #2992)
+*(Maintainer 2026-10-14: do the follow-up on the cross section penalty, #2226, #2259, #948.)*
+- **#2992, ObjectANCFBeam**: after #2228 the node and element rotation were the symmetric basis, but the strains
+  (twist, curvatures, the two shear strains) were measured in the frame of the 2013 formulation (`GetBasisI`, the
+  z-slope leading). A torque on the node then acted on a frame that the strains did not see as rotated, and the cross
+  section at the loaded node sheared against the penalty only: 0.00044, 0.00088, 0.0018 degrees for 8, 16, 32
+  elements, i.e. 1/(penalty x element length). `CrossSectionFrame` (the symmetric basis, [e3, e1, e2]) replaces
+  `GetBasisI`/`GetBasisI_xI`; the curvature is kappa = A^T G [slopeY'; slopeZ'], G the closed-form rotation Jacobian.
+  The shear falls to about 1e-10 degrees; ANCFBeamGeometricallyExactComparisonTest: the static rotation difference to
+  the geometrically exact beam 1.4e-7 instead of 3.7e-6. References: ANCFBeamTest +2.4e-5 (the Princeton beam of
+  ANCFBeamTest moves by about 1e-6 relative), ANCFCableBeamDampingTest +1.5e-11, energiesFlexibleBodiesTest +2.8e-10,
+  the comparison test -3.2e-9.
+- **#2226, ShellMesh**: the derivative lengths of the mapped geometry (chained through the bilinear map of the
+  vertices) improve the chord lengths only 3 times on a 30-degree element (radius error 1.95e-4 against 5.8e-4): a cubic
+  with the exact tangent lengths is not the best cubic of an arc. `EdgeSlopeScaling` takes per element edge the length s
+  for which the cubic passes through the mapped midpoint of the edge, s = 8 (m - (p0+p1)/2).(t0-t1)/|t0-t1|^2 - for an
+  arc 4 R tan(angle/4) - and the derivative length on straight edges, without a mapping, or when s leaves [0.5, 2]
+  times the derivative length. Radius error 3.5e-7; flat meshes keep the chord lengths (1.1e-16). The plate tests are
+  unchanged (flat or mapped without curvature along an edge).
+- **#2259**: `SystemContainer(attachToRenderer=False)`; such a container can be attached later by SC.renderer.Attach().
+  Destroying it does not detach the renderer either (DetachVisualizationSystem only detaches the container that is
+  linked). InverseKinematicsNumerical uses it unless useRenderer. Test model systemContainerComputeOnlyTest.py, through
+  exu.special.currentRendererSystemContainer. It found #2993: InverseKinematicsNumerical fails for links without
+  PDcontrol (raised, RG11.8.20).
+- **#948**: mecanumWheelRollingDiscTest follows a Trajectory (forward 4 m, sideways 4 m, half a turn, forward) with
+  TorsionalSpringDamper motors (stiffness 0, damping 500, `velocityOffset` set in a PreStepUserFunction), as
+  mobileMecanumWheelRobotWithLidar.py. The result cannot stay the same: before, the torque was a load on the wheel only
+  and the velocity a step. After 20 s the car is 1 cm from the trajectory; the test runs 4 s (3.890 of 4 m).

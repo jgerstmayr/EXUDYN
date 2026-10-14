@@ -42,6 +42,15 @@ pb.DefStartTable(pyClassStr)
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #GENERAL FUNCTIONS
 
+pb.DefPyFunctionAccess(cClass=classStr, pyName='__init__', cName='', 
+                        description="create a SystemContainer; with attachToRenderer=False it is not attached to the renderer and leaves the render window with the container it is attached to - for a container used only to compute, such as the one of InverseKinematics; SC.renderer.Attach() attaches it later (#2259)",
+                        argList=['attachToRenderer'],
+                        defaultArgs=['True'],
+                        argTypes=['bool'],
+                        example='SCcompute = exu.SystemContainer(attachToRenderer=False)',
+                        returnType='None',
+                        )
+
 pb.DefPyFunctionAccess(cClass=classStr, pyName='Reset', cName='Reset', 
                         description="delete all multibody systems and reset SystemContainer (including graphics); this also releases SystemContainer from the renderer, which requires SC.renderer.Attach() to be called in order to reconnect to rendering; a safer way is to delete the current SystemContainer and create a new one (SC=SystemContainer() )",
                         returnType='None',

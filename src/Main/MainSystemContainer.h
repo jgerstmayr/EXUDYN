@@ -215,10 +215,12 @@ protected:
 	//should be after visualizationSystems due to initialization
 	MainRenderer renderer;								//!< substructure mainly for Python: in Python this represents the substructure which handles all rendering tasks
 public:
-	MainSystemContainer()
+	//! attachToRenderer=false: a container only to compute, which leaves the renderer with the container it is
+	//! attached to (#2259)
+	MainSystemContainer(bool attachToRenderer = true)
 	{
 		renderer.Initialize(this);
-		AttachToRenderEngineInternal(); //also sets currentRendererContainer
+		if (attachToRenderer) { AttachToRenderEngineInternal(); } //also sets currentRendererContainer
 	}
 
 	//! delete all systems (otherwise they could do illegal operations)

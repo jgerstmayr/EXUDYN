@@ -8,10 +8,10 @@ Every entry carries the **type** of the issue, then its **priority** and its **e
 
 General information on current version:
 
-- Exudyn version = 1.13.82.dev1
-- last change = 2026-10-13
-- Number of issues = 2992
-- Number of resolved issues = 2859 (82 in current version)
+- Exudyn version = 1.13.86.dev1
+- last change = 2026-10-14
+- Number of issues = 2994
+- Number of resolved issues = 2863 (86 in current version)
 
 ## Resolved issues and resolved bugs before version 1.13
 
@@ -9125,10 +9125,6 @@ The following list contains the issues which have been **RESOLVED** in the accor
   - description: add detailed description to function, in particular to returned dict
   - **remarks:** planned as revision2026b step RG18.1 (triage 2026-10-07)
   - date raised: 2026-02-04
-- `EXTENSION` `LOW EFF` SystemContainer (#2259)
-  - description: add option to constructor whether to attach to renderer or not (if used purely for computations, like in InverseKinematics
-  - **remarks:** planned as revision2026b step RG18.1 (triage 2026-10-07)
-  - date raised: 2026-02-02
 - `CHANGE` `LOW EFF` camera (#2247)
   - description: add documentation for model-centric and camera-centric views
   - **remarks:** planned as revision2026b step RG18.1 (triage 2026-10-07)
@@ -9153,10 +9149,6 @@ The following list contains the issues which have been **RESOLVED** in the accor
   - description: add cylindrical test problem; compare to ANCFCable2D
   - **remarks:** planned as revision2026b step RG4.20.5 (triage 2026-10-07)
   - date raised: 2026-01-18
-- `EXTENSION` `MEDIUM EFF` ANCFThinPlate (#2226)
-  - description: compute optimal slopes scaling in ShellMesh functionality
-  - **remarks:** planned as revision2026b step RG4.20.5 (triage 2026-10-07)
-  - date raised: 2026-01-16
 - `EXTENSION` `HIGH EFF` symbolic (#2223)
   - description: add vector and matrix functionality for Diff()
   - **remarks:** kept open as an idea, no plan step (triage 2026-10-07, revision2026b group RG18)
@@ -9390,10 +9382,6 @@ The following list contains the issues which have been **RESOLVED** in the accor
   - description: add description - specifically regarding OutputVariables, special terms not available in ANCFCable2D (and add reference to ASME CND paper)
   - **remarks:** planned as revision2026b step RG13.9 (triage 2026-10-07)
   - date raised: 2022-03-15
-- `CHANGE` `LOW EFF` update mecanumWheelRollingDiscTest (#948)
-  - description: update w.r.t. Trajectory class and TorsionalSpringDamper
-  - **remarks:** planned as revision2026b step RG18.1 (triage 2026-10-07)
-  - date raised: 2022-02-21
 - `EXTENSION` `MEDIUM EFF` GeneralContact (#937)
   - description: add option to draw contact forces
   - date raised: 2022-02-10
@@ -9538,3 +9526,6 @@ The following list contains the issues which have been **RESOLVED** in the accor
 
 ## Known bugs
 
+- <span class="textred">`BUG`</span> `LOW EFF` `raised by: Claude-JG` InverseKinematicsNumerical fails for a robot whose links have no PDcontrol (#2993)
+  - description: revision2026c step RG11.8.20: InverseKinematicsNumerical.\_\_init\_\_ reads self.robot.links\[i\].PDcontrol to store it, but RobotLink sets the attribute only when PDcontrol is given, so a robot built without control raises AttributeError ('RobotLink' object has no attribute 'PDcontrol'); it also leaves the joint stiffness of the inverse kinematics and robot.gravity = \[0,0,0\] in the robot it is given. Found with the test model of \#2259.
+  - date raised: 2026-10-14

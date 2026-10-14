@@ -41,9 +41,9 @@ def TestExamplesReferenceSolution():
         'abaqusImportTest.py': 0.0005885208722206048,               #new 2023-04-20; 5 modes as 8 modes have sensitive "half mode included"
         'allExudynModulesTest.py': 1.0,                               #new 2026-02-03; test all modules (if some major error is contained...)
         'appendSystemTest.py': 6.274157091191782,                     #new 2026-10-04: SC.AppendSystem of a copy and of the system of another container, deleted once (#2842)
-        'ANCFBeamTest.py': 1.010486312300453, #2026-10-13: the frame of the slopes is their symmetric basis (#2228), +2.6e-10; before 1.0104863120355159; 2026-10-11: initial values from exudyn.cMath and cUtilities (#2962, #2963); before 1.010486312035481;new 2023-04-04, after resolving local kappa bug; 2026-10-02: the rotation of the slope nodes consistent (#2763), -2.6e-10
+        'ANCFBeamTest.py': 1.0105101312118379, #2026-10-14: the strains in the symmetric basis of the slopes (#2992), +2.4e-5; before 1.010486312300453; 2026-10-13: the frame of the slopes is their symmetric basis (#2228), +2.6e-10; before 1.0104863120355159; 2026-10-11: initial values from exudyn.cMath and cUtilities (#2962, #2963); before 1.010486312035481;new 2023-04-04, after resolving local kappa bug; 2026-10-02: the rotation of the slope nodes consistent (#2763), -2.6e-10
         'ANCFcable2DuserFunction.py': 0.6015588367721794, #2026-10-11: initial values from exudyn.cMath and cUtilities (#2962, #2963); before 0.6015588367721973;new 2023-12-13
-        'ANCFCableBeamDampingTest.py': 0.18992335574301988, #2026-10-13: the symmetric basis of the slopes (#2228), +2.3e-11; before 0.1899233557201726; new 2026-03-25, checking damping between ANCFCable2D and ANCFBeam; 2026-10-02: the rotation of the slope nodes consistent (#2763)
+        'ANCFCableBeamDampingTest.py': 0.1899233558939727, #2026-10-14: the strains of ObjectANCFBeam in the symmetric basis (#2992), +1.5e-11; before 0.18992335574301988; 2026-10-13: the symmetric basis of the slopes (#2228), +2.3e-11; before 0.1899233557201726; new 2026-03-25, checking damping between ANCFCable2D and ANCFBeam; 2026-10-02: the rotation of the slope nodes consistent (#2763)
         'ANCFbeltDrive.py': -0.0011715990134787968, #2026-10-11: initial values from exudyn.cMath and cUtilities (#2962, #2963); before -0.0011715885324992126;new 2026-09-17: the model was retuned (16 elements
                                                                 #per section, tEnd=0.1) and the result now comes from the
                                                                 #sensor rather than an ODE2 coordinate (#2368)
@@ -113,7 +113,7 @@ def TestExamplesReferenceSolution():
         'geometricallyExactBeamCurvedTest.py':4.561491685469839, #the 45-degree bend, stress-free in its curved reference configuration (#1494)
         'geometricallyExactBeamRightAngleFrame.py':3.306181715978533, #2026-10-02: JointGeneric on the connector interface, reaction forces summed in another order (#2745), before 3.306181714013268; #lateral buckling of the right-angle frame at 1.088 N (#1499)
         'rightAngleFrame.py':4.3718231979938516, #2026-10-02: JointGeneric on the connector interface, reaction forces summed in another order (#2745), before 4.371823197993865; #the same frame driven by displacement, past the buckling point (#2762)
-        'energiesFlexibleBodiesTest.py':5.850170604918973, #2026-10-05: the ANCF thin plate of the working copy 2026 (#2857), round-off; before 5.850170604919896; #elastic energy of beams, plate and kinematic tree in free oscillations (#2202)
+        'energiesFlexibleBodiesTest.py':5.850170605200625, #2026-10-14: the strains of ObjectANCFBeam in the symmetric basis (#2992), +2.8e-10; before 5.850170604918973; 2026-10-05: the ANCF thin plate of the working copy 2026 (#2857), round-off; before 5.850170604919896; #elastic energy of beams, plate and kinematic tree in free oscillations (#2202)
         'accessFunctionsTest.py':1.255546526424125, #new 2026-10-02: the access functions of a body at a local position, and what Assemble() refuses (#2744); 2026-10-02: a force at the rim of ObjectRotationalMass1D (#2775)
         'computeItemTest.py':71.26280786962762, #new 2026-10-02: mbs.ComputeItem and NumericalJacobian on a double pendulum (#2779)
         'emptySystemTest.py':124.09765181769477, #new 2026-10-02: a system without coordinates through every solver, dense and sparse (#2790)
@@ -135,7 +135,9 @@ def TestExamplesReferenceSolution():
         'solverFailureMessageTest.py':0, #new 2026-10-13: the exception of a failed solve carries the whole message (#1977)
         'sensorUserFunctionItemsTest.py':7.537499976593686, #new 2026-10-13: SensorUserFunction with itemNumbers, the kinetic energy of a group of bodies (#2977)
         'userFunctionTimerTest.py':3, #new 2026-10-13: the solver timer userFunctions, flags only (#2007)
-        'ANCFBeamGeometricallyExactComparisonTest.py':5.9995017472560175, #new 2026-10-13: ObjectANCFBeam against ObjectBeamGeometricallyExact, tip torque on node and element (#2228)
+        'shellMeshSlopesScalingTest.py':0.0005808783959917463, #new 2026-10-14: the slope scaling of ShellMesh on a quarter cylinder and a flat trapezoid (#2226)
+        'systemContainerComputeOnlyTest.py':4.0, #new 2026-10-14: SystemContainer(attachToRenderer=False), the renderer stays with the container of the model, also for InverseKinematicsNumerical (#2259)
+        'ANCFBeamGeometricallyExactComparisonTest.py':5.999501744103005, #2026-10-14: the strains of ObjectANCFBeam in the symmetric basis (#2992); before 5.9995017472560175; new 2026-10-13: ObjectANCFBeam against ObjectBeamGeometricallyExact, tip torque on node and element (#2228)
         'ANCFThinPlateRotationTest.py':0.009394817004517305, #new 2026-10-13: the frame of ObjectANCFThinPlate and NodePointSlope12, torque on element and node (#2228)
         'userTypesTest.py':2.0, #new 2026-10-12: the user types of OutputVariableType, NodeType, MarkerType, their names and aliases, ObjectUserBody.outputVariableUserFunction (#2989)
         'rotationMarkerDeprecationTest.py':-0.1340286194620787, #new 2026-10-03: rotationMarker0/1 against localHT of the markers, the deprecation warning once per session (#2745, #2801)
@@ -177,7 +179,7 @@ def TestExamplesReferenceSolution():
         'mainSystemUserFunctionsTest.py': 4.069301305919595,        #new 2024-10-17
         'manualExplicitIntegrator.py':2.0596986296922988,
         'matrixContainerTest.py':56.5,                              #new 2024-10-09
-        'mecanumWheelRollingDiscTest.py':0.2714267238324342,
+        'mecanumWheelRollingDiscTest.py':3.8895688163077313, #2026-10-14: a Trajectory and TorsionalSpringDamper motors, 4 s (#948); before 0.2714267238324342 with torques controlled in a load user function, 0.5 s
         'movingGroundRobotTest.py':0.0038408994979840755,           #updated 2026-09-09, with factor 0.5 for tolerance too close
         'NGsolveCMStest.py': 0.06953224923173146,                   #re-measured 2026-09-16 (#2466) against the COMMITTED testData/netgenTestMesh.pkl; the model rewrites that tracked file whenever its load fails, and the result then moves by 2.4e-8 (#2469); changed 2025-05-05 (new .pkl file with newer ngsolve); until 2024-10-11: 0.06953227339277462
         'objectFFRFreducedOrderAccelerations.py':0.10000570245889191,#before 2022-07-22 (because often small fails); 0.5000285122944431,#before 2022-02-20 (accuracy of internal sensors is higher): 0.5000285122930983,
@@ -681,7 +683,8 @@ def AVX2ReferenceSolutionUpdate():
         'genericODE2test.py':                     0.03604546349916921,      #drift 8.0e-14
         'createKinematicTreeTest.py':             3.340830142730632,         #drift 7.4e-14
         'ANCFcable2DuserFunction.py':             0.6015588367721516,        #drift 7.1e-14
-        'ANCFBeamTest.py':                        1.0104863123003804,        #2026-10-13: the symmetric basis of the slopes (#2228)
+        'ANCFBeamTest.py':                        1.0105101312117235,        #2026-10-14: the strains in the symmetric basis (#2992); before 1.0104863123003804
+        'energiesFlexibleBodiesTest.py':          5.850170605200533,         #drift 9.2e-14 (#2992)
         'userRigidBodyTest.py':                   13.4757550213763,          #drift 5.3e-14 (#2986)
         #a single run of runPerformanceTests.py: its result moves by 20% with the Newton tolerance (#2914)
         'perfAccessFunctionsAD:cable-n200-implicit': 0.004662459533372243,  #drift 8.4e-07

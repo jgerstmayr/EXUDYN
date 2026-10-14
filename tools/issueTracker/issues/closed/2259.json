@@ -1,0 +1,15 @@
+{
+  "number": 2259,
+  "title": "SystemContainer",
+  "author": "JG",
+  "status": "RESOLVED",
+  "type": "EXTENSION",
+  "effort": "LOW",
+  "description": "add option to constructor whether to attach to renderer or not (if used purely for computations, like in InverseKinematics",
+  "dateRaised": "2026-02-02",
+  "deadline": "2026-08-01",
+  "dateResolved": "2026-10-14 08:16",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "SystemContainer(attachToRenderer=False) creates a container only to compute, which leaves the render window with the container of the model; InverseKinematicsNumerical uses it unless useRenderer; test model systemContainerComputeOnlyTest.py (revision2026c step RG11.8.15)",
+  "resolvedInVersion": "1.13.85"
+}

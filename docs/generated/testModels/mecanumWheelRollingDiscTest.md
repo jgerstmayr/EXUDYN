@@ -10,9 +10,10 @@ You can view and download this file on Github: [mecanumWheelRollingDiscTest.py](
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 # This is an EXUDYN example
 #
-# Details:  mecanum wheels modeled by ObjectConnectorRollingDiscPenalty
-#           specific friction angle of rolling disc is used to model rolls of mecanum wheels
-#           formulation is still under development and needs more testing
+# Details:  mecanum wheels modeled by ObjectConnectorRollingDiscPenalty: the friction angle of the rolling disc models
+#           the rolls of the mecanum wheels. The car follows a Trajectory of [x, y, phi]: a PreStepUserFunction turns
+#           its velocities into the angular velocities of the wheels, which are the velocityOffset of a
+#           TorsionalSpringDamper between car and wheel - a motor whose torque reacts on the car (#948).
 #
 # Author:   Johannes Gerstmayr
 # Date:     2020-06-19
@@ -24,6 +25,8 @@ You can view and download this file on Github: [mecanumWheelRollingDiscTest.py](
 import exudyn as exu
 from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
 import exudyn.graphics as graphics
+
+from exudyn.robotics.motion import Trajectory, ProfileConstantAcceleration
 
 import numpy as np
 from exudyn import cMath #the math functions of the C++ code, the same bits on every platform
@@ -87,6 +90,8 @@ markerWheels=[]
 markerCarAxles=[]
 oRollingDiscs=[]
 sAngularVelWheels=[]
+oWheelMotors=[]
+pControl = 500 #the damping of the motors, the gain of their velocity control
 
 # car setup:
 # ^Y, lCar
@@ -171,6 +176,14 @@ for iWheel in range(nWheels):
     mbs.AddObject(GenericJoint(markerNumbers=[mWheel,mCarAxle],
                                constrainedAxes=[1,1,1,lockedAxis0,1,1])) #revolute joint for wheel
 
+    #the motor: a torsional damper about the wheel axis, whose velocityOffset is the desired angular velocity of the
+    #wheel relative to the car; the torsional spring-damper acts about the z-axis of its markers, turned onto x
+    RMotor = RotationMatrixY(0.5*np.pi)
+    mMotorCar = mbs.AddMarker(MarkerBodyRigid(bodyNumber=bCar, localHT=exu.HT(rotation=initialRotation @ RMotor, translation=pOff)))
+    mMotorWheel = mbs.AddMarker(MarkerBodyRigid(bodyNumber=b0, localHT=exu.HT(rotation=RMotor)))
+    oWheelMotors += [mbs.AddObject(TorsionalSpringDamper(markerNumbers=[mMotorCar, mMotorWheel],
+                                                         stiffness=0, damping=pControl))]
+
     #does not work, because revolute joint does not accept off-axis
     #kSuspension = 1e4
     #dSuspension = kSuspension*0.01
@@ -200,13 +213,6 @@ for iWheel in range(nWheels):
                                    outputVariableType = exu.OutputVariableType.ForceLocal))]
 
 
-torqueFactor = 100
-def UFBasicTorque(mbs, t, torque):
-    if t < 0.2:
-        return torque
-    else:
-        return [0,0,0]
-
 #takes as input the translational and angular velocity and outputs the velocities for all 4 wheels
 #wheel axis is mounted at x-axis; positive angVel rotates CCW in x/y plane viewed from top
 # car setup:
@@ -227,43 +233,23 @@ def MecanumXYphi2WheelVelocities(xVel, yVel, angVel, R, Lx, Ly):
                           [ 1,-1,-LxLy2]])    
     return mat @ [xVel, yVel, angVel]
 
-#compute velocity trajectory
-def ComputeVelocity(t):
-    vel = [0,0,0] #vx, vy, angVel; these are the local velocities!!!
-    f=1
-    if t < 4:
-      vel = [f,0,0]
-    elif t < 8:
-      vel = [0,f,0]
-    elif t < 16:
-      vel = [0,0,0.125*np.pi]
-    elif t < 20:
-      vel = [f,0,0]
-    return vel
+#the trajectory of the car, [x, y, phi] in the global frame: forward, sideways, half a turn, forward again
+trajectory = Trajectory(initialCoordinates=[0, 0, 0], initialTime=0)
+trajectory.Add(ProfileConstantAcceleration([4, 0, 0], 4))
+trajectory.Add(ProfileConstantAcceleration([4, 4, 0], 4))
+trajectory.Add(ProfileConstantAcceleration([4, 4, np.pi], 8))
+trajectory.Add(ProfileConstantAcceleration([0, 4, np.pi], 4))
 
-pControl = 500
-#compute controlled torque; torque[0] contains wheel number
-def UFtorque(mbs, t, torque):
-    iWheel = int(torque[0]) #wheel number
+def PreStepUserFunction(mbs, t):
+    """the desired angular velocities of the wheels from the velocities of the trajectory, in the frame of the car"""
+    [s, v, a] = trajectory.Evaluate(t)
+    vLocal = RotationMatrixZ(s[2]).T @ [v[0], v[1], 0]
+    wDesired = MecanumXYphi2WheelVelocities(vLocal[0], vLocal[1], v[2], rWheel, wCar, lCar)
+    for iWheel in range(nWheels):
+        mbs.SetObjectParameter(oWheelMotors[iWheel], 'velocityOffset', wDesired[iWheel])
+    return True
 
-    v = ComputeVelocity(t) #desired velocity
-    vDesired = MecanumXYphi2WheelVelocities(v[0],v[1],v[2],rWheel,wCar,lCar)[iWheel]
-    vCurrent = mbs.GetSensorValues(sAngularVelWheels[iWheel])[0] #local x-axis = wheel axis
-    
-    cTorque = pControl*(vDesired-vCurrent)
-    #print("W",iWheel, ": vDes=", vDesired, ", vCur=", vCurrent, ", torque=", cTorque)
-    
-    return [cTorque,0,0]
-
-if False:
-    mbs.AddLoad(Torque(markerNumber=markerWheels[0],loadVector=[ torqueFactor,0,0], bodyFixed = True, loadVectorUserFunction=UFBasicTorque))
-    mbs.AddLoad(Torque(markerNumber=markerWheels[1],loadVector=[-torqueFactor,0,0], bodyFixed = True, loadVectorUserFunction=UFBasicTorque))
-    mbs.AddLoad(Torque(markerNumber=markerWheels[2],loadVector=[-torqueFactor,0,0], bodyFixed = True, loadVectorUserFunction=UFBasicTorque))
-    mbs.AddLoad(Torque(markerNumber=markerWheels[3],loadVector=[ torqueFactor,0,0], bodyFixed = True, loadVectorUserFunction=UFBasicTorque))
-
-if True:
-    for i in range(4):
-        mbs.AddLoad(Torque(markerNumber=markerWheels[i],loadVector=[ i,0,0], bodyFixed = True, loadVectorUserFunction=UFtorque))
+mbs.SetPreStepUserFunction(PreStepUserFunction)
 
 #mbs.AddSensor(SensorObject(objectNumber=oRolling, fileName='solution/rollingDiscTrailVel.txt', 
 #                           outputVariableType = exu.OutputVariableType.VelocityLocal))
@@ -273,9 +259,9 @@ mbs.Assemble()
 
 simulationSettings = exu.SimulationSettings() #takes currently set values or default values
 
-tEnd = 0.5
+tEnd = 4 #the first part of the trajectory: 4 m forward
 if not testIsActive:
-    tEnd = 0.5 #24
+    tEnd = 20 #the whole trajectory
 
 h=0.002
 
@@ -316,6 +302,7 @@ if not testIsActive:
 mbs.SolveDynamic(simulationSettings)
 
 p0=mbs.GetObjectOutputBody(bCar, exu.OutputVariableType.Position, localPosition=[0,0,0])
+exu.Print('car position', p0[0:2], ', trajectory', trajectory.Evaluate(tEnd)[0][0:2])
 exu.Print('solution of mecanumWheelRollingDiscTest=',p0[0]) #use x-coordinate
 
 exu.sys['testResult'] = p0[0]

@@ -1,0 +1,15 @@
+{
+  "number": 2226,
+  "title": "ANCFThinPlate",
+  "author": "JG",
+  "status": "RESOLVED",
+  "type": "EXTENSION",
+  "effort": "MEDIUM",
+  "description": "compute optimal slopes scaling in ShellMesh functionality",
+  "dateRaised": "2026-01-16",
+  "deadline": "2026-07-15",
+  "dateResolved": "2026-10-14 08:16",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "ShellMesh gives slopesScalingX/Y per element edge: the length for which the cubic edge passes through the mapped midpoint of the edge (on a circle the best cubic), on straight edges the derivative of the geometry times the parameter length; on a quarter cylinder the radius error falls from 5.8e-4 (chord lengths) to 3.5e-7; test model shellMeshSlopesScalingTest.py (revision2026c step RG4.20.5.1)",
+  "resolvedInVersion": "1.13.84"
+}

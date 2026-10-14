@@ -1,0 +1,15 @@
+{
+  "number": 948,
+  "title": "update mecanumWheelRollingDiscTest",
+  "author": "JG",
+  "status": "RESOLVED",
+  "type": "CHANGE",
+  "effort": "LOW",
+  "description": "update w.r.t. Trajectory class and TorsionalSpringDamper",
+  "dateRaised": "2022-02-21",
+  "deadline": "2022-04-22",
+  "dateResolved": "2026-10-14 08:16",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "mecanumWheelRollingDiscTest follows a Trajectory of [x, y, phi]; its velocities are the velocityOffset of TorsionalSpringDamper motors between car and wheels, set in a PreStepUserFunction, so the motor torque reacts on the car; the car follows 20 s of trajectory to 1 cm, the test runs the first 4 s (revision2026c step RG11.8.14)",
+  "resolvedInVersion": "1.13.83"
+}

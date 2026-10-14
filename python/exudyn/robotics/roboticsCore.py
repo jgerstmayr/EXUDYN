@@ -1186,7 +1186,8 @@ class InverseKinematicsNumerical():
             useRenderer: when solving the inverse kinematics the renderer is used to show the starting/end
                          configuration of the robot using the graphics objects definded in the robot object
         """
-        self.SC = exudyn.SystemContainer()
+        #without the renderer, the render window stays with the container of the model (#2259)
+        self.SC = exudyn.SystemContainer(attachToRenderer=useRenderer)
         self.mbsIK = self.SC.AddSystem()
         self.robot = robot
         self.nLinks = len(self.robot.links)

@@ -44,7 +44,15 @@ in user functions (#2007).
 **The frame of two slopes** - of NodePointSlope12 and NodePointSlope23, ObjectANCFBeam and ObjectANCFThinPlate - is
 their symmetric basis, `exudyn.rigidBodyUtilities.SymmetricBasis`: symmetric in the two slopes and independent of
 their lengths, with a consistent angular velocity and rotation Jacobian; ObjectANCFThinPlate has a rotation, so
-MarkerBodyRigid acts on it. Models with rigid markers on these items change slightly (#2228).
+MarkerBodyRigid acts on it. Models with rigid markers on these items change slightly (#2228). ObjectANCFBeam measures its
+strains in the same frame, so a torque on its node no longer shears the cross section; results change slightly
+(#2992).
+
+**`ShellMesh`** scales the slopes of each element edge so that the cubic edge follows the mapped surface - on a
+cylinder about a thousand times closer than with the chord lengths (#2226).
+
+**`SystemContainer(attachToRenderer=False)`** creates a container only to compute, which leaves the render window with
+the container of the model; `InverseKinematicsNumerical` uses it (#2259).
 
 (sec-revisions-1-13)=
 (sec-revisions-1-12)=

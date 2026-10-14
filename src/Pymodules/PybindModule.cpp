@@ -554,7 +554,7 @@ PYBIND11_MODULE(exudynCPP, m) {
 	//+++++++++++++++++++++++++++++++++++++++++++
 	//MAINSYSTEMCONTAINER
 	py::class_<MainSystemContainer>(m, "SystemContainer", "SystemContainer: Contains a set of (multibody) systems")
-		.def(py::init<>())
+		.def(py::init<bool>(), py::arg("attachToRenderer") = true) //False: only to compute, the renderer stays with its container (#2259)
 		//+++++++++++++++++++++++++++++++++++++++++++
 		//System functions:
 		.def("AddSystem", &MainSystemContainer::AddMainSystem, "add a new computational system", py::return_value_policy::reference, py::keep_alive<0, 1>())

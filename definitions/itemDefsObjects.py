@@ -5330,14 +5330,14 @@ definitions.append(ItemDefinition(
 
     #### Strains
 
-    From the cross section vectors $\rv_y$, $\rv_z$ the element builds an orthonormal basis
-    $\tv_1,\, \tv_2,\, \tv_3$ of the cross section ($\tv_3 \parallel \rv_z$, $\tv_1 \perp \rv_y,\,\rv_z$),
-    and measures
+    The frame of the cross section $\Am = [\tv_1,\, \tv_2,\, \tv_3]$ is the symmetric basis of the cross section
+    vectors $\rv_y$, $\rv_z$, the frame of `NodePointSlope23` and of the output variable `Rotation` (#2228); the strains
+    are measured in it (#2992):
 
     | strain | definition | stiffness |
     |---|---|---|
     | axial and shear | $\gamma_1 = \tv_1\tp\rv' - 1$, $\gamma_2 = \tv_2\tp\rv'$, $\gamma_3 = \tv_3\tp\rv'$ | $[EA,\; GA_y,\; GA_z]$ = `axialShearStiffness` |
-    | twist and curvature | $\kv = \frac{1}{2}\sum_i \ev_i \times \ev_i'$ in the local basis | $[GJ_x,\; EI_y,\; EI_z]$ = `torsionalBendingStiffness` |
+    | twist and curvature | $\kv = \Am\tp \Gm \left[ \rv_y';\, \rv_z' \right]$, the derivative of the frame by $x$, with the rotation Jacobian $\Gm$ of the frame | $[GJ_x,\; EI_y,\; EI_z]$ = `torsionalBendingStiffness` |
     | cross section deformation | $\frac{1}{2}(\rv_y\tp\rv_y - 1)$, $\frac{1}{2}(\rv_z\tp\rv_z - 1)$, $\frac{1}{2}\rv_y\tp\rv_z$ | penalty $[f_{yy} EA,\; f_{zz} EA,\; f_{yz}(GA_y+GA_z)]$ with `crossSectionPenaltyFactor` |
 
     each with a viscous damping of the same form. The strains are measured against a **straight,

@@ -109,6 +109,8 @@ graphicsDataErrorsTest
 solverFailureMessageTest
 sensorUserFunctionItemsTest
 userFunctionTimerTest
+shellMeshSlopesScalingTest
+systemContainerComputeOnlyTest
 ANCFBeamGeometricallyExactComparisonTest
 ANCFThinPlateRotationTest
 userTypesTest

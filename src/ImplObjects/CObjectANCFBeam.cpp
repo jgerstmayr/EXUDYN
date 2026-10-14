@@ -377,108 +377,37 @@ void CObjectANCFBeam::PreComputeMassTerms() const
 
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++
 //! compute non-normalized (but close to unit-length) basis vector i
-//! the Z-slope "prescribes" orientation of the cross section, Y-basis is orthogonal to Z-slope
-//! similar to 2013 implementation (very inefficient, use Lie group approach!):
+//! the frame of the cross section, A = [ex, ey, ez], the symmetric basis of the slopes y, z, as of NodePointSlope23 and
+//! GetRotationMatrix (#2228, #2992): ey, ez = e1, e2 and ex = e3 of RigidBodyMath::SymmetricBasis
 template<class TReal>
-SlimVectorBase<TReal, 3> GetBasisI(Index i, TReal dr1dy, TReal dr2dy, TReal dr3dy, TReal dr1dz, TReal dr2dz, TReal dr3dz)
+void CrossSectionFrame(const SlimVectorBase<TReal, 3>& slopeY, const SlimVectorBase<TReal, 3>& slopeZ, SlimVectorBase<TReal, 3>* t)
 {
-	switch (i)
-	{
-	case 0:
-		return SlimVectorBase<TReal, 3>({ -(dr2dz*dr3dy) + dr2dy * dr3dz, dr1dz*dr3dy - dr1dy * dr3dz, -(dr1dz*dr2dy) + dr1dy * dr2dz });
-		break;
-	case 1:
-		return SlimVectorBase<TReal, 3>({ -(dr1dz*(dr2dy*dr2dz + dr3dy * dr3dz)) + dr1dy * (EXUstd::Square(dr2dz) + EXUstd::Square(dr3dz)),
-			EXUstd::Square(dr1dz)*dr2dy - dr1dy * dr1dz*dr2dz + dr3dz * (-(dr2dz*dr3dy) + dr2dy * dr3dz), 
-			EXUstd::Square(dr1dz)*dr3dy - dr1dy * dr1dz*dr3dz + dr2dz * (dr2dz*dr3dy - dr2dy * dr3dz) });
-		break;
-	case 2:
-		return SlimVectorBase<TReal, 3>({ dr1dz, dr2dz, dr3dz });
-		break;
-	default:
-		CHECKandTHROWstring("GetBasisI");
-		return SlimVectorBase<TReal, 3>();
-		break;
-	}
+	TReal e1[3], e2[3], e3[3];
+	const TReal y[3] = { slopeY[0], slopeY[1], slopeY[2] };
+	const TReal z[3] = { slopeZ[0], slopeZ[1], slopeZ[2] };
+	RigidBodyMath::SymmetricBasis(y, z, e1, e2, e3);
+	for (Index c = 0; c < 3; c++) { t[0][c] = e3[c]; t[1][c] = e1[c]; t[2][c] = e2[c]; }
 }
 
-template<class TReal>
-SlimVectorBase<TReal, 3> GetBasisI_xI(Index i, TReal dr1dy, TReal dr2dy, TReal dr3dy, 
-                                               TReal dr1dz, TReal dr2dz, TReal dr3dz, 
-                                               TReal ddr1dydxi, TReal ddr2dydxi, TReal ddr3dydxi, 
-                                               TReal ddr1dzdxi, TReal ddr2dzdxi, TReal ddr3dzdxi)
-{
-	switch (i)
-	{
-	case 0:
-		return SlimVectorBase<TReal, 3>({ddr3dzdxi*dr2dy - ddr3dydxi * dr2dz - ddr2dzdxi * dr3dy + ddr2dydxi * dr3dz,
-			-(ddr3dzdxi*dr1dy) + ddr3dydxi * dr1dz + ddr1dzdxi * dr3dy - ddr1dydxi * dr3dz,
-			ddr2dzdxi*dr1dy - ddr2dydxi * dr1dz - ddr1dzdxi * dr2dy + ddr1dydxi * dr2dz});
-		break;
-	case 1:
-		return SlimVectorBase<TReal, 3>({ -(dr1dz*(ddr2dzdxi*dr2dy + ddr2dydxi * dr2dz + ddr3dzdxi * dr3dy + ddr3dydxi * dr3dz)) + 2 * dr1dy*(ddr2dzdxi*dr2dz + ddr3dzdxi * dr3dz) - ddr1dzdxi * (dr2dy*dr2dz + dr3dy * dr3dz) + ddr1dydxi * (EXUstd::Square(dr2dz) + EXUstd::Square(dr3dz)),
-			ddr2dydxi*EXUstd::Square(dr1dz) - ddr1dzdxi * dr1dy*dr2dz - dr1dz * (ddr2dzdxi*dr1dy - 2 * ddr1dzdxi*dr2dy + ddr1dydxi * dr2dz) - ddr3dzdxi * dr2dz*dr3dy + 2 * ddr3dzdxi*dr2dy*dr3dz - ddr3dydxi * dr2dz*dr3dz - ddr2dzdxi * dr3dy*dr3dz + ddr2dydxi * EXUstd::Square(dr3dz),
-			ddr3dydxi*EXUstd::Square(dr1dz) - ddr3dzdxi * dr2dy*dr2dz + ddr3dydxi * EXUstd::Square(dr2dz) + 2 * ddr2dzdxi*dr2dz*dr3dy - ddr1dzdxi * dr1dy*dr3dz - ddr2dzdxi * dr2dy*dr3dz - ddr2dydxi * dr2dz*dr3dz - dr1dz * (ddr3dzdxi*dr1dy - 2 * ddr1dzdxi*dr3dy + ddr1dydxi * dr3dz) });
-		break;
-	case 2:
-		return SlimVectorBase<TReal, 3>({ ddr1dzdxi, ddr2dzdxi, ddr3dzdxi });
-		break;
-	default:
-		CHECKandTHROWstring("GetBasisI_xI");
-		return SlimVectorBase<TReal, 3>();
-		break;
-	}
-}
-
-//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-
-//! get vector of twist and curvature at position x
-//templates need to be defined in .h file ==> put it outside of CObjectANCFBeam
+//! the twist and the two curvatures at x, in the frame of the cross section: kappa = A^T axial(A' A^T), where the
+//! derivative of the frame by x is its rotation Jacobian G - the one of the angular velocity - times the derivatives of
+//! the slopes by x, kappa = A^T G [slopeY'; slopeZ'] (#2992)
 template<class TReal=Real>
 SlimVectorBase<TReal, 3> GetLocalTwistAndCurvature(Real x, SlimVectorBase<TReal, 3> slopeY, SlimVectorBase<TReal, 3> slopeZ,
 	SlimVectorBase<TReal, 3> slopeYX, SlimVectorBase<TReal, 3> slopeZX)
 {
-    SlimVectorBase<TReal, 3> eiBar; //non-normalized (but close to unit length) cross section vectors
-    SlimVectorBase<TReal, 3> deiBarDxi;
-    std::array<SlimVectorBase<TReal, 3>,3> eiList; //normalized cross section vectors
-
+	const TReal s[6] = { slopeY[0], slopeY[1], slopeY[2], slopeZ[0], slopeZ[1], slopeZ[2] };
+	const TReal s_x[6] = { slopeYX[0], slopeYX[1], slopeYX[2], slopeZX[0], slopeZX[1], slopeZX[2] };
+	TReal G[3][6];
+	RigidBodyMath::SymmetricBasisRotationJacobian(&s[0], &s[3], G);
 	SlimVectorBase<TReal, 3> k((TReal)0.); //global curvature
-	for (Index i = 0; i < EXUstd::dim3D; i++)
+	for (Index r = 0; r < 3; r++)
 	{
-        eiBar = GetBasisI(i, slopeY.X(), slopeY.Y(), slopeY.Z(), slopeZ.X(), slopeZ.Y(), slopeZ.Z());
-        deiBarDxi = GetBasisI_xI(i, slopeY.X(), slopeY.Y(), slopeY.Z(),
-                                 slopeZ.X(), slopeZ.Y(), slopeZ.Z(), 
-                                 slopeYX.X(), slopeYX.Y(), slopeYX.Z(), 
-                                 slopeZX.X(), slopeZX.Y(), slopeZX.Z());
-
-		//**** NOTE: derivative of deidxi w.r.t. |ei| is missing in 2013 implementation
-		//d(ei_N)dxi = 1/|ei|*(I - np.outer(ei_N,ei_N))* deidxi ==> kappa+= 0.5/|ei|^2 * ei_N x ((I - 1//|ei|^2 * outer(ei,ei))*d(ei)dxi)
-		//should read: 
-		TReal eiNorm2 = eiBar.GetL2NormSquared();
-        CHECKandTHROW(eiNorm2 != 0., "CObjectANCFBeam: GetLocalTwistAndCurvature: Basis vector has zero length; check initialization of NodePointSlope23");
-        eiList[i] = eiBar * (1. / sqrt(eiNorm2));
-
-		//corrected version: (but not big difference ...):
-		ConstSizeMatrixBase<TReal, 9> IsubEiEi;
-		IsubEiEi.SetWithDiadicProduct(-eiBar, eiBar);
-		IsubEiEi(0, 0) += 1.;
-		IsubEiEi(1, 1) += 1.;
-		IsubEiEi(2, 2) += 1.;//[1.99762284e+000 8.96763007e-002 3.97492136e-128]
-		//corrected:
-        k += (0.5 / eiNorm2) * eiBar.CrossProduct(IsubEiEi * deiBarDxi);  //k = 1/2 sum_i e_i x e_i' -> simplified written using e_i^{\bar}-Vectors (see the paper)
-        //original:
-		//k += (0.5 / eiNorm2) * eiBar.CrossProduct(deidxi);  //k = 1/2 sum_i e_i x e_i' -> simplified written using e_i^{\bar}-Vectors (see the paper)
+		for (Index j = 0; j < 6; j++) { k[r] += G[r][j] * s_x[j]; }
 	}
-
-    //compute local curvature by projection of k into local (cross-section) frame given by eiList
-    SlimVectorBase<TReal, 3> kLocal((TReal)0.);
-    for (Index i = 0; i < EXUstd::dim3D; i++)
-    {
-        kLocal[i] += eiList[i] * k;
-    }
-
-	return kLocal;
+	SlimVectorBase<TReal, 3> t[3];
+	CrossSectionFrame(slopeY, slopeZ, t);
+	return SlimVectorBase<TReal, 3>({ t[0] * k, t[1] * k, t[2] * k });
 }
 
 //function to make interface to Autodiff:
@@ -544,14 +473,8 @@ void GetLocalAxialShearDeformationDiff(const ConstSizeVectorBase<TReal, CObjectA
 	//gamma2 = t2*slopeX
 	//gamma3 = t3*slopeX
 
-	SlimVectorBase<TReal, 3> ti[3];
-	for (Index i = 0; i < EXUstd::dim3D; i++)
-	{
-		ti[i] = GetBasisI(i,
-			slopeY.X(), slopeY.Y(), slopeY.Z(),
-			slopeZ.X(), slopeZ.Y(), slopeZ.Z());
-		ti[i].Normalize();
-	}
+	SlimVectorBase<TReal, 3> ti[3]; //the frame of the cross section (#2992)
+	CrossSectionFrame(slopeY, slopeZ, ti);
 
 	f.SetVector({ ti[0] * slopeX - 1.,
 				  ti[1] * slopeX,

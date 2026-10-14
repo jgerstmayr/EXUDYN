@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.13 | Newborn | 82 | 1.13.82 |
+| 1.13 | Newborn | 86 | 1.13.86 |
 | 1.12 | Metheney | 367 | 1.12.462 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
@@ -30,6 +30,22 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.13 - Newborn (current)
 
+- **1.13.86** `CHANGE` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` ObjectANCFBeam: strains in the frame of the cross section, the symmetric basis (#2992)
+  - description: revision2026c step RG11.8.19 (follow-up of \#2228): after \#2228 the rotation of NodePointSlope23 and of the element is the symmetric basis of the slopes, while the twist, curvature and shear strains of ObjectANCFBeam used the frame of the 2013 formulation, z-slope leading; a torque at a node then sheared the cross section at the loaded node, against the penalty only, so the shear grew with the refinement (1/element length: 0.00044, 0.00088, 0.0018 degrees for 8, 16, 32 elements). The strains now use the same symmetric basis; the curvature is A^T G \[slopeY'; slopeZ'\] with the rotation Jacobian G.
+  - **notes:** ObjectANCFBeam measures twist, curvatures and shear strains in the symmetric basis of the slopes, the frame of its rotation and of NodePointSlope23; a torque on a node no longer shears the cross section in proportion to 1/element length; results change slightly (revision2026c step RG11.8.19)
+  - date resolved: **2026-10-14 08:16**, date raised: 2026-10-14
+- **1.13.85** `EXTENSION` `LOW EFF` `resolved by: Claude-JG` SystemContainer (#2259)
+  - description: add option to constructor whether to attach to renderer or not (if used purely for computations, like in InverseKinematics
+  - **notes:** SystemContainer(attachToRenderer=False) creates a container only to compute, which leaves the render window with the container of the model; InverseKinematicsNumerical uses it unless useRenderer; test model systemContainerComputeOnlyTest.py (revision2026c step RG11.8.15)
+  - date resolved: **2026-10-14 08:16**, date raised: 2026-02-02
+- **1.13.84** `EXTENSION` `MEDIUM EFF` `resolved by: Claude-JG` ANCFThinPlate (#2226)
+  - description: compute optimal slopes scaling in ShellMesh functionality
+  - **notes:** ShellMesh gives slopesScalingX/Y per element edge: the length for which the cubic edge passes through the mapped midpoint of the edge (on a circle the best cubic), on straight edges the derivative of the geometry times the parameter length; on a quarter cylinder the radius error falls from 5.8e-4 (chord lengths) to 3.5e-7; test model shellMeshSlopesScalingTest.py (revision2026c step RG4.20.5.1)
+  - date resolved: **2026-10-14 08:16**, date raised: 2026-01-16
+- **1.13.83** `CHANGE` `LOW EFF` `resolved by: Claude-JG` update mecanumWheelRollingDiscTest (#948)
+  - description: update w.r.t. Trajectory class and TorsionalSpringDamper
+  - **notes:** mecanumWheelRollingDiscTest follows a Trajectory of \[x, y, phi\]; its velocities are the velocityOffset of TorsionalSpringDamper motors between car and wheels, set in a PreStepUserFunction, so the motor torque reacts on the car; the car follows 20 s of trajectory to 1 cm, the test runs the first 4 s (revision2026c step RG11.8.14)
+  - date resolved: **2026-10-14 08:16**, date raised: 2022-02-21
 - **1.13.82** `EXTENSION` `LOW EFF` `resolved by: Claude-JG` Symmetric basis (#2228)
   - description: add a function to compute a basis for two given non-parallel vectors; the average of the two vectors is computed from averaging normalized vectors (=mid axis) and according projections; used for NodeSlope12
   - **notes:** the frame of two slopes is their symmetric basis (RigidBodyMath::SymmetricBasis, exudyn.cUtilities and rigidBodyUtilities.SymmetricBasis), with a closed-form rotation Jacobian and its derivative by AutoDiff: NodePointSlope12, NodePointSlope23, ObjectANCFBeam, and ObjectANCFThinPlate, which gets a rotation for MarkerBodyRigid

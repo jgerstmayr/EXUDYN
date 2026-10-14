@@ -4179,6 +4179,14 @@ class SystemContainer:
     The SystemContainer contains ``visualizationSettings`` to adjust all kinds of visualization appearance, windows and interactions.
     """
     @overload
+    def __init__(self, attachToRenderer: bool=True) -> None: 
+        """Create a SystemContainer; with attachToRenderer=False it is not attached to the renderer and leaves the render window with the container it is attached to - for a container used only to compute, such as the one of InverseKinematics; SC.renderer.Attach() attaches it later (#2259).
+        
+        Examples:
+            SCcompute = exu.SystemContainer(attachToRenderer=False)
+        """
+        ...
+    @overload
     def Reset(self) -> None: 
         """Delete all multibody systems and reset SystemContainer (including graphics); this also releases SystemContainer from the renderer, which requires SC.renderer.Attach() to be called in order to reconnect to rendering; a safer way is to delete the current SystemContainer and create a new one (SC=SystemContainer() )."""
         ...

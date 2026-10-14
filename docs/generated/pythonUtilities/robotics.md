@@ -28,7 +28,7 @@ import this library e.g. with import exudyn.robotics as robotics
 - **function description**: compute the homogeneous transformation HT, an exudyn.HT, from standard DHparameters=[theta, d, a, alpha]
 
 
-Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`humanRobotInteraction.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/humanRobotInteraction.py) (Ex), [`InverseKinematicsNumericalExample.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/InverseKinematicsNumericalExample.py) (Ex), [`serialRobotFlexible.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/serialRobotFlexible.py) (Ex), [`serialRobotInteractiveLimits.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/serialRobotInteractiveLimits.py) (Ex), [`serialRobotKinematicTree.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/serialRobotKinematicTree.py) (Ex), [`movingGroundRobotTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/movingGroundRobotTest.py) (TM), [`serialRobotTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/serialRobotTest.py) (TM), ...
+Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`humanRobotInteraction.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/humanRobotInteraction.py) (Ex), [`InverseKinematicsNumericalExample.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/InverseKinematicsNumericalExample.py) (Ex), [`serialRobotFlexible.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/serialRobotFlexible.py) (Ex), [`serialRobotInteractiveLimits.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/serialRobotInteractiveLimits.py) (Ex), [`serialRobotKinematicTree.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/serialRobotKinematicTree.py) (Ex), [`movingGroundRobotTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/movingGroundRobotTest.py) (TM), [`serialRobotTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/serialRobotTest.py) (TM), [`systemContainerComputeOnlyTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/systemContainerComputeOnlyTest.py) (TM), ...
 
 
 (sec-roboticscore-moddhkk2ht)=
@@ -446,7 +446,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`humanRobotI
 (sec-roboticscore-inversekinematicsnumerical()-getcurrentrobotht)=
 ### Class function: GetCurrentRobotHT
 
-[`GetCurrentRobotHT(self)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/roboticsCore.py#L1275)
+[`GetCurrentRobotHT(self)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/roboticsCore.py#L1276)
 
 - **class function description**: Utility function to get current Homogeneous transformation of the robot to check inverse Kinematics solution ** output: T: homogeneous transformation (exudyn.HT) of the current TCP pose
 
@@ -454,7 +454,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`humanRobotI
 (sec-roboticscore-inversekinematicsnumerical()-interpolatehts)=
 ### Class function: InterpolateHTs
 
-[`InterpolateHTs(self, T1, T2, rotStep = np.pi/16, minSteps = 1)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/roboticsCore.py#L1287)
+[`InterpolateHTs(self, T1, T2, rotStep = np.pi/16, minSteps = 1)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/roboticsCore.py#L1288)
 
 - **class function description**: 
 - **input**:
@@ -470,7 +470,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`humanRobotI
 (sec-roboticscore-inversekinematicsnumerical()-solvesafe)=
 ### Class function: SolveSafe
 
-[`SolveSafe(self, T, q0 = None)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/roboticsCore.py#L1334)
+[`SolveSafe(self, T, q0 = None)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/roboticsCore.py#L1335)
 
 - **class function description**: This Method can be used to solve the inverse kinematics problem by solving the static problem of a serial robot using steps to interpolate between start and end position close to the function Solve. This helps the function Solve() to find the correct solutions.
 - **input**:
@@ -484,7 +484,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`humanRobotI
 (sec-roboticscore-inversekinematicsnumerical()-solve)=
 ### Class function: Solve
 
-[`Solve(self, T, q0 = None)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/roboticsCore.py#L1391)
+[`Solve(self, T, q0 = None)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/roboticsCore.py#L1392)
 
 - **class function description**: This Method can be used to solve the inverse kinematics problem by solving the static problem of a serial robot using steps to interpolate between start and end position close to the function Solve. T his helps the fucntion Solve to find the correct solutions.
 - **input**:
@@ -495,4 +495,4 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`humanRobotI
 - **notes**: still under development; errors in orientations of solution may occure. works similar to ikine_LM function of the robotics toolbox from peter corke
 
 
-Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`InverseKinematicsNumericalExample.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/InverseKinematicsNumericalExample.py) (Ex), [`serialRobotInverseKinematics.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/serialRobotInverseKinematics.py) (Ex)
+Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`InverseKinematicsNumericalExample.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/InverseKinematicsNumericalExample.py) (Ex), [`serialRobotInverseKinematics.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/serialRobotInverseKinematics.py) (Ex), [`systemContainerComputeOnlyTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/systemContainerComputeOnlyTest.py) (TM)

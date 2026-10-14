@@ -131,6 +131,12 @@ class ShellMesh:
         self.nodeSlopesX = []
         # dr/dy tangent slopes (unit vectors) per node — polar / width direction for shells
         self.nodeSlopesY = []
+        # the derivatives of the position by the mesh parameters sx, sy in [0,1] per node, before mapping (the bilinear
+        # map of the vertices); with them, the lengths of the slopes per element side, slopesScalingX/Y (#2226)
+        self.nodeParameterTangentsX = []
+        self.nodeParameterTangentsY = []
+        self.nodeSlopeLengthsX = []
+        self.nodeSlopeLengthsY = []
 
     @docmeta(public=False)
     def NumberOfNodes(self):
@@ -175,6 +181,10 @@ class ShellMesh:
         # clear slopes; they will be recomputed from the mapping derivatives
         self.nodeSlopesX = []
         self.nodeSlopesY = []
+        self.nodeSlopeLengthsX = []
+        self.nodeSlopeLengthsY = []
+        nx = self.numberOfElementsX
+        ny = self.numberOfElementsY
         # save the unmapped (parametric) positions for potential later use
         self.nodeReferencePositionsUnmapped = []
 
@@ -223,6 +233,22 @@ class ShellMesh:
                 slopeX = _numeric_slope(pos, 0)
             if cMath.norm(slopeY) == 0.0:
                 slopeY = _numeric_slope(pos, 1)
+
+            #the derivatives by the mesh parameters sx, sy, chained with the derivatives of the bilinear map of the
+            #vertices; z enters only where the vertices do not lie in a plane z = const (#2226)
+            tangentX = self.nodeParameterTangentsX[i]
+            tangentY = self.nodeParameterTangentsY[i]
+            slopeZ = np.zeros(3)
+            if tangentX[2] != 0. or tangentY[2] != 0.:
+                slopeZ = np.array([_diff(v[0], z), _diff(v[1], z), _diff(v[2], z)])
+                if cMath.norm(slopeZ) == 0.0:
+                    slopeZ = _numeric_slope(pos, 2)
+            slopeX, slopeY = (tangentX[0]*slopeX + tangentX[1]*slopeY + tangentX[2]*slopeZ,
+                              tangentY[0]*slopeX + tangentY[1]*slopeY + tangentY[2]*slopeZ)
+            #the scaling of the slopes: the length of the derivative by sx times the parameter length 1/nx of an element;
+            #the cubic shape functions then interpolate the mapped geometry with its derivatives (#2226)
+            self.nodeSlopeLengthsX.append(float(cMath.norm(slopeX))/nx)
+            self.nodeSlopeLengthsY.append(float(cMath.norm(slopeY))/ny)
 
             # override parametric position with the physically mapped 3D position
             self.nodeReferencePositions[i] = posEval   #override with mapped position
@@ -285,6 +311,32 @@ class ShellMesh:
             self.thicknessGradientAtNodes[i, 2] = dhdX * slopeY[0] + dhdY * slopeY[1]  # dh/ds along slope y
 
     @docmeta(public=False)
+    @docmeta(public=False)
+    def EdgeSlopeScaling(self, k0, k1, direction):
+        """the slope scaling of an element edge from node k0 to node k1, the same at both ends (#2226): on a straight
+        edge the length of the derivative of the geometry times the parameter length of the element; on a curved one
+        the length s for which the cubic edge passes through the mapped midpoint of the edge, its midpoint being
+        (p0 + p1)/2 + s/8 (t0 - t1) for the unit slopes t0, t1 - for a circular arc the best cubic approximation,
+        4 R tan(angle/4); direction 0 for the x-slopes, 1 for the y-slopes"""
+        slopes = self.nodeSlopesX if direction == 0 else self.nodeSlopesY
+        lengths = self.nodeSlopeLengthsX if direction == 0 else self.nodeSlopeLengthsY
+        derivativeLength = 0.5*(lengths[k0] + lengths[k1])
+        if self.vertexMapping is None:
+            return derivativeLength #the bilinear map: the edges are straight
+        dt = slopes[k0] - slopes[k1]
+        dt2 = float(dt @ dt)
+        if dt2 < 1e-12: #straight, or nearly
+            return derivativeLength
+        midParameter = 0.5*(self.nodeReferencePositionsUnmapped[k0] + self.nodeReferencePositionsUnmapped[k1])
+        mapped = self.vertexMapping([float(midParameter[0]), float(midParameter[1]), float(midParameter[2])])
+        midPoint = np.array([float(mapped[0]), float(mapped[1]), float(mapped[2])])
+        p0 = self.nodeReferencePositions[k0]
+        p1 = self.nodeReferencePositions[k1]
+        s = 8.*float((midPoint - 0.5*(p0 + p1)) @ dt)/dt2
+        if not (0.5*derivativeLength < s < 2.*derivativeLength): #an edge that a cubic cannot follow: the derivatives
+            return derivativeLength
+        return s
+
     def CreateANCFThinPlateElements(self, mbs, VthicknessFactor=1.0, useReducedOrderIntegration=0):
         """add the nodes (NodePointSlope12) and the elements (ObjectANCFThinPlate) of the mesh to mbs; fills
         nodeNumbers, elementNumbers and boundaryNodeNumbers
@@ -332,10 +384,16 @@ class ShellMesh:
                 # making the slope field consistent with the bilinear geometry.
                 # OLD: slopeX = np.array(Normalize(v[1] - v[0]))
                 #      slopeY = np.array(Normalize(v[3] - v[0]))
-                slopeX = np.array(Normalize((1-sy)*(v[1] - v[0]) + sy*(v[2] - v[3])))
-                slopeY = np.array(Normalize((1-sx)*(v[3] - v[0]) + sx*(v[2] - v[1])))
-                self.nodeSlopesX.append(slopeX)
-                self.nodeSlopesY.append(slopeY)
+                tangentX = (1-sy)*(v[1] - v[0]) + sy*(v[2] - v[3])
+                tangentY = (1-sx)*(v[3] - v[0]) + sx*(v[2] - v[1])
+                self.nodeParameterTangentsX.append(tangentX)
+                self.nodeParameterTangentsY.append(tangentY)
+                self.nodeSlopesX.append(np.array(Normalize(tangentX)))
+                self.nodeSlopesY.append(np.array(Normalize(tangentY)))
+                #the scaling of the slopes: the length of the derivative by sx times the parameter length 1/nx of an
+                #element, the length of the element side for a flat mesh (#2226)
+                self.nodeSlopeLengthsX.append(float(cMath.norm(tangentX))/nx)
+                self.nodeSlopeLengthsY.append(float(cMath.norm(tangentY))/ny)
                 self.nodeReferencePositions.append(pos)
 
         #+++++++++
@@ -452,8 +510,16 @@ class ShellMesh:
 
 
                 
+                #the slope scaling per edge: x-slopes along the bottom (n0, n1) and top (n3, n2) edges, y-slopes along
+                #the left (n0, n3) and right (n1, n2) edges (#2226)
+                sBottom = self.EdgeSlopeScaling(i0, i1, 0)
+                sTop = self.EdgeSlopeScaling(i3, i2, 0)
+                sLeft = self.EdgeSlopeScaling(i0, i3, 1)
+                sRight = self.EdgeSlopeScaling(i1, i2, 1)
                 oANCF = eii.ObjectANCFThinPlate(
                     nodeNumbers=[n0, n1, n2, n3],
+                    slopesScalingX=[sBottom, sBottom, sTop, sTop],
+                    slopesScalingY=[sLeft, sRight, sRight, sLeft],
                     thickness=thickness,
                     strainCoefficients=self.Dstrain,        # membrane stiffness
                     curvatureCoefficients=self.Dcurvature,  # bending stiffness

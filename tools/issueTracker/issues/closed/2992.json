@@ -1,0 +1,15 @@
+{
+  "number": 2992,
+  "title": "ObjectANCFBeam: strains in the frame of the cross section, the symmetric basis",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "CHANGE",
+  "effort": "LOW",
+  "description": "revision2026c step RG11.8.19 (follow-up of #2228): after #2228 the rotation of NodePointSlope23 and of the element is the symmetric basis of the slopes, while the twist, curvature and shear strains of ObjectANCFBeam used the frame of the 2013 formulation, z-slope leading; a torque at a node then sheared the cross section at the loaded node, against the penalty only, so the shear grew with the refinement (1/element length: 0.00044, 0.00088, 0.0018 degrees for 8, 16, 32 elements). The strains now use the same symmetric basis; the curvature is A^T G [slopeY'; slopeZ'] with the rotation Jacobian G.",
+  "dateRaised": "2026-10-14",
+  "deadline": "2027-04-12",
+  "dateResolved": "2026-10-14 08:16",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "ObjectANCFBeam measures twist, curvatures and shear strains in the symmetric basis of the slopes, the frame of its rotation and of NodePointSlope23; a torque on a node no longer shears the cross section in proportion to 1/element length; results change slightly (revision2026c step RG11.8.19)",
+  "resolvedInVersion": "1.13.86"
+}

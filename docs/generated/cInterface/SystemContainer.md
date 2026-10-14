@@ -20,6 +20,14 @@ mbs = SC.AddSystem()
 
 The class **SystemContainer** has the following **functions and structures**:
 
+- **`__init__(attachToRenderer = True)`**: create a SystemContainer; with attachToRenderer=False it is not attached to the renderer and leaves the render window with the container it is attached to - for a container used only to compute, such as the one of InverseKinematics; SC.renderer.Attach() attaches it later (#2259)
+
+  *Example*:
+
+  ```python
+  SCcompute = exu.SystemContainer(attachToRenderer=False)
+  ```
+
 - **`Reset()`**: delete all multibody systems and reset SystemContainer (including graphics); this also releases SystemContainer from the renderer, which requires SC.renderer.Attach() to be called in order to reconnect to rendering; a safer way is to delete the current SystemContainer and create a new one (SC=SystemContainer() )
 - **`AddSystem()`**: add a new computational system; the returned MainSystem keeps the system container alive (`returns a reference`)
 - **`AppendSystem(mainSystem)`**: append an existing MainSystem - a copy, or the system of another container - to the system container; returns its index in the container. The container keeps the system alive but does not own it: SC.Reset() and the end of the container leave it to its owner, and the system of another container gets that container back (#2842) (`returns a reference`)
