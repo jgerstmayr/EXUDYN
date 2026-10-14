@@ -1,0 +1,15 @@
+{
+  "number": 2218,
+  "title": "ANCFThinPlate",
+  "author": "JG",
+  "status": "RESOLVED",
+  "type": "EXTENSION",
+  "effort": "LOW",
+  "description": "add access function for rotation",
+  "dateRaised": "2026-01-13",
+  "deadline": "2026-07-12",
+  "dateResolved": "2026-10-14 11:33",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "ObjectANCFThinPlate has the rotation of its symmetric slope frame: GetRotationMatrix, angular velocity, rotation Jacobian and its derivative, the output variables RotationMatrix, AngularVelocity and AngularVelocityLocal; MarkerBodyRigid acts on it; done with #2228 (revision2026c steps RG11.8.8, RG4.20.5.2)",
+  "resolvedInVersion": "1.13.87"
+}

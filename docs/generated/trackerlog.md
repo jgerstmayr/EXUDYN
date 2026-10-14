@@ -8,10 +8,10 @@ Every entry carries the **type** of the issue, then its **priority** and its **e
 
 General information on current version:
 
-- Exudyn version = 1.13.86.dev1
+- Exudyn version = 1.13.89.dev1
 - last change = 2026-10-14
-- Number of issues = 2994
-- Number of resolved issues = 2863 (86 in current version)
+- Number of issues = 2995
+- Number of resolved issues = 2866 (89 in current version)
 
 ## Resolved issues and resolved bugs before version 1.13
 
@@ -9153,14 +9153,6 @@ The following list contains the issues which have been **RESOLVED** in the accor
   - description: add vector and matrix functionality for Diff()
   - **remarks:** kept open as an idea, no plan step (triage 2026-10-07, revision2026b group RG18)
   - date raised: 2026-01-16
-- `EXTENSION` `MEDIUM EFF` NodePointSlope12 (#2219)
-  - description: correct average Rotation and RotationJacobian to be symmetric w.r.t. both slopes
-  - **remarks:** RG13.3 (2026-10-05): GetRotationJacobianTTimesVector\_q of NodePointSlope12 is not implemented - a RigidBodySpringDamper at the node with an implicit solver raises NotImplementedFeatureError; the angular velocity is the least-squares fit, the rotation the Gram-Schmidt frame of slope x - the description says so now; planned as revision2026b step RG4.20.5 (triage 2026-10-07)
-  - date raised: 2026-01-13
-- `EXTENSION` `LOW EFF` ANCFThinPlate (#2218)
-  - description: add access function for rotation
-  - **remarks:** planned as revision2026b step RG4.20.5 (triage 2026-10-07)
-  - date raised: 2026-01-13
 - `CHECK` `LOW EFF` perspective (#2204)
   - description: check OpenGL visibility problems with larger zoom (is this the 0.1 limit?)
   - **remarks:** planned as revision2026b step RG6.8.8 (triage 2026-10-07)

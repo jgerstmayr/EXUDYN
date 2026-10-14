@@ -39,7 +39,8 @@ items through mbs, e.g. the energy of a group of bodies (#2977).
 **Messages**: the exception of a failed `SolveDynamic` or `SolveStatic` carries the whole message, and nothing is
 printed (#1977); an error in graphics data names the item and the entry of the list, and not-a-number is refused in
 every type of graphics data (#2304, #2305). With `show.computationTime`, the CPU-time statistics list the time spent
-in user functions (#2007).
+in user functions (#2007). A line copied in the simulation or visualization dialog stays in the clipboard after
+the dialog closes (#2994).
 
 **The frame of two slopes** - of NodePointSlope12 and NodePointSlope23, ObjectANCFBeam and ObjectANCFThinPlate - is
 their symmetric basis, `exudyn.rigidBodyUtilities.SymmetricBasis`: symmetric in the two slopes and independent of

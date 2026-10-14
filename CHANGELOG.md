@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.13 | Newborn | 86 | 1.13.86 |
+| 1.13 | Newborn | 89 | 1.13.89 |
 | 1.12 | Metheney | 367 | 1.12.462 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
@@ -30,6 +30,18 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.13 - Newborn (current)
 
+- **1.13.89** <span class="textred">`BUG`</span> `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` A line copied in the sim or vis dialog is lost from the clipboard when the dialog closes (#2994)
+  - description: revision2026c step RG11.8.21 (reported 2026-10-14, Windows and macOS, the vis dialog from exudyn dialog vis and from the V key): copy line and copy all used tkinter's clipboard, which Tk serves only while its window exists; in a process that goes on after the dialog closes, the clipboard is empty (reproduced on Windows; update() after clipboard\_append does not help). The text has to be given to the system clipboard: Win32 on Windows, pbcopy on macOS, wl-copy/xclip/xsel on Linux, tkinter as fallback.
+  - **notes:** copy line and copy all of the sim and vis dialogs give the text to the system clipboard (Win32 on Windows, pbcopy on macOS, wl-copy/xclip/xsel on Linux, tkinter as fallback), so it can be pasted after the dialog closes (revision2026c step RG11.8.21)
+  - date resolved: **2026-10-14 11:33**, date raised: 2026-10-14
+- **1.13.88** `EXTENSION` `MEDIUM EFF` `resolved by: Claude-JG` NodePointSlope12 (#2219)
+  - description: correct average Rotation and RotationJacobian to be symmetric w.r.t. both slopes
+  - **notes:** NodePointSlope12: rotation, angular velocity and rotation Jacobian from the symmetric basis of both slopes, with GetRotationJacobianTTimesVector\_q, so that rigid connectors with implicit solvers work at the node; done with \#2228 (revision2026c steps RG11.8.8, RG4.20.5.2)
+  - date resolved: **2026-10-14 11:33**, date raised: 2026-01-13
+- **1.13.87** `EXTENSION` `LOW EFF` `resolved by: Claude-JG` ANCFThinPlate (#2218)
+  - description: add access function for rotation
+  - **notes:** ObjectANCFThinPlate has the rotation of its symmetric slope frame: GetRotationMatrix, angular velocity, rotation Jacobian and its derivative, the output variables RotationMatrix, AngularVelocity and AngularVelocityLocal; MarkerBodyRigid acts on it; done with \#2228 (revision2026c steps RG11.8.8, RG4.20.5.2)
+  - date resolved: **2026-10-14 11:33**, date raised: 2026-01-13
 - **1.13.86** `CHANGE` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` ObjectANCFBeam: strains in the frame of the cross section, the symmetric basis (#2992)
   - description: revision2026c step RG11.8.19 (follow-up of \#2228): after \#2228 the rotation of NodePointSlope23 and of the element is the symmetric basis of the slopes, while the twist, curvature and shear strains of ObjectANCFBeam used the frame of the 2013 formulation, z-slope leading; a torque at a node then sheared the cross section at the loaded node, against the penalty only, so the shear grew with the refinement (1/element length: 0.00044, 0.00088, 0.0018 degrees for 8, 16, 32 elements). The strains now use the same symmetric basis; the curvature is A^T G \[slopeY'; slopeZ'\] with the rotation Jacobian G.
   - **notes:** ObjectANCFBeam measures twist, curvatures and shear strains in the symmetric basis of the slopes, the frame of its rotation and of NodePointSlope23; a torque on a node no longer shears the cross section in proportion to 1/element length; results change slightly (revision2026c step RG11.8.19)

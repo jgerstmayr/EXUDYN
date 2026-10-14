@@ -945,3 +945,44 @@ def testThePropertiesDialogTakesAnEmptyValue():
         assert dialog.GetDictionary('')['fileName'] == ''
     finally:
         window.destroy()
+
+
+#a copied line stays in the clipboard after the dialog closes: the system holds it, not tkinter (#2994)
+@pytest.mark.parametrize('platform, installed, expected', [
+    ('darwin', [], ['pbcopy']),
+    ('linux', ['xclip', 'xsel'], ['xclip', '-selection', 'clipboard']),
+    ('linux', ['wl-copy', 'xclip'], ['wl-copy']),
+    ('linux', ['xsel'], ['xsel', '--clipboard', '--input']),
+    ('linux', [], None),
+    ('win32', ['pbcopy'], None),
+])
+def testTheClipboardCommandOfEachPlatform(platform, installed, expected):
+    assert gui._ClipboardCommand(platform, lambda name: name if name in installed else None) == expected
+
+
+class _ClipboardWidget:
+    """records what tkinter's clipboard would get"""
+    def __init__(self):
+        self.text = None
+    def clipboard_clear(self):
+        self.text = ''
+    def clipboard_append(self, text):
+        self.text += text
+    def update(self):
+        pass
+
+
+def testTheSystemClipboardIsUsedAndTkinterOnlyIfItFails(monkeypatch):
+    calls = []
+    monkeypatch.setattr(gui.sys, 'platform', 'darwin')
+    monkeypatch.setattr('subprocess.run', lambda command, input, **_: calls.append((command, input)))
+    widget = _ClipboardWidget()
+    assert gui.CopyToClipboard(widget, 'SC.visualizationSettings.nodes.show = True')
+    assert calls == [(['pbcopy'], b'SC.visualizationSettings.nodes.show = True')]
+    assert widget.text is None
+
+    def Fail(*_, **__):
+        raise OSError('no pbcopy')
+    monkeypatch.setattr('subprocess.run', Fail)
+    assert not gui.CopyToClipboard(widget, 'line')
+    assert widget.text == 'line'

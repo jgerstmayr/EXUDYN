@@ -1044,3 +1044,24 @@ the geometrically exact beam.)*
   TorsionalSpringDamper motors (stiffness 0, damping 500, `velocityOffset` set in a PreStepUserFunction), as
   mobileMecanumWheelRobotWithLidar.py. The result cannot stay the same: before, the torque was a load on the wheel only
   and the velocity a step. After 20 s the car is 1 cm from the trajectory; the test runs 4 s (3.890 of 4 m).
+
+<a id="rg11-8-21"></a>
+### RG11.8.21 and RG4.20.5.2 — the clipboard of the dialogs, the rotation issues of the plate closed (2026-10-14, #2218, #2219, #2994)
+*(Maintainer 2026-10-14: a line copied by "copy line" in the sim or vis dialog can be pasted only while the dialog
+is open, on macOS and Windows, from "exudyn dialog vis" and from the V key; close #2218 and #2219 if resolved.)*
+- **The cause**: tkinter's clipboard is served by Tk itself - it answers when another program pastes - so the text
+  lives only as long as the Tk window. The `update()` after `clipboard_append` (added for this before) is not enough:
+  reproduced on Windows with a process that goes on after the window is destroyed, as the renderer does, the
+  clipboard is then empty; when the process ends right after the window, Windows keeps the text, which is why a
+  short test looked fine.
+- **The fix**: `GUI.CopyToClipboard(widget, text)` gives the text to the system - Windows: `OpenClipboard`,
+  `SetClipboardData(CF_UNICODETEXT)` through ctypes, the memory then belongs to the system; macOS: `pbcopy` (with a
+  UTF-8 locale); Linux: `wl-copy`, `xclip` or `xsel` if installed - and falls back to tkinter's clipboard. Used by
+  "copy line" and by "copy all" of the code window. Checked on Windows: the text, with a non-ASCII character, is
+  still in the clipboard after the window is destroyed in a running process and after the process ends; tkinter's
+  way gives an empty clipboard in the same run. test_guiValues.py: the command per platform, and the fallback.
+  macOS and Linux are not checked on a machine here.
+- **#2218, #2219**: done with #2228 (RG11.8.8): ObjectANCFThinPlate has GetRotationMatrix, the angular velocity, the
+  rotation Jacobian and its derivative (MarkerBodyRigid acts on it); NodePointSlope12 has the symmetric basis,
+  symmetric in both slopes, with the consistent angular velocity, rotation Jacobian and the formerly missing
+  GetRotationJacobianTTimesVector_q. Closed as resolved.

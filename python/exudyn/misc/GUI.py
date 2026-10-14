@@ -16,6 +16,7 @@ import tkinter.messagebox
 import tkinter.ttk as ttk
 import tkinter.font as tkFont
 import numpy as np #for array checks
+import os
 import sys
 import re
 import exudyn
@@ -42,7 +43,7 @@ __all__ = [
     'boolDoubleClickDelay', 'textHeightFactor', 'defaultColumnWidths', 'treeEditDefaultWidth',
     'treeEditDefaultHeight', 'treeEditMaxInitialHeight', 'dialogDefaultWidth',
     'dialogDefaultHeight', 'treeEditOpenItems', 'treeEditLastOpenItems', 'codeLineBackground',
-    'changedValueColor', 'IsApple', 'GetRendererSystemContainer', 'MakeProcessDpiAware',
+    'changedValueColor', 'IsApple', 'GetRendererSystemContainer', 'MakeProcessDpiAware', 'CopyToClipboard',
     'TkFontSystemHint', 'CheckTkFontSystem', 'ScaledFontSize', 'ApplyDialogFontScaling', 'GetTkRootAndNewWindow', 'TkRootExists', 'ColumnWidthFractions', 'DialogFontSize',
     'DialogRowMetrics', 'TkTextHeight', 'GetExudynDisplayScaling', 'GetGUIContentScaling',
     'DialogScaling', 'SplitStoredFromChanged', 'RenderStateCodeLines', 'Tooltip',
@@ -162,6 +163,92 @@ def MakeProcessDpiAware():
             return bool(ctypes.windll.user32.SetProcessDPIAware())
         except Exception:
             return False
+
+
+def _WindowsClipboard(text):
+    """put text into the Windows clipboard as CF_UNICODETEXT; the memory then belongs to the system"""
+    import ctypes                                                       # noqa: PLC0415
+    from ctypes import wintypes                                         # noqa: PLC0415
+    user32 = ctypes.WinDLL('user32', use_last_error=True)
+    kernel32 = ctypes.WinDLL('kernel32', use_last_error=True)
+    user32.OpenClipboard.argtypes = [wintypes.HWND]
+    user32.SetClipboardData.argtypes = [wintypes.UINT, wintypes.HANDLE]
+    user32.SetClipboardData.restype = wintypes.HANDLE
+    kernel32.GlobalAlloc.argtypes = [wintypes.UINT, ctypes.c_size_t]
+    kernel32.GlobalAlloc.restype = wintypes.HGLOBAL
+    kernel32.GlobalLock.argtypes = [wintypes.HGLOBAL]
+    kernel32.GlobalLock.restype = ctypes.c_void_p
+    kernel32.GlobalUnlock.argtypes = [wintypes.HGLOBAL]
+    kernel32.GlobalFree.argtypes = [wintypes.HGLOBAL]
+    CF_UNICODETEXT, GMEM_MOVEABLE = 13, 0x0002
+
+    data = (text + '\0').encode('utf-16-le')
+    if not user32.OpenClipboard(None):
+        return False
+    try:
+        user32.EmptyClipboard()
+        handle = kernel32.GlobalAlloc(GMEM_MOVEABLE, len(data))
+        if not handle:
+            return False
+        pointer = kernel32.GlobalLock(handle)
+        ctypes.memmove(pointer, data, len(data))
+        kernel32.GlobalUnlock(handle)
+        if not user32.SetClipboardData(CF_UNICODETEXT, handle):
+            kernel32.GlobalFree(handle)
+            return False
+        return True
+    finally:
+        user32.CloseClipboard()
+
+
+def _ClipboardCommand(platform, Which):
+    """the command that writes stdin into the clipboard, or None: pbcopy on macOS, on Linux
+    wl-copy, xclip or xsel, whichever is installed"""
+    if platform == 'darwin':
+        return ['pbcopy']
+    if platform.startswith('linux'):
+        for command in (['wl-copy'], ['xclip', '-selection', 'clipboard'], ['xsel', '--clipboard', '--input']):
+            if Which(command[0]) is not None:
+                return command
+    return None
+
+
+def CopyToClipboard(tkWidget, text):
+    """put text into the clipboard of the operating system, where it stays after the dialog closes (#2994)
+
+    tkinter only offers the text while its window exists - Tk owns the clipboard and answers
+    when another program pastes - so a line copied in a dialog was gone once the dialog closed,
+    on Windows and on macOS. The text is therefore given to the system: on Windows through the
+    Win32 clipboard, on macOS by pbcopy, on Linux by wl-copy, xclip or xsel; tkinter's own
+    clipboard is the fallback when none of these works.
+
+    Args:
+        tkWidget: a tkinter widget of the dialog, for the fallback
+        text: the text to copy
+
+    Returns:
+        True if the system holds the text, False if only tkinter does
+    """
+    import shutil                                                       # noqa: PLC0415
+    import subprocess                                                   # noqa: PLC0415
+    try:
+        if sys.platform == 'win32':
+            if _WindowsClipboard(text):
+                return True
+        else:
+            command = _ClipboardCommand(sys.platform, shutil.which)
+            if command is not None:
+                environment = dict(os.environ)
+                environment.setdefault('LC_CTYPE', 'UTF-8') #pbcopy reads the text in the encoding of the locale
+                subprocess.run(command, input=text.encode('utf-8'), env=environment, check=True, timeout=5,
+                               stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+                return True
+    except Exception:  # noqa: S110 - any failure of the system clipboard falls back to tkinter's
+        pass
+    tkWidget.clipboard_clear()
+    tkWidget.clipboard_append(text)
+    tkWidget.update()
+    return False
 
 
 def TkFontSystemHint(platform, fontSystem):
@@ -1081,13 +1168,11 @@ class TkinterEditDictionaryWithTypeInfo(tk.Frame):
         self.codeLineVar.set(self.CodeLine(item))
 
     def OnCopyCodeLine(self):
-        """the line into the clipboard; tkinter keeps it only while it runs, so it is flushed"""
+        """the line into the clipboard of the system, where it stays after the dialog closes"""
         line = self.codeLineVar.get()
         if line == '':
             return
-        self.clipboard_clear()
-        self.clipboard_append(line)
-        self.update()                         #without this the clipboard is empty after closing
+        CopyToClipboard(self, line)
 
     #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     #WHAT DIFFERS, AND FROM WHAT (#2606)
@@ -1453,9 +1538,7 @@ class TkinterEditDictionaryWithTypeInfo(tk.Frame):
 
         def CopyAll():
             if lines:
-                self.clipboard_clear()
-                self.clipboard_append(code)
-                self.update()       #without this the clipboard is empty once the window closes
+                CopyToClipboard(self, code)
 
         tk.Button(window, text='copy all', command=CopyAll).grid(row=2, column=0, pady=6)
         tk.Button(window, text='cancel' if confirm is not None else 'close',

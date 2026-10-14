@@ -1,0 +1,16 @@
+{
+  "number": 2994,
+  "title": "A line copied in the sim or vis dialog is lost from the clipboard when the dialog closes",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "BUG",
+  "effort": "LOW",
+  "description": "revision2026c step RG11.8.21 (reported 2026-10-14, Windows and macOS, the vis dialog from exudyn dialog vis and from the V key): copy line and copy all used tkinter's clipboard, which Tk serves only while its window exists; in a process that goes on after the dialog closes, the clipboard is empty (reproduced on Windows; update() after clipboard_append does not help). The text has to be given to the system clipboard: Win32 on Windows, pbcopy on macOS, wl-copy/xclip/xsel on Linux, tkinter as fallback.",
+  "dateRaised": "2026-10-14",
+  "deadline": "2027-04-12",
+  "dateResolved": "2026-10-14 11:33",
+  "resolvedAuthor": "Claude-JG",
+  "file": "python/exudyn/misc/GUI.py",
+  "releaseNotes": "copy line and copy all of the sim and vis dialogs give the text to the system clipboard (Win32 on Windows, pbcopy on macOS, wl-copy/xclip/xsel on Linux, tkinter as fallback), so it can be pasted after the dialog closes (revision2026c step RG11.8.21)",
+  "resolvedInVersion": "1.13.89"
+}

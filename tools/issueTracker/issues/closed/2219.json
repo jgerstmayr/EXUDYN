@@ -1,0 +1,15 @@
+{
+  "number": 2219,
+  "title": "NodePointSlope12",
+  "author": "JG",
+  "status": "RESOLVED",
+  "type": "EXTENSION",
+  "effort": "MEDIUM",
+  "description": "correct average Rotation and RotationJacobian to be symmetric w.r.t. both slopes",
+  "dateRaised": "2026-01-13",
+  "deadline": "2026-07-12",
+  "dateResolved": "2026-10-14 11:33",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "NodePointSlope12: rotation, angular velocity and rotation Jacobian from the symmetric basis of both slopes, with GetRotationJacobianTTimesVector_q, so that rigid connectors with implicit solvers work at the node; done with #2228 (revision2026c steps RG11.8.8, RG4.20.5.2)",
+  "resolvedInVersion": "1.13.88"
+}

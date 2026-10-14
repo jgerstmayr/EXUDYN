@@ -301,6 +301,12 @@ edge (on a circle the best cubic, 4 R tan(angle/4)); on straight edges the deriv
 parameter length. Quarter cylinder of 3 elements: radius error 3.5e-7 against 5.8e-4 with the chord lengths; test
 model shellMeshSlopesScalingTest.py. [log](exudynRevisionLog2026c.md#rg11-8-19)
 
+##### **CLOSED_RG4.20.5.2** Close the rotation issues of the plate and of NodePointSlope12, done by the symmetric basis
+
+CLOSED 2026-10-14 (#2218, #2219; maintainer: close them if resolved): the rotation, angular velocity and rotation
+Jacobian of ObjectANCFThinPlate and the symmetric rotation of NodePointSlope12 with its
+GetRotationJacobianTTimesVector_q came with #2228 (RG11.8.8). [log](exudynRevisionLog2026c.md#rg11-8-21)
+
 ### **OPEN_RG4.21** Flag the constraints that depend on velocities or time, and add their term to the initial accelerations
 
 #303 (the flag), #574 (the term of the velocity-level constraints, checked with the rolling coin).
@@ -850,6 +856,11 @@ elements) to 1e-10. [log](exudynRevisionLog2026c.md#rg11-8-19)
 #### **OPEN_RG11.8.20** Let InverseKinematicsNumerical accept links without PDcontrol and leave the robot unchanged
 
 #2993.
+
+#### **CLOSED_RG11.8.21** Keep a line copied in the sim or vis dialog in the clipboard after the dialog closes
+
+CLOSED 2026-10-14 (#2994, reported for Windows and macOS): the text goes to the system clipboard (Win32, pbcopy,
+wl-copy/xclip/xsel), tkinter's only as fallback; GUI.CopyToClipboard. [log](exudynRevisionLog2026c.md#rg11-8-21)
 
 ### **CLOSED_RG11.9** Add the velocity offset to all spring-dampers and replace the user functions that move a damper
 
