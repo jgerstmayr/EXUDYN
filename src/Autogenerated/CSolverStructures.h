@@ -4,7 +4,7 @@
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2026-10-13 (last modfied)
+* @date         AUTO: 2026-10-14 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -145,7 +145,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2026-10-13 (last modfied)
+* @date         AUTO: 2026-10-14 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -262,7 +262,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2026-10-13 (last modfied)
+* @date         AUTO: 2026-10-14 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -369,7 +369,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2026-10-13 (last modfied)
+* @date         AUTO: 2026-10-14 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -458,7 +458,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2026-10-13 (last modfied)
+* @date         AUTO: 2026-10-14 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -473,7 +473,10 @@ public: // AUTO:
   Real cpuSolverStartTime;                        //!< AUTO: CPU start time of main solver (not including initial conditions); cpuSolverStartTime-cpuStartTime gives time for initialization
   Real cpuStartTime;                              //!< AUTO: CPU start time of computation (starts counting at computation of initial conditions)
   bool finishedSuccessfully;                      //!< AUTO: flag is false until solver functions SolveSteps)...) or SolveSystem(...) finished successfully (can be used as external trigger)
+  Real initialConstraintsResidualPosition;        //!< AUTO: the largest absolute residual of the constraints with the initial positions, computed at the start of the time integration if timeIntegration.generalizedAlpha.checkInitialConstraints is True; -1 if not computed (#2234)
+  Real initialConstraintsResidualVelocity;        //!< AUTO: the largest absolute residual of the velocity-level constraints with the initial velocities, after their projection if timeIntegration.generalizedAlpha.projectInitialVelocities is True; -1 if not computed (#2234)
   bool initializationSuccessful;                  //!< AUTO: flag is set during call to InitializeSolver(...); reasons for failure are multiple, either inconsistent solver settings are used, files cannot be written (file locked), or initial conditions could not be computed 
+  bool initialVelocitiesProjected;                //!< AUTO: True if the initial velocities have been projected onto the constraints (timeIntegration.generalizedAlpha.projectInitialVelocities) (#2234)
   Index lastDiscontinuousIterationsCount;         //!< AUTO: discontinuous iterations count when written to console (or file) last time
   Real lastImageRecorded;                         //!< AUTO: simulation time when last image has been recorded
   Index lastNewtonJacobiCount;                    //!< AUTO: jacobian update count when written to console (or file) last time
@@ -505,7 +508,10 @@ public: // AUTO:
     cpuSolverStartTime = 0.;
     cpuStartTime = 0.;
     finishedSuccessfully = false;
+    initialConstraintsResidualPosition = -1.;
+    initialConstraintsResidualVelocity = -1.;
     initializationSuccessful = false;
+    initialVelocitiesProjected = false;
     lastDiscontinuousIterationsCount = 0;
     lastImageRecorded = 0.;
     lastNewtonJacobiCount = 0;
@@ -541,7 +547,10 @@ public: // AUTO:
     os << "  cpuSolverStartTime = " << cpuSolverStartTime << "\n";
     os << "  cpuStartTime = " << cpuStartTime << "\n";
     os << "  finishedSuccessfully = " << finishedSuccessfully << "\n";
+    os << "  initialConstraintsResidualPosition = " << initialConstraintsResidualPosition << "\n";
+    os << "  initialConstraintsResidualVelocity = " << initialConstraintsResidualVelocity << "\n";
     os << "  initializationSuccessful = " << initializationSuccessful << "\n";
+    os << "  initialVelocitiesProjected = " << initialVelocitiesProjected << "\n";
     os << "  lastDiscontinuousIterationsCount = " << lastDiscontinuousIterationsCount << "\n";
     os << "  lastImageRecorded = " << lastImageRecorded << "\n";
     os << "  lastNewtonJacobiCount = " << lastNewtonJacobiCount << "\n";
@@ -581,7 +590,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2026-10-13 (last modfied)
+* @date         AUTO: 2026-10-14 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:

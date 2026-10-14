@@ -69,6 +69,15 @@ public:
 	//! set/compute initial conditions (solver-specific!); called from InitializeSolver()
 	virtual void InitializeSolverInitialConditions(CSystem& computationalSystem, const SimulationSettings& simulationSettings) override;
 
+	//! assemble and factorize the matrix [M C_q^T; C_q 0] of the initial state, with a unit diagonal for ODE1 coordinates;
+	//! used for the initial accelerations and the projection of the initial velocities; returns the result of FactorizeNew
+	//! (-1: success) (#2234)
+	Index FactorizeInitialSystemJacobian(CSystem& computationalSystem, const SimulationSettings& simulationSettings);
+
+	//! check the initial positions and velocities against the constraints, warn and, if requested, project the velocities
+	//! onto the constraints (#2234); returns true if it left the matrix of FactorizeInitialSystemJacobian factorized
+	bool CheckInitialConstraints(CSystem& computationalSystem, const SimulationSettings& simulationSettings);
+
 	//! update currentTime (and load factor); MUST be overwritten in special solver class
 	virtual void UpdateCurrentTime(CSystem& computationalSystem, const SimulationSettings& simulationSettings) override;
 

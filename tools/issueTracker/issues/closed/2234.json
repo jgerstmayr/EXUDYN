@@ -1,0 +1,15 @@
+{
+  "number": 2234,
+  "title": "computeInitialAccelerations",
+  "author": "JG",
+  "status": "RESOLVED",
+  "type": "EXTENSION",
+  "effort": "LOW",
+  "description": "add WARNING for inconsistent initial velocities - which usually cause heavy oscillations in constraint forces",
+  "dateRaised": "2026-01-21",
+  "deadline": "2026-07-20",
+  "dateResolved": "2026-10-14 12:39",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "the implicit solver checks the initial positions and velocities against the constraints and warns, naming the item, if the residual exceeds generalizedAlpha.initialConstraintsTolerance (generalizedAlpha.checkInitialConstraints switches it off; a constraint without velocity level is reported and skipped); generalizedAlpha.projectInitialVelocities projects the initial velocities onto the constraints; the residuals are in the solver output, exu.special.solver.initialConstraintsViolations counts such runs and the test suite lists them per model; test model initialConstraintsCheckTest.py (revision2026c step RG11.8.9)",
+  "resolvedInVersion": "1.13.90"
+}

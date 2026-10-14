@@ -642,6 +642,7 @@ void Init_Pybind_manual_classes(py::module& m) {
 		.def_readwrite("timeout", &PySpecialSolver::timeout)
 		.def_readwrite("throwErrorWithCtrlC", &PySpecialSolver::throwErrorWithCtrlC)
 		.def_readwrite("multiThreadingLoadBalancing", &PySpecialSolver::multiThreadingLoadBalancing)
+		.def_readwrite("initialConstraintsViolations", &PySpecialSolver::initialConstraintsViolations)
 
 		//representation:
 		.def("__repr__", [](const PySpecialSolver& item) {

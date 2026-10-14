@@ -1237,8 +1237,12 @@ class NewtonSettings:
 
 class GeneralizedAlphaSettings:
     """Settings for generalized-alpha, implicit trapezoidal or Newmark time integration methods."""
+    checkInitialConstraints: bool
+    """True: at the start of the time integration, the constraints are evaluated with the initial positions and with the initial velocities; if the largest residual exceeds initialConstraintsTolerance, a warning names the item - inconsistent initial conditions give large constraint forces and oscillations in the first steps; the residuals are in the output of the solver; False: no check and no warning; see sec-solver-initialconstraints (#2234)."""
     computeInitialAccelerations: bool
     """True: compute initial accelerations from system EOM in acceleration form; NOTE that initial accelerations that are following from user functions in constraints are not considered for now! False: use zero accelerations."""
+    initialConstraintsTolerance: float
+    """the tolerance of checkInitialConstraints and projectInitialVelocities, relative to 1 plus the largest initial coordinate (positions) or initial velocity coordinate (velocities)."""
     lieGroupAddTangentOperator: bool
     """True: for Lie group nodes, in case that lieGroupSimplifiedKinematicRelations=True, the integrator adds the tangent operator for stiffness and constraint matrices, for improved Newton convergence; not available for sparse matrix mode (EigenSparse)."""
     lieGroupSimplifiedKinematicRelations: bool
@@ -1247,6 +1251,8 @@ class GeneralizedAlphaSettings:
     r"""value beta for Newmark method; default value beta = :math:`\frac 1 4` corresponds to (undamped) trapezoidal rule."""
     newmarkGamma: float
     r"""value gamma for Newmark method; default value gamma = :math:`\frac 1 2` corresponds to (undamped) trapezoidal rule."""
+    projectInitialVelocities: bool
+    r"""True: initial velocities that do not fulfill the constraints are projected onto them, :math:`\dot \qv_0 \leftarrow \dot \qv_0 + \Delta \dot \qv` with :math:`\Mm \Delta \dot \qv + \Cm_q\tp \tmu = \Null`, :math:`\Cm_q \Delta \dot \qv = -\gv_v`, the change of least kinetic energy that makes the velocity-level constraints :math:`\gv_v` zero; the initial positions are not changed (#2234)."""
     resetAccelerations: bool
     """this flag only affects if computeInitialAccelerations=False: if resetAccelerations=True, accelerations are set zero in the solver function InitializeSolverInitialConditions; this may be unwanted in case of repeatedly called SolveSteps() and in cases where solutions shall be prolonged from previous computations."""
     spectralRadius: float
@@ -2477,10 +2483,16 @@ class SolverOutputData:
     """CPU start time of computation (starts counting at computation of initial conditions)."""
     finishedSuccessfully: bool
     """flag is false until solver functions SolveSteps)...) or SolveSystem(...) finished successfully (can be used as external trigger)."""
+    initialConstraintsResidualPosition: float
+    """the largest absolute residual of the constraints with the initial positions, computed at the start of the time integration if timeIntegration.generalizedAlpha.checkInitialConstraints is True; -1 if not computed (#2234)."""
+    initialConstraintsResidualVelocity: float
+    """the largest absolute residual of the velocity-level constraints with the initial velocities, after their projection if timeIntegration.generalizedAlpha.projectInitialVelocities is True; -1 if not computed (#2234)."""
     initializationSuccessful: bool
     """flag is set during call to InitializeSolver(...); reasons for failure are multiple, either inconsistent solver settings are used, files cannot be written (file locked), or initial conditions could not be computed."""
     @overload
     def InitializeData() -> None: ...
+    initialVelocitiesProjected: bool
+    """True if the initial velocities have been projected onto the constraints (timeIntegration.generalizedAlpha.projectInitialVelocities) (#2234)."""
     lastDiscontinuousIterationsCount: int
     """discontinuous iterations count when written to console (or file) last time."""
     lastImageRecorded: float
@@ -4315,6 +4327,8 @@ class SpecialSolver:
     """if >= 0, the solver stops after reaching accoring CPU time specified with timeout; makes sense for parameter variation, automatic testing or for long-running simulations; default=-1 (no timeout)."""
     throwErrorWithCtrlC:bool
     """if True, pressing CTRL-C during a simulation raises an error in Python; if False (default), the solver stops and returns; the error works in a console, the default also in Spyder."""
+    initialConstraintsViolations:int
+    """the number of time integrations, since the import of exudyn, whose initial positions or velocities did not fulfill the constraints (timeIntegration.generalizedAlpha.checkInitialConstraints); it can be set to 0; the test suite reports it per test model (#2234)."""
     multiThreadingLoadBalancing:bool
     """if True (=default), multithreaded code parts (in particular solver and raytracing) use load balancing, which may give better performance in case of non-equilibrated loads; (mobile) Intel CPUs may perform significantly better without load balancing."""
 

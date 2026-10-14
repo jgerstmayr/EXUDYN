@@ -338,6 +338,8 @@ pb.DefDataAccess('special.solver.timeout','if >= 0, the solver stops after reach
                         dataType='float', isTopLevel = True)
 pb.DefDataAccess('special.solver.throwErrorWithCtrlC','if True, pressing CTRL-C during a simulation raises an error in Python; if False (default), the solver stops and returns; the error works in a console, the default also in Spyder',
                         dataType='bool', isTopLevel = True)
+pb.DefDataAccess('special.solver.initialConstraintsViolations','the number of time integrations, since the import of exudyn, whose initial positions or velocities did not fulfill the constraints (timeIntegration.generalizedAlpha.checkInitialConstraints); it can be set to 0; the test suite reports it per test model (#2234)',
+                        dataType='int', isTopLevel = True)
 pb.DefDataAccess('special.solver.multiThreadingLoadBalancing','if True (=default), multithreaded code parts (in particular solver and raytracing) use load balancing, which may give better performance in case of non-equilibrated loads; (mobile) Intel CPUs may perform significantly better without load balancing',
                         dataType='bool', isTopLevel = True)
 

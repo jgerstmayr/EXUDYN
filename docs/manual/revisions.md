@@ -52,6 +52,10 @@ strains in the same frame, so a torque on its node no longer shears the cross se
 **`ShellMesh`** scales the slopes of each element edge so that the cubic edge follows the mapped surface - on a
 cylinder about a thousand times closer than with the chord lengths (#2226).
 
+**Consistent initial conditions**: the implicit solver checks the initial positions and velocities against the
+constraints and warns, naming the item; `generalizedAlpha.projectInitialVelocities = True` projects the initial
+velocities onto the constraints, see {ref}`sec-solver-initialconstraints` (#2234).
+
 **`SystemContainer(attachToRenderer=False)`** creates a container only to compute, which leaves the render window with
 the container of the model; `InverseKinematicsNumerical` uses it (#2259).
 

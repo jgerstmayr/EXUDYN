@@ -490,6 +490,48 @@ The linear system of equations, either {eq}`eq-initialaccelerationsvelb` or {eq}
 
 which is the default value.
 
+(sec-solver-initialconstraints)=
+### Consistent initial conditions
+
+The initial positions $\qv_0$ and velocities $\dot \qv_0$ shall fulfill the constraints: $\gv(\qv_0) = \Null$ for
+position-level constraints, and the velocity-level form $\gv_v(\qv_0, \dot \qv_0) = \Null$ - the time derivative
+$\frac{\partial \gv}{\partial \qv} \dot \qv_0$ of a position-level constraint, or the equation of a velocity-level
+constraint such as a rolling disc or a prescribed velocity. If they do not, the first steps of an implicit time
+integration enforce them by a jump: the constraint forces become large and oscillate, and the Newton method may need
+smaller steps. A typical cause is an initial velocity given to one body of a mechanism but not to the bodies connected
+to it, or a constraint that prescribes a velocity different from the initial one.
+
+At the start of the time integration, the implicit solver evaluates both levels and warns if the largest residual
+exceeds the tolerance, naming the item:
+
+- `simulationSettings.timeIntegration.generalizedAlpha.checkInitialConstraints = True` (default) checks and warns;
+  `False` switches the check and the warning off;
+- `simulationSettings.timeIntegration.generalizedAlpha.initialConstraintsTolerance = 1e-8` (default) is the tolerance,
+  relative to 1 plus the largest initial coordinate, respectively velocity coordinate.
+
+The residuals are in the output of the solver, `initialConstraintsResidualPosition` and
+`initialConstraintsResidualVelocity` (-1 if not computed), see `mbs.sys['dynamicSolver'].output` after
+`mbs.SolveDynamic(..., storeSolver=True)`; `exudyn.special.solver.initialConstraintsViolations` counts the time
+integrations that started from inconsistent initial conditions. If a constraint does not provide its velocity-level
+equations, the check says so and the simulation continues.
+
+With
+
+- `simulationSettings.timeIntegration.generalizedAlpha.projectInitialVelocities = True`
+
+the solver projects the initial velocities onto the constraints: it adds the change $\Delta \dot \qv$ with the least
+kinetic energy that makes the velocity-level residual zero,
+
+$$
+  \mp{\Mm}{\frac{\partial \gv}{\partial \qv^\mathrm{T}}}{\frac{\partial \gv}{\partial \qv}}{\Null}
+  \vp{\Delta \dot \qv}{\tmu} = \vp{\Null}{-\gv_v(\qv_0, \dot \qv_0)} \, , \quad
+  \dot \qv_0 \leftarrow \dot \qv_0 + \Delta \dot \qv \, ,
+$$ (eq-projectinitialvelocities)
+
+with the matrix of the initial accelerations, for which $\frac{\partial \gv}{\partial \dot \qv}$ takes the place of
+$\frac{\partial \gv}{\partial \qv}$ for velocity-level constraints. The initial positions are not corrected; they must
+fulfill the position-level constraints, which the check reports.
+
 ## Optimization and parameter variation
 
 The real benefit of powerful multi-body simulation emerges only if combined with modern but also simple analysis and evaluation methods.

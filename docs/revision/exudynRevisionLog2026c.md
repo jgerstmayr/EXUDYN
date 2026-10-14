@@ -1065,3 +1065,44 @@ is open, on macOS and Windows, from "exudyn dialog vis" and from the V key; clos
   rotation Jacobian and its derivative (MarkerBodyRigid acts on it); NodePointSlope12 has the symmetric basis,
   symmetric in both slopes, with the consistent angular velocity, rotation Jacobian and the formerly missing
   GetRotationJacobianTTimesVector_q. Closed as resolved.
+
+<a id="rg11-8-9"></a>
+### RG11.8.9 — the initial conditions checked against the constraints, the projection of the initial velocities (2026-10-14, #2234)
+*(Maintainer 2026-10-14: option A, the warning, in a try block, since the velocity level can fail - then the warning
+names the flag that switches the check off, and the projection; option B, the projection, as proposed; the position
+level too; check how often it occurs in the tests, ideally automatically, with values stored by the solver; #565, the
+drift, follows later and is not touched.)*
+- **The check** (CSolverImplicitSecondOrderTimeInt::CheckInitialConstraints, before the initial accelerations): the
+  algebraic equations at position level and at velocity level, `ComputeAlgebraicEquations(..., false/true)`, each in a
+  try block; the largest residual against `initialConstraintsTolerance` (default 1e-8) times 1 + the largest
+  coordinate, respectively velocity coordinate. Velocity-level constraints (`UsesVelocityLevel`: rolling disc,
+  CoordinateConstraint with velocityLevel) give their velocity equation at both levels and are left out of the
+  position check - without that, a prescribed speed of 8 pi appeared as a position residual of 25.1. The warning names
+  the item ("object 7"), the residual and the limit, the remedies, and that
+  `generalizedAlpha.checkInitialConstraints = False` switches it off. Skipped for a run that continues from a restart
+  file. If an evaluation fails (ObjectJointSliding and ObjectJointSliding2D have no velocity level), the warning says so,
+  names the flag and the projection, and the simulation continues with what was evaluated.
+- **The projection** (`generalizedAlpha.projectInitialVelocities`, default False): [M C_q^T; C_q 0][dv; mu] = [0; -g_v],
+  the change of least kinetic energy; the matrix is the one of the initial accelerations (factored once, reused by
+  them - FactorizeInitialSystemJacobian, extracted from the initial accelerations), the velocity residual is evaluated
+  again afterwards. A successful projection does not warn; the position level is not corrected.
+- **Stored values**: `solver.output.initialConstraintsResidualPosition`, `initialConstraintsResidualVelocity` (-1 if
+  not computed), `initialVelocitiesProjected`; module-wide `exu.special.solver.initialConstraintsViolations`, the number
+  of such time integrations. runTestSuite.py resets it per test model and mini example (also in parallel runs, through
+  the result line of the worker) and lists the models at the end of the log.
+- **How often** (suite of 2026-10-14): 15 of 192 test models, 32 time integrations (14 of them createItemNumbersTest); all at velocity level except
+  sliderCrank3Dtest.py, whose GenericJoint slider-conrod constrains the rotation about z while the conrod starts
+  rotated by 0.248 rad. Typical: one body of a mechanism gets an initial velocity, the others not (fourBarMechanismTest
+  4.8, sliderCrank3Dbenchmark 0.48), a prescribed speed against an initial speed 0 (ballBearingTest 8 pi - its solver
+  reduces the step size in the first steps -, coordinateSpringDamperExt, createFunctionsTest), a rolling disc without
+  matching initial rotation (createRollingDiscTest), rigidBodyAsUserFunctionTest 725. Mini examples:
+  MarkerBodiesRelativeTranslationCoordinate (position 0.3); ObjectJointSliding, ObjectJointSliding2D,
+  MarkerBodyCable2DCoordinates, MarkerBodyBeamShape cannot be checked at velocity level. No reference value changed;
+  the models are not changed here.
+- **Test model initialConstraintsCheckTest.py**: a pendulum on a distance constraint. A radial initial velocity 0.5:
+  residual 0.5, the constraint force of the first steps 28666 instead of 7.9; with the projection the solution is
+  that of the consistent start to the bit; a distance 1% too long: position residual 0.01; the check off: -1, no
+  count. Manual: docs/manual/solver.md, section *Consistent initial conditions*.
+- **For #565** (the drift during the run, later): the evaluation of both levels and the naming of the item
+  (`AlgebraicEquationItem`) are what a drift inspector needs at the end of a step; the counter in special.solver and
+  the per-model list of the runner can take a drift count the same way.

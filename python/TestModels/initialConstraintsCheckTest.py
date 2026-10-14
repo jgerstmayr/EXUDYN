@@ -1,0 +1,101 @@
+#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+# This is an EXUDYN example
+#
+# Details:  The check of the initial conditions against the constraints (#2234): a mass point on a distance
+#           constraint, a pendulum of length 1. The solver of SolveDynamic evaluates the constraints with the initial
+#           positions and velocities and warns when they are violated; the largest residuals are in the output of the
+#           solver, exu.special.solver.initialConstraintsViolations counts such time integrations.
+#           (1) a tangential initial velocity fulfills the constraint; (2) a radial component violates it, and the
+#           constraint force of the first step jumps; (3) with projectInitialVelocities the radial component is
+#           removed and the solution is that of (1); (4) a wrong initial distance violates the position level, which
+#           the solver does not correct; (5) checkInitialConstraints = False: no check, no warning, no count.
+#
+# Author:   Johannes Gerstmayr
+# Date:     2026-10-14
+#
+# Copyright:This file is part of Exudyn. Exudyn is free software. You can redistribute it and/or modify it under the terms of the Exudyn license. See 'LICENSE.txt' for more details.
+#
+#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+import exudyn as exu
+from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
+from exudyn import cMath
+
+SC = exu.SystemContainer()
+OVT = exu.OutputVariableType
+L = 1.      #length of the pendulum
+mass = 2.
+vTangential = 2.
+
+def Pendulum(initialVelocity, distance=L, check=True, project=False):
+    """the pendulum from [L, 0, 0] with the given initial velocity; returns the output of the solver, the position
+    and velocity at the end and the largest constraint force of the first 10 steps"""
+    mbs = SC.AddSystem()
+    oGround = mbs.CreateGround()
+    oMass = mbs.CreateMassPoint(referencePosition=[distance, 0, 0], initialVelocity=initialVelocity, mass=mass,
+                                gravity=[0, -9.81, 0])
+    oDistance = mbs.CreateDistanceConstraint(itemNumbers=[oGround, oMass], distance=L)
+    sForce = mbs.AddSensor(SensorObject(objectNumber=oDistance, storeInternal=True, outputVariableType=OVT.Force))
+    mbs.Assemble()
+
+    simulationSettings = exu.SimulationSettings()
+    simulationSettings.timeIntegration.numberOfSteps = 200
+    simulationSettings.timeIntegration.endTime = 0.2
+    simulationSettings.timeIntegration.verboseMode = 0
+    simulationSettings.solution.file.write = False
+    simulationSettings.solution.sensors.writePeriod = 0.001
+    simulationSettings.timeIntegration.generalizedAlpha.checkInitialConstraints = check
+    simulationSettings.timeIntegration.generalizedAlpha.projectInitialVelocities = project
+    mbs.SolveDynamic(simulationSettings, storeSolver=True)
+
+    output = mbs.sys['dynamicSolver'].output
+    nMass = mbs.GetObject(oMass)['nodeNumber']
+    forces = mbs.GetSensorStoredData(sForce)
+    return {'residualPosition': output.initialConstraintsResidualPosition,
+            'residualVelocity': output.initialConstraintsResidualVelocity,
+            'projected': output.initialVelocitiesProjected,
+            'position': mbs.GetNodeOutput(nMass, OVT.Position),
+            'velocity': mbs.GetNodeOutput(nMass, OVT.Velocity),
+            'maxForceStart': max(abs(f) for f in forces[1:11, 1])}
+
+checks = []
+counter0 = exu.special.solver.initialConstraintsViolations
+
+#(1) consistent
+consistent = Pendulum([0, vTangential, 0])
+checks += [consistent['residualPosition'] < 1e-14, consistent['residualVelocity'] < 1e-14,
+           exu.special.solver.initialConstraintsViolations == counter0]
+exu.Print('(1) consistent: residuals', consistent['residualPosition'], consistent['residualVelocity'],
+          ', largest force of the first steps', consistent['maxForceStart'])
+
+#(2) a radial component of 0.5: the velocity-level residual of the distance constraint is 0.5
+radial = Pendulum([0.5, vTangential, 0])
+checks += [abs(radial['residualVelocity'] - 0.5) < 1e-14, not radial['projected'],
+           exu.special.solver.initialConstraintsViolations == counter0 + 1,
+           radial['maxForceStart'] > 10*consistent['maxForceStart']]
+exu.Print('(2) radial component: residual', radial['residualVelocity'], ', largest force of the first steps',
+          radial['maxForceStart'])
+
+#(3) the projection removes the radial component: the solution of (1)
+projected = Pendulum([0.5, vTangential, 0], project=True)
+difference = cMath.norm(projected['position'] - consistent['position']) + cMath.norm(projected['velocity'] - consistent['velocity'])
+checks += [projected['projected'], projected['residualVelocity'] < 1e-14, difference < 1e-12,
+           exu.special.solver.initialConstraintsViolations == counter0 + 2]
+exu.Print('(3) projected: residual after', projected['residualVelocity'], ', difference to (1)', difference)
+
+#(4) the mass 1% too far out: the position level is violated by 0.01
+position = Pendulum([0, vTangential, 0], distance=1.01*L)
+checks += [abs(position['residualPosition'] - 0.01) < 1e-12,
+           exu.special.solver.initialConstraintsViolations == counter0 + 3]
+exu.Print('(4) wrong distance: residual', position['residualPosition'])
+
+#(5) no check
+unchecked = Pendulum([0.5, vTangential, 0], check=False)
+checks += [unchecked['residualPosition'] == -1, unchecked['residualVelocity'] == -1,
+           exu.special.solver.initialConstraintsViolations == counter0 + 3]
+
+exu.Print('checks:', checks)
+u = sum(checks) - len(checks) + consistent['position'][0] + projected['position'][0] + radial['position'][0]
+exu.Print('solution of initialConstraintsCheckTest=', u)
+
+exu.sys['testResult'] = u

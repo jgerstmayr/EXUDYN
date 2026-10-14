@@ -983,9 +983,10 @@ finally:
         _testResult = float(exu.sys.get('testResult', {invalidResult!r}))
     except Exception:
         _testResult = float('nan')
-    #a model may state a tolerance of its own; 0 means it did not
+    #a model may state a tolerance of its own; 0 means it did not; the last number counts the time integrations whose
+    #initial conditions did not fulfill the constraints (#2234)
     print({resultMarker!r}, repr(_testResult), repr(time.perf_counter()-start),
-          repr(float(exu.sys.get('testTolerance', 0.))))
+          repr(float(exu.sys.get('testTolerance', 0.))), repr(exu.special.solver.initialConstraintsViolations))
 """
 
 
@@ -1037,7 +1038,8 @@ def RunModelInProcess(fileName, solutionDirectory, invalidResult, timeout=1800,
         pythonExecutable: interpreter to use; default sys.executable
 
     Returns:
-        dict with 'result', 'seconds', 'output' (everything the model printed) and 'failed'
+        dict with 'result', 'seconds', 'output' (everything the model printed), 'failed', 'tolerance' and
+        'initialConstraintsViolations' (#2234)
     """
     import subprocess
 
@@ -1063,6 +1065,7 @@ def RunModelInProcess(fileName, solutionDirectory, invalidResult, timeout=1800,
 
     result = invalidResult
     tolerance = 0.       #a tolerance the model asked for; 0 means it asked for none
+    initialConstraintsViolations = 0
     seconds = time.perf_counter() - start
     keptLines = []
     for line in output.split('\n'):
@@ -1072,13 +1075,14 @@ def RunModelInProcess(fileName, solutionDirectory, invalidResult, timeout=1800,
                 result = float(parts[1])
                 seconds = float(parts[2])
                 tolerance = float(parts[3])
+                initialConstraintsViolations = int(parts[4])
             except (IndexError, ValueError):
                 pass
         else:
             keptLines += [line]
 
     return {'result': result, 'seconds': seconds, 'output': '\n'.join(keptLines).rstrip(),
-            'failed': failed, 'tolerance': tolerance}
+            'failed': failed, 'tolerance': tolerance, 'initialConstraintsViolations': initialConstraintsViolations}
 
 
 #%%******************************************************************************************************

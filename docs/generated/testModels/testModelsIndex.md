@@ -109,6 +109,7 @@ graphicsDataErrorsTest
 solverFailureMessageTest
 sensorUserFunctionItemsTest
 userFunctionTimerTest
+initialConstraintsCheckTest
 shellMeshSlopesScalingTest
 systemContainerComputeOnlyTest
 ANCFBeamGeometricallyExactComparisonTest

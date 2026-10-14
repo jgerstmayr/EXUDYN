@@ -257,6 +257,7 @@ SC.Reset()
 TSScope.examplesTestSolList={}
 TSScope.examplesTestErrorList={}
 TSScope.examplesTestTimeList={}     #per-test runtime, for the overview at the end of the log
+TSScope.initialConstraintsViolations={} #per test model: the time integrations whose initial conditions violate the constraints (#2234)
 TSScope.examplesTestTolList={}      #effective tolerance actually applied, varies per test
 TSScope.examplesTestFinalErrorList={} #error vs reference solution, after recomputation
 TSScope.examplesFailedNames=set()   #names rather than indices, for the overview
@@ -363,10 +364,12 @@ if TSScope.runTestExamples:
         exu.sys['testResult'] = TSScope.invalidResult
         exu.sys.pop('testTolerance', None)
         TSScope.testTimeStart = time.perf_counter()
+        exu.special.solver.initialConstraintsViolations = 0 #counted per model (#2234)
         try:
             if TSScope.parallel:
                 #already run in its own interpreter; reproduce its output in the log here
                 TSScope.modelRun = TSScope.parallelResults[TSScope.file]
+                exu.special.solver.initialConstraintsViolations = TSScope.modelRun.get('initialConstraintsViolations', 0)
                 exu.Print(TSScope.modelRun['output'])
                 TSScope.testResult = TSScope.modelRun['result']
                 #the model ran in another interpreter, so its tolerance comes back with it
@@ -392,6 +395,8 @@ if TSScope.runTestExamples:
             if exu.sys.get('testResult', TSScope.invalidResult) != TSScope.invalidResult:
                 TSScope.testResult = exu.sys['testResult']
             exu.sys['testIsActive'] = False
+            if exu.special.solver.initialConstraintsViolations > 0:
+                TSScope.initialConstraintsViolations[TSScope.name] = exu.special.solver.initialConstraintsViolations
 
             TSScope.examplesTestErrorList[TSScope.name] = TSScope.testError
             TSScope.examplesTestSolList[TSScope.name] = TSScope.testResult
@@ -498,6 +503,7 @@ if TSScope.runMiniExamples:
         exu.config.outputDirectory = TSScope.solutionDirectory + '/MiniExamples/' + file[:-3] #(#2418)
         fileDir = '../MiniExamples/'+file
         miniTimeStart = time.perf_counter()
+        exu.special.solver.initialConstraintsViolations = 0 #counted per model (#2234)
         try:
             testRunnerTools.ExecModel(fileDir, quiet=not writeToConsole) #as when it runs alone (#2875)
         except Exception as e:
@@ -506,6 +512,8 @@ if TSScope.runMiniExamples:
         finally:
             TSScope.testResult = exu.sys.get('testResult', TSScope.invalidResult)
             exu.sys['testIsActive'] = False
+            if exu.special.solver.initialConstraintsViolations > 0:
+                TSScope.initialConstraintsViolations['MiniExamples/' + name] = exu.special.solver.initialConstraintsViolations
             TSScope.testError = TSScope.testResult-miniExamplesRefSol[name]
             if abs(TSScope.testError) < TSScope.testTolerance:
                 exu.Print('  MINI EXAMPLE ' + str(testExamplesCnt) + ' ("' + file + '") FINISHED SUCCESSFUL')
@@ -636,6 +644,13 @@ if TSScope.runTestExamples:
         failedNames=TSScope.examplesFailedNames,
         sensitiveNames=TSScope.sensitiveTests,
         unresolvedNames=TSScope.unresolvedTests))
+
+#the models whose initial conditions do not fulfill their constraints, with the number of such time integrations;
+#not a failure, the solver warns (#2234)
+exu.Print('\nINITIAL CONDITIONS THAT DO NOT FULFILL THE CONSTRAINTS (#2234): ' + str(len(TSScope.initialConstraintsViolations))
+          + ' models; per model the number of time integrations')
+for (name, count) in sorted(TSScope.initialConstraintsViolations.items()):
+    exu.Print('  ' + name + ': ' + str(count))
 
 if TSScope.runMiniExamples:
     exu.Print(testRunnerTools.FormatTestOverview(

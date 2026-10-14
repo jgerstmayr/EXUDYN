@@ -105,6 +105,7 @@ The class **exudyn** has the following **functions and structures**:
 - **`special.solver`**: special solver attributes and functions; not intended for regular users; for available features, see the C++ code class PySpecialSolver
 - **`special.solver.timeout`**: if >= 0, the solver stops after reaching accoring CPU time specified with timeout; makes sense for parameter variation, automatic testing or for long-running simulations; default=-1 (no timeout)
 - **`special.solver.throwErrorWithCtrlC`**: if True, pressing CTRL-C during a simulation raises an error in Python; if False (default), the solver stops and returns; the error works in a console, the default also in Spyder
+- **`special.solver.initialConstraintsViolations`**: the number of time integrations, since the import of exudyn, whose initial positions or velocities did not fulfill the constraints (timeIntegration.generalizedAlpha.checkInitialConstraints); it can be set to 0; the test suite reports it per test model (#2234)
 - **`special.solver.multiThreadingLoadBalancing`**: if True (=default), multithreaded code parts (in particular solver and raytracing) use load balancing, which may give better performance in case of non-equilibrated loads; (mobile) Intel CPUs may perform significantly better without load balancing
 
 (sec-exudyn-special-exceptions)=

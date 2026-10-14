@@ -27,6 +27,9 @@
 #include "Linalg/LinkedDataVectorParallel.h"	 
 
 #include "Pymodules/PyMatrixContainer.h" //for Python user functions
+#include "Main/Experimental.h"
+
+extern PySpecial pySpecial; //special.solver counts the initial conditions that violate the constraints (#2234)
 
 namespace py = pybind11;	//for py::object
 
@@ -82,6 +85,207 @@ void CSolverImplicitSecondOrderTimeInt::IncreaseStepSize(CSystem& computationalS
 	}
 }
 
+//! the largest absolute entry of v and its index
+static Real MaxAbsAndIndex(const Vector& v, Index& index)
+{
+	Real maxAbs = 0.;
+	index = 0;
+	for (Index i = 0; i < v.NumberOfItems(); i++)
+	{
+		if (fabs(v[i]) > maxAbs) { maxAbs = fabs(v[i]); index = i; }
+	}
+	return maxAbs;
+}
+
+//! the item whose algebraic equation aeIndex is, as "object 5" or "node 3" (#2234)
+static STDstring AlgebraicEquationItem(const CSystemData& systemData, Index aeIndex)
+{
+	for (Index j : systemData.objectsWithAlgebraicEquations)
+	{
+		for (Index k : systemData.GetLocalToGlobalAE()[j])
+		{
+			if (k == aeIndex) { return "object " + EXUstd::ToString(j); }
+		}
+	}
+	for (Index i : systemData.nodesODE2WithAE)
+	{
+		const CNode& node = systemData.GetCNode(i);
+		Index start = node.GetGlobalAECoordinateIndex();
+		if (aeIndex >= start && aeIndex < start + node.GetAlgebraicEquationsSize()) { return "node " + EXUstd::ToString(i); }
+	}
+	return "algebraic equation " + EXUstd::ToString(aeIndex);
+}
+
+Index CSolverImplicitSecondOrderTimeInt::FactorizeInitialSystemJacobian(CSystem& computationalSystem, const SimulationSettings& simulationSettings)
+{
+	//size of systemJacobian already set!
+	data.systemJacobian->SetAllZero(); //entries are not set to zero inside jacobian computation!
+	Real factorAE_ODE2 = 1.;			//for position level constraints: depends, if index reduction is used
+	Real factorAE_ODE2_t = 1.;			//for velocity constraints ==> C_qt*q_tt term from velocity level, if C=C(q_t)
+	Real factorAE_ODE1 = 1.;			//
+	bool velocityLevel = false;
+
+	//Jacobian of algebraic equations
+	computationalSystem.JacobianAE(data.tempCompDataArray, newton, *(data.systemJacobian), factorAE_ODE2, factorAE_ODE2_t, factorAE_ODE1, velocityLevel);
+
+	//Mass matrix - may also be directly filled into data.systemJacobian?
+	if (!hasConstantMassMatrix) //not yet set at this point, done in PostInitializeSolverSpecific; default=false
+	{
+		data.systemMassMatrix->SetAllZero();
+		computationalSystem.ComputeMassMatrix(data.tempCompDataArray, *(data.systemMassMatrix));
+	}
+	data.systemJacobian->AddSubmatrix(*(data.systemMassMatrix));
+
+	//add unit matrix for ODE1 components (nothing to be solved for)
+	ConstSizeVector<1> unit(1, 1.);
+	LinkedDataVector linkedUnit(unit);
+
+	for (Index i = 0; i < data.nODE1; i++)
+	{
+		data.systemJacobian->AddColumnVector(data.nODE2 + i, linkedUnit, data.nODE2 + i); //add single components
+	}
+
+	if (IsVerbose(3)) { Verbose(3, "    initial system Jacobian: Jac  =\n" + EXUstd::ToString(*(data.systemJacobian)) + "\n"); }
+
+	data.systemJacobian->FinalizeMatrix();
+	return data.systemJacobian->FactorizeNew();
+}
+
+bool CSolverImplicitSecondOrderTimeInt::CheckInitialConstraints(CSystem& computationalSystem, const SimulationSettings& simulationSettings)
+{
+	const GeneralizedAlphaSettings& alpha = simulationSettings.timeIntegration.generalizedAlpha;
+	output.initialConstraintsResidualPosition = -1.;
+	output.initialConstraintsResidualVelocity = -1.;
+	output.initialVelocitiesProjected = false;
+	//a run that continues from the restart file starts from its state, not from the initial one (#2850)
+	if (data.nAE == 0 || restart.active || !(alpha.checkInitialConstraints || alpha.projectInitialVelocities)) { return false; }
+
+	CSystemData& systemData = computationalSystem.GetSystemData();
+	Vector& velocities = systemData.GetCData().currentState.ODE2Coords_t;
+	const Vector& positions = systemData.GetCData().currentState.ODE2Coords;
+	const Real tolerance = alpha.initialConstraintsTolerance;
+	Index dummy;
+	const Real limitPosition = tolerance * (1. + MaxAbsAndIndex(positions, dummy));
+	Real limitVelocity = tolerance * (1. + MaxAbsAndIndex(velocities, dummy));
+	const STDstring switchOff = "timeIntegration.generalizedAlpha.checkInitialConstraints = False switches this check and its warning off";
+
+	Vector residualPosition(data.nAE);
+	Vector residualVelocity(data.nAE);
+	Index indexPosition = 0;
+	Index indexVelocity = 0;
+	//the velocity level is not implemented in every constraint, and a user function may fail: the check must not stop the
+	//simulation, which may well run without it
+	STDstring failure;
+	try
+	{
+		computationalSystem.ComputeAlgebraicEquations(data.tempCompDataArray, residualPosition, false);
+		//a velocity-level constraint (a rolling disc, a prescribed velocity) gives its velocity equation at both levels:
+		//it is checked with the velocities
+		for (Index j : systemData.objectsWithAlgebraicEquations)
+		{
+			const CObject& object = *(systemData.GetCObjects()[j]);
+			if (((Index)object.GetType() & (Index)CObjectType::Constraint) && ((const CObjectConstraint&)object).UsesVelocityLevel())
+			{
+				for (Index k : systemData.GetLocalToGlobalAE()[j]) { residualPosition[k] = 0.; }
+			}
+		}
+		output.initialConstraintsResidualPosition = MaxAbsAndIndex(residualPosition, indexPosition);
+	}
+	catch (const std::exception& error) { failure = STDstring("positions: ") + error.what(); }
+	try
+	{
+		computationalSystem.ComputeAlgebraicEquations(data.tempCompDataArray, residualVelocity, true);
+		output.initialConstraintsResidualVelocity = MaxAbsAndIndex(residualVelocity, indexVelocity);
+	}
+	catch (const std::exception& error) { failure += STDstring(failure.empty() ? "" : "; ") + "velocities: " + error.what(); }
+	if (!failure.empty() && alpha.checkInitialConstraints)
+	{
+		PyWarning("the initial conditions could not be checked against the constraints (#2234): " + failure
+			+ "\nthe simulation continues without this check; " + switchOff
+			+ "; timeIntegration.generalizedAlpha.projectInitialVelocities = True needs the evaluation of the velocities", file.solverFile);
+	}
+
+	const bool positionViolated = output.initialConstraintsResidualPosition > limitPosition;
+	bool velocityViolated = output.initialConstraintsResidualVelocity > limitVelocity;
+	if (positionViolated || velocityViolated) { pySpecial.solver.initialConstraintsViolations++; }
+
+	STDstring projection;
+	bool factorized = false;
+	if (alpha.projectInitialVelocities && velocityViolated)
+	{
+		//[M  C_q^T][dv]   [  0 ]
+		//[C_q  0  ][mu] = [-g_v]: the change of the velocities with the least kinetic energy that fulfills the
+		//velocity-level constraints g_v, which are linear in the velocities; the row of a velocity constraint is its
+		//derivative by the velocities, as in the initial accelerations
+		Real residualBefore = output.initialConstraintsResidualVelocity;
+		Index factorizeOutput = FactorizeInitialSystemJacobian(computationalSystem, simulationSettings);
+		factorized = (factorizeOutput == -1);
+		if (!factorized)
+		{
+			projection = "\nthe initial velocities could not be projected: the matrix [M C_q^T; C_q 0] is singular (equation "
+				+ EXUstd::ToString(factorizeOutput) + ")";
+		}
+		else
+		{
+			Vector systemRHS(data.nSys);
+			systemRHS.SetAll(0.);
+			for (Index k = 0; k < data.nAE; k++) { systemRHS[data.startAE + k] = -residualVelocity[k]; }
+			Vector solution(data.nSys);
+			solution.SetAll(0.);
+			data.systemJacobian->Solve(systemRHS, solution);
+			for (Index k = 0; k < data.nODE2; k++) { velocities[k] += solution[k]; }
+			output.initialVelocitiesProjected = true;
+			limitVelocity = tolerance * (1. + MaxAbsAndIndex(velocities, dummy));
+
+			try
+			{
+				computationalSystem.ComputeAlgebraicEquations(data.tempCompDataArray, residualVelocity, true);
+				output.initialConstraintsResidualVelocity = MaxAbsAndIndex(residualVelocity, indexVelocity);
+				velocityViolated = output.initialConstraintsResidualVelocity > limitVelocity;
+				projection = "\nthe initial velocities have been projected onto the constraints (projectInitialVelocities): residual "
+					+ EXUstd::ToString(residualBefore) + " before, " + EXUstd::ToString(output.initialConstraintsResidualVelocity) + " after";
+			}
+			catch (const std::exception& error)
+			{
+				output.initialConstraintsResidualVelocity = -1.;
+				velocityViolated = false;
+				projection = STDstring("\nthe initial velocities have been projected onto the constraints, but could not be checked again: ") + error.what();
+			}
+		}
+	}
+
+	//the projection that succeeded is what was asked for and says nothing; the rest is a warning
+	if (alpha.checkInitialConstraints && (positionViolated || velocityViolated))
+	{
+		STDstring s = "the initial conditions do not fulfill the constraints (#2234):";
+		if (positionViolated)
+		{
+			s += "\n  positions:  largest residual " + EXUstd::ToString(output.initialConstraintsResidualPosition) + " in "
+				+ AlgebraicEquationItem(systemData, indexPosition) + ", limit " + EXUstd::ToString(limitPosition);
+		}
+		if (velocityViolated)
+		{
+			s += "\n  velocities: largest residual " + EXUstd::ToString(output.initialConstraintsResidualVelocity) + " in "
+				+ AlgebraicEquationItem(systemData, indexVelocity) + ", limit " + EXUstd::ToString(limitVelocity);
+		}
+		s += projection;
+		s += "\ninconsistent initial conditions give large constraint forces and oscillations in the first steps; "
+			"use initial positions and velocities that fulfill the constraints";
+		if (velocityViolated && !output.initialVelocitiesProjected)
+		{
+			s += "; timeIntegration.generalizedAlpha.projectInitialVelocities = True projects the initial velocities onto the constraints";
+		}
+		if (positionViolated) { s += "; the initial positions are not corrected by the solver"; }
+		s += "; " + switchOff;
+		PyWarning(s, file.solverFile);
+	}
+	else if (!projection.empty() && !output.initialVelocitiesProjected) //the projection was asked for and failed
+	{
+		PyWarning(projection.substr(1), file.solverFile);
+	}
+	return factorized;
+}
+
 //! set/compute initial conditions (solver-specific!); called from InitializeSolver()
 void CSolverImplicitSecondOrderTimeInt::InitializeSolverInitialConditions(CSystem& computationalSystem, const SimulationSettings& simulationSettings)
 {
@@ -89,6 +293,9 @@ void CSolverImplicitSecondOrderTimeInt::InitializeSolverInitialConditions(CSyste
 
 	//call base class for general tasks
 	CSolverBase::InitializeSolverInitialConditions(computationalSystem, simulationSettings); //set currentState = initialState
+
+	//before the initial accelerations, which depend on the (projected) initial velocities (#2234)
+	bool systemJacobianFactorized = CheckInitialConstraints(computationalSystem, simulationSettings);
 
 
 	Vector& solutionODE2_tt = computationalSystem.GetSystemData().GetCData().currentState.ODE2Coords_tt;
@@ -116,35 +323,8 @@ void CSolverImplicitSecondOrderTimeInt::InitializeSolverInitialConditions(CSyste
 		//[C_q   0    ][lambda]   [ (C_q*q_t)_q*q_t]   [0]
 		//the term (C_q*q_t)_q*q_t is computed numerically and only exists, if initial velocities are != 0
 
-		//size of systemJacobian already set!
-		data.systemJacobian->SetAllZero(); //entries are not set to zero inside jacobian computation!
-		Real factorAE_ODE2 = 1.;			//for position level constraints: depends, if index reduction is used
-		Real factorAE_ODE2_t = 1.;			//for velocity constraints ==> C_qt*q_tt term from velocity level, if C=C(q_t)
-		Real factorAE_ODE1 = 1.;			//
-		//bool fillIntoSystemMatrix = true;
-		bool velocityLevel = false;
-
-		//+++++++++++++++++++++++++++++
-		//Jacobian of algebraic equations
-		//Real factorAE = EXUstd::Square(stepSize) * newmarkBeta; //Index3
-		computationalSystem.JacobianAE(data.tempCompDataArray, newton, *(data.systemJacobian), factorAE_ODE2, factorAE_ODE2_t, factorAE_ODE1, velocityLevel);// , fillIntoSystemMatrix);
-
-		//Mass matrix - may also be directly filled into data.systemJacobian?
-		if (!hasConstantMassMatrix) //not yet set at this point, done in PostInitializeSolverSpecific; default=false
-		{
-			data.systemMassMatrix->SetAllZero();
-			computationalSystem.ComputeMassMatrix(data.tempCompDataArray, *(data.systemMassMatrix));
-		}
-		data.systemJacobian->AddSubmatrix(*(data.systemMassMatrix));
-
-		//add unit matrix for ODE1 components (nothing to be solved for)
-		ConstSizeVector<1> unit(1, 1.);
-		LinkedDataVector linkedUnit(unit);
-
-		for (Index i = 0; i < data.nODE1; i++)
-		{
-			data.systemJacobian->AddColumnVector(data.nODE2 + i, linkedUnit, data.nODE2 + i); //add single components
-		}
+		//the matrix [M C_q^T; C_q 0] does not depend on the velocities: the projection of the velocities left it factorized
+		Index factorizeOutput = systemJacobianFactorized ? -1 : FactorizeInitialSystemJacobian(computationalSystem, simulationSettings);
 
 		//compute RHS
 		Vector systemRHS(data.nSys);
@@ -159,8 +339,6 @@ void CSolverImplicitSecondOrderTimeInt::InitializeSolverInitialConditions(CSyste
 		aeRHS.SetAll(0);
 
 		//.... for velocity level constraints: add dg/dq*\dot q and ODE1 term in future
-
-		if (IsVerbose(3)) { Verbose(3, "    initial accelerations update Jacobian: Jac  =\n" + EXUstd::ToString(*(data.systemJacobian)) + "\n"); }
 
 		if (computationalSystem.GetSystemData().GetCData().currentState.ODE2Coords_t.GetL2Norm() > 1e-10)
 		{
@@ -196,10 +374,6 @@ void CSolverImplicitSecondOrderTimeInt::InitializeSolverInitialConditions(CSyste
 				if (IsVerbose(3)) { Verbose(3, STDstring("    Cqv2     = ") + EXUstd::ToString(Cqv2) + "\n"); }
 			}
 		}
-
-		data.systemJacobian->FinalizeMatrix();
-
-        Index factorizeOutput = data.systemJacobian->FactorizeNew();
 
 		if (factorizeOutput != -1)
 		{

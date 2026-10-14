@@ -71,6 +71,7 @@ public:
     Real timeout;                           //!< specific timeout used if >= 0
     bool throwErrorWithCtrlC;               //!< switches behavior for CTRL-C; both works in console, but not in Spyder's iPython
     bool multiThreadingLoadBalancing;       //!< true=use load balancing
+    Index initialConstraintsViolations;     //!< number of time integrations whose initial conditions did not fulfill the constraints (#2234)
 
     PySpecialSolver()
     {
@@ -80,6 +81,7 @@ public:
     void Initialize()
     {
         multiThreadingLoadBalancing = true;
+        initialConstraintsViolations = 0;
         timeout = -1.; //means no timeout
         throwErrorWithCtrlC = false; //false works cleaner in Windows-console
     }
@@ -92,6 +94,7 @@ public:
         os << "  timeout = " << timeout << "\n";
         os << "  throwErrorWithCtrlC = " << throwErrorWithCtrlC << "\n";
         os << "  multiThreadingLoadBalancing = " << multiThreadingLoadBalancing << "\n";
+        os << "  initialConstraintsViolations = " << initialConstraintsViolations << "\n";
 
         os << "\n";
     }

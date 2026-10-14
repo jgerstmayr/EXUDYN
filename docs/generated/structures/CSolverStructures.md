@@ -133,8 +133,11 @@ SolverOutputData has the following items:
 | `cpuSolverStartTime` | Real | 0. | CPU start time of main solver (not including initial conditions); cpuSolverStartTime-cpuStartTime gives time for initialization |
 | `cpuStartTime` | Real | 0. | CPU start time of computation (starts counting at computation of initial conditions) |
 | `finishedSuccessfully` | bool | False | flag is false until solver functions SolveSteps)...) or SolveSystem(...) finished successfully (can be used as external trigger) |
+| `initialConstraintsResidualPosition` | Real | -1. | the largest absolute residual of the constraints with the initial positions, computed at the start of the time integration if timeIntegration.generalizedAlpha.checkInitialConstraints is True; -1 if not computed (#2234) |
+| `initialConstraintsResidualVelocity` | Real | -1. | the largest absolute residual of the velocity-level constraints with the initial velocities, after their projection if timeIntegration.generalizedAlpha.projectInitialVelocities is True; -1 if not computed (#2234) |
 | `initializationSuccessful` | bool | False | flag is set during call to InitializeSolver(...); reasons for failure are multiple, either inconsistent solver settings are used, files cannot be written (file locked), or initial conditions could not be computed |
 | `InitializeData()` | void |  | initialize SolverOutputData by assigning default values |
+| `initialVelocitiesProjected` | bool | False | True if the initial velocities have been projected onto the constraints (timeIntegration.generalizedAlpha.projectInitialVelocities) (#2234) |
 | `lastDiscontinuousIterationsCount` | Index | 0 | discontinuous iterations count when written to console (or file) last time |
 | `lastImageRecorded` | Real | 0. | simulation time when last image has been recorded |
 | `lastNewtonJacobiCount` | Index | 0 | jacobian update count when written to console (or file) last time |

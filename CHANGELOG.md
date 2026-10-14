@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.13 | Newborn | 89 | 1.13.89 |
+| 1.13 | Newborn | 90 | 1.13.90 |
 | 1.12 | Metheney | 367 | 1.12.462 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
@@ -30,6 +30,10 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.13 - Newborn (current)
 
+- **1.13.90** `EXTENSION` `LOW EFF` `resolved by: Claude-JG` computeInitialAccelerations (#2234)
+  - description: add WARNING for inconsistent initial velocities - which usually cause heavy oscillations in constraint forces
+  - **notes:** the implicit solver checks the initial positions and velocities against the constraints and warns, naming the item, if the residual exceeds generalizedAlpha.initialConstraintsTolerance (generalizedAlpha.checkInitialConstraints switches it off; a constraint without velocity level is reported and skipped); generalizedAlpha.projectInitialVelocities projects the initial velocities onto the constraints; the residuals are in the solver output, exu.special.solver.initialConstraintsViolations counts such runs and the test suite lists them per model; test model initialConstraintsCheckTest.py (revision2026c step RG11.8.9)
+  - date resolved: **2026-10-14 12:39**, date raised: 2026-01-21
 - **1.13.89** <span class="textred">`BUG`</span> `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` A line copied in the sim or vis dialog is lost from the clipboard when the dialog closes (#2994)
   - description: revision2026c step RG11.8.21 (reported 2026-10-14, Windows and macOS, the vis dialog from exudyn dialog vis and from the V key): copy line and copy all used tkinter's clipboard, which Tk serves only while its window exists; in a process that goes on after the dialog closes, the clipboard is empty (reproduced on Windows; update() after clipboard\_append does not help). The text has to be given to the system clipboard: Win32 on Windows, pbcopy on macOS, wl-copy/xclip/xsel on Linux, tkinter as fallback.
   - **notes:** copy line and copy all of the sim and vis dialogs give the text to the system clipboard (Win32 on Windows, pbcopy on macOS, wl-copy/xclip/xsel on Linux, tkinter as fallback), so it can be pasted after the dialog closes (revision2026c step RG11.8.21)

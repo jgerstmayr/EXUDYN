@@ -8,10 +8,10 @@ Every entry carries the **type** of the issue, then its **priority** and its **e
 
 General information on current version:
 
-- Exudyn version = 1.13.89.dev1
+- Exudyn version = 1.13.90.dev1
 - last change = 2026-10-14
 - Number of issues = 2995
-- Number of resolved issues = 2866 (89 in current version)
+- Number of resolved issues = 2867 (90 in current version)
 
 ## Resolved issues and resolved bugs before version 1.13
 
@@ -9137,10 +9137,6 @@ The following list contains the issues which have been **RESOLVED** in the accor
   - description: add adaptive step refinement for case of divergence - define limit for velocities/solution increment to decide step refinement (+ nan/inf)
   - **remarks:** kept open as an idea, no plan step (triage 2026-10-07, revision2026b group RG18)
   - date raised: 2026-01-27
-- `EXTENSION` `LOW EFF` computeInitialAccelerations (#2234)
-  - description: add WARNING for inconsistent initial velocities - which usually cause heavy oscillations in constraint forces
-  - **remarks:** planned as revision2026b step RG18.1 (triage 2026-10-07)
-  - date raised: 2026-01-21
 - `TESTING` `MEDIUM EFF` ANCFThinPlate (#2230)
   - description: add hemispheric test problem; compare to literature
   - **remarks:** planned as revision2026b step RG4.20.5 (triage 2026-10-07)
