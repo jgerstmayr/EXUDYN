@@ -113,6 +113,24 @@ public:
 		for (auto value : matrix) { this->data[cnt++] = value; }//use this-> to access member variables, because of templated base class
 	}
 
+	//! copy assignment: the values are copied into the memory of this matrix, which keeps its own allocated size; the
+	//! generated one copied allocatedSize of the other matrix as well (#2999)
+	ResizableMatrixBase& operator=(const ResizableMatrixBase<T>& matrix)
+	{
+		MatrixBase<T>::operator=(matrix);
+		return *this;
+	}
+
+	//! move assignment: exchanges the memory together with the allocated size (#2999)
+	ResizableMatrixBase& operator=(ResizableMatrixBase<T>&& other) noexcept
+	{
+		Swap(other);
+		return *this;
+	}
+
+	//! its allocated memory can be larger than rows x columns (#2999)
+	virtual bool OwnsExactMemory() const override { return false; }
+
 	//destructor: not needed; called from Matrix ...
 	//virtual ~ResizableMatrix()
 	

@@ -310,7 +310,7 @@ void CObjectUserBody::EvaluateUserFunctionOutputVariable(Vector& value, Real t, 
 		result = (Vector)(parameters.outputVariableUserFunction.userFunction((const MainSystem&)cSystemData->GetMainSystemBacklink(), t, GetObjectNumber(),
 			variableType, localPosition, coordinates, coordinates_t));
 	}, "ObjectUserBody::outputVariableUserFunction");
-	value.CopyFrom(result); //a copy: value may be a resizable vector, whose memory a move would exchange
+	value.CopyFrom(result);
 }
 
 void CObjectUserBody::EvaluateUserFunctionMassMatrix(EXUmath::MatrixContainer& massMatrix, Real t, Index objectNumber,
@@ -345,7 +345,7 @@ void CObjectUserBody::EvaluateMatrix(Index which, Matrix& value, Real t, const V
 	{
 		result = EPyUtils::NumPy2Matrix(py::cast<py::array_t<Real>>(function.userFunction((const MainSystem&)cSystemData->GetMainSystemBacklink(), t, GetObjectNumber(), localPosition, coordinates)));
 	}, names[which]);
-	value = (const Matrix&)result; //a copy: value may be a ResizableMatrix, whose memory a move would exchange
+	value = std::move(result); //exchanges the memory of a Matrix, copies into a ResizableMatrix (#2999)
 	Index columns = (which == 1) ? 3 : (Index)coordinates.size();
 	if (!(value.NumberOfRows() == 3 && value.NumberOfColumns() == columns)) { PyError(STDstring("ObjectUserBody: ") + names[which] + " returned a matrix of size ("
 		+ EXUstd::ToString(value.NumberOfRows()) + " x " + EXUstd::ToString(value.NumberOfColumns()) + "), but (3 x " + EXUstd::ToString(columns) + ") is needed", PyErrorType::valueError); }

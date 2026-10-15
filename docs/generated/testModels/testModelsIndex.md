@@ -109,6 +109,7 @@ graphicsDataErrorsTest
 solverFailureMessageTest
 sensorUserFunctionItemsTest
 userFunctionTimerTest
+symbolicVectorUserFunctionTest
 constraintDriftTest
 initialConstraintsCheckTest
 shellMeshSlopesScalingTest

@@ -2,12 +2,16 @@
   "number": 2998,
   "title": "ResizableConstVector: setting the same size above 7 again points data to the local buffer of 7 - heap corruption of symbolic vector user functions",
   "author": "Claude-JG",
-  "status": "RAISED",
+  "status": "RESOLVED",
   "type": "BUG",
   "priority": "HIGH",
   "effort": "LOW",
   "description": "revision2026c step RG12.3.2 (found in the pre-analysis of #2996): ResizableConstVectorBase::SetNumberOfItems sets data = &localData[0] whenever the new size is not above maxNumberOfItems, also when the vector lives on the heap; the next write of more than 7 items overflows localData, and the destructor delete[]s localData because maxNumberOfItems > 7. A symbolic user function sets its vector arguments on every call: ObjectGenericODE2.forceUserFunction as symbolic function crashes for 10 coordinates (0xC0000374), works for up to 7; reproduced with AddressSanitizer (stack-buffer-overflow at the second SetAll). Fix: keep data where it is in that branch.",
   "dateRaised": "2026-10-15",
   "deadline": "2027-04-13",
-  "file": "src/Linalg/ResizableVector.h"
+  "dateResolved": "2026-10-16 00:01",
+  "resolvedAuthor": "Claude-JG",
+  "file": "src/Linalg/ResizableVector.h",
+  "releaseNotes": "ResizableConstVector keeps its data where it is while the new size fits, and records the size of its heap memory on every allocation: symbolic vector user functions with more than 7 items no longer corrupt the heap; unit tests under AddressSanitizer, test model symbolicVectorUserFunctionTest.py (revision2026c step RG12.3.2)",
+  "resolvedInVersion": "1.13.93"
 }

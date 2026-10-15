@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.13 | Newborn | 92 | 1.13.92 |
+| 1.13 | Newborn | 94 | 1.13.94 |
 | 1.12 | Metheney | 367 | 1.12.462 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
@@ -30,6 +30,14 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.13 - Newborn (current)
 
+- **1.13.94** <span class="textred">`BUG`</span> `NORMAL` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` Matrix move assignment through a base reference exchanges the memory of a ResizableMatrix or LinkedDataMatrix but not its allocation (#2999)
+  - description: revision2026c step RG7.3.4 point 16: MatrixBase::operator=(MatrixBase&&) swaps data, rows and columns; called on a ResizableMatrix through Matrix& (as the access functions take it), allocatedSize keeps the old capacity, so a later resize within it writes past the moved-in buffer - the heap corruption of c3d53a99, reproduced with AddressSanitizer (heap-buffer-overflow); on a LinkedDataMatrix the temporary deletes the linked memory. Fix in the Linalg classes (a virtual move that copies for the derived classes, or no move assignment through the base), not in each caller.
+  - **notes:** the assignments of the matrices and vectors keep memory and capacity consistent: the move assignment of Matrix copies when a ResizableMatrix or LinkedDataMatrix is on either side, ResizableMatrix and ResizableVector have copy assignments that keep their own capacity (the generated ones copied the other's), ResizableMatrix a move assignment with its capacity; unit tests under AddressSanitizer (revision2026c step RG7.3.4.1)
+  - date resolved: **2026-10-16 00:01**, date raised: 2026-10-15
+- **1.13.93** <span class="textred">`BUG`</span> `HIGH` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` ResizableConstVector: setting the same size above 7 again points data to the local buffer of 7 - heap corruption of symbolic vector user functions (#2998)
+  - description: revision2026c step RG12.3.2 (found in the pre-analysis of \#2996): ResizableConstVectorBase::SetNumberOfItems sets data = &localData\[0\] whenever the new size is not above maxNumberOfItems, also when the vector lives on the heap; the next write of more than 7 items overflows localData, and the destructor delete\[\]s localData because maxNumberOfItems \> 7. A symbolic user function sets its vector arguments on every call: ObjectGenericODE2.forceUserFunction as symbolic function crashes for 10 coordinates (0xC0000374), works for up to 7; reproduced with AddressSanitizer (stack-buffer-overflow at the second SetAll). Fix: keep data where it is in that branch.
+  - **notes:** ResizableConstVector keeps its data where it is while the new size fits, and records the size of its heap memory on every allocation: symbolic vector user functions with more than 7 items no longer corrupt the heap; unit tests under AddressSanitizer, test model symbolicVectorUserFunctionTest.py (revision2026c step RG12.3.2)
+  - date resolved: **2026-10-16 00:01**, date raised: 2026-10-15
 - **1.13.92** `EXTENSION` `MEDIUM EFF` `resolved by: Claude-JG` Drift inspector (#565)
   - description: add functionality to check whether drift gets too large
   - **notes:** the drift of the constraints: generalizedAlpha.checkConstraintDrift checks the position-level constraints every constraintDriftCheckPeriod steps, warns at 0.001 constraintDriftTolerance and stops above it (default 1e-5), the largest drift in the solver output; SolveDynamic switches it on for TrapezoidalIndex2 (index2CheckConstraints); mbs.ComputeConstraintResiduals, ComputeItemType.ConstraintDrift and AlgebraicEquations\_t, the output variable ConstraintEquation of every constraint, the sensor function SensorUFSystemConstraintDrift; test model constraintDriftTest.py (revision2026c steps RG4.25.1, RG4.25.2)

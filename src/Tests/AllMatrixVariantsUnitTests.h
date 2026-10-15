@@ -384,6 +384,60 @@ const lest::test matrixVariants_specific_test[] =
 		EXPECT(result[1] == 0.);
 	},
 
+	//#2999: an assignment must not give a ResizableMatrix memory of another size than its allocated size says
+	CASE("ResizableMatrix: a Matrix moved in through Matrix& is copied, the allocation stays its own")
+	{
+		ResizableMatrix value(6, 6);      //allocated: 36
+		Matrix result;
+		MatrixVariantsFill(result, 3, 1);
+		Matrix& reference = value;        //as the access functions take it
+		reference = std::move(result);
+		EXPECT(MatrixVariantsHoldsValues(value, 3, 1));
+		EXPECT(MatrixVariantsHoldsValues(result, 3, 1)); //copied, not exchanged
+		MatrixVariantsFill(value, 6, 6);  //within the allocation of 36: before, 36 values into the 3 of result
+		EXPECT(MatrixVariantsHoldsValues(value, 6, 6));
+	},
+	CASE("ResizableMatrix: copy assignment keeps the own allocation, move assignment exchanges it")
+	{
+		ResizableMatrix a(2, 2);          //allocated: 4
+		ResizableMatrix b(6, 6);          //allocated: 36
+		MatrixVariantsFill(b, 1, 1);
+		a = b;                            //before: allocatedSize 36 copied, with the memory of 4
+		EXPECT(MatrixVariantsHoldsValues(a, 1, 1));
+		MatrixVariantsFill(a, 6, 6);
+		EXPECT(MatrixVariantsHoldsValues(a, 6, 6));
+
+		ResizableMatrix c(2, 2);
+		MatrixVariantsFill(b, 5, 5);
+		c = std::move(b);                 //exchanges memory and allocation
+		EXPECT(MatrixVariantsHoldsValues(c, 5, 5));
+		MatrixVariantsFill(c, 6, 6);
+		EXPECT(MatrixVariantsHoldsValues(c, 6, 6));
+	},
+	CASE("Matrix: move assignment between two Matrix objects still exchanges the memory")
+	{
+		Matrix a;
+		MatrixVariantsFill(a, 2, 3);
+		Matrix b;
+		MatrixVariantsFill(b, 4, 4);
+		const Real* memory = b.GetDataPointer();
+		a = std::move(b);
+		EXPECT(a.GetDataPointer() == memory);
+		EXPECT(MatrixVariantsHoldsValues(a, 4, 4));
+	},
+	CASE("LinkedDataMatrix: a Matrix moved in through Matrix& is copied into the linked memory")
+	{
+		Matrix original;
+		MatrixVariantsFill(original, 2, 2);
+		LinkedDataMatrix linked(original.GetDataPointer(), 2, 2);
+		Matrix result(2, 2);
+		result.SetAll(7.);
+		Matrix& reference = linked;
+		reference = std::move(result);    //before: the temporary deleted the memory of original
+		EXPECT(original(1, 1) == 7.);
+		EXPECT(result(1, 1) == 7.);
+	},
+
 };
 
 #endif //include header once

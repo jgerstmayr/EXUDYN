@@ -581,6 +581,43 @@ const lest::test resizableVector_specific_test[] =
 		EXPECT(v1.NumberOfItems() == 1);
 		EXPECT(ToString(v1) == "[13]");
 	},
+	CASE("ResizableVector: copy assignment keeps the own memory, not the capacity of the other (#2999)")
+	{
+		ResizableVector small(2);
+		ResizableVector large(36, 1.);
+		large.SetNumberOfItems(1);
+		small = large;                    //1 item into the memory of 2
+		EXPECT(small.NumberOfItems() == 1);
+		EXPECT(small.MaxNumberOfItems() == 2);
+		small.SetNumberOfItems(36);       //needs new memory: before, the copied capacity 36 kept the 2
+		small.SetAll(2.);
+		EXPECT(small.MaxNumberOfItems() == 36);
+		EXPECT(small[35] == 2.);
+	},
+	CASE("ResizableConstVector: above its local size, setting the size again keeps the heap memory (#2998)")
+	{
+		ResizableConstVector v;           //local memory for 7 items
+		v.SetNumberOfItems(10);           //on the heap
+		v.SetAll(1.);
+		const Real* heap = v.GetDataPointer();
+		v.SetNumberOfItems(10);           //as a symbolic user function does on every call
+		EXPECT(v.GetDataPointer() == heap); //before: the local memory of 7, written with 10 items
+		v.SetAll(2.);
+		v.SetNumberOfItems(3);            //shrinking keeps the heap memory as well
+		EXPECT(v.GetDataPointer() == heap);
+		EXPECT(v[2] == 2.);
+		v.SetNumberOfItems(12);           //growing beyond it allocates
+		v.SetAll(3.);
+		EXPECT(v.NumberOfItems() == 12);
+		EXPECT(v[11] == 3.);
+
+		ResizableConstVector w(10, 4.);   //the constructors above 7 items record their heap memory
+		EXPECT(w.MaxNumberOfItems() == 10);
+		ResizableConstVector u(2);
+		u = w;
+		u.SetNumberOfItems(5);
+		EXPECT(u[4] == 4.);
+	},
 };
 
 #endif

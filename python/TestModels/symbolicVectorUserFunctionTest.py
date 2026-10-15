@@ -1,0 +1,56 @@
+#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+# This is an EXUDYN example
+#
+# Details:  A symbolic user function with vectors of more than 7 items (#2998): ObjectGenericODE2 with 10 coordinates,
+#           a chain of springs as forceUserFunction, once as Python function and once as symbolic user function; both
+#           give the same solution. The symbolic vectors keep up to 7 items in local memory and more on the heap.
+#
+# Author:   Johannes Gerstmayr
+# Date:     2026-10-15
+#
+# Copyright:This file is part of Exudyn. Exudyn is free software. You can redistribute it and/or modify it under the terms of the Exudyn license. See 'LICENSE.txt' for more details.
+#
+#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+import exudyn as exu
+from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
+from exudyn.advancedUtilities import CreateSymbolicUserFunction
+import numpy as np
+
+n = 10
+k = 1000.
+d = 2.
+
+def Force(mbs, t, itemNumber, q, q_t):
+    return -k*q - d*q_t
+
+def Solve(symbolic):
+    SC = exu.SystemContainer()
+    mbs = SC.AddSystem()
+    node = mbs.AddNode(NodeGenericODE2(referenceCoordinates=[0]*n, initialCoordinates=[0.01*(i+1) for i in range(n)],
+                                       initialCoordinates_t=[0]*n, numberOfODE2Coordinates=n))
+    oGeneric = mbs.AddObject(ObjectGenericODE2(nodeNumbers=[node], massMatrix=np.eye(n)))
+    keep = None
+    if symbolic:
+        keep = CreateSymbolicUserFunction(mbs, Force, 'forceUserFunction', oGeneric) #keep it alive with the model
+        mbs.SetObjectParameter(oGeneric, 'forceUserFunction', keep)
+    else:
+        mbs.SetObjectParameter(oGeneric, 'forceUserFunction', lambda mbs, t, i, q, q_t: Force(mbs, t, i, np.array(q), np.array(q_t)))
+    mbs.Assemble()
+    simulationSettings = exu.SimulationSettings()
+    simulationSettings.timeIntegration.numberOfSteps = 200
+    simulationSettings.timeIntegration.endTime = 0.2
+    simulationSettings.timeIntegration.verboseMode = 0
+    simulationSettings.solution.file.write = False
+    mbs.SolveDynamic(simulationSettings)
+    return np.array(mbs.systemData.GetODE2Coordinates())
+
+qPython = Solve(False)
+qSymbolic = Solve(True)
+difference = max(abs(qSymbolic - qPython))
+exu.Print('largest difference symbolic - Python:', difference)
+
+u = sum(qSymbolic) + (difference > 1e-14)
+exu.Print('solution of symbolicVectorUserFunctionTest=', u)
+
+exu.sys['testResult'] = u

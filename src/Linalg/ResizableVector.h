@@ -137,6 +137,14 @@ public:
 
     //! @todo: ResizableVectorBase: check if operator+,-,* need to be overloaded (compare ConstSizeVectorBase)
 
+	//! copy assignment: the items are copied into the memory of this vector, which keeps its own maxNumberOfItems; the
+	//! generated one - chosen before the template below - copied maxNumberOfItems of the other vector as well (#2999)
+	ResizableVectorBase& operator=(const ResizableVectorBase& vector)
+	{
+		VectorBase<T>::operator=(vector);
+		return *this;
+	}
+
 	//! overloaded operator=, because it needs to return a ResizableVectorBase
 	template <class TVector>
 	ResizableVectorBase& operator=(const TVector& vector)
@@ -242,7 +250,7 @@ public:
 	{
 		this->maxNumberOfItems = 0;
 		this->AllocateMemory(numberOfItemsInit);
-		SetAll(initializationValue);
+		this->SetAll(initializationValue); //this->: a name of the dependent base class (#2998)
 	}
 
 	//! constructor with initializer list; memory allocation!
@@ -306,16 +314,19 @@ public:
 		FreeMemory();
 	}
 
+	//! the data is on the heap if and only if maxNumberOfItems > maxLocalSize; then maxNumberOfItems is its size (#2998)
 	virtual void AllocateMemory(Index numberOfRealsInit) override
 	{
 		if (numberOfRealsInit > maxLocalSize)
 		{
 			ResizableVectorBase<T>::AllocateMemory(numberOfRealsInit);
+			this->maxNumberOfItems = numberOfRealsInit;
 		}
 		else
 		{
 			this->numberOfItems = numberOfRealsInit;
 			this->data = &localData[0]; //if data size is reduced
+			this->maxNumberOfItems = 0;
 		}
 	}
 
@@ -344,27 +355,22 @@ public:
 	// ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 	virtual VectorType GetType() const override { return VectorType::ResizableConstVector; }
 
-	Index MaxNumberOfItems() const { return this->maxNumberOfItems; }             //!< Get dataSize (available memory) of ResizableVectorBase
+	//! the number of items the vector holds without new memory: its heap memory, or the local data
+	Index MaxNumberOfItems() const { return (this->maxNumberOfItems > maxLocalSize) ? this->maxNumberOfItems : maxLocalSize; }
 
-	//! Change the currently used numberOfItems, which can be larger than previous numberOfItems (leads to delete/new) or smaller/equal to previous numberOfItems (no delete/new)
+	//! Change the currently used numberOfItems; new memory only if it does not fit into the present memory - the local data
+	//! or the heap memory -, which is kept otherwise; before, a vector on the heap was pointed to its local data whenever
+	//! its size was set again, and more than maxLocalSize items overwrote it (#2998)
 	virtual void SetNumberOfItems(Index newNumberOfItems) override
 	{
 		if (newNumberOfItems > MaxNumberOfItems())
 		{
-			if (newNumberOfItems > maxLocalSize)
-			{
-				this->FreeMemory();
-				this->AllocateMemory(newNumberOfItems);
-			}
-			else
-			{
-				this->numberOfItems = newNumberOfItems;
-			}
-			this->maxNumberOfItems = newNumberOfItems;
+			this->FreeMemory();
+			this->AllocateMemory(newNumberOfItems);
 		}
 		else
 		{
-			this->data = &localData[0];
+			if (this->data == nullptr) { this->data = &localData[0]; } //after FreeMemory
 			this->numberOfItems = newNumberOfItems;
 		}
 	}

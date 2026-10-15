@@ -1238,3 +1238,29 @@ computed in the main thread.)*
   UpdateGraphicsData, which draws markers, connectors and sensors and asks the bodies for positions in the
   visualization configuration - for a user body a Python call from that thread, which the cache avoids. Recorded as a
   decision for RG7.3.4.
+
+<a id="rg12-3-2"></a>
+### RG12.3.2 and RG7.3.4.1 — the ResizableConstVector and the assignments of the matrices and vectors (2026-10-15, #2998, #2999)
+*(Maintainer 2026-10-15: first fix the matrix problem with the move assignment and the ResizableConstVector #2998.)*
+- **#2998, ResizableConstVector** (src/Linalg/ResizableVector.h): one rule now - the data is on the heap if and only if
+  maxNumberOfItems > maxLocalSize (7), and then maxNumberOfItems is its size; `AllocateMemory` records it in both
+  branches (before, the constructors with a size or a std::vector above 7 left it 0: the heap memory leaked);
+  `MaxNumberOfItems()` is the memory the vector has, the local 7 or the heap size; `SetNumberOfItems` allocates only
+  if the size does not fit and leaves the data where it is otherwise. The constructor with a value called `SetAll`
+  without `this->` (GCC refuses it; it was never used).
+- **#2999, the assignments**: `MatrixBase::operator=(MatrixBase&&)` exchanges the memory only if both matrices own
+  exactly their rows x columns (a virtual `OwnsExactMemory`, false for ResizableMatrix and LinkedDataMatrix), and copies
+  otherwise. Found while testing it: the GENERATED copy assignments of ResizableMatrix and ResizableVector (the class
+  declares a copy constructor and a template operator=, neither suppresses it) copied the allocated size of the other
+  object together with the values - a ResizableMatrix of 4 assigned from one of 1 x 1 within 36 believed to have 36
+  (AddressSanitizer: heap-buffer-overflow), the same for ResizableVector and with it ResizableVectorParallel. Both now
+  have copy assignments that copy the values through the base and keep their own capacity; ResizableMatrix a move
+  assignment that swaps the memory with the capacity. `EvaluateMatrix` of ObjectUserBody moves its result again.
+- **Tests**: src/Tests/AllVectorUnitTests.h (ResizableVector copy assignment; ResizableConstVector set again above 7,
+  shrink, grow, the constructors) and AllMatrixVariantsUnitTests.h (a Matrix moved into a ResizableMatrix and into a
+  LinkedDataMatrix through Matrix&, copy and move assignment of ResizableMatrix, the move between two Matrix objects
+  still exchanging memory). Run in WSL with g++ and AddressSanitizer (the vector and matrix-variant lists): all pass,
+  no sanitizer report; with the old headers the vector tests fail and AddressSanitizer reports the invalid free.
+  Test model symbolicVectorUserFunctionTest.py: ObjectGenericODE2 with 10 coordinates, symbolic forceUserFunction
+  equal to the Python one to the bit; it crashed before. userFunctionBoundary.md has the symbolic column above 7 now:
+  0.45 microseconds at 10, 0.67 at 100, 4.2 at 1000.

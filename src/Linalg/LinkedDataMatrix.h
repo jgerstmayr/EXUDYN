@@ -125,6 +125,9 @@ protected:
 	virtual void FreeMemory() override {}
 
 	//! if new size (rows*cols) fits into allocatedSize ==> reshape matrix; else: delete data if data != nullptr; Set new size of matrix; for external access, use 'SetNumberOfRowsAndColumns' to modify size of matrix
+	//! the memory is linked, not owned (#2999)
+	virtual bool OwnsExactMemory() const override { return false; }
+
 	virtual void ResizeMatrix(Index numberOfRowsInit, Index numberOfColumnsInit) override
 	{
 		if (!(numberOfRowsInit == this->NumberOfRows() && numberOfColumnsInit == this->NumberOfColumns()))

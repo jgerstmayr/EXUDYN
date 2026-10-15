@@ -1,6 +1,6 @@
 #measurement for docs/dev/design/userFunctionBoundary.md (revision2026c step RG12.3.1, #2996): the cost of one call of a
 #user function at the C++/Python boundary, read from the solver timer userFunctions (the call with its conversions)
-#(1) ObjectGenericODE2.forceUserFunction with n coordinates: q and q_t in, n values out - symbolic (n <= 7: above, #2998),
+#(1) ObjectGenericODE2.forceUserFunction with n coordinates: q and q_t in, n values out - symbolic,
 #    Python computing a list, Python returning a prepared list, Python returning a prepared numpy array
 #(2) LoadCoordinate.loadUserFunction with scalar arguments only: symbolic and Python, the reference without vectors
 import exudyn as exu
@@ -84,9 +84,6 @@ if __name__ == '__main__':
         steps = 5000 if n < 1000 else 500
         row = []
         for variant in ['symbolic', 'python', 'list', 'numpy']:
-            if variant == 'symbolic' and n > 7: #ResizableConstVector above 7 items corrupts the heap (#2998)
-                row.append(float('nan'))
-                continue
             row.append(min(ForceCall(n, variant, steps) for i in range(3)))
         print('%7d %9.3f %11.3f %8.3f %9.3f' % tuple([n] + row), flush=True)
     print('the Python function gets q as', argumentType.get('q'))

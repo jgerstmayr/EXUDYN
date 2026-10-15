@@ -451,14 +451,23 @@ public:
 		return *this;
 	}
 
-	//! move assignment operator, rule of 5
+	//! move assignment operator, rule of 5: exchanges the memory of two matrices that own exactly their rows x columns;
+	//! a ResizableMatrix (with its allocated size) or a LinkedDataMatrix (memory it does not own) on either side - as
+	//! when a function takes a Matrix& - is copied instead, as its memory cannot be exchanged (#2999)
 	MatrixBase<T>& operator= (MatrixBase<T>&& other) noexcept
 	{
+		if (!OwnsExactMemory() || !other.OwnsExactMemory())
+		{
+			return *this = (const MatrixBase<T>&)other;
+		}
 		std::swap(data, other.data);
 		std::swap(numberOfRows, other.numberOfRows);
 		std::swap(numberOfColumns, other.numberOfColumns);
 		return *this;
 	}
+
+	//! true if the matrix owns exactly the memory of its rows x columns, so that the move assignment can exchange it (#2999)
+	virtual bool OwnsExactMemory() const { return true; }
 
 private:
 	MatrixBase<T>& operator= (LinkedDataMatrixBase<T>&& other) = delete; //avoid move operator with linked data, will fail!

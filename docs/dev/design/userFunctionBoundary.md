@@ -60,9 +60,12 @@ ObjectGenericODE2.forceUserFunction, microseconds per call:
 | 1 | 0.306 | 0.636 | 0.453 | 0.484 |
 | 5 | 0.329 | 0.782 | 0.539 | 0.641 |
 | 7 | 0.332 | 0.862 | 0.571 | 0.700 |
-| 10 | - | 0.991 | 0.645 | 0.811 |
-| 100 | - | 5.13 | 2.66 | 4.28 |
-| 1000 | - | 47.3 | 29.0 | 53.3 |
+| 10 | 0.454 | 0.991 | 0.645 | 0.811 |
+| 100 | 0.668 | 5.13 | 2.66 | 4.28 |
+| 1000 | 4.17 | 47.3 | 29.0 | 53.3 |
+
+The symbolic column above 7 is measured after #2998 (the Python columns of n = 100, 1000 vary by up to a factor 1.8
+between runs); from 8 items the symbolic vectors are on the heap.
 
 The reference with scalar arguments only, LoadCoordinate.loadUserFunction: symbolic 0.035 to 0.050, Python 0.20 to 0.36
 (two runs). A copy of a small `std::vector<double>` costs about 6 ns under Linux in a tight loop; the Windows heap
@@ -75,9 +78,9 @@ is slower.
   Python itself dominates; for large n the conversion of the lists.
 - **A Python function gets lists, not numpy arrays** (`type(q)` is `list`): `q` must be converted by the user before
   `K @ q`, and returning a numpy array is slower than returning a list (pybind11 converts it item by item).
-- **Symbolic vector functions above 7 items crash** (#2998): `ResizableConstVector::SetNumberOfItems` points `data` to
-  its local buffer of 7 when the size is set again - the second call writes past it, the destructor deletes it. Found
-  by this measurement; the symbolic column ends at 7 because of it.
+- **Symbolic vector functions above 7 items crashed** (#2998, fixed): `ResizableConstVector::SetNumberOfItems` pointed
+  `data` to its local buffer of 7 when the size was set again - the second call wrote past it, the destructor deleted
+  it. Found by this measurement.
 
 ## 4. Options
 
@@ -95,7 +98,7 @@ in C and D.
 
 ## 5. Proposal
 
-1. #2998 first (a crash, one line).
+1. #2998 first (a crash) - done, with #2999.
 2. A (and the `VectorBase` constructor of step 6): mechanical, measured again with this script.
 3. C for the symbolic functions, together with RG7.8 (parallel symbolic items), which needs the per-thread argument
    storage anyway.
