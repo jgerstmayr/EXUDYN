@@ -483,7 +483,15 @@ review, to be decided item by item:
   take the MainSystem as argument in one and fetch it in the other; (15) gathering the coordinates of all nodes is
   written in both (and in ObjectKinematicTree, ObjectFFRF) - one function of CObjectBody or the system data; (16) the
   copy `value = (const Matrix&)result` works around a move of a Matrix into a ResizableMatrix that exchanges the memory
-  but not the allocated size (the heap corruption of c3d53a99) - to be fixed in the Linalg classes, not in each caller.
+  but not the allocated size (the heap corruption of c3d53a99) - to be fixed in the Linalg classes, not in each caller
+  (#2999; reproduced with AddressSanitizer, heap-buffer-overflow after a resize within the old capacity).
+- **ObjectUserBody, the renderer** (maintainer 2026-10-15: there should be no visualization cache, the graphics user
+  functions are computed in the main thread): (17) true for its graphicsDataUserFunction - the renderer only requests
+  it, PostProcessData::ProcessUserFunctionDrawing calls it in the main thread. The cache serves the other items the
+  render loop draws itself (GlfwClient calls UpdateGraphicsData): markers, connectors and sensors on a user body ask
+  for its position and rotation in the visualization configuration from that thread (VisualizationSystem.cpp, marker
+  drawing; the connectors' UpdateGraphics). Without the cache: either these are drawn from the main thread as well
+  (with the user function drawing), or they are not drawn on a user body. To decide.
 
 CLOSED 2026-10-12 (#2988): test model userTetrahedronTest.py, Saint Venant-Kirchhoff material, the nonlinear patch test
 against the exact solution. [log](exudynRevisionLog2026c.md#rg7-3-2)
@@ -983,14 +991,17 @@ access to the MainSystem, before symbolic user items (RG7.8) are built on it.
 
 #2983. Vectors and matrices as first-class arguments; for decision.
 
-#### **OPEN_RG12.3.1** Pre-analyze the allocations of vectors at the C++/Python boundary of the user functions
+#### **CLOSED_RG12.3.1** Pre-analyze the allocations of vectors at the C++/Python boundary of the user functions
 
-#2996 (maintainer 2026-10-15). The user functions take `StdVector`, which pybind11 maps to numpy: each call allocates
-its argument vectors and its results. Inevitable for the numpy interface, but for symbolic user functions possibly the
-bottleneck. First: where the allocations happen (per signature, from RG12.2), what they cost against the call itself
-(Python and symbolic), and what linking allows - a numpy array or a symbolic vector viewing the C++ memory: lifetime,
-writes from the function, threads, the GIL. Related: #1864 (MatrixContainer linking a numpy matrix), #1910 (total
-coordinates linked instead of copied).
+CLOSED 2026-10-15 (#2996 stays open for the options; maintainer: Python user functions run serially, no GIL
+question): [design/userFunctionBoundary.md](../dev/design/userFunctionBoundary.md). 14 of 26 user function signatures
+take `StdVector`; about a dozen heap allocations per call, most of them copies by value; a symbolic call with vectors
+0.31 microseconds against 0.04 with scalars, Python lists (not numpy) 0.25 plus 25 ns per value. Options A to E,
+proposal: #2998, then A, then C with RG7.8, D as a decision of its own. [log](exudynRevisionLog2026c.md#rg12-3-1)
+
+#### **OPEN_RG12.3.2** Keep the heap memory of a ResizableConstVector above 7 items when its size is set again
+
+#2998 (found in RG12.3.1): symbolic vector user functions above 7 items corrupt the heap.
 
 ### **OPEN_RG12.4** Give symbolic user functions access to the MainSystem and the item functions
 

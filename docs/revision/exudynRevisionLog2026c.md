@@ -1208,3 +1208,33 @@ the tests, reduce the step size where it stops.)*
   drift 9.8e-6; the residual function, ComputeItem, the output variable and the sensor agree to the bit; the flag off
   gives -1; a tolerance below the drift stops the solver with the message; index 3 checked: 2.8e-13.
 - **Not done**: the energies as sensor functions (#2997, RG4.25.3); a projection (decided against).
+
+<a id="rg12-3-1"></a>
+### RG12.3.1 — the user function boundary analysed; two Linalg bugs found (2026-10-15, #2996, #2998, #2999)
+*(Maintainer 2026-10-15: continue with the pre-analysis; Python user functions run only serially, no GIL problem;
+show the matrix problem; there should be no visualization cache in ObjectUserBody, the user function graphics is
+computed in the main thread.)*
+- **The analysis**: docs/dev/design/userFunctionBoundary.md with its script userFunctionBoundary.py. The path of a
+  `forceUserFunction` call counted from the code: `Vector` to `StdVector` (2), the `std::function` by value (2),
+  symbolic: the lambda and `EvaluateStdVector` by value (2), `ResizableConstVector(const std::vector<T>)` by value
+  (2, +2 above 7), the result `ResizableConstVector` -> `StdVector` -> `Vector` with a by-value constructor (3), no
+  move assignment of `Vector` (1). Measured with the solver timer userFunctions: symbolic 0.31 microseconds with
+  vectors, 0.035 to 0.050 with scalar arguments; Python 0.45 (n = 1) to 29 (n = 1000) for returning a prepared list,
+  0.25 plus 25 ns per value; a Python function receives lists, numpy results are slower than lists. Options A
+  (const references), B (persistent buffers), C (a direct symbolic path into Exudyn vectors), D (numpy views for
+  Python), E (move assignment of Vector).
+- **#2998**: the measurement crashed (0xC0000374) for a symbolic forceUserFunction with 10 coordinates, deterministic
+  from n = 8: `ResizableConstVectorBase::SetNumberOfItems`, when the size does not grow, sets `data = &localData[0]`
+  also for a vector on the heap; the second call writes 10 values into 7, the destructor deletes the local buffer.
+  AddressSanitizer (WSL, g++, the Linalg headers only): stack-buffer-overflow at the second SetAll. Raised as a bug,
+  RG12.3.2; not fixed in this step.
+- **#2999, the matrix problem** (RG7.3.4 point 16): `MatrixBase::operator=(MatrixBase&&)` swaps data, rows and
+  columns; through a `Matrix&` to a `ResizableMatrix`, `allocatedSize` keeps the old capacity. AddressSanitizer: a
+  ResizableMatrix of 6 x 6 gets a moved Matrix of 3 x 1, `SetNumberOfRowsAndColumns(6, 6)` stays within the old
+  capacity, `SetAll` writes 36 values into the 24-byte buffer - heap-buffer-overflow. On a `LinkedDataMatrix` the
+  temporary would delete the linked memory. Vectors are not affected: `VectorBase` has no move assignment.
+- **The renderer and ObjectUserBody** (RG7.3.4 point 17): the graphicsDataUserFunction runs in the main thread
+  (PostProcessData::ProcessUserFunctionDrawing on request of the renderer); the render loop itself calls
+  UpdateGraphicsData, which draws markers, connectors and sensors and asks the bodies for positions in the
+  visualization configuration - for a user body a Python call from that thread, which the cache avoids. Recorded as a
+  decision for RG7.3.4.

@@ -10,7 +10,7 @@ General information on current version:
 
 - Exudyn version = 1.13.92.dev1
 - last change = 2026-10-15
-- Number of issues = 2998
+- Number of issues = 3000
 - Number of resolved issues = 2869 (92 in current version)
 
 ## Resolved issues and resolved bugs before version 1.13
@@ -9516,6 +9516,12 @@ The following list contains the issues which have been **RESOLVED** in the accor
 
 ## Known bugs
 
+- <span class="textred">`BUG`</span> <span class="textorange">`NORMAL`</span> `LOW EFF` `raised by: Claude-JG` Matrix move assignment through a base reference exchanges the memory of a ResizableMatrix or LinkedDataMatrix but not its allocation (#2999)
+  - description: revision2026c step RG7.3.4 point 16: MatrixBase::operator=(MatrixBase&&) swaps data, rows and columns; called on a ResizableMatrix through Matrix& (as the access functions take it), allocatedSize keeps the old capacity, so a later resize within it writes past the moved-in buffer - the heap corruption of c3d53a99, reproduced with AddressSanitizer (heap-buffer-overflow); on a LinkedDataMatrix the temporary deletes the linked memory. Fix in the Linalg classes (a virtual move that copies for the derived classes, or no move assignment through the base), not in each caller.
+  - date raised: 2026-10-15
+- <span class="textred">`BUG`</span> <span class="textred">`HIGH`</span> `LOW EFF` `raised by: Claude-JG` ResizableConstVector: setting the same size above 7 again points data to the local buffer of 7 - heap corruption of symbolic vector user functions (#2998)
+  - description: revision2026c step RG12.3.2 (found in the pre-analysis of \#2996): ResizableConstVectorBase::SetNumberOfItems sets data = &localData\[0\] whenever the new size is not above maxNumberOfItems, also when the vector lives on the heap; the next write of more than 7 items overflows localData, and the destructor delete\[\]s localData because maxNumberOfItems \> 7. A symbolic user function sets its vector arguments on every call: ObjectGenericODE2.forceUserFunction as symbolic function crashes for 10 coordinates (0xC0000374), works for up to 7; reproduced with AddressSanitizer (stack-buffer-overflow at the second SetAll). Fix: keep data where it is in that branch.
+  - date raised: 2026-10-15
 - <span class="textred">`BUG`</span> `LOW EFF` `raised by: Claude-JG` InverseKinematicsNumerical fails for a robot whose links have no PDcontrol (#2993)
   - description: revision2026c step RG11.8.20: InverseKinematicsNumerical.\_\_init\_\_ reads self.robot.links\[i\].PDcontrol to store it, but RobotLink sets the attribute only when PDcontrol is given, so a robot built without control raises AttributeError ('RobotLink' object has no attribute 'PDcontrol'); it also leaves the joint stiffness of the inverse kinematics and robot.gravity = \[0,0,0\] in the robot it is given. Found with the test model of \#2259.
   - date raised: 2026-10-14
