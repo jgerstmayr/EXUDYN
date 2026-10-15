@@ -129,6 +129,9 @@ SolverOutputData has the following items:
 
 | name | type / return type | default / arguments | description |
 |---|---|---|---|
+| `constraintDriftItem` | String | '' | the item of constraintDriftMaximum, as object 5 or node 3 |
+| `constraintDriftMaximum` | Real | -1. | the largest drift of the position-level constraints found by timeIntegration.generalizedAlpha.checkConstraintDrift in this run; -1 if not checked (#565) |
+| `constraintDriftTime` | Real | -1. | the time of constraintDriftMaximum |
 | `cpuLastTimePrinted` | Real | 0. | CPU time when output has been printed last time |
 | `cpuSolverStartTime` | Real | 0. | CPU start time of main solver (not including initial conditions); cpuSolverStartTime-cpuStartTime gives time for initialization |
 | `cpuStartTime` | Real | 0. | CPU start time of computation (starts counting at computation of initial conditions) |

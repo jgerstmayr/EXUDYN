@@ -4,7 +4,7 @@
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2026-10-14 (last modfied)
+* @date         AUTO: 2026-10-15 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -145,7 +145,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2026-10-14 (last modfied)
+* @date         AUTO: 2026-10-15 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -262,7 +262,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2026-10-14 (last modfied)
+* @date         AUTO: 2026-10-15 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -369,7 +369,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2026-10-14 (last modfied)
+* @date         AUTO: 2026-10-15 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -458,7 +458,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2026-10-14 (last modfied)
+* @date         AUTO: 2026-10-15 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -469,6 +469,9 @@ public: // AUTO:
 class SolverOutputData // AUTO: 
 {
 public: // AUTO: 
+  std::string constraintDriftItem;                //!< AUTO: the item of constraintDriftMaximum, as object 5 or node 3
+  Real constraintDriftMaximum;                    //!< AUTO: the largest drift of the position-level constraints found by timeIntegration.generalizedAlpha.checkConstraintDrift in this run; -1 if not checked (#565)
+  Real constraintDriftTime;                       //!< AUTO: the time of constraintDriftMaximum
   Real cpuLastTimePrinted;                        //!< AUTO: CPU time when output has been printed last time
   Real cpuSolverStartTime;                        //!< AUTO: CPU start time of main solver (not including initial conditions); cpuSolverStartTime-cpuStartTime gives time for initialization
   Real cpuStartTime;                              //!< AUTO: CPU start time of computation (starts counting at computation of initial conditions)
@@ -504,6 +507,8 @@ public: // AUTO:
   //! AUTO: default constructor with parameter initialization
   SolverOutputData()
   {
+    constraintDriftMaximum = -1.;
+    constraintDriftTime = -1.;
     cpuLastTimePrinted = 0.;
     cpuSolverStartTime = 0.;
     cpuStartTime = 0.;
@@ -543,6 +548,9 @@ public: // AUTO:
   virtual void Print(std::ostream& os) const
   {
     os << "SolverOutputData" << ":\n";
+    os << "  constraintDriftItem = " << constraintDriftItem << "\n";
+    os << "  constraintDriftMaximum = " << constraintDriftMaximum << "\n";
+    os << "  constraintDriftTime = " << constraintDriftTime << "\n";
     os << "  cpuLastTimePrinted = " << cpuLastTimePrinted << "\n";
     os << "  cpuSolverStartTime = " << cpuSolverStartTime << "\n";
     os << "  cpuStartTime = " << cpuStartTime << "\n";
@@ -590,7 +598,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2026-10-14 (last modfied)
+* @date         AUTO: 2026-10-15 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:

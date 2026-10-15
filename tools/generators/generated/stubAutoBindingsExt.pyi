@@ -30,6 +30,7 @@ from exudyn.solver import SolveStatic as _SolveStatic
 from exudyn.solver import SolveDynamic as _SolveDynamic
 from exudyn.solver import ComputeLinearizedSystem as _ComputeLinearizedSystem
 from exudyn.solver import ComputeODE2Eigenvalues as _ComputeODE2Eigenvalues
+from exudyn.solver import ComputeConstraintResiduals as _ComputeConstraintResiduals
 from exudyn.solver import ComputeSystemDegreeOfFreedom as _ComputeSystemDegreeOfFreedom
 
 class MainSystem:
@@ -65,4 +66,5 @@ class MainSystem:
     SolveDynamic = _SolveDynamic
     ComputeLinearizedSystem = _ComputeLinearizedSystem
     ComputeODE2Eigenvalues = _ComputeODE2Eigenvalues
+    ComputeConstraintResiduals = _ComputeConstraintResiduals
     ComputeSystemDegreeOfFreedom = _ComputeSystemDegreeOfFreedom

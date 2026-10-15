@@ -131,7 +131,7 @@ exu.Print('solution SliderCrankIndex3  =',u[0])
 exu.Print('error errorSliderCrankIndex3=',errorSliderCrankIndex3)
 
 simulationSettings.timeIntegration.generalizedAlpha.useNewmark = True
-simulationSettings.timeIntegration.generalizedAlpha.useIndex2Constraints = True
+simulationSettings.timeIntegration.generalizedAlpha.useIndex2Constraints = True #the positions drift by 3.3e-6 (#565)
 
 #solve index 2 / trapezoidal rule:
 mbs.SolveDynamic(simulationSettings)

@@ -58,6 +58,7 @@ Available as `OutputVariableType` in sensors, `Get...Output()` and other functio
 | ForceLocal | $\LU{J0}{\fv} = \Am_0\tp \nv_1 \lambda_0$ | the joint force normal to the axis, in the joint frame $J0$; as for the other joints the force on marker m0; the torque $\lambda_1$ is not included |
 | HomogeneousTransformation | $\LU{0}{\Hm}_{J0}$ | the joint frame $J0$ as homogeneous transformation: its rotation matrix and the position of marker $m0$, as 4x4 matrix $[\LU{0}{\Rot}_{J0}\;\LU{0}{\pv}_{m0};\;\Null\tp\;1]$; the Get...Output functions return it as exu.HT, a sensor stores its 16 values row by row |
 | HomogeneousTransformationLocal | $\LU{J0}{\Hm}_{J1} = \LU{0}{\Hm}_{J0}^{-1}\,\LU{0}{\Hm}_{J1}$ | the joint frame $J1$ relative to the joint frame $J0$: the relative rotation matrix $\LU{0}{\Rot}_{J0}\tp\LU{0}{\Rot}_{J1}$ and the relative position $\LU{0}{\Rot}_{J0}\tp(\LU{0}{\pv}_{m1}-\LU{0}{\pv}_{m0})$; for a joint the identity up to its free axes and its drift; returned and stored as HomogeneousTransformation |
+| ConstraintEquation | $\cv$ | residual of the constraint equations at position level, the drift (#565) |
 
 (description-objectjointprismatic2d)=
 ## Detailed description

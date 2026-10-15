@@ -4,7 +4,7 @@
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2026-10-14 (last modfied)
+* @date         AUTO: 2026-10-15 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -82,7 +82,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2026-10-14 (last modfied)
+* @date         AUTO: 2026-10-15 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -164,7 +164,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2026-10-14 (last modfied)
+* @date         AUTO: 2026-10-15 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -229,7 +229,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2026-10-14 (last modfied)
+* @date         AUTO: 2026-10-15 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -291,7 +291,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2026-10-14 (last modfied)
+* @date         AUTO: 2026-10-15 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -362,7 +362,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2026-10-14 (last modfied)
+* @date         AUTO: 2026-10-15 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -545,7 +545,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2026-10-14 (last modfied)
+* @date         AUTO: 2026-10-15 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -624,7 +624,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2026-10-14 (last modfied)
+* @date         AUTO: 2026-10-15 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -686,7 +686,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2026-10-14 (last modfied)
+* @date         AUTO: 2026-10-15 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -788,7 +788,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2026-10-14 (last modfied)
+* @date         AUTO: 2026-10-15 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -799,8 +799,11 @@ public: // AUTO:
 class GeneralizedAlphaSettings // AUTO: 
 {
 public: // AUTO: 
+  bool checkConstraintDrift;                      //!< AUTO: True: every constraintDriftCheckPeriod steps, the solver evaluates the position-level constraints - their drift, which grows with velocity-level (index 2) constraints, useIndex2Constraints and the solver TrapezoidalIndex2; a warning names the item once the drift exceeds 0.001 constraintDriftTolerance, the solver stops with an exception above constraintDriftTolerance, the largest drift is in the output of the solver; SolveDynamic switches it on for the solver TrapezoidalIndex2 (its argument index2CheckConstraints); see [](#sec-solver-constraintdrift) (#565)
   bool checkInitialConstraints;                   //!< AUTO: True: at the start of the time integration, the constraints are evaluated with the initial positions and with the initial velocities; if the largest residual exceeds initialConstraintsTolerance, a warning names the item - inconsistent initial conditions give large constraint forces and oscillations in the first steps; the residuals are in the output of the solver; False: no check and no warning; see [](#sec-solver-initialconstraints) (#2234)
   bool computeInitialAccelerations;               //!< AUTO: True: compute initial accelerations from system EOM in acceleration form; NOTE that initial accelerations that are following from user functions in constraints are not considered for now! False: use zero accelerations
+  Index constraintDriftCheckPeriod;               //!< AUTO: must be > 0; the number of steps between two checks of checkConstraintDrift
+  Real constraintDriftTolerance;                  //!< AUTO: must be >= 0; the largest drift of the position-level constraints that checkConstraintDrift accepts, in the units of the constraint equations (m for a position, rad for an angle); a warning comes at 0.001 of it
   Real initialConstraintsTolerance;               //!< AUTO: must be >= 0; the tolerance of checkInitialConstraints and projectInitialVelocities, relative to 1 plus the largest initial coordinate (positions) or initial velocity coordinate (velocities)
   bool lieGroupAddTangentOperator;                //!< AUTO: True: for Lie group nodes, in case that lieGroupSimplifiedKinematicRelations=True, the integrator adds the tangent operator for stiffness and constraint matrices, for improved Newton convergence; not available for sparse matrix mode (EigenSparse)
   bool lieGroupSimplifiedKinematicRelations;      //!< AUTO: True: for Lie group nodes, the integrator uses the original kinematic relations of the Bruls and Cardona 2010 paper; False (recommended): higher accuracy as proposed in paper by Holzinger, Arnold, Gerstmayr, sigma-modified Lie group generalized alpha methods for constrained multibody systems, 2025 (to be sumitted)
@@ -822,8 +825,11 @@ public: // AUTO:
   GeneralizedAlphaSettings()
   {
     backlink=nullptr;
+    checkConstraintDrift = false;
     checkInitialConstraints = true;
     computeInitialAccelerations = true;
+    constraintDriftCheckPeriod = 20;
+    constraintDriftTolerance = 1e-5;
     initialConstraintsTolerance = 1e-8;
     lieGroupAddTangentOperator = true;
     lieGroupSimplifiedKinematicRelations = false;
@@ -846,8 +852,11 @@ public: // AUTO:
   virtual void Print(std::ostream& os) const
   {
     os << "GeneralizedAlphaSettings" << ":\n";
+    os << "  checkConstraintDrift = " << checkConstraintDrift << "\n";
     os << "  checkInitialConstraints = " << checkInitialConstraints << "\n";
     os << "  computeInitialAccelerations = " << computeInitialAccelerations << "\n";
+    os << "  constraintDriftCheckPeriod = " << constraintDriftCheckPeriod << "\n";
+    os << "  constraintDriftTolerance = " << constraintDriftTolerance << "\n";
     os << "  initialConstraintsTolerance = " << initialConstraintsTolerance << "\n";
     os << "  lieGroupAddTangentOperator = " << lieGroupAddTangentOperator << "\n";
     os << "  lieGroupSimplifiedKinematicRelations = " << lieGroupSimplifiedKinematicRelations << "\n";
@@ -877,7 +886,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2026-10-14 (last modfied)
+* @date         AUTO: 2026-10-15 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -939,7 +948,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2026-10-14 (last modfied)
+* @date         AUTO: 2026-10-15 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -1012,7 +1021,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2026-10-14 (last modfied)
+* @date         AUTO: 2026-10-15 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -1071,7 +1080,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2026-10-14 (last modfied)
+* @date         AUTO: 2026-10-15 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -1217,7 +1226,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2026-10-14 (last modfied)
+* @date         AUTO: 2026-10-15 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -1332,7 +1341,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2026-10-14 (last modfied)
+* @date         AUTO: 2026-10-15 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -1397,7 +1406,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2026-10-14 (last modfied)
+* @date         AUTO: 2026-10-15 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -1465,7 +1474,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2026-10-14 (last modfied)
+* @date         AUTO: 2026-10-15 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -1559,7 +1568,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2026-10-14 (last modfied)
+* @date         AUTO: 2026-10-15 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -1618,7 +1627,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2026-10-14 (last modfied)
+* @date         AUTO: 2026-10-15 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:

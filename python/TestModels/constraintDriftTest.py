@@ -1,0 +1,106 @@
+#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+# This is an EXUDYN example
+#
+# Details:  The drift of the constraints (#565): a pendulum of length 1, a mass point on a distance constraint, and a
+#           free rigid body with Euler parameters, whose norm is an algebraic equation of its node. With velocity-level
+#           (index 2) constraints, TrapezoidalIndex2, the positions drift; SolveDynamic then checks the drift
+#           (index2CheckConstraints), the largest value is in the output of the solver, and a smaller
+#           constraintDriftTolerance stops the solver. The index 3 solver keeps the drift at the Newton tolerance.
+#           The drift in the current state: mbs.ComputeConstraintResiduals, ComputeItemType.ConstraintDrift, the output
+#           variable ConstraintEquation of the constraint, and the sensor function SensorUFSystemConstraintDrift.
+#
+# Author:   Johannes Gerstmayr
+# Date:     2026-10-15
+#
+# Copyright:This file is part of Exudyn. Exudyn is free software. You can redistribute it and/or modify it under the terms of the Exudyn license. See 'LICENSE.txt' for more details.
+#
+#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+import exudyn as exu
+from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
+from exudyn.advancedUtilities import SensorUFSystemConstraintDrift
+import numpy as np
+
+SC = exu.SystemContainer()
+OVT = exu.OutputVariableType
+L = 1.      #length of the pendulum
+
+def Model():
+    """the pendulum and the free rigid body; returns mbs, the distance constraint, the node of the rigid body and the
+    sensor of the drift"""
+    mbs = SC.AddSystem()
+    oGround = mbs.CreateGround()
+    oMass = mbs.CreateMassPoint(referencePosition=[L, 0, 0], initialVelocity=[0, 2, 0], mass=1, gravity=[0, -9.81, 0])
+    oDistance = mbs.CreateDistanceConstraint(itemNumbers=[oGround, oMass], distance=L)
+    oBody = mbs.CreateRigidBody(referencePosition=[0, 0, 2], inertia=InertiaCuboid(1000, [0.4, 0.2, 0.1]),
+                                initialAngularVelocity=[1, 4, 0.5], nodeType=exu.NodeType.RotationEulerParameters)
+    nBody = mbs.GetObject(oBody)['nodeNumber']
+    sDrift = mbs.AddSensor(SensorUserFunction(sensorUserFunction=SensorUFSystemConstraintDrift, storeInternal=True))
+    mbs.Assemble()
+    return (mbs, oDistance, nBody, sDrift)
+
+def Settings(tolerance=1e-6):
+    simulationSettings = exu.SimulationSettings()
+    simulationSettings.timeIntegration.numberOfSteps = 1000
+    simulationSettings.timeIntegration.endTime = 2
+    simulationSettings.timeIntegration.verboseMode = 0
+    simulationSettings.solution.file.write = False
+    simulationSettings.solution.sensors.writePeriod = 0.002
+    simulationSettings.timeIntegration.generalizedAlpha.constraintDriftTolerance = tolerance
+    return simulationSettings
+
+checks = []
+
+#(1) index 2: the positions drift; SolveDynamic checks it
+(mbs, oDistance, nBody, sDrift) = Model()
+mbs.SolveDynamic(Settings(1e-3), solverType=exu.DynamicSolverType.TrapezoidalIndex2)
+output = mbs.sys['dynamicSolver'].output
+drift2 = output.constraintDriftMaximum
+exu.Print('(1) index 2: largest drift', drift2, 'in', output.constraintDriftItem, 'at t =', output.constraintDriftTime)
+checks += [1e-9 < drift2 < 1e-3]
+
+#the drift in the current state, four ways: the residuals of the system, ComputeItem, the output variable, the sensor
+[residuals, items] = mbs.ComputeConstraintResiduals()
+ltgDistance = list(mbs.systemData.GetObjectLTGAE(oDistance))
+itemDrift = mbs.ComputeItem(oDistance, exu.ComputeItemType.ConstraintDrift)
+outputDrift = mbs.GetObjectOutput(oDistance, OVT.ConstraintEquation)
+nodeDrift = mbs.ComputeItem(nBody, exu.ComputeItemType.ConstraintDrift)
+sensorDrift = mbs.GetSensorValues(sDrift)
+exu.Print('    at the end: distance constraint', itemDrift, outputDrift, ', Euler parameters', nodeDrift,
+          ', sensor', sensorDrift)
+checks += [abs(residuals[ltgDistance[0]] - itemDrift[0]) < 1e-15, abs(outputDrift - itemDrift[0]) < 1e-15,
+           int(items[ltgDistance[0]]) == int(oDistance), int(items[mbs.GetNodeAEIndex(nBody)]) == int(nBody),
+           abs(residuals[mbs.GetNodeAEIndex(nBody)] - nodeDrift[0]) < 1e-15,
+           abs(sensorDrift[0] - max(abs(residuals))) < 1e-15]
+velocityResiduals = mbs.ComputeConstraintResiduals(velocityLevel=True)[0]
+checks += [max(abs(velocityResiduals)) < 1e-8] #index 2 fulfills the velocity level
+
+#(2) index2CheckConstraints=False: no check
+(mbs, oDistance, nBody, sDrift) = Model()
+mbs.SolveDynamic(Settings(1e-3), solverType=exu.DynamicSolverType.TrapezoidalIndex2, index2CheckConstraints=False)
+checks += [mbs.sys['dynamicSolver'].output.constraintDriftMaximum == -1]
+
+#(3) a tolerance below the drift stops the solver
+(mbs, oDistance, nBody, sDrift) = Model()
+stopped = ''
+try:
+    mbs.SolveDynamic(Settings(0.1*drift2), solverType=exu.DynamicSolverType.TrapezoidalIndex2)
+except Exception as error:
+    stopped = str(error)
+exu.Print('(3) stopped:', stopped.splitlines()[0] if stopped else 'no')
+checks += ['constraintDriftTolerance' in stopped]
+
+#(4) index 3, checked: the drift stays at the Newton tolerance
+(mbs, oDistance, nBody, sDrift) = Model()
+simulationSettings = Settings()
+simulationSettings.timeIntegration.generalizedAlpha.checkConstraintDrift = True
+mbs.SolveDynamic(simulationSettings)
+drift3 = mbs.sys['dynamicSolver'].output.constraintDriftMaximum
+exu.Print('(4) index 3: largest drift', drift3)
+checks += [0 <= drift3 < 1e-9]
+
+exu.Print('checks:', checks)
+u = sum(checks) - len(checks) + drift2
+exu.Print('solution of constraintDriftTest=', u)
+
+exu.sys['testResult'] = u

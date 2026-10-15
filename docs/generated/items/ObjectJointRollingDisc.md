@@ -63,6 +63,7 @@ Available as `OutputVariableType` in sensors, `Get...Output()` and other functio
 | Velocity | $\LU{0}{\vv}_{trail}$ | current velocity of the trail (according to motion of the contact point along the trail!) in global coordinates; this is not the velocity of the contact point; needs further testing for general case of relative moving bodies |
 | ForceLocal | $\LU{J1}{\fv} = \LU{0}{[f_0,\, f_1,\, f_2]\tp}= [-\zv^T \LU{0}{\wv_{lat}}, \, -\zv^T \LU{0}{\wv_2}, \, -\zv^T \LU{0}{\vv_{PN}}]\tp$ | contact forces acting on disc, in special $J1$ joint coordinates, $f_0$ being the lateral force (parallel to ground plane), $f_1$ being the longitudinal force and $f_2$ being the normal force |
 | RotationMatrix | $\LU{0,J1}{\Am} = [\LU{0}{\wv_{lat}},\, \LU{0}{\wv}_2,\, \LU{0}{\vv_{PN}}]$ | transformation matrix of special joint coordinates $J1$ to global coordinates |
+| ConstraintEquation | $\cv$ | residual of the constraint equations: the position of the contact normal to the plane, and the velocity equations of rolling (#565) |
 
 (description-objectjointrollingdisc)=
 ## Detailed description

@@ -355,7 +355,7 @@ simulationSettings.timeIntegration.verboseMode = 1
 simulationSettings.show.computationTime = False
 simulationSettings.show.statistics = False
 
-simulationSettings.timeIntegration.generalizedAlpha.useIndex2Constraints = True
+simulationSettings.timeIntegration.generalizedAlpha.useIndex2Constraints = True #the positions drift by 1.5e-6 (#565)
 simulationSettings.timeIntegration.generalizedAlpha.useNewmark = True
 simulationSettings.timeIntegration.generalizedAlpha.spectralRadius = 0.5#0.5
 simulationSettings.timeIntegration.generalizedAlpha.computeInitialAccelerations=True

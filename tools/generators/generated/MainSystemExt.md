@@ -118,7 +118,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`ANCFALEtest
 (sec-mainsystemextensions-solvestatic)=
 #### Function: SolveStatic
 
-[`SolveStatic(mbs, simulationSettings = None, updateInitialValues = False, storeSolver = True, showHints = False, showCausingItems = True, autoAssemble = True) -> bool`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/solver.py#L152)
+[`SolveStatic(mbs, simulationSettings = None, updateInitialValues = False, storeSolver = True, showHints = False, showCausingItems = True, autoAssemble = True) -> bool`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/solver.py#L153)
 
 - **function description**: solves the static mbs problem using simulationSettings; see MainSolverStatic, {ref}`sec-mainsolverstatic`, for further details of the static solver; this function is also available in exudyn (using exudyn.SolveStatic(...)) - NOTE that this function is added to MainSystem via Python function SolveStatic.
 - **input**:
@@ -164,7 +164,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`3SpringsDis
 (sec-mainsystemextensions-solvedynamic)=
 #### Function: SolveDynamic
 
-[`SolveDynamic(mbs, simulationSettings = None, solverType = None, updateInitialValues = False, storeSolver = True, showHints = False, showCausingItems = True, autoAssemble = True) -> bool`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/solver.py#L226)
+[`SolveDynamic(mbs, simulationSettings = None, solverType = None, updateInitialValues = False, storeSolver = True, showHints = False, showCausingItems = True, autoAssemble = True, index2CheckConstraints = True) -> bool`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/solver.py#L227)
 
 - **function description**: solves the dynamic mbs problem using simulationSettings and solver type; see MainSolverImplicitSecondOrder, {ref}`sec-mainsolverimplicitsecondorder`, for further details of the dynamic solver; this function is also available in exudyn (using exudyn.SolveDynamic(...)) - NOTE that this function is added to MainSystem via Python function SolveDynamic.
 - **input**:
@@ -176,6 +176,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`3SpringsDis
   - `showHints`: show additional hints, if solver fails
   - `showCausingItems`: if linear solver fails, this option helps to identify objects, etc. which are related to a singularity in the linearized system matrix
   - `autoAssemble`: if True: if mbs.systemIsConsistent=False (system is not assembled), call mbs.Assemble() before solver calls
+  - `index2CheckConstraints`: if True, the solver TrapezoidalIndex2, whose velocity-level (index 2) constraints let the positions drift, checks the drift of the position-level constraints during this run, as timeIntegration.generalizedAlpha.checkConstraintDrift = True does, and stops above constraintDriftTolerance (#565)
 - **output**: (type: bool) returns True, if successful, False if fails; if storeSolver = True, mbs.sys contains dynamicSolver, which allows to investigate solver problems (see {ref}`sec-solversubstructures` and the items described in {ref}`sec-mainsolverimplicitsecondorder`)
 
 *example*:
@@ -212,7 +213,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`3SpringsDis
 (sec-mainsystemextensions-computelinearizedsystem)=
 #### Function: ComputeLinearizedSystem
 
-[`ComputeLinearizedSystem(mbs, simulationSettings = None, projectIntoConstraintNullspace = False, singularValuesTolerance = 1e-12, returnConstraintJacobian = False, returnConstraintNullspace = False, autoAssemble = True, useSparseMatrices = False) -> list`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/solver.py#L422)
+[`ComputeLinearizedSystem(mbs, simulationSettings = None, projectIntoConstraintNullspace = False, singularValuesTolerance = 1e-12, returnConstraintJacobian = False, returnConstraintNullspace = False, autoAssemble = True, useSparseMatrices = False) -> list`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/solver.py#L432)
 
 - **function description**: compute linearized system of equations for ODE2 part of mbs, not considering the effects of algebraic constraints; for computation of eigenvalues and advanced computation with constrained systems, see ComputeODE2Eigenvalues; the current implementation is also able to project into the constrained space, however, this currently does not generally work with non-holonomic systems - NOTE that this function is added to MainSystem via Python function ComputeLinearizedSystem.
 - **input**:
@@ -262,7 +263,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`ANCFBeamEig
 (sec-mainsystemextensions-computeode2eigenvalues)=
 #### Function: ComputeODE2Eigenvalues
 
-[`ComputeODE2Eigenvalues(mbs, simulationSettings = None, useSparseSolver = False, numberOfEigenvalues = 0, constrainedCoordinates = [], convert2Frequencies = False, useAbsoluteValues = True, computeComplexEigenvalues = False, ignoreAlgebraicEquations = False, singularValuesTolerance = 1e-12, autoAssemble = True) -> list`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/solver.py#L563)
+[`ComputeODE2Eigenvalues(mbs, simulationSettings = None, useSparseSolver = False, numberOfEigenvalues = 0, constrainedCoordinates = [], convert2Frequencies = False, useAbsoluteValues = True, computeComplexEigenvalues = False, ignoreAlgebraicEquations = False, singularValuesTolerance = 1e-12, autoAssemble = True) -> list`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/solver.py#L573)
 
 - **function description**: compute eigenvalues for unconstrained ODE2 part of mbs, which represent the square of the eigenfrequencies (in radiant) of the undamped system; the computation may include constraints in case that ignoreAlgebraicEquations=False (however, this currently does not generally work with non-holonomic systems); for algebraic constraints, however, a dense singular value decomposition of the constraint jacobian is used for the nullspace projection; the computation is done for the initial values of the mbs, independently of previous computations. If you would like to use the current state for the eigenvalue computation, you need to copy the current state to the initial state (using GetSystemState, SetSystemState, see {ref}`sec-mbs-systemdata`); with useSparseSolver=True, mass and stiffness matrices are computed and exported as sparse matrices (unless computeComplexEigenvalues or the projection of algebraic equations needs them dense). - NOTE that this function is added to MainSystem via Python function ComputeODE2Eigenvalues.
 - **input**:
@@ -321,10 +322,36 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`ANCFBeamEig
 Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`nMassOscillator.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/nMassOscillator.py) (Ex), [`nMassOscillatorEigenmodes.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/nMassOscillatorEigenmodes.py) (Ex), [`nMassOscillatorInteractive.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/nMassOscillatorInteractive.py) (Ex), [`ANCFBeamEigTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/ANCFBeamEigTest.py) (TM), [`ANCFThinPlateRevisionTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/ANCFThinPlateRevisionTest.py) (TM), [`ANCFThinPlateTests.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/ANCFThinPlateTests.py) (TM), [`bricardMechanism.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/bricardMechanism.py) (TM), [`complexEigenvaluesTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/complexEigenvaluesTest.py) (TM), ...
 
 
+(sec-mainsystemextensions-computeconstraintresiduals)=
+#### Function: ComputeConstraintResiduals
+
+[`ComputeConstraintResiduals(mbs, velocityLevel = False, autoAssemble = True) -> list`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/solver.py#L830)
+
+- **function description**: the residuals of all algebraic equations of the system in the current state - the drift of the constraints (#565); computed per item with mbs.ComputeItem, without a solver, so that it can be called at any time, e.g., in a PreStepUserFunction or a SensorUserFunction during a simulation - NOTE that this function is added to MainSystem via Python function ComputeConstraintResiduals.
+- **input**:
+  - `mbs`: the MainSystem
+  - `velocityLevel`: False: the position-level constraints, ComputeItemType.ConstraintDrift - zero for the equations of velocity-level constraints (rolling disc, CoordinateConstraint with velocityLevel=True), which do not drift;
+  - `True`: the equations at velocity level, ComputeItemType.AlgebraicEquations_t
+  - `autoAssemble`: if True and mbs.systemIsConsistent=False, mbs.Assemble() is called first
+- **output**: (type: list) [residuals, items], residuals is a numpy array with one entry per algebraic equation of the system (the numbering of the Lagrange multipliers, mbs.systemData.GetAECoordinates()), items the ObjectIndex or NodeIndex of each entry
+
+*example*:
+
+```python
+  [residuals, items] = mbs.ComputeConstraintResiduals()
+  k = np.argmax(abs(residuals))
+  print('largest drift', residuals[k], 'in', items[k])
+```
+
+
+
+Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`constraintDriftTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/constraintDriftTest.py) (TM)
+
+
 (sec-mainsystemextensions-computesystemdegreeoffreedom)=
 #### Function: ComputeSystemDegreeOfFreedom
 
-[`ComputeSystemDegreeOfFreedom(mbs, simulationSettings = None, threshold = 1e-12, verbose = False, useSVD = False, autoAssemble = True) -> dict`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/solver.py#L820)
+[`ComputeSystemDegreeOfFreedom(mbs, simulationSettings = None, threshold = 1e-12, verbose = False, useSVD = False, autoAssemble = True) -> dict`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/solver.py#L881)
 
 - **function description**: compute system DOF numerically, considering Grübler-Kutzbach formula as well as redundant constraints; uses numpy matrix rank or singular value decomposition of scipy (useSVD=True) - NOTE that this function is added to MainSystem via Python function ComputeSystemDegreeOfFreedom.
 - **input**:

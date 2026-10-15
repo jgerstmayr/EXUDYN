@@ -147,15 +147,7 @@ void CObjectConnectorCoordinate::GetOutputVariableConnector(OutputVariableType v
 	{
 	case OutputVariableType::Displacement: value.SetVector({ relPos }); break;
 	case OutputVariableType::Velocity: value.SetVector({ relVel }); break;
-	case OutputVariableType::ConstraintEquation: 
-	{
-		Real t = GetCSystemData()->GetCData().GetCurrent().GetTime();
-		bool velocityLevel = false;
-		Vector algebraicEquations;
-		ComputeAlgebraicEquations(algebraicEquations, markerData, t, velocityLevel);
-		value.CopyFrom(algebraicEquations); 
-		break;
-	}
+	//ConstraintEquation: GetConnectorOutputVariable, for every constraint (#565)
 	case OutputVariableType::Force: value.CopyFrom(markerData.GetLagrangeMultipliers()); break;
 	default:
 		SysError("CObjectConnectorCoordinate::GetOutputVariableConnector failed"); //error should not occur, because types are checked!

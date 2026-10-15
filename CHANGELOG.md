@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.13 | Newborn | 91 | 1.13.91 |
+| 1.13 | Newborn | 92 | 1.13.92 |
 | 1.12 | Metheney | 367 | 1.12.462 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
@@ -30,6 +30,10 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.13 - Newborn (current)
 
+- **1.13.92** `EXTENSION` `MEDIUM EFF` `resolved by: Claude-JG` Drift inspector (#565)
+  - description: add functionality to check whether drift gets too large
+  - **notes:** the drift of the constraints: generalizedAlpha.checkConstraintDrift checks the position-level constraints every constraintDriftCheckPeriod steps, warns at 0.001 constraintDriftTolerance and stops above it (default 1e-5), the largest drift in the solver output; SolveDynamic switches it on for TrapezoidalIndex2 (index2CheckConstraints); mbs.ComputeConstraintResiduals, ComputeItemType.ConstraintDrift and AlgebraicEquations\_t, the output variable ConstraintEquation of every constraint, the sensor function SensorUFSystemConstraintDrift; test model constraintDriftTest.py (revision2026c steps RG4.25.1, RG4.25.2)
+  - date resolved: **2026-10-15 20:25**, date raised: 2021-01-29
 - **1.13.91** `CHANGE` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` Eigen without fused multiply-add on arm64, so that the solvers give the bits of x86-64 (#2990)
   - description: revision2026c step RG4.1.3.8: the macOS ARM run of 1.13.75 (tmp/MacOS) fails in six test models, all with LinearSolverType.EigenSparse; the dumps of the Mac agent show identical inputs, a bit-identical explicit solve and a first difference of one ulp in an implicit step. Eigen's NEON packets fuse a\*b+c (vfmaq\_f64 under \_\_ARM\_FEATURE\_FMA) whatever -ffp-contract says; without the macro they multiply and add, as SSE2 does on x86-64. Undefine it around the Eigen includes of LinearSolver.h; to be verified on macOS ARM.
   - **notes:** on arm64 Eigen multiplies and adds instead of fusing: \_\_ARM\_FEATURE\_FMA is undefined around the Eigen includes, and the DenseBase plugin Linalg/EigenPluginNoMadd.h undefines EIGEN\_HAS\_SINGLE\_INSTRUCTION\_MADD, without a change of the vendored Eigen; macOS ARM passes the whole test suite and gives the results of x86-64 (revision2026c step RG4.1.3.8)

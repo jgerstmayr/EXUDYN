@@ -59,6 +59,7 @@ Available as `OutputVariableType` in sensors, `Get...Output()` and other functio
 | Coordinates | $[x_{data0},\,q_{ALE}]\tp$ | provides two values: [0] = current sliding marker index, [1] = ALE sliding coordinate |
 | Coordinates_t | $[\dot q_{ALE}]\tp$ | provides ALE sliding velocity |
 | Force | $\fv$ | joint force vector (3D) |
+| ConstraintEquation | $\cv$ | residual of the constraint equations at position level, the drift (#565) |
 
 (description-objectjointalemoving2d)=
 ## Detailed description

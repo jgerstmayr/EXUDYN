@@ -38,6 +38,7 @@ public: //made public for access via pybind
 	bool hasConstantMassMatrix; //!< avoid recomputation of mass matrix, if constant
 
 	bool useLieGroupIntegration;			//!< only used internally to speed up in case of no Lie group nodes
+	bool constraintDriftWarned;				//!< the drift of the constraints has exceeded the level of the warning in this run (#565)
 	//++++++++++++++++++++++++++++++
 	//Lie groups:
 	//ResizableArray<Index> lieGroupDataNodes;			//filled with Lie group node indices with data coordinates during initialization; ONLY if useLieGroupIntegration=true
@@ -77,6 +78,27 @@ public:
 	//! check the initial positions and velocities against the constraints, warn and, if requested, project the velocities
 	//! onto the constraints (#2234); returns true if it left the matrix of FactorizeInitialSystemJacobian factorized
 	bool CheckInitialConstraints(CSystem& computationalSystem, const SimulationSettings& simulationSettings);
+
+	//! the largest absolute entry of v, and its index
+	Real MaxAbsAndIndex(const Vector& v, Index& index) const;
+
+	//! the item whose algebraic equation aeIndex is, as "object 5" or "node 3" (#2234)
+	STDstring AlgebraicEquationItem(const CSystemData& systemData, Index aeIndex) const;
+
+	//! the residual of the algebraic equations at position or velocity level and its largest absolute value, with the
+	//! equation in index; at position level, the equations of velocity-level constraints are zero, as they give their
+	//! velocity equations at both levels (#2234, #565)
+	Real ConstraintResidual(CSystem& computationalSystem, bool velocityLevel, Vector& residual, Index& index);
+
+	//! the drift of the position-level constraints, every constraintDriftCheckPeriod steps: the largest value in the output,
+	//! a warning once above 0.001 constraintDriftTolerance, an exception above constraintDriftTolerance (#565)
+	void CheckConstraintDrift(CSystem& computationalSystem, const SimulationSettings& simulationSettings);
+
+	//! the check of the drift, then the output of the step
+	virtual void FinishStep(CSystem& computationalSystem, const SimulationSettings& simulationSettings, bool writeSolution = true) override;
+
+	//! the largest drift of the run, if it was warned about, then the finalization of the base class
+	virtual void FinalizeSolver(CSystem& computationalSystem, const SimulationSettings& simulationSettings) override;
 
 	//! update currentTime (and load factor); MUST be overwritten in special solver class
 	virtual void UpdateCurrentTime(CSystem& computationalSystem, const SimulationSettings& simulationSettings) override;

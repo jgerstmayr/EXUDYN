@@ -85,8 +85,7 @@ void CSolverImplicitSecondOrderTimeInt::IncreaseStepSize(CSystem& computationalS
 	}
 }
 
-//! the largest absolute entry of v and its index
-static Real MaxAbsAndIndex(const Vector& v, Index& index)
+Real CSolverImplicitSecondOrderTimeInt::MaxAbsAndIndex(const Vector& v, Index& index) const
 {
 	Real maxAbs = 0.;
 	index = 0;
@@ -97,8 +96,7 @@ static Real MaxAbsAndIndex(const Vector& v, Index& index)
 	return maxAbs;
 }
 
-//! the item whose algebraic equation aeIndex is, as "object 5" or "node 3" (#2234)
-static STDstring AlgebraicEquationItem(const CSystemData& systemData, Index aeIndex)
+STDstring CSolverImplicitSecondOrderTimeInt::AlgebraicEquationItem(const CSystemData& systemData, Index aeIndex) const
 {
 	for (Index j : systemData.objectsWithAlgebraicEquations)
 	{
@@ -114,6 +112,90 @@ static STDstring AlgebraicEquationItem(const CSystemData& systemData, Index aeIn
 		if (aeIndex >= start && aeIndex < start + node.GetAlgebraicEquationsSize()) { return "node " + EXUstd::ToString(i); }
 	}
 	return "algebraic equation " + EXUstd::ToString(aeIndex);
+}
+
+Real CSolverImplicitSecondOrderTimeInt::ConstraintResidual(CSystem& computationalSystem, bool velocityLevel, Vector& residual, Index& index)
+{
+	residual.SetNumberOfItems(data.nAE);
+	computationalSystem.ComputeAlgebraicEquations(data.tempCompDataArray, residual, velocityLevel);
+	if (!velocityLevel)
+	{
+		const CSystemData& systemData = computationalSystem.GetSystemData();
+		for (Index j : systemData.objectsWithAlgebraicEquations)
+		{
+			const CObject& object = *(systemData.GetCObjects()[j]);
+			if (((Index)object.GetType() & (Index)CObjectType::Constraint) && ((const CObjectConstraint&)object).UsesVelocityLevel())
+			{
+				for (Index k : systemData.GetLocalToGlobalAE()[j]) { residual[k] = 0.; }
+			}
+		}
+	}
+	return MaxAbsAndIndex(residual, index);
+}
+
+void CSolverImplicitSecondOrderTimeInt::CheckConstraintDrift(CSystem& computationalSystem, const SimulationSettings& simulationSettings)
+{
+	const GeneralizedAlphaSettings& alpha = simulationSettings.timeIntegration.generalizedAlpha;
+	const Index period = EXUstd::Maximum((Index)1, alpha.constraintDriftCheckPeriod);
+	if (!alpha.checkConstraintDrift || data.nAE == 0 || it.currentStepIndex == 0 || it.currentStepIndex % period != 0) { return; }
+
+	CSystemData& systemData = computationalSystem.GetSystemData();
+	const Real t = systemData.GetCData().currentState.time;
+	const STDstring switchOff = "timeIntegration.generalizedAlpha.checkConstraintDrift = False switches the check off";
+	Vector residual;
+	Index index = 0;
+	Real drift = 0.;
+	try { drift = ConstraintResidual(computationalSystem, false, residual, index); }
+	catch (const std::exception& error)
+	{
+		if (!constraintDriftWarned)
+		{
+			constraintDriftWarned = true;
+			PyWarning(STDstring("the drift of the constraints could not be evaluated (#565): ") + error.what()
+				+ "\nthe simulation continues without this check; " + switchOff, file.solverFile);
+		}
+		return;
+	}
+
+	const STDstring item = AlgebraicEquationItem(systemData, index);
+	if (drift > output.constraintDriftMaximum)
+	{
+		output.constraintDriftMaximum = drift;
+		output.constraintDriftItem = item;
+		output.constraintDriftTime = t;
+	}
+	const Real tolerance = alpha.constraintDriftTolerance;
+	if (drift > tolerance) //PyError: also in the fast module, where the CHECKandTHROW macros are compiled out
+	{
+		PyError("the drift of the constraints, " + EXUstd::ToString(drift) + " in " + item + " at t = " + EXUstd::ToString(t)
+			+ ", exceeds timeIntegration.generalizedAlpha.constraintDriftTolerance = " + EXUstd::ToString(tolerance)
+			+ " (#565); the positions drift with velocity-level (index 2) constraints: reduce the step size, use a solver that "
+			"fulfills the position-level constraints (GeneralizedAlpha with useIndex2Constraints = False), or raise "
+			"constraintDriftTolerance; " + switchOff, PyErrorType::solverError);
+	}
+	if (drift > 1e-3*tolerance && !constraintDriftWarned)
+	{
+		constraintDriftWarned = true;
+		PyWarning("the drift of the constraints exceeds 0.001 constraintDriftTolerance (#565): " + EXUstd::ToString(drift) + " in "
+			+ item + " at t = " + EXUstd::ToString(t) + "; the solver stops above constraintDriftTolerance = " + EXUstd::ToString(tolerance)
+			+ "; the largest drift of the run is reported at its end", file.solverFile);
+	}
+}
+
+void CSolverImplicitSecondOrderTimeInt::FinishStep(CSystem& computationalSystem, const SimulationSettings& simulationSettings, bool writeSolution)
+{
+	CheckConstraintDrift(computationalSystem, simulationSettings);
+	CSolverBase::FinishStep(computationalSystem, simulationSettings, writeSolution);
+}
+
+void CSolverImplicitSecondOrderTimeInt::FinalizeSolver(CSystem& computationalSystem, const SimulationSettings& simulationSettings)
+{
+	if (constraintDriftWarned && output.constraintDriftMaximum >= 0.)
+	{
+		PyWarning("the largest drift of the constraints in this run (#565): " + EXUstd::ToString(output.constraintDriftMaximum) + " in "
+			+ output.constraintDriftItem + " at t = " + EXUstd::ToString(output.constraintDriftTime), file.solverFile);
+	}
+	CSolverBase::FinalizeSolver(computationalSystem, simulationSettings);
 }
 
 Index CSolverImplicitSecondOrderTimeInt::FactorizeInitialSystemJacobian(CSystem& computationalSystem, const SimulationSettings& simulationSettings)
@@ -176,26 +258,13 @@ bool CSolverImplicitSecondOrderTimeInt::CheckInitialConstraints(CSystem& computa
 	//the velocity level is not implemented in every constraint, and a user function may fail: the check must not stop the
 	//simulation, which may well run without it
 	STDstring failure;
-	try
-	{
-		computationalSystem.ComputeAlgebraicEquations(data.tempCompDataArray, residualPosition, false);
-		//a velocity-level constraint (a rolling disc, a prescribed velocity) gives its velocity equation at both levels:
-		//it is checked with the velocities
-		for (Index j : systemData.objectsWithAlgebraicEquations)
-		{
-			const CObject& object = *(systemData.GetCObjects()[j]);
-			if (((Index)object.GetType() & (Index)CObjectType::Constraint) && ((const CObjectConstraint&)object).UsesVelocityLevel())
-			{
-				for (Index k : systemData.GetLocalToGlobalAE()[j]) { residualPosition[k] = 0.; }
-			}
-		}
-		output.initialConstraintsResidualPosition = MaxAbsAndIndex(residualPosition, indexPosition);
-	}
+	//a velocity-level constraint (a rolling disc, a prescribed velocity) gives its velocity equation at both levels: it is
+	//checked with the velocities
+	try { output.initialConstraintsResidualPosition = ConstraintResidual(computationalSystem, false, residualPosition, indexPosition); }
 	catch (const std::exception& error) { failure = STDstring("positions: ") + error.what(); }
 	try
 	{
-		computationalSystem.ComputeAlgebraicEquations(data.tempCompDataArray, residualVelocity, true);
-		output.initialConstraintsResidualVelocity = MaxAbsAndIndex(residualVelocity, indexVelocity);
+		output.initialConstraintsResidualVelocity = ConstraintResidual(computationalSystem, true, residualVelocity, indexVelocity);
 	}
 	catch (const std::exception& error) { failure += STDstring(failure.empty() ? "" : "; ") + "velocities: " + error.what(); }
 	if (!failure.empty() && alpha.checkInitialConstraints)
@@ -293,6 +362,8 @@ void CSolverImplicitSecondOrderTimeInt::InitializeSolverInitialConditions(CSyste
 
 	//call base class for general tasks
 	CSolverBase::InitializeSolverInitialConditions(computationalSystem, simulationSettings); //set currentState = initialState
+
+	constraintDriftWarned = false; //once per run (#565)
 
 	//before the initial accelerations, which depend on the (projected) initial velocities (#2234)
 	bool systemJacobianFactorized = CheckInitialConstraints(computationalSystem, simulationSettings);

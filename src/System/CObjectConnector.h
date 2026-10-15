@@ -255,6 +255,11 @@ public:
 	//! otherwise it takes the path of the marker data (#2745)
 	bool OnConnectorInterface() const { return IsActive() && !UsesVelocityLevel(); }
 
+	//! OutputVariableType::ConstraintEquation of every constraint: its algebraic equations at position level, as the
+	//! solver evaluates them - the drift of a position-level constraint, the velocity equations of a velocity-level one,
+	//! the Lagrange multipliers of an inactive one (#565)
+	void GetOutputVariableConstraintEquation(const MarkerDataStructure& markerData, Index objectNumber, Vector& value) const;
+
 	//! the connector interface of a constraint (#2745): its algebraic equations into localAE, by the chain of its kind of
 	//! markers (ConstraintEquationsPositionMarkers, ...); false: the path of the marker data (ComputeAlgebraicEquations), the default
 	virtual bool ComputeAlgebraicEquationsConnector(const CSystemData& systemData, TemporaryComputationData& temp, Index objectNumber,
@@ -399,7 +404,11 @@ inline void ConnectorOutputVariableFrameLocal(const Matrix3D& A0, const Vector3D
 inline void GetConnectorOutputVariable(const CObjectConnector& connector, OutputVariableType variableType,
 	const MarkerDataStructure& markerData, Index objectNumber, Vector& value)
 {
-	if (variableType == OutputVariableType::HomogeneousTransformation &&
+	if (variableType == OutputVariableType::ConstraintEquation && ((Index)connector.GetType() & (Index)CObjectType::Constraint))
+	{
+		((const CObjectConstraint&)connector).GetOutputVariableConstraintEquation(markerData, objectNumber, value); //(#565)
+	}
+	else if (variableType == OutputVariableType::HomogeneousTransformation &&
 		((Index64)connector.GetOutputVariableTypes() & (Index64)OutputVariableType::RotationMatrix))
 	{
 		OutputVariableHomogeneousTransformation([&connector, &markerData, objectNumber](OutputVariableType type, Vector& v)

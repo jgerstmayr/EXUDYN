@@ -1166,3 +1166,45 @@ Eigen's documented `EIGEN_DENSEBASE_PLUGIN` on arm64 to `Linalg/EigenPluginNoMad
 Eigen/Core includes the plugin inside DenseBase, after the NEON packet math and before the product kernels. Checked on
 x86 with `-mavx2 -mfma`, where Eigen's AVX header defines the macro the same way: gebp mr 12 -> 8 for double, SparseLU
 solves. Open until the Mac suite confirms it without the local patch; then `UnresolvedOnMacOS()` loses the four.
+
+<a id="rg4-25"></a>
+### RG4.25.1 and RG4.25.2 — the drift of the constraints, in the solver and in Python (2026-10-15, #565)
+*(Maintainer 2026-10-15: monitoring in a solver function at FinishStep if checkConstraintDrift, default False;
+constraintDriftTolerance in the units of the constraint, stop above it with the remedies in the exception; check
+period 20 steps; warning hard-wired at 0.001 of the tolerance; output: the largest residual and the item; warn once
+and a summary at the end; SolveDynamic gets index2CheckConstraints for TrapezoidalIndex2; no counter in
+exu.special; measure first, then the tolerance; a Python function like ComputeLinearizedSystem instead of a
+systemData function; no projection, it destabilizes the index 2 solver; sensor user functions, energy later; the drift
+as output variable of the joints. After the measurement: 1e-5 and 1e-8, TrapezoidalIndex2 only, mention the drift in
+the tests, reduce the step size where it stops.)*
+- **The solver** (CSolverImplicitSecondOrderTimeInt): `ConstraintResidual` evaluates the algebraic equations at
+  position or velocity level, at position level without the equations of velocity-level constraints (they give their
+  velocity equations at both levels); used by the initial check of #2234 and by `CheckConstraintDrift`, called in the
+  overridden `FinishStep` every `constraintDriftCheckPeriod` steps. Above 0.001 `constraintDriftTolerance` one warning
+  per run with item and time, above the tolerance an `ExudynSolverError` with the remedies (step size, index 3,
+  tolerance, the flag); `FinalizeSolver` reports the largest drift if a warning came. `output.constraintDriftMaximum`
+  (-1 if not checked), `constraintDriftItem`, `constraintDriftTime`. The two free static helpers of #2234
+  (`MaxAbsAndIndex`, `AlgebraicEquationItem`) became members.
+- **Measured** (suite of 2026-10-15, the check forced on for every dynamic solve with an unreachable tolerance, in the
+  installed solver.py only): 407 index 3 solves - ordinary joints at most 6.6e-9 (the Newton tolerance), the sliding
+  joints (ObjectJointSliding, ObjectJointSliding2D) 0.00995 and SlidingJoint2DTest, connectorFrameOutputsTest 5e-5 to
+  9e-5: their equations include forces (the force along the slide is zero), not only positions. 24 index 2 solves:
+  laserScanner 1.5e-6, rollingCoin 2.5e-6, carRollingDisc 2.5e-6, SliderCrank2D 3.3e-6, mecanumWheel 5.9e-6 (all
+  Euler parameters of nodes except SliderCrank2D), rotatingTable 1.9e-5, rigidBodyCOM 2.6e-4, ANCFslidingAndALEjoint
+  0.017 (the ALE joint), sliderCrank3Dtest 0.248 (its initial positions, #2234). A pendulum with h = 2 ms drifts 1e-5
+  in 2 s. Hence 1e-5; of the TrapezoidalIndex2 models only rotatingTableTest exceeds it - its step size is halved
+  (drift 4.8e-6, new reference); the index 2 test models note their drift at the solver setting.
+- **Python**: `mbs.ComputeConstraintResiduals(velocityLevel=False)` - per item with `mbs.ComputeItem`, without a
+  solver: a solver's InitializeSolver copies the initial state into the current one, so it could not be used during a
+  simulation; returns the residuals and the ObjectIndex or NodeIndex of each entry. `ComputeItemType.ConstraintDrift`
+  (position level, zero for velocity-level constraints) and `AlgebraicEquations_t`, both and `AlgebraicEquations` also
+  for nodes with algebraic equations (Euler parameters). `SensorUFSystemConstraintDrift` (advancedUtilities): [largest
+  drift, largest velocity-level residual], NaN for the latter where an item has no velocity level.
+- **The output variable**: `ConstraintEquation` existed for CoordinateConstraint and CoordinateVectorConstraint; it is
+  now computed for every constraint in `GetConnectorOutputVariable` (CObjectConstraint::GetOutputVariableConstraintEquation,
+  the connector interface or the marker data) and listed for ObjectConnectorDistance and the ten joints. The two
+  former implementations passed the velocity flag in the place of the item number.
+- **Test model constraintDriftTest.py**: pendulum and free rigid body with Euler parameters, TrapezoidalIndex2:
+  drift 9.8e-6; the residual function, ComputeItem, the output variable and the sensor agree to the bit; the flag off
+  gives -1; a tolerance below the drift stops the solver with the message; index 3 checked: 2.8e-13.
+- **Not done**: the energies as sensor functions (#2997, RG4.25.3); a projection (decided against).

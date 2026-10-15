@@ -22,6 +22,17 @@
 #include "System/CObjectConnector.h"
 #include "Main/TemporaryComputationData.h"
 
+void CObjectConstraint::GetOutputVariableConstraintEquation(const MarkerDataStructure& markerData, Index objectNumber, Vector& value) const
+{
+	TemporaryComputationData temp;
+	Vector equations;
+	if (!ComputeAlgebraicEquationsConnector(*GetCSystemData(), temp, objectNumber, false, equations))
+	{
+		ComputeAlgebraicEquations(equations, markerData, GetCSystemData()->GetCData().GetCurrent().GetTime(), objectNumber, false);
+	}
+	value.CopyFrom(equations); //a copy: value may be a resizable vector
+}
+
 //! function to compute jacobian for connectors having a simple structure with a local jacobian 
 //! using K=d(F)/(dq), D=d(F)/(dq_t) ==> localJac must be: localJac = factorODE2*K + factorODE_t*D
 //! jacobianODE2 is computed using the marker jacobians and the jacobianDerivative stored in markerData

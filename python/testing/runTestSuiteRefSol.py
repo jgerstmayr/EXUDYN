@@ -135,6 +135,7 @@ def TestExamplesReferenceSolution():
         'solverFailureMessageTest.py':0, #new 2026-10-13: the exception of a failed solve carries the whole message (#1977)
         'sensorUserFunctionItemsTest.py':7.537499976593686, #new 2026-10-13: SensorUserFunction with itemNumbers, the kinetic energy of a group of bodies (#2977)
         'userFunctionTimerTest.py':3, #new 2026-10-13: the solver timer userFunctions, flags only (#2007)
+        'constraintDriftTest.py':9.796449624399628e-06, #new 2026-10-15: the drift of TrapezoidalIndex2 checked, the drift in the current state four ways (#565)
         'initialConstraintsCheckTest.py':2.937101858808996, #new 2026-10-14: the check of the initial conditions against the constraints, the projection of the initial velocities (#2234)
         'shellMeshSlopesScalingTest.py':0.0005808783959917463, #new 2026-10-14: the slope scaling of ShellMesh on a quarter cylinder and a flat trapezoid (#2226)
         'systemContainerComputeOnlyTest.py':4.0, #new 2026-10-14: SystemContainer(attachToRenderer=False), the renderer stays with the container of the model, also for InverseKinematicsNumerical (#2259)
@@ -208,7 +209,7 @@ def TestExamplesReferenceSolution():
         'rollingCoinTest.py':1.0634381189361193,                     #until 2024-04-29 (without force): 0.0020040999273379673
         'rollingDiscTangentialForces.py':1.034201740283854, #2026-10-02: JointGeneric on the connector interface, reaction forces summed in another order (#2745), before 1.034201740253807; #2026-10-01: constraints on the connector interface, reaction forces summed in another order (#2745), before 1.0342017404650015;        #new 2024-05-04: RollingDiscPenalty: switch to local computation of tangential forces
         'rollingCoinPenaltyTest.py':0.03489603106786701,
-        'rotatingTableTest.py':7.838680414273868, #2026-10-11: initial values from exudyn.cMath and cUtilities (#2962, #2963); before 7.838680414273867;2026-10-01: Jacobian of the rigid-body spring-damper by AD (#2745), before 7.838680375029852; until 2024-05-04 (before slight change in RollingDiscPenalty): 7.838680371309492
+        'rotatingTableTest.py':7.838280044952864, #2026-10-15: step size 0.0025 instead of 0.005, the drift of TrapezoidalIndex2 below constraintDriftTolerance (#565); before 7.838680414273868; 2026-10-11: initial values from exudyn.cMath and cUtilities (#2962, #2963); before 7.838680414273867;2026-10-01: Jacobian of the rigid-body spring-damper by AD (#2745), before 7.838680375029852; until 2024-05-04 (before slight change in RollingDiscPenalty): 7.838680371309492
         'scissorPrismaticRevolute2D.py':27.202556489044277,          #new 2022-07-11 (CState Parallel); #added JacobianODE2, but example computed with numDiff forODE2Connectors, 2022-01-18: 27.202556489044145,
         'sensorUserFunctionTest.py':45.0,            
         'serialRobotTest.py':0.7681856909831933,                    #until 2022-04-21: 0.7680031232063571 wrong static torque compensation

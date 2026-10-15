@@ -124,7 +124,7 @@ simulationSettings.timeIntegration.verboseMode = 1
 simulationSettings.solution.file.write = False
 
 simulationSettings.timeIntegration.newton.useModifiedNewton = True
-simulationSettings.timeIntegration.generalizedAlpha.useIndex2Constraints = True
+simulationSettings.timeIntegration.generalizedAlpha.useIndex2Constraints = True #the positions drift by 2.6e-4, above constraintDriftTolerance = 1e-5 if checked (#565)
 simulationSettings.timeIntegration.generalizedAlpha.useNewmark = True
 simulationSettings.timeIntegration.generalizedAlpha.spectralRadius = 0.6 #0.6 works well 
 

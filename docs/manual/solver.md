@@ -532,6 +532,41 @@ with the matrix of the initial accelerations, for which $\frac{\partial \gv}{\pa
 $\frac{\partial \gv}{\partial \qv}$ for velocity-level constraints. The initial positions are not corrected; they must
 fulfill the position-level constraints, which the check reports.
 
+(sec-solver-constraintdrift)=
+### Drift of the constraints
+
+The solver fulfills the constraints at the level it is given: the default generalized-alpha method the position-level
+constraints $\gv(\qv) = \Null$ in every step, to the Newton tolerance; with velocity-level (index 2) constraints -
+`generalizedAlpha.useIndex2Constraints = True`, or the solver `TrapezoidalIndex2` - their time derivative only, so that
+the positions drift away from $\gv(\qv) = \Null$, typically growing with time and with the step size. The drift of the
+Euler parameter norm of a rigid body node belongs to it.
+
+With `simulationSettings.timeIntegration.generalizedAlpha.checkConstraintDrift = True` (default False), the solver
+evaluates the position-level constraints every `constraintDriftCheckPeriod` steps (default 20); the equations of
+velocity-level constraints - a rolling disc, a `CoordinateConstraint` with `velocityLevel = True` - do not drift and are
+left out:
+
+- above 0.001 `constraintDriftTolerance` it warns once, naming the item, and reports the largest drift at the end of the
+  run;
+- above `constraintDriftTolerance` (default $10^{-5}$, in the units of the constraint equations) it stops with an
+  exception: reduce the step size, use the index 3 formulation, or raise the tolerance;
+- the largest drift, its item and its time are in the output of the solver, `constraintDriftMaximum`,
+  `constraintDriftItem`, `constraintDriftTime`.
+
+`mbs.SolveDynamic(..., solverType = exu.DynamicSolverType.TrapezoidalIndex2)` switches the check on for its run, unless
+`index2CheckConstraints = False` is given.
+
+The drift in the current state, e.g., in a user function: `mbs.ComputeConstraintResiduals()` returns the residuals of
+all algebraic equations of the system and the item of each, `velocityLevel = True` those at velocity level;
+`mbs.ComputeItem(item, exu.ComputeItemType.ConstraintDrift)` those of one constraint or node; every constraint has the
+output variable `ConstraintEquation`; and `exudyn.advancedUtilities.SensorUFSystemConstraintDrift` is a sensor user
+function recording the largest drift and the largest residual at velocity level:
+
+```python
+from exudyn.advancedUtilities import SensorUFSystemConstraintDrift
+sDrift = mbs.AddSensor(SensorUserFunction(sensorUserFunction=SensorUFSystemConstraintDrift, storeInternal=True))
+```
+
 ## Optimization and parameter variation
 
 The real benefit of powerful multi-body simulation emerges only if combined with modern but also simple analysis and evaluation methods.

@@ -57,6 +57,7 @@ Available as `OutputVariableType` in sensors, `Get...Output()` and other functio
 | Velocity |  | velocity vector of joint given by marker0 |
 | SlidingCoordinate |  | global sliding coordinate along all elements; the maximum sliding coordinate is equivalent to the reference lengths of all sliding elements |
 | Force |  | joint force vector (3D) |
+| ConstraintEquation | $\cv$ | residual of the constraint equations at position level, the drift (#565) |
 
 (description-objectjointsliding)=
 ## Detailed description

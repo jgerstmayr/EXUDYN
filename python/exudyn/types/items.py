@@ -995,7 +995,7 @@ items = {
     'kind': 'Object',
     'types': ['Connector', 'Constraint'],
     'requestedMarkerTypes': ['Position'],
-    'outputVariables': ['Displacement', 'Velocity', 'Distance', 'Force'],
+    'outputVariables': ['Displacement', 'Velocity', 'Distance', 'Force', 'ConstraintEquation'],
     'parameters': {
       'name': {'type': 'String', 'size': '', 'range': '', 'default': '', 'mustBeGiven': False, 'description': "constraints's unique name"},
       'markerNumbers': {'type': 'ArrayMarkerIndex', 'size': '', 'range': '', 'default': '[ exudyn.InvalidIndex(), exudyn.InvalidIndex() ]', 'mustBeGiven': False, 'description': 'list of markers used in connector'},
@@ -1303,7 +1303,7 @@ items = {
     'kind': 'Object',
     'types': ['Connector', 'Constraint'],
     'requestedMarkerTypes': ['Position', 'Orientation'],
-    'outputVariables': ['Position', 'Velocity', 'DisplacementLocal', 'VelocityLocal', 'Rotation', 'AngularVelocityLocal', 'ForceLocal', 'TorqueLocal', 'HomogeneousTransformation', 'HomogeneousTransformationLocal'],
+    'outputVariables': ['Position', 'Velocity', 'DisplacementLocal', 'VelocityLocal', 'Rotation', 'AngularVelocityLocal', 'ForceLocal', 'TorqueLocal', 'HomogeneousTransformation', 'HomogeneousTransformationLocal', 'ConstraintEquation'],
     'parameters': {
       'name': {'type': 'String', 'size': '', 'range': '', 'default': '', 'mustBeGiven': False, 'description': "constraints's unique name"},
       'markerNumbers': {'type': 'ArrayMarkerIndex', 'size': '2', 'range': '', 'default': '[ exudyn.InvalidIndex(), exudyn.InvalidIndex() ]', 'mustBeGiven': False, 'description': 'list of markers used in connector'},
@@ -1327,7 +1327,7 @@ items = {
     'kind': 'Object',
     'types': ['Connector', 'Constraint'],
     'requestedMarkerTypes': ['Position', 'Orientation'],
-    'outputVariables': ['Position', 'Velocity', 'DisplacementLocal', 'VelocityLocal', 'Rotation', 'AngularVelocityLocal', 'ForceLocal', 'TorqueLocal', 'HomogeneousTransformation', 'HomogeneousTransformationLocal'],
+    'outputVariables': ['Position', 'Velocity', 'DisplacementLocal', 'VelocityLocal', 'Rotation', 'AngularVelocityLocal', 'ForceLocal', 'TorqueLocal', 'HomogeneousTransformation', 'HomogeneousTransformationLocal', 'ConstraintEquation'],
     'parameters': {
       'name': {'type': 'String', 'size': '', 'range': '', 'default': '', 'mustBeGiven': False, 'description': "constraints's unique name"},
       'markerNumbers': {'type': 'ArrayMarkerIndex', 'size': '2', 'range': '', 'default': '[ exudyn.InvalidIndex(), exudyn.InvalidIndex() ]', 'mustBeGiven': False, 'description': 'list of markers used in connector'},
@@ -1346,7 +1346,7 @@ items = {
     'kind': 'Object',
     'types': ['Connector', 'Constraint'],
     'requestedMarkerTypes': ['Position', 'Orientation'],
-    'outputVariables': ['Position', 'Velocity', 'DisplacementLocal', 'VelocityLocal', 'Rotation', 'AngularVelocityLocal', 'ForceLocal', 'TorqueLocal', 'HomogeneousTransformation', 'HomogeneousTransformationLocal'],
+    'outputVariables': ['Position', 'Velocity', 'DisplacementLocal', 'VelocityLocal', 'Rotation', 'AngularVelocityLocal', 'ForceLocal', 'TorqueLocal', 'HomogeneousTransformation', 'HomogeneousTransformationLocal', 'ConstraintEquation'],
     'parameters': {
       'name': {'type': 'String', 'size': '', 'range': '', 'default': '', 'mustBeGiven': False, 'description': "constraints's unique name"},
       'markerNumbers': {'type': 'ArrayMarkerIndex', 'size': '2', 'range': '', 'default': '[ exudyn.InvalidIndex(), exudyn.InvalidIndex() ]', 'mustBeGiven': False, 'description': 'list of markers used in connector'},
@@ -1365,7 +1365,7 @@ items = {
     'kind': 'Object',
     'types': ['Connector', 'Constraint'],
     'requestedMarkerTypes': ['Position'],
-    'outputVariables': ['Position', 'Velocity', 'Displacement', 'Force'],
+    'outputVariables': ['Position', 'Velocity', 'Displacement', 'Force', 'ConstraintEquation'],
     'parameters': {
       'name': {'type': 'String', 'size': '', 'range': '', 'default': '', 'mustBeGiven': False, 'description': "constraints's unique name"},
       'markerNumbers': {'type': 'ArrayMarkerIndex', 'size': '2', 'range': '', 'default': '[ exudyn.InvalidIndex(), exudyn.InvalidIndex() ]', 'mustBeGiven': False, 'description': 'list of markers used in connector; :math:`m1` is the moving coin rigid body and :math:`m0` is the marker for the ground body, which use the localPosition=[0,0,0] for this marker!'},
@@ -1382,7 +1382,7 @@ items = {
     'kind': 'Object',
     'types': ['Connector', 'Constraint'],
     'requestedMarkerTypes': ['Position', 'Orientation'],
-    'outputVariables': ['Position', 'Velocity', 'ForceLocal', 'RotationMatrix', 'HomogeneousTransformation'],
+    'outputVariables': ['Position', 'Velocity', 'ForceLocal', 'RotationMatrix', 'HomogeneousTransformation', 'ConstraintEquation'],
     'parameters': {
       'name': {'type': 'String', 'size': '', 'range': '', 'default': '', 'mustBeGiven': False, 'description': "constraints's unique name"},
       'markerNumbers': {'type': 'ArrayMarkerIndex', 'size': '2', 'range': '', 'default': '[ exudyn.InvalidIndex(), exudyn.InvalidIndex() ]', 'mustBeGiven': False, 'description': 'list of markers used in connector; :math:`m0` represents the ground and :math:`m1` represents the rolling body, which has its reference point (=local position [0,0,0]) at the disc center point'},
@@ -1402,7 +1402,7 @@ items = {
     'kind': 'Object',
     'types': ['Connector', 'Constraint'],
     'requestedMarkerTypes': ['Position'],
-    'outputVariables': ['Displacement', 'Position', 'Velocity', 'Force'],
+    'outputVariables': ['Displacement', 'Position', 'Velocity', 'Force', 'ConstraintEquation'],
     'parameters': {
       'name': {'type': 'String', 'size': '', 'range': '', 'default': '', 'mustBeGiven': False, 'description': "constraints's unique name"},
       'markerNumbers': {'type': 'ArrayMarkerIndex', 'size': '', 'range': '', 'default': '[ exudyn.InvalidIndex(), exudyn.InvalidIndex() ]', 'mustBeGiven': False, 'description': 'list of markers used in connector'},
@@ -1418,7 +1418,7 @@ items = {
     'kind': 'Object',
     'types': ['Connector', 'Constraint'],
     'requestedMarkerTypes': ['Position', 'Orientation'],
-    'outputVariables': ['Distance', 'Rotation', 'Position', 'Velocity', 'DisplacementLocal', 'ForceLocal', 'HomogeneousTransformation', 'HomogeneousTransformationLocal'],
+    'outputVariables': ['Distance', 'Rotation', 'Position', 'Velocity', 'DisplacementLocal', 'ForceLocal', 'HomogeneousTransformation', 'HomogeneousTransformationLocal', 'ConstraintEquation'],
     'parameters': {
       'name': {'type': 'String', 'size': '', 'range': '', 'default': '', 'mustBeGiven': False, 'description': "constraints's unique name"},
       'markerNumbers': {'type': 'ArrayMarkerIndex', 'size': '', 'range': '', 'default': '[ exudyn.InvalidIndex(), exudyn.InvalidIndex() ]', 'mustBeGiven': False, 'description': 'list of markers used in connector'},
@@ -1438,7 +1438,7 @@ items = {
     'types': ['Connector', 'Constraint'],
     'requestedNodeTypes': ['GenericData'],
     'requestedMarkerTypes': [],
-    'outputVariables': ['Position', 'Velocity', 'SlidingCoordinate', 'Force'],
+    'outputVariables': ['Position', 'Velocity', 'SlidingCoordinate', 'Force', 'ConstraintEquation'],
     'parameters': {
       'name': {'type': 'String', 'size': '', 'range': '', 'default': '', 'mustBeGiven': False, 'description': "constraints's unique name"},
       'markerNumbers': {'type': 'ArrayMarkerIndex', 'size': '', 'range': '', 'default': '[ exudyn.InvalidIndex(), exudyn.InvalidIndex() ]', 'mustBeGiven': False, 'description': 'marker m0: position or rigid body marker of mass point or rigid body; marker m1: updated marker to Cable2D element, where the sliding joint currently is attached to; must be initialized with an appropriate (global) marker number according to the starting position of the sliding object; this marker changes with time (PostNewtonStep)'},
@@ -1461,7 +1461,7 @@ items = {
     'types': ['Connector', 'Constraint'],
     'requestedNodeTypes': ['GenericData'],
     'requestedMarkerTypes': [],
-    'outputVariables': ['Position', 'Velocity', 'SlidingCoordinate', 'Force', 'DisplacementLocal'],
+    'outputVariables': ['Position', 'Velocity', 'SlidingCoordinate', 'Force', 'DisplacementLocal', 'ConstraintEquation'],
     'parameters': {
       'name': {'type': 'String', 'size': '', 'range': '', 'default': '', 'mustBeGiven': False, 'description': "constraints's unique name"},
       'markerNumbers': {'type': 'ArrayMarkerIndex', 'size': '', 'range': '', 'default': '[ exudyn.InvalidIndex(), exudyn.InvalidIndex() ]', 'mustBeGiven': False, 'description': 'marker m0: position or rigid body marker of mass point or rigid body; marker m1: updated marker to Cable2D element, where the sliding joint currently is attached to; must be initialized with an appropriate (global) marker number according to the starting position of the sliding object; this marker changes with time (PostNewtonStep)'},
@@ -1485,7 +1485,7 @@ items = {
     'types': ['Connector', 'Constraint'],
     'requestedNodeTypes': [],
     'requestedMarkerTypes': [],
-    'outputVariables': ['Position', 'Velocity', 'SlidingCoordinate', 'Coordinates', 'Coordinates_t', 'Force'],
+    'outputVariables': ['Position', 'Velocity', 'SlidingCoordinate', 'Coordinates', 'Coordinates_t', 'Force', 'ConstraintEquation'],
     'parameters': {
       'name': {'type': 'String', 'size': '', 'range': '', 'default': '', 'mustBeGiven': False, 'description': "constraints's unique name"},
       'markerNumbers': {'type': 'ArrayMarkerIndex', 'size': '', 'range': '', 'default': '[ exudyn.InvalidIndex(), exudyn.InvalidIndex() ]', 'mustBeGiven': False, 'description': 'marker m0: position-marker of mass point or rigid body; marker m1: updated marker to ANCF Cable2D element, where the sliding joint currently is attached to; must be initialized with an appropriate (global) marker number according to the starting position of the sliding object; this marker changes with time (PostNewtonStep)'},

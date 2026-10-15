@@ -35,7 +35,7 @@ __all__ = [
     'ConvertDictToScipySparse', 'SaveDictToHDF5', 'LoadDictFromHDF5', 'ConvertFunctionToSymbolic',
     'CreateSymbolicUserFunction', 'TCPIPdata', 'CreateTCPIPconnection', 'TCPIPsendReceive',
     'CloseTCPIPconnection', 'LoadPotentialEnergy', 'CreateLoadEnergySensor', 'SystemEnergy',
-    'ItemODE2Coordinates', 'NumericalJacobian',
+    'SensorUFSystemConstraintDrift', 'ItemODE2Coordinates', 'NumericalJacobian',
     ]
 
 def PlotLineCode(index):
@@ -1217,6 +1217,33 @@ class SystemEnergy:
             return self.ComputeSystemEnergies(configuration)
         return self.mbs.AddSensor(exudyn.itemInterface.SensorUserFunction(sensorUserFunction=UFsensor, storeInternal=storeInternal,
                                                                           writeToFile=writeToFile, fileName=fileName))
+
+
+def SensorUFSystemConstraintDrift(mbs, t, sensorNumbers, factors, configuration):
+    """a sensorUserFunction for SensorUserFunction: [the largest drift of the position-level constraints, the largest
+    residual of the constraints at velocity level] of the current state, from mbs.ComputeConstraintResiduals (#565); the
+    velocity level is NaN if an item does not provide it (ObjectJointSliding, ObjectJointSliding2D)
+
+    Args:
+        mbs: the MainSystem
+        t: the time, unused
+        sensorNumbers: the sensorNumbers of the SensorUserFunction, unused
+        factors: the factors of the SensorUserFunction, unused
+        configuration: the configuration, unused - the residuals are those of the current state
+
+    Returns:
+        :list: [largest drift, largest residual at velocity level]
+
+    Example:
+        sDrift = mbs.AddSensor(SensorUserFunction(sensorUserFunction=SensorUFSystemConstraintDrift, storeInternal=True))
+    """
+    drift = mbs.ComputeConstraintResiduals()[0]
+    try:
+        velocity = mbs.ComputeConstraintResiduals(velocityLevel=True)[0]
+        velocityMaximum = float(np.max(np.abs(velocity))) if len(velocity) else 0.
+    except (NotImplementedError, RuntimeError):
+        velocityMaximum = float('nan')
+    return [float(np.max(np.abs(drift))) if len(drift) else 0., velocityMaximum]
 
 
 #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++

@@ -60,6 +60,7 @@ Available as `OutputVariableType` in sensors, `Get...Output()` and other functio
 | Velocity | $\LU{0}{\vv}_{m0}$ | current global velocity of position marker $m0$ |
 | Displacement | $\LU{0}{\Delta\pv}=\LU{0}{\pv}_{m1} - \LU{0}{\pv}_{m0}$ | constraint drift or relative motion, if not all axes fixed |
 | Force | $\LU{0}{\fv}$ | joint force in global coordinates |
+| ConstraintEquation | $\cv$ | residual of the constraint equations at position level, the drift (#565) |
 
 (description-objectjointspherical)=
 ## Detailed description

@@ -262,13 +262,15 @@ enum class ComputeItemType {
     MassWeightedPositionJacobian = 4,   //!< the integral of the density times the position Jacobian over a body, as the mass-proportional load uses it
     ODE2LHS = 5,                        //!< the left-hand side of the second order equations of an object - a body, or the forces of a connector projected on its markers -, with the sign of ComputeODE2LHS
     MassMatrix = 6,                     //!< the mass matrix of a body
-    AlgebraicEquations = 7,             //!< the algebraic equations of a constraint, or of a body with algebraic equations
+    AlgebraicEquations = 7,             //!< the algebraic equations of a constraint, of a body or of a node with algebraic equations (Euler parameters), at position level
     ConstraintJacobian = 8,             //!< the Jacobian of the algebraic equations by the ODE2 coordinates (by the velocities for a constraint at velocity level)
     ReactionForces = 9,                 //!< the reaction forces C_q^T lambda of a constraint, with the current Lagrange multipliers
     Kinematics = 10,                    //!< the marker data of a marker, without Jacobians, as a dict: position, velocity, rotationMatrix and angularVelocityLocal where the marker has an orientation, value and value_t for a coordinate marker
     CoordinateJacobian = 11,            //!< the Jacobian of a coordinate marker by the coordinates it acts on
     JacobianODE2 = 12,                  //!< the analytic Jacobian d(ODE2LHS)/dq of a body or connector, where it has one - the one the solver uses; for the others, NumericalJacobian of ODE2LHS
-    JacobianODE2_t = 13                 //!< the analytic Jacobian d(ODE2LHS)/dq_t of a body or connector, where it has one
+    JacobianODE2_t = 13,                //!< the analytic Jacobian d(ODE2LHS)/dq_t of a body or connector, where it has one
+    AlgebraicEquations_t = 14,          //!< the algebraic equations at velocity level, as with useIndex2Constraints: the time derivative of a position-level constraint, the equations of a velocity-level constraint; of a constraint, a body or a node with algebraic equations (#565)
+    ConstraintDrift = 15                //!< the drift of the position-level constraints: AlgebraicEquations, zero for the equations of a velocity-level constraint (rolling disc, velocityLevel=True), as the solver checks it with checkConstraintDrift (#565)
 };
 
 //! ostream operator for printing of ComputeItemType
@@ -289,6 +291,8 @@ inline std::ostream& operator<<(std::ostream& os, ComputeItemType value)
     case ComputeItemType::CoordinateJacobian: return os << "CoordinateJacobian";
     case ComputeItemType::JacobianODE2: return os << "JacobianODE2";
     case ComputeItemType::JacobianODE2_t: return os << "JacobianODE2_t";
+    case ComputeItemType::AlgebraicEquations_t: return os << "AlgebraicEquations_t";
+    case ComputeItemType::ConstraintDrift: return os << "ConstraintDrift";
     default: return os << "ComputeItemType::invalid";
     }
 }

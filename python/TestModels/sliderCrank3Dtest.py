@@ -195,7 +195,7 @@ simulationSettings.solution.sensors.writePeriod = simulationSettings.timeIntegra
 simulationSettings.solution.file.write = (not testIsActive)
 simulationSettings.timeIntegration.verboseMode = 1
 
-simulationSettings.timeIntegration.generalizedAlpha.useIndex2Constraints = True
+simulationSettings.timeIntegration.generalizedAlpha.useIndex2Constraints = True #the initial positions violate the joint slider-conrod by 0.248, which index 2 does not correct (#2234, #565)
 simulationSettings.timeIntegration.generalizedAlpha.useNewmark = True
 simulationSettings.timeIntegration.generalizedAlpha.spectralRadius = 0.5 #0.6 works well 
 

@@ -74,6 +74,7 @@ The title of each says what it does; the sentence after it, why it comes now.
   - RG4.22 Add a 3D sliding joint with rotation, tested with the ANCF cable and beam
   - RG4.23 Compute the Jacobian of ODE1 loads, with a test model
   - RG4.24 Extend the viscous rolling friction of ObjectRollingDiscPenalty to any axis
+  - RG4.25 Inspect the drift of the constraints during the time integration (1 open sub-step)
 - **RG5** Performance
   - RG5.1 Write a linear algebra micro-benchmark that every build carries (4 open sub-steps)
   - RG5.2 Make the hot linear algebra vectorizable with compile-time sizes
@@ -128,7 +129,7 @@ The title of each says what it does; the sentence after it, why it comes now.
 | RG1 | OPEN | 2 | Release and publication |
 | RG2 | OPEN | 5 | Testing and verification |
 | RG3 | CLOSED | 0 | Docs |
-| RG4 | OPEN | 9 | Implementation problems and bugs |
+| RG4 | OPEN | 11 | Implementation problems and bugs |
 | RG5 | OPEN | 8 | Performance |
 | RG6 | OPEN | 4 | Graphics and rendering |
 | RG7 | OPEN | 7 | Python user items |
@@ -309,6 +310,31 @@ GetRotationJacobianTTimesVector_q came with #2228 (RG11.8.8). [log](exudynRevisi
 ### **OPEN_RG4.24** Extend the viscous rolling friction of ObjectRollingDiscPenalty to any axis
 
 #926: `rollingFrictionViscous` works only for an axis parallel to the plane today.
+
+### **OPEN_RG4.25** Inspect the drift of the constraints during the time integration
+
+#565 (maintainer 2026-10-15: monitoring in the solver at FinishStep, off by default; tolerance 1e-5 and warning at
+0.001 of it after the measurement; the SolveDynamic flag for TrapezoidalIndex2 only; a Python function instead of a
+systemData function; no projection after the steps, which destabilizes the index 2 solver; a sensor function, and
+the output variable for the joints). [log](exudynRevisionLog2026c.md#rg4-25)
+
+#### **CLOSED_RG4.25.1** Check the drift in the solver and stop above a tolerance
+
+CLOSED 2026-10-15 (#565): `generalizedAlpha.checkConstraintDrift`, `constraintDriftTolerance` 1e-5,
+`constraintDriftCheckPeriod` 20; warning at 0.001 of the tolerance, exception above it; `solver.output.constraintDrift*`;
+`SolveDynamic(index2CheckConstraints=True)` for TrapezoidalIndex2. Suite: index 3 at most 6.6e-9; rotatingTableTest
+at half the step size. [log](exudynRevisionLog2026c.md#rg4-25)
+
+#### **CLOSED_RG4.25.2** Give the drift to Python: function, ComputeItem, output variable, sensor function
+
+CLOSED 2026-10-15 (#565): `mbs.ComputeConstraintResiduals`, `ComputeItemType.ConstraintDrift` and
+`AlgebraicEquations_t` (also for nodes), `ConstraintEquation` for every constraint, `SensorUFSystemConstraintDrift`;
+test model constraintDriftTest.py. [log](exudynRevisionLog2026c.md#rg4-25)
+
+#### **OPEN_RG4.25.3** Add sensor user functions for the energies of the system
+
+#2997: `SensorUFSystemKineticEnergy` and the potential and total energy, like `SensorUFSystemConstraintDrift`;
+`SystemEnergy(mbs).AddSensor()` exists.
 
 ## **OPEN_RG5** Performance
 

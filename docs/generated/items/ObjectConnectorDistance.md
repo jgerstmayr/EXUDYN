@@ -60,6 +60,7 @@ Available as `OutputVariableType` in sensors, `Get...Output()` and other functio
 | Velocity | $\LU{0}{\Delta\vv}$ | relative translational velocity in global coordinates |
 | Distance | $\vert \LU{0}{\Delta\pv}\vert $ | distance between markers (should stay constant; shows constraint deviation) |
 | Force | $\lambda_0$ | joint force (=scalar Lagrange multiplier) |
+| ConstraintEquation | $\cv$ | residual of the constraint equations at position level, the drift (#565) |
 
 (description-objectconnectordistance)=
 ## Detailed description

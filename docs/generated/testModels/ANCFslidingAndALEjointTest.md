@@ -275,7 +275,7 @@ if solveDynamic:
     SC.visualizationSettings.openGL.lineWidth = 2
     simulationSettings.timeIntegration.numberOfSteps = steps 
     simulationSettings.timeIntegration.endTime = tend 
-    simulationSettings.timeIntegration.generalizedAlpha.useIndex2Constraints = True
+    simulationSettings.timeIntegration.generalizedAlpha.useIndex2Constraints = True #the drift check would report 0.017 in the ALE joint, whose equations include forces (#565)
     simulationSettings.timeIntegration.generalizedAlpha.useNewmark = simulationSettings.timeIntegration.generalizedAlpha.useIndex2Constraints
     simulationSettings.timeIntegration.generalizedAlpha.spectralRadius = 0.3
     simulationSettings.timeIntegration.verboseMode = 1

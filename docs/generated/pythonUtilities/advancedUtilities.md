@@ -564,10 +564,32 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`TCPIPexudyn
 - **output**: the SensorIndex of the new sensor
 
 
+(sec-advancedutilities-sensorufsystemconstraintdrift)=
+## Function: SensorUFSystemConstraintDrift
+
+[`SensorUFSystemConstraintDrift(mbs, t, sensorNumbers, factors, configuration)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/advancedUtilities.py#L1222)
+
+- **function description**: a sensorUserFunction for SensorUserFunction: [the largest drift of the position-level constraints, the largest residual of the constraints at velocity level] of the current state, from mbs.ComputeConstraintResiduals (#565); the velocity level is NaN if an item does not provide it (ObjectJointSliding, ObjectJointSliding2D)
+- **input**:
+  - `mbs`: the MainSystem
+  - `t`: the time, unused
+  - `sensorNumbers`: the sensorNumbers of the SensorUserFunction, unused
+  - `factors`: the factors of the SensorUserFunction, unused
+  - `configuration`: the configuration, unused - the residuals are those of the current state
+- **output**: (type: list) [largest drift, largest residual at velocity level]
+
+*example*:
+
+```python
+  sDrift = mbs.AddSensor(SensorUserFunction(sensorUserFunction=SensorUFSystemConstraintDrift, storeInternal=True))
+```
+
+
+
 (sec-advancedutilities-itemode2coordinates)=
 ## Function: ItemODE2Coordinates
 
-[`ItemODE2Coordinates(mbs, itemIndex)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/advancedUtilities.py#L1226)
+[`ItemODE2Coordinates(mbs, itemIndex)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/advancedUtilities.py#L1253)
 
 - **function description**: the global ODE2 coordinate indices of an object (its local-to-global list) or of a node, in the order of the matrices and vectors mbs.ComputeItem returns for it; the system must be assembled
 
@@ -578,7 +600,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`computeItem
 (sec-advancedutilities-numericaljacobian)=
 ## Function: NumericalJacobian
 
-[`NumericalJacobian(mbs, function, coordinates, velocities = False, epsilon = 1e-6)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/advancedUtilities.py#L1236)
+[`NumericalJacobian(mbs, function, coordinates, velocities = False, epsilon = 1e-6)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/advancedUtilities.py#L1263)
 
 - **function description**: the derivative of function() - any computation of the current state, e.g. an output variable or mbs.ComputeItem - by the given global ODE2 coordinates (velocities=True: by their time derivatives), by central differences with step epsilon; the state is restored afterwards; returns an array (number of values of function) x (number of coordinates); with ItemODE2Coordinates, the comparison with mbs.ComputeItem is one line: NumericalJacobian(mbs, lambda: mbs.GetObjectOutputBody(oBody, exu.OutputVariableType.Velocity, localPosition), ItemODE2Coordinates(mbs, oBody), velocities=True) against mbs.ComputeItem(oBody, exu.ComputeItemType.PositionJacobian, localPosition)
 

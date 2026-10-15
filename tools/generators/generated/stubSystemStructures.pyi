@@ -204,10 +204,16 @@ class NewtonSettings:
 #information for GeneralizedAlphaSettings
 class GeneralizedAlphaSettings:
     """Settings for generalized-alpha, implicit trapezoidal or Newmark time integration methods."""
+    checkConstraintDrift: bool
+    """True: every constraintDriftCheckPeriod steps, the solver evaluates the position-level constraints - their drift, which grows with velocity-level (index 2) constraints, useIndex2Constraints and the solver TrapezoidalIndex2; a warning names the item once the drift exceeds 0.001 constraintDriftTolerance, the solver stops with an exception above constraintDriftTolerance, the largest drift is in the output of the solver; SolveDynamic switches it on for the solver TrapezoidalIndex2 (its argument index2CheckConstraints); see sec-solver-constraintdrift (#565)."""
     checkInitialConstraints: bool
     """True: at the start of the time integration, the constraints are evaluated with the initial positions and with the initial velocities; if the largest residual exceeds initialConstraintsTolerance, a warning names the item - inconsistent initial conditions give large constraint forces and oscillations in the first steps; the residuals are in the output of the solver; False: no check and no warning; see sec-solver-initialconstraints (#2234)."""
     computeInitialAccelerations: bool
     """True: compute initial accelerations from system EOM in acceleration form; NOTE that initial accelerations that are following from user functions in constraints are not considered for now! False: use zero accelerations."""
+    constraintDriftCheckPeriod: int
+    """the number of steps between two checks of checkConstraintDrift."""
+    constraintDriftTolerance: float
+    """the largest drift of the position-level constraints that checkConstraintDrift accepts, in the units of the constraint equations (m for a position, rad for an angle); a warning comes at 0.001 of it."""
     initialConstraintsTolerance: float
     """the tolerance of checkInitialConstraints and projectInitialVelocities, relative to 1 plus the largest initial coordinate (positions) or initial velocity coordinate (velocities)."""
     lieGroupAddTangentOperator: bool
@@ -1442,6 +1448,12 @@ class SolverConvergenceData:
 #information for SolverOutputData
 class SolverOutputData:
     """Solver internal structure for output modes, output timers and counters."""
+    constraintDriftItem: str
+    """the item of constraintDriftMaximum, as object 5 or node 3."""
+    constraintDriftMaximum: float
+    """the largest drift of the position-level constraints found by timeIntegration.generalizedAlpha.checkConstraintDrift in this run; -1 if not checked (#565)."""
+    constraintDriftTime: float
+    """the time of constraintDriftMaximum."""
     cpuLastTimePrinted: float
     """CPU time when output has been printed last time."""
     cpuSolverStartTime: float

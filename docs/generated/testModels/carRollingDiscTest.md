@@ -230,7 +230,7 @@ SC.visualizationSettings.nodes.drawNodesAsPoint  = False
 SC.visualizationSettings.nodes.showBasis = True
 SC.visualizationSettings.nodes.basisSize = 0.015
 
-mbs.SolveDynamic(simulationSettings, solverType=exu.DynamicSolverType.TrapezoidalIndex2)
+mbs.SolveDynamic(simulationSettings, solverType=exu.DynamicSolverType.TrapezoidalIndex2) #the positions drift by 2.5e-6, checked by SolveDynamic (#565)
 
 if not testIsActive:
     SC.renderer.DoIdleTasks()

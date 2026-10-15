@@ -22,8 +22,9 @@ from exudyn.misc.extensionRegistry import extends
 __all__ = [
     'solverCheckMemoryAllocations', 'solverCheckMemoryAllocationsThreshold', 'SolverErrorMessage',
     'SolveStatic', 'SolveDynamic', 'SolverSuccess', 'DeactivateWritingOfSolvers',
-    'RestoreSimulationSettings', 'UseSparseLinearSolver', 'ComputeLinearizedSystem', 'ComputeODE2Eigenvalues',
-    'ComputeSystemDegreeOfFreedom', 'CheckSolverInfoStatistics',
+    'RestoreSimulationSettings', 'UseSparseLinearSolver', 'ComputeLinearizedSystem',
+    'ComputeODE2Eigenvalues', 'ComputeConstraintResiduals', 'ComputeSystemDegreeOfFreedom',
+    'CheckSolverInfoStatistics',
     ]
 
 solverCheckMemoryAllocations = True
@@ -231,6 +232,7 @@ def SolveDynamic(mbs,
                 showHints = False,
                 showCausingItems = True,
                 autoAssemble = True,
+                index2CheckConstraints = True,
                 ) -> bool:
     """solves the dynamic mbs problem using simulationSettings and solver type; see MainSolverImplicitSecondOrder, [Section](#sec:MainSolverImplicitSecondOrder), for further details of the dynamic solver; this function is also available in exudyn (using exudyn.SolveDynamic(...))
 
@@ -243,6 +245,9 @@ def SolveDynamic(mbs,
         showHints: show additional hints, if solver fails
         showCausingItems: if linear solver fails, this option helps to identify objects, etc. which are related to a singularity in the linearized system matrix
         autoAssemble: if True: if mbs.systemIsConsistent=False (system is not assembled), call mbs.Assemble() before solver calls
+        index2CheckConstraints: if True, the solver TrapezoidalIndex2, whose velocity-level (index 2) constraints let the
+            positions drift, checks the drift of the position-level constraints during this run, as
+            timeIntegration.generalizedAlpha.checkConstraintDrift = True does, and stops above constraintDriftTolerance (#565)
 
     Returns:
         :bool: returns True, if successful, False if fails; if storeSolver = True, mbs.sys contains dynamicSolver, which allows to investigate solver problems (see [Section](#sec:solverSubstructures) and the items described in [Section](#sec:MainSolverImplicitSecondOrder))
@@ -278,13 +283,13 @@ def SolveDynamic(mbs,
     simulationSettings.timeIntegration.solverType = solverType
     try:
         return _SolveDynamic(mbs, simulationSettings, solverType, updateInitialValues, storeSolver, showHints,
-                             showCausingItems, autoAssemble)
+                             showCausingItems, autoAssemble, index2CheckConstraints)
     finally:
         simulationSettings.timeIntegration.solverType = solverTypeStored
 
 
 def _SolveDynamic(mbs, simulationSettings, solverType, updateInitialValues, storeSolver, showHints, showCausingItems,
-                  autoAssemble):
+                  autoAssemble, index2CheckConstraints):
     """SolveDynamic with the solver type decided and set in the settings"""
     success = False
     if not mbs.systemIsConsistent and autoAssemble:
@@ -304,11 +309,15 @@ def _SolveDynamic(mbs, simulationSettings, solverType, updateInitialValues, stor
         #store old settings:
         newmarkOld = simulationSettings.timeIntegration.generalizedAlpha.useNewmark
         index2Old = simulationSettings.timeIntegration.generalizedAlpha.useIndex2Constraints
+        checkDriftOld = simulationSettings.timeIntegration.generalizedAlpha.checkConstraintDrift
 
         if solverType == exudyn.DynamicSolverType.TrapezoidalIndex2:
             #manually override settings for integrator
             simulationSettings.timeIntegration.generalizedAlpha.useNewmark = True
             simulationSettings.timeIntegration.generalizedAlpha.useIndex2Constraints = True
+            #with velocity-level constraints, the positions drift (#565)
+            if index2CheckConstraints:
+                simulationSettings.timeIntegration.generalizedAlpha.checkConstraintDrift = True
     
         stat = exudyn.special.InfoStat(False)
         success = False
@@ -329,6 +338,7 @@ def _SolveDynamic(mbs, simulationSettings, solverType, updateInitialValues, stor
             #script silently used a different integrator
             simulationSettings.timeIntegration.generalizedAlpha.useNewmark = newmarkOld
             simulationSettings.timeIntegration.generalizedAlpha.useIndex2Constraints = index2Old
+            simulationSettings.timeIntegration.generalizedAlpha.checkConstraintDrift = checkDriftOld
     elif (solverType == exudyn.DynamicSolverType.ExplicitEuler or 
             solverType == exudyn.DynamicSolverType.ExplicitMidpoint or
             solverType == exudyn.DynamicSolverType.RK33 or
@@ -815,6 +825,57 @@ def ComputeODE2Eigenvalues(mbs,
         return [eigenValues, eigenVectors]
 
     
+
+@extends(exudyn.MainSystem)
+def ComputeConstraintResiduals(mbs, velocityLevel = False, autoAssemble = True) -> list:
+    """the residuals of all algebraic equations of the system in the current state - the drift of the constraints (#565);
+    computed per item with mbs.ComputeItem, without a solver, so that it can be called at any time, e.g., in a
+    PreStepUserFunction or a SensorUserFunction during a simulation
+
+    Args:
+        mbs: the MainSystem
+        velocityLevel: False: the position-level constraints, ComputeItemType.ConstraintDrift - zero for the equations of
+            velocity-level constraints (rolling disc, CoordinateConstraint with velocityLevel=True), which do not drift;
+            True: the equations at velocity level, ComputeItemType.AlgebraicEquations_t
+        autoAssemble: if True and mbs.systemIsConsistent=False, mbs.Assemble() is called first
+
+    Returns:
+        :list: [residuals, items], residuals is a numpy array with one entry per algebraic equation of the system (the
+        numbering of the Lagrange multipliers, mbs.systemData.GetAECoordinates()), items the ObjectIndex or NodeIndex
+        of each entry
+
+    Example:
+        [residuals, items] = mbs.ComputeConstraintResiduals()
+        k = np.argmax(abs(residuals))
+        print('largest drift', residuals[k], 'in', items[k])
+    """
+    if not mbs.systemIsConsistent:
+        if not autoAssemble:
+            raise ValueError('ComputeConstraintResiduals: the system is not assembled; call mbs.Assemble() first')
+        mbs.Assemble()
+    what = exudyn.ComputeItemType.AlgebraicEquations_t if velocityLevel else exudyn.ComputeItemType.ConstraintDrift
+    residuals = np.zeros(len(mbs.systemData.GetAECoordinates()))
+    items = [None]*len(residuals)
+    for i in range(mbs.systemData.NumberOfObjects()):
+        item = exudyn.ObjectIndex(i)
+        #the objects with algebraic equations of their own: a body lists those of its nodes here too
+        if what not in mbs.ComputeItem(item):
+            continue
+        values = mbs.ComputeItem(item, what)
+        for (k, value) in zip(list(mbs.systemData.GetObjectLTGAE(i)), values):
+            residuals[k] += value
+            items[k] = item
+    for i in range(mbs.systemData.NumberOfNodes()):
+        node = exudyn.NodeIndex(i)
+        if what not in mbs.ComputeItem(node): #the nodes with algebraic equations: Euler parameters
+            continue
+        values = mbs.ComputeItem(node, what)
+        start = mbs.GetNodeAEIndex(i)
+        for (k, value) in enumerate(values):
+            residuals[start + k] += value
+            items[start + k] = node
+    return [residuals, items]
+
 
 @extends(exudyn.MainSystem)
 def ComputeSystemDegreeOfFreedom(mbs, 

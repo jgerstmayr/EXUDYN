@@ -169,7 +169,7 @@ for mode in range(2):
     simulationSettings = exu.SimulationSettings() #takes currently set values or default values
     
     tEnd = 5
-    h = 0.005
+    h = 0.0025 #TrapezoidalIndex2: the Euler parameters drift by 4.8e-6; with h = 0.005 by 1.9e-5, above constraintDriftTolerance = 1e-5 (#565)
     simulationSettings.timeIntegration.endTime = tEnd #0.2 for testing
     simulationSettings.timeIntegration.numberOfSteps = int(tEnd/h)
     #simulationSettings.solution.file.writePeriod = 0.01

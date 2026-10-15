@@ -54,6 +54,7 @@ Available as `OutputVariableType` in sensors, `Get...Output()` and other functio
 | Position | $\LU{0}{\pv}_{m0}$ | current global position of position marker $m0$ |
 | Velocity | $\LU{0}{\vv}_{m0}$ | current global velocity of position marker $m0$ |
 | Force | $\LU{0}{\fv} = [\lambda_0,\,\lambda_1,\,0]\tp$ | global joint force; as for the other joints the force on marker m0 |
+| ConstraintEquation | $\cv$ | residual of the constraint equations at position level, the drift (#565) |
 
 (description-objectjointrevolute2d)=
 ## Detailed description

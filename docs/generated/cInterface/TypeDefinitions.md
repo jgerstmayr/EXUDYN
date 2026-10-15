@@ -104,13 +104,15 @@ The class **ComputeItemType** has the following **functions and structures**:
 - **`MassWeightedPositionJacobian`**: the integral of the density times the position Jacobian over a body, as the mass-proportional load uses it
 - **`ODE2LHS`**: the left-hand side of the second order equations of an object - a body, or the forces of a connector projected on its markers -, with the sign of ComputeODE2LHS
 - **`MassMatrix`**: the mass matrix of a body
-- **`AlgebraicEquations`**: the algebraic equations of a constraint, or of a body with algebraic equations
+- **`AlgebraicEquations`**: the algebraic equations of a constraint, of a body or of a node with algebraic equations (Euler parameters), at position level
 - **`ConstraintJacobian`**: the Jacobian of the algebraic equations by the ODE2 coordinates (by the velocities for a constraint at velocity level)
 - **`ReactionForces`**: the reaction forces C_q^T lambda of a constraint, with the current Lagrange multipliers
 - **`Kinematics`**: the marker data of a marker, without Jacobians, as a dict: position, velocity, rotationMatrix and angularVelocityLocal where the marker has an orientation, value and value_t for a coordinate marker
 - **`CoordinateJacobian`**: the Jacobian of a coordinate marker by the coordinates it acts on
 - **`JacobianODE2`**: the analytic Jacobian d(ODE2LHS)/dq of a body or connector, where it has one - the one the solver uses; for the others, NumericalJacobian of ODE2LHS
 - **`JacobianODE2_t`**: the analytic Jacobian d(ODE2LHS)/dq_t of a body or connector, where it has one
+- **`AlgebraicEquations_t`**: the algebraic equations at velocity level, as with useIndex2Constraints: the time derivative of a position-level constraint, the equations of a velocity-level constraint; of a constraint, a body or a node with algebraic equations (#565)
+- **`ConstraintDrift`**: the drift of the position-level constraints: AlgebraicEquations, zero for the equations of a velocity-level constraint (rolling disc, velocityLevel=True), as the solver checks it with checkConstraintDrift (#565)
 
 
 (sec-configurationtype)=

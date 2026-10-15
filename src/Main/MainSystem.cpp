@@ -1167,6 +1167,8 @@ py::object MainSystem::PyComputeItem(const py::object& itemIndex, const py::obje
 		if (object->GetAlgebraicEquationsSize() != 0)
 		{
 			applicable.push_back(ComputeItemType::AlgebraicEquations);
+			applicable.push_back(ComputeItemType::AlgebraicEquations_t);
+			applicable.push_back(ComputeItemType::ConstraintDrift);
 			applicable.push_back(ComputeItemType::ConstraintJacobian);
 			applicable.push_back(ComputeItemType::ReactionForces);
 		}
@@ -1182,6 +1184,12 @@ py::object MainSystem::PyComputeItem(const py::object& itemIndex, const py::obje
 			{
 				applicable.push_back(ComputeItemType::RotationJacobian);
 				if ((Index)node->GetType() & (Index)Node::Orientation) { applicable.push_back(ComputeItemType::JacobianTTimesVectorDerivative); }
+			}
+			if (node->GetAlgebraicEquationsSize() != 0) //the Euler parameter constraint (#565)
+			{
+				applicable.push_back(ComputeItemType::AlgebraicEquations);
+				applicable.push_back(ComputeItemType::AlgebraicEquations_t);
+				applicable.push_back(ComputeItemType::ConstraintDrift);
 			}
 		}
 	}
@@ -1260,7 +1268,13 @@ py::object MainSystem::PyComputeItem(const py::object& itemIndex, const py::obje
 			body->ComputeMassMatrix(temp.massMatrix, cSystemData.GetLocalToGlobalODE2()[number], number);
 			return EPyUtils::ToPython(temp.massMatrix.GetInternalDenseMatrix());
 		case ComputeItemType::AlgebraicEquations:
+		case ComputeItemType::ConstraintDrift:
 			GetCSystem().ComputeObjectAlgebraicEquations(temp, number, local);
+			if (computeType == ComputeItemType::ConstraintDrift && EXUstd::IsOfType(object->GetType(), CObjectType::Constraint)
+				&& ((const CObjectConstraint*)object)->UsesVelocityLevel()) { local.SetAll(0.); } //velocity equations, no drift (#565)
+			return EPyUtils::ToPython(local);
+		case ComputeItemType::AlgebraicEquations_t:
+			GetCSystem().ComputeObjectAlgebraicEquations(temp, number, local, true);
 			return EPyUtils::ToPython(local);
 		case ComputeItemType::ConstraintJacobian:
 		{
@@ -1313,6 +1327,11 @@ py::object MainSystem::PyComputeItem(const py::object& itemIndex, const py::obje
 		case ComputeItemType::JacobianTTimesVectorDerivative:
 			node->GetRotationJacobianTTimesVector_q(Vector3D({ forceTorque[3], forceTorque[4], forceTorque[5] }), matrix);
 			return EPyUtils::ToPython(matrix);
+		case ComputeItemType::AlgebraicEquations:
+		case ComputeItemType::ConstraintDrift:
+		case ComputeItemType::AlgebraicEquations_t:
+			node->ComputeAlgebraicEquations(local, computeType == ComputeItemType::AlgebraicEquations_t);
+			return EPyUtils::ToPython(local);
 		default: break;
 		}
 	}

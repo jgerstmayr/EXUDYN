@@ -120,7 +120,7 @@ class ComputeItemType(Enum):
     MassMatrix = int
     """the mass matrix of a body"""
     AlgebraicEquations = int
-    """the algebraic equations of a constraint, or of a body with algebraic equations"""
+    """the algebraic equations of a constraint, of a body or of a node with algebraic equations (Euler parameters), at position level"""
     ConstraintJacobian = int
     """the Jacobian of the algebraic equations by the ODE2 coordinates (by the velocities for a constraint at velocity level)"""
     ReactionForces = int
@@ -133,6 +133,10 @@ class ComputeItemType(Enum):
     """the analytic Jacobian d(ODE2LHS)/dq of a body or connector, where it has one - the one the solver uses; for the others, NumericalJacobian of ODE2LHS"""
     JacobianODE2_t = int
     """the analytic Jacobian d(ODE2LHS)/dq_t of a body or connector, where it has one"""
+    AlgebraicEquations_t = int
+    """the algebraic equations at velocity level, as with useIndex2Constraints: the time derivative of a position-level constraint, the equations of a velocity-level constraint; of a constraint, a body or a node with algebraic equations (#565)"""
+    ConstraintDrift = int
+    """the drift of the position-level constraints: AlgebraicEquations, zero for the equations of a velocity-level constraint (rolling disc, velocityLevel=True), as the solver checks it with checkConstraintDrift (#565)"""
 
 class ConfigurationType(Enum):
     """The enumeration type  ConfigurationType is used for selecting a configuration for reading or writing information to the module.

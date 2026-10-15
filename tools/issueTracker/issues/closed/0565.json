@@ -1,0 +1,15 @@
+{
+  "number": 565,
+  "title": "Drift inspector",
+  "author": "JG",
+  "status": "RESOLVED",
+  "type": "EXTENSION",
+  "effort": "MEDIUM",
+  "description": "add functionality to check whether drift gets too large",
+  "dateRaised": "2021-01-29",
+  "deadline": "2021-03-30",
+  "dateResolved": "2026-10-15 20:25",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "the drift of the constraints: generalizedAlpha.checkConstraintDrift checks the position-level constraints every constraintDriftCheckPeriod steps, warns at 0.001 constraintDriftTolerance and stops above it (default 1e-5), the largest drift in the solver output; SolveDynamic switches it on for TrapezoidalIndex2 (index2CheckConstraints); mbs.ComputeConstraintResiduals, ComputeItemType.ConstraintDrift and AlgebraicEquations_t, the output variable ConstraintEquation of every constraint, the sensor function SensorUFSystemConstraintDrift; test model constraintDriftTest.py (revision2026c steps RG4.25.1, RG4.25.2)",
+  "resolvedInVersion": "1.13.92"
+}
