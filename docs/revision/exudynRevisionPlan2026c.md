@@ -68,7 +68,7 @@ The title of each says what it does; the sentence after it, why it comes now.
   - RG2.8 Choose parameters for a converged cable run in perfAccessFunctionsAD
   - RG2.9 Add three old test models (3 open sub-steps)
 - **RG4** Implementation problems and bugs
-  - RG4.1 Remove the platform differences of the contact and friction models by finding their causes (3 open sub-steps)
+  - RG4.1 Remove the platform differences of the contact and friction models by finding their causes (2 open sub-steps)
   - RG4.20 Port the revision of ObjectANCFThinPlate and complete the element (1 open sub-step)
   - RG4.21 Flag the constraints that depend on velocities or time, and add their term to the initial accelerations
   - RG4.22 Add a 3D sliding joint with rotation, tested with the ANCF cable and beam
@@ -128,7 +128,7 @@ The title of each says what it does; the sentence after it, why it comes now.
 | RG1 | OPEN | 2 | Release and publication |
 | RG2 | OPEN | 5 | Testing and verification |
 | RG3 | CLOSED | 0 | Docs |
-| RG4 | OPEN | 10 | Implementation problems and bugs |
+| RG4 | OPEN | 9 | Implementation problems and bugs |
 | RG5 | OPEN | 8 | Performance |
 | RG6 | OPEN | 4 | Graphics and rendering |
 | RG7 | OPEN | 7 | Python user items |
@@ -264,36 +264,12 @@ CLOSED 2026-10-10 (#2953): namespace EM with the 14 functions; `tools/checkMathF
 
 CLOSED 2026-10-11 (#2956): math.sin and numpy in the initial values; done in RG11.10, `UnresolvedOnLinux()` empty. [log](exudynRevisionLog2026c.md#rg11-10-4)
 
-##### **OPEN_RG4.1.3.8** Let Eigen multiply and add on arm64 instead of fusing, and verify it on macOS ARM
+##### **CLOSED_RG4.1.3.8** Let Eigen multiply and add on arm64 instead of fusing, and verify it on macOS ARM
 
-#2990. The macOS ARM run of 1.13.75 fails in six test models (createSphereQuadContact, createSphereTriangleContact,
-sphereTriangleTest2, sliderCrank3Dbenchmark, and the listed ANCFgeneralContactCircle and
-geometricallyExactBeamRightAngleFrame), all solved with `LinearSolverType.EigenSparse`. The dumps of the Mac agent
-(tmp/MacOS/MacAgentResponse, `dumpRun.py`) against the same script on Windows: the inputs - initial and reference
-coordinates, every item, the numbers numpy computes in sliderCrank3Dbenchmark - are the same bits, the explicit solve
-of sphereTriangleTest2 too; the implicit solves part by one ulp in some step. Eigen's NEON packets fuse a*b+c
-(`vfmaq_f64` under `__ARM_FEATURE_FMA`) whatever `-ffp-contract=off` says. LinearSolver.h undefines the macro around
-the Eigen includes; done on Windows (no change there), open until the Mac run confirms; then `UnresolvedOnMacOS()`
-shrinks. The same holds for the fast module, whose `-mfma` makes Eigen's AVX packets fuse (`__FMA__`) - a separate
-decision, as that module is meant to be fast.
-
-2026-10-13, the Mac run of the change (tmp/MacOS/MacAgentResponse2): clang's arm_neon.h needs the macro, so it is
-included before the macro is undefined. With that, sliderCrank3Dbenchmark is bit-identical with Windows and
-ANCFgeneralContactCircle passes; 7 of the 8 entries of `UnresolvedOnMacOS()` pass. Four models still differ:
-createSphereQuadContact, createSphereTriangleContact and sphereTriangleTest2 (EigenSparse; from step 13, resp. after step
-50, by one ulp in 32 of 49 coordinates at once) and geometricallyExactBeamRightAngleFrame (static, EigenSparse). Next:
-the same dumps with `LinearSolverType.EXUdense` on both platforms (`tmp/MacOS/dumpRun2.py`, `compareDumps2.py`, the
-Windows dumps in `WindowsReference2.zip`) - identical then means the rest is in Eigen too.
-
-2026-10-15, the Mac agent's result (tmp/MacOS/MacOSeigenFixTestSuite.md): EXUdense is bit-identical; the rest is
-`EIGEN_HAS_SINGLE_INSTRUCTION_MADD`, which Eigen 3.3.7 defines on NEON unconditionally (on SSE only with `__FMA__`). It
-sets the block height of the product kernel (mr = 3 instead of 2 packets) and a fused multiply-add in it, and with them
-the order of the sums in SparseLU; with the macro off, all four models match Windows in every step and the whole suite
-passes on the Mac (patched in the vendored header, not committed). Done without a change of Eigen: LinearSolver.h sets
-Eigen's documented `EIGEN_DENSEBASE_PLUGIN` on arm64 to `Linalg/EigenPluginNoMadd.h`, which only undefines the macro;
-Eigen/Core includes the plugin inside DenseBase, after the NEON packet math and before the product kernels. Checked on
-x86 with `-mavx2 -mfma`, where Eigen's AVX header defines the macro the same way: gebp mr 12 -> 8 for double, SparseLU
-solves. Open until the Mac suite confirms it without the local patch; then `UnresolvedOnMacOS()` loses the four.
+CLOSED 2026-10-15 (#2990, maintainer: the Mac reports the whole test suite passing with b8507905): `__ARM_FEATURE_FMA`
+undefined around the Eigen includes and the DenseBase plugin `Linalg/EigenPluginNoMadd.h` that undefines
+`EIGEN_HAS_SINGLE_INSTRUCTION_MADD`; Eigen unchanged. `UnresolvedOnMacOS()` is unchanged until a Mac log shows which of
+its models now match. [log](exudynRevisionLog2026c.md#rg4-1-3-8-closed)
 
 ### **OPEN_RG4.20** Port the revision of ObjectANCFThinPlate and complete the element
 

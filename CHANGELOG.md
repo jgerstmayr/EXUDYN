@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.13 | Newborn | 90 | 1.13.90 |
+| 1.13 | Newborn | 91 | 1.13.91 |
 | 1.12 | Metheney | 367 | 1.12.462 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
@@ -30,6 +30,10 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.13 - Newborn (current)
 
+- **1.13.91** `CHANGE` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` Eigen without fused multiply-add on arm64, so that the solvers give the bits of x86-64 (#2990)
+  - description: revision2026c step RG4.1.3.8: the macOS ARM run of 1.13.75 (tmp/MacOS) fails in six test models, all with LinearSolverType.EigenSparse; the dumps of the Mac agent show identical inputs, a bit-identical explicit solve and a first difference of one ulp in an implicit step. Eigen's NEON packets fuse a\*b+c (vfmaq\_f64 under \_\_ARM\_FEATURE\_FMA) whatever -ffp-contract says; without the macro they multiply and add, as SSE2 does on x86-64. Undefine it around the Eigen includes of LinearSolver.h; to be verified on macOS ARM.
+  - **notes:** on arm64 Eigen multiplies and adds instead of fusing: \_\_ARM\_FEATURE\_FMA is undefined around the Eigen includes, and the DenseBase plugin Linalg/EigenPluginNoMadd.h undefines EIGEN\_HAS\_SINGLE\_INSTRUCTION\_MADD, without a change of the vendored Eigen; macOS ARM passes the whole test suite and gives the results of x86-64 (revision2026c step RG4.1.3.8)
+  - date resolved: **2026-10-15 13:47**, date raised: 2026-10-12
 - **1.13.90** `EXTENSION` `LOW EFF` `resolved by: Claude-JG` computeInitialAccelerations (#2234)
   - description: add WARNING for inconsistent initial velocities - which usually cause heavy oscillations in constraint forces
   - **notes:** the implicit solver checks the initial positions and velocities against the constraints and warns, naming the item, if the residual exceeds generalizedAlpha.initialConstraintsTolerance (generalizedAlpha.checkInitialConstraints switches it off; a constraint without velocity level is reported and skipped); generalizedAlpha.projectInitialVelocities projects the initial velocities onto the constraints; the residuals are in the solver output, exu.special.solver.initialConstraintsViolations counts such runs and the test suite lists them per model; test model initialConstraintsCheckTest.py (revision2026c step RG11.8.9)
