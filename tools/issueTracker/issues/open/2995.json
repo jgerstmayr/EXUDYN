@@ -1,0 +1,12 @@
+{
+  "number": 2995,
+  "title": "ObjectUserBody and ObjectGenericODE2: implement them with the Exudyn conventions and one shared pattern",
+  "author": "Claude-JG",
+  "status": "RAISED",
+  "type": "IMPROVEMENT",
+  "effort": "MEDIUM",
+  "description": "revision2026c step RG7.3.4 (maintainer 2026-10-15: static functions, EvaluateMatrix with an integer switch, StdVector used internally instead of the Exudyn vectors; check both objects): the review of both objects is in the plan step; to be decided item by item before the change",
+  "dateRaised": "2026-10-15",
+  "deadline": "2027-04-13",
+  "file": "src/ImplObjects/CObjectUserBody.cpp"
+}

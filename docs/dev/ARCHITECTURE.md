@@ -138,6 +138,10 @@ Vendored third-party (in `include/`): **Eigen** (dense/sparse linear algebra), *
 **GLFW** (windowing/OpenGL), **LEST** (unit tests). No heavy dependencies — see the invariants in
 [README.md](README.md#invariants).
 
+Eigen 3.3.7 is unchanged. Its configuration is set where it is included, in `src/Linalg/LinearSolver.h`: on arm64,
+`__ARM_FEATURE_FMA` is undefined around the includes and the `EIGEN_DENSEBASE_PLUGIN` `src/Linalg/EigenPluginNoMadd.h`
+undefines `EIGEN_HAS_SINGLE_INSTRUCTION_MADD`, so that the solvers give the bits of x86-64 (#2990).
+
 ## Coordinates: the LTG mapping
 
 Each item owns *local* coordinates; the solver works on *global* ones. The **local-to-global (LTG)**

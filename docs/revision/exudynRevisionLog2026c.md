@@ -1106,3 +1106,27 @@ drift, follows later and is not touched.)*
 - **For #565** (the drift during the run, later): the evaluation of both levels and the naming of the item
   (`AlgebraicEquationItem`) are what a drift inspector needs at the end of a step; the counter in special.solver and
   the per-model list of the runner can take a drift count the same way.
+
+<a id="rg4-1-3-8"></a>
+### RG4.1.3.8 (open), RG7.3.4 and RG12.3.1 (planned) — Eigen on arm64 without a patch, the review of the user body, the user function boundary (2026-10-15, #2990, #2995, #2996)
+*(Maintainer 2026-10-15: realize the Mac agent's fix without patching the Eigen sources - outside or by compiler
+flags, then now, otherwise only propose; review ObjectUserBody and ObjectGenericODE2 into a new sub-step; the
+allocations of the StdVector interface into an open step with a first sub-step to pre-analyze.)*
+- **#2990**: the Mac agent found the rest of the difference in `EIGEN_HAS_SINGLE_INSTRUCTION_MADD`, which Eigen 3.3.7
+  defines unconditionally on NEON (`#ifndef ... #define`, so no `-D` can prevent it), on SSE only under `__FMA__`.
+  In GeneralBlockPanelKernel.h it selects mr = 3 packets instead of the default 2 (double on NEON: 6 instead of 4)
+  and `pmadd` instead of `pmul` + `padd`. Eigen/Core includes, in this order, the NEON packet math (line 401),
+  DenseBase.h (435) and the product kernels (491); DenseBase includes the user header named by
+  `EIGEN_DENSEBASE_PLUGIN` inside the class. That header, `src/Linalg/EigenPluginNoMadd.h`, contains only the
+  `#undef`, and LinearSolver.h - the only file that includes Eigen - sets the plugin on `__aarch64__`. Eigen stays
+  unchanged, the configuration is in one place with the `__ARM_FEATURE_FMA` handling of 03c90435. Checked on x86
+  in WSL with g++ `-mavx2 -mfma`, where Eigen's AVX header defines the macro the same way: mr for double 12 without,
+  8 with the plugin, through the include path of the build (`-Isrc -Iinclude`), and SparseLU solves. Windows and
+  Linux x86-64 do not compile the branch. tmp/MacOS/MacAgentRequest5.md asks the Mac agent for the suite without its
+  header patch. ARCHITECTURE.md lists the configuration beside the vendored libraries. The option of a newer Eigen
+  stays open; the fast module (AVX2 + FMA, mr 12) could take the same plugin to give the bits of the regular module,
+  not done, as it is meant to be fast.
+- **#2995** (RG7.3.4, RG7.3 reopened for it): the review of ObjectUserBody and ObjectGenericODE2, 16 points in the
+  plan step, to be decided before the change.
+- **#2996** (RG12.3.1, under the design of the user function interfaces): the pre-analysis of the allocations at the
+  boundary, related to #1864 and #1910.

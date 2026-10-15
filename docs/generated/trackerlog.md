@@ -9,8 +9,8 @@ Every entry carries the **type** of the issue, then its **priority** and its **e
 General information on current version:
 
 - Exudyn version = 1.13.90.dev1
-- last change = 2026-10-14
-- Number of issues = 2995
+- last change = 2026-10-15
+- Number of issues = 2997
 - Number of resolved issues = 2867 (90 in current version)
 
 ## Resolved issues and resolved bugs before version 1.13
@@ -9039,6 +9039,12 @@ The following list contains the issues which have been **RESOLVED** in the accor
 
 ## Open issues
 
+- `IDEA` `MEDIUM EFF` `raised by: Claude-JG` User functions: coordinates and results without allocation at the C++/Python boundary (#2996)
+  - description: revision2026c step RG12.3.1 (maintainer 2026-10-15): the user functions take StdVector, which pybind11 maps to numpy, so every call allocates the vectors of its arguments (and its results); for Python functions the call costs more than that, for symbolic user functions it may be the bottleneck. Linking - a numpy array or a symbolic vector that views the C++ memory - is one option; first a pre-analysis: where the allocations happen, what they cost against the call, and what pybind11, numpy and symbolic allow (lifetime, writes, threads). Related: \#1864 (MatrixContainer linking a numpy matrix), \#1910 (total coordinates linked instead of copied).
+  - date raised: 2026-10-15
+- `IMPROVEMENT` `MEDIUM EFF` `raised by: Claude-JG` ObjectUserBody and ObjectGenericODE2: implement them with the Exudyn conventions and one shared pattern (#2995)
+  - description: revision2026c step RG7.3.4 (maintainer 2026-10-15: static functions, EvaluateMatrix with an integer switch, StdVector used internally instead of the Exudyn vectors; check both objects): the review of both objects is in the plan step; to be decided item by item before the change
+  - date raised: 2026-10-15
 - `CHANGE` `LOW EFF` `raised by: Claude-JG` Eigen without fused multiply-add on arm64, so that the solvers give the bits of x86-64 (#2990)
   - description: revision2026c step RG4.1.3.8: the macOS ARM run of 1.13.75 (tmp/MacOS) fails in six test models, all with LinearSolverType.EigenSparse; the dumps of the Mac agent show identical inputs, a bit-identical explicit solve and a first difference of one ulp in an implicit step. Eigen's NEON packets fuse a\*b+c (vfmaq\_f64 under \_\_ARM\_FEATURE\_FMA) whatever -ffp-contract says; without the macro they multiply and add, as SSE2 does on x86-64. Undefine it around the Eigen includes of LinearSolver.h; to be verified on macOS ARM.
   - date raised: 2026-10-12

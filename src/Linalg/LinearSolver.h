@@ -38,6 +38,12 @@
 	#undef __ARM_FEATURE_FMA
 	#define EXUDYN_RESTORE_ARM_FEATURE_FMA
 #endif
+	//on arm64, Eigen also sets EIGEN_HAS_SINGLE_INSTRUCTION_MADD, which changes the blocking of its matrix products and
+	//the order of the sums in SparseLU; the DenseBase plugin removes it after the NEON packet math, before the products
+	//(#2990)
+#if defined(__aarch64__) && !defined(EIGEN_DENSEBASE_PLUGIN)
+	#define EIGEN_DENSEBASE_PLUGIN "Linalg/EigenPluginNoMadd.h"
+#endif
     #include "../Eigen/Sparse"
 	#include "../Eigen/Dense"
 	//#include "Eigen/SuperLUSupport"
