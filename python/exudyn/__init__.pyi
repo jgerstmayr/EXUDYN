@@ -4387,6 +4387,8 @@ class SpecialDeprecations:
     """if True (=default), each deprecated name warns once per session; if False, every use warns, e.g. to find all places in a script that use it."""
     recordUse:bool
     """if True (=default), every use of a deprecated name is counted in exudyn.sys[deprecationUse], by source and name, also when no warning is shown; a test reads it instead of catching warnings."""
+    userFunctionListArguments:bool
+    """if True, Python user functions get their vector arguments (q, q_t, ...) as lists, as before version 1.13.104, instead of read-only numpy arrays; False (=default); for the transition of scripts that change their arguments or add lists to them; deprecated, removed in 2031 (#3008)."""
     @overload
     def Reset(self) -> None: 
         """Forget which names were warned about in this session, so that each one warns once more."""

@@ -1,0 +1,16 @@
+{
+  "number": 3008,
+  "title": "Python user functions get their vector arguments as read-only numpy arrays instead of lists",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "CHANGE",
+  "effort": "HIGH",
+  "description": "revision2026c step RG12.3.6 (#2996, userFunctionBoundary.md section 9; maintainer 2026-10-16: numpy now, lists were a flaw; a switch for the old behaviour only if free): a vector argument of run-time size (q, q_t, factors, ...) is a read-only numpy array that views the memory of the coordinates, valid during the call; a numpy result is copied with one pass; exudyn.special.deprecations.userFunctionListArguments = True gives lists, for a transition; the fixed-size 3D and 6D vectors stay lists",
+  "dateRaised": "2026-10-16",
+  "deadline": "2027-04-14",
+  "dateResolved": "2026-10-16 17:15",
+  "resolvedAuthor": "Claude-JG",
+  "file": "src/Linalg/Symbolic.cpp",
+  "releaseNotes": "Python user functions get their vector arguments of run-time size (q, q_t, the factors of SensorUserFunction) as read-only numpy arrays instead of lists, valid during the call; a numpy result is copied in one pass; vector user functions are up to 4.5 times faster; exudyn.special.deprecations.userFunctionListArguments = True gives lists for the transition",
+  "resolvedInVersion": "1.13.104"
+}

@@ -5,7 +5,7 @@
 #           a chain of springs as forceUserFunction, once as Python function and once as symbolic user function; both
 #           give the same solution. The symbolic vectors keep up to 7 items in local memory and more on the heap.
 #           A second force uses every kind of vector node - a node used twice, sums, differences, products with scalars,
-#           MultComponents, the scalar product, NormL2, the unary minus -, each evaluating into its own
+#           MultComponents, the scalar product, a component (#3007), NormL2, the unary minus -, each evaluating into its own
 #           memory, which is reused at every call (#3006); it gives the solution of its Python version as well.
 #
 # Author:   Johannes Gerstmayr
@@ -30,13 +30,13 @@ def Force(mbs, t, itemNumber, q, q_t):
 
 def ForceNodes(mbs, t, itemNumber, q, q_t):
     a = -k*q                      #a node used twice
-    return a + 0.5*a - d*q_t + 10*q.MultComponents(q_t) - (q*q_t)*q - q.NormL2()*(-q_t)
+    return a + 0.5*a - d*q_t + 10*q.MultComponents(q_t) - (q*q_t)*q + q[0]*q_t - q.NormL2()*(-q_t)
 
 def ForceNodesPython(mbs, t, itemNumber, q, q_t):
     q = np.array(q)
     q_t = np.array(q_t)
     a = -k*q
-    return a + 0.5*a - d*q_t + 10*q*q_t - (q@q_t)*q - cMath.norm(q)*(-q_t)
+    return a + 0.5*a - d*q_t + 10*q*q_t - (q@q_t)*q + q[0]*q_t - cMath.norm(q)*(-q_t)
 
 def Solve(symbolic, force=Force, forcePython=None):
     SC = exu.SystemContainer()

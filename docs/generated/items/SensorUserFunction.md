@@ -58,6 +58,8 @@ The user function arguments are as follows:
 | `configuration` | ConfigurationType | usually the exudyn.ConfigurationType.Current, but could also be different in user defined functions. |
 | **return value** | Vector $\in \Rcal^{n_r}$ | returns list or numpy array of sensor output values; size $n_r$ is implicitly defined by the returned list and may not be changed during simulation. |
 
+A Python user function gets its `Vector` arguments as read-only numpy arrays, valid during the call, see [](#sec-userfunctions).
+
 *Example*:
 
 ```python

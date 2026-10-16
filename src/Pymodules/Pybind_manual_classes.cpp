@@ -696,6 +696,8 @@ void Init_Pybind_manual_classes(py::module& m) {
 		.def(py::init<>())
 		.def_readwrite("warnOnce", &PySpecialDeprecations::warnOnce)
 		.def_readwrite("recordUse", &PySpecialDeprecations::recordUse)
+		.def_readwrite("userFunctionListArguments", &PySpecialDeprecations::userFunctionListArguments,
+			"if True, Python user functions get their vector arguments (q, q_t, ...) as lists, as before version 1.13.104, instead of read-only numpy arrays; deprecated, removed in 2031 (#3008)")
 		.def("Reset", &PySpecialDeprecations::Reset, "forget which names were warned about in this session, so that each one warns once more")
 		.def("Warn", [](const PySpecialDeprecations&, const STDstring& source, const STDstring& name, const STDstring& message, int stackLevel) {
 			PyDeprecated(source, name, message, stackLevel);

@@ -240,6 +240,7 @@ class PySpecialDeprecations
 public:
     bool warnOnce;      //!< true: each deprecated name warns once per session; false: every use warns, for debugging a script
     bool recordUse;     //!< true: every use is counted in exudyn.sys['deprecationUse'][source][name], also when no warning is shown
+    bool userFunctionListArguments; //!< true: Python user functions get lists instead of numpy arrays, as before #3008
 
     std::set<std::string> warned; //!< the names warned about in this session, as "source:name"; not exposed to Python
 
@@ -252,6 +253,7 @@ public:
     {
         warnOnce = true;
         recordUse = true;
+        userFunctionListArguments = false;
         warned.clear();
     }
 
@@ -263,6 +265,7 @@ public:
     {
         os << "  warnOnce = " << warnOnce << "\n";
         os << "  recordUse = " << recordUse << "\n";
+        os << "  userFunctionListArguments = " << userFunctionListArguments << "\n";
         os << "  names warned about = " << warned.size() << "\n";
         os << "\n";
     }

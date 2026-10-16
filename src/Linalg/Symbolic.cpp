@@ -66,6 +66,8 @@ namespace py = pybind11;
 #include "Linalg/SymbolicVector.h"
 #include "Linalg/SymbolicMatrix.h"
 #include "Linalg/SymbolicUtilities.h"
+#include "Main/Experimental.h"
+extern PySpecial pySpecial; //special.deprecations.userFunctionListArguments (#3008)
 //compiled but never called: worked examples of how the symbolic types are used from C++,
 //so that they cannot rot (#2485). Nothing in the module refers to them
 #include "Linalg/symbolicCppDemo.h"
@@ -88,6 +90,15 @@ int Symbolic::MatrixExpressionBase::deleteCount = 0;
 
 //user functions implementation
 #define PyUFobject pybind11::object
+
+//! exudyn.special.deprecations.userFunctionListArguments, read for every vector argument of a Python user function (#3008)
+bool UserFunctionListArguments()
+{
+	if (!pySpecial.deprecations.userFunctionListArguments) { return false; }
+	PyDeprecated("settings", "special.deprecations.userFunctionListArguments", "exudyn.special.deprecations.userFunctionListArguments: "
+		"Python user functions get their vector arguments as read-only numpy arrays since 1.13.104; the switch to lists is removed in 2031");
+	return true;
+}
 
 template <typename UFT>
 PythonUserFunctionBase<UFT>::~PythonUserFunctionBase()
@@ -127,15 +138,14 @@ void PythonUserFunctionBase<UFT>::SetPythonObject(const PyUFobject& pyObjectInit
 			PyWarning("PythonUserFunctionBase::SetPythonObject: symbolic user functions are currently only copied as regular Python functions!");
 		}
 		else { PyError(STDstring("PythonUserFunctionBase::SetPythonObject: invalid function type: ") + typeString, PyErrorType::valueError); }
-		userFunction = py::cast<UFT>(pyDict["function"]);
+		userFunction = PythonUserFunctionToStdFunction(pyDict["function"], (UFT*)nullptr);
 
 	}
 	else if (py::isinstance<py::function>(pyObjectInit)) //old-style or first initialization
 	{
 		*pyObject = pyObjectInit;
 		ufType = UserFunctionType::Python;
-		//userFunction = py::cast< std::function<bool(const MainSystem & mainSystem, Real t)> >(pyObjectInit);
-		userFunction = py::cast<UFT>(pyObjectInit);
+		userFunction = PythonUserFunctionToStdFunction(pyObjectInit, (UFT*)nullptr); //numpy arguments (#3008)
 	}
 	else if (EPyUtils::IsPyTypeInteger(pyObjectInit))
 	{

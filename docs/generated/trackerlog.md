@@ -8,10 +8,10 @@ Every entry carries the **type** of the issue, then its **priority** and its **e
 
 General information on current version:
 
-- Exudyn version = 1.13.102.dev1
+- Exudyn version = 1.13.104.dev1
 - last change = 2026-10-16
-- Number of issues = 3008
-- Number of resolved issues = 2879 (102 in current version)
+- Number of issues = 3010
+- Number of resolved issues = 2881 (104 in current version)
 
 ## Resolved issues and resolved bugs before version 1.13
 
@@ -9511,8 +9511,8 @@ The following list contains the issues which have been **RESOLVED** in the accor
 
 ## Known bugs
 
-- <span class="textred">`BUG`</span> `LOW EFF` `raised by: Claude-JG` Symbolic user function: a component of a vector argument, q\[0\], cannot be recorded (#3007)
-  - description: CreateSymbolicUserFunction records the function with vector arguments of size 0, so q\[0\] in a symbolic forceUserFunction of ObjectGenericODE2 raises 'VectorExpressionBase::operator\[\] index out of range' while recording (1.13.6 and now; found with the test of RG12.3.5, \#3006). The arguments should be recorded with the size the item gives them, or the component node should not be evaluated while recording.
+- <span class="textred">`BUG`</span> `LOW EFF` `raised by: Claude-JG` Three examples stop at the drift check of TrapezoidalIndex2 (#3009)
+  - description: Found with runTestExamples.py (1.13.102): notebooks/tutorialRigidBody.py and notebooks/tutorialRigidBodyCreate.py stop with a drift of 1.005e-5 at t = 1.7, publications/CND2022PieberNtarladimaGerstmayr/fixedFixedANCFALEdiscreteMasses.py with 2.7e-4 at t = 0.36, above constraintDriftTolerance = 1e-5: SolveDynamic switches the check on for TrapezoidalIndex2 since \#565 (RG4.25.1). To decide: the tolerance, the step size of the examples, or the check off in them; the examples suite was not run for \#565.
   - date raised: 2026-10-16
 - <span class="textred">`BUG`</span> `LOW EFF` `raised by: Claude-JG` InverseKinematicsNumerical fails for a robot whose links have no PDcontrol (#2993)
   - description: revision2026c step RG11.8.20: InverseKinematicsNumerical.\_\_init\_\_ reads self.robot.links\[i\].PDcontrol to store it, but RobotLink sets the attribute only when PDcontrol is given, so a robot built without control raises AttributeError ('RobotLink' object has no attribute 'PDcontrol'); it also leaves the joint stiffness of the inverse kinematics and robot.gravity = \[0,0,0\] in the robot it is given. Found with the test model of \#2259.

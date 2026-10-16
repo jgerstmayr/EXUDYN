@@ -14,6 +14,10 @@ You can view and download this file on Github: [userRigidBodyTest.py](https://gi
 #           velocity terms, position, rotation matrix and Jacobians are Python user functions, written with
 #           exudyn.cUtilities; it moves under gravity, a Cartesian spring-damper at a point off the center of
 #           mass and a torque, side by side with an ObjectRigidBody under the same loads, and both must agree.
+#           A second user body has a symbolic forceUserFunction and positionUserFunction, written once
+#           with components (#3007), so that the same function computes with floats and records with exudyn.symbolic; its
+#           mass matrix, rotation and Jacobians return matrices, which symbolic user functions do not yet (RG12.3.7),
+#           and stay Python functions.
 #           A rigid marker on a user body without rotationMatrixUserFunction is refused when it is evaluated.
 #
 # Author:   Johannes Gerstmayr
@@ -26,7 +30,10 @@ You can view and download this file on Github: [userRigidBodyTest.py](https://gi
 import exudyn as exu
 from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
 import exudyn.cUtilities as cu
+import exudyn.cMath as cMath
+from exudyn.advancedUtilities import CreateSymbolicUserFunction
 import numpy as np
+esym = exu.symbolic
 
 SC = exu.SystemContainer()
 mbs = SC.AddSystem()
@@ -72,11 +79,72 @@ def UFrotationJacobian(mbs, t, itemNumber, localPosition, q):
     Jrot[:, 3:6] = cu.RotXYZ2RotationMatrix(q[3:6]) @ cu.RotXYZ2GLocal(q[3:6])
     return Jrot
 
+#the force and the position with components, for floats (cMath) and for the symbolic recording (esym) alike
+def MatVec(A, v):
+    return [A[i][0]*v[0] + A[i][1]*v[1] + A[i][2]*v[2] for i in range(3)]
+
+def MatTVec(A, v):
+    return [A[0][i]*v[0] + A[1][i]*v[1] + A[2][i]*v[2] for i in range(3)]
+
+def Cross(a, b):
+    return [a[1]*b[2] - a[2]*b[1], a[2]*b[0] - a[0]*b[2], a[0]*b[1] - a[1]*b[0]]
+
+def GLocal(functions, rot):
+    #local G matrix of Tait-Bryan angles xyz, omegaLocal = G @ rot_t
+    return [[functions.cos(rot[1])*functions.cos(rot[2]), functions.sin(rot[2]), 0],
+            [-functions.cos(rot[1])*functions.sin(rot[2]), functions.cos(rot[2]), 0],
+            [functions.sin(rot[1]), 0, 1]]
+
+def GLocal_t(functions, rot, rot_t):
+    c1, s1, c2, s2 = functions.cos(rot[1]), functions.sin(rot[1]), functions.cos(rot[2]), functions.sin(rot[2])
+    return [[-s1*c2*rot_t[1] - c1*s2*rot_t[2], c2*rot_t[2], 0],
+            [s1*s2*rot_t[1] - c1*c2*rot_t[2], -s2*rot_t[2], 0],
+            [c1*rot_t[1], 0, 0]]
+
+def RotationMatrix(functions, rot):
+    #Rx(rot[0]) Ry(rot[1]) Rz(rot[2])
+    c0, s0, c1, s1, c2, s2 = (functions.cos(rot[0]), functions.sin(rot[0]), functions.cos(rot[1]), functions.sin(rot[1]),
+                              functions.cos(rot[2]), functions.sin(rot[2]))
+    return [[c1*c2, -c1*s2, s1],
+            [s0*s1*c2 + c0*s2, -s0*s1*s2 + c0*c2, -s0*c1],
+            [-c0*s1*c2 + s0*s2, c0*s1*s2 + s0*c2, c0*c1]]
+
+def ForceComponents(functions, q, q_t):
+    rot = [q[3], q[4], q[5]]
+    rot_t = [q_t[3], q_t[4], q_t[5]]
+    G = GLocal(functions, rot)
+    omegaLocal = MatVec(G, rot_t)
+    JomegaLocal = MatVec(J, omegaLocal)
+    inner = MatVec(J, MatVec(GLocal_t(functions, rot, rot_t), rot_t))
+    gyroscopic = Cross(omegaLocal, JomegaLocal)
+    torques = MatTVec(G, [inner[i] + gyroscopic[i] for i in range(3)])
+    return [0*q[0], 0*q[0], 0*q[0], -torques[0], -torques[1], -torques[2]]
+
+def PositionComponents(functions, localPosition, q):
+    A = RotationMatrix(functions, [q[3], q[4], q[5]])
+    p = MatVec(A, localPosition)
+    return [q[0] + p[0], q[1] + p[1], q[2] + p[2]]
+
+def UFforceSymbolic(mbs, t, itemNumber, q, q_t):
+    return ForceComponents(esym, q, q_t)
+
+def UFpositionSymbolic(mbs, t, itemNumber, localPosition, q):
+    return PositionComponents(esym, localPosition, q)
+
+#the component functions compute what the matrix functions above compute
+qTest = [0.1, 0.2, 0.3, 0.2, -0.1, 0.3]
+qTest_t = [0.5, 0, 1, 1, 0.5, 2]
+componentsDifference = max(np.max(np.abs(np.array(ForceComponents(cMath, qTest, qTest_t)) - UFforce(0, 0, 0, np.array(qTest), np.array(qTest_t)))),
+                           np.max(np.abs(np.array(PositionComponents(cMath, pSpring, qTest)) - UFposition(0, 0, 0, pSpring, np.array(qTest)))))
+exu.Print('the component functions against the matrix functions:', componentsDifference)
+
 oGround = mbs.AddObject(ObjectGround())
 mGround = mbs.AddMarker(MarkerBodyPosition(bodyNumber=oGround, localPosition=[0.3, 0.2, 0]))
 
 bodies = []
-for isUserBody in [False, True]:
+keep = [] #the symbolic functions live as long as the model
+for kind in ['rigidBody', 'python', 'symbolic']:
+    isUserBody = (kind != 'rigidBody')
     node = mbs.AddNode(NodeRigidBodyRxyz(referenceCoordinates=[0, 0, 0, 0.2, -0.1, 0.3],
                                          initialVelocities=[0.5, 0, 1, 1, 0.5, 2]))
     if isUserBody:
@@ -84,6 +152,11 @@ for isUserBody in [False, True]:
                                             positionUserFunction=UFposition, positionJacobianUserFunction=UFpositionJacobian,
                                             rotationMatrixUserFunction=UFrotationMatrix,
                                             rotationJacobianUserFunction=UFrotationJacobian))
+        if kind == 'symbolic':
+            keep += [CreateSymbolicUserFunction(mbs, UFforceSymbolic, 'forceUserFunction', body),
+                     CreateSymbolicUserFunction(mbs, UFpositionSymbolic, 'positionUserFunction', body)]
+            mbs.SetObjectParameter(body, 'forceUserFunction', keep[-2])
+            mbs.SetObjectParameter(body, 'positionUserFunction', keep[-1])
     else:
         body = mbs.AddObject(ObjectRigidBody(nodeNumber=node, mass=m, inertia=inertia.GetInertia6D()))
     bodies += [body]
@@ -104,15 +177,18 @@ mbs.SolveDynamic(simulationSettings)
 outputs = [exu.OutputVariableType.Position, exu.OutputVariableType.Displacement, exu.OutputVariableType.Velocity,
            exu.OutputVariableType.RotationMatrix, exu.OutputVariableType.AngularVelocity, exu.OutputVariableType.AngularVelocityLocal]
 difference = 0
+differenceSymbolic = 0  #between the Python and the symbolic user body
 u = 0
 for output in outputs:
     values = [np.array(mbs.GetObjectOutputBody(body, output, localPosition=pSpring)) for body in bodies]
-    difference = max(difference, np.max(np.abs(values[1] - values[0])))
+    difference = max(difference, np.max(np.abs(values[1] - values[0])), np.max(np.abs(values[2] - values[0])))
+    differenceSymbolic = max(differenceSymbolic, np.max(np.abs(values[2] - values[1])))
     u += np.sum(values[1])
 energies = [mbs.GetObjectOutputBody(body, exu.OutputVariableType.KineticEnergy, localPosition=[0, 0, 0]) for body in bodies]
-difference = max(difference, abs(energies[1] - energies[0]))
+difference = max(difference, abs(energies[1] - energies[0]), abs(energies[2] - energies[0]))
 u += energies[1]
-exu.Print('largest difference to ObjectRigidBody:', difference)
+exu.Print('largest difference to ObjectRigidBody:', difference, ', between Python and symbolic user functions:',
+          differenceSymbolic)
 
 #a rigid marker on a user body without rotationMatrixUserFunction is refused when it is evaluated
 mbs2 = SC.AddSystem()
@@ -128,7 +204,7 @@ except ValueError as e:
     refused = int('rotationMatrixUserFunction is not given' in str(e))
 exu.Print('a rigid marker without rotationMatrixUserFunction is refused, as it must be:', bool(refused))
 
-u += int(difference > 1e-8) + (1 - refused)
+u += int(difference > 1e-8) + (1 - refused) + int(differenceSymbolic > 1e-12) + int(componentsDifference > 1e-14)
 exu.Print('solution of userRigidBodyTest=', u)
 
 exu.sys['testResult'] = u

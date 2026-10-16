@@ -133,6 +133,10 @@ def UserFunctionDocumentation(parameter):
         text += ('| **return value** | '
                  + userFunction.TypeAndSize(userFunction.returnType, userFunction.returnSize)
                  + ' | ' + userFunction.returnText + ' |\n')
+    #the general rule, said once in the manual, linked where it applies (#3008)
+    if any(annotation == 'Vector' for (name, annotation) in userFunction.arguments):
+        text += ('\nA Python user function gets its `Vector` arguments as read-only numpy arrays, valid during the call, '
+                 'see [](#sec-userfunctions).\n')
     if parameter['userFunctionExample'] != '':
         text += '\n*Example*:\n\n```python\n' + parameter['userFunctionExample'].strip('\n') + '\n```\n'
     return text

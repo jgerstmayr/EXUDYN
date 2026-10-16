@@ -115,6 +115,25 @@ restart. The model is the script's: it is built again, with its user functions a
 file that does not fit it - other numbers of coordinates or items, another solver - raises an error. The static solver
 writes no restart file.
 
+(sec-userfunctions)=
+## User functions
+
+Many items take a **user function**, a Python function that Exudyn calls during the simulation - a force law, a
+load that depends on time, the mass matrix of a user item. The reference page of the item lists its arguments and its
+return value.
+
+- **Arguments**: a vector argument whose size is known only at run time - the coordinates `q` and their velocities
+  `q_t`, a list of factors - is a **read-only numpy array** that views the memory of Exudyn, without copying it: `K @ q`
+  and `-k*q` work directly. It is valid during the call: a function that keeps it for later must copy it,
+  `q.copy()`; writing into it raises. Vectors of size 3 and 6 (positions, forces, the offsets of a spring) are lists
+  of floats.
+- **Results**: a vector is returned as numpy array or as list; a numpy array is copied in one pass.
+- **Symbolic user functions**: `exudyn.advancedUtilities.CreateSymbolicUserFunction` records the same Python function
+  as an expression, which C++ evaluates without calling Python - at about the cost of the built-in force laws.
+
+`exudyn.special.deprecations.userFunctionListArguments = True` gives the vector arguments as lists, as before
+version 1.13.104, for scripts that change them or add lists to them; it is deprecated and removed in 2031 (#3008).
+
 (sec-overview-basics-seeingthemodel)=
 ## Seeing the model
 

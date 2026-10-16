@@ -652,12 +652,71 @@ protected:
 
 }; //namespace Symbolic
 
-//! the argument of a Python user function: an Exudyn vector as std::vector, everything else as it is (#3006)
+//! the argument of a user function's std::function: an Exudyn vector as std::vector, everything else as it is (#3006)
 template<typename T>
 inline decltype(auto) UserFunctionArgument(const T& argument)
 {
 	if constexpr (std::is_base_of_v<VectorBase<Real>, T>) { return (StdVector)argument; }
 	else { return (const T&)argument; }
+}
+
+//! the argument of a Python user function: a vector of run-time size - std::vector or Exudyn vector - as read-only
+//! numpy array that views its memory, valid during the call, or as list with userFunctionListArguments; everything else
+//! as it is, cast by pybind11 as its own wrapper of a function does (#3008)
+template<typename T>
+inline decltype(auto) PythonUserFunctionArgument(const T& argument)
+{
+	if constexpr (std::is_same_v<T, StdVector>)
+	{
+		if (UserFunctionListArguments()) { return py::object(py::cast(argument)); }
+		return EPyUtils::ToNumpyView(argument.data(), (Index)argument.size());
+	}
+	else if constexpr (std::is_base_of_v<VectorBase<Real>, T>)
+	{
+		if (UserFunctionListArguments()) { return py::object(py::cast((StdVector)argument)); }
+		return EPyUtils::ToNumpyView(argument.GetDataPointer(), argument.NumberOfItems());
+	}
+	else { return (const T&)argument; }
+}
+
+//! the result of a Python user function as the C++ type R; a vector from numpy in one pass (#3008)
+template<typename R>
+inline R PythonUserFunctionResult(const py::object& result)
+{
+	if constexpr (std::is_same_v<R, StdVector>)
+	{
+		StdVector vector;
+		EPyUtils::CopyFromPython(result, vector);
+		return vector;
+	}
+	else { return result.cast<R>(); }
+}
+
+//! holds the Python function of a std::function and acquires the GIL when it releases it, as pybind11 does (#3008)
+class PythonFunctionHandle
+{
+public:
+	py::object function;
+	PythonFunctionHandle(const py::object& functionInit) : function(functionInit) {}
+	~PythonFunctionHandle()
+	{
+		py::gil_scoped_acquire gil;
+		py::object release(std::move(function));
+	}
+};
+
+//! the std::function of a Python user function, with numpy arguments instead of lists (#3008); the second argument
+//! selects the signature
+template<typename R, typename... Args>
+std::function<R(Args...)> PythonUserFunctionToStdFunction(const py::object& function, std::function<R(Args...)>*)
+{
+	std::shared_ptr<PythonFunctionHandle> handle = std::make_shared<PythonFunctionHandle>(function);
+	return [handle](Args... args) -> R
+	{
+		py::gil_scoped_acquire gil;
+		py::object result = handle->function(PythonUserFunctionArgument(args)...);
+		if constexpr (!std::is_void_v<R>) { return PythonUserFunctionResult<R>(result); }
+	};
 }
 
 //! evaluate a user function that returns a vector into result, which keeps its memory when it has the size: a symbolic
@@ -670,6 +729,13 @@ void EvaluateUserFunctionIntoVector(const PythonUserFunctionBase<UFT>& userFunct
 	if (userFunction.GetSymbolicFunction())
 	{
 		userFunction.GetSymbolicFunction()->EvaluateIntoVector(result, mainSystem, args...);
+	}
+	else if (userFunction.GetUFtype() == UserFunctionType::Python) //the Python function directly, with numpy views (#3008)
+	{
+		py::gil_scoped_acquire gil;
+		py::object pyResult = userFunction.GetPythonObject()(PythonUserFunctionArgument(mainSystem),
+			PythonUserFunctionArgument(args)...);
+		EPyUtils::CopyFromPython(pyResult, result);
 	}
 	else
 	{

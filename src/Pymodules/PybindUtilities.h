@@ -37,7 +37,56 @@ namespace py = pybind11;            //! namespace 'py' used throughout in code
 class ExudynConfig;                 //! declared for the two functions at the end; see Main/Config.h
 
 //! Exudyn python utilities namespace
-namespace EPyUtils { 
+namespace EPyUtils {
+	//! a read-only numpy array that views data without copying it; valid as long as the memory is (#3008)
+	inline py::object ToNumpyView(const Real* data, Index numberOfItems)
+	{
+		if (numberOfItems == 0) { return py::array_t<Real>(0); }
+		py::array_t<Real> array({ (py::ssize_t)numberOfItems }, { (py::ssize_t)sizeof(Real) }, data, py::none()); //a base: no copy
+		py::detail::array_proxy(array.ptr())->flags &= ~py::detail::npy_api::NPY_ARRAY_WRITEABLE_;
+		return std::move(array);
+	}
+
+	//! copy a vector returned by Python - a 1D numpy array in one pass, a list or tuple item by item (#3008)
+	inline void CopyFromPython(const py::handle& object, std::vector<Real>& vector)
+	{
+		if (py::isinstance<py::array>(object))
+		{
+			auto array = py::array_t<Real, py::array::c_style | py::array::forcecast>::ensure(object);
+			if (array && array.ndim() == 1)
+			{
+				vector.assign(array.data(), array.data() + array.size());
+				return;
+			}
+		}
+		vector = py::cast<std::vector<Real>>(object);
+	}
+
+	//! copy a vector returned by Python into an Exudyn vector, which keeps its memory when it has the size (#3008)
+	template<class TVector>
+	inline void CopyFromPython(const py::handle& object, TVector& vector)
+	{
+		if (py::isinstance<py::array>(object))
+		{
+			auto array = py::array_t<Real, py::array::c_style | py::array::forcecast>::ensure(object);
+			if (array && array.ndim() == 1)
+			{
+				vector.SetNumberOfItems((Index)array.size());
+				std::copy(array.data(), array.data() + array.size(), vector.begin());
+				return;
+			}
+		}
+		if (py::isinstance<py::list>(object) || py::isinstance<py::tuple>(object))
+		{
+			py::sequence sequence = py::reinterpret_borrow<py::sequence>(object);
+			vector.SetNumberOfItems((Index)sequence.size());
+			Index i = 0;
+			for (const auto& item : sequence) { vector[i++] = py::cast<Real>(item); }
+			return;
+		}
+		vector.CopyFrom(py::cast<std::vector<Real>>(object));
+	}
+ 
 
 
 	//! function to check if a specific item exists (but type is not checked) in the dictionary

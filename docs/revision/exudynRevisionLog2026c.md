@@ -1464,3 +1464,34 @@ Python and symbolic user functions.)*
 - **Test**: symbolicVectorUserFunctionTest.py with a second force of every kind of vector node against its Python
   version (difference 3.5e-18; the same with 1.13.6 for 6 coordinates). Writing it found #3007: `q[0]` of a vector
   argument cannot be recorded (1.13.6 too) - RG12.3.8.
+
+<a id="rg12-3-6"></a>
+### RG12.3.6, RG12.3.8 — numpy arguments for Python user functions, components in symbolic ones, the symbolic user rigid body (2026-10-16, #3007, #3008, #3009)
+*(Maintainer 2026-10-16: do RG12.3.6 and fix #3007; build the userRigidBody example also with symbolic user functions,
+as far as possible - both modes in the same test model; completely possible at the end of the user function and
+symbolic extensions.)*
+- **#3007**: `VectorExpressionOperatorBracket::Evaluate` gives 0 while a function is recorded and the vector has no size
+  (the arguments are recorded with size 0); out of range otherwise raises as before. `q[0]` in a symbolic vector user
+  function works; symbolicVectorUserFunctionTest.py uses it (new reference 0.5094476793074225).
+- **#3008, the Python path**: `PythonUserFunctionBase::SetPythonObject` makes the std::function with
+  `PythonUserFunctionToStdFunction` (SymbolicUtilities.h) instead of `py::cast<UFT>`: a `StdVector` argument becomes a
+  read-only numpy view (`EPyUtils::ToNumpyView`, base None: no copy, not writeable), every other argument is cast as
+  pybind11 casts it; the result goes through `PythonUserFunctionResult`, a `StdVector` from a 1D numpy array in one
+  pass (`EPyUtils::CopyFromPython`); a `PythonFunctionHandle` releases the function under the GIL, as pybind11's own
+  wrapper does. `EvaluateUserFunctionIntoVector` calls a Python function directly with views of the Exudyn vectors
+  and copies the result into the item's vector - no `std::vector` on that path.
+- **The switch**: `exudyn.special.deprecations.userFunctionListArguments` (False) gives lists; one bool test per vector
+  argument, so it is free, as the maintainer required; its use is reported with PyDeprecated ('settings', removed 2031).
+- **Not changed**: the fixed-size vectors (Vector3D, Vector6D) and matrices stay lists, as section 9 decided only for
+  the run-time sized ones.
+- **Measured** (section 12): Python generic6/10/100 2.26/2.25/2.35 us per call against 2.99/3.35/10.48 in 1.13.6; scalar
+  and 3D unchanged; a list comprehension over `q` is slower at small n, as numpy scalars are slower to iterate.
+- **userRigidBodyTest.py**: a third body, ObjectUserBody with a symbolic forceUserFunction and positionUserFunction;
+  the force and the position are written once with components (MatVec, Cross, GLocal, the rotation matrix) and run
+  with `exudyn.cMath` as Python functions (checked against the matrix versions: 5.6e-17) and with `exudyn.symbolic`
+  as recording; the Python and the symbolic user body agree to 6.5e-14, both agree with ObjectRigidBody; the mass
+  matrix, rotation and Jacobians return matrices and stay Python until RG12.3.7. The reference value is unchanged.
+- **Docs**: manual section *User functions* (`sec-userfunctions`, introductionBasics.md); every user function with a
+  `Vector` argument links it from its reference page (itemDocsEmitter); revisions.md.
+- **Found**: the examples suite (runTestExamples.py, not run for #565) stops in three examples at the drift check of
+  TrapezoidalIndex2 - #3009, RG4.26, for decision; rendererNOGLFWexample.py fails as in 1.13.6 (an image file).

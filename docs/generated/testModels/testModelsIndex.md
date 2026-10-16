@@ -112,6 +112,7 @@ userFunctionTimerTest
 symbolicVectorUserFunctionTest
 constraintDriftTest
 systemUtilitiesTest
+pythonUserFunctionArgumentsTest
 initialConstraintsCheckTest
 shellMeshSlopesScalingTest
 systemContainerComputeOnlyTest

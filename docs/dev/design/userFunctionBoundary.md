@@ -257,7 +257,11 @@ sub-step of RG12.3 or a step of RG7 in the plan:
    arguments are copied into the memory of the named vectors instead of linked (one copy, no allocation); measured in
    section 12. ObjectUserBody and ObjectConnectorCoordinateVector follow with RG7.3.4, the matrices with RG12.3.7.
 3. **RG12.3.6** - section 9: numpy arguments for the Python user functions, decided; the deprecation switch only if
-   it is free.
+   it is free. Done (#3008): the std::function of every Python user function is Exudyn's own wrapper
+   (`PythonUserFunctionToStdFunction`), which passes a `std::vector` argument as read-only numpy view; the vector
+   user functions of section 7 call the Python function directly with views of the Exudyn vectors; a numpy result is
+   copied in one pass (`EPyUtils::CopyFromPython`). The switch `userFunctionListArguments` costs one test of a bool
+   per vector argument, so it exists. The fixed sizes (3D, 6D) stay lists. Measured in section 12.
 4. **RG7.10** (#3003) - the items that depend on Python user functions drawn in the main thread, a list from
    `Assemble`, and the detection of Python calls from the render thread; the condition for removing the cache.
 5. **RG7.3.4** - section 10, the user items on 1 to 4: ObjectUserBody without the cache, ObjectGenericODE2; point 13
@@ -329,3 +333,22 @@ ObjectKinematicTree keep as a member), 1.13.101:
 - the 3D vector functions (`load`, `cartesian`) gain from the node buffers too (0.71, 0.84);
 - the Python functions are unchanged within the noise; the force of a Python function is copied into the member of
   the item as well, so no Exudyn vector is allocated per call - the lists of pybind11 remain, RG12.3.6.
+
+**After RG12.3.6** (#3008: numpy views as arguments of the Python user functions, the result copied in one pass),
+1.13.102; the symbolic rows as after RG12.3.5 within the noise (generic100 0.30 to 0.41 in three runs):
+
+| function | kind | 1.13.6: us/call | current: us/call | current/1.13.6 |
+|---|---|---:|---:|---:|
+| spring | python | 0.353 | 0.363 | 1.03 |
+| cartesian | python | 0.717 | 0.730 | 1.02 |
+| load | python | 0.424 | 0.426 | 1.00 |
+| generic6 | python | 2.993 | 2.255 | 0.75 |
+| generic10 | python | 3.347 | 2.249 | 0.67 |
+| generic100 | python | 10.476 | 2.345 | 0.22 |
+
+- the Python vector functions no longer depend on the size: 2.3 microseconds for 6 to 100 coordinates (4.5 times
+  faster than 1.13.6 at 100), as `np.asarray(q)` no longer converts a list; the scalar and 3D ones are unchanged;
+- userFunctionBoundary.py: a function that returns a prepared numpy array costs 0.60 at n = 1 to 2.4 at n = 1000
+  (before: 0.48 to 53); one that returns a prepared list 0.54 to 14 (0.45 to 29); one that computes a list
+  comprehension over `q` is slower than before at small n (1.15 against 0.64 at n = 1), because iterating a numpy array
+  gives numpy scalars - `-k*q` is the way to write it now.

@@ -390,6 +390,8 @@ pb.DefDataAccess('special.deprecations.warnOnce','if True (=default), each depre
                         dataType='bool', isTopLevel = True)
 pb.DefDataAccess('special.deprecations.recordUse','if True (=default), every use of a deprecated name is counted in exudyn.sys[deprecationUse], by source and name, also when no warning is shown; a test reads it instead of catching warnings',
                         dataType='bool', isTopLevel = True)
+pb.DefDataAccess('special.deprecations.userFunctionListArguments','if True, Python user functions get their vector arguments (q, q_t, ...) as lists, as before version 1.13.104, instead of read-only numpy arrays; False (=default); for the transition of scripts that change their arguments or add lists to them; deprecated, removed in 2031 (#3008)',
+                        dataType='bool', isTopLevel = True)
 
 pb.BeginCppWrittenByHand() #bound in Pybind_manual_classes.cpp
 pb.DefPyFunctionAccess(cClass='', pyName='special.deprecations.Reset', cName='unused',

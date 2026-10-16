@@ -478,6 +478,8 @@ public:
 		Index i = (Index)iReal;
 		CHECKandTHROW((Real)i == iReal, "VectorExpressionBase::operator[] index must be integer");
 		const ResizableConstVector& v = operand->EvaluateRef();
+		//while a user function is recorded, its vector arguments have no size yet: the component has no value then (#3007)
+		if (SReal::recordExpressions && v.NumberOfItems() == 0 && i >= 0) { return 0.; }
 		CHECKandTHROW((i >= 0) && (i < v.NumberOfItems()), "VectorExpressionBase::operator[] index out of range");
 		return v[i];
 	}

@@ -335,6 +335,8 @@ A user function, which computes a force vector depending on current time and sta
 | `q_t` | Vector $\in \Rcal^n_c$ | object velocity coordinates (time derivative of `q`) in current configuration |
 | **return value** | Vector $\in \Rcal^{n_c}$ | returns force vector for object |
 
+A Python user function gets its `Vector` arguments as read-only numpy arrays, valid during the call, see [](#sec-userfunctions).
+
 **Userfunction**: `massMatrixUserFunction(mbs, t, itemNumber, q, q_t)`
 A user function, which computes a mass matrix depending on current time and states of object. Can be used to create any kind of mechanical system by using the object states.
 
@@ -346,6 +348,8 @@ A user function, which computes a mass matrix depending on current time and stat
 | `q` | Vector $\in \Rcal^n_c$ | object coordinates (nodal displacement coordinates of rigid body and mesh nodes) in current configuration, without reference values |
 | `q_t` | Vector $\in \Rcal^n_c$ | object velocity coordinates (time derivative of `q`) in current configuration |
 | **return value** | NumpyMatrix $\in \Rcal^{n_c \times n_c}$ | returns mass matrix for object |
+
+A Python user function gets its `Vector` arguments as read-only numpy arrays, valid during the call, see [](#sec-userfunctions).
 
 
 Examples (Ex) and TestModels (TM) that show this item, with weblink to github: [`NGsolveFFRF.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/NGsolveFFRF.py) (Ex), [`objectFFRFTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/objectFFRFTest.py) (TM), [`objectFFRFTest2.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/objectFFRFTest2.py) (TM)

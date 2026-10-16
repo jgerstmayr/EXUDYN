@@ -41,6 +41,10 @@ enum class UserFunctionType {
 	Jit = 4,		//! Jitted user function
 };
 
+//! true if Python user functions get their vector arguments as lists instead of numpy arrays:
+//! exudyn.special.deprecations.userFunctionListArguments, for the transition (#3008); reports the deprecated use
+bool UserFunctionListArguments();
+
 //! convert SensorType to a string (used for output, type comparison, ...)
 inline const char* GetUserFunctionTypeString(UserFunctionType var)
 {
@@ -86,6 +90,8 @@ public:
 	//! the symbolic function, for an evaluation without the std::function (EvaluateUserFunctionIntoVector); nullptr for
 	//! a Python function, and for a symbolic one set only as std::function (#3006)
 	Symbolic::PySymbolicUserFunction* GetSymbolicFunction() const { return symbolicFunction; }
+	//! the Python function (UserFunctionType::Python), for a call without the std::function (#3008)
+	const pybind11::object& GetPythonObject() const { return *pyObject; }
 	//! return true, if user functions exists
 	bool IsValid() const { return ufType != UserFunctionType::_None; }
 	void Reset();

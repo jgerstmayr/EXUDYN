@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.13 | Newborn | 101 | 1.13.102 |
+| 1.13 | Newborn | 103 | 1.13.104 |
 | 1.12 | Metheney | 367 | 1.12.462 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
@@ -30,6 +30,14 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.13 - Newborn (current)
 
+- **1.13.104** `CHANGE` `HIGH EFF` `raised by: Claude-JG` `resolved by: Claude-JG` Python user functions get their vector arguments as read-only numpy arrays instead of lists (#3008)
+  - description: revision2026c step RG12.3.6 (\#2996, userFunctionBoundary.md section 9; maintainer 2026-10-16: numpy now, lists were a flaw; a switch for the old behaviour only if free): a vector argument of run-time size (q, q\_t, factors, ...) is a read-only numpy array that views the memory of the coordinates, valid during the call; a numpy result is copied with one pass; exudyn.special.deprecations.userFunctionListArguments = True gives lists, for a transition; the fixed-size 3D and 6D vectors stay lists
+  - **notes:** Python user functions get their vector arguments of run-time size (q, q\_t, the factors of SensorUserFunction) as read-only numpy arrays instead of lists, valid during the call; a numpy result is copied in one pass; vector user functions are up to 4.5 times faster; exudyn.special.deprecations.userFunctionListArguments = True gives lists for the transition
+  - date resolved: **2026-10-16 17:15**, date raised: 2026-10-16
+- **1.13.103** <span class="textred">`BUG`</span> `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` Symbolic user function: a component of a vector argument, q\[0\], cannot be recorded (#3007)
+  - description: CreateSymbolicUserFunction records the function with vector arguments of size 0, so q\[0\] in a symbolic forceUserFunction of ObjectGenericODE2 raises 'VectorExpressionBase::operator\[\] index out of range' while recording (1.13.6 and now; found with the test of RG12.3.5, \#3006). The arguments should be recorded with the size the item gives them, or the component node should not be evaluated while recording.
+  - **notes:** A component of a vector argument, q\[0\], can be used in a symbolic user function
+  - date resolved: **2026-10-16 17:15**, date raised: 2026-10-16
 - **1.13.102** `IMPROVEMENT` `HIGH EFF` `raised by: Claude-JG` `resolved by: Claude-JG` Symbolic vector user functions without allocations: node buffers, arguments copied into the named vectors, the result into the item's vector (#3006)
   - description: revision2026c step RG12.3.5 (\#2996, userFunctionBoundary.md step 2): every vector node of a symbolic expression evaluates into its own buffer (EvaluateRef), the arguments are copied into the memory of the named vectors, EvaluateUserFunctionIntoVector evaluates a vector user function into the item's vector - a symbolic function directly, without std::function and std::vector, a Python function through its std::function; ObjectGenericODE2, ObjectGenericODE1, ObjectFFRF, ObjectFFRFreducedOrder and ObjectKinematicTree pass their coordinates as Exudyn vectors and keep the force in a member
   - **notes:** Symbolic user functions that return a vector of run-time size (forceUserFunction of ObjectGenericODE2, ObjectFFRF, ObjectFFRFreducedOrder, ObjectKinematicTree, rhsUserFunction of ObjectGenericODE1) are evaluated without memory allocation: 6.7 times faster than in 1.13.6 for 6 coordinates, 0.3 microseconds per call for 100; the 3D vector user functions are faster as well
