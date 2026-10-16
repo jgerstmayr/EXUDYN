@@ -1,0 +1,12 @@
+{
+  "number": 3003,
+  "title": "Draw the items that depend on Python user functions in the main thread, and detect a Python call from the render thread",
+  "author": "Claude-JG",
+  "status": "RAISED",
+  "type": "CHANGE",
+  "effort": "MEDIUM",
+  "description": "revision2026c step RG7.10 (maintainer 2026-10-16): no visualization cache in ObjectUserBody (it would not work with the SolutionViewer). The render thread draws markers, connectors and sensors itself and asks bodies for positions; items that depend on a Python user function - a user body, and the markers, connectors, sensors and loads on it - cannot be drawn there. Assemble() computes a list of them, as the other lists (now the decision is item->HasUserFunction()), with their dependencies; they are drawn in the main thread together with the graphics user functions. A global flag (or counter) set whenever a Python (not symbolic) user function is called from a thread other than the main thread detects what is missed.",
+  "dateRaised": "2026-10-16",
+  "deadline": "2027-04-14",
+  "file": "src/Graphics/VisualizationSystem.cpp"
+}

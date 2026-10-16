@@ -10,7 +10,7 @@ General information on current version:
 
 - Exudyn version = 1.13.98.dev1
 - last change = 2026-10-16
-- Number of issues = 3003
+- Number of issues = 3004
 - Number of resolved issues = 2875 (98 in current version)
 
 ## Resolved issues and resolved bugs before version 1.13
@@ -9039,6 +9039,9 @@ The following list contains the issues which have been **RESOLVED** in the accor
 
 ## Open issues
 
+- `CHANGE` `MEDIUM EFF` `raised by: Claude-JG` Draw the items that depend on Python user functions in the main thread, and detect a Python call from the render thread (#3003)
+  - description: revision2026c step RG7.10 (maintainer 2026-10-16): no visualization cache in ObjectUserBody (it would not work with the SolutionViewer). The render thread draws markers, connectors and sensors itself and asks bodies for positions; items that depend on a Python user function - a user body, and the markers, connectors, sensors and loads on it - cannot be drawn there. Assemble() computes a list of them, as the other lists (now the decision is item-\>HasUserFunction()), with their dependencies; they are drawn in the main thread together with the graphics user functions. A global flag (or counter) set whenever a Python (not symbolic) user function is called from a thread other than the main thread detects what is missed.
+  - date raised: 2026-10-16
 - `TESTING` `MEDIUM EFF` `raised by: Claude-JG` Performance measurement over more models, solvers and solver configurations, as the baseline of the total coordinates (#3002)
   - description: revision2026c step RG13.1 (maintainer 2026-10-16): before total coordinates are added (RG13.2, \#1910), the cost of the solvers is measured on more models (rigid multibody, flexible, contact, large systems), for the implicit and explicit solvers and their configurations (dense/sparse, modified Newton, step sizes, multithreading), so that the cost of an additional vector addition and of the cache memory per step becomes visible - mostly relevant for the explicit solvers
   - date raised: 2026-10-16

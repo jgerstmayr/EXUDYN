@@ -1346,3 +1346,18 @@ the explicit solvers; after extended performance evaluations with more models, s
   of the right size takes the result in place. Matrices the same with `Matrix`. Point 13 of RG7.3.4 waits for RG13.
 - **RG13**, a new group: RG13.1 the performance baseline over more models, solvers and configurations (#3002), RG13.2
   the evaluation of how the total coordinates are provided (#1910, kept open as an idea since 2024).
+
+<a id="rg12-3-4"></a>
+### RG12.3.4-RG12.3.7 and RG7.10 planned — the decisions on the user function interface (2026-10-16, #2996, #3003)
+*(Maintainer 2026-10-16: numpy for q in the Python user functions - it was a flaw that it was not; a switch in
+exudyn.special.deprecations for the old behaviour only if it causes no significant overhead with the planned changes;
+nobody should have concatenated lists, so numpy in any case. No visualization cache in ObjectUserBody - it would not
+work with the SolutionViewer; items that depend on Python user items cannot be drawn in the visualization thread: a
+list computed in Assemble that marks them, or a second function besides HasUserFunction that evaluates the
+dependencies, in a separate step; a mechanism that detects a Python (not symbolic) user function called in the
+visualization thread, a global flag. The order of the steps was generally good; integrate the decisions.)*
+- userFunctionBoundary.md: section 9 decided (numpy, the switch only if free), point 17 decided (no cache, RG7.10),
+  section 11 the order: RG12.3.4 (const references), RG12.3.5 (generated Evaluate, symbolic node buffers), RG12.3.6
+  (numpy), RG7.10 (drawing in the main thread, detection), RG7.3.4 (the user items without the cache), RG12.3.7
+  (matrices).
+- RG7.10 a new step of RG7 (#3003), as the maintainer asked; the four sub-steps of RG12.3 carry #2996.

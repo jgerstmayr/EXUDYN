@@ -204,11 +204,13 @@ arithmetic, against 0.31 to 4.2 microseconds now (n = 1 to 1000).
 
 ## 9. Proposal: Python user functions
 
-- `q`, `q_t` arrive as **read-only numpy arrays** that view the coordinates (R4) instead of lists: no O(n) conversion,
-  and `K @ q` works without `np.array(q)`. A function written for lists keeps working where it reads (`q[i]`, `len(q)`,
+- **Decided (maintainer 2026-10-16): numpy now.** `q`, `q_t` arrive as **read-only numpy arrays** that view the
+  coordinates (R4) instead of lists - lists were a flaw of the earlier implementation: no O(n) conversion, and `K @ q`
+  works without `np.array(q)`. A function written for lists keeps working where it reads (`q[i]`, `len(q)`,
   iteration, `-k*x for x in q`); it fails where it writes into `q` or uses list operations (`q + [...]`, `q.append`) -
-  rare in user functions, but a change of behaviour: with a switch for the transition (e.g.
-  `exu.special.userFunctions.vectorsAsLists`) or with version 2.0.
+  which nobody should have done. For the old behaviour a switch `exudyn.special.deprecations.userFunctionListArguments`
+  (default False: numpy) - **only if it costs nothing measurable**: one test of a bool per call is the price on the
+  numpy path; if the planned `Evaluate` (section 7) would need more than that, there is no switch.
 - the result: numpy arrays copied with one `memcpy` (R3), lists item by item - no longer through `std::vector`.
 - a view is valid during the call; a function that keeps `q` (in a closure, for the next call) must copy it:
   `q.copy()`. One sentence in the documentation of every such user function, written once in the general section on
@@ -235,7 +237,7 @@ The interface above decides most of the points of RG7.3.4:
 | (14) MainSystem argument | inside the generated `Evaluate` (the item has `cSystemData->GetMainSystemBacklink()`) |
 | (15) gathering coordinates | one function `CObjectBody::GatherCoordinates(ResizableVector& q, ResizableVector& q_t, configuration, withReference)` for GenericODE2, GenericODE1, UserBody, KinematicTree, FFRF |
 | (16) the matrix copy | done (#2999) |
-| (17) visualization cache | to decide (main thread or not drawn) |
+| (17) visualization cache | decided: no cache (it would not work with the SolutionViewer); the items that depend on a Python user function are drawn in the main thread - a list computed in `Assemble`, RG7.10 (#3003), with a check that detects a Python call from the render thread |
 
 **Helpers for users**: none needed for the interface itself; `exudyn.advancedUtilities.CreateSymbolicUserFunction`
 stays the way to make a symbolic function. The documentation gets one section on the arguments (views, valid during
@@ -243,11 +245,18 @@ the call) and the results (numpy or list, copied).
 
 ## 11. Steps
 
-1. A and R3, R5 (const references, `CopyFrom(std::vector)`, `Vector` move assignment, the by-value constructors):
-   mechanical, no change for users; measured again with userFunctionBoundary.py.
-2. Section 8, symbolic evaluation into node buffers and linked named variables, with the generated `Evaluate`
-   (section 7) for the symbolic kind: the gain where it matters.
-3. Section 9, the Python views: a decision (the change of `q` from list to numpy).
-4. Section 10 with RG7.3.4, on top of 1 to 3.
-5. Matrices (`massMatrixUserFunction`, `jacobianUserFunction`, the Jacobians of ObjectUserBody): the same scheme with
-   `const Matrix&` arguments and `Matrix&` / `MatrixContainer&` results; #1864 belongs here.
+The order (maintainer 2026-10-16: generally good; with the decisions on numpy and on the visualization), each a
+sub-step of RG12.3 or a step of RG7 in the plan:
+
+1. **RG12.3.4** - A and R3, R5: const references, `CopyFrom(std::vector)`, the move assignment of `Vector`, the
+   constructors that take `std::vector` by value; no change for users; measured again with userFunctionBoundary.py.
+2. **RG12.3.5** - section 7 and 8: the generated `Evaluate` per signature with `const Vector&` arguments and `Vector&`
+   results, the symbolic evaluation into node buffers and the linked named variables; the gain of the symbolic path.
+3. **RG12.3.6** - section 9: numpy arguments for the Python user functions, decided; the deprecation switch only if
+   it is free.
+4. **RG7.10** (#3003) - the items that depend on Python user functions drawn in the main thread, a list from
+   `Assemble`, and the detection of Python calls from the render thread; the condition for removing the cache.
+5. **RG7.3.4** - section 10, the user items on 1 to 4: ObjectUserBody without the cache, ObjectGenericODE2; point 13
+   waits for RG13.
+6. **RG12.3.7** - matrices (`massMatrixUserFunction`, `jacobianUserFunction`, the Jacobians of ObjectUserBody): the
+   same scheme with `const Matrix&` arguments and `Matrix&` / `MatrixContainer&` results; #1864 belongs here.
