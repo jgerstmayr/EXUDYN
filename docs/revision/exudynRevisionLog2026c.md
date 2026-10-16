@@ -1379,3 +1379,28 @@ docstring conventions; if purely internal, a place like misc.internal. Revise be
   round-off is about 1e-16/epsilon = 1e-8, which is above the relative tolerance 1e-7 of
   test_accessFunctionsAllBodies.py at some of its random states; the test passes `epsilon=1e-6` (truncation about 1e-12),
   with a comment. computeItemTest.py unchanged (71.26280786962762).
+
+<a id="rg4-25-3"></a>
+### RG4.25.3 — exudyn.systemUtilities (2026-10-16, #2997)
+*(Maintainer 2026-10-16: ComputeSystemDegreeOfFreedom also requires the solver, so it stays there - remove it from the
+systemUtilities plan; implement systemUtilities.md as far as it can be done now and adapt the docs.)*
+- **python/exudyn/systemUtilities.py**: `SystemQuantity` (items collected once, `Refresh`, `Compute`, `ComputeItems`,
+  `SensorFunction`, `AddSensor(components=...)`, `.items`, `.unavailable`); `SystemEnergy` (kinetic, potential, loads,
+  total) and `SystemConstraintDrift` (positionDrift, velocityResidual; the maximum over the items, NaN where an item
+  has no velocity level); `LoadPotentialEnergy`, `NumericalJacobian` from advancedUtilities;
+  `ComputeConstraintResiduals` from solver.py; `ComputeSystemGraph` and `DrawSystemGraph` from mainSystemExtensions,
+  both `@extends` in the module, which mainSystemExtensions imports before `install()`.
+- `ComputeItems` returns a list of (item, values), not a dict as the concept said: `ObjectIndex(3) == ObjectIndex(3)`
+  is False and their hashes differ, so item indices cannot be keys.
+- `CreateLoadEnergySensor` and `SensorUFSystemConstraintDrift` removed (1.12/1.13, as decided); `utilities.py`
+  star-imports the module - `DrawSystemGraph` comes with `from exudyn.utilities import *` again, as before 1.11, and
+  `tools/checkUserScripts.py` no longer reports it (its test uses `CreateDistanceSensor` instead).
+- `DrawSystemGraph` against the one of 1.13.6 (venvP313, which has networkx) on a model with joint, spring, loads and
+  sensors, for six combinations of the label options, with and without drawing: the same graph nodes in the same
+  order, the same edges and edge colors, the same node data (only the order of the keys differs).
+- Tests: energiesTest.py, constraintDriftTest.py, computeItemTest.py, mainSystemExtensionsTests.py give their
+  reference values unchanged; new systemUtilitiesTest.py (the graph part runs only where networkx is installed - not
+  in venvExuP313).
+- Docs: introductionBasics.md section *Quantities of the whole system* (`sec-systemquantities`), solver.md drift
+  section, revisions.md (after 1.13), the references in definitions and MainSystem.cpp; design/systemUtilities.md
+  describes the module as it is. RG4.25 closed with it.

@@ -72,7 +72,6 @@ The title of each says what it does; the sentence after it, why it comes now.
   - RG4.22 Add a 3D sliding joint with rotation, tested with the ANCF cable and beam
   - RG4.23 Compute the Jacobian of ODE1 loads, with a test model
   - RG4.24 Extend the viscous rolling friction of ObjectRollingDiscPenalty to any axis
-  - RG4.25 Inspect the drift of the constraints during the time integration (1 open sub-step)
 - **RG5** Performance
   - RG5.1 Write a linear algebra micro-benchmark that every build carries (4 open sub-steps)
   - RG5.2 Make the hot linear algebra vectorizable with compile-time sizes
@@ -131,7 +130,7 @@ The title of each says what it does; the sentence after it, why it comes now.
 | RG1 | OPEN | 2 | Release and publication |
 | RG2 | OPEN | 5 | Testing and verification |
 | RG3 | CLOSED | 0 | Docs |
-| RG4 | OPEN | 8 | Implementation problems and bugs |
+| RG4 | OPEN | 6 | Implementation problems and bugs |
 | RG5 | OPEN | 8 | Performance |
 | RG6 | OPEN | 3 | Graphics and rendering |
 | RG7 | OPEN | 8 | Python user items |
@@ -329,11 +328,11 @@ GetRotationJacobianTTimesVector_q came with #2228 (RG11.8.8). [log](exudynRevisi
 
 #926: `rollingFrictionViscous` works only for an axis parallel to the plane today.
 
-### **OPEN_RG4.25** Inspect the drift of the constraints during the time integration
+### **CLOSED_RG4.25** Inspect the drift of the constraints during the time integration
 
-#565 (maintainer 2026-10-15: monitoring in the solver at FinishStep, off by default; tolerance 1e-5 and warning at
-0.001 of it after the measurement; the SolveDynamic flag for TrapezoidalIndex2 only; a Python function instead of a
-systemData function; no projection after the steps, which destabilizes the index 2 solver; a sensor function, and
+CLOSED 2026-10-16 with RG4.25.3. #565 (maintainer 2026-10-15: monitoring in the solver at FinishStep, off by default;
+tolerance 1e-5 and warning at 0.001 of it after the measurement; the SolveDynamic flag for TrapezoidalIndex2 only; a
+Python function instead of a systemData function; no projection after the steps, which destabilizes the index 2 solver; a sensor function, and
 the output variable for the joints). [log](exudynRevisionLog2026c.md#rg4-25)
 
 #### **CLOSED_RG4.25.1** Check the drift in the solver and stop above a tolerance
@@ -349,28 +348,16 @@ CLOSED 2026-10-15 (#565): `mbs.ComputeConstraintResiduals`, `ComputeItemType.Con
 `AlgebraicEquations_t` (also for nodes), `ConstraintEquation` for every constraint, `SensorUFSystemConstraintDrift`;
 test model constraintDriftTest.py. [log](exudynRevisionLog2026c.md#rg4-25)
 
-#### **OPEN_RG4.25.3** Add sensor user functions for the energies of the system
+#### **CLOSED_RG4.25.3** Add sensor user functions for the energies of the system
 
-#2997: `SensorUFSystemKineticEnergy` and the potential and total energy, like `SensorUFSystemConstraintDrift`;
-`SystemEnergy(mbs).AddSensor()` exists.
-
-Concept 2026-10-16 (maintainer: SystemQuantity and the derived classes exactly as proposed; all system functions in
-one library with a good name, DrawSystemGraph split into ComputeSystemGraph and the drawing; the 1.13 interface of the
-new functions may change): [design/systemUtilities.md](../dev/design/systemUtilities.md) - `exudyn.systemUtilities`,
-what moves into it, `SystemQuantity`, the graph, the imports, steps 1-3; RG4.25.3.1 before it. The proposal before it:
-- a base class `SystemQuantity(mbs)` in a module `exudyn.systemQuantities` (from advancedUtilities): built once per
-  assembled system (`Refresh()` after a change); `names` (the components), `Compute(configuration)` -> one value per
-  component, `ComputeItems(configuration)` -> the contribution of each item, `SensorFunction` (a function with the
-  signature of `sensorUserFunction`) and `AddSensor(components=None, storeInternal=True, writeToFile=False,
-  fileName='')`;
-- `SystemEnergy(SystemQuantity)`: names kinetic, potential of the objects, potential of the loads, total; the present
-  class, unchanged in what it computes; `.unavailable` stays;
-- `SystemConstraintDrift(SystemQuantity)`: names position drift, velocity residual; `Compute` the largest absolute
-  values from `mbs.ComputeConstraintResiduals`, `ComputeItems` the residuals with their items; it replaces
-  `SensorUFSystemConstraintDrift` (which stays as `SystemConstraintDrift(mbs).SensorFunction` for a release);
-- the solver check of RG4.25.1 stays in C++ (it runs in every step without Python) and uses the same definition of the
-  drift as `ComputeItemType.ConstraintDrift`;
-- later quantities in the same form: momentum and angular momentum, the work of the loads, the power of the dampers.
+CLOSED 2026-10-16 (#2997, maintainer: SystemQuantity and the derived classes exactly as proposed; all system functions
+in one library with a good name, DrawSystemGraph split into ComputeSystemGraph and the drawing; the 1.13 interface of
+the new functions may change; ComputeSystemDegreeOfFreedom needs the solver and stays in solver.py):
+`exudyn.systemUtilities` with `SystemQuantity`, `SystemEnergy`, `SystemConstraintDrift` (`Compute`, `ComputeItems`,
+`AddSensor`), `LoadPotentialEnergy`, `NumericalJacobian`, `ComputeConstraintResiduals`, `ComputeSystemGraph`,
+`DrawSystemGraph`; `CreateLoadEnergySensor` and `SensorUFSystemConstraintDrift` removed; in `exudyn.utilities`; the
+manual section *Quantities of the whole system*; test model systemUtilitiesTest.py.
+[design/systemUtilities.md](../dev/design/systemUtilities.md), [log](exudynRevisionLog2026c.md#rg4-25-3)
 
 ##### **CLOSED_RG4.25.3.1** Revise NumericalJacobian and remove ItemODE2Coordinates before the move
 

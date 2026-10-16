@@ -16,7 +16,7 @@
 #           (9) an ObjectGenericODE2 with a constant force vector; (10) a rigid body on a rigid-body
 #           spring-damper, in small motion; (11) ANCF cables and geometrically exact beams in a rigid
 #           translation, whose kinetic energy comes from their mass matrix; (12) a system with gravity
-#           and a constant force, whose total energy SystemEnergy (exudyn.advancedUtilities) records;
+#           and a constant force, whose total energy SystemEnergy (exudyn.systemUtilities) records;
 #           (13) what the energies refuse, with the reason, and how SystemEnergy skips it; (14) two mass
 #           points attracting each other (ObjectConnectorGravity), on an elliptic orbit.
 #
@@ -185,7 +185,7 @@ testResult += sum(rigidMotion)
 
 #(12) the energy of a whole system with loads, SystemEnergy: a rigid body with an offset center of mass under
 #gravity and a constant force, on a spring; the total of kinetic, elastic and load potential energy is kept
-from exudyn.advancedUtilities import SystemEnergy
+from exudyn.systemUtilities import SystemEnergy
 SC2 = exu.SystemContainer()
 mbs2 = SC2.AddSystem()
 oGround2 = mbs2.AddObject(ObjectGround())
@@ -204,8 +204,7 @@ mbs2.Assemble()
 systemEnergy = SystemEnergy(mbs2)
 sEnergy = systemEnergy.AddSensor()
 mbs2.Assemble()
-exu.Print('SystemEnergy: kinetic', len(systemEnergy.kineticObjects), 'potential', len(systemEnergy.potentialObjects),
-          'loads', len(systemEnergy.loads), 'unavailable', systemEnergy.unavailable)
+exu.Print('SystemEnergy:', systemEnergy.names, 'of', len(systemEnergy.items), 'items, unavailable', systemEnergy.unavailable)
 mbs2.SolveDynamic(simulationSettings)
 energies = mbs2.GetSensorStoredData(sEnergy)
 exu.Print('system with loads: total energy %.8f -> %.8f, relative change %.2e' % (energies[0, 4], energies[-1, 4],
@@ -244,7 +243,7 @@ try:
 except NotImplementedError as error:
     exu.Print('refused:', str(error).split(' [Python file')[0])
     refused += 1
-T3, V3, loads3, total3 = systemEnergy3.ComputeSystemEnergies()
+T3, V3, loads3, total3 = systemEnergy3.Compute()
 exu.Print('the mass point alone: T =', T3, '(exact 6), total =', total3)
 testResult += refused + total3
 

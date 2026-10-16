@@ -273,35 +273,10 @@ Most of the solvers are implemented inside the C++ core.
 - **NOTE**: this function is directly available in MainSystem (mbs); it should be directly called as mbs.ComputeODE2Eigenvalues(...). For description of the interface, see the MainSystem Python extensions, {ref}`sec-mainsystemextensions-computeode2eigenvalues`
 
 
-(sec-solver-computeconstraintresiduals)=
-## Function: ComputeConstraintResiduals
-
-[`ComputeConstraintResiduals(mbs, velocityLevel = False, autoAssemble = True) -> list`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/solver.py#L830)
-
-- **function description**: the residuals of all algebraic equations of the system in the current state - the drift of the constraints (#565); computed per item with mbs.ComputeItem, without a solver, so that it can be called at any time, e.g., in a PreStepUserFunction or a SensorUserFunction during a simulation
-- **input**:
-  - `mbs`: the MainSystem
-  - `velocityLevel`: False: the position-level constraints, ComputeItemType.ConstraintDrift - zero for the equations of velocity-level constraints (rolling disc, CoordinateConstraint with velocityLevel=True), which do not drift;
-  - `True`: the equations at velocity level, ComputeItemType.AlgebraicEquations_t
-  - `autoAssemble`: if True and mbs.systemIsConsistent=False, mbs.Assemble() is called first
-- **output**: (type: list) [residuals, items], residuals is a numpy array with one entry per algebraic equation of the system (the numbering of the Lagrange multipliers, mbs.systemData.GetAECoordinates()), items the ObjectIndex or NodeIndex of each entry
-
-*example*:
-
-```python
-  [residuals, items] = mbs.ComputeConstraintResiduals()
-  k = np.argmax(abs(residuals))
-  print('largest drift', residuals[k], 'in', items[k])
-```
-
-
-- **NOTE**: this function is directly available in MainSystem (mbs); it should be directly called as mbs.ComputeConstraintResiduals(...). For description of the interface, see the MainSystem Python extensions, {ref}`sec-mainsystemextensions-computeconstraintresiduals`
-
-
 (sec-solver-computesystemdegreeoffreedom)=
 ## Function: ComputeSystemDegreeOfFreedom
 
-[`ComputeSystemDegreeOfFreedom(mbs, simulationSettings = None, threshold = 1e-12, verbose = False, useSVD = False, autoAssemble = True) -> dict`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/solver.py#L881)
+[`ComputeSystemDegreeOfFreedom(mbs, simulationSettings = None, threshold = 1e-12, verbose = False, useSVD = False, autoAssemble = True) -> dict`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/solver.py#L830)
 
 - **function description**: compute system DOF numerically, considering Grübler-Kutzbach formula as well as redundant constraints; uses numpy matrix rank or singular value decomposition of scipy (useSVD=True)
 - **input**:
@@ -347,7 +322,7 @@ Most of the solvers are implemented inside the C++ core.
 (sec-solver-checksolverinfostatistics)=
 ## Function: CheckSolverInfoStatistics
 
-[`CheckSolverInfoStatistics(solverName, infoStat, numberOfEvaluations)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/solver.py#L1011)
+[`CheckSolverInfoStatistics(solverName, infoStat, numberOfEvaluations)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/solver.py#L960)
 
 - **function description**: helper function for solvers to check e.g. if high number of memory allocations happened during simulation This can happen, if large amount of sensors are attached and output is written in every time step
 - **input**: stat=exudyn.special.InfoStat() from previous step, numberOfEvaluations is a counter which is proportional to number of RHS evaluations in method

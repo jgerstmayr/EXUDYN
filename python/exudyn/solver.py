@@ -23,7 +23,7 @@ __all__ = [
     'solverCheckMemoryAllocations', 'solverCheckMemoryAllocationsThreshold', 'SolverErrorMessage',
     'SolveStatic', 'SolveDynamic', 'SolverSuccess', 'DeactivateWritingOfSolvers',
     'RestoreSimulationSettings', 'UseSparseLinearSolver', 'ComputeLinearizedSystem',
-    'ComputeODE2Eigenvalues', 'ComputeConstraintResiduals', 'ComputeSystemDegreeOfFreedom',
+    'ComputeODE2Eigenvalues', 'ComputeSystemDegreeOfFreedom',
     'CheckSolverInfoStatistics',
     ]
 
@@ -825,57 +825,6 @@ def ComputeODE2Eigenvalues(mbs,
         return [eigenValues, eigenVectors]
 
     
-
-@extends(exudyn.MainSystem)
-def ComputeConstraintResiduals(mbs, velocityLevel = False, autoAssemble = True) -> list:
-    """the residuals of all algebraic equations of the system in the current state - the drift of the constraints (#565);
-    computed per item with mbs.ComputeItem, without a solver, so that it can be called at any time, e.g., in a
-    PreStepUserFunction or a SensorUserFunction during a simulation
-
-    Args:
-        mbs: the MainSystem
-        velocityLevel: False: the position-level constraints, ComputeItemType.ConstraintDrift - zero for the equations of
-            velocity-level constraints (rolling disc, CoordinateConstraint with velocityLevel=True), which do not drift;
-            True: the equations at velocity level, ComputeItemType.AlgebraicEquations_t
-        autoAssemble: if True and mbs.systemIsConsistent=False, mbs.Assemble() is called first
-
-    Returns:
-        :list: [residuals, items], residuals is a numpy array with one entry per algebraic equation of the system (the
-        numbering of the Lagrange multipliers, mbs.systemData.GetAECoordinates()), items the ObjectIndex or NodeIndex
-        of each entry
-
-    Example:
-        [residuals, items] = mbs.ComputeConstraintResiduals()
-        k = np.argmax(abs(residuals))
-        print('largest drift', residuals[k], 'in', items[k])
-    """
-    if not mbs.systemIsConsistent:
-        if not autoAssemble:
-            raise ValueError('ComputeConstraintResiduals: the system is not assembled; call mbs.Assemble() first')
-        mbs.Assemble()
-    what = exudyn.ComputeItemType.AlgebraicEquations_t if velocityLevel else exudyn.ComputeItemType.ConstraintDrift
-    residuals = np.zeros(len(mbs.systemData.GetAECoordinates()))
-    items = [None]*len(residuals)
-    for i in range(mbs.systemData.NumberOfObjects()):
-        item = exudyn.ObjectIndex(i)
-        #the objects with algebraic equations of their own: a body lists those of its nodes here too
-        if what not in mbs.ComputeItem(item):
-            continue
-        values = mbs.ComputeItem(item, what)
-        for (k, value) in zip(list(mbs.systemData.GetObjectLTGAE(i)), values):
-            residuals[k] += value
-            items[k] = item
-    for i in range(mbs.systemData.NumberOfNodes()):
-        node = exudyn.NodeIndex(i)
-        if what not in mbs.ComputeItem(node): #the nodes with algebraic equations: Euler parameters
-            continue
-        values = mbs.ComputeItem(node, what)
-        start = mbs.GetNodeAEIndex(i)
-        for (k, value) in enumerate(values):
-            residuals[start + k] += value
-            items[start + k] = node
-    return [residuals, items]
-
 
 @extends(exudyn.MainSystem)
 def ComputeSystemDegreeOfFreedom(mbs, 

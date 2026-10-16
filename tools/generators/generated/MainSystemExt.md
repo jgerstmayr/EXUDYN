@@ -322,36 +322,10 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`ANCFBeamEig
 Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`nMassOscillator.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/nMassOscillator.py) (Ex), [`nMassOscillatorEigenmodes.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/nMassOscillatorEigenmodes.py) (Ex), [`nMassOscillatorInteractive.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/nMassOscillatorInteractive.py) (Ex), [`ANCFBeamEigTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/ANCFBeamEigTest.py) (TM), [`ANCFThinPlateRevisionTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/ANCFThinPlateRevisionTest.py) (TM), [`ANCFThinPlateTests.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/ANCFThinPlateTests.py) (TM), [`bricardMechanism.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/bricardMechanism.py) (TM), [`complexEigenvaluesTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/complexEigenvaluesTest.py) (TM), ...
 
 
-(sec-mainsystemextensions-computeconstraintresiduals)=
-#### Function: ComputeConstraintResiduals
-
-[`ComputeConstraintResiduals(mbs, velocityLevel = False, autoAssemble = True) -> list`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/solver.py#L830)
-
-- **function description**: the residuals of all algebraic equations of the system in the current state - the drift of the constraints (#565); computed per item with mbs.ComputeItem, without a solver, so that it can be called at any time, e.g., in a PreStepUserFunction or a SensorUserFunction during a simulation - NOTE that this function is added to MainSystem via Python function ComputeConstraintResiduals.
-- **input**:
-  - `mbs`: the MainSystem
-  - `velocityLevel`: False: the position-level constraints, ComputeItemType.ConstraintDrift - zero for the equations of velocity-level constraints (rolling disc, CoordinateConstraint with velocityLevel=True), which do not drift;
-  - `True`: the equations at velocity level, ComputeItemType.AlgebraicEquations_t
-  - `autoAssemble`: if True and mbs.systemIsConsistent=False, mbs.Assemble() is called first
-- **output**: (type: list) [residuals, items], residuals is a numpy array with one entry per algebraic equation of the system (the numbering of the Lagrange multipliers, mbs.systemData.GetAECoordinates()), items the ObjectIndex or NodeIndex of each entry
-
-*example*:
-
-```python
-  [residuals, items] = mbs.ComputeConstraintResiduals()
-  k = np.argmax(abs(residuals))
-  print('largest drift', residuals[k], 'in', items[k])
-```
-
-
-
-Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`constraintDriftTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/constraintDriftTest.py) (TM)
-
-
 (sec-mainsystemextensions-computesystemdegreeoffreedom)=
 #### Function: ComputeSystemDegreeOfFreedom
 
-[`ComputeSystemDegreeOfFreedom(mbs, simulationSettings = None, threshold = 1e-12, verbose = False, useSVD = False, autoAssemble = True) -> dict`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/solver.py#L881)
+[`ComputeSystemDegreeOfFreedom(mbs, simulationSettings = None, threshold = 1e-12, verbose = False, useSVD = False, autoAssemble = True) -> dict`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/solver.py#L830)
 
 - **function description**: compute system DOF numerically, considering Grübler-Kutzbach formula as well as redundant constraints; uses numpy matrix rank or singular value decomposition of scipy (useSVD=True) - NOTE that this function is added to MainSystem via Python function ComputeSystemDegreeOfFreedom.
 - **input**:
@@ -393,4 +367,58 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`constraintD
 
 
 Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`fourBarMechanism3D.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/fourBarMechanism3D.py) (Ex), [`bricardMechanism.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/bricardMechanism.py) (TM), [`mainSystemExtensionsTests.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/mainSystemExtensionsTests.py) (TM)
+
+
+(sec-mainsystemextensions-computeconstraintresiduals)=
+#### Function: ComputeConstraintResiduals
+
+[`ComputeConstraintResiduals(mbs, velocityLevel = False, autoAssemble = True) -> list`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/systemUtilities.py#L361)
+
+- **function description**: the residuals of all algebraic equations of the system in the current state - the drift of the constraints (#565); computed per item with mbs.ComputeItem, without a solver, so that it can be called at any time, e.g., in a PreStepUserFunction or a SensorUserFunction during a simulation - NOTE that this function is added to MainSystem via Python function ComputeConstraintResiduals.
+- **input**:
+  - `mbs`: the MainSystem
+  - `velocityLevel`: False: the position-level constraints, ComputeItemType.ConstraintDrift - zero for the equations of velocity-level constraints (rolling disc, CoordinateConstraint with velocityLevel=True), which do not drift;
+  - `True`: the equations at velocity level, ComputeItemType.AlgebraicEquations_t
+  - `autoAssemble`: if True and mbs.systemIsConsistent=False, mbs.Assemble() is called first
+- **output**: (type: list) [residuals, items], residuals is a numpy array with one entry per algebraic equation of the system (the numbering of the Lagrange multipliers, mbs.systemData.GetAECoordinates()), items the ObjectIndex or NodeIndex of each entry
+
+*example*:
+
+```python
+  [residuals, items] = mbs.ComputeConstraintResiduals()
+  k = np.argmax(abs(residuals))
+  print('largest drift', residuals[k], 'in', items[k])
+```
+
+
+
+Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`constraintDriftTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/constraintDriftTest.py) (TM), [`systemUtilitiesTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/systemUtilitiesTest.py) (TM)
+
+
+(sec-mainsystemextensions-drawsystemgraph)=
+#### Function: DrawSystemGraph
+
+[`DrawSystemGraph(mbs, showLoads = True, showSensors = True, useItemNames = False, useItemTypes = False, addItemTypeNames = True, multiLine = True, fontSizeFactor = 1., layoutDistanceFactor = 3., layoutIterations = 100, showLegend = True, tightLayout = True, showGraph = True, addItemData = False, addAnnotations = False) -> list`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/systemUtilities.py#L606)
+
+- **function description**: draw the graph of a MainSystem with matplotlib, from ComputeSystemGraph; several options adjust the appearance; the layout is random, so it differs from run to run; needs networkx and matplotlib - NOTE that this function is added to MainSystem via Python function DrawSystemGraph.
+- **input**:
+  - `mbs`: MainSystem to be operated with
+  - `showLoads`: toggle appearance of loads in mbs
+  - `showSensors`: toggle appearance of sensors in mbs
+  - `useItemNames`: if True, object names are shown instead of basic object types (Node, Load, ...)
+  - `useItemTypes`: if True, object type names (MassPoint, JointRevolute, ...) are shown instead of basic object types (Node, Load, ...); Note that Node, Object, is omitted at the beginning of itemName (as compared to the reference manual); item classes become clear from the legend
+  - `addItemTypeNames`: if True, type nymes (Node, Load, etc.) are added
+  - `multiLine`: if True, labels are multiline, improving readability; ignored if showGraph = False
+  - `fontSizeFactor`: use this factor to scale fonts, allowing to fit larger graphs on the screen with values < 1
+  - `layoutDistanceFactor`: this factor influences the arrangement of labels; larger distance values lead to circle-like results
+  - `layoutIterations`: more iterations lead to better arrangement of the layout, but need more time for larger systems (use 1000-10000 to get good results)
+  - `showLegend`: shows legend for different item types
+  - `tightLayout`: if True, uses matplotlib plt.tight_layout() which may raise warning
+  - `showGraph`: if True, graph is plotted with matplotlib
+  - `addItemData`: if True, specific data is added to the graph nodes, to be used for deeper analysis of system graphs
+  - `addAnnotations`: add data node graphs (not shown), except for graphics data, item numbers, names and types (which are already available in graph data or edges)
+- **output**: (type: [Any, Any, Any]) returns [networkx, G, items] with nx being networkx, G the graph and item what is returned by nx.draw_networkx_labels(...)
+
+
+Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`fourBarMechanism3D.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/fourBarMechanism3D.py) (Ex), [`mainSystemExtensionsTests.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/mainSystemExtensionsTests.py) (TM)
 

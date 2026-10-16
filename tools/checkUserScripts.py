@@ -75,7 +75,7 @@ formerStarNames = {
 utilitiesNames = {}
 for name in ['GenerateStraightLineANCFCable2D', 'GenerateSlidingJoint', 'GenerateAleSlidingJoint', 'GenerateStraightBeam']:
     utilitiesNames[name] = ('exudyn.beams', 'from exudyn.beams import ' + name)
-for name in ['CreateDistanceSensorGeometry', 'CreateDistanceSensor', 'DrawSystemGraph']:
+for name in ['CreateDistanceSensorGeometry', 'CreateDistanceSensor']: #DrawSystemGraph: exudyn.systemUtilities (#2997)
     utilitiesNames[name] = ('exudyn.misc.mainSystemExtensions', 'mbs.' + name + '(...), a function of the MainSystem')
 for name in ['red', 'green', 'blue', 'cyan', 'magenta', 'yellow', 'orange', 'pink', 'lawngreen', 'springgreen',
              'violet', 'dodgerblue', 'lightred', 'lightgreen', 'steelblue', 'brown', 'black', 'darkgrey',

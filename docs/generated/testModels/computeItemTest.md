@@ -11,7 +11,7 @@ You can view and download this file on Github: [computeItemTest.py](https://gith
 # This is an EXUDYN example
 #
 # Details:  mbs.ComputeItem computes what the solver computes for one item, at the current state (#2779) - for
-#           tests and for the debugging of a model or of a user's item; exudyn.advancedUtilities.NumericalJacobian
+#           tests and for the debugging of a model or of a user's item; exudyn.systemUtilities.NumericalJacobian
 #           gives the numerical derivative to compare with. A double pendulum of two rigid bodies, the first on
 #           a revolute joint to the ground, the second on a spring-damper:
 #           (1) mbs.ComputeItem(item) lists what applies to the item;
@@ -30,7 +30,7 @@ You can view and download this file on Github: [computeItemTest.py](https://gith
 
 import exudyn as exu
 from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
-from exudyn.advancedUtilities import NumericalJacobian
+from exudyn.systemUtilities import NumericalJacobian
 import numpy as np
 
 testIsActive = exu.sys.get('testIsActive', False)

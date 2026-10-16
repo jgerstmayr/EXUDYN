@@ -5,7 +5,7 @@
 
 The big import of Exudyn's Python utilities: 'from exudyn.utilities import *' makes the
 utility modules available at once. It defines no functions of its own;
-they are in basicUtilities, advancedUtilities, rigidBodyUtilities and itemInterface.
+they are in basicUtilities, advancedUtilities, systemUtilities, rigidBodyUtilities and itemInterface.
 The beam generators are imported from exudyn.beams, graphics and colors from
 exudyn.graphics, the mesh functions from exudyn.graphicsDataUtilities; the MainSystem
 extensions are functions of mbs (#2756).

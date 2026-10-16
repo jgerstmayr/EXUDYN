@@ -1298,7 +1298,7 @@ py::object MainSystem::PyComputeItem(const py::object& itemIndex, const py::obje
 			if (!GetCSystem().ComputeObjectJacobianODE2(temp, numDiff, number, byVelocities ? 0. : 1., byVelocities ? 1. : 0.))
 			{
 				PyError("ComputeItem: " + EXUstd::ToString(itemType) + " " + EXUstd::ToString(number) + " has no analytic Jacobian here (a marker without the derivative of its Jacobian); "
-					"exudyn.advancedUtilities.NumericalJacobian of ComputeItemType.ODE2LHS gives the numerical one", PyErrorType::valueError);
+					"exudyn.systemUtilities.NumericalJacobian of ComputeItemType.ODE2LHS gives the numerical one", PyErrorType::valueError);
 				return py::none();
 			}
 			if (temp.jacobianODE2Container.UseDenseMatrix()) { return EPyUtils::ToPython(temp.jacobianODE2Container.GetInternalDenseMatrix()); }

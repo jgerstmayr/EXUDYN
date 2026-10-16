@@ -59,8 +59,17 @@ velocities onto the constraints, see {ref}`sec-solver-initialconstraints` (#2234
 **Drift of the constraints**: with `generalizedAlpha.checkConstraintDrift`, the solver checks the drift of the
 position-level constraints during the run and stops above `constraintDriftTolerance`; `SolveDynamic` switches it on
 for `TrapezoidalIndex2`. `mbs.ComputeConstraintResiduals`, `ComputeItemType.ConstraintDrift` and
-`AlgebraicEquations_t`, the output variable `ConstraintEquation` of every constraint and the sensor function
-`SensorUFSystemConstraintDrift` give the drift at any time, see {ref}`sec-solver-constraintdrift` (#565).
+`AlgebraicEquations_t`, the output variable `ConstraintEquation` of every constraint and `SystemConstraintDrift` give
+the drift at any time, see {ref}`sec-solver-constraintdrift` (#565).
+
+**`exudyn.systemUtilities`**, the functions of a whole system, see {ref}`sec-systemquantities` (#2997):
+`SystemEnergy` and `SystemConstraintDrift` with `Compute()`, `ComputeItems()` and `AddSensor()`,
+`ComputeSystemGraph` - the graph without drawing - and `DrawSystemGraph`, `LoadPotentialEnergy`, `NumericalJacobian`
+and `ComputeConstraintResiduals`; `from exudyn.utilities import *` includes it, and with it `DrawSystemGraph` again.
+`SystemEnergy`, `LoadPotentialEnergy` and `NumericalJacobian` are no longer in `exudyn.advancedUtilities`;
+`SystemEnergy.ComputeSystemEnergies()` is `Compute()`, `CreateLoadEnergySensor(mbs, load)` is
+`SystemEnergy(mbs, items=[load]).AddSensor(components=['loads'])`. `NumericalJacobian` takes `systemCoordinates`,
+`velocityLevel` and `epsilon = 1e-8` (#3004).
 
 **`SystemContainer(attachToRenderer=False)`** creates a container only to compute, which leaves the render window with
 the container of the model; `InverseKinematicsNumerical` uses it (#2259).

@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.13 | Newborn | 98 | 1.13.99 |
+| 1.13 | Newborn | 99 | 1.13.100 |
 | 1.12 | Metheney | 367 | 1.12.462 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
@@ -30,6 +30,10 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.13 - Newborn (current)
 
+- **1.13.100** `EXTENSION` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` Sensor user functions for the kinetic, potential and total energy of the system (#2997)
+  - description: revision2026c step RG4.25.3 (maintainer 2026-10-15, with the drift of \#565): SensorUFSystemKineticEnergy, SensorUFSystemPotentialEnergy, SensorUFSystemTotalEnergy for SensorUserFunction, like SensorUFSystemConstraintDrift; SystemEnergy(mbs).AddSensor() exists and records all four values, built once per model - the functions would build what they need per call or keep it per mbs
+  - **notes:** exudyn.systemUtilities: the functions of a whole system - SystemEnergy and SystemConstraintDrift (derived from SystemQuantity) with Compute(), ComputeItems() and AddSensor(components=...), LoadPotentialEnergy, NumericalJacobian, ComputeConstraintResiduals, ComputeSystemGraph (the graph without drawing) and DrawSystemGraph; included in exudyn.utilities. SystemEnergy.ComputeSystemEnergies() is Compute(); CreateLoadEnergySensor and SensorUFSystemConstraintDrift are removed (use SystemEnergy(mbs, items=\[load\]).AddSensor(components=\['loads'\]) and SystemConstraintDrift(mbs).AddSensor())
+  - date resolved: **2026-10-16 13:08**, date raised: 2026-10-15
 - **1.13.99** `CHANGE` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` NumericalJacobian: arguments as in Exudyn, docstring to the conventions; ItemODE2Coordinates removed (#3004)
   - description: revision2026c step RG4.25.3.1 (maintainer 2026-10-16): ItemODE2Coordinates duplicates mbs.systemData.GetObjectLTGODE2 and GetNodeLTGODE2 (C++) and is removed; NumericalJacobian gets systemCoordinates (the indices of system ODE2 coordinates) and velocityLevel instead of coordinates and velocities, epsilon 1e-8 as in the numerical differentiation of the solvers, and a docstring with Args, Returns and Example; kept public, as the counterpart of mbs.ComputeItem for testing user items
   - **notes:** exudyn.advancedUtilities.NumericalJacobian(mbs, function, systemCoordinates, velocityLevel=False, epsilon=1e-8): the arguments named as elsewhere in Exudyn and the step 1e-8 as in the solvers; ItemODE2Coordinates removed - use mbs.systemData.GetObjectLTGODE2 or GetNodeLTGODE2

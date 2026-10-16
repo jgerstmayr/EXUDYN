@@ -559,12 +559,12 @@ left out:
 The drift in the current state, e.g., in a user function: `mbs.ComputeConstraintResiduals()` returns the residuals of
 all algebraic equations of the system and the item of each, `velocityLevel = True` those at velocity level;
 `mbs.ComputeItem(item, exu.ComputeItemType.ConstraintDrift)` those of one constraint or node; every constraint has the
-output variable `ConstraintEquation`; and `exudyn.advancedUtilities.SensorUFSystemConstraintDrift` is a sensor user
-function recording the largest drift and the largest residual at velocity level:
+output variable `ConstraintEquation`; and `SystemConstraintDrift` of `exudyn.systemUtilities` gives the largest drift
+and the largest residual at velocity level and records them with a sensor, see {ref}`sec-systemquantities`:
 
 ```python
-from exudyn.advancedUtilities import SensorUFSystemConstraintDrift
-sDrift = mbs.AddSensor(SensorUserFunction(sensorUserFunction=SensorUFSystemConstraintDrift, storeInternal=True))
+sDrift = SystemConstraintDrift(mbs).AddSensor()     #after mbs.Assemble()
+mbs.Assemble()
 ```
 
 ## Optimization and parameter variation

@@ -24,14 +24,14 @@ from exudyn.misc.mainSystemExtensions import MainSystemCreateForce as _MainSyste
 from exudyn.misc.mainSystemExtensions import MainSystemCreateTorque as _MainSystemCreateTorque
 from exudyn.misc.mainSystemExtensions import CreateDistanceSensorGeometry as _CreateDistanceSensorGeometry
 from exudyn.misc.mainSystemExtensions import CreateDistanceSensor as _CreateDistanceSensor
-from exudyn.misc.mainSystemExtensions import DrawSystemGraph as _DrawSystemGraph
 from exudyn.plot import PlotSensor as _PlotSensor
 from exudyn.solver import SolveStatic as _SolveStatic
 from exudyn.solver import SolveDynamic as _SolveDynamic
 from exudyn.solver import ComputeLinearizedSystem as _ComputeLinearizedSystem
 from exudyn.solver import ComputeODE2Eigenvalues as _ComputeODE2Eigenvalues
-from exudyn.solver import ComputeConstraintResiduals as _ComputeConstraintResiduals
 from exudyn.solver import ComputeSystemDegreeOfFreedom as _ComputeSystemDegreeOfFreedom
+from exudyn.systemUtilities import ComputeConstraintResiduals as _ComputeConstraintResiduals
+from exudyn.systemUtilities import DrawSystemGraph as _DrawSystemGraph
 
 class MainSystem:
     SolutionViewer = _SolutionViewer
@@ -60,11 +60,11 @@ class MainSystem:
     CreateTorque = _MainSystemCreateTorque
     CreateDistanceSensorGeometry = _CreateDistanceSensorGeometry
     CreateDistanceSensor = _CreateDistanceSensor
-    DrawSystemGraph = _DrawSystemGraph
     PlotSensor = _PlotSensor
     SolveStatic = _SolveStatic
     SolveDynamic = _SolveDynamic
     ComputeLinearizedSystem = _ComputeLinearizedSystem
     ComputeODE2Eigenvalues = _ComputeODE2Eigenvalues
-    ComputeConstraintResiduals = _ComputeConstraintResiduals
     ComputeSystemDegreeOfFreedom = _ComputeSystemDegreeOfFreedom
+    ComputeConstraintResiduals = _ComputeConstraintResiduals
+    DrawSystemGraph = _DrawSystemGraph

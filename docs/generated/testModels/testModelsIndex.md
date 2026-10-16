@@ -111,6 +111,7 @@ sensorUserFunctionItemsTest
 userFunctionTimerTest
 symbolicVectorUserFunctionTest
 constraintDriftTest
+systemUtilitiesTest
 initialConstraintsCheckTest
 shellMeshSlopesScalingTest
 systemContainerComputeOnlyTest

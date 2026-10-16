@@ -178,14 +178,14 @@ from exudyn.misc.mainSystemExtensions import MainSystemCreateForce as _MainSyste
 from exudyn.misc.mainSystemExtensions import MainSystemCreateTorque as _MainSystemCreateTorque
 from exudyn.misc.mainSystemExtensions import CreateDistanceSensorGeometry as _CreateDistanceSensorGeometry
 from exudyn.misc.mainSystemExtensions import CreateDistanceSensor as _CreateDistanceSensor
-from exudyn.misc.mainSystemExtensions import DrawSystemGraph as _DrawSystemGraph
 from exudyn.plot import PlotSensor as _PlotSensor
 from exudyn.solver import SolveStatic as _SolveStatic
 from exudyn.solver import SolveDynamic as _SolveDynamic
 from exudyn.solver import ComputeLinearizedSystem as _ComputeLinearizedSystem
 from exudyn.solver import ComputeODE2Eigenvalues as _ComputeODE2Eigenvalues
-from exudyn.solver import ComputeConstraintResiduals as _ComputeConstraintResiduals
 from exudyn.solver import ComputeSystemDegreeOfFreedom as _ComputeSystemDegreeOfFreedom
+from exudyn.systemUtilities import ComputeConstraintResiduals as _ComputeConstraintResiduals
+from exudyn.systemUtilities import DrawSystemGraph as _DrawSystemGraph
 
 
 class ExudynError(Exception): ...
@@ -3772,7 +3772,7 @@ class MainSystem:
         ...
     @overload
     def ComputeItem(self, itemIndex: Any, what: ComputeItemType=None, localPosition: Vector3D=[0.,0.,0.], vector: Any=None) -> Any: 
-        """Compute a function of an item at the current state of the system (#2779) - for tests and the debugging of items: for the typed index of an object, node or marker and a what of type exu.ComputeItemType, a numpy array (a dict for the kinematics of a marker), in the coordinates of the item; localPosition is the position in a body, vector the force and torque of a Jacobian derivative; with what=None the list of what applies to the item; a what that does not apply raises with that list; the system must be assembled; exudyn.advancedUtilities.NumericalJacobian gives the numerical derivative to compare with.
+        """Compute a function of an item at the current state of the system (#2779) - for tests and the debugging of items: for the typed index of an object, node or marker and a what of type exu.ComputeItemType, a numpy array (a dict for the kinematics of a marker), in the coordinates of the item; localPosition is the position in a body, vector the force and torque of a Jacobian derivative; with what=None the list of what applies to the item; a what that does not apply raises with that list; the system must be assembled; exudyn.systemUtilities.NumericalJacobian gives the numerical derivative to compare with.
         
         Examples:
             mbs.ComputeItem(oBody, exu.ComputeItemType.PositionJacobian, localPosition=[0.1,0,0])
@@ -4046,14 +4046,14 @@ class MainSystem:
     CreateTorque = _MainSystemCreateTorque
     CreateDistanceSensorGeometry = _CreateDistanceSensorGeometry
     CreateDistanceSensor = _CreateDistanceSensor
-    DrawSystemGraph = _DrawSystemGraph
     PlotSensor = _PlotSensor
     SolveStatic = _SolveStatic
     SolveDynamic = _SolveDynamic
     ComputeLinearizedSystem = _ComputeLinearizedSystem
     ComputeODE2Eigenvalues = _ComputeODE2Eigenvalues
-    ComputeConstraintResiduals = _ComputeConstraintResiduals
     ComputeSystemDegreeOfFreedom = _ComputeSystemDegreeOfFreedom
+    ComputeConstraintResiduals = _ComputeConstraintResiduals
+    DrawSystemGraph = _DrawSystemGraph
 
 class Renderer:
     """The Renderer is the substructure of SystemContainer that collects rendering and visualization interaction, in particular starting and stopping the renderer, image retrieval and materials.

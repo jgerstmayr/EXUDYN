@@ -51,5 +51,6 @@ robotics.utilities
 shells
 signalProcessing
 solver
+systemUtilities
 utilities
 ```

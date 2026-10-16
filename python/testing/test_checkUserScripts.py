@@ -263,7 +263,7 @@ def testWhatFixRewrites(tables):
               'exu.SolveDynamic(mbs, sims)\n'
               'mbs.WaitForUserToContinue()\n'
               "data = np.loadtxt('coordinatesSolution.txt')\n"
-              'DrawSystemGraph(mbs, useItemNames=True)\n')
+              'CreateDistanceSensor(mbs, generalContact, positionOrMarker=[0,0,0])\n')
     (fixed, tree, nFixed) = checker.FixSource(source, ast.parse(source), tables)
     assert fixed == ('import exudyn as exu\n'
                      'from exudyn.utilities import *\n'
@@ -286,7 +286,7 @@ def testWhatFixRewrites(tables):
                      'mbs.SolveDynamic(sims)\n'
                      'SC.renderer.DoIdleTasks()\n'
                      "data = np.loadtxt('solution/coordinatesSolution.txt')\n"
-                     'mbs.DrawSystemGraph(useItemNames=True)\n')
+                     'mbs.CreateDistanceSensor(generalContact, positionOrMarker=[0,0,0])\n')
     assert nFixed > 0 and Findings(fixed, tables) == []
 
 

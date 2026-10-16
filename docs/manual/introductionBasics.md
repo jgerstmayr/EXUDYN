@@ -62,6 +62,35 @@ position, forces or joint data. For viewing sensor results, use the `PlotSensor`
 Finally, the render window allows to show traces (trajectories) of position sensors, sensor vector quantities (e.g., velocity vectors),
 or triads given by rotation matrices. For further information, see the `sensors.traces` structure of `VisualizationSettings`, {ref}`sec-vsettingstraces`.
 
+(sec-systemquantities)=
+### Quantities of the whole system
+
+`exudyn.systemUtilities` (included in `from exudyn.utilities import *`) computes quantities of the whole system from
+the contributions of its items, and records them with a sensor:
+
+- `SystemEnergy(mbs)`: the components `kinetic`, `potential` (of the objects) and `loads` (the potential of the
+  constant loads) and their sum `total`;
+- `SystemConstraintDrift(mbs)`: `positionDrift`, the largest residual of the position-level constraints, and
+  `velocityResidual`, the largest residual at velocity level, see {ref}`sec-solver-constraintdrift`.
+
+Both are created after `mbs.Assemble()` and collect the items that contribute once; `items = [...]` restricts them to
+chosen objects, nodes or loads. `Compute()` returns one value per component, in the order of `names`, `ComputeItems()`
+the contribution of each item, and `AddSensor()` adds a `SensorUserFunction` that records all or some components:
+
+```python
+energy = SystemEnergy(mbs)
+[kinetic, potential, loads, total] = energy.Compute()
+sTotal = energy.AddSensor(components=['total'])
+mbs.Assemble()                  #after adding the sensor
+mbs.SolveDynamic(simulationSettings)
+mbs.PlotSensor(sTotal)
+```
+
+An item that has the quantity but cannot compute it with its parameters - a spring-damper whose force is a user
+function, a load with a user function - is left out and listed with the reason in `.unavailable`; with
+`skipUnavailable = False` it raises instead. `ComputeSystemGraph(mbs)` returns the graph of the items, a networkx
+graph, for an analysis of the structure of a model; `mbs.DrawSystemGraph()` draws it.
+
 ### Continuing a simulation from its restart file
 
 A long dynamic simulation can be stopped and continued, e.g. a job on a cluster with a time limit, or a run

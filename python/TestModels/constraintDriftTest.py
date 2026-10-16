@@ -7,7 +7,7 @@
 #           (index2CheckConstraints), the largest value is in the output of the solver, and a smaller
 #           constraintDriftTolerance stops the solver. The index 3 solver keeps the drift at the Newton tolerance.
 #           The drift in the current state: mbs.ComputeConstraintResiduals, ComputeItemType.ConstraintDrift, the output
-#           variable ConstraintEquation of the constraint, and the sensor function SensorUFSystemConstraintDrift.
+#           variable ConstraintEquation of the constraint, and the sensor of SystemConstraintDrift (exudyn.systemUtilities).
 #
 # Author:   Johannes Gerstmayr
 # Date:     2026-10-15
@@ -18,7 +18,7 @@
 
 import exudyn as exu
 from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
-from exudyn.advancedUtilities import SensorUFSystemConstraintDrift
+from exudyn.systemUtilities import SystemConstraintDrift
 import numpy as np
 
 SC = exu.SystemContainer()
@@ -35,7 +35,8 @@ def Model():
     oBody = mbs.CreateRigidBody(referencePosition=[0, 0, 2], inertia=InertiaCuboid(1000, [0.4, 0.2, 0.1]),
                                 initialAngularVelocity=[1, 4, 0.5], nodeType=exu.NodeType.RotationEulerParameters)
     nBody = mbs.GetObject(oBody)['nodeNumber']
-    sDrift = mbs.AddSensor(SensorUserFunction(sensorUserFunction=SensorUFSystemConstraintDrift, storeInternal=True))
+    mbs.Assemble()
+    sDrift = SystemConstraintDrift(mbs).AddSensor()
     mbs.Assemble()
     return (mbs, oDistance, nBody, sDrift)
 

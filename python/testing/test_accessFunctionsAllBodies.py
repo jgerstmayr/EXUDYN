@@ -2,7 +2,7 @@
 # This is an EXUDYN test file
 #
 # Details:  The access functions of every body against finite differences (#2777), through mbs.ComputeItem and
-#           exudyn.advancedUtilities.NumericalJacobian (#2779): at random coordinates and velocities and at several
+#           exudyn.systemUtilities.NumericalJacobian (#2779): at random coordinates and velocities and at several
 #           local positions, the position Jacobian is d(velocity)/d(q_t), the rotation Jacobian d(angular velocity)/d(q_t),
 #           and the derivative of J_pos^T f + J_rot^T tau the numerical derivative of the Jacobians times f and tau.
 #           Euler parameters are compared on the tangent space of the unit sphere; the Lie group node (rotation
@@ -32,7 +32,7 @@ from exudyn.utilities import (NodeGenericODE2, ObjectKinematicTree, MarkerKinema
                               InertiaCuboid, RotXYZ2RotationMatrix, NodeRigidBody2D, ObjectRigidBody2D, NodePoint2DSlope1,
                               ObjectANCFCable2D, NodePointSlope1, ObjectANCFCable, NodePointSlope23, ObjectANCFBeam,
                               ObjectBeamGeometricallyExact2D, NodeRigidBodyEP, NodeRigidBodyRxyz, ObjectBeamGeometricallyExact)
-from exudyn.advancedUtilities import NumericalJacobian
+from exudyn.systemUtilities import NumericalJacobian
 
 #central differences: the error of epsilon = 1e-6 is about 1e-12 (truncation), that of the default 1e-8 about 1e-8
 #(round-off), above the tolerance 1e-8 of these comparisons
