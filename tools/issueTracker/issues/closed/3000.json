@@ -2,11 +2,15 @@
   "number": 3000,
   "title": "Camera-centric view: field of view, camera placement and far plane independent of the scale of the model",
   "author": "Claude-JG",
-  "status": "RAISED",
+  "status": "RESOLVED",
   "type": "IDEA",
   "effort": "MEDIUM",
   "description": "revision2026c step RG6.8.10 (found in RG6.8.8 with the raytracer, both renderers agree): in the camera-centric perspective view the half angle of the view is atan(zoom*perspective) - zoom is a length, so a model of 1 cm (zoom 0.018) sees through a tube of 1 degree and a model of 1 m through 84 degrees; ZoomAll does not place the eye (cameraPosition stays where it is, by default in the center of the scene, which shows nothing); the far plane is zMaxSceneFactor*maxSceneSize from the eye, independent of how far the eye is from the scene. The raytracer clips triangles at neither plane. To decide with the move to OpenGL 3.3/4.1.",
   "dateRaised": "2026-10-16",
   "deadline": "2027-04-14",
-  "file": "src/Graphics/GlfwClient.cpp"
+  "dateResolved": "2026-10-16 10:15",
+  "resolvedAuthor": "Claude-JG",
+  "file": "src/Graphics/GlfwClient.cpp",
+  "releaseNotes": "the camera-centric perspective view does not depend on the size of the model: the angle of view follows the zoom relative to the scene, ZoomAll places the camera (camera.cameraPosition) in front of the scene, the far plane lies behind the scene seen from the camera; OpenGL and raytracer share the frustum (RenderState::ComputePerspectiveFrustum), and the raytracer clips at its near and far plane as OpenGL does (revision2026c step RG6.8.10)",
+  "resolvedInVersion": "1.13.97"
 }

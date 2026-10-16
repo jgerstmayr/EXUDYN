@@ -47,16 +47,15 @@ and is open. **Open steps** and the **groups** table are generated - never edit 
 
 The title of each says what it does; the sentence after it, why it comes now.
 
-1. **Check the SolutionViewer on screen** (#2930, #2931): the PreStepUserFunction example on Windows, the space key on
-   macOS - both changed without a screen.
-2. **Run the suite and the math check on macOS ARM** (RG4.1.3, `mathFunctionsPlatform.py`,
-   `test_mathFunctionsPlatform.py`): the portable math functions are the default now; the fingerprint test shows whether
-   ARM computes the same bits, and `UnresolvedOnMacOS()` shrinks with the result.
+1. **Check the SolutionViewer on screen** (#2930): the PreStepUserFunction example on Windows - changed without a
+   screen; the space key works on macOS (2026-10-16).
+2. **The user function interface** (RG12.3, userFunctionBoundary.md section 11): the decisions on the steps, then the
+   mechanical first step.
 3. **Rehearse the next release on a `release/*` branch** with *build as a release* - the first run of cibuildwheel
    4.3.0 and of cp315 on GitHub.
 4. **The quick old issues** (RG11.8) - each small and without a decision.
-5. **The larger open work**, once the next release is planned: the remaining platform differences (RG4.1), the linear
-   algebra benchmark (RG5.1), the plugin interface (RG8), the checked item interface (RG9.6).
+5. **The larger open work**, once the next release is planned: the linear algebra benchmark (RG5.1), the plugin
+   interface (RG8), the checked item interface (RG9.6).
 
 # Revision plan open steps
 
@@ -68,7 +67,6 @@ The title of each says what it does; the sentence after it, why it comes now.
   - RG2.8 Choose parameters for a converged cable run in perfAccessFunctionsAD
   - RG2.9 Add three old test models (3 open sub-steps)
 - **RG4** Implementation problems and bugs
-  - RG4.1 Remove the platform differences of the contact and friction models by finding their causes (2 open sub-steps)
   - RG4.20 Port the revision of ObjectANCFThinPlate and complete the element (1 open sub-step)
   - RG4.21 Flag the constraints that depend on velocities or time, and add their term to the initial accelerations
   - RG4.22 Add a 3D sliding joint with rotation, tested with the ANCF cable and beam
@@ -81,7 +79,7 @@ The title of each says what it does; the sentence after it, why it comes now.
   - RG5.3 Assemble the analytic Jacobians in parallel with ParallelFor and a cost per item
   - RG5.4 Store the superelement matrices as sparse triplets for larger meshes
 - **RG6** Graphics and rendering
-  - RG6.8 Fix the remaining graphics problems with a test each (2 open sub-steps)
+  - RG6.8 Fix the remaining graphics problems with a test each
   - RG6.11 Draw textures from numpy arrays in triangle lists
   - RG6.12 Add a ruler to the renderer and orient imported triangles consistently
 - **RG7** Python user items
@@ -129,9 +127,9 @@ The title of each says what it does; the sentence after it, why it comes now.
 | RG1 | OPEN | 2 | Release and publication |
 | RG2 | OPEN | 5 | Testing and verification |
 | RG3 | CLOSED | 0 | Docs |
-| RG4 | OPEN | 11 | Implementation problems and bugs |
+| RG4 | OPEN | 8 | Implementation problems and bugs |
 | RG5 | OPEN | 8 | Performance |
-| RG6 | OPEN | 5 | Graphics and rendering |
+| RG6 | OPEN | 3 | Graphics and rendering |
 | RG7 | OPEN | 7 | Python user items |
 | RG8 | OPEN | 10 | Compiled C++ user items |
 | RG9 | OPEN | 4 | Structural core improvements |
@@ -214,13 +212,20 @@ CLOSED 2026-10-10 (#2937); the maintainer adjusts the widths.
 Real, reproducible problems that need a plan rather than a fix. Put off by a decision of the maintainer, not planned:
 `NodeGenericAE` as the owner of Lagrange multipliers (#2736, a case re-opens it).
 
-### **OPEN_RG4.1** Remove the platform differences of the contact and friction models by finding their causes
+### **CLOSED_RG4.1** Remove the platform differences of the contact and friction models by finding their causes
+
+CLOSED 2026-10-16 (#2954, #2990; maintainer: the successful macOS run, tmp/MacOS/testSuiteLog_V1.13.90.dev1_darwin-ARM-64bit-P3.13.txt):
+Linux and macOS ARM give the Windows results - all 193 test models and 94 mini examples within their tolerance, the
+former macOS-only models with an error of 0 or 1e-16. `UnresolvedOnLinux()` is empty, `UnresolvedOnMacOS()` keeps
+objectFFRFreducedOrderTest.py for cp314, whose modes come from numpy. [log](exudynRevisionLog2026c.md#rg4-1)
 
 The known differences are listed in `UnresolvedOnLinux()` and `UnresolvedOnMacOS()` (`python/testing/runTestSuiteRefSol.py`,
 the macOS list also for Linux ARM, #2919); every entry removed is a real fix. The measurements and their history are in
 the log of revision2026b step RG4.1.
 
-#### **OPEN_RG4.1.2** Look for one mechanism behind the macOS-only differences
+#### **CLOSED_RG4.1.2** Look for one mechanism behind the macOS-only differences
+
+CLOSED 2026-10-16 (#2990): Eigen's fused multiply-add on NEON (`__ARM_FEATURE_FMA`, `EIGEN_HAS_SINGLE_INSTRUCTION_MADD`).
 
 ANCF contact and sliding models and a gravity connector (`ANCFbeltDrive`, `ANCFcontactCircleTest`,
 `ANCFgeneralContactCircle`, `ANCFslidingAndALEjointTest`, `connectorGravityTest`), and since 1.13
@@ -233,7 +238,9 @@ and the newest Mac log in tmp/MacOS is of 1.13.75. tmp/MacOS/MacAgentRequest6.md
 the entries that match are then removed, and RG4.1 closes when the list is empty or every remaining entry has its
 cause.
 
-#### **OPEN_RG4.1.3** Test the math library and uninitialized values as causes, each with a build switch
+#### **CLOSED_RG4.1.3** Test the math library and uninitialized values as causes, each with a build switch
+
+CLOSED 2026-10-16 (#2954): the math library was the cause on Linux (RG4.1.3.4); no uninitialized values were needed.
 
 - the transcendental functions (`atan2`, `sin`, `exp`, `pow`, ...) differ in the last bit between glibc, the MSVC
   UCRT and Apple's libm; `sqrt` does not. Test: route them through one header (`EXUmath::Atan2`, ...) with a switch
@@ -342,8 +349,10 @@ test model constraintDriftTest.py. [log](exudynRevisionLog2026c.md#rg4-25)
 #2997: `SensorUFSystemKineticEnergy` and the potential and total energy, like `SensorUFSystemConstraintDrift`;
 `SystemEnergy(mbs).AddSensor()` exists.
 
-Proposal 2026-10-16 (maintainer: energy and drift homogenized, two classes with similar functionality at system
-level, open for more quantities) - for decision:
+Concept 2026-10-16 (maintainer: SystemQuantity and the derived classes exactly as proposed; all system functions in
+one library with a good name, DrawSystemGraph split into ComputeSystemGraph and the drawing; the 1.13 interface of the
+new functions may change): [design/systemUtilities.md](../dev/design/systemUtilities.md) - `exudyn.systemUtilities`,
+what moves into it, `SystemQuantity`, the graph, the imports, steps 1-3. The proposal before it:
 - a base class `SystemQuantity(mbs)` in a module `exudyn.systemQuantities` (from advancedUtilities): built once per
   assembled system (`Refresh()` after a change); `names` (the components), `Compute(configuration)` -> one value per
   component, `ComputeItems(configuration)` -> the contribution of each item, `SensorFunction` (a function with the
@@ -419,14 +428,18 @@ Proposals: RG6.8.10, RG6.8.11. [log](exudynRevisionLog2026c.md#rg6-8-8)
 
 CLOSED 2026-10-10 (#2951): the sensor traces were cut at z = -0.1; pytest `testRaytracerTracesInPerspective`. [log](exudynRevisionLog2026c.md#rg6-8-9)
 
-#### **OPEN_RG6.8.10** Make the camera-centric view independent of the scale of the model
+#### **CLOSED_RG6.8.10** Make the camera-centric view independent of the scale of the model
 
-#3000 (found in RG6.8.8): the field of view depends on the zoom (a length), ZoomAll does not place the eye, the far
-plane does not follow the eye; the raytracer clips no triangles. With the move to OpenGL 3.3/4.1.
+CLOSED 2026-10-16 (#3000, maintainer: fix it, also for the raytracer): one frustum for OpenGL and raytracer
+(`RenderState::ComputePerspectiveFrustum`); camera-centric angle of view tan = perspective zoom / (maxSceneSize/2), the
+far plane behind the scene from the eye, ZoomAll sets `cameraPosition`; the raytracer clips its triangles at the near and
+far plane as OpenGL. pytest `testTheCameraCentricViewShowsTheScene`. [log](exudynRevisionLog2026c.md#rg6-8-10)
 
-#### **OPEN_RG6.8.11** Let ZoomAll fit small scenes without changing two settings
+#### **CLOSED_RG6.8.11** Let ZoomAll fit small scenes without changing two settings
 
-#3001 (found in RG6.8.8): `minSceneSize` and `boundingBoxZoomAllOffset` are absolute lengths.
+CLOSED 2026-10-16 (#3001, maintainer: absolute by intention, a point has no size; the offset 10 times smaller, document
+it): `minSceneSize` 0.01, `boundingBoxZoomAllOffset` 0.001; GUI.md section Tiny and huge models.
+[log](exudynRevisionLog2026c.md#rg6-8-10)
 
 ### **OPEN_RG6.11** Draw textures from numpy arrays in triangle lists
 
@@ -447,7 +460,7 @@ CLOSED 2026-10-10 (#2930): `callPreStepUserFunction` (False by default), example
 
 #### **CLOSED_RG6.18.2** Start and stop the SolutionViewer with the space key on every platform
 
-CLOSED 2026-10-10 (#2931): the space key starts in Continuous run and stops in Static; to be checked on macOS.
+CLOSED 2026-10-10 (#2931): the space key starts in Continuous run and stops in Static; works on macOS (maintainer, 2026-10-16).
 
 #### **CLOSED_RG6.18.3** Switch a running SolutionViewer from Static to Continuous run with the first space key
 

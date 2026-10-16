@@ -121,6 +121,10 @@ public:
 	RTfloat zMaxSceneFactor;
 	RTVector3D nearFarPlaneOffset; //near and far plane overrides and flag
 	RTfloat projectionNearMin; //! given in renderState
+	RTfloat eyeZ;				//!< perspective: the eye on the view axis, RenderState::ComputePerspectiveFrustum (#3000)
+	RTfloat zNear;				//!< perspective: near plane, distance from the eye
+	RTfloat zFar;				//!< perspective: far plane, distance from the eye
+	RTfloat tanHalfAngle;		//!< perspective: tangent of half the vertical angle of view
 	Matrix4DF modelViewRM;	//!< model view matrix, row major (OpenGL is column-major!!!)
 	Matrix3DF rotationView;	//!< rotation matrix of modelView, row-major; updated by caller
 	RTVector3D translationView; //!< translation of modelView, row-major version; updated by caller
@@ -204,6 +208,10 @@ public:
 		zMaxSceneFactor = 2.f;
 		nearFarPlaneOffset = Float3({ 0,0,0 });
 		projectionNearMin = 0.1f; //set later!
+		eyeZ = 0.f;
+		zNear = 0.1f;
+		zFar = 1.f;
+		tanHalfAngle = 1.f;
 	}
 };
 

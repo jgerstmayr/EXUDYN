@@ -2245,59 +2245,18 @@ void GlfwRenderer::SetProjection(Index viewID, int width, int height, float rati
 		}
 		else
 		{
-			float zNearMin = state->GetProjectionNearMin();
-			//perspective
-			float distance = EXUstd::Maximum(1e-6f, zoom / perspective);
+			//perspective: the frustum of the render state, which the raytracer uses as well (#3000)
+			Matrix3DF rotationMV;
+			Float3 translationMV;
+			state->GetRotationTranslationFWithMarker(rotationMV, translationMV, basicVisualizationSystemContainer, settingsView);
+			float eyeZ, tanHalfAngle;
+			state->ComputePerspectiveFrustum(settingsView, zFactor, translationMV, zoom, eyeZ, zNear, zFar, tanHalfAngle);
 
-			//zNear must be > 0 for glFrustum
-			//choose a value that ensures the whole scene is visible
-			float zNear;
-			float zFar;
-			float scale;
+			float top = tanHalfAngle * zNear;
+			glFrustum(-ratio * top, ratio * top, -top, top, zNear, zFar);
 
-			if (settingsView.camera.modelCentricView) 
-			{
-				//model centric: zNear pushes out to surround the model
-				zNear = distance - (zFactor * maxSize);
-				zFar = distance + (zFactor * maxSize);
-				if (nearFar[2] == 1.f) { zNear = nearFar[0] + distance; zFar = nearFar[1] + distance; }
-
-				//safety cap to avoid inversion and avoid very small values
-				//for camera centric view, if we reach zNearMin, we can increase zoom!
-				if (zNear < zNearMin) { zNear = zNearMin; }
-
-				scale = zNear / distance;
-			}
-			else 
-			{
-				//camera-centric: near plane is the camera lens. 
-				//must be strictly > 0 for glFrustum to make sense:
-				zNear = zNearMin;
-				zFar = (zFactor * maxSize);
-				if (nearFar[2] == 1.f) { zNear = nearFar[0]; zFar = nearFar[1]; }
-
-				//safety cap to avoid inversion and avoid very small values
-				//for camera centric view, if we reach zNearMin, we can increase zoom!
-				if (zNear < zNearMin) { zNear = zNearMin; }
-
-				scale = zNear * perspective;
-			}
-
-
-			//scale the Ortho-bounds to the Near Plane
-			//relation: frustumValue = orthoValue * (zNear / distance)
-			float left = -ratio * zoom * scale;
-			float right = ratio * zoom * scale;
-			float bottom = -zoom * scale;
-			float top = zoom * scale;
-
-			glFrustum(left, right, bottom, top, zNear, zFar);
-
-			// apply Z-offset pushback only for the model centric view.
-			if (settingsView.camera.modelCentricView) 
-			{
-				glTranslatef(0.f, 0.f, -distance);
-			}
+			//the model-centric view: the eye in front of the focal plane
+			if (eyeZ != 0.f) { glTranslatef(0.f, 0.f, -eyeZ); }
 		}
 	}
 	else //a projection matrix was given from outside, through SetState (renderState)

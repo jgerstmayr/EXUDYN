@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.13 | Newborn | 96 | 1.13.96 |
+| 1.13 | Newborn | 97 | 1.13.98 |
 | 1.12 | Metheney | 367 | 1.12.462 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
@@ -30,6 +30,10 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.13 - Newborn (current)
 
+- **1.13.98** `CHANGE` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` ZoomAll of small scenes: minSceneSize and boundingBoxZoomAllOffset are absolute lengths (#3001)
+  - description: revision2026c step RG6.8.11 (found in RG6.8.8): general.minSceneSize = 0.1 and general.boundingBoxZoomAllOffset = 0.01 are lengths; a model of 1 cm is zoomed to 0.042 instead of 0.018 and appears at half the size, one of 1 mm fills a few pixels; the settings must be scaled by the user (their descriptions say so). Proposal: relative to the bounding box of the scene, or a zero default with a positive minimum only against division by zero.
+  - **notes:** general.minSceneSize 0.01 and general.boundingBoxZoomAllOffset 0.001 (were 0.1 and 0.01), both lengths on purpose, as points and texts have no size; the manual section Tiny and huge models says which settings to adjust (revision2026c step RG6.8.11)
+  - date resolved: **2026-10-16 10:15**, date raised: 2026-10-16
 - **1.13.96** `CHECK` `LOW EFF` `resolved by: Claude-JG` perspective (#2204)
   - description: check OpenGL visibility problems with larger zoom (is this the 0.1 limit?)
   - **notes:** a small model stays visible when zoomed in with perspective: the near plane is at least 0.001 of the scene size (at most 0.1) instead of a fixed 0.1, the same for OpenGL and the raytracer; pytest testASmallModelStaysVisibleInPerspective (revision2026c step RG6.8.8)

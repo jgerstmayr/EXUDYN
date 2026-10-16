@@ -1298,3 +1298,35 @@ for the shadows and camera settings; not much investment before OpenGL 3.3/4.1.)
   Python (a change from lists, with a switch or 2.0), the points of RG7.3.4 decided by it; steps in section 11.
 - **RG4.25.3**: proposal of `SystemQuantity` with `SystemEnergy` and `SystemConstraintDrift` in the plan step.
 - **RG4.1**: Linux resolved; macOS needs a log of a full run (tmp/MacOS/MacAgentRequest6.md).
+
+<a id="rg6-8-10"></a>
+### RG6.8.10, RG6.8.11, RG4.1 closed, RG4.25.3 concept — the camera-centric view, small scenes, macOS, system utilities (2026-10-16, #3000, #3001)
+*(Maintainer 2026-10-16: the successful macOS run is tmp/MacOS/testSuiteLog_V1.13.90.dev1_darwin-ARM-64bit-P3.13.txt;
+the space key of the SolutionViewer works on macOS. #3001: absolute by intention, as a point has no size; minSceneSize
+could be smaller if the scene were computed more accurately; boundingBoxZoomAllOffset 10 times smaller; a short section
+for tiny or huge models. #3000: fix it, also for the raytracer. RG4.25.3: all system functions in one library,
+DrawSystemGraph split, a good name; the concept into design/systemUtilities.md.)*
+- **RG4.1 closed**: the macOS log of 1.13.90 - all 193 test models and 94 mini examples within their tolerance; the
+  seven models of `UnresolvedOnMacOS()` that had macOS-only differences give the Windows values (error 0, one 1e-16),
+  the largest differences elsewhere 1e-14 to 1.2e-12. The list keeps objectFFRFreducedOrderTest.py for cp314 (numpy's
+  eigenvalue solver). RG4.1.2 (the mechanism: Eigen's fused multiply-add on NEON) and RG4.1.3 (the math library)
+  closed with it. RG6.18.2 notes the space key on macOS.
+- **#3000**: `RenderState::ComputePerspectiveFrustum` gives the eye on the view axis, the near and far plane and the
+  angle of view, used by `GlfwRenderer::SetProjection` and by the raytracer (rays, lines, texts, and now the clipping
+  of its triangles at the near and far plane of primary rays, which OpenGL always did). Model-centric: unchanged (the
+  same values as before). Camera-centric: tan(angle/2) = perspective zoom / (maxSceneSize/2) instead of
+  perspective zoom - the zoom, a length, made a model of 1 cm look through 1 degree and one of 1 m through 84; the far
+  plane at |translation| + zMaxSceneFactor maxSceneSize from the eye instead of zMaxSceneFactor maxSceneSize; ZoomAll
+  sets `camera.cameraPosition` (a setting; the rotation pivots about the camera, so its position decides) in front of
+  the center of the scene at maxSceneSize/(2 perspective) - before, it stayed in the scene and showed nothing. The
+  camera-centric inverse projection of the raytracer's lines used the model-centric formula; corrected. Checked with
+  12 raytracer images of light, rotation, pan and both views: the camera-centric images show the scene as the
+  model-centric ones. pytest testTheCameraCentricViewShowsTheScene (scale 1 and 0.01).
+- **#3001**: the box of the scene counts spheres, circles, lines, triangles with their size; points drawn in pixels and
+  texts have none - that is what minSceneSize is for. `minSceneSize` 0.1 -> 0.01, `boundingBoxZoomAllOffset`
+  0.01 -> 0.001; descriptions and GUI.md section *Tiny and huge models*.
+- **RG4.25.3**: docs/dev/design/systemUtilities.md - `exudyn.systemUtilities`; what moves (SystemEnergy,
+  LoadPotentialEnergy, ComputeConstraintResiduals, ItemODE2Coordinates, NumericalJacobian, ComputeSystemDegreeOfFreedom,
+  DrawSystemGraph) and what is removed (CreateLoadEnergySensor, SensorUFSystemConstraintDrift - both since 1.12/1.13);
+  `SystemQuantity` with `Compute`, `ComputeItems`, `SensorFunction`, `AddSensor`, `items`, `unavailable`;
+  `SystemEnergy`, `SystemConstraintDrift`; `ComputeSystemGraph` and `DrawSystemGraph`; imports for compatibility.

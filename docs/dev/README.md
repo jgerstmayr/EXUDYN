@@ -13,6 +13,7 @@ Developer-facing notes. Users start at [`README.rst`](https://github.com/jgerstm
 | [RELEASE.md](RELEASE.md) | how a release reaches GitHub, PyPI and the documentation: the commands in order, the rehearsal on GitHub, the traps |
 | [design/pythonUserItems.md](design/pythonUserItems.md) | the design of the Python user items: what each kind of item needs, the decisions, measurements |
 | [design/symmetricBasis.md](design/symmetricBasis.md) | the symmetric frame of two slope vectors and its rotation Jacobian, for NodePointSlope12 (concept, with a Python reference) |
+| [design/systemUtilities.md](design/systemUtilities.md) | exudyn.systemUtilities: the functions of a whole system, SystemQuantity with SystemEnergy and SystemConstraintDrift, the system graph (concept) |
 | [design/userFunctionBoundary.md](design/userFunctionBoundary.md) | the vectors of the user functions at the C++/Python boundary: allocations per call, measurements, options |
 | [GUI_MANUAL_CHECK.md](GUI_MANUAL_CHECK.md) | the manual check of the render window and the dialogs before a release, per platform |
 | [../../definitions/README.md](../../definitions/README.md) | the item and structure definitions as Python, and the function declaration library |
@@ -40,6 +41,7 @@ Developer-facing notes. Users start at [`README.rst`](https://github.com/jgerstm
 /docs/dev/GUI_MANUAL_CHECK
 /docs/dev/design/pythonUserItems
 /docs/dev/design/symmetricBasis
+/docs/dev/design/systemUtilities
 /docs/dev/design/userFunctionBoundary
 /docs/generated/deprecations
 /definitions/README

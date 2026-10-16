@@ -420,28 +420,20 @@ def UnresolvedOnMacOS():
     """the models whose result differs on macOS by more than their tolerance
 
     What UnresolvedOnLinux() is to Linux. The reference values are the Windows ones, so a difference
-    here is the same kind of reproducible platform difference - a different compiler, a different
-    libm - and not a fault of the model. Measured on 2026-09-26 by the maintainer, on macOS ARM with
-    Python 3.13 and V1.12.68.dev1 (tmp/testSuiteLog_V1.12.68.dev1_darwin-ARM-64bit-P3.13.txt):
-    thirteen test models and one mini example, of which nine are also unresolved on Linux.
-    The set also applies to Linux on ARM (aarch64), which fuses a*b+c into one FMA as macOS ARM does (#2919).
+    here is the same kind of reproducible platform difference and not a fault of the model. The set
+    also applies to Linux on ARM (aarch64).
+
+    Since the portable math functions (#2954) and Eigen without fused multiply-add on arm64 (#2990),
+    macOS ARM gives the Windows results: V1.13.90.dev1, Python 3.13
+    (tmp/MacOS/testSuiteLog_V1.13.90.dev1_darwin-ARM-64bit-P3.13.txt), all 193 test models and 94 mini
+    examples within their tolerance, the seven models of this list with an error of 0 or 1e-16.
 
     A model that is in this set and passes is not a problem: the set says "a difference here proves
     nothing", not "there must be one"."""
 
     unresolved = UnresolvedOnLinux() | set([
-        #macOS ARM only, 2026-09-26; the relative error against the 3e-11 tolerance
-        'ANCFbeltDrive.py',                     #rel. 8.9e-06
-        'ANCFcontactCircleTest.py',             #rel. 1.5e-07
-        'ANCFgeneralContactCircle.py',          #rel. 7.8e-11
-        'ANCFslidingAndALEjointTest.py',        #rel. 1.4e-09
-        'connectorGravityTest.py',              #rel. 3.9e-13 of a value of 1.0e+06
-        #the only mini example that differs; the test model of the same connector
-        #(rigidBodySpringDamperIntrinsic.py) is in the Linux list above
-        'ObjectConnectorRigidBodySpringDamper.py',  #rel. 2.5e-09
-        #GitHub CI of 1.13.3, macOS ARM (#2919): the frame buckles laterally, which amplifies the roundoff; and the
-        #reduced order FFRF model on cp314 only (numpy 2.5.3), whose modes come from the eigenvalue solver
-        'geometricallyExactBeamRightAngleFrame.py', #rel. 3.9e-10
+        #GitHub CI of 1.13.3 on cp314 only (numpy 2.5.3): the modes of the reduced order FFRF model come from numpy's
+        #eigenvalue solver, not from Exudyn; passed with Python 3.13 on 2026-10-16 (#2919)
         'objectFFRFreducedOrderTest.py',        #rel. 1.3e-08
         ])
 

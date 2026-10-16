@@ -27,6 +27,7 @@ import os
 import sys
 
 import numpy as np
+import pytest
 
 import exudyn as exu
 import exudyn.graphics as graphics
@@ -535,6 +536,32 @@ def testRaytracerTracesInPerspective():
         image = SC.renderer.RedrawAndGetImage(useRaytracer=True).astype(int)
         pixels[perspective] = int(((image[:, :, 0] > 180) & (image[:, :, 1] < 80) & (image[:, :, 2] < 80)).sum())
     assert pixels[0.] > 300 and pixels[0.5] > 0.5*pixels[0.], pixels
+
+
+@pytest.mark.parametrize('scale', [1., 0.01])
+def testTheCameraCentricViewShowsTheScene(scale):
+    """ZoomAll puts the camera of a camera-centric perspective view in front of the scene, and the angle of view does not
+    depend on the size of the model (#3000): before, the eye stayed in the center of the scene, and a model of 1 cm was
+    seen through an angle of 1 degree"""
+    SC = exu.SystemContainer()
+    mbs = SC.AddSystem()
+    mbs.CreateGround(graphicsDataList=[graphics.CheckerBoard(point=[0, 0, 0], size=3*scale, nTiles=6),
+                                       graphics.Sphere(point=[scale, 0, 0.3*scale], radius=0.3*scale,
+                                                       color=graphics.color.blue)])
+    mbs.Assemble()
+    vs = SC.visualizationSettings
+    vs.view0.window.renderWindowSize = [200, 200]
+    vs.raytracer.advanced.showText = False
+    vs.view0.scene.drawWorldBasis = False
+    vs.view0.scene.drawCoordinateSystem = 0
+    vs.view0.camera.perspective = 0.5
+    vs.view0.camera.modelCentricView = False
+    vs.general.minSceneSize = 0.1*scale
+    SC.renderer.ZoomAll()
+    image = SC.renderer.RedrawAndGetImage(useRaytracer=True).astype(int)
+    blue = int(((image[:, :, 2] > 150) & (image[:, :, 0] < 80)).sum())
+    checkered = int((abs(image[:, :, 0] - image[:, :, 2]) < 10).sum()) #the gray tiles
+    assert blue > 400 and checkered > 0.3*200*200, (blue, checkered)
 
 
 def testASmallModelStaysVisibleInPerspective():

@@ -33,14 +33,14 @@ public: // AUTO:
   Float4 backgroundColor;                         //!< AUTO: red, green, blue and alpha values for background color of render window (white=[1,1,1,1]; black = [0,0,0,1])
   Float4 backgroundColorBottom;                   //!< AUTO: red, green, blue and alpha values for bottom background color in case that useGradientBackground = True
   float boundingBoxZoomAllFactor;                 //!< AUTO: must be > 0; factor on boundingBox for zoom all (without minimum offset)
-  float boundingBoxZoomAllOffset;                 //!< AUTO: must be >= 0; minimum offset to bounding box of scene in window - width or height, whatever is smaller; adjust for very small or large scenes; may be negative
+  float boundingBoxZoomAllOffset;                 //!< AUTO: must be >= 0; minimum offset to bounding box of scene in window - width or height, whatever is smaller, a length; usually boundingBoxZoomAllFactor decides; adjust for very small scenes, see [](#sec-renderer-modelsize); may be negative
   Index circleTiling;                             //!< AUTO: must be > 0; global number of segments for circles; if smaller than 2, 2 segments are used (flat); the circles of the 2D cable contacts (ObjectContactCircleCable2D, ObjectContactFrictionCircleCable2D), large compared to the cable, take 4 times as many
   float coordinateSystemSize;                     //!< AUTO: must be > 0; size of coordinate system relative to font size
   Index cylinderTiling;                           //!< AUTO: must be > 0; global number of segments for cylinders; if smaller than 2, 2 segments are used (flat); also around the rope of a reeving system and the wire of a spring drawn as a tube; the disc of ObjectJointRollingDisc and ObjectConnectorRollingDiscPenalty, large compared to the joint, takes 4 times as many; space curves use connectors.curveTiling
   float displayScaleFactor;                       //!< AUTO: must be > 0; factor on the texts of the render window, multiplied with the display scaling of the system (monitor scaling, e.g. 150 percent on Windows, fractional scaling on Linux), which GLFW reads (glfwGetWindowContentScale; on Linux from GLFW 3.3.6 on) and follows when it changes; acts while the renderer runs; the dialogs are scaled with dialogs.fontScaling
   float graphicsUpdateInterval;                   //!< AUTO: must be >= 0; interval of graphics update during simulation in seconds; 0.1 = 10 frames per second; low numbers might slow down computation speed
   bool limitWindowToScreenSize;                   //!< AUTO: True: size for render window of respective view is limited to screen size; False: larger window sizes (e.g. for rendering) allowed according to renderWindowSize
-  float minSceneSize;                             //!< AUTO: must be > 0; minimum scene size for initial scene size and for autoFitScene, to avoid division by zero; SET GREATER THAN ZERO
+  float minSceneSize;                             //!< AUTO: must be > 0; minimum scene size for initial scene size and for autoFitScene: a scene of points (drawn in pixels) and texts has no size; reduce it for models smaller than it, see [](#sec-renderer-modelsize); SET GREATER THAN ZERO
   float pointSize;                                //!< AUTO: must be > 0; global point size (absolute)
   Real reallyQuitTimeLimit;                       //!< AUTO: must be >= 0; number of seconds after which user is asked a security question before stopping simulation and closing renderer; set to 0 in order to always get asked; set to 1e10 to (nearly) never get asked
   Index rendererPrecision;                        //!< AUTO: must be > 0; precision of general floating point numbers shown in render window: total number of digits used  (max. 16)
@@ -75,14 +75,14 @@ public: // AUTO:
     backgroundColor = Float4({1.0f,1.0f,1.0f,1.0f});
     backgroundColorBottom = Float4({0.8f,0.8f,1.0f,1.0f});
     boundingBoxZoomAllFactor = 1.2f;
-    boundingBoxZoomAllOffset = 0.01f;
+    boundingBoxZoomAllOffset = 0.001f;
     circleTiling = 16;
     coordinateSystemSize = 5.f;
     cylinderTiling = 16;
     displayScaleFactor = 1.f;
     graphicsUpdateInterval = 0.1f;
     limitWindowToScreenSize = true;
-    minSceneSize = 0.1f;
+    minSceneSize = 0.01f;
     pointSize = 0.01f;
     reallyQuitTimeLimit = 900;
     rendererPrecision = 4;
@@ -1265,7 +1265,7 @@ public: // AUTO:
 class VSettingsCamera // AUTO: 
 {
 public: // AUTO: 
-  Float3 cameraPosition;                          //!< AUTO: if modelCentricView=True: offset to camera position in model view (and, if used, relative to tracked marker - instead of a tracked marker position, you could also just change the camera position in camera-centric views); camera rotation follows modelRotation in renderState
+  Float3 cameraPosition;                          //!< AUTO: if modelCentricView=False: the position of the camera in the model (and, if used, relative to a tracked marker); camera rotation follows modelRotation in renderState; ZoomAll sets it in a perspective view, such that the camera looks at the center of the scene from the distance at which it shows the scene
   float clippingPlaneDistance;                    //!< AUTO: distance of clipping plane on normal vector; see also clippingPlaneNormal and openGL.advanced.clippingPlaneColor
   Float3 clippingPlaneNormal;                     //!< AUTO: normal vector of clipping plane, e.g. [0,0,1] to set a xy-clipping plane; the clipped half-space is in direction of the normal; use [0,0,0] to deactivate clipping plane; Note that clipping is mainly made for triangles in order to visualize hidden objects and currently it only fully clips triangles, but does not exactly cut them; see also clippingPlaneDistance and openGL.advanced.clippingPlaneColor
   bool modelCentricView;                          //!< AUTO: True: rotations and translations are applied to model, while camera stays far enough away from the model and always captures the whole model (everything is in front of camera plane); False: camera moves and rotates while model stays in physical space; only geometry in front of camera is visible; note that the behavior of trackMarker changes with modelCentricView and some features are not available in case of modelCentricView=False.

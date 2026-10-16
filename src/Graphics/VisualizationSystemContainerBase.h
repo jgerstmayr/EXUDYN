@@ -147,6 +147,38 @@ public:
 	//! nearer than 0.1 (#2204); the ratio of far to near plane stays about 1000 for the depth buffer
 	float GetProjectionNearMin() const { return EXUstd::Minimum(0.1f, 1e-3f * maxSceneSize); }
 
+	//! the frustum of a perspective view (perspective > 0), the same for OpenGL and the raytracer (#3000): the eye at eyeZ
+	//! on the view axis - zoom/perspective in front of the focal plane for the model-centric view, at the origin of the
+	//! view (the camera) for the camera-centric one -, the near and far plane as distances from the eye, and the tangent of
+	//! half the vertical angle of view; translationMV as GetRotationTranslationFWithMarker gives it
+	void ComputePerspectiveFrustum(const VSettingsView& settingsView, float zMaxSceneFactor, const Float3& translationMV,
+		float zoomView, float& eyeZ, float& zNear, float& zFar, float& tanHalfAngle) const
+	{
+		const Float3& nearFar = settingsView.camera.nearFarPlaneOffset;
+		const float perspective = settingsView.camera.perspective;
+		const float zNearMin = GetProjectionNearMin();
+		if (settingsView.camera.modelCentricView)
+		{
+			const float distance = EXUstd::Maximum(1e-6f, zoomView / perspective);
+			eyeZ = distance;
+			zNear = distance - zMaxSceneFactor * maxSceneSize;
+			zFar = distance + zMaxSceneFactor * maxSceneSize;
+			if (nearFar[2] == 1.f) { zNear = nearFar[0] + distance; zFar = nearFar[1] + distance; }
+			tanHalfAngle = zoomView / distance; //= perspective
+		}
+		else
+		{
+			//the angle of view does not depend on the size of the model: the zoom relative to the scene is the zoom of a
+			//lens; tan(angle/2) = perspective at a zoom of half the scene size
+			eyeZ = 0.f;
+			tanHalfAngle = perspective * zoomView / EXUstd::Maximum(1e-12f, 0.5f * maxSceneSize);
+			zNear = zNearMin;
+			zFar = translationMV.GetL2Norm() + zMaxSceneFactor * maxSceneSize; //behind the scene, wherever the eye is
+			if (nearFar[2] == 1.f) { zNear = nearFar[0]; zFar = nearFar[1]; }
+		}
+		if (zNear < zNearMin) { zNear = zNearMin; }
+	}
+
 	//! increment centerPoint to compensate motion due to rotation with rotationCenterPoint != 0
 	void CenterPointUpdateFromRotationChange(const Matrix3DF& previousRotation, const Matrix3DF& newRotation,
 		bool useColumnMajor = true)
@@ -286,7 +318,7 @@ public:
 
 	//! ZoomAll compute actions: optionally update graphics; with VSC, a tracked marker's translation is
 	//! subtracted, so that the scene is centered with the tracking applied, and it stays so while the marker moves (#2309)
-	void ComputeZoomAll(const VisualizationSettings& visSettings, VisualizationSystemContainerBase* VSC = nullptr, Index viewID = 0)
+	void ComputeZoomAll(VisualizationSettings& visSettings, VisualizationSystemContainerBase* VSC = nullptr, Index viewID = 0)
 	{
 		float bbFactor = visSettings.general.boundingBoxZoomAllFactor;
 		float bbOffset = visSettings.general.boundingBoxZoomAllOffset;
@@ -342,7 +374,17 @@ public:
 				this->zoom = 0.5f * factorX / ratio;
 			}
 		}
-		//std::cout << "ZoomAll zoom=" << this->zoom << "\n";
+
+		//a camera-centric perspective view looks from the camera position: ZoomAll puts it in front of the center of the
+		//scene, at the distance from which the zoom just shows the scene - before, the eye stayed where cameraPosition
+		//was, by default in the scene (#3000)
+		VSettingsView& settingsView = GetSettingsViewWritable(viewID, visSettings);
+		if (!settingsView.camera.modelCentricView && settingsView.camera.perspective > 0.f)
+		{
+			float distance = 0.5f * this->maxSceneSize / settingsView.camera.perspective;
+			Matrix3DF A = GetRotation3DF().GetTransposed(); //rotation of the view, as the bounding box is computed
+			settingsView.camera.cameraPosition = A * Float3({ 0.f, 0.f, this->boundingBox.Center()[2] + distance });
+		}
 	}
 
 };

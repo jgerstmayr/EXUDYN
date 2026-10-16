@@ -1942,7 +1942,7 @@ inline py::dict GetDictionaryWithTypeInfo(const VSettingsGeneral& data) {
     d["value"] = data.boundingBoxZoomAllOffset;
     d["type"] = "UFloat";
     d["size"] = std::vector<int>{1};
-    d["description"] = "minimum offset to bounding box of scene in window - width or height, whatever is smaller; adjust for very small or large scenes; may be negative";
+    d["description"] = "minimum offset to bounding box of scene in window - width or height, whatever is smaller, a length; usually boundingBoxZoomAllFactor decides; adjust for very small scenes, see [](#sec-renderer-modelsize); may be negative";
     structureDict["boundingBoxZoomAllOffset"] = d;
 
     d = py::dict(); //reset local dict
@@ -1998,7 +1998,7 @@ inline py::dict GetDictionaryWithTypeInfo(const VSettingsGeneral& data) {
     d["value"] = data.minSceneSize;
     d["type"] = "PFloat";
     d["size"] = std::vector<int>{1};
-    d["description"] = "minimum scene size for initial scene size and for autoFitScene, to avoid division by zero; SET GREATER THAN ZERO";
+    d["description"] = "minimum scene size for initial scene size and for autoFitScene: a scene of points (drawn in pixels) and texts has no size; reduce it for models smaller than it, see [](#sec-renderer-modelsize); SET GREATER THAN ZERO";
     structureDict["minSceneSize"] = d;
 
     d = py::dict(); //reset local dict
@@ -3729,7 +3729,7 @@ inline py::dict GetDictionaryWithTypeInfo(const VSettingsCamera& data) {
     d["value"] = EPyUtils::ToPythonMember(data.cameraPosition);
     d["type"] = "VectorFloat";
     d["size"] = std::vector<int>{3};
-    d["description"] = "if modelCentricView=True: offset to camera position in model view (and, if used, relative to tracked marker - instead of a tracked marker position, you could also just change the camera position in camera-centric views); camera rotation follows modelRotation in renderState";
+    d["description"] = "if modelCentricView=False: the position of the camera in the model (and, if used, relative to a tracked marker); camera rotation follows modelRotation in renderState; ZoomAll sets it in a perspective view, such that the camera looks at the center of the scene from the distance at which it shows the scene";
     structureDict["cameraPosition"] = d;
 
     d = py::dict(); //reset local dict

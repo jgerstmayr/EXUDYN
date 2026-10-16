@@ -241,6 +241,25 @@ Note that other items in renderState are ignored when calling `SC.renderer.SetSt
 
 $^*$Note that values with an asterisk are only available if the renderer has already been started using `SC.renderer.Start()`.
 
+(sec-renderer-modelsize)=
+### Tiny and huge models
+
+`ZoomAll` and the automatic near and far planes follow the size of the scene, so that a model of a few millimeters is
+shown as one of a few meters. Two settings are lengths, against scenes without size - points drawn in pixels, texts:
+
+- `visualizationSettings.general.minSceneSize` (default 0.01): a scene is not smaller than this; for a model of less
+  than about 1 cm, set it to about a tenth of the model size;
+- `visualizationSettings.general.boundingBoxZoomAllOffset` (default 0.001): the margin of `ZoomAll` around the scene;
+  usually `boundingBoxZoomAllFactor` (default 1.2, relative) decides; for a model of less than about 1 cm, set it to
+  about a hundredth of the model size.
+
+For huge models nothing needs to be set; for very large or very small node or connector sizes, see
+`visualizationSettings.nodes.defaultSize` and `connectors.defaultSize`.
+
+In a perspective view (`view0.camera.perspective` > 0), the model-centric view (`modelCentricView = True`, default)
+moves the model in front of the camera; in the camera-centric view the camera moves, `ZoomAll` puts it in front of the
+scene (`camera.cameraPosition`), and the zoom acts as the zoom of a lens.
+
 (sec-overview-basics-storingmodelview)=
 ### Storing the model view
 

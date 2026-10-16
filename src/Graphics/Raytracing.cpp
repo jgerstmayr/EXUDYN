@@ -266,7 +266,13 @@ RTVector3D Raytracer::ComputePixelColor(const RTVector3D& rayOrigin, const RTVec
 	IntersectionResult closestHit;
 	RTfloat minDistanceZ = std::numeric_limits<RTfloat>::lowest();
 	RTfloat maxDistanceTriangle = std::numeric_limits<RTfloat>::max();
-	if (RTS.nearFarPlaneOffset[2] == 1.f)
+	if (RTS.perspectiveFactor > perspectiveFactorLimit && reflectionDepth == 0 && transparencyDepth == 0)
+	{
+		//a ray from the eye: the triangles between the near and the far plane of the frustum, as OpenGL draws them (#3000)
+		minDistanceZ = RTS.zNear;
+		maxDistanceTriangle = RTS.zFar / EXUstd::Maximum(-rayDirection[2], 1e-6f);
+	}
+	else if (RTS.nearFarPlaneOffset[2] == 1.f)
 	{
 		minDistanceZ = rayOrigin[2] + RTS.nearFarPlaneOffset[0];
 		maxDistanceTriangle = rayOrigin[2] + RTS.nearFarPlaneOffset[1];
@@ -603,8 +609,8 @@ void Raytracer::RasterizeLine(const RTVector3D& p0, const RTVector3D& p1, const 
 			RTfloat scale = dist / EXUstd::Maximum(dist - p_world[2], 1e-6f);
 			if (!RTS.modelCentricView)
 			{
-				//dist = 0 => only projection counts (zoom not used here, as we use p to represent FOV)
-				scale = 1.f  / (p * EXUstd::Maximum(-p_world[2], 1e-6f));
+				//the eye at the origin, the angle of view of the frustum (#3000)
+				scale = RTS.zoom / (RTS.tanHalfAngle * EXUstd::Maximum(-p_world[2], 1e-6f));
 			}
 			RTfloat sx = (p_world[0] * scale / (RTS.zoom * RTS.ratio) + 1.f) * 0.5f * RTS.imageWidth;
 			RTfloat sy = (p_world[1] * scale / RTS.zoom + 1.f) * 0.5f * RTS.imageHeight;
@@ -620,7 +626,8 @@ void Raytracer::RasterizeLine(const RTVector3D& p0, const RTVector3D& p1, const 
 			return RTVector3D({ mx, my, z_world });
 		}
 		else {
-			RTfloat invScale = (dist - z_world) / dist;
+			RTfloat invScale = RTS.modelCentricView ? (dist - z_world) / dist
+				: RTS.tanHalfAngle * EXUstd::Maximum(-z_world, 1e-6f) / RTS.zoom; //inverse of ModelViewToScreen (#3000)
 			RTfloat mx = RTS.zoom * RTS.ratio * ((x_scr + 0.5f) / (0.5f * RTS.imageWidth) - 1.f) * invScale;
 			RTfloat my = RTS.zoom * ((y_scr + 0.5f) / (0.5f * RTS.imageHeight) - 1.f) * invScale;
 			return RTVector3D({ mx, my, z_world });
@@ -851,6 +858,10 @@ void Raytracer::DrawString(const char* text, float fontSizeScaled, const RTVecto
 	const RTfloat perspectiveFactor = isStaticObject ? 0 : RTS.perspectiveFactor;
 	const RTfloat dist = (perspectiveFactor > perspectiveFactorLimit) ? (RTS.zoom / perspectiveFactor) : 0.0f;
 	RTfloat scale = (perspectiveFactor <= perspectiveFactorLimit) ? 1 : dist / EXUstd::Maximum(dist - p[2], 1e-6f);
+	if (perspectiveFactor > perspectiveFactorLimit && !RTS.modelCentricView) //the eye at the origin, as the rays (#3000)
+	{
+		scale = RTS.zoom / (RTS.tanHalfAngle * EXUstd::Maximum(-p[2], 1e-6f));
+	}
 	fontScaling *= EXUstd::Minimum(20.f, scale);
 
 	auto ModelViewToScreen = [&](const RTVector3D& p_world) -> RTVector3D {
@@ -1124,6 +1135,11 @@ void Raytracer::SoftwareRenderer(Index viewID, VisualizationSystemContainerBase*
 	HomogeneousTransformationF modelView(RTS.rotationView, -RTS.translationView); //neg. translation to compensate for centerPoint shift
 	RTS.modelViewRM = modelView.GetHT44();
 	RTS.projectionNearMin = renderState->GetProjectionNearMin();
+	if (RTS.perspectiveFactor > perspectiveFactorLimit) //the frustum of OpenGL (#3000)
+	{
+		renderState->ComputePerspectiveFrustum(settingsView, RTS.zMaxSceneFactor, RTS.translationView, RTS.zoom,
+			RTS.eyeZ, RTS.zNear, RTS.zFar, RTS.tanHalfAngle);
+	}
 
 	RTfloat translationViewZ = RTS.translationView[2]; //used to correct Z-offset in static objects
 
@@ -1418,27 +1434,10 @@ void Raytracer::SoftwareRenderer(Index viewID, VisualizationSystemContainerBase*
 					}
 					else 
 					{
-						// Lens Zoom: Eye stays at origin, look through the "zoom" window
-						// In OpenGL camera-centric, the camera is at (0,0,0)
+						//the eye at the origin; the angle of view of the frustum, independent of the size of the scene (#3000)
 						rayOrigin = { 0.0f, 0.0f, 0.0f };
-
-						// To match 'scale = zNear * perspective', the 'window' height 
-						// pointOnPlane currently gives us the ortho-coords (-zoom to +zoom).
-						RTfloat zNearPlane = RTS.projectionNearMin;
-						if (RTS.nearFarPlaneOffset[2] == 1.f) 
-						{ 
-							zNearPlane = EXUstd::Maximum(RTS.nearFarPlaneOffset[0], RTS.projectionNearMin);
-						}
-						RTfloat scale = zNearPlane * perspectiveFactor;
-
-						//compute ray dir directly
-						rayDir = {
-							pointOnPlane[0] * scale, //as rayDir is normalized, zNearPlane cancels out!!!
-							pointOnPlane[1] * scale,
-							-zNearPlane //plane distance
-						};
-
-						//rayDir = directionTarget - rayOrigin;
+						RTfloat scale = RTS.tanHalfAngle / zoom; //pointOnPlane is in [-zoom, zoom] vertically
+						rayDir = { pointOnPlane[0] * scale, pointOnPlane[1] * scale, -1.f };
 					}
 
 					rayDir.NormalizeSafe();
@@ -1461,10 +1460,9 @@ void Raytracer::SoftwareRenderer(Index viewID, VisualizationSystemContainerBase*
 		//for both, the model-centric view cut every line in front of the focal plane - the sensor traces (#2951)
 		if (RTS.perspectiveFactor > perspectiveFactorLimit)
 		{
-			RTfloat eyeZ = settingsView.camera.modelCentricView ? EXUstd::Maximum(1e-6f, RTS.zoom / RTS.perspectiveFactor) : 0.f;
-			nearPlaneZ = eyeZ - RTS.projectionNearMin; //zDepths grow towards the eye
+			nearPlaneZ = RTS.eyeZ - RTS.zNear; //zDepths grow towards the eye; the near plane of the frustum (#3000)
 		}
-		if (RTS.nearFarPlaneOffset[2] == 1.f) { nearPlaneZ = -RTS.nearFarPlaneOffset[0]; } //negative nearPlane gives larger zDepth! 
+		else if (RTS.nearFarPlaneOffset[2] == 1.f) { nearPlaneZ = -RTS.nearFarPlaneOffset[0]; } //negative nearPlane gives larger zDepth! 
 
 		//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 		if (false)

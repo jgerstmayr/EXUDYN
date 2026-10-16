@@ -467,7 +467,7 @@ class VSettingsGeneral:
     boundingBoxZoomAllFactor: float
     """factor on boundingBox for zoom all (without minimum offset)."""
     boundingBoxZoomAllOffset: float
-    """minimum offset to bounding box of scene in window - width or height, whatever is smaller; adjust for very small or large scenes; may be negative."""
+    """minimum offset to bounding box of scene in window - width or height, whatever is smaller, a length; usually boundingBoxZoomAllFactor decides; adjust for very small scenes, see sec-renderer-modelsize; may be negative."""
     circleTiling: int
     """global number of segments for circles; if smaller than 2, 2 segments are used (flat); the circles of the 2D cable contacts (ObjectContactCircleCable2D, ObjectContactFrictionCircleCable2D), large compared to the cable, take 4 times as many."""
     coordinateSystemSize: float
@@ -481,7 +481,7 @@ class VSettingsGeneral:
     limitWindowToScreenSize: bool
     """True: size for render window of respective view is limited to screen size; False: larger window sizes (e.g. for rendering) allowed according to renderWindowSize."""
     minSceneSize: float
-    """minimum scene size for initial scene size and for autoFitScene, to avoid division by zero; SET GREATER THAN ZERO."""
+    """minimum scene size for initial scene size and for autoFitScene: a scene of points (drawn in pixels) and texts has no size; reduce it for models smaller than it, see sec-renderer-modelsize; SET GREATER THAN ZERO."""
     pointSize: float
     """global point size (absolute)."""
     reallyQuitTimeLimit: float
@@ -863,7 +863,7 @@ class VSettingsContact:
 class VSettingsCamera:
     """Settings for camera like perspective, marker tracking, clipping plane, etc. Note that some options may also be found in openGL settings."""
     cameraPosition: Tuple[float,float,float]
-    """if modelCentricView=True: offset to camera position in model view (and, if used, relative to tracked marker - instead of a tracked marker position, you could also just change the camera position in camera-centric views); camera rotation follows modelRotation in renderState."""
+    """if modelCentricView=False: the position of the camera in the model (and, if used, relative to a tracked marker); camera rotation follows modelRotation in renderState; ZoomAll sets it in a perspective view, such that the camera looks at the center of the scene from the distance at which it shows the scene."""
     clippingPlaneDistance: float
     """distance of clipping plane on normal vector; see also clippingPlaneNormal and openGL.advanced.clippingPlaneColor."""
     clippingPlaneNormal: Tuple[float,float,float]
