@@ -1330,3 +1330,19 @@ DrawSystemGraph split, a good name; the concept into design/systemUtilities.md.)
   DrawSystemGraph) and what is removed (CreateLoadEnergySensor, SensorUFSystemConstraintDrift - both since 1.12/1.13);
   `SystemQuantity` with `Compute`, `ComputeItems`, `SensorFunction`, `AddSensor`, `items`, `unavailable`;
   `SystemEnergy`, `SystemConstraintDrift`; `ComputeSystemGraph` and `DrawSystemGraph`; imports for compatibility.
+
+<a id="rg13"></a>
+### RG13 added, RG12.3.3 revised — total coordinates as a group, Vector& in the user function interface (2026-10-16, #1910, #3002)
+*(Maintainer 2026-10-16: why not `const Vector& q` instead of `LinkedDataVector`, as it includes the linked vector and
+is more flexible - adjust if agreed. Total coordinates will be stored in the solver in the future, so their efficiency
+is less a question for the current proposal; a new group for total coordinates in system data, solvers and item
+functions, starting with an evaluation of how to do it efficiently; the solvers act on coordinates relative to the
+reference, total coordinates are an additional end product - a vector addition and cache memory, mostly relevant for
+the explicit solvers; after extended performance evaluations with more models, solvers and configurations.)*
+- **userFunctionBoundary.md**: agreed - `Vector` is `VectorBase<Real>`, the base of `ResizableVector` and
+  `LinkedDataVector`, so `const Vector&` takes all three without a conversion; only memory that is no `VectorBase`
+  (`std::vector`, a pointer, `ConstSizeVector`, `SlimVector`) needs a `LinkedDataVector` around it. The results become
+  `Vector&` as well: `SetNumberOfItems` is virtual, so a `ResizableVector` keeps its capacity and a `LinkedDataVector`
+  of the right size takes the result in place. Matrices the same with `Matrix`. Point 13 of RG7.3.4 waits for RG13.
+- **RG13**, a new group: RG13.1 the performance baseline over more models, solvers and configurations (#3002), RG13.2
+  the evaluation of how the total coordinates are provided (#1910, kept open as an idea since 2024).

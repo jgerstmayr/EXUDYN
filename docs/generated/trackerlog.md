@@ -10,7 +10,7 @@ General information on current version:
 
 - Exudyn version = 1.13.98.dev1
 - last change = 2026-10-16
-- Number of issues = 3002
+- Number of issues = 3003
 - Number of resolved issues = 2875 (98 in current version)
 
 ## Resolved issues and resolved bugs before version 1.13
@@ -9039,6 +9039,9 @@ The following list contains the issues which have been **RESOLVED** in the accor
 
 ## Open issues
 
+- `TESTING` `MEDIUM EFF` `raised by: Claude-JG` Performance measurement over more models, solvers and solver configurations, as the baseline of the total coordinates (#3002)
+  - description: revision2026c step RG13.1 (maintainer 2026-10-16): before total coordinates are added (RG13.2, \#1910), the cost of the solvers is measured on more models (rigid multibody, flexible, contact, large systems), for the implicit and explicit solvers and their configurations (dense/sparse, modified Newton, step sizes, multithreading), so that the cost of an additional vector addition and of the cache memory per step becomes visible - mostly relevant for the explicit solvers
+  - date raised: 2026-10-16
 - `EXTENSION` `LOW EFF` `raised by: Claude-JG` Sensor user functions for the kinetic, potential and total energy of the system (#2997)
   - description: revision2026c step RG4.25.3 (maintainer 2026-10-15, with the drift of \#565): SensorUFSystemKineticEnergy, SensorUFSystemPotentialEnergy, SensorUFSystemTotalEnergy for SensorUserFunction, like SensorUFSystemConstraintDrift; SystemEnergy(mbs).AddSensor() exists and records all four values, built once per model - the functions would build what they need per call or keep it per mbs
   - date raised: 2026-10-15
@@ -9221,7 +9224,7 @@ The following list contains the issues which have been **RESOLVED** in the accor
   - date raised: 2024-11-02
 - `CHECK` `HIGH EFF` total coordinates (#1910)
   - description: consider a solver option which continuously provides total coordinates during iterations which could be used in user functions or globally and also be linked instead of copied; add an exception if the respective option is not switched on; by default, only add an empty Vector currentState.ODE2CoordsTotal
-  - **remarks:** kept open as an idea, no plan step (triage 2026-10-07, revision2026b group RG18)
+  - **remarks:** planned as revision2026c step RG13.2 (maintainer 2026-10-16): the solvers keep relative coordinates, total coordinates an additional result; after the performance baseline RG13.1 (\#3002)
   - date raised: 2024-10-26
 - `EXTENSION` `HIGH EFF` Reference/link data (#1904)
   - description: evaluate further options to link to internal data, such as objects, nodes, etc.; possibly with GetObjectParameter(...) and similar functions possibly automated; this would highly speed up user functions as it reduces the number of exudyn function calls

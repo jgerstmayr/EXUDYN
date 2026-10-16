@@ -136,19 +136,24 @@ need no heap memory and stay as they are.
 
 ## 6. Proposal: the linalg components
 
-1. **R1 as one type for all user function arguments: `LinkedDataVector` / `LinkedDataMatrix`, const.** They exist,
-   every Exudyn container converts to them, and all vector code accepts them. Added: a constructor from
-   `const std::vector<Real>&` and from `(const Real*, Index)` without `const_cast` at the call site, and a
-   `ConstVectorView`-like use documented: an argument of a user function is `const LinkedDataVector&`. A separate,
-   non-virtual view class would be lighter, but would duplicate the vector operations; not proposed now.
-2. **R2 stays `ResizableVector` / `ResizableMatrix`**, with R5 for `Vector`: a move assignment that exchanges memory
-   only between two plain `Vector`s and copies otherwise - the rule of #2999 for matrices.
+1. **R1: the arguments of a user function are `const Vector&` and `const Matrix&`** (maintainer 2026-10-16) - the
+   base classes `VectorBase<Real>`, `MatrixBase<Real>`, of which `Vector`, `ResizableVector`, `LinkedDataVector` (and
+   `Matrix`, `ResizableMatrix`, `LinkedDataMatrix`) are; the item passes what it has without a conversion: its own
+   buffer, or a `LinkedDataVector` view of a part of a system vector. Memory that is no Exudyn vector - a
+   `std::vector`, a raw pointer, a `ConstSizeVector` or `SlimVector`, which are no `VectorBase` - is wrapped in a
+   `LinkedDataVector` first; added for it: constructors from `const std::vector<Real>&` and from `(const Real*, Index)`
+   without `const_cast` at the call site.
+2. **R2: the result is `Vector&` (`Matrix&`)**, in which the item usually passes a `ResizableVector` (`ResizableMatrix`):
+   `SetNumberOfItems` is virtual, so a resizable vector keeps its capacity, a `Vector` allocates, and a
+   `LinkedDataVector` of the right size receives the result in place - e.g. directly in a part of a system vector. With
+   R5 for `Vector`: a move assignment that exchanges memory only between two plain `Vector`s and copies otherwise - the
+   rule of #2999 for matrices.
 3. **R3: `CopyFrom(const std::vector<Real>&)` on all vectors, and `EPyUtils::CopyFromPython(const py::handle&,
    ResizableVector&)` / `(..., ResizableMatrix&)`**: a numpy array through the buffer protocol (contiguous `float64`:
    one `memcpy`; otherwise `py::array_t<Real, py::array::forcecast>`), a list or tuple item by item. The constructors
    that take `std::vector<T>` by value take it by const reference.
-4. **R4: `EPyUtils::ToNumpyView(const LinkedDataVector&)` / `(const LinkedDataMatrix&)`**: a `py::array_t<Real>` with
-   the data pointer and a dummy base object (no copy, no ownership), flagged not writeable. Valid during the call.
+4. **R4: `EPyUtils::ToNumpyView(const Vector&)` / `(const Matrix&)`**: a `py::array_t<Real>` with the data pointer
+   and a dummy base object (no copy, no ownership), flagged not writeable. Valid during the call.
 
 ## 7. Proposal: the call of a user function
 
@@ -161,8 +166,8 @@ caller's buffer and dispatches on the kind:
 
 ```cpp
 //generated for forceUserFunction: (mbs, t, itemNumber, q, q_t) -> vector
-void Evaluate(ResizableVector& result, const MainSystem& mbs, Real t, Index itemNumber,
-              const LinkedDataVector& q, const LinkedDataVector& q_t) const
+void Evaluate(Vector& result, const MainSystem& mbs, Real t, Index itemNumber,
+              const Vector& q, const Vector& q_t) const
 {
     if (ufType == UserFunctionType::Symbolic)  //links q, q_t into the named vectors, evaluates into result: no allocation
     { symbolicFunction->Evaluate(result, mbs, t, itemNumber, q, q_t); }
@@ -176,15 +181,15 @@ void Evaluate(ResizableVector& result, const MainSystem& mbs, Real t, Index item
 - the `std::function` member stays for what needs it (the dictionary of an item, calling a user function from
   Python), and leaves the hot path;
 - the generator (tools/generators, the user function declarations in definitions/) emits the `Evaluate` per
-  signature from the argument types it has: `StdVector` becomes `const LinkedDataVector&`, a result `StdVector`
-  becomes `ResizableVector&`, matrices `ResizableMatrix&` or `MatrixContainer&`; `StdVector3D` and the other fixed
-  sizes stay;
+  signature from the argument types it has: `StdVector` becomes `const Vector&`, a result `StdVector` becomes
+  `Vector&`, matrices `const Matrix&` and `Matrix&` or `MatrixContainer&`; `StdVector3D` and the other fixed sizes stay;
 - `UserFunctionExceptionHandling` and the solver timer wrap `Evaluate` as they wrap the call now.
 
 ## 8. Proposal: symbolic evaluation without allocations
 
 1. **Linked named variables (R6)**: `VectorExpressionNamedReal` can hold a `LinkedDataVector` to the argument instead
-   of a copy; `processArgument(const LinkedDataVector&)` sets the link - no copy, the value is read where it is.
+   of a copy; `processArgument(const Vector&)` sets the link to the memory of the argument - no copy, the value is read
+   where it is.
    Matrices the same (`MatrixExpressionNamedReal`).
 2. **Evaluation into node buffers**: `const ResizableConstVector& EvaluateRef() const` beside `Evaluate()`: a named
    variable returns its (linked) memory, an operator evaluates into a `mutable ResizableConstVector` member of the node
@@ -226,7 +231,7 @@ The interface above decides most of the points of RG7.3.4:
 | (7) double evaluations | `GetDisplacement` from one position evaluation and the reference position stored at `Assemble` |
 | (8) errors of a wrong size | one check in the generated `Evaluate`: `PyError` with the name of the user function and the sizes |
 | (9)-(12) ObjectGenericODE2 | the commented code removed; the Jacobian through `CopyOrAddTripletsWithFactor` in both modes; the coordinate buffers as in (3) |
-| (13) displacement or total coordinates | to decide: ObjectGenericODE2 gives displacements, ObjectUserBody total coordinates; proposal: keep both, say so in each description - a user body works in total coordinates, a generic system around a reference |
+| (13) displacement or total coordinates | waits for RG13 (total coordinates in the system data and the solvers, maintainer 2026-10-16): until then both stay as they are - ObjectGenericODE2 gives displacements, ObjectUserBody total coordinates - and each description says which; the efficiency of forming the total coordinates is no criterion of this proposal |
 | (14) MainSystem argument | inside the generated `Evaluate` (the item has `cSystemData->GetMainSystemBacklink()`) |
 | (15) gathering coordinates | one function `CObjectBody::GatherCoordinates(ResizableVector& q, ResizableVector& q_t, configuration, withReference)` for GenericODE2, GenericODE1, UserBody, KinematicTree, FFRF |
 | (16) the matrix copy | done (#2999) |
@@ -245,4 +250,4 @@ the call) and the results (numpy or list, copied).
 3. Section 9, the Python views: a decision (the change of `q` from list to numpy).
 4. Section 10 with RG7.3.4, on top of 1 to 3.
 5. Matrices (`massMatrixUserFunction`, `jacobianUserFunction`, the Jacobians of ObjectUserBody): the same scheme with
-   `LinkedDataMatrix` views and `ResizableMatrix` / `MatrixContainer` results; #1864 belongs here.
+   `const Matrix&` arguments and `Matrix&` / `MatrixContainer&` results; #1864 belongs here.
