@@ -79,7 +79,9 @@ lists to them or keeps them for the next call has to copy them; `exudyn.special.
 = True` gives the lists for the transition, see {ref}`sec-userfunctions` (#3008).
 
 **Symbolic user functions** that return a vector run without memory allocation and several times faster (#3005,
-#3006), and a component of a vector argument, `q[0]`, can be used in them (#3007).
+#3006), and a component of a vector argument, `q[0]`, can be used in them (#3007); `postNewtonFunction`, the
+`constraintUserFunction` of ObjectConnectorCoordinateVector and the `outputVariableUserFunction` of ObjectUserBody can
+be symbolic now (#2985).
 
 **`SystemContainer(attachToRenderer=False)`** creates a container only to compute, which leaves the render window with
 the container of the model; `InverseKinematicsNumerical` uses it (#2259).

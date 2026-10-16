@@ -103,7 +103,8 @@ image = ShowImage(SC, size=[1280,960], modelRotation=view)
 :width: 640px
 ```
 
-Four seconds with the index 2 trapezoidal rule, and the tip position over time:
+Four seconds with the generalized-$\alpha$ method, which keeps the position constraints of the joints, and the tip
+position over time:
 
 ```python
 tEnd = 4
@@ -113,7 +114,7 @@ simulationSettings.timeIntegration.numberOfSteps = int(tEnd/h)
 simulationSettings.timeIntegration.endTime = tEnd
 simulationSettings.solution.file.writePeriod = 0.005
 
-mbs.SolveDynamic(simulationSettings=simulationSettings, solverType=exu.DynamicSolverType.TrapezoidalIndex2)
+mbs.SolveDynamic(simulationSettings=simulationSettings, solverType=exu.DynamicSolverType.GeneralizedAlpha)
 mbs.PlotSensor(sensorNumbers=[sens1], components=[1], closeAll=True)
 ```
 

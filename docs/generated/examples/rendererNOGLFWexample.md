@@ -194,8 +194,12 @@ else:
     plt.imshow(image)
     plt.axis('off')
     plt.show()
-    #make sure that directory exists:
-    plt.imsave("images/mergedImageBallContact.jpg", image)
+    #the image goes where the output of a run goes, exudyn.config.outputDirectory; its directory is created
+    import os
+    from exudyn.basicUtilities import OutputFilePath
+    imageFile = OutputFilePath('images/mergedImageBallContact.jpg')
+    os.makedirs(os.path.dirname(imageFile), exist_ok=True)
+    plt.imsave(imageFile, image)
 
 mbs.PlotSensor(sPos, components=[2])
     

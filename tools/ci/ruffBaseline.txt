@@ -7,7 +7,6 @@
 1	python/exudyn/FEM.py	E721	Use `is` and `is not` for type comparisons, or `isinstance()` for isinstance checks
 9	python/exudyn/advancedUtilities.py	E721	Use `is` and `is not` for type comparisons, or `isinstance()` for isinstance checks
 1	python/exudyn/advancedUtilities.py	E731	Do not assign a `lambda` expression, use a `def`
-3	python/exudyn/advancedUtilities.py	E741	Ambiguous variable name: `l`
 1	python/exudyn/artificialIntelligence.py	E721	Use `is` and `is not` for type comparisons, or `isinstance()` for isinstance checks
 1	python/exudyn/basicUtilities.py	E721	Use `is` and `is not` for type comparisons, or `isinstance()` for isinstance checks
 3	python/exudyn/graphics.py	E721	Use `is` and `is not` for type comparisons, or `isinstance()` for isinstance checks

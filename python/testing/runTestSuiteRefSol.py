@@ -139,6 +139,7 @@ def TestExamplesReferenceSolution():
         'constraintDriftTest.py':9.796449624399628e-06, #new 2026-10-15: the drift of TrapezoidalIndex2 checked, the drift in the current state four ways (#565)
         'systemUtilitiesTest.py':1.670836871616957, #new 2026-10-16: SystemEnergy, SystemConstraintDrift and ComputeSystemGraph of exudyn.systemUtilities (#2997)
         'pythonUserFunctionArgumentsTest.py':0.5418115020412166, #new 2026-10-16: numpy arrays as vector arguments of Python user functions, userFunctionListArguments (#3008)
+        'symbolicUserFunctionSignaturesTest.py':30.255735007657506, #new 2026-10-16: the 30 symbolic user function signatures and seven items against their Python versions (#2985)
         'initialConstraintsCheckTest.py':2.937101858808996, #new 2026-10-14: the check of the initial conditions against the constraints, the projection of the initial velocities (#2234)
         'shellMeshSlopesScalingTest.py':0.0005808783959917463, #new 2026-10-14: the slope scaling of ShellMesh on a quarter cylinder and a flat trapezoid (#2226)
         'systemContainerComputeOnlyTest.py':4.0, #new 2026-10-14: SystemContainer(attachToRenderer=False), the renderer stays with the container of the model, also for InverseKinematicsNumerical (#2259)

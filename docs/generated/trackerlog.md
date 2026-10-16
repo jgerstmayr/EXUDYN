@@ -8,10 +8,10 @@ Every entry carries the **type** of the issue, then its **priority** and its **e
 
 General information on current version:
 
-- Exudyn version = 1.13.104.dev1
+- Exudyn version = 1.13.108.dev1
 - last change = 2026-10-16
-- Number of issues = 3010
-- Number of resolved issues = 2881 (104 in current version)
+- Number of issues = 3011
+- Number of resolved issues = 2885 (108 in current version)
 
 ## Resolved issues and resolved bugs before version 1.13
 
@@ -9051,9 +9051,6 @@ The following list contains the issues which have been **RESOLVED** in the accor
 - `IMPROVEMENT` `MEDIUM EFF` `raised by: Claude-JG` ObjectUserBody and ObjectGenericODE2: implement them with the Exudyn conventions and one shared pattern (#2995)
   - description: revision2026c step RG7.3.4 (maintainer 2026-10-15: static functions, EvaluateMatrix with an integer switch, StdVector used internally instead of the Exudyn vectors; check both objects): the review of both objects is in the plan step; to be decided item by item before the change
   - date raised: 2026-10-15
-- `TESTING` `MEDIUM EFF` `raised by: Claude-JG` Symbolic: complete tests of the symbolic user functions (#2985)
-  - description: revision2026c step RG12.5: check which symbolic user functions have tests (symbolicUserFunctionTest, symbolicModuleTest, symbolicUserFunctionCopyTest, ...) and add the missing ones, every signature against its Python version.
-  - date raised: 2026-10-12
 - `EXTENSION` `raised by: Claude-JG` Symbolic: access to the MainSystem and the item functions (#2984)
   - description: revision2026c step RG12.4: inside a symbolic user function, read what the system has - e.g. the current position of a node, a sensor value - as symbolic expressions evaluated in C++.
   - date raised: 2026-10-12
@@ -9062,9 +9059,6 @@ The following list contains the issues which have been **RESOLVED** in the accor
   - date raised: 2026-10-12
 - `CHANGE` `MEDIUM EFF` `raised by: Claude-JG` Symbolic: the user function interfaces as they are (#2982)
   - description: revision2026c step RG12.2: the interface of the symbolic user functions per signature - arguments, return types, how they are transferred to C++ - measured against the Python user functions.
-  - date raised: 2026-10-12
-- `DOCU` `MEDIUM EFF` `raised by: Claude-JG` Symbolic: the status of exudyn.symbolic and its user functions (#2981)
-  - description: revision2026c step RG12.1 (maintainer 2026-10-12): what exists - expression types, vectors, matrices, the user functions per item, what is missing (dense linear algebra), how they are created (CreateSymbolicUserFunction) and where the interface is awkward.
   - date raised: 2026-10-12
 - `CHANGE` `raised by: Claude-JG` General markers for curves, surfaces and volumes instead of the Cable2D markers (#2980)
   - description: revision2026c step RG9.7 (maintainer 2026-10-11; docs/dev/design/pythonUserItems.md 5.3): MarkerBodyCable2DShape and MarkerBodyCable2DCoordinates serve ObjectANCFCable2D only; a marker that gives the shape of a body, positions at varying local coordinates and their Jacobians, so that contact and sliding joints work on beams, plates, shells and general flexible surfaces.
@@ -9511,9 +9505,6 @@ The following list contains the issues which have been **RESOLVED** in the accor
 
 ## Known bugs
 
-- <span class="textred">`BUG`</span> `LOW EFF` `raised by: Claude-JG` Three examples stop at the drift check of TrapezoidalIndex2 (#3009)
-  - description: Found with runTestExamples.py (1.13.102): notebooks/tutorialRigidBody.py and notebooks/tutorialRigidBodyCreate.py stop with a drift of 1.005e-5 at t = 1.7, publications/CND2022PieberNtarladimaGerstmayr/fixedFixedANCFALEdiscreteMasses.py with 2.7e-4 at t = 0.36, above constraintDriftTolerance = 1e-5: SolveDynamic switches the check on for TrapezoidalIndex2 since \#565 (RG4.25.1). To decide: the tolerance, the step size of the examples, or the check off in them; the examples suite was not run for \#565.
-  - date raised: 2026-10-16
 - <span class="textred">`BUG`</span> `LOW EFF` `raised by: Claude-JG` InverseKinematicsNumerical fails for a robot whose links have no PDcontrol (#2993)
   - description: revision2026c step RG11.8.20: InverseKinematicsNumerical.\_\_init\_\_ reads self.robot.links\[i\].PDcontrol to store it, but RobotLink sets the attribute only when PDcontrol is given, so a robot built without control raises AttributeError ('RobotLink' object has no attribute 'PDcontrol'); it also leaves the joint stiffness of the inverse kinematics and robot.gravity = \[0,0,0\] in the robot it is given. Found with the test model of \#2259.
   - date raised: 2026-10-14

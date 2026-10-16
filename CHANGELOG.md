@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.13 | Newborn | 103 | 1.13.104 |
+| 1.13 | Newborn | 107 | 1.13.108 |
 | 1.12 | Metheney | 367 | 1.12.462 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
@@ -30,6 +30,22 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.13 - Newborn (current)
 
+- **1.13.108** `CHANGE` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` Python user functions get their fixed-size vectors and matrices as numpy arrays as well (#3010)
+  - description: Maintainer 2026-10-16 (after RG12.3.6): that the vectors of size 3 and 6 stayed lists was a misunderstanding; if there are no major boundaries, they become numpy arrays too. The std::array arguments (StdVector2D, StdVector3D, StdVector6D) and the matrices (StdMatrix3D, StdMatrix6D) are read-only numpy views, valid during the call; a fixed-size result from numpy in one pass; userFunctionListArguments gives lists for them as well; two examples that wrote into their load argument return a new vector.
+  - **notes:** Python user functions with vector arguments are about 10 percent faster: the numpy views are made with the numpy C interface; the vectors and matrices of size 3 and 6 stay lists, which Python computes with twice as fast
+  - date resolved: **2026-10-16 23:30**, date raised: 2026-10-16
+- **1.13.107** <span class="textred">`BUG`</span> `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` Three examples stop at the drift check of TrapezoidalIndex2 (#3009)
+  - description: Found with runTestExamples.py (1.13.102): notebooks/tutorialRigidBody.py and notebooks/tutorialRigidBodyCreate.py stop with a drift of 1.005e-5 at t = 1.7, publications/CND2022PieberNtarladimaGerstmayr/fixedFixedANCFALEdiscreteMasses.py with 2.7e-4 at t = 0.36, above constraintDriftTolerance = 1e-5: SolveDynamic switches the check on for TrapezoidalIndex2 since \#565 (RG4.25.1). To decide: the tolerance, the step size of the examples, or the check off in them; the examples suite was not run for \#565.
+  - **notes:** The rigid body tutorials solve with the generalized-alpha method; the ALE example of the CND 2022 article sets the drift tolerance its index 2 solution needs; rendererNOGLFWexample.py writes its image into the output directory
+  - date resolved: **2026-10-16 23:30**, date raised: 2026-10-16
+- **1.13.106** `TESTING` `MEDIUM EFF` `raised by: Claude-JG` `resolved by: Claude-JG` Symbolic: complete tests of the symbolic user functions (#2985)
+  - description: revision2026c step RG12.5: check which symbolic user functions have tests (symbolicUserFunctionTest, symbolicModuleTest, symbolicUserFunctionCopyTest, ...) and add the missing ones, every signature against its Python version.
+  - **notes:** All 30 user function signatures that can be symbolic are tested against their Python versions; postNewtonFunction, the constraintUserFunction of ObjectConnectorCoordinateVector and the outputVariableUserFunction of ObjectUserBody can be symbolic now, and UserFunction.Evaluate takes matrix arguments
+  - date resolved: **2026-10-16 23:30**, date raised: 2026-10-12
+- **1.13.105** `DOCU` `MEDIUM EFF` `raised by: Claude-JG` `resolved by: Claude-JG` Symbolic: the status of exudyn.symbolic and its user functions (#2981)
+  - description: revision2026c step RG12.1 (maintainer 2026-10-12): what exists - expression types, vectors, matrices, the user functions per item, what is missing (dense linear algebra), how they are created (CreateSymbolicUserFunction) and where the interface is awkward.
+  - **notes:** The status of exudyn.symbolic - the expression types, which user functions can be symbolic, what is missing - is described for developers in docs/dev/design/symbolicStatus.md
+  - date resolved: **2026-10-16 23:30**, date raised: 2026-10-12
 - **1.13.104** `CHANGE` `HIGH EFF` `raised by: Claude-JG` `resolved by: Claude-JG` Python user functions get their vector arguments as read-only numpy arrays instead of lists (#3008)
   - description: revision2026c step RG12.3.6 (\#2996, userFunctionBoundary.md section 9; maintainer 2026-10-16: numpy now, lists were a flaw; a switch for the old behaviour only if free): a vector argument of run-time size (q, q\_t, factors, ...) is a read-only numpy array that views the memory of the coordinates, valid during the call; a numpy result is copied with one pass; exudyn.special.deprecations.userFunctionListArguments = True gives lists, for a transition; the fixed-size 3D and 6D vectors stay lists
   - **notes:** Python user functions get their vector arguments of run-time size (q, q\_t, the factors of SensorUserFunction) as read-only numpy arrays instead of lists, valid during the call; a numpy result is copied in one pass; vector user functions are up to 4.5 times faster; exudyn.special.deprecations.userFunctionListArguments = True gives lists for the transition

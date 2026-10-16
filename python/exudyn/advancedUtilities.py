@@ -841,16 +841,18 @@ def ConvertFunctionToSymbolic(mbs, function, userFunctionName, itemIndex=None, i
         arg = fnArgs[i] #functionArgs[1][i] 
         if varType == 'Real':
             var = exudyn.symbolic.Real(arg, 0.)
-        elif varType == 'Index':
+        elif varType in ['Index', 'bool', 'OutputVariableType']: #a flag and an enum are Reals in the expression (#2985)
             var = exudyn.symbolic.Real(arg, 0)
-        elif (varType == 'StdVector3D'
+        elif (varType == 'StdVector2D'
+              or varType == 'StdVector3D'
               or varType == 'StdVector6D'
               or varType == 'StdVector'
               ):
-            l = 0
-            if '3D' in varType: l = 3
-            if '6D' in varType: l = 6
-            var = exudyn.symbolic.Vector(arg,[0.]*l)
+            size = 0
+            if '2D' in varType: size = 2
+            if '3D' in varType: size = 3
+            if '6D' in varType: size = 6
+            var = exudyn.symbolic.Vector(arg,[0.]*size)
         elif (varType == 'NumpyMatrix'
               or varType == 'StdMatrix3D'
               or varType == 'StdMatrix6D'

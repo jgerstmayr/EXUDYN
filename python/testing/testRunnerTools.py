@@ -716,10 +716,9 @@ def KnownExampleFailures():
         #decides them by what the environment HAS (#2507), so pymeshlabFileImport.py
         #is skipped where pymeshlab is missing and RUNS where it is installed, and the two that
         #need files nothing produces are permanent skips by name.
-        #What is left is one real failure with a cause of its own. NGsolveGeometry.py, listed here as
-        #failing inside NGsolve, called AddEdgesAndSmoothenNormals without graphics. (#2714)
-        'rendererNOGLFWexample.py': 'expects the renderer to be absent; the runner suppresses it '
-                                    'differently',
+        #NGsolveGeometry.py, listed here as failing inside NGsolve, called AddEdgesAndSmoothenNormals
+        #without graphics (#2714); rendererNOGLFWexample.py wrote its image into a directory 'images' that
+        #did not exist, and writes it into the output directory now (#3009)
         }
 
 

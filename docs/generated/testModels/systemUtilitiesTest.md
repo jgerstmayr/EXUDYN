@@ -35,11 +35,11 @@ mbs = SC.AddSystem()
 oGround = mbs.CreateGround()
 oBody = mbs.CreateRigidBody(referencePosition=[0.5, 0, 0], inertia=InertiaCuboid(1000, [1, 0.1, 0.1]),
                             gravity=[0, -9.81, 0], initialVelocity=[0, 0.5, 0], initialAngularVelocity=[0, 0, 1])
-oJoint = mbs.CreateRevoluteJoint(bodyNumbers=[oGround, oBody], position=[0, 0, 0], axis=[0, 0, 1])
-oMass = mbs.CreateMassPoint(referencePosition=[1.5, 0, 0], physicsMass=2, gravity=[0, -9.81, 0])
-mbs.CreateSpringDamper(bodyNumbers=[oBody, oMass], localPosition0=[0.5, 0, 0], stiffness=1000, damping=0)
-oDistance = mbs.CreateDistanceConstraint(bodyNumbers=[oGround, oMass], localPosition0=[0, 0, 0], distance=1.5)
-lForce = mbs.CreateForce(bodyNumber=oBody, localPosition=[0.5, 0, 0], loadVector=[0, 2, 0])
+oJoint = mbs.CreateRevoluteJoint(itemNumbers=[oGround, oBody], position=[0, 0, 0], axis=[0, 0, 1])
+oMass = mbs.CreateMassPoint(referencePosition=[1.5, 0, 0], mass=2, gravity=[0, -9.81, 0])
+mbs.CreateSpringDamper(itemNumbers=[oBody, oMass], localPosition0=[0.5, 0, 0], stiffness=1000, damping=0)
+oDistance = mbs.CreateDistanceConstraint(itemNumbers=[oGround, oMass], localPosition0=[0, 0, 0], distance=1.5)
+lForce = mbs.CreateForce(itemNumber=oBody, localPosition=[0.5, 0, 0], loadVector=[0, 2, 0])
 mbs.Assemble()
 
 checks = []

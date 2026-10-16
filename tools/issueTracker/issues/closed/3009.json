@@ -2,11 +2,15 @@
   "number": 3009,
   "title": "Three examples stop at the drift check of TrapezoidalIndex2",
   "author": "Claude-JG",
-  "status": "RAISED",
+  "status": "RESOLVED",
   "type": "BUG",
   "effort": "LOW",
   "description": "Found with runTestExamples.py (1.13.102): notebooks/tutorialRigidBody.py and notebooks/tutorialRigidBodyCreate.py stop with a drift of 1.005e-5 at t = 1.7, publications/CND2022PieberNtarladimaGerstmayr/fixedFixedANCFALEdiscreteMasses.py with 2.7e-4 at t = 0.36, above constraintDriftTolerance = 1e-5: SolveDynamic switches the check on for TrapezoidalIndex2 since #565 (RG4.25.1). To decide: the tolerance, the step size of the examples, or the check off in them; the examples suite was not run for #565.",
   "dateRaised": "2026-10-16",
   "deadline": "2027-04-14",
-  "file": "python/exudyn/solver.py"
+  "dateResolved": "2026-10-16 23:30",
+  "resolvedAuthor": "Claude-JG",
+  "file": "python/exudyn/solver.py",
+  "releaseNotes": "The rigid body tutorials solve with the generalized-alpha method; the ALE example of the CND 2022 article sets the drift tolerance its index 2 solution needs; rendererNOGLFWexample.py writes its image into the output directory",
+  "resolvedInVersion": "1.13.107"
 }

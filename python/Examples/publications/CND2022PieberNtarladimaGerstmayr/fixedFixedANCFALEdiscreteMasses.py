@@ -412,6 +412,10 @@ def BuildModel(parameterSet):
 
     #simulationSettings.timeIntegration.realtime.active = True
     #simulationSettings.timeIntegration.realtime.factor=1
+    #the index 2 solver of the article: the sliding joints of the moving masses drift by up to 2e-3 at this step size,
+    #proportional to it (9e-4 at h = 1e-4), so that a smaller step does not reach the default tolerance 1e-5; the check
+    #of the drift stays on with a tolerance above it (#3009)
+    simulationSettings.timeIntegration.generalizedAlpha.constraintDriftTolerance = 5e-3
     success = mbs.SolveDynamic(simulationSettings, exudyn.DynamicSolverType.TrapezoidalIndex2)
     #success = mbs.SolveDynamic(simulationSettings)
 

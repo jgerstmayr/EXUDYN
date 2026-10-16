@@ -265,7 +265,7 @@ public:
 				symGeneric.Initialize(); //initialize symGeneric
 				const py::object& arg = stdArgList[i];
 				STDstring argType = py::cast<std::string>(argTypeList[i]);
-				if (argType == "Real" || argType == "Index")
+				if (argType == "Real" || argType == "Index" || argType == "bool" || argType == "OutputVariableType") //a flag, an enum: as Real (#2985)
 				{
 					symGeneric.Set(py::cast<SReal*>(arg));
 				}
@@ -295,6 +295,7 @@ public:
 			else if (ArgTypeIsVector(returnTypeStr))
 			{
 				Index returnSize = -1; //unknown vector size => not needed here
+				if (returnTypeStr.find("2D") != std::string::npos) { returnSize = 2; }
 				if (returnTypeStr.find("3D") != std::string::npos) { returnSize = 3; }
 				if (returnTypeStr.find("6D") != std::string::npos) { returnSize = 6; }
 				SetVectorType(returnSize, py::cast<SymbolicRealVector*>(pyReturnValue)); //pyReturnValue is list/numpy array
@@ -318,7 +319,7 @@ public:
 
 	virtual bool ArgTypeIsVector(const STDstring& argType) const
 	{
-		return (argType == "StdVector" || argType == "StdVector3D" || argType == "StdVector6D");
+		return (argType == "StdVector" || argType == "StdVector2D" || argType == "StdVector3D" || argType == "StdVector6D");
 	}
 
 	virtual bool ArgTypeIsMatrix(const STDstring& argType) const
@@ -448,28 +449,30 @@ public:
 	py::object PyEvaluateUF(/*const MainSystem& mainSystem, */const py::args& args)
 	{
 		//namespace py = pybind11;
+		//the arguments as the function was recorded with them, after mbs: a Real - also an int, a bool and an
+		//OutputVariableType -, a vector or a matrix (#2985)
 		Index argIndex = 0;
 		for (const auto& arg : args) {
-			// Check if the argument is a float
-			if (py::isinstance<py::float_>(arg))
+			if (py::isinstance<MainSystem>(arg)) { continue; } //MainSystem is not stored for now
+			CHECKandTHROW(argIndex < argRealList.NumberOfItems(), "Symbolic::SymbolicFunction::Evaluate: too many arguments");
+			SymbolicGeneric& symbolicArg = argRealList[argIndex];
+			if (symbolicArg.IsReal())
 			{
-				argRealList[argIndex++].GetReal()->SetExpressionNamedReal(arg.cast<Real>());
+				Real value = 0;
+				if (py::isinstance<OutputVariableType>(arg)) { value = (Real)(Index64)py::cast<OutputVariableType>(arg); }
+				else if (py::isinstance<py::float_>(arg) || py::isinstance<py::int_>(arg)) { value = arg.cast<Real>(); }
+				else { PyError(STDstring("Symbolic::SymbolicFunction::Evaluate: argument ") + EXUstd::ToString(argIndex) + " must be a number", PyErrorType::valueError); }
+				symbolicArg.GetReal()->SetExpressionNamedReal(value);
 			}
-			// Check if the argument is a string
-			else if (py::isinstance<py::int_>(arg))
+			else if (symbolicArg.IsVector())
 			{
-				argRealList[argIndex++].GetReal()->SetExpressionNamedReal(arg.cast<Index>());
+				symbolicArg.GetVector()->SetExpressionNamedVector(ResizableConstVector(arg.cast<std::vector<Real> >()));
 			}
-			else if (py::isinstance<py::list>(arg) || py::isinstance<py::array>(arg))
+			else
 			{
-				argRealList[argIndex++].GetVector()->SetExpressionNamedVector(arg.cast<std::vector<Real> >());
+				symbolicArg.GetMatrix()->SetSymbolicMatrix(py::array_t<Real>::ensure(arg));
 			}
-			else if (py::isinstance<MainSystem>(arg)) {
-				//argIndex++; //do nothing, as MainSystem is not stored for now
-			}
-			else {
-				PyError(STDstring("Symbolic::SymbolicFunction::Evaluate: invalid argument ") + EXUstd::ToString(argIndex) + ", type is not supported", PyErrorType::valueError);
-			}
+			argIndex++;
 		}
 
 		if (returnValue.IsReal())
@@ -660,9 +663,15 @@ inline decltype(auto) UserFunctionArgument(const T& argument)
 	else { return (const T&)argument; }
 }
 
+//! true for std::array<Real, n>, the vectors of fixed size of the user functions (StdVector2D, StdVector3D, StdVector6D)
+template<typename T> struct IsStdArrayOfReal : std::false_type {};
+template<std::size_t n> struct IsStdArrayOfReal<std::array<Real, n>> : std::true_type {};
+
 //! the argument of a Python user function: a vector of run-time size - std::vector or Exudyn vector - as read-only
 //! numpy array that views its memory, valid during the call, or as list with userFunctionListArguments; everything else
-//! as it is, cast by pybind11 as its own wrapper of a function does (#3008)
+//! as it is, cast by pybind11 as its own wrapper of a function does (#3008). The vectors and matrices of fixed size stay
+//! lists: Python computes with the items of a list of 3 about twice as fast as with those of a numpy array, and the
+//! user functions that take them are mostly written with components (#3010)
 template<typename T>
 inline decltype(auto) PythonUserFunctionArgument(const T& argument)
 {
@@ -688,6 +697,20 @@ inline R PythonUserFunctionResult(const py::object& result)
 		StdVector vector;
 		EPyUtils::CopyFromPython(result, vector);
 		return vector;
+	}
+	else if constexpr (IsStdArrayOfReal<R>::value)
+	{
+		if (py::isinstance<py::array>(result)) //a numpy array of the size in one pass
+		{
+			auto array = py::array_t<Real, py::array::c_style | py::array::forcecast>::ensure(result);
+			if (array && array.ndim() == 1 && (std::size_t)array.size() == std::tuple_size<R>::value)
+			{
+				R vector;
+				std::copy(array.data(), array.data() + array.size(), vector.begin());
+				return vector;
+			}
+		}
+		return result.cast<R>();
 	}
 	else { return result.cast<R>(); }
 }

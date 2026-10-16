@@ -95,6 +95,8 @@ int Symbolic::MatrixExpressionBase::deleteCount = 0;
 bool UserFunctionListArguments()
 {
 	if (!pySpecial.deprecations.userFunctionListArguments) { return false; }
+	if (pySpecial.deprecations.userFunctionListArgumentsReported) { return true; } //reported once per session: it is read per argument
+	pySpecial.deprecations.userFunctionListArgumentsReported = true;
 	PyDeprecated("settings", "special.deprecations.userFunctionListArguments", "exudyn.special.deprecations.userFunctionListArguments: "
 		"Python user functions get their vector arguments as read-only numpy arrays since 1.13.104; the switch to lists is removed in 2031");
 	return true;

@@ -135,8 +135,7 @@ mbs.AddObject(GenericJoint(markerNumbers=[markerGround, TCPMarker],
 
 #User Function for torque of -20 Nm
 def UF(mbs, t, load):
-    load[2] = 100*(-20-mbs.GetSensorValues(sOmega)[2])
-    return load
+    return [load[0], load[1], 100*(-20-mbs.GetSensorValues(sOmega)[2])] #the argument is read-only (#3008)
 
  # Create Torque to drive the kinematics and Sensor
 AntriebMarker = mbs.AddMarker(MarkerKinematicTreeRigid(objectNumber=oKT,

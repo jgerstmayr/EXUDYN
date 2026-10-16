@@ -1,0 +1,204 @@
+#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+# This is an EXUDYN example
+#
+# Details:  Every user function that can be symbolic, against its Python version (#2985):
+#           (1) for each of the 30 signatures of userFunctionArgsDict that a symbolic user function supports, a function
+#           that uses every argument - numbers, vectors of run-time and fixed size, matrices - is generated, once
+#           computing with exudyn.cMath and once recorded with exudyn.symbolic; both are evaluated with the same
+#           arguments and must agree;
+#           (2) items whose symbolic user function no other test model solves, each simulated with the Python and with
+#           the symbolic version of the same function: CartesianSpringDamper, CoordinateSpringDamper,
+#           TorsionalSpringDamper, ObjectGenericODE1, LoadTorqueVector, LoadMassProportional, the offset of a
+#           CoordinateConstraint.
+#
+# Author:   Johannes Gerstmayr
+# Date:     2026-10-16
+#
+# Copyright:This file is part of Exudyn. Exudyn is free software. You can redistribute it and/or modify it under the terms of the Exudyn license. See 'LICENSE.txt' for more details.
+#
+#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+import exudyn as exu
+from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
+from exudyn.advancedUtilities import CreateSymbolicUserFunction
+from exudyn.itemInterface import userFunctionArgsDict
+import exudyn.cMath as cMath
+import numpy as np
+esym = exu.symbolic
+
+SC = exu.SystemContainer()
+mbs = SC.AddSystem()
+
+#%%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#(1) every signature, evaluated
+argumentTypes = ['MainSystem', 'Real', 'Index', 'bool', 'OutputVariableType', 'StdVector', 'StdVector2D', 'StdVector3D',
+                 'StdVector6D', 'StdMatrix3D', 'StdMatrix6D']
+returnTypes = ['Real', 'bool', 'StdVector', 'StdVector2D', 'StdVector3D', 'StdVector6D']
+n = 5 #the size of the run-time sized vectors
+
+def Value(argumentType, k):
+    """a value of argument k of the type, different for every argument"""
+    if argumentType == 'Real': return 0.3 + 0.1*k
+    if argumentType == 'Index': return k
+    if argumentType == 'bool': return True
+    if argumentType == 'OutputVariableType': return exu.OutputVariableType.Position
+    if argumentType == 'StdVector': return [0.1*(i+1) + 0.01*k for i in range(n)]
+    if argumentType == 'StdVector2D': return [0.2 + 0.01*k, -0.4]
+    if argumentType == 'StdVector3D': return [0.2 + 0.01*k, -0.4, 0.7]
+    if argumentType == 'StdVector6D': return [0.2 + 0.01*k, -0.4, 0.7, 0.1, 0.5, -0.3]
+    if argumentType == 'StdMatrix3D': return [[0.1*(i+j) + 0.01*k for j in range(3)] for i in range(3)]
+    if argumentType == 'StdMatrix6D': return [[0.05*(i-j) + 0.01*k for j in range(6)] for i in range(6)]
+    return mbs
+
+def MakeFunction(types, names, returnType, functions):
+    """a user function of the signature that uses every number, vector and matrix argument; functions is exudyn.cMath
+    or exudyn.symbolic"""
+    lines = ['def F(' + ', '.join(names) + '):', '    s = 0.']
+    firstVector = None
+    for k, (argumentType, name) in enumerate(zip(types, names)):
+        c = str(0.1*(k+1))
+        if argumentType in ['Real', 'Index']:
+            lines.append('    s = s + ' + c + '*' + name)
+        elif argumentType in ['StdVector2D', 'StdVector3D', 'StdVector6D']:
+            m = int(argumentType[9])
+            lines.append('    s = s + ' + ' + '.join(c + '*' + str(i+1) + '*' + name + '[' + str(i) + ']' for i in range(m)))
+        elif argumentType in ['StdMatrix3D', 'StdMatrix6D']:
+            m = int(argumentType[9])
+            lines.append('    s = s + ' + c + '*(' + name + '[0,' + str(m-1) + '] - ' + name + '[' + str(m-1) + ',0])')
+        elif argumentType == 'StdVector':
+            lines.append('    s = s + ' + c + '*(' + name + '[0] - 2*' + name + '[1])')
+            if firstVector is None:
+                firstVector = name
+    lines.append('    s2 = s + 0.5*s*s + functions.sin(s)')
+    if returnType in ['Real', 'bool']:
+        lines.append('    return s2')
+    elif returnType != 'StdVector':
+        lines.append('    return [' + ', '.join('s2*' + str(i+1) for i in range(int(returnType[9]))) + ']')
+    else:
+        lines.append('    return s2*' + firstVector + ' + ' + firstVector)
+    namespace = {'functions': functions}
+    exec('\n'.join(lines), namespace)
+    return namespace['F']
+
+signatures = 0
+largestDifference = 0
+for key, entry in userFunctionArgsDict.items():
+    (types, returnType) = (entry[0], entry[2][0])
+    if any(t not in argumentTypes for t in types) or returnType not in returnTypes:
+        continue #a graphics or matrix user function, which cannot be symbolic
+    (itemTypeName, userFunctionName) = key.split(',')
+    names = ['mbs'] + ['a' + str(i) for i in range(1, len(types))]
+    values = [Value(t, k) for (k, t) in enumerate(types)]
+    reference = MakeFunction(types, names, returnType, cMath)(*[np.array(v) if isinstance(v, list) else v for v in values])
+    if itemTypeName == 'MainSystem':
+        symbolic = CreateSymbolicUserFunction(mbs, MakeFunction(types, names, returnType, esym), userFunctionName, itemIndex=-1)
+    else:
+        symbolic = CreateSymbolicUserFunction(mbs, MakeFunction(types, names, returnType, esym), userFunctionName,
+                                              itemTypeName=itemTypeName)
+    result = symbolic.Evaluate(*values)
+    if returnType == 'bool':
+        difference = float(bool(result) != bool(reference))
+    else:
+        difference = float(np.max(np.abs(np.array(result, dtype=float) - np.array(reference, dtype=float))))
+    largestDifference = max(largestDifference, difference)
+    signatures += 1
+exu.Print('(1)', signatures, 'signatures, largest difference symbolic - Python:', largestDifference)
+
+#%%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#(2) items simulated with the Python and with the symbolic version of a user function
+k = 200.
+d = 1.
+
+def CartesianUF(functions):
+    def UF(mbs, t, itemNumber, u, v, stiffness, damping, offset):
+        return [stiffness[0]*u[0] + damping[0]*v[0] + stiffness[0]*u[0]**3, stiffness[1]*u[1] + damping[1]*v[1],
+                stiffness[2]*functions.sin(u[2]) + damping[2]*v[2]]
+    return UF
+
+def SpringUF(functions):
+    def UF(mbs, t, itemNumber, u, v, stiffness, damping, offset):
+        return stiffness*(u - offset) + damping*v + 0.1*stiffness*functions.sin(10*t)
+    return UF
+
+def ODE1UF(functions):
+    def UF(mbs, t, itemNumber, q):
+        return [q[1], -k*q[0] - 0.1*q[1] + functions.cos(t)]
+    return UF
+
+def TorqueUF(functions):
+    def UF(mbs, t, loadVector):
+        return [loadVector[0]*functions.cos(2*t), loadVector[1], loadVector[2]*t]
+    return UF
+
+def OffsetUF(functions):
+    def UF(mbs, t, itemNumber, offset):
+        return offset + 0.1*(1 - functions.cos(3*t)) #starts with zero velocity
+    return UF
+
+def Model(symbolic):
+    """the items with their user functions; the symbolic functions are kept in mbs.variables"""
+    SC = exu.SystemContainer()
+    mbs = SC.AddSystem()
+    functions = esym if symbolic else cMath
+    keep = []
+    def Set(item, name, makeFunction, isLoad=False):
+        function = makeFunction(functions)
+        if symbolic:
+            function = CreateSymbolicUserFunction(mbs, function, name, item)
+            keep.append(function)
+        if isLoad:
+            mbs.SetLoadParameter(item, name, function)
+        else:
+            mbs.SetObjectParameter(item, name, function)
+    oGround = mbs.CreateGround()
+    #a mass point on a Cartesian spring-damper, under a mass-proportional load
+    oMass = mbs.CreateMassPoint(referencePosition=[1, 0, 0], initialVelocity=[0.2, 0.1, 0.3], mass=2)
+    Set(mbs.CreateCartesianSpringDamper(itemNumbers=[oGround, oMass], stiffness=[k]*3, damping=[d]*3), 'springForceUserFunction',
+        CartesianUF)
+    lMass = mbs.AddLoad(LoadMassProportional(markerNumber=mbs.AddMarker(MarkerBodyMass(bodyNumber=oMass)), loadVector=[0, -9.81, 0]))
+    Set(lMass, 'loadVectorUserFunction', TorqueUF, isLoad=True)
+    #a 1D mass on a coordinate spring-damper
+    n1 = mbs.AddNode(Node1D(referenceCoordinates=[0], initialCoordinates=[0.1], initialVelocities=[0]))
+    o1 = mbs.AddObject(Mass1D(nodeNumber=n1, mass=1))
+    mGround = mbs.AddMarker(MarkerBodyPosition(bodyNumber=oGround))
+    m1 = mbs.AddMarker(MarkerNodeCoordinate(nodeNumber=n1, coordinate=0))
+    Set(mbs.AddObject(CoordinateSpringDamper(markerNumbers=[mbs.AddMarker(MarkerNodeCoordinate(nodeNumber=mbs.AddNode(NodePointGround()),
+                                                                                                coordinate=0)), m1],
+                                             stiffness=k, damping=d, offset=0.05)), 'springForceUserFunction', SpringUF)
+    #a rigid body on a torsional spring-damper about z, under a torque vector
+    oBody = mbs.CreateRigidBody(referencePosition=[0, 2, 0], inertia=InertiaCuboid(1000, [0.2, 0.2, 0.2]),
+                                initialAngularVelocity=[0, 0, 1])
+    mbs.CreateRevoluteJoint(itemNumbers=[oGround, oBody], position=[0, 2, 0], axis=[0, 0, 1])
+    mBody = mbs.AddMarker(MarkerBodyRigid(bodyNumber=oBody))
+    Set(mbs.AddObject(TorsionalSpringDamper(markerNumbers=[mbs.AddMarker(MarkerBodyRigid(bodyNumber=oGround, localPosition=[0, 2, 0])), mBody],
+                                            stiffness=10, damping=0.1)), 'springTorqueUserFunction', SpringUF)
+    Set(mbs.AddLoad(LoadTorqueVector(markerNumber=mBody, loadVector=[0, 0, 0.5])), 'loadVectorUserFunction', TorqueUF, isLoad=True)
+    #a first-order system
+    nODE1 = mbs.AddNode(NodeGenericODE1(referenceCoordinates=[0, 0], initialCoordinates=[0.1, 0], numberOfODE1Coordinates=2))
+    Set(mbs.AddObject(ObjectGenericODE1(nodeNumbers=[nODE1])), 'rhsUserFunction', ODE1UF)
+    #a 1D mass whose coordinate follows the offset of a coordinate constraint
+    n2 = mbs.AddNode(Node1D(referenceCoordinates=[0], initialCoordinates=[0], initialVelocities=[0]))
+    mbs.AddObject(Mass1D(nodeNumber=n2, mass=1))
+    Set(mbs.AddObject(CoordinateConstraint(markerNumbers=[mbs.AddMarker(MarkerNodeCoordinate(nodeNumber=mbs.AddNode(NodePointGround()),
+                                                                                              coordinate=0)),
+                                                          mbs.AddMarker(MarkerNodeCoordinate(nodeNumber=n2, coordinate=0))],
+                                           offset=0.)), 'offsetUserFunction', OffsetUF)
+    mbs.variables['keep'] = keep
+    mbs.Assemble()
+    simulationSettings = exu.SimulationSettings()
+    simulationSettings.timeIntegration.numberOfSteps = 400
+    simulationSettings.timeIntegration.endTime = 0.4
+    simulationSettings.timeIntegration.verboseMode = 0
+    simulationSettings.solution.file.write = False
+    mbs.SolveDynamic(simulationSettings)
+    return np.hstack([mbs.systemData.GetODE2Coordinates(), mbs.systemData.GetODE1Coordinates()])
+
+qPython = Model(False)
+qSymbolic = Model(True)
+differenceItems = float(np.max(np.abs(qSymbolic - qPython)))
+exu.Print('(2) the items, largest difference symbolic - Python:', differenceItems)
+
+u = signatures + np.sum(qSymbolic) + int(largestDifference > 1e-14) + int(differenceItems > 1e-12)
+exu.Print('solution of symbolicUserFunctionSignaturesTest=', u)
+
+exu.sys['testResult'] = u

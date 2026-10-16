@@ -241,6 +241,7 @@ public:
     bool warnOnce;      //!< true: each deprecated name warns once per session; false: every use warns, for debugging a script
     bool recordUse;     //!< true: every use is counted in exudyn.sys['deprecationUse'][source][name], also when no warning is shown
     bool userFunctionListArguments; //!< true: Python user functions get lists instead of numpy arrays, as before #3008
+    bool userFunctionListArgumentsReported; //!< its use was reported in this session; not exposed to Python
 
     std::set<std::string> warned; //!< the names warned about in this session, as "source:name"; not exposed to Python
 
@@ -254,6 +255,7 @@ public:
         warnOnce = true;
         recordUse = true;
         userFunctionListArguments = false;
+        userFunctionListArgumentsReported = false;
         warned.clear();
     }
 

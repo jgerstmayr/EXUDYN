@@ -131,8 +131,7 @@ sOmega = mbs.AddSensor(SensorKinematicTree(objectNumber=oKT,
 #user function for torque
 def UF(mbs, t, load):
     #simple control: desired - current value
-    load[2] = 100*(20 - mbs.GetSensorValues(sOmega)[2]) 
-    return load
+    return [load[0], load[1], 100*(20 - mbs.GetSensorValues(sOmega)[2])] #the argument is read-only (#3008)
     
 markerAtB0 = mbs.AddMarker(MarkerKinematicTreeRigid(objectNumber=oKT,
                                                     linkNumber=0,

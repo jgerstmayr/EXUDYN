@@ -1495,3 +1495,50 @@ symbolic extensions.)*
   `Vector` argument links it from its reference page (itemDocsEmitter); revisions.md.
 - **Found**: the examples suite (runTestExamples.py, not run for #565) stops in three examples at the drift check of
   TrapezoidalIndex2 - #3009, RG4.26, for decision; rendererNOGLFWexample.py fails as in 1.13.6 (an image file).
+
+<a id="rg12-5"></a>
+### RG12.3.9, RG4.26, RG12.5, RG12.1 — numpy for the fixed sizes, the examples at the drift check, the symbolic tests and status (2026-10-16, #2981, #2985, #3009, #3010)
+*(Maintainer 2026-10-16: vectors of size 3 and 6 staying lists was a misunderstanding - if there are no major
+boundaries, they become numpy arrays too. The two tutorialRigidBody examples use the generalized-alpha solver, as the
+drift is large and users would be misled; the ALE example gets a smaller step size, possibly a smaller tEnd, to match
+the limit and keep the duration small; rendererNOGLFWexample.py - check and fix. Then RG12.5 and RG12.1.)*
+- **#3010**: built first as asked - `std::array<Real, n>` and `std::array<std::array<Real, n>, m>` as read-only numpy
+  views - and measured with a CartesianSpringDamper user function (five 3D arguments), microseconds per call:
+
+  | user function | numpy arrays | lists |
+  |---|---:|---:|
+  | returns a constant (the conversion only) | 0.58 | 0.53 |
+  | written with components, `k[0]*u[0] + ...` | 1.40 | 0.66 |
+  | written with numpy operations, `k*u + d*v` | 1.72 | - |
+
+  The conversion costs the same since the views are made with the numpy C interface (`EPyUtils::NumpyView`,
+  `PyArray_NewFromDescr` without a base and without the writeable flag; with `py::array_t` it was 1.0); but Python
+  computes with numpy scalars and with arrays of three items two to three times slower than with floats and lists, and
+  the existing user functions of fixed-size vectors are written with components. That is a major boundary in the sense
+  of the request, so the fixed sizes stay lists and the decision is the maintainer's; switching is two branches in
+  `PythonUserFunctionArgument`. Kept from it: the C interface views (the run-time sized vectors gain about 10 %:
+  generic6 2.06 instead of 2.26 us), a fixed-size result from a numpy array in one pass, and
+  fourBarKinematicTreeLoadDep.py and fourBarKinematicTreeUF.py, which wrote `load[2] = ...` into their argument and
+  return a new list now. The use of `userFunctionListArguments` is reported once per session (it was reported at every
+  argument, 4 us per call).
+- **#3009**: tutorialRigidBody(Create).ipynb solve with `GeneralizedAlpha`; the Create tutorial says what index 2 does
+  and that the solver stops at its drift for this model; outputs stored with `exudev notebooks`. The ALE example: the
+  drift of its moving-mass sliding joints (JointALEMoving2D) under index 2 is proportional to the step size - 1.8e-3
+  over the full run at h = 4e-4, 9.3e-4 at 1e-4, 4.7e-4 at 5e-5 (measured with tEnd = 2), and largest in the first
+  second - so 1e-5 would need h of about 1e-6, 2e7 steps; a shorter tEnd does not help either. The example keeps the
+  step size and solver of its article and sets `constraintDriftTolerance = 5e-3` with the reason. rendererNOGLFWexample.py
+  wrote `images/mergedImageBallContact.jpg` into a directory nothing creates (failed in 1.13.6 too); it writes into
+  `OutputFilePath(...)` and creates the directory; removed from `KnownExampleFailures`.
+- **RG12.5** (#2985): symbolicUserFunctionSignaturesTest.py generates, for each of the 30 symbolic signatures of
+  `userFunctionArgsDict`, a function that uses every argument, computes it with `exudyn.cMath` and records it with
+  `exudyn.symbolic`, and compares `UserFunction.Evaluate` with Python: equal to the last bit. Four signatures failed
+  before: `postNewtonFunction` (a StdVector2D result: `ArgTypeIsVector` lacked it), `constraintUserFunction` of
+  CoordinateVector (a `bool` argument), `outputVariableUserFunction` of ObjectUserBody (an `OutputVariableType`
+  argument) - both recorded as `esym.Real` now -, and `springForceTorqueUserFunction` evaluated from Python (matrix
+  arguments: `PyEvaluateUF` dispatches on what was recorded). Part (2) solves seven items with Python and symbolic
+  versions of one function: CartesianSpringDamper, CoordinateSpringDamper, TorsionalSpringDamper, ObjectGenericODE1,
+  LoadTorqueVector, LoadMassProportional, the offset of a CoordinateConstraint - equal.
+- **RG12.1** (#2981): docs/dev/design/symbolicStatus.md. Found while writing it: an item set with `SetObjectParameter`
+  holds its symbolic function, so the "keep it alive" note of CreateSymbolicUserFunction is stricter than needed.
+- The examples suite after the changes: only NGsolveOCCboundaries2.py failed, inside NGsolve (a local heap of 3.2 GB in
+  the parallel run); alone it runs.

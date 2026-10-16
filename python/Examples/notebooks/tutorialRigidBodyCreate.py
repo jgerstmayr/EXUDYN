@@ -138,10 +138,12 @@ image = ShowImage(SC, size=[1280,960], modelRotation=view)
 # solution is stored every 5 ms for the `SolutionViewer`; `timeIntegration.realtime.active = True` would let a
 # simulation in a render window run in real time.
 #
-# The **index 2** (velocity level) trapezoidal rule is energy conserving (guaranteed for linear systems, very often also
-# for nonlinear multibody systems), but leads to a small drift of the position constraints, linear in time. The default
-# **generalized-$\alpha$ method** (index 3) damps numerically, with its spectral radius, which stabilizes the
-# constraints; for fixed step sizes, it is the recommended integrator.
+# The **generalized-$\alpha$ method** (index 3), the default, damps numerically with its spectral radius and keeps the
+# position constraints of the joints; for fixed step sizes, it is the recommended integrator. The **index 2** (velocity
+# level) trapezoidal rule, `solverType = exu.DynamicSolverType.TrapezoidalIndex2`, conserves the energy (guaranteed for
+# linear systems, very often also for nonlinear multibody systems), but the position constraints drift, linear in time -
+# for this model by $10^{-5}$ in four seconds, where the solver stops, see the drift of the constraints in the chapter
+# on solvers of the manual.
 tEnd = 4 #simulation time
 h = 1e-3 #step size
 simulationSettings = exu.SimulationSettings()
@@ -150,7 +152,7 @@ simulationSettings.timeIntegration.endTime = tEnd
 simulationSettings.solution.file.writePeriod = 0.005 #store every 5 ms
 
 mbs.SolveDynamic(simulationSettings = simulationSettings,
-                 solverType = exu.DynamicSolverType.TrapezoidalIndex2)
+                 solverType = exu.DynamicSolverType.GeneralizedAlpha)
 
 image = ShowImage(SC, size=[1280,960], modelRotation=view) #the state at the end
 

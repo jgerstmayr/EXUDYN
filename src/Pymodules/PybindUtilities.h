@@ -38,13 +38,25 @@ class ExudynConfig;                 //! declared for the two functions at the en
 
 //! Exudyn python utilities namespace
 namespace EPyUtils {
-	//! a read-only numpy array that views data without copying it; valid as long as the memory is (#3008)
+	//! a read-only numpy array of the dimensions that views row-wise data without copying it; valid as long as the
+	//! memory is. Made with the numpy C interface directly: py::array_t costs several times more, which matters for the
+	//! small vectors of a user function (#3008, #3010)
+	inline py::object NumpyView(const Real* data, Index numberOfDimensions, const Py_intptr_t* dimensions)
+	{
+		auto& api = py::detail::npy_api::get();
+		PyObject* descr = api.PyArray_DescrFromType_(py::detail::npy_api::NPY_DOUBLE_); //stolen by PyArray_NewFromDescr_
+		PyObject* array = api.PyArray_NewFromDescr_(api.PyArray_Type_, descr, (int)numberOfDimensions, dimensions, nullptr,
+			const_cast<Real*>(data), py::detail::npy_api::NPY_ARRAY_C_CONTIGUOUS_ | py::detail::npy_api::NPY_ARRAY_ALIGNED_,
+			nullptr); //without NPY_ARRAY_WRITEABLE_: read-only; no base: the memory is not owned
+		if (!array) { throw py::error_already_set(); }
+		return py::reinterpret_steal<py::object>(array);
+	}
+
+	//! a read-only 1D numpy array that views data (#3008)
 	inline py::object ToNumpyView(const Real* data, Index numberOfItems)
 	{
-		if (numberOfItems == 0) { return py::array_t<Real>(0); }
-		py::array_t<Real> array({ (py::ssize_t)numberOfItems }, { (py::ssize_t)sizeof(Real) }, data, py::none()); //a base: no copy
-		py::detail::array_proxy(array.ptr())->flags &= ~py::detail::npy_api::NPY_ARRAY_WRITEABLE_;
-		return std::move(array);
+		Py_intptr_t dimensions[1] = { (Py_intptr_t)numberOfItems };
+		return NumpyView(data, 1, dimensions);
 	}
 
 	//! copy a vector returned by Python - a 1D numpy array in one pass, a list or tuple item by item (#3008)

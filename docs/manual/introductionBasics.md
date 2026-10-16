@@ -125,8 +125,9 @@ return value.
 - **Arguments**: a vector argument whose size is known only at run time - the coordinates `q` and their velocities
   `q_t`, a list of factors - is a **read-only numpy array** that views the memory of Exudyn, without copying it: `K @ q`
   and `-k*q` work directly. It is valid during the call: a function that keeps it for later must copy it,
-  `q.copy()`; writing into it raises. Vectors of size 3 and 6 (positions, forces, the offsets of a spring) are lists
-  of floats.
+  `q.copy()`; writing into it raises - return a new vector instead. Vectors of size 3 and 6 (positions, forces, the
+  offsets of a spring) and matrices of size 3 and 6 are lists: Python computes with their items about twice as fast as
+  with those of a numpy array; `np.array(u)` gives the array where vector operations are wanted.
 - **Results**: a vector is returned as numpy array or as list; a numpy array is copied in one pass.
 - **Symbolic user functions**: `exudyn.advancedUtilities.CreateSymbolicUserFunction` records the same Python function
   as an expression, which C++ evaluates without calling Python - at about the cost of the built-in force laws.

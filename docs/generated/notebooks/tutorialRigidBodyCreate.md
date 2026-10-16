@@ -184,10 +184,12 @@ The solver settings: implicit solvers have no automatic step size, so the end ti
 solution is stored every 5 ms for the `SolutionViewer`; `timeIntegration.realtime.active = True` would let a
 simulation in a render window run in real time.
 
-The **index 2** (velocity level) trapezoidal rule is energy conserving (guaranteed for linear systems, very often also
-for nonlinear multibody systems), but leads to a small drift of the position constraints, linear in time. The default
-**generalized-$\alpha$ method** (index 3) damps numerically, with its spectral radius, which stabilizes the
-constraints; for fixed step sizes, it is the recommended integrator.
+The **generalized-$\alpha$ method** (index 3), the default, damps numerically with its spectral radius and keeps the
+position constraints of the joints; for fixed step sizes, it is the recommended integrator. The **index 2** (velocity
+level) trapezoidal rule, `solverType = exu.DynamicSolverType.TrapezoidalIndex2`, conserves the energy (guaranteed for
+linear systems, very often also for nonlinear multibody systems), but the position constraints drift, linear in time -
+for this model by $10^{-5}$ in four seconds, where the solver stops, see the drift of the constraints in the chapter
+on solvers of the manual.
 
 ```python
 tEnd = 4 #simulation time
@@ -198,7 +200,7 @@ simulationSettings.timeIntegration.endTime = tEnd
 simulationSettings.solution.file.writePeriod = 0.005 #store every 5 ms
 
 mbs.SolveDynamic(simulationSettings = simulationSettings,
-                 solverType = exu.DynamicSolverType.TrapezoidalIndex2)
+                 solverType = exu.DynamicSolverType.GeneralizedAlpha)
 
 image = ShowImage(SC, size=[1280,960], modelRotation=view) #the state at the end
 ```
@@ -226,8 +228,8 @@ print('rotation angle of body 1 (rad):', round(H.RotationAngle(), 4))
 ```
 
 ```text
-position of body 1: [-0.329  -0.9634  0.4621]
-rotation angle of body 1 (rad): 2.1108
+position of body 1: [-0.3291 -0.9634  0.4621]
+rotation angle of body 1 (rad): 2.1107
 ```
 
 In a script, `mbs.SolutionViewer()` shows the stored motion forward and backward in the render window.

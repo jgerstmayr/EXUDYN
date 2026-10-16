@@ -1,0 +1,15 @@
+{
+  "number": 2985,
+  "title": "Symbolic: complete tests of the symbolic user functions",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "TESTING",
+  "effort": "MEDIUM",
+  "description": "revision2026c step RG12.5: check which symbolic user functions have tests (symbolicUserFunctionTest, symbolicModuleTest, symbolicUserFunctionCopyTest, ...) and add the missing ones, every signature against its Python version.",
+  "dateRaised": "2026-10-12",
+  "deadline": "2027-04-10",
+  "dateResolved": "2026-10-16 23:30",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "All 30 user function signatures that can be symbolic are tested against their Python versions; postNewtonFunction, the constraintUserFunction of ObjectConnectorCoordinateVector and the outputVariableUserFunction of ObjectUserBody can be symbolic now, and UserFunction.Evaluate takes matrix arguments",
+  "resolvedInVersion": "1.13.106"
+}

@@ -113,6 +113,7 @@ symbolicVectorUserFunctionTest
 constraintDriftTest
 systemUtilitiesTest
 pythonUserFunctionArgumentsTest
+symbolicUserFunctionSignaturesTest
 initialConstraintsCheckTest
 shellMeshSlopesScalingTest
 systemContainerComputeOnlyTest

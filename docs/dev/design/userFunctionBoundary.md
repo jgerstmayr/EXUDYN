@@ -261,7 +261,8 @@ sub-step of RG12.3 or a step of RG7 in the plan:
    (`PythonUserFunctionToStdFunction`), which passes a `std::vector` argument as read-only numpy view; the vector
    user functions of section 7 call the Python function directly with views of the Exudyn vectors; a numpy result is
    copied in one pass (`EPyUtils::CopyFromPython`). The switch `userFunctionListArguments` costs one test of a bool
-   per vector argument, so it exists. The fixed sizes (3D, 6D) stay lists. Measured in section 12.
+   per vector argument, so it exists. The fixed sizes (3D, 6D vectors, 3x3 and 6x6 matrices) stay lists - measured
+   with #3010, section 12.
 4. **RG7.10** (#3003) - the items that depend on Python user functions drawn in the main thread, a list from
    `Assemble`, and the detection of Python calls from the render thread; the condition for removing the cache.
 5. **RG7.3.4** - section 10, the user items on 1 to 4: ObjectUserBody without the cache, ObjectGenericODE2; point 13
@@ -352,3 +353,15 @@ ObjectKinematicTree keep as a member), 1.13.101:
   (before: 0.48 to 53); one that returns a prepared list 0.54 to 14 (0.45 to 29); one that computes a list
   comprehension over `q` is slower than before at small n (1.15 against 0.64 at n = 1), because iterating a numpy array
   gives numpy scalars - `-k*q` is the way to write it now.
+
+**After RG12.3.9** (#3010: the numpy views made with the numpy C interface; the fixed-size vectors and matrices stay
+lists, because Python computes with them twice as fast - measured in the log, RG12.3.9), 1.13.104:
+
+| function | kind | 1.13.6: us/call | current: us/call | current/1.13.6 |
+|---|---|---:|---:|---:|
+| spring | python | 0.358 | 0.376 | 1.05 |
+| cartesian | python | 0.715 | 0.751 | 1.05 |
+| load | python | 0.390 | 0.428 | 1.10 |
+| generic6 | python | 2.991 | 2.056 | 0.69 |
+| generic100 | python | 10.482 | 2.127 | 0.20 |
+| generic100 | symbolic | crashed (#2998) | 0.223 | |
