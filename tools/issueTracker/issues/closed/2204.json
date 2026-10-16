@@ -1,0 +1,15 @@
+{
+  "number": 2204,
+  "title": "perspective",
+  "author": "JG",
+  "status": "RESOLVED",
+  "type": "CHECK",
+  "effort": "LOW",
+  "description": "check OpenGL visibility problems with larger zoom (is this the 0.1 limit?)",
+  "dateRaised": "2026-01-08",
+  "deadline": "2026-07-07",
+  "dateResolved": "2026-10-16 09:02",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "a small model stays visible when zoomed in with perspective: the near plane is at least 0.001 of the scene size (at most 0.1) instead of a fixed 0.1, the same for OpenGL and the raytracer; pytest testASmallModelStaysVisibleInPerspective (revision2026c step RG6.8.8)",
+  "resolvedInVersion": "1.13.96"
+}

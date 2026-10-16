@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.13 | Newborn | 94 | 1.13.94 |
+| 1.13 | Newborn | 96 | 1.13.96 |
 | 1.12 | Metheney | 367 | 1.12.462 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
@@ -30,6 +30,14 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.13 - Newborn (current)
 
+- **1.13.96** `CHECK` `LOW EFF` `resolved by: Claude-JG` perspective (#2204)
+  - description: check OpenGL visibility problems with larger zoom (is this the 0.1 limit?)
+  - **notes:** a small model stays visible when zoomed in with perspective: the near plane is at least 0.001 of the scene size (at most 0.1) instead of a fixed 0.1, the same for OpenGL and the raytracer; pytest testASmallModelStaysVisibleInPerspective (revision2026c step RG6.8.8)
+  - date resolved: **2026-10-16 09:02**, date raised: 2026-01-08
+- **1.13.95** `EXTENSION` `LOW EFF` `resolved by: Claude-JG` OpenGL view (#2194)
+  - description: add manual offsets for zNear and zFar, to adjust visible objects
+  - **notes:** the near and far planes can be set by hand with view.camera.nearFarPlaneOffset (flag = 1); its description now gives the automatic values the renderer uses (revision2026c step RG6.8.8)
+  - date resolved: **2026-10-16 09:02**, date raised: 2026-01-06
 - **1.13.94** <span class="textred">`BUG`</span> `NORMAL` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` Matrix move assignment through a base reference exchanges the memory of a ResizableMatrix or LinkedDataMatrix but not its allocation (#2999)
   - description: revision2026c step RG7.3.4 point 16: MatrixBase::operator=(MatrixBase&&) swaps data, rows and columns; called on a ResizableMatrix through Matrix& (as the access functions take it), allocatedSize keeps the old capacity, so a later resize within it writes past the moved-in buffer - the heap corruption of c3d53a99, reproduced with AddressSanitizer (heap-buffer-overflow); on a LinkedDataMatrix the temporary deletes the linked memory. Fix in the Linalg classes (a virtual move that copies for the derived classes, or no move assignment through the base), not in each caller.
   - **notes:** the assignments of the matrices and vectors keep memory and capacity consistent: the move assignment of Matrix copies when a ResizableMatrix or LinkedDataMatrix is on either side, ResizableMatrix and ResizableVector have copy assignments that keep their own capacity (the generated ones copied the other's), ResizableMatrix a move assignment with its capacity; unit tests under AddressSanitizer (revision2026c step RG7.3.4.1)

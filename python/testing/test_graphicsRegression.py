@@ -535,3 +535,47 @@ def testRaytracerTracesInPerspective():
         image = SC.renderer.RedrawAndGetImage(useRaytracer=True).astype(int)
         pixels[perspective] = int(((image[:, :, 0] > 180) & (image[:, :, 1] < 80) & (image[:, :, 2] < 80)).sum())
     assert pixels[0.] > 300 and pixels[0.5] > 0.5*pixels[0.], pixels
+
+
+def testASmallModelStaysVisibleInPerspective():
+    """the trace of testRaytracerTracesInPerspective scaled to 1/100: with a perspective, model-centric view the eye is
+    0.084 from the focal plane; the near plane, fixed at 0.1 before, cut the whole model in OpenGL and the lines in the
+    raytracer, and is 0.001 of the scene size for small scenes now (#2204)"""
+    from exudyn.utilities import SensorBody
+    scale = 0.01
+    pixels = {}
+    for perspective in [0., 0.5]:
+        SC = exu.SystemContainer()
+        mbs = SC.AddSystem()
+        mbs.CreateGround(graphicsDataList=[graphics.CheckerBoard(point=[0, 0, 0], size=3*scale, nTiles=6)])
+        oMoving = mbs.CreateGround(graphicsDataList=[graphics.Sphere(radius=0.05*scale, color=graphics.color.blue)])
+        def PreStepUserFunction(mbs, t):
+            mbs.SetObjectParameter(oMoving, 'referenceHT', exu.HT(translation=[scale*np.cos(2*np.pi*t),
+                                                                               scale*np.sin(2*np.pi*t), 0.5*scale]))
+            return True
+        mbs.SetPreStepUserFunction(PreStepUserFunction)
+        sPos = mbs.AddSensor(SensorBody(bodyNumber=oMoving, storeInternal=True,
+                                        outputVariableType=exu.OutputVariableType.Position))
+        mbs.Assemble()
+        simulationSettings = exu.SimulationSettings()
+        simulationSettings.timeIntegration.numberOfSteps = 100
+        simulationSettings.timeIntegration.endTime = 1
+        simulationSettings.solution.file.write = False
+        mbs.SolveDynamic(simulationSettings)
+
+        vs = SC.visualizationSettings
+        vs.view0.window.renderWindowSize = [240, 240]
+        vs.general.minSceneSize = 0.1*scale             #the settings for a small scene, as their descriptions say
+        vs.general.boundingBoxZoomAllOffset = 0.01*scale
+        vs.raytracer.advanced.showText = False
+        vs.view0.scene.drawWorldBasis = False
+        vs.view0.scene.drawCoordinateSystem = 0
+        vs.view0.camera.perspective = perspective
+        vs.sensors.traces.listOfPositionSensors = [sPos]
+        vs.sensors.traces.showPositionTrace = True
+        vs.sensors.traces.traceColors = [1, 0, 0, 1]
+        vs.sensors.traces.lineWidth = 3
+        SC.renderer.ZoomAll()
+        image = SC.renderer.RedrawAndGetImage(useRaytracer=True).astype(int)
+        pixels[perspective] = int(((image[:, :, 0] > 180) & (image[:, :, 1] < 80) & (image[:, :, 2] < 80)).sum())
+    assert pixels[0.] > 300 and pixels[0.5] > 0.8*pixels[0.], pixels

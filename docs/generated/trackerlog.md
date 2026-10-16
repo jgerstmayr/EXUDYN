@@ -8,10 +8,10 @@ Every entry carries the **type** of the issue, then its **priority** and its **e
 
 General information on current version:
 
-- Exudyn version = 1.13.94.dev1
+- Exudyn version = 1.13.96.dev1
 - last change = 2026-10-16
-- Number of issues = 3000
-- Number of resolved issues = 2871 (94 in current version)
+- Number of issues = 3002
+- Number of resolved issues = 2873 (96 in current version)
 
 ## Resolved issues and resolved bugs before version 1.13
 
@@ -9039,6 +9039,12 @@ The following list contains the issues which have been **RESOLVED** in the accor
 
 ## Open issues
 
+- `CHANGE` `LOW EFF` `raised by: Claude-JG` ZoomAll of small scenes: minSceneSize and boundingBoxZoomAllOffset are absolute lengths (#3001)
+  - description: revision2026c step RG6.8.11 (found in RG6.8.8): general.minSceneSize = 0.1 and general.boundingBoxZoomAllOffset = 0.01 are lengths; a model of 1 cm is zoomed to 0.042 instead of 0.018 and appears at half the size, one of 1 mm fills a few pixels; the settings must be scaled by the user (their descriptions say so). Proposal: relative to the bounding box of the scene, or a zero default with a positive minimum only against division by zero.
+  - date raised: 2026-10-16
+- `IDEA` `MEDIUM EFF` `raised by: Claude-JG` Camera-centric view: field of view, camera placement and far plane independent of the scale of the model (#3000)
+  - description: revision2026c step RG6.8.10 (found in RG6.8.8 with the raytracer, both renderers agree): in the camera-centric perspective view the half angle of the view is atan(zoom\*perspective) - zoom is a length, so a model of 1 cm (zoom 0.018) sees through a tube of 1 degree and a model of 1 m through 84 degrees; ZoomAll does not place the eye (cameraPosition stays where it is, by default in the center of the scene, which shows nothing); the far plane is zMaxSceneFactor\*maxSceneSize from the eye, independent of how far the eye is from the scene. The raytracer clips triangles at neither plane. To decide with the move to OpenGL 3.3/4.1.
+  - date raised: 2026-10-16
 - `EXTENSION` `LOW EFF` `raised by: Claude-JG` Sensor user functions for the kinetic, potential and total energy of the system (#2997)
   - description: revision2026c step RG4.25.3 (maintainer 2026-10-15, with the drift of \#565): SensorUFSystemKineticEnergy, SensorUFSystemPotentialEnergy, SensorUFSystemTotalEnergy for SensorUserFunction, like SensorUFSystemConstraintDrift; SystemEnergy(mbs).AddSensor() exists and records all four values, built once per model - the functions would build what they need per call or keep it per mbs
   - date raised: 2026-10-15
@@ -9155,14 +9161,6 @@ The following list contains the issues which have been **RESOLVED** in the accor
   - description: add vector and matrix functionality for Diff()
   - **remarks:** kept open as an idea, no plan step (triage 2026-10-07, revision2026b group RG18)
   - date raised: 2026-01-16
-- `CHECK` `LOW EFF` perspective (#2204)
-  - description: check OpenGL visibility problems with larger zoom (is this the 0.1 limit?)
-  - **remarks:** planned as revision2026b step RG6.8.8 (triage 2026-10-07)
-  - date raised: 2026-01-08
-- `EXTENSION` `LOW EFF` OpenGL view (#2194)
-  - description: add manual offsets for zNear and zFar, to adjust visible objects
-  - **remarks:** planned as revision2026b step RG6.8.8 (triage 2026-10-07)
-  - date raised: 2026-01-06
 - `EXTENSION` `MEDIUM EFF` MarkerSuperElementRigid (#2184)
   - description: highly improve efficiency for larger number of nodes by adding according precomputed transformations
   - **remarks:** planned as revision2026b step RG5.4 (triage 2026-10-07)

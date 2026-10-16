@@ -142,8 +142,10 @@ public:
 	Index joystickAvailable;		//!< -1 if no joystick available, otherwise the index of the available joystick
 
 
-	//! minimal distance from screen plane for projection
-	constexpr float GetProjectionNearMin() const { return 0.1f; }
+	//! minimal distance of the near plane from the eye in a perspective view: 0.1, and 0.001 of the scene for scenes
+	//! smaller than 100 - with a fixed 0.1, a model of a few centimeters disappeared when zoomed in, as the eye came
+	//! nearer than 0.1 (#2204); the ratio of far to near plane stays about 1000 for the depth buffer
+	float GetProjectionNearMin() const { return EXUstd::Minimum(0.1f, 1e-3f * maxSceneSize); }
 
 	//! increment centerPoint to compensate motion due to rotation with rotationCenterPoint != 0
 	void CenterPointUpdateFromRotationChange(const Matrix3DF& previousRotation, const Matrix3DF& newRotation,

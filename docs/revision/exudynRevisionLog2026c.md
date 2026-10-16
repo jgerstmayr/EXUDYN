@@ -1264,3 +1264,37 @@ computed in the main thread.)*
   Test model symbolicVectorUserFunctionTest.py: ObjectGenericODE2 with 10 coordinates, symbolic forceUserFunction
   equal to the Python one to the bit; it crashed before. userFunctionBoundary.md has the symbolic column above 7 now:
   0.45 microseconds at 10, 0.67 at 100, 4.2 at 1000.
+
+<a id="rg6-8-8"></a>
+### RG6.8.8, RG12.3.3, RG4.25.3 (proposal) and RG4.1 — the near plane, the user function interface, energy and drift (2026-10-16, #2194, #2204, #2996, #2997)
+*(Maintainer 2026-10-16: the user items - evaluate the Python and symbolic user functions again; which vector and
+matrix classes, what must they do, such that the interface is smoothest for Python and symbolic, ideally without
+allocation on the Exudyn side, symbolic first; a proposal for the linalg components, the symbolic interface, helpers,
+and the user items, into userFunctionBoundary.md. Is RG4.1 resolved? RG4.25: energy and drift homogenized, two
+classes with similar functionality at system level. RG6.8.8 with the raytracer, fixes that match OpenGL, proposals
+for the shadows and camera settings; not much investment before OpenGL 3.3/4.1.)*
+- **RG6.8.8, the near plane (#2204)**: measured with the raytracer, whose lines are cut at the same near plane as
+  OpenGL's triangles: the sensor trace of testRaytracerTracesInPerspective scaled to 1/100 disappeared completely in
+  the perspective, model-centric view - the eye is zoom/perspective = 0.084 from the focal plane, inside the fixed near
+  plane 0.1 (`RenderState::GetProjectionNearMin`). Now `min(0.1, 0.001 maxSceneSize)`: scenes of 100 and larger
+  unchanged, the ratio of far to near plane about 1000 for the depth buffer. OpenGL (GlfwRenderer::SetProjection) and
+  the raytracer take it from the same function, so the fix is the same in both. Scale 1, 0.01, 0.001: trace and sphere
+  visible in both projections (with `minSceneSize` and `boundingBoxZoomAllOffset` scaled, see #3001). pytest
+  testASmallModelStaysVisibleInPerspective. **#2194**: `camera.nearFarPlaneOffset` with its flag exists; its
+  description said 0.01 for the camera-centric near plane, which was 0.1, and is corrected.
+- **Lights and shadows** (scratch script, 12 raytracer images): a directional or positional global light keeps its
+  shadows on the model when the model is rotated or panned; a camera-frame light moves them; perspective
+  model-centric is consistent. The light transformations of the raytracer (global: R p - w c) and of the OpenGL
+  shadow volumes (camera frame: p R + (1 - dir) c R) are the same transformation in the two directions. OpenGL itself
+  cannot be rendered here without a window; nothing found that needs a fix now.
+- **Found, for decision** (#3000, RG6.8.10): the camera-centric view - field of view atan(zoom perspective), with zoom a
+  length (1 degree for a model of 1 cm, 84 degrees for 1 m), ZoomAll does not place the eye, the far plane does not
+  follow it; the raytracer clips no triangles. (#3001, RG6.8.11): ZoomAll of small scenes is limited by two absolute
+  settings. Both left for the OpenGL 3.3/4.1 renderer or a decision.
+- **RG12.3.3**: the user functions again - 42 parameters, 28 with a symbolic version; the symbolic evaluation itself
+  returns every node by value. userFunctionBoundary.md sections 5 to 11: requirements R1-R7, the linalg components
+  (views as arguments, resizable results, copy from numpy in one pass, numpy views), a generated `Evaluate` per
+  signature that dispatches on the kind, linked named variables and node buffers for symbolic, numpy views for
+  Python (a change from lists, with a switch or 2.0), the points of RG7.3.4 decided by it; steps in section 11.
+- **RG4.25.3**: proposal of `SystemQuantity` with `SystemEnergy` and `SystemConstraintDrift` in the plan step.
+- **RG4.1**: Linux resolved; macOS needs a log of a full run (tmp/MacOS/MacAgentRequest6.md).

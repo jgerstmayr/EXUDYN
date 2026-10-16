@@ -81,7 +81,7 @@ The title of each says what it does; the sentence after it, why it comes now.
   - RG5.3 Assemble the analytic Jacobians in parallel with ParallelFor and a cost per item
   - RG5.4 Store the superelement matrices as sparse triplets for larger meshes
 - **RG6** Graphics and rendering
-  - RG6.8 Fix the remaining graphics problems with a test each (1 open sub-step)
+  - RG6.8 Fix the remaining graphics problems with a test each (2 open sub-steps)
   - RG6.11 Draw textures from numpy arrays in triangle lists
   - RG6.12 Add a ruler to the renderer and orient imported triangles consistently
 - **RG7** Python user items
@@ -131,7 +131,7 @@ The title of each says what it does; the sentence after it, why it comes now.
 | RG3 | CLOSED | 0 | Docs |
 | RG4 | OPEN | 11 | Implementation problems and bugs |
 | RG5 | OPEN | 8 | Performance |
-| RG6 | OPEN | 4 | Graphics and rendering |
+| RG6 | OPEN | 5 | Graphics and rendering |
 | RG7 | OPEN | 7 | Python user items |
 | RG8 | OPEN | 10 | Compiled C++ user items |
 | RG9 | OPEN | 4 | Structural core improvements |
@@ -226,6 +226,12 @@ ANCF contact and sliding models and a gravity connector (`ANCFbeltDrive`, `ANCFc
 `ANCFgeneralContactCircle`, `ANCFslidingAndALEjointTest`, `connectorGravityTest`), and since 1.13
 `geometricallyExactBeamRightAngleFrame` and `objectFFRFreducedOrderTest` (cp314). `-ffp-contract=off` for every unix
 build (since #2869) reduced the macOS differences from 8 to 3 models.
+
+2026-10-16 (maintainer: is RG4.1 resolved now?): Linux is - `UnresolvedOnLinux()` is empty. macOS is not yet known:
+the suite passes since the Eigen plugin, but the 8 entries of `UnresolvedOnMacOS()` do not count for the exit code,
+and the newest Mac log in tmp/MacOS is of 1.13.75. tmp/MacOS/MacAgentRequest6.md asks for the log of a full run;
+the entries that match are then removed, and RG4.1 closes when the list is empty or every remaining entry has its
+cause.
 
 #### **OPEN_RG4.1.3** Test the math library and uninitialized values as causes, each with a build switch
 
@@ -336,6 +342,22 @@ test model constraintDriftTest.py. [log](exudynRevisionLog2026c.md#rg4-25)
 #2997: `SensorUFSystemKineticEnergy` and the potential and total energy, like `SensorUFSystemConstraintDrift`;
 `SystemEnergy(mbs).AddSensor()` exists.
 
+Proposal 2026-10-16 (maintainer: energy and drift homogenized, two classes with similar functionality at system
+level, open for more quantities) - for decision:
+- a base class `SystemQuantity(mbs)` in a module `exudyn.systemQuantities` (from advancedUtilities): built once per
+  assembled system (`Refresh()` after a change); `names` (the components), `Compute(configuration)` -> one value per
+  component, `ComputeItems(configuration)` -> the contribution of each item, `SensorFunction` (a function with the
+  signature of `sensorUserFunction`) and `AddSensor(components=None, storeInternal=True, writeToFile=False,
+  fileName='')`;
+- `SystemEnergy(SystemQuantity)`: names kinetic, potential of the objects, potential of the loads, total; the present
+  class, unchanged in what it computes; `.unavailable` stays;
+- `SystemConstraintDrift(SystemQuantity)`: names position drift, velocity residual; `Compute` the largest absolute
+  values from `mbs.ComputeConstraintResiduals`, `ComputeItems` the residuals with their items; it replaces
+  `SensorUFSystemConstraintDrift` (which stays as `SystemConstraintDrift(mbs).SensorFunction` for a release);
+- the solver check of RG4.25.1 stays in C++ (it runs in every step without Python) and uses the same definition of the
+  drift as `ComputeItemType.ConstraintDrift`;
+- later quantities in the same form: momentum and angular momentum, the work of the loads, the power of the dampers.
+
 ## **OPEN_RG5** Performance
 
 Measurement first, then the code that is actually hot.
@@ -385,13 +407,26 @@ raytracer for curved geometry and curved Hex20 faces (#2709).
 
 ### **OPEN_RG6.8** Fix the remaining graphics problems with a test each
 
-#### **OPEN_RG6.8.8** Set the near and far planes from the scene, with manual offsets in the settings
+#### **CLOSED_RG6.8.8** Set the near and far planes from the scene, with manual offsets in the settings
 
-#2204 (visibility at a larger zoom), #2194 (`zNear`, `zFar` offsets).
+CLOSED 2026-10-16 (#2204, #2194; maintainer: with the raytracer, fixes that match OpenGL, proposals for the camera
+settings, not much investment before OpenGL 3.3/4.1): the near plane of the perspective view is at least 0.001 of the
+scene (0.1 at most) instead of a fixed 0.1 - one function for OpenGL and raytracer; the manual offsets existed
+(`camera.nearFarPlaneOffset`), their description corrected. pytest `testASmallModelStaysVisibleInPerspective`.
+Proposals: RG6.8.10, RG6.8.11. [log](exudynRevisionLog2026c.md#rg6-8-8)
 
 #### **CLOSED_RG6.8.9** Draw the lines of the raytracer in front of the focal plane of a model-centric perspective view
 
 CLOSED 2026-10-10 (#2951): the sensor traces were cut at z = -0.1; pytest `testRaytracerTracesInPerspective`. [log](exudynRevisionLog2026c.md#rg6-8-9)
+
+#### **OPEN_RG6.8.10** Make the camera-centric view independent of the scale of the model
+
+#3000 (found in RG6.8.8): the field of view depends on the zoom (a length), ZoomAll does not place the eye, the far
+plane does not follow the eye; the raytracer clips no triangles. With the move to OpenGL 3.3/4.1.
+
+#### **OPEN_RG6.8.11** Let ZoomAll fit small scenes without changing two settings
+
+#3001 (found in RG6.8.8): `minSceneSize` and `boundingBoxZoomAllOffset` are absolute lengths.
 
 ### **OPEN_RG6.11** Draw textures from numpy arrays in triangle lists
 
@@ -1014,6 +1049,15 @@ proposal: #2998, then A, then C with RG7.8, D as a decision of its own. [log](ex
 CLOSED 2026-10-15 (#2998): the data stays in its memory while it fits, every allocation records the heap size; unit
 tests under AddressSanitizer, test model symbolicVectorUserFunctionTest.py (10 coordinates, symbolic = Python).
 [log](exudynRevisionLog2026c.md#rg12-3-2)
+
+#### **CLOSED_RG12.3.3** Propose the vector and matrix classes and the call of the user functions for Python and symbolic
+
+CLOSED 2026-10-16 (#2996 stays open for the steps; maintainer: no allocation on the Exudyn side in both, the symbolic
+path first): [design/userFunctionBoundary.md](../dev/design/userFunctionBoundary.md) sections 5 to 11 - read-only
+views (`LinkedDataVector`/`LinkedDataMatrix`) as arguments, `ResizableVector`/`ResizableMatrix` as results, a
+generated `Evaluate` per signature that dispatches on the kind, symbolic named variables that link and nodes that
+evaluate into their own buffers, numpy views for Python, the user items on top. Steps 1-5 in section 11, for decision.
+[log](exudynRevisionLog2026c.md#rg6-8-8)
 
 ### **OPEN_RG12.4** Give symbolic user functions access to the MainSystem and the item functions
 
