@@ -30,7 +30,7 @@ You can view and download this file on Github: [computeItemTest.py](https://gith
 
 import exudyn as exu
 from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
-from exudyn.advancedUtilities import NumericalJacobian, ItemODE2Coordinates
+from exudyn.advancedUtilities import NumericalJacobian
 import numpy as np
 
 testIsActive = exu.sys.get('testIsActive', False)
@@ -72,7 +72,7 @@ exu.Print('mass of the body from its mass matrix:', massMatrix[0, 0], ', expecte
 #(3) the joint
 equations = mbs.ComputeItem(oJoint, IC.AlgebraicEquations)
 constraintJacobian = mbs.ComputeItem(oJoint, IC.ConstraintJacobian)
-coordinates = ItemODE2Coordinates(mbs, oJoint)
+coordinates = list(mbs.systemData.GetObjectLTGODE2(oJoint))
 numerical = NumericalJacobian(mbs, lambda: mbs.ComputeItem(oJoint, IC.AlgebraicEquations), coordinates)
 errorCq = np.abs(constraintJacobian - numerical).max()
 exu.Print('joint equations', np.round(equations, 8), ', C_q against its numerical derivative:', errorCq)
@@ -81,7 +81,7 @@ reactionForces = mbs.ComputeItem(oJoint, IC.ReactionForces)
 #(4) the position Jacobian at a point of the body
 positionJacobian = mbs.ComputeItem(body, IC.PositionJacobian, localPosition=p)
 numerical = NumericalJacobian(mbs, lambda: mbs.GetObjectOutputBody(body, exu.OutputVariableType.Velocity, localPosition=p),
-                              ItemODE2Coordinates(mbs, body), velocities=True)
+                              list(mbs.systemData.GetObjectLTGODE2(body)), velocityLevel=True)
 errorJpos = np.abs(positionJacobian - numerical).max()
 exu.Print('position Jacobian against the derivative of the velocity:', errorJpos)
 

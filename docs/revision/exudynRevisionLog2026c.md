@@ -1361,3 +1361,21 @@ visualization thread, a global flag. The order of the steps was generally good; 
   (numpy), RG7.10 (drawing in the main thread, detection), RG7.3.4 (the user items without the cache), RG12.3.7
   (matrices).
 - RG7.10 a new step of RG7 (#3003), as the maintainer asked; the four sub-steps of RG12.3 carry #2996.
+
+<a id="rg4-25-3-numjac"></a>
+### RG4.25.3 — NumericalJacobian revised, ItemODE2Coordinates removed (2026-10-16, #3004)
+*(Maintainer 2026-10-16: both functions need to be revised, probably removed. ItemODE2Coordinates exists for objects in
+mbs.systemData - is it required for other items, and if so, why not in C++? NumericalJacobian: velocityLevel instead of
+velocities, systemCoordinates instead of coordinates, epsilon about 1e-8 as elsewhere in Exudyn. Both do not meet the
+docstring conventions; if purely internal, a place like misc.internal. Revise before continuing with systemUtilities.)*
+- **ItemODE2Coordinates removed**: for objects it was `GetObjectLTGODE2`, for nodes `GetNodeLTGODE2` - both C++ already;
+  for markers it raised. The callers (test_accessFunctionsAllBodies.py, computeItemTest.py) use
+  `mbs.systemData.GetObjectLTGODE2`.
+- **NumericalJacobian(mbs, function, systemCoordinates, velocityLevel=False, epsilon=1e-8)**: the docstring with Args,
+  Returns, Example. Kept public, not internal: `mbs.ComputeItem` is public for testing and debugging a user's item, and
+  NumericalJacobian is what it is compared with (the ComputeItem description and the 1.13 revisions say so); it moves to
+  systemUtilities with step 1 of the concept.
+- **epsilon**: 1e-8 as the numerical differentiation of the solvers, absolute here. With central differences the
+  round-off is about 1e-16/epsilon = 1e-8, which is above the relative tolerance 1e-7 of
+  test_accessFunctionsAllBodies.py at some of its random states; the test passes `epsilon=1e-6` (truncation about 1e-12),
+  with a comment. computeItemTest.py unchanged (71.26280786962762).

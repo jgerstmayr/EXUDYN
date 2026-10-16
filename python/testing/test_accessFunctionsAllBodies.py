@@ -32,7 +32,11 @@ from exudyn.utilities import (NodeGenericODE2, ObjectKinematicTree, MarkerKinema
                               InertiaCuboid, RotXYZ2RotationMatrix, NodeRigidBody2D, ObjectRigidBody2D, NodePoint2DSlope1,
                               ObjectANCFCable2D, NodePointSlope1, ObjectANCFCable, NodePointSlope23, ObjectANCFBeam,
                               ObjectBeamGeometricallyExact2D, NodeRigidBodyEP, NodeRigidBodyRxyz, ObjectBeamGeometricallyExact)
-from exudyn.advancedUtilities import NumericalJacobian, ItemODE2Coordinates
+from exudyn.advancedUtilities import NumericalJacobian
+
+#central differences: the error of epsilon = 1e-6 is about 1e-12 (truncation), that of the default 1e-8 about 1e-8
+#(round-off), above the tolerance 1e-8 of these comparisons
+EPSILON = 1e-6
 from exudyn.shells import ShellMesh
 
 exu.special.userInterface.SuppressAll(True)
@@ -127,7 +131,7 @@ def test_theAccessFunctionsAreTheNumericalDerivatives(name):
     (body, localPositions) = bodies[name](mbs)
     mbs.Assemble()
     (rng, eulerParameterBlocks) = RandomState(mbs, 3)
-    coordinates = ItemODE2Coordinates(mbs, body)
+    coordinates = list(mbs.systemData.GetObjectLTGODE2(body))
     tangent = np.eye(len(coordinates)) #the tangent space of the Euler parameters, in the coordinates of the body
     for (k, ep) in eulerParameterBlocks:
         kk = coordinates.index(k)
@@ -137,11 +141,11 @@ def test_theAccessFunctionsAreTheNumericalDerivatives(name):
     assert IC.PositionJacobian in applies
     for p in localPositions:
         jacobian = mbs.ComputeItem(body, IC.PositionJacobian, localPosition=p)
-        numerical = NumericalJacobian(mbs, lambda: mbs.GetObjectOutputBody(body, OV.Velocity, localPosition=p), coordinates, velocities=True)
+        numerical = NumericalJacobian(mbs, lambda: mbs.GetObjectOutputBody(body, OV.Velocity, localPosition=p), coordinates, velocityLevel=True, epsilon=EPSILON)
         assert np.abs(jacobian[:numerical.shape[0]] - numerical).max() < 1e-8
         if IC.RotationJacobian in applies and OV.AngularVelocity in outputs:
             jacobian = mbs.ComputeItem(body, IC.RotationJacobian, localPosition=p)
-            numerical = NumericalJacobian(mbs, lambda: mbs.GetObjectOutputBody(body, OV.AngularVelocity, localPosition=p), coordinates, velocities=True)
+            numerical = NumericalJacobian(mbs, lambda: mbs.GetObjectOutputBody(body, OV.AngularVelocity, localPosition=p), coordinates, velocityLevel=True, epsilon=EPSILON)
             assert np.abs(jacobian - numerical).max() < 1e-8
         if IC.JacobianTTimesVectorDerivative in applies and name != 'RigidBodyRotVecLG':
             forceTorque = list(rng.standard_normal(6))
@@ -155,7 +159,7 @@ def test_theAccessFunctionsAreTheNumericalDerivatives(name):
                 if withRotation:
                     result = result + mbs.ComputeItem(body, IC.RotationJacobian, localPosition=p).T @ np.array(forceTorque[3:])
                 return result
-            numerical = NumericalJacobian(mbs, JacobiansTimesForceTorque, coordinates) @ tangent
+            numerical = NumericalJacobian(mbs, JacobiansTimesForceTorque, coordinates, epsilon=EPSILON) @ tangent
             derivative = mbs.ComputeItem(body, IC.JacobianTTimesVectorDerivative, localPosition=p, vector=forceTorque)
             if derivative.size == 0: #declared zero
                 derivative = np.zeros_like(numerical)
@@ -188,11 +192,11 @@ def CompareMarker(mbs, marker, coordinates):
     """the position and rotation Jacobians of a marker against the derivatives of its velocity and angular velocity"""
     applies = mbs.ComputeItem(marker)
     jacobian = mbs.ComputeItem(marker, IC.PositionJacobian)
-    numerical = NumericalJacobian(mbs, lambda: mbs.GetMarkerOutput(marker, OV.Velocity), coordinates, velocities=True)
+    numerical = NumericalJacobian(mbs, lambda: mbs.GetMarkerOutput(marker, OV.Velocity), coordinates, velocityLevel=True, epsilon=EPSILON)
     assert np.abs(jacobian - numerical).max() < 1e-8
     if IC.RotationJacobian in applies:
         jacobian = mbs.ComputeItem(marker, IC.RotationJacobian)
-        numerical = NumericalJacobian(mbs, lambda: mbs.GetMarkerOutput(marker, OV.AngularVelocity), coordinates, velocities=True)
+        numerical = NumericalJacobian(mbs, lambda: mbs.GetMarkerOutput(marker, OV.AngularVelocity), coordinates, velocityLevel=True, epsilon=EPSILON)
         assert np.abs(jacobian - numerical).max() < 1e-8
 
 
@@ -218,7 +222,7 @@ def test_theSuperElementMarkersHaveTheNumericalJacobians(kind):
     RandomState(mbs, 5)
     assert IC.PositionJacobian not in mbs.ComputeItem(body) #a superelement is reached through its markers
     for marker in markers:
-        CompareMarker(mbs, marker, ItemODE2Coordinates(mbs, body))
+        CompareMarker(mbs, marker, list(mbs.systemData.GetObjectLTGODE2(body)))
 
 
 def test_theKinematicTreeMarkerHasTheNumericalJacobians():
@@ -234,7 +238,7 @@ def test_theKinematicTreeMarkerHasTheNumericalJacobians():
     marker = mbs.AddMarker(MarkerKinematicTreeRigid(objectNumber=tree, linkNumber=1, localPosition=[0.1, 0.05, 0]))
     mbs.Assemble()
     RandomState(mbs, 6)
-    CompareMarker(mbs, marker, ItemODE2Coordinates(mbs, tree))
+    CompareMarker(mbs, marker, list(mbs.systemData.GetObjectLTGODE2(tree)))
 
 
 def test_theALECableHasTheNumericalPositionJacobianInItsANCFCoordinates():
@@ -249,10 +253,10 @@ def test_theALECableHasTheNumericalPositionJacobianInItsANCFCoordinates():
                                                bendingStiffness=1, axialStiffness=100, movingMassFactor=1))
     mbs.Assemble()
     RandomState(mbs, 7)
-    coordinates = ItemODE2Coordinates(mbs, cable)[:8]
+    coordinates = list(mbs.systemData.GetObjectLTGODE2(cable))[:8]
     for p in [[0.3, 0, 0], [0.6, 0, 0]]:
         jacobian = mbs.ComputeItem(cable, IC.PositionJacobian, localPosition=p)
-        numerical = NumericalJacobian(mbs, lambda: mbs.GetObjectOutputBody(cable, OV.Velocity, localPosition=p), coordinates, velocities=True)
+        numerical = NumericalJacobian(mbs, lambda: mbs.GetObjectOutputBody(cable, OV.Velocity, localPosition=p), coordinates, velocityLevel=True, epsilon=EPSILON)
         assert jacobian.shape[1] == 9 and np.abs(jacobian[:, 8]).max() == 0 #the ALE coordinate: a zero column (#2786)
         assert np.abs(jacobian[:2, :8] - numerical[:2]).max() < 1e-8
 
@@ -290,7 +294,7 @@ def test_theODE2JacobianIsTheNumericalOne(name):
     (rng, eulerParameterBlocks) = RandomState(mbs, 8)
     if name not in bodies:
         mbs.systemData.SetODE2Coordinates_t(0*mbs.systemData.GetODE2Coordinates_t())
-    coordinates = ItemODE2Coordinates(mbs, item)
+    coordinates = list(mbs.systemData.GetObjectLTGODE2(item))
     tangent = np.eye(len(coordinates))
     for (k, ep) in eulerParameterBlocks:
         kk = coordinates.index(k)
@@ -298,7 +302,7 @@ def test_theODE2JacobianIsTheNumericalOne(name):
     assert IC.JacobianODE2 in mbs.ComputeItem(item)
     for (what, velocities) in [(IC.JacobianODE2, False), (IC.JacobianODE2_t, True)]:
         jacobian = mbs.ComputeItem(item, what)
-        numerical = NumericalJacobian(mbs, lambda: mbs.ComputeItem(item, IC.ODE2LHS), coordinates, velocities=velocities)
+        numerical = NumericalJacobian(mbs, lambda: mbs.ComputeItem(item, IC.ODE2LHS), coordinates, velocityLevel=velocities, epsilon=EPSILON)
         if not velocities:
             jacobian = jacobian @ tangent
             numerical = numerical @ tangent

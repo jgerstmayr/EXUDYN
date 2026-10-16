@@ -31,9 +31,12 @@ the creation of items, not a run of a solver:
 | `CreateLoadEnergySensor` | advancedUtilities | 1.12.236 | removed: `SystemEnergy(mbs, items=[load]).AddSensor(components=['loads'])` |
 | `SensorUFSystemConstraintDrift` | advancedUtilities | 1.13.92 (#565) | removed: `SystemConstraintDrift(mbs).SensorFunction` |
 | `ComputeConstraintResiduals` | solver.py, `mbs.` | 1.13.92 (#565) | moved; `mbs.ComputeConstraintResiduals` stays |
-| `ItemODE2Coordinates`, `NumericalJacobian` | advancedUtilities | 1.12.217 (#2779) | moved: the state of the system, for tests of items |
+| `NumericalJacobian` | advancedUtilities | 1.12.217 (#2779) | moved: it varies the state of the system; the counterpart of `mbs.ComputeItem` for tests of items, in particular user items (arguments `systemCoordinates`, `velocityLevel`, `epsilon=1e-8` since #3004) |
 | `ComputeSystemDegreeOfFreedom` | solver.py, `exu.`, `mbs.` | before 1.11 | moved; solver.py imports it, so `exudyn.solver.` and `exu.` keep it |
 | `DrawSystemGraph` | mainSystemExtensions, `mbs.` | before 1.11 | split: `ComputeSystemGraph`, `DrawSystemGraph`; `mbs.DrawSystemGraph` a thin wrapper with the same arguments |
+
+Removed before the move (#3004): `ItemODE2Coordinates` - the indices of the ODE2 coordinates of an item are
+`mbs.systemData.GetObjectLTGODE2` and `GetNodeLTGODE2` (C++); markers have no coordinates of their own.
 
 Not included: `ComputeLinearizedSystem` and `ComputeODE2Eigenvalues` (they set up a solver and stay in solver.py),
 `FindObjectIndex`/`FindNodeIndex` (they search Python variables), the `Create...` functions, `PlotSensor`.

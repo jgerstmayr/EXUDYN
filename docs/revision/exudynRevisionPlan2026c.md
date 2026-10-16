@@ -357,7 +357,7 @@ test model constraintDriftTest.py. [log](exudynRevisionLog2026c.md#rg4-25)
 Concept 2026-10-16 (maintainer: SystemQuantity and the derived classes exactly as proposed; all system functions in
 one library with a good name, DrawSystemGraph split into ComputeSystemGraph and the drawing; the 1.13 interface of the
 new functions may change): [design/systemUtilities.md](../dev/design/systemUtilities.md) - `exudyn.systemUtilities`,
-what moves into it, `SystemQuantity`, the graph, the imports, steps 1-3. The proposal before it:
+what moves into it, `SystemQuantity`, the graph, the imports, steps 1-3; RG4.25.3.1 before it. The proposal before it:
 - a base class `SystemQuantity(mbs)` in a module `exudyn.systemQuantities` (from advancedUtilities): built once per
   assembled system (`Refresh()` after a change); `names` (the components), `Compute(configuration)` -> one value per
   component, `ComputeItems(configuration)` -> the contribution of each item, `SensorFunction` (a function with the
@@ -371,6 +371,13 @@ what moves into it, `SystemQuantity`, the graph, the imports, steps 1-3. The pro
 - the solver check of RG4.25.1 stays in C++ (it runs in every step without Python) and uses the same definition of the
   drift as `ComputeItemType.ConstraintDrift`;
 - later quantities in the same form: momentum and angular momentum, the work of the loads, the power of the dampers.
+
+##### **CLOSED_RG4.25.3.1** Revise NumericalJacobian and remove ItemODE2Coordinates before the move
+
+CLOSED 2026-10-16 (#3004, maintainer: both to be revised; arguments as elsewhere in Exudyn): `ItemODE2Coordinates`
+removed (`mbs.systemData.GetObjectLTGODE2`/`GetNodeLTGODE2` exist); `NumericalJacobian(mbs, function,
+systemCoordinates, velocityLevel=False, epsilon=1e-8)` with a docstring to the conventions, kept public as the
+counterpart of `mbs.ComputeItem`. [log](exudynRevisionLog2026c.md#rg4-25-3-numjac)
 
 ## **OPEN_RG5** Performance
 

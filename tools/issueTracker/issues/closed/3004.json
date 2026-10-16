@@ -1,0 +1,16 @@
+{
+  "number": 3004,
+  "title": "NumericalJacobian: arguments as in Exudyn, docstring to the conventions; ItemODE2Coordinates removed",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "CHANGE",
+  "effort": "LOW",
+  "description": "revision2026c step RG4.25.3.1 (maintainer 2026-10-16): ItemODE2Coordinates duplicates mbs.systemData.GetObjectLTGODE2 and GetNodeLTGODE2 (C++) and is removed; NumericalJacobian gets systemCoordinates (the indices of system ODE2 coordinates) and velocityLevel instead of coordinates and velocities, epsilon 1e-8 as in the numerical differentiation of the solvers, and a docstring with Args, Returns and Example; kept public, as the counterpart of mbs.ComputeItem for testing user items",
+  "dateRaised": "2026-10-16",
+  "deadline": "2027-04-14",
+  "dateResolved": "2026-10-16 12:06",
+  "resolvedAuthor": "Claude-JG",
+  "file": "python/exudyn/advancedUtilities.py",
+  "releaseNotes": "exudyn.advancedUtilities.NumericalJacobian(mbs, function, systemCoordinates, velocityLevel=False, epsilon=1e-8): the arguments named as elsewhere in Exudyn and the step 1e-8 as in the solvers; ItemODE2Coordinates removed - use mbs.systemData.GetObjectLTGODE2 or GetNodeLTGODE2",
+  "resolvedInVersion": "1.13.99"
+}

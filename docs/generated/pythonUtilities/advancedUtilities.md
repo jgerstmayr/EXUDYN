@@ -586,23 +586,30 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`TCPIPexudyn
 
 
 
-(sec-advancedutilities-itemode2coordinates)=
-## Function: ItemODE2Coordinates
-
-[`ItemODE2Coordinates(mbs, itemIndex)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/advancedUtilities.py#L1253)
-
-- **function description**: the global ODE2 coordinate indices of an object (its local-to-global list) or of a node, in the order of the matrices and vectors mbs.ComputeItem returns for it; the system must be assembled
-
-
-Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`computeItemTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/computeItemTest.py) (TM)
-
-
 (sec-advancedutilities-numericaljacobian)=
 ## Function: NumericalJacobian
 
-[`NumericalJacobian(mbs, function, coordinates, velocities = False, epsilon = 1e-6)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/advancedUtilities.py#L1263)
+[`NumericalJacobian(mbs, function, systemCoordinates, velocityLevel = False, epsilon = 1e-8)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/advancedUtilities.py#L1253)
 
-- **function description**: the derivative of function() - any computation of the current state, e.g. an output variable or mbs.ComputeItem - by the given global ODE2 coordinates (velocities=True: by their time derivatives), by central differences with step epsilon; the state is restored afterwards; returns an array (number of values of function) x (number of coordinates); with ItemODE2Coordinates, the comparison with mbs.ComputeItem is one line: NumericalJacobian(mbs, lambda: mbs.GetObjectOutputBody(oBody, exu.OutputVariableType.Velocity, localPosition), ItemODE2Coordinates(mbs, oBody), velocities=True) against mbs.ComputeItem(oBody, exu.ComputeItemType.PositionJacobian, localPosition)
+- **function description**: the derivative of a computation of the current state of the system - an output variable, mbs.ComputeItem, a user function - by some of the system ODE2 coordinates or their velocities, by central differences; for tests of the Jacobians of an item, in particular of a user item, against mbs.ComputeItem
+- **input**:
+  - `mbs`: the MainSystem, assembled
+  - `function`: a function without arguments that computes the values from the current state, e.g.
+  - `lambda`: mbs.ComputeItem(oBody, exu.ComputeItemType.ODE2LHS)
+  - `systemCoordinates`: the indices of the system ODE2 coordinates to differentiate by, e.g. the coordinates of an object, mbs.systemData.GetObjectLTGODE2(objectNumber), or of a node, mbs.systemData.GetNodeLTGODE2(nodeNumber)
+  - `velocityLevel`: False: by the coordinates; True: by their time derivatives
+  - `epsilon`: the step of the central differences, absolute; 1e-8 as in the numerical differentiation of the solvers; the round-off error is about 1e-16/epsilon, the truncation error about epsilon**2 - 1e-6 is more accurate for smooth functions of coordinates of order 1
+- **output**: the derivative as numpy array, (number of values of function) x (number of systemCoordinates); the state of the system is restored afterwards
+
+*example*:
+
+```python
+  coordinates = mbs.systemData.GetObjectLTGODE2(oBody)
+  numerical = NumericalJacobian(mbs, lambda: mbs.GetObjectOutputBody(oBody, exu.OutputVariableType.Velocity,
+                                localPosition=[0.1,0,0]), coordinates, velocityLevel=True)
+  analytic = mbs.ComputeItem(oBody, exu.ComputeItemType.PositionJacobian, localPosition=[0.1,0,0])
+```
+
 
 
 Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`computeItemTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/computeItemTest.py) (TM)
