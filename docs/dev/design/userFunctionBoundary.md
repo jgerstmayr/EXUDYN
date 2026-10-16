@@ -249,7 +249,7 @@ The order (maintainer 2026-10-16: generally good; with the decisions on numpy an
 sub-step of RG12.3 or a step of RG7 in the plan:
 
 1. **RG12.3.4** - A and R3, R5: const references, `CopyFrom(std::vector)`, the move assignment of `Vector`, the
-   constructors that take `std::vector` by value; no change for users; measured again with userFunctionBoundary.py.
+   constructors that take `std::vector` by value; no change for users. Done (#3005), measured in section 12.
 2. **RG12.3.5** - section 7 and 8: the generated `Evaluate` per signature with `const Vector&` arguments and `Vector&`
    results, the symbolic evaluation into node buffers and the linked named variables; the gain of the symbolic path.
 3. **RG12.3.6** - section 9: numpy arguments for the Python user functions, decided; the deprecation switch only if
@@ -260,3 +260,42 @@ sub-step of RG12.3 or a step of RG7 in the plan:
    waits for RG13.
 6. **RG12.3.7** - matrices (`massMatrixUserFunction`, `jacobianUserFunction`, the Jacobians of ObjectUserBody): the
    same scheme with `const Matrix&` arguments and `Matrix&` / `MatrixContainer&` results; #1864 belongs here.
+
+Every step that changes the user functions is measured against 1.13.6 with userFunctionPerformance.py (maintainer
+2026-10-16: the performance shall improve, or at least not drop, for Python and for symbolic user functions), and the
+table of section 12 is updated.
+
+## 12. Performance against 1.13.6
+
+Measured with [userFunctionPerformance.py](userFunctionPerformance.py) on the runs of
+`python/PerformanceModels/perfUserFunctions.py` (also part of the performance suite): typical user functions, each as
+Python and as symbolic function computing the same, explicit RK44 with 4 calls per step. Microseconds per call =
+(solver time - solver time of the same model without the user function) / calls, fastest of 5; allocations = Exudyn
+vectors, arrays and matrices per call (`exu.special.InfoStat`; `std::vector` is not counted). Windows, Python 3.13;
+differences up to about 10 % are the noise of the machine. The reference is a copy of the installed 1.13.6 package.
+`spring` symbolic is about 10 % slower than in 1.13.6 already before RG12.3.4: `u**3` is the portable power of
+`exudyn.cMath` since #2954.
+
+**After RG12.3.4** (#3005: const references, one copy of the result, the move assignment of `Vector`), 1.13.100:
+
+| function | kind | 1.13.6: us/call | current: us/call | current/1.13.6 | allocations/call |
+|---|---|---:|---:|---:|---|
+| spring | python | 0.351 | 0.365 | 1.04 | 0 -> 0 |
+| spring | symbolic | 0.068 | 0.079 | 1.17 | 0 -> 0 |
+| cartesian | python | 0.711 | 0.757 | 1.06 | 0 -> 0 |
+| cartesian | symbolic | 0.284 | 0.257 | 0.91 | 0 -> 0 |
+| load | python | 0.391 | 0.420 | 1.07 | 0 -> 0 |
+| load | symbolic | 0.092 | 0.087 | 0.95 | 0 -> 0 |
+| generic6 | python | 2.972 | 2.847 | 0.96 | 2.5 -> 1.25 |
+| generic6 | symbolic | 0.399 | 0.215 | 0.54 | 2.5 -> 1.25 |
+| generic10 | python | 3.296 | 3.185 | 0.97 | 2.5 -> 1.25 |
+| generic10 | symbolic | crashed (#2998) | 0.385 (before: 0.565) | | - -> 8.75 (before: 10) |
+| generic100 | python | 10.284 | 10.410 | 1.01 | 2.5 -> 1.25 |
+| generic100 | symbolic | crashed (#2998) | 0.692 (before: 1.105) | | - -> 8.75 (before: 10) |
+
+- the symbolic vector functions gain 35 to 45 %: the copies of the arguments are gone; what remains is the conversion
+  of the coordinates into `std::vector`, the copy into the named vectors, the vectors of the expression tree and the
+  local `Vector` of the force in ObjectGenericODE2 - RG12.3.5;
+- the Python vector functions do not change measurably: their cost is the lists of pybind11 and the Python body
+  (`np.asarray`, the arithmetic, the conversion of the result) - RG12.3.6;
+- scalar and 3D user functions are unchanged, as expected - their arguments were no `std::vector`.

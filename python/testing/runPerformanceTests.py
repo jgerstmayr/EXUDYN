@@ -193,6 +193,7 @@ testGroups = {
                 'perfRigidPendulum.py',
                 'perfSpringDamperExplicit.py',
                 'perfSpringDamperUserFunction.py',
+                'perfUserFunctions.py',
              ],
     'large': [
                 'generalContactSpheresPerf.py',

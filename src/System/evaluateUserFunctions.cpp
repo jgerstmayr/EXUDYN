@@ -247,7 +247,7 @@ void CObjectGenericODE2::EvaluateUserFunctionForce(Vector& force, const MainSyst
 {
 	UserFunctionExceptionHandling([&] //lambda function to add consistent try{..} catch(...) block
 	{
-		force = (Vector)(parameters.forceUserFunction.userFunction((const MainSystem&)mainSystem, t, objectNumber, coordinates, coordinates_t));
+		force.CopyFrom(parameters.forceUserFunction.userFunction((const MainSystem&)mainSystem, t, objectNumber, coordinates, coordinates_t));
 	}, "ObjectGenericODE2::forceUserFunction");
 }
 
@@ -281,7 +281,7 @@ void CObjectGenericODE1::EvaluateUserFunctionRHS(Vector& force, const MainSystem
 {
 	UserFunctionExceptionHandling([&] //lambda function to add consistent try{..} catch(...) block
 	{
-		force = (Vector)(parameters.rhsUserFunction.userFunction((const MainSystem&)mainSystem, t, objectNumber, coordinates));
+		force.CopyFrom(parameters.rhsUserFunction.userFunction((const MainSystem&)mainSystem, t, objectNumber, coordinates));
 	}, "ObjectGenericODE1::rhsUserFunction");
 }
 
@@ -297,7 +297,7 @@ void CObjectUserBody::EvaluateUserFunctionForce(Vector& force, Real t, Index obj
 {
 	UserFunctionExceptionHandling([&] //lambda function to add consistent try{..} catch(...) block
 	{
-		force = (Vector)(parameters.forceUserFunction.userFunction((const MainSystem&)cSystemData->GetMainSystemBacklink(), t, objectNumber, coordinates, coordinates_t));
+		force.CopyFrom(parameters.forceUserFunction.userFunction((const MainSystem&)cSystemData->GetMainSystemBacklink(), t, objectNumber, coordinates, coordinates_t));
 	}, "ObjectUserBody::forceUserFunction");
 }
 
@@ -307,7 +307,7 @@ void CObjectUserBody::EvaluateUserFunctionOutputVariable(Vector& value, Real t, 
 	Vector result;
 	UserFunctionExceptionHandling([&] //lambda function to add consistent try{..} catch(...) block
 	{
-		result = (Vector)(parameters.outputVariableUserFunction.userFunction((const MainSystem&)cSystemData->GetMainSystemBacklink(), t, GetObjectNumber(),
+		result.CopyFrom(parameters.outputVariableUserFunction.userFunction((const MainSystem&)cSystemData->GetMainSystemBacklink(), t, GetObjectNumber(),
 			variableType, localPosition, coordinates, coordinates_t));
 	}, "ObjectUserBody::outputVariableUserFunction");
 	value.CopyFrom(result);
@@ -357,7 +357,7 @@ void CObjectKinematicTree::EvaluateUserFunctionForce(Vector& force, const MainSy
 {
 	UserFunctionExceptionHandling([&] //lambda function to add consistent try{..} catch(...) block
 	{
-		force = (Vector)(parameters.forceUserFunction.userFunction((const MainSystem&)mainSystem, t, objectNumber, coordinates, coordinates_t));
+		force.CopyFrom(parameters.forceUserFunction.userFunction((const MainSystem&)mainSystem, t, objectNumber, coordinates, coordinates_t));
 	}, "ObjectKinematicTree::forceUserFunction");
 }
 
@@ -367,7 +367,7 @@ void CObjectFFRF::EvaluateUserFunctionForce(Vector& force, const MainSystemBase&
 {
 	UserFunctionExceptionHandling([&] //lambda function to add consistent try{..} catch(...) block
 	{
-		force = (Vector)(parameters.forceUserFunction.userFunction((const MainSystem&)mainSystem, t, objectNumber, coordinates, coordinates_t));
+		force.CopyFrom(parameters.forceUserFunction.userFunction((const MainSystem&)mainSystem, t, objectNumber, coordinates, coordinates_t));
 	}, "ObjectFFRF::forceUserFunction");
 }
 
@@ -386,7 +386,7 @@ void CObjectFFRFreducedOrder::EvaluateUserFunctionForce(Vector& force, const Mai
 {
 	UserFunctionExceptionHandling([&] //lambda function to add consistent try{..} catch(...) block
 	{
-		force = (Vector)(parameters.forceUserFunction.userFunction((const MainSystem&)mainSystem, t, objectNumber, coordinates, coordinates_t));
+		force.CopyFrom(parameters.forceUserFunction.userFunction((const MainSystem&)mainSystem, t, objectNumber, coordinates, coordinates_t));
 	}, "ObjectFFRFreducedOrder::forceUserFunction");
 }
 

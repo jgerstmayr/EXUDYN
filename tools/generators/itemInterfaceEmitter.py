@@ -97,7 +97,7 @@ def CreateStringSymbolicUserFunctionArgs(pySymbolicUserFunction):
         cnt = 0
         for arg in fcnArgs[1:]: #omit MainSystem
             fcnArgsList += ['arg'+str(cnt)]
-            fcnTypesList += [arg.strip()]
+            fcnTypesList += [arg.replace('const ', '').replace('&', '').strip()] #'const StdVector&' is a StdVector
             cnt+=1
 
         #a parameter that carries a Python def knows what its arguments are CALLED; arg0, arg1, ...

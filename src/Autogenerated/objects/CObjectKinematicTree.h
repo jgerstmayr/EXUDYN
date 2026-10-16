@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-10-04  16:59:49 (last modified)
+* @date         2026-10-16  13:28:11 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -55,7 +55,7 @@ public: // AUTO:
     Vector jointVelocityOffsetVector;             //!< AUTO: velocity offset for joint coordinates used in (P)D control; acts in positive joint direction similar to jointForceVector; should be modified, e.g., in preStepUserFunction; must be either empty list/array \f$[]\f$ (default) or have size \f$n\f$
     Vector jointPControlVector;                   //!< AUTO: proportional (P) control values per joint (multiplied with position error between joint value and offset \f$\uv_o\f$); note that more complicated control laws must be implemented with user functions; must be either empty list/array \f$[]\f$ (default) or have size \f$n\f$
     Vector jointDControlVector;                   //!< AUTO: derivative (D) control values per joint (multiplied with velocity error between joint velocity and velocity offset \f$\vv_o\f$); note that more complicated control laws must be implemented with user functions; must be either empty list/array \f$[]\f$ (default) or have size \f$n\f$
-    PythonUserFunctionBase< std::function<StdVector(const MainSystem&,Real,Index,StdVector,StdVector)> > forceUserFunction;//!< AUTO: A Python user function which computes the generalized force vector on RHS with identical action as jointForceVector; see description below
+    PythonUserFunctionBase< std::function<StdVector(const MainSystem&,Real,Index,const StdVector&,const StdVector&)> > forceUserFunction;//!< AUTO: A Python user function which computes the generalized force vector on RHS with identical action as jointForceVector; see description below
     //! AUTO: default constructor with parameter initialization
     CObjectKinematicTreeParameters()
     {

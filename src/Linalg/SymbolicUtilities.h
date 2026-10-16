@@ -322,7 +322,7 @@ public:
 
 	//! variadic template to evaluate all kinds of user functions (templates created/defined by Pybind interface)
 	template<typename... Args>
-	Real EvaluateReal(const MainSystem& mainSystem, Args... args)
+	Real EvaluateReal(const MainSystem& mainSystem, const Args&... args)
 	{
 		// Process the rest of the arguments
 		Index argIndex = 0;
@@ -336,7 +336,7 @@ public:
 
 	//! variadic template to evaluate all kinds of user functions (templates created/defined by Pybind interface)
 	template<typename... Args>
-	bool EvaluateBool(const MainSystem& mainSystem, Args... args)
+	bool EvaluateBool(const MainSystem& mainSystem, const Args&... args)
 	{
 		// Process the rest of the arguments
 		Index argIndex = 0;
@@ -347,7 +347,7 @@ public:
 
 	//! variadic template to evaluate all kinds of user functions (templates created/defined by Pybind interface)
 	template<typename... Args>
-	StdVector2D EvaluateStdVector2D(const MainSystem& mainSystem, Args... args)
+	StdVector2D EvaluateStdVector2D(const MainSystem& mainSystem, const Args&... args)
 	{
 		// Process the rest of the arguments
 		Index argIndex = 0;
@@ -358,7 +358,7 @@ public:
 
 	//! variadic template to evaluate all kinds of user functions (templates created/defined by Pybind interface)
 	template<typename... Args>
-	StdVector3D EvaluateStdVector3D(const MainSystem& mainSystem, Args... args)
+	StdVector3D EvaluateStdVector3D(const MainSystem& mainSystem, const Args&... args)
 	{
 		// Process the rest of the arguments
 		Index argIndex = 0;
@@ -369,7 +369,7 @@ public:
 
 	//! variadic template to evaluate all kinds of user functions (templates created/defined by Pybind interface)
 	template<typename... Args>
-	StdVector6D EvaluateStdVector6D(const MainSystem& mainSystem, Args... args)
+	StdVector6D EvaluateStdVector6D(const MainSystem& mainSystem, const Args&... args)
 	{
 		// Process the rest of the arguments
 		Index argIndex = 0;
@@ -380,7 +380,7 @@ public:
 
 	//! variadic template to evaluate all kinds of user functions (templates created/defined by Pybind interface)
 	template<typename... Args>
-	std::vector<Real> EvaluateStdVector(const MainSystem& mainSystem, Args... args)
+	std::vector<Real> EvaluateStdVector(const MainSystem& mainSystem, const Args&... args)
 	{
 		// Process the rest of the arguments
 		Index argIndex = 0;
@@ -394,7 +394,7 @@ public:
 
 	//! variadic template to evaluate all kinds of user functions (templates created/defined by Pybind interface)
 	template<typename... Args>
-	StdMatrix3D EvaluateStdMatrix3D(const MainSystem& mainSystem, Args... args)
+	StdMatrix3D EvaluateStdMatrix3D(const MainSystem& mainSystem, const Args&... args)
 	{
 		// Process the rest of the arguments
 		Index argIndex = 0;
@@ -405,7 +405,7 @@ public:
 
 	//! variadic template to evaluate all kinds of user functions (templates created/defined by Pybind interface)
 	template<typename... Args>
-	StdMatrix6D EvaluateStdMatrix6D(const MainSystem& mainSystem, Args... args)
+	StdMatrix6D EvaluateStdMatrix6D(const MainSystem& mainSystem, const Args&... args)
 	{
 		// Process the rest of the arguments
 		Index argIndex = 0;
@@ -416,7 +416,7 @@ public:
 
 	//! variadic template to evaluate all kinds of user functions (templates created/defined by Pybind interface)
 	template<typename... Args>
-	NumpyMatrix EvaluateNumpyMatrix(const MainSystem& mainSystem, Args... args)
+	NumpyMatrix EvaluateNumpyMatrix(const MainSystem& mainSystem, const Args&... args)
 	{
 		// Process the rest of the arguments
 		Index argIndex = 0;

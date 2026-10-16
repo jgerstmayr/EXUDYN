@@ -68,7 +68,7 @@ public:
 
 
 	//! constructor with std::vector
-	ResizableVectorBase(const std::vector<T> vector)
+	ResizableVectorBase(const std::vector<T>& vector)
 	{
 		maxNumberOfItems = (Index)vector.size();
 		this->AllocateMemory((Index)vector.size());
@@ -300,7 +300,7 @@ public:
 		other.numberOfItems = 0;
 	}
 	//! constructor with std::vector
-	ResizableConstVectorBase(const std::vector<T> vector)
+	ResizableConstVectorBase(const std::vector<T>& vector)
 	{
 		this->maxNumberOfItems = 0;
 		this->AllocateMemory((Index)vector.size());
@@ -531,7 +531,7 @@ typedef ResizableConstVectorBase<Real> ResizableConstVector;
 
 ////! constructor with std::vector
 //template<typename T>
-//ResizableVectorBase<T>::ResizableVectorBase(const std::vector<T> vector)
+//ResizableVectorBase<T>::ResizableVectorBase(const std::vector<T>& vector)
 //{
 //	maxNumberOfItems = (Index)vector.size();
 //	AllocateMemory((Index)vector.size());

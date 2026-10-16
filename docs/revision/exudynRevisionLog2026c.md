@@ -1404,3 +1404,33 @@ systemUtilities plan; implement systemUtilities.md as far as it can be done now 
 - Docs: introductionBasics.md section *Quantities of the whole system* (`sec-systemquantities`), solver.md drift
   section, revisions.md (after 1.13), the references in definitions and MainSystem.cpp; design/systemUtilities.md
   describes the module as it is. RG4.25 closed with it.
+
+<a id="rg12-3-4-done"></a>
+### RG12.3.4 — the vectors of the user functions by const reference, the comparison with 1.13.6 (2026-10-16, #3005)
+*(Maintainer 2026-10-16: the 6 steps of userFunctionBoundary.md section 11 are all good to go; whenever something
+advances for the user functions, a performance comparison of a couple of typical user functions with 1.13.6, possibly
+in the performance tests; the performance should rather improve, or at least not drop; for Python and symbolic user
+functions, so that both effects are seen.)*
+- **definitions/definitionTypes.py**: `annotationToCppArgument` - a `Vector` argument of a user function is
+  `const StdVector&` in its std::function; the return stays `StdVector`. The generated templates and members change with
+  it; `itemInterfaceEmitter` reads `const StdVector&` as `StdVector`, so `userFunctionArgsDict` (and itemInterface.py)
+  is unchanged.
+- **SymbolicUtilities.h**: the nine `Evaluate...` templates take `const Args&...`; the generated lambdas pass their
+  references through.
+- **Linalg**: the constructors of VectorBase, ResizableVectorBase, ResizableConstVectorBase, ResizableVectorParallelBase
+  and SlimVectorBase from `std::vector` take a const reference; `VectorBase::operator=(VectorBase&&)` exchanges memory
+  between two plain Vectors (`GetType() == VectorType::Vector`) and copies otherwise - the rule of #2999; unit test
+  in AllVectorUnitTests.h (plain, resizable through a `Vector&`, linked, from a resizable).
+- **evaluateUserFunctions.cpp**: the seven `force = (Vector)(...)` are `force.CopyFrom(...)` - no temporary Vector.
+- **The measurement** (maintainer's request): `python/PerformanceModels/perfUserFunctions.py` - spring (scalars),
+  cartesian (3D vectors in and out), load (3D), generic6/10/100 (ObjectGenericODE2 force) as Python and symbolic
+  functions computing the same - in the performance suite (group small, 12 single runs with reference values, the
+  Python and symbolic results identical); `docs/dev/design/userFunctionPerformance.py` runs each case in a process of
+  its own in the current version and in a reference package directory (a copy of site-packages/exudyn of 1.13.6 from
+  venvP313), subtracts the same model without user function, and prints a table: userFunctionBoundary.md section 12.
+  The symbolic generic10/generic100 crash in 1.13.6 (#2998), hence generic6.
+- **Result**: symbolic vector functions 35-45 % faster than before the step (generic6 0.40 -> 0.22 us per call against
+  1.13.6, generic100 1.10 -> 0.69), Exudyn allocations per call 2.5 -> 1.25 (10 -> 8.75 above 7 items); Python vector
+  functions unchanged (the lists and the Python body dominate); scalar and 3D ones unchanged. `spring` symbolic is about
+  10 % slower than 1.13.6 before and after the step: `u**3` is the portable power since #2954.
+- Gates: build, regeneration, suite with the C++ unit tests, pytest, performance suite (all 37 single runs).

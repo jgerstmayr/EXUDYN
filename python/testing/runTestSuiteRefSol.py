@@ -570,6 +570,7 @@ def PerformanceTestsReferenceSolution():
         'perfConnectorInterface.py':1.8871766817354405, #new 2026-10-01 (#2745)
         'perfAccessFunctionsAD.py':439.41627874357835, #new 2026-10-02 (#2744)
         'perfLargeMassSpringChain.py':0.01426191722384829, #2026-09-16: rigid body chain, last run n=20000; before (mass points): 0.03136079550415616
+        'perfUserFunctions.py':0.563588880190506, #new 2026-10-16: typical user functions, Python and symbolic (#2996)
 
         #the single runs of the models that solve several sizes or thread counts. Measured
         #2026-09-16 on Windows cp313; deterministic (repeated runs bit-identical).
@@ -590,6 +591,20 @@ def PerformanceTestsReferenceSolution():
         'perfConnectorInterface:coordinate-n1000-explicit':        0.9526968492542502,
         'perfConnectorInterface:rigid-n100-implicit':              1.552725084801644, #2026-10-08: modified Newton is the default of timeIntegration.newton since 2026-10-03 (#2815, #2900); before: 1.552725088397863
         'perfConnectorInterface:rigid-n100-explicit':              1.8871766817354405,
+        #typical user functions, each as Python and as symbolic function, which compute the same (#2996) - measured
+        #2026-10-16 on Windows cp313
+        'perfUserFunctions:spring-python':                0.05386283407605861,
+        'perfUserFunctions:spring-symbolic':              0.05386283407605861,
+        'perfUserFunctions:cartesian-python':             0.0014831340538506632,
+        'perfUserFunctions:cartesian-symbolic':           0.0014831340538506632,
+        'perfUserFunctions:load-python':                  0.010228708405763877,
+        'perfUserFunctions:load-symbolic':                0.010228708405763877,
+        'perfUserFunctions:generic6-python':              0.0021661492424455936,
+        'perfUserFunctions:generic6-symbolic':            0.0021661492424455936,
+        'perfUserFunctions:generic10-python':             0.0026733098226563758,
+        'perfUserFunctions:generic10-symbolic':           0.0026733098226563758,
+        'perfUserFunctions:generic100-python':            0.21138030449447787,
+        'perfUserFunctions:generic100-symbolic':          0.21138030449447787,
         #the access functions of the bodies (#2744): hand-written, and for the cable the derivative of J^T f by automatic
         #differentiation - measured 2026-10-02 on Windows cp313
         'perfAccessFunctionsAD:rigidEP-n100-implicit':           1.552725084801644, #2026-10-08: modified Newton is the default of timeIntegration.newton since 2026-10-03 (#2815, #2900); before: 1.552725088397863

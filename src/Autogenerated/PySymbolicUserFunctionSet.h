@@ -7,27 +7,27 @@ public:
     std::function<bool(const MainSystem&,Real)> boolMbsScalar;
     std::function<StdVector2D(const MainSystem&,Real)> vector2DMbsScalar;
     std::function<py::object(const MainSystem&,Index)> objectGroundGraphicsDataUserFunction;
-    std::function<StdVector(const MainSystem&,Real,Index,StdVector,StdVector)> objectGenericODE2ForceUserFunction;
-    std::function<py::object(const MainSystem&,Real,Index,StdVector,StdVector)> objectGenericODE2MassMatrixUserFunction;
-    std::function<py::object(const MainSystem&,Real,Index,StdVector,StdVector,Real,Real)> objectGenericODE2JacobianUserFunction;
-    std::function<StdVector(const MainSystem&,Real,Index,StdVector)> objectGenericODE1RhsUserFunction;
-    std::function<StdVector3D(const MainSystem&,Real,Index,StdVector3D,StdVector)> objectUserBodyPositionUserFunction;
-    std::function<py::object(const MainSystem&,Real,Index,StdVector3D,StdVector)> objectUserBodyPositionJacobianUserFunction;
-    std::function<StdVector(const MainSystem&,Real,Index,OutputVariableType,StdVector3D,StdVector,StdVector)> objectUserBodyOutputVariableUserFunction;
-    std::function<NumpyMatrix(const MainSystem&,Real,Index,StdVector,StdVector)> objectFFRFMassMatrixUserFunction;
+    std::function<StdVector(const MainSystem&,Real,Index,const StdVector&,const StdVector&)> objectGenericODE2ForceUserFunction;
+    std::function<py::object(const MainSystem&,Real,Index,const StdVector&,const StdVector&)> objectGenericODE2MassMatrixUserFunction;
+    std::function<py::object(const MainSystem&,Real,Index,const StdVector&,const StdVector&,Real,Real)> objectGenericODE2JacobianUserFunction;
+    std::function<StdVector(const MainSystem&,Real,Index,const StdVector&)> objectGenericODE1RhsUserFunction;
+    std::function<StdVector3D(const MainSystem&,Real,Index,StdVector3D,const StdVector&)> objectUserBodyPositionUserFunction;
+    std::function<py::object(const MainSystem&,Real,Index,StdVector3D,const StdVector&)> objectUserBodyPositionJacobianUserFunction;
+    std::function<StdVector(const MainSystem&,Real,Index,OutputVariableType,StdVector3D,const StdVector&,const StdVector&)> objectUserBodyOutputVariableUserFunction;
+    std::function<NumpyMatrix(const MainSystem&,Real,Index,const StdVector&,const StdVector&)> objectFFRFMassMatrixUserFunction;
     std::function<Real(const MainSystem&,Real,Index,Real,Real,Real,Real,Real,Real,Real,Real,Real)> objectANCFCable2DAxialForceUserFunction;
     std::function<Real(const MainSystem&,Real,Index,Real,Real,Real,Real,Real)> objectConnectorSpringDamperSpringForceUserFunction;
     std::function<StdVector3D(const MainSystem&,Real,Index,StdVector3D,StdVector3D,StdVector3D,StdVector3D,StdVector3D)> objectConnectorCartesianSpringDamperSpringForceUserFunction;
     std::function<StdVector6D(const MainSystem&,Real,Index,StdVector3D,StdVector3D,StdVector3D,StdVector3D,StdMatrix6D,StdMatrix6D,StdMatrix3D,StdMatrix3D,StdVector6D)> objectConnectorRigidBodySpringDamperSpringForceTorqueUserFunction;
-    std::function<StdVector(const MainSystem&,Real,Index,StdVector,StdVector3D,StdVector3D,StdVector3D,StdVector3D,StdMatrix6D,StdMatrix6D,StdMatrix3D,StdMatrix3D,StdVector6D)> objectConnectorRigidBodySpringDamperPostNewtonStepUserFunction;
+    std::function<StdVector(const MainSystem&,Real,Index,const StdVector&,StdVector3D,StdVector3D,StdVector3D,StdVector3D,StdMatrix6D,StdMatrix6D,StdMatrix3D,StdMatrix3D,StdVector6D)> objectConnectorRigidBodySpringDamperPostNewtonStepUserFunction;
     std::function<Real(const MainSystem&,Real,Index,Real,Real,Real,Real,Real,Real,Real,Real,Real,Real,Real)> objectConnectorCoordinateSpringDamperExtSpringForceUserFunction;
     std::function<Real(const MainSystem&,Real,Index,Real)> objectConnectorCoordinateOffsetUserFunction;
-    std::function<StdVector(const MainSystem&,Real,Index,StdVector,StdVector,bool)> objectConnectorCoordinateVectorConstraintUserFunction;
-    std::function<py::object(const MainSystem&,Real,Index,StdVector,StdVector,bool)> objectConnectorCoordinateVectorJacobianUserFunction;
+    std::function<StdVector(const MainSystem&,Real,Index,const StdVector&,const StdVector&,bool)> objectConnectorCoordinateVectorConstraintUserFunction;
+    std::function<py::object(const MainSystem&,Real,Index,const StdVector&,const StdVector&,bool)> objectConnectorCoordinateVectorJacobianUserFunction;
     std::function<StdVector6D(const MainSystem&,Real,Index,StdVector6D)> objectJointGenericOffsetUserFunction;
     std::function<StdVector3D(const MainSystem&,Real,StdVector3D)> loadForceVectorLoadVectorUserFunction;
     std::function<Real(const MainSystem&,Real,Real)> loadCoordinateLoadUserFunction;
-    std::function<StdVector(const MainSystem&,Real,StdArrayIndex,StdVector,ConfigurationType)> sensorUserFunctionSensorUserFunction;
+    std::function<StdVector(const MainSystem&,Real,StdArrayIndex,const StdVector&,ConfigurationType)> sensorUserFunctionSensorUserFunction;
 
 	//! set up general user function from dictionary:
 	void SetUserFunctionFromDict(MainSystem& mainSystem, py::dict pyObject, const STDstring& userFunctionName, py::object itemIndex, STDstring itemTypeName)
@@ -69,56 +69,56 @@ public:
         }
         else if (itemTypeName == "ObjectGenericODE2" && userFunctionName == "forceUserFunction")
         {            //define the user function as lambda function of this
-            objectGenericODE2ForceUserFunction = [this](const MainSystem& mainSystem, Real arg0, Index arg1, StdVector arg2, StdVector arg3)
+            objectGenericODE2ForceUserFunction = [this](const MainSystem& mainSystem, Real arg0, Index arg1, const StdVector& arg2, const StdVector& arg3)
                 {
                     return this->EvaluateStdVector(mainSystem, arg0, arg1, arg2, arg3);
                 };
         }
         else if (itemTypeName == "ObjectGenericODE1" && userFunctionName == "rhsUserFunction")
         {            //define the user function as lambda function of this
-            objectGenericODE1RhsUserFunction = [this](const MainSystem& mainSystem, Real arg0, Index arg1, StdVector arg2)
+            objectGenericODE1RhsUserFunction = [this](const MainSystem& mainSystem, Real arg0, Index arg1, const StdVector& arg2)
                 {
                     return this->EvaluateStdVector(mainSystem, arg0, arg1, arg2);
                 };
         }
         else if (itemTypeName == "ObjectUserBody" && userFunctionName == "forceUserFunction")
         {            //define the user function as lambda function of this
-            objectGenericODE2ForceUserFunction = [this](const MainSystem& mainSystem, Real arg0, Index arg1, StdVector arg2, StdVector arg3)
+            objectGenericODE2ForceUserFunction = [this](const MainSystem& mainSystem, Real arg0, Index arg1, const StdVector& arg2, const StdVector& arg3)
                 {
                     return this->EvaluateStdVector(mainSystem, arg0, arg1, arg2, arg3);
                 };
         }
         else if (itemTypeName == "ObjectUserBody" && userFunctionName == "positionUserFunction")
         {            //define the user function as lambda function of this
-            objectUserBodyPositionUserFunction = [this](const MainSystem& mainSystem, Real arg0, Index arg1, StdVector3D arg2, StdVector arg3)
+            objectUserBodyPositionUserFunction = [this](const MainSystem& mainSystem, Real arg0, Index arg1, StdVector3D arg2, const StdVector& arg3)
                 {
                     return this->EvaluateStdVector3D(mainSystem, arg0, arg1, arg2, arg3);
                 };
         }
         else if (itemTypeName == "ObjectUserBody" && userFunctionName == "outputVariableUserFunction")
         {            //define the user function as lambda function of this
-            objectUserBodyOutputVariableUserFunction = [this](const MainSystem& mainSystem, Real arg0, Index arg1, OutputVariableType arg2, StdVector3D arg3, StdVector arg4, StdVector arg5)
+            objectUserBodyOutputVariableUserFunction = [this](const MainSystem& mainSystem, Real arg0, Index arg1, OutputVariableType arg2, StdVector3D arg3, const StdVector& arg4, const StdVector& arg5)
                 {
                     return this->EvaluateStdVector(mainSystem, arg0, arg1, arg2, arg3, arg4, arg5);
                 };
         }
         else if (itemTypeName == "ObjectKinematicTree" && userFunctionName == "forceUserFunction")
         {            //define the user function as lambda function of this
-            objectGenericODE2ForceUserFunction = [this](const MainSystem& mainSystem, Real arg0, Index arg1, StdVector arg2, StdVector arg3)
+            objectGenericODE2ForceUserFunction = [this](const MainSystem& mainSystem, Real arg0, Index arg1, const StdVector& arg2, const StdVector& arg3)
                 {
                     return this->EvaluateStdVector(mainSystem, arg0, arg1, arg2, arg3);
                 };
         }
         else if (itemTypeName == "ObjectFFRF" && userFunctionName == "forceUserFunction")
         {            //define the user function as lambda function of this
-            objectGenericODE2ForceUserFunction = [this](const MainSystem& mainSystem, Real arg0, Index arg1, StdVector arg2, StdVector arg3)
+            objectGenericODE2ForceUserFunction = [this](const MainSystem& mainSystem, Real arg0, Index arg1, const StdVector& arg2, const StdVector& arg3)
                 {
                     return this->EvaluateStdVector(mainSystem, arg0, arg1, arg2, arg3);
                 };
         }
         else if (itemTypeName == "ObjectFFRFreducedOrder" && userFunctionName == "forceUserFunction")
         {            //define the user function as lambda function of this
-            objectGenericODE2ForceUserFunction = [this](const MainSystem& mainSystem, Real arg0, Index arg1, StdVector arg2, StdVector arg3)
+            objectGenericODE2ForceUserFunction = [this](const MainSystem& mainSystem, Real arg0, Index arg1, const StdVector& arg2, const StdVector& arg3)
                 {
                     return this->EvaluateStdVector(mainSystem, arg0, arg1, arg2, arg3);
                 };
@@ -160,7 +160,7 @@ public:
         }
         else if (itemTypeName == "ObjectConnectorRigidBodySpringDamper" && userFunctionName == "postNewtonStepUserFunction")
         {            //define the user function as lambda function of this
-            objectConnectorRigidBodySpringDamperPostNewtonStepUserFunction = [this](const MainSystem& mainSystem, Real arg0, Index arg1, StdVector arg2, StdVector3D arg3, StdVector3D arg4, StdVector3D arg5, StdVector3D arg6, StdMatrix6D arg7, StdMatrix6D arg8, StdMatrix3D arg9, StdMatrix3D arg10, StdVector6D arg11)
+            objectConnectorRigidBodySpringDamperPostNewtonStepUserFunction = [this](const MainSystem& mainSystem, Real arg0, Index arg1, const StdVector& arg2, StdVector3D arg3, StdVector3D arg4, StdVector3D arg5, StdVector3D arg6, StdMatrix6D arg7, StdMatrix6D arg8, StdMatrix3D arg9, StdMatrix3D arg10, StdVector6D arg11)
                 {
                     return this->EvaluateStdVector(mainSystem, arg0, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11);
                 };
@@ -209,7 +209,7 @@ public:
         }
         else if (itemTypeName == "ObjectConnectorCoordinateVector" && userFunctionName == "constraintUserFunction")
         {            //define the user function as lambda function of this
-            objectConnectorCoordinateVectorConstraintUserFunction = [this](const MainSystem& mainSystem, Real arg0, Index arg1, StdVector arg2, StdVector arg3, bool arg4)
+            objectConnectorCoordinateVectorConstraintUserFunction = [this](const MainSystem& mainSystem, Real arg0, Index arg1, const StdVector& arg2, const StdVector& arg3, bool arg4)
                 {
                     return this->EvaluateStdVector(mainSystem, arg0, arg1, arg2, arg3, arg4);
                 };
@@ -282,35 +282,35 @@ public:
 		{
 			return objectGroundGraphicsDataUserFunction;
 		}
-        else if constexpr (std::is_same_v<UFT, std::function<StdVector(const MainSystem&,Real,Index,StdVector,StdVector)>>)
+        else if constexpr (std::is_same_v<UFT, std::function<StdVector(const MainSystem&,Real,Index,const StdVector&,const StdVector&)>>)
 		{
 			return objectGenericODE2ForceUserFunction;
 		}
-        else if constexpr (std::is_same_v<UFT, std::function<py::object(const MainSystem&,Real,Index,StdVector,StdVector)>>)
+        else if constexpr (std::is_same_v<UFT, std::function<py::object(const MainSystem&,Real,Index,const StdVector&,const StdVector&)>>)
 		{
 			return objectGenericODE2MassMatrixUserFunction;
 		}
-        else if constexpr (std::is_same_v<UFT, std::function<py::object(const MainSystem&,Real,Index,StdVector,StdVector,Real,Real)>>)
+        else if constexpr (std::is_same_v<UFT, std::function<py::object(const MainSystem&,Real,Index,const StdVector&,const StdVector&,Real,Real)>>)
 		{
 			return objectGenericODE2JacobianUserFunction;
 		}
-        else if constexpr (std::is_same_v<UFT, std::function<StdVector(const MainSystem&,Real,Index,StdVector)>>)
+        else if constexpr (std::is_same_v<UFT, std::function<StdVector(const MainSystem&,Real,Index,const StdVector&)>>)
 		{
 			return objectGenericODE1RhsUserFunction;
 		}
-        else if constexpr (std::is_same_v<UFT, std::function<StdVector3D(const MainSystem&,Real,Index,StdVector3D,StdVector)>>)
+        else if constexpr (std::is_same_v<UFT, std::function<StdVector3D(const MainSystem&,Real,Index,StdVector3D,const StdVector&)>>)
 		{
 			return objectUserBodyPositionUserFunction;
 		}
-        else if constexpr (std::is_same_v<UFT, std::function<py::object(const MainSystem&,Real,Index,StdVector3D,StdVector)>>)
+        else if constexpr (std::is_same_v<UFT, std::function<py::object(const MainSystem&,Real,Index,StdVector3D,const StdVector&)>>)
 		{
 			return objectUserBodyPositionJacobianUserFunction;
 		}
-        else if constexpr (std::is_same_v<UFT, std::function<StdVector(const MainSystem&,Real,Index,OutputVariableType,StdVector3D,StdVector,StdVector)>>)
+        else if constexpr (std::is_same_v<UFT, std::function<StdVector(const MainSystem&,Real,Index,OutputVariableType,StdVector3D,const StdVector&,const StdVector&)>>)
 		{
 			return objectUserBodyOutputVariableUserFunction;
 		}
-        else if constexpr (std::is_same_v<UFT, std::function<NumpyMatrix(const MainSystem&,Real,Index,StdVector,StdVector)>>)
+        else if constexpr (std::is_same_v<UFT, std::function<NumpyMatrix(const MainSystem&,Real,Index,const StdVector&,const StdVector&)>>)
 		{
 			return objectFFRFMassMatrixUserFunction;
 		}
@@ -330,7 +330,7 @@ public:
 		{
 			return objectConnectorRigidBodySpringDamperSpringForceTorqueUserFunction;
 		}
-        else if constexpr (std::is_same_v<UFT, std::function<StdVector(const MainSystem&,Real,Index,StdVector,StdVector3D,StdVector3D,StdVector3D,StdVector3D,StdMatrix6D,StdMatrix6D,StdMatrix3D,StdMatrix3D,StdVector6D)>>)
+        else if constexpr (std::is_same_v<UFT, std::function<StdVector(const MainSystem&,Real,Index,const StdVector&,StdVector3D,StdVector3D,StdVector3D,StdVector3D,StdMatrix6D,StdMatrix6D,StdMatrix3D,StdMatrix3D,StdVector6D)>>)
 		{
 			return objectConnectorRigidBodySpringDamperPostNewtonStepUserFunction;
 		}
@@ -342,11 +342,11 @@ public:
 		{
 			return objectConnectorCoordinateOffsetUserFunction;
 		}
-        else if constexpr (std::is_same_v<UFT, std::function<StdVector(const MainSystem&,Real,Index,StdVector,StdVector,bool)>>)
+        else if constexpr (std::is_same_v<UFT, std::function<StdVector(const MainSystem&,Real,Index,const StdVector&,const StdVector&,bool)>>)
 		{
 			return objectConnectorCoordinateVectorConstraintUserFunction;
 		}
-        else if constexpr (std::is_same_v<UFT, std::function<py::object(const MainSystem&,Real,Index,StdVector,StdVector,bool)>>)
+        else if constexpr (std::is_same_v<UFT, std::function<py::object(const MainSystem&,Real,Index,const StdVector&,const StdVector&,bool)>>)
 		{
 			return objectConnectorCoordinateVectorJacobianUserFunction;
 		}
@@ -362,7 +362,7 @@ public:
 		{
 			return loadCoordinateLoadUserFunction;
 		}
-        else if constexpr (std::is_same_v<UFT, std::function<StdVector(const MainSystem&,Real,StdArrayIndex,StdVector,ConfigurationType)>>)
+        else if constexpr (std::is_same_v<UFT, std::function<StdVector(const MainSystem&,Real,StdArrayIndex,const StdVector&,ConfigurationType)>>)
 		{
 			return sensorUserFunctionSensorUserFunction;
 		}

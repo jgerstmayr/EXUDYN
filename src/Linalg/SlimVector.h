@@ -130,9 +130,9 @@ public:
 
 
 	//! constructor with std::vector
-	SlimVectorBase(const std::vector<T> vector)
+	SlimVectorBase(const std::vector<T>& vector)
 	{
-		CHECKandTHROW(vector.size() == dataSize, "ERROR: SlimVectorBase(const std::vector<T> vector), dataSize mismatch");
+		CHECKandTHROW(vector.size() == dataSize, "ERROR: SlimVectorBase(const std::vector<T>& vector), dataSize mismatch");
 
 		//better?: std::copy(vector.begin(), vector.end(), this->begin());
 		Index cnt = 0;

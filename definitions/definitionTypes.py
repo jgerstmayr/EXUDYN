@@ -684,6 +684,8 @@ annotationToCpp = {'MainSystem': 'const MainSystem&', 'Real': 'Real', 'Index': '
                    'Matrix3D': 'StdMatrix3D', 'Matrix6D': 'StdMatrix6D', 'NumpyMatrix': 'NumpyMatrix',
                    'Array': 'StdArrayIndex', 'ConfigurationType': 'ConfigurationType', 'OutputVariableType': 'OutputVariableType',
                    'BodyGraphicsData': 'py::object', 'MatrixContainer': 'py::object'}
+#an argument of a size known only at run time is passed by const reference, not copied (#2996)
+annotationToCppArgument = {'Vector': 'const StdVector&'}
 
 
 def UserFunctionSignature(function):
@@ -692,14 +694,16 @@ def UserFunctionSignature(function):
     import inspect
     import textwrap
     node = ast.parse(textwrap.dedent(inspect.getsource(function))).body[0]
-    def Cpp(annotation):
+    def Cpp(annotation, isArgument):
         name = ast.unparse(annotation) if annotation is not None else 'None'
         if name not in annotationToCpp:
             raise ValueError(function.__name__ + ': the annotation ' + repr(name) + ' has no C++ type - use one of '
                              + ', '.join(annotationToCpp))
+        if isArgument and name in annotationToCppArgument:
+            return annotationToCppArgument[name]
         return annotationToCpp[name]
-    return ('std::function<' + Cpp(node.returns) + '(' + ','.join(Cpp(argument.annotation) for argument in node.args.args)
-            + ')>')
+    return ('std::function<' + Cpp(node.returns, False) + '('
+            + ','.join(Cpp(argument.annotation, True) for argument in node.args.args) + ')>')
 
 
 #%%************************************************************************************************

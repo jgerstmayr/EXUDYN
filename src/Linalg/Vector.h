@@ -107,7 +107,7 @@ private:
 public:
 
 	//! constructor with std::vector
-	VectorBase(const std::vector<T> vector);
+	VectorBase(const std::vector<T>& vector);
 	
 	//! constructor with initializer list; memory allocation!
 	VectorBase(std::initializer_list<T> listOfReals);
@@ -332,6 +332,20 @@ public:
         }
         return *this;
     }
+
+	//! move assignment operator, rule of 5: exchanges the memory of two plain Vectors; a ResizableVector (with its
+	//! allocated size) or a LinkedDataVector (memory it does not own) on either side - as when a function takes a
+	//! Vector& - is copied instead, as its memory cannot be exchanged (#2996, the rule of #2999 for matrices)
+	VectorBase& operator=(VectorBase&& other) noexcept
+	{
+		if (GetType() != VectorType::Vector || other.GetType() != VectorType::Vector)
+		{
+			return *this = (const VectorBase&)other;
+		}
+		std::swap(data, other.data);
+		std::swap(numberOfItems, other.numberOfItems);
+		return *this;
+	}
 
 	//! copy assignment operator for SlimVector
 	template <Index dataSize>
@@ -705,7 +719,7 @@ VectorBase<T>::VectorBase(const VectorBase<T>& vector)
 
 //! constructor with std::vector
 template<typename T>
-VectorBase<T>::VectorBase(const std::vector<T> vector)
+VectorBase<T>::VectorBase(const std::vector<T>& vector)
 {
 	AllocateMemory((Index)vector.size());
 

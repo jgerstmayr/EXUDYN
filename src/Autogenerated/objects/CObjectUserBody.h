@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-10-12  07:18:49 (last modified)
+* @date         2026-10-16  13:28:11 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -33,13 +33,13 @@ class CObjectUserBodyParameters // AUTO:
 {
 public: // AUTO:
     ArrayIndex nodeNumbers;                       //!< AUTO: the nodes whose ABRV:ODE2 coordinates are the coordinates of the body, in this order
-    PythonUserFunctionBase< std::function<py::object(const MainSystem&,Real,Index,StdVector,StdVector)> > massMatrixUserFunction;//!< AUTO: A Python user function which computes the mass matrix; it must be given
-    PythonUserFunctionBase< std::function<StdVector(const MainSystem&,Real,Index,StdVector,StdVector)> > forceUserFunction;//!< AUTO: A Python user function which computes the generalized forces on the right-hand side; zero if not given
-    PythonUserFunctionBase< std::function<StdVector3D(const MainSystem&,Real,Index,StdVector3D,StdVector)> > positionUserFunction;//!< AUTO: A Python user function which computes the global position of the point at localPosition
-    PythonUserFunctionBase< std::function<py::object(const MainSystem&,Real,Index,StdVector3D,StdVector)> > positionJacobianUserFunction;//!< AUTO: A Python user function which computes the position Jacobian at localPosition
-    PythonUserFunctionBase< std::function<py::object(const MainSystem&,Real,Index,StdVector3D,StdVector)> > rotationMatrixUserFunction;//!< AUTO: A Python user function which computes the rotation matrix at localPosition; optional, for rigid markers
-    PythonUserFunctionBase< std::function<py::object(const MainSystem&,Real,Index,StdVector3D,StdVector)> > rotationJacobianUserFunction;//!< AUTO: A Python user function which computes the rotation Jacobian (of the global angular velocity) at localPosition; optional, for rigid markers
-    PythonUserFunctionBase< std::function<StdVector(const MainSystem&,Real,Index,OutputVariableType,StdVector3D,StdVector,StdVector)> > outputVariableUserFunction;//!< AUTO: A Python user function which computes the output variables UserType0 to UserType3 at localPosition; optional
+    PythonUserFunctionBase< std::function<py::object(const MainSystem&,Real,Index,const StdVector&,const StdVector&)> > massMatrixUserFunction;//!< AUTO: A Python user function which computes the mass matrix; it must be given
+    PythonUserFunctionBase< std::function<StdVector(const MainSystem&,Real,Index,const StdVector&,const StdVector&)> > forceUserFunction;//!< AUTO: A Python user function which computes the generalized forces on the right-hand side; zero if not given
+    PythonUserFunctionBase< std::function<StdVector3D(const MainSystem&,Real,Index,StdVector3D,const StdVector&)> > positionUserFunction;//!< AUTO: A Python user function which computes the global position of the point at localPosition
+    PythonUserFunctionBase< std::function<py::object(const MainSystem&,Real,Index,StdVector3D,const StdVector&)> > positionJacobianUserFunction;//!< AUTO: A Python user function which computes the position Jacobian at localPosition
+    PythonUserFunctionBase< std::function<py::object(const MainSystem&,Real,Index,StdVector3D,const StdVector&)> > rotationMatrixUserFunction;//!< AUTO: A Python user function which computes the rotation matrix at localPosition; optional, for rigid markers
+    PythonUserFunctionBase< std::function<py::object(const MainSystem&,Real,Index,StdVector3D,const StdVector&)> > rotationJacobianUserFunction;//!< AUTO: A Python user function which computes the rotation Jacobian (of the global angular velocity) at localPosition; optional, for rigid markers
+    PythonUserFunctionBase< std::function<StdVector(const MainSystem&,Real,Index,OutputVariableType,StdVector3D,const StdVector&,const StdVector&)> > outputVariableUserFunction;//!< AUTO: A Python user function which computes the output variables UserType0 to UserType3 at localPosition; optional
     //! AUTO: default constructor with parameter initialization
     CObjectUserBodyParameters()
     {

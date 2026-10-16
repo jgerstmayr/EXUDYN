@@ -1,0 +1,16 @@
+{
+  "number": 3005,
+  "title": "User functions: vector arguments by const reference, one copy of the result, a move assignment for Vector",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "IMPROVEMENT",
+  "effort": "MEDIUM",
+  "description": "revision2026c step RG12.3.4 (#2996, userFunctionBoundary.md step 1): the std::function of a user function takes its run-time sized vector arguments as const StdVector& (definitionTypes.annotationToCppArgument), the symbolic Evaluate templates take const Args&, the constructors of the vectors from std::vector take a const reference, the result of a vector user function is copied into the item's vector with CopyFrom instead of a temporary Vector, and VectorBase gets a move assignment that exchanges memory only between plain Vectors; plus perfUserFunctions.py in the performance suite and docs/dev/design/userFunctionPerformance.py, the comparison with 1.13.6",
+  "dateRaised": "2026-10-16",
+  "deadline": "2027-04-14",
+  "dateResolved": "2026-10-16 13:38",
+  "resolvedAuthor": "Claude-JG",
+  "file": "src/Linalg/SymbolicUtilities.h",
+  "releaseNotes": "User functions with vector arguments (ObjectGenericODE2, ObjectGenericODE1, ObjectFFRF, ObjectKinematicTree, ObjectUserBody, ObjectConnectorCoordinateVector, SensorUserFunction): the vectors are passed by reference and the result is copied once; symbolic vector user functions are 35 to 45 percent faster",
+  "resolvedInVersion": "1.13.101"
+}

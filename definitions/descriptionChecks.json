@@ -247,9 +247,9 @@
    "fingerprint": "c54c1aa0794f"
   },
   "ObjectConnectorCoordinateVector": {
-   "checked": "2026-10-15",
+   "checked": "2026-10-16",
    "by": "Claude-JG",
-   "fingerprint": "b0fafe90bfd4"
+   "fingerprint": "b30035f62329"
   },
   "ObjectConnectorDistance": {
    "checked": "2026-10-15",
@@ -277,9 +277,9 @@
    "fingerprint": "95c77c878740"
   },
   "ObjectConnectorRigidBodySpringDamper": {
-   "checked": "2026-10-12",
+   "checked": "2026-10-16",
    "by": "Claude-JG",
-   "fingerprint": "770f923ce0d0"
+   "fingerprint": "b6ea6427209f"
   },
   "ObjectConnectorRollingDiscPenalty": {
    "checked": "2026-10-10",
@@ -337,24 +337,24 @@
    "fingerprint": "a863a9068c59"
   },
   "ObjectFFRF": {
-   "checked": "2026-10-06",
+   "checked": "2026-10-16",
    "by": "Claude-JG",
-   "fingerprint": "f7d42c69f783"
+   "fingerprint": "c4ff88aa1a47"
   },
   "ObjectFFRFreducedOrder": {
-   "checked": "2026-10-06",
+   "checked": "2026-10-16",
    "by": "Claude-JG",
-   "fingerprint": "4fc25875e010"
+   "fingerprint": "1bf716b1777a"
   },
   "ObjectGenericODE1": {
-   "checked": "2026-10-06",
+   "checked": "2026-10-16",
    "by": "Claude-JG",
-   "fingerprint": "558854ba12fc"
+   "fingerprint": "de85c5ed06bc"
   },
   "ObjectGenericODE2": {
-   "checked": "2026-10-06",
+   "checked": "2026-10-16",
    "by": "Claude-JG",
-   "fingerprint": "15a15931a2cf"
+   "fingerprint": "cc6a525ce90e"
   },
   "ObjectGround": {
    "checked": "2026-10-06",
@@ -412,9 +412,9 @@
    "fingerprint": "db096416b1e3"
   },
   "ObjectKinematicTree": {
-   "checked": "2026-10-06",
+   "checked": "2026-10-16",
    "by": "Claude-JG",
-   "fingerprint": "8ce6f58772a0"
+   "fingerprint": "8ce5d97d8fc7"
   },
   "ObjectMass1D": {
    "checked": "2026-10-06",
@@ -482,9 +482,9 @@
    "fingerprint": "f33c3053e9e8"
   },
   "SensorUserFunction": {
-   "checked": "2026-10-13",
+   "checked": "2026-10-16",
    "by": "Claude-JG",
-   "fingerprint": "1c46cdd7c8de"
+   "fingerprint": "4752e78264b4"
   }
  }
 }

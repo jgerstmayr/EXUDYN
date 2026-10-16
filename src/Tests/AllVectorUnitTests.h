@@ -618,6 +618,40 @@ const lest::test resizableVector_specific_test[] =
 		u.SetNumberOfItems(5);
 		EXPECT(u[4] == 4.);
 	},
+	CASE("Vector: the move assignment exchanges memory only between plain Vectors (#2996)")
+	{
+		Vector a(3, 1.);
+		Vector b(5, 2.);
+		const Real* memoryB = b.GetDataPointer();
+		a = std::move(b);                 //two plain Vectors: the memory is exchanged
+		EXPECT(a.GetDataPointer() == memoryB);
+		EXPECT(a.NumberOfItems() == 5);
+		EXPECT(a[4] == 2.);
+
+		ResizableVector r(10);            //a resizable vector keeps its memory and capacity
+		r.SetNumberOfItems(2);
+		const Real* memoryR = r.GetDataPointer();
+		Vector& rAsVector = r;
+		rAsVector = Vector(4, 3.);
+		EXPECT(r.GetDataPointer() == memoryR);
+		EXPECT(r.MaxNumberOfItems() == 10);
+		EXPECT(r.NumberOfItems() == 4);
+		EXPECT(r[3] == 3.);
+
+		Vector target(2, 0.);             //a linked vector receives the values in its memory
+		LinkedDataVector linked(target);
+		Vector& linkedAsVector = linked;
+		linkedAsVector = Vector(2, 5.);
+		EXPECT(target[0] == 5.);
+		EXPECT(target[1] == 5.);
+
+		Vector c(2, 7.);                  //from a resizable vector, the values are copied
+		ResizableVector source(3, 6.);
+		c = std::move((Vector&)source);
+		EXPECT(c.NumberOfItems() == 3);
+		EXPECT(c[2] == 6.);
+		EXPECT(source.NumberOfItems() == 3);
+	},
 };
 
 #endif

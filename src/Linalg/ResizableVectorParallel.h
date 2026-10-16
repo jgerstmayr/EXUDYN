@@ -64,7 +64,7 @@ public:
 
 
 	//! constructor with std::vector
-	ResizableVectorParallelBase(const std::vector<T> vector)
+	ResizableVectorParallelBase(const std::vector<T>& vector)
 	{
 		this->maxNumberOfItems = (Index)vector.size();
 		this->AllocateMemory((Index)vector.size());
