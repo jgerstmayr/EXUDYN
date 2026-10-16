@@ -135,7 +135,7 @@ def TestExamplesReferenceSolution():
         'solverFailureMessageTest.py':0, #new 2026-10-13: the exception of a failed solve carries the whole message (#1977)
         'sensorUserFunctionItemsTest.py':7.537499976593686, #new 2026-10-13: SensorUserFunction with itemNumbers, the kinetic energy of a group of bodies (#2977)
         'userFunctionTimerTest.py':3, #new 2026-10-13: the solver timer userFunctions, flags only (#2007)
-        'symbolicVectorUserFunctionTest.py':0.45054179156603763, #new 2026-10-15: a symbolic forceUserFunction with 10 coordinates equals the Python one (#2998)
+        'symbolicVectorUserFunctionTest.py':0.5094818486008039, #2026-10-16: with a force of every kind of vector node (#3006), before 0.45054179156603763; new 2026-10-15: a symbolic forceUserFunction with 10 coordinates equals the Python one (#2998)
         'constraintDriftTest.py':9.796449624399628e-06, #new 2026-10-15: the drift of TrapezoidalIndex2 checked, the drift in the current state four ways (#565)
         'systemUtilitiesTest.py':1.670836871616957, #new 2026-10-16: SystemEnergy, SystemConstraintDrift and ComputeSystemGraph of exudyn.systemUtilities (#2997)
         'initialConstraintsCheckTest.py':2.937101858808996, #new 2026-10-14: the check of the initial conditions against the constraints, the projection of the initial velocities (#2234)

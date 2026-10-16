@@ -172,6 +172,12 @@ public:
 		return returnValue.GetVector()->Evaluate();
 	}
 
+	//! the returned vector without a copy, valid until the function is evaluated again (#3006)
+	const ResizableConstVector& EvaluateReturnVectorRef() const
+	{
+		return returnValue.GetVector()->EvaluateRef();
+	}
+
 	virtual ResizableConstMatrix EvaluateReturnMatrix() const
 	{
 		return returnValue.GetMatrix()->Evaluate();
@@ -353,7 +359,7 @@ public:
 		Index argIndex = 0;
 		(..., processArgument(args, argRealList, argIndex));
 
-		return (StdVector2D)EvaluateReturnVector();
+		return (StdVector2D)EvaluateReturnVectorRef();
 	}
 
 	//! variadic template to evaluate all kinds of user functions (templates created/defined by Pybind interface)
@@ -364,7 +370,7 @@ public:
 		Index argIndex = 0;
 		(..., processArgument(args, argRealList, argIndex));
 
-		return (StdVector3D)EvaluateReturnVector();
+		return (StdVector3D)EvaluateReturnVectorRef();
 	}
 
 	//! variadic template to evaluate all kinds of user functions (templates created/defined by Pybind interface)
@@ -375,7 +381,7 @@ public:
 		Index argIndex = 0;
 		(..., processArgument(args, argRealList, argIndex));
 
-		return (StdVector6D)EvaluateReturnVector();
+		return (StdVector6D)EvaluateReturnVectorRef();
 	}
 
 	//! variadic template to evaluate all kinds of user functions (templates created/defined by Pybind interface)
@@ -386,10 +392,18 @@ public:
 		Index argIndex = 0;
 		(..., processArgument(args, argRealList, argIndex));
 
-		return (StdVector)EvaluateReturnVector(); //slow, but for bigger objects, this should not affect so much
-		//EvaluateReturnValues(); //evaluate symbolic expression trees
+		return (StdVector)EvaluateReturnVectorRef();
+	}
 
-		//return returnValues;
+	//! a user function that returns a vector, evaluated into result, which keeps its memory when it has the size;
+	//! the arguments may be Exudyn vectors, which are copied into the named variables (#3006)
+	template<typename... Args>
+	void EvaluateIntoVector(Vector& result, const MainSystem& mainSystem, const Args&... args)
+	{
+		Index argIndex = 0;
+		(..., processArgument(args, argRealList, argIndex));
+
+		result.CopyFrom(EvaluateReturnVectorRef());
 	}
 
 	//! variadic template to evaluate all kinds of user functions (templates created/defined by Pybind interface)
@@ -565,6 +579,17 @@ protected:
 	{
 		argRealList[argIndex++].GetVector()->SetExpressionNamedVector(arg);
 	}
+	//! a vector argument, copied into the memory of the named vector, which keeps it: no allocation (#3006)
+	void processArgument(const StdVector& arg, ResizableArray<SymbolicGeneric>& argRealList, Index& argIndex)
+	{
+		argRealList[argIndex++].GetVector()->GetExpressionNamedReal().SetVector(arg);
+	}
+	void processArgument(const VectorBase<Real>& arg, ResizableArray<SymbolicGeneric>& argRealList, Index& argIndex)
+	{
+		ResizableConstVector& vector = argRealList[argIndex++].GetVector()->GetExpressionNamedReal().GetVector();
+		vector.SetNumberOfItems(arg.NumberOfItems());
+		std::copy(arg.begin(), arg.end(), vector.begin());
+	}
 	void processArgument(const StdVector3D& arg, ResizableArray<SymbolicGeneric>& argRealList, Index& argIndex)
 	{
 		//directly inject values into stored vector (no new for larger vectors)
@@ -626,5 +651,30 @@ protected:
 
 
 }; //namespace Symbolic
+
+//! the argument of a Python user function: an Exudyn vector as std::vector, everything else as it is (#3006)
+template<typename T>
+inline decltype(auto) UserFunctionArgument(const T& argument)
+{
+	if constexpr (std::is_base_of_v<VectorBase<Real>, T>) { return (StdVector)argument; }
+	else { return (const T&)argument; }
+}
+
+//! evaluate a user function that returns a vector into result, which keeps its memory when it has the size: a symbolic
+//! function directly - its arguments copied into its named vectors, its result into result, without std::function and
+//! std::vector -, a Python function through its std::function; the arguments may be Exudyn vectors (#3006)
+template<typename UFT, typename... Args>
+void EvaluateUserFunctionIntoVector(const PythonUserFunctionBase<UFT>& userFunction, Vector& result,
+	const MainSystem& mainSystem, const Args&... args)
+{
+	if (userFunction.GetSymbolicFunction())
+	{
+		userFunction.GetSymbolicFunction()->EvaluateIntoVector(result, mainSystem, args...);
+	}
+	else
+	{
+		result.CopyFrom(userFunction.userFunction(mainSystem, UserFunctionArgument(args)...));
+	}
+}
 
 #endif //SYMBOLIC__H

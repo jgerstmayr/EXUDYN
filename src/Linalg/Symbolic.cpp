@@ -96,7 +96,7 @@ PythonUserFunctionBase<UFT>::~PythonUserFunctionBase()
 }
 
 template <typename UFT>
-PythonUserFunctionBase<UFT>::PythonUserFunctionBase() : pyObject(new PyUFobject()), ufType(UserFunctionType::_None)
+PythonUserFunctionBase<UFT>::PythonUserFunctionBase() : pyObject(new PyUFobject()), ufType(UserFunctionType::_None), symbolicFunction(nullptr)
 {
 	*pyObject = py::cast((Index)0);
 }
@@ -104,6 +104,7 @@ PythonUserFunctionBase<UFT>::PythonUserFunctionBase() : pyObject(new PyUFobject(
 template <typename UFT>
 void PythonUserFunctionBase<UFT>::SetPythonObject(const PyUFobject& pyObjectInit)
 {
+	symbolicFunction = nullptr; //set again by SetPythonUserFunction for a symbolic function
 	if (py::isinstance<py::dict>(pyObjectInit))
 	{
 		py::dict pyDict = py::cast<py::dict>(pyObjectInit);
@@ -167,6 +168,7 @@ void PythonUserFunctionBase<UFT>::SetPythonUserFunction(const PyUFobject& pyObje
 
 		*pyObject = pyObjectInit;
 		ufType = UserFunctionType::Symbolic;
+		symbolicFunction = py::cast<Symbolic::PySymbolicUserFunction*>(pyObjectInit); //the object pyObject holds
 	}
 	else //all other cases
 	{

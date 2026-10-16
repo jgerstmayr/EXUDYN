@@ -82,12 +82,10 @@ void CObjectGenericODE1::ComputeODE1RHS(Vector& ODE1Rhs, Index objectNumber) con
 	if (parameters.rhsUserFunction)
 	{
 		Real t = GetCSystemData()->GetCData().GetCurrent().GetTime();
-		Vector userForce;
+		EvaluateUserFunctionRHS(tempUserFunctionForce, cSystemData->GetMainSystemBacklink(), t, objectNumber, tempCoordinates);
+		CHECKandTHROW(tempUserFunctionForce.NumberOfItems() == nODE1, "CObjectGenericODE1: forceUserFunction return a vector with different size from ObjectGenericODE1 system size", ExudynValueError);
 
-		EvaluateUserFunctionRHS(userForce, cSystemData->GetMainSystemBacklink(), t, objectNumber, tempCoordinates);
-		CHECKandTHROW(userForce.NumberOfItems() == nODE1, "CObjectGenericODE1: forceUserFunction return a vector with different size from ObjectGenericODE1 system size", ExudynValueError);
-
-		ODE1Rhs += userForce;
+		ODE1Rhs += tempUserFunctionForce;
 	}
 
 }

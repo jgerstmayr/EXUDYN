@@ -4,6 +4,9 @@
 # Details:  A symbolic user function with vectors of more than 7 items (#2998): ObjectGenericODE2 with 10 coordinates,
 #           a chain of springs as forceUserFunction, once as Python function and once as symbolic user function; both
 #           give the same solution. The symbolic vectors keep up to 7 items in local memory and more on the heap.
+#           A second force uses every kind of vector node - a node used twice, sums, differences, products with scalars,
+#           MultComponents, the scalar product, NormL2, the unary minus -, each evaluating into its own
+#           memory, which is reused at every call (#3006); it gives the solution of its Python version as well.
 #
 # Author:   Johannes Gerstmayr
 # Date:     2026-10-15
@@ -16,6 +19,7 @@ import exudyn as exu
 from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
 from exudyn.advancedUtilities import CreateSymbolicUserFunction
 import numpy as np
+import exudyn.cMath as cMath
 
 n = 10
 k = 1000.
@@ -24,7 +28,17 @@ d = 2.
 def Force(mbs, t, itemNumber, q, q_t):
     return -k*q - d*q_t
 
-def Solve(symbolic):
+def ForceNodes(mbs, t, itemNumber, q, q_t):
+    a = -k*q                      #a node used twice
+    return a + 0.5*a - d*q_t + 10*q.MultComponents(q_t) - (q*q_t)*q - q.NormL2()*(-q_t)
+
+def ForceNodesPython(mbs, t, itemNumber, q, q_t):
+    q = np.array(q)
+    q_t = np.array(q_t)
+    a = -k*q
+    return a + 0.5*a - d*q_t + 10*q*q_t - (q@q_t)*q - cMath.norm(q)*(-q_t)
+
+def Solve(symbolic, force=Force, forcePython=None):
     SC = exu.SystemContainer()
     mbs = SC.AddSystem()
     node = mbs.AddNode(NodeGenericODE2(referenceCoordinates=[0]*n, initialCoordinates=[0.01*(i+1) for i in range(n)],
@@ -32,10 +46,12 @@ def Solve(symbolic):
     oGeneric = mbs.AddObject(ObjectGenericODE2(nodeNumbers=[node], massMatrix=np.eye(n)))
     keep = None
     if symbolic:
-        keep = CreateSymbolicUserFunction(mbs, Force, 'forceUserFunction', oGeneric) #keep it alive with the model
+        keep = CreateSymbolicUserFunction(mbs, force, 'forceUserFunction', oGeneric) #keep it alive with the model
         mbs.SetObjectParameter(oGeneric, 'forceUserFunction', keep)
+    elif forcePython is not None:
+        mbs.SetObjectParameter(oGeneric, 'forceUserFunction', forcePython)
     else:
-        mbs.SetObjectParameter(oGeneric, 'forceUserFunction', lambda mbs, t, i, q, q_t: Force(mbs, t, i, np.array(q), np.array(q_t)))
+        mbs.SetObjectParameter(oGeneric, 'forceUserFunction', lambda mbs, t, i, q, q_t: force(mbs, t, i, np.array(q), np.array(q_t)))
     mbs.Assemble()
     simulationSettings = exu.SimulationSettings()
     simulationSettings.timeIntegration.numberOfSteps = 200
@@ -50,7 +66,12 @@ qSymbolic = Solve(True)
 difference = max(abs(qSymbolic - qPython))
 exu.Print('largest difference symbolic - Python:', difference)
 
-u = sum(qSymbolic) + (difference > 1e-14)
+qNodesPython = Solve(False, ForceNodes, ForceNodesPython)
+qNodesSymbolic = Solve(True, ForceNodes)
+differenceNodes = max(abs(qNodesSymbolic - qNodesPython))
+exu.Print('every kind of vector node: largest difference symbolic - Python:', differenceNodes)
+
+u = sum(qSymbolic) + (difference > 1e-14) + sum(qNodesSymbolic) + (differenceNodes > 1e-12)
 exu.Print('solution of symbolicVectorUserFunctionTest=', u)
 
 exu.sys['testResult'] = u

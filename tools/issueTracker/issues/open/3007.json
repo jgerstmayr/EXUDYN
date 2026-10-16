@@ -1,0 +1,12 @@
+{
+  "number": 3007,
+  "title": "Symbolic user function: a component of a vector argument, q[0], cannot be recorded",
+  "author": "Claude-JG",
+  "status": "RAISED",
+  "type": "BUG",
+  "effort": "LOW",
+  "description": "CreateSymbolicUserFunction records the function with vector arguments of size 0, so q[0] in a symbolic forceUserFunction of ObjectGenericODE2 raises 'VectorExpressionBase::operator[] index out of range' while recording (1.13.6 and now; found with the test of RG12.3.5, #3006). The arguments should be recorded with the size the item gives them, or the component node should not be evaluated while recording.",
+  "dateRaised": "2026-10-16",
+  "deadline": "2027-04-14",
+  "file": "python/exudyn/advancedUtilities.py"
+}

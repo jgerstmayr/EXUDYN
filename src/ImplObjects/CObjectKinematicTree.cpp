@@ -166,12 +166,11 @@ void CObjectKinematicTree::AddJointForces(Vector& f, const LinkedDataVector& q, 
 	if (parameters.forceUserFunction)
 	{
 		Real t = GetCSystemData()->GetCData().GetCurrent().GetTime();
-		Vector userForce;
 		tempVector2.CopyFrom(q_t); //the joint velocities for the user function (#2845)
 
-		EvaluateUserFunctionForce(userForce, cSystemData->GetMainSystemBacklink(), t, objectNumber, tempVector, tempVector2);
-		CHECKandTHROW(userForce.NumberOfItems() == n, "CObjectKinematicTree: forceUserFunction return a vector with different size from ObjectKinematicTree system size", ExudynValueError);
-		f -= userForce;
+		EvaluateUserFunctionForce(tempUserFunctionForce, cSystemData->GetMainSystemBacklink(), t, objectNumber, tempVector, tempVector2);
+		CHECKandTHROW(tempUserFunctionForce.NumberOfItems() == n, "CObjectKinematicTree: forceUserFunction return a vector with different size from ObjectKinematicTree system size", ExudynValueError);
+		f -= tempUserFunctionForce;
 	}
 }
 

@@ -112,8 +112,14 @@ public:
 	int ReferenceCounter() const { return referenceCounter; }
 	void SetReferenceCounter(Index value) { referenceCounter = value; }
 	virtual void Destroy() = 0;
-	virtual ResizableConstVector Evaluate() const = 0;
+	//! the value as a new vector
+	virtual ResizableConstVector Evaluate() const { return EvaluateRef(); }
+	//! the value, evaluated into the memory of this node (buffer), which is kept for the next evaluation: no allocation
+	//! once the sizes are set; valid until the node is evaluated again (#3006)
+	virtual const ResizableConstVector& EvaluateRef() const = 0;
 	virtual STDstring ToString() const = 0;
+protected:
+	mutable ResizableConstVector buffer; //!< the value of an operator node, see EvaluateRef()
 };
 
 

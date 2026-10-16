@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes, Zwölfer Andreas
 * @date         2019-07-01 (generated)
-* @date         2026-10-16  13:28:11 (last modified)
+* @date         2026-10-16  13:52:10 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -93,6 +93,7 @@ protected: // AUTO:
     Vector referencePositions;                    //!< AUTO: vector containing the reference positions of all flexible nodes
     mutable Vector tempVector;                    //!< AUTO: temporary vector
     mutable Vector tempCoordinates;               //!< AUTO: temporary vector containing coordinates
+    mutable ResizableVector tempUserFunctionForce;//!< AUTO: the force of the user function, kept between the calls (#3006)
     mutable Vector tempCoordinates_t;             //!< AUTO: temporary vector containing velocity coordinates
     mutable Matrix tempRefPosSkew;                //!< AUTO: temporary matrix with skew symmetric local (deformed) node positions
     mutable Matrix tempVelSkew;                   //!< AUTO: temporary matrix with skew symmetric local node velocities
@@ -114,6 +115,7 @@ public: // AUTO:
         referencePositions = Vector();
         tempVector = Vector();
         tempCoordinates = Vector();
+        tempUserFunctionForce = ResizableVector();
         tempCoordinates_t = Vector();
         tempRefPosSkew = Matrix();
         tempVelSkew = Matrix();
@@ -189,6 +191,13 @@ public: // AUTO:
     const Vector& GetTempCoordinates() const { return tempCoordinates; }
     //! AUTO:  Read (Reference) access to:\f$\cv_{temp} \in \Rcal^{n\indf}\f$temporary vector containing coordinates
     Vector& GetTempCoordinates() { return tempCoordinates; }
+
+    //! AUTO:  Write (Reference) access to:\f$\fv_{temp} \in \Rcal^{n}\f$the force of the user function, kept between the calls (#3006)
+    void SetTempUserFunctionForce(const ResizableVector& value) { tempUserFunctionForce = value; }
+    //! AUTO:  Read (Reference) access to:\f$\fv_{temp} \in \Rcal^{n}\f$the force of the user function, kept between the calls (#3006)
+    const ResizableVector& GetTempUserFunctionForce() const { return tempUserFunctionForce; }
+    //! AUTO:  Read (Reference) access to:\f$\fv_{temp} \in \Rcal^{n}\f$the force of the user function, kept between the calls (#3006)
+    ResizableVector& GetTempUserFunctionForce() { return tempUserFunctionForce; }
 
     //! AUTO:  Write (Reference) access to:\f$\dot \cv_{temp} \in \Rcal^{n\indf}\f$temporary vector containing velocity coordinates
     void SetTempCoordinates_t(const Vector& value) { tempCoordinates_t = value; }
@@ -352,7 +361,7 @@ public: // AUTO:
     void InitializeObject();
 
     //! AUTO:  call to user function implemented in separate file to avoid including pybind and MainSystem.h at too many places
-    void EvaluateUserFunctionForce(Vector& force, const MainSystemBase& mainSystem, Real t, Index objectNumber, const StdVector& coordinates, const StdVector& coordinates_t) const;
+    void EvaluateUserFunctionForce(Vector& force, const MainSystemBase& mainSystem, Real t, Index objectNumber, const Vector& coordinates, const Vector& coordinates_t) const;
 
     //! AUTO:  call to user function implemented in separate file to avoid including pybind and MainSystem.h at too many places
     void EvaluateUserFunctionMassMatrix(Matrix& massMatrix, const MainSystemBase& mainSystem, Real t, Index objectNumber, const StdVector& coordinates, const StdVector& coordinates_t) const;

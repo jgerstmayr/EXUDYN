@@ -28,6 +28,9 @@ class PyMatrixContainer;
 namespace pybind11 {
 	class object;
 };
+namespace Symbolic {
+	class PySymbolicUserFunction;
+};
 
 
 enum class UserFunctionType {
@@ -59,6 +62,7 @@ class PythonUserFunctionBase
 private:
 	pybind11::object* pyObject;
 	UserFunctionType ufType;
+	Symbolic::PySymbolicUserFunction* symbolicFunction; //!< the symbolic function held by pyObject, or nullptr (#3006)
 public:
 	UFT userFunction;
 
@@ -78,7 +82,10 @@ public:
 
 	//! flag: true=stored valid user function (UF!=0); false=no user function (UF==0)
 	void SetUFtype(UserFunctionType typeInit) { ufType = typeInit; }
-	UserFunctionType GetUFtype() { return ufType; }
+	UserFunctionType GetUFtype() const { return ufType; }
+	//! the symbolic function, for an evaluation without the std::function (EvaluateUserFunctionIntoVector); nullptr for
+	//! a Python function, and for a symbolic one set only as std::function (#3006)
+	Symbolic::PySymbolicUserFunction* GetSymbolicFunction() const { return symbolicFunction; }
 	//! return true, if user functions exists
 	bool IsValid() const { return ufType != UserFunctionType::_None; }
 	void Reset();

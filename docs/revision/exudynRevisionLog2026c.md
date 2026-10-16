@@ -1434,3 +1434,33 @@ functions, so that both effects are seen.)*
   functions unchanged (the lists and the Python body dominate); scalar and 3D ones unchanged. `spring` symbolic is about
   10 % slower than 1.13.6 before and after the step: `u**3` is the portable power since #2954.
 - Gates: build, regeneration, suite with the C++ unit tests, pytest, performance suite (all 37 single runs).
+
+<a id="rg12-3-5"></a>
+### RG12.3.5 — symbolic vector user functions without allocations (2026-10-16, #3006, #3007)
+*(Maintainer 2026-10-16: the 6 steps of section 11 are all good to go; every advance measured against 1.13.6, for
+Python and symbolic user functions.)*
+- **Node buffers** (Symbolic.h, SymbolicVector.h): `VectorExpressionBase::EvaluateRef()` returns the value in the memory
+  of the node - a mutable `ResizableConstVector buffer`, kept between the evaluations -, `Evaluate()` copies it; every
+  vector node (the list of SReal, +, -, scalar*vector, matrix*vector and its transpose, unary + and -, MultComponents)
+  evaluates into its buffer from the references of its operands; the scalar nodes of vectors (scalar product, NormL2,
+  component, == and !=) read their operands by reference. A node used twice in one expression is evaluated twice with
+  the same arguments into the same buffer, which gives the same values.
+- **Arguments and result** (SymbolicUtilities.h): `processArgument` for `StdVector` and for Exudyn vectors copies into
+  the memory of the named vector (no temporary `ResizableConstVector`); the returns of 2D/3D/6D/StdVector read the
+  result by reference; `EvaluateIntoVector(result, ...)` copies the result into `result`.
+- **The call**: `PythonUserFunctionBase` keeps the pointer of the symbolic function its `pyObject` holds (set in
+  `SetPythonUserFunction`, reset in `SetPythonObject`); `EvaluateUserFunctionIntoVector(userFunction, result, mbs,
+  args...)` evaluates a symbolic function directly and a Python one through its std::function, converting Exudyn vector
+  arguments with `UserFunctionArgument`. One template for all signatures instead of a generated `Evaluate` per
+  signature - the same effect with less generated code. ObjectGenericODE2, ObjectGenericODE1, ObjectFFRF,
+  ObjectFFRFreducedOrder and ObjectKinematicTree pass their coordinates as Exudyn vectors (definitions: `const Vector&`
+  in `EvaluateUserFunctionForce`/`RHS`) and keep the force in the new member `tempUserFunctionForce` (no interface).
+- **Not done, deliberately**: the linked named variables (R6) - a copy of the arguments costs one pass and no
+  allocation, while a link would change the type every vector node reads; ObjectUserBody and
+  ObjectConnectorCoordinateVector (RG7.3.4), the matrices (RG12.3.7).
+- **Measured** (userFunctionPerformance.py against 1.13.6, userFunctionBoundary.md section 12): symbolic generic6
+  0.407 -> 0.061 us per call, generic10 0.069, generic100 0.306 (after RG12.3.4: 0.385, 0.692); load 0.71, cartesian 0.84
+  of 1.13.6; no Exudyn allocation per call in any run; Python unchanged.
+- **Test**: symbolicVectorUserFunctionTest.py with a second force of every kind of vector node against its Python
+  version (difference 3.5e-18; the same with 1.13.6 for 6 coordinates). Writing it found #3007: `q[0]` of a vector
+  argument cannot be recorded (1.13.6 too) - RG12.3.8.

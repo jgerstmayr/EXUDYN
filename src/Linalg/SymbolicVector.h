@@ -45,7 +45,7 @@ public:
 	}
 	virtual void Destroy() override {}
 
-	virtual ResizableConstVector Evaluate() const override
+	virtual const ResizableConstVector& EvaluateRef() const override
 	{
 		return vector;
 	}
@@ -55,6 +55,12 @@ public:
 	}
 	virtual Index NumberOfItems() const { return vector.NumberOfItems(); }
 	virtual void SetVector(const ResizableConstVector& vectorInit) { vector = vectorInit; }
+	//! the value of an argument, copied into the memory of the vector, which is kept (#3006)
+	virtual void SetVector(const std::vector<Real>& vectorInit)
+	{
+		vector.SetNumberOfItems((Index)vectorInit.size());
+		std::copy(vectorInit.begin(), vectorInit.end(), vector.begin());
+	}
 	virtual void SetComponent(Index i, Real value) { vector[i] = value; }
 	virtual const ResizableConstVector& GetVector() const { return vector; }
 	virtual ResizableConstVector& GetVector() { return vector; }
@@ -152,14 +158,14 @@ public:
 		//released: the destructor calls Destroy() again after SymbolicRealVector::Destroy() did, which freed them twice (#2876)
 		exprList.SetNumberOfItems(0);
 	}
-	virtual ResizableConstVector Evaluate() const override
+	virtual const ResizableConstVector& EvaluateRef() const override
 	{
-		ResizableConstVector result(exprList.NumberOfItems());
+		buffer.SetNumberOfItems(exprList.NumberOfItems());
 		for (Index i = 0; i < exprList.NumberOfItems(); i++)
 		{
-			result[i] = exprList.GetItem(i)->Evaluate();
+			buffer[i] = exprList.GetItem(i)->Evaluate();
 		}
-		return result;
+		return buffer;
 	}
 	virtual STDstring ToString() const override
 	{
@@ -194,15 +200,15 @@ public:
 		if (right) { right->DecreaseReferenceCounter(); if (right->ReferenceCounter() == 0) { right->Destroy(); delete right; VectorExpressionBase::deleteCount++; } }
 	}
 
-	virtual ResizableConstVector Evaluate() const override
+	virtual const ResizableConstVector& EvaluateRef() const override
 	{
-		ResizableConstVector leftExpr = left->Evaluate();
-		ResizableConstVector rightExpr = right->Evaluate();
+		const ResizableConstVector& leftExpr = left->EvaluateRef();
+		const ResizableConstVector& rightExpr = right->EvaluateRef();
 		CHECKandTHROW(leftExpr.NumberOfItems() == rightExpr.NumberOfItems(),
 			"symbolic.Vector::operator+ : inconsistent vector sizes");
-		leftExpr += rightExpr;
-		return leftExpr;
-		//return left->Evaluate() + right->Evaluate();
+		buffer.SetNumberOfItems(leftExpr.NumberOfItems());
+		for (Index i = 0; i < leftExpr.NumberOfItems(); i++) { buffer[i] = leftExpr[i] + rightExpr[i]; }
+		return buffer;
 	}
 	virtual STDstring ToString() const override
 	{
@@ -222,15 +228,15 @@ public:
 		if (right) { right->DecreaseReferenceCounter(); if (right->ReferenceCounter() == 0) { right->Destroy(); delete right; VectorExpressionBase::deleteCount++; } }
 	}
 
-	virtual ResizableConstVector Evaluate() const override
+	virtual const ResizableConstVector& EvaluateRef() const override
 	{
-		ResizableConstVector leftExpr = left->Evaluate();
-		ResizableConstVector rightExpr = right->Evaluate();
+		const ResizableConstVector& leftExpr = left->EvaluateRef();
+		const ResizableConstVector& rightExpr = right->EvaluateRef();
 		CHECKandTHROW(leftExpr.NumberOfItems() == rightExpr.NumberOfItems(),
 			"symbolic.Vector::operator- : inconsistent vector sizes");
-		leftExpr -= rightExpr;
-		return leftExpr;
-		//return left->Evaluate() - right->Evaluate();
+		buffer.SetNumberOfItems(leftExpr.NumberOfItems());
+		for (Index i = 0; i < leftExpr.NumberOfItems(); i++) { buffer[i] = leftExpr[i] - rightExpr[i]; }
+		return buffer;
 	}
 	virtual STDstring ToString() const override
 	{
@@ -251,10 +257,14 @@ public:
 		if (right) { right->DecreaseReferenceCounter(); if (right->ReferenceCounter() == 0) { right->Destroy(); delete right; VectorExpressionBase::deleteCount++; } }
 	}
 
-	virtual ResizableConstVector Evaluate() const override
+	virtual const ResizableConstVector& EvaluateRef() const override
 	{
 		//always possible:
-		return left->Evaluate() * right->Evaluate();
+		Real factor = left->Evaluate();
+		const ResizableConstVector& vector = right->EvaluateRef();
+		buffer.SetNumberOfItems(vector.NumberOfItems());
+		for (Index i = 0; i < vector.NumberOfItems(); i++) { buffer[i] = factor * vector[i]; }
+		return buffer;
 	}
 	virtual STDstring ToString() const override
 	{
@@ -276,13 +286,12 @@ public:
 		if (right) { right->DecreaseReferenceCounter(); if (right->ReferenceCounter() == 0) { right->Destroy(); delete right; VectorExpressionBase::deleteCount++; } }
 	}
 
-	virtual ResizableConstVector Evaluate() const override
+	virtual const ResizableConstVector& EvaluateRef() const override
 	{
 		//CHECKandTHROW(left->NumberOfColumns() == right->NumberOfItems(),
 		//	"symbolic.Vector::operator*(Matrix) : inconsistent matrix/vector sizes");
-		ResizableConstVector result;
-		EXUmath::MultMatrixVector(left->Evaluate(), right->Evaluate(), result);
-		return result;
+		EXUmath::MultMatrixVector(left->Evaluate(), right->EvaluateRef(), buffer);
+		return buffer;
 	}
 
 	virtual STDstring ToString() const override
@@ -304,13 +313,12 @@ public:
 		if (right) { right->DecreaseReferenceCounter(); if (right->ReferenceCounter() == 0) { right->Destroy(); delete right; VectorExpressionBase::deleteCount++; } }
 	}
 
-	virtual ResizableConstVector Evaluate() const override
+	virtual const ResizableConstVector& EvaluateRef() const override
 	{
 		//CHECKandTHROW(left->NumberOfColumns() == right->NumberOfItems(),
 		//	"symbolic.Vector::operator*(Matrix) : inconsistent matrix/vector sizes");
-		ResizableConstVector result;
-		EXUmath::MultMatrixTransposedVector(left->Evaluate(), right->Evaluate(), result);
-		return result;
+		EXUmath::MultMatrixTransposedVector(left->Evaluate(), right->EvaluateRef(), buffer);
+		return buffer;
 	}
 
 	virtual STDstring ToString() const override
@@ -332,8 +340,8 @@ public:
 		if (operand) { operand->DecreaseReferenceCounter(); if (operand->ReferenceCounter() == 0) { operand->Destroy(); delete operand; VectorExpressionBase::deleteCount++; } }
 	}
 
-	virtual ResizableConstVector Evaluate() const override {
-		return operand->Evaluate();
+	virtual const ResizableConstVector& EvaluateRef() const override {
+		return operand->EvaluateRef();
 	}
 	virtual STDstring ToString() const override {
 		return operand->ToString();
@@ -351,8 +359,11 @@ public:
 		if (operand) { operand->DecreaseReferenceCounter(); if (operand->ReferenceCounter() == 0) { operand->Destroy(); delete operand; VectorExpressionBase::deleteCount++; } }
 	}
 
-	virtual ResizableConstVector Evaluate() const override {
-		return -1.*operand->Evaluate();
+	virtual const ResizableConstVector& EvaluateRef() const override {
+		const ResizableConstVector& vector = operand->EvaluateRef();
+		buffer.SetNumberOfItems(vector.NumberOfItems());
+		for (Index i = 0; i < vector.NumberOfItems(); i++) { buffer[i] = -vector[i]; }
+		return buffer;
 	}
 	virtual STDstring ToString() const override {
 		return "(-" + operand->ToString() + ")";
@@ -372,17 +383,17 @@ public:
 		if (right) { right->DecreaseReferenceCounter(); if (right->ReferenceCounter() == 0) { right->Destroy(); delete right; VectorExpressionBase::deleteCount++; } }
 	}
 
-	virtual ResizableConstVector Evaluate() const override
+	virtual const ResizableConstVector& EvaluateRef() const override
 	{
-		ResizableConstVector l = left->Evaluate();
-		ResizableConstVector r = right->Evaluate();
+		const ResizableConstVector& l = left->EvaluateRef();
+		const ResizableConstVector& r = right->EvaluateRef();
 
 		CHECKandTHROW(l.NumberOfItems() == r.NumberOfItems(),
 			"symbolic.MultComponents(...): inconsistent vector sizes");
 
-		ResizableConstVector result(l.NumberOfItems());
-		EXUmath::MultVectorComponents(l, r, result);
-		return result;
+		buffer.SetNumberOfItems(l.NumberOfItems());
+		EXUmath::MultVectorComponents(l, r, buffer);
+		return buffer;
 	}
 
 	virtual STDstring ToString() const override
@@ -411,8 +422,8 @@ public:
 
 	virtual Real Evaluate() const override
 	{
-		ResizableConstVector leftExpr = left->Evaluate();
-		ResizableConstVector rightExpr = right->Evaluate();
+		const ResizableConstVector& leftExpr = left->EvaluateRef();
+		const ResizableConstVector& rightExpr = right->EvaluateRef();
 		CHECKandTHROW(leftExpr.NumberOfItems() == rightExpr.NumberOfItems(),
 			"symbolic.Vector::operator* (scalar vector multiplication) : inconsistent vector sizes");
 
@@ -440,7 +451,7 @@ public:
 
 	virtual Real Evaluate() const override 
 	{ 
-		return operand->Evaluate().GetL2Norm(); 
+		return operand->EvaluateRef().GetL2Norm(); 
 	}
 	virtual Real Diff(ExpressionNamedReal* var) const override { CHECKandTHROWstring("Symbolic::Vector::NormL2(vector): not implemented"); return 0.; }
 	virtual STDstring ToString() const override { return "NormL2(" + operand->ToString() + ")"; }
@@ -466,7 +477,7 @@ public:
 		Real iReal = index->Evaluate();
 		Index i = (Index)iReal;
 		CHECKandTHROW((Real)i == iReal, "VectorExpressionBase::operator[] index must be integer");
-		ResizableConstVector v = operand->Evaluate(); //this is not super fast, but anyway we need to evaluate expression
+		const ResizableConstVector& v = operand->EvaluateRef();
 		CHECKandTHROW((i >= 0) && (i < v.NumberOfItems()), "VectorExpressionBase::operator[] index out of range");
 		return v[i];
 	}
@@ -491,7 +502,7 @@ public:
 
 	virtual Real Evaluate() const override
 	{
-		return Real(left->Evaluate() == right->Evaluate());
+		return Real(left->EvaluateRef() == right->EvaluateRef());
 	}
 	virtual Real Diff(ExpressionNamedReal* var) const override { CHECKandTHROWstring("Symbolic::operator==::Diff(...): not possible"); return 0.; }
 	virtual STDstring ToString() const override {
@@ -512,7 +523,7 @@ public:
 	}
 
 	virtual Real Evaluate() const override {
-		return Real(!(left->Evaluate() == right->Evaluate()));
+		return Real(!(left->EvaluateRef() == right->EvaluateRef()));
 	}
 	virtual Real Diff(ExpressionNamedReal* var) const override { CHECKandTHROWstring("Symbolic::operator!=::Diff(...): not possible"); return 0.; }
 	virtual STDstring ToString() const override {
@@ -698,6 +709,11 @@ public:
 		if (exprList) { return exprList->Evaluate(); }
 		return vector;
 	}
+	//! the value without a copy, valid until the expression is evaluated again (#3006)
+	const ResizableConstVector& EvaluateRef() const {
+		if (exprList) { return exprList->EvaluateRef(); }
+		return vector;
+	}
 
 	//! for Python usage: return numpy array:
 	//! 
@@ -707,7 +723,7 @@ public:
 	}
 
 	virtual Index NumberOfItems() const {
-		if (exprList) { return exprList->Evaluate().NumberOfItems(); }
+		if (exprList) { return exprList->EvaluateRef().NumberOfItems(); }
 		return vector.NumberOfItems();
 	}
 

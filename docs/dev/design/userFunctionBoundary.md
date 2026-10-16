@@ -252,6 +252,10 @@ sub-step of RG12.3 or a step of RG7 in the plan:
    constructors that take `std::vector` by value; no change for users. Done (#3005), measured in section 12.
 2. **RG12.3.5** - section 7 and 8: the generated `Evaluate` per signature with `const Vector&` arguments and `Vector&`
    results, the symbolic evaluation into node buffers and the linked named variables; the gain of the symbolic path.
+   Done (#3006) for the user functions that return a vector of run-time size, in a simpler form: one template
+   `EvaluateUserFunctionIntoVector` (SymbolicUtilities.h) instead of a generated `Evaluate` per signature; the
+   arguments are copied into the memory of the named vectors instead of linked (one copy, no allocation); measured in
+   section 12. ObjectUserBody and ObjectConnectorCoordinateVector follow with RG7.3.4, the matrices with RG12.3.7.
 3. **RG12.3.6** - section 9: numpy arguments for the Python user functions, decided; the deprecation switch only if
    it is free.
 4. **RG7.10** (#3003) - the items that depend on Python user functions drawn in the main thread, a list from
@@ -299,3 +303,29 @@ differences up to about 10 % are the noise of the machine. The reference is a co
 - the Python vector functions do not change measurably: their cost is the lists of pybind11 and the Python body
   (`np.asarray`, the arithmetic, the conversion of the result) - RG12.3.6;
 - scalar and 3D user functions are unchanged, as expected - their arguments were no `std::vector`.
+
+**After RG12.3.5** (#3006: every vector node evaluates into its own memory, the arguments are copied into the named
+vectors, `EvaluateUserFunctionIntoVector` evaluates a symbolic function without `std::function` and `std::vector`
+into the vector of the item, which ObjectGenericODE2, ObjectGenericODE1, ObjectFFRF, ObjectFFRFreducedOrder and
+ObjectKinematicTree keep as a member), 1.13.101:
+
+| function | kind | 1.13.6: us/call | current: us/call | current/1.13.6 | allocations/call |
+|---|---|---:|---:|---:|---|
+| spring | python | 0.348 | 0.363 | 1.04 | 0 -> 0 |
+| spring | symbolic | 0.069 | 0.073 | 1.05 | 0 -> 0 |
+| cartesian | python | 0.729 | 0.719 | 0.99 | 0 -> 0 |
+| cartesian | symbolic | 0.287 | 0.240 | 0.84 | 0 -> 0 |
+| load | python | 0.406 | 0.409 | 1.01 | 0 -> 0 |
+| load | symbolic | 0.094 | 0.066 | 0.71 | 0 -> 0 |
+| generic6 | python | 2.969 | 2.841 | 0.96 | 2.5 -> 0 |
+| generic6 | symbolic | 0.407 | 0.061 | 0.15 | 2.5 -> 0 |
+| generic10 | python | 3.279 | 3.164 | 0.97 | 2.5 -> 0 |
+| generic10 | symbolic | crashed (#2998) | 0.069 (RG12.3.4: 0.385) | | - -> 0 |
+| generic100 | python | 10.212 | 10.101 | 0.99 | 2.5 -> 0 |
+| generic100 | symbolic | crashed (#2998) | 0.306 (RG12.3.4: 0.692) | | - -> 0 |
+
+- a symbolic vector user function costs about what a scalar one costs, plus its arithmetic: 0.06 microseconds for 6 and
+  10 coordinates, 0.31 for 100 - 6.7 times faster than 1.13.6 for 6 coordinates; no allocation per call in any case;
+- the 3D vector functions (`load`, `cartesian`) gain from the node buffers too (0.71, 0.84);
+- the Python functions are unchanged within the noise; the force of a Python function is copied into the member of
+  the item as well, so no Exudyn vector is allocated per call - the lists of pybind11 remain, RG12.3.6.

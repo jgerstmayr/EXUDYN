@@ -417,16 +417,8 @@ void CObjectFFRF::ComputeODE2LHS(Vector& ode2Lhs, Index objectNumber) const
 	if (parameters.forceUserFunction)
 	{
 		Real t = GetCSystemData()->GetCData().GetCurrent().GetTime();
-		Vector userForce;
-
-		EvaluateUserFunctionForce(userForce, cSystemData->GetMainSystemBacklink(), t, objectNumber, tempCoordinates, tempCoordinates_t);
-		//UserFunctionExceptionHandling([&] //lambda function to add consistent try{..} catch(...) block
-		//{
-		//	//user function args:(t, coordinates, coordinates_t)
-		//	userForce = (Vector)(parameters.forceUserFunction(t, tempCoordinates, tempCoordinates_t));
-		//}, "ObjectFFRF::forceUserFunction");
-
-		ode2Lhs -= userForce;
+		EvaluateUserFunctionForce(tempUserFunctionForce, cSystemData->GetMainSystemBacklink(), t, objectNumber, tempCoordinates, tempCoordinates_t);
+		ode2Lhs -= tempUserFunctionForce;
 	}
 
 }

@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-10-16  13:28:11 (last modified)
+* @date         2026-10-16  13:52:10 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -108,6 +108,7 @@ protected: // AUTO:
     CObjectKinematicTreeParameters parameters; //! AUTO: contains all parameters for CObjectKinematicTree
     mutable ResizableVector tempVector;           //!< AUTO: temporary vector during computation of mass and ODE2LHS
     mutable ResizableVector tempVector2;          //!< AUTO: second temporary vector during computation of mass and ODE2LHS
+    mutable ResizableVector tempUserFunctionForce;//!< AUTO: the force of the user function, kept between the calls (#3006)
     mutable ResizableMatrix tempMatrix;           //!< AUTO: temporary matrix during computation of inverse of mass matrix
     mutable ArrayIndex tempArrayIndex;            //!< AUTO: temporary array during computation of inverse of mass matrix
     mutable Transformation66List jointTransformationsTemp;//!< AUTO: temporary list of the placements of the links, as homogeneous transformations
@@ -124,6 +125,7 @@ public: // AUTO:
     {
         tempVector = ResizableVector();
         tempVector2 = ResizableVector();
+        tempUserFunctionForce = ResizableVector();
         tempMatrix = ResizableMatrix();
         tempArrayIndex = ArrayIndex();
         jointTransformationsTemp = Transformation66List();
@@ -153,6 +155,13 @@ public: // AUTO:
     const ResizableVector& GetTempVector2() const { return tempVector2; }
     //! AUTO:  Read (Reference) access to:second temporary vector during computation of mass and ODE2LHS
     ResizableVector& GetTempVector2() { return tempVector2; }
+
+    //! AUTO:  Write (Reference) access to:\f$\fv_{temp} \in \Rcal^{n}\f$the force of the user function, kept between the calls (#3006)
+    void SetTempUserFunctionForce(const ResizableVector& value) { tempUserFunctionForce = value; }
+    //! AUTO:  Read (Reference) access to:\f$\fv_{temp} \in \Rcal^{n}\f$the force of the user function, kept between the calls (#3006)
+    const ResizableVector& GetTempUserFunctionForce() const { return tempUserFunctionForce; }
+    //! AUTO:  Read (Reference) access to:\f$\fv_{temp} \in \Rcal^{n}\f$the force of the user function, kept between the calls (#3006)
+    ResizableVector& GetTempUserFunctionForce() { return tempUserFunctionForce; }
 
     //! AUTO:  Write (Reference) access to:temporary matrix during computation of inverse of mass matrix
     void SetTempMatrix(const ResizableMatrix& value) { tempMatrix = value; }
@@ -326,7 +335,7 @@ public: // AUTO:
     }
 
     //! AUTO:  call to user function implemented in separate file to avoid including pybind and MainSystem.h at too many places
-    void EvaluateUserFunctionForce(Vector& force, const MainSystemBase& mainSystem, Real t, Index objectNumber, const StdVector& coordinates, const StdVector& coordinates_t) const;
+    void EvaluateUserFunctionForce(Vector& force, const MainSystemBase& mainSystem, Real t, Index objectNumber, const Vector& coordinates, const Vector& coordinates_t) const;
 
     //! AUTO:  the placements of the links (in the base, or in their parents), and their velocities and accelerations as (omega, v) in link coordinates (#2829)
     void ComputeTreeTransformations(ConfigurationType configuration, bool computeVelocitiesAccelerations, bool computeAbsoluteTransformations, Transformation66List& frames, Vector6DList& V, Vector6DList& A) const;

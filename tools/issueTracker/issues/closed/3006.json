@@ -1,0 +1,16 @@
+{
+  "number": 3006,
+  "title": "Symbolic vector user functions without allocations: node buffers, arguments copied into the named vectors, the result into the item's vector",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "IMPROVEMENT",
+  "effort": "HIGH",
+  "description": "revision2026c step RG12.3.5 (#2996, userFunctionBoundary.md step 2): every vector node of a symbolic expression evaluates into its own buffer (EvaluateRef), the arguments are copied into the memory of the named vectors, EvaluateUserFunctionIntoVector evaluates a vector user function into the item's vector - a symbolic function directly, without std::function and std::vector, a Python function through its std::function; ObjectGenericODE2, ObjectGenericODE1, ObjectFFRF, ObjectFFRFreducedOrder and ObjectKinematicTree pass their coordinates as Exudyn vectors and keep the force in a member",
+  "dateRaised": "2026-10-16",
+  "deadline": "2027-04-14",
+  "dateResolved": "2026-10-16 13:59",
+  "resolvedAuthor": "Claude-JG",
+  "file": "src/Linalg/SymbolicVector.h",
+  "releaseNotes": "Symbolic user functions that return a vector of run-time size (forceUserFunction of ObjectGenericODE2, ObjectFFRF, ObjectFFRFreducedOrder, ObjectKinematicTree, rhsUserFunction of ObjectGenericODE1) are evaluated without memory allocation: 6.7 times faster than in 1.13.6 for 6 coordinates, 0.3 microseconds per call for 100; the 3D vector user functions are faster as well",
+  "resolvedInVersion": "1.13.102"
+}

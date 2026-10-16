@@ -49,8 +49,8 @@ The title of each says what it does; the sentence after it, why it comes now.
 
 1. **Check the SolutionViewer on screen** (#2930): the PreStepUserFunction example on Windows - changed without a
    screen; the space key works on macOS (2026-10-16).
-2. **The user function interface** (userFunctionBoundary.md section 11, decided 2026-10-16): RG12.3.5, RG12.3.6,
-   then RG7.10 and RG7.3.4, RG12.3.7 last; each measured against 1.13.6 (section 12).
+2. **The user function interface** (userFunctionBoundary.md section 11, decided 2026-10-16): RG12.3.6, then RG7.10
+   and RG7.3.4, RG12.3.7 last; each measured against 1.13.6 (section 12).
 3. **Rehearse the next release on a `release/*` branch** with *build as a release* - the first run of cibuildwheel
    4.3.0 and of cp315 on GitHub.
 4. **The quick old issues** (RG11.8) - each small and without a decision.
@@ -1091,7 +1091,13 @@ functions 35-45 % faster, the rest unchanged. [log](exudynRevisionLog2026c.md#rg
 #2996 (userFunctionBoundary.md step 1): const references in the signatures and constructors, `CopyFrom(std::vector)`,
 the move assignment of `Vector`; no change for users; measured again.
 
-#### **OPEN_RG12.3.5** Generate an Evaluate per signature and evaluate symbolic functions into node buffers
+#### **CLOSED_RG12.3.5** Generate an Evaluate per signature and evaluate symbolic functions into node buffers
+
+CLOSED 2026-10-16 (#3006): every vector node evaluates into its own memory (EvaluateRef), the arguments are copied
+into the named vectors, EvaluateUserFunctionIntoVector (one template instead of a generated Evaluate per signature)
+evaluates a symbolic vector function into the item's vector; the five items with a vector force keep it as a member.
+Symbolic vector user functions 6.7 times faster than 1.13.6 (6 coordinates), no allocation per call; Python unchanged.
+[log](exudynRevisionLog2026c.md#rg12-3-5)
 
 #2996 (step 2): `Evaluate(Vector& result, ..., const Vector& q, ...)` dispatching on the kind, symbolic named variables
 that link, nodes that evaluate into their own buffers.
@@ -1102,6 +1108,11 @@ that link, nodes that evaluate into their own buffers.
 `exudyn.special.deprecations.userFunctionListArguments` for the old behaviour only if it costs nothing measurable.
 
 #### **OPEN_RG12.3.7** Pass matrices to and from the user functions the same way
+
+#### **OPEN_RG12.3.8** Record a component of a vector argument in a symbolic user function
+
+#3007 (found with the test of RG12.3.5): `q[0]` in a symbolic forceUserFunction raises while CreateSymbolicUserFunction
+records it, as the vector arguments are recorded with size 0 - also in 1.13.6.
 
 #2996 (step 6, after RG7.10 and RG7.3.4): `const Matrix&` arguments, `Matrix&` / `MatrixContainer&` results; #1864.
 

@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-10-16  13:28:11 (last modified)
+* @date         2026-10-16  13:52:10 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -78,6 +78,7 @@ class CObjectGenericODE1: public CObject // AUTO:
 protected: // AUTO:
     CObjectGenericODE1Parameters parameters; //! AUTO: contains all parameters for CObjectGenericODE1
     mutable Vector tempCoordinates;               //!< AUTO: temporary vector containing coordinates
+    mutable ResizableVector tempUserFunctionForce;//!< AUTO: the force of the user function, kept between the calls (#3006)
     mutable Vector tempCoordinates_t;             //!< AUTO: temporary vector containing velocity coordinates
 
 public: // AUTO:
@@ -85,6 +86,7 @@ public: // AUTO:
     CObjectGenericODE1()
     {
         tempCoordinates = Vector();
+        tempUserFunctionForce = ResizableVector();
         tempCoordinates_t = Vector();
     };
 
@@ -100,6 +102,13 @@ public: // AUTO:
     const Vector& GetTempCoordinates() const { return tempCoordinates; }
     //! AUTO:  Read (Reference) access to:\f$\cv_{temp} \in \Rcal^{n}\f$temporary vector containing coordinates
     Vector& GetTempCoordinates() { return tempCoordinates; }
+
+    //! AUTO:  Write (Reference) access to:\f$\fv_{temp} \in \Rcal^{n}\f$the force of the user function, kept between the calls (#3006)
+    void SetTempUserFunctionForce(const ResizableVector& value) { tempUserFunctionForce = value; }
+    //! AUTO:  Read (Reference) access to:\f$\fv_{temp} \in \Rcal^{n}\f$the force of the user function, kept between the calls (#3006)
+    const ResizableVector& GetTempUserFunctionForce() const { return tempUserFunctionForce; }
+    //! AUTO:  Read (Reference) access to:\f$\fv_{temp} \in \Rcal^{n}\f$the force of the user function, kept between the calls (#3006)
+    ResizableVector& GetTempUserFunctionForce() { return tempUserFunctionForce; }
 
     //! AUTO:  Write (Reference) access to:\f$\dot \cv_{temp} \in \Rcal^{n}\f$temporary vector containing velocity coordinates
     void SetTempCoordinates_t(const Vector& value) { tempCoordinates_t = value; }
@@ -184,7 +193,7 @@ public: // AUTO:
     void InitializeCoordinateIndices();
 
     //! AUTO:  call to user function implemented in separate file to avoid including pybind and MainSystem.h at too many places
-    void EvaluateUserFunctionRHS(Vector& rhs, const MainSystemBase& mainSystem, Real t, Index objectNumber, const StdVector& coordinates) const;
+    void EvaluateUserFunctionRHS(Vector& rhs, const MainSystemBase& mainSystem, Real t, Index objectNumber, const Vector& coordinates) const;
 
     virtual OutputVariableType GetOutputVariableTypes() const override
     {

@@ -8,10 +8,10 @@ Every entry carries the **type** of the issue, then its **priority** and its **e
 
 General information on current version:
 
-- Exudyn version = 1.13.101.dev1
+- Exudyn version = 1.13.102.dev1
 - last change = 2026-10-16
-- Number of issues = 3006
-- Number of resolved issues = 2878 (101 in current version)
+- Number of issues = 3008
+- Number of resolved issues = 2879 (102 in current version)
 
 ## Resolved issues and resolved bugs before version 1.13
 
@@ -9511,6 +9511,9 @@ The following list contains the issues which have been **RESOLVED** in the accor
 
 ## Known bugs
 
+- <span class="textred">`BUG`</span> `LOW EFF` `raised by: Claude-JG` Symbolic user function: a component of a vector argument, q\[0\], cannot be recorded (#3007)
+  - description: CreateSymbolicUserFunction records the function with vector arguments of size 0, so q\[0\] in a symbolic forceUserFunction of ObjectGenericODE2 raises 'VectorExpressionBase::operator\[\] index out of range' while recording (1.13.6 and now; found with the test of RG12.3.5, \#3006). The arguments should be recorded with the size the item gives them, or the component node should not be evaluated while recording.
+  - date raised: 2026-10-16
 - <span class="textred">`BUG`</span> `LOW EFF` `raised by: Claude-JG` InverseKinematicsNumerical fails for a robot whose links have no PDcontrol (#2993)
   - description: revision2026c step RG11.8.20: InverseKinematicsNumerical.\_\_init\_\_ reads self.robot.links\[i\].PDcontrol to store it, but RobotLink sets the attribute only when PDcontrol is given, so a robot built without control raises AttributeError ('RobotLink' object has no attribute 'PDcontrol'); it also leaves the joint stiffness of the inverse kinematics and robot.gravity = \[0,0,0\] in the robot it is given. Found with the test model of \#2259.
   - date raised: 2026-10-14

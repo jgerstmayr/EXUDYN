@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.13 | Newborn | 100 | 1.13.101 |
+| 1.13 | Newborn | 101 | 1.13.102 |
 | 1.12 | Metheney | 367 | 1.12.462 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
@@ -30,6 +30,10 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.13 - Newborn (current)
 
+- **1.13.102** `IMPROVEMENT` `HIGH EFF` `raised by: Claude-JG` `resolved by: Claude-JG` Symbolic vector user functions without allocations: node buffers, arguments copied into the named vectors, the result into the item's vector (#3006)
+  - description: revision2026c step RG12.3.5 (\#2996, userFunctionBoundary.md step 2): every vector node of a symbolic expression evaluates into its own buffer (EvaluateRef), the arguments are copied into the memory of the named vectors, EvaluateUserFunctionIntoVector evaluates a vector user function into the item's vector - a symbolic function directly, without std::function and std::vector, a Python function through its std::function; ObjectGenericODE2, ObjectGenericODE1, ObjectFFRF, ObjectFFRFreducedOrder and ObjectKinematicTree pass their coordinates as Exudyn vectors and keep the force in a member
+  - **notes:** Symbolic user functions that return a vector of run-time size (forceUserFunction of ObjectGenericODE2, ObjectFFRF, ObjectFFRFreducedOrder, ObjectKinematicTree, rhsUserFunction of ObjectGenericODE1) are evaluated without memory allocation: 6.7 times faster than in 1.13.6 for 6 coordinates, 0.3 microseconds per call for 100; the 3D vector user functions are faster as well
+  - date resolved: **2026-10-16 13:59**, date raised: 2026-10-16
 - **1.13.101** `IMPROVEMENT` `MEDIUM EFF` `raised by: Claude-JG` `resolved by: Claude-JG` User functions: vector arguments by const reference, one copy of the result, a move assignment for Vector (#3005)
   - description: revision2026c step RG12.3.4 (\#2996, userFunctionBoundary.md step 1): the std::function of a user function takes its run-time sized vector arguments as const StdVector& (definitionTypes.annotationToCppArgument), the symbolic Evaluate templates take const Args&, the constructors of the vectors from std::vector take a const reference, the result of a vector user function is copied into the item's vector with CopyFrom instead of a temporary Vector, and VectorBase gets a move assignment that exchanges memory only between plain Vectors; plus perfUserFunctions.py in the performance suite and docs/dev/design/userFunctionPerformance.py, the comparison with 1.13.6
   - **notes:** User functions with vector arguments (ObjectGenericODE2, ObjectGenericODE1, ObjectFFRF, ObjectKinematicTree, ObjectUserBody, ObjectConnectorCoordinateVector, SensorUserFunction): the vectors are passed by reference and the result is copied once; symbolic vector user functions are 35 to 45 percent faster
