@@ -1642,3 +1642,22 @@ thread. 2026-10-17: do RG7.10 and RG7.3.4.)*
 - (16), (17) done before (#2999, #3003).
 - Measured: generic6 and generic100 of perfUserFunctions as after RG12.3.10 (Python 2.04/2.12 us, symbolic 0.058/0.25);
   ObjectUserBody did not exist in 1.13.6.
+
+<a id="rg9-8"></a>
+### RG9.8 — the object numbers owned by CSystemData (2026-10-17, #3012)
+*(Maintainer 2026-10-17: set the number when the item is added, as functions of the reference configuration work
+before Assemble; only DeleteObject changes numbers; integrate it into CSystemData so that no number can be wrong.)*
+- Checked: the list `CSystemData::cObjects` was changed in two places only - `Append` in MainObjectFactory (AddObject)
+  and `Remove` in `MainSystem::PyDeleteObject`; `Reset` empties it. Nothing sorts or moves objects.
+- `CSystemData::AddCObject(object)` appends and sets the number, `DeleteCObject(number)` deletes, removes and renumbers
+  the objects after it; the non-const `GetCObjects()` is gone, so no other code can change the list (the build needed
+  no other change); `CObject::SetObjectNumber` and the number are private, CSystemData is a friend. The renumbering of
+  #2995 in `CSystem::Assemble` is gone.
+- The reference configuration works before Assemble already (`RaiseIfNotConsistentNorReference`); with the number set
+  at AddObject, a user function of ObjectUserBody called from `GetObjectOutputBody(..., Reference)` before Assemble
+  gets its object number, not -1.
+- Found and fixed in DeleteObject: a marker on several bodies (MarkerBodiesRelativeTranslationCoordinate/
+  RotationCoordinate) was renumbered by comparing its first body for each of them; a deleted object between its two
+  bodies left the second one unchanged.
+- deleteItemsTest.py checks the number before Assemble, after a DeleteObject, and both bodies of a relative marker
+  around a deleted object; its result is unchanged.

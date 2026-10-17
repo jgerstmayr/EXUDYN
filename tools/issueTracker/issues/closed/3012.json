@@ -1,0 +1,15 @@
+{
+  "number": 3012,
+  "title": "CSystemData owns the object numbers: set when an object is added, renumbered only by DeleteObject",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "CHANGE",
+  "effort": "MEDIUM",
+  "description": "CObject::GetObjectNumber (#2995) is set by Assemble, so an access function that calls a user function before Assemble (a reference position of ObjectUserBody) gets -1. The number is set by CSystemData when the object is added (AddObject) and renumbered by CSystemData when an object is deleted; SetObjectNumber is private to CSystemData and the list of objects cannot be changed elsewhere. DeleteObject also renumbers the markers that refer to several bodies with their local index (it compared the first body only).",
+  "dateRaised": "2026-10-17",
+  "deadline": "2027-04-15",
+  "dateResolved": "2026-10-17 13:23",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "An object gets its number when it is added (CSystemData::AddCObject) and keeps it until DeleteObject renumbers the objects after a deleted one (CSystemData::DeleteCObject); no other code can change the list of objects or the number. A user function called before Assemble, e.g. for a reference position of ObjectUserBody, gets the object number. Fixed: DeleteObject renumbers each body of a marker on several bodies (MarkerBodiesRelative...Coordinate), it compared the first body only.",
+  "resolvedInVersion": "1.13.112"
+}

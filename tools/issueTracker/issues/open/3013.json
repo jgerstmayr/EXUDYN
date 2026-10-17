@@ -1,0 +1,11 @@
+{
+  "number": 3013,
+  "title": "Remove the argument objectNumber from the item functions that now get it from the object",
+  "author": "Claude-JG",
+  "status": "RAISED",
+  "type": "CHANGE",
+  "effort": "HIGH",
+  "description": "Since #2995 and the issue before, every CObject knows its number. Many functions of the object interface (ComputeODE2LHS, ComputeODE1RHS, ComputeJacobianODE2_ODE2, ComputeMassMatrix, GetOutputVariable, GetOutputVariableBody, the connector functions with MarkerDataStructure, the algebraic equations, the item-specific evaluations of user functions) and their callers in CSystem and MainObject pass it as an argument only to hand it to the user functions. The argument is removed, the functions call GetObjectNumber(). Evaluation and sub-steps in revision2026c step RG9.9.",
+  "dateRaised": "2026-10-17",
+  "deadline": "2027-04-15"
+}

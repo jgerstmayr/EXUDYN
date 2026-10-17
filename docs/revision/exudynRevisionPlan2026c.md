@@ -640,6 +640,13 @@ classes.
 contact and sliding on beams, plates, shells and general flexible surfaces need a marker that gives the shape of a
 body, positions at varying local coordinates and their Jacobians (docs/dev/design/pythonUserItems.md 5.3).
 
+### **CLOSED_RG9.8** Give every object its number in CSystemData when it is added, and renumber only in DeleteObject
+
+CLOSED 2026-10-17 (#3012): `CSystemData::AddCObject`/`DeleteCObject` are the only changes of the object list and set
+the numbers; `SetObjectNumber` is private to CSystemData; DeleteObject renumbers every body of a marker on several
+bodies. Maintainer 2026-10-17: the number is needed by many functions, also before Assemble.
+[log](exudynRevisionLog2026c.md#rg9-8)
+
 ## **CLOSED_RG10** Tooling and process
 
 exudev, the issue tracker, the generators, the checks of the commit gate, CI. Open without a step: #2541 (`exudyn.config`

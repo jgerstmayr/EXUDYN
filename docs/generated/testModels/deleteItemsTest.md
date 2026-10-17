@@ -10,7 +10,9 @@ You can view and download this file on Github: [deleteItemsTest.py](https://gith
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 # This is an EXUDYN example
 #
-# Details:  Test for deleting items; we make a chain of 3 mass points and remove the first mass point
+# Details:  Test for deleting items; we make a chain of 3 mass points and remove the first mass point.
+#           An object has its number from AddObject on, also before Assemble, and DeleteObject renumbers the objects
+#           after the deleted one and every body of a marker on several bodies (#3012).
 #
 # Author:   Johannes Gerstmayr
 # Date:     2025-05-08
@@ -123,6 +125,33 @@ mbs.SolveDynamic(simulationSettings)
 if not testIsActive:
     SC.renderer.DoIdleTasks()
     SC.renderer.Stop()
+
+#+++++++++++++++++++++++++++++++++++++++++++++
+#the number of an object, as its user functions get it: from AddObject on, and renumbered by DeleteObject (#3012)
+mbs2 = SC.AddSystem()
+itemNumbers = []
+def UFposition(mbs, t, itemNumber, localPosition, q):
+    itemNumbers.append(itemNumber)
+    return q[0:3] + localPosition
+
+oGround2 = mbs2.AddObject(ObjectGround())
+oMass2 = mbs2.AddObject(MassPoint(mass=1, nodeNumber=mbs2.AddNode(NodePoint())))
+nUser = mbs2.AddNode(NodePoint(referenceCoordinates=[1,2,3]))
+oUser = mbs2.AddObject(ObjectUserBody(nodeNumbers=[nUser], positionUserFunction=UFposition))
+mRelative = mbs2.AddMarker(MarkerBodiesRelativeTranslationCoordinate(bodyNumbers=[oGround2, oUser], axis0=[1,0,0]))
+
+#before Assemble: the reference configuration needs no coordinate lists
+p = mbs2.GetObjectOutputBody(oUser, exu.OutputVariableType.Position, localPosition=[0.5,0,0],
+                             configuration=exu.ConfigurationType.Reference)
+if itemNumbers[-1] != int(oUser) or list(p) != [1.5,2,3]:
+    raise ValueError('deleteItemsTest: the user function got the object number '+str(itemNumbers[-1])+', not '+str(oUser))
+
+mbs2.DeleteObject(oMass2, deleteDependentItems=False) #between the two bodies of the marker
+mbs2.GetObjectOutputBody(int(oUser)-1, exu.OutputVariableType.Position, configuration=exu.ConfigurationType.Reference)
+if itemNumbers[-1] != int(oUser)-1:
+    raise ValueError('deleteItemsTest: after DeleteObject the user function got '+str(itemNumbers[-1])+', not '+str(int(oUser)-1))
+if [int(i) for i in mbs2.GetMarker(mRelative)['bodyNumbers']] != [int(oGround2), int(oUser)-1]:
+    raise ValueError('deleteItemsTest: DeleteObject did not renumber both bodies of the marker: '+str(mbs2.GetMarker(mRelative)['bodyNumbers']))
 
 #+++++++++++++++++++++++++++++++++++++++++++++
 uTotal = sum(mbs.GetSensorValues(mbs.systemData.NumberOfSensors()-1))

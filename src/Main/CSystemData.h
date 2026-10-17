@@ -178,10 +178,22 @@ public: //
 
 	//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 	//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-	//! Write (Reference) access to:container for computational objects
-	ResizableArray<CObject*>& GetCObjects() { return cObjects; }
-	//! Read (Reference) access to:container for computational objects
+	//! the computational objects; the list is changed only by AddCObject and DeleteCObject, which keep the object
+	//! numbers (#3012)
 	const ResizableArray<CObject*>& GetCObjects() const { return cObjects; }
+	//! append an object and give it its number; returns the number
+	Index AddCObject(CObject* object)
+	{
+		object->SetObjectNumber(cObjects.NumberOfItems());
+		return cObjects.Append(object);
+	}
+	//! delete an object and renumber the objects after it
+	void DeleteCObject(Index objectNumber)
+	{
+		delete cObjects[objectNumber];
+		cObjects.Remove(objectNumber);
+		for (Index i = objectNumber; i < cObjects.NumberOfItems(); i++) { cObjects[i]->SetObjectNumber(i); }
+	}
 
 	//! Write (Reference) access to:container for computational objects
 	CObjectBody& GetCObjectBody(Index objectIndex) { CHECKandTHROW(((Index)cObjects[objectIndex]->GetType() & (Index)CObjectType::Body) != 0,"SystemData::GetObjectBody(...): object is not a body", ExudynTypeError); return *(CObjectBody*)(cObjects[objectIndex]); }

@@ -52,7 +52,6 @@ void CSystem::Assemble(const MainSystem& mainSystem)
 	globalTimers.Reset(); //timers already used by finalize contact ...
 	for (Index i = 0; i < cSystemData.GetCObjects().NumberOfItems(); i++)
 	{
-		cSystemData.GetCObjects()[i]->SetObjectNumber(i); //for the user functions of the access functions (#2995)
 		cSystemData.GetCObjects()[i]->PreAssemble();
 	}
 	//pout << "++++++++++++++++\nCheckSystemIntegrity ...\n";

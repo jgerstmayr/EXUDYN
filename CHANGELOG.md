@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.13 | Newborn | 110 | 1.13.111 |
+| 1.13 | Newborn | 111 | 1.13.112 |
 | 1.12 | Metheney | 367 | 1.12.462 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
@@ -30,6 +30,10 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.13 - Newborn (current)
 
+- **1.13.112** `CHANGE` `MEDIUM EFF` `raised by: Claude-JG` `resolved by: Claude-JG` CSystemData owns the object numbers: set when an object is added, renumbered only by DeleteObject (#3012)
+  - description: CObject::GetObjectNumber (\#2995) is set by Assemble, so an access function that calls a user function before Assemble (a reference position of ObjectUserBody) gets -1. The number is set by CSystemData when the object is added (AddObject) and renumbered by CSystemData when an object is deleted; SetObjectNumber is private to CSystemData and the list of objects cannot be changed elsewhere. DeleteObject also renumbers the markers that refer to several bodies with their local index (it compared the first body only).
+  - **notes:** An object gets its number when it is added (CSystemData::AddCObject) and keeps it until DeleteObject renumbers the objects after a deleted one (CSystemData::DeleteCObject); no other code can change the list of objects or the number. A user function called before Assemble, e.g. for a reference position of ObjectUserBody, gets the object number. Fixed: DeleteObject renumbers each body of a marker on several bodies (MarkerBodiesRelative...Coordinate), it compared the first body only.
+  - date resolved: **2026-10-17 13:23**, date raised: 2026-10-17
 - **1.13.111** `IMPROVEMENT` `MEDIUM EFF` `raised by: Claude-JG` `resolved by: Claude-JG` ObjectUserBody and ObjectGenericODE2: implement them with the Exudyn conventions and one shared pattern (#2995)
   - description: revision2026c step RG7.3.4 (maintainer 2026-10-15: static functions, EvaluateMatrix with an integer switch, StdVector used internally instead of the Exudyn vectors; check both objects): the review of both objects is in the plan step; to be decided item by item before the change
   - **notes:** ObjectUserBody and ObjectGenericODE2 are implemented with one pattern: the user functions get numpy views of Exudyn vectors without intermediate copies, a result of the wrong size names the user function and the sizes, and the derivative of a user body's Jacobians uses the step of the numerical differentiation of the solver

@@ -890,12 +890,11 @@ void MainSystem::PyDeleteObject(const py::object& objectNumber, bool deleteDepen
 		}
 
 		//delete object pointers:
-		delete GetCSystem().GetSystemData().GetCObjects()[deleteItemNumber];
+		GetCSystem().GetSystemData().DeleteCObject(deleteItemNumber); //renumbers the objects after it (#3012)
 		delete GetVisualizationSystem().GetVisualizationSystemData().GetVisualizationObjects()[deleteItemNumber];
 		delete GetMainSystemData().GetMainObjects()[deleteItemNumber];
 
 		//remove item from list
-		GetCSystem().GetSystemData().GetCObjects().Remove(deleteItemNumber);
 		GetVisualizationSystem().GetVisualizationSystemData().GetVisualizationObjects().Remove(deleteItemNumber);
 		GetMainSystemData().GetMainObjects().Remove(deleteItemNumber);
 
@@ -931,9 +930,9 @@ void MainSystem::PyDeleteObject(const py::object& objectNumber, bool deleteDepen
 						}
 						item->SetObjectNumber(EXUstd::InvalidIndex, iLocal);
 					}
-					else if (item->GetObjectNumber() > deleteItemNumber)
+					else if (item->GetObjectNumber(iLocal) > deleteItemNumber) //each body of the marker (#3012)
 					{
-						item->SetObjectNumber(item->GetObjectNumber() - 1, iLocal);
+						item->SetObjectNumber(item->GetObjectNumber(iLocal) - 1, iLocal);
 					}
 				}
 			}

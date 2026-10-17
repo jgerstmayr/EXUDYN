@@ -291,7 +291,7 @@ Index MainObjectFactory::AddMainObject(MainSystem& mainSystem, const py::dict& d
 				{
 					GraphicsDataContext context("AddObject (object " + EXUstd::ToString(currentNumber) + ", " + nameString + ")"); //names it in errors of its graphics data (#2304)
 					mainObject->SetWithDictionary(d);
-					mainSystem.GetCSystem().GetSystemData().GetCObjects().Append(mainObject->GetCObject());
+					mainSystem.GetCSystem().GetSystemData().AddCObject(mainObject->GetCObject());
 					mainSystem.GetVisualizationSystem().GetVisualizationSystemData().GetVisualizationObjects().Append(mainObject->GetVisualizationObject());
 					return mainSystem.GetMainSystemData().GetMainObjects().Append(mainObject);
 				}
