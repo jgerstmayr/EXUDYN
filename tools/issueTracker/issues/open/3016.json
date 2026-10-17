@@ -8,5 +8,6 @@
   "description": "Maintainer 2026-10-17: * of two symbolic vectors (or with a matrix) raises a TypeError since the issue before, so that scripts change to dot(), @ and multiply(); in about two to three years, when the problems have shown up, * becomes the component-wise product as in numpy, and the deprecation flag symbolicStarProduct is removed.",
   "dateRaised": "2026-10-17",
   "deadline": "2029-01-01",
-  "workingRemarks": "Delayed on purpose (maintainer 2026-10-17): the plan step RG12.6 is closed, the issue waits for its deadline 2029-01-01."
+  "workingRemarks": "Delayed on purpose (maintainer 2026-10-17): the plan step RG12.6 is closed, the issue waits for its deadline 2029-01-01.; deferred until 2029-01-01 (Claude-JG, 2026-10-17): * of symbolic vectors becomes the product of the components once the scripts that used it for the scalar product have shown up through the TypeError of #3015 (maintainer 2026-10-17)",
+  "deferredUntil": "2029-01-01"
 }

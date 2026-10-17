@@ -1810,3 +1810,25 @@ table of RG12.3.7 in the plan.
   functions of the coordinates in both modes (identical results).
 - **Measured** (ObjectGenericODE2, 6 coordinates, mass matrix and force user functions, 20000 steps of
   ExplicitMidpoint): Python 0.468 s, symbolic 0.051 s, the same result; the matrix nodes still allocate (RG12.3.7.3).
+
+<a id="rg11-8-22"></a>
+### RG11.8.22 — the issue store of the tests (2026-10-17, #3023)
+*(Maintainer 2026-10-17: the test should not create thousands of files.)*
+- The fixture `tracker` of test_issueTracker.py copied the whole store (128 open, 1167 closed files, 6 archives) for
+  each of its about 60 tests; under pytest -n 8 the setup failed once with WinError 1450. A session fixture
+  `storeTemplate` builds the store of the tests once per process: the open issues, the archives, the 50 newest closed
+  issues in closed/ (a test that changes a closed issue takes a recent one, which lies there as in the real store),
+  the older closed issues written into the archives of their years - the same issues and the same closed count, in
+  about 190 files; each test copies that.
+- testTheStoreIsConsistent checks the real store read-only and the store of the tests, and that both have the same
+  closed count. test_exudev.py's html test reads the real store instead of a copy, as it writes no issue.
+
+<a id="rg10-32"></a>
+### RG10.32 — deferred issues (2026-10-17, #3024)
+*(Maintainer 2026-10-17: RG12.6 is a delayed issue; the step can be closed; a field for it as proposed.)*
+- issueStore: the field `deferredUntil` (YYYY-MM-DD); CheckStore refuses another form and the field on a closed issue.
+- issueTracker: `IsDeferred(issue)` - open and the date not reached - and `DeferIssue(number, date, reason)`, which
+  sets the field and the deadline and writes the reason into the working remarks; `exudev issue defer`.
+- `exudev issue list --open` and `triage` leave deferred issues out and name them apart; planManager prints each
+  deferred issue with the steps that cite it (`deferred: #3016 until 2029-01-01 (RG12.6)`).
+- #3016 is deferred until 2029-01-01. pytest: three tests in test_issueTracker.py.

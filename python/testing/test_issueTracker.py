@@ -82,18 +82,50 @@ def testGeneratedPageIsThere():
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #ExtendIssue and the triage notes
 
+@pytest.fixture(scope='session')
+def storeTemplate(tmp_path_factory):
+    """the issue store of the tests, built once per pytest process: the open issues, the archives and the 50
+    newest closed issues of the real store, the other closed issues written into the archives of their years -
+    the same issues and the same closed count, the version depends on it, in about 190 files instead of 1300;
+    copying all files for every test failed now and then with WinError 1450 (#3023). A test that changes a
+    closed issue takes a recent one, which lies in closed/ as in the real store."""
+    import shutil
+    module = IssueTracker()
+    store = module.issueStore
+    template = os.path.join(str(tmp_path_factory.mktemp('issueStore')), 'issues')
+    realDirectory = os.path.join(trackerDirectory, 'issues')
+    closedNames = sorted(os.listdir(os.path.join(realDirectory, 'closed')), key=lambda name: int(name.split('.')[0]))
+    keep = set(closedNames[-50:])
+    shutil.copytree(realDirectory, template,
+                    ignore=lambda directory, names: [name for name in names if name not in keep]
+                    if os.path.basename(directory) == 'closed' else [])
+    patchedDirectory = store.storeDirectory
+    closedByYear = {}
+    for name in closedNames[:-50]:
+        issue = store.ReadJson(os.path.join(realDirectory, 'closed', name))
+        closedByYear.setdefault(store.ArchiveYear(issue), []).append(issue)
+    store.storeDirectory = template
+    try:
+        for year, issues in closedByYear.items():
+            if os.path.isfile(store.ArchivePath(year)):
+                issues = store.ReadJson(store.ArchivePath(year))['issues'] + issues
+            store.WriteArchive(year, issues)
+    finally:
+        store.storeDirectory = patchedDirectory
+    return template
+
+
 @pytest.fixture
-def tracker(tmp_path, monkeypatch):
+def tracker(tmp_path, monkeypatch, storeTemplate):
     """the tracker working on a COPY of the log in a temporary directory: it reads and writes
     trackerlog.txt relative to the current directory, and the three files it updates afterwards
     (the version files, the HTML and the Markdown page) live outside it"""
     import shutil
     module = IssueTracker()
     #the issues are a directory of JSON files; the tests work on a
-    #copy of it and point both modules at the copy, so that a test run can never write into the
+    #copy of the template and point both modules at the copy, so that a test run can never write into the
     #real tracker (it also owns version.txt)
-    shutil.copytree(os.path.join(trackerDirectory, 'issues'),
-                    os.path.join(str(tmp_path), 'issues'))
+    shutil.copytree(storeTemplate, os.path.join(str(tmp_path), 'issues'))
     #the releases and their baselines are data, and a bump writes
     #this file - so the copy gets its own
     shutil.copy(os.path.join(trackerDirectory, 'releases.json'),
@@ -231,10 +263,19 @@ def testEffortIsKeptAndNormalized(tracker):
 
 
 def testTheStoreIsConsistent(tracker):
-    """the check that runs in the commit gate, against the real store: no number twice, no file
-    whose name and content disagree, no issue in the wrong directory, and the closed count the
-    version is derived from"""
-    assert tracker.issueStore.CheckStore() == []
+    """the check that runs in the commit gate, against the real store - read only - and against the store of
+    the tests: no number twice, no file whose name and content disagree, no issue in the wrong directory, and
+    the closed count the version is derived from; both stores hold the same number of closed issues"""
+    store = tracker.issueStore
+    assert store.CheckStore() == []
+    closedOfTheTests = store.ClosedCount()
+    patchedDirectory = store.storeDirectory
+    store.storeDirectory = os.path.join(trackerDirectory, 'issues') #the real store, read only
+    try:
+        assert store.CheckStore() == []
+        assert store.ClosedCount() == closedOfTheTests
+    finally:
+        store.storeDirectory = patchedDirectory
 
 
 def testEveryFieldOfAnIssueIsKnown(tracker):
@@ -1142,3 +1183,35 @@ def testTheReleaseTagIsTheVersion(monkeypatch):
     commands = ExudevCommands()
     monkeypatch.setattr(commands.runner, 'RepositoryVersion', lambda: '1.12.0')
     assert commands.ReleaseTagName() == 'v1.12.0'
+
+
+#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#an open issue that waits on purpose until a date (#3024)
+
+def testADeferredIssueWaitsUntilItsDate(tracker):
+    number = OpenIssueNumber(tracker)
+    tracker.DeferIssue(number, '2099-01-01', 'waits for the scripts to change', author='Claude-JG')
+    issue = tracker.GetIssue(number)
+    assert issue['deferredUntil'] == '2099-01-01' and issue['deadline'] == '2099-01-01'
+    assert 'deferred until 2099-01-01' in issue['workingRemarks']
+    assert tracker.IsDeferred(issue)
+    assert not tracker.IsDeferred(issue, today='2099-01-01')     #on its date it is back
+    assert tracker.issueStore.CheckStore() == []
+
+
+def testDeferringNeedsADateAReasonAndAnOpenIssue(tracker):
+    number = OpenIssueNumber(tracker)
+    with pytest.raises(ValueError):
+        tracker.DeferIssue(number, '1.1.2099', 'a date in another form', author='Claude-JG')
+    with pytest.raises(ValueError):
+        tracker.DeferIssue(number, '2099-01-01', ' ', author='Claude-JG')
+    with pytest.raises(ValueError):
+        tracker.DeferIssue(ClosedIssueNumber(tracker), '2099-01-01', 'closed', author='Claude-JG')
+
+
+def testTheStoreRefusesADeferredClosedIssue(tracker):
+    number = ClosedIssueNumber(tracker)
+    issue = tracker.GetIssue(number)
+    issue['deferredUntil'] = '2099-01-01'
+    tracker.issueStore.Save(issue)
+    assert any('deferred' in message for message in tracker.issueStore.CheckStore())

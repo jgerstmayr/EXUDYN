@@ -1052,6 +1052,32 @@ def ChangeIssue(issueNumber, key, value, force=False): #raise a new issue into l
 #%%******************************************************************************************************
 #%%******************************************************************************************************
 #use this when the analysis of an issue turns up more than the issue says
+def IsDeferred(issue, today=None):
+    """True for an open issue that waits on purpose until its date deferredUntil (#3024)"""
+    date = str(issue.get('deferredUntil', '')).strip()
+    return (date != '' and issue['status'].strip() not in closedStatuses
+            and (today or GetDateStr()[:10]) < date)
+
+
+def DeferIssue(issueNumber, date, reason, author='JG'):
+    """Let an OPEN issue wait on purpose until date (YYYY-MM-DD): it gets deferredUntil and that deadline, and
+    the reason goes into its working remarks; exudev issue list --open and triage leave it out until then, and a
+    step of the revision plan that it belongs to may be closed meanwhile (#3024)."""
+    if not re.fullmatch(r'\d{4}-\d{2}-\d{2}', date):
+        raise ValueError('DeferIssue: the date must be YYYY-MM-DD, not "' + date + '"')
+    if reason.strip() == '':
+        raise ValueError('DeferIssue: the reason is mandatory - it is the record of the decision')
+    d = GetIssue(issueNumber)
+    if d['status'] in closedStatuses:
+        raise ValueError('DeferIssue: issue ' + str(issueNumber) + ' is ' + d['status'] + '; only an open issue waits')
+    d['deferredUntil'] = date
+    d['deadline'] = date
+    ModifyDictIssue(d)
+    RemarkIssue(issueNumber, 'deferred until ' + date + ' (' + author + ', ' + GetDateStr()[:10] + '): ' + reason.strip(),
+                author=author)
+    return issueNumber
+
+
 def ExtendIssue(issueNumber, text, author='JG'):
     """Append a dated paragraph to the description of an OPEN issue.
 

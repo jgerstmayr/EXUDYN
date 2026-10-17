@@ -8,10 +8,10 @@ Every entry carries the **type** of the issue, then its **priority** and its **e
 
 General information on current version:
 
-- Exudyn version = 1.13.119.dev1
+- Exudyn version = 1.13.121.dev1
 - last change = 2026-10-17
-- Number of issues = 3024
-- Number of resolved issues = 2896 (119 in current version)
+- Number of issues = 3025
+- Number of resolved issues = 2898 (121 in current version)
 
 ## Resolved issues and resolved bugs before version 1.13
 
@@ -9039,9 +9039,6 @@ The following list contains the issues which have been **RESOLVED** in the accor
 
 ## Open issues
 
-- `TESTING` `LOW EFF` `raised by: Claude-JG` The fixtures of test\_issueTracker.py copy the whole issue store per test, which fails now and then with WinError 1450 (#3023)
-  - description: In pytest -n 8, the setup of four tests of test\_issueTracker.py failed once in three runs (2026-10-17) with shutil.Error, \[WinError 1450\] not enough system resources, while copying the about 3000 issue files of tools/issueTracker/issues into the tmp directory of each test; the other runs pass. A store of a few issues, or one copy per worker, avoids it.
-  - date raised: 2026-10-17
 - `EXTENSION` `MEDIUM EFF` `raised by: Claude-JG` Sparse matrix results of symbolic user functions with the pattern fixed when they are recorded (#3022)
   - description: Mass matrices and Jacobians of ObjectGenericODE2 and ObjectUserBody can be very sparse. A symbolic result esym.SparseMatrix - triplets (row, column, expression) - or an esym.Matrix built from components, whose components that are the constant 0 are known when it is recorded, evaluates into the triplets of the item's MatrixContainer in sparse mode; CopyOrAddTriplets adds them to the system matrix as for a Python function that returns triplets or a scipy matrix. Revision2026c step RG12.3.7.4.
   - date raised: 2026-10-17
@@ -9050,7 +9047,7 @@ The following list contains the issues which have been **RESOLVED** in the accor
   - date raised: 2026-10-17
 - `CHANGE` `LOW EFF` `raised by: Claude-JG` Make \* of symbolic vectors and matrices the product of the components, as numpy, and remove special.deprecations.symbolicStarProduct (#3016)
   - description: Maintainer 2026-10-17: \* of two symbolic vectors (or with a matrix) raises a TypeError since the issue before, so that scripts change to dot(), @ and multiply(); in about two to three years, when the problems have shown up, \* becomes the component-wise product as in numpy, and the deprecation flag symbolicStarProduct is removed.
-  - **remarks:** Delayed on purpose (maintainer 2026-10-17): the plan step RG12.6 is closed, the issue waits for its deadline 2029-01-01.
+  - **remarks:** Delayed on purpose (maintainer 2026-10-17): the plan step RG12.6 is closed, the issue waits for its deadline 2029-01-01.; deferred until 2029-01-01 (Claude-JG, 2026-10-17): \* of symbolic vectors becomes the product of the components once the scripts that used it for the scalar product have shown up through the TypeError of \#3015 (maintainer 2026-10-17)
   - date raised: 2026-10-17
 - `TESTING` `MEDIUM EFF` `raised by: Claude-JG` Performance measurement over more models, solvers and solver configurations, as the baseline of the total coordinates (#3002)
   - description: revision2026c step RG13.1 (maintainer 2026-10-16): before total coordinates are added (RG13.2, \#1910), the cost of the solvers is measured on more models (rigid multibody, flexible, contact, large systems), for the implicit and explicit solvers and their configurations (dense/sparse, modified Newton, step sizes, multithreading), so that the cost of an additional vector addition and of the cache memory per step becomes visible - mostly relevant for the explicit solvers

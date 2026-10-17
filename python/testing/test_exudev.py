@@ -216,14 +216,14 @@ def testEnvListsOnlyTheEnvironmentsThatExist(monkeypatch):
 #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 def testIssueHtmlWritesTheOverviewAlone(tmp_path, monkeypatch):
     """#2885: trackerlog.html is ignored by git, so a fresh checkout has none; 'exudev issue html'
-    writes it, and nothing else - here into a copy of the tracker"""
+    writes it, and nothing else - here into a temporary directory; it reads the real store, which nothing
+    changes, instead of a copy of its 1300 files (#3023)"""
     import shutil
     tracker = commands.IssueTracker()
-    shutil.copytree(os.path.join(repositoryRoot, 'tools', 'issueTracker', 'issues'), str(tmp_path / 'issues'))
     shutil.copy(os.path.join(repositoryRoot, 'tools', 'issueTracker', 'releases.json'), str(tmp_path))
     monkeypatch.setattr(tracker, 'releasesCache', None)
     monkeypatch.setattr(tracker, 'trackerDirectory', str(tmp_path))
-    monkeypatch.setattr(tracker.issueStore, 'storeDirectory', str(tmp_path / 'issues'))
+    monkeypatch.setattr(tracker.issueStore, 'storeDirectory', os.path.join(repositoryRoot, 'tools', 'issueTracker', 'issues'))
     for name in ['ConvertToMarkdown', 'ConvertToChangelog', 'UpdateFiles', 'UpdateDateAndVersion']:
         monkeypatch.setattr(tracker, name, lambda *args, **kwargs: pytest.fail(name + ' called'))
     [step] = commands.Issue(Options(issueVerb='html'))

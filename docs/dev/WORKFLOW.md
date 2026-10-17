@@ -102,6 +102,7 @@ exudev issue raise "title" "description" --type FIX --effort LOW --author Claude
 exudev issue extend 2566 "what the analysis turned up"
 exudev issue remark 2566 "duplicate of #2134, check before starting"
 exudev issue resolve 2566 "what was done" --author Claude-JG     #bumps the micro version
+exudev issue defer 3016 2029-01-01 "why it waits" --author Claude-JG   #waits on purpose; list --open and triage leave it out
 exudev issue close 2566 "duplicate of #2134" | "superseded by ..." | "won't fix, because ..."
 exudev issue triage                                #the open issues by type and effort
 exudev issue plot                                  #the issues over time: total, closed, open; bugs and fixes

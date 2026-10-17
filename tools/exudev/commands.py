@@ -1462,8 +1462,11 @@ def ShowIssue(issue):
 def ListIssues(tracker, options):
     """the backlog, newest first, with the filters a triage pass needs"""
     issues = list(reversed(tracker.GetIssues()))
+    deferred = []
     if options.open:
         issues = [issue for issue in issues if issue['status'].strip() == 'RAISED']
+        deferred = [issue for issue in issues if tracker.IsDeferred(issue)] #waiting on purpose (#3024)
+        issues = [issue for issue in issues if not tracker.IsDeferred(issue)]
     for (name, wanted) in [('type', options.type), ('effort', options.effort),
                            ('priority', options.priority)]:
         if wanted:
@@ -1477,6 +1480,9 @@ def ListIssues(tracker, options):
     print('')
     print(str(len(shown)) + ' of ' + str(len(issues)) + ' matching issues, '
           + str(tracker.NumberOfIssues()) + ' in the tracker')
+    if deferred:
+        print('deferred, left out until their dates: ' + ', '.join('#' + str(issue['number']) + ' ('
+                                                                     + issue['deferredUntil'] + ')' for issue in deferred))
     return 0
 
 
@@ -1486,6 +1492,8 @@ def TriageReport(tracker):
     which 270 issues in one list cannot."""
     issues = [issue for issue in tracker.GetIssues()
               if issue['status'].strip() not in tracker.closedStatuses]
+    deferred = [issue for issue in issues if tracker.IsDeferred(issue)] #waiting on purpose (#3024)
+    issues = [issue for issue in issues if not tracker.IsDeferred(issue)]
     efforts = list(tracker.issueEfforts) + ['']
     types = sorted(set(issue['type'].strip() for issue in issues))
 
@@ -1517,6 +1525,9 @@ def TriageReport(tracker):
     print(str(len(unclassified)) + ' of ' + str(len(issues)) + ' open issues have no effort yet'
           + ('' if not unclassified else '; the oldest are #'
              + ', #'.join(str(issue['number']) for issue in unclassified[:8])))
+    if deferred:
+        print('deferred, not counted until their dates: ' + ', '.join('#' + str(issue['number']) + ' ('
+                                                                       + issue['deferredUntil'] + ')' for issue in deferred))
     return 0
 
 
@@ -1582,6 +1593,14 @@ def Issue(options):
         def Action():
             tracker.RemarkIssue(IssueNumber(tracker, options.number), options.text,
                                 author=options.author, replace=options.replace)
+            return 0
+
+    elif verb == 'defer':
+        note = 'defer issue ' + str(options.number) + ' until ' + options.date
+
+        def Action():
+            tracker.DeferIssue(IssueNumber(tracker, options.number), options.date, options.reason,
+                               author=options.author)
             return 0
 
     elif verb == 'resolve':

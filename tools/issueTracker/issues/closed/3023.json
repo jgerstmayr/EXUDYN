@@ -2,10 +2,14 @@
   "number": 3023,
   "title": "The fixtures of test_issueTracker.py copy the whole issue store per test, which fails now and then with WinError 1450",
   "author": "Claude-JG",
-  "status": "RAISED",
+  "status": "RESOLVED",
   "type": "TESTING",
   "effort": "LOW",
   "description": "In pytest -n 8, the setup of four tests of test_issueTracker.py failed once in three runs (2026-10-17) with shutil.Error, [WinError 1450] not enough system resources, while copying the about 3000 issue files of tools/issueTracker/issues into the tmp directory of each test; the other runs pass. A store of a few issues, or one copy per worker, avoids it.",
   "dateRaised": "2026-10-17",
-  "deadline": "2027-04-15"
+  "deadline": "2027-04-15",
+  "dateResolved": "2026-10-17 17:34",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "The tests of the issue tracker work on a store of about 190 files, built once per pytest process with the same issues and the same closed count, instead of a copy of all 1300 issue files per test, which failed now and then with WinError 1450.",
+  "resolvedInVersion": "1.13.120"
 }

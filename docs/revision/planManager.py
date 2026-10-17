@@ -24,6 +24,7 @@
 # Every command that writes runs 'update' and the check at its end.
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 import argparse
+import datetime
 import io
 import json
 import os
@@ -173,6 +174,23 @@ def IssueStates():
                 except (ValueError, AttributeError, TypeError):
                     pass
     return states
+
+
+def DeferredIssues():
+    """issue number -> deferredUntil of the open issues that wait on purpose until a later date (#3024)"""
+    deferred = {}
+    path = os.path.join(issuesPath, 'open')
+    today = datetime.date.today().isoformat()
+    if os.path.isdir(path):
+        for name in os.listdir(path):
+            if name.endswith('.json') and name[:-5].isdigit():
+                try:
+                    date = str(json.load(io.open(os.path.join(path, name), encoding='utf-8')).get('deferredUntil', ''))
+                except ValueError:
+                    continue
+                if date > today:
+                    deferred[int(name[:-5])] = date
+    return deferred
 
 
 #%%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -361,6 +379,12 @@ def Report(plan):
     if errors:
         print('planManager: the plan is NOT valid (%d errors)' % len(errors))
         return 1
+    #the issues that wait on purpose: a closed step may cite them (#3024)
+    deferred = DeferredIssues()
+    for number in sorted(deferred):
+        steps = [n for n in plan.order if re.search(r'#%d(?!\d)' % number, plan.Body(n) + ' ' + plan.steps[n]['title'])]
+        print('  deferred: #%d until %s%s' % (number, deferred[number],
+                                             (' (RG' + ', RG'.join(steps) + ')') if steps else ''))
     print('planManager: OK - %d groups, %d steps, %d of them open%s'
           % (len(groups), len(plan.order) - len(groups), nOpen,
              ', %d warnings' % len(warnings) if warnings else ''))

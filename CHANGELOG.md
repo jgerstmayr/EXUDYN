@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.13 | Newborn | 118 | 1.13.119 |
+| 1.13 | Newborn | 120 | 1.13.121 |
 | 1.12 | Metheney | 367 | 1.12.462 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
@@ -30,6 +30,14 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.13 - Newborn (current)
 
+- **1.13.121** `EXTENSION` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` Mark an open issue as deferred until a date, so that triage and the plan treat it as waiting on purpose (#3024)
+  - description: Maintainer 2026-10-17: \#3016 waits until 2029 on purpose; its plan step is closed. An issue gets the field deferredUntil (a date); exudev issue defer \<number\> \<date\> \<reason\> sets it, the deadline and a remark; exudev issue list --open and triage leave a deferred issue out until the date and name it apart; CheckStore refuses the field on a closed issue and a date not in the form YYYY-MM-DD; planManager reports the deferred issues the plan cites.
+  - **notes:** An open issue can wait on purpose until a date: exudev issue defer \<number\> \<date\> \<reason\> sets deferredUntil and the deadline and records the reason; exudev issue list --open and triage leave it out until then, the store check refuses the field on a closed issue, and the plan manager names the deferred issues with the steps that cite them.
+  - date resolved: **2026-10-17 17:34**, date raised: 2026-10-17
+- **1.13.120** `TESTING` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` The fixtures of test\_issueTracker.py copy the whole issue store per test, which fails now and then with WinError 1450 (#3023)
+  - description: In pytest -n 8, the setup of four tests of test\_issueTracker.py failed once in three runs (2026-10-17) with shutil.Error, \[WinError 1450\] not enough system resources, while copying the about 3000 issue files of tools/issueTracker/issues into the tmp directory of each test; the other runs pass. A store of a few issues, or one copy per worker, avoids it.
+  - **notes:** The tests of the issue tracker work on a store of about 190 files, built once per pytest process with the same issues and the same closed count, instead of a copy of all 1300 issue files per test, which failed now and then with WinError 1450.
+  - date resolved: **2026-10-17 17:34**, date raised: 2026-10-17
 - **1.13.119** `EXTENSION` `MEDIUM EFF` `raised by: Claude-JG` `resolved by: Claude-JG` Symbolic user functions with matrix results, dense, in the format of MatrixContainer (#3020)
   - description: The user functions that return a matrix cannot be symbolic: ObjectGenericODE2 massMatrixUserFunction and jacobianUserFunction, ObjectUserBody massMatrixUserFunction, positionJacobianUserFunction, rotationMatrixUserFunction and rotationJacobianUserFunction, ObjectFFRF and ObjectFFRFreducedOrder massMatrixUserFunction, ObjectConnectorCoordinateVector jacobianUserFunction. A recorded esym.Matrix result is evaluated directly into the MatrixContainer (dense) or the Matrix of the item, without the std::function and Python; the items call one EvaluateUserFunctionIntoMatrixContainer / IntoMatrix, as for the vectors (\#3006), so that a sparse result (next step) fits the same path. Revision2026c step RG12.3.7.2.
   - **notes:** Symbolic user functions can return matrices: the mass matrices and Jacobians of ObjectGenericODE2 and ObjectUserBody, the rotation matrix of ObjectUserBody, the mass matrices of ObjectFFRF and ObjectFFRFreducedOrder and the jacobianUserFunction of ObjectConnectorCoordinateVector; the recorded esym.Matrix (also a list of lists or a numpy array of symbolic items) is evaluated without Python into the dense matrix of the item. An ObjectGenericODE2 with a 6 x 6 mass matrix user function solves nine times faster than with the Python function. Fixed: the component of a symbolic matrix product, (A @ B)\[i, j\], was refused.

@@ -1,0 +1,15 @@
+{
+  "number": 3024,
+  "title": "Mark an open issue as deferred until a date, so that triage and the plan treat it as waiting on purpose",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "EXTENSION",
+  "effort": "LOW",
+  "description": "Maintainer 2026-10-17: #3016 waits until 2029 on purpose; its plan step is closed. An issue gets the field deferredUntil (a date); exudev issue defer <number> <date> <reason> sets it, the deadline and a remark; exudev issue list --open and triage leave a deferred issue out until the date and name it apart; CheckStore refuses the field on a closed issue and a date not in the form YYYY-MM-DD; planManager reports the deferred issues the plan cites.",
+  "dateRaised": "2026-10-17",
+  "deadline": "2027-04-15",
+  "dateResolved": "2026-10-17 17:34",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "An open issue can wait on purpose until a date: exudev issue defer <number> <date> <reason> sets deferredUntil and the deadline and records the reason; exudev issue list --open and triage leave it out until then, the store check refuses the field on a closed issue, and the plan manager names the deferred issues with the steps that cite them.",
+  "resolvedInVersion": "1.13.121"
+}

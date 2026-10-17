@@ -172,6 +172,15 @@ def IssueParser(subParsers, globalParser):
     remark.add_argument('--replace', action='store_true',
                         help='replace the remarks instead of appending to them')
 
+    defer = verbs.add_parser('defer', parents=[globalParser, author],
+        help='let an open issue wait on purpose until a date',
+        description='Sets deferredUntil and the deadline and writes the reason into the working remarks; '
+                    '"list --open" and "triage" leave the issue out until the date, and the plan step it '
+                    'belongs to may be closed meanwhile (#3024).')
+    defer.add_argument('number', type=int)
+    defer.add_argument('date', help='YYYY-MM-DD')
+    defer.add_argument('reason', help='why it waits')
+
     resolve = verbs.add_parser('resolve', parents=[globalParser, author],
         help='resolve an issue (BUMPS THE VERSION)',
         description='The note is the release note of this issue and is published.')

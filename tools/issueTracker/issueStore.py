@@ -35,6 +35,7 @@
 import io
 import json
 import os
+import re
 
 #the format of the files; a reader that does not know this number must not guess
 schemaVersion = 1
@@ -63,6 +64,7 @@ issueFields = [
     'duplicateOf',      #the issue this one repeats
     'resolvedInVersion',#the version the resolution produced; CHANGELOG.md is rendered from it
     'resolvedCommit',   #the hash
+    'deferredUntil',    #YYYY-MM-DD: an OPEN issue that waits on purpose until then; list --open and triage leave it out (#3024)
     ]
 
 #an issue without these is not an issue
@@ -288,6 +290,13 @@ def CheckStore():
                             + str(issue.get('status')) + '"')
         if fileName is not None and fileName != IssueFileName(number):
             messages.append('issue ' + str(number) + ': file is called ' + fileName)
+        deferred = str(issue.get('deferredUntil', '')).strip()
+        if deferred != '':
+            if not re.fullmatch(r'\d{4}-\d{2}-\d{2}', deferred):
+                messages.append('issue ' + str(number) + ': deferredUntil "' + deferred + '" is not YYYY-MM-DD')
+            if issue.get('status') in closedStatuses:
+                messages.append('issue ' + str(number) + ' is ' + str(issue.get('status'))
+                                + ' and deferred; only an open issue waits')
 
     for (directory, expectClosed) in [(OpenDirectory(), False), (ClosedDirectory(), True)]:
         if not os.path.isdir(directory):
