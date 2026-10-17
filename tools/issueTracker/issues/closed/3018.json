@@ -2,10 +2,14 @@
   "number": 3018,
   "title": "Add Matrix.T, rows M[i], slices v[a:b] and component-wise functions of symbolic vectors",
   "author": "Claude-JG",
-  "status": "RAISED",
+  "status": "RESOLVED",
   "type": "EXTENSION",
   "effort": "MEDIUM",
   "description": "Missing in exudyn.symbolic compared with numpy (#3015): the transposed matrix (A.T @ f, which v @ A computes already), a row of a matrix, slices of vectors and matrices, np.sin(v) and the other functions applied to the components, a vector plus a scalar or a list, np.cross and np.linalg.norm as recorded operations (NormL2 exists). The transposed matrix is the most important for rigid body user functions.",
   "dateRaised": "2026-10-17",
-  "deadline": "2027-04-15"
+  "deadline": "2027-04-15",
+  "dateResolved": "2026-10-17 16:28",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "exudyn.symbolic has the transposed matrix A.T and transpose(), rows A[i], slices of vectors v[a:b], a vector plus or minus a scalar (to each component) or a list, and numpy's functions of each component of a vector (np.sin(v), np.abs(v)).",
+  "resolvedInVersion": "1.13.118"
 }

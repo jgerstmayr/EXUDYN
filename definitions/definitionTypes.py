@@ -688,6 +688,19 @@ annotationToCpp = {'MainSystem': 'const MainSystem&', 'Real': 'Real', 'Index': '
 annotationToCppArgument = {'Vector': 'const StdVector&'}
 
 
+#the user functions whose result is a matrix, by type name: a symbolic user function returns an esym.Matrix for them
+#(#3020)
+userFunctionMatrixResults = {}
+
+def UserFunctionReturnAnnotation(function):
+    """the return annotation of a user function def, as it is written"""
+    import ast
+    import inspect
+    import textwrap
+    node = ast.parse(textwrap.dedent(inspect.getsource(function))).body[0]
+    return ast.unparse(node.returns) if node.returns is not None else 'None'
+
+
 def UserFunctionSignature(function):
     """the std::function<...> of a user function def, from its annotations as they are written"""
     import ast
@@ -1003,6 +1016,7 @@ def ItemDefinition(className, members, **header):
             name = 'PyFunction' + className + member['pythonName'][0].upper() + member['pythonName'][1:]
             member['type'] = TypeSpec(name)
             userFunctionSignatures[name] = UserFunctionSignature(member['userFunction'])
+            userFunctionMatrixResults[name] = UserFunctionReturnAnnotation(member['userFunction']) in ['MatrixContainer', 'NumpyMatrix']
 
     return header
 

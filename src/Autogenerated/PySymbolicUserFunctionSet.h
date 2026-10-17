@@ -74,11 +74,32 @@ public:
                     return this->EvaluateStdVector(mainSystem, arg0, arg1, arg2, arg3);
                 };
         }
+        else if (itemTypeName == "ObjectGenericODE2" && userFunctionName == "massMatrixUserFunction")
+        {            //define the user function as lambda function of this
+            objectGenericODE2MassMatrixUserFunction = [this](const MainSystem& mainSystem, Real arg0, Index arg1, const StdVector& arg2, const StdVector& arg3)
+                {
+                    return this->EvaluatePyObject(mainSystem, arg0, arg1, arg2, arg3);
+                };
+        }
+        else if (itemTypeName == "ObjectGenericODE2" && userFunctionName == "jacobianUserFunction")
+        {            //define the user function as lambda function of this
+            objectGenericODE2JacobianUserFunction = [this](const MainSystem& mainSystem, Real arg0, Index arg1, const StdVector& arg2, const StdVector& arg3, Real arg4, Real arg5)
+                {
+                    return this->EvaluatePyObject(mainSystem, arg0, arg1, arg2, arg3, arg4, arg5);
+                };
+        }
         else if (itemTypeName == "ObjectGenericODE1" && userFunctionName == "rhsUserFunction")
         {            //define the user function as lambda function of this
             objectGenericODE1RhsUserFunction = [this](const MainSystem& mainSystem, Real arg0, Index arg1, const StdVector& arg2)
                 {
                     return this->EvaluateStdVector(mainSystem, arg0, arg1, arg2);
+                };
+        }
+        else if (itemTypeName == "ObjectUserBody" && userFunctionName == "massMatrixUserFunction")
+        {            //define the user function as lambda function of this
+            objectGenericODE2MassMatrixUserFunction = [this](const MainSystem& mainSystem, Real arg0, Index arg1, const StdVector& arg2, const StdVector& arg3)
+                {
+                    return this->EvaluatePyObject(mainSystem, arg0, arg1, arg2, arg3);
                 };
         }
         else if (itemTypeName == "ObjectUserBody" && userFunctionName == "forceUserFunction")
@@ -93,6 +114,27 @@ public:
             objectUserBodyPositionUserFunction = [this](const MainSystem& mainSystem, Real arg0, Index arg1, StdVector3D arg2, const StdVector& arg3)
                 {
                     return this->EvaluateStdVector3D(mainSystem, arg0, arg1, arg2, arg3);
+                };
+        }
+        else if (itemTypeName == "ObjectUserBody" && userFunctionName == "positionJacobianUserFunction")
+        {            //define the user function as lambda function of this
+            objectUserBodyPositionJacobianUserFunction = [this](const MainSystem& mainSystem, Real arg0, Index arg1, StdVector3D arg2, const StdVector& arg3)
+                {
+                    return this->EvaluatePyObject(mainSystem, arg0, arg1, arg2, arg3);
+                };
+        }
+        else if (itemTypeName == "ObjectUserBody" && userFunctionName == "rotationMatrixUserFunction")
+        {            //define the user function as lambda function of this
+            objectUserBodyPositionJacobianUserFunction = [this](const MainSystem& mainSystem, Real arg0, Index arg1, StdVector3D arg2, const StdVector& arg3)
+                {
+                    return this->EvaluatePyObject(mainSystem, arg0, arg1, arg2, arg3);
+                };
+        }
+        else if (itemTypeName == "ObjectUserBody" && userFunctionName == "rotationJacobianUserFunction")
+        {            //define the user function as lambda function of this
+            objectUserBodyPositionJacobianUserFunction = [this](const MainSystem& mainSystem, Real arg0, Index arg1, StdVector3D arg2, const StdVector& arg3)
+                {
+                    return this->EvaluatePyObject(mainSystem, arg0, arg1, arg2, arg3);
                 };
         }
         else if (itemTypeName == "ObjectUserBody" && userFunctionName == "outputVariableUserFunction")
@@ -116,11 +158,25 @@ public:
                     return this->EvaluateStdVector(mainSystem, arg0, arg1, arg2, arg3);
                 };
         }
+        else if (itemTypeName == "ObjectFFRF" && userFunctionName == "massMatrixUserFunction")
+        {            //define the user function as lambda function of this
+            objectFFRFMassMatrixUserFunction = [this](const MainSystem& mainSystem, Real arg0, Index arg1, const StdVector& arg2, const StdVector& arg3)
+                {
+                    return this->EvaluateNumpyMatrix(mainSystem, arg0, arg1, arg2, arg3);
+                };
+        }
         else if (itemTypeName == "ObjectFFRFreducedOrder" && userFunctionName == "forceUserFunction")
         {            //define the user function as lambda function of this
             objectGenericODE2ForceUserFunction = [this](const MainSystem& mainSystem, Real arg0, Index arg1, const StdVector& arg2, const StdVector& arg3)
                 {
                     return this->EvaluateStdVector(mainSystem, arg0, arg1, arg2, arg3);
+                };
+        }
+        else if (itemTypeName == "ObjectFFRFreducedOrder" && userFunctionName == "massMatrixUserFunction")
+        {            //define the user function as lambda function of this
+            objectFFRFMassMatrixUserFunction = [this](const MainSystem& mainSystem, Real arg0, Index arg1, const StdVector& arg2, const StdVector& arg3)
+                {
+                    return this->EvaluateNumpyMatrix(mainSystem, arg0, arg1, arg2, arg3);
                 };
         }
         else if (itemTypeName == "ObjectANCFCable2D" && userFunctionName == "axialForceUserFunction")
@@ -212,6 +268,13 @@ public:
             objectConnectorCoordinateVectorConstraintUserFunction = [this](const MainSystem& mainSystem, Real arg0, Index arg1, const StdVector& arg2, const StdVector& arg3, bool arg4)
                 {
                     return this->EvaluateStdVector(mainSystem, arg0, arg1, arg2, arg3, arg4);
+                };
+        }
+        else if (itemTypeName == "ObjectConnectorCoordinateVector" && userFunctionName == "jacobianUserFunction")
+        {            //define the user function as lambda function of this
+            objectConnectorCoordinateVectorJacobianUserFunction = [this](const MainSystem& mainSystem, Real arg0, Index arg1, const StdVector& arg2, const StdVector& arg3, bool arg4)
+                {
+                    return this->EvaluatePyObject(mainSystem, arg0, arg1, arg2, arg3, arg4);
                 };
         }
         else if (itemTypeName == "ObjectJointGeneric" && userFunctionName == "offsetUserFunction")

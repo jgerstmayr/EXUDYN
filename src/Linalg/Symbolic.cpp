@@ -128,6 +128,42 @@ void SymbolicStarProduct(const char* operands)
 		"* of symbolic vectors and matrices will be the product of the components, as in numpy; use dot(), @ and multiply()");
 }
 
+//! the components of a vector, by a list of their indices, as a vector of their expressions (#3018)
+Symbolic::SymbolicRealVector SymbolicVectorComponents(const Symbolic::SymbolicRealVector& vector, const std::vector<Index>& indices)
+{
+	py::list items;
+	for (Index i : indices) { items.append(py::cast(vector[i])); }
+	return Symbolic::SymbolicRealVector(items);
+}
+
+//! the size of a vector, refused where it is not known while recording (#3015)
+Index SymbolicVectorSize(const Symbolic::SymbolicRealVector& vector)
+{
+	Index n = vector.NumberOfItems();
+	if (n == 0) { throw py::type_error("symbolic.Vector: a vector argument of run-time size has no size while the user function is recorded; use its components v[i] and the vector operations"); }
+	return n;
+}
+
+//! a function of each component of a vector, as numpy applies np.sin to an array (#3018)
+py::object SymbolicVectorMap(const py::object& vector, const py::object& function)
+{
+	const Symbolic::SymbolicRealVector& v = py::cast<const Symbolic::SymbolicRealVector&>(vector);
+	Index n = SymbolicVectorSize(v);
+	py::list items;
+	for (Index i = 0; i < n; i++) { items.append(function(py::cast(v[i]))); }
+	return py::cast(Symbolic::SymbolicRealVector(items));
+}
+
+//! a vector plus a scalar, as numpy adds it to each component (#3018)
+template<typename TScalar>
+Symbolic::SymbolicRealVector SymbolicVectorPlusScalar(const Symbolic::SymbolicRealVector& vector, const TScalar& scalar, Real sign)
+{
+	Index n = SymbolicVectorSize(vector);
+	py::list items;
+	for (Index i = 0; i < n; i++) { items.append(py::cast(sign*vector[i] + scalar)); }
+	return Symbolic::SymbolicRealVector(items);
+}
+
 //! a numpy array or scalar as operand of the symbolic types: a vector, a matrix or a float; everything else as it is
 py::object SymbolicUfuncOperand(const py::module& m, const py::handle& x)
 {
@@ -170,13 +206,16 @@ py::object SymbolicArrayUfunc(const py::module& m, const py::object& ufunc, cons
 	{
 		if (name == "negative") { return Result(PyNumber_Negative(x[0].ptr())); }
 		if (name == "positive") { return x[0]; }
-		if (name == "absolute") { return m.attr("abs")(x[0]); }
-		const std::map<STDstring, const char*> functions = { {"sin","sin"}, {"cos","cos"}, {"tan","tan"}, {"arcsin","asin"},
+		const std::map<STDstring, const char*> functions = { {"absolute","abs"}, {"sin","sin"}, {"cos","cos"}, {"tan","tan"}, {"arcsin","asin"},
 			{"arccos","acos"}, {"arctan","atan"}, {"sinh","sinh"}, {"cosh","cosh"}, {"tanh","tanh"}, {"arcsinh","asinh"},
 			{"arccosh","acosh"}, {"arctanh","atanh"}, {"exp","exp"}, {"log","log"}, {"sqrt","sqrt"}, {"sign","sign"},
 			{"floor","floor"}, {"ceil","ceil"}, {"isfinite","isfinite"} };
 		auto f = functions.find(name);
-		if (f != functions.end() && !IsType(x[0], "Vector") && !IsType(x[0], "Matrix")) { return m.attr(f->second)(x[0]); }
+		if (f != functions.end() && !IsType(x[0], "Matrix"))
+		{
+			if (IsType(x[0], "Vector")) { return SymbolicVectorMap(x[0], m.attr(f->second)); } //each component (#3018)
+			return m.attr(f->second)(x[0]);
+		}
 	}
 	else if (x.size() == 2)
 	{
@@ -746,6 +785,15 @@ void Init_Pybind_Symbolic(py::module& m) {
 				if (index < 0 || index >= n) { throw py::index_error("symbolic.Vector: index " + EXUstd::ToString(index) + " out of range for a vector of size " + EXUstd::ToString(n)); }
 				return self[index];
 			})
+		//a slice, as for numpy arrays: a vector of the components (#3018)
+		.def("__getitem__", [](const Symbolic::SymbolicRealVector& self, const py::slice& slice)
+			{
+				size_t start = 0, stop = 0, step = 0, length = 0;
+				if (!slice.compute((size_t)SymbolicVectorSize(self), &start, &stop, &step, &length)) { throw py::error_already_set(); }
+				std::vector<Index> indices;
+				for (size_t i = 0; i < length; i++) { indices.push_back((Index)(start + i*step)); }
+				return SymbolicVectorComponents(self, indices);
+			})
 		.def("__iter__", [](const Symbolic::SymbolicRealVector& self)
 			{
 				Index n = self.NumberOfItems();
@@ -773,6 +821,19 @@ void Init_Pybind_Symbolic(py::module& m) {
 		//operators: (right now, we do not have implicit conversion from Real to Symbolic::SReal)
 		.def(py::self + py::self)
 		.def(py::self - py::self)
+		//with a list, and with a scalar added to each component, as numpy (#3018)
+		.def("__add__", [](const Symbolic::SymbolicRealVector& self, const std::vector<Real>& other) { return self + Symbolic::SymbolicRealVector(Vector(other)); }, py::is_operator())
+		.def("__radd__", [](const Symbolic::SymbolicRealVector& self, const std::vector<Real>& other) { return Symbolic::SymbolicRealVector(Vector(other)) + self; }, py::is_operator())
+		.def("__sub__", [](const Symbolic::SymbolicRealVector& self, const std::vector<Real>& other) { return self - Symbolic::SymbolicRealVector(Vector(other)); }, py::is_operator())
+		.def("__rsub__", [](const Symbolic::SymbolicRealVector& self, const std::vector<Real>& other) { return Symbolic::SymbolicRealVector(Vector(other)) - self; }, py::is_operator())
+		.def("__add__", [](const Symbolic::SymbolicRealVector& self, Real s) { return SymbolicVectorPlusScalar(self, s, 1.); }, py::is_operator())
+		.def("__add__", [](const Symbolic::SymbolicRealVector& self, const Symbolic::SReal& s) { return SymbolicVectorPlusScalar(self, s, 1.); }, py::is_operator())
+		.def("__radd__", [](const Symbolic::SymbolicRealVector& self, Real s) { return SymbolicVectorPlusScalar(self, s, 1.); }, py::is_operator())
+		.def("__radd__", [](const Symbolic::SymbolicRealVector& self, const Symbolic::SReal& s) { return SymbolicVectorPlusScalar(self, s, 1.); }, py::is_operator())
+		.def("__sub__", [](const Symbolic::SymbolicRealVector& self, Real s) { return SymbolicVectorPlusScalar(self, -s, 1.); }, py::is_operator())
+		.def("__sub__", [](const Symbolic::SymbolicRealVector& self, const Symbolic::SReal& s) { return SymbolicVectorPlusScalar(self, -s, 1.); }, py::is_operator())
+		.def("__rsub__", [](const Symbolic::SymbolicRealVector& self, Real s) { return SymbolicVectorPlusScalar(self, s, -1.); }, py::is_operator())
+		.def("__rsub__", [](const Symbolic::SymbolicRealVector& self, const Symbolic::SReal& s) { return SymbolicVectorPlusScalar(self, s, -1.); }, py::is_operator())
 		.def("__mul__", [](const Symbolic::SymbolicRealVector& self, const Symbolic::SymbolicRealVector& other)
 			{ SymbolicStarProduct("symbolic.Vector * symbolic.Vector"); return self * other; }, py::is_operator())
 
@@ -847,6 +908,19 @@ void Init_Pybind_Symbolic(py::module& m) {
 
 		.def("Get", [](const Symbolic::SymbolicRealMatrix& self, Index row, Index column)
 			{ return self.GetComponent(row, column); })
+
+		//the transposed matrix and a row, as for numpy arrays (#3018)
+		.def_property_readonly("T", [](const Symbolic::SymbolicRealMatrix& self) { return self.Transposed(); })
+		.def("transpose", [](const Symbolic::SymbolicRealMatrix& self) { return self.Transposed(); })
+		.def("__getitem__", [](const Symbolic::SymbolicRealMatrix& self, Index row)
+			{
+				Index rows = self.NumberOfRows();
+				if (row < 0) { row += rows; }
+				if (row < 0 || row >= rows) { throw py::index_error("symbolic.Matrix: row " + EXUstd::ToString(row) + " out of range for a matrix with " + EXUstd::ToString(rows) + " rows"); }
+				py::list items;
+				for (Index column = 0; column < self.NumberOfColumns(); column++) { items.append(py::cast(self.GetComponent(row, column))); }
+				return Symbolic::SymbolicRealVector(items);
+			})
 
 		//operators: (right now, we do not have implicit conversion from Real to Symbolic::SReal)
 		.def(py::self + py::self)

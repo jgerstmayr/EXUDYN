@@ -1769,3 +1769,44 @@ in general - no discrepancies, a smaller set of features; important missing feat
 - The parallel run of the test suite keeps the threads: its results are compared to 5e-14, and the number of BLAS
   threads may change the last bits of a large product.
 - pytest test_runnerLogs.py::testTheParallelProcessesShareTheThreadsOfTheLibraries.
+
+<a id="rg12-8"></a>
+### RG12.8 — the transposed matrix, rows, slices and component-wise functions in exudyn.symbolic (2026-10-17, #3018)
+*(Maintainer 2026-10-17: do RG12.8.)*
+- `MatrixExpressionTransposed` (SymbolicMatrix.h) and `SymbolicRealMatrix::Transposed`; `A.T` and `A.transpose()`;
+  a row `A[i]` (also `A[-1]`) is a vector of the components `A[i, j]`.
+- `v[a:b]` (any Python slice) is a vector of the components; `v + s`, `s + v`, `v - s`, `s - v` with a float or an
+  `esym.Real` add to each component; `v + list`, `list + v`, `v - list`, `list - v`.
+- numpy's functions of one argument applied to a vector apply to each component (`np.sin(v)`, `np.abs(v)`, ...), in
+  `SymbolicArrayUfunc` through `SymbolicVectorMap`; the functions of matrices, `npMatrix * v` and slices of matrices are
+  refused, as not needed so far.
+- These need the size of the vector while recording; a vector argument without size raises the TypeError of #3015.
+- symbolicNumpyCompatibilityTest.py: seven more expressions agree with numpy.
+
+<a id="rg12-3-7-2"></a>
+### RG12.3.7.2 — symbolic user functions with matrix results, dense (2026-10-17, #3020)
+*(Maintainer 2026-10-17: plan the sub-steps first; a sparse path with the pattern fixed when the tree is built, dense
+first is acceptable in a format that passes into the sparse mode, as MatrixContainer does.)* The evaluation is the
+table of RG12.3.7 in the plan.
+- **Generator**: `definitionTypes.userFunctionMatrixResults` marks the user function defs annotated `-> MatrixContainer`
+  or `-> NumpyMatrix`; `FitsSymbolicUF` lets them be symbolic, so that PySymbolicUserFunctionSet.h has a branch for the
+  nine functions (`EvaluatePyObject`, `EvaluateNumpyMatrix`).
+- **SymbolicUtilities.h**: a recorded `esym.Matrix` result (`SetMatrixType`; the return type py::object of a
+  MatrixContainer result or NumpyMatrix); `EvaluateIntoMatrix(Matrix&)` and `EvaluateIntoMatrixContainer(container,
+  ltg)` - dense now, the ltg list is the parameter for the sparse results of RG12.3.7.4; `PyEvaluateUF` returns a numpy
+  array for a matrix. Fixed on the way: `EvaluateNumpyMatrix` cast a ResizableMatrix to `py::array_t` by its
+  constructor, which gave an array of a wrong shape - it uses `EPyUtils::ToPython` (only reached now, as no matrix result
+  could be symbolic); `MatrixExpressionOperatorMultMatrixMatrix::EvaluateComponent` compared the inner size with a bool
+  and refused every component of a matrix product, `(A @ B)[i, j]`.
+- **The items** (evaluateUserFunctions.cpp): `EvaluateUserFunctionIntoMatrixContainer` - a symbolic function directly,
+  a Python one through `PyMatrixContainer` and `CopyOrAddTriplets` as before - for ObjectGenericODE2 (mass, Jacobian),
+  ObjectUserBody (mass) and ObjectConnectorCoordinateVector (Jacobian); `EvaluateUserFunctionIntoMatrix` for the
+  Jacobians and the rotation of ObjectUserBody; ObjectFFRF and ObjectFFRFreducedOrder evaluate a symbolic mass matrix
+  directly.
+- **CreateSymbolicUserFunction** takes a list of lists or a 2D numpy array of symbolic items as matrix result.
+- **Tests**: userRigidBodyTest.py - the user body with all six user functions symbolic, the matrices with `@` and
+  `.T`, agrees with the Python body to 7.8e-14 (result unchanged); symbolicUserFunctionSignaturesTest.py evaluates the
+  nine signatures with matrix results (39 signatures) and solves an ObjectGenericODE2 with mass matrix and Jacobian
+  functions of the coordinates in both modes (identical results).
+- **Measured** (ObjectGenericODE2, 6 coordinates, mass matrix and force user functions, 20000 steps of
+  ExplicitMidpoint): Python 0.468 s, symbolic 0.051 s, the same result; the matrix nodes still allocate (RG12.3.7.3).

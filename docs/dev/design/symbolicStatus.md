@@ -41,8 +41,8 @@ Consequences of recording once:
 | type | what | operators and functions |
 |---|---|---|
 | `esym.Real` | scalar | `+ - * / **` (also `2**x`), unary `-`, `abs(x)`, comparisons, the math functions of `esym` (`sin` ... `tanh`, `exp`, `log`, `sqrt`, `pow`, `atan2`, `abs`, `sign`, `floor`, `ceil`, `round`, `mod`, `min`, `max`, `isfinite`) and of numpy for them (`np.sin`, ...), `IfThenElse`, `Not`; `Diff(variable)`, the derivative, for scalars only |
-| `esym.Vector` | vector of any size | `+ -` of vectors (also with a numpy array), `*` and `/` with a scalar, `dot(w)` and `@` (scalar product, also with a list or numpy array; `v @ A` the transposed product), `multiply(w)` and `np.multiply` (product of the components; `MultComponents(w)` is the same), unary `-`, `v[i]` and `v[-1]`, `len(v)`, `sum(v)`, `NormL2()`; built from a list of numbers and `esym.Real`; refused: `*` of two vectors and `==`, `!=` of two vectors |
-| `esym.Matrix` | matrix | `+ -`, `*` with a scalar, `@` and `dot()` for matrix * matrix, matrix * vector and vector * matrix (the transposed product), `numpyMatrix @ v` with a constant numpy matrix, unary `-`, `A[i, j]`, `Get(i, j)`; refused: `*` of two matrices and of a matrix and a vector |
+| `esym.Vector` | vector of any size | `+ -` of vectors (also with a numpy array or a list) and with a scalar (to each component), `*` and `/` with a scalar, slices `v[a:b]`, numpy's functions of each component (`np.sin(v)`),`dot(w)` and `@` (scalar product, also with a list or numpy array; `v @ A` the transposed product), `multiply(w)` and `np.multiply` (product of the components; `MultComponents(w)` is the same), unary `-`, `v[i]` and `v[-1]`, `len(v)`, `sum(v)`, `NormL2()`; built from a list of numbers and `esym.Real`; refused: `*` of two vectors and `==`, `!=` of two vectors |
+| `esym.Matrix` | matrix | `+ -`, `*` with a scalar, `@` and `dot()` for matrix * matrix, matrix * vector and vector * matrix (the transposed product), `numpyMatrix @ v` with a constant numpy matrix, unary `-`, `A.T` and `transpose()`, `A[i, j]`, `Get(i, j)`, rows `A[i]`; built from a list of lists of numbers and `esym.Real`; a result of a user function (#3020);refused: `*` of two matrices and of a matrix and a vector |
 
 **Numpy and symbolic in one function** (#3011, #3015): the three types implement numpy's `__array_ufunc__`, so that
 numpy hands an operation with a symbolic operand to them - `K @ q` with a numpy `K` records `K` as a constant matrix,
@@ -60,7 +60,7 @@ expressions with numpy is `symbolicNumpyCompatibilityTest.py`.
 |---|---|---|---|
 | `math.sin(x)`, `float(x)`, `np.array([x], dtype=float)` | a float | TypeError while recording, as the conversion would record a constant; `x.Evaluate()` gives the value | #3017 |
 | `np.array([x, y])`, `np.cross(a, b)` | an array | an array of `esym.Real`, which CreateSymbolicUserFunction takes as vector result | - |
-| `A.T`, `A[i]`, `v[0:2]`, `np.sin(v)`, `v + 1`, `v + [1, 2]`, `npMatrix * v` | defined | TypeError | #3018 |
+| `npMatrix * v`, `np.sin(A)`, slices of matrices | defined | TypeError | - |
 
 Every vector node evaluates into its own buffer since #3006: no memory is allocated per call once the sizes are set.
 Matrix nodes still return new matrices (RG12.3.7).
@@ -89,9 +89,9 @@ Fixed with the tests (#2985): a `StdVector2D` result (`postNewtonFunction`), a `
 
 | | missing or awkward | where it belongs |
 |---|---|---|
-| 1 | **matrix results**: mass matrices, Jacobians, the rotation of ObjectUserBody, `jacobianUserFunction` - they return `MatrixContainer`/numpy and cannot be symbolic; a user body is symbolic only in its force, position and output variables (`userRigidBodyTest.py`) | RG12.3.7 |
+| 1 | **matrix results**: symbolic and dense (#3020) - the mass matrices and Jacobians of ObjectGenericODE2 and ObjectUserBody, the rotation of ObjectUserBody, the mass matrices of the FFRF objects, `jacobianUserFunction` of ObjectConnectorCoordinateVector; a matrix node still allocates (RG12.3.7.3), a sparse result does not exist yet (RG12.3.7.4) | RG12.3.7 |
 | 2 | **the MainSystem in an expression**: the position of a node, a sensor value - a symbolic function sees only its arguments | RG12.4 |
-| 3 | **matrix functions**: transpose, inverse, skew, cross product, `MultComponents` of matrices, matrix nodes into buffers | RG12.3.7 |
+| 3 | **matrix functions**: inverse, skew, cross product, the product of the components of matrices; `A.T` exists (#3018) | (raise when needed) |
 | 4 | **derivatives of vectors and matrices**: `Diff` exists for scalars only; analytic Jacobians of symbolic forces would need it | (not planned) |
 | 5 | **parallel evaluation**: the named variables and the node buffers belong to the function object, so one function is evaluated by one thread at a time | RG7.8 |
 | 6 | **graphics, sensors, matrix user functions** (`graphicsDataUserFunction`, `sensorUserFunction`, `massMatrixUserFunction`, ...) take or return Python objects | - |

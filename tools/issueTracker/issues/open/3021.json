@@ -1,0 +1,11 @@
+{
+  "number": 3021,
+  "title": "Evaluate symbolic matrix expressions into node buffers",
+  "author": "Claude-JG",
+  "status": "RAISED",
+  "type": "IMPROVEMENT",
+  "effort": "MEDIUM",
+  "description": "Every node of a symbolic matrix expression returns a new matrix; the vector nodes evaluate into their own buffers since #3006. The same for matrices (EvaluateRef with a mutable buffer per node), so that a symbolic matrix result costs no allocation per call. Revision2026c step RG12.3.7.3.",
+  "dateRaised": "2026-10-17",
+  "deadline": "2027-04-15"
+}

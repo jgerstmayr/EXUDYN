@@ -1,0 +1,15 @@
+{
+  "number": 3020,
+  "title": "Symbolic user functions with matrix results, dense, in the format of MatrixContainer",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "EXTENSION",
+  "effort": "MEDIUM",
+  "description": "The user functions that return a matrix cannot be symbolic: ObjectGenericODE2 massMatrixUserFunction and jacobianUserFunction, ObjectUserBody massMatrixUserFunction, positionJacobianUserFunction, rotationMatrixUserFunction and rotationJacobianUserFunction, ObjectFFRF and ObjectFFRFreducedOrder massMatrixUserFunction, ObjectConnectorCoordinateVector jacobianUserFunction. A recorded esym.Matrix result is evaluated directly into the MatrixContainer (dense) or the Matrix of the item, without the std::function and Python; the items call one EvaluateUserFunctionIntoMatrixContainer / IntoMatrix, as for the vectors (#3006), so that a sparse result (next step) fits the same path. Revision2026c step RG12.3.7.2.",
+  "dateRaised": "2026-10-17",
+  "deadline": "2027-04-15",
+  "dateResolved": "2026-10-17 16:28",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "Symbolic user functions can return matrices: the mass matrices and Jacobians of ObjectGenericODE2 and ObjectUserBody, the rotation matrix of ObjectUserBody, the mass matrices of ObjectFFRF and ObjectFFRFreducedOrder and the jacobianUserFunction of ObjectConnectorCoordinateVector; the recorded esym.Matrix (also a list of lists or a numpy array of symbolic items) is evaluated without Python into the dense matrix of the item. An ObjectGenericODE2 with a 6 x 6 mass matrix user function solves nine times faster than with the Python function. Fixed: the component of a symbolic matrix product, (A @ B)[i, j], was refused.",
+  "resolvedInVersion": "1.13.119"
+}

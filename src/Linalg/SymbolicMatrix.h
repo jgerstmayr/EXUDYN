@@ -488,7 +488,7 @@ public:
 	{
 		Index nSum = left->NumberOfColumns();
 		CHECKandTHROW((row < left->NumberOfRows()) && (column < right->NumberOfColumns()) && 
-			(nSum == (row < right->NumberOfRows())),
+			(nSum == right->NumberOfRows()),
 			"symbolic.Matrix::operator* (matrix): invalid row/column");
 		Real result = 0;
 
@@ -505,6 +505,26 @@ public:
 	{
 		return "(" + left->ToString() + " @ " + right->ToString() + ")";
 	}
+};
+
+//! the transposed matrix (#3018)
+class MatrixExpressionTransposed : public MatrixExpressionBase
+{
+	MatrixExpressionBase* operand;
+public:
+	MatrixExpressionTransposed(MatrixExpressionBase* op) : MatrixExpressionBase(), operand(op) {}
+
+	virtual void Destroy() override
+	{
+		if (operand) { operand->DecreaseReferenceCounter(); if (operand->ReferenceCounter() == 0) { operand->Destroy(); delete operand; MatrixExpressionBase::deleteCount++; } }
+	}
+
+	virtual Index NumberOfRows() const override { return operand->NumberOfColumns(); }
+	virtual Index NumberOfColumns() const override { return operand->NumberOfRows(); }
+
+	virtual ResizableMatrix Evaluate() const override { return operand->Evaluate().GetTransposed(); }
+	virtual Real EvaluateComponent(Index row, Index column) const override { return operand->EvaluateComponent(column, row); }
+	virtual STDstring ToString() const override { return operand->ToString() + ".T"; }
 };
 
 //class MatrixExpressionNormL2 : public ExpressionBase
@@ -1065,6 +1085,16 @@ public:
 		}
 		MatrixExpressionBase::NewCount()++;
 		return new MatrixExpressionUnaryMinus(GetFunctionExpression(*this, true));
+	}
+
+	//! the transposed matrix, as numpy's A.T (#3018)
+	SymbolicRealMatrix Transposed() const
+	{
+		if (!SReal::recordExpressions || !exprMatrix) {
+			return matrix.GetTransposed();
+		}
+		MatrixExpressionBase::NewCount()++;
+		return new MatrixExpressionTransposed(GetFunctionExpression(*this, true));
 	}
 
 	SymbolicRealMatrix operator+() const

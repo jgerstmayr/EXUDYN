@@ -280,8 +280,9 @@ The class **symbolic.Vector** has the following **functions and structures**:
 - **`operator __matmul__(other)`**: the operator @: with a vector the scalar product, with a matrix the product vector times matrix, as for numpy arrays (#3011)
 - **`operator __rmatmul__(other)`**: the operator @ with a numpy array on the left: a constant matrix times this vector, or the scalar product with a constant vector (#3011)
 - **`operator __mul__(other)`**: the operator *: with a scalar the vector times the scalar; of two vectors a TypeError, as numpy multiplies their components - use @, dot() or multiply() (#3015)
+- **`operator __add__(other)`**: the operator +: with a vector, a list or a numpy array the sum, with a scalar the scalar added to each component, as numpy (#3018); - alike
 - **`operator __truediv__(other)`**: the operator /: the vector divided by a scalar, a float or a symbolic.Real (#3015)
-- **`operator __getitem__(index)`**: bracket [] operator to return (symbolic) component of vector, allowing read-access; a negative index counts from the end and an index outside raises IndexError, as for lists (#3015). Index may also evaluate from an expression.
+- **`operator __getitem__(index)`**: bracket [] operator to return (symbolic) component of vector, allowing read-access; a negative index counts from the end and an index outside raises IndexError, as for lists (#3015); a slice v[a:b] gives a vector of the components (#3018). Index may also evaluate from an expression.
 - **`operator __str__()`**: conversion of SymVector to string
 - **`operator __repr__()`**: representation of SymVector in Python
 
@@ -368,7 +369,15 @@ The class **symbolic.Matrix** has the following **functions and structures**:
 
 - **`operator __matmul__(other)`**: the operator @: the product with a vector or a matrix, as for numpy arrays (#3011)
 - **`operator __rmatmul__(other)`**: the operator @ with a numpy array on the left: a constant matrix times this matrix, or a constant vector times it (#3011)
-- **`operator __getitem__(row, column)`**: bracket [] operator for (symbolic) component of Matrix (read-access). Row and column may also evaluate from an expression.
+- **`transpose()`**: the transposed matrix, recorded; the property T gives the same, as for numpy arrays (#3018)
+
+  *Example*:
+
+  ```python
+  m = esym.Matrix([[1,2],[3,4]])\mT = m.T #gives [[1,3],[2,4]]
+  ```
+
+- **`operator __getitem__(row, column)`**: bracket [] operator for (symbolic) component of Matrix (read-access), A[i, j]; A[i] gives row i as symbolic.Vector, as numpy (#3018). Row and column may also evaluate from an expression.
 - **`operator __str__()`**: conversion of SymMatrix to string
 - **`operator __repr__()`**: representation of SymMatrix in Python
 

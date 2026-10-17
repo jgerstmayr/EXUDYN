@@ -817,10 +817,11 @@ def ItemCppHeaders(definition):
 
 #define types, not available for symbolic user functions:
 def FitsSymbolicUF(pyUserFunctionType, stdFunctionType):
-    return not (#'StdVector' in stdFunctionType or
-                'GraphicsData' in pyUserFunctionType
-                or 'NumpyMatrix' in stdFunctionType
-                or 'py::object' in stdFunctionType
+    #a matrix result (MatrixContainer or NumpyMatrix) can be symbolic (#3020), other Python objects cannot
+    matrixResult = im.definitionTypes.userFunctionMatrixResults.get(pyUserFunctionType, False)
+    return not ('GraphicsData' in pyUserFunctionType
+                or ('NumpyMatrix' in stdFunctionType and not matrixResult)
+                or ('py::object' in stdFunctionType and not matrixResult)
                 or 'StdArrayIndex' in stdFunctionType
                 )
 

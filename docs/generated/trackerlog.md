@@ -8,10 +8,10 @@ Every entry carries the **type** of the issue, then its **priority** and its **e
 
 General information on current version:
 
-- Exudyn version = 1.13.117.dev1
+- Exudyn version = 1.13.119.dev1
 - last change = 2026-10-17
-- Number of issues = 3020
-- Number of resolved issues = 2894 (117 in current version)
+- Number of issues = 3024
+- Number of resolved issues = 2896 (119 in current version)
 
 ## Resolved issues and resolved bugs before version 1.13
 
@@ -9039,8 +9039,14 @@ The following list contains the issues which have been **RESOLVED** in the accor
 
 ## Open issues
 
-- `EXTENSION` `MEDIUM EFF` `raised by: Claude-JG` Add Matrix.T, rows M\[i\], slices v\[a:b\] and component-wise functions of symbolic vectors (#3018)
-  - description: Missing in exudyn.symbolic compared with numpy (\#3015): the transposed matrix (A.T @ f, which v @ A computes already), a row of a matrix, slices of vectors and matrices, np.sin(v) and the other functions applied to the components, a vector plus a scalar or a list, np.cross and np.linalg.norm as recorded operations (NormL2 exists). The transposed matrix is the most important for rigid body user functions.
+- `TESTING` `LOW EFF` `raised by: Claude-JG` The fixtures of test\_issueTracker.py copy the whole issue store per test, which fails now and then with WinError 1450 (#3023)
+  - description: In pytest -n 8, the setup of four tests of test\_issueTracker.py failed once in three runs (2026-10-17) with shutil.Error, \[WinError 1450\] not enough system resources, while copying the about 3000 issue files of tools/issueTracker/issues into the tmp directory of each test; the other runs pass. A store of a few issues, or one copy per worker, avoids it.
+  - date raised: 2026-10-17
+- `EXTENSION` `MEDIUM EFF` `raised by: Claude-JG` Sparse matrix results of symbolic user functions with the pattern fixed when they are recorded (#3022)
+  - description: Mass matrices and Jacobians of ObjectGenericODE2 and ObjectUserBody can be very sparse. A symbolic result esym.SparseMatrix - triplets (row, column, expression) - or an esym.Matrix built from components, whose components that are the constant 0 are known when it is recorded, evaluates into the triplets of the item's MatrixContainer in sparse mode; CopyOrAddTriplets adds them to the system matrix as for a Python function that returns triplets or a scipy matrix. Revision2026c step RG12.3.7.4.
+  - date raised: 2026-10-17
+- `IMPROVEMENT` `MEDIUM EFF` `raised by: Claude-JG` Evaluate symbolic matrix expressions into node buffers (#3021)
+  - description: Every node of a symbolic matrix expression returns a new matrix; the vector nodes evaluate into their own buffers since \#3006. The same for matrices (EvaluateRef with a mutable buffer per node), so that a symbolic matrix result costs no allocation per call. Revision2026c step RG12.3.7.3.
   - date raised: 2026-10-17
 - `CHANGE` `LOW EFF` `raised by: Claude-JG` Make \* of symbolic vectors and matrices the product of the components, as numpy, and remove special.deprecations.symbolicStarProduct (#3016)
   - description: Maintainer 2026-10-17: \* of two symbolic vectors (or with a matrix) raises a TypeError since the issue before, so that scripts change to dot(), @ and multiply(); in about two to three years, when the problems have shown up, \* becomes the component-wise product as in numpy, and the deprecation flag symbolicStarProduct is removed.

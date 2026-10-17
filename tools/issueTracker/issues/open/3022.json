@@ -1,0 +1,11 @@
+{
+  "number": 3022,
+  "title": "Sparse matrix results of symbolic user functions with the pattern fixed when they are recorded",
+  "author": "Claude-JG",
+  "status": "RAISED",
+  "type": "EXTENSION",
+  "effort": "MEDIUM",
+  "description": "Mass matrices and Jacobians of ObjectGenericODE2 and ObjectUserBody can be very sparse. A symbolic result esym.SparseMatrix - triplets (row, column, expression) - or an esym.Matrix built from components, whose components that are the constant 0 are known when it is recorded, evaluates into the triplets of the item's MatrixContainer in sparse mode; CopyOrAddTriplets adds them to the system matrix as for a Python function that returns triplets or a scipy matrix. Revision2026c step RG12.3.7.4.",
+  "dateRaised": "2026-10-17",
+  "deadline": "2027-04-15"
+}

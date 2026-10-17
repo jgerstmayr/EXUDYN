@@ -14,10 +14,9 @@ You can view and download this file on Github: [userRigidBodyTest.py](https://gi
 #           velocity terms, position, rotation matrix and Jacobians are Python user functions, written with
 #           exudyn.cUtilities; it moves under gravity, a Cartesian spring-damper at a point off the center of
 #           mass and a torque, side by side with an ObjectRigidBody under the same loads, and both must agree.
-#           A second user body has a symbolic forceUserFunction and positionUserFunction, written once
-#           with components (#3007), so that the same function computes with floats and records with exudyn.symbolic; its
-#           mass matrix, rotation and Jacobians return matrices, which symbolic user functions do not yet (RG12.3.7),
-#           and stay Python functions.
+#           A second user body has only symbolic user functions: the force and the position written once with
+#           components (#3007), so that the same function computes with floats and records with exudyn.symbolic, the
+#           mass matrix, the rotation matrix and the Jacobians as symbolic matrices with @ and .T (#3020, #3018).
 #           A rigid marker on a user body without rotationMatrixUserFunction is refused when it is evaluated.
 #
 # Author:   Johannes Gerstmayr
@@ -131,6 +130,33 @@ def UFforceSymbolic(mbs, t, itemNumber, q, q_t):
 def UFpositionSymbolic(mbs, t, itemNumber, localPosition, q):
     return PositionComponents(esym, localPosition, q)
 
+#the matrix results as symbolic matrices (#3020): built from the components, multiplied with @ and transposed with .T
+def Skew(v):
+    return [[0, -v[2], v[1]], [v[2], 0, -v[0]], [-v[1], v[0], 0]]
+
+def Blocks3x6(left, right):
+    #the 3 x 6 matrix [left, right] of two 3 x 3 symbolic matrices; None is a zero block
+    return esym.Matrix([[left[i, j] if left is not None else 0 for j in range(3)] + [right[i, j] for j in range(3)] for i in range(3)])
+
+def UFmassSymbolic(mbs, t, itemNumber, q, q_t):
+    G = esym.Matrix(GLocal(esym, [q[3], q[4], q[5]]))
+    Mrot = G.T @ esym.Matrix(J) @ G
+    return esym.Matrix([[m if i == j else 0 for j in range(3)] + [0, 0, 0] for i in range(3)]
+                       + [[0, 0, 0] + [Mrot[i, j] for j in range(3)] for i in range(3)])
+
+def UFpositionJacobianSymbolic(mbs, t, itemNumber, localPosition, q):
+    rot = [q[3], q[4], q[5]]
+    A = esym.Matrix(RotationMatrix(esym, rot))
+    rotationPart = -(A @ esym.Matrix(Skew(localPosition)) @ esym.Matrix(GLocal(esym, rot)))
+    return Blocks3x6(esym.Matrix(np.eye(3)), rotationPart)
+
+def UFrotationMatrixSymbolic(mbs, t, itemNumber, localPosition, q):
+    return esym.Matrix(RotationMatrix(esym, [q[3], q[4], q[5]]))
+
+def UFrotationJacobianSymbolic(mbs, t, itemNumber, localPosition, q):
+    rot = [q[3], q[4], q[5]]
+    return Blocks3x6(None, esym.Matrix(RotationMatrix(esym, rot)) @ esym.Matrix(GLocal(esym, rot)))
+
 #the component functions compute what the matrix functions above compute
 qTest = [0.1, 0.2, 0.3, 0.2, -0.1, 0.3]
 qTest_t = [0.5, 0, 1, 1, 0.5, 2]
@@ -152,11 +178,14 @@ for kind in ['rigidBody', 'python', 'symbolic']:
                                             positionUserFunction=UFposition, positionJacobianUserFunction=UFpositionJacobian,
                                             rotationMatrixUserFunction=UFrotationMatrix,
                                             rotationJacobianUserFunction=UFrotationJacobian))
-        if kind == 'symbolic':
-            keep += [CreateSymbolicUserFunction(mbs, UFforceSymbolic, 'forceUserFunction', body),
-                     CreateSymbolicUserFunction(mbs, UFpositionSymbolic, 'positionUserFunction', body)]
-            mbs.SetObjectParameter(body, 'forceUserFunction', keep[-2])
-            mbs.SetObjectParameter(body, 'positionUserFunction', keep[-1])
+        if kind == 'symbolic': #every user function of the body symbolic, the matrices too (#3020)
+            for name, function in [('forceUserFunction', UFforceSymbolic), ('positionUserFunction', UFpositionSymbolic),
+                                   ('massMatrixUserFunction', UFmassSymbolic),
+                                   ('positionJacobianUserFunction', UFpositionJacobianSymbolic),
+                                   ('rotationMatrixUserFunction', UFrotationMatrixSymbolic),
+                                   ('rotationJacobianUserFunction', UFrotationJacobianSymbolic)]:
+                keep += [CreateSymbolicUserFunction(mbs, function, name, body)]
+                mbs.SetObjectParameter(body, name, keep[-1])
     else:
         body = mbs.AddObject(ObjectRigidBody(nodeNumber=node, mass=m, inertia=inertia.GetInertia6D()))
     bodies += [body]

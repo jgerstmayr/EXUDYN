@@ -88,18 +88,46 @@ void CObjectConnectorCoordinateVector::EvaluateUserFunctionConstraint(Vector& al
 	}, "ObjectConnectorCoordinateVector::constraintUserFunction");
 }
 
+//! a user function that returns a matrix, into a MatrixContainer as CopyOrAddTriplets adds it: a symbolic function
+//! evaluates directly, a Python function's result goes through PyMatrixContainer (#3020)
+template<typename UFT, typename... Args>
+void EvaluateUserFunctionIntoMatrixContainer(const PythonUserFunctionBase<UFT>& userFunction, EXUmath::MatrixContainer& result,
+	const ArrayIndex& ltg, const MainSystem& mainSystem, const Args&... args)
+{
+	if (userFunction.GetSymbolicFunction())
+	{
+		userFunction.GetSymbolicFunction()->EvaluateIntoMatrixContainer(result, ltg, mainSystem, args...);
+	}
+	else
+	{
+		result.CopyOrAddTriplets(PyMatrixContainer(EvaluateUserFunction(userFunction, mainSystem, args...)), ltg);
+	}
+}
+
+//! a user function that returns a dense matrix, into result: a symbolic function evaluates directly (#3020)
+template<typename UFT, typename... Args>
+void EvaluateUserFunctionIntoMatrix(const PythonUserFunctionBase<UFT>& userFunction, Matrix& result,
+	const MainSystem& mainSystem, const Args&... args)
+{
+	if (userFunction.GetSymbolicFunction())
+	{
+		userFunction.GetSymbolicFunction()->EvaluateIntoMatrix(result, mainSystem, args...);
+	}
+	else
+	{
+		EPyUtils::FromPython(py::cast<py::array_t<Real>>(py::object(EvaluateUserFunction(userFunction, mainSystem, args...))), result);
+	}
+}
+
 //! call to user function implemented in separate file to avoid including pybind and MainSystem.h at too many places
 void CObjectConnectorCoordinateVector::EvaluateUserFunctionJacobian(EXUmath::MatrixContainer& jacobian, const MainSystemBase& mainSystem, Real t,
 	const ResizableVector& qMarker0, const ResizableVector& qMarker1, const ResizableVector& qMarker0_t, const ResizableVector& qMarker1_t, bool velocityLevel) const
 {
 	UserFunctionExceptionHandling([&] //lambda function to add consistent try{..} catch(...) block
 	{
-		PyMatrixContainer PMC(parameters.jacobianUserFunction.userFunction((const MainSystem&)mainSystem, t, GetObjectNumber(),
-			(StdVector)(qMarker0.Append(qMarker1)), (StdVector)(qMarker0_t.Append(qMarker1_t)), velocityLevel));
-
-		CHECKandTHROW(PMC.UseDenseMatrix(), "ObjectConnectorCoordinateVector::EvaluateUserFunctionJacobian: jacobian currently only accepts dense matrices", ExudynValueError);
-		jacobian.SetUseDenseMatrix();
-		jacobian.GetInternalDenseMatrix() = PMC.GetInternalDenseMatrix(); 
+		EvaluateUserFunctionIntoMatrixContainer(parameters.jacobianUserFunction, jacobian, ArrayIndex(), (const MainSystem&)mainSystem, t, GetObjectNumber(),
+			(StdVector)(qMarker0.Append(qMarker1)), (StdVector)(qMarker0_t.Append(qMarker1_t)), velocityLevel);
+		CHECKandTHROW(jacobian.UseDenseMatrix(), "ObjectConnectorCoordinateVector::EvaluateUserFunctionJacobian: jacobian currently only accepts dense matrices", ExudynValueError);
 
 	}, "ObjectConnectorCoordinateVector::jacobianUserFunction");
 }
@@ -266,8 +294,8 @@ void CObjectGenericODE2::EvaluateUserFunctionMassMatrix(EXUmath::MatrixContainer
 {
 	UserFunctionExceptionHandling([&] //lambda function to add consistent try{..} catch(...) block
 	{
-		massMatrix.CopyOrAddTriplets(PyMatrixContainer(EvaluateUserFunction(parameters.massMatrixUserFunction, (const MainSystem&)cSystemData->GetMainSystemBacklink(),
-			t, GetObjectNumber(), coordinates, coordinates_t)), ltg);
+		EvaluateUserFunctionIntoMatrixContainer(parameters.massMatrixUserFunction, massMatrix, ltg, (const MainSystem&)cSystemData->GetMainSystemBacklink(),
+			t, GetObjectNumber(), coordinates, coordinates_t);
 	}, "ObjectGenericODE2::massMatrixUserFunction");
 }
 
@@ -277,8 +305,8 @@ void CObjectGenericODE2::EvaluateUserFunctionJacobian(EXUmath::MatrixContainer& 
 	UserFunctionExceptionHandling([&] //lambda function to add consistent try{..} catch(...) block
 	{
 		//factorODE2 / factorODE2_t must be added in user function, ltg-transformation done by CopyOrAddTriplets
-		jacobianODE2.CopyOrAddTriplets(PyMatrixContainer(EvaluateUserFunction(parameters.jacobianUserFunction, (const MainSystem&)cSystemData->GetMainSystemBacklink(),
-			t, GetObjectNumber(), coordinates, coordinates_t, factorODE2, factorODE2_t)), ltg);
+		EvaluateUserFunctionIntoMatrixContainer(parameters.jacobianUserFunction, jacobianODE2, ltg, (const MainSystem&)cSystemData->GetMainSystemBacklink(),
+			t, GetObjectNumber(), coordinates, coordinates_t, factorODE2, factorODE2_t);
 	}, "ObjectGenericODE2::jacobianUserFunction");
 	//the size can be checked in the dense mode; in the sparse mode the triplets go directly into the system matrix
 	Index n = coordinates.NumberOfItems();
@@ -353,8 +381,8 @@ void CObjectUserBody::EvaluateUserFunctionMassMatrix(EXUmath::MatrixContainer& m
 	if (!(parameters.massMatrixUserFunction)) { PyError("ObjectUserBody: massMatrixUserFunction is not given", PyErrorType::valueError); }
 	UserFunctionExceptionHandling([&] //lambda function to add consistent try{..} catch(...) block
 	{
-		massMatrix.CopyOrAddTriplets(PyMatrixContainer(EvaluateUserFunction(parameters.massMatrixUserFunction, USERBODY_MAINSYSTEM,
-			t, GetObjectNumber(), coordinates, coordinates_t)), ltg);
+		EvaluateUserFunctionIntoMatrixContainer(parameters.massMatrixUserFunction, massMatrix, ltg, USERBODY_MAINSYSTEM,
+			t, GetObjectNumber(), coordinates, coordinates_t);
 	}, "ObjectUserBody::massMatrixUserFunction");
 }
 
@@ -374,8 +402,7 @@ void CObjectUserBody::EvaluateMatrixUserFunction(const TUserFunction& function, 
 	if (!(function)) { PyError(STDstring("ObjectUserBody: ") + name + " is not given, but a marker, load, sensor or output needs it", PyErrorType::valueError); }
 	UserFunctionExceptionHandling([&] //lambda function to add consistent try{..} catch(...) block
 	{
-		value = EPyUtils::NumPy2Matrix(py::cast<py::array_t<Real>>(EvaluateUserFunction(function, USERBODY_MAINSYSTEM, t, GetObjectNumber(),
-			localPosition, coordinates))); //exchanges the memory of a Matrix, copies into a ResizableMatrix (#2999)
+		EvaluateUserFunctionIntoMatrix(function, value, USERBODY_MAINSYSTEM, t, GetObjectNumber(), localPosition, coordinates);
 	}, name);
 	CheckResultSize(name, value.NumberOfRows(), value.NumberOfColumns(), 3, columns);
 }
@@ -424,7 +451,14 @@ void CObjectFFRF::EvaluateUserFunctionMassMatrix(Matrix& massMatrix, const MainS
 {
 	UserFunctionExceptionHandling([&] //lambda function to add consistent try{..} catch(...) block
 	{
-		EPyUtils::FromPython(parameters.massMatrixUserFunction.userFunction((const MainSystem&)mainSystem, t, GetObjectNumber(), coordinates, coordinates_t), massMatrix);
+		if (parameters.massMatrixUserFunction.GetSymbolicFunction()) //a symbolic function evaluates into the matrix (#3020)
+		{
+			parameters.massMatrixUserFunction.GetSymbolicFunction()->EvaluateIntoMatrix(massMatrix, (const MainSystem&)mainSystem, t, GetObjectNumber(), coordinates, coordinates_t);
+		}
+		else
+		{
+			EPyUtils::FromPython(parameters.massMatrixUserFunction.userFunction((const MainSystem&)mainSystem, t, GetObjectNumber(), coordinates, coordinates_t), massMatrix);
+		}
 	}, "ObjectFFRF::massMatrixUserFunction");
 }
 
@@ -444,7 +478,14 @@ void CObjectFFRFreducedOrder::EvaluateUserFunctionMassMatrix(Matrix& massMatrix,
 {
 	UserFunctionExceptionHandling([&] //lambda function to add consistent try{..} catch(...) block
 	{
-		EPyUtils::FromPython(parameters.massMatrixUserFunction.userFunction((const MainSystem&)mainSystem, t, GetObjectNumber(), coordinates, coordinates_t), massMatrix);
+		if (parameters.massMatrixUserFunction.GetSymbolicFunction()) //a symbolic function evaluates into the matrix (#3020)
+		{
+			parameters.massMatrixUserFunction.GetSymbolicFunction()->EvaluateIntoMatrix(massMatrix, (const MainSystem&)mainSystem, t, GetObjectNumber(), coordinates, coordinates_t);
+		}
+		else
+		{
+			EPyUtils::FromPython(parameters.massMatrixUserFunction.userFunction((const MainSystem&)mainSystem, t, GetObjectNumber(), coordinates, coordinates_t), massMatrix);
+		}
 	}, "ObjectFFRFreducedOrder::massMatrixUserFunction");
 }
 

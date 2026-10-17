@@ -881,12 +881,18 @@ def ConvertFunctionToSymbolic(mbs, function, userFunctionName, itemIndex=None, i
     exudyn.symbolic.SetRecording(recStored)
 
 
-    if type(returnValue) is list:
+    if type(returnValue) is list and len(returnValue) != 0 and type(returnValue[0]) is list:
+        #a list of lists: a matrix result (#3020)
+        returnValue = exudyn.symbolic.Matrix(returnValue)
+    elif type(returnValue) is list:
         #in this case, we create a SymbolicRealVector such that the user also can work with lists ...
         returnValue = exudyn.symbolic.Vector(returnValue) #create vector from list
     elif isinstance(returnValue, np.ndarray) and returnValue.ndim == 1:
         #np.array([fx, fy, fz]) or np.cross(a, b) of symbolic items: an array of objects, as in a Python user function (#3015)
         returnValue = exudyn.symbolic.Vector(returnValue.tolist())
+    elif isinstance(returnValue, np.ndarray) and returnValue.ndim == 2:
+        #a matrix result as numpy array of symbolic items or numbers (#3020)
+        returnValue = exudyn.symbolic.Matrix(returnValue.tolist())
 
     if verbose:
         exudyn.Print('return value=', returnValue)

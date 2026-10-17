@@ -409,7 +409,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`serialRobot
 (sec-advancedutilities--objectcoordinatessize)=
 ## Function: _ObjectCoordinatesSize
 
-[`_ObjectCoordinatesSize(mbs, itemIndex)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/advancedUtilities.py#L901)
+[`_ObjectCoordinatesSize(mbs, itemIndex)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/advancedUtilities.py#L907)
 
 - **function description**: the number of coordinates q of the nodes of an object, which its user functions get, or 0 where it is not known; a vector argument recorded with its size can be combined with constant vectors and has len() (#3015)
 - **input**:
@@ -421,7 +421,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`serialRobot
 (sec-advancedutilities-createsymbolicuserfunction)=
 ## Function: CreateSymbolicUserFunction
 
-[`CreateSymbolicUserFunction(mbs, function, userFunctionName, itemIndex = None, itemTypeName = None, verbose = 0)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/advancedUtilities.py#L928)
+[`CreateSymbolicUserFunction(mbs, function, userFunctionName, itemIndex = None, itemTypeName = None, verbose = 0)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/advancedUtilities.py#L934)
 
 - **function description**: Helper function to convert a Python user function into a symbolic user function; this function is under development and should be used with care
 - **input**:
@@ -459,7 +459,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`cartesianSp
 (sec-advancedutilities-createtcpipconnection)=
 ## Function: CreateTCPIPconnection
 
-[`CreateTCPIPconnection(sendSize, receiveSize, IPaddress = '127.0.0.1', port = 52421, bigEndian = False, verbose = False)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/advancedUtilities.py#L985)
+[`CreateTCPIPconnection(sendSize, receiveSize, IPaddress = '127.0.0.1', port = 52421, bigEndian = False, verbose = False)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/advancedUtilities.py#L991)
 
 - **function description**: function which has to be called before simulation to setup TCP/IP socket (server) for sending and receiving data; can be used to communicate with other Python interpreters or for communication with MATLAB/Simulink
 - **input**:
@@ -515,7 +515,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`TCPIPexudyn
 (sec-advancedutilities-tcpipsendreceive)=
 ## Function: TCPIPsendReceive
 
-[`TCPIPsendReceive(TCPIPobject, sendData)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/advancedUtilities.py#L1056)
+[`TCPIPsendReceive(TCPIPobject, sendData)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/advancedUtilities.py#L1062)
 
 - **function description**: call this function at every simulation step at which you intend to communicate with other programs via TCPIP; e.g., call this function in preStepUserFunction of a mbs model
 - **input**:
@@ -539,7 +539,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`TCPIPexudyn
 (sec-advancedutilities-closetcpipconnection)=
 ## Function: CloseTCPIPconnection
 
-[`CloseTCPIPconnection(TCPIPobject)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/advancedUtilities.py#L1084)
+[`CloseTCPIPconnection(TCPIPobject)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/advancedUtilities.py#L1090)
 
 - **function description**: close a previously created TCPIP connection
 

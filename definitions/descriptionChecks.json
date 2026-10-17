@@ -249,7 +249,7 @@
   "ObjectConnectorCoordinateVector": {
    "checked": "2026-10-17",
    "by": "Claude-JG",
-   "fingerprint": "5d504733abcb"
+   "fingerprint": "a399811d98c4"
   },
   "ObjectConnectorDistance": {
    "checked": "2026-10-17",
@@ -339,12 +339,12 @@
   "ObjectFFRF": {
    "checked": "2026-10-17",
    "by": "Claude-JG",
-   "fingerprint": "945093aaae5a"
+   "fingerprint": "f95b7203530b"
   },
   "ObjectFFRFreducedOrder": {
    "checked": "2026-10-17",
    "by": "Claude-JG",
-   "fingerprint": "e265ef3c691c"
+   "fingerprint": "3d806e6188cd"
   },
   "ObjectGenericODE1": {
    "checked": "2026-10-17",
@@ -354,7 +354,7 @@
   "ObjectGenericODE2": {
    "checked": "2026-10-17",
    "by": "Claude-JG",
-   "fingerprint": "296be30e1555"
+   "fingerprint": "7b3e616de5e2"
   },
   "ObjectGround": {
    "checked": "2026-10-17",

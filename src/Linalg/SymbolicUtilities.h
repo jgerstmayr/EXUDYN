@@ -15,6 +15,7 @@
 #define SYMBOLICUTILITIES__H
 
 #include <initializer_list> //for initializer_list in constructor
+#include "Linalg/MatrixContainer.h" //matrix results of symbolic user functions (#3020)
 
 extern bool linalgPrintUsePythonFormat; 
 
@@ -133,12 +134,14 @@ public:
 		//vectorSize = 0; 
 		returnValue.Set(sReal);
 	}
-	void SetVectorType(Index size, SymbolicRealVector* sVector) 
-	{ 
-		//scalarType = false; 
-		//vectorSize = size; 
+	void SetVectorType(Index size, SymbolicRealVector* sVector)
+	{
+		//scalarType = false;
+		//vectorSize = size;
 		returnValue.Set(sVector);
 	}
+	//! a matrix result (#3020)
+	void SetMatrixType(SymbolicRealMatrix* sMatrix) { returnValue.Set(sMatrix); }
 
 	//! free allocated linked reals and SReal
 	virtual ~SymbolicFunction()
@@ -300,9 +303,14 @@ public:
 				if (returnTypeStr.find("6D") != std::string::npos) { returnSize = 6; }
 				SetVectorType(returnSize, py::cast<SymbolicRealVector*>(pyReturnValue)); //pyReturnValue is list/numpy array
 			}
-			else if (ArgTypeIsMatrix(returnTypeStr))
+			else if (ArgTypeIsMatrix(returnTypeStr) || returnTypeStr == "py::object") //py::object: a MatrixContainer result (#3020)
 			{
-				CHECKandTHROWstring("SymbolicUserFunction::SetupUserFunction: Matrix returnType not implemented");
+				if (!py::isinstance<SymbolicRealMatrix>(pyReturnValue))
+				{
+					PyError(STDstring("SymbolicUserFunction: ") + userFunctionName + " of " + itemTypeName
+						+ " returns a matrix: the recorded function must return an exudyn.symbolic.Matrix", PyErrorType::typeError);
+				}
+				SetMatrixType(py::cast<SymbolicRealMatrix*>(pyReturnValue));
 			}
 			else
 			{
@@ -437,7 +445,34 @@ public:
 		Index argIndex = 0;
 		(..., processArgument(args, argRealList, argIndex));
 
-		return (NumpyMatrix)EvaluateReturnMatrix();
+		return EPyUtils::ToPython(EvaluateReturnMatrix()); //a numpy array of the rows and columns
+	}
+
+	//! a matrix result as Python object, for the std::function of a user function that returns a MatrixContainer (#3020)
+	template<typename... Args>
+	py::object EvaluatePyObject(const MainSystem& mainSystem, const Args&... args)
+	{
+		return EvaluateNumpyMatrix(mainSystem, args...);
+	}
+
+	//! a matrix result evaluated into result, which keeps its memory when it has the size (#3020)
+	template<typename... Args>
+	void EvaluateIntoMatrix(Matrix& result, const MainSystem& mainSystem, const Args&... args)
+	{
+		Index argIndex = 0;
+		(..., processArgument(args, argRealList, argIndex));
+		result.CopyFrom(EvaluateReturnMatrix());
+	}
+
+	//! a matrix result evaluated into a MatrixContainer as CopyOrAddTriplets does it with the result of a Python function:
+	//! a dense result is copied, ltg is for the sparse results (#3020, #3022)
+	template<typename... Args>
+	void EvaluateIntoMatrixContainer(EXUmath::MatrixContainer& result, const ArrayIndex& ltg, const MainSystem& mainSystem, const Args&... args)
+	{
+		Index argIndex = 0;
+		(..., processArgument(args, argRealList, argIndex));
+		result.SetUseDenseMatrix(true);
+		result.GetInternalDenseMatrix().CopyFrom(EvaluateReturnMatrix());
 	}
 
 
@@ -478,6 +513,10 @@ public:
 		if (returnValue.IsReal())
 		{
 			return py::cast<Real>(EvaluateReturnValue());
+		}
+		else if (returnValue.IsMatrix()) //a numpy array (#3020)
+		{
+			return py::object(EPyUtils::ToPython(EvaluateReturnMatrix()));
 		}
 		else
 		{

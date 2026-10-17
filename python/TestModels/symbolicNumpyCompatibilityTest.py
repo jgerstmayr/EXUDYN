@@ -3,7 +3,8 @@
 #
 # Details:  The same expressions computed with numpy arrays and with exudyn.symbolic (#3015): every operation symbolic
 #           has gives the numpy result - sums, products with scalars, a / s, a @ b, a.dot(b), np.multiply(a, b), M @ v,
-#           v @ M, a numpy array plus or times a symbolic vector, components a[0] and a[-1], sum(a), np.dot, np.sin(x),
+#           v @ M, M.T, rows M[i], slices a[0:2], a + scalar, np.sin(a), a numpy array plus or times a symbolic vector,
+#           components a[0] and a[-1], sum(a), np.dot, np.sin(x),
 #           np.arctan2, abs(x), 2**x; what numpy defines differently is refused with a TypeError: * of two vectors, of
 #           two matrices and of a matrix and a vector, and == of two vectors; a conversion to float, which would record a
 #           constant, is refused while recording, and an operation on numbers alone gives a number (#3017).
@@ -65,6 +66,13 @@ agreeing = {
     'npMatrix @ a': lambda a, b, M, s, y: npMatrix @ a,
     's * M + M * s - M': lambda a, b, M, s, y: s * M + M * s - M,
     'M[0,1]': lambda a, b, M, s, y: M[0,1],
+    'M.T @ a': lambda a, b, M, s, y: M.T @ a,
+    'M.transpose() @ M': lambda a, b, M, s, y: M.transpose() @ M,
+    'M[1] + M[-1]': lambda a, b, M, s, y: M[1] + M[-1],
+    'a[0:2] - a[1:]': lambda a, b, M, s, y: a[0:2] - a[1:],
+    'a + 1 - s': lambda a, b, M, s, y: a + 1 - s,
+    '2 - a + [1, 2, 3]': lambda a, b, M, s, y: 2 - a + [1., 2., 3.],
+    'np.sin(a) + np.sqrt(np.abs(b))': lambda a, b, M, s, y: np.sin(a) + np.sqrt(np.abs(b)), #checkPythonMath: allowed - see above
     's * y / y**2': lambda a, b, M, s, y: s * y / y**2,
     '2**y + abs(-y)': lambda a, b, M, s, y: 2**y + abs(-y),
     'np.sin(y) + np.sqrt(y)': lambda a, b, M, s, y: np.sin(y) + np.sqrt(y), #checkPythonMath: allowed - numpy's functions with a symbolic operand are the subject; the result u takes the symbolic value

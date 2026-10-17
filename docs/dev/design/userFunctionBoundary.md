@@ -268,7 +268,9 @@ sub-step of RG12.3 or a step of RG7 in the plan:
 5. **RG7.3.4** - section 10, the user items on 1 to 4: ObjectUserBody without the cache, ObjectGenericODE2; point 13
    waits for RG13. Done (#2995), see the log.
 6. **RG12.3.7** - matrices (`massMatrixUserFunction`, `jacobianUserFunction`, the Jacobians of ObjectUserBody): the
-   same scheme with `const Matrix&` arguments and `Matrix&` / `MatrixContainer&` results; #1864 belongs here.
+   same scheme with `const Matrix&` arguments and `Matrix&` / `MatrixContainer&` results; #1864 belongs here. The
+   symbolic dense results are done (#3020, `EvaluateUserFunctionIntoMatrixContainer`/`IntoMatrix` in
+   evaluateUserFunctions.cpp); the node buffers, the sparse results and the Python copy are sub-steps 3 to 5.
 
 Every step that changes the user functions is measured against 1.13.6 with userFunctionPerformance.py (maintainer
 2026-10-16: the performance shall improve, or at least not drop, for Python and for symbolic user functions), and the

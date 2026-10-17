@@ -320,6 +320,13 @@ symbolicModule.DefOperator(name='__mul__',
                      returnType='symbolic.Vector',
                      )
 
+symbolicModule.DefOperator(name='__add__',
+                     description="the operator +: with a vector, a list or a numpy array the sum, with a scalar the scalar added to each component, as numpy (#3018); - alike",
+                     argList=['other'],
+                     argTypes=['symbolic.Vector'],
+                     returnType='symbolic.Vector',
+                     )
+
 symbolicModule.DefOperator(name='__truediv__',
                      description="the operator /: the vector divided by a scalar, a float or a symbolic.Real (#3015)",
                      argList=['other'],
@@ -328,7 +335,7 @@ symbolicModule.DefOperator(name='__truediv__',
                      )
 
 symbolicModule.DefOperator(name='__getitem__',
-                     description="bracket [] operator to return (symbolic) component of vector, allowing read-access; a negative index counts from the end and an index outside raises IndexError, as for lists (#3015). Index may also evaluate from an expression.",
+                     description="bracket [] operator to return (symbolic) component of vector, allowing read-access; a negative index counts from the end and an index outside raises IndexError, as for lists (#3015); a slice v[a:b] gives a vector of the components (#3018). Index may also evaluate from an expression.",
                      argList=['index'],
                      argTypes=['symbolic.Real'],
                      returnType='symbolic.Real',
@@ -446,8 +453,14 @@ symbolicModule.DefOperator(name='__rmatmul__',
                      returnType='symbolic.Matrix',
                      )
 
-symbolicModule.DefOperator(name='__getitem__', 
-                     description="bracket [] operator for (symbolic) component of Matrix (read-access). Row and column may also evaluate from an expression.",
+symbolicModule.DefPyFunctionAccess(cClass=classStr, pyName='transpose', cName='',
+                        description="the transposed matrix, recorded; the property T gives the same, as for numpy arrays (#3018)",
+                        example = r"""m = esym.Matrix([[1,2],[3,4]])\mT = m.T #gives [[1,3],[2,4]]""",
+                        returnType='symbolic.Matrix',
+                        )
+
+symbolicModule.DefOperator(name='__getitem__',
+                     description="bracket [] operator for (symbolic) component of Matrix (read-access), A[i, j]; A[i] gives row i as symbolic.Vector, as numpy (#3018). Row and column may also evaluate from an expression.",
                      argList=['row','column'],
                      argTypes=['symbolic.Real','symbolic.Real'],
                      returnType='symbolic.Real',

@@ -11,14 +11,14 @@ You can view and download this file on Github: [symbolicUserFunctionSignaturesTe
 # This is an EXUDYN example
 #
 # Details:  Every user function that can be symbolic, against its Python version (#2985):
-#           (1) for each of the 30 signatures of userFunctionArgsDict that a symbolic user function supports, a function
-#           that uses every argument - numbers, vectors of run-time and fixed size, matrices - is generated, once
-#           computing with exudyn.cMath and once recorded with exudyn.symbolic; both are evaluated with the same
-#           arguments and must agree;
+#           (1) for each signature of userFunctionArgsDict that a symbolic user function supports, also those with
+#           a matrix result (#3020), a function that uses every argument - numbers, vectors of run-time and fixed size,
+#           matrices - is generated, once computing with exudyn.cMath and once recorded with exudyn.symbolic; both are
+#           evaluated with the same arguments and must agree;
 #           (2) items whose symbolic user function no other test model solves, each simulated with the Python and with
 #           the symbolic version of the same function: CartesianSpringDamper, CoordinateSpringDamper,
 #           TorsionalSpringDamper, ObjectGenericODE1, LoadTorqueVector, LoadMassProportional, the offset of a
-#           CoordinateConstraint.
+#           CoordinateConstraint, ObjectGenericODE2 with a mass matrix and a Jacobian that depend on the coordinates.
 #
 # Author:   Johannes Gerstmayr
 # Date:     2026-10-16
@@ -42,7 +42,7 @@ mbs = SC.AddSystem()
 #(1) every signature, evaluated
 argumentTypes = ['MainSystem', 'Real', 'Index', 'bool', 'OutputVariableType', 'StdVector', 'StdVector2D', 'StdVector3D',
                  'StdVector6D', 'StdMatrix3D', 'StdMatrix6D']
-returnTypes = ['Real', 'bool', 'StdVector', 'StdVector2D', 'StdVector3D', 'StdVector6D']
+returnTypes = ['Real', 'bool', 'StdVector', 'StdVector2D', 'StdVector3D', 'StdVector6D', 'py::object', 'NumpyMatrix']
 n = 5 #the size of the run-time sized vectors
 
 def Value(argumentType, k):
@@ -81,6 +81,8 @@ def MakeFunction(types, names, returnType, functions):
     lines.append('    s2 = s + 0.5*s*s + functions.sin(s)')
     if returnType in ['Real', 'bool']:
         lines.append('    return s2')
+    elif returnType in ['py::object', 'NumpyMatrix']: #a matrix result, as list of lists (#3020)
+        lines.append('    return [[s2, 2*s2, 3.], [s2*s2, 0., -s2]]')
     elif returnType != 'StdVector':
         lines.append('    return [' + ', '.join('s2*' + str(i+1) for i in range(int(returnType[9]))) + ']')
     else:
@@ -93,8 +95,8 @@ signatures = 0
 largestDifference = 0
 for key, entry in userFunctionArgsDict.items():
     (types, returnType) = (entry[0], entry[2][0])
-    if any(t not in argumentTypes for t in types) or returnType not in returnTypes:
-        continue #a graphics or matrix user function, which cannot be symbolic
+    if any(t not in argumentTypes for t in types) or returnType not in returnTypes or 'graphics' in key:
+        continue #a graphics user function, which cannot be symbolic
     (itemTypeName, userFunctionName) = key.split(',')
     names = ['mbs'] + ['a' + str(i) for i in range(1, len(types))]
     values = [Value(t, k) for (k, t) in enumerate(types)]
@@ -137,6 +139,22 @@ def ODE1UF(functions):
 def TorqueUF(functions):
     def UF(mbs, t, loadVector):
         return [loadVector[0]*functions.cos(2*t), loadVector[1], loadVector[2]*t]
+    return UF
+
+def ODE2ForceUF(functions):
+    def UF(mbs, t, itemNumber, q, q_t):
+        return [-k*q[0] - d*q_t[0] + 0.5*functions.sin(t), -k*q[1] - 0.1*q[0]*q[1]]
+    return UF
+
+def ODE2MassUF(functions):
+    def UF(mbs, t, itemNumber, q, q_t):
+        return [[1 + 0.1*q[1]*q[1], 0.05*q[0]], [0.05*q[0], 2.]]
+    return UF
+
+def ODE2JacobianUF(functions):
+    #fODE2 times the derivative of the negative force by q plus fODE2_t times the one by q_t, of ODE2ForceUF
+    def UF(mbs, t, itemNumber, q, q_t, fODE2, fODE2_t):
+        return [[fODE2*k + fODE2_t*d, 0.], [fODE2*0.1*q[1], fODE2*(k + 0.1*q[0])]]
     return UF
 
 def OffsetUF(functions):
@@ -192,6 +210,13 @@ def Model(symbolic):
                                                                                               coordinate=0)),
                                                           mbs.AddMarker(MarkerNodeCoordinate(nodeNumber=n2, coordinate=0))],
                                            offset=0.)), 'offsetUserFunction', OffsetUF)
+    #ObjectGenericODE2 with a mass matrix and a Jacobian of the coordinates (#3020)
+    nODE2 = mbs.AddNode(NodeGenericODE2(referenceCoordinates=[0, 0], initialCoordinates=[0.05, -0.02], initialCoordinates_t=[0, 0],
+                                        numberOfODE2Coordinates=2))
+    oODE2 = mbs.AddObject(ObjectGenericODE2(nodeNumbers=[nODE2]))
+    Set(oODE2, 'forceUserFunction', ODE2ForceUF)
+    Set(oODE2, 'massMatrixUserFunction', ODE2MassUF)
+    Set(oODE2, 'jacobianUserFunction', ODE2JacobianUF)
     mbs.variables['keep'] = keep
     mbs.Assemble()
     simulationSettings = exu.SimulationSettings()

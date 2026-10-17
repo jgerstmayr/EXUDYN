@@ -98,6 +98,14 @@ size, so that they combine with constant vectors. The expression of a product pr
 While recording, a symbolic expression or named variable converted to float raises a TypeError - `math.sin(x)`,
 `float(x)`, `np.array([x], dtype=float)` recorded a constant without a message; `np.sin(x)` and `esym.sin(x)` record,
 and `x.Evaluate()` gives the value (#3017).
+`esym.Matrix` has `A.T`, `transpose()` and rows `A[i]`, `esym.Vector` slices `v[a:b]`, a scalar or a list added, and
+numpy's functions of each component, `np.sin(v)` (#3018).
+
+**Symbolic user functions with matrix results** (#3020): the mass matrices and Jacobians of ObjectGenericODE2 and
+ObjectUserBody, the rotation matrix of ObjectUserBody, the mass matrices of ObjectFFRF and ObjectFFRFreducedOrder and
+the `jacobianUserFunction` of ObjectConnectorCoordinateVector can be symbolic: the function returns an `esym.Matrix`,
+a list of lists or a numpy array of symbolic items, and the item evaluates it without Python - an ObjectGenericODE2
+with a 6 x 6 mass matrix function solves nine times faster than with the Python function. The results are dense.
 
 **Drawing with user functions in a renderer thread**: the markers, connectors, loads and sensors on an ObjectUserBody
 and every load with a user function are drawn in the main thread, together with the graphics user functions, so that

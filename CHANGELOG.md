@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.13 | Newborn | 116 | 1.13.117 |
+| 1.13 | Newborn | 118 | 1.13.119 |
 | 1.12 | Metheney | 367 | 1.12.462 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
@@ -30,6 +30,14 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.13 - Newborn (current)
 
+- **1.13.119** `EXTENSION` `MEDIUM EFF` `raised by: Claude-JG` `resolved by: Claude-JG` Symbolic user functions with matrix results, dense, in the format of MatrixContainer (#3020)
+  - description: The user functions that return a matrix cannot be symbolic: ObjectGenericODE2 massMatrixUserFunction and jacobianUserFunction, ObjectUserBody massMatrixUserFunction, positionJacobianUserFunction, rotationMatrixUserFunction and rotationJacobianUserFunction, ObjectFFRF and ObjectFFRFreducedOrder massMatrixUserFunction, ObjectConnectorCoordinateVector jacobianUserFunction. A recorded esym.Matrix result is evaluated directly into the MatrixContainer (dense) or the Matrix of the item, without the std::function and Python; the items call one EvaluateUserFunctionIntoMatrixContainer / IntoMatrix, as for the vectors (\#3006), so that a sparse result (next step) fits the same path. Revision2026c step RG12.3.7.2.
+  - **notes:** Symbolic user functions can return matrices: the mass matrices and Jacobians of ObjectGenericODE2 and ObjectUserBody, the rotation matrix of ObjectUserBody, the mass matrices of ObjectFFRF and ObjectFFRFreducedOrder and the jacobianUserFunction of ObjectConnectorCoordinateVector; the recorded esym.Matrix (also a list of lists or a numpy array of symbolic items) is evaluated without Python into the dense matrix of the item. An ObjectGenericODE2 with a 6 x 6 mass matrix user function solves nine times faster than with the Python function. Fixed: the component of a symbolic matrix product, (A @ B)\[i, j\], was refused.
+  - date resolved: **2026-10-17 16:28**, date raised: 2026-10-17
+- **1.13.118** `EXTENSION` `MEDIUM EFF` `raised by: Claude-JG` `resolved by: Claude-JG` Add Matrix.T, rows M\[i\], slices v\[a:b\] and component-wise functions of symbolic vectors (#3018)
+  - description: Missing in exudyn.symbolic compared with numpy (\#3015): the transposed matrix (A.T @ f, which v @ A computes already), a row of a matrix, slices of vectors and matrices, np.sin(v) and the other functions applied to the components, a vector plus a scalar or a list, np.cross and np.linalg.norm as recorded operations (NormL2 exists). The transposed matrix is the most important for rigid body user functions.
+  - **notes:** exudyn.symbolic has the transposed matrix A.T and transpose(), rows A\[i\], slices of vectors v\[a:b\], a vector plus or minus a scalar (to each component) or a list, and numpy's functions of each component of a vector (np.sin(v), np.abs(v)).
+  - date resolved: **2026-10-17 16:28**, date raised: 2026-10-17
 - **1.13.117** `FIX` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` Limit the threads of MKL, OpenMP, OpenBLAS and NGsolve in the processes of the parallel examples run (#3019)
   - description: NGsolveOCCboundaries2.py failed twice in the parallel examples run (1.13.104, 1.13.111) with 'Could not allocate localheap, heapsize = 3200000000'. Measured on 32 threads: import ngsolve reserves 8 GB (MKL/OpenMP, one buffer per thread), Assemble in the TaskManager 3.2 GB more (100 MB per thread), the example 17 GB; import exudyn adds 5 MB. Eight processes, with the NGsolve examples next to each other, exceed the commit limit (RAM + pagefile). The child processes of the parallel run get OMP\_NUM\_THREADS, MKL\_NUM\_THREADS, OPENBLAS\_NUM\_THREADS and NGS\_NUM\_THREADS = cores / processes (unless set); the example then reserves 6.3 GB and takes the same time. The environment of the runner and of the shell does not change.
   - **notes:** The processes of the parallel examples run get OMP\_NUM\_THREADS, MKL\_NUM\_THREADS, OPENBLAS\_NUM\_THREADS and NGS\_NUM\_THREADS set to the cores divided by the processes, unless set already: on 32 threads an NGsolve example reserved 17 GB (MKL, OpenMP and the TaskManager reserve memory per thread), and several at once exceeded what Windows can commit; with 4 threads it reserves 6.3 GB in the same time. The environment of the runner does not change.
