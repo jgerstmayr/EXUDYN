@@ -270,7 +270,8 @@ sub-step of RG12.3 or a step of RG7 in the plan:
 6. **RG12.3.7** - matrices (`massMatrixUserFunction`, `jacobianUserFunction`, the Jacobians of ObjectUserBody): the
    same scheme with `const Matrix&` arguments and `Matrix&` / `MatrixContainer&` results; #1864 belongs here. The
    symbolic dense results are done (#3020, `EvaluateUserFunctionIntoMatrixContainer`/`IntoMatrix` in
-   evaluateUserFunctions.cpp); the node buffers, the sparse results and the Python copy are sub-steps 3 to 5.
+   evaluateUserFunctions.cpp), the matrix nodes evaluate into buffers (#3021), a matrix of components is sparse (#3022),
+   a numpy result is copied once (#1864).
 
 Every step that changes the user functions is measured against 1.13.6 with userFunctionPerformance.py (maintainer
 2026-10-16: the performance shall improve, or at least not drop, for Python and for symbolic user functions), and the
@@ -367,3 +368,19 @@ lists, because Python computes with them twice as fast - measured in the log, RG
 | generic6 | python | 2.991 | 2.056 | 0.69 |
 | generic100 | python | 10.482 | 2.127 | 0.20 |
 | generic100 | symbolic | crashed (#2998) | 0.223 | |
+
+**After RG12.3.7** (#3020, #3021, #3022, #1864: matrix results, 1.13.121): ObjectGenericODE2 with 6 coordinates, a
+mass matrix user function of `q[0]` and the force `-100*q`, 20000 steps of ExplicitMidpoint (whole solution, fastest
+of three; not the per-call measurement above):
+
+| function | kind | 1.13.6: s | current: s | current/1.13.6 |
+|---|---|---:|---:|---:|
+| mass matrix 6 x 6 + force | python | 0.502 | 0.444 | 0.88 |
+| mass matrix 6 x 6 + force | symbolic | not possible | 0.046 | |
+
+- a numpy matrix result is copied once into the item's matrix, which keeps its memory (#1864); before: into a
+  PyMatrixContainer and from there into the item;
+- a symbolic matrix result allocates nothing per call (#3021, pytest test_symbolicAllocations.py); a matrix built from
+  components with constant zeros is evaluated into triplets (#3022): a chain of 300 masses with a diagonal mass matrix
+  and a tridiagonal Jacobian, 200 implicit steps with EigenSparse, 0.26 s symbolic against 3.6 s with Python functions
+  that build the dense lists.

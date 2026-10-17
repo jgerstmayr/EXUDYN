@@ -148,11 +148,17 @@ public:
 	int ReferenceCounter() const { return referenceCounter; }
 	void SetReferenceCounter(Index value) { referenceCounter = value; }
 	virtual void Destroy() = 0;
-	virtual ResizableMatrix Evaluate() const = 0;
+	//! the value as a new matrix
+	virtual ResizableMatrix Evaluate() const { return EvaluateRef(); }
+	//! the value, evaluated into the memory of this node (buffer), which is kept for the next evaluation: no allocation
+	//! once the sizes are set; valid until the node is evaluated again (#3021, as #3006 for vectors)
+	virtual const ResizableMatrix& EvaluateRef() const = 0;
 	virtual Real EvaluateComponent(Index row, Index column) const = 0;
 	virtual Index NumberOfRows() const = 0;
 	virtual Index NumberOfColumns() const = 0;
 	virtual STDstring ToString() const = 0;
+protected:
+	mutable ResizableMatrix buffer; //!< the value of an operator node, see EvaluateRef()
 };
 
 

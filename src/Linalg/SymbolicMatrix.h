@@ -42,7 +42,7 @@ public:
 	}
 	virtual void Destroy() override {}
 
-	virtual ResizableMatrix Evaluate() const override
+	virtual const ResizableMatrix& EvaluateRef() const override
 	{
 		return matrix;
 	}
@@ -151,29 +151,43 @@ public:
 			}
 		}
 	}
-	virtual ResizableMatrix Evaluate() const override
+	virtual const ResizableMatrix& EvaluateRef() const override
 	{
-		ResizableMatrix result(NumberOfRows(), NumberOfColumns());
+		buffer.SetNumberOfRowsAndColumns(NumberOfRows(), NumberOfColumns());
 		Index row = 0;
 		for (const auto& sVector : exprMatrix)
 		{
 			Index column = 0;
 			for (const auto& sreal : sVector)
 			{
-				result(row, column) = sreal->Evaluate();
-
+				buffer(row, column) = sreal->Evaluate();
 				column++;
 			}
 			row++;
 		}
-
-		return result;
+		return buffer;
 	}
 	virtual Real EvaluateComponent(Index row, Index column) const override
-	{ 
+	{
 		CHECKandTHROW(row < (Index)exprMatrix.size() && column < (Index)exprMatrix[0].size(), "MatrixExpressionSReal: invalid row/column");
 		return exprMatrix[row][column]->Evaluate();
 	};
+
+	//! the components that are not the constant 0, as the pattern of a sparse matrix fixed when it is built (#3022)
+	void StructuralNonZeros(std::vector<std::pair<Index, Index>>& pattern) const
+	{
+		pattern.clear();
+		for (Index row = 0; row < NumberOfRows(); row++)
+		{
+			for (Index column = 0; column < NumberOfColumns(); column++)
+			{
+				ExpressionBase* item = exprMatrix[row][column];
+				bool constantZero = dynamic_cast<ExpressionReal*>(item) && !dynamic_cast<ExpressionNamedReal*>(item)
+					&& item->Evaluate() == 0.;
+				if (!constantZero) { pattern.push_back(std::make_pair(row, column)); }
+			}
+		}
+	}
 	virtual STDstring ToString() const override
 	{
 		STDstring str = "[";
@@ -227,14 +241,18 @@ public:
 		return leftColumns;
 	}
 
-	virtual ResizableMatrix Evaluate() const override
+	virtual const ResizableMatrix& EvaluateRef() const override
 	{
-		ResizableMatrix leftExpr = left->Evaluate();
-		ResizableMatrix rightExpr = right->Evaluate();
+		const ResizableMatrix& leftExpr = left->EvaluateRef();
+		const ResizableMatrix& rightExpr = right->EvaluateRef();
 		CHECKandTHROW( (leftExpr.NumberOfRows() == rightExpr.NumberOfRows()) && (leftExpr.NumberOfColumns() == rightExpr.NumberOfColumns()),
 			"symbolic.Matrix::operator+ : inconsistent matrix sizes");
-		leftExpr += rightExpr;
-		return leftExpr;
+		buffer.SetNumberOfRowsAndColumns(leftExpr.NumberOfRows(), leftExpr.NumberOfColumns());
+		for (Index i = 0; i < leftExpr.NumberOfRows()*leftExpr.NumberOfColumns(); i++)
+		{
+			buffer.GetDataPointer()[i] = leftExpr.GetDataPointer()[i] + rightExpr.GetDataPointer()[i];
+		}
+		return buffer;
 	}
 
 	virtual Real EvaluateComponent(Index row, Index column) const override
@@ -277,15 +295,18 @@ public:
 		return leftColumns;
 	}
 
-	virtual ResizableMatrix Evaluate() const override
+	virtual const ResizableMatrix& EvaluateRef() const override
 	{
-		ResizableMatrix leftExpr = left->Evaluate();
-		ResizableMatrix rightExpr = right->Evaluate();
+		const ResizableMatrix& leftExpr = left->EvaluateRef();
+		const ResizableMatrix& rightExpr = right->EvaluateRef();
 		CHECKandTHROW((leftExpr.NumberOfRows() == rightExpr.NumberOfRows()) && (leftExpr.NumberOfColumns() == rightExpr.NumberOfColumns()),
 			"symbolic.Matrix::operator- : inconsistent matrix sizes");
-		leftExpr -= rightExpr;
-		return leftExpr;
-		//return left->Evaluate() - right->Evaluate();
+		buffer.SetNumberOfRowsAndColumns(leftExpr.NumberOfRows(), leftExpr.NumberOfColumns());
+		for (Index i = 0; i < leftExpr.NumberOfRows()*leftExpr.NumberOfColumns(); i++)
+		{
+			buffer.GetDataPointer()[i] = leftExpr.GetDataPointer()[i] - rightExpr.GetDataPointer()[i];
+		}
+		return buffer;
 	}
 	virtual Real EvaluateComponent(Index row, Index column) const override
 	{
@@ -324,10 +345,16 @@ public:
 		return right->NumberOfColumns();
 	}
 
-	virtual ResizableMatrix Evaluate() const override
+	virtual const ResizableMatrix& EvaluateRef() const override
 	{
-		//always possible:
-		return left->Evaluate() * right->Evaluate();
+		Real factor = left->Evaluate();
+		const ResizableMatrix& matrix = right->EvaluateRef();
+		buffer.SetNumberOfRowsAndColumns(matrix.NumberOfRows(), matrix.NumberOfColumns());
+		for (Index i = 0; i < matrix.NumberOfRows()*matrix.NumberOfColumns(); i++)
+		{
+			buffer.GetDataPointer()[i] = factor*matrix.GetDataPointer()[i];
+		}
+		return buffer;
 	}
 	virtual Real EvaluateComponent(Index row, Index column) const override
 	{
@@ -365,8 +392,8 @@ public:
 		return operand->NumberOfColumns();
 	}
 
-	virtual ResizableMatrix Evaluate() const override {
-		return operand->Evaluate();
+	virtual const ResizableMatrix& EvaluateRef() const override {
+		return operand->EvaluateRef();
 	}
 	virtual Real EvaluateComponent(Index row, Index column) const override
 	{
@@ -400,8 +427,14 @@ public:
 		return operand->NumberOfColumns();
 	}
 
-	virtual ResizableMatrix Evaluate() const override {
-		return -1. * operand->Evaluate();
+	virtual const ResizableMatrix& EvaluateRef() const override {
+		const ResizableMatrix& matrix = operand->EvaluateRef();
+		buffer.SetNumberOfRowsAndColumns(matrix.NumberOfRows(), matrix.NumberOfColumns());
+		for (Index i = 0; i < matrix.NumberOfRows()*matrix.NumberOfColumns(); i++)
+		{
+			buffer.GetDataPointer()[i] = -matrix.GetDataPointer()[i];
+		}
+		return buffer;
 	}
 	virtual Real EvaluateComponent(Index row, Index column) const override
 	{
@@ -474,15 +507,23 @@ public:
 		return right->NumberOfColumns();
 	}
 
-	virtual ResizableMatrix Evaluate() const override
+	virtual const ResizableMatrix& EvaluateRef() const override
 	{
-		ResizableMatrix leftExpr = left->Evaluate();
-		ResizableMatrix rightExpr = right->Evaluate();
+		const ResizableMatrix& leftExpr = left->EvaluateRef();
+		const ResizableMatrix& rightExpr = right->EvaluateRef();
 		CHECKandTHROW((leftExpr.NumberOfColumns() == rightExpr.NumberOfRows()),
-			"symbolic.Matrix::operator* (scalar matrix multiplication) : inconsistent matrix sizes");
-
-		return leftExpr * rightExpr;
-		//return left->Evaluate() * right->Evaluate();
+			"symbolic.Matrix::operator@ (matrix matrix multiplication) : inconsistent matrix sizes");
+		buffer.SetNumberOfRowsAndColumns(leftExpr.NumberOfRows(), rightExpr.NumberOfColumns());
+		for (Index i = 0; i < leftExpr.NumberOfRows(); i++)
+		{
+			for (Index j = 0; j < rightExpr.NumberOfColumns(); j++)
+			{
+				Real value = 0.;
+				for (Index k = 0; k < leftExpr.NumberOfColumns(); k++) { value += leftExpr(i, k)*rightExpr(k, j); }
+				buffer(i, j) = value;
+			}
+		}
+		return buffer;
 	}
 	virtual Real EvaluateComponent(Index row, Index column) const override
 	{
@@ -522,7 +563,16 @@ public:
 	virtual Index NumberOfRows() const override { return operand->NumberOfColumns(); }
 	virtual Index NumberOfColumns() const override { return operand->NumberOfRows(); }
 
-	virtual ResizableMatrix Evaluate() const override { return operand->Evaluate().GetTransposed(); }
+	virtual const ResizableMatrix& EvaluateRef() const override
+	{
+		const ResizableMatrix& matrix = operand->EvaluateRef();
+		buffer.SetNumberOfRowsAndColumns(matrix.NumberOfColumns(), matrix.NumberOfRows());
+		for (Index i = 0; i < matrix.NumberOfRows(); i++)
+		{
+			for (Index j = 0; j < matrix.NumberOfColumns(); j++) { buffer(j, i) = matrix(i, j); }
+		}
+		return buffer;
+	}
 	virtual Real EvaluateComponent(Index row, Index column) const override { return operand->EvaluateComponent(column, row); }
 	virtual STDstring ToString() const override { return operand->ToString() + ".T"; }
 };
@@ -822,6 +872,12 @@ public:
 	MatrixExpressionBase* GetExpression() const { return exprMatrix; }
 
 	//! for C++ usage: return Matrix
+	//! the value without a copy, valid until the expression is evaluated again (#3021)
+	const ResizableConstMatrix& EvaluateRef() const {
+		if (exprMatrix) { return exprMatrix->EvaluateRef(); }
+		return matrix;
+	}
+
 	virtual ResizableConstMatrix Evaluate() const {
 		if (exprMatrix) { return exprMatrix->Evaluate(); }
 		return matrix;

@@ -89,7 +89,7 @@ Fixed with the tests (#2985): a `StdVector2D` result (`postNewtonFunction`), a `
 
 | | missing or awkward | where it belongs |
 |---|---|---|
-| 1 | **matrix results**: symbolic and dense (#3020) - the mass matrices and Jacobians of ObjectGenericODE2 and ObjectUserBody, the rotation of ObjectUserBody, the mass matrices of the FFRF objects, `jacobianUserFunction` of ObjectConnectorCoordinateVector; a matrix node still allocates (RG12.3.7.3), a sparse result does not exist yet (RG12.3.7.4) | RG12.3.7 |
+| 1 | **matrix results** exist (#3020): the mass matrices and Jacobians of ObjectGenericODE2 and ObjectUserBody, the rotation of ObjectUserBody, the mass matrices of the FFRF objects, `jacobianUserFunction` of ObjectConnectorCoordinateVector; without allocation per call (#3021); a matrix built from components with constant zeros is sparse, with the pattern fixed when it is recorded (#3022); a matrix computed with operations (`G.T @ J @ G`) is dense | done |
 | 2 | **the MainSystem in an expression**: the position of a node, a sensor value - a symbolic function sees only its arguments | RG12.4 |
 | 3 | **matrix functions**: inverse, skew, cross product, the product of the components of matrices; `A.T` exists (#3018) | (raise when needed) |
 | 4 | **derivatives of vectors and matrices**: `Diff` exists for scalars only; analytic Jacobians of symbolic forces would need it | (not planned) |

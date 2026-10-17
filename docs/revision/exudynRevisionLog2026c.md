@@ -1832,3 +1832,46 @@ table of RG12.3.7 in the plan.
 - `exudev issue list --open` and `triage` leave deferred issues out and name them apart; planManager prints each
   deferred issue with the steps that cite it (`deferred: #3016 until 2029-01-01 (RG12.6)`).
 - #3016 is deferred until 2029-01-01. pytest: three tests in test_issueTracker.py.
+
+<a id="rg12-3-7-3"></a>
+### RG12.3.7.3 to .5 — symbolic matrix nodes without allocation, sparse matrix results, one copy of a numpy result (2026-10-17, #3021, #3022, #1864)
+*(Maintainer 2026-10-17: do the next steps as suggested.)*
+- **#3021**: `MatrixExpressionBase` has `EvaluateRef()` into a `mutable ResizableMatrix buffer` per node and
+  `Evaluate()` copies from it, as the vector nodes since #3006; every matrix node (the constant and named matrices,
+  the matrix of components, +, -, scalar times matrix, unary minus and plus, the product, the transposed) evaluates
+  into its buffer, the products of matrix and vector read the matrix by reference, and the symbolic function evaluates
+  its matrix result by reference into the item. Measured with `exu.special.InfoStat`: an ObjectGenericODE2 with a
+  mass matrix `G.T @ J @ G + 0.1*G - 0.1*G` and a force with `np.multiply` and `@` adds the same counts for 100 and
+  1000 steps (pytest test_symbolicAllocations.py).
+- **#3022**: `MatrixExpressionSReal::StructuralNonZeros` - the components that are not a constant ExpressionReal
+  with value 0 (a named variable is never a structural zero); the symbolic function keeps this pattern when the result
+  is recorded (`SetMatrixType`), and `EvaluateIntoMatrixContainer` appends the triplets of the pattern with the ltg
+  indices, as `CopyOrAddTriplets` does with a sparse Python result; a matrix without constant zeros, a matrix of
+  operations and an item without ltg list (the Jacobian of ObjectConnectorCoordinateVector) stay dense. Both system
+  matrices take triplets (the dense one adds them). No separate `esym.SparseMatrix` type: the components are the
+  natural way to write a sparse matrix, and the pattern follows from them. symbolicSparseMatrixTest.py: a chain of
+  30 masses on ObjectGenericODE2, with mass matrix and Jacobian of components, Python (dense numpy) and symbolic
+  (sparse), EigenSparse and EXUdense - the four solutions agree to 7e-17. With 300 masses: 0.26 s symbolic, 3.6 s
+  with the Python functions, which build the dense lists.
+- **#1864**: a numpy matrix returned by a Python function is copied once into the dense matrix of the item's
+  MatrixContainer (`EPyUtils::FromPython`, which keeps the memory when the size fits) instead of into a
+  PyMatrixContainer and from there into the item; other results (MatrixContainer, scipy sparse, lists) take the
+  PyMatrixContainer path as before. ObjectGenericODE2 with a 6 x 6 mass matrix function: 0.444 s against 0.502 s of
+  1.13.6 (whole solution); the table is in userFunctionBoundary.md section 12. The original idea of #1864, linking the
+  numpy memory, is not needed for this.
+- The evaluation of RG12.3.7 (2026-10-17), as it stood in the plan:
+
+The matrices at the boundary (evaluation 2026-10-17, maintainer: a sparse path for GenericODE2 and the user body, with
+the sparse pattern fixed when the tree is built; dense first is fine, in the format that passes into the sparse mode,
+as MatrixContainer does):
+
+| item, user function | matrix | Python now | symbolic now |
+|---|---|---|---|
+| ObjectGenericODE2 massMatrixUserFunction, jacobianUserFunction | result n x n, MatrixContainer | numpy, list of lists, scipy sparse or MatrixContainer, one copy into the item's MatrixContainer, added with `CopyOrAddTriplets` and the ltg list | not possible (py::object result) |
+| ObjectUserBody massMatrixUserFunction | result n x n, MatrixContainer | the same | not possible |
+| ObjectUserBody positionJacobianUserFunction, rotationJacobianUserFunction, rotationMatrixUserFunction | result 3 x n, 3 x 3, dense | numpy, copied into a Matrix (`NumPy2Matrix`) | not possible |
+| ObjectFFRF, ObjectFFRFreducedOrder massMatrixUserFunction | result n x n, dense | numpy, copied | not possible (NumpyMatrix result) |
+| ObjectConnectorCoordinateVector jacobianUserFunction | result, MatrixContainer, dense only | numpy, copied | not possible |
+| ObjectConnectorRigidBodySpringDamper springForceTorqueUserFunction, postNewtonStepUserFunction | arguments stiffness, damping 6 x 6, rotJ0, rotJ1 3 x 3 | read-only numpy views (#3011) | named matrices (#2985) |
+
+The arguments are done; what is left are the results, and the expressions of matrices (RG12.8 for `A.T`).

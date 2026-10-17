@@ -115,6 +115,7 @@ systemUtilitiesTest
 pythonUserFunctionArgumentsTest
 symbolicUserFunctionSignaturesTest
 symbolicNumpyCompatibilityTest
+symbolicSparseMatrixTest
 initialConstraintsCheckTest
 shellMeshSlopesScalingTest
 systemContainerComputeOnlyTest

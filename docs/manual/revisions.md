@@ -105,7 +105,11 @@ numpy's functions of each component, `np.sin(v)` (#3018).
 ObjectUserBody, the rotation matrix of ObjectUserBody, the mass matrices of ObjectFFRF and ObjectFFRFreducedOrder and
 the `jacobianUserFunction` of ObjectConnectorCoordinateVector can be symbolic: the function returns an `esym.Matrix`,
 a list of lists or a numpy array of symbolic items, and the item evaluates it without Python - an ObjectGenericODE2
-with a 6 x 6 mass matrix function solves nine times faster than with the Python function. The results are dense.
+with a 6 x 6 mass matrix function solves nine times faster than with the Python function. A matrix result built from
+components, `[[m if i == j else 0. for j in range(n)] for i in range(n)]`, is sparse: its components that are the
+constant 0 are left out when the function is recorded, and the others are added to the sparse system matrix as
+triplets (#3022); a matrix computed with operations is dense. Symbolic matrix expressions allocate no memory per call
+(#3021), and a numpy matrix returned by a Python user function is copied once into the item (#1864).
 
 **Drawing with user functions in a renderer thread**: the markers, connectors, loads and sensors on an ObjectUserBody
 and every load with a user function are drawn in the main thread, together with the graphics user functions, so that

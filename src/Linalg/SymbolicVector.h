@@ -290,7 +290,7 @@ public:
 	{
 		//CHECKandTHROW(left->NumberOfColumns() == right->NumberOfItems(),
 		//	"symbolic.Vector::operator*(Matrix) : inconsistent matrix/vector sizes");
-		EXUmath::MultMatrixVector(left->Evaluate(), right->EvaluateRef(), buffer);
+		EXUmath::MultMatrixVector(left->EvaluateRef(), right->EvaluateRef(), buffer);
 		return buffer;
 	}
 
@@ -317,7 +317,7 @@ public:
 	{
 		//CHECKandTHROW(left->NumberOfColumns() == right->NumberOfItems(),
 		//	"symbolic.Vector::operator*(Matrix) : inconsistent matrix/vector sizes");
-		EXUmath::MultMatrixTransposedVector(left->Evaluate(), right->EvaluateRef(), buffer);
+		EXUmath::MultMatrixTransposedVector(left->EvaluateRef(), right->EvaluateRef(), buffer);
 		return buffer;
 	}
 

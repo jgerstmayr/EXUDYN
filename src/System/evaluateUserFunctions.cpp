@@ -89,7 +89,8 @@ void CObjectConnectorCoordinateVector::EvaluateUserFunctionConstraint(Vector& al
 }
 
 //! a user function that returns a matrix, into a MatrixContainer as CopyOrAddTriplets adds it: a symbolic function
-//! evaluates directly, a Python function's result goes through PyMatrixContainer (#3020)
+//! evaluates directly, a numpy array is copied into the dense matrix, another Python result goes through
+//! PyMatrixContainer (#3020, #1864)
 template<typename UFT, typename... Args>
 void EvaluateUserFunctionIntoMatrixContainer(const PythonUserFunctionBase<UFT>& userFunction, EXUmath::MatrixContainer& result,
 	const ArrayIndex& ltg, const MainSystem& mainSystem, const Args&... args)
@@ -100,7 +101,17 @@ void EvaluateUserFunctionIntoMatrixContainer(const PythonUserFunctionBase<UFT>& 
 	}
 	else
 	{
-		result.CopyOrAddTriplets(PyMatrixContainer(EvaluateUserFunction(userFunction, mainSystem, args...)), ltg);
+		py::object pyResult = EvaluateUserFunction(userFunction, mainSystem, args...);
+		if (py::isinstance<py::array>(pyResult) && py::cast<py::array>(pyResult).ndim() == 2)
+		{
+			//a numpy array in one copy into the dense matrix, which keeps its memory (#1864)
+			result.SetUseDenseMatrix(true);
+			EPyUtils::FromPython(pyResult, result.GetInternalDenseMatrix());
+		}
+		else
+		{
+			result.CopyOrAddTriplets(PyMatrixContainer(pyResult), ltg);
+		}
 	}
 }
 

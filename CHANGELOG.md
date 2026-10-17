@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.13 | Newborn | 120 | 1.13.121 |
+| 1.13 | Newborn | 124 | 1.13.126 |
 | 1.12 | Metheney | 367 | 1.12.462 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
@@ -30,6 +30,22 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.13 - Newborn (current)
 
+- **1.13.126** `EXTENSION` `MEDIUM EFF` `raised by: Claude-JG` `resolved by: Claude-JG` Sparse matrix results of symbolic user functions with the pattern fixed when they are recorded (#3022)
+  - description: Mass matrices and Jacobians of ObjectGenericODE2 and ObjectUserBody can be very sparse. A symbolic result esym.SparseMatrix - triplets (row, column, expression) - or an esym.Matrix built from components, whose components that are the constant 0 are known when it is recorded, evaluates into the triplets of the item's MatrixContainer in sparse mode; CopyOrAddTriplets adds them to the system matrix as for a Python function that returns triplets or a scipy matrix. Revision2026c step RG12.3.7.4.
+  - **notes:** A matrix result of a symbolic user function built from components is sparse: its components that are the constant 0 are left out when the function is recorded, and the others are added to the system matrix as triplets; a chain of 300 masses with a diagonal mass matrix and a tridiagonal Jacobian solves in 0.26 s against 3.6 s with Python functions building the dense lists.
+  - date resolved: **2026-10-17 17:54**, date raised: 2026-10-17
+- **1.13.125** `IMPROVEMENT` `MEDIUM EFF` `raised by: Claude-JG` `resolved by: Claude-JG` Evaluate symbolic matrix expressions into node buffers (#3021)
+  - description: Every node of a symbolic matrix expression returns a new matrix; the vector nodes evaluate into their own buffers since \#3006. The same for matrices (EvaluateRef with a mutable buffer per node), so that a symbolic matrix result costs no allocation per call. Revision2026c step RG12.3.7.3.
+  - **notes:** Symbolic matrix expressions evaluate into the memory of their nodes: a symbolic user function with a matrix result allocates no memory per call.
+  - date resolved: **2026-10-17 17:54**, date raised: 2026-10-17
+- **1.13.123** `EXTENSION` `raised by: Claude-JG` `resolved by: Claude-JG` Symbolic: design of improved user function interfaces, with the dense linear algebra (#2983)
+  - description: revision2026c step RG12.3: a design of the symbolic user functions with vectors and matrices as first-class arguments and the dense linear algebra fully in symbolic, for decision.
+  - **notes:** User functions take vectors and matrices as first-class arguments: read-only numpy views for Python user functions, named vectors and matrices for symbolic ones, which compute with numpy's operators and functions; results of any size are returned without allocation, matrix results dense or sparse.
+  - date resolved: **2026-10-17 17:54**, date raised: 2026-10-12
+- **1.13.122** `EXTENSION` `HIGH EFF` `resolved by: Claude-JG` MatrixContainer (#1864)
+  - description: consider functionality to link to dense numpy matrix; possibly by using the allocatedSize in ResizableMatrix to indicate linking rather than allocation
+  - **notes:** A numpy matrix returned by a Python user function (mass matrix, Jacobian) is copied once into the item's matrix, which keeps its memory, instead of twice; ObjectGenericODE2 with a 6 x 6 mass matrix user function solves in 0.88 of the time of 1.13.6.
+  - date resolved: **2026-10-17 17:54**, date raised: 2024-10-02
 - **1.13.121** `EXTENSION` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` Mark an open issue as deferred until a date, so that triage and the plan treat it as waiting on purpose (#3024)
   - description: Maintainer 2026-10-17: \#3016 waits until 2029 on purpose; its plan step is closed. An issue gets the field deferredUntil (a date); exudev issue defer \<number\> \<date\> \<reason\> sets it, the deadline and a remark; exudev issue list --open and triage leave a deferred issue out until the date and name it apart; CheckStore refuses the field on a closed issue and a date not in the form YYYY-MM-DD; planManager reports the deferred issues the plan cites.
   - **notes:** An open issue can wait on purpose until a date: exudev issue defer \<number\> \<date\> \<reason\> sets deferredUntil and the deadline and records the reason; exudev issue list --open and triage leave it out until then, the store check refuses the field on a closed issue, and the plan manager names the deferred issues with the steps that cite them.

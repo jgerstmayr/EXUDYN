@@ -8,10 +8,10 @@ Every entry carries the **type** of the issue, then its **priority** and its **e
 
 General information on current version:
 
-- Exudyn version = 1.13.121.dev1
+- Exudyn version = 1.13.126.dev1
 - last change = 2026-10-17
 - Number of issues = 3025
-- Number of resolved issues = 2898 (121 in current version)
+- Number of resolved issues = 2903 (126 in current version)
 
 ## Resolved issues and resolved bugs before version 1.13
 
@@ -9039,12 +9039,6 @@ The following list contains the issues which have been **RESOLVED** in the accor
 
 ## Open issues
 
-- `EXTENSION` `MEDIUM EFF` `raised by: Claude-JG` Sparse matrix results of symbolic user functions with the pattern fixed when they are recorded (#3022)
-  - description: Mass matrices and Jacobians of ObjectGenericODE2 and ObjectUserBody can be very sparse. A symbolic result esym.SparseMatrix - triplets (row, column, expression) - or an esym.Matrix built from components, whose components that are the constant 0 are known when it is recorded, evaluates into the triplets of the item's MatrixContainer in sparse mode; CopyOrAddTriplets adds them to the system matrix as for a Python function that returns triplets or a scipy matrix. Revision2026c step RG12.3.7.4.
-  - date raised: 2026-10-17
-- `IMPROVEMENT` `MEDIUM EFF` `raised by: Claude-JG` Evaluate symbolic matrix expressions into node buffers (#3021)
-  - description: Every node of a symbolic matrix expression returns a new matrix; the vector nodes evaluate into their own buffers since \#3006. The same for matrices (EvaluateRef with a mutable buffer per node), so that a symbolic matrix result costs no allocation per call. Revision2026c step RG12.3.7.3.
-  - date raised: 2026-10-17
 - `CHANGE` `LOW EFF` `raised by: Claude-JG` Make \* of symbolic vectors and matrices the product of the components, as numpy, and remove special.deprecations.symbolicStarProduct (#3016)
   - description: Maintainer 2026-10-17: \* of two symbolic vectors (or with a matrix) raises a TypeError since the issue before, so that scripts change to dot(), @ and multiply(); in about two to three years, when the problems have shown up, \* becomes the component-wise product as in numpy, and the deprecation flag symbolicStarProduct is removed.
   - **remarks:** Delayed on purpose (maintainer 2026-10-17): the plan step RG12.6 is closed, the issue waits for its deadline 2029-01-01.; deferred until 2029-01-01 (Claude-JG, 2026-10-17): \* of symbolic vectors becomes the product of the components once the scripts that used it for the scalar product have shown up through the TypeError of \#3015 (maintainer 2026-10-17)
@@ -9052,14 +9046,8 @@ The following list contains the issues which have been **RESOLVED** in the accor
 - `TESTING` `MEDIUM EFF` `raised by: Claude-JG` Performance measurement over more models, solvers and solver configurations, as the baseline of the total coordinates (#3002)
   - description: revision2026c step RG13.1 (maintainer 2026-10-16): before total coordinates are added (RG13.2, \#1910), the cost of the solvers is measured on more models (rigid multibody, flexible, contact, large systems), for the implicit and explicit solvers and their configurations (dense/sparse, modified Newton, step sizes, multithreading), so that the cost of an additional vector addition and of the cache memory per step becomes visible - mostly relevant for the explicit solvers
   - date raised: 2026-10-16
-- `IDEA` `MEDIUM EFF` `raised by: Claude-JG` User functions: coordinates and results without allocation at the C++/Python boundary (#2996)
-  - description: revision2026c step RG12.3.1 (maintainer 2026-10-15): the user functions take StdVector, which pybind11 maps to numpy, so every call allocates the vectors of its arguments (and its results); for Python functions the call costs more than that, for symbolic user functions it may be the bottleneck. Linking - a numpy array or a symbolic vector that views the C++ memory - is one option; first a pre-analysis: where the allocations happen, what they cost against the call, and what pybind11, numpy and symbolic allow (lifetime, writes, threads). Related: \#1864 (MatrixContainer linking a numpy matrix), \#1910 (total coordinates linked instead of copied).
-  - date raised: 2026-10-15
 - `EXTENSION` `raised by: Claude-JG` Symbolic: access to the MainSystem and the item functions (#2984)
   - description: revision2026c step RG12.4: inside a symbolic user function, read what the system has - e.g. the current position of a node, a sensor value - as symbolic expressions evaluated in C++.
-  - date raised: 2026-10-12
-- `EXTENSION` `raised by: Claude-JG` Symbolic: design of improved user function interfaces, with the dense linear algebra (#2983)
-  - description: revision2026c step RG12.3: a design of the symbolic user functions with vectors and matrices as first-class arguments and the dense linear algebra fully in symbolic, for decision.
   - date raised: 2026-10-12
 - `CHANGE` `MEDIUM EFF` `raised by: Claude-JG` Symbolic: the user function interfaces as they are (#2982)
   - description: revision2026c step RG12.2: the interface of the symbolic user functions per signature - arguments, return types, how they are transferred to C++ - measured against the Python user functions.
@@ -9238,10 +9226,6 @@ The following list contains the issues which have been **RESOLVED** in the accor
   - description: Add Data structures like MatrixContainer, Vector3DList, etc.
   - **remarks:** planned as revision2026b step RG12.46 (triage 2026-10-07)
   - date raised: 2024-10-13
-- `EXTENSION` `HIGH EFF` MatrixContainer (#1864)
-  - description: consider functionality to link to dense numpy matrix; possibly by using the allocatedSize in ResizableMatrix to indicate linking rather than allocation
-  - **remarks:** planned as revision2026b step RG12.46 (triage 2026-10-07)
-  - date raised: 2024-10-02
 - `EXTENSION` `HIGH EFF` MatrixContainer (#1863)
   - description: consider functionality to link to sparse CSR scipy matrix rather than using the current CSR format - as a minimal solution do copying on C++ level; Problem: scipy CSR uses other format than Exudyns Triplets
   - **remarks:** planned as revision2026b step RG12.46 (triage 2026-10-07)

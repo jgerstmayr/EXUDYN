@@ -117,6 +117,10 @@ protected:
 	ResizableArray<SymbolicGeneric> argRealList;
 	SymbolicGeneric returnValue;
 	STDstring functionName; //!< will be set by derived class
+	//! a matrix result built from components with constant zeros: its components and the pattern of the others, which
+	//! are evaluated into triplets of a sparse MatrixContainer (#3022); nullptr for a dense result
+	const MatrixExpressionSReal* resultComponents = nullptr;
+	std::vector<std::pair<Index, Index>> resultPattern;
 
 public:
 	SymbolicFunction() : //scalarType(true), vectorSize(0), 
@@ -140,8 +144,20 @@ public:
 		//vectorSize = size;
 		returnValue.Set(sVector);
 	}
-	//! a matrix result (#3020)
-	void SetMatrixType(SymbolicRealMatrix* sMatrix) { returnValue.Set(sMatrix); }
+	//! a matrix result (#3020); built from components with constant zeros, it is sparse with the pattern of the others (#3022)
+	void SetMatrixType(SymbolicRealMatrix* sMatrix)
+	{
+		returnValue.Set(sMatrix);
+		resultComponents = dynamic_cast<const MatrixExpressionSReal*>(sMatrix->GetExpression());
+		resultPattern.clear();
+		if (resultComponents)
+		{
+			resultComponents->StructuralNonZeros(resultPattern);
+			if ((Index)resultPattern.size() == resultComponents->NumberOfRows()*resultComponents->NumberOfColumns()) { resultComponents = nullptr; }
+		}
+	}
+	//! true, if the matrix result is sparse (#3022)
+	bool HasSparseMatrixResult() const { return resultComponents != nullptr; }
 
 	//! free allocated linked reals and SReal
 	virtual ~SymbolicFunction()
@@ -184,6 +200,12 @@ public:
 	virtual ResizableConstMatrix EvaluateReturnMatrix() const
 	{
 		return returnValue.GetMatrix()->Evaluate();
+	}
+
+	//! the returned matrix without a copy, valid until the function is evaluated again (#3021)
+	const ResizableConstMatrix& EvaluateReturnMatrixRef() const
+	{
+		return returnValue.GetMatrix()->EvaluateRef();
 	}
 	////evaluate all expression trees, storing results in Real*, which are linked to destination of function 
 	//void EvaluateReturnValues()
@@ -461,7 +483,7 @@ public:
 	{
 		Index argIndex = 0;
 		(..., processArgument(args, argRealList, argIndex));
-		result.CopyFrom(EvaluateReturnMatrix());
+		result.CopyFrom(EvaluateReturnMatrixRef());
 	}
 
 	//! a matrix result evaluated into a MatrixContainer as CopyOrAddTriplets does it with the result of a Python function:
@@ -471,8 +493,20 @@ public:
 	{
 		Index argIndex = 0;
 		(..., processArgument(args, argRealList, argIndex));
+		if (resultComponents && ltg.NumberOfItems() != 0) //sparse: only the components that are not the constant 0 (#3022)
+		{
+			CHECKandTHROW(resultComponents->NumberOfRows() <= ltg.NumberOfItems() && resultComponents->NumberOfColumns() <= ltg.NumberOfItems(),
+				"symbolic user function: the matrix result is larger than the coordinates of the item");
+			result.SetUseDenseMatrix(false);
+			ResizableArray<EXUmath::Triplet>& triplets = result.GetInternalSparseTripletMatrix().GetTriplets();
+			for (const std::pair<Index, Index>& item : resultPattern)
+			{
+				triplets.AppendPure(EXUmath::Triplet(ltg[item.first], ltg[item.second], resultComponents->EvaluateComponent(item.first, item.second)));
+			}
+			return;
+		}
 		result.SetUseDenseMatrix(true);
-		result.GetInternalDenseMatrix().CopyFrom(EvaluateReturnMatrix());
+		result.GetInternalDenseMatrix().CopyFrom(EvaluateReturnMatrixRef());
 	}
 
 

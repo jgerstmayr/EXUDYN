@@ -1,0 +1,15 @@
+{
+  "number": 1864,
+  "title": "MatrixContainer",
+  "author": "JG",
+  "status": "RESOLVED",
+  "type": "EXTENSION",
+  "effort": "HIGH",
+  "description": "consider functionality to link to dense numpy matrix; possibly by using the allocatedSize in ResizableMatrix to indicate linking rather than allocation",
+  "dateRaised": "2024-10-02",
+  "deadline": "2025-03-31",
+  "dateResolved": "2026-10-17 17:54",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "A numpy matrix returned by a Python user function (mass matrix, Jacobian) is copied once into the item's matrix, which keeps its memory, instead of twice; ObjectGenericODE2 with a 6 x 6 mass matrix user function solves in 0.88 of the time of 1.13.6.",
+  "resolvedInVersion": "1.13.122"
+}
