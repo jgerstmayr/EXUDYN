@@ -194,6 +194,8 @@ Note that itemNumber represents the index of the object in mbs, which can be use
 | `offset` | Vector3D | copied from object |
 | **return value** | Vector3D | list or numpy array of computed spring force |
 
+A Python user function gets its vector and matrix arguments as read-only numpy arrays, valid during the call, see [](#sec-userfunctions).
+
 *Example*:
 
 ```python

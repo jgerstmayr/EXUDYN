@@ -75,6 +75,8 @@ Example of user function: functionality same as in `LoadForceVector`
 | `loadVector` | Vector3D | $\bv$ copied from object; WARNING: this parameter does not work in combination with static computation, as it is changed by the solver over step time |
 | **return value** | Vector3D | computed load vector |
 
+A Python user function gets its vector and matrix arguments as read-only numpy arrays, valid during the call, see [](#sec-userfunctions).
+
 (miniexample-loadmassproportional)=
 ## Mini example
 

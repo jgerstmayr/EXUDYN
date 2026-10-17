@@ -276,9 +276,7 @@ def UFtorque(mbs, t, load):
     val = 1
     if t < 1:
         val = t*t
-    #print('load type=',type(load))
-    # return val*load
-    return val*np.array(load)
+    return val*load #load is a numpy array (#3011)
 
 #add torque applied in body coordinates:
 t0 = mbs.CreateTorque(itemNumber=b0, loadVector=[0.,0.,10.], bodyFixed=True,

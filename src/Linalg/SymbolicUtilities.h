@@ -666,15 +666,31 @@ inline decltype(auto) UserFunctionArgument(const T& argument)
 //! true for std::array<Real, n>, the vectors of fixed size of the user functions (StdVector2D, StdVector3D, StdVector6D)
 template<typename T> struct IsStdArrayOfReal : std::false_type {};
 template<std::size_t n> struct IsStdArrayOfReal<std::array<Real, n>> : std::true_type {};
+//! true for std::array<std::array<Real, n>, m>, the matrices of fixed size (StdMatrix3D, StdMatrix6D)
+template<typename T> struct IsStdArrayMatrixOfReal : std::false_type {};
+template<std::size_t m, std::size_t n> struct IsStdArrayMatrixOfReal<std::array<std::array<Real, n>, m>> : std::true_type {};
 
-//! the argument of a Python user function: a vector of run-time size - std::vector or Exudyn vector - as read-only
-//! numpy array that views its memory, valid during the call, or as list with userFunctionListArguments; everything else
-//! as it is, cast by pybind11 as its own wrapper of a function does (#3008). The vectors and matrices of fixed size stay
-//! lists: Python computes with the items of a list of 3 about twice as fast as with those of a numpy array, and the
-//! user functions that take them are mostly written with components (#3010)
+//! the argument of a Python user function: a vector - of run-time size, std::vector or Exudyn vector, or of fixed size,
+//! std::array - and a matrix of fixed size as read-only numpy array that views its memory, valid during the call, or as
+//! list with userFunctionListArguments; everything else as it is, cast by pybind11 as its own wrapper of a function
+//! does (#3008, #3011: a single item of a small numpy array is slower to compute with than one of a list, the
+//! vectorized form is what numpy is for)
 template<typename T>
 inline decltype(auto) PythonUserFunctionArgument(const T& argument)
 {
+	if constexpr (IsStdArrayOfReal<T>::value)
+	{
+		if (UserFunctionListArguments()) { return py::object(py::cast(argument)); }
+		return EPyUtils::ToNumpyView(argument.data(), (Index)argument.size());
+	}
+	else if constexpr (IsStdArrayMatrixOfReal<T>::value)
+	{
+		static_assert(sizeof(T) == sizeof(Real) * std::tuple_size<T>::value * std::tuple_size<typename T::value_type>::value,
+			"PythonUserFunctionArgument: the rows of the matrix must be contiguous");
+		if (UserFunctionListArguments()) { return py::object(py::cast(argument)); }
+		return EPyUtils::ToNumpyView(argument[0].data(), (Index)argument.size(), (Index)argument[0].size());
+	}
+	else
 	if constexpr (std::is_same_v<T, StdVector>)
 	{
 		if (UserFunctionListArguments()) { return py::object(py::cast(argument)); }

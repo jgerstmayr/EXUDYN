@@ -155,7 +155,7 @@ Note that itemNumber represents the index of the ObjectGenericODE2 object in mbs
 | `q_t` | Vector $\in \Rcal^n$ | object velocity coordinates (time derivative of `q`) in current configuration |
 | **return value** | Vector $\in \Rcal^{n}$ | returns force vector for object |
 
-A Python user function gets its `Vector` arguments as read-only numpy arrays, valid during the call, see [](#sec-userfunctions).
+A Python user function gets its vector and matrix arguments as read-only numpy arrays, valid during the call, see [](#sec-userfunctions).
 
 **Userfunction**: `massMatrixUserFunction(mbs, t, itemNumber, q, q_t)`
 A user function, which computes a mass matrix depending on current time and states of object. Can be used to create any kind of mechanical system by using the object states.
@@ -169,7 +169,7 @@ A user function, which computes a mass matrix depending on current time and stat
 | `q_t` | Vector $\in \Rcal^n$ | object velocity coordinates (time derivative of `q`) in current configuration |
 | **return value** | MatrixContainer $\in \Rcal^{n \times n}$ | returns mass matrix for object, as exu.MatrixContainer, numpy array or list of lists; use MatrixContainer sparse format for larger matrices to speed up computations. |
 
-A Python user function gets its `Vector` arguments as read-only numpy arrays, valid during the call, see [](#sec-userfunctions).
+A Python user function gets its vector and matrix arguments as read-only numpy arrays, valid during the call, see [](#sec-userfunctions).
 
 **Userfunction**: `jacobianUserFunction(mbs, t, itemNumber, q, q_t, fODE2, fODE2_t)`
 A user function, which computes the jacobian of the {ref}`LHS <LHS>` of the equations of motion, depending on current time, states of object and two
@@ -187,7 +187,7 @@ Can be used to create any kind of mechanical system by using the object states.
 | `fODE2_t` | Real | factor to be multiplied with the velocity level jacobian, see {eq}`eq-objectgenericode2-jac` |
 | **return value** | MatrixContainer $\in \Rcal^{n \times n}$ | returns special jacobian for object, as exu.MatrixContainer, numpy array or list of lists; use MatrixContainer sparse format for larger matrices to speed up computations; NOTE that the format of returnValue must AGREE with (dense/sparse triplet) format of stiffnessMatrix and dampingMatrix; sparse triplets MAY NOT contain zero values! |
 
-A Python user function gets its `Vector` arguments as read-only numpy arrays, valid during the call, see [](#sec-userfunctions).
+A Python user function gets its vector and matrix arguments as read-only numpy arrays, valid during the call, see [](#sec-userfunctions).
 
 **Userfunction**: `graphicsDataUserFunction(mbs, itemNumber)`
 A user function, which is called by the visualization thread in order to draw user-defined objects.

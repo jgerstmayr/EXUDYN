@@ -13,11 +13,11 @@ You can view and download this file on Github: [pythonUserFunctionArgumentsTest.
 # Details:  The vector arguments of Python user functions (#3008): q and q_t of the forceUserFunction and the
 #           massMatrixUserFunction of ObjectGenericODE2 arrive as read-only numpy arrays that view the coordinates,
 #           valid during the call - a function that keeps them must copy them; writing into them raises. The result may
-#           be a numpy array or a list. The vectors and matrices of fixed size stay lists, as they are faster to
-#           compute with item by item (#3010): the load vector of a LoadForceVector, displacement, stiffness and offset of
-#           a CartesianSpringDamper, the 6x6 stiffness of a RigidBodySpringDamper; their result may be a numpy array.
-#           exudyn.special.deprecations.userFunctionListArguments = True gives lists for the vectors of run-time size,
-#           as before, and is reported as deprecated. The solutions of all variants agree.
+#           be a numpy array or a list. The vectors and matrices of fixed size are numpy arrays as well (#3011), which
+#           the user functions use in vectorized form: the load vector of a LoadForceVector, displacement, stiffness and
+#           offset of a CartesianSpringDamper, the 6x6 stiffness and the 3x3 rotations of a RigidBodySpringDamper.
+#           exudyn.special.deprecations.userFunctionListArguments = True gives lists, as before, and is reported as
+#           deprecated. The solutions of all variants agree.
 #
 # Author:   Johannes Gerstmayr
 # Date:     2026-10-16
@@ -69,18 +69,18 @@ def Solve(force, massUserFunction=False):
 
 checks = []
 
-#the vectors and matrices of fixed size: lists; a numpy result is accepted
+#the vectors and matrices of fixed size, in vectorized form
 def LoadUF(mbs, t, loadVector):
-    seen['load'] = type(loadVector).__name__
-    return np.array(loadVector)*(1 + t)
+    seen['load'] = (type(loadVector).__name__, loadVector.shape, loadVector.flags.writeable)
+    return loadVector*(1 + t)
 
 def CartesianUF(mbs, t, itemNumber, u, v, k, d, offset):
     seen['cartesian'] = [type(x).__name__ for x in [u, v, k, d, offset]]
-    return [k[i]*(u[i] - offset[i]) + d[i]*v[i] for i in range(3)]
+    return k*(u - offset) + d*v
 
 def RigidUF(mbs, t, itemNumber, displacement, rotation, velocity, angularVelocity, stiffness, damping, rot0, rot1, offset):
-    seen['rigid'] = (type(stiffness).__name__, type(rot0).__name__, type(offset).__name__)
-    return np.array(stiffness) @ np.hstack([displacement, rotation]) + np.array(damping) @ np.hstack([velocity, angularVelocity])
+    seen['rigid'] = (type(stiffness).__name__, stiffness.shape, type(rot0).__name__, rot0.shape, type(offset).__name__)
+    return stiffness @ np.hstack([displacement, rotation]) + damping @ np.hstack([velocity, angularVelocity])
 
 SC = exu.SystemContainer()
 mbs = SC.AddSystem()
@@ -101,7 +101,8 @@ simulationSettings.solution.file.write = False
 mbs.SolveDynamic(simulationSettings)
 exu.Print('load vector', seen['load'], ', Cartesian spring-damper', seen['cartesian'], ', rigid body spring-damper',
           seen['rigid'])
-checks += [seen['load'] == 'list', seen['cartesian'] == ['list']*5, seen['rigid'] == ('list', 'list', 'list')]
+checks += [seen['load'] == ('ndarray', (3,), False), seen['cartesian'] == ['ndarray']*5,
+           seen['rigid'] == ('ndarray', (6, 6), 'ndarray', (3, 3), 'ndarray')]
 
 qNumpy = Solve(ForceNumpy, massUserFunction=True)
 exu.Print('force gets', seen['force'], ', mass matrix gets', seen['mass'], ', kept copy', seen['kept'])

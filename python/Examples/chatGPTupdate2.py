@@ -78,7 +78,7 @@ b0 = mbs.CreateRigidBody(inertia = inertiaCube,
 #add an load with user function:
 def UFforce(mbs, t, loadVector):
     #define time-dependent function:
-    return (10+5*np.sin(t*10*2*pi))*np.array(loadVector)
+    return (10+5*np.sin(t*10*2*pi))*loadVector
 
 #add an load with 10N in x-direction to rigid body at marker position
 #add user function to modify load in time

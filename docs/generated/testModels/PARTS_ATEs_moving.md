@@ -396,7 +396,7 @@ def userLoad(mbs, t, loadVector):
     f=0.01+0.99*(1-cMath.cos((t/0.05)*np.pi)) #use small initial value for solver
     if t>8:
         f = 1
-    return [f*loadVector[0], f*loadVector[1], f*loadVector[2]]
+    return f*loadVector
 
 fL = 1e3*10
 mbs.AddLoad(Force(markerNumber = topCon[15], loadVector=[fL,-fL,0], loadVectorUserFunction = userLoad))

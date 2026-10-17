@@ -300,7 +300,7 @@ Note that itemNumber represents the index of the ObjectKinematicTree object in m
 | `q_t` | Vector $\in \Rcal^n$ | object velocity coordinates (time derivative of `q`) in current configuration |
 | **return value** | Vector $\in \Rcal^{n}$ | returns force vector for object |
 
-A Python user function gets its `Vector` arguments as read-only numpy arrays, valid during the call, see [](#sec-userfunctions).
+A Python user function gets its vector and matrix arguments as read-only numpy arrays, valid during the call, see [](#sec-userfunctions).
 
 (miniexample-objectkinematictree)=
 ## Mini example

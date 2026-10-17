@@ -71,9 +71,10 @@ and `ComputeConstraintResiduals`; `from exudyn.utilities import *` includes it, 
 `SystemEnergy(mbs, items=[load]).AddSensor(components=['loads'])`. `NumericalJacobian` takes `systemCoordinates`,
 `velocityLevel` and `epsilon = 1e-8` (#3004).
 
-**Python user functions get numpy arrays**: a vector argument of run-time size - `q`, `q_t` of ObjectGenericODE2,
-ObjectUserBody and the other items with such user functions, the factors of SensorUserFunction - is a read-only
-numpy array that views the memory of Exudyn, valid during the call, instead of a list; `-k*q` and `K @ q` work without
+**Python user functions get numpy arrays**: a vector or matrix argument - `q`, `q_t` of ObjectGenericODE2 and
+ObjectUserBody, the factors of SensorUserFunction, the load vector of a load, displacement, stiffness and offset of a
+spring-damper - is a read-only numpy array that views the memory of Exudyn, valid during the call, instead of a list
+(#3008, #3011); a function computing with single items, `u[0]`, is slower than before, one in vectorized form faster; `-k*q` and `K @ q` work without
 `np.array(q)`, and a vector user function costs the same for any size. A function that writes into its arguments, adds
 lists to them or keeps them for the next call has to copy them; `exudyn.special.deprecations.userFunctionListArguments
 = True` gives the lists for the transition, see {ref}`sec-userfunctions` (#3008).
@@ -81,7 +82,9 @@ lists to them or keeps them for the next call has to copy them; `exudyn.special.
 **Symbolic user functions** that return a vector run without memory allocation and several times faster (#3005,
 #3006), and a component of a vector argument, `q[0]`, can be used in them (#3007); `postNewtonFunction`, the
 `constraintUserFunction` of ObjectConnectorCoordinateVector and the `outputVariableUserFunction` of ObjectUserBody can
-be symbolic now (#2985).
+be symbolic now (#2985). `exudyn.symbolic.Vector` and `Matrix` have `dot()` and the operator `@` with numpy's meaning,
+and a numpy array leaves `@` and `*` with a symbolic operand to it, so that one function computes with numpy arrays and
+symbolic vectors (#3011).
 
 **`SystemContainer(attachToRenderer=False)`** creates a container only to compute, which leaves the render window with
 the container of the model; `InverseKinematicsNumerical` uses it (#2259).

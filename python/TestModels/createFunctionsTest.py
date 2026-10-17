@@ -94,7 +94,7 @@ mbs.CreateForce(itemNumber=oBody,
                 loadVectorUserFunction=UFforce)
 
 def UserFunctionTorque(mbs, t, loadVector):
-    return cMath.cos(t*2*np.pi)*np.array(loadVector)
+    return cMath.cos(t*2*np.pi)*loadVector
 
 #add torque with user function
 mbs.CreateTorque(itemNumber=oBody, loadVector=[5,0,0], 

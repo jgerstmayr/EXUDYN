@@ -214,7 +214,7 @@ def main():
                                         springTorqueUserFunction = UFtorque))
     # create userfunction for CartesianSpringDamper
     def UFforce(mbs, t,itemNumber, u, v, k, d, offset):
-        return [(v[0]-offset[0])*d[0], (v[1]-offset[1])*d[1], (v[2]-offset[2])*d[2]] 
+        return (v - offset)*d
     # create CartesianSpringDamper object 
 
     oCSD = mbs.AddObject(CartesianSpringDamper(markerNumbers = [mGround, mUIP],

@@ -210,6 +210,8 @@ for all relative translational and rotational joint coordinates:
 | `offsetUserFunctionParameters` | Vector6D | $\pv_{par}$, set of parameters which can be freely used in user function |
 | **return value** | Vector6D | computed offset vector for given time |
 
+A Python user function gets its vector and matrix arguments as read-only numpy arrays, valid during the call, see [](#sec-userfunctions).
+
 **Userfunction**: `offsetUserFunction_t(mbs, t, itemNumber, offsetUserFunctionParameters)`
 A user function, which computes an offset **velocity** vector for the GenericJoint.
 It is NECESSARY to use sufficiently smooth functions, having **initial offset velocities** consistent with **initial velocities** of bodies.
@@ -229,6 +231,8 @@ for all relative translational and rotational joint coordinates:
 | `itemNumber` | Index | integer number of the object in mbs, allowing easy access to all object data via mbs.GetObjectParameter(itemNumber, ...) |
 | `offsetUserFunctionParameters` | Vector6D | $\pv_{par}$, set of parameters which can be freely used in user function |
 | **return value** | Vector6D | computed offset velocity vector for given time |
+
+A Python user function gets its vector and matrix arguments as read-only numpy arrays, valid during the call, see [](#sec-userfunctions).
 
 *Example*:
 

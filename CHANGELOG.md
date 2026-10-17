@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.13 | Newborn | 107 | 1.13.108 |
+| 1.13 | Newborn | 108 | 1.13.109 |
 | 1.12 | Metheney | 367 | 1.12.462 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
@@ -30,6 +30,10 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.13 - Newborn (current)
 
+- **1.13.109** `CHANGE` `MEDIUM EFF` `raised by: Claude-JG` `resolved by: Claude-JG` Fixed-size vectors and matrices of Python user functions as numpy arrays; dot and @ for symbolic vectors and matrices (#3011)
+  - description: Maintainer 2026-10-17: no problem if the access to single items is slower - with numpy, most problems are solved in vectorized form; switch the 3D and 6D vectors to numpy and adapt the scripts that can take the vector form. Symbolic should allow a vectorized form as well: exudyn.symbolic.Vector and Matrix get dot() and the @ operator with numpy's meaning, and numpy defers to them (\_\_array\_ufunc\_\_ = None), so that one script computes with numpy arrays and symbolic vectors; \* of two symbolic vectors stays the scalar product for now.
+  - **notes:** Python user functions get their vectors and matrices of size 3 and 6 as read-only numpy arrays as well, to be used in vectorized form; exudyn.symbolic.Vector and Matrix have dot() and the operator @ with numpy's meaning, and numpy leaves an operation with a symbolic operand to it, so that one function computes with numpy arrays and symbolic vectors
+  - date resolved: **2026-10-17 09:19**, date raised: 2026-10-17
 - **1.13.108** `CHANGE` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` Python user functions get their fixed-size vectors and matrices as numpy arrays as well (#3010)
   - description: Maintainer 2026-10-16 (after RG12.3.6): that the vectors of size 3 and 6 stayed lists was a misunderstanding; if there are no major boundaries, they become numpy arrays too. The std::array arguments (StdVector2D, StdVector3D, StdVector6D) and the matrices (StdMatrix3D, StdMatrix6D) are read-only numpy views, valid during the call; a fixed-size result from numpy in one pass; userFunctionListArguments gives lists for them as well; two examples that wrote into their load argument return a new vector.
   - **notes:** Python user functions with vector arguments are about 10 percent faster: the numpy views are made with the numpy C interface; the vectors and matrices of size 3 and 6 stay lists, which Python computes with twice as fast

@@ -261,6 +261,16 @@ The class **symbolic.Vector** has the following **functions and structures**:
   v3 = v1.MultComponents(v2)
   ```
 
+- **`dot(other)`**: the scalar product with another vector, symbolic or a list or numpy array, as numpy's dot (#3011)
+
+  *Example*:
+
+  ```python
+  v1 = esym.Vector([1,2,4])\v2 = esym.Vector([1,0.5,0.25])\s = v1.dot(v2) #gives 3.
+  ```
+
+- **`operator __matmul__(other)`**: the operator @: with a vector the scalar product, with a matrix the product vector times matrix, as for numpy arrays (#3011)
+- **`operator __rmatmul__(other)`**: the operator @ with a numpy array on the left: a constant matrix times this vector, or the scalar product with a constant vector (#3011)
 - **`operator __getitem__(index)`**: bracket [] operator to return (symbolic) component of vector, allowing read-access. Index may also evaluate from an expression.
 - **`operator __str__()`**: conversion of SymVector to string
 - **`operator __repr__()`**: representation of SymVector in Python
@@ -337,6 +347,16 @@ The class **symbolic.Matrix** has the following **functions and structures**:
 - **`NumberOfRows()`**: Get number of rows (may require to evaluate expression; not recording)
 - **`NumberOfColumns()`**: Get number of columns (may require to evaluate expression; not recording)
 - **`operator __setitem__(row, column)`**: bracket [] operator for (symbolic) component of Matrix (write-access). Only works, if SymMatrix contains no expression. (may lead to inconsistencies in recording)
+- **`dot(other)`**: the product with a vector or a matrix, as numpy's dot (#3011)
+
+  *Example*:
+
+  ```python
+  m = esym.Matrix([[1,2],[3,4]])\v = esym.Vector([1,0])\w = m.dot(v) #gives [1,3]
+  ```
+
+- **`operator __matmul__(other)`**: the operator @: the product with a vector or a matrix, as for numpy arrays (#3011)
+- **`operator __rmatmul__(other)`**: the operator @ with a numpy array on the left: a constant matrix times this matrix, or a constant vector times it (#3011)
 - **`operator __getitem__(row, column)`**: bracket [] operator for (symbolic) component of Matrix (read-access). Row and column may also evaluate from an expression.
 - **`operator __str__()`**: conversion of SymMatrix to string
 - **`operator __repr__()`**: representation of SymMatrix in Python

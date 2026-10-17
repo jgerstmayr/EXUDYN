@@ -140,7 +140,7 @@ Note that itemNumber represents the index of the ObjectGenericODE2 object in mbs
 | `velocityLevel` | Bool | velocityLevel as currently stored in connector |
 | **return value** | Vector $\in \Rcal^{n_{ae}}$ | returns vector (numpy array or list) of evaluated constraint equations for connector |
 
-A Python user function gets its `Vector` arguments as read-only numpy arrays, valid during the call, see [](#sec-userfunctions).
+A Python user function gets its vector and matrix arguments as read-only numpy arrays, valid during the call, see [](#sec-userfunctions).
 
 **Userfunction**: `jacobianUserFunction(mbs, t, itemNumber, q, q_t, velocityLevel)`
 A user function, which computes the jacobian of the algebraic equations w.r.t. the ODE2 coordiantes (ODE2_t velocity coordinates if `velocityLevel=True`).
@@ -157,7 +157,7 @@ The returned matrix of `jacobianUserFunction` must have `nAE` rows and `len(q)` 
 | `velocityLevel` | Bool | velocityLevel as currently stored in connector |
 | **return value** | MatrixContainer $\in \Rcal^{(n_{q_{m0}}+n_{q_{m1}})\times n_{ae}}$ | returns special jacobian for connector, as exu.MatrixContainer, numpy array or list of lists; use MatrixContainer sparse format for larger matrices to speed up computations; sparse triplets MAY NOT contain zero values! |
 
-A Python user function gets its `Vector` arguments as read-only numpy arrays, valid during the call, see [](#sec-userfunctions).
+A Python user function gets its vector and matrix arguments as read-only numpy arrays, valid during the call, see [](#sec-userfunctions).
 
 (miniexample-objectconnectorcoordinatevector)=
 ## Mini example

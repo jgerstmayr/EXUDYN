@@ -1542,3 +1542,28 @@ the limit and keep the duration small; rendererNOGLFWexample.py - check and fix.
   holds its symbolic function, so the "keep it alive" note of CreateSymbolicUserFunction is stricter than needed.
 - The examples suite after the changes: only NGsolveOCCboundaries2.py failed, inside NGsolve (a local heap of 3.2 GB in
   the parallel run); alone it runs.
+
+<a id="rg12-3-10"></a>
+### RG12.3.10 — fixed-size vectors and matrices as numpy arrays, dot and @ for symbolic (2026-10-17, #3011)
+*(Maintainer 2026-10-17: no problem if the access to single elements is slower - with numpy, most problems would be
+solved in vectorized form; really do the switch, and adapt the scripts that can now take the vector form. With
+symbolic, a vectorized form should work as well; the multiplication operators of exudyn.symbolic have a different
+meaning, so introduce a .dot operator to enable equal scripts for Python and symbolic, or switch to @ in symbolic later.)*
+- `PythonUserFunctionArgument` gives `std::array<Real, n>` and `std::array<std::array<Real, n>, m>` (row-wise,
+  static_assert) as read-only numpy views again, through `EPyUtils::ToNumpyView(data, rows, columns)`.
+- **Scripts in vectorized form**: ROSTurtle.py `(v - offset)*d`; chatGPTupdate2.py, createFunctionsTest.py,
+  taskmanagerTest.py, mainSystemExtensionsTests.py and PARTS_ATEs_moving.py without `np.array(loadVector)` or with
+  `f*loadVector`; pythonUserFunctionArgumentsTest.py `k*(u - offset) + d*v`, `stiffness @ np.hstack(...)`;
+  perfUserFunctions.py has vectorized Python versions of the Cartesian spring-damper and the load (`np.asarray`, so
+  that they also run with the lists of 1.13.6 for the comparison). The results of the test models are unchanged. Left
+  with components: the functions that are recorded symbolically too (tutorialSymbolic, cartesianSpringDamperUserFunction,
+  the symbolic tests), where `k*u` would be the scalar product.
+- **Symbolic**: `esym.Vector.dot`, `Vector @ Vector`, `Vector @ Matrix`, `Matrix.dot`, `Matrix @ Vector`, `Matrix @
+  Matrix`, `numpyArray @ esym.Vector/Matrix` (`__rmatmul__`, a 2D array as constant matrix); `__array_ufunc__ = None` on
+  Real, Vector and Matrix, so numpy returns NotImplemented and Python calls the symbolic operator - checked:
+  `K @ q` records `([[2,0,0],...] * q)`, `np.float64(2.)*x` gives `(2 * x)`, which numpy before turned into a number
+  through `__float__`. `*` of two symbolic vectors stays the scalar product: changing it to the product of the items
+  would silently change existing symbolic functions; with `dot`/`@` the scalar product is written alike for both, and
+  the question of `*` is open.
+- **Measured** (userFunctionPerformance.py, the same script for both versions): cartesian Python 2.86 against 3.67 us in
+  1.13.6, load 1.21 against 1.37, generic6 2.05 against 2.96, generic100 2.20 against 10.46; symbolic unchanged.

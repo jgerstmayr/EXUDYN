@@ -623,6 +623,19 @@ void Init_Pybind_Symbolic(py::module& m) {
 		.def("__getitem__", [](const Symbolic::SymbolicRealVector& self, Index index)
 			{ return self[index]; })
 
+		//the products under their numpy names, so that a script computes alike with numpy arrays and symbolic vectors:
+		//a.dot(b), a @ b, M @ v, v @ M (#3011); a * b of two symbolic vectors is the scalar product as well
+		.def("dot", [](const Symbolic::SymbolicRealVector& self, const Symbolic::SymbolicRealVector& other) { return self * other; })
+		.def("dot", [](const Symbolic::SymbolicRealVector& self, const std::vector<Real>& other) { return self * Symbolic::SymbolicRealVector(Vector(other)); })
+		.def("__matmul__", [](const Symbolic::SymbolicRealVector& self, const Symbolic::SymbolicRealVector& other) { return self * other; })
+		.def("__matmul__", [](const Symbolic::SymbolicRealVector& self, const Symbolic::SymbolicRealMatrix& other) { return self * other; })
+		.def("__matmul__", [](const Symbolic::SymbolicRealVector& self, const std::vector<Real>& other) { return self * Symbolic::SymbolicRealVector(Vector(other)); })
+		.def("__rmatmul__", [](const Symbolic::SymbolicRealVector& self, const py::array_t<Real>& other) -> py::object
+			{
+				if (other.ndim() == 2) { return py::cast(Symbolic::SymbolicRealMatrix(other) * self); } //numpy matrix @ symbolic vector
+				return py::cast(Symbolic::SymbolicRealVector(Vector(py::cast<std::vector<Real>>(other))) * self);
+			})
+
 		//operators: (right now, we do not have implicit conversion from Real to Symbolic::SReal)
 		.def(py::self + py::self)
 		.def(py::self - py::self)
@@ -707,6 +720,16 @@ void Init_Pybind_Symbolic(py::module& m) {
 		.def(Symbolic::SReal() * py::self)
 		.def(py::self * Symbolic::SymbolicRealVector())
 		.def(Symbolic::SymbolicRealVector() * py::self)
+		//the products under their numpy names (#3011)
+		.def("dot", [](const Symbolic::SymbolicRealMatrix& self, const Symbolic::SymbolicRealVector& other) { return self * other; })
+		.def("dot", [](const Symbolic::SymbolicRealMatrix& self, const Symbolic::SymbolicRealMatrix& other) { return self * other; })
+		.def("__matmul__", [](const Symbolic::SymbolicRealMatrix& self, const Symbolic::SymbolicRealVector& other) { return self * other; })
+		.def("__matmul__", [](const Symbolic::SymbolicRealMatrix& self, const Symbolic::SymbolicRealMatrix& other) { return self * other; })
+		.def("__rmatmul__", [](const Symbolic::SymbolicRealMatrix& self, const py::array_t<Real>& other) -> py::object
+			{
+				if (other.ndim() == 2) { return py::cast(Symbolic::SymbolicRealMatrix(other) * self); }
+				return py::cast(Symbolic::SymbolicRealVector(Vector(py::cast<std::vector<Real>>(other))) * self); //vector @ matrix
+			})
 
 		.def(py::self += py::self)
 		.def(py::self -= py::self)
@@ -720,6 +743,10 @@ void Init_Pybind_Symbolic(py::module& m) {
 		;
 
 
+
+	//numpy leaves an operation with a symbolic operand to it - numpy matrix @ symbolic vector, np.float64 * symbolic
+	//Real - instead of converting the operand to a number and losing the expression (#3011)
+	for (const char* name : { "Real", "Vector", "Matrix" }) { m.attr(name).attr("__array_ufunc__") = py::none(); }
 
 	//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 	//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++

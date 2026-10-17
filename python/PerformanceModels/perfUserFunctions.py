@@ -33,13 +33,22 @@ d = 2.      #damping
 def SpringUF(mbs, t, itemNumber, u, v, stiffness, damping, offset):
     return 0.1*stiffness*u + stiffness*u**3 + damping*v
 
+#the symbolic functions with components; the Python functions compute the same in vectorized form, as they would be
+#written for numpy arrays (#3011); np.asarray, so that they run with the lists of earlier versions for the comparison
 def CartesianUF(mbs, t, itemNumber, u, v, stiffness, damping, offset):
     return [stiffness[0]*u[0] + damping[0]*v[0] + stiffness[0]*u[0]**3,
             stiffness[1]*u[1] + damping[1]*v[1],
             stiffness[2]*u[2] + damping[2]*v[2]]
 
+def CartesianPythonUF(mbs, t, itemNumber, u, v, stiffness, damping, offset):
+    (stiffness, u) = (np.asarray(stiffness), np.asarray(u))
+    return stiffness*u + np.asarray(damping)*np.asarray(v) + [stiffness[0]*u[0]**3, 0., 0.]
+
 def LoadUF(mbs, t, loadVector):
     return [loadVector[0]*(1 + 0.5*t), loadVector[1]*t, loadVector[2]]
+
+def LoadPythonUF(mbs, t, loadVector):
+    return np.asarray(loadVector)*[1 + 0.5*t, t, 1.]
 
 def GenericSymbolicUF(mbs, t, itemNumber, q, q_t):
     return -k*q - d*q_t
@@ -70,7 +79,7 @@ def Model(function, kind):
     elif function == 'cartesian':
         markers = [mbs.AddMarker(MarkerNodePosition(nodeNumber=nGround)), mbs.AddMarker(MarkerNodePosition(nodeNumber=n1))]
         item = mbs.AddObject(CartesianSpringDamper(markerNumbers=markers, stiffness=[k, k, k], damping=[d, d, d],
-                                                   offset=[1, 0, 0], springForceUserFunction=UF(CartesianUF)))
+                                                   offset=[1, 0, 0], springForceUserFunction=UF(CartesianPythonUF)))
         if symbolic:
             keep = CreateSymbolicUserFunction(mbs, CartesianUF, 'springForceUserFunction', item)
             mbs.SetObjectParameter(item, 'springForceUserFunction', keep)
@@ -79,7 +88,7 @@ def Model(function, kind):
                                                            mbs.AddMarker(MarkerNodePosition(nodeNumber=n1))],
                                             stiffness=[k, k, k], damping=[d, d, d], offset=[1, 0, 0]))
         item = mbs.AddLoad(LoadForceVector(markerNumber=mbs.AddMarker(MarkerNodePosition(nodeNumber=n1)),
-                                           loadVector=[1, 2, 3], loadVectorUserFunction=UF(LoadUF)))
+                                           loadVector=[1, 2, 3], loadVectorUserFunction=UF(LoadPythonUF)))
         if symbolic:
             keep = CreateSymbolicUserFunction(mbs, LoadUF, 'loadVectorUserFunction', item)
             mbs.SetLoadParameter(item, 'loadVectorUserFunction', keep)

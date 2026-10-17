@@ -109,7 +109,7 @@ Note that itemNumber represents the index of the ObjectGenericODE1 object in mbs
 | `q` | Vector $\in \Rcal^n$ | object coordinates (composed from {ref}`ODE1 <ODE1>` nodal coordinates) in current configuration, without reference values |
 | **return value** | Vector $\in \Rcal^{n}$ | returns force vector for object |
 
-A Python user function gets its `Vector` arguments as read-only numpy arrays, valid during the call, see [](#sec-userfunctions).
+A Python user function gets its vector and matrix arguments as read-only numpy arrays, valid during the call, see [](#sec-userfunctions).
 
 (miniexample-objectgenericode1)=
 ## Mini example

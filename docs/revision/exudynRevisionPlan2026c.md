@@ -1142,6 +1142,14 @@ tiny arrays; so the fixed sizes stay lists, for decision. Kept: the numpy views 
 (0.58 instead of 1.0 us for five views; the run-time sized vectors gain 10 %), a fixed-size result from numpy in one
 pass, two examples that wrote into their argument return a new vector. [log](exudynRevisionLog2026c.md#rg12-5)
 
+#### **CLOSED_RG12.3.10** Fixed-size vectors and matrices as numpy arrays, and the products of numpy for symbolic
+
+CLOSED 2026-10-17 (#3011; maintainer: the slower access to single items is no problem, with numpy most problems are
+solved in vectorized form; symbolic with dot or @): the 3D/6D vectors and 3x3/6x6 matrices of Python user functions
+are read-only numpy views; the scripts that take the vector form use it; `esym.Vector`/`Matrix` have `dot()` and `@`
+with numpy's meaning, and numpy defers to them. The same vectorized Cartesian spring-damper function is 0.78 and the
+load 0.88 of 1.13.6. [log](exudynRevisionLog2026c.md#rg12-3-10)
+
 #3007 (found with the test of RG12.3.5): `q[0]` in a symbolic forceUserFunction raises while CreateSymbolicUserFunction
 records it, as the vector arguments are recorded with size 0 - also in 1.13.6.
 

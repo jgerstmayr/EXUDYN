@@ -59,6 +59,13 @@ namespace EPyUtils {
 		return NumpyView(data, 1, dimensions);
 	}
 
+	//! a read-only 2D numpy array of rows x columns that views row-wise data (#3011)
+	inline py::object ToNumpyView(const Real* data, Index rows, Index columns)
+	{
+		Py_intptr_t dimensions[2] = { (Py_intptr_t)rows, (Py_intptr_t)columns };
+		return NumpyView(data, 2, dimensions);
+	}
+
 	//! copy a vector returned by Python - a 1D numpy array in one pass, a list or tuple item by item (#3008)
 	inline void CopyFromPython(const py::handle& object, std::vector<Real>& vector)
 	{

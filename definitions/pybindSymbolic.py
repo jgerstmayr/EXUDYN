@@ -283,6 +283,28 @@ symbolicModule.DefPyFunctionAccess(cClass=classStr, pyName='MultComponents', cNa
                         returnType='symbolic.Real',
                         )
 
+symbolicModule.DefPyFunctionAccess(cClass=classStr, pyName='dot', cName='', 
+                        description="the scalar product with another vector, symbolic or a list or numpy array, as numpy's dot (#3011)",
+                        example = r"""v1 = esym.Vector([1,2,4])\v2 = esym.Vector([1,0.5,0.25])\s = v1.dot(v2) #gives 3.""",
+                        argList=['other'],
+                        argTypes=['symbolic.Vector'],
+                        returnType='symbolic.Real',
+                        )
+
+symbolicModule.DefOperator(name='__matmul__', 
+                     description="the operator @: with a vector the scalar product, with a matrix the product vector times matrix, as for numpy arrays (#3011)",
+                     argList=['other'],
+                     argTypes=['symbolic.Vector'],
+                     returnType='symbolic.Real',
+                     )
+
+symbolicModule.DefOperator(name='__rmatmul__', 
+                     description="the operator @ with a numpy array on the left: a constant matrix times this vector, or the scalar product with a constant vector (#3011)",
+                     argList=['other'],
+                     argTypes=['numpy.ndarray'],
+                     returnType='symbolic.Vector',
+                     )
+
 symbolicModule.DefOperator(name='__getitem__', 
                      description="bracket [] operator to return (symbolic) component of vector, allowing read-access. Index may also evaluate from an expression.",
                      argList=['index'],
@@ -379,6 +401,28 @@ symbolicModule.DefOperator(name='__setitem__',
 #                         argTypes=['sym.Matrix'],
 #                         returnType='symbolic.Real',
 #                         )
+
+symbolicModule.DefPyFunctionAccess(cClass=classStr, pyName='dot', cName='', 
+                        description="the product with a vector or a matrix, as numpy's dot (#3011)",
+                        example = r"""m = esym.Matrix([[1,2],[3,4]])\v = esym.Vector([1,0])\w = m.dot(v) #gives [1,3]""",
+                        argList=['other'],
+                        argTypes=['symbolic.Vector'],
+                        returnType='symbolic.Vector',
+                        )
+
+symbolicModule.DefOperator(name='__matmul__', 
+                     description="the operator @: the product with a vector or a matrix, as for numpy arrays (#3011)",
+                     argList=['other'],
+                     argTypes=['symbolic.Vector'],
+                     returnType='symbolic.Vector',
+                     )
+
+symbolicModule.DefOperator(name='__rmatmul__', 
+                     description="the operator @ with a numpy array on the left: a constant matrix times this matrix, or a constant vector times it (#3011)",
+                     argList=['other'],
+                     argTypes=['numpy.ndarray'],
+                     returnType='symbolic.Matrix',
+                     )
 
 symbolicModule.DefOperator(name='__getitem__', 
                      description="bracket [] operator for (symbolic) component of Matrix (read-access). Row and column may also evaluate from an expression.",

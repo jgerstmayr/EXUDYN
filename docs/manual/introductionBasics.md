@@ -122,17 +122,19 @@ Many items take a **user function**, a Python function that Exudyn calls during 
 load that depends on time, the mass matrix of a user item. The reference page of the item lists its arguments and its
 return value.
 
-- **Arguments**: a vector argument whose size is known only at run time - the coordinates `q` and their velocities
-  `q_t`, a list of factors - is a **read-only numpy array** that views the memory of Exudyn, without copying it: `K @ q`
-  and `-k*q` work directly. It is valid during the call: a function that keeps it for later must copy it,
-  `q.copy()`; writing into it raises - return a new vector instead. Vectors of size 3 and 6 (positions, forces, the
-  offsets of a spring) and matrices of size 3 and 6 are lists: Python computes with their items about twice as fast as
-  with those of a numpy array; `np.array(u)` gives the array where vector operations are wanted.
+- **Arguments**: a vector or matrix argument - the coordinates `q` and their velocities `q_t`, a position, a load
+  vector, the stiffness of a spring-damper - is a **read-only numpy array** that views the memory of Exudyn, without
+  copying it. Write the function in vectorized form, `K @ q`, `k*(u - offset) + d*v`, `f*loadVector`: a single item,
+  `u[0]`, is slower to compute with than an item of a list. The array is valid during the call: a function that keeps
+  it for later must copy it, `q.copy()`; writing into it raises - return a new vector instead.
 - **Results**: a vector is returned as numpy array or as list; a numpy array is copied in one pass.
 - **Symbolic user functions**: `exudyn.advancedUtilities.CreateSymbolicUserFunction` records the same Python function
-  as an expression, which C++ evaluates without calling Python - at about the cost of the built-in force laws.
+  as an expression, which C++ evaluates without calling Python - at about the cost of the built-in force laws. The
+  products have numpy's names for symbolic vectors and matrices as well - `a.dot(b)`, `a @ b`, `K @ q` - so that one
+  function serves both; `*` of two symbolic vectors is the scalar product, of two numpy arrays the product of the items
+  (`MultComponents` in symbolic).
 
-`exudyn.special.deprecations.userFunctionListArguments = True` gives the vector arguments as lists, as before
+`exudyn.special.deprecations.userFunctionListArguments = True` gives the vector and matrix arguments as lists, as before
 version 1.13.104, for scripts that change them or add lists to them; it is deprecated and removed in 2031 (#3008).
 
 (sec-overview-basics-seeingthemodel)=

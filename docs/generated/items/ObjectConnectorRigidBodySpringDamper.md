@@ -167,6 +167,8 @@ Detailed description of the arguments and local quantities:
 | `offset` | Vector6D | copied from object |
 | **return value** | Vector6D | list or numpy array of computed spring force-torque |
 
+A Python user function gets its vector and matrix arguments as read-only numpy arrays, valid during the call, see [](#sec-userfunctions).
+
 *Example*:
 
 ```python
@@ -211,7 +213,7 @@ Detailed description of the arguments and local quantities:
 | `offset` | Vector6D | copied from object |
 | **return value** | Vector | $\left[\varepsilon_{PN},\; t_{recom},\; d_0^{k},\; d_1^{k}, ...\right]$ where $k$ indicates the current step |
 
-A Python user function gets its `Vector` arguments as read-only numpy arrays, valid during the call, see [](#sec-userfunctions).
+A Python user function gets its vector and matrix arguments as read-only numpy arrays, valid during the call, see [](#sec-userfunctions).
 
 (miniexample-objectconnectorrigidbodyspringdamper)=
 ## Mini example

@@ -123,7 +123,7 @@ A user function, which computes the mass matrix of the body.
 | `q_t` | Vector $\in \Rcal^n$ | object velocity coordinates |
 | **return value** | MatrixContainer $\in \Rcal^{n \times n}$ | the mass matrix, as numpy array, list of lists or exu.MatrixContainer |
 
-A Python user function gets its `Vector` arguments as read-only numpy arrays, valid during the call, see [](#sec-userfunctions).
+A Python user function gets its vector and matrix arguments as read-only numpy arrays, valid during the call, see [](#sec-userfunctions).
 
 **Userfunction**: `forceUserFunction(mbs, t, itemNumber, q, q_t)`
 A user function, which computes the generalized forces of the body: elastic forces, the quadratic velocity terms of a rigid body, damping; on the right-hand side, $\Mm \ddot\qv = \fv$.
@@ -137,7 +137,7 @@ A user function, which computes the generalized forces of the body: elastic forc
 | `q_t` | Vector $\in \Rcal^n$ | object velocity coordinates |
 | **return value** | Vector $\in \Rcal^{n}$ | the generalized force vector |
 
-A Python user function gets its `Vector` arguments as read-only numpy arrays, valid during the call, see [](#sec-userfunctions).
+A Python user function gets its vector and matrix arguments as read-only numpy arrays, valid during the call, see [](#sec-userfunctions).
 
 **Userfunction**: `positionUserFunction(mbs, t, itemNumber, localPosition, q)`
 A user function, which computes the global position of the material point at localPosition: the position interface of the body.
@@ -151,7 +151,7 @@ A user function, which computes the global position of the material point at loc
 | `q` | Vector $\in \Rcal^n$ | object coordinates, INCLUDING their reference values, of the configuration asked for |
 | **return value** | Vector3D $\in \Rcal^{3}$ | the global position of the point |
 
-A Python user function gets its `Vector` arguments as read-only numpy arrays, valid during the call, see [](#sec-userfunctions).
+A Python user function gets its vector and matrix arguments as read-only numpy arrays, valid during the call, see [](#sec-userfunctions).
 
 **Userfunction**: `positionJacobianUserFunction(mbs, t, itemNumber, localPosition, q)`
 A user function of the interface of the body that returns a matrix at localPosition: the position Jacobian $\Jm_{pos} = \partial \vv / \partial \dot\qv$ (3 x n), the rotation matrix (3 x 3) or the rotation Jacobian $\Jm_{rot} = \partial \LU{0}{\tomega} / \partial \dot\qv$ (3 x n, global angular velocity).
@@ -165,7 +165,7 @@ A user function of the interface of the body that returns a matrix at localPosit
 | `q` | Vector $\in \Rcal^n$ | object coordinates, INCLUDING their reference values, of the configuration asked for |
 | **return value** | MatrixContainer | the matrix, as numpy array or list of lists |
 
-A Python user function gets its `Vector` arguments as read-only numpy arrays, valid during the call, see [](#sec-userfunctions).
+A Python user function gets its vector and matrix arguments as read-only numpy arrays, valid during the call, see [](#sec-userfunctions).
 
 **Userfunction**: `rotationMatrixUserFunction(mbs, t, itemNumber, localPosition, q)`
 A user function of the interface of the body that returns a matrix at localPosition: the position Jacobian $\Jm_{pos} = \partial \vv / \partial \dot\qv$ (3 x n), the rotation matrix (3 x 3) or the rotation Jacobian $\Jm_{rot} = \partial \LU{0}{\tomega} / \partial \dot\qv$ (3 x n, global angular velocity).
@@ -179,7 +179,7 @@ A user function of the interface of the body that returns a matrix at localPosit
 | `q` | Vector $\in \Rcal^n$ | object coordinates, INCLUDING their reference values, of the configuration asked for |
 | **return value** | MatrixContainer | the matrix, as numpy array or list of lists |
 
-A Python user function gets its `Vector` arguments as read-only numpy arrays, valid during the call, see [](#sec-userfunctions).
+A Python user function gets its vector and matrix arguments as read-only numpy arrays, valid during the call, see [](#sec-userfunctions).
 
 **Userfunction**: `rotationJacobianUserFunction(mbs, t, itemNumber, localPosition, q)`
 A user function of the interface of the body that returns a matrix at localPosition: the position Jacobian $\Jm_{pos} = \partial \vv / \partial \dot\qv$ (3 x n), the rotation matrix (3 x 3) or the rotation Jacobian $\Jm_{rot} = \partial \LU{0}{\tomega} / \partial \dot\qv$ (3 x n, global angular velocity).
@@ -193,7 +193,7 @@ A user function of the interface of the body that returns a matrix at localPosit
 | `q` | Vector $\in \Rcal^n$ | object coordinates, INCLUDING their reference values, of the configuration asked for |
 | **return value** | MatrixContainer | the matrix, as numpy array or list of lists |
 
-A Python user function gets its `Vector` arguments as read-only numpy arrays, valid during the call, see [](#sec-userfunctions).
+A Python user function gets its vector and matrix arguments as read-only numpy arrays, valid during the call, see [](#sec-userfunctions).
 
 **Userfunction**: `outputVariableUserFunction(mbs, t, itemNumber, outputVariableType, localPosition, q, q_t)`
 A user function, which computes the output variables UserType0 to UserType3 of the body at localPosition, e.g. strains or stresses of a user element; name them with exudyn.special.userTypes.SetName.
@@ -209,7 +209,7 @@ A user function, which computes the output variables UserType0 to UserType3 of t
 | `q_t` | Vector $\in \Rcal^n$ | object velocity coordinates of the configuration asked for |
 | **return value** | Vector | the value as a vector of any size, the same size for every call with the same outputVariableType |
 
-A Python user function gets its `Vector` arguments as read-only numpy arrays, valid during the call, see [](#sec-userfunctions).
+A Python user function gets its vector and matrix arguments as read-only numpy arrays, valid during the call, see [](#sec-userfunctions).
 
 **Userfunction**: `graphicsDataUserFunction(mbs, itemNumber)`
 A user function, which is called by the visualization thread in order to draw user-defined objects.

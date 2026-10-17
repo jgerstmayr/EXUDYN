@@ -34,8 +34,15 @@ Consequences of recording once:
 | type | what | operators and functions |
 |---|---|---|
 | `esym.Real` | scalar | `+ - * /`, unary `-`, comparisons, the math functions of `esym` (`sin` ... `tanh`, `exp`, `log`, `sqrt`, `pow`, `atan2`, `abs`, `sign`, `floor`, `ceil`, `round`, `mod`, `min`, `max`, `isfinite`), `IfThenElse`, `Not`; `Diff(variable)`, the derivative, for scalars only |
-| `esym.Vector` | vector of any size | `+ -` of vectors, `*` with a scalar, `*` of two vectors (scalar product), unary `-`, `v[i]`, `NormL2()`, `MultComponents(w)`, `==`, `!=`; built from a list of numbers and `esym.Real` |
-| `esym.Matrix` | matrix | `+ -`, `*` with a scalar, matrix * matrix, matrix * vector and vector * matrix (the transposed product), unary `-`, `A[i, j]`, `Get(i, j)` |
+| `esym.Vector` | vector of any size | `+ -` of vectors, `*` with a scalar, `*` of two vectors (scalar product), `dot(w)` and `@` (scalar product, also with a list or numpy array; `v @ A` the transposed product), unary `-`, `v[i]`, `NormL2()`, `MultComponents(w)`, `==`, `!=`; built from a list of numbers and `esym.Real` |
+| `esym.Matrix` | matrix | `+ -`, `*` with a scalar, matrix * matrix, matrix * vector and vector * matrix (the transposed product), `dot()` and `@` for the same, `numpyMatrix @ v` with a constant numpy matrix, unary `-`, `A[i, j]`, `Get(i, j)` |
+
+**Numpy and symbolic in one function** (#3011): the three types set `__array_ufunc__ = None`, so that numpy leaves an
+operation with a symbolic operand to it - `K @ q` with a numpy `K` and a symbolic `q` records `K` as a constant matrix,
+`np.float64(2)*x` stays an expression (before, numpy converted `x` to its value and the expression was lost). The
+difference that remains is `*` of two vectors: numpy multiplies the items, symbolic forms the scalar product; written
+with `dot`/`@` for the scalar product and with components or `MultComponents` for the product of the items, a function
+is the same for both.
 
 Every vector node evaluates into its own buffer since #3006: no memory is allocated per call once the sizes are set.
 Matrix nodes still return new matrices (RG12.3.7).

@@ -367,7 +367,7 @@ Note that itemNumber represents the index of the ObjectFFRFreducedOrder object i
 | `q_t` | Vector $\in \Rcal^n_{ODE2}$ | object velocity coordinates (time derivatives of `q`) in current configuration |
 | **return value** | Vector $\in \Rcal^{n_{ODE2}}$ | returns force vector for object |
 
-A Python user function gets its `Vector` arguments as read-only numpy arrays, valid during the call, see [](#sec-userfunctions).
+A Python user function gets its vector and matrix arguments as read-only numpy arrays, valid during the call, see [](#sec-userfunctions).
 
 **Userfunction**: `massMatrixUserFunction(mbs, t, itemNumber, q, q_t)`
 A user function, which computes a mass matrix depending on current time and states of object. Can be used to create any kind of mechanical system by using the object states.
@@ -381,7 +381,7 @@ A user function, which computes a mass matrix depending on current time and stat
 | `q_t` | Vector $\in \Rcal^n_{ODE2}$ | object velocity coordinates (time derivatives of `q`) in current configuration |
 | **return value** | NumpyMatrix $\in \Rcal^{n_{ODE2} \times n_{ODE2}}$ | returns mass matrix for object |
 
-A Python user function gets its `Vector` arguments as read-only numpy arrays, valid during the call, see [](#sec-userfunctions).
+A Python user function gets its vector and matrix arguments as read-only numpy arrays, valid during the call, see [](#sec-userfunctions).
 
 
 Examples (Ex) and TestModels (TM) that show this item, with weblink to github: [`NGsolveCMStutorial.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/NGsolveCMStutorial.py) (Ex), [`objectFFRFreducedOrderTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/objectFFRFreducedOrderTest.py) (TM), [`NGsolvePistonEngine.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/NGsolvePistonEngine.py) (Ex), [`objectFFRFreducedOrderNetgen.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/objectFFRFreducedOrderNetgen.py) (Ex), [`objectFFRFreducedOrderAccelerations.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/objectFFRFreducedOrderAccelerations.py) (TM), [`objectFFRFreducedOrderShowModes.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/objectFFRFreducedOrderShowModes.py) (TM), [`objectFFRFreducedOrderStressModesTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/objectFFRFreducedOrderStressModesTest.py) (TM), [`superElementRigidJointTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/superElementRigidJointTest.py) (TM)
