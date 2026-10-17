@@ -8,10 +8,10 @@ Every entry carries the **type** of the issue, then its **priority** and its **e
 
 General information on current version:
 
-- Exudyn version = 1.13.126.dev1
+- Exudyn version = 1.13.127.dev1
 - last change = 2026-10-17
-- Number of issues = 3025
-- Number of resolved issues = 2903 (126 in current version)
+- Number of issues = 3028
+- Number of resolved issues = 2904 (127 in current version)
 
 ## Resolved issues and resolved bugs before version 1.13
 
@@ -9039,6 +9039,12 @@ The following list contains the issues which have been **RESOLVED** in the accor
 
 ## Open issues
 
+- `EXTENSION` `LOW EFF` `raised by: Claude-JG` Zoom to the selected item in the renderer (#3027)
+  - description: Maintainer 2026-10-17: a selected item (left click, state-\>mouseSelectionItemID) is not used for the view; zoom to its bounding box as ZoomAll does for the scene, by a key and an icon of the icon bar.
+  - date raised: 2026-10-17
+- `EXTENSION` `HIGH EFF` `raised by: Claude-JG` An icon bar in the renderer window as alternative to the keys, folding in from the right border (#3026)
+  - description: Maintainer 2026-10-17: small icons for the most important keys - visualization settings, command window, help; the standard views; show/hide and numbers of nodes, bodies, connectors, markers, loads, sensors; zoom in, out, all and to the selection; ruler; mouse coordinates; quit; graphics update speed; lines, edges, faces; global transparency. The icons are compiled into the code and drawn once at startup into textures with the existing line, circle and text functions, not loaded from files; the bar folds in from the right border when the mouse comes close without a button pressed, fills the height of the window, scaled with the display scaling and a size in the visualization settings. Drawn by a subfunction that leaves the current implementation mostly untouched and fits later OpenGL versions.
+  - date raised: 2026-10-17
 - `CHANGE` `LOW EFF` `raised by: Claude-JG` Make \* of symbolic vectors and matrices the product of the components, as numpy, and remove special.deprecations.symbolicStarProduct (#3016)
   - description: Maintainer 2026-10-17: \* of two symbolic vectors (or with a matrix) raises a TypeError since the issue before, so that scripts change to dot(), @ and multiply(); in about two to three years, when the problems have shown up, \* becomes the component-wise product as in numpy, and the deprecation flag symbolicStarProduct is removed.
   - **remarks:** Delayed on purpose (maintainer 2026-10-17): the plan step RG12.6 is closed, the issue waits for its deadline 2029-01-01.; deferred until 2029-01-01 (Claude-JG, 2026-10-17): \* of symbolic vectors becomes the product of the components once the scripts that used it for the scalar product have shown up through the TypeError of \#3015 (maintainer 2026-10-17)

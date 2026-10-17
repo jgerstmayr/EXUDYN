@@ -17,6 +17,7 @@ You can view and download this file on Github: [userRigidBodyTest.py](https://gi
 #           A second user body has only symbolic user functions: the force and the position written once with
 #           components (#3007), so that the same function computes with floats and records with exudyn.symbolic, the
 #           mass matrix, the rotation matrix and the Jacobians as symbolic matrices with @ and .T (#3020, #3018).
+#           The three bodies are solved one after the other, each alone, with the computation time shown.
 #           A rigid marker on a user body without rotationMatrixUserFunction is refused when it is evaluated.
 #
 # Author:   Johannes Gerstmayr
@@ -35,7 +36,6 @@ import numpy as np
 esym = exu.symbolic
 
 SC = exu.SystemContainer()
-mbs = SC.AddSystem()
 
 inertia = InertiaCuboid(density=1000, sideLengths=[0.4, 0.2, 0.1])
 m = inertia.Mass()
@@ -164,16 +164,31 @@ componentsDifference = max(np.max(np.abs(np.array(ForceComponents(cMath, qTest, 
                            np.max(np.abs(np.array(PositionComponents(cMath, pSpring, qTest)) - UFposition(0, 0, 0, pSpring, np.array(qTest)))))
 exu.Print('the component functions against the matrix functions:', componentsDifference)
 
-oGround = mbs.AddObject(ObjectGround())
-mGround = mbs.AddMarker(MarkerBodyPosition(bodyNumber=oGround, localPosition=[0.3, 0.2, 0]))
+simulationSettings = exu.SimulationSettings()
+simulationSettings.timeIntegration.numberOfSteps = 500
+simulationSettings.timeIntegration.endTime = 0.5
+simulationSettings.timeIntegration.verboseMode = 1
+simulationSettings.show.computationTime = True #shows what each kind of body costs
+simulationSettings.solution.file.write = False
 
-bodies = []
-keep = [] #the symbolic functions live as long as the model
-for kind in ['rigidBody', 'python', 'symbolic']:
-    isUserBody = (kind != 'rigidBody')
+#the output variables at the point of the spring-damper and the kinetic energy, of each kind of body
+outputs = [exu.OutputVariableType.Position, exu.OutputVariableType.Displacement, exu.OutputVariableType.Velocity,
+           exu.OutputVariableType.RotationMatrix, exu.OutputVariableType.AngularVelocity, exu.OutputVariableType.AngularVelocityLocal]
+
+def Solve(kind):
+    """the body under gravity, a Cartesian spring-damper and a torque, as ObjectRigidBody ('standard'), as
+    ObjectUserBody with Python user functions ('python') or with symbolic user functions ('symbolic'), solved alone"""
+    exu.Print('+++ the body with ' + {'standard': 'ObjectRigidBody', 'python': 'Python user functions',
+                                       'symbolic': 'symbolic user functions'}[kind] + ' +++')
+    mbs = SC.AddSystem()
+    oGround = mbs.AddObject(ObjectGround())
+    mGround = mbs.AddMarker(MarkerBodyPosition(bodyNumber=oGround, localPosition=[0.3, 0.2, 0]))
     node = mbs.AddNode(NodeRigidBodyRxyz(referenceCoordinates=[0, 0, 0, 0.2, -0.1, 0.3],
                                          initialVelocities=[0.5, 0, 1, 1, 0.5, 2]))
-    if isUserBody:
+    keep = [] #the symbolic functions live as long as the model
+    if kind == 'standard':
+        body = mbs.AddObject(ObjectRigidBody(nodeNumber=node, mass=m, inertia=inertia.GetInertia6D()))
+    else:
         body = mbs.AddObject(ObjectUserBody(nodeNumbers=[node], massMatrixUserFunction=UFmass, forceUserFunction=UFforce,
                                             positionUserFunction=UFposition, positionJacobianUserFunction=UFpositionJacobian,
                                             rotationMatrixUserFunction=UFrotationMatrix,
@@ -186,34 +201,28 @@ for kind in ['rigidBody', 'python', 'symbolic']:
                                    ('rotationJacobianUserFunction', UFrotationJacobianSymbolic)]:
                 keep += [CreateSymbolicUserFunction(mbs, function, name, body)]
                 mbs.SetObjectParameter(body, name, keep[-1])
-    else:
-        body = mbs.AddObject(ObjectRigidBody(nodeNumber=node, mass=m, inertia=inertia.GetInertia6D()))
-    bodies += [body]
+    mbs.variables['keep'] = keep
     mbs.AddLoad(LoadForceVector(markerNumber=mbs.AddMarker(MarkerBodyPosition(bodyNumber=body)), loadVector=m*np.array(g)))
     mbs.AddObject(CartesianSpringDamper(markerNumbers=[mGround, mbs.AddMarker(MarkerBodyPosition(bodyNumber=body, localPosition=pSpring))],
                                         stiffness=[200, 200, 200], damping=[2, 2, 2]))
     mbs.AddLoad(LoadTorqueVector(markerNumber=mbs.AddMarker(MarkerBodyRigid(bodyNumber=body)), loadVector=torque))
+    mbs.Assemble()
+    mbs.SolveDynamic(simulationSettings)
+    values = [np.array(mbs.GetObjectOutputBody(body, output, localPosition=pSpring)) for output in outputs]
+    energy = mbs.GetObjectOutputBody(body, exu.OutputVariableType.KineticEnergy, localPosition=[0, 0, 0])
+    return values, energy
 
-mbs.Assemble()
-simulationSettings = exu.SimulationSettings()
-simulationSettings.timeIntegration.numberOfSteps = 500
-simulationSettings.timeIntegration.endTime = 0.5
-simulationSettings.timeIntegration.verboseMode = 0
-simulationSettings.solution.file.write = False
-mbs.SolveDynamic(simulationSettings)
+results = [Solve(kind) for kind in ['standard', 'python', 'symbolic']]
 
-#the output variables of both bodies at the point of the spring-damper
-outputs = [exu.OutputVariableType.Position, exu.OutputVariableType.Displacement, exu.OutputVariableType.Velocity,
-           exu.OutputVariableType.RotationMatrix, exu.OutputVariableType.AngularVelocity, exu.OutputVariableType.AngularVelocityLocal]
 difference = 0
 differenceSymbolic = 0  #between the Python and the symbolic user body
 u = 0
-for output in outputs:
-    values = [np.array(mbs.GetObjectOutputBody(body, output, localPosition=pSpring)) for body in bodies]
+for i in range(len(outputs)):
+    values = [result[0][i] for result in results]
     difference = max(difference, np.max(np.abs(values[1] - values[0])), np.max(np.abs(values[2] - values[0])))
     differenceSymbolic = max(differenceSymbolic, np.max(np.abs(values[2] - values[1])))
     u += np.sum(values[1])
-energies = [mbs.GetObjectOutputBody(body, exu.OutputVariableType.KineticEnergy, localPosition=[0, 0, 0]) for body in bodies]
+energies = [result[1] for result in results]
 difference = max(difference, abs(energies[1] - energies[0]), abs(energies[2] - energies[0]))
 u += energies[1]
 exu.Print('largest difference to ObjectRigidBody:', difference, ', between Python and symbolic user functions:',

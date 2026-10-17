@@ -1875,3 +1875,15 @@ as MatrixContainer does):
 | ObjectConnectorRigidBodySpringDamper springForceTorqueUserFunction, postNewtonStepUserFunction | arguments stiffness, damping 6 x 6, rotJ0, rotJ1 3 x 3 | read-only numpy views (#3011) | named matrices (#2985) |
 
 The arguments are done; what is left are the results, and the expressions of matrices (RG12.8 for `A.T`).
+
+<a id="rg7-3-5"></a>
+### RG7.3.5 — userRigidBodyTest.py in a loop over the three kinds of body (2026-10-17, #3025)
+*(Maintainer 2026-10-17: the three cases computed one after the other, with show.computationTime and verboseMode on.)*
+- `Solve(kind)` builds the ground, the body and its loads in a system of their own for 'standard' (ObjectRigidBody),
+  'python' and 'symbolic' (ObjectUserBody) and solves it with `show.computationTime` and `verboseMode = 1`; the
+  comparison of the outputs is unchanged, and so is the result (13.475755021376248).
+- 500 implicit steps on this machine: ObjectRigidBody 0.005 s, Python user functions 0.26 s (97 % in the user
+  functions), symbolic user functions 0.11 s (95 %). The symbolic body is still 20 times the standard one: per Newton
+  iteration the Cartesian spring-damper evaluates position, rotation and both Jacobians of the body, and the
+  derivative of J^T f evaluates the Jacobians 4 n times by differences (#2995) - a place for analytic derivatives
+  later.

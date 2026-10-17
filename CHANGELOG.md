@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.13 | Newborn | 124 | 1.13.126 |
+| 1.13 | Newborn | 125 | 1.13.127 |
 | 1.12 | Metheney | 367 | 1.12.462 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
@@ -30,6 +30,10 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.13 - Newborn (current)
 
+- **1.13.127** `TESTING` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` userRigidBodyTest.py: solve the standard, the Python and the symbolic body one after the other with the computation time shown (#3025)
+  - description: Maintainer 2026-10-17: the three kinds of the body (ObjectRigidBody, ObjectUserBody with Python user functions, ObjectUserBody with symbolic user functions) are solved in a loop, each in its own system, with show.computationTime and verboseMode on, so that the cost of each mode is visible.
+  - **notes:** userRigidBodyTest.py solves the body as ObjectRigidBody, as ObjectUserBody with Python user functions and with symbolic user functions one after the other, each with its computation time.
+  - date resolved: **2026-10-17 19:21**, date raised: 2026-10-17
 - **1.13.126** `EXTENSION` `MEDIUM EFF` `raised by: Claude-JG` `resolved by: Claude-JG` Sparse matrix results of symbolic user functions with the pattern fixed when they are recorded (#3022)
   - description: Mass matrices and Jacobians of ObjectGenericODE2 and ObjectUserBody can be very sparse. A symbolic result esym.SparseMatrix - triplets (row, column, expression) - or an esym.Matrix built from components, whose components that are the constant 0 are known when it is recorded, evaluates into the triplets of the item's MatrixContainer in sparse mode; CopyOrAddTriplets adds them to the system matrix as for a Python function that returns triplets or a scipy matrix. Revision2026c step RG12.3.7.4.
   - **notes:** A matrix result of a symbolic user function built from components is sparse: its components that are the constant 0 are left out when the function is recorded, and the others are added to the system matrix as triplets; a chain of 300 masses with a diagonal mass matrix and a tridiagonal Jacobian solves in 0.26 s against 3.6 s with Python functions building the dense lists.

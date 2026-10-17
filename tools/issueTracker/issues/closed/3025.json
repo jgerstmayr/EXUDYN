@@ -1,0 +1,15 @@
+{
+  "number": 3025,
+  "title": "userRigidBodyTest.py: solve the standard, the Python and the symbolic body one after the other with the computation time shown",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "TESTING",
+  "effort": "LOW",
+  "description": "Maintainer 2026-10-17: the three kinds of the body (ObjectRigidBody, ObjectUserBody with Python user functions, ObjectUserBody with symbolic user functions) are solved in a loop, each in its own system, with show.computationTime and verboseMode on, so that the cost of each mode is visible.",
+  "dateRaised": "2026-10-17",
+  "deadline": "2027-04-15",
+  "dateResolved": "2026-10-17 19:21",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "userRigidBodyTest.py solves the body as ObjectRigidBody, as ObjectUserBody with Python user functions and with symbolic user functions one after the other, each with its computation time.",
+  "resolvedInVersion": "1.13.127"
+}
