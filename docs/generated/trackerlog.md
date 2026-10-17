@@ -9050,6 +9050,7 @@ The following list contains the issues which have been **RESOLVED** in the accor
   - date raised: 2026-10-17
 - `CHANGE` `LOW EFF` `raised by: Claude-JG` Make \* of symbolic vectors and matrices the product of the components, as numpy, and remove special.deprecations.symbolicStarProduct (#3016)
   - description: Maintainer 2026-10-17: \* of two symbolic vectors (or with a matrix) raises a TypeError since the issue before, so that scripts change to dot(), @ and multiply(); in about two to three years, when the problems have shown up, \* becomes the component-wise product as in numpy, and the deprecation flag symbolicStarProduct is removed.
+  - **remarks:** Delayed on purpose (maintainer 2026-10-17): the plan step RG12.6 is closed, the issue waits for its deadline 2029-01-01.
   - date raised: 2026-10-17
 - `TESTING` `MEDIUM EFF` `raised by: Claude-JG` Performance measurement over more models, solvers and solver configurations, as the baseline of the total coordinates (#3002)
   - description: revision2026c step RG13.1 (maintainer 2026-10-16): before total coordinates are added (RG13.2, \#1910), the cost of the solvers is measured on more models (rigid multibody, flexible, contact, large systems), for the implicit and explicit solvers and their configurations (dense/sparse, modified Newton, step sizes, multithreading), so that the cost of an additional vector addition and of the cache memory per step becomes visible - mostly relevant for the explicit solvers
