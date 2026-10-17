@@ -564,6 +564,11 @@ CLOSED 2026-10-17 (#3003): the items that depend on user functions - an ObjectUs
 connectors, loads and sensors on them, every load with a user function - are drawn in the main thread; a call from the
 render thread is reported; no cache in ObjectUserBody. [log](exudynRevisionLog2026c.md#rg7-10)
 
+#### **CLOSED_RG7.10.1** Delete the unused header VisualizationAccessCache.h
+
+CLOSED 2026-10-17 (#3014): deleted with the maintainer's approval, also from the VS project; pythonUserItems.md 5.2
+describes the main-thread drawing.
+
 ## **OPEN_RG8** Compiled C++ user items
 
 Plugins: user items compiled against the shipped headers. A plugin author builds Exudyn from source once and the

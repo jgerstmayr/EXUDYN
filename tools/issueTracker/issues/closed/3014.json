@@ -1,0 +1,15 @@
+{
+  "number": 3014,
+  "title": "Delete the unused header VisualizationAccessCache.h",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "CHANGE",
+  "effort": "LOW",
+  "description": "Since #3003 ObjectUserBody has no visualization cache; the header src/System/VisualizationAccessCache.h is included nowhere. Maintainer 2026-10-17: delete it.",
+  "dateRaised": "2026-10-17",
+  "deadline": "2027-04-15",
+  "dateResolved": "2026-10-17 13:57",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "The unused header src/System/VisualizationAccessCache.h is deleted (unused since #3003).",
+  "resolvedInVersion": "1.13.114"
+}

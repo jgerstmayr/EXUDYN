@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.13 | Newborn | 112 | 1.13.113 |
+| 1.13 | Newborn | 113 | 1.13.114 |
 | 1.12 | Metheney | 367 | 1.12.462 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
@@ -30,6 +30,10 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.13 - Newborn (current)
 
+- **1.13.114** `CHANGE` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` Delete the unused header VisualizationAccessCache.h (#3014)
+  - description: Since \#3003 ObjectUserBody has no visualization cache; the header src/System/VisualizationAccessCache.h is included nowhere. Maintainer 2026-10-17: delete it.
+  - **notes:** The unused header src/System/VisualizationAccessCache.h is deleted (unused since \#3003).
+  - date resolved: **2026-10-17 13:57**, date raised: 2026-10-17
 - **1.13.113** `CHANGE` `HIGH EFF` `raised by: Claude-JG` `resolved by: Claude-JG` Remove the argument objectNumber from the item functions that now get it from the object (#3013)
   - description: Since \#2995 and the issue before, every CObject knows its number. Many functions of the object interface (ComputeODE2LHS, ComputeODE1RHS, ComputeJacobianODE2\_ODE2, ComputeMassMatrix, GetOutputVariable, GetOutputVariableBody, the connector functions with MarkerDataStructure, the algebraic equations, the item-specific evaluations of user functions) and their callers in CSystem and MainObject pass it as an argument only to hand it to the user functions. The argument is removed, the functions call GetObjectNumber(). Evaluation and sub-steps in revision2026c step RG9.9.
   - **notes:** The functions of the objects, connectors and constraints no longer take their own number as argument (objectNumber, itemIndex): ComputeODE2LHS, ComputeODE1RHS, the Jacobians, ComputeMassMatrix, the output variables, PostNewtonStep, the algebraic equations, the connector interface and the evaluations of the user functions call GetObjectNumber(); so do the callers in CSystem, MainObject and the sensors. The Python user functions get the same itemNumber as before.

@@ -1686,3 +1686,10 @@ the connector interface). The definitions had two identical entries of the libra
 of constraints (they differed by a space before the argument); one is gone. Every call passed the own number (the loop
 index of the objects, the number of the MainObject, the object of a sensor), so nothing computes differently; the test
 suite passes unchanged.
+
+<a id="rg7-10-1"></a>
+### RG7.10.1 — VisualizationAccessCache.h deleted (2026-10-17, #3014)
+*(Maintainer 2026-10-17: yes, delete it.)* `src/System/VisualizationAccessCache.h` and its entries in
+`msvc/cppsrc.vcxproj(.filters)` are gone; docs/dev/design/pythonUserItems.md 5.2 said the renderer reads the cache and
+the item number is searched - it now says the body is drawn in the main thread (#3003) and the number is the object's
+own (#3012).

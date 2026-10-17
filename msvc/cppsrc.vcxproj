@@ -621,7 +621,6 @@
     <ClInclude Include="..\src\System\CNode.h" />
     <ClInclude Include="..\src\System\CObject.h" />
     <ClInclude Include="..\src\System\CObjectBody.h" />
-    <ClInclude Include="..\src\System\VisualizationAccessCache.h" />
     <ClInclude Include="..\src\System\CObjectConnector.h" />
     <ClInclude Include="..\src\System\CSensor.h" />
     <ClInclude Include="..\src\System\ItemIndices.h" />

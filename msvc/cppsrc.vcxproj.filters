@@ -1076,9 +1076,6 @@
     <ClInclude Include="..\src\System\CObjectBody.h">
       <Filter>HPPobjects</Filter>
     </ClInclude>
-    <ClInclude Include="..\src\System\VisualizationAccessCache.h">
-      <Filter>HPPobjects</Filter>
-    </ClInclude>
     <ClInclude Include="..\src\System\CObjectConnector.h">
       <Filter>HPPobjects</Filter>
     </ClInclude>

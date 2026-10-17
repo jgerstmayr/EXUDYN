@@ -187,10 +187,11 @@ Python class derived from a C++ class: items stay validated dicts (the C++/Pytho
   reference configuration, the derivative of the projected forces by central differences, the Jacobian of the
   equations numerically. Each call is a wrapper in `src/System/evaluateUserFunctions.cpp` inside
   `UserFunctionExceptionHandling`; a function that is needed and not given is reported with PyError, which also runs in
-  the fast module; the item number for the access functions is found once in the list of objects.
-- **Threads**: `HasUserFunction` is true, so the item is computed serially. The renderer thread may not call Python:
-  the access functions ask `PyGILState_Check()` and, without the GIL, read a cache (`VisualizationAccessCache`) that
-  the computation thread fills in `CallUserFunction`, which the renderer requests.
+  the fast module; the item number the user functions get is the object's own number, `CObject::GetObjectNumber`
+  (#2995, #3012).
+- **Threads**: `HasUserFunction` is true, so the item is computed serially. The renderer thread does not call Python:
+  the body, its markers and what depends on them are drawn in the main thread with the graphics user functions
+  (`AccessFunctionsCallUserFunctions`, #3003).
 - **Output variables** the item provides only with a user function are conditional in the definition.
 
 ## 6. Examples that go beyond the present user functions
