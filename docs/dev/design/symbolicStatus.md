@@ -18,7 +18,8 @@ microseconds per call, against 0.35 to 2.4 for a Python function).
 Consequences of recording once:
 
 - **Python control flow is evaluated at recording**, with the recorded values (0 and empty vectors): an `if` on an
-  argument and `math.sin` of an argument do not record (#3017), `np.sin` does (#3015). Conditions are
+  argument does not record; `math.sin(x)`, `float(x)` and a float array of a symbolic expression raise a TypeError
+  while recording (#3017), `np.sin` records (#3015). Conditions are
   `esym.IfThenElse(condition, a, b)`, `esym.Not`, the comparisons `<`, `<=`, `==`, ... of `esym.Real`; the functions
   are those of `esym`.
 - **A function can be written once for both**: with the math functions as a parameter - `exudyn.cMath` for Python,
@@ -57,7 +58,7 @@ expressions with numpy is `symbolicNumpyCompatibilityTest.py`.
 
 | expression | numpy | symbolic | |
 |---|---|---|---|
-| `math.sin(x)`, `float(x)` | a float | a float: the expression is lost without a message, as `esym.Real` converts to its value | #3017 |
+| `math.sin(x)`, `float(x)`, `np.array([x], dtype=float)` | a float | TypeError while recording, as the conversion would record a constant; `x.Evaluate()` gives the value | #3017 |
 | `np.array([x, y])`, `np.cross(a, b)` | an array | an array of `esym.Real`, which CreateSymbolicUserFunction takes as vector result | - |
 | `A.T`, `A[i]`, `v[0:2]`, `np.sin(v)`, `v + 1`, `v + [1, 2]`, `npMatrix * v` | defined | TypeError | #3018 |
 

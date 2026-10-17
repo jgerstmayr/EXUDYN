@@ -1,0 +1,11 @@
+{
+  "number": 3019,
+  "title": "Limit the threads of MKL, OpenMP, OpenBLAS and NGsolve in the processes of the parallel examples run",
+  "author": "Claude-JG",
+  "status": "RAISED",
+  "type": "FIX",
+  "effort": "LOW",
+  "description": "NGsolveOCCboundaries2.py failed twice in the parallel examples run (1.13.104, 1.13.111) with 'Could not allocate localheap, heapsize = 3200000000'. Measured on 32 threads: import ngsolve reserves 8 GB (MKL/OpenMP, one buffer per thread), Assemble in the TaskManager 3.2 GB more (100 MB per thread), the example 17 GB; import exudyn adds 5 MB. Eight processes, with the NGsolve examples next to each other, exceed the commit limit (RAM + pagefile). The child processes of the parallel run get OMP_NUM_THREADS, MKL_NUM_THREADS, OPENBLAS_NUM_THREADS and NGS_NUM_THREADS = cores / processes (unless set); the example then reserves 6.3 GB and takes the same time. The environment of the runner and of the shell does not change.",
+  "dateRaised": "2026-10-17",
+  "deadline": "2027-04-15"
+}

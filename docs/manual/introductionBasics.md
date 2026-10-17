@@ -133,7 +133,8 @@ return value.
   operators and numpy's functions mean the same for symbolic vectors and matrices as for numpy arrays - `a.dot(b)`,
   `a @ b`, `K @ q`, `np.multiply(a, b)`, `a / s`, `np.sin(x)` - so that one function serves both; what numpy defines
   differently raises a TypeError: `*` of two symbolic vectors or with a symbolic matrix (numpy multiplies the
-  components) and `==` of two vectors (#3015). `exudyn.special.deprecations.symbolicStarProduct = True` makes `*` the
+  components) and `==` of two vectors (#3015), and so does a conversion to float while recording, `math.sin(x)` or
+  `float(x)`, which would record a constant - `np.sin(x)` and `esym.sin(x)` record (#3017).`exudyn.special.deprecations.symbolicStarProduct = True` makes `*` the
   scalar and matrix product, as before version 1.13.115, for the transition; `*` is to become the product of the
   components, as in numpy (#3016).
 

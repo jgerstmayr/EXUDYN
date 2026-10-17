@@ -1728,3 +1728,26 @@ in general - no discrepancies, a smaller set of features; important missing feat
   functions and perfUserFunctions.py run unchanged.
 - **Open as steps**: RG12.6 (#3016, `*` as numpy in 2029), RG12.7 (#3017, `float()` while recording, a decision),
   RG12.8 (#3018, `A.T`, rows, slices, component-wise functions).
+
+<a id="rg12-7"></a>
+### RG12.7 — float() of a symbolic expression refused while recording (2026-10-17, #3017)
+*(Maintainer 2026-10-17: yes, raise an error.)*
+- `esym.Real.__float__` raises a TypeError while recording (`SReal::recordExpressions`) for a Real that holds an
+  expression or a named variable; a number converts as before, and so does an expression after
+  `esym.SetRecording(False)`. The error is a plain Python TypeError, not PyError, as pybind11 may try a conversion to
+  float when it resolves an overload, which must not stop a renderer.
+- Refused now: `math.sin(x)`, `float(x)`, `np.array([x], dtype=float)`, and the component of a vector without
+  expression set to an expression (`v[0] = x + 1`, `v[0] += x`), which evaluated it before.
+- Found by the test suite: shells.py called its vertex mapping with `esym.Real` and evaluated the result with
+  `float()`; SurfaceMap.ConeFrustum and Cylinder convert their arguments with `float()` and got constants, so the
+  slopes came from differences. Now a mapping that raises the TypeError is evaluated with numbers and the slopes by
+  differences - the same values as before; `_Number` evaluates a result that is symbolic. symbolicModuleTest.py sets
+  the components of its vector with `Evaluate(...)`. Results unchanged.
+- **An operation on numbers alone gives a number, also while recording**: `esym.sign(v[0])*10` in a Python user
+  function (cartesianSpringDamperUserFunction.py, the documented way of writing one function for both) built an
+  expression of constants, which the conversion to float now refused. `SReal::RecordExpressions(operands...)` - recording
+  on and an operand with an expression or a named variable - replaces `recordExpressions` in the 44 operators and
+  functions of `esym.Real`; an expression without variables was a constant anyway, so nothing records differently, the
+  trees are smaller and the printed expressions show the folded numbers.
+- symbolicNumpyCompatibilityTest.py checks the three conversions among the refused operations, and that esym functions
+  of numbers give a float.

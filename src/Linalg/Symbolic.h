@@ -1242,6 +1242,12 @@ private:
 	{
 		return x.value;
 	}
+	//! an operation is recorded if recording is on and an operand holds an expression or a named variable; on numbers
+	//! alone it gives a number, also while recording, so that esym.sin(0.5)*10 in a Python user function is a float (#3017)
+	static bool HasExpression(const SReal& x) { return x.expr != nullptr; }
+	static bool HasExpression(Real x) { return false; }
+	template<typename... Args>
+	static bool RecordExpressions(const Args&... operands) { return recordExpressions && (HasExpression(operands) || ...); }
 	//! Get Expression* either for SReal or Real
 	static ExpressionBase* GetFunctionExpression(const SReal& x, bool increaseReferenceCounter = true)
 	{
@@ -1265,7 +1271,7 @@ public:
 	//}
 
 	SReal& operator+=(const SReal& rhs) {
-		if (!recordExpressions) {
+		if (!RecordExpressions(*this, rhs)) {
 			value += rhs.value;
 			return *this;
 		}
@@ -1277,7 +1283,7 @@ public:
 	}
 
 	SReal& operator-=(const SReal& rhs) {
-		if (!recordExpressions) {
+		if (!RecordExpressions(*this, rhs)) {
 			value -= rhs.value;
 			return *this;
 		}
@@ -1288,7 +1294,7 @@ public:
 	}
 
 	SReal& operator*=(const SReal& rhs) {
-		if (!recordExpressions) {
+		if (!RecordExpressions(*this, rhs)) {
 			value *= rhs.value;
 			return *this;
 		}
@@ -1299,7 +1305,7 @@ public:
 	}
 
 	SReal& operator/=(const SReal& rhs) {
-		if (!recordExpressions) {
+		if (!RecordExpressions(*this, rhs)) {
 			value /= rhs.value;
 			return *this;
 		}
@@ -1312,7 +1318,7 @@ public:
 	// Overloaded addition operator
 	friend SReal operator+(const SReal& left, const SReal& right)
 	{
-		if (!recordExpressions) {
+		if (!RecordExpressions(left, right)) {
 			return left.value + right.value;
 		}
 		ExpressionBase::NewCount()++;
@@ -1322,7 +1328,7 @@ public:
 	// Overloaded subtraction operator
 	friend SReal operator-(const SReal& left, const SReal& right)
 	{
-		if (!recordExpressions) {
+		if (!RecordExpressions(left, right)) {
 			return left.value - right.value;
 		}
 		ExpressionBase::NewCount()++;
@@ -1332,7 +1338,7 @@ public:
 	// Overloaded subtraction operator
 	friend SReal operator*(const SReal& left, const SReal& right)
 	{
-		if (!recordExpressions) {
+		if (!RecordExpressions(left, right)) {
 			return left.value * right.value;
 		}
 		ExpressionBase::NewCount()++;
@@ -1342,7 +1348,7 @@ public:
 	// Overloaded division operator
 	friend SReal operator/(const SReal& left, const SReal& right)
 	{
-		if (!recordExpressions) {
+		if (!RecordExpressions(left, right)) {
 			return left.value / right.value;
 		}
 		ExpressionBase::NewCount()++;
@@ -1354,7 +1360,7 @@ public:
 	// Overloaded comparison operators
 	friend SReal operator==(const SReal& left, const SReal& right)
 	{
-		if (!recordExpressions) {
+		if (!RecordExpressions(left, right)) {
 			return left.value == right.value;
 		}
 		ExpressionBase::NewCount()++;
@@ -1363,7 +1369,7 @@ public:
 
 	friend SReal operator!=(const SReal& left, const SReal& right)
 	{
-		if (!recordExpressions) {
+		if (!RecordExpressions(left, right)) {
 			return left.value != right.value;
 		}
 		ExpressionBase::NewCount()++;
@@ -1372,7 +1378,7 @@ public:
 
 	friend SReal operator>(const SReal& left, const SReal& right)
 	{
-		if (!recordExpressions) {
+		if (!RecordExpressions(left, right)) {
 			return left.value > right.value;
 		}
 		ExpressionBase::NewCount()++;
@@ -1381,7 +1387,7 @@ public:
 
 	friend SReal operator>=(const SReal& left, const SReal& right)
 	{
-		if (!recordExpressions) {
+		if (!RecordExpressions(left, right)) {
 			return left.value >= right.value;
 		}
 		ExpressionBase::NewCount()++;
@@ -1390,7 +1396,7 @@ public:
 
 	friend SReal operator<=(const SReal& left, const SReal& right)
 	{
-		if (!recordExpressions) {
+		if (!RecordExpressions(left, right)) {
 			return left.value <= right.value;
 		}
 		ExpressionBase::NewCount()++;
@@ -1399,7 +1405,7 @@ public:
 
 	friend SReal operator<(const SReal& left, const SReal& right)
 	{
-		if (!recordExpressions) {
+		if (!RecordExpressions(left, right)) {
 			return left.value < right.value;
 		}
 		ExpressionBase::NewCount()++;
@@ -1411,7 +1417,7 @@ public:
 	//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 	// Unary plus operator
 	SReal operator+() const {
-		if (!recordExpressions) {
+		if (!RecordExpressions(*this)) {
 			return +value;
 		}
 		ExpressionBase::NewCount()++;
@@ -1420,7 +1426,7 @@ public:
 
 	// Unary minus operator
 	SReal operator-() const {
-		if (!recordExpressions) {
+		if (!RecordExpressions(*this)) {
 			return -value;
 		}
 		ExpressionBase::NewCount()++;
@@ -1432,7 +1438,7 @@ public:
 	// Overloaded isfinite function
 	template<typename RealType>
 	static SReal isfinite(const RealType& x) {
-		if (!recordExpressions) { return std::isfinite(Number2Real(x)); }
+		if (!RecordExpressions(x)) { return std::isfinite(Number2Real(x)); }
 		ExpressionBase::NewCount()++;
 		return new ExpressionIsFinite(GetFunctionExpression(x));
 	}
@@ -1440,7 +1446,7 @@ public:
 	// Overloaded abs function
 	template<typename RealType>
 	static SReal abs(const RealType& x) {
-		if (!recordExpressions) { return std::fabs(Number2Real(x)); }
+		if (!RecordExpressions(x)) { return std::fabs(Number2Real(x)); }
 		ExpressionBase::NewCount()++;
 		return new ExpressionAbs(GetFunctionExpression(x));
 	}
@@ -1448,7 +1454,7 @@ public:
 	// Overloaded sign function
 	template<typename RealType>
 	static SReal sign(const RealType& x) {
-		if (!recordExpressions) { return EXUstd::SignReal(Number2Real(x)); }
+		if (!RecordExpressions(x)) { return EXUstd::SignReal(Number2Real(x)); }
 		ExpressionBase::NewCount()++;
 		return new ExpressionSign(GetFunctionExpression(x));
 	}
@@ -1456,7 +1462,7 @@ public:
 	// Overloaded not function; "not" is reserved in C++
 	template<typename RealType>
 	static SReal Not(const RealType& x) { 
-		if (!recordExpressions) { return !(Number2Real(x)); }
+		if (!RecordExpressions(x)) { return !(Number2Real(x)); }
 		ExpressionBase::NewCount()++;
 		return new ExpressionNot(GetFunctionExpression(x));
 	}
@@ -1464,7 +1470,7 @@ public:
 	// Overloaded round function
 	template<typename RealType>
 	static SReal round(const RealType& x) {
-		if (!recordExpressions) { return std::round(Number2Real(x)); }
+		if (!RecordExpressions(x)) { return std::round(Number2Real(x)); }
 		ExpressionBase::NewCount()++;
 		return new ExpressionRound(GetFunctionExpression(x));
 	}
@@ -1472,7 +1478,7 @@ public:
 	// Overloaded ceil function
 	template<typename RealType>
 	static SReal ceil(const RealType& x) {
-		if (!recordExpressions) { return std::ceil(Number2Real(x)); }
+		if (!RecordExpressions(x)) { return std::ceil(Number2Real(x)); }
 		ExpressionBase::NewCount()++;
 		return new ExpressionCeil(GetFunctionExpression(x));
 	}
@@ -1480,7 +1486,7 @@ public:
 	// Overloaded floor function
 	template<typename RealType>
 	static SReal floor(const RealType& x) {
-		if (!recordExpressions) { return std::floor(Number2Real(x)); }
+		if (!RecordExpressions(x)) { return std::floor(Number2Real(x)); }
 		ExpressionBase::NewCount()++;
 		return new ExpressionFloor(GetFunctionExpression(x));
 	}
@@ -1489,7 +1495,7 @@ public:
 	// Overloaded sqrt function
 	template<typename RealType>
 	static SReal sqrt(const RealType& x) {
-		if (!recordExpressions) { return std::sqrt(Number2Real(x)); }
+		if (!RecordExpressions(x)) { return std::sqrt(Number2Real(x)); }
 		ExpressionBase::NewCount()++;
 		return new ExpressionSqrt(GetFunctionExpression(x));
 	}
@@ -1497,7 +1503,7 @@ public:
 	// Overloaded exp function
 	template<typename RealType>
 	static SReal exp(const RealType& x) {
-		if (!recordExpressions) { return EM::Exp(Number2Real(x)); }
+		if (!RecordExpressions(x)) { return EM::Exp(Number2Real(x)); }
 		ExpressionBase::NewCount()++;
 		return new ExpressionExp(GetFunctionExpression(x));
 	}
@@ -1505,7 +1511,7 @@ public:
 	// Overloaded log function
 	template<typename RealType>
 	static SReal log(const RealType& x) {
-		if (!recordExpressions) { return EM::Log(Number2Real(x)); }
+		if (!RecordExpressions(x)) { return EM::Log(Number2Real(x)); }
 		ExpressionBase::NewCount()++;
 		return new ExpressionLog(GetFunctionExpression(x));
 	}
@@ -1518,7 +1524,7 @@ public:
 	// Overloaded sin function
 	template<typename RealType>
 	static SReal sin(const RealType& x) {
-		if (!recordExpressions) { return EM::Sin(Number2Real(x)); }
+		if (!RecordExpressions(x)) { return EM::Sin(Number2Real(x)); }
 		ExpressionBase::NewCount()++;
 		return new ExpressionSin(GetFunctionExpression(x));
 	}
@@ -1526,7 +1532,7 @@ public:
 	// Overloaded cos function
 	template<typename RealType>
 	static SReal cos(const RealType& x) {
-		if (!recordExpressions) { return EM::Cos(Number2Real(x)); }
+		if (!RecordExpressions(x)) { return EM::Cos(Number2Real(x)); }
 		ExpressionBase::NewCount()++;
 		return new ExpressionCos(GetFunctionExpression(x));
 	}
@@ -1534,7 +1540,7 @@ public:
 	// Overloaded tan function
 	template<typename RealType>
 	static SReal tan(const RealType& x) {
-		if (!recordExpressions) { return EM::Tan(Number2Real(x)); }
+		if (!RecordExpressions(x)) { return EM::Tan(Number2Real(x)); }
 		ExpressionBase::NewCount()++;
 		return new ExpressionTan(GetFunctionExpression(x));
 	}
@@ -1542,7 +1548,7 @@ public:
 	// Overloaded asin function
 	template<typename RealType>
 	static SReal asin(const RealType& x) {
-		if (!recordExpressions) { return EM::Asin(Number2Real(x)); }
+		if (!RecordExpressions(x)) { return EM::Asin(Number2Real(x)); }
 		ExpressionBase::NewCount()++;
 		return new ExpressionASin(GetFunctionExpression(x));
 	}
@@ -1550,7 +1556,7 @@ public:
 	// Overloaded acos function
 	template<typename RealType>
 	static SReal acos(const RealType& x) {
-		if (!recordExpressions) { return EM::Acos(Number2Real(x)); }
+		if (!RecordExpressions(x)) { return EM::Acos(Number2Real(x)); }
 		ExpressionBase::NewCount()++;
 		return new ExpressionACos(GetFunctionExpression(x));
 	}
@@ -1558,7 +1564,7 @@ public:
 	// Overloaded atan function
 	template<typename RealType>
 	static SReal atan(const RealType& x) {
-		if (!recordExpressions) { return EM::Atan(Number2Real(x)); }
+		if (!RecordExpressions(x)) { return EM::Atan(Number2Real(x)); }
 		ExpressionBase::NewCount()++;
 		return new ExpressionATan(GetFunctionExpression(x));
 	}
@@ -1567,7 +1573,7 @@ public:
 	// Overloaded sin function
 	template<typename RealType>
 	static SReal sinh(const RealType& x) {
-		if (!recordExpressions) { return EM::Sinh(Number2Real(x)); }
+		if (!RecordExpressions(x)) { return EM::Sinh(Number2Real(x)); }
 		ExpressionBase::NewCount()++;
 		return new ExpressionSinh(GetFunctionExpression(x));
 	}
@@ -1575,7 +1581,7 @@ public:
 	// Overloaded cos function
 	template<typename RealType>
 	static SReal cosh(const RealType& x) {
-		if (!recordExpressions) { return EM::Cosh(Number2Real(x)); }
+		if (!RecordExpressions(x)) { return EM::Cosh(Number2Real(x)); }
 		ExpressionBase::NewCount()++;
 		return new ExpressionCosh(GetFunctionExpression(x));
 	}
@@ -1583,7 +1589,7 @@ public:
 	// Overloaded tan function
 	template<typename RealType>
 	static SReal tanh(const RealType& x) {
-		if (!recordExpressions) { return EM::Tanh(Number2Real(x)); }
+		if (!RecordExpressions(x)) { return EM::Tanh(Number2Real(x)); }
 		ExpressionBase::NewCount()++;
 		return new ExpressionTanh(GetFunctionExpression(x));
 	}
@@ -1591,7 +1597,7 @@ public:
 	// Overloaded asin function
 	template<typename RealType>
 	static SReal asinh(const RealType& x) {
-		if (!recordExpressions) { return std::asinh(Number2Real(x)); }
+		if (!RecordExpressions(x)) { return std::asinh(Number2Real(x)); }
 		ExpressionBase::NewCount()++;
 		return new ExpressionASinh(GetFunctionExpression(x));
 	}
@@ -1599,7 +1605,7 @@ public:
 	// Overloaded acos function
 	template<typename RealType>
 	static SReal acosh(const RealType& x) {
-		if (!recordExpressions) { return std::acosh(Number2Real(x)); }
+		if (!RecordExpressions(x)) { return std::acosh(Number2Real(x)); }
 		ExpressionBase::NewCount()++;
 		return new ExpressionACosh(GetFunctionExpression(x));
 	}
@@ -1607,7 +1613,7 @@ public:
 	// Overloaded atan function
 	template<typename RealType>
 	static SReal atanh(const RealType& x) {
-		if (!recordExpressions) { return std::atanh(Number2Real(x)); }
+		if (!RecordExpressions(x)) { return std::atanh(Number2Real(x)); }
 		ExpressionBase::NewCount()++;
 		return new ExpressionATanh(GetFunctionExpression(x));
 	}
@@ -1618,7 +1624,7 @@ public:
 	// Overloaded pow function
 	template<typename RealType, typename RealTypeExp>
 	static SReal pow(const RealType& base, const RealTypeExp& exponent) {
-		if (!recordExpressions) { return EM::Pow(Number2Real(base), Number2Real(exponent)); }
+		if (!RecordExpressions(base, exponent)) { return EM::Pow(Number2Real(base), Number2Real(exponent)); }
 		ExpressionBase::NewCount()++;
 		return new ExpressionPower(GetFunctionExpression(base), GetFunctionExpression(exponent));
 	}
@@ -1626,7 +1632,7 @@ public:
 	// Overloaded atan2 function
 	template<typename RealTypeArg1, typename RealTypeArg2>
 	static SReal atan2(const RealTypeArg1& arg1, const RealTypeArg2& arg2) {
-		if (!recordExpressions) { return EM::Atan2(Number2Real(arg1), Number2Real(arg2)); }
+		if (!RecordExpressions(arg1, arg2)) { return EM::Atan2(Number2Real(arg1), Number2Real(arg2)); }
 		ExpressionBase::NewCount()++;
 		return new ExpressionAtan2(GetFunctionExpression(arg1), GetFunctionExpression(arg2));
 	}
@@ -1634,7 +1640,7 @@ public:
 	// Overloaded modulo function (floating-point remainder of division)
 	template<typename RealTypeArg1, typename RealTypeArg2>
 	static SReal mod(const RealTypeArg1& arg1, const RealTypeArg2& arg2) {
-		if (!recordExpressions) { return std::fmod(Number2Real(arg1), Number2Real(arg2)); }
+		if (!RecordExpressions(arg1, arg2)) { return std::fmod(Number2Real(arg1), Number2Real(arg2)); }
 		ExpressionBase::NewCount()++;
 		return new ExpressionMod(GetFunctionExpression(arg1), GetFunctionExpression(arg2));
 	}
@@ -1642,7 +1648,7 @@ public:
 	// Overloaded min function
 	template<typename RealTypeArg1, typename RealTypeArg2>
 	static SReal min(const RealTypeArg1& arg1, const RealTypeArg2& arg2) {
-		if (!recordExpressions) { return std::min(Number2Real(arg1), Number2Real(arg2)); }
+		if (!RecordExpressions(arg1, arg2)) { return std::min(Number2Real(arg1), Number2Real(arg2)); }
 		ExpressionBase::NewCount()++;
 		return new ExpressionMin(GetFunctionExpression(arg1), GetFunctionExpression(arg2));
 	}
@@ -1650,7 +1656,7 @@ public:
 	// Overloaded max function
 	template<typename RealTypeArg1, typename RealTypeArg2>
 	static SReal max(const RealTypeArg1& arg1, const RealTypeArg2& arg2) {
-		if (!recordExpressions) { return std::max(Number2Real(arg1), Number2Real(arg2)); }
+		if (!RecordExpressions(arg1, arg2)) { return std::max(Number2Real(arg1), Number2Real(arg2)); }
 		ExpressionBase::NewCount()++;
 		return new ExpressionMax(GetFunctionExpression(arg1), GetFunctionExpression(arg2));
 	}
@@ -1662,7 +1668,7 @@ public:
 	// If-then-else construct, for expressions
 	template<typename RealType, typename RealTypeTrue, typename RealTypeFalse>
 	static SReal IfThenElse(const RealType& condition, const RealTypeTrue& ifTrue, const RealTypeFalse& ifFalse) {
-		if (!recordExpressions) {return Number2Real(condition) ? Number2Real(ifTrue) : Number2Real(ifFalse); }
+		if (!RecordExpressions(condition, ifTrue, ifFalse)) {return Number2Real(condition) ? Number2Real(ifTrue) : Number2Real(ifFalse); }
 		ExpressionBase::NewCount()++;
 		return new ExpressionIfThenElse(GetFunctionExpression(condition), GetFunctionExpression(ifTrue), GetFunctionExpression(ifFalse));
 	}

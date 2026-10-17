@@ -49,10 +49,10 @@ esym.SetRecording(True)
 
 ```text
 a:  a  =  42.0
-c:  (((a + (13 * 7)) + 1) - 3)  =  131.0
-d:  ((a + (13 * sin(a))) + cos(7))  =  30.839122131440067
-d:  ((a + (13 * sin(a))) + cos(7))  =  27.63179787837662
-d:  ((a + (13 * sin(a))) + cos(7))  =  27.63179787837662
+c:  (((a + 91) + 1) - 3)  =  131.0
+d:  ((a + (13 * sin(a))) + 0.753902)  =  30.839122131440067
+d:  ((a + (13 * sin(a))) + 0.753902)  =  27.63179787837662
+d:  ((a + (13 * sin(a))) + 0.753902)  =  27.63179787837662
 f= 1007.048934256198 , diff= 11.908573304574846
 ```
 
@@ -88,7 +88,7 @@ The class **symbolic.Real** has the following **functions and structures**:
   ```
 
 - **`value`**: access to internal float value, which is used in case that symbolic.Real has been built from a float (but without a name and without symbolic expression)
-- **`operator __float__()`**: evaluation of expression and conversion of symbolic.Real to Python float
+- **`operator __float__()`**: conversion of symbolic.Real to Python float; while recording, an expression or a named variable raises a TypeError, as math.sin(x) or float(x) would record a constant - use Evaluate() for the value (#3017)
 - **`operator __str__()`**: conversion of symbolic.Real to string
 - **`operator __repr__()`**: representation of symbolic.Real in Python
 
@@ -226,9 +226,9 @@ print('v1[2]: ',v1[2],"=",v1[2].Evaluate())   #evaluate as Real
 ```text
 v1:  [1,3,2]
 v2 initial:  [1,3,2]
-v2 now:  [a,42,(a - (3 * 13))] = [42. 42.  3.]
-v1+v2:  ([1,3,2] + [a,42,(a - (3 * 13))]) = [43. 45.  5.]
-v1@v2:  ([1,3,2] * [a,42,(a - (3 * 13))]) = 174.0
+v2 now:  [a,42,(a - 39)] = [42. 42.  3.]
+v1+v2:  ([1,3,2] + [a,42,(a - 39)]) = [43. 45.  5.]
+v1@v2:  ([1,3,2] @ [a,42,(a - 39)]) = 174.0
 v1[2]:  [1,3,2][2] = 2.0
 ```
 
@@ -341,8 +341,8 @@ print('m2: ',m2)
 ```
 
 ```text
-m1:  ((3 * ([[1,3,2],[4,5,6]] + [[a,(3 * 13),2],
-[4,5,6]])) - (3 * [[a,(3 * 13),2],
+m1:  ((3 * ([[1,3,2],[4,5,6]] + [[a,39,2],
+[4,5,6]])) - (3 * [[a,39,2],
 [4,5,6]]))
 m2:  [[0,1,1],[1,0,1],[1,1,0]]
 ```

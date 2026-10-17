@@ -510,9 +510,17 @@ void Init_Pybind_Symbolic(py::module& m) {
 
 		.def_property("value", &Symbolic::SReal::GetValue, &Symbolic::SReal::SetValue)
 
+		//while recording, an expression or a named variable converted to float would be a constant of the recorded function:
+		//math.sin(x), float(x), np.array([x], dtype=float) raise instead of losing the expression (#3017)
 		.def("__float__", [](const Symbolic::SReal& item) {
-		return (Real)item;
-			}, "same as Evaluate()")
+				if (Symbolic::SReal::recordExpressions && item.GetExpression())
+				{
+					//a Python TypeError without PyError: pybind11 may try a float conversion when it resolves an overload
+					throw py::type_error("exudyn.symbolic: a symbolic.Real expression is converted to float while recording, which would record a constant: "
+						"use the functions of exudyn.symbolic (esym.sin) or of numpy (np.sin) instead of math.sin, and x.Evaluate() for the value");
+				}
+				return (Real)item;
+			}, "the value of a number; refused for an expression or a named variable while recording, use Evaluate() (#3017)")
 
 		//+++++++++++++++++++++++++++++++++++++++++++
 		//add operators: (right now, we do not have implicit conversion from Real to Symbolic::SReal)

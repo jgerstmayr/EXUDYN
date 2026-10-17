@@ -95,6 +95,9 @@ two symbolic vectors raises a TypeError as well. Numpy's functions record with s
 divided by a scalar, `2**x`, `abs(x)`, `v[-1]`, `sum(v)` and `len(v)` work, and CreateSymbolicUserFunction records `q`
 and `q_t` of ObjectGenericODE2, ObjectGenericODE1, ObjectUserBody, ObjectKinematicTree and the FFRF objects with their
 size, so that they combine with constant vectors. The expression of a product prints as `@`.
+While recording, a symbolic expression or named variable converted to float raises a TypeError - `math.sin(x)`,
+`float(x)`, `np.array([x], dtype=float)` recorded a constant without a message; `np.sin(x)` and `esym.sin(x)` record,
+and `x.Evaluate()` gives the value (#3017).
 
 **Drawing with user functions in a renderer thread**: the markers, connectors, loads and sensors on an ObjectUserBody
 and every load with a user function are drawn in the main thread, together with the graphics user functions, so that

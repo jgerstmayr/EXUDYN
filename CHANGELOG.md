@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.13 | Newborn | 114 | 1.13.115 |
+| 1.13 | Newborn | 115 | 1.13.116 |
 | 1.12 | Metheney | 367 | 1.12.462 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
@@ -30,6 +30,10 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.13 - Newborn (current)
 
+- **1.13.116** `CHANGE` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` Refuse float() of a symbolic expression while recording, so that math.sin and float() cannot lose it (#3017)
+  - description: symbolic.Real has \_\_float\_\_, which evaluates the expression: math.sin(x) or float(x) in a symbolic user function records a constant instead of the expression, without any message (found by the comparison with numpy, \#3015; tools/checkPythonMath.py checks the test models for it). While recording, \_\_float\_\_ of a Real that holds an expression or a named variable should raise a TypeError that names exudyn.symbolic.sin etc. Decision needed: Evaluate() stays for the value; code that uses float() on purpose has to change.
+  - **notes:** While recording, a symbolic.Real that holds an expression or a named variable refuses the conversion to float with a TypeError: math.sin(x), float(x) and np.array(\[x\], dtype=float) recorded a constant without a message; np.sin(x) and esym.sin(x) record, x.Evaluate() gives the value. An operation of exudyn.symbolic on numbers alone gives a number, also while recording, so that esym functions in a Python user function return floats.
+  - date resolved: **2026-10-17 15:46**, date raised: 2026-10-17
 - **1.13.115** `CHANGE` `MEDIUM EFF` `raised by: Claude-JG` `resolved by: Claude-JG` Make the operators of exudyn.symbolic agree with numpy: \* of two vectors or with a matrix refused, multiply, numpy ufuncs (#3015)
   - description: The operator \* of two symbolic vectors is their scalar product, of matrices and of a matrix and a vector the matrix product; numpy multiplies the components. \* of vectors and matrices raises a TypeError that names dot(), @ and multiply(); exudyn.special.deprecations.symbolicStarProduct restores the old meaning for the transition. Vector.multiply is the product of the components. Numpy's ufuncs (np.multiply, np.sin, np.sqrt, np.arctan2, np.maximum, a numpy array times or plus a symbolic vector) compute with symbolic operands instead of refusing them. Indexing raises IndexError and takes negative indices, so that a symbolic vector is a sequence; a vector divided by a scalar, 2\*\*x and abs(x) are added. The comparison with numpy in python is a test.
   - **notes:** The operators of exudyn.symbolic mean what they mean for numpy, so that one user function computes with numpy arrays and records with symbolic vectors: \* of two symbolic vectors, of two matrices or of a matrix and a vector raises a TypeError (numpy multiplies the components; use @, dot() or multiply()), as does == of two vectors; exudyn.special.deprecations.symbolicStarProduct = True restores the scalar and matrix products for the transition. New: Vector.multiply, numpy's functions with symbolic operands (np.multiply, np.dot, np.sin, np.sqrt, np.arctan2, np.maximum, a numpy array plus or times a symbolic vector), a vector divided by a scalar, 2\*\*x, abs(x), v\[-1\], sum(v); CreateSymbolicUserFunction records q and q\_t of the bodies and systems with their size. Test model symbolicNumpyCompatibilityTest.py.

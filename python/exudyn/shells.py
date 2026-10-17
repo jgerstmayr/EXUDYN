@@ -198,7 +198,7 @@ class ShellMesh:
 
         def _map_numeric(pos_values):
             mapped = self.vertexMapping([float(pos_values[0]), float(pos_values[1]), float(pos_values[2])])
-            return np.array([float(mapped[0]), float(mapped[1]), float(mapped[2])], dtype=float)
+            return np.array([_Number(mapped[0]), _Number(mapped[1]), _Number(mapped[2])], dtype=float)
 
         def _numeric_slope(pos_values, component):
             step = 1e-6 * max(1.0, abs(float(pos_values[component])))
@@ -217,8 +217,12 @@ class ShellMesh:
             y = SymReal("y", pos[1])
             z = SymReal("z", pos[2])
 
-            # evaluate the user mapping — returns a list of three symbolic (or plain) values
-            v = self.vertexMapping([x, y, z])
+            # evaluate the user mapping — returns a list of three symbolic (or plain) values; a numeric mapping, which
+            # converts its arguments with float(), gets numbers and its slopes by differences (#3017)
+            try:
+                v = self.vertexMapping([x, y, z])
+            except TypeError:
+                v = list(_map_numeric(pos))
 
             # evaluate mapped position numerically
             posEval = np.array([_eval(v[0]), _eval(v[1]), _eval(v[2])])
@@ -329,7 +333,7 @@ class ShellMesh:
             return derivativeLength
         midParameter = 0.5*(self.nodeReferencePositionsUnmapped[k0] + self.nodeReferencePositionsUnmapped[k1])
         mapped = self.vertexMapping([float(midParameter[0]), float(midParameter[1]), float(midParameter[2])])
-        midPoint = np.array([float(mapped[0]), float(mapped[1]), float(mapped[2])])
+        midPoint = np.array([_Number(mapped[0]), _Number(mapped[1]), _Number(mapped[2])])
         p0 = self.nodeReferencePositions[k0]
         p1 = self.nodeReferencePositions[k1]
         s = 8.*float((midPoint - 0.5*(p0 + p1)) @ dt)/dt2
@@ -542,6 +546,10 @@ _degenTol  = 1e-12   # mapping degeneracy threshold (|sx x sy| ~ 0)
 _aspectTol = 1e-6    # minimum |sx x sy| / max(|sx x sy|) for ill-conditioned check
 
 # ── vector / matrix helpers ──────────────────────────────────────────────────
+
+def _Number(value):
+    """the value of a number or of an exu.symbolic.Real, which float() refuses while recording (#3017)"""
+    return value.Evaluate() if hasattr(value, 'Evaluate') else float(value)
 
 def _UnitVector(v):
     """Return the unit vector of v; raises ValueError if v is near-zero."""

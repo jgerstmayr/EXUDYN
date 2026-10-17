@@ -2,10 +2,14 @@
   "number": 3017,
   "title": "Refuse float() of a symbolic expression while recording, so that math.sin and float() cannot lose it",
   "author": "Claude-JG",
-  "status": "RAISED",
+  "status": "RESOLVED",
   "type": "CHANGE",
   "effort": "LOW",
   "description": "symbolic.Real has __float__, which evaluates the expression: math.sin(x) or float(x) in a symbolic user function records a constant instead of the expression, without any message (found by the comparison with numpy, #3015; tools/checkPythonMath.py checks the test models for it). While recording, __float__ of a Real that holds an expression or a named variable should raise a TypeError that names exudyn.symbolic.sin etc. Decision needed: Evaluate() stays for the value; code that uses float() on purpose has to change.",
   "dateRaised": "2026-10-17",
-  "deadline": "2027-04-15"
+  "deadline": "2027-04-15",
+  "dateResolved": "2026-10-17 15:46",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "While recording, a symbolic.Real that holds an expression or a named variable refuses the conversion to float with a TypeError: math.sin(x), float(x) and np.array([x], dtype=float) recorded a constant without a message; np.sin(x) and esym.sin(x) record, x.Evaluate() gives the value. An operation of exudyn.symbolic on numbers alone gives a number, also while recording, so that esym functions in a Python user function return floats.",
+  "resolvedInVersion": "1.13.116"
 }

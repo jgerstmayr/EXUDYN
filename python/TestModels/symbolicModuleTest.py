@@ -276,12 +276,12 @@ if vectorTests:
             if case == 0:
                 w.SetVector([4.2,-1.2])
                 d = 3.3*v+a*w+(v@w)*v
-                x[0] += d.NormL2()
-                x[1] += Evaluate(AllEqual(v, v))
-                x[1] += Evaluate(AllEqual(v, Vector([1,2.1])))
-                x[1] += Evaluate(AnyNotEqual(v, Vector([1,2.1])))
-                x[1] += Evaluate(AllEqual(v, Vector([1,2.])))
-                x[1] += Evaluate(AnyNotEqual(v, Vector([1,2.])))
+                x[0] = Evaluate(x[0] + d.NormL2()) #a component of a vector without expression is set to a number (#3017)
+                x[1] = Evaluate(x[1] + AllEqual(v, v))
+                x[1] = Evaluate(x[1] + AllEqual(v, Vector([1,2.1])))
+                x[1] = Evaluate(x[1] + AnyNotEqual(v, Vector([1,2.1])))
+                x[1] = Evaluate(x[1] + AllEqual(v, Vector([1,2.])))
+                x[1] = Evaluate(x[1] + AnyNotEqual(v, Vector([1,2.])))
             else:
                 w = np.array([4.2,-1.2])
                 d = 3.3*v+a*w+(v@w)*v

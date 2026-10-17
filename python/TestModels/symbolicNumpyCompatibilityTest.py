@@ -5,8 +5,10 @@
 #           has gives the numpy result - sums, products with scalars, a / s, a @ b, a.dot(b), np.multiply(a, b), M @ v,
 #           v @ M, a numpy array plus or times a symbolic vector, components a[0] and a[-1], sum(a), np.dot, np.sin(x),
 #           np.arctan2, abs(x), 2**x; what numpy defines differently is refused with a TypeError: * of two vectors, of
-#           two matrices and of a matrix and a vector, and == of two vectors. exudyn.special.deprecations.symbolicStarProduct
-#           restores the scalar and matrix products of *, with a DeprecationWarning.
+#           two matrices and of a matrix and a vector, and == of two vectors; a conversion to float, which would record a
+#           constant, is refused while recording, and an operation on numbers alone gives a number (#3017).
+#           exudyn.special.deprecations.symbolicStarProduct restores the scalar and matrix products of *, with a
+#           DeprecationWarning.
 #           One user function is written once and solved as Python and as symbolic user function.
 #
 # Author:   Johannes Gerstmayr
@@ -22,6 +24,7 @@ from exudyn.advancedUtilities import CreateSymbolicUserFunction
 import exudyn.cMath as cMath
 import numpy as np
 import warnings
+import math
 esym = exu.symbolic
 
 aValues, bValues = [1., 2., 3.], [4., -5., 6.]
@@ -76,6 +79,9 @@ refused = {
     'M * a': lambda a, b, M, s, y: M * a,
     'a * M': lambda a, b, M, s, y: a * M,
     'a == b': lambda a, b, M, s, y: a == b,
+    'math.sin(y)': lambda a, b, M, s, y: math.sin(y), #checkPythonMath: allowed - refused for a symbolic operand (#3017)
+    'float(y)': lambda a, b, M, s, y: float(y),
+    'np.array([s, y], dtype=float)': lambda a, b, M, s, y: np.array([s, y], dtype=float),
 }
 
 def Value(result):
@@ -102,6 +108,11 @@ for name, Function in refused.items():
         testError += 1
     except TypeError:
         pass
+
+#an operation on numbers alone gives a number, also while recording: esym functions in a Python user function (#3017)
+if float(esym.sign(-0.5)*10 + esym.sin(0.5)) != -10 + cMath.sin(0.5):
+    exu.Print('esym functions of numbers do not give a number')
+    testError += 1
 
 #the old meaning of *, for the transition
 exu.special.deprecations.symbolicStarProduct = True

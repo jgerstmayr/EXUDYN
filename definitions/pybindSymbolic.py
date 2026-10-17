@@ -88,7 +88,7 @@ symbolicModule.DefPyFunctionAccess(cClass=classStr, pyName='Diff', cName='',
 symbolicModule.DefDataAccess('value','access to internal float value, which is used in case that symbolic.Real has been built from a float (but without a name and without symbolic expression)',
                        dataType = 'float')
 
-symbolicModule.DefOperator('__float__','evaluation of expression and conversion of symbolic.Real to Python float',
+symbolicModule.DefOperator('__float__','conversion of symbolic.Real to Python float; while recording, an expression or a named variable raises a TypeError, as math.sin(x) or float(x) would record a constant - use Evaluate() for the value (#3017)',
                        returnType = 'float')
 
 symbolicModule.DefOperator('__str__','conversion of symbolic.Real to string',
