@@ -313,3 +313,43 @@ void CObjectSuperElement::GetAccessFunctionSuperElement(AccessFunctionType acces
 
 }
 
+//! the ODE2 coordinates of the nodes and their velocities (#2995)
+void CObjectBody::GatherCoordinates(VectorBase<Real>& coordinates, VectorBase<Real>& coordinates_t, ConfigurationType configuration,
+	bool addReference) const
+{
+	Index n = 0;
+	for (Index i = 0; i < GetNumberOfNodes(); i++) { n += GetCNode(i)->GetNumberOfODE2Coordinates(); }
+	coordinates.SetNumberOfItems(n);
+	coordinates_t.SetNumberOfItems(n);
+	Index cnt = 0;
+	for (Index i = 0; i < GetNumberOfNodes(); i++)
+	{
+		const CNodeODE2* node = (const CNodeODE2*)GetCNode(i);
+		Index nc = node->GetNumberOfODE2Coordinates();
+		if (configuration == ConfigurationType::Reference)
+		{
+			LinkedDataVector reference(node->GetReferenceCoordinateVector());
+			for (Index k = 0; k < nc; k++)
+			{
+				coordinates[cnt + k] = addReference ? reference[k] : 0.;
+				coordinates_t[cnt + k] = 0.;
+			}
+		}
+		else
+		{
+			LinkedDataVector u(node->GetCoordinateVector(configuration));
+			LinkedDataVector u_t(node->GetCoordinateVector_t(configuration));
+			for (Index k = 0; k < nc; k++)
+			{
+				coordinates[cnt + k] = u[k];
+				coordinates_t[cnt + k] = u_t[k];
+			}
+			if (addReference)
+			{
+				LinkedDataVector reference(node->GetReferenceCoordinateVector());
+				for (Index k = 0; k < nc; k++) { coordinates[cnt + k] += reference[k]; }
+			}
+		}
+		cnt += nc;
+	}
+}

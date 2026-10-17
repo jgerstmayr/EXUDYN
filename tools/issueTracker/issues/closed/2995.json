@@ -2,11 +2,15 @@
   "number": 2995,
   "title": "ObjectUserBody and ObjectGenericODE2: implement them with the Exudyn conventions and one shared pattern",
   "author": "Claude-JG",
-  "status": "RAISED",
+  "status": "RESOLVED",
   "type": "IMPROVEMENT",
   "effort": "MEDIUM",
   "description": "revision2026c step RG7.3.4 (maintainer 2026-10-15: static functions, EvaluateMatrix with an integer switch, StdVector used internally instead of the Exudyn vectors; check both objects): the review of both objects is in the plan step; to be decided item by item before the change",
   "dateRaised": "2026-10-15",
   "deadline": "2027-04-13",
-  "file": "src/ImplObjects/CObjectUserBody.cpp"
+  "dateResolved": "2026-10-17 10:14",
+  "resolvedAuthor": "Claude-JG",
+  "file": "src/ImplObjects/CObjectUserBody.cpp",
+  "releaseNotes": "ObjectUserBody and ObjectGenericODE2 are implemented with one pattern: the user functions get numpy views of Exudyn vectors without intermediate copies, a result of the wrong size names the user function and the sizes, and the derivative of a user body's Jacobians uses the step of the numerical differentiation of the solver",
+  "resolvedInVersion": "1.13.111"
 }

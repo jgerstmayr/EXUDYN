@@ -88,6 +88,7 @@ protected:
 
 	//remove this in future: CObject functions should get nodal coordinates (pos+vel+acc) per node
 	CSystemData* cSystemData; //needs to be initialized during Object Factory
+	Index objectNumber = -1;  //!< the number in the system, set by Assemble (#2995)
 
 public:
     // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -112,6 +113,11 @@ public:
 	//  - use this access rarely, as it introduces deeper coupling of objects into system!
 	CSystemData* GetCSystemData() const { return cSystemData; }
 	void SetCSystemData(CSystemData* cSystemDataInit) { cSystemData = cSystemDataInit; }
+
+	//! the number of this object in the system, set by Assemble; -1 before, e.g. for the user functions that an item
+	//! calls from an access function, which gets no object number (#2995)
+	Index GetObjectNumber() const { return objectNumber; }
+	void SetObjectNumber(Index number) { objectNumber = number; }
 
 	//! function which is called, if parameters have changed; this should e.g. tell if precomputed values need to be re-computed; is called in MainObject::SetWithDictionary(...)
 	virtual void ParametersHaveChanged() {} //default: do nothing

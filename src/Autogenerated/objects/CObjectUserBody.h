@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-10-17  09:33:47 (last modified)
+* @date         2026-10-17  10:00:15 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -78,7 +78,14 @@ public: // AUTO:
 class CObjectUserBody: public CObjectBody // AUTO:
 {
 protected: // AUTO:
-    mutable Index ownObjectNumber = -1; //the number of this object in the system, for the user functions of the access functions
+    //! a user function that returns a matrix of 3 rows, with its name for the messages and the number of columns (#2995)
+    template<class TUserFunction>
+    void EvaluateMatrixUserFunction(const TUserFunction& function, const char* name, Index columns, Matrix& value, Real t,
+        const Vector3D& localPosition, const Vector& coordinates) const;
+    //! the result of a user function has the size the body needs, or a PyError names the user function and the sizes (#2995)
+    void CheckResultSize(const char* name, Index rows, Index columns, Index requiredRows, Index requiredColumns) const;
+    //! a Jacobian times the velocity coordinates, in a configuration (#2995)
+    Vector3D JacobianTimesVelocity(bool rotation, const Vector3D& localPosition, ConfigurationType configuration) const;
     CObjectUserBodyParameters parameters; //! AUTO: contains all parameters for CObjectUserBody
 
 public: // AUTO:
@@ -188,12 +195,6 @@ public: // AUTO:
         return false;
     }
 
-    //! AUTO:  the object coordinates including the reference values, and the velocity coordinates (zero in the reference configuration)
-    void ComputeObjectCoordinates(StdVector& coordinates, StdVector& coordinates_t, ConfigurationType configuration) const;
-
-    //! AUTO:  the number of this object in the system, which the user functions of the access functions get
-    Index GetObjectNumber() const;
-
     //! AUTO:  false in another thread than the main thread, which then gets no position (#3003); implemented in evaluateUserFunctions.cpp
     bool PythonCallPossible() const;
 
@@ -204,19 +205,25 @@ public: // AUTO:
     }
 
     //! AUTO:  call of positionUserFunction; implemented in evaluateUserFunctions.cpp
-    void EvaluatePosition(Vector3D& position, Real t, const Vector3D& localPosition, const StdVector& coordinates) const;
+    void EvaluatePosition(Vector3D& position, Real t, const Vector3D& localPosition, const Vector& coordinates) const;
 
-    //! AUTO:  call of positionJacobianUserFunction (which=0), rotationMatrixUserFunction (1) or rotationJacobianUserFunction (2), with the size checked; implemented in evaluateUserFunctions.cpp
-    void EvaluateMatrix(Index which, Matrix& value, Real t, const Vector3D& localPosition, const StdVector& coordinates) const;
+    //! AUTO:  call of positionJacobianUserFunction, with the size checked; implemented in evaluateUserFunctions.cpp
+    void EvaluatePositionJacobian(Matrix& value, Real t, const Vector3D& localPosition, const Vector& coordinates) const;
+
+    //! AUTO:  call of rotationMatrixUserFunction, with the size checked; implemented in evaluateUserFunctions.cpp
+    void EvaluateRotationMatrix(Matrix3D& value, Real t, const Vector3D& localPosition, const Vector& coordinates) const;
+
+    //! AUTO:  call of rotationJacobianUserFunction, with the size checked; implemented in evaluateUserFunctions.cpp
+    void EvaluateRotationJacobian(Matrix& value, Real t, const Vector3D& localPosition, const Vector& coordinates) const;
 
     //! AUTO:  call of outputVariableUserFunction; implemented in evaluateUserFunctions.cpp
-    void EvaluateUserFunctionOutputVariable(Vector& value, Real t, OutputVariableType variableType, const Vector3D& localPosition, const StdVector& coordinates, const StdVector& coordinates_t) const;
+    void EvaluateUserFunctionOutputVariable(Vector& value, Real t, OutputVariableType variableType, const Vector3D& localPosition, const Vector& coordinates, const Vector& coordinates_t) const;
 
-    //! AUTO:  call of forceUserFunction; implemented in evaluateUserFunctions.cpp
-    void EvaluateUserFunctionForce(Vector& force, Real t, Index objectNumber, const StdVector& coordinates, const StdVector& coordinates_t) const;
+    //! AUTO:  call of forceUserFunction, with the size checked; implemented in evaluateUserFunctions.cpp
+    void EvaluateUserFunctionForce(Vector& force, Real t, const Vector& coordinates, const Vector& coordinates_t) const;
 
     //! AUTO:  call of massMatrixUserFunction; implemented in evaluateUserFunctions.cpp
-    void EvaluateUserFunctionMassMatrix(EXUmath::MatrixContainer& massMatrix, Real t, Index objectNumber, const StdVector& coordinates, const StdVector& coordinates_t, const ArrayIndex& ltg) const;
+    void EvaluateUserFunctionMassMatrix(EXUmath::MatrixContainer& massMatrix, Real t, const Vector& coordinates, const Vector& coordinates_t, const ArrayIndex& ltg) const;
 
     virtual OutputVariableType GetOutputVariableTypes() const override
     {

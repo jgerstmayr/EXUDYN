@@ -246,37 +246,48 @@ void CObjectConnectorSpringDamper::EvaluateUserFunctionForce(Real& force, const 
 }
 
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-//! call to user function implemented in separate file to avoid including pybind and MainSystem.h at too many places
-void CObjectGenericODE2::EvaluateUserFunctionForce(Vector& force, const MainSystemBase& mainSystem, Real t, Index objectNumber, const Vector& coordinates, const Vector& coordinates_t) const
+//! the user functions of ObjectGenericODE2, with the MainSystem of the object (#2995)
+void CObjectGenericODE2::EvaluateUserFunctionForce(Vector& force, Real t, Index objectNumber, const Vector& coordinates, const Vector& coordinates_t) const
 {
 	UserFunctionExceptionHandling([&] //lambda function to add consistent try{..} catch(...) block
 	{
-		EvaluateUserFunctionIntoVector(parameters.forceUserFunction, force, (const MainSystem&)mainSystem, t, objectNumber, coordinates, coordinates_t);
+		EvaluateUserFunctionIntoVector(parameters.forceUserFunction, force, (const MainSystem&)cSystemData->GetMainSystemBacklink(), t, objectNumber,
+			coordinates, coordinates_t);
 	}, "ObjectGenericODE2::forceUserFunction");
+	if (force.NumberOfItems() != coordinates.NumberOfItems())
+	{
+		PyError("ObjectGenericODE2: forceUserFunction returned a vector of size " + EXUstd::ToString(force.NumberOfItems()) + ", but "
+			+ EXUstd::ToString(coordinates.NumberOfItems()) + " is needed", PyErrorType::valueError);
+	}
 }
 
-//! call to user function implemented in separate file to avoid including pybind and MainSystem.h at too many places
-void CObjectGenericODE2::EvaluateUserFunctionMassMatrix(EXUmath::MatrixContainer& massMatrix, const MainSystemBase& mainSystem, Real t, Index objectNumber,
-	const StdVector& coordinates, const StdVector& coordinates_t, const ArrayIndex& ltg) const
+void CObjectGenericODE2::EvaluateUserFunctionMassMatrix(EXUmath::MatrixContainer& massMatrix, Real t, Index objectNumber,
+	const Vector& coordinates, const Vector& coordinates_t, const ArrayIndex& ltg) const
 {
 	UserFunctionExceptionHandling([&] //lambda function to add consistent try{..} catch(...) block
 	{
-		//EPyUtils::FromPython(parameters.massMatrixUserFunction.userFunction((const MainSystem&)mainSystem, t, objectNumber, coordinates, coordinates_t), massMatrix);
-		massMatrix.CopyOrAddTriplets(PyMatrixContainer(parameters.massMatrixUserFunction.userFunction((const MainSystem&)mainSystem, t, objectNumber, coordinates, coordinates_t)), ltg);
-		//pout << "Mass=" << massMatrix.GetEXUdenseMatrix() << "\n";
+		massMatrix.CopyOrAddTriplets(PyMatrixContainer(EvaluateUserFunction(parameters.massMatrixUserFunction, (const MainSystem&)cSystemData->GetMainSystemBacklink(),
+			t, objectNumber, coordinates, coordinates_t)), ltg);
 	}, "ObjectGenericODE2::massMatrixUserFunction");
 }
 
-//! call to user function implemented in separate file to avoid including pybind and MainSystem.h at too many places
-void CObjectGenericODE2::EvaluateUserFunctionJacobian(EXUmath::MatrixContainer& jacobianODE2, const MainSystemBase& mainSystem, Real t, Index objectNumber, 
-	const StdVector& coordinates, const StdVector& coordinates_t, Real factorODE2, Real factorODE2_t, const ArrayIndex& ltg) const
+void CObjectGenericODE2::EvaluateUserFunctionJacobian(EXUmath::MatrixContainer& jacobianODE2, Real t, Index objectNumber,
+	const Vector& coordinates, const Vector& coordinates_t, Real factorODE2, Real factorODE2_t, const ArrayIndex& ltg) const
 {
 	UserFunctionExceptionHandling([&] //lambda function to add consistent try{..} catch(...) block
 	{
 		//factorODE2 / factorODE2_t must be added in user function, ltg-transformation done by CopyOrAddTriplets
-		jacobianODE2.CopyOrAddTriplets(PyMatrixContainer(parameters.jacobianUserFunction.userFunction((const MainSystem&)mainSystem, t, objectNumber, 
-			coordinates, coordinates_t, factorODE2, factorODE2_t)), ltg);
+		jacobianODE2.CopyOrAddTriplets(PyMatrixContainer(EvaluateUserFunction(parameters.jacobianUserFunction, (const MainSystem&)cSystemData->GetMainSystemBacklink(),
+			t, objectNumber, coordinates, coordinates_t, factorODE2, factorODE2_t)), ltg);
 	}, "ObjectGenericODE2::jacobianUserFunction");
+	//the size can be checked in the dense mode; in the sparse mode the triplets go directly into the system matrix
+	Index n = coordinates.NumberOfItems();
+	if (jacobianODE2.UseDenseMatrix() && (jacobianODE2.NumberOfRows() != n || jacobianODE2.NumberOfColumns() != n))
+	{
+		PyError("ObjectGenericODE2: jacobianUserFunction returned a matrix of size (" + EXUstd::ToString(jacobianODE2.NumberOfRows()) + " x "
+			+ EXUstd::ToString(jacobianODE2.NumberOfColumns()) + "), but (" + EXUstd::ToString(n) + " x " + EXUstd::ToString(n) + ") is needed",
+			PyErrorType::valueError);
+	}
 }
 
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -301,63 +312,92 @@ bool CObjectUserBody::PythonCallPossible() const
 	return false;
 }
 
-void CObjectUserBody::EvaluateUserFunctionForce(Vector& force, Real t, Index objectNumber, const StdVector& coordinates, const StdVector& coordinates_t) const
+//! the MainSystem of the user functions
+#define USERBODY_MAINSYSTEM ((const MainSystem&)cSystemData->GetMainSystemBacklink())
+
+void CObjectUserBody::CheckResultSize(const char* name, Index rows, Index columns, Index requiredRows, Index requiredColumns) const
+{
+	if (rows == requiredRows && columns == requiredColumns) { return; }
+	if (requiredColumns == 1)
+	{
+		PyError(STDstring("ObjectUserBody: ") + name + " returned a vector of size " + EXUstd::ToString(rows)
+			+ ", but " + EXUstd::ToString(requiredRows) + " is needed", PyErrorType::valueError);
+	}
+	PyError(STDstring("ObjectUserBody: ") + name + " returned a matrix of size (" + EXUstd::ToString(rows) + " x "
+		+ EXUstd::ToString(columns) + "), but (" + EXUstd::ToString(requiredRows) + " x " + EXUstd::ToString(requiredColumns)
+		+ ") is needed", PyErrorType::valueError);
+}
+
+void CObjectUserBody::EvaluateUserFunctionForce(Vector& force, Real t, const Vector& coordinates, const Vector& coordinates_t) const
 {
 	UserFunctionExceptionHandling([&] //lambda function to add consistent try{..} catch(...) block
 	{
-		force.CopyFrom(parameters.forceUserFunction.userFunction((const MainSystem&)cSystemData->GetMainSystemBacklink(), t, objectNumber, coordinates, coordinates_t));
+		EvaluateUserFunctionIntoVector(parameters.forceUserFunction, force, USERBODY_MAINSYSTEM, t, GetObjectNumber(), coordinates, coordinates_t);
 	}, "ObjectUserBody::forceUserFunction");
+	CheckResultSize("forceUserFunction", force.NumberOfItems(), 1, coordinates.NumberOfItems(), 1);
 }
 
 void CObjectUserBody::EvaluateUserFunctionOutputVariable(Vector& value, Real t, OutputVariableType variableType, const Vector3D& localPosition,
-	const StdVector& coordinates, const StdVector& coordinates_t) const
+	const Vector& coordinates, const Vector& coordinates_t) const
 {
-	Vector result;
 	UserFunctionExceptionHandling([&] //lambda function to add consistent try{..} catch(...) block
 	{
-		result.CopyFrom(parameters.outputVariableUserFunction.userFunction((const MainSystem&)cSystemData->GetMainSystemBacklink(), t, GetObjectNumber(),
-			variableType, localPosition, coordinates, coordinates_t));
+		EvaluateUserFunctionIntoVector(parameters.outputVariableUserFunction, value, USERBODY_MAINSYSTEM, t, GetObjectNumber(),
+			variableType, localPosition, coordinates, coordinates_t);
 	}, "ObjectUserBody::outputVariableUserFunction");
-	value.CopyFrom(result);
 }
 
-void CObjectUserBody::EvaluateUserFunctionMassMatrix(EXUmath::MatrixContainer& massMatrix, Real t, Index objectNumber,
-	const StdVector& coordinates, const StdVector& coordinates_t, const ArrayIndex& ltg) const
+void CObjectUserBody::EvaluateUserFunctionMassMatrix(EXUmath::MatrixContainer& massMatrix, Real t,
+	const Vector& coordinates, const Vector& coordinates_t, const ArrayIndex& ltg) const
 {
 	if (!(parameters.massMatrixUserFunction)) { PyError("ObjectUserBody: massMatrixUserFunction is not given", PyErrorType::valueError); }
 	UserFunctionExceptionHandling([&] //lambda function to add consistent try{..} catch(...) block
 	{
-		massMatrix.CopyOrAddTriplets(PyMatrixContainer(parameters.massMatrixUserFunction.userFunction((const MainSystem&)cSystemData->GetMainSystemBacklink(),
-			t, objectNumber, coordinates, coordinates_t)), ltg);
+		massMatrix.CopyOrAddTriplets(PyMatrixContainer(EvaluateUserFunction(parameters.massMatrixUserFunction, USERBODY_MAINSYSTEM,
+			t, GetObjectNumber(), coordinates, coordinates_t)), ltg);
 	}, "ObjectUserBody::massMatrixUserFunction");
 }
 
-void CObjectUserBody::EvaluatePosition(Vector3D& position, Real t, const Vector3D& localPosition, const StdVector& coordinates) const
+void CObjectUserBody::EvaluatePosition(Vector3D& position, Real t, const Vector3D& localPosition, const Vector& coordinates) const
 {
 	if (!(parameters.positionUserFunction)) { PyError("ObjectUserBody: positionUserFunction is not given, but a marker, sensor or output asks for a position", PyErrorType::valueError); }
 	UserFunctionExceptionHandling([&] //lambda function to add consistent try{..} catch(...) block
 	{
-		position = Vector3D(parameters.positionUserFunction.userFunction((const MainSystem&)cSystemData->GetMainSystemBacklink(), t, GetObjectNumber(),
-			localPosition, coordinates));
+		position = Vector3D(EvaluateUserFunction(parameters.positionUserFunction, USERBODY_MAINSYSTEM, t, GetObjectNumber(), localPosition, coordinates));
 	}, "ObjectUserBody::positionUserFunction");
 }
 
-void CObjectUserBody::EvaluateMatrix(Index which, Matrix& value, Real t, const Vector3D& localPosition, const StdVector& coordinates) const
+template<class TUserFunction>
+void CObjectUserBody::EvaluateMatrixUserFunction(const TUserFunction& function, const char* name, Index columns, Matrix& value, Real t,
+	const Vector3D& localPosition, const Vector& coordinates) const
 {
-	const char* names[3] = { "positionJacobianUserFunction", "rotationMatrixUserFunction", "rotationJacobianUserFunction" };
-	const auto& function = (which == 0) ? parameters.positionJacobianUserFunction :
-		((which == 1) ? parameters.rotationMatrixUserFunction : parameters.rotationJacobianUserFunction);
-	if (!(function)) { PyError(STDstring("ObjectUserBody: ") + names[which] + " is not given, but a marker, load, sensor or output needs it", PyErrorType::valueError); }
-	Matrix result;
+	if (!(function)) { PyError(STDstring("ObjectUserBody: ") + name + " is not given, but a marker, load, sensor or output needs it", PyErrorType::valueError); }
 	UserFunctionExceptionHandling([&] //lambda function to add consistent try{..} catch(...) block
 	{
-		result = EPyUtils::NumPy2Matrix(py::cast<py::array_t<Real>>(function.userFunction((const MainSystem&)cSystemData->GetMainSystemBacklink(), t, GetObjectNumber(), localPosition, coordinates)));
-	}, names[which]);
-	value = std::move(result); //exchanges the memory of a Matrix, copies into a ResizableMatrix (#2999)
-	Index columns = (which == 1) ? 3 : (Index)coordinates.size();
-	if (!(value.NumberOfRows() == 3 && value.NumberOfColumns() == columns)) { PyError(STDstring("ObjectUserBody: ") + names[which] + " returned a matrix of size ("
-		+ EXUstd::ToString(value.NumberOfRows()) + " x " + EXUstd::ToString(value.NumberOfColumns()) + "), but (3 x " + EXUstd::ToString(columns) + ") is needed", PyErrorType::valueError); }
+		value = EPyUtils::NumPy2Matrix(py::cast<py::array_t<Real>>(EvaluateUserFunction(function, USERBODY_MAINSYSTEM, t, GetObjectNumber(),
+			localPosition, coordinates))); //exchanges the memory of a Matrix, copies into a ResizableMatrix (#2999)
+	}, name);
+	CheckResultSize(name, value.NumberOfRows(), value.NumberOfColumns(), 3, columns);
 }
+
+void CObjectUserBody::EvaluatePositionJacobian(Matrix& value, Real t, const Vector3D& localPosition, const Vector& coordinates) const
+{
+	EvaluateMatrixUserFunction(parameters.positionJacobianUserFunction, "positionJacobianUserFunction", coordinates.NumberOfItems(), value, t, localPosition, coordinates);
+}
+
+void CObjectUserBody::EvaluateRotationMatrix(Matrix3D& value, Real t, const Vector3D& localPosition, const Vector& coordinates) const
+{
+	Matrix rotation;
+	EvaluateMatrixUserFunction(parameters.rotationMatrixUserFunction, "rotationMatrixUserFunction", 3, rotation, t, localPosition, coordinates);
+	value.CopyFrom(rotation);
+}
+
+void CObjectUserBody::EvaluateRotationJacobian(Matrix& value, Real t, const Vector3D& localPosition, const Vector& coordinates) const
+{
+	EvaluateMatrixUserFunction(parameters.rotationJacobianUserFunction, "rotationJacobianUserFunction", coordinates.NumberOfItems(), value, t, localPosition, coordinates);
+}
+
+#undef USERBODY_MAINSYSTEM
 
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 //! call to user function implemented in separate file to avoid including pybind and MainSystem.h at too many places

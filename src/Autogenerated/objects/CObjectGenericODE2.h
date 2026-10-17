@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-10-16  13:52:10 (last modified)
+* @date         2026-10-17  10:04:18 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -240,14 +240,17 @@ public: // AUTO:
     //! AUTO:  initialize coordinateIndexPerNode array
     void InitializeCoordinateIndices();
 
-    //! AUTO:  call to user function implemented in separate file to avoid including pybind and MainSystem.h at too many places
-    void EvaluateUserFunctionForce(Vector& force, const MainSystemBase& mainSystem, Real t, Index objectNumber, const Vector& coordinates, const Vector& coordinates_t) const;
+    //! AUTO:  call of forceUserFunction, with the size checked; implemented in evaluateUserFunctions.cpp
+    void EvaluateUserFunctionForce(Vector& force, Real t, Index objectNumber, const Vector& coordinates, const Vector& coordinates_t) const;
 
-    //! AUTO:  call to user function implemented in separate file to avoid including pybind and MainSystem.h at too many places
-    void EvaluateUserFunctionMassMatrix(EXUmath::MatrixContainer& massMatrix, const MainSystemBase& mainSystem, Real t, Index objectNumber, const StdVector& coordinates, const StdVector& coordinates_t, const ArrayIndex& ltg) const;
+    //! AUTO:  call of massMatrixUserFunction; implemented in evaluateUserFunctions.cpp
+    void EvaluateUserFunctionMassMatrix(EXUmath::MatrixContainer& massMatrix, Real t, Index objectNumber, const Vector& coordinates, const Vector& coordinates_t, const ArrayIndex& ltg) const;
 
-    //! AUTO:  call to user function implemented in separate file to avoid including pybind and MainSystem.h at too many places
-    void EvaluateUserFunctionJacobian(EXUmath::MatrixContainer& jacobianODE2, const MainSystemBase& mainSystem, Real t, Index objectNumber, const StdVector& coordinates, const StdVector& coordinates_t, Real factorODE2, Real factorODE2_t, const ArrayIndex& ltg) const;
+    //! AUTO:  call of jacobianUserFunction, with the size checked; implemented in evaluateUserFunctions.cpp
+    void EvaluateUserFunctionJacobian(EXUmath::MatrixContainer& jacobianODE2, Real t, Index objectNumber, const Vector& coordinates, const Vector& coordinates_t, Real factorODE2, Real factorODE2_t, const ArrayIndex& ltg) const;
+
+    //! AUTO:  add factor times the stiffness or damping matrix to the Jacobian, dense or as sparse triplets, which must be the format of the Jacobian (#2995)
+    void AddMatrixWithFactor(EXUmath::MatrixContainer& jacobianODE2, const EXUmath::MatrixContainer& matrix, const ArrayIndex& ltg, Real factor) const;
 
     //! AUTO:  return true, if object has reference frame; return according LOCAL node number
     virtual bool HasReferenceFrame(Index& localReferenceFrameNode) const override

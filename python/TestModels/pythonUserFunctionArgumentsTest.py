@@ -110,6 +110,15 @@ except Exception as error:
 exu.Print('writing into q:', 'read-only' in refused)
 checks += ['read-only' in refused]
 
+#a result of the wrong size is refused with the name of the user function and the sizes (#2995)
+wrongSize = ''
+try:
+    Solve(lambda mbs, t, itemNumber, q, q_t: [0., 0.])
+except Exception as error:
+    wrongSize = str(error)
+exu.Print('wrong size:', wrongSize.splitlines()[0] if wrongSize else '')
+checks += ['forceUserFunction returned a vector of size 2, but 4 is needed' in wrongSize]
+
 #the old behaviour, for the transition
 exu.special.deprecations.userFunctionListArguments = True
 qOld = Solve(ForceList, massUserFunction=True)

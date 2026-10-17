@@ -167,6 +167,8 @@ public: //
 	CData& GetCData() { return cData; }
 	//! Read (Reference) access to:computational data for all configurations (current, initial, etc.); this data is available in CNode
 	const CData& GetCData() const { return cData; }
+	//! the time of a configuration, which e.g. the user functions of an access function get (#2995)
+	Real GetConfigurationTime(ConfigurationType configuration) const { return cData.Get(configuration).GetTime(); }
 
 	//! Write (Reference) access to: MainSystem
 	MainSystemBase& GetMainSystemBacklink() { return *mainSystemBacklink; }

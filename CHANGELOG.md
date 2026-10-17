@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.13 | Newborn | 109 | 1.13.110 |
+| 1.13 | Newborn | 110 | 1.13.111 |
 | 1.12 | Metheney | 367 | 1.12.462 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
@@ -30,6 +30,10 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.13 - Newborn (current)
 
+- **1.13.111** `IMPROVEMENT` `MEDIUM EFF` `raised by: Claude-JG` `resolved by: Claude-JG` ObjectUserBody and ObjectGenericODE2: implement them with the Exudyn conventions and one shared pattern (#2995)
+  - description: revision2026c step RG7.3.4 (maintainer 2026-10-15: static functions, EvaluateMatrix with an integer switch, StdVector used internally instead of the Exudyn vectors; check both objects): the review of both objects is in the plan step; to be decided item by item before the change
+  - **notes:** ObjectUserBody and ObjectGenericODE2 are implemented with one pattern: the user functions get numpy views of Exudyn vectors without intermediate copies, a result of the wrong size names the user function and the sizes, and the derivative of a user body's Jacobians uses the step of the numerical differentiation of the solver
+  - date resolved: **2026-10-17 10:14**, date raised: 2026-10-15
 - **1.13.110** `CHANGE` `MEDIUM EFF` `raised by: Claude-JG` `resolved by: Claude-JG` Draw the items that depend on Python user functions in the main thread, and detect a Python call from the render thread (#3003)
   - description: revision2026c step RG7.10 (maintainer 2026-10-16): no visualization cache in ObjectUserBody (it would not work with the SolutionViewer). The render thread draws markers, connectors and sensors itself and asks bodies for positions; items that depend on a Python user function - a user body, and the markers, connectors, sensors and loads on it - cannot be drawn there. Assemble() computes a list of them, as the other lists (now the decision is item-\>HasUserFunction()), with their dependencies; they are drawn in the main thread together with the graphics user functions. A global flag (or counter) set whenever a Python (not symbolic) user function is called from a thread other than the main thread detects what is missed.
   - **notes:** The markers, connectors, loads and sensors on an ObjectUserBody and every load with a user function are drawn in the main thread, so that a renderer running in a thread of its own never calls Python; loads.drawWithUserFunction draws a Python user function with multithreaded rendering too

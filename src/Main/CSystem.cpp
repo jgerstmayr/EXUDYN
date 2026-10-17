@@ -50,9 +50,10 @@ void CSystem::Assemble(const MainSystem& mainSystem)
 	if (!mainSystem.HasMainSystemContainer()) { PyError("MainSystem has not been yet linked to a system container. Having a MainSystem mbs, you need to do first:\n SC=exudyn.SystemContainer()\nSC.AppendSystem(mbs)\n", PyErrorType::modelError); }
 
 	globalTimers.Reset(); //timers already used by finalize contact ...
-	for (CObject* object : cSystemData.GetCObjects())
+	for (Index i = 0; i < cSystemData.GetCObjects().NumberOfItems(); i++)
 	{
-		object->PreAssemble();
+		cSystemData.GetCObjects()[i]->SetObjectNumber(i); //for the user functions of the access functions (#2995)
+		cSystemData.GetCObjects()[i]->PreAssemble();
 	}
 	//pout << "++++++++++++++++\nCheckSystemIntegrity ...\n";
 	if (CheckSystemIntegrity(mainSystem)) //checks prior to Assemble() ==> after Assemble(), everything shall be ok.

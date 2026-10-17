@@ -49,8 +49,7 @@ The title of each says what it does; the sentence after it, why it comes now.
 
 1. **Check the SolutionViewer on screen** (#2930): the PreStepUserFunction example on Windows - changed without a
    screen; the space key works on macOS (2026-10-16).
-2. **The user function interface** (userFunctionBoundary.md section 11, decided 2026-10-16): RG7.3.4,
-   RG12.3.7 last - then the user rigid body completely symbolic; each measured against 1.13.6 (section 12).
+2. **The user function interface** (userFunctionBoundary.md section 11, decided 2026-10-16): RG12.3.7 last - then the user rigid body completely symbolic; each measured against 1.13.6 (section 12).
 3. **Rehearse the next release on a `release/*` branch** with *build as a release* - the first run of cibuildwheel
    4.3.0 and of cp315 on GitHub.
 4. **The quick old issues** (RG11.8) - each small and without a decision.
@@ -82,7 +81,6 @@ The title of each says what it does; the sentence after it, why it comes now.
   - RG6.11 Draw textures from numpy arrays in triangle lists
   - RG6.12 Add a ruler to the renderer and orient imported triangles consistently
 - **RG7** Python user items
-  - RG7.3 Add the user body as a finite element, first the user rigid body (1 open sub-step)
   - RG7.4 Add user nodes with position and orientation interfaces
   - RG7.5 Add user markers and a user connector with access to its markers
   - RG7.6 Add a user joint on two position and orientation markers
@@ -130,7 +128,7 @@ The title of each says what it does; the sentence after it, why it comes now.
 | RG4 | OPEN | 6 | Implementation problems and bugs |
 | RG5 | OPEN | 8 | Performance |
 | RG6 | OPEN | 3 | Graphics and rendering |
-| RG7 | OPEN | 7 | Python user items |
+| RG7 | OPEN | 5 | Python user items |
 | RG8 | OPEN | 10 | Compiled C++ user items |
 | RG9 | OPEN | 4 | Structural core improvements |
 | RG10 | CLOSED | 0 | Tooling and process |
@@ -498,7 +496,7 @@ CLOSED 2026-10-12 (#2989, maintainer 2026-10-12: four user types): UserType0-3 o
 MarkerType, exu.special.userTypes, ObjectUserBody.outputVariableUserFunction; test model userTypesTest.py.
 [log](exudynRevisionLog2026c.md#rg7-2)
 
-### **OPEN_RG7.3** Add the user body as a finite element, first the user rigid body
+### **CLOSED_RG7.3** Add the user body as a finite element, first the user rigid body
 
 Reopened 2026-10-15 for the review of RG7.3.4. CLOSED 2026-10-12 (#2973): ObjectUserBody (RG7.3.1) and its three examples, the rigid body, the ANCF cable and the linear
 tetrahedron, each agreeing with a reference to 1e-13. [log](exudynRevisionLog2026c.md#rg7-3-2)
@@ -519,43 +517,13 @@ user elements against ObjectANCFCable2D. [log](exudynRevisionLog2026c.md#rg7-3-2
 CLOSED 2026-10-12 (#2988): test model userTetrahedronTest.py, Saint Venant-Kirchhoff material, the nonlinear patch test
 against the exact solution. [log](exudynRevisionLog2026c.md#rg7-3-2)
 
-#### **OPEN_RG7.3.4** Implement ObjectUserBody and ObjectGenericODE2 with the Exudyn conventions and one pattern
+#### **CLOSED_RG7.3.4** Implement ObjectUserBody and ObjectGenericODE2 with the Exudyn conventions and one pattern
 
-#2995 (maintainer 2026-10-15: static functions, EvaluateMatrix with an integer switch, StdVector used internally). The
-review, to be decided item by item:
-- **ObjectUserBody**: (1) the free static functions `ConfigurationTime`, `CurrentMatrix`, `MatrixTimesVelocity` become
-  members; (2) `EvaluateMatrix(which, ...)` with 0/1/2 becomes three named functions (position Jacobian, rotation
-  matrix, rotation Jacobian) over one private helper that takes the user function, its name and the column count;
-  (3) the coordinates are `StdVector` throughout - every access function allocates `q`, `q_t` and a result `Matrix`;
-  internally Exudyn vectors, converted once at the call into Python (see RG12.3.1 for the boundary itself);
-  (4) `GetODE2Size` loops over the nodes on every call, ObjectGenericODE2 keeps `coordinateIndexPerNode`;
-  (5) `GetObjectNumber` searches the object list (cached in a mutable member) because access functions get no object
-  number - a number every CObject knows from AddObject would serve all items with user functions;
-  (6) the derivative of J^T f uses 2n Python calls with a fixed epsilon 1e-6, not `newton.numericalDifferentiation`;
-  (7) `GetDisplacement` calls the position user function twice, the output Coordinates computes the coordinates twice;
-  (8) a wrong size of a user function result is a `PyError` here and a `CHECKandTHROW` in ObjectGenericODE2.
-- **ObjectGenericODE2**: (9) about 30 lines of commented-out code ("OLD, DELETE", loops kept as comments);
-  (10) `ComputeJacobianODE2_ODE2` handles K and D in a dense and a sparse branch with flags, and checks the format of
-  the stiffness matrix even without a jacobianUserFunction - `CopyOrAddTripletsWithFactor` covers both modes;
-  (11) the coordinates go through mutable members `tempCoordinates` - no allocation, but not safe when the renderer
-  thread asks for an output variable during a step; (12) `GetOutputVariableBody` computes the coordinates for every
-  variable, also for those that do not need them.
-- **Both**: (13) the user functions get displacement coordinates in ObjectGenericODE2 and total coordinates
-  (reference + displacement) in ObjectUserBody - a convention to decide and document; (14) the `Evaluate...` functions
-  take the MainSystem as argument in one and fetch it in the other; (15) gathering the coordinates of all nodes is
-  written in both (and in ObjectKinematicTree, ObjectFFRF) - one function of CObjectBody or the system data; (16) the
-  copy `value = (const Matrix&)result` works around a move of a Matrix into a ResizableMatrix that exchanges the memory
-  but not the allocated size (the heap corruption of c3d53a99) - to be fixed in the Linalg classes, not in each caller
-  (#2999; reproduced with AddressSanitizer, heap-buffer-overflow after a resize within the old capacity) - fixed in
-  RG7.3.4.1; the copy in EvaluateMatrix is a move again.
-- **ObjectUserBody, the renderer** (maintainer 2026-10-15: there should be no visualization cache, the graphics user
-  functions are computed in the main thread): (17) true for its graphicsDataUserFunction - the renderer only requests
-  it, PostProcessData::ProcessUserFunctionDrawing calls it in the main thread. The cache serves the other items the
-  render loop draws itself (GlfwClient calls UpdateGraphicsData): markers, connectors and sensors on a user body ask
-  for its position and rotation in the visualization configuration from that thread (VisualizationSystem.cpp, marker
-  drawing; the connectors' UpdateGraphics). Without the cache: either these are drawn from the main thread as well
-  (with the user function drawing), or they are not drawn on a user body. Decided 2026-10-16: no cache (it would not
-  work with the SolutionViewer); the dependent items are drawn in the main thread, RG7.10 (#3003).
+CLOSED 2026-10-17 (#2995): the review points done but (13), which waits for RG13 - members instead of static
+functions, three named matrix evaluations over one helper, Exudyn vectors (`CObjectBody::GatherCoordinates`) and numpy
+views at the call, `CObject::GetObjectNumber` set by Assemble, the step of numericalDifferentiation, one size check with
+the user function's name, ObjectGenericODE2 without commented code, one Jacobian assembly, local coordinates for the
+outputs, the MainSystem fetched in both. [log](exudynRevisionLog2026c.md#rg7-3-4)
 
 ##### **CLOSED_RG7.3.4.1** Make the assignments of the resizable and linked matrices and vectors keep their memory consistent
 

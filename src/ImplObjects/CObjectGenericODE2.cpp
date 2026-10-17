@@ -36,24 +36,10 @@ void CObjectGenericODE2::ComputeObjectCoordinates(Vector& coordinates, Configura
 
 }
 
+//! the displacement coordinates of the nodes and their velocities (#2995)
 void CObjectGenericODE2::ComputeObjectCoordinates(Vector& coordinates, Vector& coordinates_t, ConfigurationType configuration) const
 {
-	coordinates.SetNumberOfItems(GetODE2Size());
-	coordinates_t.SetNumberOfItems(GetODE2Size());
-	Index cnt = 0;
-	for (Index nn = 0; nn < parameters.nodeNumbers.NumberOfItems(); nn++)
-	{
-		Index nc = GetCNode(nn)->GetNumberOfODE2Coordinates();
-		LinkedDataVector vNode(GetCNode(nn)->GetCoordinateVector(configuration));
-		LinkedDataVector vNode_t(((CNodeODE2*)GetCNode(nn))->GetCoordinateVector_t(configuration));
-		for (Index i = 0; i < nc; i++)
-		{
-			coordinates[cnt + i] = vNode[i];
-			coordinates_t[cnt + i] = vNode_t[i];
-		}
-		cnt += nc;
-	}
-
+	GatherCoordinates(coordinates, coordinates_t, configuration, false);
 }
 
 void CObjectGenericODE2::ComputeObjectCoordinates_tt(Vector& coordinates_tt, ConfigurationType configuration) const
@@ -79,21 +65,10 @@ void CObjectGenericODE2::ComputeMassMatrix(EXUmath::MatrixContainer& massMatrixC
 
 	if (parameters.massMatrixUserFunction)
 	{
-		Index nODE2 = GetODE2Size();
-		//Vector coordinates(nODE2); //leads to new==> change to direct matrix multiplication / add with nodal coordinates
-		//Vector coordinates_t(nODE2);
-		tempCoordinates.SetNumberOfItems(nODE2);
-		tempCoordinates_t.SetNumberOfItems(nODE2);
 		ComputeObjectCoordinates(tempCoordinates, tempCoordinates_t);
-
-		Real t = GetCSystemData()->GetCData().GetCurrent().GetTime();
-
-		//Matrix& massMatrix = massMatrixC.GetInternalDenseMatrix();
-
-		//massMatrixC is set with user function, chosing the correct type of matrix
-		//massMatrixC sparse/dense matrix type is set in user function!
-		EvaluateUserFunctionMassMatrix(massMatrixC, cSystemData->GetMainSystemBacklink(), t, objectNumber, tempCoordinates, tempCoordinates_t, ltg);
-
+		//massMatrixC is set with user function, which choses the type of matrix, sparse or dense
+		EvaluateUserFunctionMassMatrix(massMatrixC, GetCSystemData()->GetConfigurationTime(ConfigurationType::Current), objectNumber,
+			tempCoordinates, tempCoordinates_t, ltg);
 	}
 	else //standard constant matrix
 	{
@@ -104,12 +79,6 @@ void CObjectGenericODE2::ComputeMassMatrix(EXUmath::MatrixContainer& massMatrixC
 		else //set zero mass matrix, e.g. for static computation
 		{
 			massMatrixC.SetUseDenseMatrix(false); //uses sparse matrix with no entries.
-
-			//OLD, DELETE:
-			//Matrix& massMatrix = massMatrixC.GetInternalDenseMatrix();
-			//Index nODE2 = GetODE2Size();
-			//massMatrix.SetNumberOfRowsAndColumns(nODE2, nODE2);
-			//massMatrix.SetAll(0.);
 		}
 	}
 }
@@ -122,23 +91,14 @@ void CObjectGenericODE2::ComputeODE2LHS(Vector& ode2Lhs, Index objectNumber) con
 	ode2Lhs.SetNumberOfItems(nODE2);
 	ode2Lhs.SetAll(0.);
 
-	//Vector coordinates(nODE2); //leads to new==> change to direct matrix multiplication / add with nodal coordinates
-	//Vector coordinates_t(nODE2);
-	tempCoordinates.SetNumberOfItems(nODE2);
-	tempCoordinates_t.SetNumberOfItems(nODE2);
 	ComputeObjectCoordinates(tempCoordinates, tempCoordinates_t);
-
-	//K*q and D*q_T put to LHS !!!
-
+	//K*q and D*q_t on the left-hand side
 	if (parameters.stiffnessMatrix.NumberOfRows() != 0)
 	{
-		//EXUmath::MultMatrixVectorAdd(parameters.stiffnessMatrix, tempCoordinates, ode2Lhs);
 		parameters.stiffnessMatrix.MultMatrixVectorAdd(tempCoordinates, ode2Lhs);
 	}
-
 	if (parameters.dampingMatrix.NumberOfRows() != 0)
 	{
-		//EXUmath::MultMatrixVectorAdd(parameters.dampingMatrix, tempCoordinates_t, ode2Lhs);
 		parameters.dampingMatrix.MultMatrixVectorAdd(tempCoordinates_t, ode2Lhs);
 	}
 
@@ -149,112 +109,66 @@ void CObjectGenericODE2::ComputeODE2LHS(Vector& ode2Lhs, Index objectNumber) con
 
 	if (parameters.forceUserFunction)
 	{
-		Real t = GetCSystemData()->GetCData().GetCurrent().GetTime();
-		EvaluateUserFunctionForce(tempUserFunctionForce, cSystemData->GetMainSystemBacklink(), t, objectNumber, tempCoordinates, tempCoordinates_t);
-		CHECKandTHROW(tempUserFunctionForce.NumberOfItems() == nODE2, "CObjectGenericODE2: forceUserFunction return a vector with different size from ObjectGenericODE2 system size", ExudynValueError);
+		EvaluateUserFunctionForce(tempUserFunctionForce, GetCSystemData()->GetConfigurationTime(ConfigurationType::Current), objectNumber,
+			tempCoordinates, tempCoordinates_t);
 		ode2Lhs -= tempUserFunctionForce;
 	}
 
 }
 
-//! Computational function: compute mass matrix
-void CObjectGenericODE2::ComputeJacobianODE2_ODE2(EXUmath::MatrixContainer& jacobianODE2, JacobianTemp& temp, 
+//! the Jacobian: the jacobianUserFunction, or the stiffness matrix, or the damping matrix, as first matrix, which
+//! sets the format; the stiffness and damping matrices added to it
+void CObjectGenericODE2::ComputeJacobianODE2_ODE2(EXUmath::MatrixContainer& jacobianODE2, JacobianTemp& temp,
 	Real factorODE2, Real factorODE2_t, Index objectNumber, const ArrayIndex& ltg) const
 {
-	//Index columnsStiff = parameters.stiffnessMatrix.NumberOfColumns();
-	Index rowsStiff = parameters.stiffnessMatrix.NumberOfRows();
-	//Index columnsDamp = parameters.dampingMatrix.NumberOfColumns();
-	Index rowsDamp = parameters.dampingMatrix.NumberOfRows();
-	//Index nODE2 = GetNumberOfCoordinates();
-	bool addStiffnessMatrix = true;
-	bool addDampingMatrix = true;
+	bool hasStiffness = parameters.stiffnessMatrix.NumberOfRows() != 0;
+	bool hasDamping = parameters.dampingMatrix.NumberOfRows() != 0;
+	bool addStiffnessMatrix = hasStiffness;
+	bool addDampingMatrix = hasDamping;
 
 	if (parameters.jacobianUserFunction)
 	{
-		Index nODE2 = GetODE2Size();
-		//Vector coordinates(nODE2); //leads to new==> change to direct matrix multiplication / add with nodal coordinates
-		//Vector coordinates_t(nODE2);
-		tempCoordinates.SetNumberOfItems(nODE2);
-		tempCoordinates_t.SetNumberOfItems(nODE2);
 		ComputeObjectCoordinates(tempCoordinates, tempCoordinates_t);
-
-		Real t = GetCSystemData()->GetCData().GetCurrent().GetTime();
-
-		//jacobian is computed in user function, chosing the correct type of matrix
-		//EvaluateUserFunctionJacobian does the correct adding to jacobianODE2 depending on sparse/dense mode
-		EvaluateUserFunctionJacobian(jacobianODE2, cSystemData->GetMainSystemBacklink(), t, objectNumber, 
+		EvaluateUserFunctionJacobian(jacobianODE2, GetCSystemData()->GetConfigurationTime(ConfigurationType::Current), objectNumber,
 			tempCoordinates, tempCoordinates_t, factorODE2, factorODE2_t, ltg);
-		//pout << "nODE2=" << nODE2 << ", rows=" << jacobianODE2.NumberOfRows() << ", cols=" << jacobianODE2.NumberOfColumns() << "\n";
-
-		//checks performed only in dense mode :
-		//(in sparse mode the jacobianODE2 is a link to the sparseTriplets of the system matrix and has size 0):
-		if (jacobianODE2.UseDenseMatrix() && (jacobianODE2.NumberOfRows() != nODE2 || jacobianODE2.NumberOfColumns() != nODE2))
-		{
-			CHECKandTHROWstring("CObjectGenericODE2::ComputeJacobianODE2_ODE2: jacobianUserFunction must return square matrix with size according to ObjectGenericODE2 coordinates!", ExudynValueError);
-		}
 	}
-	else
+	else if (hasStiffness)
 	{
-		//add stiffness matrix as first matrix and set type with it:
-		//jacobianODE2.SetUseDenseMatrix(parameters.stiffnessMatrix.UseDenseMatrix()); //use just type of stiffnessMatrix
-		if (rowsStiff)
-		{ 
-			jacobianODE2.CopyOrAddTripletsWithFactor(parameters.stiffnessMatrix, ltg, factorODE2); 		
-			addStiffnessMatrix = false;
-		}
-		else if (rowsDamp) 
-		{
-			jacobianODE2.CopyOrAddTripletsWithFactor(parameters.dampingMatrix, ltg, factorODE2_t);
-			addStiffnessMatrix = false; //not needed, because rowsStiff = 0
-			addDampingMatrix = false;
-		}
+		jacobianODE2.CopyOrAddTripletsWithFactor(parameters.stiffnessMatrix, ltg, factorODE2);
+		addStiffnessMatrix = false;
+	}
+	else if (hasDamping)
+	{
+		jacobianODE2.CopyOrAddTripletsWithFactor(parameters.dampingMatrix, ltg, factorODE2_t);
+		addDampingMatrix = false;
 	}
 
+	if (addStiffnessMatrix) { AddMatrixWithFactor(jacobianODE2, parameters.stiffnessMatrix, ltg, factorODE2); }
+	if (addDampingMatrix) { AddMatrixWithFactor(jacobianODE2, parameters.dampingMatrix, ltg, factorODE2_t); }
+}
+
+//! factor times a constant matrix added to the Jacobian, in its format (#2995)
+void CObjectGenericODE2::AddMatrixWithFactor(EXUmath::MatrixContainer& jacobianODE2, const EXUmath::MatrixContainer& matrix,
+	const ArrayIndex& ltg, Real factor) const
+{
+	if (jacobianODE2.UseDenseMatrix() != matrix.UseDenseMatrix())
+	{
+		PyError("ObjectGenericODE2: the jacobianUserFunction, the stiffness matrix and the damping matrix must have the same format, dense or sparse",
+			PyErrorType::valueError);
+	}
 	if (jacobianODE2.UseDenseMatrix())
 	{
-		if (!parameters.stiffnessMatrix.UseDenseMatrix() && parameters.stiffnessMatrix.NumberOfRows() != 0)
-		{
-			CHECKandTHROWstring("CObjectGenericODE2::ComputeJacobianODE2_ODE2: jacobianUserFunction must return same format (dense/sparse triplets) as in stiffnessMatrix!", ExudynValueError);
-		}
-		if (rowsStiff && addStiffnessMatrix) 
-		{ 
-			//jacobianODE2.GetInternalDenseMatrix() += factorODE2 * parameters.stiffnessMatrix.GetInternalDenseMatrix(); 
-			EXUmath::FactorTimesMatrixAddTemplate< ResizableMatrix, ResizableMatrix>(factorODE2, 
-				parameters.stiffnessMatrix.GetInternalDenseMatrix(), jacobianODE2.GetInternalDenseMatrix());
-		}
-		if (rowsDamp && addDampingMatrix) 
-		{ 
-			//jacobianODE2.GetInternalDenseMatrix() += factorODE2_t * parameters.dampingMatrix.GetInternalDenseMatrix(); 
-			EXUmath::FactorTimesMatrixAddTemplate< ResizableMatrix, ResizableMatrix>(factorODE2_t, 
-				parameters.dampingMatrix.GetInternalDenseMatrix(), jacobianODE2.GetInternalDenseMatrix());
-		}
+		EXUmath::FactorTimesMatrixAddTemplate<ResizableMatrix, ResizableMatrix>(factor, matrix.GetInternalDenseMatrix(),
+			jacobianODE2.GetInternalDenseMatrix());
 	}
 	else
 	{
-		if (parameters.stiffnessMatrix.UseDenseMatrix() && parameters.stiffnessMatrix.NumberOfRows() != 0)
+		SparseTripletVector& triplets = jacobianODE2.GetInternalSparseTripletMatrix().GetTriplets();
+		for (const SparseTriplet& item : matrix.GetInternalSparseTripletMatrix().GetTriplets())
 		{
-			CHECKandTHROWstring("CObjectGenericODE2::ComputeJacobianODE2_ODE2: jacobianUserFunction must return same format (dense/sparse triplets) as in stiffnessMatrix!", ExudynValueError);
+			triplets.AppendPure(SparseTriplet(ltg[item.row()], ltg[item.col()], factor*item.value()));
 		}
-		if (rowsStiff && addStiffnessMatrix)
-		{
-			SparseTripletVector& triplets = jacobianODE2.GetInternalSparseTripletMatrix().GetTriplets();
-			for (const SparseTriplet& item : parameters.stiffnessMatrix.GetInternalSparseTripletMatrix().GetTriplets())
-			{
-				triplets.AppendPure(SparseTriplet(ltg[item.row()], ltg[item.col()], factorODE2*item.value()));
-			}
-		}
-		if (rowsDamp && addDampingMatrix)
-		{
-			SparseTripletVector& triplets = jacobianODE2.GetInternalSparseTripletMatrix().GetTriplets();
-			for (const SparseTriplet& item : parameters.dampingMatrix.GetInternalSparseTripletMatrix().GetTriplets())
-			{
-				triplets.AppendPure(SparseTriplet(ltg[item.row()], ltg[item.col()], factorODE2_t*item.value()));
-			}
-		}
-
 	}
-
-
 }
 
 //! AUTO:  return the available jacobian dependencies and the jacobians which are available as a function; if jacobian dependencies exist but are not available as a function, it is computed numerically; can be combined with 2^i enum flags
@@ -272,45 +186,31 @@ JacobianType::Type CObjectGenericODE2::GetAvailableJacobians() const
 }
 
 
-//! provide according output variable in "value"
+//! provide according output variable in "value"; the coordinates in local vectors, as the renderer thread may ask
+//! during a step, which uses the members (#2995)
 void CObjectGenericODE2::GetOutputVariableBody(OutputVariableType variableType, const Vector3D& localPosition, ConfigurationType configuration, Vector& value, Index objectNumber) const
 {
-	Index nODE2 = GetODE2Size();
-	//Vector coordinates(nODE2); //leads to new==> change to direct matrix multiplication / add with nodal coordinates
-	//Vector coordinates_t(nODE2);
-	tempCoordinates.SetNumberOfItems(nODE2);
-	tempCoordinates_t.SetNumberOfItems(nODE2);
-	ComputeObjectCoordinates(tempCoordinates, tempCoordinates_t, configuration);
-
 	switch (variableType)
 	{
 	case OutputVariableType::CoordinatesTotal:
 	{
-		ComputeObjectCoordinates(value, ConfigurationType::Reference);
-		value += tempCoordinates;
+		Vector reference;
+		ComputeObjectCoordinates(reference, ConfigurationType::Reference);
+		ComputeObjectCoordinates(value, configuration);
+		value += reference;
 		break;
 	}
-	case OutputVariableType::Coordinates:	
+	case OutputVariableType::Coordinates: ComputeObjectCoordinates(value, configuration); break;
+	case OutputVariableType::Coordinates_t:
 	{
-		value.CopyFrom(tempCoordinates);
+		Vector coordinates;
+		ComputeObjectCoordinates(coordinates, value, configuration);
 		break;
 	}
-	case OutputVariableType::Coordinates_t: 
+	case OutputVariableType::Coordinates_tt: ComputeObjectCoordinates_tt(value, configuration); break;
+	case OutputVariableType::Force:
 	{
-		value.CopyFrom(tempCoordinates_t);
-		break;
-	}
-	case OutputVariableType::Coordinates_tt: 
-	{
-		//Vector coordinates_tt(nODE2);
-		tempCoordinates_tt.SetNumberOfItems(nODE2);
-		ComputeObjectCoordinates_tt(tempCoordinates_tt, configuration);
-		value.CopyFrom(tempCoordinates_tt);
-		break;
-	}
-	case OutputVariableType::Force:			
-	{
-		ComputeODE2LHS(value, objectNumber);	
+		ComputeODE2LHS(value, objectNumber);
 		break;
 	}
 	case OutputVariableType::KineticEnergy: {
@@ -341,7 +241,6 @@ Vector3D CObjectGenericODE2::GetPosition(const Vector3D& localPosition, Configur
 {
 	CHECKandTHROWstring("CObjectGenericODE2::GetPosition: function not available", ExudynNotImplementedError);
 	return { 0,0,0 };
-	//return ((CNodeODE2*)GetCNode(0))->GetPosition(configuration) + localPosition;
 
 }
 
@@ -350,7 +249,6 @@ Vector3D CObjectGenericODE2::GetVelocity(const Vector3D& localPosition, Configur
 {
 	CHECKandTHROWstring("CObjectGenericODE2::GetVelocity: function not available", ExudynNotImplementedError);
 	return { 0,0,0 };
-	//return ((CNodeODE2*)GetCNode(0))->GetVelocity(configuration);
 }
 
 //! return the (global) position of "localPosition" according to configuration type
@@ -358,19 +256,11 @@ Vector3D CObjectGenericODE2::GetDisplacement(const Vector3D& localPosition, Conf
 {
 	CHECKandTHROWstring("CObjectGenericODE2::GetDisplacement: function not available", ExudynNotImplementedError);
 	return { 0,0,0 };
-	//return ((CNodeODE2*)GetCNode(0))->GetPosition(configuration) - ((CNodeODE2*)GetCNode(0))->GetPosition(ConfigurationType::Reference); //this also works for NodePointGround
 }
 
+//! from the coordinate indices per node, without a loop over the nodes
 Index CObjectGenericODE2::GetODE2Size() const
 {
-	//Index s = 0;
-	//for (Index i = 0; i < parameters.nodeNumbers.NumberOfItems(); i++)
-	//{
-	//	s += GetCNode(i)->GetNumberOfODE2Coordinates();
-	//}
-	//return s;
-
-	//faster version, does not require iterations:
 	Index nn = parameters.nodeNumbers.NumberOfItems();
 	if (nn) { return parameters.coordinateIndexPerNode.Last() + GetCNode(nn - 1)->GetNumberOfODE2Coordinates(); }
 	else { return 0; }

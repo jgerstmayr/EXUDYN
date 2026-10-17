@@ -587,6 +587,14 @@ protected:
 	{
 		argRealList[argIndex++].GetVector()->GetExpressionNamedReal().SetVector(arg);
 	}
+	//! a vector of fixed size, e.g. the Vector3D of a local position (#2995)
+	template<Index n>
+	void processArgument(const SlimVectorBase<Real, n>& arg, ResizableArray<SymbolicGeneric>& argRealList, Index& argIndex)
+	{
+		ResizableConstVector& vector = argRealList[argIndex++].GetVector()->GetExpressionNamedReal().GetVector();
+		vector.SetNumberOfItems(n);
+		std::copy(arg.begin(), arg.end(), vector.begin());
+	}
 	void processArgument(const VectorBase<Real>& arg, ResizableArray<SymbolicGeneric>& argRealList, Index& argIndex)
 	{
 		ResizableConstVector& vector = argRealList[argIndex++].GetVector()->GetExpressionNamedReal().GetVector();
@@ -655,11 +663,22 @@ protected:
 
 }; //namespace Symbolic
 
-//! the argument of a user function's std::function: an Exudyn vector as std::vector, everything else as it is (#3006)
+//! true for SlimVectorBase<Real, n>, e.g. Vector3D (#2995)
+template<typename T> struct IsSlimVectorOfReal : std::false_type {};
+template<Index n> struct IsSlimVectorOfReal<SlimVectorBase<Real, n>> : std::true_type { static constexpr Index size = n; };
+
+//! the argument of a user function's std::function: an Exudyn vector as std::vector, a SlimVector as std::array,
+//! everything else as it is (#3006, #2995)
 template<typename T>
 inline decltype(auto) UserFunctionArgument(const T& argument)
 {
 	if constexpr (std::is_base_of_v<VectorBase<Real>, T>) { return (StdVector)argument; }
+	else if constexpr (IsSlimVectorOfReal<T>::value)
+	{
+		std::array<Real, IsSlimVectorOfReal<T>::size> array;
+		std::copy(argument.begin(), argument.end(), array.begin());
+		return array;
+	}
 	else { return (const T&)argument; }
 }
 
@@ -697,6 +716,11 @@ inline decltype(auto) PythonUserFunctionArgument(const T& argument)
 		return EPyUtils::ToNumpyView(argument.data(), (Index)argument.size());
 	}
 	else if constexpr (std::is_base_of_v<VectorBase<Real>, T>)
+	{
+		if (UserFunctionListArguments()) { return py::object(py::cast((StdVector)argument)); }
+		return EPyUtils::ToNumpyView(argument.GetDataPointer(), argument.NumberOfItems());
+	}
+	else if constexpr (IsSlimVectorOfReal<T>::value) //Vector3D, ... (#2995)
 	{
 		if (UserFunctionListArguments()) { return py::object(py::cast((StdVector)argument)); }
 		return EPyUtils::ToNumpyView(argument.GetDataPointer(), argument.NumberOfItems());
@@ -763,6 +787,26 @@ std::function<R(Args...)> PythonUserFunctionToStdFunction(const py::object& func
 		py::object result = handle->function(PythonUserFunctionArgument(args)...);
 		if constexpr (!std::is_void_v<R>) { return PythonUserFunctionResult<R>(result); }
 	};
+}
+
+//! evaluate a user function to its result type: a Python function directly with numpy views of the arguments, also of
+//! Exudyn vectors, a symbolic one through its std::function (#2995)
+template<typename UFT, typename... Args>
+typename UFT::result_type EvaluateUserFunction(const PythonUserFunctionBase<UFT>& userFunction, const MainSystem& mainSystem,
+	const Args&... args)
+{
+	using R = typename UFT::result_type;
+	if (userFunction.GetUFtype() == UserFunctionType::Python)
+	{
+		if (!IsExudynMainThread()) { ReportUserFunctionCallOutsideMainThread(); } //the render thread (#3003)
+		py::gil_scoped_acquire gil;
+		py::object result = userFunction.GetPythonObject()(PythonUserFunctionArgument(mainSystem), PythonUserFunctionArgument(args)...);
+		if constexpr (!std::is_void_v<R>) { return PythonUserFunctionResult<R>(result); }
+	}
+	else
+	{
+		return userFunction.userFunction(mainSystem, UserFunctionArgument(args)...);
+	}
 }
 
 //! evaluate a user function that returns a vector into result, which keeps its memory when it has the size: a symbolic

@@ -81,6 +81,12 @@ public:
 	//! local to global coordinates are available in CSystemData
 	virtual void GetODE2LocalToGlobalCoordinates(ArrayIndex& ltg) const;
 
+	//! the ODE2 coordinates of the nodes, in the order of the nodes, and their velocities in a configuration; with
+	//! addReference, the reference coordinates are added (the total coordinates); in the reference configuration the
+	//! coordinates are the reference coordinates (or zero) and the velocities zero (#2995)
+	void GatherCoordinates(VectorBase<Real>& coordinates, VectorBase<Real>& coordinates_t, ConfigurationType configuration,
+		bool addReference) const;
+
 	//!compute local coordinate index (within body coordinates) for a certain local node number
 	//!this is inefficient for objects with many nodes and needs to be reimplemented, e.g., in ObjectGenericODE2
 	virtual Index GetLocalODE2CoordinateIndexPerNode(Index localNode) const

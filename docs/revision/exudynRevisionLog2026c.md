@@ -1600,3 +1600,45 @@ thread. 2026-10-17: do RG7.10 and RG7.3.4.)*
 - **Test**: test_graphicsData.py testTheItemsOnAUserBodyAreDrawnOnceAndWhereTheyAre - a marker frame, a Cartesian
   spring-damper, a load with a user function and a sensor on an ObjectUserBody give the same drawing elements, per
   item and at the same points, as on an ObjectRigidBody. The thread itself cannot be tested without a window.
+
+<a id="rg7-3-4"></a>
+### RG7.3.4 — ObjectUserBody and ObjectGenericODE2 with the conventions of Exudyn (2026-10-17, #2995)
+*(Maintainer 2026-10-15: static functions, EvaluateMatrix with an integer switch, StdVector used internally;
+2026-10-17: do RG7.10 and RG7.3.4.)* The points of the review:
+- (1) the free static functions are gone: `ConfigurationTime` is `CSystemData::GetConfigurationTime`, `CurrentMatrix`
+  is the body of `GetPositionJacobian`/`GetRotationJacobian`, `MatrixTimesVelocity` the member `JacobianTimesVelocity`.
+- (2) `EvaluateMatrix(which)` is `EvaluatePositionJacobian`, `EvaluateRotationMatrix` (into a Matrix3D),
+  `EvaluateRotationJacobian`, over one member template `EvaluateMatrixUserFunction(function, name, columns, ...)`.
+- (3) no StdVector inside: `CObjectBody::GatherCoordinates(q, q_t, configuration, addReference)` gathers into local
+  `ResizableConstVector`s - no allocation up to 7 coordinates, and no member buffer that a nested call (a user function
+  that asks for an output of the same body) could overwrite while Python holds a view of it; the user functions get
+  numpy views of them through the new `EvaluateUserFunction(userFunction, mbs, args...)` (SymbolicUtilities.h), which
+  calls a Python function directly and a symbolic one through its std::function, and `EvaluateUserFunctionIntoVector`
+  for the force and the output variables. `PythonUserFunctionArgument` views a SlimVector (the local position) too;
+  `processArgument` copies one into a symbolic named vector.
+- (4) `GetODE2Size` of ObjectUserBody keeps its loop over the nodes: a body has few nodes, and a value kept from
+  Assemble would be stale for the checks before the next Assemble.
+- (5) `CObject::GetObjectNumber`/`SetObjectNumber`, set for every object at the start of `CSystem::Assemble`; the search
+  of ObjectUserBody and its mutable member are gone.
+- (6) the derivative of J^T f uses the rule of `newton.numericalDifferentiation` with its defaults (relativeEpsilon 1e-7,
+  minimumCoordinateSize 1e-2) - the settings of the solver do not reach a marker; userRigidBodyTest.py changes by 1e-14
+  relative (13.475755021376248, before ...353), from the Newton iterations.
+- (7) the output Coordinates gathers once, without the reference; `GetDisplacement` keeps two calls of the position user
+  function, as the reference position depends on the local position.
+- (8) `CheckResultSize` in ObjectUserBody and the same message in ObjectGenericODE2: "ObjectGenericODE2:
+  forceUserFunction returned a vector of size 2, but 4 is needed" - a `PyError` (ValueError) in both;
+  pythonUserFunctionArgumentsTest.py checks it.
+- (9) the commented-out code of ObjectGenericODE2 removed.
+- (10) `ComputeJacobianODE2_ODE2`: the user Jacobian, or the stiffness matrix, or the damping matrix as the first matrix
+  (`CopyOrAddTripletsWithFactor`), the others added by `AddMatrixWithFactor`, which checks that the format is the one of
+  the Jacobian - before, the stiffness matrix was checked also without a jacobianUserFunction and the damping matrix
+  not at all.
+- (11), (12) `GetOutputVariableBody` of ObjectGenericODE2 computes into local vectors, only what the variable needs.
+- (13) waits for RG13 (total coordinates).
+- (14) both fetch the MainSystem from their system data; the GenericODE2 evaluations no longer take it as argument.
+- (15) `GatherCoordinates` serves ObjectUserBody and ObjectGenericODE2 (`ComputeObjectCoordinates` is a call of it);
+  ObjectKinematicTree, ObjectFFRF and ObjectGenericODE1 keep their own, as their coordinates are not those of the nodes
+  alone (joint coordinates, the reference frame, ODE1 nodes).
+- (16), (17) done before (#2999, #3003).
+- Measured: generic6 and generic100 of perfUserFunctions as after RG12.3.10 (Python 2.04/2.12 us, symbolic 0.058/0.25);
+  ObjectUserBody did not exist in 1.13.6.

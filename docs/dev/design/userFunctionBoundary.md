@@ -266,7 +266,7 @@ sub-step of RG12.3 or a step of RG7 in the plan:
 4. **RG7.10** (#3003) - the items that depend on Python user functions drawn in the main thread, a list from
    `Assemble`, and the detection of Python calls from the render thread; the condition for removing the cache.
 5. **RG7.3.4** - section 10, the user items on 1 to 4: ObjectUserBody without the cache, ObjectGenericODE2; point 13
-   waits for RG13.
+   waits for RG13. Done (#2995), see the log.
 6. **RG12.3.7** - matrices (`massMatrixUserFunction`, `jacobianUserFunction`, the Jacobians of ObjectUserBody): the
    same scheme with `const Matrix&` arguments and `Matrix&` / `MatrixContainer&` results; #1864 belongs here.
 
