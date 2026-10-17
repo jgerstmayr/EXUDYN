@@ -178,6 +178,12 @@ What the test suite, the examples and pytest do not cover. Open without a step: 
 
 #2326.
 
+### **CLOSED_RG2.10** Limit the threads of the numerical libraries in the processes of the parallel examples run
+
+CLOSED 2026-10-17 (#3019; maintainer: add a step, the local machine might not be the most critical case): the child
+processes get OMP_NUM_THREADS, MKL_NUM_THREADS, OPENBLAS_NUM_THREADS and NGS_NUM_THREADS = cores / processes;
+NGsolveOCCboundaries2.py reserves 6.3 GB instead of 17 GB. [log](exudynRevisionLog2026c.md#rg2-10)
+
 ## **CLOSED_RG3** Docs
 
 What the documentation still gets wrong or does not say.

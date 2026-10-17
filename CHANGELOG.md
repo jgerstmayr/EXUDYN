@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.13 | Newborn | 115 | 1.13.116 |
+| 1.13 | Newborn | 116 | 1.13.117 |
 | 1.12 | Metheney | 367 | 1.12.462 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
@@ -30,6 +30,10 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.13 - Newborn (current)
 
+- **1.13.117** `FIX` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` Limit the threads of MKL, OpenMP, OpenBLAS and NGsolve in the processes of the parallel examples run (#3019)
+  - description: NGsolveOCCboundaries2.py failed twice in the parallel examples run (1.13.104, 1.13.111) with 'Could not allocate localheap, heapsize = 3200000000'. Measured on 32 threads: import ngsolve reserves 8 GB (MKL/OpenMP, one buffer per thread), Assemble in the TaskManager 3.2 GB more (100 MB per thread), the example 17 GB; import exudyn adds 5 MB. Eight processes, with the NGsolve examples next to each other, exceed the commit limit (RAM + pagefile). The child processes of the parallel run get OMP\_NUM\_THREADS, MKL\_NUM\_THREADS, OPENBLAS\_NUM\_THREADS and NGS\_NUM\_THREADS = cores / processes (unless set); the example then reserves 6.3 GB and takes the same time. The environment of the runner and of the shell does not change.
+  - **notes:** The processes of the parallel examples run get OMP\_NUM\_THREADS, MKL\_NUM\_THREADS, OPENBLAS\_NUM\_THREADS and NGS\_NUM\_THREADS set to the cores divided by the processes, unless set already: on 32 threads an NGsolve example reserved 17 GB (MKL, OpenMP and the TaskManager reserve memory per thread), and several at once exceeded what Windows can commit; with 4 threads it reserves 6.3 GB in the same time. The environment of the runner does not change.
+  - date resolved: **2026-10-17 15:48**, date raised: 2026-10-17
 - **1.13.116** `CHANGE` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` Refuse float() of a symbolic expression while recording, so that math.sin and float() cannot lose it (#3017)
   - description: symbolic.Real has \_\_float\_\_, which evaluates the expression: math.sin(x) or float(x) in a symbolic user function records a constant instead of the expression, without any message (found by the comparison with numpy, \#3015; tools/checkPythonMath.py checks the test models for it). While recording, \_\_float\_\_ of a Real that holds an expression or a named variable should raise a TypeError that names exudyn.symbolic.sin etc. Decision needed: Evaluate() stays for the value; code that uses float() on purpose has to change.
   - **notes:** While recording, a symbolic.Real that holds an expression or a named variable refuses the conversion to float with a TypeError: math.sin(x), float(x) and np.array(\[x\], dtype=float) recorded a constant without a message; np.sin(x) and esym.sin(x) record, x.Evaluate() gives the value. An operation of exudyn.symbolic on numbers alone gives a number, also while recording, so that esym functions in a Python user function return floats.

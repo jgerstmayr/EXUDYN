@@ -2,7 +2,8 @@
 # This is an EXUDYN test infrastructure file
 #
 # Details:  The logs of the runners are committed: they write the home directory of the account as
-#           %USERPROFILE% (Windows) or ~ (#2923).
+#           %USERPROFILE% (Windows) or ~ (#2923). The processes of the parallel examples run divide the
+#           threads of the libraries among them (#3019).
 #
 # Author:   Johannes Gerstmayr
 # Date:     2026-10-10 (created)
@@ -46,3 +47,16 @@ def testTheLogFileIsRewritten(tmp_path):
     testRunnerTools.HideHomeDirectoryInLog(str(log))
     text = log.read_text(encoding='utf-8')
     assert home not in text and 'nothing else' in text
+
+
+#the processes of the parallel examples run get the threads of OpenMP, MKL, OpenBLAS and NGsolve divided among them;
+#a variable set already stays, and the environment of the runner does not change (#3019)
+def testTheParallelProcessesShareTheThreadsOfTheLibraries(monkeypatch):
+    monkeypatch.delenv('MKL_NUM_THREADS', raising=False)
+    monkeypatch.setenv('OMP_NUM_THREADS', '3')
+    environment = testRunnerTools.ParallelProcessEnvironment(8, cores=32)
+    assert environment['MKL_NUM_THREADS'] == '4'
+    assert environment['NGS_NUM_THREADS'] == '4' and environment['OPENBLAS_NUM_THREADS'] == '4'
+    assert environment['OMP_NUM_THREADS'] == '3'
+    assert 'MKL_NUM_THREADS' not in os.environ
+    assert testRunnerTools.ParallelProcessEnvironment(64, cores=8)['MKL_NUM_THREADS'] == '1'

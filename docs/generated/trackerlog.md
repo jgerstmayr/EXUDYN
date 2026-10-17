@@ -8,10 +8,10 @@ Every entry carries the **type** of the issue, then its **priority** and its **e
 
 General information on current version:
 
-- Exudyn version = 1.13.116.dev1
+- Exudyn version = 1.13.117.dev1
 - last change = 2026-10-17
 - Number of issues = 3020
-- Number of resolved issues = 2893 (116 in current version)
+- Number of resolved issues = 2894 (117 in current version)
 
 ## Resolved issues and resolved bugs before version 1.13
 
@@ -9039,9 +9039,6 @@ The following list contains the issues which have been **RESOLVED** in the accor
 
 ## Open issues
 
-- `FIX` `LOW EFF` `raised by: Claude-JG` Limit the threads of MKL, OpenMP, OpenBLAS and NGsolve in the processes of the parallel examples run (#3019)
-  - description: NGsolveOCCboundaries2.py failed twice in the parallel examples run (1.13.104, 1.13.111) with 'Could not allocate localheap, heapsize = 3200000000'. Measured on 32 threads: import ngsolve reserves 8 GB (MKL/OpenMP, one buffer per thread), Assemble in the TaskManager 3.2 GB more (100 MB per thread), the example 17 GB; import exudyn adds 5 MB. Eight processes, with the NGsolve examples next to each other, exceed the commit limit (RAM + pagefile). The child processes of the parallel run get OMP\_NUM\_THREADS, MKL\_NUM\_THREADS, OPENBLAS\_NUM\_THREADS and NGS\_NUM\_THREADS = cores / processes (unless set); the example then reserves 6.3 GB and takes the same time. The environment of the runner and of the shell does not change.
-  - date raised: 2026-10-17
 - `EXTENSION` `MEDIUM EFF` `raised by: Claude-JG` Add Matrix.T, rows M\[i\], slices v\[a:b\] and component-wise functions of symbolic vectors (#3018)
   - description: Missing in exudyn.symbolic compared with numpy (\#3015): the transposed matrix (A.T @ f, which v @ A computes already), a row of a matrix, slices of vectors and matrices, np.sin(v) and the other functions applied to the components, a vector plus a scalar or a list, np.cross and np.linalg.norm as recorded operations (NormL2 exists). The transposed matrix is the most important for rigid body user functions.
   - date raised: 2026-10-17

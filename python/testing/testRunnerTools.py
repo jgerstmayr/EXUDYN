@@ -839,7 +839,7 @@ exec(testRunnerTools.PrepareExampleSource(_source, {quietMode!r}), globals())
 
 #%%******************************************************************************************************
 def RunExampleInProcess(exampleFileName, examplesDirectory, outputDirectory='', timeout=60,
-                        solverTimeout=1, quietMode=True, pythonExecutable=None):
+                        solverTimeout=1, quietMode=True, pythonExecutable=None, environment=None):
     """
     Run ONE example in a fresh interpreter.
 
@@ -860,6 +860,7 @@ def RunExampleInProcess(exampleFileName, examplesDirectory, outputDirectory='', 
         solverTimeout (float): seconds after which the solvers inside the example stop
         quietMode (bool): switch off verbose output of the example
         pythonExecutable (str): interpreter to use; default sys.executable
+        environment (dict): the environment of the process; default None, the one of the runner
 
     Returns:
         dict with 'seconds', 'output', 'failed', 'timedOut' and 'reachedSolver'
@@ -880,7 +881,7 @@ def RunExampleInProcess(exampleFileName, examplesDirectory, outputDirectory='', 
     try:
         completed = subprocess.run([pythonExecutable or sys.executable, '-c', source],
                                    capture_output=True, text=True, errors='replace',
-                                   timeout=timeout, cwd=workingDirectory)
+                                   timeout=timeout, cwd=workingDirectory, env=environment)
         output = completed.stdout + completed.stderr
         failed = completed.returncode != 0
     except subprocess.TimeoutExpired as e:
@@ -900,6 +901,32 @@ def RunExampleInProcess(exampleFileName, examplesDirectory, outputDirectory='', 
             'output': '\n'.join([line for line in output.split('\n')
                                  if not line.startswith(exampleSolvingMarker)]).rstrip(),
             'failed': failed, 'timedOut': timedOut, 'reachedSolver': reachedSolver}
+
+
+#%%******************************************************************************************************
+#the libraries that start a thread per core and reserve memory per thread: OpenMP and MKL (loaded by NGsolve, 8 GB
+#on 32 threads at the import), OpenBLAS (numpy, scipy) and the TaskManager of NGsolve (100 MB per thread); several
+#such processes at once exceeded the memory Windows can commit (#3019)
+threadEnvironmentVariables = ['OMP_NUM_THREADS', 'MKL_NUM_THREADS', 'OPENBLAS_NUM_THREADS', 'NGS_NUM_THREADS']
+
+def ParallelProcessEnvironment(numberOfProcesses, cores=None):
+    """
+    The environment of a child process when numberOfProcesses run at once: the thread variables of
+    threadEnvironmentVariables are the cores divided by the processes, unless the environment sets them already.
+    Only the child processes get it; the environment of the runner is not changed.
+
+    Args:
+        numberOfProcesses (int): the processes that run at the same time
+        cores (int): the number of cores; default os.cpu_count()
+
+    Returns:
+        dict: a copy of os.environ with the thread variables
+    """
+    environment = dict(os.environ)
+    threads = str(max(1, (cores or os.cpu_count() or 4)//max(1, numberOfProcesses)))
+    for name in threadEnvironmentVariables:
+        environment.setdefault(name, threads)
+    return environment
 
 
 #%%******************************************************************************************************
@@ -928,12 +955,13 @@ def RunExamplesInParallel(exampleFileNames, examplesDirectory, outputDirectory,
 
     results = {}
     finished = [0]
+    environment = ParallelProcessEnvironment(numberOfProcesses) #the threads of the libraries per process (#3019)
 
     def Run(exampleFileName):
         r = RunExampleInProcess(exampleFileName, examplesDirectory,
                                 outputDirectory=outputDirectory + '/' + exampleFileName[:-3],
                                 timeout=timeout, solverTimeout=solverTimeout,
-                                quietMode=quietMode)
+                                quietMode=quietMode, environment=environment)
         finished[0] += 1
         if printProgress and compactProgress:
             ProgressLine(finished[0], len(exampleFileNames), 'example ' + exampleFileName

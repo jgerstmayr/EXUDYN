@@ -1751,3 +1751,21 @@ in general - no discrepancies, a smaller set of features; important missing feat
   trees are smaller and the printed expressions show the folded numbers.
 - symbolicNumpyCompatibilityTest.py checks the three conversions among the refused operations, and that esym functions
   of numbers give a float.
+
+<a id="rg2-10"></a>
+### RG2.10 — the threads of the numerical libraries in the parallel examples run (2026-10-17, #3019)
+*(Maintainer 2026-10-17: probably like the earlier problem with scipy, check it; then: add a step and resolve it.)*
+- NGsolveOCCboundaries2.py failed in the parallel run of 1.13.104 and 1.13.111 with "Could not allocate localheap,
+  heapsize = 3200000000", and passed alone. Measured with psutil (the memory a process reserves from Windows; the
+  working set stays near 1.3 GB), on 32 threads, 66 GB RAM and 41 GB pagefile: `import ngsolve` 8 GB (MKL and OpenMP
+  reserve per thread), `Assemble` in the TaskManager 3.2 GB more (100 MB per thread), the example 17 GB; `import exudyn`
+  5 MB, `import numpy, scipy` 1.6 GB. The examples run in 8 processes in alphabetical order, so the NGsolve examples
+  run at the same time and exceed the commit limit. Nothing of Exudyn and no dense matrix is involved.
+- `testRunnerTools.ParallelProcessEnvironment(numberOfProcesses)`: a copy of the environment with OMP_NUM_THREADS,
+  MKL_NUM_THREADS, OPENBLAS_NUM_THREADS and NGS_NUM_THREADS = cores / processes (4 here), unless set already;
+  RunExamplesInParallel gives it to every example process. Only the child processes get it - the runner and the shell
+  keep their environment, so there is nothing to set back. With 4 threads the example reserves 6.3 GB and takes the
+  same 14 s; the threads of Exudyn's own solvers are set by their settings and do not change.
+- The parallel run of the test suite keeps the threads: its results are compared to 5e-14, and the number of BLAS
+  threads may change the last bits of a large product.
+- pytest test_runnerLogs.py::testTheParallelProcessesShareTheThreadsOfTheLibraries.
