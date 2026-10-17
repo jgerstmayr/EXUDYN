@@ -86,6 +86,11 @@ be symbolic now (#2985). `exudyn.symbolic.Vector` and `Matrix` have `dot()` and 
 and a numpy array leaves `@` and `*` with a symbolic operand to it, so that one function computes with numpy arrays and
 symbolic vectors (#3011).
 
+**Drawing with user functions in a renderer thread**: the markers, connectors, loads and sensors on an ObjectUserBody
+and every load with a user function are drawn in the main thread, together with the graphics user functions, so that
+the render thread never calls Python; `loads.drawWithUserFunction` draws a Python user function with multithreaded
+rendering as well (#3003).
+
 **`SystemContainer(attachToRenderer=False)`** creates a container only to compute, which leaves the render window with
 the container of the model; `InverseKinematicsNumerical` uses it (#2259).
 

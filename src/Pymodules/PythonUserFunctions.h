@@ -41,6 +41,15 @@ enum class UserFunctionType {
 	Jit = 4,		//! Jitted user function
 };
 
+//! the main thread, which imports exudyn and runs the solvers and Python; the render thread draws and may not call user
+//! functions (#3003)
+void SetExudynMainThread();
+bool IsExudynMainThread();
+//! a user function was called from another thread than the main thread: set, reported once in the main thread
+void ReportUserFunctionCallOutsideMainThread();
+//! true once after a call of a user function outside the main thread was reported
+bool UserFunctionCalledOutsideMainThread();
+
 //! true if Python user functions get their vector arguments as lists instead of numpy arrays:
 //! exudyn.special.deprecations.userFunctionListArguments, for the transition (#3008); reports the deprecated use
 bool UserFunctionListArguments();

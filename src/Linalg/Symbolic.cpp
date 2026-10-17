@@ -20,6 +20,8 @@
 ************************************************************************************************ */
 
 #include "Utilities/BasicDefinitions.h"
+#include <thread>
+#include <atomic>
 #include <pybind11/pybind11.h>
 #include <pybind11/stl.h>
 #include <pybind11/stl_bind.h>
@@ -90,6 +92,14 @@ int Symbolic::MatrixExpressionBase::deleteCount = 0;
 
 //user functions implementation
 #define PyUFobject pybind11::object
+
+std::thread::id exudynMainThreadID;								//!< the thread that imported exudyn (#3003)
+std::atomic<bool> userFunctionCalledOutsideMainThread(false);	//!< set by a user function called from another thread
+
+void SetExudynMainThread() { exudynMainThreadID = std::this_thread::get_id(); }
+bool IsExudynMainThread() { return std::this_thread::get_id() == exudynMainThreadID; }
+void ReportUserFunctionCallOutsideMainThread() { userFunctionCalledOutsideMainThread = true; }
+bool UserFunctionCalledOutsideMainThread() { return userFunctionCalledOutsideMainThread.exchange(false); }
 
 //! exudyn.special.deprecations.userFunctionListArguments, read for every vector argument of a Python user function (#3008)
 bool UserFunctionListArguments()

@@ -725,7 +725,7 @@ definitions.append(StructureDefinition(
         StructureParameter(type=Tbool, 
             pythonName='drawWithUserFunction',
             defaultValue=True,
-            description=r'draw loads with the value of their user function, time dependent; make sure that fixedLoadSize=false, while otherwise only the direction will change; a symbolic user function is always drawn so, a Python user function only with general.useMultiThreadedRendering=False, because the render thread cannot call Python; otherwise the load is drawn with its loadVector'),
+            description=r'draw loads with the value of their user function, time dependent; make sure that fixedLoadSize=false, while otherwise only the direction will change; a load with a user function is drawn in the main thread for it, as the render thread cannot call Python (#3003)'),
         StructureParameter(type=TFloat4, 
             pythonName='defaultColor',
             defaultValue='Float4({0.7f,0.1f,0.1f,1.f})',

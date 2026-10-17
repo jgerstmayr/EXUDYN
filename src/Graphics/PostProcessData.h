@@ -49,6 +49,7 @@ public:
 
 	VisualizationSystem* visualizationSystem; //!< this backlink ist used for: user functions, WaitForUserToContinue and for MainSystem backlink (but use rarely!!!)
 	bool requestUserFunctionDrawing;	//!< if this flag is set, user functions request drawing update from computation thread
+	bool userFunctionOutsideMainThreadReported = false; //!< a call of a user function from the render thread was reported (#3003)
 	std::atomic_flag requestUserFunctionDrawingAtomicFlag;  //!< flag for user function drawing in python
 
 

@@ -164,13 +164,7 @@ bool CObjectUserBody::GetJacobianTransposedTimesVectorDerivative(const Vector3D&
 
 Vector3D CObjectUserBody::GetPosition(const Vector3D& localPosition, ConfigurationType configuration) const
 {
-	if (configuration == ConfigurationType::Visualization && !PythonCallPossible())
-	{
-		Vector3D position;
-		Matrix3D rotation;
-		visualizationCache.Get(localPosition, position, rotation);
-		return position;
-	}
+	if (configuration == ConfigurationType::Visualization && !PythonCallPossible()) { return Vector3D(0.); }
 	StdVector q, q_t;
 	ComputeObjectCoordinates(q, q_t, configuration);
 	Vector3D position;
@@ -207,13 +201,7 @@ Vector3D CObjectUserBody::GetVelocity(const Vector3D& localPosition, Configurati
 
 Matrix3D CObjectUserBody::GetRotationMatrix(const Vector3D& localPosition, ConfigurationType configuration) const
 {
-	if (configuration == ConfigurationType::Visualization && !PythonCallPossible())
-	{
-		Vector3D position;
-		Matrix3D rotation;
-		visualizationCache.Get(localPosition, position, rotation);
-		return rotation;
-	}
+	if (configuration == ConfigurationType::Visualization && !PythonCallPossible()) { return EXUmath::unitMatrix3D; }
 	StdVector q, q_t;
 	ComputeObjectCoordinates(q, q_t, configuration);
 	Matrix rotation;
@@ -281,30 +269,6 @@ void CObjectUserBody::GetOutputVariableBody(OutputVariableType variableType, con
 	}
 	default:
 		SysError("CObjectUserBody::GetOutputVariableBody failed"); //error should not occur, because types are checked!
-	}
-}
-
-//! the positions and rotations of the local positions the renderer asked for, in the visualization configuration
-void CObjectUserBody::UpdateVisualizationCache() const
-{
-	std::vector<Vector3D> localPositions = visualizationCache.GetLocalPositions();
-	if (localPositions.size() == 0) { return; }
-
-	StdVector q, q_t;
-	ComputeObjectCoordinates(q, q_t, ConfigurationType::Visualization);
-	Real t = ConfigurationTime(GetCSystemData(), ConfigurationType::Visualization);
-	for (const Vector3D& localPosition : localPositions)
-	{
-		Vector3D position;
-		EvaluatePosition(position, t, localPosition, q);
-		Matrix3D rotation3D = EXUmath::unitMatrix3D;
-		if (parameters.rotationMatrixUserFunction)
-		{
-			Matrix rotation;
-			EvaluateMatrix(1, rotation, t, localPosition, q);
-			rotation3D.CopyFrom(rotation);
-		}
-		visualizationCache.Set(localPosition, position, rotation3D);
 	}
 }
 

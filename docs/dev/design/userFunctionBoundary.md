@@ -237,7 +237,7 @@ The interface above decides most of the points of RG7.3.4:
 | (14) MainSystem argument | inside the generated `Evaluate` (the item has `cSystemData->GetMainSystemBacklink()`) |
 | (15) gathering coordinates | one function `CObjectBody::GatherCoordinates(ResizableVector& q, ResizableVector& q_t, configuration, withReference)` for GenericODE2, GenericODE1, UserBody, KinematicTree, FFRF |
 | (16) the matrix copy | done (#2999) |
-| (17) visualization cache | decided: no cache (it would not work with the SolutionViewer); the items that depend on a Python user function are drawn in the main thread - a list computed in `Assemble`, RG7.10 (#3003), with a check that detects a Python call from the render thread |
+| (17) visualization cache | done (#3003, RG7.10): no cache; the items that depend on user functions are drawn in the main thread - lists computed when the system has changed -, and a user function called from another thread is reported |
 
 **Helpers for users**: none needed for the interface itself; `exudyn.advancedUtilities.CreateSymbolicUserFunction`
 stays the way to make a symbolic function. The documentation gets one section on the arguments (views, valid during

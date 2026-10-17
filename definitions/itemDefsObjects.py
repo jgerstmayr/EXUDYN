@@ -2092,11 +2092,9 @@ definitions.append(ItemDefinition(
     className='ObjectUserBody',
     drawing=r'What its `graphicsDataUserFunction` returns, in global coordinates; nothing without it.',
     drawingSettings=[],
-    addIncludesC=r"""#include "System/VisualizationAccessCache.h"
-class MainSystem; //AUTO; for std::function / userFunction; avoid including MainSystem.h
+    addIncludesC=r"""class MainSystem; //AUTO; for std::function / userFunction; avoid including MainSystem.h
 """,
-    addProtectedC=r"""    mutable VisualizationAccessCache visualizationCache; //positions and rotations for a renderer thread, which may not call Python
-    mutable Index ownObjectNumber = -1; //the number of this object in the system, for the user functions of the access functions
+    addProtectedC=r"""    mutable Index ownObjectNumber = -1; //the number of this object in the system, for the user functions of the access functions
 """,
     cParentClass=ParentClassCObjectBody,
     overallDescription=r"""A body whose equations of motion and whose position, and optionally orientation, at a local position are computed by Python user functions: a user finite element or a user rigid body on existing nodes. As it provides the access functions of a body, the body markers (MarkerBodyPosition, MarkerBodyRigid), SensorBody, the loads on these markers and every connector work on it.""",
@@ -2106,7 +2104,7 @@ class MainSystem; //AUTO; for std::function / userFunction; avoid including Main
     The object coordinates $\qv \in \Rcal^n$ are the ABRV:ODE2 coordinates of its nodes, in the order of
     `nodeNumbers`, **including** their reference values; every user function gets the same $\qv$, so that
     a point is computed from the total coordinates as a finite element does. The user functions get $\qv$, $\dot\qv$
-    and the local position as lists; `np.array(q)` makes an array of one.
+    and the local position as read-only numpy arrays.
 
     #### Equations of motion
 
@@ -2140,8 +2138,8 @@ class MainSystem; //AUTO; for std::function / userFunction; avoid including Main
     is the same value.
 
     The user functions are called serially, one Python call at a time. A renderer that runs in a thread of its
-    own may not call Python: it draws markers and connectors on the body with the positions and rotation matrices
-    that the computation thread computes for it, a frame later.
+    own may not call Python: the body, the markers on it and the connectors, loads and sensors on them are drawn in
+    the main thread, together with the graphics user functions (#3003).
     """,
     miniExample=r"""    #a mass point as a user body on a NodePoint: M = m*I, the position of every point is q
     m = 2
@@ -2282,10 +2280,10 @@ class MainSystem; //AUTO; for std::function / userFunction; avoid including Main
             description=r'the number of this object in the system, which the user functions of the access functions get'),
         ItemFunction(type=TBool, destination=DestComp, cFlags=CFConst, isVirtual=False,
             pythonName='PythonCallPossible',
-            description=r'false in a thread that does not hold the Python GIL, the renderer thread; implemented in evaluateUserFunctions.cpp'),
-        ItemFunction(type=Tvoid, destination=DestComp, cFlags=CFConst, isVirtual=False,
-            pythonName='UpdateVisualizationCache',
-            description=r'compute the positions and rotations, which the renderer thread asked for, in the visualization configuration; called in the computation thread'),
+            description=r'false in another thread than the main thread, which then gets no position (#3003); implemented in evaluateUserFunctions.cpp'),
+        ItemFunction(type=TBool, destination=DestComp, cFlags=CFConst,
+            pythonName='AccessFunctionsCallUserFunctions', implementation='return true;',
+            description=r'the body, its markers and what depends on them are drawn in the main thread (#3003)'),
         ItemFunction(type=Tvoid, destination=DestComp, cFlags=CFConst, isVirtual=False,
             pythonName='EvaluatePosition',
             args='Vector3D& position, Real t, const Vector3D& localPosition, const StdVector& coordinates',

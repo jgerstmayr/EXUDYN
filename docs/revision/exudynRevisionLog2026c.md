@@ -1567,3 +1567,36 @@ meaning, so introduce a .dot operator to enable equal scripts for Python and sym
   the question of `*` is open.
 - **Measured** (userFunctionPerformance.py, the same script for both versions): cartesian Python 2.86 against 3.67 us in
   1.13.6, load 1.21 against 1.37, generic6 2.05 against 2.96, generic100 2.20 against 10.46; symbolic unchanged.
+
+<a id="rg7-10"></a>
+### RG7.10 — the items that depend on user functions drawn in the main thread (2026-10-17, #3003)
+*(Maintainer 2026-10-16: no visualization cache in ObjectUserBody, it would not work with the SolutionViewer; items that
+depend on Python user items cannot be drawn in the visualization thread: a list computed in Assemble that marks them,
+in a separate step; a global flag that detects a Python (not symbolic) user function called in the visualization
+thread. 2026-10-17: do RG7.10 and RG7.3.4.)*
+- **The lists** (VisualizationSystem::UpdateMainThreadItems): computed in the render update when the system has changed
+  (`systemHasChanged`, which Assemble and every change of an item set) - the same moment as an Assemble, without a
+  second place that must know about the visualization. An object with `AccessFunctionsCallUserFunctions()` (a new
+  virtual of CObject, true for ObjectUserBody), the markers on such an object (`Marker::Body` or `Object`), the
+  connectors with such a marker, the loads on such a marker and every load with a user function, the sensors on such an
+  object, marker or load. Symbolic user functions are included: one is evaluated by one thread at a time, and the
+  computation thread evaluates it during the step.
+- **The drawing**: `UpdateGraphicsData` (render thread) requests the main thread as for the graphics user functions when
+  a list has an item, and skips the listed items; `PostProcessData::ProcessUserFunctionDrawing` (main thread) calls
+  `UpdateMainThreadGraphics` after the graphics user functions, with the show flags of each kind; the marker frame is
+  drawn by `DrawMarker` in both. Single-threaded rendering and `GetGraphicsData` go the same way in one thread.
+- **The detection**: `SetExudynMainThread` at the import of the module records the thread; `IsExudynMainThread` is
+  asked by every Python user function (`PythonUserFunctionToStdFunction`) and by ObjectUserBody before it evaluates a
+  user function; a call from another thread sets an atomic flag, which ProcessUserFunctionDrawing reports once as a
+  warning. ObjectUserBody returns zero or the unit matrix in another thread, as before with an empty cache.
+- **Removed**: `VisualizationAccessCache` from ObjectUserBody (member, `UpdateVisualizationCache`); the header
+  `src/System/VisualizationAccessCache.h` is unused now - to be deleted after approval (a tracked file).
+- **Loads**: `loads.drawWithUserFunction` evaluates the user function wherever the load is drawn in the main thread -
+  a Python user function is drawn in multithreaded rendering too (before: only symbolic, or single-threaded).
+- **Found and fixed**: the MainSystem argument of a Python user function was passed as a const reference, which pybind11
+  copies - and MainSystem cannot be copied - when its Python object no longer exists (a model built in a function that
+  returned only the SystemContainer): "return_value_policy = copy, but type is non-copyable". It is passed by
+  reference now (`PythonUserFunctionArgument`).
+- **Test**: test_graphicsData.py testTheItemsOnAUserBodyAreDrawnOnceAndWhereTheyAre - a marker frame, a Cartesian
+  spring-damper, a load with a user function and a sensor on an ObjectUserBody give the same drawing elements, per
+  item and at the same points, as on an ObjectRigidBody. The thread itself cannot be tested without a window.

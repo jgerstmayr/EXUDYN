@@ -156,6 +156,7 @@ PYBIND11_MODULE(exudynCPP, m) {
 	m.doc() = "EXUDYN binding Python<->C++\n -> usage:\nSC=exu.SystemContainer()\nmbs=SC.AddSystem()\n see theDoc.pdf for tutorials, interface description and further information"; // module docstring
 //#pragma message("***** pybind: building exudynCPP module *****")
 #endif
+	SetExudynMainThread(); //the thread that imports exudyn runs Python and the solvers (#3003)
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 //variables linked to exudyn
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++

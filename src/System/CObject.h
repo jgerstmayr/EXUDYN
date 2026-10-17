@@ -145,6 +145,10 @@ public:
 	// for connectors: only used for data coordinates!!
 
 	//! local to global node number transformation
+	//! true if the access functions (position, rotation, ...) evaluate user functions, as ObjectUserBody does: the
+	//! object and what depends on it are drawn in the main thread (#3003)
+	virtual bool AccessFunctionsCallUserFunctions() const { return false; }
+
 	virtual Index GetNodeNumber(Index localIndex) const
 	{
 		CHECKandTHROWstring("ERROR: illegal call to CObject::GetNodeNumber");

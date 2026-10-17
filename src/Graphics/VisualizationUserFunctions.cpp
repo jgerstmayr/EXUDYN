@@ -127,11 +127,9 @@ void VisualizationObjectGenericODE2::CallUserFunction(const VisualizationSetting
 
 }
 
-//! in the computation thread: the positions and rotations the renderer asked for, and the graphics of the user function in global coordinates (#2986)
+//! in the main thread: the graphics of the user function in global coordinates (#2986)
 void VisualizationObjectUserBody::CallUserFunction(const VisualizationSettings& visualizationSettings, VisualizationSystem* vSystem, const MainSystem& mainSystem, Index itemNumber)
 {
-	CObjectUserBody* cObject = (CObjectUserBody*)vSystem->systemData->GetCObjects()[itemNumber];
-	cObject->UpdateVisualizationCache();
 	if (!graphicsDataUserFunction) { return; }
 
 	py::object pyBodyGraphicsData;

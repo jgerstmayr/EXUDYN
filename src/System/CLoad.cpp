@@ -193,8 +193,7 @@ void VisualizationLoadForceVector::UpdateGraphics(const VisualizationSettings& v
 		Vector3D loadVector = cLoad->GetParameters().loadVector;
 		if (visualizationSettings.loads.drawWithUserFunction &&
 			cLoad->HasUserFunction() &&
-			(cLoad->GetParameters().loadVectorUserFunction.GetUFtype() == UserFunctionType::Symbolic ||
-			visualizationSettings.general.useMultiThreadedRendering == false) )
+			IsExudynMainThread()) //a load with a user function is drawn in the main thread (#3003)
 		{
 			VisualizationExceptionHandling([&] //in case that user function contains error, it is not drawn
 			{
@@ -250,8 +249,7 @@ void VisualizationLoadTorqueVector::UpdateGraphics(const VisualizationSettings& 
 		Vector3D loadVector = cLoad->GetParameters().loadVector;
 		if (visualizationSettings.loads.drawWithUserFunction &&
 			cLoad->HasUserFunction() &&
-			(cLoad->GetParameters().loadVectorUserFunction.GetUFtype() == UserFunctionType::Symbolic ||
-				visualizationSettings.general.useMultiThreadedRendering == false))
+			IsExudynMainThread()) //a load with a user function is drawn in the main thread (#3003)
 		{
 			VisualizationExceptionHandling([&] //in case that user function contains error, it is not drawn
 				{

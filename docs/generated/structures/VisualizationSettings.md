@@ -305,7 +305,7 @@ VSettingsLoads has the following items:
 | `defaultRadius` | float | 0.005 | global radius of load axis if drawn in 3D |
 | `defaultSize` | float | 0.2 | global load size; if -1.f, load size is relative to maxSceneSize |
 | `drawSimplified` | bool | True | draw loads with simplified symbols |
-| `drawWithUserFunction` | bool | True | draw loads with the value of their user function, time dependent; make sure that fixedLoadSize=false, while otherwise only the direction will change; a symbolic user function is always drawn so, a Python user function only with general.useMultiThreadedRendering=False, because the render thread cannot call Python; otherwise the load is drawn with its loadVector |
+| `drawWithUserFunction` | bool | True | draw loads with the value of their user function, time dependent; make sure that fixedLoadSize=false, while otherwise only the direction will change; a load with a user function is drawn in the main thread for it, as the render thread cannot call Python (#3003) |
 | `fixedLoadSize` | bool | True | if true, the load is drawn with a fixed vector length in direction of the load vector, independently of the load size |
 | `loadSizeFactor` | float | 0.1 | if fixedLoadSize=false, then this scaling factor is used to draw the load vector |
 | `show` | bool | True | flag to decide, whether the loads are shown |

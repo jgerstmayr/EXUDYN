@@ -701,6 +701,12 @@ inline decltype(auto) PythonUserFunctionArgument(const T& argument)
 		if (UserFunctionListArguments()) { return py::object(py::cast((StdVector)argument)); }
 		return EPyUtils::ToNumpyView(argument.GetDataPointer(), argument.NumberOfItems());
 	}
+	else if constexpr (std::is_same_v<T, MainSystem>)
+	{
+		//by reference: a const reference would be copied - MainSystem cannot - when its Python object no longer exists,
+		//e.g. a model built in a function that returned only the SystemContainer (#3003)
+		return py::cast(&argument, py::return_value_policy::reference);
+	}
 	else { return (const T&)argument; }
 }
 
@@ -752,6 +758,7 @@ std::function<R(Args...)> PythonUserFunctionToStdFunction(const py::object& func
 	std::shared_ptr<PythonFunctionHandle> handle = std::make_shared<PythonFunctionHandle>(function);
 	return [handle](Args... args) -> R
 	{
+		if (!IsExudynMainThread()) { ReportUserFunctionCallOutsideMainThread(); } //the render thread (#3003)
 		py::gil_scoped_acquire gil;
 		py::object result = handle->function(PythonUserFunctionArgument(args)...);
 		if constexpr (!std::is_void_v<R>) { return PythonUserFunctionResult<R>(result); }

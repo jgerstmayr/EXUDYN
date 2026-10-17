@@ -170,7 +170,15 @@ void PostProcessData::ProcessUserFunctionDrawing()
 				cnt++; //synchronize itemNumber with item!!!
 			}
 		}
+		//the items that call user functions, which the render thread leaves to this thread (#3003)
+		visualizationSystem->UpdateMainThreadGraphics(visSettings);
 		requestUserFunctionDrawing = false;
+		if (UserFunctionCalledOutsideMainThread() && !userFunctionOutsideMainThreadReported)
+		{
+			userFunctionOutsideMainThreadReported = true;
+			PyWarning("a user function was called from the render thread, which may not call Python and may not evaluate a symbolic "
+				"function while the solver does; an item that depends on user functions was not found for drawing in the main thread (#3003)");
+		}
 	}
 	EXUstd::ReleaseSemaphore(requestUserFunctionDrawingAtomicFlag);
 }

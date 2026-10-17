@@ -97,7 +97,24 @@ public:
 	virtual void UpdateGraphicsData(VisualizationSystemContainer& visualizationSystemContainer);
 
 	//! Renderer reports to CSystem that simulation shall be interrupted
-	virtual void StopSimulation();		
+	virtual void StopSimulation();
+
+	//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+	//THE ITEMS DRAWN IN THE MAIN THREAD (#3003)
+	//the render thread may not call Python, and a symbolic user function is evaluated by one thread at a time: an
+	//object whose access functions are user functions (ObjectUserBody), the markers on it, the connectors, loads and
+	//sensors on these markers or on it, and a load with a user function are drawn in the main thread, together with the
+	//graphics user functions of the objects; true per item, computed when the system has changed
+	std::vector<bool> mainThreadObjects, mainThreadMarkers, mainThreadLoads, mainThreadSensors;
+	bool hasMainThreadItems = false;		//!< one of the lists has an item
+	bool mainThreadItemsValid = false;		//!< false: the lists are computed again before the next drawing
+
+	//! compute the lists of the items drawn in the main thread
+	void UpdateMainThreadItems();
+	//! draw the items of the lists; called in the main thread, while the render thread waits, as the graphics user functions
+	void UpdateMainThreadGraphics(const VisualizationSettings& visualizationSettings);
+	//! draw marker itemNumber with its frame
+	void DrawMarker(const VisualizationSettings& visualizationSettings, Index itemNumber);
 
 	//! any multi-line text message from computation to be shown in renderer (e.g. time, solver, ...)
 	virtual std::string GetComputationMessage(bool solverInformation = true, bool solutionInformation = true, bool solverTime = true);

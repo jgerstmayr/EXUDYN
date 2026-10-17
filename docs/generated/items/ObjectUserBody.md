@@ -74,7 +74,7 @@ Available as `OutputVariableType` in sensors, `Get...Output()` and other functio
 The object coordinates $\qv \in \Rcal^n$ are the {ref}`ODE2 <ODE2>` coordinates of its nodes, in the order of
 `nodeNumbers`, **including** their reference values; every user function gets the same $\qv$, so that
 a point is computed from the total coordinates as a finite element does. The user functions get $\qv$, $\dot\qv$
-and the local position as lists; `np.array(q)` makes an array of one.
+and the local position as read-only numpy arrays.
 
 ### Equations of motion
 
@@ -108,8 +108,8 @@ position, e.g. the strains of a user element; `exu.special.userTypes.SetName(exu
 is the same value.
 
 The user functions are called serially, one Python call at a time. A renderer that runs in a thread of its
-own may not call Python: it draws markers and connectors on the body with the positions and rotation matrices
-that the computation thread computes for it, a frame later.
+own may not call Python: the body, the markers on it and the connectors, loads and sensors on them are drawn in
+the main thread, together with the graphics user functions (#3003).
 
 **Userfunction**: `massMatrixUserFunction(mbs, t, itemNumber, q, q_t)`
 A user function, which computes the mass matrix of the body.

@@ -49,7 +49,7 @@ The title of each says what it does; the sentence after it, why it comes now.
 
 1. **Check the SolutionViewer on screen** (#2930): the PreStepUserFunction example on Windows - changed without a
    screen; the space key works on macOS (2026-10-16).
-2. **The user function interface** (userFunctionBoundary.md section 11, decided 2026-10-16): RG7.10 and RG7.3.4,
+2. **The user function interface** (userFunctionBoundary.md section 11, decided 2026-10-16): RG7.3.4,
    RG12.3.7 last - then the user rigid body completely symbolic; each measured against 1.13.6 (section 12).
 3. **Rehearse the next release on a `release/*` branch** with *build as a release* - the first run of cibuildwheel
    4.3.0 and of cp315 on GitHub.
@@ -88,7 +88,6 @@ The title of each says what it does; the sentence after it, why it comes now.
   - RG7.6 Add a user joint on two position and orientation markers
   - RG7.8 Evaluate symbolic user items in parallel and in the graphics
   - RG7.9 Document how items work, and the user items
-  - RG7.10 Draw the items that depend on Python user functions in the main thread, and detect Python calls from the render thread
 - **RG8** Compiled C++ user items
   - RG8.1 Move the item registry into one exported translation unit so that plugins share it
   - RG8.2 Check an ABI fingerprint when a plugin registers, and refuse a mismatch with a message
@@ -131,7 +130,7 @@ The title of each says what it does; the sentence after it, why it comes now.
 | RG4 | OPEN | 6 | Implementation problems and bugs |
 | RG5 | OPEN | 8 | Performance |
 | RG6 | OPEN | 3 | Graphics and rendering |
-| RG7 | OPEN | 8 | Python user items |
+| RG7 | OPEN | 7 | Python user items |
 | RG8 | OPEN | 10 | Compiled C++ user items |
 | RG9 | OPEN | 4 | Structural core improvements |
 | RG10 | CLOSED | 0 | Tooling and process |
@@ -590,14 +589,12 @@ both refused at Assemble; test model sensorUserFunctionItemsTest.py. [log](exudy
 
 #2979. A section that explains each kind of item and how a user item of that kind is set up, one example per user item.
 
-### **OPEN_RG7.10** Draw the items that depend on Python user functions in the main thread, and detect Python calls from the render thread
+### **CLOSED_RG7.10** Draw the items that depend on Python user functions in the main thread, and detect Python calls from the render thread
 
-#3003 (maintainer 2026-10-16: no visualization cache, it would not work with the SolutionViewer). The render thread
-draws markers, connectors and sensors itself; those on a user body - and the body - need its Python user functions.
-`Assemble` computes the list of items that depend on a Python user function, with their dependencies (now the only
-criterion is `HasUserFunction()` of the item itself), and they are drawn in the main thread with the graphics user
-functions; a global flag, set when a Python (not a symbolic) user function is called from another thread than the
-main thread, detects what the list misses. The condition for removing the cache of ObjectUserBody (RG7.3.4).
+CLOSED 2026-10-17 (#3003): the items that depend on user functions - an ObjectUserBody, the markers on it, the
+connectors, loads and sensors on them, every load with a user function - are drawn in the main thread; a call from the
+render thread is reported; no cache in ObjectUserBody. [log](exudynRevisionLog2026c.md#rg7-10)
+
 ## **OPEN_RG8** Compiled C++ user items
 
 Plugins: user items compiled against the shipped headers. A plugin author builds Exudyn from source once and the

@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-10-16  13:28:11 (last modified)
+* @date         2026-10-17  09:33:47 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -25,7 +25,6 @@
 #include <functional> //! AUTO: needed for std::function
 #include "Pymodules/PythonUserFunctions.h" //! AUTO: needed for user functions, without pybind11
 namespace py = pybind11;            //! AUTO: "py" used throughout in code
-#include "System/VisualizationAccessCache.h"
 class MainSystem; //AUTO; for std::function / userFunction; avoid including MainSystem.h
 
 //! AUTO: Parameters for class CObjectUserBodyParameters
@@ -79,7 +78,6 @@ public: // AUTO:
 class CObjectUserBody: public CObjectBody // AUTO:
 {
 protected: // AUTO:
-    mutable VisualizationAccessCache visualizationCache; //positions and rotations for a renderer thread, which may not call Python
     mutable Index ownObjectNumber = -1; //the number of this object in the system, for the user functions of the access functions
     CObjectUserBodyParameters parameters; //! AUTO: contains all parameters for CObjectUserBody
 
@@ -196,11 +194,14 @@ public: // AUTO:
     //! AUTO:  the number of this object in the system, which the user functions of the access functions get
     Index GetObjectNumber() const;
 
-    //! AUTO:  false in a thread that does not hold the Python GIL, the renderer thread; implemented in evaluateUserFunctions.cpp
+    //! AUTO:  false in another thread than the main thread, which then gets no position (#3003); implemented in evaluateUserFunctions.cpp
     bool PythonCallPossible() const;
 
-    //! AUTO:  compute the positions and rotations, which the renderer thread asked for, in the visualization configuration; called in the computation thread
-    void UpdateVisualizationCache() const;
+    //! AUTO:  the body, its markers and what depends on them are drawn in the main thread (#3003)
+    virtual bool AccessFunctionsCallUserFunctions() const override
+    {
+        return true;
+    }
 
     //! AUTO:  call of positionUserFunction; implemented in evaluateUserFunctions.cpp
     void EvaluatePosition(Vector3D& position, Real t, const Vector3D& localPosition, const StdVector& coordinates) const;

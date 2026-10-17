@@ -292,9 +292,13 @@ void CObjectGenericODE1::EvaluateUserFunctionRHS(Vector& force, const MainSystem
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 //ObjectUserBody (#2986)
 //! false in a thread that does not hold the GIL, the renderer thread, which may not call Python
+//! in another thread than the main thread - the render thread - the user functions are not called: the body and what
+//! depends on it are drawn in the main thread; a call from another thread is reported (#3003)
 bool CObjectUserBody::PythonCallPossible() const
 {
-	return PyGILState_Check() != 0;
+	if (IsExudynMainThread()) { return true; }
+	ReportUserFunctionCallOutsideMainThread();
+	return false;
 }
 
 void CObjectUserBody::EvaluateUserFunctionForce(Vector& force, Real t, Index objectNumber, const StdVector& coordinates, const StdVector& coordinates_t) const

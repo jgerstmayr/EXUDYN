@@ -239,3 +239,50 @@ def testThePlateIsDrawnWithShellsInPlaneTiling():
         SC.visualizationSettings.bodies.shells.inPlaneTiling = n
         numbers[n] = len(SC.renderer.GetGraphicsData()['triangles']['items'])
     assert numbers[4] == 4 * numbers[2] and numbers[2] > 0
+
+
+def UserBodyScene(userBody):
+    """a rigid body - ObjectRigidBody or an ObjectUserBody with the same motion - with a marker frame, a spring-damper,
+    a load with a user function and a sensor on it; the body itself draws nothing"""
+    import exudyn.cUtilities as cu
+    from exudyn.itemInterface import (NodeRigidBodyRxyz, ObjectUserBody, ObjectRigidBody, VObjectRigidBody, MarkerBodyRigid,
+                                      MarkerBodyPosition, CartesianSpringDamper, LoadForceVector, SensorBody)
+    SC = exu.SystemContainer()
+    mbs = SC.AddSystem()
+    oGround = mbs.CreateGround()
+    node = mbs.AddNode(NodeRigidBodyRxyz(referenceCoordinates=[0.5, 0.2, 0, 0.2, -0.1, 0.3]))
+    if userBody:
+        def Position(mbs, t, itemNumber, localPosition, q):
+            return q[0:3] + cu.RotXYZ2RotationMatrix(q[3:6]) @ localPosition
+        def Rotation(mbs, t, itemNumber, localPosition, q):
+            return cu.RotXYZ2RotationMatrix(q[3:6])
+        body = mbs.AddObject(ObjectUserBody(nodeNumbers=[node], massMatrixUserFunction=lambda mbs, t, i, q, q_t: np.eye(6),
+                                            positionUserFunction=Position, rotationMatrixUserFunction=Rotation))
+    else:
+        body = mbs.AddObject(ObjectRigidBody(nodeNumber=node, mass=1, inertia=[1, 1, 1, 0, 0, 0],
+                                             visualization=VObjectRigidBody(graphicsData=[])))
+    marker = mbs.AddMarker(MarkerBodyRigid(bodyNumber=body, localPosition=[0.1, 0, 0]))
+    mbs.AddObject(CartesianSpringDamper(markerNumbers=[mbs.AddMarker(MarkerBodyPosition(bodyNumber=oGround)), marker],
+                                        stiffness=[1, 1, 1]))
+    mbs.AddLoad(LoadForceVector(markerNumber=marker, loadVector=[0, -1, 0],
+                                loadVectorUserFunction=lambda mbs, t, loadVector: 2*loadVector))
+    mbs.AddSensor(SensorBody(bodyNumber=body, localPosition=[0.1, 0, 0], storeInternal=True,
+                             outputVariableType=exu.OutputVariableType.Position))
+    mbs.Assemble()
+    SC.visualizationSettings.markers.show = True
+    SC.visualizationSettings.markers.showBasis = True
+    SC.visualizationSettings.loads.drawWithUserFunction = True
+    SC.visualizationSettings.sensors.show = True
+    return SC
+
+
+def testTheItemsOnAUserBodyAreDrawnOnceAndWhereTheyAre():
+    """the markers, connectors, loads and sensors on an ObjectUserBody, and a load with a user function, are drawn in
+    the main thread (#3003): once each, at the positions of the same items on an ObjectRigidBody"""
+    reference = UserBodyScene(False).renderer.GetGraphicsData()
+    user = UserBodyScene(True).renderer.GetGraphicsData()
+    for kind in ['lines', 'triangles', 'spheres']:
+        counts = (CountsPerItem(reference, kind), CountsPerItem(user, kind))
+        assert counts[0] == counts[1], kind
+        if len(reference[kind]['items']):
+            assert np.allclose(np.sort(reference[kind]['points'], axis=0), np.sort(user[kind]['points'], axis=0)), kind

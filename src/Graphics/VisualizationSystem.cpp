@@ -83,6 +83,132 @@ void VisualizationSystem::StopSimulation()
 	postProcessData->stopSimulation = true;
 }
 
+//! the items drawn in the main thread (#3003): an object whose access functions call user functions, the markers on
+//! it, the connectors with such a marker, the loads on such a marker or with a user function, the sensors on such an
+//! object, marker or load
+void VisualizationSystem::UpdateMainThreadItems()
+{
+	const CSystemData& data = *systemData;
+	Index nObjects = data.GetCObjects().NumberOfItems();
+	Index nMarkers = data.GetCMarkers().NumberOfItems();
+	Index nLoads = data.GetCLoads().NumberOfItems();
+	Index nSensors = data.GetCSensors().NumberOfItems();
+	mainThreadObjects.assign(nObjects, false);
+	mainThreadMarkers.assign(nMarkers, false);
+	mainThreadLoads.assign(nLoads, false);
+	mainThreadSensors.assign(nSensors, false);
+
+	for (Index i = 0; i < nObjects; i++)
+	{
+		mainThreadObjects[i] = data.GetCObjects()[i]->AccessFunctionsCallUserFunctions();
+	}
+	for (Index i = 0; i < nMarkers; i++)
+	{
+		const CMarker* marker = data.GetCMarkers()[i];
+		if (marker->GetType() & (Marker::Body + Marker::Object)) //a marker on one object
+		{
+			Index objectNumber = marker->GetObjectNumber();
+			mainThreadMarkers[i] = (objectNumber >= 0 && objectNumber < nObjects && mainThreadObjects[objectNumber]);
+		}
+	}
+	for (Index i = 0; i < nObjects; i++) //the connectors and joints on these markers
+	{
+		const CObject* object = data.GetCObjects()[i];
+		if (EXUstd::IsOfType(object->GetType(), CObjectType::Connector))
+		{
+			for (Index marker : ((const CObjectConnector*)object)->GetMarkerNumbers())
+			{
+				if (marker >= 0 && marker < nMarkers && mainThreadMarkers[marker]) { mainThreadObjects[i] = true; }
+			}
+		}
+	}
+	for (Index i = 0; i < nLoads; i++)
+	{
+		const CLoad* load = data.GetCLoads()[i];
+		Index marker = load->GetMarkerNumber();
+		mainThreadLoads[i] = load->HasUserFunction() || (marker >= 0 && marker < nMarkers && mainThreadMarkers[marker]);
+	}
+	for (Index i = 0; i < nSensors; i++)
+	{
+		const CSensor* sensor = data.GetCSensors()[i];
+		SensorType type = sensor->GetType();
+		bool depends = false;
+		if (sensor->HasObjectNumber()) { Index o = sensor->GetObjectNumber(); depends = (o >= 0 && o < nObjects && mainThreadObjects[o]); }
+		else if (type == SensorType::Marker) { Index m = sensor->GetMarkerNumber(); depends = (m >= 0 && m < nMarkers && mainThreadMarkers[m]); }
+		else if (type == SensorType::Load) { Index l = sensor->GetLoadNumber(); depends = (l >= 0 && l < nLoads && mainThreadLoads[l]); }
+		mainThreadSensors[i] = depends;
+	}
+
+	hasMainThreadItems = false;
+	for (const std::vector<bool>* list : { &mainThreadObjects, &mainThreadMarkers, &mainThreadLoads, &mainThreadSensors })
+	{
+		for (bool flag : *list) { hasMainThreadItems = hasMainThreadItems || flag; }
+	}
+	mainThreadItemsValid = true;
+}
+
+//! draw marker itemNumber, and its frame if settings.markers.showBasis
+void VisualizationSystem::DrawMarker(const VisualizationSettings& settings, Index itemNumber)
+{
+	vSystemData.GetVisualizationMarkers()[itemNumber]->UpdateGraphics(settings, this, itemNumber);
+	//the frame of a marker with position and orientation, for all such markers in one place (#2791)
+	const CMarker* cMarker = systemData->GetCMarkers()[itemNumber];
+	if (settings.markers.showBasis && EXUstd::IsOfType(cMarker->GetType(), (Marker::Type)(Marker::Position + Marker::Orientation)))
+	{
+		Vector3D position;
+		Matrix3D rotation;
+		cMarker->GetPosition(*systemData, position, ConfigurationType::Visualization);
+		cMarker->GetRotationMatrix(*systemData, rotation, ConfigurationType::Visualization);
+		Index itemID = Index2ItemID(itemNumber, ItemType::Marker, GetSystemID());
+		EXUvis::DrawOrthonormalBasis(position, rotation, settings.markers.basisSize, 0.025*settings.markers.basisSize,
+			graphicsData, itemID, 1.f, !settings.markers.drawSimplified, settings.general.axesTiling, 2.5,
+			settings.markers.showNumbers ? itemNumber : EXUstd::InvalidIndex, settings.markers.showNumbers ? "M" : nullptr, 0.5);
+	}
+}
+
+//! draw the items of the main thread lists, with the settings that apply to their kind; in the main thread (#3003)
+void VisualizationSystem::UpdateMainThreadGraphics(const VisualizationSettings& settings)
+{
+	if (!hasMainThreadItems) { return; }
+	Index cnt = 0;
+	for (auto item : vSystemData.GetVisualizationObjects())
+	{
+		if (mainThreadObjects[cnt] && item->GetShow() &&
+			((item->IsConnector() && settings.connectors.show) || (!item->IsConnector() && settings.bodies.show)))
+		{
+			VisualizationExceptionHandling([&] { item->UpdateGraphics(settings, this, cnt); });
+		}
+		cnt++;
+	}
+	if (settings.markers.show)
+	{
+		cnt = 0;
+		for (auto item : vSystemData.GetVisualizationMarkers())
+		{
+			if (mainThreadMarkers[cnt] && item->GetShow()) { VisualizationExceptionHandling([&] { DrawMarker(settings, cnt); }); }
+			cnt++;
+		}
+	}
+	if (settings.loads.show)
+	{
+		cnt = 0;
+		for (auto item : vSystemData.GetVisualizationLoads())
+		{
+			if (mainThreadLoads[cnt] && item->GetShow()) { VisualizationExceptionHandling([&] { item->UpdateGraphics(settings, this, cnt); }); }
+			cnt++;
+		}
+	}
+	if (settings.sensors.show)
+	{
+		cnt = 0;
+		for (auto item : vSystemData.GetVisualizationSensors())
+		{
+			if (mainThreadSensors[cnt] && item->GetShow()) { VisualizationExceptionHandling([&] { item->UpdateGraphics(settings, this, cnt); }); }
+			cnt++;
+		}
+	}
+}
+
 bool visualizationSystemUpdateGraphicsDataTimeoutWarned = false;
 
 //! OpenGL renderer calls UpdateGraphicsData (different thread) to update graphics data
@@ -105,6 +231,7 @@ void VisualizationSystem::UpdateGraphicsData(VisualizationSystemContainer& visua
 	{
 		visualizationSystemContainer.SetComputeMaxSceneRequest(true);
 		SetSystemHasChanged(false);
+		mainThreadItemsValid = false; //the items drawn in the main thread are computed again (#3003)
 	}
 
 	EXUstd::ReleaseSemaphore(postProcessData->accessState); //now visualizationStateUpdate can be written again in main thread
@@ -133,9 +260,11 @@ void VisualizationSystem::UpdateGraphicsData(VisualizationSystemContainer& visua
 
 			Index cnt;
 
+			if (!mainThreadItemsValid) { UpdateMainThreadItems(); }
+
 			//++++++++++++++++++++++++++++++++++++++++++++++
-			//call object user functions
-			bool systemHasUserFunction = false;
+			//call object user functions, and draw the items that call user functions, in the main thread (#3003)
+			bool systemHasUserFunction = hasMainThreadItems;
 			for (auto item : vSystemData.GetVisualizationObjects())
 			{
 				if (item->GetShow() && ((!(item->IsConnector()) && visualizationSystemContainer.settings.bodies.show) ||
@@ -203,7 +332,7 @@ void VisualizationSystem::UpdateGraphicsData(VisualizationSystemContainer& visua
 				cnt = 0;
 				for (auto item : vSystemData.GetVisualizationObjects())
 				{
-					if (item->GetShow() && item->IsConnector()) { item->UpdateGraphics(visualizationSystemContainer.GetVisualizationSettings(), this, cnt); }
+					if (item->GetShow() && item->IsConnector() && !mainThreadObjects[cnt]) { item->UpdateGraphics(visualizationSystemContainer.GetVisualizationSettings(), this, cnt); }
 					cnt++; //synchronize itemNumber with item!!!
 				}
 			}
@@ -215,7 +344,7 @@ void VisualizationSystem::UpdateGraphicsData(VisualizationSystemContainer& visua
 				cnt = 0;
 				for (auto item : vSystemData.GetVisualizationObjects())
 				{
-					if (item->GetShow() && !(item->IsConnector()))
+					if (item->GetShow() && !(item->IsConnector()) && !mainThreadObjects[cnt])
 					{
 						item->UpdateGraphics(visualizationSystemContainer.GetVisualizationSettings(), this, cnt);
 					}
@@ -385,23 +514,7 @@ void VisualizationSystem::UpdateGraphicsData(VisualizationSystemContainer& visua
 				const VisualizationSettings& settings = visualizationSystemContainer.GetVisualizationSettings();
 				for (auto item : vSystemData.GetVisualizationMarkers())
 				{
-					if (item->GetShow())
-					{
-						item->UpdateGraphics(settings, this, cnt);
-						//the frame of a marker with position and orientation, for all such markers in one place (#2791)
-						const CMarker* cMarker = systemData->GetCMarkers()[cnt];
-						if (settings.markers.showBasis && EXUstd::IsOfType(cMarker->GetType(), (Marker::Type)(Marker::Position + Marker::Orientation)))
-						{
-							Vector3D position;
-							Matrix3D rotation;
-							cMarker->GetPosition(*systemData, position, ConfigurationType::Visualization);
-							cMarker->GetRotationMatrix(*systemData, rotation, ConfigurationType::Visualization);
-							Index itemID = Index2ItemID(cnt, ItemType::Marker, GetSystemID());
-							EXUvis::DrawOrthonormalBasis(position, rotation, settings.markers.basisSize, 0.025*settings.markers.basisSize,
-								graphicsData, itemID, 1.f, !settings.markers.drawSimplified, settings.general.axesTiling, 2.5,
-								settings.markers.showNumbers ? cnt : EXUstd::InvalidIndex, settings.markers.showNumbers ? "M" : nullptr, 0.5);
-						}
-					}
+					if (item->GetShow() && !mainThreadMarkers[cnt]) { DrawMarker(settings, cnt); }
 					cnt++; //synchronize itemNumber with item!!!
 				}
 			}
@@ -413,7 +526,7 @@ void VisualizationSystem::UpdateGraphicsData(VisualizationSystemContainer& visua
 				cnt = 0;
 				for (auto item : vSystemData.GetVisualizationLoads())
 				{
-					if (item->GetShow()) { item->UpdateGraphics(visualizationSystemContainer.GetVisualizationSettings(), this, cnt); }
+					if (item->GetShow() && !mainThreadLoads[cnt]) { item->UpdateGraphics(visualizationSystemContainer.GetVisualizationSettings(), this, cnt); }
 					cnt++; //synchronize itemNumber with item!!!
 				}
 			}
@@ -436,7 +549,7 @@ void VisualizationSystem::UpdateGraphicsData(VisualizationSystemContainer& visua
 				cnt = 0;
 				for (auto item : vSystemData.GetVisualizationSensors())
 				{
-					if (item->GetShow()) { item->UpdateGraphics(visualizationSystemContainer.GetVisualizationSettings(), this, cnt); }
+					if (item->GetShow() && !mainThreadSensors[cnt]) { item->UpdateGraphics(visualizationSystemContainer.GetVisualizationSettings(), this, cnt); }
 					cnt++; //synchronize itemNumber with item!!!
 				}
 			}
