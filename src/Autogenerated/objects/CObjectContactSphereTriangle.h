@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-10-06  07:03:31 (last modified)
+* @date         2026-10-17  13:37:10 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -145,7 +145,7 @@ public: // AUTO:
     }
 
     //! AUTO:  function called after Newton method; returns a residual error (force)
-    virtual Real PostNewtonStep(const MarkerDataStructure& markerDataCurrent, Index itemIndex, PostNewtonFlags::Type& flags, Real& recommendedStepSize) override;
+    virtual Real PostNewtonStep(const MarkerDataStructure& markerDataCurrent, PostNewtonFlags::Type& flags, Real& recommendedStepSize) override;
 
     //! AUTO:  function called after discontinuous iterations have been completed for one step (e.g. to finalize history variables and set initial values for next step)
     virtual void PostDiscontinuousIterationStep() override;
@@ -163,22 +163,22 @@ public: // AUTO:
     }
 
     //! AUTO:  the right-hand side on the connector interface of rigid markers (#2745)
-    virtual bool ComputeODE2LHSConnector(const CSystemData& systemData, TemporaryComputationData& temp, Vector& localODE2Lhs, Index objectNumber) const override
+    virtual bool ComputeODE2LHSConnector(const CSystemData& systemData, TemporaryComputationData& temp, Vector& localODE2Lhs) const override
     {
-        ConnectorODE2LHSRigidMarkers(systemData, temp, *this, localODE2Lhs, objectNumber); return true;
+        ConnectorODE2LHSRigidMarkers(systemData, temp, *this, localODE2Lhs); return true;
     }
 
     //! AUTO:  the force and torque on each marker from the kinematics of the two markers (#2745)
-    virtual void ComputeConnectorForceRigid(const MarkerRigid<Real>* markers, Real t, Index itemIndex, Vector3D* forces, Vector3D* torques) const override;
+    virtual void ComputeConnectorForceRigid(const MarkerRigid<Real>* markers, Real t, Vector3D* forces, Vector3D* torques) const override;
 
     //! AUTO:  provide according output variable in 'value'
-    virtual void GetOutputVariableConnector(OutputVariableType variableType, const MarkerDataStructure& markerData, Index itemIndex, Vector& value) const override;
+    virtual void GetOutputVariableConnector(OutputVariableType variableType, const MarkerDataStructure& markerData, Vector& value) const override;
 
     //! AUTO:  unique function to compute contact forces
     template<typename TReal> TReal ComputeContactForces(TReal gap, const SlimVectorBase<TReal, 3>& n0, TReal deltaVnormal, const SlimVectorBase<TReal, 3>& deltaVji, TReal dryFriction, bool frictionRegularizedRegion, SlimVectorBase<TReal, 3>& fVec, SlimVectorBase<TReal, 3>& fFriction, bool forceFrictionMode = true) const;
 
     //! AUTO:  main function to compute contact kinematics and forces
-    void ComputeConnectorProperties(const MarkerDataStructure& markerData, Index itemIndex, const LinkedDataVector& data, Real& frictionCoeff, Real& gap, Vector3D& deltaP, Vector3D& deltaV, Vector3D& fVec, Vector3D& fFriction, Vector3D& n0, bool contactFromData = true) const;
+    void ComputeConnectorProperties(const MarkerDataStructure& markerData, const LinkedDataVector& data, Real& frictionCoeff, Real& gap, Vector3D& deltaP, Vector3D& deltaV, Vector3D& fVec, Vector3D& fFriction, Vector3D& n0, bool contactFromData = true) const;
 
     //! AUTO:  provide requested markerType for connector
     virtual Marker::Type GetRequestedMarkerType() const override

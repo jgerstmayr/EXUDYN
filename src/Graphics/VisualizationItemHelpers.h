@@ -53,7 +53,7 @@ void VisualizationObjectANCFCable2DBaseUpdateGraphics(const VisualizationSetting
 	Vector& value = vSystem->tempVector;
 	if (EXUstd::IsOfTypeAndNotNone(cObject->GetOutputVariableTypes(), visualizationSettings.contour.outputVariable))
 	{
-		cObject->GetOutputVariableBody(visualizationSettings.contour.outputVariable, Vector3D({ 0.,0.,0. }), ConfigurationType::Visualization, value, itemNumber);
+		cObject->GetOutputVariableBody(visualizationSettings.contour.outputVariable, Vector3D({ 0.,0.,0. }), ConfigurationType::Visualization, value);
 		if (visualizationSettings.contour.outputVariableComponent < value.NumberOfItems())
 		{
 			if (drawHeight == 0. || visualizationSettings.bodies.beams.drawVertical)
@@ -61,25 +61,25 @@ void VisualizationObjectANCFCable2DBaseUpdateGraphics(const VisualizationSetting
 				EXUvis::ComputeContourColor<Vector>(value, visualizationSettings.contour.outputVariable, visualizationSettings.contour.outputVariableComponent, item.color1);
 				interpValues[0] = item.color1[0]; //store this contour plot value
 
-				cObject->GetOutputVariableBody(visualizationSettings.contour.outputVariable, Vector3D({ L,0.,0. }), ConfigurationType::Visualization, value, itemNumber);
+				cObject->GetOutputVariableBody(visualizationSettings.contour.outputVariable, Vector3D({ L,0.,0. }), ConfigurationType::Visualization, value);
 				EXUvis::ComputeContourColor<Vector>(value, visualizationSettings.contour.outputVariable, visualizationSettings.contour.outputVariableComponent, item.color2);
 				interpValues[1] = item.color2[0]; //store this contour plot value
 			}
 			else
 			{
-				cObject->GetOutputVariableBody(visualizationSettings.contour.outputVariable, Vector3D({ 0.,-0.5*drawHeight,0. }), ConfigurationType::Visualization, value, itemNumber);
+				cObject->GetOutputVariableBody(visualizationSettings.contour.outputVariable, Vector3D({ 0.,-0.5*drawHeight,0. }), ConfigurationType::Visualization, value);
 				EXUvis::ComputeContourColor<Vector>(value, visualizationSettings.contour.outputVariable, visualizationSettings.contour.outputVariableComponent, item.color1);
 				interpValues[0] = item.color1[0]; //store this contour plot value
 
-				cObject->GetOutputVariableBody(visualizationSettings.contour.outputVariable, Vector3D({ L,-0.5*drawHeight,0. }), ConfigurationType::Visualization, value, itemNumber);
+				cObject->GetOutputVariableBody(visualizationSettings.contour.outputVariable, Vector3D({ L,-0.5*drawHeight,0. }), ConfigurationType::Visualization, value);
 				EXUvis::ComputeContourColor<Vector>(value, visualizationSettings.contour.outputVariable, visualizationSettings.contour.outputVariableComponent, item.color2);
 				interpValues[1] = item.color2[0]; //store this contour plot value
 
-				cObject->GetOutputVariableBody(visualizationSettings.contour.outputVariable, Vector3D({ 0.,0.5*drawHeight,0. }), ConfigurationType::Visualization, value, itemNumber);
+				cObject->GetOutputVariableBody(visualizationSettings.contour.outputVariable, Vector3D({ 0.,0.5*drawHeight,0. }), ConfigurationType::Visualization, value);
 				EXUvis::ComputeContourColor<Vector>(value, visualizationSettings.contour.outputVariable, visualizationSettings.contour.outputVariableComponent, item.color1);
 				interpValues[2] = item.color1[0]; //store this contour plot value
 
-				cObject->GetOutputVariableBody(visualizationSettings.contour.outputVariable, Vector3D({ L,0.5*drawHeight,0. }), ConfigurationType::Visualization, value, itemNumber);
+				cObject->GetOutputVariableBody(visualizationSettings.contour.outputVariable, Vector3D({ L,0.5*drawHeight,0. }), ConfigurationType::Visualization, value);
 				EXUvis::ComputeContourColor<Vector>(value, visualizationSettings.contour.outputVariable, visualizationSettings.contour.outputVariableComponent, item.color2);
 				interpValues[3] = item.color2[0]; //store this contour plot value
 
@@ -147,9 +147,9 @@ void VisualizationObjectANCFCable2DBaseUpdateGraphics(const VisualizationSetting
 					}
 					else
 					{
-						cObject->GetOutputVariableBody(visualizationSettings.contour.outputVariable, pLoc0, ConfigurationType::Visualization, value, itemNumber);
+						cObject->GetOutputVariableBody(visualizationSettings.contour.outputVariable, pLoc0, ConfigurationType::Visualization, value);
 						EXUvis::ComputeContourColor<Vector>(value, visualizationSettings.contour.outputVariable, visualizationSettings.contour.outputVariableComponent, item.color1);
-						cObject->GetOutputVariableBody(visualizationSettings.contour.outputVariable, pLoc1, ConfigurationType::Visualization, value, itemNumber);
+						cObject->GetOutputVariableBody(visualizationSettings.contour.outputVariable, pLoc1, ConfigurationType::Visualization, value);
 						EXUvis::ComputeContourColor<Vector>(value, visualizationSettings.contour.outputVariable, visualizationSettings.contour.outputVariableComponent, item.color2);
 						val1 = item.color1[0];
 						val2 = item.color2[0];
@@ -317,14 +317,14 @@ void UpdateGraphicsBeam3D(const VisualizationSettings& visualizationSettings, Vi
 		Vector& value = vSystem->tempVector;
 		//the values at both ends, -L/2 and L/2, where the line starts and ends; quantities of the axis (displacement,
 		//velocity, the forces of the section) are interpolated along it (#2843)
-		cObject->GetOutputVariableBody(visualizationSettings.contour.outputVariable, Vector3D({ -0.5*L,0.,0. }), ConfigurationType::Visualization, value, itemNumber);
+		cObject->GetOutputVariableBody(visualizationSettings.contour.outputVariable, Vector3D({ -0.5*L,0.,0. }), ConfigurationType::Visualization, value);
 		if (visualizationSettings.contour.outputVariableComponent < value.NumberOfItems())
 		{
 			EXUvis::ComputeContourColor<Vector>(value, visualizationSettings.contour.outputVariable, visualizationSettings.contour.outputVariableComponent, item.color1);
 			value1 = item.color1[0]; 
 			//item.color1 = Float4({ 0.,0.,0.,vSystem->contourPlotFlag }); //transparency of -2. indicates a contour value ... hack!
 
-			cObject->GetOutputVariableBody(visualizationSettings.contour.outputVariable, Vector3D({ 0.5*L,0.,0. }), ConfigurationType::Visualization, value, itemNumber);
+			cObject->GetOutputVariableBody(visualizationSettings.contour.outputVariable, Vector3D({ 0.5*L,0.,0. }), ConfigurationType::Visualization, value);
 			EXUvis::ComputeContourColor<Vector>(value, visualizationSettings.contour.outputVariable, visualizationSettings.contour.outputVariableComponent, item.color2);
 			value2 = item.color2[0];
 

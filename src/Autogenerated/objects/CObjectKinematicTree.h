@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-10-16  13:52:10 (last modified)
+* @date         2026-10-17  13:28:01 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -232,10 +232,10 @@ public: // AUTO:
     }
 
     //! AUTO:  Computational function: compute mass matrix
-    virtual void ComputeMassMatrix(EXUmath::MatrixContainer& massMatrixC, const ArrayIndex& ltg, Index objectNumber, bool computeInverse=false) const override;
+    virtual void ComputeMassMatrix(EXUmath::MatrixContainer& massMatrixC, const ArrayIndex& ltg, bool computeInverse=false) const override;
 
     //! AUTO:  Computational function: compute left-hand-side (LHS) of second order ordinary differential equations (ODE) to 'ode2Lhs'
-    virtual void ComputeODE2LHS(Vector& ode2Lhs, Index objectNumber) const override;
+    virtual void ComputeODE2LHS(Vector& ode2Lhs) const override;
 
     //! AUTO:  return the available jacobian dependencies and the jacobians which are available as a function; if jacobian dependencies exist but are not available as a function, it is computed numerically; can be combined with 2^i enum flags
     virtual JacobianType::Type GetAvailableJacobians() const override;
@@ -247,7 +247,7 @@ public: // AUTO:
     }
 
     //! AUTO:  provide according output variable in 'value'
-    virtual void GetOutputVariableBody(OutputVariableType variableType, const Vector3D& localPosition, ConfigurationType configuration, Vector& value, Index objectNumber) const override;
+    virtual void GetOutputVariableBody(OutputVariableType variableType, const Vector3D& localPosition, ConfigurationType configuration, Vector& value) const override;
 
     //! AUTO:  the potential energy of the P control springs, the constant joint forces and the built-in gravity (#2202)
     Real ComputePotentialEnergy(ConfigurationType configuration) const;
@@ -335,16 +335,16 @@ public: // AUTO:
     }
 
     //! AUTO:  call to user function implemented in separate file to avoid including pybind and MainSystem.h at too many places
-    void EvaluateUserFunctionForce(Vector& force, const MainSystemBase& mainSystem, Real t, Index objectNumber, const Vector& coordinates, const Vector& coordinates_t) const;
+    void EvaluateUserFunctionForce(Vector& force, const MainSystemBase& mainSystem, Real t, const Vector& coordinates, const Vector& coordinates_t) const;
 
     //! AUTO:  the placements of the links (in the base, or in their parents), and their velocities and accelerations as (omega, v) in link coordinates (#2829)
     void ComputeTreeTransformations(ConfigurationType configuration, bool computeVelocitiesAccelerations, bool computeAbsoluteTransformations, Transformation66List& frames, Vector6DList& V, Vector6DList& A) const;
 
     //! AUTO:  compute mass matrix if computeMass = true and compute ODE2LHS vector if computeMass=false
-    void ComputeMassMatrixAndODE2LHS(ResizableMatrix* massMatrix, Vector* ode2Lhs, Index objectNumber, bool computeMass) const;
+    void ComputeMassMatrixAndODE2LHS(ResizableMatrix* massMatrix, Vector* ode2Lhs, bool computeMass) const;
 
     //! AUTO:  subtract the forces given per joint from the joint forces f: jointForceVector, the P and D control and the forceUserFunction
-    void AddJointForces(Vector& f, const LinkedDataVector& q, const LinkedDataVector& q_t, Index objectNumber) const;
+    void AddJointForces(Vector& f, const LinkedDataVector& q, const LinkedDataVector& q_t) const;
 
     //! AUTO:  return true, if object has reference frame; return according LOCAL node number
     virtual bool HasReferenceFrame(Index& localReferenceFrameNode) const override

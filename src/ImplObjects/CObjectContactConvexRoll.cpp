@@ -245,7 +245,7 @@ void CObjectContactConvexRoll::ComputeContactForces(const MarkerDataStructure& m
 
 //! Computational function: compute left-hand-side (LHS) of second order ordinary differential equations (ODE) to "ode2Lhs"
 //! the forces and torques of the connector interface (#2745), as ComputeODE2LHS projects them
-void CObjectContactConvexRoll::ComputeConnectorForceRigid(const MarkerRigid<Real>* markers, Real t, Index itemIndex,
+void CObjectContactConvexRoll::ComputeConnectorForceRigid(const MarkerRigid<Real>* markers, Real t,
 	Vector3D* forces, Vector3D* torques) const
 {
 	for (Index k = 0; k < 2; k++) { forces[k].SetAll(0.); torques[k].SetAll(0.); }
@@ -260,7 +260,7 @@ void CObjectContactConvexRoll::ComputeConnectorForceRigid(const MarkerRigid<Real
 }
 
 //! provide according output variable in "value"
-void CObjectContactConvexRoll::GetOutputVariableConnector(OutputVariableType variableType, const MarkerDataStructure& markerData, Index itemIndex, Vector& value) const
+void CObjectContactConvexRoll::GetOutputVariableConnector(OutputVariableType variableType, const MarkerDataStructure& markerData, Vector& value) const
 {
 	//const Matrix3D& A1 = markerData.GetMarkerData(1).orientation;
 	//const Vector3D& v1 = markerData.GetMarkerData(1).velocity;
@@ -292,7 +292,7 @@ void CObjectContactConvexRoll::GetOutputVariableConnector(OutputVariableType var
 }
 
 //! function called after Newton method; returns a residual error (force)
-Real CObjectContactConvexRoll::PostNewtonStep(const MarkerDataStructure& markerDataCurrent, Index itemIndex, PostNewtonFlags::Type& flags, Real& recommendedStepSize)
+Real CObjectContactConvexRoll::PostNewtonStep(const MarkerDataStructure& markerDataCurrent, PostNewtonFlags::Type& flags, Real& recommendedStepSize)
 {
 	Real discontinuousError = 0;
 	flags = PostNewtonFlags::_None;
@@ -310,7 +310,7 @@ Real CObjectContactConvexRoll::PostNewtonStep(const MarkerDataStructure& markerD
 	if ((currentGap > 0 && dataGapStart <= 0) || (currentGap <= 0 && dataGapStart > 0)) { //action: state1=dataGapState, error = |currentGap*k|
 		discontinuousError += fabs(currentGap * parameters.contactStiffness); // error because of wrong assumption of contact#
 		// ToDo: only print if Verbosemode >= 1 
-		pout << "PostNewton Connector " << EXUstd::ToString(itemIndex) << ": " << markerDataCurrent.GetTime() << ": changed from gap " << dataGapStart << " to " << currentGap << "\n";
+		pout << "PostNewton Connector " << EXUstd::ToString(GetObjectNumber()) << ": " << markerDataCurrent.GetTime() << ": changed from gap " << dataGapStart << " to " << currentGap << "\n";
 		recommendedStepSize = fabs(pC[2]/vC[2]);  // moment in which contact should switch 
 	}
 	else if (currentGap < 0) { //both states are the same, only interesting if gap is negative

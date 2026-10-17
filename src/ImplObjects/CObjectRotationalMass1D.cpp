@@ -22,7 +22,7 @@
 
 
 //! Computational function: compute mass matrix
-void CObjectRotationalMass1D::ComputeMassMatrix(EXUmath::MatrixContainer& massMatrixC, const ArrayIndex& ltg, Index objectNumber, bool computeInverse) const
+void CObjectRotationalMass1D::ComputeMassMatrix(EXUmath::MatrixContainer& massMatrixC, const ArrayIndex& ltg, bool computeInverse) const
 {
 	CHECKandTHROW(!computeInverse, "CObjectRotationalMass1D::ComputeMassMatrix: computeInverse=True not implemented, change solver settings: computeMassMatrixInversePerBody=False", ExudynNotImplementedError);
 
@@ -39,7 +39,7 @@ void CObjectRotationalMass1D::ComputeMassMatrix(EXUmath::MatrixContainer& massMa
 }
 
 //! Computational function: compute left-hand-side (LHS) of second order ordinary differential equations (ODE) to "ode2Lhs"
-void CObjectRotationalMass1D::ComputeODE2LHS(Vector& ode2Lhs, Index objectNumber) const
+void CObjectRotationalMass1D::ComputeODE2LHS(Vector& ode2Lhs) const
 {
 	ode2Lhs.SetNumberOfItems(1);
 	ode2Lhs.SetAll(0.);
@@ -74,7 +74,7 @@ bool CObjectRotationalMass1D::GetJacobianTransposedTimesVectorDerivative(const V
 
 
 //! provide according output variable in "value"
-void CObjectRotationalMass1D::GetOutputVariableBody(OutputVariableType variableType, const Vector3D& localPosition, ConfigurationType configuration, Vector& value, Index objectNumber) const
+void CObjectRotationalMass1D::GetOutputVariableBody(OutputVariableType variableType, const Vector3D& localPosition, ConfigurationType configuration, Vector& value) const
 {
 	switch (variableType)
 	{

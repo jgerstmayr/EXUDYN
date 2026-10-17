@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-10-17  10:04:18 (last modified)
+* @date         2026-10-17  13:28:01 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -148,13 +148,13 @@ public: // AUTO:
     }
 
     //! AUTO:  Computational function: compute mass matrix
-    virtual void ComputeMassMatrix(EXUmath::MatrixContainer& massMatrixC, const ArrayIndex& ltg, Index objectNumber, bool computeInverse=false) const override;
+    virtual void ComputeMassMatrix(EXUmath::MatrixContainer& massMatrixC, const ArrayIndex& ltg, bool computeInverse=false) const override;
 
     //! AUTO:  Computational function: compute left-hand-side (LHS) of second order ordinary differential equations (ODE) to 'ode2Lhs'
-    virtual void ComputeODE2LHS(Vector& ode2Lhs, Index objectNumber) const override;
+    virtual void ComputeODE2LHS(Vector& ode2Lhs) const override;
 
     //! AUTO:  Computational function: compute jacobian (dense or sparse mode, see parent CObject function)
-    virtual void ComputeJacobianODE2_ODE2(EXUmath::MatrixContainer& jacobianODE2, JacobianTemp& temp, Real factorODE2, Real factorODE2_t, Index objectNumber, const ArrayIndex& ltg) const override;
+    virtual void ComputeJacobianODE2_ODE2(EXUmath::MatrixContainer& jacobianODE2, JacobianTemp& temp, Real factorODE2, Real factorODE2_t, const ArrayIndex& ltg) const override;
 
     //! AUTO:  return the available jacobian dependencies and the jacobians which are available as a function; if jacobian dependencies exist but are not available as a function, it is computed numerically; can be combined with 2^i enum flags
     virtual JacobianType::Type GetAvailableJacobians() const override;
@@ -166,7 +166,7 @@ public: // AUTO:
     }
 
     //! AUTO:  provide according output variable in 'value'
-    virtual void GetOutputVariableBody(OutputVariableType variableType, const Vector3D& localPosition, ConfigurationType configuration, Vector& value, Index objectNumber) const override;
+    virtual void GetOutputVariableBody(OutputVariableType variableType, const Vector3D& localPosition, ConfigurationType configuration, Vector& value) const override;
 
     //! AUTO:  return the (global) position of 'localPosition' according to configuration type
     virtual Vector3D GetPosition(const Vector3D& localPosition, ConfigurationType configuration = ConfigurationType::Current) const override;
@@ -241,13 +241,13 @@ public: // AUTO:
     void InitializeCoordinateIndices();
 
     //! AUTO:  call of forceUserFunction, with the size checked; implemented in evaluateUserFunctions.cpp
-    void EvaluateUserFunctionForce(Vector& force, Real t, Index objectNumber, const Vector& coordinates, const Vector& coordinates_t) const;
+    void EvaluateUserFunctionForce(Vector& force, Real t, const Vector& coordinates, const Vector& coordinates_t) const;
 
     //! AUTO:  call of massMatrixUserFunction; implemented in evaluateUserFunctions.cpp
-    void EvaluateUserFunctionMassMatrix(EXUmath::MatrixContainer& massMatrix, Real t, Index objectNumber, const Vector& coordinates, const Vector& coordinates_t, const ArrayIndex& ltg) const;
+    void EvaluateUserFunctionMassMatrix(EXUmath::MatrixContainer& massMatrix, Real t, const Vector& coordinates, const Vector& coordinates_t, const ArrayIndex& ltg) const;
 
     //! AUTO:  call of jacobianUserFunction, with the size checked; implemented in evaluateUserFunctions.cpp
-    void EvaluateUserFunctionJacobian(EXUmath::MatrixContainer& jacobianODE2, Real t, Index objectNumber, const Vector& coordinates, const Vector& coordinates_t, Real factorODE2, Real factorODE2_t, const ArrayIndex& ltg) const;
+    void EvaluateUserFunctionJacobian(EXUmath::MatrixContainer& jacobianODE2, Real t, const Vector& coordinates, const Vector& coordinates_t, Real factorODE2, Real factorODE2_t, const ArrayIndex& ltg) const;
 
     //! AUTO:  add factor times the stiffness or damping matrix to the Jacobian, dense or as sparse triplets, which must be the format of the Jacobian (#2995)
     void AddMatrixWithFactor(EXUmath::MatrixContainer& jacobianODE2, const EXUmath::MatrixContainer& matrix, const ArrayIndex& ltg, Real factor) const;

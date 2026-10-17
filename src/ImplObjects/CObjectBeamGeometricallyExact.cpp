@@ -160,7 +160,7 @@ static void BeamGEInertiaAtGaussPoints(const CObjectBeamGeometricallyExact& beam
 
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 //! Computational function: compute mass matrix
-void CObjectBeamGeometricallyExact::ComputeMassMatrix(EXUmath::MatrixContainer& massMatrixC, const ArrayIndex& ltg, Index objectNumber, bool computeInverse) const
+void CObjectBeamGeometricallyExact::ComputeMassMatrix(EXUmath::MatrixContainer& massMatrixC, const ArrayIndex& ltg, bool computeInverse) const
 {
 	CHECKandTHROW(!computeInverse, "CObjectBeamGeometricallyExact::ComputeMassMatrix: computeMassMatrixInversePerBody=True is not possible for this type of element; change solver settings", ExudynNotImplementedError);
 
@@ -235,7 +235,7 @@ void CObjectBeamGeometricallyExact::ComputeMassMatrix(EXUmath::MatrixContainer& 
 
 //#define useAverageRotation
 //! Computational function: compute left-hand-side (LHS) of second order ordinary differential equations (ODE) to 'ode2Lhs'
-void CObjectBeamGeometricallyExact::ComputeODE2LHS(Vector& ode2Lhs, Index objectNumber) const
+void CObjectBeamGeometricallyExact::ComputeODE2LHS(Vector& ode2Lhs) const
 {
 	ode2Lhs.SetNumberOfItems(GetODE2Size());
 	ode2Lhs.SetAll(0.);
@@ -392,8 +392,7 @@ void CObjectBeamGeometricallyExact::ComputeODE2LHS(Vector& ode2Lhs, Index object
 //! d(TexpInv_i^T s)/dh is computed by central differences of the closed-form TExpSE3Inv; the derivative of the
 //! quadratic velocity vector with respect to the velocities is added with factorODE2_t, its derivative with respect to
 //! the coordinates is neglected, as the one of the mass matrix
-void CObjectBeamGeometricallyExact::ComputeJacobianODE2_ODE2(EXUmath::MatrixContainer& jacobianODE2, JacobianTemp& temp, Real factorODE2, Real factorODE2_t,
-	Index objectNumber, const ArrayIndex& ltg) const
+void CObjectBeamGeometricallyExact::ComputeJacobianODE2_ODE2(EXUmath::MatrixContainer& jacobianODE2, JacobianTemp& temp, Real factorODE2, Real factorODE2_t, const ArrayIndex& ltg) const
 {
 	const Index nDim3D = 3;
 	const Index maxNodeCoordinates = CNodeRigidBody::maxRotationCoordinates + nDim3D;
@@ -770,7 +769,7 @@ void CObjectBeamGeometricallyExact::GetMassWeightedPositionJacobian(Matrix& valu
 
 
 //! provide according output variable in 'value'
-void CObjectBeamGeometricallyExact::GetOutputVariableBody(OutputVariableType variableType, const Vector3D& localPosition, ConfigurationType configuration, Vector& value, Index objectNumber) const
+void CObjectBeamGeometricallyExact::GetOutputVariableBody(OutputVariableType variableType, const Vector3D& localPosition, ConfigurationType configuration, Vector& value) const
 {
 	//CHECKandTHROWstring("CObjectBeamGeometricallyExact::GetOutputVariableBody not implemented!");
 
@@ -820,7 +819,7 @@ void CObjectBeamGeometricallyExact::GetOutputVariableBody(OutputVariableType var
 	}
 	case OutputVariableType::KineticEnergy: {
 		CheckEnergyLocalPosition(localPosition, "ObjectBeamGeometricallyExact");
-		value.SetVector({ ComputeKineticEnergyFromMassMatrix(configuration, objectNumber, "ObjectBeamGeometricallyExact") }); break; }
+		value.SetVector({ ComputeKineticEnergyFromMassMatrix(configuration, "ObjectBeamGeometricallyExact") }); break; }
 	default:
 		SysError("CObjectBeamGeometricallyExact::GetOutputVariableBody failed"); //error should not occur, because types are checked!
 	}

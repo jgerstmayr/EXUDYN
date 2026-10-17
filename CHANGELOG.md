@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.13 | Newborn | 111 | 1.13.112 |
+| 1.13 | Newborn | 112 | 1.13.113 |
 | 1.12 | Metheney | 367 | 1.12.462 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
@@ -30,6 +30,10 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.13 - Newborn (current)
 
+- **1.13.113** `CHANGE` `HIGH EFF` `raised by: Claude-JG` `resolved by: Claude-JG` Remove the argument objectNumber from the item functions that now get it from the object (#3013)
+  - description: Since \#2995 and the issue before, every CObject knows its number. Many functions of the object interface (ComputeODE2LHS, ComputeODE1RHS, ComputeJacobianODE2\_ODE2, ComputeMassMatrix, GetOutputVariable, GetOutputVariableBody, the connector functions with MarkerDataStructure, the algebraic equations, the item-specific evaluations of user functions) and their callers in CSystem and MainObject pass it as an argument only to hand it to the user functions. The argument is removed, the functions call GetObjectNumber(). Evaluation and sub-steps in revision2026c step RG9.9.
+  - **notes:** The functions of the objects, connectors and constraints no longer take their own number as argument (objectNumber, itemIndex): ComputeODE2LHS, ComputeODE1RHS, the Jacobians, ComputeMassMatrix, the output variables, PostNewtonStep, the algebraic equations, the connector interface and the evaluations of the user functions call GetObjectNumber(); so do the callers in CSystem, MainObject and the sensors. The Python user functions get the same itemNumber as before.
+  - date resolved: **2026-10-17 13:51**, date raised: 2026-10-17
 - **1.13.112** `CHANGE` `MEDIUM EFF` `raised by: Claude-JG` `resolved by: Claude-JG` CSystemData owns the object numbers: set when an object is added, renumbered only by DeleteObject (#3012)
   - description: CObject::GetObjectNumber (\#2995) is set by Assemble, so an access function that calls a user function before Assemble (a reference position of ObjectUserBody) gets -1. The number is set by CSystemData when the object is added (AddObject) and renumbered by CSystemData when an object is deleted; SetObjectNumber is private to CSystemData and the list of objects cannot be changed elsewhere. DeleteObject also renumbers the markers that refer to several bodies with their local index (it compared the first body only).
   - **notes:** An object gets its number when it is added (CSystemData::AddCObject) and keeps it until DeleteObject renumbers the objects after a deleted one (CSystemData::DeleteCObject); no other code can change the list of objects or the number. A user function called before Assemble, e.g. for a reference position of ObjectUserBody, gets the object number. Fixed: DeleteObject renumbers each body of a marker on several bodies (MarkerBodiesRelative...Coordinate), it compared the first body only.

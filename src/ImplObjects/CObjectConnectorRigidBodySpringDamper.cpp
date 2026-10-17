@@ -24,7 +24,7 @@
 //! compute joint frame, relative displacement, relative rotation, relative velocity and relative angular velocity; for Real
 //! and AutoDiff (#2745), except the intrinsic formulation and the user function, which are Real only
 template<class TReal>
-void CObjectConnectorRigidBodySpringDamper::ComputeSpringForceTorque(const MarkerRigid<TReal>* markers, Real t, Index itemIndex,
+void CObjectConnectorRigidBodySpringDamper::ComputeSpringForceTorque(const MarkerRigid<TReal>* markers, Real t,
 	ConstSizeMatrixBase<TReal, 9>& Ajoint, SlimVectorBase<TReal, 3>& vLocPos, SlimVectorBase<TReal, 3>& vLocVel,
 	SlimVectorBase<TReal, 3>& vLocRot, SlimVectorBase<TReal, 3>& vLocAngVel, SlimVectorBase<TReal, 6>& fLocVec6D,
 	bool computeForceTorque) const
@@ -111,7 +111,7 @@ void CObjectConnectorRigidBodySpringDamper::ComputeSpringForceTorque(const Marke
 		{
 			if constexpr (std::is_same<TReal, Real>::value)
 			{
-				EvaluateUserFunctionForce(fLocVec6D, cSystemData->GetMainSystemBacklink(), t, itemIndex, uLoc6D, vLoc6D);
+				EvaluateUserFunctionForce(fLocVec6D, cSystemData->GetMainSystemBacklink(), t, uLoc6D, vLoc6D);
 			}
 			else
 			{
@@ -124,7 +124,7 @@ void CObjectConnectorRigidBodySpringDamper::ComputeSpringForceTorque(const Marke
 //! the forces and torques of the connector interface on rigid markers (#2745), as ComputeODE2LHS projects them: the
 //! intrinsic formulation adds the same torque of the offset force on both markers
 template<class TReal>
-void CObjectConnectorRigidBodySpringDamper::ComputeConnectorForceRigidTemplate(const MarkerRigid<TReal>* markers, Real t, Index itemIndex,
+void CObjectConnectorRigidBodySpringDamper::ComputeConnectorForceRigidTemplate(const MarkerRigid<TReal>* markers, Real t,
 	SlimVectorBase<TReal, 3>* forces, SlimVectorBase<TReal, 3>* torques) const
 {
 	for (Index k = 0; k < 2; k++) { forces[k].SetAll(0.); torques[k].SetAll(0.); }
@@ -133,7 +133,7 @@ void CObjectConnectorRigidBodySpringDamper::ComputeConnectorForceRigidTemplate(c
 	SlimVectorBase<TReal, 3> vLocPos, vLocVel, vLocRot, vLocAngVel;
 	SlimVectorBase<TReal, 6> fLocVec6D;
 	ConstSizeMatrixBase<TReal, 9> Ajoint;
-	ComputeSpringForceTorque(markers, t, itemIndex, Ajoint, vLocPos, vLocVel, vLocRot, vLocAngVel, fLocVec6D);
+	ComputeSpringForceTorque(markers, t, Ajoint, vLocPos, vLocVel, vLocRot, vLocAngVel, fLocVec6D);
 
 	SlimVectorBase<TReal, 3> fPos = Ajoint * SlimVectorBase<TReal, 3>({ fLocVec6D[0], fLocVec6D[1], fLocVec6D[2] });
 	SlimVectorBase<TReal, 3> fRot = Ajoint * SlimVectorBase<TReal, 3>({ fLocVec6D[3], fLocVec6D[4], fLocVec6D[5] });
@@ -161,21 +161,21 @@ JacobianType::Type CObjectConnectorRigidBodySpringDamper::GetAvailableJacobians(
 	return (JacobianType::Type)(JacobianType::ODE2_ODE2 + JacobianType::ODE2_ODE2_t);
 }
 
-void CObjectConnectorRigidBodySpringDamper::ComputeConnectorForceRigid(const MarkerRigid<Real>* markers, Real t, Index itemIndex,
+void CObjectConnectorRigidBodySpringDamper::ComputeConnectorForceRigid(const MarkerRigid<Real>* markers, Real t,
 	Vector3D* forces, Vector3D* torques) const
 {
-	ComputeConnectorForceRigidTemplate(markers, t, itemIndex, forces, torques);
+	ComputeConnectorForceRigidTemplate(markers, t, forces, torques);
 }
 
-void CObjectConnectorRigidBodySpringDamper::ComputeConnectorForceRigidDiff(const MarkerRigid<DRealRigidMarkers>* markers, Real t, Index itemIndex,
+void CObjectConnectorRigidBodySpringDamper::ComputeConnectorForceRigidDiff(const MarkerRigid<DRealRigidMarkers>* markers, Real t,
 	SlimVectorBase<DRealRigidMarkers, 3>* forces, SlimVectorBase<DRealRigidMarkers, 3>* torques) const
 {
-	ComputeConnectorForceRigidTemplate(markers, t, itemIndex, forces, torques);
+	ComputeConnectorForceRigidTemplate(markers, t, forces, torques);
 }
 
 
 //! provide according output variable in "value"
-void CObjectConnectorRigidBodySpringDamper::GetOutputVariableConnector(OutputVariableType variableType, const MarkerDataStructure& markerData, Index itemIndex, Vector& value) const
+void CObjectConnectorRigidBodySpringDamper::GetOutputVariableConnector(OutputVariableType variableType, const MarkerDataStructure& markerData, Vector& value) const
 {
 	Vector3D vLocPos;
 	Vector3D vLocVel;
@@ -185,7 +185,7 @@ void CObjectConnectorRigidBodySpringDamper::GetOutputVariableConnector(OutputVar
 	Matrix3D Ajoint;
 	MarkerRigid<Real> markers[2];
 	GetMarkersRigid(markerData, markers);
-	ComputeSpringForceTorque(markers, markerData.GetTime(), itemIndex, Ajoint, vLocPos, vLocVel, vLocRot, vLocAngVel, fLocVec6D,
+	ComputeSpringForceTorque(markers, markerData.GetTime(), Ajoint, vLocPos, vLocVel, vLocRot, vLocAngVel, fLocVec6D,
 		(variableType == OutputVariableType::ForceLocal ||
 		variableType == OutputVariableType::TorqueLocal));
 	if (!parameters.activeConnector) { fLocVec6D.SetAll(0.); } //an inactive connector reports no force and torque (#984)
@@ -221,7 +221,7 @@ void CObjectConnectorRigidBodySpringDamper::GetOutputVariableConnector(OutputVar
 
 
 //! function called after Newton method; returns a residual error (force); 
-Real CObjectConnectorRigidBodySpringDamper::PostNewtonStep(const MarkerDataStructure& markerDataCurrent, Index itemIndex, PostNewtonFlags::Type& flags, Real& recommendedStepSize)
+Real CObjectConnectorRigidBodySpringDamper::PostNewtonStep(const MarkerDataStructure& markerDataCurrent, PostNewtonFlags::Type& flags, Real& recommendedStepSize)
 {
 	Real discontinuousError = 0;
 	flags = PostNewtonFlags::_None;
@@ -240,7 +240,7 @@ Real CObjectConnectorRigidBodySpringDamper::PostNewtonStep(const MarkerDataStruc
 		//adds some overhead ...
 		MarkerRigid<Real> markers[2];
 		GetMarkersRigid(markerDataCurrent, markers);
-		ComputeSpringForceTorque(markers, markerDataCurrent.GetTime(), itemIndex, Ajoint, vLocPos, vLocVel, vLocRot, vLocAngVel, fLocVec6D);
+		ComputeSpringForceTorque(markers, markerDataCurrent.GetTime(), Ajoint, vLocPos, vLocVel, vLocRot, vLocAngVel, fLocVec6D);
 
 		Vector returnValue(dataCoordinates.NumberOfItems() + overheadData); //return = [eps, deltaT_recommended, data[0], data[1], ...]
 
@@ -254,7 +254,7 @@ Real CObjectConnectorRigidBodySpringDamper::PostNewtonStep(const MarkerDataStruc
 			vLoc6D[i + 3] = vLocAngVel[i];
 		}
 
-		EvaluateUserFunctionPostNewtonStep(returnValue, cSystemData->GetMainSystemBacklink(), markerDataCurrent.GetTime(), itemIndex,
+		EvaluateUserFunctionPostNewtonStep(returnValue, cSystemData->GetMainSystemBacklink(), markerDataCurrent.GetTime(),
 			dataCoordinates, uLoc6D, vLoc6D);
 
 		discontinuousError = returnValue[0];

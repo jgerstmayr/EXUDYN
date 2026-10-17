@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-10-07  00:51:49 (last modified)
+* @date         2026-10-17  13:37:10 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -169,19 +169,19 @@ public: // AUTO:
     virtual JacobianType::Type GetAvailableJacobians() const override;
 
     //! AUTO:  the right-hand side on the connector interface of coordinate markers (#2745)
-    virtual bool ComputeODE2LHSConnector(const CSystemData& systemData, TemporaryComputationData& temp, Vector& localODE2Lhs, Index objectNumber) const override
+    virtual bool ComputeODE2LHSConnector(const CSystemData& systemData, TemporaryComputationData& temp, Vector& localODE2Lhs) const override
     {
-        ConnectorODE2LHSCoordinateMarkers(systemData, temp, *this, localODE2Lhs, objectNumber); return true;
+        ConnectorODE2LHSCoordinateMarkers(systemData, temp, *this, localODE2Lhs); return true;
     }
 
     //! AUTO:  the generalized forces on the two coordinates, with factor0 and factor1 (#2745)
-    virtual void ComputeConnectorForcesCoordinate(const MarkerCoordinate<Real>* markers, Real t, Index itemIndex, Real* forces) const override;
+    virtual void ComputeConnectorForcesCoordinate(const MarkerCoordinate<Real>* markers, Real t, Real* forces) const override;
 
     //! AUTO:  the force of the connector from relative position and velocity (#2745)
-    void ComputeSpringForceRelative(Real relPos, Real relVel, Real t, Index itemIndex, Real& force) const;
+    void ComputeSpringForceRelative(Real relPos, Real relVel, Real t, Real& force) const;
 
     //! AUTO:  Computational function: compute Jacobian of ABRV:ODE2 ABRV:LHS equations w.r.t. ODE2 coordinates and ODE2 velocities; write either dense local jacobian into dense matrix of MatrixContainer or ADD sparse triplets INCLUDING ltg mapping to sparse matrix of MatrixContainer
-    virtual void ComputeJacobianODE2_ODE2(EXUmath::MatrixContainer& jacobianODE2, JacobianTemp& temp, Real factorODE2, Real factorODE2_t, Index objectNumber, const ArrayIndex& ltg, const MarkerDataStructure& markerData) const override;
+    virtual void ComputeJacobianODE2_ODE2(EXUmath::MatrixContainer& jacobianODE2, JacobianTemp& temp, Real factorODE2, Real factorODE2_t, const ArrayIndex& ltg, const MarkerDataStructure& markerData) const override;
 
     //! AUTO:  flag to be set for connectors, which use DiscontinuousIteration
     virtual bool HasDiscontinuousIteration() const override
@@ -190,16 +190,16 @@ public: // AUTO:
     }
 
     //! AUTO:  function called after Newton method; returns a residual error (force)
-    virtual Real PostNewtonStep(const MarkerDataStructure& markerDataCurrent, Index itemIndex, PostNewtonFlags::Type& flags, Real& recommendedStepSize) override;
+    virtual Real PostNewtonStep(const MarkerDataStructure& markerDataCurrent, PostNewtonFlags::Type& flags, Real& recommendedStepSize) override;
 
     //! AUTO:  function called after discontinuous iterations have been completed for one step (e.g. to finalize history variables and set initial values for next step)
     virtual void PostDiscontinuousIterationStep() override;
 
     //! AUTO:  compute global 6D force and torque which is used for computation of derivative of jacobian; used only in combination with ComputeJacobianODE2_ODE2
-    virtual void ComputeJacobianForce6D(const MarkerDataStructure& markerData, Index objectNumber, Vector6D& force6D) const override;
+    virtual void ComputeJacobianForce6D(const MarkerDataStructure& markerData, Vector6D& force6D) const override;
 
     //! AUTO:  provide according output variable in 'value'
-    virtual void GetOutputVariableConnector(OutputVariableType variableType, const MarkerDataStructure& markerData, Index itemIndex, Vector& value) const override;
+    virtual void GetOutputVariableConnector(OutputVariableType variableType, const MarkerDataStructure& markerData, Vector& value) const override;
 
     //! AUTO:  provide requested markerType for connector
     virtual Marker::Type GetRequestedMarkerType() const override
@@ -220,10 +220,10 @@ public: // AUTO:
     }
 
     //! AUTO:  compute spring damper force helper function
-    void ComputeSpringForce(const MarkerDataStructure& markerData, Index itemIndex, Real& relPos, Real& relVel, Real& force) const;
+    void ComputeSpringForce(const MarkerDataStructure& markerData, Real& relPos, Real& relVel, Real& force) const;
 
     //! AUTO:  call to user function implemented in separate file to avoid including pybind and MainSystem.h at too many places
-    void EvaluateUserFunctionForce(Real& force, const MainSystemBase& mainSystem, Real t, Index itemIndex, Real relPos, Real relVel) const;
+    void EvaluateUserFunctionForce(Real& force, const MainSystemBase& mainSystem, Real t, Real relPos, Real relVel) const;
 
     virtual OutputVariableType GetOutputVariableTypes() const override
     {

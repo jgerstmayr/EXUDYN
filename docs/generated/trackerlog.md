@@ -8,10 +8,10 @@ Every entry carries the **type** of the issue, then its **priority** and its **e
 
 General information on current version:
 
-- Exudyn version = 1.13.112.dev1
+- Exudyn version = 1.13.113.dev1
 - last change = 2026-10-17
 - Number of issues = 3014
-- Number of resolved issues = 2889 (112 in current version)
+- Number of resolved issues = 2890 (113 in current version)
 
 ## Resolved issues and resolved bugs before version 1.13
 
@@ -9039,9 +9039,6 @@ The following list contains the issues which have been **RESOLVED** in the accor
 
 ## Open issues
 
-- `CHANGE` `HIGH EFF` `raised by: Claude-JG` Remove the argument objectNumber from the item functions that now get it from the object (#3013)
-  - description: Since \#2995 and the issue before, every CObject knows its number. Many functions of the object interface (ComputeODE2LHS, ComputeODE1RHS, ComputeJacobianODE2\_ODE2, ComputeMassMatrix, GetOutputVariable, GetOutputVariableBody, the connector functions with MarkerDataStructure, the algebraic equations, the item-specific evaluations of user functions) and their callers in CSystem and MainObject pass it as an argument only to hand it to the user functions. The argument is removed, the functions call GetObjectNumber(). Evaluation and sub-steps in revision2026c step RG9.9.
-  - date raised: 2026-10-17
 - `TESTING` `MEDIUM EFF` `raised by: Claude-JG` Performance measurement over more models, solvers and solver configurations, as the baseline of the total coordinates (#3002)
   - description: revision2026c step RG13.1 (maintainer 2026-10-16): before total coordinates are added (RG13.2, \#1910), the cost of the solvers is measured on more models (rigid multibody, flexible, contact, large systems), for the implicit and explicit solvers and their configurations (dense/sparse, modified Newton, step sizes, multithreading), so that the cost of an additional vector addition and of the cache memory per step becomes visible - mostly relevant for the explicit solvers
   - date raised: 2026-10-16

@@ -22,7 +22,7 @@
 
 //! the equation on the path of the marker data, which serves the constraint at velocity level (UsesVelocityLevel) and
 //! the inactive one; the same equation as on the connector interface (#2745)
-void CObjectConnectorCoordinate::ComputeAlgebraicEquations(Vector& algebraicEquations, const MarkerDataStructure& markerData, Real t, Index itemIndex, bool velocityLevel) const
+void CObjectConnectorCoordinate::ComputeAlgebraicEquations(Vector& algebraicEquations, const MarkerDataStructure& markerData, Real t, bool velocityLevel) const
 {
 	if (!parameters.activeConnector)
 	{
@@ -39,14 +39,14 @@ void CObjectConnectorCoordinate::ComputeAlgebraicEquations(Vector& algebraicEqua
 		markers[k].value_t = withVelocities ? markerData.GetMarkerData(k).vectorValue_t[0] : 0.;
 	}
 	ConstSizeVector<maxConstraintEquations> equations;
-	ComputeConstraintEquationsTemplate(markers, t, itemIndex, velocityLevel, equations);
+	ComputeConstraintEquationsTemplate(markers, t, velocityLevel, equations);
 	algebraicEquations.CopyFrom(equations);
 }
 
 //! the equation on the connector interface (#2745), as ComputeAlgebraicEquations; the system takes it at position level
 //! only (UsesVelocityLevel: the path of the marker data)
 template<class TReal>
-void CObjectConnectorCoordinate::ComputeConstraintEquationsTemplate(const MarkerCoordinate<TReal>* markers, Real t, Index itemIndex,
+void CObjectConnectorCoordinate::ComputeConstraintEquationsTemplate(const MarkerCoordinate<TReal>* markers, Real t,
 	bool velocityLevel, ConstSizeVectorBase<TReal, maxConstraintEquations>& equations) const
 {
 	equations.SetNumberOfItems(1);
@@ -55,7 +55,7 @@ void CObjectConnectorCoordinate::ComputeConstraintEquationsTemplate(const Marker
 		Real offset = parameters.offset;
 		if (parameters.offsetUserFunction)
 		{
-			EvaluateUserFunctionOffset(offset, cSystemData->GetMainSystemBacklink(), t, itemIndex);
+			EvaluateUserFunctionOffset(offset, cSystemData->GetMainSystemBacklink(), t);
 		}
 		equations[0] = markers[1].value * parameters.factor1 - markers[0].value - offset;
 	}
@@ -65,27 +65,26 @@ void CObjectConnectorCoordinate::ComputeConstraintEquationsTemplate(const Marker
 		if (parameters.offsetUserFunction_t)
 		{
 			Real offset = 0;
-			EvaluateUserFunctionOffset_t(offset, cSystemData->GetMainSystemBacklink(), t, itemIndex);
+			EvaluateUserFunctionOffset_t(offset, cSystemData->GetMainSystemBacklink(), t);
 			equations[0] -= offset;
 		}
 		else if (parameters.velocityLevel) { equations[0] -= parameters.offset; }
 	}
 }
 
-void CObjectConnectorCoordinate::ComputeConstraintEquationsCoordinate(const MarkerCoordinate<Real>* markers, const LinkedDataVector& lambda, Real t,
-	Index itemIndex, bool velocityLevel, ConstSizeVector<maxConstraintEquations>& equations) const
+void CObjectConnectorCoordinate::ComputeConstraintEquationsCoordinate(const MarkerCoordinate<Real>* markers, const LinkedDataVector& lambda, Real t, bool velocityLevel, ConstSizeVector<maxConstraintEquations>& equations) const
 {
-	ComputeConstraintEquationsTemplate(markers, t, itemIndex, velocityLevel, equations);
+	ComputeConstraintEquationsTemplate(markers, t, velocityLevel, equations);
 }
 
 void CObjectConnectorCoordinate::ComputeConstraintEquationsCoordinateDiff(const MarkerCoordinate<DRealCoordinateMarkers>* markers, const LinkedDataVector& lambda,
-	Real t, Index itemIndex, ConstSizeVectorBase<DRealCoordinateMarkers, maxConstraintEquations>& equations) const
+	Real t, ConstSizeVectorBase<DRealCoordinateMarkers, maxConstraintEquations>& equations) const
 {
-	ComputeConstraintEquationsTemplate(markers, t, itemIndex, false, equations);
+	ComputeConstraintEquationsTemplate(markers, t, false, equations);
 }
 
 void CObjectConnectorCoordinate::ComputeJacobianAE(ResizableMatrix& jacobian_ODE2, ResizableMatrix& jacobian_ODE2_t, ResizableMatrix& jacobian_ODE1, 
-	ResizableMatrix& jacobian_AE, const MarkerDataStructure& markerData, Real t, Index itemIndex) const
+	ResizableMatrix& jacobian_AE, const MarkerDataStructure& markerData, Real t) const
 {
 	if (parameters.activeConnector)
 	{
@@ -138,7 +137,7 @@ JacobianType::Type CObjectConnectorCoordinate::GetAvailableJacobians() const
 
 
 //! provide according output variable in "value"
-void CObjectConnectorCoordinate::GetOutputVariableConnector(OutputVariableType variableType, const MarkerDataStructure& markerData, Index itemIndex, Vector& value) const
+void CObjectConnectorCoordinate::GetOutputVariableConnector(OutputVariableType variableType, const MarkerDataStructure& markerData, Vector& value) const
 {
 	Real relPos = markerData.GetMarkerData(1).vectorValue[0] - markerData.GetMarkerData(0).vectorValue[0];
 	Real relVel = markerData.GetMarkerData(1).vectorValue_t[0] - markerData.GetMarkerData(0).vectorValue_t[0]; //this is the index-reduced equation: does not have offset!!!

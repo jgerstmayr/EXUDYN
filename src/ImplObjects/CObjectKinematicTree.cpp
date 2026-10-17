@@ -43,10 +43,10 @@
 
 
 //! Computational function: compute mass matrix
-void CObjectKinematicTree::ComputeMassMatrix(EXUmath::MatrixContainer& massMatrixC, const ArrayIndex& ltg, Index objectNumber, bool computeInverse) const
+void CObjectKinematicTree::ComputeMassMatrix(EXUmath::MatrixContainer& massMatrixC, const ArrayIndex& ltg, bool computeInverse) const
 {
 	massMatrixC.SetUseDenseMatrix();
-	ComputeMassMatrixAndODE2LHS(&(massMatrixC.GetInternalDenseMatrix()), nullptr, objectNumber, true);
+	ComputeMassMatrixAndODE2LHS(&(massMatrixC.GetInternalDenseMatrix()), nullptr, true);
 
 	if (computeInverse)
 	{
@@ -58,13 +58,13 @@ void CObjectKinematicTree::ComputeMassMatrix(EXUmath::MatrixContainer& massMatri
 
 //! Computational function: compute right-hand-side (LHS) of second order ordinary differential equations (ODE) to "ode2Lhs"
 //in fact, this is the LHS function!
-void CObjectKinematicTree::ComputeODE2LHS(Vector& ode2Lhs, Index objectNumber) const
+void CObjectKinematicTree::ComputeODE2LHS(Vector& ode2Lhs) const
 {
 	//done in ComputeMassMatrixAndODE2LHS:
 	//ode2Lhs.SetNumberOfItems(nODE2);
 	//ode2Lhs.SetAll(0.);
 
-	ComputeMassMatrixAndODE2LHS(nullptr, &ode2Lhs, objectNumber, false);
+	ComputeMassMatrixAndODE2LHS(nullptr, &ode2Lhs, false);
 
 
 }
@@ -76,7 +76,7 @@ JacobianType::Type CObjectKinematicTree::GetAvailableJacobians() const
 }
 
 //! provide according output variable in "value"
-void CObjectKinematicTree::GetOutputVariableBody(OutputVariableType variableType, const Vector3D& localPosition, ConfigurationType configuration, Vector& value, Index objectNumber) const
+void CObjectKinematicTree::GetOutputVariableBody(OutputVariableType variableType, const Vector3D& localPosition, ConfigurationType configuration, Vector& value) const
 {
 	switch (variableType)
 	{
@@ -90,14 +90,14 @@ void CObjectKinematicTree::GetOutputVariableBody(OutputVariableType variableType
 	case OutputVariableType::Force:
 	{
 		CHECKandTHROW(configuration == ConfigurationType::Current, "ObjectKinematicTree::GetOutputVariable: OutputVariableType::Force can only be computed for Current configuration", ExudynValueError);
-		ComputeODE2LHS(value, objectNumber);	break;
+		ComputeODE2LHS(value);	break;
 	}
 	case OutputVariableType::PotentialEnergy: {
 		CheckEnergyLocalPosition(localPosition, "ObjectKinematicTree");
 		value.SetVector({ ComputePotentialEnergy(configuration) }); break; }
 	case OutputVariableType::KineticEnergy: {
 		CheckEnergyLocalPosition(localPosition, "ObjectKinematicTree");
-		value.SetVector({ ComputeKineticEnergyFromMassMatrix(configuration, objectNumber, "ObjectKinematicTree") }); break; }
+		value.SetVector({ ComputeKineticEnergyFromMassMatrix(configuration, "ObjectKinematicTree") }); break; }
 	default:
 		SysError("CObjectKinematicTree::GetOutputVariableBody failed"); //error should not occur, because types are checked!
 	}
@@ -143,7 +143,7 @@ Vector3D CObjectKinematicTree::GetLocalCenterOfMass() const
 
 //! subtract the forces given per joint from the joint forces f: the constant joint forces, the P and D control and the
 //! forceUserFunction; q includes the reference coordinates
-void CObjectKinematicTree::AddJointForces(Vector& f, const LinkedDataVector& q, const LinkedDataVector& q_t, Index objectNumber) const
+void CObjectKinematicTree::AddJointForces(Vector& f, const LinkedDataVector& q, const LinkedDataVector& q_t) const
 {
 	Index n = NumberOfLinks();
 	if (parameters.jointForceVector.NumberOfItems() != 0)
@@ -168,7 +168,7 @@ void CObjectKinematicTree::AddJointForces(Vector& f, const LinkedDataVector& q, 
 		Real t = GetCSystemData()->GetCData().GetCurrent().GetTime();
 		tempVector2.CopyFrom(q_t); //the joint velocities for the user function (#2845)
 
-		EvaluateUserFunctionForce(tempUserFunctionForce, cSystemData->GetMainSystemBacklink(), t, objectNumber, tempVector, tempVector2);
+		EvaluateUserFunctionForce(tempUserFunctionForce, cSystemData->GetMainSystemBacklink(), t, tempVector, tempVector2);
 		CHECKandTHROW(tempUserFunctionForce.NumberOfItems() == n, "CObjectKinematicTree: forceUserFunction return a vector with different size from ObjectKinematicTree system size", ExudynValueError);
 		f -= tempUserFunctionForce;
 	}
@@ -352,8 +352,7 @@ void CObjectKinematicTree::ComputeTreeTransformations(ConfigurationType configur
 }
 
 //! the mass matrix if computeMass, otherwise the forces of the left-hand side
-void CObjectKinematicTree::ComputeMassMatrixAndODE2LHS(ResizableMatrix* massMatrix, Vector* ode2Lhs,
-	Index objectNumber, bool computeMass) const
+void CObjectKinematicTree::ComputeMassMatrixAndODE2LHS(ResizableMatrix* massMatrix, Vector* ode2Lhs, bool computeMass) const
 {
 	using namespace KinematicTreeHT;
 	Index n = NumberOfLinks();
@@ -433,7 +432,7 @@ void CObjectKinematicTree::ComputeMassMatrixAndODE2LHS(ResizableMatrix* massMatr
 			Index parent = parameters.linkParents[i];
 			if (parent != noParent) { AddForceToParent(L[i].R, L[i].p, L[i].n, L[i].f, L[parent].n, L[parent].f); }
 		}
-		AddJointForces(f, q, q_t, objectNumber);
+		AddJointForces(f, q, q_t);
 	}
 	else
 	{

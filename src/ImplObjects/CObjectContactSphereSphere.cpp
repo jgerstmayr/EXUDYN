@@ -135,7 +135,7 @@ TReal CObjectContactSphereSphere::ComputeContactForces(TReal gap, const SlimVect
 }
 
 //compute the properties which are needed for computation of LHS and needed for OutputVariables
-void CObjectContactSphereSphere::ComputeConnectorProperties(const MarkerDataStructure& markerData, Index itemIndex, const LinkedDataVector& data, 
+void CObjectContactSphereSphere::ComputeConnectorProperties(const MarkerDataStructure& markerData, const LinkedDataVector& data, 
 	Real& frictionCoeff, Real& gap, Vector3D& deltaP, Vector3D& deltaV, 
 	Vector3D& fVec, Vector3D& fFriction, Vector3D& n0, bool contactFromData) const
 {
@@ -205,7 +205,7 @@ void CObjectContactSphereSphere::ComputeConnectorProperties(const MarkerDataStru
 
 //! the forces and torques of the connector interface (#2745): the contact force on sphere 1
 //! and its reaction, with friction the torques of the contact point; a marker without orientation takes the force only
-void CObjectContactSphereSphere::ComputeConnectorForceRigid(const MarkerRigid<Real>* markers, Real t, Index itemIndex,
+void CObjectContactSphereSphere::ComputeConnectorForceRigid(const MarkerRigid<Real>* markers, Real t,
 	Vector3D* forces, Vector3D* torques) const
 {
 	for (Index k = 0; k < 2; k++) { forces[k].SetAll(0.); torques[k].SetAll(0.); }
@@ -216,7 +216,7 @@ void CObjectContactSphereSphere::ComputeConnectorForceRigid(const MarkerRigid<Re
 	LinkedDataVector data = GetCNode(0)->GetCurrentCoordinateVector();
 	Vector3D deltaP, deltaV, fVec, fFriction, n0;
 	Real frictionCoeff, gap;
-	ComputeConnectorProperties(markerData, itemIndex, data, frictionCoeff, gap, deltaP, deltaV, fVec, fFriction, n0);
+	ComputeConnectorProperties(markerData, data, frictionCoeff, gap, deltaP, deltaV, fVec, fFriction, n0);
 	Real h1 = parameters.isHollowSphere1 ? -1. : 1.;
 	forces[1] = fVec;
 	forces[0] = -fVec;
@@ -228,7 +228,7 @@ void CObjectContactSphereSphere::ComputeConnectorForceRigid(const MarkerRigid<Re
 }
 
 //! provide according output variable in "value"
-void CObjectContactSphereSphere::GetOutputVariableConnector(OutputVariableType variableType, const MarkerDataStructure& markerData, Index itemIndex, Vector& value) const
+void CObjectContactSphereSphere::GetOutputVariableConnector(OutputVariableType variableType, const MarkerDataStructure& markerData, Vector& value) const
 {
 	LinkedDataVector data = GetCNode(0)->GetCurrentCoordinateVector();
 	Vector3D deltaP;
@@ -241,7 +241,7 @@ void CObjectContactSphereSphere::GetOutputVariableConnector(OutputVariableType v
 	Real gap;
 	//Real h1 = parameters.isHollowSphere1 ? -1. : 1.;
 
-	ComputeConnectorProperties(markerData, itemIndex, data,
+	ComputeConnectorProperties(markerData, data,
 		frictionCoeff, gap, deltaP, deltaV, fVec, fFriction, n0);
 
 	const Vector3D& p0 = markerData.GetMarkerData(0).position;
@@ -263,7 +263,7 @@ void CObjectContactSphereSphere::GetOutputVariableConnector(OutputVariableType v
 
 //! function called after Newton method; returns a residual error (force); 
 //! done for two different computation states in order to estimate the correct time of contact
-Real CObjectContactSphereSphere::PostNewtonStep(const MarkerDataStructure& markerDataCurrent, Index itemIndex, PostNewtonFlags::Type& flags, Real& recommendedStepSize)
+Real CObjectContactSphereSphere::PostNewtonStep(const MarkerDataStructure& markerDataCurrent, PostNewtonFlags::Type& flags, Real& recommendedStepSize)
 {
 	//return force-type error in case of contact: in case that the assumed contact state has been wrong, 
 	//  the contact force (also negative) is returned as measure of the error
@@ -284,7 +284,7 @@ Real CObjectContactSphereSphere::PostNewtonStep(const MarkerDataStructure& marke
 	Real frictionCoeff;
 	Real currentGap;
 
-	ComputeConnectorProperties(markerDataCurrent, itemIndex, data, frictionCoeff, currentGap, deltaP, deltaV, 
+	ComputeConnectorProperties(markerDataCurrent, data, frictionCoeff, currentGap, deltaP, deltaV, 
 		fVec, fFriction, n0, false);
 
 	Real vGap = n0 * deltaV; //required for Hunt-Crossley and similar models

@@ -42,14 +42,13 @@ void CObjectConnectorDistance::ComputeConstraintEquationsTemplate(const MarkerPo
 	}
 }
 
-void CObjectConnectorDistance::ComputeConstraintEquationsPosition(const MarkerPosition<Real>* markers, const LinkedDataVector& lambda, Real t,
-	Index itemIndex, bool velocityLevel, ConstSizeVector<maxConstraintEquations>& equations) const
+void CObjectConnectorDistance::ComputeConstraintEquationsPosition(const MarkerPosition<Real>* markers, const LinkedDataVector& lambda, Real t, bool velocityLevel, ConstSizeVector<maxConstraintEquations>& equations) const
 {
 	ComputeConstraintEquationsTemplate(markers, lambda, velocityLevel, equations);
 }
 
 void CObjectConnectorDistance::ComputeConstraintEquationsPositionDiff(const MarkerPosition<DRealPositionMarkers>* markers, const LinkedDataVector& lambda,
-	Real t, Index itemIndex, ConstSizeVectorBase<DRealPositionMarkers, maxConstraintEquations>& equations) const
+	Real t, ConstSizeVectorBase<DRealPositionMarkers, maxConstraintEquations>& equations) const
 {
 	ComputeConstraintEquationsTemplate(markers, lambda, false, equations);
 }
@@ -73,7 +72,7 @@ JacobianType::Type CObjectConnectorDistance::GetAvailableJacobians() const
 //}
 
 //! provide according output variable in "value"
-void CObjectConnectorDistance::GetOutputVariableConnector(OutputVariableType variableType, const MarkerDataStructure& markerData, Index itemIndex, Vector& value) const
+void CObjectConnectorDistance::GetOutputVariableConnector(OutputVariableType variableType, const MarkerDataStructure& markerData, Vector& value) const
 {
 	Vector3D vPos = (markerData.GetMarkerData(1).position - markerData.GetMarkerData(0).position);
 	Vector3D vVel = (markerData.GetMarkerData(1).velocity - markerData.GetMarkerData(0).velocity);

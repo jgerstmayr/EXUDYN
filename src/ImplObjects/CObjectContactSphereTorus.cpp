@@ -105,7 +105,7 @@ TReal CObjectContactSphereTorus::ComputeContactForces(TReal gap, const SlimVecto
 }
 
 //compute the properties which are needed for computation of LHS and needed for OutputVariables
-void CObjectContactSphereTorus::ComputeConnectorProperties(const MarkerDataStructure& markerData, Index itemIndex, const LinkedDataVector& data, 
+void CObjectContactSphereTorus::ComputeConnectorProperties(const MarkerDataStructure& markerData, const LinkedDataVector& data, 
 	Real& frictionCoeff, Real& gap, Vector3D& deltaP, Vector3D& deltaV, Vector3D& pCircle1, Vector3D& contactPoint,
 	Vector3D& fVec, Vector3D& fFriction, Vector3D& n0, bool contactFromData) const
 {
@@ -182,7 +182,7 @@ void CObjectContactSphereTorus::ComputeConnectorProperties(const MarkerDataStruc
 //  MODEL: f
 //! the forces and torques of the connector interface (#2745), as ComputeODE2LHS projects them: the contact force on the
 //! torus at the contact point and its reaction on the sphere, with friction its torque
-void CObjectContactSphereTorus::ComputeConnectorForceRigid(const MarkerRigid<Real>* markers, Real t, Index itemIndex,
+void CObjectContactSphereTorus::ComputeConnectorForceRigid(const MarkerRigid<Real>* markers, Real t,
 	Vector3D* forces, Vector3D* torques) const
 {
 	for (Index k = 0; k < 2; k++) { forces[k].SetAll(0.); torques[k].SetAll(0.); }
@@ -193,7 +193,7 @@ void CObjectContactSphereTorus::ComputeConnectorForceRigid(const MarkerRigid<Rea
 	LinkedDataVector data = GetCNode(0)->GetCurrentCoordinateVector();
 	Vector3D deltaP, deltaV, pCircle1, contactPoint, fVec, fFriction, n0;
 	Real frictionCoeff, gap;
-	ComputeConnectorProperties(markerData, itemIndex, data, frictionCoeff, gap, deltaP, deltaV, pCircle1, contactPoint, fVec, fFriction, n0);
+	ComputeConnectorProperties(markerData, data, frictionCoeff, gap, deltaP, deltaV, pCircle1, contactPoint, fVec, fFriction, n0);
 	forces[1] = fVec;
 	torques[1] = (contactPoint - markerData.GetMarkerData(1).position).CrossProduct(fVec);
 	forces[0] = -fVec;
@@ -201,7 +201,7 @@ void CObjectContactSphereTorus::ComputeConnectorForceRigid(const MarkerRigid<Rea
 }
 
 //! provide according output variable in "value"
-void CObjectContactSphereTorus::GetOutputVariableConnector(OutputVariableType variableType, const MarkerDataStructure& markerData, Index itemIndex, Vector& value) const
+void CObjectContactSphereTorus::GetOutputVariableConnector(OutputVariableType variableType, const MarkerDataStructure& markerData, Vector& value) const
 {
 	LinkedDataVector data = GetCNode(0)->GetCurrentCoordinateVector();
 	Vector3D deltaP;
@@ -215,7 +215,7 @@ void CObjectContactSphereTorus::GetOutputVariableConnector(OutputVariableType va
 	Real frictionCoeff;
 	Real gap;
 
-	ComputeConnectorProperties(markerData, itemIndex, data,
+	ComputeConnectorProperties(markerData, data,
 		frictionCoeff, gap, deltaP, deltaV, pCircle1, contactPoint, fVec, fFriction, n0);
 
 	const Vector3D& p0 = markerData.GetMarkerData(0).position;
@@ -245,7 +245,7 @@ void CObjectContactSphereTorus::GetOutputVariableConnector(OutputVariableType va
 
 //! function called after Newton method; returns a residual error (force); 
 //! done for two different computation states in order to estimate the correct time of contact
-Real CObjectContactSphereTorus::PostNewtonStep(const MarkerDataStructure& markerDataCurrent, Index itemIndex, PostNewtonFlags::Type& flags, Real& recommendedStepSize)
+Real CObjectContactSphereTorus::PostNewtonStep(const MarkerDataStructure& markerDataCurrent, PostNewtonFlags::Type& flags, Real& recommendedStepSize)
 {
 	//return force-type error in case of contact: in case that the assumed contact state has been wrong, 
 	//  the contact force (also negative) is returned as measure of the error
@@ -268,7 +268,7 @@ Real CObjectContactSphereTorus::PostNewtonStep(const MarkerDataStructure& marker
 	Real frictionCoeff;
 	Real currentGap;
 
-	ComputeConnectorProperties(markerDataCurrent, itemIndex, data, frictionCoeff, currentGap, deltaP, deltaV, fVec, pCircle1, contactPoint, fFriction, n0, false);
+	ComputeConnectorProperties(markerDataCurrent, data, frictionCoeff, currentGap, deltaP, deltaV, fVec, pCircle1, contactPoint, fFriction, n0, false);
 
 	Real vGap = n0 * deltaV; //required for Hunt-Crossley and similar models
 

@@ -51,11 +51,11 @@ private:
 	using CObject::ComputeJacobianODE2_ODE2;
 	using CObject::ComputeJacobianAE;
 	using CObject::GetOutputVariable;
-	virtual void ComputeODE2LHS(Vector& ode2Lhs, Index objectNumber) const final { CHECKandTHROWstring("ERROR: illegal call to CObjectConnector::ComputeODE2LHS"); }//!< this is the non-connector function, which is not available for connectors!
-	virtual void ComputeODE1RHS(Vector& ode1Rhs, Index objectNumber) const final { CHECKandTHROWstring("ERROR: illegal call to CObjectConnector::ComputeODE1LHS"); }//!< this is the non-connector function, which is not available for connectors!
-	virtual void ComputeJacobianODE2_ODE2(EXUmath::MatrixContainer& jacobianODE2, JacobianTemp& temp, Real factorODE2, Real factorODE2_t, Index objectNumber, const ArrayIndex& ltg) const final { CHECKandTHROWstring("ERROR: illegal call to CObjectConnector::ComputeJacobianODE2_ODE2"); }//!< this is the non-connector function, which is not available for connectors!
+	virtual void ComputeODE2LHS(Vector& ode2Lhs) const final { CHECKandTHROWstring("ERROR: illegal call to CObjectConnector::ComputeODE2LHS"); }//!< this is the non-connector function, which is not available for connectors!
+	virtual void ComputeODE1RHS(Vector& ode1Rhs) const final { CHECKandTHROWstring("ERROR: illegal call to CObjectConnector::ComputeODE1LHS"); }//!< this is the non-connector function, which is not available for connectors!
+	virtual void ComputeJacobianODE2_ODE2(EXUmath::MatrixContainer& jacobianODE2, JacobianTemp& temp, Real factorODE2, Real factorODE2_t, const ArrayIndex& ltg) const final { CHECKandTHROWstring("ERROR: illegal call to CObjectConnector::ComputeJacobianODE2_ODE2"); }//!< this is the non-connector function, which is not available for connectors!
 	virtual void ComputeJacobianAE(ResizableMatrix& jacobian_ODE2, ResizableMatrix& jacobian_ODE2_t, ResizableMatrix& jacobian_ODE1, ResizableMatrix& jacobian_AE) const final { CHECKandTHROWstring("ERROR: illegal call to CObjectConnector::ComputeJacobianAE"); }//!< this is the non-connector function, which is not available for connectors!
-	virtual void GetOutputVariable(OutputVariableType variableType, Vector& value, ConfigurationType configuration, Index objectNumber) const final { CHECKandTHROWstring("ERROR: illegal call to CObjectConnector::GetOutputVariable"); } //!< this is the non-connector function, which is not available for connectors!
+	virtual void GetOutputVariable(OutputVariableType variableType, Vector& value, ConfigurationType configuration) const final { CHECKandTHROWstring("ERROR: illegal call to CObjectConnector::GetOutputVariable"); } //!< this is the non-connector function, which is not available for connectors!
 
 public:
     //! get an exact clone of *this, must be implemented in all derived classes! Necessary for better handling in ObjectContainer
@@ -64,25 +64,24 @@ public:
 	//! the connector interface (#2745): a connector on it computes its right-hand side here, by the L2 chain of its kind of
 	//! markers (ConnectorODE2LHSPositionMarkers, ...), into localODE2Lhs [marker 0, marker 1]; false: the system takes the
 	//! path of the marker data (ComputeMarkerDataStructure, ComputeODE2LHS), which is the default
-	virtual bool ComputeODE2LHSConnector(const CSystemData& systemData, TemporaryComputationData& temp, Vector& localODE2Lhs,
-		Index objectNumber) const { return false; }
+	virtual bool ComputeODE2LHSConnector(const CSystemData& systemData, TemporaryComputationData& temp, Vector& localODE2Lhs) const { return false; }
 
 	//! the Jacobian of the connector interface into temp.jacobianODE2Container (#2745); false: the system takes the Jacobian
 	//! of the path of the marker data (ComputeJacobianODE2_ODE2), which is the default
 	virtual bool ComputeJacobianODE2Connector(const CSystemData& systemData, TemporaryComputationData& temp, Real factorODE2,
-		Real factorODE2_t, Index objectNumber, bool jacobianDerivativeNonZero) const { return false; }
+		Real factorODE2_t, bool jacobianDerivativeNonZero) const { return false; }
 
 
 	//! L1 of a connector on position markers (#2745): its force on marker 1 from the kinematics of its two markers,
 	//! global; marker 0 gets the reaction; no system access and no Jacobians
-	virtual void ComputeConnectorForcePosition(const MarkerPosition<Real>* markers, Real t, Index itemIndex, Vector3D& force) const
+	virtual void ComputeConnectorForcePosition(const MarkerPosition<Real>* markers, Real t, Vector3D& force) const
 	{
 		CHECKandTHROWstring("CObjectConnector::ComputeConnectorForcePosition: not implemented for this connector");
 	}
 
 	//! the same force with automatic differentiation, for the connector's Jacobian (#2745); a connector whose
 	//! GetAvailableJacobians() names the ODE2 Jacobian functions must implement it
-	virtual void ComputeConnectorForcePositionDiff(const MarkerPosition<DRealPositionMarkers>* markers, Real t, Index itemIndex,
+	virtual void ComputeConnectorForcePositionDiff(const MarkerPosition<DRealPositionMarkers>* markers, Real t,
 		SlimVectorBase<DRealPositionMarkers, 3>& force) const
 	{
 		CHECKandTHROWstring("CObjectConnector::ComputeConnectorForcePositionDiff: not implemented for this connector");
@@ -90,14 +89,14 @@ public:
 
 	//! L1 of a connector on rigid markers (#2745): the force and the torque on each marker, global, from the kinematics of
 	//! the two markers; not necessarily action and reaction (a torque from the offset of the force, for instance)
-	virtual void ComputeConnectorForceRigid(const MarkerRigid<Real>* markers, Real t, Index itemIndex, Vector3D* forces, Vector3D* torques) const
+	virtual void ComputeConnectorForceRigid(const MarkerRigid<Real>* markers, Real t, Vector3D* forces, Vector3D* torques) const
 	{
 		CHECKandTHROWstring("CObjectConnector::ComputeConnectorForceRigid: not implemented for this connector");
 	}
 
 	//! the same forces and torques with automatic differentiation, for the connector's Jacobian (#2745); a connector on rigid
 	//! markers whose GetAvailableJacobians() names the ODE2 Jacobian functions must implement it
-	virtual void ComputeConnectorForceRigidDiff(const MarkerRigid<DRealRigidMarkers>* markers, Real t, Index itemIndex,
+	virtual void ComputeConnectorForceRigidDiff(const MarkerRigid<DRealRigidMarkers>* markers, Real t,
 		SlimVectorBase<DRealRigidMarkers, 3>* forces, SlimVectorBase<DRealRigidMarkers, 3>* torques) const
 	{
 		CHECKandTHROWstring("CObjectConnector::ComputeConnectorForceRigidDiff: not implemented for this connector");
@@ -105,23 +104,23 @@ public:
 
 	//! L1 of a connector on coordinate markers (#2745): its generalized force on the coordinate of marker 1 from the
 	//! values of its two markers; marker 0 gets the reaction
-	virtual void ComputeConnectorForceCoordinate(const MarkerCoordinate<Real>* markers, Real t, Index itemIndex, Real& force) const
+	virtual void ComputeConnectorForceCoordinate(const MarkerCoordinate<Real>* markers, Real t, Real& force) const
 	{
 		CHECKandTHROWstring("CObjectConnector::ComputeConnectorForceCoordinate: not implemented for this connector");
 	}
 
 	//! the generalized forces on the coordinates of the two markers (#2745); by default the force of
 	//! ComputeConnectorForceCoordinate on marker 1 and its reaction on marker 0; a connector with factors overrides it
-	virtual void ComputeConnectorForcesCoordinate(const MarkerCoordinate<Real>* markers, Real t, Index itemIndex, Real* forces) const
+	virtual void ComputeConnectorForcesCoordinate(const MarkerCoordinate<Real>* markers, Real t, Real* forces) const
 	{
 		Real force;
-		ComputeConnectorForceCoordinate(markers, t, itemIndex, force);
+		ComputeConnectorForceCoordinate(markers, t, force);
 		forces[0] = -force;
 		forces[1] = force;
 	}
 
 	//! the same force with automatic differentiation, for the connector's Jacobian (#2745)
-	virtual void ComputeConnectorForceCoordinateDiff(const MarkerCoordinate<DRealCoordinateMarkers>* markers, Real t, Index itemIndex,
+	virtual void ComputeConnectorForceCoordinateDiff(const MarkerCoordinate<DRealCoordinateMarkers>* markers, Real t,
 		DRealCoordinateMarkers& force) const
 	{
 		CHECKandTHROWstring("CObjectConnector::ComputeConnectorForceCoordinateDiff: not implemented for this connector");
@@ -159,22 +158,21 @@ public:
 	//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 	//specific Connector/Marker functions!
 	//! compute left-hand-side (LHS) of second order ordinary differential equations (ODE) to 'ode2Lhs' for CONNECTORS; provides objectNumber for user functions
-	virtual void ComputeODE2LHS(Vector& ode2Lhs, const MarkerDataStructure& markerData, Index objectNumber) const { CHECKandTHROWstring("ERROR: illegal call to CObjectConnector::ComputeODE2LHS"); }
+	virtual void ComputeODE2LHS(Vector& ode2Lhs, const MarkerDataStructure& markerData) const { CHECKandTHROWstring("ERROR: illegal call to CObjectConnector::ComputeODE2LHS"); }
 
-	//! compute right-hand-side (RHS) of first order ordinary differential equations (ODE) to 'ode1Rhs' for CONNECTORS, which has dimension GetODE1Size(); objectNumber contains items own number for user functions
-	virtual void ComputeODE1RHS(Vector& ode1Rhs, const MarkerDataStructure& markerData, Index objectNumber) const { CHECKandTHROWstring("ERROR: illegal call to CObjectConnector::ComputeODE1LHS"); }
+	//! compute right-hand-side (RHS) of first order ordinary differential equations (ODE) to 'ode1Rhs' for CONNECTORS, which has dimension GetODE1Size()
+	virtual void ComputeODE1RHS(Vector& ode1Rhs, const MarkerDataStructure& markerData) const { CHECKandTHROWstring("ERROR: illegal call to CObjectConnector::ComputeODE1LHS"); }
 
 	//! compute algebraic equations to 'algebraicEquations', which has dimension GetAlgebraicEquationsSize(); q are the system coordinates
-	virtual void ComputeAlgebraicEquations(Vector& algebraicEquations, const MarkerDataStructure& markerData, Real t, Index itemIndex, bool useIndex2 = false) const { CHECKandTHROWstring("ERROR: illegal call to CObjectConnector::ComputeAlgebraicEquations"); }
+	virtual void ComputeAlgebraicEquations(Vector& algebraicEquations, const MarkerDataStructure& markerData, Real t, bool useIndex2 = false) const { CHECKandTHROWstring("ERROR: illegal call to CObjectConnector::ComputeAlgebraicEquations"); }
 
 	//! compute derivative of right-hand-side (LHS) w.r.t q of second order ordinary differential equations (ODE) [optional w.r.t. ODE2_t variables as well, if flag ODE2_ODE2_t_function set in GetAvailableJacobians()]; jacobian [and jacobianODE2_t] has dimension GetODE2Size() x GetODE2Size(); this is the local tangent stiffness matrix;
 	//OLD: virtual void ComputeJacobianODE2_ODE2(ResizableMatrix& jacobian, ResizableMatrix& jacobian_ODE2_t, const MarkerDataStructure& markerData) const { CHECKandTHROWstring("ERROR: illegal call to CObjectConnector::ComputeODE2LHSJacobian"); }
-	virtual void ComputeJacobianODE2_ODE2(EXUmath::MatrixContainer& jacobianODE2, JacobianTemp& temp, Real factorODE2, Real factorODE2_t,
-		Index objectNumber, const ArrayIndex& ltg, const MarkerDataStructure& markerData) const { CHECKandTHROWstring("ERROR: illegal call to CObjectConnector::ComputeJacobianODE2_ODE2"); }
+	virtual void ComputeJacobianODE2_ODE2(EXUmath::MatrixContainer& jacobianODE2, JacobianTemp& temp, Real factorODE2, Real factorODE2_t, const ArrayIndex& ltg, const MarkerDataStructure& markerData) const { CHECKandTHROWstring("ERROR: illegal call to CObjectConnector::ComputeJacobianODE2_ODE2"); }
 
 	//! compute 'force' which is used for computation of derivative of jacobian; for position connectors this is a force, 
 	//! while for position+rotation connectors, this is a generalized 6D force; used only in combination with ComputeJacobianODE2_ODE2
-	virtual void ComputeJacobianForce6D(const MarkerDataStructure& markerData, Index objectNumber, Vector6D& force6D) const {
+	virtual void ComputeJacobianForce6D(const MarkerDataStructure& markerData, Vector6D& force6D) const {
 		CHECKandTHROWstring("ERROR: illegal call to CObjectConnector::ComputeJacobianForce6D");
 	}
 
@@ -185,14 +183,14 @@ public:
 	//! dense mode is used here; if activeConnector=false, jacobian becomes a zeros matrix
 	//! works for coordinate connectors (isCoordinateConnector=true) or position/orientation markers (pure position if hasRotationJacobian=false)
 	virtual void ComputeJacobianODE2_ODE2generic(ResizableMatrix& localJac, EXUmath::MatrixContainer& jacobianODE2, JacobianTemp& temp,
-		Real factorODE2, Real factorODE2_t, Index objectNumber, const MarkerDataStructure& markerData, bool activeConnector, 
+		Real factorODE2, Real factorODE2_t, const MarkerDataStructure& markerData, bool activeConnector, 
 		bool isCoordinateConnector, bool hasRotationJacobian) const;
 
 	//! compute derivative of algebraic equations w.r.t. ODE2 in jacobian [and w.r.t. ODE2_t coordinates in jacobian_t if flag ODE2_t_AE_function is set] [and w.r.t. AE coordinates if flag AE_AE_function is set in GetAvailableJacobians()]; jacobian[_t] has dimension GetAlgebraicEquationsSize() x (GetODE2Size() + GetODE1Size() [+GetAlgebraicEquationsSize()]); q are the system coordinates; markerData provides according marker information to compute jacobians
-	virtual void ComputeJacobianAE(ResizableMatrix& jacobian_ODE2, ResizableMatrix& jacobian_ODE2_t, ResizableMatrix& jacobian_ODE1, ResizableMatrix& jacobian_AE, const MarkerDataStructure& markerData, Real t, Index itemIndex) const { CHECKandTHROWstring("ERROR: illegal call to CObject::ComputeJacobianAE"); }
+	virtual void ComputeJacobianAE(ResizableMatrix& jacobian_ODE2, ResizableMatrix& jacobian_ODE2_t, ResizableMatrix& jacobian_ODE1, ResizableMatrix& jacobian_AE, const MarkerDataStructure& markerData, Real t) const { CHECKandTHROWstring("ERROR: illegal call to CObject::ComputeJacobianAE"); }
 
 	//! get output variable 'variableType' in (vector) value; for connectors, marker information must be provided as in ComputeODE2LHS (e.g. to compute distance)
-	virtual void GetOutputVariableConnector(OutputVariableType variableType, const MarkerDataStructure& markerData, Index itemIndex, Vector& value) const { CHECKandTHROWstring("ERROR: illegal call to CObjectConnector::GetOutputVariableConnector(...)"); }
+	virtual void GetOutputVariableConnector(OutputVariableType variableType, const MarkerDataStructure& markerData, Vector& value) const { CHECKandTHROWstring("ERROR: illegal call to CObjectConnector::GetOutputVariableConnector(...)"); }
 
 	////! compute derivative of right-hand-side (LHS) w.r.t q of second order ordinary differential equations (ODE) to 'ode2Lhs', which has dimension GetODE2Size() x GetODE2Size(); this is the tangent stiffness matrix; q are the system coordinates
 	//virtual void ComputeODE2LHSJacobian(Matrix& jac, const MarkerDataStructure& markerData) const { CHECKandTHROWstring("ERROR: illegal call to CObjectConnector::ComputeODE2LHSJacobian"); }
@@ -212,7 +210,7 @@ public:
 	//virtual void InitializeDiscontinuousIteration() {  } ==> use initial conditions of data coordinates?
 
 	//! function called after Newton method; returns a residual error (force); input: marker data for current configuration to achieve the correct behavior; flags are modified, e.g. to recompute jacobian; recommendedStepSize = [< 0 for no recommendation, 0 for min step size, > 0 for reduction of step size to given value]
-	virtual Real PostNewtonStep(const MarkerDataStructure& markerDataCurrent, Index itemIndex, PostNewtonFlags::Type& flags, Real& recommendedStepSize) { return 0; };
+	virtual Real PostNewtonStep(const MarkerDataStructure& markerDataCurrent, PostNewtonFlags::Type& flags, Real& recommendedStepSize) { return 0; };
 	//virtual Real PostNewtonStep(const MarkerDataStructure& markerDataStartOfStep, const MarkerDataStructure& markerDataCurrent) { return 0; };
 
 	//! function called after discontinuous iterations have been completed for one step (e.g. to finalize history variables and set initial values for next step)
@@ -258,56 +256,53 @@ public:
 	//! OutputVariableType::ConstraintEquation of every constraint: its algebraic equations at position level, as the
 	//! solver evaluates them - the drift of a position-level constraint, the velocity equations of a velocity-level one,
 	//! the Lagrange multipliers of an inactive one (#565)
-	void GetOutputVariableConstraintEquation(const MarkerDataStructure& markerData, Index objectNumber, Vector& value) const;
+	void GetOutputVariableConstraintEquation(const MarkerDataStructure& markerData, Vector& value) const;
 
 	//! the connector interface of a constraint (#2745): its algebraic equations into localAE, by the chain of its kind of
 	//! markers (ConstraintEquationsPositionMarkers, ...); false: the path of the marker data (ComputeAlgebraicEquations), the default
-	virtual bool ComputeAlgebraicEquationsConnector(const CSystemData& systemData, TemporaryComputationData& temp, Index objectNumber,
+	virtual bool ComputeAlgebraicEquationsConnector(const CSystemData& systemData, TemporaryComputationData& temp,
 		bool velocityLevel, Vector& localAE) const { return false; }
 
 	//! C_q by automatic differentiation of the equations on the connector interface (#2745); false: ComputeJacobianAE
-	virtual bool ComputeJacobianAEConnector(const CSystemData& systemData, TemporaryComputationData& temp, Index objectNumber,
+	virtual bool ComputeJacobianAEConnector(const CSystemData& systemData, TemporaryComputationData& temp,
 		ResizableMatrix& jacobianAE_ODE2) const { return false; }
 
 	//! C_q^T lambda on the connector interface, without forming C_q (#2745); false: the path of the marker data
-	virtual bool ComputeReactionForcesConnector(const CSystemData& systemData, TemporaryComputationData& temp, Index objectNumber,
+	virtual bool ComputeReactionForcesConnector(const CSystemData& systemData, TemporaryComputationData& temp,
 		const Vector& reactionForces, Vector& localODE2) const { return false; }
 
 	//! L1 of a constraint on position markers (#2745): its algebraic equations from the kinematics of its two markers -
 	//! the positions, or at velocityLevel the velocities - and its Lagrange multipliers (lambda_i = 0 for a free axis);
 	//! the system forms C_q from the same equations by automatic differentiation (ComputeConstraintEquationsPositionDiff)
-	virtual void ComputeConstraintEquationsPosition(const MarkerPosition<Real>* markers, const LinkedDataVector& lambda, Real t,
-		Index itemIndex, bool velocityLevel, ConstSizeVector<maxConstraintEquations>& equations) const
+	virtual void ComputeConstraintEquationsPosition(const MarkerPosition<Real>* markers, const LinkedDataVector& lambda, Real t, bool velocityLevel, ConstSizeVector<maxConstraintEquations>& equations) const
 	{
 		CHECKandTHROWstring("CObjectConstraint::ComputeConstraintEquationsPosition: not implemented for this constraint");
 	}
 
 	//! the same equations at position level with automatic differentiation by the marker positions (#2745)
 	virtual void ComputeConstraintEquationsPositionDiff(const MarkerPosition<DRealPositionMarkers>* markers, const LinkedDataVector& lambda,
-		Real t, Index itemIndex, ConstSizeVectorBase<DRealPositionMarkers, maxConstraintEquations>& equations) const
+		Real t, ConstSizeVectorBase<DRealPositionMarkers, maxConstraintEquations>& equations) const
 	{
 		CHECKandTHROWstring("CObjectConstraint::ComputeConstraintEquationsPositionDiff: not implemented for this constraint");
 	}
 
 	//! L1 of a constraint on coordinate markers (#2745): its algebraic equations from the values of its two markers (or their
 	//! time derivatives at velocityLevel); t and itemIndex for offsets given by user functions
-	virtual void ComputeConstraintEquationsCoordinate(const MarkerCoordinate<Real>* markers, const LinkedDataVector& lambda, Real t,
-		Index itemIndex, bool velocityLevel, ConstSizeVector<maxConstraintEquations>& equations) const
+	virtual void ComputeConstraintEquationsCoordinate(const MarkerCoordinate<Real>* markers, const LinkedDataVector& lambda, Real t, bool velocityLevel, ConstSizeVector<maxConstraintEquations>& equations) const
 	{
 		CHECKandTHROWstring("CObjectConstraint::ComputeConstraintEquationsCoordinate: not implemented for this constraint");
 	}
 
 	//! the same equations at position level with automatic differentiation by the marker values (#2745)
 	virtual void ComputeConstraintEquationsCoordinateDiff(const MarkerCoordinate<DRealCoordinateMarkers>* markers, const LinkedDataVector& lambda,
-		Real t, Index itemIndex, ConstSizeVectorBase<DRealCoordinateMarkers, maxConstraintEquations>& equations) const
+		Real t, ConstSizeVectorBase<DRealCoordinateMarkers, maxConstraintEquations>& equations) const
 	{
 		CHECKandTHROWstring("CObjectConstraint::ComputeConstraintEquationsCoordinateDiff: not implemented for this constraint");
 	}
 
 	//! L1 of a constraint on rigid markers (#2745): its algebraic equations from the frames (and at velocityLevel the
 	//! velocities) of its two markers and its Lagrange multipliers
-	virtual void ComputeConstraintEquationsRigid(const MarkerRigid<Real>* markers, const LinkedDataVector& lambda, Real t,
-		Index itemIndex, bool velocityLevel, ConstSizeVector<maxConstraintEquations>& equations) const
+	virtual void ComputeConstraintEquationsRigid(const MarkerRigid<Real>* markers, const LinkedDataVector& lambda, Real t, bool velocityLevel, ConstSizeVector<maxConstraintEquations>& equations) const
 	{
 		CHECKandTHROWstring("CObjectConstraint::ComputeConstraintEquationsRigid: not implemented for this constraint");
 	}
@@ -315,7 +310,7 @@ public:
 	//! the same equations at position level with automatic differentiation by the translations and rotations of the markers
 	//! (#2745)
 	virtual void ComputeConstraintEquationsRigidDiff(const MarkerRigid<DRealRigidMarkers>* markers, const LinkedDataVector& lambda,
-		Real t, Index itemIndex, ConstSizeVectorBase<DRealRigidMarkers, maxConstraintEquations>& equations) const
+		Real t, ConstSizeVectorBase<DRealRigidMarkers, maxConstraintEquations>& equations) const
 	{
 		CHECKandTHROWstring("CObjectConstraint::ComputeConstraintEquationsRigidDiff: not implemented for this constraint");
 	}
@@ -347,35 +342,26 @@ public:
 //the equations of the connector (L1), and their projection by the markers; a connector on the interface calls the chain of
 //its kind of markers from the functions above
 void ConnectorODE2LHSPositionMarkers(const CSystemData& cSystemData, TemporaryComputationData& temp, const CObjectConnector& connector,
-	Vector& localODE2Lhs, Index objectNumber);
+	Vector& localODE2Lhs);
 void ConnectorJacobianODE2PositionMarkers(const CSystemData& cSystemData, TemporaryComputationData& temp, const CObjectConnector& connector,
-	Real factorODE2, Real factorODE2_t, Index objectNumber, bool jacobianDerivativeNonZero);
-void ConstraintEquationsPositionMarkers(const CSystemData& cSystemData, TemporaryComputationData& temp, const CObjectConstraint& constraint,
-	Index objectNumber, bool velocityLevel, Vector& localAE);
-void ConstraintJacobianPositionMarkers(const CSystemData& cSystemData, TemporaryComputationData& temp, const CObjectConstraint& constraint,
-	Index objectNumber, ResizableMatrix& jacobian);
-void ConstraintReactionForcesPositionMarkers(const CSystemData& cSystemData, TemporaryComputationData& temp, const CObjectConstraint& constraint,
-	Index objectNumber, const Vector& reactionForces, Vector& localODE2);
+	Real factorODE2, Real factorODE2_t, bool jacobianDerivativeNonZero);
+void ConstraintEquationsPositionMarkers(const CSystemData& cSystemData, TemporaryComputationData& temp, const CObjectConstraint& constraint, bool velocityLevel, Vector& localAE);
+void ConstraintJacobianPositionMarkers(const CSystemData& cSystemData, TemporaryComputationData& temp, const CObjectConstraint& constraint, ResizableMatrix& jacobian);
+void ConstraintReactionForcesPositionMarkers(const CSystemData& cSystemData, TemporaryComputationData& temp, const CObjectConstraint& constraint, const Vector& reactionForces, Vector& localODE2);
 void ConnectorODE2LHSRigidMarkers(const CSystemData& cSystemData, TemporaryComputationData& temp, const CObjectConnector& connector,
-	Vector& localODE2Lhs, Index objectNumber);
+	Vector& localODE2Lhs);
 void ConnectorJacobianODE2RigidMarkers(const CSystemData& cSystemData, TemporaryComputationData& temp, const CObjectConnector& connector,
-	Real factorODE2, Real factorODE2_t, Index objectNumber, bool jacobianDerivativeNonZero);
-void ConstraintEquationsRigidMarkers(const CSystemData& cSystemData, TemporaryComputationData& temp, const CObjectConstraint& constraint,
-	Index objectNumber, bool velocityLevel, Vector& localAE);
-void ConstraintJacobianRigidMarkers(const CSystemData& cSystemData, TemporaryComputationData& temp, const CObjectConstraint& constraint,
-	Index objectNumber, ResizableMatrix& jacobian);
-void ConstraintReactionForcesRigidMarkers(const CSystemData& cSystemData, TemporaryComputationData& temp, const CObjectConstraint& constraint,
-	Index objectNumber, const Vector& reactionForces, Vector& localODE2);
+	Real factorODE2, Real factorODE2_t, bool jacobianDerivativeNonZero);
+void ConstraintEquationsRigidMarkers(const CSystemData& cSystemData, TemporaryComputationData& temp, const CObjectConstraint& constraint, bool velocityLevel, Vector& localAE);
+void ConstraintJacobianRigidMarkers(const CSystemData& cSystemData, TemporaryComputationData& temp, const CObjectConstraint& constraint, ResizableMatrix& jacobian);
+void ConstraintReactionForcesRigidMarkers(const CSystemData& cSystemData, TemporaryComputationData& temp, const CObjectConstraint& constraint, const Vector& reactionForces, Vector& localODE2);
 void ConnectorODE2LHSCoordinateMarkers(const CSystemData& cSystemData, TemporaryComputationData& temp, const CObjectConnector& connector,
-	Vector& localODE2Lhs, Index objectNumber);
+	Vector& localODE2Lhs);
 void ConnectorJacobianODE2CoordinateMarkers(const CSystemData& cSystemData, TemporaryComputationData& temp, const CObjectConnector& connector,
-	Real factorODE2, Real factorODE2_t, Index objectNumber, bool jacobianDerivativeNonZero);
-void ConstraintEquationsCoordinateMarkers(const CSystemData& cSystemData, TemporaryComputationData& temp, const CObjectConstraint& constraint,
-	Index objectNumber, bool velocityLevel, Vector& localAE);
-void ConstraintJacobianCoordinateMarkers(const CSystemData& cSystemData, TemporaryComputationData& temp, const CObjectConstraint& constraint,
-	Index objectNumber, ResizableMatrix& jacobian);
-void ConstraintReactionForcesCoordinateMarkers(const CSystemData& cSystemData, TemporaryComputationData& temp, const CObjectConstraint& constraint,
-	Index objectNumber, const Vector& reactionForces, Vector& localODE2);
+	Real factorODE2, Real factorODE2_t, bool jacobianDerivativeNonZero);
+void ConstraintEquationsCoordinateMarkers(const CSystemData& cSystemData, TemporaryComputationData& temp, const CObjectConstraint& constraint, bool velocityLevel, Vector& localAE);
+void ConstraintJacobianCoordinateMarkers(const CSystemData& cSystemData, TemporaryComputationData& temp, const CObjectConstraint& constraint, ResizableMatrix& jacobian);
+void ConstraintReactionForcesCoordinateMarkers(const CSystemData& cSystemData, TemporaryComputationData& temp, const CObjectConstraint& constraint, const Vector& reactionForces, Vector& localODE2);
 
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 //the frame outputs of joints and connectors on rigid markers (#2870)
@@ -402,19 +388,19 @@ inline void ConnectorOutputVariableFrameLocal(const Matrix3D& A0, const Vector3D
 //! an output variable of a connector, as Python and the sensors ask for it: HomogeneousTransformation is composed of Position
 //! and RotationMatrix if the connector has these (#2780), else the connector gives it as the frame J0 (#2870)
 inline void GetConnectorOutputVariable(const CObjectConnector& connector, OutputVariableType variableType,
-	const MarkerDataStructure& markerData, Index objectNumber, Vector& value)
+	const MarkerDataStructure& markerData, Vector& value)
 {
 	if (variableType == OutputVariableType::ConstraintEquation && ((Index)connector.GetType() & (Index)CObjectType::Constraint))
 	{
-		((const CObjectConstraint&)connector).GetOutputVariableConstraintEquation(markerData, objectNumber, value); //(#565)
+		((const CObjectConstraint&)connector).GetOutputVariableConstraintEquation(markerData, value); //(#565)
 	}
 	else if (variableType == OutputVariableType::HomogeneousTransformation &&
 		((Index64)connector.GetOutputVariableTypes() & (Index64)OutputVariableType::RotationMatrix))
 	{
-		OutputVariableHomogeneousTransformation([&connector, &markerData, objectNumber](OutputVariableType type, Vector& v)
-			{ connector.GetOutputVariableConnector(type, markerData, objectNumber, v); }, value);
+		OutputVariableHomogeneousTransformation([&connector, &markerData](OutputVariableType type, Vector& v)
+			{ connector.GetOutputVariableConnector(type, markerData, v); }, value);
 	}
-	else { connector.GetOutputVariableConnector(variableType, markerData, objectNumber, value); }
+	else { connector.GetOutputVariableConnector(variableType, markerData, value); }
 }
 
 #endif

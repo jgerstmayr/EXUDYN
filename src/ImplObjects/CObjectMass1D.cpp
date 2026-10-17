@@ -22,7 +22,7 @@
 
 
 //! Computational function: compute mass matrix
-void CObjectMass1D::ComputeMassMatrix(EXUmath::MatrixContainer& massMatrixC, const ArrayIndex& ltg, Index objectNumber, bool computeInverse) const
+void CObjectMass1D::ComputeMassMatrix(EXUmath::MatrixContainer& massMatrixC, const ArrayIndex& ltg, bool computeInverse) const
 {
 	Matrix& massMatrix = massMatrixC.GetInternalDenseMatrix();
 
@@ -38,7 +38,7 @@ void CObjectMass1D::ComputeMassMatrix(EXUmath::MatrixContainer& massMatrixC, con
 }
 
 //! Computational function: compute left-hand-side (LHS) of second order ordinary differential equations (ODE) to "ode2Lhs"
-void CObjectMass1D::ComputeODE2LHS(Vector& ode2Lhs, Index objectNumber) const
+void CObjectMass1D::ComputeODE2LHS(Vector& ode2Lhs) const
 {
 	ode2Lhs.SetNumberOfItems(1);
 	ode2Lhs.SetAll(0.);
@@ -76,7 +76,7 @@ void CObjectMass1D::GetMassWeightedPositionJacobian(Matrix& value) const
 
 
 //! provide according output variable in "value"
-void CObjectMass1D::GetOutputVariableBody(OutputVariableType variableType, const Vector3D& localPosition, ConfigurationType configuration, Vector& value, Index objectNumber) const
+void CObjectMass1D::GetOutputVariableBody(OutputVariableType variableType, const Vector3D& localPosition, ConfigurationType configuration, Vector& value) const
 {
 	switch (variableType)
 	{

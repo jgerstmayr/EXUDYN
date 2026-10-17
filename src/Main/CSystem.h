@@ -231,10 +231,10 @@ public:
 	//void ComputeMassMatrixOLD(TemporaryComputationData& temp, Matrix& massMatrix);
 
 
-	bool ComputeObjectODE2LHS(TemporaryComputationData& temp, CObject* object, Vector& localODE2Lhs, Index objectNumber);
+	bool ComputeObjectODE2LHS(TemporaryComputationData& temp, CObject* object, Vector& localODE2Lhs);
 		
 	//! compute right-hand-side (RHS) of first order ordinary differential equations (ODE) for every object (used in numerical differentiation and in LHS computation); return true, if object has localODE1Rhs, false otherwise
-	bool ComputeObjectODE1RHS(TemporaryComputationData& temp, CObject* object, Vector& localODE1Lhs, Index objectNumber);
+	bool ComputeObjectODE1RHS(TemporaryComputationData& temp, CObject* object, Vector& localODE1Lhs);
 
 	//! compute system right-hand-side (RHS) of second order ordinary differential equations (ODE) to 'systemODE2Rhs' for ODE2 part
 	void ComputeSystemODE2RHS(TemporaryComputationDataArray& tempArray, Vector& systemODE2Rhs);

@@ -52,8 +52,7 @@ void CObjectJointGenericLockedRotAxis(const ArrayIndex& constrainedAxes, Index& 
 //! all three are constrained, else in the frame of marker 0) minus the offset of the user function, the constrained
 //! rotations as rigid, revolute or universal joint, lambda_i = 0 on the free axes; the velocity level (index 2) for Real only
 template<class TReal>
-void CObjectJointGeneric::ComputeConstraintEquationsTemplate(const MarkerRigid<TReal>* markers, const LinkedDataVector& lambda, Real t,
-	Index itemIndex, bool velocityLevel, ConstSizeVectorBase<TReal, maxConstraintEquations>& equations) const
+void CObjectJointGeneric::ComputeConstraintEquationsTemplate(const MarkerRigid<TReal>* markers, const LinkedDataVector& lambda, Real t, bool velocityLevel, ConstSizeVectorBase<TReal, maxConstraintEquations>& equations) const
 {
 	equations.SetNumberOfItems(nConstraints);
 	const ConstSizeMatrixBase<TReal, 9>& A0 = markers[0].frame.GetRotation();
@@ -68,7 +67,7 @@ void CObjectJointGeneric::ComputeConstraintEquationsTemplate(const MarkerRigid<T
 		Vector6D userOffset(0.);
 		if (parameters.offsetUserFunction)
 		{
-			EvaluateUserFunctionOffset(userOffset, cSystemData->GetMainSystemBacklink(), t, itemIndex);
+			EvaluateUserFunctionOffset(userOffset, cSystemData->GetMainSystemBacklink(), t);
 			if (userOffset[3] != 0. || userOffset[4] != 0. || userOffset[5] != 0.)
 			{
 				Matrix3D A0offset = RigidBodyMath::RotXYZ2RotationMatrix(Vector3D({ userOffset[3], userOffset[4], userOffset[5] }));
@@ -204,16 +203,15 @@ void CObjectJointGeneric::ComputeConstraintEquationsTemplate(const MarkerRigid<T
 	}
 }
 
-void CObjectJointGeneric::ComputeConstraintEquationsRigid(const MarkerRigid<Real>* markers, const LinkedDataVector& lambda, Real t,
-	Index itemIndex, bool velocityLevel, ConstSizeVector<maxConstraintEquations>& equations) const
+void CObjectJointGeneric::ComputeConstraintEquationsRigid(const MarkerRigid<Real>* markers, const LinkedDataVector& lambda, Real t, bool velocityLevel, ConstSizeVector<maxConstraintEquations>& equations) const
 {
-	ComputeConstraintEquationsTemplate(markers, lambda, t, itemIndex, velocityLevel, equations);
+	ComputeConstraintEquationsTemplate(markers, lambda, t, velocityLevel, equations);
 }
 
 void CObjectJointGeneric::ComputeConstraintEquationsRigidDiff(const MarkerRigid<DRealRigidMarkers>* markers, const LinkedDataVector& lambda,
-	Real t, Index itemIndex, ConstSizeVectorBase<DRealRigidMarkers, maxConstraintEquations>& equations) const
+	Real t, ConstSizeVectorBase<DRealRigidMarkers, maxConstraintEquations>& equations) const
 {
-	ComputeConstraintEquationsTemplate(markers, lambda, t, itemIndex, false, equations);
+	ComputeConstraintEquationsTemplate(markers, lambda, t, false, equations);
 }
 
 void CObjectJointGeneric::ComputeJacobianAE_AE(ResizableMatrix& jacobian_AE) const
@@ -238,7 +236,7 @@ JacobianType::Type CObjectJointGeneric::GetAvailableJacobians() const
 }
 
 //! provide according output variable in "value"
-void CObjectJointGeneric::GetOutputVariableConnector(OutputVariableType variableType, const MarkerDataStructure& markerData, Index itemIndex, Vector& value) const
+void CObjectJointGeneric::GetOutputVariableConnector(OutputVariableType variableType, const MarkerDataStructure& markerData, Vector& value) const
 {
 	//const LinkedDataVector& lambda = markerData.GetLagrangeMultipliers();
 

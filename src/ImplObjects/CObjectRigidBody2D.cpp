@@ -59,7 +59,7 @@ static ConstSizeVector<3> RigidBody2DCoordinates(const CNode* node)
 
 
 //! Computational function: compute mass matrix
-void CObjectRigidBody2D::ComputeMassMatrix(EXUmath::MatrixContainer& massMatrixC, const ArrayIndex& ltg, Index objectNumber, bool computeInverse) const
+void CObjectRigidBody2D::ComputeMassMatrix(EXUmath::MatrixContainer& massMatrixC, const ArrayIndex& ltg, bool computeInverse) const
 {
 	Real m = parameters.mass;
 	Real J = parameters.inertia;
@@ -118,7 +118,7 @@ void CObjectRigidBody2D::ComputeMassMatrix(EXUmath::MatrixContainer& massMatrixC
 }
 
 //! Computational function: compute left-hand-side (LHS) of second order ordinary differential equations (ODE) to "ode2Lhs"
-void CObjectRigidBody2D::ComputeODE2LHS(Vector& ode2Lhs, Index objectNumber) const
+void CObjectRigidBody2D::ComputeODE2LHS(Vector& ode2Lhs) const
 {
 	ode2Lhs.SetNumberOfItems(nODE2coordinates);
 	ode2Lhs.SetAll(0.);
@@ -244,7 +244,7 @@ void CObjectRigidBody2D::GetMassWeightedPositionJacobian(Matrix& value) const
 
 
 //! provide according output variable in "value"
-void CObjectRigidBody2D::GetOutputVariableBody(OutputVariableType variableType, const Vector3D& localPosition, ConfigurationType configuration, Vector& value, Index objectNumber) const
+void CObjectRigidBody2D::GetOutputVariableBody(OutputVariableType variableType, const Vector3D& localPosition, ConfigurationType configuration, Vector& value) const
 {
 	switch (variableType)
 	{

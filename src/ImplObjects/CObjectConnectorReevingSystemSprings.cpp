@@ -40,7 +40,7 @@ Real CObjectConnectorReevingSystemSprings::ComputeForce(Real L, Real L0, Real L_
 }
 
 //! compute reeving geometry based on localPositionsList, length, time derivative of length
-void CObjectConnectorReevingSystemSprings::ComputeReevingGeometry(const MarkerDataStructure& markerData, Index itemIndex,
+void CObjectConnectorReevingSystemSprings::ComputeReevingGeometry(const MarkerDataStructure& markerData,
 	Vector3DList& positionsList, Real& actualLength, Real& actualLength_t, bool storePositions) const
 {
 	//compute local (at according marker) position of tangent points to sheaves
@@ -155,7 +155,7 @@ void CObjectConnectorReevingSystemSprings::ComputeReevingGeometry(const MarkerDa
 
 
 //! Computational function: compute left-hand-side (LHS) of second order ordinary differential equations (ODE) to "ode2Lhs"
-void CObjectConnectorReevingSystemSprings::ComputeODE2LHS(Vector& ode2Lhs, const MarkerDataStructure& markerData, Index objectNumber) const
+void CObjectConnectorReevingSystemSprings::ComputeODE2LHS(Vector& ode2Lhs, const MarkerDataStructure& markerData) const
 {
 	CHECKandTHROW(markerData.GetMarkerData(1).velocityAvailable && markerData.GetMarkerData(0).velocityAvailable,
 		"CObjectConnectorReevingSystemSprings::ComputeODE2LHS: marker do not provide velocityLevel information");
@@ -180,7 +180,7 @@ void CObjectConnectorReevingSystemSprings::ComputeODE2LHS(Vector& ode2Lhs, const
 	{
 
 		Real actualLength, actualLength_t;
-		ComputeReevingGeometry(markerData, objectNumber, tempPositionsList, actualLength, actualLength_t, true);
+		ComputeReevingGeometry(markerData, tempPositionsList, actualLength, actualLength_t, true);
 
 		CHECKandTHROW(tempPositionsList.NumberOfItems() == 2 * (nRigidBodyMarkers - 1), "CObjectConnectorReevingSystemSprings: Internal error; tempPositionsList inconsistent with number of rigid body markers");
 
@@ -282,13 +282,13 @@ void CObjectConnectorReevingSystemSprings::ComputeODE2LHS(Vector& ode2Lhs, const
 
 
 //! provide according output variable in "value"
-void CObjectConnectorReevingSystemSprings::GetOutputVariableConnector(OutputVariableType variableType, const MarkerDataStructure& markerData, Index itemIndex, Vector& value) const
+void CObjectConnectorReevingSystemSprings::GetOutputVariableConnector(OutputVariableType variableType, const MarkerDataStructure& markerData, Vector& value) const
 {
 	Index nRigidBodyMarkers = parameters.markerNumbers.NumberOfItems() - 2 * (Index)parameters.hasCoordinateMarkers;
 
 	Real actualLength, actualLength_t;
 	Vector3DList tempList;
-	ComputeReevingGeometry(markerData, itemIndex, tempList, actualLength, actualLength_t, false);
+	ComputeReevingGeometry(markerData, tempList, actualLength, actualLength_t, false);
 
 	Real Lref = parameters.referenceLength;
 	Real Lref_t = 0.;

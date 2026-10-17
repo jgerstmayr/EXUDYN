@@ -59,7 +59,7 @@ void CObjectGenericODE2::ComputeObjectCoordinates_tt(Vector& coordinates_tt, Con
 }
 
 //! Computational function: compute mass matrix
-void CObjectGenericODE2::ComputeMassMatrix(EXUmath::MatrixContainer& massMatrixC, const ArrayIndex& ltg, Index objectNumber, bool computeInverse) const
+void CObjectGenericODE2::ComputeMassMatrix(EXUmath::MatrixContainer& massMatrixC, const ArrayIndex& ltg, bool computeInverse) const
 {
 	CHECKandTHROW(!computeInverse, "CObjectGenericODE2::ComputeMassMatrix: computeInverse=True not implemented, change solver settings: computeMassMatrixInversePerBody=False", ExudynNotImplementedError);
 
@@ -67,7 +67,7 @@ void CObjectGenericODE2::ComputeMassMatrix(EXUmath::MatrixContainer& massMatrixC
 	{
 		ComputeObjectCoordinates(tempCoordinates, tempCoordinates_t);
 		//massMatrixC is set with user function, which choses the type of matrix, sparse or dense
-		EvaluateUserFunctionMassMatrix(massMatrixC, GetCSystemData()->GetConfigurationTime(ConfigurationType::Current), objectNumber,
+		EvaluateUserFunctionMassMatrix(massMatrixC, GetCSystemData()->GetConfigurationTime(ConfigurationType::Current),
 			tempCoordinates, tempCoordinates_t, ltg);
 	}
 	else //standard constant matrix
@@ -85,7 +85,7 @@ void CObjectGenericODE2::ComputeMassMatrix(EXUmath::MatrixContainer& massMatrixC
 
 //! Computational function: compute right-hand-side (LHS) of second order ordinary differential equations (ODE) to "ode2Lhs"
 //in fact, this is the LHS function!
-void CObjectGenericODE2::ComputeODE2LHS(Vector& ode2Lhs, Index objectNumber) const
+void CObjectGenericODE2::ComputeODE2LHS(Vector& ode2Lhs) const
 {
 	Index nODE2 = GetODE2Size();
 	ode2Lhs.SetNumberOfItems(nODE2);
@@ -109,7 +109,7 @@ void CObjectGenericODE2::ComputeODE2LHS(Vector& ode2Lhs, Index objectNumber) con
 
 	if (parameters.forceUserFunction)
 	{
-		EvaluateUserFunctionForce(tempUserFunctionForce, GetCSystemData()->GetConfigurationTime(ConfigurationType::Current), objectNumber,
+		EvaluateUserFunctionForce(tempUserFunctionForce, GetCSystemData()->GetConfigurationTime(ConfigurationType::Current),
 			tempCoordinates, tempCoordinates_t);
 		ode2Lhs -= tempUserFunctionForce;
 	}
@@ -119,7 +119,7 @@ void CObjectGenericODE2::ComputeODE2LHS(Vector& ode2Lhs, Index objectNumber) con
 //! the Jacobian: the jacobianUserFunction, or the stiffness matrix, or the damping matrix, as first matrix, which
 //! sets the format; the stiffness and damping matrices added to it
 void CObjectGenericODE2::ComputeJacobianODE2_ODE2(EXUmath::MatrixContainer& jacobianODE2, JacobianTemp& temp,
-	Real factorODE2, Real factorODE2_t, Index objectNumber, const ArrayIndex& ltg) const
+	Real factorODE2, Real factorODE2_t, const ArrayIndex& ltg) const
 {
 	bool hasStiffness = parameters.stiffnessMatrix.NumberOfRows() != 0;
 	bool hasDamping = parameters.dampingMatrix.NumberOfRows() != 0;
@@ -129,7 +129,7 @@ void CObjectGenericODE2::ComputeJacobianODE2_ODE2(EXUmath::MatrixContainer& jaco
 	if (parameters.jacobianUserFunction)
 	{
 		ComputeObjectCoordinates(tempCoordinates, tempCoordinates_t);
-		EvaluateUserFunctionJacobian(jacobianODE2, GetCSystemData()->GetConfigurationTime(ConfigurationType::Current), objectNumber,
+		EvaluateUserFunctionJacobian(jacobianODE2, GetCSystemData()->GetConfigurationTime(ConfigurationType::Current),
 			tempCoordinates, tempCoordinates_t, factorODE2, factorODE2_t, ltg);
 	}
 	else if (hasStiffness)
@@ -188,7 +188,7 @@ JacobianType::Type CObjectGenericODE2::GetAvailableJacobians() const
 
 //! provide according output variable in "value"; the coordinates in local vectors, as the renderer thread may ask
 //! during a step, which uses the members (#2995)
-void CObjectGenericODE2::GetOutputVariableBody(OutputVariableType variableType, const Vector3D& localPosition, ConfigurationType configuration, Vector& value, Index objectNumber) const
+void CObjectGenericODE2::GetOutputVariableBody(OutputVariableType variableType, const Vector3D& localPosition, ConfigurationType configuration, Vector& value) const
 {
 	switch (variableType)
 	{
@@ -210,12 +210,12 @@ void CObjectGenericODE2::GetOutputVariableBody(OutputVariableType variableType, 
 	case OutputVariableType::Coordinates_tt: ComputeObjectCoordinates_tt(value, configuration); break;
 	case OutputVariableType::Force:
 	{
-		ComputeODE2LHS(value, objectNumber);
+		ComputeODE2LHS(value);
 		break;
 	}
 	case OutputVariableType::KineticEnergy: {
 		CheckEnergyLocalPosition(localPosition, "ObjectGenericODE2");
-		value.SetVector({ ComputeKineticEnergyFromMassMatrix(configuration, objectNumber, "ObjectGenericODE2") }); break; }
+		value.SetVector({ ComputeKineticEnergyFromMassMatrix(configuration, "ObjectGenericODE2") }); break; }
 	case OutputVariableType::PotentialEnergy: {
 		//1/2 q^T K q of the stiffness matrix, and -f^T q of the constant force vector, which is conservative in any coordinates
 		CheckEnergyLocalPosition(localPosition, "ObjectGenericODE2");

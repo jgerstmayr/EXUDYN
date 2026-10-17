@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-10-13  22:49:59 (last modified)
+* @date         2026-10-17  13:28:01 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -97,10 +97,10 @@ public: // AUTO:
     virtual const CObjectANCFThinPlateParameters& GetParameters() const { return parameters; }
 
     //! AUTO:  Computational function: compute mass matrix
-    virtual void ComputeMassMatrix(EXUmath::MatrixContainer& massMatrixC, const ArrayIndex& ltg, Index objectNumber, bool computeInverse=false) const override;
+    virtual void ComputeMassMatrix(EXUmath::MatrixContainer& massMatrixC, const ArrayIndex& ltg, bool computeInverse=false) const override;
 
     //! AUTO:  Computational function: compute left-hand-side (LHS) of second order ordinary differential equations (ODE) to 'ode2Lhs'
-    virtual void ComputeODE2LHS(Vector& ode2Lhs, Index objectNumber) const override;
+    virtual void ComputeODE2LHS(Vector& ode2Lhs) const override;
 
     //! AUTO:  Computational function: compute left-hand-side (LHS) of second order ordinary differential equations (ODE) to 'ode2Lhs'
     template<class TReal> void ComputeODE2LHStemplate(VectorBase<TReal>& ode2Lhs, const ConstSizeVectorBase<TReal, nODE2coordinates>& qANCFtotal, const ConstSizeVectorBase<TReal, nODE2coordinates>& qANCF_t) const;
@@ -136,7 +136,7 @@ public: // AUTO:
     }
 
     //! AUTO:  provide according output variable in 'value'
-    virtual void GetOutputVariableBody(OutputVariableType variableType, const Vector3D& localPosition, ConfigurationType configuration, Vector& value, Index objectNumber) const override;
+    virtual void GetOutputVariableBody(OutputVariableType variableType, const Vector3D& localPosition, ConfigurationType configuration, Vector& value) const override;
 
     //! AUTO:  the integration rules of the membrane and the bending virtual work in each direction, shared with the elastic energy (#2202, #2857)
     void GetIntegrationRules(ConstSizeVector<5>& membranePoints, ConstSizeVector<5>& membraneWeights, ConstSizeVector<5>& bendingPoints, ConstSizeVector<5>& bendingWeights) const;
@@ -266,7 +266,7 @@ public: // AUTO:
     Real ComputeThicknessAtPoint(Real xi, Real eta) const;
 
     //! AUTO:  Computational function: compute jacobian (dense or sparse mode, see parent CObject function)
-    virtual void ComputeJacobianODE2_ODE2(EXUmath::MatrixContainer& jacobianODE2, JacobianTemp& temp, Real factorODE2, Real factorODE2_t, Index objectNumber, const ArrayIndex& ltg) const override;
+    virtual void ComputeJacobianODE2_ODE2(EXUmath::MatrixContainer& jacobianODE2, JacobianTemp& temp, Real factorODE2, Real factorODE2_t, const ArrayIndex& ltg) const override;
 
     virtual OutputVariableType GetOutputVariableTypes() const override
     {

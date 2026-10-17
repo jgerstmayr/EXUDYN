@@ -1260,11 +1260,11 @@ py::object MainSystem::PyComputeItem(const py::object& itemIndex, const py::obje
 			return EPyUtils::ToPython(matrix);
 		case ComputeItemType::MassWeightedPositionJacobian: body->GetMassWeightedPositionJacobian(matrix); return EPyUtils::ToPython(matrix);
 		case ComputeItemType::ODE2LHS:
-			GetCSystem().ComputeObjectODE2LHS(temp, object, local, number);
+			GetCSystem().ComputeObjectODE2LHS(temp, object, local);
 			return EPyUtils::ToPython(local);
 		case ComputeItemType::MassMatrix:
 			temp.massMatrix.SetUseDenseMatrix(true);
-			body->ComputeMassMatrix(temp.massMatrix, cSystemData.GetLocalToGlobalODE2()[number], number);
+			body->ComputeMassMatrix(temp.massMatrix, cSystemData.GetLocalToGlobalODE2()[number]);
 			return EPyUtils::ToPython(temp.massMatrix.GetInternalDenseMatrix());
 		case ComputeItemType::AlgebraicEquations:
 		case ComputeItemType::ConstraintDrift:
@@ -1520,11 +1520,11 @@ py::object MainSystem::PyGetObjectOutputVariable(const py::object& itemIndex, Ou
 			CObjectConnector* connector = (CObjectConnector*)(mainSystemData.GetMainObjects().GetItem(itemNumber)->GetCObject());
 			GetCSystem().GetSystemData().ComputeMarkerDataStructure(connector, computeJacobian, markerDataStructure);
 
-			return mainSystemData.GetMainObjects().GetItem(itemNumber)->GetOutputVariableConnector(variableType, markerDataStructure, itemNumber);
+			return mainSystemData.GetMainObjects().GetItem(itemNumber)->GetOutputVariableConnector(variableType, markerDataStructure);
 
 		} else
 		{
-			return mainSystemData.GetMainObjects().GetItem(itemNumber)->GetOutputVariable(variableType, configuration, itemNumber);
+			return mainSystemData.GetMainObjects().GetItem(itemNumber)->GetOutputVariable(variableType, configuration);
 		}
 	}
 	else
@@ -1552,7 +1552,7 @@ py::object MainSystem::PyGetObjectOutputVariableBody(const py::object& itemIndex
 			{
 				const MainObject* mo = mainSystemData.GetMainObjects().GetItem(itemNumber);
 
-				return mo->GetOutputVariableBody(variableType, localPosition, configuration, itemNumber);
+				return mo->GetOutputVariableBody(variableType, localPosition, configuration);
 			}
 			else
 			{

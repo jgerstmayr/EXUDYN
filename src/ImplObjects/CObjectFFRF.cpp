@@ -163,7 +163,7 @@ void CObjectFFRF::InitializeObject()
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 //! Computational function: compute mass matrix
-void CObjectFFRF::ComputeMassMatrix(EXUmath::MatrixContainer& massMatrixC, const ArrayIndex& ltg, Index objectNumber, bool computeInverse) const
+void CObjectFFRF::ComputeMassMatrix(EXUmath::MatrixContainer& massMatrixC, const ArrayIndex& ltg, bool computeInverse) const
 {
 	CHECKandTHROW(!computeInverse, "CObjectFFRF::ComputeMassMatrix: computeInverse=True not implemented, change solver settings: computeMassMatrixInversePerBody=False", ExudynNotImplementedError);
 
@@ -181,7 +181,7 @@ void CObjectFFRF::ComputeMassMatrix(EXUmath::MatrixContainer& massMatrixC, const
 
 		Real t = GetCSystemData()->GetCData().GetCurrent().GetTime();
 
-		EvaluateUserFunctionMassMatrix(massMatrix, cSystemData->GetMainSystemBacklink(), t, objectNumber, coordinates, coordinates_t);
+		EvaluateUserFunctionMassMatrix(massMatrix, cSystemData->GetMainSystemBacklink(), t, coordinates, coordinates_t);
 	}
 	else //initialize with zero
 	{
@@ -286,7 +286,7 @@ void CObjectFFRF::ComputeMassMatrix(EXUmath::MatrixContainer& massMatrixC, const
 
 //! Computational function: compute right-hand-side (LHS) of second order ordinary differential equations (ODE) to "ode2Lhs"
 //in fact, this is the LHS function!
-void CObjectFFRF::ComputeODE2LHS(Vector& ode2Lhs, Index objectNumber) const
+void CObjectFFRF::ComputeODE2LHS(Vector& ode2Lhs) const
 {
 	Index nODE2 = GetODE2Size(); //total number of coordinates
 	Index nODE2FF = GetNumberOfMeshNodes() * ffrfNodeDim;
@@ -417,7 +417,7 @@ void CObjectFFRF::ComputeODE2LHS(Vector& ode2Lhs, Index objectNumber) const
 	if (parameters.forceUserFunction)
 	{
 		Real t = GetCSystemData()->GetCData().GetCurrent().GetTime();
-		EvaluateUserFunctionForce(tempUserFunctionForce, cSystemData->GetMainSystemBacklink(), t, objectNumber, tempCoordinates, tempCoordinates_t);
+		EvaluateUserFunctionForce(tempUserFunctionForce, cSystemData->GetMainSystemBacklink(), t, tempCoordinates, tempCoordinates_t);
 		ode2Lhs -= tempUserFunctionForce;
 	}
 
@@ -537,7 +537,7 @@ void CObjectFFRF::GetMassWeightedPositionJacobian(Matrix& value) const
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 //! provide according output variable in "value", localPosition ONLY REFERS TO THE REFERENCE FRAME!
-void CObjectFFRF::GetOutputVariableBody(OutputVariableType variableType, const Vector3D& localPosition, ConfigurationType configuration, Vector& value, Index objectNumber) const
+void CObjectFFRF::GetOutputVariableBody(OutputVariableType variableType, const Vector3D& localPosition, ConfigurationType configuration, Vector& value) const
 {
 	Index nODE2 = GetODE2Size();
 	Vector coordinates(nODE2);
@@ -555,10 +555,10 @@ void CObjectFFRF::GetOutputVariableBody(OutputVariableType variableType, const V
 		value.CopyFrom(coordinates_tt);
 		break;
 	}
-	case OutputVariableType::Force:			ComputeODE2LHS(value, objectNumber);	break; //no index available
+	case OutputVariableType::Force:			ComputeODE2LHS(value);	break; //no index available
 	case OutputVariableType::KineticEnergy: {
 		CheckEnergyLocalPosition(localPosition, "ObjectFFRF");
-		value.SetVector({ ComputeKineticEnergyFromMassMatrix(configuration, objectNumber, "ObjectFFRF") }); break; }
+		value.SetVector({ ComputeKineticEnergyFromMassMatrix(configuration, "ObjectFFRF") }); break; }
 	case OutputVariableType::PotentialEnergy: {
 		//1/2 q_f^T K_ff q_f of the flexible coordinates, and -f^T q of the constant force vector
 		CheckEnergyLocalPosition(localPosition, "ObjectFFRF");

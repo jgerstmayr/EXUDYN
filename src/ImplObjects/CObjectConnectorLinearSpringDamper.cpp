@@ -22,7 +22,7 @@
 
 //! the physics of the connector, for Real and AutoDiff (#2745); the user function is Real only
 template<class TReal>
-void CObjectConnectorLinearSpringDamper::ComputeSpringForce(const MarkerRigid<TReal>* markers, Real t, Index itemIndex,
+void CObjectConnectorLinearSpringDamper::ComputeSpringForce(const MarkerRigid<TReal>* markers, Real t,
 	ConstSizeMatrixBase<TReal, 9>& A0, TReal& displacement, TReal& velocity, TReal& force) const
 {
 	//spring is measured relative to marker0:
@@ -45,7 +45,7 @@ void CObjectConnectorLinearSpringDamper::ComputeSpringForce(const MarkerRigid<TR
 	{
 		if constexpr (std::is_same<TReal, Real>::value)
 		{
-			EvaluateUserFunctionForce(force, cSystemData->GetMainSystemBacklink(), t, itemIndex, displacement, velocity);
+			EvaluateUserFunctionForce(force, cSystemData->GetMainSystemBacklink(), t, displacement, velocity);
 		}
 		else
 		{
@@ -56,7 +56,7 @@ void CObjectConnectorLinearSpringDamper::ComputeSpringForce(const MarkerRigid<TR
 
 //! the forces of the connector interface on rigid markers (#2745): along the axis of marker 0, no torques
 template<class TReal>
-void CObjectConnectorLinearSpringDamper::ComputeConnectorForceRigidTemplate(const MarkerRigid<TReal>* markers, Real t, Index itemIndex,
+void CObjectConnectorLinearSpringDamper::ComputeConnectorForceRigidTemplate(const MarkerRigid<TReal>* markers, Real t,
 	SlimVectorBase<TReal, 3>* forces, SlimVectorBase<TReal, 3>* torques) const
 {
 	for (Index k = 0; k < 2; k++) { forces[k].SetAll(0.); torques[k].SetAll(0.); }
@@ -64,7 +64,7 @@ void CObjectConnectorLinearSpringDamper::ComputeConnectorForceRigidTemplate(cons
 
 	TReal displacement, velocity, force;
 	ConstSizeMatrixBase<TReal, 9> A0;
-	ComputeSpringForce(markers, t, itemIndex, A0, displacement, velocity, force);
+	ComputeSpringForce(markers, t, A0, displacement, velocity, force);
 	SlimVectorBase<TReal, 3> axisForce;
 	for (Index i = 0; i < 3; i++) { axisForce[i] = parameters.axisMarker0[i] * force; }
 	forces[1] = A0 * axisForce;
@@ -81,21 +81,21 @@ JacobianType::Type CObjectConnectorLinearSpringDamper::GetAvailableJacobians() c
 	return (JacobianType::Type)(JacobianType::ODE2_ODE2 + JacobianType::ODE2_ODE2_t);
 }
 
-void CObjectConnectorLinearSpringDamper::ComputeConnectorForceRigid(const MarkerRigid<Real>* markers, Real t, Index itemIndex,
+void CObjectConnectorLinearSpringDamper::ComputeConnectorForceRigid(const MarkerRigid<Real>* markers, Real t,
 	Vector3D* forces, Vector3D* torques) const
 {
-	ComputeConnectorForceRigidTemplate(markers, t, itemIndex, forces, torques);
+	ComputeConnectorForceRigidTemplate(markers, t, forces, torques);
 }
 
-void CObjectConnectorLinearSpringDamper::ComputeConnectorForceRigidDiff(const MarkerRigid<DRealRigidMarkers>* markers, Real t, Index itemIndex,
+void CObjectConnectorLinearSpringDamper::ComputeConnectorForceRigidDiff(const MarkerRigid<DRealRigidMarkers>* markers, Real t,
 	SlimVectorBase<DRealRigidMarkers, 3>* forces, SlimVectorBase<DRealRigidMarkers, 3>* torques) const
 {
-	ComputeConnectorForceRigidTemplate(markers, t, itemIndex, forces, torques);
+	ComputeConnectorForceRigidTemplate(markers, t, forces, torques);
 }
 
 
 //! provide according output variable in "value"
-void CObjectConnectorLinearSpringDamper::GetOutputVariableConnector(OutputVariableType variableType, const MarkerDataStructure& markerData, Index itemIndex, Vector& value) const
+void CObjectConnectorLinearSpringDamper::GetOutputVariableConnector(OutputVariableType variableType, const MarkerDataStructure& markerData, Vector& value) const
 {
 	Real displacement, velocity, force;
 	Matrix3D A0;
@@ -103,7 +103,7 @@ void CObjectConnectorLinearSpringDamper::GetOutputVariableConnector(OutputVariab
 	//compute local torque
 	MarkerRigid<Real> markers[2];
 	GetMarkersRigid(markerData, markers);
-	ComputeSpringForce(markers, markerData.GetTime(), itemIndex, A0, displacement, velocity, force);
+	ComputeSpringForce(markers, markerData.GetTime(), A0, displacement, velocity, force);
 	if (!parameters.activeConnector) { force = 0.; } //an inactive connector reports no force (#984)
 	//Vector3D fTrans = A0 * (parameters.axisMarker0 * force);
 

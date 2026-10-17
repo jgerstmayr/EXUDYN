@@ -19,14 +19,14 @@
 
 
 //compute the properties which are needed for computation of LHS and needed for OutputVariables
-void CObjectConnectorGravity::ComputeConnectorProperties(const MarkerDataStructure& markerData, Index itemIndex,
+void CObjectConnectorGravity::ComputeConnectorProperties(const MarkerDataStructure& markerData,
 	Vector3D& relPos, /*Vector3D& relVel, */Real& force, Vector3D& forceDirection) const
 {
 	ComputeGravityForce(markerData.GetMarkerData(0).position, markerData.GetMarkerData(1).position, relPos, force, forceDirection);
 }
 
 //! the force of the connector interface on position markers (#2745): on marker 1, global
-void CObjectConnectorGravity::ComputeConnectorForcePosition(const MarkerPosition<Real>* markers, Real t, Index itemIndex, Vector3D& force) const
+void CObjectConnectorGravity::ComputeConnectorForcePosition(const MarkerPosition<Real>* markers, Real t, Vector3D& force) const
 {
 	Vector3D relPos, forceDirection;
 	Real forceScalar;
@@ -35,7 +35,7 @@ void CObjectConnectorGravity::ComputeConnectorForcePosition(const MarkerPosition
 }
 
 //! the force with automatic differentiation, for the Jacobian of the connector interface (#2745)
-void CObjectConnectorGravity::ComputeConnectorForcePositionDiff(const MarkerPosition<DRealPositionMarkers>* markers, Real t, Index itemIndex,
+void CObjectConnectorGravity::ComputeConnectorForcePositionDiff(const MarkerPosition<DRealPositionMarkers>* markers, Real t,
 	SlimVectorBase<DRealPositionMarkers, 3>& force) const
 {
 	SlimVectorBase<DRealPositionMarkers, 3> relPos, forceDirection;
@@ -94,11 +94,11 @@ JacobianType::Type CObjectConnectorGravity::GetAvailableJacobians() const
 
 
 //! provide according output variable in "value"
-void CObjectConnectorGravity::GetOutputVariableConnector(OutputVariableType variableType, const MarkerDataStructure& markerData, Index itemIndex, Vector& value) const
+void CObjectConnectorGravity::GetOutputVariableConnector(OutputVariableType variableType, const MarkerDataStructure& markerData, Vector& value) const
 {
 	Real force;
 	Vector3D relPos, forceDirection;
-	ComputeConnectorProperties(markerData, itemIndex, relPos, force, forceDirection);
+	ComputeConnectorProperties(markerData, relPos, force, forceDirection);
 
 	switch (variableType)
 	{

@@ -51,7 +51,7 @@ void ComputeContactPoint(const Vector3D& p0, const Matrix3D& A0, const Vector3D&
 }
 
 //! Computational function: compute algebraic equations and write residual into "algebraicEquations"
-void CObjectJointRollingDisc::ComputeAlgebraicEquations(Vector& algebraicEquations, const MarkerDataStructure& markerData, Real t, Index itemIndex, bool velocityLevel) const
+void CObjectJointRollingDisc::ComputeAlgebraicEquations(Vector& algebraicEquations, const MarkerDataStructure& markerData, Real t, bool velocityLevel) const
 {
 	if (parameters.activeConnector)
 	{
@@ -119,7 +119,7 @@ void CObjectJointRollingDisc::ComputeAlgebraicEquations(Vector& algebraicEquatio
 
 
 void CObjectJointRollingDisc::ComputeJacobianAE(ResizableMatrix& jacobian_ODE2, ResizableMatrix& jacobian_ODE2_t, ResizableMatrix& jacobian_ODE1, 
-	ResizableMatrix& jacobian_AE, const MarkerDataStructure& markerData, Real t, Index itemIndex) const
+	ResizableMatrix& jacobian_AE, const MarkerDataStructure& markerData, Real t) const
 {
 	if (parameters.activeConnector)
 	{
@@ -233,7 +233,7 @@ JacobianType::Type CObjectJointRollingDisc::GetAvailableJacobians() const
 }
 
 //! provide according output variable in "value"
-void CObjectJointRollingDisc::GetOutputVariableConnector(OutputVariableType variableType, const MarkerDataStructure& markerData, Index itemIndex, Vector& value) const
+void CObjectJointRollingDisc::GetOutputVariableConnector(OutputVariableType variableType, const MarkerDataStructure& markerData, Vector& value) const
 {
 	const LinkedDataVector& lambda = markerData.GetLagrangeMultipliers();
 

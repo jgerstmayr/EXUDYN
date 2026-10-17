@@ -1661,3 +1661,28 @@ before Assemble; only DeleteObject changes numbers; integrate it into CSystemDat
   bodies left the second one unchanged.
 - deleteItemsTest.py checks the number before Assemble, after a DeleteObject, and both bodies of a relative marker
   around a deleted object; its result is unchanged.
+
+<a id="rg9-9"></a>
+### RG9.9 — the own number out of the arguments of the item functions (2026-10-17, #3013)
+*(Maintainer 2026-10-17: remove the object number from the arguments where it is not needed any more; evaluate first,
+propose sub-steps, resolve what needs no decision.)*
+
+**Evaluation (RG9.9.1).** Since #3012 every object has its number from AddObject on; the argument repeated it:
+
+| where | functions | argument | done |
+|---|---|---|---|
+| CObject, CObjectBody, every object | ComputeODE2LHS, ComputeODE1RHS, ComputeJacobianODE2_ODE2, ComputeMassMatrix, GetOutputVariable, GetOutputVariableBody, ComputeKineticEnergyFromMassMatrix, the item helpers (ComputeODE2LHStemplate, ComputeMassMatrixAndODE2LHS, AddJointForces, EvaluateUserFunctionForce/MassMatrix/Jacobian/RHS, ComputeAxialForce/BendingMomentLocalUserFunction) | objectNumber, itemIndex | RG9.9.2/.3 |
+| CObjectConnector, every connector and constraint | ComputeODE2LHS/ODE1RHS/ComputeJacobianODE2_ODE2 with MarkerDataStructure, ComputeJacobianForce6D, ComputeJacobianODE2_ODE2generic, GetOutputVariableConnector, GetOutputVariableConstraintEquation, PostNewtonStep, ComputeAlgebraicEquations, ComputeJacobianAE, the connector interface (`...Connector`, the L2 chains `Connector...Markers`, `Constraint...Markers`, `SeedConstraintEquations...`, GetConnectorOutputVariable), ComputeConnectorForce*/ComputeConstraintEquations*(Diff), ComputeSpringForce*, ComputeSpringTorque, ComputeConnectorProperties, ComputeReevingGeometry, EvaluateUserFunctionForce/Offset/Offset_t/Constraint/Jacobian/PostNewtonStep | objectNumber, itemIndex | RG9.9.2/.3 |
+| CSystem | ComputeObjectODE2LHS, ComputeObjectODE1RHS (take the object pointer and its number) | objectNumber | RG9.9.2 |
+| MainObject | GetOutputVariable, GetOutputVariableConnector, GetOutputVariableBody | objectNumber | RG9.9.2 |
+| CSensor, the graphics helpers | the calls of the object outputs | parameters.objectNumber, itemNumber | RG9.9.2 |
+| visualization of all kinds of items | UpdateGraphics, CallUserFunction, DrawMarker, GetMarkerPositionOrientation | itemNumber | RG9.9.4, proposed |
+| kept | CSystem::ComputeObjectJacobianODE2/AlgebraicEquations/ReactionForces (the number selects the object); MainSystem and MainSystemData (the Python interface); the markers and sensors (the number of the object they refer to); the arguments of the Python user functions (the user's interface) | | |
+
+**RG9.9.2/.3.** A script removed the parameter from the signatures of the listed functions, in `src/` and in the
+definitions, and the argument at its position from their calls, where it was an item number; the compiler named the
+uses left in the bodies, which became `GetObjectNumber()` (`connector.GetObjectNumber()` in the free functions of
+the connector interface). The definitions had two identical entries of the library function ComputeAlgebraicEquations
+of constraints (they differed by a space before the argument); one is gone. Every call passed the own number (the loop
+index of the objects, the number of the MainObject, the object of a sensor), so nothing computes differently; the test
+suite passes unchanged.

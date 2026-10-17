@@ -32,7 +32,7 @@ Index CObjectConnectorHydraulicActuatorSimple::GetODE1Size() const
 }
 
 //compute the properties which are needed for computation of LHS and needed for OutputVariables
-void CObjectConnectorHydraulicActuatorSimple::ComputeConnectorProperties(const MarkerDataStructure& markerData, Index itemIndex,
+void CObjectConnectorHydraulicActuatorSimple::ComputeConnectorProperties(const MarkerDataStructure& markerData,
 	Vector3D& relPos, Vector3D& relVel, Real& linearVelocity, Real& force, Vector3D& forceDirection) const
 {
 	ComputeActuatorForce(markerData.GetMarkerData(0).position, markerData.GetMarkerData(1).position,
@@ -40,7 +40,7 @@ void CObjectConnectorHydraulicActuatorSimple::ComputeConnectorProperties(const M
 }
 
 //! the force of the connector interface on position markers (#2745): on marker 1, global
-void CObjectConnectorHydraulicActuatorSimple::ComputeConnectorForcePosition(const MarkerPosition<Real>* markers, Real t, Index itemIndex, Vector3D& force) const
+void CObjectConnectorHydraulicActuatorSimple::ComputeConnectorForcePosition(const MarkerPosition<Real>* markers, Real t, Vector3D& force) const
 {
 	Vector3D relPos, relVel, forceDirection;
 	Real forceScalar, linearVelocity;
@@ -85,7 +85,7 @@ void CObjectConnectorHydraulicActuatorSimple::ComputeActuatorForce(const Vector3
 }
 
 //! Computational function: compute right-hand-side (RHS) of first order ordinary differential equations (ODE) to 'ode1Rhs'
-void CObjectConnectorHydraulicActuatorSimple::ComputeODE1RHS(Vector& ode1Rhs, const MarkerDataStructure& markerData, Index objectNumber) const
+void CObjectConnectorHydraulicActuatorSimple::ComputeODE1RHS(Vector& ode1Rhs, const MarkerDataStructure& markerData) const
 {
 	ode1Rhs.SetNumberOfItems(GetODE1Size());
 	ode1Rhs.SetAll(0.);//not needed?
@@ -186,11 +186,11 @@ JacobianType::Type CObjectConnectorHydraulicActuatorSimple::GetAvailableJacobian
 
 
 //! provide according output variable in "value"
-void CObjectConnectorHydraulicActuatorSimple::GetOutputVariableConnector(OutputVariableType variableType, const MarkerDataStructure& markerData, Index itemIndex, Vector& value) const
+void CObjectConnectorHydraulicActuatorSimple::GetOutputVariableConnector(OutputVariableType variableType, const MarkerDataStructure& markerData, Vector& value) const
 {
 	Real force, linearVelocity;
 	Vector3D relPos, relVel, forceDirection;
-	ComputeConnectorProperties(markerData, itemIndex, relPos, relVel, linearVelocity, force, forceDirection);
+	ComputeConnectorProperties(markerData, relPos, relVel, linearVelocity, force, forceDirection);
 
 	switch (variableType)
 	{

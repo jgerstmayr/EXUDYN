@@ -194,7 +194,7 @@ void CObjectANCFCable::PreComputeMassTerms() const
 }
 
 //! Computational function: compute mass matrix
-void CObjectANCFCable::ComputeMassMatrix(EXUmath::MatrixContainer& massMatrixC, const ArrayIndex& ltg, Index objectNumber, bool computeInverse) const
+void CObjectANCFCable::ComputeMassMatrix(EXUmath::MatrixContainer& massMatrixC, const ArrayIndex& ltg, bool computeInverse) const
 {
 	CHECKandTHROW(!computeInverse, "CObjectANCFCable::ComputeMassMatrix: computeMassMatrixInversePerBody=True is not possible for this type of element; change solver settings", ExudynNotImplementedError);
 
@@ -204,7 +204,7 @@ void CObjectANCFCable::ComputeMassMatrix(EXUmath::MatrixContainer& massMatrixC, 
 }
 
 //! Computational function: compute left-hand-side (LHS) of second order ordinary differential equations (ODE) to "ode2Lhs"
-void CObjectANCFCable::ComputeODE2LHS(Vector& ode2Lhs, Index objectNumber) const
+void CObjectANCFCable::ComputeODE2LHS(Vector& ode2Lhs) const
 {
 	const Index dim = 3;				//3D finite element
 	const Index ns = nShapeFunctions;	//number of shape functions
@@ -409,8 +409,7 @@ void CObjectANCFCable::ComputeODE2LHStemplate(VectorBase<TReal>& ode2Lhs,
 //! jacobian of LHS, w.r.t. position AND velocity level coordinates
 //void CObjectANCFCable::ComputeJacobianODE2_ODE2(ResizableMatrix& jacobian, ResizableMatrix& jacobian_ODE2_t) const
 void CObjectANCFCable::ComputeJacobianODE2_ODE2(EXUmath::MatrixContainer& jacobianODE2, JacobianTemp& temp, 
-	Real factorODE2, Real factorODE2_t,
-	Index objectNumber, const ArrayIndex& ltg) const
+	Real factorODE2, Real factorODE2_t, const ArrayIndex& ltg) const
 {
 	const Index dim = 3;		//3D finite element
 	const Index ns = nShapeFunctions;			//number of shape functions
@@ -591,7 +590,7 @@ Real CObjectANCFCable::ComputeElasticEnergy(ConfigurationType configuration) con
 }
 
 //! provide according output variable in "value"
-void CObjectANCFCable::GetOutputVariableBody(OutputVariableType variableType, const Vector3D& localPosition, ConfigurationType configuration, Vector& value, Index objectNumber) const
+void CObjectANCFCable::GetOutputVariableBody(OutputVariableType variableType, const Vector3D& localPosition, ConfigurationType configuration, Vector& value) const
 {
 	//outputVariables = "{
 	//'Position':'global position vector of local axis (1) and cross section (2) position', 
@@ -678,7 +677,7 @@ void CObjectANCFCable::GetOutputVariableBody(OutputVariableType variableType, co
 		value.SetVector({ ComputeElasticEnergy(configuration) }); break; }
 	case OutputVariableType::KineticEnergy: {
 		CheckEnergyLocalPosition(localPosition, "ObjectANCFCable");
-		value.SetVector({ ComputeKineticEnergyFromMassMatrix(configuration, objectNumber, "ObjectANCFCable") }); break; }
+		value.SetVector({ ComputeKineticEnergyFromMassMatrix(configuration, "ObjectANCFCable") }); break; }
 	default:
 		SysError("CObjectANCFCable::GetOutputVariableBody failed"); //error should not occur, because types are checked!
 	}
@@ -899,13 +898,13 @@ void VisualizationObjectANCFCable::UpdateGraphics(const VisualizationSettings& v
 	Vector& value = vSystem->tempVector;
 	if (EXUstd::IsOfTypeAndNotNone(cObject->GetOutputVariableTypes(), visualizationSettings.contour.outputVariable))
 	{
-		cObject->GetOutputVariableBody(visualizationSettings.contour.outputVariable, Vector3D({ 0.,0.,0. }), ConfigurationType::Visualization, value, itemNumber);
+		cObject->GetOutputVariableBody(visualizationSettings.contour.outputVariable, Vector3D({ 0.,0.,0. }), ConfigurationType::Visualization, value);
 		if (visualizationSettings.contour.outputVariableComponent < value.NumberOfItems())
 		{
 			EXUvis::ComputeContourColor<Vector>(value, visualizationSettings.contour.outputVariable, visualizationSettings.contour.outputVariableComponent, item.color1);
 			interpValues[0] = item.color1[0]; //store this contour plot value
 
-			cObject->GetOutputVariableBody(visualizationSettings.contour.outputVariable, Vector3D({ L,0.,0. }), ConfigurationType::Visualization, value, itemNumber);
+			cObject->GetOutputVariableBody(visualizationSettings.contour.outputVariable, Vector3D({ L,0.,0. }), ConfigurationType::Visualization, value);
 			EXUvis::ComputeContourColor<Vector>(value, visualizationSettings.contour.outputVariable, visualizationSettings.contour.outputVariableComponent, item.color2);
 			interpValues[1] = item.color2[0]; //store this contour plot value
 
@@ -965,9 +964,9 @@ void VisualizationObjectANCFCable::UpdateGraphics(const VisualizationSettings& v
 			}
 			else
 			{
-				cObject->GetOutputVariableBody(visualizationSettings.contour.outputVariable, pLoc0, ConfigurationType::Visualization, value, itemNumber);
+				cObject->GetOutputVariableBody(visualizationSettings.contour.outputVariable, pLoc0, ConfigurationType::Visualization, value);
 				EXUvis::ComputeContourColor<Vector>(value, visualizationSettings.contour.outputVariable, visualizationSettings.contour.outputVariableComponent, item.color1);
-				cObject->GetOutputVariableBody(visualizationSettings.contour.outputVariable, pLoc1, ConfigurationType::Visualization, value, itemNumber);
+				cObject->GetOutputVariableBody(visualizationSettings.contour.outputVariable, pLoc1, ConfigurationType::Visualization, value);
 				EXUvis::ComputeContourColor<Vector>(value, visualizationSettings.contour.outputVariable, visualizationSettings.contour.outputVariableComponent, item.color2);
 			}
 

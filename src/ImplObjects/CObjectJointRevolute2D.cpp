@@ -32,14 +32,13 @@ void CObjectJointRevolute2D::ComputeConstraintEquationsTemplate(const MarkerPosi
 	equations[1] = relative[1];
 }
 
-void CObjectJointRevolute2D::ComputeConstraintEquationsPosition(const MarkerPosition<Real>* markers, const LinkedDataVector& lambda, Real t,
-	Index itemIndex, bool velocityLevel, ConstSizeVector<maxConstraintEquations>& equations) const
+void CObjectJointRevolute2D::ComputeConstraintEquationsPosition(const MarkerPosition<Real>* markers, const LinkedDataVector& lambda, Real t, bool velocityLevel, ConstSizeVector<maxConstraintEquations>& equations) const
 {
 	ComputeConstraintEquationsTemplate(markers, lambda, velocityLevel, equations);
 }
 
 void CObjectJointRevolute2D::ComputeConstraintEquationsPositionDiff(const MarkerPosition<DRealPositionMarkers>* markers, const LinkedDataVector& lambda,
-	Real t, Index itemIndex, ConstSizeVectorBase<DRealPositionMarkers, maxConstraintEquations>& equations) const
+	Real t, ConstSizeVectorBase<DRealPositionMarkers, maxConstraintEquations>& equations) const
 {
 	ComputeConstraintEquationsTemplate(markers, lambda, false, equations);
 }
@@ -58,7 +57,7 @@ JacobianType::Type CObjectJointRevolute2D::GetAvailableJacobians() const
 
 
 //! provide according output variable in "value"
-void CObjectJointRevolute2D::GetOutputVariableConnector(OutputVariableType variableType, const MarkerDataStructure& markerData, Index itemIndex, Vector& value) const
+void CObjectJointRevolute2D::GetOutputVariableConnector(OutputVariableType variableType, const MarkerDataStructure& markerData, Vector& value) const
 {
 	switch (variableType)
 	{

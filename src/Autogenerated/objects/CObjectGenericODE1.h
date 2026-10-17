@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-10-16  13:52:10 (last modified)
+* @date         2026-10-17  13:28:01 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -124,7 +124,7 @@ public: // AUTO:
     }
 
     //! AUTO:  Computational function: compute right-hand-side (RHS) of first order ordinary differential equations (ODE) to 'ode1Rhs'
-    virtual void ComputeODE1RHS(Vector& ode1Rhs, Index objectNumber) const override;
+    virtual void ComputeODE1RHS(Vector& ode1Rhs) const override;
 
     //! AUTO:  return the available jacobian dependencies and the jacobians which are available as a function; if jacobian dependencies exist but are not available as a function, it is computed numerically; can be combined with 2^i enum flags
     virtual JacobianType::Type GetAvailableJacobians() const override
@@ -142,7 +142,7 @@ public: // AUTO:
     virtual void GetAccessFunction(AccessFunctionType accessType, Matrix& value) const override;
 
     //! AUTO:  provide according output variable in 'value'
-    virtual void GetOutputVariable(OutputVariableType variableType, Vector& value, ConfigurationType configuration, Index objectNumber) const override;
+    virtual void GetOutputVariable(OutputVariableType variableType, Vector& value, ConfigurationType configuration) const override;
 
     //! AUTO:  Get global node number (with local node index); needed for every object ==> does local mapping
     virtual Index GetNodeNumber(Index localIndex) const override
@@ -193,7 +193,7 @@ public: // AUTO:
     void InitializeCoordinateIndices();
 
     //! AUTO:  call to user function implemented in separate file to avoid including pybind and MainSystem.h at too many places
-    void EvaluateUserFunctionRHS(Vector& rhs, const MainSystemBase& mainSystem, Real t, Index objectNumber, const Vector& coordinates) const;
+    void EvaluateUserFunctionRHS(Vector& rhs, const MainSystemBase& mainSystem, Real t, const Vector& coordinates) const;
 
     virtual OutputVariableType GetOutputVariableTypes() const override
     {

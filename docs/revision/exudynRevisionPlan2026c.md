@@ -100,6 +100,7 @@ The title of each says what it does; the sentence after it, why it comes now.
 - **RG9** Structural core improvements
   - RG9.6 Check at compile time that an item provides the member functions its declarations require (2 open sub-steps)
   - RG9.7 Replace the Cable2D markers by general markers for curves, surfaces and volumes
+  - RG9.9 Remove the own item number from the arguments of the item functions, which take it from the item (1 open sub-step)
 - **RG11** Misc
   - RG11.4 Extend the Python interface: dictionaries, URDF import, MatrixContainer (4 open sub-steps)
   - RG11.5 Document single items that the general pages did not reach
@@ -130,7 +131,7 @@ The title of each says what it does; the sentence after it, why it comes now.
 | RG6 | OPEN | 3 | Graphics and rendering |
 | RG7 | OPEN | 5 | Python user items |
 | RG8 | OPEN | 10 | Compiled C++ user items |
-| RG9 | OPEN | 4 | Structural core improvements |
+| RG9 | OPEN | 6 | Structural core improvements |
 | RG10 | CLOSED | 0 | Tooling and process |
 | RG11 | OPEN | 14 | Misc |
 | RG12 | OPEN | 4 | Symbolic |
@@ -646,6 +647,33 @@ CLOSED 2026-10-17 (#3012): `CSystemData::AddCObject`/`DeleteCObject` are the onl
 the numbers; `SetObjectNumber` is private to CSystemData; DeleteObject renumbers every body of a marker on several
 bodies. Maintainer 2026-10-17: the number is needed by many functions, also before Assemble.
 [log](exudynRevisionLog2026c.md#rg9-8)
+
+### **OPEN_RG9.9** Remove the own item number from the arguments of the item functions, which take it from the item
+
+#3013. Maintainer 2026-10-17: many old and new functions have the object number in their arguments and do not need it
+any more; evaluate, propose sub-steps, do what needs no decision. [log](exudynRevisionLog2026c.md#rg9-9)
+
+#### **CLOSED_RG9.9.1** Evaluate which functions get their own number as argument
+
+CLOSED 2026-10-17: about 140 signatures and 180 calls in the objects, connectors, CSystem, MainObject and the sensors;
+the table is in the log.
+
+#### **CLOSED_RG9.9.2** Remove objectNumber from the object functions and their callers
+
+CLOSED 2026-10-17 (#3013): CObject, CObjectBody, CObjectConnector and every object; the L2 chains of the connector
+interface; CSystem::ComputeObjectODE2LHS/ODE1RHS; MainObject; the sensors.
+
+#### **CLOSED_RG9.9.3** Remove itemIndex from the connector and constraint functions and their callers
+
+CLOSED 2026-10-17 (#3013): GetOutputVariableConnector, PostNewtonStep, ComputeAlgebraicEquations, ComputeJacobianAE, the
+connector forces and constraint equations, the spring-damper and contact helpers, the user function evaluations.
+
+#### **OPEN_RG9.9.4** Give nodes, markers, loads and sensors their number in CSystemData, and draw without itemNumber
+
+Proposal, for a decision: `UpdateGraphics(settings, vSystem, itemNumber)` and `CallUserFunction` are one interface of all
+five kinds of items, and only objects know their number; nodes, markers, loads and sensors would get theirs the same way
+(`AddCNode`, ..., renumbered by their Delete functions), the visualization items would take it from their
+computational item, and `itemNumber` would leave about 190 signatures, `DrawMarker` and `GetMarkerPositionOrientation`.
 
 ## **CLOSED_RG10** Tooling and process
 

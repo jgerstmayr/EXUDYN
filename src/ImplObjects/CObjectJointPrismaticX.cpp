@@ -74,14 +74,13 @@ void CObjectJointPrismaticX::ComputeConstraintEquationsTemplate(const MarkerRigi
 	}
 }
 
-void CObjectJointPrismaticX::ComputeConstraintEquationsRigid(const MarkerRigid<Real>* markers, const LinkedDataVector& lambda, Real t,
-	Index itemIndex, bool velocityLevel, ConstSizeVector<maxConstraintEquations>& equations) const
+void CObjectJointPrismaticX::ComputeConstraintEquationsRigid(const MarkerRigid<Real>* markers, const LinkedDataVector& lambda, Real t, bool velocityLevel, ConstSizeVector<maxConstraintEquations>& equations) const
 {
 	ComputeConstraintEquationsTemplate(markers, lambda, velocityLevel, equations);
 }
 
 void CObjectJointPrismaticX::ComputeConstraintEquationsRigidDiff(const MarkerRigid<DRealRigidMarkers>* markers, const LinkedDataVector& lambda,
-	Real t, Index itemIndex, ConstSizeVectorBase<DRealRigidMarkers, maxConstraintEquations>& equations) const
+	Real t, ConstSizeVectorBase<DRealRigidMarkers, maxConstraintEquations>& equations) const
 {
 	ComputeConstraintEquationsTemplate(markers, lambda, false, equations);
 }
@@ -99,7 +98,7 @@ JacobianType::Type CObjectJointPrismaticX::GetAvailableJacobians() const
 }
 
 //! provide according output variable in "value"
-void CObjectJointPrismaticX::GetOutputVariableConnector(OutputVariableType variableType, const MarkerDataStructure& markerData, Index itemIndex, Vector& value) const
+void CObjectJointPrismaticX::GetOutputVariableConnector(OutputVariableType variableType, const MarkerDataStructure& markerData, Vector& value) const
 {
 	const Matrix3D& A0 = markerData.GetMarkerData(0).orientation;
 	const Matrix3D& A0off = parameters.rotationMarker0;

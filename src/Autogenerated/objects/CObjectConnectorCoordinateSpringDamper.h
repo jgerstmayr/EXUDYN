@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-10-12  00:27:46 (last modified)
+* @date         2026-10-17  13:37:10 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -120,7 +120,7 @@ public: // AUTO:
     virtual JacobianType::Type GetAvailableJacobians() const override;
 
     //! AUTO:  provide according output variable in 'value'
-    virtual void GetOutputVariableConnector(OutputVariableType variableType, const MarkerDataStructure& markerData, Index itemIndex, Vector& value) const override;
+    virtual void GetOutputVariableConnector(OutputVariableType variableType, const MarkerDataStructure& markerData, Vector& value) const override;
 
     //! AUTO:  provide requested markerType for connector
     virtual Marker::Type GetRequestedMarkerType() const override
@@ -141,28 +141,28 @@ public: // AUTO:
     }
 
     //! AUTO:  the right-hand side on the connector interface of coordinate markers (#2745)
-    virtual bool ComputeODE2LHSConnector(const CSystemData& systemData, TemporaryComputationData& temp, Vector& localODE2Lhs, Index objectNumber) const override
+    virtual bool ComputeODE2LHSConnector(const CSystemData& systemData, TemporaryComputationData& temp, Vector& localODE2Lhs) const override
     {
-        ConnectorODE2LHSCoordinateMarkers(systemData, temp, *this, localODE2Lhs, objectNumber); return true;
+        ConnectorODE2LHSCoordinateMarkers(systemData, temp, *this, localODE2Lhs); return true;
     }
 
     //! AUTO:  the Jacobian by automatic differentiation of the force (#2745)
-    virtual bool ComputeJacobianODE2Connector(const CSystemData& systemData, TemporaryComputationData& temp, Real factorODE2, Real factorODE2_t, Index objectNumber, bool jacobianDerivativeNonZero) const override
+    virtual bool ComputeJacobianODE2Connector(const CSystemData& systemData, TemporaryComputationData& temp, Real factorODE2, Real factorODE2_t, bool jacobianDerivativeNonZero) const override
     {
-        ConnectorJacobianODE2CoordinateMarkers(systemData, temp, *this, factorODE2, factorODE2_t, objectNumber, jacobianDerivativeNonZero); return true;
+        ConnectorJacobianODE2CoordinateMarkers(systemData, temp, *this, factorODE2, factorODE2_t, jacobianDerivativeNonZero); return true;
     }
 
     //! AUTO:  the generalized force on marker 1 from the values of the two markers (#2745)
-    virtual void ComputeConnectorForceCoordinate(const MarkerCoordinate<Real>* markers, Real t, Index itemIndex, Real& force) const override;
+    virtual void ComputeConnectorForceCoordinate(const MarkerCoordinate<Real>* markers, Real t, Real& force) const override;
 
     //! AUTO:  the same force with automatic differentiation, for the Jacobian (#2745)
-    virtual void ComputeConnectorForceCoordinateDiff(const MarkerCoordinate<DRealCoordinateMarkers>* markers, Real t, Index itemIndex, DRealCoordinateMarkers& force) const override;
+    virtual void ComputeConnectorForceCoordinateDiff(const MarkerCoordinate<DRealCoordinateMarkers>* markers, Real t, DRealCoordinateMarkers& force) const override;
 
     //! AUTO:  the physics of the spring-damper, shared by the connector interface, its Jacobian and the output variables (#2745)
-    template<class TReal> void ComputeSpringForce(TReal value0, TReal value1, TReal value0_t, TReal value1_t, Real t, Index itemIndex, TReal& relPos, TReal& relVel, TReal& force) const;
+    template<class TReal> void ComputeSpringForce(TReal value0, TReal value1, TReal value0_t, TReal value1_t, Real t, TReal& relPos, TReal& relVel, TReal& force) const;
 
     //! AUTO:  call to user function implemented in separate file to avoid including pybind and MainSystem.h at too many places
-    void EvaluateUserFunctionForce(Real& force, const MainSystemBase& mainSystem, Real t, Index itemIndex, Real relPos, Real relVel) const;
+    void EvaluateUserFunctionForce(Real& force, const MainSystemBase& mainSystem, Real t, Real relPos, Real relVel) const;
 
     virtual OutputVariableType GetOutputVariableTypes() const override
     {

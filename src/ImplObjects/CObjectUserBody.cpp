@@ -26,7 +26,7 @@ Index CObjectUserBody::GetODE2Size() const
 	return n;
 }
 
-void CObjectUserBody::ComputeMassMatrix(EXUmath::MatrixContainer& massMatrixC, const ArrayIndex& ltg, Index objectNumber, bool computeInverse) const
+void CObjectUserBody::ComputeMassMatrix(EXUmath::MatrixContainer& massMatrixC, const ArrayIndex& ltg, bool computeInverse) const
 {
 	CHECKandTHROW(!computeInverse, "ObjectUserBody: computeMassMatrixInversePerBody=True is not possible, change the solver settings", ExudynNotImplementedError);
 	ResizableConstVector q, q_t;
@@ -35,7 +35,7 @@ void CObjectUserBody::ComputeMassMatrix(EXUmath::MatrixContainer& massMatrixC, c
 }
 
 //! the left-hand side is the negative force of the user function
-void CObjectUserBody::ComputeODE2LHS(Vector& ode2Lhs, Index objectNumber) const
+void CObjectUserBody::ComputeODE2LHS(Vector& ode2Lhs) const
 {
 	Index n = GetODE2Size();
 	ode2Lhs.SetNumberOfItems(n);
@@ -176,7 +176,7 @@ Vector3D CObjectUserBody::GetAngularVelocityLocal(const Vector3D& localPosition,
 	return GetRotationMatrix(localPosition, configuration).GetTransposed()*GetAngularVelocity(localPosition, configuration);
 }
 
-void CObjectUserBody::GetOutputVariableBody(OutputVariableType variableType, const Vector3D& localPosition, ConfigurationType configuration, Vector& value, Index objectNumber) const
+void CObjectUserBody::GetOutputVariableBody(OutputVariableType variableType, const Vector3D& localPosition, ConfigurationType configuration, Vector& value) const
 {
 	switch (variableType)
 	{
@@ -202,7 +202,7 @@ void CObjectUserBody::GetOutputVariableBody(OutputVariableType variableType, con
 	}
 	case OutputVariableType::KineticEnergy:
 		CheckEnergyLocalPosition(localPosition, "ObjectUserBody");
-		value.SetVector({ ComputeKineticEnergyFromMassMatrix(configuration, objectNumber, "ObjectUserBody") });
+		value.SetVector({ ComputeKineticEnergyFromMassMatrix(configuration, "ObjectUserBody") });
 		break;
 	case OutputVariableType::UserType0:
 	case OutputVariableType::UserType1:

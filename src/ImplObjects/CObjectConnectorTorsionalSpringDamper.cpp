@@ -22,7 +22,7 @@
 
 //! the physics of the connector, for Real and AutoDiff (#2745); the user function is Real only
 template<class TReal>
-void CObjectConnectorTorsionalSpringDamper::ComputeSpringTorque(const MarkerRigid<TReal>* markers, Real t, Index itemIndex,
+void CObjectConnectorTorsionalSpringDamper::ComputeSpringTorque(const MarkerRigid<TReal>* markers, Real t,
 	ConstSizeMatrixBase<TReal, 9>& A0all, TReal& angle, TReal& omega, TReal& torque) const
 {
 	//spring is measured relative to marker0:
@@ -63,7 +63,7 @@ void CObjectConnectorTorsionalSpringDamper::ComputeSpringTorque(const MarkerRigi
 	{
 		if constexpr (std::is_same<TReal, Real>::value)
 		{
-			EvaluateUserFunctionForce(torque, cSystemData->GetMainSystemBacklink(), t, itemIndex, angle, omega);
+			EvaluateUserFunctionForce(torque, cSystemData->GetMainSystemBacklink(), t, angle, omega);
 		}
 		else
 		{
@@ -74,7 +74,7 @@ void CObjectConnectorTorsionalSpringDamper::ComputeSpringTorque(const MarkerRigi
 
 //! the torques of the connector interface on rigid markers (#2745): about the z-axis of the frame of marker 0, no forces
 template<class TReal>
-void CObjectConnectorTorsionalSpringDamper::ComputeConnectorForceRigidTemplate(const MarkerRigid<TReal>* markers, Real t, Index itemIndex,
+void CObjectConnectorTorsionalSpringDamper::ComputeConnectorForceRigidTemplate(const MarkerRigid<TReal>* markers, Real t,
 	SlimVectorBase<TReal, 3>* forces, SlimVectorBase<TReal, 3>* torques) const
 {
 	for (Index k = 0; k < 2; k++) { forces[k].SetAll(0.); torques[k].SetAll(0.); }
@@ -82,7 +82,7 @@ void CObjectConnectorTorsionalSpringDamper::ComputeConnectorForceRigidTemplate(c
 
 	TReal angle, omega, torque;
 	ConstSizeMatrixBase<TReal, 9> A0all;
-	ComputeSpringTorque(markers, t, itemIndex, A0all, angle, omega, torque);
+	ComputeSpringTorque(markers, t, A0all, angle, omega, torque);
 	SlimVectorBase<TReal, 3> fRotLoc;
 	fRotLoc.SetAll(0.);
 	fRotLoc[2] = torque;
@@ -100,28 +100,28 @@ JacobianType::Type CObjectConnectorTorsionalSpringDamper::GetAvailableJacobians(
 	return (JacobianType::Type)(JacobianType::ODE2_ODE2 + JacobianType::ODE2_ODE2_t);
 }
 
-void CObjectConnectorTorsionalSpringDamper::ComputeConnectorForceRigid(const MarkerRigid<Real>* markers, Real t, Index itemIndex,
+void CObjectConnectorTorsionalSpringDamper::ComputeConnectorForceRigid(const MarkerRigid<Real>* markers, Real t,
 	Vector3D* forces, Vector3D* torques) const
 {
-	ComputeConnectorForceRigidTemplate(markers, t, itemIndex, forces, torques);
+	ComputeConnectorForceRigidTemplate(markers, t, forces, torques);
 }
 
-void CObjectConnectorTorsionalSpringDamper::ComputeConnectorForceRigidDiff(const MarkerRigid<DRealRigidMarkers>* markers, Real t, Index itemIndex,
+void CObjectConnectorTorsionalSpringDamper::ComputeConnectorForceRigidDiff(const MarkerRigid<DRealRigidMarkers>* markers, Real t,
 	SlimVectorBase<DRealRigidMarkers, 3>* forces, SlimVectorBase<DRealRigidMarkers, 3>* torques) const
 {
-	ComputeConnectorForceRigidTemplate(markers, t, itemIndex, forces, torques);
+	ComputeConnectorForceRigidTemplate(markers, t, forces, torques);
 }
 
 
 //! provide according output variable in "value"
-void CObjectConnectorTorsionalSpringDamper::GetOutputVariableConnector(OutputVariableType variableType, const MarkerDataStructure& markerData, Index itemIndex, Vector& value) const
+void CObjectConnectorTorsionalSpringDamper::GetOutputVariableConnector(OutputVariableType variableType, const MarkerDataStructure& markerData, Vector& value) const
 {
 	Real angle, omega, torque;
 	Matrix3D A0all;
 
 	MarkerRigid<Real> markers[2];
 	GetMarkersRigid(markerData, markers);
-	ComputeSpringTorque(markers, markerData.GetTime(), itemIndex, A0all, angle, omega, torque);
+	ComputeSpringTorque(markers, markerData.GetTime(), A0all, angle, omega, torque);
 	if (!parameters.activeConnector) { torque = 0.; } //an inactive connector reports no torque (#984)
 
 	switch (variableType)
@@ -141,7 +141,7 @@ void CObjectConnectorTorsionalSpringDamper::GetOutputVariableConnector(OutputVar
 
 
 //! function called after Newton method; returns a residual error (force); 
-Real CObjectConnectorTorsionalSpringDamper::PostNewtonStep(const MarkerDataStructure& markerDataCurrent, Index itemIndex, PostNewtonFlags::Type& flags, Real& recommendedStepSize)
+Real CObjectConnectorTorsionalSpringDamper::PostNewtonStep(const MarkerDataStructure& markerDataCurrent, PostNewtonFlags::Type& flags, Real& recommendedStepSize)
 {
 	Real discontinuousError = 0;
 	flags = PostNewtonFlags::_None;
@@ -155,7 +155,7 @@ Real CObjectConnectorTorsionalSpringDamper::PostNewtonStep(const MarkerDataStruc
 
 		MarkerRigid<Real> markers[2];
 		GetMarkersRigid(markerDataCurrent, markers);
-		ComputeSpringTorque(markers, markerDataCurrent.GetTime(), itemIndex, A0all, angle, omega, torque);
+		ComputeSpringTorque(markers, markerDataCurrent.GetTime(), A0all, angle, omega, torque);
 		dataCoordinates[0] = angle; //already takes care for jumps based on previous value
 	}
 

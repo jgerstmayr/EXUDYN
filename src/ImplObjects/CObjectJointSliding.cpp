@@ -36,7 +36,7 @@ Real CObjectJointSliding::ComputeLocalSlidingCoordinate() const
 }
 
 //! Computational function: compute algebraic equations and write residual into "algebraicEquations"
-void CObjectJointSliding::ComputeAlgebraicEquations(Vector& algebraicEquations, const MarkerDataStructure& markerData, Real t, Index itemIndex, bool velocityLevel) const
+void CObjectJointSliding::ComputeAlgebraicEquations(Vector& algebraicEquations, const MarkerDataStructure& markerData, Real t, bool velocityLevel) const
 {
 	//markerData.GetMarkerData(1).vectorValue/_t:cable (refCoordinates+coordinates)/velocities
 	//markerData.GetMarkerData(1).GetHelper():cable Length (current cable)
@@ -145,7 +145,7 @@ void CObjectJointSliding::ComputeAlgebraicEquations(Vector& algebraicEquations, 
 
 
 void CObjectJointSliding::ComputeJacobianAE(ResizableMatrix& jacobian_ODE2, ResizableMatrix& jacobian_ODE2_t, ResizableMatrix& jacobian_ODE1, 
-	ResizableMatrix& jacobian_AE, const MarkerDataStructure& markerData, Real t, Index itemIndex) const
+	ResizableMatrix& jacobian_AE, const MarkerDataStructure& markerData, Real t) const
 {
 	//CHECKandTHROWstring("CObjectJointSliding::ComputeJacobianAE");
 
@@ -275,7 +275,7 @@ void CObjectJointSliding::ComputeJacobianAE(ResizableMatrix& jacobian_ODE2, Resi
 }
 
 //! provide according output variable in "value"
-void CObjectJointSliding::GetOutputVariableConnector(OutputVariableType variableType, const MarkerDataStructure& markerData, Index itemIndex, Vector& value) const
+void CObjectJointSliding::GetOutputVariableConnector(OutputVariableType variableType, const MarkerDataStructure& markerData, Vector& value) const
 {
 	switch (variableType)
 	{
@@ -305,7 +305,7 @@ void CObjectJointSliding::GetOutputVariableConnector(OutputVariableType variable
 bool slidingJointwarned = false;
 //! function called after Newton method; returns a residual error (force); 
 //! done for two different computation states in order to estimate the correct time of contact
-Real CObjectJointSliding::PostNewtonStep(const MarkerDataStructure& markerDataCurrent, Index itemIndex, PostNewtonFlags::Type& flags, Real& recommendedStepSize)
+Real CObjectJointSliding::PostNewtonStep(const MarkerDataStructure& markerDataCurrent, PostNewtonFlags::Type& flags, Real& recommendedStepSize)
 {
 	//return force-type error in case of contact: in case that the assumed contact state has been wrong, 
 	//  the contact force (also negative) is returned as measure of the error

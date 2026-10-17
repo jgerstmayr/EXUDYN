@@ -33,7 +33,7 @@ const CNode* CObject::GetCNode(Index localIndex) const
 
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-Real CObjectBody::ComputeKineticEnergyFromMassMatrix(ConfigurationType configuration, Index objectNumber, const char* itemName) const
+Real CObjectBody::ComputeKineticEnergyFromMassMatrix(ConfigurationType configuration, const char* itemName) const
 {
 	if (configuration != ConfigurationType::Current)
 	{
@@ -56,7 +56,7 @@ Real CObjectBody::ComputeKineticEnergyFromMassMatrix(ConfigurationType configura
 
 	EXUmath::MatrixContainer massMatrix;
 	massMatrix.SetUseDenseMatrix(true);
-	ComputeMassMatrix(massMatrix, ltg, objectNumber, false);
+	ComputeMassMatrix(massMatrix, ltg, false);
 
 	Real energy = 0.;
 	if (massMatrix.UseDenseMatrix())

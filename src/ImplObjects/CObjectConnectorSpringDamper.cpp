@@ -21,31 +21,31 @@
 
 
 //compute the properties which are needed for computation of LHS and needed for OutputVariables
-void CObjectConnectorSpringDamper::ComputeConnectorProperties(const MarkerDataStructure& markerData, Index itemIndex,
+void CObjectConnectorSpringDamper::ComputeConnectorProperties(const MarkerDataStructure& markerData,
 	Vector3D& relPos, Vector3D& relVel, Real& force, Vector3D& forceDirection) const
 {
 	ComputeSpringForce(markerData.GetMarkerData(0).position, markerData.GetMarkerData(1).position,
-		markerData.GetMarkerData(0).velocity, markerData.GetMarkerData(1).velocity, markerData.GetTime(), itemIndex,
+		markerData.GetMarkerData(0).velocity, markerData.GetMarkerData(1).velocity, markerData.GetTime(),
 		relPos, relVel, force, forceDirection);
 }
 
 //! the force of the connector interface on position markers (#2745): on marker 1, global
-void CObjectConnectorSpringDamper::ComputeConnectorForcePosition(const MarkerPosition<Real>* markers, Real t, Index itemIndex, Vector3D& force) const
+void CObjectConnectorSpringDamper::ComputeConnectorForcePosition(const MarkerPosition<Real>* markers, Real t, Vector3D& force) const
 {
 	Vector3D relPos, relVel, forceDirection;
 	Real forceScalar;
-	ComputeSpringForce(markers[0].position, markers[1].position, markers[0].velocity, markers[1].velocity, t, itemIndex,
+	ComputeSpringForce(markers[0].position, markers[1].position, markers[0].velocity, markers[1].velocity, t,
 		relPos, relVel, forceScalar, forceDirection);
 	force = forceScalar * forceDirection;
 }
 
 //! the force with automatic differentiation, for the Jacobian of the connector interface (#2745)
-void CObjectConnectorSpringDamper::ComputeConnectorForcePositionDiff(const MarkerPosition<DRealPositionMarkers>* markers, Real t, Index itemIndex,
+void CObjectConnectorSpringDamper::ComputeConnectorForcePositionDiff(const MarkerPosition<DRealPositionMarkers>* markers, Real t,
 	SlimVectorBase<DRealPositionMarkers, 3>& force) const
 {
 	SlimVectorBase<DRealPositionMarkers, 3> relPos, relVel, forceDirection;
 	DRealPositionMarkers forceScalar;
-	ComputeSpringForce(markers[0].position, markers[1].position, markers[0].velocity, markers[1].velocity, t, itemIndex,
+	ComputeSpringForce(markers[0].position, markers[1].position, markers[0].velocity, markers[1].velocity, t,
 		relPos, relVel, forceScalar, forceDirection);
 	force = forceScalar * forceDirection;
 	if (relPos.GetL2NormSquared() == 0. && parameters.activeConnector)
@@ -57,7 +57,7 @@ void CObjectConnectorSpringDamper::ComputeConnectorForcePositionDiff(const Marke
 
 template<class TReal>
 void CObjectConnectorSpringDamper::ComputeSpringForce(const SlimVectorBase<TReal, 3>& position0, const SlimVectorBase<TReal, 3>& position1,
-	const SlimVectorBase<TReal, 3>& velocity0, const SlimVectorBase<TReal, 3>& velocity1, Real t, Index itemIndex,
+	const SlimVectorBase<TReal, 3>& velocity0, const SlimVectorBase<TReal, 3>& velocity1, Real t,
 	SlimVectorBase<TReal, 3>& relPos, SlimVectorBase<TReal, 3>& relVel, TReal& force, SlimVectorBase<TReal, 3>& forceDirection) const
 {
 	using std::sqrt;
@@ -112,7 +112,7 @@ void CObjectConnectorSpringDamper::ComputeSpringForce(const SlimVectorBase<TReal
 		else if constexpr (std::is_same<TReal, Real>::value)
 		{
 			Real forceAdd;
-			EvaluateUserFunctionForce(forceAdd, cSystemData->GetMainSystemBacklink(), t, itemIndex,
+			EvaluateUserFunctionForce(forceAdd, cSystemData->GetMainSystemBacklink(), t,
 				springLength - parameters.referenceLength, relVel*forceDirection - parameters.velocityOffset);
 			force += forceAdd;
 		}
@@ -146,11 +146,11 @@ JacobianType::Type CObjectConnectorSpringDamper::GetAvailableJacobians() const
 
 
 //! provide according output variable in "value"
-void CObjectConnectorSpringDamper::GetOutputVariableConnector(OutputVariableType variableType, const MarkerDataStructure& markerData, Index itemIndex, Vector& value) const
+void CObjectConnectorSpringDamper::GetOutputVariableConnector(OutputVariableType variableType, const MarkerDataStructure& markerData, Vector& value) const
 {
 	Real force;
 	Vector3D relPos, relVel, forceDirection;
-	ComputeConnectorProperties(markerData, itemIndex, relPos, relVel, force, forceDirection);
+	ComputeConnectorProperties(markerData, relPos, relVel, force, forceDirection);
 
 	switch (variableType)
 	{

@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-10-12  00:27:46 (last modified)
+* @date         2026-10-17  13:37:10 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -120,7 +120,7 @@ public: // AUTO:
     virtual JacobianType::Type GetAvailableJacobians() const override;
 
     //! AUTO:  provide according output variable in 'value'
-    virtual void GetOutputVariableConnector(OutputVariableType variableType, const MarkerDataStructure& markerData, Index itemIndex, Vector& value) const override;
+    virtual void GetOutputVariableConnector(OutputVariableType variableType, const MarkerDataStructure& markerData, Vector& value) const override;
 
     //! AUTO:  provide requested markerType for connector
     virtual Marker::Type GetRequestedMarkerType() const override
@@ -135,28 +135,28 @@ public: // AUTO:
     }
 
     //! AUTO:  the right-hand side on the connector interface of position markers (#2745)
-    virtual bool ComputeODE2LHSConnector(const CSystemData& systemData, TemporaryComputationData& temp, Vector& localODE2Lhs, Index objectNumber) const override
+    virtual bool ComputeODE2LHSConnector(const CSystemData& systemData, TemporaryComputationData& temp, Vector& localODE2Lhs) const override
     {
-        ConnectorODE2LHSPositionMarkers(systemData, temp, *this, localODE2Lhs, objectNumber); return true;
+        ConnectorODE2LHSPositionMarkers(systemData, temp, *this, localODE2Lhs); return true;
     }
 
     //! AUTO:  the Jacobian by automatic differentiation of the force (#2745)
-    virtual bool ComputeJacobianODE2Connector(const CSystemData& systemData, TemporaryComputationData& temp, Real factorODE2, Real factorODE2_t, Index objectNumber, bool jacobianDerivativeNonZero) const override
+    virtual bool ComputeJacobianODE2Connector(const CSystemData& systemData, TemporaryComputationData& temp, Real factorODE2, Real factorODE2_t, bool jacobianDerivativeNonZero) const override
     {
-        ConnectorJacobianODE2PositionMarkers(systemData, temp, *this, factorODE2, factorODE2_t, objectNumber, jacobianDerivativeNonZero); return true;
+        ConnectorJacobianODE2PositionMarkers(systemData, temp, *this, factorODE2, factorODE2_t, jacobianDerivativeNonZero); return true;
     }
 
     //! AUTO:  the force on marker 1 from the kinematics of the two markers (#2745)
-    virtual void ComputeConnectorForcePosition(const MarkerPosition<Real>* markers, Real t, Index itemIndex, Vector3D& force) const override;
+    virtual void ComputeConnectorForcePosition(const MarkerPosition<Real>* markers, Real t, Vector3D& force) const override;
 
     //! AUTO:  the same force with automatic differentiation, for the Jacobian (#2745)
-    virtual void ComputeConnectorForcePositionDiff(const MarkerPosition<DRealPositionMarkers>* markers, Real t, Index itemIndex, SlimVectorBase<DRealPositionMarkers, 3>& force) const override;
+    virtual void ComputeConnectorForcePositionDiff(const MarkerPosition<DRealPositionMarkers>* markers, Real t, SlimVectorBase<DRealPositionMarkers, 3>& force) const override;
 
     //! AUTO:  the physics of the spring-damper, shared by the connector interface, its Jacobian and the output variables (#2745)
-    template<class TReal> void ComputeSpringForce(const SlimVectorBase<TReal, 3>& position0, const SlimVectorBase<TReal, 3>& position1, const SlimVectorBase<TReal, 3>& velocity0, const SlimVectorBase<TReal, 3>& velocity1, Real t, Index itemIndex, SlimVectorBase<TReal, 3>& vPos, SlimVectorBase<TReal, 3>& vVel, SlimVectorBase<TReal, 3>& fVec) const;
+    template<class TReal> void ComputeSpringForce(const SlimVectorBase<TReal, 3>& position0, const SlimVectorBase<TReal, 3>& position1, const SlimVectorBase<TReal, 3>& velocity0, const SlimVectorBase<TReal, 3>& velocity1, Real t, SlimVectorBase<TReal, 3>& vPos, SlimVectorBase<TReal, 3>& vVel, SlimVectorBase<TReal, 3>& fVec) const;
 
     //! AUTO:  call to user function implemented in separate file to avoid including pybind and MainSystem.h at too many places
-    void EvaluateUserFunctionForce(Vector3D& force, const MainSystemBase& mainSystem, Real t, Index itemIndex, Vector3D& vPos, Vector3D& vVel) const;
+    void EvaluateUserFunctionForce(Vector3D& force, const MainSystemBase& mainSystem, Real t, Vector3D& vPos, Vector3D& vVel) const;
 
     //! AUTO:  return if connector is active-->speeds up computation
     virtual bool IsActive() const override

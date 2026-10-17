@@ -62,7 +62,7 @@ Real CObjectContactCoordinate::ComputeContactForce(Real gap, Real gap_t) const
 }
 
 //! the force of the connector interface on coordinate markers (#2745), as ComputeODE2LHS: on marker 1, the reaction on marker 0
-void CObjectContactCoordinate::ComputeConnectorForceCoordinate(const MarkerCoordinate<Real>* markers, Real t, Index itemIndex, Real& force) const
+void CObjectContactCoordinate::ComputeConnectorForceCoordinate(const MarkerCoordinate<Real>* markers, Real t, Real& force) const
 {
 	force = 0.;
 	if (!parameters.activeConnector) { return; } //an inactive connector adds no force (#2735)
@@ -70,7 +70,7 @@ void CObjectContactCoordinate::ComputeConnectorForceCoordinate(const MarkerCoord
 }
 
 //! provide according output variable in "value"
-void CObjectContactCoordinate::GetOutputVariableConnector(OutputVariableType variableType, const MarkerDataStructure& markerData, Index itemIndex, Vector& value) const
+void CObjectContactCoordinate::GetOutputVariableConnector(OutputVariableType variableType, const MarkerDataStructure& markerData, Vector& value) const
 {
 	switch (variableType)
 	{
@@ -83,7 +83,7 @@ void CObjectContactCoordinate::GetOutputVariableConnector(OutputVariableType var
 
 //! function called after Newton method; returns a residual error (force); 
 //! done for two different computation states in order to estimate the correct time of contact
-Real CObjectContactCoordinate::PostNewtonStep(const MarkerDataStructure& markerDataCurrent, Index itemIndex, PostNewtonFlags::Type& flags, Real& recommendedStepSize)
+Real CObjectContactCoordinate::PostNewtonStep(const MarkerDataStructure& markerDataCurrent, PostNewtonFlags::Type& flags, Real& recommendedStepSize)
 {
 	//return force-type error in case of contact: in case that the assumed contact state has been wrong, 
 	//  the contact force (also negative) is returned as measure of the error

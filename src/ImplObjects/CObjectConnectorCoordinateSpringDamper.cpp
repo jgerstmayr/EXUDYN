@@ -23,7 +23,7 @@
 //! Jacobian by automatic differentiation (#2745)
 template<class TReal>
 void CObjectConnectorCoordinateSpringDamper::ComputeSpringForce(TReal value0, TReal value1, TReal value0_t, TReal value1_t,
-	Real t, Index itemIndex, TReal& relPos, TReal& relVel, TReal& force) const
+	Real t, TReal& relPos, TReal& relVel, TReal& force) const
 {
 	//relative position, spring length and inverse spring length
 	relPos = (value1 - value0);
@@ -53,7 +53,7 @@ void CObjectConnectorCoordinateSpringDamper::ComputeSpringForce(TReal value0, TR
 		}
 		else if constexpr (std::is_same<TReal, Real>::value)
 		{
-			EvaluateUserFunctionForce(force, cSystemData->GetMainSystemBacklink(), t, itemIndex, relPos, relVel);
+			EvaluateUserFunctionForce(force, cSystemData->GetMainSystemBacklink(), t, relPos, relVel);
 		}
 		else
 		{
@@ -63,18 +63,18 @@ void CObjectConnectorCoordinateSpringDamper::ComputeSpringForce(TReal value0, TR
 }
 
 //! the generalized force of the connector interface on coordinate markers (#2745): on marker 1
-void CObjectConnectorCoordinateSpringDamper::ComputeConnectorForceCoordinate(const MarkerCoordinate<Real>* markers, Real t, Index itemIndex, Real& force) const
+void CObjectConnectorCoordinateSpringDamper::ComputeConnectorForceCoordinate(const MarkerCoordinate<Real>* markers, Real t, Real& force) const
 {
 	Real relPos, relVel;
-	ComputeSpringForce(markers[0].value, markers[1].value, markers[0].value_t, markers[1].value_t, t, itemIndex, relPos, relVel, force);
+	ComputeSpringForce(markers[0].value, markers[1].value, markers[0].value_t, markers[1].value_t, t, relPos, relVel, force);
 }
 
 //! the force with automatic differentiation, for the Jacobian of the connector interface (#2745)
-void CObjectConnectorCoordinateSpringDamper::ComputeConnectorForceCoordinateDiff(const MarkerCoordinate<DRealCoordinateMarkers>* markers, Real t, Index itemIndex,
+void CObjectConnectorCoordinateSpringDamper::ComputeConnectorForceCoordinateDiff(const MarkerCoordinate<DRealCoordinateMarkers>* markers, Real t,
 	DRealCoordinateMarkers& force) const
 {
 	DRealCoordinateMarkers relPos, relVel;
-	ComputeSpringForce(markers[0].value, markers[1].value, markers[0].value_t, markers[1].value_t, t, itemIndex, relPos, relVel, force);
+	ComputeSpringForce(markers[0].value, markers[1].value, markers[0].value_t, markers[1].value_t, t, relPos, relVel, force);
 }
 
 
@@ -92,13 +92,13 @@ JacobianType::Type CObjectConnectorCoordinateSpringDamper::GetAvailableJacobians
 }
 
 //! provide according output variable in "value"
-void CObjectConnectorCoordinateSpringDamper::GetOutputVariableConnector(OutputVariableType variableType, const MarkerDataStructure& markerData, Index itemIndex, Vector& value) const
+void CObjectConnectorCoordinateSpringDamper::GetOutputVariableConnector(OutputVariableType variableType, const MarkerDataStructure& markerData, Vector& value) const
 {
 	Real relPos;
 	Real relVel;
 	Real force;
 	ComputeSpringForce(markerData.GetMarkerData(0).vectorValue[0], markerData.GetMarkerData(1).vectorValue[0],
-		markerData.GetMarkerData(0).vectorValue_t[0], markerData.GetMarkerData(1).vectorValue_t[0], markerData.GetTime(), itemIndex, relPos, relVel, force);
+		markerData.GetMarkerData(0).vectorValue_t[0], markerData.GetMarkerData(1).vectorValue_t[0], markerData.GetTime(), relPos, relVel, force);
 
 	switch (variableType)
 	{

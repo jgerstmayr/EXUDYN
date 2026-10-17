@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-09-15  19:35:47 (last modified)
+* @date         2026-10-17  13:37:10 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -137,7 +137,7 @@ public: // AUTO:
     }
 
     //! AUTO:  Computational function: compute left-hand-side (LHS) of second order ordinary differential equations (ODE) to 'ode2Lhs'
-    virtual void ComputeODE2LHS(Vector& ode2Lhs, const MarkerDataStructure& markerData, Index objectNumber) const override;
+    virtual void ComputeODE2LHS(Vector& ode2Lhs, const MarkerDataStructure& markerData) const override;
 
     //! AUTO:  return the available jacobian dependencies and the jacobians which are available as a function; if jacobian dependencies exist but are not available as a function, it is computed numerically; can be combined with 2^i enum flags
     virtual JacobianType::Type GetAvailableJacobians() const override
@@ -146,7 +146,7 @@ public: // AUTO:
     }
 
     //! AUTO:  provide according output variable in 'value'
-    virtual void GetOutputVariableConnector(OutputVariableType variableType, const MarkerDataStructure& markerData, Index itemIndex, Vector& value) const override;
+    virtual void GetOutputVariableConnector(OutputVariableType variableType, const MarkerDataStructure& markerData, Vector& value) const override;
 
     //! AUTO:  provide requested markerType for connector
     virtual Marker::Type GetRequestedMarkerType() const override
@@ -167,7 +167,7 @@ public: // AUTO:
     }
 
     //! AUTO:  compute reeving geometry based on tempPositionsList, length, time derivative of length
-    void ComputeReevingGeometry(const MarkerDataStructure& markerData, Index itemIndex, Vector3DList& positionsList, Real& actualLength, Real& actualLength_t, bool storePositions) const;
+    void ComputeReevingGeometry(const MarkerDataStructure& markerData, Vector3DList& positionsList, Real& actualLength, Real& actualLength_t, bool storePositions) const;
 
     //! AUTO:  compute force in reeving system (including damping)
     Real ComputeForce(Real L, Real L0, Real L_t, Real L0_t, Real EA, Real DA) const;

@@ -46,7 +46,7 @@ Real CObjectContactCurveCircles::ComputePolynomials(Real x, Real c, Index segNum
 
 //compute the properties which are needed for computation of LHS and needed for OutputVariables
 //NOTE: all computations done in local 2D frame!
-void CObjectContactCurveCircles::ComputeConnectorProperties(const MarkerDataStructure& markerData, Index itemIndex, LinkedDataVector& data, 
+void CObjectContactCurveCircles::ComputeConnectorProperties(const MarkerDataStructure& markerData, LinkedDataVector& data, 
 	bool useDataStates, Vector2D& forceMarker0, Real& torqueMarker0,
 	Vector& gapPerSegment, Vector& gapPerSegment_t, Vector& segmentsForceLocalX, Vector& segmentsForceLocalY
 	//ResizableConstVectorBase<Real, CObjectContactCurveCirclesMaxConstSize>& gapPerSegment,
@@ -250,7 +250,7 @@ void CObjectContactCurveCircles::ComputeConnectorProperties(const MarkerDataStru
 
 //! Computational function: compute left-hand-side (LHS) of second order ordinary differential equations (ODE) to "ode2Lhs"
 //  MODEL: f
-void CObjectContactCurveCircles::ComputeODE2LHS(Vector& ode2Lhs, const MarkerDataStructure& markerData, Index objectNumber) const
+void CObjectContactCurveCircles::ComputeODE2LHS(Vector& ode2Lhs, const MarkerDataStructure& markerData) const
 {
 	CHECKandTHROW(markerData.GetMarkerData(1).velocityAvailable && markerData.GetMarkerData(0).velocityAvailable,
 		"CObjectContactCurveCircles::ComputeAlgebraicEquations: marker do not provide velocityLevel information");
@@ -261,7 +261,7 @@ void CObjectContactCurveCircles::ComputeODE2LHS(Vector& ode2Lhs, const MarkerDat
 	Vector2D forceMarker0;
 	Real torqueMarker0;
 
-	ComputeConnectorProperties(markerData, objectNumber, data, useDataStates, forceMarker0, torqueMarker0,
+	ComputeConnectorProperties(markerData, data, useDataStates, forceMarker0, torqueMarker0,
 		gapPerSegment, gapPerSegment_t, segmentsForceLocalX, segmentsForceLocalY);
 
 
@@ -331,7 +331,7 @@ void CObjectContactCurveCircles::ComputeODE2LHS(Vector& ode2Lhs, const MarkerDat
 
 
 //! provide according output variable in "value"
-void CObjectContactCurveCircles::GetOutputVariableConnector(OutputVariableType variableType, const MarkerDataStructure& markerData, Index itemIndex, Vector& value) const
+void CObjectContactCurveCircles::GetOutputVariableConnector(OutputVariableType variableType, const MarkerDataStructure& markerData, Vector& value) const
 {
 	//per segment (#2867): the gaps and their velocities from the current geometry, the forces as they act with the contact
 	//states of the data node; computed on a copy of the data coordinates, which an output must not change
@@ -345,12 +345,12 @@ void CObjectContactCurveCircles::GetOutputVariableConnector(OutputVariableType v
 	{
 	case OutputVariableType::DisplacementLocal:
 	case OutputVariableType::VelocityLocal:
-		ComputeConnectorProperties(markerData, itemIndex, data, false, forceMarker0, torqueMarker0,
+		ComputeConnectorProperties(markerData, data, false, forceMarker0, torqueMarker0,
 			gapPerSegment, gapPerSegment_t, segmentsForceLocalX, segmentsForceLocalY);
 		value.CopyFrom(variableType == OutputVariableType::DisplacementLocal ? gapPerSegment : gapPerSegment_t);
 		break;
 	case OutputVariableType::ForceLocal:
-		ComputeConnectorProperties(markerData, itemIndex, data, true, forceMarker0, torqueMarker0,
+		ComputeConnectorProperties(markerData, data, true, forceMarker0, torqueMarker0,
 			gapPerSegment, gapPerSegment_t, segmentsForceLocalX, segmentsForceLocalY);
 		value.SetNumberOfItems(2 * nSegments);
 		for (Index j = 0; j < nSegments; j++) //the force on the circle; the vectors hold it with the sign of the equations
@@ -368,7 +368,7 @@ void CObjectContactCurveCircles::GetOutputVariableConnector(OutputVariableType v
 
 //! function called after Newton method; returns a residual error (force); 
 //! done for two different computation states in order to estimate the correct time of contact
-Real CObjectContactCurveCircles::PostNewtonStep(const MarkerDataStructure& markerDataCurrent, Index itemIndex, PostNewtonFlags::Type& flags, Real& recommendedStepSize)
+Real CObjectContactCurveCircles::PostNewtonStep(const MarkerDataStructure& markerDataCurrent, PostNewtonFlags::Type& flags, Real& recommendedStepSize)
 {
 	//return force-type error in case of contact: in case that the assumed contact state has been wrong, 
 	//  the contact force (also negative) is returned as measure of the error
@@ -383,7 +383,7 @@ Real CObjectContactCurveCircles::PostNewtonStep(const MarkerDataStructure& marke
 	Vector2D forceMarker0;
 	Real torqueMarker0;
 
-	ComputeConnectorProperties(markerDataCurrent, itemIndex, data, useDataStates, forceMarker0, torqueMarker0,
+	ComputeConnectorProperties(markerDataCurrent, data, useDataStates, forceMarker0, torqueMarker0,
 		gapPerSegment, gapPerSegment_t, segmentsForceLocalX, segmentsForceLocalY);
 
 

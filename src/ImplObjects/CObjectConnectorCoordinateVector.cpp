@@ -28,7 +28,7 @@ Index CObjectConnectorCoordinateVector::GetAlgebraicEquationsSize() const
 }
 
 //! Computational function: compute algebraic equations and write residual into "algebraicEquations"
-void CObjectConnectorCoordinateVector::ComputeAlgebraicEquations(Vector& algebraicEquations, const MarkerDataStructure& markerData, Real t, Index itemIndex, bool velocityLevel) const
+void CObjectConnectorCoordinateVector::ComputeAlgebraicEquations(Vector& algebraicEquations, const MarkerDataStructure& markerData, Real t, bool velocityLevel) const
 {
 	if (parameters.activeConnector)
 	{
@@ -115,7 +115,7 @@ void CObjectConnectorCoordinateVector::ComputeAlgebraicEquations(Vector& algebra
 		}
 		else
 		{
-			EvaluateUserFunctionConstraint(algebraicEquations, cSystemData->GetMainSystemBacklink(), markerData.GetTime(), itemIndex,
+			EvaluateUserFunctionConstraint(algebraicEquations, cSystemData->GetMainSystemBacklink(), markerData.GetTime(),
 				markerData.GetMarkerData(0).vectorValue, markerData.GetMarkerData(1).vectorValue,
 				markerData.GetMarkerData(0).vectorValue_t, markerData.GetMarkerData(1).vectorValue_t, velocityLevel || parameters.velocityLevel);
 			CHECKandTHROW(algebraicEquations.NumberOfItems() == nAE, "CObjectConnectorCoordinateVector::ComputeAlgebraicEquations with constraintUserFunction: size returned =" + EXUstd::ToString(algebraicEquations.NumberOfItems()) + " but expected size of algebraic equations =" + EXUstd::ToString(nAE));
@@ -129,7 +129,7 @@ void CObjectConnectorCoordinateVector::ComputeAlgebraicEquations(Vector& algebra
 }
 
 void CObjectConnectorCoordinateVector::ComputeJacobianAE(ResizableMatrix& jacobian_ODE2, ResizableMatrix& jacobian_ODE2_t, ResizableMatrix& jacobian_ODE1, 
-	ResizableMatrix& jacobian_AE, const MarkerDataStructure& markerData, Real t, Index itemIndex) const
+	ResizableMatrix& jacobian_AE, const MarkerDataStructure& markerData, Real t) const
 {
 	Index nAE = GetAlgebraicEquationsSize();
 	if (parameters.activeConnector)
@@ -202,7 +202,7 @@ void CObjectConnectorCoordinateVector::ComputeJacobianAE(ResizableMatrix& jacobi
 		else
 		{
 			EXUmath::MatrixContainer MC;
-			EvaluateUserFunctionJacobian(MC, cSystemData->GetMainSystemBacklink(), markerData.GetTime(), itemIndex,
+			EvaluateUserFunctionJacobian(MC, cSystemData->GetMainSystemBacklink(), markerData.GetTime(),
 				markerData.GetMarkerData(0).vectorValue, markerData.GetMarkerData(1).vectorValue,
 				markerData.GetMarkerData(0).vectorValue_t, markerData.GetMarkerData(1).vectorValue_t, parameters.velocityLevel);
 
@@ -248,7 +248,7 @@ JacobianType::Type CObjectConnectorCoordinateVector::GetAvailableJacobians() con
 
 
 //! provide according output variable in "value"
-void CObjectConnectorCoordinateVector::GetOutputVariableConnector(OutputVariableType variableType, const MarkerDataStructure& markerData, Index itemIndex, Vector& value) const
+void CObjectConnectorCoordinateVector::GetOutputVariableConnector(OutputVariableType variableType, const MarkerDataStructure& markerData, Vector& value) const
 {
 	switch (variableType)
 	{

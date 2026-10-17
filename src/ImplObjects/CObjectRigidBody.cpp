@@ -126,7 +126,7 @@ bool CObjectRigidBody::HasConstantMassMatrix() const
 }
 
 //! Computational function: compute mass matrix
-void CObjectRigidBody::ComputeMassMatrix(EXUmath::MatrixContainer& massMatrixC, const ArrayIndex& ltg, Index objectNumber, bool computeInverse) const
+void CObjectRigidBody::ComputeMassMatrix(EXUmath::MatrixContainer& massMatrixC, const ArrayIndex& ltg, bool computeInverse) const
 {
 	Matrix& massMatrix = massMatrixC.GetInternalDenseMatrix();
 	//STARTGLOBALTIMER(TSrigidMass);
@@ -199,7 +199,7 @@ void CObjectRigidBody::ComputeMassMatrix(EXUmath::MatrixContainer& massMatrixC, 
 
 
 //! Computational function: compute left-hand-side (LHS) of second order ordinary differential equations (ODE) to "ode2Lhs"
-void CObjectRigidBody::ComputeODE2LHS(Vector& ode2Lhs, Index objectNumber) const
+void CObjectRigidBody::ComputeODE2LHS(Vector& ode2Lhs) const
 {
 	//STARTGLOBALTIMER(TSrigidInertia);
 	ode2Lhs.SetNumberOfItems(GetODE2Size());
@@ -598,7 +598,7 @@ void CObjectRigidBody::AddForceTorque(const Vector3D& localPosition, const Vecto
 	}
 }
 
-void CObjectRigidBody::GetOutputVariableBody(OutputVariableType variableType, const Vector3D& localPosition, ConfigurationType configuration, Vector& value, Index objectNumber) const
+void CObjectRigidBody::GetOutputVariableBody(OutputVariableType variableType, const Vector3D& localPosition, ConfigurationType configuration, Vector& value) const
 {
 	switch (variableType)
 	{
@@ -852,7 +852,7 @@ void CObjectRigidBody::ComputeRigidBodyMarkerData(const Vector3D& localPosition,
 //#define useNewCObjectRigidBody
 //#ifndef useNewCObjectRigidBody
 ////! Computational function: compute mass matrix
-//void CObjectRigidBody::ComputeMassMatrix(EXUmath::MatrixContainer& massMatrixC, const ArrayIndex& ltg, Index objectNumber, bool computeInverse) const
+//void CObjectRigidBody::ComputeMassMatrix(EXUmath::MatrixContainer& massMatrixC, const ArrayIndex& ltg, bool computeInverse) const
 //{
 //CHECKandTHROW(!computeInverse, "CObjectRigidBody::ComputeMassMatrix: computeInverse=True not implemented, change solver settings: computeMassMatrixInversePerBody=False");
 //
@@ -910,7 +910,7 @@ void CObjectRigidBody::ComputeRigidBodyMarkerData(const Vector3D& localPosition,
 //}
 //
 ////! Computational function: compute left-hand-side (LHS) of second order ordinary differential equations (ODE) to "ode2Lhs"
-//void CObjectRigidBody::ComputeODE2LHS(Vector& ode2Lhs, Index objectNumber) const
+//void CObjectRigidBody::ComputeODE2LHS(Vector& ode2Lhs) const
 //{
 //	ode2Lhs.SetNumberOfItems(GetODE2Size());
 //	ode2Lhs.SetAll(0.);

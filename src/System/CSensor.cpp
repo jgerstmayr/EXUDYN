@@ -97,9 +97,9 @@ void CSensorObject::GetSensorValues(const CSystemData& cSystemData, Vector& valu
 		if (parameters.outputVariableType == OutputVariableType::HomogeneousTransformation)
 		{
 			OutputVariableHomogeneousTransformation([this, cObject, configuration](OutputVariableType type, Vector& v)
-				{ cObject->GetOutputVariable(type, v, configuration, parameters.objectNumber); }, values);
+				{ cObject->GetOutputVariable(type, v, configuration); }, values);
 		}
-		else { cObject->GetOutputVariable(parameters.outputVariableType, values, configuration, parameters.objectNumber); }
+		else { cObject->GetOutputVariable(parameters.outputVariableType, values, configuration); }
 	}
 	else
 	{
@@ -110,7 +110,7 @@ void CSensorObject::GetSensorValues(const CSystemData& cSystemData, Vector& valu
 		const bool computeJacobian = false; //not needed for OutputVariables
 		cSystemData.ComputeMarkerDataStructure(cConnector, computeJacobian, markerDataStructure);
 
-		GetConnectorOutputVariable(*cConnector, parameters.outputVariableType, markerDataStructure, parameters.objectNumber, values); //#2870
+		GetConnectorOutputVariable(*cConnector, parameters.outputVariableType, markerDataStructure, values); //#2870
 
 	}
 }
@@ -122,10 +122,10 @@ void CSensorBody::GetSensorValues(const CSystemData& cSystemData, Vector& values
 	if (parameters.outputVariableType == OutputVariableType::HomogeneousTransformation)
 	{
 		OutputVariableHomogeneousTransformation([this, &cObject, configuration](OutputVariableType type, Vector& v)
-			{ cObject.GetOutputVariableBody(type, parameters.localPosition, configuration, v, parameters.bodyNumber); }, values);
+			{ cObject.GetOutputVariableBody(type, parameters.localPosition, configuration, v); }, values);
 		return;
 	}
-	cObject.GetOutputVariableBody(parameters.outputVariableType, parameters.localPosition, configuration, values, parameters.bodyNumber);
+	cObject.GetOutputVariableBody(parameters.outputVariableType, parameters.localPosition, configuration, values);
 }
 
 //! main function to generate sensor output values

@@ -188,7 +188,7 @@ void CObjectANCFCable2DBase::PreComputeMassTerms() const
 }
 
 //! Computational function: compute mass matrix
-void CObjectANCFCable2DBase::ComputeMassMatrix(EXUmath::MatrixContainer& massMatrixC, const ArrayIndex& ltg, Index objectNumber, bool computeInverse) const
+void CObjectANCFCable2DBase::ComputeMassMatrix(EXUmath::MatrixContainer& massMatrixC, const ArrayIndex& ltg, bool computeInverse) const
 {
 	CHECKandTHROW(!computeInverse, "CObjectANCFCable2DBase::ComputeMassMatrix: computeMassMatrixInversePerBody=True is not possible for this type of element; change solver settings", ExudynNotImplementedError);
 
@@ -198,7 +198,7 @@ void CObjectANCFCable2DBase::ComputeMassMatrix(EXUmath::MatrixContainer& massMat
 }
 
 //! Computational function: compute left-hand-side (LHS) of second order ordinary differential equations (ODE) to "ode2Lhs"
-void CObjectANCFCable2DBase::ComputeODE2LHS(Vector& ode2Lhs, Index objectNumber) const
+void CObjectANCFCable2DBase::ComputeODE2LHS(Vector& ode2Lhs) const
 {
 	const Index ns = 4;   //number of shape functions
 	//pout << "GetNumberOfNodes() =" << GetNumberOfNodes() << "\n";
@@ -208,7 +208,7 @@ void CObjectANCFCable2DBase::ComputeODE2LHS(Vector& ode2Lhs, Index objectNumber)
 		ConstSizeVector<2 * ns> qANCF_t;
 		ComputeCurrentObjectCoordinates(qANCF);
 		ComputeCurrentObjectVelocities(qANCF_t);
-		ComputeODE2LHStemplate<Real>(ode2Lhs, qANCF, qANCF_t, objectNumber);
+		ComputeODE2LHStemplate<Real>(ode2Lhs, qANCF, qANCF_t);
 	}
 	else //ALE
 	{
@@ -216,7 +216,7 @@ void CObjectANCFCable2DBase::ComputeODE2LHS(Vector& ode2Lhs, Index objectNumber)
 		ConstSizeVector<2 * ns+1> qANCF_t;
 		ComputeCurrentObjectCoordinates(qANCF);
 		ComputeCurrentObjectVelocities(qANCF_t);
-		ComputeODE2LHStemplate<Real>(ode2Lhs, qANCF, qANCF_t, objectNumber);
+		ComputeODE2LHStemplate<Real>(ode2Lhs, qANCF, qANCF_t);
 
 	}
 }
@@ -224,7 +224,7 @@ void CObjectANCFCable2DBase::ComputeODE2LHS(Vector& ode2Lhs, Index objectNumber)
 //! Computational function: compute left-hand-side (LHS) of second order ordinary differential equations (ODE) to "ode2Lhs"
 template<class TReal, Index ancfSize>
 void CObjectANCFCable2DBase::ComputeODE2LHStemplate(VectorBase<TReal>& ode2Lhs, 
-	const ConstSizeVectorBase<TReal, ancfSize>& qANCF, const ConstSizeVectorBase<TReal, ancfSize>& qANCF_t, Index objectNumber) const
+	const ConstSizeVectorBase<TReal, ancfSize>& qANCF, const ConstSizeVectorBase<TReal, ancfSize>& qANCF_t) const
 {
 	ode2Lhs.SetNumberOfItems(ancfSize); //works both for ANCF and ALE-ANCF
 	ode2Lhs.SetAll(0.);
@@ -362,7 +362,7 @@ void CObjectANCFCable2DBase::ComputeODE2LHStemplate(VectorBase<TReal>& ode2Lhs,
 			Real axialPositionNormalized = x / L;
 			axialForce = ComputeAxialForceLocalUserFunction(axialPositionNormalized,
 				(Real)axialStrain, (Real)axialStrain_t, axialStrainRef, EA, axialDamping,
-				curvature, curvature_t, curvatureRef, objectNumber, ConfigurationType::Current);
+				curvature, curvature_t, curvatureRef, ConfigurationType::Current);
 		}
 
 		elasticForces *= integrationFactor * axialForce;
@@ -504,7 +504,7 @@ void CObjectANCFCable2DBase::ComputeODE2LHStemplate(VectorBase<TReal>& ode2Lhs,
 			Real axialPositionNormalized = x / L;
 			bendingMoment = ComputeBendingMomentLocalUserFunction(axialPositionNormalized,
 				(Real)curvature, (Real)curvature_t, curvatureRef, EI, bendingDamping, //curvature: DReal, converted into Real
-				axialStrain, axialStrain_t, axialStrainRef, objectNumber);
+				axialStrain, axialStrain_t, axialStrainRef);
 		}
 
 		elasticForces *= integrationFactor * bendingMoment;
@@ -525,8 +525,7 @@ JacobianType::Type CObjectANCFCable2D::GetAvailableJacobians() const
 //! jacobian of LHS, w.r.t. position AND velocity level coordinates
 //void CObjectANCFCable2DBase::ComputeJacobianODE2_ODE2(ResizableMatrix& jacobian, ResizableMatrix& jacobian_ODE2_t) const
 void CObjectANCFCable2DBase::ComputeJacobianODE2_ODE2(EXUmath::MatrixContainer& jacobianODE2, JacobianTemp& temp, 
-	Real factorODE2, Real factorODE2_t,
-	Index objectNumber, const ArrayIndex& ltg) const
+	Real factorODE2, Real factorODE2_t, const ArrayIndex& ltg) const
 {
 	const Index ns = 4;   //number of shape functions
 	ConstSizeVector<2*ns> qANCF0;
@@ -545,7 +544,7 @@ void CObjectANCFCable2DBase::ComputeJacobianODE2_ODE2(EXUmath::MatrixContainer& 
 	ConstSizeVectorBase<DReal16, 2 * ns> ode2Lhs;
 	LinkedDataVectorBase<DReal16> linkedOde2Lhs(ode2Lhs); //added because of decoupling of ConstSizeVectorBase
 
-	ComputeODE2LHStemplate<DReal16>(linkedOde2Lhs, qANCF, qANCF_t, objectNumber);
+	ComputeODE2LHStemplate<DReal16>(linkedOde2Lhs, qANCF, qANCF_t);
 
 	jacobianODE2.SetUseDenseMatrix(true);
 	ResizableMatrix& jac = jacobianODE2.GetInternalDenseMatrix();
@@ -769,14 +768,14 @@ void CObjectANCFCable2DBase::GetMassWeightedPositionJacobian(Matrix& value) cons
 //! compute local force for user function; axialPositionNormalized is in unit coordinates [-1, +1]
 Real CObjectANCFCable2DBase::ComputeAxialForceLocalUserFunction(Real axialPositionNormalized, 
 	Real axialStrain, Real axialStrain_t, Real axialStrainRef, Real axialStiffness, Real axialDamping,
-	Real curvature, Real curvature_t, Real curvatureRef, Index itemIndex, ConfigurationType configuration) const
+	Real curvature, Real curvature_t, Real curvatureRef, ConfigurationType configuration) const
 {
 	if (HasForceUserFunction())
 	{
 		const CObjectANCFCable2D& cable = (const CObjectANCFCable2D&)(*this);
 		Real t = cSystemData->GetCData().Get(configuration).GetTime();
 		Real force;
-		cable.EvaluateUserFunctionAxialForce(force, cSystemData->GetMainSystemBacklink(), t, itemIndex,
+		cable.EvaluateUserFunctionAxialForce(force, cSystemData->GetMainSystemBacklink(), t,
 					axialPositionNormalized, axialStrain, axialStrain_t, axialStrainRef, axialStiffness, axialDamping,
 					curvature, curvature_t, curvatureRef);
 		return force;
@@ -790,14 +789,14 @@ Real CObjectANCFCable2DBase::ComputeAxialForceLocalUserFunction(Real axialPositi
 //! compute local torque for user function; axialPositionNormalized is in unit coordinates [-1, +1]
 Real CObjectANCFCable2DBase::ComputeBendingMomentLocalUserFunction(Real axialPositionNormalized,
 	Real curvature, Real curvature_t, Real curvatureRef, Real bendingStiffness, Real bendingDamping,
-	Real axialStrain, Real axialStrain_t, Real axialStrainRef, Index itemIndex, ConfigurationType configuration) const
+	Real axialStrain, Real axialStrain_t, Real axialStrainRef, ConfigurationType configuration) const
 {
 	if (HasTorqueUserFunction())
 	{
 		const CObjectANCFCable2D& cable = (const CObjectANCFCable2D&)(*this);
 		Real t = cSystemData->GetCData().Get(configuration).GetTime();
 		Real torque;
-		cable.EvaluateUserFunctionBendingMoment(torque, cSystemData->GetMainSystemBacklink(), t, itemIndex,
+		cable.EvaluateUserFunctionBendingMoment(torque, cSystemData->GetMainSystemBacklink(), t,
 			axialPositionNormalized, curvature, curvature_t, curvatureRef, bendingStiffness, bendingDamping,
 			axialStrain, axialStrain_t, axialStrainRef);
 		return torque;
@@ -871,7 +870,7 @@ Real CObjectANCFCable2DBase::ComputeElasticEnergy(ConfigurationType configuratio
 
 //! provide according output variable in "value"
 void CObjectANCFCable2DBase::GetOutputVariableBody(OutputVariableType variableType, const Vector3D& localPosition, 
-	ConfigurationType configuration, Vector& value, Index objectNumber) const
+	ConfigurationType configuration, Vector& value) const
 {
 	//outputVariables = "{
 	//'Position':'global position vector of local axis (1) and cross section (2) position', 
@@ -991,7 +990,7 @@ void CObjectANCFCable2DBase::GetOutputVariableBody(OutputVariableType variableTy
 
 		Real force = ComputeAxialForceLocalUserFunction(axialPositionNormalized,
 			axialStrain, axialStrain_t, axialStrainRef, axialStiffness, axialDamping,
-			curvature, curvature_t, curvatureRef, objectNumber, configuration);
+			curvature, curvature_t, curvatureRef, configuration);
 
 		value.SetVector({ force }); break;
 	}
@@ -1016,7 +1015,7 @@ void CObjectANCFCable2DBase::GetOutputVariableBody(OutputVariableType variableTy
 
 		Real torque = ComputeBendingMomentLocalUserFunction(axialPositionNormalized,
 			curvature, curvature_t, curvatureRef, bendingStiffness, bendingDamping,
-			axialStrain, axialStrain_t, axialStrainRef, objectNumber, configuration);
+			axialStrain, axialStrain_t, axialStrainRef, configuration);
 
 		value.SetVector({ torque }); break;
 	}
@@ -1025,7 +1024,7 @@ void CObjectANCFCable2DBase::GetOutputVariableBody(OutputVariableType variableTy
 		value.SetVector({ ComputeElasticEnergy(configuration) }); break; }
 	case OutputVariableType::KineticEnergy: {
 		CheckEnergyLocalPosition(localPosition, "ObjectANCFCable2D");
-		value.SetVector({ ComputeKineticEnergyFromMassMatrix(configuration, objectNumber, "ObjectANCFCable2D") }); break; }
+		value.SetVector({ ComputeKineticEnergyFromMassMatrix(configuration, "ObjectANCFCable2D") }); break; }
 	default:
 		SysError("CObjectANCFCable2D::GetOutputVariableBody failed"); //error should not occur, because types are checked!
 	}

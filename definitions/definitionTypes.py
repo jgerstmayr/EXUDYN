@@ -822,23 +822,23 @@ def ItemConnectorInterface(markers, constraint=False, jacobian=True, markerDataP
     if constraint:
         return [
             ItemFunction(type=TBool, destination=DestComp, cFlags=CFConst, pythonName='ComputeAlgebraicEquationsConnector',
-                args=system + 'Index objectNumber, bool velocityLevel, Vector& localAE',
+                args=system + 'bool velocityLevel, Vector& localAE',
                 implementation='if (!OnConnectorInterface()) { return false; } ConstraintEquations' + markers
-                    + 'Markers(systemData, temp, *this, objectNumber, velocityLevel, localAE); return true;',
+                    + 'Markers(systemData, temp, *this, velocityLevel, localAE); return true;',
                 description='the equations on the connector interface of ' + markers.lower() + ' markers (#2745)'),
             ItemFunction(type=TBool, destination=DestComp, cFlags=CFConst, pythonName='ComputeJacobianAEConnector',
-                args=system + 'Index objectNumber, ResizableMatrix& jacobianAE_ODE2',
+                args=system + 'ResizableMatrix& jacobianAE_ODE2',
                 implementation='if (!OnConnectorInterface()) { return false; } ConstraintJacobian' + markers
-                    + 'Markers(systemData, temp, *this, objectNumber, jacobianAE_ODE2); return true;',
+                    + 'Markers(systemData, temp, *this, jacobianAE_ODE2); return true;',
                 description='C_q by automatic differentiation of the equations (#2745)'),
             ItemFunction(type=TBool, destination=DestComp, cFlags=CFConst, pythonName='ComputeReactionForcesConnector',
-                args=system + 'Index objectNumber, const Vector& reactionForces, Vector& localODE2',
+                args=system + 'const Vector& reactionForces, Vector& localODE2',
                 implementation='if (!OnConnectorInterface()) { return false; } ConstraintReactionForces' + markers
-                    + 'Markers(systemData, temp, *this, objectNumber, reactionForces, localODE2); return true;',
+                    + 'Markers(systemData, temp, *this, reactionForces, localODE2); return true;',
                 description='C_q^T lambda per marker, without forming C_q (#2745)'),
             ] + ([] if markerDataPath else [
             ItemFunctionDef('ComputeAlgebraicEquations',
-                args='Vector& algebraicEquations, const MarkerDataStructure& markerData, Real t, Index itemIndex, bool velocityLevel = false',
+                args='Vector& algebraicEquations, const MarkerDataStructure& markerData, Real t, bool velocityLevel = false',
                 implementation='CHECKandTHROW(!IsActive(), "ComputeAlgebraicEquations: an active constraint computes on the connector interface"); '
                     'algebraicEquations.CopyFrom(markerData.GetLagrangeMultipliers());',
                 description='the equations of the inactive constraint, lambda = 0; the active one computes on the connector interface (#2745)'),
@@ -849,15 +849,15 @@ def ItemConnectorInterface(markers, constraint=False, jacobian=True, markerDataP
             ])
     members = [
         ItemFunction(type=TBool, destination=DestComp, cFlags=CFConst, pythonName='ComputeODE2LHSConnector',
-            args=system + 'Vector& localODE2Lhs, Index objectNumber',
-            implementation='ConnectorODE2LHS' + markers + 'Markers(systemData, temp, *this, localODE2Lhs, objectNumber); return true;',
+            args=system + 'Vector& localODE2Lhs',
+            implementation='ConnectorODE2LHS' + markers + 'Markers(systemData, temp, *this, localODE2Lhs); return true;',
             description='the right-hand side on the connector interface of ' + markers.lower() + ' markers (#2745)'),
         ]
     if jacobian:
         members.append(ItemFunction(type=TBool, destination=DestComp, cFlags=CFConst, pythonName='ComputeJacobianODE2Connector',
-            args=system + 'Real factorODE2, Real factorODE2_t, Index objectNumber, bool jacobianDerivativeNonZero',
+            args=system + 'Real factorODE2, Real factorODE2_t, bool jacobianDerivativeNonZero',
             implementation='ConnectorJacobianODE2' + markers
-                + 'Markers(systemData, temp, *this, factorODE2, factorODE2_t, objectNumber, jacobianDerivativeNonZero); return true;',
+                + 'Markers(systemData, temp, *this, factorODE2, factorODE2_t, jacobianDerivativeNonZero); return true;',
             description='the Jacobian by automatic differentiation of the force (#2745)'))
     return members
 

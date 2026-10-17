@@ -116,7 +116,7 @@ Matrix2D CObjectBeamGeometricallyExact2D::GetRotationMatrix2D(Real theta) const
 
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 // Compute mass matrix for ns-node element (each node: 3 DOFs)
-void CObjectBeamGeometricallyExact2D::ComputeMassMatrix(EXUmath::MatrixContainer& massMatrixC, const ArrayIndex& ltg, Index objectNumber, bool computeInverse) const
+void CObjectBeamGeometricallyExact2D::ComputeMassMatrix(EXUmath::MatrixContainer& massMatrixC, const ArrayIndex& ltg, bool computeInverse) const
 {
     CHECKandTHROW(!computeInverse, "CObjectBeamGeometricallyExact2D::ComputeMassMatrix: computeMassMatrixInversePerBody=True is not possible for this type of element; change solver settings", ExudynNotImplementedError);
 
@@ -314,8 +314,7 @@ JacobianType::Type CObjectBeamGeometricallyExact2D::GetAvailableJacobians() cons
 //! jacobian of LHS, w.r.t. position AND velocity level coordinates
 //void CObjectANCFCable2DBase::ComputeJacobianODE2_ODE2(ResizableMatrix& jacobian, ResizableMatrix& jacobian_ODE2_t) const
 void CObjectBeamGeometricallyExact2D::ComputeJacobianODE2_ODE2(EXUmath::MatrixContainer& jacobianODE2, JacobianTemp& temp,
-    Real factorODE2, Real factorODE2_t,
-    Index objectNumber, const ArrayIndex& ltg) const
+    Real factorODE2, Real factorODE2_t, const ArrayIndex& ltg) const
 {
     const Index nodeSize = 3;
     const Index nODE2 = GetNumberOfNodes() * nodeSize;
@@ -337,7 +336,7 @@ void CObjectBeamGeometricallyExact2D::ComputeJacobianODE2_ODE2(EXUmath::MatrixCo
     ConstSizeVectorBase<DReal18, maxODE2coordinates> ode2Lhs(nODE2);
     LinkedDataVectorBase<DReal18> linkedOde2Lhs(ode2Lhs); //added because of decoupling of ConstSizeVectorBase
 
-    ComputeODE2LHStemplate<DReal18>(linkedOde2Lhs, qBeamTotal, qBeam_t, qBeam0Ref, objectNumber);
+    ComputeODE2LHStemplate<DReal18>(linkedOde2Lhs, qBeamTotal, qBeam_t, qBeam0Ref);
 
     jacobianODE2.SetUseDenseMatrix(true);
     ResizableMatrix& jac = jacobianODE2.GetInternalDenseMatrix();
@@ -356,7 +355,7 @@ void CObjectBeamGeometricallyExact2D::ComputeJacobianODE2_ODE2(EXUmath::MatrixCo
 
 
 // Compute ODE2 LHS for ns-node element
-void CObjectBeamGeometricallyExact2D::ComputeODE2LHS(Vector& ode2Lhs, Index objectNumber) const
+void CObjectBeamGeometricallyExact2D::ComputeODE2LHS(Vector& ode2Lhs) const
 {
     //const Index nodeSize = 3;
     //const Index nODE2 = GetNumberOfNodes() * nodeSize;
@@ -367,14 +366,14 @@ void CObjectBeamGeometricallyExact2D::ComputeODE2LHS(Vector& ode2Lhs, Index obje
 
     ComputeCurrentCoordinates(qBeam0Total, qBeam0_t, qBeam0Ref, ConfigurationType::Current);
 
-    ComputeODE2LHStemplate<Real>(ode2Lhs, qBeam0Total, qBeam0_t, qBeam0Ref, objectNumber);
+    ComputeODE2LHStemplate<Real>(ode2Lhs, qBeam0Total, qBeam0_t, qBeam0Ref);
 
 }
 
 template<class TReal>
 void CObjectBeamGeometricallyExact2D::ComputeODE2LHStemplate(VectorBase<TReal>& ode2Lhs, 
     const ConstSizeVectorBase<TReal, maxODE2coordinates>& qBeamTotal, const ConstSizeVectorBase<TReal, maxODE2coordinates>& qBeam_t,
-    const ConstSizeVectorBase<Real, maxODE2coordinates>& qBeamRef, Index objectNumber) const
+    const ConstSizeVectorBase<Real, maxODE2coordinates>& qBeamRef) const
 {
 
     ode2Lhs.SetNumberOfItems(GetODE2Size());
@@ -568,7 +567,7 @@ void CObjectBeamGeometricallyExact2D::GetMassWeightedPositionJacobian(Matrix& va
 
 //! provide according output variable in 'value'
 void CObjectBeamGeometricallyExact2D::GetOutputVariableBody(OutputVariableType variableType, const Vector3D& localPosition, 
-	ConfigurationType configuration, Vector& value, Index objectNumber) const
+	ConfigurationType configuration, Vector& value) const
 {
     switch (variableType)
     {
@@ -602,7 +601,7 @@ void CObjectBeamGeometricallyExact2D::GetOutputVariableBody(OutputVariableType v
                 value.SetVector({ ComputeElasticEnergy(configuration) }); break; }
             case OutputVariableType::KineticEnergy: {
                 CheckEnergyLocalPosition(localPosition, "ObjectBeamGeometricallyExact2D");
-                value.SetVector({ ComputeKineticEnergyFromMassMatrix(configuration, objectNumber, "ObjectBeamGeometricallyExact2D") }); break; }
+                value.SetVector({ ComputeKineticEnergyFromMassMatrix(configuration, "ObjectBeamGeometricallyExact2D") }); break; }
             default:
                 SysError("CObjectBeamGeometricallyExact2D::GetOutputVariableBody failed"); //error should not occur, because types are checked!
             }
@@ -783,14 +782,14 @@ void VisualizationObjectBeamGeometricallyExact2D::UpdateGraphics(const Visualiza
 	if (EXUstd::IsOfTypeAndNotNone(cObject->GetOutputVariableTypes(), visualizationSettings.contour.outputVariable))
 	{
 		Vector& value = vSystem->tempVector;
-		cObject->GetOutputVariableBody(visualizationSettings.contour.outputVariable, Vector3D({ -0.5*L,0.,0. }), ConfigurationType::Visualization, value, itemNumber);
+		cObject->GetOutputVariableBody(visualizationSettings.contour.outputVariable, Vector3D({ -0.5*L,0.,0. }), ConfigurationType::Visualization, value);
 		if (visualizationSettings.contour.outputVariableComponent < value.NumberOfItems())
 		{
 			EXUvis::ComputeContourColor<Vector>(value, visualizationSettings.contour.outputVariable, visualizationSettings.contour.outputVariableComponent, item.color1);
 			//std::cout << "item.color1=" << item.color1 << "\n";
 			value1 = item.color1[0];
 
-			cObject->GetOutputVariableBody(visualizationSettings.contour.outputVariable, Vector3D({ 0.5*L,0.,0. }), ConfigurationType::Visualization, value, itemNumber);
+			cObject->GetOutputVariableBody(visualizationSettings.contour.outputVariable, Vector3D({ 0.5*L,0.,0. }), ConfigurationType::Visualization, value);
 			EXUvis::ComputeContourColor<Vector>(value, visualizationSettings.contour.outputVariable, visualizationSettings.contour.outputVariableComponent, item.color2);
 			//std::cout << "item.color2=" << item.color2 << "\n";
 

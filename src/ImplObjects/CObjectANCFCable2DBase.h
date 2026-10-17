@@ -62,7 +62,7 @@ public:
 	virtual bool PotentialEnergyAvailable() const override { return !HasUserFunction(); }
 
 	//!  Computational function: compute mass matrix
-	virtual void ComputeMassMatrix(EXUmath::MatrixContainer& massMatrixC, const ArrayIndex& ltg, Index objectNumber, bool computeInverse=false) const override;
+	virtual void ComputeMassMatrix(EXUmath::MatrixContainer& massMatrixC, const ArrayIndex& ltg, bool computeInverse=false) const override;
 
 	//!  precompute mass terms if it has not been done yet
 	virtual void PreComputeMassTerms() const;
@@ -75,7 +75,7 @@ public:
 	//TEMPLATED FUNCTIONS
 	template<class TReal, Index ancfSize>
 	void ComputeODE2LHStemplate(VectorBase<TReal>& ode2Lhs, const ConstSizeVectorBase<TReal, ancfSize>& qANCF, 
-		const ConstSizeVectorBase<TReal, ancfSize>& qANCF_t, Index objectNumber) const;
+		const ConstSizeVectorBase<TReal, ancfSize>& qANCF_t) const;
 
 	//!  map element coordinates (position or veloctiy level) given by nodal vectors q0 and q1 onto compressed shape function vector to compute position, etc.
 	template<class TReal, Index ancfSize>
@@ -96,12 +96,11 @@ public:
 
 
 	//!  Computational function: compute left-hand-side (LHS) of second order ordinary differential equations (ODE) to "ode2Lhs"
-    virtual void ComputeODE2LHS(Vector& ode2Lhs, Index objectNumber) const override;
+    virtual void ComputeODE2LHS(Vector& ode2Lhs) const override;
 
 	//! compute derivative of left-hand-side (LHS) w.r.t q of second order ordinary differential equations (ODE) 
 	//! combined computation w.r.t. ODE2 and ODE2\_t variables jacobian has dimension GetODE2Size() x GetODE2Size(); this is the local tangent stiffness matrix;
-	virtual void ComputeJacobianODE2_ODE2(EXUmath::MatrixContainer& jacobianODE2, JacobianTemp& temp, Real factorODE2, Real factorODE2_t,
-		Index objectNumber, const ArrayIndex& ltg) const override;
+	virtual void ComputeJacobianODE2_ODE2(EXUmath::MatrixContainer& jacobianODE2, JacobianTemp& temp, Real factorODE2, Real factorODE2_t, const ArrayIndex& ltg) const override;
 
 
     //!  Flags to determine, which output variables are available (displacment, velocity, stress, ...)
@@ -114,7 +113,7 @@ public:
     virtual void GetMassWeightedPositionJacobian(Matrix& value) const override;
 
     //!  provide according output variable in "value"
-    virtual void GetOutputVariableBody(OutputVariableType variableType, const Vector3D& localPosition, ConfigurationType configuration, Vector& value, Index objectNumber) const override;
+    virtual void GetOutputVariableBody(OutputVariableType variableType, const Vector3D& localPosition, ConfigurationType configuration, Vector& value) const override;
 
     //!  return the (global) position of "localPosition" according to configuration type
     virtual Vector3D GetPosition(const Vector3D& localPosition, ConfigurationType configuration = ConfigurationType::Current) const override;
@@ -249,10 +248,10 @@ public:
 	//! compute local force for user function; axialPositionNormalized is in unit coordinates [0, 1]
 	Real ComputeAxialForceLocalUserFunction(Real axialPositionNormalized, Real axialStrain, Real axialStrain_t, Real axialStrain0, 
 		Real axialStiffness, Real axialDamping,
-		Real curvature, Real curvature_t, Real curvature0, Index itemIndex, ConfigurationType configuration = ConfigurationType::Current) const;
+		Real curvature, Real curvature_t, Real curvature0, ConfigurationType configuration = ConfigurationType::Current) const;
 	//! compute local torque for user function; axialPositionNormalized is in unit coordinates [0, 1]
 	Real ComputeBendingMomentLocalUserFunction(Real axialPositionNormalized, Real curvature, Real curvature_t, Real curvatureRef, Real bendingStiffness, Real bendingDamping,
-		Real axialStrain, Real axialStrain_t, Real axialStrainRef, Index itemIndex, ConfigurationType configuration = ConfigurationType::Current) const;
+		Real axialStrain, Real axialStrain_t, Real axialStrainRef, ConfigurationType configuration = ConfigurationType::Current) const;
 };
 
 

@@ -58,7 +58,7 @@ void CObjectGenericODE1::ComputeObjectCoordinates(Vector& coordinates, Configura
 
 //! Computational function: compute right-hand-side (RHS) of first order ordinary differential equations (ODE) to "ODE1Rhs"
 //in fact, this is the LHS function!
-void CObjectGenericODE1::ComputeODE1RHS(Vector& ODE1Rhs, Index objectNumber) const
+void CObjectGenericODE1::ComputeODE1RHS(Vector& ODE1Rhs) const
 {
 	Index nODE1 = GetODE1Size();
 	ODE1Rhs.SetNumberOfItems(nODE1);
@@ -82,7 +82,7 @@ void CObjectGenericODE1::ComputeODE1RHS(Vector& ODE1Rhs, Index objectNumber) con
 	if (parameters.rhsUserFunction)
 	{
 		Real t = GetCSystemData()->GetCData().GetCurrent().GetTime();
-		EvaluateUserFunctionRHS(tempUserFunctionForce, cSystemData->GetMainSystemBacklink(), t, objectNumber, tempCoordinates);
+		EvaluateUserFunctionRHS(tempUserFunctionForce, cSystemData->GetMainSystemBacklink(), t, tempCoordinates);
 		CHECKandTHROW(tempUserFunctionForce.NumberOfItems() == nODE1, "CObjectGenericODE1: forceUserFunction return a vector with different size from ObjectGenericODE1 system size", ExudynValueError);
 
 		ODE1Rhs += tempUserFunctionForce;
@@ -98,7 +98,7 @@ void CObjectGenericODE1::GetAccessFunction(AccessFunctionType accessType, Matrix
 }
 
 //! provide according output variable in "value"
-void CObjectGenericODE1::GetOutputVariable(OutputVariableType variableType, Vector& value, ConfigurationType configuration, Index objectNumber) const
+void CObjectGenericODE1::GetOutputVariable(OutputVariableType variableType, Vector& value, ConfigurationType configuration) const
 {
 	Index nODE1 = GetODE1Size();
 	tempCoordinates.SetNumberOfItems(nODE1);

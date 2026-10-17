@@ -163,15 +163,15 @@ inline void ComputePosVel(const MarkerDataStructure& markerData, const CObjectCo
 }
 
 //! function provides the force, relative displacement and relative velocity of the connector
-inline void CObjectConnectorCoordinateSpringDamperExt::ComputeSpringForce(const MarkerDataStructure& markerData, Index itemIndex,
+inline void CObjectConnectorCoordinateSpringDamperExt::ComputeSpringForce(const MarkerDataStructure& markerData,
 	Real& relPos, Real& relVel, Real& force) const
 {
 	ComputePosVel(markerData, parameters, relPos, relVel);
-	ComputeSpringForceRelative(relPos, relVel, markerData.GetTime(), itemIndex, force);
+	ComputeSpringForceRelative(relPos, relVel, markerData.GetTime(), force);
 }
 
 //! the force of the connector from its relative position and velocity (#2745)
-void CObjectConnectorCoordinateSpringDamperExt::ComputeSpringForceRelative(Real relPos, Real relVel, Real t, Index itemIndex, Real& force) const
+void CObjectConnectorCoordinateSpringDamperExt::ComputeSpringForceRelative(Real relPos, Real relVel, Real t, Real& force) const
 {
 	force = 0; //default; necessary, e.g. if computed in GetOutputVariable...
 	if (parameters.activeConnector)
@@ -218,8 +218,7 @@ void CObjectConnectorCoordinateSpringDamperExt::ComputeSpringForceRelative(Real 
         }
 		else
 		{
-			EvaluateUserFunctionForce(force, cSystemData->GetMainSystemBacklink(), t, 
-                itemIndex, relPos, relVel);
+			EvaluateUserFunctionForce(force, cSystemData->GetMainSystemBacklink(), t, relPos, relVel);
 		}
 	}
 }
@@ -230,7 +229,7 @@ void CObjectConnectorCoordinateSpringDamperExt::ComputeSpringForceRelative(Real 
 //  MODEL: f
 //! the forces of the connector interface on coordinate markers (#2745), as ComputeODE2LHS: factor1 times the force on
 //! marker 1, -factor0 times it on marker 0
-void CObjectConnectorCoordinateSpringDamperExt::ComputeConnectorForcesCoordinate(const MarkerCoordinate<Real>* markers, Real t, Index itemIndex,
+void CObjectConnectorCoordinateSpringDamperExt::ComputeConnectorForcesCoordinate(const MarkerCoordinate<Real>* markers, Real t,
 	Real* forces) const
 {
 	forces[0] = forces[1] = 0.;
@@ -238,26 +237,25 @@ void CObjectConnectorCoordinateSpringDamperExt::ComputeConnectorForcesCoordinate
 	Real relPos = parameters.factor1 * markers[1].value - parameters.factor0 * markers[0].value;
 	Real relVel = parameters.factor1 * markers[1].value_t - parameters.factor0 * markers[0].value_t;
 	Real force;
-	ComputeSpringForceRelative(relPos, relVel, t, itemIndex, force);
+	ComputeSpringForceRelative(relPos, relVel, t, force);
 	forces[1] = parameters.factor1 * force;
 	forces[0] = -parameters.factor0 * force;
 }
 
 //FUTURE: needed if MarkerNodeRotationCoordinate has jacDerivative: 
-void CObjectConnectorCoordinateSpringDamperExt::ComputeJacobianForce6D(const MarkerDataStructure& markerData, Index objectNumber, Vector6D& force6D) const
+void CObjectConnectorCoordinateSpringDamperExt::ComputeJacobianForce6D(const MarkerDataStructure& markerData, Vector6D& force6D) const
 {
 	if (parameters.activeConnector)
 	{
 		Real relPos, relVel, force;
-		ComputeSpringForce(markerData, objectNumber, relPos, relVel, force);
+		ComputeSpringForce(markerData, relPos, relVel, force);
 		force6D.SetVector({ force, 0., 0., 0., 0., 0. }); //for coordinate connectors, use only first coordinate
 	}
 	else { force6D.SetAll(0.); }
 }
 
 void CObjectConnectorCoordinateSpringDamperExt::ComputeJacobianODE2_ODE2(EXUmath::MatrixContainer& jacobianODE2, JacobianTemp& temp,
-	Real factorODE2, Real factorODE2_t,
-	Index objectNumber, const ArrayIndex& ltg, const MarkerDataStructure& markerData) const
+	Real factorODE2, Real factorODE2_t, const ArrayIndex& ltg, const MarkerDataStructure& markerData) const
 {
 	if (parameters.activeConnector)
 	{
@@ -269,7 +267,7 @@ void CObjectConnectorCoordinateSpringDamperExt::ComputeJacobianODE2_ODE2(EXUmath
 		//pout << "inside, localJac=" << localJac << "\n";
 	}
 	//compute jacobianODE2 in dense mode; temp.localJacobian is modified!
-	ComputeJacobianODE2_ODE2generic(temp.localJacobian, jacobianODE2, temp, factorODE2, factorODE2_t, objectNumber, markerData, 
+	ComputeJacobianODE2_ODE2generic(temp.localJacobian, jacobianODE2, temp, factorODE2, factorODE2_t, markerData, 
 		parameters.activeConnector, true, false);
 }
 
@@ -292,12 +290,12 @@ JacobianType::Type CObjectConnectorCoordinateSpringDamperExt::GetAvailableJacobi
 
 //! provide according output variable in "value"
 void CObjectConnectorCoordinateSpringDamperExt::GetOutputVariableConnector(OutputVariableType variableType, 
-    const MarkerDataStructure& markerData, Index itemIndex, Vector& value) const
+    const MarkerDataStructure& markerData, Vector& value) const
 {
 	Real relPos;
 	Real relVel;
 	Real force;
-	ComputeSpringForce(markerData, itemIndex, relPos, relVel, force);
+	ComputeSpringForce(markerData, relPos, relVel, force);
 
 	switch (variableType)
 	{
@@ -311,7 +309,7 @@ void CObjectConnectorCoordinateSpringDamperExt::GetOutputVariableConnector(Outpu
 }
 
 //! function called after Newton method; returns a residual error (force)
-Real CObjectConnectorCoordinateSpringDamperExt::PostNewtonStep(const MarkerDataStructure& markerDataCurrent, Index itemIndex, PostNewtonFlags::Type& flags, Real& recommendedStepSize)
+Real CObjectConnectorCoordinateSpringDamperExt::PostNewtonStep(const MarkerDataStructure& markerDataCurrent, PostNewtonFlags::Type& flags, Real& recommendedStepSize)
 {
     Real discontinuousError = 0;
     flags = PostNewtonFlags::_None;

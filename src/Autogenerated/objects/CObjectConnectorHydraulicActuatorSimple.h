@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-10-02  12:15:38 (last modified)
+* @date         2026-10-17  13:37:10 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -126,13 +126,13 @@ public: // AUTO:
     }
 
     //! AUTO:  Computational function: compute right-hand-side (RHS) of first order ordinary differential equations (ODE) to 'ode1Rhs'
-    virtual void ComputeODE1RHS(Vector& ode1Rhs, const MarkerDataStructure& markerData, Index objectNumber) const override;
+    virtual void ComputeODE1RHS(Vector& ode1Rhs, const MarkerDataStructure& markerData) const override;
 
     //! AUTO:  return the available jacobian dependencies and the jacobians which are available as a function; if jacobian dependencies exist but are not available as a function, it is computed numerically; can be combined with 2^i enum flags
     virtual JacobianType::Type GetAvailableJacobians() const override;
 
     //! AUTO:  provide according output variable in 'value'
-    virtual void GetOutputVariableConnector(OutputVariableType variableType, const MarkerDataStructure& markerData, Index itemIndex, Vector& value) const override;
+    virtual void GetOutputVariableConnector(OutputVariableType variableType, const MarkerDataStructure& markerData, Vector& value) const override;
 
     //! AUTO:  provide requested markerType for connector
     virtual Marker::Type GetRequestedMarkerType() const override
@@ -174,22 +174,22 @@ public: // AUTO:
     }
 
     //! AUTO:  compute connector force and further properties (relative position, etc.) for unique functionality and output
-    void ComputeConnectorProperties(const MarkerDataStructure& markerData, Index itemIndex, Vector3D& relPos, Vector3D& relVel, Real& linearVelocity, Real& force, Vector3D& forceDirection) const;
+    void ComputeConnectorProperties(const MarkerDataStructure& markerData, Vector3D& relPos, Vector3D& relVel, Real& linearVelocity, Real& force, Vector3D& forceDirection) const;
 
     //! AUTO:  the right-hand side on the connector interface of position markers (#2745)
-    virtual bool ComputeODE2LHSConnector(const CSystemData& systemData, TemporaryComputationData& temp, Vector& localODE2Lhs, Index objectNumber) const override
+    virtual bool ComputeODE2LHSConnector(const CSystemData& systemData, TemporaryComputationData& temp, Vector& localODE2Lhs) const override
     {
-        ConnectorODE2LHSPositionMarkers(systemData, temp, *this, localODE2Lhs, objectNumber); return true;
+        ConnectorODE2LHSPositionMarkers(systemData, temp, *this, localODE2Lhs); return true;
     }
 
     //! AUTO:  the Jacobian by automatic differentiation of the force (#2745)
-    virtual bool ComputeJacobianODE2Connector(const CSystemData& systemData, TemporaryComputationData& temp, Real factorODE2, Real factorODE2_t, Index objectNumber, bool jacobianDerivativeNonZero) const override
+    virtual bool ComputeJacobianODE2Connector(const CSystemData& systemData, TemporaryComputationData& temp, Real factorODE2, Real factorODE2_t, bool jacobianDerivativeNonZero) const override
     {
-        ConnectorJacobianODE2PositionMarkers(systemData, temp, *this, factorODE2, factorODE2_t, objectNumber, jacobianDerivativeNonZero); return true;
+        ConnectorJacobianODE2PositionMarkers(systemData, temp, *this, factorODE2, factorODE2_t, jacobianDerivativeNonZero); return true;
     }
 
     //! AUTO:  the force on marker 1 from the kinematics of the two markers (#2745)
-    virtual void ComputeConnectorForcePosition(const MarkerPosition<Real>* markers, Real t, Index itemIndex, Vector3D& force) const override;
+    virtual void ComputeConnectorForcePosition(const MarkerPosition<Real>* markers, Real t, Vector3D& force) const override;
 
     //! AUTO:  the force of the actuator from the kinematics of its markers and the pressures of its node, shared by the connector interface and the output variables (#2745)
     void ComputeActuatorForce(const Vector3D& position0, const Vector3D& position1, const Vector3D& velocity0, const Vector3D& velocity1, Vector3D& relPos, Vector3D& relVel, Real& linearVelocity, Real& force, Vector3D& forceDirection) const;

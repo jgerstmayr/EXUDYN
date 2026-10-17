@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-10-06  07:03:31 (last modified)
+* @date         2026-10-17  13:37:10 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -193,10 +193,10 @@ public: // AUTO:
     }
 
     //! AUTO:  Safe interface to evaluation of user function
-    void EvaluateUserFunctionBendingMoment(Real& torque, const MainSystemBase& mainSystem, Real t, Index itemIndex, Real axialPositionNormalized, Real curvature, Real curvature_t, Real curvatureRef, Real bendingStiffness, Real bendingDamping, Real axialStrain, Real axialStrain_t, Real axialStrainRef) const;
+    void EvaluateUserFunctionBendingMoment(Real& torque, const MainSystemBase& mainSystem, Real t, Real axialPositionNormalized, Real curvature, Real curvature_t, Real curvatureRef, Real bendingStiffness, Real bendingDamping, Real axialStrain, Real axialStrain_t, Real axialStrainRef) const;
 
     //! AUTO:  Safe interface to evaluation of user function
-    void EvaluateUserFunctionAxialForce(Real& force, const MainSystemBase& mainSystem, Real t, Index itemIndex, Real axialPositionNormalized, Real axialStrain, Real axialStrain_t, Real axialStrainRef, Real axialStiffness, Real axialDamping, Real curvature, Real curvature_t, Real curvatureRef) const;
+    void EvaluateUserFunctionAxialForce(Real& force, const MainSystemBase& mainSystem, Real t, Real axialPositionNormalized, Real axialStrain, Real axialStrain_t, Real axialStrainRef, Real axialStiffness, Real axialDamping, Real curvature, Real curvature_t, Real curvatureRef) const;
 
     virtual OutputVariableType GetOutputVariableTypes() const override
     {

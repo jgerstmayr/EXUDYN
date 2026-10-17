@@ -22,13 +22,13 @@
 #include "System/CObjectConnector.h"
 #include "Main/TemporaryComputationData.h"
 
-void CObjectConstraint::GetOutputVariableConstraintEquation(const MarkerDataStructure& markerData, Index objectNumber, Vector& value) const
+void CObjectConstraint::GetOutputVariableConstraintEquation(const MarkerDataStructure& markerData, Vector& value) const
 {
 	TemporaryComputationData temp;
 	Vector equations;
-	if (!ComputeAlgebraicEquationsConnector(*GetCSystemData(), temp, objectNumber, false, equations))
+	if (!ComputeAlgebraicEquationsConnector(*GetCSystemData(), temp, false, equations))
 	{
-		ComputeAlgebraicEquations(equations, markerData, GetCSystemData()->GetCData().GetCurrent().GetTime(), objectNumber, false);
+		ComputeAlgebraicEquations(equations, markerData, GetCSystemData()->GetCData().GetCurrent().GetTime(), false);
 	}
 	value.CopyFrom(equations); //a copy: value may be a resizable vector
 }
@@ -38,7 +38,7 @@ void CObjectConstraint::GetOutputVariableConstraintEquation(const MarkerDataStru
 //! jacobianODE2 is computed using the marker jacobians and the jacobianDerivative stored in markerData
 //! dense mode is used here; if activeConnector=false, jacobian becomes a zeros matrix
 void CObjectConnector::ComputeJacobianODE2_ODE2generic(ResizableMatrix& localJac, EXUmath::MatrixContainer& jacobianODE2, JacobianTemp& temp,
-	Real factorODE2, Real factorODE2_t, Index objectNumber, const MarkerDataStructure& markerData, 
+	Real factorODE2, Real factorODE2_t, const MarkerDataStructure& markerData, 
 	bool activeConnector, bool isCoordinateConnector, bool hasRotationJacobian) const
 {
 	const ResizableMatrix& jac0 = (isCoordinateConnector ? markerData.GetMarkerData(0).jacobian : markerData.GetMarkerData(0).positionJacobian);
@@ -130,7 +130,7 @@ void CObjectConnector::ComputeJacobianODE2_ODE2generic(ResizableMatrix& localJac
 
 //! L2 of the connector interface for connectors on position markers (#2745): the kinematics of the two markers (L0),
 //! the connector's force (L1), and its projection by each marker, into the local vector [marker 0, marker 1]
-void ConnectorODE2LHSPositionMarkers(const CSystemData& cSystemData, TemporaryComputationData& temp, const CObjectConnector& connector, Vector& localODE2Lhs, Index objectNumber)
+void ConnectorODE2LHSPositionMarkers(const CSystemData& cSystemData, TemporaryComputationData& temp, const CObjectConnector& connector, Vector& localODE2Lhs)
 {
 	const CMarker* marker0 = cSystemData.GetCMarkers()[connector.GetMarkerNumbers()[0]];
 	const CMarker* marker1 = cSystemData.GetCMarkers()[connector.GetMarkerNumbers()[1]];
@@ -144,7 +144,7 @@ void ConnectorODE2LHSPositionMarkers(const CSystemData& cSystemData, TemporaryCo
 	localODE2Lhs.SetAll(0.);
 
 	Vector3D force;
-	connector.ComputeConnectorForcePosition(kinematics, cSystemData.GetCData().currentState.time, objectNumber, force);
+	connector.ComputeConnectorForcePosition(kinematics, cSystemData.GetCData().currentState.time, force);
 	if (n1 != 0)
 	{
 		LinkedDataVector ode2Lhs1(localODE2Lhs, n0, n1);
@@ -212,7 +212,7 @@ static void ChainConnectorJacobian(const CSystemData& cSystemData, const ArrayIn
 //! J_i^T s_i K_k J_k (s_0 = -1, s_1 = 1), plus the derivative of J_i^T f for markers whose Jacobian depends on the
 //! coordinates; dense, into temp.jacobianODE2Container; dv/dq is neglected
 void ConnectorJacobianODE2PositionMarkers(const CSystemData& cSystemData, TemporaryComputationData& temp, const CObjectConnector& connector,
-	Real factorODE2, Real factorODE2_t, Index objectNumber, bool jacobianDerivativeNonZero)
+	Real factorODE2, Real factorODE2_t, bool jacobianDerivativeNonZero)
 {
 	const ArrayIndex& markerNumbers = connector.GetMarkerNumbers();
 	MarkerPosition<DRealPositionMarkers> kinematics[2];
@@ -225,7 +225,7 @@ void ConnectorJacobianODE2PositionMarkers(const CSystemData& cSystemData, Tempor
 	}
 
 	SlimVectorBase<DRealPositionMarkers, 3> force;
-	connector.ComputeConnectorForcePositionDiff(kinematics, cSystemData.GetCData().currentState.time, objectNumber, force);
+	connector.ComputeConnectorForcePositionDiff(kinematics, cSystemData.GetCData().currentState.time, force);
 
 	ChainConnectorJacobian<3>(cSystemData, markerNumbers, force, temp.markerTemp[0].positionJacobian,
 		temp.markerTemp[1].positionJacobian, factorODE2, jacobianDerivativeNonZero, temp);
@@ -247,7 +247,7 @@ static Index GetKinematicsRigidOrPosition(const CSystemData& cSystemData, const 
 //! L2 of the connector interface for connectors on rigid markers (#2745): the frames and velocities of the two markers
 //! (L0), the connector's forces and torques (L1), and their projection by each marker, into [marker 0, marker 1]; a
 //! marker without orientation takes the force only
-void ConnectorODE2LHSRigidMarkers(const CSystemData& cSystemData, TemporaryComputationData& temp, const CObjectConnector& connector, Vector& localODE2Lhs, Index objectNumber)
+void ConnectorODE2LHSRigidMarkers(const CSystemData& cSystemData, TemporaryComputationData& temp, const CObjectConnector& connector, Vector& localODE2Lhs)
 {
 	const CMarker* markers[2] = { cSystemData.GetCMarkers()[connector.GetMarkerNumbers()[0]], cSystemData.GetCMarkers()[connector.GetMarkerNumbers()[1]] };
 	MarkerRigid<Real> kinematics[2];
@@ -257,7 +257,7 @@ void ConnectorODE2LHSRigidMarkers(const CSystemData& cSystemData, TemporaryCompu
 	localODE2Lhs.SetAll(0.);
 
 	Vector3D forces[2], torques[2];
-	connector.ComputeConnectorForceRigid(kinematics, cSystemData.GetCData().currentState.time, objectNumber, forces, torques);
+	connector.ComputeConnectorForceRigid(kinematics, cSystemData.GetCData().currentState.time, forces, torques);
 	for (Index k = 0; k < 2; k++)
 	{
 		if (n[k] == 0) { continue; }
@@ -279,7 +279,7 @@ void ConnectorODE2LHSRigidMarkers(const CSystemData& cSystemData, TemporaryCompu
 //! [J_pos,i; J_rot,i]^T K_ik [J_pos,k; J_rot,k]; then the derivative of J_i^T (f_i, tau_i) for markers whose Jacobian depends
 //! on the coordinates, each with its own force and torque; dv/dq and domega/dq are neglected, as for position markers
 void ConnectorJacobianODE2RigidMarkers(const CSystemData& cSystemData, TemporaryComputationData& temp, const CObjectConnector& connector,
-	Real factorODE2, Real factorODE2_t, Index objectNumber, bool jacobianDerivativeNonZero)
+	Real factorODE2, Real factorODE2_t, bool jacobianDerivativeNonZero)
 {
 	const ArrayIndex& markerNumbers = connector.GetMarkerNumbers();
 	MarkerRigid<DRealRigidMarkers> kinematics[2];
@@ -319,7 +319,7 @@ void ConnectorJacobianODE2RigidMarkers(const CSystemData& cSystemData, Temporary
 	}
 
 	SlimVectorBase<DRealRigidMarkers, 3> forces[2], torques[2];
-	connector.ComputeConnectorForceRigidDiff(kinematics, cSystemData.GetCData().currentState.time, objectNumber, forces, torques);
+	connector.ComputeConnectorForceRigidDiff(kinematics, cSystemData.GetCData().currentState.time, forces, torques);
 
 	//the chain, into temp.jacobianODE2Container
 	const Index n[2] = { temp.markerTemp[0].positionJacobian.NumberOfColumns(), temp.markerTemp[1].positionJacobian.NumberOfColumns() };
@@ -377,7 +377,7 @@ void ConnectorJacobianODE2RigidMarkers(const CSystemData& cSystemData, Temporary
 
 //! the equations of a constraint on rigid markers (#2745)
 void ConstraintEquationsRigidMarkers(const CSystemData& cSystemData, TemporaryComputationData& temp,
-	const CObjectConstraint& constraint, Index objectNumber, bool velocityLevel, Vector& localAE)
+	const CObjectConstraint& constraint, bool velocityLevel, Vector& localAE)
 {
 	const ArrayIndex& markerNumbers = constraint.GetMarkerNumbers();
 	MarkerRigid<Real> kinematics[2];
@@ -387,7 +387,7 @@ void ConstraintEquationsRigidMarkers(const CSystemData& cSystemData, TemporaryCo
 	}
 	LinkedDataVector lambda(cSystemData.GetCData().currentState.AECoords, constraint.GetGlobalAECoordinateIndex(), constraint.GetAlgebraicEquationsSize());
 	ConstSizeVector<maxConstraintEquations> equations;
-	constraint.ComputeConstraintEquationsRigid(kinematics, lambda, cSystemData.GetCData().currentState.time, objectNumber, velocityLevel, equations);
+	constraint.ComputeConstraintEquationsRigid(kinematics, lambda, cSystemData.GetCData().currentState.time, velocityLevel, equations);
 	localAE.CopyFrom(equations);
 }
 
@@ -395,7 +395,7 @@ void ConstraintEquationsRigidMarkers(const CSystemData& cSystemData, TemporaryCo
 //! per marker 3 translations and 3 global rotation increments, A(dtheta) = (I + skew(dtheta)) A; with Jacobians, the
 //! marker data is in temp.markerTemp, else the frames come from GetKinematicsRigid
 static void SeedConstraintEquationsRigid(const CSystemData& cSystemData, TemporaryComputationData& temp,
-	const CObjectConstraint& constraint, Index objectNumber, bool withJacobians, ConstSizeVectorBase<DRealRigidMarkers, maxConstraintEquations>& equations,
+	const CObjectConstraint& constraint, bool withJacobians, ConstSizeVectorBase<DRealRigidMarkers, maxConstraintEquations>& equations,
 	Index* numberOfCoordinates = nullptr)
 {
 	const ArrayIndex& markerNumbers = constraint.GetMarkerNumbers();
@@ -442,12 +442,12 @@ static void SeedConstraintEquationsRigid(const CSystemData& cSystemData, Tempora
 		kinematics[k].angularVelocityLocal.SetAll(0.);
 	}
 	LinkedDataVector lambda(cSystemData.GetCData().currentState.AECoords, constraint.GetGlobalAECoordinateIndex(), constraint.GetAlgebraicEquationsSize());
-	constraint.ComputeConstraintEquationsRigidDiff(kinematics, lambda, cSystemData.GetCData().currentState.time, objectNumber, equations);
+	constraint.ComputeConstraintEquationsRigidDiff(kinematics, lambda, cSystemData.GetCData().currentState.time, equations);
 }
 
 //! the equations of a constraint on coordinate markers (#2745)
 void ConstraintEquationsCoordinateMarkers(const CSystemData& cSystemData, TemporaryComputationData& temp,
-	const CObjectConstraint& constraint, Index objectNumber, bool velocityLevel, Vector& localAE)
+	const CObjectConstraint& constraint, bool velocityLevel, Vector& localAE)
 {
 	const ArrayIndex& markerNumbers = constraint.GetMarkerNumbers();
 	MarkerCoordinate<Real> kinematics[2];
@@ -457,14 +457,14 @@ void ConstraintEquationsCoordinateMarkers(const CSystemData& cSystemData, Tempor
 	}
 	LinkedDataVector lambda(cSystemData.GetCData().currentState.AECoords, constraint.GetGlobalAECoordinateIndex(), constraint.GetAlgebraicEquationsSize());
 	ConstSizeVector<maxConstraintEquations> equations;
-	constraint.ComputeConstraintEquationsCoordinate(kinematics, lambda, cSystemData.GetCData().currentState.time, objectNumber, velocityLevel, equations);
+	constraint.ComputeConstraintEquationsCoordinate(kinematics, lambda, cSystemData.GetCData().currentState.time, velocityLevel, equations);
 	localAE.CopyFrom(equations);
 }
 
 //! the equations of a constraint on coordinate markers with automatic differentiation by the values of the markers, one
 //! direction per marker; the marker data with the Jacobians is in temp.markerTemp
 static void SeedConstraintEquationsCoordinate(const CSystemData& cSystemData, TemporaryComputationData& temp,
-	const CObjectConstraint& constraint, Index objectNumber, ConstSizeVectorBase<DRealCoordinateMarkers, maxConstraintEquations>& equations)
+	const CObjectConstraint& constraint, ConstSizeVectorBase<DRealCoordinateMarkers, maxConstraintEquations>& equations)
 {
 	const ArrayIndex& markerNumbers = constraint.GetMarkerNumbers();
 	MarkerCoordinate<DRealCoordinateMarkers> kinematics[2];
@@ -477,13 +477,12 @@ static void SeedConstraintEquationsCoordinate(const CSystemData& cSystemData, Te
 		kinematics[k].value_t = 0.; //position level: the equations do not read it
 	}
 	LinkedDataVector lambda(cSystemData.GetCData().currentState.AECoords, constraint.GetGlobalAECoordinateIndex(), constraint.GetAlgebraicEquationsSize());
-	constraint.ComputeConstraintEquationsCoordinateDiff(kinematics, lambda, cSystemData.GetCData().currentState.time, objectNumber, equations);
+	constraint.ComputeConstraintEquationsCoordinateDiff(kinematics, lambda, cSystemData.GetCData().currentState.time, equations);
 }
 
 //! the equations of a constraint on position markers (#2745): the kinematics of its markers (L0) and its Lagrange
 //! multipliers, the equations by the constraint (L1)
-void ConstraintEquationsPositionMarkers(const CSystemData& cSystemData, TemporaryComputationData& temp, const CObjectConstraint& constraint,
-	Index objectNumber, bool velocityLevel, Vector& localAE)
+void ConstraintEquationsPositionMarkers(const CSystemData& cSystemData, TemporaryComputationData& temp, const CObjectConstraint& constraint, bool velocityLevel, Vector& localAE)
 {
 	const ArrayIndex& markerNumbers = constraint.GetMarkerNumbers();
 	MarkerPosition<Real> kinematics[2];
@@ -493,14 +492,14 @@ void ConstraintEquationsPositionMarkers(const CSystemData& cSystemData, Temporar
 	}
 	LinkedDataVector lambda(cSystemData.GetCData().currentState.AECoords, constraint.GetGlobalAECoordinateIndex(), constraint.GetAlgebraicEquationsSize());
 	ConstSizeVector<maxConstraintEquations> equations;
-	constraint.ComputeConstraintEquationsPosition(kinematics, lambda, cSystemData.GetCData().currentState.time, objectNumber, velocityLevel, equations);
+	constraint.ComputeConstraintEquationsPosition(kinematics, lambda, cSystemData.GetCData().currentState.time, velocityLevel, equations);
 	localAE.CopyFrom(equations);
 }
 
 //! the derivatives dg/dp_k of the equations of a constraint on position markers, into equations, seeded as for position
 //! connectors with the 3 directions per marker (#2745); with Jacobians, the marker data is in temp.markerTemp
 static void SeedConstraintEquationsPosition(const CSystemData& cSystemData, TemporaryComputationData& temp,
-	const CObjectConstraint& constraint, Index objectNumber, bool withJacobians, ConstSizeVectorBase<DRealPositionMarkers, maxConstraintEquations>& equations)
+	const CObjectConstraint& constraint, bool withJacobians, ConstSizeVectorBase<DRealPositionMarkers, maxConstraintEquations>& equations)
 {
 	const ArrayIndex& markerNumbers = constraint.GetMarkerNumbers();
 	MarkerPosition<DRealPositionMarkers> kinematics[2];
@@ -522,16 +521,16 @@ static void SeedConstraintEquationsPosition(const CSystemData& cSystemData, Temp
 		kinematics[k].velocity.SetAll(0.); //position level: the equations do not read it
 	}
 	LinkedDataVector lambda(cSystemData.GetCData().currentState.AECoords, constraint.GetGlobalAECoordinateIndex(), constraint.GetAlgebraicEquationsSize());
-	constraint.ComputeConstraintEquationsPositionDiff(kinematics, lambda, cSystemData.GetCData().currentState.time, objectNumber, equations);
+	constraint.ComputeConstraintEquationsPositionDiff(kinematics, lambda, cSystemData.GetCData().currentState.time, equations);
 }
 
 //! C_q = [dg/dp_0 J_pos,0, dg/dp_1 J_pos,1] of a constraint on position markers, the derivatives by automatic
 //! differentiation of the constraint's own equations (#2745) - no hand-written Jacobian
-void ConstraintJacobianPositionMarkers(const CSystemData& cSystemData, TemporaryComputationData& temp, const CObjectConstraint& constraint, Index objectNumber,
+void ConstraintJacobianPositionMarkers(const CSystemData& cSystemData, TemporaryComputationData& temp, const CObjectConstraint& constraint,
 	ResizableMatrix& jacobian)
 {
 	ConstSizeVectorBase<DRealPositionMarkers, maxConstraintEquations> equations;
-	SeedConstraintEquationsPosition(cSystemData, temp, constraint, objectNumber, true, equations);
+	SeedConstraintEquationsPosition(cSystemData, temp, constraint, true, equations);
 
 	const ResizableMatrix* markerJacobian[2] = { &temp.markerTemp[0].positionJacobian, &temp.markerTemp[1].positionJacobian };
 	const Index n0 = markerJacobian[0]->NumberOfColumns();
@@ -554,11 +553,11 @@ void ConstraintJacobianPositionMarkers(const CSystemData& cSystemData, Temporary
 
 //! C_q = [dg/d(p,theta)_k [J_pos,k; J_rot,k]] of a constraint on rigid markers, the derivatives by automatic
 //! differentiation of the constraint's own equations (#2745)
-void ConstraintJacobianRigidMarkers(const CSystemData& cSystemData, TemporaryComputationData& temp, const CObjectConstraint& constraint, Index objectNumber,
+void ConstraintJacobianRigidMarkers(const CSystemData& cSystemData, TemporaryComputationData& temp, const CObjectConstraint& constraint,
 	ResizableMatrix& jacobian)
 {
 	ConstSizeVectorBase<DRealRigidMarkers, maxConstraintEquations> equations;
-	SeedConstraintEquationsRigid(cSystemData, temp, constraint, objectNumber, true, equations);
+	SeedConstraintEquationsRigid(cSystemData, temp, constraint, true, equations);
 	const Index n0 = temp.markerTemp[0].positionJacobian.NumberOfColumns();
 	const Index n1 = temp.markerTemp[1].positionJacobian.NumberOfColumns();
 	jacobian.SetNumberOfRowsAndColumns(equations.NumberOfItems(), n0 + n1);
@@ -583,11 +582,11 @@ void ConstraintJacobianRigidMarkers(const CSystemData& cSystemData, TemporaryCom
 
 //! C_q = [dg/dv_0 J_0, dg/dv_1 J_1] of a constraint on coordinate markers, J_k the 1 x n_k marker Jacobian, by automatic
 //! differentiation of the constraint's own equations (#2745)
-void ConstraintJacobianCoordinateMarkers(const CSystemData& cSystemData, TemporaryComputationData& temp, const CObjectConstraint& constraint, Index objectNumber,
+void ConstraintJacobianCoordinateMarkers(const CSystemData& cSystemData, TemporaryComputationData& temp, const CObjectConstraint& constraint,
 	ResizableMatrix& jacobian)
 {
 	ConstSizeVectorBase<DRealCoordinateMarkers, maxConstraintEquations> equations;
-	SeedConstraintEquationsCoordinate(cSystemData, temp, constraint, objectNumber, equations);
+	SeedConstraintEquationsCoordinate(cSystemData, temp, constraint, equations);
 	const ResizableMatrix& jacobian0 = temp.markerTemp[0].coordinateJacobian;
 	const ResizableMatrix& jacobian1 = temp.markerTemp[1].coordinateJacobian;
 	jacobian.SetNumberOfRowsAndColumns(equations.NumberOfItems(), jacobian0.NumberOfColumns() + jacobian1.NumberOfColumns());
@@ -600,14 +599,14 @@ void ConstraintJacobianCoordinateMarkers(const CSystemData& cSystemData, Tempora
 
 //! C_q^T lambda of a constraint on position markers (#2745): per marker the force f_k = (dg/dp_k)^T lambda, projected by
 //! the marker as for a connector force - C_q itself is not formed
-void ConstraintReactionForcesPositionMarkers(const CSystemData& cSystemData, TemporaryComputationData& temp, const CObjectConstraint& constraint, Index objectNumber,
+void ConstraintReactionForcesPositionMarkers(const CSystemData& cSystemData, TemporaryComputationData& temp, const CObjectConstraint& constraint,
 	const Vector& reactionForces, Vector& localODE2)
 {
 	ConstSizeVectorBase<DRealPositionMarkers, maxConstraintEquations> equations;
-	SeedConstraintEquationsPosition(cSystemData, temp, constraint, objectNumber, false, equations);
+	SeedConstraintEquationsPosition(cSystemData, temp, constraint, false, equations);
 
 	const ArrayIndex& markerNumbers = constraint.GetMarkerNumbers();
-	const ArrayIndex& ltgAE = cSystemData.GetLocalToGlobalAE()[objectNumber];
+	const ArrayIndex& ltgAE = cSystemData.GetLocalToGlobalAE()[constraint.GetObjectNumber()];
 	const CMarker* marker[2] = { cSystemData.GetCMarkers()[markerNumbers[0]], cSystemData.GetCMarkers()[markerNumbers[1]] };
 	const Index n[2] = { marker[0]->GetODE2Size(cSystemData, temp.markerTemp[0]), marker[1]->GetODE2Size(cSystemData, temp.markerTemp[1]) };
 	localODE2.SetNumberOfItems(n[0] + n[1]);
@@ -627,14 +626,14 @@ void ConstraintReactionForcesPositionMarkers(const CSystemData& cSystemData, Tem
 
 //! C_q^T lambda of a constraint on rigid markers (#2745): per marker the force and torque (dg/d(p,theta)_k)^T lambda,
 //! projected by the marker - C_q itself is not formed
-void ConstraintReactionForcesRigidMarkers(const CSystemData& cSystemData, TemporaryComputationData& temp, const CObjectConstraint& constraint, Index objectNumber,
+void ConstraintReactionForcesRigidMarkers(const CSystemData& cSystemData, TemporaryComputationData& temp, const CObjectConstraint& constraint,
 	const Vector& reactionForces, Vector& localODE2)
 {
 	ConstSizeVectorBase<DRealRigidMarkers, maxConstraintEquations> equations;
 	Index n[2];
-	SeedConstraintEquationsRigid(cSystemData, temp, constraint, objectNumber, false, equations, n); //GetKinematicsRigid prepares temp for the projection
+	SeedConstraintEquationsRigid(cSystemData, temp, constraint, false, equations, n); //GetKinematicsRigid prepares temp for the projection
 	const ArrayIndex& markerNumbers = constraint.GetMarkerNumbers();
-	const ArrayIndex& ltgAE = cSystemData.GetLocalToGlobalAE()[objectNumber];
+	const ArrayIndex& ltgAE = cSystemData.GetLocalToGlobalAE()[constraint.GetObjectNumber()];
 	const CMarker* marker[2] = { cSystemData.GetCMarkers()[markerNumbers[0]], cSystemData.GetCMarkers()[markerNumbers[1]] };
 	localODE2.SetNumberOfItems(n[0] + n[1]);
 	localODE2.SetAll(0.);
@@ -657,13 +656,13 @@ void ConstraintReactionForcesRigidMarkers(const CSystemData& cSystemData, Tempor
 
 //! C_q^T lambda of a constraint on coordinate markers (#2745): per marker the generalized force (dg/dv_k)^T lambda -
 //! C_q itself is not formed
-void ConstraintReactionForcesCoordinateMarkers(const CSystemData& cSystemData, TemporaryComputationData& temp, const CObjectConstraint& constraint, Index objectNumber,
+void ConstraintReactionForcesCoordinateMarkers(const CSystemData& cSystemData, TemporaryComputationData& temp, const CObjectConstraint& constraint,
 	const Vector& reactionForces, Vector& localODE2)
 {
 	ConstSizeVectorBase<DRealCoordinateMarkers, maxConstraintEquations> equations;
-	SeedConstraintEquationsCoordinate(cSystemData, temp, constraint, objectNumber, equations);
+	SeedConstraintEquationsCoordinate(cSystemData, temp, constraint, equations);
 	const ArrayIndex& markerNumbers = constraint.GetMarkerNumbers();
-	const ArrayIndex& ltgAE = cSystemData.GetLocalToGlobalAE()[objectNumber];
+	const ArrayIndex& ltgAE = cSystemData.GetLocalToGlobalAE()[constraint.GetObjectNumber()];
 	MarkerCoordinate<Real> kinematics;
 	const CMarker* marker[2] = { cSystemData.GetCMarkers()[markerNumbers[0]], cSystemData.GetCMarkers()[markerNumbers[1]] };
 	const Index n[2] = { marker[0]->GetKinematicsCoordinate(cSystemData, kinematics, temp.markerTemp[0]),
@@ -682,7 +681,7 @@ void ConstraintReactionForcesCoordinateMarkers(const CSystemData& cSystemData, T
 
 //! L2 of the connector interface for connectors on coordinate markers (#2745): the values of the two markers (L0), the
 //! connector's generalized force (L1), and its projection by each marker, into the local vector [marker 0, marker 1]
-void ConnectorODE2LHSCoordinateMarkers(const CSystemData& cSystemData, TemporaryComputationData& temp, const CObjectConnector& connector, Vector& localODE2Lhs, Index objectNumber)
+void ConnectorODE2LHSCoordinateMarkers(const CSystemData& cSystemData, TemporaryComputationData& temp, const CObjectConnector& connector, Vector& localODE2Lhs)
 {
 	const CMarker* marker0 = cSystemData.GetCMarkers()[connector.GetMarkerNumbers()[0]];
 	const CMarker* marker1 = cSystemData.GetCMarkers()[connector.GetMarkerNumbers()[1]];
@@ -693,7 +692,7 @@ void ConnectorODE2LHSCoordinateMarkers(const CSystemData& cSystemData, Temporary
 	localODE2Lhs.SetAll(0.);
 
 	Real forces[2];
-	connector.ComputeConnectorForcesCoordinate(kinematics, cSystemData.GetCData().currentState.time, objectNumber, forces);
+	connector.ComputeConnectorForcesCoordinate(kinematics, cSystemData.GetCData().currentState.time, forces);
 	if (n1 != 0)
 	{
 		LinkedDataVector ode2Lhs1(localODE2Lhs, n0, n1);
@@ -709,7 +708,7 @@ void ConnectorODE2LHSCoordinateMarkers(const CSystemData& cSystemData, Temporary
 //! the Jacobian of L2 for connectors on coordinate markers (#2745): as for position markers, with one direction per
 //! marker, the value seeded with factorODE2 and its time derivative with factorODE2_t
 void ConnectorJacobianODE2CoordinateMarkers(const CSystemData& cSystemData, TemporaryComputationData& temp, const CObjectConnector& connector,
-	Real factorODE2, Real factorODE2_t, Index objectNumber, bool jacobianDerivativeNonZero)
+	Real factorODE2, Real factorODE2_t, bool jacobianDerivativeNonZero)
 {
 	const ArrayIndex& markerNumbers = connector.GetMarkerNumbers();
 	MarkerCoordinate<DRealCoordinateMarkers> kinematics[2];
@@ -724,7 +723,7 @@ void ConnectorJacobianODE2CoordinateMarkers(const CSystemData& cSystemData, Temp
 	}
 
 	SlimVectorBase<DRealCoordinateMarkers, 1> force;
-	connector.ComputeConnectorForceCoordinateDiff(kinematics, cSystemData.GetCData().currentState.time, objectNumber, force[0]);
+	connector.ComputeConnectorForceCoordinateDiff(kinematics, cSystemData.GetCData().currentState.time, force[0]);
 
 	ChainConnectorJacobian<1>(cSystemData, markerNumbers, force, temp.markerTemp[0].coordinateJacobian,
 		temp.markerTemp[1].coordinateJacobian, factorODE2, jacobianDerivativeNonZero, temp);

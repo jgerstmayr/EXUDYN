@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-10-06  07:03:31 (last modified)
+* @date         2026-10-17  13:37:10 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -142,19 +142,19 @@ public: // AUTO:
     }
 
     //! AUTO:  the right-hand side on the connector interface of coordinate markers (#2745)
-    virtual bool ComputeODE2LHSConnector(const CSystemData& systemData, TemporaryComputationData& temp, Vector& localODE2Lhs, Index objectNumber) const override
+    virtual bool ComputeODE2LHSConnector(const CSystemData& systemData, TemporaryComputationData& temp, Vector& localODE2Lhs) const override
     {
-        ConnectorODE2LHSCoordinateMarkers(systemData, temp, *this, localODE2Lhs, objectNumber); return true;
+        ConnectorODE2LHSCoordinateMarkers(systemData, temp, *this, localODE2Lhs); return true;
     }
 
     //! AUTO:  the Jacobian by automatic differentiation of the force (#2745)
-    virtual bool ComputeJacobianODE2Connector(const CSystemData& systemData, TemporaryComputationData& temp, Real factorODE2, Real factorODE2_t, Index objectNumber, bool jacobianDerivativeNonZero) const override
+    virtual bool ComputeJacobianODE2Connector(const CSystemData& systemData, TemporaryComputationData& temp, Real factorODE2, Real factorODE2_t, bool jacobianDerivativeNonZero) const override
     {
-        ConnectorJacobianODE2CoordinateMarkers(systemData, temp, *this, factorODE2, factorODE2_t, objectNumber, jacobianDerivativeNonZero); return true;
+        ConnectorJacobianODE2CoordinateMarkers(systemData, temp, *this, factorODE2, factorODE2_t, jacobianDerivativeNonZero); return true;
     }
 
     //! AUTO:  the contact force on marker 1 from the values of the two markers (#2745)
-    virtual void ComputeConnectorForceCoordinate(const MarkerCoordinate<Real>* markers, Real t, Index itemIndex, Real& force) const override;
+    virtual void ComputeConnectorForceCoordinate(const MarkerCoordinate<Real>* markers, Real t, Real& force) const override;
 
     //! AUTO:  the contact force on marker 1 for gap and its time derivative, with the contact state of the data node (#2745)
     Real ComputeContactForce(Real gap, Real gap_t) const;
@@ -166,7 +166,7 @@ public: // AUTO:
     }
 
     //! AUTO:  function called after Newton method; returns a residual error (force)
-    virtual Real PostNewtonStep(const MarkerDataStructure& markerDataCurrent, Index itemIndex, PostNewtonFlags::Type& flags, Real& recommendedStepSize) override;
+    virtual Real PostNewtonStep(const MarkerDataStructure& markerDataCurrent, PostNewtonFlags::Type& flags, Real& recommendedStepSize) override;
 
     //! AUTO:  function called after discontinuous iterations have been completed for one step (e.g. to finalize history variables and set initial values for next step)
     virtual void PostDiscontinuousIterationStep() override;
@@ -178,7 +178,7 @@ public: // AUTO:
     }
 
     //! AUTO:  provide according output variable in 'value'
-    virtual void GetOutputVariableConnector(OutputVariableType variableType, const MarkerDataStructure& markerData, Index itemIndex, Vector& value) const override;
+    virtual void GetOutputVariableConnector(OutputVariableType variableType, const MarkerDataStructure& markerData, Vector& value) const override;
 
     //! AUTO:  provide requested markerType for connector
     virtual Marker::Type GetRequestedMarkerType() const override

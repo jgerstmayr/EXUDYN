@@ -34,14 +34,13 @@ void CObjectJointSpherical::ComputeConstraintEquationsTemplate(const MarkerPosit
 	}
 }
 
-void CObjectJointSpherical::ComputeConstraintEquationsPosition(const MarkerPosition<Real>* markers, const LinkedDataVector& lambda, Real t,
-	Index itemIndex, bool velocityLevel, ConstSizeVector<maxConstraintEquations>& equations) const
+void CObjectJointSpherical::ComputeConstraintEquationsPosition(const MarkerPosition<Real>* markers, const LinkedDataVector& lambda, Real t, bool velocityLevel, ConstSizeVector<maxConstraintEquations>& equations) const
 {
 	ComputeConstraintEquationsTemplate(markers, lambda, velocityLevel, equations);
 }
 
 void CObjectJointSpherical::ComputeConstraintEquationsPositionDiff(const MarkerPosition<DRealPositionMarkers>* markers, const LinkedDataVector& lambda,
-	Real t, Index itemIndex, ConstSizeVectorBase<DRealPositionMarkers, maxConstraintEquations>& equations) const
+	Real t, ConstSizeVectorBase<DRealPositionMarkers, maxConstraintEquations>& equations) const
 {
 	ComputeConstraintEquationsTemplate(markers, lambda, false, equations);
 }
@@ -69,7 +68,7 @@ JacobianType::Type CObjectJointSpherical::GetAvailableJacobians() const
 
 
 //! provide according output variable in "value"
-void CObjectJointSpherical::GetOutputVariableConnector(OutputVariableType variableType, const MarkerDataStructure& markerData, Index itemIndex, Vector& value) const
+void CObjectJointSpherical::GetOutputVariableConnector(OutputVariableType variableType, const MarkerDataStructure& markerData, Vector& value) const
 {
 	switch (variableType)
 	{

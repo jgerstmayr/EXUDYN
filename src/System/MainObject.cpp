@@ -27,7 +27,7 @@
 
 
 //! GetOutputVariable with type and return value; copies values==>slow!; can be scalar or vector-valued! maps to CObject GetOutputVariable(...)
-py::object MainObject::GetOutputVariable(OutputVariableType variableType, ConfigurationType configuration, Index objectNumber) const
+py::object MainObject::GetOutputVariable(OutputVariableType variableType, ConfigurationType configuration) const
 {
 	if ((Index)GetCObject()->GetType() & (Index)CObjectType::Connector)
 	{
@@ -41,10 +41,10 @@ py::object MainObject::GetOutputVariable(OutputVariableType variableType, Config
 	{
 		if (variableType == OutputVariableType::HomogeneousTransformation)
 		{
-			OutputVariableHomogeneousTransformation([this, configuration, objectNumber](OutputVariableType type, Vector& v)
-				{ GetCObject()->GetOutputVariable(type, v, configuration, objectNumber); }, value);
+			OutputVariableHomogeneousTransformation([this, configuration](OutputVariableType type, Vector& v)
+				{ GetCObject()->GetOutputVariable(type, v, configuration); }, value);
 		}
-		else { GetCObject()->GetOutputVariable(variableType, value, configuration, objectNumber); }
+		else { GetCObject()->GetOutputVariable(variableType, value, configuration); }
 		//now check if it is scalar or a vector-valued:
 		return OutputVariableToPython(variableType, value); //exu.HT for HomogeneousTransformation (#2789)
 	}
@@ -57,7 +57,7 @@ py::object MainObject::GetOutputVariable(OutputVariableType variableType, Config
 	}
 }
 
-py::object MainObject::GetOutputVariableConnector(OutputVariableType variableType, const MarkerDataStructure& markerData, Index objectNumber) const
+py::object MainObject::GetOutputVariableConnector(OutputVariableType variableType, const MarkerDataStructure& markerData) const
 {
 	Vector value;
 	//check if type is valid:
@@ -66,7 +66,7 @@ py::object MainObject::GetOutputVariableConnector(OutputVariableType variableTyp
 		if ((Index)GetCObject()->GetType() & (Index)CObjectType::Connector)
 		{
 			const CObjectConnector* connector = (CObjectConnector*)GetCObject();
-			GetConnectorOutputVariable(*connector, variableType, markerData, objectNumber, value); //#2870
+			GetConnectorOutputVariable(*connector, variableType, markerData, value); //#2870
 
 			//now check if it is scalar or a vector-valued:
 			return OutputVariableToPython(variableType, value); //exu.HT for HomogeneousTransformation (#2789)
@@ -85,7 +85,7 @@ py::object MainObject::GetOutputVariableConnector(OutputVariableType variableTyp
 
 
 //! GetOutputVariable with type and return value; copies values==>slow!; can be scalar or vector-valued! maps to CObject GetOutputVariable(...)
-py::object MainObject::GetOutputVariableBody(OutputVariableType variableType, const Vector3D& localPosition, ConfigurationType configuration, Index objectNumber) const
+py::object MainObject::GetOutputVariableBody(OutputVariableType variableType, const Vector3D& localPosition, ConfigurationType configuration) const
 {
 	Vector value;
 	//check if type is valid:
@@ -97,10 +97,10 @@ py::object MainObject::GetOutputVariableBody(OutputVariableType variableType, co
 
 			if (variableType == OutputVariableType::HomogeneousTransformation)
 			{
-				OutputVariableHomogeneousTransformation([cObjectBody, &localPosition, configuration, objectNumber](OutputVariableType type, Vector& v)
-					{ cObjectBody->GetOutputVariableBody(type, localPosition, configuration, v, objectNumber); }, value);
+				OutputVariableHomogeneousTransformation([cObjectBody, &localPosition, configuration](OutputVariableType type, Vector& v)
+					{ cObjectBody->GetOutputVariableBody(type, localPosition, configuration, v); }, value);
 			}
-			else { cObjectBody->GetOutputVariableBody(variableType, localPosition, configuration, value, objectNumber); }
+			else { cObjectBody->GetOutputVariableBody(variableType, localPosition, configuration, value); }
 			//now check if it is scalar or a vector-valued:
 			return OutputVariableToPython(variableType, value); //exu.HT for HomogeneousTransformation (#2789)
 		}

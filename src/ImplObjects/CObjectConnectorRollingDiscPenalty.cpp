@@ -118,7 +118,7 @@ void CObjectConnectorRollingDiscPenalty::ComputeContactForces(const MarkerDataSt
 
 //! Computational function: compute left-hand-side (LHS) of second order ordinary differential equations (ODE) to "ode2Lhs"
 //! the forces and torques of the connector interface (#2745), as ComputeODE2LHS projects them
-void CObjectConnectorRollingDiscPenalty::ComputeConnectorForceRigid(const MarkerRigid<Real>* markers, Real t, Index itemIndex,
+void CObjectConnectorRollingDiscPenalty::ComputeConnectorForceRigid(const MarkerRigid<Real>* markers, Real t,
 	Vector3D* forces, Vector3D* torques) const
 {
 	for (Index k = 0; k < 2; k++) { forces[k].SetAll(0.); torques[k].SetAll(0.); }
@@ -146,7 +146,7 @@ void CObjectConnectorRollingDiscPenalty::ComputeConnectorForceRigid(const Marker
 }
 
 //! provide according output variable in "value"
-void CObjectConnectorRollingDiscPenalty::GetOutputVariableConnector(OutputVariableType variableType, const MarkerDataStructure& markerData, Index itemIndex, Vector& value) const
+void CObjectConnectorRollingDiscPenalty::GetOutputVariableConnector(OutputVariableType variableType, const MarkerDataStructure& markerData, Vector& value) const
 {
 	const Matrix3D& A1 = markerData.GetMarkerData(1).orientation;
 	const Vector3D& v1 = markerData.GetMarkerData(1).velocity;
@@ -244,7 +244,7 @@ void CObjectConnectorRollingDiscPenalty::GetOutputVariableConnector(OutputVariab
 }
 
 //! function called after Newton method; returns a residual error (force)
-Real CObjectConnectorRollingDiscPenalty::PostNewtonStep(const MarkerDataStructure& markerDataCurrent, Index itemIndex, PostNewtonFlags::Type& flags, Real& recommendedStepSize)
+Real CObjectConnectorRollingDiscPenalty::PostNewtonStep(const MarkerDataStructure& markerDataCurrent, PostNewtonFlags::Type& flags, Real& recommendedStepSize)
 {
 	Real discontinuousError = 0;
 	flags = PostNewtonFlags::_None;

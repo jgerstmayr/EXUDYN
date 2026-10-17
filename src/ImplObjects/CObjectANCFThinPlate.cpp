@@ -716,7 +716,7 @@ static void StiffnessAtPoint(const CObjectANCFThinPlate& plate, Real xi, Real et
 
 //! Compute left-hand-side (LHS) of second order ODE
 //! qANCFtotal are total coordinates!
-void CObjectANCFThinPlate::ComputeODE2LHS(Vector& ode2Lhs, Index objectNumber) const
+void CObjectANCFThinPlate::ComputeODE2LHS(Vector& ode2Lhs) const
 {
     // Get current configuration
     ConstSizeVector<nODE2coordinates> qANCFtotal;
@@ -1178,7 +1178,6 @@ void CObjectANCFThinPlate::ComputeODE2LHStemplate(VectorBase<TReal>& ode2Lhs,
 //! Compute mass matrix
 void CObjectANCFThinPlate::ComputeMassMatrix(EXUmath::MatrixContainer& massMatrixC, 
                                              const ArrayIndex& ltg, 
-                                             Index objectNumber, 
                                              bool computeInverse) const
 {
     CHECKandTHROW(!computeInverse, "CObjectANCFThinPlate::ComputeMassMatrix: computeMassMatrixInversePerBody=True is not possible for this type of element; change solver settings", ExudynNotImplementedError);
@@ -1391,8 +1390,7 @@ void CObjectANCFThinPlate::GetMassWeightedPositionJacobian(Matrix& value) const
 void CObjectANCFThinPlate::GetOutputVariableBody(OutputVariableType variableType, 
                                                   const Vector3D& localPosition, 
                                                   ConfigurationType configuration, 
-                                                  Vector& value, 
-                                                  Index objectNumber) const
+                                                  Vector& value) const
 {
     // localPosition is interpreted as (xi,eta,*) in [-1,1]x[-1,1] for this element
     Real xi = localPosition[0];
@@ -1556,7 +1554,7 @@ void CObjectANCFThinPlate::GetOutputVariableBody(OutputVariableType variableType
         value.SetVector({ ComputeElasticEnergy(configuration) }); break; }
     case OutputVariableType::KineticEnergy: {
         CheckEnergyLocalPosition(localPosition, "ObjectANCFThinPlate");
-        value.SetVector({ ComputeKineticEnergyFromMassMatrix(configuration, objectNumber, "ObjectANCFThinPlate") }); break; }
+        value.SetVector({ ComputeKineticEnergyFromMassMatrix(configuration, "ObjectANCFThinPlate") }); break; }
     default:
         SysError("CObjectANCFThinPlate::GetOutputVariableBody failed"); // error should not occur, because types are checked!
     }
@@ -2087,8 +2085,7 @@ template void CObjectANCFThinPlate::ComputeKinematics<DReal36>(
 //! Pass 2 seeds q̇   → captures factorODE2_t · ∂(ode2Lhs)/∂q̇       (α·M + β·∂f_d/∂q̇ at current config).
 //! Pass 2 is skipped when factorODE2_t == 0 or when no velocity-dependent forces are present.
 void CObjectANCFThinPlate::ComputeJacobianODE2_ODE2(EXUmath::MatrixContainer& jacobianODE2, JacobianTemp& temp,
-                                                     Real factorODE2, Real factorODE2_t,
-                                                     Index objectNumber, const ArrayIndex& ltg) const
+                                                     Real factorODE2, Real factorODE2_t, const ArrayIndex& ltg) const
 {
     ConstSizeVector<nODE2coordinates> qANCF0total;
     ConstSizeVector<nODE2coordinates> qANCF0_t;
@@ -2200,7 +2197,7 @@ void VisualizationObjectANCFThinPlate::UpdateGraphics(const VisualizationSetting
 	auto ContourDirect = [&](Real xi, Real eta, Real zeta) -> Float4 {
 		Float4 col = plateColor;
 		Vector& value = vSystem->tempVector;
-		cObject->GetOutputVariableBody(contourVariable, Vector3D({ xi, eta, zeta }), ConfigurationType::Visualization, value, itemNumber);
+		cObject->GetOutputVariableBody(contourVariable, Vector3D({ xi, eta, zeta }), ConfigurationType::Visualization, value);
 		EXUvis::ComputeContourColor<Vector>(value, contourVariable, visualizationSettings.contour.outputVariableComponent, col);
 		return col;
 	};

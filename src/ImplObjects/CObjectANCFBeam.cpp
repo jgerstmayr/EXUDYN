@@ -591,7 +591,7 @@ void CObjectANCFBeam::GetDeltaCrossSectionDeformation(Real x, ConstSizeMatrix<EX
 
 
 //! Computational function: compute mass matrix
-void CObjectANCFBeam::ComputeMassMatrix(EXUmath::MatrixContainer& massMatrixC, const ArrayIndex& ltg, Index objectNumber, bool computeInverse) const
+void CObjectANCFBeam::ComputeMassMatrix(EXUmath::MatrixContainer& massMatrixC, const ArrayIndex& ltg, bool computeInverse) const
 {
 	CHECKandTHROW(!computeInverse, "CObjectANCFBeam::ComputeMassMatrix: computeMassMatrixInversePerBody=True is not possible for this type of element; change solver settings", ExudynNotImplementedError);
 	
@@ -643,7 +643,7 @@ Real CObjectANCFBeam::ComputeElasticEnergy() const
 	return energy;
 }
 
-void CObjectANCFBeam::ComputeODE2LHS(Vector& ode2Lhs, Index objectNumber) const
+void CObjectANCFBeam::ComputeODE2LHS(Vector& ode2Lhs) const
 {
 	ConstSizeVector<nODE2coordinates> qANCF;
 	ConstSizeVector<nODE2coordinates> qANCF_t;
@@ -936,7 +936,7 @@ void CObjectANCFBeam::GetMassWeightedPositionJacobian(Matrix& value) const
 
 
 //! provide according output variable in "value"
-void CObjectANCFBeam::GetOutputVariableBody(OutputVariableType variableType, const Vector3D& localPosition, ConfigurationType configuration, Vector& value, Index objectNumber) const
+void CObjectANCFBeam::GetOutputVariableBody(OutputVariableType variableType, const Vector3D& localPosition, ConfigurationType configuration, Vector& value) const
 {
 	//outputVariables = "{
 	//'Position':'global position vector of local axis (1) and cross section (2) position', 
@@ -1066,7 +1066,7 @@ void CObjectANCFBeam::GetOutputVariableBody(OutputVariableType variableType, con
 		value.SetVector({ ComputeElasticEnergy() }); break; }
 	case OutputVariableType::KineticEnergy: {
 		CheckEnergyLocalPosition(localPosition, "ObjectANCFBeam");
-		value.SetVector({ ComputeKineticEnergyFromMassMatrix(configuration, objectNumber, "ObjectANCFBeam") }); break; }
+		value.SetVector({ ComputeKineticEnergyFromMassMatrix(configuration, "ObjectANCFBeam") }); break; }
 	default:
 		SysError("CObjectANCFBeam::GetOutputVariableBody failed"); //error should not occur, because types are checked!
 	}

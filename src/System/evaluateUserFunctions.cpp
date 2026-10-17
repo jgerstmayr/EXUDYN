@@ -48,53 +48,53 @@
 
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 //! call to user function implemented in separate file to avoid including pybind and MainSystem.h at too many places
-void CObjectConnectorCartesianSpringDamper::EvaluateUserFunctionForce(Vector3D& force, const MainSystemBase& mainSystem, Real t, Index itemIndex, Vector3D& vPos, Vector3D& vVel) const
+void CObjectConnectorCartesianSpringDamper::EvaluateUserFunctionForce(Vector3D& force, const MainSystemBase& mainSystem, Real t, Vector3D& vPos, Vector3D& vVel) const
 {
 	UserFunctionExceptionHandling([&] //lambda function to add consistent try{..} catch(...) block
 	{
-		force = parameters.springForceUserFunction.userFunction((const MainSystem&)mainSystem, t, itemIndex, vPos, vVel,
+		force = parameters.springForceUserFunction.userFunction((const MainSystem&)mainSystem, t, GetObjectNumber(), vPos, vVel,
 			parameters.stiffness, parameters.damping, parameters.offset);
 	}, "ObjectConnectorCartesianSpringDamper::springForceUserFunction");
 }
 
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 //! call to user function implemented in separate file to avoid including pybind and MainSystem.h at too many places
-void CObjectConnectorCoordinate::EvaluateUserFunctionOffset(Real& offset, const MainSystemBase& mainSystem, Real t, Index itemIndex) const
+void CObjectConnectorCoordinate::EvaluateUserFunctionOffset(Real& offset, const MainSystemBase& mainSystem, Real t) const
 {
 	UserFunctionExceptionHandling([&] //lambda function to add consistent try{..} catch(...) block
 	{
-		offset = parameters.offsetUserFunction.userFunction((const MainSystem&)mainSystem, t, itemIndex, parameters.offset);
+		offset = parameters.offsetUserFunction.userFunction((const MainSystem&)mainSystem, t, GetObjectNumber(), parameters.offset);
 	}, "ObjectConnectorCoordinate::offsetUserFunction");
 }
 
 //! call to user function implemented in separate file to avoid including pybind and MainSystem.h at too many places
-void CObjectConnectorCoordinate::EvaluateUserFunctionOffset_t(Real& offset, const MainSystemBase& mainSystem, Real t, Index itemIndex) const
+void CObjectConnectorCoordinate::EvaluateUserFunctionOffset_t(Real& offset, const MainSystemBase& mainSystem, Real t) const
 {
 	UserFunctionExceptionHandling([&] //lambda function to add consistent try{..} catch(...) block
 	{
-		offset = parameters.offsetUserFunction_t.userFunction((const MainSystem&)mainSystem,  t, itemIndex, parameters.offset);
+		offset = parameters.offsetUserFunction_t.userFunction((const MainSystem&)mainSystem,  t, GetObjectNumber(), parameters.offset);
 	}, "ObjectConnectorCoordinate::offsetUserFunction_t");
 }
 
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 //! call to user function implemented in separate file to avoid including pybind and MainSystem.h at too many places
-void CObjectConnectorCoordinateVector::EvaluateUserFunctionConstraint(Vector& algebraicEquations, const MainSystemBase& mainSystem, Real t, Index itemIndex, 
+void CObjectConnectorCoordinateVector::EvaluateUserFunctionConstraint(Vector& algebraicEquations, const MainSystemBase& mainSystem, Real t, 
 	const ResizableVector& qMarker0, const ResizableVector& qMarker1, const ResizableVector& qMarker0_t, const ResizableVector& qMarker1_t, bool velocityLevel) const
 {
 	UserFunctionExceptionHandling([&] //lambda function to add consistent try{..} catch(...) block
 	{
-		algebraicEquations.CopyFrom(parameters.constraintUserFunction.userFunction((const MainSystem&)mainSystem, t, itemIndex, 
+		algebraicEquations.CopyFrom(parameters.constraintUserFunction.userFunction((const MainSystem&)mainSystem, t, GetObjectNumber(), 
 			(StdVector)(qMarker0.Append(qMarker1)), (StdVector)(qMarker0_t.Append(qMarker1_t)), velocityLevel));
 	}, "ObjectConnectorCoordinateVector::constraintUserFunction");
 }
 
 //! call to user function implemented in separate file to avoid including pybind and MainSystem.h at too many places
-void CObjectConnectorCoordinateVector::EvaluateUserFunctionJacobian(EXUmath::MatrixContainer& jacobian, const MainSystemBase& mainSystem, Real t, Index itemIndex,
+void CObjectConnectorCoordinateVector::EvaluateUserFunctionJacobian(EXUmath::MatrixContainer& jacobian, const MainSystemBase& mainSystem, Real t,
 	const ResizableVector& qMarker0, const ResizableVector& qMarker1, const ResizableVector& qMarker0_t, const ResizableVector& qMarker1_t, bool velocityLevel) const
 {
 	UserFunctionExceptionHandling([&] //lambda function to add consistent try{..} catch(...) block
 	{
-		PyMatrixContainer PMC(parameters.jacobianUserFunction.userFunction((const MainSystem&)mainSystem, t, itemIndex,
+		PyMatrixContainer PMC(parameters.jacobianUserFunction.userFunction((const MainSystem&)mainSystem, t, GetObjectNumber(),
 			(StdVector)(qMarker0.Append(qMarker1)), (StdVector)(qMarker0_t.Append(qMarker1_t)), velocityLevel));
 
 		CHECKandTHROW(PMC.UseDenseMatrix(), "ObjectConnectorCoordinateVector::EvaluateUserFunctionJacobian: jacobian currently only accepts dense matrices", ExudynValueError);
@@ -108,7 +108,7 @@ void CObjectConnectorCoordinateVector::EvaluateUserFunctionJacobian(EXUmath::Mat
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 //! call to user function implemented in separate file to avoid including pybind and MainSystem.h at too many places
-void CObjectConnectorRigidBodySpringDamper::EvaluateUserFunctionForce(Vector6D& fLocVec6D, const MainSystemBase& mainSystem, Real t, Index itemIndex,
+void CObjectConnectorRigidBodySpringDamper::EvaluateUserFunctionForce(Vector6D& fLocVec6D, const MainSystemBase& mainSystem, Real t,
 	Vector6D& uLoc6D, Vector6D& vLoc6D) const
 {
 	Vector3D u, rot, v, omega;
@@ -122,7 +122,7 @@ void CObjectConnectorRigidBodySpringDamper::EvaluateUserFunctionForce(Vector6D& 
 
 	UserFunctionExceptionHandling([&] //lambda function to add consistent try{..} catch(...) block
 	{
-		fLocVec6D = parameters.springForceTorqueUserFunction.userFunction((const MainSystem&)mainSystem, t, itemIndex,
+		fLocVec6D = parameters.springForceTorqueUserFunction.userFunction((const MainSystem&)mainSystem, t, GetObjectNumber(),
 			u, rot, v, omega, EXUmath::Matrix6DToStdArray66(parameters.stiffness), EXUmath::Matrix6DToStdArray66(parameters.damping),
 			EXUmath::Matrix3DToStdArray33(parameters.rotationMarker0), EXUmath::Matrix3DToStdArray33(parameters.rotationMarker1),
 			parameters.offset);
@@ -131,7 +131,7 @@ void CObjectConnectorRigidBodySpringDamper::EvaluateUserFunctionForce(Vector6D& 
 }
 
 //! call to post Newton step user function implemented in separate file to avoid including pybind and MainSystem.h at too many places
-void CObjectConnectorRigidBodySpringDamper::EvaluateUserFunctionPostNewtonStep(Vector& returnValue, const MainSystemBase& mainSystem, Real t, Index itemIndex,
+void CObjectConnectorRigidBodySpringDamper::EvaluateUserFunctionPostNewtonStep(Vector& returnValue, const MainSystemBase& mainSystem, Real t,
 	Vector& dataCoordinates, Vector6D& uLoc6D, Vector6D& vLoc6D) const
 {
 	Vector3D u, rot, v, omega;
@@ -145,7 +145,7 @@ void CObjectConnectorRigidBodySpringDamper::EvaluateUserFunctionPostNewtonStep(V
 
 	UserFunctionExceptionHandling([&] //lambda function to add consistent try{..} catch(...) block
 	{
-		returnValue = parameters.postNewtonStepUserFunction.userFunction((const MainSystem&)mainSystem, t, itemIndex, (std::vector<Real>)dataCoordinates,
+		returnValue = parameters.postNewtonStepUserFunction.userFunction((const MainSystem&)mainSystem, t, GetObjectNumber(), (std::vector<Real>)dataCoordinates,
 			u, rot, v, omega, EXUmath::Matrix6DToStdArray66(parameters.stiffness), EXUmath::Matrix6DToStdArray66(parameters.damping),
 			EXUmath::Matrix3DToStdArray33(parameters.rotationMarker0), EXUmath::Matrix3DToStdArray33(parameters.rotationMarker1),
 			parameters.offset);
@@ -156,12 +156,12 @@ void CObjectConnectorRigidBodySpringDamper::EvaluateUserFunctionPostNewtonStep(V
 
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 //! call to user function implemented in separate file to avoid including pybind and MainSystem.h at too many places
-void CObjectConnectorLinearSpringDamper::EvaluateUserFunctionForce(Real& force, const MainSystemBase& mainSystem, Real t, Index itemIndex,
+void CObjectConnectorLinearSpringDamper::EvaluateUserFunctionForce(Real& force, const MainSystemBase& mainSystem, Real t,
 	Real displacement, Real velocity) const
 {
 	UserFunctionExceptionHandling([&] //lambda function to add consistent try{..} catch(...) block
 	{
-		force = parameters.springForceUserFunction.userFunction((const MainSystem&)mainSystem, t, itemIndex,
+		force = parameters.springForceUserFunction.userFunction((const MainSystem&)mainSystem, t, GetObjectNumber(),
 			displacement, velocity, parameters.stiffness, parameters.damping, parameters.offset);
 
 	}, "CObjectConnectorLinearSpringDamper::springForceUserFunction");
@@ -169,12 +169,12 @@ void CObjectConnectorLinearSpringDamper::EvaluateUserFunctionForce(Real& force, 
 
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 //! call to user function implemented in separate file to avoid including pybind and MainSystem.h at too many places
-void CObjectConnectorTorsionalSpringDamper::EvaluateUserFunctionForce(Real& torque, const MainSystemBase& mainSystem, Real t, Index itemIndex,
+void CObjectConnectorTorsionalSpringDamper::EvaluateUserFunctionForce(Real& torque, const MainSystemBase& mainSystem, Real t,
 	Real angle, Real omega) const
 {
 	UserFunctionExceptionHandling([&] //lambda function to add consistent try{..} catch(...) block
 	{
-		torque = parameters.springTorqueUserFunction.userFunction((const MainSystem&)mainSystem, t, itemIndex,
+		torque = parameters.springTorqueUserFunction.userFunction((const MainSystem&)mainSystem, t, GetObjectNumber(),
 			angle, omega, parameters.stiffness, parameters.damping, parameters.offset);
 
 	}, "CObjectConnectorTorsionalSpringDamper::springTorqueUserFunction");
@@ -182,26 +182,26 @@ void CObjectConnectorTorsionalSpringDamper::EvaluateUserFunctionForce(Real& torq
 
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 //! call to user function implemented in separate file to avoid including pybind and MainSystem.h at too many places
-void CObjectConnectorCoordinateSpringDamper::EvaluateUserFunctionForce(Real& force, const MainSystemBase& mainSystem, Real t, Index itemIndex,
+void CObjectConnectorCoordinateSpringDamper::EvaluateUserFunctionForce(Real& force, const MainSystemBase& mainSystem, Real t,
     Real relPos, Real relVel) const
 {
     UserFunctionExceptionHandling([&] //lambda function to add consistent try{..} catch(...) block
     {
         //user function args:(deltaL, deltaL_t, Real stiffness, Real damping, Real offset, Real dryFriction, Real dryFrictionProportionalZone)
-        force = parameters.springForceUserFunction.userFunction((const MainSystem&)cSystemData->GetMainSystemBacklink(), t, itemIndex,
+        force = parameters.springForceUserFunction.userFunction((const MainSystem&)cSystemData->GetMainSystemBacklink(), t, GetObjectNumber(),
             relPos, relVel, parameters.stiffness, parameters.damping, parameters.offset); // , parameters.dryFriction, parameters.dryFrictionProportionalZone);
     }, "ObjectConnectorCoordinateSpringDamper::springForceUserFunction");
 }
 
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 //! call to user function implemented in separate file to avoid including pybind and MainSystem.h at too many places
-void CObjectConnectorCoordinateSpringDamperExt::EvaluateUserFunctionForce(Real& force, const MainSystemBase& mainSystem, Real t, Index itemIndex,
+void CObjectConnectorCoordinateSpringDamperExt::EvaluateUserFunctionForce(Real& force, const MainSystemBase& mainSystem, Real t,
     Real relPos, Real relVel) const
 {
     UserFunctionExceptionHandling([&] //lambda function to add consistent try{..} catch(...) block
     {
         //user function args:(deltaL, deltaL_t, Real stiffness, Real damping, Real offset, Real dryFriction, Real dryFrictionProportionalZone)
-        force = parameters.springForceUserFunction.userFunction((const MainSystem&)cSystemData->GetMainSystemBacklink(), t, itemIndex,
+        force = parameters.springForceUserFunction.userFunction((const MainSystem&)cSystemData->GetMainSystemBacklink(), t, GetObjectNumber(),
             relPos, relVel, parameters.stiffness, parameters.damping, parameters.offset, parameters.velocityOffset,
             parameters.dynamicFrictionForce, parameters.staticFrictionOffsetForce, parameters.exponentialDecayStatic,
             parameters.viscousFrictionFactor, parameters.frictionProportionalZone);
@@ -211,23 +211,23 @@ void CObjectConnectorCoordinateSpringDamperExt::EvaluateUserFunctionForce(Real& 
 
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 //! call to user function implemented in separate file to avoid including pybind and MainSystem.h at too many places
-void CObjectJointGeneric::EvaluateUserFunctionOffset(Vector6D& offset, const MainSystemBase& mainSystem, Real t, Index itemIndex) const
+void CObjectJointGeneric::EvaluateUserFunctionOffset(Vector6D& offset, const MainSystemBase& mainSystem, Real t) const
 {
 	UserFunctionExceptionHandling([&] //lambda function to add consistent try{..} catch(...) block
 	{
 		//user function args:(Real t, Real load)
-		offset = (Vector6D)(parameters.offsetUserFunction.userFunction((const MainSystem&)mainSystem, t, itemIndex, parameters.offsetUserFunctionParameters));
+		offset = (Vector6D)(parameters.offsetUserFunction.userFunction((const MainSystem&)mainSystem, t, GetObjectNumber(), parameters.offsetUserFunctionParameters));
 	}, "ObjectJointGeneric::offsetUserFunction");
 
 }
 
 //! call to user function implemented in separate file to avoid including pybind and MainSystem.h at too many places
-void CObjectJointGeneric::EvaluateUserFunctionOffset_t(Vector6D& offset, const MainSystemBase& mainSystem, Real t, Index itemIndex) const
+void CObjectJointGeneric::EvaluateUserFunctionOffset_t(Vector6D& offset, const MainSystemBase& mainSystem, Real t) const
 {
 	UserFunctionExceptionHandling([&] //lambda function to add consistent try{..} catch(...) block
 	{
 		//user function args:(Real t, Real load)
-		offset = (Vector6D)(parameters.offsetUserFunction.userFunction((const MainSystem&)mainSystem, t, itemIndex, parameters.offsetUserFunctionParameters));
+		offset = (Vector6D)(parameters.offsetUserFunction.userFunction((const MainSystem&)mainSystem, t, GetObjectNumber(), parameters.offsetUserFunctionParameters));
 	}, "ObjectJointGeneric::offsetUserFunction  (called from ComputeJacobianAE)");
 
 }
@@ -235,23 +235,23 @@ void CObjectJointGeneric::EvaluateUserFunctionOffset_t(Vector6D& offset, const M
 
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 //! call to user function implemented in separate file to avoid including pybind and MainSystem.h at too many places
-void CObjectConnectorSpringDamper::EvaluateUserFunctionForce(Real& force, const MainSystemBase& mainSystem, Real t, Index itemIndex, Real deltaL, Real deltaL_t) const
+void CObjectConnectorSpringDamper::EvaluateUserFunctionForce(Real& force, const MainSystemBase& mainSystem, Real t, Real deltaL, Real deltaL_t) const
 {
 	UserFunctionExceptionHandling([&] //lambda function to add consistent try{..} catch(...) block
 	{
 		//user function args:(deltaL, deltaL_t, Real stiffness, Real damping, Real springForce)
-		force = parameters.springForceUserFunction.userFunction((const MainSystem&)mainSystem, t, itemIndex,
+		force = parameters.springForceUserFunction.userFunction((const MainSystem&)mainSystem, t, GetObjectNumber(),
 			deltaL, deltaL_t, parameters.stiffness, parameters.damping, parameters.force);
 	}, "ObjectConnectorSpringDamper::springForceUserFunction");
 }
 
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 //! the user functions of ObjectGenericODE2, with the MainSystem of the object (#2995)
-void CObjectGenericODE2::EvaluateUserFunctionForce(Vector& force, Real t, Index objectNumber, const Vector& coordinates, const Vector& coordinates_t) const
+void CObjectGenericODE2::EvaluateUserFunctionForce(Vector& force, Real t, const Vector& coordinates, const Vector& coordinates_t) const
 {
 	UserFunctionExceptionHandling([&] //lambda function to add consistent try{..} catch(...) block
 	{
-		EvaluateUserFunctionIntoVector(parameters.forceUserFunction, force, (const MainSystem&)cSystemData->GetMainSystemBacklink(), t, objectNumber,
+		EvaluateUserFunctionIntoVector(parameters.forceUserFunction, force, (const MainSystem&)cSystemData->GetMainSystemBacklink(), t, GetObjectNumber(),
 			coordinates, coordinates_t);
 	}, "ObjectGenericODE2::forceUserFunction");
 	if (force.NumberOfItems() != coordinates.NumberOfItems())
@@ -261,24 +261,24 @@ void CObjectGenericODE2::EvaluateUserFunctionForce(Vector& force, Real t, Index 
 	}
 }
 
-void CObjectGenericODE2::EvaluateUserFunctionMassMatrix(EXUmath::MatrixContainer& massMatrix, Real t, Index objectNumber,
+void CObjectGenericODE2::EvaluateUserFunctionMassMatrix(EXUmath::MatrixContainer& massMatrix, Real t,
 	const Vector& coordinates, const Vector& coordinates_t, const ArrayIndex& ltg) const
 {
 	UserFunctionExceptionHandling([&] //lambda function to add consistent try{..} catch(...) block
 	{
 		massMatrix.CopyOrAddTriplets(PyMatrixContainer(EvaluateUserFunction(parameters.massMatrixUserFunction, (const MainSystem&)cSystemData->GetMainSystemBacklink(),
-			t, objectNumber, coordinates, coordinates_t)), ltg);
+			t, GetObjectNumber(), coordinates, coordinates_t)), ltg);
 	}, "ObjectGenericODE2::massMatrixUserFunction");
 }
 
-void CObjectGenericODE2::EvaluateUserFunctionJacobian(EXUmath::MatrixContainer& jacobianODE2, Real t, Index objectNumber,
+void CObjectGenericODE2::EvaluateUserFunctionJacobian(EXUmath::MatrixContainer& jacobianODE2, Real t,
 	const Vector& coordinates, const Vector& coordinates_t, Real factorODE2, Real factorODE2_t, const ArrayIndex& ltg) const
 {
 	UserFunctionExceptionHandling([&] //lambda function to add consistent try{..} catch(...) block
 	{
 		//factorODE2 / factorODE2_t must be added in user function, ltg-transformation done by CopyOrAddTriplets
 		jacobianODE2.CopyOrAddTriplets(PyMatrixContainer(EvaluateUserFunction(parameters.jacobianUserFunction, (const MainSystem&)cSystemData->GetMainSystemBacklink(),
-			t, objectNumber, coordinates, coordinates_t, factorODE2, factorODE2_t)), ltg);
+			t, GetObjectNumber(), coordinates, coordinates_t, factorODE2, factorODE2_t)), ltg);
 	}, "ObjectGenericODE2::jacobianUserFunction");
 	//the size can be checked in the dense mode; in the sparse mode the triplets go directly into the system matrix
 	Index n = coordinates.NumberOfItems();
@@ -292,11 +292,11 @@ void CObjectGenericODE2::EvaluateUserFunctionJacobian(EXUmath::MatrixContainer& 
 
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 //! call to user function implemented in separate file to avoid including pybind and MainSystem.h at too many places
-void CObjectGenericODE1::EvaluateUserFunctionRHS(Vector& force, const MainSystemBase& mainSystem, Real t, Index objectNumber, const Vector& coordinates) const
+void CObjectGenericODE1::EvaluateUserFunctionRHS(Vector& force, const MainSystemBase& mainSystem, Real t, const Vector& coordinates) const
 {
 	UserFunctionExceptionHandling([&] //lambda function to add consistent try{..} catch(...) block
 	{
-		EvaluateUserFunctionIntoVector(parameters.rhsUserFunction, force, (const MainSystem&)mainSystem, t, objectNumber, coordinates);
+		EvaluateUserFunctionIntoVector(parameters.rhsUserFunction, force, (const MainSystem&)mainSystem, t, GetObjectNumber(), coordinates);
 	}, "ObjectGenericODE1::rhsUserFunction");
 }
 
@@ -401,74 +401,74 @@ void CObjectUserBody::EvaluateRotationJacobian(Matrix& value, Real t, const Vect
 
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 //! call to user function implemented in separate file to avoid including pybind and MainSystem.h at too many places
-void CObjectKinematicTree::EvaluateUserFunctionForce(Vector& force, const MainSystemBase& mainSystem, Real t, Index objectNumber, const Vector& coordinates, const Vector& coordinates_t) const
+void CObjectKinematicTree::EvaluateUserFunctionForce(Vector& force, const MainSystemBase& mainSystem, Real t, const Vector& coordinates, const Vector& coordinates_t) const
 {
 	UserFunctionExceptionHandling([&] //lambda function to add consistent try{..} catch(...) block
 	{
-		EvaluateUserFunctionIntoVector(parameters.forceUserFunction, force, (const MainSystem&)mainSystem, t, objectNumber, coordinates, coordinates_t);
+		EvaluateUserFunctionIntoVector(parameters.forceUserFunction, force, (const MainSystem&)mainSystem, t, GetObjectNumber(), coordinates, coordinates_t);
 	}, "ObjectKinematicTree::forceUserFunction");
 }
 
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 //! call to user function implemented in separate file to avoid including pybind and MainSystem.h at too many places
-void CObjectFFRF::EvaluateUserFunctionForce(Vector& force, const MainSystemBase& mainSystem, Real t, Index objectNumber, const Vector& coordinates, const Vector& coordinates_t) const
+void CObjectFFRF::EvaluateUserFunctionForce(Vector& force, const MainSystemBase& mainSystem, Real t, const Vector& coordinates, const Vector& coordinates_t) const
 {
 	UserFunctionExceptionHandling([&] //lambda function to add consistent try{..} catch(...) block
 	{
-		EvaluateUserFunctionIntoVector(parameters.forceUserFunction, force, (const MainSystem&)mainSystem, t, objectNumber, coordinates, coordinates_t);
+		EvaluateUserFunctionIntoVector(parameters.forceUserFunction, force, (const MainSystem&)mainSystem, t, GetObjectNumber(), coordinates, coordinates_t);
 	}, "ObjectFFRF::forceUserFunction");
 }
 
 //! call to user function implemented in separate file to avoid including pybind and MainSystem.h at too many places
-void CObjectFFRF::EvaluateUserFunctionMassMatrix(Matrix& massMatrix, const MainSystemBase& mainSystem, Real t, Index objectNumber, const StdVector& coordinates, const StdVector& coordinates_t) const
+void CObjectFFRF::EvaluateUserFunctionMassMatrix(Matrix& massMatrix, const MainSystemBase& mainSystem, Real t, const StdVector& coordinates, const StdVector& coordinates_t) const
 {
 	UserFunctionExceptionHandling([&] //lambda function to add consistent try{..} catch(...) block
 	{
-		EPyUtils::FromPython(parameters.massMatrixUserFunction.userFunction((const MainSystem&)mainSystem, t, objectNumber, coordinates, coordinates_t), massMatrix);
+		EPyUtils::FromPython(parameters.massMatrixUserFunction.userFunction((const MainSystem&)mainSystem, t, GetObjectNumber(), coordinates, coordinates_t), massMatrix);
 	}, "ObjectFFRF::massMatrixUserFunction");
 }
 
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 //! call to user function implemented in separate file to avoid including pybind and MainSystem.h at too many places
-void CObjectFFRFreducedOrder::EvaluateUserFunctionForce(Vector& force, const MainSystemBase& mainSystem, Real t, Index objectNumber, const Vector& coordinates, const Vector& coordinates_t) const
+void CObjectFFRFreducedOrder::EvaluateUserFunctionForce(Vector& force, const MainSystemBase& mainSystem, Real t, const Vector& coordinates, const Vector& coordinates_t) const
 {
 	UserFunctionExceptionHandling([&] //lambda function to add consistent try{..} catch(...) block
 	{
-		EvaluateUserFunctionIntoVector(parameters.forceUserFunction, force, (const MainSystem&)mainSystem, t, objectNumber, coordinates, coordinates_t);
+		EvaluateUserFunctionIntoVector(parameters.forceUserFunction, force, (const MainSystem&)mainSystem, t, GetObjectNumber(), coordinates, coordinates_t);
 	}, "ObjectFFRFreducedOrder::forceUserFunction");
 }
 
 //! call to user function implemented in separate file to avoid including pybind and MainSystem.h at too many places
-void CObjectFFRFreducedOrder::EvaluateUserFunctionMassMatrix(Matrix& massMatrix, const MainSystemBase& mainSystem, Real t, Index objectNumber, 
+void CObjectFFRFreducedOrder::EvaluateUserFunctionMassMatrix(Matrix& massMatrix, const MainSystemBase& mainSystem, Real t, 
 	const StdVector& coordinates, const StdVector& coordinates_t) const
 {
 	UserFunctionExceptionHandling([&] //lambda function to add consistent try{..} catch(...) block
 	{
-		EPyUtils::FromPython(parameters.massMatrixUserFunction.userFunction((const MainSystem&)mainSystem, t, objectNumber, coordinates, coordinates_t), massMatrix);
+		EPyUtils::FromPython(parameters.massMatrixUserFunction.userFunction((const MainSystem&)mainSystem, t, GetObjectNumber(), coordinates, coordinates_t), massMatrix);
 	}, "ObjectFFRFreducedOrder::massMatrixUserFunction");
 }
 
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 //! call to user function implemented in separate file to avoid including pybind and MainSystem.h at too many places
-void CObjectANCFCable2D::EvaluateUserFunctionBendingMoment(Real& torque, const MainSystemBase& mainSystem, Real t, Index itemIndex,
+void CObjectANCFCable2D::EvaluateUserFunctionBendingMoment(Real& torque, const MainSystemBase& mainSystem, Real t,
 	Real axialPositionNormalized, Real curvature, Real curvature_t, Real curvatureRef, Real bendingStiffness, Real bendingDamping,
 	Real axialStrain, Real axialStrain_t, Real axialStrainRef) const
 {
 	UserFunctionExceptionHandling([&] //lambda function to add consistent try{..} catch(...) block
 		{
-			torque = parameters.bendingMomentUserFunction.userFunction((const MainSystem&)mainSystem, t, itemIndex,
+			torque = parameters.bendingMomentUserFunction.userFunction((const MainSystem&)mainSystem, t, GetObjectNumber(),
 			axialPositionNormalized, curvature, curvature_t, curvatureRef, bendingStiffness, bendingDamping,
 			axialStrain, axialStrain_t, axialStrainRef); 
 		}, "CObjectANCFCable2D::bendingMomentUserFunction");
 }
 
-void CObjectANCFCable2D::EvaluateUserFunctionAxialForce(Real& force, const MainSystemBase& mainSystem, Real t, Index itemIndex,
+void CObjectANCFCable2D::EvaluateUserFunctionAxialForce(Real& force, const MainSystemBase& mainSystem, Real t,
 	Real axialPositionNormalized, Real axialStrain, Real axialStrain_t, Real axialStrainRef, Real axialStiffness, Real axialDamping,
 	Real curvature, Real curvature_t, Real curvatureRef) const
 {
 	UserFunctionExceptionHandling([&] //lambda function to add consistent try{..} catch(...) block
 		{
-			force = parameters.axialForceUserFunction.userFunction((const MainSystem&)mainSystem, t, itemIndex,
+			force = parameters.axialForceUserFunction.userFunction((const MainSystem&)mainSystem, t, GetObjectNumber(),
 			axialPositionNormalized, axialStrain, axialStrain_t, axialStrainRef, axialStiffness, axialDamping,
 			curvature, curvature_t, curvatureRef);
 		}, "CObjectANCFCable2D::axialForceUserFunction");

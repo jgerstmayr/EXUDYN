@@ -85,7 +85,7 @@ void CObjectALEANCFCable2D::PreComputeMassTerms() const
 }
 
 //! Computational function: compute mass matrix
-void CObjectALEANCFCable2D::ComputeMassMatrix(EXUmath::MatrixContainer& massMatrixC, const ArrayIndex& ltg, Index objectNumber, bool computeInverse) const
+void CObjectALEANCFCable2D::ComputeMassMatrix(EXUmath::MatrixContainer& massMatrixC, const ArrayIndex& ltg, bool computeInverse) const
 {
 	CHECKandTHROW(!computeInverse, "CObjectALEANCFCable2DBase::ComputeMassMatrix: computeMassMatrixInversePerBody=True is not possible for this type of element; change solver settings", ExudynNotImplementedError);
 
@@ -149,7 +149,7 @@ void CObjectALEANCFCable2D::ComputeMassMatrix(EXUmath::MatrixContainer& massMatr
 }
 
 //! Computational function: compute left-hand-side (LHS) of second order ordinary differential equations (ODE) to "ode2Lhs"
-void CObjectALEANCFCable2D::ComputeODE2LHS(Vector& ode2Lhs, Index objectNumber) const
+void CObjectALEANCFCable2D::ComputeODE2LHS(Vector& ode2Lhs) const
 {
 	PreComputeMassTerms();
 
@@ -160,7 +160,7 @@ void CObjectALEANCFCable2D::ComputeODE2LHS(Vector& ode2Lhs, Index objectNumber) 
 	//	ConstSizeMatrix< (nODE2coordinates + 1)*(nODE2coordinates + 1)> temp(nODE2coordinates + 1, nODE2coordinates + 1);
 	//	//Matrix temp;
 	//	LinkedDataMatrix linkedTemp(temp);
-	//	ComputeMassMatrix(linkedTemp, objectNumber); //temp matrix is not used
+	//	ComputeMassMatrix(linkedTemp); //temp matrix is not used
 	//	//now preComputedM,M1,M2,B1 and B2 matrices are available
 	//}
 
@@ -173,7 +173,7 @@ void CObjectALEANCFCable2D::ComputeODE2LHS(Vector& ode2Lhs, Index objectNumber) 
 	//ComputeCurrentObjectCoordinates(qANCFALE);
 	//ComputeCurrentObjectVelocities(qANCFALE_t);
 	//ComputeODE2LHStemplate<Real>(ode2Lhs, qANCFALE, qANCFALE_t, Index objectNumber);
-	CObjectANCFCable2DBase::ComputeODE2LHS(ode2Lhs, objectNumber); //compute stiffness terms
+	CObjectANCFCable2DBase::ComputeODE2LHS(ode2Lhs); //compute stiffness terms
 	
 	//ode2Lhs.SetNumberOfItems(nODE2coordinates + 1);
 	//ode2Lhs.CopyFrom(temp, 0, 0, nODE2coordinates); //copies 8 terms
