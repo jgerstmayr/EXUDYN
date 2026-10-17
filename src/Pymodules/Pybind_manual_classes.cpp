@@ -698,6 +698,8 @@ void Init_Pybind_manual_classes(py::module& m) {
 		.def_readwrite("recordUse", &PySpecialDeprecations::recordUse)
 		.def_readwrite("userFunctionListArguments", &PySpecialDeprecations::userFunctionListArguments,
 			"if True, Python user functions get their vector arguments (q, q_t, ...) as lists, as before version 1.13.104, instead of read-only numpy arrays; deprecated, removed in 2031 (#3008)")
+		.def_readwrite("symbolicStarProduct", &PySpecialDeprecations::symbolicStarProduct,
+			"if True, * of two exudyn.symbolic vectors is their scalar product and * with a symbolic matrix the matrix product, as before version 1.13.115; False (=default): it raises a TypeError, as numpy multiplies the components - use dot() or @ for the products and multiply() for the product of the components; deprecated, removed when * becomes the product of the components (#3015, #3016)")
 		.def("Reset", &PySpecialDeprecations::Reset, "forget which names were warned about in this session, so that each one warns once more")
 		.def("Warn", [](const PySpecialDeprecations&, const STDstring& source, const STDstring& name, const STDstring& message, int stackLevel) {
 			PyDeprecated(source, name, message, stackLevel);

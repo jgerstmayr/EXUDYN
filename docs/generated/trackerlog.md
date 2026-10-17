@@ -8,10 +8,10 @@ Every entry carries the **type** of the issue, then its **priority** and its **e
 
 General information on current version:
 
-- Exudyn version = 1.13.114.dev1
+- Exudyn version = 1.13.115.dev1
 - last change = 2026-10-17
-- Number of issues = 3015
-- Number of resolved issues = 2891 (114 in current version)
+- Number of issues = 3019
+- Number of resolved issues = 2892 (115 in current version)
 
 ## Resolved issues and resolved bugs before version 1.13
 
@@ -9039,6 +9039,15 @@ The following list contains the issues which have been **RESOLVED** in the accor
 
 ## Open issues
 
+- `EXTENSION` `MEDIUM EFF` `raised by: Claude-JG` Add Matrix.T, rows M\[i\], slices v\[a:b\] and component-wise functions of symbolic vectors (#3018)
+  - description: Missing in exudyn.symbolic compared with numpy (\#3015): the transposed matrix (A.T @ f, which v @ A computes already), a row of a matrix, slices of vectors and matrices, np.sin(v) and the other functions applied to the components, a vector plus a scalar or a list, np.cross and np.linalg.norm as recorded operations (NormL2 exists). The transposed matrix is the most important for rigid body user functions.
+  - date raised: 2026-10-17
+- `CHANGE` `LOW EFF` `raised by: Claude-JG` Refuse float() of a symbolic expression while recording, so that math.sin and float() cannot lose it (#3017)
+  - description: symbolic.Real has \_\_float\_\_, which evaluates the expression: math.sin(x) or float(x) in a symbolic user function records a constant instead of the expression, without any message (found by the comparison with numpy, \#3015; tools/checkPythonMath.py checks the test models for it). While recording, \_\_float\_\_ of a Real that holds an expression or a named variable should raise a TypeError that names exudyn.symbolic.sin etc. Decision needed: Evaluate() stays for the value; code that uses float() on purpose has to change.
+  - date raised: 2026-10-17
+- `CHANGE` `LOW EFF` `raised by: Claude-JG` Make \* of symbolic vectors and matrices the product of the components, as numpy, and remove special.deprecations.symbolicStarProduct (#3016)
+  - description: Maintainer 2026-10-17: \* of two symbolic vectors (or with a matrix) raises a TypeError since the issue before, so that scripts change to dot(), @ and multiply(); in about two to three years, when the problems have shown up, \* becomes the component-wise product as in numpy, and the deprecation flag symbolicStarProduct is removed.
+  - date raised: 2026-10-17
 - `TESTING` `MEDIUM EFF` `raised by: Claude-JG` Performance measurement over more models, solvers and solver configurations, as the baseline of the total coordinates (#3002)
   - description: revision2026c step RG13.1 (maintainer 2026-10-16): before total coordinates are added (RG13.2, \#1910), the cost of the solvers is measured on more models (rigid multibody, flexible, contact, large systems), for the implicit and explicit solvers and their configurations (dense/sparse, modified Newton, step sizes, multithreading), so that the cost of an additional vector addition and of the cache memory per step becomes visible - mostly relevant for the explicit solvers
   - date raised: 2026-10-16

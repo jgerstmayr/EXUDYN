@@ -130,9 +130,12 @@ return value.
 - **Results**: a vector is returned as numpy array or as list; a numpy array is copied in one pass.
 - **Symbolic user functions**: `exudyn.advancedUtilities.CreateSymbolicUserFunction` records the same Python function
   as an expression, which C++ evaluates without calling Python - at about the cost of the built-in force laws. The
-  products have numpy's names for symbolic vectors and matrices as well - `a.dot(b)`, `a @ b`, `K @ q` - so that one
-  function serves both; `*` of two symbolic vectors is the scalar product, of two numpy arrays the product of the items
-  (`MultComponents` in symbolic).
+  operators and numpy's functions mean the same for symbolic vectors and matrices as for numpy arrays - `a.dot(b)`,
+  `a @ b`, `K @ q`, `np.multiply(a, b)`, `a / s`, `np.sin(x)` - so that one function serves both; what numpy defines
+  differently raises a TypeError: `*` of two symbolic vectors or with a symbolic matrix (numpy multiplies the
+  components) and `==` of two vectors (#3015). `exudyn.special.deprecations.symbolicStarProduct = True` makes `*` the
+  scalar and matrix product, as before version 1.13.115, for the transition; `*` is to become the product of the
+  components, as in numpy (#3016).
 
 `exudyn.special.deprecations.userFunctionListArguments = True` gives the vector and matrix arguments as lists, as before
 version 1.13.104, for scripts that change them or add lists to them; it is deprecated and removed in 2031 (#3008).

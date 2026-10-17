@@ -69,7 +69,7 @@ namespace py = pybind11;
 #include "Linalg/SymbolicMatrix.h"
 #include "Linalg/SymbolicUtilities.h"
 #include "Main/Experimental.h"
-extern PySpecial pySpecial; //special.deprecations.userFunctionListArguments (#3008)
+extern PySpecial pySpecial; //special.deprecations.userFunctionListArguments (#3008), symbolicStarProduct (#3015)
 //compiled but never called: worked examples of how the symbolic types are used from C++,
 //so that they cannot rot (#2485). Nothing in the module refers to them
 #include "Linalg/symbolicCppDemo.h"
@@ -110,6 +110,98 @@ bool UserFunctionListArguments()
 	PyDeprecated("settings", "special.deprecations.userFunctionListArguments", "exudyn.special.deprecations.userFunctionListArguments: "
 		"Python user functions get their vector arguments as read-only numpy arrays since 1.13.104; the switch to lists is removed in 2031");
 	return true;
+}
+
+//! * of two symbolic vectors or with a symbolic matrix: refused, as numpy multiplies the components, unless
+//! exudyn.special.deprecations.symbolicStarProduct restores the scalar and matrix products (#3015, #3016)
+void SymbolicStarProduct(const char* operands)
+{
+	if (!pySpecial.deprecations.symbolicStarProduct)
+	{
+		PyError(STDstring("exudyn.symbolic: ") + operands + " is not defined, because numpy multiplies the components and symbolic "
+			"multiplied as scalar or matrix product: use a.dot(b) or a @ b for the products, a.multiply(b) for the product of the "
+			"components of two vectors; exudyn.special.deprecations.symbolicStarProduct = True restores the old meaning", PyErrorType::typeError);
+	}
+	if (pySpecial.deprecations.symbolicStarProductReported) { return; }
+	pySpecial.deprecations.symbolicStarProductReported = true;
+	PyDeprecated("settings", "special.deprecations.symbolicStarProduct", "exudyn.special.deprecations.symbolicStarProduct: "
+		"* of symbolic vectors and matrices will be the product of the components, as in numpy; use dot(), @ and multiply()");
+}
+
+//! a numpy array or scalar as operand of the symbolic types: a vector, a matrix or a float; everything else as it is
+py::object SymbolicUfuncOperand(const py::module& m, const py::handle& x)
+{
+	py::module np = py::module::import("numpy");
+	if (py::isinstance(x, np.attr("ndarray")))
+	{
+		py::array a = py::reinterpret_borrow<py::array>(x);
+		if (a.ndim() == 0) { return x.attr("item")(); } //a float, or a symbolic object of an object array
+		if (a.ndim() == 1) { return m.attr("Vector")(x.attr("tolist")()); } //tolist keeps the symbolic items of an object array
+		if (a.ndim() == 2) { return m.attr("Matrix")(x.attr("tolist")()); }
+		return py::reinterpret_borrow<py::object>(Py_NotImplemented);
+	}
+	if (py::isinstance(x, np.attr("generic"))) { return x.attr("item")(); } //np.float64 and the other numpy scalars
+	return py::reinterpret_borrow<py::object>(x);
+}
+
+//! numpy's ufuncs with a symbolic operand (#3015): numpy calls this instead of computing itself, so that np.multiply(a, b),
+//! np.sin(x), a numpy array times or plus a symbolic vector record the expression; what symbolic does not have
+//! returns NotImplemented, and numpy raises a TypeError
+py::object SymbolicArrayUfunc(const py::module& m, const py::object& ufunc, const STDstring& method, const py::args& inputs,
+	const py::kwargs& kwargs)
+{
+	py::object notImplemented = py::reinterpret_borrow<py::object>(Py_NotImplemented);
+	if (method != "__call__" || kwargs.size() != 0) { return notImplemented; }
+	STDstring name = py::cast<STDstring>(ufunc.attr("__name__"));
+	std::vector<py::object> x;
+	for (const py::handle& input : inputs)
+	{
+		x.push_back(SymbolicUfuncOperand(m, input));
+		if (x.back().is(notImplemented)) { return notImplemented; }
+	}
+	auto Result = [](PyObject* result) -> py::object
+	{
+		if (!result) { throw py::error_already_set(); }
+		return py::reinterpret_steal<py::object>(result);
+	};
+	auto IsType = [&m](const py::object& item, const char* type) { return py::isinstance(item, m.attr(type)); };
+
+	if (x.size() == 1)
+	{
+		if (name == "negative") { return Result(PyNumber_Negative(x[0].ptr())); }
+		if (name == "positive") { return x[0]; }
+		if (name == "absolute") { return m.attr("abs")(x[0]); }
+		const std::map<STDstring, const char*> functions = { {"sin","sin"}, {"cos","cos"}, {"tan","tan"}, {"arcsin","asin"},
+			{"arccos","acos"}, {"arctan","atan"}, {"sinh","sinh"}, {"cosh","cosh"}, {"tanh","tanh"}, {"arcsinh","asinh"},
+			{"arccosh","acosh"}, {"arctanh","atanh"}, {"exp","exp"}, {"log","log"}, {"sqrt","sqrt"}, {"sign","sign"},
+			{"floor","floor"}, {"ceil","ceil"}, {"isfinite","isfinite"} };
+		auto f = functions.find(name);
+		if (f != functions.end() && !IsType(x[0], "Vector") && !IsType(x[0], "Matrix")) { return m.attr(f->second)(x[0]); }
+	}
+	else if (x.size() == 2)
+	{
+		if (name == "add") { return Result(PyNumber_Add(x[0].ptr(), x[1].ptr())); }
+		if (name == "subtract") { return Result(PyNumber_Subtract(x[0].ptr(), x[1].ptr())); }
+		if (name == "true_divide" || name == "divide") { return Result(PyNumber_TrueDivide(x[0].ptr(), x[1].ptr())); }
+		if (name == "matmul") { return Result(PyNumber_MatrixMultiply(x[0].ptr(), x[1].ptr())); }
+		if (name == "power") { return Result(PyNumber_Power(x[0].ptr(), x[1].ptr(), Py_None)); }
+		if (name == "multiply")
+		{
+			if (IsType(x[0], "Vector") && IsType(x[1], "Vector")) { return x[0].attr("multiply")(x[1]); }
+			if (IsType(x[0], "Matrix") || IsType(x[1], "Matrix"))
+			{
+				if (IsType(x[0], "Vector") || IsType(x[1], "Vector") || (IsType(x[0], "Matrix") && IsType(x[1], "Matrix")))
+				{
+					return notImplemented; //the product of the components of matrices does not exist in symbolic
+				}
+			}
+			return Result(PyNumber_Multiply(x[0].ptr(), x[1].ptr()));
+		}
+		const std::map<STDstring, const char*> functions = { {"arctan2","atan2"}, {"maximum","max"}, {"minimum","min"} };
+		auto f = functions.find(name);
+		if (f != functions.end()) { return m.attr(f->second)(x[0], x[1]); }
+	}
+	return notImplemented;
 }
 
 template <typename UFT>
@@ -477,7 +569,8 @@ void Init_Pybind_Symbolic(py::module& m) {
 		//pow as ** needs special treatment:
 		.def("__pow__", [](const Symbolic::SReal& base, const Symbolic::SReal& exponent) { return Symbolic::SReal::pow(base, exponent); }, py::is_operator())
 		.def("__pow__", [](const Symbolic::SReal& base, const Real& exponent) { return Symbolic::SReal::pow(base, exponent); }, py::is_operator())
-		.def("__pow__", [](const Real& base, const Symbolic::SReal& exponent) { return Symbolic::SReal::pow(base, exponent); }, py::is_operator())
+		.def("__rpow__", [](const Symbolic::SReal& exponent, const Real& base) { return Symbolic::SReal::pow(base, exponent); }, py::is_operator())
+		.def("__abs__", [](const Symbolic::SReal& x) { return Symbolic::SReal::abs<Symbolic::SReal>(x); }) //abs(x), as numpy (#3015)
 
 		//+++++++++++++++++++++++++++++++++++++++++++
 		//representation:
@@ -611,8 +704,12 @@ void Init_Pybind_Symbolic(py::module& m) {
 		.def("__setitem__", [](Symbolic::SymbolicRealVector& self, Index index, Real value)
 			{ self.SetSymbolicVectorComponent(index, value); })
 
+		//a vector argument of run-time size has no size while it is recorded: len(), a loop over it and numpy refuse it, as
+		//they would see an empty vector (#3015)
 		.def("__len__", [](const Symbolic::SymbolicRealVector& item) {
-		return item.NumberOfItems();
+				Index n = item.NumberOfItems();
+				if (n == 0) { throw py::type_error("symbolic.Vector: a vector argument of run-time size has no size while the user function is recorded; use its components v[i] and the vector operations"); }
+				return n;
 			}, "return number of items")
 
 		//+++++++++++++++++++++++++++++++++++++++++++
@@ -630,11 +727,30 @@ void Init_Pybind_Symbolic(py::module& m) {
 		.def("NormL2", &Symbolic::SymbolicRealVector::NormL2)
 		.def("MultComponents", &Symbolic::SymbolicRealVector::MultComponents)
 
+		//an index outside raises IndexError and a negative one counts from the end, as for a list, so that sum(v), list(v)
+		//and numpy see a sequence (#3015); a vector argument of run-time size has no size while it is recorded (0), and its
+		//index is not checked
 		.def("__getitem__", [](const Symbolic::SymbolicRealVector& self, Index index)
-			{ return self[index]; })
+			{
+				Index n = self.NumberOfItems();
+				if (n == 0 && index >= 0) { return self[index]; }
+				if (index < 0) { index += n; }
+				if (index < 0 || index >= n) { throw py::index_error("symbolic.Vector: index " + EXUstd::ToString(index) + " out of range for a vector of size " + EXUstd::ToString(n)); }
+				return self[index];
+			})
+		.def("__iter__", [](const Symbolic::SymbolicRealVector& self)
+			{
+				Index n = self.NumberOfItems();
+				if (n == 0) { throw py::type_error("symbolic.Vector: a vector argument of run-time size has no size while the user function is recorded; use its components v[i] and the vector operations"); }
+				py::list items;
+				for (Index i = 0; i < n; i++) { items.append(py::cast(self[i])); }
+				return py::iter(items);
+			})
 
 		//the products under their numpy names, so that a script computes alike with numpy arrays and symbolic vectors:
-		//a.dot(b), a @ b, M @ v, v @ M (#3011); a * b of two symbolic vectors is the scalar product as well
+		//a.dot(b), a @ b, M @ v, v @ M (#3011), a.multiply(b) (#3015); a * b of two symbolic vectors is refused
+		.def("multiply", [](Symbolic::SymbolicRealVector& self, const Symbolic::SymbolicRealVector& other) { return self.MultComponents(other); })
+		.def("multiply", [](Symbolic::SymbolicRealVector& self, const std::vector<Real>& other) { return self.MultComponents(Symbolic::SymbolicRealVector(Vector(other))); })
 		.def("dot", [](const Symbolic::SymbolicRealVector& self, const Symbolic::SymbolicRealVector& other) { return self * other; })
 		.def("dot", [](const Symbolic::SymbolicRealVector& self, const std::vector<Real>& other) { return self * Symbolic::SymbolicRealVector(Vector(other)); })
 		.def("__matmul__", [](const Symbolic::SymbolicRealVector& self, const Symbolic::SymbolicRealVector& other) { return self * other; })
@@ -649,12 +765,15 @@ void Init_Pybind_Symbolic(py::module& m) {
 		//operators: (right now, we do not have implicit conversion from Real to Symbolic::SReal)
 		.def(py::self + py::self)
 		.def(py::self - py::self)
-		.def(py::self * py::self)
+		.def("__mul__", [](const Symbolic::SymbolicRealVector& self, const Symbolic::SymbolicRealVector& other)
+			{ SymbolicStarProduct("symbolic.Vector * symbolic.Vector"); return self * other; }, py::is_operator())
 
 		.def(py::self * Real())
 		.def(Real() * py::self)
 		.def(py::self * Symbolic::SReal())
 		.def(Symbolic::SReal() * py::self)
+		.def("__truediv__", [](const Symbolic::SymbolicRealVector& self, Real divisor) { return self * (1. / divisor); }, py::is_operator())
+		.def("__truediv__", [](const Symbolic::SymbolicRealVector& self, const Symbolic::SReal& divisor) { return self * (1. / divisor); }, py::is_operator())
 
 		.def(py::self += py::self)
 		.def(py::self -= py::self)
@@ -663,8 +782,11 @@ void Init_Pybind_Symbolic(py::module& m) {
 
 		.def(-py::self)
 
-		.def(py::self == py::self)
-		.def(py::self != py::self)
+		//numpy compares the components, symbolic compared the vectors: refused (#3015)
+		.def("__eq__", [](const Symbolic::SymbolicRealVector&, const Symbolic::SymbolicRealVector&) -> bool
+			{ PyError("exudyn.symbolic: symbolic.Vector == symbolic.Vector is not defined, as numpy compares the components; compare the components, e.g. a[0] == b[0]", PyErrorType::typeError); return false; })
+		.def("__ne__", [](const Symbolic::SymbolicRealVector&, const Symbolic::SymbolicRealVector&) -> bool
+			{ PyError("exudyn.symbolic: symbolic.Vector != symbolic.Vector is not defined, as numpy compares the components; compare the components, e.g. a[0] != b[0]", PyErrorType::typeError); return false; })
 		;
 
 
@@ -721,15 +843,18 @@ void Init_Pybind_Symbolic(py::module& m) {
 		//operators: (right now, we do not have implicit conversion from Real to Symbolic::SReal)
 		.def(py::self + py::self)
 		.def(py::self - py::self)
-		.def(py::self * py::self)
+		.def("__mul__", [](const Symbolic::SymbolicRealMatrix& self, const Symbolic::SymbolicRealMatrix& other)
+			{ SymbolicStarProduct("symbolic.Matrix * symbolic.Matrix"); return self * other; }, py::is_operator())
 
 		.def(py::self * Real())
 		.def(Real() * py::self)
 
 		.def(py::self * Symbolic::SReal())
 		.def(Symbolic::SReal() * py::self)
-		.def(py::self * Symbolic::SymbolicRealVector())
-		.def(Symbolic::SymbolicRealVector() * py::self)
+		.def("__mul__", [](const Symbolic::SymbolicRealMatrix& self, const Symbolic::SymbolicRealVector& other)
+			{ SymbolicStarProduct("symbolic.Matrix * symbolic.Vector"); return self * other; }, py::is_operator())
+		.def("__rmul__", [](const Symbolic::SymbolicRealMatrix& self, const Symbolic::SymbolicRealVector& other)
+			{ SymbolicStarProduct("symbolic.Vector * symbolic.Matrix"); return other * self; }, py::is_operator())
 		//the products under their numpy names (#3011)
 		.def("dot", [](const Symbolic::SymbolicRealMatrix& self, const Symbolic::SymbolicRealVector& other) { return self * other; })
 		.def("dot", [](const Symbolic::SymbolicRealMatrix& self, const Symbolic::SymbolicRealMatrix& other) { return self * other; })
@@ -754,9 +879,17 @@ void Init_Pybind_Symbolic(py::module& m) {
 
 
 
-	//numpy leaves an operation with a symbolic operand to it - numpy matrix @ symbolic vector, np.float64 * symbolic
-	//Real - instead of converting the operand to a number and losing the expression (#3011)
-	for (const char* name : { "Real", "Vector", "Matrix" }) { m.attr(name).attr("__array_ufunc__") = py::none(); }
+	//numpy hands its ufuncs with a symbolic operand to the symbolic types - numpy matrix @ symbolic vector, np.float64 *
+	//symbolic Real, np.multiply, np.sin - instead of converting the operand to a number and losing the expression (#3011,
+	//#3015)
+	for (const char* name : { "Real", "Vector", "Matrix" })
+	{
+		py::object type = m.attr(name);
+		type.attr("__array_ufunc__") = py::cpp_function([m](const py::object& self, const py::object& ufunc, const STDstring& method,
+			const py::args& inputs, const py::kwargs& kwargs) { return SymbolicArrayUfunc(m, ufunc, method, inputs, kwargs); },
+			py::is_method(type), py::name("__array_ufunc__"),
+			"numpy's ufuncs with a symbolic operand, recorded as symbolic expression (#3015)");
+	}
 
 	//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 	//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++

@@ -217,7 +217,7 @@ v2 = SymVector([a,42,c])
 print('v2 now: ',v2,"=",v2.Evaluate())
 print('v1+v2: ',v1+v2,"=",(v1+v2).Evaluate()) #evaluate as vector
 
-print('v1*v2: ',v1*v2,"=",(v1*v2).Evaluate()) #evaluate as Real
+print('v1@v2: ',v1@v2,"=",(v1@v2).Evaluate()) #scalar product, as v1.dot(v2); evaluate as Real
 
 #access of vector component:
 print('v1[2]: ',v1[2],"=",v1[2].Evaluate())   #evaluate as Real
@@ -228,11 +228,11 @@ v1:  [1,3,2]
 v2 initial:  [1,3,2]
 v2 now:  [a,42,(a - (3 * 13))] = [42. 42.  3.]
 v1+v2:  ([1,3,2] + [a,42,(a - (3 * 13))]) = [43. 45.  5.]
-v1*v2:  ([1,3,2] * [a,42,(a - (3 * 13))]) = 174.0
+v1@v2:  ([1,3,2] * [a,42,(a - (3 * 13))]) = 174.0
 v1[2]:  [1,3,2][2] = 2.0
 ```
 
-To create a symbolic Vector, use `aa=symbolic.Vector([3,4.2,5]` to build a Python object aa with values [3,4.2,5]. In order to use a named vector, use `v=symbolic.Vector('myVec',[3,4.2,5])`. Vectors can be also created from mixed symbolic expressions and numbers, such as `v=symbolic.Vector([x,x**2,3.14])`, however, this cannot become a named vector as it contains expressions. There is a significance difference to numpy, such that '*' represents the scalar vector multplication which gives a scalar. Furthermore, the comparison operator '==' gives only True, if all components are equal, and the operator '!=' gives True, if any component is unequal. Note that in the following, we use the abbreviation `SymVector=exudyn.symbolic.Vector`, and the examples `esym=exudyn.symbolic`. Note that only functions are able to be recorded. Member functions of `SymVector` are:
+To create a symbolic Vector, use `aa=symbolic.Vector([3,4.2,5]` to build a Python object aa with values [3,4.2,5]. In order to use a named vector, use `v=symbolic.Vector('myVec',[3,4.2,5])`. Vectors can be also created from mixed symbolic expressions and numbers, such as `v=symbolic.Vector([x,x**2,3.14])`, however, this cannot become a named vector as it contains expressions. The operators and functions mean what they mean for numpy arrays, so that one user function computes with numpy arrays and records with symbolic vectors: `a @ b` and `a.dot(b)` give the scalar product, `a.multiply(b)` or `np.multiply(a, b)` the product of the components, `a / s` the division by a scalar; numpy's functions (`np.multiply`, `np.dot`, `np.sin`, ...) and a numpy array plus, times or @ a symbolic vector record the expression (#3015). What numpy defines differently is refused with a TypeError: `a * b` of two vectors (numpy multiplies the components; `exudyn.special.deprecations.symbolicStarProduct` gives the scalar product for the transition, #3016) and `a == b` (numpy compares the components). A symbolic vector is a sequence, with `len(a)`, `a[-1]` and `sum(a)`; a vector argument of run-time size that CreateSymbolicUserFunction cannot size has no size while it is recorded, so that `len()` and loops over it raise a TypeError. Note thatin the following, we use the abbreviation `SymVector=exudyn.symbolic.Vector`, and the examples `esym=exudyn.symbolic`. Note that only functions are able to be recorded. Member functions of `SymVector` are:
 
 The class **symbolic.Vector** has the following **functions and structures**:
 
@@ -251,7 +251,7 @@ The class **symbolic.Vector** has the following **functions and structures**:
   length = v1.NormL2() #gives 9.
   ```
 
-- **`MultComponents(other)`**: Perform component-wise multiplication of vector times other vector and return result. This corresponds to the numpy multiplication using '*'.
+- **`MultComponents(other)`**: Perform component-wise multiplication of vector times other vector and return result; the same as multiply.
 
   *Example*:
 
@@ -259,6 +259,14 @@ The class **symbolic.Vector** has the following **functions and structures**:
   v1 = esym.Vector([1,2,4])
   v2 = esym.Vector([1,0.5,0.25])
   v3 = v1.MultComponents(v2)
+  ```
+
+- **`multiply(other)`**: the product of the components with another vector, symbolic or a list or numpy array, as numpy's multiply and the operator * of numpy arrays (#3015)
+
+  *Example*:
+
+  ```python
+  v1 = esym.Vector([1,2,4])\v2 = esym.Vector([1,0.5,0.25])\v3 = v1.multiply(v2) #gives [1,1,1]
   ```
 
 - **`dot(other)`**: the scalar product with another vector, symbolic or a list or numpy array, as numpy's dot (#3011)
@@ -271,7 +279,9 @@ The class **symbolic.Vector** has the following **functions and structures**:
 
 - **`operator __matmul__(other)`**: the operator @: with a vector the scalar product, with a matrix the product vector times matrix, as for numpy arrays (#3011)
 - **`operator __rmatmul__(other)`**: the operator @ with a numpy array on the left: a constant matrix times this vector, or the scalar product with a constant vector (#3011)
-- **`operator __getitem__(index)`**: bracket [] operator to return (symbolic) component of vector, allowing read-access. Index may also evaluate from an expression.
+- **`operator __mul__(other)`**: the operator *: with a scalar the vector times the scalar; of two vectors a TypeError, as numpy multiplies their components - use @, dot() or multiply() (#3015)
+- **`operator __truediv__(other)`**: the operator /: the vector divided by a scalar, a float or a symbolic.Real (#3015)
+- **`operator __getitem__(index)`**: bracket [] operator to return (symbolic) component of vector, allowing read-access; a negative index counts from the end and an index outside raises IndexError, as for lists (#3015). Index may also evaluate from an expression.
 - **`operator __str__()`**: conversion of SymVector to string
 - **`operator __repr__()`**: representation of SymVector in Python
 
@@ -284,10 +294,11 @@ w = SymVector([3.3,2.2,1.1])
 u = v+w
 u = v-w
 u = -v
-#scalar multiplication; evaluates to SymReal:
-x = v*w
-#NOTE: component-wise multiplication, returns SymVector:
-u = v.MultComponents(w)
+#scalar product, as for numpy arrays; evaluates to SymReal:
+x = v@w           #or v.dot(w)
+#product of the components, as numpy's v*w; returns SymVector:
+u = v.multiply(w) #or np.multiply(v, w)
+#v*w raises a TypeError: use @, dot() or multiply()
 
 #inplace operators:
 v += w
@@ -336,7 +347,7 @@ m1:  ((3 * ([[1,3,2],[4,5,6]] + [[a,(3 * 13),2],
 m2:  [[0,1,1],[1,0,1],[1,1,0]]
 ```
 
-To create a symbolic Matrix, use `aa=symbolic.Matrix([[3,4.2],[3.3,1.2]]` to build a Python object aa. In order to use a named matrix, use `v=symbolic.Matrix('myMat',[3,4.2,5])`. Matrixs can be also created from mixed symbolic expressions and numbers, such as `v=symbolic.Matrix([x,x**2,3.14])`, however, this cannot become a named matrix as it contains expressions. There is a significance difference to numpy, such that '*' represents the matrix multplication (compute components from row times column operations). Note that in the following, we use the abbreviation `SymMatrix=exudyn.symbolic.Matrix`, and the examples `esym=exudyn.symbolic`. Member functions of `SymMatrix` are:
+To create a symbolic Matrix, use `aa=symbolic.Matrix([[3,4.2],[3.3,1.2]]` to build a Python object aa. In order to use a named matrix, use `v=symbolic.Matrix('myMat',[3,4.2,5])`. Matrixs can be also created from mixed symbolic expressions and numbers, such as `v=symbolic.Matrix([x,x**2,3.14])`, however, this cannot become a named matrix as it contains expressions. The products are those of numpy: `A @ B`, `A @ v`, `v @ A` and `A.dot(B)` are the matrix products, and `A * B`, `A * v` and `v * A` raise a TypeError, as numpy multiplies the components (#3015). Note thatin the following, we use the abbreviation `SymMatrix=exudyn.symbolic.Matrix`, and the examples `esym=exudyn.symbolic`. Member functions of `SymMatrix` are:
 
 The class **symbolic.Matrix** has the following **functions and structures**:
 
@@ -370,17 +381,17 @@ v = SymVector([1.5,3])
 
 m3 = m1+m2
 m3 = m1-m2
-m3 = m1*m2
+m3 = m1@m2 #matrix product, as numpy; m1*m2 raises a TypeError
 
 #multiply with scalar
 m3 = 13*m2
 m3 = m2*3.14
 
 #multiply with vector
-m3 = m2*v
+m3 = m2@v
 
 #transposed:
-m3 = v*m2 #equals numpy operation m2.T @ v
+m3 = v@m2 #equals numpy operation m2.T @ v
 
 #inplace operators:
 m1 += m1

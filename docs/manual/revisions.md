@@ -86,6 +86,16 @@ be symbolic now (#2985). `exudyn.symbolic.Vector` and `Matrix` have `dot()` and 
 and a numpy array leaves `@` and `*` with a symbolic operand to it, so that one function computes with numpy arrays and
 symbolic vectors (#3011).
 
+**The operators of exudyn.symbolic are those of numpy** (#3015): `*` of two symbolic vectors, of two matrices and of a
+matrix and a vector raises a TypeError, because numpy multiplies the components - write `a @ b` or `a.dot(b)` for the
+scalar and matrix products and `a.multiply(b)` or `np.multiply(a, b)` for the product of the components;
+`exudyn.special.deprecations.symbolicStarProduct = True` restores the old meaning for the transition (#3016). `==` of
+two symbolic vectors raises a TypeError as well. Numpy's functions record with symbolic operands - `np.sin(x)`,
+`np.sqrt(x)`, `np.arctan2(y, x)`, `np.multiply`, `np.dot`, a numpy array plus or times a symbolic vector -, a vector
+divided by a scalar, `2**x`, `abs(x)`, `v[-1]`, `sum(v)` and `len(v)` work, and CreateSymbolicUserFunction records `q`
+and `q_t` of ObjectGenericODE2, ObjectGenericODE1, ObjectUserBody, ObjectKinematicTree and the FFRF objects with their
+size, so that they combine with constant vectors. The expression of a product prints as `@`.
+
 **Drawing with user functions in a renderer thread**: the markers, connectors, loads and sensors on an ObjectUserBody
 and every load with a user function are drawn in the main thread, together with the graphics user functions, so that
 the render thread never calls Python; `loads.drawWithUserFunction` draws a Python user function with multithreaded

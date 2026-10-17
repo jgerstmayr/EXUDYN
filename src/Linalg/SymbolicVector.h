@@ -296,7 +296,7 @@ public:
 
 	virtual STDstring ToString() const override
 	{
-		return "(" + left->ToString() + " * " + right->ToString() + ")";
+		return "(" + left->ToString() + " @ " + right->ToString() + ")";
 	}
 };
 
@@ -323,7 +323,7 @@ public:
 
 	virtual STDstring ToString() const override
 	{
-		return "(" + left->ToString() + " * " + right->ToString() + ")";
+		return "(" + right->ToString() + " @ " + left->ToString() + ")"; //vector @ matrix
 	}
 };
 
@@ -398,7 +398,7 @@ public:
 
 	virtual STDstring ToString() const override
 	{
-		return left->ToString() + ".MultComponents(" + right->ToString() + ")";
+		return left->ToString() + ".multiply(" + right->ToString() + ")";
 	}
 };
 
@@ -434,7 +434,7 @@ public:
 	virtual Real Diff(ExpressionNamedReal* var) const override { CHECKandTHROWstring("Symbolic::operator*::Diff(vector, vector): not implemented"); return 0.; }
 	virtual STDstring ToString() const override
 	{
-		return "(" + left->ToString() + " * " + right->ToString() + ")";
+		return "(" + left->ToString() + " @ " + right->ToString() + ")";
 	}
 };
 

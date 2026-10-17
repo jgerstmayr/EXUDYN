@@ -114,6 +114,7 @@ constraintDriftTest
 systemUtilitiesTest
 pythonUserFunctionArgumentsTest
 symbolicUserFunctionSignaturesTest
+symbolicNumpyCompatibilityTest
 initialConstraintsCheckTest
 shellMeshSlopesScalingTest
 systemContainerComputeOnlyTest

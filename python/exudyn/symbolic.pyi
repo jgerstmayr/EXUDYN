@@ -316,14 +316,20 @@ class Vector:
         ...
     @overload
     def MultComponents(self, other: Vector) -> Real: 
-        """Perform component-wise multiplication of vector times other vector and return result.
-        
-        This corresponds to the numpy multiplication using '*'.
+        """Perform component-wise multiplication of vector times other vector and return result; the same as multiply.
         
         Examples:
             v1 = esym.Vector([1,2,4])
             v2 = esym.Vector([1,0.5,0.25])
             v3 = v1.MultComponents(v2)
+        """
+        ...
+    @overload
+    def multiply(self, other: Vector) -> Vector: 
+        r"""The product of the components with another vector, symbolic or a list or numpy array, as numpy's multiply and the operator * of numpy arrays (#3015).
+        
+        Examples:
+            v1 = esym.Vector([1,2,4])\v2 = esym.Vector([1,0.5,0.25])\v3 = v1.multiply(v2) #gives [1,1,1]
         """
         ...
     @overload
@@ -338,6 +344,10 @@ class Vector:
     def __matmul__(self, other: Vector) -> Real: ...
     @overload
     def __rmatmul__(self, other: numpy.ndarray) -> Vector: ...
+    @overload
+    def __mul__(self, other: Real) -> Vector: ...
+    @overload
+    def __truediv__(self, other: Real) -> Vector: ...
     @overload
     def __getitem__(self, index: Real) -> Real: ...
     @overload

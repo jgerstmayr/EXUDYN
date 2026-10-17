@@ -219,7 +219,7 @@ symbolicModule.AddDocu(r"""A symbolic Vector type to replace Python's (1D) numpy
 
 symbolicModule.AddDocuNotebook('python/Notebooks/reference/symbolic.ipynb', part='vector')
 
-symbolicModule.AddDocu(r"""To create a symbolic Vector, use `aa=symbolic.Vector([3,4.2,5]` to build a Python object aa with values [3,4.2,5]. In order to use a named vector, use `v=symbolic.Vector('myVec',[3,4.2,5])`. Vectors can be also created from mixed symbolic expressions and numbers, such as `v=symbolic.Vector([x,x**2,3.14])`, however, this cannot become a named vector as it contains expressions. There is a significance difference to numpy, such that '*' represents the scalar vector multplication which gives a scalar. Furthermore, the comparison operator '==' gives only True, if all components are equal, and the operator '!=' gives True, if any component is unequal. Note that in the following, we use the abbreviation `SymVector=exudyn.symbolic.Vector`, and the examples `esym=exudyn.symbolic`. Note that only functions are able to be recorded. Member functions of `SymVector` are:""")
+symbolicModule.AddDocu(r"""To create a symbolic Vector, use `aa=symbolic.Vector([3,4.2,5]` to build a Python object aa with values [3,4.2,5]. In order to use a named vector, use `v=symbolic.Vector('myVec',[3,4.2,5])`. Vectors can be also created from mixed symbolic expressions and numbers, such as `v=symbolic.Vector([x,x**2,3.14])`, however, this cannot become a named vector as it contains expressions. The operators and functions mean what they mean for numpy arrays, so that one user function computes with numpy arrays and records with symbolic vectors: `a @ b` and `a.dot(b)` give the scalar product, `a.multiply(b)` or `np.multiply(a, b)` the product of the components, `a / s` the division by a scalar; numpy's functions (`np.multiply`, `np.dot`, `np.sin`, ...) and a numpy array plus, times or @ a symbolic vector record the expression (#3015). What numpy defines differently is refused with a TypeError: `a * b` of two vectors (numpy multiplies the components; `exudyn.special.deprecations.symbolicStarProduct` gives the scalar product for the transition, #3016) and `a == b` (numpy compares the components). A symbolic vector is a sequence, with `len(a)`, `a[-1]` and `sum(a)`; a vector argument of run-time size that CreateSymbolicUserFunction cannot size has no size while it is recorded, so that `len()` and loops over it raise a TypeError. Note thatin the following, we use the abbreviation `SymVector=exudyn.symbolic.Vector`, and the examples `esym=exudyn.symbolic`. Note that only functions are able to be recorded. Member functions of `SymVector` are:""")
 
 symbolicModule.DefStartTable(pyClassStr)
 
@@ -275,15 +275,23 @@ symbolicModule.DefPyFunctionAccess(cClass=classStr, pyName='NormL2', cName='',
                         returnType='symbolic.Real',
                         )
 
-symbolicModule.DefPyFunctionAccess(cClass=classStr, pyName='MultComponents', cName='', 
-                        description="Perform component-wise multiplication of vector times other vector and return result. This corresponds to the numpy multiplication using '*'.",
+symbolicModule.DefPyFunctionAccess(cClass=classStr, pyName='MultComponents', cName='',
+                        description="Perform component-wise multiplication of vector times other vector and return result; the same as multiply.",
                         example = r"""v1 = esym.Vector([1,2,4])\\v2 = esym.Vector([1,0.5,0.25])\\v3 = v1.MultComponents(v2)""",
                         argList=['other'],
                         argTypes=['symbolic.Vector'],
                         returnType='symbolic.Real',
                         )
 
-symbolicModule.DefPyFunctionAccess(cClass=classStr, pyName='dot', cName='', 
+symbolicModule.DefPyFunctionAccess(cClass=classStr, pyName='multiply', cName='',
+                        description="the product of the components with another vector, symbolic or a list or numpy array, as numpy's multiply and the operator * of numpy arrays (#3015)",
+                        example = r"""v1 = esym.Vector([1,2,4])\v2 = esym.Vector([1,0.5,0.25])\v3 = v1.multiply(v2) #gives [1,1,1]""",
+                        argList=['other'],
+                        argTypes=['symbolic.Vector'],
+                        returnType='symbolic.Vector',
+                        )
+
+symbolicModule.DefPyFunctionAccess(cClass=classStr, pyName='dot', cName='',
                         description="the scalar product with another vector, symbolic or a list or numpy array, as numpy's dot (#3011)",
                         example = r"""v1 = esym.Vector([1,2,4])\v2 = esym.Vector([1,0.5,0.25])\s = v1.dot(v2) #gives 3.""",
                         argList=['other'],
@@ -305,8 +313,22 @@ symbolicModule.DefOperator(name='__rmatmul__',
                      returnType='symbolic.Vector',
                      )
 
-symbolicModule.DefOperator(name='__getitem__', 
-                     description="bracket [] operator to return (symbolic) component of vector, allowing read-access. Index may also evaluate from an expression.",
+symbolicModule.DefOperator(name='__mul__',
+                     description="the operator *: with a scalar the vector times the scalar; of two vectors a TypeError, as numpy multiplies their components - use @, dot() or multiply() (#3015)",
+                     argList=['other'],
+                     argTypes=['symbolic.Real'],
+                     returnType='symbolic.Vector',
+                     )
+
+symbolicModule.DefOperator(name='__truediv__',
+                     description="the operator /: the vector divided by a scalar, a float or a symbolic.Real (#3015)",
+                     argList=['other'],
+                     argTypes=['symbolic.Real'],
+                     returnType='symbolic.Vector',
+                     )
+
+symbolicModule.DefOperator(name='__getitem__',
+                     description="bracket [] operator to return (symbolic) component of vector, allowing read-access; a negative index counts from the end and an index outside raises IndexError, as for lists (#3015). Index may also evaluate from an expression.",
                      argList=['index'],
                      argTypes=['symbolic.Real'],
                      returnType='symbolic.Real',
@@ -340,7 +362,7 @@ symbolicModule.AddDocu(r"""A symbolic Matrix type to replace Python's (2D) numpy
 
 symbolicModule.AddDocuNotebook('python/Notebooks/reference/symbolic.ipynb', part='matrix')
 
-symbolicModule.AddDocu(r"""To create a symbolic Matrix, use `aa=symbolic.Matrix([[3,4.2],[3.3,1.2]]` to build a Python object aa. In order to use a named matrix, use `v=symbolic.Matrix('myMat',[3,4.2,5])`. Matrixs can be also created from mixed symbolic expressions and numbers, such as `v=symbolic.Matrix([x,x**2,3.14])`, however, this cannot become a named matrix as it contains expressions. There is a significance difference to numpy, such that '*' represents the matrix multplication (compute components from row times column operations). Note that in the following, we use the abbreviation `SymMatrix=exudyn.symbolic.Matrix`, and the examples `esym=exudyn.symbolic`. Member functions of `SymMatrix` are:""")
+symbolicModule.AddDocu(r"""To create a symbolic Matrix, use `aa=symbolic.Matrix([[3,4.2],[3.3,1.2]]` to build a Python object aa. In order to use a named matrix, use `v=symbolic.Matrix('myMat',[3,4.2,5])`. Matrixs can be also created from mixed symbolic expressions and numbers, such as `v=symbolic.Matrix([x,x**2,3.14])`, however, this cannot become a named matrix as it contains expressions. The products are those of numpy: `A @ B`, `A @ v`, `v @ A` and `A.dot(B)` are the matrix products, and `A * B`, `A * v` and `v * A` raise a TypeError, as numpy multiplies the components (#3015). Note thatin the following, we use the abbreviation `SymMatrix=exudyn.symbolic.Matrix`, and the examples `esym=exudyn.symbolic`. Member functions of `SymMatrix` are:""")
 
 symbolicModule.DefStartTable(pyClassStr)
 

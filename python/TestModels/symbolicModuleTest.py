@@ -50,6 +50,16 @@ def Evaluate(value):
         value = value.copy() #requires copy, to store results!
     return value
 
+#vectors are compared by their components: == of symbolic vectors is refused, as numpy compares the components (#3015)
+def AllEqual(v, w):
+    result = 1
+    for i in range(len(v)):
+        result = result*(v[i] == w[i])
+    return result
+
+def AnyNotEqual(v, w):
+    return 1 - AllEqual(v, w)
+
 def Min(a,b):
     return a if a<b else b
 def Max(a,b):
@@ -265,13 +275,13 @@ if vectorTests:
                 
             if case == 0:
                 w.SetVector([4.2,-1.2])
-                d = 3.3*v+a*w+(v*w)*v
+                d = 3.3*v+a*w+(v@w)*v
                 x[0] += d.NormL2()
-                x[1] += Evaluate(v == v )
-                x[1] += Evaluate(v == Vector([1,2.1]) )
-                x[1] += Evaluate(v != Vector([1,2.1]) )
-                x[1] += Evaluate(v == Vector([1,2.]) )
-                x[1] += Evaluate(v != Vector([1,2.]) )
+                x[1] += Evaluate(AllEqual(v, v))
+                x[1] += Evaluate(AllEqual(v, Vector([1,2.1])))
+                x[1] += Evaluate(AnyNotEqual(v, Vector([1,2.1])))
+                x[1] += Evaluate(AllEqual(v, Vector([1,2.])))
+                x[1] += Evaluate(AnyNotEqual(v, Vector([1,2.])))
             else:
                 w = np.array([4.2,-1.2])
                 d = 3.3*v+a*w+(v@w)*v
@@ -289,7 +299,7 @@ if vectorTests:
             result[case] += [Evaluate(v-w)]
             if case==0: 
                 n = w.NumberOfItems()
-                result[case] += [Evaluate(v*w)]
+                result[case] += [Evaluate(v@w)]
                 # print('v0:',x)
             if case==1: 
                 n = len(w)
@@ -314,13 +324,8 @@ if vectorTests:
             result[case] += [Evaluate(v+w)]
             result[case] += [Evaluate(v-w)]
 
-            if case==0: 
-                result[case] += [Evaluate(v*w)]
-                result[case] += [Evaluate(v.MultComponents(w))]
-                
-            if case==1: 
-                result[case] += [Evaluate(v@w)]
-                result[case] += [Evaluate(v*w)]
+            result[case] += [Evaluate(v@w)]
+            result[case] += [Evaluate(np.multiply(v, w))] #the product of the components, alike for both (#3015)
             
             result[case] += [Evaluate(v)]
             result[case] += [Evaluate(-v)]
@@ -336,14 +341,14 @@ if vectorTests:
             result[case] += [Evaluate(u)]
             u -= v
             result[case] += [Evaluate(u)]
-            result[case] += [Evaluate(u==v)]
-            result[case] += [Evaluate(u!=v)]
+            result[case] += [Evaluate(AllEqual(u, v))]
+            result[case] += [Evaluate(AnyNotEqual(u, v))]
             u *= a
             result[case] += [Evaluate(u)]
             u *= 1/3
             result[case] += [Evaluate(u)]
-            result[case] += [Evaluate(u==v)]
-            result[case] += [Evaluate(u!=v)]
+            result[case] += [Evaluate(AllEqual(u, v))]
+            result[case] += [Evaluate(AnyNotEqual(u, v))]
 
             #MATRIX MATRIX MATRIX
             M = Matrix(np.array([[2.,0.1,0.33],
@@ -378,14 +383,9 @@ if vectorTests:
             result[case] += [Evaluate(M*0.5)]
             result[case] += [Evaluate(M+N)]
             result[case] += [Evaluate(M-N)]
-            if case==0: 
-                result[case] += [Evaluate(M*N)]
-                result[case] += [Evaluate(M*v)]
-                result[case] += [Evaluate(v*M)]
-            if case==1: 
-                result[case] += [Evaluate(M@N)]
-                result[case] += [Evaluate(M@v)]
-                result[case] += [Evaluate(v@M)]
+            result[case] += [Evaluate(M@N)]
+            result[case] += [Evaluate(M@v)]
+            result[case] += [Evaluate(v@M)]
                 
             P = 0.*M
             result[case] += [Evaluate(P)]

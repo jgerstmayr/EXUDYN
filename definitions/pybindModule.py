@@ -392,6 +392,8 @@ pb.DefDataAccess('special.deprecations.recordUse','if True (=default), every use
                         dataType='bool', isTopLevel = True)
 pb.DefDataAccess('special.deprecations.userFunctionListArguments','if True, Python user functions get their vector arguments (q, q_t, ...) as lists, as before version 1.13.104, instead of read-only numpy arrays; False (=default); for the transition of scripts that change their arguments or add lists to them; deprecated, removed in 2031 (#3008)',
                         dataType='bool', isTopLevel = True)
+pb.DefDataAccess('special.deprecations.symbolicStarProduct','if True, * of two exudyn.symbolic vectors is their scalar product and * with a symbolic matrix the matrix product, as before version 1.13.115; False (=default): it raises a TypeError, because numpy multiplies the components - dot() or @ give the products and multiply() the product of the components, alike for numpy arrays and symbolic vectors; deprecated, removed when * becomes the product of the components, as in numpy (#3015, #3016)',
+                        dataType='bool', isTopLevel = True)
 
 pb.BeginCppWrittenByHand() #bound in Pybind_manual_classes.cpp
 pb.DefPyFunctionAccess(cClass='', pyName='special.deprecations.Reset', cName='unused',

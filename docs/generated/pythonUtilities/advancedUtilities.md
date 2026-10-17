@@ -406,10 +406,22 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`serialRobot
 - **output**: return dictionary with 'functionName', 'argList', and 'returnList'
 
 
+(sec-advancedutilities--objectcoordinatessize)=
+## Function: _ObjectCoordinatesSize
+
+[`_ObjectCoordinatesSize(mbs, itemIndex)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/advancedUtilities.py#L901)
+
+- **function description**: the number of coordinates q of the nodes of an object, which its user functions get, or 0 where it is not known; a vector argument recorded with its size can be combined with constant vectors and has len() (#3015)
+- **input**:
+  - `mbs`: the MainSystem of the object
+  - `itemIndex`: the ObjectIndex, or anything else, which gives 0
+- **output**: int: the number of coordinates of the nodes of ObjectGenericODE2, ObjectGenericODE1, ObjectUserBody, ObjectKinematicTree, ObjectFFRF or ObjectFFRFreducedOrder, else 0
+
+
 (sec-advancedutilities-createsymbolicuserfunction)=
 ## Function: CreateSymbolicUserFunction
 
-[`CreateSymbolicUserFunction(mbs, function, userFunctionName, itemIndex = None, itemTypeName = None, verbose = 0)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/advancedUtilities.py#L896)
+[`CreateSymbolicUserFunction(mbs, function, userFunctionName, itemIndex = None, itemTypeName = None, verbose = 0)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/advancedUtilities.py#L928)
 
 - **function description**: Helper function to convert a Python user function into a symbolic user function; this function is under development and should be used with care
 - **input**:
@@ -441,13 +453,13 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`serialRobot
 
 
 
-Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`cartesianSpringDamperUserFunction.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/cartesianSpringDamperUserFunction.py) (Ex), [`SpringDamperMassUserFunction.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/SpringDamperMassUserFunction.py) (Ex), [`symbolicUserFunctionMasses.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/symbolicUserFunctionMasses.py) (Ex), [`loadUserFunctionTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/loadUserFunctionTest.py) (TM), [`symbolicUserFunctionCopyTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/symbolicUserFunctionCopyTest.py) (TM), [`symbolicUserFunctionSignaturesTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/symbolicUserFunctionSignaturesTest.py) (TM), [`symbolicUserFunctionTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/symbolicUserFunctionTest.py) (TM), [`symbolicVectorUserFunctionTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/symbolicVectorUserFunctionTest.py) (TM), ...
+Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`cartesianSpringDamperUserFunction.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/cartesianSpringDamperUserFunction.py) (Ex), [`SpringDamperMassUserFunction.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/SpringDamperMassUserFunction.py) (Ex), [`symbolicUserFunctionMasses.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/symbolicUserFunctionMasses.py) (Ex), [`loadUserFunctionTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/loadUserFunctionTest.py) (TM), [`symbolicNumpyCompatibilityTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/symbolicNumpyCompatibilityTest.py) (TM), [`symbolicUserFunctionCopyTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/symbolicUserFunctionCopyTest.py) (TM), [`symbolicUserFunctionSignaturesTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/symbolicUserFunctionSignaturesTest.py) (TM), [`symbolicUserFunctionTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/symbolicUserFunctionTest.py) (TM), ...
 
 
 (sec-advancedutilities-createtcpipconnection)=
 ## Function: CreateTCPIPconnection
 
-[`CreateTCPIPconnection(sendSize, receiveSize, IPaddress = '127.0.0.1', port = 52421, bigEndian = False, verbose = False)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/advancedUtilities.py#L953)
+[`CreateTCPIPconnection(sendSize, receiveSize, IPaddress = '127.0.0.1', port = 52421, bigEndian = False, verbose = False)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/advancedUtilities.py#L985)
 
 - **function description**: function which has to be called before simulation to setup TCP/IP socket (server) for sending and receiving data; can be used to communicate with other Python interpreters or for communication with MATLAB/Simulink
 - **input**:
@@ -503,7 +515,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`TCPIPexudyn
 (sec-advancedutilities-tcpipsendreceive)=
 ## Function: TCPIPsendReceive
 
-[`TCPIPsendReceive(TCPIPobject, sendData)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/advancedUtilities.py#L1024)
+[`TCPIPsendReceive(TCPIPobject, sendData)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/advancedUtilities.py#L1056)
 
 - **function description**: call this function at every simulation step at which you intend to communicate with other programs via TCPIP; e.g., call this function in preStepUserFunction of a mbs model
 - **input**:
@@ -527,7 +539,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`TCPIPexudyn
 (sec-advancedutilities-closetcpipconnection)=
 ## Function: CloseTCPIPconnection
 
-[`CloseTCPIPconnection(TCPIPobject)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/advancedUtilities.py#L1052)
+[`CloseTCPIPconnection(TCPIPobject)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/advancedUtilities.py#L1084)
 
 - **function description**: close a previously created TCPIP connection
 

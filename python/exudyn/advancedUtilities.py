@@ -852,6 +852,8 @@ def ConvertFunctionToSymbolic(mbs, function, userFunctionName, itemIndex=None, i
             if '2D' in varType: size = 2
             if '3D' in varType: size = 3
             if '6D' in varType: size = 6
+            if varType == 'StdVector' and functionArgs[1][i] in ['q', 'q_t']:
+                size = _ObjectCoordinatesSize(mbs, itemIndex)
             var = exudyn.symbolic.Vector(arg,[0.]*size)
         elif (varType == 'NumpyMatrix'
               or varType == 'StdMatrix3D'
@@ -882,6 +884,9 @@ def ConvertFunctionToSymbolic(mbs, function, userFunctionName, itemIndex=None, i
     if type(returnValue) is list:
         #in this case, we create a SymbolicRealVector such that the user also can work with lists ...
         returnValue = exudyn.symbolic.Vector(returnValue) #create vector from list
+    elif isinstance(returnValue, np.ndarray) and returnValue.ndim == 1:
+        #np.array([fx, fy, fz]) or np.cross(a, b) of symbolic items: an array of objects, as in a Python user function (#3015)
+        returnValue = exudyn.symbolic.Vector(returnValue.tolist())
 
     if verbose:
         exudyn.Print('return value=', returnValue)
@@ -891,6 +896,33 @@ def ConvertFunctionToSymbolic(mbs, function, userFunctionName, itemIndex=None, i
             'argTypeList': argTypeList,
             'returnValue': returnValue,
             'returnType': returnType}
+
+
+def _ObjectCoordinatesSize(mbs, itemIndex):
+    """the number of coordinates q of the nodes of an object, which its user functions get, or 0 where it is not known;
+    a vector argument recorded with its size can be combined with constant vectors and has len() (#3015)
+
+    Args:
+        mbs: the MainSystem of the object
+        itemIndex: the ObjectIndex, or anything else, which gives 0
+
+    Returns:
+        int: the number of coordinates of the nodes of ObjectGenericODE2, ObjectGenericODE1, ObjectUserBody,
+        ObjectKinematicTree, ObjectFFRF or ObjectFFRFreducedOrder, else 0
+    """
+    try:
+        if itemIndex is None or itemIndex.GetTypeString() != 'ObjectIndex':
+            return 0
+        item = mbs.GetObject(itemIndex)
+    except (AttributeError, ValueError, IndexError, RuntimeError):
+        return 0
+    if item['objectType'] not in ['GenericODE2', 'GenericODE1', 'UserBody', 'KinematicTree', 'FFRF', 'FFRFreducedOrder']:
+        return 0
+    nodes = item['nodeNumbers'] if 'nodeNumbers' in item else [item['nodeNumber']]
+    size = 0
+    for node in nodes:
+        size += len(mbs.GetNodeOutput(node, exudyn.OutputVariableType.Coordinates, configuration=exudyn.ConfigurationType.Reference))
+    return size
 
 
 def CreateSymbolicUserFunction(mbs, function, userFunctionName, itemIndex=None, itemTypeName=None, verbose=0):

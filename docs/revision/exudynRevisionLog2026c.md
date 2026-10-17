@@ -1693,3 +1693,38 @@ suite passes unchanged.
 `msvc/cppsrc.vcxproj(.filters)` are gone; docs/dev/design/pythonUserItems.md 5.2 said the renderer reads the cache and
 the item number is searched - it now says the body is drawn in the main thread (#3003) and the number is the object's
 own (#3012).
+
+<a id="rg12-3-11"></a>
+### RG12.3.11 — the operators of exudyn.symbolic are those of numpy (2026-10-17, #3015)
+*(Maintainer 2026-10-17: deactivate `*` between two symbolic vectors, the scalar product via `@`; add numpy's multiply
+so that user functions are cross-compatible; `*` raises and names dot and multiply; an issue for `*` as in numpy in two
+to three years; a deprecation flag for the scalar product, off by default; check the compatibility of numpy and symbolic
+in general - no discrepancies, a smaller set of features; important missing features as issue and step.)*
+- **The comparison** (scratchpad script, then symbolicNumpyCompatibilityTest.py): 60 expressions with numpy arrays and
+  symbolic operands. Before: 5 gave a different result (`a * b`, `M * M`, `M * a`, `a * M`, `a == b`), 2 lost the
+  expression silently (`math.sin(y)`, `float(y)` - and `np.array([s, y])` looked lost but is an array of `esym.Real`),
+  about 30 were refused, among them every numpy ufunc (`np.multiply`, `np.sin`, a numpy array plus or times a symbolic
+  vector), `a / s`, `2**y` (the third `__pow__` overload was bound as `__pow__` instead of `__rpow__`), `abs(y)`,
+  `a[-1]`, `sum(a)` and `np.dot(a, b)` (the index raised InternalError, so the vector was no sequence).
+- **Refused now** with a TypeError that names the operation to use: `*` of two vectors, of two matrices, of a matrix
+  and a vector (`SymbolicStarProduct` in Symbolic.cpp), `==` and `!=` of two vectors. `exudyn.special.deprecations.
+  symbolicStarProduct = True` restores the scalar and matrix products of `*`, with a DeprecationWarning once.
+- **Added**: `Vector.multiply` (also with a list or numpy array); `__array_ufunc__` implemented instead of `None`
+  (`SymbolicArrayUfunc`): numpy arrays and numpy scalars become symbolic vectors, matrices and floats (an object array
+  keeps its `esym.Real` items), then `add`, `subtract`, `multiply` (of two vectors: `multiply`), `divide`, `matmul`,
+  `power`, `negative`, `positive`, `absolute`, the math functions of `esym` under numpy's names (`arcsin` is `asin`, ...),
+  `arctan2`, `maximum`, `minimum`; anything else is NotImplemented, and numpy raises a TypeError. `Vector / scalar`,
+  `2**x`, `abs(x)`; `v[i]` raises IndexError outside and counts negative indices from the end; `__iter__`.
+- **Run-time size**: a recorded `StdVector` argument had size 0, so `len(q)` was 0 and numpy, `sum()` and a loop saw an
+  empty vector; `q * npArray` failed. CreateSymbolicUserFunction records `q`, `q_t` of ObjectGenericODE2, ObjectGenericODE1,
+  ObjectUserBody, ObjectKinematicTree, ObjectFFRF and ObjectFFRFreducedOrder with the number of coordinates of their
+  nodes (`_ObjectCoordinatesSize`, from `GetNodeOutput(..., Coordinates, Reference)`, which works before Assemble);
+  where the size stays unknown, `len()` and `iter()` raise a TypeError instead of seeing 0. A vector result that is a
+  numpy array of `esym.Real` (`np.array([fx, fy])`, `np.cross`) is taken as `esym.Vector`.
+- The expression strings print the products as `@` and the product of the components as `.multiply(...)`.
+- **Changed**: symbolicModuleTest.py (`v@w`, `M@N`, `M@v`, `v@M`, `np.multiply` in both cases; the comparisons of
+  vectors by components with `AllEqual`), symbolicVectorUserFunctionTest.py (`q@q_t`), the notebook
+  reference/symbolic.ipynb; their results are unchanged. All other test models, the five examples with symbolic user
+  functions and perfUserFunctions.py run unchanged.
+- **Open as steps**: RG12.6 (#3016, `*` as numpy in 2029), RG12.7 (#3017, `float()` while recording, a decision),
+  RG12.8 (#3018, `A.T`, rows, slices, component-wise functions).

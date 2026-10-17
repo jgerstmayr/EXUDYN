@@ -503,7 +503,7 @@ public:
 	virtual Real Diff(ExpressionNamedReal* var) const { CHECKandTHROWstring("Symbolic::operator*::Diff(matrix, matrix): not implemented"); return 0.; }
 	virtual STDstring ToString() const override
 	{
-		return "(" + left->ToString() + " * " + right->ToString() + ")";
+		return "(" + left->ToString() + " @ " + right->ToString() + ")";
 	}
 };
 

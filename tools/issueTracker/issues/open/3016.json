@@ -1,0 +1,11 @@
+{
+  "number": 3016,
+  "title": "Make * of symbolic vectors and matrices the product of the components, as numpy, and remove special.deprecations.symbolicStarProduct",
+  "author": "Claude-JG",
+  "status": "RAISED",
+  "type": "CHANGE",
+  "effort": "LOW",
+  "description": "Maintainer 2026-10-17: * of two symbolic vectors (or with a matrix) raises a TypeError since the issue before, so that scripts change to dot(), @ and multiply(); in about two to three years, when the problems have shown up, * becomes the component-wise product as in numpy, and the deprecation flag symbolicStarProduct is removed.",
+  "dateRaised": "2026-10-17",
+  "deadline": "2029-01-01"
+}

@@ -30,7 +30,7 @@ def Force(mbs, t, itemNumber, q, q_t):
 
 def ForceNodes(mbs, t, itemNumber, q, q_t):
     a = -k*q                      #a node used twice
-    return a + 0.5*a - d*q_t + 10*q.MultComponents(q_t) - (q*q_t)*q + q[0]*q_t - q.NormL2()*(-q_t)
+    return a + 0.5*a - d*q_t + 10*q.MultComponents(q_t) - (q@q_t)*q + q[0]*q_t - q.NormL2()*(-q_t)
 
 def ForceNodesPython(mbs, t, itemNumber, q, q_t):
     q = np.array(q)

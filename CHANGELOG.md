@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.13 | Newborn | 113 | 1.13.114 |
+| 1.13 | Newborn | 114 | 1.13.115 |
 | 1.12 | Metheney | 367 | 1.12.462 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
@@ -30,6 +30,10 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.13 - Newborn (current)
 
+- **1.13.115** `CHANGE` `MEDIUM EFF` `raised by: Claude-JG` `resolved by: Claude-JG` Make the operators of exudyn.symbolic agree with numpy: \* of two vectors or with a matrix refused, multiply, numpy ufuncs (#3015)
+  - description: The operator \* of two symbolic vectors is their scalar product, of matrices and of a matrix and a vector the matrix product; numpy multiplies the components. \* of vectors and matrices raises a TypeError that names dot(), @ and multiply(); exudyn.special.deprecations.symbolicStarProduct restores the old meaning for the transition. Vector.multiply is the product of the components. Numpy's ufuncs (np.multiply, np.sin, np.sqrt, np.arctan2, np.maximum, a numpy array times or plus a symbolic vector) compute with symbolic operands instead of refusing them. Indexing raises IndexError and takes negative indices, so that a symbolic vector is a sequence; a vector divided by a scalar, 2\*\*x and abs(x) are added. The comparison with numpy in python is a test.
+  - **notes:** The operators of exudyn.symbolic mean what they mean for numpy, so that one user function computes with numpy arrays and records with symbolic vectors: \* of two symbolic vectors, of two matrices or of a matrix and a vector raises a TypeError (numpy multiplies the components; use @, dot() or multiply()), as does == of two vectors; exudyn.special.deprecations.symbolicStarProduct = True restores the scalar and matrix products for the transition. New: Vector.multiply, numpy's functions with symbolic operands (np.multiply, np.dot, np.sin, np.sqrt, np.arctan2, np.maximum, a numpy array plus or times a symbolic vector), a vector divided by a scalar, 2\*\*x, abs(x), v\[-1\], sum(v); CreateSymbolicUserFunction records q and q\_t of the bodies and systems with their size. Test model symbolicNumpyCompatibilityTest.py.
+  - date resolved: **2026-10-17 14:44**, date raised: 2026-10-17
 - **1.13.114** `CHANGE` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` Delete the unused header VisualizationAccessCache.h (#3014)
   - description: Since \#3003 ObjectUserBody has no visualization cache; the header src/System/VisualizationAccessCache.h is included nowhere. Maintainer 2026-10-17: delete it.
   - **notes:** The unused header src/System/VisualizationAccessCache.h is deleted (unused since \#3003).
