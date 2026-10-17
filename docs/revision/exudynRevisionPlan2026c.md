@@ -50,6 +50,9 @@ The title of each says what it does; the sentence after it, why it comes now.
 1. **Check the SolutionViewer on screen** (#2930): the PreStepUserFunction example on Windows - changed without a
    screen; the space key works on macOS (2026-10-16).
 2. **The user function interface** (userFunctionBoundary.md section 11, decided 2026-10-16): RG12.3.7 last - then the user rigid body completely symbolic; each measured against 1.13.6 (section 12).
+   Two decisions are open beside it: the numbers of nodes, markers, loads and sensors in CSystemData, which would end
+   the itemNumber of the drawing functions (RG9.9.4), and `float()` of a symbolic expression while recording (RG12.7);
+   `A.T` of symbolic matrices (RG12.8) helps the rigid body user functions.
 3. **Rehearse the next release on a `release/*` branch** with *build as a release* - the first run of cibuildwheel
    4.3.0 and of cp315 on GitHub.
 4. **The quick old issues** (RG11.8) - each small and without a decision.
