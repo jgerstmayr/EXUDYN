@@ -2158,3 +2158,19 @@ ints (selectionLeftMouseItemTypes=31). Decision by question: | for the enumerati
   arguments, the drawing settings, parameterConversionTest reference, mini example and its graphics reference, the
   pydoclint baseline (DOC108 of the Protocol arguments, as ObjectUserBody).
 
+<a id="rg7-4-2"></a>
+### RG7.4.2 — the fully parametrized ANCF beam on NodeUser (2026-10-19, #2974)
+- userANCFBeam3DTest.py: nodes NodeUser(12): r, r_x, r_y, r_z; position and its Jacobian given, the rotation from
+  the gradients, its Jacobian by the central differences of NodeUser. The element ObjectUserBody(24): cubic Hermite
+  along the axis for r and r_x, linear for r_y and r_z (Shabana's fully parametrized element), constant mass matrix,
+  forces f_a = -sum_p w_p F S dN_a/dX with F, the Green-Lagrange strain and the second Piola-Kirchhoff stress of
+  St.Venant-Kirchhoff at 4 x 2 x 2 Gauss points, vectorized with einsum (the whole test 0.5 s). nu = 0 avoids the
+  Poisson locking of the linear cross section.
+- Tip force -0.1 (E = 1e6, square 0.1, L = 1): 2, 4, 8 elements 6.3 %, 1.7 %, 0.50 % from Timoshenko (-0.004024), the
+  shear locking of the element vanishing with the mesh.
+- Tip torque on MarkerNodeRigid: with the frame of r_x and r_y the tip rotated 5.7 % more than M L/(E I) - the torque
+  acted on the tangent of the axis; with the frame of the cross section (r_z and r_y orthonormalized) it acts on the
+  gradients of the cross section, as the stress of pure bending, and the rotation is M L/(E I) to 1e-6 for 2 to 8
+  elements. The test uses this frame and says why.
+- The result is the sum of three deflections and the angle, to the tolerance of Newton: `exu.sys['testTolerance'] = 1e-9`.
+

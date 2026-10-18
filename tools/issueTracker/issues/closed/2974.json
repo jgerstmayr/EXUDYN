@@ -1,0 +1,14 @@
+{
+  "number": 2974,
+  "title": "User nodes with position and orientation interfaces",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "EXTENSION",
+  "description": "revision2026c step RG7.4 (docs/dev/design/pythonUserItems.md 5.2): number of coordinates, position, velocity, position Jacobian; rotation matrix, local angular velocity, Glocal and its derivatives (numerical if not given); example 3: a fully parametrized ANCF node (NodePointSlope123) and beam.",
+  "dateRaised": "2026-10-12",
+  "deadline": "2027-04-10",
+  "dateResolved": "2026-10-19 00:05",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "NodeUser: a node with any number of coordinates whose position and orientation are Python user functions, the Jacobians by central differences if not given; node markers, SensorNode, loads and connectors work on it; userANCFBeam3DTest.py builds a fully parametrized ANCF beam from it and ObjectUserBody (revision2026c step RG7.4)",
+  "resolvedInVersion": "1.13.145"
+}

@@ -49,9 +49,10 @@ The title of each says what it does; the sentence after it, why it comes now.
 
 1. **Check the SolutionViewer on screen** (#2930): the PreStepUserFunction example on Windows - changed without a
    screen; the space key works on macOS (2026-10-16).
-2. **The user items and symbolic access to the system**: user nodes, markers and joints (RG7.4 to RG7.6), the
-   MainSystem in symbolic user functions (RG12.4), symbolic items in parallel (RG7.8); each user function change
-   measured against 1.13.6 (userFunctionBoundary.md section 12).
+2. **The user items and symbolic access to the system**: user markers and joints (RG7.5, RG7.6), the MainSystem in
+   symbolic user functions (RG12.4, proposal RG12.4.1 to decide), symbolic items in parallel (RG7.8); each user
+   function change measured against 1.13.6 (userFunctionBoundary.md sections 12, 13); the icon bar (RG6.19, proposal
+   RG6.19.1 to decide).
 3. **Rehearse the next release on a `release/*` branch** with *build as a release* - the first run of cibuildwheel
    4.3.0 and of cp315 on GitHub.
 4. **The quick old issues** (RG11.8) - each small and without a decision.
@@ -81,7 +82,6 @@ The title of each says what it does; the sentence after it, why it comes now.
   - RG6.8 Fix the remaining graphics problems with a test each
   - RG6.19 Add an icon bar to the renderer that folds in from the right border, as alternative to the keys (1 open sub-step)
 - **RG7** Python user items
-  - RG7.4 Add user nodes with position and orientation interfaces (1 open sub-step)
   - RG7.5 Add user markers and a user connector with access to its markers
   - RG7.6 Add a user joint on two position and orientation markers
   - RG7.8 Evaluate symbolic user items in parallel and in the graphics
@@ -128,7 +128,7 @@ The title of each says what it does; the sentence after it, why it comes now.
 | RG4 | OPEN | 6 | Implementation problems and bugs |
 | RG5 | OPEN | 8 | Performance |
 | RG6 | OPEN | 3 | Graphics and rendering |
-| RG7 | OPEN | 6 | Python user items |
+| RG7 | OPEN | 4 | Python user items |
 | RG8 | OPEN | 10 | Compiled C++ user items |
 | RG9 | OPEN | 5 | Structural core improvements |
 | RG10 | CLOSED | 0 | Tooling and process |
@@ -666,7 +666,7 @@ capacity (the generated ones copied it), ResizableMatrix a move assignment with 
 CLOSED 2026-10-17 (#3025): each in its own system with the computation time shown; 500 implicit steps: standard
 0.005 s, Python user functions 0.26 s, symbolic 0.11 s. [log](exudynRevisionLog2026c.md#rg7-3-5)
 
-### **OPEN_RG7.4** Add user nodes with position and orientation interfaces
+### **CLOSED_RG7.4** Add user nodes with position and orientation interfaces
 
 #2974. Design 5.2; example: a fully parametrized ANCF node and beam.
 
@@ -678,10 +678,14 @@ rotationJacobianUserFunction)`, the Jacobians by central differences if not give
 and connectors work on it; drawn in the main thread; userNodeTest.py against NodePoint and NodeRigidBodyRxyz.
 [log](exudynRevisionLog2026c.md#rg7-4-1)
 
-#### **OPEN_RG7.4.2** Example: a fully parametrized ANCF beam on NodeUser and ObjectUserBody
+#### **CLOSED_RG7.4.2** Example: a fully parametrized ANCF beam on NodeUser and ObjectUserBody
 
 #2974, example 3 of the design: nodes with position and three gradients (12 coordinates), the element as
 ObjectUserBody, rigid markers from the gradients; compared with the analytic deflection, with convergence.
+
+CLOSED 2026-10-19: userANCFBeam3DTest.py - NodeUser with the frame of the cross section, the element with the forces of
+a St.Venant-Kirchhoff continuum by 4 x 2 x 2 Gauss points; tip force: 6.3, 1.7, 0.5 % from Timoshenko with 2, 4, 8
+elements; tip torque on MarkerNodeRigid: M L/(E I) to 1e-6. [log](exudynRevisionLog2026c.md#rg7-4-2)
 
 ### **OPEN_RG7.5** Add user markers and a user connector with access to its markers
 

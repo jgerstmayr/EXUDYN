@@ -1,0 +1,165 @@
+#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+# This is an EXUDYN example
+#
+# Details:  A fully parametrized 3D ANCF beam element (#2974) on user nodes: NodeUser with the position and its three
+#           gradients (12 coordinates), whose rotation is the frame of its cross section, the gradients r_z and r_y
+#           orthonormalized; the
+#           element as ObjectUserBody, cubic along the axis and linear over the cross section, with the continuum
+#           mechanics forces of a St.Venant-Kirchhoff material, integrated by Gauss points. A cantilever, clamped by
+#           its first node, under a tip force on MarkerNodePosition converges to the deflection of a Timoshenko beam;
+#           under a tip torque on MarkerNodeRigid, whose orientation is the one of the user node, its tip cross section
+#           rotates by M L / (E I) - the torque acts on the gradients of the cross section as the stress of pure bending.
+#
+# Author:   Johannes Gerstmayr
+# Date:     2026-10-19
+#
+# Copyright:This file is part of Exudyn. Exudyn is free software. You can redistribute it and/or modify it under the terms of the Exudyn license. See 'LICENSE.txt' for more details.
+#
+#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+import exudyn as exu
+from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
+import exudyn.cMath as cMath
+import numpy as np
+
+length = 1.         #beam length
+a = 0.1             #side of the square cross section
+E = 1e6             #Young's modulus
+nu = 0.             #Poisson ratio: no Poisson locking of the linear cross section
+rho = 1000.         #density
+lam = E*nu/((1 + nu)*(1 - 2*nu))
+mu = E/(2*(1 + nu))
+EI = E*a**4/12
+GA = mu*a**2
+
+#%%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#the node: position r and gradients r_x, r_y, r_z; the orientation is the frame of the cross section: r_z and r_y
+#orthonormalized - a torque then acts on the cross section, as the stress of pure bending does; the frame of r_x and
+#r_y would put it on the tangent of the axis and rotate the tip 5 % more than M L/(E I)
+def NodePosition(mbs, t, itemNumber, q):
+    return q[0:3]
+
+def NodePositionJacobian(mbs, t, itemNumber, q):
+    return np.hstack([np.eye(3), np.zeros((3, 9))])
+
+def NodeRotation(mbs, t, itemNumber, q):
+    e3 = q[9:12]/cMath.norm(q[9:12])
+    e2 = q[6:9] - (q[6:9] @ e3)*e3
+    e2 = e2/cMath.norm(e2)
+    return np.column_stack([np.cross(e2, e3), e2, e3])
+
+def Node(x):
+    return NodeUser(numberOfODE2Coordinates=12, referenceCoordinates=[x, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1],
+                    initialCoordinates=[0]*12, initialVelocities=[0]*12,
+                    positionUserFunction=NodePosition, positionJacobianUserFunction=NodePositionJacobian,
+                    rotationMatrixUserFunction=NodeRotation) #the rotation Jacobian by central differences
+
+#%%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#the element: r(x, y, z) = sum_a N_a(x, y, z) e_a with e_a = r0, r0_x, r0_y, r0_z, r1, r1_x, r1_y, r1_z
+def ShapeFunctions(Le, x, y, z):
+    """N (8) and its derivatives dN/dX (8 x 3) at a point of the element"""
+    xi = x/Le
+    N = np.array([1 - 3*xi**2 + 2*xi**3, Le*(xi - 2*xi**2 + xi**3), y*(1 - xi), z*(1 - xi),
+                  3*xi**2 - 2*xi**3, Le*(-xi**2 + xi**3), y*xi, z*xi])
+    dNdx = np.array([(-6*xi + 6*xi**2)/Le, 1 - 4*xi + 3*xi**2, -y/Le, -z/Le,
+                     (6*xi - 6*xi**2)/Le, -2*xi + 3*xi**2, y/Le, z/Le])
+    dNdy = np.array([0, 0, 1 - xi, 0, 0, 0, xi, 0])
+    dNdz = np.array([0, 0, 0, 1 - xi, 0, 0, 0, xi])
+    return N, np.column_stack([dNdx, dNdy, dNdz])
+
+def Element(Le):
+    """the user functions of an element of length Le"""
+    (gx, wx) = np.polynomial.legendre.leggauss(4)
+    (gy, wy) = np.polynomial.legendre.leggauss(2)
+    points = [(0.5*Le*(px + 1), 0.5*a*py, 0.5*a*pz, 0.125*Le*a*a*vx*vy*vz)
+              for (px, vx) in zip(gx, wx) for (py, vy) in zip(gy, wy) for (pz, vz) in zip(gy, wy)]
+    weights = np.array([p[3] for p in points])
+    dN = np.array([ShapeFunctions(Le, x, y, z)[1] for (x, y, z, w) in points]) #(points, 8, 3)
+    (gm, wm) = np.polynomial.legendre.leggauss(4) #the mass matrix of cubic times linear functions
+    M8 = np.zeros((8, 8))
+    for (px, vx) in zip(gm, wm):
+        for (py, vy) in zip(gy, wy):
+            for (pz, vz) in zip(gy, wy):
+                N = ShapeFunctions(Le, 0.5*Le*(px + 1), 0.5*a*py, 0.5*a*pz)[0]
+                M8 += rho*0.125*Le*a*a*vx*vy*vz*np.outer(N, N)
+    massMatrix = np.kron(M8, np.eye(3))
+
+    def UFmass(mbs, t, itemNumber, q, q_t):
+        return massMatrix
+
+    def UFforce(mbs, t, itemNumber, q, q_t):
+        e = np.asarray(q).reshape((8, 3))                        #the vectors e_a as rows
+        F = np.einsum('paj,ai->pij', dN, e)                     #deformation gradient per point
+        strain = 0.5*(np.einsum('pki,pkj->pij', F, F) - np.eye(3)) #Green-Lagrange
+        trace = np.einsum('pii->p', strain)
+        S = lam*trace[:, None, None]*np.eye(3) + 2*mu*strain     #second Piola-Kirchhoff stress
+        P = np.einsum('pik,pkj->pij', F, S)                     #first Piola-Kirchhoff stress
+        return -np.einsum('p,pij,paj->ai', weights, P, dN).flatten()
+
+    def UFposition(mbs, t, itemNumber, localPosition, q):
+        N = ShapeFunctions(Le, localPosition[0], localPosition[1], localPosition[2])[0]
+        return N @ np.asarray(q).reshape((8, 3))
+
+    def UFpositionJacobian(mbs, t, itemNumber, localPosition, q):
+        N = ShapeFunctions(Le, localPosition[0], localPosition[1], localPosition[2])[0]
+        return np.kron(N, np.eye(3))
+
+    return dict(massMatrixUserFunction=UFmass, forceUserFunction=UFforce, positionUserFunction=UFposition,
+                positionJacobianUserFunction=UFpositionJacobian)
+
+def Cantilever(nElements, tipForce=[0, 0, 0], tipTorque=[0, 0, 0]):
+    """a cantilever of nElements, clamped at its first node, static; returns the tip position and rotation"""
+    SC = exu.SystemContainer()
+    mbs = SC.AddSystem()
+    Le = length/nElements
+    nodes = [mbs.AddNode(Node(i*Le)) for i in range(nElements + 1)]
+    functions = Element(Le)
+    for i in range(nElements):
+        mbs.AddObject(ObjectUserBody(nodeNumbers=nodes[i:i+2], **functions))
+    mGround = mbs.AddMarker(MarkerNodeCoordinate(nodeNumber=mbs.AddNode(NodePointGround()), coordinate=0))
+    for coordinate in range(12): #clamped: position and gradients of the first node
+        mbs.AddObject(CoordinateConstraint(markerNumbers=[mGround, mbs.AddMarker(MarkerNodeCoordinate(nodeNumber=nodes[0],
+                                                                                                     coordinate=coordinate))]))
+    mbs.AddLoad(LoadForceVector(markerNumber=mbs.AddMarker(MarkerNodePosition(nodeNumber=nodes[-1])), loadVector=tipForce))
+    mbs.AddLoad(LoadTorqueVector(markerNumber=mbs.AddMarker(MarkerNodeRigid(nodeNumber=nodes[-1])), loadVector=tipTorque))
+    mbs.Assemble()
+    simulationSettings = exu.SimulationSettings()
+    simulationSettings.staticSolver.verboseMode = 0
+    simulationSettings.staticSolver.newton.relativeTolerance = 1e-10
+    simulationSettings.solution.file.write = False
+    mbs.SolveStatic(simulationSettings)
+    return (np.array(mbs.GetNodeOutput(nodes[-1], exu.OutputVariableType.Position)),
+            np.array(mbs.GetNodeOutput(nodes[-1], exu.OutputVariableType.RotationMatrix)).reshape((3, 3)))
+
+testError = 0
+def Check(condition, message):
+    global testError
+    if not condition:
+        exu.Print('userANCFBeam3DTest: ' + message)
+        testError += 1
+
+#a tip force: Euler-Bernoulli and the shear deformation of Timoshenko
+force = -0.1
+deflectionTimoshenko = force*length**3/(3*EI) + force*length/(5/6*GA)
+errors = []
+u = 0
+for nElements in [2, 4, 8]:
+    (position, rotation) = Cantilever(nElements, tipForce=[0, 0, force])
+    errors += [abs(position[2]/deflectionTimoshenko - 1)]
+    exu.Print(nElements, 'elements: tip deflection', position[2], ', Timoshenko', deflectionTimoshenko, ', relative error', errors[-1])
+    u += position[2]
+Check(errors[2] < errors[1] < errors[0] and errors[2] < 0.02, 'no convergence to the Timoshenko deflection: ' + str(errors))
+
+#a tip torque about y on the rigid marker of the user node: the tip rotates by M L/(E I)
+torque = 0.05
+(position, rotation) = Cantilever(4, tipTorque=[0, torque, 0])
+angle = cMath.atan2(-rotation[2, 0], rotation[0, 0])
+exu.Print('tip rotation', angle, ', M L/(E I) =', torque*length/EI)
+Check(abs(angle/(torque*length/EI) - 1) < 1e-4, 'tip rotation under a torque')
+u += angle
+
+u += testError
+exu.Print('solution of userANCFBeam3DTest=', u)
+
+exu.sys['testResult'] = u
+exu.sys['testTolerance'] = 1e-9 #the static solution, to the tolerance of Newton; the forces are sums of numpy

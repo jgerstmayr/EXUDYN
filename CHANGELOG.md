@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.13 | Newborn | 142 | 1.13.144 |
+| 1.13 | Newborn | 143 | 1.13.145 |
 | 1.12 | Metheney | 367 | 1.12.462 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
@@ -30,6 +30,10 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.13 - Newborn (current)
 
+- **1.13.145** `EXTENSION` `raised by: Claude-JG` `resolved by: Claude-JG` User nodes with position and orientation interfaces (#2974)
+  - description: revision2026c step RG7.4 (docs/dev/design/pythonUserItems.md 5.2): number of coordinates, position, velocity, position Jacobian; rotation matrix, local angular velocity, Glocal and its derivatives (numerical if not given); example 3: a fully parametrized ANCF node (NodePointSlope123) and beam.
+  - **notes:** NodeUser: a node with any number of coordinates whose position and orientation are Python user functions, the Jacobians by central differences if not given; node markers, SensorNode, loads and connectors work on it; userANCFBeam3DTest.py builds a fully parametrized ANCF beam from it and ObjectUserBody (revision2026c step RG7.4)
+  - date resolved: **2026-10-19 00:05**, date raised: 2026-10-12
 - **1.13.144** `EXTENSION` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` Zoom to the selected item in the renderer (#3027)
   - description: Maintainer 2026-10-17: a selected item (left click, state-\>mouseSelectionItemID) is not used for the view; zoom to its bounding box as ZoomAll does for the scene, by a key and an icon of the icon bar.
   - **notes:** CTRL+A in the render window centers the view on the item selected with the left mouse button and zooms such that it fills the window; SC.renderer.ZoomToItem(itemIndex) does the same from Python (revision2026c step RG6.19.2)

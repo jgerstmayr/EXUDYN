@@ -121,6 +121,7 @@ textureTest
 textureGraphicsTest
 zoomToItemTest
 userNodeTest
+userANCFBeam3DTest
 initialConstraintsCheckTest
 shellMeshSlopesScalingTest
 systemContainerComputeOnlyTest
