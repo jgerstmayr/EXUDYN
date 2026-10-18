@@ -2130,3 +2130,31 @@ ints (selectionLeftMouseItemTypes=31). Decision by question: | for the enumerati
   ZoomAll, scene size unchanged; node (with nodes.showBasis - a rigid-body node drawn as point has no graphics data),
   marker and load near it; a hidden node returns False and leaves the view; an int and a wrong mbsNumber refused.
 
+<a id="rg7-4-1"></a>
+### RG7.4.1 — NodeUser (2026-10-18, #2974)
+- Definition `NodeUser` (itemDefsNodes.py) with the pattern of ObjectUserBody (design 5.9): `q` with the reference
+  values, read-only arrays; `positionUserFunction` required (CheckPreAssembleConsistency, also the sizes of the three
+  coordinate vectors); `positionJacobianUserFunction`, `rotationMatrixUserFunction`, `rotationJacobianUserFunction`
+  optional. Type Position + Orientation, declared statically as ObjectUserBody does: a rigid marker on a node without
+  rotation function raises when evaluated, and the rotation outputs (and HomogeneousTransformation, which the
+  generator now adds under the condition of RotationMatrix) are conditional.
+- `src/ImplNodes/CNodeUser.cpp` (new source; vcxproj, filters, sources.json): positions, velocities `J q_t`,
+  accelerations - with a given J, `J q_tt + J_t q_t` with `J_t q_t` by central differences of J along q_t; without, the
+  second derivative of the position along q_t (h = 1e-4 relative), as first differences of a numerical J amplified its
+  rounding to 2.5e-4 in the test; angular velocities, `d(J_rot^T v)/dq` by central differences. The Evaluate functions
+  in evaluateUserFunctions.cpp: caches as #3028 (local position 0), numerical position Jacobian, numerical rotation
+  Jacobian from the axial vector of `dR/dq_k R^T`.
+- A node needs the MainSystem and the time: `CNode::SetCSystemData` (virtual, empty) is called by the generated
+  registration for every node, NodeUser keeps it; the node number is searched in the node list at the call, as
+  DeleteNode renumbers. `CNode::AccessFunctionsCallUserFunctions` makes VisualizationSystem draw the node, the
+  objects on it, the markers and sensors on it in the main thread (mainThreadNodes).
+- The generator adds symbolic versions of the four user functions (symbolicUserFunctionSignaturesTest.py: 43
+  signatures, all agree); a symbolic NodeUser function through CreateSymbolicUserFunction with a NodeIndex is not
+  tried yet.
+- userNodeTest.py (30.459...): a point with numerical and given Jacobian against NodePoint (1.3e-8), a rigid-body node
+  in Rxyz coordinates with the rigid-body mass matrix in ObjectGenericODE2, RigidBodySpringDamper on MarkerNodeRigid and
+  a torque, rotation Jacobian given and numerical, against NodeRigidBodyRxyz (4.4e-9); refused: no position function,
+  wrong size, rotation without function, wrong Jacobian size; the node in the graphics data. Also: test_itemCompatibility
+  arguments, the drawing settings, parameterConversionTest reference, mini example and its graphics reference, the
+  pydoclint baseline (DOC108 of the Protocol arguments, as ObjectUserBody).
+

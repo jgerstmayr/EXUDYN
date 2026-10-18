@@ -6,6 +6,8 @@
 public:
     std::function<bool(const MainSystem&,Real)> boolMbsScalar;
     std::function<StdVector2D(const MainSystem&,Real)> vector2DMbsScalar;
+    std::function<StdVector3D(const MainSystem&,Real,Index,const StdVector&)> nodeUserPositionUserFunction;
+    std::function<py::object(const MainSystem&,Real,Index,const StdVector&)> nodeUserPositionJacobianUserFunction;
     std::function<py::object(const MainSystem&,Index)> objectGroundGraphicsDataUserFunction;
     std::function<StdVector(const MainSystem&,Real,Index,const StdVector&,const StdVector&)> objectGenericODE2ForceUserFunction;
     std::function<py::object(const MainSystem&,Real,Index,const StdVector&,const StdVector&)> objectGenericODE2MassMatrixUserFunction;
@@ -65,6 +67,34 @@ public:
             vector2DMbsScalar = [this](const MainSystem& mainSystem, Real arg0)
                 {
                     return this->EvaluateStdVector2D(mainSystem, arg0);
+                };
+        }
+        else if (itemTypeName == "NodeUser" && userFunctionName == "positionUserFunction")
+        {            //define the user function as lambda function of this
+            nodeUserPositionUserFunction = [this](const MainSystem& mainSystem, Real arg0, Index arg1, const StdVector& arg2)
+                {
+                    return this->EvaluateStdVector3D(mainSystem, arg0, arg1, arg2);
+                };
+        }
+        else if (itemTypeName == "NodeUser" && userFunctionName == "positionJacobianUserFunction")
+        {            //define the user function as lambda function of this
+            nodeUserPositionJacobianUserFunction = [this](const MainSystem& mainSystem, Real arg0, Index arg1, const StdVector& arg2)
+                {
+                    return this->EvaluatePyObject(mainSystem, arg0, arg1, arg2);
+                };
+        }
+        else if (itemTypeName == "NodeUser" && userFunctionName == "rotationMatrixUserFunction")
+        {            //define the user function as lambda function of this
+            nodeUserPositionJacobianUserFunction = [this](const MainSystem& mainSystem, Real arg0, Index arg1, const StdVector& arg2)
+                {
+                    return this->EvaluatePyObject(mainSystem, arg0, arg1, arg2);
+                };
+        }
+        else if (itemTypeName == "NodeUser" && userFunctionName == "rotationJacobianUserFunction")
+        {            //define the user function as lambda function of this
+            nodeUserPositionJacobianUserFunction = [this](const MainSystem& mainSystem, Real arg0, Index arg1, const StdVector& arg2)
+                {
+                    return this->EvaluatePyObject(mainSystem, arg0, arg1, arg2);
                 };
         }
         else if (itemTypeName == "ObjectGenericODE2" && userFunctionName == "forceUserFunction")
@@ -340,6 +370,14 @@ public:
         else if constexpr (std::is_same_v<UFT, std::function<StdVector2D(const MainSystem&,Real)>>)
 		{
 			return vector2DMbsScalar;
+		}
+        else if constexpr (std::is_same_v<UFT, std::function<StdVector3D(const MainSystem&,Real,Index,const StdVector&)>>)
+		{
+			return nodeUserPositionUserFunction;
+		}
+        else if constexpr (std::is_same_v<UFT, std::function<py::object(const MainSystem&,Real,Index,const StdVector&)>>)
+		{
+			return nodeUserPositionJacobianUserFunction;
 		}
         else if constexpr (std::is_same_v<UFT, std::function<py::object(const MainSystem&,Index)>>)
 		{

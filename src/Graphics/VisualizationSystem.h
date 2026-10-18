@@ -104,8 +104,9 @@ public:
 	//the render thread may not call Python, and a symbolic user function is evaluated by one thread at a time: an
 	//object whose access functions are user functions (ObjectUserBody), the markers on it, the connectors, loads and
 	//sensors on these markers or on it, and a load with a user function are drawn in the main thread, together with the
-	//graphics user functions of the objects; true per item, computed when the system has changed
-	std::vector<bool> mainThreadObjects, mainThreadMarkers, mainThreadLoads, mainThreadSensors;
+	//graphics user functions of the objects; the same for a node with user functions (NodeUser, #2974) and the objects,
+	//markers and sensors on it; true per item, computed when the system has changed
+	std::vector<bool> mainThreadNodes, mainThreadObjects, mainThreadMarkers, mainThreadLoads, mainThreadSensors;
 	bool hasMainThreadItems = false;		//!< one of the lists has an item
 	bool mainThreadItemsValid = false;		//!< false: the lists are computed again before the next drawing
 

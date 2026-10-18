@@ -89,18 +89,30 @@ void VisualizationSystem::StopSimulation()
 void VisualizationSystem::UpdateMainThreadItems()
 {
 	const CSystemData& data = *systemData;
+	Index nNodes = data.GetCNodes().NumberOfItems();
 	Index nObjects = data.GetCObjects().NumberOfItems();
 	Index nMarkers = data.GetCMarkers().NumberOfItems();
 	Index nLoads = data.GetCLoads().NumberOfItems();
 	Index nSensors = data.GetCSensors().NumberOfItems();
+	mainThreadNodes.assign(nNodes, false);
 	mainThreadObjects.assign(nObjects, false);
 	mainThreadMarkers.assign(nMarkers, false);
 	mainThreadLoads.assign(nLoads, false);
 	mainThreadSensors.assign(nSensors, false);
 
-	for (Index i = 0; i < nObjects; i++)
+	for (Index i = 0; i < nNodes; i++)
 	{
-		mainThreadObjects[i] = data.GetCObjects()[i]->AccessFunctionsCallUserFunctions();
+		mainThreadNodes[i] = data.GetCNodes()[i]->AccessFunctionsCallUserFunctions();
+	}
+	for (Index i = 0; i < nObjects; i++) //the objects with user access functions, and those on a node with them (#2974)
+	{
+		const CObject* object = data.GetCObjects()[i];
+		mainThreadObjects[i] = object->AccessFunctionsCallUserFunctions();
+		for (Index k = 0; k < object->GetNumberOfNodes() && !mainThreadObjects[i]; k++)
+		{
+			Index node = object->GetNodeNumber(k);
+			mainThreadObjects[i] = (node >= 0 && node < nNodes && mainThreadNodes[node]);
+		}
 	}
 	for (Index i = 0; i < nMarkers; i++)
 	{
@@ -109,6 +121,11 @@ void VisualizationSystem::UpdateMainThreadItems()
 		{
 			Index objectNumber = marker->GetObjectNumber();
 			mainThreadMarkers[i] = (objectNumber >= 0 && objectNumber < nObjects && mainThreadObjects[objectNumber]);
+		}
+		else if (marker->GetType() & Marker::Node) //a marker on one node (#2974)
+		{
+			Index nodeNumber = marker->GetNodeNumber();
+			mainThreadMarkers[i] = (nodeNumber >= 0 && nodeNumber < nNodes && mainThreadNodes[nodeNumber]);
 		}
 	}
 	for (Index i = 0; i < nObjects; i++) //the connectors and joints on these markers
@@ -134,13 +151,14 @@ void VisualizationSystem::UpdateMainThreadItems()
 		SensorType type = sensor->GetType();
 		bool depends = false;
 		if (sensor->HasObjectNumber()) { Index o = sensor->GetObjectNumber(); depends = (o >= 0 && o < nObjects && mainThreadObjects[o]); }
+		else if (type == SensorType::Node) { Index n = sensor->GetNodeNumber(); depends = (n >= 0 && n < nNodes && mainThreadNodes[n]); }
 		else if (type == SensorType::Marker) { Index m = sensor->GetMarkerNumber(); depends = (m >= 0 && m < nMarkers && mainThreadMarkers[m]); }
 		else if (type == SensorType::Load) { Index l = sensor->GetLoadNumber(); depends = (l >= 0 && l < nLoads && mainThreadLoads[l]); }
 		mainThreadSensors[i] = depends;
 	}
 
 	hasMainThreadItems = false;
-	for (const std::vector<bool>* list : { &mainThreadObjects, &mainThreadMarkers, &mainThreadLoads, &mainThreadSensors })
+	for (const std::vector<bool>* list : { &mainThreadNodes, &mainThreadObjects, &mainThreadMarkers, &mainThreadLoads, &mainThreadSensors })
 	{
 		for (bool flag : *list) { hasMainThreadItems = hasMainThreadItems || flag; }
 	}
@@ -171,6 +189,15 @@ void VisualizationSystem::UpdateMainThreadGraphics(const VisualizationSettings& 
 {
 	if (!hasMainThreadItems) { return; }
 	Index cnt = 0;
+	if (settings.nodes.show)
+	{
+		for (auto item : vSystemData.GetVisualizationNodes())
+		{
+			if (mainThreadNodes[cnt] && item->GetShow()) { VisualizationExceptionHandling([&] { item->UpdateGraphics(settings, this, cnt); }); }
+			cnt++;
+		}
+	}
+	cnt = 0;
 	for (auto item : vSystemData.GetVisualizationObjects())
 	{
 		if (mainThreadObjects[cnt] && item->GetShow() &&
@@ -319,7 +346,7 @@ void VisualizationSystem::UpdateGraphicsData(VisualizationSystemContainer& visua
 				cnt = 0;
 				for (auto item : vSystemData.GetVisualizationNodes())
 				{
-					if (item->GetShow()) { item->UpdateGraphics(visualizationSystemContainer.GetVisualizationSettings(), this, cnt); }
+					if (item->GetShow() && !mainThreadNodes[cnt]) { item->UpdateGraphics(visualizationSystemContainer.GetVisualizationSettings(), this, cnt); }
 					cnt++; //synchronize itemNumber with item!!!
 				}
 			}

@@ -17,18 +17,20 @@ from typing import Protocol, Union
 __all__ = [
     'CopyDictLevel1', 'IIDiagMatrix', 'CheckForValidUInt', 'CheckForValidPInt',
     'CheckForValidUReal', 'CheckForValidPReal', 'IsValidNumber', 'CheckForValidNumpyArray',
-    'userFunctionArgsDict', 'ObjectGroundGraphicsDataUserFunction',
-    'ObjectRigidBodyGraphicsDataUserFunction', 'ObjectRigidBody2DGraphicsDataUserFunction',
-    'ObjectGenericODE2ForceUserFunction', 'ObjectGenericODE2MassMatrixUserFunction',
-    'ObjectGenericODE2JacobianUserFunction', 'ObjectGenericODE2GraphicsDataUserFunction',
-    'ObjectGenericODE1RhsUserFunction', 'ObjectUserBodyMassMatrixUserFunction',
-    'ObjectUserBodyForceUserFunction', 'ObjectUserBodyPositionUserFunction',
-    'ObjectUserBodyPositionJacobianUserFunction', 'ObjectUserBodyRotationMatrixUserFunction',
-    'ObjectUserBodyRotationJacobianUserFunction', 'ObjectUserBodyOutputVariableUserFunction',
-    'ObjectUserBodyGraphicsDataUserFunction', 'ObjectKinematicTreeForceUserFunction',
-    'ObjectFFRFForceUserFunction', 'ObjectFFRFMassMatrixUserFunction',
-    'ObjectFFRFreducedOrderForceUserFunction', 'ObjectFFRFreducedOrderMassMatrixUserFunction',
-    'ObjectANCFCable2DAxialForceUserFunction', 'ObjectANCFCable2DBendingMomentUserFunction',
+    'userFunctionArgsDict', 'NodeUserPositionUserFunction', 'NodeUserPositionJacobianUserFunction',
+    'NodeUserRotationMatrixUserFunction', 'NodeUserRotationJacobianUserFunction',
+    'ObjectGroundGraphicsDataUserFunction', 'ObjectRigidBodyGraphicsDataUserFunction',
+    'ObjectRigidBody2DGraphicsDataUserFunction', 'ObjectGenericODE2ForceUserFunction',
+    'ObjectGenericODE2MassMatrixUserFunction', 'ObjectGenericODE2JacobianUserFunction',
+    'ObjectGenericODE2GraphicsDataUserFunction', 'ObjectGenericODE1RhsUserFunction',
+    'ObjectUserBodyMassMatrixUserFunction', 'ObjectUserBodyForceUserFunction',
+    'ObjectUserBodyPositionUserFunction', 'ObjectUserBodyPositionJacobianUserFunction',
+    'ObjectUserBodyRotationMatrixUserFunction', 'ObjectUserBodyRotationJacobianUserFunction',
+    'ObjectUserBodyOutputVariableUserFunction', 'ObjectUserBodyGraphicsDataUserFunction',
+    'ObjectKinematicTreeForceUserFunction', 'ObjectFFRFForceUserFunction',
+    'ObjectFFRFMassMatrixUserFunction', 'ObjectFFRFreducedOrderForceUserFunction',
+    'ObjectFFRFreducedOrderMassMatrixUserFunction', 'ObjectANCFCable2DAxialForceUserFunction',
+    'ObjectANCFCable2DBendingMomentUserFunction',
     'ObjectConnectorSpringDamperSpringForceUserFunction',
     'ObjectConnectorCartesianSpringDamperSpringForceUserFunction',
     'ObjectConnectorRigidBodySpringDamperSpringForceTorqueUserFunction',
@@ -52,15 +54,15 @@ __all__ = [
     'VNodePointSlope12', 'NodePointSlope12', 'VNodePointSlope23', 'NodePointSlope23',
     'VNodeGenericODE2', 'NodeGenericODE2', 'VNodeGenericODE1', 'NodeGenericODE1', 'VNodeGenericAE',
     'NodeGenericAE', 'VNodeGenericData', 'NodeGenericData', 'VNodePointGround', 'NodePointGround',
-    'PointGround', 'VPointGround', 'VObjectGround', 'ObjectGround', 'VObjectMassPoint',
-    'ObjectMassPoint', 'MassPoint', 'VMassPoint', 'VObjectMassPoint2D', 'ObjectMassPoint2D',
-    'MassPoint2D', 'VMassPoint2D', 'VObjectMass1D', 'ObjectMass1D', 'Mass1D', 'VMass1D',
-    'VObjectRotationalMass1D', 'ObjectRotationalMass1D', 'Rotor1D', 'VRotor1D', 'VObjectRigidBody',
-    'ObjectRigidBody', 'RigidBody', 'VRigidBody', 'VObjectRigidBody2D', 'ObjectRigidBody2D',
-    'RigidBody2D', 'VRigidBody2D', 'VObjectGenericODE2', 'ObjectGenericODE2', 'VObjectGenericODE1',
-    'ObjectGenericODE1', 'VObjectUserBody', 'ObjectUserBody', 'VObjectKinematicTree',
-    'ObjectKinematicTree', 'KinematicTree', 'VKinematicTree', 'VObjectFFRF', 'ObjectFFRF',
-    'VObjectFFRFreducedOrder', 'ObjectFFRFreducedOrder', 'CMSobject', 'VCMSobject',
+    'PointGround', 'VPointGround', 'VNodeUser', 'NodeUser', 'VObjectGround', 'ObjectGround',
+    'VObjectMassPoint', 'ObjectMassPoint', 'MassPoint', 'VMassPoint', 'VObjectMassPoint2D',
+    'ObjectMassPoint2D', 'MassPoint2D', 'VMassPoint2D', 'VObjectMass1D', 'ObjectMass1D', 'Mass1D',
+    'VMass1D', 'VObjectRotationalMass1D', 'ObjectRotationalMass1D', 'Rotor1D', 'VRotor1D',
+    'VObjectRigidBody', 'ObjectRigidBody', 'RigidBody', 'VRigidBody', 'VObjectRigidBody2D',
+    'ObjectRigidBody2D', 'RigidBody2D', 'VRigidBody2D', 'VObjectGenericODE2', 'ObjectGenericODE2',
+    'VObjectGenericODE1', 'ObjectGenericODE1', 'VObjectUserBody', 'ObjectUserBody',
+    'VObjectKinematicTree', 'ObjectKinematicTree', 'KinematicTree', 'VKinematicTree', 'VObjectFFRF',
+    'ObjectFFRF', 'VObjectFFRFreducedOrder', 'ObjectFFRFreducedOrder', 'CMSobject', 'VCMSobject',
     'VObjectANCFCable', 'ObjectANCFCable', 'Cable', 'VCable', 'VObjectANCFCable2D',
     'ObjectANCFCable2D', 'Cable2D', 'VCable2D', 'VObjectALEANCFCable2D', 'ObjectALEANCFCable2D',
     'ALECable2D', 'VALECable2D', 'VObjectANCFBeam', 'ObjectANCFBeam', 'ANCFBeam', 'VANCFBeam',
@@ -194,6 +196,10 @@ def CheckForValidNumpyArray(value):
 userFunctionArgsDict = {'MainSystem,preStepUserFunction': [['MainSystem', 'Real'], ['mbs', 'arg0'], ['bool']],
         'MainSystem,postStepUserFunction': [['MainSystem', 'Real'], ['mbs', 'arg0'], ['bool']],
         'MainSystem,postNewtonFunction': [['MainSystem', 'Real'], ['mbs', 'arg0'], ['StdVector2D']],
+        'NodeUser,positionUserFunction': [['MainSystem', 'Real', 'Index', 'StdVector'], ['mbs', 't', 'itemNumber', 'q'], ['StdVector3D'], ['NodeUserPositionUserFunction']],
+        'NodeUser,positionJacobianUserFunction': [['MainSystem', 'Real', 'Index', 'StdVector'], ['mbs', 't', 'itemNumber', 'q'], ['py::object'], ['NodeUserPositionJacobianUserFunction']],
+        'NodeUser,rotationMatrixUserFunction': [['MainSystem', 'Real', 'Index', 'StdVector'], ['mbs', 't', 'itemNumber', 'q'], ['py::object'], ['NodeUserRotationMatrixUserFunction']],
+        'NodeUser,rotationJacobianUserFunction': [['MainSystem', 'Real', 'Index', 'StdVector'], ['mbs', 't', 'itemNumber', 'q'], ['py::object'], ['NodeUserRotationJacobianUserFunction']],
         'ObjectGround,graphicsDataUserFunction': [['MainSystem', 'Index'], ['mbs', 'itemNumber'], ['py::object'], ['ObjectGroundGraphicsDataUserFunction']],
         'ObjectRigidBody,graphicsDataUserFunction': [['MainSystem', 'Index'], ['mbs', 'itemNumber'], ['py::object'], ['ObjectRigidBodyGraphicsDataUserFunction']],
         'ObjectRigidBody2D,graphicsDataUserFunction': [['MainSystem', 'Index'], ['mbs', 'itemNumber'], ['py::object'], ['ObjectRigidBody2DGraphicsDataUserFunction']],
@@ -237,6 +243,74 @@ userFunctionArgsDict = {'MainSystem,preStepUserFunction': [['MainSystem', 'Real'
         'LoadCoordinate,loadUserFunction': [['MainSystem', 'Real', 'Real'], ['mbs', 't', 'load'], ['Real'], ['LoadCoordinateLoadUserFunction']],
         'SensorUserFunction,sensorUserFunction': [['MainSystem', 'Real', 'StdArrayIndex', 'StdVector', 'ConfigurationType'], ['mbs', 't', 'numbers', 'factors', 'configuration'], ['StdVector'], ['SensorUserFunctionSensorUserFunction']]}
 
+
+class NodeUserPositionUserFunction(Protocol):
+    """A user function, which computes the global position of the node from its coordinates: the position interface of the node.
+    
+    Args:
+        mbs (exudyn.MainSystem): provides MainSystem mbs to which the node belongs
+
+        t (float): time of the configuration asked for
+
+        itemNumber (int): integer number of the node in mbs
+
+        q (np.ndarray): node coordinates, INCLUDING their reference values, of the configuration asked for
+
+    Returns:
+        np.ndarray: the global position of the node
+    """
+    def __call__(self, mbs: exudyn.MainSystem, t: float, itemNumber: int, q: np.ndarray) -> np.ndarray: ...
+
+class NodeUserPositionJacobianUserFunction(Protocol):
+    r"""A user function of the interface of the node that returns a matrix: the position Jacobian :math:`\Jm_{pos} = \partial \vv / \partial \dot\qv` (3 x n), the rotation matrix (3 x 3) or the rotation Jacobian :math:`\Jm_{rot} = \partial {}^{0}{\tomega} / \partial \dot\qv` (3 x n, global angular velocity).
+    
+    Args:
+        mbs (exudyn.MainSystem): provides MainSystem mbs to which the node belongs
+
+        t (float): time of the configuration asked for
+
+        itemNumber (int): integer number of the node in mbs
+
+        q (np.ndarray): node coordinates, INCLUDING their reference values, of the configuration asked for
+
+    Returns:
+        exudyn.MatrixContainer: the matrix, as numpy array or list of lists
+    """
+    def __call__(self, mbs: exudyn.MainSystem, t: float, itemNumber: int, q: np.ndarray) -> exudyn.MatrixContainer: ...
+
+class NodeUserRotationMatrixUserFunction(Protocol):
+    r"""A user function of the interface of the node that returns a matrix: the position Jacobian :math:`\Jm_{pos} = \partial \vv / \partial \dot\qv` (3 x n), the rotation matrix (3 x 3) or the rotation Jacobian :math:`\Jm_{rot} = \partial {}^{0}{\tomega} / \partial \dot\qv` (3 x n, global angular velocity).
+    
+    Args:
+        mbs (exudyn.MainSystem): provides MainSystem mbs to which the node belongs
+
+        t (float): time of the configuration asked for
+
+        itemNumber (int): integer number of the node in mbs
+
+        q (np.ndarray): node coordinates, INCLUDING their reference values, of the configuration asked for
+
+    Returns:
+        exudyn.MatrixContainer: the matrix, as numpy array or list of lists
+    """
+    def __call__(self, mbs: exudyn.MainSystem, t: float, itemNumber: int, q: np.ndarray) -> exudyn.MatrixContainer: ...
+
+class NodeUserRotationJacobianUserFunction(Protocol):
+    r"""A user function of the interface of the node that returns a matrix: the position Jacobian :math:`\Jm_{pos} = \partial \vv / \partial \dot\qv` (3 x n), the rotation matrix (3 x 3) or the rotation Jacobian :math:`\Jm_{rot} = \partial {}^{0}{\tomega} / \partial \dot\qv` (3 x n, global angular velocity).
+    
+    Args:
+        mbs (exudyn.MainSystem): provides MainSystem mbs to which the node belongs
+
+        t (float): time of the configuration asked for
+
+        itemNumber (int): integer number of the node in mbs
+
+        q (np.ndarray): node coordinates, INCLUDING their reference values, of the configuration asked for
+
+    Returns:
+        exudyn.MatrixContainer: the matrix, as numpy array or list of lists
+    """
+    def __call__(self, mbs: exudyn.MainSystem, t: float, itemNumber: int, q: np.ndarray) -> exudyn.MatrixContainer: ...
 
 class ObjectGroundGraphicsDataUserFunction(Protocol):
     """A user function, which is called by the visualization thread in order to draw user-defined objects.
@@ -2230,6 +2304,90 @@ class NodePointGround:
 #add typedef for short usage:
 PointGround = NodePointGround
 VPointGround = VNodePointGround
+
+class VNodeUser:
+    """Visualization data for NodeUser.
+    
+    Args:
+        show: set true, if item is shown in visualization and false if it is not shown; type: bool
+
+        drawSize: drawing size (diameter, dimensions of underlying cube, etc.)  for item; size == -1.f means that default size is used; type: float
+
+        color: Default RGBA color for nodes; 4th value is alpha-transparency; R=-1.f means, that default color is used; type: [float,float,float,float]
+
+    """
+    def __init__(self, show = True, drawSize = -1., color = [-1.,-1.,-1.,-1.]):
+        self.show = show
+        self.drawSize = drawSize
+        self.color = np.array(color)
+
+    def __iter__(self):
+        yield 'show', self.show
+        yield 'drawSize', self.drawSize
+        yield 'color', self.color
+
+    def __repr__(self):
+        return str(dict(self))
+
+class NodeUser:
+    """A node with any number of ODE2 coordinates, whose position, and optionally orientation, are computed from its coordinates by Python user functions: a node for elements whose nodes are not in Exudyn, such as an ANCF node with full gradients.
+    
+    The node markers (MarkerNodePosition, MarkerNodeRigid, MarkerNodeCoordinate), SensorNode, loads on these markers and every connector work on it.
+    
+    Args:
+        name: node's unique name; type: str
+
+        numberOfODE2Coordinates: number of ODE2 coordinates; type: int
+
+        referenceCoordinates: reference coordinates of the node; must have numberOfODE2Coordinates components; type: array_like
+
+        initialCoordinates: initial displacement coordinates; must have numberOfODE2Coordinates components; type: array_like
+
+        initialVelocities: initial velocity coordinates; must have numberOfODE2Coordinates components; type: array_like
+
+        positionUserFunction: A Python user function which computes the global position of the node; it must be given; type: NodeUserPositionUserFunction
+
+        positionJacobianUserFunction: A Python user function which computes the position Jacobian; by central differences of the position if not given; type: NodeUserPositionJacobianUserFunction
+
+        rotationMatrixUserFunction: A Python user function which computes the rotation matrix of the node; optional, for rigid markers; type: NodeUserRotationMatrixUserFunction
+
+        rotationJacobianUserFunction: A Python user function which computes the rotation Jacobian (of the global angular velocity); by central differences of the rotation matrix if not given; type: NodeUserRotationJacobianUserFunction
+
+        visualization: visualization data, see VNodeUser
+
+    Notes:
+        Node has/provides the following types: ``Position``, ``Orientation``
+
+    """
+    def __init__(self, name = '', numberOfODE2Coordinates = 0, referenceCoordinates = [], initialCoordinates = [], initialVelocities = [], positionUserFunction: Union[NodeUserPositionUserFunction, int] = 0, positionJacobianUserFunction: Union[NodeUserPositionJacobianUserFunction, int] = 0, rotationMatrixUserFunction: Union[NodeUserRotationMatrixUserFunction, int] = 0, rotationJacobianUserFunction: Union[NodeUserRotationJacobianUserFunction, int] = 0, visualization = {'show': True, 'drawSize': -1., 'color': [-1.,-1.,-1.,-1.]}):
+        self.name = name
+        self.numberOfODE2Coordinates = numberOfODE2Coordinates
+        self.referenceCoordinates = np.array(referenceCoordinates)
+        self.initialCoordinates = np.array(initialCoordinates)
+        self.initialVelocities = np.array(initialVelocities)
+        self.positionUserFunction = positionUserFunction
+        self.positionJacobianUserFunction = positionJacobianUserFunction
+        self.rotationMatrixUserFunction = rotationMatrixUserFunction
+        self.rotationJacobianUserFunction = rotationJacobianUserFunction
+        self.visualization = CopyDictLevel1(visualization)
+
+    def __iter__(self):
+        yield 'nodeType', 'User'
+        yield 'name', self.name
+        yield 'numberOfODE2Coordinates', self.numberOfODE2Coordinates
+        yield 'referenceCoordinates', self.referenceCoordinates
+        yield 'initialCoordinates', self.initialCoordinates
+        yield 'initialVelocities', self.initialVelocities
+        yield 'positionUserFunction', self.positionUserFunction
+        yield 'positionJacobianUserFunction', self.positionJacobianUserFunction
+        yield 'rotationMatrixUserFunction', self.rotationMatrixUserFunction
+        yield 'rotationJacobianUserFunction', self.rotationJacobianUserFunction
+        yield 'Vshow', dict(self.visualization)["show"]
+        yield 'VdrawSize', dict(self.visualization)["drawSize"]
+        yield 'Vcolor', dict(self.visualization)["color"]
+
+    def __repr__(self):
+        return str(dict(self))
 
 #+++++++++++++++++++++++++++++++
 #OBJECT

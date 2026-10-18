@@ -42,6 +42,8 @@ nodeArguments = {
                       'initialCoordinates': [0, 0, 0]},
     'NodeGenericData': {'numberOfDataCoordinates': 3, 'initialCoordinates': [0, 0, 0]},
     'NodeRigidBodyEP': {'referenceCoordinates': [0, 0, 0, 1, 0, 0, 0]},
+    'NodeUser': {'numberOfODE2Coordinates': 3, 'referenceCoordinates': [0, 0, 0], 'initialCoordinates': [0, 0, 0],
+                 'initialVelocities': [0, 0, 0], 'positionUserFunction': lambda mbs, t, itemNumber, q: q},
     }
 markerArguments = {'MarkerNodeRotationCoordinate': {'rotationCoordinate': 0}}
 

@@ -120,6 +120,7 @@ orientTrianglesTest
 textureTest
 textureGraphicsTest
 zoomToItemTest
+userNodeTest
 initialConstraintsCheckTest
 shellMeshSlopesScalingTest
 systemContainerComputeOnlyTest

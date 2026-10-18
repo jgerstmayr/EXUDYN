@@ -1153,6 +1153,7 @@ bool Main{itemType}{classNamePure}IsRegistered = ClassFactoryItemsSystemData<Mai
 	{ //AUTO: 
 		C{itemType}{classNamePure}* cItem = new C{itemType}{classNamePure}();							//new point {itemType}
 		cItem->GetCData() = &(cSystemData->GetCData()); //add CData reference to CNode
+		cItem->SetCSystemData(cSystemData); //for the user functions of NodeUser; nothing for the other nodes (#2974)
 		Main{itemType}* item = new Main{itemType}{classNamePure}(); //new main item
 		item->SetC{itemType}(cItem);
 		Visualization{itemType}{classNamePure}* vItem = new Visualization{itemType}{classNamePure}();

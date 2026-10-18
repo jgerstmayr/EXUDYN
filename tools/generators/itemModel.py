@@ -384,8 +384,12 @@ def AddHomogeneousTransformationOutput(definition):
     if 'Position' in names and 'RotationMatrix' in names and 'HomogeneousTransformation' not in names:
         import outputVariableTypes
         import outputVariableDescriptions
-        entries.insert(names.index('RotationMatrix') + 1, {'outputVariable': outputVariableTypes.OVHomogeneousTransformation,
-                                                          'description': outputVariableDescriptions.OVDHomogeneousTransformation})
+        entry = {'outputVariable': outputVariableTypes.OVHomogeneousTransformation,
+                 'description': outputVariableDescriptions.OVDHomogeneousTransformation}
+        rotationMatrix = entries[names.index('RotationMatrix')]
+        if rotationMatrix.get('condition'): #available under the same condition as the rotation, e.g. NodeUser (#2974)
+            entry['condition'] = rotationMatrix['condition']
+        entries.insert(names.index('RotationMatrix') + 1, entry)
 
 
 def IsParameter(member):

@@ -6,6 +6,8 @@
 //templates require explicit instantiations for each template because otherwise linker problems ... (alternative: include everything into .h files ...)
 template class PythonUserFunctionBase<std::function<bool(const MainSystem&,Real)>>;
 template class PythonUserFunctionBase<std::function<StdVector2D(const MainSystem&,Real)>>;
+template class PythonUserFunctionBase<std::function<StdVector3D(const MainSystem&,Real,Index,const StdVector&)>>;
+template class PythonUserFunctionBase<std::function<py::object(const MainSystem&,Real,Index,const StdVector&)>>;
 template class PythonUserFunctionBase<std::function<py::object(const MainSystem&,Index)>>;
 template class PythonUserFunctionBase<std::function<StdVector(const MainSystem&,Real,Index,const StdVector&,const StdVector&)>>;
 template class PythonUserFunctionBase<std::function<py::object(const MainSystem&,Real,Index,const StdVector&,const StdVector&)>>;

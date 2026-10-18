@@ -254,6 +254,27 @@ items = {
       'color': {'type': 'Float4', 'size': '4', 'range': '', 'default': '[-1.,-1.,-1.,-1.]', 'mustBeGiven': False, 'description': 'Default RGBA color for nodes; 4th value is alpha-transparency; R=-1.f means, that default color is used'},
     },
   },
+  'NodeUser': {
+    'kind': 'Node',
+    'types': ['Position', 'Orientation'],
+    'outputVariables': ['Position', 'Displacement', 'Velocity', 'Acceleration', 'RotationMatrix', 'HomogeneousTransformation', 'AngularVelocity', 'AngularVelocityLocal', 'CoordinatesTotal', 'Coordinates', 'Coordinates_t', 'Coordinates_tt'],
+    'parameters': {
+      'name': {'type': 'String', 'size': '', 'range': '', 'default': '', 'mustBeGiven': False, 'description': "node's unique name"},
+      'numberOfODE2Coordinates': {'type': 'PInt', 'size': '', 'range': '> 0', 'default': '0', 'mustBeGiven': True, 'description': 'number of ODE2 coordinates'},
+      'referenceCoordinates': {'type': 'Vector', 'size': '', 'range': '', 'default': '[]', 'mustBeGiven': False, 'description': 'reference coordinates of the node; must have numberOfODE2Coordinates components'},
+      'initialCoordinates': {'type': 'Vector', 'size': '', 'range': '', 'default': '[]', 'mustBeGiven': False, 'description': 'initial displacement coordinates; must have numberOfODE2Coordinates components'},
+      'initialVelocities': {'type': 'Vector', 'size': '', 'range': '', 'default': '[]', 'mustBeGiven': False, 'description': 'initial velocity coordinates; must have numberOfODE2Coordinates components'},
+      'positionUserFunction': {'type': 'NodeUserPositionUserFunction', 'size': '', 'range': '', 'default': '0', 'mustBeGiven': False, 'description': 'A Python user function which computes the global position of the node; it must be given'},
+      'positionJacobianUserFunction': {'type': 'NodeUserPositionJacobianUserFunction', 'size': '', 'range': '', 'default': '0', 'mustBeGiven': False, 'description': 'A Python user function which computes the position Jacobian; by central differences of the position if not given'},
+      'rotationMatrixUserFunction': {'type': 'NodeUserRotationMatrixUserFunction', 'size': '', 'range': '', 'default': '0', 'mustBeGiven': False, 'description': 'A Python user function which computes the rotation matrix of the node; optional, for rigid markers'},
+      'rotationJacobianUserFunction': {'type': 'NodeUserRotationJacobianUserFunction', 'size': '', 'range': '', 'default': '0', 'mustBeGiven': False, 'description': 'A Python user function which computes the rotation Jacobian (of the global angular velocity); by central differences of the rotation matrix if not given'},
+    },
+    'visualization': {
+      'show': {'type': 'Bool', 'size': '', 'range': '', 'default': 'True', 'mustBeGiven': False, 'description': 'set true, if item is shown in visualization and false if it is not shown'},
+      'drawSize': {'type': 'float', 'size': '', 'range': '', 'default': '-1.', 'mustBeGiven': False, 'description': 'drawing size (diameter, dimensions of underlying cube, etc.)  for item; size == -1.f means that default size is used'},
+      'color': {'type': 'Float4', 'size': '4', 'range': '', 'default': '[-1.,-1.,-1.,-1.]', 'mustBeGiven': False, 'description': 'Default RGBA color for nodes; 4th value is alpha-transparency; R=-1.f means, that default color is used'},
+    },
+  },
   'ObjectGround': {
     'kind': 'Object',
     'types': ['Body', 'Ground'],

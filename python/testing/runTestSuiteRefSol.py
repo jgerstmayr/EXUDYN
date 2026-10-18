@@ -139,13 +139,14 @@ def TestExamplesReferenceSolution():
         'constraintDriftTest.py':9.796449624399628e-06, #new 2026-10-15: the drift of TrapezoidalIndex2 checked, the drift in the current state four ways (#565)
         'systemUtilitiesTest.py':1.670836871616957, #new 2026-10-16: SystemEnergy, SystemConstraintDrift and ComputeSystemGraph of exudyn.systemUtilities (#2997)
         'pythonUserFunctionArgumentsTest.py':0.5418115020412166, #new 2026-10-16: numpy arrays as vector arguments of Python user functions, userFunctionListArguments (#3008)
-        'symbolicUserFunctionSignaturesTest.py':39.302161797439574, #2026-10-17: with the 9 signatures of matrix results and ObjectGenericODE2 with mass matrix and Jacobian (#3020), before 30.255735007657506; new 2026-10-16: the 30 symbolic user function signatures and seven items against their Python versions (#2985)
+        'symbolicUserFunctionSignaturesTest.py':43.302161797439574, #2026-10-17: with the 9 signatures of matrix results and ObjectGenericODE2 with mass matrix and Jacobian (#3020), before 30.255735007657506; new 2026-10-16: the 30 symbolic user function signatures and seven items against their Python versions (#2985); 2026-10-18: 43 with the 4 of NodeUser (#2974)
         'symbolicNumpyCompatibilityTest.py':306.26230077004766, #2026-10-17: with A.T, rows, slices, scalars and np.sin of vectors (#3018), before 242.87935007040414; new 2026-10-17: numpy and symbolic agree where symbolic has the operation and refuse what numpy defines differently (#3015)
         'symbolicSparseMatrixTest.py':0.19711034463698704, #new 2026-10-17: sparse matrix results of symbolic user functions with the pattern fixed when recorded, Python and symbolic, sparse and dense solver (#3022)
         'orientTrianglesTest.py':475.0, #new 2026-10-18: graphics.OrientTriangles and CheckTriangleOrientation, the STL import with orientTriangles (#2281)
         'textureTest.py':103.0, #new 2026-10-18: SC.renderer.AddTexture, textured TriangleList and 6-node triangles, GetGraphicsData texturedTriangles (#2154, #2155, #3029, #3030)
         'textureGraphicsTest.py':3684.0, #new 2026-10-18: textures in the raytracer, graphics.Quad/Cylinder/ProjectTexture/CheckerBoard with a texture, graphics.ImageFromFile (#3031, #3034, #3035, #3036)
         'zoomToItemTest.py':0.02, #new 2026-10-18: SC.renderer.ZoomToItem, centered and zoomed to an item (#3027)
+        'userNodeTest.py':30.45974515191901, #new 2026-10-18: NodeUser against NodePoint and NodeRigidBodyRxyz, Jacobians given and numerical (#2974)
         'initialConstraintsCheckTest.py':2.937101858808996, #new 2026-10-14: the check of the initial conditions against the constraints, the projection of the initial velocities (#2234)
         'shellMeshSlopesScalingTest.py':0.0005808783959917463, #new 2026-10-14: the slope scaling of ShellMesh on a quarter cylinder and a flat trapezoid (#2226)
         'systemContainerComputeOnlyTest.py':4.0, #new 2026-10-14: SystemContainer(attachToRenderer=False), the renderer stays with the container of the model, also for InverseKinematicsNumerical (#2259)
@@ -543,6 +544,7 @@ def MiniExamplesReferenceSolution():
         'NodePoint2D.py':-2.9049999999999967,
         'NodePoint2DSlope1.py':-0.3333332497979799,
         'NodePointGround.py':0.10000000000000009,
+        'NodeUser.py':0.8414709848078965, #new 2026-10-18 (#2974)
         'NodePointSlope1.py':-0.3333332497979799,
         'NodePointSlope12.py':-0.06986346700419381, #2026-10-13: the clamping joints act on the symmetric basis of the slopes (#2228), before -0.06987478663348738; 2026-10-05: material curvature measure, Gauss 5x5 (#2857); before -0.06987553667440825
         'NodePointSlope23.py':-0.3381249577076517,

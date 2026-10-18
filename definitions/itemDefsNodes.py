@@ -2098,3 +2098,232 @@ definitions.append(ItemDefinition(
             description=r'Default RGBA color for nodes; 4th value is alpha-transparency; R=-1.f means, that default color is used'),
         ],
     ))
+
+#++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#++++++++++++++++   NodeUser   ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+def NodeUser_positionUserFunction(mbs: MainSystem, t: Real, itemNumber: Index, q: Vector) -> Vector3D:
+    r"""A user function, which computes the global position of the node from its coordinates: the position interface of the node.
+
+    Args:
+        mbs: provides MainSystem mbs to which the node belongs
+        t: time of the configuration asked for
+        itemNumber: integer number of the node in mbs
+        q: $\in \Rcal^n$ node coordinates, INCLUDING their reference values, of the configuration asked for
+    Returns:
+        $\in \Rcal^{3}$ the global position of the node
+    """
+
+def NodeUser_matrixUserFunction(mbs: MainSystem, t: Real, itemNumber: Index, q: Vector) -> MatrixContainer:
+    r"""A user function of the interface of the node that returns a matrix: the position Jacobian $\Jm_{pos} = \partial \vv / \partial \dot\qv$ (3 x n), the rotation matrix (3 x 3) or the rotation Jacobian $\Jm_{rot} = \partial \LU{0}{\tomega} / \partial \dot\qv$ (3 x n, global angular velocity).
+
+    Args:
+        mbs: provides MainSystem mbs to which the node belongs
+        t: time of the configuration asked for
+        itemNumber: integer number of the node in mbs
+        q: $\in \Rcal^n$ node coordinates, INCLUDING their reference values, of the configuration asked for
+    Returns:
+        the matrix, as numpy array or list of lists
+    """
+
+definitions.append(ItemDefinition(
+    className='NodeUser',
+    drawing=r'A point at its position; with `nodes.showBasis` and a `rotationMatrixUserFunction`, also its frame.',
+    drawingSettings=['general.axesTiling', 'nodes.basisSize', 'nodes.showBasis'],
+    addIncludesC=r"""class MainSystem; //AUTO; for std::function / userFunction; avoid including MainSystem.h
+#include "System/CObjectBody.h" //UserFunctionResultCache
+""",
+    addProtectedC=r"""    CSystemData* cSystemData = nullptr; //!< for the MainSystem and the time of the user functions
+    //! the total coordinates of a configuration: reference plus displacement (#2974)
+    void TotalCoordinates(ResizableConstVector& q, ConfigurationType configuration) const;
+    //! the number of the node in the system, for the user functions
+    Index GetNodeNumber() const;
+    //! false in another thread than the main thread
+    bool PythonCallPossible() const;
+    //! a matrix user function, its size checked
+    template<class TUserFunction>
+    void EvaluateMatrixUserFunction(const TUserFunction& function, const char* name, Index rows, Index columns, Matrix& value, Real t,
+        const Vector& coordinates) const;
+    //! the last results of the user functions, by time and coordinates (#3028)
+    mutable UserFunctionResultCache<Vector3D> positionCache;
+    mutable UserFunctionResultCache<ResizableMatrix> positionJacobianCache;
+    mutable UserFunctionResultCache<Matrix3D> rotationMatrixCache;
+    mutable UserFunctionResultCache<ResizableMatrix> rotationJacobianCache;
+""",
+    cParentClass=ParentClassCNodeODE2,
+    overallDescription=r"""A node with any number of ABRV:ODE2 coordinates, whose position, and optionally orientation, are computed from its coordinates by Python user functions: a node for elements whose nodes are not in Exudyn, such as an ANCF node with full gradients. The node markers (MarkerNodePosition, MarkerNodeRigid, MarkerNodeCoordinate), SensorNode, loads on these markers and every connector work on it.""",
+    classType=ClassTypeNode,
+    detailedDescription=r"""    #### Coordinates
+
+    $n$ = `numberOfODE2Coordinates` ABRV:ODE2 coordinates; their meaning is defined by the user functions and the
+    object that uses the node. The user functions get the coordinates $\qv \in \Rcal^n$ **including** their reference
+    values, as read-only numpy arrays, as the user functions of ObjectUserBody do.
+
+    #### Interface of the node
+
+    | function | gives | needed for |
+    |---|---|---|
+    | `positionUserFunction` | $\LU{0}{\pv}(\qv)$ | positions of markers, sensors and the drawing; must be given |
+    | `positionJacobianUserFunction` | $\Jm_{pos}(\qv) = \partial \LU{0}{\pv} / \partial \qv$ | forces on MarkerNodePosition, MarkerNodeRigid; by central differences of the position if not given |
+    | `rotationMatrixUserFunction` | $\LU{0n}{\Rot}(\qv)$ | MarkerNodeRigid, optional |
+    | `rotationJacobianUserFunction` | $\Jm_{rot}(\qv) = \partial \LU{0}{\tomega} / \partial \dot\qv$ | torques on MarkerNodeRigid; by central differences of the rotation matrix if not given |
+
+    The velocity is $\LU{0}{\vv} = \Jm_{pos} \dot\qv$, the acceleration $\LU{0}{\av} = \Jm_{pos} \ddot\qv + \dot\Jm_{pos}
+    \dot\qv$ with $\dot\Jm_{pos}\dot\qv$ by central differences along $\dot\qv$, the global angular velocity
+    $\LU{0}{\tomega} = \Jm_{rot} \dot\qv$ and the local one $\LU{n}{\tomega} = \LU{n0}{\Rot}\LU{0}{\tomega}$. Without
+    a rotation Jacobian, column $k$ of $\Jm_{rot}$ is the axial vector of $(\partial \Rot / \partial q_k) \Rot\tp$, the
+    derivative by central differences. The derivative of $\Jm_{rot}\tp \mv$ with respect to $\qv$, which the Jacobians
+    of connectors on MarkerNodeRigid need, is computed by central differences; a MarkerNodePosition treats
+    $\Jm_{pos}$ as constant in the Jacobians, so a position that is not linear in $\qv$ makes the Newton iteration
+    converge slower, not wrong.
+
+    The node keeps the last two results of each user function, by time and coordinates; the user functions are
+    functions of their arguments, as those of ObjectUserBody (#3028).
+
+    The user functions are called serially in the main thread; a renderer that runs in a thread of its own draws the
+    node, the markers on it and what depends on them in the main thread (#3003).
+    """,
+    miniExample=r"""    #a node whose coordinates are cylindrical coordinates (r, phi, z) of a point; it turns with phi_t = 1
+    def UFposition(mbs, t, itemNumber, q):
+        return [q[0]*np.cos(q[1]), q[0]*np.sin(q[1]), q[2]]
+    node = mbs.AddNode(NodeUser(numberOfODE2Coordinates=3, referenceCoordinates=[1,0,0],
+                                initialCoordinates=[0,0,0], initialVelocities=[0,1,0],
+                                positionUserFunction=UFposition))
+    #free coordinates with unit mass: phi = t
+    mbs.AddObject(ObjectGenericODE2(nodeNumbers=[node], massMatrix=np.eye(3)))
+
+    mbs.Assemble()
+    mbs.SolveDynamic()
+
+    #after 1 s the position is [cos(1), sin(1), 0]
+    exu.sys['testResult'] = mbs.GetNodeOutput(node, exu.OutputVariableType.Position)[1] #0.8414709848
+    """,
+    miniExamplePerformanceTest={'numberOfSteps': 1000},
+    mainParentClass=MainParentClassMainNode,
+    outputVariables=[
+        ItemOutputVariable(OVPosition, r"""$\LU{0}{\pv}\cConfig$global position of the node, from positionUserFunction"""),
+        ItemOutputVariable(OVDisplacement, r"""$\LU{0}{\pv}\cConfig - \LU{0}{\pv}\cRef$global displacement of the node"""),
+        ItemOutputVariable(OVVelocity, r"""$\LU{0}{\vv}\cConfig = \Jm_{pos}\dot\qv\cConfig$global velocity of the node"""),
+        ItemOutputVariable(OVAcceleration, r"""$\LU{0}{\av}\cConfig = \Jm_{pos}\ddot\qv\cConfig + \dot\Jm_{pos}\dot\qv\cConfig$global acceleration of the node"""),
+        ItemOutputVariable(OVRotationMatrix, r"""$\mathrm{vec}(\LU{0n}{\Rot})\cConfig$rotation matrix of the node, from rotationMatrixUserFunction, row by row""",
+                           condition='parameters.rotationMatrixUserFunction'),
+        ItemOutputVariable(OVAngularVelocity, r"""$\LU{0}{\tomega}\cConfig = \Jm_{rot}\dot\qv\cConfig$global angular velocity of the node""",
+                           condition='parameters.rotationMatrixUserFunction'),
+        ItemOutputVariable(OVAngularVelocityLocal, r"""$\LU{n}{\tomega}\cConfig = \LU{n0}{\Rot}\LU{0}{\tomega}\cConfig$local angular velocity of the node""",
+                           condition='parameters.rotationMatrixUserFunction'),
+        ItemOutputVariable(OVCoordinatesTotal, OVDCoordinatesTotalNode),
+        ItemOutputVariable(OVCoordinates, r"""$\qv\cConfig$coordinates vector of the node, without the reference values"""),
+        ItemOutputVariable(OVCoordinates_t, r"""$\dot \qv\cConfig$velocity coordinates vector of the node"""),
+        ItemOutputVariable(OVCoordinates_tt, r"""$\ddot \qv\cConfig$acceleration coordinates vector of the node"""),
+        ],
+    visuParentClass=VisuParentClassVisualizationNode,
+    members=[
+        ItemParameter(type=TString, destination=DestMain, fromParent=True,
+            pythonName='name',
+            defaultValue=NoDefaultValue,
+            description=r"node's unique name"),
+        ItemParameter(type=TIndex(greaterThan=0), destination=DestComp+DestParam, cFlags=CFMustBeGiven,
+            pythonName='numberOfODE2Coordinates',
+            defaultValue=0,
+            description=r'$n$number of ABRV:ODE2 coordinates'),
+        ItemParameter(type=TVector, destination=DestComp+DestParam,
+            pythonName='referenceCoordinates',
+            defaultValue='Vector()',
+            description=r"""$\qv\cRef \in \Rcal^n$reference coordinates of the node; must have numberOfODE2Coordinates components"""),
+        ItemParameter(type=TVector, destination=DestMain+DestParam,
+            pythonName='initialCoordinates',
+            defaultValue='Vector()',
+            description=r"""$\qv\cIni \in \Rcal^n$initial displacement coordinates; must have numberOfODE2Coordinates components"""),
+        ItemParameter(type=TVector, destination=DestMain+DestParam,
+            pythonName='initialVelocities',
+            cplusplusName='initialCoordinates_t',
+            defaultValue='Vector()',
+            description=r"""$\dot\qv\cIni \in \Rcal^n$initial velocity coordinates; must have numberOfODE2Coordinates components"""),
+        ItemParameter(destination=DestComp+DestParam,
+            pythonName='positionUserFunction',
+            defaultValue=0,
+            description=r"""$\LU{0}{\pv}(\qv)$A Python user function which computes the global position of the node; it must be given""",
+            userFunction=NodeUser_positionUserFunction),
+        ItemParameter(destination=DestComp+DestParam,
+            pythonName='positionJacobianUserFunction',
+            defaultValue=0,
+            description=r"""$\Jm_{pos}(\qv) \in \Rcal^{3\times n}$A Python user function which computes the position Jacobian; by central differences of the position if not given""",
+            userFunction=NodeUser_matrixUserFunction),
+        ItemParameter(destination=DestComp+DestParam,
+            pythonName='rotationMatrixUserFunction',
+            defaultValue=0,
+            description=r"""$\LU{0n}{\Rot}(\qv) \in \Rcal^{3\times 3}$A Python user function which computes the rotation matrix of the node; optional, for rigid markers""",
+            userFunction=NodeUser_matrixUserFunction),
+        ItemParameter(destination=DestComp+DestParam,
+            pythonName='rotationJacobianUserFunction',
+            defaultValue=0,
+            description=r"""$\Jm_{rot}(\qv) \in \Rcal^{3\times n}$A Python user function which computes the rotation Jacobian (of the global angular velocity); by central differences of the rotation matrix if not given""",
+            userFunction=NodeUser_matrixUserFunction),
+        ItemFunctionDef('GetNumberOfODE2Coordinates',
+            implementation='return parameters.numberOfODE2Coordinates;'),
+        ItemTypes('Node', ['Position', 'Orientation'],
+            description=r'return node type (for node treatment in computation); the orientation needs rotationMatrixUserFunction'),
+        ItemFunctionDef('GetPosition'),
+        ItemFunctionDef('GetVelocity'),
+        ItemFunctionDef('GetAcceleration'),
+        ItemFunctionDef('GetRotationMatrix'),
+        ItemFunctionDef('GetAngularVelocity'),
+        ItemFunctionDef('GetAngularVelocityLocal'),
+        ItemFunctionDef('GetPositionJacobian'),
+        ItemFunctionDef('GetRotationJacobian'),
+        ItemFunctionDef('GetRotationJacobianTTimesVector_q'),
+        ItemFunction(type='const char*', destination=DestMain, cFlags=CFConst,
+            pythonName='GetTypeName',
+            implementation='return "User";',
+            description=r"Get type name of node (without keyword 'Node'...!)"),
+        ItemFunctionDef('GetReferenceCoordinateVector',
+            implementation='return parameters.referenceCoordinates;'),
+        ItemFunctionDef('GetInitialCoordinateVector',
+            implementation='return parameters.initialCoordinates;'),
+        ItemFunctionDef('GetInitialCoordinateVector_t',
+            implementation='return parameters.initialCoordinates_t;'),
+        ItemFunctionDef('GetOutputVariable'),
+        ItemFunctionDef('CheckPreAssembleConsistency'),
+        ItemFunction(type=Tvoid, destination=DestComp,
+            pythonName='SetCSystemData', args='CSystemData* cSystemDataInit',
+            implementation='cSystemData = cSystemDataInit;',
+            description=r'the system of the node, for the MainSystem and the time of the user functions (#2974)'),
+        ItemFunction(type=TBool, destination=DestComp, cFlags=CFConst,
+            pythonName='AccessFunctionsCallUserFunctions', implementation='return true;',
+            description=r'the node, its markers and what depends on them are drawn in the main thread (#3003)'),
+        ItemFunction(type=Tvoid, destination=DestComp, cFlags=CFConst, isVirtual=False,
+            pythonName='ClearUserFunctionResults',
+            implementation='positionCache.Clear(); positionJacobianCache.Clear(); rotationMatrixCache.Clear(); rotationJacobianCache.Clear();',
+            description=r'forget the stored results of the user functions (#3028)'),
+        ItemFunction(type=Tvoid, destination=DestComp, cFlags=CFConst, isVirtual=False,
+            pythonName='EvaluatePosition',
+            args='Vector3D& position, Real t, const Vector& coordinates',
+            description=r'call of positionUserFunction; implemented in evaluateUserFunctions.cpp'),
+        ItemFunction(type=Tvoid, destination=DestComp, cFlags=CFConst, isVirtual=False,
+            pythonName='EvaluatePositionJacobian',
+            args='Matrix& value, Real t, const Vector& coordinates',
+            description=r'call of positionJacobianUserFunction, or central differences of the position; implemented in evaluateUserFunctions.cpp'),
+        ItemFunction(type=Tvoid, destination=DestComp, cFlags=CFConst, isVirtual=False,
+            pythonName='EvaluateRotationMatrix',
+            args='Matrix3D& value, Real t, const Vector& coordinates',
+            description=r'call of rotationMatrixUserFunction; implemented in evaluateUserFunctions.cpp'),
+        ItemFunction(type=Tvoid, destination=DestComp, cFlags=CFConst, isVirtual=False,
+            pythonName='EvaluateRotationJacobian',
+            args='Matrix& value, Real t, const Vector& coordinates',
+            description=r'call of rotationJacobianUserFunction, or central differences of the rotation matrix; implemented in evaluateUserFunctions.cpp'),
+        ItemParameter(type=TBool, destination=DestVisu, fromParent=True,
+            pythonName='show',
+            defaultValue=True,
+            description=r'set true, if item is shown in visualization and false if it is not shown'),
+        ItemParameter(type=Tfloat, destination=DestVisu,
+            pythonName='drawSize',
+            defaultValue=-1.,
+            description=r'drawing size (diameter, dimensions of underlying cube, etc.)  for item; size == -1.f means that default size is used'),
+        ItemParameter(type=TFloat4, destination=DestVisu,
+            pythonName='color',
+            defaultValue=DVDefaultColor,
+            description=r'Default RGBA color for nodes; 4th value is alpha-transparency; R=-1.f means, that default color is used'),
+        ItemFunctionDef('UpdateGraphics'),
+        ],
+    ))

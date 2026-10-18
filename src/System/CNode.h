@@ -30,6 +30,7 @@
 //#include "System/CSystem.h" 
 
 class CData;
+class CSystemData;
 
 ////! nodetype is used to know, which quantities can be measured (position, rotation) and which actions are possible (force, moment)
 //enum class CNodeType {
@@ -128,6 +129,10 @@ public:
 
 
     virtual CNodeGroup GetNodeGroup() const { CHECKandTHROWstring("CNode::GetNodeGroup"); return CNodeGroup::_None; }
+	//! the system of the node; NodeUser keeps it for its user functions, the other nodes need nothing (#2974)
+	virtual void SetCSystemData(CSystemData* cSystemData) {}
+	//! true if the access functions of the node call Python user functions: it is drawn in the main thread (#2974, #3003)
+	virtual bool AccessFunctionsCallUserFunctions() const { return false; }
     virtual Node::Type GetType() const { CHECKandTHROWstring("CNode::GetType"); return Node::_None; }
 
     friend std::ostream& operator<<(std::ostream& os, const CNode& object) {

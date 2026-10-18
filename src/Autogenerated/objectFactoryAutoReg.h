@@ -10,6 +10,7 @@ bool MainNodePointIsRegistered = ClassFactoryItemsSystemData<MainNode>::Get().Re
 	{ //AUTO: 
 		CNodePoint* cItem = new CNodePoint();							//new point Node
 		cItem->GetCData() = &(cSystemData->GetCData()); //add CData reference to CNode
+		cItem->SetCSystemData(cSystemData); //for the user functions of NodeUser; nothing for the other nodes (#2974)
 		MainNode* item = new MainNodePoint(); //new main item
 		item->SetCNode(cItem);
 		VisualizationNodePoint* vItem = new VisualizationNodePoint();
@@ -97,6 +98,7 @@ bool MainNodePoint2DIsRegistered = ClassFactoryItemsSystemData<MainNode>::Get().
 	{ //AUTO: 
 		CNodePoint2D* cItem = new CNodePoint2D();							//new point Node
 		cItem->GetCData() = &(cSystemData->GetCData()); //add CData reference to CNode
+		cItem->SetCSystemData(cSystemData); //for the user functions of NodeUser; nothing for the other nodes (#2974)
 		MainNode* item = new MainNodePoint2D(); //new main item
 		item->SetCNode(cItem);
 		VisualizationNodePoint2D* vItem = new VisualizationNodePoint2D();
@@ -108,6 +110,7 @@ bool MainNodeRigidBodyEPIsRegistered = ClassFactoryItemsSystemData<MainNode>::Ge
 	{ //AUTO: 
 		CNodeRigidBodyEP* cItem = new CNodeRigidBodyEP();							//new point Node
 		cItem->GetCData() = &(cSystemData->GetCData()); //add CData reference to CNode
+		cItem->SetCSystemData(cSystemData); //for the user functions of NodeUser; nothing for the other nodes (#2974)
 		MainNode* item = new MainNodeRigidBodyEP(); //new main item
 		item->SetCNode(cItem);
 		VisualizationNodeRigidBodyEP* vItem = new VisualizationNodeRigidBodyEP();
@@ -119,6 +122,7 @@ bool MainNodeRigidBodyRxyzIsRegistered = ClassFactoryItemsSystemData<MainNode>::
 	{ //AUTO: 
 		CNodeRigidBodyRxyz* cItem = new CNodeRigidBodyRxyz();							//new point Node
 		cItem->GetCData() = &(cSystemData->GetCData()); //add CData reference to CNode
+		cItem->SetCSystemData(cSystemData); //for the user functions of NodeUser; nothing for the other nodes (#2974)
 		MainNode* item = new MainNodeRigidBodyRxyz(); //new main item
 		item->SetCNode(cItem);
 		VisualizationNodeRigidBodyRxyz* vItem = new VisualizationNodeRigidBodyRxyz();
@@ -130,6 +134,7 @@ bool MainNodeRigidBodyRotVecLGIsRegistered = ClassFactoryItemsSystemData<MainNod
 	{ //AUTO: 
 		CNodeRigidBodyRotVecLG* cItem = new CNodeRigidBodyRotVecLG();							//new point Node
 		cItem->GetCData() = &(cSystemData->GetCData()); //add CData reference to CNode
+		cItem->SetCSystemData(cSystemData); //for the user functions of NodeUser; nothing for the other nodes (#2974)
 		MainNode* item = new MainNodeRigidBodyRotVecLG(); //new main item
 		item->SetCNode(cItem);
 		VisualizationNodeRigidBodyRotVecLG* vItem = new VisualizationNodeRigidBodyRotVecLG();
@@ -141,6 +146,7 @@ bool MainNodeRigidBody2DIsRegistered = ClassFactoryItemsSystemData<MainNode>::Ge
 	{ //AUTO: 
 		CNodeRigidBody2D* cItem = new CNodeRigidBody2D();							//new point Node
 		cItem->GetCData() = &(cSystemData->GetCData()); //add CData reference to CNode
+		cItem->SetCSystemData(cSystemData); //for the user functions of NodeUser; nothing for the other nodes (#2974)
 		MainNode* item = new MainNodeRigidBody2D(); //new main item
 		item->SetCNode(cItem);
 		VisualizationNodeRigidBody2D* vItem = new VisualizationNodeRigidBody2D();
@@ -152,6 +158,7 @@ bool MainNode1DIsRegistered = ClassFactoryItemsSystemData<MainNode>::Get().Regis
 	{ //AUTO: 
 		CNode1D* cItem = new CNode1D();							//new point Node
 		cItem->GetCData() = &(cSystemData->GetCData()); //add CData reference to CNode
+		cItem->SetCSystemData(cSystemData); //for the user functions of NodeUser; nothing for the other nodes (#2974)
 		MainNode* item = new MainNode1D(); //new main item
 		item->SetCNode(cItem);
 		VisualizationNode1D* vItem = new VisualizationNode1D();
@@ -163,6 +170,7 @@ bool MainNodePoint2DSlope1IsRegistered = ClassFactoryItemsSystemData<MainNode>::
 	{ //AUTO: 
 		CNodePoint2DSlope1* cItem = new CNodePoint2DSlope1();							//new point Node
 		cItem->GetCData() = &(cSystemData->GetCData()); //add CData reference to CNode
+		cItem->SetCSystemData(cSystemData); //for the user functions of NodeUser; nothing for the other nodes (#2974)
 		MainNode* item = new MainNodePoint2DSlope1(); //new main item
 		item->SetCNode(cItem);
 		VisualizationNodePoint2DSlope1* vItem = new VisualizationNodePoint2DSlope1();
@@ -174,6 +182,7 @@ bool MainNodePointSlope1IsRegistered = ClassFactoryItemsSystemData<MainNode>::Ge
 	{ //AUTO: 
 		CNodePointSlope1* cItem = new CNodePointSlope1();							//new point Node
 		cItem->GetCData() = &(cSystemData->GetCData()); //add CData reference to CNode
+		cItem->SetCSystemData(cSystemData); //for the user functions of NodeUser; nothing for the other nodes (#2974)
 		MainNode* item = new MainNodePointSlope1(); //new main item
 		item->SetCNode(cItem);
 		VisualizationNodePointSlope1* vItem = new VisualizationNodePointSlope1();
@@ -185,6 +194,7 @@ bool MainNodePointSlope12IsRegistered = ClassFactoryItemsSystemData<MainNode>::G
 	{ //AUTO: 
 		CNodePointSlope12* cItem = new CNodePointSlope12();							//new point Node
 		cItem->GetCData() = &(cSystemData->GetCData()); //add CData reference to CNode
+		cItem->SetCSystemData(cSystemData); //for the user functions of NodeUser; nothing for the other nodes (#2974)
 		MainNode* item = new MainNodePointSlope12(); //new main item
 		item->SetCNode(cItem);
 		VisualizationNodePointSlope12* vItem = new VisualizationNodePointSlope12();
@@ -196,6 +206,7 @@ bool MainNodePointSlope23IsRegistered = ClassFactoryItemsSystemData<MainNode>::G
 	{ //AUTO: 
 		CNodePointSlope23* cItem = new CNodePointSlope23();							//new point Node
 		cItem->GetCData() = &(cSystemData->GetCData()); //add CData reference to CNode
+		cItem->SetCSystemData(cSystemData); //for the user functions of NodeUser; nothing for the other nodes (#2974)
 		MainNode* item = new MainNodePointSlope23(); //new main item
 		item->SetCNode(cItem);
 		VisualizationNodePointSlope23* vItem = new VisualizationNodePointSlope23();
@@ -207,6 +218,7 @@ bool MainNodeGenericODE2IsRegistered = ClassFactoryItemsSystemData<MainNode>::Ge
 	{ //AUTO: 
 		CNodeGenericODE2* cItem = new CNodeGenericODE2();							//new point Node
 		cItem->GetCData() = &(cSystemData->GetCData()); //add CData reference to CNode
+		cItem->SetCSystemData(cSystemData); //for the user functions of NodeUser; nothing for the other nodes (#2974)
 		MainNode* item = new MainNodeGenericODE2(); //new main item
 		item->SetCNode(cItem);
 		VisualizationNodeGenericODE2* vItem = new VisualizationNodeGenericODE2();
@@ -218,6 +230,7 @@ bool MainNodeGenericODE1IsRegistered = ClassFactoryItemsSystemData<MainNode>::Ge
 	{ //AUTO: 
 		CNodeGenericODE1* cItem = new CNodeGenericODE1();							//new point Node
 		cItem->GetCData() = &(cSystemData->GetCData()); //add CData reference to CNode
+		cItem->SetCSystemData(cSystemData); //for the user functions of NodeUser; nothing for the other nodes (#2974)
 		MainNode* item = new MainNodeGenericODE1(); //new main item
 		item->SetCNode(cItem);
 		VisualizationNodeGenericODE1* vItem = new VisualizationNodeGenericODE1();
@@ -229,6 +242,7 @@ bool MainNodeGenericAEIsRegistered = ClassFactoryItemsSystemData<MainNode>::Get(
 	{ //AUTO: 
 		CNodeGenericAE* cItem = new CNodeGenericAE();							//new point Node
 		cItem->GetCData() = &(cSystemData->GetCData()); //add CData reference to CNode
+		cItem->SetCSystemData(cSystemData); //for the user functions of NodeUser; nothing for the other nodes (#2974)
 		MainNode* item = new MainNodeGenericAE(); //new main item
 		item->SetCNode(cItem);
 		VisualizationNodeGenericAE* vItem = new VisualizationNodeGenericAE();
@@ -240,6 +254,7 @@ bool MainNodeGenericDataIsRegistered = ClassFactoryItemsSystemData<MainNode>::Ge
 	{ //AUTO: 
 		CNodeGenericData* cItem = new CNodeGenericData();							//new point Node
 		cItem->GetCData() = &(cSystemData->GetCData()); //add CData reference to CNode
+		cItem->SetCSystemData(cSystemData); //for the user functions of NodeUser; nothing for the other nodes (#2974)
 		MainNode* item = new MainNodeGenericData(); //new main item
 		item->SetCNode(cItem);
 		VisualizationNodeGenericData* vItem = new VisualizationNodeGenericData();
@@ -251,9 +266,22 @@ bool MainNodePointGroundIsRegistered = ClassFactoryItemsSystemData<MainNode>::Ge
 	{ //AUTO: 
 		CNodePointGround* cItem = new CNodePointGround();							//new point Node
 		cItem->GetCData() = &(cSystemData->GetCData()); //add CData reference to CNode
+		cItem->SetCSystemData(cSystemData); //for the user functions of NodeUser; nothing for the other nodes (#2974)
 		MainNode* item = new MainNodePointGround(); //new main item
 		item->SetCNode(cItem);
 		VisualizationNodePointGround* vItem = new VisualizationNodePointGround();
+		item->SetVisualizationNode(vItem);
+		return item;
+	});
+
+bool MainNodeUserIsRegistered = ClassFactoryItemsSystemData<MainNode>::Get().RegisterClass("User", [](CSystemData* cSystemData)
+	{ //AUTO: 
+		CNodeUser* cItem = new CNodeUser();							//new point Node
+		cItem->GetCData() = &(cSystemData->GetCData()); //add CData reference to CNode
+		cItem->SetCSystemData(cSystemData); //for the user functions of NodeUser; nothing for the other nodes (#2974)
+		MainNode* item = new MainNodeUser(); //new main item
+		item->SetCNode(cItem);
+		VisualizationNodeUser* vItem = new VisualizationNodeUser();
 		item->SetVisualizationNode(vItem);
 		return item;
 	});

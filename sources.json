@@ -50,6 +50,7 @@
         "src/ImplNodes/CNodeRigidBodyEP.cpp",
         "src/ImplNodes/CNodeRigidBodyRotVecLG.cpp",
         "src/ImplNodes/CNodeRigidBodyRxyz.cpp",
+        "src/ImplNodes/CNodeUser.cpp",
         "src/ImplObjects/CObjectALEANCFCable2D.cpp",
         "src/ImplObjects/CObjectANCFBeam.cpp",
         "src/ImplObjects/CObjectANCFCable.cpp",

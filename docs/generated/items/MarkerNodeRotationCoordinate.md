@@ -11,7 +11,7 @@ A node-Marker attached to a a node containing rotation; the Marker measures a ro
 ## Interface
 
 - Provides: `Coordinate`
-- Nodes it can be attached to: [](#sec-item-noderigidbodyep), [](#sec-item-noderigidbodyrxyz), [](#sec-item-noderigidbodyrotveclg), [](#sec-item-nodepointslope12), [](#sec-item-nodepointslope23), [](#sec-item-nodepointground)
+- Nodes it can be attached to: [](#sec-item-noderigidbodyep), [](#sec-item-noderigidbodyrxyz), [](#sec-item-noderigidbodyrotveclg), [](#sec-item-nodepointslope12), [](#sec-item-nodepointslope23), [](#sec-item-nodepointground), [](#sec-item-nodeuser)
 - Connectors, constraints and loads that can use it: [](#sec-item-objectconnectorcoordinatespringdamper), [](#sec-item-objectconnectorcoordinatespringdamperext), [](#sec-item-objectconnectorcoordinate), [](#sec-item-objectcontactcoordinate), [](#sec-item-loadcoordinate)
 
 ## Parameters

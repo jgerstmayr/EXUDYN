@@ -17,7 +17,7 @@ A 3D mass point which is attached to a position-based node, usually NodePoint.
 ## Interface
 
 - Python names: `ObjectMassPoint` or `MassPoint`, and `VMassPoint` for its visualization
-- Nodes it takes: [](#sec-item-nodepoint), [](#sec-item-noderigidbodyep), [](#sec-item-noderigidbodyrxyz), [](#sec-item-noderigidbodyrotveclg), [](#sec-item-nodepointslope1), [](#sec-item-nodepointslope12), [](#sec-item-nodepointslope23), [](#sec-item-nodepointground)
+- Nodes it takes: [](#sec-item-nodepoint), [](#sec-item-noderigidbodyep), [](#sec-item-noderigidbodyrxyz), [](#sec-item-noderigidbodyrotveclg), [](#sec-item-nodepointslope1), [](#sec-item-nodepointslope12), [](#sec-item-nodepointslope23), [](#sec-item-nodepointground), [](#sec-item-nodeuser)
 - Body markers that can be placed on it: [](#sec-item-markerbodymass), [](#sec-item-markerbodyposition)
 
 ## Parameters

@@ -81,7 +81,7 @@ The title of each says what it does; the sentence after it, why it comes now.
   - RG6.8 Fix the remaining graphics problems with a test each
   - RG6.19 Add an icon bar to the renderer that folds in from the right border, as alternative to the keys (1 open sub-step)
 - **RG7** Python user items
-  - RG7.4 Add user nodes with position and orientation interfaces
+  - RG7.4 Add user nodes with position and orientation interfaces (1 open sub-step)
   - RG7.5 Add user markers and a user connector with access to its markers
   - RG7.6 Add a user joint on two position and orientation markers
   - RG7.8 Evaluate symbolic user items in parallel and in the graphics
@@ -128,7 +128,7 @@ The title of each says what it does; the sentence after it, why it comes now.
 | RG4 | OPEN | 6 | Implementation problems and bugs |
 | RG5 | OPEN | 8 | Performance |
 | RG6 | OPEN | 3 | Graphics and rendering |
-| RG7 | OPEN | 5 | Python user items |
+| RG7 | OPEN | 6 | Python user items |
 | RG8 | OPEN | 10 | Compiled C++ user items |
 | RG9 | OPEN | 5 | Structural core improvements |
 | RG10 | CLOSED | 0 | Tooling and process |
@@ -669,6 +669,19 @@ CLOSED 2026-10-17 (#3025): each in its own system with the computation time show
 ### **OPEN_RG7.4** Add user nodes with position and orientation interfaces
 
 #2974. Design 5.2; example: a fully parametrized ANCF node and beam.
+
+#### **CLOSED_RG7.4.1** NodeUser: a node whose position and orientation are Python user functions
+
+CLOSED 2026-10-18 (#2974): `NodeUser(numberOfODE2Coordinates, referenceCoordinates, initialCoordinates,
+initialVelocities, positionUserFunction, positionJacobianUserFunction, rotationMatrixUserFunction,
+rotationJacobianUserFunction)`, the Jacobians by central differences if not given; node markers, SensorNode, loads
+and connectors work on it; drawn in the main thread; userNodeTest.py against NodePoint and NodeRigidBodyRxyz.
+[log](exudynRevisionLog2026c.md#rg7-4-1)
+
+#### **OPEN_RG7.4.2** Example: a fully parametrized ANCF beam on NodeUser and ObjectUserBody
+
+#2974, example 3 of the design: nodes with position and three gradients (12 coordinates), the element as
+ObjectUserBody, rigid markers from the gradients; compared with the analytic deflection, with convergence.
 
 ### **OPEN_RG7.5** Add user markers and a user connector with access to its markers
 

@@ -129,6 +129,7 @@ python/exudyn/interactive.py
     DOC104: Function `AnimateModes`: Arguments are the same in the docstring and the function signature, but are in a different order.
 --------------------
 python/exudyn/itemInterface.py
+    DOC108: Method `NodeUser.__init__`: The option `--arg-type-hints-in-signature` is `False` but there are argument type hints in the signature
     DOC108: Method `VObjectGround.__init__`: The option `--arg-type-hints-in-signature` is `False` but there are argument type hints in the signature
     DOC108: Method `VObjectRigidBody.__init__`: The option `--arg-type-hints-in-signature` is `False` but there are argument type hints in the signature
     DOC108: Method `VObjectRigidBody2D.__init__`: The option `--arg-type-hints-in-signature` is `False` but there are argument type hints in the signature

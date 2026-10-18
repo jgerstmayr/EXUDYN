@@ -1,0 +1,169 @@
+#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+# This is an EXUDYN example
+#
+# Details:  NodeUser (#2974), a node whose position and orientation are Python user functions, against the nodes of
+#           Exudyn: (1) a point - position q, without and with positionJacobianUserFunction - with a mass, a spring
+#           to the ground and gravity on MarkerNodePosition, against NodePoint; (2) a rigid body node with the
+#           coordinates of NodeRigidBodyRxyz - position and Tait-Bryan angles - with the mass matrix of a rigid body
+#           in ObjectGenericODE2, a RigidBodySpringDamper on MarkerNodeRigid and a torque, the rotation Jacobian
+#           given and by central differences of the rotation matrix, against NodeRigidBodyRxyz; the output
+#           variables of both; what NodeUser refuses; the node drawn in the graphics data.
+#
+# Author:   Johannes Gerstmayr
+# Date:     2026-10-18
+#
+# Copyright:This file is part of Exudyn. Exudyn is free software. You can redistribute it and/or modify it under the terms of the Exudyn license. See 'LICENSE.txt' for more details.
+#
+#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+import exudyn as exu
+from exudyn.utilities import *
+import exudyn.cUtilities as cu
+import numpy as np
+
+testError = 0
+def Check(condition, message):
+    global testError
+    if not condition:
+        exu.Print('userNodeTest: ' + message)
+        testError += 1
+
+def Solve(mbs, endTime=0.5, steps=200):
+    simulationSettings = exu.SimulationSettings()
+    simulationSettings.timeIntegration.numberOfSteps = steps
+    simulationSettings.timeIntegration.endTime = endTime
+    simulationSettings.timeIntegration.verboseMode = 0
+    simulationSettings.solution.file.write = False
+    simulationSettings.solution.sensors.active = False
+    mbs.SolveDynamic(simulationSettings)
+
+#%%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#(1) a point
+def PointPosition(mbs, t, itemNumber, q):
+    return q
+def PointJacobian(mbs, t, itemNumber, q):
+    return np.eye(3)
+
+def PointModel(kind):
+    SC = exu.SystemContainer()
+    mbs = SC.AddSystem()
+    if kind == 'NodePoint':
+        node = mbs.AddNode(NodePoint(referenceCoordinates=[1, 0, 0], initialVelocities=[0, 0.5, 0.2]))
+    else:
+        node = mbs.AddNode(NodeUser(numberOfODE2Coordinates=3, referenceCoordinates=[1, 0, 0], initialCoordinates=[0, 0, 0],
+                                    initialVelocities=[0, 0.5, 0.2], positionUserFunction=PointPosition,
+                                    positionJacobianUserFunction=PointJacobian if kind == 'jacobian' else 0))
+    mbs.AddObject(ObjectGenericODE2(nodeNumbers=[node], massMatrix=2*np.eye(3)))
+    mNode = mbs.AddMarker(MarkerNodePosition(nodeNumber=node))
+    mGround = mbs.AddMarker(MarkerBodyPosition(bodyNumber=mbs.AddObject(ObjectGround())))
+    mbs.AddObject(CartesianSpringDamper(markerNumbers=[mGround, mNode], stiffness=[100, 200, 300], damping=[1, 1, 1],
+                                        offset=[1, 0, 0]))
+    mbs.AddLoad(LoadForceVector(markerNumber=mNode, loadVector=[0, 0, -2*9.81]))
+    mbs.Assemble()
+    Solve(mbs)
+    outputs = [mbs.GetNodeOutput(node, variable) for variable in [exu.OutputVariableType.Position, exu.OutputVariableType.Displacement,
+                                                                 exu.OutputVariableType.Velocity, exu.OutputVariableType.Acceleration]]
+    return SC, mbs, node, np.hstack(outputs)
+
+reference = PointModel('NodePoint')[3]
+for kind in ['numerical', 'jacobian']:
+    (SC1, mbs1, node1, result) = PointModel(kind)
+    Check(np.abs(result - reference).max() < 1e-6, 'point (' + kind + '): ' + str(np.abs(result - reference).max()))
+u = float(np.sum(np.abs(reference)))
+
+#the node is drawn, in the main thread
+SC1.visualizationSettings.nodes.drawNodesAsPoint = False
+data = SC1.renderer.GetGraphicsData()
+Check(any(item[1] == int(exu.ItemType.Node) for item in data['spheres']['items'].tolist() + data['triangles']['items'].tolist()),
+      'the node is not drawn')
+
+#%%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#(2) a rigid body node with the coordinates of NodeRigidBodyRxyz: position and Tait-Bryan angles
+mass = 2.
+inertia = np.diag([0.1, 0.2, 0.3])
+def RxyzPosition(mbs, t, itemNumber, q):
+    return q[0:3]
+def RxyzJacobian(mbs, t, itemNumber, q):
+    return np.hstack([np.eye(3), np.zeros((3, 3))])
+def RxyzRotation(mbs, t, itemNumber, q):
+    return cu.RotXYZ2RotationMatrix(q[3:6])
+def RxyzRotationJacobian(mbs, t, itemNumber, q):
+    return np.hstack([np.zeros((3, 3)), cu.RotXYZ2G(q[3:6])])
+
+def RigidModel(kind):
+    SC = exu.SystemContainer()
+    mbs = SC.AddSystem()
+    reference = [0.5, 0, 0, 0, 0, 0]
+    initial = [0, 0, 0, 0.1, 0.2, 0.3]
+    initial_t = [0, 0.2, 0, 1, 2, 0.5]
+    if kind == 'NodeRigidBodyRxyz':
+        node = mbs.AddNode(NodeRigidBodyRxyz(referenceCoordinates=reference, initialCoordinates=initial, initialVelocities=initial_t))
+    else:
+        node = mbs.AddNode(NodeUser(numberOfODE2Coordinates=6, referenceCoordinates=reference, initialCoordinates=initial,
+                                    initialVelocities=initial_t, positionUserFunction=RxyzPosition,
+                                    positionJacobianUserFunction=RxyzJacobian, rotationMatrixUserFunction=RxyzRotation,
+                                    rotationJacobianUserFunction=RxyzRotationJacobian if kind == 'jacobian' else 0))
+    #the rigid body in the coordinates of the node: M = diag(m I, Glocal^T J Glocal), the quadratic velocity terms in the force
+    def MassMatrix(mbs, t, itemNumber, q, q_t):
+        Glocal = cu.RotXYZ2GLocal(q[3:6])
+        M = np.zeros((6, 6))
+        M[0:3, 0:3] = mass*np.eye(3)
+        M[3:6, 3:6] = Glocal.T @ inertia @ Glocal
+        return M
+    def Force(mbs, t, itemNumber, q, q_t):
+        Glocal = cu.RotXYZ2GLocal(q[3:6])
+        Glocal_t = cu.RotXYZ2GLocal_t(q[3:6], q_t[3:6])
+        omega = Glocal @ q_t[3:6]
+        f = np.zeros(6)
+        f[3:6] = -Glocal.T @ (inertia @ (Glocal_t @ q_t[3:6]) + np.cross(omega, inertia @ omega))
+        return f
+    mbs.AddObject(ObjectGenericODE2(nodeNumbers=[node], massMatrixUserFunction=MassMatrix, forceUserFunction=Force,
+                                    massMatrix=np.eye(6)))
+    mNode = mbs.AddMarker(MarkerNodeRigid(nodeNumber=node))
+    mGround = mbs.AddMarker(MarkerBodyRigid(bodyNumber=mbs.AddObject(ObjectGround()), localPosition=[0.5, 0, 0]))
+    mbs.AddObject(RigidBodySpringDamper(markerNumbers=[mGround, mNode], stiffness=np.diag([100, 100, 100, 10, 20, 30]),
+                                        damping=np.diag([1, 1, 1, 0.1, 0.1, 0.1])))
+    mbs.AddLoad(LoadTorqueVector(markerNumber=mNode, loadVector=[0.5, -0.2, 0.1]))
+    mbs.Assemble()
+    Solve(mbs)
+    outputs = [mbs.GetNodeOutput(node, variable) for variable in [exu.OutputVariableType.Position, exu.OutputVariableType.Velocity,
+                                                                 exu.OutputVariableType.RotationMatrix, exu.OutputVariableType.AngularVelocity,
+                                                                 exu.OutputVariableType.AngularVelocityLocal]]
+    return mbs, np.hstack(outputs)
+
+reference = RigidModel('NodeRigidBodyRxyz')[1]
+for kind in ['jacobian', 'numerical']:
+    result = RigidModel(kind)[1]
+    Check(np.abs(result - reference).max() < 1e-5, 'rigid (' + kind + '): ' + str(np.abs(result - reference).max()))
+u += float(np.sum(np.abs(reference)))
+
+#%%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#what NodeUser refuses
+def Refused(function, errorType):
+    try:
+        function()
+    except errorType:
+        return True
+    return False
+
+def Assembled(**arguments):
+    SC = exu.SystemContainer()
+    mbs = SC.AddSystem()
+    parameters = dict(numberOfODE2Coordinates=3, referenceCoordinates=[0, 0, 0], initialCoordinates=[0, 0, 0],
+                      initialVelocities=[0, 0, 0])
+    parameters.update(arguments)
+    mbs.AddNode(NodeUser(**parameters))
+    mbs.Assemble()
+    return mbs
+Check(Refused(lambda: Assembled(), ValueError), 'no positionUserFunction not refused')
+Check(Refused(lambda: Assembled(positionUserFunction=PointPosition, referenceCoordinates=[0, 0]), ValueError), 'a wrong size not refused')
+mbsNoRotation = Assembled(positionUserFunction=PointPosition)
+Check(Refused(lambda: mbsNoRotation.GetNodeOutput(0, exu.OutputVariableType.RotationMatrix), ValueError),
+      'a rotation without rotationMatrixUserFunction not refused')
+mbsWrongJacobian = Assembled(positionUserFunction=PointPosition, positionJacobianUserFunction=lambda mbs, t, itemNumber, q: np.eye(2))
+Check(Refused(lambda: mbsWrongJacobian.GetNodeOutput(0, exu.OutputVariableType.Velocity), ValueError), 'a wrong Jacobian size not refused')
+
+u += testError
+exu.Print('solution of userNodeTest=', u)
+
+exu.sys['testResult'] = u
