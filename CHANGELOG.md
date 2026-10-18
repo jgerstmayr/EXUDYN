@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.13 | Newborn | 126 | 1.13.128 |
+| 1.13 | Newborn | 127 | 1.13.129 |
 | 1.12 | Metheney | 367 | 1.12.462 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
@@ -30,6 +30,10 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.13 - Newborn (current)
 
+- **1.13.129** `IMPROVEMENT` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` ObjectUserBody: reuse the results of its position and rotation user functions for the same time, coordinates and local position (#3028)
+  - description: Measured 2026-10-18 with userRigidBodyTest.py (500 implicit steps, Python user functions counted): per evaluation of the right-hand side, ObjectUserBody calls positionJacobianUserFunction 5 times, positionUserFunction, rotationMatrixUserFunction and rotationJacobianUserFunction 2 times each - the markers, the loads and the connector on it ask for the same values; with the last two results of each function kept, by time, coordinates and local position, 45 % of the calls remain. The derivative of J^T f, which was suspected, costs 2 % (totalJacobian). The results are cleared when a parameter of the body changes.
+  - **notes:** ObjectUserBody reuses the results of its position, position Jacobian, rotation matrix and rotation Jacobian user functions for the same time, coordinates and local position, which the markers, loads and connectors on it ask for several times per evaluation; a rigid user body solves 1.4 times (Python) and 1.6 times (symbolic) faster. A change of a parameter or a new Assemble clears the stored results.
+  - date resolved: **2026-10-18 10:05**, date raised: 2026-10-18
 - **1.13.128** `EXTENSION` `MEDIUM EFF` `resolved by: Claude-JG` GLFWClient (#2244)
   - description: add ruler to renderer, only for case where axes are parallel to x, y and z (i.e. 90 degree rotations)
   - **notes:** A ruler in the render window: visualizationSettings.view0.window.showRuler or the key F5 shows scales at the bottom and the left border of an orthographic view, with ticks at 1, 2 or 5 times a power of 10; in an axis-aligned view the labels are the coordinates of the view, else the distance from the end of the scale; the raytracer draws it as well.

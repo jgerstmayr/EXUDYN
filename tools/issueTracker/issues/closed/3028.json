@@ -1,0 +1,15 @@
+{
+  "number": 3028,
+  "title": "ObjectUserBody: reuse the results of its position and rotation user functions for the same time, coordinates and local position",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "IMPROVEMENT",
+  "effort": "LOW",
+  "description": "Measured 2026-10-18 with userRigidBodyTest.py (500 implicit steps, Python user functions counted): per evaluation of the right-hand side, ObjectUserBody calls positionJacobianUserFunction 5 times, positionUserFunction, rotationMatrixUserFunction and rotationJacobianUserFunction 2 times each - the markers, the loads and the connector on it ask for the same values; with the last two results of each function kept, by time, coordinates and local position, 45 % of the calls remain. The derivative of J^T f, which was suspected, costs 2 % (totalJacobian). The results are cleared when a parameter of the body changes.",
+  "dateRaised": "2026-10-18",
+  "deadline": "2027-04-16",
+  "dateResolved": "2026-10-18 10:05",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "ObjectUserBody reuses the results of its position, position Jacobian, rotation matrix and rotation Jacobian user functions for the same time, coordinates and local position, which the markers, loads and connectors on it ask for several times per evaluation; a rigid user body solves 1.4 times (Python) and 1.6 times (symbolic) faster. A change of a parameter or a new Assemble clears the stored results.",
+  "resolvedInVersion": "1.13.129"
+}

@@ -1905,3 +1905,23 @@ as F4 is often used for other actions.)*
 - pytest testTheRulerHasTicksAtNiceDistances (test_graphicsRegression.py): raytraced 400 x 300 images at three zooms
   over five orders of magnitude, 10 to 25 ticks across the width, and the ruler in a rotated view.
 - parameterConversionTestReference.txt records the new setting (written with `recordReference = True`).
+
+<a id="rg7-11"></a>
+### RG7.11 — ObjectUserBody reuses the results of its access-function user functions (2026-10-18, #3028)
+*(Maintainer 2026-10-18: make the symbolic user body faster - a step and an issue, now.)*
+- **Measured first** (userRigidBodyTest.py, 500 implicit steps, the Python user functions counted): 4173 calls of
+  forceUserFunction, i.e. evaluations of the right-hand side, and per evaluation 4.8 calls of positionJacobianUserFunction
+  and 1.9 of each of positionUserFunction, rotationMatrixUserFunction and rotationJacobianUserFunction - the
+  Cartesian spring-damper, the force and the torque marker on the body ask for the same values. The timers put 92 % of
+  the time into ODE2RHS and 2 % into the Jacobian. **Correction** of the log of RG7.3.5: the derivative of J^T f by
+  differences is not where the time goes; an analytic derivative would not help this model.
+- `UserFunctionResultCache<TValue>` (CObjectBody.h): the last two results by time, local position and coordinates
+  (compared exactly); `CObjectUserBody` keeps one for the position, the position Jacobian, the rotation matrix and the
+  rotation Jacobian (`mutable`, as the body is evaluated serially in the main thread, #3003). A nested call - a user
+  function that asks for an output of its own body - stores after it has computed, so it cannot see a half-written
+  entry. `ParametersHaveChanged` (a new user function, any parameter) and `PreAssemble` clear the results.
+- With the two entries 45 % of the calls remain (simulated in Python first). userRigidBodyTest.py: Python user
+  functions 0.26 s to 0.18 s, symbolic 0.106 s to 0.068 s; ObjectRigidBody 0.005 s; the results are bit-identical. The
+  test checks that a new positionUserFunction is used and not the stored result.
+- The detailed description of ObjectUserBody says that its user functions must be functions of their arguments while
+  time and coordinates stay the same.

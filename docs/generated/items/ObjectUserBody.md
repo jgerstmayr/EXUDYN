@@ -100,6 +100,12 @@ of $\Jm_{pos}\tp \fv + \Jm_{rot}\tp \mv$ with respect to $\qv$, which the Jacobi
 by central differences of the Jacobian user functions. A marker that needs a function the body is not given
 raises when it is evaluated.
 
+The markers, loads and connectors on the body often ask for the same value in one evaluation of the equations; the
+body keeps the last two results of each of these four user functions, by time, coordinates and local position, and
+calls a function only for new arguments (#3028). They are therefore functions of their arguments: what they read
+from elsewhere - `mbs.variables`, a parameter set by a preStepUserFunction - must not change while time and
+coordinates stay the same; a change of a parameter of the body clears the stored results.
+
 ### User output variables
 
 With `outputVariableUserFunction`, the body provides the output variables `UserType0` to `UserType3` at a local

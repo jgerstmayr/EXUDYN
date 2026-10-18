@@ -9,6 +9,8 @@
 #           components (#3007), so that the same function computes with floats and records with exudyn.symbolic, the
 #           mass matrix, the rotation matrix and the Jacobians as symbolic matrices with @ and .T (#3020, #3018).
 #           The three bodies are solved one after the other, each alone, with the computation time shown.
+#           The user body reuses the results of its position and rotation user functions for the same time,
+#           coordinates and local position; a new user function clears them (#3028).
 #           A rigid marker on a user body without rotationMatrixUserFunction is refused when it is evaluated.
 #
 # Author:   Johannes Gerstmayr
@@ -233,7 +235,18 @@ except ValueError as e:
     refused = int('rotationMatrixUserFunction is not given' in str(e))
 exu.Print('a rigid marker without rotationMatrixUserFunction is refused, as it must be:', bool(refused))
 
-u += int(difference > 1e-8) + (1 - refused) + int(differenceSymbolic > 1e-12) + int(componentsDifference > 1e-14)
+#the body reuses the results of its user functions for the same time, coordinates and local position; a new user
+#function clears them (#3028)
+p1 = np.array(mbs2.GetObjectOutputBody(body, exu.OutputVariableType.Position, localPosition=[0.1, 0, 0],
+                                       configuration=exu.ConfigurationType.Reference))
+mbs2.SetObjectParameter(body, 'positionUserFunction', lambda mbs, t, itemNumber, localPosition, q:
+                        UFposition(mbs, t, itemNumber, localPosition, q) + np.array([1., 0, 0]))
+p2 = np.array(mbs2.GetObjectOutputBody(body, exu.OutputVariableType.Position, localPosition=[0.1, 0, 0],
+                                       configuration=exu.ConfigurationType.Reference))
+newFunctionUsed = int(np.max(np.abs(p2 - p1 - np.array([1., 0, 0]))) < 1e-15)
+exu.Print('a new positionUserFunction is used, not the stored result:', bool(newFunctionUsed))
+
+u += int(difference > 1e-8) + (1 - refused) + (1 - newFunctionUsed) + int(differenceSymbolic > 1e-12) + int(componentsDifference > 1e-14)
 exu.Print('solution of userRigidBodyTest=', u)
 
 exu.sys['testResult'] = u

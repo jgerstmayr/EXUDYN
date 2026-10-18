@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-10-17  13:28:01 (last modified)
+* @date         2026-10-18  09:55:32 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -86,6 +86,11 @@ protected: // AUTO:
     void CheckResultSize(const char* name, Index rows, Index columns, Index requiredRows, Index requiredColumns) const;
     //! a Jacobian times the velocity coordinates, in a configuration (#2995)
     Vector3D JacobianTimesVelocity(bool rotation, const Vector3D& localPosition, ConfigurationType configuration) const;
+    //! the last results of the access-function user functions, by time, coordinates and local position (#3028)
+    mutable UserFunctionResultCache<Vector3D> positionCache;
+    mutable UserFunctionResultCache<ResizableMatrix> positionJacobianCache;
+    mutable UserFunctionResultCache<Matrix3D> rotationMatrixCache;
+    mutable UserFunctionResultCache<ResizableMatrix> rotationJacobianCache;
     CObjectUserBodyParameters parameters; //! AUTO: contains all parameters for CObjectUserBody
 
 public: // AUTO:
@@ -202,6 +207,24 @@ public: // AUTO:
     virtual bool AccessFunctionsCallUserFunctions() const override
     {
         return true;
+    }
+
+    //! AUTO:  forget the stored results of the access-function user functions (#3028)
+    void ClearUserFunctionResults() const
+    {
+        positionCache.Clear(); positionJacobianCache.Clear(); rotationMatrixCache.Clear(); rotationJacobianCache.Clear();
+    }
+
+    //! AUTO:  a changed parameter, e.g. a user function, clears the stored results of the user functions (#3028)
+    virtual void ParametersHaveChanged() override
+    {
+        ClearUserFunctionResults();
+    }
+
+    //! AUTO:  Assemble clears the stored results of the user functions (#3028)
+    virtual void PreAssemble() override
+    {
+        ClearUserFunctionResults();
     }
 
     //! AUTO:  call of positionUserFunction; implemented in evaluateUserFunctions.cpp
