@@ -254,6 +254,15 @@ private:
 public:
 	static GLuint textureNumberRGBbitmap[256*NUMBER_OF_TEXTUREFONT_LISTS];	//!< store texture numbers for every character of bitmap font
 private:
+	//! a texture of the TextureStore in OpenGL (#3032)
+	struct SceneTexture
+	{
+		GLuint name = 0;			//!< OpenGL name; 0: none
+		uint64_t version = 0;		//!< the version of the TextureStore entry uploaded
+		bool replace = false;		//!< TextureFlags::Replace
+		bool mask = false;			//!< TextureInterpretation::RGBAMask
+	};
+	static std::vector<SceneTexture> sceneTextures;	//!< by the number of the TextureStore
     static GLuint bitmapFontListBase;			//!< starting index for GLlists for font bitmap textured quads
 	static ResizableArray<GLubyte> charBuffer;	//!< buffer for converstion of UTF8 into internal unicode-like format
 
@@ -647,7 +656,8 @@ private: //to be called internally only!
 	}
 
 
-	static void ComputeSortedTriangleDepthIndices(const ResizableArray<GLTriangle>& triangles, ResizableArray<Index>& trigIndices, 
+	template<class TTriangle>
+	static void ComputeSortedTriangleDepthIndices(const ResizableArray<TTriangle>& triangles, ResizableArray<Index>& trigIndices,
 		const Matrix4DF& modelViewMatrix)
 	{
 		Index nt = triangles.NumberOfItems();
@@ -685,9 +695,19 @@ public:
 		out[1] = modelview[1] * x + modelview[5] * y + modelview[9] * z + modelview[13];
 		out[2] = modelview[2] * x + modelview[6] * y + modelview[10] * z + modelview[14];
 	}
-	//! template function for drawing triangles and triangle outlines
-	template<bool highlight, bool transparent, bool edgeMode>
-	static void DrawTriangles(const ResizableArray<GLTriangle>& triangles,
+	//! upload the textures of the TextureStore that changed since the last frame; in the render thread (#3032)
+	static void UpdateSceneTextures();
+	//! delete the OpenGL textures of the TextureStore, when the renderer stops
+	static void DeleteSceneTextures();
+	//! bind a texture for the following triangles, if it changed; boundTexture is the number bound, -1 for none
+	static void BindSceneTexture(Index textureID, Index& boundTexture);
+	//! unbind the texture of BindSceneTexture
+	static void UnbindSceneTexture(Index& boundTexture);
+
+	//! template function for drawing triangles and triangle outlines; GLTexturedTriangle draws with their texture, unless
+	//! highlighted, in selection or edge mode, or with openGL.showTextures=False (#3032)
+	template<bool highlight, bool transparent, bool edgeMode, class TTriangle = GLTriangle>
+	static void DrawTriangles(const ResizableArray<TTriangle>& triangles,
 		const Float4& highlightColor,
 		const Float4& otherColor,
 		bool selectionMode,
@@ -708,10 +728,13 @@ public:
 		{
 			ComputeSortedTriangleDepthIndices(triangles, trigIndices, renderViews.State(viewID)->modelRotation);
 		}
+		constexpr bool textured = std::is_same<TTriangle, GLTexturedTriangle>::value;
+		const bool useTextures = textured && !highlight && !edgeMode && !selectionMode && visSettings->openGL.showTextures;
+		Index boundTexture = -1;
 		for (Index k=0; k < triangles.NumberOfItems(); k++)
 		{
 			//pout << "trigIndices[k]=" << trigIndices[k] << ", k=" << k << "\n" << std::flush;
-			const GLTriangle& trig = sortTriangles ? triangles[trigIndices[k]] : triangles[k];
+			const TTriangle& trig = sortTriangles ? triangles[trigIndices[k]] : triangles[k];
 
 			if (selectionMode && trig.itemID != lastItemID) {
 				glLoadName(trig.itemID);
@@ -739,8 +762,11 @@ public:
 				}
 			}
 
+			if constexpr (textured) { if (useTextures) { BindSceneTexture(trig.textureID, boundTexture); } }
+
 			glBegin(GL_TRIANGLES);
 			for (Index i = 0; i < 3; i++) {
+				if constexpr (textured) { if (boundTexture >= 0) { glTexCoord2fv(trig.textureCoordinates[i].GetDataPointer()); } }
 				if constexpr (highlight && !edgeMode) {
 					glColor4fv((trig.itemID != highlightID ? otherColor : highlightColor).GetDataPointer());
 				}
@@ -758,6 +784,7 @@ public:
 			}
 			glEnd();
 		}
+		if constexpr (textured) { UnbindSceneTexture(boundTexture); }
 		if (edgeMode) {
 			glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 		}

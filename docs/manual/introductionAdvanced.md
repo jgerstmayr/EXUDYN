@@ -166,6 +166,8 @@ GraphicsData `'type' = 'TriangleList'` draws a mesh with flat triangles for give
 | edges | array | [] | the edges drawn on the triangle mesh as rows of 2 point indices, $n_{lines} \times 2$ |
 | edges3 | array | [] | quadratic (curved) edges, rows [p0, p1, m01] of three point indices: the end points, then the mid point - the order of `triangles6`; for feature edges on a surface of 6-node triangles, such as the rim of a cylinder; drawn as the quadratic lines of `Lines`, in `edgeColor` |
 | edgeColor | list | [0,0,0,1] | list of 4 floats to define RGB-color and transparency of edges |
+| texture | str | none | the name of a texture added before with `SC.renderer.AddTexture(...)`; the triangles are drawn with it, multiplied with the colors of their points unless the texture has `exu.TextureFlags.Replace`; 6-node triangles with a texture are drawn as the four flat triangles on their nodes (#3030) |
+| textureCoordinates | array | mandatory with texture | the coordinates (u, v) of each point in the texture as rows, $n \times 2$; (0, 0) is the bottom left and (1, 1) the top right corner of the image, values outside repeat the image unless it has `exu.TextureFlags.Clamp` |
 
 (sec-graphicsdata-example)=
 ### GraphicsData: an example of all types

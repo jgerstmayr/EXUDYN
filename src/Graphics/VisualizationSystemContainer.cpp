@@ -23,9 +23,12 @@
 #include "Graphics/GlfwClient.h" //in order to link to graphics engine
 #include "Main/MainSystem.h" //for MainSystemBacklink
 #include "Graphics/BodyGraphicsDataPython.h"
+#include "Graphics/TextureStore.h"
 
 //#ifdef USE_GLFW_GRAPHICS
 //#endif
+
+TextureStore textureStore; //the textures of all SystemContainers (#3029)
 
 bool VisualizationSystemContainer::AttachToRenderEngine(bool warnNoRenderer)
 {
@@ -1035,6 +1038,29 @@ bool PyWriteBodyGraphicsDataList(const py::object object, BodyGraphicsData& data
 								normalsDefined = false;
 							}
 
+							//a texture of the TextureStore by name, and the texture coordinates (u, v) per point (#3030)
+							Index textureID = -1;
+							std::vector<float> textureCoordinates;
+							if (gDict.contains("texture"))
+							{
+								py::object gTexture = gDict["texture"];
+								if (!py::isinstance<py::str>(gTexture)) { GraphicsDataError("GraphicsData::TriangleList::texture must be the name of a texture, as a string", PyErrorType::typeError); return false; }
+								STDstring name = py::cast<STDstring>(gTexture);
+								textureID = textureStore.GetID(name);
+								if (textureID == -1) { GraphicsDataError("GraphicsData::TriangleList::texture: there is no texture named '" + name + "'; add it with SC.renderer.AddTexture(...) before the graphics data that uses it", PyErrorType::valueError); return false; }
+								if (!gDict.contains("textureCoordinates")) { GraphicsDataError("GraphicsData::TriangleList::texture needs 'textureCoordinates', the coordinates (u, v) of every point in the texture", PyErrorType::valueError); return false; }
+								if (!PyReadNumbers(gDict["textureCoordinates"], textureCoordinates)) { GraphicsDataError("GraphicsData::TriangleList::textureCoordinates must be a list or numpy array of numbers, flat or as rows (u, v)", PyErrorType::valueError); return false; }
+								if ((Index)textureCoordinates.size() != 2 * points.NumberOfItems()) { GraphicsDataError("GraphicsData::TriangleList::textureCoordinates must have 2*n components (u, v), n being the number of points, but has " + EXUstd::ToString((Index)textureCoordinates.size()), PyErrorType::valueError); return false; }
+								for (float value : textureCoordinates)
+								{
+									if (!std::isfinite(value)) { GraphicsDataError("GraphicsData::TriangleList::textureCoordinates contain not-a-number (nan) or infinity", PyErrorType::valueError); return false; }
+								}
+							}
+							else if (gDict.contains("textureCoordinates")) { GraphicsDataError("GraphicsData::TriangleList::textureCoordinates are given without 'texture', the name of the texture", PyErrorType::valueError); return false; }
+							GLTexturedTriangle texturedTrig;
+							texturedTrig.textureID = textureID;
+							auto TextureCoordinate = [&textureCoordinates](Index point) { return Float2({ textureCoordinates[point * 2], textureCoordinates[point * 2 + 1] }); };
+
 							if (gDict.contains("triangles"))
 							{
 								py::object gDictList = gDict["triangles"]; //this is necessary to make isinstance work
@@ -1078,7 +1104,13 @@ bool PyWriteBodyGraphicsDataList(const py::object object, BodyGraphicsData& data
 												//trig.normals[1] = n;
 												//trig.normals[2] = n;
 											}
-											data.glTriangles.Append(trig);
+											if (textureID == -1) { data.glTriangles.Append(trig); }
+											else
+											{
+												(GLTriangle&)texturedTrig = trig;
+												for (Index j = 0; j < 3; j++) { texturedTrig.textureCoordinates[j] = TextureCoordinate(pointInd[j]); }
+												data.glTexturedTriangles.Append(texturedTrig);
+											}
 											//pout << "trig" << i << " = " << trig.points[0] << "," << trig.points[0] << "," << trig.points[0] << "\n";
 										}
 									}
@@ -1131,7 +1163,24 @@ bool PyWriteBodyGraphicsDataList(const py::object object, BodyGraphicsData& data
 										trig6.normals[j] = normalsDefined ? normals[ind] : pointNormals[ind];
 										trig6.colors[j] = colors[ind];
 									}
-									data.glTriangles6.Append(trig6);
+									if (textureID == -1) { data.glTriangles6.Append(trig6); }
+									else //textured: the four flat triangles on the 6 nodes (#3030)
+									{
+										texturedTrig.itemID = -1;
+										texturedTrig.isFiniteElement = false;
+										for (const std::array<Index, 3>& sub : { std::array<Index, 3>({ 0, 3, 5 }), std::array<Index, 3>({ 3, 1, 4 }),
+											std::array<Index, 3>({ 5, 4, 2 }), std::array<Index, 3>({ 3, 4, 5 }) })
+										{
+											for (Index j = 0; j < 3; j++)
+											{
+												texturedTrig.points[j] = trig6.points[sub[j]];
+												texturedTrig.normals[j] = trig6.normals[sub[j]];
+												texturedTrig.colors[j] = trig6.colors[sub[j]];
+												texturedTrig.textureCoordinates[j] = TextureCoordinate(indices[i * 6 + sub[j]]);
+											}
+											data.glTexturedTriangles.Append(texturedTrig);
+										}
+									}
 								}
 							}
 
@@ -1418,6 +1467,40 @@ py::list PyGetBodyGraphicsDataList(const BodyGraphicsData& data, bool addGraphic
 			d["colors"] = Rows2NumPy(colors, 4);
 			d["normals"] = Rows2NumPy(normals, 3);
 			d["triangles"] = Rows2NumPy(triangles, 3);
+			list.append(d);
+		}
+
+		//the textured triangles: one TriangleList per texture, in the order of their first triangle (#3030)
+		std::vector<Index> textureIDs;
+		for (const GLTexturedTriangle& item : data.glTexturedTriangles)
+		{
+			if (std::find(textureIDs.begin(), textureIDs.end(), item.textureID) == textureIDs.end()) { textureIDs.push_back(item.textureID); }
+		}
+		for (Index textureID : textureIDs)
+		{
+			auto d = py::dict();
+			d["type"] = std::string("TriangleList");
+			ResizableArray<float> points, colors, normals, textureCoordinates;
+			ResizableArray<int> triangles;
+			Index cnt = 0; //counts points
+			for (const GLTexturedTriangle& item : data.glTexturedTriangles)
+			{
+				if (item.textureID != textureID) { continue; }
+				for (Index j = 0; j < 3; j++)
+				{
+					triangles.Append(cnt++);
+					for (Index i = 0; i < 4; i++) { colors.Append(item.colors[j][i]); }
+					for (Index i = 0; i < 3; i++) { points.Append(item.points[j][i]); }
+					for (Index i = 0; i < 3; i++) { normals.Append(item.normals[j][i]); }
+					for (Index i = 0; i < 2; i++) { textureCoordinates.Append(item.textureCoordinates[j][i]); }
+				}
+			}
+			d["points"] = Rows2NumPy(points, 3);
+			d["colors"] = Rows2NumPy(colors, 4);
+			d["normals"] = Rows2NumPy(normals, 3);
+			d["triangles"] = Rows2NumPy(triangles, 3);
+			d["texture"] = textureStore.GetName(textureID);
+			d["textureCoordinates"] = Rows2NumPy(textureCoordinates, 2);
 			list.append(d);
 		}
 	}

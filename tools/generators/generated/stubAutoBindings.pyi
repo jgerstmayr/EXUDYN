@@ -1198,7 +1198,7 @@ class Renderer:
     def GetGraphicsData(self, flatShapes=False) -> dict: 
         """The drawing elements of the scene as a dictionary of numpy arrays: what the renderer would draw, as data.
         
-        It is built without a window, the way `RedrawAndGetImage(True)` builds it, so it works with `EXUDYN_SUPPRESS_UI_WINDOW_OPEN` set and needs no OpenGL; zoom, model view and window size are not part of it. The keys `lines`, `spheres`, `circles`, `texts` and `triangles` each hold a dictionary whose `items` is an int array of shape (n,3) - the system number, the `exudyn.ItemType` value and the index of the item that drew the element, or `[-1, 0, code]` for a static element of the scene; then `points` and `colors` (RGBA, per vertex for lines and triangles), and per kind `radius` and `resolution` (spheres), `radius` and `numberOfSegments` (circles), `fontSize`, `offset` and the list `text` (texts), `normals` (triangles). The curved shapes are kept as they are under `triangles6` (6-node triangles: `points`, `normals` and `colors` of shape (n,6,3) / (n,6,4), nodes as in the key `triangles6` of a TriangleList; the normals given, else those of the geometry) and `lines3` (quadratic lines: `points` (n,3,3) and `colors` (n,3,4), the end points and then the mid node); with `flatShapes=True` these two are empty and their shapes are among `triangles` and `lines` instead, refined once - 4 triangles on the 6 nodes, 2 lines on the 3 nodes - independently of the tiling settings, which only the renderers apply. `formatVersion` is 1. It is the oracle of the graphics tests: the number of elements per item is exact, coordinates are floats and are compared with a tolerance
+        It is built without a window, the way `RedrawAndGetImage(True)` builds it, so it works with `EXUDYN_SUPPRESS_UI_WINDOW_OPEN` set and needs no OpenGL; zoom, model view and window size are not part of it. The keys `lines`, `spheres`, `circles`, `texts` and `triangles` each hold a dictionary whose `items` is an int array of shape (n,3) - the system number, the `exudyn.ItemType` value and the index of the item that drew the element, or `[-1, 0, code]` for a static element of the scene; then `points` and `colors` (RGBA, per vertex for lines and triangles), and per kind `radius` and `resolution` (spheres), `radius` and `numberOfSegments` (circles), `fontSize`, `offset` and the list `text` (texts), `normals` (triangles). The curved shapes are kept as they are under `triangles6` (6-node triangles: `points`, `normals` and `colors` of shape (n,6,3) / (n,6,4), nodes as in the key `triangles6` of a TriangleList; the normals given, else those of the geometry) and `lines3` (quadratic lines: `points` (n,3,3) and `colors` (n,3,4), the end points and then the mid node); `texturedTriangles` holds the triangles with a texture as `triangles` does, and `textureCoordinates` (n,3,2) and the list `texture` of the names of their textures (#3030); with`flatShapes=True` these two are empty and their shapes are among `triangles` and `lines` instead, refined once - 4 triangles on the 6 nodes, 2 lines on the 3 nodes - independently of the tiling settings, which only the renderers apply. `formatVersion` is 1. It is the oracle of the graphics tests: the number of elements per item is exact, coordinates are floats and are compared with a tolerance
         
         Examples:
             data = SC.renderer.GetGraphicsData()
@@ -1253,6 +1253,25 @@ class Renderer:
     @overload
     def GetRenderCount(self) -> bool: 
         """Returns the number of rendered OpenGL images; can be used to determine if image has been drawn by comparing to previous counter; also shows that first image has been drawn (needed for zoom all)."""
+        ...
+    @overload
+    def AddTexture(self, name: str, image: ArrayLike, interpretation: TextureInterpretation=TextureInterpretation.RGBA, flags: list[TextureFlags]=[]) -> None: 
+        """Add a texture by its name, or replace the image of a name, for the triangle lists that refer to it with the key 'texture' (#3029); the textures are shared by all SystemContainers and are added before the graphics data that uses them; image is a numpy array of shape (height, width) or (height, width, channels) with 1, 3 or 4 channels, of uint8 or of floats in [0, 1]; its first row is the top of the image, at the texture coordinate v=1; interpretation is a TextureInterpretation, which says how the channels are drawn; flags is a list of TextureFlags; names starting with 'exudyn.' are reserved.
+        
+        Examples:
+            import numpy as np
+            image = np.zeros((64,64,3), dtype=np.uint8)
+            image[:32,:,0] = 255 #upper half red
+            SC.renderer.AddTexture('redTop', image, interpretation=exu.TextureInterpretation.RGB, flags=[exu.TextureFlags.Nearest])
+        """
+        ...
+    @overload
+    def RemoveTexture(self, name: str) -> bool: 
+        """Remove a texture by its name; triangles that refer to it are drawn without texture; returns False if no texture has this name."""
+        ...
+    @overload
+    def GetTextureNames(self) -> list[str]: 
+        """The names of the textures added with AddTexture, in the order they were added."""
         ...
     materials:GraphicsMaterialList
     """GraphicsMaterialList used for raytracer (possibly for OpenGL in future); list can be accessed with [] operator, reset and extended. Note that after Reset() there are at least 10 materials available, which are copied from visualizationSettings.raytracer.materials which are synced continuously (``returns a reference``)."""

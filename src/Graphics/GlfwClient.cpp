@@ -17,6 +17,7 @@
 #include "Linalg/BoundingBox.h"
 
 #include "Graphics/Raytracing.h"
+#include "Graphics/TextureStore.h"
 
 
 #ifdef USE_GLFW_GRAPHICS
@@ -110,6 +111,7 @@ BitmapFont GlfwRenderer::bitmapFont;				//!< bitmap font for regular texts, init
 
 GLuint GlfwRenderer::textureNumberRGBbitmap[256*NUMBER_OF_TEXTUREFONT_LISTS];	//!< store texture number for our bitmap font; in ultimate case, there are 2*nCharacter lists
 GLuint GlfwRenderer::bitmapFontListBase;			//!< starting index for GLlists for font bitmap textured quads
+std::vector<GlfwRenderer::SceneTexture> GlfwRenderer::sceneTextures;	//!< the textures of the TextureStore in OpenGL (#3032)
 ResizableArray<GLubyte> GlfwRenderer::charBuffer;	//!< buffer for converstion of UTF8 into internal unicode-like format
 
 bool GlfwRenderer::depthMask;                   //!< state of glDepthMask (except for fonts)
@@ -2179,6 +2181,7 @@ void GlfwRenderer::FinishRunLoop()
 	glfwTerminate();		//should be called from main thread, but also works this way!
 
 	DeleteFonts();
+	DeleteSceneTextures();
 	if (verboseRenderer) { outputBuffer.WriteVisualization("  ... renderer loop finished\n"); }
 }
 
@@ -2336,6 +2339,7 @@ void GlfwRenderer::Render(GLFWwindow* window) //GLFWwindow* needed in argument, 
 	//+++++++++++++++++
 	//activate openGL context
 	glfwMakeContextCurrent(window);
+	UpdateSceneTextures(); //the contexts of the views share their textures
 
 	int width, height;
 
@@ -3026,6 +3030,8 @@ void GlfwRenderer::RenderGraphicsData(Index viewID, bool selectionMode)
 						highlightColor, otherColor, selectionMode, lastItemID, highlightID, useClipping, window);
 					DrawTriangles<true, false, false>(triangles6Split,
 						highlightColor, otherColor, selectionMode, lastItemID, highlightID, useClipping, window);
+					DrawTriangles<true, false, false>(data->glTexturedTriangles,
+						highlightColor, otherColor, selectionMode, lastItemID, highlightID, useClipping, window);
 				}
 				else if (!settingsView.scene.facesTransparent)
 				{
@@ -3033,7 +3039,9 @@ void GlfwRenderer::RenderGraphicsData(Index viewID, bool selectionMode)
 						highlightColor, otherColor, selectionMode, lastItemID, highlightID, useClipping, window);
 					DrawTriangles<false, false, false>(triangles6Split,
 						highlightColor, otherColor, selectionMode, lastItemID, highlightID, useClipping, window);
-					if (!selectionMode) // DrawTrianglesWithShadow will do nothing if lights have no shadow; //&& visSettings->openGL.shadow != 0)
+					DrawTriangles<false, false, false>(data->glTexturedTriangles,
+						highlightColor, otherColor, selectionMode, lastItemID, highlightID, useClipping, window);
+					if (!selectionMode)// DrawTrianglesWithShadow will do nothing if lights have no shadow; //&& visSettings->openGL.shadow != 0)
 					{
 						DrawTrianglesWithShadow(viewID, data);
 					}
@@ -3042,6 +3050,8 @@ void GlfwRenderer::RenderGraphicsData(Index viewID, bool selectionMode)
 					DrawTriangles<false, true, false>(data->glTriangles,
 						highlightColor, otherColor, selectionMode, lastItemID, highlightID, useClipping, window);
 					DrawTriangles<false, true, false>(triangles6Split,
+						highlightColor, otherColor, selectionMode, lastItemID, highlightID, useClipping, window);
+					DrawTriangles<false, true, false>(data->glTexturedTriangles,
 						highlightColor, otherColor, selectionMode, lastItemID, highlightID, useClipping, window);
 				}
 
@@ -3194,10 +3204,14 @@ void GlfwRenderer::RenderGraphicsData(Index viewID, bool selectionMode)
 				{
 					DrawTriangles<true, false, true>(data->glTriangles,
 						highlightColor, otherColor, selectionMode, lastItemID, highlightID, useClipping, window);
+					DrawTriangles<true, false, true>(data->glTexturedTriangles,
+						highlightColor, otherColor, selectionMode, lastItemID, highlightID, useClipping, window);
 				}
 				else
 				{
 					DrawTriangles<false, false, true>(data->glTriangles,
+						highlightColor, otherColor, selectionMode, lastItemID, highlightID, useClipping, window);
+					DrawTriangles<false, false, true>(data->glTexturedTriangles,
 						highlightColor, otherColor, selectionMode, lastItemID, highlightID, useClipping, window);
 				}
 				//the 6-node triangles: their curved edges, not the edges of their split (#2709)
@@ -3416,6 +3430,90 @@ void SphereShadowTriangles(const ResizableArray<GLSphere>& spheres, const Float3
 //! the shadows are stencil shadow volumes, counted with the z-fail method: correct only if no volume is clipped
 //! by the near or far plane, which the camera-centric view (camera inside the scene, far plane close) does;
 //! depth clamping keeps the clipped parts at the plane instead (#2308)
+#ifndef GL_CLAMP_TO_EDGE
+#define GL_CLAMP_TO_EDGE 0x812F //OpenGL 1.2; not in every gl.h
+#endif
+
+void GlfwRenderer::UpdateSceneTextures()
+{
+	textureStore.LockData();
+	Index n = textureStore.NumberOfEntries();
+	if ((Index)sceneTextures.size() < n) { sceneTextures.resize(n); }
+	for (Index id = 0; id < n; id++)
+	{
+		const Texture& texture = textureStore.GetTexture(id);
+		SceneTexture& sceneTexture = sceneTextures[id];
+		if (sceneTexture.version == texture.version) { continue; }
+		sceneTexture.version = texture.version;
+		if (!texture.valid)
+		{
+			if (sceneTexture.name != 0) { glDeleteTextures(1, &sceneTexture.name); }
+			sceneTexture.name = 0;
+			continue;
+		}
+		if (sceneTexture.name == 0) { glGenTextures(1, &sceneTexture.name); }
+		glBindTexture(GL_TEXTURE_2D, sceneTexture.name);
+		GLint filter = texture.HasFlag(TextureFlags::Nearest) ? GL_NEAREST : GL_LINEAR;
+		GLint wrap = texture.HasFlag(TextureFlags::Clamp) ? GL_CLAMP_TO_EDGE : GL_REPEAT;
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, filter);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, filter);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, wrap);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, wrap);
+		GLenum format = texture.channels == 1 ? GL_LUMINANCE : (texture.channels == 3 ? GL_RGB : GL_RGBA);
+		glPixelStorei(GL_UNPACK_ALIGNMENT, 1); //rows of any width
+		glTexImage2D(GL_TEXTURE_2D, 0, format, (GLsizei)texture.width, (GLsizei)texture.height, 0, format, GL_UNSIGNED_BYTE, texture.data.data());
+		glPixelStorei(GL_UNPACK_ALIGNMENT, 4);
+		sceneTexture.replace = texture.HasFlag(TextureFlags::Replace);
+		sceneTexture.mask = texture.interpretation == TextureInterpretation::RGBAMask;
+	}
+	textureStore.ClearLock();
+	glBindTexture(GL_TEXTURE_2D, 0);
+}
+
+void GlfwRenderer::DeleteSceneTextures()
+{
+	for (SceneTexture& sceneTexture : sceneTextures)
+	{
+		if (sceneTexture.name != 0) { glDeleteTextures(1, &sceneTexture.name); }
+	}
+	sceneTextures.clear(); //uploaded again by the next renderer
+}
+
+void GlfwRenderer::BindSceneTexture(Index textureID, Index& boundTexture)
+{
+	if (textureID == boundTexture) { return; }
+	bool exists = textureID >= 0 && textureID < (Index)sceneTextures.size() && sceneTextures[textureID].name != 0;
+	if (!exists) //removed: the colors of the points
+	{
+		if (boundTexture >= 0) { UnbindSceneTexture(boundTexture); }
+		boundTexture = -2; //no texture for this number
+		return;
+	}
+	const SceneTexture& sceneTexture = sceneTextures[textureID];
+	glEnable(GL_TEXTURE_2D);
+	glBindTexture(GL_TEXTURE_2D, sceneTexture.name);
+	glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, sceneTexture.replace ? GL_REPLACE : GL_MODULATE);
+	if (sceneTexture.mask)
+	{
+		glEnable(GL_ALPHA_TEST);
+		glAlphaFunc(GL_GREATER, 0.5f);
+	}
+	else { glDisable(GL_ALPHA_TEST); }
+	boundTexture = textureID;
+}
+
+void GlfwRenderer::UnbindSceneTexture(Index& boundTexture)
+{
+	if (boundTexture >= 0)
+	{
+		glBindTexture(GL_TEXTURE_2D, 0);
+		glDisable(GL_TEXTURE_2D);
+		glDisable(GL_ALPHA_TEST);
+		glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
+	}
+	boundTexture = -1;
+}
+
 void GlfwRenderer::DrawTrianglesWithShadow(Index viewID, GraphicsData* data)
 {
 	RenderState* state = renderViews.State(viewID);
@@ -3483,8 +3581,9 @@ void GlfwRenderer::DrawTrianglesWithShadow(Index viewID, GraphicsData* data)
 		glCullFace(GL_FRONT);
 		glStencilFunc(GL_ALWAYS, 0x0, 0xff);
 		glStencilOp(GL_KEEP, GL_INCR_WRAP, GL_KEEP); //INCR_WRAP/DECR_WRAP works for > 255 triangles
-		
+
 		for (const GLTriangle& trig : sphereShadowTriangles) { RenderTriangleShadowVolume(trig, lightPos, maxDist, shadow); }
+		if (settingsView.scene.showFaces) { for (const GLTriangle& trig : data->glTexturedTriangles) { RenderTriangleShadowVolume(trig, lightPos, maxDist, shadow); } }
 		for (const ResizableArray<GLTriangle>* triangleList : { &data->glTriangles, &data->triangles6SplitCache }) //with the split 6-node triangles (#2709)
 		for (const GLTriangle& trig : *triangleList)
 		{ //draw faces
@@ -3498,6 +3597,7 @@ void GlfwRenderer::DrawTrianglesWithShadow(Index viewID, GraphicsData* data)
 		glStencilFunc(GL_ALWAYS, 0x0, 0xff);
 		glStencilOp(GL_KEEP, GL_DECR_WRAP, GL_KEEP);
 		for (const GLTriangle& trig : sphereShadowTriangles) { RenderTriangleShadowVolume(trig, lightPos, maxDist, shadow); }
+		if (settingsView.scene.showFaces) { for (const GLTriangle& trig : data->glTexturedTriangles) { RenderTriangleShadowVolume(trig, lightPos, maxDist, shadow); } }
 		for (const ResizableArray<GLTriangle>* triangleList : { &data->glTriangles, &data->triangles6SplitCache }) //with the split 6-node triangles (#2709)
 		for (const GLTriangle& trig : *triangleList)
 		{ //draw faces

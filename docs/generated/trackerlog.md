@@ -8,10 +8,10 @@ Every entry carries the **type** of the issue, then its **priority** and its **e
 
 General information on current version:
 
-- Exudyn version = 1.13.130.dev1
+- Exudyn version = 1.13.135.dev1
 - last change = 2026-10-18
-- Number of issues = 3029
-- Number of resolved issues = 2907 (130 in current version)
+- Number of issues = 3035
+- Number of resolved issues = 2912 (135 in current version)
 
 ## Resolved issues and resolved bugs before version 1.13
 
@@ -9039,6 +9039,15 @@ The following list contains the issues which have been **RESOLVED** in the accor
 
 ## Open issues
 
+- `EXTENSION` `LOW EFF` `raised by: Claude-JG` Textures in the raytracer (#3034)
+  - description: The raytracer samples the texture of a textured triangle with the barycentric coordinates it computes already, nearest or bilinear by the flags, so that raytraced and saved images show textures as OpenGL does.
+  - date raised: 2026-10-18
+- `EXAMPLE` `LOW EFF` `raised by: Claude-JG` Example: an image on graphics.Quad as texture (#3033)
+  - description: Maintainer 2026-10-18: an example that adds an image as texture and shows it on a graphics.Quad; also a checkerboard by texture.
+  - date raised: 2026-10-18
+- `EXTENSION` `MEDIUM EFF` `raised by: Claude-JG` Texture coordinates for graphics.Quad and graphics.Cylinder, and by projection for any TriangleList (#3031)
+  - description: Maintainer 2026-10-18: a straightforward way to put a texture on a quad and on a cylinder (an argument texture=name), and for general geometry a function that computes the texture coordinates by a planar, cylindrical or spherical projection, without the user giving them.
+  - date raised: 2026-10-18
 - `EXTENSION` `LOW EFF` `raised by: Claude-JG` Zoom to the selected item in the renderer (#3027)
   - description: Maintainer 2026-10-17: a selected item (left click, state-\>mouseSelectionItemID) is not used for the view; zoom to its bounding box as ZoomAll does for the scene, by a key and an icon of the icon bar.
   - date raised: 2026-10-17
@@ -9154,14 +9163,6 @@ The following list contains the issues which have been **RESOLVED** in the accor
   - description: improve efficiency by using internal sparse triplets for mass matrix in C++ code
   - **remarks:** planned as revision2026b step RG5.4 (triage 2026-10-07)
   - date raised: 2026-01-04
-- `EXTENSION` `HIGH EFF` OpenGL (#2155)
-  - description: add textures to renderer (and add reset function), using numpy binary array representing RGB/RGBA image; reference numbers are then used in triangle lists
-  - **remarks:** planned as revision2026b step RG6.11 (triage 2026-10-07)
-  - date raised: 2025-11-02
-- `EXTENSION` `HIGH EFF` OpenGL (#2154)
-  - description: add textures for triangle lists, using texture reference number and coordinates, according to standard format
-  - **remarks:** planned as revision2026b step RG6.11 (triage 2026-10-07)
-  - date raised: 2025-11-02
 - `EXTENSION` `MEDIUM EFF` ObjectContact (#2131)
   - description: add rolling resistance
   - **remarks:** kept open as an idea, no plan step (triage 2026-10-07, revision2026b group RG18)

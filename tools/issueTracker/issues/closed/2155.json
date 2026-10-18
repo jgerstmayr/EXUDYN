@@ -1,0 +1,15 @@
+{
+  "number": 2155,
+  "title": "OpenGL",
+  "author": "JG",
+  "status": "RESOLVED",
+  "type": "EXTENSION",
+  "effort": "HIGH",
+  "description": "add textures to renderer (and add reset function), using numpy binary array representing RGB/RGBA image; reference numbers are then used in triangle lists",
+  "dateRaised": "2025-11-02",
+  "deadline": "2026-05-01",
+  "dateResolved": "2026-10-18 14:41",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "SC.renderer.AddTexture(name, image, interpretation, flags) adds a texture from a numpy array of uint8 or floats in [0, 1], grey, RGB or RGBA, shared by all SystemContainers; RemoveTexture and GetTextureNames (revision2026c step RG6.11.2)",
+  "resolvedInVersion": "1.13.132"
+}

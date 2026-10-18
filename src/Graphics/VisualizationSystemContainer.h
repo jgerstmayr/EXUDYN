@@ -42,6 +42,7 @@ public:
 	ResizableArray<GLSphere> glSpheres;		//!< spheres of the type 'Spheres' (#2709)
 	ResizableArray<GLTriangle6> glTriangles6;	//!< 6-node triangles of the key 'triangles6' of a TriangleList (#2709)
 	ResizableArray<GLLine3> glLines3;			//!< quadratic lines: Lines with shape 'quadratic', the key 'edges3' of a TriangleList (#2709)
+	ResizableArray<GLTexturedTriangle> glTexturedTriangles;	//!< triangles of a TriangleList with the key 'texture' (#3030)
 
 	//! clear lists (keep allocated data) and deallocate data of texts, allocated with new
 	void FlushData()
@@ -57,6 +58,7 @@ public:
 		glCirclesXY.SetNumberOfItems(0);
 		glTexts.SetNumberOfItems(0);
 		glTriangles.SetNumberOfItems(0);
+		glTexturedTriangles.SetNumberOfItems(0);
 	}
 
 	//! destructor

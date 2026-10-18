@@ -727,6 +727,7 @@ VSettingsOpenGL has the following items:
 | `materialShininess` | float | 32. | shininess of material |
 | `materialSpecular` | Float4 | [0.6,0.6,0.6,1.] | RGBA specular color of material |
 | `multiSampling` | PInt | 1 | NOTE: this parameter must be set before starting renderer; later changes are not affecting visualization; multi sampling turned off (<=1) or turned on to given values (2, 3, 4, 8 or 16); increases the graphics buffers and might crash due to graphics card memory limitations; only works if supported by hardware; if it does not work, try to change 3D graphics hardware settings! |
+| `showTextures` | bool | True | True: the triangles of a TriangleList with a texture are drawn with it; False: with the colors of their points (#3032) |
 | `zMaxSceneFactor` | PFloat | 2. | factor multiplied with maxSceneSize to avoid clipping of modelview; larger values reduce clipping of near or far objects, but may lead to artifacts (so-called Z-fighting) |
 
 

@@ -637,6 +637,28 @@ class LinearSolverType(Enum):
     """use Eigen's LU factorization with partial pivoting (faster than EXUdense) or full pivot (if linearSolver.ignoreSingularJacobian=True; is much slower, but can resolve overdetermined and underdetermined problems!); NOTE: in the default partial pivoting mode a singular matrix is NOT detected - Eigen provides no invertibility check there - so the solver continues with an undefined result instead of reporting a singular jacobian; use EXUdense or EigenSparse if that must be reported, or full pivot (ignoreSingularJacobian=True), which resolves the singular system by least squares on purpose"""
 
 
+class TextureInterpretation(Enum):
+    """The enumeration type TextureInterpretation says how SC.renderer.AddTexture interprets an image and how the renderers draw it (#3029); the channels of the image are converted to those of the interpretation: a grey image gives equal R, G and B, an image without alpha gets A=1; an image with colors cannot be interpreted as Grey."""
+    Grey = int
+    """one channel, the brightness; multiplied with the color of the triangle it shades a colored surface"""
+    RGB = int
+    """three channels, the color; opaque"""
+    RGBA = int
+    """four channels, the color and A the opacity; transparent where A < 1, multiplied with the alpha of the triangle"""
+    RGBAMask = int
+    """four channels, the color and A a mask: a pixel with A < 0.5 is not drawn, the others are opaque; for cut-out shapes without the sorting that transparency needs"""
+
+
+class TextureFlags(Enum):
+    """The enumeration type TextureFlags lists the options of a texture as bits, passed to SC.renderer.AddTexture as a list (#3029); without a flag a texture is filtered linearly, repeated outside the texture coordinates 0 to 1, and multiplied with the color of the triangle, as OpenGL does by default."""
+    Nearest = int
+    """the nearest pixel instead of linear interpolation; sharp pixels, e.g. for a checkerboard or a pixel image"""
+    Clamp = int
+    """texture coordinates outside 0 to 1 take the color of the border instead of repeating the texture"""
+    Replace = int
+    """the texture replaces the color of the triangle instead of being multiplied with it; the triangle color and the lighting are not applied"""
+
+
 class ContactTypeIndex(Enum):
     """The enumeration type  ContactTypeIndex is used in GeneralContact to select specific contact items, such as spheres, ANCFCable or triangle items."""
     IndexSpheresMarkerBased = int
@@ -2216,6 +2238,8 @@ class VSettingsOpenGL:
     """RGBA specular color of material."""
     multiSampling: int
     """NOTE: this parameter must be set before starting renderer; later changes are not affecting visualization; multi sampling turned off (<=1) or turned on to given values (2, 3, 4, 8 or 16); increases the graphics buffers and might crash due to graphics card memory limitations; only works if supported by hardware; if it does not work, try to change 3D graphics hardware settings!"""
+    showTextures: bool
+    """True: the triangles of a TriangleList with a texture are drawn with it; False: with the colors of their points (#3032)."""
     zMaxSceneFactor: float
     """factor multiplied with maxSceneSize to avoid clipping of modelview; larger values reduce clipping of near or far objects, but may lead to artifacts (so-called Z-fighting)."""
     def GetDictionary(self) -> dict: ...
@@ -4142,7 +4166,7 @@ class Renderer:
     def GetGraphicsData(self, flatShapes=False) -> dict: 
         """The drawing elements of the scene as a dictionary of numpy arrays: what the renderer would draw, as data.
         
-        It is built without a window, the way `RedrawAndGetImage(True)` builds it, so it works with `EXUDYN_SUPPRESS_UI_WINDOW_OPEN` set and needs no OpenGL; zoom, model view and window size are not part of it. The keys `lines`, `spheres`, `circles`, `texts` and `triangles` each hold a dictionary whose `items` is an int array of shape (n,3) - the system number, the `exudyn.ItemType` value and the index of the item that drew the element, or `[-1, 0, code]` for a static element of the scene; then `points` and `colors` (RGBA, per vertex for lines and triangles), and per kind `radius` and `resolution` (spheres), `radius` and `numberOfSegments` (circles), `fontSize`, `offset` and the list `text` (texts), `normals` (triangles). The curved shapes are kept as they are under `triangles6` (6-node triangles: `points`, `normals` and `colors` of shape (n,6,3) / (n,6,4), nodes as in the key `triangles6` of a TriangleList; the normals given, else those of the geometry) and `lines3` (quadratic lines: `points` (n,3,3) and `colors` (n,3,4), the end points and then the mid node); with `flatShapes=True` these two are empty and their shapes are among `triangles` and `lines` instead, refined once - 4 triangles on the 6 nodes, 2 lines on the 3 nodes - independently of the tiling settings, which only the renderers apply. `formatVersion` is 1. It is the oracle of the graphics tests: the number of elements per item is exact, coordinates are floats and are compared with a tolerance
+        It is built without a window, the way `RedrawAndGetImage(True)` builds it, so it works with `EXUDYN_SUPPRESS_UI_WINDOW_OPEN` set and needs no OpenGL; zoom, model view and window size are not part of it. The keys `lines`, `spheres`, `circles`, `texts` and `triangles` each hold a dictionary whose `items` is an int array of shape (n,3) - the system number, the `exudyn.ItemType` value and the index of the item that drew the element, or `[-1, 0, code]` for a static element of the scene; then `points` and `colors` (RGBA, per vertex for lines and triangles), and per kind `radius` and `resolution` (spheres), `radius` and `numberOfSegments` (circles), `fontSize`, `offset` and the list `text` (texts), `normals` (triangles). The curved shapes are kept as they are under `triangles6` (6-node triangles: `points`, `normals` and `colors` of shape (n,6,3) / (n,6,4), nodes as in the key `triangles6` of a TriangleList; the normals given, else those of the geometry) and `lines3` (quadratic lines: `points` (n,3,3) and `colors` (n,3,4), the end points and then the mid node); `texturedTriangles` holds the triangles with a texture as `triangles` does, and `textureCoordinates` (n,3,2) and the list `texture` of the names of their textures (#3030); with`flatShapes=True` these two are empty and their shapes are among `triangles` and `lines` instead, refined once - 4 triangles on the 6 nodes, 2 lines on the 3 nodes - independently of the tiling settings, which only the renderers apply. `formatVersion` is 1. It is the oracle of the graphics tests: the number of elements per item is exact, coordinates are floats and are compared with a tolerance
         
         Examples:
             data = SC.renderer.GetGraphicsData()
@@ -4197,6 +4221,25 @@ class Renderer:
     @overload
     def GetRenderCount(self) -> bool: 
         """Returns the number of rendered OpenGL images; can be used to determine if image has been drawn by comparing to previous counter; also shows that first image has been drawn (needed for zoom all)."""
+        ...
+    @overload
+    def AddTexture(self, name: str, image: ArrayLike, interpretation: TextureInterpretation=TextureInterpretation.RGBA, flags: list[TextureFlags]=[]) -> None: 
+        """Add a texture by its name, or replace the image of a name, for the triangle lists that refer to it with the key 'texture' (#3029); the textures are shared by all SystemContainers and are added before the graphics data that uses them; image is a numpy array of shape (height, width) or (height, width, channels) with 1, 3 or 4 channels, of uint8 or of floats in [0, 1]; its first row is the top of the image, at the texture coordinate v=1; interpretation is a TextureInterpretation, which says how the channels are drawn; flags is a list of TextureFlags; names starting with 'exudyn.' are reserved.
+        
+        Examples:
+            import numpy as np
+            image = np.zeros((64,64,3), dtype=np.uint8)
+            image[:32,:,0] = 255 #upper half red
+            SC.renderer.AddTexture('redTop', image, interpretation=exu.TextureInterpretation.RGB, flags=[exu.TextureFlags.Nearest])
+        """
+        ...
+    @overload
+    def RemoveTexture(self, name: str) -> bool: 
+        """Remove a texture by its name; triangles that refer to it are drawn without texture; returns False if no texture has this name."""
+        ...
+    @overload
+    def GetTextureNames(self) -> list[str]: 
+        """The names of the textures added with AddTexture, in the order they were added."""
         ...
     materials:GraphicsMaterialList
     """GraphicsMaterialList used for raytracer (possibly for OpenGL in future); list can be accessed with [] operator, reset and extended. Note that after Reset() there are at least 10 materials available, which are copied from visualizationSettings.raytracer.materials which are synced continuously (``returns a reference``)."""

@@ -550,6 +550,7 @@
     <ClInclude Include="..\src\Graphics\GraphicsData.h" />
     <ClInclude Include="..\src\Graphics\PostProcessData.h" />
     <ClInclude Include="..\src\Graphics\Raytracing.h" />
+    <ClInclude Include="..\src\Graphics\TextureStore.h" />
     <ClInclude Include="..\src\Graphics\VisualizationBasics.h" />
     <ClInclude Include="..\src\Graphics\VisualizationPrimitives.h" />
     <ClInclude Include="..\src\Graphics\VisualizationSystem.h" />

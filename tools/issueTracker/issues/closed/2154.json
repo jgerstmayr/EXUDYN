@@ -1,0 +1,15 @@
+{
+  "number": 2154,
+  "title": "OpenGL",
+  "author": "JG",
+  "status": "RESOLVED",
+  "type": "EXTENSION",
+  "effort": "HIGH",
+  "description": "add textures for triangle lists, using texture reference number and coordinates, according to standard format",
+  "dateRaised": "2025-11-02",
+  "deadline": "2026-05-01",
+  "dateResolved": "2026-10-18 14:41",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "A TriangleList takes 'texture', the name of a texture added with SC.renderer.AddTexture, and 'textureCoordinates', (u, v) per point; OpenGL draws the triangles with the texture (revision2026c step RG6.11.3)",
+  "resolvedInVersion": "1.13.131"
+}

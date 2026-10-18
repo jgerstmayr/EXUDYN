@@ -412,6 +412,26 @@ class LinearSolverType(Enum):
     EigenDense = int
     """use Eigen's LU factorization with partial pivoting (faster than EXUdense) or full pivot (if linearSolver.ignoreSingularJacobian=True; is much slower, but can resolve overdetermined and underdetermined problems!); NOTE: in the default partial pivoting mode a singular matrix is NOT detected - Eigen provides no invertibility check there - so the solver continues with an undefined result instead of reporting a singular jacobian; use EXUdense or EigenSparse if that must be reported, or full pivot (ignoreSingularJacobian=True), which resolves the singular system by least squares on purpose"""
 
+class TextureInterpretation(Enum):
+    """The enumeration type TextureInterpretation says how SC.renderer.AddTexture interprets an image and how the renderers draw it (#3029); the channels of the image are converted to those of the interpretation: a grey image gives equal R, G and B, an image without alpha gets A=1; an image with colors cannot be interpreted as Grey."""
+    Grey = int
+    """one channel, the brightness; multiplied with the color of the triangle it shades a colored surface"""
+    RGB = int
+    """three channels, the color; opaque"""
+    RGBA = int
+    """four channels, the color and A the opacity; transparent where A < 1, multiplied with the alpha of the triangle"""
+    RGBAMask = int
+    """four channels, the color and A a mask: a pixel with A < 0.5 is not drawn, the others are opaque; for cut-out shapes without the sorting that transparency needs"""
+
+class TextureFlags(Enum):
+    """The enumeration type TextureFlags lists the options of a texture as bits, passed to SC.renderer.AddTexture as a list (#3029); without a flag a texture is filtered linearly, repeated outside the texture coordinates 0 to 1, and multiplied with the color of the triangle, as OpenGL does by default."""
+    Nearest = int
+    """the nearest pixel instead of linear interpolation; sharp pixels, e.g. for a checkerboard or a pixel image"""
+    Clamp = int
+    """texture coordinates outside 0 to 1 take the color of the border instead of repeating the texture"""
+    Replace = int
+    """the texture replaces the color of the triangle instead of being multiplied with it; the triangle color and the lighting are not applied"""
+
 class ContactTypeIndex(Enum):
     """The enumeration type  ContactTypeIndex is used in GeneralContact to select specific contact items, such as spheres, ANCFCable or triangle items."""
     IndexSpheresMarkerBased = int

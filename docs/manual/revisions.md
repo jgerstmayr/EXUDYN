@@ -123,6 +123,14 @@ the bottom and the left border of an orthographic view (perspective 0), with tic
 in an axis-aligned view the labels are the coordinates of the view, as the mouse coordinates (F3) show them, else the
 distance from the end of the scale. The raytracer draws it as well.
 
+**Textures** (#2154, #2155, #3029, #3030, #3032): `SC.renderer.AddTexture(name, image, interpretation, flags)` adds an
+image - a numpy array of uint8 or of floats in [0, 1], grey, RGB or RGBA - by its name, shared by all
+SystemContainers; `exu.TextureInterpretation` says how its channels are drawn (A as opacity or as a mask) and
+`exu.TextureFlags` how it is filtered, repeated and combined with the color of the triangles. A `TriangleList` with
+`'texture': name` and `'textureCoordinates'` (u, v per point) is drawn with it by OpenGL; 6-node triangles with a
+texture become four flat ones. `visualizationSettings.openGL.showTextures = False` draws the colors of the points
+instead; the raytracer does so for now. `SC.renderer.GetGraphicsData()` returns them under `texturedTriangles`.
+
 **Drawing with user functions in a renderer thread**: the markers, connectors, loads and sensors on an ObjectUserBody
 and every load with a user function are drawn in the main thread, together with the graphics user functions, so that
 the render thread never calls Python; `loads.drawWithUserFunction` draws a Python user function with multithreaded

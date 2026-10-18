@@ -1,0 +1,15 @@
+{
+  "number": 3029,
+  "title": "Textures: the enumeration types TextureInterpretation and TextureFlags shared by Python and C++",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "EXTENSION",
+  "effort": "LOW",
+  "description": "Maintainer 2026-10-18: the interpretation of a texture (grey, RGB, RGBA with A as opacity or as mask) is an enumeration type, so that Python has completion and Python and C++ agree; the flags (filter, wrap, how the texture combines with the color) are a separate bit field beside it, following OpenGL, so that a GraphicsData may override them later.",
+  "dateRaised": "2026-10-18",
+  "deadline": "2027-04-16",
+  "dateResolved": "2026-10-18 14:41",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "exu.TextureInterpretation (Grey, RGB, RGBA, RGBAMask) and exu.TextureFlags (Nearest, Clamp, Replace, passed as a list), the same enumeration types in Python and C++ (revision2026c step RG6.11.2)",
+  "resolvedInVersion": "1.13.133"
+}

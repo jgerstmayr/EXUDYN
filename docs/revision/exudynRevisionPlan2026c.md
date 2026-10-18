@@ -79,7 +79,7 @@ The title of each says what it does; the sentence after it, why it comes now.
   - RG5.4 Store the superelement matrices as sparse triplets for larger meshes
 - **RG6** Graphics and rendering
   - RG6.8 Fix the remaining graphics problems with a test each
-  - RG6.11 Draw textures from numpy arrays in triangle lists (1 open sub-step)
+  - RG6.11 Draw textures from numpy arrays in triangle lists (3 open sub-steps)
   - RG6.19 Add an icon bar to the renderer that folds in from the right border, as alternative to the keys (2 open sub-steps)
 - **RG7** Python user items
   - RG7.4 Add user nodes with position and orientation interfaces
@@ -128,7 +128,7 @@ The title of each says what it does; the sentence after it, why it comes now.
 | RG3 | CLOSED | 0 | Docs |
 | RG4 | OPEN | 6 | Implementation problems and bugs |
 | RG5 | OPEN | 8 | Performance |
-| RG6 | OPEN | 6 | Graphics and rendering |
+| RG6 | OPEN | 8 | Graphics and rendering |
 | RG7 | OPEN | 5 | Python user items |
 | RG8 | OPEN | 10 | Compiled C++ user items |
 | RG9 | OPEN | 5 | Structural core improvements |
@@ -460,31 +460,44 @@ it): `minSceneSize` 0.01, `boundingBoxZoomAllOffset` 0.001; GUI.md section Tiny 
 #2155 (a texture from an RGB/RGBA array with a reference number), #2154 (triangle lists with that number and texture
 coordinates); with the rendering revision.
 
-#### **OPEN_RG6.11.1** Proposal: global textures by name, referenced by the triangle lists
+#### **CLOSED_RG6.11.1** Proposal: global textures by name, referenced by the triangle lists
 
-For a decision (maintainer 2026-10-17: textures defined globally, objects refer to them; a unique string name in
-Python, a number in C++; RGB, RGBA with a meaning of A, grey; flags for later extensions; GraphicsData adds only the
-texture coordinates). Today no scene texture exists; the font is one GL texture per character from the bitmap
-compiled into characterBitmap.cpp (GlfwClientExtended.cpp:511), and the raytracer image is shown as a texture.
-- **The store**: one `TextureStore` in the VisualizationSystemContainer, shared by all systems and views: entries
-  {name, id, width, height, channels 1/3/4, bytes (uint8, row by row), flags, version}. Python:
-  `SC.renderer.AddTexture(name, image, interpretation=...)` with a numpy array (H x W, H x W x 3, H x W x 4, uint8 or
-  float in [0,1]) returns the id; `RemoveTexture(name)`, `GetTextureNames()`; adding a name again replaces the image
-  (its version moves, the renderer uploads it again). Names starting with `exudyn.` are reserved (the icons below).
-- **Flags** (a bit field, extensible): filter nearest/linear, wrap repeat/clamp, the meaning of A (opacity, mask with
-  a threshold, or unused), how the texture combines with the color of the triangle (replace, or multiply - a grey
-  texture times the color gives shading), mipmaps later.
-- **GraphicsData**: the `TriangleList` dict gets `'texture': name` and `'textureCoordinates'` (u, v per point); C++
-  resolves the name to the id once, when the graphics data is set. The textured triangles go into their own array
-  (`GLTexturedTriangle`: the triangle, the texture id, 3 x (u, v)), so that untextured triangles keep their size and
-  path; the renderer draws them sorted by texture, one bind per texture.
-- **OpenGL**: textures are uploaded in the render thread when their version changed (`glTexImage2D`, 1.x: sizes that
-  are not powers of 2 need the extension, which current drivers have; else padded); OpenGL 3.3/4.1 later uses the same
-  store with sampler objects. **Raytracer**: samples the bytes with the barycentric u, v it computes already
-  (Raytracing.cpp:95), nearest or bilinear by the flag - a raytraced image shows the textures as well.
-- **Steps after the decision**: the store and the Python API with a test of names and replacement; the textured
-  triangles in OpenGL; in the raytracer with a graphics regression image; an example (an image on a plane, a
-  checkerboard by texture instead of triangles).
+CLOSED 2026-10-18, decided with additions: the interpretation an enumeration type, flags beside it following OpenGL, a
+way for 6-node triangles, graphics.Quad and graphics.Cylinder and projections, openGL.showTextures, the example with
+graphics.Quad; the sub-steps below. [log](exudynRevisionLog2026c.md#rg6-11-1)
+
+#### **CLOSED_RG6.11.2** The texture store, the Python functions and the enumeration types TextureInterpretation and TextureFlags
+
+CLOSED 2026-10-18 (#2155, #3029): `TextureStore` (src/Graphics/TextureStore.h), one for the module;
+`SC.renderer.AddTexture(name, image, interpretation, flags)`, `RemoveTexture`, `GetTextureNames`;
+`exu.TextureInterpretation` (Grey, RGB, RGBA, RGBAMask), `exu.TextureFlags` (Nearest, Clamp, Replace) as a list;
+textureTest.py. [log](exudynRevisionLog2026c.md#rg6-11-2)
+
+#### **CLOSED_RG6.11.3** The texture and its coordinates in TriangleList, the textured triangles of GraphicsData, 6-node triangles
+
+CLOSED 2026-10-18 (#2154, #3030): `'texture'` and `'textureCoordinates'` in a TriangleList, `GLTexturedTriangle` in an
+array of its own in GraphicsData and BodyGraphicsData; textured 6-node triangles become four flat ones when read; moved
+with the bodies, contour colors instead of the texture; returned by the graphics data of an object and by
+`GetGraphicsData()['texturedTriangles']`; the raytracer draws them with the colors of their points until RG6.11.5.
+[log](exudynRevisionLog2026c.md#rg6-11-2)
+
+#### **CLOSED_RG6.11.4** Draw the textured triangles with OpenGL, and switch textures off with openGL.showTextures
+
+CLOSED 2026-10-18 (#3032): uploaded in the render thread when their version changes, bound when the texture changes from
+one triangle to the next; modulate or replace, alpha test for RGBAMask; not in highlight, selection or edge mode; shadows;
+`openGL.showTextures`. Not seen on a screen by Claude (no window may open). [log](exudynRevisionLog2026c.md#rg6-11-2)
+
+#### **OPEN_RG6.11.5** Sample the textures in the raytracer
+
+#3034.
+
+#### **OPEN_RG6.11.6** Texture coordinates for graphics.Quad and graphics.Cylinder, and by projection for any TriangleList
+
+#3031.
+
+#### **OPEN_RG6.11.7** An example: an image on graphics.Quad, a checkerboard by texture
+
+#3033.
 
 ### **CLOSED_RG6.12** Add a ruler to the renderer and orient imported triangles consistently
 

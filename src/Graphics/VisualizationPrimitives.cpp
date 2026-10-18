@@ -515,8 +515,29 @@ namespace EXUvis {
 		EXUvis::ComputeContourColor(value, visualizationSettings.contour.outputVariable, visualizationSettings.contour.outputVariableComponent, color);
 	}
 
-	void AddBodyGraphicsDataColored(const BodyGraphicsData& bodyGraphicsData, GraphicsData& graphicsData, 
-		const Float3& position, const Matrix3DF& rotation, const Float3& refPosition, const Matrix3DF& refRotation, const Float3& velocity, const Float3& angularVelocity,
+	//! the triangles of body graphics, moved to the position and rotation of the body
+	template<class TTriangle>
+	void AppendMovedTriangles(const ResizableArray<TTriangle>& source, ResizableArray<TTriangle>& target, bool applyRotation,
+		const Float3& position, const Matrix3DF& rotation, Index itemID)
+	{
+		for (TTriangle item : source) //copy objects
+		{
+			item.itemID = itemID;
+			for (Index i = 0; i < 3; i++)
+			{
+				if (applyRotation)
+				{
+					EXUmath::RigidBodyTransformation(rotation, position, item.points[i], item.points[i]);
+					item.normals[i] = rotation * item.normals[i];
+				}
+				else { item.points[i] += position; }
+			}
+			target.Append(item);
+		}
+	}
+
+	void AddBodyGraphicsDataColored(const BodyGraphicsData& bodyGraphicsData, GraphicsData& graphicsData,
+		const Float3& position,const Matrix3DF& rotation, const Float3& refPosition, const Matrix3DF& refRotation, const Float3& velocity, const Float3& angularVelocity,
 		Index itemID, const VisualizationSettings& visualizationSettings, bool contourColor)
 	{
 		bool applyRotation = !IsIdentityRotation(rotation);
@@ -619,26 +640,8 @@ namespace EXUvis {
 
 		if (!contourColor)
 		{
-			for (GLTriangle item : bodyGraphicsData.glTriangles) //copy objects
-			{
-				item.itemID = itemID;
-				if (applyRotation)
-				{
-					for (Index i = 0; i < 3; i++)
-					{
-						EXUmath::RigidBodyTransformation(rotation, position, item.points[i], item.points[i]);
-						item.normals[i] = rotation * item.normals[i];
-					}
-				}
-				else
-				{
-					for (Index i = 0; i < 3; i++)
-					{
-						item.points[i] += position;
-					}
-				}
-				graphicsData.glTriangles.Append(item);
-			}
+			AppendMovedTriangles(bodyGraphicsData.glTriangles, graphicsData.glTriangles, applyRotation, position, rotation, itemID);
+			AppendMovedTriangles(bodyGraphicsData.glTexturedTriangles, graphicsData.glTexturedTriangles, applyRotation, position, rotation, itemID);
 		}
 		else
 		{
@@ -648,9 +651,12 @@ namespace EXUvis {
 			Float3 value; //this is the computed value per triangle vertex (node)
 			Float3 pRef;
 
-			for (Index iItem = 0; iItem < bodyGraphicsData.glTriangles.NumberOfItems(); iItem++)
+			//the textured triangles with the contour colors instead of their texture (#3030)
+			Index nTriangles = bodyGraphicsData.glTriangles.NumberOfItems();
+			for (Index iItem = 0; iItem < nTriangles + bodyGraphicsData.glTexturedTriangles.NumberOfItems(); iItem++)
 			{
-				GLTriangle  item = bodyGraphicsData.glTriangles[iItem]; //copy objects, then modify some data
+				GLTriangle item = iItem < nTriangles ? bodyGraphicsData.glTriangles[iItem]
+					: (const GLTriangle&)bodyGraphicsData.glTexturedTriangles[iItem - nTriangles]; //copy objects, then modify some data
 				item.itemID = itemID;
 				if (applyRotation)
 				{
@@ -850,26 +856,8 @@ namespace EXUvis {
 			graphicsData.glTexts.Append(item);
 		}
 
-		for (GLTriangle item : bodyGraphicsData.glTriangles) //copy objects
-		{
-			item.itemID = itemID;
-			if (applyRotation)
-			{
-				for (Index i = 0; i < 3; i++)
-				{
-					EXUmath::RigidBodyTransformation(rotation, position, item.points[i], item.points[i]);
-					item.normals[i] = rotation * item.normals[i];
-				}
-			}
-			else
-			{
-				for (Index i = 0; i < 3; i++)
-				{
-					item.points[i] += position;
-				}
-			}
-			graphicsData.glTriangles.Append(item);
-		}
+		AppendMovedTriangles(bodyGraphicsData.glTriangles, graphicsData.glTriangles, applyRotation, position, rotation, itemID);
+		AppendMovedTriangles(bodyGraphicsData.glTexturedTriangles, graphicsData.glTexturedTriangles, applyRotation, position, rotation, itemID);
 	}
 
 	//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++

@@ -1949,3 +1949,69 @@ often have wrong orientations.)*
   the original; two bricks, one inverted, end outward; an open checkerboard keeps its majority; three triangles on an
   edge are reported; an STL file with flipped triangles is repaired by FromSTLfileASCII(orientTriangles=True), with
   outward normals; seven primitives are consistent.
+
+<a id="rg6-11-1"></a>
+### RG6.11.1 — the textures, decided (2026-10-18, #2155, #2154)
+*(Maintainer 2026-10-18: SC.renderer.AddTexture with the interpretation as a new enumeration type, for completion and
+Python/C++ consistency; flags following what is usual in OpenGL, beside the interpretation, so that GraphicsData may
+override them in the future, not now; a way for 6-node triangles; graphics.Quad and possibly graphics.Cylinder with a
+texture, or general geometry without giving the coordinates; a flag in the OpenGL settings to switch textures off; the
+rest and the example, preferably with graphics.Quad, good to go; new specific things as sub-steps and issues: #3029 to
+#3034.)* The proposal as it was decided (maintainer 2026-10-17: textures defined globally, objects refer to them; a unique string name in
+Python, a number in C++; RGB, RGBA with a meaning of A, grey; flags for later extensions; GraphicsData adds only the
+texture coordinates). Today no scene texture exists; the font is one GL texture per character from the bitmap
+compiled into characterBitmap.cpp (GlfwClientExtended.cpp:511), and the raytracer image is shown as a texture.
+- **The store**: one `TextureStore` in the VisualizationSystemContainer, shared by all systems and views: entries
+  {name, id, width, height, channels 1/3/4, bytes (uint8, row by row), flags, version}. Python:
+  `SC.renderer.AddTexture(name, image, interpretation=...)` with a numpy array (H x W, H x W x 3, H x W x 4, uint8 or
+  float in [0,1]) returns the id; `RemoveTexture(name)`, `GetTextureNames()`; adding a name again replaces the image
+  (its version moves, the renderer uploads it again). Names starting with `exudyn.` are reserved (the icons below).
+- **Flags** (a bit field, extensible): filter nearest/linear, wrap repeat/clamp, the meaning of A (opacity, mask with
+  a threshold, or unused), how the texture combines with the color of the triangle (replace, or multiply - a grey
+  texture times the color gives shading), mipmaps later.
+- **GraphicsData**: the `TriangleList` dict gets `'texture': name` and `'textureCoordinates'` (u, v per point); C++
+  resolves the name to the id once, when the graphics data is set. The textured triangles go into their own array
+  (`GLTexturedTriangle`: the triangle, the texture id, 3 x (u, v)), so that untextured triangles keep their size and
+  path; the renderer draws them sorted by texture, one bind per texture.
+- **OpenGL**: textures are uploaded in the render thread when their version changed (`glTexImage2D`, 1.x: sizes that
+  are not powers of 2 need the extension, which current drivers have; else padded); OpenGL 3.3/4.1 later uses the same
+  store with sampler objects. **Raytracer**: samples the bytes with the barycentric u, v it computes already
+  (Raytracing.cpp:95), nearest or bilinear by the flag - a raytraced image shows the textures as well.
+- **Steps after the decision**: the store and the Python API with a test of names and replacement; the textured
+  triangles in OpenGL; in the raytracer with a graphics regression image; an example (an image on a plane, a
+  checkerboard by texture instead of triangles).
+
+<a id="rg6-11-2"></a>
+### RG6.11.2 to .4 — the texture store, textured triangle lists, OpenGL (2026-10-18, #2154, #2155, #3029, #3030, #3032)
+- **Store** (`src/Graphics/TextureStore.h`, the instance in VisualizationSystemContainer.cpp): entries by number with
+  name, size, channels, interpretation, flag bits, bytes and a version from one counter; a number is never given to
+  another name, a removed entry keeps its name and number, so the graphics data keeps the numbers it resolved; a spin
+  lock against the render thread. Different from the proposal: one store for the module rather than a member of the
+  VisualizationSystemContainer (same effect: shared by all containers and views), and `AddTexture` returns None - the
+  number is C++ only.
+- **AddTexture**: `py::array::ensure`, so nested lists work; uint8 copied, any other numbers as floats in [0, 1]
+  (else ValueError); 1, 3 or 4 channels converted to those of the interpretation (Grey 1, RGB 3, RGBA/RGBAMask 4: grey
+  replicated, A=255 added, A dropped for RGB; colors refused for Grey); the rows stored from the bottom of the image so
+  that v=0 is its bottom; empty and `exudyn.` names refused. The default interpretation is RGBA, which takes every image.
+- **Enums**: `TextureInterpretation` plain values; `TextureFlags` bits as an enum class without a string function (the
+  generated bit string function only compiles for the plain enums in a namespace); pybind enums have no `|`, so the
+  flags are a list. The stub default of an empty `std::vector<...>()` is shown as `[]` (autoGenerateHelper.py).
+- **Data**: `GLTexturedTriangle : GLTriangle` with textureID and three `Float2`, in `glTexturedTriangles` of
+  GraphicsData and BodyGraphicsData - untextured triangles keep their 128 bytes. Parsing resolves the name (unknown or
+  removed: ValueError, add the texture first); `textureCoordinates` without `texture` and the reverse are refused.
+  6-node textured triangles: the four sub-triangles (0,3,5), (3,1,4), (5,4,2), (3,4,5) with the node normals - they
+  lose their curvature, as decided. `AppendMovedTriangles` (template) moves both kinds in AddBodyGraphicsData(Colored);
+  with contour colors the textured ones are plain triangles. Bounding box, flush, the export of the body graphics (one
+  TriangleList per texture) and `GetGraphicsData()['texturedTriangles']` (items, points, normals, colors,
+  textureCoordinates, texture names).
+- **OpenGL**: `UpdateSceneTextures` after `glfwMakeContextCurrent` in Render - the views share one context group;
+  `GL_LUMINANCE`/`GL_RGB`/`GL_RGBA`, unpack alignment 1, `GL_NEAREST`/`GL_LINEAR`, `GL_REPEAT`/`GL_CLAMP_TO_EDGE`;
+  deleted when the renderer stops, uploaded again on the next start. `DrawTriangles` is templated on the triangle type;
+  the textured kind binds when the texture changes from one triangle to the next (no sorting by texture - with
+  depthSorting the order is the depth), `GL_MODULATE` or `GL_REPLACE`, alpha test at 0.5 for RGBAMask; highlight,
+  selection and edge mode draw them plain. They cast shadows.
+- **Not verified on a screen**: no window may open from here; the OpenGL path compiles and the data paths are tested
+  (textureTest.py, 103.0); a raytraced image with textured triangles is produced, plain. The maintainer checks the look
+  with the example of RG6.11.7, or with the quad of textureTest.py and `SC.renderer.Start()`.
+- Left for later sub-steps: the raytracer (RG6.11.5), the graphics functions keeping `texture` when they merge or move
+  triangle lists and giving coordinates (RG6.11.6), the example (RG6.11.7).

@@ -121,6 +121,15 @@ public:
 	GLisFiniteElement isFiniteElement;	//!< true, if finite element with different handling of edge drawing, etc.
 };
 
+//! a triangle with a texture (#3030): the number of the texture in the TextureStore and the texture coordinates (u, v) of
+//! its points; kept in an array of its own, so that the triangles without texture keep their size and their path
+class GLTexturedTriangle : public GLTriangle
+{
+public:
+	Index textureID;								//!< number in the TextureStore
+	std::array< Float2, 3> textureCoordinates;		//!< (u, v) per point; (0,0) is the bottom left of the image
+};
+
 //! structure for a 6-node quadratic triangle (#2709): corners 0,1,2 counter-clockwise seen from outside, then the mid-side
 //! nodes 3 (between 0 and 1), 4 (between 1 and 2) and 5 (between 2 and 0); points, normals and colors per node, the points
 //! duplicated per triangle as for GLTriangle; kept as they are, the renderers split them into flat triangles when they draw
@@ -165,6 +174,7 @@ public:
 	ResizableArray<GLText> glTexts;				//!< texts to be displayed
 	ResizableArray<GLTriangle> glTriangles;		//!< triangles to be displayed
 	ResizableArray<GLTriangle6> glTriangles6;	//!< 6-node triangles, split by the renderers when they draw (#2709)
+	ResizableArray<GLTexturedTriangle> glTexturedTriangles;	//!< triangles with a texture (#3030)
 
 	//! the split of glTriangles6 that OpenGL draws, kept while the data and the settings stay the same, so that a frame
 	//! that only turns the view does not split again (EXUvis::SplitTriangles6Cached, #2709)
@@ -239,6 +249,7 @@ public:
 		glTexts.SetNumberOfItems(0);
 		glTriangles.SetNumberOfItems(0);
 		glTriangles6.SetNumberOfItems(0);
+		glTexturedTriangles.SetNumberOfItems(0);
 		dataVersion++;
 
 		ClearLock();
@@ -292,6 +303,13 @@ public:
 			}
 		}
 		for (const GLTriangle6& item : glTriangles6)
+		{
+			for (const Float3& point : item.points)
+			{
+				box.Add(Transform(point));
+			}
+		}
+		for (const GLTexturedTriangle& item : glTexturedTriangles)
 		{
 			for (const Float3& point : item.points)
 			{
@@ -531,6 +549,7 @@ public:
 		os << "  number of circles= " << glCirclesXY.NumberOfItems() << "\n";
 		os << "  number of texts  = " << glTexts.NumberOfItems() << "\n";
 		os << "  number of trigs  = " << glTriangles.NumberOfItems() << "\n";
+		os << "  number of textured trigs = " << glTexturedTriangles.NumberOfItems() << "\n";
 
 		os << "\n";
 	}

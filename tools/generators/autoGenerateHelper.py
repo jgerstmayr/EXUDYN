@@ -547,6 +547,7 @@ class DeclarationWriter:
                 sNew = sNew.replace('{','').replace('}','')
                 sNew = sNew.replace('(','[').replace(')',']')
             sNew = sNew.replace('py::none()','None')
+            sNew = re.sub(r'std::vector<[^>]*>\(\)', '[]', sNew) #an empty list, e.g. of TextureFlags
             sNew = sNew.replace('py::','').replace('::','.') #replace C-style '::' (e.g. in ConfiguationType) to python-style '.'            
             return sNew
         

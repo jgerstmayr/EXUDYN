@@ -2325,6 +2325,7 @@ public: // AUTO:
   float materialShininess;                        //!< AUTO: shininess of material
   Float4 materialSpecular;                        //!< AUTO: RGBA specular color of material
   Index multiSampling;                            //!< AUTO: must be > 0; NOTE: this parameter must be set before starting renderer; later changes are not affecting visualization; multi sampling turned off (<=1) or turned on to given values (2, 3, 4, 8 or 16); increases the graphics buffers and might crash due to graphics card memory limitations; only works if supported by hardware; if it does not work, try to change 3D graphics hardware settings!
+  bool showTextures;                              //!< AUTO: True: the triangles of a TriangleList with a texture are drawn with it; False: with the colors of their points (#3032)
   float zMaxSceneFactor;                          //!< AUTO: must be > 0; factor multiplied with maxSceneSize to avoid clipping of modelview; larger values reduce clipping of near or far objects, but may lead to artifacts (so-called Z-fighting)
   float dummy;                                    //!< AUTO: unused dummy variable, used to redirect deprecated values
   bool dummyBool;                                 //!< AUTO: unused dummy variable, used to redirect deprecated bool values
@@ -2350,6 +2351,7 @@ public: // AUTO:
     materialShininess = 32.f;
     materialSpecular = Float4({0.6f,0.6f,0.6f,1.f});
     multiSampling = 1;
+    showTextures = true;
     zMaxSceneFactor = 2.f;
     light1.diffuse = 0.25f;
     light1.specular = 0.25f;
@@ -2608,6 +2610,7 @@ public: // AUTO:
     os << "  materialShininess = " << materialShininess << "\n";
     os << "  materialSpecular = " << materialSpecular << "\n";
     os << "  multiSampling = " << multiSampling << "\n";
+    os << "  showTextures = " << showTextures << "\n";
     os << "  zMaxSceneFactor = " << zMaxSceneFactor << "\n";
     os << "\n";
   }

@@ -1,0 +1,15 @@
+{
+  "number": 3030,
+  "title": "Textures on 6-node triangles",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "EXTENSION",
+  "effort": "LOW",
+  "description": "Maintainer 2026-10-18: a TriangleList with triangles6 and texture coordinates per point; first way: the textured 6-node triangles are split into four flat textured triangles when they are read, the texture coordinates of the mid-side nodes as given.",
+  "dateRaised": "2026-10-18",
+  "deadline": "2027-04-16",
+  "dateResolved": "2026-10-18 14:41",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "6-node triangles with a texture are drawn as the four flat triangles on their nodes; SC.renderer.GetGraphicsData() returns the textured triangles under texturedTriangles (revision2026c step RG6.11.3)",
+  "resolvedInVersion": "1.13.134"
+}

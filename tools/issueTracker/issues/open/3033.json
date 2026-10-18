@@ -1,0 +1,11 @@
+{
+  "number": 3033,
+  "title": "Example: an image on graphics.Quad as texture",
+  "author": "Claude-JG",
+  "status": "RAISED",
+  "type": "EXAMPLE",
+  "effort": "LOW",
+  "description": "Maintainer 2026-10-18: an example that adds an image as texture and shows it on a graphics.Quad; also a checkerboard by texture.",
+  "dateRaised": "2026-10-18",
+  "deadline": "2027-04-16"
+}

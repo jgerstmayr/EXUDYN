@@ -439,4 +439,31 @@ inline std::ostream& operator<<(std::ostream& os, LinearSolverType value)
     }
 }
 
+enum class TextureInterpretation {
+    Grey = 0,     //!< one channel, the brightness; multiplied with the color of the triangle it shades a colored surface
+    RGB = 1,      //!< three channels, the color; opaque
+    RGBA = 2,     //!< four channels, the color and A the opacity; transparent where A < 1, multiplied with the alpha of the triangle
+    RGBAMask = 3  //!< four channels, the color and A a mask: a pixel with A < 0.5 is not drawn, the others are opaque; for cut-out shapes without the sorting that transparency needs
+};
+
+//! ostream operator for printing of TextureInterpretation
+inline std::ostream& operator<<(std::ostream& os, TextureInterpretation value)
+{
+    switch (value)
+    {
+    case TextureInterpretation::Grey: return os << "Grey";
+    case TextureInterpretation::RGB: return os << "RGB";
+    case TextureInterpretation::RGBA: return os << "RGBA";
+    case TextureInterpretation::RGBAMask: return os << "RGBAMask";
+    default: return os << "TextureInterpretation::invalid";
+    }
+}
+
+enum class TextureFlags {
+    _None = 0,        //!< no flag
+    Nearest = 1 << 0, //!< the nearest pixel instead of linear interpolation; sharp pixels, e.g. for a checkerboard or a pixel image
+    Clamp = 1 << 1,   //!< texture coordinates outside 0 to 1 take the color of the border instead of repeating the texture
+    Replace = 1 << 2  //!< the texture replaces the color of the triangle instead of being multiplied with it; the triangle color and the lighting are not applied
+};
+
 #endif //ENUMTYPES__H

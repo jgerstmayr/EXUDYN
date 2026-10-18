@@ -5011,6 +5011,14 @@ inline py::dict GetDictionaryWithTypeInfo(const VSettingsOpenGL& data) {
 
     d = py::dict(); //reset local dict
     d["itemIdentifier"] = std::string(""); //identifier for item
+    d["value"] = data.showTextures;
+    d["type"] = "bool";
+    d["size"] = std::vector<int>{1};
+    d["description"] = "True: the triangles of a TriangleList with a texture are drawn with it; False: with the colors of their points (#3032)";
+    structureDict["showTextures"] = d;
+
+    d = py::dict(); //reset local dict
+    d["itemIdentifier"] = std::string(""); //identifier for item
     d["value"] = data.zMaxSceneFactor;
     d["type"] = "PFloat";
     d["size"] = std::vector<int>{1};
@@ -5038,6 +5046,7 @@ inline py::dict GetDictionary(const VSettingsOpenGL& data) {
     structureDict["materialShininess"] = data.materialShininess;
     structureDict["materialSpecular"] = EPyUtils::ToPythonMember(data.materialSpecular);
     structureDict["multiSampling"] = data.multiSampling;
+    structureDict["showTextures"] = data.showTextures;
     structureDict["zMaxSceneFactor"] = data.zMaxSceneFactor;
     return structureDict;
 }
@@ -5059,6 +5068,7 @@ inline void SetDictionary(VSettingsOpenGL& data, const py::dict& d) {
     EPyUtils::FromPython(d["materialShininess"], data.materialShininess, "VSettingsOpenGL.materialShininess");
     EPyUtils::FromPython(d["materialSpecular"], data.materialSpecular, "VSettingsOpenGL.materialSpecular");
     EPyUtils::FromPython(d["multiSampling"], data.multiSampling, EPyUtils::RangeCheck::positive, "VSettingsOpenGL.multiSampling");
+    EPyUtils::FromPython(d["showTextures"], data.showTextures, "VSettingsOpenGL.showTextures");
     EPyUtils::FromPython(d["zMaxSceneFactor"], data.zMaxSceneFactor, EPyUtils::RangeCheck::positive, "VSettingsOpenGL.zMaxSceneFactor");
 }
 

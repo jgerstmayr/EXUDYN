@@ -117,6 +117,7 @@ symbolicUserFunctionSignaturesTest
 symbolicNumpyCompatibilityTest
 symbolicSparseMatrixTest
 orientTrianglesTest
+textureTest
 initialConstraintsCheckTest
 shellMeshSlopesScalingTest
 systemContainerComputeOnlyTest

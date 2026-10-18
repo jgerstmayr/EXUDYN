@@ -178,6 +178,14 @@ public:
 	//! retrieve number of redraws, can be used to see whether renderer is fully started and first image drawn (zoom all)
 	Index GetRedrawCount() const;
 
+	//! add a texture to the store shared by all SystemContainers, or replace the image of a name (#3029)
+	void AddTexture(const STDstring& name, const py::object& image, TextureInterpretation interpretation = TextureInterpretation::RGBA,
+		const std::vector<TextureFlags>& flags = std::vector<TextureFlags>());
+	//! remove a texture; false for an unknown name
+	bool RemoveTexture(const STDstring& name);
+	//! the names of the textures
+	std::vector<STDstring> GetTextureNames() const;
+
 	//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 	//! check if renderer is active; if not, write error message

@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.13 | Newborn | 128 | 1.13.130 |
+| 1.13 | Newborn | 133 | 1.13.135 |
 | 1.12 | Metheney | 367 | 1.12.462 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
@@ -30,6 +30,26 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.13 - Newborn (current)
 
+- **1.13.135** `EXTENSION` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` visualizationSettings.openGL.showTextures to switch off drawing textures (#3032)
+  - description: Maintainer 2026-10-18: a flag in the OpenGL settings; without textures the triangles are drawn with their colors.
+  - **notes:** visualizationSettings.openGL.showTextures=False draws the textured triangles with the colors of their points (revision2026c step RG6.11.4)
+  - date resolved: **2026-10-18 14:41**, date raised: 2026-10-18
+- **1.13.134** `EXTENSION` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` Textures on 6-node triangles (#3030)
+  - description: Maintainer 2026-10-18: a TriangleList with triangles6 and texture coordinates per point; first way: the textured 6-node triangles are split into four flat textured triangles when they are read, the texture coordinates of the mid-side nodes as given.
+  - **notes:** 6-node triangles with a texture are drawn as the four flat triangles on their nodes; SC.renderer.GetGraphicsData() returns the textured triangles under texturedTriangles (revision2026c step RG6.11.3)
+  - date resolved: **2026-10-18 14:41**, date raised: 2026-10-18
+- **1.13.133** `EXTENSION` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` Textures: the enumeration types TextureInterpretation and TextureFlags shared by Python and C++ (#3029)
+  - description: Maintainer 2026-10-18: the interpretation of a texture (grey, RGB, RGBA with A as opacity or as mask) is an enumeration type, so that Python has completion and Python and C++ agree; the flags (filter, wrap, how the texture combines with the color) are a separate bit field beside it, following OpenGL, so that a GraphicsData may override them later.
+  - **notes:** exu.TextureInterpretation (Grey, RGB, RGBA, RGBAMask) and exu.TextureFlags (Nearest, Clamp, Replace, passed as a list), the same enumeration types in Python and C++ (revision2026c step RG6.11.2)
+  - date resolved: **2026-10-18 14:41**, date raised: 2026-10-18
+- **1.13.132** `EXTENSION` `HIGH EFF` `resolved by: Claude-JG` OpenGL (#2155)
+  - description: add textures to renderer (and add reset function), using numpy binary array representing RGB/RGBA image; reference numbers are then used in triangle lists
+  - **notes:** SC.renderer.AddTexture(name, image, interpretation, flags) adds a texture from a numpy array of uint8 or floats in \[0, 1\], grey, RGB or RGBA, shared by all SystemContainers; RemoveTexture and GetTextureNames (revision2026c step RG6.11.2)
+  - date resolved: **2026-10-18 14:41**, date raised: 2025-11-02
+- **1.13.131** `EXTENSION` `HIGH EFF` `resolved by: Claude-JG` OpenGL (#2154)
+  - description: add textures for triangle lists, using texture reference number and coordinates, according to standard format
+  - **notes:** A TriangleList takes 'texture', the name of a texture added with SC.renderer.AddTexture, and 'textureCoordinates', (u, v) per point; OpenGL draws the triangles with the texture (revision2026c step RG6.11.3)
+  - date resolved: **2026-10-18 14:41**, date raised: 2025-11-02
 - **1.13.130** `EXTENSION` `MEDIUM EFF` `resolved by: Claude-JG` graphics (#2281)
   - description: add functionality to make consistent triangles with same orientation (all computed normals are outbound or inbound); used to heal imported geometries
   - **notes:** graphics.OrientTriangles orients the triangles of a TriangleList consistently and every closed part outward, merging points by position so that the triangles of STL files are connected, recomputes the normals and reports what it changed; graphics.CheckTriangleOrientation reports without changing; FromSTLfile, FromSTLfileASCII and FromPointsAndTrigs take orientTriangles=True for STL files whose orientation is not consistent.

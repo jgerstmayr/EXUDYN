@@ -1174,13 +1174,16 @@ void Raytracer::SoftwareRenderer(Index viewID, VisualizationSystemContainerBase*
 	Index cntWrongNormals = 0;
 	static bool warnedWrongNormals = false;
 	ResizableArray<GLTriangle> triangles6Split;	//the 6-node triangles of a GraphicsData, split with the settings of now (#2709)
-	ResizableArray<GLLine> triangles6Edges;
+	ResizableArray<GLTriangle> texturedAsPlain;
+ResizableArray<GLLine> triangles6Edges;
 	ResizableArray<GLLine> lines3Split;			//the quadratic lines, split likewise
 	for (auto data : basicVisualizationSystemContainer->GetGraphicsDataList())
 	{
 		EXUvis::SplitTriangles6(data->glTriangles6, *visSettings, triangles6Split, &triangles6Edges,
 			settingsView.scene.showFaceEdges, settingsView.scene.showMeshEdges);
-		for (const ResizableArray<GLTriangle>* triangleList : { &data->glTriangles, &triangles6Split })
+		texturedAsPlain.SetNumberOfItems(0); //the textured triangles, drawn with the colors of their points (#3030)
+		for (const GLTriangle& trig : data->glTexturedTriangles) { texturedAsPlain.Append(trig); }
+		for (const ResizableArray<GLTriangle>* triangleList : { &data->glTriangles, &triangles6Split, &texturedAsPlain })
 		for (const GLTriangle& trig : *triangleList)
 		{
 			bool isSplit = (triangleList == &triangles6Split); //its edges are the curved ones below
