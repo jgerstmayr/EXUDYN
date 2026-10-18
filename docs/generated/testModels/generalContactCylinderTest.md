@@ -68,7 +68,7 @@ gContact.SetSearchTreeCellSize(numberOfCells=[ss,ss,ss])
 # gContact.sphereSphereContact = False
 
 #%% ground
-gFloor = graphics.CheckerBoard(p0,size=planeL, nTiles=10)
+gFloor = graphics.CheckerBoard(p0,size=planeL, nTiles=10, useTexture=False) #the triangles of the pattern are the contact mesh
 gDataList = [gFloor]
 
 

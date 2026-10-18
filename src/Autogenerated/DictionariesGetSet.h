@@ -5014,7 +5014,7 @@ inline py::dict GetDictionaryWithTypeInfo(const VSettingsOpenGL& data) {
     d["value"] = data.showTextures;
     d["type"] = "bool";
     d["size"] = std::vector<int>{1};
-    d["description"] = "True: the triangles of a TriangleList with a texture are drawn with it; False: with the colors of their points (#3032)";
+    d["description"] = "True: the triangles of a TriangleList with a texture are drawn with it, by OpenGL and by the raytracer; False: with the colors of their points (#3032)";
     structureDict["showTextures"] = d;
 
     d = py::dict(); //reset local dict

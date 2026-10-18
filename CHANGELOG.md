@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.13 | Newborn | 133 | 1.13.135 |
+| 1.13 | Newborn | 136 | 1.13.138 |
 | 1.12 | Metheney | 367 | 1.12.462 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
@@ -30,6 +30,18 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.13 - Newborn (current)
 
+- **1.13.138** `CHANGE` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` graphics.CheckerBoard draws its pattern with a texture generated on the fly, useTexture=True (#3036)
+  - description: Maintainer 2026-10-18: graphics.CheckerBoard uses by default (useTexture=True) a 2x2 texture of its two colors, generated when it is called, on one quad of two triangles instead of 2 nTiles^2 triangles; useTexture=False keeps the triangles
+  - **notes:** graphics.CheckerBoard is one quad with a texture of its two colors, generated when it is called (useTexture=True); useTexture=False gives the triangles of the pattern, e.g. for a contact mesh, and colors that encode a material give them as well (revision2026c step RG6.11.9)
+  - date resolved: **2026-10-18 17:00**, date raised: 2026-10-18
+- **1.13.137** `EXTENSION` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` Textures in the raytracer (#3034)
+  - description: The raytracer samples the texture of a textured triangle with the barycentric coordinates it computes already, nearest or bilinear by the flags, so that raytraced and saved images show textures as OpenGL does.
+  - **notes:** The raytracer draws textures as OpenGL does: nearest or linear, repeated or clamped, multiplied with or replacing the color, RGBA as transparency and RGBAMask cut out, also in the shadows; visualizationSettings.openGL.showTextures applies (revision2026c step RG6.11.5)
+  - date resolved: **2026-10-18 17:00**, date raised: 2026-10-18
+- **1.13.136** `EXTENSION` `MEDIUM EFF` `raised by: Claude-JG` `resolved by: Claude-JG` Texture coordinates for graphics.Quad and graphics.Cylinder, and by projection for any TriangleList (#3031)
+  - description: Maintainer 2026-10-18: a straightforward way to put a texture on a quad and on a cylinder (an argument texture=name), and for general geometry a function that computes the texture coordinates by a planar, cylindrical or spherical projection, without the user giving them.
+  - **notes:** graphics.Quad and graphics.Cylinder take texture and textureTiles; graphics.ProjectTexture gives a TriangleList texture coordinates by a planar, box, cylindrical or spherical projection; Transform, Move, InvertTriangles and MergeTriangleLists keep the texture, and a list merged with one without has the texture coordinates nan there, whose triangles are drawn without texture (revision2026c step RG6.11.6)
+  - date resolved: **2026-10-18 17:00**, date raised: 2026-10-18
 - **1.13.135** `EXTENSION` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` visualizationSettings.openGL.showTextures to switch off drawing textures (#3032)
   - description: Maintainer 2026-10-18: a flag in the OpenGL settings; without textures the triangles are drawn with their colors.
   - **notes:** visualizationSettings.openGL.showTextures=False draws the textured triangles with the colors of their points (revision2026c step RG6.11.4)

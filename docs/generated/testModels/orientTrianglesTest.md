@@ -77,7 +77,7 @@ Check(graphics.CheckTriangleOrientation(fixed)['consistent'], 'two bricks: not o
 u += report['flipped']
 
 #an open surface keeps the orientation of most of its triangles
-board = graphics.CheckerBoard(point=[0, 0, 0], size=2, nTiles=4)
+board = graphics.CheckerBoard(point=[0, 0, 0], size=2, nTiles=4, useTexture=False)
 fixed, report = graphics.OrientTriangles(Scrambled(board, fraction=0.3), returnReport=True)
 Check(np.array_equal(Triangles(fixed), Triangles(board)) and report['openEdges'] > 0, 'open surface: ' + str(report))
 u += report['flipped']

@@ -100,6 +100,7 @@ common = [
     "numpy-stl",        #imported as 'stl'; STL import in graphics.py
     "tqdm",             #progress reporting, e.g. in the optimization routines
     "ffmpeg-python",    #video export from interactive.py
+    "pillow",           #imported as 'PIL'; graphics.ImageFromFile (matplotlib depends on it as well)
     ]
 all = [
     "exudyn[common]",

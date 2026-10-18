@@ -1,0 +1,15 @@
+{
+  "number": 3034,
+  "title": "Textures in the raytracer",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "EXTENSION",
+  "effort": "LOW",
+  "description": "The raytracer samples the texture of a textured triangle with the barycentric coordinates it computes already, nearest or bilinear by the flags, so that raytraced and saved images show textures as OpenGL does.",
+  "dateRaised": "2026-10-18",
+  "deadline": "2027-04-16",
+  "dateResolved": "2026-10-18 17:00",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "The raytracer draws textures as OpenGL does: nearest or linear, repeated or clamped, multiplied with or replacing the color, RGBA as transparency and RGBAMask cut out, also in the shadows; visualizationSettings.openGL.showTextures applies (revision2026c step RG6.11.5)",
+  "resolvedInVersion": "1.13.137"
+}

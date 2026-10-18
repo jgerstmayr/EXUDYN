@@ -1510,7 +1510,7 @@
         .def_property("showLines", &VSettingsOpenGL::PyGetShowLines, &VSettingsOpenGL::PySetShowLines)
         .def_property("showMeshEdges", &VSettingsOpenGL::PyGetShowMeshEdges, &VSettingsOpenGL::PySetShowMeshEdges)
         .def_property("showMeshFaces", &VSettingsOpenGL::PyGetShowMeshFaces, &VSettingsOpenGL::PySetShowMeshFaces)
-        .def_property("showTextures", EPyUtils::MemberGetter(&VSettingsOpenGL::showTextures), EPyUtils::MemberSetter(&VSettingsOpenGL::showTextures, "VSettingsOpenGL.showTextures"), "True: the triangles of a TriangleList with a texture are drawn with it; False: with the colors of their points (#3032)")
+        .def_property("showTextures", EPyUtils::MemberGetter(&VSettingsOpenGL::showTextures), EPyUtils::MemberSetter(&VSettingsOpenGL::showTextures, "VSettingsOpenGL.showTextures"), "True: the triangles of a TriangleList with a texture are drawn with it, by OpenGL and by the raytracer; False: with the colors of their points (#3032)")
         .def_property("textLineSmooth", &VSettingsOpenGL::PyGetTextLineSmooth, &VSettingsOpenGL::PySetTextLineSmooth)
         .def_property("textLineWidth", &VSettingsOpenGL::PyGetTextLineWidth, &VSettingsOpenGL::PySetTextLineWidth)
         .def_property("zMaxSceneFactor", EPyUtils::MemberGetter(&VSettingsOpenGL::zMaxSceneFactor), EPyUtils::MemberSetter(&VSettingsOpenGL::zMaxSceneFactor, EPyUtils::RangeCheck::positive, "VSettingsOpenGL.zMaxSceneFactor"), "factor multiplied with maxSceneSize to avoid clipping of modelview; larger values reduce clipping of near or far objects, but may lead to artifacts (so-called Z-fighting)")

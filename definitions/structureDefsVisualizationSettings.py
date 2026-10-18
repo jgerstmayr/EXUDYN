@@ -1815,7 +1815,7 @@ definitions.append(StructureDefinition(
         StructureParameter(type=Tbool,
             pythonName='showTextures',
             defaultValue=True,
-            description=r'True: the triangles of a TriangleList with a texture are drawn with it; False: with the colors of their points (#3032)'),
+            description=r'True: the triangles of a TriangleList with a texture are drawn with it, by OpenGL and by the raytracer; False: with the colors of their points (#3032)'),
         StructureParameter(type=Tbool,
             pythonName='drawFaceNormals',
             defaultValue=False,

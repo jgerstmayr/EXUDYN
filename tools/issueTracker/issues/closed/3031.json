@@ -1,0 +1,15 @@
+{
+  "number": 3031,
+  "title": "Texture coordinates for graphics.Quad and graphics.Cylinder, and by projection for any TriangleList",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "EXTENSION",
+  "effort": "MEDIUM",
+  "description": "Maintainer 2026-10-18: a straightforward way to put a texture on a quad and on a cylinder (an argument texture=name), and for general geometry a function that computes the texture coordinates by a planar, cylindrical or spherical projection, without the user giving them.",
+  "dateRaised": "2026-10-18",
+  "deadline": "2027-04-16",
+  "dateResolved": "2026-10-18 17:00",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "graphics.Quad and graphics.Cylinder take texture and textureTiles; graphics.ProjectTexture gives a TriangleList texture coordinates by a planar, box, cylindrical or spherical projection; Transform, Move, InvertTriangles and MergeTriangleLists keep the texture, and a list merged with one without has the texture coordinates nan there, whose triangles are drawn without texture (revision2026c step RG6.11.6)",
+  "resolvedInVersion": "1.13.136"
+}

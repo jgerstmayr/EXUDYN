@@ -2015,3 +2015,46 @@ compiled into characterBitmap.cpp (GlfwClientExtended.cpp:511), and the raytrace
   with the example of RG6.11.7, or with the quad of textureTest.py and `SC.renderer.Start()`.
 - Left for later sub-steps: the raytracer (RG6.11.5), the graphics functions keeping `texture` when they merge or move
   triangle lists and giving coordinates (RG6.11.6), the example (RG6.11.7).
+
+<a id="rg6-11-5"></a>
+### RG6.11.5, .6, .9 and .8 in part — textures in the raytracer and in exudyn.graphics (2026-10-18, #3031, #3034, #3035, #3036)
+*(Maintainer 2026-10-18: the OpenGL test shows the red and black checkerboard texture, the ruler works in OpenGL; do
+RG6.11.5 and .6; textures in OpenGameArt_textures_nosync, a test with hardwood_small.jpg; a common loader under
+exudyn.graphics; graphics.CheckerBoard by default with a texture generated on the fly, useTexture=True.)*
+- **Raytracer** (#3034): the textured triangles go into the triangle list of the raytracer as before; beside it
+  `triangleTextures` (per triangle -1 or an index into `texturedTriangles`, allocated only when a textured triangle
+  exists, filled with -1 for those before) and `textures`, a copy of each texture used (`TextureStore::GetCopy`), so the
+  threads sample without the lock and Python may replace a texture meanwhile. `IntersectRayWithItem` calls
+  `ApplyTexture` after a hit: the barycentric u, v of the hit interpolate the coordinates, `Texture::Sample` (in
+  TextureStore.h, nearest or bilinear between pixel centers, repeat or clamp - as OpenGL); Replace sets the color,
+  else it is multiplied; RGBA multiplies the alpha; RGBAMask below 0.5 clears the hit, so the ray passes and the cut-out
+  casts no shadow. The raytracer lights a replaced color (OpenGL does not with GL_REPLACE) - left as it is.
+- **exudyn.graphics** (#3031): `Quad(texture, textureTiles)` - one quad of two triangles, coordinates (0,0) to the tiles;
+  `color=None` is black, white with a texture. `ProjectTexture(graphicsData, texture, projection, point, rotationMatrix,
+  size, tiles, color=white)`: planar keeps the points; box, cylindrical and spherical give each triangle points of its
+  own (appended, so edges keep their indices), box chooses per triangle the axis nearest to its normal and orients the
+  image not mirrored and upright on the sides; cylindrical puts the triangles facing along the axis planar on the
+  faces; a triangle across the seam gets its angles on one side, a point on the axis the angle of the others.
+  `Cylinder(texture, textureTiles)` = the cylinder, then ProjectTexture cylindrical with right-handed axes, the image
+  once across the diameter on the faces. `_rowColumns` knows `textureCoordinates`; Transform and InvertTriangles copy
+  the keys; MergeTriangleLists refuses two textures and gives a list without texture the coordinates nan - C++ draws a
+  triangle with a nan coordinate without the texture (inf still refused). This was forced by the examples and
+  laserScannerTest, which merge bricks into a CheckerBoard.
+- **CheckerBoard** (#3036): the 2x2 image [[alternate, color], [color, alternate]] (first row at the top, so the tile
+  at p0 has color), Nearest, RGB or RGBA if a color is transparent, tiles nTiles/2; the module function `_AddTexture`
+  (hand-bound in Pybind_manual_classes.cpp, `PyAddTexture` with `allowReserved`) adds it without a SystemContainer -
+  no defaults there, because the enums are registered after the manual classes (the module failed to import with
+  them). Colors outside [0, 1] (a material in A) give the triangles. orientTrianglesTest and
+  generalContactCylinderTest use `useTexture=False`: the first needs the triangles, the second makes its contact mesh of
+  them.
+- **ImageFromFile** (#3035): Pillow, converting other modes to L, RGB or RGBA; else matplotlib (PNG as floats, scaled);
+  else ImportError naming both; pillow is in the extra [common] of pyproject.toml (checkExtras). Tested with a PNG
+  written by matplotlib. hardwood_small.jpg is not in the repository:
+  the folder has no license file and the JPEG no license metadata, so it waits for the maintainer (RG6.11.8 open).
+- graphicsRegression.py: `texturedTriangles` is a kind of the fingerprint, with the texture coordinates and the names;
+  the references recorded again - the CheckerBoard of the cases is now two textured triangles, and the raytraced image
+  with showFaceEdges shows the edges of the two triangles instead of those of the tiles.
+- textureGraphicsTest.py (3684.0): raytraced quadrants of a 2x2 texture, showTextures=False, the mask over a green quad,
+  the coordinates of Quad, Cylinder (no seam triangle, tiles, faces), box, planar, spherical, Move/Merge/Invert, a
+  merged list without texture drawn plain, CheckerBoard with texture against the triangles (< 5 % of the pixels
+  differ), ImageFromFile; the sums of coordinates rounded to 1e-6, since the angles come from numpy.

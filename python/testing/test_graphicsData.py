@@ -23,7 +23,7 @@ import exudyn as exu
 import exudyn.graphics as graphics
 from exudyn.utilities import InertiaCuboid                                  # noqa: F401 - installs mbs.Create...
 
-kinds = ['lines', 'spheres', 'circles', 'texts', 'triangles', 'lines3', 'triangles6']
+kinds = ['lines', 'spheres', 'circles', 'texts', 'triangles', 'lines3', 'triangles6', 'texturedTriangles']
 
 
 def Pendulum():
@@ -71,8 +71,9 @@ def testEveryTriangleNamesTheItemThatDrewIt():
 
     #a brick is 6 faces of 2 triangles, and it is the body's own graphics
     assert counts[(0, objectType, int(oBody))] == 12
-    #the ground draws its checkerboard
-    assert counts[(0, objectType, int(oGround))] > 0
+    #the ground draws its checkerboard, one quad with a texture (#3036)
+    textured = CountsPerItem(SC.renderer.GetGraphicsData(), 'texturedTriangles')
+    assert textured[(0, objectType, int(oGround))] == 2
 
 
 def testTheCountsAreTheSameEveryTime():

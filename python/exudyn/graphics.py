@@ -41,8 +41,8 @@ __all__ = [
     'LinkedCylinders', 'BallBearingRings', 'InvoluteGear', 'ToothedRack', 'BoundingBoxSingle',
     'BoundingBox', 'FromPointsAndTrigs', 'ToPointsAndTrigs', 'Transform', 'Move',
     'MergeTriangleLists', 'InvertTriangles', 'InconsistentTriangles', 'OrientTriangles', 'CheckTriangleOrientation',
-    'NGsolveMesh2PointsAndTrigs',
-    'FromSTLfileASCII', 'FromPyMeshlabFile', 'FromSTLfile', 'AddEdgesAndSmoothenNormals',
+    'NGsolveMesh2PointsAndTrigs', 'ImageFromFile', 'ProjectTexture',
+    'FromSTLfileASCII','FromPyMeshlabFile', 'FromSTLfile', 'AddEdgesAndSmoothenNormals',
     'ExportSTL',
     ]
 
@@ -122,7 +122,8 @@ class material:
 colorList = exudyn.graphicsDataUtilities.color4list
 
 #the columns of the rows of a GraphicsData, per type and key (#2709)
-_rowColumns = {'TriangleList': {'points':3, 'normals':3, 'colors':4, 'triangles':3, 'triangles6':6, 'edges':2, 'edges3':3},
+_rowColumns = {'TriangleList': {'points':3, 'normals':3, 'colors':4, 'triangles':3, 'triangles6':6, 'edges':2, 'edges3':3,
+                                'textureCoordinates':2},
                'Spheres': {'points':3, 'colors':4},
                'Lines': {'points':3, 'colors':4},
                'Line': {'data':3}}
@@ -895,9 +896,10 @@ def _NumberOfQuadraticElements(nSegments):
 @_ReturnsRows
 def Cylinder(pAxis=[0,0,0], vAxis=[0,0,1], radius=0.1, color=[0.,0.,0.,1.], nTiles = 16, 
              radiusInner = None, angleRange=[0,2*pi], lastFace = True, cutPlain = True, 
-             addEdges=False, edgeColor=color.black, addFaces=True, **kwargs):  
+             addEdges=False, edgeColor=color.black, addFaces=True, texture=None, textureTiles=[1,1], **kwargs):
     """generate graphics data for a cylinder with given axis, radius and color; nTiles gives the number of tiles (minimum=3);
-    the cylinder consists of 6-node triangles (triangles6), ceil(nTiles/2) curved elements around, drawn with at least nTiles segments
+    the cylinder consists of 6-node triangles (triangles6), ceil(nTiles/2) curved elements around, drawn with at least nTiles segments;
+    with a texture, flat triangles, see ProjectTexture
 
     Args:
         pAxis: axis point of one face of cylinder (3D list or np.array)
@@ -913,10 +915,25 @@ def Cylinder(pAxis=[0,0,0], vAxis=[0,0,1], radius=0.1, color=[0.,0.,0.,1.], nTil
         edgeColor: optional color for edges
         addFaces: if False, no faces are added (only edges)
         alternatingColor: if given, optionally another color in order to see rotation of solid; only works, if angleRange=[0,2*pi]
+        texture: the name of a texture added with SC.renderer.AddTexture: around the mantle and along the axis, and on
+            each face once across the diameter, by ProjectTexture(..., projection='cylindrical'); the color, if given, is
+            multiplied with it, default white (#3031)
+        textureTiles: the number of images around the mantle and along the axis
 
     Returns:
         graphicsData dictionary, to be used in visualization of EXUDYN objects
     """
+    if texture is not None: #the cylinder without texture, then the coordinates by projection (#3031)
+        g = Cylinder(pAxis=pAxis, vAxis=vAxis, radius=radius, color=[1.,1.,1.,1.] if list(color) == [0.,0.,0.,1.] else color,
+                     nTiles=nTiles, radiusInner=radiusInner, angleRange=angleRange, lastFace=lastFace, cutPlain=cutPlain,
+                     addEdges=addEdges, edgeColor=edgeColor, addFaces=addFaces, **kwargs)
+        [axis, n1, n2] = ComputeOrthonormalBasisVectors(vAxis)
+        length = cMath.norm(vAxis)
+        axes = np.array([n1, n2, axis]).T
+        if np.linalg.det(axes) < 0: #right-handed, so that the image is not mirrored
+            axes = np.array([n2, n1, axis]).T
+        return ProjectTexture(g, texture, projection='cylindrical', point=pAxis, rotationMatrix=axes,
+                              size=[2*radius, length/textureTiles[1]], tiles=textureTiles[0], color=None)
     if nTiles < 3: 
         exudyn.Print("WARNING: graphics.Cylinder: nTiles < 3: setting nTiles=3")
         nTiles = 3
@@ -1537,14 +1554,17 @@ def Frame(HT=np.eye(4), length = 1, colors=[color.red, color.green, color.blue],
 
 
 @_ReturnsRows
-def Quad(pList, color=[0.,0.,0.,1.], **kwargs): 
-    """generate graphics data for simple quad with option for checkerboard pattern;
+def Quad(pList, color=None, texture=None, textureTiles=[1,1], **kwargs):
+    """generate graphics data for simple quad with option for checkerboard pattern or a texture;
     points are arranged counter-clock-wise, e.g.: p0=[0,0,0], p1=[1,0,0], p2=[1,1,0], p3=[0,1,0]
 
     Args:
         pList: list of 4 quad points [[x0,y0,z0],[x1,y1,z1],...]
-        color: provided as list of 4 RGBA values
-        alternatingColor: second color; if defined, a checkerboard pattern (default: 10x10) is drawn with color and alternatingColor
+        color: provided as list of 4 RGBA values; default black, or white with a texture, which is multiplied with it
+        texture: the name of a texture added with SC.renderer.AddTexture; the quad is drawn with it, the bottom left
+            corner of the image at p0, its bottom edge along p0-p1 (#3031)
+        textureTiles: the number of images along p0-p1 and along p0-p3
+        alternatingColor: second color; if defined, a checkerboard pattern (default: 10x10) is drawn with color and alternatingColor; not with a texture
         nTiles: number of tiles for checkerboard pattern (default: 10)
         nTilesY: if defined, use number of tiles in y-direction different from x-direction (=nTiles)
 
@@ -1558,6 +1578,16 @@ def Quad(pList, color=[0.,0.,0.,1.], **kwargs):
         oGround=mbs.AddObject(ObjectGround(referencePosition=[0,0,0],
                               visualization=VObjectGround(graphicsData=[plane])))
     """
+    if color is None:
+        color = [1.,1.,1.,1.] if texture is not None else [0.,0.,0.,1.]
+    if texture is not None: #one quad of two triangles with the texture (#3031)
+        (t0, t1) = (float(textureTiles[0]), float(textureTiles[1]))
+        points = np.array(pList, dtype=float).reshape((4, 3))
+        normal = list(gdu.ComputeTriangleNormal(points[0], points[1], points[2]))
+        return {'type':'TriangleList', 'colors':np.array(list(color)*4), 'points':points.flatten(),
+                'normals':np.array(normal*4), 'triangles':np.array([0,1,2, 0,2,3]),
+                'texture':texture, 'textureCoordinates':np.array([0,0, t0,0, t0,t1, 0,t1], dtype=float)}
+
     color2 = list(color)
     nTiles = 1
     if 'alternatingColor' in kwargs:
@@ -1617,7 +1647,7 @@ def Quad(pList, color=[0.,0.,0.,1.], **kwargs):
 
 @_ReturnsRows
 def CheckerBoard(point=[0,0,0], normal=[0,0,1], size = 1,
-                             color=color.lightgrey, alternatingColor=color.lightgrey2, nTiles=10, **kwargs):
+                             color=color.lightgrey, alternatingColor=color.lightgrey2, nTiles=10, useTexture=True, **kwargs):
     """function to generate checkerboard background;
     points are arranged counter-clock-wise, e.g.:
 
@@ -1630,7 +1660,11 @@ def CheckerBoard(point=[0,0,0], normal=[0,0,1], size = 1,
         alternatingColor: second color; if defined, a checkerboard pattern (default: 10x10) is drawn with color and alternatingColor
         nTiles: number of tiles for checkerboard pattern in first direction
         nTiles2: number of tiles for checkerboard pattern in second direction; default: nTiles
-        materialIndex: use special graphics material for both colors
+        useTexture: True: one quad of two triangles with a texture of the two colors, which is added when this function is
+            called, named 'exudyn.checkerBoard.' and the colors; the points are white; False: 2 nTiles nTiles2 triangles
+            with the colors of their points (#3036)
+        materialIndex: use special graphics material for both colors; drawn with triangles, as colors with values
+            outside [0, 1], which encode a material
 
     Returns:
         graphicsData dictionary, to be used in visualization of EXUDYN objects
@@ -1660,7 +1694,17 @@ def CheckerBoard(point=[0,0,0], normal=[0,0,1], size = 1,
               list(p0+0.5*size*n1+0.5*size2*n2),
               list(p0-0.5*size*n1+0.5*size2*n2)]
 
-    return Quad(points, color=color0, alternatingColor=color1, 
+    colors = np.array([color0, color1], dtype=float)
+    if useTexture and 'materialIndex' not in kwargs and colors.min() >= 0 and colors.max() <= 1: #a 2x2 texture of the two colors, repeated (#3036)
+        image = np.array([[color1, color0], [color0, color1]], dtype=float) #first row at the top: tile (0,0) at the bottom left has color
+        transparent = colors[:, 3].min() < 1
+        name = 'exudyn.checkerBoard.' + '_'.join('{:.4g}'.format(c) for c in list(color0) + list(color1))
+        exudyn._compiledModule._AddTexture(name, image if transparent else image[:, :, :3],
+                                           exudyn.TextureInterpretation.RGBA if transparent else exudyn.TextureInterpretation.RGB,
+                                           [exudyn.TextureFlags.Nearest])
+        return Quad(points, texture=name, textureTiles=[0.5*nTiles, 0.5*nTiles2])
+
+    return Quad(points, color=color0, alternatingColor=color1,
                 nTiles=nTiles, nTilesY=nTiles2)
 
 #%%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -2531,6 +2575,9 @@ def Transform(graphicsData, translation=None, rotation=None, scale=1,
             gNew['edges3'] = np.array(graphicsData['edges3'])
         if 'edgeColor' in graphicsData:
             gNew['edgeColor'] = np.array(graphicsData['edgeColor'])
+        if 'texture' in graphicsData: #the texture coordinates stay with the points (#3031)
+            gNew['texture'] = graphicsData['texture']
+            gNew['textureCoordinates'] = np.array(graphicsData['textureCoordinates'], dtype=float).flatten()
 
         n=int(len(graphicsData['points'])/3)
         v0 = np.array(graphicsData['points'])
@@ -2626,10 +2673,13 @@ def MergeTriangleLists(g1,g2):
         graphicsData dictionaries g1 and g2 obtained from GraphicsData functions
 
     Returns:
-        one graphicsData dictionary with single triangle lists and compatible points and normals, to be used in visualization of EXUDYN objects; edges are merged; edgeColor is taken from graphicsData g1
+        one graphicsData dictionary with single triangle lists and compatible points and normals, to be used in visualization of EXUDYN objects; edges are merged; edgeColor is taken from graphicsData g1; the texture of one of them is kept, and the points of the other get the texture coordinates nan, so that their triangles are drawn without it; two different textures cannot be merged (#3031)
     """
     g1 = _Flat(SpheresToTriangleList(g1))
     g2 = _Flat(SpheresToTriangleList(g2))
+    if 'texture' in g1 and 'texture' in g2 and g1['texture'] != g2['texture']:
+        raise ValueError("MergeTriangleLists: the lists have different textures ('" + str(g1.get('texture')) + "' and '"
+                         + str(g2.get('texture')) + "'); a TriangleList has one texture, keep them as two graphics data")
     nPoints = int(len(g1['points'])/3) #number of points in g1
     useNormals = False
     if 'normals' in g1 and 'normals' in g2:
@@ -2670,6 +2720,11 @@ def MergeTriangleLists(g1,g2):
         data['edgeColor'] = np.array(g1['edgeColor']) #only taken from g1, as there is only a single color
     elif 'edgeColor' in g2:
         data['edgeColor'] = np.array(g2['edgeColor']) #only taken from g2
+    if 'texture' in g1 or 'texture' in g2: #the points of a list without texture have none (nan)
+        def Coordinates(g):
+            return np.array(g['textureCoordinates'], dtype=float) if 'texture' in g else np.full(2*int(len(g['points'])/3), np.nan)
+        data['texture'] = g1['texture'] if 'texture' in g1 else g2['texture']
+        data['textureCoordinates'] = np.append(Coordinates(g1), Coordinates(g2))
 
 
     return data
@@ -2711,6 +2766,9 @@ def InvertTriangles(graphicsData, invertTriangles=True, invertNormals=True):
         gNew['edges'] = np.array(graphicsData['edges']) #copy
     if 'edgeColor' in graphicsData:
         gNew['edgeColor'] = np.array(graphicsData['edgeColor']) #copy
+    if 'texture' in graphicsData:
+        gNew['texture'] = graphicsData['texture']
+        gNew['textureCoordinates'] = np.array(graphicsData['textureCoordinates'], dtype=float).flatten() #copy
 
     #points = np.array(graphicsData['points']).reshape((nPoints,3))
     triangles = np.array(gNew['triangles']).reshape((nTrigs,3))
@@ -3078,7 +3136,138 @@ def NGsolveMesh2PointsAndTrigs(mesh=None, ngMesh=None, meshOrder=2, scale=1, add
 
 
 @_ReturnsRows
-def FromSTLfileASCII(fileName, color=[0.,0.,0.,1.], verbose=False, invertNormals=True, invertTriangles=True,
+def ImageFromFile(fileName):
+    """load an image file - PNG, JPG and the other formats of Pillow - as a numpy array for SC.renderer.AddTexture (#3035);
+    uses Pillow (PIL), else matplotlib, which reads PNG without Pillow; neither is a dependency of Exudyn
+
+    Args:
+        fileName: the name of the image file
+
+    Returns:
+        a numpy array of uint8 with the shape (height, width) for a grey image, else (height, width, 3) or, with
+        transparency, (height, width, 4); the first row is the top of the image
+
+    Example:
+        SC.renderer.AddTexture('wood', graphics.ImageFromFile('wood.jpg'), interpretation=exu.TextureInterpretation.RGB)
+    """
+    try:
+        from PIL import Image
+    except ImportError:
+        Image = None
+    if Image is not None:
+        with Image.open(fileName) as image:
+            if image.mode not in ['L', 'RGB', 'RGBA']:
+                hasAlpha = 'A' in image.mode or 'transparency' in image.info
+                image = image.convert('RGBA' if hasAlpha else ('L' if image.mode in ['1', 'I', 'I;16', 'F'] else 'RGB'))
+            return np.array(image, dtype=np.uint8)
+    try:
+        import matplotlib.image
+    except ImportError:
+        raise ImportError('graphics.ImageFromFile needs Pillow (pip install pillow) or matplotlib to read images')
+    image = np.asarray(matplotlib.image.imread(fileName))
+    if image.dtype != np.uint8: #PNG: floats in [0, 1]
+        image = np.round(np.clip(image, 0., 1.)*255.).astype(np.uint8)
+    return image
+
+
+@_ReturnsRows
+def ProjectTexture(graphicsData, texture, projection='box', point=[0,0,0], rotationMatrix=np.eye(3), size=1., tiles=1,
+                   color=[1.,1.,1.,1.]):
+    """add a texture to a TriangleList with texture coordinates computed by a projection, for geometry that has none
+    (#3031); 6-node triangles become flat ones (which the renderer does with a texture anyway)
+
+    Args:
+        graphicsData: GraphicsData of type TriangleList
+        texture: the name of a texture added with SC.renderer.AddTexture
+        projection: how a point gets its coordinates (u, v), with the axes a0, a1, a2 = the columns of rotationMatrix
+            and x = the point minus point:
+            'planar': u = x*a0/size[0], v = x*a1/size[1];
+            'box': each triangle planar on the plane of the two axes that are most nearly in it, oriented such that the
+            image is not mirrored seen from outside and upright (v along a2) on the sides - for bricks and other boxy shapes;
+            'cylindrical': around the axis a2: u = tiles times the angle about a2 / (2 pi), v = x*a2/size[1]; the
+            triangles facing along a2 (the faces of a cylinder) planar, u = 0.5 + x*a0/size[0], v = 0.5 + x*a1/size[0];
+            'spherical': u = tiles times the angle about a2 / (2 pi), v = the angle from the pole -a2 / pi
+        point: the origin of the projection
+        rotationMatrix: its columns are the axes a0, a1, a2 of the projection
+        size: the length of one image, a float or [size0, size1]
+        tiles: the number of images around the axis, for 'cylindrical' and 'spherical'
+        color: the color of all points, multiplied with the texture; white shows the texture as it is; None keeps the
+            colors of graphicsData
+
+    Returns:
+        the GraphicsData with 'texture' and 'textureCoordinates'; for 'box', 'cylindrical' and 'spherical' each
+        triangle gets points of its own, so that the coordinates can jump at its edges (seams, the edges of a box);
+        the edges refer to the points as before
+
+    Example:
+        SC.renderer.AddTexture('wood', graphics.ImageFromFile('wood.jpg'))
+        g = graphics.ProjectTexture(graphics.Brick(size=[1,0.5,0.2]), 'wood', projection='box', size=0.5)
+    """
+    if projection not in ['planar', 'box', 'cylindrical', 'spherical']:
+        raise ValueError("ProjectTexture: projection must be 'planar', 'box', 'cylindrical' or 'spherical'")
+    g = _Flat(Triangles6ToTriangles(SpheresToTriangleList(graphicsData)))
+    if g['type'] != 'TriangleList':
+        raise ValueError('ProjectTexture: graphicsData must be a TriangleList')
+    (s0, s1) = (float(size), float(size)) if np.isscalar(size) else (float(size[0]), float(size[1]))
+    A = np.array(rotationMatrix, dtype=float).reshape((3, 3))
+    points = np.array(g['points'], dtype=float).reshape((-1, 3))
+    triangles = np.array(g.get('triangles', []), dtype=int).reshape((-1, 3))
+    local = (points - np.array(point, dtype=float)) @ A #the coordinates x*a0, x*a1, x*a2 of each point
+    if color is not None:
+        g['colors'] = np.tile(np.array(color, dtype=float), len(points))
+    gNew = dict(g)
+    gNew['texture'] = texture
+    if projection == 'planar': #the points stay shared
+        gNew['textureCoordinates'] = np.column_stack([local[:, 0]/s0, local[:, 1]/s1]).flatten()
+        return gNew
+
+    #each triangle with points of its own, appended to the points, so that the edges refer to the old ones
+    nPoints = len(points)
+    corners = triangles.flatten()
+    x = local[corners].reshape((-1, 3, 3))
+    normals = np.cross(x[:, 1] - x[:, 0], x[:, 2] - x[:, 0]) #in the axes of the projection
+    uv = np.zeros((len(triangles), 3, 2))
+    if projection == 'box':
+        dominant = np.argmax(np.abs(normals), axis=1)
+        positive = normals[np.arange(len(normals)), dominant] >= 0
+        #(axis of u, sign of u, axis of v, sign of v) per dominant axis and side, such that u x v is the normal
+        frames = {(0, True): (1, 1, 2, 1), (0, False): (1, -1, 2, 1), (1, True): (0, -1, 2, 1), (1, False): (0, 1, 2, 1),
+                  (2, True): (0, 1, 1, 1), (2, False): (0, 1, 1, -1)}
+        for i in range(len(triangles)):
+            (iu, su, iv, sv) = frames[(int(dominant[i]), bool(positive[i]))]
+            uv[i, :, 0] = su*x[i, :, iu]/s0
+            uv[i, :, 1] = sv*x[i, :, iv]/s1
+    else:
+        angle = cMath.atan2(x[:, :, 1], x[:, :, 0])/(2*pi) #in [-0.5, 0.5]
+        for i in range(len(triangles)): #a triangle across the seam: its angles on one side
+            if angle[i].max() - angle[i].min() > 0.5:
+                angle[i][angle[i] < 0] += 1.
+        radial = np.linalg.norm(x[:, :, 0:2], axis=2)
+        if projection == 'cylindrical':
+            uv[:, :, 0] = tiles*angle
+            uv[:, :, 1] = x[:, :, 2]/s1
+            normalLength = np.linalg.norm(normals, axis=1)
+            cap = np.abs(normals[:, 2]) > 0.7*np.where(normalLength > 0, normalLength, 1.) #facing along the axis
+            sign = np.where(normals[:, 2] >= 0, 1., -1.)[cap] #not mirrored on the face at -a2
+            uv[cap, :, 0] = 0.5 + sign[:, None]*x[cap, :, 0]/s0
+            uv[cap, :, 1] = 0.5 + x[cap, :, 1]/s0
+        else:
+            uv[:, :, 0] = tiles*angle
+            uv[:, :, 1] = cMath.atan2(radial, -x[:, :, 2])/pi
+        for i in range(len(triangles)): #a point on the axis has no angle: that of the other points
+            onAxis = radial[i] <= 1e-12*max(1., np.abs(x[i]).max())
+            if onAxis.any() and not onAxis.all():
+                uv[i, onAxis, 0] = uv[i, ~onAxis, 0].mean()
+    gNew['points'] = np.append(points.flatten(), points[corners].flatten())
+    gNew['colors'] = np.append(np.array(g['colors'], dtype=float), np.array(g['colors'], dtype=float).reshape((-1, 4))[corners].flatten())
+    if 'normals' in g:
+        gNew['normals'] = np.append(np.array(g['normals'], dtype=float), np.array(g['normals'], dtype=float).reshape((-1, 3))[corners].flatten())
+    gNew['triangles'] = nPoints + np.arange(len(corners), dtype=int)
+    gNew['textureCoordinates'] = np.append(np.zeros(2*nPoints), uv.flatten()) #the old points are only used by the edges
+    return gNew
+
+
+def FromSTLfileASCII(fileName,color=[0.,0.,0.,1.], verbose=False, invertNormals=True, invertTriangles=True,
                      orientTriangles=False):
     """generate graphics data from STL file (text format!) and use color for visualization; this function is slow, use stl binary files with FromSTLfile(...)
 

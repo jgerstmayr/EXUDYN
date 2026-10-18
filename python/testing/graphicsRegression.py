@@ -38,10 +38,10 @@ import numpy as np
 referenceDirectory = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'graphicsReferences')
 relativeTolerance = 1e-5              #maintainer, 2026-09-27
 itemLimit = 32                        #per item up to this many items, per item type above
-kinds = ['lines', 'spheres', 'circles', 'texts', 'triangles', 'lines3', 'triangles6']
+kinds = ['lines', 'spheres', 'circles', 'texts', 'triangles', 'lines3', 'triangles6', 'texturedTriangles']
 #the scalar quantities of an element, under the keys GetGraphicsData() gives them
 scalars = {'spheres': ['radius', 'resolution'], 'circles': ['radius', 'numberOfSegments'], 'texts': ['fontSize']}
-quantities = ['points', 'colors', 'radius', 'resolution', 'numberOfSegments', 'fontSize', 'normals']
+quantities = ['points', 'colors', 'radius', 'resolution', 'numberOfSegments', 'fontSize', 'normals', 'textureCoordinates']
 itemTypeNames = {0: 'None', 1: 'Node', 2: 'Object', 3: 'Marker', 4: 'Load', 5: 'Sensor'}
 
 
@@ -88,8 +88,11 @@ def Fingerprint(data, perItem=None):
             summary['colors'] = Statistics(colors)
             for quantity in scalars.get(kind, []):
                 summary[quantity] = Statistics(np.asarray(entry[quantity])[mask])
-            if kind in ['triangles', 'triangles6']:
+            if kind in ['triangles', 'triangles6', 'texturedTriangles']:
                 summary['normals'] = Statistics(np.asarray(entry['normals'])[mask].reshape(-1, 3))
+            if kind == 'texturedTriangles': #(#3030)
+                summary['textureCoordinates'] = Statistics(np.asarray(entry['textureCoordinates'])[mask].reshape(-1, 2))
+                summary['texture'] = sorted(set(texture for (texture, m) in zip(entry['texture'], mask) if m))
             if kind == 'texts':
                 summary['text'] = sorted(text for (text, m) in zip(entry['text'], mask) if m)
             group[kind] = summary
@@ -113,6 +116,8 @@ def GroupDifferences(key, a, b, tolerance=relativeTolerance):
             continue
         if x.get('text') != y.get('text'):
             lines.append(key + ': texts ' + str(x.get('text')) + ' -> ' + str(y.get('text')))
+        if x.get('texture') != y.get('texture'):
+            lines.append(key + ': textures ' + str(x.get('texture')) + ' -> ' + str(y.get('texture')))
         for quantity in quantities:
             if quantity not in x or quantity not in y:
                 continue

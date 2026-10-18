@@ -103,6 +103,24 @@ void Raytracer::IntersectRayWithTriangle(const RTVector3D& rayOrigin, const RTVe
 	return;
 }
 
+void Raytracer::ApplyTexture(Index texturedIndex, IntersectionResult& result) const
+{
+	const GLTexturedTriangle& triangle = texturedTriangles[texturedIndex];
+	if (triangle.textureID < 0 || triangle.textureID >= (Index)textures.size()) { return; }
+	const Texture& texture = textures[triangle.textureID];
+	if (!texture.valid) { return; } //removed: the colors of the points
+	RTfloat w = 1.f - result.u - result.v;
+	Float2 uv = w * triangle.textureCoordinates[0] + result.u * triangle.textureCoordinates[1] + result.v * triangle.textureCoordinates[2];
+	Float4 sample = texture.Sample(uv[0], uv[1]);
+	if (texture.interpretation == TextureInterpretation::RGBAMask)
+	{
+		if (sample[3] < 0.5f) { result.Init(); return; } //cut out: the ray passes
+	}
+	else if (texture.interpretation == TextureInterpretation::RGBA) { result.alpha *= sample[3]; }
+	bool replace = texture.HasFlag(TextureFlags::Replace);
+	for (Index i = 0; i < 3; i++) { result.color[i] = replace ? sample[i] : result.color[i] * sample[i]; }
+}
+
 //! ray-sphere intersection (#2709): the nearer intersection in front of the ray origin, else the farther one (from inside)
 void Raytracer::IntersectRayWithSphere(const RTVector3D& rayOrigin, const RTVector3D& rayDirection, const GLSphere& sphere,
 	const RaytracingSettings& RTS, IntersectionResult& result)
@@ -1175,17 +1193,34 @@ void Raytracer::SoftwareRenderer(Index viewID, VisualizationSystemContainerBase*
 	static bool warnedWrongNormals = false;
 	ResizableArray<GLTriangle> triangles6Split;	//the 6-node triangles of a GraphicsData, split with the settings of now (#2709)
 	ResizableArray<GLTriangle> texturedAsPlain;
+	triangleTextures.SetNumberOfItems(0);
+	texturedTriangles.SetNumberOfItems(0);
+	textures.clear();
+	const bool showTextures = visSettings->openGL.showTextures;
 ResizableArray<GLLine> triangles6Edges;
 	ResizableArray<GLLine> lines3Split;			//the quadratic lines, split likewise
 	for (auto data : basicVisualizationSystemContainer->GetGraphicsDataList())
 	{
 		EXUvis::SplitTriangles6(data->glTriangles6, *visSettings, triangles6Split, &triangles6Edges,
 			settingsView.scene.showFaceEdges, settingsView.scene.showMeshEdges);
-		texturedAsPlain.SetNumberOfItems(0); //the textured triangles, drawn with the colors of their points (#3030)
+		texturedAsPlain.SetNumberOfItems(0); //the textured triangles as plain ones, with their texture in triangleTextures (#3034)
 		for (const GLTriangle& trig : data->glTexturedTriangles) { texturedAsPlain.Append(trig); }
+		Index iTextured = 0;
 		for (const ResizableArray<GLTriangle>* triangleList : { &data->glTriangles, &triangles6Split, &texturedAsPlain })
 		for (const GLTriangle& trig : *triangleList)
 		{
+			Index textureIndex = -1;
+			if (triangleList == &texturedAsPlain)
+			{
+				const GLTexturedTriangle& textured = data->glTexturedTriangles[iTextured++];
+				if (showTextures)
+				{
+					textureIndex = texturedTriangles.Append(textured);
+					Index id = textured.textureID;
+					if (id >= (Index)textures.size()) { textures.resize(id + 1); }
+					if (textures[id].version == 0) { textures[id] = textureStore.GetCopy(id); } //copied once per image
+				}
+			}
 			bool isSplit = (triangleList == &triangles6Split); //its edges are the curved ones below
 			GLTriangle trigNew(trig);
 
@@ -1202,7 +1237,12 @@ ResizableArray<GLLine> triangles6Edges;
 			if ((!trig.isFiniteElement && settingsView.scene.showFaces) ||
 				(trig.isFiniteElement && settingsView.scene.showMeshFaces))
 			{
-				graphicsData.glTriangles.Append(trigNew);
+				Index index = graphicsData.glTriangles.Append(trigNew);
+				if (textureIndex != -1 || triangleTextures.NumberOfItems() != 0)
+				{
+					while (triangleTextures.NumberOfItems() < index) { triangleTextures.Append(-1); } //the triangles before have none
+					triangleTextures.Append(textureIndex);
+				}
 			}
 			if (!isSplit && (settingsView.scene.showFaceEdges || settingsView.scene.showMeshEdges))
 			{

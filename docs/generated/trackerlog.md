@@ -8,10 +8,10 @@ Every entry carries the **type** of the issue, then its **priority** and its **e
 
 General information on current version:
 
-- Exudyn version = 1.13.135.dev1
+- Exudyn version = 1.13.138.dev1
 - last change = 2026-10-18
-- Number of issues = 3035
-- Number of resolved issues = 2912 (135 in current version)
+- Number of issues = 3037
+- Number of resolved issues = 2915 (138 in current version)
 
 ## Resolved issues and resolved bugs before version 1.13
 
@@ -9039,14 +9039,12 @@ The following list contains the issues which have been **RESOLVED** in the accor
 
 ## Open issues
 
-- `EXTENSION` `LOW EFF` `raised by: Claude-JG` Textures in the raytracer (#3034)
-  - description: The raytracer samples the texture of a textured triangle with the barycentric coordinates it computes already, nearest or bilinear by the flags, so that raytraced and saved images show textures as OpenGL does.
+- `EXTENSION` `LOW EFF` `raised by: Claude-JG` graphics.ImageFromFile: load an image file as a numpy array for SC.renderer.AddTexture (#3035)
+  - description: Maintainer 2026-10-18: a common image loader in exudyn.graphics, with whatever package supports image loading (Pillow, else matplotlib), returning a uint8 array that AddTexture takes; an optional dependency with a clear error at the point of use; a test with a real texture image (hardwood\_small.jpg of OpenGameArt, 64 kB) once its license is confirmed
+  - **remarks:** graphics.ImageFromFile done (2026-10-18, with RG6.11.5); open: the test with hardwood\_small.jpg, waiting for its license
   - date raised: 2026-10-18
 - `EXAMPLE` `LOW EFF` `raised by: Claude-JG` Example: an image on graphics.Quad as texture (#3033)
   - description: Maintainer 2026-10-18: an example that adds an image as texture and shows it on a graphics.Quad; also a checkerboard by texture.
-  - date raised: 2026-10-18
-- `EXTENSION` `MEDIUM EFF` `raised by: Claude-JG` Texture coordinates for graphics.Quad and graphics.Cylinder, and by projection for any TriangleList (#3031)
-  - description: Maintainer 2026-10-18: a straightforward way to put a texture on a quad and on a cylinder (an argument texture=name), and for general geometry a function that computes the texture coordinates by a planar, cylindrical or spherical projection, without the user giving them.
   - date raised: 2026-10-18
 - `EXTENSION` `LOW EFF` `raised by: Claude-JG` Zoom to the selected item in the renderer (#3027)
   - description: Maintainer 2026-10-17: a selected item (left click, state-\>mouseSelectionItemID) is not used for the view; zoom to its bounding box as ZoomAll does for the scene, by a key and an icon of the icon bar.

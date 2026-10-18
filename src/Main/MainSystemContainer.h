@@ -202,6 +202,10 @@ public:
 	void ViewDisabledError(Index viewID, const char* functionName) const;
 };
 
+//! add a texture to the TextureStore from a numpy image (#3029); allowReserved: also names starting with 'exudyn.'
+void PyAddTexture(const STDstring& name, const py::object& image, TextureInterpretation interpretation,
+	const std::vector<TextureFlags>& flags, bool allowReserved);
+
 //! This is the extension of SystemContainer, which contains all objects needed for management and in the Python world.
 //  The System objects have their corresponding python object, which contains a pointer to the system (main) objects.
 //  Thus, any object list in SystemContainer is doubled by its Main correspondent

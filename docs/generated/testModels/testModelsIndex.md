@@ -118,6 +118,7 @@ symbolicNumpyCompatibilityTest
 symbolicSparseMatrixTest
 orientTrianglesTest
 textureTest
+textureGraphicsTest
 initialConstraintsCheckTest
 shellMeshSlopesScalingTest
 systemContainerComputeOnlyTest

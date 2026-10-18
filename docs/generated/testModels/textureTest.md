@@ -38,6 +38,9 @@ def Check(condition, message):
         exu.Print('textureTest: ' + message)
         testError += 1
 
+def Names(): #without the textures of Exudyn, e.g. of graphics.CheckerBoard in models before
+    return [name for name in SC.renderer.GetTextureNames() if not name.startswith('exudyn.')]
+
 def Refused(function, errorType=ValueError):
     try:
         function()
@@ -53,11 +56,12 @@ SC.renderer.AddTexture('gradient', np.linspace(0, 1, 16).reshape((4, 4)), interp
 SC.renderer.AddTexture('mask', [[[1, 0, 0, 1], [0, 0, 0, 0]], [[0, 0, 0, 0], [1, 0, 0, 1]]], interpretation=exu.TextureInterpretation.RGBAMask,
                        flags=[exu.TextureFlags.Clamp, exu.TextureFlags.Replace])
 SC.renderer.AddTexture('temporary', checker) #RGB image as RGBA: opaque
-Check(SC.renderer.GetTextureNames() == ['checker', 'gradient', 'mask', 'temporary'], 'names: ' + str(SC.renderer.GetTextureNames()))
+Check(Names() == ['checker', 'gradient', 'mask', 'temporary'], 'names: ' + str(Names()))
 SC.renderer.AddTexture('checker', checker[:4, :4]) #replaces the image, the name stays in place
 Check(SC.renderer.RemoveTexture('temporary') and not SC.renderer.RemoveTexture('temporary'), 'RemoveTexture')
-Check(SC.renderer.GetTextureNames() == ['checker', 'gradient', 'mask'], 'names after remove: ' + str(SC.renderer.GetTextureNames()))
-Check(exu.SystemContainer().renderer.GetTextureNames() == ['checker', 'gradient', 'mask'], 'textures are shared by the SystemContainers')
+Check(Names() == ['checker', 'gradient', 'mask'], 'names after remove: ' + str(Names()))
+Check([n for n in exu.SystemContainer().renderer.GetTextureNames() if not n.startswith('exudyn.')] == ['checker', 'gradient', 'mask'],
+      'textures are shared by the SystemContainers')
 
 #what AddTexture refuses
 Check(Refused(lambda: SC.renderer.AddTexture('a', np.full((2, 2, 3), 2.))), 'floats above 1 not refused')
@@ -66,7 +70,7 @@ Check(Refused(lambda: SC.renderer.AddTexture('a', checker, interpretation=exu.Te
 Check(Refused(lambda: SC.renderer.AddTexture('exudyn.icon', checker)), 'reserved name not refused')
 Check(Refused(lambda: SC.renderer.AddTexture('', checker)), 'empty name not refused')
 Check(Refused(lambda: SC.renderer.AddTexture('a', np.zeros((0, 4, 3)))), 'empty image not refused')
-Check('a' not in SC.renderer.GetTextureNames(), 'a refused texture was added')
+Check('a' not in Names(), 'a refused texture was added')
 
 #a quad of two triangles with the checkerboard, on the ground
 quad = {'type': 'TriangleList', 'points': [[0, 0, 0], [2, 0, 0], [2, 1, 0], [0, 1, 0]], 'triangles': [[0, 1, 2], [0, 2, 3]],
@@ -117,7 +121,7 @@ Check(Refused(lambda: Ground(texture=None)), 'textureCoordinates without texture
 Check(Refused(lambda: Ground(texture=3), TypeError), 'a texture that is not a name not refused')
 Check(mbs.systemData.NumberOfObjects() == 2, 'a refused ground was added')
 
-for name in SC.renderer.GetTextureNames():
+for name in Names():
     SC.renderer.RemoveTexture(name) #the store is shared by the module, the other tests start without textures
 
 u += testError

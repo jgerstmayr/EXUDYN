@@ -2239,7 +2239,7 @@ class VSettingsOpenGL:
     multiSampling: int
     """NOTE: this parameter must be set before starting renderer; later changes are not affecting visualization; multi sampling turned off (<=1) or turned on to given values (2, 3, 4, 8 or 16); increases the graphics buffers and might crash due to graphics card memory limitations; only works if supported by hardware; if it does not work, try to change 3D graphics hardware settings!"""
     showTextures: bool
-    """True: the triangles of a TriangleList with a texture are drawn with it; False: with the colors of their points (#3032)."""
+    """True: the triangles of a TriangleList with a texture are drawn with it, by OpenGL and by the raytracer; False: with the colors of their points (#3032)."""
     zMaxSceneFactor: float
     """factor multiplied with maxSceneSize to avoid clipping of modelview; larger values reduce clipping of near or far objects, but may lead to artifacts (so-called Z-fighting)."""
     def GetDictionary(self) -> dict: ...

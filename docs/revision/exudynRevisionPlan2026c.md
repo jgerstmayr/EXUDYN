@@ -79,7 +79,7 @@ The title of each says what it does; the sentence after it, why it comes now.
   - RG5.4 Store the superelement matrices as sparse triplets for larger meshes
 - **RG6** Graphics and rendering
   - RG6.8 Fix the remaining graphics problems with a test each
-  - RG6.11 Draw textures from numpy arrays in triangle lists (3 open sub-steps)
+  - RG6.11 Draw textures from numpy arrays in triangle lists (2 open sub-steps)
   - RG6.19 Add an icon bar to the renderer that folds in from the right border, as alternative to the keys (2 open sub-steps)
 - **RG7** Python user items
   - RG7.4 Add user nodes with position and orientation interfaces
@@ -128,7 +128,7 @@ The title of each says what it does; the sentence after it, why it comes now.
 | RG3 | CLOSED | 0 | Docs |
 | RG4 | OPEN | 6 | Implementation problems and bugs |
 | RG5 | OPEN | 8 | Performance |
-| RG6 | OPEN | 8 | Graphics and rendering |
+| RG6 | OPEN | 7 | Graphics and rendering |
 | RG7 | OPEN | 5 | Python user items |
 | RG8 | OPEN | 10 | Compiled C++ user items |
 | RG9 | OPEN | 5 | Structural core improvements |
@@ -487,17 +487,35 @@ CLOSED 2026-10-18 (#3032): uploaded in the render thread when their version chan
 one triangle to the next; modulate or replace, alpha test for RGBAMask; not in highlight, selection or edge mode; shadows;
 `openGL.showTextures`. Not seen on a screen by Claude (no window may open). [log](exudynRevisionLog2026c.md#rg6-11-2)
 
-#### **OPEN_RG6.11.5** Sample the textures in the raytracer
+#### **CLOSED_RG6.11.5** Sample the textures in the raytracer
 
-#3034.
+CLOSED 2026-10-18 (#3034): `Texture::Sample` as OpenGL samples (pixel centers, nearest or linear, repeat or clamp); the
+raytracer keeps the textured triangles with their coordinates and a copy of their textures, multiplies or replaces the
+color at the hit, multiplies the alpha of RGBA and lets the ray pass where the mask of RGBAMask is below 0.5, also for
+shadows; `openGL.showTextures` applies. Maintainer 2026-10-18: OpenGL drawing and the ruler checked on the screen.
+[log](exudynRevisionLog2026c.md#rg6-11-5)
 
-#### **OPEN_RG6.11.6** Texture coordinates for graphics.Quad and graphics.Cylinder, and by projection for any TriangleList
+#### **CLOSED_RG6.11.6** Texture coordinates for graphics.Quad and graphics.Cylinder, and by projection for any TriangleList
 
-#3031.
+CLOSED 2026-10-18 (#3031): `graphics.Quad(..., texture, textureTiles)`, `graphics.Cylinder(..., texture, textureTiles)`,
+`graphics.ProjectTexture` (planar, box, cylindrical, spherical); Transform, Move, InvertTriangles and MergeTriangleLists
+keep the texture, a list merged with one without has nan coordinates there, drawn without texture.
+[log](exudynRevisionLog2026c.md#rg6-11-5)
 
 #### **OPEN_RG6.11.7** An example: an image on graphics.Quad, a checkerboard by texture
 
 #3033.
+
+#### **OPEN_RG6.11.8** Load images with graphics.ImageFromFile, and a test with a real texture image
+
+#3035 (maintainer 2026-10-18): `graphics.ImageFromFile` with Pillow, else matplotlib - done with RG6.11.5; open: a test
+model with `hardwood_small.jpg` of OpenGameArt (64 kB), once its license allows it in the repository.
+
+#### **CLOSED_RG6.11.9** graphics.CheckerBoard with a texture generated on the fly, useTexture=True
+
+CLOSED 2026-10-18 (#3036, maintainer 2026-10-18): a 2x2 texture of the two colors, named `exudyn.checkerBoard.` and the
+colors, added through the internal `exudyn._compiledModule._AddTexture`, on one quad; colors encoding a material and
+`useTexture=False` give the triangles. [log](exudynRevisionLog2026c.md#rg6-11-5)
 
 ### **CLOSED_RG6.12** Add a ruler to the renderer and orient imported triangles consistently
 

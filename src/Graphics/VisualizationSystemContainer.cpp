@@ -1051,15 +1051,16 @@ bool PyWriteBodyGraphicsDataList(const py::object object, BodyGraphicsData& data
 								if (!gDict.contains("textureCoordinates")) { GraphicsDataError("GraphicsData::TriangleList::texture needs 'textureCoordinates', the coordinates (u, v) of every point in the texture", PyErrorType::valueError); return false; }
 								if (!PyReadNumbers(gDict["textureCoordinates"], textureCoordinates)) { GraphicsDataError("GraphicsData::TriangleList::textureCoordinates must be a list or numpy array of numbers, flat or as rows (u, v)", PyErrorType::valueError); return false; }
 								if ((Index)textureCoordinates.size() != 2 * points.NumberOfItems()) { GraphicsDataError("GraphicsData::TriangleList::textureCoordinates must have 2*n components (u, v), n being the number of points, but has " + EXUstd::ToString((Index)textureCoordinates.size()), PyErrorType::valueError); return false; }
-								for (float value : textureCoordinates)
+								for (float value : textureCoordinates) //nan: the point has none, its triangles are drawn without the texture (#3031)
 								{
-									if (!std::isfinite(value)) { GraphicsDataError("GraphicsData::TriangleList::textureCoordinates contain not-a-number (nan) or infinity", PyErrorType::valueError); return false; }
+									if (std::isinf(value)) { GraphicsDataError("GraphicsData::TriangleList::textureCoordinates contain infinity", PyErrorType::valueError); return false; }
 								}
 							}
 							else if (gDict.contains("textureCoordinates")) { GraphicsDataError("GraphicsData::TriangleList::textureCoordinates are given without 'texture', the name of the texture", PyErrorType::valueError); return false; }
 							GLTexturedTriangle texturedTrig;
 							texturedTrig.textureID = textureID;
 							auto TextureCoordinate = [&textureCoordinates](Index point) { return Float2({ textureCoordinates[point * 2], textureCoordinates[point * 2 + 1] }); };
+							auto HasTextureCoordinates = [&textureCoordinates](Index point) { return !std::isnan(textureCoordinates[point * 2]) && !std::isnan(textureCoordinates[point * 2 + 1]); };
 
 							if (gDict.contains("triangles"))
 							{
@@ -1104,7 +1105,10 @@ bool PyWriteBodyGraphicsDataList(const py::object object, BodyGraphicsData& data
 												//trig.normals[1] = n;
 												//trig.normals[2] = n;
 											}
-											if (textureID == -1) { data.glTriangles.Append(trig); }
+											if (textureID == -1 || !(HasTextureCoordinates(pointInd[0]) && HasTextureCoordinates(pointInd[1]) && HasTextureCoordinates(pointInd[2])))
+											{
+												data.glTriangles.Append(trig);
+											}
 											else
 											{
 												(GLTriangle&)texturedTrig = trig;
@@ -1163,7 +1167,9 @@ bool PyWriteBodyGraphicsDataList(const py::object object, BodyGraphicsData& data
 										trig6.normals[j] = normalsDefined ? normals[ind] : pointNormals[ind];
 										trig6.colors[j] = colors[ind];
 									}
-									if (textureID == -1) { data.glTriangles6.Append(trig6); }
+									bool textured = textureID != -1;
+									for (Index j = 0; j < 6 && textured; j++) { textured = HasTextureCoordinates(indices[i * 6 + j]); }
+									if (!textured) { data.glTriangles6.Append(trig6); }
 									else //textured: the four flat triangles on the 6 nodes (#3030)
 									{
 										texturedTrig.itemID = -1;

@@ -504,11 +504,12 @@ void MainRenderer::RedrawAndSaveImage(Index viewID)
 
 //! a numpy array H x W, H x W x 1, H x W x 3 or H x W x 4 of uint8 or of floats in [0,1] into the store (#3029); the
 //! channels converted to those of the interpretation and the rows from the bottom of the image, so that v=0 is its bottom
-void MainRenderer::AddTexture(const STDstring& name, const py::object& image, TextureInterpretation interpretation,
-	const std::vector<TextureFlags>& flags)
+//! allowReserved: the textures of Exudyn itself, named 'exudyn.', e.g. by graphics.CheckerBoard (#3036)
+void PyAddTexture(const STDstring& name, const py::object& image, TextureInterpretation interpretation,
+	const std::vector<TextureFlags>& flags, bool allowReserved)
 {
 	if (name.size() == 0) { PyError("renderer.AddTexture: the name must not be empty", PyErrorType::valueError); }
-	if (name.rfind("exudyn.", 0) == 0) { PyError("renderer.AddTexture: names starting with 'exudyn.' are reserved for the textures of Exudyn; got '" + name + "'", PyErrorType::valueError); }
+	if (!allowReserved && name.rfind("exudyn.", 0) == 0) { PyError("renderer.AddTexture: names starting with 'exudyn.' are reserved for the textures of Exudyn; got '" + name + "'", PyErrorType::valueError); }
 	py::array array = py::array::ensure(image);
 	if (!array) { PyError("renderer.AddTexture: the image must be a numpy array or a nested list of numbers", PyErrorType::typeError); }
 	if (array.ndim() != 2 && array.ndim() != 3) { PyError("renderer.AddTexture: the image must have the shape (height, width) or (height, width, channels), but has " + EXUstd::ToString((Index)array.ndim()) + " dimensions", PyErrorType::valueError); }
@@ -558,6 +559,12 @@ void MainRenderer::AddTexture(const STDstring& name, const py::object& image, Te
 		}
 	}
 	textureStore.Set(name, width, height, interpretation, flagBits, std::move(data));
+}
+
+void MainRenderer::AddTexture(const STDstring& name, const py::object& image, TextureInterpretation interpretation,
+	const std::vector<TextureFlags>& flags)
+{
+	PyAddTexture(name, image, interpretation, flags, false);
 	SendRedrawSignal();
 }
 

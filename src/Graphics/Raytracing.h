@@ -18,6 +18,7 @@
 
 #include "Graphics/VisualizationSystemContainer.h"
 #include "Graphics/VisualizationPrimitives.h"
+#include "Graphics/TextureStore.h"
 
 #include "Graphics/GlfwClientBitmapText.h"
 #include "Graphics/characterBitmap.h"
@@ -376,7 +377,12 @@ private:
 	ResizableArray<gchar*> fontBitmaps;
 
 	GraphicsData graphicsData;			//!< main graphics data
-	GraphicsData graphicsDataStatic;	//!< static GraphicsData objects (info, Exudyn, etc.)
+	//! the textures of the triangles of graphicsData (#3034): per triangle -1 or an index into texturedTriangles,
+	//! empty if no triangle has a texture; the textures copied from the TextureStore by their number
+	ResizableArray<Index> triangleTextures;
+	ResizableArray<GLTexturedTriangle> texturedTriangles;
+	std::vector<Texture> textures;
+GraphicsData graphicsDataStatic;	//!< static GraphicsData objects (info, Exudyn, etc.)
 
 public:
 	Raytracer();
@@ -396,9 +402,17 @@ public:
 	inline void IntersectRayWithItem(const RTVector3D& rayOrigin, const RTVector3D& rayDirection, Index iInd,
 		const ResizableArray<GLTriangle>& triangles, const RaytracingSettings& RTS, IntersectionResult& result)
 	{
-		if (iInd < triangles.NumberOfItems()) { IntersectRayWithTriangle(rayOrigin, rayDirection, triangles[iInd], RTS, result); }
+		if (iInd < triangles.NumberOfItems())
+		{
+			IntersectRayWithTriangle(rayOrigin, rayDirection, triangles[iInd], RTS, result);
+			if (result.hit && iInd < triangleTextures.NumberOfItems() && triangleTextures[iInd] >= 0) { ApplyTexture(triangleTextures[iInd], result); }
+		}
 		else { IntersectRayWithSphere(rayOrigin, rayDirection, graphicsData.glSpheres[iInd - triangles.NumberOfItems()], RTS, result); }
 	}
+
+	//! the color of a textured triangle at the hit (#3034): multiplied with the texture or replaced by it, the alpha of
+	//! RGBA multiplied, and no hit where the mask of RGBAMask is below 0.5 - also for shadows
+	void ApplyTexture(Index texturedIndex, IntersectionResult& result) const;
 
 	//! check intersection with list of triangles; 
 	//! write information in closestHit structure; 
