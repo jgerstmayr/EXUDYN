@@ -8,10 +8,10 @@ Every entry carries the **type** of the issue, then its **priority** and its **e
 
 General information on current version:
 
-- Exudyn version = 1.13.138.dev1
+- Exudyn version = 1.13.140.dev1
 - last change = 2026-10-18
 - Number of issues = 3037
-- Number of resolved issues = 2915 (138 in current version)
+- Number of resolved issues = 2917 (140 in current version)
 
 ## Resolved issues and resolved bugs before version 1.13
 
@@ -9039,13 +9039,6 @@ The following list contains the issues which have been **RESOLVED** in the accor
 
 ## Open issues
 
-- `EXTENSION` `LOW EFF` `raised by: Claude-JG` graphics.ImageFromFile: load an image file as a numpy array for SC.renderer.AddTexture (#3035)
-  - description: Maintainer 2026-10-18: a common image loader in exudyn.graphics, with whatever package supports image loading (Pillow, else matplotlib), returning a uint8 array that AddTexture takes; an optional dependency with a clear error at the point of use; a test with a real texture image (hardwood\_small.jpg of OpenGameArt, 64 kB) once its license is confirmed
-  - **remarks:** graphics.ImageFromFile done (2026-10-18, with RG6.11.5); open: the test with hardwood\_small.jpg, waiting for its license
-  - date raised: 2026-10-18
-- `EXAMPLE` `LOW EFF` `raised by: Claude-JG` Example: an image on graphics.Quad as texture (#3033)
-  - description: Maintainer 2026-10-18: an example that adds an image as texture and shows it on a graphics.Quad; also a checkerboard by texture.
-  - date raised: 2026-10-18
 - `EXTENSION` `LOW EFF` `raised by: Claude-JG` Zoom to the selected item in the renderer (#3027)
   - description: Maintainer 2026-10-17: a selected item (left click, state-\>mouseSelectionItemID) is not used for the view; zoom to its bounding box as ZoomAll does for the scene, by a key and an icon of the icon bar.
   - date raised: 2026-10-17

@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.13 | Newborn | 136 | 1.13.138 |
+| 1.13 | Newborn | 138 | 1.13.140 |
 | 1.12 | Metheney | 367 | 1.12.462 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
@@ -30,6 +30,14 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.13 - Newborn (current)
 
+- **1.13.140** `EXTENSION` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` graphics.ImageFromFile: load an image file as a numpy array for SC.renderer.AddTexture (#3035)
+  - description: Maintainer 2026-10-18: a common image loader in exudyn.graphics, with whatever package supports image loading (Pillow, else matplotlib), returning a uint8 array that AddTexture takes; an optional dependency with a clear error at the point of use; a test with a real texture image (hardwood\_small.jpg of OpenGameArt, 64 kB) once its license is confirmed
+  - **notes:** graphics.ImageFromFile reads an image file (Pillow, else matplotlib) as a numpy array for SC.renderer.AddTexture; python/Examples/testData/hardwood\_small.jpg is a CC0 texture of a wooden floor (revision2026c step RG6.11.8)
+  - date resolved: **2026-10-18 17:39**, date raised: 2026-10-18
+- **1.13.139** `EXAMPLE` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` Example: an image on graphics.Quad as texture (#3033)
+  - description: Maintainer 2026-10-18: an example that adds an image as texture and shows it on a graphics.Quad; also a checkerboard by texture.
+  - **notes:** texturesExample.py: a wooden floor from an image file and a spinning cylinder with a pattern computed from sin and cos, rendered with the raytracer (revision2026c step RG6.11.7)
+  - date resolved: **2026-10-18 17:39**, date raised: 2026-10-18
 - **1.13.138** `CHANGE` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` graphics.CheckerBoard draws its pattern with a texture generated on the fly, useTexture=True (#3036)
   - description: Maintainer 2026-10-18: graphics.CheckerBoard uses by default (useTexture=True) a 2x2 texture of its two colors, generated when it is called, on one quad of two triangles instead of 2 nTiles^2 triangles; useTexture=False keeps the triangles
   - **notes:** graphics.CheckerBoard is one quad with a texture of its two colors, generated when it is called (useTexture=True); useTexture=False gives the triangles of the pattern, e.g. for a contact mesh, and colors that encode a material give them as well (revision2026c step RG6.11.9)

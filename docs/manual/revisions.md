@@ -131,7 +131,8 @@ mask) and `exu.TextureFlags` how it is filtered, repeated and combined with the 
 raytracer; 6-node triangles with a texture become four flat ones. `graphics.Quad` and `graphics.Cylinder` take
 `texture=name`, and `graphics.ProjectTexture` gives any TriangleList texture coordinates by a planar, box, cylindrical
 or spherical projection. `visualizationSettings.openGL.showTextures = False` draws the colors of the points instead.
-`SC.renderer.GetGraphicsData()` returns the textured triangles under `texturedTriangles`.
+`SC.renderer.GetGraphicsData()` returns the textured triangles under `texturedTriangles`. `texturesExample.py` shows a
+wooden floor and a cylinder with a computed pattern, rendered with the raytracer.
 
 **`graphics.CheckerBoard`** is one quad of two triangles with a texture of its two colors (#3036), drawn as before;
 `useTexture=False` gives the triangles of the pattern, as needed for a contact mesh made from it with

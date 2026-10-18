@@ -2058,3 +2058,23 @@ exudyn.graphics; graphics.CheckerBoard by default with a texture generated on th
   the coordinates of Quad, Cylinder (no seam triangle, tiles, faces), box, planar, spherical, Move/Merge/Invert, a
   merged list without texture drawn plain, CheckerBoard with texture against the triangles (< 5 % of the pixels
   differ), ImageFromFile; the sums of coordinates rounded to 1e-6, since the angles come from numpy.
+
+<a id="rg6-11-7"></a>
+### RG6.11.7 and RG6.11.8 — the textures example and the wood image (2026-10-18, #3033, #3035)
+*(Maintainer 2026-10-18: hardwood.jpg, of which hardwood_small.jpg is built, is CC0 - add it to the testData; the
+RG6.11.7 example, not a test, with a wooden floor and a cylinder with a painted pattern like colors of sin/cos, with
+raytracer settings to render nicely.)*
+- `python/Examples/testData/hardwood_small.jpg` (64 kB, 1024 x 1024): once in the repository, beside the other data of
+  the examples; textureGraphicsTest.py reads it as `../Examples/testData/...`, as the runners change into the
+  directory of the model. Its check is not part of the result (JPEG decoders may differ in the last levels): shape,
+  uint8, the mean color brown, and a raytraced quad brown.
+- `texturesExample.py`: the floor `graphics.Quad` 4 x 4 m with the wood twice in each direction, a brick with the wood by
+  `ProjectTexture(..., 'box')`, a cylinder (r 0.4 m, 1 m) with a 512 x 256 pattern of red, green and blue from
+  `cMath.sin`/`cos` of whole periods around (no seam) on a revolute joint, a quarter turn per second; light0
+  directional with shadow 0.4 and lightRadius 0.15, ambient 0.5; `useRaytracer=True` (default): raytracer with 8
+  threads, multiSampling 2, 7 light radius variations, keepWindowActive; SetModelView for the start view. A raytraced
+  800 x 600 image of the scene was looked at; written without deprecated names (run with -W error::DeprecationWarning).
+- Found by the examples run: the commit of RG6.11.5 (d48ebc4d) put `ImageFromFile` between the decorator `@_ReturnsRows`
+  and `FromSTLfileASCII`, so the STL import returned flat lists and the image loader went through `_Rows`; the
+  decorator is back on FromSTLfileASCII. The example reads the image as `../Examples/testData/...`, as the other
+  examples with data do, since the runners do not start in the directory of the example.

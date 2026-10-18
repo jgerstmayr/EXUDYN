@@ -897,7 +897,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`NGsolveOCCb
 (sec-graphics-imagefromfile)=
 ## Function: ImageFromFile
 
-[`ImageFromFile(fileName)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/graphics.py#L3139)
+[`ImageFromFile(fileName)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/graphics.py#L3138)
 
 - **function description**: load an image file - PNG, JPG and the other formats of Pillow - as a numpy array for SC.renderer.AddTexture (#3035); uses Pillow (PIL), else matplotlib, which reads PNG without Pillow; neither is a dependency of Exudyn
 - **input**:
@@ -912,13 +912,13 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`NGsolveOCCb
 
 
 
-Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`textureGraphicsTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/textureGraphicsTest.py) (TM)
+Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`texturesExample.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/texturesExample.py) (Ex), [`textureGraphicsTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/textureGraphicsTest.py) (TM)
 
 
 (sec-graphics-projecttexture)=
 ## Function: ProjectTexture
 
-[`ProjectTexture(graphicsData, texture, projection = 'box', point = [0,0,0], rotationMatrix = np.eye(3), size = 1., tiles = 1, color = [1.,1.,1.,1.])`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/graphics.py#L3174)
+[`ProjectTexture(graphicsData, texture, projection = 'box', point = [0,0,0], rotationMatrix = np.eye(3), size = 1., tiles = 1, color = [1.,1.,1.,1.])`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/graphics.py#L3173)
 
 - **function description**: add a texture to a TriangleList with texture coordinates computed by a projection, for geometry that has none (#3031); 6-node triangles become flat ones (which the renderer does with a texture anyway)
 - **input**:
@@ -941,7 +941,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`textureGrap
 
 
 
-Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`textureGraphicsTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/textureGraphicsTest.py) (TM)
+Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`texturesExample.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/texturesExample.py) (Ex), [`textureGraphicsTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/textureGraphicsTest.py) (TM)
 
 
 (sec-graphics-fromstlfileascii)=

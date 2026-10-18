@@ -169,6 +169,7 @@ testGymCartpoleEnv
 testGymDoublePendulum
 testGymDoublePendulumEnv
 testHDF5loadSave
+texturesExample
 tippeTop
 tutorialNeuralNetwork
 universalJoint

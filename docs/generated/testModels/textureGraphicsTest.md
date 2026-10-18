@@ -15,8 +15,8 @@ You can view and download this file on Github: [textureGraphicsTest.py](https://
 #           openGL.showTextures=False; graphics.Quad and graphics.Cylinder with a texture, graphics.ProjectTexture
 #           planar, box, cylindrical and spherical; graphics.CheckerBoard with its texture looks like the one of
 #           triangles; Transform, MergeTriangleLists and InvertTriangles keep the texture, a list merged with one without
-#           texture has its triangles drawn without; graphics.ImageFromFile
-#           reads a PNG written before.
+#           texture has its triangles drawn without; graphics.ImageFromFile reads a PNG written before and the JPEG of
+#           a wooden floor of the examples (testData/hardwood_small.jpg, OpenGameArt, CC0), drawn brown.
 #
 # Author:   Johannes Gerstmayr
 # Date:     2026-10-18
@@ -151,7 +151,16 @@ read = graphics.ImageFromFile(fileName)
 Check(read.dtype == np.uint8 and read.shape[0:2] == (3, 5) and np.array_equal(read[:, :, 0:3], written), 'ImageFromFile: ' + str(read.shape))
 os.remove(fileName)
 
-for name in ['redBlue', 'halfMask']:
+#a real texture: the JPEG of a wooden floor (OpenGameArt, CC0) of the examples, brown on a quad in the raytracer
+wood = graphics.ImageFromFile('../Examples/testData/hardwood_small.jpg')
+meanColor = wood.reshape((-1, 3)).mean(axis=0)
+Check(wood.dtype == np.uint8 and wood.shape == (1024, 1024, 3) and meanColor[0] > meanColor[1] > meanColor[2],
+      'hardwood_small.jpg: ' + str(wood.shape) + str(meanColor))
+SC.renderer.AddTexture('hardwood', wood, interpretation=exu.TextureInterpretation.RGB)
+im = Render([graphics.Quad(square, texture='hardwood', textureTiles=[2, 2])])
+Check(im[40, 40, 0] > im[40, 40, 1] > im[40, 40, 2], 'raytraced wood is not brown: ' + str(im[40, 40]))
+
+for name in ['redBlue', 'halfMask', 'hardwood']:
     SC.renderer.RemoveTexture(name)
 
 u += testError

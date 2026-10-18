@@ -3135,7 +3135,6 @@ def NGsolveMesh2PointsAndTrigs(mesh=None, ngMesh=None, meshOrder=2, scale=1, add
 
 
 
-@_ReturnsRows
 def ImageFromFile(fileName):
     """load an image file - PNG, JPG and the other formats of Pillow - as a numpy array for SC.renderer.AddTexture (#3035);
     uses Pillow (PIL), else matplotlib, which reads PNG without Pillow; neither is a dependency of Exudyn
@@ -3267,6 +3266,7 @@ def ProjectTexture(graphicsData, texture, projection='box', point=[0,0,0], rotat
     return gNew
 
 
+@_ReturnsRows
 def FromSTLfileASCII(fileName,color=[0.,0.,0.,1.], verbose=False, invertNormals=True, invertTriangles=True,
                      orientTriangles=False):
     """generate graphics data from STL file (text format!) and use color for visualization; this function is slow, use stl binary files with FromSTLfile(...)
