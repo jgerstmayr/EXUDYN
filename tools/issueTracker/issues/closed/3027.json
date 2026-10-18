@@ -1,0 +1,15 @@
+{
+  "number": 3027,
+  "title": "Zoom to the selected item in the renderer",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "EXTENSION",
+  "effort": "LOW",
+  "description": "Maintainer 2026-10-17: a selected item (left click, state->mouseSelectionItemID) is not used for the view; zoom to its bounding box as ZoomAll does for the scene, by a key and an icon of the icon bar.",
+  "dateRaised": "2026-10-17",
+  "deadline": "2027-04-15",
+  "dateResolved": "2026-10-18 23:16",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "CTRL+A in the render window centers the view on the item selected with the left mouse button and zooms such that it fills the window; SC.renderer.ZoomToItem(itemIndex) does the same from Python (revision2026c step RG6.19.2)",
+  "resolvedInVersion": "1.13.144"
+}

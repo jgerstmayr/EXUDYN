@@ -145,6 +145,7 @@ def TestExamplesReferenceSolution():
         'orientTrianglesTest.py':475.0, #new 2026-10-18: graphics.OrientTriangles and CheckTriangleOrientation, the STL import with orientTriangles (#2281)
         'textureTest.py':103.0, #new 2026-10-18: SC.renderer.AddTexture, textured TriangleList and 6-node triangles, GetGraphicsData texturedTriangles (#2154, #2155, #3029, #3030)
         'textureGraphicsTest.py':3684.0, #new 2026-10-18: textures in the raytracer, graphics.Quad/Cylinder/ProjectTexture/CheckerBoard with a texture, graphics.ImageFromFile (#3031, #3034, #3035, #3036)
+        'zoomToItemTest.py':0.02, #new 2026-10-18: SC.renderer.ZoomToItem, centered and zoomed to an item (#3027)
         'initialConstraintsCheckTest.py':2.937101858808996, #new 2026-10-14: the check of the initial conditions against the constraints, the projection of the initial velocities (#2234)
         'shellMeshSlopesScalingTest.py':0.0005808783959917463, #new 2026-10-14: the slope scaling of ShellMesh on a quarter cylinder and a flat trapezoid (#2226)
         'systemContainerComputeOnlyTest.py':4.0, #new 2026-10-14: SystemContainer(attachToRenderer=False), the renderer stays with the container of the model, also for InverseKinematicsNumerical (#2259)

@@ -316,7 +316,66 @@ public:
 	}
 
 
-	//! ZoomAll compute actions: optionally update graphics; with VSC, a tracked marker's translation is
+	//! the zoom with which a box in the rotation of the view fills the window, with the factor and the offset of ZoomAll
+	float ZoomForBox(const Box3DF& box, float bbFactor, float bbOffset) const
+	{
+		Index width = this->currentWindowSize[0];
+		Index height = this->currentWindowSize[1];
+		float ratio = height != 0 ? width / (float)height : (float)width;
+
+		float factorX = bbFactor * box.SizeX();
+		if (box.SizeX() + bbOffset > factorX)
+		{
+			factorX = box.SizeX() + bbOffset;
+		}
+
+		float factorY = bbFactor * box.SizeY();
+		if (box.SizeY() + bbOffset > factorY)
+		{
+			factorY = box.SizeY() + bbOffset;
+		}
+
+		if (factorY * ratio > factorX)
+		{   //Y-size is the relevant quantity:
+			return 0.5f * factorY;
+		}
+		//X-size is the relevant quantity:
+		return 0.5f * factorX / ratio;
+	}
+
+	//! zoom to one item (#3027): its graphics data, itemID as Index2ItemID gives it, centered and filling the window as
+	//! ZoomAll does for the scene; the size of the scene (clipping planes) stays; false if the item draws nothing
+	bool ComputeZoomToItem(VisualizationSettings& visSettings, ResizableArray<GraphicsData*>* graphicsDataList,
+		VisualizationSystemContainerBase* VSC, Index viewID, Index itemID)
+	{
+		if (graphicsDataList == nullptr || itemID == itemIDinvalidValue) { return false; }
+		Matrix3DF rotationMV = GetRotation3DF();
+		Float3 markerTranslationMV(0.f);
+		if (VSC != nullptr)
+		{
+			GetTrackedMarkerTransformation(VSC, GetSettingsView(viewID, visSettings), rotationMV, markerTranslationMV);
+		}
+		Box3DF box;
+		for (GraphicsData* data : *graphicsDataList)
+		{
+			box.Add(data->ComputeMaxScene(rotationMV.GetTransposed(), Float3(0.f), true, itemID)); //as ComputeMaxSceneSize
+		}
+		if (box.Empty()) { return false; }
+
+		centerPoint = Float3({ box.Center()[0] - markerTranslationMV[0], box.Center()[1] - markerTranslationMV[1], 0.f });
+		zoom = ZoomForBox(box, visSettings.general.boundingBoxZoomAllFactor, visSettings.general.boundingBoxZoomAllOffset);
+
+		VSettingsView& settingsView = GetSettingsViewWritable(viewID, visSettings);
+		if (!settingsView.camera.modelCentricView && settingsView.camera.perspective > 0.f) //as ZoomAll (#3000)
+		{
+			float distance = box.Radius() / settingsView.camera.perspective;
+			Matrix3DF A = GetRotation3DF().GetTransposed();
+			settingsView.camera.cameraPosition = A * Float3({ 0.f, 0.f, box.Center()[2] + distance }); //x, y by centerPoint, as ZoomAll
+		}
+		return true;
+	}
+
+	//! ZoomAll compute actions: optionally update graphics;with VSC, a tracked marker's translation is
 	//! subtracted, so that the scene is centered with the tracking applied, and it stays so while the marker moves (#2309)
 	void ComputeZoomAll(VisualizationSettings& visSettings, VisualizationSystemContainerBase* VSC = nullptr, Index viewID = 0)
 	{
@@ -346,33 +405,7 @@ public:
 		}
 		else
 		{
-			//compute ratio for comparison with bounding box
-			Index width = this->currentWindowSize[0];
-			Index height = this->currentWindowSize[1];
-			float ratio = height != 0 ? width / (float)height : (float)width;
-
-			const Box3DF& box = this->boundingBox;
-
-			float factorX = bbFactor * box.SizeX();
-			if (box.SizeX() + bbOffset > factorX)
-			{
-				factorX = box.SizeX() + bbOffset;
-			}
-
-			float factorY = bbFactor * box.SizeY();
-			if (box.SizeY() + bbOffset > factorY)
-			{
-				factorY = box.SizeY() + bbOffset;
-			}
-
-			if (factorY * ratio > factorX)
-			{   //Y-size is the relevant quantity:
-				this->zoom = 0.5f * factorY;
-			}
-			else
-			{   //X-size is the relevant quantity:
-				this->zoom = 0.5f * factorX / ratio;
-			}
+			this->zoom = ZoomForBox(this->boundingBox, bbFactor, bbOffset);
 		}
 
 		//a camera-centric perspective view looks from the camera position: ZoomAll puts it in front of the center of the
@@ -411,6 +444,7 @@ public:
 	virtual SlimVectorBase<Index, 2>* GetImageDataSize(Index viewID) = 0; //! width and height of image in ImageData()
 	virtual bool GetAndResetZoomAllRequest(Index viewID) = 0;//! get zoom all request and reset to false
 	virtual void SetZoomAllRequest(Index viewID, bool flag) = 0; //!< request ZoomAll
+	virtual Index GetAndResetZoomToItemRequest(Index viewID) = 0; //!< the item to zoom to, or itemIDinvalidValue (#3027)
 	virtual void SetComputeMaxSceneRequest(bool flag) = 0;
 	virtual bool GetComputeMaxSceneRequest() = 0;
 

@@ -142,6 +142,9 @@ wooden floor and a cylinder with a computed pattern, rendered with the raytracer
 `useTexture=False` gives the triangles of the pattern, as needed for a contact mesh made from it with
 `graphics.ToPointsAndTrigs`; colors that encode a material give the triangles as well.
 
+**Zoom to an item** (#3027): CTRL+A in the render window centers the view on the item selected with the left mouse
+button and zooms such that it fills the window; `SC.renderer.ZoomToItem(oBody)` does the same from Python.
+
 **Drawing with user functions in a renderer thread**: the markers, connectors, loads and sensors on an ObjectUserBody
 and every load with a user function are drawn in the main thread, together with the graphics user functions, so that
 the render thread never calls Python; `loads.drawWithUserFunction` draws a Python user function with multithreaded

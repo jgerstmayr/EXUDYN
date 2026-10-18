@@ -183,6 +183,9 @@ keyBindings = [
                'ignore all keyboard input, except for the KeyPress user function, F2 and escape',
                'GLFW_KEY_F2'),
     KeyBinding('F3', 'show mouse coordinates', 'shown in the status line', '', 'GLFW_KEY_F3'),
+    KeyBinding('CTRL+A', 'zoom to the selected item',
+               'centers the view on the item selected with the left mouse button and zooms such that it fills the '
+               'window, as SC.renderer.ZoomToItem (#3027)', 'zoom to selection', 'GLFW_KEY_A+CONTROL'),
     KeyBinding('F5', 'show ruler',
                'a ruler along the bottom and the left border, in model units; in an axis-aligned view with the '
                'coordinates of the view, else with the distance from its end; only with perspective 0 (#2244)',

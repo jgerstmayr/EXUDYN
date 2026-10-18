@@ -79,7 +79,7 @@ The title of each says what it does; the sentence after it, why it comes now.
   - RG5.4 Store the superelement matrices as sparse triplets for larger meshes
 - **RG6** Graphics and rendering
   - RG6.8 Fix the remaining graphics problems with a test each
-  - RG6.19 Add an icon bar to the renderer that folds in from the right border, as alternative to the keys (2 open sub-steps)
+  - RG6.19 Add an icon bar to the renderer that folds in from the right border, as alternative to the keys (1 open sub-step)
 - **RG7** Python user items
   - RG7.4 Add user nodes with position and orientation interfaces
   - RG7.5 Add user markers and a user connector with access to its markers
@@ -127,7 +127,7 @@ The title of each says what it does; the sentence after it, why it comes now.
 | RG3 | CLOSED | 0 | Docs |
 | RG4 | OPEN | 6 | Implementation problems and bugs |
 | RG5 | OPEN | 8 | Performance |
-| RG6 | OPEN | 4 | Graphics and rendering |
+| RG6 | OPEN | 3 | Graphics and rendering |
 | RG7 | OPEN | 5 | Python user items |
 | RG8 | OPEN | 10 | Compiled C++ user items |
 | RG9 | OPEN | 5 | Structural core improvements |
@@ -596,11 +596,15 @@ drag (961-1188); the display scaling is `state->displayScaling` (1887).
   pytest of a few icons as images; the bar and its mouse handling; the icons; the documentation of the keys and icons
   in GUI.md.
 
-#### **OPEN_RG6.19.2** Zoom to the selected item
+#### **CLOSED_RG6.19.2** Zoom to the selected item
 
 #3027: the item selected with the mouse (`state->mouseSelectionItemID`) is shown filling the window: the bounding box
 of its graphics data (items with that item ID), centered and zoomed as ZoomAll does for the scene; a key (Ctrl-A) and
 an icon of the bar.
+
+CLOSED 2026-10-18 (#3027): `RenderState::ComputeZoomToItem` (the box of the elements with the item ID, the zoom of
+ZoomAll's bounding box, the scene size kept), CTRL+A in the render window, `SC.renderer.ZoomToItem(itemIndex, mbsNumber,
+viewID)`; zoomToItemTest.py. The icon comes with the bar (RG6.19.1). [log](exudynRevisionLog2026c.md#rg6-19-2)
 
 ## **OPEN_RG7** Python user items
 

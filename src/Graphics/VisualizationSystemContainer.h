@@ -92,7 +92,8 @@ class RenderViewDataVSC
 public:
 	RenderState renderState;						//!< RenderState per view stored here, linked to GLFWClient, etc.
 	bool zoomAllRequest = false;			//!< used to perform zoom all()
-	bool saveImage = false;					//!< set true: signal to save the current state shall be rendered and saved to a given image (with consecutive number); will be set false, as soon as frame is saved
+	Index zoomToItemRequest = itemIDinvalidValue;	//!< the item to zoom to at the next update, as Index2ItemID gives it (#3027)
+bool saveImage = false;					//!< set true: signal to save the current state shall be rendered and saved to a given image (with consecutive number); will be set false, as soon as frame is saved
 	bool saveImageOpenGL = false;			//!< set true, as soon as graphics is updated (prevents that a frame is saved prior to updating to current visualization state); set false, as soon as frame is saved
 	bool saveImageAsData = false;			//!< (#2887) if true, does not store image as file but stores retrievable data, used by RedrawAndGetImage()
 	SlimVectorBase<Index, 2> imageDataSize; //!< if saveImageAsData=true, contains image width and height stored in imageData
@@ -277,6 +278,14 @@ public:
 			return true; 
 		}
 		return false;
+	}
+
+	virtual Index GetAndResetZoomToItemRequest(Index viewID) override
+	{
+		CHECKandTHROW(viewID < MAX_VIEWS_GLFW, "GetAndResetZoomToItemRequest: illegal viewID");
+		Index itemID = renderViewDataArray[viewID].zoomToItemRequest;
+		renderViewDataArray[viewID].zoomToItemRequest = itemIDinvalidValue;
+		return itemID;
 	}
 
 	virtual void SetZoomAllRequest(Index viewID, bool flag) override

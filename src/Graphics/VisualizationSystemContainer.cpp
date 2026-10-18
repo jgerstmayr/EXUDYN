@@ -337,6 +337,7 @@ void VisualizationSystemContainer::InitializeRenderState(bool validInitializatio
 		renderState.windowOpen = false; //set when renderer is started
 
 		renderViewData.zoomAllRequest = false;
+		renderViewData.zoomToItemRequest = itemIDinvalidValue;
 		renderViewData.saveImage = false;
 		renderViewData.saveImageOpenGL = false;
 		renderViewData.saveImageAsData = false; //#2887

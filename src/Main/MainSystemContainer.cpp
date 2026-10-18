@@ -965,6 +965,47 @@ void MainRenderer::ZoomAll(bool computeMaxScene, Index viewID)
 	}
 }
 
+//! zoom to the graphics of one item (#3027): with an active renderer at its next update, else now, from the graphics data
+//! built as RedrawAndGetImage(useRaytracer=True) builds it
+bool MainRenderer::ZoomToItem(const py::object& itemIndex, Index mbsNumber, Index viewID)
+{
+	ViewDisabledError(viewID, "ZoomToItem");
+	ItemType itemType = ItemType::_None;
+	Index number = EXUstd::InvalidIndex;
+	if (py::isinstance<ObjectIndex>(itemIndex)) { itemType = ItemType::Object; number = py::cast<ObjectIndex>(itemIndex).GetIndex(); }
+	else if (py::isinstance<NodeIndex>(itemIndex)) { itemType = ItemType::Node; number = py::cast<NodeIndex>(itemIndex).GetIndex(); }
+	else if (py::isinstance<MarkerIndex>(itemIndex)) { itemType = ItemType::Marker; number = py::cast<MarkerIndex>(itemIndex).GetIndex(); }
+	else if (py::isinstance<LoadIndex>(itemIndex)) { itemType = ItemType::Load; number = py::cast<LoadIndex>(itemIndex).GetIndex(); }
+	else if (py::isinstance<SensorIndex>(itemIndex)) { itemType = ItemType::Sensor; number = py::cast<SensorIndex>(itemIndex).GetIndex(); }
+	else
+	{
+		PyError(STDstring("renderer.ZoomToItem: itemIndex must be a NodeIndex, ObjectIndex, MarkerIndex, LoadIndex or SensorIndex, as the Add functions return it; got ")
+			+ STDstring(py::str(itemIndex)), PyErrorType::typeError);
+	}
+	if (!EXUstd::IndexIsInRange(mbsNumber, 0, mainSystemContainer->GetMainSystems().NumberOfItems()))
+	{
+		PyError("renderer.ZoomToItem: mbsNumber " + EXUstd::ToString(mbsNumber) + " is not a system of this SystemContainer", PyErrorType::indexError);
+	}
+	Index itemID = Index2ItemID(number, itemType, mbsNumber);
+
+	VisualizationSystemContainer& VSC = mainSystemContainer->GetVisualizationSystemContainer();
+	RenderViewDataVSC& RVD = VSC.GetRenderViewData(viewID);
+	if (IsActive())
+	{
+		RVD.zoomToItemRequest = itemID;
+		return true;
+	}
+	VSC.InitializeRenderState(true, true); //if first call to inactive renderer->initialize RenderState
+	for (MainSystem* mainSystem : mainSystemContainer->GetMainSystems())
+	{
+		mainSystem->GetCSystem().UpdatePostProcessData();
+	}
+	VSC.UpdateGraphicsDataNow();
+	VSC.UpdateGraphicsData();
+	RVD.renderState.ComputeMaxSceneSize(VSC.GetVisualizationSettings(), &VSC.GetGraphicsDataList(), &VSC, viewID); //clipping planes of the scene
+	return RVD.renderState.ComputeZoomToItem(VSC.GetVisualizationSettings(), &VSC.GetGraphicsDataList(), &VSC, viewID, itemID);
+}
+
 void MainRenderer::SetModelView(float zoom, const std::vector<Real>& rotationVector, const std::vector<Real>& centerPoint, Index viewID)
 {
 	ViewDisabledError(viewID, "SetModelView");

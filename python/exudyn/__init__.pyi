@@ -4177,6 +4177,14 @@ class Renderer:
         """Send zoom all signal, which will perform zoom all at next redraw request; if renderer is inactive (renderer.IsActive()=0), it will perform computations for renderState, thus at the next RedrawAndGetImage() having the full view as with the OpenGL renderer; NOTE: in case of OpenGL, call ZoomAll() after renderer.Start(); NOTE: may also first initialize renderState from visualizationSettings (if renderer is inactive)."""
         ...
     @overload
+    def ZoomToItem(self, itemIndex: NodeIndex | ObjectIndex | MarkerIndex | LoadIndex | SensorIndex, mbsNumber: int=0, viewID: int=0) -> bool: 
+        """Center the view on the graphics of one item and zoom such that it fills the window, as ZoomAll does for the scene (#3027); itemIndex is the NodeIndex, ObjectIndex, MarkerIndex, LoadIndex or SensorIndex the Add functions return, mbsNumber the number of its system in the SystemContainer; with an active renderer this happens at its next update and the function returns True, else now, and it returns False if the item draws nothing; in the render window, CTRL+A zooms to the item selected with the left mouse button.
+        
+        Examples:
+            SC.renderer.ZoomToItem(oBody)
+        """
+        ...
+    @overload
     def SetModelView(self, zoom: float=0, rotationVector: [float,float,float]=[0,0,0], centerPoint: [float,float,float]=[0,0,0], viewID: int=0) -> None: 
         """Function to adjusts the current view in renderState; rotationVector and centerPoint transform the modelView while zoom equals the visible scene height; rotationVector is the axis of rotation times the angle in radiant; if zoom=0 then zoom will be computed automatically like in autoFitScene with openGL; use this function in particular for raytracing before RedrawAndGetImage() or with regular OpenGL after renderer.Start(); you can also store the renderState and write the full renderState alternatively; NOTE: may also first initialize renderState from visualizationSettings (if renderer is inactive).
         

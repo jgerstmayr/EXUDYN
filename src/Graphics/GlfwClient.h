@@ -597,6 +597,8 @@ private: //to be called internally only!
 	
 	//! Zoom all graphics objects (for current configuration)
 	static void ZoomAll(Index viewID, bool updateGraphicsData=true, bool computeMaxScene=true, bool render=true);
+	//! zoom to the graphics of one item, itemID as Index2ItemID gives it; a message if it draws nothing (#3027)
+	static void ZoomToItem(Index viewID, Index itemID);
 
     //! Set all light functions for openGL
     static void SetGLLights(Index viewID);

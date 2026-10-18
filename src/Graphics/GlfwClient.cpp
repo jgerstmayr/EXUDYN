@@ -894,6 +894,15 @@ void GlfwRenderer::key_callback(GLFWwindow* window, int key, int scancode, int a
 				ZoomAll(viewID);
 				keyPressed = true;
 			}
+			if (key == GLFW_KEY_A && action == GLFW_PRESS && mods == GLFW_MOD_CONTROL) //zoom to the selected item (#3027)
+			{
+				if (state->mouseSelectionItemType != ItemType::_None && state->mouseSelectionItemID != EXUstd::InvalidIndex)
+				{
+					ZoomToItem(viewID, Index2ItemID(state->mouseSelectionItemID, state->mouseSelectionItemType, state->mouseSelectionMbsNumber));
+				}
+				else { ShowMessage("CTRL+A zooms to the selected item: select one with the left mouse button first", 3); }
+				keyPressed = true;
+			}
 			if (key == GLFW_KEY_O && action == GLFW_PRESS && mods == 0)
 			{
 				const float* A = state->modelRotation.GetDataPointer();
@@ -943,6 +952,16 @@ void GlfwRenderer::ZoomAll(Index viewID, bool updateGraphicsData, bool computeMa
 	state->ComputeZoomAll(*visSettings, basicVisualizationSystemContainer, viewID);
 
 	if (render) { Render(window); }
+}
+
+void GlfwRenderer::ZoomToItem(Index viewID, Index itemID)
+{
+	RenderState* state = renderViews.State(viewID);
+	stateMachine.hasLastMousePressed = 0;
+	if (!state->ComputeZoomToItem(*visSettings, graphicsDataList, basicVisualizationSystemContainer, viewID, itemID))
+	{
+		ShowMessage("zoom to item: the item draws nothing", 3);
+	}
 }
 
 void GlfwRenderer::scroll_callback(GLFWwindow* window, double xoffset, double yoffset)
@@ -2124,6 +2143,8 @@ void GlfwRenderer::DoRendererTasks(bool graphicsUpdateAndRender)
 				{
 					ZoomAll(viewID, false, !maxSceneComputed, false);
 				}
+				Index itemID = basicVisualizationSystemContainer->GetAndResetZoomToItemRequest(viewID);
+				if (itemID != itemIDinvalidValue) { ZoomToItem(viewID, itemID); }
 			});
 		DoAutoRotation(mainViewID); //currently available only for main view
 		

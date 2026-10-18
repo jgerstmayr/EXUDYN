@@ -134,6 +134,9 @@ public:
 	//! send zoom all request for next scene redraw:
 	void ZoomAll(bool computeMaxScene = true, Index viewID = VisualizationSystemContainer::mainViewID);
 
+	//! zoom to the graphics of one item, centered and filling the window (#3027)
+	bool ZoomToItem(const py::object& itemIndex, Index mbsNumber = 0, Index viewID = VisualizationSystemContainer::mainViewID);
+
 	//! set model view with zoom for window height, (rotationVector & centerPoint) for model view
 	void SetModelView(float zoom, const std::vector<Real>& rotationVector, const std::vector<Real>& centerPoint,
 		Index viewID = VisualizationSystemContainer::mainViewID);

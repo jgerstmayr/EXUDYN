@@ -114,6 +114,15 @@ pb.DefPyFunctionAccess(cClass=classStr, pyName='ZoomAll', cName='ZoomAll',
                         returnType='None',
                         )
 
+pb.DefPyFunctionAccess(cClass=classStr, pyName='ZoomToItem', cName='ZoomToItem',
+                        description="Center the view on the graphics of one item and zoom such that it fills the window, as ZoomAll does for the scene (#3027); itemIndex is the NodeIndex, ObjectIndex, MarkerIndex, LoadIndex or SensorIndex the Add functions return, mbsNumber the number of its system in the SystemContainer; with an active renderer this happens at its next update and the function returns True, else now, and it returns False if the item draws nothing; in the render window, CTRL+A zooms to the item selected with the left mouse button",
+                        example = r"""SC.renderer.ZoomToItem(oBody)""",
+                        argList=['itemIndex', 'mbsNumber', 'viewID'],
+                        argTypes=['NodeIndex | ObjectIndex | MarkerIndex | LoadIndex | SensorIndex', 'int', 'int'],
+                        defaultArgs=['', '0', mainViewID],
+                        returnType='bool',
+                        )
+
 pb.DefPyFunctionAccess(cClass=classStr, pyName='SetModelView', cName='SetModelView', 
                         description="Function to adjusts the current view in renderState; rotationVector and centerPoint transform the modelView while zoom equals the visible scene height; rotationVector is the axis of rotation times the angle in radiant; if zoom=0 then zoom will be computed automatically like in autoFitScene with openGL; use this function in particular for raytracing before RedrawAndGetImage() or with regular OpenGL after renderer.Start(); you can also store the renderState and write the full renderState alternatively; NOTE: may also first initialize renderState from visualizationSettings (if renderer is inactive)",
                         example = r"""SC.renderer.SetModelView(10,[0,0,pi],[2.5,0,0])\\image=SC.renderer.RedrawAndGetImage()""",

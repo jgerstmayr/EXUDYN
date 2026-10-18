@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.13 | Newborn | 141 | 1.13.143 |
+| 1.13 | Newborn | 142 | 1.13.144 |
 | 1.12 | Metheney | 367 | 1.12.462 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
@@ -30,6 +30,10 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.13 - Newborn (current)
 
+- **1.13.144** `EXTENSION` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` Zoom to the selected item in the renderer (#3027)
+  - description: Maintainer 2026-10-17: a selected item (left click, state-\>mouseSelectionItemID) is not used for the view; zoom to its bounding box as ZoomAll does for the scene, by a key and an icon of the icon bar.
+  - **notes:** CTRL+A in the render window centers the view on the item selected with the left mouse button and zooms such that it fills the window; SC.renderer.ZoomToItem(itemIndex) does the same from Python (revision2026c step RG6.19.2)
+  - date resolved: **2026-10-18 23:16**, date raised: 2026-10-17
 - **1.13.143** <span class="textred">`BUG`</span> `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` A symbolic user function that returns a constant, e.g. True of a preStepUserFunction, fails with a cast error (#3038)
   - description: Found by revision2026c step RG12.2: CreateSymbolicUserFunction records the returned value; a Python bool, int or float is no symbolic expression, and the conversion fails with 'Unable to cast Python instance of type bool to C++ type ?'. A constant result becomes a symbolic constant.
   - **notes:** A symbolic user function that returns a constant, e.g. True of a preStepUserFunction, is recorded as a symbolic constant instead of failing with a cast error (revision2026c step RG12.2.1)

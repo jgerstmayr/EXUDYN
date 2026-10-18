@@ -2112,3 +2112,21 @@ ints (selectionLeftMouseItemTypes=31). Decision by question: | for the enumerati
   int or float result into `exudyn.symbolic.Real`; symbolicUserFunctionSignaturesTest.py part (3), result unchanged.
 - **#3039** (idea, RG12.2.2): constant matrix arguments copied at every call.
 - **RG12.4.1**: the proposal in the plan; the fact behind it: `mbs` is passed as itself while recording.
+
+<a id="rg6-19-2"></a>
+### RG6.19.2 — zoom to the selected item (2026-10-18, #3027)
+- `GraphicsData::ComputeMaxScene(..., onlyItemID)` takes only the elements an item drew (all kinds, the textured
+  triangles included); `RenderState::ComputeZoomToItem` adds them over the graphics data in the rotation of the view
+  (with a tracked marker, as ComputeMaxSceneSize), centers x and y, and takes the zoom from the box with the factor and
+  offset of ZoomAll - the bounding-box branch of ComputeZoomAll is now `ZoomForBox`, used by both; the scene size and
+  bounding box stay, so the clipping planes do not change; a camera-centric perspective view moves its camera as
+  ZoomAll does (#3000).
+- CTRL+A (plain A is ZoomAll): the item of `state->mouseSelectionItemID/Type/MbsNumber`, which the left mouse click
+  sets and keeps after the highlight timeout; without a selection a message. `SC.renderer.ZoomToItem(itemIndex,
+  mbsNumber=0, viewID=0)`: with an active renderer a request in RenderViewDataVSC (`zoomToItemRequest`, read with
+  the zoom-all request in the update loop), else at once on the graphics data built as for the raytracer; False if the
+  item draws nothing. keyBindings.py has CTRL+A.
+- zoomToItemTest.py: a 10 m plate and two small bodies; the far body centered within 5 cm and the zoom below 0.2 of
+  ZoomAll, scene size unchanged; node (with nodes.showBasis - a rigid-body node drawn as point has no graphics data),
+  marker and load near it; a hidden node returns False and leaves the view; an int and a wrong mbsNumber refused.
+

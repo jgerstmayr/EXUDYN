@@ -52,6 +52,14 @@ The class **MainRenderer** has the following **functions and structures**:
 - **`EnableView(viewID, createWindow = True)`**: Enables a specified view (1,2 or 3) additionally to the main view (0); a window is created if createWindow=True, otherwise, the view is only enabled to use it with the raytracer; NOTE: additional views cause slightly more workload for the renderer which is why they are disabled by default; failure to create the view usually results in an exception; to check whether the view exists, check the according RenderState regarding viewEnabled and windowOpen
 - **`DisableView(viewID)`**: Disables a specified view (1,2 or 3) and (if created) closes the according window; NOTE: in case of renderer.Stop(), all views are closed; NOTE: if you still aim to use the view without the window, you have to enable the view again EnableView(..., createWindow=False)
 - **`ZoomAll(computeMaxScene = True, viewID = 0)`**: Send zoom all signal, which will perform zoom all at next redraw request; if renderer is inactive (renderer.IsActive()=0), it will perform computations for renderState, thus at the next RedrawAndGetImage() having the full view as with the OpenGL renderer; NOTE: in case of OpenGL, call ZoomAll() after renderer.Start(); NOTE: may also first initialize renderState from visualizationSettings (if renderer is inactive)
+- **`ZoomToItem(itemIndex, mbsNumber = 0, viewID = 0)`**: Center the view on the graphics of one item and zoom such that it fills the window, as ZoomAll does for the scene (#3027); itemIndex is the NodeIndex, ObjectIndex, MarkerIndex, LoadIndex or SensorIndex the Add functions return, mbsNumber the number of its system in the SystemContainer; with an active renderer this happens at its next update and the function returns True, else now, and it returns False if the item draws nothing; in the render window, CTRL+A zooms to the item selected with the left mouse button
+
+  *Example*:
+
+  ```python
+  SC.renderer.ZoomToItem(oBody)
+  ```
+
 - **`SetModelView(zoom = 0, rotationVector = [0,0,0], centerPoint = [0,0,0], viewID = 0)`**: Function to adjusts the current view in renderState; rotationVector and centerPoint transform the modelView while zoom equals the visible scene height; rotationVector is the axis of rotation times the angle in radiant; if zoom=0 then zoom will be computed automatically like in autoFitScene with openGL; use this function in particular for raytracing before RedrawAndGetImage() or with regular OpenGL after renderer.Start(); you can also store the renderState and write the full renderState alternatively; NOTE: may also first initialize renderState from visualizationSettings (if renderer is inactive)
 
   *Example*:

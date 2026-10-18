@@ -119,6 +119,7 @@ symbolicSparseMatrixTest
 orientTrianglesTest
 textureTest
 textureGraphicsTest
+zoomToItemTest
 initialConstraintsCheckTest
 shellMeshSlopesScalingTest
 systemContainerComputeOnlyTest

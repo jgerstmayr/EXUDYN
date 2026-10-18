@@ -255,7 +255,9 @@ public:
 		ClearLock();
 	}
 
-	Box3DF ComputeMaxScene(const Matrix3DF& rotationMV, const Float3& translationMV, bool transform = true) const
+	//! the box of the graphics data in the view; with onlyItemID, only the elements that this item drew (#3027)
+	Box3DF ComputeMaxScene(const Matrix3DF& rotationMV, const Float3& translationMV, bool transform = true,
+		Index onlyItemID = itemIDinvalidValue) const
 	{
 		LockData();
 
@@ -274,29 +276,35 @@ public:
 
 		for (const GLLine& item : glLines)
 		{
+			if (onlyItemID != itemIDinvalidValue && item.itemID != onlyItemID) { continue; }
 			box.Add(Transform(item.point1));
 			box.Add(Transform(item.point2));
 		}
 		for (const GLLine3& item : glLines3)
 		{
+			if (onlyItemID != itemIDinvalidValue && item.itemID != onlyItemID) { continue; }
 			for (const Float3& point : item.points) { box.Add(Transform(point)); }
 		}
 		for (const GLText& item : glTexts)
 		{
+			if (onlyItemID != itemIDinvalidValue && item.itemID != onlyItemID) { continue; }
 			box.Add(Transform(item.point));
 		}
 		for (const GLSphere& item : glSpheres)
 		{
+			if (onlyItemID != itemIDinvalidValue && item.itemID != onlyItemID) { continue; }
 			Box3DF sphere(Transform(item.point), EXUstd::Maximum(item.radius,0.f) ); //avoid negative radius
 			box.Add(sphere);
 		}
 		for (const GLCircleXY& item : glCirclesXY)
 		{
+			if (onlyItemID != itemIDinvalidValue && item.itemID != onlyItemID) { continue; }
 			Box3DF circle(Transform(item.point), EXUstd::Maximum(item.radius, 0.f)); //avoid negative radius
 			box.Add(circle);
 		}
 		for (const GLTriangle& item : glTriangles)
 		{
+			if (onlyItemID != itemIDinvalidValue && item.itemID != onlyItemID) { continue; }
 			for (const Float3& point : item.points)
 			{
 				box.Add(Transform(point));
@@ -304,6 +312,7 @@ public:
 		}
 		for (const GLTriangle6& item : glTriangles6)
 		{
+			if (onlyItemID != itemIDinvalidValue && item.itemID != onlyItemID) { continue; }
 			for (const Float3& point : item.points)
 			{
 				box.Add(Transform(point));
@@ -311,6 +320,7 @@ public:
 		}
 		for (const GLTexturedTriangle& item : glTexturedTriangles)
 		{
+			if (onlyItemID != itemIDinvalidValue && item.itemID != onlyItemID) { continue; }
 			for (const Float3& point : item.points)
 			{
 				box.Add(Transform(point));
