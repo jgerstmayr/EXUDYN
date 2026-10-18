@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.13 | Newborn | 139 | 1.13.141 |
+| 1.13 | Newborn | 141 | 1.13.143 |
 | 1.12 | Metheney | 367 | 1.12.462 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
@@ -30,6 +30,14 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.13 - Newborn (current)
 
+- **1.13.143** <span class="textred">`BUG`</span> `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` A symbolic user function that returns a constant, e.g. True of a preStepUserFunction, fails with a cast error (#3038)
+  - description: Found by revision2026c step RG12.2: CreateSymbolicUserFunction records the returned value; a Python bool, int or float is no symbolic expression, and the conversion fails with 'Unable to cast Python instance of type bool to C++ type ?'. A constant result becomes a symbolic constant.
+  - **notes:** A symbolic user function that returns a constant, e.g. True of a preStepUserFunction, is recorded as a symbolic constant instead of failing with a cast error (revision2026c step RG12.2.1)
+  - date resolved: **2026-10-18 22:57**, date raised: 2026-10-18
+- **1.13.142** `CHANGE` `MEDIUM EFF` `raised by: Claude-JG` `resolved by: Claude-JG` Symbolic: the user function interfaces as they are (#2982)
+  - description: revision2026c step RG12.2: the interface of the symbolic user functions per signature - arguments, return types, how they are transferred to C++ - measured against the Python user functions.
+  - **notes:** The user function interfaces measured: 45 user functions in 24 signatures, 39 with a symbolic version, one representative per class against 1.13.6; no Exudyn allocation per call, symbolic 5 to 44 times faster than Python (docs/dev/design/userFunctionBoundary.md, section 13; revision2026c step RG12.2)
+  - date resolved: **2026-10-18 22:57**, date raised: 2026-10-12
 - **1.13.141** `CHANGE` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` The bit enumeration types combine with \| in Python; TextureFlags passed as one value (#3037)
   - description: Maintainer 2026-10-18: TextureFlags shall work like the other bit types instead of a list. None of the enums supported \| in Python (bound without py::arithmetic); the enums declared as bits (NodeType, MarkerType, CrossSectionType, LinearSolverType, TextureFlags) and OutputVariableType are bound with py::arithmetic, so that exu.TextureFlags.Nearest \| exu.TextureFlags.Clamp works; SC.renderer.AddTexture takes flags as a TextureFlags value or an int of them, default 0; the list goes (introduced after 1.11, no deprecation)
   - **notes:** The values of OutputVariableType, NodeType, MarkerType, CrossSectionType, LinearSolverType and TextureFlags combine with \| and & into an int, as in C++; SC.renderer.AddTexture takes flags as exu.TextureFlags.Nearest \| exu.TextureFlags.Clamp, default 0 (revision2026c step RG6.11.10)

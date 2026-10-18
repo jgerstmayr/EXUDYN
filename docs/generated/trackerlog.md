@@ -8,10 +8,10 @@ Every entry carries the **type** of the issue, then its **priority** and its **e
 
 General information on current version:
 
-- Exudyn version = 1.13.141.dev1
+- Exudyn version = 1.13.143.dev1
 - last change = 2026-10-18
-- Number of issues = 3038
-- Number of resolved issues = 2918 (141 in current version)
+- Number of issues = 3040
+- Number of resolved issues = 2920 (143 in current version)
 
 ## Resolved issues and resolved bugs before version 1.13
 
@@ -9039,6 +9039,9 @@ The following list contains the issues which have been **RESOLVED** in the accor
 
 ## Open issues
 
+- `IDEA` `MEDIUM EFF` `raised by: Claude-JG` Symbolic user functions copy their constant matrix arguments at every call (#3039)
+  - description: Found by revision2026c step RG12.2: the springForceTorqueUserFunction of ObjectConnectorRigidBodySpringDamper takes two 6x6 and two 3x3 matrices, 90 values copied into the named symbolic matrices per call; it costs 0.41 microseconds against 0.23 for the 3D vectors of CartesianSpringDamper. Arguments that are parameters of the item could be copied only when the parameter changes.
+  - date raised: 2026-10-18
 - `EXTENSION` `LOW EFF` `raised by: Claude-JG` Zoom to the selected item in the renderer (#3027)
   - description: Maintainer 2026-10-17: a selected item (left click, state-\>mouseSelectionItemID) is not used for the view; zoom to its bounding box as ZoomAll does for the scene, by a key and an icon of the icon bar.
   - date raised: 2026-10-17
@@ -9054,9 +9057,6 @@ The following list contains the issues which have been **RESOLVED** in the accor
   - date raised: 2026-10-16
 - `EXTENSION` `raised by: Claude-JG` Symbolic: access to the MainSystem and the item functions (#2984)
   - description: revision2026c step RG12.4: inside a symbolic user function, read what the system has - e.g. the current position of a node, a sensor value - as symbolic expressions evaluated in C++.
-  - date raised: 2026-10-12
-- `CHANGE` `MEDIUM EFF` `raised by: Claude-JG` Symbolic: the user function interfaces as they are (#2982)
-  - description: revision2026c step RG12.2: the interface of the symbolic user functions per signature - arguments, return types, how they are transferred to C++ - measured against the Python user functions.
   - date raised: 2026-10-12
 - `CHANGE` `raised by: Claude-JG` General markers for curves, surfaces and volumes instead of the Cable2D markers (#2980)
   - description: revision2026c step RG9.7 (maintainer 2026-10-11; docs/dev/design/pythonUserItems.md 5.3): MarkerBodyCable2DShape and MarkerBodyCable2DCoordinates serve ObjectANCFCable2D only; a marker that gives the shape of a body, positions at varying local coordinates and their Jacobians, so that contact and sliding joints work on beams, plates, shells and general flexible surfaces.

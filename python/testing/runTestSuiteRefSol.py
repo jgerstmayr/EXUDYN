@@ -577,7 +577,7 @@ def PerformanceTestsReferenceSolution():
         'perfConnectorInterface.py':1.8871766817354405, #new 2026-10-01 (#2745)
         'perfAccessFunctionsAD.py':439.41627874357835, #new 2026-10-02 (#2744)
         'perfLargeMassSpringChain.py':0.01426191722384829, #2026-09-16: rigid body chain, last run n=20000; before (mass points): 0.03136079550415616
-        'perfUserFunctions.py':0.563588880190506, #new 2026-10-16: typical user functions, Python and symbolic (#2996)
+        'perfUserFunctions.py':0.6945286696349366, #new 2026-10-16: typical user functions, Python and symbolic (#2996); 2026-10-18: rigid6, ode1x6, mass6, preStep (#2982)
 
         #the single runs of the models that solve several sizes or thread counts. Measured
         #2026-09-16 on Windows cp313; deterministic (repeated runs bit-identical).
@@ -612,6 +612,14 @@ def PerformanceTestsReferenceSolution():
         'perfUserFunctions:generic10-symbolic':           0.0026733098226563758,
         'perfUserFunctions:generic100-python':            0.21138030449447787,
         'perfUserFunctions:generic100-symbolic':          0.21138030449447787,
+        'perfUserFunctions:rigid6-python':                0.0008349292410866855,
+        'perfUserFunctions:rigid6-symbolic':              0.0008349292410866855,
+        'perfUserFunctions:ode1x6-python':                0.00032001095136912787,
+        'perfUserFunctions:ode1x6-symbolic':              0.00032001095136912787,
+        'perfUserFunctions:mass6-python':                 0.016573990749079354,
+        'perfUserFunctions:mass6-symbolic':               0.016573990749079354,
+        'perfUserFunctions:preStep-python':               0.047740963780680185,
+        'perfUserFunctions:preStep-symbolic':             0.047740963780680185,
         #the access functions of the bodies (#2744): hand-written, and for the cable the derivative of J^T f by automatic
         #differentiation - measured 2026-10-02 on Windows cp313
         'perfAccessFunctionsAD:rigidEP-n100-implicit':           1.552725084801644, #2026-10-08: modified Newton is the default of timeIntegration.newton since 2026-10-03 (#2815, #2900); before: 1.552725088397863

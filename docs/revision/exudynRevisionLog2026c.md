@@ -2094,3 +2094,21 @@ ints (selectionLeftMouseItemTypes=31). Decision by question: | for the enumerati
   `__index__`), default 0; bits outside Nearest|Clamp|Replace raise ValueError, a list TypeError (introduced after
   1.11, so no deprecation). CheckerBoard, textureTest.py (two checks added) and textureGraphicsTest.py pass single
   values or |. The empty-`std::vector` default rule in autoGenerateHelper.py is gone with the list.
+
+<a id="rg12-2"></a>
+### RG12.2 and RG12.2.1, RG12.4.1 proposed — the user function interfaces measured (2026-10-18, #2982, #3038, #3039, #2984)
+- **The table**: `docs/dev/design/userFunctionInterfaces.py` reads every user function def of the item definitions
+  (member `userFunction`, annotations as written) and the three of the MainSystem, classifies what crosses the
+  boundary, and takes the symbolic ones from `PySymbolicUserFunctionSet.h`: 45 user functions, 24 signatures, 39
+  symbolic; without: the 5 graphics user functions and sensorUserFunction. Section 1 of userFunctionBoundary.md had 42
+  and 28 (before the matrix results #3020); corrected there with the date.
+- **Measured** (userFunctionBoundary.md section 13): perfUserFunctions.py gains rigid6 (RigidBodySpringDamper with
+  NodeRigidBodyRxyz, explicit without constraints), ode1x6 (GenericODE1; 'none' uses systemMatrix, the rate 2 so that
+  the result is not 0 after 4 s), mass6 (GenericODE2 mass matrix, 'none' the constant mass) and preStep (once per step:
+  `callsPerStep`, also used by userFunctionPerformance.py); runTestSuiteRefSol.py has the 8 new timings and the new
+  total. The Python cartesian/load functions are numpy-vectorized since #3011, which is why they are slower than the
+  lists of section 12 in both versions - checked against 1.13.6 with the same functions, not a regression.
+- **#3038** found while writing preStep: `return True` cannot be recorded; `CreateSymbolicUserFunction` turns a bool,
+  int or float result into `exudyn.symbolic.Real`; symbolicUserFunctionSignaturesTest.py part (3), result unchanged.
+- **#3039** (idea, RG12.2.2): constant matrix arguments copied at every call.
+- **RG12.4.1**: the proposal in the plan; the fact behind it: `mbs` is passed as itself while recording.

@@ -18,7 +18,8 @@ You can view and download this file on Github: [symbolicUserFunctionSignaturesTe
 #           (2) items whose symbolic user function no other test model solves, each simulated with the Python and with
 #           the symbolic version of the same function: CartesianSpringDamper, CoordinateSpringDamper,
 #           TorsionalSpringDamper, ObjectGenericODE1, LoadTorqueVector, LoadMassProportional, the offset of a
-#           CoordinateConstraint, ObjectGenericODE2 with a mass matrix and a Jacobian that depend on the coordinates.
+#           CoordinateConstraint, ObjectGenericODE2 with a mass matrix and a Jacobian that depend on the coordinates;
+#           (3) a function that returns a constant, True of a preStepUserFunction, is recorded (#3038).
 #
 # Author:   Johannes Gerstmayr
 # Date:     2026-10-16
@@ -232,7 +233,16 @@ qSymbolic = Model(True)
 differenceItems = float(np.max(np.abs(qSymbolic - qPython)))
 exu.Print('(2) the items, largest difference symbolic - Python:', differenceItems)
 
-u = signatures + np.sum(qSymbolic) + int(largestDifference > 1e-14) + int(differenceItems > 1e-12)
+#(3) a constant result is a symbolic constant (#3038): a preStepUserFunction that returns True
+def PreStepConstantUF(mbs, t):
+    return True
+SC3 = exu.SystemContainer()
+mbs3 = SC3.AddSystem()
+preStepSymbolic = CreateSymbolicUserFunction(mbs3, PreStepConstantUF, 'preStepUserFunction', -1)
+constantOk = preStepSymbolic.Evaluate(mbs3, 0.5) == 1.
+exu.Print('(3) a constant result:', constantOk)
+
+u = signatures + np.sum(qSymbolic) + int(largestDifference > 1e-14) + int(differenceItems > 1e-12) + int(not constantOk)
 exu.Print('solution of symbolicUserFunctionSignaturesTest=', u)
 
 exu.sys['testResult'] = u

@@ -26,7 +26,7 @@ import exudyn as exu
 import perfUserFunctions as p
 measured = [p.Solve({function!r}, {kind!r}) for i in range({repeat})]
 print('RESULT', json.dumps({{'version': exu.__version__, 'result': measured[0][0], 'time': min(m[1] for m in measured),
-                            'allocations': float(measured[0][2]), 'calls': 4*p.runs[{function!r}]}}))
+                            'allocations': float(measured[0][2]), 'calls': p.callsPerStep.get({function!r}, 4)*p.runs[{function!r}]}}))
 '''
 
 def Run(function, kind, repeat, reference):

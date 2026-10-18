@@ -1,0 +1,11 @@
+{
+  "number": 3039,
+  "title": "Symbolic user functions copy their constant matrix arguments at every call",
+  "author": "Claude-JG",
+  "status": "RAISED",
+  "type": "IDEA",
+  "effort": "MEDIUM",
+  "description": "Found by revision2026c step RG12.2: the springForceTorqueUserFunction of ObjectConnectorRigidBodySpringDamper takes two 6x6 and two 3x3 matrices, 90 values copied into the named symbolic matrices per call; it costs 0.41 microseconds against 0.23 for the 3D vectors of CartesianSpringDamper. Arguments that are parameters of the item could be copied only when the parameter changes.",
+  "dateRaised": "2026-10-18",
+  "deadline": "2027-04-16"
+}

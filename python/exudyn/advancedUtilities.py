@@ -893,6 +893,9 @@ def ConvertFunctionToSymbolic(mbs, function, userFunctionName, itemIndex=None, i
     elif isinstance(returnValue, np.ndarray) and returnValue.ndim == 2:
         #a matrix result as numpy array of symbolic items or numbers (#3020)
         returnValue = exudyn.symbolic.Matrix(returnValue.tolist())
+    elif isinstance(returnValue, (bool, int, float, np.bool_, np.integer, np.floating)):
+        #a constant, e.g. True of a preStepUserFunction (#3038)
+        returnValue = exudyn.symbolic.Real(float(returnValue))
 
     if verbose:
         exudyn.Print('return value=', returnValue)

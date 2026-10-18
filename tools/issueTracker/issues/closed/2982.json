@@ -1,0 +1,15 @@
+{
+  "number": 2982,
+  "title": "Symbolic: the user function interfaces as they are",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "CHANGE",
+  "effort": "MEDIUM",
+  "description": "revision2026c step RG12.2: the interface of the symbolic user functions per signature - arguments, return types, how they are transferred to C++ - measured against the Python user functions.",
+  "dateRaised": "2026-10-12",
+  "deadline": "2027-04-10",
+  "dateResolved": "2026-10-18 22:57",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "The user function interfaces measured: 45 user functions in 24 signatures, 39 with a symbolic version, one representative per class against 1.13.6; no Exudyn allocation per call, symbolic 5 to 44 times faster than Python (docs/dev/design/userFunctionBoundary.md, section 13; revision2026c step RG12.2)",
+  "resolvedInVersion": "1.13.142"
+}
