@@ -351,6 +351,11 @@ void GlfwRenderer::key_callback(GLFWwindow* window, int key, int scancode, int a
 			settingsView.window.showMouseCoordinates = !settingsView.window.showMouseCoordinates;
 			stateMachine.rendererMessage = "";
 		}
+		//switch the ruler (#2244)
+		if (key == GLFW_KEY_F5 && action == GLFW_PRESS && mods == 0)
+		{
+			settingsView.window.showRuler = !settingsView.window.showRuler;
+		}
 		if (key == GLFW_KEY_F3 && action == GLFW_PRESS && mods == GLFW_MOD_CONTROL)
 		{
 			settingsView.window.showRenderStateInfo = !settingsView.window.showRenderStateInfo;

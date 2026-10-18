@@ -1,0 +1,15 @@
+{
+  "number": 2244,
+  "title": "GLFWClient",
+  "author": "JG",
+  "status": "RESOLVED",
+  "type": "EXTENSION",
+  "effort": "MEDIUM",
+  "description": "add ruler to renderer, only for case where axes are parallel to x, y and z (i.e. 90 degree rotations)",
+  "dateRaised": "2026-01-31",
+  "deadline": "2026-07-30",
+  "dateResolved": "2026-10-18 08:52",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "A ruler in the render window: visualizationSettings.view0.window.showRuler or the key F5 shows scales at the bottom and the left border of an orthographic view, with ticks at 1, 2 or 5 times a power of 10; in an axis-aligned view the labels are the coordinates of the view, else the distance from the end of the scale; the raytracer draws it as well.",
+  "resolvedInVersion": "1.13.128"
+}

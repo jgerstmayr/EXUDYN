@@ -80,7 +80,7 @@ The title of each says what it does; the sentence after it, why it comes now.
 - **RG6** Graphics and rendering
   - RG6.8 Fix the remaining graphics problems with a test each
   - RG6.11 Draw textures from numpy arrays in triangle lists (1 open sub-step)
-  - RG6.12 Add a ruler to the renderer and orient imported triangles consistently (1 open sub-step)
+  - RG6.12 Add a ruler to the renderer and orient imported triangles consistently
   - RG6.19 Add an icon bar to the renderer that folds in from the right border, as alternative to the keys (2 open sub-steps)
 - **RG7** Python user items
   - RG7.4 Add user nodes with position and orientation interfaces
@@ -129,7 +129,7 @@ The title of each says what it does; the sentence after it, why it comes now.
 | RG3 | CLOSED | 0 | Docs |
 | RG4 | OPEN | 6 | Implementation problems and bugs |
 | RG5 | OPEN | 8 | Performance |
-| RG6 | OPEN | 8 | Graphics and rendering |
+| RG6 | OPEN | 7 | Graphics and rendering |
 | RG7 | OPEN | 5 | Python user items |
 | RG8 | OPEN | 10 | Compiled C++ user items |
 | RG9 | OPEN | 5 | Structural core improvements |
@@ -491,21 +491,12 @@ compiled into characterBitmap.cpp (GlfwClientExtended.cpp:511), and the raytrace
 
 #2244 (a ruler for views parallel to x, y, z), #2281 (the normals of imported geometry all outward).
 
-#### **OPEN_RG6.12.1** Proposal: a ruler drawn with the overlay, for the axis-aligned orthographic views
+#### **CLOSED_RG6.12.1** Draw a ruler with the overlay in orthographic views
 
-For a decision. The overlay - texts, mouse coordinates with their crosshair lines, the contour bar, the triad - is
-built in one place, `GetGraphicsDataStatic` (Raytracing.cpp:1848), which serves OpenGL and the raytracer alike.
-- **What it shows**: in an axis-aligned orthographic view, a scale along the bottom and the left border of the window
-  in model units: major ticks at 1, 2 or 5 times a power of 10 chosen from the zoom and the window size so that they
-  are 60 to 150 pixels apart (scaled with the display scaling), minor ticks between, labels at the major ticks in the
-  axis names of the view (x, y or z); with mouse coordinates on, the ruler marks the cursor position on both scales.
-  In a rotated or perspective view, a scale bar valid in the plane of the rotation center, labeled as such, or nothing
-  (to decide).
-- **Where**: a function `AddRuler(...)` called from `GetGraphicsDataStatic`, so the raytraced and saved images show
-  it; setting `window.showRuler` (default False), a key (F4) and an icon of the icon bar (RG6.19).
-- **Tests**: pytest of the tick spacing for several zooms; the graphics regression of the overlay.
-- #2281 (outward normals of imported triangles) has nothing in common with the ruler and becomes a step of its own.
-
+CLOSED 2026-10-18 (#2244; maintainer: also in rotated views, but only with perspective 0; key F5 instead of F4): scales
+at the bottom and the left border, ticks at 1, 2 or 5 times a power of 10 at least 80 pixels apart, labels with the
+coordinates of an axis-aligned view or the distance from the end; `window.showRuler`, key F5; the raytracer shows it.
+#2281 (outward normals) stays in RG6.12. [log](exudynRevisionLog2026c.md#rg6-12-1)
 ### **CLOSED_RG6.18** Show prescribed motions in the SolutionViewer and fix its space key
 
 Maintainer 2026-10-10. CLOSED 2026-10-10.

@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.13 | Newborn | 125 | 1.13.127 |
+| 1.13 | Newborn | 126 | 1.13.128 |
 | 1.12 | Metheney | 367 | 1.12.462 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
@@ -30,6 +30,10 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.13 - Newborn (current)
 
+- **1.13.128** `EXTENSION` `MEDIUM EFF` `resolved by: Claude-JG` GLFWClient (#2244)
+  - description: add ruler to renderer, only for case where axes are parallel to x, y and z (i.e. 90 degree rotations)
+  - **notes:** A ruler in the render window: visualizationSettings.view0.window.showRuler or the key F5 shows scales at the bottom and the left border of an orthographic view, with ticks at 1, 2 or 5 times a power of 10; in an axis-aligned view the labels are the coordinates of the view, else the distance from the end of the scale; the raytracer draws it as well.
+  - date resolved: **2026-10-18 08:52**, date raised: 2026-01-31
 - **1.13.127** `TESTING` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` userRigidBodyTest.py: solve the standard, the Python and the symbolic body one after the other with the computation time shown (#3025)
   - description: Maintainer 2026-10-17: the three kinds of the body (ObjectRigidBody, ObjectUserBody with Python user functions, ObjectUserBody with symbolic user functions) are solved in a loop, each in its own system, with show.computationTime and verboseMode on, so that the cost of each mode is visible.
   - **notes:** userRigidBodyTest.py solves the body as ObjectRigidBody, as ObjectUserBody with Python user functions and with symbolic user functions one after the other, each with its computation time.

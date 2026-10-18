@@ -606,3 +606,31 @@ def testASmallModelStaysVisibleInPerspective():
         image = SC.renderer.RedrawAndGetImage(useRaytracer=True).astype(int)
         pixels[perspective] = int(((image[:, :, 0] > 180) & (image[:, :, 1] < 80) & (image[:, :, 2] < 80)).sum())
     assert pixels[0.] > 300 and pixels[0.5] > 0.8*pixels[0.], pixels
+
+
+def RulerImage(zoom, showRuler=True, rotation=[0, 0, 0]):
+    """a brick from (0,0) to (1,0.5) at 400 x 300 pixels through the raytracer, with or without the ruler"""
+    SC = exu.SystemContainer()
+    mbs = SC.AddSystem()
+    mbs.CreateGround(graphicsDataList=[graphics.Brick(centerPoint=[0.5, 0.25, 0], size=[1, 0.5, 0.1])])
+    mbs.Assemble()
+    SC.visualizationSettings.view0.window.renderWindowSize = [400, 300]
+    SC.visualizationSettings.view0.window.showRuler = showRuler
+    SC.visualizationSettings.view0.window.showComputationInfo = False
+    SC.visualizationSettings.view0.scene.drawWorldBasis = False
+    SC.visualizationSettings.view0.scene.drawCoordinateSystem = 0
+    SC.renderer.ZoomAll()
+    SC.renderer.SetModelView(zoom, rotation, [0.5, 0.25, 0])
+    return SC.renderer.RedrawAndGetImage(useRaytracer=True)
+
+
+def testTheRulerHasTicksAtNiceDistances():
+    """#2244: the ruler is drawn in the overlay, so the raytracer shows it; its minor ticks are a fifth of 1, 2 or 5
+    times a power of 10 and the major ones at least 80 pixels apart, at any zoom; also in a rotated view"""
+    assert not np.array_equal(RulerImage(0.8), RulerImage(0.8, showRuler=False))
+    for zoom in [0.8, 3.7, 0.013]:
+        row = RulerImage(zoom)[-3, :, :].astype(float).sum(axis=1)      #3 pixels above the bottom: every tick
+        dark = row < 0.5 * row.max()
+        ticks = int(np.sum(dark[1:] & ~dark[:-1]))
+        assert 400/40 - 1 <= ticks <= 400/16 + 1, (zoom, ticks)
+    assert not np.array_equal(RulerImage(0.8, rotation=[0.4, 0.6, 0]), RulerImage(0.8, showRuler=False, rotation=[0.4, 0.6, 0]))

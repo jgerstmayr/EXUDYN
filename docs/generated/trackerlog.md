@@ -8,10 +8,10 @@ Every entry carries the **type** of the issue, then its **priority** and its **e
 
 General information on current version:
 
-- Exudyn version = 1.13.127.dev1
-- last change = 2026-10-17
+- Exudyn version = 1.13.128.dev1
+- last change = 2026-10-18
 - Number of issues = 3028
-- Number of resolved issues = 2904 (127 in current version)
+- Number of resolved issues = 2905 (128 in current version)
 
 ## Resolved issues and resolved bugs before version 1.13
 
@@ -9129,10 +9129,6 @@ The following list contains the issues which have been **RESOLVED** in the accor
 - `CHANGE` `LOW EFF` camera (#2247)
   - description: add documentation for model-centric and camera-centric views
   - **remarks:** planned as revision2026b step RG18.1 (triage 2026-10-07)
-  - date raised: 2026-01-31
-- `EXTENSION` `MEDIUM EFF` GLFWClient (#2244)
-  - description: add ruler to renderer, only for case where axes are parallel to x, y and z (i.e. 90 degree rotations)
-  - **remarks:** planned as revision2026b step RG6.12 (triage 2026-10-07)
   - date raised: 2026-01-31
 - `EXTENSION` `MEDIUM EFF` explicit solver (#2238)
   - description: add adaptive step refinement for case of divergence - define limit for velocities/solution increment to decide step refinement (+ nan/inf)

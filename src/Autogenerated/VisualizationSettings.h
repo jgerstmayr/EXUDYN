@@ -4,7 +4,7 @@
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2026-10-17 (last modfied)
+* @date         AUTO: 2026-10-18 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -197,7 +197,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2026-10-17 (last modfied)
+* @date         AUTO: 2026-10-18 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -277,7 +277,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2026-10-17 (last modfied)
+* @date         AUTO: 2026-10-18 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -372,7 +372,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2026-10-17 (last modfied)
+* @date         AUTO: 2026-10-18 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -449,7 +449,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2026-10-17 (last modfied)
+* @date         AUTO: 2026-10-18 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -529,7 +529,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2026-10-17 (last modfied)
+* @date         AUTO: 2026-10-18 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -606,7 +606,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2026-10-17 (last modfied)
+* @date         AUTO: 2026-10-18 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -668,7 +668,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2026-10-17 (last modfied)
+* @date         AUTO: 2026-10-18 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -742,7 +742,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2026-10-17 (last modfied)
+* @date         AUTO: 2026-10-18 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -828,7 +828,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2026-10-17 (last modfied)
+* @date         AUTO: 2026-10-18 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -899,7 +899,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2026-10-17 (last modfied)
+* @date         AUTO: 2026-10-18 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -976,7 +976,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2026-10-17 (last modfied)
+* @date         AUTO: 2026-10-18 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -1085,7 +1085,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2026-10-17 (last modfied)
+* @date         AUTO: 2026-10-18 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -1153,7 +1153,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2026-10-17 (last modfied)
+* @date         AUTO: 2026-10-18 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -1254,7 +1254,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2026-10-17 (last modfied)
+* @date         AUTO: 2026-10-18 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -1337,7 +1337,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2026-10-17 (last modfied)
+* @date         AUTO: 2026-10-18 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -1414,7 +1414,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2026-10-17 (last modfied)
+* @date         AUTO: 2026-10-18 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -1434,6 +1434,7 @@ public: // AUTO:
   bool showComputationInfo;                       //!< AUTO: true = show (hide) all computation information including Exudyn and version
   bool showMouseCoordinates;                      //!< AUTO: True: show OpenGL coordinates and distance to last left mouse button pressed position in renderer status message; switched on/off with key 'F3'; only works for axis-aligned ortho-projections
   bool showRenderStateInfo;                       //!< AUTO: True: show renderer.state infos regarding zoom, offset and rotation in renderer status message; switched on/off with 'CTRL-F3'
+  bool showRuler;                                 //!< AUTO: True: show a ruler along the bottom and the left border of the window, with ticks at 1, 2 or 5 times a power of 10 in model units; in an axis-aligned view the labels are the coordinates of the view, as the mouse coordinates show them, else the distance from the left or bottom end; only shown with perspective=0; switched on/off with key 'F5' (#2244)
   bool showWindow;                                //!< AUTO: True: render window of respective view is shown when created; False: window will be iconified when created (e.g. if you are starting multiple computations automatically)
   bool storeRenderWindowGeometry;                 //!< AUTO: True: when the render window of this view closes, where it was is written into `renderWindowSize` and `renderWindowPosition` - so that storing the settings keeps the window where you left it, see Section [](#sec-usersettings). False (default): the settings are only ever what you set, which is why *diff to default* does not report a window position after every run
 
@@ -1455,6 +1456,7 @@ public: // AUTO:
     showComputationInfo = true;
     showMouseCoordinates = false;
     showRenderStateInfo = false;
+    showRuler = false;
     showWindow = true;
     storeRenderWindowGeometry = false;
   };
@@ -1477,6 +1479,7 @@ public: // AUTO:
     os << "  showComputationInfo = " << showComputationInfo << "\n";
     os << "  showMouseCoordinates = " << showMouseCoordinates << "\n";
     os << "  showRenderStateInfo = " << showRenderStateInfo << "\n";
+    os << "  showRuler = " << showRuler << "\n";
     os << "  showWindow = " << showWindow << "\n";
     os << "  storeRenderWindowGeometry = " << storeRenderWindowGeometry << "\n";
     os << "\n";
@@ -1497,7 +1500,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2026-10-17 (last modfied)
+* @date         AUTO: 2026-10-18 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -1556,7 +1559,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2026-10-17 (last modfied)
+* @date         AUTO: 2026-10-18 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -1659,7 +1662,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2026-10-17 (last modfied)
+* @date         AUTO: 2026-10-18 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -1741,7 +1744,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2026-10-17 (last modfied)
+* @date         AUTO: 2026-10-18 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -1815,7 +1818,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2026-10-17 (last modfied)
+* @date         AUTO: 2026-10-18 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -1886,7 +1889,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2026-10-17 (last modfied)
+* @date         AUTO: 2026-10-18 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -2104,7 +2107,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2026-10-17 (last modfied)
+* @date         AUTO: 2026-10-18 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -2216,7 +2219,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2026-10-17 (last modfied)
+* @date         AUTO: 2026-10-18 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -2296,7 +2299,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2026-10-17 (last modfied)
+* @date         AUTO: 2026-10-18 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -2624,7 +2627,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2026-10-17 (last modfied)
+* @date         AUTO: 2026-10-18 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -2695,7 +2698,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2026-10-17 (last modfied)
+* @date         AUTO: 2026-10-18 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -2787,7 +2790,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2026-10-17 (last modfied)
+* @date         AUTO: 2026-10-18 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -2966,7 +2969,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2026-10-17 (last modfied)
+* @date         AUTO: 2026-10-18 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:

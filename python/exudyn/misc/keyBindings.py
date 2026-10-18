@@ -183,6 +183,10 @@ keyBindings = [
                'ignore all keyboard input, except for the KeyPress user function, F2 and escape',
                'GLFW_KEY_F2'),
     KeyBinding('F3', 'show mouse coordinates', 'shown in the status line', '', 'GLFW_KEY_F3'),
+    KeyBinding('F5', 'show ruler',
+               'a ruler along the bottom and the left border, in model units; in an axis-aligned view with the '
+               'coordinates of the view, else with the distance from its end; only with perspective 0 (#2244)',
+               'ruler at the bottom and left border', 'GLFW_KEY_F5'),
     KeyBinding('CTRL+F3', 'show model view parameters',
                'shown in the status line: zoom, rotationVector (rot) and centerPoint (pos), as '
                'they are needed by `renderer.SetModelView(zoom, rot, pos)` to restore a view '

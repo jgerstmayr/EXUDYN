@@ -1887,3 +1887,21 @@ The arguments are done; what is left are the results, and the expressions of mat
   iteration the Cartesian spring-damper evaluates position, rotation and both Jacobians of the body, and the
   derivative of J^T f evaluates the Jacobians 4 n times by differences (#2995) - a place for analytic derivatives
   later.
+
+<a id="rg6-12-1"></a>
+### RG6.12.1 — the ruler (2026-10-18, #2244)
+*(Maintainer 2026-10-18: the ruler makes sense in rotated views as well, but only with perspective 0; key F5 or F6,
+as F4 is often used for other actions.)*
+- `AddRuler` and `RulerTickSpacing` in Raytracing.cpp, called from `GetGraphicsDataStatic`, so OpenGL and the raytracer
+  draw it: a line at the bottom and the left border, minor ticks of 5 pixels every fifth of the major distance, major
+  ticks of 10 pixels (times the display scaling) with labels in the small font; the major distance is 1, 2 or 5 times a
+  power of 10 and at least 80 pixels; no label within 2.5 font sizes of the corner, where the two scales meet.
+- In an axis-aligned view without tracked marker the labels are the coordinates of the view
+  (`PixelsToOpenGLCoordinates2D`, as the mouse coordinates of F3), and with F3 on the mouse position is marked green
+  on both scales; in a rotated view the labels are the distance from the left or bottom end. Nothing with perspective
+  > 0.
+- `window.showRuler` (default False), key F5 (GlfwClient.cpp), the key table exudyn.misc.keyBindings and from it the
+  help dialog and GUI.md.
+- pytest testTheRulerHasTicksAtNiceDistances (test_graphicsRegression.py): raytraced 400 x 300 images at three zooms
+  over five orders of magnitude, 10 to 25 ticks across the width, and the ruler in a rotated view.
+- parameterConversionTestReference.txt records the new setting (written with `recordReference = True`).

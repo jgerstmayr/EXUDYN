@@ -39,4 +39,5 @@
 | **H** | show help | open the window that shows this list of mouse and keyboard commands |
 | **F2** | ignore keys | switch the key input on and off; can be used together with a keyPressUserFunction to build simulators |
 | **F3** | show mouse coordinates | shown in the status line |
+| **F5** | show ruler | a ruler along the bottom and the left border, in model units; in an axis-aligned view with the coordinates of the view, else with the distance from its end; only with perspective 0 (#2244) |
 | **CTRL+F3** | show model view parameters | shown in the status line: zoom, rotationVector (rot) and centerPoint (pos), as they are needed by `renderer.SetModelView(zoom, rot, pos)` to restore a view after the renderer started |

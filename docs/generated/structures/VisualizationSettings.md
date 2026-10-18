@@ -482,6 +482,7 @@ VSettingsWindow has the following items:
 | `showComputationInfo` | bool | True | true = show (hide) all computation information including Exudyn and version |
 | `showMouseCoordinates` | bool | False | True: show OpenGL coordinates and distance to last left mouse button pressed position in renderer status message; switched on/off with key 'F3'; only works for axis-aligned ortho-projections |
 | `showRenderStateInfo` | bool | False | True: show renderer.state infos regarding zoom, offset and rotation in renderer status message; switched on/off with 'CTRL-F3' |
+| `showRuler` | bool | False | True: show a ruler along the bottom and the left border of the window, with ticks at 1, 2 or 5 times a power of 10 in model units; in an axis-aligned view the labels are the coordinates of the view, as the mouse coordinates show them, else the distance from the left or bottom end; only shown with perspective=0; switched on/off with key 'F5' (#2244) |
 | `showWindow` | bool | True | True: render window of respective view is shown when created; False: window will be iconified when created (e.g. if you are starting multiple computations automatically) |
 | `storeRenderWindowGeometry` | bool | False | True: when the render window of this view closes, where it was is written into `renderWindowSize` and `renderWindowPosition` - so that storing the settings keeps the window where you left it, see Section [](#sec-usersettings). False (default): the settings are only ever what you set, which is why *diff to default* does not report a window position after every run |
 

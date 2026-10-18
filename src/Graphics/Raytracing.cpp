@@ -1845,6 +1845,84 @@ void Raytracer::SoftwareRenderer(Index viewID, VisualizationSystemContainerBase*
 //! write static overlay text and objects for render view
 //! this is used in GlfwClient and in Raytracer and does not need GLFWClient
 //! zOffset is added in GlfwClient such that it is put on top!
+//! the distance of the major ticks of the ruler: 1, 2 or 5 times a power of 10, at least minimumPixels apart (#2244)
+Real RulerTickSpacing(Real unitsPerPixel, Real minimumPixels)
+{
+	Real target = unitsPerPixel * minimumPixels;
+	if (!(target > 0.)) { return 1.; }
+	Real power = std::pow(10., std::floor(std::log10(target)));
+	for (Real factor : { 1., 2., 5., 10. })
+	{
+		if (factor * power >= target * (1. - 1e-12)) { return factor * power; }
+	}
+	return 10. * power;
+}
+
+//! a ruler along the bottom and the left border, in model units of the orthographic view: major ticks with labels and four
+//! minor ticks between them; the labels are the coordinates of the view (as the mouse coordinates) or, with
+//! showCoordinates=false, the distance from the left or bottom end; the mouse position is marked (#2244)
+void AddRuler(VisualizationSystemContainerBase* container, GraphicsData& graphicsData, const RenderState& state,
+	float fontSize, const Float4& color, bool showCoordinates, bool markMouse, Index itemID)
+{
+	const Index width = state.currentWindowSize[0];
+	const Index height = state.currentWindowSize[1];
+	if (width <= 0 || height <= 0 || !(state.zoom > 0.f)) { return; }
+	const Real scaling = state.displayScaling > 0.f ? state.displayScaling : 1.;
+	const Real unitsPerPixel = 2. * (Real)state.zoom / (Real)height;
+	const Real spacing = RulerTickSpacing(unitsPerPixel, 80. * scaling);
+	const Real majorLength = 10. * scaling; //pixels
+	const Real minorLength = 5. * scaling;
+	const Real cornerPixels = 2.5 * fontSize * scaling; //no label near the corner, where the two rulers meet
+
+	//pixel (from bottom/left) to the 3D modelview coordinates of the overlay
+	auto Point = [&](Real px, Real py) { return Vector3D({ (Real)container->PixelsToModelViewCoordinates2D((float)px, (float)py, width, height, state.zoom)[0],
+		(Real)container->PixelsToModelViewCoordinates2D((float)px, (float)py, width, height, state.zoom)[1], 0. }); };
+	auto Label = [](Real value, Real step)
+	{
+		char buffer[32];
+		int digits = (int)EXUstd::Maximum(0., -std::floor(std::log10(step) + 1e-9));
+		if (std::fabs(value) < 1e-9 * step) { value = 0.; }
+		snprintf(buffer, sizeof(buffer), "%.*f", digits, value);
+		return STDstring(buffer);
+	};
+
+	//the coordinates of the view at the bottom left corner; with showCoordinates=false the rulers start at 0
+	Vector2D corner({ 0., 0. });
+	if (showCoordinates) { corner = container->PixelsToOpenGLCoordinates2D(0., (double)height, state); } //y of the pixels from the top
+	for (Index direction = 0; direction < 2; direction++) //0: horizontal ruler at the bottom, 1: vertical at the left
+	{
+		Index pixels = direction == 0 ? width : height;
+		Real start = corner[direction];
+		graphicsData.AddLine(direction == 0 ? Point(0, 0.5) : Point(0.5, 0), direction == 0 ? Point(width, 0.5) : Point(0.5, height),
+			color, color, itemID);
+		Real minor = spacing / 5.;
+		Index first = (Index)std::ceil(start / minor - 1e-9);
+		for (Index k = first; (k * minor - start) / unitsPerPixel <= (Real)pixels; k++)
+		{
+			Real value = k * minor;
+			Real p = (value - start) / unitsPerPixel; //pixel along the ruler
+			bool major = (k % 5 == 0);
+			Real length = major ? majorLength : minorLength;
+			graphicsData.AddLine(direction == 0 ? Point(p, 0) : Point(0, p), direction == 0 ? Point(p, length) : Point(length, p),
+				color, color, itemID);
+			if (major && p > cornerPixels && p < (Real)pixels - cornerPixels)
+			{
+				STDstring text = Label(value, spacing);
+				if (direction == 0) { graphicsData.AddText(Point(p, length), color, text, fontSize * fontSmallFactor, -0.5f * (float)text.size(), 0.2f, itemID); }
+				else { graphicsData.AddText(Point(length + 2. * scaling, p), color, text, fontSize * fontSmallFactor, 0.f, -0.3f, itemID); }
+			}
+		}
+	}
+	if (markMouse) //the mouse position on both rulers
+	{
+		Float4 markColor({ 0.3f, 0.9f, 0.3f, 1.f });
+		Real px = (state.openGLcoordinates[0] - corner[0]) / unitsPerPixel;
+		Real py = (state.openGLcoordinates[1] - corner[1]) / unitsPerPixel;
+		graphicsData.AddLine(Point(px, 0), Point(px, 2. * majorLength), markColor, markColor, itemID);
+		graphicsData.AddLine(Point(0, py), Point(2. * majorLength, py), markColor, markColor, itemID);
+	}
+}
+
 void GetGraphicsDataStatic(Index viewID, VisualizationSystemContainerBase* basicVisualizationSystemContainer,
 	GraphicsData& graphicsData, const RenderStateMachine& stateMachine, bool flushData)
 {
@@ -1991,6 +2069,14 @@ void GetGraphicsDataStatic(Index viewID, VisualizationSystemContainerBase* basic
 	{
 		graphicsData.AddText(pBottomLeft3D, textColor, statusMessage.c_str(), fontSize* fontSmallFactor,
 			0, (float)EXUstd::Count(statusMessage, '\n'), itemID);
+	}
+
+	//the ruler, in orthographic views only (#2244)
+	if (settingsView.window.showRuler && settingsView.camera.perspective == 0)
+	{
+		bool coordinates = basicVisualizationSystemContainer->IsAxisAlignedView(*state) && settingsView.camera.trackMarker < 0;
+		AddRuler(basicVisualizationSystemContainer, graphicsData, *state, fontSize, textColor, coordinates,
+			coordinates && settingsView.window.showMouseCoordinates && !settingsView.camera.useRaytracer, itemID);
 	}
 
 	if (visSettings->contour.advanced.showColorBar && visSettings->contour.outputVariable != OutputVariableType::_None) //draw coordinate system
