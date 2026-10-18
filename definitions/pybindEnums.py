@@ -41,7 +41,7 @@ descriptionStr += r"""Available output variables and the interpreation of the ou
  The OutputVariableType does not provide information about the size of the output variable, which can be either scalar or a list (vector). For vector output quantities, the contour plot option offers an additional parameter for selection of the component of the OutputVariableType. The components are usually out of \{0,1,2\}, representing \{x,y,z\} components (e.g., of displacements, velocities, ...), or \{0,1,2,3,4,5\} representing \{xx,yy,zz,yz,xz,xy\} components (e.g., of strain or stress). In order to compute a norm, chose component=-1, which will result in the quadratic norm for other vectors and to a norm specified for stresses (if no norm is defined for an outputVariable, it does not compute anything)
 """
 
-pb.DefStartEnumClass(className = pyClass, 
+pb.DefStartEnumClass(className = pyClass, arithmetic=True,
                         description=descriptionStr, 
                         subSection=True, labelName='sec:'+pyClass)
 pb.DefStartTable(pyClass)
@@ -52,7 +52,7 @@ pb.DefStartTable(pyClass)
 for outputVariable in outputVariableTypes:
     pb.AddEnumValue(pyClass, outputVariable.name, outputVariable.description)
 
-pb.CppCode('		'+enumExportValues+';\n\n')
+pb.CppCode('		'+enumExportValues+EnumBitOperators()+';\n\n')
 pb.DefFinishTable()
 
 #the other enums: their values, the C++ enums and string functions all come from
@@ -63,14 +63,14 @@ for enum in enumTypes:
     cClass = enum.Namespace() if enum.Namespace() != '' else enum.pythonName
     if enum.Namespace() != '':
         pb.DefStartEnumClass(className=enum.pythonName, description=enum.description,
-                             subSection=True, labelName='sec:'+enum.pythonName, cClass=enum.cppName)
+                             subSection=True, labelName='sec:'+enum.pythonName, cClass=enum.cppName, arithmetic=enum.bits)
     else:
         pb.DefStartEnumClass(className=enum.pythonName, description=enum.description,
-                             subSection=True, labelName='sec:'+enum.pythonName)
+                             subSection=True, labelName='sec:'+enum.pythonName, arithmetic=enum.bits)
     pb.DefStartTable(enum.pythonName)
     for value in enum.values:
         if value.python:
             pb.AddEnumValue(cClass, value.name, value.description)
-    pb.CppCode('		'+enumExportValues+';\n\n')
+    pb.CppCode('		'+enumExportValues+(EnumBitOperators() if enum.bits else '')+';\n\n')
     pb.DefFinishTable()
 

@@ -208,11 +208,11 @@ pb.DefPyFunctionAccess(cClass=classStr, pyName='GetRenderCount', cName='GetRedra
 
 
 pb.DefPyFunctionAccess(cClass=classStr, pyName='AddTexture', cName='AddTexture',
-                        description="Add a texture by its name, or replace the image of a name, for the triangle lists that refer to it with the key 'texture' (#3029); the textures are shared by all SystemContainers and are added before the graphics data that uses them; image is a numpy array of shape (height, width) or (height, width, channels) with 1, 3 or 4 channels, of uint8 or of floats in [0, 1]; its first row is the top of the image, at the texture coordinate v=1; interpretation is a TextureInterpretation, which says how the channels are drawn; flags is a list of TextureFlags; names starting with 'exudyn.' are reserved",
-                        example = r"""import numpy as np\\image = np.zeros((64,64,3), dtype=np.uint8)\\image[:32,:,0] = 255 #upper half red\\SC.renderer.AddTexture('redTop', image, interpretation=exu.TextureInterpretation.RGB, flags=[exu.TextureFlags.Nearest])""",
+                        description="Add a texture by its name, or replace the image of a name, for the triangle lists that refer to it with the key 'texture' (#3029); the textures are shared by all SystemContainers and are added before the graphics data that uses them; image is a numpy array of shape (height, width) or (height, width, channels) with 1, 3 or 4 channels, of uint8 or of floats in [0, 1]; its first row is the top of the image, at the texture coordinate v=1; interpretation is a TextureInterpretation, which says how the channels are drawn; flags are TextureFlags combined with |, e.g. exu.TextureFlags.Nearest | exu.TextureFlags.Clamp, or 0 for none; names starting with 'exudyn.' are reserved",
+                        example = r"""import numpy as np\\image = np.zeros((64,64,3), dtype=np.uint8)\\image[:32,:,0] = 255 #upper half red\\SC.renderer.AddTexture('redTop', image, interpretation=exu.TextureInterpretation.RGB, flags=exu.TextureFlags.Nearest)""",
                         argList=['name', 'image', 'interpretation', 'flags'],
-                        argTypes=['str', 'ArrayLike', 'TextureInterpretation', 'list[TextureFlags]'],
-                        defaultArgs=['', '', 'exu.TextureInterpretation::RGBA', 'std::vector<TextureFlags>()'],
+                        argTypes=['str', 'ArrayLike', 'TextureInterpretation', 'TextureFlags | int'],
+                        defaultArgs=['', '', 'exu.TextureInterpretation::RGBA', '0'],
                         returnType='None',
                         )
 

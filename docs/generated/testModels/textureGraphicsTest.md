@@ -63,7 +63,7 @@ image = np.zeros((2, 2, 3), dtype=np.uint8)
 image[0, 0] = image[1, 1] = [255, 0, 0]
 image[0, 1] = image[1, 0] = [0, 0, 255]
 SC.renderer.AddTexture('redBlue', image, interpretation=exu.TextureInterpretation.RGB,
-                       flags=[exu.TextureFlags.Nearest, exu.TextureFlags.Replace])
+                       flags=exu.TextureFlags.Nearest | exu.TextureFlags.Replace)
 im = Render([graphics.Quad(square, texture='redBlue')])
 quadrants = [Dominant(im[20, 20]), Dominant(im[20, 60]), Dominant(im[60, 20]), Dominant(im[60, 60])]
 Check(quadrants == [0, 2, 2, 0], 'raytraced texture: ' + str(quadrants))
@@ -73,7 +73,7 @@ Check(np.ptp(im[20, 20]) < 30 and np.ptp(im[60, 60]) < 30, 'showTextures=False: 
 #the mask: the left half cut out, the green quad below is seen there
 mask = np.zeros((4, 4, 4))
 mask[:, 2:] = [1, 0, 0, 1]
-SC.renderer.AddTexture('halfMask', mask, interpretation=exu.TextureInterpretation.RGBAMask, flags=[exu.TextureFlags.Nearest])
+SC.renderer.AddTexture('halfMask', mask, interpretation=exu.TextureInterpretation.RGBAMask, flags=exu.TextureFlags.Nearest)
 green = graphics.Quad([[-1, -1, -0.1], [1, -1, -0.1], [1, 1, -0.1], [-1, 1, -0.1]], color=[0, 1, 0, 1])
 im = Render([graphics.Quad(square, texture='halfMask'), green])
 Check(Dominant(im[40, 20]) == 1 and Dominant(im[40, 60]) == 0, 'mask: ' + str(im[40, 20]) + str(im[40, 60]))

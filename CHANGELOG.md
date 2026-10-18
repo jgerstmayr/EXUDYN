@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.13 | Newborn | 138 | 1.13.140 |
+| 1.13 | Newborn | 139 | 1.13.141 |
 | 1.12 | Metheney | 367 | 1.12.462 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
@@ -30,6 +30,10 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.13 - Newborn (current)
 
+- **1.13.141** `CHANGE` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` The bit enumeration types combine with \| in Python; TextureFlags passed as one value (#3037)
+  - description: Maintainer 2026-10-18: TextureFlags shall work like the other bit types instead of a list. None of the enums supported \| in Python (bound without py::arithmetic); the enums declared as bits (NodeType, MarkerType, CrossSectionType, LinearSolverType, TextureFlags) and OutputVariableType are bound with py::arithmetic, so that exu.TextureFlags.Nearest \| exu.TextureFlags.Clamp works; SC.renderer.AddTexture takes flags as a TextureFlags value or an int of them, default 0; the list goes (introduced after 1.11, no deprecation)
+  - **notes:** The values of OutputVariableType, NodeType, MarkerType, CrossSectionType, LinearSolverType and TextureFlags combine with \| and & into an int, as in C++; SC.renderer.AddTexture takes flags as exu.TextureFlags.Nearest \| exu.TextureFlags.Clamp, default 0 (revision2026c step RG6.11.10)
+  - date resolved: **2026-10-18 22:02**, date raised: 2026-10-18
 - **1.13.140** `EXTENSION` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` graphics.ImageFromFile: load an image file as a numpy array for SC.renderer.AddTexture (#3035)
   - description: Maintainer 2026-10-18: a common image loader in exudyn.graphics, with whatever package supports image loading (Pillow, else matplotlib), returning a uint8 array that AddTexture takes; an optional dependency with a clear error at the point of use; a test with a real texture image (hardwood\_small.jpg of OpenGameArt, 64 kB) once its license is confirmed
   - **notes:** graphics.ImageFromFile reads an image file (Pillow, else matplotlib) as a numpy array for SC.renderer.AddTexture; python/Examples/testData/hardwood\_small.jpg is a CC0 texture of a wooden floor (revision2026c step RG6.11.8)

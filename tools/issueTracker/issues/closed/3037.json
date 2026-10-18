@@ -1,0 +1,15 @@
+{
+  "number": 3037,
+  "title": "The bit enumeration types combine with | in Python; TextureFlags passed as one value",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "CHANGE",
+  "effort": "LOW",
+  "description": "Maintainer 2026-10-18: TextureFlags shall work like the other bit types instead of a list. None of the enums supported | in Python (bound without py::arithmetic); the enums declared as bits (NodeType, MarkerType, CrossSectionType, LinearSolverType, TextureFlags) and OutputVariableType are bound with py::arithmetic, so that exu.TextureFlags.Nearest | exu.TextureFlags.Clamp works; SC.renderer.AddTexture takes flags as a TextureFlags value or an int of them, default 0; the list goes (introduced after 1.11, no deprecation)",
+  "dateRaised": "2026-10-18",
+  "deadline": "2027-04-16",
+  "dateResolved": "2026-10-18 22:02",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "The values of OutputVariableType, NodeType, MarkerType, CrossSectionType, LinearSolverType and TextureFlags combine with | and & into an int, as in C++; SC.renderer.AddTexture takes flags as exu.TextureFlags.Nearest | exu.TextureFlags.Clamp, default 0 (revision2026c step RG6.11.10)",
+  "resolvedInVersion": "1.13.141"
+}

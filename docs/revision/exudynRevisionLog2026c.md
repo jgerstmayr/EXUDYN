@@ -2078,3 +2078,19 @@ raytracer settings to render nicely.)*
   and `FromSTLfileASCII`, so the STL import returned flat lists and the image loader went through `_Rows`; the
   decorator is back on FromSTLfileASCII. The example reads the image as `../Examples/testData/...`, as the other
   examples with data do, since the runners do not start in the directory of the example.
+
+<a id="rg6-11-10"></a>
+### RG6.11.10 — the bit enumerations combine with | in Python (2026-10-18, #3037)
+*(Maintainer 2026-10-18: "Python enums can't be OR-ed" - but this is widely used, e.g. for the output variables; adjust
+TextureFlags to match the other enums. Measured: no enum of Exudyn had | in Python - `exu.NodeType.Position |
+exu.NodeType.Orientation` raised TypeError; combined bits appeared as lists of names (requestedMarkerTypes) or plain
+ints (selectionLeftMouseItemTypes=31). Decision by question: | for the enumerations of bits.)*
+- `py::arithmetic` does not do it: pybind11 2.13 gives a scoped enum (enum class: OutputVariableType, TextureFlags,
+  LinearSolverType, CrossSectionType) only comparisons, no bitwise operators (they exist for unscoped enums only).
+  So `pybindTypes.EnumBitOperators()` emits `__or__`, `__ror__`, `__and__`, `__rand__` as `py::int_(a) | py::int_(b)`,
+  for every enum with `bits=True` and OutputVariableType; they go after the values, as `.def` returns a `class_`
+  that has no `.value`. The result is an int, as in C++. The stubs get the four operators, the documentation a sentence.
+- `SC.renderer.AddTexture(..., flags)` and the internal `_AddTexture` take `Index flags` (an enum value converts via
+  `__index__`), default 0; bits outside Nearest|Clamp|Replace raise ValueError, a list TypeError (introduced after
+  1.11, so no deprecation). CheckerBoard, textureTest.py (two checks added) and textureGraphicsTest.py pass single
+  values or |. The empty-`std::vector` default rule in autoGenerateHelper.py is gone with the list.

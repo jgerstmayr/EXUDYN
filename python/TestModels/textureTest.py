@@ -42,10 +42,10 @@ def Refused(function, errorType=ValueError):
 #the textures: a checkerboard of uint8, a grey gradient of floats, a mask of RGBA as nested list
 checker = np.zeros((8, 8, 3), dtype=np.uint8)
 checker[(np.add.outer(np.arange(8), np.arange(8)) % 2) == 0] = [255, 255, 255]
-SC.renderer.AddTexture('checker', checker, interpretation=exu.TextureInterpretation.RGB, flags=[exu.TextureFlags.Nearest])
+SC.renderer.AddTexture('checker', checker, interpretation=exu.TextureInterpretation.RGB, flags=exu.TextureFlags.Nearest)
 SC.renderer.AddTexture('gradient', np.linspace(0, 1, 16).reshape((4, 4)), interpretation=exu.TextureInterpretation.Grey)
 SC.renderer.AddTexture('mask', [[[1, 0, 0, 1], [0, 0, 0, 0]], [[0, 0, 0, 0], [1, 0, 0, 1]]], interpretation=exu.TextureInterpretation.RGBAMask,
-                       flags=[exu.TextureFlags.Clamp, exu.TextureFlags.Replace])
+                       flags=exu.TextureFlags.Clamp | exu.TextureFlags.Replace)
 SC.renderer.AddTexture('temporary', checker) #RGB image as RGBA: opaque
 Check(Names() == ['checker', 'gradient', 'mask', 'temporary'], 'names: ' + str(Names()))
 SC.renderer.AddTexture('checker', checker[:4, :4]) #replaces the image, the name stays in place
@@ -61,6 +61,8 @@ Check(Refused(lambda: SC.renderer.AddTexture('a', checker, interpretation=exu.Te
 Check(Refused(lambda: SC.renderer.AddTexture('exudyn.icon', checker)), 'reserved name not refused')
 Check(Refused(lambda: SC.renderer.AddTexture('', checker)), 'empty name not refused')
 Check(Refused(lambda: SC.renderer.AddTexture('a', np.zeros((0, 4, 3)))), 'empty image not refused')
+Check(Refused(lambda: SC.renderer.AddTexture('a', checker, flags=16)), 'unknown flag bits not refused')
+Check(Refused(lambda: SC.renderer.AddTexture('a', checker, flags=[exu.TextureFlags.Nearest]), TypeError), 'a list of flags not refused')
 Check('a' not in Names(), 'a refused texture was added')
 
 #a quad of two triangles with the checkerboard, on the ground

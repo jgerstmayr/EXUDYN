@@ -27,7 +27,7 @@ sensor = mbs.AddSensor(SensorBody(bodyNumber=rigid, storeInternal=True,
 The enumeration type  OutputVariableType is used for selecting output values, e.g., for GetObjectOutput(...) or for selecting variables for contour plot.
 
 Available output variables and the interpreation of the output variable can be found at the object definitions.
-The OutputVariableType does not provide information about the size of the output variable, which can be either scalar or a list (vector). For vector output quantities, the contour plot option offers an additional parameter for selection of the component of the OutputVariableType. The components are usually out of \{0,1,2\}, representing \{x,y,z\} components (e.g., of displacements, velocities, ...), or \{0,1,2,3,4,5\} representing \{xx,yy,zz,yz,xz,xy\} components (e.g., of strain or stress). In order to compute a norm, chose component=-1, which will result in the quadratic norm for other vectors and to a norm specified for stresses (if no norm is defined for an outputVariable, it does not compute anything)
+The OutputVariableType does not provide information about the size of the output variable, which can be either scalar or a list (vector). For vector output quantities, the contour plot option offers an additional parameter for selection of the component of the OutputVariableType. The components are usually out of \{0,1,2\}, representing \{x,y,z\} components (e.g., of displacements, velocities, ...), or \{0,1,2,3,4,5\} representing \{xx,yy,zz,yz,xz,xy\} components (e.g., of strain or stress). In order to compute a norm, chose component=-1, which will result in the quadratic norm for other vectors and to a norm specified for stresses (if no norm is defined for an outputVariable, it does not compute anything) The values are bits; | and & combine them into an int, as in C++.
 
 
 The class **OutputVariableType** has the following **functions and structures**:
@@ -151,7 +151,7 @@ The class **ItemType** has the following **functions and structures**:
 (sec-nodetype)=
 ## NodeType
 
-The enumeration type  NodeType is used for defining node types for 3D rigid bodies.
+The enumeration type  NodeType is used for defining node types for 3D rigid bodies. The values are bits; | and & combine them into an int, as in C++.
 
 
 The class **NodeType** has the following **functions and structures**:
@@ -184,7 +184,7 @@ The class **NodeType** has the following **functions and structures**:
 (sec-markertype)=
 ## MarkerType
 
-The enumeration type MarkerType lists the properties of a marker as bits; a connector or load requests a combination of them (GetRequestedMarkerType), which the marker type must contain.
+The enumeration type MarkerType lists the properties of a marker as bits; a connector or load requests a combination of them (GetRequestedMarkerType), which the marker type must contain. The values are bits; | and & combine them into an int, as in C++.
 
 
 The class **MarkerType** has the following **functions and structures**:
@@ -282,7 +282,7 @@ The class **DynamicSolverType** has the following **functions and structures**:
 (sec-crosssectiontype)=
 ## CrossSectionType
 
-The enumeration type  CrossSectionType is used for defining beam cross section types.
+The enumeration type  CrossSectionType is used for defining beam cross section types. The values are bits; | and & combine them into an int, as in C++.
 
 
 The class **CrossSectionType** has the following **functions and structures**:
@@ -322,7 +322,7 @@ The class **KeyCode** has the following **functions and structures**:
 (sec-linearsolvertype)=
 ## LinearSolverType
 
-The enumeration type  LinearSolverType is used for selecting linear solver types, which are dense or sparse solvers.
+The enumeration type  LinearSolverType is used for selecting linear solver types, which are dense or sparse solvers. The values are bits; | and & combine them into an int, as in C++.
 
 
 The class **LinearSolverType** has the following **functions and structures**:
@@ -351,7 +351,7 @@ The class **TextureInterpretation** has the following **functions and structures
 (sec-textureflags)=
 ## TextureFlags
 
-The enumeration type TextureFlags lists the options of a texture as bits, passed to SC.renderer.AddTexture as a list (#3029); without a flag a texture is filtered linearly, repeated outside the texture coordinates 0 to 1, and multiplied with the color of the triangle, as OpenGL does by default.
+The enumeration type TextureFlags lists the options of a texture, passed to SC.renderer.AddTexture (#3029, #3037); with none, a texture is filtered linearly, repeated outside the texture coordinates 0 to 1, and multiplied with the color of the triangle, as OpenGL does by default. The values are bits; | and & combine them into an int, as in C++.
 
 
 The class **TextureFlags** has the following **functions and structures**:

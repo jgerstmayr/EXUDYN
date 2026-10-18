@@ -117,7 +117,7 @@ The class **MainRenderer** has the following **functions and structures**:
 - **`ResetState()`**: Reset renderState in all views to default values using current visualizationSettings; usually this does not have to be called!
 - **`SendRedrawSignal()`**: This function is used to send a signal to the renderer that all MainSystems (mbs) shall be redrawn
 - **`GetRenderCount()`**: Returns the number of rendered OpenGL images; can be used to determine if image has been drawn by comparing to previous counter; also shows that first image has been drawn (needed for zoom all)
-- **`AddTexture(name, image, interpretation = exu.TextureInterpretation.RGBA, flags = [])`**: Add a texture by its name, or replace the image of a name, for the triangle lists that refer to it with the key 'texture' (#3029); the textures are shared by all SystemContainers and are added before the graphics data that uses them; image is a numpy array of shape (height, width) or (height, width, channels) with 1, 3 or 4 channels, of uint8 or of floats in [0, 1]; its first row is the top of the image, at the texture coordinate v=1; interpretation is a TextureInterpretation, which says how the channels are drawn; flags is a list of TextureFlags; names starting with 'exudyn.' are reserved
+- **`AddTexture(name, image, interpretation = exu.TextureInterpretation.RGBA, flags = 0)`**: Add a texture by its name, or replace the image of a name, for the triangle lists that refer to it with the key 'texture' (#3029); the textures are shared by all SystemContainers and are added before the graphics data that uses them; image is a numpy array of shape (height, width) or (height, width, channels) with 1, 3 or 4 channels, of uint8 or of floats in [0, 1]; its first row is the top of the image, at the texture coordinate v=1; interpretation is a TextureInterpretation, which says how the channels are drawn; flags are TextureFlags combined with |, e.g. exu.TextureFlags.Nearest | exu.TextureFlags.Clamp, or 0 for none; names starting with 'exudyn.' are reserved
 
   *Example*:
 
@@ -125,7 +125,7 @@ The class **MainRenderer** has the following **functions and structures**:
   import numpy as np
   image = np.zeros((64,64,3), dtype=np.uint8)
   image[:32,:,0] = 255 #upper half red
-  SC.renderer.AddTexture('redTop', image, interpretation=exu.TextureInterpretation.RGB, flags=[exu.TextureFlags.Nearest])
+  SC.renderer.AddTexture('redTop', image, interpretation=exu.TextureInterpretation.RGB, flags=exu.TextureFlags.Nearest)
   ```
 
 - **`RemoveTexture(name)`**: Remove a texture by its name; triangles that refer to it are drawn without texture; returns False if no texture has this name

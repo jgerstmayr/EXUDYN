@@ -180,7 +180,7 @@ public:
 
 	//! add a texture to the store shared by all SystemContainers, or replace the image of a name (#3029)
 	void AddTexture(const STDstring& name, const py::object& image, TextureInterpretation interpretation = TextureInterpretation::RGBA,
-		const std::vector<TextureFlags>& flags = std::vector<TextureFlags>());
+		Index flags = 0);
 	//! remove a texture; false for an unknown name
 	bool RemoveTexture(const STDstring& name);
 	//! the names of the textures
@@ -204,7 +204,7 @@ public:
 
 //! add a texture to the TextureStore from a numpy image (#3029); allowReserved: also names starting with 'exudyn.'
 void PyAddTexture(const STDstring& name, const py::object& image, TextureInterpretation interpretation,
-	const std::vector<TextureFlags>& flags, bool allowReserved);
+	Index flags, bool allowReserved);
 
 //! This is the extension of SystemContainer, which contains all objects needed for management and in the Python world.
 //  The System objects have their corresponding python object, which contains a pointer to the system (main) objects.

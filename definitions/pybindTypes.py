@@ -98,4 +98,13 @@ pickleDictTemplateNew = """        .def(py::pickle(
 
 #enumExportValues = '.export_values()' #don't do that for enum class => would be visible at global scope
 enumExportValues = '' #since 1.6.98
+
+#| and & of the values of an enumeration of bits give an int, as in C++ (#3037); after the values, because .def returns
+#a class_; pybind11 gives a scoped enum (enum class) no | even with py::arithmetic
+def EnumBitOperators():
+    indent = '\n' + 2*chr(9) #two tabs, as the generated code is indented
+    return indent.join('.def("' + operator + '", [](const py::object& a, const py::object& b) { return py::int_(a) '
+                       + symbol + ' py::int_(b); }, py::is_operator())'
+                       for (operator, symbol) in [('__or__', '|'), ('__ror__', '|'), ('__and__', '&'), ('__rand__', '&')])
+
 mainViewID = '0' #just used to avoid using value 0 for main view

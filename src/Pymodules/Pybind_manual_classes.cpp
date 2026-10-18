@@ -731,7 +731,7 @@ void Init_Pybind_manual_classes(py::module& m) {
 	//the texture store without a SystemContainer, for the textures of exudyn.graphics, e.g. CheckerBoard (#3036);
 	//the user adds textures with SC.renderer.AddTexture
 	m.def("_AddTexture", [](const STDstring& name, const py::object& image, TextureInterpretation interpretation,
-		const std::vector<TextureFlags>& flags) { PyAddTexture(name, image, interpretation, flags, true); },
+		Index flags) { PyAddTexture(name, image, interpretation, flags, true); },
 		"internal: add a texture; names starting with 'exudyn.' are allowed", py::arg("name"), py::arg("image"),
 		py::arg("interpretation"), py::arg("flags")); //no defaults: the enums are registered after this
 

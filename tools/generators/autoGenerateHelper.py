@@ -399,9 +399,11 @@ class DeclarationWriter:
     def DefFinishTable(self):
         self.sMarkdown += '\n'
 
-    def DefStartEnumClass(self, className, description, subSection=False, labelName='', cClass=None):
+    def DefStartEnumClass(self, className, description, subSection=False, labelName='', cClass=None, arithmetic=False):
         if cClass==None:
             cClass = className
+        if arithmetic: #the values are bits, which combine with | in Python as in C++ (#3037)
+            description = description.rstrip('\n') + ' The values are bits; | and & combine them into an int, as in C++.\n\n'
 
         self.sPy +=	'  py::enum_<' + cClass + '>(m, "' + className + '")\n'
         self.DefStartClass(className, description, subSection=subSection, labelName=labelName)
@@ -409,6 +411,9 @@ class DeclarationWriter:
         self.sPyi += '\nclass '+className+'(Enum):\n'
         self.sPyi += DocStringGoogleFromPlainText(description, addSpaces='    ', multiline=True,
                                                   splitSummaryDescription=True)
+        if arithmetic:
+            for operator in ['__or__', '__ror__', '__and__', '__rand__']:
+                self.sPyi += '    def ' + operator + '(self, other: ' + className + ' | int) -> int: ...\n'
 
     #add an enum value to the pybind interface and to the documentation
     def AddEnumValue(self, className, itemName, description):
@@ -547,7 +552,6 @@ class DeclarationWriter:
                 sNew = sNew.replace('{','').replace('}','')
                 sNew = sNew.replace('(','[').replace(')',']')
             sNew = sNew.replace('py::none()','None')
-            sNew = re.sub(r'std::vector<[^>]*>\(\)', '[]', sNew) #an empty list, e.g. of TextureFlags
             sNew = sNew.replace('py::','').replace('::','.') #replace C-style '::' (e.g. in ConfiguationType) to python-style '.'            
             return sNew
         

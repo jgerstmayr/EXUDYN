@@ -506,7 +506,7 @@ void MainRenderer::RedrawAndSaveImage(Index viewID)
 //! channels converted to those of the interpretation and the rows from the bottom of the image, so that v=0 is its bottom
 //! allowReserved: the textures of Exudyn itself, named 'exudyn.', e.g. by graphics.CheckerBoard (#3036)
 void PyAddTexture(const STDstring& name, const py::object& image, TextureInterpretation interpretation,
-	const std::vector<TextureFlags>& flags, bool allowReserved)
+	Index flags, bool allowReserved)
 {
 	if (name.size() == 0) { PyError("renderer.AddTexture: the name must not be empty", PyErrorType::valueError); }
 	if (!allowReserved && name.rfind("exudyn.", 0) == 0) { PyError("renderer.AddTexture: names starting with 'exudyn.' are reserved for the textures of Exudyn; got '" + name + "'", PyErrorType::valueError); }
@@ -540,8 +540,9 @@ void PyAddTexture(const STDstring& name, const py::object& image, TextureInterpr
 	}
 	else { PyError("renderer.AddTexture: the image must be of numbers, uint8 or floats in [0, 1]", PyErrorType::typeError); }
 
-	Index flagBits = 0;
-	for (TextureFlags flag : flags) { flagBits |= (Index)flag; }
+	const Index allFlags = (Index)TextureFlags::Nearest | (Index)TextureFlags::Clamp | (Index)TextureFlags::Replace;
+	if (flags < 0 || (flags & ~allFlags) != 0) { PyError("renderer.AddTexture: flags must be TextureFlags combined with |, or 0, but got " + EXUstd::ToString(flags), PyErrorType::valueError); }
+	Index flagBits = flags;
 
 	Index targetChannels = Texture::Channels(interpretation);
 	std::vector<unsigned char> data((size_t)(height * width * targetChannels));
@@ -562,7 +563,7 @@ void PyAddTexture(const STDstring& name, const py::object& image, TextureInterpr
 }
 
 void MainRenderer::AddTexture(const STDstring& name, const py::object& image, TextureInterpretation interpretation,
-	const std::vector<TextureFlags>& flags)
+	Index flags)
 {
 	PyAddTexture(name, image, interpretation, flags, false);
 	SendRedrawSignal();

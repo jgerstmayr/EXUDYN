@@ -1701,7 +1701,7 @@ def CheckerBoard(point=[0,0,0], normal=[0,0,1], size = 1,
         name = 'exudyn.checkerBoard.' + '_'.join('{:.4g}'.format(c) for c in list(color0) + list(color1))
         exudyn._compiledModule._AddTexture(name, image if transparent else image[:, :, :3],
                                            exudyn.TextureInterpretation.RGBA if transparent else exudyn.TextureInterpretation.RGB,
-                                           [exudyn.TextureFlags.Nearest])
+                                           exudyn.TextureFlags.Nearest)
         return Quad(points, texture=name, textureTiles=[0.5*nTiles, 0.5*nTiles2])
 
     return Quad(points, color=color0, alternatingColor=color1,

@@ -44,7 +44,10 @@
 		.value("UserType1", OutputVariableType::UserType1, "a type for a user item, e.g. a strain of a user element; its name is set with exudyn.special.userTypes.SetName, which also adds it as an alias of this value")
 		.value("UserType2", OutputVariableType::UserType2, "a type for a user item, e.g. a strain of a user element; its name is set with exudyn.special.userTypes.SetName, which also adds it as an alias of this value")
 		.value("UserType3", OutputVariableType::UserType3, "a type for a user item, e.g. a strain of a user element; its name is set with exudyn.special.userTypes.SetName, which also adds it as an alias of this value")
-		;
+		.def("__or__", [](const py::object& a, const py::object& b) { return py::int_(a) | py::int_(b); }, py::is_operator())
+		.def("__ror__", [](const py::object& a, const py::object& b) { return py::int_(a) | py::int_(b); }, py::is_operator())
+		.def("__and__", [](const py::object& a, const py::object& b) { return py::int_(a) & py::int_(b); }, py::is_operator())
+		.def("__rand__", [](const py::object& a, const py::object& b) { return py::int_(a) & py::int_(b); }, py::is_operator());
 
   py::enum_<InspectType>(m, "InspectType")
 		.value("OutputVariables", InspectType::OutputVariables, "the output variables of an object, node or marker (OutputVariableType), with its current parameters: the energies only where they can be computed")
@@ -117,7 +120,10 @@
 		.value("UserType1", Node::UserType1, "a type for a user item, e.g. a strain of a user element; its name is set with exudyn.special.userTypes.SetName, which also adds it as an alias of this value")
 		.value("UserType2", Node::UserType2, "a type for a user item, e.g. a strain of a user element; its name is set with exudyn.special.userTypes.SetName, which also adds it as an alias of this value")
 		.value("UserType3", Node::UserType3, "a type for a user item, e.g. a strain of a user element; its name is set with exudyn.special.userTypes.SetName, which also adds it as an alias of this value")
-		;
+		.def("__or__", [](const py::object& a, const py::object& b) { return py::int_(a) | py::int_(b); }, py::is_operator())
+		.def("__ror__", [](const py::object& a, const py::object& b) { return py::int_(a) | py::int_(b); }, py::is_operator())
+		.def("__and__", [](const py::object& a, const py::object& b) { return py::int_(a) & py::int_(b); }, py::is_operator())
+		.def("__rand__", [](const py::object& a, const py::object& b) { return py::int_(a) & py::int_(b); }, py::is_operator());
 
   py::enum_<Marker::Type>(m, "MarkerType")
 		.value("_None", Marker::_None, "no type is used")
@@ -147,7 +153,10 @@
 		.value("UserType1", Marker::UserType1, "a type for a user item, e.g. a strain of a user element; its name is set with exudyn.special.userTypes.SetName, which also adds it as an alias of this value")
 		.value("UserType2", Marker::UserType2, "a type for a user item, e.g. a strain of a user element; its name is set with exudyn.special.userTypes.SetName, which also adds it as an alias of this value")
 		.value("UserType3", Marker::UserType3, "a type for a user item, e.g. a strain of a user element; its name is set with exudyn.special.userTypes.SetName, which also adds it as an alias of this value")
-		;
+		.def("__or__", [](const py::object& a, const py::object& b) { return py::int_(a) | py::int_(b); }, py::is_operator())
+		.def("__ror__", [](const py::object& a, const py::object& b) { return py::int_(a) | py::int_(b); }, py::is_operator())
+		.def("__and__", [](const py::object& a, const py::object& b) { return py::int_(a) & py::int_(b); }, py::is_operator())
+		.def("__rand__", [](const py::object& a, const py::object& b) { return py::int_(a) & py::int_(b); }, py::is_operator());
 
   py::enum_<Joint::Type>(m, "JointType")
 		.value("_None", Joint::_None, "node has no type")
@@ -192,7 +201,10 @@
   py::enum_<CrossSectionType>(m, "CrossSectionType")
 		.value("Polygon", CrossSectionType::Polygon, "cross section profile defined by polygon")
 		.value("Circular", CrossSectionType::Circular, "cross section is circle or elliptic")
-		;
+		.def("__or__", [](const py::object& a, const py::object& b) { return py::int_(a) | py::int_(b); }, py::is_operator())
+		.def("__ror__", [](const py::object& a, const py::object& b) { return py::int_(a) | py::int_(b); }, py::is_operator())
+		.def("__and__", [](const py::object& a, const py::object& b) { return py::int_(a) & py::int_(b); }, py::is_operator())
+		.def("__rand__", [](const py::object& a, const py::object& b) { return py::int_(a) & py::int_(b); }, py::is_operator());
 
   py::enum_<KeyCode>(m, "KeyCode")
 		.value("SPACE", KeyCode::SPACE, "space key")
@@ -221,7 +233,10 @@
 		.value("EigenSparse", LinearSolverType::EigenSparse, "use sparse matrices and according solvers; additional overhead for very small multibody systems; specifically, memory allocation is performed during a factorization process")
 		.value("EigenSparseSymmetric", LinearSolverType::EigenSparseSymmetric, "use sparse matrices and according solvers; NOTE: this is the symmetric mode, which assumes symmetric system matrices; this is EXPERIMENTAL and should only be used of user knows that the system matrices are (nearly) symmetric; does not work with scaled GeneralizedAlpha matrices; does not work with constraints, as it must be symmetric positive definite")
 		.value("EigenDense", LinearSolverType::EigenDense, "use Eigen's LU factorization with partial pivoting (faster than EXUdense) or full pivot (if linearSolver.ignoreSingularJacobian=True; is much slower, but can resolve overdetermined and underdetermined problems!); NOTE: in the default partial pivoting mode a singular matrix is NOT detected - Eigen provides no invertibility check there - so the solver continues with an undefined result instead of reporting a singular jacobian; use EXUdense or EigenSparse if that must be reported, or full pivot (ignoreSingularJacobian=True), which resolves the singular system by least squares on purpose")
-		;
+		.def("__or__", [](const py::object& a, const py::object& b) { return py::int_(a) | py::int_(b); }, py::is_operator())
+		.def("__ror__", [](const py::object& a, const py::object& b) { return py::int_(a) | py::int_(b); }, py::is_operator())
+		.def("__and__", [](const py::object& a, const py::object& b) { return py::int_(a) & py::int_(b); }, py::is_operator())
+		.def("__rand__", [](const py::object& a, const py::object& b) { return py::int_(a) & py::int_(b); }, py::is_operator());
 
   py::enum_<TextureInterpretation>(m, "TextureInterpretation")
 		.value("Grey", TextureInterpretation::Grey, "one channel, the brightness; multiplied with the color of the triangle it shades a colored surface")
@@ -234,7 +249,10 @@
 		.value("Nearest", TextureFlags::Nearest, "the nearest pixel instead of linear interpolation; sharp pixels, e.g. for a checkerboard or a pixel image")
 		.value("Clamp", TextureFlags::Clamp, "texture coordinates outside 0 to 1 take the color of the border instead of repeating the texture")
 		.value("Replace", TextureFlags::Replace, "the texture replaces the color of the triangle instead of being multiplied with it; the triangle color and the lighting are not applied")
-		;
+		.def("__or__", [](const py::object& a, const py::object& b) { return py::int_(a) | py::int_(b); }, py::is_operator())
+		.def("__ror__", [](const py::object& a, const py::object& b) { return py::int_(a) | py::int_(b); }, py::is_operator())
+		.def("__and__", [](const py::object& a, const py::object& b) { return py::int_(a) & py::int_(b); }, py::is_operator())
+		.def("__rand__", [](const py::object& a, const py::object& b) { return py::int_(a) & py::int_(b); }, py::is_operator());
 
   py::enum_<Contact::TypeIndex>(m, "ContactTypeIndex")
 		.value("IndexSpheresMarkerBased", Contact::IndexSpheresMarkerBased, "spheres attached to markers")
@@ -361,7 +379,7 @@
         .def("ResetState", &MainRenderer::ResetState, "Reset renderState in all views to default values using current visualizationSettings; usually this does not have to be called!")
         .def("SendRedrawSignal", &MainRenderer::SendRedrawSignal, "This function is used to send a signal to the renderer that all MainSystems (mbs) shall be redrawn")
         .def("GetRenderCount", &MainRenderer::GetRedrawCount, "Returns the number of rendered OpenGL images; can be used to determine if image has been drawn by comparing to previous counter; also shows that first image has been drawn (needed for zoom all)")
-        .def("AddTexture", &MainRenderer::AddTexture, "Add a texture by its name, or replace the image of a name, for the triangle lists that refer to it with the key 'texture' (#3029); the textures are shared by all SystemContainers and are added before the graphics data that uses them; image is a numpy array of shape (height, width) or (height, width, channels) with 1, 3 or 4 channels, of uint8 or of floats in [0, 1]; its first row is the top of the image, at the texture coordinate v=1; interpretation is a TextureInterpretation, which says how the channels are drawn; flags is a list of TextureFlags; names starting with 'exudyn.' are reserved", py::arg("name"), py::arg("image"), py::arg("interpretation") = TextureInterpretation::RGBA, py::arg("flags") = std::vector<TextureFlags>())
+        .def("AddTexture", &MainRenderer::AddTexture, "Add a texture by its name, or replace the image of a name, for the triangle lists that refer to it with the key 'texture' (#3029); the textures are shared by all SystemContainers and are added before the graphics data that uses them; image is a numpy array of shape (height, width) or (height, width, channels) with 1, 3 or 4 channels, of uint8 or of floats in [0, 1]; its first row is the top of the image, at the texture coordinate v=1; interpretation is a TextureInterpretation, which says how the channels are drawn; flags are TextureFlags combined with |, e.g. exu.TextureFlags.Nearest | exu.TextureFlags.Clamp, or 0 for none; names starting with 'exudyn.' are reserved", py::arg("name"), py::arg("image"), py::arg("interpretation") = TextureInterpretation::RGBA, py::arg("flags") = 0)
         .def("RemoveTexture", &MainRenderer::RemoveTexture, "Remove a texture by its name; triangles that refer to it are drawn without texture; returns False if no texture has this name", py::arg("name"))
         .def("GetTextureNames", &MainRenderer::GetTextureNames, "The names of the textures added with AddTexture, in the order they were added")
         .def_readwrite("materials", &MainRenderer::materials, py::return_value_policy::reference);

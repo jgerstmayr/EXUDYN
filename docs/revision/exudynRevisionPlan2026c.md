@@ -519,6 +519,13 @@ CLOSED 2026-10-18 (#3036, maintainer 2026-10-18): a 2x2 texture of the two color
 colors, added through the internal `exudyn._compiledModule._AddTexture`, on one quad; colors encoding a material and
 `useTexture=False` give the triangles. [log](exudynRevisionLog2026c.md#rg6-11-5)
 
+#### **CLOSED_RG6.11.10** The bit enumeration types combine with | in Python; TextureFlags as one value
+
+CLOSED 2026-10-18 (#3037; maintainer 2026-10-18: TextureFlags like the other enums, | for the enumerations of bits):
+`|` and `&` for OutputVariableType, NodeType, MarkerType, CrossSectionType, LinearSolverType and TextureFlags, giving
+an int; `SC.renderer.AddTexture(..., flags=exu.TextureFlags.Nearest | exu.TextureFlags.Clamp)`, default 0, unknown bits
+refused; no list. [log](exudynRevisionLog2026c.md#rg6-11-10)
+
 ### **CLOSED_RG6.12** Add a ruler to the renderer and orient imported triangles consistently
 
 #2244 (a ruler for views parallel to x, y, z), #2281 (the normals of imported geometry all outward).

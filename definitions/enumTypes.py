@@ -273,7 +273,7 @@ enumTypes = [
               ],
              stringFunction='operator<<'),
     EnumType('TextureFlags', 'TextureFlags',
-             'The enumeration type TextureFlags lists the options of a texture as bits, passed to SC.renderer.AddTexture as a list (#3029); without a flag a texture is filtered linearly, repeated outside the texture coordinates 0 to 1, and multiplied with the color of the triangle, as OpenGL does by default.\n\n',
+             'The enumeration type TextureFlags lists the options of a texture, passed to SC.renderer.AddTexture (#3029, #3037); with none, a texture is filtered linearly, repeated outside the texture coordinates 0 to 1, and multiplied with the color of the triangle, as OpenGL does by default.\n\n',
              [EnumValue('_None', None, 'no flag', python=False),
               EnumValue('Nearest', 0, 'the nearest pixel instead of linear interpolation; sharp pixels, e.g. for a checkerboard or a pixel image'),
               EnumValue('Clamp', 1, 'texture coordinates outside 0 to 1 take the color of the border instead of repeating the texture'),

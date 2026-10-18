@@ -1255,14 +1255,14 @@ class Renderer:
         """Returns the number of rendered OpenGL images; can be used to determine if image has been drawn by comparing to previous counter; also shows that first image has been drawn (needed for zoom all)."""
         ...
     @overload
-    def AddTexture(self, name: str, image: ArrayLike, interpretation: TextureInterpretation=TextureInterpretation.RGBA, flags: list[TextureFlags]=[]) -> None: 
-        """Add a texture by its name, or replace the image of a name, for the triangle lists that refer to it with the key 'texture' (#3029); the textures are shared by all SystemContainers and are added before the graphics data that uses them; image is a numpy array of shape (height, width) or (height, width, channels) with 1, 3 or 4 channels, of uint8 or of floats in [0, 1]; its first row is the top of the image, at the texture coordinate v=1; interpretation is a TextureInterpretation, which says how the channels are drawn; flags is a list of TextureFlags; names starting with 'exudyn.' are reserved.
+    def AddTexture(self, name: str, image: ArrayLike, interpretation: TextureInterpretation=TextureInterpretation.RGBA, flags: TextureFlags | int=0) -> None: 
+        """Add a texture by its name, or replace the image of a name, for the triangle lists that refer to it with the key 'texture' (#3029); the textures are shared by all SystemContainers and are added before the graphics data that uses them; image is a numpy array of shape (height, width) or (height, width, channels) with 1, 3 or 4 channels, of uint8 or of floats in [0, 1]; its first row is the top of the image, at the texture coordinate v=1; interpretation is a TextureInterpretation, which says how the channels are drawn; flags are TextureFlags combined with |, e.g. exu.TextureFlags.Nearest | exu.TextureFlags.Clamp, or 0 for none; names starting with 'exudyn.' are reserved.
         
         Examples:
             import numpy as np
             image = np.zeros((64,64,3), dtype=np.uint8)
             image[:32,:,0] = 255 #upper half red
-            SC.renderer.AddTexture('redTop', image, interpretation=exu.TextureInterpretation.RGB, flags=[exu.TextureFlags.Nearest])
+            SC.renderer.AddTexture('redTop', image, interpretation=exu.TextureInterpretation.RGB, flags=exu.TextureFlags.Nearest)
         """
         ...
     @overload

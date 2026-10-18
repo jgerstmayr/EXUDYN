@@ -219,8 +219,12 @@ class OutputVariableType(Enum):
     The OutputVariableType does not provide information about the size of the output variable, which can be either scalar or a list (vector)
     For vector output quantities, the contour plot option offers an additional parameter for selection of the component of the OutputVariableType
     The components are usually out of {0,1,2}, representing {x,y,z} components (e.g., of displacements, velocities, ...), or {0,1,2,3,4,5} representing {xx,yy,zz,yz,xz,xy} components (e.g., of strain or stress)
-    In order to compute a norm, chose component=-1, which will result in the quadratic norm for other vectors and to a norm specified for stresses (if no norm is defined for an outputVariable, it does not compute anything)
+    In order to compute a norm, chose component=-1, which will result in the quadratic norm for other vectors and to a norm specified for stresses (if no norm is defined for an outputVariable, it does not compute anything) The values are bits; | and & combine them into an int, as in C++.
     """
+    def __or__(self, other: OutputVariableType | int) -> int: ...
+    def __ror__(self, other: OutputVariableType | int) -> int: ...
+    def __and__(self, other: OutputVariableType | int) -> int: ...
+    def __rand__(self, other: OutputVariableType | int) -> int: ...
     _None = int
     """no value; used, e.g., to select no output variable in contour plot"""
     Distance = int
@@ -391,7 +395,14 @@ class ItemType(Enum):
 
 
 class NodeType(Enum):
-    """The enumeration type  NodeType is used for defining node types for 3D rigid bodies."""
+    """The enumeration type  NodeType is used for defining node types for 3D rigid bodies.
+
+    The values are bits; | and & combine them into an int, as in C++.
+    """
+    def __or__(self, other: NodeType | int) -> int: ...
+    def __ror__(self, other: NodeType | int) -> int: ...
+    def __and__(self, other: NodeType | int) -> int: ...
+    def __rand__(self, other: NodeType | int) -> int: ...
     _None = int
     """node has no type"""
     Ground = int
@@ -441,7 +452,14 @@ class NodeType(Enum):
 
 
 class MarkerType(Enum):
-    """The enumeration type MarkerType lists the properties of a marker as bits; a connector or load requests a combination of them (GetRequestedMarkerType), which the marker type must contain."""
+    """The enumeration type MarkerType lists the properties of a marker as bits; a connector or load requests a combination of them (GetRequestedMarkerType), which the marker type must contain.
+
+    The values are bits; | and & combine them into an int, as in C++.
+    """
+    def __or__(self, other: MarkerType | int) -> int: ...
+    def __ror__(self, other: MarkerType | int) -> int: ...
+    def __and__(self, other: MarkerType | int) -> int: ...
+    def __rand__(self, other: MarkerType | int) -> int: ...
     _None = int
     """no type is used"""
     Body = int
@@ -576,7 +594,14 @@ class DynamicSolverType(Enum):
 
 
 class CrossSectionType(Enum):
-    """The enumeration type  CrossSectionType is used for defining beam cross section types."""
+    """The enumeration type  CrossSectionType is used for defining beam cross section types.
+
+    The values are bits; | and & combine them into an int, as in C++.
+    """
+    def __or__(self, other: CrossSectionType | int) -> int: ...
+    def __ror__(self, other: CrossSectionType | int) -> int: ...
+    def __and__(self, other: CrossSectionType | int) -> int: ...
+    def __rand__(self, other: CrossSectionType | int) -> int: ...
     Polygon = int
     """cross section profile defined by polygon"""
     Circular = int
@@ -624,7 +649,14 @@ class KeyCode(Enum):
 
 
 class LinearSolverType(Enum):
-    """The enumeration type  LinearSolverType is used for selecting linear solver types, which are dense or sparse solvers."""
+    """The enumeration type  LinearSolverType is used for selecting linear solver types, which are dense or sparse solvers.
+
+    The values are bits; | and & combine them into an int, as in C++.
+    """
+    def __or__(self, other: LinearSolverType | int) -> int: ...
+    def __ror__(self, other: LinearSolverType | int) -> int: ...
+    def __and__(self, other: LinearSolverType | int) -> int: ...
+    def __rand__(self, other: LinearSolverType | int) -> int: ...
     _None = int
     """no value; used, e.g., if no solver is selected"""
     EXUdense = int
@@ -650,7 +682,14 @@ class TextureInterpretation(Enum):
 
 
 class TextureFlags(Enum):
-    """The enumeration type TextureFlags lists the options of a texture as bits, passed to SC.renderer.AddTexture as a list (#3029); without a flag a texture is filtered linearly, repeated outside the texture coordinates 0 to 1, and multiplied with the color of the triangle, as OpenGL does by default."""
+    """The enumeration type TextureFlags lists the options of a texture, passed to SC.renderer.AddTexture (#3029, #3037); with none, a texture is filtered linearly, repeated outside the texture coordinates 0 to 1, and multiplied with the color of the triangle, as OpenGL does by default.
+
+    The values are bits; | and & combine them into an int, as in C++.
+    """
+    def __or__(self, other: TextureFlags | int) -> int: ...
+    def __ror__(self, other: TextureFlags | int) -> int: ...
+    def __and__(self, other: TextureFlags | int) -> int: ...
+    def __rand__(self, other: TextureFlags | int) -> int: ...
     Nearest = int
     """the nearest pixel instead of linear interpolation; sharp pixels, e.g. for a checkerboard or a pixel image"""
     Clamp = int
@@ -4223,14 +4262,14 @@ class Renderer:
         """Returns the number of rendered OpenGL images; can be used to determine if image has been drawn by comparing to previous counter; also shows that first image has been drawn (needed for zoom all)."""
         ...
     @overload
-    def AddTexture(self, name: str, image: ArrayLike, interpretation: TextureInterpretation=TextureInterpretation.RGBA, flags: list[TextureFlags]=[]) -> None: 
-        """Add a texture by its name, or replace the image of a name, for the triangle lists that refer to it with the key 'texture' (#3029); the textures are shared by all SystemContainers and are added before the graphics data that uses them; image is a numpy array of shape (height, width) or (height, width, channels) with 1, 3 or 4 channels, of uint8 or of floats in [0, 1]; its first row is the top of the image, at the texture coordinate v=1; interpretation is a TextureInterpretation, which says how the channels are drawn; flags is a list of TextureFlags; names starting with 'exudyn.' are reserved.
+    def AddTexture(self, name: str, image: ArrayLike, interpretation: TextureInterpretation=TextureInterpretation.RGBA, flags: TextureFlags | int=0) -> None: 
+        """Add a texture by its name, or replace the image of a name, for the triangle lists that refer to it with the key 'texture' (#3029); the textures are shared by all SystemContainers and are added before the graphics data that uses them; image is a numpy array of shape (height, width) or (height, width, channels) with 1, 3 or 4 channels, of uint8 or of floats in [0, 1]; its first row is the top of the image, at the texture coordinate v=1; interpretation is a TextureInterpretation, which says how the channels are drawn; flags are TextureFlags combined with |, e.g. exu.TextureFlags.Nearest | exu.TextureFlags.Clamp, or 0 for none; names starting with 'exudyn.' are reserved.
         
         Examples:
             import numpy as np
             image = np.zeros((64,64,3), dtype=np.uint8)
             image[:32,:,0] = 255 #upper half red
-            SC.renderer.AddTexture('redTop', image, interpretation=exu.TextureInterpretation.RGB, flags=[exu.TextureFlags.Nearest])
+            SC.renderer.AddTexture('redTop', image, interpretation=exu.TextureInterpretation.RGB, flags=exu.TextureFlags.Nearest)
         """
         ...
     @overload
