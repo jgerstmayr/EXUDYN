@@ -40,7 +40,8 @@ __all__ = [
     'SolidOfRevolution', 'Arrow', 'Basis', 'Frame', 'Quad', 'CheckerBoard', 'SolidExtrusion',
     'LinkedCylinders', 'BallBearingRings', 'InvoluteGear', 'ToothedRack', 'BoundingBoxSingle',
     'BoundingBox', 'FromPointsAndTrigs', 'ToPointsAndTrigs', 'Transform', 'Move',
-    'MergeTriangleLists', 'InvertTriangles', 'InconsistentTriangles', 'NGsolveMesh2PointsAndTrigs',
+    'MergeTriangleLists', 'InvertTriangles', 'InconsistentTriangles', 'OrientTriangles', 'CheckTriangleOrientation',
+    'NGsolveMesh2PointsAndTrigs',
     'FromSTLfileASCII', 'FromPyMeshlabFile', 'FromSTLfile', 'AddEdgesAndSmoothenNormals',
     'ExportSTL',
     ]
@@ -2396,7 +2397,7 @@ def BoundingBox(graphicsData):
 
 
 @_ReturnsRows
-def FromPointsAndTrigs(points, triangles, color=[0.,0.,0.,1.], normals=None):
+def FromPointsAndTrigs(points, triangles, color=[0.,0.,0.,1.], normals=None, orientTriangles=False):
     """convert triangles and points as returned from graphics.ToPointsAndTrigs(...) to GraphicsData; additionally, normals and color(s) can be provided
 
     Args:
@@ -2404,6 +2405,8 @@ def FromPointsAndTrigs(points, triangles, color=[0.,0.,0.,1.], normals=None):
         triangles: list or np.array with 3 int per triangle (0-based indices to triangles), giving a matrix with nt rows and 3 columns (with nt triangles); a matrix with 6 columns gives 6-node (curved) triangles, corners counter-clockwise and then the mid-side nodes 01, 12, 20 (key 'triangles6')
         color: provided as list of 4 RGBA values or single list of (np)*[4 RGBA values]
         normals: if not None, they have to be provided per point (as matrix, list of lists or flattened) and will be added to returned GraphicsData
+        orientTriangles: if True, the triangles are oriented consistently and closed parts outward with OrientTriangles;
+            given normals are then replaced by the normals of the oriented triangles (#2281)
 
     Returns:
         returns GraphicsData with type TriangleList
@@ -2430,8 +2433,10 @@ def FromPointsAndTrigs(points, triangles, color=[0.,0.,0.,1.], normals=None):
             'colors': colorList,
             'points':pointList,
             triangleKey:triangleList}
-    if normals is not None: 
+    if normals is not None:
         data['normals'] = np.array(normals).flatten()
+    if orientTriangles:
+        data = _Flat(OrientTriangles(data, normals='recompute' if normals is not None else 'remove'))
     return data
 
 
@@ -2757,6 +2762,182 @@ def InconsistentTriangles(graphicsData):
 
     return cntWrong
 
+#%%++++++++++++++++++++++++++++++++++++++++++++++++++++
+#consistent and outward orientation of the triangles of a TriangleList, e.g. of an STL file (#2281)
+def _TriangleOrientation(graphicsData, tolerance):
+    """the topology of a TriangleList: the corners of 'triangles' and of the corners of 'triangles6', the points merged
+    by position (an STL file gives each triangle its own points), the neighbours across edges with two triangles and
+    whether they run the shared edge the same way (inconsistent); edges with one triangle are open, with more non-manifold"""
+    g = _Flat(graphicsData)
+    if g.get('type') != 'TriangleList':
+        raise ValueError('the triangle orientation works for graphicsData of type TriangleList only')
+    points = np.asarray(g['points'], dtype=float).reshape((-1, 3))
+    corners = [np.asarray(g.get('triangles', []), dtype=int).reshape((-1, 3))]
+    if 'triangles6' in g:
+        corners += [np.asarray(g['triangles6'], dtype=int).reshape((-1, 6))[:, :3]]
+    corners = np.vstack(corners)
+    nTrigs = len(corners)
+    if len(points) == 0 or nTrigs == 0:
+        return points, corners, np.zeros(nTrigs, dtype=bool), [[] for i in range(nTrigs)], 0, 0, 0, np.zeros(nTrigs, dtype=bool)
+    size = float(np.max(np.max(points, axis=0) - np.min(points, axis=0)))
+    if tolerance is None:
+        tolerance = 1e-9 * (size if size > 0 else 1.)
+    keys = np.round(points / tolerance).astype(np.int64)
+    vertexOfPoint = np.unique(keys, axis=0, return_inverse=True)[1].reshape(-1)
+    vertices = vertexOfPoint[corners]                                     #nTrigs x 3, merged
+    #a degenerate triangle - two corners at the same point, e.g. at the pole of a sphere - has no area and no orientation
+    degenerate = (vertices[:, 0] == vertices[:, 1]) | (vertices[:, 1] == vertices[:, 2]) | (vertices[:, 2] == vertices[:, 0])
+    a = vertices.reshape(-1)                                              #half edges a -> b, three per triangle
+    b = vertices[:, [1, 2, 0]].reshape(-1)
+    triangleOfHalfEdge = np.repeat(np.arange(nTrigs), 3)
+    proper = ~np.repeat(degenerate, 3)
+    a, b, triangleOfHalfEdge = a[proper], b[proper], triangleOfHalfEdge[proper]
+    edgeKeys = np.stack([np.minimum(a, b), np.maximum(a, b)], axis=1)
+    (edges, edgeOfHalfEdge, counts) = np.unique(edgeKeys, axis=0, return_inverse=True, return_counts=True)
+    edgeOfHalfEdge = edgeOfHalfEdge.reshape(-1)
+    openEdges = int(np.sum(counts == 1))
+    nonManifoldEdges = int(np.sum(counts > 2))
+    neighbours = [[] for i in range(nTrigs)]                              #(neighbour, flip relative to it)
+    inconsistent = 0
+    order = np.argsort(edgeOfHalfEdge, kind='stable')
+    shared = order[counts[edgeOfHalfEdge[order]] == 2].reshape((-1, 2))   #the two half edges of each manifold edge
+    for (h0, h1) in shared:
+        sameDirection = bool(a[h0] == a[h1])                              #the same way: one of the two must flip
+        t0, t1 = int(triangleOfHalfEdge[h0]), int(triangleOfHalfEdge[h1])
+        if t0 == t1:
+            continue
+        neighbours[t0].append((t1, sameDirection))
+        neighbours[t1].append((t0, sameDirection))
+        inconsistent += int(sameDirection)
+    openTriangles = np.zeros(nTrigs, dtype=bool)
+    openTriangles[triangleOfHalfEdge[counts[edgeOfHalfEdge] != 2]] = True
+    return points, corners, openTriangles, neighbours, openEdges, nonManifoldEdges, inconsistent, degenerate
+
+
+def _OrientTrianglesAnalysis(graphicsData, outward, tolerance):
+    """the triangles to flip, and the report of OrientTriangles and CheckTriangleOrientation"""
+    import collections
+    (points, corners, openTriangles, neighbours, openEdges, nonManifoldEdges,
+     inconsistent, degenerate) = _TriangleOrientation(graphicsData, tolerance)
+    nTrigs = len(corners)
+    flip = np.zeros(nTrigs, dtype=bool)
+    component = -np.ones(nTrigs, dtype=int)
+    nComponents = 0
+    closedComponents = 0
+    invertedComponents = 0
+    p0, p1, p2 = (points[corners[:, 0]], points[corners[:, 1]], points[corners[:, 2]]) if nTrigs else (None, None, None)
+    volumes = np.einsum('ij,ij->i', p0, np.cross(p1, p2)) / 6. if nTrigs else np.zeros(0) #signed, about the origin
+    for start in range(nTrigs):
+        if component[start] >= 0 or degenerate[start]:
+            continue
+        members = [start]
+        component[start] = nComponents
+        queue = collections.deque([start])
+        while queue: #flood fill: a neighbour that runs the shared edge the same way gets the other orientation
+            t = queue.popleft()
+            for (n, sameDirection) in neighbours[t]:
+                if component[n] < 0:
+                    component[n] = nComponents
+                    flip[n] = flip[t] != sameDirection
+                    members.append(n)
+                    queue.append(n)
+        members = np.array(members)
+        closed = not np.any(openTriangles[members])
+        if closed and outward:
+            volume = np.sum(np.where(flip[members], -volumes[members], volumes[members]))
+            if volume < 0: #inward: the whole component turns
+                flip[members] = ~flip[members]
+                invertedComponents += 1
+        elif np.sum(flip[members]) > 0.5 * len(members): #an open surface keeps the orientation most of its triangles have
+            flip[members] = ~flip[members]
+        closedComponents += int(closed)
+        nComponents += 1
+    report = {'triangles': nTrigs, 'flipped': int(np.sum(flip)), 'components': nComponents,
+              'closedComponents': closedComponents, 'invertedComponents': invertedComponents,
+              'inconsistentEdges': inconsistent, 'openEdges': openEdges, 'nonManifoldEdges': nonManifoldEdges,
+              'degenerateTriangles': int(np.sum(degenerate))}
+    return flip, report
+
+
+def OrientTriangles(graphicsData, outward=True, normals='recompute', tolerance=None, returnReport=False):
+    """orient the triangles of a TriangleList consistently - two triangles that share an edge run it in opposite
+    directions - and, for every closed part, outward; for imported geometry such as STL files, whose orientation is
+    often not consistent (#2281)
+
+    Args:
+        graphicsData: GraphicsData of type TriangleList, with 'triangles' and/or 'triangles6'
+        outward: if True, every closed part is oriented such that its triangle normals point outward (positive
+            volume); an open surface keeps the orientation that most of its triangles have
+        normals: 'recompute': the normals of the points are computed from the oriented triangles, area-weighted (a
+            point shared by triangles gets their mean, a point of one triangle - as in STL files - its normal);
+            'remove': the normals are left out and the renderer computes them per triangle; 'keep': the given normals
+            stay, for input whose normals are correct
+        tolerance: points closer than this are the same point; default: 1e-9 times the size of the bounding box
+        returnReport: if True, also return a dict with the number of triangles, flipped triangles, connected
+            components, closed and inverted components, and the inconsistent, open (one triangle) and non-manifold
+            (more than two triangles) edges
+
+    Returns:
+        the oriented GraphicsData (a copy), and the report if returnReport=True
+
+    Note:
+        points are merged by position, so the triangles of an STL file, which have points of their own, are connected;
+        the orientation does not cross non-manifold edges; about 0.5 s for 100000 triangles
+    """
+    if normals not in ['recompute', 'remove', 'keep']:
+        raise ValueError("OrientTriangles: normals must be 'recompute', 'remove' or 'keep'")
+    g = _Flat(graphicsData)
+    flip, report = _OrientTrianglesAnalysis(g, outward, tolerance)
+    gNew = {key: (np.array(value) if isinstance(value, (list, np.ndarray)) else value) for key, value in g.items()}
+    nPlain = 0
+    if 'triangles' in g:
+        triangles = np.array(g['triangles'], dtype=int).reshape((-1, 3))
+        nPlain = len(triangles)
+        triangles[flip[:nPlain]] = triangles[flip[:nPlain]][:, [1, 0, 2]]
+        gNew['triangles'] = triangles.flatten()
+    if 'triangles6' in g: #corners c0, c1 and the mid-side nodes m12, m20 swap, as in InvertTriangles
+        triangles6 = np.array(g['triangles6'], dtype=int).reshape((-1, 6))
+        flip6 = flip[nPlain:]
+        triangles6[flip6] = triangles6[flip6][:, [1, 0, 2, 3, 5, 4]]
+        gNew['triangles6'] = triangles6.flatten()
+    if normals == 'remove':
+        gNew.pop('normals', None)
+    elif normals == 'recompute':
+        points = np.asarray(g['points'], dtype=float).reshape((-1, 3))
+        pointNormals = np.zeros_like(points)
+        for key, nodes in [('triangles', 3), ('triangles6', 6)]:
+            if key in gNew:
+                elements = np.asarray(gNew[key], dtype=int).reshape((-1, nodes))
+                faceNormals = np.cross(points[elements[:, 1]] - points[elements[:, 0]],
+                                       points[elements[:, 2]] - points[elements[:, 0]]) #twice the area
+                for j in range(nodes):
+                    np.add.at(pointNormals, elements[:, j], faceNormals)
+        lengths = np.linalg.norm(pointNormals, axis=1)
+        lengths[lengths == 0] = 1.
+        gNew['normals'] = (pointNormals / lengths[:, None]).flatten()
+    gNew = _Rows(gNew)
+    if returnReport:
+        return gNew, report
+    return gNew
+
+
+def CheckTriangleOrientation(graphicsData, tolerance=None):
+    """check the orientation of the triangles of a TriangleList without changing it (#2281)
+
+    Args:
+        graphicsData: GraphicsData of type TriangleList
+        tolerance: points closer than this are the same point; default: 1e-9 times the size of the bounding box
+
+    Returns:
+        a dict as the report of OrientTriangles, where 'flipped' is the number of triangles OrientTriangles would flip,
+        and 'consistent': True if no triangle needs to flip, so that the triangles are consistent and closed parts
+        outward
+    """
+    flip, report = _OrientTrianglesAnalysis(_Flat(graphicsData), True, tolerance)
+    report['consistent'] = (report['flipped'] == 0)
+    return report
+
+
 def NGsolveMesh2PointsAndTrigs(mesh=None, ngMesh=None, meshOrder=2, scale=1, addNormals=True, verbose=False, triangles6=False):
     """convert NGsolve (surface) mesh into (surface) points and triangles; clearly, it requires to have ngsolve installed
 
@@ -2897,7 +3078,8 @@ def NGsolveMesh2PointsAndTrigs(mesh=None, ngMesh=None, meshOrder=2, scale=1, add
 
 
 @_ReturnsRows
-def FromSTLfileASCII(fileName, color=[0.,0.,0.,1.], verbose=False, invertNormals=True, invertTriangles=True): 
+def FromSTLfileASCII(fileName, color=[0.,0.,0.,1.], verbose=False, invertNormals=True, invertTriangles=True,
+                     orientTriangles=False):
     """generate graphics data from STL file (text format!) and use color for visualization; this function is slow, use stl binary files with FromSTLfile(...)
 
     Args:
@@ -2906,6 +3088,8 @@ def FromSTLfileASCII(fileName, color=[0.,0.,0.,1.], verbose=False, invertNormals
         verbose: if True, useful information is provided during reading
         invertNormals: if True, orientation of normals (usually pointing inwards in STL mesh) are inverted for compatibility in Exudyn
         invertTriangles: if True, triangle orientation (based on local indices) is inverted for compatibility in Exudyn
+        orientTriangles: if True, the triangles are oriented consistently and closed parts outward with OrientTriangles,
+            and the normals are computed from them (#2281)
 
     Returns:
         creates graphicsData, inverting the STL graphics regarding normals and triangle orientations (interchanged 2nd and 3rd component of triangle index)
@@ -2991,6 +3175,8 @@ def FromSTLfileASCII(fileName, color=[0.,0.,0.,1.], verbose=False, invertNormals
         lineCnt+=1
     
     data = {'type':'TriangleList', 'colors':colors, 'normals':normals, 'points':points, 'triangles':triangles}
+    if orientTriangles:
+        data = _Flat(OrientTriangles(data))
     return data
 
 
@@ -3077,7 +3263,8 @@ def FromPyMeshlabFile(fileName, defaultColor=color.defaultBody,
 
 #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 @_ReturnsRows
-def FromSTLfile(fileName, color=[0.,0.,0.,1.], verbose=False, density=0., scale=1., Aoff=[], pOff=[], invertNormals=True, invertTriangles=True):
+def FromSTLfile(fileName, color=[0.,0.,0.,1.], verbose=False, density=0., scale=1., Aoff=[], pOff=[], invertNormals=True, invertTriangles=True,
+                orientTriangles=False):
     """generate graphics data from STL file, allowing text or binary format; requires numpy-stl to be installed; additionally can scale, rotate and translate
 
     Args:
@@ -3088,6 +3275,8 @@ def FromSTLfile(fileName, color=[0.,0.,0.,1.], verbose=False, density=0., scale=
         scale: point coordinates are transformed by scaling factor
         invertNormals: if True, orientation of normals (usually pointing inwards in STL mesh) are inverted for compatibility in Exudyn
         invertTriangles: if True, triangle orientation (based on local indices) is inverted for compatibility in Exudyn
+        orientTriangles: if True, the triangles are oriented consistently and closed parts outward with OrientTriangles,
+            and the normals are computed from them - for STL files whose triangles are not oriented consistently (#2281)
 
     Returns:
         creates graphicsData, inverting the STL graphics regarding normals and triangle orientations (interchanged 2nd and 3rd component of triangle index)
@@ -3146,8 +3335,10 @@ def FromSTLfile(fileName, color=[0.,0.,0.,1.], verbose=False, density=0., scale=
     nf = 1.-2.*int(invertNormals)                           #+1 or -1 (inverted)
     normals = np.kron([nf,nf,nf],data.normals).flatten()    #normals must be per point
 
-    dictGraphics = {'type':'TriangleList', 'colors':colors, 'normals':normals, 
+    dictGraphics = {'type':'TriangleList', 'colors':colors, 'normals':normals,
                     'points':points, 'triangles':triangles}
+    if orientTriangles:
+        dictGraphics = _Flat(OrientTriangles(dictGraphics))
     if density == 0:
         return dictGraphics 
     else:

@@ -1925,3 +1925,27 @@ as F4 is often used for other actions.)*
   test checks that a new positionUserFunction is used and not the stored result.
 - The detailed description of ObjectUserBody says that its user functions must be functions of their arguments while
   time and coordinates stay the same.
+
+<a id="rg6-12-2"></a>
+### RG6.12.2 — orienting the triangles of imported geometry (2026-10-18, #2281)
+*(Maintainer 2026-10-18: do it as described in the concept, in particular as an option of the STL import, as STL files
+often have wrong orientations.)*
+- graphics.py: `_TriangleOrientation` merges the points by position (rounded to 1e-9 of the bounding box, or a given
+  tolerance), forms the half edges in numpy and pairs them with `np.unique`; `_OrientTrianglesAnalysis` flood-fills each
+  connected component, flipping a neighbour that runs the shared edge the same way, turns a closed component with
+  negative signed volume, and keeps the majority orientation of an open one. Degenerate triangles (two corners at one
+  point, as at the poles of a sphere) have no orientation and are left out of the topology - before, the poles showed
+  as non-manifold edges. `triangles6` are oriented by their corners (the mid-side nodes swap as in InvertTriangles).
+- `OrientTriangles(graphicsData, outward=True, normals='recompute'|'remove'|'keep', tolerance=None,
+  returnReport=False)`; the report: triangles, flipped, components, closedComponents, invertedComponents,
+  inconsistentEdges, openEdges, nonManifoldEdges, degenerateTriangles. `CheckTriangleOrientation` returns the report of
+  what OrientTriangles would do, with `consistent`.
+- `orientTriangles=False` in FromSTLfile, FromSTLfileASCII and FromPointsAndTrigs (normals then recomputed, or left to
+  the renderer where none were given). Not when graphics is added to a system, as decided in the concept.
+- Measured: 65 536 triangles (a sphere) 0.28 s for the check.
+- Checked with it: every primitive of exudyn.graphics in the list of test_graphicsRegression.py is consistent and
+  outward (Basis and Frame report non-manifold edges where their arrows meet, InvertTriangles is inward by intention).
+- orientTrianglesTest.py: a brick, a cylinder and a sphere with 40 % of their triangles flipped are oriented back to
+  the original; two bricks, one inverted, end outward; an open checkerboard keeps its majority; three triangles on an
+  edge are reported; an STL file with flipped triangles is repaired by FromSTLfileASCII(orientTriangles=True), with
+  outward normals; seven primitives are consistent.

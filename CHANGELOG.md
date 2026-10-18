@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.13 | Newborn | 127 | 1.13.129 |
+| 1.13 | Newborn | 128 | 1.13.130 |
 | 1.12 | Metheney | 367 | 1.12.462 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
@@ -30,6 +30,10 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.13 - Newborn (current)
 
+- **1.13.130** `EXTENSION` `MEDIUM EFF` `resolved by: Claude-JG` graphics (#2281)
+  - description: add functionality to make consistent triangles with same orientation (all computed normals are outbound or inbound); used to heal imported geometries
+  - **notes:** graphics.OrientTriangles orients the triangles of a TriangleList consistently and every closed part outward, merging points by position so that the triangles of STL files are connected, recomputes the normals and reports what it changed; graphics.CheckTriangleOrientation reports without changing; FromSTLfile, FromSTLfileASCII and FromPointsAndTrigs take orientTriangles=True for STL files whose orientation is not consistent.
+  - date resolved: **2026-10-18 10:28**, date raised: 2026-02-11
 - **1.13.129** `IMPROVEMENT` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` ObjectUserBody: reuse the results of its position and rotation user functions for the same time, coordinates and local position (#3028)
   - description: Measured 2026-10-18 with userRigidBodyTest.py (500 implicit steps, Python user functions counted): per evaluation of the right-hand side, ObjectUserBody calls positionJacobianUserFunction 5 times, positionUserFunction, rotationMatrixUserFunction and rotationJacobianUserFunction 2 times each - the markers, the loads and the connector on it ask for the same values; with the last two results of each function kept, by time, coordinates and local position, 45 % of the calls remain. The derivative of J^T f, which was suspected, costs 2 % (totalJacobian). The results are cleared when a parameter of the body changes.
   - **notes:** ObjectUserBody reuses the results of its position, position Jacobian, rotation matrix and rotation Jacobian user functions for the same time, coordinates and local position, which the markers, loads and connectors on it ask for several times per evaluation; a rigid user body solves 1.4 times (Python) and 1.6 times (symbolic) faster. A change of a parameter or a new Assemble clears the stored results.

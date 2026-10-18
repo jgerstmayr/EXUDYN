@@ -80,7 +80,6 @@ The title of each says what it does; the sentence after it, why it comes now.
 - **RG6** Graphics and rendering
   - RG6.8 Fix the remaining graphics problems with a test each
   - RG6.11 Draw textures from numpy arrays in triangle lists (1 open sub-step)
-  - RG6.12 Add a ruler to the renderer and orient imported triangles consistently (1 open sub-step)
   - RG6.19 Add an icon bar to the renderer that folds in from the right border, as alternative to the keys (2 open sub-steps)
 - **RG7** Python user items
   - RG7.4 Add user nodes with position and orientation interfaces
@@ -129,7 +128,7 @@ The title of each says what it does; the sentence after it, why it comes now.
 | RG3 | CLOSED | 0 | Docs |
 | RG4 | OPEN | 6 | Implementation problems and bugs |
 | RG5 | OPEN | 8 | Performance |
-| RG6 | OPEN | 8 | Graphics and rendering |
+| RG6 | OPEN | 6 | Graphics and rendering |
 | RG7 | OPEN | 5 | Python user items |
 | RG8 | OPEN | 10 | Compiled C++ user items |
 | RG9 | OPEN | 5 | Structural core improvements |
@@ -487,7 +486,7 @@ compiled into characterBitmap.cpp (GlfwClientExtended.cpp:511), and the raytrace
   triangles in OpenGL; in the raytracer with a graphics regression image; an example (an image on a plane, a
   checkerboard by texture instead of triangles).
 
-### **OPEN_RG6.12** Add a ruler to the renderer and orient imported triangles consistently
+### **CLOSED_RG6.12** Add a ruler to the renderer and orient imported triangles consistently
 
 #2244 (a ruler for views parallel to x, y, z), #2281 (the normals of imported geometry all outward).
 
@@ -498,29 +497,11 @@ at the bottom and the left border, ticks at 1, 2 or 5 times a power of 10 at lea
 coordinates of an axis-aligned view or the distance from the end; `window.showRuler`, key F5; the raytracer shows it.
 #2281 (outward normals) stays in RG6.12. [log](exudynRevisionLog2026c.md#rg6-12-1)
 
-#### **OPEN_RG6.12.2** Concept: orient the triangles of imported geometry consistently and outward, on request
+#### **CLOSED_RG6.12.2** Orient the triangles of imported geometry consistently and outward, on request
 
-#2281, for a decision (maintainer 2026-10-18: a short concept first - when, how, performance; a graphics function or
-when the graphics is added to the system).
-- **When**: on request, not when the graphics is added. A function `graphics.OrientTriangles(graphicsData, outward=True,
-  normals='recompute')` returns the corrected TriangleList and a report, and the importers get an option
-  (`FromSTLfile(..., orientTriangles=True)`, `FromPointsAndTrigs`, NGsolve meshes). Checking in AddObject would cost
-  every build of every model, would change the user's data without a word, and is not needed for the primitives of
-  exudyn.graphics, which are consistent by construction; `graphics.CheckTriangleOrientation(graphicsData)` reports
-  without changing, and a pytest checks with it that every primitive of exudyn.graphics is consistent and outward.
-- **How**: the edges of all triangles in numpy (3n x 2, sorted point pairs, `np.unique`) give each triangle its
-  neighbours across edges with exactly two triangles; a flood fill over the neighbours flips a triangle whose shared
-  edge runs in the same direction as in its neighbour - consistent orientation within each connected component.
-  Outward: per closed component the signed volume sum p0 . (p1 x p2) / 6 must be positive, else the component is
-  flipped; an open surface keeps the orientation of the majority of its original triangles. Edges with one triangle
-  (holes) and with more than two (non-manifold) are reported; the fill does not cross non-manifold edges.
-- **Normals**: per point, so a flipped triangle cannot simply flip them: 'recompute' (area-weighted averages of the
-  face normals, smooth), 'remove' (the renderer computes flat normals), 'keep' (only for consistent input).
-- **Performance**: numpy for the edges; the flood fill a Python loop over triangles with a deque - estimated 0.2 s
-  for 100 000 triangles, a few seconds for a million; done once at import, so acceptable; if needed later, the fill
-  moves to C++ (exudyn.cUtilities).
-- **Tests**: a cube and a sphere with randomly flipped triangles (all outward afterwards), two components of which one
-  is inverted, an open surface, a non-manifold edge reported, an STL file through FromSTLfile.
+CLOSED 2026-10-18 (#2281; maintainer: as described, in particular as an option of the STL import):
+`graphics.OrientTriangles`, `graphics.CheckTriangleOrientation`, `orientTriangles=True` in FromSTLfile,
+FromSTLfileASCII and FromPointsAndTrigs; orientTrianglesTest.py. [log](exudynRevisionLog2026c.md#rg6-12-2)
 ### **CLOSED_RG6.18** Show prescribed motions in the SolutionViewer and fix its space key
 
 Maintainer 2026-10-10. CLOSED 2026-10-10.

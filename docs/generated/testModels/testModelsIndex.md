@@ -116,6 +116,7 @@ pythonUserFunctionArgumentsTest
 symbolicUserFunctionSignaturesTest
 symbolicNumpyCompatibilityTest
 symbolicSparseMatrixTest
+orientTrianglesTest
 initialConstraintsCheckTest
 shellMeshSlopesScalingTest
 systemContainerComputeOnlyTest

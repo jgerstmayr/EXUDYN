@@ -8,10 +8,10 @@ Every entry carries the **type** of the issue, then its **priority** and its **e
 
 General information on current version:
 
-- Exudyn version = 1.13.129.dev1
+- Exudyn version = 1.13.130.dev1
 - last change = 2026-10-18
 - Number of issues = 3029
-- Number of resolved issues = 2906 (129 in current version)
+- Number of resolved issues = 2907 (130 in current version)
 
 ## Resolved issues and resolved bugs before version 1.13
 
@@ -9118,10 +9118,6 @@ The following list contains the issues which have been **RESOLVED** in the accor
   - description: Extend SlidingJoint for rotation case
   - **remarks:** planned as revision2026b step RG4.22 (triage 2026-10-07)
   - date raised: 2026-03-02
-- `EXTENSION` `MEDIUM EFF` graphics (#2281)
-  - description: add functionality to make consistent triangles with same orientation (all computed normals are outbound or inbound); used to heal imported geometries
-  - **remarks:** planned as revision2026b step RG6.12 (triage 2026-10-07)
-  - date raised: 2026-02-11
 - `DOCU` `LOW EFF` GetURDFrobotData (#2267)
   - description: add detailed description to function, in particular to returned dict
   - **remarks:** planned as revision2026b step RG18.1 (triage 2026-10-07)

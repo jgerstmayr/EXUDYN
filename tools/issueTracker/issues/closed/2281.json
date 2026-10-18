@@ -1,0 +1,15 @@
+{
+  "number": 2281,
+  "title": "graphics",
+  "author": "JG",
+  "status": "RESOLVED",
+  "type": "EXTENSION",
+  "effort": "MEDIUM",
+  "description": "add functionality to make consistent triangles with same orientation (all computed normals are outbound or inbound); used to heal imported geometries",
+  "dateRaised": "2026-02-11",
+  "deadline": "2026-08-10",
+  "dateResolved": "2026-10-18 10:28",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "graphics.OrientTriangles orients the triangles of a TriangleList consistently and every closed part outward, merging points by position so that the triangles of STL files are connected, recomputes the normals and reports what it changed; graphics.CheckTriangleOrientation reports without changing; FromSTLfile, FromSTLfileASCII and FromPointsAndTrigs take orientTriangles=True for STL files whose orientation is not consistent.",
+  "resolvedInVersion": "1.13.130"
+}

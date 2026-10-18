@@ -111,6 +111,13 @@ constant 0 are left out when the function is recorded, and the others are added 
 triplets (#3022); a matrix computed with operations is dense. Symbolic matrix expressions allocate no memory per call
 (#3021), and a numpy matrix returned by a Python user function is copied once into the item (#1864).
 
+**Orienting imported triangles** (#2281): `graphics.OrientTriangles(graphicsData)` orients the triangles of a
+TriangleList consistently - two triangles on an edge run it in opposite directions - and every closed part outward,
+merging points by position, so that the triangles of an STL file, which have points of their own, are connected; it
+recomputes the normals and returns a report on request; `graphics.CheckTriangleOrientation` reports without changing.
+`FromSTLfile`, `FromSTLfileASCII` and `FromPointsAndTrigs` take `orientTriangles=True`, for STL files whose triangles are
+not oriented consistently.
+
 **A ruler in the render window** (#2244): `visualizationSettings.view0.window.showRuler` or the key F5 shows scales at
 the bottom and the left border of an orthographic view (perspective 0), with ticks at 1, 2 or 5 times a power of 10;
 in an axis-aligned view the labels are the coordinates of the view, as the mouse coordinates (F3) show them, else the
