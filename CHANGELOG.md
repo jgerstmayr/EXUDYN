@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.13 | Newborn | 151 | 1.13.153 |
+| 1.13 | Newborn | 152 | 1.13.155 |
 | 1.12 | Metheney | 367 | 1.12.462 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
@@ -30,6 +30,10 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.13 - Newborn (current)
 
+- **1.13.155** `CHANGE` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` remove the result caches of ObjectUserBody and NodeUser (#3049)
+  - description: Maintainer 2026-10-20 (decision D18): values are recomputed and not stored between evaluations in the items and the core; the result caches of \#3028 (UserFunctionResultCache, the last two results of the access-function user functions) are removed.
+  - **notes:** The result caches of ObjectUserBody and NodeUser are removed; their user functions are called for every request (revision2026c step RG7.11.1, decision D18)
+  - date resolved: **2026-10-20 00:17**, date raised: 2026-10-20
 - **1.13.153** `CHECK` `MEDIUM EFF` `raised by: Claude-JG` `resolved by: Claude-JG` memory allocations in every step of userRigidBodyTest with symbolic user functions (#3046)
   - description: Maintainer 2026-10-19: userRigidBodyTest.py with 10000 steps reports 613350 memory allocations for the body with symbolic user functions (ODE2RHS 83 %, user functions 91 %); find the cause, improve if possible, or plan the step.
   - **notes:** ObjectUserBody allocates no memory in a time step: Matrix.CopyFrom keeps the memory for the same size, the result cache of the body copies into its entries, and the body keeps its buffers (revision2026c step RG12.2.3)

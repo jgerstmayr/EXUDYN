@@ -400,13 +400,11 @@ void CObjectUserBody::EvaluateUserFunctionMassMatrix(EXUmath::MatrixContainer& m
 
 void CObjectUserBody::EvaluatePosition(Vector3D& position, Real t, const Vector3D& localPosition, const Vector& coordinates) const
 {
-	if (const Vector3D* stored = positionCache.Find(t, localPosition, coordinates)) { position = *stored; return; } //(#3028)
 	if (!(parameters.positionUserFunction)) { PyError("ObjectUserBody: positionUserFunction is not given, but a marker, sensor or output asks for a position", PyErrorType::valueError); }
 	UserFunctionExceptionHandling([&] //lambda function to add consistent try{..} catch(...) block
 	{
 		position = Vector3D(EvaluateUserFunction(parameters.positionUserFunction, USERBODY_MAINSYSTEM, t, GetObjectNumber(), localPosition, coordinates));
 	}, "ObjectUserBody::positionUserFunction");
-	positionCache.Store(t, localPosition, coordinates, position);
 }
 
 template<class TUserFunction>
@@ -421,28 +419,20 @@ void CObjectUserBody::EvaluateMatrixUserFunction(const TUserFunction& function, 
 	CheckResultSize(name, value.NumberOfRows(), value.NumberOfColumns(), 3, columns);
 }
 
-//the markers, loads and connectors on the body ask for the same values in one evaluation: the last results of each
-//function are reused for the same time, coordinates and local position (#3028)
 void CObjectUserBody::EvaluatePositionJacobian(Matrix& value, Real t, const Vector3D& localPosition, const Vector& coordinates) const
 {
-	if (const ResizableMatrix* stored = positionJacobianCache.Find(t, localPosition, coordinates)) { value.CopyFrom(*stored); return; }
 	EvaluateMatrixUserFunction(parameters.positionJacobianUserFunction, "positionJacobianUserFunction", coordinates.NumberOfItems(), value, t, localPosition, coordinates);
-	positionJacobianCache.Store(t, localPosition, coordinates, value);
 }
 
 void CObjectUserBody::EvaluateRotationMatrix(Matrix3D& value, Real t, const Vector3D& localPosition, const Vector& coordinates) const
 {
-	if (const Matrix3D* stored = rotationMatrixCache.Find(t, localPosition, coordinates)) { value = *stored; return; }
 	EvaluateMatrixUserFunction(parameters.rotationMatrixUserFunction, "rotationMatrixUserFunction", 3, bufferRotation, t, localPosition, coordinates);
 	value.CopyFrom(bufferRotation);
-	rotationMatrixCache.Store(t, localPosition, coordinates, value);
 }
 
 void CObjectUserBody::EvaluateRotationJacobian(Matrix& value, Real t, const Vector3D& localPosition, const Vector& coordinates) const
 {
-	if (const ResizableMatrix* stored = rotationJacobianCache.Find(t, localPosition, coordinates)) { value.CopyFrom(*stored); return; }
 	EvaluateMatrixUserFunction(parameters.rotationJacobianUserFunction, "rotationJacobianUserFunction", coordinates.NumberOfItems(), value, t, localPosition, coordinates);
-	rotationJacobianCache.Store(t, localPosition, coordinates, value);
 }
 
 #undef USERBODY_MAINSYSTEM
@@ -460,14 +450,11 @@ bool CNodeUser::PythonCallPossible() const
 
 void CNodeUser::EvaluatePosition(Vector3D& position, Real t, const Vector& coordinates) const
 {
-	const Vector3D noLocalPosition(0.);
-	if (const Vector3D* stored = positionCache.Find(t, noLocalPosition, coordinates)) { position = *stored; return; } //(#3028)
 	if (!(parameters.positionUserFunction)) { PyError("NodeUser: positionUserFunction is not given, but a marker, sensor or output asks for the position", PyErrorType::valueError); }
 	UserFunctionExceptionHandling([&] //lambda function to add consistent try{..} catch(...) block
 	{
 		position = Vector3D(EvaluateUserFunction(parameters.positionUserFunction, NODEUSER_MAINSYSTEM, t, GetNodeNumber(), coordinates));
 	}, "NodeUser::positionUserFunction");
-	positionCache.Store(t, noLocalPosition, coordinates, position);
 }
 
 template<class TUserFunction>
@@ -489,8 +476,6 @@ void CNodeUser::EvaluateMatrixUserFunction(const TUserFunction& function, const 
 //! the user function, or central differences of the position with the step of newton.numericalDifferentiation
 void CNodeUser::EvaluatePositionJacobian(Matrix& value, Real t, const Vector& coordinates) const
 {
-	const Vector3D noLocalPosition(0.);
-	if (const ResizableMatrix* stored = positionJacobianCache.Find(t, noLocalPosition, coordinates)) { value.CopyFrom(*stored); return; }
 	Index n = coordinates.NumberOfItems();
 	if (parameters.positionJacobianUserFunction)
 	{
@@ -513,25 +498,18 @@ void CNodeUser::EvaluatePositionJacobian(Matrix& value, Real t, const Vector& co
 			for (Index i = 0; i < 3; i++) { value(i, k) = (plus[i] - minus[i])/(2.*eps); }
 		}
 	}
-	positionJacobianCache.Store(t, noLocalPosition, coordinates, value);
 }
 
 void CNodeUser::EvaluateRotationMatrix(Matrix3D& value, Real t, const Vector& coordinates) const
 {
-	const Vector3D noLocalPosition(0.);
-	if (const Matrix3D* stored = rotationMatrixCache.Find(t, noLocalPosition, coordinates)) { value = *stored; return; }
 	if (!(parameters.rotationMatrixUserFunction)) { PyError("NodeUser: rotationMatrixUserFunction is not given, but a rigid marker, sensor or output asks for the orientation", PyErrorType::valueError); }
-	Matrix rotation;
-	EvaluateMatrixUserFunction(parameters.rotationMatrixUserFunction, "rotationMatrixUserFunction", 3, 3, rotation, t, coordinates);
-	value.CopyFrom(rotation);
-	rotationMatrixCache.Store(t, noLocalPosition, coordinates, value);
+	EvaluateMatrixUserFunction(parameters.rotationMatrixUserFunction, "rotationMatrixUserFunction", 3, 3, bufferRotation, t, coordinates);
+	value.CopyFrom(bufferRotation);
 }
 
 //! the user function, or column k the axial vector of (dR/dq_k) R^T, dR/dq_k by central differences
 void CNodeUser::EvaluateRotationJacobian(Matrix& value, Real t, const Vector& coordinates) const
 {
-	const Vector3D noLocalPosition(0.);
-	if (const ResizableMatrix* stored = rotationJacobianCache.Find(t, noLocalPosition, coordinates)) { value.CopyFrom(*stored); return; }
 	Index n = coordinates.NumberOfItems();
 	if (parameters.rotationJacobianUserFunction)
 	{
@@ -559,7 +537,6 @@ void CNodeUser::EvaluateRotationJacobian(Matrix& value, Real t, const Vector& co
 			value(2, k) = 0.5*(skew(1, 0) - skew(0, 1));
 		}
 	}
-	rotationJacobianCache.Store(t, noLocalPosition, coordinates, value);
 }
 
 #undef NODEUSER_MAINSYSTEM

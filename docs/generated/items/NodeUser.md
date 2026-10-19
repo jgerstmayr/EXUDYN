@@ -95,9 +95,6 @@ of connectors on MarkerNodeRigid need, is computed by central differences; a Mar
 $\Jm_{pos}$ as constant in the Jacobians, so a position that is not linear in $\qv$ makes the Newton iteration
 converge slower, not wrong.
 
-The node keeps the last two results of each user function, by time and coordinates; the user functions are
-functions of their arguments, as those of ObjectUserBody (#3028).
-
 The user functions are called serially in the main thread; a renderer that runs in a thread of its own draws the
 node, the markers on it and what depends on them in the main thread (#3003).
 

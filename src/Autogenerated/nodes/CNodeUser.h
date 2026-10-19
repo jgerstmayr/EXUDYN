@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-10-18  23:50:56 (last modified)
+* @date         2026-10-20  00:12:31 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -26,7 +26,6 @@
 #include "Pymodules/PythonUserFunctions.h" //! AUTO: needed for user functions, without pybind11
 namespace py = pybind11;            //! AUTO: "py" used throughout in code
 class MainSystem; //AUTO; for std::function / userFunction; avoid including MainSystem.h
-#include "System/CObjectBody.h" //UserFunctionResultCache
 
 //! AUTO: Parameters for class CNodeUserParameters
 class CNodeUserParameters // AUTO:
@@ -86,11 +85,8 @@ protected: // AUTO:
     template<class TUserFunction>
     void EvaluateMatrixUserFunction(const TUserFunction& function, const char* name, Index rows, Index columns, Matrix& value, Real t,
         const Vector& coordinates) const;
-    //! the last results of the user functions, by time and coordinates (#3028)
-    mutable UserFunctionResultCache<Vector3D> positionCache;
-    mutable UserFunctionResultCache<ResizableMatrix> positionJacobianCache;
-    mutable UserFunctionResultCache<Matrix3D> rotationMatrixCache;
-    mutable UserFunctionResultCache<ResizableMatrix> rotationJacobianCache;
+    //! the matrix of the rotation user function, which keeps its memory between the calls (#3049)
+    mutable ResizableMatrix bufferRotation;
     CNodeUserParameters parameters; //! AUTO: contains all parameters for CNodeUser
 
 public: // AUTO:
@@ -159,12 +155,6 @@ public: // AUTO:
     virtual bool AccessFunctionsCallUserFunctions() const override
     {
         return true;
-    }
-
-    //! AUTO:  forget the stored results of the user functions (#3028)
-    void ClearUserFunctionResults() const
-    {
-        positionCache.Clear(); positionJacobianCache.Clear(); rotationMatrixCache.Clear(); rotationJacobianCache.Clear();
     }
 
     //! AUTO:  call of positionUserFunction; implemented in evaluateUserFunctions.cpp

@@ -8,10 +8,10 @@ Every entry carries the **type** of the issue, then its **priority** and its **e
 
 General information on current version:
 
-- Exudyn version = 1.13.153.dev1
-- last change = 2026-10-19
-- Number of issues = 3048
-- Number of resolved issues = 2930 (153 in current version)
+- Exudyn version = 1.13.155.dev1
+- last change = 2026-10-20
+- Number of issues = 3050
+- Number of resolved issues = 2932 (155 in current version)
 
 ## Resolved issues and resolved bugs before version 1.13
 
@@ -9039,9 +9039,9 @@ The following list contains the issues which have been **RESOLVED** in the accor
 
 ## Open issues
 
-- `IMPROVEMENT` `HIGH EFF` `raised by: Claude-JG` symbolic expressions: evaluate a node that is shared in the tree once per evaluation (#3047)
-  - description: Found with \#3046: after the allocations are gone, the symbolic user body of userRigidBodyTest.py with 10000 steps still takes 1.86 s against 0.12 s of ObjectRigidBody. A recorded expression is a graph whose shared nodes - the sin and cos of the angles, the components of omegaLocal - are evaluated again at every use: the force has a text of 9456 characters and one evaluation takes about 5 us (from Python, with its overhead), the position Jacobian 4 us; an evaluation of the right-hand side calls the force and the access functions of three markers. Proposal: a node used more than once keeps its value with the number of the evaluation (a counter raised when the arguments are set), so that each node is computed once per evaluation; then measure again.
-  - date raised: 2026-10-19
+- `CHECK` `MEDIUM EFF` `raised by: Claude-JG` symbolic expressions: evaluate the options for intermediate values inside one evaluation (#3048)
+  - description: Maintainer 2026-10-20, after \#3047 was closed: evaluate the options first - (1) an automatic value of a node of the expression tree used more than once, kept for one evaluation; (2) a more algorithmic form, expressions and statements as in code, which allows iterations but probably not automatic differentiation; (3) intermediate variables stored by hand, traceable; (4) other options. Ultimate performance is not needed now, and expressions of the C++ items (mass matrix, ODE2LHS, ...) are planned to be recorded for a symbolic representation and evaluated, e.g. on GPUs - so the option that changes least is preferred.
+  - date raised: 2026-10-20
 - `IDEA` `MEDIUM EFF` `raised by: Claude-JG` Symbolic user functions copy their constant matrix arguments at every call (#3039)
   - description: Found by revision2026c step RG12.2: the springForceTorqueUserFunction of ObjectConnectorRigidBodySpringDamper takes two 6x6 and two 3x3 matrices, 90 values copied into the named symbolic matrices per call; it costs 0.41 microseconds against 0.23 for the 3D vectors of CartesianSpringDamper. Arguments that are parameters of the item could be copied only when the parameter changes.
   - date raised: 2026-10-18

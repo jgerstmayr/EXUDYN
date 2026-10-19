@@ -2106,11 +2106,6 @@ definitions.append(ItemDefinition(
     void CheckResultSize(const char* name, Index rows, Index columns, Index requiredRows, Index requiredColumns) const;
     //! a Jacobian times the velocity coordinates, in a configuration (#2995)
     Vector3D JacobianTimesVelocity(bool rotation, const Vector3D& localPosition, ConfigurationType configuration) const;
-    //! the last results of the access-function user functions, by time, coordinates and local position (#3028)
-    mutable UserFunctionResultCache<Vector3D> positionCache;
-    mutable UserFunctionResultCache<ResizableMatrix> positionJacobianCache;
-    mutable UserFunctionResultCache<Matrix3D> rotationMatrixCache;
-    mutable UserFunctionResultCache<ResizableMatrix> rotationJacobianCache;
     //! the matrices and vectors of the computations above, which keep their memory between the calls (#3046); each is
     //! written by a copy after a user function returned, so that a user function that asks the body again does not
     //! change what its caller reads
@@ -2152,12 +2147,6 @@ definitions.append(ItemDefinition(
     of $\Jm_{pos}\tp \fv + \Jm_{rot}\tp \mv$ with respect to $\qv$, which the Jacobians of connectors need, is computed
     by central differences of the Jacobian user functions. A marker that needs a function the body is not given
     raises when it is evaluated.
-
-    The markers, loads and connectors on the body often ask for the same value in one evaluation of the equations; the
-    body keeps the last two results of each of these four user functions, by time, coordinates and local position, and
-    calls a function only for new arguments (#3028). They are therefore functions of their arguments: what they read
-    from elsewhere - `mbs.variables`, a parameter set by a preStepUserFunction - must not change while time and
-    coordinates stay the same; a change of a parameter of the body clears the stored results.
 
     #### User output variables
 
@@ -2306,16 +2295,6 @@ definitions.append(ItemDefinition(
         ItemFunction(type=TBool, destination=DestComp, cFlags=CFConst,
             pythonName='AccessFunctionsCallUserFunctions', implementation='return true;',
             description=r'the body, its markers and what depends on them are drawn in the main thread (#3003)'),
-        ItemFunction(type=Tvoid, destination=DestComp, cFlags=CFConst, isVirtual=False,
-            pythonName='ClearUserFunctionResults',
-            implementation='positionCache.Clear(); positionJacobianCache.Clear(); rotationMatrixCache.Clear(); rotationJacobianCache.Clear();',
-            description=r'forget the stored results of the access-function user functions (#3028)'),
-        ItemFunctionDef('ParametersHaveChanged',
-            implementation='ClearUserFunctionResults();',
-            description=r'a changed parameter, e.g. a user function, clears the stored results of the user functions (#3028)'),
-        ItemFunction(type=Tvoid, destination=DestComp,
-            pythonName='PreAssemble', implementation='ClearUserFunctionResults();',
-            description=r'Assemble clears the stored results of the user functions (#3028)'),
         ItemFunction(type=Tvoid, destination=DestComp, cFlags=CFConst, isVirtual=False,
             pythonName='EvaluatePosition',
             args='Vector3D& position, Real t, const Vector3D& localPosition, const Vector& coordinates',

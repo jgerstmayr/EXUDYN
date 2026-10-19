@@ -751,6 +751,11 @@ CLOSED 2026-10-18 (#3028; maintainer: make the symbolic user body faster): the l
 access-function user functions are kept by time, coordinates and local position; userRigidBodyTest.py, 500 steps:
 Python 0.26 to 0.18 s, symbolic 0.106 to 0.068 s, results unchanged. [log](exudynRevisionLog2026c.md#rg7-11)
 
+#### **CLOSED_RG7.11.1** Remove the result caches of ObjectUserBody and NodeUser
+
+CLOSED 2026-10-20 (#3049; maintainer: remove them, decision D18 - values are recomputed): `UserFunctionResultCache`
+and its use deleted; the user functions are called for every request again. [log](exudynRevisionLog2026c.md#rg7-11-1)
+
 ## **OPEN_RG8** Compiled C++ user items
 
 Plugins: user items compiled against the shipped headers. A plugin author builds Exudyn from source once and the
@@ -1288,12 +1293,30 @@ stored a Matrix through a temporary ResizableMatrix, and ObjectUserBody had loca
 per step now, for Python and symbolic user functions. Not the cause of the time: 1.86 s against 0.12 s of
 ObjectRigidBody, see RG12.2.4. [log](exudynRevisionLog2026c.md#rg12-2-3)
 
-#### **OPEN_RG12.2.4** Evaluate a shared node of a symbolic expression once per evaluation
+#### **CLOSED_RG12.2.4** Evaluate a shared node of a symbolic expression once per evaluation
 
 #3047: a recorded expression is a graph, and its shared nodes - the sin and cos of the angles, the components of
 omegaLocal - are evaluated again at every use; the force of userRigidBodyTest.py is a text of 9456 characters and
 takes about 5 microseconds. Proposal: a node used more than once keeps its value with the number of the evaluation,
 a counter raised when the arguments are set; then measure userRigidBodyTest.py with 10000 steps again.
+
+CLOSED 2026-10-19 (#3047, won't fix; maintainer: against the proposal and against any hashing of values - a design
+decision, info document D18): values are recomputed; the symbolic rigid body is a demo and test case and stays as it is.
+[log](exudynRevisionLog2026c.md#rg12-2-4)
+
+#### **OPEN_RG12.2.5** Evaluate the options for intermediate values in symbolic expressions
+
+#3048 (maintainer 2026-10-20, after #3047 was closed): first evaluate, then decide -
+1. an automatic value of a node of the expression tree that is used more than once, kept for one evaluation (the
+   proposal of #3047);
+2. a more algorithmic form: expressions and statements as in code, which allows iterations and simpler algorithms,
+   but probably no automatic differentiation;
+3. intermediate variables stored by hand in the recorded function: hand-crafted, but traceable;
+4. other options.
+
+Ultimate performance is not needed now. The expressions of the C++ items (mass matrix, ODE2LHS, ...) are planned to
+be recorded for a symbolic representation and evaluated from the recorded tree, e.g. on GPUs; in this view, the
+option that changes least is preferred, and too many changes may be counter-productive. D18 applies.
 
 ### **CLOSED_RG12.3** Design improved user function interfaces, with the dense linear algebra in symbolic
 

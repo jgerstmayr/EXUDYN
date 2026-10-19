@@ -65,55 +65,6 @@ inline void AccessFunctionNotProvided(const char* accessName)
 	CHECKandTHROWstring(STDstring("this body provides no ") + accessName, ExudynNotImplementedError);
 }
 
-//! the last results of a user function of an access function - a position or a matrix of a body at a local position -
-//! by time, coordinates and local position, so that the markers, loads and connectors that ask for the same value in one
-//! evaluation get it without another call (#3028); the entries are replaced in turn and cleared by Clear()
-template<class TValue, Index numberOfEntries = 2>
-class UserFunctionResultCache
-{
-	struct Entry
-	{
-		bool valid = false;
-		Real time = 0.;
-		Vector3D localPosition;
-		ResizableConstVector coordinates;
-		TValue value;
-	};
-	std::array<Entry, numberOfEntries> entries;
-	Index next = 0;
-public:
-	//! the stored value of these arguments, or nullptr
-	const TValue* Find(Real time, const Vector3D& localPosition, const VectorBase<Real>& coordinates) const
-	{
-		for (const Entry& entry : entries)
-		{
-			if (entry.valid && entry.time == time && entry.localPosition == localPosition
-				&& entry.coordinates.NumberOfItems() == coordinates.NumberOfItems())
-			{
-				bool equal = true;
-				for (Index i = 0; i < coordinates.NumberOfItems() && equal; i++) { equal = (entry.coordinates[i] == coordinates[i]); }
-				if (equal) { return &entry.value; }
-			}
-		}
-		return nullptr;
-	}
-	//! store a value, replacing the oldest entry; a value of another type - a Matrix into a ResizableMatrix - is copied
-	//! into the memory of the entry, without a temporary (#3046)
-	template<class TInput>
-	void Store(Real time, const Vector3D& localPosition, const VectorBase<Real>& coordinates, const TInput& value)
-	{
-		Entry& entry = entries[next];
-		next = (next + 1) % numberOfEntries;
-		entry.valid = true;
-		entry.time = time;
-		entry.localPosition = localPosition;
-		entry.coordinates.CopyFrom(coordinates);
-		if constexpr (std::is_same<TInput, TValue>::value) { entry.value = value; }
-		else { entry.value.CopyFrom(value); }
-	}
-	void Clear() { for (Entry& entry : entries) { entry.valid = false; } }
-};
-
 class CObjectBody: public CObject
 {
 protected:

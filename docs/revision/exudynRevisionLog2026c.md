@@ -2377,3 +2377,39 @@ another limitation?)*
   (mass matrix 2.7, position 1.4, position Jacobian 4.4), and an evaluation of the right-hand side calls the force and,
   for three markers, positions, velocities and Jacobians. A shared node is evaluated at every use - planned as
   RG12.2.4 (#3047).
+
+<a id="rg12-2-4"></a>
+### RG12.2.4 — closed: no shared-node values in the symbolic evaluation (2026-10-19, #3047)
+*(Maintainer 2026-10-19: totally against the proposal and against any hashing of values; this is a design decision
+and needs to be treated carefully. Many things are recomputed, in particular when markers are evaluated twice, and
+node and body functions overlap, like the G matrix; but in parallel computation it is often better to recompute
+values than to load them from memory, and intermediate storage destroys the flexibility and transparency of the
+approach and leads to problems that are very hard to detect - the time spent on them is usually much longer than the
+time saved. A workaround is the combined function of the rigid-body marker, which computes all values at once and is
+faster than the single position, velocity, rotation matrix functions; possibly a cause of the lower speed here, not
+checked. The symbolic rigid body is a demo and test case and is left as it is.)*
+- #3047 closed as won't fix; the decision is D18 of the info document.
+- *(Maintainer 2026-10-20, after the question what "node" meant - a node of the expression tree, not a node item:
+  #3047 stays closed; a new step evaluates the options first - an automatic value of a tree node for one evaluation,
+  an algorithmic form with statements, intermediate variables stored by hand, others -, without the need for ultimate
+  performance now and with the recording of the C++ items in view, so that too many changes are counter-productive;
+  the result caches of #3028 are removed; D18 covers the items, the core and the visualization, and storing values
+  is used rarely, each case discussed with and approved by the maintainer.)* RG12.2.5 (#3048) evaluates the
+  options, RG7.11.1 (#3049) removes the caches. The buffers of #3046 reuse memory only and store no value that a
+  later evaluation reads.
+- `ObjectUserBody` uses the generic `CObjectBody::ComputeRigidBodyMarkerData`, which calls GetPosition, GetVelocity,
+  GetRotationMatrix and GetAngularVelocityLocal one by one; a combined function, as ObjectRigidBody has, is not planned.
+
+<a id="rg7-11-1"></a>
+### RG7.11.1 — the result caches of ObjectUserBody and NodeUser removed (2026-10-20, #3049)
+*(Maintainer 2026-10-20: remove #3028; D18 relates to the Exudyn items, the CSystem core and the visualization, and
+storing values shall be used rarely, each case discussed with and approved by the maintainer.)*
+- `UserFunctionResultCache` (CObjectBody.h), the four caches of each item, `ClearUserFunctionResults`, and the
+  `ParametersHaveChanged` and `PreAssemble` of ObjectUserBody that cleared them are gone; the user functions are
+  called for every request. The descriptions of both items no longer say that the user functions must be functions
+  of their arguments. NodeUser's rotation matrix goes through a buffer `bufferRotation` (memory only), as
+  ObjectUserBody's, so that no allocation per call comes back.
+- userRigidBodyTest.py keeps the check that a new position user function is used at once; its header no longer
+  names the caches. The results of the test models are unchanged.
+- userRigidBodyTest.py with 10000 steps, as RG12.2.3: Python user functions 4.35 -> 10.9 s, symbolic 1.86 -> 4.13 s,
+  ObjectRigidBody 0.12 s; no memory allocation per step.

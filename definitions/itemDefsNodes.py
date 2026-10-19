@@ -2132,7 +2132,6 @@ definitions.append(ItemDefinition(
     drawing=r'A point at its position; with `nodes.showBasis` and a `rotationMatrixUserFunction`, also its frame.',
     drawingSettings=['general.axesTiling', 'nodes.basisSize', 'nodes.showBasis'],
     addIncludesC=r"""class MainSystem; //AUTO; for std::function / userFunction; avoid including MainSystem.h
-#include "System/CObjectBody.h" //UserFunctionResultCache
 """,
     addProtectedC=r"""    CSystemData* cSystemData = nullptr; //!< for the MainSystem and the time of the user functions
     //! the total coordinates of a configuration: reference plus displacement (#2974)
@@ -2145,11 +2144,8 @@ definitions.append(ItemDefinition(
     template<class TUserFunction>
     void EvaluateMatrixUserFunction(const TUserFunction& function, const char* name, Index rows, Index columns, Matrix& value, Real t,
         const Vector& coordinates) const;
-    //! the last results of the user functions, by time and coordinates (#3028)
-    mutable UserFunctionResultCache<Vector3D> positionCache;
-    mutable UserFunctionResultCache<ResizableMatrix> positionJacobianCache;
-    mutable UserFunctionResultCache<Matrix3D> rotationMatrixCache;
-    mutable UserFunctionResultCache<ResizableMatrix> rotationJacobianCache;
+    //! the matrix of the rotation user function, which keeps its memory between the calls (#3049)
+    mutable ResizableMatrix bufferRotation;
 """,
     cParentClass=ParentClassCNodeODE2,
     overallDescription=r"""A node with any number of ABRV:ODE2 coordinates, whose position, and optionally orientation, are computed from its coordinates by Python user functions: a node for elements whose nodes are not in Exudyn, such as an ANCF node with full gradients. The node markers (MarkerNodePosition, MarkerNodeRigid, MarkerNodeCoordinate), SensorNode, loads on these markers and every connector work on it.""",
@@ -2177,9 +2173,6 @@ definitions.append(ItemDefinition(
     of connectors on MarkerNodeRigid need, is computed by central differences; a MarkerNodePosition treats
     $\Jm_{pos}$ as constant in the Jacobians, so a position that is not linear in $\qv$ makes the Newton iteration
     converge slower, not wrong.
-
-    The node keeps the last two results of each user function, by time and coordinates; the user functions are
-    functions of their arguments, as those of ObjectUserBody (#3028).
 
     The user functions are called serially in the main thread; a renderer that runs in a thread of its own draws the
     node, the markers on it and what depends on them in the main thread (#3003).
@@ -2292,10 +2285,6 @@ definitions.append(ItemDefinition(
         ItemFunction(type=TBool, destination=DestComp, cFlags=CFConst,
             pythonName='AccessFunctionsCallUserFunctions', implementation='return true;',
             description=r'the node, its markers and what depends on them are drawn in the main thread (#3003)'),
-        ItemFunction(type=Tvoid, destination=DestComp, cFlags=CFConst, isVirtual=False,
-            pythonName='ClearUserFunctionResults',
-            implementation='positionCache.Clear(); positionJacobianCache.Clear(); rotationMatrixCache.Clear(); rotationJacobianCache.Clear();',
-            description=r'forget the stored results of the user functions (#3028)'),
         ItemFunction(type=Tvoid, destination=DestComp, cFlags=CFConst, isVirtual=False,
             pythonName='EvaluatePosition',
             args='Vector3D& position, Real t, const Vector& coordinates',
