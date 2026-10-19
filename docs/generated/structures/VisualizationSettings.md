@@ -802,7 +802,7 @@ VSettingsIconBar has the following items:
 | name | type | default | description |
 |---|---|---|---|
 | `foldDistance` | UFloat | 20. | distance from the right border in pixels, at the display scaling of the monitor, at which the bar folds in |
-| `scaling` | PFloat | 1. | size of the icons relative to their size at the display scaling of the monitor; the icons are made smaller where the window is not high enough for all of them |
+| `scaling` | PFloat | 0.7 | size of the icons relative to 54 pixels at the display scaling of the monitor; the icons are made smaller where the window is not high enough for all of them |
 | `show` | bool | True | True: the icon bar folds in when the mouse comes near the right border of the render window |
 
 

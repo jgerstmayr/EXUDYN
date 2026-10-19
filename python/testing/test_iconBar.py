@@ -10,7 +10,7 @@ import numpy as np
 
 import exudyn as exu
 
-order = ['quit', 'zoomAll', 'zoomSelection', 'viewXY', 'viewYZ', 'viewXZ', 'viewIsometric', 'ruler',
+order = ['quit', 'zoomAll', 'zoomRegion', 'viewXY', 'viewYZ', 'viewXZ', 'viewIsometric', 'ruler',
          'mouseCoordinates', 'lines', 'edges', 'faces', 'transparency', 'updateSpeed',
          'nodes', 'bodies', 'connectors', 'markers', 'loads', 'sensors']
 

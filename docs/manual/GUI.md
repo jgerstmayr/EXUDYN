@@ -90,11 +90,12 @@ same table as the help dialog, which opens with the key **H**:
 ### Icon bar
 
 When the mouse comes near the right border of the render window without a button pressed, an icon bar folds in;
-it folds out when the mouse leaves it. Each icon does what its key does, and the mouse over an icon shows what it
+it folds out shortly after the mouse leaves it. Each icon does what its key does, and the mouse over an icon shows what it
 does and the key. From the top:
 
 - **quit**: closes the renderer, as ESCAPE;
-- **zoom all** (A) and **zoom to the selected item** (CTRL+A);
+- **zoom all** (A) and **zoom to a region**: after the icon, two clicks into the window are the corners of the
+  region, which then fills the window (a right click cancels); CTRL+A zooms to the item selected with the mouse;
 - **views** in the X-Y, Y-Z and X-Z planes and a 3D view (CTRL+1, CTRL+3, CTRL+2, CTRL+7); with CTRL held, the axes
   swap (Y-X, Z-Y, Z-X, as CTRL+4, CTRL+6, CTRL+5) and the icons show them; with SHIFT, the view from behind;
 - **ruler** (F5) and **mouse coordinates** (F3);

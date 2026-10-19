@@ -24,7 +24,7 @@ namespace IconBar
 
 	//! the icons in the order of the bar (maintainer 2026-10-19)
 	enum class Icon {
-		Quit, ZoomAll, ZoomSelection, ViewXY, ViewYZ, ViewXZ, ViewIsometric, Ruler, MouseCoordinates, Lines, Edges,
+		Quit, ZoomAll, ZoomRegion, ViewXY, ViewYZ, ViewXZ, ViewIsometric, Ruler, MouseCoordinates, Lines, Edges,
 		Faces, Transparency, UpdateSpeed, Nodes, Bodies, Connectors, Markers, Loads, Sensors, NumberOfIcons
 	};
 

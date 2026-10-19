@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.13 | Newborn | 143 | 1.13.145 |
+| 1.13 | Newborn | 144 | 1.13.146 |
 | 1.12 | Metheney | 367 | 1.12.462 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
@@ -30,6 +30,10 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.13 - Newborn (current)
 
+- **1.13.146** `EXTENSION` `HIGH EFF` `raised by: Claude-JG` `resolved by: Claude-JG` An icon bar in the renderer window as alternative to the keys, folding in from the right border (#3026)
+  - description: Maintainer 2026-10-17: small icons for the most important keys - visualization settings, command window, help; the standard views; show/hide and numbers of nodes, bodies, connectors, markers, loads, sensors; zoom in, out, all and to the selection; ruler; mouse coordinates; quit; graphics update speed; lines, edges, faces; global transparency. The icons are compiled into the code and drawn once at startup into textures with the existing line, circle and text functions, not loaded from files; the bar folds in from the right border when the mouse comes close without a button pressed, fills the height of the window, scaled with the display scaling and a size in the visualization settings. Drawn by a subfunction that leaves the current implementation mostly untouched and fits later OpenGL versions.
+  - **notes:** An icon bar in the render window folds in from the right border: quit, zoom all, zoom to a region given by two clicks, the views, ruler, mouse coordinates, lines, edges, faces, transparency, the update interval and the visibility of the items, with SHIFT and CTRL as described; visualizationSettings.interactive.iconBar (revision2026c step RG6.19)
+  - date resolved: **2026-10-19 10:06**, date raised: 2026-10-17
 - **1.13.145** `EXTENSION` `raised by: Claude-JG` `resolved by: Claude-JG` User nodes with position and orientation interfaces (#2974)
   - description: revision2026c step RG7.4 (docs/dev/design/pythonUserItems.md 5.2): number of coordinates, position, velocity, position Jacobian; rotation matrix, local angular velocity, Glocal and its derivatives (numerical if not given); example 3: a fully parametrized ANCF node (NodePointSlope123) and beam.
   - **notes:** NodeUser: a node with any number of coordinates whose position and orientation are Python user functions, the Jacobians by central differences if not given; node markers, SensorNode, loads and connectors work on it; userANCFBeam3DTest.py builds a fully parametrized ANCF beam from it and ObjectUserBody (revision2026c step RG7.4)

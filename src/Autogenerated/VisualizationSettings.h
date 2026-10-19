@@ -2805,7 +2805,7 @@ class VSettingsIconBar // AUTO:
 {
 public: // AUTO: 
   float foldDistance;                             //!< AUTO: must be >= 0; distance from the right border in pixels, at the display scaling of the monitor, at which the bar folds in
-  float scaling;                                  //!< AUTO: must be > 0; size of the icons relative to their size at the display scaling of the monitor; the icons are made smaller where the window is not high enough for all of them
+  float scaling;                                  //!< AUTO: must be > 0; size of the icons relative to 54 pixels at the display scaling of the monitor; the icons are made smaller where the window is not high enough for all of them
   bool show;                                      //!< AUTO: True: the icon bar folds in when the mouse comes near the right border of the render window
 
 private: // AUTO: 
@@ -2818,7 +2818,7 @@ public: // AUTO:
   {
     backlink=nullptr;
     foldDistance = 20.f;
-    scaling = 1.f;
+    scaling = 0.7f;
     show = true;
   };
   void Init(VisualizationSettings* backlinkInit) //!< AUTO: called from parent structure

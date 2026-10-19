@@ -147,7 +147,7 @@ wooden floor and a cylinder with a computed pattern, rendered with the raytracer
 `graphics.ToPointsAndTrigs`; colors that encode a material give the triangles as well.
 
 **An icon bar in the render window** (#3026): it folds in from the right border when the mouse comes near it, with
-icons for quit, zoom, the views, the ruler, the mouse coordinates, lines, edges, faces, transparency, the update
+icons for quit, zoom all, zoom to a region given by two clicks, the views, the ruler, the mouse coordinates, lines, edges, faces, transparency, the update
 interval and the visibility of the items, see {ref}`sec-gui-sec-iconbar`; `visualizationSettings.interactive.iconBar`
 switches it off or scales it.
 

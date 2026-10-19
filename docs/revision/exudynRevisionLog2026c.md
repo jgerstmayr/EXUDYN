@@ -2232,3 +2232,16 @@ drag (961-1188); the display scaling is `state->displayScaling` (1887).
   pytest of a few icons as images; the bar and its mouse handling; the icons; the documentation of the keys and icons
   in GUI.md.
 
+<a id="rg6-19-3"></a>
+### RG6.19.3 — the icon bar checked on the screen and adapted (2026-10-19, #3026)
+*(Maintainer 2026-10-19: works well; the bar shall stay a little longer, 3 times longer than now; zoom to the
+selection is a region selected by two mouse clicks - a misunderstanding; the bar smaller, scaling 0.7 by default.)*
+- After the mouse left the bar, it stays `iconBarHoldTime` = 0.3 s before it folds out over 0.15 s: 0.45 s, 3 times the
+  fold time it had.
+- The icon `zoomRegion` (was zoomSelection, a magnifier over a dashed frame): the next two left clicks outside the bar
+  are the corners of a region, drawn as a rectangle from the first corner to the mouse; the region fills the window -
+  its center becomes the center of the view, the zoom shrinks by the larger of its relative width and height
+  (`IconBarZoomToRegion`); a right click or the icon again cancels; the clicks do not reach the selection or the
+  movement of the model. CTRL+A stays the zoom to the selected item (RG6.19.2), without an icon.
+- `interactive.iconBar.scaling` = 0.7 by default: 38 px icons at display scaling 1, about 830 px for the bar.
+

@@ -1245,7 +1245,7 @@ class VSettingsIconBar:
     foldDistance: float
     """distance from the right border in pixels, at the display scaling of the monitor, at which the bar folds in."""
     scaling: float
-    """size of the icons relative to their size at the display scaling of the monitor; the icons are made smaller where the window is not high enough for all of them."""
+    """size of the icons relative to 54 pixels at the display scaling of the monitor; the icons are made smaller where the window is not high enough for all of them."""
     show: bool
     """True: the icon bar folds in when the mouse comes near the right border of the render window."""
     def GetDictionary(self) -> dict: ...

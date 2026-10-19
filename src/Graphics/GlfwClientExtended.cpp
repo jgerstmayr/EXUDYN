@@ -654,7 +654,10 @@ void GlfwRenderer::IconBarExecute(GLFWwindow* window, Index viewID, Index icon, 
 	{
 	case IconBar::Icon::Quit: Key(GLFW_KEY_ESCAPE, 0); break;
 	case IconBar::Icon::ZoomAll: Key(GLFW_KEY_A, 0); break;
-	case IconBar::Icon::ZoomSelection: Key(GLFW_KEY_A, GLFW_MOD_CONTROL); break;
+	case IconBar::Icon::ZoomRegion: //the next two clicks are the corners of the region
+		iconBarStates[viewID].regionStep = (iconBarStates[viewID].regionStep == 0) ? 1 : 0;
+		ShowMessage(iconBarStates[viewID].regionStep ? "zoom to a region: click two of its corners (right mouse button: cancel)" : "", 5);
+		break;
 	case IconBar::Icon::ViewXY: Key(control ? GLFW_KEY_4 : GLFW_KEY_1, viewMods); break;
 	case IconBar::Icon::ViewYZ: Key(control ? GLFW_KEY_6 : GLFW_KEY_3, viewMods); break;
 	case IconBar::Icon::ViewXZ: Key(control ? GLFW_KEY_5 : GLFW_KEY_2, viewMods); break;
@@ -698,18 +701,54 @@ bool GlfwRenderer::IconBarMouseButton(GLFWwindow* window, Index viewID, int butt
 		bar.pressed = false;
 		return true;
 	}
-	if (action != GLFW_PRESS || !visSettings->interactive.iconBar.show || bar.visible < 0.5f) { return false; }
+	if (action != GLFW_PRESS || !visSettings->interactive.iconBar.show) { return false; }
 	int width, height;
 	GetWindowSize(window, width, height);
 	double x, y;
 	IconBarMouse(window, width, height, x, y);
 	float iconSize, gap, barWidth;
 	IconBarGeometry(viewID, height, iconSize, gap, barWidth);
-	if (x < (double)width - barWidth*bar.visible) { return false; } //not on the bar
+	bool onBar = bar.visible >= 0.5f && x >= (double)width - barWidth*bar.visible;
+	if (bar.regionStep != 0 && !onBar) //the corners of the region to zoom to
+	{
+		bar.pressed = true;
+		if (button != GLFW_MOUSE_BUTTON_LEFT) { bar.regionStep = 0; ShowMessage("", 0); return true; } //cancelled
+		if (bar.regionStep == 1)
+		{
+			bar.regionX = x;
+			bar.regionY = y;
+			bar.regionStep = 2;
+		}
+		else
+		{
+			bar.regionStep = 0;
+			ShowMessage("", 0);
+			IconBarZoomToRegion(viewID, bar.regionX, bar.regionY, x, y);
+		}
+		return true;
+	}
+	if (!onBar) { return false; }
 	bar.pressed = true;
 	Index icon = IconBarIconAt(viewID, width, height, x, y);
 	if (icon >= 0 && button == GLFW_MOUSE_BUTTON_LEFT) { IconBarExecute(window, viewID, icon, mods); }
 	return true;
+}
+
+//! the region between two corners, in pixels of the frame buffer, fills the window: its center becomes the center of
+//! the view, the zoom shrinks by the larger of its relative width and height
+void GlfwRenderer::IconBarZoomToRegion(Index viewID, double x0, double y0, double x1, double y1)
+{
+	RenderState* state = renderViews.State(viewID);
+	double width = (double)EXUstd::Maximum((Index)1, state->currentWindowSize[0]);
+	double height = (double)EXUstd::Maximum((Index)1, state->currentWindowSize[1]);
+	double factor = EXUstd::Maximum(std::fabs(x1 - x0)/width, std::fabs(y1 - y0)/height);
+	if (factor*height < 3.) { ShowMessage("zoom to a region: the region is too small", 3); return; }
+	Vector2D center = basicVisualizationSystemContainer->PixelsToOpenGLCoordinates2D(0.5*(x0 + x1), 0.5*(y0 + y1), *state);
+	state->centerPoint[0] = (float)center[0];
+	state->centerPoint[1] = (float)center[1];
+	state->zoom *= (float)factor;
+	stateMachine.hasLastMousePressed = 0;
+	SetCallBackRefreshSignal();
 }
 
 //! draw the bar in pixels of the frame buffer; it slides in and out over iconBarFoldTime seconds
@@ -732,8 +771,14 @@ void GlfwRenderer::DrawIconBar(GLFWwindow* window, Index viewID, int width, int 
 	bool show = hovered && ((!buttonPressed && x >= (double)width - foldDistance) ||
 		(bar.visible > 0.f && x >= (double)width - barWidth - 2.f*gap));
 
-	//slide in or out
+	//slide in or out; after the mouse left, the bar stays iconBarHoldTime
 	double now = EXUstd::GetTimeInSeconds();
+	if (show) { bar.lastShownTime = now; }
+	else if (bar.visible > 0.f && now - bar.lastShownTime < iconBarHoldTime)
+	{
+		show = true;
+		SetCallBackRefreshSignal(); //the next frame checks again
+	}
 	float step = (float)((now - bar.lastTime)/iconBarFoldTime);
 	bar.lastTime = now;
 	float target = show ? 1.f : 0.f;
@@ -743,7 +788,8 @@ void GlfwRenderer::DrawIconBar(GLFWwindow* window, Index viewID, int width, int 
 		bar.visible = show ? EXUstd::Minimum(1.f, bar.visible + step) : EXUstd::Maximum(0.f, bar.visible - step);
 		SetCallBackRefreshSignal(); //the next frame continues the animation
 	}
-	if (bar.visible <= 0.f) { return; }
+	bool drawRegion = (bar.regionStep == 2);
+	if (bar.visible <= 0.f && !drawRegion) { return; }
 
 	glPushAttrib(GL_ENABLE_BIT | GL_TEXTURE_BIT | GL_CURRENT_BIT | GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_LINE_BIT);
 	glDisable(GL_DEPTH_TEST);
@@ -765,72 +811,84 @@ void GlfwRenderer::DrawIconBar(GLFWwindow* window, Index viewID, int width, int 
 		glVertex2f(x0, y0); glVertex2f(x1, y0); glVertex2f(x1, y1); glVertex2f(x0, y1);
 		glEnd();
 	};
-	float x0 = (float)width - barWidth*bar.visible;
-	glColor4f(0.93f, 0.94f, 0.96f, 0.92f);
-	Quad(x0, 0.f, x0 + barWidth, (float)height);
-	glColor4f(0.6f, 0.62f, 0.66f, 1.f);
-	glLineWidth(1.f);
-	glBegin(GL_LINES); glVertex2f(x0 + 0.5f, 0.f); glVertex2f(x0 + 0.5f, (float)height); glEnd();
-
-	Index hover = (bar.visible >= 1.f && hovered) ? IconBarIconAt(viewID, width, height, x, y) : -1;
-	bool control = glfwGetKey(window, GLFW_KEY_LEFT_CONTROL) == GLFW_PRESS || glfwGetKey(window, GLFW_KEY_RIGHT_CONTROL) == GLFW_PRESS;
-	float fontPixels = 0.3f*iconSize;
-	float fontScale = fontPixels/(float)bitmapFont.fontSize;
-	for (Index icon = 0; icon < IconBar::NumberOfIcons(); icon++)
+	if (drawRegion) //the region to zoom to, from its first corner to the mouse (#3026)
 	{
-		float ix = x0 + gap;
-		float iy = gap + icon*(iconSize + gap);
-		if (IconBarIconIsOn(viewID, icon) || icon == hover)
+		float rx0 = (float)bar.regionX, ry0 = (float)bar.regionY, rx1 = (float)x, ry1 = (float)y;
+		glColor4f(0.15f, 0.42f, 0.8f, 0.15f);
+		Quad(rx0, ry0, rx1, ry1);
+		glColor4f(0.15f, 0.42f, 0.8f, 1.f);
+		glLineWidth(1.5f);
+		glBegin(GL_LINE_LOOP); glVertex2f(rx0, ry0); glVertex2f(rx1, ry0); glVertex2f(rx1, ry1); glVertex2f(rx0, ry1); glEnd();
+	}
+	if (bar.visible > 0.f)
+	{
+		float x0 = (float)width - barWidth*bar.visible;
+		glColor4f(0.93f, 0.94f, 0.96f, 0.92f);
+		Quad(x0, 0.f, x0 + barWidth, (float)height);
+		glColor4f(0.6f, 0.62f, 0.66f, 1.f);
+		glLineWidth(1.f);
+		glBegin(GL_LINES); glVertex2f(x0 + 0.5f, 0.f); glVertex2f(x0 + 0.5f, (float)height); glEnd();
+
+		Index hover = (bar.visible >= 1.f && hovered) ? IconBarIconAt(viewID, width, height, x, y) : -1;
+		bool control = glfwGetKey(window, GLFW_KEY_LEFT_CONTROL) == GLFW_PRESS || glfwGetKey(window, GLFW_KEY_RIGHT_CONTROL) == GLFW_PRESS;
+		float fontPixels = 0.3f*iconSize;
+		float fontScale = fontPixels/(float)bitmapFont.fontSize;
+		for (Index icon = 0; icon < IconBar::NumberOfIcons(); icon++)
 		{
-			if (IconBarIconIsOn(viewID, icon)) { glColor4f(0.68f, 0.8f, 0.97f, 1.f); }
-			else { glColor4f(0.84f, 0.86f, 0.9f, 1.f); }
-			Quad(ix - 0.5f*gap, iy - 0.5f*gap, ix + iconSize + 0.5f*gap, iy + iconSize + 0.5f*gap);
+			float ix = x0 + gap;
+			float iy = gap + icon*(iconSize + gap);
+			if (IconBarIconIsOn(viewID, icon) || icon == hover)
+			{
+				if (IconBarIconIsOn(viewID, icon)) { glColor4f(0.68f, 0.8f, 0.97f, 1.f); }
+				else { glColor4f(0.84f, 0.86f, 0.9f, 1.f); }
+				Quad(ix - 0.5f*gap, iy - 0.5f*gap, ix + iconSize + 0.5f*gap, iy + iconSize + 0.5f*gap);
+			}
+			Index id = bar.textureIDs[icon];
+			if (id >= 0 && id < (Index)sceneTextures.size() && sceneTextures[id].name != 0)
+			{
+				glEnable(GL_TEXTURE_2D);
+				glBindTexture(GL_TEXTURE_2D, sceneTextures[id].name);
+				glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
+				glColor4f(1.f, 1.f, 1.f, 1.f);
+				glBegin(GL_QUADS); //the image has its bottom row first: v=0 at the bottom of the icon, y grows down
+				glTexCoord2f(0.f, 1.f); glVertex2f(ix, iy);
+				glTexCoord2f(1.f, 1.f); glVertex2f(ix + iconSize, iy);
+				glTexCoord2f(1.f, 0.f); glVertex2f(ix + iconSize, iy + iconSize);
+				glTexCoord2f(0.f, 0.f); glVertex2f(ix, iy + iconSize);
+				glEnd();
+				glBindTexture(GL_TEXTURE_2D, 0);
+				glDisable(GL_TEXTURE_2D);
+			}
+			STDstring text = IconBarIconText(viewID, icon, control);
+			if (text.size())
+			{
+				//the text at the top right of the icon; the font draws upward from its point, so the y axis is turned for it
+				glPushMatrix();
+				glTranslatef(ix + iconSize - 0.62f*fontPixels*(float)text.size() - 1.f, iy + 1.05f*fontPixels, 0.f);
+				glScalef(1.f, -1.f, 1.f);
+				DrawStringWithTextures(text.c_str(), fontScale, Float3({ 0.f, 0.f, 0.f }), Float4({ 0.7f, 0.1f, 0.1f, 1.f }), bitmapFont,
+					charBuffer, bitmapFontListBase, true);
+				glPopMatrix();
+			}
 		}
-		Index id = bar.textureIDs[icon];
-		if (id >= 0 && id < (Index)sceneTextures.size() && sceneTextures[id].name != 0)
+
+		if (hover >= 0) //the tooltip left of the bar
 		{
-			glEnable(GL_TEXTURE_2D);
-			glBindTexture(GL_TEXTURE_2D, sceneTextures[id].name);
-			glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
-			glColor4f(1.f, 1.f, 1.f, 1.f);
-			glBegin(GL_QUADS); //the image has its bottom row first: v=0 at the bottom of the icon, y grows down
-			glTexCoord2f(0.f, 1.f); glVertex2f(ix, iy);
-			glTexCoord2f(1.f, 1.f); glVertex2f(ix + iconSize, iy);
-			glTexCoord2f(1.f, 0.f); glVertex2f(ix + iconSize, iy + iconSize);
-			glTexCoord2f(0.f, 0.f); glVertex2f(ix, iy + iconSize);
-			glEnd();
-			glBindTexture(GL_TEXTURE_2D, 0);
-			glDisable(GL_TEXTURE_2D);
-		}
-		STDstring text = IconBarIconText(viewID, icon, control);
-		if (text.size())
-		{
-			//the text at the top right of the icon; the font draws upward from its point, so the y axis is turned for it
+			STDstring text = IconBar::Tooltip(hover);
+			float tipFont = EXUstd::Maximum(12.f, 0.28f*iconSize);
+			float textWidth = 0.6f*tipFont*(float)text.size();
+			float ty = gap + hover*(iconSize + gap) + 0.5f*iconSize;
+			float tx1 = x0 - gap;
+			float tx0 = EXUstd::Maximum(0.f, tx1 - textWidth - 2.f*gap);
+			glColor4f(1.f, 1.f, 0.88f, 0.95f);
+			Quad(tx0, ty - 0.8f*tipFont, tx1, ty + 0.8f*tipFont);
 			glPushMatrix();
-			glTranslatef(ix + iconSize - 0.62f*fontPixels*(float)text.size() - 1.f, iy + 1.05f*fontPixels, 0.f);
+			glTranslatef(tx0 + gap, ty + 0.45f*tipFont, 0.f);
 			glScalef(1.f, -1.f, 1.f);
-			DrawStringWithTextures(text.c_str(), fontScale, Float3({ 0.f, 0.f, 0.f }), Float4({ 0.7f, 0.1f, 0.1f, 1.f }), bitmapFont,
-				charBuffer, bitmapFontListBase, true);
+			DrawStringWithTextures(text.c_str(), tipFont/(float)bitmapFont.fontSize, Float3({ 0.f, 0.f, 0.f }), Float4({ 0.1f, 0.1f, 0.1f, 1.f }),
+				bitmapFont, charBuffer, bitmapFontListBase, true);
 			glPopMatrix();
 		}
-	}
-
-	if (hover >= 0) //the tooltip left of the bar
-	{
-		STDstring text = IconBar::Tooltip(hover);
-		float tipFont = EXUstd::Maximum(12.f, 0.28f*iconSize);
-		float textWidth = 0.6f*tipFont*(float)text.size();
-		float ty = gap + hover*(iconSize + gap) + 0.5f*iconSize;
-		float tx1 = x0 - gap;
-		float tx0 = EXUstd::Maximum(0.f, tx1 - textWidth - 2.f*gap);
-		glColor4f(1.f, 1.f, 0.88f, 0.95f);
-		Quad(tx0, ty - 0.8f*tipFont, tx1, ty + 0.8f*tipFont);
-		glPushMatrix();
-		glTranslatef(tx0 + gap, ty + 0.45f*tipFont, 0.f);
-		glScalef(1.f, -1.f, 1.f);
-		DrawStringWithTextures(text.c_str(), tipFont/(float)bitmapFont.fontSize, Float3({ 0.f, 0.f, 0.f }), Float4({ 0.1f, 0.1f, 0.1f, 1.f }),
-			bitmapFont, charBuffer, bitmapFontListBase, true);
-		glPopMatrix();
 	}
 
 	glMatrixMode(GL_MODELVIEW);

@@ -270,10 +270,14 @@ private:
 		float visible = 0.f;			//!< 0: folded out, 1: in
 		double lastTime = 0.;			//!< time of the last frame, for the animation
 		bool pressed = false;			//!< a mouse button was pressed on the bar: its release is the bar's as well
+		double lastShownTime = 0.;		//!< the last time the mouse was at the bar: it stays iconBarHoldTime longer
+		Index regionStep = 0;			//!< zoom to a region: 0 off, 1 waiting for the first corner, 2 for the second
+		double regionX = 0., regionY = 0.;	//!< the first corner, in pixels of the frame buffer
 		std::vector<Index> textureIDs;	//!< the numbers of the icons in the TextureStore
 	};
 	static IconBarState iconBarStates[MAX_VIEWS_GLFW];
 	static constexpr double iconBarFoldTime = 0.15; //!< seconds to fold in or out
+	static constexpr double iconBarHoldTime = 0.3;	//!< seconds the bar stays after the mouse left it
     static GLuint bitmapFontListBase;			//!< starting index for GLlists for font bitmap textured quads
 	static ResizableArray<GLubyte> charBuffer;	//!< buffer for converstion of UTF8 into internal unicode-like format
 
@@ -717,6 +721,7 @@ public:
 	static STDstring IconBarIconText(Index viewID, Index icon, bool control);
 	static void IconBarExecute(GLFWwindow* window, Index viewID, Index icon, int mods);
 	static bool IconBarMouseButton(GLFWwindow* window, Index viewID, int button, int action, int mods);
+	static void IconBarZoomToRegion(Index viewID, double x0, double y0, double x1, double y1);
 	static void DrawIconBar(GLFWwindow* window, Index viewID, int width, int height);
 
 	//! upload the textures of the TextureStore that changed since the last frame; in the render thread (#3032)

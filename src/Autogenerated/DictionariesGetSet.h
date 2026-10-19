@@ -5336,7 +5336,7 @@ inline py::dict GetDictionaryWithTypeInfo(const VSettingsIconBar& data) {
     d["value"] = data.scaling;
     d["type"] = "PFloat";
     d["size"] = std::vector<int>{1};
-    d["description"] = "size of the icons relative to their size at the display scaling of the monitor; the icons are made smaller where the window is not high enough for all of them";
+    d["description"] = "size of the icons relative to 54 pixels at the display scaling of the monitor; the icons are made smaller where the window is not high enough for all of them";
     structureDict["scaling"] = d;
 
     d = py::dict(); //reset local dict

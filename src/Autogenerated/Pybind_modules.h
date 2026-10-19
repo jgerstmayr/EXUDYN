@@ -1596,7 +1596,7 @@
     py::class_<VSettingsIconBar>(m, "VSettingsIconBar", "VSettingsIconBar class") // AUTO: 
         .def(py::init<>())
         .def_property("foldDistance", EPyUtils::MemberGetter(&VSettingsIconBar::foldDistance), EPyUtils::MemberSetter(&VSettingsIconBar::foldDistance, EPyUtils::RangeCheck::nonNegative, "VSettingsIconBar.foldDistance"), "distance from the right border in pixels, at the display scaling of the monitor, at which the bar folds in")
-        .def_property("scaling", EPyUtils::MemberGetter(&VSettingsIconBar::scaling), EPyUtils::MemberSetter(&VSettingsIconBar::scaling, EPyUtils::RangeCheck::positive, "VSettingsIconBar.scaling"), "size of the icons relative to their size at the display scaling of the monitor; the icons are made smaller where the window is not high enough for all of them")
+        .def_property("scaling", EPyUtils::MemberGetter(&VSettingsIconBar::scaling), EPyUtils::MemberSetter(&VSettingsIconBar::scaling, EPyUtils::RangeCheck::positive, "VSettingsIconBar.scaling"), "size of the icons relative to 54 pixels at the display scaling of the monitor; the icons are made smaller where the window is not high enough for all of them")
         .def_property("show", EPyUtils::MemberGetter(&VSettingsIconBar::show), EPyUtils::MemberSetter(&VSettingsIconBar::show, "VSettingsIconBar.show"), "True: the icon bar folds in when the mouse comes near the right border of the render window")
         // AUTO: access functions for VSettingsIconBar
         .def("__repr__", [](const VSettingsIconBar &item) { return "<VSettingsIconBar:\n" + EXUstd::ToString(item) + " >"; } ) //!< AUTO: add representation for object based on ostream operator

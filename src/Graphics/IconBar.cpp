@@ -163,7 +163,7 @@ namespace IconBar
 
 	const char* Name(Index icon)
 	{
-		static const char* names[] = { "quit", "zoomAll", "zoomSelection", "viewXY", "viewYZ", "viewXZ", "viewIsometric",
+		static const char* names[] = { "quit", "zoomAll", "zoomRegion", "viewXY", "viewYZ", "viewXZ", "viewIsometric",
 			"ruler", "mouseCoordinates", "lines", "edges", "faces", "transparency", "updateSpeed",
 			"nodes", "bodies", "connectors", "markers", "loads", "sensors" };
 		return (icon >= 0 && icon < NumberOfIcons()) ? names[icon] : "";
@@ -174,7 +174,7 @@ namespace IconBar
 		static const char* tooltips[] = {
 			"close the renderer (ESCAPE)",
 			"zoom all (A)",
-			"zoom to the selected item (CTRL+A)",
+			"zoom to a region: click two of its corners (CTRL+A zooms to the selected item)",
 			"view in the X-Y plane (CTRL: Y-X; SHIFT: from behind)",
 			"view in the Y-Z plane (CTRL: Z-Y; SHIFT: from behind)",
 			"view in the X-Z plane (CTRL: Z-X; SHIFT: from behind)",
@@ -220,10 +220,16 @@ namespace IconBar
 			}
 			c.Rectangle(21, 21, 43, 43, accent);
 			break;
-		case Icon::ZoomSelection: //a magnifier on a selected point
-			c.Line({ 39, 25 }, { 55, 9 }, 8, ink);
-			c.Arc({ 27, 37 }, 17, 5, ink);
-			c.Disc({ 27, 37 }, 7, accent);
+		case Icon::ZoomRegion: //a magnifier on a region drawn dashed
+			for (float t = 0.f; t < 1.f; t += 0.25f) //the dashes of the four sides
+			{
+				c.Line({ 6 + 44*t, 58 }, { 6 + 44*(t + 0.14f), 58 }, 3, accent);
+				c.Line({ 6 + 44*t, 14 }, { 6 + 44*(t + 0.14f), 14 }, 3, accent);
+				c.Line({ 6, 14 + 44*t }, { 6, 14 + 44*(t + 0.14f) }, 3, accent);
+				c.Line({ 50, 14 + 44*t }, { 50, 14 + 44*(t + 0.14f) }, 3, accent);
+			}
+			c.Line({ 40, 24 }, { 56, 8 }, 7, ink);
+			c.Arc({ 29, 35 }, 14, 5, ink);
 			break;
 		case Icon::ViewXY:
 		case Icon::ViewYZ:

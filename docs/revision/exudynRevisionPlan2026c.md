@@ -51,7 +51,7 @@ The title of each says what it does; the sentence after it, why it comes now.
    screen; the space key works on macOS (2026-10-16).
 2. **The user items and symbolic access to the system**: user markers and joints (RG7.5, RG7.6), the MainSystem in
    symbolic user functions (RG12.4, proposal RG12.4.1 to decide), symbolic items in parallel (RG7.8); each user
-   function change measured against 1.13.6 (userFunctionBoundary.md sections 12, 13); the icon bar on the screen (RG6.19.3).
+   function change measured against 1.13.6 (userFunctionBoundary.md sections 12, 13).
 3. **Rehearse the next release on a `release/*` branch** with *build as a release* - the first run of cibuildwheel
    4.3.0 and of cp315 on GitHub.
 4. **The quick old issues** (RG11.8) - each small and without a decision.
@@ -79,7 +79,6 @@ The title of each says what it does; the sentence after it, why it comes now.
   - RG5.4 Store the superelement matrices as sparse triplets for larger meshes
 - **RG6** Graphics and rendering
   - RG6.8 Fix the remaining graphics problems with a test each
-  - RG6.19 Add an icon bar to the renderer that folds in from the right border, as alternative to the keys (1 open sub-step)
 - **RG7** Python user items
   - RG7.5 Add user markers and a user connector with access to its markers
   - RG7.6 Add a user joint on two position and orientation markers
@@ -126,7 +125,7 @@ The title of each says what it does; the sentence after it, why it comes now.
 | RG3 | CLOSED | 0 | Docs |
 | RG4 | OPEN | 6 | Implementation problems and bugs |
 | RG5 | OPEN | 8 | Performance |
-| RG6 | OPEN | 3 | Graphics and rendering |
+| RG6 | OPEN | 1 | Graphics and rendering |
 | RG7 | OPEN | 4 | Python user items |
 | RG8 | OPEN | 10 | Compiled C++ user items |
 | RG9 | OPEN | 5 | Structural core improvements |
@@ -562,7 +561,7 @@ CLOSED 2026-10-10 (#2940): running in Static or One cycle, space switches to Con
 
 CLOSED 2026-10-10 (#2950): `LoadSolutionFile` always returns a matrix; test model `solutionFileWithoutCoordinatesTest.py`. [log](exudynRevisionLog2026c.md#rg6-18-4)
 
-### **OPEN_RG6.19** Add an icon bar to the renderer that folds in from the right border, as alternative to the keys
+### **CLOSED_RG6.19** Add an icon bar to the renderer that folds in from the right border, as alternative to the keys
 
 #3026 (maintainer 2026-10-17).
 
@@ -586,10 +585,10 @@ CLOSED 2026-10-18 (#3027): `RenderState::ComputeZoomToItem` (the box of the elem
 ZoomAll's bounding box, the scene size kept), CTRL+A in the render window, `SC.renderer.ZoomToItem(itemIndex, mbsNumber,
 viewID)`; zoomToItemTest.py. The icon comes with the bar (RG6.19.1). [log](exudynRevisionLog2026c.md#rg6-19-2)
 
-#### **OPEN_RG6.19.3** Check the icon bar on the screen
+#### **CLOSED_RG6.19.3** Check the icon bar on the screen
 
-#3026: the bar could not be seen here - the fold-in, the sizes at display scalings, the texts over the icons and the
-tooltips, a click with SHIFT and CTRL; on Windows, Linux and macOS (the mouse in pixels of the frame buffer).
+CLOSED 2026-10-19 (#3026; maintainer: works well; the bar stays longer, zoom to a region of two clicks instead of the
+selected item - a misunderstanding -, scaling 0.7 by default): done as asked. [log](exudynRevisionLog2026c.md#rg6-19-3)
 
 ## **OPEN_RG7** Python user items
 
