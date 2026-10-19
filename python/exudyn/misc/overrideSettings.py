@@ -39,7 +39,8 @@ __all__ = [
     'StoreSection', 'Applied', 'Ignored', 'Print', 'notStoredSettings', 'StorableValue',
     'ApplyConfig', 'ApplyVisualizationSettings', 'DialogKey', 'DialogGeometry',
     'StoreDialogGeometry', 'PositionIsReachable', 'Store', 'numberOfStoredSettings',
-    'ChangedVisualizationSettings', 'StoredSettings', 'StoreStoredSettings', 'ApplyStoredSettings',
+    'modelViewKeys', 'ChangedVisualizationSettings', 'ModelView', 'StoredSettings',
+    'StoreStoredSettings', 'ApplyStoredSettings',
     ]
 
 #THE VERSION OF THE FILE FORMAT, written into every file and required to match exactly
@@ -628,11 +629,18 @@ def Store(SC=None, config=None, replace=False):
 
 
 #%%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-#THE STORED CONFIGURATIONS CFG0 to CFG3 (#3043): whole visualizationSettings that a user switches
-#between with the icons of the render window. Each is stored as its difference to the defaults, as
-#the visualizationSettings section is, under 'storedSettings' as a list of four dictionaries; the
-#list is written with all four as soon as one is stored, and an empty one is the defaults.
+#THE STORED CONFIGURATIONS CFG0 to CFG3 (#3043, #3045): visualization settings and model views that a
+#user switches between with the icons of the render window. Each configuration is a dictionary with
+#two parts, 'visualizationSettings' - the difference to the defaults, as the visualizationSettings
+#section holds it - and 'modelView' - zoom, center point and rotation of the view, as
+#SC.renderer.GetState() gives them. Both are empty when nothing was stored, and an empty part changes
+#nothing when switching to the configuration, so that a configuration can be a view, settings or both.
+#They are stored under 'storedSettings', as a list that is written with all four configurations as
+#soon as one is stored.
 numberOfStoredSettings = 4
+
+#the entries of the render state that make the model view of a configuration (#3045)
+modelViewKeys = ['centerPoint', 'rotationCenterPoint', 'zoom', 'modelRotation']
 
 
 def ChangedVisualizationSettings(visualizationSettings):
@@ -661,10 +669,16 @@ def ChangedVisualizationSettings(visualizationSettings):
 
 
 def _StoredSettingsList(stored):
-    """the list of numberOfStoredSettings dictionaries that the section 'storedSettings' holds"""
+    """the list of numberOfStoredSettings configurations that the section 'storedSettings' holds,
+    each with its two parts"""
     stored = list(stored) if isinstance(stored, list) else []
-    stored = [dict(entry) if isinstance(entry, dict) else {} for entry in stored[:numberOfStoredSettings]]
-    return stored + [{} for _ in range(numberOfStoredSettings - len(stored))]
+    configurations = []
+    for entry in stored[:numberOfStoredSettings]:
+        entry = entry if isinstance(entry, dict) else {}
+        configurations.append({'visualizationSettings': dict(entry.get('visualizationSettings') or {}),
+                               'modelView': dict(entry.get('modelView') or {})})
+    return configurations + [{'visualizationSettings': {}, 'modelView': {}}
+                             for _ in range(numberOfStoredSettings - len(configurations))]
 
 
 def _CheckStoredSettingsIndex(index):
@@ -674,12 +688,28 @@ def _CheckStoredSettingsIndex(index):
                          + ' (CFG0 to CFG' + str(numberOfStoredSettings - 1) + '), not ' + repr(index))
 
 
-def StoredSettings():
-    """The stored configurations CFG0 to CFG3 of the visualization settings, as the file holds them.
+def ModelView(renderState):
+    """The model view of a render state, as a configuration stores it.
+
+    Args:
+        renderState: what `SC.renderer.GetState()` returns
 
     Returns:
-        list of `numberOfStoredSettings` dictionaries {path: value}, each the difference of a
-        configuration to the defaults; `{}` for one that was never stored, which is the defaults
+        dictionary with the entries of `modelViewKeys` as plain numbers and lists, which
+        `SC.renderer.SetState` takes back
+    """
+    def Plain(value):
+        return [Plain(entry) for entry in value] if hasattr(value, '__len__') else float(value)
+    return {key: Plain(renderState[key]) for key in modelViewKeys if key in renderState}
+
+
+def StoredSettings():
+    """The stored configurations CFG0 to CFG3, as the file holds them.
+
+    Returns:
+        list of `numberOfStoredSettings` dictionaries, each with 'visualizationSettings'
+        {path: value}, the difference to the defaults, and 'modelView', see `ModelView`; a part that
+        was never stored is `{}`
 
     Note:
         The file is read, not the store of this process, so that a configuration stored by another
@@ -688,34 +718,42 @@ def StoredSettings():
     return _StoredSettingsList(Load().get('storedSettings'))
 
 
-def StoreStoredSettings(index, values):
+def StoreStoredSettings(index, visualizationSettings=None, modelView=None):
     """Store one of the configurations CFG0 to CFG3, keeping the others.
 
     Args:
         index: the configuration, 0 to `numberOfStoredSettings` - 1
-        values: {path: value}, its difference to the defaults, see `ChangedVisualizationSettings`;
-            it replaces what the configuration held
+        visualizationSettings: {path: value}, the difference to the defaults, see
+            `ChangedVisualizationSettings`; it replaces the settings of the configuration, and None
+            keeps them
+        modelView: the model view, see `ModelView`; it replaces the model view of the
+            configuration, and None keeps it
 
     Returns:
         the file name that was written
     """
     _CheckStoredSettingsIndex(index)
     stored = StoredSettings()
-    stored[index] = dict(values)
+    if visualizationSettings is not None:
+        stored[index]['visualizationSettings'] = dict(visualizationSettings)
+    if modelView is not None:
+        stored[index]['modelView'] = dict(modelView)
     return StoreSection('storedSettings', stored)
 
 
-def ApplyStoredSettings(visualizationSettings, index):
-    """Switch a visualizationSettings structure to one of the stored configurations CFG0 to CFG3:
-    every setting to its default, and then the stored difference.
+def ApplyStoredSettings(visualizationSettings, index, renderer=None):
+    """Switch to one of the stored configurations CFG0 to CFG3: to its settings, if it stores some,
+    and to its model view, if it stores one; an empty part changes nothing.
 
     Args:
-        visualizationSettings: `SC.visualizationSettings`
+        visualizationSettings: `SC.visualizationSettings`; every setting goes to its default, and
+            then to what the configuration stores
         index: the configuration, 0 to `numberOfStoredSettings` - 1
+        renderer: `SC.renderer`, which takes the model view; None leaves the view as it is
 
     Returns:
-        the number of stored settings applied; 0 for an empty configuration, which resets the
-        settings to the defaults
+        `(settings, modelView)`: the number of stored settings applied - 0 when the configuration
+        stores none and the settings are untouched - and True if the model view was set
 
     Note:
         The defaults are those of the class, without the visualizationSettings section of the
@@ -724,18 +762,26 @@ def ApplyStoredSettings(visualizationSettings, index):
     from exudyn.misc.settingsUtilities import (DefaultSettingsDictionary,   # noqa: PLC0415
                                                SettingsLeafList, SettingsValueStrings)
     _CheckStoredSettingsIndex(index)
-    values = StoredSettings()[index]
-    current = SettingsValueStrings(visualizationSettings.GetDictionaryWithTypeInfo())
-    for (path, value, valueString, _, _, _) in SettingsLeafList(DefaultSettingsDictionary(visualizationSettings)):
-        if path in notStoredSettings or current.get(path, valueString) == valueString:
-            continue
-        structure = visualizationSettings
-        parts = path.split('.')
-        try:
-            for part in parts[:-1]:
-                structure = getattr(structure, part)
-            setattr(structure, parts[-1], value)
-        except Exception as e:
-            print('WARNING: visualizationSettings.' + path + ' could not be reset: ' + str(e))
-    return ApplyVisualizationSettings(visualizationSettings, {'visualizationSettings': values},
-                                      record=False)
+    configuration = StoredSettings()[index]
+    values = configuration['visualizationSettings']
+    applied = 0
+    if values != {}:
+        current = SettingsValueStrings(visualizationSettings.GetDictionaryWithTypeInfo())
+        for (path, value, valueString, _, _, _) in SettingsLeafList(DefaultSettingsDictionary(visualizationSettings)):
+            if path in notStoredSettings or current.get(path, valueString) == valueString:
+                continue
+            structure = visualizationSettings
+            parts = path.split('.')
+            try:
+                for part in parts[:-1]:
+                    structure = getattr(structure, part)
+                setattr(structure, parts[-1], value)
+            except Exception as e:
+                print('WARNING: visualizationSettings.' + path + ' could not be reset: ' + str(e))
+        applied = ApplyVisualizationSettings(visualizationSettings, {'visualizationSettings': values},
+                                             record=False)
+    modelView = {key: value for (key, value) in configuration['modelView'].items() if key in modelViewKeys}
+    if modelView != {} and renderer is not None:
+        renderer.SetState(modelView)
+        return (applied, True)
+    return (applied, False)

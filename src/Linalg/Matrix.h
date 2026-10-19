@@ -257,7 +257,7 @@ public:
 		CHECKandTHROW((/*matrixStartRow >= 0 && matrixStartColumn >= 0) &&*/
 			matrixEndRow >= matrixStartRow && matrixEndColumn >= matrixStartColumn),
 			"Matrix::CopyFrom(...): invalid parameters");
-		ResizeMatrix(matrixEndRow - matrixStartRow, matrixEndColumn - matrixStartColumn);
+		SetNumberOfRowsAndColumns(matrixEndRow - matrixStartRow, matrixEndColumn - matrixStartColumn);
 		Index i = 0;
 		for (Index row = matrixStartRow; row < matrixEndRow; row++)
 		{
@@ -273,7 +273,7 @@ public:
 	void CopyFrom(const TMatrix& matrix)
 	//void CopyFrom(const MatrixBase& matrix)
 	{
-		ResizeMatrix(matrix.NumberOfRows(), matrix.NumberOfColumns());
+		SetNumberOfRowsAndColumns(matrix.NumberOfRows(), matrix.NumberOfColumns());
 		
 		Index cnt = 0;
 		for (auto value : matrix) { data[cnt++] = (T)value; }
@@ -293,7 +293,7 @@ public:
 		CHECKandTHROW((/*numberOfRowsInit >= 0 && numberOfColumnsInit >= 0 &&*/
 			numberOfRowsInit*numberOfColumnsInit == (Index)listOfTs.size()),
 			"Matrix::SetMatrix(Index, Index, initializer_list): inconsistent size of initializer_list");
-		ResizeMatrix(numberOfRowsInit, numberOfColumnsInit);
+		SetNumberOfRowsAndColumns(numberOfRowsInit, numberOfColumnsInit);
 
 		Index cnt = 0;
 		for (auto value : listOfTs) {
@@ -443,7 +443,7 @@ public:
 	{
 		if (this == &matrix) { return *this; }
 
-		ResizeMatrix(matrix.NumberOfRows(), matrix.NumberOfColumns());
+		SetNumberOfRowsAndColumns(matrix.NumberOfRows(), matrix.NumberOfColumns());
 
 		Index cnt = 0;
 		for (auto value : matrix) { data[cnt++] = value; }

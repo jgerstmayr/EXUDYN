@@ -164,7 +164,7 @@ namespace IconBar
 	const char* Name(Index icon)
 	{
 		static const char* names[] = { "quit", "zoomAll", "zoomRegion", "viewXY", "viewYZ", "viewXZ", "viewIsometric",
-			"ruler", "mouseCoordinates", "lines", "edges", "faces", "transparency", "updateSpeed",
+			"ruler", "mouseCoordinates", "lines", "edges", "faces", "transparency", "shadow", "updateSpeed",
 			"nodes", "bodies", "connectors", "markers", "loads", "sensors", "config0", "config1", "config2", "config3" };
 		return (icon >= 0 && icon < NumberOfIcons()) ? names[icon] : "";
 	}
@@ -185,6 +185,7 @@ namespace IconBar
 			"show edges of faces and meshes",
 			"show faces",
 			"transparent faces",
+			"shadow: 0.25 for light0, or none for all lights",
 			"graphics update interval (keys 1 to 5)",
 			"show nodes (N; SHIFT: numbers, CTRL+N)",
 			"show bodies (B; SHIFT: numbers, CTRL+B)",
@@ -192,10 +193,10 @@ namespace IconBar
 			"show markers (M; SHIFT: numbers, CTRL+M)",
 			"show loads (L; SHIFT: numbers, CTRL+L)",
 			"show sensors (S; SHIFT: numbers, CTRL+S)",
-			"switch the visualization settings to the configuration CFG0 stored in config.json (CTRL: store the current settings as CFG0)",
-			"switch the visualization settings to the configuration CFG1 stored in config.json (CTRL: store the current settings as CFG1)",
-			"switch the visualization settings to the configuration CFG2 stored in config.json (CTRL: store the current settings as CFG2)",
-			"switch the visualization settings to the configuration CFG3 stored in config.json (CTRL: store the current settings as CFG3)" };
+			"switch to the stored configuration CFG0 (CTRL: store settings and view as CFG0)",
+			"switch to the stored configuration CFG1 (CTRL: store settings and view as CFG1)",
+			"switch to the stored configuration CFG2 (CTRL: store settings and view as CFG2)",
+			"switch to the stored configuration CFG3 (CTRL: store settings and view as CFG3)" };
 		return (icon >= 0 && icon < NumberOfIcons()) ? tooltips[icon] : "";
 	}
 
@@ -306,6 +307,20 @@ namespace IconBar
 			c.Rectangle(22, 6, 58, 42, Float4({ 0.85f, 0.88f, 0.92f, 0.65f }));
 			c.PolyLine({ {22, 6}, {58, 6}, {58, 42}, {22, 42} }, 3, ink, true);
 			break;
+		case Icon::Shadow: //a ball over its shadow
+		{
+			std::vector<P> ellipse;
+			for (Index k = 0; k < 32; k++)
+			{
+				float a = 2.f*pi*(float)k/32.f;
+				ellipse.push_back({ 36 + 22*std::cos(a), 13 + 7*std::sin(a) });
+			}
+			c.Polygon(ellipse, Float4({ 0.3f, 0.32f, 0.36f, 0.75f }));
+			c.Disc({ 26, 38 }, 16, accent);
+			c.Disc({ 21, 43 }, 5, lightAccent);
+			c.Arc({ 26, 38 }, 16, 2.5f, ink);
+			break;
+		}
 		case Icon::UpdateSpeed: //a clock; the bar writes the number of the interval
 			c.Arc({ 32, 32 }, 25, 4, ink);
 			for (Index k = 0; k < 12; k++)
@@ -346,18 +361,33 @@ namespace IconBar
 			c.Line({ 32, 20 }, { 47, 38 }, 4, warning);
 			c.Disc({ 32, 20 }, 5, ink);
 			break;
-		case Icon::Config0: //three sliders of settings; the bar writes the number of the configuration
+		case Icon::Config0: //a button with sliders of settings; the bar writes CFG0 ... into its upper part
 		case Icon::Config1:
 		case Icon::Config2:
 		case Icon::Config3:
+		{
+			std::vector<P> button; //a rectangle with rounded corners
+			const float x0 = 4, y0 = 4, x1 = 60, y1 = 60, r = 8;
+			const P corners[4] = { {x1 - r, y0 + r}, {x1 - r, y1 - r}, {x0 + r, y1 - r}, {x0 + r, y0 + r} };
+			for (Index corner = 0; corner < 4; corner++)
+			{
+				for (Index k = 0; k <= 4; k++)
+				{
+					float a = 0.5f*pi*((float)corner - 1.f + (float)k/4.f);
+					button.push_back({ corners[corner].x + r*std::cos(a), corners[corner].y + r*std::sin(a) });
+				}
+			}
+			c.Polygon(button, Float4({ 0.84f, 0.88f, 0.95f, 1.f }));
+			c.PolyLine(button, 2.5f, ink, true);
 			for (Index k = 0; k < 3; k++)
 			{
-				float y = 14.f + 16.f*(float)k;
-				float knob = (k == 1) ? 36.f : (k == 0 ? 20.f : 28.f);
-				c.Line({ 8, y }, { 52, y }, 3.5f, ink);
-				c.Disc({ knob, y }, 6.5f, accent);
+				float y = 13.f + 10.f*(float)k;
+				float knob = (k == 1) ? 38.f : (k == 0 ? 22.f : 30.f);
+				c.Line({ 12, y }, { 52, y }, 2.5f, ink);
+				c.Disc({ knob, y }, 4.5f, accent);
 			}
 			break;
+		}
 		default:
 			break;
 		}

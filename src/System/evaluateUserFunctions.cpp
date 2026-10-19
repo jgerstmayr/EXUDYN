@@ -433,9 +433,8 @@ void CObjectUserBody::EvaluatePositionJacobian(Matrix& value, Real t, const Vect
 void CObjectUserBody::EvaluateRotationMatrix(Matrix3D& value, Real t, const Vector3D& localPosition, const Vector& coordinates) const
 {
 	if (const Matrix3D* stored = rotationMatrixCache.Find(t, localPosition, coordinates)) { value = *stored; return; }
-	Matrix rotation;
-	EvaluateMatrixUserFunction(parameters.rotationMatrixUserFunction, "rotationMatrixUserFunction", 3, rotation, t, localPosition, coordinates);
-	value.CopyFrom(rotation);
+	EvaluateMatrixUserFunction(parameters.rotationMatrixUserFunction, "rotationMatrixUserFunction", 3, bufferRotation, t, localPosition, coordinates);
+	value.CopyFrom(bufferRotation);
 	rotationMatrixCache.Store(t, localPosition, coordinates, value);
 }
 

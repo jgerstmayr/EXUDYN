@@ -1279,9 +1279,25 @@ class TkinterEditDictionaryWithTypeInfo(tk.Frame):
         if guiSC is None:
             self.ShowCodeLines('model view', [], 'no render window is open')
             return
-        self.ShowCodeLines('model view', RenderStateCodeLines(guiSC.renderer.GetState()),
+        renderState = guiSC.renderer.GetState()
+
+        def Store(CFG):
+            try:
+                from exudyn.misc import overrideSettings                     # noqa: PLC0415
+                overrideSettings.StoreStoredSettings(CFG, modelView=overrideSettings.ModelView(renderState))
+                exudyn.Print('stored the model view as configuration CFG' + str(CFG) + ' in '
+                             + overrideSettings.ShownFileName())
+            except Exception as exception:                                   # noqa: BLE001
+                exudyn.Print('WARNING: could not store the model view: ' + str(exception))
+
+        #the model view of the stored configurations CFG0 to CFG3 (#3045)
+        self.ShowCodeLines('model view', RenderStateCodeLines(renderState),
                            'the current model view, as CTRL+F3 prints it; paste the lines into the script'
-                           ' instead of its own renderer.Start()')
+                           ' instead of its own renderer.Start()',
+                           confirm=[('\u2192 CFG' + str(index), lambda index=index: Store(index),
+                                     'store this model view as configuration CFG' + str(index)
+                                     + ' in config.json; the icon CFG' + str(index) + ' switches to it')
+                                    for index in range(4)])
 
     def SettingsFileName(self):
         """the override settings file, or a readable stand-in if it cannot be asked for"""
@@ -1331,7 +1347,7 @@ class TkinterEditDictionaryWithTypeInfo(tk.Frame):
                     overrideSettings.StoreSection('visualizationSettings', values)
                     exudyn.Print('stored ' + str(len(values)) + ' setting(s) in ' + fileName)
                 else:
-                    overrideSettings.StoreStoredSettings(CFG, values)
+                    overrideSettings.StoreStoredSettings(CFG, visualizationSettings=values)
                     exudyn.Print('stored ' + str(len(values)) + ' setting(s) as configuration CFG'
                                  + str(CFG) + ' in ' + fileName)
             except Exception as exception:                                   # noqa: BLE001
@@ -1341,10 +1357,8 @@ class TkinterEditDictionaryWithTypeInfo(tk.Frame):
         configurationButtons = []
         if CompiledSettingsClass(self.settingsStructure).__name__ == 'VisualizationSettings':
             configurationButtons = [('\u2192 CFG' + str(index), lambda index=index: Store(index),
-                                     'store these settings as the configuration CFG' + str(index)
-                                     + ' in ' + fileName + ', replacing what it held; the icon CFG'
-                                     + str(index) + ' of the icon bar of the render window switches'
-                                     ' to it, CTRL and the icon store the current settings in it')
+                                     'store these settings as configuration CFG' + str(index)
+                                     + ' in config.json; the icon CFG' + str(index) + ' switches to them')
                                     for index in range(4)]
         self.ShowCodeLines('store settings in ' + fileName, lines,
                            'the settings that differ from the defaults, including the size and'
@@ -2478,20 +2492,24 @@ def AskQuitDialog():
 
 
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-#THE STORED CONFIGURATIONS CFG0 to CFG3 (#3043): what the icons CFG0 to CFG3 of the icon bar and the
-#"store settings" window of the visualization settings dialog do, for a script
-def StoreVisualizationSettings(SC=None, CFG=None):
-    """Store the visualization settings that differ from the defaults in `~/.exudyn/config.json`.
+#THE STORED CONFIGURATIONS CFG0 to CFG3 (#3043, #3045): what the icons CFG0 to CFG3 of the icon bar
+#and the store windows of the visualization settings dialog do, for a script
+def StoreVisualizationSettings(SC=None, CFG=None, storeSettings=True, storeModelView=False):
+    """Store the visualization settings that differ from the defaults, and the model view, in
+    `~/.exudyn/config.json`.
 
     Args:
-        SC: the SystemContainer whose `visualizationSettings` are stored; the one attached to the
-            renderer when None is given
-        CFG: None stores them as the visualizationSettings every model starts with, replacing what
-            was stored there; 0 to 3 stores them as the configuration CFG0 to CFG3, replacing what it
-            held, which the icons CFG0 to CFG3 of the icon bar of the render window switch to
+        SC: the SystemContainer whose `visualizationSettings` and model view are stored; the one
+            attached to the renderer when None is given
+        CFG: None stores the settings as the visualizationSettings every model starts with,
+            replacing what was stored there; 0 to 3 stores into the configuration CFG0 to CFG3, which
+            the icons CFG0 to CFG3 of the icon bar of the render window switch to
+        storeSettings: True stores the settings, replacing those the configuration held
+        storeModelView: True stores the model view of `SC.renderer.GetState()` - zoom, center point
+            and rotation - into the configuration, replacing the one it held; only with CFG 0 to 3
 
     Returns:
-        the number of settings stored; -1 if there is no SystemContainer
+        the number of settings stored, 0 if none are stored; -1 if there is no SystemContainer
 
     Example:
         SC.visualizationSettings.nodes.show = False
@@ -2499,45 +2517,52 @@ def StoreVisualizationSettings(SC=None, CFG=None):
         SC.renderer.Start()
     """
     from exudyn.misc import overrideSettings                                 # noqa: PLC0415
+    if CFG is None and storeModelView:
+        raise ValueError('StoreVisualizationSettings: the model view is stored in a configuration, CFG=0 to 3')
     SC = GetRendererSystemContainer() if SC is None else SC
     if SC is None:
         exudyn.Print('WARNING: StoreVisualizationSettings: no SystemContainer is given or attached'
                      ' to the renderer; nothing stored')
         return -1
-    values = overrideSettings.ChangedVisualizationSettings(SC.visualizationSettings)
+    values = overrideSettings.ChangedVisualizationSettings(SC.visualizationSettings) if storeSettings else None
+    what = (str(len(values)) + ' visualization setting(s)') if storeSettings else ''
     if CFG is None:
-        overrideSettings.StoreSection('visualizationSettings', values)
-        exudyn.Print('stored ' + str(len(values)) + ' visualization setting(s) in '
-                     + overrideSettings.ShownFileName())
+        if storeSettings:
+            overrideSettings.StoreSection('visualizationSettings', values)
     else:
-        overrideSettings.StoreStoredSettings(CFG, values)
-        exudyn.Print('stored ' + str(len(values)) + ' visualization setting(s) as configuration CFG'
-                     + str(CFG) + ' in ' + overrideSettings.ShownFileName())
-    return len(values)
+        modelView = overrideSettings.ModelView(SC.renderer.GetState()) if storeModelView else None
+        overrideSettings.StoreStoredSettings(CFG, values, modelView)
+        if storeModelView:
+            what += (' and ' if what else '') + 'the model view'
+        what += ' as configuration CFG' + str(CFG)
+    if what != '':
+        exudyn.Print('stored ' + what + ' in ' + overrideSettings.ShownFileName())
+    return len(values) if storeSettings else 0
 
 
 def ApplyStoredVisualizationSettings(CFG, SC=None):
-    """Switch the visualization settings to one of the configurations CFG0 to CFG3 stored in
-    `~/.exudyn/config.json`: every setting to its default, and then what the configuration stores;
-    an empty configuration resets the settings to the defaults.
+    """Switch to one of the configurations CFG0 to CFG3 stored in `~/.exudyn/config.json`: if it
+    stores settings, every visualization setting goes to its default and then to what it stores; if
+    it stores a model view, the view goes to it. A part that is not stored changes nothing.
 
     Args:
         CFG: the configuration, 0 to 3
-        SC: the SystemContainer whose `visualizationSettings` are switched; the one attached to the
-            renderer when None is given
+        SC: the SystemContainer whose `visualizationSettings` and view are switched; the one
+            attached to the renderer when None is given
 
     Returns:
-        the number of stored settings applied; -1 if there is no SystemContainer
+        `(settings, modelView)`: the number of stored settings applied and True if the model view
+        was set; None if there is no SystemContainer
     """
     from exudyn.misc import overrideSettings                                 # noqa: PLC0415
     SC = GetRendererSystemContainer() if SC is None else SC
     if SC is None:
         exudyn.Print('WARNING: ApplyStoredVisualizationSettings: no SystemContainer is given or'
                      ' attached to the renderer')
-        return -1
-    applied = overrideSettings.ApplyStoredSettings(SC.visualizationSettings, CFG)
-    exudyn.Print('visualization settings switched to configuration CFG' + str(CFG) + ' ('
-                 + str(applied) + ' stored setting(s))')
+        return None
+    (applied, modelView) = overrideSettings.ApplyStoredSettings(SC.visualizationSettings, CFG, SC.renderer)
+    exudyn.Print('switched to configuration CFG' + str(CFG) + ': ' + str(applied) + ' stored setting(s)'
+                 + (', the stored model view' if modelView else ''))
     if SC.renderer.IsActive():
         SC.renderer.SendRedrawSignal()
-    return applied
+    return (applied, modelView)

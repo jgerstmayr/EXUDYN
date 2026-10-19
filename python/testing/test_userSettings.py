@@ -24,6 +24,7 @@
 import json
 import os
 
+import numpy as np
 import pytest
 
 import exudyn as exu
@@ -683,7 +684,7 @@ def test_theStorableValueIsWhatTheFileCarries():
 
 
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-#THE STORED CONFIGURATIONS CFG0 to CFG3 (#3043)
+#THE STORED CONFIGURATIONS CFG0 to CFG3 (#3043, #3045)
 def test_aStoredConfigurationIsWrittenWithAllFour(settingsFile):
     settingsFile({})
     SC = exu.SystemContainer()
@@ -692,25 +693,50 @@ def test_aStoredConfigurationIsWrittenWithAllFour(settingsFile):
     settings.StoreStoredSettings(2, settings.ChangedVisualizationSettings(SC.visualizationSettings))
     with open(settings.FileName(), encoding='utf-8') as file:
         stored = json.load(file)['storedSettings']
-    assert stored == [{}, {}, {'nodes.show': False, 'contour.outputVariable': 'Displacement'}, {}]
+    empty = {'visualizationSettings': {}, 'modelView': {}}
+    assert stored == [empty, empty, {'visualizationSettings': {'nodes.show': False,
+                                                               'contour.outputVariable': 'Displacement'},
+                                     'modelView': {}}, empty]
     assert 'visualizationSettings' not in settings.Load()       #the settings every run starts with are untouched
+    #the model view is stored beside the settings, which it keeps
+    settings.StoreStoredSettings(2, modelView={'zoom': 2.})
+    assert settings.StoredSettings()[2] == {'visualizationSettings': {'nodes.show': False,
+                                                                      'contour.outputVariable': 'Displacement'},
+                                            'modelView': {'zoom': 2.}}
 
 
 def test_switchingToAConfigurationGivesTheDefaultsAndWhatItStores(settingsFile):
-    settingsFile({'storedSettings': [{}, {'nodes.show': False, 'openGL.lineWidth': 3.}]})
+    settingsFile({'storedSettings': [{}, {'visualizationSettings': {'nodes.show': False, 'openGL.lineWidth': 3.}}]})
     SC = exu.SystemContainer()
     visualizationSettings = SC.visualizationSettings
     visualizationSettings.bodies.show = False                   #not in the configuration: reset
     visualizationSettings.openGL.lineWidth = 5.
-    assert settings.ApplyStoredSettings(visualizationSettings, 1) == 2
+    assert settings.ApplyStoredSettings(visualizationSettings, 1) == (2, False)
     assert visualizationSettings.nodes.show is False
     assert visualizationSettings.openGL.lineWidth == pytest.approx(3.)
     assert visualizationSettings.bodies.show is True
-    #an empty configuration is a reset, and none of it counts as applied from the file
-    assert settings.ApplyStoredSettings(visualizationSettings, 0) == 0
-    assert visualizationSettings.nodes.show is True
-    assert visualizationSettings.openGL.lineWidth == pytest.approx(1.)
+    #a configuration without settings leaves them as they are, and none of it counts as applied from the file
+    assert settings.ApplyStoredSettings(visualizationSettings, 0) == (0, False)
+    assert visualizationSettings.nodes.show is False
     assert settings.Applied() == []
+
+
+def test_aConfigurationSwitchesTheModelView(settingsFile):
+    """the model view of a configuration goes to the renderer; settings it does not store stay"""
+    settingsFile({})
+    SC = exu.SystemContainer()
+    SC.renderer.SetModelView(zoom=2.5, rotationVector=[0, 0, 0.5], centerPoint=[1, 2, 0])
+    view = settings.ModelView(SC.renderer.GetState())
+    assert sorted(view) == sorted(settings.modelViewKeys)
+    settings.StoreStoredSettings(1, modelView=view)
+    SC.visualizationSettings.loads.show = False
+    SC.renderer.SetModelView(zoom=7., rotationVector=[0, 0, 0], centerPoint=[0, 0, 0])
+    assert settings.ApplyStoredSettings(SC.visualizationSettings, 1, SC.renderer) == (0, True)
+    state = SC.renderer.GetState()
+    assert state['zoom'] == pytest.approx(2.5)
+    assert list(state['centerPoint'][0:2]) == pytest.approx([1, 2])
+    assert np.allclose(state['modelRotation'], view['modelRotation'])
+    assert SC.visualizationSettings.loads.show is False
 
 
 def test_aConfigurationIsOneOfFour(settingsFile):
@@ -726,11 +752,14 @@ def test_theGUIFunctionsStoreAndSwitchConfigurations(settingsFile):
     settingsFile({})
     SC = exu.SystemContainer()
     SC.visualizationSettings.loads.show = False
-    assert GUI.StoreVisualizationSettings(SC, CFG=3) == 1
+    assert GUI.StoreVisualizationSettings(SC, CFG=3, storeModelView=True) == 1
     assert GUI.StoreVisualizationSettings(SC) == 1
+    with pytest.raises(ValueError):
+        GUI.StoreVisualizationSettings(SC, storeModelView=True)
     stored = settings.Load()
-    assert stored['storedSettings'][3] == {'loads.show': False}
+    assert stored['storedSettings'][3]['visualizationSettings'] == {'loads.show': False}
+    assert stored['storedSettings'][3]['modelView'] != {}
     assert stored['visualizationSettings'] == {'loads.show': False}
     SC.visualizationSettings.loads.show = True
-    assert GUI.ApplyStoredVisualizationSettings(3, SC) == 1
+    assert GUI.ApplyStoredVisualizationSettings(3, SC) == (1, True)
     assert SC.visualizationSettings.loads.show is False

@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.13 | Newborn | 148 | 1.13.150 |
+| 1.13 | Newborn | 151 | 1.13.153 |
 | 1.12 | Metheney | 367 | 1.12.462 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
@@ -30,6 +30,18 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.13 - Newborn (current)
 
+- **1.13.153** `CHECK` `MEDIUM EFF` `raised by: Claude-JG` `resolved by: Claude-JG` memory allocations in every step of userRigidBodyTest with symbolic user functions (#3046)
+  - description: Maintainer 2026-10-19: userRigidBodyTest.py with 10000 steps reports 613350 memory allocations for the body with symbolic user functions (ODE2RHS 83 %, user functions 91 %); find the cause, improve if possible, or plan the step.
+  - **notes:** ObjectUserBody allocates no memory in a time step: Matrix.CopyFrom keeps the memory for the same size, the result cache of the body copies into its entries, and the body keeps its buffers (revision2026c step RG12.2.3)
+  - date resolved: **2026-10-19 23:24**, date raised: 2026-10-19
+- **1.13.152** `EXTENSION` `MEDIUM EFF` `raised by: Claude-JG` `resolved by: Claude-JG` stored configurations CFG0 to CFG3 with the model view (#3045)
+  - description: Maintainer 2026-10-19: a configuration stores the visualization settings and the model view, each as a dictionary that is empty by default and then changes nothing; CTRL and the icon store both; the store settings window stores the settings into CFGx, the store model view window the model view; the GUI storing function has flags for the settings and the model view; so a configuration can be a view, settings, or both.
+  - **notes:** The stored configurations CFG0 to CFG3 keep the visualization settings and the model view, each changing nothing when empty; CTRL and an icon store both, the store settings and store model view windows store their part, exudyn.misc.GUI.StoreVisualizationSettings has storeSettings and storeModelView (revision2026c step RG6.19.9)
+  - date resolved: **2026-10-19 23:24**, date raised: 2026-10-19
+- **1.13.151** `IMPROVEMENT` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` icon bar: a shadow switch, the CFG icons as buttons with the text CFG0 to CFG3, shorter hints (#3044)
+  - description: Maintainer 2026-10-19: an icon switches the shadow between 0.25 and 0; the icons CFG0 to CFG3 get an underlay rectangle slightly smaller than the icon, so they look like a settings button, and the text CFG0 ... instead of the number; the hints of the CFG buttons are much too long, about half.
+  - **notes:** The icon bar has an icon for the shadow (0.25 for light0, or none); the icons CFG0 to CFG3 are buttons with the text CFG0 ... and shorter hints (revision2026c step RG6.19.8)
+  - date resolved: **2026-10-19 23:24**, date raised: 2026-10-19
 - **1.13.150** `EXTENSION` `MEDIUM EFF` `raised by: Claude-JG` `resolved by: Claude-JG` stored visualization configurations CFG0-CFG3: icons of the icon bar, config.json, GUI functions and store buttons (#3043)
   - description: Maintainer 2026-10-19 (a user request): four stored configurations CFG0 to CFG3 of the visualizationSettings, in ~/.exudyn/config.json as a list 'storedSettings' of four dictionaries with the difference to the defaults (created as four empty dictionaries, which equal a reset); an icon per configuration switches the whole settings to it (defaults plus the stored difference), CTRL+icon stores the current settings into it; the store settings window of the dialog gets buttons '-\> CFG0' to '-\> CFG3' with hints; exudyn.misc.GUI.StoreVisualizationSettings(SC, CFG=None\|0..3) stores from a script, None being the regular visualizationSettings section.
   - **notes:** Four stored configurations CFG0 to CFG3 of the visualizationSettings in ~/.exudyn/config.json (storedSettings): the icons CFG0 to CFG3 of the icon bar switch to one (defaults plus what it stores), CTRL and the icon store the current settings in it; buttons -\> CFG0 to -\> CFG3 in the store settings window; exudyn.misc.GUI.StoreVisualizationSettings(SC, CFG=None\|0..3) and ApplyStoredVisualizationSettings(CFG, SC) (revision2026c step RG6.19.7)

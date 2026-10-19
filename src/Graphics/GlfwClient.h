@@ -717,6 +717,7 @@ public:
 	static Index IconBarIconAt(Index viewID, int width, int height, double x, double y);
 	static void IconBarMouse(GLFWwindow* window, int width, int height, double& x, double& y);
 	static bool IconBarIconIsOn(Index viewID, Index icon);
+	static bool IconBarShadowIsOn();
 	static std::vector<float> IconBarUpdateIntervals();
 	static Index IconBarUpdateInterval();
 	static STDstring IconBarTooltip(Index icon);

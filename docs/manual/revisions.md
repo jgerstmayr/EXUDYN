@@ -28,7 +28,8 @@ calls it: `ComputeOrthonormalBasisVectors` and `GramSchmidt` return a 3x3 array 
 before), and a wrong size or a singular input raises a `ValueError` (#2960, #2961).
 
 **`ObjectUserBody`**, a body whose mass matrix, forces, positions, rotations and Jacobians are Python user
-functions; body markers, sensors, loads and connectors work on it, see {ref}`sec-item-objectuserbody` (#2986).
+functions; body markers, sensors, loads and connectors work on it, see {ref}`sec-item-objectuserbody` (#2986). It
+allocates no memory in a time step, with Python or symbolic user functions (#3046).
 
 **`NodeUser`**, a node with any number of coordinates whose position, and optionally orientation, are Python user
 functions; the Jacobians are computed by central differences if they are not given; node markers, SensorNode, loads
@@ -152,11 +153,11 @@ interval and the visibility of the items, see {ref}`sec-gui-sec-iconbar`; `visua
 switches it off, `general.iconBarScaling`, `iconBarFoldDistance` and `iconBarTimeout` adjust it. SHIFT and dragging
 with the left mouse button zooms to the rectangle dragged (#3040).
 
-**Stored configurations CFG0 to CFG3** (#3043): four sets of `visualizationSettings` in
-`~/.exudyn/config.json`, which the icons CFG0 to CFG3 of the icon bar switch to (CTRL: store the
-current settings); stored from the dialog with the buttons → CFG0 ... of **store settings**, or from a
-script with `exudyn.misc.GUI.StoreVisualizationSettings(SC, CFG=0)`, see
-{ref}`sec-usersettings-storedconfigurations`.
+**Stored configurations CFG0 to CFG3** (#3043, #3045): four sets of `visualizationSettings` and model
+views in `~/.exudyn/config.json`, which the icons CFG0 to CFG3 of the icon bar switch to (CTRL: store the
+current settings and view); stored from the dialog with the buttons → CFG0 ... of **store settings** and
+**store model view**, or from a script with `exudyn.misc.GUI.StoreVisualizationSettings(SC, CFG=0)`,
+see {ref}`sec-usersettings-storedconfigurations`. An icon of the icon bar switches the shadow (#3044).
 
 **Zoom to an item** (#3027): CTRL+A in the render window centers the view on the item selected with the left mouse
 button and zooms such that it fills the window; `SC.renderer.ZoomToItem(oBody)` does the same from Python.

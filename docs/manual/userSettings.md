@@ -109,23 +109,28 @@ have just made without switching `storeDialogPositions` on.
 (sec-usersettings-storedconfigurations)=
 ## Stored configurations CFG0 to CFG3
 
-Besides the settings every run starts with, the file keeps four **configurations** of the
-`visualizationSettings`, CFG0 to CFG3, which you switch between while the renderer runs (#3043). They
-are stored under `storedSettings`, a list of four dictionaries, each the difference of one configuration
-to the defaults; when the first one is stored, the other three are written as empty dictionaries, and
-an empty configuration is the defaults. They are not applied when a run starts.
+Besides the settings every run starts with, the file keeps four **configurations** CFG0 to CFG3,
+which you switch between while the renderer runs (#3043, #3045). Each has two parts: the
+`visualizationSettings`, as their difference to the defaults, and the **model view** - zoom, center
+point, rotation center point and rotation, as `SC.renderer.GetState()` gives them. They are stored under
+`storedSettings`, a list of four dictionaries `{"visualizationSettings": {...}, "modelView": {...}}`;
+when the first one is stored, the others are written with both parts empty. **An empty part changes
+nothing**, so a configuration can be a view, settings, or both. They are not applied when a run starts.
 
 - the icons **CFG0** to **CFG3** of the icon bar of the render window, see {ref}`sec-gui-sec-iconbar`,
-  switch to a configuration: every setting goes to its default, and then to what the configuration
-  stores - so an empty one is a reset; CTRL and the icon store the current settings in it;
+  switch to a configuration: if it stores settings, every setting goes to its default and then to what
+  it stores; if it stores a model view, the view goes to it. CTRL and the icon store the current
+  settings and the model view in it;
 - the window of **store settings** has the buttons **→ CFG0** to **→ CFG3**, which store the settings
-  it shows in a configuration instead;
-- from a script, `exudyn.misc.GUI.StoreVisualizationSettings(SC, CFG=0)` stores the settings of `SC` as
-  CFG0, and `CFG=None` as the settings every run starts with;
-  `exudyn.misc.GUI.ApplyStoredVisualizationSettings(0, SC)` switches to CFG0.
+  it shows in a configuration, and the window of **store model view** the same buttons for the model
+  view; each keeps the other part of the configuration;
+- from a script, `exudyn.misc.GUI.StoreVisualizationSettings(SC, CFG=0, storeSettings=True,
+  storeModelView=False)` stores the settings of `SC`, its model view or both as CFG0, and `CFG=None`
+  the settings every run starts with; `exudyn.misc.GUI.ApplyStoredVisualizationSettings(0, SC)`
+  switches to CFG0.
 
 ```python
-#the view of this model as CFG0, before the renderer starts:
+#the settings of this model as CFG0, before the renderer starts:
 import exudyn.misc.GUI
 SC.visualizationSettings.nodes.show = False
 exudyn.misc.GUI.StoreVisualizationSettings(SC, CFG=0)

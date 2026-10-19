@@ -101,14 +101,15 @@ does and the key. From the top:
   swap (Y-X, Z-Y, Z-X, as CTRL+4, CTRL+6, CTRL+5) and the icons show them; with SHIFT, the view from behind;
 - **ruler** (F5) and **mouse coordinates** (F3);
 - **lines**, **edges** and **faces** of the scene, and **transparent faces**;
+- **shadow**: 0.25 for `openGL.light0`, or no shadow of any light;
 - **graphics update interval**: each click takes the next of 0.02, 0.1, 0.5, 2 and 100 seconds (keys 1 to 5) and,
   sorted in, the interval the model set when the bar was first drawn; the icon shows the number of the current one
   in this list and the tooltip the list;
 - **show nodes, bodies, connectors, markers, loads, sensors** (N, B, C, M, L, S); with SHIFT, their numbers
   (CTRL+N, ...), which the icon marks with #;
-- **CFG0** to **CFG3**: switch the visualization settings to one of the four configurations stored in
-  `~/.exudyn/config.json`, the defaults and what the configuration stores; CTRL and the icon store the
-  current settings in it, see {ref}`sec-usersettings-storedconfigurations`.
+- **CFG0** to **CFG3**: switch to one of the four configurations stored in `~/.exudyn/config.json`, to
+  its settings and its model view, as far as it stores them; CTRL and the icon store the current
+  settings and model view in it, see {ref}`sec-usersettings-storedconfigurations`.
 
 An icon that switches something on is drawn pressed while it is on. The bar is not part of saved images; the
 tooltips have the size of the version string, `window.globalFontSize` times 0.75 at the display scaling.

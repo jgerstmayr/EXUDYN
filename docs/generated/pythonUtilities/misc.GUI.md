@@ -210,7 +210,7 @@ Helper functions and classes for graphical interaction with Exudyn
 (sec-gui-editdictionarywithtypeinfo)=
 ## Function: EditDictionaryWithTypeInfo
 
-[`EditDictionaryWithTypeInfo(settingsStructure, exu = None, dictionaryName = 'edit')`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/GUI.py#L1716)
+[`EditDictionaryWithTypeInfo(settingsStructure, exu = None, dictionaryName = 'edit')`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/GUI.py#L1730)
 
 - **function description**: edit dictionaryData and return modified (new) dictionary
 - **input**:
@@ -223,7 +223,7 @@ Helper functions and classes for graphical interaction with Exudyn
 (sec-gui-storedialogpositions)=
 ## Function: StoreDialogPositions
 
-[`StoreDialogPositions(settingsStructure = None)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/GUI.py#L2062)
+[`StoreDialogPositions(settingsStructure = None)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/GUI.py#L2076)
 
 - **function description**: True if a dialog should store where it was left, when it closes.
 - **input**:
@@ -235,7 +235,7 @@ Helper functions and classes for graphical interaction with Exudyn
 (sec-gui-restorewindowgeometry)=
 ## Function: RestoreWindowGeometry
 
-[`RestoreWindowGeometry(tkWindow, name, width = None, height = None)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/GUI.py#L2095)
+[`RestoreWindowGeometry(tkWindow, name, width = None, height = None)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/GUI.py#L2109)
 
 - **function description**: Give a dialog the size and position it was left at, as far as that is safe.
 - **input**:
@@ -250,7 +250,7 @@ Helper functions and classes for graphical interaction with Exudyn
 (sec-gui-rememberwindowgeometry)=
 ## Function: RememberWindowGeometry
 
-[`RememberWindowGeometry(tkWindow, name, settingsStructure = None)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/GUI.py#L2149)
+[`RememberWindowGeometry(tkWindow, name, settingsStructure = None)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/GUI.py#L2163)
 
 - **function description**: Record where a dialog is while it lives, so that it can be stored when it closes.
 - **input**:
@@ -264,7 +264,7 @@ Helper functions and classes for graphical interaction with Exudyn
 (sec-gui-storegeometrystring)=
 ## Function: StoreGeometryString
 
-[`StoreGeometryString(geometry, name)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/GUI.py#L2181)
+[`StoreGeometryString(geometry, name)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/GUI.py#L2195)
 
 - **function description**: Store one 'WIDTHxHEIGHT+X+Y' under the name of a dialog.
 - **input**:
@@ -277,7 +277,7 @@ Helper functions and classes for graphical interaction with Exudyn
 (sec-gui-storewindowgeometry)=
 ## Function: StoreWindowGeometry
 
-[`StoreWindowGeometry(recorded, name)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/GUI.py#L2211)
+[`StoreWindowGeometry(recorded, name)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/GUI.py#L2225)
 
 - **function description**: Store what `RememberWindowGeometry` recorded, after the dialog has closed.
 - **input**:
@@ -288,7 +288,7 @@ Helper functions and classes for graphical interaction with Exudyn
 (sec-gui-applydialogwindowsettings)=
 ## Function: ApplyDialogWindowSettings
 
-[`ApplyDialogWindowSettings(tkWindow, alwaysTopmost = None, alphaTransparency = None)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/GUI.py#L2221)
+[`ApplyDialogWindowSettings(tkWindow, alwaysTopmost = None, alphaTransparency = None)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/GUI.py#L2235)
 
 - **function description**: Apply what visualizationSettings.dialogs says about a dialog window.
 - **input**:
@@ -301,7 +301,7 @@ Helper functions and classes for graphical interaction with Exudyn
 (sec-gui-showhelpdialog)=
 ## Function: ShowHelpDialog
 
-[`ShowHelpDialog()`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/GUI.py#L2251)
+[`ShowHelpDialog()`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/GUI.py#L2265)
 
 - **function description**: The keyboard and mouse commands of the renderer, in a read-only window; opened with H in the render window.
 - **output**: None
@@ -310,7 +310,7 @@ Helper functions and classes for graphical interaction with Exudyn
 (sec-gui-modelscope)=
 ## Function: ModelScope
 
-[`ModelScope()`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/GUI.py#L2305)
+[`ModelScope()`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/GUI.py#L2319)
 
 - **function description**: the namespace a command of the command window runs in: the one the MODEL lives in `__main__` is the script the user started, or the console they are typing in, so this is where `mbs`, `SC` and everything else the model defined are. The command window used to be a Python string that the C++ executed in exactly this namespace; as a function of this module it would otherwise see the module's own globals, where there is no `mbs` (#2654).
 - **output**: the dictionary of `__main__`, which is written to as well as read: an assignment in the command window has to survive the command
@@ -319,7 +319,7 @@ Helper functions and classes for graphical interaction with Exudyn
 (sec-gui-showpythoncommanddialog)=
 ## Function: ShowPythonCommandDialog
 
-[`ShowPythonCommandDialog()`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/GUI.py#L2321)
+[`ShowPythonCommandDialog()`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/GUI.py#L2335)
 
 - **function description**: A window that executes a Python command in the global scope of the running model; opened with X in the render window. CTRL+RETURN runs what is in the text area.
 - **output**: None
@@ -328,7 +328,7 @@ Helper functions and classes for graphical interaction with Exudyn
 (sec-gui-showvisualizationsettingsdialog)=
 ## Function: ShowVisualizationSettingsDialog
 
-[`ShowVisualizationSettingsDialog()`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/GUI.py#L2409)
+[`ShowVisualizationSettingsDialog()`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/GUI.py#L2423)
 
 - **function description**: The settings tree of the renderer; opened with V in the render window.
 - **output**: None
@@ -337,7 +337,7 @@ Helper functions and classes for graphical interaction with Exudyn
 (sec-gui-showrightmouseselectiondialog)=
 ## Function: ShowRightMouseSelectionDialog
 
-[`ShowRightMouseSelectionDialog()`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/GUI.py#L2424)
+[`ShowRightMouseSelectionDialog()`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/GUI.py#L2438)
 
 - **function description**: The properties of the item the right mouse button selected, read-only; the renderer has put them into exudyn.sys['currentRendererSelectionDict'] before calling this.
 - **output**: None
@@ -346,7 +346,7 @@ Helper functions and classes for graphical interaction with Exudyn
 (sec-gui-askquitdialog)=
 ## Function: AskQuitDialog
 
-[`AskQuitDialog()`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/GUI.py#L2439)
+[`AskQuitDialog()`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/GUI.py#L2453)
 
 - **function description**: Ask whether a long running simulation really shall be stopped; the answer goes back to the renderer in exudyn.sys['quitResponse'], as 2 (do not quit) or 3 (quit).
 - **output**: None
@@ -355,13 +355,15 @@ Helper functions and classes for graphical interaction with Exudyn
 (sec-gui-storevisualizationsettings)=
 ## Function: StoreVisualizationSettings
 
-[`StoreVisualizationSettings(SC = None, CFG = None)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/GUI.py#L2483)
+[`StoreVisualizationSettings(SC = None, CFG = None, storeSettings = True, storeModelView = False)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/GUI.py#L2497)
 
-- **function description**: Store the visualization settings that differ from the defaults in `~/.exudyn/config.json`.
+- **function description**: Store the visualization settings that differ from the defaults, and the model view, in `~/.exudyn/config.json`.
 - **input**:
-  - `SC`: the SystemContainer whose `visualizationSettings` are stored; the one attached to the renderer when None is given
-  - `CFG`: None stores them as the visualizationSettings every model starts with, replacing what was stored there; 0 to 3 stores them as the configuration CFG0 to CFG3, replacing what it held, which the icons CFG0 to CFG3 of the icon bar of the render window switch to
-- **output**: the number of settings stored; -1 if there is no SystemContainer
+  - `SC`: the SystemContainer whose `visualizationSettings` and model view are stored; the one attached to the renderer when None is given
+  - `CFG`: None stores the settings as the visualizationSettings every model starts with, replacing what was stored there; 0 to 3 stores into the configuration CFG0 to CFG3, which the icons CFG0 to CFG3 of the icon bar of the render window switch to
+  - `storeSettings`: True stores the settings, replacing those the configuration held
+  - `storeModelView`: True stores the model view of `SC.renderer.GetState()` - zoom, center point and rotation - into the configuration, replacing the one it held; only with CFG 0 to 3
+- **output**: the number of settings stored, 0 if none are stored; -1 if there is no SystemContainer
 
 *example*:
 
@@ -376,13 +378,13 @@ Helper functions and classes for graphical interaction with Exudyn
 (sec-gui-applystoredvisualizationsettings)=
 ## Function: ApplyStoredVisualizationSettings
 
-[`ApplyStoredVisualizationSettings(CFG, SC = None)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/GUI.py#L2519)
+[`ApplyStoredVisualizationSettings(CFG, SC = None)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/GUI.py#L2543)
 
-- **function description**: Switch the visualization settings to one of the configurations CFG0 to CFG3 stored in `~/.exudyn/config.json`: every setting to its default, and then what the configuration stores; an empty configuration resets the settings to the defaults.
+- **function description**: Switch to one of the configurations CFG0 to CFG3 stored in `~/.exudyn/config.json`: if it stores settings, every visualization setting goes to its default and then to what it stores; if it stores a model view, the view goes to it. A part that is not stored changes nothing.
 - **input**:
   - `CFG`: the configuration, 0 to 3
-  - `SC`: the SystemContainer whose `visualizationSettings` are switched; the one attached to the renderer when None is given
-- **output**: the number of stored settings applied; -1 if there is no SystemContainer
+  - `SC`: the SystemContainer whose `visualizationSettings` and view are switched; the one attached to the renderer when None is given
+- **output**: `(settings, modelView)`: the number of stored settings applied and True if the model view was set; None if there is no SystemContainer
 
 
 (sec-module-misc.gui-class-tooltip)=

@@ -2111,6 +2111,13 @@ definitions.append(ItemDefinition(
     mutable UserFunctionResultCache<ResizableMatrix> positionJacobianCache;
     mutable UserFunctionResultCache<Matrix3D> rotationMatrixCache;
     mutable UserFunctionResultCache<ResizableMatrix> rotationJacobianCache;
+    //! the matrices and vectors of the computations above, which keep their memory between the calls (#3046); each is
+    //! written by a copy after a user function returned, so that a user function that asks the body again does not
+    //! change what its caller reads
+    mutable ResizableMatrix bufferJacobian;
+    mutable ResizableMatrix bufferRotation;
+    mutable ResizableVector bufferPlus;
+    mutable ResizableVector bufferMinus;
 """,
     cParentClass=ParentClassCObjectBody,
     overallDescription=r"""A body whose equations of motion and whose position, and optionally orientation, at a local position are computed by Python user functions: a user finite element or a user rigid body on existing nodes. As it provides the access functions of a body, the body markers (MarkerBodyPosition, MarkerBodyRigid), SensorBody, the loads on these markers and every connector work on it.""",

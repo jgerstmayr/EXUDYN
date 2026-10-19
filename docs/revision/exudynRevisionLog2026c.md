@@ -2316,3 +2316,64 @@ stored difference.)*
 - Tests in test_userSettings.py (the file of the pytest's own): all four written, defaults plus the
   difference, an empty one resets, the index checked, the GUI functions; test_iconBar.py with 24 icons.
 
+<a id="rg6-19-8"></a>
+### RG6.19.8 — a shadow icon, the CFG icons as buttons (2026-10-19, #3044)
+*(Maintainer 2026-10-19: add a shadow switch 0.25 / 0; CFG0-3 with an underlay rectangle slightly smaller than the
+icon, so that it looks like a settings button, and the text CFG0 ... instead of the number, which fits at the current
+text size; the hints of the CFG buttons much too long, about half.)*
+- Icon `shadow` after `transparency` (25 icons): a ball over its shadow. On when a light that is on casts a shadow
+  (`IconBarShadowIsOn`); a click sets `openGL.light0.shadow` to 0.25 and switches light0 on, or sets the shadow of
+  the four lights to 0.
+- config0 to config3: a light rectangle with rounded corners at 4 to 60 of the 64 pixels and three sliders in its
+  lower part; the bar writes CFG0 ... centered over the upper part, in dark blue. The text over an icon is placed by
+  the advance of the font (characterWidth/fontSize = 0.73 of its size), it was 0.62. test_iconBar.py allows the
+  buttons 90 % coverage.
+- Hints: the tooltips of the icons "switch to the stored configuration CFG0 (CTRL: store settings and view as CFG0)",
+  the buttons of the store windows "store these settings as configuration CFG0 in config.json; the icon CFG0 switches
+  to them" - about half of before.
+
+<a id="rg6-19-9"></a>
+### RG6.19.9 — the stored configurations with the model view (2026-10-19, #3045)
+*(Maintainer 2026-10-19: CFG0-3 do not store the model view, but should; the GUI storing function gets a flag for the
+settings and for the model view; CTRL+CFGx stores both; store settings stores the settings into CFGx, store model view
+the model view; the dictionaries of both are empty by default and only override what is there - an empty model view
+does not change the current one -, so that a user can have a view, settings, or both.)*
+- A configuration is `{'visualizationSettings': {...}, 'modelView': {...}}`; `overrideSettings.modelViewKeys`
+  centerPoint, rotationCenterPoint, zoom, modelRotation - the entries of the render state that SetState takes and
+  that make the view; `ModelView(renderState)` gives them as plain lists. `StoreStoredSettings(index,
+  visualizationSettings=None, modelView=None)` replaces the parts given and keeps the others.
+- `ApplyStoredSettings(vs, index, renderer=None)`: settings only if the configuration stores some (then the
+  defaults plus them, as before), the view through `renderer.SetState` only if it stores one; returns (number of
+  settings, view set). An empty configuration is no longer a reset - the maintainer's rule now, an empty part changes
+  nothing.
+- `GUI.StoreVisualizationSettings(SC, CFG, storeSettings=True, storeModelView=False)` - the model view only into a
+  configuration, else a ValueError; `ApplyStoredVisualizationSettings(CFG, SC)` returns the tuple. CTRL and an icon
+  call it with both flags; the window of **store model view** has the buttons → CFG0 ... for the view.
+- An entry of the earlier form, a flat dictionary of paths, is read as empty; it existed for a few hours.
+- Tests: the two parts, the view switched with the settings kept (test_aConfigurationSwitchesTheModelView), the GUI
+  flags.
+
+<a id="rg12-2-3"></a>
+### RG12.2.3 — the memory allocations of a symbolic ObjectUserBody (2026-10-19, #3046)
+*(Maintainer 2026-10-19: userRigidBodyTest.py with 10000 time steps still reports 613350 memory allocations for the
+body with symbolic user functions, ODE2RHS 83 %, user functions 91 %; what is the cause - a step still to do, or
+another limitation?)*
+- Measured with `exu.special.InfoStat` around `SolveDynamic`, 100 and 200 steps, full Newton, the body alone with
+  each user function symbolic in turn (scratch script): 49 matrix and 4 vector allocations per step with Python user
+  functions, 71 with the symbolic positionJacobianUserFunction; ObjectRigidBody 0.
+- Cause 1: `MatrixBase::CopyFrom`, `SetMatrix` and `operator=` called `ResizeMatrix`, which frees and allocates also
+  at the same size; a symbolic matrix result is copied with `CopyFrom` into the Matrix of the caller. Now
+  `SetNumberOfRowsAndColumns`, which reallocates only for another size (src/Linalg/Matrix.h) - the rule of Vector
+  already. 71 -> 49.
+- Cause 2: ObjectUserBody's local `Matrix jacobian`, `Matrix rotation`, `Vector plus(n), minus(n)` in
+  GetJacobianTransposedTimesVectorDerivative, JacobianTimesVelocity and EvaluateRotationMatrix; now the mutable
+  buffers bufferJacobian, bufferRotation, bufferPlus, bufferMinus. Each is written by a copy after the user function
+  returned, so a user function that asks the body again (an output) does not change what its caller reads. 49 -> 33.
+- Cause 3: `UserFunctionResultCache<ResizableMatrix>::Store` took `const TValue&`, so a Matrix was converted into a
+  temporary ResizableMatrix at every store; now a template that copies into the entry (CObjectBody.h). 33 -> 0, for
+  Python and symbolic user functions alike.
+- The time did not change: 10000 steps take 1.86 s (symbolic), 4.35 s (Python), 0.12 s (ObjectRigidBody). The cost is
+  the evaluation itself: the force expression is a text of 9456 characters, one evaluation about 5 us from Python
+  (mass matrix 2.7, position 1.4, position Jacobian 4.4), and an evaluation of the right-hand side calls the force and,
+  for three markers, positions, velocities and Jacobians. A shared node is evaluated at every use - planned as
+  RG12.2.4 (#3047).

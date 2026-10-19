@@ -97,8 +97,10 @@ public:
 		}
 		return nullptr;
 	}
-	//! store a value, replacing the oldest entry
-	void Store(Real time, const Vector3D& localPosition, const VectorBase<Real>& coordinates, const TValue& value)
+	//! store a value, replacing the oldest entry; a value of another type - a Matrix into a ResizableMatrix - is copied
+	//! into the memory of the entry, without a temporary (#3046)
+	template<class TInput>
+	void Store(Real time, const Vector3D& localPosition, const VectorBase<Real>& coordinates, const TInput& value)
 	{
 		Entry& entry = entries[next];
 		next = (next + 1) % numberOfEntries;
@@ -106,7 +108,8 @@ public:
 		entry.time = time;
 		entry.localPosition = localPosition;
 		entry.coordinates.CopyFrom(coordinates);
-		entry.value = value;
+		if constexpr (std::is_same<TInput, TValue>::value) { entry.value = value; }
+		else { entry.value.CopyFrom(value); }
 	}
 	void Clear() { for (Entry& entry : entries) { entry.valid = false; } }
 };

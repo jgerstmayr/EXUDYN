@@ -1,0 +1,11 @@
+{
+  "number": 3047,
+  "title": "symbolic expressions: evaluate a node that is shared in the tree once per evaluation",
+  "author": "Claude-JG",
+  "status": "RAISED",
+  "type": "IMPROVEMENT",
+  "effort": "HIGH",
+  "description": "Found with #3046: after the allocations are gone, the symbolic user body of userRigidBodyTest.py with 10000 steps still takes 1.86 s against 0.12 s of ObjectRigidBody. A recorded expression is a graph whose shared nodes - the sin and cos of the angles, the components of omegaLocal - are evaluated again at every use: the force has a text of 9456 characters and one evaluation takes about 5 us (from Python, with its overhead), the position Jacobian 4 us; an evaluation of the right-hand side calls the force and the access functions of three markers. Proposal: a node used more than once keeps its value with the number of the evaluation (a counter raised when the arguments are set), so that each node is computed once per evaluation; then measure again.",
+  "dateRaised": "2026-10-19",
+  "deadline": "2027-04-17"
+}

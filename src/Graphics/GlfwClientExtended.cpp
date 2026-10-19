@@ -603,6 +603,7 @@ bool GlfwRenderer::IconBarIconIsOn(Index viewID, Index icon)
 	case IconBar::Icon::Edges: return view.scene.showFaceEdges;
 	case IconBar::Icon::Faces: return view.scene.showFaces;
 	case IconBar::Icon::Transparency: return view.scene.facesTransparent;
+	case IconBar::Icon::Shadow: return IconBarShadowIsOn();
 	case IconBar::Icon::Nodes: return visSettings->nodes.show;
 	case IconBar::Icon::Bodies: return visSettings->bodies.show;
 	case IconBar::Icon::Connectors: return visSettings->connectors.show;
@@ -611,6 +612,14 @@ bool GlfwRenderer::IconBarIconIsOn(Index viewID, Index icon)
 	case IconBar::Icon::Sensors: return visSettings->sensors.show;
 	default: return false;
 	}
+}
+
+//! true if a light that is on casts a shadow
+bool GlfwRenderer::IconBarShadowIsOn()
+{
+	const VSettingsOpenGL& gl = visSettings->openGL;
+	return (gl.light0.enable && gl.light0.shadow > 0.f) || (gl.light1.enable && gl.light1.shadow > 0.f) ||
+		(gl.light2.enable && gl.light2.shadow > 0.f) || (gl.light3.enable && gl.light3.shadow > 0.f);
 }
 
 //! the graphics update intervals the icon cycles through: those of the keys 1 to 5 and, sorted in, the interval the
@@ -667,7 +676,7 @@ STDstring GlfwRenderer::IconBarIconText(Index viewID, Index icon, bool control)
 	case IconBar::Icon::Loads: return visSettings->loads.showNumbers ? "#" : "";
 	case IconBar::Icon::Sensors: return visSettings->sensors.showNumbers ? "#" : "";
 	case IconBar::Icon::Config0: case IconBar::Icon::Config1: case IconBar::Icon::Config2: case IconBar::Icon::Config3:
-		return EXUstd::ToString(icon - (Index)IconBar::Icon::Config0);
+		return "CFG" + EXUstd::ToString(icon - (Index)IconBar::Icon::Config0);
 	default: return "";
 	}
 }
@@ -706,6 +715,15 @@ void GlfwRenderer::IconBarExecute(GLFWwindow* window, Index viewID, Index icon, 
 		UpdateGraphicsDataNow();
 		break;
 	case IconBar::Icon::Transparency: view.scene.facesTransparent = !view.scene.facesTransparent; UpdateGraphicsDataNow(); break;
+	case IconBar::Icon::Shadow: //light0 casts 0.25, or no light casts one (#3044)
+	{
+		bool on = !IconBarShadowIsOn();
+		visSettings->openGL.light0.shadow = on ? 0.25f : 0.f;
+		if (!on) { visSettings->openGL.light1.shadow = visSettings->openGL.light2.shadow = visSettings->openGL.light3.shadow = 0.f; }
+		if (on) { visSettings->openGL.light0.enable = true; }
+		UpdateGraphicsDataNow();
+		break;
+	}
 	case IconBar::Icon::UpdateSpeed: { //the next interval; the keys 1 to 5 do not reach the interval of the model
 		std::vector<float> intervals = IconBarUpdateIntervals();
 		float interval = intervals[(size_t)((IconBarUpdateInterval() + 1) % (Index)intervals.size())];
@@ -723,10 +741,11 @@ void GlfwRenderer::IconBarExecute(GLFWwindow* window, Index viewID, Index icon, 
 	{
 		//in the Python thread, as the dialogs: the configurations are in config.json, which Python reads and writes (#3043)
 		STDstring number = EXUstd::ToString(icon - (Index)IconBar::Icon::Config0);
-		STDstring function = control ? "StoreVisualizationSettings" : "ApplyStoredVisualizationSettings";
-		PyQueueExecutableString("__import__('exudyn.misc.GUI', fromlist=['GUI'])." + function + "(CFG=" + number + ")\n");
-		ShowMessage(control ? "store the visualization settings as configuration CFG" + number :
-			"switch the visualization settings to configuration CFG" + number, 3);
+		STDstring call = control ? "StoreVisualizationSettings(CFG=" + number + ", storeSettings=True, storeModelView=True)" :
+			"ApplyStoredVisualizationSettings(CFG=" + number + ")";
+		PyQueueExecutableString("__import__('exudyn.misc.GUI', fromlist=['GUI'])." + call + "\n");
+		ShowMessage(control ? "store the visualization settings and the model view as configuration CFG" + number :
+			"switch to configuration CFG" + number, 3);
 		break;
 	}
 	default: break;
@@ -925,9 +944,11 @@ void GlfwRenderer::DrawIconBar(GLFWwindow* window, Index viewID, int width, int 
 			{
 				//the text at the top right of the icon; the font draws upward from its point, so the y axis is turned for it
 				glPushMatrix();
-				glTranslatef(ix + iconSize - 0.62f*fontPixels*(float)text.size() - 1.f, iy + 1.05f*fontPixels, 0.f);
+				float textWidth = fontScale*(float)bitmapFont.characterWidth*(float)text.size();
+				float textX = (icon >= (Index)IconBar::Icon::Config0) ? ix + 0.5f*(iconSize - textWidth) : ix + iconSize - textWidth - 0.5f*gap; //CFG0 ... centered on the button
+				glTranslatef(textX, iy + 1.1f*fontPixels, 0.f);
 				glScalef(1.f, -1.f, 1.f);
-				DrawStringWithTextures(text.c_str(), fontScale, Float3({ 0.f, 0.f, 0.f }), Float4({ 0.7f, 0.1f, 0.1f, 1.f }), bitmapFont,
+				DrawStringWithTextures(text.c_str(), fontScale, Float3({ 0.f, 0.f, 0.f }), (icon >= (Index)IconBar::Icon::Config0 ? Float4({ 0.1f, 0.15f, 0.3f, 1.f }) : Float4({ 0.7f, 0.1f, 0.1f, 1.f })), bitmapFont,
 					charBuffer, bitmapFontListBase, true);
 				glPopMatrix();
 			}

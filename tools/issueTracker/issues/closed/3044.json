@@ -1,0 +1,15 @@
+{
+  "number": 3044,
+  "title": "icon bar: a shadow switch, the CFG icons as buttons with the text CFG0 to CFG3, shorter hints",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "IMPROVEMENT",
+  "effort": "LOW",
+  "description": "Maintainer 2026-10-19: an icon switches the shadow between 0.25 and 0; the icons CFG0 to CFG3 get an underlay rectangle slightly smaller than the icon, so they look like a settings button, and the text CFG0 ... instead of the number; the hints of the CFG buttons are much too long, about half.",
+  "dateRaised": "2026-10-19",
+  "deadline": "2027-04-17",
+  "dateResolved": "2026-10-19 23:24",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "The icon bar has an icon for the shadow (0.25 for light0, or none); the icons CFG0 to CFG3 are buttons with the text CFG0 ... and shorter hints (revision2026c step RG6.19.8)",
+  "resolvedInVersion": "1.13.151"
+}

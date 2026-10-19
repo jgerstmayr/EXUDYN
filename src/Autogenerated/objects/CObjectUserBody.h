@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-10-18  09:55:32 (last modified)
+* @date         2026-10-19  23:09:29 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -91,6 +91,13 @@ protected: // AUTO:
     mutable UserFunctionResultCache<ResizableMatrix> positionJacobianCache;
     mutable UserFunctionResultCache<Matrix3D> rotationMatrixCache;
     mutable UserFunctionResultCache<ResizableMatrix> rotationJacobianCache;
+    //! the matrices and vectors of the computations above, which keep their memory between the calls (#3046); each is
+    //! written by a copy after a user function returned, so that a user function that asks the body again does not
+    //! change what its caller reads
+    mutable ResizableMatrix bufferJacobian;
+    mutable ResizableMatrix bufferRotation;
+    mutable ResizableVector bufferPlus;
+    mutable ResizableVector bufferMinus;
     CObjectUserBodyParameters parameters; //! AUTO: contains all parameters for CObjectUserBody
 
 public: // AUTO:

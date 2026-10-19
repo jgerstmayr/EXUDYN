@@ -80,8 +80,11 @@ bool CObjectUserBody::GetJacobianTransposedTimesVectorDerivative(const Vector3D&
 	Real t = GetCSystemData()->GetConfigurationTime(ConfigurationType::Current);
 	value.SetNumberOfRowsAndColumns(n, n);
 
-	Matrix jacobian;
-	Vector plus(n), minus(n);
+	Matrix& jacobian = bufferJacobian; //memory kept between the calls (#3046)
+	Vector& plus = bufferPlus;
+	Vector& minus = bufferMinus;
+	plus.SetNumberOfItems(n);
+	minus.SetNumberOfItems(n);
 	//J^T force + J_rot^T torque at the coordinates q, varied
 	auto ProjectedVector = [&](Vector& result)
 	{
@@ -137,7 +140,7 @@ Vector3D CObjectUserBody::JacobianTimesVelocity(bool rotation, const Vector3D& l
 	ResizableConstVector q, q_t;
 	GatherCoordinates(q, q_t, configuration, true);
 	Real t = GetCSystemData()->GetConfigurationTime(configuration);
-	Matrix jacobian;
+	Matrix& jacobian = bufferJacobian; //memory kept between the calls (#3046)
 	if (rotation) { EvaluateRotationJacobian(jacobian, t, localPosition, q); }
 	else { EvaluatePositionJacobian(jacobian, t, localPosition, q); }
 	Vector3D result(0.);
