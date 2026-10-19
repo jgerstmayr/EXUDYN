@@ -666,6 +666,8 @@ STDstring GlfwRenderer::IconBarIconText(Index viewID, Index icon, bool control)
 	case IconBar::Icon::Markers: return visSettings->markers.showNumbers ? "#" : "";
 	case IconBar::Icon::Loads: return visSettings->loads.showNumbers ? "#" : "";
 	case IconBar::Icon::Sensors: return visSettings->sensors.showNumbers ? "#" : "";
+	case IconBar::Icon::Config0: case IconBar::Icon::Config1: case IconBar::Icon::Config2: case IconBar::Icon::Config3:
+		return EXUstd::ToString(icon - (Index)IconBar::Icon::Config0);
 	default: return "";
 	}
 }
@@ -717,6 +719,16 @@ void GlfwRenderer::IconBarExecute(GLFWwindow* window, Index viewID, Index icon, 
 	case IconBar::Icon::Markers: Key(GLFW_KEY_M, shift ? GLFW_MOD_CONTROL : 0); break;
 	case IconBar::Icon::Loads: Key(GLFW_KEY_L, shift ? GLFW_MOD_CONTROL : 0); break;
 	case IconBar::Icon::Sensors: Key(GLFW_KEY_S, shift ? GLFW_MOD_CONTROL : 0); break;
+	case IconBar::Icon::Config0: case IconBar::Icon::Config1: case IconBar::Icon::Config2: case IconBar::Icon::Config3:
+	{
+		//in the Python thread, as the dialogs: the configurations are in config.json, which Python reads and writes (#3043)
+		STDstring number = EXUstd::ToString(icon - (Index)IconBar::Icon::Config0);
+		STDstring function = control ? "StoreVisualizationSettings" : "ApplyStoredVisualizationSettings";
+		PyQueueExecutableString("__import__('exudyn.misc.GUI', fromlist=['GUI'])." + function + "(CFG=" + number + ")\n");
+		ShowMessage(control ? "store the visualization settings as configuration CFG" + number :
+			"switch the visualization settings to configuration CFG" + number, 3);
+		break;
+	}
 	default: break;
 	}
 	SetCallBackRefreshSignal();
@@ -921,10 +933,10 @@ void GlfwRenderer::DrawIconBar(GLFWwindow* window, Index viewID, int width, int 
 			}
 		}
 
-		if (hover >= 0) //the tooltip left of the bar, in the font size of the texts of the window
+		if (hover >= 0) //the tooltip left of the bar, in the font size of the version string, at the display scaling
 		{
 			STDstring text = IconBarTooltip(hover);
-			float tipFont = GetSettingsView(viewID, *visSettings).window.globalFontSize*GetFontScaling(viewID);
+			float tipFont = GetSettingsView(viewID, *visSettings).window.globalFontSize*fontSmallFactor*GetFontScaling(viewID);
 			float tipScale = tipFont/(float)bitmapFont.fontSize;
 			float textWidth = tipScale*(float)bitmapFont.characterWidth*(float)text.size();
 			float margin = 0.4f*tipFont;

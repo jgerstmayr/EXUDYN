@@ -152,6 +152,12 @@ interval and the visibility of the items, see {ref}`sec-gui-sec-iconbar`; `visua
 switches it off, `general.iconBarScaling`, `iconBarFoldDistance` and `iconBarTimeout` adjust it. SHIFT and dragging
 with the left mouse button zooms to the rectangle dragged (#3040).
 
+**Stored configurations CFG0 to CFG3** (#3043): four sets of `visualizationSettings` in
+`~/.exudyn/config.json`, which the icons CFG0 to CFG3 of the icon bar switch to (CTRL: store the
+current settings); stored from the dialog with the buttons → CFG0 ... of **store settings**, or from a
+script with `exudyn.misc.GUI.StoreVisualizationSettings(SC, CFG=0)`, see
+{ref}`sec-usersettings-storedconfigurations`.
+
 **Zoom to an item** (#3027): CTRL+A in the render window centers the view on the item selected with the left mouse
 button and zooms such that it fills the window; `SC.renderer.ZoomToItem(oBody)` does the same from Python.
 

@@ -598,6 +598,27 @@ without overlap, its background higher and up, scaled with the display; `view.wi
 rectangle, faces a cube, lines its edges; the interval of the model in the update list): done as asked.
 [log](exudynRevisionLog2026c.md#rg6-19-4)
 
+#### **CLOSED_RG6.19.5** The tooltips of the icon bar in the size of the version string
+
+CLOSED 2026-10-19 (#3041; maintainer: the tooltips are large): `window.globalFontSize` times the small
+font factor 0.75 of the version string, at the display scaling. [log](exudynRevisionLog2026c.md#rg6-19-5)
+
+#### **CLOSED_RG6.19.6** The store windows of the settings dialog say where they store, in shorter lines
+
+CLOSED 2026-10-19 (#3042; maintainer: 'store' becomes 'store in config.json' with a hint, the long
+descriptions get line breaks): `ShowCodeLines` wraps the description at 80 characters and takes a list
+of buttons with tooltips. [log](exudynRevisionLog2026c.md#rg6-19-6)
+
+#### **CLOSED_RG6.19.7** Stored configurations CFG0 to CFG3 of the visualization settings
+
+CLOSED 2026-10-19 (#3043; maintainer, a user request: four configurations in config.json as
+`storedSettings`, the difference to the defaults, four empty ones when created; the icons switch to one,
+CTRL stores; buttons → CFG0 ... in store settings; `exudyn.misc.GUI.StoreVisualizationSettings(SC,
+CFG=None|0..3)`; switching gives the defaults plus the stored difference): overrideSettings
+`ChangedVisualizationSettings`, `StoredSettings`, `StoreStoredSettings`, `ApplyStoredSettings`; GUI
+`StoreVisualizationSettings`, `ApplyStoredVisualizationSettings`; icons config0 to config3 through
+the Python queue; userSettings.md section. [log](exudynRevisionLog2026c.md#rg6-19-7)
+
 ## **OPEN_RG7** Python user items
 
 Items whose behaviour is written in Python, and where the line runs against compiled user items (RG8).

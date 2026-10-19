@@ -1,0 +1,15 @@
+{
+  "number": 3043,
+  "title": "stored visualization configurations CFG0-CFG3: icons of the icon bar, config.json, GUI functions and store buttons",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "EXTENSION",
+  "effort": "MEDIUM",
+  "description": "Maintainer 2026-10-19 (a user request): four stored configurations CFG0 to CFG3 of the visualizationSettings, in ~/.exudyn/config.json as a list 'storedSettings' of four dictionaries with the difference to the defaults (created as four empty dictionaries, which equal a reset); an icon per configuration switches the whole settings to it (defaults plus the stored difference), CTRL+icon stores the current settings into it; the store settings window of the dialog gets buttons '-> CFG0' to '-> CFG3' with hints; exudyn.misc.GUI.StoreVisualizationSettings(SC, CFG=None|0..3) stores from a script, None being the regular visualizationSettings section.",
+  "dateRaised": "2026-10-19",
+  "deadline": "2027-04-17",
+  "dateResolved": "2026-10-19 17:02",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "Four stored configurations CFG0 to CFG3 of the visualizationSettings in ~/.exudyn/config.json (storedSettings): the icons CFG0 to CFG3 of the icon bar switch to one (defaults plus what it stores), CTRL and the icon store the current settings in it; buttons -> CFG0 to -> CFG3 in the store settings window; exudyn.misc.GUI.StoreVisualizationSettings(SC, CFG=None|0..3) and ApplyStoredVisualizationSettings(CFG, SC) (revision2026c step RG6.19.7)",
+  "resolvedInVersion": "1.13.150"
+}

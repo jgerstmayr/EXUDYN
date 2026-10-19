@@ -1,0 +1,15 @@
+{
+  "number": 3042,
+  "title": "visualization settings dialog: the store windows say where they store and are less wide",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "IMPROVEMENT",
+  "effort": "LOW",
+  "description": "Maintainer 2026-10-19: the window of 'store settings' has a button 'store'; it becomes 'store in config.json' with a hint, because the positions are stored in the same local file; the descriptions of the 'store settings' and 'store positions' windows are one long line and get line breaks.",
+  "dateRaised": "2026-10-19",
+  "deadline": "2027-04-17",
+  "dateResolved": "2026-10-19 17:02",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "The store settings and store positions windows of the visualization settings dialog have a button 'store in config.json' with a tooltip naming the file, and their descriptions are wrapped (revision2026c step RG6.19.6)",
+  "resolvedInVersion": "1.13.149"
+}

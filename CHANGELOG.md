@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.13 | Newborn | 145 | 1.13.147 |
+| 1.13 | Newborn | 148 | 1.13.150 |
 | 1.12 | Metheney | 367 | 1.12.462 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
@@ -30,6 +30,18 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.13 - Newborn (current)
 
+- **1.13.150** `EXTENSION` `MEDIUM EFF` `raised by: Claude-JG` `resolved by: Claude-JG` stored visualization configurations CFG0-CFG3: icons of the icon bar, config.json, GUI functions and store buttons (#3043)
+  - description: Maintainer 2026-10-19 (a user request): four stored configurations CFG0 to CFG3 of the visualizationSettings, in ~/.exudyn/config.json as a list 'storedSettings' of four dictionaries with the difference to the defaults (created as four empty dictionaries, which equal a reset); an icon per configuration switches the whole settings to it (defaults plus the stored difference), CTRL+icon stores the current settings into it; the store settings window of the dialog gets buttons '-\> CFG0' to '-\> CFG3' with hints; exudyn.misc.GUI.StoreVisualizationSettings(SC, CFG=None\|0..3) stores from a script, None being the regular visualizationSettings section.
+  - **notes:** Four stored configurations CFG0 to CFG3 of the visualizationSettings in ~/.exudyn/config.json (storedSettings): the icons CFG0 to CFG3 of the icon bar switch to one (defaults plus what it stores), CTRL and the icon store the current settings in it; buttons -\> CFG0 to -\> CFG3 in the store settings window; exudyn.misc.GUI.StoreVisualizationSettings(SC, CFG=None\|0..3) and ApplyStoredVisualizationSettings(CFG, SC) (revision2026c step RG6.19.7)
+  - date resolved: **2026-10-19 17:02**, date raised: 2026-10-19
+- **1.13.149** `IMPROVEMENT` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` visualization settings dialog: the store windows say where they store and are less wide (#3042)
+  - description: Maintainer 2026-10-19: the window of 'store settings' has a button 'store'; it becomes 'store in config.json' with a hint, because the positions are stored in the same local file; the descriptions of the 'store settings' and 'store positions' windows are one long line and get line breaks.
+  - **notes:** The store settings and store positions windows of the visualization settings dialog have a button 'store in config.json' with a tooltip naming the file, and their descriptions are wrapped (revision2026c step RG6.19.6)
+  - date resolved: **2026-10-19 17:02**, date raised: 2026-10-19
+- **1.13.148** `IMPROVEMENT` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` icon bar: tooltips in the size of the version string (#3041)
+  - description: Maintainer 2026-10-19: the tooltips of the icon bar scale with the display, but are large; they shall have the size of the version string (globalFontSize times the small font factor), still scaled with the monitor scaling and displayScaleFactor.
+  - **notes:** The tooltips of the icon bar have the size of the version string, scaled with the monitor scaling and general.displayScaleFactor (revision2026c step RG6.19.5)
+  - date resolved: **2026-10-19 17:02**, date raised: 2026-10-19
 - **1.13.147** `IMPROVEMENT` `MEDIUM EFF` `raised by: Claude-JG` `resolved by: Claude-JG` icon bar: settings per view and in general, SHIFT+drag zoom, tooltips scaled, new icons for lines/edges/faces, model interval in the update list (#3040)
   - description: Maintainer 2026-10-19 after the second check on screen: SHIFT + left mouse drag zooms to a region (CTRL+A stays); the tooltip left of the bar without overlap, its background up by about 15 % and 10 % higher, in the font size at the monitor scaling and general.displayScaleFactor; interactive.iconBar.show becomes view.window.showIconBar, scaling and foldDistance become general.iconBarScaling and general.iconBarFoldDistance, new general.iconBarTimeout in milliseconds (no deprecation, introduced in this version); icons: edges a rectangle meshed into 8 triangles, faces a cube with front, top and side faces, lines the edges of that cube; the update interval icon cycles through the key intervals with the interval of the model sorted in.
   - **notes:** The icon bar is switched by visualizationSettings.view0.window.showIconBar (per view) and adjusted by general.iconBarScaling, general.iconBarFoldDistance and general.iconBarTimeout (milliseconds; replaces interactive.iconBar); SHIFT + dragging with the left mouse button zooms to the rectangle dragged; the tooltips no longer overlap the bar and follow the display scaling and displayScaleFactor; new icons for lines, edges and faces; the update interval icon includes the interval set by the model (revision2026c step RG6.19.4)

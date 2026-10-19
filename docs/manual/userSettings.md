@@ -103,8 +103,34 @@ them stops `import exudyn`.
 The settings dialog has a **store settings** button. It writes the `visualizationSettings` that
 differ from the defaults, and the size and position of the dialog itself, and **nothing else** - not
 `exudyn.config`, not the simulation settings - and it shows exactly what it is about to write before
-it writes anything. It is the way to keep a look you have just made without switching
-`storeDialogPositions` on.
+it writes anything; its button **store in config.json** writes it. It is the way to keep a look you
+have just made without switching `storeDialogPositions` on.
+
+(sec-usersettings-storedconfigurations)=
+## Stored configurations CFG0 to CFG3
+
+Besides the settings every run starts with, the file keeps four **configurations** of the
+`visualizationSettings`, CFG0 to CFG3, which you switch between while the renderer runs (#3043). They
+are stored under `storedSettings`, a list of four dictionaries, each the difference of one configuration
+to the defaults; when the first one is stored, the other three are written as empty dictionaries, and
+an empty configuration is the defaults. They are not applied when a run starts.
+
+- the icons **CFG0** to **CFG3** of the icon bar of the render window, see {ref}`sec-gui-sec-iconbar`,
+  switch to a configuration: every setting goes to its default, and then to what the configuration
+  stores - so an empty one is a reset; CTRL and the icon store the current settings in it;
+- the window of **store settings** has the buttons **→ CFG0** to **→ CFG3**, which store the settings
+  it shows in a configuration instead;
+- from a script, `exudyn.misc.GUI.StoreVisualizationSettings(SC, CFG=0)` stores the settings of `SC` as
+  CFG0, and `CFG=None` as the settings every run starts with;
+  `exudyn.misc.GUI.ApplyStoredVisualizationSettings(0, SC)` switches to CFG0.
+
+```python
+#the view of this model as CFG0, before the renderer starts:
+import exudyn.misc.GUI
+SC.visualizationSettings.nodes.show = False
+exudyn.misc.GUI.StoreVisualizationSettings(SC, CFG=0)
+SC.renderer.Start()
+```
 
 **diff to default** stays a difference to the *default*, and a setting that the file already stores
 is listed with the others and then named again under a comment line that says so. Comparing against

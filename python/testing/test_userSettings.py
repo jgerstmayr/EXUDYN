@@ -680,3 +680,57 @@ def test_theStorableValueIsWhatTheFileCarries():
     assert settings.StorableValue('interactive.highlightItemType', exu.ItemType.Node)[0] is None
     (value, reason) = settings.StorableValue('some.thing', object())
     assert value is None and 'cannot carry' in reason
+
+
+#++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#THE STORED CONFIGURATIONS CFG0 to CFG3 (#3043)
+def test_aStoredConfigurationIsWrittenWithAllFour(settingsFile):
+    settingsFile({})
+    SC = exu.SystemContainer()
+    SC.visualizationSettings.nodes.show = False
+    SC.visualizationSettings.contour.outputVariable = exu.OutputVariableType.Displacement
+    settings.StoreStoredSettings(2, settings.ChangedVisualizationSettings(SC.visualizationSettings))
+    with open(settings.FileName(), encoding='utf-8') as file:
+        stored = json.load(file)['storedSettings']
+    assert stored == [{}, {}, {'nodes.show': False, 'contour.outputVariable': 'Displacement'}, {}]
+    assert 'visualizationSettings' not in settings.Load()       #the settings every run starts with are untouched
+
+
+def test_switchingToAConfigurationGivesTheDefaultsAndWhatItStores(settingsFile):
+    settingsFile({'storedSettings': [{}, {'nodes.show': False, 'openGL.lineWidth': 3.}]})
+    SC = exu.SystemContainer()
+    visualizationSettings = SC.visualizationSettings
+    visualizationSettings.bodies.show = False                   #not in the configuration: reset
+    visualizationSettings.openGL.lineWidth = 5.
+    assert settings.ApplyStoredSettings(visualizationSettings, 1) == 2
+    assert visualizationSettings.nodes.show is False
+    assert visualizationSettings.openGL.lineWidth == pytest.approx(3.)
+    assert visualizationSettings.bodies.show is True
+    #an empty configuration is a reset, and none of it counts as applied from the file
+    assert settings.ApplyStoredSettings(visualizationSettings, 0) == 0
+    assert visualizationSettings.nodes.show is True
+    assert visualizationSettings.openGL.lineWidth == pytest.approx(1.)
+    assert settings.Applied() == []
+
+
+def test_aConfigurationIsOneOfFour(settingsFile):
+    settingsFile({})
+    for index in [-1, 4, 1.0, True, None]:
+        with pytest.raises(ValueError):
+            settings.StoreStoredSettings(index, {})
+
+
+def test_theGUIFunctionsStoreAndSwitchConfigurations(settingsFile):
+    """exudyn.misc.GUI.StoreVisualizationSettings with CFG=None and CFG=0..3, and the switch back"""
+    from exudyn.misc import GUI
+    settingsFile({})
+    SC = exu.SystemContainer()
+    SC.visualizationSettings.loads.show = False
+    assert GUI.StoreVisualizationSettings(SC, CFG=3) == 1
+    assert GUI.StoreVisualizationSettings(SC) == 1
+    stored = settings.Load()
+    assert stored['storedSettings'][3] == {'loads.show': False}
+    assert stored['visualizationSettings'] == {'loads.show': False}
+    SC.visualizationSettings.loads.show = True
+    assert GUI.ApplyStoredVisualizationSettings(3, SC) == 1
+    assert SC.visualizationSettings.loads.show is False

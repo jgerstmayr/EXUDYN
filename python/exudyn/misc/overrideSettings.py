@@ -38,7 +38,8 @@ __all__ = [
     'ShownFileName', 'NoteSuppressed', 'Ignoring', 'Settings', 'Load', 'Save', 'Clear', 'Reload',
     'StoreSection', 'Applied', 'Ignored', 'Print', 'notStoredSettings', 'StorableValue',
     'ApplyConfig', 'ApplyVisualizationSettings', 'DialogKey', 'DialogGeometry',
-    'StoreDialogGeometry', 'PositionIsReachable', 'Store',
+    'StoreDialogGeometry', 'PositionIsReachable', 'Store', 'numberOfStoredSettings',
+    'ChangedVisualizationSettings', 'StoredSettings', 'StoreStoredSettings', 'ApplyStoredSettings',
     ]
 
 #THE VERSION OF THE FILE FORMAT, written into every file and required to match exactly
@@ -55,9 +56,10 @@ __all__ = [
 fileFormatVersion = 1
 
 #the sections of the file. 'dialogs' is read by the dialogs themselves and is listed here
-#so that this module does not warn about it
+#so that this module does not warn about it; 'storedSettings' holds the configurations CFG0 to CFG3
+#(#3043), which are not applied at import, only when a user switches to one
 sectionNames = ['config', 'visualizationSettings', 'dialogs', 'resultsMonitor',
-                'plotSensor']
+                'plotSensor', 'storedSettings']
 
 #the keys of the file that are flags of the file itself rather than sections, like 'version'.
 #'suppressOverrideSettingsWarning': true keeps `import exudyn` from printing the one note that
@@ -424,12 +426,14 @@ def ApplyConfig(config, settings=None):
     return applied
 
 
-def ApplyVisualizationSettings(visualizationSettings, settings=None):
+def ApplyVisualizationSettings(visualizationSettings, settings=None, record=True):
     """Apply the `visualizationSettings` section of the override settings to a settings structure.
 
     Args:
         visualizationSettings: `SC.visualizationSettings` of a SystemContainer
         settings: the section dictionary; `exudyn.special.overrideSettings` when None is given
+        record: False keeps what is applied out of `Applied()` and `Ignored()`, which describe the
+            file as `import exudyn` applies it; a stored configuration (#3043) is not that
 
     Returns:
         the number of settings applied
@@ -444,6 +448,7 @@ def ApplyVisualizationSettings(visualizationSettings, settings=None):
         SC = exu.SystemContainer()      #the two settings are applied here
     """
     settings = Settings() if settings is None else settings
+    Record = _Record if record else (lambda path, value, reason=None: None)
     applied = 0
     for (path, value) in (settings.get('visualizationSettings') or {}).items():
         full = 'visualizationSettings.' + path
@@ -454,34 +459,34 @@ def ApplyVisualizationSettings(visualizationSettings, settings=None):
                 structure = getattr(structure, part)
             current = getattr(structure, parts[-1])
         except AttributeError:
-            _Record(full, value, 'no such setting')
+            Record(full, value, 'no such setting')
             continue
         if path in notStoredSettings:
-            _Record(full, value, notStoredSettings[path])
+            Record(full, value, notStoredSettings[path])
             continue
         if _IsEnum(current):
             (member, reason) = _EnumValue(current, value)
             if member is None:
-                _Record(full, value, reason)
+                Record(full, value, reason)
                 continue
             setattr(structure, parts[-1], member)
-            _Record(full, value)
+            Record(full, value)
             applied += 1
             continue
         if not _IsPlain(current):
-            _Record(full, value, 'the setting holds a ' + type(current).__name__
+            Record(full, value, 'the setting holds a ' + type(current).__name__
                     + ', which a settings file cannot carry')
             continue
         if not _IsPlain(value):
-            _Record(full, value, 'the stored value is a ' + type(value).__name__)
+            Record(full, value, 'the stored value is a ' + type(value).__name__)
             continue
         try:
             setattr(structure, parts[-1],
                     type(current)(value) if isinstance(current, plainTypes) else value)
         except Exception as e:
-            _Record(full, value, str(e))
+            Record(full, value, str(e))
             continue
-        _Record(full, value)
+        Record(full, value)
         applied += 1
     return applied
 
@@ -600,21 +605,8 @@ def Store(SC=None, config=None, replace=False):
     settings = {} if replace else Load()
 
     if SC is not None:
-        from exudyn.misc.settingsUtilities import ChangedSettings
         stored = {} if replace else dict(settings.get('visualizationSettings') or {})
-        leftOut = []        #and said so: a setting dropped without a word was the fault of #2666
-        for (path, line) in ChangedSettings(SC.visualizationSettings):
-            structure = SC.visualizationSettings
-            parts = path.split('.')
-            for part in parts[:-1]:
-                structure = getattr(structure, part)
-            (storable, reason) = StorableValue(path, getattr(structure, parts[-1]))
-            if storable is None:
-                leftOut.append((path, reason))
-            else:
-                stored[path] = storable
-        for (path, reason) in leftOut:
-            print('NOTE: not stored: visualizationSettings.' + path + ' - ' + reason)
+        stored.update(ChangedVisualizationSettings(SC.visualizationSettings))
         settings['visualizationSettings'] = stored
 
     if config is not None:
@@ -633,3 +625,117 @@ def Store(SC=None, config=None, replace=False):
     Settings().clear()
     Settings().update(settings)  #the store follows the file, so the two cannot disagree
     return settings
+
+
+#%%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#THE STORED CONFIGURATIONS CFG0 to CFG3 (#3043): whole visualizationSettings that a user switches
+#between with the icons of the render window. Each is stored as its difference to the defaults, as
+#the visualizationSettings section is, under 'storedSettings' as a list of four dictionaries; the
+#list is written with all four as soon as one is stored, and an empty one is the defaults.
+numberOfStoredSettings = 4
+
+
+def ChangedVisualizationSettings(visualizationSettings):
+    """The visualization settings that differ from the defaults, as the settings file stores them.
+
+    Args:
+        visualizationSettings: `SC.visualizationSettings` or a VisualizationSettings structure
+
+    Returns:
+        dictionary {path: value}, e.g. `{'openGL.multiSampling': 4}`; a setting that a file cannot
+        carry is left out with a note
+    """
+    from exudyn.misc.settingsUtilities import ChangedSettings                # noqa: PLC0415
+    values = {}
+    for (path, _) in ChangedSettings(visualizationSettings):
+        structure = visualizationSettings
+        parts = path.split('.')
+        for part in parts[:-1]:
+            structure = getattr(structure, part)
+        (storable, reason) = StorableValue(path, getattr(structure, parts[-1]))
+        if storable is None:    #and said so: a setting dropped without a word was the fault of #2666
+            print('NOTE: not stored: visualizationSettings.' + path + ' - ' + reason)
+        else:
+            values[path] = storable
+    return values
+
+
+def _StoredSettingsList(stored):
+    """the list of numberOfStoredSettings dictionaries that the section 'storedSettings' holds"""
+    stored = list(stored) if isinstance(stored, list) else []
+    stored = [dict(entry) if isinstance(entry, dict) else {} for entry in stored[:numberOfStoredSettings]]
+    return stored + [{} for _ in range(numberOfStoredSettings - len(stored))]
+
+
+def _CheckStoredSettingsIndex(index):
+    """raise a ValueError unless index is one of the stored configurations"""
+    if isinstance(index, bool) or not isinstance(index, int) or not 0 <= index < numberOfStoredSettings:
+        raise ValueError('a stored configuration is 0 to ' + str(numberOfStoredSettings - 1)
+                         + ' (CFG0 to CFG' + str(numberOfStoredSettings - 1) + '), not ' + repr(index))
+
+
+def StoredSettings():
+    """The stored configurations CFG0 to CFG3 of the visualization settings, as the file holds them.
+
+    Returns:
+        list of `numberOfStoredSettings` dictionaries {path: value}, each the difference of a
+        configuration to the defaults; `{}` for one that was never stored, which is the defaults
+
+    Note:
+        The file is read, not the store of this process, so that a configuration stored by another
+        script is the one switched to.
+    """
+    return _StoredSettingsList(Load().get('storedSettings'))
+
+
+def StoreStoredSettings(index, values):
+    """Store one of the configurations CFG0 to CFG3, keeping the others.
+
+    Args:
+        index: the configuration, 0 to `numberOfStoredSettings` - 1
+        values: {path: value}, its difference to the defaults, see `ChangedVisualizationSettings`;
+            it replaces what the configuration held
+
+    Returns:
+        the file name that was written
+    """
+    _CheckStoredSettingsIndex(index)
+    stored = StoredSettings()
+    stored[index] = dict(values)
+    return StoreSection('storedSettings', stored)
+
+
+def ApplyStoredSettings(visualizationSettings, index):
+    """Switch a visualizationSettings structure to one of the stored configurations CFG0 to CFG3:
+    every setting to its default, and then the stored difference.
+
+    Args:
+        visualizationSettings: `SC.visualizationSettings`
+        index: the configuration, 0 to `numberOfStoredSettings` - 1
+
+    Returns:
+        the number of stored settings applied; 0 for an empty configuration, which resets the
+        settings to the defaults
+
+    Note:
+        The defaults are those of the class, without the visualizationSettings section of the
+        file. `interactive.highlightItemType` is the state of an interaction and keeps its value.
+    """
+    from exudyn.misc.settingsUtilities import (DefaultSettingsDictionary,   # noqa: PLC0415
+                                               SettingsLeafList, SettingsValueStrings)
+    _CheckStoredSettingsIndex(index)
+    values = StoredSettings()[index]
+    current = SettingsValueStrings(visualizationSettings.GetDictionaryWithTypeInfo())
+    for (path, value, valueString, _, _, _) in SettingsLeafList(DefaultSettingsDictionary(visualizationSettings)):
+        if path in notStoredSettings or current.get(path, valueString) == valueString:
+            continue
+        structure = visualizationSettings
+        parts = path.split('.')
+        try:
+            for part in parts[:-1]:
+                structure = getattr(structure, part)
+            setattr(structure, parts[-1], value)
+        except Exception as e:
+            print('WARNING: visualizationSettings.' + path + ' could not be reset: ' + str(e))
+    return ApplyVisualizationSettings(visualizationSettings, {'visualizationSettings': values},
+                                      record=False)

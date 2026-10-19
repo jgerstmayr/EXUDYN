@@ -2271,3 +2271,48 @@ faces a cube with a front and two side faces, lines the cube's edges; the standa
   into the key intervals; the icon cycles through that list and sets the interval itself (keys 1 to 5 cannot reach the
   model's), shows the number in the list (none for another value) and its tooltip lists the intervals.
 
+<a id="rg6-19-5"></a>
+### RG6.19.5 — the tooltips of the icon bar in the size of the version string (2026-10-19, #3041)
+*(Maintainer 2026-10-19: the tooltips follow the scaling - good -, but are quite large; they shall have the
+size of the version string, which has a smaller factor, still scaled as now.)*
+- The version string is drawn with `globalFontSize*fontSmallFactor` (0.75, GlfwClientBase.h), and so is the
+  tooltip now, times `GetFontScaling` (monitor scaling times displayScaleFactor) as before.
+
+<a id="rg6-19-6"></a>
+### RG6.19.6 — the store windows of the settings dialog (2026-10-19, #3042)
+*(Maintainer 2026-10-19: the button 'store' of the store settings window becomes 'store in config.json'
+with a hint, because the positions are stored in the same local file; the one-line descriptions of the
+store settings and store positions windows get line breaks.)*
+- `ShowCodeLines` wraps the description with `textwrap.fill(..., 80)`, the width of its code area, and
+  takes `confirm` as a list of (text, function, tooltip): the buttons sit in a frame of their own, each
+  with a tooltip.
+- Both store windows have **store in config.json**; its tooltip names the file, the settings file of this
+  computer and account, which keeps the window positions as well as the settings.
+
+<a id="rg6-19-7"></a>
+### RG6.19.7 — stored configurations CFG0 to CFG3 (2026-10-19, #3043)
+*(Maintainer 2026-10-19, a user request: four configurations CFG0 to CFG3 to switch the whole settings
+between, in ~/.exudyn/config.json as a list storedSettings of dictionaries with the difference to the
+default, created as empty dictionaries, which equal a reset; an icon switches to one, CTRL and the icon
+store into it; buttons -> CFG0 ... with hints and a UTF-8 arrow in store settings. Asked: all four
+stored, none fixed; a script stores with GUI.StoreVisualizationSettings(CFG=None|0..3), None the regular
+section - so that CFG0 can be set right before renderer.Start(); switching gives the defaults plus the
+stored difference.)*
+- **overrideSettings**: section `storedSettings` (in `sectionNames`, not applied at import);
+  `numberOfStoredSettings` = 4; `ChangedVisualizationSettings(vs)` - the storable difference to the
+  defaults, which `Store(SC)` used inline and now calls; `StoredSettings()` reads the FILE, so that a
+  configuration stored by another script is the one switched to; `StoreStoredSettings(index, values)`
+  writes all four; `ApplyStoredSettings(vs, index)` sets every leaf whose value string differs from the
+  default back to it (not `interactive.highlightItemType`) and then applies the configuration through
+  `ApplyVisualizationSettings(..., record=False)`, so that `Applied()` keeps describing the import.
+  A user function of the settings is not a leaf of the dictionary and is not touched.
+- **GUI**: `StoreVisualizationSettings(SC=None, CFG=None)` and `ApplyStoredVisualizationSettings(CFG,
+  SC=None)`, the renderer's container when SC is None; the switch sends a redraw signal.
+- **Icons** config0 to config3 at the end of the bar (24 icons): three sliders, the bar writes the
+  number. A click queues `ApplyStoredVisualizationSettings(CFG=n)`, CTRL and a click
+  `StoreVisualizationSettings(CFG=n)`, as a string for the Python thread (`PyQueueExecutableString`,
+  through `__import__`, so nothing is added to the namespace of the model), as the dialogs do.
+- **store settings** window: buttons → CFG0 to → CFG3 (U+2192) with tooltips.
+- Tests in test_userSettings.py (the file of the pytest's own): all four written, defaults plus the
+  difference, an empty one resets, the index checked, the GUI functions; test_iconBar.py with 24 icons.
+

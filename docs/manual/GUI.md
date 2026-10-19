@@ -105,10 +105,13 @@ does and the key. From the top:
   sorted in, the interval the model set when the bar was first drawn; the icon shows the number of the current one
   in this list and the tooltip the list;
 - **show nodes, bodies, connectors, markers, loads, sensors** (N, B, C, M, L, S); with SHIFT, their numbers
-  (CTRL+N, ...), which the icon marks with #.
+  (CTRL+N, ...), which the icon marks with #;
+- **CFG0** to **CFG3**: switch the visualization settings to one of the four configurations stored in
+  `~/.exudyn/config.json`, the defaults and what the configuration stores; CTRL and the icon store the
+  current settings in it, see {ref}`sec-usersettings-storedconfigurations`.
 
 An icon that switches something on is drawn pressed while it is on. The bar is not part of saved images; the
-tooltips are drawn in `window.globalFontSize`, at the display scaling.
+tooltips have the size of the version string, `window.globalFontSize` times 0.75 at the display scaling.
 `visualizationSettings.view0.window.showIconBar` (per view: `view1`, ... for the other views) switches it off. In
 `visualizationSettings.general`, `iconBarScaling` scales the icons relative to the display scaling of the monitor
 times `displayScaleFactor` - they are made smaller where the window is not high enough for all of them -,

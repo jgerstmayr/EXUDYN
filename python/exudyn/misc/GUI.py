@@ -19,6 +19,7 @@ import numpy as np #for array checks
 import os
 import sys
 import re
+import textwrap
 import exudyn
 from exudyn.misc.keyBindings import RendererHelpText
 
@@ -52,7 +53,8 @@ __all__ = [
     'RememberWindowGeometry', 'StoreGeometryString', 'StoreWindowGeometry',
     'ApplyDialogWindowSettings', 'rendererHelpText', 'ShowHelpDialog', 'pythonCommandExamples',
     'ModelScope', 'ShowPythonCommandDialog', 'ShowVisualizationSettingsDialog',
-    'ShowRightMouseSelectionDialog', 'AskQuitDialog',
+    'ShowRightMouseSelectionDialog', 'AskQuitDialog', 'StoreVisualizationSettings',
+    'ApplyStoredVisualizationSettings',
     ]
 
 useRenderWindowDisplayScaling = True #using this, scaling will change with render window
@@ -1309,7 +1311,7 @@ class TkinterEditDictionaryWithTypeInfo(tk.Frame):
                   + SettingsPrefix(self.settingsStructure) + ' will be stored in ' + fileName)] \
             + changes
 
-        def Store():
+        def Store(CFG=None):
             try:
                 from exudyn.misc import overrideSettings                     # noqa: PLC0415
 
@@ -1325,16 +1327,34 @@ class TkinterEditDictionaryWithTypeInfo(tk.Frame):
                         exudyn.Print('NOTE: not stored: visualizationSettings.' + path + ' - ' + reason)
                     else:
                         values[path] = storable
-                overrideSettings.StoreSection('visualizationSettings', values)
-                exudyn.Print('stored ' + str(len(values)) + ' setting(s) in ' + fileName)
+                if CFG is None:
+                    overrideSettings.StoreSection('visualizationSettings', values)
+                    exudyn.Print('stored ' + str(len(values)) + ' setting(s) in ' + fileName)
+                else:
+                    overrideSettings.StoreStoredSettings(CFG, values)
+                    exudyn.Print('stored ' + str(len(values)) + ' setting(s) as configuration CFG'
+                                 + str(CFG) + ' in ' + fileName)
             except Exception as exception:                                   # noqa: BLE001
                 exudyn.Print('WARNING: could not store the settings: ' + str(exception))
 
+        #the stored configurations CFG0 to CFG3 (#3043), only for the visualizationSettings
+        configurationButtons = []
+        if CompiledSettingsClass(self.settingsStructure).__name__ == 'VisualizationSettings':
+            configurationButtons = [('\u2192 CFG' + str(index), lambda index=index: Store(index),
+                                     'store these settings as the configuration CFG' + str(index)
+                                     + ' in ' + fileName + ', replacing what it held; the icon CFG'
+                                     + str(index) + ' of the icon bar of the render window switches'
+                                     ' to it, CTRL and the icon store the current settings in it')
+                                    for index in range(4)]
         self.ShowCodeLines('store settings in ' + fileName, lines,
                            'the settings that differ from the defaults, including the size and'
                            ' position of the RENDER window if they differ; the position of THIS'
                            ' dialog is the "store positions" button',
-                           confirm=('store', Store))
+                           confirm=[('store in config.json', Store,
+                                     'store these settings in ' + fileName + ', the settings file of'
+                                     ' this computer and account, which also keeps the positions of'
+                                     ' the windows; every model run here starts with them')]
+                           + configurationButtons)
 
     def OnStorePositions(self):
         """write the size and the position of every open window to the override settings file
@@ -1395,7 +1415,10 @@ class TkinterEditDictionaryWithTypeInfo(tk.Frame):
                            'where the open windows are - this dialog, the other dialogs, the plot'
                            ' windows and the render window - so that they open there next time;'
                            ' the settings this dialog shows are the "store settings" button',
-                           confirm=('store', Store))
+                           confirm=[('store in config.json', Store,
+                                     'store the positions in ' + fileName + ', the settings file of'
+                                     ' this computer and account, which also keeps the stored'
+                                     ' settings')])
 
     def OnShowSessionChanges(self):
         self.ShowCodeLines('settings changed in this dialog',
@@ -1478,8 +1501,9 @@ class TkinterEditDictionaryWithTypeInfo(tk.Frame):
         """the changes as the code that makes them, in a window that shows AND copies: a dialog
         session that can be pasted into a script (maintainer, 2026-09-23)
 
-        confirm: (buttonText, function) adds a button that closes the window and calls the
-        function, which is how the store button shows what it will write before it writes it"""
+        confirm: a list of (buttonText, function, tooltip); each adds a button that closes the window
+        and calls the function, which is how the store button shows what it will write before it
+        writes it"""
         window = tk.Toplevel(self)
         window.title(title)
         #THE WINDOW HAS TO BE SEEN (#2621). The settings dialog is topmost - it has to be, it
@@ -1522,7 +1546,8 @@ class TkinterEditDictionaryWithTypeInfo(tk.Frame):
         window.grid_columnconfigure(0, weight=1)
         window.grid_rowconfigure(1, weight=1)
 
-        tk.Label(window, text=description, justify=tk.LEFT, anchor=tk.W).grid(
+        #in lines of the width of the code below, so that a long description does not make the window wide
+        tk.Label(window, text=textwrap.fill(description, 80), justify=tk.LEFT, anchor=tk.W).grid(
             row=0, column=0, columnspan=2, sticky=tk.E+tk.W, padx=8, pady=(8, 2))
 
         textArea = tk.Text(window, wrap=tk.NONE, width=80, height=min(25, max(4, len(lines) + 1)),
@@ -1540,17 +1565,22 @@ class TkinterEditDictionaryWithTypeInfo(tk.Frame):
             if lines:
                 CopyToClipboard(self, code)
 
-        tk.Button(window, text='copy all', command=CopyAll).grid(row=2, column=0, pady=6)
-        tk.Button(window, text='cancel' if confirm is not None else 'close',
-                  command=window.destroy).grid(row=2, column=1, pady=6)
-        if confirm is not None:
+        buttons = tk.Frame(window)
+        buttons.grid(row=2, column=0, columnspan=3, pady=6)
+        tk.Button(buttons, text='copy all', command=CopyAll).pack(side=tk.LEFT, padx=4)
+        tk.Button(buttons, text='cancel' if confirm else 'close',
+                  command=window.destroy).pack(side=tk.LEFT, padx=4)
+        tooltip = Tooltip(window, wrapLength=420)
+        for (buttonText, function, buttonTooltip) in (confirm or []):
             #the window is what asks: everything that writes outside this session shows what it
             #will write first (#2685)
-            def Confirm():
+            def Confirm(function=function):
                 window.destroy()
-                confirm[1]()
+                function()
 
-            tk.Button(window, text=confirm[0], command=Confirm).grid(row=2, column=2, pady=6)
+            button = tk.Button(buttons, text=buttonText, command=Confirm)
+            button.pack(side=tk.LEFT, padx=4)
+            tooltip.Bind(button, buttonTooltip)
         window.bind('<Escape>', lambda event: window.destroy())
 
     #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -2445,3 +2475,69 @@ def AskQuitDialog():
         tk.mainloop()
 
     exudyn.sys['quitResponse'] = response + 2   #2=do not quit, 3=quit
+
+
+#++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#THE STORED CONFIGURATIONS CFG0 to CFG3 (#3043): what the icons CFG0 to CFG3 of the icon bar and the
+#"store settings" window of the visualization settings dialog do, for a script
+def StoreVisualizationSettings(SC=None, CFG=None):
+    """Store the visualization settings that differ from the defaults in `~/.exudyn/config.json`.
+
+    Args:
+        SC: the SystemContainer whose `visualizationSettings` are stored; the one attached to the
+            renderer when None is given
+        CFG: None stores them as the visualizationSettings every model starts with, replacing what
+            was stored there; 0 to 3 stores them as the configuration CFG0 to CFG3, replacing what it
+            held, which the icons CFG0 to CFG3 of the icon bar of the render window switch to
+
+    Returns:
+        the number of settings stored; -1 if there is no SystemContainer
+
+    Example:
+        SC.visualizationSettings.nodes.show = False
+        exudyn.misc.GUI.StoreVisualizationSettings(SC, CFG=0)  #the icon CFG0 switches to these settings
+        SC.renderer.Start()
+    """
+    from exudyn.misc import overrideSettings                                 # noqa: PLC0415
+    SC = GetRendererSystemContainer() if SC is None else SC
+    if SC is None:
+        exudyn.Print('WARNING: StoreVisualizationSettings: no SystemContainer is given or attached'
+                     ' to the renderer; nothing stored')
+        return -1
+    values = overrideSettings.ChangedVisualizationSettings(SC.visualizationSettings)
+    if CFG is None:
+        overrideSettings.StoreSection('visualizationSettings', values)
+        exudyn.Print('stored ' + str(len(values)) + ' visualization setting(s) in '
+                     + overrideSettings.ShownFileName())
+    else:
+        overrideSettings.StoreStoredSettings(CFG, values)
+        exudyn.Print('stored ' + str(len(values)) + ' visualization setting(s) as configuration CFG'
+                     + str(CFG) + ' in ' + overrideSettings.ShownFileName())
+    return len(values)
+
+
+def ApplyStoredVisualizationSettings(CFG, SC=None):
+    """Switch the visualization settings to one of the configurations CFG0 to CFG3 stored in
+    `~/.exudyn/config.json`: every setting to its default, and then what the configuration stores;
+    an empty configuration resets the settings to the defaults.
+
+    Args:
+        CFG: the configuration, 0 to 3
+        SC: the SystemContainer whose `visualizationSettings` are switched; the one attached to the
+            renderer when None is given
+
+    Returns:
+        the number of stored settings applied; -1 if there is no SystemContainer
+    """
+    from exudyn.misc import overrideSettings                                 # noqa: PLC0415
+    SC = GetRendererSystemContainer() if SC is None else SC
+    if SC is None:
+        exudyn.Print('WARNING: ApplyStoredVisualizationSettings: no SystemContainer is given or'
+                     ' attached to the renderer')
+        return -1
+    applied = overrideSettings.ApplyStoredSettings(SC.visualizationSettings, CFG)
+    exudyn.Print('visualization settings switched to configuration CFG' + str(CFG) + ' ('
+                 + str(applied) + ' stored setting(s))')
+    if SC.renderer.IsActive():
+        SC.renderer.SendRedrawSignal()
+    return applied

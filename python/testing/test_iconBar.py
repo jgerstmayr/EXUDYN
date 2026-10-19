@@ -12,7 +12,8 @@ import exudyn as exu
 
 order = ['quit', 'zoomAll', 'zoomRegion', 'viewXY', 'viewYZ', 'viewXZ', 'viewIsometric', 'ruler',
          'mouseCoordinates', 'lines', 'edges', 'faces', 'transparency', 'updateSpeed',
-         'nodes', 'bodies', 'connectors', 'markers', 'loads', 'sensors']
+         'nodes', 'bodies', 'connectors', 'markers', 'loads', 'sensors',
+         'config0', 'config1', 'config2', 'config3']
 
 
 def testTheIconsAreThoseOfTheBarInItsOrder():
@@ -32,6 +33,7 @@ def testEveryIconDrawsInsideItsSquare():
 
 def testTheIconsDiffer():
     images = [image for (name, image) in exu._compiledModule._IconBarImages()]
-    #the three views have the same picture; their axes are written over them by the bar
+    #the three views have the same picture, and the four stored configurations (#3043); their axes and
+    #numbers are written over them by the bar
     distinct = {image.tobytes() for image in images}
-    assert len(distinct) == len(images) - 2
+    assert len(distinct) == len(images) - 2 - 3

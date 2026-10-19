@@ -165,7 +165,7 @@ namespace IconBar
 	{
 		static const char* names[] = { "quit", "zoomAll", "zoomRegion", "viewXY", "viewYZ", "viewXZ", "viewIsometric",
 			"ruler", "mouseCoordinates", "lines", "edges", "faces", "transparency", "updateSpeed",
-			"nodes", "bodies", "connectors", "markers", "loads", "sensors" };
+			"nodes", "bodies", "connectors", "markers", "loads", "sensors", "config0", "config1", "config2", "config3" };
 		return (icon >= 0 && icon < NumberOfIcons()) ? names[icon] : "";
 	}
 
@@ -191,7 +191,11 @@ namespace IconBar
 			"show connectors (C; SHIFT: numbers, CTRL+C)",
 			"show markers (M; SHIFT: numbers, CTRL+M)",
 			"show loads (L; SHIFT: numbers, CTRL+L)",
-			"show sensors (S; SHIFT: numbers, CTRL+S)" };
+			"show sensors (S; SHIFT: numbers, CTRL+S)",
+			"switch the visualization settings to the configuration CFG0 stored in config.json (CTRL: store the current settings as CFG0)",
+			"switch the visualization settings to the configuration CFG1 stored in config.json (CTRL: store the current settings as CFG1)",
+			"switch the visualization settings to the configuration CFG2 stored in config.json (CTRL: store the current settings as CFG2)",
+			"switch the visualization settings to the configuration CFG3 stored in config.json (CTRL: store the current settings as CFG3)" };
 		return (icon >= 0 && icon < NumberOfIcons()) ? tooltips[icon] : "";
 	}
 
@@ -341,6 +345,18 @@ namespace IconBar
 			c.Line({ 7, 20 }, { 57, 20 }, 4, ink);
 			c.Line({ 32, 20 }, { 47, 38 }, 4, warning);
 			c.Disc({ 32, 20 }, 5, ink);
+			break;
+		case Icon::Config0: //three sliders of settings; the bar writes the number of the configuration
+		case Icon::Config1:
+		case Icon::Config2:
+		case Icon::Config3:
+			for (Index k = 0; k < 3; k++)
+			{
+				float y = 14.f + 16.f*(float)k;
+				float knob = (k == 1) ? 36.f : (k == 0 ? 20.f : 28.f);
+				c.Line({ 8, y }, { 52, y }, 3.5f, ink);
+				c.Disc({ knob, y }, 6.5f, accent);
+			}
 			break;
 		default:
 			break;

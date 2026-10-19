@@ -1,0 +1,15 @@
+{
+  "number": 3041,
+  "title": "icon bar: tooltips in the size of the version string",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "IMPROVEMENT",
+  "effort": "LOW",
+  "description": "Maintainer 2026-10-19: the tooltips of the icon bar scale with the display, but are large; they shall have the size of the version string (globalFontSize times the small font factor), still scaled with the monitor scaling and displayScaleFactor.",
+  "dateRaised": "2026-10-19",
+  "deadline": "2027-04-17",
+  "dateResolved": "2026-10-19 17:02",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "The tooltips of the icon bar have the size of the version string, scaled with the monitor scaling and general.displayScaleFactor (revision2026c step RG6.19.5)",
+  "resolvedInVersion": "1.13.148"
+}
