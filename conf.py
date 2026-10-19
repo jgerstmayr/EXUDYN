@@ -383,7 +383,7 @@ mathjax3_config = {
             'cRef': r'{_\mathrm{ref}}', #reference
             'cCur': r'{_\mathrm{cur}}', #current
             'cVis': r'{_\mathrm{vis}}', #visualization
-            'cSOS': r'{_\mathrm{start\;of\;step}}',
+            'cSOS': r'{_\text{start of step}}', #start of step
             'cConfig': r'{_\mathrm{config}}', #any configuration
 
 #++++++++++++++++++++++++++++++++++++++++++
