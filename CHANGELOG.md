@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.13 | Newborn | 144 | 1.13.146 |
+| 1.13 | Newborn | 145 | 1.13.147 |
 | 1.12 | Metheney | 367 | 1.12.462 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
@@ -30,6 +30,10 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.13 - Newborn (current)
 
+- **1.13.147** `IMPROVEMENT` `MEDIUM EFF` `raised by: Claude-JG` `resolved by: Claude-JG` icon bar: settings per view and in general, SHIFT+drag zoom, tooltips scaled, new icons for lines/edges/faces, model interval in the update list (#3040)
+  - description: Maintainer 2026-10-19 after the second check on screen: SHIFT + left mouse drag zooms to a region (CTRL+A stays); the tooltip left of the bar without overlap, its background up by about 15 % and 10 % higher, in the font size at the monitor scaling and general.displayScaleFactor; interactive.iconBar.show becomes view.window.showIconBar, scaling and foldDistance become general.iconBarScaling and general.iconBarFoldDistance, new general.iconBarTimeout in milliseconds (no deprecation, introduced in this version); icons: edges a rectangle meshed into 8 triangles, faces a cube with front, top and side faces, lines the edges of that cube; the update interval icon cycles through the key intervals with the interval of the model sorted in.
+  - **notes:** The icon bar is switched by visualizationSettings.view0.window.showIconBar (per view) and adjusted by general.iconBarScaling, general.iconBarFoldDistance and general.iconBarTimeout (milliseconds; replaces interactive.iconBar); SHIFT + dragging with the left mouse button zooms to the rectangle dragged; the tooltips no longer overlap the bar and follow the display scaling and displayScaleFactor; new icons for lines, edges and faces; the update interval icon includes the interval set by the model (revision2026c step RG6.19.4)
+  - date resolved: **2026-10-19 11:57**, date raised: 2026-10-19
 - **1.13.146** `EXTENSION` `HIGH EFF` `raised by: Claude-JG` `resolved by: Claude-JG` An icon bar in the renderer window as alternative to the keys, folding in from the right border (#3026)
   - description: Maintainer 2026-10-17: small icons for the most important keys - visualization settings, command window, help; the standard views; show/hide and numbers of nodes, bodies, connectors, markers, loads, sensors; zoom in, out, all and to the selection; ruler; mouse coordinates; quit; graphics update speed; lines, edges, faces; global transparency. The icons are compiled into the code and drawn once at startup into textures with the existing line, circle and text functions, not loaded from files; the bar folds in from the right border when the mouse comes close without a button pressed, fills the height of the window, scaled with the display scaling and a size in the visualization settings. Drawn by a subfunction that leaves the current implementation mostly untouched and fits later OpenGL versions.
   - **notes:** An icon bar in the render window folds in from the right border: quit, zoom all, zoom to a region given by two clicks, the views, ruler, mouse coordinates, lines, edges, faces, transparency, the update interval and the visibility of the items, with SHIFT and CTRL as described; visualizationSettings.interactive.iconBar (revision2026c step RG6.19)

@@ -2245,3 +2245,29 @@ selection is a region selected by two mouse clicks - a misunderstanding; the bar
   movement of the model. CTRL+A stays the zoom to the selected item (RG6.19.2), without an icon.
 - `interactive.iconBar.scaling` = 0.7 by default: 38 px icons at display scaling 1, about 830 px for the bar.
 
+<a id="rg6-19-4"></a>
+### RG6.19.4 — the icon bar after the second check on the screen (2026-10-19, #3040)
+*(Maintainer 2026-10-19, with a screenshot: keep CTRL+A and zoom to a region also with SHIFT + click and drag; the
+tooltip more to the left, so that it does not overlap the bar, its background about 15 % up and 10 % higher, and
+scaled with the monitor scaling and general.displayScaleFactor; iconBar.show to view.window.showIconBar, the other two
+to general, plus general.iconBarTimeout in milliseconds, no deprecation; edges a rectangle split into 8 triangles,
+faces a cube with a front and two side faces, lines the cube's edges; the standard update interval into the list.)*
+- **Settings.** The structure VSettingsIconBar is gone: `view0.window.showIconBar` (True, per view),
+  `general.iconBarScaling` (0.7), `general.iconBarFoldDistance` (20 px), `general.iconBarTimeout` (300 ms, the hold
+  time that was the constant `iconBarHoldTime`). Introduced after 1.11, so renamed without deprecation.
+- **SHIFT+drag** (`IconBarMouseButton`, `regionStep` 3): a left press with exactly SHIFT outside the bar starts the
+  rectangle, drawn as for the icon; the release zooms with `IconBarZoomToRegion`; less than 3 px is a click and does
+  nothing. It works with the bar switched off. SHIFT with the left button had no use in the render window. A row in `keyBindings.mouseBindings`, so the help text and the generated table have it.
+- **Tooltip.** The width was estimated with 0.6 times the font size per character, the font advances by
+  `characterWidth/fontSize` = 47/64 = 0.73: the text ran into the bar. It is now measured with the font's advance,
+  and drawn in `window.globalFontSize` times `GetFontScaling` (monitor scaling times displayScaleFactor) instead of a
+  fraction of the icon size; the background is 1.76 font sizes high (was 1.6), its center 0.24 up.
+- **Icons.** `edges`: the outline and a 2 x 2 grid with one diagonal per cell; `faces`: a cube with front, top and
+  right faces (`DrawCube`), without outline - the icon of the bodies has one and other proportions; `lines`: the
+  edges of the same cube, the three hidden ones thin and grey.
+- **Update interval.** The 0.1 s default is the second key interval; the "1" of the screenshot is what
+  `IconBarUpdateInterval` answered for 0.02 s and for every interval that is not one of the keys. Now
+  `IconBarUpdateIntervals` sorts the interval of the model, taken when the bar is drawn first after `StartRenderer`,
+  into the key intervals; the icon cycles through that list and sets the interval itself (keys 1 to 5 cannot reach the
+  model's), shows the number in the list (none for another value) and its tooltip lists the intervals.
+

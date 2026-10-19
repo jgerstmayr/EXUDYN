@@ -148,8 +148,9 @@ wooden floor and a cylinder with a computed pattern, rendered with the raytracer
 
 **An icon bar in the render window** (#3026): it folds in from the right border when the mouse comes near it, with
 icons for quit, zoom all, zoom to a region given by two clicks, the views, the ruler, the mouse coordinates, lines, edges, faces, transparency, the update
-interval and the visibility of the items, see {ref}`sec-gui-sec-iconbar`; `visualizationSettings.interactive.iconBar`
-switches it off or scales it.
+interval and the visibility of the items, see {ref}`sec-gui-sec-iconbar`; `visualizationSettings.view0.window.showIconBar`
+switches it off, `general.iconBarScaling`, `iconBarFoldDistance` and `iconBarTimeout` adjust it. SHIFT and dragging
+with the left mouse button zooms to the rectangle dragged (#3040).
 
 **Zoom to an item** (#3027): CTRL+A in the render window centers the view on the item selected with the left mouse
 button and zooms such that it fills the window; `SC.renderer.ZoomToItem(oBody)` does the same from Python.

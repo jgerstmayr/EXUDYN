@@ -478,6 +478,12 @@ class VSettingsGeneral:
     """factor on the texts of the render window, multiplied with the display scaling of the system (monitor scaling, e.g. 150 percent on Windows, fractional scaling on Linux), which GLFW reads (glfwGetWindowContentScale; on Linux from GLFW 3.3.6 on) and follows when it changes; acts while the renderer runs; the dialogs are scaled with dialogs.fontScaling."""
     graphicsUpdateInterval: float
     """interval of graphics update during simulation in seconds; 0.1 = 10 frames per second; low numbers might slow down computation speed."""
+    iconBarFoldDistance: float
+    """distance from the right border of the render window in pixels, at the display scaling, at which the icon bar folds in (#3026)."""
+    iconBarScaling: float
+    """size of the icons of the icon bar relative to 54 pixels at the display scaling (monitor scaling times displayScaleFactor); the icons are made smaller where the window is not high enough for all of them; see view0.window.showIconBar (#3026)."""
+    iconBarTimeout: int
+    """time in milliseconds the icon bar stays after the mouse left it, before it folds out (#3026)."""
     limitWindowToScreenSize: bool
     """True: size for render window of respective view is limited to screen size; False: larger window sizes (e.g. for rendering) allowed according to renderWindowSize."""
     minSceneSize: float
@@ -928,6 +934,8 @@ class VSettingsWindow:
     """initial size of the render window of this view, in pixels."""
     showComputationInfo: bool
     """true = show (hide) all computation information including Exudyn and version."""
+    showIconBar: bool
+    """True: the icon bar folds in when the mouse comes near the right border of the render window, without a button pressed; its icons do what keys do; see general.iconBarScaling, general.iconBarFoldDistance and general.iconBarTimeout (#3026)."""
     showMouseCoordinates: bool
     """True: show OpenGL coordinates and distance to last left mouse button pressed position in renderer status message; switched on/off with key 'F3'; only works for axis-aligned ortho-projections."""
     showRenderStateInfo: bool
@@ -1239,25 +1247,11 @@ class VSettingsInteractiveAdvanced:
     def GetDictionary(self) -> dict: ...
     def SetDictionary(self, d: dict) -> None: ...
 
-#information for VSettingsIconBar
-class VSettingsIconBar:
-    """The icon bar of the render window: it folds in from the right border when the mouse comes near it without a button pressed, and its icons do what keys do (#3026)."""
-    foldDistance: float
-    """distance from the right border in pixels, at the display scaling of the monitor, at which the bar folds in."""
-    scaling: float
-    """size of the icons relative to 54 pixels at the display scaling of the monitor; the icons are made smaller where the window is not high enough for all of them."""
-    show: bool
-    """True: the icon bar folds in when the mouse comes near the right border of the render window."""
-    def GetDictionary(self) -> dict: ...
-    def SetDictionary(self, d: dict) -> None: ...
-
 #information for VSettingsInteractive
 class VSettingsInteractive:
     """Functionality to interact with render window; includes special rotation and zoom factors, item-highlighting, marker tracking, item selection and keyPressUserFunction."""
     advanced: VSettingsInteractiveAdvanced
     """advanced interactive visualization settings."""
-    iconBar: VSettingsIconBar
-    """the icon bar of the render window (#3026)."""
     autoRotateModelView: bool
     """True: rotate model view with autorotation."""
     autoRotationVelocity: Tuple[float,float,float]

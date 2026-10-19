@@ -45,6 +45,9 @@ mouseBindings = [
                'mouse click on any node, object, etc. to see its basic information in the status '
                'line; selection is deactivated if mouse coordinates are shown (see F3)',
                'click; deactivated if mouse coordinates are shown'),
+    KeyBinding('SHIFT + left mouse button', 'zoom to region',
+               'hold SHIFT and drag a rectangle with the left mouse button; on release, the '
+               'rectangle fills the window', 'hold SHIFT and drag'),
     KeyBinding('right mouse button', 'rotate model',
                'keep right mouse button pressed to rotate the model around the current '
                '$X_1$/$X_2$ axes', 'hold and drag'),

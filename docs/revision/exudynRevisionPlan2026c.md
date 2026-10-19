@@ -590,6 +590,14 @@ viewID)`; zoomToItemTest.py. The icon comes with the bar (RG6.19.1). [log](exudy
 CLOSED 2026-10-19 (#3026; maintainer: works well; the bar stays longer, zoom to a region of two clicks instead of the
 selected item - a misunderstanding -, scaling 0.7 by default): done as asked. [log](exudynRevisionLog2026c.md#rg6-19-3)
 
+#### **CLOSED_RG6.19.4** The second check on the screen: settings, SHIFT+drag, tooltips, three icons
+
+CLOSED 2026-10-19 (#3040; maintainer: SHIFT+drag zooms to a region, CTRL+A stays; the tooltip left of the bar
+without overlap, its background higher and up, scaled with the display; `view.window.showIconBar`,
+`general.iconBarScaling`, `iconBarFoldDistance`, `iconBarTimeout` in ms, without deprecation; edges a meshed
+rectangle, faces a cube, lines its edges; the interval of the model in the update list): done as asked.
+[log](exudynRevisionLog2026c.md#rg6-19-4)
+
 ## **OPEN_RG7** Python user items
 
 Items whose behaviour is written in Python, and where the line runs against compiled user items (RG8).

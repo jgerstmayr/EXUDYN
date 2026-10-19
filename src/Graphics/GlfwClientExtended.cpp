@@ -550,12 +550,13 @@ void GlfwRenderer::CreateFontTextures()
 //of the scene; drawn after the frame is saved, so not part of saved images
 
 GlfwRenderer::IconBarState GlfwRenderer::iconBarStates[MAX_VIEWS_GLFW];
+float GlfwRenderer::iconBarStandardUpdateInterval = -1.f;
 
 //! icon size, gap and the width of the bar, in pixels of the frame buffer
 void GlfwRenderer::IconBarGeometry(Index viewID, int height, float& iconSize, float& gap, float& barWidth)
 {
 	RenderState* state = renderViews.State(viewID);
-	float scaling = EXUstd::Maximum(0.1f, visSettings->interactive.iconBar.scaling)*(state->displayScaling > 0.f ? state->displayScaling : 1.f);
+	float scaling = EXUstd::Maximum(0.1f, visSettings->general.iconBarScaling)*(state->displayScaling > 0.f ? state->displayScaling : 1.f);
 	Index n = IconBar::NumberOfIcons();
 	gap = 4.f*scaling;
 	iconSize = 54.f*scaling;
@@ -612,15 +613,42 @@ bool GlfwRenderer::IconBarIconIsOn(Index viewID, Index icon)
 	}
 }
 
-//! the index 0 to 4 of the graphics update interval of the keys 1 to 5 that is set; 0 for another value
+//! the graphics update intervals the icon cycles through: those of the keys 1 to 5 and, sorted in, the interval the
+//! model set when the bar was first drawn
+std::vector<float> GlfwRenderer::IconBarUpdateIntervals()
+{
+	std::vector<float> intervals = { 0.02f, 0.1f, 0.5f, 2.f, 100.f };
+	float standard = iconBarStandardUpdateInterval;
+	if (standard >= 0.f && std::find_if(intervals.begin(), intervals.end(),
+		[standard](float value) { return std::fabs(standard - value) <= 1e-6f*value; }) == intervals.end())
+	{
+		intervals.insert(std::upper_bound(intervals.begin(), intervals.end(), standard), standard);
+	}
+	return intervals;
+}
+
+//! the index in IconBarUpdateIntervals() of the graphics update interval that is set; -1 for another value
 Index GlfwRenderer::IconBarUpdateInterval()
 {
-	const float intervals[] = { 0.02f, 0.1f, 0.5f, 2.f, 100.f };
-	for (Index k = 0; k < 5; k++)
+	std::vector<float> intervals = IconBarUpdateIntervals();
+	for (Index k = 0; k < (Index)intervals.size(); k++)
 	{
 		if (std::fabs(visSettings->general.graphicsUpdateInterval - intervals[k]) <= 1e-6f*intervals[k]) { return k; }
 	}
-	return 0;
+	return -1;
+}
+
+//! the tooltip of an icon; the one of the update interval lists the intervals
+STDstring GlfwRenderer::IconBarTooltip(Index icon)
+{
+	STDstring text = IconBar::Tooltip(icon);
+	if ((IconBar::Icon)icon == IconBar::Icon::UpdateSpeed)
+	{
+		STDstring values;
+		for (float value : IconBarUpdateIntervals()) { values += (values.size() ? ", " : "") + EXUstd::Num2String(value, 4); }
+		text = "graphics update interval: " + values + " s (keys 1 to 5)";
+	}
+	return text;
 }
 
 //! the text written over an icon: the axes of a view, the number of the update interval, # for shown item numbers
@@ -631,7 +659,7 @@ STDstring GlfwRenderer::IconBarIconText(Index viewID, Index icon, bool control)
 	case IconBar::Icon::ViewXY: return control ? "YX" : "XY";
 	case IconBar::Icon::ViewYZ: return control ? "ZY" : "YZ";
 	case IconBar::Icon::ViewXZ: return control ? "ZX" : "XZ";
-	case IconBar::Icon::UpdateSpeed: return EXUstd::ToString(IconBarUpdateInterval() + 1);
+	case IconBar::Icon::UpdateSpeed: return IconBarUpdateInterval() >= 0 ? EXUstd::ToString(IconBarUpdateInterval() + 1) : "";
 	case IconBar::Icon::Nodes: return visSettings->nodes.showNumbers ? "#" : "";
 	case IconBar::Icon::Bodies: return visSettings->bodies.showNumbers ? "#" : "";
 	case IconBar::Icon::Connectors: return visSettings->connectors.showNumbers ? "#" : "";
@@ -656,7 +684,7 @@ void GlfwRenderer::IconBarExecute(GLFWwindow* window, Index viewID, Index icon, 
 	case IconBar::Icon::ZoomAll: Key(GLFW_KEY_A, 0); break;
 	case IconBar::Icon::ZoomRegion: //the next two clicks are the corners of the region
 		iconBarStates[viewID].regionStep = (iconBarStates[viewID].regionStep == 0) ? 1 : 0;
-		ShowMessage(iconBarStates[viewID].regionStep ? "zoom to a region: click two of its corners (right mouse button: cancel)" : "", 5);
+		ShowMessage(iconBarStates[viewID].regionStep ? "zoom to a region: click two of its corners (right mouse button: cancel; or SHIFT+drag)" : "", 5);
 		break;
 	case IconBar::Icon::ViewXY: Key(control ? GLFW_KEY_4 : GLFW_KEY_1, viewMods); break;
 	case IconBar::Icon::ViewYZ: Key(control ? GLFW_KEY_6 : GLFW_KEY_3, viewMods); break;
@@ -676,8 +704,11 @@ void GlfwRenderer::IconBarExecute(GLFWwindow* window, Index viewID, Index icon, 
 		UpdateGraphicsDataNow();
 		break;
 	case IconBar::Icon::Transparency: view.scene.facesTransparent = !view.scene.facesTransparent; UpdateGraphicsDataNow(); break;
-	case IconBar::Icon::UpdateSpeed: {
-		Key(GLFW_KEY_1 + (int)((IconBarUpdateInterval() + 1) % 5), 0); //the key of the next interval
+	case IconBar::Icon::UpdateSpeed: { //the next interval; the keys 1 to 5 do not reach the interval of the model
+		std::vector<float> intervals = IconBarUpdateIntervals();
+		float interval = intervals[(size_t)((IconBarUpdateInterval() + 1) % (Index)intervals.size())];
+		visSettings->general.graphicsUpdateInterval = interval;
+		ShowMessage("Visualization update: " + EXUstd::Num2String(interval, 4) + "s", 2);
 		break;
 	}
 	case IconBar::Icon::Nodes: Key(GLFW_KEY_N, shift ? GLFW_MOD_CONTROL : 0); break;
@@ -692,23 +723,38 @@ void GlfwRenderer::IconBarExecute(GLFWwindow* window, Index viewID, Index icon, 
 }
 
 //! a click on the bar: the action of the icon on press; the press and its release do not reach the selection and the
-//! rotation of the model; true if the bar took the event
+//! rotation of the model; the corners of the region of the icon zoomRegion, or SHIFT+drag with the left button for
+//! the same zoom, also with the bar off; true if the bar took the event
 bool GlfwRenderer::IconBarMouseButton(GLFWwindow* window, Index viewID, int button, int action, int mods)
 {
 	IconBarState& bar = iconBarStates[viewID];
-	if (action == GLFW_RELEASE && bar.pressed)
-	{
-		bar.pressed = false;
-		return true;
-	}
-	if (action != GLFW_PRESS || !visSettings->interactive.iconBar.show) { return false; }
 	int width, height;
 	GetWindowSize(window, width, height);
 	double x, y;
 	IconBarMouse(window, width, height, x, y);
+	if (action == GLFW_RELEASE && bar.pressed)
+	{
+		bar.pressed = false;
+		if (bar.regionStep == 3) //the end of SHIFT+drag; a click without drag does nothing
+		{
+			bar.regionStep = 0;
+			if (std::fabs(x - bar.regionX) >= 3. || std::fabs(y - bar.regionY) >= 3.) { IconBarZoomToRegion(viewID, bar.regionX, bar.regionY, x, y); }
+		}
+		return true;
+	}
+	if (action != GLFW_PRESS) { return false; }
 	float iconSize, gap, barWidth;
 	IconBarGeometry(viewID, height, iconSize, gap, barWidth);
-	bool onBar = bar.visible >= 0.5f && x >= (double)width - barWidth*bar.visible;
+	bool showBar = GetSettingsView(viewID, *visSettings).window.showIconBar;
+	bool onBar = showBar && bar.visible >= 0.5f && x >= (double)width - barWidth*bar.visible;
+	if (bar.regionStep == 0 && !onBar && button == GLFW_MOUSE_BUTTON_LEFT && mods == GLFW_MOD_SHIFT) //SHIFT+drag
+	{
+		bar.pressed = true;
+		bar.regionX = x;
+		bar.regionY = y;
+		bar.regionStep = 3;
+		return true;
+	}
 	if (bar.regionStep != 0 && !onBar) //the corners of the region to zoom to
 	{
 		bar.pressed = true;
@@ -755,7 +801,10 @@ void GlfwRenderer::IconBarZoomToRegion(Index viewID, double x0, double y0, doubl
 void GlfwRenderer::DrawIconBar(GLFWwindow* window, Index viewID, int width, int height)
 {
 	IconBarState& bar = iconBarStates[viewID];
-	if (!visSettings->interactive.iconBar.show || height <= 0) { bar.visible = 0.f; return; }
+	if (iconBarStandardUpdateInterval < 0.f) { iconBarStandardUpdateInterval = visSettings->general.graphicsUpdateInterval; }
+	bool showBar = GetSettingsView(viewID, *visSettings).window.showIconBar;
+	if (!showBar) { bar.visible = 0.f; }
+	if ((!showBar && bar.regionStep < 2) || height <= 0) { return; }
 	if (bar.textureIDs.size() == 0) //the icons are in the TextureStore (CreateFontTextures)
 	{
 		for (Index icon = 0; icon < IconBar::NumberOfIcons(); icon++) { bar.textureIDs.push_back(textureStore.GetID(STDstring("exudyn.icon.") + IconBar::Name(icon))); }
@@ -767,14 +816,14 @@ void GlfwRenderer::DrawIconBar(GLFWwindow* window, Index viewID, int width, int 
 	IconBarMouse(window, width, height, x, y);
 	bool hovered = glfwGetWindowAttrib(window, GLFW_HOVERED) != 0;
 	bool buttonPressed = glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS || glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_RIGHT) == GLFW_PRESS;
-	float foldDistance = visSettings->interactive.iconBar.foldDistance*(renderViews.State(viewID)->displayScaling > 0.f ? renderViews.State(viewID)->displayScaling : 1.f);
-	bool show = hovered && ((!buttonPressed && x >= (double)width - foldDistance) ||
+	float foldDistance = visSettings->general.iconBarFoldDistance*(renderViews.State(viewID)->displayScaling > 0.f ? renderViews.State(viewID)->displayScaling : 1.f);
+	bool show = showBar && hovered && bar.regionStep != 3 && ((!buttonPressed && x >= (double)width - foldDistance) ||
 		(bar.visible > 0.f && x >= (double)width - barWidth - 2.f*gap));
 
-	//slide in or out; after the mouse left, the bar stays iconBarHoldTime
+	//slide in or out; after the mouse left, the bar stays general.iconBarTimeout
 	double now = EXUstd::GetTimeInSeconds();
 	if (show) { bar.lastShownTime = now; }
-	else if (bar.visible > 0.f && now - bar.lastShownTime < iconBarHoldTime)
+	else if (showBar && bar.visible > 0.f && now - bar.lastShownTime < 0.001*(double)visSettings->general.iconBarTimeout)
 	{
 		show = true;
 		SetCallBackRefreshSignal(); //the next frame checks again
@@ -788,7 +837,7 @@ void GlfwRenderer::DrawIconBar(GLFWwindow* window, Index viewID, int width, int 
 		bar.visible = show ? EXUstd::Minimum(1.f, bar.visible + step) : EXUstd::Maximum(0.f, bar.visible - step);
 		SetCallBackRefreshSignal(); //the next frame continues the animation
 	}
-	bool drawRegion = (bar.regionStep == 2);
+	bool drawRegion = (bar.regionStep >= 2);
 	if (bar.visible <= 0.f && !drawRegion) { return; }
 
 	glPushAttrib(GL_ENABLE_BIT | GL_TEXTURE_BIT | GL_CURRENT_BIT | GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_LINE_BIT);
@@ -872,20 +921,22 @@ void GlfwRenderer::DrawIconBar(GLFWwindow* window, Index viewID, int width, int 
 			}
 		}
 
-		if (hover >= 0) //the tooltip left of the bar
+		if (hover >= 0) //the tooltip left of the bar, in the font size of the texts of the window
 		{
-			STDstring text = IconBar::Tooltip(hover);
-			float tipFont = EXUstd::Maximum(12.f, 0.28f*iconSize);
-			float textWidth = 0.6f*tipFont*(float)text.size();
+			STDstring text = IconBarTooltip(hover);
+			float tipFont = GetSettingsView(viewID, *visSettings).window.globalFontSize*GetFontScaling(viewID);
+			float tipScale = tipFont/(float)bitmapFont.fontSize;
+			float textWidth = tipScale*(float)bitmapFont.characterWidth*(float)text.size();
+			float margin = 0.4f*tipFont;
 			float ty = gap + hover*(iconSize + gap) + 0.5f*iconSize;
 			float tx1 = x0 - gap;
-			float tx0 = EXUstd::Maximum(0.f, tx1 - textWidth - 2.f*gap);
+			float tx0 = EXUstd::Maximum(0.f, tx1 - textWidth - 2.f*margin);
 			glColor4f(1.f, 1.f, 0.88f, 0.95f);
-			Quad(tx0, ty - 0.8f*tipFont, tx1, ty + 0.8f*tipFont);
+			Quad(tx0, ty - 1.12f*tipFont, tx1, ty + 0.64f*tipFont);
 			glPushMatrix();
-			glTranslatef(tx0 + gap, ty + 0.45f*tipFont, 0.f);
+			glTranslatef(tx0 + margin, ty + 0.45f*tipFont, 0.f);
 			glScalef(1.f, -1.f, 1.f);
-			DrawStringWithTextures(text.c_str(), tipFont/(float)bitmapFont.fontSize, Float3({ 0.f, 0.f, 0.f }), Float4({ 0.1f, 0.1f, 0.1f, 1.f }),
+			DrawStringWithTextures(text.c_str(), tipScale, Float3({ 0.f, 0.f, 0.f }), Float4({ 0.1f, 0.1f, 0.1f, 1.f }),
 				bitmapFont, charBuffer, bitmapFontListBase, true);
 			glPopMatrix();
 		}

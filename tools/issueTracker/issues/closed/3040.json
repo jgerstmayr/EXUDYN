@@ -1,0 +1,15 @@
+{
+  "number": 3040,
+  "title": "icon bar: settings per view and in general, SHIFT+drag zoom, tooltips scaled, new icons for lines/edges/faces, model interval in the update list",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "IMPROVEMENT",
+  "effort": "MEDIUM",
+  "description": "Maintainer 2026-10-19 after the second check on screen: SHIFT + left mouse drag zooms to a region (CTRL+A stays); the tooltip left of the bar without overlap, its background up by about 15 % and 10 % higher, in the font size at the monitor scaling and general.displayScaleFactor; interactive.iconBar.show becomes view.window.showIconBar, scaling and foldDistance become general.iconBarScaling and general.iconBarFoldDistance, new general.iconBarTimeout in milliseconds (no deprecation, introduced in this version); icons: edges a rectangle meshed into 8 triangles, faces a cube with front, top and side faces, lines the edges of that cube; the update interval icon cycles through the key intervals with the interval of the model sorted in.",
+  "dateRaised": "2026-10-19",
+  "deadline": "2027-04-17",
+  "dateResolved": "2026-10-19 11:57",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "The icon bar is switched by visualizationSettings.view0.window.showIconBar (per view) and adjusted by general.iconBarScaling, general.iconBarFoldDistance and general.iconBarTimeout (milliseconds; replaces interactive.iconBar); SHIFT + dragging with the left mouse button zooms to the rectangle dragged; the tooltips no longer overlap the bar and follow the display scaling and displayScaleFactor; new icons for lines, edges and faces; the update interval icon includes the interval set by the model (revision2026c step RG6.19.4)",
+  "resolvedInVersion": "1.13.147"
+}

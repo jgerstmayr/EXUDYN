@@ -174,7 +174,7 @@ namespace IconBar
 		static const char* tooltips[] = {
 			"close the renderer (ESCAPE)",
 			"zoom all (A)",
-			"zoom to a region: click two of its corners (CTRL+A zooms to the selected item)",
+			"zoom to a region: click two of its corners (or SHIFT+drag; CTRL+A zooms to the selected item)",
 			"view in the X-Y plane (CTRL: Y-X; SHIFT: from behind)",
 			"view in the Y-Z plane (CTRL: Z-Y; SHIFT: from behind)",
 			"view in the X-Z plane (CTRL: Z-X; SHIFT: from behind)",
@@ -185,7 +185,7 @@ namespace IconBar
 			"show edges of faces and meshes",
 			"show faces",
 			"transparent faces",
-			"graphics update interval: 0.02, 0.1, 0.5, 2, 100 s (keys 1 to 5)",
+			"graphics update interval (keys 1 to 5)",
 			"show nodes (N; SHIFT: numbers, CTRL+N)",
 			"show bodies (B; SHIFT: numbers, CTRL+B)",
 			"show connectors (C; SHIFT: numbers, CTRL+C)",
@@ -201,6 +201,28 @@ namespace IconBar
 		c.Arrow({ 12, 12 }, { 52, 12 }, 4, 11, ink);
 		c.Arrow({ 12, 12 }, { 12, 52 }, 4, 11, ink);
 		c.Disc({ 12, 12 }, 4, ink);
+	}
+
+	//! a cube in an oblique view: its front, top and right faces, or its edges with the three hidden ones thin
+	void DrawCube(Canvas& c, bool faces)
+	{
+		P f0{ 8, 8 }, f1{ 40, 8 }, f2{ 40, 40 }, f3{ 8, 40 };	//the front face, counterclockwise from the bottom left
+		P b0{ 24, 22 }, b1{ 56, 22 }, b2{ 56, 54 }, b3{ 24, 54 };	//the back face
+		if (faces)
+		{
+			c.Polygon({ f0, f1, f2, f3 }, accent);
+			c.Polygon({ f3, f2, b2, b3 }, lightAccent);
+			c.Polygon({ f1, b1, b2, f2 }, Float4({ 0.1f, 0.3f, 0.6f, 1.f }));
+		}
+		else
+		{
+			const Float4 hidden({ 0.18f, 0.2f, 0.24f, 0.45f });
+			c.PolyLine({ f0, b0, b3 }, 2, hidden);
+			c.Line(b0, b1, 2, hidden);
+			c.PolyLine({ f0, f1, b1, b2, b3, f3 }, 3.5f, ink, true);
+			c.PolyLine({ f3, f2, f1 }, 3.5f, ink);
+			c.Line(f2, b2, 3.5f, ink);
+		}
 	}
 
 	void DrawIcon(Index icon, std::vector<unsigned char>& rgba)
@@ -261,18 +283,19 @@ namespace IconBar
 			c.Line({ 6, 32 }, { 58, 32 }, 3, ink);
 			c.Arc({ 32, 32 }, 13, 4, accent);
 			break;
-		case Icon::Lines:
-			c.PolyLine({ {7, 12}, {22, 50}, {34, 22}, {46, 48}, {57, 16} }, 5, ink);
+		case Icon::Lines: //the edges of a cube, the hidden ones thin
+			DrawCube(c, false);
 			break;
-		case Icon::Edges: //the edges of a mesh of triangles
-			c.PolyLine({ {8, 10}, {56, 10}, {56, 54}, {8, 54} }, 4, ink, true);
-			c.Line({ 8, 10 }, { 56, 54 }, 4, ink);
-			c.Line({ 32, 10 }, { 56, 32 }, 3, ink);
-			c.Line({ 8, 32 }, { 32, 54 }, 3, ink);
+		case Icon::Edges: //a rectangle meshed into 8 triangles
+			c.PolyLine({ {7, 10}, {57, 10}, {57, 54}, {7, 54} }, 3.5f, ink, true);
+			c.Line({ 32, 10 }, { 32, 54 }, 2.5f, ink);
+			c.Line({ 7, 32 }, { 57, 32 }, 2.5f, ink);
+			c.Line({ 7, 10 }, { 57, 54 }, 2.5f, ink);
+			c.Line({ 32, 10 }, { 57, 32 }, 2.5f, ink);
+			c.Line({ 7, 32 }, { 32, 54 }, 2.5f, ink);
 			break;
-		case Icon::Faces:
-			c.Polygon({ {8, 10}, {56, 10}, {56, 54}, {8, 54} }, accent);
-			c.Polygon({ {8, 10}, {56, 54}, {8, 54} }, lightAccent);
+		case Icon::Faces: //the faces of a cube
+			DrawCube(c, true);
 			break;
 		case Icon::Transparency: //two squares, the front one transparent
 			c.Rectangle(6, 22, 42, 58, accent);

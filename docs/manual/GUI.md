@@ -95,20 +95,25 @@ does and the key. From the top:
 
 - **quit**: closes the renderer, as ESCAPE;
 - **zoom all** (A) and **zoom to a region**: after the icon, two clicks into the window are the corners of the
-  region, which then fills the window (a right click cancels); CTRL+A zooms to the item selected with the mouse;
+  region, which then fills the window (a right click cancels); dragging a rectangle with the left mouse button and
+  SHIFT held does the same without the icon; CTRL+A zooms to the item selected with the mouse;
 - **views** in the X-Y, Y-Z and X-Z planes and a 3D view (CTRL+1, CTRL+3, CTRL+2, CTRL+7); with CTRL held, the axes
   swap (Y-X, Z-Y, Z-X, as CTRL+4, CTRL+6, CTRL+5) and the icons show them; with SHIFT, the view from behind;
 - **ruler** (F5) and **mouse coordinates** (F3);
 - **lines**, **edges** and **faces** of the scene, and **transparent faces**;
-- **graphics update interval**: each click takes the next of 0.02, 0.1, 0.5, 2 and 100 seconds (keys 1 to 5); the
-  icon shows the number of the current one;
+- **graphics update interval**: each click takes the next of 0.02, 0.1, 0.5, 2 and 100 seconds (keys 1 to 5) and,
+  sorted in, the interval the model set when the bar was first drawn; the icon shows the number of the current one
+  in this list and the tooltip the list;
 - **show nodes, bodies, connectors, markers, loads, sensors** (N, B, C, M, L, S); with SHIFT, their numbers
   (CTRL+N, ...), which the icon marks with #.
 
-An icon that switches something on is drawn pressed while it is on. The bar is not part of saved images.
-`visualizationSettings.interactive.iconBar` switches it off (`show`), scales the icons relative to the display scaling
-of the monitor (`scaling`) - they are made smaller where the window is not high enough for all of them - and sets how
-near to the border the mouse must come (`foldDistance`).
+An icon that switches something on is drawn pressed while it is on. The bar is not part of saved images; the
+tooltips are drawn in `window.globalFontSize`, at the display scaling.
+`visualizationSettings.view0.window.showIconBar` (per view: `view1`, ... for the other views) switches it off. In
+`visualizationSettings.general`, `iconBarScaling` scales the icons relative to the display scaling of the monitor
+times `displayScaleFactor` - they are made smaller where the window is not high enough for all of them -,
+`iconBarFoldDistance` sets how near to the border the mouse must come, and `iconBarTimeout` how many milliseconds the
+bar stays after the mouse left it.
 
 (sec-overview-basics-visualizationsettings)=
 ### Visualization settings dialog

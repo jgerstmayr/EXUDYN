@@ -39,6 +39,9 @@ public: // AUTO:
   Index cylinderTiling;                           //!< AUTO: must be > 0; global number of segments for cylinders; if smaller than 2, 2 segments are used (flat); also around the rope of a reeving system and the wire of a spring drawn as a tube; the disc of ObjectJointRollingDisc and ObjectConnectorRollingDiscPenalty, large compared to the joint, takes 4 times as many; space curves use connectors.curveTiling
   float displayScaleFactor;                       //!< AUTO: must be > 0; factor on the texts of the render window, multiplied with the display scaling of the system (monitor scaling, e.g. 150 percent on Windows, fractional scaling on Linux), which GLFW reads (glfwGetWindowContentScale; on Linux from GLFW 3.3.6 on) and follows when it changes; acts while the renderer runs; the dialogs are scaled with dialogs.fontScaling
   float graphicsUpdateInterval;                   //!< AUTO: must be >= 0; interval of graphics update during simulation in seconds; 0.1 = 10 frames per second; low numbers might slow down computation speed
+  float iconBarFoldDistance;                      //!< AUTO: must be >= 0; distance from the right border of the render window in pixels, at the display scaling, at which the icon bar folds in (#3026)
+  float iconBarScaling;                           //!< AUTO: must be > 0; size of the icons of the icon bar relative to 54 pixels at the display scaling (monitor scaling times displayScaleFactor); the icons are made smaller where the window is not high enough for all of them; see view0.window.showIconBar (#3026)
+  Index iconBarTimeout;                           //!< AUTO: must be >= 0; time in milliseconds the icon bar stays after the mouse left it, before it folds out (#3026)
   bool limitWindowToScreenSize;                   //!< AUTO: True: size for render window of respective view is limited to screen size; False: larger window sizes (e.g. for rendering) allowed according to renderWindowSize
   float minSceneSize;                             //!< AUTO: must be > 0; minimum scene size for initial scene size and for autoFitScene: a scene of points (drawn in pixels) and texts has no size; reduce it for models smaller than it, see [](#sec-renderer-modelsize); SET GREATER THAN ZERO
   float pointSize;                                //!< AUTO: must be > 0; global point size (absolute)
@@ -81,6 +84,9 @@ public: // AUTO:
     cylinderTiling = 16;
     displayScaleFactor = 1.f;
     graphicsUpdateInterval = 0.1f;
+    iconBarFoldDistance = 20.f;
+    iconBarScaling = 0.7f;
+    iconBarTimeout = 300;
     limitWindowToScreenSize = true;
     minSceneSize = 0.01f;
     pointSize = 0.01f;
@@ -158,6 +164,9 @@ public: // AUTO:
     os << "  cylinderTiling = " << cylinderTiling << "\n";
     os << "  displayScaleFactor = " << displayScaleFactor << "\n";
     os << "  graphicsUpdateInterval = " << graphicsUpdateInterval << "\n";
+    os << "  iconBarFoldDistance = " << iconBarFoldDistance << "\n";
+    os << "  iconBarScaling = " << iconBarScaling << "\n";
+    os << "  iconBarTimeout = " << iconBarTimeout << "\n";
     os << "  limitWindowToScreenSize = " << limitWindowToScreenSize << "\n";
     os << "  minSceneSize = " << minSceneSize << "\n";
     os << "  pointSize = " << pointSize << "\n";
@@ -1432,6 +1441,7 @@ public: // AUTO:
   Index2 renderWindowPosition;                    //!< AUTO: position of the top left corner of the render window of this view, in pixels; a NEGATIVE coordinate - which is the default - means that the window manager places the window, as it did before this setting existed. Set both to place the window, or store them in `~/.exudyn/config.json` to have every run start there, see Section [](#sec-usersettings). NOTE: this is the position of the OpenGL area, not of the title bar, so a small value hides part of the title bar and 0 hides it completely - which still leaves the escape key, and is a way to have a view without one. The position is only used while the window is created, and one that lies outside the screens you have now puts the window where you cannot reach it
   Index2 renderWindowSize;                        //!< AUTO: initial size of the render window of this view, in pixels
   bool showComputationInfo;                       //!< AUTO: true = show (hide) all computation information including Exudyn and version
+  bool showIconBar;                               //!< AUTO: True: the icon bar folds in when the mouse comes near the right border of the render window, without a button pressed; its icons do what keys do; see general.iconBarScaling, general.iconBarFoldDistance and general.iconBarTimeout (#3026)
   bool showMouseCoordinates;                      //!< AUTO: True: show OpenGL coordinates and distance to last left mouse button pressed position in renderer status message; switched on/off with key 'F3'; only works for axis-aligned ortho-projections
   bool showRenderStateInfo;                       //!< AUTO: True: show renderer.state infos regarding zoom, offset and rotation in renderer status message; switched on/off with 'CTRL-F3'
   bool showRuler;                                 //!< AUTO: True: show a ruler along the bottom and the left border of the window, with ticks at 1, 2 or 5 times a power of 10 in model units; in an axis-aligned view the labels are the coordinates of the view, as the mouse coordinates show them, else the distance from the left or bottom end; only shown with perspective=0; switched on/off with key 'F5' (#2244)
@@ -1454,6 +1464,7 @@ public: // AUTO:
     renderWindowPosition = Index2({-1,-1});
     renderWindowSize = Index2({1024,768});
     showComputationInfo = true;
+    showIconBar = true;
     showMouseCoordinates = false;
     showRenderStateInfo = false;
     showRuler = false;
@@ -1477,6 +1488,7 @@ public: // AUTO:
     os << "  renderWindowPosition = " << renderWindowPosition << "\n";
     os << "  renderWindowSize = " << renderWindowSize << "\n";
     os << "  showComputationInfo = " << showComputationInfo << "\n";
+    os << "  showIconBar = " << showIconBar << "\n";
     os << "  showMouseCoordinates = " << showMouseCoordinates << "\n";
     os << "  showRenderStateInfo = " << showRenderStateInfo << "\n";
     os << "  showRuler = " << showRuler << "\n";
@@ -2788,65 +2800,6 @@ public: // AUTO:
 
 
 /** ***********************************************************************************************
-* @class        VSettingsIconBar
-* @brief        The icon bar of the render window: it folds in from the right border when the mouse comes near it without a button pressed, and its icons do what keys do (#3026).
-*
-* @author       AUTO: Gerstmayr Johannes
-* @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2026-10-19 (last modfied)
-*
-* @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
-* @note         Bug reports, support and further information:
-                - email: johannes.gerstmayr@uibk.ac.at
-                - weblink: missing
-                
-************************************************************************************************ **/
-class VSettingsIconBar // AUTO: 
-{
-public: // AUTO: 
-  float foldDistance;                             //!< AUTO: must be >= 0; distance from the right border in pixels, at the display scaling of the monitor, at which the bar folds in
-  float scaling;                                  //!< AUTO: must be > 0; size of the icons relative to 54 pixels at the display scaling of the monitor; the icons are made smaller where the window is not high enough for all of them
-  bool show;                                      //!< AUTO: True: the icon bar folds in when the mouse comes near the right border of the render window
-
-private: // AUTO: 
-  VisualizationSettings* backlink; //!< AUTO: backlink for global access of structure
-
-
-public: // AUTO: 
-  //! AUTO: default constructor with parameter initialization
-  VSettingsIconBar()
-  {
-    backlink=nullptr;
-    foldDistance = 20.f;
-    scaling = 0.7f;
-    show = true;
-  };
-  void Init(VisualizationSettings* backlinkInit) //!< AUTO: called from parent structure
-  {
-    backlink = backlinkInit;
-  }
-
-  // AUTO: access functions
-  //! AUTO: print function used in ostream operator (print is virtual and can thus be overloaded)
-  virtual void Print(std::ostream& os) const
-  {
-    os << "VSettingsIconBar" << ":\n";
-    os << "  foldDistance = " << foldDistance << "\n";
-    os << "  scaling = " << scaling << "\n";
-    os << "  show = " << show << "\n";
-    os << "\n";
-  }
-
-  friend std::ostream& operator<<(std::ostream& os, const VSettingsIconBar& object)
-  {
-    object.Print(os);
-    return os;
-  }
-
-};
-
-
-/** ***********************************************************************************************
 * @class        VSettingsInteractive
 * @brief        Functionality to interact with render window; includes special rotation and zoom factors, item-highlighting, marker tracking, item selection and keyPressUserFunction.
 *
@@ -2864,7 +2817,6 @@ class VSettingsInteractive // AUTO:
 {
 public: // AUTO: 
   VSettingsInteractiveAdvanced advanced;          //!< AUTO: advanced interactive visualization settings
-  VSettingsIconBar iconBar;                       //!< AUTO: the icon bar of the render window (#3026)
   bool autoRotateModelView;                       //!< AUTO: True: rotate model view with autorotation
   Float3 autoRotationVelocity;                    //!< AUTO: Angular velocity vector for auto-rotation of scene (only visualization view is rotated, not the model itself!)
   Index highlightItemIndex;                       //!< AUTO: index of item that shall be highlighted (e.g., to find item which cauess problems); if set -1, no item is highlighted
@@ -2898,7 +2850,6 @@ public: // AUTO:
   {
     backlink = backlinkInit;
     advanced.Init(backlinkInit);
-    iconBar.Init(backlinkInit);
   }
 
   // AUTO: access functions
@@ -3007,7 +2958,6 @@ public: // AUTO:
   {
     os << "VSettingsInteractive" << ":\n";
     os << "  advanced = " << advanced << "\n";
-    os << "  iconBar = " << iconBar << "\n";
     os << "  autoRotateModelView = " << autoRotateModelView << "\n";
     os << "  autoRotationVelocity = " << autoRotationVelocity << "\n";
     os << "  highlightItemIndex = " << highlightItemIndex << "\n";

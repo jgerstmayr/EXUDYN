@@ -92,6 +92,18 @@ This section includes hierarchical structures for visualization settings, e.g., 
             deprecated=Deprecated('1.12.445', 2031),
             defaultValue=NoDefaultValue,
             description=r'displayScaleFactor'),
+        StructureParameter(type=Tfloat(greaterThan=0),
+            pythonName='iconBarScaling',
+            defaultValue=0.7,
+            description=r'size of the icons of the icon bar relative to 54 pixels at the display scaling (monitor scaling times displayScaleFactor); the icons are made smaller where the window is not high enough for all of them; see view0.window.showIconBar (#3026)'),
+        StructureParameter(type=Tfloat(minimum=0),
+            pythonName='iconBarFoldDistance',
+            defaultValue=20.,
+            description=r'distance from the right border of the render window in pixels, at the display scaling, at which the icon bar folds in (#3026)'),
+        StructureParameter(type=TIndex(minimum=0),
+            pythonName='iconBarTimeout',
+            defaultValue=300,
+            description=r'time in milliseconds the icon bar stays after the mouse left it, before it folds out (#3026)'),
         StructureParameter(type=Tbool, 
             pythonName='useBitmapText',
             defaultValue=True,
@@ -1097,6 +1109,10 @@ definitions.append(StructureDefinition(
             pythonName='showRuler',
             defaultValue=False,
             description=r"True: show a ruler along the bottom and the left border of the window, with ticks at 1, 2 or 5 times a power of 10 in model units; in an axis-aligned view the labels are the coordinates of the view, as the mouse coordinates show them, else the distance from the left or bottom end; only shown with perspective=0; switched on/off with key 'F5' (#2244)"),
+        StructureParameter(type=Tbool,
+            pythonName='showIconBar',
+            defaultValue=True,
+            description=r"True: the icon bar folds in when the mouse comes near the right border of the render window, without a button pressed; its icons do what keys do; see general.iconBarScaling, general.iconBarFoldDistance and general.iconBarTimeout (#3026)"),
         StructureParameter(type=Tbool, 
             pythonName='showRenderStateInfo',
             defaultValue=False,
@@ -2170,34 +2186,6 @@ definitions.append(StructureDefinition(
     ))
 
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-#++++++++++++++++   VSettingsIconBar   ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-#++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-definitions.append(StructureDefinition(
-    className='VSettingsIconBar',
-    writeFile='VisualizationSettings.h',
-    addDictionaryAccess=False,
-    appendToFile=True,
-    classDescription=r'The icon bar of the render window: it folds in from the right border when the mouse comes near it without a button pressed, and its icons do what keys do (#3026).',
-    typicalPaths='SC.visualizationSettings.interactive',
-    writePybindIncludes=True,
-    members=[
-        StructureParameter(type=Tbool,
-            pythonName='show',
-            defaultValue=True,
-            description=r'True: the icon bar folds in when the mouse comes near the right border of the render window'),
-        StructureParameter(type=Tfloat(greaterThan=0),
-            pythonName='scaling',
-            defaultValue=0.7,
-            description=r'size of the icons relative to 54 pixels at the display scaling of the monitor; the icons are made smaller where the window is not high enough for all of them'),
-        StructureParameter(type=Tfloat(minimum=0),
-            pythonName='foldDistance',
-            defaultValue=20.,
-            description=r'distance from the right border in pixels, at the display scaling of the monitor, at which the bar folds in'),
-        ],
-    ))
-
-
-#++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #++++++++++++++++   VSettingsInteractive   ++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 definitions.append(StructureDefinition(
@@ -2213,10 +2201,6 @@ definitions.append(StructureDefinition(
             pythonName='advanced',
             defaultValue=NoDefaultValue,
             description=r'advanced interactive visualization settings'),
-        StructureParameter(type='VSettingsIconBar',
-            pythonName='iconBar',
-            defaultValue=NoDefaultValue,
-            description=r'the icon bar of the render window (#3026)'),
         StructureParameter(type=Tbool, 
             pythonName='autoRotateModelView',
             defaultValue=False,

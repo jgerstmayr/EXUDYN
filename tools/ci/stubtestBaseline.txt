@@ -133,7 +133,6 @@ exudyn.VSettingsGeneral.showComputationInfo
 exudyn.VSettingsGeneral.textSize
 exudyn.VSettingsGeneral.useWindowsDisplayScaleFactor
 exudyn.VSettingsGeneral.worldBasisSize
-exudyn.VSettingsIconBar
 exudyn.VSettingsInteractive
 exudyn.VSettingsInteractive.highlightColor
 exudyn.VSettingsInteractive.highlightOtherColor

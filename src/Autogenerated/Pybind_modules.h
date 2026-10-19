@@ -663,6 +663,9 @@
         .def_property("drawCoordinateSystem", &VSettingsGeneral::PyGetDrawCoordinateSystem, &VSettingsGeneral::PySetDrawCoordinateSystem)
         .def_property("drawWorldBasis", &VSettingsGeneral::PyGetDrawWorldBasis, &VSettingsGeneral::PySetDrawWorldBasis)
         .def_property("graphicsUpdateInterval", EPyUtils::MemberGetter(&VSettingsGeneral::graphicsUpdateInterval), EPyUtils::MemberSetter(&VSettingsGeneral::graphicsUpdateInterval, EPyUtils::RangeCheck::nonNegative, "VSettingsGeneral.graphicsUpdateInterval"), "interval of graphics update during simulation in seconds; 0.1 = 10 frames per second; low numbers might slow down computation speed")
+        .def_property("iconBarFoldDistance", EPyUtils::MemberGetter(&VSettingsGeneral::iconBarFoldDistance), EPyUtils::MemberSetter(&VSettingsGeneral::iconBarFoldDistance, EPyUtils::RangeCheck::nonNegative, "VSettingsGeneral.iconBarFoldDistance"), "distance from the right border of the render window in pixels, at the display scaling, at which the icon bar folds in (#3026)")
+        .def_property("iconBarScaling", EPyUtils::MemberGetter(&VSettingsGeneral::iconBarScaling), EPyUtils::MemberSetter(&VSettingsGeneral::iconBarScaling, EPyUtils::RangeCheck::positive, "VSettingsGeneral.iconBarScaling"), "size of the icons of the icon bar relative to 54 pixels at the display scaling (monitor scaling times displayScaleFactor); the icons are made smaller where the window is not high enough for all of them; see view0.window.showIconBar (#3026)")
+        .def_property("iconBarTimeout", EPyUtils::MemberGetter(&VSettingsGeneral::iconBarTimeout), EPyUtils::MemberSetter(&VSettingsGeneral::iconBarTimeout, EPyUtils::RangeCheck::nonNegative, "VSettingsGeneral.iconBarTimeout"), "time in milliseconds the icon bar stays after the mouse left it, before it folds out (#3026)")
         .def_property("limitWindowToScreenSize", EPyUtils::MemberGetter(&VSettingsGeneral::limitWindowToScreenSize), EPyUtils::MemberSetter(&VSettingsGeneral::limitWindowToScreenSize, "VSettingsGeneral.limitWindowToScreenSize"), "True: size for render window of respective view is limited to screen size; False: larger window sizes (e.g. for rendering) allowed according to renderWindowSize")
         .def_property("linuxDisplayScaleFactor", &VSettingsGeneral::PyGetLinuxDisplayScaleFactor, &VSettingsGeneral::PySetLinuxDisplayScaleFactor)
         .def_property("minSceneSize", EPyUtils::MemberGetter(&VSettingsGeneral::minSceneSize), EPyUtils::MemberSetter(&VSettingsGeneral::minSceneSize, EPyUtils::RangeCheck::positive, "VSettingsGeneral.minSceneSize"), "minimum scene size for initial scene size and for autoFitScene: a scene of points (drawn in pixels) and texts has no size; reduce it for models smaller than it, see [](#sec-renderer-modelsize); SET GREATER THAN ZERO")
@@ -1168,6 +1171,7 @@
         .def_property("renderWindowPosition", EPyUtils::MemberGetter(&VSettingsWindow::renderWindowPosition), EPyUtils::MemberSetter(&VSettingsWindow::renderWindowPosition, "VSettingsWindow.renderWindowPosition"), "position of the top left corner of the render window of this view, in pixels; a NEGATIVE coordinate - which is the default - means that the window manager places the window, as it did before this setting existed. Set both to place the window, or store them in `~/.exudyn/config.json` to have every run start there, see Section [](#sec-usersettings). NOTE: this is the position of the OpenGL area, not of the title bar, so a small value hides part of the title bar and 0 hides it completely - which still leaves the escape key, and is a way to have a view without one. The position is only used while the window is created, and one that lies outside the screens you have now puts the window where you cannot reach it")
         .def_property("renderWindowSize", EPyUtils::MemberGetter(&VSettingsWindow::renderWindowSize), EPyUtils::MemberSetter(&VSettingsWindow::renderWindowSize, "VSettingsWindow.renderWindowSize"), "initial size of the render window of this view, in pixels")
         .def_property("showComputationInfo", EPyUtils::MemberGetter(&VSettingsWindow::showComputationInfo), EPyUtils::MemberSetter(&VSettingsWindow::showComputationInfo, "VSettingsWindow.showComputationInfo"), "true = show (hide) all computation information including Exudyn and version")
+        .def_property("showIconBar", EPyUtils::MemberGetter(&VSettingsWindow::showIconBar), EPyUtils::MemberSetter(&VSettingsWindow::showIconBar, "VSettingsWindow.showIconBar"), "True: the icon bar folds in when the mouse comes near the right border of the render window, without a button pressed; its icons do what keys do; see general.iconBarScaling, general.iconBarFoldDistance and general.iconBarTimeout (#3026)")
         .def_property("showMouseCoordinates", EPyUtils::MemberGetter(&VSettingsWindow::showMouseCoordinates), EPyUtils::MemberSetter(&VSettingsWindow::showMouseCoordinates, "VSettingsWindow.showMouseCoordinates"), "True: show OpenGL coordinates and distance to last left mouse button pressed position in renderer status message; switched on/off with key 'F3'; only works for axis-aligned ortho-projections")
         .def_property("showRenderStateInfo", EPyUtils::MemberGetter(&VSettingsWindow::showRenderStateInfo), EPyUtils::MemberSetter(&VSettingsWindow::showRenderStateInfo, "VSettingsWindow.showRenderStateInfo"), "True: show renderer.state infos regarding zoom, offset and rotation in renderer status message; switched on/off with 'CTRL-F3'")
         .def_property("showRuler", EPyUtils::MemberGetter(&VSettingsWindow::showRuler), EPyUtils::MemberSetter(&VSettingsWindow::showRuler, "VSettingsWindow.showRuler"), "True: show a ruler along the bottom and the left border of the window, with ticks at 1, 2 or 5 times a power of 10 in model units; in an axis-aligned view the labels are the coordinates of the view, as the mouse coordinates show them, else the distance from the left or bottom end; only shown with perspective=0; switched on/off with key 'F5' (#2244)")
@@ -1593,33 +1597,9 @@
 
     //++++++++++++++++++++++++++++++++
     //++++++++++++++++++++++++++++++++
-    py::class_<VSettingsIconBar>(m, "VSettingsIconBar", "VSettingsIconBar class") // AUTO: 
-        .def(py::init<>())
-        .def_property("foldDistance", EPyUtils::MemberGetter(&VSettingsIconBar::foldDistance), EPyUtils::MemberSetter(&VSettingsIconBar::foldDistance, EPyUtils::RangeCheck::nonNegative, "VSettingsIconBar.foldDistance"), "distance from the right border in pixels, at the display scaling of the monitor, at which the bar folds in")
-        .def_property("scaling", EPyUtils::MemberGetter(&VSettingsIconBar::scaling), EPyUtils::MemberSetter(&VSettingsIconBar::scaling, EPyUtils::RangeCheck::positive, "VSettingsIconBar.scaling"), "size of the icons relative to 54 pixels at the display scaling of the monitor; the icons are made smaller where the window is not high enough for all of them")
-        .def_property("show", EPyUtils::MemberGetter(&VSettingsIconBar::show), EPyUtils::MemberSetter(&VSettingsIconBar::show, "VSettingsIconBar.show"), "True: the icon bar folds in when the mouse comes near the right border of the render window")
-        // AUTO: access functions for VSettingsIconBar
-        .def("__repr__", [](const VSettingsIconBar &item) { return "<VSettingsIconBar:\n" + EXUstd::ToString(item) + " >"; } ) //!< AUTO: add representation for object based on ostream operator
-        .def("GetDictionary", [](const VSettingsIconBar &item) { return EPyUtils::GetDictionary(item); }) //!< AUTO: add read for dictionary access
-        .def("SetDictionary", [](VSettingsIconBar &item, const py::dict& d) { return EPyUtils::SetDictionary(item, d); }) //!< AUTO: add write from dictionary access
-        .def(py::pickle(
-            [](const VSettingsIconBar& self) {
-                return py::make_tuple(EPyUtils::GetDictionary(self));
-            },
-            [](const py::tuple& t) {
-                CHECKandTHROW(t.size() == 1, "VSettingsIconBar: loading data with pickle received invalid data structure!", ExudynValueError);
-                VSettingsIconBar self;
-                EPyUtils::SetDictionary(self,py::cast<py::dict>(t[0]));
-                return self;
-            }))
-        ; // AUTO: end of class definition!!!
-
-    //++++++++++++++++++++++++++++++++
-    //++++++++++++++++++++++++++++++++
     py::class_<VSettingsInteractive>(m, "VSettingsInteractive", "VSettingsInteractive class") // AUTO: 
         .def(py::init<>())
         .def_readwrite("advanced", &VSettingsInteractive::advanced, "advanced interactive visualization settings")
-        .def_readwrite("iconBar", &VSettingsInteractive::iconBar, "the icon bar of the render window (#3026)")
         .def_property("autoRotateModelView", EPyUtils::MemberGetter(&VSettingsInteractive::autoRotateModelView), EPyUtils::MemberSetter(&VSettingsInteractive::autoRotateModelView, "VSettingsInteractive.autoRotateModelView"), "True: rotate model view with autorotation")
         .def_property("autoRotationVelocity", EPyUtils::MemberGetter(&VSettingsInteractive::autoRotationVelocity), EPyUtils::MemberSetter(&VSettingsInteractive::autoRotationVelocity, "VSettingsInteractive.autoRotationVelocity"), "Angular velocity vector for auto-rotation of scene (only visualization view is rotated, not the model itself!)")
         .def_property("highlightColor", &VSettingsInteractive::PyGetHighlightColor, &VSettingsInteractive::PySetHighlightColor)

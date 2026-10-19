@@ -1987,6 +1987,30 @@ inline py::dict GetDictionaryWithTypeInfo(const VSettingsGeneral& data) {
 
     d = py::dict(); //reset local dict
     d["itemIdentifier"] = std::string(""); //identifier for item
+    d["value"] = data.iconBarFoldDistance;
+    d["type"] = "UFloat";
+    d["size"] = std::vector<int>{1};
+    d["description"] = "distance from the right border of the render window in pixels, at the display scaling, at which the icon bar folds in (#3026)";
+    structureDict["iconBarFoldDistance"] = d;
+
+    d = py::dict(); //reset local dict
+    d["itemIdentifier"] = std::string(""); //identifier for item
+    d["value"] = data.iconBarScaling;
+    d["type"] = "PFloat";
+    d["size"] = std::vector<int>{1};
+    d["description"] = "size of the icons of the icon bar relative to 54 pixels at the display scaling (monitor scaling times displayScaleFactor); the icons are made smaller where the window is not high enough for all of them; see view0.window.showIconBar (#3026)";
+    structureDict["iconBarScaling"] = d;
+
+    d = py::dict(); //reset local dict
+    d["itemIdentifier"] = std::string(""); //identifier for item
+    d["value"] = data.iconBarTimeout;
+    d["type"] = "UInt";
+    d["size"] = std::vector<int>{1};
+    d["description"] = "time in milliseconds the icon bar stays after the mouse left it, before it folds out (#3026)";
+    structureDict["iconBarTimeout"] = d;
+
+    d = py::dict(); //reset local dict
+    d["itemIdentifier"] = std::string(""); //identifier for item
     d["value"] = data.limitWindowToScreenSize;
     d["type"] = "bool";
     d["size"] = std::vector<int>{1};
@@ -2170,6 +2194,9 @@ inline py::dict GetDictionary(const VSettingsGeneral& data) {
     structureDict["cylinderTiling"] = data.cylinderTiling;
     structureDict["displayScaleFactor"] = data.displayScaleFactor;
     structureDict["graphicsUpdateInterval"] = data.graphicsUpdateInterval;
+    structureDict["iconBarFoldDistance"] = data.iconBarFoldDistance;
+    structureDict["iconBarScaling"] = data.iconBarScaling;
+    structureDict["iconBarTimeout"] = data.iconBarTimeout;
     structureDict["limitWindowToScreenSize"] = data.limitWindowToScreenSize;
     structureDict["minSceneSize"] = data.minSceneSize;
     structureDict["pointSize"] = data.pointSize;
@@ -2207,6 +2234,9 @@ inline void SetDictionary(VSettingsGeneral& data, const py::dict& d) {
     EPyUtils::FromPython(d["cylinderTiling"], data.cylinderTiling, EPyUtils::RangeCheck::positive, "VSettingsGeneral.cylinderTiling");
     EPyUtils::FromPython(d["displayScaleFactor"], data.displayScaleFactor, EPyUtils::RangeCheck::positive, "VSettingsGeneral.displayScaleFactor");
     EPyUtils::FromPython(d["graphicsUpdateInterval"], data.graphicsUpdateInterval, EPyUtils::RangeCheck::nonNegative, "VSettingsGeneral.graphicsUpdateInterval");
+    EPyUtils::FromPython(d["iconBarFoldDistance"], data.iconBarFoldDistance, EPyUtils::RangeCheck::nonNegative, "VSettingsGeneral.iconBarFoldDistance");
+    EPyUtils::FromPython(d["iconBarScaling"], data.iconBarScaling, EPyUtils::RangeCheck::positive, "VSettingsGeneral.iconBarScaling");
+    EPyUtils::FromPython(d["iconBarTimeout"], data.iconBarTimeout, EPyUtils::RangeCheck::nonNegative, "VSettingsGeneral.iconBarTimeout");
     EPyUtils::FromPython(d["limitWindowToScreenSize"], data.limitWindowToScreenSize, "VSettingsGeneral.limitWindowToScreenSize");
     EPyUtils::FromPython(d["minSceneSize"], data.minSceneSize, EPyUtils::RangeCheck::positive, "VSettingsGeneral.minSceneSize");
     EPyUtils::FromPython(d["pointSize"], data.pointSize, EPyUtils::RangeCheck::positive, "VSettingsGeneral.pointSize");
@@ -4018,6 +4048,14 @@ inline py::dict GetDictionaryWithTypeInfo(const VSettingsWindow& data) {
 
     d = py::dict(); //reset local dict
     d["itemIdentifier"] = std::string(""); //identifier for item
+    d["value"] = data.showIconBar;
+    d["type"] = "bool";
+    d["size"] = std::vector<int>{1};
+    d["description"] = "True: the icon bar folds in when the mouse comes near the right border of the render window, without a button pressed; its icons do what keys do; see general.iconBarScaling, general.iconBarFoldDistance and general.iconBarTimeout (#3026)";
+    structureDict["showIconBar"] = d;
+
+    d = py::dict(); //reset local dict
+    d["itemIdentifier"] = std::string(""); //identifier for item
     d["value"] = data.showMouseCoordinates;
     d["type"] = "bool";
     d["size"] = std::vector<int>{1};
@@ -4069,6 +4107,7 @@ inline py::dict GetDictionary(const VSettingsWindow& data) {
     structureDict["renderWindowPosition"] = EPyUtils::ToPythonMember(data.renderWindowPosition);
     structureDict["renderWindowSize"] = EPyUtils::ToPythonMember(data.renderWindowSize);
     structureDict["showComputationInfo"] = data.showComputationInfo;
+    structureDict["showIconBar"] = data.showIconBar;
     structureDict["showMouseCoordinates"] = data.showMouseCoordinates;
     structureDict["showRenderStateInfo"] = data.showRenderStateInfo;
     structureDict["showRuler"] = data.showRuler;
@@ -4086,6 +4125,7 @@ inline void SetDictionary(VSettingsWindow& data, const py::dict& d) {
     EPyUtils::FromPython(d["renderWindowPosition"], data.renderWindowPosition, "VSettingsWindow.renderWindowPosition");
     EPyUtils::FromPython(d["renderWindowSize"], data.renderWindowSize, "VSettingsWindow.renderWindowSize");
     EPyUtils::FromPython(d["showComputationInfo"], data.showComputationInfo, "VSettingsWindow.showComputationInfo");
+    EPyUtils::FromPython(d["showIconBar"], data.showIconBar, "VSettingsWindow.showIconBar");
     EPyUtils::FromPython(d["showMouseCoordinates"], data.showMouseCoordinates, "VSettingsWindow.showMouseCoordinates");
     EPyUtils::FromPython(d["showRenderStateInfo"], data.showRenderStateInfo, "VSettingsWindow.showRenderStateInfo");
     EPyUtils::FromPython(d["showRuler"], data.showRuler, "VSettingsWindow.showRuler");
@@ -5319,60 +5359,11 @@ inline void SetDictionary(VSettingsInteractiveAdvanced& data, const py::dict& d)
 }
 
 //! AUTO: read access to structure; converting into dictionary
-inline py::dict GetDictionaryWithTypeInfo(const VSettingsIconBar& data) {
-    auto structureDict = py::dict();
-    auto d = py::dict(); //local dict
-    structureDict["structureDescription"] = "The icon bar of the render window: it folds in from the right border when the mouse comes near it without a button pressed, and its icons do what keys do (#3026).";
-    d = py::dict(); //reset local dict
-    d["itemIdentifier"] = std::string(""); //identifier for item
-    d["value"] = data.foldDistance;
-    d["type"] = "UFloat";
-    d["size"] = std::vector<int>{1};
-    d["description"] = "distance from the right border in pixels, at the display scaling of the monitor, at which the bar folds in";
-    structureDict["foldDistance"] = d;
-
-    d = py::dict(); //reset local dict
-    d["itemIdentifier"] = std::string(""); //identifier for item
-    d["value"] = data.scaling;
-    d["type"] = "PFloat";
-    d["size"] = std::vector<int>{1};
-    d["description"] = "size of the icons relative to 54 pixels at the display scaling of the monitor; the icons are made smaller where the window is not high enough for all of them";
-    structureDict["scaling"] = d;
-
-    d = py::dict(); //reset local dict
-    d["itemIdentifier"] = std::string(""); //identifier for item
-    d["value"] = data.show;
-    d["type"] = "bool";
-    d["size"] = std::vector<int>{1};
-    d["description"] = "True: the icon bar folds in when the mouse comes near the right border of the render window";
-    structureDict["show"] = d;
-
-    return structureDict;
-}
-
-//! AUTO: read access to structure; converting into dictionary without type info
-inline py::dict GetDictionary(const VSettingsIconBar& data) {
-    auto structureDict = py::dict();
-    structureDict["foldDistance"] = data.foldDistance;
-    structureDict["scaling"] = data.scaling;
-    structureDict["show"] = data.show;
-    return structureDict;
-}
-
-//! AUTO: write access to data structure; converting dictionary d into structure
-inline void SetDictionary(VSettingsIconBar& data, const py::dict& d) {
-    EPyUtils::FromPython(d["foldDistance"], data.foldDistance, EPyUtils::RangeCheck::nonNegative, "VSettingsIconBar.foldDistance");
-    EPyUtils::FromPython(d["scaling"], data.scaling, EPyUtils::RangeCheck::positive, "VSettingsIconBar.scaling");
-    EPyUtils::FromPython(d["show"], data.show, "VSettingsIconBar.show");
-}
-
-//! AUTO: read access to structure; converting into dictionary
 inline py::dict GetDictionaryWithTypeInfo(const VSettingsInteractive& data) {
     auto structureDict = py::dict();
     auto d = py::dict(); //local dict
     structureDict["structureDescription"] = "Functionality to interact with render window; includes special rotation and zoom factors, item-highlighting, marker tracking, item selection and keyPressUserFunction.";
     structureDict["advanced"] = GetDictionaryWithTypeInfo(data.advanced);
-    structureDict["iconBar"] = GetDictionaryWithTypeInfo(data.iconBar);
     d = py::dict(); //reset local dict
     d["itemIdentifier"] = std::string(""); //identifier for item
     d["value"] = data.autoRotateModelView;
@@ -5444,7 +5435,6 @@ inline py::dict GetDictionaryWithTypeInfo(const VSettingsInteractive& data) {
 inline py::dict GetDictionary(const VSettingsInteractive& data) {
     auto structureDict = py::dict();
     structureDict["advanced"] = GetDictionary(data.advanced);
-    structureDict["iconBar"] = GetDictionary(data.iconBar);
     structureDict["autoRotateModelView"] = data.autoRotateModelView;
     structureDict["autoRotationVelocity"] = EPyUtils::ToPythonMember(data.autoRotationVelocity);
     structureDict["highlightItemIndex"] = data.highlightItemIndex;
@@ -5459,7 +5449,6 @@ inline py::dict GetDictionary(const VSettingsInteractive& data) {
 //! AUTO: write access to data structure; converting dictionary d into structure
 inline void SetDictionary(VSettingsInteractive& data, const py::dict& d) {
     SetDictionary(data.advanced, py::cast<py::dict>(d["advanced"]));
-    SetDictionary(data.iconBar, py::cast<py::dict>(d["iconBar"]));
     EPyUtils::FromPython(d["autoRotateModelView"], data.autoRotateModelView, "VSettingsInteractive.autoRotateModelView");
     EPyUtils::FromPython(d["autoRotationVelocity"], data.autoRotationVelocity, "VSettingsInteractive.autoRotationVelocity");
     EPyUtils::FromPython(d["highlightItemIndex"], data.highlightItemIndex, "VSettingsInteractive.highlightItemIndex");
