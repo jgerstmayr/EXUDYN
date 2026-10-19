@@ -2413,3 +2413,14 @@ storing values shall be used rarely, each case discussed with and approved by th
   names the caches. The results of the test models are unchanged.
 - userRigidBodyTest.py with 10000 steps, as RG12.2.3: Python user functions 4.35 -> 10.9 s, symbolic 1.86 -> 4.13 s,
   ObjectRigidBody 0.12 s; no memory allocation per step.
+
+<a id="rg6-19-10"></a>
+### RG6.19.10 — the CFG buttons and the bar with the raytracer (2026-10-20, #3050)
+*(Maintainer 2026-10-20, with a screenshot of the CFG buttons: CFG shall be written lower, the underlay rectangle
+slightly larger and without border; with the raytracer the bar also fades in, and as the raytracer is slow it shall
+show completely with no delay.)*
+- config0 to config3: the rounded rectangle at 1 to 63 of the 64 pixels, radius 9, without the outline; the text
+  CFG0 ... has its baseline at 0.42 of the icon height (was 1.1 font sizes, so that it stood on the upper edge),
+  above the three sliders. test_iconBar.py allows these buttons 97 % coverage.
+- With `camera.useRaytracer` of the view, `bar.visible` jumps to its target instead of sliding over 0.15 s; the time the
+  bar stays after the mouse left it is the same.

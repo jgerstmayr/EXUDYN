@@ -1,0 +1,15 @@
+{
+  "number": 3050,
+  "title": "icon bar: CFG text lower on a larger button without border; no fold animation with the raytracer",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "IMPROVEMENT",
+  "effort": "LOW",
+  "description": "Maintainer 2026-10-20 with a screenshot: CFG0 ... is written lower, the underlay rectangle is slightly larger and has no border; with the raytracer the bar also fades in, but a raytraced frame is slow, so the bar shall show completely without delay in that case.",
+  "dateRaised": "2026-10-20",
+  "deadline": "2027-04-18",
+  "dateResolved": "2026-10-20 00:31",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "The CFG buttons of the icon bar are larger, without border, with CFG0 ... written lower; with the raytracer the bar appears at once (revision2026c step RG6.19.10)",
+  "resolvedInVersion": "1.13.156"
+}

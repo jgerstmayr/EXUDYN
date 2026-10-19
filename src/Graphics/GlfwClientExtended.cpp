@@ -862,6 +862,7 @@ void GlfwRenderer::DrawIconBar(GLFWwindow* window, Index viewID, int width, int 
 	float step = (float)((now - bar.lastTime)/iconBarFoldTime);
 	bar.lastTime = now;
 	float target = show ? 1.f : 0.f;
+	if (GetSettingsView(viewID, *visSettings).camera.useRaytracer) { bar.visible = target; } //a raytraced frame is slow: no animation (#3050)
 	if (bar.visible != target)
 	{
 		step = EXUstd::Minimum(EXUstd::Maximum(step, 0.f), 0.25f);
@@ -946,7 +947,8 @@ void GlfwRenderer::DrawIconBar(GLFWwindow* window, Index viewID, int width, int 
 				glPushMatrix();
 				float textWidth = fontScale*(float)bitmapFont.characterWidth*(float)text.size();
 				float textX = (icon >= (Index)IconBar::Icon::Config0) ? ix + 0.5f*(iconSize - textWidth) : ix + iconSize - textWidth - 0.5f*gap; //CFG0 ... centered on the button
-				glTranslatef(textX, iy + 1.1f*fontPixels, 0.f);
+				float textY = (icon >= (Index)IconBar::Icon::Config0) ? iy + 0.42f*iconSize : iy + 1.1f*fontPixels; //CFG0 ... inside the button
+				glTranslatef(textX, textY, 0.f);
 				glScalef(1.f, -1.f, 1.f);
 				DrawStringWithTextures(text.c_str(), fontScale, Float3({ 0.f, 0.f, 0.f }), (icon >= (Index)IconBar::Icon::Config0 ? Float4({ 0.1f, 0.15f, 0.3f, 1.f }) : Float4({ 0.7f, 0.1f, 0.1f, 1.f })), bitmapFont,
 					charBuffer, bitmapFontListBase, true);

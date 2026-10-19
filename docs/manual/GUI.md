@@ -90,7 +90,8 @@ same table as the help dialog, which opens with the key **H**:
 ### Icon bar
 
 When the mouse comes near the right border of the render window without a button pressed, an icon bar folds in;
-it folds out shortly after the mouse leaves it. Each icon does what its key does, and the mouse over an icon shows what it
+it folds out shortly after the mouse leaves it. With the raytracer, whose frames are slow, it appears and disappears
+at once. Each icon does what its key does, and the mouse over an icon shows what it
 does and the key. From the top:
 
 - **quit**: closes the renderer, as ESCAPE;

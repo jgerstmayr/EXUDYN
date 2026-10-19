@@ -366,8 +366,8 @@ namespace IconBar
 		case Icon::Config2:
 		case Icon::Config3:
 		{
-			std::vector<P> button; //a rectangle with rounded corners
-			const float x0 = 4, y0 = 4, x1 = 60, y1 = 60, r = 8;
+			std::vector<P> button; //a rectangle with rounded corners, without border
+			const float x0 = 1, y0 = 1, x1 = 63, y1 = 63, r = 9;
 			const P corners[4] = { {x1 - r, y0 + r}, {x1 - r, y1 - r}, {x0 + r, y1 - r}, {x0 + r, y0 + r} };
 			for (Index corner = 0; corner < 4; corner++)
 			{
@@ -377,8 +377,7 @@ namespace IconBar
 					button.push_back({ corners[corner].x + r*std::cos(a), corners[corner].y + r*std::sin(a) });
 				}
 			}
-			c.Polygon(button, Float4({ 0.84f, 0.88f, 0.95f, 1.f }));
-			c.PolyLine(button, 2.5f, ink, true);
+			c.Polygon(button, Float4({ 0.8f, 0.85f, 0.94f, 1.f }));
 			for (Index k = 0; k < 3; k++)
 			{
 				float y = 13.f + 10.f*(float)k;

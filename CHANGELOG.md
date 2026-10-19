@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.13 | Newborn | 152 | 1.13.155 |
+| 1.13 | Newborn | 153 | 1.13.156 |
 | 1.12 | Metheney | 367 | 1.12.462 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
@@ -30,6 +30,10 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.13 - Newborn (current)
 
+- **1.13.156** `IMPROVEMENT` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` icon bar: CFG text lower on a larger button without border; no fold animation with the raytracer (#3050)
+  - description: Maintainer 2026-10-20 with a screenshot: CFG0 ... is written lower, the underlay rectangle is slightly larger and has no border; with the raytracer the bar also fades in, but a raytraced frame is slow, so the bar shall show completely without delay in that case.
+  - **notes:** The CFG buttons of the icon bar are larger, without border, with CFG0 ... written lower; with the raytracer the bar appears at once (revision2026c step RG6.19.10)
+  - date resolved: **2026-10-20 00:31**, date raised: 2026-10-20
 - **1.13.155** `CHANGE` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` remove the result caches of ObjectUserBody and NodeUser (#3049)
   - description: Maintainer 2026-10-20 (decision D18): values are recomputed and not stored between evaluations in the items and the core; the result caches of \#3028 (UserFunctionResultCache, the last two results of the access-function user functions) are removed.
   - **notes:** The result caches of ObjectUserBody and NodeUser are removed; their user functions are called for every request (revision2026c step RG7.11.1, decision D18)

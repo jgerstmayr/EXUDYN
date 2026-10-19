@@ -632,6 +632,11 @@ in the GUI function; CTRL and the icon store both; store settings stores the set
 model view; empty parts do not override): `storedSettings` entries with 'visualizationSettings' and 'modelView'.
 [log](exudynRevisionLog2026c.md#rg6-19-9)
 
+#### **CLOSED_RG6.19.10** CFG text lower on a larger button; the bar without animation for the raytracer
+
+CLOSED 2026-10-20 (#3050; maintainer, with a screenshot: CFG lower, the rectangle slightly larger and without border;
+with the raytracer the bar shows at once): done as asked. [log](exudynRevisionLog2026c.md#rg6-19-10)
+
 ## **OPEN_RG7** Python user items
 
 Items whose behaviour is written in Python, and where the line runs against compiled user items (RG8).
