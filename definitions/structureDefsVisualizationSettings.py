@@ -2170,6 +2170,34 @@ definitions.append(StructureDefinition(
     ))
 
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#++++++++++++++++   VSettingsIconBar   ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+definitions.append(StructureDefinition(
+    className='VSettingsIconBar',
+    writeFile='VisualizationSettings.h',
+    addDictionaryAccess=False,
+    appendToFile=True,
+    classDescription=r'The icon bar of the render window: it folds in from the right border when the mouse comes near it without a button pressed, and its icons do what keys do (#3026).',
+    typicalPaths='SC.visualizationSettings.interactive',
+    writePybindIncludes=True,
+    members=[
+        StructureParameter(type=Tbool,
+            pythonName='show',
+            defaultValue=True,
+            description=r'True: the icon bar folds in when the mouse comes near the right border of the render window'),
+        StructureParameter(type=Tfloat(greaterThan=0),
+            pythonName='scaling',
+            defaultValue=1.,
+            description=r'size of the icons relative to their size at the display scaling of the monitor; the icons are made smaller where the window is not high enough for all of them'),
+        StructureParameter(type=Tfloat(minimum=0),
+            pythonName='foldDistance',
+            defaultValue=20.,
+            description=r'distance from the right border in pixels, at the display scaling of the monitor, at which the bar folds in'),
+        ],
+    ))
+
+
+#++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #++++++++++++++++   VSettingsInteractive   ++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 definitions.append(StructureDefinition(
@@ -2185,6 +2213,10 @@ definitions.append(StructureDefinition(
             pythonName='advanced',
             defaultValue=NoDefaultValue,
             description=r'advanced interactive visualization settings'),
+        StructureParameter(type='VSettingsIconBar',
+            pythonName='iconBar',
+            defaultValue=NoDefaultValue,
+            description=r'the icon bar of the render window (#3026)'),
         StructureParameter(type=Tbool, 
             pythonName='autoRotateModelView',
             defaultValue=False,

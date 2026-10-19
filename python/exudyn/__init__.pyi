@@ -2339,10 +2339,24 @@ class VSettingsInteractiveAdvanced:
     def SetDictionary(self, d: dict) -> None: ...
 
 
+class VSettingsIconBar:
+    """The icon bar of the render window: it folds in from the right border when the mouse comes near it without a button pressed, and its icons do what keys do (#3026)."""
+    foldDistance: float
+    """distance from the right border in pixels, at the display scaling of the monitor, at which the bar folds in."""
+    scaling: float
+    """size of the icons relative to their size at the display scaling of the monitor; the icons are made smaller where the window is not high enough for all of them."""
+    show: bool
+    """True: the icon bar folds in when the mouse comes near the right border of the render window."""
+    def GetDictionary(self) -> dict: ...
+    def SetDictionary(self, d: dict) -> None: ...
+
+
 class VSettingsInteractive:
     """Functionality to interact with render window; includes special rotation and zoom factors, item-highlighting, marker tracking, item selection and keyPressUserFunction."""
     advanced: VSettingsInteractiveAdvanced
     """advanced interactive visualization settings."""
+    iconBar: VSettingsIconBar
+    """the icon bar of the render window (#3026)."""
     autoRotateModelView: bool
     """True: rotate model view with autorotation."""
     autoRotationVelocity: Tuple[float,float,float]

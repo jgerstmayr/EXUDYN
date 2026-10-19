@@ -52,6 +52,8 @@
 #define MY_GL_TEXTURE_2D GL_TEXTURE_2D
 #include "Graphics/GlfwClient.h"
 #include "Graphics/characterBitmap.h"
+#include "Graphics/IconBar.h"
+#include "Graphics/TextureStore.h"
 
 
 //for GetItemInformation, MainSystem*
@@ -515,6 +517,8 @@ void GlfwRenderer::CreateFontTextures()
 		charBitmap64::characterByteWidth, charBitmap64::characterBytes,
 		charBitmap64::OpenGLtextBitmap);
 
+	IconBar::AddIconTextures(); //the icons of the icon bar, uploaded with the other textures (#3026)
+
 	//create texture bitmapFont (could also be loaded from file)
 	glGenTextures(bitmapFont.nCharacters*NUMBER_OF_TEXTUREFONT_LISTS, &textureNumberRGBbitmap[0]);   //create one texture
 
@@ -536,6 +540,305 @@ void GlfwRenderer::CreateFontTextures()
 }
 
 
+
+
+//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+//+++++++++++++++++++++++++++++++++                        ICON BAR                            +++++++++++++++++++++++++++++++++
+//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+//the icon bar (#3026): folds in from the right border when the mouse comes near it without a button pressed; each icon
+//does what a key does - the key is sent to key_callback, so that a key and its icon do the same - or switches a setting
+//of the scene; drawn after the frame is saved, so not part of saved images
+
+GlfwRenderer::IconBarState GlfwRenderer::iconBarStates[MAX_VIEWS_GLFW];
+
+//! icon size, gap and the width of the bar, in pixels of the frame buffer
+void GlfwRenderer::IconBarGeometry(Index viewID, int height, float& iconSize, float& gap, float& barWidth)
+{
+	RenderState* state = renderViews.State(viewID);
+	float scaling = EXUstd::Maximum(0.1f, visSettings->interactive.iconBar.scaling)*(state->displayScaling > 0.f ? state->displayScaling : 1.f);
+	Index n = IconBar::NumberOfIcons();
+	gap = 4.f*scaling;
+	iconSize = 54.f*scaling;
+	if (n*(iconSize + gap) + gap > (float)height) //shrunk to the height of the window
+	{
+		iconSize = EXUstd::Maximum(8.f, ((float)height - gap*(n + 1))/(float)n);
+	}
+	barWidth = iconSize + 2.f*gap;
+}
+
+//! the icon at a mouse position in pixels of the frame buffer from the top left, or -1
+Index GlfwRenderer::IconBarIconAt(Index viewID, int width, int height, double x, double y)
+{
+	const IconBarState& bar = iconBarStates[viewID];
+	if (bar.visible <= 0.f) { return -1; }
+	float iconSize, gap, barWidth;
+	IconBarGeometry(viewID, height, iconSize, gap, barWidth);
+	float x0 = (float)width - barWidth*bar.visible;
+	if (x < x0 + gap || x > x0 + gap + iconSize) { return -1; }
+	Index icon = (Index)std::floor((y - gap)/(iconSize + gap));
+	if (icon < 0 || icon >= IconBar::NumberOfIcons() || y - gap - icon*(iconSize + gap) > iconSize) { return -1; }
+	return icon;
+}
+
+//! the mouse position in pixels of the frame buffer, which is larger than the window on a retina display
+void GlfwRenderer::IconBarMouse(GLFWwindow* window, int width, int height, double& x, double& y)
+{
+	int windowWidth = 1, windowHeight = 1;
+	glfwGetWindowSize(window, &windowWidth, &windowHeight);
+	glfwGetCursorPos(window, &x, &y);
+	x *= (double)width/(double)EXUstd::Maximum(1, windowWidth);
+	y *= (double)height/(double)EXUstd::Maximum(1, windowHeight);
+}
+
+//! true, if an icon is pressed (shown as pressed in the bar)
+bool GlfwRenderer::IconBarIconIsOn(Index viewID, Index icon)
+{
+	const VSettingsView& view = GetSettingsView(viewID, *visSettings);
+	switch ((IconBar::Icon)icon)
+	{
+	case IconBar::Icon::Ruler: return view.window.showRuler;
+	case IconBar::Icon::MouseCoordinates: return view.window.showMouseCoordinates;
+	case IconBar::Icon::Lines: return view.scene.showLines;
+	case IconBar::Icon::Edges: return view.scene.showFaceEdges;
+	case IconBar::Icon::Faces: return view.scene.showFaces;
+	case IconBar::Icon::Transparency: return view.scene.facesTransparent;
+	case IconBar::Icon::Nodes: return visSettings->nodes.show;
+	case IconBar::Icon::Bodies: return visSettings->bodies.show;
+	case IconBar::Icon::Connectors: return visSettings->connectors.show;
+	case IconBar::Icon::Markers: return visSettings->markers.show;
+	case IconBar::Icon::Loads: return visSettings->loads.show;
+	case IconBar::Icon::Sensors: return visSettings->sensors.show;
+	default: return false;
+	}
+}
+
+//! the index 0 to 4 of the graphics update interval of the keys 1 to 5 that is set; 0 for another value
+Index GlfwRenderer::IconBarUpdateInterval()
+{
+	const float intervals[] = { 0.02f, 0.1f, 0.5f, 2.f, 100.f };
+	for (Index k = 0; k < 5; k++)
+	{
+		if (std::fabs(visSettings->general.graphicsUpdateInterval - intervals[k]) <= 1e-6f*intervals[k]) { return k; }
+	}
+	return 0;
+}
+
+//! the text written over an icon: the axes of a view, the number of the update interval, # for shown item numbers
+STDstring GlfwRenderer::IconBarIconText(Index viewID, Index icon, bool control)
+{
+	switch ((IconBar::Icon)icon)
+	{
+	case IconBar::Icon::ViewXY: return control ? "YX" : "XY";
+	case IconBar::Icon::ViewYZ: return control ? "ZY" : "YZ";
+	case IconBar::Icon::ViewXZ: return control ? "ZX" : "XZ";
+	case IconBar::Icon::UpdateSpeed: return EXUstd::ToString(IconBarUpdateInterval() + 1);
+	case IconBar::Icon::Nodes: return visSettings->nodes.showNumbers ? "#" : "";
+	case IconBar::Icon::Bodies: return visSettings->bodies.showNumbers ? "#" : "";
+	case IconBar::Icon::Connectors: return visSettings->connectors.showNumbers ? "#" : "";
+	case IconBar::Icon::Markers: return visSettings->markers.showNumbers ? "#" : "";
+	case IconBar::Icon::Loads: return visSettings->loads.showNumbers ? "#" : "";
+	case IconBar::Icon::Sensors: return visSettings->sensors.showNumbers ? "#" : "";
+	default: return "";
+	}
+}
+
+//! the action of an icon; SHIFT and CTRL as described in its tooltip
+void GlfwRenderer::IconBarExecute(GLFWwindow* window, Index viewID, Index icon, int mods)
+{
+	VSettingsView& view = GetSettingsView(viewID, *visSettings);
+	bool shift = (mods & GLFW_MOD_SHIFT) != 0;
+	bool control = (mods & GLFW_MOD_CONTROL) != 0;
+	auto Key = [&](int key, int keyMods) { key_callback(window, key, 0, GLFW_PRESS, keyMods); };
+	int viewMods = GLFW_MOD_CONTROL + (shift ? GLFW_MOD_SHIFT : 0);
+	switch ((IconBar::Icon)icon)
+	{
+	case IconBar::Icon::Quit: Key(GLFW_KEY_ESCAPE, 0); break;
+	case IconBar::Icon::ZoomAll: Key(GLFW_KEY_A, 0); break;
+	case IconBar::Icon::ZoomSelection: Key(GLFW_KEY_A, GLFW_MOD_CONTROL); break;
+	case IconBar::Icon::ViewXY: Key(control ? GLFW_KEY_4 : GLFW_KEY_1, viewMods); break;
+	case IconBar::Icon::ViewYZ: Key(control ? GLFW_KEY_6 : GLFW_KEY_3, viewMods); break;
+	case IconBar::Icon::ViewXZ: Key(control ? GLFW_KEY_5 : GLFW_KEY_2, viewMods); break;
+	case IconBar::Icon::ViewIsometric: Key(GLFW_KEY_7, GLFW_MOD_CONTROL); break;
+	case IconBar::Icon::Ruler: Key(GLFW_KEY_F5, 0); break;
+	case IconBar::Icon::MouseCoordinates: Key(GLFW_KEY_F3, 0); break;
+	case IconBar::Icon::Lines: view.scene.showLines = !view.scene.showLines; UpdateGraphicsDataNow(); break;
+	case IconBar::Icon::Edges:
+		view.scene.showFaceEdges = !view.scene.showFaceEdges;
+		view.scene.showMeshEdges = view.scene.showFaceEdges;
+		UpdateGraphicsDataNow();
+		break;
+	case IconBar::Icon::Faces:
+		view.scene.showFaces = !view.scene.showFaces;
+		view.scene.showMeshFaces = view.scene.showFaces;
+		UpdateGraphicsDataNow();
+		break;
+	case IconBar::Icon::Transparency: view.scene.facesTransparent = !view.scene.facesTransparent; UpdateGraphicsDataNow(); break;
+	case IconBar::Icon::UpdateSpeed: {
+		Key(GLFW_KEY_1 + (int)((IconBarUpdateInterval() + 1) % 5), 0); //the key of the next interval
+		break;
+	}
+	case IconBar::Icon::Nodes: Key(GLFW_KEY_N, shift ? GLFW_MOD_CONTROL : 0); break;
+	case IconBar::Icon::Bodies: Key(GLFW_KEY_B, shift ? GLFW_MOD_CONTROL : 0); break;
+	case IconBar::Icon::Connectors: Key(GLFW_KEY_C, shift ? GLFW_MOD_CONTROL : 0); break;
+	case IconBar::Icon::Markers: Key(GLFW_KEY_M, shift ? GLFW_MOD_CONTROL : 0); break;
+	case IconBar::Icon::Loads: Key(GLFW_KEY_L, shift ? GLFW_MOD_CONTROL : 0); break;
+	case IconBar::Icon::Sensors: Key(GLFW_KEY_S, shift ? GLFW_MOD_CONTROL : 0); break;
+	default: break;
+	}
+	SetCallBackRefreshSignal();
+}
+
+//! a click on the bar: the action of the icon on press; the press and its release do not reach the selection and the
+//! rotation of the model; true if the bar took the event
+bool GlfwRenderer::IconBarMouseButton(GLFWwindow* window, Index viewID, int button, int action, int mods)
+{
+	IconBarState& bar = iconBarStates[viewID];
+	if (action == GLFW_RELEASE && bar.pressed)
+	{
+		bar.pressed = false;
+		return true;
+	}
+	if (action != GLFW_PRESS || !visSettings->interactive.iconBar.show || bar.visible < 0.5f) { return false; }
+	int width, height;
+	GetWindowSize(window, width, height);
+	double x, y;
+	IconBarMouse(window, width, height, x, y);
+	float iconSize, gap, barWidth;
+	IconBarGeometry(viewID, height, iconSize, gap, barWidth);
+	if (x < (double)width - barWidth*bar.visible) { return false; } //not on the bar
+	bar.pressed = true;
+	Index icon = IconBarIconAt(viewID, width, height, x, y);
+	if (icon >= 0 && button == GLFW_MOUSE_BUTTON_LEFT) { IconBarExecute(window, viewID, icon, mods); }
+	return true;
+}
+
+//! draw the bar in pixels of the frame buffer; it slides in and out over iconBarFoldTime seconds
+void GlfwRenderer::DrawIconBar(GLFWwindow* window, Index viewID, int width, int height)
+{
+	IconBarState& bar = iconBarStates[viewID];
+	if (!visSettings->interactive.iconBar.show || height <= 0) { bar.visible = 0.f; return; }
+	if (bar.textureIDs.size() == 0) //the icons are in the TextureStore (CreateFontTextures)
+	{
+		for (Index icon = 0; icon < IconBar::NumberOfIcons(); icon++) { bar.textureIDs.push_back(textureStore.GetID(STDstring("exudyn.icon.") + IconBar::Name(icon))); }
+	}
+
+	float iconSize, gap, barWidth;
+	IconBarGeometry(viewID, height, iconSize, gap, barWidth);
+	double x, y;
+	IconBarMouse(window, width, height, x, y);
+	bool hovered = glfwGetWindowAttrib(window, GLFW_HOVERED) != 0;
+	bool buttonPressed = glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS || glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_RIGHT) == GLFW_PRESS;
+	float foldDistance = visSettings->interactive.iconBar.foldDistance*(renderViews.State(viewID)->displayScaling > 0.f ? renderViews.State(viewID)->displayScaling : 1.f);
+	bool show = hovered && ((!buttonPressed && x >= (double)width - foldDistance) ||
+		(bar.visible > 0.f && x >= (double)width - barWidth - 2.f*gap));
+
+	//slide in or out
+	double now = EXUstd::GetTimeInSeconds();
+	float step = (float)((now - bar.lastTime)/iconBarFoldTime);
+	bar.lastTime = now;
+	float target = show ? 1.f : 0.f;
+	if (bar.visible != target)
+	{
+		step = EXUstd::Minimum(EXUstd::Maximum(step, 0.f), 0.25f);
+		bar.visible = show ? EXUstd::Minimum(1.f, bar.visible + step) : EXUstd::Maximum(0.f, bar.visible - step);
+		SetCallBackRefreshSignal(); //the next frame continues the animation
+	}
+	if (bar.visible <= 0.f) { return; }
+
+	glPushAttrib(GL_ENABLE_BIT | GL_TEXTURE_BIT | GL_CURRENT_BIT | GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_LINE_BIT);
+	glDisable(GL_DEPTH_TEST);
+	glDisable(GL_LIGHTING);
+	glDisable(GL_CULL_FACE);
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	glMatrixMode(GL_PROJECTION);
+	glPushMatrix();
+	glLoadIdentity();
+	glOrtho(0.0, width, height, 0.0, -1.0, 1.0); //y down, as the mouse
+	glMatrixMode(GL_MODELVIEW);
+	glPushMatrix();
+	glLoadIdentity();
+
+	auto Quad = [](float x0, float y0, float x1, float y1)
+	{
+		glBegin(GL_QUADS);
+		glVertex2f(x0, y0); glVertex2f(x1, y0); glVertex2f(x1, y1); glVertex2f(x0, y1);
+		glEnd();
+	};
+	float x0 = (float)width - barWidth*bar.visible;
+	glColor4f(0.93f, 0.94f, 0.96f, 0.92f);
+	Quad(x0, 0.f, x0 + barWidth, (float)height);
+	glColor4f(0.6f, 0.62f, 0.66f, 1.f);
+	glLineWidth(1.f);
+	glBegin(GL_LINES); glVertex2f(x0 + 0.5f, 0.f); glVertex2f(x0 + 0.5f, (float)height); glEnd();
+
+	Index hover = (bar.visible >= 1.f && hovered) ? IconBarIconAt(viewID, width, height, x, y) : -1;
+	bool control = glfwGetKey(window, GLFW_KEY_LEFT_CONTROL) == GLFW_PRESS || glfwGetKey(window, GLFW_KEY_RIGHT_CONTROL) == GLFW_PRESS;
+	float fontPixels = 0.3f*iconSize;
+	float fontScale = fontPixels/(float)bitmapFont.fontSize;
+	for (Index icon = 0; icon < IconBar::NumberOfIcons(); icon++)
+	{
+		float ix = x0 + gap;
+		float iy = gap + icon*(iconSize + gap);
+		if (IconBarIconIsOn(viewID, icon) || icon == hover)
+		{
+			if (IconBarIconIsOn(viewID, icon)) { glColor4f(0.68f, 0.8f, 0.97f, 1.f); }
+			else { glColor4f(0.84f, 0.86f, 0.9f, 1.f); }
+			Quad(ix - 0.5f*gap, iy - 0.5f*gap, ix + iconSize + 0.5f*gap, iy + iconSize + 0.5f*gap);
+		}
+		Index id = bar.textureIDs[icon];
+		if (id >= 0 && id < (Index)sceneTextures.size() && sceneTextures[id].name != 0)
+		{
+			glEnable(GL_TEXTURE_2D);
+			glBindTexture(GL_TEXTURE_2D, sceneTextures[id].name);
+			glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
+			glColor4f(1.f, 1.f, 1.f, 1.f);
+			glBegin(GL_QUADS); //the image has its bottom row first: v=0 at the bottom of the icon, y grows down
+			glTexCoord2f(0.f, 1.f); glVertex2f(ix, iy);
+			glTexCoord2f(1.f, 1.f); glVertex2f(ix + iconSize, iy);
+			glTexCoord2f(1.f, 0.f); glVertex2f(ix + iconSize, iy + iconSize);
+			glTexCoord2f(0.f, 0.f); glVertex2f(ix, iy + iconSize);
+			glEnd();
+			glBindTexture(GL_TEXTURE_2D, 0);
+			glDisable(GL_TEXTURE_2D);
+		}
+		STDstring text = IconBarIconText(viewID, icon, control);
+		if (text.size())
+		{
+			//the text at the top right of the icon; the font draws upward from its point, so the y axis is turned for it
+			glPushMatrix();
+			glTranslatef(ix + iconSize - 0.62f*fontPixels*(float)text.size() - 1.f, iy + 1.05f*fontPixels, 0.f);
+			glScalef(1.f, -1.f, 1.f);
+			DrawStringWithTextures(text.c_str(), fontScale, Float3({ 0.f, 0.f, 0.f }), Float4({ 0.7f, 0.1f, 0.1f, 1.f }), bitmapFont,
+				charBuffer, bitmapFontListBase, true);
+			glPopMatrix();
+		}
+	}
+
+	if (hover >= 0) //the tooltip left of the bar
+	{
+		STDstring text = IconBar::Tooltip(hover);
+		float tipFont = EXUstd::Maximum(12.f, 0.28f*iconSize);
+		float textWidth = 0.6f*tipFont*(float)text.size();
+		float ty = gap + hover*(iconSize + gap) + 0.5f*iconSize;
+		float tx1 = x0 - gap;
+		float tx0 = EXUstd::Maximum(0.f, tx1 - textWidth - 2.f*gap);
+		glColor4f(1.f, 1.f, 0.88f, 0.95f);
+		Quad(tx0, ty - 0.8f*tipFont, tx1, ty + 0.8f*tipFont);
+		glPushMatrix();
+		glTranslatef(tx0 + gap, ty + 0.45f*tipFont, 0.f);
+		glScalef(1.f, -1.f, 1.f);
+		DrawStringWithTextures(text.c_str(), tipFont/(float)bitmapFont.fontSize, Float3({ 0.f, 0.f, 0.f }), Float4({ 0.1f, 0.1f, 0.1f, 1.f }),
+			bitmapFont, charBuffer, bitmapFontListBase, true);
+		glPopMatrix();
+	}
+
+	glMatrixMode(GL_MODELVIEW);
+	glPopMatrix();
+	glMatrixMode(GL_PROJECTION);
+	glPopMatrix();
+	glPopAttrib();
+}
 
 
 void GlfwRenderer::DeleteFonts()

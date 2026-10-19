@@ -263,6 +263,17 @@ private:
 		bool mask = false;			//!< TextureInterpretation::RGBAMask
 	};
 	static std::vector<SceneTexture> sceneTextures;	//!< by the number of the TextureStore
+
+	//! the state of the icon bar of a view (#3026)
+	struct IconBarState
+	{
+		float visible = 0.f;			//!< 0: folded out, 1: in
+		double lastTime = 0.;			//!< time of the last frame, for the animation
+		bool pressed = false;			//!< a mouse button was pressed on the bar: its release is the bar's as well
+		std::vector<Index> textureIDs;	//!< the numbers of the icons in the TextureStore
+	};
+	static IconBarState iconBarStates[MAX_VIEWS_GLFW];
+	static constexpr double iconBarFoldTime = 0.15; //!< seconds to fold in or out
     static GLuint bitmapFontListBase;			//!< starting index for GLlists for font bitmap textured quads
 	static ResizableArray<GLubyte> charBuffer;	//!< buffer for converstion of UTF8 into internal unicode-like format
 
@@ -697,6 +708,17 @@ public:
 		out[1] = modelview[1] * x + modelview[5] * y + modelview[9] * z + modelview[13];
 		out[2] = modelview[2] * x + modelview[6] * y + modelview[10] * z + modelview[14];
 	}
+	//! the icon bar (#3026), see GlfwClientExtended.cpp
+	static void IconBarGeometry(Index viewID, int height, float& iconSize, float& gap, float& barWidth);
+	static Index IconBarIconAt(Index viewID, int width, int height, double x, double y);
+	static void IconBarMouse(GLFWwindow* window, int width, int height, double& x, double& y);
+	static bool IconBarIconIsOn(Index viewID, Index icon);
+	static Index IconBarUpdateInterval();
+	static STDstring IconBarIconText(Index viewID, Index icon, bool control);
+	static void IconBarExecute(GLFWwindow* window, Index viewID, Index icon, int mods);
+	static bool IconBarMouseButton(GLFWwindow* window, Index viewID, int button, int action, int mods);
+	static void DrawIconBar(GLFWwindow* window, Index viewID, int width, int height);
+
 	//! upload the textures of the TextureStore that changed since the last frame; in the render thread (#3032)
 	static void UpdateSceneTextures();
 	//! delete the OpenGL textures of the TextureStore, when the renderer stops

@@ -86,6 +86,29 @@ same table as the help dialog, which opens with the key **H**:
 ```{include} /docs/generated/keyBindings.md
 ```
 
+(sec-gui-sec-iconbar)=
+### Icon bar
+
+When the mouse comes near the right border of the render window without a button pressed, an icon bar folds in;
+it folds out when the mouse leaves it. Each icon does what its key does, and the mouse over an icon shows what it
+does and the key. From the top:
+
+- **quit**: closes the renderer, as ESCAPE;
+- **zoom all** (A) and **zoom to the selected item** (CTRL+A);
+- **views** in the X-Y, Y-Z and X-Z planes and a 3D view (CTRL+1, CTRL+3, CTRL+2, CTRL+7); with CTRL held, the axes
+  swap (Y-X, Z-Y, Z-X, as CTRL+4, CTRL+6, CTRL+5) and the icons show them; with SHIFT, the view from behind;
+- **ruler** (F5) and **mouse coordinates** (F3);
+- **lines**, **edges** and **faces** of the scene, and **transparent faces**;
+- **graphics update interval**: each click takes the next of 0.02, 0.1, 0.5, 2 and 100 seconds (keys 1 to 5); the
+  icon shows the number of the current one;
+- **show nodes, bodies, connectors, markers, loads, sensors** (N, B, C, M, L, S); with SHIFT, their numbers
+  (CTRL+N, ...), which the icon marks with #.
+
+An icon that switches something on is drawn pressed while it is on. The bar is not part of saved images.
+`visualizationSettings.interactive.iconBar` switches it off (`show`), scales the icons relative to the display scaling
+of the monitor (`scaling`) - they are made smaller where the window is not high enough for all of them - and sets how
+near to the border the mouse must come (`foldDistance`).
+
 (sec-overview-basics-visualizationsettings)=
 ### Visualization settings dialog
 

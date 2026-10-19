@@ -146,6 +146,11 @@ wooden floor and a cylinder with a computed pattern, rendered with the raytracer
 `useTexture=False` gives the triangles of the pattern, as needed for a contact mesh made from it with
 `graphics.ToPointsAndTrigs`; colors that encode a material give the triangles as well.
 
+**An icon bar in the render window** (#3026): it folds in from the right border when the mouse comes near it, with
+icons for quit, zoom, the views, the ruler, the mouse coordinates, lines, edges, faces, transparency, the update
+interval and the visibility of the items, see {ref}`sec-gui-sec-iconbar`; `visualizationSettings.interactive.iconBar`
+switches it off or scales it.
+
 **Zoom to an item** (#3027): CTRL+A in the render window centers the view on the item selected with the left mouse
 button and zooms such that it fills the window; `SC.renderer.ZoomToItem(oBody)` does the same from Python.
 

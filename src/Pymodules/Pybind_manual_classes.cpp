@@ -51,6 +51,7 @@ using namespace pybind11::literals; //brings in the '_a' literals; e.g. for shor
 //
 #include "Main/SystemContainer.h"
 #include "Main/MainSystemContainer.h"
+#include "Graphics/IconBar.h"
 //
 
 
@@ -734,6 +735,23 @@ void Init_Pybind_manual_classes(py::module& m) {
 		Index flags) { PyAddTexture(name, image, interpretation, flags, true); },
 		"internal: add a texture; names starting with 'exudyn.' are allowed", py::arg("name"), py::arg("image"),
 		py::arg("interpretation"), py::arg("flags")); //no defaults: the enums are registered after this
+
+	//the images of the icons of the icon bar, for their test (#3026): a list of [name, uint8 array (64, 64, 4)], first row at the top
+	m.def("_IconBarImages", []() {
+		py::list result;
+		std::vector<unsigned char> rgba;
+		for (Index icon = 0; icon < IconBar::NumberOfIcons(); icon++)
+		{
+			IconBar::DrawIcon(icon, rgba);
+			const py::ssize_t n = IconBar::iconPixels;
+			py::array_t<uint8_t> image({ n, n, (py::ssize_t)4 });
+			auto pixels = image.mutable_unchecked<3>();
+			for (py::ssize_t j = 0; j < n; j++) { for (py::ssize_t i = 0; i < n; i++) { for (py::ssize_t k = 0; k < 4; k++) {
+				pixels(n - 1 - j, i, k) = rgba[(size_t)((j*n + i)*4 + k)]; } } }
+			result.append(py::make_tuple(STDstring(IconBar::Name(icon)), image));
+		}
+		return result;
+		}, "internal: the images of the icons of the icon bar");
 
 	//Python version of Special class
 	py::class_<PySpecial>(m, "Special", "Special features, to be handled with care")

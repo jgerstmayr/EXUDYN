@@ -992,6 +992,7 @@ void GlfwRenderer::mouse_button_callback(GLFWwindow* window, int button, int act
 	if (PyGetRendererCallbackLock()) { return; }
 	SetCallBackRefreshSignal();
 	//EXUstd::WaitAndLockSemaphore(graphicsUpdateAtomicFlag);
+	if (IconBarMouseButton(window, viewID, button, action, mods)) { return; } //a click on the icon bar (#3026)
 
 	//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 	//STATE MACHINE MOUSE MOVE
@@ -2541,6 +2542,7 @@ void GlfwRenderer::Render(GLFWwindow* window) //GLFWwindow* needed in argument, 
 	//the frame is read from the back buffer before the swap: after it the back buffer is undefined, and the
 	//front buffer reads black under a compositor or a remote desktop (#2881)
 	SaveImage(viewID); //in case of flag, save frame to image file
+	DrawIconBar(window, viewID, width, height); //after the frame is saved: not part of saved images (#3026)
 	glfwSwapBuffers(window);
 
 	//++++++++++++++++++++++++++++++++++++++++++

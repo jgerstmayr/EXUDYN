@@ -2174,3 +2174,61 @@ ints (selectionLeftMouseItemTypes=31). Decision by question: | for the enumerati
   elements. The test uses this frame and says why.
 - The result is the sum of three deflections and the angle, to the tolerance of Newton: `exu.sys['testTolerance'] = 1e-9`.
 
+<a id="rg6-19-1"></a>
+### RG6.19.1 — the icon bar (2026-10-19, #3026)
+*(Maintainer 2026-10-19: start with the implementation as planned; the order of the icons with SHIFT and CTRL as in
+the plan; `interactive.iconBar.scaling`; about 19 icons, 1200 pixels high. The list gives 20: quit, 2 zooms, 4
+views, ruler, mouse coordinates, lines, edges, faces, transparency, update speed and 6 item kinds.)*
+- **Icons** (src/Graphics/IconBar.h/.cpp, compiled in every build): a canvas of 64 x 64 RGBA floats with
+  anti-aliased shapes from the signed distance of the pixel center (lines, polylines as one shape, arcs, discs,
+  polygons by the even-odd rule, arrows), blended over; one drawing per icon, in ink, blue, light blue and red.
+  `IconBar::AddIconTextures` puts them into the TextureStore as 'exudyn.icon.<name>' (RGBA, Clamp) when the
+  renderer creates its font textures; OpenGL uploads them with the scene textures. `exudyn._compiledModule.
+  _IconBarImages` gives the images to Python, for test_iconBar.py and to look at them - looked at as a sheet.
+- **One action per key and icon**, simpler than the planned ExecuteAction refactoring of key_callback: an icon sends
+  its key to key_callback (ESCAPE, A, CTRL+A, CTRL+1 to 7 with SHIFT, F5, F3, 1 to 5, N, B, C, M, L, S with CTRL for
+  SHIFT), so a key and its icon do the same by construction; lines, edges (face and mesh edges), faces (face and mesh
+  faces) and transparency have no key of their own and switch the settings of the view. A consequence: F2 (ignore
+  keys) also stops the icons.
+- **The bar** (GlfwClientExtended.cpp, `DrawIconBar` after `SaveImage`, so not in saved or retrieved images): pixel
+  coordinates of the frame buffer, the mouse converted from window coordinates (retina); folds in when the window is
+  hovered, no mouse button is pressed and the mouse is within `foldDistance` x display scaling of the right border,
+  stays while the mouse is over it, slides over 0.15 s with a refresh signal per frame; icon 54 px x scaling x display
+  scaling with 4 px gaps, made smaller to fit the height. Pressed toggles on light blue, the hovered icon grey; texts
+  over the icons with the bitmap font - the axes of the views (swapped while CTRL is held), the number of the update
+  interval, # for shown item numbers; the tooltip of the hovered icon left of the bar. A mouse press on the bar runs
+  the action (left button) and, with its release, does not reach the selection and the rotation.
+- Settings `interactive.iconBar.show` (True), `scaling` (1), `foldDistance` (20 px) - a new structure VSettingsIconBar.
+  Its class is in stubtestBaseline.txt as every VSettings class (pybind metaclass, written by checkPython.py
+  --stubs --write); parameterConversionTest reference with its three settings.
+- **Not seen on a screen** (no window may open here): RG6.19.3 is the check; the positions of the texts over the icons
+  (the bitmap font drawn with a flipped y axis) are the most likely to need a correction.
+- The proposal as it was decided:
+
+For a decision. Facts: the renderer is OpenGL 1.x (immediate mode, display lists); `key_callback`
+(GlfwClient.cpp:204-922) performs each action inline; the mouse callbacks select items on click and rotate or move on
+drag (961-1188); the display scaling is `state->displayScaling` (1887).
+- **Actions**: the bodies of the key cases move into one function `ExecuteAction(RendererAction)`; a key and an icon
+  call the same action, so nothing is done twice and the help lists both. Not every key gets an icon.
+- **The icons** (about 30, in groups): visualization settings, command window, help; views XY, YZ, XZ, isometric;
+  show/hide nodes, bodies, connectors, markers, loads, sensors and their numbers (a click on the small number field of
+  the icon); zoom in, out, all, to the selection (RG6.19.2); ruler (RG6.12); mouse coordinates; lines, edges, faces;
+  global transparency; graphics update speed (cycles through the five intervals); quit. A toggle shows its state
+  (pressed or not).
+- **Drawing the icons**: each icon is a small C++ function on a 64 x 64 canvas using a few primitives - line, polyline,
+  circle, filled rectangle, filled triangle and a glyph of the font bitmap that is compiled in already - which a small
+  rasterizer writes into an RGBA buffer (the raytracer has RasterizeLine and RasterizeCharacter, Raytracing.cpp:578,
+  746). At startup all icons are drawn once and stored in the texture store of RG6.11.1 under reserved names
+  (`exudyn.icon.zoomAll`); no files, no data beyond the code. In OpenGL 3.3/4.1 the same textures are drawn as quads
+  with a shader. Until RG6.11 exists, the icon textures are created directly as GL textures, as the font is.
+- **The bar**: drawn in pixel coordinates after the overlay (`glOrtho(0, width, 0, height)`, as `DrawImageRGBA`
+  does), by one function `DrawIconBar`; it is not part of the raytraced or saved images. It folds in from the right
+  border when the mouse comes within `interactive.iconBar.foldDistance` pixels (default 20) without a button pressed,
+  slides in over about 0.15 s and folds out when the mouse leaves it; it fills the height of the window, the icon size
+  is `interactive.iconBar.size` times the font size times the display scaling, shrunk to fit the height; a click on an
+  icon is taken before selection and rotation; the name and the key of an icon appear beside it on hover.
+  `interactive.iconBar.show` (default True) switches it off.
+- **Steps after the decision**: ExecuteAction with the keys unchanged (the GUI tests pass); the icon rasterizer with a
+  pytest of a few icons as images; the bar and its mouse handling; the icons; the documentation of the keys and icons
+  in GUI.md.
+

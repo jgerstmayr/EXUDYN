@@ -787,6 +787,26 @@ VSettingsInteractiveAdvanced has the following items:
 
 
 
+(sec-vsettingsiconbar)=
+### VSettingsIconBar
+
+The icon bar of the render window: it folds in from the right border when the mouse comes near it without a button pressed, and its icons do what keys do (#3026).
+
+Reached as `SC.visualizationSettings.interactive.iconBar`.
+
+VSettingsIconBar has the following items:
+
+```{tabularcolumns} \Y{0.26}\Y{0.12}\Y{0.14}\Y{0.48}
+```
+
+| name | type | default | description |
+|---|---|---|---|
+| `foldDistance` | UFloat | 20. | distance from the right border in pixels, at the display scaling of the monitor, at which the bar folds in |
+| `scaling` | PFloat | 1. | size of the icons relative to their size at the display scaling of the monitor; the icons are made smaller where the window is not high enough for all of them |
+| `show` | bool | True | True: the icon bar folds in when the mouse comes near the right border of the render window |
+
+
+
 (sec-vsettingsinteractive)=
 ### VSettingsInteractive
 
@@ -802,6 +822,7 @@ VSettingsInteractive has the following items:
 | name | type | default | description |
 |---|---|---|---|
 | `advanced` | VSettingsInteractiveAdvanced |  | advanced interactive visualization settings |
+| `iconBar` | VSettingsIconBar |  | the icon bar of the render window (#3026) |
 | `autoRotateModelView` | bool | False | True: rotate model view with autorotation |
 | `autoRotationVelocity` | Float3 | [0.,0.,1.047198] | Angular velocity vector for auto-rotation of scene (only visualization view is rotated, not the model itself!) |
 | `highlightItemIndex` | Int | -1 | index of item that shall be highlighted (e.g., to find item which cauess problems); if set -1, no item is highlighted |

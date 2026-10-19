@@ -51,8 +51,7 @@ The title of each says what it does; the sentence after it, why it comes now.
    screen; the space key works on macOS (2026-10-16).
 2. **The user items and symbolic access to the system**: user markers and joints (RG7.5, RG7.6), the MainSystem in
    symbolic user functions (RG12.4, proposal RG12.4.1 to decide), symbolic items in parallel (RG7.8); each user
-   function change measured against 1.13.6 (userFunctionBoundary.md sections 12, 13); the icon bar (RG6.19, proposal
-   RG6.19.1 to decide).
+   function change measured against 1.13.6 (userFunctionBoundary.md sections 12, 13); the icon bar on the screen (RG6.19.3).
 3. **Rehearse the next release on a `release/*` branch** with *build as a release* - the first run of cibuildwheel
    4.3.0 and of cp315 on GitHub.
 4. **The quick old issues** (RG11.8) - each small and without a decision.
@@ -567,34 +566,15 @@ CLOSED 2026-10-10 (#2950): `LoadSolutionFile` always returns a matrix; test mode
 
 #3026 (maintainer 2026-10-17).
 
-#### **OPEN_RG6.19.1** Proposal: compiled icons drawn into textures at startup, and one action per key and icon
+#### **CLOSED_RG6.19.1** Proposal: compiled icons drawn into textures at startup, and one action per key and icon
 
-For a decision. Facts: the renderer is OpenGL 1.x (immediate mode, display lists); `key_callback`
-(GlfwClient.cpp:204-922) performs each action inline; the mouse callbacks select items on click and rotate or move on
-drag (961-1188); the display scaling is `state->displayScaling` (1887).
-- **Actions**: the bodies of the key cases move into one function `ExecuteAction(RendererAction)`; a key and an icon
-  call the same action, so nothing is done twice and the help lists both. Not every key gets an icon.
-- **The icons** (about 30, in groups): visualization settings, command window, help; views XY, YZ, XZ, isometric;
-  show/hide nodes, bodies, connectors, markers, loads, sensors and their numbers (a click on the small number field of
-  the icon); zoom in, out, all, to the selection (RG6.19.2); ruler (RG6.12); mouse coordinates; lines, edges, faces;
-  global transparency; graphics update speed (cycles through the five intervals); quit. A toggle shows its state
-  (pressed or not).
-- **Drawing the icons**: each icon is a small C++ function on a 64 x 64 canvas using a few primitives - line, polyline,
-  circle, filled rectangle, filled triangle and a glyph of the font bitmap that is compiled in already - which a small
-  rasterizer writes into an RGBA buffer (the raytracer has RasterizeLine and RasterizeCharacter, Raytracing.cpp:578,
-  746). At startup all icons are drawn once and stored in the texture store of RG6.11.1 under reserved names
-  (`exudyn.icon.zoomAll`); no files, no data beyond the code. In OpenGL 3.3/4.1 the same textures are drawn as quads
-  with a shader. Until RG6.11 exists, the icon textures are created directly as GL textures, as the font is.
-- **The bar**: drawn in pixel coordinates after the overlay (`glOrtho(0, width, 0, height)`, as `DrawImageRGBA`
-  does), by one function `DrawIconBar`; it is not part of the raytraced or saved images. It folds in from the right
-  border when the mouse comes within `interactive.iconBar.foldDistance` pixels (default 20) without a button pressed,
-  slides in over about 0.15 s and folds out when the mouse leaves it; it fills the height of the window, the icon size
-  is `interactive.iconBar.size` times the font size times the display scaling, shrunk to fit the height; a click on an
-  icon is taken before selection and rotation; the name and the key of an icon appear beside it on hover.
-  `interactive.iconBar.show` (default True) switches it off.
-- **Steps after the decision**: ExecuteAction with the keys unchanged (the GUI tests pass); the icon rasterizer with a
-  pytest of a few icons as images; the bar and its mouse handling; the icons; the documentation of the keys and icons
-  in GUI.md.
+CLOSED 2026-10-19 (#3026; maintainer 2026-10-19: as planned, with these icons in this order - quit; zoom all, zoom to
+the selection (zoom in and out left away); views XY, YZ, XZ, isometric (CTRL: YX, ZY, ZX; SHIFT: from behind);
+ruler; mouse coordinates; lines, edges, faces; global transparency; graphics update speed (cycling through the five
+intervals); show/hide nodes, bodies, connectors, markers, loads, sensors and their numbers with SHIFT; a toggle shows
+its state; `interactive.iconBar.scaling`): IconBar.h/.cpp - the rasterizer and 20 icons, textures
+'exudyn.icon.<name>'; the bar in GlfwClientExtended.cpp; `interactive.iconBar.show`, `scaling`, `foldDistance`;
+test_iconBar.py; GUI.md section *Icon bar*. [log](exudynRevisionLog2026c.md#rg6-19-1)
 
 #### **CLOSED_RG6.19.2** Zoom to the selected item
 
@@ -605,6 +585,11 @@ an icon of the bar.
 CLOSED 2026-10-18 (#3027): `RenderState::ComputeZoomToItem` (the box of the elements with the item ID, the zoom of
 ZoomAll's bounding box, the scene size kept), CTRL+A in the render window, `SC.renderer.ZoomToItem(itemIndex, mbsNumber,
 viewID)`; zoomToItemTest.py. The icon comes with the bar (RG6.19.1). [log](exudynRevisionLog2026c.md#rg6-19-2)
+
+#### **OPEN_RG6.19.3** Check the icon bar on the screen
+
+#3026: the bar could not be seen here - the fold-in, the sizes at display scalings, the texts over the icons and the
+tooltips, a click with SHIFT and CTRL; on Windows, Linux and macOS (the mouse in pixels of the frame buffer).
 
 ## **OPEN_RG7** Python user items
 
