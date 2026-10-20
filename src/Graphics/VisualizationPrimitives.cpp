@@ -19,6 +19,8 @@
 #include "Linalg/RigidBodyMath.h"
 #include "Graphics/VisualizationSystemContainer.h"
 #include "Graphics/VisualizationPrimitives.h"
+#include "Main/Experimental.h"
+extern PyExperimental pyExperimental; //the switch of the split cache and its measurement (#3052)
 
 #include <stdio.h>
 
@@ -103,9 +105,15 @@ namespace EXUvis {
 		key.maxTiling = visualizationSettings.openGL.advanced.curvedTriangleMaxTiling;
 		key.faceEdges = faceEdges;
 		key.meshEdges = meshEdges;
-		if (key == data.triangles6SplitKey) { return; }
+		if (key == data.triangles6SplitKey && pyExperimental.cacheCurvedTriangleSplit) { return; }
+		Real start = EXUstd::GetTimeInSeconds();
 		SplitTriangles6(data.glTriangles6, visualizationSettings, data.triangles6SplitCache, &data.triangles6EdgesCache, faceEdges, meshEdges);
 		data.triangles6SplitKey = key;
+		if (key.numberOfTriangles6 != 0) //what the cache saves, measured (#3052)
+		{
+			pyExperimental.curvedTriangleSplitTime += EXUstd::GetTimeInSeconds() - start;
+			pyExperimental.curvedTriangleSplitCount++;
+		}
 	}
 
 	//! the angle between two vectors, in degrees; exact and cheap; 0 if one of them is zero

@@ -692,6 +692,7 @@ void GlfwRenderer::IconBarExecute(GLFWwindow* window, Index viewID, Index icon, 
 	switch ((IconBar::Icon)icon)
 	{
 	case IconBar::Icon::Quit: Key(GLFW_KEY_ESCAPE, 0); break;
+	case IconBar::Icon::Settings: Key(GLFW_KEY_V, 0); break;
 	case IconBar::Icon::ZoomAll: Key(GLFW_KEY_A, 0); break;
 	case IconBar::Icon::ZoomRegion: //the next two clicks are the corners of the region
 		iconBarStates[viewID].regionStep = (iconBarStates[viewID].regionStep == 0) ? 1 : 0;

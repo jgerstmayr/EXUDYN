@@ -4553,6 +4553,12 @@ class Experimental:
     """debug output of the EigenDense solver with full pivoting: 0 (default) = none, 1 = rank and information, 2 = also the matrices."""
     markerSuperElementRigidTexpSO3:int
     """if nonzero (default), MarkerSuperElementRigid uses the additional tangent operator TexpSO3 of the rotation parameters."""
+    cacheCurvedTriangleSplit:bool
+    """True (default): the OpenGL renderer splits the 6-node triangles of a graphics data into flat ones only when the data or the tiling settings changed; False: in every frame, to measure what the cache saves (#3052)."""
+    curvedTriangleSplitCount:int
+    """the number of lists of 6-node triangles the OpenGL renderer has split; set it to 0 before a measurement (#3052)."""
+    curvedTriangleSplitTime:float
+    """the seconds the OpenGL renderer has spent splitting 6-node triangles; set it to 0 before a measurement (#3052)."""
     @overload
     def EvaluateMathFunction(self, name: str, x: ArrayLike, y: ArrayLike=[], implementation: str='std', repetitions: int=1) -> Tuple[ArrayLike, float]: 
         """Evaluate a function of the math library the way the C++ code of Exudyn calls it, to compare the platforms (#2947): name is one of sin, cos, tan, asin, acos, atan, atan2, exp, log, pow, sinh, cosh, tanh, cbrt, fmod, sqrt; y is the second argument of atan2, pow and fmod, of the size of x; implementation is std (the C++ library, one call per value), stdLoop (in a loop the compiler may vectorize), portable (the functions of musl libc compiled into Exudyn, the same bits on every platform, #2948), exudyn (EM::Sin, ..., what the C++ code of Exudyn calls: the library, or portable with the switch EXUDYN_PORTABLE_MATH) or, on Windows x64, stdNoFMA3 (the UCRT without its FMA3 code path); the evaluation is repeated repetitions times for a timing.

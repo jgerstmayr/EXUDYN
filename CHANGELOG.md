@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.13 | Newborn | 153 | 1.13.156 |
+| 1.13 | Newborn | 154 | 1.13.157 |
 | 1.12 | Metheney | 367 | 1.12.462 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
@@ -30,6 +30,10 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.13 - Newborn (current)
 
+- **1.13.157** `IMPROVEMENT` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` icon bar: an icon that opens the visualization settings (#3051)
+  - description: Maintainer 2026-10-20: an additional icon opens the visualization settings dialog, as the key V.
+  - **notes:** The icon bar has an icon that opens the visualization settings, as the key V (revision2026c step RG6.19.11)
+  - date resolved: **2026-10-20 21:40**, date raised: 2026-10-20
 - **1.13.156** `IMPROVEMENT` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` icon bar: CFG text lower on a larger button without border; no fold animation with the raytracer (#3050)
   - description: Maintainer 2026-10-20 with a screenshot: CFG0 ... is written lower, the underlay rectangle is slightly larger and has no border; with the raytracer the bar also fades in, but a raytraced frame is slow, so the bar shall show completely without delay in that case.
   - **notes:** The CFG buttons of the icon bar are larger, without border, with CFG0 ... written lower; with the raytracer the bar appears at once (revision2026c step RG6.19.10)

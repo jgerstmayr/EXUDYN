@@ -165,7 +165,7 @@ namespace IconBar
 	{
 		static const char* names[] = { "quit", "zoomAll", "zoomRegion", "viewXY", "viewYZ", "viewXZ", "viewIsometric",
 			"ruler", "mouseCoordinates", "lines", "edges", "faces", "transparency", "shadow", "updateSpeed",
-			"nodes", "bodies", "connectors", "markers", "loads", "sensors", "config0", "config1", "config2", "config3" };
+			"nodes", "bodies", "connectors", "markers", "loads", "sensors", "settings", "config0", "config1", "config2", "config3" };
 		return (icon >= 0 && icon < NumberOfIcons()) ? names[icon] : "";
 	}
 
@@ -193,6 +193,7 @@ namespace IconBar
 			"show markers (M; SHIFT: numbers, CTRL+M)",
 			"show loads (L; SHIFT: numbers, CTRL+L)",
 			"show sensors (S; SHIFT: numbers, CTRL+S)",
+			"visualization settings (V)",
 			"switch to the stored configuration CFG0 (CTRL: store settings and view as CFG0)",
 			"switch to the stored configuration CFG1 (CTRL: store settings and view as CFG1)",
 			"switch to the stored configuration CFG2 (CTRL: store settings and view as CFG2)",
@@ -361,6 +362,21 @@ namespace IconBar
 			c.Line({ 32, 20 }, { 47, 38 }, 4, warning);
 			c.Disc({ 32, 20 }, 5, ink);
 			break;
+		case Icon::Settings: //a gear wheel
+		{
+			std::vector<P> gear;
+			const Index teeth = 8;
+			for (Index k = 0; k < 4*teeth; k++) //per tooth: two points outside, two inside
+			{
+				float a = 2.f*pi*((float)k - 0.5f)/(float)(4*teeth);
+				float r = (k % 4 == 0 || k % 4 == 1) ? 26.f : 19.f;
+				gear.push_back({ 32 + r*std::cos(a), 32 + r*std::sin(a) });
+			}
+			c.Polygon(gear, ink);
+			c.Disc({ 32, 32 }, 8, Float4({ 0.93f, 0.94f, 0.96f, 1.f }));
+			c.Arc({ 32, 32 }, 8, 2.5f, accent);
+			break;
+		}
 		case Icon::Config0: //a button with sliders of settings; the bar writes CFG0 ... into its upper part
 		case Icon::Config1:
 		case Icon::Config2:

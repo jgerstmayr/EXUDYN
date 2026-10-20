@@ -108,6 +108,7 @@ does and the key. From the top:
   in this list and the tooltip the list;
 - **show nodes, bodies, connectors, markers, loads, sensors** (N, B, C, M, L, S); with SHIFT, their numbers
   (CTRL+N, ...), which the icon marks with #;
+- **visualization settings**: opens the dialog, as V;
 - **CFG0** to **CFG3**: switch to one of the four configurations stored in `~/.exudyn/config.json`, to
   its settings and its model view, as far as it stores them; CTRL and the icon store the current
   settings and model view in it, see {ref}`sec-usersettings-storedconfigurations`.

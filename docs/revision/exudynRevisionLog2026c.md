@@ -2424,3 +2424,26 @@ show completely with no delay.)*
   above the three sliders. test_iconBar.py allows these buttons 97 % coverage.
 - With `camera.useRaytracer` of the view, `bar.visible` jumps to its target instead of sliding over 0.15 s; the time the
   bar stays after the mouse left it is the same.
+
+<a id="rg6-19-11"></a>
+### RG6.19.11 — the icon for the visualization settings (2026-10-20, #3051)
+*(Maintainer 2026-10-20: the icon bar looks good; add an icon to open the visualization settings.)*
+- Icon `settings` after `sensors` and before the CFG buttons (26 icons): a gear wheel of 8 teeth with a light hub; it
+  sends the key V. GUI.md lists it.
+
+<a id="rg6-8-12"></a>
+### RG6.8.12 — a switch and a measurement for the split cache (2026-10-20, #3052)
+*(Maintainer 2026-10-20: does triangles6SplitCache make sense at all? In flexible bodies the shapes deform, so the cache
+will not act; pure rigid body transformations could be done via OpenGL, which is not done as display lists are not
+widely used. Are there measurements in common situations? If not, an experimental flag to check the influence; the
+maintainer tries a FEM example with quadratic triangles or many cylinders.)*
+- The measurement there is (revision2026b RG6.7.2.3): a partial sphere of 90000 triangles6 through the raytracer
+  takes 139 ms against 79 ms for the same 360000 flat triangles, so the split costs about 60 ms per image (0.7 us per
+  element). Nothing was measured in the OpenGL renderer and nothing for common models. The cache acts only for frames
+  without a new graphics update - turning the view of a paused or finished simulation -, as every graphics update
+  raises the data version; graphics.Cylinder and Tube are made of 6-node triangles, so many cylinders are a case.
+- `exu.experimental.cacheCurvedTriangleSplit` (True): False splits in every frame. `curvedTriangleSplitCount` and
+  `curvedTriangleSplitTime` add up the splits of a non-empty list and their seconds in the OpenGL renderer
+  (`EXUvis::SplitTriangles6Cached`); set both to 0 before a measurement. The raytracer splits per image anyway.
+- Usage: run the model with the renderer, rotate the view for some seconds after the simulation, print the count and
+  the time with and without the cache; the time per frame without the cache is what the cache saves per frame.

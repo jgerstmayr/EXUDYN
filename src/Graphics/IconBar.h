@@ -25,7 +25,7 @@ namespace IconBar
 	//! the icons in the order of the bar (maintainer 2026-10-19)
 	enum class Icon {
 		Quit, ZoomAll, ZoomRegion, ViewXY, ViewYZ, ViewXZ, ViewIsometric, Ruler, MouseCoordinates, Lines, Edges,
-		Faces, Transparency, Shadow, UpdateSpeed, Nodes, Bodies, Connectors, Markers, Loads, Sensors,
+		Faces, Transparency, Shadow, UpdateSpeed, Nodes, Bodies, Connectors, Markers, Loads, Sensors, Settings,
 		Config0, Config1, Config2, Config3, NumberOfIcons	//the stored configurations CFG0 to CFG3 (#3043)
 	};
 

@@ -78,7 +78,7 @@ The title of each says what it does; the sentence after it, why it comes now.
   - RG5.3 Assemble the analytic Jacobians in parallel with ParallelFor and a cost per item
   - RG5.4 Store the superelement matrices as sparse triplets for larger meshes
 - **RG6** Graphics and rendering
-  - RG6.8 Fix the remaining graphics problems with a test each
+  - RG6.8 Fix the remaining graphics problems with a test each (1 open sub-step)
 - **RG7** Python user items
   - RG7.5 Add user markers and a user connector with access to its markers
   - RG7.6 Add a user joint on two position and orientation markers
@@ -125,7 +125,7 @@ The title of each says what it does; the sentence after it, why it comes now.
 | RG3 | CLOSED | 0 | Docs |
 | RG4 | OPEN | 6 | Implementation problems and bugs |
 | RG5 | OPEN | 8 | Performance |
-| RG6 | OPEN | 1 | Graphics and rendering |
+| RG6 | OPEN | 2 | Graphics and rendering |
 | RG7 | OPEN | 4 | Python user items |
 | RG8 | OPEN | 10 | Compiled C++ user items |
 | RG9 | OPEN | 5 | Structural core improvements |
@@ -452,6 +452,14 @@ CLOSED 2026-10-16 (#3001, maintainer: absolute by intention, a point has no size
 it): `minSceneSize` 0.01, `boundingBoxZoomAllOffset` 0.001; GUI.md section Tiny and huge models.
 [log](exudynRevisionLog2026c.md#rg6-8-10)
 
+#### **OPEN_RG6.8.12** Measure what the cache of the split 6-node triangles saves
+
+#3052 (maintainer 2026-10-20): the split of the 6-node triangles is cached per GraphicsData (#2709), but flexible
+bodies change the data at every graphics update, and rigid transformations could be done by OpenGL; the only
+measurement is 60 ms per image for 90000 triangles6, through the raytracer. `exu.experimental.cacheCurvedTriangleSplit`
+switches the cache off, `curvedTriangleSplitCount` and `curvedTriangleSplitTime` count the splits and their time;
+the maintainer measures a FEM example with quadratic triangles or many cylinders, then the cache stays or goes (D18).
+
 ### **CLOSED_RG6.11** Draw textures from numpy arrays in triangle lists
 
 CLOSED 2026-10-18 (maintainer): sub-steps RG6.11.1 to .10 done.
@@ -636,6 +644,10 @@ model view; empty parts do not override): `storedSettings` entries with 'visuali
 
 CLOSED 2026-10-20 (#3050; maintainer, with a screenshot: CFG lower, the rectangle slightly larger and without border;
 with the raytracer the bar shows at once): done as asked. [log](exudynRevisionLog2026c.md#rg6-19-10)
+
+#### **CLOSED_RG6.19.11** An icon for the visualization settings
+
+CLOSED 2026-10-20 (#3051): a gear wheel after the sensors, as the key V. [log](exudynRevisionLog2026c.md#rg6-19-11)
 
 ## **OPEN_RG7** Python user items
 

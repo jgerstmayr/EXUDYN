@@ -33,6 +33,9 @@ class PyExperimental
 public: 
     Index eigenFullPivotLUsolverDebugLevel; //!< debug: 0=off, 1=print rank and info, 2=print matrices
     Index markerSuperElementRigidTexpSO3; //!< True: use additional TexpSO3 for FFRF
+    bool cacheCurvedTriangleSplit;          //!< True: the OpenGL renderer splits the 6-node triangles of a GraphicsData only when it changed (#3052)
+    Index curvedTriangleSplitCount;         //!< the number of 6-node triangle lists the OpenGL renderer split, for measurements (#3052)
+    Real curvedTriangleSplitTime;           //!< the seconds the OpenGL renderer spent splitting them (#3052)
 
     PyExperimental()
     {
@@ -43,6 +46,9 @@ public:
     {
         eigenFullPivotLUsolverDebugLevel = 0;
         markerSuperElementRigidTexpSO3 = true;
+        cacheCurvedTriangleSplit = true;
+        curvedTriangleSplitCount = 0;
+        curvedTriangleSplitTime = 0.;
     }
 
     //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -51,6 +57,9 @@ public:
     {
         os << "  eigenFullPivotLUsolverDebugLevel = " << eigenFullPivotLUsolverDebugLevel << "\n";
         os << "  markerSuperElementRigidTexpSO3 = " << markerSuperElementRigidTexpSO3 << "\n";
+        os << "  cacheCurvedTriangleSplit = " << cacheCurvedTriangleSplit << "\n";
+        os << "  curvedTriangleSplitCount = " << curvedTriangleSplitCount << "\n";
+        os << "  curvedTriangleSplitTime = " << curvedTriangleSplitTime << "\n";
         os << "\n";
     }
 

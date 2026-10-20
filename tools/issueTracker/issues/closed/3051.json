@@ -1,0 +1,15 @@
+{
+  "number": 3051,
+  "title": "icon bar: an icon that opens the visualization settings",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "IMPROVEMENT",
+  "effort": "LOW",
+  "description": "Maintainer 2026-10-20: an additional icon opens the visualization settings dialog, as the key V.",
+  "dateRaised": "2026-10-20",
+  "deadline": "2027-04-18",
+  "dateResolved": "2026-10-20 21:40",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "The icon bar has an icon that opens the visualization settings, as the key V (revision2026c step RG6.19.11)",
+  "resolvedInVersion": "1.13.157"
+}

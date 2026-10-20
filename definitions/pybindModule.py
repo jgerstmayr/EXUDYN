@@ -454,6 +454,12 @@ pb.DefDataAccess('experimental.eigenFullPivotLUsolverDebugLevel','debug output o
                        dataType='int', isTopLevel = True)
 pb.DefDataAccess('experimental.markerSuperElementRigidTexpSO3','if nonzero (default), MarkerSuperElementRigid uses the additional tangent operator TexpSO3 of the rotation parameters',
                        dataType='int', isTopLevel = True)
+pb.DefDataAccess('experimental.cacheCurvedTriangleSplit','True (default): the OpenGL renderer splits the 6-node triangles of a graphics data into flat ones only when the data or the tiling settings changed; False: in every frame, to measure what the cache saves (#3052)',
+                       dataType='bool', isTopLevel = True)
+pb.DefDataAccess('experimental.curvedTriangleSplitCount','the number of lists of 6-node triangles the OpenGL renderer has split; set it to 0 before a measurement (#3052)',
+                       dataType='int', isTopLevel = True)
+pb.DefDataAccess('experimental.curvedTriangleSplitTime','the seconds the OpenGL renderer has spent splitting 6-node triangles; set it to 0 before a measurement (#3052)',
+                       dataType='float', isTopLevel = True)
 pb.BeginCppWrittenByHand() #pybindings added only in C++
 pb.DefPyFunctionAccess(cClass='', pyName='experimental.EvaluateMathFunction', cName='unused',
                         description='evaluate a function of the math library the way the C++ code of Exudyn calls it, to compare the platforms (#2947): name is one of sin, cos, tan, asin, acos, atan, atan2, exp, log, pow, sinh, cosh, tanh, cbrt, fmod, sqrt; y is the second argument of atan2, pow and fmod, of the size of x; implementation is std (the C++ library, one call per value), stdLoop (in a loop the compiler may vectorize), portable (the functions of musl libc compiled into Exudyn, the same bits on every platform, #2948), exudyn (EM::Sin, ..., what the C++ code of Exudyn calls: the library, or portable with the switch EXUDYN_PORTABLE_MATH) or, on Windows x64, stdNoFMA3 (the UCRT without its FMA3 code path); the evaluation is repeated repetitions times for a timing. Returns the values as numpy array and the time per evaluation in seconds. python/testing/mathFunctionsPlatform.py compares the platforms with it',
