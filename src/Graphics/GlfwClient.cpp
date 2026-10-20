@@ -117,6 +117,8 @@ ResizableArray<GLubyte> GlfwRenderer::charBuffer;	//!< buffer for converstion of
 bool GlfwRenderer::depthMask;                   //!< state of glDepthMask (except for fonts)
 GLuint GlfwRenderer::spheresListBase;			//!< starting index for GLlists for spheres
 ResizableArray<GLLine> GlfwRenderer::lines3Split;
+ResizableArray<GLTriangle> GlfwRenderer::triangles6Split;
+ResizableArray<GLLine> GlfwRenderer::triangles6Edges;
 
 GraphicsData GlfwRenderer::graphicsDataStatic;	//!< static GraphicsData objects (info, Exudyn, etc.)
 
@@ -3004,9 +3006,8 @@ void GlfwRenderer::RenderGraphicsData(Index viewID, bool selectionMode)
 		for (auto data : *graphicsDataList)
 		{
 			//the 6-node triangles are drawn as their split, with the settings of now (#2709)
-			EXUvis::SplitTriangles6Cached(*data, *visSettings, settingsView.scene.showFaceEdges, settingsView.scene.showMeshEdges);
-			const ResizableArray<GLTriangle>& triangles6Split = data->triangles6SplitCache;
-			const ResizableArray<GLLine>& triangles6Edges = data->triangles6EdgesCache;
+			EXUvis::SplitTriangles6(data->glTriangles6, *visSettings, triangles6Split, &triangles6Edges,
+				settingsView.scene.showFaceEdges, settingsView.scene.showMeshEdges);
 			EXUvis::SplitLines3(data->glLines3, *visSettings, lines3Split);
 
             //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -3130,7 +3131,7 @@ void GlfwRenderer::RenderGraphicsData(Index viewID, bool selectionMode)
 				float len = visSettings->openGL.drawNormalsLength;
 				Float4 edgeColor = visSettings->openGL.advanced.faceNormalsColor;
 				glColor4f(edgeColor[0] + 0.5f, edgeColor[1], edgeColor[2], edgeColor[3]);
-				for (const ResizableArray<GLTriangle>* triangleList : { &data->glTriangles, &data->triangles6SplitCache })
+				for (const ResizableArray<GLTriangle>* triangleList : { &data->glTriangles, &triangles6Split })
 				for (const GLTriangle& trig : *triangleList)
 				{
 					if (useClipping)
@@ -3158,7 +3159,7 @@ void GlfwRenderer::RenderGraphicsData(Index viewID, bool selectionMode)
 				float len = visSettings->openGL.drawNormalsLength;
 				Float4 edgeColor = visSettings->openGL.advanced.vertexNormalsColor;
 				glColor4f(edgeColor[0], edgeColor[1], edgeColor[2]+0.5f, edgeColor[3]);
-				for (const ResizableArray<GLTriangle>* triangleList : { &data->glTriangles, &data->triangles6SplitCache })
+				for (const ResizableArray<GLTriangle>* triangleList : { &data->glTriangles, &triangles6Split })
 				for (const GLTriangle& trig : *triangleList)
 				{
 					if (selectionMode) { if (trig.itemID != lastItemID) { glLoadName(trig.itemID); lastItemID = trig.itemID; } }
@@ -3608,7 +3609,7 @@ void GlfwRenderer::DrawTrianglesWithShadow(Index viewID, GraphicsData* data)
 
 		for (const GLTriangle& trig : sphereShadowTriangles) { RenderTriangleShadowVolume(trig, lightPos, maxDist, shadow); }
 		if (settingsView.scene.showFaces) { for (const GLTriangle& trig : data->glTexturedTriangles) { RenderTriangleShadowVolume(trig, lightPos, maxDist, shadow); } }
-		for (const ResizableArray<GLTriangle>* triangleList : { &data->glTriangles, &data->triangles6SplitCache }) //with the split 6-node triangles (#2709)
+		for (const ResizableArray<GLTriangle>* triangleList : { &data->glTriangles, &triangles6Split }) //with the split 6-node triangles (#2709)
 		for (const GLTriangle& trig : *triangleList)
 		{ //draw faces
 			if ((settingsView.scene.showFaces && !trig.isFiniteElement)
@@ -3622,7 +3623,7 @@ void GlfwRenderer::DrawTrianglesWithShadow(Index viewID, GraphicsData* data)
 		glStencilOp(GL_KEEP, GL_DECR_WRAP, GL_KEEP);
 		for (const GLTriangle& trig : sphereShadowTriangles) { RenderTriangleShadowVolume(trig, lightPos, maxDist, shadow); }
 		if (settingsView.scene.showFaces) { for (const GLTriangle& trig : data->glTexturedTriangles) { RenderTriangleShadowVolume(trig, lightPos, maxDist, shadow); } }
-		for (const ResizableArray<GLTriangle>* triangleList : { &data->glTriangles, &data->triangles6SplitCache }) //with the split 6-node triangles (#2709)
+		for (const ResizableArray<GLTriangle>* triangleList : { &data->glTriangles, &triangles6Split }) //with the split 6-node triangles (#2709)
 		for (const GLTriangle& trig : *triangleList)
 		{ //draw faces
 			if ((settingsView.scene.showFaces && !trig.isFiniteElement)

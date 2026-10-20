@@ -2,11 +2,14 @@
   "number": 3052,
   "title": "an experimental switch and a measurement for the cache of the split 6-node triangles",
   "author": "Claude-JG",
-  "status": "RAISED",
+  "status": "RESOLVED",
   "type": "TESTING",
   "effort": "LOW",
   "description": "Maintainer 2026-10-20: does triangles6SplitCache (#2709) pay off in common cases? Flexible bodies deform and change the data at every graphics update, and rigid transformations could be done by OpenGL. The only measurement (RG6.7.2.3) is 60 ms per image for 90000 triangles6, through the raytracer. exu.experimental.cacheCurvedTriangleSplit switches the cache off, and a count and the time of the splits allow the maintainer to measure a FEM example with quadratic triangles or many cylinders.",
   "dateRaised": "2026-10-20",
   "deadline": "2027-04-18",
-  "workingRemarks": "2026-10-20: exu.experimental.cacheCurvedTriangleSplit, curvedTriangleSplitCount and curvedTriangleSplitTime are in; open for the maintainer's measurement (revision2026c step RG6.8.12)"
+  "dateResolved": "2026-10-20 22:15",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "Measured by the maintainer with graphicsCurvedShapes: the cache of the split 6-node triangles makes no visible difference; the cache and its experimental switch are removed, the OpenGL renderer splits in every frame (revision2026c step RG6.8.12)",
+  "resolvedInVersion": "1.13.159"
 }

@@ -145,23 +145,6 @@ public:
 	GLisFiniteElement isFiniteElement;	//!< true, if finite element with different handling of edge drawing, etc.
 };
 
-//! what the split of the 6-node triangles of a GraphicsData was computed for (#2709)
-class Triangles6SplitKey
-{
-public:
-	uint64_t dataVersion = (uint64_t)-1;	//!< GraphicsData::GetDataVersion() of the data split
-	Index numberOfTriangles6 = -1;
-	float tilingAngle = 0.f;
-	Index maxTiling = 0;
-	bool faceEdges = false;
-	bool meshEdges = false;
-	bool operator==(const Triangles6SplitKey& other) const
-	{
-		return dataVersion == other.dataVersion && numberOfTriangles6 == other.numberOfTriangles6 && tilingAngle == other.tilingAngle
-			&& maxTiling == other.maxTiling && faceEdges == other.faceEdges && meshEdges == other.meshEdges;
-	}
-};
-
 //!interface for system graphics data
 // data is read by glfwClient (other thread) and Visualization
 class GraphicsData
@@ -176,12 +159,6 @@ public:
 	ResizableArray<GLTriangle6> glTriangles6;	//!< 6-node triangles, split by the renderers when they draw (#2709)
 	ResizableArray<GLTexturedTriangle> glTexturedTriangles;	//!< triangles with a texture (#3030)
 
-	//! the split of glTriangles6 that OpenGL draws, kept while the data and the settings stay the same, so that a frame
-	//! that only turns the view does not split again (EXUvis::SplitTriangles6Cached, #2709)
-	ResizableArray<GLTriangle> triangles6SplitCache;
-	ResizableArray<GLLine> triangles6EdgesCache;	//!< the curved edges of the split, for showFaceEdges / showMeshEdges
-	Triangles6SplitKey triangles6SplitKey;
-
 	//bool isStatic;				//!< true, if object is fixed to world-frame (e.g. background or groundObject)
 	//bool isRigid;				//!< signals that after creation of the object, all points just undergo a rigidbody transformation
 	//hMatrix4f transformation;	//!< used for rigidbody transformation, if object is rigid
@@ -189,7 +166,6 @@ public:
 private:
 	mutable std::atomic_flag lock;
 	uint64_t visualizationCounter;
-	uint64_t dataVersion;			//!< increased by FlushData: the data that follows is new
 	//bool updateGraphicsDataNow;		//! flag set by Renderer to recompute graphics data (e.g. when settings changed)
 	float contourCurrentMinValue;	//! current minimum value for contour plot
 	float contourCurrentMaxValue;	//! current maximum value for contour plot
@@ -200,7 +176,6 @@ public:
 		contourCurrentMinValue = EXUstd::_MAXFLOAT;
 		contourCurrentMaxValue = EXUstd::_MINFLOAT;
 		visualizationCounter = 0;
-		dataVersion = 0;
 		ClearLock();
 	}
 	//! Aquire lock for data, such that computation / visualization thread does not access data at the same time
@@ -221,7 +196,6 @@ public:
 		FlushData();
 	}
 
-	const uint64_t& GetDataVersion() const { return dataVersion; };
 	const uint64_t& GetVisualizationCounter() const { return visualizationCounter; };
 	uint64_t& GetVisualizationCounter() { return visualizationCounter; };
 
@@ -250,7 +224,6 @@ public:
 		glTriangles.SetNumberOfItems(0);
 		glTriangles6.SetNumberOfItems(0);
 		glTexturedTriangles.SetNumberOfItems(0);
-		dataVersion++;
 
 		ClearLock();
 	}

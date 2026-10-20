@@ -8,10 +8,10 @@ Every entry carries the **type** of the issue, then its **priority** and its **e
 
 General information on current version:
 
-- Exudyn version = 1.13.158.dev1
+- Exudyn version = 1.13.159.dev1
 - last change = 2026-10-20
 - Number of issues = 3053
-- Number of resolved issues = 2935 (158 in current version)
+- Number of resolved issues = 2936 (159 in current version)
 
 ## Resolved issues and resolved bugs before version 1.13
 
@@ -9039,10 +9039,6 @@ The following list contains the issues which have been **RESOLVED** in the accor
 
 ## Open issues
 
-- `TESTING` `LOW EFF` `raised by: Claude-JG` an experimental switch and a measurement for the cache of the split 6-node triangles (#3052)
-  - description: Maintainer 2026-10-20: does triangles6SplitCache (\#2709) pay off in common cases? Flexible bodies deform and change the data at every graphics update, and rigid transformations could be done by OpenGL. The only measurement (RG6.7.2.3) is 60 ms per image for 90000 triangles6, through the raytracer. exu.experimental.cacheCurvedTriangleSplit switches the cache off, and a count and the time of the splits allow the maintainer to measure a FEM example with quadratic triangles or many cylinders.
-  - **remarks:** 2026-10-20: exu.experimental.cacheCurvedTriangleSplit, curvedTriangleSplitCount and curvedTriangleSplitTime are in; open for the maintainer's measurement (revision2026c step RG6.8.12)
-  - date raised: 2026-10-20
 - `IDEA` `MEDIUM EFF` `raised by: Claude-JG` Symbolic user functions copy their constant matrix arguments at every call (#3039)
   - description: Found by revision2026c step RG12.2: the springForceTorqueUserFunction of ObjectConnectorRigidBodySpringDamper takes two 6x6 and two 3x3 matrices, 90 values copied into the named symbolic matrices per call; it costs 0.41 microseconds against 0.23 for the 3D vectors of CartesianSpringDamper. Arguments that are parameters of the item could be copied only when the parameter changes.
   - date raised: 2026-10-18

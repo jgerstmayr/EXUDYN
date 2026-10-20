@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.13 | Newborn | 155 | 1.13.158 |
+| 1.13 | Newborn | 156 | 1.13.159 |
 | 1.12 | Metheney | 367 | 1.12.462 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
@@ -30,6 +30,10 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.13 - Newborn (current)
 
+- **1.13.159** `TESTING` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` an experimental switch and a measurement for the cache of the split 6-node triangles (#3052)
+  - description: Maintainer 2026-10-20: does triangles6SplitCache (\#2709) pay off in common cases? Flexible bodies deform and change the data at every graphics update, and rigid transformations could be done by OpenGL. The only measurement (RG6.7.2.3) is 60 ms per image for 90000 triangles6, through the raytracer. exu.experimental.cacheCurvedTriangleSplit switches the cache off, and a count and the time of the splits allow the maintainer to measure a FEM example with quadratic triangles or many cylinders.
+  - **notes:** Measured by the maintainer with graphicsCurvedShapes: the cache of the split 6-node triangles makes no visible difference; the cache and its experimental switch are removed, the OpenGL renderer splits in every frame (revision2026c step RG6.8.12)
+  - date resolved: **2026-10-20 22:15**, date raised: 2026-10-20
 - **1.13.158** `CHECK` `MEDIUM EFF` `raised by: Claude-JG` `resolved by: Claude-JG` symbolic expressions: evaluate the options for intermediate values inside one evaluation (#3048)
   - description: Maintainer 2026-10-20, after \#3047 was closed: evaluate the options first - (1) an automatic value of a node of the expression tree used more than once, kept for one evaluation; (2) a more algorithmic form, expressions and statements as in code, which allows iterations but probably not automatic differentiation; (3) intermediate variables stored by hand, traceable; (4) other options. Ultimate performance is not needed now, and expressions of the C++ items (mass matrix, ODE2LHS, ...) are planned to be recorded for a symbolic representation and evaluated, e.g. on GPUs - so the option that changes least is preferred.
   - **notes:** The options for intermediate values in symbolic expressions are evaluated in docs/dev/design/symbolicIntermediateValues.md: recommended is a flat evaluation of the recorded graph, with the slots of one evaluation as local scope; the C++ connectors, joints and ANCF elements can be recorded through their templates of automatic differentiation (revision2026c step RG12.2.5)

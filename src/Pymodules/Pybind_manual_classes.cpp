@@ -613,9 +613,6 @@ void Init_Pybind_manual_classes(py::module& m) {
 		//.def_readwrite("useEigenFullPivotLUsolver", &Experimental::useEigenFullPivotLUsolver)//, "switch to special solver")
 		.def_readwrite("eigenFullPivotLUsolverDebugLevel", &PyExperimental::eigenFullPivotLUsolverDebugLevel)//, "debug level for solver")
 		.def_readwrite("markerSuperElementRigidTexpSO3", &PyExperimental::markerSuperElementRigidTexpSO3)//, "debug level for solver")
-		.def_readwrite("cacheCurvedTriangleSplit", &PyExperimental::cacheCurvedTriangleSplit) //(#3052)
-		.def_readwrite("curvedTriangleSplitCount", &PyExperimental::curvedTriangleSplitCount)
-		.def_readwrite("curvedTriangleSplitTime", &PyExperimental::curvedTriangleSplitTime)
 		//the math library as the C++ code calls it, to compare the platforms (#2947)
 		.def("EvaluateMathFunction", [](const PyExperimental&, const std::string& name, const std::vector<Real>& x,
 			const std::vector<Real>& y, const std::string& implementation, Index repetitions) {

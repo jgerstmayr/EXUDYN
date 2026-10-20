@@ -19,8 +19,6 @@
 #include "Linalg/RigidBodyMath.h"
 #include "Graphics/VisualizationSystemContainer.h"
 #include "Graphics/VisualizationPrimitives.h"
-#include "Main/Experimental.h"
-extern PyExperimental pyExperimental; //the switch of the split cache and its measurement (#3052)
 
 #include <stdio.h>
 
@@ -93,26 +91,6 @@ namespace EXUvis {
 		{
 			bool showEdges = triangle.isFiniteElement ? meshEdges : faceEdges;
 			SplitTriangle6(triangle, tilingAngle, maxTiling, triangles, showEdges ? edges : nullptr);
-		}
-	}
-
-	void SplitTriangles6Cached(GraphicsData& data, const VisualizationSettings& visualizationSettings, bool faceEdges, bool meshEdges)
-	{
-		Triangles6SplitKey key;
-		key.dataVersion = data.GetDataVersion();
-		key.numberOfTriangles6 = data.glTriangles6.NumberOfItems();
-		key.tilingAngle = visualizationSettings.openGL.advanced.curvedTriangleTilingAngle;
-		key.maxTiling = visualizationSettings.openGL.advanced.curvedTriangleMaxTiling;
-		key.faceEdges = faceEdges;
-		key.meshEdges = meshEdges;
-		if (key == data.triangles6SplitKey && pyExperimental.cacheCurvedTriangleSplit) { return; }
-		Real start = EXUstd::GetTimeInSeconds();
-		SplitTriangles6(data.glTriangles6, visualizationSettings, data.triangles6SplitCache, &data.triangles6EdgesCache, faceEdges, meshEdges);
-		data.triangles6SplitKey = key;
-		if (key.numberOfTriangles6 != 0) //what the cache saves, measured (#3052)
-		{
-			pyExperimental.curvedTriangleSplitTime += EXUstd::GetTimeInSeconds() - start;
-			pyExperimental.curvedTriangleSplitCount++;
 		}
 	}
 

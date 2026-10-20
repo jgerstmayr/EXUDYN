@@ -121,10 +121,6 @@ namespace EXUvis {
 	void SplitTriangles6(const ResizableArray<GLTriangle6>& triangles6, const VisualizationSettings& visualizationSettings,
 		ResizableArray<GLTriangle>& triangles, ResizableArray<GLLine>* edges = nullptr, bool faceEdges = true, bool meshEdges = true);
 
-	//! SplitTriangles6 of data.glTriangles6 into data.triangles6SplitCache and data.triangles6EdgesCache, only if the data
-	//! (GraphicsData::GetDataVersion, the number of triangles) or the settings changed since the last split (#2709)
-	void SplitTriangles6Cached(GraphicsData& data, const VisualizationSettings& visualizationSettings, bool faceEdges, bool meshEdges);
-
 	//! copy bodyGraphicsData (of body) into global graphicsData (of system)
 	void AddBodyGraphicsDataColored(const BodyGraphicsData& bodyGraphicsData, GraphicsData& graphicsData, 
 		const Float3& position, const Matrix3DF& rotation, const Float3& refPosition, const Matrix3DF& refRotation, const Float3& velocity, const Float3& angularVelocity,

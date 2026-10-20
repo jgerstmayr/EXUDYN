@@ -2468,3 +2468,15 @@ re-implementing everything as a symbolic tree? This could influence the way to g
   would have to replace by the value from the operands.
 - Recommendation: the flat evaluation of scalar expressions first, then vectors and matrices; a feasibility step for
   the recording number type with SpringDamper and ANCFCable2D. Nothing implemented; the maintainer decides.
+
+<a id="rg6-8-12-done"></a>
+### RG6.8.12 — the split cache removed (2026-10-20, #3052)
+*(Maintainer 2026-10-20: tested with graphicsCurvedShapes, the resolution and the triangle refinement increased; the
+speed looked the same with and without the cache, so the split cache and the experimental flag can be removed.)*
+- Removed: `triangles6SplitCache`, `triangles6EdgesCache`, `Triangles6SplitKey` and the data version of GraphicsData,
+  which only the cache read; `EXUvis::SplitTriangles6Cached`; `exu.experimental.cacheCurvedTriangleSplit`,
+  `curvedTriangleSplitCount` and `curvedTriangleSplitTime`.
+- The OpenGL renderer splits the 6-node triangles of each GraphicsData in every frame with `EXUvis::SplitTriangles6`
+  into `GlfwRenderer::triangles6Split` and `triangles6Edges`, buffers of the render thread as `lines3Split` - the
+  faces, the normals and the shadow volumes of that GraphicsData read them in the same pass. The raytracer splits per
+  image as before.
