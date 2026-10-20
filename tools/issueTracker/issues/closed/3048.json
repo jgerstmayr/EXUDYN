@@ -2,10 +2,14 @@
   "number": 3048,
   "title": "symbolic expressions: evaluate the options for intermediate values inside one evaluation",
   "author": "Claude-JG",
-  "status": "RAISED",
+  "status": "RESOLVED",
   "type": "CHECK",
   "effort": "MEDIUM",
   "description": "Maintainer 2026-10-20, after #3047 was closed: evaluate the options first - (1) an automatic value of a node of the expression tree used more than once, kept for one evaluation; (2) a more algorithmic form, expressions and statements as in code, which allows iterations but probably not automatic differentiation; (3) intermediate variables stored by hand, traceable; (4) other options. Ultimate performance is not needed now, and expressions of the C++ items (mass matrix, ODE2LHS, ...) are planned to be recorded for a symbolic representation and evaluated, e.g. on GPUs - so the option that changes least is preferred.",
   "dateRaised": "2026-10-20",
-  "deadline": "2027-04-18"
+  "deadline": "2027-04-18",
+  "dateResolved": "2026-10-20 21:54",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "The options for intermediate values in symbolic expressions are evaluated in docs/dev/design/symbolicIntermediateValues.md: recommended is a flat evaluation of the recorded graph, with the slots of one evaluation as local scope; the C++ connectors, joints and ANCF elements can be recorded through their templates of automatic differentiation (revision2026c step RG12.2.5)",
+  "resolvedInVersion": "1.13.158"
 }

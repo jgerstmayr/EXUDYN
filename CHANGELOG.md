@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.13 | Newborn | 154 | 1.13.157 |
+| 1.13 | Newborn | 155 | 1.13.158 |
 | 1.12 | Metheney | 367 | 1.12.462 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
@@ -30,6 +30,10 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.13 - Newborn (current)
 
+- **1.13.158** `CHECK` `MEDIUM EFF` `raised by: Claude-JG` `resolved by: Claude-JG` symbolic expressions: evaluate the options for intermediate values inside one evaluation (#3048)
+  - description: Maintainer 2026-10-20, after \#3047 was closed: evaluate the options first - (1) an automatic value of a node of the expression tree used more than once, kept for one evaluation; (2) a more algorithmic form, expressions and statements as in code, which allows iterations but probably not automatic differentiation; (3) intermediate variables stored by hand, traceable; (4) other options. Ultimate performance is not needed now, and expressions of the C++ items (mass matrix, ODE2LHS, ...) are planned to be recorded for a symbolic representation and evaluated, e.g. on GPUs - so the option that changes least is preferred.
+  - **notes:** The options for intermediate values in symbolic expressions are evaluated in docs/dev/design/symbolicIntermediateValues.md: recommended is a flat evaluation of the recorded graph, with the slots of one evaluation as local scope; the C++ connectors, joints and ANCF elements can be recorded through their templates of automatic differentiation (revision2026c step RG12.2.5)
+  - date resolved: **2026-10-20 21:54**, date raised: 2026-10-20
 - **1.13.157** `IMPROVEMENT` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` icon bar: an icon that opens the visualization settings (#3051)
   - description: Maintainer 2026-10-20: an additional icon opens the visualization settings dialog, as the key V.
   - **notes:** The icon bar has an icon that opens the visualization settings, as the key V (revision2026c step RG6.19.11)

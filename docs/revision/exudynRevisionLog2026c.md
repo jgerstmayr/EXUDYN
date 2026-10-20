@@ -2447,3 +2447,24 @@ maintainer tries a FEM example with quadratic triangles or many cylinders.)*
   (`EXUvis::SplitTriangles6Cached`); set both to 0 before a measurement. The raytracer splits per image anyway.
 - Usage: run the model with the renderer, rotate the view for some seconds after the simulation, print the count and
   the time with and without the cache; the time per frame without the cache is what the cache saves per frame.
+
+<a id="rg12-2-5"></a>
+### RG12.2.5 — the options for intermediate values in symbolic expressions (2026-10-20, #3048)
+*(Maintainer 2026-10-20: do RG12.2.5 now - find a good way to extend or optimize the symbolic functions; expressions
+might require a scope for variables; the current variable sets may already be a way to store intermediate values as in
+algorithms; and for the most important objects - rigid bodies, Cable2D, connectors and joints, without FFRF and
+complex features - would it be feasible to record the expressions of a mass matrix or residual, or would that require
+re-implementing everything as a symbolic tree? This could influence the way to go.)*
+- The evaluation and the recommendation are in docs/dev/design/symbolicIntermediateValues.md; the counts come from
+  docs/dev/design/symbolicGraphSize.py, which records the component functions of userRigidBodyTest.py with a counting
+  type: force 122 nodes, 1171 operations as a tree (9.6 times), position 48 and 71.
+- Read from the code: SetValue of a variable during recording runs once and is not recorded, so a recorded function
+  writes nothing; a VariableSet is global state written from Python between calls. The vector and matrix nodes have
+  per-node buffers of the current evaluation, but a shared vector node is still computed twice.
+- The AD templates: connectors and joints on `MarkerRigid<TReal>` (#2745), `ComputeODE2LHStemplate` of the ANCF
+  elements, the position and rotation of ObjectRigidBody (#2744); ComputeMassMatrix and ComputeODE2LHS of the rigid
+  body and the G matrices of the nodes are `Real` only. Branches on values such as `if (springLength2 != 0.)` are the
+  review a recording needs. `SReal(ExpressionBase*)` evaluates the new node's subtree at once, which a large recording
+  would have to replace by the value from the operands.
+- Recommendation: the flat evaluation of scalar expressions first, then vectors and matrices; a feasibility step for
+  the recording number type with SpringDamper and ANCFCable2D. Nothing implemented; the maintainer decides.
