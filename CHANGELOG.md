@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.13 | Newborn | 157 | 1.13.160 |
+| 1.13 | Newborn | 158 | 1.13.161 |
 | 1.12 | Metheney | 367 | 1.12.462 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
@@ -30,6 +30,10 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.13 - Newborn (current)
 
+- **1.13.161** `IMPROVEMENT` `MEDIUM EFF` `raised by: Claude-JG` `resolved by: Claude-JG` symbolic user functions: flat evaluation of vector and matrix operations (#3054)
+  - description: Maintainer 2026-10-20 (decision on RG12.2.5), after the scalar expressions (RG12.2.6): the vector and matrix operation nodes (sums, products, transposes, components of a computed vector or matrix) become operations of the flat list as well, so that a shared vector or matrix node is computed once per evaluation; same tests and text export.
+  - **notes:** Symbolic user functions evaluate their vector and matrix operations by the list of operations as well: a shared vector or matrix is computed once per call; userRigidBodyTest.py with 10000 steps: 2.72 s with the tree, 0.75 s with the list (revision2026c step RG12.2.7)
+  - date resolved: **2026-10-20 23:14**, date raised: 2026-10-20
 - **1.13.160** `IMPROVEMENT` `MEDIUM EFF` `raised by: Claude-JG` `resolved by: Claude-JG` symbolic user functions: flat evaluation of the scalar expressions, with the compiled list as text (#3053)
   - description: Maintainer 2026-10-20 (decision on RG12.2.5): the recorded graph of a symbolic user function is sorted once into a list of operations, evaluated into slots that belong to one evaluation; tree evaluation stays as reference and fallback, a test shows both bit-identical; the compiled list can be exported as text; userRigidBodyTest.py with 10000 steps measured before and after. Scalar results and vector and matrix results built from scalar components first.
   - **notes:** Symbolic user functions whose result is a number, or a vector or matrix of numbers, are evaluated by a list of operations built after the recording, each shared value once per call; GetFlatProgram() gives the list as text, flatEvaluation=False the tree evaluation (revision2026c step RG12.2.6)

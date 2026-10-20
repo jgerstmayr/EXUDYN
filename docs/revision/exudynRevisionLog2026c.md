@@ -2509,3 +2509,26 @@ The C++ recording is not started now.)*
   of call overhead); the position 1.45 -> 1.3 us. The mass matrix and the Jacobians are matrix products and stay trees
   until RG12.2.7. userRigidBodyTest.py with 10000 steps, the symbolic body alone, both runs twice: 2.70 s (tree) ->
   2.19 s (flat). (The 4.13 s of RG7.11.1 were measured on a loaded machine; the tree evaluation now takes 2.70 s.)
+
+<a id="rg12-2-7"></a>
+### RG12.2.7 — the flat evaluation of the vector and matrix operations (2026-10-20, #3054)
+*(Maintainer 2026-10-20, on RG12.2.5: the vectors and matrices after the scalar expressions, with the same tests and
+the text export.)*
+- `FlatNode` (the kind - number, vector, matrix - and the node) and `FlatValue` (the number, or a pointer to the vector
+  or matrix an operand's node evaluated into) in Symbolic.h; `GetOperand` returns a FlatNode and `EvaluateFromOperands`
+  takes FlatValues for all three kinds. VectorExpressionBase and MatrixExpressionBase have the interface with the
+  default of a leaf (`EvaluateRef()`). The 13 classes of SymbolicVector.h and 8 of SymbolicMatrix.h with operands got
+  it generated from their own `EvaluateRef` / `Evaluate` and `ToString` - the scalar ones there too (dot product,
+  norm, the brackets, the comparisons of vectors). The component of a matrix reads the operand's value instead of
+  `EvaluateComponent`: the same sum in the same order. The vector and matrix of scalar components
+  (VectorExpressionSReal, MatrixExpressionSReal) take their components as operands; the accessors of RG12.2.6 are gone.
+- FlatProgram: operations of any kind with any number of operands (a list of operand slots), slots of FlatValue; the
+  result is the root of the return value - a vector or matrix result is the node's own memory, returned without copy;
+  the sparse matrix result reads its pattern from it. A component of an argument, `q[1]`, is an operation but written
+  inline in the text and not counted (`InlineInFlatText`).
+- Tests (test_symbolicFlatEvaluation.py): two more functions - matrix products with a shared matrix G, vector
+  operations with a matrix, a dot product, a norm and components of computed vectors - bit-identical to the tree; the
+  text: the vector root as `[t.., t.., t..]`, G one operation used by `.T` and `@`.
+- Measured: per call from Python, flat against tree: force 1.8 / 5.8 us, mass matrix (G.T J G) 1.95 / 2.7, position
+  Jacobian 2.2 / 4.3, position 1.5 / 1.45. userRigidBodyTest.py with 10000 steps, the symbolic body alone, twice each:
+  2.72 s (tree) -> 0.75 s (flat); ObjectRigidBody 0.12 s.

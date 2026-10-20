@@ -8,10 +8,10 @@ Every entry carries the **type** of the issue, then its **priority** and its **e
 
 General information on current version:
 
-- Exudyn version = 1.13.160.dev1
+- Exudyn version = 1.13.161.dev1
 - last change = 2026-10-20
 - Number of issues = 3055
-- Number of resolved issues = 2937 (160 in current version)
+- Number of resolved issues = 2938 (161 in current version)
 
 ## Resolved issues and resolved bugs before version 1.13
 
@@ -9039,9 +9039,6 @@ The following list contains the issues which have been **RESOLVED** in the accor
 
 ## Open issues
 
-- `IMPROVEMENT` `MEDIUM EFF` `raised by: Claude-JG` symbolic user functions: flat evaluation of vector and matrix operations (#3054)
-  - description: Maintainer 2026-10-20 (decision on RG12.2.5), after the scalar expressions (RG12.2.6): the vector and matrix operation nodes (sums, products, transposes, components of a computed vector or matrix) become operations of the flat list as well, so that a shared vector or matrix node is computed once per evaluation; same tests and text export.
-  - date raised: 2026-10-20
 - `IDEA` `MEDIUM EFF` `raised by: Claude-JG` Symbolic user functions copy their constant matrix arguments at every call (#3039)
   - description: Found by revision2026c step RG12.2: the springForceTorqueUserFunction of ObjectConnectorRigidBodySpringDamper takes two 6x6 and two 3x3 matrices, 90 values copied into the named symbolic matrices per call; it costs 0.41 microseconds against 0.23 for the 3D vectors of CartesianSpringDamper. Arguments that are parameters of the item could be copied only when the parameter changes.
   - date raised: 2026-10-18

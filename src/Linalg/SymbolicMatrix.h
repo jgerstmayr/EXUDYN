@@ -127,8 +127,26 @@ public:
 		exprMatrix.assign(rows, std::vector <Symbolic::ExpressionBase*>(columns, nullptr));
 	}
 
-	//! the expression of a component, for the flat evaluation (#3053)
-	const ExpressionBase* GetComponent(Index row, Index column) const { return exprMatrix[row][column]; }
+	//the flat evaluation (#3054): the components, row by row, are the operands
+	virtual Index NumberOfOperands() const override { return NumberOfRows()*NumberOfColumns(); }
+	virtual FlatNode GetOperand(Index i) const override { return FlatNode(exprMatrix[i/NumberOfColumns()][i % NumberOfColumns()]); }
+	virtual const ResizableMatrix& EvaluateFromOperands(const FlatValue* values) const override
+	{
+		buffer.SetNumberOfRowsAndColumns(NumberOfRows(), NumberOfColumns());
+		for (Index i = 0; i < NumberOfRows()*NumberOfColumns(); i++) { buffer.GetDataPointer()[i] = values[i].real; }
+		return buffer;
+	}
+	virtual STDstring ToStringFromOperands(const STDstring* operands) const override
+	{
+		STDstring str = "[";
+		for (Index row = 0; row < NumberOfRows(); row++)
+		{
+			str += (row > 0 ? ", [" : "[");
+			for (Index column = 0; column < NumberOfColumns(); column++) { str += (column > 0 ? ", " : "") + operands[row*NumberOfColumns() + column]; }
+			str += "]";
+		}
+		return str + "]";
+	}
 
 	//! set a particular component of matrix; used in SymbolicRealMatrix py::list constructor
 	void SetSReal(Index row, Index column, const SReal& value)
@@ -270,6 +288,12 @@ public:
 	{
 		return "(" + left->ToString() + " + " + right->ToString() + ")";
 	}
+
+	//the flat evaluation (#3054)
+	virtual Index NumberOfOperands() const override { return 2; }
+	virtual FlatNode GetOperand(Index i) const override { return i == 0 ? FlatNode(left) : FlatNode(right); }
+	virtual const ResizableMatrix& EvaluateFromOperands(const FlatValue* values) const override { const ResizableMatrix& leftExpr = (*values[0].matrix); const ResizableMatrix& rightExpr = (*values[1].matrix); CHECKandTHROW( (leftExpr.NumberOfRows() == rightExpr.NumberOfRows()) && (leftExpr.NumberOfColumns() == rightExpr.NumberOfColumns()), "symbolic.Matrix::operator+ : inconsistent matrix sizes"); buffer.SetNumberOfRowsAndColumns(leftExpr.NumberOfRows(), leftExpr.NumberOfColumns()); for (Index i = 0; i < leftExpr.NumberOfRows()*leftExpr.NumberOfColumns(); i++) { buffer.GetDataPointer()[i] = leftExpr.GetDataPointer()[i] + rightExpr.GetDataPointer()[i]; } return buffer; }
+	virtual STDstring ToStringFromOperands(const STDstring* operands) const override { return "(" + operands[0] + " + " + operands[1] + ")"; }
 };
 
 class MatrixExpressionOperatorMinus : public MatrixExpressionBase
@@ -323,6 +347,12 @@ public:
 	{
 		return "(" + left->ToString() + " - " + right->ToString() + ")";
 	}
+
+	//the flat evaluation (#3054)
+	virtual Index NumberOfOperands() const override { return 2; }
+	virtual FlatNode GetOperand(Index i) const override { return i == 0 ? FlatNode(left) : FlatNode(right); }
+	virtual const ResizableMatrix& EvaluateFromOperands(const FlatValue* values) const override { const ResizableMatrix& leftExpr = (*values[0].matrix); const ResizableMatrix& rightExpr = (*values[1].matrix); CHECKandTHROW((leftExpr.NumberOfRows() == rightExpr.NumberOfRows()) && (leftExpr.NumberOfColumns() == rightExpr.NumberOfColumns()), "symbolic.Matrix::operator- : inconsistent matrix sizes"); buffer.SetNumberOfRowsAndColumns(leftExpr.NumberOfRows(), leftExpr.NumberOfColumns()); for (Index i = 0; i < leftExpr.NumberOfRows()*leftExpr.NumberOfColumns(); i++) { buffer.GetDataPointer()[i] = leftExpr.GetDataPointer()[i] - rightExpr.GetDataPointer()[i]; } return buffer; }
+	virtual STDstring ToStringFromOperands(const STDstring* operands) const override { return "(" + operands[0] + " - " + operands[1] + ")"; }
 };
 
 class MatrixExpressionOperatorMultScalarMatrix : public MatrixExpressionBase
@@ -370,6 +400,12 @@ public:
 	{
 		return "(" + left->ToString() + " * " + right->ToString() + ")";
 	}
+
+	//the flat evaluation (#3054)
+	virtual Index NumberOfOperands() const override { return 2; }
+	virtual FlatNode GetOperand(Index i) const override { return i == 0 ? FlatNode(left) : FlatNode(right); }
+	virtual const ResizableMatrix& EvaluateFromOperands(const FlatValue* values) const override { Real factor = values[0].real; const ResizableMatrix& matrix = (*values[1].matrix); buffer.SetNumberOfRowsAndColumns(matrix.NumberOfRows(), matrix.NumberOfColumns()); for (Index i = 0; i < matrix.NumberOfRows()*matrix.NumberOfColumns(); i++) { buffer.GetDataPointer()[i] = factor*matrix.GetDataPointer()[i]; } return buffer; }
+	virtual STDstring ToStringFromOperands(const STDstring* operands) const override { return "(" + operands[0] + " * " + operands[1] + ")"; }
 };
 
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -408,6 +444,12 @@ public:
 	virtual STDstring ToString() const override {
 		return operand->ToString();
 	}
+
+	//the flat evaluation (#3054)
+	virtual Index NumberOfOperands() const override { return 1; }
+	virtual FlatNode GetOperand(Index i) const override { return FlatNode(operand); }
+	virtual const ResizableMatrix& EvaluateFromOperands(const FlatValue* values) const override { return (*values[0].matrix); }
+	virtual STDstring ToStringFromOperands(const STDstring* operands) const override { return operands[0]; }
 };
 
 class MatrixExpressionUnaryMinus : public MatrixExpressionBase {
@@ -448,6 +490,12 @@ public:
 	virtual STDstring ToString() const override {
 		return "(-" + operand->ToString() + ")";
 	}
+
+	//the flat evaluation (#3054)
+	virtual Index NumberOfOperands() const override { return 1; }
+	virtual FlatNode GetOperand(Index i) const override { return FlatNode(operand); }
+	virtual const ResizableMatrix& EvaluateFromOperands(const FlatValue* values) const override { const ResizableMatrix& matrix = (*values[0].matrix); buffer.SetNumberOfRowsAndColumns(matrix.NumberOfRows(), matrix.NumberOfColumns()); for (Index i = 0; i < matrix.NumberOfRows()*matrix.NumberOfColumns(); i++) { buffer.GetDataPointer()[i] = -matrix.GetDataPointer()[i]; } return buffer; }
+	virtual STDstring ToStringFromOperands(const STDstring* operands) const override { return "(-" + operands[0] + ")"; }
 };
 
 
@@ -549,6 +597,12 @@ public:
 	{
 		return "(" + left->ToString() + " @ " + right->ToString() + ")";
 	}
+
+	//the flat evaluation (#3054)
+	virtual Index NumberOfOperands() const override { return 2; }
+	virtual FlatNode GetOperand(Index i) const override { return i == 0 ? FlatNode(left) : FlatNode(right); }
+	virtual const ResizableMatrix& EvaluateFromOperands(const FlatValue* values) const override { const ResizableMatrix& leftExpr = (*values[0].matrix); const ResizableMatrix& rightExpr = (*values[1].matrix); CHECKandTHROW((leftExpr.NumberOfColumns() == rightExpr.NumberOfRows()), "symbolic.Matrix::operator@ (matrix matrix multiplication) : inconsistent matrix sizes"); buffer.SetNumberOfRowsAndColumns(leftExpr.NumberOfRows(), rightExpr.NumberOfColumns()); for (Index i = 0; i < leftExpr.NumberOfRows(); i++) { for (Index j = 0; j < rightExpr.NumberOfColumns(); j++) { Real value = 0.; for (Index k = 0; k < leftExpr.NumberOfColumns(); k++) { value += leftExpr(i, k)*rightExpr(k, j); } buffer(i, j) = value; } } return buffer; }
+	virtual STDstring ToStringFromOperands(const STDstring* operands) const override { return "(" + operands[0] + " @ " + operands[1] + ")"; }
 };
 
 //! the transposed matrix (#3018)
@@ -578,6 +632,12 @@ public:
 	}
 	virtual Real EvaluateComponent(Index row, Index column) const override { return operand->EvaluateComponent(column, row); }
 	virtual STDstring ToString() const override { return operand->ToString() + ".T"; }
+
+	//the flat evaluation (#3054)
+	virtual Index NumberOfOperands() const override { return 1; }
+	virtual FlatNode GetOperand(Index i) const override { return FlatNode(operand); }
+	virtual const ResizableMatrix& EvaluateFromOperands(const FlatValue* values) const override { const ResizableMatrix& matrix = (*values[0].matrix); buffer.SetNumberOfRowsAndColumns(matrix.NumberOfColumns(), matrix.NumberOfRows()); for (Index i = 0; i < matrix.NumberOfRows(); i++) { for (Index j = 0; j < matrix.NumberOfColumns(); j++) { buffer(j, i) = matrix(i, j); } } return buffer; }
+	virtual STDstring ToStringFromOperands(const STDstring* operands) const override { return operands[0] + ".T"; }
 };
 
 //class MatrixExpressionNormL2 : public ExpressionBase
@@ -642,6 +702,13 @@ public:
 	{
 		return operand->ToString() + "[" + indexRow->ToString() +"," + indexColumn->ToString() + "]";
 	}
+
+	virtual bool InlineInFlatText() const override { return true; } //a component, q[1]
+	//the flat evaluation (#3054)
+	virtual Index NumberOfOperands() const override { return 3; }
+	virtual FlatNode GetOperand(Index i) const override { return i == 0 ? FlatNode(operand) : i == 1 ? FlatNode(indexRow) : FlatNode(indexColumn); }
+	virtual Real EvaluateFromOperands(const FlatValue* values) const override { Real rowReal = values[1].real; Index row = (Index)rowReal; Real columnReal = values[2].real; Index column = (Index)columnReal; CHECKandTHROW(((Real)row == rowReal) && ((Real)column == columnReal), "MatrixExpressionBase::operator[] index must contain integer indices"); return (*values[0].matrix)(row, column); }
+	virtual STDstring ToStringFromOperands(const STDstring* operands) const override { return operands[0] + "[" + operands[1] +"," + operands[2] + "]"; }
 };
 
 

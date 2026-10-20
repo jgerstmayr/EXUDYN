@@ -28,6 +28,31 @@
 
 namespace Symbolic
 {
+class ExpressionBase;
+class VectorExpressionBase;
+class MatrixExpressionBase;
+
+//! the kinds of nodes of the flat evaluation (#3053, #3054)
+enum class FlatKind { Real, Vector, Matrix };
+
+//! a node of a recording of any kind, for the flat evaluation (#3054)
+struct FlatNode
+{
+	FlatKind kind = FlatKind::Real;
+	const void* node = nullptr;
+	FlatNode() {}
+	FlatNode(const ExpressionBase* e) : kind(FlatKind::Real), node(e) {}
+	FlatNode(const VectorExpressionBase* e) : kind(FlatKind::Vector), node(e) {}
+	FlatNode(const MatrixExpressionBase* e) : kind(FlatKind::Matrix), node(e) {}
+};
+
+//! the value of an operand in the flat evaluation: a number, or the vector or matrix its node evaluated into (#3054)
+struct FlatValue
+{
+	Real real = 0.;
+	const ResizableConstVector* vector = nullptr;
+	const ResizableMatrix* matrix = nullptr;
+};
 class ExpressionNamedReal;
 
 
@@ -65,9 +90,12 @@ public:
 	//computed before; a node without this interface - a leaf, IfThenElse, a component of a vector - has no operands for
 	//the program and is evaluated as a tree
 	virtual Index NumberOfOperands() const { return 0; }
-	virtual ExpressionBase* GetOperand(Index i) const { return nullptr; }
-	virtual Real EvaluateFromOperands(const Real* values) const { return Evaluate(); }
+	virtual FlatNode GetOperand(Index i) const { return FlatNode(); }
+	virtual Real EvaluateFromOperands(const FlatValue* values) const { return Evaluate(); }
 	virtual STDstring ToStringFromOperands(const STDstring* operands) const { return ToString(); }
+	//! true for a component of a vector or matrix argument, q[1]: the text of the flat program writes it into the
+	//! operations that use it, as a leaf, and does not count it
+	virtual bool InlineInFlatText() const { return false; }
 	//virtual ExpressionBase* clone() const = 0; // Pure virtual clone method
 	virtual void Destroy() = 0; //Pure virtual destroy method, which deletes tree reversely
 
@@ -126,6 +154,11 @@ public:
 	//! once the sizes are set; valid until the node is evaluated again (#3006)
 	virtual const ResizableConstVector& EvaluateRef() const = 0;
 	virtual STDstring ToString() const = 0;
+	//the flat evaluation (#3054): as ExpressionBase; the value is the vector the node evaluated into
+	virtual Index NumberOfOperands() const { return 0; }
+	virtual FlatNode GetOperand(Index i) const { return FlatNode(); }
+	virtual const ResizableConstVector& EvaluateFromOperands(const FlatValue* values) const { return EvaluateRef(); }
+	virtual STDstring ToStringFromOperands(const STDstring* operands) const { return ToString(); }
 protected:
 	mutable ResizableConstVector buffer; //!< the value of an operator node, see EvaluateRef()
 };
@@ -165,6 +198,11 @@ public:
 	virtual Index NumberOfRows() const = 0;
 	virtual Index NumberOfColumns() const = 0;
 	virtual STDstring ToString() const = 0;
+	//the flat evaluation (#3054): as ExpressionBase; the value is the matrix the node evaluated into
+	virtual Index NumberOfOperands() const { return 0; }
+	virtual FlatNode GetOperand(Index i) const { return FlatNode(); }
+	virtual const ResizableMatrix& EvaluateFromOperands(const FlatValue* values) const { return EvaluateRef(); }
+	virtual STDstring ToStringFromOperands(const STDstring* operands) const { return ToString(); }
 protected:
 	mutable ResizableMatrix buffer; //!< the value of an operator node, see EvaluateRef()
 };
@@ -198,8 +236,8 @@ public:
 
 	//the flat evaluation (#3053)
 	virtual Index NumberOfOperands() const override { return 2; }
-	virtual ExpressionBase* GetOperand(Index i) const override { return i == 0 ? left : right; }
-	virtual Real EvaluateFromOperands(const Real* values) const override { return values[0] + values[1]; }
+	virtual FlatNode GetOperand(Index i) const override { return i == 0 ? FlatNode(left) : FlatNode(right); }
+	virtual Real EvaluateFromOperands(const FlatValue* values) const override { return values[0].real + values[1].real; }
 	virtual STDstring ToStringFromOperands(const STDstring* operands) const override { return "(" + operands[0] + " + " + operands[1] + ")"; }
 };
 
@@ -226,8 +264,8 @@ public:
 
 	//the flat evaluation (#3053)
 	virtual Index NumberOfOperands() const override { return 2; }
-	virtual ExpressionBase* GetOperand(Index i) const override { return i == 0 ? left : right; }
-	virtual Real EvaluateFromOperands(const Real* values) const override { return values[0] - values[1]; }
+	virtual FlatNode GetOperand(Index i) const override { return i == 0 ? FlatNode(left) : FlatNode(right); }
+	virtual Real EvaluateFromOperands(const FlatValue* values) const override { return values[0].real - values[1].real; }
 	virtual STDstring ToStringFromOperands(const STDstring* operands) const override { return "(" + operands[0] + " - " + operands[1] + ")"; }
 };
 
@@ -258,8 +296,8 @@ public:
 
 	//the flat evaluation (#3053)
 	virtual Index NumberOfOperands() const override { return 2; }
-	virtual ExpressionBase* GetOperand(Index i) const override { return i == 0 ? left : right; }
-	virtual Real EvaluateFromOperands(const Real* values) const override { return values[0] * values[1]; }
+	virtual FlatNode GetOperand(Index i) const override { return i == 0 ? FlatNode(left) : FlatNode(right); }
+	virtual Real EvaluateFromOperands(const FlatValue* values) const override { return values[0].real * values[1].real; }
 	virtual STDstring ToStringFromOperands(const STDstring* operands) const override { return "(" + operands[0] + " * " + operands[1] + ")"; }
 };
 
@@ -295,8 +333,8 @@ public:
 
 	//the flat evaluation (#3053)
 	virtual Index NumberOfOperands() const override { return 2; }
-	virtual ExpressionBase* GetOperand(Index i) const override { return i == 0 ? left : right; }
-	virtual Real EvaluateFromOperands(const Real* values) const override { return values[0] / values[1]; }
+	virtual FlatNode GetOperand(Index i) const override { return i == 0 ? FlatNode(left) : FlatNode(right); }
+	virtual Real EvaluateFromOperands(const FlatValue* values) const override { return values[0].real / values[1].real; }
 	virtual STDstring ToStringFromOperands(const STDstring* operands) const override { return "(" + operands[0] + " / " + operands[1] + ")"; }
 };
 
@@ -324,8 +362,8 @@ public:
 
 	//the flat evaluation (#3053)
 	virtual Index NumberOfOperands() const override { return 2; }
-	virtual ExpressionBase* GetOperand(Index i) const override { return i == 0 ? left : right; }
-	virtual Real EvaluateFromOperands(const Real* values) const override { return Real(values[0] == values[1]); }
+	virtual FlatNode GetOperand(Index i) const override { return i == 0 ? FlatNode(left) : FlatNode(right); }
+	virtual Real EvaluateFromOperands(const FlatValue* values) const override { return Real(values[0].real == values[1].real); }
 	virtual STDstring ToStringFromOperands(const STDstring* operands) const override { return "(" + operands[0] + " == " + operands[1] + ")"; }
 };
 
@@ -350,8 +388,8 @@ public:
 
 	//the flat evaluation (#3053)
 	virtual Index NumberOfOperands() const override { return 2; }
-	virtual ExpressionBase* GetOperand(Index i) const override { return i == 0 ? left : right; }
-	virtual Real EvaluateFromOperands(const Real* values) const override { return Real(values[0] != values[1]); }
+	virtual FlatNode GetOperand(Index i) const override { return i == 0 ? FlatNode(left) : FlatNode(right); }
+	virtual Real EvaluateFromOperands(const FlatValue* values) const override { return Real(values[0].real != values[1].real); }
 	virtual STDstring ToStringFromOperands(const STDstring* operands) const override { return "(" + operands[0] + " != " + operands[1] + ")"; }
 };
 
@@ -376,8 +414,8 @@ public:
 
 	//the flat evaluation (#3053)
 	virtual Index NumberOfOperands() const override { return 2; }
-	virtual ExpressionBase* GetOperand(Index i) const override { return i == 0 ? left : right; }
-	virtual Real EvaluateFromOperands(const Real* values) const override { return Real(values[0] > values[1]); }
+	virtual FlatNode GetOperand(Index i) const override { return i == 0 ? FlatNode(left) : FlatNode(right); }
+	virtual Real EvaluateFromOperands(const FlatValue* values) const override { return Real(values[0].real > values[1].real); }
 	virtual STDstring ToStringFromOperands(const STDstring* operands) const override { return "(" + operands[0] + " > " + operands[1] + ")"; }
 };
 
@@ -402,8 +440,8 @@ public:
 
 	//the flat evaluation (#3053)
 	virtual Index NumberOfOperands() const override { return 2; }
-	virtual ExpressionBase* GetOperand(Index i) const override { return i == 0 ? left : right; }
-	virtual Real EvaluateFromOperands(const Real* values) const override { return Real(values[0] >= values[1]); }
+	virtual FlatNode GetOperand(Index i) const override { return i == 0 ? FlatNode(left) : FlatNode(right); }
+	virtual Real EvaluateFromOperands(const FlatValue* values) const override { return Real(values[0].real >= values[1].real); }
 	virtual STDstring ToStringFromOperands(const STDstring* operands) const override { return "(" + operands[0] + " >= " + operands[1] + ")"; }
 };
 
@@ -428,8 +466,8 @@ public:
 
 	//the flat evaluation (#3053)
 	virtual Index NumberOfOperands() const override { return 2; }
-	virtual ExpressionBase* GetOperand(Index i) const override { return i == 0 ? left : right; }
-	virtual Real EvaluateFromOperands(const Real* values) const override { return Real(values[0] <= values[1]); }
+	virtual FlatNode GetOperand(Index i) const override { return i == 0 ? FlatNode(left) : FlatNode(right); }
+	virtual Real EvaluateFromOperands(const FlatValue* values) const override { return Real(values[0].real <= values[1].real); }
 	virtual STDstring ToStringFromOperands(const STDstring* operands) const override { return "(" + operands[0] + " <= " + operands[1] + ")"; }
 };
 
@@ -454,8 +492,8 @@ public:
 
 	//the flat evaluation (#3053)
 	virtual Index NumberOfOperands() const override { return 2; }
-	virtual ExpressionBase* GetOperand(Index i) const override { return i == 0 ? left : right; }
-	virtual Real EvaluateFromOperands(const Real* values) const override { return Real(values[0] < values[1]); }
+	virtual FlatNode GetOperand(Index i) const override { return i == 0 ? FlatNode(left) : FlatNode(right); }
+	virtual Real EvaluateFromOperands(const FlatValue* values) const override { return Real(values[0].real < values[1].real); }
 	virtual STDstring ToStringFromOperands(const STDstring* operands) const override { return "(" + operands[0] + " < " + operands[1] + ")"; }
 };
 
@@ -482,8 +520,8 @@ public:
 
 	//the flat evaluation (#3053)
 	virtual Index NumberOfOperands() const override { return 1; }
-	virtual ExpressionBase* GetOperand(Index i) const override { return operand; }
-	virtual Real EvaluateFromOperands(const Real* values) const override { return values[0]; }
+	virtual FlatNode GetOperand(Index i) const override { return FlatNode(operand); }
+	virtual Real EvaluateFromOperands(const FlatValue* values) const override { return values[0].real; }
 	virtual STDstring ToStringFromOperands(const STDstring* operands) const override { return operands[0]; }
 };
 
@@ -507,8 +545,8 @@ public:
 
 	//the flat evaluation (#3053)
 	virtual Index NumberOfOperands() const override { return 1; }
-	virtual ExpressionBase* GetOperand(Index i) const override { return operand; }
-	virtual Real EvaluateFromOperands(const Real* values) const override { return -values[0]; }
+	virtual FlatNode GetOperand(Index i) const override { return FlatNode(operand); }
+	virtual Real EvaluateFromOperands(const FlatValue* values) const override { return -values[0].real; }
 	virtual STDstring ToStringFromOperands(const STDstring* operands) const override { return "(-" + operands[0] + ")"; }
 };
 
@@ -531,8 +569,8 @@ public:
 
 	//the flat evaluation (#3053)
 	virtual Index NumberOfOperands() const override { return 1; }
-	virtual ExpressionBase* GetOperand(Index i) const override { return operand; }
-	virtual Real EvaluateFromOperands(const Real* values) const override { return std::isfinite(values[0]); }
+	virtual FlatNode GetOperand(Index i) const override { return FlatNode(operand); }
+	virtual Real EvaluateFromOperands(const FlatValue* values) const override { return std::isfinite(values[0].real); }
 	virtual STDstring ToStringFromOperands(const STDstring* operands) const override { return "isfinite(" + operands[0] + ")"; }
 };
 
@@ -554,8 +592,8 @@ public:
 
 	//the flat evaluation (#3053)
 	virtual Index NumberOfOperands() const override { return 1; }
-	virtual ExpressionBase* GetOperand(Index i) const override { return operand; }
-	virtual Real EvaluateFromOperands(const Real* values) const override { return std::fabs(values[0]); }
+	virtual FlatNode GetOperand(Index i) const override { return FlatNode(operand); }
+	virtual Real EvaluateFromOperands(const FlatValue* values) const override { return std::fabs(values[0].real); }
 	virtual STDstring ToStringFromOperands(const STDstring* operands) const override { return "abs(" + operands[0] + ")"; }
 };
 
@@ -573,8 +611,8 @@ public:
 
 	//the flat evaluation (#3053)
 	virtual Index NumberOfOperands() const override { return 1; }
-	virtual ExpressionBase* GetOperand(Index i) const override { return operand; }
-	virtual Real EvaluateFromOperands(const Real* values) const override { return EXUstd::SignReal(values[0]); }
+	virtual FlatNode GetOperand(Index i) const override { return FlatNode(operand); }
+	virtual Real EvaluateFromOperands(const FlatValue* values) const override { return EXUstd::SignReal(values[0].real); }
 	virtual STDstring ToStringFromOperands(const STDstring* operands) const override { return "sign(" + operands[0] + ")"; }
 };
 
@@ -593,8 +631,8 @@ public:
 
 	//the flat evaluation (#3053)
 	virtual Index NumberOfOperands() const override { return 1; }
-	virtual ExpressionBase* GetOperand(Index i) const override { return operand; }
-	virtual Real EvaluateFromOperands(const Real* values) const override { return !(values[0]); }
+	virtual FlatNode GetOperand(Index i) const override { return FlatNode(operand); }
+	virtual Real EvaluateFromOperands(const FlatValue* values) const override { return !(values[0].real); }
 	virtual STDstring ToStringFromOperands(const STDstring* operands) const override { return "Not(" + operands[0] + ")"; }
 };
 
@@ -612,8 +650,8 @@ public:
 
 	//the flat evaluation (#3053)
 	virtual Index NumberOfOperands() const override { return 1; }
-	virtual ExpressionBase* GetOperand(Index i) const override { return operand; }
-	virtual Real EvaluateFromOperands(const Real* values) const override { return std::round(values[0]); }
+	virtual FlatNode GetOperand(Index i) const override { return FlatNode(operand); }
+	virtual Real EvaluateFromOperands(const FlatValue* values) const override { return std::round(values[0].real); }
 	virtual STDstring ToStringFromOperands(const STDstring* operands) const override { return "round(" + operands[0] + ")"; }
 };
 
@@ -631,8 +669,8 @@ public:
 
 	//the flat evaluation (#3053)
 	virtual Index NumberOfOperands() const override { return 1; }
-	virtual ExpressionBase* GetOperand(Index i) const override { return operand; }
-	virtual Real EvaluateFromOperands(const Real* values) const override { return std::ceil(values[0]); }
+	virtual FlatNode GetOperand(Index i) const override { return FlatNode(operand); }
+	virtual Real EvaluateFromOperands(const FlatValue* values) const override { return std::ceil(values[0].real); }
 	virtual STDstring ToStringFromOperands(const STDstring* operands) const override { return "ceil(" + operands[0] + ")"; }
 };
 
@@ -650,8 +688,8 @@ public:
 
 	//the flat evaluation (#3053)
 	virtual Index NumberOfOperands() const override { return 1; }
-	virtual ExpressionBase* GetOperand(Index i) const override { return operand; }
-	virtual Real EvaluateFromOperands(const Real* values) const override { return std::floor(values[0]); }
+	virtual FlatNode GetOperand(Index i) const override { return FlatNode(operand); }
+	virtual Real EvaluateFromOperands(const FlatValue* values) const override { return std::floor(values[0].real); }
 	virtual STDstring ToStringFromOperands(const STDstring* operands) const override { return "floor(" + operands[0] + ")"; }
 };
 
@@ -676,8 +714,8 @@ public:
 
 	//the flat evaluation (#3053)
 	virtual Index NumberOfOperands() const override { return 1; }
-	virtual ExpressionBase* GetOperand(Index i) const override { return operand; }
-	virtual Real EvaluateFromOperands(const Real* values) const override { return std::sqrt(values[0]); }
+	virtual FlatNode GetOperand(Index i) const override { return FlatNode(operand); }
+	virtual Real EvaluateFromOperands(const FlatValue* values) const override { return std::sqrt(values[0].real); }
 	virtual STDstring ToStringFromOperands(const STDstring* operands) const override { return "sqrt(" + operands[0] + ")"; }
 };
 
@@ -695,8 +733,8 @@ public:
 
 	//the flat evaluation (#3053)
 	virtual Index NumberOfOperands() const override { return 1; }
-	virtual ExpressionBase* GetOperand(Index i) const override { return operand; }
-	virtual Real EvaluateFromOperands(const Real* values) const override { return EM::Exp(values[0]); }
+	virtual FlatNode GetOperand(Index i) const override { return FlatNode(operand); }
+	virtual Real EvaluateFromOperands(const FlatValue* values) const override { return EM::Exp(values[0].real); }
 	virtual STDstring ToStringFromOperands(const STDstring* operands) const override { return "exp(" + operands[0] + ")"; }
 };
 
@@ -714,8 +752,8 @@ public:
 
 	//the flat evaluation (#3053)
 	virtual Index NumberOfOperands() const override { return 1; }
-	virtual ExpressionBase* GetOperand(Index i) const override { return operand; }
-	virtual Real EvaluateFromOperands(const Real* values) const override { return EM::Log(values[0]); }
+	virtual FlatNode GetOperand(Index i) const override { return FlatNode(operand); }
+	virtual Real EvaluateFromOperands(const FlatValue* values) const override { return EM::Log(values[0].real); }
 	virtual STDstring ToStringFromOperands(const STDstring* operands) const override { return "log(" + operands[0] + ")"; }
 };
 
@@ -734,8 +772,8 @@ public:
 
 	//the flat evaluation (#3053)
 	virtual Index NumberOfOperands() const override { return 1; }
-	virtual ExpressionBase* GetOperand(Index i) const override { return operand; }
-	virtual Real EvaluateFromOperands(const Real* values) const override { return EM::Sin(values[0]); }
+	virtual FlatNode GetOperand(Index i) const override { return FlatNode(operand); }
+	virtual Real EvaluateFromOperands(const FlatValue* values) const override { return EM::Sin(values[0].real); }
 	virtual STDstring ToStringFromOperands(const STDstring* operands) const override { return "sin(" + operands[0] + ")"; }
 };
 
@@ -753,8 +791,8 @@ public:
 
 	//the flat evaluation (#3053)
 	virtual Index NumberOfOperands() const override { return 1; }
-	virtual ExpressionBase* GetOperand(Index i) const override { return operand; }
-	virtual Real EvaluateFromOperands(const Real* values) const override { return EM::Cos(values[0]); }
+	virtual FlatNode GetOperand(Index i) const override { return FlatNode(operand); }
+	virtual Real EvaluateFromOperands(const FlatValue* values) const override { return EM::Cos(values[0].real); }
 	virtual STDstring ToStringFromOperands(const STDstring* operands) const override { return "cos(" + operands[0] + ")"; }
 };
 
@@ -775,8 +813,8 @@ public:
 
 	//the flat evaluation (#3053)
 	virtual Index NumberOfOperands() const override { return 1; }
-	virtual ExpressionBase* GetOperand(Index i) const override { return operand; }
-	virtual Real EvaluateFromOperands(const Real* values) const override { return EM::Tan(values[0]); }
+	virtual FlatNode GetOperand(Index i) const override { return FlatNode(operand); }
+	virtual Real EvaluateFromOperands(const FlatValue* values) const override { return EM::Tan(values[0].real); }
 	virtual STDstring ToStringFromOperands(const STDstring* operands) const override { return "tan(" + operands[0] + ")"; }
 };
 
@@ -801,8 +839,8 @@ public:
 
 	//the flat evaluation (#3053)
 	virtual Index NumberOfOperands() const override { return 1; }
-	virtual ExpressionBase* GetOperand(Index i) const override { return operand; }
-	virtual Real EvaluateFromOperands(const Real* values) const override { return EM::Asin(values[0]); }
+	virtual FlatNode GetOperand(Index i) const override { return FlatNode(operand); }
+	virtual Real EvaluateFromOperands(const FlatValue* values) const override { return EM::Asin(values[0].real); }
 	virtual STDstring ToStringFromOperands(const STDstring* operands) const override { return "asin(" + operands[0] + ")"; }
 };
 
@@ -827,8 +865,8 @@ public:
 
 	//the flat evaluation (#3053)
 	virtual Index NumberOfOperands() const override { return 1; }
-	virtual ExpressionBase* GetOperand(Index i) const override { return operand; }
-	virtual Real EvaluateFromOperands(const Real* values) const override { return EM::Acos(values[0]); }
+	virtual FlatNode GetOperand(Index i) const override { return FlatNode(operand); }
+	virtual Real EvaluateFromOperands(const FlatValue* values) const override { return EM::Acos(values[0].real); }
 	virtual STDstring ToStringFromOperands(const STDstring* operands) const override { return "acos(" + operands[0] + ")"; }
 };
 
@@ -849,8 +887,8 @@ public:
 
 	//the flat evaluation (#3053)
 	virtual Index NumberOfOperands() const override { return 1; }
-	virtual ExpressionBase* GetOperand(Index i) const override { return operand; }
-	virtual Real EvaluateFromOperands(const Real* values) const override { return EM::Atan(values[0]); }
+	virtual FlatNode GetOperand(Index i) const override { return FlatNode(operand); }
+	virtual Real EvaluateFromOperands(const FlatValue* values) const override { return EM::Atan(values[0].real); }
 	virtual STDstring ToStringFromOperands(const STDstring* operands) const override { return "atan(" + operands[0] + ")"; }
 };
 
@@ -870,8 +908,8 @@ public:
 
 	//the flat evaluation (#3053)
 	virtual Index NumberOfOperands() const override { return 1; }
-	virtual ExpressionBase* GetOperand(Index i) const override { return operand; }
-	virtual Real EvaluateFromOperands(const Real* values) const override { return EM::Sinh(values[0]); }
+	virtual FlatNode GetOperand(Index i) const override { return FlatNode(operand); }
+	virtual Real EvaluateFromOperands(const FlatValue* values) const override { return EM::Sinh(values[0].real); }
 	virtual STDstring ToStringFromOperands(const STDstring* operands) const override { return "sinh(" + operands[0] + ")"; }
 };
 
@@ -889,8 +927,8 @@ public:
 
 	//the flat evaluation (#3053)
 	virtual Index NumberOfOperands() const override { return 1; }
-	virtual ExpressionBase* GetOperand(Index i) const override { return operand; }
-	virtual Real EvaluateFromOperands(const Real* values) const override { return EM::Cosh(values[0]); }
+	virtual FlatNode GetOperand(Index i) const override { return FlatNode(operand); }
+	virtual Real EvaluateFromOperands(const FlatValue* values) const override { return EM::Cosh(values[0].real); }
 	virtual STDstring ToStringFromOperands(const STDstring* operands) const override { return "cosh(" + operands[0] + ")"; }
 };
 
@@ -908,8 +946,8 @@ public:
 
 	//the flat evaluation (#3053)
 	virtual Index NumberOfOperands() const override { return 1; }
-	virtual ExpressionBase* GetOperand(Index i) const override { return operand; }
-	virtual Real EvaluateFromOperands(const Real* values) const override { return EM::Tanh(values[0]); }
+	virtual FlatNode GetOperand(Index i) const override { return FlatNode(operand); }
+	virtual Real EvaluateFromOperands(const FlatValue* values) const override { return EM::Tanh(values[0].real); }
 	virtual STDstring ToStringFromOperands(const STDstring* operands) const override { return "tanh(" + operands[0] + ")"; }
 };
 
@@ -930,8 +968,8 @@ public:
 
 	//the flat evaluation (#3053)
 	virtual Index NumberOfOperands() const override { return 1; }
-	virtual ExpressionBase* GetOperand(Index i) const override { return operand; }
-	virtual Real EvaluateFromOperands(const Real* values) const override { return std::asinh(values[0]); }
+	virtual FlatNode GetOperand(Index i) const override { return FlatNode(operand); }
+	virtual Real EvaluateFromOperands(const FlatValue* values) const override { return std::asinh(values[0].real); }
 	virtual STDstring ToStringFromOperands(const STDstring* operands) const override { return "asinh(" + operands[0] + ")"; }
 };
 
@@ -954,8 +992,8 @@ public:
 
 	//the flat evaluation (#3053)
 	virtual Index NumberOfOperands() const override { return 1; }
-	virtual ExpressionBase* GetOperand(Index i) const override { return operand; }
-	virtual Real EvaluateFromOperands(const Real* values) const override { return std::acosh(values[0]); }
+	virtual FlatNode GetOperand(Index i) const override { return FlatNode(operand); }
+	virtual Real EvaluateFromOperands(const FlatValue* values) const override { return std::acosh(values[0].real); }
 	virtual STDstring ToStringFromOperands(const STDstring* operands) const override { return "acosh(" + operands[0] + ")"; }
 };
 
@@ -978,8 +1016,8 @@ public:
 
 	//the flat evaluation (#3053)
 	virtual Index NumberOfOperands() const override { return 1; }
-	virtual ExpressionBase* GetOperand(Index i) const override { return operand; }
-	virtual Real EvaluateFromOperands(const Real* values) const override { return std::atanh(values[0]); }
+	virtual FlatNode GetOperand(Index i) const override { return FlatNode(operand); }
+	virtual Real EvaluateFromOperands(const FlatValue* values) const override { return std::atanh(values[0].real); }
 	virtual STDstring ToStringFromOperands(const STDstring* operands) const override { return "atanh(" + operands[0] + ")"; }
 };
 
@@ -1018,8 +1056,8 @@ public:
 
 	//the flat evaluation (#3053)
 	virtual Index NumberOfOperands() const override { return 2; }
-	virtual ExpressionBase* GetOperand(Index i) const override { return i == 0 ? base : exponent; }
-	virtual Real EvaluateFromOperands(const Real* values) const override { return EM::Pow(values[0], values[1]); }
+	virtual FlatNode GetOperand(Index i) const override { return i == 0 ? FlatNode(base) : FlatNode(exponent); }
+	virtual Real EvaluateFromOperands(const FlatValue* values) const override { return EM::Pow(values[0].real, values[1].real); }
 	virtual STDstring ToStringFromOperands(const STDstring* operands) const override { return "pow(" + operands[0] + ", " + operands[1] + ")"; }
 };
 
@@ -1049,8 +1087,8 @@ public:
 
 	//the flat evaluation (#3053)
 	virtual Index NumberOfOperands() const override { return 2; }
-	virtual ExpressionBase* GetOperand(Index i) const override { return i == 0 ? arg1 : arg2; }
-	virtual Real EvaluateFromOperands(const Real* values) const override { return EM::Atan2(values[0], values[1]); }
+	virtual FlatNode GetOperand(Index i) const override { return i == 0 ? FlatNode(arg1) : FlatNode(arg2); }
+	virtual Real EvaluateFromOperands(const FlatValue* values) const override { return EM::Atan2(values[0].real, values[1].real); }
 	virtual STDstring ToStringFromOperands(const STDstring* operands) const override { return "atan2(" + operands[0] + ", " + operands[1] + ")"; }
 };
 
@@ -1072,8 +1110,8 @@ public:
 
 	//the flat evaluation (#3053)
 	virtual Index NumberOfOperands() const override { return 2; }
-	virtual ExpressionBase* GetOperand(Index i) const override { return i == 0 ? arg1 : arg2; }
-	virtual Real EvaluateFromOperands(const Real* values) const override { return std::fmod(values[0], values[1]); }
+	virtual FlatNode GetOperand(Index i) const override { return i == 0 ? FlatNode(arg1) : FlatNode(arg2); }
+	virtual Real EvaluateFromOperands(const FlatValue* values) const override { return std::fmod(values[0].real, values[1].real); }
 	virtual STDstring ToStringFromOperands(const STDstring* operands) const override { return "mod(" + operands[0] + ", " + operands[1] + ")"; }
 };
 
@@ -1095,8 +1133,8 @@ public:
 
 	//the flat evaluation (#3053)
 	virtual Index NumberOfOperands() const override { return 2; }
-	virtual ExpressionBase* GetOperand(Index i) const override { return i == 0 ? arg1 : arg2; }
-	virtual Real EvaluateFromOperands(const Real* values) const override { return std::min(values[0], values[1]); }
+	virtual FlatNode GetOperand(Index i) const override { return i == 0 ? FlatNode(arg1) : FlatNode(arg2); }
+	virtual Real EvaluateFromOperands(const FlatValue* values) const override { return std::min(values[0].real, values[1].real); }
 	virtual STDstring ToStringFromOperands(const STDstring* operands) const override { return "min(" + operands[0] + ", " + operands[1] + ")"; }
 };
 
@@ -1118,8 +1156,8 @@ public:
 
 	//the flat evaluation (#3053)
 	virtual Index NumberOfOperands() const override { return 2; }
-	virtual ExpressionBase* GetOperand(Index i) const override { return i == 0 ? arg1 : arg2; }
-	virtual Real EvaluateFromOperands(const Real* values) const override { return std::max(values[0], values[1]); }
+	virtual FlatNode GetOperand(Index i) const override { return i == 0 ? FlatNode(arg1) : FlatNode(arg2); }
+	virtual Real EvaluateFromOperands(const FlatValue* values) const override { return std::max(values[0].real, values[1].real); }
 	virtual STDstring ToStringFromOperands(const STDstring* operands) const override { return "max(" + operands[0] + ", " + operands[1] + ")"; }
 };
 
@@ -1933,81 +1971,124 @@ public:
 };
 
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-//! THE FLAT EVALUATION of scalar expressions (#3053): the graph of a recording, sorted once into a list of operations so
-//! that every operand comes before its parent; a node that several parents share is one operation and is computed once
-//! per evaluation. The values live in the slots of the evaluation and are not used by the next one: each evaluation
-//! computes every operation again (decision D18). A node without operands for the program - a leaf, IfThenElse, the
-//! component of a vector - is one operation that evaluates its own subtree as a tree.
+//! THE FLAT EVALUATION (#3053, #3054): the graph of a recording, sorted once into a list of operations so that every
+//! operand comes before its parent; a node that several parents share - a number, a vector or a matrix - is one
+//! operation and is computed once per evaluation. Operation k writes slot k: the number, or a pointer to the vector or
+//! matrix its node evaluated into. Nothing is used by the next evaluation, which computes every operation again
+//! (decision D18). A node without operands for the program - a leaf, IfThenElse - is one operation that evaluates its
+//! own subtree as a tree.
 class FlatProgram
 {
 	struct Operation
 	{
-		const ExpressionBase* node;
+		FlatNode node;
+		Index firstOperand;	 //!< the slots of its operands are operandSlots[firstOperand ...]
 		Index numberOfOperands;
-		Index operands[2];	  //!< the slots of the operands
+		bool inlineText;		//!< written into its users in the text: a leaf, or a component of an argument
 	};
 	std::vector<Operation> operations;  //!< operation k writes slot k
+	std::vector<Index> operandSlots;
 	std::vector<Index> results;		 //!< the slots of the results, in the order of the roots
-	mutable std::vector<Real> slots;	//!< the values of one evaluation
-public:
-	//! build the list for these roots; a root may be nullptr for a result that is not an expression
-	void Build(const std::vector<const ExpressionBase*>& roots)
+	mutable std::vector<FlatValue> slots;		   //!< the values of one evaluation
+	mutable std::vector<FlatValue> operandValues;   //!< the operands of one operation
+
+	static Index NumberOfOperands(const FlatNode& node)
 	{
-		operations.clear();
-		results.clear();
-		std::unordered_map<const ExpressionBase*, Index> slotOfNode; //where each node of the recording was put
-		std::vector<std::pair<const ExpressionBase*, Index>> stack; //node and the number of its operands already done
-		for (const ExpressionBase* root : roots)
+		switch (node.kind)
 		{
-			CHECKandTHROW(root != nullptr, "FlatProgram::Build: a result is no expression");
-			if (slotOfNode.find(root) == slotOfNode.end()) { stack.push_back({ root, 0 }); }
+		case FlatKind::Real: return ((const ExpressionBase*)node.node)->NumberOfOperands();
+		case FlatKind::Vector: return ((const VectorExpressionBase*)node.node)->NumberOfOperands();
+		default: return ((const MatrixExpressionBase*)node.node)->NumberOfOperands();
+		}
+	}
+	static FlatNode GetOperand(const FlatNode& node, Index i)
+	{
+		switch (node.kind)
+		{
+		case FlatKind::Real: return ((const ExpressionBase*)node.node)->GetOperand(i);
+		case FlatKind::Vector: return ((const VectorExpressionBase*)node.node)->GetOperand(i);
+		default: return ((const MatrixExpressionBase*)node.node)->GetOperand(i);
+		}
+	}
+public:
+	//! build the list for these roots
+	void Build(const std::vector<FlatNode>& roots)
+	{
+		Clear();
+		std::unordered_map<const void*, Index> slotOfNode; //where each node of the recording was put, while building
+		std::vector<std::pair<FlatNode, Index>> stack;	 //node and the number of its operands already done
+		Index maxOperands = 0;
+		for (const FlatNode& root : roots)
+		{
+			CHECKandTHROW(root.node != nullptr, "FlatProgram::Build: a result is no expression");
+			if (slotOfNode.find(root.node) == slotOfNode.end()) { stack.push_back({ root, 0 }); }
 			while (stack.size())
 			{
-				auto& [node, done] = stack.back();
-				if (done < node->NumberOfOperands()) //first the operands, depth first, without recursion
+				FlatNode node = stack.back().first;
+				Index done = stack.back().second;
+				Index n = NumberOfOperands(node);
+				if (done < n) //first the operands, depth first, without recursion
 				{
-					const ExpressionBase* operand = node->GetOperand(done);
-					done++;
-					if (slotOfNode.find(operand) == slotOfNode.end()) { stack.push_back({ operand, 0 }); }
+					FlatNode operand = GetOperand(node, done);
+					stack.back().second++;
+					if (slotOfNode.find(operand.node) == slotOfNode.end()) { stack.push_back({ operand, 0 }); }
 					continue;
 				}
 				Operation operation;
 				operation.node = node;
-				operation.numberOfOperands = node->NumberOfOperands();
-				for (Index i = 0; i < operation.numberOfOperands; i++) { operation.operands[i] = slotOfNode[node->GetOperand(i)]; }
-				slotOfNode[node] = (Index)operations.size();
+				operation.firstOperand = (Index)operandSlots.size();
+				operation.numberOfOperands = n;
+				for (Index i = 0; i < n; i++) { operandSlots.push_back(slotOfNode[GetOperand(node, i).node]); }
+				maxOperands = EXUstd::Maximum(maxOperands, n);
+				operation.inlineText = (n == 0);
+				if (n != 0 && node.kind == FlatKind::Real && ((const ExpressionBase*)node.node)->InlineInFlatText())
+				{
+					operation.inlineText = true;
+					for (Index i = 0; i < n; i++) { operation.inlineText &= operations[operandSlots[operation.firstOperand + i]].inlineText; }
+				}
+				slotOfNode[node.node] = (Index)operations.size();
 				operations.push_back(operation);
 				stack.pop_back();
 			}
-			results.push_back(slotOfNode[root]);
+			results.push_back(slotOfNode[root.node]);
 		}
 		slots.resize(operations.size());
+		operandValues.resize(maxOperands);
 	}
 
 	//! true, if Build has been called with at least one root
 	bool IsBuilt() const { return results.size() != 0; }
-	void Clear() { operations.clear(); results.clear(); slots.clear(); }
+	void Clear() { operations.clear(); operandSlots.clear(); results.clear(); slots.clear(); operandValues.clear(); }
 
 	//! compute all operations in their order
 	void Evaluate() const
 	{
-		Real values[2];
-		Real* slot = slots.data();
+		FlatValue* slot = slots.data();
+		FlatValue* values = operandValues.data();
 		Index k = 0;
 		for (const Operation& operation : operations)
 		{
-			for (Index i = 0; i < operation.numberOfOperands; i++) { values[i] = slot[operation.operands[i]]; }
-			slot[k++] = operation.node->EvaluateFromOperands(values); //slot k belongs to operation k
+			const Index* operands = &operandSlots[operation.firstOperand];
+			for (Index i = 0; i < operation.numberOfOperands; i++) { values[i] = slot[operands[i]]; }
+			switch (operation.node.kind) //slot k belongs to operation k
+			{
+			case FlatKind::Real: slot[k].real = ((const ExpressionBase*)operation.node.node)->EvaluateFromOperands(values); break;
+			case FlatKind::Vector: slot[k].vector = &((const VectorExpressionBase*)operation.node.node)->EvaluateFromOperands(values); break;
+			default: slot[k].matrix = &((const MatrixExpressionBase*)operation.node.node)->EvaluateFromOperands(values); break;
+			}
+			k++;
 		}
 	}
 	//! the value of result i of the last evaluation
-	Real Result(Index i) const { return slots[results[i]]; }
+	Real Result(Index i) const { return slots[results[i]].real; }
+	const ResizableConstVector& VectorResult(Index i) const { return *slots[results[i]].vector; }
+	const ResizableMatrix& MatrixResult(Index i) const { return *slots[results[i]].matrix; }
 	Index NumberOfResults() const { return (Index)results.size(); }
 	//! the number of operations that have operands, the arithmetic of one evaluation
 	Index NumberOfComputations() const
 	{
 		Index n = 0;
-		for (const Operation& operation : operations) { n += (operation.numberOfOperands != 0); }
+		for (const Operation& operation : operations) { n += !operation.inlineText; }
 		return n;
 	}
 
@@ -2016,17 +2097,38 @@ public:
 	STDstring ToString(const std::vector<STDstring>& resultNames) const
 	{
 		std::vector<STDstring> names(operations.size());
+		std::vector<STDstring> operands;
 		STDstring text;
 		Index k = 0;
 		for (const Operation& operation : operations)
 		{
-			if (operation.numberOfOperands == 0) { names[k] = operation.node->ToString(); }
+			const void* node = operation.node.node;
+			if (operation.numberOfOperands == 0)
+			{
+				switch (operation.node.kind)
+				{
+				case FlatKind::Real: names[k] = ((const ExpressionBase*)node)->ToString(); break;
+				case FlatKind::Vector: names[k] = ((const VectorExpressionBase*)node)->ToString(); break;
+				default: names[k] = ((const MatrixExpressionBase*)node)->ToString(); break;
+				}
+			}
 			else
 			{
-				STDstring operands[2];
-				for (Index i = 0; i < operation.numberOfOperands; i++) { operands[i] = names[operation.operands[i]]; }
-				names[k] = "t" + EXUstd::ToString(k);
-				text += names[k] + " = " + operation.node->ToStringFromOperands(operands) + "\n";
+				operands.resize(operation.numberOfOperands);
+				for (Index i = 0; i < operation.numberOfOperands; i++) { operands[i] = names[operandSlots[operation.firstOperand + i]]; }
+				STDstring value;
+				switch (operation.node.kind)
+				{
+				case FlatKind::Real: value = ((const ExpressionBase*)node)->ToStringFromOperands(operands.data()); break;
+				case FlatKind::Vector: value = ((const VectorExpressionBase*)node)->ToStringFromOperands(operands.data()); break;
+				default: value = ((const MatrixExpressionBase*)node)->ToStringFromOperands(operands.data()); break;
+				}
+				if (operation.inlineText) { names[k] = value; }
+				else
+				{
+					names[k] = "t" + EXUstd::ToString(k);
+					text += names[k] + " = " + value + "\n";
+				}
 			}
 			k++;
 		}

@@ -383,13 +383,13 @@ class UserFunction:
         ...
     @overload
     def GetFlatProgram(self) -> str: 
-        """The list of operations by which a result made of scalar expressions is evaluated, as text: one operation tK = ...
+        """The list of operations by which the result is evaluated, as text: one operation tK = ...
         
-        per line, then the results; each value that the recorded function uses several times is computed once per call (#3053)
+        per line, then the result; each number, vector or matrix that the recorded function uses several times is computed once per call (#3053, #3054)
         """
         ...
     flatEvaluation:bool
-    """True (default): a result made of scalar expressions is evaluated by the list of operations of GetFlatProgram(); False: as a tree, with the same results, for comparison (#3053)."""
+    """True (default): the result is evaluated by the list of operations of GetFlatProgram(); False: as a tree, with the same results, for comparison (#3053, #3054)."""
     @overload
     def __repr__(self) -> str: ...
     @overload

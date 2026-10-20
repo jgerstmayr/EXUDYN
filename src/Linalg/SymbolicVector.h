@@ -167,8 +167,21 @@ public:
 		}
 		return buffer;
 	}
-	//! the expressions of the components, for the flat evaluation (#3053)
-	const ExpressionList& GetExpressionList() const { return exprList; }
+	//the flat evaluation (#3054): the components are the operands
+	virtual Index NumberOfOperands() const override { return exprList.NumberOfItems(); }
+	virtual FlatNode GetOperand(Index i) const override { return FlatNode(exprList.GetItem(i)); }
+	virtual const ResizableConstVector& EvaluateFromOperands(const FlatValue* values) const override
+	{
+		buffer.SetNumberOfItems(exprList.NumberOfItems());
+		for (Index i = 0; i < exprList.NumberOfItems(); i++) { buffer[i] = values[i].real; }
+		return buffer;
+	}
+	virtual STDstring ToStringFromOperands(const STDstring* operands) const override
+	{
+		STDstring str = "[";
+		for (Index i = 0; i < exprList.NumberOfItems(); i++) { str += (i > 0 ? ", " : "") + operands[i]; }
+		return str + "]";
+	}
 	virtual STDstring ToString() const override
 	{
 		STDstring str = "[";
@@ -216,6 +229,12 @@ public:
 	{
 		return "(" + left->ToString() + " + " + right->ToString() + ")";
 	}
+
+	//the flat evaluation (#3054)
+	virtual Index NumberOfOperands() const override { return 2; }
+	virtual FlatNode GetOperand(Index i) const override { return i == 0 ? FlatNode(left) : FlatNode(right); }
+	virtual const ResizableConstVector& EvaluateFromOperands(const FlatValue* values) const override { const ResizableConstVector& leftExpr = (*values[0].vector); const ResizableConstVector& rightExpr = (*values[1].vector); CHECKandTHROW(leftExpr.NumberOfItems() == rightExpr.NumberOfItems(), "symbolic.Vector::operator+ : inconsistent vector sizes"); buffer.SetNumberOfItems(leftExpr.NumberOfItems()); for (Index i = 0; i < leftExpr.NumberOfItems(); i++) { buffer[i] = leftExpr[i] + rightExpr[i]; } return buffer; }
+	virtual STDstring ToStringFromOperands(const STDstring* operands) const override { return "(" + operands[0] + " + " + operands[1] + ")"; }
 };
 
 class VectorExpressionOperatorMinus: public VectorExpressionBase
@@ -244,6 +263,12 @@ public:
 	{
 		return "(" + left->ToString() + " - " + right->ToString() + ")";
 	}
+
+	//the flat evaluation (#3054)
+	virtual Index NumberOfOperands() const override { return 2; }
+	virtual FlatNode GetOperand(Index i) const override { return i == 0 ? FlatNode(left) : FlatNode(right); }
+	virtual const ResizableConstVector& EvaluateFromOperands(const FlatValue* values) const override { const ResizableConstVector& leftExpr = (*values[0].vector); const ResizableConstVector& rightExpr = (*values[1].vector); CHECKandTHROW(leftExpr.NumberOfItems() == rightExpr.NumberOfItems(), "symbolic.Vector::operator- : inconsistent vector sizes"); buffer.SetNumberOfItems(leftExpr.NumberOfItems()); for (Index i = 0; i < leftExpr.NumberOfItems(); i++) { buffer[i] = leftExpr[i] - rightExpr[i]; } return buffer; }
+	virtual STDstring ToStringFromOperands(const STDstring* operands) const override { return "(" + operands[0] + " - " + operands[1] + ")"; }
 };
 
 class VectorExpressionOperatorMultScalarVector: public VectorExpressionBase
@@ -272,6 +297,12 @@ public:
 	{
 		return "(" + left->ToString() + " * " + right->ToString() + ")";
 	}
+
+	//the flat evaluation (#3054)
+	virtual Index NumberOfOperands() const override { return 2; }
+	virtual FlatNode GetOperand(Index i) const override { return i == 0 ? FlatNode(left) : FlatNode(right); }
+	virtual const ResizableConstVector& EvaluateFromOperands(const FlatValue* values) const override { Real factor = values[0].real; const ResizableConstVector& vector = (*values[1].vector); buffer.SetNumberOfItems(vector.NumberOfItems()); for (Index i = 0; i < vector.NumberOfItems(); i++) { buffer[i] = factor * vector[i]; } return buffer; }
+	virtual STDstring ToStringFromOperands(const STDstring* operands) const override { return "(" + operands[0] + " * " + operands[1] + ")"; }
 };
 
 
@@ -300,6 +331,12 @@ public:
 	{
 		return "(" + left->ToString() + " @ " + right->ToString() + ")";
 	}
+
+	//the flat evaluation (#3054)
+	virtual Index NumberOfOperands() const override { return 2; }
+	virtual FlatNode GetOperand(Index i) const override { return i == 0 ? FlatNode(left) : FlatNode(right); }
+	virtual const ResizableConstVector& EvaluateFromOperands(const FlatValue* values) const override { EXUmath::MultMatrixVector((*values[0].matrix), (*values[1].vector), buffer); return buffer; }
+	virtual STDstring ToStringFromOperands(const STDstring* operands) const override { return "(" + operands[0] + " @ " + operands[1] + ")"; }
 };
 
 class VectorExpressionOperatorMultMatrixTransposed : public VectorExpressionBase
@@ -327,6 +364,12 @@ public:
 	{
 		return "(" + right->ToString() + " @ " + left->ToString() + ")"; //vector @ matrix
 	}
+
+	//the flat evaluation (#3054)
+	virtual Index NumberOfOperands() const override { return 2; }
+	virtual FlatNode GetOperand(Index i) const override { return i == 0 ? FlatNode(left) : FlatNode(right); }
+	virtual const ResizableConstVector& EvaluateFromOperands(const FlatValue* values) const override { EXUmath::MultMatrixTransposedVector((*values[0].matrix), (*values[1].vector), buffer); return buffer; }
+	virtual STDstring ToStringFromOperands(const STDstring* operands) const override { return "(" + operands[1] + " @ " + operands[0] + ")"; }
 };
 
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -349,6 +392,12 @@ public:
 		return operand->ToString();
 		//return "(+" + operand->ToString() + ")";
 	}
+
+	//the flat evaluation (#3054)
+	virtual Index NumberOfOperands() const override { return 1; }
+	virtual FlatNode GetOperand(Index i) const override { return FlatNode(operand); }
+	virtual const ResizableConstVector& EvaluateFromOperands(const FlatValue* values) const override { return (*values[0].vector); }
+	virtual STDstring ToStringFromOperands(const STDstring* operands) const override { return operands[0]; }
 };
 
 class VectorExpressionUnaryMinus: public VectorExpressionBase {
@@ -370,6 +419,12 @@ public:
 	virtual STDstring ToString() const override {
 		return "(-" + operand->ToString() + ")";
 	}
+
+	//the flat evaluation (#3054)
+	virtual Index NumberOfOperands() const override { return 1; }
+	virtual FlatNode GetOperand(Index i) const override { return FlatNode(operand); }
+	virtual const ResizableConstVector& EvaluateFromOperands(const FlatValue* values) const override { const ResizableConstVector& vector = (*values[0].vector); buffer.SetNumberOfItems(vector.NumberOfItems()); for (Index i = 0; i < vector.NumberOfItems(); i++) { buffer[i] = -vector[i]; } return buffer; }
+	virtual STDstring ToStringFromOperands(const STDstring* operands) const override { return "(-" + operands[0] + ")"; }
 };
 
 
@@ -402,6 +457,12 @@ public:
 	{
 		return left->ToString() + ".multiply(" + right->ToString() + ")";
 	}
+
+	//the flat evaluation (#3054)
+	virtual Index NumberOfOperands() const override { return 2; }
+	virtual FlatNode GetOperand(Index i) const override { return i == 0 ? FlatNode(left) : FlatNode(right); }
+	virtual const ResizableConstVector& EvaluateFromOperands(const FlatValue* values) const override { const ResizableConstVector& l = (*values[0].vector); const ResizableConstVector& r = (*values[1].vector); CHECKandTHROW(l.NumberOfItems() == r.NumberOfItems(), "symbolic.MultComponents(...): inconsistent vector sizes"); buffer.SetNumberOfItems(l.NumberOfItems()); EXUmath::MultVectorComponents(l, r, buffer); return buffer; }
+	virtual STDstring ToStringFromOperands(const STDstring* operands) const override { return operands[0] + ".multiply(" + operands[1] + ")"; }
 };
 
 
@@ -438,6 +499,12 @@ public:
 	{
 		return "(" + left->ToString() + " @ " + right->ToString() + ")";
 	}
+
+	//the flat evaluation (#3054)
+	virtual Index NumberOfOperands() const override { return 2; }
+	virtual FlatNode GetOperand(Index i) const override { return i == 0 ? FlatNode(left) : FlatNode(right); }
+	virtual Real EvaluateFromOperands(const FlatValue* values) const override { const ResizableConstVector& leftExpr = (*values[0].vector); const ResizableConstVector& rightExpr = (*values[1].vector); CHECKandTHROW(leftExpr.NumberOfItems() == rightExpr.NumberOfItems(), "symbolic.Vector::operator* (scalar vector multiplication) : inconsistent vector sizes"); return leftExpr * rightExpr; }
+	virtual STDstring ToStringFromOperands(const STDstring* operands) const override { return "(" + operands[0] + " @ " + operands[1] + ")"; }
 };
 
 class VectorExpressionNormL2: public ExpressionBase
@@ -457,6 +524,12 @@ public:
 	}
 	virtual Real Diff(ExpressionNamedReal* var) const override { CHECKandTHROWstring("Symbolic::Vector::NormL2(vector): not implemented"); return 0.; }
 	virtual STDstring ToString() const override { return "NormL2(" + operand->ToString() + ")"; }
+
+	//the flat evaluation (#3054)
+	virtual Index NumberOfOperands() const override { return 1; }
+	virtual FlatNode GetOperand(Index i) const override { return FlatNode(operand); }
+	virtual Real EvaluateFromOperands(const FlatValue* values) const override { return (*values[0].vector).GetL2Norm(); }
+	virtual STDstring ToStringFromOperands(const STDstring* operands) const override { return "NormL2(" + operands[0] + ")"; }
 };
 
 
@@ -490,6 +563,13 @@ public:
 	{
 		return operand->ToString() + "[" + index->ToString() + "]";
 	}
+
+	virtual bool InlineInFlatText() const override { return true; } //a component, q[1]
+	//the flat evaluation (#3054)
+	virtual Index NumberOfOperands() const override { return 2; }
+	virtual FlatNode GetOperand(Index i) const override { return i == 0 ? FlatNode(operand) : FlatNode(index); }
+	virtual Real EvaluateFromOperands(const FlatValue* values) const override { Real iReal = values[1].real; Index i = (Index)iReal; CHECKandTHROW((Real)i == iReal, "VectorExpressionBase::operator[] index must be integer"); const ResizableConstVector& v = (*values[0].vector); if (SReal::recordExpressions && v.NumberOfItems() == 0 && i >= 0) { return 0.; } CHECKandTHROW((i >= 0) && (i < v.NumberOfItems()), "VectorExpressionBase::operator[] index out of range"); return v[i]; }
+	virtual STDstring ToStringFromOperands(const STDstring* operands) const override { return operands[0] + "[" + operands[1] + "]"; }
 };
 
 class VectorExpressionOperatorEQ: public ExpressionBase 
@@ -512,6 +592,12 @@ public:
 	virtual STDstring ToString() const override {
 		return "(" + left->ToString() + " == " + right->ToString() + ")";
 	}
+
+	//the flat evaluation (#3054)
+	virtual Index NumberOfOperands() const override { return 2; }
+	virtual FlatNode GetOperand(Index i) const override { return i == 0 ? FlatNode(left) : FlatNode(right); }
+	virtual Real EvaluateFromOperands(const FlatValue* values) const override { return Real((*values[0].vector) == (*values[1].vector)); }
+	virtual STDstring ToStringFromOperands(const STDstring* operands) const override { return "(" + operands[0] + " == " + operands[1] + ")"; }
 };
 
 class VectorExpressionOperatorNEQ: public ExpressionBase 
@@ -533,6 +619,12 @@ public:
 	virtual STDstring ToString() const override {
 		return "(" + left->ToString() + " != " + right->ToString() + ")";
 	}
+
+	//the flat evaluation (#3054)
+	virtual Index NumberOfOperands() const override { return 2; }
+	virtual FlatNode GetOperand(Index i) const override { return i == 0 ? FlatNode(left) : FlatNode(right); }
+	virtual Real EvaluateFromOperands(const FlatValue* values) const override { return Real(!((*values[0].vector) == (*values[1].vector))); }
+	virtual STDstring ToStringFromOperands(const STDstring* operands) const override { return "(" + operands[0] + " != " + operands[1] + ")"; }
 };
 
 

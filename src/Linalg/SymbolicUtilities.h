@@ -122,51 +122,22 @@ protected:
 	const MatrixExpressionSReal* resultComponents = nullptr;
 	std::vector<std::pair<Index, Index>> resultPattern;
 
-	//the flat evaluation (#3053): a result that is a scalar expression, or a vector or matrix of scalar expressions,
-	//is evaluated by a list of operations built once after the recording; the tree evaluation stays for the others
-	//and for comparison (flatEvaluation = false)
+	//the flat evaluation (#3053, #3054): the result is evaluated by a list of operations built once after the
+	//recording; the tree evaluation stays for comparison (flatEvaluation = false)
 	FlatProgram flatProgram;
 	bool flatEvaluation = true;
-	Index flatRows = 0, flatColumns = 0;			//!< the size of a vector (flatColumns = 0) or matrix result
-	mutable ResizableConstVector flatVector;		//!< a vector result of the flat evaluation
-	mutable ResizableConstMatrix flatMatrix;		//!< a matrix result of the flat evaluation
 
-	//! build the flat program of the result, if it consists of scalar expressions
+	//! build the flat program of the result
 	void BuildFlatProgram()
 	{
 		flatProgram.Clear();
-		std::vector<const ExpressionBase*> roots;
-		flatRows = 0; flatColumns = 0;
-		if (returnValue.IsReal() && returnValue.GetReal())
-		{
-			if (returnValue.GetReal()->GetExpression()) { roots.push_back(returnValue.GetReal()->GetExpression()); }
-		}
-		else if (returnValue.IsVector() && returnValue.GetVector())
-		{
-			const VectorExpressionSReal* components = dynamic_cast<const VectorExpressionSReal*>(returnValue.GetVector()->GetExpression());
-			if (components)
-			{
-				for (const ExpressionBase* expression : components->GetExpressionList()) { roots.push_back(expression); }
-				flatRows = (Index)roots.size();
-			}
-		}
-		else if (returnValue.IsMatrix() && returnValue.GetMatrix())
-		{
-			const MatrixExpressionSReal* components = dynamic_cast<const MatrixExpressionSReal*>(returnValue.GetMatrix()->GetExpression());
-			if (components)
-			{
-				flatRows = components->NumberOfRows();
-				flatColumns = components->NumberOfColumns();
-				for (Index i = 0; i < flatRows; i++)
-				{
-					for (Index j = 0; j < flatColumns; j++) { roots.push_back(components->GetComponent(i, j)); }
-				}
-			}
-		}
-		if (roots.size()) { flatProgram.Build(roots); }
-		//only leaves, e.g. the components of a matrix product: the tree is as fast, and its vector and matrix nodes
-		//are not part of the list yet
-		if (flatProgram.IsBuilt() && flatProgram.NumberOfComputations() == 0) { flatProgram.Clear(); }
+		FlatNode root;
+		if (returnValue.IsReal() && returnValue.GetReal()) { root = FlatNode(returnValue.GetReal()->GetExpression()); }
+		else if (returnValue.IsVector() && returnValue.GetVector()) { root = FlatNode(returnValue.GetVector()->GetExpression()); }
+		else if (returnValue.IsMatrix() && returnValue.GetMatrix()) { root = FlatNode(returnValue.GetMatrix()->GetExpression()); }
+		if (root.node == nullptr) { return; } //a constant result
+		flatProgram.Build({ root });
+		if (flatProgram.NumberOfComputations() == 0) { flatProgram.Clear(); } //a leaf: nothing to sort
 	}
 	//! true, if the result is evaluated by the flat program
 	bool UseFlatProgram() const { return flatEvaluation && flatProgram.IsBuilt(); }
@@ -217,16 +188,10 @@ public:
 	STDstring FlatProgramToString() const
 	{
 		if (!flatProgram.IsBuilt()) { return "#" + functionName + ": no flat program; the result is evaluated as a tree\n"; }
-		std::vector<STDstring> names;
-		for (Index i = 0; i < flatProgram.NumberOfResults(); i++)
-		{
-			if (returnValue.IsReal()) { names.push_back("result"); }
-			else if (flatColumns == 0) { names.push_back("result[" + EXUstd::ToString(i) + "]"); }
-			else { names.push_back("result[" + EXUstd::ToString(i/flatColumns) + "," + EXUstd::ToString(i % flatColumns) + "]"); }
-		}
-		return "#" + functionName + ": " + EXUstd::ToString(flatProgram.NumberOfComputations()) + " operations, "
-			+ EXUstd::ToString(flatProgram.NumberOfResults()) + " results\n" + flatProgram.ToString(names);
+		return "#" + functionName + ": " + EXUstd::ToString(flatProgram.NumberOfComputations()) + " operations\n"
+			+ flatProgram.ToString({ "result" });
 	}
+
 	//! true, if the matrix result is sparse (#3022)
 	bool HasSparseMatrixResult() const { return resultComponents != nullptr; }
 
@@ -268,13 +233,7 @@ public:
 	//! the returned vector without a copy, valid until the function is evaluated again (#3006)
 	const ResizableConstVector& EvaluateReturnVectorRef() const
 	{
-		if (UseFlatProgram())
-		{
-			flatProgram.Evaluate();
-			flatVector.SetNumberOfItems(flatRows);
-			for (Index i = 0; i < flatRows; i++) { flatVector[i] = flatProgram.Result(i); }
-			return flatVector;
-		}
+		if (UseFlatProgram()) { flatProgram.Evaluate(); return flatProgram.VectorResult(0); }
 		return returnValue.GetVector()->EvaluateRef();
 	}
 
@@ -287,13 +246,7 @@ public:
 	//! the returned matrix without a copy, valid until the function is evaluated again (#3021)
 	const ResizableConstMatrix& EvaluateReturnMatrixRef() const
 	{
-		if (UseFlatProgram())
-		{
-			flatProgram.Evaluate();
-			flatMatrix.SetNumberOfRowsAndColumns(flatRows, flatColumns);
-			for (Index i = 0; i < flatRows*flatColumns; i++) { flatMatrix.GetDataPointer()[i] = flatProgram.Result(i); }
-			return flatMatrix;
-		}
+		if (UseFlatProgram()) { flatProgram.Evaluate(); return flatProgram.MatrixResult(0); }
 		return returnValue.GetMatrix()->EvaluateRef();
 	}
 	////evaluate all expression trees, storing results in Real*, which are linked to destination of function 
@@ -591,9 +544,10 @@ public:
 			if (UseFlatProgram()) //all components in one pass (#3053)
 			{
 				flatProgram.Evaluate();
+				const ResizableMatrix& matrix = flatProgram.MatrixResult(0);
 				for (const std::pair<Index, Index>& item : resultPattern)
 				{
-					triplets.AppendPure(EXUmath::Triplet(ltg[item.first], ltg[item.second], flatProgram.Result(item.first*flatColumns + item.second)));
+					triplets.AppendPure(EXUmath::Triplet(ltg[item.first], ltg[item.second], matrix(item.first, item.second)));
 				}
 				return;
 			}

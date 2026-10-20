@@ -1050,7 +1050,7 @@ void Init_Pybind_Symbolic(py::module& m) {
 		.def("Evaluate", &Symbolic::PySymbolicUserFunction::PyEvaluateUF,
 			"for testing: evaluate user function; note: this version is much slower than the C++ version because of the overhead in the interface")
 		.def_property("flatEvaluation", &Symbolic::PySymbolicUserFunction::GetFlatEvaluation, &Symbolic::PySymbolicUserFunction::SetFlatEvaluation,
-			"True (default): a result made of scalar expressions is evaluated by the list of operations built after the recording, each shared node once; False: as a tree, for comparison (#3053)")
+			"True (default): the result is evaluated by the list of operations built after the recording, each shared node once; False: as a tree, for comparison (#3053, #3054)")
 		.def("GetFlatProgram", &Symbolic::PySymbolicUserFunction::FlatProgramToString,
 			"the list of operations of the flat evaluation as text, one operation tK = ... per line and then the results (#3053)")
 

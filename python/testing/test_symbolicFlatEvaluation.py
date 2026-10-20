@@ -1,10 +1,11 @@
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 # This is an EXUDYN test infrastructure file
 #
-# Details:  The flat evaluation of symbolic user functions (#3053): a result made of scalar expressions is evaluated by
-#           the list of operations built after the recording, each shared node once. It must give the same bits as the
-#           evaluation of the tree (flatEvaluation=False), for single values, vectors and matrices of components, in a
-#           simulation too; GetFlatProgram() gives the list as text.
+# Details:  The flat evaluation of symbolic user functions (#3053, #3054): the result is evaluated by the list of
+#           operations built after the recording, each shared node - a number, a vector or a matrix - once. It must
+#           give the same bits as the evaluation of the tree (flatEvaluation=False), for numbers, vectors and matrices,
+#           of components and of vector and matrix operations, in a simulation too; GetFlatProgram() gives the list as
+#           text.
 #
 # Author:   Johannes Gerstmayr
 # Date:     2026-10-20 (created)
@@ -42,6 +43,22 @@ def MassMatrix(mbs, t, itemNumber, q, q_t):
     return esym.Matrix([[2 + c*c, c, 0], [c, 2 + c*c, 0], [0, 0, 1 + esym.sin(q[2])**2]])
 
 
+def MassMatrixProducts(mbs, t, itemNumber, q, q_t):
+    """products and transposes of symbolic matrices, a shared matrix G"""
+    G = esym.Matrix([[esym.cos(q[1]), esym.sin(q[2]), 0], [-esym.sin(q[2]), esym.cos(q[1]), 0], [0, 0, 1]])
+    J = esym.Matrix(np.diag([1., 2., 3.]))
+    return G.T @ J @ G + 0.1*G - 0.1*G + esym.Matrix(np.eye(3))
+
+
+def ForceVectors(mbs, t, itemNumber, q, q_t):
+    """the operations of symbolic vectors: sums, products with numbers, matrices and components, a dot product, a norm,
+    components of a computed vector"""
+    A = esym.Matrix([[esym.cos(q[0]), 0, 1], [0, 2, esym.sin(q[1])], [1, 0, 3]])
+    v = A @ q - np.multiply(q_t, np.array([1., 2., 3.])) + (q @ q)*q
+    w = A.T @ v
+    return -v + 0.5*w + esym.Vector([v[0]*w[1], esym.sqrt(v @ v + 1), q_t[2]])
+
+
 def SpringForce(mbs, t, itemNumber, deltaL, deltaL_t, stiffness, damping, force):
     """a scalar with the functions, comparisons and IfThenElse"""
     x = deltaL + 0.25
@@ -61,7 +78,9 @@ def Model():
     mbs.SetObjectParameter(item, 'massMatrixUserFunction', keep[0])
     mbs.SetObjectParameter(item, 'forceUserFunction', keep[1])
     spring = CreateSymbolicUserFunction(mbs, SpringForce, 'springForceUserFunction', itemTypeName='ObjectConnectorSpringDamper')
-    return (SC, mbs, keep + [spring])
+    products = CreateSymbolicUserFunction(mbs, MassMatrixProducts, 'massMatrixUserFunction', item)
+    vectors = CreateSymbolicUserFunction(mbs, ForceVectors, 'forceUserFunction', item)
+    return (SC, mbs, keep + [spring, products, vectors])
 
 
 def Evaluations(function, arguments):
@@ -75,27 +94,32 @@ def Evaluations(function, arguments):
 
 
 def testTheFlatEvaluationGivesTheBitsOfTheTree():
-    (SC, mbs, (mass, force, spring)) = Model()
+    (SC, mbs, (mass, force, spring, products, vectors)) = Model()
     rng = np.random.default_rng(1)
-    vectors = [(mbs, 0., 0, list(rng.uniform(-2, 2, 3)), list(rng.uniform(-2, 2, 3))) for i in range(25)]
+    qq_t = [(mbs, 0., 0, list(rng.uniform(-2, 2, 3)), list(rng.uniform(-2, 2, 3))) for i in range(25)]
     scalars = [(mbs, 0., 0, rng.uniform(-1, 1), rng.uniform(-1, 1), 100., 2., 0.5) for i in range(50)]
-    for (function, arguments) in [(force, vectors), (mass, vectors), (spring, scalars)]:
+    for (function, arguments) in [(force, qq_t), (mass, qq_t), (spring, scalars), (products, qq_t), (vectors, qq_t)]:
         (flat, tree) = Evaluations(function, arguments)
         for (a, b) in zip(flat, tree):
             assert a.tobytes() == b.tobytes(), str(function)
 
 
 def testTheFlatProgramComputesEachSharedNodeOnce():
-    (SC, mbs, (mass, force, spring)) = Model()
+    (SC, mbs, (mass, force, spring, products, vectors)) = Model()
     text = force.GetFlatProgram()
-    operations = int(re.match(r'#\w+: (\d+) operations, 3 results', text).group(1))
+    operations = int(re.match(r'#\w+: (\d+) operations\n', text).group(1))
     lines = text.strip().split('\n')
     assert len([line for line in lines if re.match(r't\d+ = ', line)]) == operations
-    assert [line.split(' =')[0] for line in lines[-3:]] == ['result[0]', 'result[1]', 'result[2]']
+    result = re.match(r'result = (t\d+)$', lines[-1]).group(1)
+    assert re.match(result + r' = \[t\d+, t\d+, t\d+\]$', lines[-2])          #the vector of the three components
     assert len([line for line in lines if line.endswith('= cos(q[1])')]) == 1     #recorded once, computed once
     #the tree evaluates the shared values at every use, as its text shows them
     assert str(force).count('cos(q[1])') > 5
-    assert 'result[2,2] = ' in mass.GetFlatProgram()
+    #the matrix G: one operation, used three times in G.T @ J @ G + 0.1*G - 0.1*G
+    text = products.GetFlatProgram()
+    matrixG = [line.split(' =')[0] for line in text.split('\n') if re.match(r't\d+ = \[\[t\d+, t\d+, 0\], ', line)]
+    assert len(matrixG) == 1
+    assert text.count(matrixG[0] + '.T') == 1 and text.count(' @ ' + matrixG[0]) == 1
 
 
 def testASimulationGivesTheBitsOfTheTree():
