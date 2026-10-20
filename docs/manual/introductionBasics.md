@@ -137,6 +137,12 @@ return value.
   `float(x)`, which would record a constant - `np.sin(x)` and `esym.sin(x)` record (#3017).`exudyn.special.deprecations.symbolicStarProduct = True` makes `*` the
   scalar and matrix product, as before version 1.13.115, for the transition; `*` is to become the product of the
   components, as in numpy (#3016).
+- **How a symbolic function is evaluated**: the recording is a graph, in which a value that the Python function uses
+  several times - `c = esym.cos(q[1])` - is one node. After the recording it is sorted into a list of operations, and
+  each call computes every operation once, in this order; nothing is kept from one call to the next.
+  `symbolicFunction.GetFlatProgram()` gives the list as text, one line `t5 = cos(q[1])` per operation, and
+  `symbolicFunction.flatEvaluation = False` evaluates the recording as a tree instead, with the same results (#3053).
+  This holds for a result that is a number, or a vector or matrix of numbers.
 
 `exudyn.special.deprecations.userFunctionListArguments = True` gives the vector and matrix arguments as lists, as before
 version 1.13.104, for scripts that change them or add lists to them; it is deprecated and removed in 2031 (#3008).

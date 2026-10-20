@@ -612,6 +612,14 @@ symbolicModule.DefPyFunctionAccess(cClass=classStr, pyName='SetUserFunctionFromD
                         returnType='None',
                         )
 
+symbolicModule.DefPyFunctionAccess(cClass=classStr, pyName='GetFlatProgram', cName='',
+                        description="the list of operations by which a result made of scalar expressions is evaluated, as text: one operation tK = ... per line, then the results; each value that the recorded function uses several times is computed once per call (#3053)",
+                        returnType='str',
+                        )
+
+symbolicModule.DefDataAccess('flatEvaluation','True (default): a result made of scalar expressions is evaluated by the list of operations of GetFlatProgram(); False: as a tree, with the same results, for comparison (#3053)',
+                       dataType = 'bool')
+
 # not needed any more (use userFunction directly, same as Python function)
 # symbolicModule.DefPyFunctionAccess(cClass=classStr, pyName='TransferUserFunction2Item', cName='', 
 #                         description="Transfer the std::function to a given object, load or other; this needs to be done purely in C++ to avoid Pybind overheads.",

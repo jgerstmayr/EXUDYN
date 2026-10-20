@@ -122,6 +122,55 @@ protected:
 	const MatrixExpressionSReal* resultComponents = nullptr;
 	std::vector<std::pair<Index, Index>> resultPattern;
 
+	//the flat evaluation (#3053): a result that is a scalar expression, or a vector or matrix of scalar expressions,
+	//is evaluated by a list of operations built once after the recording; the tree evaluation stays for the others
+	//and for comparison (flatEvaluation = false)
+	FlatProgram flatProgram;
+	bool flatEvaluation = true;
+	Index flatRows = 0, flatColumns = 0;			//!< the size of a vector (flatColumns = 0) or matrix result
+	mutable ResizableConstVector flatVector;		//!< a vector result of the flat evaluation
+	mutable ResizableConstMatrix flatMatrix;		//!< a matrix result of the flat evaluation
+
+	//! build the flat program of the result, if it consists of scalar expressions
+	void BuildFlatProgram()
+	{
+		flatProgram.Clear();
+		std::vector<const ExpressionBase*> roots;
+		flatRows = 0; flatColumns = 0;
+		if (returnValue.IsReal() && returnValue.GetReal())
+		{
+			if (returnValue.GetReal()->GetExpression()) { roots.push_back(returnValue.GetReal()->GetExpression()); }
+		}
+		else if (returnValue.IsVector() && returnValue.GetVector())
+		{
+			const VectorExpressionSReal* components = dynamic_cast<const VectorExpressionSReal*>(returnValue.GetVector()->GetExpression());
+			if (components)
+			{
+				for (const ExpressionBase* expression : components->GetExpressionList()) { roots.push_back(expression); }
+				flatRows = (Index)roots.size();
+			}
+		}
+		else if (returnValue.IsMatrix() && returnValue.GetMatrix())
+		{
+			const MatrixExpressionSReal* components = dynamic_cast<const MatrixExpressionSReal*>(returnValue.GetMatrix()->GetExpression());
+			if (components)
+			{
+				flatRows = components->NumberOfRows();
+				flatColumns = components->NumberOfColumns();
+				for (Index i = 0; i < flatRows; i++)
+				{
+					for (Index j = 0; j < flatColumns; j++) { roots.push_back(components->GetComponent(i, j)); }
+				}
+			}
+		}
+		if (roots.size()) { flatProgram.Build(roots); }
+		//only leaves, e.g. the components of a matrix product: the tree is as fast, and its vector and matrix nodes
+		//are not part of the list yet
+		if (flatProgram.IsBuilt() && flatProgram.NumberOfComputations() == 0) { flatProgram.Clear(); }
+	}
+	//! true, if the result is evaluated by the flat program
+	bool UseFlatProgram() const { return flatEvaluation && flatProgram.IsBuilt(); }
+
 public:
 	SymbolicFunction() : //scalarType(true), vectorSize(0), 
 		returnValue() {};
@@ -137,12 +186,14 @@ public:
 		//scalarType = true; 
 		//vectorSize = 0; 
 		returnValue.Set(sReal);
+		BuildFlatProgram();
 	}
 	void SetVectorType(Index size, SymbolicRealVector* sVector)
 	{
 		//scalarType = false;
 		//vectorSize = size;
 		returnValue.Set(sVector);
+		BuildFlatProgram();
 	}
 	//! a matrix result (#3020); built from components with constant zeros, it is sparse with the pattern of the others (#3022)
 	void SetMatrixType(SymbolicRealMatrix* sMatrix)
@@ -155,6 +206,26 @@ public:
 			resultComponents->StructuralNonZeros(resultPattern);
 			if ((Index)resultPattern.size() == resultComponents->NumberOfRows()*resultComponents->NumberOfColumns()) { resultComponents = nullptr; }
 		}
+		BuildFlatProgram();
+	}
+
+	//! True (default): the result is evaluated by the flat program, if it has one; False: as a tree (#3053)
+	void SetFlatEvaluation(bool flag) { flatEvaluation = flag; }
+	bool GetFlatEvaluation() const { return flatEvaluation; }
+
+	//! the flat program as text, one operation per line (#3053)
+	STDstring FlatProgramToString() const
+	{
+		if (!flatProgram.IsBuilt()) { return "#" + functionName + ": no flat program; the result is evaluated as a tree\n"; }
+		std::vector<STDstring> names;
+		for (Index i = 0; i < flatProgram.NumberOfResults(); i++)
+		{
+			if (returnValue.IsReal()) { names.push_back("result"); }
+			else if (flatColumns == 0) { names.push_back("result[" + EXUstd::ToString(i) + "]"); }
+			else { names.push_back("result[" + EXUstd::ToString(i/flatColumns) + "," + EXUstd::ToString(i % flatColumns) + "]"); }
+		}
+		return "#" + functionName + ": " + EXUstd::ToString(flatProgram.NumberOfComputations()) + " operations, "
+			+ EXUstd::ToString(flatProgram.NumberOfResults()) + " results\n" + flatProgram.ToString(names);
 	}
 	//! true, if the matrix result is sparse (#3022)
 	bool HasSparseMatrixResult() const { return resultComponents != nullptr; }
@@ -174,6 +245,7 @@ public:
 		}
 		returnValue.Delete();
 		argRealList.SetMaxNumberOfItems(0);
+		flatProgram.Clear(); //it points to the nodes of the recording
 	}
 
 	virtual STDstring ToString() const
@@ -183,28 +255,45 @@ public:
 
 	virtual Real EvaluateReturnValue() const
 	{
+		if (UseFlatProgram()) { flatProgram.Evaluate(); return flatProgram.Result(0); }
 		return returnValue.GetReal()->Evaluate();
 	}
 
 	virtual ResizableConstVector EvaluateReturnVector() const
 	{
+		if (UseFlatProgram()) { return EvaluateReturnVectorRef(); }
 		return returnValue.GetVector()->Evaluate();
 	}
 
 	//! the returned vector without a copy, valid until the function is evaluated again (#3006)
 	const ResizableConstVector& EvaluateReturnVectorRef() const
 	{
+		if (UseFlatProgram())
+		{
+			flatProgram.Evaluate();
+			flatVector.SetNumberOfItems(flatRows);
+			for (Index i = 0; i < flatRows; i++) { flatVector[i] = flatProgram.Result(i); }
+			return flatVector;
+		}
 		return returnValue.GetVector()->EvaluateRef();
 	}
 
 	virtual ResizableConstMatrix EvaluateReturnMatrix() const
 	{
+		if (UseFlatProgram()) { return EvaluateReturnMatrixRef(); }
 		return returnValue.GetMatrix()->Evaluate();
 	}
 
 	//! the returned matrix without a copy, valid until the function is evaluated again (#3021)
 	const ResizableConstMatrix& EvaluateReturnMatrixRef() const
 	{
+		if (UseFlatProgram())
+		{
+			flatProgram.Evaluate();
+			flatMatrix.SetNumberOfRowsAndColumns(flatRows, flatColumns);
+			for (Index i = 0; i < flatRows*flatColumns; i++) { flatMatrix.GetDataPointer()[i] = flatProgram.Result(i); }
+			return flatMatrix;
+		}
 		return returnValue.GetMatrix()->EvaluateRef();
 	}
 	////evaluate all expression trees, storing results in Real*, which are linked to destination of function 
@@ -499,6 +588,15 @@ public:
 				"symbolic user function: the matrix result is larger than the coordinates of the item");
 			result.SetUseDenseMatrix(false);
 			ResizableArray<EXUmath::Triplet>& triplets = result.GetInternalSparseTripletMatrix().GetTriplets();
+			if (UseFlatProgram()) //all components in one pass (#3053)
+			{
+				flatProgram.Evaluate();
+				for (const std::pair<Index, Index>& item : resultPattern)
+				{
+					triplets.AppendPure(EXUmath::Triplet(ltg[item.first], ltg[item.second], flatProgram.Result(item.first*flatColumns + item.second)));
+				}
+				return;
+			}
 			for (const std::pair<Index, Index>& item : resultPattern)
 			{
 				triplets.AppendPure(EXUmath::Triplet(ltg[item.first], ltg[item.second], resultComponents->EvaluateComponent(item.first, item.second)));

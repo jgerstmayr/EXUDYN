@@ -36,6 +36,12 @@ Consequences of recording once:
   a component `q[i]` evaluates to 0 then (#3007), `len()` and a loop over the vector raise a TypeError, and an
   operation that needs the size - `q + esym.Vector([1, 2, 3])` - fails while recording.
 
+**Evaluation** (#3053): a result that is a scalar expression, or a vector or matrix of scalar expressions, is evaluated
+by a `FlatProgram` (Symbolic.h) built in `SymbolicFunction::BuildFlatProgram` after the recording: the graph sorted
+into operations, each node computing its value from its operands' slots (`EvaluateFromOperands`); a node without that
+interface - a leaf, IfThenElse, a component of a vector or matrix expression - is one operation evaluated as a tree.
+The text is `GetFlatProgram()`, the switch `flatEvaluation`; see [symbolicIntermediateValues.md](symbolicIntermediateValues.md).
+
 ## 2. The expression types
 
 | type | what | operators and functions |

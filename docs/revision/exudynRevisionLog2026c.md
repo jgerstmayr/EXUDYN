@@ -2480,3 +2480,32 @@ speed looked the same with and without the cache, so the split cache and the exp
   into `GlfwRenderer::triangles6Split` and `triangles6Edges`, buffers of the render thread as `lines3Split` - the
   faces, the normals and the shadow volumes of that GraphicsData read them in the same pass. The raytracer splits per
   image as before.
+
+<a id="rg12-2-6"></a>
+### RG12.2.6 — the flat evaluation of the scalar expressions (2026-10-20, #3053)
+*(Maintainer 2026-10-20, on RG12.2.5: implement the flat evaluation for scalar expressions next, vectors and matrices
+afterwards, with the proposed tests; add issues and steps; allow export or conversion to text of the compiled lists.
+The C++ recording is not started now.)*
+- **The operand interface** of `ExpressionBase` (Symbolic.h): `NumberOfOperands`, `GetOperand`, `EvaluateFromOperands`,
+  `ToStringFromOperands`; the defaults make a node a leaf evaluated by `Evaluate()`. The 39 classes with one or two
+  scalar operands (arithmetic, comparisons, the functions, pow, atan2, mod, min, max) override them; the bodies were
+  generated from each class's own `Evaluate()` and `ToString()`, the operand calls replaced by the values, so that both
+  compute with the same expression. IfThenElse stays a leaf - its branches are evaluated lazily, as a tree -, as do the
+  components of vector and matrix expressions (RG12.2.7).
+- **FlatProgram**: `Build(roots)` sorts the graph depth first without recursion, a map from node to slot used only
+  while building; operation k writes slot k from the slots of its operands; `Evaluate()` runs the list; the slots are
+  overwritten by every evaluation (D18). `ToString` writes `tK = op(...)` per operation with operands, leaves written
+  into their users (`cos(q[1])`), then the results.
+- **SymbolicFunction**: `BuildFlatProgram()` after the return type is set - a scalar, a vector of components
+  (VectorExpressionSReal) or a matrix of components (MatrixExpressionSReal); a program of leaves only is dropped (the
+  tree is as fast). The evaluation functions, including the sparse matrix result (#3022), use it when
+  `flatEvaluation` (True); `Delete()` clears it. Python: `UserFunction.flatEvaluation`, `UserFunction.GetFlatProgram()`,
+  declared in definitions/pybindSymbolic.py for the stub and the reference.
+- **Tests** (test_symbolicFlatEvaluation.py): bit-identical results of both evaluations for a vector force with shared
+  values on several levels, a matrix of components with zeros, a scalar with IfThenElse, the functions and the
+  comparisons, 25 to 50 random arguments each; a solution of 200 steps through ObjectGenericODE2 bit-identical; the
+  text - one line per operation, `cos(q[1])` once, the result names. The symbolic test models keep their results.
+- **Measured**: the force of userRigidBodyTest.py, 122 operations, 5.5 -> 1.5 us per call from Python (with about 1 us
+  of call overhead); the position 1.45 -> 1.3 us. The mass matrix and the Jacobians are matrix products and stay trees
+  until RG12.2.7. userRigidBodyTest.py with 10000 steps, the symbolic body alone, both runs twice: 2.70 s (tree) ->
+  2.19 s (flat). (The 4.13 s of RG7.11.1 were measured on a loaded machine; the tree evaluation now takes 2.70 s.)

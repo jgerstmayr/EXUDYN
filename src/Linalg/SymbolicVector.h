@@ -167,6 +167,8 @@ public:
 		}
 		return buffer;
 	}
+	//! the expressions of the components, for the flat evaluation (#3053)
+	const ExpressionList& GetExpressionList() const { return exprList; }
 	virtual STDstring ToString() const override
 	{
 		STDstring str = "[";

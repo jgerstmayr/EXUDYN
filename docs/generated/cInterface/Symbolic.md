@@ -531,5 +531,7 @@ The class **symbolic.UserFunction** has the following **functions and structures
 
 - **`Evaluate()`**: Evaluate symbolic function with test values; requires exactly same args as Python user functions; this is slow and only intended for testing
 - **`SetUserFunctionFromDict(mainSystem, fcnDict, itemIndex, userFunctionName)`**: Create C++ std::function (as requested in C++ item) with symbolic user function as recorded in given dictionary, as created with ConvertFunctionToSymbolic(...).
+- **`GetFlatProgram()`**: the list of operations by which a result made of scalar expressions is evaluated, as text: one operation tK = ... per line, then the results; each value that the recorded function uses several times is computed once per call (#3053)
+- **`flatEvaluation`**: True (default): a result made of scalar expressions is evaluated by the list of operations of GetFlatProgram(); False: as a tree, with the same results, for comparison (#3053)
 - **`operator __repr__()`**: Representation of Symbolic function
 - **`operator __str__()`**: Convert stored symbolic function to string

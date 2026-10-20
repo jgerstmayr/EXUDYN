@@ -91,6 +91,9 @@ be symbolic now (#2985). `exudyn.symbolic.Vector` and `Matrix` have `dot()` and 
 and a numpy array leaves `@` and `*` with a symbolic operand to it, so that one function computes with numpy arrays and
 symbolic vectors (#3011).
 
+**Symbolic user functions compute a shared value once per call** (#3053): the recording is evaluated as a list of
+operations instead of a tree; `GetFlatProgram()` shows the list, `flatEvaluation = False` restores the tree evaluation.
+
 **The operators of exudyn.symbolic are those of numpy** (#3015): `*` of two symbolic vectors, of two matrices and of a
 matrix and a vector raises a TypeError, because numpy multiplies the components - write `a @ b` or `a.dot(b)` for the
 scalar and matrix products and `a.multiply(b)` or `np.multiply(a, b)` for the product of the components;

@@ -127,6 +127,9 @@ public:
 		exprMatrix.assign(rows, std::vector <Symbolic::ExpressionBase*>(columns, nullptr));
 	}
 
+	//! the expression of a component, for the flat evaluation (#3053)
+	const ExpressionBase* GetComponent(Index row, Index column) const { return exprMatrix[row][column]; }
+
 	//! set a particular component of matrix; used in SymbolicRealMatrix py::list constructor
 	void SetSReal(Index row, Index column, const SReal& value)
 	{
