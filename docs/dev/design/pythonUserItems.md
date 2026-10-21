@@ -194,6 +194,66 @@ Python class derived from a C++ class: items stay validated dicts (the C++/Pytho
   (`AccessFunctionsCallUserFunctions`, #3003).
 - **Output variables** the item provides only with a user function are conditional in the definition.
 
+### 5.10 Parameters of a user item: evaluation and recommendation (#3056, 2026-10-21)
+
+**What there is.** ObjectUserBody and NodeUser have no parameters besides their nodes and user functions. A mass, a
+stiffness or an element length is written into the user function: as a global of the script, or as a closure, as
+userANCFBeam3DTest.py does with `Element(Le)`, which creates the functions of one element length. A Python user
+function reads the value at each call; a **symbolic** user function records it as a **constant**: changing it means
+recording again, and items with different values need a recording each. Recording the force of userRigidBodyTest.py
+takes 0.2 ms, so a recording per element is affordable for a few thousand elements, but every element then keeps its
+own graph and list of operations, a parameter study records again for every variant, and nothing in the item says
+what its parameters are. One recorded function can already serve several items - assigned to two ObjectUserBody it
+gives both the same, measured -, but only items with the same values.
+
+**The proposal** (maintainer 2026-10-20): an item parameter `parameters`, a vector of doubles of any length, passed to
+every user function of the item; zero length is the present behaviour. A pair of Python functions maps it to a dict of
+interpretable quantities and back - `ToDict(parameters) -> dict`, `ToVector(dict) -> vector` -, with lists in the dict
+for vector quantities.
+
+**Evaluation.**
+
+- **Symbolic functions keep one recording for all items.** While recording, `parameters` is a named symbolic vector, as
+  `q` is; `ToDict` called inside the user function slices it into components - `d['mass']` is `parameters[0]`,
+  `d['com']` is `[parameters[7], parameters[8], parameters[9]]` -, and these are leaves of the recording that read the
+  item's vector at each call: in the list of operations they are written inline, as `q[1]`, and cost a read with an
+  index check, no arithmetic.
+  So one recording serves every element of a user beam with its own cross section and length, and
+  `SetObjectParameter(item, 'parameters', ...)` acts at once, in a parameter study or an optimization, without
+  recording again. The mapping costs nothing at evaluation; it runs once, while recording.
+- **Python functions** get the vector as a read-only numpy view, as `q`; `ToDict` works on it alike, at the cost of a
+  Python function call - for speed the function indexes the vector directly.
+- **Bools and indices as doubles** are fine for values that enter the arithmetic or an `IfThenElse`. A parameter that
+  changes the **structure** of the computation - the number of Gauss points, the size of a matrix, a Python `if` -
+  cannot come from the vector in a symbolic function: while recording it has no value (`int(parameters[3])` raises,
+  #3017). Such parameters stay what they are now, constants of the Python code, and a structural variant is a recording
+  of its own. The documentation has to say this clearly; it is the one limit of the approach.
+- **The mapping in the item?** As an item parameter it would be a Python function that C++ never calls, stored in the
+  item's dict: `GetDictionary` and a saved system would carry a Python object, and every item of a kind would hold the
+  same function again. The mapping belongs to the **kind** of user element, next to its user functions, not to the
+  instance. What an item can say without a function: nothing more than the vector.
+- **The interface change.** Every user function of ObjectUserBody and NodeUser gets `parameters` as its **last**
+  argument - after the coordinates, as the stiffness and damping follow the kinematics in the existing user functions
+  (`springForceUserFunction(mbs, t, itemNumber, deltaL, deltaL_t, stiffness, damping, force)`). The interfaces are not
+  public yet (introduced after 1.11, no deprecation needed). Cost: one more read-only array per call for Python, about
+  as much as `q_t` (to be measured), and one more named vector set per call for symbolic functions - a copy of its
+  values, small for parameter vectors (#3039 is the case of large matrices).
+
+**Recommendation.**
+
+1. `parameters` (vector, default `[]`) on ObjectUserBody and NodeUser, passed as the last argument of all their user
+   functions; future user items follow the common pattern (5.9) with it.
+2. The mapping as a small Python helper of the user items, not as an item parameter: a layout of named entries and their
+   sizes, e.g. `ParameterLayout([('mass', 1), ('inertia', 6), ('com', 3)])`, with `ToVector(dict)` - which checks names
+   and sizes - and `ToDict(vector)`, which works with numpy arrays and symbolic vectors alike and gives a number for size
+   1 and a list otherwise. The user defines the layout next to the user functions, uses `ToVector` when adding items and
+   `ToDict` inside the functions. Hand-written pairs of functions remain possible; the helper is the recommended way.
+3. The documentation of the user items: structural parameters are Python constants, numerical ones go into
+   `parameters`; an example of a user element with several parameter sets and one recording (the 3D ANCF beam of
+   userANCFBeam3DTest.py with two cross sections), and the measured cost of the extra argument.
+4. Later, if the dialogs shall show named parameters: a layout registered on the Python side for a kind of user
+   element, read by the dialog - not part of this step.
+
 ## 6. Examples that go beyond the present user functions
 
 Each is a test model AND a check of the concept: it needs the new interface, and it has a result to compare with.

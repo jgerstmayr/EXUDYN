@@ -2532,3 +2532,25 @@ the text export.)*
 - Measured: per call from Python, flat against tree: force 1.8 / 5.8 us, mass matrix (G.T J G) 1.95 / 2.7, position
   Jacobian 2.2 / 4.3, position 1.5 / 1.45. userRigidBodyTest.py with 10000 steps, the symbolic body alone, twice each:
   2.72 s (tree) -> 0.75 s (flat); ObjectRigidBody 0.12 s.
+
+<a id="rg7-12-1"></a>
+### RG7.12.1 — the parameters of the user items, evaluated (2026-10-21, #3056)
+*(Maintainer 2026-10-20: the ObjectUserBody, and future user items, has no parameters - they are in the symbolic user
+functions; is that the planned and optimal way, think of a user beam with different parameters per element. Suggestion:
+an arbitrary-length parameter vector of doubles, which also allows bools and indices, available in the user functions
+(changing the interfaces, which are not public yet); the user defines the meaning, and a Python mapping in both
+directions, map2dict(parameter vector) -> dict and map2parameters(dict) -> vector, with lists in the dict, keeps the
+symbolic quantities in the recorded functions, so no overhead; zero length is the present implementation; the mapping
+defined in the script with the user functions, recommended as the way to go, or integrated into the user item as a
+Python function only used at definition. Evaluate and recommend in the first sub-step. Also: the GPU tests of
+recorded Python symbolic user functions as a step in RG5, done by someone else - RG5.5, #3055.)*
+- Measured (scratch script): one recorded forceUserFunction assigned to two ObjectUserBody gives both the same motion;
+  recording the force of userRigidBodyTest.py takes 0.2 ms. userANCFBeam3DTest.py creates the functions per element
+  length by a closure.
+- The evaluation and the recommendation are pythonUserItems.md section 5.10: `parameters` last in every user
+  function, a named symbolic vector while recording, so one recording serves all items of a kind and SetObjectParameter
+  acts without recording again; its components are read at each call, inline in the list of operations as `q[1]`; structural
+  parameters (sizes, Gauss points, Python branches) cannot come from it in a symbolic function and stay Python
+  constants; the mapping as a Python helper `ParameterLayout` (`ToVector` checking names and sizes, `ToDict` for numpy
+  and symbolic vectors) next to the user functions, not as an item parameter, which C++ never calls and which would put
+  a Python object into the item's dict. Nothing implemented.

@@ -77,6 +77,7 @@ The title of each says what it does; the sentence after it, why it comes now.
   - RG5.2 Make the hot linear algebra vectorizable with compile-time sizes
   - RG5.3 Assemble the analytic Jacobians in parallel with ParallelFor and a cost per item
   - RG5.4 Store the superelement matrices as sparse triplets for larger meshes
+  - RG5.5 Record symbolic user functions of specific objects in Python and evaluate them on a GPU
 - **RG6** Graphics and rendering
   - RG6.8 Fix the remaining graphics problems with a test each
 - **RG7** Python user items
@@ -84,6 +85,7 @@ The title of each says what it does; the sentence after it, why it comes now.
   - RG7.6 Add a user joint on two position and orientation markers
   - RG7.8 Evaluate symbolic user items in parallel and in the graphics
   - RG7.9 Document how items work, and the user items
+  - RG7.12 Give the user items parameters
 - **RG8** Compiled C++ user items
   - RG8.1 Move the item registry into one exported translation unit so that plugins share it
   - RG8.2 Check an ABI fingerprint when a plugin registers, and refuse a mismatch with a message
@@ -124,9 +126,9 @@ The title of each says what it does; the sentence after it, why it comes now.
 | RG2 | OPEN | 5 | Testing and verification |
 | RG3 | CLOSED | 0 | Docs |
 | RG4 | OPEN | 6 | Implementation problems and bugs |
-| RG5 | OPEN | 8 | Performance |
+| RG5 | OPEN | 9 | Performance |
 | RG6 | OPEN | 1 | Graphics and rendering |
-| RG7 | OPEN | 4 | Python user items |
+| RG7 | OPEN | 5 | Python user items |
 | RG8 | OPEN | 10 | Compiled C++ user items |
 | RG9 | OPEN | 5 | Structural core improvements |
 | RG10 | CLOSED | 0 | Tooling and process |
@@ -419,6 +421,13 @@ transformations in the rigid-body kinematics, the object loop of `ODE2RHS`; stee
 
 #2182 (the mass matrix of `ObjectFFRFreducedOrder`), #2183 (adding dense and transposed submatrices to
 `SparseTripletMatrix`), #2184 (`MarkerSuperElementRigid` with precomputed transformations).
+
+### **OPEN_RG5.5** Record symbolic user functions of specific objects in Python and evaluate them on a GPU
+
+#3055 (maintainer 2026-10-20; done by someone else): instead of recording the C++ items, implement symbolic user
+functions in Python for specific objects - as the user rigid body of userRigidBodyTest.py -, record them and test on a
+GPU whether the approach works; the list of operations of the flat evaluation (`GetFlatProgram()`, #3053, #3054) is
+the input.
 
 ## **OPEN_RG6** Graphics and rendering
 
@@ -770,6 +779,20 @@ Python 0.26 to 0.18 s, symbolic 0.106 to 0.068 s, results unchanged. [log](exudy
 
 CLOSED 2026-10-20 (#3049; maintainer: remove them, decision D18 - values are recomputed): `UserFunctionResultCache`
 and its use deleted; the user functions are called for every request again. [log](exudynRevisionLog2026c.md#rg7-11-1)
+
+### **OPEN_RG7.12** Give the user items parameters
+
+#3056 (maintainer 2026-10-20): ObjectUserBody and NodeUser have no parameters; they are written into the user
+functions, so that a symbolic recording holds them as constants - a user beam with different parameters per element
+needs a recording per element. Proposed: a parameter vector of any length passed to the user functions, and a Python
+mapping between the vector and a dict of interpretable quantities.
+
+#### **CLOSED_RG7.12.1** Evaluate the parameter vector and its mapping, and recommend
+
+CLOSED 2026-10-21 (#3056): [pythonUserItems.md](../dev/design/pythonUserItems.md) section 5.10 - `parameters` as the
+last argument of all user functions, one recording for every item of a kind, structural parameters stay Python
+constants; the mapping as a Python helper `ParameterLayout` next to the user functions, not in the item. Waiting for
+the decision. [log](exudynRevisionLog2026c.md#rg7-12-1)
 
 ## **OPEN_RG8** Compiled C++ user items
 

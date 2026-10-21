@@ -1,0 +1,11 @@
+{
+  "number": 3055,
+  "title": "record symbolic user functions of specific objects in Python and evaluate them on a GPU",
+  "author": "Claude-JG",
+  "status": "RAISED",
+  "type": "TESTING",
+  "effort": "HIGH",
+  "description": "Maintainer 2026-10-20: the C++ recording of the items is not started now; it is easier to implement symbolic user functions in Python for specific objects (as the user rigid body), record them and test with the GPU whether the approach works - the list of operations of the flat evaluation (GetFlatProgram, #3053, #3054) is the input. Done by someone else.",
+  "dateRaised": "2026-10-21",
+  "deadline": "2027-04-19"
+}
