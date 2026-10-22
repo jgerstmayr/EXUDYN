@@ -2019,65 +2019,76 @@ oGenericODE1 = mbs.AddObject(ObjectGenericODE1(nodeNumbers=[nODE1],
 #++++++++++++++++   ObjectUserBody   ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-def ObjectUserBody_massMatrixUserFunction(mbs: MainSystem, t: Real, itemNumber: Index,
-                                          q: Vector, q_t: Vector) -> MatrixContainer:
+def ObjectUserBody_massMatrixUserFunction(mbs: MainSystem, t: Real, itemNumber: Index, qRef: Vector,
+                                          q: Vector, q_t: Vector, parameters: Vector) -> MatrixContainer:
     r"""A user function, which computes the mass matrix of the body.
 
     Args:
         mbs: provides MainSystem mbs to which object belongs
         t: current time in mbs
         itemNumber: integer number $i_N$ of the object in mbs, allowing easy access to all object data via mbs.GetObjectParameter(itemNumber, ...)
-        q: $\in \Rcal^n$ object coordinates, the coordinates of its nodes in their order, INCLUDING their reference values
-        q_t: $\in \Rcal^n$ object velocity coordinates
+        qRef: $\in \Rcal^n$ the reference coordinates of the nodes, in the order of nodeNumbers
+        q: $\in \Rcal^n$ object coordinates, the coordinates of the nodes INCLUDING their reference values, of the configuration asked for
+        q_t: $\in \Rcal^n$ object velocity coordinates of the configuration asked for
+        parameters: $\in \Rcal^{n_p}$ the parameters of the body, see parameters; empty if not given
     Returns:
         $\in \Rcal^{n \times n}$ the mass matrix, as numpy array, list of lists or exu.MatrixContainer
     """
 
-def ObjectUserBody_forceUserFunction(mbs: MainSystem, t: Real, itemNumber: Index, q: Vector,
-                                     q_t: Vector) -> Vector:
+def ObjectUserBody_forceUserFunction(mbs: MainSystem, t: Real, itemNumber: Index, qRef: Vector, q: Vector,
+                                     q_t: Vector, parameters: Vector) -> Vector:
     r"""A user function, which computes the generalized forces of the body: elastic forces, the quadratic velocity terms of a rigid body, damping; on the right-hand side, $\Mm \ddot\qv = \fv$.
 
     Args:
         mbs: provides MainSystem mbs to which object belongs
         t: current time in mbs
         itemNumber: integer number $i_N$ of the object in mbs, allowing easy access to all object data via mbs.GetObjectParameter(itemNumber, ...)
-        q: $\in \Rcal^n$ object coordinates, INCLUDING their reference values
-        q_t: $\in \Rcal^n$ object velocity coordinates
+        qRef: $\in \Rcal^n$ the reference coordinates of the nodes, in the order of nodeNumbers
+        q: $\in \Rcal^n$ object coordinates, the coordinates of the nodes INCLUDING their reference values, of the configuration asked for
+        q_t: $\in \Rcal^n$ object velocity coordinates of the configuration asked for
+        parameters: $\in \Rcal^{n_p}$ the parameters of the body, see parameters; empty if not given
     Returns:
         $\in \Rcal^{n}$ the generalized force vector
     """
 
-def ObjectUserBody_positionUserFunction(mbs: MainSystem, t: Real, itemNumber: Index,
-                                        localPosition: Vector3D, q: Vector) -> Vector3D:
+def ObjectUserBody_positionUserFunction(mbs: MainSystem, t: Real, itemNumber: Index, localPosition: Vector3D,
+                                        qRef: Vector, q: Vector, q_t: Vector, parameters: Vector) -> Vector3D:
     r"""A user function, which computes the global position of the material point at localPosition: the position interface of the body.
 
     Args:
         mbs: provides MainSystem mbs to which object belongs
-        t: current time in mbs
+        t: time of the configuration asked for
         itemNumber: integer number $i_N$ of the object in mbs
         localPosition: $\in \Rcal^3$ the local position of the point, in the coordinates the body defines (e.g. body-fixed, or the element coordinates of a finite element)
-        q: $\in \Rcal^n$ object coordinates, INCLUDING their reference values, of the configuration asked for
+        qRef: $\in \Rcal^n$ the reference coordinates of the nodes, in the order of nodeNumbers
+        q: $\in \Rcal^n$ object coordinates, the coordinates of the nodes INCLUDING their reference values, of the configuration asked for
+        q_t: $\in \Rcal^n$ object velocity coordinates of the configuration asked for
+        parameters: $\in \Rcal^{n_p}$ the parameters of the body, see parameters; empty if not given
     Returns:
         $\in \Rcal^{3}$ the global position of the point
     """
 
-def ObjectUserBody_matrixUserFunction(mbs: MainSystem, t: Real, itemNumber: Index,
-                                      localPosition: Vector3D, q: Vector) -> MatrixContainer:
+def ObjectUserBody_matrixUserFunction(mbs: MainSystem, t: Real, itemNumber: Index, localPosition: Vector3D,
+                                      qRef: Vector, q: Vector, q_t: Vector, parameters: Vector) -> MatrixContainer:
     r"""A user function of the interface of the body that returns a matrix at localPosition: the position Jacobian $\Jm_{pos} = \partial \vv / \partial \dot\qv$ (3 x n), the rotation matrix (3 x 3) or the rotation Jacobian $\Jm_{rot} = \partial \LU{0}{\tomega} / \partial \dot\qv$ (3 x n, global angular velocity).
 
     Args:
         mbs: provides MainSystem mbs to which object belongs
-        t: current time in mbs
+        t: time of the configuration asked for
         itemNumber: integer number $i_N$ of the object in mbs
         localPosition: $\in \Rcal^3$ the local position of the point
-        q: $\in \Rcal^n$ object coordinates, INCLUDING their reference values, of the configuration asked for
+        qRef: $\in \Rcal^n$ the reference coordinates of the nodes, in the order of nodeNumbers
+        q: $\in \Rcal^n$ object coordinates, the coordinates of the nodes INCLUDING their reference values, of the configuration asked for
+        q_t: $\in \Rcal^n$ object velocity coordinates of the configuration asked for
+        parameters: $\in \Rcal^{n_p}$ the parameters of the body, see parameters; empty if not given
     Returns:
         the matrix, as numpy array or list of lists
     """
 
 def ObjectUserBody_outputVariableUserFunction(mbs: MainSystem, t: Real, itemNumber: Index,
                                               outputVariableType: OutputVariableType, localPosition: Vector3D,
-                                              q: Vector, q_t: Vector) -> Vector:
+                                              qRef: Vector, q: Vector, q_t: Vector, q_tt: Vector,
+                                              parameters: Vector) -> Vector:
     r"""A user function, which computes the output variables UserType0 to UserType3 of the body at localPosition, e.g. strains or stresses of a user element; name them with exudyn.special.userTypes.SetName.
 
     Args:
@@ -2086,10 +2097,29 @@ def ObjectUserBody_outputVariableUserFunction(mbs: MainSystem, t: Real, itemNumb
         itemNumber: integer number $i_N$ of the object in mbs
         outputVariableType: the output variable asked for, UserType0 to UserType3
         localPosition: $\in \Rcal^3$ the local position of the point
-        q: $\in \Rcal^n$ object coordinates, INCLUDING their reference values, of the configuration asked for
+        qRef: $\in \Rcal^n$ the reference coordinates of the nodes, in the order of nodeNumbers
+        q: $\in \Rcal^n$ object coordinates, the coordinates of the nodes INCLUDING their reference values, of the configuration asked for
         q_t: $\in \Rcal^n$ object velocity coordinates of the configuration asked for
+        q_tt: $\in \Rcal^n$ object acceleration coordinates of the configuration asked for; zero in the reference configuration
+        parameters: $\in \Rcal^{n_p}$ the parameters of the body, see parameters; empty if not given
     Returns:
         the value as a vector of any size, the same size for every call with the same outputVariableType
+    """
+
+def ObjectUserBody_graphicsDataUserFunction(mbs: MainSystem, t: Real, itemNumber: Index, qRef: Vector, q: Vector,
+                                            q_t: Vector, parameters: Vector) -> BodyGraphicsData:
+    r"""A user function, which draws the body: it returns a list of graphics data in global coordinates, computed from the coordinates of the visualization configuration; see `exudyn.graphics`.
+
+    Args:
+        mbs: provides MainSystem mbs to which object belongs
+        t: time of the visualization configuration
+        itemNumber: integer number $i_N$ of the object in mbs
+        qRef: $\in \Rcal^n$ the reference coordinates of the nodes, in the order of nodeNumbers
+        q: $\in \Rcal^n$ object coordinates, the coordinates of the nodes INCLUDING their reference values, of the configuration asked for
+        q_t: $\in \Rcal^n$ object velocity coordinates of the configuration asked for
+        parameters: $\in \Rcal^{n_p}$ the parameters of the body, see parameters; empty if not given
+    Returns:
+        a list of graphics data (BodyGraphicsData)
     """
 
 definitions.append(ItemDefinition(
@@ -2101,7 +2131,12 @@ definitions.append(ItemDefinition(
     addProtectedC=r"""    //! a user function that returns a matrix of 3 rows, with its name for the messages and the number of columns (#2995)
     template<class TUserFunction>
     void EvaluateMatrixUserFunction(const TUserFunction& function, const char* name, Index columns, Matrix& value, Real t,
-        const Vector3D& localPosition, const Vector& coordinates) const;
+        const Vector3D& localPosition, const Vector& qRef, const Vector& coordinates, const Vector& coordinates_t) const;
+    //! the coordinates the user functions get in a configuration: the reference ones, the total ones and their velocities (#3056)
+    void GatherUserFunctionCoordinates(ResizableConstVector& qRef, ResizableConstVector& q, ResizableConstVector& q_t,
+        ConfigurationType configuration) const;
+    //! the acceleration coordinates of a configuration, zero in the reference configuration (#3056)
+    void GatherAccelerations(ResizableConstVector& q_tt, ConfigurationType configuration) const;
     //! the result of a user function has the size the body needs, or a PyError names the user function and the sizes (#2995)
     void CheckResultSize(const char* name, Index rows, Index columns, Index requiredRows, Index requiredColumns) const;
     //! a Jacobian times the velocity coordinates, in a configuration (#2995)
@@ -2120,9 +2155,21 @@ definitions.append(ItemDefinition(
     detailedDescription=r"""    #### Coordinates
 
     The object coordinates $\qv \in \Rcal^n$ are the ABRV:ODE2 coordinates of its nodes, in the order of
-    `nodeNumbers`, **including** their reference values; every user function gets the same $\qv$, so that
-    a point is computed from the total coordinates as a finite element does. The user functions get $\qv$, $\dot\qv$
-    and the local position as read-only numpy arrays.
+    `nodeNumbers`, **including** their reference values. Every user function gets the reference coordinates
+    $\qv\cRef$, the total coordinates $\qv$ and the velocities $\dot\qv$ of the configuration asked for, and the
+    parameters $\pv_{par}$ of the body (#3056): a rigid body computes with $\qv$, a finite element with the
+    displacements $\qv - \qv\cRef$ and its reference geometry from $\qv\cRef$. All of them are read-only numpy
+    arrays, the local position as well.
+
+    #### Parameters
+
+    `parameters` is a vector of any length - masses, lengths, stiffnesses, also flags and indices as numbers -, whose
+    meaning the user functions define; `exudyn.advancedUtilities.ParameterLayout` maps it to a dict of named
+    quantities and back. One recorded symbolic user function then serves every body of its kind, each with its own
+    parameters, and `SetObjectParameter(body, 'parameters', ...)` acts without recording again. A value that changes
+    the structure of the computation - a number of integration points, the size of a matrix, a Python `if` - cannot
+    come from the parameters of a symbolic function, as they have no value while it is recorded; it stays a constant of
+    the Python code.
 
     #### Equations of motion
 
@@ -2162,16 +2209,16 @@ definitions.append(ItemDefinition(
     miniExample=r"""    #a mass point as a user body on a NodePoint: M = m*I, the position of every point is q
     m = 2
     node = mbs.AddNode(NodePoint(referenceCoordinates=[1,0,0]))
-    def UFmass(mbs, t, itemNumber, q, q_t):
+    def UFmass(mbs, t, itemNumber, qRef, q, q_t, parameters):
         return m*np.eye(3)
-    def UFposition(mbs, t, itemNumber, localPosition, q):
+    def UFposition(mbs, t, itemNumber, localPosition, qRef, q, q_t, parameters):
         return q
-    def UFpositionJacobian(mbs, t, itemNumber, localPosition, q):
+    def UFpositionJacobian(mbs, t, itemNumber, localPosition, qRef, q, q_t, parameters):
         return np.eye(3)
     #a point does not rotate; with these, rigid markers and the rotation outputs work on it
-    def UFrotationMatrix(mbs, t, itemNumber, localPosition, q):
+    def UFrotationMatrix(mbs, t, itemNumber, localPosition, qRef, q, q_t, parameters):
         return np.eye(3)
-    def UFrotationJacobian(mbs, t, itemNumber, localPosition, q):
+    def UFrotationJacobian(mbs, t, itemNumber, localPosition, qRef, q, q_t, parameters):
         return np.zeros((3,3))
     body = mbs.AddObject(ObjectUserBody(nodeNumbers=[node], massMatrixUserFunction=UFmass,
                                         positionUserFunction=UFposition,
@@ -2212,6 +2259,10 @@ definitions.append(ItemDefinition(
             pythonName='nodeNumbers',
             defaultValue='ArrayIndex()',
             description=r"""$\mathbf{n}_n = [n_0,\,\ldots,\,n_n]\tp$the nodes whose ABRV:ODE2 coordinates are the coordinates of the body, in this order"""),
+        ItemParameter(type=TNumpyVector, destination=DestComp+DestParam,
+            pythonName='parameters',
+            defaultValue='Vector()',
+            description=r"""$\pv_{par} \in \Rcal^{n_p}$the parameters of the body - masses, lengths, stiffnesses -, passed to every user function; their meaning is defined by the user functions, see exudyn.advancedUtilities.ParameterLayout; empty by default"""),
         ItemParameter(destination=DestComp+DestParam,
             pythonName='massMatrixUserFunction',
             defaultValue=0,
@@ -2297,31 +2348,31 @@ definitions.append(ItemDefinition(
             description=r'the body, its markers and what depends on them are drawn in the main thread (#3003)'),
         ItemFunction(type=Tvoid, destination=DestComp, cFlags=CFConst, isVirtual=False,
             pythonName='EvaluatePosition',
-            args='Vector3D& position, Real t, const Vector3D& localPosition, const Vector& coordinates',
+            args='Vector3D& position, Real t, const Vector3D& localPosition, const Vector& qRef, const Vector& coordinates, const Vector& coordinates_t',
             description=r'call of positionUserFunction; implemented in evaluateUserFunctions.cpp'),
         ItemFunction(type=Tvoid, destination=DestComp, cFlags=CFConst, isVirtual=False,
             pythonName='EvaluatePositionJacobian',
-            args='Matrix& value, Real t, const Vector3D& localPosition, const Vector& coordinates',
+            args='Matrix& value, Real t, const Vector3D& localPosition, const Vector& qRef, const Vector& coordinates, const Vector& coordinates_t',
             description=r'call of positionJacobianUserFunction, with the size checked; implemented in evaluateUserFunctions.cpp'),
         ItemFunction(type=Tvoid, destination=DestComp, cFlags=CFConst, isVirtual=False,
             pythonName='EvaluateRotationMatrix',
-            args='Matrix3D& value, Real t, const Vector3D& localPosition, const Vector& coordinates',
+            args='Matrix3D& value, Real t, const Vector3D& localPosition, const Vector& qRef, const Vector& coordinates, const Vector& coordinates_t',
             description=r'call of rotationMatrixUserFunction, with the size checked; implemented in evaluateUserFunctions.cpp'),
         ItemFunction(type=Tvoid, destination=DestComp, cFlags=CFConst, isVirtual=False,
             pythonName='EvaluateRotationJacobian',
-            args='Matrix& value, Real t, const Vector3D& localPosition, const Vector& coordinates',
+            args='Matrix& value, Real t, const Vector3D& localPosition, const Vector& qRef, const Vector& coordinates, const Vector& coordinates_t',
             description=r'call of rotationJacobianUserFunction, with the size checked; implemented in evaluateUserFunctions.cpp'),
         ItemFunction(type=Tvoid, destination=DestComp, cFlags=CFConst, isVirtual=False,
             pythonName='EvaluateUserFunctionOutputVariable',
-            args='Vector& value, Real t, OutputVariableType variableType, const Vector3D& localPosition, const Vector& coordinates, const Vector& coordinates_t',
+            args='Vector& value, Real t, OutputVariableType variableType, const Vector3D& localPosition, const Vector& qRef, const Vector& coordinates, const Vector& coordinates_t, const Vector& coordinates_tt',
             description=r'call of outputVariableUserFunction; implemented in evaluateUserFunctions.cpp'),
         ItemFunction(type=Tvoid, destination=DestComp, cFlags=CFConst, isVirtual=False,
             pythonName='EvaluateUserFunctionForce',
-            args='Vector& force, Real t, const Vector& coordinates, const Vector& coordinates_t',
+            args='Vector& force, Real t, const Vector& qRef, const Vector& coordinates, const Vector& coordinates_t',
             description=r'call of forceUserFunction, with the size checked; implemented in evaluateUserFunctions.cpp'),
         ItemFunction(type=Tvoid, destination=DestComp, cFlags=CFConst, isVirtual=False,
             pythonName='EvaluateUserFunctionMassMatrix',
-            args='EXUmath::MatrixContainer& massMatrix, Real t, const Vector& coordinates, const Vector& coordinates_t, const ArrayIndex& ltg',
+            args='EXUmath::MatrixContainer& massMatrix, Real t, const Vector& qRef, const Vector& coordinates, const Vector& coordinates_t, const ArrayIndex& ltg',
             description=r'call of massMatrixUserFunction; implemented in evaluateUserFunctions.cpp'),
         ItemParameter(type=TBool, destination=DestVisu, fromParent=True,
             pythonName='show',
@@ -2335,8 +2386,8 @@ definitions.append(ItemDefinition(
         ItemParameter(destination=DestVisu,
             pythonName='graphicsDataUserFunction',
             defaultValue=0,
-            description=r'A Python function which returns a list of graphics data in global coordinates, see ObjectGenericODE2; the only drawing of the body',
-            userFunction=ObjectGenericODE2_graphicsDataUserFunction),
+            description=r'A Python function which returns a list of graphics data in global coordinates, from the coordinates of the visualization configuration; the only drawing of the body',
+            userFunction=ObjectUserBody_graphicsDataUserFunction),
         ],
     ))
 

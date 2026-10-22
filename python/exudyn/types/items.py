@@ -264,6 +264,7 @@ items = {
       'referenceCoordinates': {'type': 'Vector', 'size': '', 'range': '', 'default': '[]', 'mustBeGiven': False, 'description': 'reference coordinates of the node; must have numberOfODE2Coordinates components'},
       'initialCoordinates': {'type': 'Vector', 'size': '', 'range': '', 'default': '[]', 'mustBeGiven': False, 'description': 'initial displacement coordinates; must have numberOfODE2Coordinates components'},
       'initialVelocities': {'type': 'Vector', 'size': '', 'range': '', 'default': '[]', 'mustBeGiven': False, 'description': 'initial velocity coordinates; must have numberOfODE2Coordinates components'},
+      'parameters': {'type': 'NumpyVector', 'size': '', 'range': '', 'default': '[]', 'mustBeGiven': False, 'description': 'the parameters of the node, passed to every user function; their meaning is defined by the user functions, see exudyn.advancedUtilities.ParameterLayout; empty by default'},
       'positionUserFunction': {'type': 'NodeUserPositionUserFunction', 'size': '', 'range': '', 'default': '0', 'mustBeGiven': False, 'description': 'A Python user function which computes the global position of the node; it must be given'},
       'positionJacobianUserFunction': {'type': 'NodeUserPositionJacobianUserFunction', 'size': '', 'range': '', 'default': '0', 'mustBeGiven': False, 'description': 'A Python user function which computes the position Jacobian; by central differences of the position if not given'},
       'rotationMatrixUserFunction': {'type': 'NodeUserRotationMatrixUserFunction', 'size': '', 'range': '', 'default': '0', 'mustBeGiven': False, 'description': 'A Python user function which computes the rotation matrix of the node; optional, for rigid markers'},
@@ -454,6 +455,7 @@ items = {
     'parameters': {
       'name': {'type': 'String', 'size': '', 'range': '', 'default': '', 'mustBeGiven': False, 'description': "objects's unique name"},
       'nodeNumbers': {'type': 'ArrayNodeIndex', 'size': '', 'range': '', 'default': '[]', 'mustBeGiven': False, 'description': 'the nodes whose ODE2 coordinates are the coordinates of the body, in this order'},
+      'parameters': {'type': 'NumpyVector', 'size': '', 'range': '', 'default': '[]', 'mustBeGiven': False, 'description': 'the parameters of the body - masses, lengths, stiffnesses -, passed to every user function; their meaning is defined by the user functions, see exudyn.advancedUtilities.ParameterLayout; empty by default'},
       'massMatrixUserFunction': {'type': 'ObjectUserBodyMassMatrixUserFunction', 'size': '', 'range': '', 'default': '0', 'mustBeGiven': False, 'description': 'A Python user function which computes the mass matrix; it must be given'},
       'forceUserFunction': {'type': 'ObjectUserBodyForceUserFunction', 'size': '', 'range': '', 'default': '0', 'mustBeGiven': False, 'description': 'A Python user function which computes the generalized forces on the right-hand side; zero if not given'},
       'positionUserFunction': {'type': 'ObjectUserBodyPositionUserFunction', 'size': '', 'range': '', 'default': '0', 'mustBeGiven': False, 'description': 'A Python user function which computes the global position of the point at localPosition'},
@@ -464,7 +466,7 @@ items = {
     },
     'visualization': {
       'show': {'type': 'Bool', 'size': '', 'range': '', 'default': 'True', 'mustBeGiven': False, 'description': 'set true, if item is shown in visualization and false if it is not shown'},
-      'graphicsDataUserFunction': {'type': 'ObjectUserBodyGraphicsDataUserFunction', 'size': '', 'range': '', 'default': '0', 'mustBeGiven': False, 'description': 'A Python function which returns a list of graphics data in global coordinates, see ObjectGenericODE2; the only drawing of the body'},
+      'graphicsDataUserFunction': {'type': 'ObjectUserBodyGraphicsDataUserFunction', 'size': '', 'range': '', 'default': '0', 'mustBeGiven': False, 'description': 'A Python function which returns a list of graphics data in global coordinates, from the coordinates of the visualization configuration; the only drawing of the body'},
     },
   },
   'ObjectKinematicTree': {

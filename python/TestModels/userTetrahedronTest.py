@@ -33,12 +33,12 @@ force = 50 #nominal stress on the unit face x=1
 #configuration (4 x 3) and the volume
 tetData = {}
 
-def UFmass(mbs, t, itemNumber, q, q_t):
+def UFmass(mbs, t, itemNumber, qRef, q, q_t, parameters):
     volume = tetData[itemNumber][1]
     return np.kron(rho*volume/20*(np.ones((4, 4)) + np.eye(4)), np.eye(3))
 
 #the internal forces of the Saint Venant-Kirchhoff material, on the right-hand side
-def UFforce(mbs, t, itemNumber, q, q_t):
+def UFforce(mbs, t, itemNumber, qRef, q, q_t, parameters):
     (gradN, volume) = tetData[itemNumber]
     F = np.array(q).reshape(4, 3).T @ gradN #deformation gradient
     E = 0.5*(F.T @ F - np.eye(3)) #Green strain
@@ -50,10 +50,10 @@ def N(localPosition):
     (xi, eta, zeta) = localPosition
     return np.array([1 - xi - eta - zeta, xi, eta, zeta])
 
-def UFposition(mbs, t, itemNumber, localPosition, q):
+def UFposition(mbs, t, itemNumber, localPosition, qRef, q, q_t, parameters):
     return N(localPosition) @ np.array(q).reshape(4, 3)
 
-def UFpositionJacobian(mbs, t, itemNumber, localPosition, q):
+def UFpositionJacobian(mbs, t, itemNumber, localPosition, qRef, q, q_t, parameters):
     return np.kron(N(localPosition), np.eye(3))
 
 #a unit cube of six tetrahedra on its diagonal from node 0 to node 7; node i is at (i%2, (i//2)%2, i//4)

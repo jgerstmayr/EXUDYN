@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.13 | Newborn | 158 | 1.13.161 |
+| 1.13 | Newborn | 159 | 1.13.162 |
 | 1.12 | Metheney | 367 | 1.12.462 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
@@ -30,6 +30,10 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.13 - Newborn (current)
 
+- **1.13.162** `EXTENSION` `MEDIUM EFF` `raised by: Claude-JG` `resolved by: Claude-JG` parameters of the user items: a parameter vector passed to the user functions (#3056)
+  - description: Maintainer 2026-10-20: ObjectUserBody (and future user items) has no parameters; they are written into the user functions. For a user beam with different parameters per element, an arbitrary-length parameter vector of doubles (also for bools and indices) passed to the user functions, with a Python mapping between the vector and a dict of interpretable quantities (mass, inertia, COM, ...), which keeps symbolic quantities when recording; zero length is the present behaviour; the mapping possibly part of the item as a Python function used at definition. First evaluate and recommend.
+  - **notes:** ObjectUserBody and NodeUser have a parameter vector 'parameters'; their user functions get qRef, q, q\_t and the parameters (the outputVariableUserFunction also q\_tt, the graphicsDataUserFunction of ObjectUserBody the visualization configuration); exudyn.advancedUtilities.ParameterLayout maps the parameters to named quantities and back, for numpy and symbolic vectors, so that one recorded symbolic user function serves every body of a kind (revision2026c steps RG7.12.1-RG7.12.3)
+  - date resolved: **2026-10-22 15:30**, date raised: 2026-10-21
 - **1.13.161** `IMPROVEMENT` `MEDIUM EFF` `raised by: Claude-JG` `resolved by: Claude-JG` symbolic user functions: flat evaluation of vector and matrix operations (#3054)
   - description: Maintainer 2026-10-20 (decision on RG12.2.5), after the scalar expressions (RG12.2.6): the vector and matrix operation nodes (sums, products, transposes, components of a computed vector or matrix) become operations of the flat list as well, so that a shared vector or matrix node is computed once per evaluation; same tests and text export.
   - **notes:** Symbolic user functions evaluate their vector and matrix operations by the list of operations as well: a shared vector or matrix is computed once per call; userRigidBodyTest.py with 10000 steps: 2.72 s with the tree, 0.75 s with the list (revision2026c step RG12.2.7)

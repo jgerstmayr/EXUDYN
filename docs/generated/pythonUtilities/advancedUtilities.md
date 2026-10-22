@@ -406,10 +406,22 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`serialRobot
 - **output**: return dictionary with 'functionName', 'argList', and 'returnList'
 
 
+(sec-advancedutilities--objectparameterssize)=
+## Function: _ObjectParametersSize
+
+[`_ObjectParametersSize(mbs, itemIndex)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/advancedUtilities.py#L912)
+
+- **function description**: the length of the parameters of a user item, which its user functions get, or 0 where it is not known (#3056)
+- **input**:
+  - `mbs`: the MainSystem of the object
+  - `itemIndex`: the ObjectIndex, or anything else, which gives 0
+- **output**: int: the length of the parameters of the object, 0 if it has none
+
+
 (sec-advancedutilities--objectcoordinatessize)=
 ## Function: _ObjectCoordinatesSize
 
-[`_ObjectCoordinatesSize(mbs, itemIndex)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/advancedUtilities.py#L910)
+[`_ObjectCoordinatesSize(mbs, itemIndex)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/advancedUtilities.py#L930)
 
 - **function description**: the number of coordinates q of the nodes of an object, which its user functions get, or 0 where it is not known; a vector argument recorded with its size can be combined with constant vectors and has len() (#3015)
 - **input**:
@@ -421,7 +433,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`serialRobot
 (sec-advancedutilities-createsymbolicuserfunction)=
 ## Function: CreateSymbolicUserFunction
 
-[`CreateSymbolicUserFunction(mbs, function, userFunctionName, itemIndex = None, itemTypeName = None, verbose = 0)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/advancedUtilities.py#L937)
+[`CreateSymbolicUserFunction(mbs, function, userFunctionName, itemIndex = None, itemTypeName = None, verbose = 0)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/advancedUtilities.py#L957)
 
 - **function description**: Helper function to convert a Python user function into a symbolic user function; this function is under development and should be used with care
 - **input**:
@@ -459,7 +471,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`cartesianSp
 (sec-advancedutilities-createtcpipconnection)=
 ## Function: CreateTCPIPconnection
 
-[`CreateTCPIPconnection(sendSize, receiveSize, IPaddress = '127.0.0.1', port = 52421, bigEndian = False, verbose = False)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/advancedUtilities.py#L994)
+[`CreateTCPIPconnection(sendSize, receiveSize, IPaddress = '127.0.0.1', port = 52421, bigEndian = False, verbose = False)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/advancedUtilities.py#L1100)
 
 - **function description**: function which has to be called before simulation to setup TCP/IP socket (server) for sending and receiving data; can be used to communicate with other Python interpreters or for communication with MATLAB/Simulink
 - **input**:
@@ -515,7 +527,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`TCPIPexudyn
 (sec-advancedutilities-tcpipsendreceive)=
 ## Function: TCPIPsendReceive
 
-[`TCPIPsendReceive(TCPIPobject, sendData)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/advancedUtilities.py#L1065)
+[`TCPIPsendReceive(TCPIPobject, sendData)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/advancedUtilities.py#L1171)
 
 - **function description**: call this function at every simulation step at which you intend to communicate with other programs via TCPIP; e.g., call this function in preStepUserFunction of a mbs model
 - **input**:
@@ -539,7 +551,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`TCPIPexudyn
 (sec-advancedutilities-closetcpipconnection)=
 ## Function: CloseTCPIPconnection
 
-[`CloseTCPIPconnection(TCPIPobject)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/advancedUtilities.py#L1093)
+[`CloseTCPIPconnection(TCPIPobject)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/advancedUtilities.py#L1199)
 
 - **function description**: close a previously created TCPIP connection
 
@@ -551,6 +563,59 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`TCPIPexudyn
 ## CLASS ExpectedType(Enum) (in module advancedUtilities)
 
 **class description**: internal type which is used for type checking in exudyn Python user functions; used to create unique error messages
+
+
+(sec-module-advancedutilities-class-parameterlayout)=
+## CLASS ParameterLayout (in module advancedUtilities)
+
+**class description**: The layout of the parameter vector of a user item, ObjectUserBody or NodeUser (#3056): named entries and their sizes, mapped to a dict of named quantities and back. The layout belongs to the kind of user item, next to its user functions: `ToVector` gives the `parameters` of each item, `ToDict` names them inside the user functions. `ToDict` works with numpy arrays and with the symbolic vector a recorded user function gets, so that the named quantities are components of the parameters of the item in the recording, read at every call: one recorded function serves every item of the kind. A value that changes the structure of the computation - a number of integration points, a Python `if` - cannot come from the parameters of a symbolic function and stays a constant of the Python code.
+
+- **input**:
+  - `entries`: list of (name, size), e.g. `[('mass', 1), ('inertia', 6), ('com', 3)]`
+
+*example*:
+
+```python
+  layout = ParameterLayout([('mass', 1), ('stiffness', 1), ('com', 3)])
+  p = layout.ToVector({'mass': 2., 'stiffness': 100., 'com': [0, 0.1, 0]})   #[2, 100, 0, 0.1, 0]
+  def UFforce(mbs, t, itemNumber, qRef, q, q_t, parameters):
+      d = layout.ToDict(parameters)
+      return -d['stiffness']*(q - qRef)
+```
+
+
+(sec-advancedutilities-parameterlayout-size)=
+### Class function: Size
+
+[`Size(self)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/advancedUtilities.py#L1028)
+
+- **class function description**: The length of the parameter vector.
+- **output**: the sum of the sizes of the entries
+
+
+(sec-advancedutilities-parameterlayout-tovector)=
+### Class function: ToVector
+
+[`ToVector(self, values)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/advancedUtilities.py#L1036)
+
+- **class function description**: The parameter vector of named quantities.
+- **input**:
+  - `values`: dict with a value for every name of the layout: a number for size 1, a list or array of the size otherwise; a name that is not in the layout is refused
+- **output**: the parameter vector as numpy array
+
+
+(sec-advancedutilities-parameterlayout-todict)=
+### Class function: ToDict
+
+[`ToDict(self, parameters)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/advancedUtilities.py#L1060)
+
+- **class function description**: The named quantities of a parameter vector.
+- **input**:
+  - `parameters`: the parameter vector, a numpy array, list or symbolic vector, of the size of the layout
+- **output**: dict with a number - or symbolic Real - for size 1 and a list otherwise
+
+
+Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`userParametersTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/userParametersTest.py) (TM)
 
 
 (sec-module-advancedutilities-class-tcpipdata)=

@@ -191,6 +191,11 @@
    "by": "Claude-JG",
    "fingerprint": "43b37a1518e6"
   },
+  "NodeUser": {
+   "checked": "2026-10-22",
+   "by": "Claude-JG",
+   "fingerprint": "4bafc3e4b65c"
+  },
   "ObjectALEANCFCable2D": {
    "checked": "2026-10-17",
    "by": "Claude-JG",
@@ -447,9 +452,9 @@
    "fingerprint": "35c0d5a5acfb"
   },
   "ObjectUserBody": {
-   "checked": "2026-10-20",
+   "checked": "2026-10-22",
    "by": "Claude-JG",
-   "fingerprint": "d4c0f3b85b9e"
+   "fingerprint": "a7ed552101f6"
   },
   "SensorBody": {
    "checked": "2026-10-17",

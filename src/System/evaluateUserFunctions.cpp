@@ -368,71 +368,75 @@ void CObjectUserBody::CheckResultSize(const char* name, Index rows, Index column
 		+ ") is needed", PyErrorType::valueError);
 }
 
-void CObjectUserBody::EvaluateUserFunctionForce(Vector& force, Real t, const Vector& coordinates, const Vector& coordinates_t) const
+void CObjectUserBody::EvaluateUserFunctionForce(Vector& force, Real t, const Vector& qRef, const Vector& coordinates, const Vector& coordinates_t) const
 {
 	UserFunctionExceptionHandling([&] //lambda function to add consistent try{..} catch(...) block
 	{
-		EvaluateUserFunctionIntoVector(parameters.forceUserFunction, force, USERBODY_MAINSYSTEM, t, GetObjectNumber(), coordinates, coordinates_t);
+		EvaluateUserFunctionIntoVector(parameters.forceUserFunction, force, USERBODY_MAINSYSTEM, t, GetObjectNumber(), qRef, coordinates, coordinates_t, parameters.parameters);
 	}, "ObjectUserBody::forceUserFunction");
 	CheckResultSize("forceUserFunction", force.NumberOfItems(), 1, coordinates.NumberOfItems(), 1);
 }
 
 void CObjectUserBody::EvaluateUserFunctionOutputVariable(Vector& value, Real t, OutputVariableType variableType, const Vector3D& localPosition,
-	const Vector& coordinates, const Vector& coordinates_t) const
+	const Vector& qRef, const Vector& coordinates, const Vector& coordinates_t, const Vector& coordinates_tt) const
 {
 	UserFunctionExceptionHandling([&] //lambda function to add consistent try{..} catch(...) block
 	{
 		EvaluateUserFunctionIntoVector(parameters.outputVariableUserFunction, value, USERBODY_MAINSYSTEM, t, GetObjectNumber(),
-			variableType, localPosition, coordinates, coordinates_t);
+			variableType, localPosition, qRef, coordinates, coordinates_t, coordinates_tt, parameters.parameters);
 	}, "ObjectUserBody::outputVariableUserFunction");
 }
 
 void CObjectUserBody::EvaluateUserFunctionMassMatrix(EXUmath::MatrixContainer& massMatrix, Real t,
-	const Vector& coordinates, const Vector& coordinates_t, const ArrayIndex& ltg) const
+	const Vector& qRef, const Vector& coordinates, const Vector& coordinates_t, const ArrayIndex& ltg) const
 {
 	if (!(parameters.massMatrixUserFunction)) { PyError("ObjectUserBody: massMatrixUserFunction is not given", PyErrorType::valueError); }
 	UserFunctionExceptionHandling([&] //lambda function to add consistent try{..} catch(...) block
 	{
 		EvaluateUserFunctionIntoMatrixContainer(parameters.massMatrixUserFunction, massMatrix, ltg, USERBODY_MAINSYSTEM,
-			t, GetObjectNumber(), coordinates, coordinates_t);
+			t, GetObjectNumber(), qRef, coordinates, coordinates_t, parameters.parameters);
 	}, "ObjectUserBody::massMatrixUserFunction");
 }
 
-void CObjectUserBody::EvaluatePosition(Vector3D& position, Real t, const Vector3D& localPosition, const Vector& coordinates) const
+void CObjectUserBody::EvaluatePosition(Vector3D& position, Real t, const Vector3D& localPosition, const Vector& qRef, const Vector& coordinates,
+	const Vector& coordinates_t) const
 {
 	if (!(parameters.positionUserFunction)) { PyError("ObjectUserBody: positionUserFunction is not given, but a marker, sensor or output asks for a position", PyErrorType::valueError); }
 	UserFunctionExceptionHandling([&] //lambda function to add consistent try{..} catch(...) block
 	{
-		position = Vector3D(EvaluateUserFunction(parameters.positionUserFunction, USERBODY_MAINSYSTEM, t, GetObjectNumber(), localPosition, coordinates));
+		position = Vector3D(EvaluateUserFunction(parameters.positionUserFunction, USERBODY_MAINSYSTEM, t, GetObjectNumber(), localPosition, qRef, coordinates, coordinates_t, parameters.parameters));
 	}, "ObjectUserBody::positionUserFunction");
 }
 
 template<class TUserFunction>
 void CObjectUserBody::EvaluateMatrixUserFunction(const TUserFunction& function, const char* name, Index columns, Matrix& value, Real t,
-	const Vector3D& localPosition, const Vector& coordinates) const
+	const Vector3D& localPosition, const Vector& qRef, const Vector& coordinates, const Vector& coordinates_t) const
 {
 	if (!(function)) { PyError(STDstring("ObjectUserBody: ") + name + " is not given, but a marker, load, sensor or output needs it", PyErrorType::valueError); }
 	UserFunctionExceptionHandling([&] //lambda function to add consistent try{..} catch(...) block
 	{
-		EvaluateUserFunctionIntoMatrix(function, value, USERBODY_MAINSYSTEM, t, GetObjectNumber(), localPosition, coordinates);
+		EvaluateUserFunctionIntoMatrix(function, value, USERBODY_MAINSYSTEM, t, GetObjectNumber(), localPosition, qRef, coordinates, coordinates_t, parameters.parameters);
 	}, name);
 	CheckResultSize(name, value.NumberOfRows(), value.NumberOfColumns(), 3, columns);
 }
 
-void CObjectUserBody::EvaluatePositionJacobian(Matrix& value, Real t, const Vector3D& localPosition, const Vector& coordinates) const
+void CObjectUserBody::EvaluatePositionJacobian(Matrix& value, Real t, const Vector3D& localPosition, const Vector& qRef, const Vector& coordinates,
+	const Vector& coordinates_t) const
 {
-	EvaluateMatrixUserFunction(parameters.positionJacobianUserFunction, "positionJacobianUserFunction", coordinates.NumberOfItems(), value, t, localPosition, coordinates);
+	EvaluateMatrixUserFunction(parameters.positionJacobianUserFunction, "positionJacobianUserFunction", coordinates.NumberOfItems(), value, t, localPosition, qRef, coordinates, coordinates_t);
 }
 
-void CObjectUserBody::EvaluateRotationMatrix(Matrix3D& value, Real t, const Vector3D& localPosition, const Vector& coordinates) const
+void CObjectUserBody::EvaluateRotationMatrix(Matrix3D& value, Real t, const Vector3D& localPosition, const Vector& qRef, const Vector& coordinates,
+	const Vector& coordinates_t) const
 {
-	EvaluateMatrixUserFunction(parameters.rotationMatrixUserFunction, "rotationMatrixUserFunction", 3, bufferRotation, t, localPosition, coordinates);
+	EvaluateMatrixUserFunction(parameters.rotationMatrixUserFunction, "rotationMatrixUserFunction", 3, bufferRotation, t, localPosition, qRef, coordinates, coordinates_t);
 	value.CopyFrom(bufferRotation);
 }
 
-void CObjectUserBody::EvaluateRotationJacobian(Matrix& value, Real t, const Vector3D& localPosition, const Vector& coordinates) const
+void CObjectUserBody::EvaluateRotationJacobian(Matrix& value, Real t, const Vector3D& localPosition, const Vector& qRef, const Vector& coordinates,
+	const Vector& coordinates_t) const
 {
-	EvaluateMatrixUserFunction(parameters.rotationJacobianUserFunction, "rotationJacobianUserFunction", coordinates.NumberOfItems(), value, t, localPosition, coordinates);
+	EvaluateMatrixUserFunction(parameters.rotationJacobianUserFunction, "rotationJacobianUserFunction", coordinates.NumberOfItems(), value, t, localPosition, qRef, coordinates, coordinates_t);
 }
 
 #undef USERBODY_MAINSYSTEM
@@ -448,22 +452,22 @@ bool CNodeUser::PythonCallPossible() const
 	return false;
 }
 
-void CNodeUser::EvaluatePosition(Vector3D& position, Real t, const Vector& coordinates) const
+void CNodeUser::EvaluatePosition(Vector3D& position, Real t, const Vector& qRef, const Vector& coordinates, const Vector& coordinates_t) const
 {
 	if (!(parameters.positionUserFunction)) { PyError("NodeUser: positionUserFunction is not given, but a marker, sensor or output asks for the position", PyErrorType::valueError); }
 	UserFunctionExceptionHandling([&] //lambda function to add consistent try{..} catch(...) block
 	{
-		position = Vector3D(EvaluateUserFunction(parameters.positionUserFunction, NODEUSER_MAINSYSTEM, t, GetNodeNumber(), coordinates));
+		position = Vector3D(EvaluateUserFunction(parameters.positionUserFunction, NODEUSER_MAINSYSTEM, t, GetNodeNumber(), qRef, coordinates, coordinates_t, parameters.parameters));
 	}, "NodeUser::positionUserFunction");
 }
 
 template<class TUserFunction>
 void CNodeUser::EvaluateMatrixUserFunction(const TUserFunction& function, const char* name, Index rows, Index columns, Matrix& value, Real t,
-	const Vector& coordinates) const
+	const Vector& qRef, const Vector& coordinates, const Vector& coordinates_t) const
 {
 	UserFunctionExceptionHandling([&] //lambda function to add consistent try{..} catch(...) block
 	{
-		EvaluateUserFunctionIntoMatrix(function, value, NODEUSER_MAINSYSTEM, t, GetNodeNumber(), coordinates);
+		EvaluateUserFunctionIntoMatrix(function, value, NODEUSER_MAINSYSTEM, t, GetNodeNumber(), qRef, coordinates, coordinates_t, parameters.parameters);
 	}, name);
 	if (value.NumberOfRows() != rows || value.NumberOfColumns() != columns)
 	{
@@ -474,12 +478,12 @@ void CNodeUser::EvaluateMatrixUserFunction(const TUserFunction& function, const 
 }
 
 //! the user function, or central differences of the position with the step of newton.numericalDifferentiation
-void CNodeUser::EvaluatePositionJacobian(Matrix& value, Real t, const Vector& coordinates) const
+void CNodeUser::EvaluatePositionJacobian(Matrix& value, Real t, const Vector& qRef, const Vector& coordinates, const Vector& coordinates_t) const
 {
 	Index n = coordinates.NumberOfItems();
 	if (parameters.positionJacobianUserFunction)
 	{
-		EvaluateMatrixUserFunction(parameters.positionJacobianUserFunction, "positionJacobianUserFunction", 3, n, value, t, coordinates);
+		EvaluateMatrixUserFunction(parameters.positionJacobianUserFunction, "positionJacobianUserFunction", 3, n, value, t, qRef, coordinates, coordinates_t);
 	}
 	else
 	{
@@ -491,35 +495,35 @@ void CNodeUser::EvaluatePositionJacobian(Matrix& value, Real t, const Vector& co
 			Real qk = q[k];
 			Real eps = 1e-7*EXUstd::Maximum(1e-2, fabs(qk));
 			q[k] = qk + eps;
-			EvaluatePosition(plus, t, q);
+			EvaluatePosition(plus, t, qRef, q, coordinates_t);
 			q[k] = qk - eps;
-			EvaluatePosition(minus, t, q);
+			EvaluatePosition(minus, t, qRef, q, coordinates_t);
 			q[k] = qk;
 			for (Index i = 0; i < 3; i++) { value(i, k) = (plus[i] - minus[i])/(2.*eps); }
 		}
 	}
 }
 
-void CNodeUser::EvaluateRotationMatrix(Matrix3D& value, Real t, const Vector& coordinates) const
+void CNodeUser::EvaluateRotationMatrix(Matrix3D& value, Real t, const Vector& qRef, const Vector& coordinates, const Vector& coordinates_t) const
 {
 	if (!(parameters.rotationMatrixUserFunction)) { PyError("NodeUser: rotationMatrixUserFunction is not given, but a rigid marker, sensor or output asks for the orientation", PyErrorType::valueError); }
-	EvaluateMatrixUserFunction(parameters.rotationMatrixUserFunction, "rotationMatrixUserFunction", 3, 3, bufferRotation, t, coordinates);
+	EvaluateMatrixUserFunction(parameters.rotationMatrixUserFunction, "rotationMatrixUserFunction", 3, 3, bufferRotation, t, qRef, coordinates, coordinates_t);
 	value.CopyFrom(bufferRotation);
 }
 
 //! the user function, or column k the axial vector of (dR/dq_k) R^T, dR/dq_k by central differences
-void CNodeUser::EvaluateRotationJacobian(Matrix& value, Real t, const Vector& coordinates) const
+void CNodeUser::EvaluateRotationJacobian(Matrix& value, Real t, const Vector& qRef, const Vector& coordinates, const Vector& coordinates_t) const
 {
 	Index n = coordinates.NumberOfItems();
 	if (parameters.rotationJacobianUserFunction)
 	{
-		EvaluateMatrixUserFunction(parameters.rotationJacobianUserFunction, "rotationJacobianUserFunction", 3, n, value, t, coordinates);
+		EvaluateMatrixUserFunction(parameters.rotationJacobianUserFunction, "rotationJacobianUserFunction", 3, n, value, t, qRef, coordinates, coordinates_t);
 	}
 	else
 	{
 		value.SetNumberOfRowsAndColumns(3, n);
 		Matrix3D rotation, plus, minus;
-		EvaluateRotationMatrix(rotation, t, coordinates);
+		EvaluateRotationMatrix(rotation, t, qRef, coordinates, coordinates_t);
 		Matrix3D rotationT = rotation.GetTransposed();
 		ResizableConstVector q(coordinates);
 		for (Index k = 0; k < n; k++)
@@ -527,9 +531,9 @@ void CNodeUser::EvaluateRotationJacobian(Matrix& value, Real t, const Vector& co
 			Real qk = q[k];
 			Real eps = 1e-7*EXUstd::Maximum(1e-2, fabs(qk));
 			q[k] = qk + eps;
-			EvaluateRotationMatrix(plus, t, q);
+			EvaluateRotationMatrix(plus, t, qRef, q, coordinates_t);
 			q[k] = qk - eps;
-			EvaluateRotationMatrix(minus, t, q);
+			EvaluateRotationMatrix(minus, t, qRef, q, coordinates_t);
 			q[k] = qk;
 			Matrix3D skew = (1./(2.*eps))*(plus - minus)*rotationT; //the tilde matrix of the angular velocity per unit q_k
 			value(0, k) = 0.5*(skew(2, 1) - skew(1, 2));

@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-10-20  00:12:31 (last modified)
+* @date         2026-10-22  15:08:27 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -32,17 +32,19 @@ class CObjectUserBodyParameters // AUTO:
 {
 public: // AUTO:
     ArrayIndex nodeNumbers;                       //!< AUTO: the nodes whose ABRV:ODE2 coordinates are the coordinates of the body, in this order
-    PythonUserFunctionBase< std::function<py::object(const MainSystem&,Real,Index,const StdVector&,const StdVector&)> > massMatrixUserFunction;//!< AUTO: A Python user function which computes the mass matrix; it must be given
-    PythonUserFunctionBase< std::function<StdVector(const MainSystem&,Real,Index,const StdVector&,const StdVector&)> > forceUserFunction;//!< AUTO: A Python user function which computes the generalized forces on the right-hand side; zero if not given
-    PythonUserFunctionBase< std::function<StdVector3D(const MainSystem&,Real,Index,StdVector3D,const StdVector&)> > positionUserFunction;//!< AUTO: A Python user function which computes the global position of the point at localPosition
-    PythonUserFunctionBase< std::function<py::object(const MainSystem&,Real,Index,StdVector3D,const StdVector&)> > positionJacobianUserFunction;//!< AUTO: A Python user function which computes the position Jacobian at localPosition
-    PythonUserFunctionBase< std::function<py::object(const MainSystem&,Real,Index,StdVector3D,const StdVector&)> > rotationMatrixUserFunction;//!< AUTO: A Python user function which computes the rotation matrix at localPosition; optional, for rigid markers
-    PythonUserFunctionBase< std::function<py::object(const MainSystem&,Real,Index,StdVector3D,const StdVector&)> > rotationJacobianUserFunction;//!< AUTO: A Python user function which computes the rotation Jacobian (of the global angular velocity) at localPosition; optional, for rigid markers
-    PythonUserFunctionBase< std::function<StdVector(const MainSystem&,Real,Index,OutputVariableType,StdVector3D,const StdVector&,const StdVector&)> > outputVariableUserFunction;//!< AUTO: A Python user function which computes the output variables UserType0 to UserType3 at localPosition; optional
+    Vector parameters;                            //!< AUTO: the parameters of the body - masses, lengths, stiffnesses -, passed to every user function; their meaning is defined by the user functions, see exudyn.advancedUtilities.ParameterLayout; empty by default
+    PythonUserFunctionBase< std::function<py::object(const MainSystem&,Real,Index,const StdVector&,const StdVector&,const StdVector&,const StdVector&)> > massMatrixUserFunction;//!< AUTO: A Python user function which computes the mass matrix; it must be given
+    PythonUserFunctionBase< std::function<StdVector(const MainSystem&,Real,Index,const StdVector&,const StdVector&,const StdVector&,const StdVector&)> > forceUserFunction;//!< AUTO: A Python user function which computes the generalized forces on the right-hand side; zero if not given
+    PythonUserFunctionBase< std::function<StdVector3D(const MainSystem&,Real,Index,StdVector3D,const StdVector&,const StdVector&,const StdVector&,const StdVector&)> > positionUserFunction;//!< AUTO: A Python user function which computes the global position of the point at localPosition
+    PythonUserFunctionBase< std::function<py::object(const MainSystem&,Real,Index,StdVector3D,const StdVector&,const StdVector&,const StdVector&,const StdVector&)> > positionJacobianUserFunction;//!< AUTO: A Python user function which computes the position Jacobian at localPosition
+    PythonUserFunctionBase< std::function<py::object(const MainSystem&,Real,Index,StdVector3D,const StdVector&,const StdVector&,const StdVector&,const StdVector&)> > rotationMatrixUserFunction;//!< AUTO: A Python user function which computes the rotation matrix at localPosition; optional, for rigid markers
+    PythonUserFunctionBase< std::function<py::object(const MainSystem&,Real,Index,StdVector3D,const StdVector&,const StdVector&,const StdVector&,const StdVector&)> > rotationJacobianUserFunction;//!< AUTO: A Python user function which computes the rotation Jacobian (of the global angular velocity) at localPosition; optional, for rigid markers
+    PythonUserFunctionBase< std::function<StdVector(const MainSystem&,Real,Index,OutputVariableType,StdVector3D,const StdVector&,const StdVector&,const StdVector&,const StdVector&,const StdVector&)> > outputVariableUserFunction;//!< AUTO: A Python user function which computes the output variables UserType0 to UserType3 at localPosition; optional
     //! AUTO: default constructor with parameter initialization
     CObjectUserBodyParameters()
     {
         nodeNumbers = ArrayIndex();
+        parameters = Vector();
         massMatrixUserFunction = 0;
         forceUserFunction = 0;
         positionUserFunction = 0;
@@ -81,7 +83,12 @@ protected: // AUTO:
     //! a user function that returns a matrix of 3 rows, with its name for the messages and the number of columns (#2995)
     template<class TUserFunction>
     void EvaluateMatrixUserFunction(const TUserFunction& function, const char* name, Index columns, Matrix& value, Real t,
-        const Vector3D& localPosition, const Vector& coordinates) const;
+        const Vector3D& localPosition, const Vector& qRef, const Vector& coordinates, const Vector& coordinates_t) const;
+    //! the coordinates the user functions get in a configuration: the reference ones, the total ones and their velocities (#3056)
+    void GatherUserFunctionCoordinates(ResizableConstVector& qRef, ResizableConstVector& q, ResizableConstVector& q_t,
+        ConfigurationType configuration) const;
+    //! the acceleration coordinates of a configuration, zero in the reference configuration (#3056)
+    void GatherAccelerations(ResizableConstVector& q_tt, ConfigurationType configuration) const;
     //! the result of a user function has the size the body needs, or a PyError names the user function and the sizes (#2995)
     void CheckResultSize(const char* name, Index rows, Index columns, Index requiredRows, Index requiredColumns) const;
     //! a Jacobian times the velocity coordinates, in a configuration (#2995)
@@ -212,25 +219,25 @@ public: // AUTO:
     }
 
     //! AUTO:  call of positionUserFunction; implemented in evaluateUserFunctions.cpp
-    void EvaluatePosition(Vector3D& position, Real t, const Vector3D& localPosition, const Vector& coordinates) const;
+    void EvaluatePosition(Vector3D& position, Real t, const Vector3D& localPosition, const Vector& qRef, const Vector& coordinates, const Vector& coordinates_t) const;
 
     //! AUTO:  call of positionJacobianUserFunction, with the size checked; implemented in evaluateUserFunctions.cpp
-    void EvaluatePositionJacobian(Matrix& value, Real t, const Vector3D& localPosition, const Vector& coordinates) const;
+    void EvaluatePositionJacobian(Matrix& value, Real t, const Vector3D& localPosition, const Vector& qRef, const Vector& coordinates, const Vector& coordinates_t) const;
 
     //! AUTO:  call of rotationMatrixUserFunction, with the size checked; implemented in evaluateUserFunctions.cpp
-    void EvaluateRotationMatrix(Matrix3D& value, Real t, const Vector3D& localPosition, const Vector& coordinates) const;
+    void EvaluateRotationMatrix(Matrix3D& value, Real t, const Vector3D& localPosition, const Vector& qRef, const Vector& coordinates, const Vector& coordinates_t) const;
 
     //! AUTO:  call of rotationJacobianUserFunction, with the size checked; implemented in evaluateUserFunctions.cpp
-    void EvaluateRotationJacobian(Matrix& value, Real t, const Vector3D& localPosition, const Vector& coordinates) const;
+    void EvaluateRotationJacobian(Matrix& value, Real t, const Vector3D& localPosition, const Vector& qRef, const Vector& coordinates, const Vector& coordinates_t) const;
 
     //! AUTO:  call of outputVariableUserFunction; implemented in evaluateUserFunctions.cpp
-    void EvaluateUserFunctionOutputVariable(Vector& value, Real t, OutputVariableType variableType, const Vector3D& localPosition, const Vector& coordinates, const Vector& coordinates_t) const;
+    void EvaluateUserFunctionOutputVariable(Vector& value, Real t, OutputVariableType variableType, const Vector3D& localPosition, const Vector& qRef, const Vector& coordinates, const Vector& coordinates_t, const Vector& coordinates_tt) const;
 
     //! AUTO:  call of forceUserFunction, with the size checked; implemented in evaluateUserFunctions.cpp
-    void EvaluateUserFunctionForce(Vector& force, Real t, const Vector& coordinates, const Vector& coordinates_t) const;
+    void EvaluateUserFunctionForce(Vector& force, Real t, const Vector& qRef, const Vector& coordinates, const Vector& coordinates_t) const;
 
     //! AUTO:  call of massMatrixUserFunction; implemented in evaluateUserFunctions.cpp
-    void EvaluateUserFunctionMassMatrix(EXUmath::MatrixContainer& massMatrix, Real t, const Vector& coordinates, const Vector& coordinates_t, const ArrayIndex& ltg) const;
+    void EvaluateUserFunctionMassMatrix(EXUmath::MatrixContainer& massMatrix, Real t, const Vector& qRef, const Vector& coordinates, const Vector& coordinates_t, const ArrayIndex& ltg) const;
 
     virtual OutputVariableType GetOutputVariableTypes() const override
     {

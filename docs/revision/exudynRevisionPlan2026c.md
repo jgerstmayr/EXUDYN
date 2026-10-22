@@ -802,6 +802,14 @@ local coordinates mapped by the positionUserFunction (later), contour colors by 
 the rigid body and the beams, and what to fix before the interfaces are public. Waiting for the decisions.
 [log](exudynRevisionLog2026c.md#rg7-12-2)
 
+#### **CLOSED_RG7.12.3** qRef, q, q_t and parameters in every user function, and ParameterLayout
+
+CLOSED 2026-10-22 (#3056; maintainer 2026-10-22: implement RG7.12 with qRef, q, q_t, parameters in every user function,
+q_tt in the outputVariableUserFunction; further quantities - data, visualization parameters - through MainSystem
+functions, later also for symbolic functions): `parameters` of ObjectUserBody and NodeUser, the new signatures, the
+graphicsDataUserFunction with the visualization configuration, `ParameterLayout`; userParametersTest.py.
+[log](exudynRevisionLog2026c.md#rg7-12-3)
+
 ## **OPEN_RG8** Compiled C++ user items
 
 Plugins: user items compiled against the shipped headers. A plugin author builds Exudyn from source once and the

@@ -196,10 +196,10 @@ def CheckForValidNumpyArray(value):
 userFunctionArgsDict = {'MainSystem,preStepUserFunction': [['MainSystem', 'Real'], ['mbs', 'arg0'], ['bool']],
         'MainSystem,postStepUserFunction': [['MainSystem', 'Real'], ['mbs', 'arg0'], ['bool']],
         'MainSystem,postNewtonFunction': [['MainSystem', 'Real'], ['mbs', 'arg0'], ['StdVector2D']],
-        'NodeUser,positionUserFunction': [['MainSystem', 'Real', 'Index', 'StdVector'], ['mbs', 't', 'itemNumber', 'q'], ['StdVector3D'], ['NodeUserPositionUserFunction']],
-        'NodeUser,positionJacobianUserFunction': [['MainSystem', 'Real', 'Index', 'StdVector'], ['mbs', 't', 'itemNumber', 'q'], ['py::object'], ['NodeUserPositionJacobianUserFunction']],
-        'NodeUser,rotationMatrixUserFunction': [['MainSystem', 'Real', 'Index', 'StdVector'], ['mbs', 't', 'itemNumber', 'q'], ['py::object'], ['NodeUserRotationMatrixUserFunction']],
-        'NodeUser,rotationJacobianUserFunction': [['MainSystem', 'Real', 'Index', 'StdVector'], ['mbs', 't', 'itemNumber', 'q'], ['py::object'], ['NodeUserRotationJacobianUserFunction']],
+        'NodeUser,positionUserFunction': [['MainSystem', 'Real', 'Index', 'StdVector', 'StdVector', 'StdVector', 'StdVector'], ['mbs', 't', 'itemNumber', 'qRef', 'q', 'q_t', 'parameters'], ['StdVector3D'], ['NodeUserPositionUserFunction']],
+        'NodeUser,positionJacobianUserFunction': [['MainSystem', 'Real', 'Index', 'StdVector', 'StdVector', 'StdVector', 'StdVector'], ['mbs', 't', 'itemNumber', 'qRef', 'q', 'q_t', 'parameters'], ['py::object'], ['NodeUserPositionJacobianUserFunction']],
+        'NodeUser,rotationMatrixUserFunction': [['MainSystem', 'Real', 'Index', 'StdVector', 'StdVector', 'StdVector', 'StdVector'], ['mbs', 't', 'itemNumber', 'qRef', 'q', 'q_t', 'parameters'], ['py::object'], ['NodeUserRotationMatrixUserFunction']],
+        'NodeUser,rotationJacobianUserFunction': [['MainSystem', 'Real', 'Index', 'StdVector', 'StdVector', 'StdVector', 'StdVector'], ['mbs', 't', 'itemNumber', 'qRef', 'q', 'q_t', 'parameters'], ['py::object'], ['NodeUserRotationJacobianUserFunction']],
         'ObjectGround,graphicsDataUserFunction': [['MainSystem', 'Index'], ['mbs', 'itemNumber'], ['py::object'], ['ObjectGroundGraphicsDataUserFunction']],
         'ObjectRigidBody,graphicsDataUserFunction': [['MainSystem', 'Index'], ['mbs', 'itemNumber'], ['py::object'], ['ObjectRigidBodyGraphicsDataUserFunction']],
         'ObjectRigidBody2D,graphicsDataUserFunction': [['MainSystem', 'Index'], ['mbs', 'itemNumber'], ['py::object'], ['ObjectRigidBody2DGraphicsDataUserFunction']],
@@ -208,14 +208,14 @@ userFunctionArgsDict = {'MainSystem,preStepUserFunction': [['MainSystem', 'Real'
         'ObjectGenericODE2,jacobianUserFunction': [['MainSystem', 'Real', 'Index', 'StdVector', 'StdVector', 'Real', 'Real'], ['mbs', 't', 'itemNumber', 'q', 'q_t', 'fODE2', 'fODE2_t'], ['py::object'], ['ObjectGenericODE2JacobianUserFunction']],
         'ObjectGenericODE2,graphicsDataUserFunction': [['MainSystem', 'Index'], ['mbs', 'itemNumber'], ['py::object'], ['ObjectGenericODE2GraphicsDataUserFunction']],
         'ObjectGenericODE1,rhsUserFunction': [['MainSystem', 'Real', 'Index', 'StdVector'], ['mbs', 't', 'itemNumber', 'q'], ['StdVector'], ['ObjectGenericODE1RhsUserFunction']],
-        'ObjectUserBody,massMatrixUserFunction': [['MainSystem', 'Real', 'Index', 'StdVector', 'StdVector'], ['mbs', 't', 'itemNumber', 'q', 'q_t'], ['py::object'], ['ObjectUserBodyMassMatrixUserFunction']],
-        'ObjectUserBody,forceUserFunction': [['MainSystem', 'Real', 'Index', 'StdVector', 'StdVector'], ['mbs', 't', 'itemNumber', 'q', 'q_t'], ['StdVector'], ['ObjectUserBodyForceUserFunction']],
-        'ObjectUserBody,positionUserFunction': [['MainSystem', 'Real', 'Index', 'StdVector3D', 'StdVector'], ['mbs', 't', 'itemNumber', 'localPosition', 'q'], ['StdVector3D'], ['ObjectUserBodyPositionUserFunction']],
-        'ObjectUserBody,positionJacobianUserFunction': [['MainSystem', 'Real', 'Index', 'StdVector3D', 'StdVector'], ['mbs', 't', 'itemNumber', 'localPosition', 'q'], ['py::object'], ['ObjectUserBodyPositionJacobianUserFunction']],
-        'ObjectUserBody,rotationMatrixUserFunction': [['MainSystem', 'Real', 'Index', 'StdVector3D', 'StdVector'], ['mbs', 't', 'itemNumber', 'localPosition', 'q'], ['py::object'], ['ObjectUserBodyRotationMatrixUserFunction']],
-        'ObjectUserBody,rotationJacobianUserFunction': [['MainSystem', 'Real', 'Index', 'StdVector3D', 'StdVector'], ['mbs', 't', 'itemNumber', 'localPosition', 'q'], ['py::object'], ['ObjectUserBodyRotationJacobianUserFunction']],
-        'ObjectUserBody,outputVariableUserFunction': [['MainSystem', 'Real', 'Index', 'OutputVariableType', 'StdVector3D', 'StdVector', 'StdVector'], ['mbs', 't', 'itemNumber', 'outputVariableType', 'localPosition', 'q', 'q_t'], ['StdVector'], ['ObjectUserBodyOutputVariableUserFunction']],
-        'ObjectUserBody,graphicsDataUserFunction': [['MainSystem', 'Index'], ['mbs', 'itemNumber'], ['py::object'], ['ObjectUserBodyGraphicsDataUserFunction']],
+        'ObjectUserBody,massMatrixUserFunction': [['MainSystem', 'Real', 'Index', 'StdVector', 'StdVector', 'StdVector', 'StdVector'], ['mbs', 't', 'itemNumber', 'qRef', 'q', 'q_t', 'parameters'], ['py::object'], ['ObjectUserBodyMassMatrixUserFunction']],
+        'ObjectUserBody,forceUserFunction': [['MainSystem', 'Real', 'Index', 'StdVector', 'StdVector', 'StdVector', 'StdVector'], ['mbs', 't', 'itemNumber', 'qRef', 'q', 'q_t', 'parameters'], ['StdVector'], ['ObjectUserBodyForceUserFunction']],
+        'ObjectUserBody,positionUserFunction': [['MainSystem', 'Real', 'Index', 'StdVector3D', 'StdVector', 'StdVector', 'StdVector', 'StdVector'], ['mbs', 't', 'itemNumber', 'localPosition', 'qRef', 'q', 'q_t', 'parameters'], ['StdVector3D'], ['ObjectUserBodyPositionUserFunction']],
+        'ObjectUserBody,positionJacobianUserFunction': [['MainSystem', 'Real', 'Index', 'StdVector3D', 'StdVector', 'StdVector', 'StdVector', 'StdVector'], ['mbs', 't', 'itemNumber', 'localPosition', 'qRef', 'q', 'q_t', 'parameters'], ['py::object'], ['ObjectUserBodyPositionJacobianUserFunction']],
+        'ObjectUserBody,rotationMatrixUserFunction': [['MainSystem', 'Real', 'Index', 'StdVector3D', 'StdVector', 'StdVector', 'StdVector', 'StdVector'], ['mbs', 't', 'itemNumber', 'localPosition', 'qRef', 'q', 'q_t', 'parameters'], ['py::object'], ['ObjectUserBodyRotationMatrixUserFunction']],
+        'ObjectUserBody,rotationJacobianUserFunction': [['MainSystem', 'Real', 'Index', 'StdVector3D', 'StdVector', 'StdVector', 'StdVector', 'StdVector'], ['mbs', 't', 'itemNumber', 'localPosition', 'qRef', 'q', 'q_t', 'parameters'], ['py::object'], ['ObjectUserBodyRotationJacobianUserFunction']],
+        'ObjectUserBody,outputVariableUserFunction': [['MainSystem', 'Real', 'Index', 'OutputVariableType', 'StdVector3D', 'StdVector', 'StdVector', 'StdVector', 'StdVector', 'StdVector'], ['mbs', 't', 'itemNumber', 'outputVariableType', 'localPosition', 'qRef', 'q', 'q_t', 'q_tt', 'parameters'], ['StdVector'], ['ObjectUserBodyOutputVariableUserFunction']],
+        'ObjectUserBody,graphicsDataUserFunction': [['MainSystem', 'Real', 'Index', 'StdVector', 'StdVector', 'StdVector', 'StdVector'], ['mbs', 't', 'itemNumber', 'qRef', 'q', 'q_t', 'parameters'], ['py::object'], ['ObjectUserBodyGraphicsDataUserFunction']],
         'ObjectKinematicTree,forceUserFunction': [['MainSystem', 'Real', 'Index', 'StdVector', 'StdVector'], ['mbs', 't', 'itemNumber', 'q', 'q_t'], ['StdVector'], ['ObjectKinematicTreeForceUserFunction']],
         'ObjectFFRF,forceUserFunction': [['MainSystem', 'Real', 'Index', 'StdVector', 'StdVector'], ['mbs', 't', 'itemNumber', 'q', 'q_t'], ['StdVector'], ['ObjectFFRFForceUserFunction']],
         'ObjectFFRF,massMatrixUserFunction': [['MainSystem', 'Real', 'Index', 'StdVector', 'StdVector'], ['mbs', 't', 'itemNumber', 'q', 'q_t'], ['NumpyMatrix'], ['ObjectFFRFMassMatrixUserFunction']],
@@ -254,12 +254,18 @@ class NodeUserPositionUserFunction(Protocol):
 
         itemNumber (int): integer number of the node in mbs
 
+        qRef (np.ndarray): the reference coordinates of the node
+
         q (np.ndarray): node coordinates, INCLUDING their reference values, of the configuration asked for
+
+        q_t (np.ndarray): node velocity coordinates of the configuration asked for; zero in the reference configuration
+
+        parameters (np.ndarray): the parameters of the node, see parameters; empty if not given
 
     Returns:
         np.ndarray: the global position of the node
     """
-    def __call__(self, mbs: exudyn.MainSystem, t: float, itemNumber: int, q: np.ndarray) -> np.ndarray: ...
+    def __call__(self, mbs: exudyn.MainSystem, t: float, itemNumber: int, qRef: np.ndarray, q: np.ndarray, q_t: np.ndarray, parameters: np.ndarray) -> np.ndarray: ...
 
 class NodeUserPositionJacobianUserFunction(Protocol):
     r"""A user function of the interface of the node that returns a matrix: the position Jacobian :math:`\Jm_{pos} = \partial \vv / \partial \dot\qv` (3 x n), the rotation matrix (3 x 3) or the rotation Jacobian :math:`\Jm_{rot} = \partial {}^{0}{\tomega} / \partial \dot\qv` (3 x n, global angular velocity).
@@ -271,12 +277,18 @@ class NodeUserPositionJacobianUserFunction(Protocol):
 
         itemNumber (int): integer number of the node in mbs
 
+        qRef (np.ndarray): the reference coordinates of the node
+
         q (np.ndarray): node coordinates, INCLUDING their reference values, of the configuration asked for
+
+        q_t (np.ndarray): node velocity coordinates of the configuration asked for; zero in the reference configuration
+
+        parameters (np.ndarray): the parameters of the node, see parameters; empty if not given
 
     Returns:
         exudyn.MatrixContainer: the matrix, as numpy array or list of lists
     """
-    def __call__(self, mbs: exudyn.MainSystem, t: float, itemNumber: int, q: np.ndarray) -> exudyn.MatrixContainer: ...
+    def __call__(self, mbs: exudyn.MainSystem, t: float, itemNumber: int, qRef: np.ndarray, q: np.ndarray, q_t: np.ndarray, parameters: np.ndarray) -> exudyn.MatrixContainer: ...
 
 class NodeUserRotationMatrixUserFunction(Protocol):
     r"""A user function of the interface of the node that returns a matrix: the position Jacobian :math:`\Jm_{pos} = \partial \vv / \partial \dot\qv` (3 x n), the rotation matrix (3 x 3) or the rotation Jacobian :math:`\Jm_{rot} = \partial {}^{0}{\tomega} / \partial \dot\qv` (3 x n, global angular velocity).
@@ -288,12 +300,18 @@ class NodeUserRotationMatrixUserFunction(Protocol):
 
         itemNumber (int): integer number of the node in mbs
 
+        qRef (np.ndarray): the reference coordinates of the node
+
         q (np.ndarray): node coordinates, INCLUDING their reference values, of the configuration asked for
+
+        q_t (np.ndarray): node velocity coordinates of the configuration asked for; zero in the reference configuration
+
+        parameters (np.ndarray): the parameters of the node, see parameters; empty if not given
 
     Returns:
         exudyn.MatrixContainer: the matrix, as numpy array or list of lists
     """
-    def __call__(self, mbs: exudyn.MainSystem, t: float, itemNumber: int, q: np.ndarray) -> exudyn.MatrixContainer: ...
+    def __call__(self, mbs: exudyn.MainSystem, t: float, itemNumber: int, qRef: np.ndarray, q: np.ndarray, q_t: np.ndarray, parameters: np.ndarray) -> exudyn.MatrixContainer: ...
 
 class NodeUserRotationJacobianUserFunction(Protocol):
     r"""A user function of the interface of the node that returns a matrix: the position Jacobian :math:`\Jm_{pos} = \partial \vv / \partial \dot\qv` (3 x n), the rotation matrix (3 x 3) or the rotation Jacobian :math:`\Jm_{rot} = \partial {}^{0}{\tomega} / \partial \dot\qv` (3 x n, global angular velocity).
@@ -305,12 +323,18 @@ class NodeUserRotationJacobianUserFunction(Protocol):
 
         itemNumber (int): integer number of the node in mbs
 
+        qRef (np.ndarray): the reference coordinates of the node
+
         q (np.ndarray): node coordinates, INCLUDING their reference values, of the configuration asked for
+
+        q_t (np.ndarray): node velocity coordinates of the configuration asked for; zero in the reference configuration
+
+        parameters (np.ndarray): the parameters of the node, see parameters; empty if not given
 
     Returns:
         exudyn.MatrixContainer: the matrix, as numpy array or list of lists
     """
-    def __call__(self, mbs: exudyn.MainSystem, t: float, itemNumber: int, q: np.ndarray) -> exudyn.MatrixContainer: ...
+    def __call__(self, mbs: exudyn.MainSystem, t: float, itemNumber: int, qRef: np.ndarray, q: np.ndarray, q_t: np.ndarray, parameters: np.ndarray) -> exudyn.MatrixContainer: ...
 
 class ObjectGroundGraphicsDataUserFunction(Protocol):
     """A user function, which is called by the visualization thread in order to draw user-defined objects.
@@ -488,14 +512,18 @@ class ObjectUserBodyMassMatrixUserFunction(Protocol):
 
         itemNumber (int): integer number :math:`i_N` of the object in mbs, allowing easy access to all object data via mbs.GetObjectParameter(itemNumber, ...)
 
-        q (np.ndarray): object coordinates, the coordinates of its nodes in their order, INCLUDING their reference values
+        qRef (np.ndarray): the reference coordinates of the nodes, in the order of nodeNumbers
 
-        q_t (np.ndarray): object velocity coordinates
+        q (np.ndarray): object coordinates, the coordinates of the nodes INCLUDING their reference values, of the configuration asked for
+
+        q_t (np.ndarray): object velocity coordinates of the configuration asked for
+
+        parameters (np.ndarray): the parameters of the body, see parameters; empty if not given
 
     Returns:
         exudyn.MatrixContainer: the mass matrix, as numpy array, list of lists or exu.MatrixContainer
     """
-    def __call__(self, mbs: exudyn.MainSystem, t: float, itemNumber: int, q: np.ndarray, q_t: np.ndarray) -> exudyn.MatrixContainer: ...
+    def __call__(self, mbs: exudyn.MainSystem, t: float, itemNumber: int, qRef: np.ndarray, q: np.ndarray, q_t: np.ndarray, parameters: np.ndarray) -> exudyn.MatrixContainer: ...
 
 class ObjectUserBodyForceUserFunction(Protocol):
     r"""A user function, which computes the generalized forces of the body: elastic forces, the quadratic velocity terms of a rigid body, damping; on the right-hand side, :math:`\Mm \ddot\qv = \fv`.
@@ -507,14 +535,18 @@ class ObjectUserBodyForceUserFunction(Protocol):
 
         itemNumber (int): integer number :math:`i_N` of the object in mbs, allowing easy access to all object data via mbs.GetObjectParameter(itemNumber, ...)
 
-        q (np.ndarray): object coordinates, INCLUDING their reference values
+        qRef (np.ndarray): the reference coordinates of the nodes, in the order of nodeNumbers
 
-        q_t (np.ndarray): object velocity coordinates
+        q (np.ndarray): object coordinates, the coordinates of the nodes INCLUDING their reference values, of the configuration asked for
+
+        q_t (np.ndarray): object velocity coordinates of the configuration asked for
+
+        parameters (np.ndarray): the parameters of the body, see parameters; empty if not given
 
     Returns:
         np.ndarray: the generalized force vector
     """
-    def __call__(self, mbs: exudyn.MainSystem, t: float, itemNumber: int, q: np.ndarray, q_t: np.ndarray) -> np.ndarray: ...
+    def __call__(self, mbs: exudyn.MainSystem, t: float, itemNumber: int, qRef: np.ndarray, q: np.ndarray, q_t: np.ndarray, parameters: np.ndarray) -> np.ndarray: ...
 
 class ObjectUserBodyPositionUserFunction(Protocol):
     """A user function, which computes the global position of the material point at localPosition: the position interface of the body.
@@ -522,18 +554,24 @@ class ObjectUserBodyPositionUserFunction(Protocol):
     Args:
         mbs (exudyn.MainSystem): provides MainSystem mbs to which object belongs
 
-        t (float): current time in mbs
+        t (float): time of the configuration asked for
 
         itemNumber (int): integer number :math:`i_N` of the object in mbs
 
         localPosition (np.ndarray): the local position of the point, in the coordinates the body defines (e.g. body-fixed, or the element coordinates of a finite element)
 
-        q (np.ndarray): object coordinates, INCLUDING their reference values, of the configuration asked for
+        qRef (np.ndarray): the reference coordinates of the nodes, in the order of nodeNumbers
+
+        q (np.ndarray): object coordinates, the coordinates of the nodes INCLUDING their reference values, of the configuration asked for
+
+        q_t (np.ndarray): object velocity coordinates of the configuration asked for
+
+        parameters (np.ndarray): the parameters of the body, see parameters; empty if not given
 
     Returns:
         np.ndarray: the global position of the point
     """
-    def __call__(self, mbs: exudyn.MainSystem, t: float, itemNumber: int, localPosition: np.ndarray, q: np.ndarray) -> np.ndarray: ...
+    def __call__(self, mbs: exudyn.MainSystem, t: float, itemNumber: int, localPosition: np.ndarray, qRef: np.ndarray, q: np.ndarray, q_t: np.ndarray, parameters: np.ndarray) -> np.ndarray: ...
 
 class ObjectUserBodyPositionJacobianUserFunction(Protocol):
     r"""A user function of the interface of the body that returns a matrix at localPosition: the position Jacobian :math:`\Jm_{pos} = \partial \vv / \partial \dot\qv` (3 x n), the rotation matrix (3 x 3) or the rotation Jacobian :math:`\Jm_{rot} = \partial {}^{0}{\tomega} / \partial \dot\qv` (3 x n, global angular velocity).
@@ -541,18 +579,24 @@ class ObjectUserBodyPositionJacobianUserFunction(Protocol):
     Args:
         mbs (exudyn.MainSystem): provides MainSystem mbs to which object belongs
 
-        t (float): current time in mbs
+        t (float): time of the configuration asked for
 
         itemNumber (int): integer number :math:`i_N` of the object in mbs
 
         localPosition (np.ndarray): the local position of the point
 
-        q (np.ndarray): object coordinates, INCLUDING their reference values, of the configuration asked for
+        qRef (np.ndarray): the reference coordinates of the nodes, in the order of nodeNumbers
+
+        q (np.ndarray): object coordinates, the coordinates of the nodes INCLUDING their reference values, of the configuration asked for
+
+        q_t (np.ndarray): object velocity coordinates of the configuration asked for
+
+        parameters (np.ndarray): the parameters of the body, see parameters; empty if not given
 
     Returns:
         exudyn.MatrixContainer: the matrix, as numpy array or list of lists
     """
-    def __call__(self, mbs: exudyn.MainSystem, t: float, itemNumber: int, localPosition: np.ndarray, q: np.ndarray) -> exudyn.MatrixContainer: ...
+    def __call__(self, mbs: exudyn.MainSystem, t: float, itemNumber: int, localPosition: np.ndarray, qRef: np.ndarray, q: np.ndarray, q_t: np.ndarray, parameters: np.ndarray) -> exudyn.MatrixContainer: ...
 
 class ObjectUserBodyRotationMatrixUserFunction(Protocol):
     r"""A user function of the interface of the body that returns a matrix at localPosition: the position Jacobian :math:`\Jm_{pos} = \partial \vv / \partial \dot\qv` (3 x n), the rotation matrix (3 x 3) or the rotation Jacobian :math:`\Jm_{rot} = \partial {}^{0}{\tomega} / \partial \dot\qv` (3 x n, global angular velocity).
@@ -560,18 +604,24 @@ class ObjectUserBodyRotationMatrixUserFunction(Protocol):
     Args:
         mbs (exudyn.MainSystem): provides MainSystem mbs to which object belongs
 
-        t (float): current time in mbs
+        t (float): time of the configuration asked for
 
         itemNumber (int): integer number :math:`i_N` of the object in mbs
 
         localPosition (np.ndarray): the local position of the point
 
-        q (np.ndarray): object coordinates, INCLUDING their reference values, of the configuration asked for
+        qRef (np.ndarray): the reference coordinates of the nodes, in the order of nodeNumbers
+
+        q (np.ndarray): object coordinates, the coordinates of the nodes INCLUDING their reference values, of the configuration asked for
+
+        q_t (np.ndarray): object velocity coordinates of the configuration asked for
+
+        parameters (np.ndarray): the parameters of the body, see parameters; empty if not given
 
     Returns:
         exudyn.MatrixContainer: the matrix, as numpy array or list of lists
     """
-    def __call__(self, mbs: exudyn.MainSystem, t: float, itemNumber: int, localPosition: np.ndarray, q: np.ndarray) -> exudyn.MatrixContainer: ...
+    def __call__(self, mbs: exudyn.MainSystem, t: float, itemNumber: int, localPosition: np.ndarray, qRef: np.ndarray, q: np.ndarray, q_t: np.ndarray, parameters: np.ndarray) -> exudyn.MatrixContainer: ...
 
 class ObjectUserBodyRotationJacobianUserFunction(Protocol):
     r"""A user function of the interface of the body that returns a matrix at localPosition: the position Jacobian :math:`\Jm_{pos} = \partial \vv / \partial \dot\qv` (3 x n), the rotation matrix (3 x 3) or the rotation Jacobian :math:`\Jm_{rot} = \partial {}^{0}{\tomega} / \partial \dot\qv` (3 x n, global angular velocity).
@@ -579,18 +629,24 @@ class ObjectUserBodyRotationJacobianUserFunction(Protocol):
     Args:
         mbs (exudyn.MainSystem): provides MainSystem mbs to which object belongs
 
-        t (float): current time in mbs
+        t (float): time of the configuration asked for
 
         itemNumber (int): integer number :math:`i_N` of the object in mbs
 
         localPosition (np.ndarray): the local position of the point
 
-        q (np.ndarray): object coordinates, INCLUDING their reference values, of the configuration asked for
+        qRef (np.ndarray): the reference coordinates of the nodes, in the order of nodeNumbers
+
+        q (np.ndarray): object coordinates, the coordinates of the nodes INCLUDING their reference values, of the configuration asked for
+
+        q_t (np.ndarray): object velocity coordinates of the configuration asked for
+
+        parameters (np.ndarray): the parameters of the body, see parameters; empty if not given
 
     Returns:
         exudyn.MatrixContainer: the matrix, as numpy array or list of lists
     """
-    def __call__(self, mbs: exudyn.MainSystem, t: float, itemNumber: int, localPosition: np.ndarray, q: np.ndarray) -> exudyn.MatrixContainer: ...
+    def __call__(self, mbs: exudyn.MainSystem, t: float, itemNumber: int, localPosition: np.ndarray, qRef: np.ndarray, q: np.ndarray, q_t: np.ndarray, parameters: np.ndarray) -> exudyn.MatrixContainer: ...
 
 class ObjectUserBodyOutputVariableUserFunction(Protocol):
     """A user function, which computes the output variables UserType0 to UserType3 of the body at localPosition, e.g. strains or stresses of a user element; name them with exudyn.special.userTypes.SetName.
@@ -606,34 +662,43 @@ class ObjectUserBodyOutputVariableUserFunction(Protocol):
 
         localPosition (np.ndarray): the local position of the point
 
-        q (np.ndarray): object coordinates, INCLUDING their reference values, of the configuration asked for
+        qRef (np.ndarray): the reference coordinates of the nodes, in the order of nodeNumbers
+
+        q (np.ndarray): object coordinates, the coordinates of the nodes INCLUDING their reference values, of the configuration asked for
 
         q_t (np.ndarray): object velocity coordinates of the configuration asked for
+
+        q_tt (np.ndarray): object acceleration coordinates of the configuration asked for; zero in the reference configuration
+
+        parameters (np.ndarray): the parameters of the body, see parameters; empty if not given
 
     Returns:
         np.ndarray: the value as a vector of any size, the same size for every call with the same outputVariableType
     """
-    def __call__(self, mbs: exudyn.MainSystem, t: float, itemNumber: int, outputVariableType: exudyn.OutputVariableType, localPosition: np.ndarray, q: np.ndarray, q_t: np.ndarray) -> np.ndarray: ...
+    def __call__(self, mbs: exudyn.MainSystem, t: float, itemNumber: int, outputVariableType: exudyn.OutputVariableType, localPosition: np.ndarray, qRef: np.ndarray, q: np.ndarray, q_t: np.ndarray, q_tt: np.ndarray, parameters: np.ndarray) -> np.ndarray: ...
 
 class ObjectUserBodyGraphicsDataUserFunction(Protocol):
-    """A user function, which is called by the visualization thread in order to draw user-defined objects.
-    
-    The function can be used to generate any ``BodyGraphicsData``, see Section sec-graphicsdata.
-    Use ``exudyn.graphics`` functions, see Section sec-module-graphics, to create more complicated objects.
-    Note that ``graphicsDataUserFunction`` needs to copy lots of data and is therefore
-    inefficient and only designed to enable simpler tests, but not large scale problems.
-    
-    For an example for ``graphicsDataUserFunction`` see ObjectGround, sec-item-objectground.
+    """A user function, which draws the body: it returns a list of graphics data in global coordinates, computed from the coordinates of the visualization configuration; see ``exudyn.graphics``.
     
     Args:
-        mbs (exudyn.MainSystem): provides reference to mbs, which can be used in user function to access all data of the object
+        mbs (exudyn.MainSystem): provides MainSystem mbs to which object belongs
 
-        itemNumber (int): integer number of the object in mbs, allowing easy access
+        t (float): time of the visualization configuration
+
+        itemNumber (int): integer number :math:`i_N` of the object in mbs
+
+        qRef (np.ndarray): the reference coordinates of the nodes, in the order of nodeNumbers
+
+        q (np.ndarray): object coordinates, the coordinates of the nodes INCLUDING their reference values, of the configuration asked for
+
+        q_t (np.ndarray): object velocity coordinates of the configuration asked for
+
+        parameters (np.ndarray): the parameters of the body, see parameters; empty if not given
 
     Returns:
-        list: list of ``GraphicsData`` dictionaries, see Section sec-graphicsdata
+        list: a list of graphics data (BodyGraphicsData)
     """
-    def __call__(self, mbs: exudyn.MainSystem, itemNumber: int) -> list: ...
+    def __call__(self, mbs: exudyn.MainSystem, t: float, itemNumber: int, qRef: np.ndarray, q: np.ndarray, q_t: np.ndarray, parameters: np.ndarray) -> list: ...
 
 class ObjectKinematicTreeForceUserFunction(Protocol):
     """A user function, which computes a force vector applied to the joint coordinates depending on current time and states of object.
@@ -2345,6 +2410,8 @@ class NodeUser:
 
         initialVelocities: initial velocity coordinates; must have numberOfODE2Coordinates components; type: array_like
 
+        parameters: the parameters of the node, passed to every user function; their meaning is defined by the user functions, see exudyn.advancedUtilities.ParameterLayout; empty by default; type: array_like
+
         positionUserFunction: A Python user function which computes the global position of the node; it must be given; type: NodeUserPositionUserFunction
 
         positionJacobianUserFunction: A Python user function which computes the position Jacobian; by central differences of the position if not given; type: NodeUserPositionJacobianUserFunction
@@ -2359,12 +2426,13 @@ class NodeUser:
         Node has/provides the following types: ``Position``, ``Orientation``
 
     """
-    def __init__(self, name = '', numberOfODE2Coordinates = 0, referenceCoordinates = [], initialCoordinates = [], initialVelocities = [], positionUserFunction: Union[NodeUserPositionUserFunction, int] = 0, positionJacobianUserFunction: Union[NodeUserPositionJacobianUserFunction, int] = 0, rotationMatrixUserFunction: Union[NodeUserRotationMatrixUserFunction, int] = 0, rotationJacobianUserFunction: Union[NodeUserRotationJacobianUserFunction, int] = 0, visualization = {'show': True, 'drawSize': -1., 'color': [-1.,-1.,-1.,-1.]}):
+    def __init__(self, name = '', numberOfODE2Coordinates = 0, referenceCoordinates = [], initialCoordinates = [], initialVelocities = [], parameters = [], positionUserFunction: Union[NodeUserPositionUserFunction, int] = 0, positionJacobianUserFunction: Union[NodeUserPositionJacobianUserFunction, int] = 0, rotationMatrixUserFunction: Union[NodeUserRotationMatrixUserFunction, int] = 0, rotationJacobianUserFunction: Union[NodeUserRotationJacobianUserFunction, int] = 0, visualization = {'show': True, 'drawSize': -1., 'color': [-1.,-1.,-1.,-1.]}):
         self.name = name
         self.numberOfODE2Coordinates = numberOfODE2Coordinates
         self.referenceCoordinates = np.array(referenceCoordinates)
         self.initialCoordinates = np.array(initialCoordinates)
         self.initialVelocities = np.array(initialVelocities)
+        self.parameters = CheckForValidNumpyArray(parameters)
         self.positionUserFunction = positionUserFunction
         self.positionJacobianUserFunction = positionJacobianUserFunction
         self.rotationMatrixUserFunction = rotationMatrixUserFunction
@@ -2378,6 +2446,7 @@ class NodeUser:
         yield 'referenceCoordinates', self.referenceCoordinates
         yield 'initialCoordinates', self.initialCoordinates
         yield 'initialVelocities', self.initialVelocities
+        yield 'parameters', self.parameters
         yield 'positionUserFunction', self.positionUserFunction
         yield 'positionJacobianUserFunction', self.positionJacobianUserFunction
         yield 'rotationMatrixUserFunction', self.rotationMatrixUserFunction
@@ -3059,7 +3128,7 @@ class VObjectUserBody:
     Args:
         show: set true, if item is shown in visualization and false if it is not shown; type: bool
 
-        graphicsDataUserFunction: A Python function which returns a list of graphics data in global coordinates, see ObjectGenericODE2; the only drawing of the body; type: ObjectUserBodyGraphicsDataUserFunction
+        graphicsDataUserFunction: A Python function which returns a list of graphics data in global coordinates, from the coordinates of the visualization configuration; the only drawing of the body; type: ObjectUserBodyGraphicsDataUserFunction
 
     """
     def __init__(self, show = True, graphicsDataUserFunction: Union[ObjectUserBodyGraphicsDataUserFunction, int] = 0):
@@ -3083,6 +3152,8 @@ class ObjectUserBody:
 
         nodeNumbers: the nodes whose ODE2 coordinates are the coordinates of the body, in this order; type: ArrayNodeIndex
 
+        parameters: the parameters of the body - masses, lengths, stiffnesses -, passed to every user function; their meaning is defined by the user functions, see exudyn.advancedUtilities.ParameterLayout; empty by default; type: array_like
+
         massMatrixUserFunction: A Python user function which computes the mass matrix; it must be given; type: ObjectUserBodyMassMatrixUserFunction
 
         forceUserFunction: A Python user function which computes the generalized forces on the right-hand side; zero if not given; type: ObjectUserBodyForceUserFunction
@@ -3103,9 +3174,10 @@ class ObjectUserBody:
         Object has/provides the following types: ``Body``, ``MultiNoded``
 
     """
-    def __init__(self, name = '', nodeNumbers = [], massMatrixUserFunction: Union[ObjectUserBodyMassMatrixUserFunction, int] = 0, forceUserFunction: Union[ObjectUserBodyForceUserFunction, int] = 0, positionUserFunction: Union[ObjectUserBodyPositionUserFunction, int] = 0, positionJacobianUserFunction: Union[ObjectUserBodyPositionJacobianUserFunction, int] = 0, rotationMatrixUserFunction: Union[ObjectUserBodyRotationMatrixUserFunction, int] = 0, rotationJacobianUserFunction: Union[ObjectUserBodyRotationJacobianUserFunction, int] = 0, outputVariableUserFunction: Union[ObjectUserBodyOutputVariableUserFunction, int] = 0, visualization = {'show': True, 'graphicsDataUserFunction': 0}):
+    def __init__(self, name = '', nodeNumbers = [], parameters = [], massMatrixUserFunction: Union[ObjectUserBodyMassMatrixUserFunction, int] = 0, forceUserFunction: Union[ObjectUserBodyForceUserFunction, int] = 0, positionUserFunction: Union[ObjectUserBodyPositionUserFunction, int] = 0, positionJacobianUserFunction: Union[ObjectUserBodyPositionJacobianUserFunction, int] = 0, rotationMatrixUserFunction: Union[ObjectUserBodyRotationMatrixUserFunction, int] = 0, rotationJacobianUserFunction: Union[ObjectUserBodyRotationJacobianUserFunction, int] = 0, outputVariableUserFunction: Union[ObjectUserBodyOutputVariableUserFunction, int] = 0, visualization = {'show': True, 'graphicsDataUserFunction': 0}):
         self.name = name
         self.nodeNumbers = copy.copy(nodeNumbers)
+        self.parameters = CheckForValidNumpyArray(parameters)
         self.massMatrixUserFunction = massMatrixUserFunction
         self.forceUserFunction = forceUserFunction
         self.positionUserFunction = positionUserFunction
@@ -3119,6 +3191,7 @@ class ObjectUserBody:
         yield 'objectType', 'UserBody'
         yield 'name', self.name
         yield 'nodeNumbers', self.nodeNumbers
+        yield 'parameters', self.parameters
         yield 'massMatrixUserFunction', self.massMatrixUserFunction
         yield 'forceUserFunction', self.forceUserFunction
         yield 'positionUserFunction', self.positionUserFunction

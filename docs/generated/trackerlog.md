@@ -8,10 +8,10 @@ Every entry carries the **type** of the issue, then its **priority** and its **e
 
 General information on current version:
 
-- Exudyn version = 1.13.161.dev1
+- Exudyn version = 1.13.162.dev1
 - last change = 2026-10-22
 - Number of issues = 3057
-- Number of resolved issues = 2938 (161 in current version)
+- Number of resolved issues = 2939 (162 in current version)
 
 ## Resolved issues and resolved bugs before version 1.13
 
@@ -9039,10 +9039,6 @@ The following list contains the issues which have been **RESOLVED** in the accor
 
 ## Open issues
 
-- `EXTENSION` `MEDIUM EFF` `raised by: Claude-JG` parameters of the user items: a parameter vector passed to the user functions (#3056)
-  - description: Maintainer 2026-10-20: ObjectUserBody (and future user items) has no parameters; they are written into the user functions. For a user beam with different parameters per element, an arbitrary-length parameter vector of doubles (also for bools and indices) passed to the user functions, with a Python mapping between the vector and a dict of interpretable quantities (mass, inertia, COM, ...), which keeps symbolic quantities when recording; zero length is the present behaviour; the mapping possibly part of the item as a Python function used at definition. First evaluate and recommend.
-  - **remarks:** 2026-10-21: RG7.12.1 evaluated in docs/dev/design/pythonUserItems.md section 5.10; waiting for the maintainer's decision; 2026-10-22: RG7.12.2, the considerations of 2026-10-21 and the gaps against the rigid body and the beams, in pythonUserItems.md section 5.11; waiting for the decisions
-  - date raised: 2026-10-21
 - `TESTING` `HIGH EFF` `raised by: Claude-JG` record symbolic user functions of specific objects in Python and evaluate them on a GPU (#3055)
   - description: Maintainer 2026-10-20: the C++ recording of the items is not started now; it is easier to implement symbolic user functions in Python for specific objects (as the user rigid body), record them and test with the GPU whether the approach works - the list of operations of the flat evaluation (GetFlatProgram, \#3053, \#3054) is the input. Done by someone else.
   - date raised: 2026-10-21

@@ -31,6 +31,17 @@ void CNodeUser::TotalCoordinates(ResizableConstVector& q, ConfigurationType conf
 	}
 }
 
+//! the velocity coordinates of a configuration, zero in the reference configuration (#3056)
+void CNodeUser::Velocities(ResizableConstVector& q_t, ConfigurationType configuration) const
+{
+	if (configuration == ConfigurationType::Reference)
+	{
+		q_t.SetNumberOfItems(GetNumberOfODE2Coordinates());
+		q_t.SetAll(0.);
+	}
+	else { q_t.CopyFrom(GetCoordinateVector_t(configuration)); }
+}
+
 Index CNodeUser::GetNodeNumber() const
 {
 	if (cSystemData == nullptr) { return EXUstd::InvalidIndex; }
@@ -42,25 +53,31 @@ Index CNodeUser::GetNodeNumber() const
 Vector3D CNodeUser::GetPosition(ConfigurationType configuration) const
 {
 	if (configuration == ConfigurationType::Visualization && !PythonCallPossible()) { return Vector3D(0.); }
-	ResizableConstVector q;
+	ResizableConstVector q, q_t;
 	TotalCoordinates(q, configuration);
+	Velocities(q_t, configuration);
+	LinkedDataVector qRef(GetReferenceCoordinateVector());
 	Vector3D position;
-	EvaluatePosition(position, cSystemData->GetConfigurationTime(configuration), q);
+	EvaluatePosition(position, cSystemData->GetConfigurationTime(configuration), qRef, q, q_t);
 	return position;
 }
 
 void CNodeUser::GetPositionJacobian(Matrix& value) const
 {
-	ResizableConstVector q;
+	ResizableConstVector q, q_t;
 	TotalCoordinates(q, ConfigurationType::Current);
-	EvaluatePositionJacobian(value, cSystemData->GetConfigurationTime(ConfigurationType::Current), q);
+	Velocities(q_t, ConfigurationType::Current);
+	LinkedDataVector qRef(GetReferenceCoordinateVector());
+	EvaluatePositionJacobian(value, cSystemData->GetConfigurationTime(ConfigurationType::Current), qRef, q, q_t);
 }
 
 void CNodeUser::GetRotationJacobian(Matrix& value) const
 {
-	ResizableConstVector q;
+	ResizableConstVector q, q_t;
 	TotalCoordinates(q, ConfigurationType::Current);
-	EvaluateRotationJacobian(value, cSystemData->GetConfigurationTime(ConfigurationType::Current), q);
+	Velocities(q_t, ConfigurationType::Current);
+	LinkedDataVector qRef(GetReferenceCoordinateVector());
+	EvaluateRotationJacobian(value, cSystemData->GetConfigurationTime(ConfigurationType::Current), qRef, q, q_t);
 }
 
 //! a Jacobian, of the position or the rotation, times the velocity coordinates of a configuration
@@ -78,10 +95,12 @@ Vector3D CNodeUser::GetVelocity(ConfigurationType configuration) const
 {
 	if (configuration == ConfigurationType::Visualization && !PythonCallPossible()) { return Vector3D(0.); }
 	if (configuration == ConfigurationType::Reference) { return Vector3D(0.); }
-	ResizableConstVector q;
+	ResizableConstVector q, q_t;
 	TotalCoordinates(q, configuration);
+	Velocities(q_t, configuration);
+	LinkedDataVector qRef(GetReferenceCoordinateVector());
 	Matrix jacobian;
-	EvaluatePositionJacobian(jacobian, cSystemData->GetConfigurationTime(configuration), q);
+	EvaluatePositionJacobian(jacobian, cSystemData->GetConfigurationTime(configuration), qRef, q, q_t);
 	return NodeUserJacobianTimesVector(jacobian, GetCoordinateVector_t(configuration));
 }
 
@@ -92,12 +111,13 @@ Vector3D CNodeUser::GetAcceleration(ConfigurationType configuration) const
 {
 	if (configuration == ConfigurationType::Visualization && !PythonCallPossible()) { return Vector3D(0.); }
 	if (configuration == ConfigurationType::Reference) { return Vector3D(0.); }
-	ResizableConstVector q;
+	ResizableConstVector q, q_t;
 	TotalCoordinates(q, configuration);
+	Velocities(q_t, configuration);
+	LinkedDataVector qRef(GetReferenceCoordinateVector());
 	Real t = cSystemData->GetConfigurationTime(configuration);
-	LinkedDataVector q_t(GetCoordinateVector_t(configuration));
 	Matrix jacobian;
-	EvaluatePositionJacobian(jacobian, t, q);
+	EvaluatePositionJacobian(jacobian, t, qRef, q, q_t);
 	Vector3D acceleration = NodeUserJacobianTimesVector(jacobian, GetCoordinateVector_tt(configuration));
 
 	Real velocityNorm = q_t.GetL2Norm();
@@ -107,30 +127,32 @@ Vector3D CNodeUser::GetAcceleration(ConfigurationType configuration) const
 	{
 		const Real eps = 1e-7*EXUstd::Maximum(1., q.GetL2Norm())/velocityNorm;
 		for (Index k = 0; k < q.NumberOfItems(); k++) { qVaried[k] = q[k] + eps*q_t[k]; }
-		EvaluatePositionJacobian(jacobian, t, qVaried);
+		EvaluatePositionJacobian(jacobian, t, qRef, qVaried, q_t);
 		Vector3D plus = NodeUserJacobianTimesVector(jacobian, q_t);
 		for (Index k = 0; k < q.NumberOfItems(); k++) { qVaried[k] = q[k] - eps*q_t[k]; }
-		EvaluatePositionJacobian(jacobian, t, qVaried);
+		EvaluatePositionJacobian(jacobian, t, qRef, qVaried, q_t);
 		Vector3D minus = NodeUserJacobianTimesVector(jacobian, q_t);
 		return acceleration + (1./(2.*eps))*(plus - minus);
 	}
 	const Real h = 1e-4*EXUstd::Maximum(1., q.GetL2Norm())/velocityNorm;
 	Vector3D position, plus, minus;
-	EvaluatePosition(position, t, q);
+	EvaluatePosition(position, t, qRef, q, q_t);
 	for (Index k = 0; k < q.NumberOfItems(); k++) { qVaried[k] = q[k] + h*q_t[k]; }
-	EvaluatePosition(plus, t, qVaried);
+	EvaluatePosition(plus, t, qRef, qVaried, q_t);
 	for (Index k = 0; k < q.NumberOfItems(); k++) { qVaried[k] = q[k] - h*q_t[k]; }
-	EvaluatePosition(minus, t, qVaried);
+	EvaluatePosition(minus, t, qRef, qVaried, q_t);
 	return acceleration + (1./(h*h))*(plus - 2.*position + minus);
 }
 
 Matrix3D CNodeUser::GetRotationMatrix(ConfigurationType configuration) const
 {
 	if (configuration == ConfigurationType::Visualization && !PythonCallPossible()) { return EXUmath::unitMatrix3D; }
-	ResizableConstVector q;
+	ResizableConstVector q, q_t;
 	TotalCoordinates(q, configuration);
+	Velocities(q_t, configuration);
+	LinkedDataVector qRef(GetReferenceCoordinateVector());
 	Matrix3D rotation;
-	EvaluateRotationMatrix(rotation, cSystemData->GetConfigurationTime(configuration), q);
+	EvaluateRotationMatrix(rotation, cSystemData->GetConfigurationTime(configuration), qRef, q, q_t);
 	return rotation;
 }
 
@@ -138,10 +160,12 @@ Vector3D CNodeUser::GetAngularVelocity(ConfigurationType configuration) const
 {
 	if (configuration == ConfigurationType::Visualization && !PythonCallPossible()) { return Vector3D(0.); }
 	if (configuration == ConfigurationType::Reference) { return Vector3D(0.); }
-	ResizableConstVector q;
+	ResizableConstVector q, q_t;
 	TotalCoordinates(q, configuration);
+	Velocities(q_t, configuration);
+	LinkedDataVector qRef(GetReferenceCoordinateVector());
 	Matrix jacobian;
-	EvaluateRotationJacobian(jacobian, cSystemData->GetConfigurationTime(configuration), q);
+	EvaluateRotationJacobian(jacobian, cSystemData->GetConfigurationTime(configuration), qRef, q, q_t);
 	return NodeUserJacobianTimesVector(jacobian, GetCoordinateVector_t(configuration));
 }
 
@@ -155,8 +179,10 @@ Vector3D CNodeUser::GetAngularVelocityLocal(ConfigurationType configuration) con
 //! newton.numericalDifferentiation with its defaults, as for ObjectUserBody (#2995)
 void CNodeUser::GetRotationJacobianTTimesVector_q(const Vector3D& vector, Matrix& jacobian_q) const
 {
-	ResizableConstVector q;
+	ResizableConstVector q, q_t;
 	TotalCoordinates(q, ConfigurationType::Current);
+	Velocities(q_t, ConfigurationType::Current);
+	LinkedDataVector qRef(GetReferenceCoordinateVector());
 	Index n = q.NumberOfItems();
 	Real t = cSystemData->GetConfigurationTime(ConfigurationType::Current);
 	jacobian_q.SetNumberOfRowsAndColumns(n, n);
@@ -164,7 +190,7 @@ void CNodeUser::GetRotationJacobianTTimesVector_q(const Vector3D& vector, Matrix
 	Vector plus(n), minus(n);
 	auto Projected = [&](Vector& result)
 	{
-		EvaluateRotationJacobian(jacobian, t, q);
+		EvaluateRotationJacobian(jacobian, t, qRef, q, q_t);
 		for (Index j = 0; j < n; j++) { result[j] = jacobian(0, j)*vector[0] + jacobian(1, j)*vector[1] + jacobian(2, j)*vector[2]; }
 	};
 	const Real relativeEpsilon = 1e-7;

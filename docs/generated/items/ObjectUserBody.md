@@ -21,6 +21,7 @@ The parameters of the item; in a dictionary, its type is 'UserBody':
 |---|---|---|---|---|
 | **name** | String |  | '' | objects's unique name |
 | **nodeNumbers** | ArrayNodeIndex |  | [] | (symbol: $\mathbf{n}_n = [n_0,\,\ldots,\,n_n]\tp$) the nodes whose {ref}`ODE2 <ODE2>` coordinates are the coordinates of the body, in this order |
+| **parameters** | NumpyVector |  | [] | (symbol: $\pv_{par} \in \Rcal^{n_p}$) the parameters of the body - masses, lengths, stiffnesses -, passed to every user function; their meaning is defined by the user functions, see exudyn.advancedUtilities.ParameterLayout; empty by default |
 | **massMatrixUserFunction** | ObjectUserBodyMassMatrixUserFunction |  | 0 | (symbol: $\Mm(\qv) \in \Rcal^{n\times n}$) A Python user function which computes the mass matrix; it must be given |
 | **forceUserFunction** | ObjectUserBodyForceUserFunction |  | 0 | (symbol: $\fv \in \Rcal^{n}$) A Python user function which computes the generalized forces on the right-hand side; zero if not given |
 | **positionUserFunction** | ObjectUserBodyPositionUserFunction |  | 0 | (symbol: $\LU{0}{\pv}(\pLocB, \qv)$) A Python user function which computes the global position of the point at localPosition |
@@ -37,7 +38,7 @@ The parameters of `VObjectUserBody`, given as `visualization`:
 | name | type | size | default | description |
 |---|---|---|---|---|
 | **show** | Bool |  | True | set true, if item is shown in visualization and false if it is not shown |
-| **graphicsDataUserFunction** | ObjectUserBodyGraphicsDataUserFunction |  | 0 | A Python function which returns a list of graphics data in global coordinates, see ObjectGenericODE2; the only drawing of the body |
+| **graphicsDataUserFunction** | ObjectUserBodyGraphicsDataUserFunction |  | 0 | A Python function which returns a list of graphics data in global coordinates, from the coordinates of the visualization configuration; the only drawing of the body |
 
 ## Drawing
 
@@ -72,9 +73,21 @@ Available as `OutputVariableType` in sensors, `Get...Output()` and other functio
 ### Coordinates
 
 The object coordinates $\qv \in \Rcal^n$ are the {ref}`ODE2 <ODE2>` coordinates of its nodes, in the order of
-`nodeNumbers`, **including** their reference values; every user function gets the same $\qv$, so that
-a point is computed from the total coordinates as a finite element does. The user functions get $\qv$, $\dot\qv$
-and the local position as read-only numpy arrays.
+`nodeNumbers`, **including** their reference values. Every user function gets the reference coordinates
+$\qv\cRef$, the total coordinates $\qv$ and the velocities $\dot\qv$ of the configuration asked for, and the
+parameters $\pv_{par}$ of the body (#3056): a rigid body computes with $\qv$, a finite element with the
+displacements $\qv - \qv\cRef$ and its reference geometry from $\qv\cRef$. All of them are read-only numpy
+arrays, the local position as well.
+
+### Parameters
+
+`parameters` is a vector of any length - masses, lengths, stiffnesses, also flags and indices as numbers -, whose
+meaning the user functions define; `exudyn.advancedUtilities.ParameterLayout` maps it to a dict of named
+quantities and back. One recorded symbolic user function then serves every body of its kind, each with its own
+parameters, and `SetObjectParameter(body, 'parameters', ...)` acts without recording again. A value that changes
+the structure of the computation - a number of integration points, the size of a matrix, a Python `if` - cannot
+come from the parameters of a symbolic function, as they have no value while it is recorded; it stays a constant of
+the Python code.
 
 ### Equations of motion
 
@@ -111,7 +124,7 @@ The user functions are called serially, one Python call at a time. A renderer th
 own may not call Python: the body, the markers on it and the connectors, loads and sensors on them are drawn in
 the main thread, together with the graphics user functions (#3003).
 
-**Userfunction**: `massMatrixUserFunction(mbs, t, itemNumber, q, q_t)`
+**Userfunction**: `massMatrixUserFunction(mbs, t, itemNumber, qRef, q, q_t, parameters)`
 A user function, which computes the mass matrix of the body.
 
 | arguments / return | type or size | description |
@@ -119,13 +132,15 @@ A user function, which computes the mass matrix of the body.
 | `mbs` | MainSystem | provides MainSystem mbs to which object belongs |
 | `t` | Real | current time in mbs |
 | `itemNumber` | Index | integer number $i_N$ of the object in mbs, allowing easy access to all object data via mbs.GetObjectParameter(itemNumber, ...) |
-| `q` | Vector $\in \Rcal^n$ | object coordinates, the coordinates of its nodes in their order, INCLUDING their reference values |
-| `q_t` | Vector $\in \Rcal^n$ | object velocity coordinates |
+| `qRef` | Vector $\in \Rcal^n$ | the reference coordinates of the nodes, in the order of nodeNumbers |
+| `q` | Vector $\in \Rcal^n$ | object coordinates, the coordinates of the nodes INCLUDING their reference values, of the configuration asked for |
+| `q_t` | Vector $\in \Rcal^n$ | object velocity coordinates of the configuration asked for |
+| `parameters` | Vector $\in \Rcal^{n_p}$ | the parameters of the body, see parameters; empty if not given |
 | **return value** | MatrixContainer $\in \Rcal^{n \times n}$ | the mass matrix, as numpy array, list of lists or exu.MatrixContainer |
 
 A Python user function gets its vector and matrix arguments as read-only numpy arrays, valid during the call, see [](#sec-userfunctions).
 
-**Userfunction**: `forceUserFunction(mbs, t, itemNumber, q, q_t)`
+**Userfunction**: `forceUserFunction(mbs, t, itemNumber, qRef, q, q_t, parameters)`
 A user function, which computes the generalized forces of the body: elastic forces, the quadratic velocity terms of a rigid body, damping; on the right-hand side, $\Mm \ddot\qv = \fv$.
 
 | arguments / return | type or size | description |
@@ -133,69 +148,83 @@ A user function, which computes the generalized forces of the body: elastic forc
 | `mbs` | MainSystem | provides MainSystem mbs to which object belongs |
 | `t` | Real | current time in mbs |
 | `itemNumber` | Index | integer number $i_N$ of the object in mbs, allowing easy access to all object data via mbs.GetObjectParameter(itemNumber, ...) |
-| `q` | Vector $\in \Rcal^n$ | object coordinates, INCLUDING their reference values |
-| `q_t` | Vector $\in \Rcal^n$ | object velocity coordinates |
+| `qRef` | Vector $\in \Rcal^n$ | the reference coordinates of the nodes, in the order of nodeNumbers |
+| `q` | Vector $\in \Rcal^n$ | object coordinates, the coordinates of the nodes INCLUDING their reference values, of the configuration asked for |
+| `q_t` | Vector $\in \Rcal^n$ | object velocity coordinates of the configuration asked for |
+| `parameters` | Vector $\in \Rcal^{n_p}$ | the parameters of the body, see parameters; empty if not given |
 | **return value** | Vector $\in \Rcal^{n}$ | the generalized force vector |
 
 A Python user function gets its vector and matrix arguments as read-only numpy arrays, valid during the call, see [](#sec-userfunctions).
 
-**Userfunction**: `positionUserFunction(mbs, t, itemNumber, localPosition, q)`
+**Userfunction**: `positionUserFunction(mbs, t, itemNumber, localPosition, qRef, q, q_t, parameters)`
 A user function, which computes the global position of the material point at localPosition: the position interface of the body.
 
 | arguments / return | type or size | description |
 |---|---|---|
 | `mbs` | MainSystem | provides MainSystem mbs to which object belongs |
-| `t` | Real | current time in mbs |
+| `t` | Real | time of the configuration asked for |
 | `itemNumber` | Index | integer number $i_N$ of the object in mbs |
 | `localPosition` | Vector3D $\in \Rcal^3$ | the local position of the point, in the coordinates the body defines (e.g. body-fixed, or the element coordinates of a finite element) |
-| `q` | Vector $\in \Rcal^n$ | object coordinates, INCLUDING their reference values, of the configuration asked for |
+| `qRef` | Vector $\in \Rcal^n$ | the reference coordinates of the nodes, in the order of nodeNumbers |
+| `q` | Vector $\in \Rcal^n$ | object coordinates, the coordinates of the nodes INCLUDING their reference values, of the configuration asked for |
+| `q_t` | Vector $\in \Rcal^n$ | object velocity coordinates of the configuration asked for |
+| `parameters` | Vector $\in \Rcal^{n_p}$ | the parameters of the body, see parameters; empty if not given |
 | **return value** | Vector3D $\in \Rcal^{3}$ | the global position of the point |
 
 A Python user function gets its vector and matrix arguments as read-only numpy arrays, valid during the call, see [](#sec-userfunctions).
 
-**Userfunction**: `positionJacobianUserFunction(mbs, t, itemNumber, localPosition, q)`
+**Userfunction**: `positionJacobianUserFunction(mbs, t, itemNumber, localPosition, qRef, q, q_t, parameters)`
 A user function of the interface of the body that returns a matrix at localPosition: the position Jacobian $\Jm_{pos} = \partial \vv / \partial \dot\qv$ (3 x n), the rotation matrix (3 x 3) or the rotation Jacobian $\Jm_{rot} = \partial \LU{0}{\tomega} / \partial \dot\qv$ (3 x n, global angular velocity).
 
 | arguments / return | type or size | description |
 |---|---|---|
 | `mbs` | MainSystem | provides MainSystem mbs to which object belongs |
-| `t` | Real | current time in mbs |
+| `t` | Real | time of the configuration asked for |
 | `itemNumber` | Index | integer number $i_N$ of the object in mbs |
 | `localPosition` | Vector3D $\in \Rcal^3$ | the local position of the point |
-| `q` | Vector $\in \Rcal^n$ | object coordinates, INCLUDING their reference values, of the configuration asked for |
+| `qRef` | Vector $\in \Rcal^n$ | the reference coordinates of the nodes, in the order of nodeNumbers |
+| `q` | Vector $\in \Rcal^n$ | object coordinates, the coordinates of the nodes INCLUDING their reference values, of the configuration asked for |
+| `q_t` | Vector $\in \Rcal^n$ | object velocity coordinates of the configuration asked for |
+| `parameters` | Vector $\in \Rcal^{n_p}$ | the parameters of the body, see parameters; empty if not given |
 | **return value** | MatrixContainer | the matrix, as numpy array or list of lists |
 
 A Python user function gets its vector and matrix arguments as read-only numpy arrays, valid during the call, see [](#sec-userfunctions).
 
-**Userfunction**: `rotationMatrixUserFunction(mbs, t, itemNumber, localPosition, q)`
+**Userfunction**: `rotationMatrixUserFunction(mbs, t, itemNumber, localPosition, qRef, q, q_t, parameters)`
 A user function of the interface of the body that returns a matrix at localPosition: the position Jacobian $\Jm_{pos} = \partial \vv / \partial \dot\qv$ (3 x n), the rotation matrix (3 x 3) or the rotation Jacobian $\Jm_{rot} = \partial \LU{0}{\tomega} / \partial \dot\qv$ (3 x n, global angular velocity).
 
 | arguments / return | type or size | description |
 |---|---|---|
 | `mbs` | MainSystem | provides MainSystem mbs to which object belongs |
-| `t` | Real | current time in mbs |
+| `t` | Real | time of the configuration asked for |
 | `itemNumber` | Index | integer number $i_N$ of the object in mbs |
 | `localPosition` | Vector3D $\in \Rcal^3$ | the local position of the point |
-| `q` | Vector $\in \Rcal^n$ | object coordinates, INCLUDING their reference values, of the configuration asked for |
+| `qRef` | Vector $\in \Rcal^n$ | the reference coordinates of the nodes, in the order of nodeNumbers |
+| `q` | Vector $\in \Rcal^n$ | object coordinates, the coordinates of the nodes INCLUDING their reference values, of the configuration asked for |
+| `q_t` | Vector $\in \Rcal^n$ | object velocity coordinates of the configuration asked for |
+| `parameters` | Vector $\in \Rcal^{n_p}$ | the parameters of the body, see parameters; empty if not given |
 | **return value** | MatrixContainer | the matrix, as numpy array or list of lists |
 
 A Python user function gets its vector and matrix arguments as read-only numpy arrays, valid during the call, see [](#sec-userfunctions).
 
-**Userfunction**: `rotationJacobianUserFunction(mbs, t, itemNumber, localPosition, q)`
+**Userfunction**: `rotationJacobianUserFunction(mbs, t, itemNumber, localPosition, qRef, q, q_t, parameters)`
 A user function of the interface of the body that returns a matrix at localPosition: the position Jacobian $\Jm_{pos} = \partial \vv / \partial \dot\qv$ (3 x n), the rotation matrix (3 x 3) or the rotation Jacobian $\Jm_{rot} = \partial \LU{0}{\tomega} / \partial \dot\qv$ (3 x n, global angular velocity).
 
 | arguments / return | type or size | description |
 |---|---|---|
 | `mbs` | MainSystem | provides MainSystem mbs to which object belongs |
-| `t` | Real | current time in mbs |
+| `t` | Real | time of the configuration asked for |
 | `itemNumber` | Index | integer number $i_N$ of the object in mbs |
 | `localPosition` | Vector3D $\in \Rcal^3$ | the local position of the point |
-| `q` | Vector $\in \Rcal^n$ | object coordinates, INCLUDING their reference values, of the configuration asked for |
+| `qRef` | Vector $\in \Rcal^n$ | the reference coordinates of the nodes, in the order of nodeNumbers |
+| `q` | Vector $\in \Rcal^n$ | object coordinates, the coordinates of the nodes INCLUDING their reference values, of the configuration asked for |
+| `q_t` | Vector $\in \Rcal^n$ | object velocity coordinates of the configuration asked for |
+| `parameters` | Vector $\in \Rcal^{n_p}$ | the parameters of the body, see parameters; empty if not given |
 | **return value** | MatrixContainer | the matrix, as numpy array or list of lists |
 
 A Python user function gets its vector and matrix arguments as read-only numpy arrays, valid during the call, see [](#sec-userfunctions).
 
-**Userfunction**: `outputVariableUserFunction(mbs, t, itemNumber, outputVariableType, localPosition, q, q_t)`
+**Userfunction**: `outputVariableUserFunction(mbs, t, itemNumber, outputVariableType, localPosition, qRef, q, q_t, q_tt, parameters)`
 A user function, which computes the output variables UserType0 to UserType3 of the body at localPosition, e.g. strains or stresses of a user element; name them with exudyn.special.userTypes.SetName.
 
 | arguments / return | type or size | description |
@@ -205,26 +234,30 @@ A user function, which computes the output variables UserType0 to UserType3 of t
 | `itemNumber` | Index | integer number $i_N$ of the object in mbs |
 | `outputVariableType` | OutputVariableType | the output variable asked for, UserType0 to UserType3 |
 | `localPosition` | Vector3D $\in \Rcal^3$ | the local position of the point |
-| `q` | Vector $\in \Rcal^n$ | object coordinates, INCLUDING their reference values, of the configuration asked for |
+| `qRef` | Vector $\in \Rcal^n$ | the reference coordinates of the nodes, in the order of nodeNumbers |
+| `q` | Vector $\in \Rcal^n$ | object coordinates, the coordinates of the nodes INCLUDING their reference values, of the configuration asked for |
 | `q_t` | Vector $\in \Rcal^n$ | object velocity coordinates of the configuration asked for |
+| `q_tt` | Vector $\in \Rcal^n$ | object acceleration coordinates of the configuration asked for; zero in the reference configuration |
+| `parameters` | Vector $\in \Rcal^{n_p}$ | the parameters of the body, see parameters; empty if not given |
 | **return value** | Vector | the value as a vector of any size, the same size for every call with the same outputVariableType |
 
 A Python user function gets its vector and matrix arguments as read-only numpy arrays, valid during the call, see [](#sec-userfunctions).
 
-**Userfunction**: `graphicsDataUserFunction(mbs, itemNumber)`
-A user function, which is called by the visualization thread in order to draw user-defined objects.
-The function can be used to generate any `BodyGraphicsData`, see Section [](#sec-graphicsdata).
-Use `exudyn.graphics` functions, see Section [](#sec-module-graphics), to create more complicated objects.
-Note that `graphicsDataUserFunction` needs to copy lots of data and is therefore
-inefficient and only designed to enable simpler tests, but not large scale problems.
-
-For an example for `graphicsDataUserFunction` see ObjectGround, [](#sec-item-objectground).
+**Userfunction**: `graphicsDataUserFunction(mbs, t, itemNumber, qRef, q, q_t, parameters)`
+A user function, which draws the body: it returns a list of graphics data in global coordinates, computed from the coordinates of the visualization configuration; see `exudyn.graphics`.
 
 | arguments / return | type or size | description |
 |---|---|---|
-| `mbs` | MainSystem | provides reference to mbs, which can be used in user function to access all data of the object |
-| `itemNumber` | Index | integer number of the object in mbs, allowing easy access |
-| **return value** | BodyGraphicsData | list of `GraphicsData` dictionaries, see Section [](#sec-graphicsdata) |
+| `mbs` | MainSystem | provides MainSystem mbs to which object belongs |
+| `t` | Real | time of the visualization configuration |
+| `itemNumber` | Index | integer number $i_N$ of the object in mbs |
+| `qRef` | Vector $\in \Rcal^n$ | the reference coordinates of the nodes, in the order of nodeNumbers |
+| `q` | Vector $\in \Rcal^n$ | object coordinates, the coordinates of the nodes INCLUDING their reference values, of the configuration asked for |
+| `q_t` | Vector $\in \Rcal^n$ | object velocity coordinates of the configuration asked for |
+| `parameters` | Vector $\in \Rcal^{n_p}$ | the parameters of the body, see parameters; empty if not given |
+| **return value** | BodyGraphicsData | a list of graphics data (BodyGraphicsData) |
+
+A Python user function gets its vector and matrix arguments as read-only numpy arrays, valid during the call, see [](#sec-userfunctions).
 
 (miniexample-objectuserbody)=
 ## Mini example
@@ -234,16 +267,16 @@ For an example for `graphicsDataUserFunction` see ObjectGround, [](#sec-item-obj
 #a mass point as a user body on a NodePoint: M = m*I, the position of every point is q
 m = 2
 node = mbs.AddNode(NodePoint(referenceCoordinates=[1,0,0]))
-def UFmass(mbs, t, itemNumber, q, q_t):
+def UFmass(mbs, t, itemNumber, qRef, q, q_t, parameters):
     return m*np.eye(3)
-def UFposition(mbs, t, itemNumber, localPosition, q):
+def UFposition(mbs, t, itemNumber, localPosition, qRef, q, q_t, parameters):
     return q
-def UFpositionJacobian(mbs, t, itemNumber, localPosition, q):
+def UFpositionJacobian(mbs, t, itemNumber, localPosition, qRef, q, q_t, parameters):
     return np.eye(3)
 #a point does not rotate; with these, rigid markers and the rotation outputs work on it
-def UFrotationMatrix(mbs, t, itemNumber, localPosition, q):
+def UFrotationMatrix(mbs, t, itemNumber, localPosition, qRef, q, q_t, parameters):
     return np.eye(3)
-def UFrotationJacobian(mbs, t, itemNumber, localPosition, q):
+def UFrotationJacobian(mbs, t, itemNumber, localPosition, qRef, q, q_t, parameters):
     return np.zeros((3,3))
 body = mbs.AddObject(ObjectUserBody(nodeNumbers=[node], massMatrixUserFunction=UFmass,
                                     positionUserFunction=UFposition,
@@ -261,4 +294,4 @@ exu.sys['testResult'] = mbs.GetObjectOutputBody(body, exu.OutputVariableType.Pos
 ```
 
 
-Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`userANCFBeam3DTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/userANCFBeam3DTest.py) (TM), [`userANCFCable2DTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/userANCFCable2DTest.py) (TM), [`userRigidBodyTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/userRigidBodyTest.py) (TM), [`userTetrahedronTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/userTetrahedronTest.py) (TM), [`userTypesTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/userTypesTest.py) (TM)
+Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`userANCFBeam3DTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/userANCFBeam3DTest.py) (TM), [`userANCFCable2DTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/userANCFCable2DTest.py) (TM), [`userParametersTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/userParametersTest.py) (TM), [`userRigidBodyTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/userRigidBodyTest.py) (TM), [`userTetrahedronTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/userTetrahedronTest.py) (TM), [`userTypesTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/userTypesTest.py) (TM)

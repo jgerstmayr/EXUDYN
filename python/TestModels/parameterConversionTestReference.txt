@@ -1062,6 +1062,7 @@ outcome: int=-1.0 int=0.0 int=2.0 !ExudynTypeError !ExudynTypeError int=1.0 !Exu
   VisualizationSettings.view3.camera: trackMarker(attribute,dict) trackMarkerMbsNumber(attribute,dict)
 
 outcome: numpy1f=[-1.0] numpy1f=[0.0] numpy1f=[2.0] numpy1f=[2.5] !RuntimeError numpy1f=[1.0] numpy2f=[1.0,2.0] numpy3f=[1.0,2.0,3.0] numpy4f=[1.0,2.0,3.0,4.0] numpy3f=[1.0,2.0,3.0] !InternalError !InternalError !InternalError numpy2f=[0.0,1.0] !InternalError
+  NodeUser: parameters(class,dict)
   ObjectConnectorCoordinateVector: offset(class,dict)
   ObjectContactConvexRoll: coefficientsHull(class,dict)
   ObjectContactCurveCircles: circlesRadii(class,dict)
@@ -1069,11 +1070,13 @@ outcome: numpy1f=[-1.0] numpy1f=[0.0] numpy1f=[2.0] numpy1f=[2.5] !RuntimeError 
   ObjectFFRFreducedOrder: referencePositions(class,dict)
   ObjectGenericODE1: rhsVector(class,dict)
   ObjectGenericODE2: forceVector(class,dict)
+  ObjectUserBody: parameters(class,dict)
 
 outcome: numpy1f=[-1.0] numpy1f=[0.0] numpy1f=[2.0] numpy1f=[2.5] !RuntimeError numpy1f=[1.0] numpy2f=[1.0,2.0] numpy3f=[1.0,2.0,3.0] numpy4f=[1.0,2.0,3.0,4.0] numpy3f=[1.0,2.0,3.0] !InternalError !InternalError !InternalError numpy2f=[0.0,1.0] numpy0f=[]
   ObjectANCFThinPlate: physicsThickness(class,dict)
 
 outcome: numpy1f=[-1.0] numpy1f=[0.0] numpy1f=[2.0] numpy1f=[2.5] !ValueError numpy1f=[1.0] numpy2f=[1.0,2.0] numpy3f=[1.0,2.0,3.0] numpy4f=[1.0,2.0,3.0,4.0] numpy3f=[1.0,2.0,3.0] !InternalError !InternalError !InternalError numpy2f=[0.0,1.0] !InternalError
+  NodeUser: parameters(set)
   ObjectANCFThinPlate: physicsThickness(set) thickness(set)
   ObjectConnectorCoordinateVector: offset(set)
   ObjectContactConvexRoll: coefficientsHull(set)
@@ -1082,6 +1085,7 @@ outcome: numpy1f=[-1.0] numpy1f=[0.0] numpy1f=[2.0] numpy1f=[2.5] !ValueError nu
   ObjectFFRFreducedOrder: referencePositions(set)
   ObjectGenericODE1: rhsVector(set)
   ObjectGenericODE2: forceVector(set)
+  ObjectUserBody: parameters(set)
 
 outcome: numpy1f=[1.0] numpy1f=[1.0] numpy1f=[1.0] numpy1f=[1.0] !RuntimeError numpy1f=[1.0] numpy1f=[1.0] numpy1f=[1.0] numpy1f=[1.0] numpy1f=[1.0] !InternalError !InternalError !InternalError numpy1f=[1.0] !InternalError
   ObjectANCFThinPlate: thickness(class,dict)
@@ -1148,7 +1152,7 @@ outcome: str=default
   NodeRigidBodyEP: Vcolor(omit) VdrawSize(omit) Vshow(omit) addConstraintEquation(omit) initialCoordinates(omit) initialVelocities(omit) referenceCoordinates(omit)
   NodeRigidBodyRotVecLG: Vcolor(omit) VdrawSize(omit) Vshow(omit) initialCoordinates(omit) initialVelocities(omit) referenceCoordinates(omit)
   NodeRigidBodyRxyz: Vcolor(omit) VdrawSize(omit) Vshow(omit) initialCoordinates(omit) initialVelocities(omit) referenceCoordinates(omit)
-  NodeUser: Vcolor(omit) VdrawSize(omit) Vshow(omit) initialCoordinates(omit) initialVelocities(omit) positionJacobianUserFunction(omit) positionUserFunction(omit) referenceCoordinates(omit) rotationJacobianUserFunction(omit) rotationMatrixUserFunction(omit)
+  NodeUser: Vcolor(omit) VdrawSize(omit) Vshow(omit) initialCoordinates(omit) initialVelocities(omit) parameters(omit) positionJacobianUserFunction(omit) positionUserFunction(omit) referenceCoordinates(omit) rotationJacobianUserFunction(omit) rotationMatrixUserFunction(omit)
   ObjectALEANCFCable2D: Vcolor(omit) VdrawHeight(omit) Vshow(omit) addALEvariation(omit) axialDamping(omit) axialStiffness(omit) bendingDamping(omit) bendingStiffness(omit) length(omit) massPerLength(omit) movingMassFactor(omit) nodeNumbers(omit) physicsAddALEvariation(omit) physicsMovingMassFactor(omit) physicsUseCouplingTerms(omit) referenceAxialStrain(omit) referenceCurvature(omit) strainIsRelativeToReference(omit) useCouplingTerms(omit) useReducedOrderIntegration(omit)
   ObjectANCFBeam: Vcolor(omit) VsectionGeometry(omit) Vshow(omit) crossSectionDamping(omit) crossSectionPenaltyFactor(omit) length(omit) nodeNumbers(omit) physicsLength(omit) sectionData(omit)
   ObjectANCFCable: Vcolor(omit) Vradius(omit) Vshow(omit) axialDamping(omit) axialStiffness(omit) bendingDamping(omit) bendingStiffness(omit) length(omit) massPerLength(omit) nodeNumbers(omit) referenceAxialStrain(omit) strainIsRelativeToReference(omit) useReducedOrderIntegration(omit)
@@ -1200,7 +1204,7 @@ outcome: str=default
   ObjectRigidBody: VgraphicsData(omit) VgraphicsDataUserFunction(omit) Vshow(omit) centerOfMass(omit) inertia(omit) mass(omit) nodeNumber(omit) physicsCenterOfMass(omit) physicsInertia(omit)
   ObjectRigidBody2D: VgraphicsData(omit) VgraphicsDataUserFunction(omit) Vshow(omit) centerOfMass(omit) inertia(omit) mass(omit) nodeNumber(omit) physicsCenterOfMass(omit)
   ObjectRotationalMass1D: VgraphicsData(omit) Vshow(omit) inertia(omit) nodeNumber(omit) referencePosition(omit) referenceRotation(omit)
-  ObjectUserBody: VgraphicsDataUserFunction(omit) Vshow(omit) forceUserFunction(omit) massMatrixUserFunction(omit) nodeNumbers(omit) outputVariableUserFunction(omit) positionJacobianUserFunction(omit) positionUserFunction(omit) rotationJacobianUserFunction(omit) rotationMatrixUserFunction(omit)
+  ObjectUserBody: VgraphicsDataUserFunction(omit) Vshow(omit) forceUserFunction(omit) massMatrixUserFunction(omit) nodeNumbers(omit) outputVariableUserFunction(omit) parameters(omit) positionJacobianUserFunction(omit) positionUserFunction(omit) rotationJacobianUserFunction(omit) rotationMatrixUserFunction(omit)
   SensorBody: Vshow(omit) bodyNumber(omit) fileName(omit) localPosition(omit) outputVariableType(omit) storeInternal(omit) writeToFile(omit)
   SensorKinematicTree: Vshow(omit) fileName(omit) localPosition(omit) objectNumber(omit) outputVariableType(omit) storeInternal(omit) writeToFile(omit)
   SensorLoad: Vshow(omit) fileName(omit) loadNumber(omit) storeInternal(omit) writeToFile(omit)

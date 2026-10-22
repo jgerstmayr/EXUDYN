@@ -45,13 +45,13 @@ GA = mu*a**2
 #the node: position r and gradients r_x, r_y, r_z; the orientation is the frame of the cross section: r_z and r_y
 #orthonormalized - a torque then acts on the cross section, as the stress of pure bending does; the frame of r_x and
 #r_y would put it on the tangent of the axis and rotate the tip 5 % more than M L/(E I)
-def NodePosition(mbs, t, itemNumber, q):
+def NodePosition(mbs, t, itemNumber, qRef, q, q_t, parameters):
     return q[0:3]
 
-def NodePositionJacobian(mbs, t, itemNumber, q):
+def NodePositionJacobian(mbs, t, itemNumber, qRef, q, q_t, parameters):
     return np.hstack([np.eye(3), np.zeros((3, 9))])
 
-def NodeRotation(mbs, t, itemNumber, q):
+def NodeRotation(mbs, t, itemNumber, qRef, q, q_t, parameters):
     e3 = q[9:12]/cMath.norm(q[9:12])
     e2 = q[6:9] - (q[6:9] @ e3)*e3
     e2 = e2/cMath.norm(e2)
@@ -93,10 +93,10 @@ def Element(Le):
                 M8 += rho*0.125*Le*a*a*vx*vy*vz*np.outer(N, N)
     massMatrix = np.kron(M8, np.eye(3))
 
-    def UFmass(mbs, t, itemNumber, q, q_t):
+    def UFmass(mbs, t, itemNumber, qRef, q, q_t, parameters):
         return massMatrix
 
-    def UFforce(mbs, t, itemNumber, q, q_t):
+    def UFforce(mbs, t, itemNumber, qRef, q, q_t, parameters):
         e = np.asarray(q).reshape((8, 3))                        #the vectors e_a as rows
         F = np.einsum('paj,ai->pij', dN, e)                     #deformation gradient per point
         strain = 0.5*(np.einsum('pki,pkj->pij', F, F) - np.eye(3)) #Green-Lagrange
@@ -105,11 +105,11 @@ def Element(Le):
         P = np.einsum('pik,pkj->pij', F, S)                     #first Piola-Kirchhoff stress
         return -np.einsum('p,pij,paj->ai', weights, P, dN).flatten()
 
-    def UFposition(mbs, t, itemNumber, localPosition, q):
+    def UFposition(mbs, t, itemNumber, localPosition, qRef, q, q_t, parameters):
         N = ShapeFunctions(Le, localPosition[0], localPosition[1], localPosition[2])[0]
         return N @ np.asarray(q).reshape((8, 3))
 
-    def UFpositionJacobian(mbs, t, itemNumber, localPosition, q):
+    def UFpositionJacobian(mbs, t, itemNumber, localPosition, qRef, q, q_t, parameters):
         N = ShapeFunctions(Le, localPosition[0], localPosition[1], localPosition[2])[0]
         return np.kron(N, np.eye(3))
 

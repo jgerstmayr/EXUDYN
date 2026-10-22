@@ -2103,26 +2103,34 @@ definitions.append(ItemDefinition(
 #++++++++++++++++   NodeUser   ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-def NodeUser_positionUserFunction(mbs: MainSystem, t: Real, itemNumber: Index, q: Vector) -> Vector3D:
+def NodeUser_positionUserFunction(mbs: MainSystem, t: Real, itemNumber: Index, qRef: Vector, q: Vector, q_t: Vector,
+                                  parameters: Vector) -> Vector3D:
     r"""A user function, which computes the global position of the node from its coordinates: the position interface of the node.
 
     Args:
         mbs: provides MainSystem mbs to which the node belongs
         t: time of the configuration asked for
         itemNumber: integer number of the node in mbs
+        qRef: $\in \Rcal^n$ the reference coordinates of the node
         q: $\in \Rcal^n$ node coordinates, INCLUDING their reference values, of the configuration asked for
+        q_t: $\in \Rcal^n$ node velocity coordinates of the configuration asked for; zero in the reference configuration
+        parameters: $\in \Rcal^{n_p}$ the parameters of the node, see parameters; empty if not given
     Returns:
         $\in \Rcal^{3}$ the global position of the node
     """
 
-def NodeUser_matrixUserFunction(mbs: MainSystem, t: Real, itemNumber: Index, q: Vector) -> MatrixContainer:
+def NodeUser_matrixUserFunction(mbs: MainSystem, t: Real, itemNumber: Index, qRef: Vector, q: Vector, q_t: Vector,
+                                parameters: Vector) -> MatrixContainer:
     r"""A user function of the interface of the node that returns a matrix: the position Jacobian $\Jm_{pos} = \partial \vv / \partial \dot\qv$ (3 x n), the rotation matrix (3 x 3) or the rotation Jacobian $\Jm_{rot} = \partial \LU{0}{\tomega} / \partial \dot\qv$ (3 x n, global angular velocity).
 
     Args:
         mbs: provides MainSystem mbs to which the node belongs
         t: time of the configuration asked for
         itemNumber: integer number of the node in mbs
+        qRef: $\in \Rcal^n$ the reference coordinates of the node
         q: $\in \Rcal^n$ node coordinates, INCLUDING their reference values, of the configuration asked for
+        q_t: $\in \Rcal^n$ node velocity coordinates of the configuration asked for; zero in the reference configuration
+        parameters: $\in \Rcal^{n_p}$ the parameters of the node, see parameters; empty if not given
     Returns:
         the matrix, as numpy array or list of lists
     """
@@ -2143,7 +2151,9 @@ definitions.append(ItemDefinition(
     //! a matrix user function, its size checked
     template<class TUserFunction>
     void EvaluateMatrixUserFunction(const TUserFunction& function, const char* name, Index rows, Index columns, Matrix& value, Real t,
-        const Vector& coordinates) const;
+        const Vector& qRef, const Vector& coordinates, const Vector& coordinates_t) const;
+    //! the velocity coordinates of a configuration, zero in the reference configuration (#3056)
+    void Velocities(ResizableConstVector& q_t, ConfigurationType configuration) const;
     //! the matrix of the rotation user function, which keeps its memory between the calls (#3049)
     mutable ResizableMatrix bufferRotation;
 """,
@@ -2153,8 +2163,9 @@ definitions.append(ItemDefinition(
     detailedDescription=r"""    #### Coordinates
 
     $n$ = `numberOfODE2Coordinates` ABRV:ODE2 coordinates; their meaning is defined by the user functions and the
-    object that uses the node. The user functions get the coordinates $\qv \in \Rcal^n$ **including** their reference
-    values, as read-only numpy arrays, as the user functions of ObjectUserBody do.
+    object that uses the node. The user functions get the reference coordinates $\qv\cRef$, the coordinates
+    $\qv \in \Rcal^n$ **including** their reference values, the velocities $\dot\qv$ and the `parameters` of the node,
+    as read-only numpy arrays, as the user functions of ObjectUserBody do (#3056).
 
     #### Interface of the node
 
@@ -2178,7 +2189,7 @@ definitions.append(ItemDefinition(
     node, the markers on it and what depends on them in the main thread (#3003).
     """,
     miniExample=r"""    #a node whose coordinates are cylindrical coordinates (r, phi, z) of a point; it turns with phi_t = 1
-    def UFposition(mbs, t, itemNumber, q):
+    def UFposition(mbs, t, itemNumber, qRef, q, q_t, parameters):
         return [q[0]*np.cos(q[1]), q[0]*np.sin(q[1]), q[2]]
     node = mbs.AddNode(NodeUser(numberOfODE2Coordinates=3, referenceCoordinates=[1,0,0],
                                 initialCoordinates=[0,0,0], initialVelocities=[0,1,0],
@@ -2233,6 +2244,10 @@ definitions.append(ItemDefinition(
             cplusplusName='initialCoordinates_t',
             defaultValue='Vector()',
             description=r"""$\dot\qv\cIni \in \Rcal^n$initial velocity coordinates; must have numberOfODE2Coordinates components"""),
+        ItemParameter(type=TNumpyVector, destination=DestComp+DestParam,
+            pythonName='parameters',
+            defaultValue='Vector()',
+            description=r"""$\pv_{par} \in \Rcal^{n_p}$the parameters of the node, passed to every user function; their meaning is defined by the user functions, see exudyn.advancedUtilities.ParameterLayout; empty by default"""),
         ItemParameter(destination=DestComp+DestParam,
             pythonName='positionUserFunction',
             defaultValue=0,
@@ -2287,19 +2302,19 @@ definitions.append(ItemDefinition(
             description=r'the node, its markers and what depends on them are drawn in the main thread (#3003)'),
         ItemFunction(type=Tvoid, destination=DestComp, cFlags=CFConst, isVirtual=False,
             pythonName='EvaluatePosition',
-            args='Vector3D& position, Real t, const Vector& coordinates',
+            args='Vector3D& position, Real t, const Vector& qRef, const Vector& coordinates, const Vector& coordinates_t',
             description=r'call of positionUserFunction; implemented in evaluateUserFunctions.cpp'),
         ItemFunction(type=Tvoid, destination=DestComp, cFlags=CFConst, isVirtual=False,
             pythonName='EvaluatePositionJacobian',
-            args='Matrix& value, Real t, const Vector& coordinates',
+            args='Matrix& value, Real t, const Vector& qRef, const Vector& coordinates, const Vector& coordinates_t',
             description=r'call of positionJacobianUserFunction, or central differences of the position; implemented in evaluateUserFunctions.cpp'),
         ItemFunction(type=Tvoid, destination=DestComp, cFlags=CFConst, isVirtual=False,
             pythonName='EvaluateRotationMatrix',
-            args='Matrix3D& value, Real t, const Vector& coordinates',
+            args='Matrix3D& value, Real t, const Vector& qRef, const Vector& coordinates, const Vector& coordinates_t',
             description=r'call of rotationMatrixUserFunction; implemented in evaluateUserFunctions.cpp'),
         ItemFunction(type=Tvoid, destination=DestComp, cFlags=CFConst, isVirtual=False,
             pythonName='EvaluateRotationJacobian',
-            args='Matrix& value, Real t, const Vector& coordinates',
+            args='Matrix& value, Real t, const Vector& qRef, const Vector& coordinates, const Vector& coordinates_t',
             description=r'call of rotationJacobianUserFunction, or central differences of the rotation matrix; implemented in evaluateUserFunctions.cpp'),
         ItemParameter(type=TBool, destination=DestVisu, fromParent=True,
             pythonName='show',

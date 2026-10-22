@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-10-18  23:25:52 (last modified)
+* @date         2026-10-22  15:08:27 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -137,6 +137,7 @@ public: // AUTO:
     {
         if (EPyUtils::DictItemExists(d, "numberOfODE2Coordinates")) { EPyUtils::RequireGiven(d["numberOfODE2Coordinates"], 0, "NodeUser.numberOfODE2Coordinates"); EPyUtils::FromPython(d["numberOfODE2Coordinates"], cNodeUser->GetParameters().numberOfODE2Coordinates, EPyUtils::RangeCheck::positive, "NodeUser.numberOfODE2Coordinates"); } else { EPyUtils::RequireGiven(py::cast(cNodeUser->GetParameters().numberOfODE2Coordinates), 0, "NodeUser.numberOfODE2Coordinates"); }
         if (EPyUtils::DictItemExists(d, "referenceCoordinates")) { EPyUtils::FromPython(d["referenceCoordinates"], cNodeUser->GetParameters().referenceCoordinates, "NodeUser.referenceCoordinates"); }
+        if (EPyUtils::DictItemExists(d, "parameters")) { EPyUtils::FromPython(d["parameters"], cNodeUser->GetParameters().parameters); }
         if (EPyUtils::DictItemExists(d, "positionUserFunction")) { cNodeUser->GetParameters().positionUserFunction = d["positionUserFunction"]; }
         if (EPyUtils::DictItemExists(d, "positionJacobianUserFunction")) { cNodeUser->GetParameters().positionJacobianUserFunction = d["positionJacobianUserFunction"]; }
         if (EPyUtils::DictItemExists(d, "rotationMatrixUserFunction")) { cNodeUser->GetParameters().rotationMatrixUserFunction = d["rotationMatrixUserFunction"]; }
@@ -156,6 +157,7 @@ public: // AUTO:
         d["nodeType"] = (std::string)GetTypeName();
         d["numberOfODE2Coordinates"] = (Index)cNodeUser->GetParameters().numberOfODE2Coordinates;
         d["referenceCoordinates"] = EPyUtils::ToPython(cNodeUser->GetParameters().referenceCoordinates);
+        d["parameters"] = EPyUtils::ToPython(cNodeUser->GetParameters().parameters);
         d["positionUserFunction"] = (py::object)cNodeUser->GetParameters().positionUserFunction;
         d["positionJacobianUserFunction"] = (py::object)cNodeUser->GetParameters().positionJacobianUserFunction;
         d["rotationMatrixUserFunction"] = (py::object)cNodeUser->GetParameters().rotationMatrixUserFunction;
@@ -177,6 +179,7 @@ public: // AUTO:
         else if (parameterName.compare("referenceCoordinates") == 0) { return EPyUtils::ToPython(cNodeUser->GetParameters().referenceCoordinates); } //! AUTO: get parameter
         else if (parameterName.compare("initialCoordinates") == 0) { return EPyUtils::ToPython(GetParameters().initialCoordinates); } //! AUTO: get parameter
         else if (parameterName.compare("initialVelocities") == 0) { return EPyUtils::ToPython(GetParameters().initialCoordinates_t); } //! AUTO: get parameter
+        else if (parameterName.compare("parameters") == 0) { return EPyUtils::ToPython(cNodeUser->GetParameters().parameters); } //! AUTO: get parameter
         else if (parameterName.compare("positionUserFunction") == 0) { return cNodeUser->GetParameters().positionUserFunction.GetPythonDictionary(); } //! AUTO: get parameter
         else if (parameterName.compare("positionJacobianUserFunction") == 0) { return cNodeUser->GetParameters().positionJacobianUserFunction.GetPythonDictionary(); } //! AUTO: get parameter
         else if (parameterName.compare("rotationMatrixUserFunction") == 0) { return cNodeUser->GetParameters().rotationMatrixUserFunction.GetPythonDictionary(); } //! AUTO: get parameter
@@ -197,6 +200,7 @@ public: // AUTO:
         else if (parameterName.compare("referenceCoordinates") == 0) { EPyUtils::FromPython(value, cNodeUser->GetParameters().referenceCoordinates, "NodeUser.referenceCoordinates"); } //! AUTO: set parameter
         else if (parameterName.compare("initialCoordinates") == 0) { EPyUtils::FromPython(value, GetParameters().initialCoordinates, "NodeUser.initialCoordinates"); } //! AUTO: set parameter
         else if (parameterName.compare("initialVelocities") == 0) { EPyUtils::FromPython(value, GetParameters().initialCoordinates_t, "NodeUser.initialVelocities"); } //! AUTO: set parameter
+        else if (parameterName.compare("parameters") == 0) { EPyUtils::FromPython(value, cNodeUser->GetParameters().parameters); } //! AUTO: set parameter
         else if (parameterName.compare("positionUserFunction") == 0) { cNodeUser->GetParameters().positionUserFunction = value; } //! AUTO: set parameter
         else if (parameterName.compare("positionJacobianUserFunction") == 0) { cNodeUser->GetParameters().positionJacobianUserFunction = value; } //! AUTO: set parameter
         else if (parameterName.compare("rotationMatrixUserFunction") == 0) { cNodeUser->GetParameters().rotationMatrixUserFunction = value; } //! AUTO: set parameter

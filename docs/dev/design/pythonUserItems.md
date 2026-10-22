@@ -179,8 +179,11 @@ Python class derived from a C++ class: items stay validated dicts (the C++/Pytho
   its def in the definition file carries the annotations, from which the std::function, the Python Protocol and the
   argument table of the page are derived. Functions with the same signature and meaning share one def.
 - **Arguments**: `mbs, t, itemNumber` first, always - the time of the configuration asked for, the number of the item;
-  then what the function is about (`localPosition`, `outputVariableType`); then the coordinates `q`, `q_t` of the item
-  as lists, INCLUDING the reference values, so that a point is computed from total coordinates as in a finite element.
+  then what the function is about (`localPosition`, `outputVariableType`); then `qRef, q, q_t` - the reference
+  coordinates, the coordinates INCLUDING the reference values and the velocities of the configuration asked for -,
+  `q_tt` where accelerations are needed (outputVariableUserFunction), and last `parameters`, the parameter vector of
+  the item (#3056). All of them as read-only numpy arrays. What else a function needs it reads through `mbs` and
+  `itemNumber`; a symbolic function will get such access through MainSystem functions (RG12.4).
 - **Returns**: a vector or a matrix as list or numpy array; a matrix of fixed meaning is checked for its size, and a
   wrong size raises a ValueError with the name of the function.
 - **C++**: the item computes what it can from the user functions - velocities from the Jacobians, displacements from the

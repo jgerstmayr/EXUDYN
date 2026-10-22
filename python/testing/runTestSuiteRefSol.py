@@ -153,6 +153,7 @@ def TestExamplesReferenceSolution():
         'systemContainerComputeOnlyTest.py':4.0, #new 2026-10-14: SystemContainer(attachToRenderer=False), the renderer stays with the container of the model, also for InverseKinematicsNumerical (#2259)
         'ANCFBeamGeometricallyExactComparisonTest.py':5.999501744103005, #2026-10-14: the strains of ObjectANCFBeam in the symmetric basis (#2992); before 5.9995017472560175; new 2026-10-13: ObjectANCFBeam against ObjectBeamGeometricallyExact, tip torque on node and element (#2228)
         'ANCFThinPlateRotationTest.py':0.009394817004517305, #new 2026-10-13: the frame of ObjectANCFThinPlate and NodePointSlope12, torque on element and node (#2228)
+        'userParametersTest.py':-0.1640216949061788, #new 2026-10-22: the parameters of ObjectUserBody, one symbolic recording for two parameter sets, ParameterLayout (#3056)
         'userTypesTest.py':2.0, #new 2026-10-12: the user types of OutputVariableType, NodeType, MarkerType, their names and aliases, ObjectUserBody.outputVariableUserFunction (#2989)
         'rotationMarkerDeprecationTest.py':-0.1340286194620787, #new 2026-10-03: rotationMarker0/1 against localHT of the markers, the deprecation warning once per session (#2745, #2801)
         'contactFrictionCircleCable2DnoFrictionTest.py':0.8052196344904814, #new 2026-10-05: no tangential force without a friction model, whatever the slip state (#1290); 1000 steps 2026-10-09 (#2912)

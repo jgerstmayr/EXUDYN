@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-10-12  01:02:16 (last modified)
+* @date         2026-10-22  15:08:27 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -28,7 +28,7 @@ namespace py = pybind11;            //! AUTO: "py" used throughout in code
 class VisualizationObjectUserBody: public VisualizationObject // AUTO:
 {
 protected: // AUTO:
-    PythonUserFunctionBase< std::function<py::object(const MainSystem&,Index)> > graphicsDataUserFunction;//!< AUTO: A Python function which returns a list of graphics data in global coordinates, see ObjectGenericODE2; the only drawing of the body
+    PythonUserFunctionBase< std::function<py::object(const MainSystem&,Real,Index,const StdVector&,const StdVector&,const StdVector&,const StdVector&)> > graphicsDataUserFunction;//!< AUTO: A Python function which returns a list of graphics data in global coordinates, from the coordinates of the visualization configuration; the only drawing of the body
 
 public: // AUTO:
     //! AUTO: default constructor with parameter initialization
@@ -51,12 +51,12 @@ public: // AUTO:
         return true;
     }
 
-    //! AUTO:  Write (Reference) access to:A Python function which returns a list of graphics data in global coordinates, see ObjectGenericODE2; the only drawing of the body
-    void SetGraphicsDataUserFunction(const PythonUserFunctionBase< std::function<py::object(const MainSystem&,Index)> >& value) { graphicsDataUserFunction = value; }
-    //! AUTO:  Read (Reference) access to:A Python function which returns a list of graphics data in global coordinates, see ObjectGenericODE2; the only drawing of the body
-    const PythonUserFunctionBase< std::function<py::object(const MainSystem&,Index)> >& GetGraphicsDataUserFunction() const { return graphicsDataUserFunction; }
-    //! AUTO:  Read (Reference) access to:A Python function which returns a list of graphics data in global coordinates, see ObjectGenericODE2; the only drawing of the body
-    PythonUserFunctionBase< std::function<py::object(const MainSystem&,Index)> >& GetGraphicsDataUserFunction() { return graphicsDataUserFunction; }
+    //! AUTO:  Write (Reference) access to:A Python function which returns a list of graphics data in global coordinates, from the coordinates of the visualization configuration; the only drawing of the body
+    void SetGraphicsDataUserFunction(const PythonUserFunctionBase< std::function<py::object(const MainSystem&,Real,Index,const StdVector&,const StdVector&,const StdVector&,const StdVector&)> >& value) { graphicsDataUserFunction = value; }
+    //! AUTO:  Read (Reference) access to:A Python function which returns a list of graphics data in global coordinates, from the coordinates of the visualization configuration; the only drawing of the body
+    const PythonUserFunctionBase< std::function<py::object(const MainSystem&,Real,Index,const StdVector&,const StdVector&,const StdVector&,const StdVector&)> >& GetGraphicsDataUserFunction() const { return graphicsDataUserFunction; }
+    //! AUTO:  Read (Reference) access to:A Python function which returns a list of graphics data in global coordinates, from the coordinates of the visualization configuration; the only drawing of the body
+    PythonUserFunctionBase< std::function<py::object(const MainSystem&,Real,Index,const StdVector&,const StdVector&,const StdVector&,const StdVector&)> >& GetGraphicsDataUserFunction() { return graphicsDataUserFunction; }
 
 };
 

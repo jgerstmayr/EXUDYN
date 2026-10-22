@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-10-20  00:12:31 (last modified)
+* @date         2026-10-22  15:08:27 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -33,15 +33,17 @@ class CNodeUserParameters // AUTO:
 public: // AUTO:
     Index numberOfODE2Coordinates;                //!< AUTO: must be > 0; number of ABRV:ODE2 coordinates
     Vector referenceCoordinates;                  //!< AUTO: reference coordinates of the node; must have numberOfODE2Coordinates components
-    PythonUserFunctionBase< std::function<StdVector3D(const MainSystem&,Real,Index,const StdVector&)> > positionUserFunction;//!< AUTO: A Python user function which computes the global position of the node; it must be given
-    PythonUserFunctionBase< std::function<py::object(const MainSystem&,Real,Index,const StdVector&)> > positionJacobianUserFunction;//!< AUTO: A Python user function which computes the position Jacobian; by central differences of the position if not given
-    PythonUserFunctionBase< std::function<py::object(const MainSystem&,Real,Index,const StdVector&)> > rotationMatrixUserFunction;//!< AUTO: A Python user function which computes the rotation matrix of the node; optional, for rigid markers
-    PythonUserFunctionBase< std::function<py::object(const MainSystem&,Real,Index,const StdVector&)> > rotationJacobianUserFunction;//!< AUTO: A Python user function which computes the rotation Jacobian (of the global angular velocity); by central differences of the rotation matrix if not given
+    Vector parameters;                            //!< AUTO: the parameters of the node, passed to every user function; their meaning is defined by the user functions, see exudyn.advancedUtilities.ParameterLayout; empty by default
+    PythonUserFunctionBase< std::function<StdVector3D(const MainSystem&,Real,Index,const StdVector&,const StdVector&,const StdVector&,const StdVector&)> > positionUserFunction;//!< AUTO: A Python user function which computes the global position of the node; it must be given
+    PythonUserFunctionBase< std::function<py::object(const MainSystem&,Real,Index,const StdVector&,const StdVector&,const StdVector&,const StdVector&)> > positionJacobianUserFunction;//!< AUTO: A Python user function which computes the position Jacobian; by central differences of the position if not given
+    PythonUserFunctionBase< std::function<py::object(const MainSystem&,Real,Index,const StdVector&,const StdVector&,const StdVector&,const StdVector&)> > rotationMatrixUserFunction;//!< AUTO: A Python user function which computes the rotation matrix of the node; optional, for rigid markers
+    PythonUserFunctionBase< std::function<py::object(const MainSystem&,Real,Index,const StdVector&,const StdVector&,const StdVector&,const StdVector&)> > rotationJacobianUserFunction;//!< AUTO: A Python user function which computes the rotation Jacobian (of the global angular velocity); by central differences of the rotation matrix if not given
     //! AUTO: default constructor with parameter initialization
     CNodeUserParameters()
     {
         numberOfODE2Coordinates = 0;
         referenceCoordinates = Vector();
+        parameters = Vector();
         positionUserFunction = 0;
         positionJacobianUserFunction = 0;
         rotationMatrixUserFunction = 0;
@@ -84,7 +86,9 @@ protected: // AUTO:
     //! a matrix user function, its size checked
     template<class TUserFunction>
     void EvaluateMatrixUserFunction(const TUserFunction& function, const char* name, Index rows, Index columns, Matrix& value, Real t,
-        const Vector& coordinates) const;
+        const Vector& qRef, const Vector& coordinates, const Vector& coordinates_t) const;
+    //! the velocity coordinates of a configuration, zero in the reference configuration (#3056)
+    void Velocities(ResizableConstVector& q_t, ConfigurationType configuration) const;
     //! the matrix of the rotation user function, which keeps its memory between the calls (#3049)
     mutable ResizableMatrix bufferRotation;
     CNodeUserParameters parameters; //! AUTO: contains all parameters for CNodeUser
@@ -158,16 +162,16 @@ public: // AUTO:
     }
 
     //! AUTO:  call of positionUserFunction; implemented in evaluateUserFunctions.cpp
-    void EvaluatePosition(Vector3D& position, Real t, const Vector& coordinates) const;
+    void EvaluatePosition(Vector3D& position, Real t, const Vector& qRef, const Vector& coordinates, const Vector& coordinates_t) const;
 
     //! AUTO:  call of positionJacobianUserFunction, or central differences of the position; implemented in evaluateUserFunctions.cpp
-    void EvaluatePositionJacobian(Matrix& value, Real t, const Vector& coordinates) const;
+    void EvaluatePositionJacobian(Matrix& value, Real t, const Vector& qRef, const Vector& coordinates, const Vector& coordinates_t) const;
 
     //! AUTO:  call of rotationMatrixUserFunction; implemented in evaluateUserFunctions.cpp
-    void EvaluateRotationMatrix(Matrix3D& value, Real t, const Vector& coordinates) const;
+    void EvaluateRotationMatrix(Matrix3D& value, Real t, const Vector& qRef, const Vector& coordinates, const Vector& coordinates_t) const;
 
     //! AUTO:  call of rotationJacobianUserFunction, or central differences of the rotation matrix; implemented in evaluateUserFunctions.cpp
-    void EvaluateRotationJacobian(Matrix& value, Real t, const Vector& coordinates) const;
+    void EvaluateRotationJacobian(Matrix& value, Real t, const Vector& qRef, const Vector& coordinates, const Vector& coordinates_t) const;
 
     virtual OutputVariableType GetOutputVariableTypes() const override
     {

@@ -33,8 +33,8 @@ __all__ = [
     'IsEmptyList', 'FillInSubMatrix', 'SweepSin', 'SweepCos', 'FrequencySweep', 'SmoothStep',
     'SmoothStepDerivative', 'IndexFromValue', 'RoundMatrix', 'ConvertScipySparseToDict',
     'ConvertDictToScipySparse', 'SaveDictToHDF5', 'LoadDictFromHDF5', 'ConvertFunctionToSymbolic',
-    'CreateSymbolicUserFunction', 'TCPIPdata', 'CreateTCPIPconnection', 'TCPIPsendReceive',
-    'CloseTCPIPconnection',
+    'CreateSymbolicUserFunction', 'ParameterLayout', 'TCPIPdata', 'CreateTCPIPconnection',
+    'TCPIPsendReceive', 'CloseTCPIPconnection',
     ]
 
 def PlotLineCode(index):
@@ -852,8 +852,10 @@ def ConvertFunctionToSymbolic(mbs, function, userFunctionName, itemIndex=None, i
             if '2D' in varType: size = 2
             if '3D' in varType: size = 3
             if '6D' in varType: size = 6
-            if varType == 'StdVector' and functionArgs[1][i] in ['q', 'q_t']:
+            if varType == 'StdVector' and functionArgs[1][i] in ['qRef', 'q', 'q_t', 'q_tt']:
                 size = _ObjectCoordinatesSize(mbs, itemIndex)
+            if varType == 'StdVector' and functionArgs[1][i] == 'parameters': #of a user item (#3056)
+                size = _ObjectParametersSize(mbs, itemIndex)
             var = exudyn.symbolic.Vector(arg,[0.]*size)
         elif (varType == 'NumpyMatrix'
               or varType == 'StdMatrix3D'
@@ -905,6 +907,24 @@ def ConvertFunctionToSymbolic(mbs, function, userFunctionName, itemIndex=None, i
             'argTypeList': argTypeList,
             'returnValue': returnValue,
             'returnType': returnType}
+
+
+def _ObjectParametersSize(mbs, itemIndex):
+    """the length of the parameters of a user item, which its user functions get, or 0 where it is not known (#3056)
+
+    Args:
+        mbs: the MainSystem of the object
+        itemIndex: the ObjectIndex, or anything else, which gives 0
+
+    Returns:
+        int: the length of the parameters of the object, 0 if it has none
+    """
+    try:
+        if itemIndex is None or itemIndex.GetTypeString() != 'ObjectIndex':
+            return 0
+        return len(mbs.GetObject(itemIndex).get('parameters', []))
+    except (AttributeError, ValueError, IndexError, RuntimeError):
+        return 0
 
 
 def _ObjectCoordinatesSize(mbs, itemIndex):
@@ -970,6 +990,92 @@ def CreateSymbolicUserFunction(mbs, function, userFunctionName, itemIndex=None, 
     symbolicFunc = exudyn.symbolic.UserFunction()
     symbolicFunc.SetUserFunctionFromDict(mbs, fnDict, userFunctionName, itemIndex, str(itemTypeName))
     return symbolicFunc
+
+
+class ParameterLayout:
+    """The layout of the parameter vector of a user item, ObjectUserBody or NodeUser (#3056): named entries and their
+    sizes, mapped to a dict of named quantities and back. The layout belongs to the kind of user item, next to its user
+    functions: `ToVector` gives the `parameters` of each item, `ToDict` names them inside the user functions.
+
+    `ToDict` works with numpy arrays and with the symbolic vector a recorded user function gets, so that the named
+    quantities are components of the parameters of the item in the recording, read at every call: one recorded
+    function serves every item of the kind. A value that changes the structure of the computation - a number of
+    integration points, a Python `if` - cannot come from the parameters of a symbolic function and stays a constant
+    of the Python code.
+
+    Args:
+        entries: list of (name, size), e.g. `[('mass', 1), ('inertia', 6), ('com', 3)]`
+
+    Example:
+        layout = ParameterLayout([('mass', 1), ('stiffness', 1), ('com', 3)])
+        p = layout.ToVector({'mass': 2., 'stiffness': 100., 'com': [0, 0.1, 0]})   #[2, 100, 0, 0.1, 0]
+        def UFforce(mbs, t, itemNumber, qRef, q, q_t, parameters):
+            d = layout.ToDict(parameters)
+            return -d['stiffness']*(q - qRef)
+    """
+
+    def __init__(self, entries):
+        self.entries = []
+        names = set()
+        for (name, size) in entries:
+            if not isinstance(name, str) or name in names:
+                raise ValueError('ParameterLayout: the names must be strings and differ; got ' + repr(name))
+            if not isinstance(size, int) or size < 1:
+                raise ValueError('ParameterLayout: the size of "' + name + '" must be an integer >= 1; got ' + repr(size))
+            names.add(name)
+            self.entries.append((name, size))
+
+    def Size(self):
+        """The length of the parameter vector.
+
+        Returns:
+            the sum of the sizes of the entries
+        """
+        return sum(size for (name, size) in self.entries)
+
+    def ToVector(self, values):
+        """The parameter vector of named quantities.
+
+        Args:
+            values: dict with a value for every name of the layout: a number for size 1, a list or array of the size
+                otherwise; a name that is not in the layout is refused
+
+        Returns:
+            the parameter vector as numpy array
+        """
+        unknown = set(values) - set(name for (name, size) in self.entries)
+        if unknown:
+            raise ValueError('ParameterLayout.ToVector: names not in the layout: ' + ', '.join(sorted(unknown)))
+        vector = []
+        for (name, size) in self.entries:
+            if name not in values:
+                raise ValueError('ParameterLayout.ToVector: no value for "' + name + '"')
+            value = np.array(values[name], dtype=float).flatten()
+            if value.size != size:
+                raise ValueError('ParameterLayout.ToVector: "' + name + '" needs ' + str(size) + ' value(s), got '
+                                 + str(value.size))
+            vector += list(value)
+        return np.array(vector)
+
+    def ToDict(self, parameters):
+        """The named quantities of a parameter vector.
+
+        Args:
+            parameters: the parameter vector, a numpy array, list or symbolic vector, of the size of the layout
+
+        Returns:
+            dict with a number - or symbolic Real - for size 1 and a list otherwise
+        """
+        #a symbolic vector argument has no size while the function is recorded (#3007)
+        if not isinstance(parameters, exudyn.symbolic.Vector) and len(parameters) != self.Size():
+            raise ValueError('ParameterLayout.ToDict: the parameter vector has ' + str(len(parameters))
+                             + ' entries, the layout ' + str(self.Size()))
+        values = {}
+        index = 0
+        for (name, size) in self.entries:
+            values[name] = parameters[index] if size == 1 else [parameters[index + i] for i in range(size)]
+            index += size
+        return values
 
 
 #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++

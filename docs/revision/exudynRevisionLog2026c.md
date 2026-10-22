@@ -2575,3 +2575,38 @@ interfaces that allow later extensions without changing them.)*
   Position+Orientation also without rotation user function. The tests carry reference data in globals, closures and a
   dict by item number.
 - The considerations and recommendations are pythonUserItems.md section 5.11 (A-F). Nothing implemented.
+
+<a id="rg7-12-3"></a>
+### RG7.12.3 — qRef, q, q_t and parameters in every user function (2026-10-22, #3056)
+*(Maintainer 2026-10-22: the revision looks better. Decisions: a) implement RG7.12 with qRef, q, q_t, parameters in every
+user function; b) q_tt in the outputVariableUserFunction; c) further things like data can only be accessed via
+MainSystem functions, probably added to symbolic in the future. Remarks: the outputVariableUserFunction is not limited
+to UserType quantities - IfThenElse allows as many output variables as needed, so beam outputs and energy are possible;
+a constant mass matrix with a local matrix storage and a flag as in the ANCF elements; algebraic equations, data
+coordinates, ODE1 not for now; visualizationParameters, q_tt, data and what else is missing should be accessible via
+mbs and itemNumber, at least for visualization - a placeholder now, or be sure that they can be accessed via mbs.)*
+- Definitions: ObjectUserBody and NodeUser get `parameters` (vector, default empty); their user functions are
+  `(mbs, t, itemNumber, [localPosition | outputVariableType, localPosition], qRef, q, q_t, [q_tt], parameters)`; the
+  graphicsDataUserFunction of ObjectUserBody has its own signature `(mbs, t, itemNumber, qRef, q, q_t, parameters)`
+  with the visualization configuration (it shared the one of ObjectGenericODE2, `(mbs, itemNumber)`). The std::function
+  types, the symbolic signatures and the Protocols are generated from the definitions.
+- C++: CObjectUserBody `GatherUserFunctionCoordinates` (q, q_t of the configuration, qRef of the reference
+  configuration) and `GatherAccelerations` (zero in the reference configuration); the Evaluate functions pass qRef and
+  q_t beside the varied q; CNodeUser `Velocities` (zero in the reference configuration, where GetCoordinateVector_t
+  throws); VisualizationObjectUserBody::CallUserFunction gathers the visualization configuration and calls through
+  `EvaluateUserFunction` (numpy views).
+- Python: `ParameterLayout(entries)` with `Size`, `ToVector(dict)` (names and sizes checked) and `ToDict(vector)` (numpy
+  and symbolic vectors; a symbolic vector argument has no size while recording, #3007); ConvertFunctionToSymbolic
+  records `qRef`, `q_tt` with the size of `q` and `parameters` with the length of the item's parameters.
+- Visualization parameters (remark 4): not added as an argument. A future `visualizationParameters` of
+  VObjectUserBody is reachable through `mbs.GetObjectParameter(itemNumber, 'V...')`, as `'Vshow'` is today, which the
+  graphicsDataUserFunction - Python only, it returns graphics data - can read; a later mapping function is a new user
+  function with a signature of its own. Data coordinates and q_tt elsewhere: through MainSystem functions (decision c).
+- The test models with user items (userRigidBodyTest, userANCFCable2DTest, userANCFBeam3DTest, userTetrahedronTest,
+  userNodeTest, userTypesTest, deleteItemsTest) and test_itemCompatibility take the new arguments; their results are
+  unchanged. New userParametersTest.py: two mass-spring oscillators, one recorded symbolic force and mass matrix for
+  both parameter sets, bit-equal to the Python functions, 2e-7 from the exact solution; a stiffness changed with
+  SetObjectParameter after recording acts; ParameterLayout refuses missing, unknown and wrongly sized entries.
+- The build: `exudev build` fails at link (LNK1181 gdi32.lib) since the Windows SDK 10.0.26100.0 found by setuptools
+  through Visual Studio 18 BuildTools has no `um` libraries; built with the vcvars64 of Visual Studio 2022 and SDK
+  10.0.22621.0 and DISTUTILS_USE_SDK=1 (a scratch batch file) - the machine's toolchain, not the code.

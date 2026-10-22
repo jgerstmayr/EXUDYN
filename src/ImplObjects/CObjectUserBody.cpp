@@ -19,6 +19,34 @@
 //the coordinates are gathered into local ResizableConstVector: up to 7 items without memory allocation, and no buffer
 //that a nested call - a user function that asks for an output of the body - could overwrite (#2995)
 
+//! the coordinates the user functions get: the reference ones, the total ones and their velocities (#3056)
+void CObjectUserBody::GatherUserFunctionCoordinates(ResizableConstVector& qRef, ResizableConstVector& q, ResizableConstVector& q_t,
+	ConfigurationType configuration) const
+{
+	GatherCoordinates(q, q_t, configuration, true);
+	ResizableConstVector zero;
+	GatherCoordinates(qRef, zero, ConfigurationType::Reference, true);
+}
+
+//! the acceleration coordinates of a configuration, zero in the reference configuration (#3056)
+void CObjectUserBody::GatherAccelerations(ResizableConstVector& q_tt, ConfigurationType configuration) const
+{
+	q_tt.SetNumberOfItems(GetODE2Size());
+	Index cnt = 0;
+	for (Index i = 0; i < GetNumberOfNodes(); i++)
+	{
+		const CNodeODE2* node = (const CNodeODE2*)GetCNode(i);
+		Index nc = node->GetNumberOfODE2Coordinates();
+		if (configuration == ConfigurationType::Reference) { for (Index k = 0; k < nc; k++) { q_tt[cnt + k] = 0.; } }
+		else
+		{
+			LinkedDataVector u_tt(node->GetCoordinateVector_tt(configuration));
+			for (Index k = 0; k < nc; k++) { q_tt[cnt + k] = u_tt[k]; }
+		}
+		cnt += nc;
+	}
+}
+
 Index CObjectUserBody::GetODE2Size() const
 {
 	Index n = 0;
@@ -29,9 +57,9 @@ Index CObjectUserBody::GetODE2Size() const
 void CObjectUserBody::ComputeMassMatrix(EXUmath::MatrixContainer& massMatrixC, const ArrayIndex& ltg, bool computeInverse) const
 {
 	CHECKandTHROW(!computeInverse, "ObjectUserBody: computeMassMatrixInversePerBody=True is not possible, change the solver settings", ExudynNotImplementedError);
-	ResizableConstVector q, q_t;
-	GatherCoordinates(q, q_t, ConfigurationType::Current, true);
-	EvaluateUserFunctionMassMatrix(massMatrixC, GetCSystemData()->GetConfigurationTime(ConfigurationType::Current), q, q_t, ltg);
+	ResizableConstVector qRef, q, q_t;
+	GatherUserFunctionCoordinates(qRef, q, q_t, ConfigurationType::Current);
+	EvaluateUserFunctionMassMatrix(massMatrixC, GetCSystemData()->GetConfigurationTime(ConfigurationType::Current), qRef, q, q_t, ltg);
 }
 
 //! the left-hand side is the negative force of the user function
@@ -42,25 +70,25 @@ void CObjectUserBody::ComputeODE2LHS(Vector& ode2Lhs) const
 	ode2Lhs.SetAll(0.);
 	if (parameters.forceUserFunction)
 	{
-		ResizableConstVector q, q_t, force;
-		GatherCoordinates(q, q_t, ConfigurationType::Current, true);
-		EvaluateUserFunctionForce(force, GetCSystemData()->GetConfigurationTime(ConfigurationType::Current), q, q_t);
+		ResizableConstVector qRef, q, q_t, force;
+		GatherUserFunctionCoordinates(qRef, q, q_t, ConfigurationType::Current);
+		EvaluateUserFunctionForce(force, GetCSystemData()->GetConfigurationTime(ConfigurationType::Current), qRef, q, q_t);
 		ode2Lhs -= force;
 	}
 }
 
 void CObjectUserBody::GetPositionJacobian(const Vector3D& localPosition, Matrix& value) const
 {
-	ResizableConstVector q, q_t;
-	GatherCoordinates(q, q_t, ConfigurationType::Current, true);
-	EvaluatePositionJacobian(value, GetCSystemData()->GetConfigurationTime(ConfigurationType::Current), localPosition, q);
+	ResizableConstVector qRef, q, q_t;
+	GatherUserFunctionCoordinates(qRef, q, q_t, ConfigurationType::Current);
+	EvaluatePositionJacobian(value, GetCSystemData()->GetConfigurationTime(ConfigurationType::Current), localPosition, qRef, q, q_t);
 }
 
 void CObjectUserBody::GetRotationJacobian(const Vector3D& localPosition, Matrix& value) const
 {
-	ResizableConstVector q, q_t;
-	GatherCoordinates(q, q_t, ConfigurationType::Current, true);
-	EvaluateRotationJacobian(value, GetCSystemData()->GetConfigurationTime(ConfigurationType::Current), localPosition, q);
+	ResizableConstVector qRef, q, q_t;
+	GatherUserFunctionCoordinates(qRef, q, q_t, ConfigurationType::Current);
+	EvaluateRotationJacobian(value, GetCSystemData()->GetConfigurationTime(ConfigurationType::Current), localPosition, qRef, q, q_t);
 }
 
 //! d(J_pos^T force + J_rot^T torque)/dq by central differences of the Jacobian user functions; the step follows the rule
@@ -74,8 +102,8 @@ bool CObjectUserBody::GetJacobianTransposedTimesVectorDerivative(const Vector3D&
 	bool hasTorque = !(torque == 0.);
 	if (!hasForce && !hasTorque) { return false; }
 
-	ResizableConstVector q, q_t;
-	GatherCoordinates(q, q_t, ConfigurationType::Current, true);
+	ResizableConstVector qRef, q, q_t;
+	GatherUserFunctionCoordinates(qRef, q, q_t, ConfigurationType::Current);
 	Index n = q.NumberOfItems();
 	Real t = GetCSystemData()->GetConfigurationTime(ConfigurationType::Current);
 	value.SetNumberOfRowsAndColumns(n, n);
@@ -91,12 +119,12 @@ bool CObjectUserBody::GetJacobianTransposedTimesVectorDerivative(const Vector3D&
 		result.SetAll(0.);
 		if (hasForce)
 		{
-			EvaluatePositionJacobian(jacobian, t, localPosition, q);
+			EvaluatePositionJacobian(jacobian, t, localPosition, qRef, q, q_t);
 			for (Index j = 0; j < n; j++) { for (Index i = 0; i < 3; i++) { result[j] += jacobian(i, j)*force[i]; } }
 		}
 		if (hasTorque)
 		{
-			EvaluateRotationJacobian(jacobian, t, localPosition, q);
+			EvaluateRotationJacobian(jacobian, t, localPosition, qRef, q, q_t);
 			for (Index j = 0; j < n; j++) { for (Index i = 0; i < 3; i++) { result[j] += jacobian(i, j)*torque[i]; } }
 		}
 	};
@@ -119,10 +147,10 @@ bool CObjectUserBody::GetJacobianTransposedTimesVectorDerivative(const Vector3D&
 Vector3D CObjectUserBody::GetPosition(const Vector3D& localPosition, ConfigurationType configuration) const
 {
 	if (configuration == ConfigurationType::Visualization && !PythonCallPossible()) { return Vector3D(0.); }
-	ResizableConstVector q, q_t;
-	GatherCoordinates(q, q_t, configuration, true);
+	ResizableConstVector qRef, q, q_t;
+	GatherUserFunctionCoordinates(qRef, q, q_t, configuration);
 	Vector3D position;
-	EvaluatePosition(position, GetCSystemData()->GetConfigurationTime(configuration), localPosition, q);
+	EvaluatePosition(position, GetCSystemData()->GetConfigurationTime(configuration), localPosition, qRef, q, q_t);
 	return position;
 }
 
@@ -137,12 +165,12 @@ Vector3D CObjectUserBody::GetDisplacement(const Vector3D& localPosition, Configu
 //! the position Jacobian or the rotation Jacobian times the velocity coordinates, in a configuration
 Vector3D CObjectUserBody::JacobianTimesVelocity(bool rotation, const Vector3D& localPosition, ConfigurationType configuration) const
 {
-	ResizableConstVector q, q_t;
-	GatherCoordinates(q, q_t, configuration, true);
+	ResizableConstVector qRef, q, q_t;
+	GatherUserFunctionCoordinates(qRef, q, q_t, configuration);
 	Real t = GetCSystemData()->GetConfigurationTime(configuration);
 	Matrix& jacobian = bufferJacobian; //memory kept between the calls (#3046)
-	if (rotation) { EvaluateRotationJacobian(jacobian, t, localPosition, q); }
-	else { EvaluatePositionJacobian(jacobian, t, localPosition, q); }
+	if (rotation) { EvaluateRotationJacobian(jacobian, t, localPosition, qRef, q, q_t); }
+	else { EvaluatePositionJacobian(jacobian, t, localPosition, qRef, q, q_t); }
 	Vector3D result(0.);
 	for (Index i = 0; i < 3; i++)
 	{
@@ -160,10 +188,10 @@ Vector3D CObjectUserBody::GetVelocity(const Vector3D& localPosition, Configurati
 Matrix3D CObjectUserBody::GetRotationMatrix(const Vector3D& localPosition, ConfigurationType configuration) const
 {
 	if (configuration == ConfigurationType::Visualization && !PythonCallPossible()) { return EXUmath::unitMatrix3D; }
-	ResizableConstVector q, q_t;
-	GatherCoordinates(q, q_t, configuration, true);
+	ResizableConstVector qRef, q, q_t;
+	GatherUserFunctionCoordinates(qRef, q, q_t, configuration);
 	Matrix3D rotation;
-	EvaluateRotationMatrix(rotation, GetCSystemData()->GetConfigurationTime(configuration), localPosition, q);
+	EvaluateRotationMatrix(rotation, GetCSystemData()->GetConfigurationTime(configuration), localPosition, qRef, q, q_t);
 	return rotation;
 }
 
@@ -212,9 +240,10 @@ void CObjectUserBody::GetOutputVariableBody(OutputVariableType variableType, con
 	case OutputVariableType::UserType2:
 	case OutputVariableType::UserType3: {
 		if (configuration == ConfigurationType::Visualization && !PythonCallPossible()) { value.SetVector({ 0. }); break; }
-		ResizableConstVector q, q_t;
-		GatherCoordinates(q, q_t, configuration, true);
-		EvaluateUserFunctionOutputVariable(value, GetCSystemData()->GetConfigurationTime(configuration), variableType, localPosition, q, q_t);
+		ResizableConstVector qRef, q, q_t, q_tt;
+		GatherUserFunctionCoordinates(qRef, q, q_t, configuration);
+		GatherAccelerations(q_tt, configuration);
+		EvaluateUserFunctionOutputVariable(value, GetCSystemData()->GetConfigurationTime(configuration), variableType, localPosition, qRef, q, q_t, q_tt);
 		break;
 	}
 	default:

@@ -253,11 +253,11 @@ def UserBodyScene(userBody):
     oGround = mbs.CreateGround()
     node = mbs.AddNode(NodeRigidBodyRxyz(referenceCoordinates=[0.5, 0.2, 0, 0.2, -0.1, 0.3]))
     if userBody:
-        def Position(mbs, t, itemNumber, localPosition, q):
+        def Position(mbs, t, itemNumber, localPosition, qRef, q, q_t, parameters):
             return q[0:3] + cu.RotXYZ2RotationMatrix(q[3:6]) @ localPosition
-        def Rotation(mbs, t, itemNumber, localPosition, q):
+        def Rotation(mbs, t, itemNumber, localPosition, qRef, q, q_t, parameters):
             return cu.RotXYZ2RotationMatrix(q[3:6])
-        body = mbs.AddObject(ObjectUserBody(nodeNumbers=[node], massMatrixUserFunction=lambda mbs, t, i, q, q_t: np.eye(6),
+        body = mbs.AddObject(ObjectUserBody(nodeNumbers=[node], massMatrixUserFunction=lambda mbs, t, i, qRef, q, q_t, parameters: np.eye(6),
                                             positionUserFunction=Position, rotationMatrixUserFunction=Rotation))
     else:
         body = mbs.AddObject(ObjectRigidBody(nodeNumber=node, mass=1, inertia=[1, 1, 1, 0, 0, 0],

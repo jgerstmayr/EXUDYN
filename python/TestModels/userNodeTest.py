@@ -39,9 +39,9 @@ def Solve(mbs, endTime=0.5, steps=200):
 
 #%%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #(1) a point
-def PointPosition(mbs, t, itemNumber, q):
+def PointPosition(mbs, t, itemNumber, qRef, q, q_t, parameters):
     return q
-def PointJacobian(mbs, t, itemNumber, q):
+def PointJacobian(mbs, t, itemNumber, qRef, q, q_t, parameters):
     return np.eye(3)
 
 def PointModel(kind):
@@ -81,13 +81,13 @@ Check(any(item[1] == int(exu.ItemType.Node) for item in data['spheres']['items']
 #(2) a rigid body node with the coordinates of NodeRigidBodyRxyz: position and Tait-Bryan angles
 mass = 2.
 inertia = np.diag([0.1, 0.2, 0.3])
-def RxyzPosition(mbs, t, itemNumber, q):
+def RxyzPosition(mbs, t, itemNumber, qRef, q, q_t, parameters):
     return q[0:3]
-def RxyzJacobian(mbs, t, itemNumber, q):
+def RxyzJacobian(mbs, t, itemNumber, qRef, q, q_t, parameters):
     return np.hstack([np.eye(3), np.zeros((3, 3))])
-def RxyzRotation(mbs, t, itemNumber, q):
+def RxyzRotation(mbs, t, itemNumber, qRef, q, q_t, parameters):
     return cu.RotXYZ2RotationMatrix(q[3:6])
-def RxyzRotationJacobian(mbs, t, itemNumber, q):
+def RxyzRotationJacobian(mbs, t, itemNumber, qRef, q, q_t, parameters):
     return np.hstack([np.zeros((3, 3)), cu.RotXYZ2G(q[3:6])])
 
 def RigidModel(kind):
@@ -160,7 +160,7 @@ Check(Refused(lambda: Assembled(positionUserFunction=PointPosition, referenceCoo
 mbsNoRotation = Assembled(positionUserFunction=PointPosition)
 Check(Refused(lambda: mbsNoRotation.GetNodeOutput(0, exu.OutputVariableType.RotationMatrix), ValueError),
       'a rotation without rotationMatrixUserFunction not refused')
-mbsWrongJacobian = Assembled(positionUserFunction=PointPosition, positionJacobianUserFunction=lambda mbs, t, itemNumber, q: np.eye(2))
+mbsWrongJacobian = Assembled(positionUserFunction=PointPosition, positionJacobianUserFunction=lambda mbs, t, itemNumber, qRef, q, q_t, parameters: np.eye(2))
 Check(Refused(lambda: mbsWrongJacobian.GetNodeOutput(0, exu.OutputVariableType.Velocity), ValueError), 'a wrong Jacobian size not refused')
 
 u += testError

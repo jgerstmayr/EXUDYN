@@ -25,6 +25,7 @@ The parameters of the item; in a dictionary, its type is 'User':
 | **referenceCoordinates** | Vector |  | [] | (symbol: $\qv\cRef \in \Rcal^n$) reference coordinates of the node; must have numberOfODE2Coordinates components |
 | **initialCoordinates** | Vector |  | [] | (symbol: $\qv\cIni \in \Rcal^n$) initial displacement coordinates; must have numberOfODE2Coordinates components |
 | **initialVelocities** | Vector |  | [] | (symbol: $\dot\qv\cIni \in \Rcal^n$) initial velocity coordinates; must have numberOfODE2Coordinates components |
+| **parameters** | NumpyVector |  | [] | (symbol: $\pv_{par} \in \Rcal^{n_p}$) the parameters of the node, passed to every user function; their meaning is defined by the user functions, see exudyn.advancedUtilities.ParameterLayout; empty by default |
 | **positionUserFunction** | NodeUserPositionUserFunction |  | 0 | (symbol: $\LU{0}{\pv}(\qv)$) A Python user function which computes the global position of the node; it must be given |
 | **positionJacobianUserFunction** | NodeUserPositionJacobianUserFunction |  | 0 | (symbol: $\Jm_{pos}(\qv) \in \Rcal^{3\times n}$) A Python user function which computes the position Jacobian; by central differences of the position if not given |
 | **rotationMatrixUserFunction** | NodeUserRotationMatrixUserFunction |  | 0 | (symbol: $\LU{0n}{\Rot}(\qv) \in \Rcal^{3\times 3}$) A Python user function which computes the rotation matrix of the node; optional, for rigid markers |
@@ -74,8 +75,9 @@ Available as `OutputVariableType` in sensors, `Get...Output()` and other functio
 ### Coordinates
 
 $n$ = `numberOfODE2Coordinates` {ref}`ODE2 <ODE2>` coordinates; their meaning is defined by the user functions and the
-object that uses the node. The user functions get the coordinates $\qv \in \Rcal^n$ **including** their reference
-values, as read-only numpy arrays, as the user functions of ObjectUserBody do.
+object that uses the node. The user functions get the reference coordinates $\qv\cRef$, the coordinates
+$\qv \in \Rcal^n$ **including** their reference values, the velocities $\dot\qv$ and the `parameters` of the node,
+as read-only numpy arrays, as the user functions of ObjectUserBody do (#3056).
 
 ### Interface of the node
 
@@ -98,7 +100,7 @@ converge slower, not wrong.
 The user functions are called serially in the main thread; a renderer that runs in a thread of its own draws the
 node, the markers on it and what depends on them in the main thread (#3003).
 
-**Userfunction**: `positionUserFunction(mbs, t, itemNumber, q)`
+**Userfunction**: `positionUserFunction(mbs, t, itemNumber, qRef, q, q_t, parameters)`
 A user function, which computes the global position of the node from its coordinates: the position interface of the node.
 
 | arguments / return | type or size | description |
@@ -106,12 +108,15 @@ A user function, which computes the global position of the node from its coordin
 | `mbs` | MainSystem | provides MainSystem mbs to which the node belongs |
 | `t` | Real | time of the configuration asked for |
 | `itemNumber` | Index | integer number of the node in mbs |
+| `qRef` | Vector $\in \Rcal^n$ | the reference coordinates of the node |
 | `q` | Vector $\in \Rcal^n$ | node coordinates, INCLUDING their reference values, of the configuration asked for |
+| `q_t` | Vector $\in \Rcal^n$ | node velocity coordinates of the configuration asked for; zero in the reference configuration |
+| `parameters` | Vector $\in \Rcal^{n_p}$ | the parameters of the node, see parameters; empty if not given |
 | **return value** | Vector3D $\in \Rcal^{3}$ | the global position of the node |
 
 A Python user function gets its vector and matrix arguments as read-only numpy arrays, valid during the call, see [](#sec-userfunctions).
 
-**Userfunction**: `positionJacobianUserFunction(mbs, t, itemNumber, q)`
+**Userfunction**: `positionJacobianUserFunction(mbs, t, itemNumber, qRef, q, q_t, parameters)`
 A user function of the interface of the node that returns a matrix: the position Jacobian $\Jm_{pos} = \partial \vv / \partial \dot\qv$ (3 x n), the rotation matrix (3 x 3) or the rotation Jacobian $\Jm_{rot} = \partial \LU{0}{\tomega} / \partial \dot\qv$ (3 x n, global angular velocity).
 
 | arguments / return | type or size | description |
@@ -119,12 +124,15 @@ A user function of the interface of the node that returns a matrix: the position
 | `mbs` | MainSystem | provides MainSystem mbs to which the node belongs |
 | `t` | Real | time of the configuration asked for |
 | `itemNumber` | Index | integer number of the node in mbs |
+| `qRef` | Vector $\in \Rcal^n$ | the reference coordinates of the node |
 | `q` | Vector $\in \Rcal^n$ | node coordinates, INCLUDING their reference values, of the configuration asked for |
+| `q_t` | Vector $\in \Rcal^n$ | node velocity coordinates of the configuration asked for; zero in the reference configuration |
+| `parameters` | Vector $\in \Rcal^{n_p}$ | the parameters of the node, see parameters; empty if not given |
 | **return value** | MatrixContainer | the matrix, as numpy array or list of lists |
 
 A Python user function gets its vector and matrix arguments as read-only numpy arrays, valid during the call, see [](#sec-userfunctions).
 
-**Userfunction**: `rotationMatrixUserFunction(mbs, t, itemNumber, q)`
+**Userfunction**: `rotationMatrixUserFunction(mbs, t, itemNumber, qRef, q, q_t, parameters)`
 A user function of the interface of the node that returns a matrix: the position Jacobian $\Jm_{pos} = \partial \vv / \partial \dot\qv$ (3 x n), the rotation matrix (3 x 3) or the rotation Jacobian $\Jm_{rot} = \partial \LU{0}{\tomega} / \partial \dot\qv$ (3 x n, global angular velocity).
 
 | arguments / return | type or size | description |
@@ -132,12 +140,15 @@ A user function of the interface of the node that returns a matrix: the position
 | `mbs` | MainSystem | provides MainSystem mbs to which the node belongs |
 | `t` | Real | time of the configuration asked for |
 | `itemNumber` | Index | integer number of the node in mbs |
+| `qRef` | Vector $\in \Rcal^n$ | the reference coordinates of the node |
 | `q` | Vector $\in \Rcal^n$ | node coordinates, INCLUDING their reference values, of the configuration asked for |
+| `q_t` | Vector $\in \Rcal^n$ | node velocity coordinates of the configuration asked for; zero in the reference configuration |
+| `parameters` | Vector $\in \Rcal^{n_p}$ | the parameters of the node, see parameters; empty if not given |
 | **return value** | MatrixContainer | the matrix, as numpy array or list of lists |
 
 A Python user function gets its vector and matrix arguments as read-only numpy arrays, valid during the call, see [](#sec-userfunctions).
 
-**Userfunction**: `rotationJacobianUserFunction(mbs, t, itemNumber, q)`
+**Userfunction**: `rotationJacobianUserFunction(mbs, t, itemNumber, qRef, q, q_t, parameters)`
 A user function of the interface of the node that returns a matrix: the position Jacobian $\Jm_{pos} = \partial \vv / \partial \dot\qv$ (3 x n), the rotation matrix (3 x 3) or the rotation Jacobian $\Jm_{rot} = \partial \LU{0}{\tomega} / \partial \dot\qv$ (3 x n, global angular velocity).
 
 | arguments / return | type or size | description |
@@ -145,7 +156,10 @@ A user function of the interface of the node that returns a matrix: the position
 | `mbs` | MainSystem | provides MainSystem mbs to which the node belongs |
 | `t` | Real | time of the configuration asked for |
 | `itemNumber` | Index | integer number of the node in mbs |
+| `qRef` | Vector $\in \Rcal^n$ | the reference coordinates of the node |
 | `q` | Vector $\in \Rcal^n$ | node coordinates, INCLUDING their reference values, of the configuration asked for |
+| `q_t` | Vector $\in \Rcal^n$ | node velocity coordinates of the configuration asked for; zero in the reference configuration |
+| `parameters` | Vector $\in \Rcal^{n_p}$ | the parameters of the node, see parameters; empty if not given |
 | **return value** | MatrixContainer | the matrix, as numpy array or list of lists |
 
 A Python user function gets its vector and matrix arguments as read-only numpy arrays, valid during the call, see [](#sec-userfunctions).
@@ -156,7 +170,7 @@ A Python user function gets its vector and matrix arguments as read-only numpy a
 
 ```python
 #a node whose coordinates are cylindrical coordinates (r, phi, z) of a point; it turns with phi_t = 1
-def UFposition(mbs, t, itemNumber, q):
+def UFposition(mbs, t, itemNumber, qRef, q, q_t, parameters):
     return [q[0]*np.cos(q[1]), q[0]*np.sin(q[1]), q[2]]
 node = mbs.AddNode(NodeUser(numberOfODE2Coordinates=3, referenceCoordinates=[1,0,0],
                             initialCoordinates=[0,0,0], initialVelocities=[0,1,0],

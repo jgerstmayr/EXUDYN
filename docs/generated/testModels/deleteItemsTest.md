@@ -130,7 +130,7 @@ if not testIsActive:
 #the number of an object, as its user functions get it: from AddObject on, and renumbered by DeleteObject (#3012)
 mbs2 = SC.AddSystem()
 itemNumbers = []
-def UFposition(mbs, t, itemNumber, localPosition, q):
+def UFposition(mbs, t, itemNumber, localPosition, qRef, q, q_t, parameters):
     itemNumbers.append(itemNumber)
     return q[0:3] + localPosition
 
