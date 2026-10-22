@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-10-22  15:36:04 (last modified)
+* @date         2026-10-22  15:51:08 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -33,6 +33,7 @@ class CObjectUserBodyParameters // AUTO:
 public: // AUTO:
     ArrayIndex nodeNumbers;                       //!< AUTO: the nodes whose ABRV:ODE2 coordinates are the coordinates of the body, in this order
     Vector parameters;                            //!< AUTO: the parameters of the body - masses, lengths, stiffnesses -, passed to every user function; their meaning is defined by the user functions, see exudyn.advancedUtilities.ParameterLayout; empty by default
+    bool constantMassMatrix;                      //!< AUTO: True: the mass matrix does not depend on the coordinates and the time; massMatrixUserFunction is called once, its result is kept and reused - computed again after a change of a parameter of the body or Assemble -, and the solvers treat the mass matrix as constant
     PythonUserFunctionBase< std::function<py::object(const MainSystem&,Real,Index,const StdVector&,const StdVector&,const StdVector&,const StdVector&)> > massMatrixUserFunction;//!< AUTO: A Python user function which computes the mass matrix; it must be given
     PythonUserFunctionBase< std::function<StdVector(const MainSystem&,Real,Index,const StdVector&,const StdVector&,const StdVector&,const StdVector&)> > forceUserFunction;//!< AUTO: A Python user function which computes the generalized forces on the right-hand side; zero if not given
     PythonUserFunctionBase< std::function<StdVector3D(const MainSystem&,Real,Index,StdVector3D,const StdVector&,const StdVector&,const StdVector&,const StdVector&)> > positionUserFunction;//!< AUTO: A Python user function which computes the global position of the point at localPosition
@@ -45,6 +46,7 @@ public: // AUTO:
     {
         nodeNumbers = ArrayIndex();
         parameters = Vector();
+        constantMassMatrix = false;
         massMatrixUserFunction = 0;
         forceUserFunction = 0;
         positionUserFunction = 0;
@@ -100,6 +102,10 @@ protected: // AUTO:
     mutable ResizableMatrix bufferRotation;
     mutable ResizableVector bufferPlus;
     mutable ResizableVector bufferMinus;
+    //! the mass matrix of constantMassMatrix, in the local coordinates of the body: computed once, as in the ANCF
+    //! elements, and again after a change of a parameter or Assemble (#3058, approved storage of a value, D18)
+    mutable bool massMatrixComputed = false;
+    mutable EXUmath::MatrixContainer storedMassMatrix;
     CObjectUserBodyParameters parameters; //! AUTO: contains all parameters for CObjectUserBody
 
 public: // AUTO:
@@ -206,7 +212,19 @@ public: // AUTO:
     //! AUTO:  return true if object has time and coordinate independent (=constant) mass matrix
     virtual bool HasConstantMassMatrix() const override
     {
-        return false;
+        return parameters.constantMassMatrix;
+    }
+
+    //! AUTO:  a changed parameter computes the constant mass matrix again (#3058)
+    virtual void ParametersHaveChanged() override
+    {
+        massMatrixComputed = false;
+    }
+
+    //! AUTO:  Assemble computes the constant mass matrix again (#3058)
+    virtual void PreAssemble() override
+    {
+        massMatrixComputed = false;
     }
 
     //! AUTO:  false in another thread than the main thread, which then gets no position (#3003); implemented in evaluateUserFunctions.cpp

@@ -8,10 +8,10 @@ Every entry carries the **type** of the issue, then its **priority** and its **e
 
 General information on current version:
 
-- Exudyn version = 1.13.163.dev1
+- Exudyn version = 1.13.164.dev1
 - last change = 2026-10-22
 - Number of issues = 3059
-- Number of resolved issues = 2940 (163 in current version)
+- Number of resolved issues = 2941 (164 in current version)
 
 ## Resolved issues and resolved bugs before version 1.13
 
@@ -9039,9 +9039,6 @@ The following list contains the issues which have been **RESOLVED** in the accor
 
 ## Open issues
 
-- `EXTENSION` `LOW EFF` `raised by: Claude-JG` ObjectUserBody: a constant mass matrix, computed once and stored (#3058)
-  - description: Maintainer 2026-10-22: a flag for a constant mass matrix, with a local storage of the matrix as in the ANCF elements: computed once, reused, recomputed after a change of a parameter or Assemble; useful for finite elements.
-  - date raised: 2026-10-22
 - `TESTING` `HIGH EFF` `raised by: Claude-JG` record symbolic user functions of specific objects in Python and evaluate them on a GPU (#3055)
   - description: Maintainer 2026-10-20: the C++ recording of the items is not started now; it is easier to implement symbolic user functions in Python for specific objects (as the user rigid body), record them and test with the GPU whether the approach works - the list of operations of the flat evaluation (GetFlatProgram, \#3053, \#3054) is the input. Done by someone else.
   - date raised: 2026-10-21

@@ -3154,6 +3154,8 @@ class ObjectUserBody:
 
         parameters: the parameters of the body - masses, lengths, stiffnesses -, passed to every user function; their meaning is defined by the user functions, see exudyn.advancedUtilities.ParameterLayout; empty by default; type: array_like
 
+        constantMassMatrix: True: the mass matrix does not depend on the coordinates and the time; massMatrixUserFunction is called once, its result is kept and reused - computed again after a change of a parameter of the body or Assemble -, and the solvers treat the mass matrix as constant; type: bool
+
         massMatrixUserFunction: A Python user function which computes the mass matrix; it must be given; type: ObjectUserBodyMassMatrixUserFunction
 
         forceUserFunction: A Python user function which computes the generalized forces on the right-hand side; zero if not given; type: ObjectUserBodyForceUserFunction
@@ -3174,10 +3176,11 @@ class ObjectUserBody:
         Object has/provides the following types: ``Body``, ``MultiNoded``
 
     """
-    def __init__(self, name = '', nodeNumbers = [], parameters = [], massMatrixUserFunction: Union[ObjectUserBodyMassMatrixUserFunction, int] = 0, forceUserFunction: Union[ObjectUserBodyForceUserFunction, int] = 0, positionUserFunction: Union[ObjectUserBodyPositionUserFunction, int] = 0, positionJacobianUserFunction: Union[ObjectUserBodyPositionJacobianUserFunction, int] = 0, rotationMatrixUserFunction: Union[ObjectUserBodyRotationMatrixUserFunction, int] = 0, rotationJacobianUserFunction: Union[ObjectUserBodyRotationJacobianUserFunction, int] = 0, outputVariableUserFunction: Union[ObjectUserBodyOutputVariableUserFunction, int] = 0, visualization = {'show': True, 'graphicsDataUserFunction': 0}):
+    def __init__(self, name = '', nodeNumbers = [], parameters = [], constantMassMatrix = False, massMatrixUserFunction: Union[ObjectUserBodyMassMatrixUserFunction, int] = 0, forceUserFunction: Union[ObjectUserBodyForceUserFunction, int] = 0, positionUserFunction: Union[ObjectUserBodyPositionUserFunction, int] = 0, positionJacobianUserFunction: Union[ObjectUserBodyPositionJacobianUserFunction, int] = 0, rotationMatrixUserFunction: Union[ObjectUserBodyRotationMatrixUserFunction, int] = 0, rotationJacobianUserFunction: Union[ObjectUserBodyRotationJacobianUserFunction, int] = 0, outputVariableUserFunction: Union[ObjectUserBodyOutputVariableUserFunction, int] = 0, visualization = {'show': True, 'graphicsDataUserFunction': 0}):
         self.name = name
         self.nodeNumbers = copy.copy(nodeNumbers)
         self.parameters = CheckForValidNumpyArray(parameters)
+        self.constantMassMatrix = constantMassMatrix
         self.massMatrixUserFunction = massMatrixUserFunction
         self.forceUserFunction = forceUserFunction
         self.positionUserFunction = positionUserFunction
@@ -3192,6 +3195,7 @@ class ObjectUserBody:
         yield 'name', self.name
         yield 'nodeNumbers', self.nodeNumbers
         yield 'parameters', self.parameters
+        yield 'constantMassMatrix', self.constantMassMatrix
         yield 'massMatrixUserFunction', self.massMatrixUserFunction
         yield 'forceUserFunction', self.forceUserFunction
         yield 'positionUserFunction', self.positionUserFunction

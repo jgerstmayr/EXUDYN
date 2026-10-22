@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.13 | Newborn | 160 | 1.13.163 |
+| 1.13 | Newborn | 161 | 1.13.164 |
 | 1.12 | Metheney | 367 | 1.12.462 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
@@ -30,6 +30,10 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.13 - Newborn (current)
 
+- **1.13.164** `EXTENSION` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` ObjectUserBody: a constant mass matrix, computed once and stored (#3058)
+  - description: Maintainer 2026-10-22: a flag for a constant mass matrix, with a local storage of the matrix as in the ANCF elements: computed once, reused, recomputed after a change of a parameter or Assemble; useful for finite elements.
+  - **notes:** ObjectUserBody has constantMassMatrix: its massMatrixUserFunction is called once, the result is kept and reused, computed again after a change of a parameter or Assemble, and the solvers treat the mass matrix as constant (revision2026c step RG7.12.5)
+  - date resolved: **2026-10-22 15:58**, date raised: 2026-10-22
 - **1.13.163** `EXTENSION` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` ObjectUserBody: the outputVariableUserFunction provides any output variable the body does not compute itself (#3057)
   - description: Maintainer 2026-10-22: the outputVariableUserFunction is not limited to UserType0-3; with IfThenElse on outputVariableType a symbolic function provides as many output variables as needed, so beam outputs (strain, curvature, force, torque), energy and accelerations are possible.
   - **notes:** The outputVariableUserFunction of ObjectUserBody provides every output variable the body does not compute itself - strains, curvatures, stresses, forces, torques, potential energy, accelerations, directors and the user types; it returns an empty list for a type it does not provide (revision2026c step RG7.12.4)

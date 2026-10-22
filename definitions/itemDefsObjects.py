@@ -2148,6 +2148,10 @@ definitions.append(ItemDefinition(
     mutable ResizableMatrix bufferRotation;
     mutable ResizableVector bufferPlus;
     mutable ResizableVector bufferMinus;
+    //! the mass matrix of constantMassMatrix, in the local coordinates of the body: computed once, as in the ANCF
+    //! elements, and again after a change of a parameter or Assemble (#3058, approved storage of a value, D18)
+    mutable bool massMatrixComputed = false;
+    mutable EXUmath::MatrixContainer storedMassMatrix;
 """,
     cParentClass=ParentClassCObjectBody,
     overallDescription=r"""A body whose equations of motion and whose position, and optionally orientation, at a local position are computed by Python user functions: a user finite element or a user rigid body on existing nodes. As it provides the access functions of a body, the body markers (MarkerBodyPosition, MarkerBodyRigid), SensorBody, the loads on these markers and every connector work on it.""",
@@ -2177,7 +2181,7 @@ definitions.append(ItemDefinition(
     \Mm(\qv)\, \ddot\qv = \fv(t, \qv, \dot\qv) + \fv_{loads} \, ,
     $$
 
-    with $\Mm$ from `massMatrixUserFunction` and $\fv$ from `forceUserFunction` (zero without it). The
+    with $\Mm$ from `massMatrixUserFunction` - called once and kept with `constantMassMatrix` (#3058) - and $\fv$ from `forceUserFunction` (zero without it). The
     Jacobian of the left-hand side is computed numerically, as for every item without an analytic one.
 
     #### Interface of the body
@@ -2268,6 +2272,10 @@ definitions.append(ItemDefinition(
             pythonName='parameters',
             defaultValue='Vector()',
             description=r"""$\pv_{par} \in \Rcal^{n_p}$the parameters of the body - masses, lengths, stiffnesses -, passed to every user function; their meaning is defined by the user functions, see exudyn.advancedUtilities.ParameterLayout; empty by default"""),
+        ItemParameter(type=TBool, destination=DestComp+DestParam,
+            pythonName='constantMassMatrix',
+            defaultValue=False,
+            description=r"""True: the mass matrix does not depend on the coordinates and the time; massMatrixUserFunction is called once, its result is kept and reused - computed again after a change of a parameter of the body or Assemble -, and the solvers treat the mass matrix as constant"""),
         ItemParameter(destination=DestComp+DestParam,
             pythonName='massMatrixUserFunction',
             defaultValue=0,
@@ -2343,7 +2351,13 @@ definitions.append(ItemDefinition(
             implementation='return (CObjectType)((Index)CObjectType::Body + (Index)CObjectType::MultiNoded);',
             description=r'Get type of object, e.g. to categorize and distinguish during assembly and computation'),
         ItemFunctionDef('HasConstantMassMatrix',
-            implementation='return false;'),
+            implementation='return parameters.constantMassMatrix;'),
+        ItemFunctionDef('ParametersHaveChanged',
+            implementation='massMatrixComputed = false;',
+            description=r'a changed parameter computes the constant mass matrix again (#3058)'),
+        ItemFunction(type=Tvoid, destination=DestComp,
+            pythonName='PreAssemble', implementation='massMatrixComputed = false;',
+            description=r'Assemble computes the constant mass matrix again (#3058)'),
         ItemFunctionDef('CheckPreAssembleConsistency'),
         ItemFunction(type=TBool, destination=DestComp, cFlags=CFConst, isVirtual=False,
             pythonName='PythonCallPossible',

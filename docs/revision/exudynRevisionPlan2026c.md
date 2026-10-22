@@ -816,6 +816,12 @@ CLOSED 2026-10-22 (#3057; maintainer: not only UserType0-3, IfThenElse allows as
 energy): 22 output variable types routed to the function, an empty result refused; userOutputVariablesTest.py.
 [log](exudynRevisionLog2026c.md#rg7-12-4)
 
+#### **CLOSED_RG7.12.5** A constant mass matrix of the user body, computed once and stored
+
+CLOSED 2026-10-22 (#3058; maintainer: a flag and a local matrix storage as in the ANCF elements): `constantMassMatrix`,
+the matrix kept in local coordinates, computed again after a change of a parameter or Assemble.
+[log](exudynRevisionLog2026c.md#rg7-12-5)
+
 ## **OPEN_RG8** Compiled C++ user items
 
 Plugins: user items compiled against the shipped headers. A plugin author builds Exudyn from source once and the

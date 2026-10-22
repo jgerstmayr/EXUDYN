@@ -2626,3 +2626,15 @@ IfThenElse construct allows as many output variables as required, so beam output
 - userOutputVariablesTest.py: a mass on a spring with strain, potential energy and acceleration (from q_tt), Python
   and symbolic (with IfThenElse), against x0 cos(omega t) and each other; SensorBody records PotentialEnergy; Rotation,
   which the Python function does not provide, is refused.
+
+<a id="rg7-12-5"></a>
+### RG7.12.5 — the constant mass matrix of the user body (2026-10-22, #3058)
+*(Maintainer 2026-10-22: constant mass matrix - good idea, add that; in particular useful for some finite elements, with a
+local matrix storage and a flag as in the ANCF elements.)*
+- `constantMassMatrix` (False): `HasConstantMassMatrix` returns it; `ComputeMassMatrix` evaluates the
+  massMatrixUserFunction once into `storedMassMatrix` with the local indices 0..n-1 - dense or sparse, as the function
+  returns it - and adds it with the item's ltg on every call (`CopyOrAddTriplets`). `ParametersHaveChanged` and
+  `PreAssemble` set `massMatrixComputed` false. A stored value, approved by the maintainer under D18, as
+  `massMatrixComputed` / `precomputedMassMatrix` of the ANCF elements.
+- userParametersTest.py: with `constantMassMatrix` the Python mass matrix function is called twice for two bodies in a
+  solution of 5000 steps, and the solution is bit-equal; its result unchanged.

@@ -22,6 +22,7 @@ The parameters of the item; in a dictionary, its type is 'UserBody':
 | **name** | String |  | '' | objects's unique name |
 | **nodeNumbers** | ArrayNodeIndex |  | [] | (symbol: $\mathbf{n}_n = [n_0,\,\ldots,\,n_n]\tp$) the nodes whose {ref}`ODE2 <ODE2>` coordinates are the coordinates of the body, in this order |
 | **parameters** | NumpyVector |  | [] | (symbol: $\pv_{par} \in \Rcal^{n_p}$) the parameters of the body - masses, lengths, stiffnesses -, passed to every user function; their meaning is defined by the user functions, see exudyn.advancedUtilities.ParameterLayout; empty by default |
+| **constantMassMatrix** | Bool |  | False | True: the mass matrix does not depend on the coordinates and the time; massMatrixUserFunction is called once, its result is kept and reused - computed again after a change of a parameter of the body or Assemble -, and the solvers treat the mass matrix as constant |
 | **massMatrixUserFunction** | ObjectUserBodyMassMatrixUserFunction |  | 0 | (symbol: $\Mm(\qv) \in \Rcal^{n\times n}$) A Python user function which computes the mass matrix; it must be given |
 | **forceUserFunction** | ObjectUserBodyForceUserFunction |  | 0 | (symbol: $\fv \in \Rcal^{n}$) A Python user function which computes the generalized forces on the right-hand side; zero if not given |
 | **positionUserFunction** | ObjectUserBodyPositionUserFunction |  | 0 | (symbol: $\LU{0}{\pv}(\pLocB, \qv)$) A Python user function which computes the global position of the point at localPosition |
@@ -113,7 +114,7 @@ $$
 \Mm(\qv)\, \ddot\qv = \fv(t, \qv, \dot\qv) + \fv_{loads} \, ,
 $$
 
-with $\Mm$ from `massMatrixUserFunction` and $\fv$ from `forceUserFunction` (zero without it). The
+with $\Mm$ from `massMatrixUserFunction` - called once and kept with `constantMassMatrix` (#3058) - and $\fv$ from `forceUserFunction` (zero without it). The
 Jacobian of the left-hand side is computed numerically, as for every item without an analytic one.
 
 ### Interface of the body

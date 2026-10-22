@@ -309,11 +309,11 @@ If a function shall switch its appearance, the values it reads come through `vis
 |---|---|---|---|
 | mass integral access (`DisplacementMassIntegral_q`): `MarkerBodyMass`, `LoadMassProportional` (gravity) | all four | missing - the user rigid-body test applies gravity as a force on its center | an optional user function for `∫ρ J_pos dV`, or a center of mass in the parameters |
 | outputs Acceleration(Local), AngularAcceleration(Local), Rotation, VelocityLocal | rigid body, beams | missing | in C++ from the Jacobians: `J q_tt` plus the derivative of `J` along `q_t` by differences; Rotation from the rotation matrix |
-| beam outputs (strain, curvature, force, torque) | beams | only UserType0-3, four names for the whole system | the outputVariableUserFunction, with `q_tt` added now (A) |
-| PotentialEnergy | rigid body, ANCF | missing | an optional user function |
-| constant mass matrix | ANCF, beams (and rigid body with rotation vector) | always recomputed | a flag of the item |
+| beam outputs (strain, curvature, force, torque) | beams | done (#3057): the outputVariableUserFunction gives every output variable the body does not compute itself, with `q_tt` | - |
+| PotentialEnergy | rigid body, ANCF | done (#3057), through the outputVariableUserFunction | - |
+| constant mass matrix | ANCF, beams (and rigid body with rotation vector) | done (#3058): `constantMassMatrix`, computed once and stored | - |
 | analytic Jacobian | ANCF, beams | numerical only | an optional jacobianUserFunction, later from the symbolic recording |
-| algebraic equations, data coordinates (plasticity), ODE1 | rigid body (EP in the node), some elements | none | data coordinates would be read by the force function: an argument that does not exist - decide before the interfaces are public |
+| algebraic equations, data coordinates (plasticity), ODE1 | rigid body (EP in the node), some elements | none | not now (maintainer 2026-10-22); data and further quantities through MainSystem functions, later also for symbolic functions |
 | drawing with contour, tiling, numbers | all | only graphicsDataUserFunction, global | C and D |
 | cable markers (MarkerBodyCable2DShape, ...), GeneralContact cables | ANCF only, by type name | refused | out of scope; these name the C++ classes |
 | node types | RigidBody, Point2DSlope1, ... | NodeUser always Position+Orientation, also without rotation | the type from the given user functions, and the user types of #2989 |

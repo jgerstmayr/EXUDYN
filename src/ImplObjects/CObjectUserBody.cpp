@@ -59,6 +59,20 @@ void CObjectUserBody::ComputeMassMatrix(EXUmath::MatrixContainer& massMatrixC, c
 	CHECKandTHROW(!computeInverse, "ObjectUserBody: computeMassMatrixInversePerBody=True is not possible, change the solver settings", ExudynNotImplementedError);
 	ResizableConstVector qRef, q, q_t;
 	GatherUserFunctionCoordinates(qRef, q, q_t, ConfigurationType::Current);
+	if (parameters.constantMassMatrix) //computed once, in local coordinates, and added with ltg (#3058)
+	{
+		if (!massMatrixComputed)
+		{
+			ArrayIndex localLtg;
+			localLtg.SetNumberOfItems(q.NumberOfItems());
+			for (Index i = 0; i < q.NumberOfItems(); i++) { localLtg[i] = i; }
+			storedMassMatrix = EXUmath::MatrixContainer();
+			EvaluateUserFunctionMassMatrix(storedMassMatrix, GetCSystemData()->GetConfigurationTime(ConfigurationType::Current), qRef, q, q_t, localLtg);
+			massMatrixComputed = true;
+		}
+		massMatrixC.CopyOrAddTriplets(storedMassMatrix, ltg);
+		return;
+	}
 	EvaluateUserFunctionMassMatrix(massMatrixC, GetCSystemData()->GetConfigurationTime(ConfigurationType::Current), qRef, q, q_t, ltg);
 }
 

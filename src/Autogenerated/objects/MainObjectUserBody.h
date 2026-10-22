@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-10-22  15:08:27 (last modified)
+* @date         2026-10-22  15:51:08 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -118,6 +118,7 @@ public: // AUTO:
     {
         if (EPyUtils::DictItemExists(d, "nodeNumbers")) { EPyUtils::ItemIndexFromPython<NodeIndex>(d["nodeNumbers"], cObjectUserBody->GetParameters().nodeNumbers); }
         if (EPyUtils::DictItemExists(d, "parameters")) { EPyUtils::FromPython(d["parameters"], cObjectUserBody->GetParameters().parameters); }
+        if (EPyUtils::DictItemExists(d, "constantMassMatrix")) { EPyUtils::FromPython(d["constantMassMatrix"], cObjectUserBody->GetParameters().constantMassMatrix, "ObjectUserBody.constantMassMatrix"); }
         if (EPyUtils::DictItemExists(d, "massMatrixUserFunction")) { cObjectUserBody->GetParameters().massMatrixUserFunction = d["massMatrixUserFunction"]; }
         if (EPyUtils::DictItemExists(d, "forceUserFunction")) { cObjectUserBody->GetParameters().forceUserFunction = d["forceUserFunction"]; }
         if (EPyUtils::DictItemExists(d, "positionUserFunction")) { cObjectUserBody->GetParameters().positionUserFunction = d["positionUserFunction"]; }
@@ -138,6 +139,7 @@ public: // AUTO:
         d["objectType"] = (std::string)GetTypeName();
         d["nodeNumbers"] = EPyUtils::ItemIndexToPython<NodeIndex>(cObjectUserBody->GetParameters().nodeNumbers);
         d["parameters"] = EPyUtils::ToPython(cObjectUserBody->GetParameters().parameters);
+        d["constantMassMatrix"] = (bool)cObjectUserBody->GetParameters().constantMassMatrix;
         d["massMatrixUserFunction"] = (py::object)cObjectUserBody->GetParameters().massMatrixUserFunction;
         d["forceUserFunction"] = (py::object)cObjectUserBody->GetParameters().forceUserFunction;
         d["positionUserFunction"] = (py::object)cObjectUserBody->GetParameters().positionUserFunction;
@@ -157,6 +159,7 @@ public: // AUTO:
         if (parameterName.compare("name") == 0) { return py::cast((std::string)name); } //! AUTO: get parameter
         else if (parameterName.compare("nodeNumbers") == 0) { return py::cast(EPyUtils::ItemIndexToPython<NodeIndex>(cObjectUserBody->GetParameters().nodeNumbers)); } //! AUTO: get parameter
         else if (parameterName.compare("parameters") == 0) { return EPyUtils::ToPython(cObjectUserBody->GetParameters().parameters); } //! AUTO: get parameter
+        else if (parameterName.compare("constantMassMatrix") == 0) { return py::cast((bool)cObjectUserBody->GetParameters().constantMassMatrix); } //! AUTO: get parameter
         else if (parameterName.compare("massMatrixUserFunction") == 0) { return cObjectUserBody->GetParameters().massMatrixUserFunction.GetPythonDictionary(); } //! AUTO: get parameter
         else if (parameterName.compare("forceUserFunction") == 0) { return cObjectUserBody->GetParameters().forceUserFunction.GetPythonDictionary(); } //! AUTO: get parameter
         else if (parameterName.compare("positionUserFunction") == 0) { return cObjectUserBody->GetParameters().positionUserFunction.GetPythonDictionary(); } //! AUTO: get parameter
@@ -177,6 +180,7 @@ public: // AUTO:
         if (parameterName.compare("name") == 0) { EPyUtils::FromPython(value, name); } //! AUTO: set parameter
         else if (parameterName.compare("nodeNumbers") == 0) { EPyUtils::ItemIndexFromPython<NodeIndex>(value, cObjectUserBody->GetParameters().nodeNumbers); } //! AUTO: set parameter
         else if (parameterName.compare("parameters") == 0) { EPyUtils::FromPython(value, cObjectUserBody->GetParameters().parameters); } //! AUTO: set parameter
+        else if (parameterName.compare("constantMassMatrix") == 0) { EPyUtils::FromPython(value, cObjectUserBody->GetParameters().constantMassMatrix, "ObjectUserBody.constantMassMatrix"); } //! AUTO: set parameter
         else if (parameterName.compare("massMatrixUserFunction") == 0) { cObjectUserBody->GetParameters().massMatrixUserFunction = value; } //! AUTO: set parameter
         else if (parameterName.compare("forceUserFunction") == 0) { cObjectUserBody->GetParameters().forceUserFunction = value; } //! AUTO: set parameter
         else if (parameterName.compare("positionUserFunction") == 0) { cObjectUserBody->GetParameters().positionUserFunction = value; } //! AUTO: set parameter

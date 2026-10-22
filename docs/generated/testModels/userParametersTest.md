@@ -15,7 +15,8 @@ You can view and download this file on Github: [userParametersTest.py](https://g
 #           get the reference coordinates qRef, the coordinates q, the velocities q_t and the parameters; the spring
 #           acts on q - qRef. One recorded symbolic force and mass matrix serve both bodies, and a parameter changed
 #           with SetObjectParameter acts without recording again. The solutions agree with the Python user functions
-#           and with x0 cos(sqrt(k/m) t).
+#           and with x0 cos(sqrt(k/m) t). With constantMassMatrix, the mass matrix user function is called once per
+#           body and the solution is the same (#3058).
 #
 # Author:   Johannes Gerstmayr
 # Date:     2026-10-22
@@ -34,7 +35,9 @@ esym = exu.symbolic
 #the layout of the parameters of this kind of user body
 layout = ParameterLayout([('mass', 1), ('stiffness', 1)])
 
+massCalls = [0] #the calls of UFmass
 def UFmass(mbs, t, itemNumber, qRef, q, q_t, parameters):
+    massCalls[0] += 1
     return layout.ToDict(parameters)['mass']*np.eye(3)
 
 def UFforce(mbs, t, itemNumber, qRef, q, q_t, parameters):
@@ -59,7 +62,7 @@ simulationSettings.timeIntegration.endTime = endTime
 simulationSettings.timeIntegration.verboseMode = 0
 simulationSettings.solution.file.write = False
 
-def Solve(kind, changedStiffness=None):
+def Solve(kind, changedStiffness=None, constantMassMatrix=False):
     """the two oscillators with Python ('python') or one recording of symbolic ('symbolic') user functions; the
     displacement of each at endTime"""
     SC = exu.SystemContainer()
@@ -67,7 +70,7 @@ def Solve(kind, changedStiffness=None):
     bodies = []
     for (i, value) in enumerate(values):
         node = mbs.AddNode(NodePoint(referenceCoordinates=[1. + i, 0, 0], initialCoordinates=[x0, 0, 0]))
-        bodies.append(mbs.AddObject(ObjectUserBody(nodeNumbers=[node], parameters=layout.ToVector(value),
+        bodies.append(mbs.AddObject(ObjectUserBody(nodeNumbers=[node], parameters=layout.ToVector(value), constantMassMatrix=constantMassMatrix,
                                                    massMatrixUserFunction=UFmass, forceUserFunction=UFforce,
                                                    positionUserFunction=UFposition,
                                                    positionJacobianUserFunction=UFpositionJacobian)))
@@ -89,6 +92,10 @@ symbolic = Solve('symbolic')
 exact = [x0*cMath.cos(cMath.sqrt(value['stiffness']/value['mass'])*endTime) for value in values]
 exu.Print('displacements, Python:', python, ', symbolic:', symbolic, ', exact:', exact)
 
+massCalls[0] = 0
+constant = Solve('python', constantMassMatrix=True)
+exu.Print('constant mass matrix: calls of the mass matrix function', massCalls[0], ', displacements', constant)
+
 changed = Solve('symbolic', changedStiffness=50.)
 exactChanged = x0*cMath.cos(cMath.sqrt(50./values[1]['mass'])*endTime)
 exu.Print('the stiffness of body 1 changed after the recording:', changed[1], ', exact:', exactChanged)
@@ -105,6 +112,7 @@ for wrong in [{'mass': 1.}, {'mass': 1., 'stiffness': 1., 'damping': 1.}, {'mass
     except ValueError:
         refused += 1
 u += 3 - refused
+u += int(massCalls[0] != 2) + int(max(abs(python[i] - constant[i]) for i in range(2)) > 1e-14)   #once per body, the same solution
 
 exu.Print('solution of userParametersTest=', u + symbolic[0] + symbolic[1])
 
