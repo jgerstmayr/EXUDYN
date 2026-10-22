@@ -2678,3 +2678,21 @@ for later, without an issue - pythonUserItems.md 5.11 D.)*
   test_itemCompatibility; pythonUserItems.md 5.9 and 5.11 (A, C, D, F with the decisions of the day),
   userFunctionBoundary.md (13), revisions.md.
 - Not checked: the AVX2 reference of userRigidBodyTest in `AVX2ReferenceSolutionUpdate()` (fast module not built).
+
+<a id="rg7-12-7"></a>
+### RG7.12.7 — one-coordinate nodes in the symbolic recording; the cost of the arguments (2026-10-22, #3061)
+*(Maintainer 2026-10-22: update pythonUserItems.md, which still mentions total coordinates, and continue with the
+planned changes of the user body.)*
+- The decided changes of the user body were all done (RG7.12.3-RG7.12.6). What 5.10 left open was the measured cost of
+  the extra arguments. measureUserFunctions.py got two variants: one ObjectUserBody per mass point with a Python force
+  `(mbs, t, itemNumber, qRef, q, q_t, parameters)` and a stored mass matrix, and the same with one symbolic force
+  recorded for all 100 bodies. Two runs, 1.13.166.dev1: Python 1.175 / 1.162 s, 0.97 us per call more than the C++
+  spring and 0.33 us more than ObjectGenericODE2 per mass point `(mbs, t, itemNumber, q, q_t)` (0.840 / 0.832 s) - two
+  more numpy views and the gathering of the coordinates by the item; symbolic 0.251 s, 0.06 us per call more than C++.
+- The symbolic variant failed: `_ObjectCoordinatesSize` took `len()` of the node output Coordinates, a float for a
+  node with one coordinate (NodeGenericODE2 of size 1), so CreateSymbolicUserFunction raised a TypeError for every item
+  with such a node. Now `np.size`. userParametersTest.py records a body on a NodeGenericODE2 of one coordinate and
+  compares with the Python function; its result unchanged.
+- pythonUserItems.md 5.10 and 5.11 rewritten to say what is - the parameters, `ParameterLayout`, the arguments with
+  `q` the displacements, no visualizationParameters argument, symbolic access to the visualization settings a later
+  path - with the measurement, also in the table of section 7; the gaps of E kept as the list for later.

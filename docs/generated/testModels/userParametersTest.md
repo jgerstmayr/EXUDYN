@@ -16,7 +16,7 @@ You can view and download this file on Github: [userParametersTest.py](https://g
 #           spring acts on q. One recorded symbolic force and mass matrix serve both bodies, and a parameter changed
 #           with SetObjectParameter acts without recording again. The solutions agree with the Python user functions
 #           and with x0 cos(sqrt(k/m) t). With constantMassMatrix, the mass matrix user function is called once per
-#           body and the solution is the same (#3058).
+#           body and the solution is the same (#3058). A body on a node with one coordinate is recorded as well (#3061).
 #
 # Author:   Johannes Gerstmayr
 # Date:     2026-10-22
@@ -100,7 +100,27 @@ changed = Solve('symbolic', changedStiffness=50.)
 exactChanged = x0*cMath.cos(cMath.sqrt(50./values[1]['mass'])*endTime)
 exu.Print('the stiffness of body 1 changed after the recording:', changed[1], ', exact:', exactChanged)
 
+#a body on a node with one coordinate: its symbolic recording has a q of size 1 (#3061)
+def SolveOneCoordinate(kind):
+    SC = exu.SystemContainer()
+    mbs = SC.AddSystem()
+    node = mbs.AddNode(NodeGenericODE2(numberOfODE2Coordinates=1, referenceCoordinates=[0], initialCoordinates=[x0],
+                                       initialCoordinates_t=[0]))
+    body = mbs.AddObject(ObjectUserBody(nodeNumbers=[node], parameters=layout.ToVector(values[0]),
+                                        massMatrixUserFunction=lambda mbs, t, itemNumber, qRef, q, q_t, parameters:
+                                            [[layout.ToDict(parameters)['mass']]],
+                                        forceUserFunction=UFforce))
+    if kind == 'symbolic':
+        mbs.variables['keep'] = CreateSymbolicUserFunction(mbs, UFforce, 'forceUserFunction', body)
+        mbs.SetObjectParameter(body, 'forceUserFunction', mbs.variables['keep'])
+    mbs.Assemble()
+    mbs.SolveDynamic(simulationSettings)
+    return mbs.GetNodeOutput(node, exu.OutputVariableType.Coordinates)
+oneCoordinate = [float(np.atleast_1d(SolveOneCoordinate(kind))[0]) for kind in ['python', 'symbolic']]
+exu.Print('one coordinate, Python and symbolic:', oneCoordinate)
+
 u = 0
+u += int(abs(oneCoordinate[0] - oneCoordinate[1]) > 1e-12) + int(abs(oneCoordinate[0] - python[0]) > 1e-12)
 u += int(max(abs(python[i] - symbolic[i]) for i in range(2)) > 1e-12)       #one recording, two parameter sets
 u += int(max(abs(python[i] - exact[i]) for i in range(2)) > 1e-5)           #the time integration
 u += int(abs(changed[1] - exactChanged) > 1e-5) + int(abs(changed[0] - symbolic[0]) > 1e-14)

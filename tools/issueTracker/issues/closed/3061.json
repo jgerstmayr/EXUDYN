@@ -1,0 +1,16 @@
+{
+  "number": 3061,
+  "title": "CreateSymbolicUserFunction fails for an item on a node with one coordinate",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "BUG",
+  "effort": "LOW",
+  "description": "_ObjectCoordinatesSize takes len() of the node output Coordinates, which is a float for a node with one coordinate (NodeGenericODE2 with numberOfODE2Coordinates=1): recording a symbolic user function of ObjectUserBody, ObjectGenericODE2, ... on such a node raises TypeError. Found while measuring the cost of the user body arguments (measureUserFunctions.py).",
+  "dateRaised": "2026-10-22",
+  "deadline": "2027-04-20",
+  "dateResolved": "2026-10-22 21:33",
+  "resolvedAuthor": "Claude-JG",
+  "file": "python/exudyn/advancedUtilities.py",
+  "releaseNotes": "CreateSymbolicUserFunction records the user functions of items on a node with one coordinate",
+  "resolvedInVersion": "1.13.167"
+}

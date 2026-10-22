@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.13 | Newborn | 163 | 1.13.166 |
+| 1.13 | Newborn | 164 | 1.13.167 |
 | 1.12 | Metheney | 367 | 1.12.462 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
@@ -30,6 +30,10 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.13 - Newborn (current)
 
+- **1.13.167** <span class="textred">`BUG`</span> `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` CreateSymbolicUserFunction fails for an item on a node with one coordinate (#3061)
+  - description: \_ObjectCoordinatesSize takes len() of the node output Coordinates, which is a float for a node with one coordinate (NodeGenericODE2 with numberOfODE2Coordinates=1): recording a symbolic user function of ObjectUserBody, ObjectGenericODE2, ... on such a node raises TypeError. Found while measuring the cost of the user body arguments (measureUserFunctions.py).
+  - **notes:** CreateSymbolicUserFunction records the user functions of items on a node with one coordinate
+  - date resolved: **2026-10-22 21:33**, date raised: 2026-10-22
 - **1.13.166** `CHANGE` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` ObjectUserBody and NodeUser: the user functions get the displacement coordinates q, not the total coordinates (#3060)
   - description: Maintainer 2026-10-22: q of the user functions of ObjectUserBody and NodeUser is the displacement coordinates, as inside the C++ items, so that the results are comparable; a finite element computes with the displacements and its reference geometry from qRef, a rigid body with qRef + q. The C++ gathers q without the reference values (also for the graphicsDataUserFunction), CNodeUser::Displacements replaces TotalCoordinates; the descriptions, the mini examples and the test models with user items are changed accordingly, their results unchanged.
   - **notes:** The user functions of ObjectUserBody and NodeUser get the displacement coordinates q, as the C++ items compute with them; the total coordinates are qRef + q

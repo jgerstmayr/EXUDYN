@@ -1,7 +1,7 @@
 # Python user items: proposal and evaluation
 
 The design of the Python user items (revision2026c group RG7, #2971), written 2026-10-11 and revised with the
-maintainer's decisions of 2026-10-11 and 2026-10-12. Measured from `definitions/itemDefs*.py` (the declared types and
+maintainer's decisions of 2026-10-11, 2026-10-12, 2026-10-21 and 2026-10-22. Measured from `definitions/itemDefs*.py` (the declared types and
 functions of every item) and with [measureUserFunctions.py](measureUserFunctions.py), next to this document (the cost
 of a call into Python). The steps are in the plan, group RG7.
 
@@ -198,138 +198,105 @@ Python class derived from a C++ class: items stay validated dicts (the C++/Pytho
   (`AccessFunctionsCallUserFunctions`, #3003).
 - **Output variables** the item provides only with a user function are conditional in the definition.
 
-### 5.10 Parameters of a user item: evaluation and recommendation (#3056, 2026-10-21)
+### 5.10 Parameters of a user item (#3056)
 
-**What there is.** ObjectUserBody and NodeUser have no parameters besides their nodes and user functions. A mass, a
-stiffness or an element length is written into the user function: as a global of the script, or as a closure, as
-userANCFBeam3DTest.py does with `Element(Le)`, which creates the functions of one element length. A Python user
-function reads the value at each call; a **symbolic** user function records it as a **constant**: changing it means
-recording again, and items with different values need a recording each. Recording the force of userRigidBodyTest.py
-takes 0.2 ms, so a recording per element is affordable for a few thousand elements, but every element then keeps its
-own graph and list of operations, a parameter study records again for every variant, and nothing in the item says
-what its parameters are. One recorded function can already serve several items - assigned to two ObjectUserBody it
-gives both the same, measured -, but only items with the same values.
+ObjectUserBody and NodeUser have a parameter vector `parameters` of any length (default empty), passed as the last
+argument of all their user functions - after the coordinates, as the stiffness and damping follow the kinematics in
+the existing user functions (`springForceUserFunction(mbs, t, itemNumber, deltaL, deltaL_t, stiffness, damping,
+force)`). What the entries mean - masses, lengths, stiffnesses, also flags and indices as numbers - the user functions
+define.
 
-**The proposal** (maintainer 2026-10-20): an item parameter `parameters`, a vector of doubles of any length, passed to
-every user function of the item; zero length is the present behaviour. A pair of Python functions maps it to a dict of
-interpretable quantities and back - `ToDict(parameters) -> dict`, `ToVector(dict) -> vector` -, with lists in the dict
-for vector quantities.
+**The mapping to named quantities** is the Python helper `exudyn.advancedUtilities.ParameterLayout`, a list of named
+entries and their sizes, e.g. `ParameterLayout([('mass', 1), ('inertia', 6), ('com', 3)])`: `ToVector(dict)` checks
+names and sizes, `ToDict(vector)` works with numpy arrays and symbolic vectors alike and gives a number for size 1 and
+a list otherwise. The user defines the layout next to the user functions, uses `ToVector` when adding items and
+`ToDict` inside the functions. It is not an item parameter: it would be a Python function that C++ never calls,
+stored in the item's dict, in `GetDictionary` and in a saved system, and every item of a kind would hold it again; the
+mapping belongs to the **kind** of user element, not to the instance.
 
-**Evaluation.**
+**Symbolic functions keep one recording for all items of a kind.** While recording, `parameters` is a named symbolic
+vector, as `q` is; `ToDict` slices it into components - `d['mass']` is `parameters[0]`, `d['com']` is
+`[parameters[7], parameters[8], parameters[9]]` -, leaves of the recording that read the item's vector at each call:
+written inline, as `q[1]`, a read with an index check and no arithmetic. So one recording serves every element of a
+user beam with its own cross section and length, and `SetObjectParameter(item, 'parameters', ...)` acts at once,
+without recording again (userParametersTest.py). **Python functions** get the vector as a read-only numpy view; `ToDict`
+costs a Python call there, so a function that must be fast indexes the vector directly.
 
-- **Symbolic functions keep one recording for all items.** While recording, `parameters` is a named symbolic vector, as
-  `q` is; `ToDict` called inside the user function slices it into components - `d['mass']` is `parameters[0]`,
-  `d['com']` is `[parameters[7], parameters[8], parameters[9]]` -, and these are leaves of the recording that read the
-  item's vector at each call: in the list of operations they are written inline, as `q[1]`, and cost a read with an
-  index check, no arithmetic.
-  So one recording serves every element of a user beam with its own cross section and length, and
-  `SetObjectParameter(item, 'parameters', ...)` acts at once, in a parameter study or an optimization, without
-  recording again. The mapping costs nothing at evaluation; it runs once, while recording.
-- **Python functions** get the vector as a read-only numpy view, as `q`; `ToDict` works on it alike, at the cost of a
-  Python function call - for speed the function indexes the vector directly.
-- **Bools and indices as doubles** are fine for values that enter the arithmetic or an `IfThenElse`. A parameter that
-  changes the **structure** of the computation - the number of Gauss points, the size of a matrix, a Python `if` -
-  cannot come from the vector in a symbolic function: while recording it has no value (`int(parameters[3])` raises,
-  #3017). Such parameters stay what they are now, constants of the Python code, and a structural variant is a recording
-  of its own. The documentation has to say this clearly; it is the one limit of the approach.
-- **The mapping in the item?** As an item parameter it would be a Python function that C++ never calls, stored in the
-  item's dict: `GetDictionary` and a saved system would carry a Python object, and every item of a kind would hold the
-  same function again. The mapping belongs to the **kind** of user element, next to its user functions, not to the
-  instance. What an item can say without a function: nothing more than the vector.
-- **The interface change.** Every user function of ObjectUserBody and NodeUser gets `parameters` as its **last**
-  argument - after the coordinates, as the stiffness and damping follow the kinematics in the existing user functions
-  (`springForceUserFunction(mbs, t, itemNumber, deltaL, deltaL_t, stiffness, damping, force)`). The interfaces are not
-  public yet (introduced after 1.11, no deprecation needed). Cost: one more read-only array per call for Python, about
-  as much as `q_t` (to be measured), and one more named vector set per call for symbolic functions - a copy of its
-  values, small for parameter vectors (#3039 is the case of large matrices).
+**The one limit.** A parameter that changes the **structure** of the computation - the number of Gauss points, the size
+of a matrix, a Python `if` - cannot come from the vector of a symbolic function: while recording it has no value
+(`int(parameters[3])` raises, #3017). Such values stay constants of the Python code, and a structural variant is a
+recording of its own. Bools and indices as doubles are fine where they enter the arithmetic or an `IfThenElse`.
 
-**Recommendation.**
+**The cost** of the arguments, measured with measureUserFunctions.py (section 7): a Python force function of
+ObjectUserBody, `(mbs, t, itemNumber, qRef, q, q_t, parameters)`, costs 0.33 us per call more than the force function
+of ObjectGenericODE2, `(mbs, t, itemNumber, q, q_t)` - two more numpy views and the gathering of the coordinates by the
+item; as a symbolic function it costs 0.06 us per call more than C++.
 
-1. `parameters` (vector, default `[]`) on ObjectUserBody and NodeUser, passed as the last argument of all their user
-   functions; future user items follow the common pattern (5.9) with it.
-2. The mapping as a small Python helper of the user items, not as an item parameter: a layout of named entries and their
-   sizes, e.g. `ParameterLayout([('mass', 1), ('inertia', 6), ('com', 3)])`, with `ToVector(dict)` - which checks names
-   and sizes - and `ToDict(vector)`, which works with numpy arrays and symbolic vectors alike and gives a number for size
-   1 and a list otherwise. The user defines the layout next to the user functions, uses `ToVector` when adding items and
-   `ToDict` inside the functions. Hand-written pairs of functions remain possible; the helper is the recommended way.
-3. The documentation of the user items: structural parameters are Python constants, numerical ones go into
-   `parameters`; an example of a user element with several parameter sets and one recording (the 3D ANCF beam of
-   userANCFBeam3DTest.py with two cross sections), and the measured cost of the extra argument.
-4. Later, if the dialogs shall show named parameters: a layout registered on the Python side for a kind of user
-   element, read by the dialog - not part of this step.
+**Later**, if the dialogs shall show named parameters: a layout registered on the Python side for a kind of user
+element, read by the dialog.
 
-### 5.11 Interfaces that last: configurations, visualization, what is missing (#3056, 2026-10-22)
+### 5.11 Interfaces that last: configurations, visualization, what is missing (#3056, #3057, #3058, #3060)
 
-The maintainer's considerations of 2026-10-21, and what the user items lack against ObjectRigidBody, ObjectANCFCable2D
-and the geometrically exact beams (read from the code, 2026-10-22). Not all of it is built now; the point is that the
-interfaces of the user functions are chosen so that what comes later does not change them.
+The interfaces of the user functions are chosen so that what comes later does not change them; built and decided with
+the maintainer on 2026-10-21 and 2026-10-22, compared with ObjectRigidBody, ObjectANCFCable2D and the geometrically
+exact beams.
 
-**A. The configurations in the arguments.** The user functions get the total coordinates `q` (reference plus
-displacement) and `q_t`; the reference configuration does not reach them separately. A rigid body needs total
-coordinates, a finite element the displacement and the reference coordinates; the tests carry the reference data in
-Python - a global `Le` and a precomputed mass matrix (userANCFCable2DTest.py), a closure per element length
-(userANCFBeam3DTest.py), a dict by item number filled after `AddObject` (userTetrahedronTest.py). With parameters
-(5.10) that data could move into the parameter vector, but the reference coordinates are already in the nodes, and a
-second copy in the parameters can disagree with them. **Recommended**: every user function gets `qRef` before `q`:
-`(mbs, t, itemNumber, [what the function is about], qRef, q, q_t, parameters)`; in the visualization `q` and `q_t` are
-those of the visualization configuration. **Decided** (maintainer 2026-10-22, #3060): `q` is the displacement
-coordinates, as inside the C++ items, so that results compare; an element computes with `q` and its reference geometry
-from `qRef`, a rigid body with `qRef + q` - one addition per coordinate, also in a symbolic function.
-Node numbers are not needed in the parameters: the item has them, and `itemNumber` reaches them.
+**A. The configurations in the arguments.** Every user function gets `(mbs, t, itemNumber, [what the function is
+about], qRef, q, q_t, parameters)`, the outputVariableUserFunction also `q_tt` before `parameters`. `q` is the
+displacement coordinates of the configuration asked for, as inside the C++ items, so that results compare (#3060); `qRef`
+the reference coordinates of the nodes; in the reference configuration `q`, `q_t` and `q_tt` are zero. A finite
+element computes its strains from `q` and its reference geometry from `qRef`, a rigid body with the total coordinates
+`qRef + q` - one addition per coordinate, also in a symbolic function. In the visualization, `q` and `q_t` are those of
+the visualization configuration. The reference geometry need not be carried in Python next to the item, and node
+numbers are not needed in the parameters: the item has them, and `itemNumber` reaches them.
 
-**B. Parameters of the visualization.** What a drawing needs - the subdivision of a mesh, the cross section drawn, colors,
-many values for a mesh - differs from what the mechanics needs and has a mapping of its own. **Recommended**: a second
-vector, `visualizationParameters`, in the visualization part of the item (VObjectUserBody, where `show` and
-`graphicsDataUserFunction` are), and the graphics user functions get both vectors, as some basic values serve both.
-A drawing function that is reused by several kinds of user elements then has a vector of its own layout.
+**B. Parameters of the visualization.** What a drawing needs - the subdivision of a mesh, the cross section drawn,
+colors - differs from what the mechanics needs. There is no `visualizationParameters` argument (maintainer 2026-10-22):
+the graphicsDataUserFunction, a Python function as it returns graphics data, reads the visualization parameters of its
+item through `mbs.GetObjectParameter(itemNumber, 'V...')`, as it reads `'Vshow'`; a vector of visualization
+parameters, when it comes, is a parameter of VObjectUserBody reached the same way, and a later mapping function (C)
+gets a signature of its own.
 
-**C. Graphics data mapped by a user function.** The graphicsDataUserFunction builds the whole graphics data in Python
-at every redraw (ObjectUserBody: `(mbs, t, itemNumber, qRef, q, q_t, parameters)` of the visualization configuration,
-global coordinates). The alternative the maintainer raised: the item keeps graphics data in local coordinates, as ObjectRigidBody
-keeps `graphicsData`, and a function maps each point. This mapping exists already: `positionUserFunction(..., localPosition,
-...)` IS the map from a local point to its global position, for a rigid body and for an element whose local position
-covers its volume (the 3D ANCF beam, the tetrahedron). **Recommended, for later**: graphics data of the item in local
-(reference) coordinates, drawn by mapping every point with the positionUserFunction in the visualization configuration
-- linear or not; C++ loops over the points, so a symbolic positionUserFunction draws a deformed mesh without Python.
-The normals are computed again from the mapped triangles, so local rotations are not needed; a frame or a text in the
-graphics data would need them, which is rare. Only where the drawing map differs from the mechanical one - the 2D cable,
-whose position covers the axis only, or a scaled deformation - a separate mapping user function with the signature of
-the positionUserFunction plus the visualization parameters. Both are additions; the present graphicsDataUserFunction,
-which produces meshes and stays Python, keeps its place for anything else.
+**C. Graphics data mapped by a user function (later).** The graphicsDataUserFunction builds the whole graphics data in
+Python at every redraw, `(mbs, t, itemNumber, qRef, q, q_t, parameters)` of the visualization configuration, in global
+coordinates. The alternative: the item keeps graphics data in local (reference) coordinates, as ObjectRigidBody keeps
+`graphicsData`, and every point is mapped with the positionUserFunction in the visualization configuration - which IS
+the map from a local point to its global position, for a rigid body and for an element whose local position covers
+its volume (the 3D ANCF beam, the tetrahedron); C++ loops over the points, so a symbolic positionUserFunction draws a
+deformed mesh without Python. The normals are computed again from the mapped triangles. Where the drawing map differs
+from the mechanical one - the 2D cable, whose position covers the axis only, or a scaled deformation - a separate
+mapping user function with the signature of the positionUserFunction. Both are additions; the graphicsDataUserFunction
+keeps its place for anything else.
 
 **D. Visualization settings in symbolic functions.** A Python function reads every setting through `mbs`; a symbolic
-function cannot. Most of what the built-in items do with the settings is done by their C++, not by a function: contour
-colors (ObjectRigidBody with `contour.rigidBodiesColored`, the beams with `contour.outputVariable` per drawn point), the
-subdivision (`bodies.beams.axialTiling`, `crossSectionTiling`), numbers (`showNumbers`). **Recommended**: with C, the C++
-of the user item does the same - it colors the mapped points by `GetOutputVariableBody(contour.outputVariable, localPosition)`,
-which the user body provides from its user functions, and writes the numbers; a symbolic function then needs no setting.
-If a function shall switch its appearance, the values it reads come through `visualizationParameters`, which the user
-(or a later mapping from settings) fills - not by access to the settings structure. **Decided** (maintainer
-2026-10-22): the graphicsDataUserFunction stays as it is, a Python function that reads settings and the visualization
-parameters of its item through `mbs` (`mbs.GetObjectParameter(itemNumber, 'V...')`); access of symbolic functions to
-the visualization settings is a path for later, different from that function, and has no issue.
+function cannot. Most of what the built-in items do with the settings is done by their C++: contour colors
+(`contour.rigidBodiesColored`, `contour.outputVariable` per drawn point of a beam), the subdivision
+(`bodies.beams.axialTiling`), numbers (`showNumbers`). With C, the C++ of the user item can do the same - color the
+mapped points by `GetOutputVariableBody(contour.outputVariable, localPosition)`, which the user body provides from its
+user functions -, so that a symbolic function needs no setting. The graphicsDataUserFunction stays a Python function
+that reads the settings through `mbs` (maintainer 2026-10-22); access of symbolic functions to the visualization
+settings is a path for later, different from that function, and has no issue.
 
-**E. What is missing to rebuild a rigid body or a beam** (ObjectUserBody, NodeUser):
+**E. What ObjectUserBody and NodeUser have, and lack, against a rigid body or a beam:**
 
 | feature | built-ins | user items | how it could come, without changing the interfaces |
 |---|---|---|---|
+| beam outputs (strain, curvature, stress, force, torque), PotentialEnergy, accelerations, Rotation, directors | beams, rigid body, ANCF | through the outputVariableUserFunction, with `q_tt`: every output variable the body does not compute itself (#3057) | - |
+| Acceleration(Local), AngularAcceleration(Local), Rotation, VelocityLocal computed by the item | rigid body, beams | only through the outputVariableUserFunction | in C++ from the Jacobians: `J q_tt` plus the derivative of `J` along `q_t` by differences; Rotation from the rotation matrix |
+| constant mass matrix | ANCF, beams (and rigid body with rotation vector) | `constantMassMatrix`: computed once and stored (#3058) | - |
 | mass integral access (`DisplacementMassIntegral_q`): `MarkerBodyMass`, `LoadMassProportional` (gravity) | all four | missing - the user rigid-body test applies gravity as a force on its center | an optional user function for `∫ρ J_pos dV`, or a center of mass in the parameters |
-| outputs Acceleration(Local), AngularAcceleration(Local), Rotation, VelocityLocal | rigid body, beams | missing | in C++ from the Jacobians: `J q_tt` plus the derivative of `J` along `q_t` by differences; Rotation from the rotation matrix |
-| beam outputs (strain, curvature, force, torque) | beams | done (#3057): the outputVariableUserFunction gives every output variable the body does not compute itself, with `q_tt` | - |
-| PotentialEnergy | rigid body, ANCF | done (#3057), through the outputVariableUserFunction | - |
-| constant mass matrix | ANCF, beams (and rigid body with rotation vector) | done (#3058): `constantMassMatrix`, computed once and stored | - |
 | analytic Jacobian | ANCF, beams | numerical only | an optional jacobianUserFunction, later from the symbolic recording |
 | algebraic equations, data coordinates (plasticity), ODE1 | rigid body (EP in the node), some elements | none | not now (maintainer 2026-10-22); data and further quantities through MainSystem functions, later also for symbolic functions |
 | drawing with contour, tiling, numbers | all | only graphicsDataUserFunction, global | C and D |
 | cable markers (MarkerBodyCable2DShape, ...), GeneralContact cables | ANCF only, by type name | refused | out of scope; these name the C++ classes |
 | node types | RigidBody, Point2DSlope1, ... | NodeUser always Position+Orientation, also without rotation | the type from the given user functions, and the user types of #2989 |
 
-**F. Interfaces chosen to last.** Before the interfaces become public (1.13 is released, the user items are not yet in a
-release): (1) `qRef, q, q_t, parameters` in every user function, `q` the displacements (A, 5.10; #3056, #3060);
-(2) `q_tt` in the outputVariableUserFunction (#3057); (3) no `visualizationParameters` argument: the graphics function
-reaches the visualization parameters of its item through `mbs`, and a later mapping function gets a signature of its
-own (B, C, D); (4) data coordinates, algebraic equations and ODE1 not now, later through MainSystem functions (E);
-(5) everything else in E as optional user functions or flags, added without touching the existing signatures.
+**F. The interfaces as they are fixed.** Before the user items reach a release: (1) `qRef, q, q_t, parameters` in every
+user function, `q` the displacements (A, 5.10; #3056, #3060); (2) `q_tt` in the outputVariableUserFunction (#3057);
+(3) no `visualizationParameters` argument - the graphics function reaches the item through `mbs`, a later mapping
+function gets a signature of its own (B, C, D); (4) data coordinates, algebraic equations and ODE1 not now, later
+through MainSystem functions (E); (5) everything else in E as optional user functions or flags, added without touching
+the existing signatures.
 
 ## 6. Examples that go beyond the present user functions
 
@@ -358,6 +325,8 @@ per step, no Jacobian), Windows, Python 3.13, 1.13.63.dev1:
 | symbolic user function | 0.241 s | 1.20 us | 0.04 us |
 | one ObjectGenericODE2 per mass point (numpy array of 1 in and out) | 0.917 s | 4.58 us | **0.72 us** (2 allocations per call) |
 | one ObjectGenericODE2 for all 100 coordinates (`-K @ q`) | 0.232 s | 1.16 us | 23 us per call for 100 coordinates |
+| one ObjectUserBody per mass point, Python force `(mbs, t, itemNumber, qRef, q, q_t, parameters)`, stored mass matrix (1.13.166.dev1) | 1.17 s | 5.85 us | 0.97 us; 0.33 us more than ObjectGenericODE2 per mass point in the same run |
+| the same, one symbolic force recorded for all bodies | 0.251 s | 1.26 us | 0.06 us |
 
 Conclusions:
 - A call into Python costs 0.2-0.7 us, more with numpy arrays; a Python user item of a few vectors costs about

@@ -831,6 +831,12 @@ CLOSED 2026-10-22 (#3060; maintainer: q the displacements, as inside the C++ cod
 expression adds qRef easily): the C++ gathers q without the reference values; test models compute with qRef + q where
 they need the total coordinates. [log](exudynRevisionLog2026c.md#rg7-12-6)
 
+#### **CLOSED_RG7.12.7** Record symbolic user functions of items on a node with one coordinate, and measure the arguments
+
+CLOSED 2026-10-22 (#3061): the coordinate size by np.size, as the node output is a float for one coordinate; a Python
+force of ObjectUserBody costs 0.33 us per call more than one of ObjectGenericODE2, a symbolic one 0.06 us more than C++;
+pythonUserItems.md 5.10/5.11 describe what is. [log](exudynRevisionLog2026c.md#rg7-12-7)
+
 ## **OPEN_RG8** Compiled C++ user items
 
 Plugins: user items compiled against the shipped headers. A plugin author builds Exudyn from source once and the

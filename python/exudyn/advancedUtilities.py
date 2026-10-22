@@ -950,7 +950,8 @@ def _ObjectCoordinatesSize(mbs, itemIndex):
     nodes = item['nodeNumbers'] if 'nodeNumbers' in item else [item['nodeNumber']]
     size = 0
     for node in nodes:
-        size += len(mbs.GetNodeOutput(node, exudyn.OutputVariableType.Coordinates, configuration=exudyn.ConfigurationType.Reference))
+        #a node with one coordinate gives a float (#3061)
+        size += np.size(mbs.GetNodeOutput(node, exudyn.OutputVariableType.Coordinates, configuration=exudyn.ConfigurationType.Reference))
     return size
 
 
