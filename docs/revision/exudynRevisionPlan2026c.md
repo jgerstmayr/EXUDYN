@@ -837,6 +837,13 @@ CLOSED 2026-10-22 (#3061): the coordinate size by np.size, as the node output is
 force of ObjectUserBody costs 0.33 us per call more than one of ObjectGenericODE2, a symbolic one 0.06 us more than C++;
 pythonUserItems.md 5.10/5.11 describe what is. [log](exudynRevisionLog2026c.md#rg7-12-7)
 
+#### **CLOSED_RG7.12.8** Pass the total coordinates again, as qTotal, to the user functions of ObjectUserBody and NodeUser
+
+CLOSED 2026-10-22 (#3062; maintainer, revising RG7.12.6: nearly all user bodies need the total coordinates, and the C++
+may move to total coordinates for performance; name them qTotal, a function may write q = qTotal): the C++ of #3060
+undone, the argument renamed in the definitions, the symbolic recording and all user functions of the tests.
+[log](exudynRevisionLog2026c.md#rg7-12-8)
+
 ## **OPEN_RG8** Compiled C++ user items
 
 Plugins: user items compiled against the shipped headers. A plugin author builds Exudyn from source once and the

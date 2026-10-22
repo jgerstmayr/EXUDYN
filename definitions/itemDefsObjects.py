@@ -2020,7 +2020,7 @@ oGenericODE1 = mbs.AddObject(ObjectGenericODE1(nodeNumbers=[nODE1],
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 def ObjectUserBody_massMatrixUserFunction(mbs: MainSystem, t: Real, itemNumber: Index, qRef: Vector,
-                                          q: Vector, q_t: Vector, parameters: Vector) -> MatrixContainer:
+                                          qTotal: Vector, q_t: Vector, parameters: Vector) -> MatrixContainer:
     r"""A user function, which computes the mass matrix of the body.
 
     Args:
@@ -2028,14 +2028,14 @@ def ObjectUserBody_massMatrixUserFunction(mbs: MainSystem, t: Real, itemNumber: 
         t: current time in mbs
         itemNumber: integer number $i_N$ of the object in mbs, allowing easy access to all object data via mbs.GetObjectParameter(itemNumber, ...)
         qRef: $\in \Rcal^n$ the reference coordinates of the nodes, in the order of nodeNumbers
-        q: $\in \Rcal^n$ object coordinates, the displacement coordinates of the nodes (without their reference values) of the configuration asked for; zero in the reference configuration
+        qTotal: $\in \Rcal^n$ the total coordinates of the nodes - reference plus displacement coordinates - of the configuration asked for
         q_t: $\in \Rcal^n$ object velocity coordinates of the configuration asked for
         parameters: $\in \Rcal^{n_p}$ the parameters of the body, see parameters; empty if not given
     Returns:
         $\in \Rcal^{n \times n}$ the mass matrix, as numpy array, list of lists or exu.MatrixContainer
     """
 
-def ObjectUserBody_forceUserFunction(mbs: MainSystem, t: Real, itemNumber: Index, qRef: Vector, q: Vector,
+def ObjectUserBody_forceUserFunction(mbs: MainSystem, t: Real, itemNumber: Index, qRef: Vector, qTotal: Vector,
                                      q_t: Vector, parameters: Vector) -> Vector:
     r"""A user function, which computes the generalized forces of the body: elastic forces, the quadratic velocity terms of a rigid body, damping; on the right-hand side, $\Mm \ddot\qv = \fv$.
 
@@ -2044,7 +2044,7 @@ def ObjectUserBody_forceUserFunction(mbs: MainSystem, t: Real, itemNumber: Index
         t: current time in mbs
         itemNumber: integer number $i_N$ of the object in mbs, allowing easy access to all object data via mbs.GetObjectParameter(itemNumber, ...)
         qRef: $\in \Rcal^n$ the reference coordinates of the nodes, in the order of nodeNumbers
-        q: $\in \Rcal^n$ object coordinates, the displacement coordinates of the nodes (without their reference values) of the configuration asked for; zero in the reference configuration
+        qTotal: $\in \Rcal^n$ the total coordinates of the nodes - reference plus displacement coordinates - of the configuration asked for
         q_t: $\in \Rcal^n$ object velocity coordinates of the configuration asked for
         parameters: $\in \Rcal^{n_p}$ the parameters of the body, see parameters; empty if not given
     Returns:
@@ -2052,7 +2052,7 @@ def ObjectUserBody_forceUserFunction(mbs: MainSystem, t: Real, itemNumber: Index
     """
 
 def ObjectUserBody_positionUserFunction(mbs: MainSystem, t: Real, itemNumber: Index, localPosition: Vector3D,
-                                        qRef: Vector, q: Vector, q_t: Vector, parameters: Vector) -> Vector3D:
+                                        qRef: Vector, qTotal: Vector, q_t: Vector, parameters: Vector) -> Vector3D:
     r"""A user function, which computes the global position of the material point at localPosition: the position interface of the body.
 
     Args:
@@ -2061,7 +2061,7 @@ def ObjectUserBody_positionUserFunction(mbs: MainSystem, t: Real, itemNumber: In
         itemNumber: integer number $i_N$ of the object in mbs
         localPosition: $\in \Rcal^3$ the local position of the point, in the coordinates the body defines (e.g. body-fixed, or the element coordinates of a finite element)
         qRef: $\in \Rcal^n$ the reference coordinates of the nodes, in the order of nodeNumbers
-        q: $\in \Rcal^n$ object coordinates, the displacement coordinates of the nodes (without their reference values) of the configuration asked for; zero in the reference configuration
+        qTotal: $\in \Rcal^n$ the total coordinates of the nodes - reference plus displacement coordinates - of the configuration asked for
         q_t: $\in \Rcal^n$ object velocity coordinates of the configuration asked for
         parameters: $\in \Rcal^{n_p}$ the parameters of the body, see parameters; empty if not given
     Returns:
@@ -2069,7 +2069,7 @@ def ObjectUserBody_positionUserFunction(mbs: MainSystem, t: Real, itemNumber: In
     """
 
 def ObjectUserBody_matrixUserFunction(mbs: MainSystem, t: Real, itemNumber: Index, localPosition: Vector3D,
-                                      qRef: Vector, q: Vector, q_t: Vector, parameters: Vector) -> MatrixContainer:
+                                      qRef: Vector, qTotal: Vector, q_t: Vector, parameters: Vector) -> MatrixContainer:
     r"""A user function of the interface of the body that returns a matrix at localPosition: the position Jacobian $\Jm_{pos} = \partial \vv / \partial \dot\qv$ (3 x n), the rotation matrix (3 x 3) or the rotation Jacobian $\Jm_{rot} = \partial \LU{0}{\tomega} / \partial \dot\qv$ (3 x n, global angular velocity).
 
     Args:
@@ -2078,7 +2078,7 @@ def ObjectUserBody_matrixUserFunction(mbs: MainSystem, t: Real, itemNumber: Inde
         itemNumber: integer number $i_N$ of the object in mbs
         localPosition: $\in \Rcal^3$ the local position of the point
         qRef: $\in \Rcal^n$ the reference coordinates of the nodes, in the order of nodeNumbers
-        q: $\in \Rcal^n$ object coordinates, the displacement coordinates of the nodes (without their reference values) of the configuration asked for; zero in the reference configuration
+        qTotal: $\in \Rcal^n$ the total coordinates of the nodes - reference plus displacement coordinates - of the configuration asked for
         q_t: $\in \Rcal^n$ object velocity coordinates of the configuration asked for
         parameters: $\in \Rcal^{n_p}$ the parameters of the body, see parameters; empty if not given
     Returns:
@@ -2087,7 +2087,7 @@ def ObjectUserBody_matrixUserFunction(mbs: MainSystem, t: Real, itemNumber: Inde
 
 def ObjectUserBody_outputVariableUserFunction(mbs: MainSystem, t: Real, itemNumber: Index,
                                               outputVariableType: OutputVariableType, localPosition: Vector3D,
-                                              qRef: Vector, q: Vector, q_t: Vector, q_tt: Vector,
+                                              qRef: Vector, qTotal: Vector, q_t: Vector, q_tt: Vector,
                                               parameters: Vector) -> Vector:
     r"""A user function, which computes the output variables of the body at localPosition that the body does not compute itself: strains, curvatures, stresses, forces and torques of a user element, its potential energy, accelerations, the user types UserType0 to UserType3 (named with exudyn.special.userTypes.SetName); for a type it does not provide, it returns an empty list. A symbolic function distinguishes the types with esym.IfThenElse(outputVariableType == int(exu.OutputVariableType.StrainLocal), ...) and returns the same size for all of them.
 
@@ -2098,7 +2098,7 @@ def ObjectUserBody_outputVariableUserFunction(mbs: MainSystem, t: Real, itemNumb
         outputVariableType: the output variable asked for
         localPosition: $\in \Rcal^3$ the local position of the point
         qRef: $\in \Rcal^n$ the reference coordinates of the nodes, in the order of nodeNumbers
-        q: $\in \Rcal^n$ object coordinates, the displacement coordinates of the nodes (without their reference values) of the configuration asked for; zero in the reference configuration
+        qTotal: $\in \Rcal^n$ the total coordinates of the nodes - reference plus displacement coordinates - of the configuration asked for
         q_t: $\in \Rcal^n$ object velocity coordinates of the configuration asked for
         q_tt: $\in \Rcal^n$ object acceleration coordinates of the configuration asked for; zero in the reference configuration
         parameters: $\in \Rcal^{n_p}$ the parameters of the body, see parameters; empty if not given
@@ -2106,7 +2106,7 @@ def ObjectUserBody_outputVariableUserFunction(mbs: MainSystem, t: Real, itemNumb
         the value as a vector of any size, the same size for every call with the same outputVariableType; empty for a type the function does not provide
     """
 
-def ObjectUserBody_graphicsDataUserFunction(mbs: MainSystem, t: Real, itemNumber: Index, qRef: Vector, q: Vector,
+def ObjectUserBody_graphicsDataUserFunction(mbs: MainSystem, t: Real, itemNumber: Index, qRef: Vector, qTotal: Vector,
                                             q_t: Vector, parameters: Vector) -> BodyGraphicsData:
     r"""A user function, which draws the body: it returns a list of graphics data in global coordinates, computed from the coordinates of the visualization configuration; see `exudyn.graphics`.
 
@@ -2115,7 +2115,7 @@ def ObjectUserBody_graphicsDataUserFunction(mbs: MainSystem, t: Real, itemNumber
         t: time of the visualization configuration
         itemNumber: integer number $i_N$ of the object in mbs
         qRef: $\in \Rcal^n$ the reference coordinates of the nodes, in the order of nodeNumbers
-        q: $\in \Rcal^n$ object coordinates, the displacement coordinates of the nodes (without their reference values) of the configuration asked for; zero in the reference configuration
+        qTotal: $\in \Rcal^n$ the total coordinates of the nodes - reference plus displacement coordinates - of the configuration asked for
         q_t: $\in \Rcal^n$ object velocity coordinates of the configuration asked for
         parameters: $\in \Rcal^{n_p}$ the parameters of the body, see parameters; empty if not given
     Returns:
@@ -2132,7 +2132,7 @@ definitions.append(ItemDefinition(
     template<class TUserFunction>
     void EvaluateMatrixUserFunction(const TUserFunction& function, const char* name, Index columns, Matrix& value, Real t,
         const Vector3D& localPosition, const Vector& qRef, const Vector& coordinates, const Vector& coordinates_t) const;
-    //! the coordinates the user functions get in a configuration: the reference ones, the displacements and the velocities (#3056)
+    //! the coordinates the user functions get in a configuration: the reference ones, the total ones and their velocities (#3056)
     void GatherUserFunctionCoordinates(ResizableConstVector& qRef, ResizableConstVector& q, ResizableConstVector& q_t,
         ConfigurationType configuration) const;
     //! the acceleration coordinates of a configuration, zero in the reference configuration (#3056)
@@ -2159,11 +2159,12 @@ definitions.append(ItemDefinition(
     detailedDescription=r"""    #### Coordinates
 
     The object coordinates $\qv \in \Rcal^n$ are the ABRV:ODE2 coordinates of its nodes, in the order of
-    `nodeNumbers`, **without** their reference values - the displacement coordinates, as in the items of Exudyn.
-    Every user function gets the reference coordinates $\qv\cRef$, the coordinates $\qv$ and the velocities
-    $\dot\qv$ of the configuration asked for, and the parameters $\pv_{par}$ of the body (#3056): a finite element
-    computes its strains from $\qv$ and its reference geometry from $\qv\cRef$, a rigid body with the total
-    coordinates $\qv\cRef + \qv$. All of them are read-only numpy arrays, the local position as well.
+    `nodeNumbers`. Every user function gets the reference coordinates $\qv\cRef$ (`qRef`), the total coordinates
+    $\qv_{tot} = \qv\cRef + \qv$ (`qTotal`, reference plus displacement coordinates) and the velocities $\dot\qv$
+    (`q_t`) of the configuration asked for, and the parameters $\pv_{par}$ of the body (#3056, #3062): a rigid body
+    computes with $\qv_{tot}$, a finite element with the displacements $\qv_{tot} - \qv\cRef$ and its reference
+    geometry from $\qv\cRef$; a function may write `q = qTotal` to keep its expressions short. All of them are
+    read-only numpy arrays, the local position as well.
 
     #### Parameters
 
@@ -2215,19 +2216,19 @@ definitions.append(ItemDefinition(
     own may not call Python: the body, the markers on it and the connectors, loads and sensors on them are drawn in
     the main thread, together with the graphics user functions (#3003).
     """,
-    miniExample=r"""    #a mass point as a user body on a NodePoint: M = m*I, the position of every point is qRef + q
+    miniExample=r"""    #a mass point as a user body on a NodePoint: M = m*I, the position of every point is qTotal
     m = 2
     node = mbs.AddNode(NodePoint(referenceCoordinates=[1,0,0]))
-    def UFmass(mbs, t, itemNumber, qRef, q, q_t, parameters):
+    def UFmass(mbs, t, itemNumber, qRef, qTotal, q_t, parameters):
         return m*np.eye(3)
-    def UFposition(mbs, t, itemNumber, localPosition, qRef, q, q_t, parameters):
-        return qRef + q
-    def UFpositionJacobian(mbs, t, itemNumber, localPosition, qRef, q, q_t, parameters):
+    def UFposition(mbs, t, itemNumber, localPosition, qRef, qTotal, q_t, parameters):
+        return qTotal
+    def UFpositionJacobian(mbs, t, itemNumber, localPosition, qRef, qTotal, q_t, parameters):
         return np.eye(3)
     #a point does not rotate; with these, rigid markers and the rotation outputs work on it
-    def UFrotationMatrix(mbs, t, itemNumber, localPosition, qRef, q, q_t, parameters):
+    def UFrotationMatrix(mbs, t, itemNumber, localPosition, qRef, qTotal, q_t, parameters):
         return np.eye(3)
-    def UFrotationJacobian(mbs, t, itemNumber, localPosition, qRef, q, q_t, parameters):
+    def UFrotationJacobian(mbs, t, itemNumber, localPosition, qRef, qTotal, q_t, parameters):
         return np.zeros((3,3))
     body = mbs.AddObject(ObjectUserBody(nodeNumbers=[node], massMatrixUserFunction=UFmass,
                                         positionUserFunction=UFposition,

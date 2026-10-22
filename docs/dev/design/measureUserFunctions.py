@@ -36,11 +36,11 @@ def Model(variant):
         return (SC, mbs)
     if variant in ['userBodyPerMass', 'userBodyPerMassSymbolic']:
         #every mass point an ObjectUserBody of 1 coordinate with a Python or symbolic force, the mass matrix stored
-        #(constantMassMatrix): the cost of the arguments qRef, q, q_t, parameters (#3056) against ObjectGenericODE2
-        def UFmass(mbs, t, itemNumber, qRef, q, q_t, parameters):
+        #(constantMassMatrix): the cost of the arguments qRef, qTotal, q_t, parameters (#3056) against ObjectGenericODE2
+        def UFmass(mbs, t, itemNumber, qRef, qTotal, q_t, parameters):
             return np.eye(1)
-        def UFforce(mbs, t, itemNumber, qRef, q, q_t, parameters):
-            return -100*q
+        def UFforce(mbs, t, itemNumber, qRef, qTotal, q_t, parameters):
+            return -100*qTotal
         symbolicForce = None
         for i in range(n):
             nd = mbs.AddNode(NodeGenericODE2(numberOfODE2Coordinates=1, referenceCoordinates=[0],

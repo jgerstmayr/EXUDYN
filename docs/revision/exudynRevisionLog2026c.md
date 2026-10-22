@@ -2696,3 +2696,24 @@ planned changes of the user body.)*
 - pythonUserItems.md 5.10 and 5.11 rewritten to say what is - the parameters, `ParameterLayout`, the arguments with
   `q` the displacements, no visualizationParameters argument, symbolic access to the visualization settings a later
   path - with the measurement, also in the table of section 7; the gaps of E kept as the list for later.
+
+<a id="rg7-12-8"></a>
+### RG7.12.8 — the total coordinates as qTotal (2026-10-22, #3062)
+*(Maintainer 2026-10-22: looking at the user body examples, almost all write q + qRef, as they need total coordinates;
+the other case seems rare, and future changes in C++ may switch to total coordinates for performance. Revising the last
+decision: use total coordinates in the user item user functions, but denote them as qTotal to make that clear; for
+complex functions they can be assigned to q inside the function to keep expressions short, but the interface shall be
+clear.)*
+- The C++ and the test models of #3060 reverted (`git revert --no-commit` of that commit, the plan, log, tracker and
+  version files kept): `GatherUserFunctionCoordinates` and the graphicsDataUserFunction gather with the reference,
+  `CNodeUser::TotalCoordinates` again; userRigidBodyTest.py has its earlier result 13.475755021376248 again.
+- The argument `q` of every user function of ObjectUserBody and NodeUser is `qTotal` - in the defs of the definition
+  files, hence in the Protocols, the argument tables and the symbolic signatures; ConvertFunctionToSymbolic sizes
+  `qTotal` like `q` (by the name in the definition). The user function itself may call it anything, as the recording
+  passes the arguments by the names of the user's function.
+- The user functions of the mini examples, the test models (deleteItemsTest, userANCFBeam3DTest, userANCFCable2DTest,
+  userNodeTest, userOutputVariablesTest, userParametersTest, userRigidBodyTest, userTetrahedronTest, userTypesTest),
+  test_graphicsData, test_itemCompatibility and measureUserFunctions.py take `qTotal`; a function that uses it more than
+  twice starts with `q = qTotal`. Results unchanged.
+- pythonUserItems.md 5.9, 5.10, 5.11 A and F, userFunctionBoundary.md (13), revisions.md and the ParameterLayout
+  docstring say `qTotal`.

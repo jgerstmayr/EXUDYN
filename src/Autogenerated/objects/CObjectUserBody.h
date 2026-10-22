@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-10-22  21:06:36 (last modified)
+* @date         2026-10-22  15:51:08 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -86,7 +86,7 @@ protected: // AUTO:
     template<class TUserFunction>
     void EvaluateMatrixUserFunction(const TUserFunction& function, const char* name, Index columns, Matrix& value, Real t,
         const Vector3D& localPosition, const Vector& qRef, const Vector& coordinates, const Vector& coordinates_t) const;
-    //! the coordinates the user functions get in a configuration: the reference ones, the displacements and the velocities (#3056)
+    //! the coordinates the user functions get in a configuration: the reference ones, the total ones and their velocities (#3056)
     void GatherUserFunctionCoordinates(ResizableConstVector& qRef, ResizableConstVector& q, ResizableConstVector& q_t,
         ConfigurationType configuration) const;
     //! the acceleration coordinates of a configuration, zero in the reference configuration (#3056)

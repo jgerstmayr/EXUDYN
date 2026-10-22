@@ -58,11 +58,11 @@ for (userType, name) in [(OVT.Position, 'MyPosition'), (OVT.UserType2, 'Velocity
 
 #a mass point as a user body, with two user output variables
 node = mbs.AddNode(NodePoint(referenceCoordinates=[1, 0, 0], initialVelocities=[0.5, 0, 0]))
-def UFmass(mbs, t, itemNumber, qRef, q, q_t, parameters):
+def UFmass(mbs, t, itemNumber, qRef, qTotal, q_t, parameters):
     return np.eye(3)
-def UFoutputVariable(mbs, t, itemNumber, outputVariableType, localPosition, qRef, q, q_t, q_tt, parameters):
+def UFoutputVariable(mbs, t, itemNumber, outputVariableType, localPosition, qRef, qTotal, q_t, q_tt, parameters):
     if outputVariableType == OVT.BendingStrain:
-        return [qRef[0] + q[0], q_t[0]]
+        return [qTotal[0], q_t[0]]
     return [2*t]
 body = mbs.AddObject(ObjectUserBody(nodeNumbers=[node], massMatrixUserFunction=UFmass, outputVariableUserFunction=UFoutputVariable))
 sensorFile = 'solution/userTypesTestSensor.txt'

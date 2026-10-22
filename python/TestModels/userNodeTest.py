@@ -2,7 +2,7 @@
 # This is an EXUDYN example
 #
 # Details:  NodeUser (#2974), a node whose position and orientation are Python user functions, against the nodes of
-#           Exudyn: (1) a point - position qRef + q, without and with positionJacobianUserFunction - with a mass, a spring
+#           Exudyn: (1) a point - position qTotal, without and with positionJacobianUserFunction - with a mass, a spring
 #           to the ground and gravity on MarkerNodePosition, against NodePoint; (2) a rigid body node with the
 #           coordinates of NodeRigidBodyRxyz - position and Tait-Bryan angles - with the mass matrix of a rigid body
 #           in ObjectGenericODE2, a RigidBodySpringDamper on MarkerNodeRigid and a torque, the rotation Jacobian
@@ -39,9 +39,9 @@ def Solve(mbs, endTime=0.5, steps=200):
 
 #%%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #(1) a point
-def PointPosition(mbs, t, itemNumber, qRef, q, q_t, parameters):
-    return qRef + q
-def PointJacobian(mbs, t, itemNumber, qRef, q, q_t, parameters):
+def PointPosition(mbs, t, itemNumber, qRef, qTotal, q_t, parameters):
+    return qTotal
+def PointJacobian(mbs, t, itemNumber, qRef, qTotal, q_t, parameters):
     return np.eye(3)
 
 def PointModel(kind):
@@ -81,14 +81,14 @@ Check(any(item[1] == int(exu.ItemType.Node) for item in data['spheres']['items']
 #(2) a rigid body node with the coordinates of NodeRigidBodyRxyz: position and Tait-Bryan angles
 mass = 2.
 inertia = np.diag([0.1, 0.2, 0.3])
-def RxyzPosition(mbs, t, itemNumber, qRef, q, q_t, parameters):
-    return qRef[0:3] + q[0:3]
-def RxyzJacobian(mbs, t, itemNumber, qRef, q, q_t, parameters):
+def RxyzPosition(mbs, t, itemNumber, qRef, qTotal, q_t, parameters):
+    return qTotal[0:3]
+def RxyzJacobian(mbs, t, itemNumber, qRef, qTotal, q_t, parameters):
     return np.hstack([np.eye(3), np.zeros((3, 3))])
-def RxyzRotation(mbs, t, itemNumber, qRef, q, q_t, parameters):
-    return cu.RotXYZ2RotationMatrix(qRef[3:6] + q[3:6])
-def RxyzRotationJacobian(mbs, t, itemNumber, qRef, q, q_t, parameters):
-    return np.hstack([np.zeros((3, 3)), cu.RotXYZ2G(qRef[3:6] + q[3:6])])
+def RxyzRotation(mbs, t, itemNumber, qRef, qTotal, q_t, parameters):
+    return cu.RotXYZ2RotationMatrix(qTotal[3:6])
+def RxyzRotationJacobian(mbs, t, itemNumber, qRef, qTotal, q_t, parameters):
+    return np.hstack([np.zeros((3, 3)), cu.RotXYZ2G(qTotal[3:6])])
 
 def RigidModel(kind):
     SC = exu.SystemContainer()
@@ -160,7 +160,7 @@ Check(Refused(lambda: Assembled(positionUserFunction=PointPosition, referenceCoo
 mbsNoRotation = Assembled(positionUserFunction=PointPosition)
 Check(Refused(lambda: mbsNoRotation.GetNodeOutput(0, exu.OutputVariableType.RotationMatrix), ValueError),
       'a rotation without rotationMatrixUserFunction not refused')
-mbsWrongJacobian = Assembled(positionUserFunction=PointPosition, positionJacobianUserFunction=lambda mbs, t, itemNumber, qRef, q, q_t, parameters: np.eye(2))
+mbsWrongJacobian = Assembled(positionUserFunction=PointPosition, positionJacobianUserFunction=lambda mbs, t, itemNumber, qRef, qTotal, q_t, parameters: np.eye(2))
 Check(Refused(lambda: mbsWrongJacobian.GetNodeOutput(0, exu.OutputVariableType.Velocity), ValueError), 'a wrong Jacobian size not refused')
 
 u += testError

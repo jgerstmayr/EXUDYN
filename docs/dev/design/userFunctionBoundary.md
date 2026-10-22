@@ -234,7 +234,7 @@ The interface above decides most of the points of RG7.3.4:
 | (7) double evaluations | `GetDisplacement` from one position evaluation and the reference position stored at `Assemble` |
 | (8) errors of a wrong size | one check in the generated `Evaluate`: `PyError` with the name of the user function and the sizes |
 | (9)-(12) ObjectGenericODE2 | the commented code removed; the Jacobian through `CopyOrAddTripletsWithFactor` in both modes; the coordinate buffers as in (3) |
-| (13) displacement or total coordinates | decided (maintainer 2026-10-22, #3060): ObjectGenericODE2, ObjectUserBody and NodeUser give the displacement coordinates, as the C++ items use them, and ObjectUserBody and NodeUser also `qRef`; the efficiency of forming the total coordinates is no criterion of this proposal |
+| (13) displacement or total coordinates | ObjectGenericODE2 gives displacements; ObjectUserBody and NodeUser give the total coordinates, named `qTotal`, and `qRef` (maintainer 2026-10-22, #3062: nearly every user body needs the total coordinates, and the C++ may move to total coordinates, RG13); the efficiency of forming the total coordinates is no criterion of this proposal |
 | (14) MainSystem argument | inside the generated `Evaluate` (the item has `cSystemData->GetMainSystemBacklink()`) |
 | (15) gathering coordinates | one function `CObjectBody::GatherCoordinates(ResizableVector& q, ResizableVector& q_t, configuration, withReference)` for GenericODE2, GenericODE1, UserBody, KinematicTree, FFRF |
 | (16) the matrix copy | done (#2999) |

@@ -59,12 +59,12 @@ axialRule = GaussRule(5)
 bendingRule = GaussRule(3)
 massMatrix = sum(w*rhoA*S(x).T @ S(x) for (x, w) in GaussRule(4))
 
-def UFmass(mbs, t, itemNumber, qRef, q, q_t, parameters):
+def UFmass(mbs, t, itemNumber, qRef, qTotal, q_t, parameters):
     return massMatrix
 
-#the elastic forces, on the right-hand side, from the total coordinates qRef + q
-def UFforce(mbs, t, itemNumber, qRef, q, q_t, parameters):
-    q = qRef + q
+#the elastic forces, on the right-hand side; from the total coordinates qTotal
+def UFforce(mbs, t, itemNumber, qRef, qTotal, q_t, parameters):
+    q = np.array(qTotal)
     f = np.zeros(8)
     for (x, w) in axialRule:
         rx = S_x(x) @ q
@@ -80,10 +80,10 @@ def UFforce(mbs, t, itemNumber, qRef, q, q_t, parameters):
         f -= w*EI*(cross/g) * curvature_q
     return f
 
-def UFposition(mbs, t, itemNumber, localPosition, qRef, q, q_t, parameters):
-    return list(S(localPosition[0]) @ (qRef + q)) + [0]
+def UFposition(mbs, t, itemNumber, localPosition, qRef, qTotal, q_t, parameters):
+    return list(S(localPosition[0]) @ qTotal) + [0]
 
-def UFpositionJacobian(mbs, t, itemNumber, localPosition, qRef, q, q_t, parameters):
+def UFpositionJacobian(mbs, t, itemNumber, localPosition, qRef, qTotal, q_t, parameters):
     return np.vstack([S(localPosition[0]), np.zeros(8)])
 
 nGround = mbs.AddNode(NodePointGround())

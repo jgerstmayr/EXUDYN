@@ -121,9 +121,9 @@ if not testIsActive:
 #the number of an object, as its user functions get it: from AddObject on, and renumbered by DeleteObject (#3012)
 mbs2 = SC.AddSystem()
 itemNumbers = []
-def UFposition(mbs, t, itemNumber, localPosition, qRef, q, q_t, parameters):
+def UFposition(mbs, t, itemNumber, localPosition, qRef, qTotal, q_t, parameters):
     itemNumbers.append(itemNumber)
-    return qRef[0:3] + q[0:3] + localPosition
+    return qTotal[0:3] + localPosition
 
 oGround2 = mbs2.AddObject(ObjectGround())
 oMass2 = mbs2.AddObject(MassPoint(mass=1, nodeNumber=mbs2.AddNode(NodePoint())))

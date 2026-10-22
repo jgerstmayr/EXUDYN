@@ -852,7 +852,7 @@ def ConvertFunctionToSymbolic(mbs, function, userFunctionName, itemIndex=None, i
             if '2D' in varType: size = 2
             if '3D' in varType: size = 3
             if '6D' in varType: size = 6
-            if varType == 'StdVector' and functionArgs[1][i] in ['qRef', 'q', 'q_t', 'q_tt']:
+            if varType == 'StdVector' and functionArgs[1][i] in ['qRef', 'qTotal', 'q', 'q_t', 'q_tt']:
                 size = _ObjectCoordinatesSize(mbs, itemIndex)
             if varType == 'StdVector' and functionArgs[1][i] == 'parameters': #of a user item (#3056)
                 size = _ObjectParametersSize(mbs, itemIndex)
@@ -1010,9 +1010,9 @@ class ParameterLayout:
     Example:
         layout = ParameterLayout([('mass', 1), ('stiffness', 1), ('com', 3)])
         p = layout.ToVector({'mass': 2., 'stiffness': 100., 'com': [0, 0.1, 0]})   #[2, 100, 0, 0.1, 0]
-        def UFforce(mbs, t, itemNumber, qRef, q, q_t, parameters):
+        def UFforce(mbs, t, itemNumber, qRef, qTotal, q_t, parameters):
             d = layout.ToDict(parameters)
-            return -d['stiffness']*q
+            return -d['stiffness']*(qTotal - qRef)
     """
 
     def __init__(self, entries):

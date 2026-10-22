@@ -37,21 +37,21 @@ m, k = 2., 50.
 x0 = 0.1        #initial displacement
 L = 1.          #the reference position of the mass: the length of the spring
 
-def UFmass(mbs, t, itemNumber, qRef, q, q_t, parameters):
+def UFmass(mbs, t, itemNumber, qRef, qTotal, q_t, parameters):
     return layout.ToDict(parameters)['mass']*np.eye(3)
 
-def UFforce(mbs, t, itemNumber, qRef, q, q_t, parameters):
-    return -layout.ToDict(parameters)['stiffness']*q
+def UFforce(mbs, t, itemNumber, qRef, qTotal, q_t, parameters):
+    return -layout.ToDict(parameters)['stiffness']*(qTotal - qRef)
 
-def UFposition(mbs, t, itemNumber, localPosition, qRef, q, q_t, parameters):
-    return qRef + q + localPosition
+def UFposition(mbs, t, itemNumber, localPosition, qRef, qTotal, q_t, parameters):
+    return qTotal + localPosition
 
-def UFpositionJacobian(mbs, t, itemNumber, localPosition, qRef, q, q_t, parameters):
+def UFpositionJacobian(mbs, t, itemNumber, localPosition, qRef, qTotal, q_t, parameters):
     return np.eye(3)
 
-def UFoutput(mbs, t, itemNumber, outputVariableType, localPosition, qRef, q, q_t, q_tt, parameters):
+def UFoutput(mbs, t, itemNumber, outputVariableType, localPosition, qRef, qTotal, q_t, q_tt, parameters):
     """Python: one branch per output variable, an empty list for the others"""
-    u = q[0]
+    u = qTotal[0] - qRef[0]
     if outputVariableType == OVT.StrainLocal:
         return [u/qRef[0]]
     if outputVariableType == OVT.PotentialEnergy:
@@ -60,9 +60,9 @@ def UFoutput(mbs, t, itemNumber, outputVariableType, localPosition, qRef, q, q_t
         return [q_tt[0], q_tt[1], q_tt[2]]
     return []
 
-def UFoutputSymbolic(mbs, t, itemNumber, outputVariableType, localPosition, qRef, q, q_t, q_tt, parameters):
+def UFoutputSymbolic(mbs, t, itemNumber, outputVariableType, localPosition, qRef, qTotal, q_t, q_tt, parameters):
     """symbolic: IfThenElse on outputVariableType, the same size for every type"""
-    u = q[0]
+    u = qTotal[0] - qRef[0]
     energy = 0.5*layout.ToDict(parameters)['stiffness']*u*u
     first = esym.IfThenElse(outputVariableType == int(OVT.StrainLocal), u/qRef[0],
                             esym.IfThenElse(outputVariableType == int(OVT.PotentialEnergy), energy, q_tt[0]))

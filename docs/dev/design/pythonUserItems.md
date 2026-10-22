@@ -179,9 +179,9 @@ Python class derived from a C++ class: items stay validated dicts (the C++/Pytho
   its def in the definition file carries the annotations, from which the std::function, the Python Protocol and the
   argument table of the page are derived. Functions with the same signature and meaning share one def.
 - **Arguments**: `mbs, t, itemNumber` first, always - the time of the configuration asked for, the number of the item;
-  then what the function is about (`localPosition`, `outputVariableType`); then `qRef, q, q_t` - the reference
-  coordinates, the displacement coordinates (without the reference values, as inside the C++ items, #3060) and the
-  velocities of the configuration asked for -,
+  then what the function is about (`localPosition`, `outputVariableType`); then `qRef, qTotal, q_t` - the reference
+  coordinates, the total coordinates (reference plus displacement coordinates, #3062) and the velocities of the
+  configuration asked for -,
   `q_tt` where accelerations are needed (outputVariableUserFunction), and last `parameters`, the parameter vector of
   the item (#3056). All of them as read-only numpy arrays. What else a function needs it reads through `mbs` and
   `itemNumber`; a symbolic function will get such access through MainSystem functions (RG12.4).
@@ -228,25 +228,27 @@ of a matrix, a Python `if` - cannot come from the vector of a symbolic function:
 recording of its own. Bools and indices as doubles are fine where they enter the arithmetic or an `IfThenElse`.
 
 **The cost** of the arguments, measured with measureUserFunctions.py (section 7): a Python force function of
-ObjectUserBody, `(mbs, t, itemNumber, qRef, q, q_t, parameters)`, costs 0.33 us per call more than the force function
+ObjectUserBody, `(mbs, t, itemNumber, qRef, qTotal, q_t, parameters)`, costs 0.33 us per call more than the force function
 of ObjectGenericODE2, `(mbs, t, itemNumber, q, q_t)` - two more numpy views and the gathering of the coordinates by the
 item; as a symbolic function it costs 0.06 us per call more than C++.
 
 **Later**, if the dialogs shall show named parameters: a layout registered on the Python side for a kind of user
 element, read by the dialog.
 
-### 5.11 Interfaces that last: configurations, visualization, what is missing (#3056, #3057, #3058, #3060)
+### 5.11 Interfaces that last: configurations, visualization, what is missing (#3056, #3057, #3058, #3062)
 
 The interfaces of the user functions are chosen so that what comes later does not change them; built and decided with
 the maintainer on 2026-10-21 and 2026-10-22, compared with ObjectRigidBody, ObjectANCFCable2D and the geometrically
 exact beams.
 
 **A. The configurations in the arguments.** Every user function gets `(mbs, t, itemNumber, [what the function is
-about], qRef, q, q_t, parameters)`, the outputVariableUserFunction also `q_tt` before `parameters`. `q` is the
-displacement coordinates of the configuration asked for, as inside the C++ items, so that results compare (#3060); `qRef`
-the reference coordinates of the nodes; in the reference configuration `q`, `q_t` and `q_tt` are zero. A finite
-element computes its strains from `q` and its reference geometry from `qRef`, a rigid body with the total coordinates
-`qRef + q` - one addition per coordinate, also in a symbolic function. In the visualization, `q` and `q_t` are those of
+about], qRef, qTotal, q_t, parameters)`, the outputVariableUserFunction also `q_tt` before `parameters`. `qTotal` is the
+total coordinates of the configuration asked for - reference plus displacement coordinates -, `qRef` the reference
+coordinates of the nodes; in the reference configuration `qTotal` is `qRef` and `q_t`, `q_tt` are zero. A rigid body
+computes with `qTotal`, a finite element its displacements as `qTotal - qRef` and its reference geometry from `qRef`. The
+name says which coordinates they are; a function with long expressions writes `q = qTotal` first. Total coordinates
+(maintainer 2026-10-22, #3062, revising #3060): nearly all user bodies so far needed them and computed `qRef + q`, and
+the C++ may move to total coordinates for performance (RG13). In the visualization, `qTotal` and `q_t` are those of
 the visualization configuration. The reference geometry need not be carried in Python next to the item, and node
 numbers are not needed in the parameters: the item has them, and `itemNumber` reaches them.
 
@@ -258,7 +260,7 @@ parameters, when it comes, is a parameter of VObjectUserBody reached the same wa
 gets a signature of its own.
 
 **C. Graphics data mapped by a user function (later).** The graphicsDataUserFunction builds the whole graphics data in
-Python at every redraw, `(mbs, t, itemNumber, qRef, q, q_t, parameters)` of the visualization configuration, in global
+Python at every redraw, `(mbs, t, itemNumber, qRef, qTotal, q_t, parameters)` of the visualization configuration, in global
 coordinates. The alternative: the item keeps graphics data in local (reference) coordinates, as ObjectRigidBody keeps
 `graphicsData`, and every point is mapped with the positionUserFunction in the visualization configuration - which IS
 the map from a local point to its global position, for a rigid body and for an element whose local position covers
@@ -284,15 +286,15 @@ settings is a path for later, different from that function, and has no issue.
 | beam outputs (strain, curvature, stress, force, torque), PotentialEnergy, accelerations, Rotation, directors | beams, rigid body, ANCF | through the outputVariableUserFunction, with `q_tt`: every output variable the body does not compute itself (#3057) | - |
 | Acceleration(Local), AngularAcceleration(Local), Rotation, VelocityLocal computed by the item | rigid body, beams | only through the outputVariableUserFunction | in C++ from the Jacobians: `J q_tt` plus the derivative of `J` along `q_t` by differences; Rotation from the rotation matrix |
 | constant mass matrix | ANCF, beams (and rigid body with rotation vector) | `constantMassMatrix`: computed once and stored (#3058) | - |
-| mass integral access (`DisplacementMassIntegral_q`): `MarkerBodyMass`, `LoadMassProportional` (gravity) | all four | missing - the user rigid-body test applies gravity as a force on its center | an optional user function for `∫ρ J_pos dV`, or a center of mass in the parameters |
+| mass integral access (`DisplacementMassIntegral_q`): `MarkerBodyMass`, `LoadMassProportional` (gravity) | all four | missing - the user rigid-body test applies gravity as a force on its center | an optional user function for `âˆ«Ï J_pos dV`, or a center of mass in the parameters |
 | analytic Jacobian | ANCF, beams | numerical only | an optional jacobianUserFunction, later from the symbolic recording |
 | algebraic equations, data coordinates (plasticity), ODE1 | rigid body (EP in the node), some elements | none | not now (maintainer 2026-10-22); data and further quantities through MainSystem functions, later also for symbolic functions |
 | drawing with contour, tiling, numbers | all | only graphicsDataUserFunction, global | C and D |
 | cable markers (MarkerBodyCable2DShape, ...), GeneralContact cables | ANCF only, by type name | refused | out of scope; these name the C++ classes |
 | node types | RigidBody, Point2DSlope1, ... | NodeUser always Position+Orientation, also without rotation | the type from the given user functions, and the user types of #2989 |
 
-**F. The interfaces as they are fixed.** Before the user items reach a release: (1) `qRef, q, q_t, parameters` in every
-user function, `q` the displacements (A, 5.10; #3056, #3060); (2) `q_tt` in the outputVariableUserFunction (#3057);
+**F. The interfaces as they are fixed.** Before the user items reach a release: (1) `qRef, qTotal, q_t, parameters` in
+every user function, `qTotal` the total coordinates (A, 5.10; #3056, #3062); (2) `q_tt` in the outputVariableUserFunction (#3057);
 (3) no `visualizationParameters` argument - the graphics function reaches the item through `mbs`, a later mapping
 function gets a signature of its own (B, C, D); (4) data coordinates, algebraic equations and ODE1 not now, later
 through MainSystem functions (E); (5) everything else in E as optional user functions or flags, added without touching
@@ -325,7 +327,7 @@ per step, no Jacobian), Windows, Python 3.13, 1.13.63.dev1:
 | symbolic user function | 0.241 s | 1.20 us | 0.04 us |
 | one ObjectGenericODE2 per mass point (numpy array of 1 in and out) | 0.917 s | 4.58 us | **0.72 us** (2 allocations per call) |
 | one ObjectGenericODE2 for all 100 coordinates (`-K @ q`) | 0.232 s | 1.16 us | 23 us per call for 100 coordinates |
-| one ObjectUserBody per mass point, Python force `(mbs, t, itemNumber, qRef, q, q_t, parameters)`, stored mass matrix (1.13.166.dev1) | 1.17 s | 5.85 us | 0.97 us; 0.33 us more than ObjectGenericODE2 per mass point in the same run |
+| one ObjectUserBody per mass point, Python force `(mbs, t, itemNumber, qRef, qTotal, q_t, parameters)`, stored mass matrix (1.13.166.dev1) | 1.17 s | 5.85 us | 0.97 us; 0.33 us more than ObjectGenericODE2 per mass point in the same run |
 | the same, one symbolic force recorded for all bodies | 0.251 s | 1.26 us | 0.06 us |
 
 Conclusions:

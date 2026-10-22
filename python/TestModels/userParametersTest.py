@@ -3,8 +3,8 @@
 #
 # Details:  The parameters of a user item (#3056): two mass-spring oscillators as ObjectUserBody on NodePoint, each
 #           with its own mass and stiffness in its parameter vector, named by a ParameterLayout. The user functions
-#           get the reference coordinates qRef, the displacements q, the velocities q_t and the parameters; the
-#           spring acts on q. One recorded symbolic force and mass matrix serve both bodies, and a parameter changed
+#           get the reference coordinates qRef, the total coordinates qTotal, the velocities q_t and the parameters; the spring
+#           acts on qTotal - qRef. One recorded symbolic force and mass matrix serve both bodies, and a parameter changed
 #           with SetObjectParameter acts without recording again. The solutions agree with the Python user functions
 #           and with x0 cos(sqrt(k/m) t). With constantMassMatrix, the mass matrix user function is called once per
 #           body and the solution is the same (#3058). A body on a node with one coordinate is recorded as well (#3061).
@@ -27,20 +27,20 @@ esym = exu.symbolic
 layout = ParameterLayout([('mass', 1), ('stiffness', 1)])
 
 massCalls = [0] #the calls of UFmass
-def UFmass(mbs, t, itemNumber, qRef, q, q_t, parameters):
+def UFmass(mbs, t, itemNumber, qRef, qTotal, q_t, parameters):
     massCalls[0] += 1
     return layout.ToDict(parameters)['mass']*np.eye(3)
 
-def UFforce(mbs, t, itemNumber, qRef, q, q_t, parameters):
-    return -layout.ToDict(parameters)['stiffness']*q
+def UFforce(mbs, t, itemNumber, qRef, qTotal, q_t, parameters):
+    return -layout.ToDict(parameters)['stiffness']*(qTotal - qRef)
 
-def UFmassSymbolic(mbs, t, itemNumber, qRef, q, q_t, parameters):
+def UFmassSymbolic(mbs, t, itemNumber, qRef, qTotal, q_t, parameters):
     return layout.ToDict(parameters)['mass']*esym.Matrix(np.eye(3))
 
-def UFposition(mbs, t, itemNumber, localPosition, qRef, q, q_t, parameters):
-    return qRef + q + localPosition
+def UFposition(mbs, t, itemNumber, localPosition, qRef, qTotal, q_t, parameters):
+    return qTotal + localPosition
 
-def UFpositionJacobian(mbs, t, itemNumber, localPosition, qRef, q, q_t, parameters):
+def UFpositionJacobian(mbs, t, itemNumber, localPosition, qRef, qTotal, q_t, parameters):
     return np.eye(3)
 
 values = [{'mass': 2., 'stiffness': 50.}, {'mass': 0.5, 'stiffness': 200.}]
@@ -98,7 +98,7 @@ def SolveOneCoordinate(kind):
     node = mbs.AddNode(NodeGenericODE2(numberOfODE2Coordinates=1, referenceCoordinates=[0], initialCoordinates=[x0],
                                        initialCoordinates_t=[0]))
     body = mbs.AddObject(ObjectUserBody(nodeNumbers=[node], parameters=layout.ToVector(values[0]),
-                                        massMatrixUserFunction=lambda mbs, t, itemNumber, qRef, q, q_t, parameters:
+                                        massMatrixUserFunction=lambda mbs, t, itemNumber, qRef, qTotal, q_t, parameters:
                                             [[layout.ToDict(parameters)['mass']]],
                                         forceUserFunction=UFforce))
     if kind == 'symbolic':

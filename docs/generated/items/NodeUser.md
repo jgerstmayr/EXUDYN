@@ -75,10 +75,9 @@ Available as `OutputVariableType` in sensors, `Get...Output()` and other functio
 ### Coordinates
 
 $n$ = `numberOfODE2Coordinates` {ref}`ODE2 <ODE2>` coordinates; their meaning is defined by the user functions and the
-object that uses the node. The user functions get the reference coordinates $\qv\cRef$, the coordinates
-$\qv \in \Rcal^n$ **without** their reference values - the displacement coordinates, as in the nodes of Exudyn -,
-the velocities $\dot\qv$ and the `parameters` of the node, as read-only numpy arrays, as the user functions of
-ObjectUserBody do (#3056); the total coordinates are $\qv\cRef + \qv$.
+object that uses the node. The user functions get the reference coordinates $\qv\cRef$ (`qRef`), the total
+coordinates $\qv_{tot} = \qv\cRef + \qv \in \Rcal^n$ (`qTotal`), the velocities $\dot\qv$ (`q_t`) and the
+`parameters` of the node, as read-only numpy arrays, as the user functions of ObjectUserBody do (#3056, #3062).
 
 ### Interface of the node
 
@@ -101,7 +100,7 @@ converge slower, not wrong.
 The user functions are called serially in the main thread; a renderer that runs in a thread of its own draws the
 node, the markers on it and what depends on them in the main thread (#3003).
 
-**Userfunction**: `positionUserFunction(mbs, t, itemNumber, qRef, q, q_t, parameters)`
+**Userfunction**: `positionUserFunction(mbs, t, itemNumber, qRef, qTotal, q_t, parameters)`
 A user function, which computes the global position of the node from its coordinates: the position interface of the node.
 
 | arguments / return | type or size | description |
@@ -110,14 +109,14 @@ A user function, which computes the global position of the node from its coordin
 | `t` | Real | time of the configuration asked for |
 | `itemNumber` | Index | integer number of the node in mbs |
 | `qRef` | Vector $\in \Rcal^n$ | the reference coordinates of the node |
-| `q` | Vector $\in \Rcal^n$ | node coordinates, the displacement coordinates (without their reference values) of the configuration asked for; zero in the reference configuration |
+| `qTotal` | Vector $\in \Rcal^n$ | the total coordinates of the node - reference plus displacement coordinates - of the configuration asked for |
 | `q_t` | Vector $\in \Rcal^n$ | node velocity coordinates of the configuration asked for; zero in the reference configuration |
 | `parameters` | Vector $\in \Rcal^{n_p}$ | the parameters of the node, see parameters; empty if not given |
 | **return value** | Vector3D $\in \Rcal^{3}$ | the global position of the node |
 
 A Python user function gets its vector and matrix arguments as read-only numpy arrays, valid during the call, see [](#sec-userfunctions).
 
-**Userfunction**: `positionJacobianUserFunction(mbs, t, itemNumber, qRef, q, q_t, parameters)`
+**Userfunction**: `positionJacobianUserFunction(mbs, t, itemNumber, qRef, qTotal, q_t, parameters)`
 A user function of the interface of the node that returns a matrix: the position Jacobian $\Jm_{pos} = \partial \vv / \partial \dot\qv$ (3 x n), the rotation matrix (3 x 3) or the rotation Jacobian $\Jm_{rot} = \partial \LU{0}{\tomega} / \partial \dot\qv$ (3 x n, global angular velocity).
 
 | arguments / return | type or size | description |
@@ -126,14 +125,14 @@ A user function of the interface of the node that returns a matrix: the position
 | `t` | Real | time of the configuration asked for |
 | `itemNumber` | Index | integer number of the node in mbs |
 | `qRef` | Vector $\in \Rcal^n$ | the reference coordinates of the node |
-| `q` | Vector $\in \Rcal^n$ | node coordinates, the displacement coordinates (without their reference values) of the configuration asked for; zero in the reference configuration |
+| `qTotal` | Vector $\in \Rcal^n$ | the total coordinates of the node - reference plus displacement coordinates - of the configuration asked for |
 | `q_t` | Vector $\in \Rcal^n$ | node velocity coordinates of the configuration asked for; zero in the reference configuration |
 | `parameters` | Vector $\in \Rcal^{n_p}$ | the parameters of the node, see parameters; empty if not given |
 | **return value** | MatrixContainer | the matrix, as numpy array or list of lists |
 
 A Python user function gets its vector and matrix arguments as read-only numpy arrays, valid during the call, see [](#sec-userfunctions).
 
-**Userfunction**: `rotationMatrixUserFunction(mbs, t, itemNumber, qRef, q, q_t, parameters)`
+**Userfunction**: `rotationMatrixUserFunction(mbs, t, itemNumber, qRef, qTotal, q_t, parameters)`
 A user function of the interface of the node that returns a matrix: the position Jacobian $\Jm_{pos} = \partial \vv / \partial \dot\qv$ (3 x n), the rotation matrix (3 x 3) or the rotation Jacobian $\Jm_{rot} = \partial \LU{0}{\tomega} / \partial \dot\qv$ (3 x n, global angular velocity).
 
 | arguments / return | type or size | description |
@@ -142,14 +141,14 @@ A user function of the interface of the node that returns a matrix: the position
 | `t` | Real | time of the configuration asked for |
 | `itemNumber` | Index | integer number of the node in mbs |
 | `qRef` | Vector $\in \Rcal^n$ | the reference coordinates of the node |
-| `q` | Vector $\in \Rcal^n$ | node coordinates, the displacement coordinates (without their reference values) of the configuration asked for; zero in the reference configuration |
+| `qTotal` | Vector $\in \Rcal^n$ | the total coordinates of the node - reference plus displacement coordinates - of the configuration asked for |
 | `q_t` | Vector $\in \Rcal^n$ | node velocity coordinates of the configuration asked for; zero in the reference configuration |
 | `parameters` | Vector $\in \Rcal^{n_p}$ | the parameters of the node, see parameters; empty if not given |
 | **return value** | MatrixContainer | the matrix, as numpy array or list of lists |
 
 A Python user function gets its vector and matrix arguments as read-only numpy arrays, valid during the call, see [](#sec-userfunctions).
 
-**Userfunction**: `rotationJacobianUserFunction(mbs, t, itemNumber, qRef, q, q_t, parameters)`
+**Userfunction**: `rotationJacobianUserFunction(mbs, t, itemNumber, qRef, qTotal, q_t, parameters)`
 A user function of the interface of the node that returns a matrix: the position Jacobian $\Jm_{pos} = \partial \vv / \partial \dot\qv$ (3 x n), the rotation matrix (3 x 3) or the rotation Jacobian $\Jm_{rot} = \partial \LU{0}{\tomega} / \partial \dot\qv$ (3 x n, global angular velocity).
 
 | arguments / return | type or size | description |
@@ -158,7 +157,7 @@ A user function of the interface of the node that returns a matrix: the position
 | `t` | Real | time of the configuration asked for |
 | `itemNumber` | Index | integer number of the node in mbs |
 | `qRef` | Vector $\in \Rcal^n$ | the reference coordinates of the node |
-| `q` | Vector $\in \Rcal^n$ | node coordinates, the displacement coordinates (without their reference values) of the configuration asked for; zero in the reference configuration |
+| `qTotal` | Vector $\in \Rcal^n$ | the total coordinates of the node - reference plus displacement coordinates - of the configuration asked for |
 | `q_t` | Vector $\in \Rcal^n$ | node velocity coordinates of the configuration asked for; zero in the reference configuration |
 | `parameters` | Vector $\in \Rcal^{n_p}$ | the parameters of the node, see parameters; empty if not given |
 | **return value** | MatrixContainer | the matrix, as numpy array or list of lists |
@@ -171,8 +170,8 @@ A Python user function gets its vector and matrix arguments as read-only numpy a
 
 ```python
 #a node whose coordinates are cylindrical coordinates (r, phi, z) of a point; it turns with phi_t = 1
-def UFposition(mbs, t, itemNumber, qRef, q, q_t, parameters):
-    (r, phi, z) = qRef + q
+def UFposition(mbs, t, itemNumber, qRef, qTotal, q_t, parameters):
+    (r, phi, z) = qTotal
     return [r*np.cos(phi), r*np.sin(phi), z]
 node = mbs.AddNode(NodeUser(numberOfODE2Coordinates=3, referenceCoordinates=[1,0,0],
                             initialCoordinates=[0,0,0], initialVelocities=[0,1,0],

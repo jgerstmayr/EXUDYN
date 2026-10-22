@@ -139,7 +139,7 @@ void VisualizationObjectUserBody::CallUserFunction(const VisualizationSettings& 
 
 	const CObjectUserBody* cObject = (const CObjectUserBody*)vSystem->systemData->GetCObjects()[itemNumber];
 	ResizableConstVector qRef, q, q_t, zero;
-	cObject->GatherCoordinates(q, q_t, ConfigurationType::Visualization, false);
+	cObject->GatherCoordinates(q, q_t, ConfigurationType::Visualization, true);
 	cObject->GatherCoordinates(qRef, zero, ConfigurationType::Reference, true);
 	Real t = vSystem->systemData->GetConfigurationTime(ConfigurationType::Visualization);
 	py::object pyBodyGraphicsData;

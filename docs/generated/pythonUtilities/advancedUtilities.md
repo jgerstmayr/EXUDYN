@@ -578,9 +578,9 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`TCPIPexudyn
 ```python
   layout = ParameterLayout([('mass', 1), ('stiffness', 1), ('com', 3)])
   p = layout.ToVector({'mass': 2., 'stiffness': 100., 'com': [0, 0.1, 0]})   #[2, 100, 0, 0.1, 0]
-  def UFforce(mbs, t, itemNumber, qRef, q, q_t, parameters):
+  def UFforce(mbs, t, itemNumber, qRef, qTotal, q_t, parameters):
       d = layout.ToDict(parameters)
-      return -d['stiffness']*q
+      return -d['stiffness']*(qTotal - qRef)
 ```
 
 

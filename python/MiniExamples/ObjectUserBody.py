@@ -20,19 +20,19 @@ mbs = SC.AddSystem()
 oGround=mbs.AddObject(ObjectGround(referencePosition= [0,0,0]))
 nGround = mbs.AddNode(NodePointGround(referenceCoordinates=[0,0,0]))
 
-#a mass point as a user body on a NodePoint: M = m*I, the position of every point is qRef + q
+#a mass point as a user body on a NodePoint: M = m*I, the position of every point is qTotal
 m = 2
 node = mbs.AddNode(NodePoint(referenceCoordinates=[1,0,0]))
-def UFmass(mbs, t, itemNumber, qRef, q, q_t, parameters):
+def UFmass(mbs, t, itemNumber, qRef, qTotal, q_t, parameters):
     return m*np.eye(3)
-def UFposition(mbs, t, itemNumber, localPosition, qRef, q, q_t, parameters):
-    return qRef + q
-def UFpositionJacobian(mbs, t, itemNumber, localPosition, qRef, q, q_t, parameters):
+def UFposition(mbs, t, itemNumber, localPosition, qRef, qTotal, q_t, parameters):
+    return qTotal
+def UFpositionJacobian(mbs, t, itemNumber, localPosition, qRef, qTotal, q_t, parameters):
     return np.eye(3)
 #a point does not rotate; with these, rigid markers and the rotation outputs work on it
-def UFrotationMatrix(mbs, t, itemNumber, localPosition, qRef, q, q_t, parameters):
+def UFrotationMatrix(mbs, t, itemNumber, localPosition, qRef, qTotal, q_t, parameters):
     return np.eye(3)
-def UFrotationJacobian(mbs, t, itemNumber, localPosition, qRef, q, q_t, parameters):
+def UFrotationJacobian(mbs, t, itemNumber, localPosition, qRef, qTotal, q_t, parameters):
     return np.zeros((3,3))
 body = mbs.AddObject(ObjectUserBody(nodeNumbers=[node], massMatrixUserFunction=UFmass,
                                     positionUserFunction=UFposition,

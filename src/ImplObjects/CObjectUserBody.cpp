@@ -23,7 +23,7 @@
 void CObjectUserBody::GatherUserFunctionCoordinates(ResizableConstVector& qRef, ResizableConstVector& q, ResizableConstVector& q_t,
 	ConfigurationType configuration) const
 {
-	GatherCoordinates(q, q_t, configuration, false);
+	GatherCoordinates(q, q_t, configuration, true);
 	ResizableConstVector zero;
 	GatherCoordinates(qRef, zero, ConfigurationType::Reference, true);
 }

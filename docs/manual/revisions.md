@@ -31,9 +31,8 @@ before), and a wrong size or a singular input raises a `ValueError` (#2960, #296
 functions; body markers, sensors, loads and connectors work on it, see {ref}`sec-item-objectuserbody` (#2986). It
 allocates no memory in a time step, with Python or symbolic user functions (#3046).
 
-**The user functions of `ObjectUserBody` and `NodeUser` get `qRef, q, q_t` and `parameters`** (#3056): the reference
-coordinates, the displacement coordinates and the velocities of the configuration asked for (the total coordinates
-are `qRef + q`, #3060), and a parameter vector of the
+**The user functions of `ObjectUserBody` and `NodeUser` get `qRef, qTotal, q_t` and `parameters`** (#3056, #3062): the
+reference coordinates, the total coordinates and the velocities of the configuration asked for, and a parameter vector of the
 item, which `exudyn.advancedUtilities.ParameterLayout` maps to named quantities and back; the
 outputVariableUserFunction also gets `q_tt`, the graphicsDataUserFunction of ObjectUserBody the coordinates of the
 visualization configuration. One recorded symbolic user function serves every body of a kind with its own parameters.

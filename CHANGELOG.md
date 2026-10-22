@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.13 | Newborn | 164 | 1.13.167 |
+| 1.13 | Newborn | 165 | 1.13.168 |
 | 1.12 | Metheney | 367 | 1.12.462 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
@@ -30,6 +30,10 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.13 - Newborn (current)
 
+- **1.13.168** `CHANGE` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` ObjectUserBody and NodeUser: the user functions get the total coordinates again, as argument qTotal (#3062)
+  - description: Maintainer 2026-10-22, revising \#3060: nearly all user bodies so far compute with qRef + q, as they need the total coordinates, and the C++ may move to total coordinates for performance. The user functions of ObjectUserBody and NodeUser get the total coordinates, named qTotal in the interface so that it is clear; a function may assign q = qTotal inside to keep expressions short. The C++ of \#3060 is undone (total coordinates gathered), the definitions, mini examples, test models, ParameterLayout docstring and the symbolic recording (sizes qTotal) use qTotal.
+  - **notes:** The user functions of ObjectUserBody and NodeUser get the total coordinates as qTotal (reference plus displacement coordinates)
+  - date resolved: **2026-10-22 21:44**, date raised: 2026-10-22
 - **1.13.167** <span class="textred">`BUG`</span> `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` CreateSymbolicUserFunction fails for an item on a node with one coordinate (#3061)
   - description: \_ObjectCoordinatesSize takes len() of the node output Coordinates, which is a float for a node with one coordinate (NodeGenericODE2 with numberOfODE2Coordinates=1): recording a symbolic user function of ObjectUserBody, ObjectGenericODE2, ... on such a node raises TypeError. Found while measuring the cost of the user body arguments (measureUserFunctions.py).
   - **notes:** CreateSymbolicUserFunction records the user functions of items on a node with one coordinate

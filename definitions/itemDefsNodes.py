@@ -2103,7 +2103,7 @@ definitions.append(ItemDefinition(
 #++++++++++++++++   NodeUser   ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-def NodeUser_positionUserFunction(mbs: MainSystem, t: Real, itemNumber: Index, qRef: Vector, q: Vector, q_t: Vector,
+def NodeUser_positionUserFunction(mbs: MainSystem, t: Real, itemNumber: Index, qRef: Vector, qTotal: Vector, q_t: Vector,
                                   parameters: Vector) -> Vector3D:
     r"""A user function, which computes the global position of the node from its coordinates: the position interface of the node.
 
@@ -2112,14 +2112,14 @@ def NodeUser_positionUserFunction(mbs: MainSystem, t: Real, itemNumber: Index, q
         t: time of the configuration asked for
         itemNumber: integer number of the node in mbs
         qRef: $\in \Rcal^n$ the reference coordinates of the node
-        q: $\in \Rcal^n$ node coordinates, the displacement coordinates (without their reference values) of the configuration asked for; zero in the reference configuration
+        qTotal: $\in \Rcal^n$ the total coordinates of the node - reference plus displacement coordinates - of the configuration asked for
         q_t: $\in \Rcal^n$ node velocity coordinates of the configuration asked for; zero in the reference configuration
         parameters: $\in \Rcal^{n_p}$ the parameters of the node, see parameters; empty if not given
     Returns:
         $\in \Rcal^{3}$ the global position of the node
     """
 
-def NodeUser_matrixUserFunction(mbs: MainSystem, t: Real, itemNumber: Index, qRef: Vector, q: Vector, q_t: Vector,
+def NodeUser_matrixUserFunction(mbs: MainSystem, t: Real, itemNumber: Index, qRef: Vector, qTotal: Vector, q_t: Vector,
                                 parameters: Vector) -> MatrixContainer:
     r"""A user function of the interface of the node that returns a matrix: the position Jacobian $\Jm_{pos} = \partial \vv / \partial \dot\qv$ (3 x n), the rotation matrix (3 x 3) or the rotation Jacobian $\Jm_{rot} = \partial \LU{0}{\tomega} / \partial \dot\qv$ (3 x n, global angular velocity).
 
@@ -2128,7 +2128,7 @@ def NodeUser_matrixUserFunction(mbs: MainSystem, t: Real, itemNumber: Index, qRe
         t: time of the configuration asked for
         itemNumber: integer number of the node in mbs
         qRef: $\in \Rcal^n$ the reference coordinates of the node
-        q: $\in \Rcal^n$ node coordinates, the displacement coordinates (without their reference values) of the configuration asked for; zero in the reference configuration
+        qTotal: $\in \Rcal^n$ the total coordinates of the node - reference plus displacement coordinates - of the configuration asked for
         q_t: $\in \Rcal^n$ node velocity coordinates of the configuration asked for; zero in the reference configuration
         parameters: $\in \Rcal^{n_p}$ the parameters of the node, see parameters; empty if not given
     Returns:
@@ -2142,8 +2142,8 @@ definitions.append(ItemDefinition(
     addIncludesC=r"""class MainSystem; //AUTO; for std::function / userFunction; avoid including MainSystem.h
 """,
     addProtectedC=r"""    CSystemData* cSystemData = nullptr; //!< for the MainSystem and the time of the user functions
-    //! the displacement coordinates of a configuration, zero in the reference configuration (#2974)
-    void Displacements(ResizableConstVector& q, ConfigurationType configuration) const;
+    //! the total coordinates of a configuration: reference plus displacement (#2974)
+    void TotalCoordinates(ResizableConstVector& q, ConfigurationType configuration) const;
     //! the number of the node in the system, for the user functions
     Index GetNodeNumber() const;
     //! false in another thread than the main thread
@@ -2163,10 +2163,9 @@ definitions.append(ItemDefinition(
     detailedDescription=r"""    #### Coordinates
 
     $n$ = `numberOfODE2Coordinates` ABRV:ODE2 coordinates; their meaning is defined by the user functions and the
-    object that uses the node. The user functions get the reference coordinates $\qv\cRef$, the coordinates
-    $\qv \in \Rcal^n$ **without** their reference values - the displacement coordinates, as in the nodes of Exudyn -,
-    the velocities $\dot\qv$ and the `parameters` of the node, as read-only numpy arrays, as the user functions of
-    ObjectUserBody do (#3056); the total coordinates are $\qv\cRef + \qv$.
+    object that uses the node. The user functions get the reference coordinates $\qv\cRef$ (`qRef`), the total
+    coordinates $\qv_{tot} = \qv\cRef + \qv \in \Rcal^n$ (`qTotal`), the velocities $\dot\qv$ (`q_t`) and the
+    `parameters` of the node, as read-only numpy arrays, as the user functions of ObjectUserBody do (#3056, #3062).
 
     #### Interface of the node
 
@@ -2190,8 +2189,8 @@ definitions.append(ItemDefinition(
     node, the markers on it and what depends on them in the main thread (#3003).
     """,
     miniExample=r"""    #a node whose coordinates are cylindrical coordinates (r, phi, z) of a point; it turns with phi_t = 1
-    def UFposition(mbs, t, itemNumber, qRef, q, q_t, parameters):
-        (r, phi, z) = qRef + q
+    def UFposition(mbs, t, itemNumber, qRef, qTotal, q_t, parameters):
+        (r, phi, z) = qTotal
         return [r*np.cos(phi), r*np.sin(phi), z]
     node = mbs.AddNode(NodeUser(numberOfODE2Coordinates=3, referenceCoordinates=[1,0,0],
                                 initialCoordinates=[0,0,0], initialVelocities=[0,1,0],
