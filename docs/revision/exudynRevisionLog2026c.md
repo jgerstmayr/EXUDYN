@@ -2638,3 +2638,17 @@ local matrix storage and a flag as in the ANCF elements.)*
   `massMatrixComputed` / `precomputedMassMatrix` of the ANCF elements.
 - userParametersTest.py: with `constantMassMatrix` the Python mass matrix function is called twice for two bodies in a
   solution of 5000 steps, and the solution is bit-equal; its result unchanged.
+
+<a id="rg11-8-23"></a>
+### RG11.8.23 — the Windows SDK of the build (2026-10-22, #3059)
+*(Maintainer 2026-10-22: after a mandatory Windows update the build fails; VS 2026 uninstalled, VS 2022 updated, exudev
+build still fails - please fix.)*
+- The link failed with LNK1181 on `gdi32.lib`: `Windows Kits/10/Lib/10.0.26100.0/um/x64` was changed on 2026-10-21
+  04:32 and has 478 libraries without `gdi32.lib`, `opengl32.lib` and `shell32.lib`; 10.0.22621.0 and 10.0.19041.0 are
+  complete. setuptools runs vcvarsall.bat without an SDK version, which takes the newest.
+- `commands.WindowsSdkEnvironment`: on Windows, if the newest SDK lacks one of the libraries setup.py links
+  (`windowsSdkLibraries`), the environment of `vcvarsall.bat x64 <newest complete>` (found by vswhere) with
+  `DISTUTILS_USE_SDK` and `MSSdk`, which setuptools then uses as it is; a printed line names both SDKs. Nothing when
+  the newest is complete, on other platforms or when the caller set `DISTUTILS_USE_SDK`. test_exudev.py checks the
+  choice on a fake SDK directory.
+- Repairing 10.0.26100.0 (Visual Studio Installer, individual components) makes the build take it again.

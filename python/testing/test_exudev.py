@@ -267,3 +267,28 @@ def testTheQuietBuildShowsPipsConflictsAsANote():
     assert 'sip 6.12.0 requires setuptools>=75.8.1' in progress.Line('sip 6.12.0 requires setuptools>=75.8.1, but you have setuptools 72.1.0 which is incompatible.')
     assert progress.Line('Building wheel for exudyn (pyproject.toml): started') is None
     assert 'exudynCPP:   1/134' in progress.Line('compile 001/134: ')
+
+
+#%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+def testTheBuildTakesTheNewestCompleteWindowsSdk(onPlatform, monkeypatch, tmp_path):
+    """the newest SDK without gdi32.lib is passed over for the newest complete one, a complete newest
+    SDK changes nothing (#3059); --dry-run runs no vcvarsall.bat"""
+    onPlatform('win32')
+    monkeypatch.setenv('ProgramFiles(x86)', str(tmp_path))
+    monkeypatch.delenv('DISTUTILS_USE_SDK', raising=False)
+    kits = tmp_path / 'Windows Kits' / '10' / 'Lib'
+    for (version, libraries) in [('10.0.22621.0', commands.windowsSdkLibraries),
+                                 ('10.0.26100.0', ['kernel32.lib', 'User32.Lib'])]:
+        directory = kits / version / 'um' / 'x64'
+        directory.mkdir(parents=True)
+        for library in libraries:
+            (directory / library).write_text('')
+    options = Options(dryRun=True)
+    assert commands.WindowsSdkEnvironment(options) == {'DISTUTILS_USE_SDK': '1', 'MSSdk': '1'}
+
+    for library in commands.windowsSdkLibraries:
+        (kits / '10.0.26100.0' / 'um' / 'x64' / library.upper()).write_text('')
+    assert commands.WindowsSdkEnvironment(options) == {}
+
+    onPlatform('linux')
+    assert commands.WindowsSdkEnvironment(options) == {}

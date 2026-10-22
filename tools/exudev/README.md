@@ -58,6 +58,11 @@ only**, and on macOS not at all.
 a different numpy changes results — the two failing models of issues #2501 and #2502 differ between
 `venvP313` (numpy 2.2.4) and `venvExuP313` (numpy 2.4.6) with a byte-identical binary.
 
+**On Windows, `build` checks the Windows SDK.** setuptools links against the newest SDK; when that one
+lacks an import library `setup.py` links (`gdi32.lib`, `opengl32.lib`, ...), the build runs in the
+environment of `vcvarsall.bat x64 <version>` for the newest complete SDK, and says so (#3059). Repairing
+the incomplete SDK in the Visual Studio Installer makes the default work again.
+
 ## How the environment is chosen
 
 `--py 313` / `P313` / `3.13` / `all` / `310,313` selects the `venvP3xx` environments;

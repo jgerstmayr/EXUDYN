@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.13 | Newborn | 161 | 1.13.164 |
+| 1.13 | Newborn | 162 | 1.13.165 |
 | 1.12 | Metheney | 367 | 1.12.462 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
@@ -30,6 +30,10 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.13 - Newborn (current)
 
+- **1.13.165** `FIX` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` exudev build: build with the newest complete Windows SDK when the newest one lacks an import library the link needs (#3059)
+  - description: setuptools always takes the newest Windows SDK. A Windows update (2026-10-21) left Windows Kits/10/Lib/10.0.26100.0/um/x64 without gdi32.lib, opengl32.lib and shell32.lib, so every build failed at the link with LNK1181. exudev build checks the import libraries setup.py links in the newest SDK; if one is missing, it builds in the environment of vcvarsall.bat for the newest complete SDK (DISTUTILS\_USE\_SDK, MSSdk) and says so.
+  - **notes:** exudev build checks on Windows whether the newest Windows SDK has every import library setup.py links; if not, it builds in the environment of vcvarsall.bat for the newest complete SDK and says so
+  - date resolved: **2026-10-22 21:02**, date raised: 2026-10-22
 - **1.13.164** `EXTENSION` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` ObjectUserBody: a constant mass matrix, computed once and stored (#3058)
   - description: Maintainer 2026-10-22: a flag for a constant mass matrix, with a local storage of the matrix as in the ANCF elements: computed once, reused, recomputed after a change of a parameter or Assemble; useful for finite elements.
   - **notes:** ObjectUserBody has constantMassMatrix: its massMatrixUserFunction is called once, the result is kept and reused, computed again after a change of a parameter or Assemble, and the solvers treat the mass matrix as constant (revision2026c step RG7.12.5)

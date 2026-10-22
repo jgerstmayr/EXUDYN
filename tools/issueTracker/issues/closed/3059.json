@@ -1,0 +1,16 @@
+{
+  "number": 3059,
+  "title": "exudev build: build with the newest complete Windows SDK when the newest one lacks an import library the link needs",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "FIX",
+  "effort": "LOW",
+  "description": "setuptools always takes the newest Windows SDK. A Windows update (2026-10-21) left Windows Kits/10/Lib/10.0.26100.0/um/x64 without gdi32.lib, opengl32.lib and shell32.lib, so every build failed at the link with LNK1181. exudev build checks the import libraries setup.py links in the newest SDK; if one is missing, it builds in the environment of vcvarsall.bat for the newest complete SDK (DISTUTILS_USE_SDK, MSSdk) and says so.",
+  "dateRaised": "2026-10-22",
+  "deadline": "2027-04-20",
+  "dateResolved": "2026-10-22 21:02",
+  "resolvedAuthor": "Claude-JG",
+  "file": "tools/exudev/commands.py",
+  "releaseNotes": "exudev build checks on Windows whether the newest Windows SDK has every import library setup.py links; if not, it builds in the environment of vcvarsall.bat for the newest complete SDK and says so",
+  "resolvedInVersion": "1.13.165"
+}

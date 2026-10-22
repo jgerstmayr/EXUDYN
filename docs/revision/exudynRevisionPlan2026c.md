@@ -1265,6 +1265,11 @@ CLOSED 2026-10-17 (#3023; maintainer: it should not create thousands of files): 
 per pytest process, the older closed issues in the archives; test_exudev reads the real store.
 [log](exudynRevisionLog2026c.md#rg11-8-22)
 
+#### **CLOSED_RG11.8.23** Build with the newest complete Windows SDK when the newest one lacks an import library
+
+CLOSED 2026-10-22 (#3059; maintainer: exudev build fails after a Windows update, please fix): `exudev build` runs in the
+environment of vcvarsall.bat for the newest SDK that has every library setup.py links. [log](exudynRevisionLog2026c.md#rg11-8-23)
+
 ### **CLOSED_RG11.9** Add the velocity offset to all spring-dampers and replace the user functions that move a damper
 
 CLOSED 2026-10-12 (#829, #1631; #1189 closed, maintainer: not for ObjectContactFrictionCircleCable2D): `velocityOffset` of the coordinate, Cartesian and rigid-body spring-dampers; test model springDamperVelocityOffsetTest.py. [log](exudynRevisionLog2026c.md#rg11-9)

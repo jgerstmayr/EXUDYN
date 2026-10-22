@@ -165,6 +165,74 @@ def BuildEnvironment(options):
     if options.no_glfw:
         environment['EXUDYN_USE_GLFW'] = '0'
 
+    environment.update(WindowsSdkEnvironment(options))
+
+    return environment
+
+
+#%%******************************************************************************************************
+#the import libraries of the Windows SDK that setup.py links (its libraries and msvcGLFWlibs)
+windowsSdkLibraries = ['kernel32.lib', 'user32.lib', 'gdi32.lib', 'shell32.lib', 'opengl32.lib']
+
+def WindowsSdkEnvironment(options):
+    """setuptools builds with the newest Windows SDK. When that one lacks an import library the link
+    needs - a Windows update left 10.0.26100.0 without gdi32.lib, opengl32.lib and shell32.lib (#3059) -
+    the build runs in the environment of vcvarsall.bat for the newest complete SDK, which setuptools
+    takes with DISTUTILS_USE_SDK and MSSdk. Nothing on other platforms, with a complete newest SDK or
+    when the caller has set DISTUTILS_USE_SDK."""
+    if sys.platform != 'win32' or os.environ.get('DISTUTILS_USE_SDK'):
+        return {}
+
+    kits = os.path.join(os.environ.get('ProgramFiles(x86)', r'C:\Program Files (x86)'), 'Windows Kits', '10', 'Lib')
+    if not os.path.isdir(kits):
+        return {}
+
+    def IsComplete(version):
+        try:
+            present = {name.lower() for name in os.listdir(os.path.join(kits, version, 'um', 'x64'))}
+        except OSError:
+            return False
+        return all(library in present for library in windowsSdkLibraries)
+
+    versions = sorted([version for version in os.listdir(kits) if re.fullmatch(r'10\.\d+\.\d+\.\d+', version)],
+                      key=lambda version: [int(part) for part in version.split('.')], reverse=True)
+    if not versions or IsComplete(versions[0]):
+        return {}
+
+    complete = [version for version in versions if IsComplete(version)]
+    if not complete:
+        print('exudev: no Windows SDK in ' + kits + ' has all of ' + ', '.join(windowsSdkLibraries)
+              + '; the link will fail - repair the SDK in the Visual Studio Installer')
+        return {}
+
+    print('exudev: the Windows SDK ' + versions[0] + ' lacks import libraries the link needs; building with '
+          + complete[0] + ' (#3059) - repairing ' + versions[0] + ' in the Visual Studio Installer ends this')
+    if options.dryRun:
+        return {'DISTUTILS_USE_SDK': '1', 'MSSdk': '1'}    #and the environment of vcvarsall.bat, said above
+
+    vswhere = os.path.join(os.environ.get('ProgramFiles(x86)', r'C:\Program Files (x86)'),
+                           'Microsoft Visual Studio', 'Installer', 'vswhere.exe')
+    installation = subprocess.run([vswhere, '-latest', '-products', '*', '-requires',
+                                   'Microsoft.VisualStudio.Component.VC.Tools.x86.x64', '-property', 'installationPath'],
+                                  capture_output=True, text=True).stdout.strip()
+    vcvarsall = os.path.join(installation, 'VC', 'Auxiliary', 'Build', 'vcvarsall.bat')
+    if not installation or not os.path.isfile(vcvarsall):
+        print('exudev: vcvarsall.bat not found, building with the newest SDK')
+        return {}
+
+    completed = subprocess.run('"' + vcvarsall + '" x64 ' + complete[0] + ' >nul && set',
+                               shell=True, capture_output=True, text=True, errors='replace')
+    if completed.returncode != 0:
+        print('exudev: vcvarsall.bat x64 ' + complete[0] + ' failed, building with the newest SDK')
+        return {}
+
+    environment = {}
+    for line in completed.stdout.splitlines():
+        (name, separator, value) = line.partition('=')
+        if separator and name and os.environ.get(name) != value:
+            environment[name] = value
+    environment.update({'DISTUTILS_USE_SDK': '1', 'MSSdk': '1'})
+
     return environment
 
 
