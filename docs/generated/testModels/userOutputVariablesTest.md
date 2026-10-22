@@ -41,17 +41,17 @@ def UFmass(mbs, t, itemNumber, qRef, q, q_t, parameters):
     return layout.ToDict(parameters)['mass']*np.eye(3)
 
 def UFforce(mbs, t, itemNumber, qRef, q, q_t, parameters):
-    return -layout.ToDict(parameters)['stiffness']*(q - qRef)
+    return -layout.ToDict(parameters)['stiffness']*q
 
 def UFposition(mbs, t, itemNumber, localPosition, qRef, q, q_t, parameters):
-    return q + localPosition
+    return qRef + q + localPosition
 
 def UFpositionJacobian(mbs, t, itemNumber, localPosition, qRef, q, q_t, parameters):
     return np.eye(3)
 
 def UFoutput(mbs, t, itemNumber, outputVariableType, localPosition, qRef, q, q_t, q_tt, parameters):
     """Python: one branch per output variable, an empty list for the others"""
-    u = q[0] - qRef[0]
+    u = q[0]
     if outputVariableType == OVT.StrainLocal:
         return [u/qRef[0]]
     if outputVariableType == OVT.PotentialEnergy:
@@ -62,7 +62,7 @@ def UFoutput(mbs, t, itemNumber, outputVariableType, localPosition, qRef, q, q_t
 
 def UFoutputSymbolic(mbs, t, itemNumber, outputVariableType, localPosition, qRef, q, q_t, q_tt, parameters):
     """symbolic: IfThenElse on outputVariableType, the same size for every type"""
-    u = q[0] - qRef[0]
+    u = q[0]
     energy = 0.5*layout.ToDict(parameters)['stiffness']*u*u
     first = esym.IfThenElse(outputVariableType == int(OVT.StrainLocal), u/qRef[0],
                             esym.IfThenElse(outputVariableType == int(OVT.PotentialEnergy), energy, q_tt[0]))

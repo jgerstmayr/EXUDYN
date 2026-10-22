@@ -256,7 +256,7 @@ class NodeUserPositionUserFunction(Protocol):
 
         qRef (np.ndarray): the reference coordinates of the node
 
-        q (np.ndarray): node coordinates, INCLUDING their reference values, of the configuration asked for
+        q (np.ndarray): node coordinates, the displacement coordinates (without their reference values) of the configuration asked for; zero in the reference configuration
 
         q_t (np.ndarray): node velocity coordinates of the configuration asked for; zero in the reference configuration
 
@@ -279,7 +279,7 @@ class NodeUserPositionJacobianUserFunction(Protocol):
 
         qRef (np.ndarray): the reference coordinates of the node
 
-        q (np.ndarray): node coordinates, INCLUDING their reference values, of the configuration asked for
+        q (np.ndarray): node coordinates, the displacement coordinates (without their reference values) of the configuration asked for; zero in the reference configuration
 
         q_t (np.ndarray): node velocity coordinates of the configuration asked for; zero in the reference configuration
 
@@ -302,7 +302,7 @@ class NodeUserRotationMatrixUserFunction(Protocol):
 
         qRef (np.ndarray): the reference coordinates of the node
 
-        q (np.ndarray): node coordinates, INCLUDING their reference values, of the configuration asked for
+        q (np.ndarray): node coordinates, the displacement coordinates (without their reference values) of the configuration asked for; zero in the reference configuration
 
         q_t (np.ndarray): node velocity coordinates of the configuration asked for; zero in the reference configuration
 
@@ -325,7 +325,7 @@ class NodeUserRotationJacobianUserFunction(Protocol):
 
         qRef (np.ndarray): the reference coordinates of the node
 
-        q (np.ndarray): node coordinates, INCLUDING their reference values, of the configuration asked for
+        q (np.ndarray): node coordinates, the displacement coordinates (without their reference values) of the configuration asked for; zero in the reference configuration
 
         q_t (np.ndarray): node velocity coordinates of the configuration asked for; zero in the reference configuration
 
@@ -514,7 +514,7 @@ class ObjectUserBodyMassMatrixUserFunction(Protocol):
 
         qRef (np.ndarray): the reference coordinates of the nodes, in the order of nodeNumbers
 
-        q (np.ndarray): object coordinates, the coordinates of the nodes INCLUDING their reference values, of the configuration asked for
+        q (np.ndarray): object coordinates, the displacement coordinates of the nodes (without their reference values) of the configuration asked for; zero in the reference configuration
 
         q_t (np.ndarray): object velocity coordinates of the configuration asked for
 
@@ -537,7 +537,7 @@ class ObjectUserBodyForceUserFunction(Protocol):
 
         qRef (np.ndarray): the reference coordinates of the nodes, in the order of nodeNumbers
 
-        q (np.ndarray): object coordinates, the coordinates of the nodes INCLUDING their reference values, of the configuration asked for
+        q (np.ndarray): object coordinates, the displacement coordinates of the nodes (without their reference values) of the configuration asked for; zero in the reference configuration
 
         q_t (np.ndarray): object velocity coordinates of the configuration asked for
 
@@ -562,7 +562,7 @@ class ObjectUserBodyPositionUserFunction(Protocol):
 
         qRef (np.ndarray): the reference coordinates of the nodes, in the order of nodeNumbers
 
-        q (np.ndarray): object coordinates, the coordinates of the nodes INCLUDING their reference values, of the configuration asked for
+        q (np.ndarray): object coordinates, the displacement coordinates of the nodes (without their reference values) of the configuration asked for; zero in the reference configuration
 
         q_t (np.ndarray): object velocity coordinates of the configuration asked for
 
@@ -587,7 +587,7 @@ class ObjectUserBodyPositionJacobianUserFunction(Protocol):
 
         qRef (np.ndarray): the reference coordinates of the nodes, in the order of nodeNumbers
 
-        q (np.ndarray): object coordinates, the coordinates of the nodes INCLUDING their reference values, of the configuration asked for
+        q (np.ndarray): object coordinates, the displacement coordinates of the nodes (without their reference values) of the configuration asked for; zero in the reference configuration
 
         q_t (np.ndarray): object velocity coordinates of the configuration asked for
 
@@ -612,7 +612,7 @@ class ObjectUserBodyRotationMatrixUserFunction(Protocol):
 
         qRef (np.ndarray): the reference coordinates of the nodes, in the order of nodeNumbers
 
-        q (np.ndarray): object coordinates, the coordinates of the nodes INCLUDING their reference values, of the configuration asked for
+        q (np.ndarray): object coordinates, the displacement coordinates of the nodes (without their reference values) of the configuration asked for; zero in the reference configuration
 
         q_t (np.ndarray): object velocity coordinates of the configuration asked for
 
@@ -637,7 +637,7 @@ class ObjectUserBodyRotationJacobianUserFunction(Protocol):
 
         qRef (np.ndarray): the reference coordinates of the nodes, in the order of nodeNumbers
 
-        q (np.ndarray): object coordinates, the coordinates of the nodes INCLUDING their reference values, of the configuration asked for
+        q (np.ndarray): object coordinates, the displacement coordinates of the nodes (without their reference values) of the configuration asked for; zero in the reference configuration
 
         q_t (np.ndarray): object velocity coordinates of the configuration asked for
 
@@ -664,7 +664,7 @@ class ObjectUserBodyOutputVariableUserFunction(Protocol):
 
         qRef (np.ndarray): the reference coordinates of the nodes, in the order of nodeNumbers
 
-        q (np.ndarray): object coordinates, the coordinates of the nodes INCLUDING their reference values, of the configuration asked for
+        q (np.ndarray): object coordinates, the displacement coordinates of the nodes (without their reference values) of the configuration asked for; zero in the reference configuration
 
         q_t (np.ndarray): object velocity coordinates of the configuration asked for
 
@@ -689,7 +689,7 @@ class ObjectUserBodyGraphicsDataUserFunction(Protocol):
 
         qRef (np.ndarray): the reference coordinates of the nodes, in the order of nodeNumbers
 
-        q (np.ndarray): object coordinates, the coordinates of the nodes INCLUDING their reference values, of the configuration asked for
+        q (np.ndarray): object coordinates, the displacement coordinates of the nodes (without their reference values) of the configuration asked for; zero in the reference configuration
 
         q_t (np.ndarray): object velocity coordinates of the configuration asked for
 

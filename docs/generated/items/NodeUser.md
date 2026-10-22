@@ -76,8 +76,9 @@ Available as `OutputVariableType` in sensors, `Get...Output()` and other functio
 
 $n$ = `numberOfODE2Coordinates` {ref}`ODE2 <ODE2>` coordinates; their meaning is defined by the user functions and the
 object that uses the node. The user functions get the reference coordinates $\qv\cRef$, the coordinates
-$\qv \in \Rcal^n$ **including** their reference values, the velocities $\dot\qv$ and the `parameters` of the node,
-as read-only numpy arrays, as the user functions of ObjectUserBody do (#3056).
+$\qv \in \Rcal^n$ **without** their reference values - the displacement coordinates, as in the nodes of Exudyn -,
+the velocities $\dot\qv$ and the `parameters` of the node, as read-only numpy arrays, as the user functions of
+ObjectUserBody do (#3056); the total coordinates are $\qv\cRef + \qv$.
 
 ### Interface of the node
 
@@ -109,7 +110,7 @@ A user function, which computes the global position of the node from its coordin
 | `t` | Real | time of the configuration asked for |
 | `itemNumber` | Index | integer number of the node in mbs |
 | `qRef` | Vector $\in \Rcal^n$ | the reference coordinates of the node |
-| `q` | Vector $\in \Rcal^n$ | node coordinates, INCLUDING their reference values, of the configuration asked for |
+| `q` | Vector $\in \Rcal^n$ | node coordinates, the displacement coordinates (without their reference values) of the configuration asked for; zero in the reference configuration |
 | `q_t` | Vector $\in \Rcal^n$ | node velocity coordinates of the configuration asked for; zero in the reference configuration |
 | `parameters` | Vector $\in \Rcal^{n_p}$ | the parameters of the node, see parameters; empty if not given |
 | **return value** | Vector3D $\in \Rcal^{3}$ | the global position of the node |
@@ -125,7 +126,7 @@ A user function of the interface of the node that returns a matrix: the position
 | `t` | Real | time of the configuration asked for |
 | `itemNumber` | Index | integer number of the node in mbs |
 | `qRef` | Vector $\in \Rcal^n$ | the reference coordinates of the node |
-| `q` | Vector $\in \Rcal^n$ | node coordinates, INCLUDING their reference values, of the configuration asked for |
+| `q` | Vector $\in \Rcal^n$ | node coordinates, the displacement coordinates (without their reference values) of the configuration asked for; zero in the reference configuration |
 | `q_t` | Vector $\in \Rcal^n$ | node velocity coordinates of the configuration asked for; zero in the reference configuration |
 | `parameters` | Vector $\in \Rcal^{n_p}$ | the parameters of the node, see parameters; empty if not given |
 | **return value** | MatrixContainer | the matrix, as numpy array or list of lists |
@@ -141,7 +142,7 @@ A user function of the interface of the node that returns a matrix: the position
 | `t` | Real | time of the configuration asked for |
 | `itemNumber` | Index | integer number of the node in mbs |
 | `qRef` | Vector $\in \Rcal^n$ | the reference coordinates of the node |
-| `q` | Vector $\in \Rcal^n$ | node coordinates, INCLUDING their reference values, of the configuration asked for |
+| `q` | Vector $\in \Rcal^n$ | node coordinates, the displacement coordinates (without their reference values) of the configuration asked for; zero in the reference configuration |
 | `q_t` | Vector $\in \Rcal^n$ | node velocity coordinates of the configuration asked for; zero in the reference configuration |
 | `parameters` | Vector $\in \Rcal^{n_p}$ | the parameters of the node, see parameters; empty if not given |
 | **return value** | MatrixContainer | the matrix, as numpy array or list of lists |
@@ -157,7 +158,7 @@ A user function of the interface of the node that returns a matrix: the position
 | `t` | Real | time of the configuration asked for |
 | `itemNumber` | Index | integer number of the node in mbs |
 | `qRef` | Vector $\in \Rcal^n$ | the reference coordinates of the node |
-| `q` | Vector $\in \Rcal^n$ | node coordinates, INCLUDING their reference values, of the configuration asked for |
+| `q` | Vector $\in \Rcal^n$ | node coordinates, the displacement coordinates (without their reference values) of the configuration asked for; zero in the reference configuration |
 | `q_t` | Vector $\in \Rcal^n$ | node velocity coordinates of the configuration asked for; zero in the reference configuration |
 | `parameters` | Vector $\in \Rcal^{n_p}$ | the parameters of the node, see parameters; empty if not given |
 | **return value** | MatrixContainer | the matrix, as numpy array or list of lists |
@@ -171,7 +172,8 @@ A Python user function gets its vector and matrix arguments as read-only numpy a
 ```python
 #a node whose coordinates are cylindrical coordinates (r, phi, z) of a point; it turns with phi_t = 1
 def UFposition(mbs, t, itemNumber, qRef, q, q_t, parameters):
-    return [q[0]*np.cos(q[1]), q[0]*np.sin(q[1]), q[2]]
+    (r, phi, z) = qRef + q
+    return [r*np.cos(phi), r*np.sin(phi), z]
 node = mbs.AddNode(NodeUser(numberOfODE2Coordinates=3, referenceCoordinates=[1,0,0],
                             initialCoordinates=[0,0,0], initialVelocities=[0,1,0],
                             positionUserFunction=UFposition))

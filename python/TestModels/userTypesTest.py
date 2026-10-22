@@ -53,7 +53,7 @@ def UFmass(mbs, t, itemNumber, qRef, q, q_t, parameters):
     return np.eye(3)
 def UFoutputVariable(mbs, t, itemNumber, outputVariableType, localPosition, qRef, q, q_t, q_tt, parameters):
     if outputVariableType == OVT.BendingStrain:
-        return [q[0], q_t[0]]
+        return [qRef[0] + q[0], q_t[0]]
     return [2*t]
 body = mbs.AddObject(ObjectUserBody(nodeNumbers=[node], massMatrixUserFunction=UFmass, outputVariableUserFunction=UFoutputVariable))
 sensorFile = 'solution/userTypesTestSensor.txt'

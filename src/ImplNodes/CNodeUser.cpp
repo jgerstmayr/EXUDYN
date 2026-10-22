@@ -20,15 +20,14 @@
 //the coordinates go into local ResizableConstVectors: up to 7 items without memory allocation, and no buffer that a
 //nested call - a user function that asks for an output of the node - could overwrite (#2995)
 
-void CNodeUser::TotalCoordinates(ResizableConstVector& q, ConfigurationType configuration) const
+void CNodeUser::Displacements(ResizableConstVector& q, ConfigurationType configuration) const
 {
-	LinkedDataVector reference(GetReferenceCoordinateVector());
-	q.CopyFrom(reference);
-	if (configuration != ConfigurationType::Reference)
+	if (configuration == ConfigurationType::Reference)
 	{
-		LinkedDataVector u(GetCoordinateVector(configuration));
-		for (Index k = 0; k < q.NumberOfItems(); k++) { q[k] += u[k]; }
+		q.SetNumberOfItems(GetNumberOfODE2Coordinates());
+		q.SetAll(0.);
 	}
+	else { q.CopyFrom(GetCoordinateVector(configuration)); }
 }
 
 //! the velocity coordinates of a configuration, zero in the reference configuration (#3056)
@@ -54,7 +53,7 @@ Vector3D CNodeUser::GetPosition(ConfigurationType configuration) const
 {
 	if (configuration == ConfigurationType::Visualization && !PythonCallPossible()) { return Vector3D(0.); }
 	ResizableConstVector q, q_t;
-	TotalCoordinates(q, configuration);
+	Displacements(q, configuration);
 	Velocities(q_t, configuration);
 	LinkedDataVector qRef(GetReferenceCoordinateVector());
 	Vector3D position;
@@ -65,7 +64,7 @@ Vector3D CNodeUser::GetPosition(ConfigurationType configuration) const
 void CNodeUser::GetPositionJacobian(Matrix& value) const
 {
 	ResizableConstVector q, q_t;
-	TotalCoordinates(q, ConfigurationType::Current);
+	Displacements(q, ConfigurationType::Current);
 	Velocities(q_t, ConfigurationType::Current);
 	LinkedDataVector qRef(GetReferenceCoordinateVector());
 	EvaluatePositionJacobian(value, cSystemData->GetConfigurationTime(ConfigurationType::Current), qRef, q, q_t);
@@ -74,7 +73,7 @@ void CNodeUser::GetPositionJacobian(Matrix& value) const
 void CNodeUser::GetRotationJacobian(Matrix& value) const
 {
 	ResizableConstVector q, q_t;
-	TotalCoordinates(q, ConfigurationType::Current);
+	Displacements(q, ConfigurationType::Current);
 	Velocities(q_t, ConfigurationType::Current);
 	LinkedDataVector qRef(GetReferenceCoordinateVector());
 	EvaluateRotationJacobian(value, cSystemData->GetConfigurationTime(ConfigurationType::Current), qRef, q, q_t);
@@ -96,7 +95,7 @@ Vector3D CNodeUser::GetVelocity(ConfigurationType configuration) const
 	if (configuration == ConfigurationType::Visualization && !PythonCallPossible()) { return Vector3D(0.); }
 	if (configuration == ConfigurationType::Reference) { return Vector3D(0.); }
 	ResizableConstVector q, q_t;
-	TotalCoordinates(q, configuration);
+	Displacements(q, configuration);
 	Velocities(q_t, configuration);
 	LinkedDataVector qRef(GetReferenceCoordinateVector());
 	Matrix jacobian;
@@ -112,7 +111,7 @@ Vector3D CNodeUser::GetAcceleration(ConfigurationType configuration) const
 	if (configuration == ConfigurationType::Visualization && !PythonCallPossible()) { return Vector3D(0.); }
 	if (configuration == ConfigurationType::Reference) { return Vector3D(0.); }
 	ResizableConstVector q, q_t;
-	TotalCoordinates(q, configuration);
+	Displacements(q, configuration);
 	Velocities(q_t, configuration);
 	LinkedDataVector qRef(GetReferenceCoordinateVector());
 	Real t = cSystemData->GetConfigurationTime(configuration);
@@ -148,7 +147,7 @@ Matrix3D CNodeUser::GetRotationMatrix(ConfigurationType configuration) const
 {
 	if (configuration == ConfigurationType::Visualization && !PythonCallPossible()) { return EXUmath::unitMatrix3D; }
 	ResizableConstVector q, q_t;
-	TotalCoordinates(q, configuration);
+	Displacements(q, configuration);
 	Velocities(q_t, configuration);
 	LinkedDataVector qRef(GetReferenceCoordinateVector());
 	Matrix3D rotation;
@@ -161,7 +160,7 @@ Vector3D CNodeUser::GetAngularVelocity(ConfigurationType configuration) const
 	if (configuration == ConfigurationType::Visualization && !PythonCallPossible()) { return Vector3D(0.); }
 	if (configuration == ConfigurationType::Reference) { return Vector3D(0.); }
 	ResizableConstVector q, q_t;
-	TotalCoordinates(q, configuration);
+	Displacements(q, configuration);
 	Velocities(q_t, configuration);
 	LinkedDataVector qRef(GetReferenceCoordinateVector());
 	Matrix jacobian;
@@ -180,7 +179,7 @@ Vector3D CNodeUser::GetAngularVelocityLocal(ConfigurationType configuration) con
 void CNodeUser::GetRotationJacobianTTimesVector_q(const Vector3D& vector, Matrix& jacobian_q) const
 {
 	ResizableConstVector q, q_t;
-	TotalCoordinates(q, ConfigurationType::Current);
+	Displacements(q, ConfigurationType::Current);
 	Velocities(q_t, ConfigurationType::Current);
 	LinkedDataVector qRef(GetReferenceCoordinateVector());
 	Index n = q.NumberOfItems();
@@ -224,9 +223,8 @@ void CNodeUser::GetOutputVariable(OutputVariableType variableType, Configuration
 	case OutputVariableType::AngularVelocity: value.CopyFrom(GetAngularVelocity(configuration)); break;
 	case OutputVariableType::AngularVelocityLocal: value.CopyFrom(GetAngularVelocityLocal(configuration)); break;
 	case OutputVariableType::CoordinatesTotal: {
-		ResizableConstVector q;
-		TotalCoordinates(q, configuration);
-		value.CopyFrom(q);
+		value.CopyFrom(GetReferenceCoordinateVector());
+		if (configuration != ConfigurationType::Reference) { value += GetCoordinateVector(configuration); }
 		break;
 	}
 	case OutputVariableType::Coordinates: value.CopyFrom(GetCoordinateVector(configuration)); break;

@@ -2,7 +2,7 @@
 # This is an EXUDYN example
 #
 # Details:  NodeUser (#2974), a node whose position and orientation are Python user functions, against the nodes of
-#           Exudyn: (1) a point - position q, without and with positionJacobianUserFunction - with a mass, a spring
+#           Exudyn: (1) a point - position qRef + q, without and with positionJacobianUserFunction - with a mass, a spring
 #           to the ground and gravity on MarkerNodePosition, against NodePoint; (2) a rigid body node with the
 #           coordinates of NodeRigidBodyRxyz - position and Tait-Bryan angles - with the mass matrix of a rigid body
 #           in ObjectGenericODE2, a RigidBodySpringDamper on MarkerNodeRigid and a torque, the rotation Jacobian
@@ -40,7 +40,7 @@ def Solve(mbs, endTime=0.5, steps=200):
 #%%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #(1) a point
 def PointPosition(mbs, t, itemNumber, qRef, q, q_t, parameters):
-    return q
+    return qRef + q
 def PointJacobian(mbs, t, itemNumber, qRef, q, q_t, parameters):
     return np.eye(3)
 
@@ -82,13 +82,13 @@ Check(any(item[1] == int(exu.ItemType.Node) for item in data['spheres']['items']
 mass = 2.
 inertia = np.diag([0.1, 0.2, 0.3])
 def RxyzPosition(mbs, t, itemNumber, qRef, q, q_t, parameters):
-    return q[0:3]
+    return qRef[0:3] + q[0:3]
 def RxyzJacobian(mbs, t, itemNumber, qRef, q, q_t, parameters):
     return np.hstack([np.eye(3), np.zeros((3, 3))])
 def RxyzRotation(mbs, t, itemNumber, qRef, q, q_t, parameters):
-    return cu.RotXYZ2RotationMatrix(q[3:6])
+    return cu.RotXYZ2RotationMatrix(qRef[3:6] + q[3:6])
 def RxyzRotationJacobian(mbs, t, itemNumber, qRef, q, q_t, parameters):
-    return np.hstack([np.zeros((3, 3)), cu.RotXYZ2G(q[3:6])])
+    return np.hstack([np.zeros((3, 3)), cu.RotXYZ2G(qRef[3:6] + q[3:6])])
 
 def RigidModel(kind):
     SC = exu.SystemContainer()

@@ -2652,3 +2652,29 @@ build still fails - please fix.)*
   the newest is complete, on other platforms or when the caller set `DISTUTILS_USE_SDK`. test_exudev.py checks the
   choice on a fake SDK directory.
 - Repairing 10.0.26100.0 (Visual Studio Installer, individual components) makes the build take it again.
+
+<a id="rg7-12-6"></a>
+### RG7.12.6 — q of the user functions: the displacement coordinates (2026-10-22, #3060)
+*(Maintainer 2026-10-22: q should be the displacement coordinates, not the total coordinates, as internally in the C++
+code, so results are also more comparable; for rigid bodies total coordinates would be preferable, but for the
+time-consuming cases like finite elements the displacements are often equally relevant, and symbolic expressions can
+easily add both. Remark 4 of the same day: the access of symbolic functions to the visualization settings stays a path
+for later, without an issue - pythonUserItems.md 5.11 D.)*
+- Estimate given before the change: no objection. Every C++ item computes with the displacements and reads the
+  reference from its node; ObjectGenericODE2 gives its user functions the displacements as well, so all user functions
+  are alike. Cost: a rigid body or a large-deformation element adds `qRef + q`, n additions per call - in a recorded
+  symbolic function n nodes more, against the tens to hundreds of a mass matrix or a force; an element with linear
+  strains saves the subtraction. The numerical derivatives inside the items (the derivative of J^T f in
+  ObjectUserBody, of J_rot^T m and the acceleration in NodeUser) scale their step with the coordinates as
+  `newton.numericalDifferentiation` does with its default `addReferenceCoordinatesToEpsilon=False`, i.e. now with the
+  displacements; userRigidBodyTest.py moves by 1.4e-13 (13.475755021376248 -> 13.475755021376385), all other results
+  unchanged.
+- C++: `CObjectUserBody::GatherUserFunctionCoordinates` and the graphicsDataUserFunction call `GatherCoordinates`
+  without the reference; `CNodeUser::Displacements` (zero in the reference configuration) replaces `TotalCoordinates`;
+  the output variable CoordinatesTotal of NodeUser stays reference plus displacement.
+- The descriptions of both items and their mini examples (`qRef + q`), the docstring of `ParameterLayout`, the test
+  models deleteItemsTest, userANCFBeam3DTest, userANCFCable2DTest, userNodeTest, userOutputVariablesTest,
+  userParametersTest, userRigidBodyTest, userTetrahedronTest, userTypesTest, and test_graphicsData /
+  test_itemCompatibility; pythonUserItems.md 5.9 and 5.11 (A, C, D, F with the decisions of the day),
+  userFunctionBoundary.md (13), revisions.md.
+- Not checked: the AVX2 reference of userRigidBodyTest in `AVX2ReferenceSolutionUpdate()` (fast module not built).

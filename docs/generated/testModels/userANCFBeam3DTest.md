@@ -46,12 +46,13 @@ GA = mu*a**2
 #orthonormalized - a torque then acts on the cross section, as the stress of pure bending does; the frame of r_x and
 #r_y would put it on the tangent of the axis and rotate the tip 5 % more than M L/(E I)
 def NodePosition(mbs, t, itemNumber, qRef, q, q_t, parameters):
-    return q[0:3]
+    return qRef[0:3] + q[0:3]
 
 def NodePositionJacobian(mbs, t, itemNumber, qRef, q, q_t, parameters):
     return np.hstack([np.eye(3), np.zeros((3, 9))])
 
 def NodeRotation(mbs, t, itemNumber, qRef, q, q_t, parameters):
+    q = qRef + q #the total coordinates
     e3 = q[9:12]/cMath.norm(q[9:12])
     e2 = q[6:9] - (q[6:9] @ e3)*e3
     e2 = e2/cMath.norm(e2)
@@ -97,7 +98,7 @@ def Element(Le):
         return massMatrix
 
     def UFforce(mbs, t, itemNumber, qRef, q, q_t, parameters):
-        e = np.asarray(q).reshape((8, 3))                        #the vectors e_a as rows
+        e = np.asarray(qRef + q).reshape((8, 3))                        #the vectors e_a as rows
         F = np.einsum('paj,ai->pij', dN, e)                     #deformation gradient per point
         strain = 0.5*(np.einsum('pki,pkj->pij', F, F) - np.eye(3)) #Green-Lagrange
         trace = np.einsum('pii->p', strain)
@@ -107,7 +108,7 @@ def Element(Le):
 
     def UFposition(mbs, t, itemNumber, localPosition, qRef, q, q_t, parameters):
         N = ShapeFunctions(Le, localPosition[0], localPosition[1], localPosition[2])[0]
-        return N @ np.asarray(q).reshape((8, 3))
+        return N @ np.asarray(qRef + q).reshape((8, 3))
 
     def UFpositionJacobian(mbs, t, itemNumber, localPosition, qRef, q, q_t, parameters):
         N = ShapeFunctions(Le, localPosition[0], localPosition[1], localPosition[2])[0]

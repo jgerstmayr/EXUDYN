@@ -180,7 +180,8 @@ Python class derived from a C++ class: items stay validated dicts (the C++/Pytho
   argument table of the page are derived. Functions with the same signature and meaning share one def.
 - **Arguments**: `mbs, t, itemNumber` first, always - the time of the configuration asked for, the number of the item;
   then what the function is about (`localPosition`, `outputVariableType`); then `qRef, q, q_t` - the reference
-  coordinates, the coordinates INCLUDING the reference values and the velocities of the configuration asked for -,
+  coordinates, the displacement coordinates (without the reference values, as inside the C++ items, #3060) and the
+  velocities of the configuration asked for -,
   `q_tt` where accelerations are needed (outputVariableUserFunction), and last `parameters`, the parameter vector of
   the item (#3056). All of them as read-only numpy arrays. What else a function needs it reads through `mbs` and
   `itemNumber`; a symbolic function will get such access through MainSystem functions (RG12.4).
@@ -270,8 +271,10 @@ Python - a global `Le` and a precomputed mass matrix (userANCFCable2DTest.py), a
 (userANCFBeam3DTest.py), a dict by item number filled after `AddObject` (userTetrahedronTest.py). With parameters
 (5.10) that data could move into the parameter vector, but the reference coordinates are already in the nodes, and a
 second copy in the parameters can disagree with them. **Recommended**: every user function gets `qRef` before `q`:
-`(mbs, t, itemNumber, [what the function is about], qRef, q, q_t, parameters)`, `q` total as now, so that a rigid body
-uses `q` and an element `q - qRef`; in the visualization `q` and `q_t` are those of the visualization configuration.
+`(mbs, t, itemNumber, [what the function is about], qRef, q, q_t, parameters)`; in the visualization `q` and `q_t` are
+those of the visualization configuration. **Decided** (maintainer 2026-10-22, #3060): `q` is the displacement
+coordinates, as inside the C++ items, so that results compare; an element computes with `q` and its reference geometry
+from `qRef`, a rigid body with `qRef + q` - one addition per coordinate, also in a symbolic function.
 Node numbers are not needed in the parameters: the item has them, and `itemNumber` reaches them.
 
 **B. Parameters of the visualization.** What a drawing needs - the subdivision of a mesh, the cross section drawn, colors,
@@ -281,8 +284,8 @@ vector, `visualizationParameters`, in the visualization part of the item (VObjec
 A drawing function that is reused by several kinds of user elements then has a vector of its own layout.
 
 **C. Graphics data mapped by a user function.** The graphicsDataUserFunction builds the whole graphics data in Python
-at every redraw (ObjectUserBody: `(mbs, itemNumber)`, global coordinates, no configuration passed; none of the tests
-uses it). The alternative the maintainer raised: the item keeps graphics data in local coordinates, as ObjectRigidBody
+at every redraw (ObjectUserBody: `(mbs, t, itemNumber, qRef, q, q_t, parameters)` of the visualization configuration,
+global coordinates). The alternative the maintainer raised: the item keeps graphics data in local coordinates, as ObjectRigidBody
 keeps `graphicsData`, and a function maps each point. This mapping exists already: `positionUserFunction(..., localPosition,
 ...)` IS the map from a local point to its global position, for a rigid body and for an element whose local position
 covers its volume (the 3D ANCF beam, the tetrahedron). **Recommended, for later**: graphics data of the item in local
@@ -301,7 +304,10 @@ subdivision (`bodies.beams.axialTiling`, `crossSectionTiling`), numbers (`showNu
 of the user item does the same - it colors the mapped points by `GetOutputVariableBody(contour.outputVariable, localPosition)`,
 which the user body provides from its user functions, and writes the numbers; a symbolic function then needs no setting.
 If a function shall switch its appearance, the values it reads come through `visualizationParameters`, which the user
-(or a later mapping from settings) fills - not by access to the settings structure.
+(or a later mapping from settings) fills - not by access to the settings structure. **Decided** (maintainer
+2026-10-22): the graphicsDataUserFunction stays as it is, a Python function that reads settings and the visualization
+parameters of its item through `mbs` (`mbs.GetObjectParameter(itemNumber, 'V...')`); access of symbolic functions to
+the visualization settings is a path for later, different from that function, and has no issue.
 
 **E. What is missing to rebuild a rigid body or a beam** (ObjectUserBody, NodeUser):
 
@@ -319,10 +325,11 @@ If a function shall switch its appearance, the values it reads come through `vis
 | node types | RigidBody, Point2DSlope1, ... | NodeUser always Position+Orientation, also without rotation | the type from the given user functions, and the user types of #2989 |
 
 **F. Interfaces chosen to last.** Before the interfaces become public (1.13 is released, the user items are not yet in a
-release): (1) `qRef, q, q_t, parameters` in every user function (A, 5.10); (2) `q_tt` in the outputVariableUserFunction;
-(3) the graphics functions with `visualizationParameters` (B); (4) a decision on data coordinates (E) - either an
-argument `data` now, empty for elements without, or a later separate set of user functions; (5) everything else in E
-as optional user functions or flags, added without touching the existing signatures.
+release): (1) `qRef, q, q_t, parameters` in every user function, `q` the displacements (A, 5.10; #3056, #3060);
+(2) `q_tt` in the outputVariableUserFunction (#3057); (3) no `visualizationParameters` argument: the graphics function
+reaches the visualization parameters of its item through `mbs`, and a later mapping function gets a signature of its
+own (B, C, D); (4) data coordinates, algebraic equations and ODE1 not now, later through MainSystem functions (E);
+(5) everything else in E as optional user functions or flags, added without touching the existing signatures.
 
 ## 6. Examples that go beyond the present user functions
 

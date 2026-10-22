@@ -92,11 +92,11 @@ Available as `OutputVariableType` in sensors, `Get...Output()` and other functio
 ### Coordinates
 
 The object coordinates $\qv \in \Rcal^n$ are the {ref}`ODE2 <ODE2>` coordinates of its nodes, in the order of
-`nodeNumbers`, **including** their reference values. Every user function gets the reference coordinates
-$\qv\cRef$, the total coordinates $\qv$ and the velocities $\dot\qv$ of the configuration asked for, and the
-parameters $\pv_{par}$ of the body (#3056): a rigid body computes with $\qv$, a finite element with the
-displacements $\qv - \qv\cRef$ and its reference geometry from $\qv\cRef$. All of them are read-only numpy
-arrays, the local position as well.
+`nodeNumbers`, **without** their reference values - the displacement coordinates, as in the items of Exudyn.
+Every user function gets the reference coordinates $\qv\cRef$, the coordinates $\qv$ and the velocities
+$\dot\qv$ of the configuration asked for, and the parameters $\pv_{par}$ of the body (#3056): a finite element
+computes its strains from $\qv$ and its reference geometry from $\qv\cRef$, a rigid body with the total
+coordinates $\qv\cRef + \qv$. All of them are read-only numpy arrays, the local position as well.
 
 ### Parameters
 
@@ -157,7 +157,7 @@ A user function, which computes the mass matrix of the body.
 | `t` | Real | current time in mbs |
 | `itemNumber` | Index | integer number $i_N$ of the object in mbs, allowing easy access to all object data via mbs.GetObjectParameter(itemNumber, ...) |
 | `qRef` | Vector $\in \Rcal^n$ | the reference coordinates of the nodes, in the order of nodeNumbers |
-| `q` | Vector $\in \Rcal^n$ | object coordinates, the coordinates of the nodes INCLUDING their reference values, of the configuration asked for |
+| `q` | Vector $\in \Rcal^n$ | object coordinates, the displacement coordinates of the nodes (without their reference values) of the configuration asked for; zero in the reference configuration |
 | `q_t` | Vector $\in \Rcal^n$ | object velocity coordinates of the configuration asked for |
 | `parameters` | Vector $\in \Rcal^{n_p}$ | the parameters of the body, see parameters; empty if not given |
 | **return value** | MatrixContainer $\in \Rcal^{n \times n}$ | the mass matrix, as numpy array, list of lists or exu.MatrixContainer |
@@ -173,7 +173,7 @@ A user function, which computes the generalized forces of the body: elastic forc
 | `t` | Real | current time in mbs |
 | `itemNumber` | Index | integer number $i_N$ of the object in mbs, allowing easy access to all object data via mbs.GetObjectParameter(itemNumber, ...) |
 | `qRef` | Vector $\in \Rcal^n$ | the reference coordinates of the nodes, in the order of nodeNumbers |
-| `q` | Vector $\in \Rcal^n$ | object coordinates, the coordinates of the nodes INCLUDING their reference values, of the configuration asked for |
+| `q` | Vector $\in \Rcal^n$ | object coordinates, the displacement coordinates of the nodes (without their reference values) of the configuration asked for; zero in the reference configuration |
 | `q_t` | Vector $\in \Rcal^n$ | object velocity coordinates of the configuration asked for |
 | `parameters` | Vector $\in \Rcal^{n_p}$ | the parameters of the body, see parameters; empty if not given |
 | **return value** | Vector $\in \Rcal^{n}$ | the generalized force vector |
@@ -190,7 +190,7 @@ A user function, which computes the global position of the material point at loc
 | `itemNumber` | Index | integer number $i_N$ of the object in mbs |
 | `localPosition` | Vector3D $\in \Rcal^3$ | the local position of the point, in the coordinates the body defines (e.g. body-fixed, or the element coordinates of a finite element) |
 | `qRef` | Vector $\in \Rcal^n$ | the reference coordinates of the nodes, in the order of nodeNumbers |
-| `q` | Vector $\in \Rcal^n$ | object coordinates, the coordinates of the nodes INCLUDING their reference values, of the configuration asked for |
+| `q` | Vector $\in \Rcal^n$ | object coordinates, the displacement coordinates of the nodes (without their reference values) of the configuration asked for; zero in the reference configuration |
 | `q_t` | Vector $\in \Rcal^n$ | object velocity coordinates of the configuration asked for |
 | `parameters` | Vector $\in \Rcal^{n_p}$ | the parameters of the body, see parameters; empty if not given |
 | **return value** | Vector3D $\in \Rcal^{3}$ | the global position of the point |
@@ -207,7 +207,7 @@ A user function of the interface of the body that returns a matrix at localPosit
 | `itemNumber` | Index | integer number $i_N$ of the object in mbs |
 | `localPosition` | Vector3D $\in \Rcal^3$ | the local position of the point |
 | `qRef` | Vector $\in \Rcal^n$ | the reference coordinates of the nodes, in the order of nodeNumbers |
-| `q` | Vector $\in \Rcal^n$ | object coordinates, the coordinates of the nodes INCLUDING their reference values, of the configuration asked for |
+| `q` | Vector $\in \Rcal^n$ | object coordinates, the displacement coordinates of the nodes (without their reference values) of the configuration asked for; zero in the reference configuration |
 | `q_t` | Vector $\in \Rcal^n$ | object velocity coordinates of the configuration asked for |
 | `parameters` | Vector $\in \Rcal^{n_p}$ | the parameters of the body, see parameters; empty if not given |
 | **return value** | MatrixContainer | the matrix, as numpy array or list of lists |
@@ -224,7 +224,7 @@ A user function of the interface of the body that returns a matrix at localPosit
 | `itemNumber` | Index | integer number $i_N$ of the object in mbs |
 | `localPosition` | Vector3D $\in \Rcal^3$ | the local position of the point |
 | `qRef` | Vector $\in \Rcal^n$ | the reference coordinates of the nodes, in the order of nodeNumbers |
-| `q` | Vector $\in \Rcal^n$ | object coordinates, the coordinates of the nodes INCLUDING their reference values, of the configuration asked for |
+| `q` | Vector $\in \Rcal^n$ | object coordinates, the displacement coordinates of the nodes (without their reference values) of the configuration asked for; zero in the reference configuration |
 | `q_t` | Vector $\in \Rcal^n$ | object velocity coordinates of the configuration asked for |
 | `parameters` | Vector $\in \Rcal^{n_p}$ | the parameters of the body, see parameters; empty if not given |
 | **return value** | MatrixContainer | the matrix, as numpy array or list of lists |
@@ -241,7 +241,7 @@ A user function of the interface of the body that returns a matrix at localPosit
 | `itemNumber` | Index | integer number $i_N$ of the object in mbs |
 | `localPosition` | Vector3D $\in \Rcal^3$ | the local position of the point |
 | `qRef` | Vector $\in \Rcal^n$ | the reference coordinates of the nodes, in the order of nodeNumbers |
-| `q` | Vector $\in \Rcal^n$ | object coordinates, the coordinates of the nodes INCLUDING their reference values, of the configuration asked for |
+| `q` | Vector $\in \Rcal^n$ | object coordinates, the displacement coordinates of the nodes (without their reference values) of the configuration asked for; zero in the reference configuration |
 | `q_t` | Vector $\in \Rcal^n$ | object velocity coordinates of the configuration asked for |
 | `parameters` | Vector $\in \Rcal^{n_p}$ | the parameters of the body, see parameters; empty if not given |
 | **return value** | MatrixContainer | the matrix, as numpy array or list of lists |
@@ -259,7 +259,7 @@ A user function, which computes the output variables of the body at localPositio
 | `outputVariableType` | OutputVariableType | the output variable asked for |
 | `localPosition` | Vector3D $\in \Rcal^3$ | the local position of the point |
 | `qRef` | Vector $\in \Rcal^n$ | the reference coordinates of the nodes, in the order of nodeNumbers |
-| `q` | Vector $\in \Rcal^n$ | object coordinates, the coordinates of the nodes INCLUDING their reference values, of the configuration asked for |
+| `q` | Vector $\in \Rcal^n$ | object coordinates, the displacement coordinates of the nodes (without their reference values) of the configuration asked for; zero in the reference configuration |
 | `q_t` | Vector $\in \Rcal^n$ | object velocity coordinates of the configuration asked for |
 | `q_tt` | Vector $\in \Rcal^n$ | object acceleration coordinates of the configuration asked for; zero in the reference configuration |
 | `parameters` | Vector $\in \Rcal^{n_p}$ | the parameters of the body, see parameters; empty if not given |
@@ -276,7 +276,7 @@ A user function, which draws the body: it returns a list of graphics data in glo
 | `t` | Real | time of the visualization configuration |
 | `itemNumber` | Index | integer number $i_N$ of the object in mbs |
 | `qRef` | Vector $\in \Rcal^n$ | the reference coordinates of the nodes, in the order of nodeNumbers |
-| `q` | Vector $\in \Rcal^n$ | object coordinates, the coordinates of the nodes INCLUDING their reference values, of the configuration asked for |
+| `q` | Vector $\in \Rcal^n$ | object coordinates, the displacement coordinates of the nodes (without their reference values) of the configuration asked for; zero in the reference configuration |
 | `q_t` | Vector $\in \Rcal^n$ | object velocity coordinates of the configuration asked for |
 | `parameters` | Vector $\in \Rcal^{n_p}$ | the parameters of the body, see parameters; empty if not given |
 | **return value** | BodyGraphicsData | a list of graphics data (BodyGraphicsData) |
@@ -288,13 +288,13 @@ A Python user function gets its vector and matrix arguments as read-only numpy a
 
 
 ```python
-#a mass point as a user body on a NodePoint: M = m*I, the position of every point is q
+#a mass point as a user body on a NodePoint: M = m*I, the position of every point is qRef + q
 m = 2
 node = mbs.AddNode(NodePoint(referenceCoordinates=[1,0,0]))
 def UFmass(mbs, t, itemNumber, qRef, q, q_t, parameters):
     return m*np.eye(3)
 def UFposition(mbs, t, itemNumber, localPosition, qRef, q, q_t, parameters):
-    return q
+    return qRef + q
 def UFpositionJacobian(mbs, t, itemNumber, localPosition, qRef, q, q_t, parameters):
     return np.eye(3)
 #a point does not rotate; with these, rigid markers and the rotation outputs work on it

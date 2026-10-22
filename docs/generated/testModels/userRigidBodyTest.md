@@ -45,8 +45,9 @@ g = [0, -9.81, 0]
 pSpring = [0.2, 0.1, 0.05] #local point of the spring-damper
 torque = [0.2, 0, 0.5]
 
-#the rigid body as user functions; q = [position, Tait-Bryan angles], including the reference values
+#the rigid body as user functions; qRef + q = [position, Tait-Bryan angles], the total coordinates
 def UFmass(mbs, t, itemNumber, qRef, q, q_t, parameters):
+    q = qRef + q #the total coordinates
     G = cu.RotXYZ2GLocal(q[3:6])
     M = np.zeros((6, 6))
     M[0:3, 0:3] = m*np.eye(3)
@@ -54,6 +55,7 @@ def UFmass(mbs, t, itemNumber, qRef, q, q_t, parameters):
     return M
 
 def UFforce(mbs, t, itemNumber, qRef, q, q_t, parameters):
+    q = qRef + q #the total coordinates
     G = cu.RotXYZ2GLocal(q[3:6])
     G_t = cu.RotXYZ2GLocal_t(q[3:6], q_t[3:6])
     omegaLocal = G @ q_t[3:6]
@@ -62,9 +64,11 @@ def UFforce(mbs, t, itemNumber, qRef, q, q_t, parameters):
     return f
 
 def UFposition(mbs, t, itemNumber, localPosition, qRef, q, q_t, parameters):
+    q = qRef + q #the total coordinates
     return np.array(q[0:3]) + cu.RotXYZ2RotationMatrix(q[3:6]) @ localPosition
 
 def UFpositionJacobian(mbs, t, itemNumber, localPosition, qRef, q, q_t, parameters):
+    q = qRef + q #the total coordinates
     A = cu.RotXYZ2RotationMatrix(q[3:6])
     Jpos = np.zeros((3, 6))
     Jpos[:, 0:3] = np.eye(3)
@@ -72,9 +76,11 @@ def UFpositionJacobian(mbs, t, itemNumber, localPosition, qRef, q, q_t, paramete
     return Jpos
 
 def UFrotationMatrix(mbs, t, itemNumber, localPosition, qRef, q, q_t, parameters):
+    q = qRef + q #the total coordinates
     return cu.RotXYZ2RotationMatrix(q[3:6])
 
 def UFrotationJacobian(mbs, t, itemNumber, localPosition, qRef, q, q_t, parameters):
+    q = qRef + q #the total coordinates
     Jrot = np.zeros((3, 6))
     Jrot[:, 3:6] = cu.RotXYZ2RotationMatrix(q[3:6]) @ cu.RotXYZ2GLocal(q[3:6])
     return Jrot
@@ -126,9 +132,11 @@ def PositionComponents(functions, localPosition, q):
     return [q[0] + p[0], q[1] + p[1], q[2] + p[2]]
 
 def UFforceSymbolic(mbs, t, itemNumber, qRef, q, q_t, parameters):
+    q = qRef + q #the total coordinates
     return ForceComponents(esym, q, q_t)
 
 def UFpositionSymbolic(mbs, t, itemNumber, localPosition, qRef, q, q_t, parameters):
+    q = qRef + q #the total coordinates
     return PositionComponents(esym, localPosition, q)
 
 #the matrix results as symbolic matrices (#3020): built from the components, multiplied with @ and transposed with .T
@@ -140,29 +148,33 @@ def Blocks3x6(left, right):
     return esym.Matrix([[left[i, j] if left is not None else 0 for j in range(3)] + [right[i, j] for j in range(3)] for i in range(3)])
 
 def UFmassSymbolic(mbs, t, itemNumber, qRef, q, q_t, parameters):
+    q = qRef + q #the total coordinates
     G = esym.Matrix(GLocal(esym, [q[3], q[4], q[5]]))
     Mrot = G.T @ esym.Matrix(J) @ G
     return esym.Matrix([[m if i == j else 0 for j in range(3)] + [0, 0, 0] for i in range(3)]
                        + [[0, 0, 0] + [Mrot[i, j] for j in range(3)] for i in range(3)])
 
 def UFpositionJacobianSymbolic(mbs, t, itemNumber, localPosition, qRef, q, q_t, parameters):
+    q = qRef + q #the total coordinates
     rot = [q[3], q[4], q[5]]
     A = esym.Matrix(RotationMatrix(esym, rot))
     rotationPart = -(A @ esym.Matrix(Skew(localPosition)) @ esym.Matrix(GLocal(esym, rot)))
     return Blocks3x6(esym.Matrix(np.eye(3)), rotationPart)
 
 def UFrotationMatrixSymbolic(mbs, t, itemNumber, localPosition, qRef, q, q_t, parameters):
+    q = qRef + q #the total coordinates
     return esym.Matrix(RotationMatrix(esym, [q[3], q[4], q[5]]))
 
 def UFrotationJacobianSymbolic(mbs, t, itemNumber, localPosition, qRef, q, q_t, parameters):
+    q = qRef + q #the total coordinates
     rot = [q[3], q[4], q[5]]
     return Blocks3x6(None, esym.Matrix(RotationMatrix(esym, rot)) @ esym.Matrix(GLocal(esym, rot)))
 
 #the component functions compute what the matrix functions above compute
 qTest = [0.1, 0.2, 0.3, 0.2, -0.1, 0.3]
 qTest_t = [0.5, 0, 1, 1, 0.5, 2]
-componentsDifference = max(np.max(np.abs(np.array(ForceComponents(cMath, qTest, qTest_t)) - UFforce(0, 0, 0, np.array(qTest), np.array(qTest), np.array(qTest_t), np.array([])))),
-                           np.max(np.abs(np.array(PositionComponents(cMath, pSpring, qTest)) - UFposition(0, 0, 0, pSpring, np.array(qTest), np.array(qTest), np.array(qTest_t), np.array([])))))
+componentsDifference = max(np.max(np.abs(np.array(ForceComponents(cMath, qTest, qTest_t)) - UFforce(0, 0, 0, np.zeros(6), np.array(qTest), np.array(qTest_t), np.array([])))),
+                           np.max(np.abs(np.array(PositionComponents(cMath, pSpring, qTest)) - UFposition(0, 0, 0, pSpring, np.zeros(6), np.array(qTest), np.array(qTest_t), np.array([])))))
 exu.Print('the component functions against the matrix functions:', componentsDifference)
 
 simulationSettings = exu.SimulationSettings()

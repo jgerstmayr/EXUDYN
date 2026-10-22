@@ -49,7 +49,7 @@ def UFmass(mbs, t, itemNumber, qRef, q, q_t, parameters):
 #the internal forces of the Saint Venant-Kirchhoff material, on the right-hand side
 def UFforce(mbs, t, itemNumber, qRef, q, q_t, parameters):
     (gradN, volume) = tetData[itemNumber]
-    F = np.array(q).reshape(4, 3).T @ gradN #deformation gradient
+    F = np.array(qRef + q).reshape(4, 3).T @ gradN #deformation gradient
     E = 0.5*(F.T @ F - np.eye(3)) #Green strain
     S = lam*np.trace(E)*np.eye(3) + 2*mu*E #second Piola-Kirchhoff stress
     return -(volume*gradN @ (F @ S).T).flatten()
@@ -60,7 +60,7 @@ def N(localPosition):
     return np.array([1 - xi - eta - zeta, xi, eta, zeta])
 
 def UFposition(mbs, t, itemNumber, localPosition, qRef, q, q_t, parameters):
-    return N(localPosition) @ np.array(q).reshape(4, 3)
+    return N(localPosition) @ np.array(qRef + q).reshape(4, 3)
 
 def UFpositionJacobian(mbs, t, itemNumber, localPosition, qRef, q, q_t, parameters):
     return np.kron(N(localPosition), np.eye(3))

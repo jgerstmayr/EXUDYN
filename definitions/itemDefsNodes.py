@@ -2112,7 +2112,7 @@ def NodeUser_positionUserFunction(mbs: MainSystem, t: Real, itemNumber: Index, q
         t: time of the configuration asked for
         itemNumber: integer number of the node in mbs
         qRef: $\in \Rcal^n$ the reference coordinates of the node
-        q: $\in \Rcal^n$ node coordinates, INCLUDING their reference values, of the configuration asked for
+        q: $\in \Rcal^n$ node coordinates, the displacement coordinates (without their reference values) of the configuration asked for; zero in the reference configuration
         q_t: $\in \Rcal^n$ node velocity coordinates of the configuration asked for; zero in the reference configuration
         parameters: $\in \Rcal^{n_p}$ the parameters of the node, see parameters; empty if not given
     Returns:
@@ -2128,7 +2128,7 @@ def NodeUser_matrixUserFunction(mbs: MainSystem, t: Real, itemNumber: Index, qRe
         t: time of the configuration asked for
         itemNumber: integer number of the node in mbs
         qRef: $\in \Rcal^n$ the reference coordinates of the node
-        q: $\in \Rcal^n$ node coordinates, INCLUDING their reference values, of the configuration asked for
+        q: $\in \Rcal^n$ node coordinates, the displacement coordinates (without their reference values) of the configuration asked for; zero in the reference configuration
         q_t: $\in \Rcal^n$ node velocity coordinates of the configuration asked for; zero in the reference configuration
         parameters: $\in \Rcal^{n_p}$ the parameters of the node, see parameters; empty if not given
     Returns:
@@ -2142,8 +2142,8 @@ definitions.append(ItemDefinition(
     addIncludesC=r"""class MainSystem; //AUTO; for std::function / userFunction; avoid including MainSystem.h
 """,
     addProtectedC=r"""    CSystemData* cSystemData = nullptr; //!< for the MainSystem and the time of the user functions
-    //! the total coordinates of a configuration: reference plus displacement (#2974)
-    void TotalCoordinates(ResizableConstVector& q, ConfigurationType configuration) const;
+    //! the displacement coordinates of a configuration, zero in the reference configuration (#2974)
+    void Displacements(ResizableConstVector& q, ConfigurationType configuration) const;
     //! the number of the node in the system, for the user functions
     Index GetNodeNumber() const;
     //! false in another thread than the main thread
@@ -2164,8 +2164,9 @@ definitions.append(ItemDefinition(
 
     $n$ = `numberOfODE2Coordinates` ABRV:ODE2 coordinates; their meaning is defined by the user functions and the
     object that uses the node. The user functions get the reference coordinates $\qv\cRef$, the coordinates
-    $\qv \in \Rcal^n$ **including** their reference values, the velocities $\dot\qv$ and the `parameters` of the node,
-    as read-only numpy arrays, as the user functions of ObjectUserBody do (#3056).
+    $\qv \in \Rcal^n$ **without** their reference values - the displacement coordinates, as in the nodes of Exudyn -,
+    the velocities $\dot\qv$ and the `parameters` of the node, as read-only numpy arrays, as the user functions of
+    ObjectUserBody do (#3056); the total coordinates are $\qv\cRef + \qv$.
 
     #### Interface of the node
 
@@ -2190,7 +2191,8 @@ definitions.append(ItemDefinition(
     """,
     miniExample=r"""    #a node whose coordinates are cylindrical coordinates (r, phi, z) of a point; it turns with phi_t = 1
     def UFposition(mbs, t, itemNumber, qRef, q, q_t, parameters):
-        return [q[0]*np.cos(q[1]), q[0]*np.sin(q[1]), q[2]]
+        (r, phi, z) = qRef + q
+        return [r*np.cos(phi), r*np.sin(phi), z]
     node = mbs.AddNode(NodeUser(numberOfODE2Coordinates=3, referenceCoordinates=[1,0,0],
                                 initialCoordinates=[0,0,0], initialVelocities=[0,1,0],
                                 positionUserFunction=UFposition))

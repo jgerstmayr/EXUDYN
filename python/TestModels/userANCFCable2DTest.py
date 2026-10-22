@@ -53,9 +53,9 @@ massMatrix = sum(w*rhoA*S(x).T @ S(x) for (x, w) in GaussRule(4))
 def UFmass(mbs, t, itemNumber, qRef, q, q_t, parameters):
     return massMatrix
 
-#the elastic forces, on the right-hand side; q includes the reference coordinates
+#the elastic forces, on the right-hand side, from the total coordinates qRef + q
 def UFforce(mbs, t, itemNumber, qRef, q, q_t, parameters):
-    q = np.array(q)
+    q = qRef + q
     f = np.zeros(8)
     for (x, w) in axialRule:
         rx = S_x(x) @ q
@@ -72,7 +72,7 @@ def UFforce(mbs, t, itemNumber, qRef, q, q_t, parameters):
     return f
 
 def UFposition(mbs, t, itemNumber, localPosition, qRef, q, q_t, parameters):
-    return list(S(localPosition[0]) @ q) + [0]
+    return list(S(localPosition[0]) @ (qRef + q)) + [0]
 
 def UFpositionJacobian(mbs, t, itemNumber, localPosition, qRef, q, q_t, parameters):
     return np.vstack([S(localPosition[0]), np.zeros(8)])

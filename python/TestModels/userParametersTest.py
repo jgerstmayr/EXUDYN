@@ -3,8 +3,8 @@
 #
 # Details:  The parameters of a user item (#3056): two mass-spring oscillators as ObjectUserBody on NodePoint, each
 #           with its own mass and stiffness in its parameter vector, named by a ParameterLayout. The user functions
-#           get the reference coordinates qRef, the coordinates q, the velocities q_t and the parameters; the spring
-#           acts on q - qRef. One recorded symbolic force and mass matrix serve both bodies, and a parameter changed
+#           get the reference coordinates qRef, the displacements q, the velocities q_t and the parameters; the
+#           spring acts on q. One recorded symbolic force and mass matrix serve both bodies, and a parameter changed
 #           with SetObjectParameter acts without recording again. The solutions agree with the Python user functions
 #           and with x0 cos(sqrt(k/m) t). With constantMassMatrix, the mass matrix user function is called once per
 #           body and the solution is the same (#3058).
@@ -32,13 +32,13 @@ def UFmass(mbs, t, itemNumber, qRef, q, q_t, parameters):
     return layout.ToDict(parameters)['mass']*np.eye(3)
 
 def UFforce(mbs, t, itemNumber, qRef, q, q_t, parameters):
-    return -layout.ToDict(parameters)['stiffness']*(q - qRef)
+    return -layout.ToDict(parameters)['stiffness']*q
 
 def UFmassSymbolic(mbs, t, itemNumber, qRef, q, q_t, parameters):
     return layout.ToDict(parameters)['mass']*esym.Matrix(np.eye(3))
 
 def UFposition(mbs, t, itemNumber, localPosition, qRef, q, q_t, parameters):
-    return q + localPosition
+    return qRef + q + localPosition
 
 def UFpositionJacobian(mbs, t, itemNumber, localPosition, qRef, q, q_t, parameters):
     return np.eye(3)

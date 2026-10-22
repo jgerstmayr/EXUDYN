@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-10-22  15:08:27 (last modified)
+* @date         2026-10-22  21:06:35 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -77,8 +77,8 @@ class CNodeUser: public CNodeODE2 // AUTO:
 {
 protected: // AUTO:
     CSystemData* cSystemData = nullptr; //!< for the MainSystem and the time of the user functions
-    //! the total coordinates of a configuration: reference plus displacement (#2974)
-    void TotalCoordinates(ResizableConstVector& q, ConfigurationType configuration) const;
+    //! the displacement coordinates of a configuration, zero in the reference configuration (#2974)
+    void Displacements(ResizableConstVector& q, ConfigurationType configuration) const;
     //! the number of the node in the system, for the user functions
     Index GetNodeNumber() const;
     //! false in another thread than the main thread

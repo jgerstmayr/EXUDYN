@@ -20,13 +20,13 @@ mbs = SC.AddSystem()
 oGround=mbs.AddObject(ObjectGround(referencePosition= [0,0,0]))
 nGround = mbs.AddNode(NodePointGround(referenceCoordinates=[0,0,0]))
 
-#a mass point as a user body on a NodePoint: M = m*I, the position of every point is q
+#a mass point as a user body on a NodePoint: M = m*I, the position of every point is qRef + q
 m = 2
 node = mbs.AddNode(NodePoint(referenceCoordinates=[1,0,0]))
 def UFmass(mbs, t, itemNumber, qRef, q, q_t, parameters):
     return m*np.eye(3)
 def UFposition(mbs, t, itemNumber, localPosition, qRef, q, q_t, parameters):
-    return q
+    return qRef + q
 def UFpositionJacobian(mbs, t, itemNumber, localPosition, qRef, q, q_t, parameters):
     return np.eye(3)
 #a point does not rotate; with these, rigid markers and the rotation outputs work on it

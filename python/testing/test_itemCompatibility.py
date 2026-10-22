@@ -43,7 +43,7 @@ nodeArguments = {
     'NodeGenericData': {'numberOfDataCoordinates': 3, 'initialCoordinates': [0, 0, 0]},
     'NodeRigidBodyEP': {'referenceCoordinates': [0, 0, 0, 1, 0, 0, 0]},
     'NodeUser': {'numberOfODE2Coordinates': 3, 'referenceCoordinates': [0, 0, 0], 'initialCoordinates': [0, 0, 0],
-                 'initialVelocities': [0, 0, 0], 'positionUserFunction': lambda mbs, t, itemNumber, qRef, q, q_t, parameters: q},
+                 'initialVelocities': [0, 0, 0], 'positionUserFunction': lambda mbs, t, itemNumber, qRef, q, q_t, parameters: qRef + q},
     }
 markerArguments = {'MarkerNodeRotationCoordinate': {'rotationCoordinate': 0}}
 
