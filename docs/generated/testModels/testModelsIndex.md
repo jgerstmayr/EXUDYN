@@ -127,6 +127,7 @@ shellMeshSlopesScalingTest
 systemContainerComputeOnlyTest
 ANCFBeamGeometricallyExactComparisonTest
 ANCFThinPlateRotationTest
+userOutputVariablesTest
 userParametersTest
 userTypesTest
 rotationMarkerDeprecationTest

@@ -649,7 +649,7 @@ class ObjectUserBodyRotationJacobianUserFunction(Protocol):
     def __call__(self, mbs: exudyn.MainSystem, t: float, itemNumber: int, localPosition: np.ndarray, qRef: np.ndarray, q: np.ndarray, q_t: np.ndarray, parameters: np.ndarray) -> exudyn.MatrixContainer: ...
 
 class ObjectUserBodyOutputVariableUserFunction(Protocol):
-    """A user function, which computes the output variables UserType0 to UserType3 of the body at localPosition, e.g. strains or stresses of a user element; name them with exudyn.special.userTypes.SetName.
+    """A user function, which computes the output variables of the body at localPosition that the body does not compute itself: strains, curvatures, stresses, forces and torques of a user element, its potential energy, accelerations, the user types UserType0 to UserType3 (named with exudyn.special.userTypes.SetName); for a type it does not provide, it returns an empty list. A symbolic function distinguishes the types with esym.IfThenElse(outputVariableType == int(exu.OutputVariableType.StrainLocal), ...) and returns the same size for all of them.
     
     Args:
         mbs (exudyn.MainSystem): provides MainSystem mbs to which object belongs
@@ -658,7 +658,7 @@ class ObjectUserBodyOutputVariableUserFunction(Protocol):
 
         itemNumber (int): integer number :math:`i_N` of the object in mbs
 
-        outputVariableType (exudyn.OutputVariableType): the output variable asked for, UserType0 to UserType3
+        outputVariableType (exudyn.OutputVariableType): the output variable asked for
 
         localPosition (np.ndarray): the local position of the point
 
@@ -673,7 +673,7 @@ class ObjectUserBodyOutputVariableUserFunction(Protocol):
         parameters (np.ndarray): the parameters of the body, see parameters; empty if not given
 
     Returns:
-        np.ndarray: the value as a vector of any size, the same size for every call with the same outputVariableType
+        np.ndarray: the value as a vector of any size, the same size for every call with the same outputVariableType; empty for a type the function does not provide
     """
     def __call__(self, mbs: exudyn.MainSystem, t: float, itemNumber: int, outputVariableType: exudyn.OutputVariableType, localPosition: np.ndarray, qRef: np.ndarray, q: np.ndarray, q_t: np.ndarray, q_tt: np.ndarray, parameters: np.ndarray) -> np.ndarray: ...
 
@@ -3166,7 +3166,7 @@ class ObjectUserBody:
 
         rotationJacobianUserFunction: A Python user function which computes the rotation Jacobian (of the global angular velocity) at localPosition; optional, for rigid markers; type: ObjectUserBodyRotationJacobianUserFunction
 
-        outputVariableUserFunction: A Python user function which computes the output variables UserType0 to UserType3 at localPosition; optional; type: ObjectUserBodyOutputVariableUserFunction
+        outputVariableUserFunction: A Python user function which computes the output variables at localPosition that the body does not compute itself, e.g. strains, energy, accelerations and UserType0 to UserType3; optional; type: ObjectUserBodyOutputVariableUserFunction
 
         visualization: visualization data, see VObjectUserBody
 

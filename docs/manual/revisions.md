@@ -36,6 +36,8 @@ coordinates, the total coordinates and the velocities of the configuration asked
 item, which `exudyn.advancedUtilities.ParameterLayout` maps to named quantities and back; the
 outputVariableUserFunction also gets `q_tt`, the graphicsDataUserFunction of ObjectUserBody the coordinates of the
 visualization configuration. One recorded symbolic user function serves every body of a kind with its own parameters.
+The outputVariableUserFunction of ObjectUserBody provides every output variable the body does not compute itself -
+strains, curvatures, stresses, forces, torques, potential energy, accelerations, the user types (#3057).
 
 **`NodeUser`**, a node with any number of coordinates whose position, and optionally orientation, are Python user
 functions; the Jacobians are computed by central differences if they are not given; node markers, SensorNode, loads

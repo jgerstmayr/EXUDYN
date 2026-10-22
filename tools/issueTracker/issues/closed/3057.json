@@ -1,0 +1,15 @@
+{
+  "number": 3057,
+  "title": "ObjectUserBody: the outputVariableUserFunction provides any output variable the body does not compute itself",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "EXTENSION",
+  "effort": "LOW",
+  "description": "Maintainer 2026-10-22: the outputVariableUserFunction is not limited to UserType0-3; with IfThenElse on outputVariableType a symbolic function provides as many output variables as needed, so beam outputs (strain, curvature, force, torque), energy and accelerations are possible.",
+  "dateRaised": "2026-10-22",
+  "deadline": "2027-04-20",
+  "dateResolved": "2026-10-22 15:47",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "The outputVariableUserFunction of ObjectUserBody provides every output variable the body does not compute itself - strains, curvatures, stresses, forces, torques, potential energy, accelerations, directors and the user types; it returns an empty list for a type it does not provide (revision2026c step RG7.12.4)",
+  "resolvedInVersion": "1.13.163"
+}

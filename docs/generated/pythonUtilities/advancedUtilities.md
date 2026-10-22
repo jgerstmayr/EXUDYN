@@ -615,7 +615,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`TCPIPexudyn
 - **output**: dict with a number - or symbolic Real - for size 1 and a list otherwise
 
 
-Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`userParametersTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/userParametersTest.py) (TM)
+Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`userOutputVariablesTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/userOutputVariablesTest.py) (TM), [`userParametersTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/userParametersTest.py) (TM)
 
 
 (sec-module-advancedutilities-class-tcpipdata)=

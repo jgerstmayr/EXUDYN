@@ -451,7 +451,7 @@ items = {
     'types': ['Body', 'MultiNoded'],
     'requestedNodeTypes': [],
     'accessFunctionTypes': ['TranslationalVelocity_qt', 'AngularVelocity_qt', 'JacobianTtimesVector_q'],
-    'outputVariables': ['Position', 'Displacement', 'Velocity', 'RotationMatrix', 'HomogeneousTransformation', 'AngularVelocity', 'AngularVelocityLocal', 'Coordinates', 'Coordinates_t', 'KineticEnergy', 'UserType0', 'UserType1', 'UserType2', 'UserType3'],
+    'outputVariables': ['Position', 'Displacement', 'Velocity', 'RotationMatrix', 'HomogeneousTransformation', 'AngularVelocity', 'AngularVelocityLocal', 'Coordinates', 'Coordinates_t', 'KineticEnergy', 'DisplacementLocal', 'VelocityLocal', 'Acceleration', 'AccelerationLocal', 'Rotation', 'AngularAcceleration', 'AngularAccelerationLocal', 'Director1', 'Director2', 'Director3', 'Force', 'ForceLocal', 'Torque', 'TorqueLocal', 'StrainLocal', 'StressLocal', 'CurvatureLocal', 'PotentialEnergy', 'UserType0', 'UserType1', 'UserType2', 'UserType3'],
     'parameters': {
       'name': {'type': 'String', 'size': '', 'range': '', 'default': '', 'mustBeGiven': False, 'description': "objects's unique name"},
       'nodeNumbers': {'type': 'ArrayNodeIndex', 'size': '', 'range': '', 'default': '[]', 'mustBeGiven': False, 'description': 'the nodes whose ODE2 coordinates are the coordinates of the body, in this order'},
@@ -462,7 +462,7 @@ items = {
       'positionJacobianUserFunction': {'type': 'ObjectUserBodyPositionJacobianUserFunction', 'size': '', 'range': '', 'default': '0', 'mustBeGiven': False, 'description': 'A Python user function which computes the position Jacobian at localPosition'},
       'rotationMatrixUserFunction': {'type': 'ObjectUserBodyRotationMatrixUserFunction', 'size': '', 'range': '', 'default': '0', 'mustBeGiven': False, 'description': 'A Python user function which computes the rotation matrix at localPosition; optional, for rigid markers'},
       'rotationJacobianUserFunction': {'type': 'ObjectUserBodyRotationJacobianUserFunction', 'size': '', 'range': '', 'default': '0', 'mustBeGiven': False, 'description': 'A Python user function which computes the rotation Jacobian (of the global angular velocity) at localPosition; optional, for rigid markers'},
-      'outputVariableUserFunction': {'type': 'ObjectUserBodyOutputVariableUserFunction', 'size': '', 'range': '', 'default': '0', 'mustBeGiven': False, 'description': 'A Python user function which computes the output variables UserType0 to UserType3 at localPosition; optional'},
+      'outputVariableUserFunction': {'type': 'ObjectUserBodyOutputVariableUserFunction', 'size': '', 'range': '', 'default': '0', 'mustBeGiven': False, 'description': 'A Python user function which computes the output variables at localPosition that the body does not compute itself, e.g. strains, energy, accelerations and UserType0 to UserType3; optional'},
     },
     'visualization': {
       'show': {'type': 'Bool', 'size': '', 'range': '', 'default': 'True', 'mustBeGiven': False, 'description': 'set true, if item is shown in visualization and false if it is not shown'},

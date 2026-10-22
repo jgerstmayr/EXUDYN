@@ -28,7 +28,7 @@ The parameters of the item; in a dictionary, its type is 'UserBody':
 | **positionJacobianUserFunction** | ObjectUserBodyPositionJacobianUserFunction |  | 0 | (symbol: $\Jm_{pos}(\pLocB, \qv) \in \Rcal^{3\times n}$) A Python user function which computes the position Jacobian at localPosition |
 | **rotationMatrixUserFunction** | ObjectUserBodyRotationMatrixUserFunction |  | 0 | (symbol: $\LU{0b}{\Rot}(\pLocB, \qv) \in \Rcal^{3\times 3}$) A Python user function which computes the rotation matrix at localPosition; optional, for rigid markers |
 | **rotationJacobianUserFunction** | ObjectUserBodyRotationJacobianUserFunction |  | 0 | (symbol: $\Jm_{rot}(\pLocB, \qv) \in \Rcal^{3\times n}$) A Python user function which computes the rotation Jacobian (of the global angular velocity) at localPosition; optional, for rigid markers |
-| **outputVariableUserFunction** | ObjectUserBodyOutputVariableUserFunction |  | 0 | A Python user function which computes the output variables UserType0 to UserType3 at localPosition; optional |
+| **outputVariableUserFunction** | ObjectUserBodyOutputVariableUserFunction |  | 0 | A Python user function which computes the output variables at localPosition that the body does not compute itself, e.g. strains, energy, accelerations and UserType0 to UserType3; optional |
 | **visualization** | VObjectUserBody |  |  | parameters for visualization of item |
 
 ## Visualization parameters
@@ -62,6 +62,24 @@ Available as `OutputVariableType` in sensors, `Get...Output()` and other functio
 | Coordinates |  | all {ref}`ODE2 <ODE2>` (displacement) coordinates of the nodes |
 | Coordinates_t |  | all {ref}`ODE2 <ODE2>` velocity coordinates |
 | KineticEnergy | $T = \frac{1}{2} \dot\qv\tp \Mm\, \dot\qv$ | kinetic energy from the mass matrix of the current state; current configuration only; localPosition must be $[0,0,0]$ |
+| DisplacementLocal |  | from outputVariableUserFunction, if it is given |
+| VelocityLocal |  | from outputVariableUserFunction, if it is given |
+| Acceleration |  | from outputVariableUserFunction, if it is given |
+| AccelerationLocal |  | from outputVariableUserFunction, if it is given |
+| Rotation |  | from outputVariableUserFunction, if it is given |
+| AngularAcceleration |  | from outputVariableUserFunction, if it is given |
+| AngularAccelerationLocal |  | from outputVariableUserFunction, if it is given |
+| Director1 |  | from outputVariableUserFunction, if it is given |
+| Director2 |  | from outputVariableUserFunction, if it is given |
+| Director3 |  | from outputVariableUserFunction, if it is given |
+| Force |  | from outputVariableUserFunction, if it is given |
+| ForceLocal |  | from outputVariableUserFunction, if it is given |
+| Torque |  | from outputVariableUserFunction, if it is given |
+| TorqueLocal |  | from outputVariableUserFunction, if it is given |
+| StrainLocal |  | from outputVariableUserFunction, if it is given |
+| StressLocal |  | from outputVariableUserFunction, if it is given |
+| CurvatureLocal |  | from outputVariableUserFunction, if it is given |
+| PotentialEnergy |  | from outputVariableUserFunction, if it is given |
 | UserType0 |  | from outputVariableUserFunction, if it is given |
 | UserType1 |  | from outputVariableUserFunction, if it is given |
 | UserType2 |  | from outputVariableUserFunction, if it is given |
@@ -115,10 +133,15 @@ raises when it is evaluated.
 
 ### User output variables
 
-With `outputVariableUserFunction`, the body provides the output variables `UserType0` to `UserType3` at a local
-position, e.g. the strains of a user element; `exu.special.userTypes.SetName(exu.OutputVariableType.UserType0,
-'BendingStrain')` names one, so that sensor files and messages write the name and `exu.OutputVariableType.BendingStrain`
-is the same value.
+With `outputVariableUserFunction`, the body provides at a local position every output variable it does not compute
+itself (#3057): the strains, curvatures, stresses, forces and torques of a user element, its potential energy,
+accelerations - the function gets `q_tt` -, directors, and the user types `UserType0` to `UserType3`; the list is
+that of the output variables below. The function returns an empty list for a type it does not provide, which
+raises when the type is asked for. A symbolic function distinguishes the types with
+`esym.IfThenElse(outputVariableType == int(exu.OutputVariableType.StrainLocal), ..., ...)` and returns the same
+size for all of them. `exu.special.userTypes.SetName(exu.OutputVariableType.UserType0, 'BendingStrain')` names a
+user type, so that sensor files and messages write the name and `exu.OutputVariableType.BendingStrain` is the same
+value.
 
 The user functions are called serially, one Python call at a time. A renderer that runs in a thread of its
 own may not call Python: the body, the markers on it and the connectors, loads and sensors on them are drawn in
@@ -225,21 +248,21 @@ A user function of the interface of the body that returns a matrix at localPosit
 A Python user function gets its vector and matrix arguments as read-only numpy arrays, valid during the call, see [](#sec-userfunctions).
 
 **Userfunction**: `outputVariableUserFunction(mbs, t, itemNumber, outputVariableType, localPosition, qRef, q, q_t, q_tt, parameters)`
-A user function, which computes the output variables UserType0 to UserType3 of the body at localPosition, e.g. strains or stresses of a user element; name them with exudyn.special.userTypes.SetName.
+A user function, which computes the output variables of the body at localPosition that the body does not compute itself: strains, curvatures, stresses, forces and torques of a user element, its potential energy, accelerations, the user types UserType0 to UserType3 (named with exudyn.special.userTypes.SetName); for a type it does not provide, it returns an empty list. A symbolic function distinguishes the types with esym.IfThenElse(outputVariableType == int(exu.OutputVariableType.StrainLocal), ...) and returns the same size for all of them.
 
 | arguments / return | type or size | description |
 |---|---|---|
 | `mbs` | MainSystem | provides MainSystem mbs to which object belongs |
 | `t` | Real | time of the configuration asked for |
 | `itemNumber` | Index | integer number $i_N$ of the object in mbs |
-| `outputVariableType` | OutputVariableType | the output variable asked for, UserType0 to UserType3 |
+| `outputVariableType` | OutputVariableType | the output variable asked for |
 | `localPosition` | Vector3D $\in \Rcal^3$ | the local position of the point |
 | `qRef` | Vector $\in \Rcal^n$ | the reference coordinates of the nodes, in the order of nodeNumbers |
 | `q` | Vector $\in \Rcal^n$ | object coordinates, the coordinates of the nodes INCLUDING their reference values, of the configuration asked for |
 | `q_t` | Vector $\in \Rcal^n$ | object velocity coordinates of the configuration asked for |
 | `q_tt` | Vector $\in \Rcal^n$ | object acceleration coordinates of the configuration asked for; zero in the reference configuration |
 | `parameters` | Vector $\in \Rcal^{n_p}$ | the parameters of the body, see parameters; empty if not given |
-| **return value** | Vector | the value as a vector of any size, the same size for every call with the same outputVariableType |
+| **return value** | Vector | the value as a vector of any size, the same size for every call with the same outputVariableType; empty for a type the function does not provide |
 
 A Python user function gets its vector and matrix arguments as read-only numpy arrays, valid during the call, see [](#sec-userfunctions).
 
@@ -294,4 +317,4 @@ exu.sys['testResult'] = mbs.GetObjectOutputBody(body, exu.OutputVariableType.Pos
 ```
 
 
-Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`userANCFBeam3DTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/userANCFBeam3DTest.py) (TM), [`userANCFCable2DTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/userANCFCable2DTest.py) (TM), [`userParametersTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/userParametersTest.py) (TM), [`userRigidBodyTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/userRigidBodyTest.py) (TM), [`userTetrahedronTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/userTetrahedronTest.py) (TM), [`userTypesTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/userTypesTest.py) (TM)
+Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`userANCFBeam3DTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/userANCFBeam3DTest.py) (TM), [`userANCFCable2DTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/userANCFCable2DTest.py) (TM), [`userOutputVariablesTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/userOutputVariablesTest.py) (TM), [`userParametersTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/userParametersTest.py) (TM), [`userRigidBodyTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/userRigidBodyTest.py) (TM), [`userTetrahedronTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/userTetrahedronTest.py) (TM), [`userTypesTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/userTypesTest.py) (TM)

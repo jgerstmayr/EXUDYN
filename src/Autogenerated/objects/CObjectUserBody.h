@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-10-22  15:08:27 (last modified)
+* @date         2026-10-22  15:36:04 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -39,7 +39,7 @@ public: // AUTO:
     PythonUserFunctionBase< std::function<py::object(const MainSystem&,Real,Index,StdVector3D,const StdVector&,const StdVector&,const StdVector&,const StdVector&)> > positionJacobianUserFunction;//!< AUTO: A Python user function which computes the position Jacobian at localPosition
     PythonUserFunctionBase< std::function<py::object(const MainSystem&,Real,Index,StdVector3D,const StdVector&,const StdVector&,const StdVector&,const StdVector&)> > rotationMatrixUserFunction;//!< AUTO: A Python user function which computes the rotation matrix at localPosition; optional, for rigid markers
     PythonUserFunctionBase< std::function<py::object(const MainSystem&,Real,Index,StdVector3D,const StdVector&,const StdVector&,const StdVector&,const StdVector&)> > rotationJacobianUserFunction;//!< AUTO: A Python user function which computes the rotation Jacobian (of the global angular velocity) at localPosition; optional, for rigid markers
-    PythonUserFunctionBase< std::function<StdVector(const MainSystem&,Real,Index,OutputVariableType,StdVector3D,const StdVector&,const StdVector&,const StdVector&,const StdVector&,const StdVector&)> > outputVariableUserFunction;//!< AUTO: A Python user function which computes the output variables UserType0 to UserType3 at localPosition; optional
+    PythonUserFunctionBase< std::function<StdVector(const MainSystem&,Real,Index,OutputVariableType,StdVector3D,const StdVector&,const StdVector&,const StdVector&,const StdVector&,const StdVector&)> > outputVariableUserFunction;//!< AUTO: A Python user function which computes the output variables at localPosition that the body does not compute itself, e.g. strains, energy, accelerations and UserType0 to UserType3; optional
     //! AUTO: default constructor with parameter initialization
     CObjectUserBodyParameters()
     {
@@ -252,6 +252,24 @@ public: // AUTO:
             (Index64)OutputVariableType::Coordinates +
             (Index64)OutputVariableType::Coordinates_t +
             (Index64)OutputVariableType::KineticEnergy +
+            ((parameters.outputVariableUserFunction) ? (Index64)OutputVariableType::DisplacementLocal : (Index64)0) +
+            ((parameters.outputVariableUserFunction) ? (Index64)OutputVariableType::VelocityLocal : (Index64)0) +
+            ((parameters.outputVariableUserFunction) ? (Index64)OutputVariableType::Acceleration : (Index64)0) +
+            ((parameters.outputVariableUserFunction) ? (Index64)OutputVariableType::AccelerationLocal : (Index64)0) +
+            ((parameters.outputVariableUserFunction) ? (Index64)OutputVariableType::Rotation : (Index64)0) +
+            ((parameters.outputVariableUserFunction) ? (Index64)OutputVariableType::AngularAcceleration : (Index64)0) +
+            ((parameters.outputVariableUserFunction) ? (Index64)OutputVariableType::AngularAccelerationLocal : (Index64)0) +
+            ((parameters.outputVariableUserFunction) ? (Index64)OutputVariableType::Director1 : (Index64)0) +
+            ((parameters.outputVariableUserFunction) ? (Index64)OutputVariableType::Director2 : (Index64)0) +
+            ((parameters.outputVariableUserFunction) ? (Index64)OutputVariableType::Director3 : (Index64)0) +
+            ((parameters.outputVariableUserFunction) ? (Index64)OutputVariableType::Force : (Index64)0) +
+            ((parameters.outputVariableUserFunction) ? (Index64)OutputVariableType::ForceLocal : (Index64)0) +
+            ((parameters.outputVariableUserFunction) ? (Index64)OutputVariableType::Torque : (Index64)0) +
+            ((parameters.outputVariableUserFunction) ? (Index64)OutputVariableType::TorqueLocal : (Index64)0) +
+            ((parameters.outputVariableUserFunction) ? (Index64)OutputVariableType::StrainLocal : (Index64)0) +
+            ((parameters.outputVariableUserFunction) ? (Index64)OutputVariableType::StressLocal : (Index64)0) +
+            ((parameters.outputVariableUserFunction) ? (Index64)OutputVariableType::CurvatureLocal : (Index64)0) +
+            ((parameters.outputVariableUserFunction) ? (Index64)OutputVariableType::PotentialEnergy : (Index64)0) +
             ((parameters.outputVariableUserFunction) ? (Index64)OutputVariableType::UserType0 : (Index64)0) +
             ((parameters.outputVariableUserFunction) ? (Index64)OutputVariableType::UserType1 : (Index64)0) +
             ((parameters.outputVariableUserFunction) ? (Index64)OutputVariableType::UserType2 : (Index64)0) +

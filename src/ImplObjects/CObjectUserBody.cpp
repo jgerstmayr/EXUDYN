@@ -235,15 +235,38 @@ void CObjectUserBody::GetOutputVariableBody(OutputVariableType variableType, con
 		CheckEnergyLocalPosition(localPosition, "ObjectUserBody");
 		value.SetVector({ ComputeKineticEnergyFromMassMatrix(configuration, "ObjectUserBody") });
 		break;
+	case OutputVariableType::DisplacementLocal:
+	case OutputVariableType::VelocityLocal:
+	case OutputVariableType::Acceleration:
+	case OutputVariableType::AccelerationLocal:
+	case OutputVariableType::Rotation:
+	case OutputVariableType::AngularAcceleration:
+	case OutputVariableType::AngularAccelerationLocal:
+	case OutputVariableType::Director1:
+	case OutputVariableType::Director2:
+	case OutputVariableType::Director3:
+	case OutputVariableType::Force:
+	case OutputVariableType::ForceLocal:
+	case OutputVariableType::Torque:
+	case OutputVariableType::TorqueLocal:
+	case OutputVariableType::StrainLocal:
+	case OutputVariableType::StressLocal:
+	case OutputVariableType::CurvatureLocal:
+	case OutputVariableType::PotentialEnergy:
 	case OutputVariableType::UserType0:
 	case OutputVariableType::UserType1:
 	case OutputVariableType::UserType2:
-	case OutputVariableType::UserType3: {
+	case OutputVariableType::UserType3: { //by the outputVariableUserFunction (#3057)
 		if (configuration == ConfigurationType::Visualization && !PythonCallPossible()) { value.SetVector({ 0. }); break; }
 		ResizableConstVector qRef, q, q_t, q_tt;
 		GatherUserFunctionCoordinates(qRef, q, q_t, configuration);
 		GatherAccelerations(q_tt, configuration);
 		EvaluateUserFunctionOutputVariable(value, GetCSystemData()->GetConfigurationTime(configuration), variableType, localPosition, qRef, q, q_t, q_tt);
+		if (value.NumberOfItems() == 0)
+		{
+			PyError(STDstring("ObjectUserBody: outputVariableUserFunction gives no value for OutputVariableType ") + GetOutputVariableTypeString(variableType),
+				PyErrorType::valueError);
+		}
 		break;
 	}
 	default:

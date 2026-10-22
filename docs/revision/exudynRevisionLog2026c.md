@@ -2610,3 +2610,19 @@ mbs and itemNumber, at least for visualization - a placeholder now, or be sure t
 - The build: `exudev build` fails at link (LNK1181 gdi32.lib) since the Windows SDK 10.0.26100.0 found by setuptools
   through Visual Studio 18 BuildTools has no `um` libraries; built with the vcvars64 of Visual Studio 2022 and SDK
   10.0.22621.0 and DISTUTILS_USE_SDK=1 (a scratch batch file) - the machine's toolchain, not the code.
+
+<a id="rg7-12-4"></a>
+### RG7.12.4 — the output variables of the user body (2026-10-22, #3057)
+*(Maintainer 2026-10-22: why does the outputVariableUserFunction only accept UserType quantities? A misunderstanding: the
+IfThenElse construct allows as many output variables as required, so beam outputs and energy are possible.)*
+- Correct: the function gets `outputVariableType`, a symbolic function as a number, and IfThenElse selects per type; the
+  limit was the list of output variables the body declared (UserType0-3). Now, with the function given, the body
+  declares DisplacementLocal, VelocityLocal, Acceleration(Local), Rotation, AngularAcceleration(Local), Director1-3,
+  Force(Local), Torque(Local), StrainLocal, StressLocal, CurvatureLocal, PotentialEnergy and UserType0-3 - all types
+  it does not compute itself, except those that belong to connectors and joints - and routes them to the function. A
+  type the function does not provide: it returns an empty list, which raises with the type named. The restriction of
+  symbolic functions: one result size for all types (IfThenElse per component), as the recording fixes the size.
+- IfThenElse takes symbolic Reals only: a constant branch is `esym.Real(0.)`.
+- userOutputVariablesTest.py: a mass on a spring with strain, potential energy and acceleration (from q_tt), Python
+  and symbolic (with IfThenElse), against x0 cos(omega t) and each other; SensorBody records PotentialEnergy; Rotation,
+  which the Python function does not provide, is refused.

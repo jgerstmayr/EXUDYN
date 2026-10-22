@@ -2089,13 +2089,13 @@ def ObjectUserBody_outputVariableUserFunction(mbs: MainSystem, t: Real, itemNumb
                                               outputVariableType: OutputVariableType, localPosition: Vector3D,
                                               qRef: Vector, q: Vector, q_t: Vector, q_tt: Vector,
                                               parameters: Vector) -> Vector:
-    r"""A user function, which computes the output variables UserType0 to UserType3 of the body at localPosition, e.g. strains or stresses of a user element; name them with exudyn.special.userTypes.SetName.
+    r"""A user function, which computes the output variables of the body at localPosition that the body does not compute itself: strains, curvatures, stresses, forces and torques of a user element, its potential energy, accelerations, the user types UserType0 to UserType3 (named with exudyn.special.userTypes.SetName); for a type it does not provide, it returns an empty list. A symbolic function distinguishes the types with esym.IfThenElse(outputVariableType == int(exu.OutputVariableType.StrainLocal), ...) and returns the same size for all of them.
 
     Args:
         mbs: provides MainSystem mbs to which object belongs
         t: time of the configuration asked for
         itemNumber: integer number $i_N$ of the object in mbs
-        outputVariableType: the output variable asked for, UserType0 to UserType3
+        outputVariableType: the output variable asked for
         localPosition: $\in \Rcal^3$ the local position of the point
         qRef: $\in \Rcal^n$ the reference coordinates of the nodes, in the order of nodeNumbers
         q: $\in \Rcal^n$ object coordinates, the coordinates of the nodes INCLUDING their reference values, of the configuration asked for
@@ -2103,7 +2103,7 @@ def ObjectUserBody_outputVariableUserFunction(mbs: MainSystem, t: Real, itemNumb
         q_tt: $\in \Rcal^n$ object acceleration coordinates of the configuration asked for; zero in the reference configuration
         parameters: $\in \Rcal^{n_p}$ the parameters of the body, see parameters; empty if not given
     Returns:
-        the value as a vector of any size, the same size for every call with the same outputVariableType
+        the value as a vector of any size, the same size for every call with the same outputVariableType; empty for a type the function does not provide
     """
 
 def ObjectUserBody_graphicsDataUserFunction(mbs: MainSystem, t: Real, itemNumber: Index, qRef: Vector, q: Vector,
@@ -2197,10 +2197,15 @@ definitions.append(ItemDefinition(
 
     #### User output variables
 
-    With `outputVariableUserFunction`, the body provides the output variables `UserType0` to `UserType3` at a local
-    position, e.g. the strains of a user element; `exu.special.userTypes.SetName(exu.OutputVariableType.UserType0,
-    'BendingStrain')` names one, so that sensor files and messages write the name and `exu.OutputVariableType.BendingStrain`
-    is the same value.
+    With `outputVariableUserFunction`, the body provides at a local position every output variable it does not compute
+    itself (#3057): the strains, curvatures, stresses, forces and torques of a user element, its potential energy,
+    accelerations - the function gets `q_tt` -, directors, and the user types `UserType0` to `UserType3`; the list is
+    that of the output variables below. The function returns an empty list for a type it does not provide, which
+    raises when the type is asked for. A symbolic function distinguishes the types with
+    `esym.IfThenElse(outputVariableType == int(exu.OutputVariableType.StrainLocal), ..., ...)` and returns the same
+    size for all of them. `exu.special.userTypes.SetName(exu.OutputVariableType.UserType0, 'BendingStrain')` names a
+    user type, so that sensor files and messages write the name and `exu.OutputVariableType.BendingStrain` is the same
+    value.
 
     The user functions are called serially, one Python call at a time. A renderer that runs in a thread of its
     own may not call Python: the body, the markers on it and the connectors, loads and sensors on them are drawn in
@@ -2248,7 +2253,7 @@ definitions.append(ItemDefinition(
         ItemOutputVariable(OVCoordinates_t, OVDVelocityCoordinatesODE2),
         ItemOutputVariable(OVKineticEnergy, r"""$T = \frac{1}{2} \dot\qv\tp \Mm\, \dot\qv$kinetic energy from the mass matrix of the current state; current configuration only; localPosition must be $[0,0,0]$"""),
         ] + [ItemOutputVariable(outputVariable, 'from outputVariableUserFunction, if it is given', condition='parameters.outputVariableUserFunction')
-             for outputVariable in [OVUserType0, OVUserType1, OVUserType2, OVUserType3]],
+             for outputVariable in [OVDisplacementLocal, OVVelocityLocal, OVAcceleration, OVAccelerationLocal, OVRotation, OVAngularAcceleration, OVAngularAccelerationLocal, OVDirector1, OVDirector2, OVDirector3, OVForce, OVForceLocal, OVTorque, OVTorqueLocal, OVStrainLocal, OVStressLocal, OVCurvatureLocal, OVPotentialEnergy, OVUserType0, OVUserType1, OVUserType2, OVUserType3]],
     visuParentClass=VisuParentClassVisualizationObject,
     members=[
         ItemParameter(type=TString, destination=DestMain, fromParent=True,
@@ -2296,7 +2301,7 @@ definitions.append(ItemDefinition(
         ItemParameter(destination=DestComp+DestParam,
             pythonName='outputVariableUserFunction',
             defaultValue=0,
-            description=r"""A Python user function which computes the output variables UserType0 to UserType3 at localPosition; optional""",
+            description=r"""A Python user function which computes the output variables at localPosition that the body does not compute itself, e.g. strains, energy, accelerations and UserType0 to UserType3; optional""",
             userFunction=ObjectUserBody_outputVariableUserFunction),
         ItemFunction(type=TBool, destination=DestComp, cFlags=CFConst,
             pythonName='PotentialEnergyAvailable', implementation='return false;',

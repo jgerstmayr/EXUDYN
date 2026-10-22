@@ -810,6 +810,12 @@ functions, later also for symbolic functions): `parameters` of ObjectUserBody an
 graphicsDataUserFunction with the visualization configuration, `ParameterLayout`; userParametersTest.py.
 [log](exudynRevisionLog2026c.md#rg7-12-3)
 
+#### **CLOSED_RG7.12.4** The outputVariableUserFunction for every output variable the body does not compute
+
+CLOSED 2026-10-22 (#3057; maintainer: not only UserType0-3, IfThenElse allows as many as needed - beam outputs and
+energy): 22 output variable types routed to the function, an empty result refused; userOutputVariablesTest.py.
+[log](exudynRevisionLog2026c.md#rg7-12-4)
+
 ## **OPEN_RG8** Compiled C++ user items
 
 Plugins: user items compiled against the shipped headers. A plugin author builds Exudyn from source once and the
