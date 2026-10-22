@@ -2554,3 +2554,24 @@ recorded Python symbolic user functions as a step in RG5, done by someone else -
   constants; the mapping as a Python helper `ParameterLayout` (`ToVector` checking names and sizes, `ToDict` for numpy
   and symbolic vectors) next to the user functions, not as an item parameter, which C++ never calls and which would put
   a Python object into the item's dict. Nothing implemented.
+
+<a id="rg7-12-2"></a>
+### RG7.12.2 — the interfaces of the user items that last (2026-10-22, #3056)
+*(Maintainer 2026-10-21: rigid bodies need total, finite elements relative coordinates and the reference ones for
+drawing - add the current and the reference configuration to the arguments, possibly qRef, q and q_t, in the
+visualization from its configuration; the visualization should have a parameter vector of its own, and the
+graphicsDataUserFunction gets both; graphics data mapped by a second visualization user function on local positions,
+possibly nonlinear, or stay with graphicsDataUserFunctions producing meshes, also symbolic; symbolic functions need
+some access to the visualization settings, for appearance and contour colors; check the user item tests, the rigid
+body and a beam element for what is missing; put the considerations into the plan of the Python user items, and choose
+interfaces that allow later extensions without changing them.)*
+- A comparison of ObjectUserBody and NodeUser with ObjectRigidBody, ObjectANCFCable2D and the geometrically exact beams,
+  read from the definitions and the C++ (a research agent, checked against the sources quoted): no
+  `DisplacementMassIntegral_q` (MarkerBodyMass, LoadMassProportional refuse the user body; the rigid-body test applies
+  gravity as LoadForceVector); no Acceleration, AngularAcceleration, Rotation, VelocityLocal, PotentialEnergy, beam
+  outputs only as UserType0-3; mass matrix never constant, Jacobian numerical only; no AE, data or ODE1 coordinates;
+  `UpdateGraphics` empty, `graphicsDataUserFunction(mbs, itemNumber)` in global coordinates without configuration, no
+  visualization setting read; cable markers and GeneralContact cables check the C++ type; NodeUser reports
+  Position+Orientation also without rotation user function. The tests carry reference data in globals, closures and a
+  dict by item number.
+- The considerations and recommendations are pythonUserItems.md section 5.11 (A-F). Nothing implemented.

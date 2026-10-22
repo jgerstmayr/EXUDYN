@@ -254,6 +254,73 @@ for vector quantities.
 4. Later, if the dialogs shall show named parameters: a layout registered on the Python side for a kind of user
    element, read by the dialog - not part of this step.
 
+### 5.11 Interfaces that last: configurations, visualization, what is missing (#3056, 2026-10-22)
+
+The maintainer's considerations of 2026-10-21, and what the user items lack against ObjectRigidBody, ObjectANCFCable2D
+and the geometrically exact beams (read from the code, 2026-10-22). Not all of it is built now; the point is that the
+interfaces of the user functions are chosen so that what comes later does not change them.
+
+**A. The configurations in the arguments.** The user functions get the total coordinates `q` (reference plus
+displacement) and `q_t`; the reference configuration does not reach them separately. A rigid body needs total
+coordinates, a finite element the displacement and the reference coordinates; the tests carry the reference data in
+Python - a global `Le` and a precomputed mass matrix (userANCFCable2DTest.py), a closure per element length
+(userANCFBeam3DTest.py), a dict by item number filled after `AddObject` (userTetrahedronTest.py). With parameters
+(5.10) that data could move into the parameter vector, but the reference coordinates are already in the nodes, and a
+second copy in the parameters can disagree with them. **Recommended**: every user function gets `qRef` before `q`:
+`(mbs, t, itemNumber, [what the function is about], qRef, q, q_t, parameters)`, `q` total as now, so that a rigid body
+uses `q` and an element `q - qRef`; in the visualization `q` and `q_t` are those of the visualization configuration.
+Node numbers are not needed in the parameters: the item has them, and `itemNumber` reaches them.
+
+**B. Parameters of the visualization.** What a drawing needs - the subdivision of a mesh, the cross section drawn, colors,
+many values for a mesh - differs from what the mechanics needs and has a mapping of its own. **Recommended**: a second
+vector, `visualizationParameters`, in the visualization part of the item (VObjectUserBody, where `show` and
+`graphicsDataUserFunction` are), and the graphics user functions get both vectors, as some basic values serve both.
+A drawing function that is reused by several kinds of user elements then has a vector of its own layout.
+
+**C. Graphics data mapped by a user function.** The graphicsDataUserFunction builds the whole graphics data in Python
+at every redraw (ObjectUserBody: `(mbs, itemNumber)`, global coordinates, no configuration passed; none of the tests
+uses it). The alternative the maintainer raised: the item keeps graphics data in local coordinates, as ObjectRigidBody
+keeps `graphicsData`, and a function maps each point. This mapping exists already: `positionUserFunction(..., localPosition,
+...)` IS the map from a local point to its global position, for a rigid body and for an element whose local position
+covers its volume (the 3D ANCF beam, the tetrahedron). **Recommended, for later**: graphics data of the item in local
+(reference) coordinates, drawn by mapping every point with the positionUserFunction in the visualization configuration
+- linear or not; C++ loops over the points, so a symbolic positionUserFunction draws a deformed mesh without Python.
+The normals are computed again from the mapped triangles, so local rotations are not needed; a frame or a text in the
+graphics data would need them, which is rare. Only where the drawing map differs from the mechanical one - the 2D cable,
+whose position covers the axis only, or a scaled deformation - a separate mapping user function with the signature of
+the positionUserFunction plus the visualization parameters. Both are additions; the present graphicsDataUserFunction,
+which produces meshes and stays Python, keeps its place for anything else.
+
+**D. Visualization settings in symbolic functions.** A Python function reads every setting through `mbs`; a symbolic
+function cannot. Most of what the built-in items do with the settings is done by their C++, not by a function: contour
+colors (ObjectRigidBody with `contour.rigidBodiesColored`, the beams with `contour.outputVariable` per drawn point), the
+subdivision (`bodies.beams.axialTiling`, `crossSectionTiling`), numbers (`showNumbers`). **Recommended**: with C, the C++
+of the user item does the same - it colors the mapped points by `GetOutputVariableBody(contour.outputVariable, localPosition)`,
+which the user body provides from its user functions, and writes the numbers; a symbolic function then needs no setting.
+If a function shall switch its appearance, the values it reads come through `visualizationParameters`, which the user
+(or a later mapping from settings) fills - not by access to the settings structure.
+
+**E. What is missing to rebuild a rigid body or a beam** (ObjectUserBody, NodeUser):
+
+| feature | built-ins | user items | how it could come, without changing the interfaces |
+|---|---|---|---|
+| mass integral access (`DisplacementMassIntegral_q`): `MarkerBodyMass`, `LoadMassProportional` (gravity) | all four | missing - the user rigid-body test applies gravity as a force on its center | an optional user function for `∫ρ J_pos dV`, or a center of mass in the parameters |
+| outputs Acceleration(Local), AngularAcceleration(Local), Rotation, VelocityLocal | rigid body, beams | missing | in C++ from the Jacobians: `J q_tt` plus the derivative of `J` along `q_t` by differences; Rotation from the rotation matrix |
+| beam outputs (strain, curvature, force, torque) | beams | only UserType0-3, four names for the whole system | the outputVariableUserFunction, with `q_tt` added now (A) |
+| PotentialEnergy | rigid body, ANCF | missing | an optional user function |
+| constant mass matrix | ANCF, beams (and rigid body with rotation vector) | always recomputed | a flag of the item |
+| analytic Jacobian | ANCF, beams | numerical only | an optional jacobianUserFunction, later from the symbolic recording |
+| algebraic equations, data coordinates (plasticity), ODE1 | rigid body (EP in the node), some elements | none | data coordinates would be read by the force function: an argument that does not exist - decide before the interfaces are public |
+| drawing with contour, tiling, numbers | all | only graphicsDataUserFunction, global | C and D |
+| cable markers (MarkerBodyCable2DShape, ...), GeneralContact cables | ANCF only, by type name | refused | out of scope; these name the C++ classes |
+| node types | RigidBody, Point2DSlope1, ... | NodeUser always Position+Orientation, also without rotation | the type from the given user functions, and the user types of #2989 |
+
+**F. Interfaces chosen to last.** Before the interfaces become public (1.13 is released, the user items are not yet in a
+release): (1) `qRef, q, q_t, parameters` in every user function (A, 5.10); (2) `q_tt` in the outputVariableUserFunction;
+(3) the graphics functions with `visualizationParameters` (B); (4) a decision on data coordinates (E) - either an
+argument `data` now, empty for elements without, or a later separate set of user functions; (5) everything else in E
+as optional user functions or flags, added without touching the existing signatures.
+
 ## 6. Examples that go beyond the present user functions
 
 Each is a test model AND a check of the concept: it needs the new interface, and it has a result to compare with.

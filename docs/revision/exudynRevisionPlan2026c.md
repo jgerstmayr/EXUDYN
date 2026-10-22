@@ -794,6 +794,14 @@ last argument of all user functions, one recording for every item of a kind, str
 constants; the mapping as a Python helper `ParameterLayout` next to the user functions, not in the item. Waiting for
 the decision. [log](exudynRevisionLog2026c.md#rg7-12-1)
 
+#### **CLOSED_RG7.12.2** The interfaces that last: configurations, visualization parameters, graphics mapping, what is missing
+
+CLOSED 2026-10-22 (#3056; maintainer's considerations of 2026-10-21): [pythonUserItems.md](../dev/design/pythonUserItems.md)
+section 5.11 - `qRef` before `q` in every user function, a second vector `visualizationParameters`, graphics data in
+local coordinates mapped by the positionUserFunction (later), contour colors by the C++ of the item, the gaps against
+the rigid body and the beams, and what to fix before the interfaces are public. Waiting for the decisions.
+[log](exudynRevisionLog2026c.md#rg7-12-2)
+
 ## **OPEN_RG8** Compiled C++ user items
 
 Plugins: user items compiled against the shipped headers. A plugin author builds Exudyn from source once and the

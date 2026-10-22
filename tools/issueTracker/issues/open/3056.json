@@ -8,5 +8,5 @@
   "description": "Maintainer 2026-10-20: ObjectUserBody (and future user items) has no parameters; they are written into the user functions. For a user beam with different parameters per element, an arbitrary-length parameter vector of doubles (also for bools and indices) passed to the user functions, with a Python mapping between the vector and a dict of interpretable quantities (mass, inertia, COM, ...), which keeps symbolic quantities when recording; zero length is the present behaviour; the mapping possibly part of the item as a Python function used at definition. First evaluate and recommend.",
   "dateRaised": "2026-10-21",
   "deadline": "2027-04-19",
-  "workingRemarks": "2026-10-21: RG7.12.1 evaluated in docs/dev/design/pythonUserItems.md section 5.10; waiting for the maintainer's decision"
+  "workingRemarks": "2026-10-21: RG7.12.1 evaluated in docs/dev/design/pythonUserItems.md section 5.10; waiting for the maintainer's decision; 2026-10-22: RG7.12.2, the considerations of 2026-10-21 and the gaps against the rigid body and the beams, in pythonUserItems.md section 5.11; waiting for the decisions"
 }
