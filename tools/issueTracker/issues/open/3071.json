@@ -1,0 +1,12 @@
+{
+  "number": 3071,
+  "title": "exudyn.symbolic: the constant pi",
+  "author": "Claude-JG",
+  "status": "RAISED",
+  "type": "EXTENSION",
+  "effort": "LOW",
+  "description": "Maintainer 2026-10-23 (on the analysis of #3069): exudyn.symbolic has no pi, while exudyn.cMath, math and numpy have it, so a function written with functions.pi fails for functions=exudyn.symbolic. Add exudyn.symbolic.pi as a float.",
+  "dateRaised": "2026-10-23",
+  "deadline": "2027-04-21",
+  "file": "src\\Linalg\\Symbolic.h"
+}

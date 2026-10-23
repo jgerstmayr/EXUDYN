@@ -1,0 +1,16 @@
+{
+  "number": 3069,
+  "title": "Rotation utilities for symbolic user items: the functions of cUtilities with an argument functions",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "EXTENSION",
+  "effort": "MEDIUM",
+  "description": "Maintainer 2026-10-23: a selected list of the functions of exudyn.cUtilities / rigidBodyUtilities useful for symbolic user items, in a new module, with the same names and arguments plus a last argument functions (default exudyn.symbolic), which may also be exudyn.cMath, numpy or math; check first what fails or is missing; then adapt the test scripts (userRigidBodyTest.py, ...), which shrink. First the analysis and recommendation (docs/dev/design/symbolicUtilities.md).",
+  "dateRaised": "2026-10-23",
+  "deadline": "2027-04-21",
+  "dateResolved": "2026-10-23 17:15",
+  "resolvedAuthor": "Claude-JG",
+  "file": "python/exudyn/rigidBodyUtilities.py",
+  "releaseNotes": "New module exudyn.symbolicUtilities: 21 rotation and kinematics functions of exudyn.cUtilities / rigidBodyUtilities (Skew, Cross, Inertia6D2InertiaTensor, RotationMatrixX/Y/Z, RotationMatrix2D, the Tait-Bryan, Euler-parameter and rotation-vector rotation matrices, G matrices and their derivatives) with the same names and arguments and a last argument functions: with exudyn.symbolic (default) they take symbolic values and return symbolic matrices and vectors for symbolic user functions, with numpy, math or exudyn.cMath they return numpy arrays; test model symbolicUtilitiesTest.py, userRigidBodyTest.py uses it.",
+  "resolvedInVersion": "1.13.175"
+}

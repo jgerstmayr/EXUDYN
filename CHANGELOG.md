@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.13 | Newborn | 171 | 1.13.174 |
+| 1.13 | Newborn | 172 | 1.13.175 |
 | 1.12 | Metheney | 367 | 1.12.462 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
@@ -30,6 +30,10 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.13 - Newborn (current)
 
+- **1.13.175** `EXTENSION` `MEDIUM EFF` `raised by: Claude-JG` `resolved by: Claude-JG` Rotation utilities for symbolic user items: the functions of cUtilities with an argument functions (#3069)
+  - description: Maintainer 2026-10-23: a selected list of the functions of exudyn.cUtilities / rigidBodyUtilities useful for symbolic user items, in a new module, with the same names and arguments plus a last argument functions (default exudyn.symbolic), which may also be exudyn.cMath, numpy or math; check first what fails or is missing; then adapt the test scripts (userRigidBodyTest.py, ...), which shrink. First the analysis and recommendation (docs/dev/design/symbolicUtilities.md).
+  - **notes:** New module exudyn.symbolicUtilities: 21 rotation and kinematics functions of exudyn.cUtilities / rigidBodyUtilities (Skew, Cross, Inertia6D2InertiaTensor, RotationMatrixX/Y/Z, RotationMatrix2D, the Tait-Bryan, Euler-parameter and rotation-vector rotation matrices, G matrices and their derivatives) with the same names and arguments and a last argument functions: with exudyn.symbolic (default) they take symbolic values and return symbolic matrices and vectors for symbolic user functions, with numpy, math or exudyn.cMath they return numpy arrays; test model symbolicUtilitiesTest.py, userRigidBodyTest.py uses it.
+  - date resolved: **2026-10-23 17:15**, date raised: 2026-10-23
 - **1.13.174** `TESTING` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` The user rigid body and the user ANCF cable element take their physical constants from their parameters (#3068)
   - description: Maintainer 2026-10-23: the user objects have parameters, but the test models do not use them. userRigidBodyTest.py: mass and inertia tensor (6 components) in a ParameterLayout, read by the Python and the symbolic user functions; userANCFCable2DTest.py: length, mass per length, axial and bending stiffness per element, the mass matrix computed once with constantMassMatrix. Results unchanged.
   - **notes:** userRigidBodyTest.py and userANCFCable2DTest.py take mass, inertia, length, mass per length and stiffnesses from the parameters of their user bodies, through a ParameterLayout

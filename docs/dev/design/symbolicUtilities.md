@@ -38,10 +38,11 @@ So the functions can use **sin, cos, tan, asin, acos, atan, atan2, sqrt, exp, lo
 | the same with `functions=exudyn.symbolic`, recorded and evaluated | equal (0.0) |
 | `cMath.sin(symbolic.Real)`, `math.sin(symbolic.Real)` | **TypeError** - they take numbers only |
 | `numpy.sin(symbolic.Real)` | records `sin(a)`: numpy's functions take symbolic values too; a matrix becomes a numpy array of symbolic Reals, which @ multiplies and the recording converts (#3015, #3020) |
-| slicing a symbolic vector `q[3:6]` | a list of components - fine as argument |
+| slicing a symbolic vector `q[3:6]` | a symbolic vector; it adds, subtracts, scales, and `@` multiplies it with a symbolic matrix |
 | `esym.IfThenElse(a < 1e-8, esym.Real(1.), a)` | works; with a float branch, `IfThenElse(cond, 1., a)`: **TypeError** - the branches must be symbolic Reals |
 | `IfThenElse(b < 1e-8, 1, sin(b)/b)` at b = 0 | 1.0 - the unused branch with 0/0 does not spoil the result |
-| a Python `if` on a symbolic value | impossible (no value while recording); every branch must be `IfThenElse` |
+| a Python `if` on a symbolic value | takes the value at the time of recording, so only that branch is recorded; a branch must be `IfThenElse` |
+| `cUtilities.RotationVector2RotationMatrix` with a rotation vector longer than 2 pi | **wrong** (#3073): it reduces the angle by 2 pi but not the vector |
 | `symbolic.Vector.cross` | **missing**; `numpy.cross` of object arrays works, or the components written out |
 | matrices from lists of mixed Reals and numbers, `@`, `.T`, `m[i, j]` | work |
 | cost of a numeric call, RotXYZ2RotationMatrix | cUtilities 0.63 us, math 1.2 us, numpy 2.1 us, cMath 2.4 us (per scalar call into C++) |
@@ -94,3 +95,21 @@ later, the user items need the rotation matrix and G).
    `functions=exudyn.symbolic` (or `numpy`) a symbolic user function is written with the same calls as a Python one.
 7. **Missing in exudyn.symbolic, worth an issue each, not needed for the module**: a cross product of symbolic vectors,
    `pi`, and IfThenElse accepting a number as a branch.
+
+## 6. Decisions (maintainer 2026-10-23) and what was built
+
+- **The module is `exudyn.symbolicUtilities`** (python/exudyn/symbolicUtilities.py), with the 21 functions of section 4.
+- **The result follows `functions`**: a symbolic matrix or vector for `exudyn.symbolic`, a numpy array of numbers for
+  `numpy`, `math` and `exudyn.cMath` (the latter for reproducible bits; for numbers alone cUtilities is faster). So
+  numpy serves numbers only; point 3 above, numpy recording symbolic values, is not used.
+- The helpers are `_Matrix` and `_Vector`; the branch of RotationVector2RotationMatrix is chosen by `IfThenElse` when the
+  angle is symbolic, by a Python `if` otherwise; `_Pi` is not needed by any of the functions.
+- Tested in python/TestModels/symbolicUtilitiesTest.py: every function at 5 random arguments with numpy, math and cMath
+  and recorded once with exudyn.symbolic, evaluated after SetValue, against cUtilities / rigidBodyUtilities (largest
+  difference 6.7e-16), the rotation vector at length 0 and 1e-13 (difference 0).
+- userRigidBodyTest.py writes its symbolic user functions with the module: its own GLocal, GLocal_t, RotationMatrix,
+  Skew, Cross, MatVec, MatTVec and InertiaTensor are gone (282 to 237 lines); the force and the position, with
+  `functions=cMath`, equal the Python user functions bit by bit; the result is unchanged. The other test scripts of the
+  user items have no rotation functions of their own.
+- Issues: #3070 (symbolic cross product), #3071 (`pi` in exudyn.symbolic), #3072 (IfThenElse with a number), and
+  #3073 (cUtilities.RotationVector2RotationMatrix beyond 2 pi), found while testing.

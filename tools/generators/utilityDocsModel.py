@@ -124,6 +124,7 @@ filesParsed=[
              'shells.py',
              'signalProcessing.py',
              'solver.py',
+             'symbolicUtilities.py',
              'systemUtilities.py',
              'utilities.py',
              #'lieGroupIntegration.py', #Stefan Holzinger

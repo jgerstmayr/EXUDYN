@@ -2854,3 +2854,26 @@ analysis and recommendation - do the analysis now.)*
   `functions=exudyn.symbolic` last, the helpers _Matrix, _IfThenElse, _Pi; a test model against cUtilities; then
   userRigidBodyTest.py and userANCFBeam3DTest.py use it. Missing in exudyn.symbolic, each an issue if wanted: cross,
   pi, IfThenElse with a number.
+
+<a id="rg12-47-2"></a>
+### RG12.47.2 and RG12.47.3 — exudyn.symbolicUtilities and its use in userRigidBodyTest.py (2026-10-23, #3069)
+*(Maintainer 2026-10-23, on the analysis: functions=math or cMath would also work, using functions.sin inside the
+function; it is about implementing e.g. RotationMatrixX for symbolic, numpy and exudyn.cMath, the result a numpy matrix,
+only for symbolic a symbolic matrix; cMath is only cosmetic, cUtilities would be faster. python/exudyn/symbolicUtilities.py:
+yes. The gaps of exudyn.symbolic get issues: yes. The list: as proposed.)*
+- python/exudyn/symbolicUtilities.py: the 21 functions of the analysis with the names and arguments of cUtilities /
+  rigidBodyUtilities and `functions=exudyn.symbolic` last; `_Matrix` / `_Vector` return exudyn.symbolic.Matrix / Vector
+  for exudyn.symbolic and float numpy arrays otherwise; RotationVector2RotationMatrix uses the limits 1 and 1/2 of its
+  factors below an angle of 1e-12, by IfThenElse for a symbolic angle. In the utility documentation
+  (utilityDocsModel.py), the module list of the introduction and the manual page of the user items.
+- python/TestModels/symbolicUtilitiesTest.py (reference 7.024076141931356): every function at 5 random arguments with
+  numpy, math and cMath and recorded once of named symbolic variables, evaluated after SetValue / SetVector, against
+  cUtilities and rigidBodyUtilities: largest difference 6.7e-16; the result types; the rotation vector at length 0 and
+  1e-13: difference 0.
+- userRigidBodyTest.py: the symbolic user functions with su.RotXYZ2GLocal, RotXYZ2GLocal_t, RotXYZ2RotationMatrix, Skew,
+  Cross and Inertia6D2InertiaTensor on symbolic vectors with @ and .T; its own component functions are gone (282 to 237
+  lines). ForceTorques and Position, with functions=cMath, equal the Python user functions (difference 0.0); the result
+  13.475755021376248 is unchanged. userANCFBeam3DTest.py and the other user item scripts have no rotation functions.
+- Found while testing: slicing a symbolic vector gives a symbolic vector (the analysis said a list; corrected in the
+  design document); cUtilities.RotationVector2RotationMatrix([7, 0, 0]) is wrong (#3073, RG12.47.7). Raised as asked:
+  #3070, #3071, #3072 (RG12.47.4-6).

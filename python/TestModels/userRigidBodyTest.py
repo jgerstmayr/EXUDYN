@@ -5,9 +5,9 @@
 #           velocity terms, position, rotation matrix and Jacobians are Python user functions, written with
 #           exudyn.cUtilities; it moves under gravity, a Cartesian spring-damper at a point off the center of
 #           mass and a torque, side by side with an ObjectRigidBody under the same loads, and both must agree.
-#           A second user body has only symbolic user functions: the force and the position written once with
-#           components (#3007), so that the same function computes with floats and records with exudyn.symbolic, the
-#           mass matrix, the rotation matrix and the Jacobians as symbolic matrices with @ and .T (#3020, #3018).
+#           A second user body has only symbolic user functions, written with exudyn.symbolicUtilities (#3069) as
+#           symbolic matrices and vectors with @ and .T (#3020, #3018); the force and the position are written once
+#           for functions=exudyn.symbolic and exudyn.cMath, so that the same function records and computes numbers.
 #           The mass and the inertia tensor are the parameters of the user bodies, named by a ParameterLayout and read
 #           by the Python and the symbolic user functions alike (#3056).
 #           The three bodies are solved one after the other, each alone, with the computation time shown.
@@ -26,6 +26,7 @@ import exudyn as exu
 from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
 import exudyn.cUtilities as cu
 import exudyn.cMath as cMath
+import exudyn.symbolicUtilities as su
 from exudyn.advancedUtilities import CreateSymbolicUserFunction, ParameterLayout
 import exudyn.graphics as graphics
 import numpy as np
@@ -41,17 +42,13 @@ g = [0, -9.81, 0]
 #the parameters of the user rigid body: its mass and inertia tensor, [Jxx, Jyy, Jzz, Jyz, Jxz, Jxy] as in Exudyn
 layout = ParameterLayout([('mass', 1), ('inertia', 6)])
 bodyParameters = layout.ToVector({'mass': m, 'inertia': inertia.GetInertia6D()})
-
-def InertiaTensor(J6):
-    """the 3 x 3 inertia tensor, as list of lists, of the 6 components - numbers or symbolic"""
-    return [[J6[0], J6[5], J6[4]], [J6[5], J6[1], J6[3]], [J6[4], J6[3], J6[2]]]
 pSpring = [0.2, 0.1, 0.05] #local point of the spring-damper
 torque = [0.2, 0, 0.5]
 
 #the rigid body as user functions; qTotal = [position, Tait-Bryan angles], the total coordinates
 def UFmass(mbs, t, itemNumber, qRef, qTotal, q_t, parameters):
     d = layout.ToDict(parameters)
-    J = np.array(InertiaTensor(d['inertia']))
+    J = Inertia6D2InertiaTensor(d['inertia'])
     G = cu.RotXYZ2GLocal(qTotal[3:6])
     M = np.zeros((6, 6))
     M[0:3, 0:3] = d['mass']*np.eye(3)
@@ -59,7 +56,7 @@ def UFmass(mbs, t, itemNumber, qRef, qTotal, q_t, parameters):
     return M
 
 def UFforce(mbs, t, itemNumber, qRef, qTotal, q_t, parameters):
-    J = np.array(InertiaTensor(layout.ToDict(parameters)['inertia']))
+    J = Inertia6D2InertiaTensor(layout.ToDict(parameters)['inertia'])
     G = cu.RotXYZ2GLocal(qTotal[3:6])
     G_t = cu.RotXYZ2GLocal_t(qTotal[3:6], q_t[3:6])
     omegaLocal = G @ q_t[3:6]
@@ -85,96 +82,54 @@ def UFrotationJacobian(mbs, t, itemNumber, localPosition, qRef, qTotal, q_t, par
     Jrot[:, 3:6] = cu.RotXYZ2RotationMatrix(qTotal[3:6]) @ cu.RotXYZ2GLocal(qTotal[3:6])
     return Jrot
 
-#the force and the position with components, for floats (cMath) and for the symbolic recording (esym) alike
-def MatVec(A, v):
-    return [A[i][0]*v[0] + A[i][1]*v[1] + A[i][2]*v[2] for i in range(3)]
+#the symbolic user functions with exudyn.symbolicUtilities (#3069): the same calls as above, with functions=esym;
+#the force and the position also compute numbers with functions=cMath
+def ForceTorques(qTotal, q_t, inertia6D, functions):
+    rot, rot_t = qTotal[3:6], q_t[3:6]
+    J = su.Inertia6D2InertiaTensor(inertia6D, functions)
+    G = su.RotXYZ2GLocal(rot, functions)
+    omegaLocal = G @ rot_t
+    torques = -(G.T @ (J @ (su.RotXYZ2GLocal_t(rot, rot_t, functions) @ rot_t) + su.Cross(omegaLocal, J @ omegaLocal, functions)))
+    return [0, 0, 0, torques[0], torques[1], torques[2]]
 
-def MatTVec(A, v):
-    return [A[0][i]*v[0] + A[1][i]*v[1] + A[2][i]*v[2] for i in range(3)]
-
-def Cross(a, b):
-    return [a[1]*b[2] - a[2]*b[1], a[2]*b[0] - a[0]*b[2], a[0]*b[1] - a[1]*b[0]]
-
-def GLocal(functions, rot):
-    #local G matrix of Tait-Bryan angles xyz, omegaLocal = G @ rot_t
-    return [[functions.cos(rot[1])*functions.cos(rot[2]), functions.sin(rot[2]), 0],
-            [-functions.cos(rot[1])*functions.sin(rot[2]), functions.cos(rot[2]), 0],
-            [functions.sin(rot[1]), 0, 1]]
-
-def GLocal_t(functions, rot, rot_t):
-    c1, s1, c2, s2 = functions.cos(rot[1]), functions.sin(rot[1]), functions.cos(rot[2]), functions.sin(rot[2])
-    return [[-s1*c2*rot_t[1] - c1*s2*rot_t[2], c2*rot_t[2], 0],
-            [s1*s2*rot_t[1] - c1*c2*rot_t[2], -s2*rot_t[2], 0],
-            [c1*rot_t[1], 0, 0]]
-
-def RotationMatrix(functions, rot):
-    #Rx(rot[0]) Ry(rot[1]) Rz(rot[2])
-    c0, s0, c1, s1, c2, s2 = (functions.cos(rot[0]), functions.sin(rot[0]), functions.cos(rot[1]), functions.sin(rot[1]),
-                              functions.cos(rot[2]), functions.sin(rot[2]))
-    return [[c1*c2, -c1*s2, s1],
-            [s0*s1*c2 + c0*s2, -s0*s1*s2 + c0*c2, -s0*c1],
-            [-c0*s1*c2 + s0*s2, c0*s1*s2 + s0*c2, c0*c1]]
-
-def ForceComponents(functions, q, q_t, J):
-    rot = [q[3], q[4], q[5]]
-    rot_t = [q_t[3], q_t[4], q_t[5]]
-    G = GLocal(functions, rot)
-    omegaLocal = MatVec(G, rot_t)
-    JomegaLocal = MatVec(J, omegaLocal)
-    inner = MatVec(J, MatVec(GLocal_t(functions, rot, rot_t), rot_t))
-    gyroscopic = Cross(omegaLocal, JomegaLocal)
-    torques = MatTVec(G, [inner[i] + gyroscopic[i] for i in range(3)])
-    return [0*q[0], 0*q[0], 0*q[0], -torques[0], -torques[1], -torques[2]]
-
-def PositionComponents(functions, localPosition, q):
-    A = RotationMatrix(functions, [q[3], q[4], q[5]])
-    p = MatVec(A, localPosition)
-    return [q[0] + p[0], q[1] + p[1], q[2] + p[2]]
+def Position(localPosition, qTotal, functions):
+    return qTotal[0:3] + su.RotXYZ2RotationMatrix(qTotal[3:6], functions) @ localPosition
 
 def UFforceSymbolic(mbs, t, itemNumber, qRef, qTotal, q_t, parameters):
-    return ForceComponents(esym, qTotal, q_t, InertiaTensor(layout.ToDict(parameters)['inertia']))
+    return ForceTorques(qTotal, q_t, layout.ToDict(parameters)['inertia'], esym)
 
 def UFpositionSymbolic(mbs, t, itemNumber, localPosition, qRef, qTotal, q_t, parameters):
-    return PositionComponents(esym, localPosition, qTotal)
-
-#the matrix results as symbolic matrices (#3020): built from the components, multiplied with @ and transposed with .T
-def Skew(v):
-    return [[0, -v[2], v[1]], [v[2], 0, -v[0]], [-v[1], v[0], 0]]
+    return Position(localPosition, qTotal, esym)
 
 def Blocks3x6(left, right):
     #the 3 x 6 matrix [left, right] of two 3 x 3 symbolic matrices; None is a zero block
     return esym.Matrix([[left[i, j] if left is not None else 0 for j in range(3)] + [right[i, j] for j in range(3)] for i in range(3)])
 
 def UFmassSymbolic(mbs, t, itemNumber, qRef, qTotal, q_t, parameters):
-    q = qTotal
     d = layout.ToDict(parameters)
-    G = esym.Matrix(GLocal(esym, [q[3], q[4], q[5]]))
-    Mrot = G.T @ esym.Matrix(InertiaTensor(d['inertia'])) @ G
+    G = su.RotXYZ2GLocal(qTotal[3:6])
+    Mrot = G.T @ su.Inertia6D2InertiaTensor(d['inertia']) @ G
     return esym.Matrix([[d['mass'] if i == j else 0 for j in range(3)] + [0, 0, 0] for i in range(3)]
                        + [[0, 0, 0] + [Mrot[i, j] for j in range(3)] for i in range(3)])
 
 def UFpositionJacobianSymbolic(mbs, t, itemNumber, localPosition, qRef, qTotal, q_t, parameters):
-    q = qTotal
-    rot = [q[3], q[4], q[5]]
-    A = esym.Matrix(RotationMatrix(esym, rot))
-    rotationPart = -(A @ esym.Matrix(Skew(localPosition)) @ esym.Matrix(GLocal(esym, rot)))
+    rot = qTotal[3:6]
+    rotationPart = -(su.RotXYZ2RotationMatrix(rot) @ su.Skew(localPosition) @ su.RotXYZ2GLocal(rot))
     return Blocks3x6(esym.Matrix(np.eye(3)), rotationPart)
 
 def UFrotationMatrixSymbolic(mbs, t, itemNumber, localPosition, qRef, qTotal, q_t, parameters):
-    q = qTotal
-    return esym.Matrix(RotationMatrix(esym, [q[3], q[4], q[5]]))
+    return su.RotXYZ2RotationMatrix(qTotal[3:6])
 
 def UFrotationJacobianSymbolic(mbs, t, itemNumber, localPosition, qRef, qTotal, q_t, parameters):
-    q = qTotal
-    rot = [q[3], q[4], q[5]]
-    return Blocks3x6(None, esym.Matrix(RotationMatrix(esym, rot)) @ esym.Matrix(GLocal(esym, rot)))
+    rot = qTotal[3:6]
+    return Blocks3x6(None, su.RotXYZ2RotationMatrix(rot) @ su.RotXYZ2GLocal(rot))
 
-#the component functions compute what the matrix functions above compute
-qTest = [0.1, 0.2, 0.3, 0.2, -0.1, 0.3]
-qTest_t = [0.5, 0, 1, 1, 0.5, 2]
-componentsDifference = max(np.max(np.abs(np.array(ForceComponents(cMath, qTest, qTest_t, InertiaTensor(inertia.GetInertia6D()))) - UFforce(0, 0, 0, np.array(qTest), np.array(qTest), np.array(qTest_t), bodyParameters))),
-                           np.max(np.abs(np.array(PositionComponents(cMath, pSpring, qTest)) - UFposition(0, 0, 0, pSpring, np.array(qTest), np.array(qTest), np.array(qTest_t), bodyParameters))))
-exu.Print('the component functions against the matrix functions:', componentsDifference)
+#with functions=cMath, the force and the position of the symbolic user functions compute what the Python ones compute
+qTest = np.array([0.1, 0.2, 0.3, 0.2, -0.1, 0.3])
+qTest_t = np.array([0.5, 0, 1, 1, 0.5, 2])
+componentsDifference = max(np.max(np.abs(np.array(ForceTorques(qTest, qTest_t, inertia.GetInertia6D(), cMath)) - UFforce(0, 0, 0, qTest, qTest, qTest_t, bodyParameters))),
+                           np.max(np.abs(Position(np.array(pSpring), qTest, cMath) - UFposition(0, 0, 0, pSpring, qTest, qTest, qTest_t, bodyParameters))))
+exu.Print('the functions of the symbolic user functions with cMath against the Python user functions:', componentsDifference)
 
 simulationSettings = exu.SimulationSettings()
 simulationSettings.timeIntegration.numberOfSteps = 500
