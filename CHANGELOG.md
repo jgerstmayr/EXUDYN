@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.13 | Newborn | 169 | 1.13.172 |
+| 1.13 | Newborn | 170 | 1.13.173 |
 | 1.12 | Metheney | 367 | 1.12.462 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
@@ -30,6 +30,10 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.13 - Newborn (current)
 
+- **1.13.173** `DOCU` `MEDIUM EFF` `raised by: Claude-JG` `resolved by: Claude-JG` Documentation: how items work, and user items (#2979)
+  - description: revision2026c step RG7.9 (docs/dev/design/pythonUserItems.md 1): a section that explains how each kind of item works conceptually and how a user item of that kind is set up, with one example per user item.
+  - **notes:** The manual page User items: how a user body, user node and user connector are set up - their arguments, parameters, symbolic user functions, what they provide - with an example, linking the general pages of each kind of item
+  - date resolved: **2026-10-23 08:37**, date raised: 2026-10-12
 - **1.13.172** `TESTING` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` The user body test models draw their bodies with graphicsData and, run alone, show the simulation and open the SolutionViewer (#3067)
   - description: Maintainer 2026-10-23 (with \#3064): the existing user body test models get graphics drawn by the positionUserFunction - a brick with its frame for the rigid body, bricks of the cross section for the 3D ANCF beam, the faces of the tetrahedra, the axis of the 2D cables, spheres for the mass points; run alone (not exu.sys\['testIsActive'\]) they start the renderer, write the solution file and open the SolutionViewer to check the graphics; in a test run nothing changes.
   - **notes:** The user body test models draw their bodies with graphicsData mapped by the positionUserFunction; run alone, they show the simulation, write the solution file and open the SolutionViewer

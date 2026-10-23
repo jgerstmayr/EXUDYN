@@ -28,6 +28,7 @@ docs/manual/tutorial
 docs/manual/GUI
 docs/manual/performanceErrors
 docs/manual/introductionAdvanced
+docs/manual/userItems
 docs/manual/notation
 docs/manual/theory
 docs/manual/solver

@@ -84,7 +84,6 @@ The title of each says what it does; the sentence after it, why it comes now.
   - RG7.5 Add user markers and a user connector with access to its markers (1 open sub-step)
   - RG7.6 Add a user joint on two position and orientation markers
   - RG7.8 Evaluate symbolic user items in parallel and in the graphics
-  - RG7.9 Document how items work, and the user items
 - **RG8** Compiled C++ user items
   - RG8.1 Move the item registry into one exported translation unit so that plugins share it
   - RG8.2 Check an ABI fingerprint when a plugin registers, and refuse a mismatch with a message
@@ -127,7 +126,7 @@ The title of each says what it does; the sentence after it, why it comes now.
 | RG4 | OPEN | 6 | Implementation problems and bugs |
 | RG5 | OPEN | 9 | Performance |
 | RG6 | OPEN | 1 | Graphics and rendering |
-| RG7 | OPEN | 5 | Python user items |
+| RG7 | OPEN | 4 | Python user items |
 | RG8 | OPEN | 10 | Compiled C++ user items |
 | RG9 | OPEN | 5 | Structural core improvements |
 | RG10 | CLOSED | 0 | Tooling and process |
@@ -763,9 +762,11 @@ both refused at Assemble; test model sensorUserFunctionItemsTest.py. [log](exudy
 
 #2978. Design 5.5. Waits for the revision of the symbolic user functions, group RG12.
 
-### **OPEN_RG7.9** Document how items work, and the user items
+### **CLOSED_RG7.9** Document how items work, and the user items
 
-#2979. A section that explains each kind of item and how a user item of that kind is set up, one example per user item.
+CLOSED 2026-10-23 (#2979; maintainer: do RG7.9): the manual page docs/manual/userItems.md - the user items, their
+arguments, parameters, symbolic functions, what a user body and a user connector provide, an example; how each kind of
+item works is on the general pages of the item reference, which it links. [log](exudynRevisionLog2026c.md#rg7-9)
 
 ### **CLOSED_RG7.10** Draw the items that depend on Python user functions in the main thread, and detect Python calls from the render thread
 

@@ -2804,3 +2804,18 @@ solution viewer will open afterwards to check the graphics.)*
 - Run alone (`exu.sys['testIsActive']` not set), the solve that is shown writes the solution file, runs with the
   renderer and then opens the SolutionViewer, as the other test models do; in a test run nothing changes - all seven
   results are the same, also run alone with the windows suppressed.
+
+<a id="rg7-9"></a>
+### RG7.9 — the manual page of the user items (2026-10-23, #2979)
+*(Maintainer 2026-10-23: do RG7.9, the mass-integral access, RG7.5 and the graphics data drawn with the
+positionUserFunction.)*
+- How each kind of item works conceptually was written meanwhile as the general pages of the item reference
+  (revision2026b step RG13.5, definitions/itemKindDefinitions.py: nodeGeneral, objectBodyGeneral, ...). The new page
+  docs/manual/userItems.md links them instead of repeating them and covers what is particular to user items: the
+  table of user items (ObjectUserBody, NodeUser, ObjectConnectorUser, the user functions of the built-in items), the
+  arguments `(mbs, t, itemNumber, [...], qRef, qTotal, q_t, parameters)`, ParameterLayout, symbolic functions with one
+  recording per kind and their structural limit, the measured cost, what a user body provides (equations,
+  constantMassMatrix, the body interface, the mass integral, output variables, graphicsData), the ConnectorMarker of
+  ObjectConnectorUser, an example - two mass points of one kind with parameters, gravity through the mass integral,
+  spheres, one symbolic recording; run before it was written - and the test models as complete examples.
+- In the manual after "Advanced topics" (index.md, pdfIndex.md); linked from the user functions of the basics.

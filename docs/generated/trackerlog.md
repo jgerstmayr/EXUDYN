@@ -8,10 +8,10 @@ Every entry carries the **type** of the issue, then its **priority** and its **e
 
 General information on current version:
 
-- Exudyn version = 1.13.172.dev1
+- Exudyn version = 1.13.173.dev1
 - last change = 2026-10-23
 - Number of issues = 3068
-- Number of resolved issues = 2949 (172 in current version)
+- Number of resolved issues = 2950 (173 in current version)
 
 ## Resolved issues and resolved bugs before version 1.13
 
@@ -9060,9 +9060,6 @@ The following list contains the issues which have been **RESOLVED** in the accor
   - date raised: 2026-10-12
 - `CHANGE` `raised by: Claude-JG` General markers for curves, surfaces and volumes instead of the Cable2D markers (#2980)
   - description: revision2026c step RG9.7 (maintainer 2026-10-11; docs/dev/design/pythonUserItems.md 5.3): MarkerBodyCable2DShape and MarkerBodyCable2DCoordinates serve ObjectANCFCable2D only; a marker that gives the shape of a body, positions at varying local coordinates and their Jacobians, so that contact and sliding joints work on beams, plates, shells and general flexible surfaces.
-  - date raised: 2026-10-12
-- `DOCU` `MEDIUM EFF` `raised by: Claude-JG` Documentation: how items work, and user items (#2979)
-  - description: revision2026c step RG7.9 (docs/dev/design/pythonUserItems.md 1): a section that explains how each kind of item works conceptually and how a user item of that kind is set up, with one example per user item.
   - date raised: 2026-10-12
 - `EXTENSION` `MEDIUM EFF` `raised by: Claude-JG` Symbolic user items: parallel evaluation and graphics (#2978)
   - description: revision2026c step RG7.8 (docs/dev/design/pythonUserItems.md 5.5): user items whose user functions are all symbolic run in parallel and are drawn directly; example 8; waits for the revision of the symbolic user functions (group RG12).

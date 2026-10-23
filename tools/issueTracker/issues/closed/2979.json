@@ -2,10 +2,14 @@
   "number": 2979,
   "title": "Documentation: how items work, and user items",
   "author": "Claude-JG",
-  "status": "RAISED",
+  "status": "RESOLVED",
   "type": "DOCU",
   "effort": "MEDIUM",
   "description": "revision2026c step RG7.9 (docs/dev/design/pythonUserItems.md 1): a section that explains how each kind of item works conceptually and how a user item of that kind is set up, with one example per user item.",
   "dateRaised": "2026-10-12",
-  "deadline": "2027-04-10"
+  "deadline": "2027-04-10",
+  "dateResolved": "2026-10-23 08:37",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "The manual page User items: how a user body, user node and user connector are set up - their arguments, parameters, symbolic user functions, what they provide - with an example, linking the general pages of each kind of item",
+  "resolvedInVersion": "1.13.173"
 }

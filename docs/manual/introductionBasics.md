@@ -121,6 +121,8 @@ writes no restart file.
 Many items take a **user function**, a Python function that Exudyn calls during the simulation - a force law, a
 load that depends on time, the mass matrix of a user item. The reference page of the item lists its arguments and its
 return value.
+Items whose behaviour is written in user functions - a body, a node, a connector - are the user items of
+{ref}`sec-useritems`.
 
 - **Arguments**: a vector or matrix argument - the coordinates `q` and their velocities `q_t`, a position, a load
   vector, the stiffness of a spring-damper - is a **read-only numpy array** that views the memory of Exudyn, without

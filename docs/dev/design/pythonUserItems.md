@@ -382,7 +382,7 @@ the overhead grows too large). Most of it is generated:
 7. **RG7.7** User sensor with itemNumbers (5.7); example 7.
 8. **RG7.8** Symbolic user items in parallel and in the graphics (5.5); example 8 - after the symbolic revision (RG12).
 9. **RG7.9** The documentation section "How items work, and user items": the concept per kind, one example per user
-   item.
+   item - done (#2979): docs/manual/userItems.md, which links the general pages of each kind in the item reference.
 
 Outside RG7: **the revision of the Cable2D markers into general markers for curves, surfaces and volumes** (5.3), a
 C++ step in RG9; and **the symbolic user functions** (5.5), group RG12.
