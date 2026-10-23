@@ -42,6 +42,9 @@ strains, curvatures, stresses, forces, torques, potential energy, accelerations,
 `massIntegralUserFunction`, MarkerBodyMass and LoadMassProportional (gravity) act on it (#3063). Its
 `graphicsData` is given in local coordinates and drawn with every point mapped by the positionUserFunction, so that a
 deformable user body is drawn deformed (#3064).
+**ObjectConnectorUser** is a connector whose Python user function gets its markers as `exudyn.ConnectorMarker`: it reads
+them - also any point of a marker's body - and applies forces and torques through them, so that a contact can search the
+closest point on a flexible body and act there (#2975).
 
 **`NodeUser`**, a node with any number of coordinates whose position, and optionally orientation, are Python user
 functions; the Jacobians are computed by central differences if they are not given; node markers, SensorNode, loads

@@ -99,6 +99,10 @@ not exist - a natural first user node (example 3 in section 6).
 
 ### 5.3 Markers, and a step for the C++ side
 
+**The user markers are open** (#3065): ObjectConnectorUser reaches any point of a body through its markers, and
+ObjectUserBody defines what a local position means, so a user marker on one body adds little; a marker on several nodes
+or bodies needs the coordinates of several items in the LTG of the marker - to decide before it is built.
+
 Contact and sliding on flexible bodies need markers that can move along the body: MarkerBodyCable2DShape and
 MarkerBodyCable2DCoordinates serve ObjectANCFCable2D only. **Proposed new step (C++, outside RG7, e.g. in RG9)**:
 revise the Cable2D markers into a general form for curves (beams), surfaces (plates, shells) and volumes - a marker that
@@ -107,6 +111,14 @@ joints work on any flexible body. The user markers (position, orientation, coord
 same interface: value, velocity, Jacobian with respect to the coordinates.
 
 ### 5.4 Connector: a user connector that calls the marker functions
+
+**Built** (#2975): `ObjectConnectorUser` with any number of markers of any type; `forceUserFunction(mbs, t, itemNumber,
+markers, parameters)` gets one `exudyn.ConnectorMarker` per marker, owned by Python and invalidated after the call. It
+reads the marker data (position, velocity, rotation, angular velocity, coordinates) and the marker's body at any local
+position, and applies `ApplyForce`, `ApplyTorque`, `ApplyBodyForce(force, localPosition)` and `ApplyCoordinateForces`
+through the Jacobians, into the block of the marker in the generalized forces; the Jacobian of the connector is
+numerical. userConnectorTest.py: a Cartesian spring-damper and a rigid-body damper equal to the built-in ones, a ball on
+an ANCF cable with the closest point searched on every element. The design as written before it was built:
 
 A force-torque function of the relative motion exists already (`springForceTorqueUserFunction` of
 ObjectConnectorRigidBodySpringDamper). The new user connector instead gets ACCESS TO ITS MARKERS: the user function

@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.13 | Newborn | 167 | 1.13.170 |
+| 1.13 | Newborn | 168 | 1.13.171 |
 | 1.12 | Metheney | 367 | 1.12.462 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
@@ -30,6 +30,10 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.13 - Newborn (current)
 
+- **1.13.171** `EXTENSION` `raised by: Claude-JG` `resolved by: Claude-JG` User markers and a user connector with access to its markers (#2975)
+  - description: revision2026c step RG7.5 (docs/dev/design/pythonUserItems.md 5.3, 5.4): user markers (position, orientation, coordinates; on a node or a body); a user connector whose user function gets the functions of its markers as Python objects per call and returns the forces; example 5: a sphere rolling on a flexible cable.
+  - **notes:** ObjectConnectorUser: a connector whose Python user function gets its markers as exudyn.ConnectorMarker objects - it reads them, also any point of a marker's body, and applies forces and torques through them; the user markers continue in \#3065
+  - date resolved: **2026-10-23 08:15**, date raised: 2026-10-12
 - **1.13.170** `EXTENSION` `MEDIUM EFF` `raised by: Claude-JG` `resolved by: Claude-JG` ObjectUserBody: graphics data in local coordinates, drawn by mapping every point with the positionUserFunction (#3064)
   - description: Maintainer 2026-10-23 (pythonUserItems.md 5.11 C): VObjectUserBody gets graphicsData in local (reference) coordinates and a show flag for it; the C++ maps every point with the positionUserFunction in the visualization configuration and computes the normals from the mapped triangles, so that a symbolic positionUserFunction draws a deformed body without a Python graphics function; with a test of the graphics data.
   - **notes:** ObjectUserBody: graphicsData in local coordinates, drawn with every point mapped by the positionUserFunction in the visualization configuration, the normals from the mapped triangles

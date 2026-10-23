@@ -244,6 +244,34 @@ The class **HT** has the following **functions and structures**:
 
 
 
+(sec-connectormarker)=
+## ConnectorMarker
+
+A ConnectorMarker is one marker of ObjectConnectorUser in its forceUserFunction, which gets one per marker: it reads the marker in the configuration of the call - its position, velocity, rotation and coordinates, and for a body marker positions and velocities anywhere on its body - and applies forces and torques through the Jacobians of the marker. A force and a torque act on the marker as a load does, in global coordinates; the functions applied in one call add up. A function that the marker does not provide raises a ValueError; a ConnectorMarker is valid during the call it was passed to only.
+
+
+The class **ConnectorMarker** has the following **functions and structures**:
+
+- **`GetMarkerNumber()`**: the number of the marker in mbs
+- **`GetObjectNumber()`**: the number of the object of the marker, -1 for a marker without an object
+- **`GetNodeNumber()`**: the number of the node of the marker, -1 for a marker without a node
+- **`GetPosition()`**: the global position of a Position marker, as numpy array
+- **`GetVelocity()`**: the global velocity of a Position marker, as numpy array
+- **`GetRotationMatrix()`**: the rotation matrix of an Orientation marker, 3x3 numpy array, from the marker to the global frame
+- **`GetAngularVelocity()`**: the global angular velocity of an Orientation marker, as numpy array
+- **`GetAngularVelocityLocal()`**: the angular velocity of an Orientation marker in the frame of the marker, as numpy array
+- **`GetCoordinates()`**: the coordinates of a Coordinate or Coordinates marker, as numpy array
+- **`GetCoordinates_t()`**: the velocities of the coordinates of a Coordinate or Coordinates marker, as numpy array
+- **`GetBodyPosition(localPosition)`**: the global position of the point at localPosition of the body of a body marker, as numpy array; localPosition is in the coordinates of the body, not of the marker
+- **`GetBodyVelocity(localPosition)`**: the global velocity of the point at localPosition of the body of a body marker, as numpy array
+- **`ApplyForce(force)`**: apply the global force (3 components) at a Position marker: the generalized force is the transposed position Jacobian of the marker times the force
+- **`ApplyTorque(torque)`**: apply the global torque (3 components) to an Orientation marker: the generalized force is the transposed rotation Jacobian of the marker times the torque
+- **`ApplyBodyForce(force, localPosition)`**: apply the global force (3 components) at the point localPosition of the body of a body marker, e.g. at a contact point searched along a flexible body; localPosition is in the coordinates of the body
+- **`ApplyCoordinateForces(forces)`**: apply forces to the coordinates of a Coordinate or Coordinates marker, one per coordinate of the marker
+- **`__repr__()`**: return the string representation of the ConnectorMarker
+
+
+
 (sec-graphicsmateriallist)=
 ## GraphicsMaterialList
 

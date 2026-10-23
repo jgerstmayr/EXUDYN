@@ -2756,3 +2756,35 @@ together with a "show" visualization flag.)*
   the same graphics data, points within 6e-8 and normals within 2e-7 (float); (2) a bent user ANCF cable element maps a
   line along its axis to the positions the body gives (2e-8) and a strip across it with normals in the plane of
   bending, normal to the axis; (3) a symbolic positionUserFunction draws the same; (4) `show=False` draws nothing.
+
+<a id="rg7-5-1"></a>
+### RG7.5.1 — ObjectConnectorUser and exudyn.ConnectorMarker (2026-10-23, #2975)
+*(Maintainer 2026-10-23: do RG7.9, the mass-integral access, RG7.5 and the graphics data drawn with the
+positionUserFunction.)*
+- The connector: any number of markers of any type (`RequestedNumberOfMarkers` 0, no requested type), `parameters`,
+  `activeConnector`, `forceUserFunction(mbs, t, itemNumber, markers, parameters) -> None`. Through the legacy path
+  `ComputeODE2LHS(ode2Lhs, markerData)`, as ObjectConnectorReevingSystemSprings - the connector interface of #2745 has
+  two markers. The block of each marker in ode2Lhs is the length of its LTG (`ComputeMarkerODE2LTGarray`), as CSystem
+  composes the coordinates of a connector. `GetAvailableJacobians` ODE2_ODE2 + ODE2_ODE2_t without `_function`: the
+  Jacobian is numerical, the user function called for each perturbed coordinate. HasUserFunction: serial.
+- `exudyn.ConnectorMarker` (src/Pymodules/PyConnectorMarker.h, bound in pybindDataStructures.py, no constructor from
+  Python): created per marker and call by py::cast of a copy - owned by Python, so a script that keeps one holds an
+  object, not a dangling pointer - and invalidated after the call, also when the function raises; then every function
+  raises ("valid during that call only"). Reads: GetPosition/GetVelocity (Position), GetRotationMatrix/
+  GetAngularVelocity/GetAngularVelocityLocal (Orientation), GetCoordinates(_t) (Coordinate(s)), GetBodyPosition/
+  GetBodyVelocity(localPosition) (Body: the body of the marker, through CObjectBody::GetPosition/GetVelocity), the
+  numbers. Applies: ApplyForce (J_pos^T f), ApplyTorque (J_rot^T m), ApplyBodyForce(force, localPosition) (the body's
+  GetPositionJacobian at localPosition), ApplyCoordinateForces (J^T f); a force acts as a load, i.e. it is subtracted
+  from the left-hand side. A function the marker does not provide raises with the marker and its type.
+- Generators: the annotations `ConnectorMarkerList` (py::object, not symbolic) and `None` (void) for the def.
+- Drawing: nothing, the number at the first marker with `connectors.showNumbers`. No output variables.
+- userConnectorTest.py: (1) a Cartesian spring-damper between two mass points against CartesianSpringDamper: 1.6e-15;
+  (2) a rigid body with a rotational damper (ApplyTorque) and a spring at a body point (ApplyBodyForce) against
+  RigidBodySpringDamper and CartesianSpringDamper: 7.8e-13; (3) a ball resting on a pinned/roller ANCF cable of four
+  elements, the contact at the closest point of the closest element (golden section, then Newton on the normality -
+  a coarser point made the numerical Jacobian too noisy for the static solver), static with the whole weight from the
+  start (`useLoadFactor=False`, as a part of the weight lifts the ball off): the contact carries the weight to 1e-12,
+  the cable deflects as under a point load (3.4e-6 of 0.081); (4) ApplyTorque on a position marker and a ConnectorMarker
+  used after the call are refused. The ball above a node touched both elements first and was counted twice - the
+  contact takes the closest element only.
+- Not done: the user markers - split off as #3065 (RG7.5.2), with the question what they add.

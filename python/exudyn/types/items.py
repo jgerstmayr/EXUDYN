@@ -992,6 +992,22 @@ items = {
       'colorPiston': {'type': 'Float4', 'size': '4', 'range': '', 'default': '[0.8,0.8,0.8,1.]', 'mustBeGiven': False, 'description': 'RGBA piston color'},
     },
   },
+  'ObjectConnectorUser': {
+    'kind': 'Object',
+    'types': ['Connector'],
+    'requestedMarkerTypes': [],
+    'outputVariables': [],
+    'parameters': {
+      'name': {'type': 'String', 'size': '', 'range': '', 'default': '', 'mustBeGiven': False, 'description': "connector's unique name"},
+      'markerNumbers': {'type': 'ArrayMarkerIndex', 'size': '', 'range': '', 'default': '[]', 'mustBeGiven': False, 'description': 'list of markers of any type, at least one; the user function gets them in this order'},
+      'parameters': {'type': 'NumpyVector', 'size': '', 'range': '', 'default': '[]', 'mustBeGiven': False, 'description': 'the parameters of the connector, of any length, passed to the user function; see exudyn.advancedUtilities.ParameterLayout'},
+      'activeConnector': {'type': 'Bool', 'size': '', 'range': '', 'default': 'True', 'mustBeGiven': False, 'description': 'flag, which determines, if the connector is active; used to deactivate (temporarily) a connector'},
+      'forceUserFunction': {'type': 'ObjectConnectorUserForceUserFunction', 'size': '', 'range': '', 'default': '0', 'mustBeGiven': False, 'description': 'A Python user function which computes the forces of the connector and applies them through its markers; without it, the connector applies no forces'},
+    },
+    'visualization': {
+      'show': {'type': 'Bool', 'size': '', 'range': '', 'default': 'True', 'mustBeGiven': False, 'description': 'set true, if item is shown in visualization and false if it is not shown'},
+    },
+  },
   'ObjectConnectorReevingSystemSprings': {
     'kind': 'Object',
     'types': ['Connector'],

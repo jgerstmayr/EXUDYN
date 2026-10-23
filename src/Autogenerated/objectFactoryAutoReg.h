@@ -561,6 +561,17 @@ bool MainObjectConnectorHydraulicActuatorSimpleIsRegistered = ClassFactoryItemsS
 		return object;
 	});
 
+bool MainObjectConnectorUserIsRegistered = ClassFactoryItemsSystemData<MainObject>::Get().RegisterClass("ConnectorUser", [](CSystemData* cSystemData)
+	{ //AUTO: 
+		CObject* cObject = new CObjectConnectorUser();
+		cObject->SetCSystemData(cSystemData);
+		MainObject* object = new MainObjectConnectorUser(); //new main object
+		object->SetCObject(cObject);
+		VisualizationObjectConnectorUser* vObject = new VisualizationObjectConnectorUser();
+		object->SetVisualizationObject(vObject);
+		return object;
+	});
+
 bool MainObjectConnectorReevingSystemSpringsIsRegistered = ClassFactoryItemsSystemData<MainObject>::Get().RegisterClass("ConnectorReevingSystemSprings", [](CSystemData* cSystemData)
 	{ //AUTO: 
 		CObject* cObject = new CObjectConnectorReevingSystemSprings();

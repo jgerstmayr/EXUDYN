@@ -10,6 +10,7 @@ exudyn.BeamSectionGeometry
 exudyn.CSolverTimer
 exudyn.ComputeODE2Eigenvalues
 exudyn.Config
+exudyn.ConnectorMarker
 exudyn.DiscontinuousSettings
 exudyn.Experimental
 exudyn.ExplicitIntegrationSettings

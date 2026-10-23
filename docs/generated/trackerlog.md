@@ -8,10 +8,10 @@ Every entry carries the **type** of the issue, then its **priority** and its **e
 
 General information on current version:
 
-- Exudyn version = 1.13.170.dev1
+- Exudyn version = 1.13.171.dev1
 - last change = 2026-10-23
-- Number of issues = 3065
-- Number of resolved issues = 2947 (170 in current version)
+- Number of issues = 3067
+- Number of resolved issues = 2948 (171 in current version)
 
 ## Resolved issues and resolved bugs before version 1.13
 
@@ -9039,6 +9039,9 @@ The following list contains the issues which have been **RESOLVED** in the accor
 
 ## Open issues
 
+- `EXTENSION` `MEDIUM EFF` `raised by: Claude-JG` User markers: decide what they provide beyond ObjectConnectorUser and ObjectUserBody, then add them (#3065)
+  - description: revision2026c step RG7.5 (pythonUserItems.md 5.3), split from \#2975: a user marker (position, orientation, coordinates; on a node, several nodes or a body) whose value and Jacobian are user functions. ObjectConnectorUser reaches any point of a body through its markers (GetBodyPosition, ApplyBodyForce) and ObjectUserBody defines what a local position means, so a user marker on one body adds little; what remains is a marker on several nodes or bodies (an average, a point between two bodies), which needs a marker with the coordinates of several items in the system's LTG. To decide with the maintainer before it is built.
+  - date raised: 2026-10-23
 - `TESTING` `HIGH EFF` `raised by: Claude-JG` record symbolic user functions of specific objects in Python and evaluate them on a GPU (#3055)
   - description: Maintainer 2026-10-20: the C++ recording of the items is not started now; it is easier to implement symbolic user functions in Python for specific objects (as the user rigid body), record them and test with the GPU whether the approach works - the list of operations of the flat evaluation (GetFlatProgram, \#3053, \#3054) is the input. Done by someone else.
   - date raised: 2026-10-21
@@ -9066,9 +9069,6 @@ The following list contains the issues which have been **RESOLVED** in the accor
   - date raised: 2026-10-12
 - `EXTENSION` `MEDIUM EFF` `raised by: Claude-JG` User joint on two position and orientation markers (#2976)
   - description: revision2026c step RG7.6 (docs/dev/design/pythonUserItems.md 5.8): n constraint equations of the marker quantities, Jacobian (or numerical), reaction forces, chain rule with the marker Jacobians in C++; example 6: a screw joint.
-  - date raised: 2026-10-12
-- `EXTENSION` `raised by: Claude-JG` User markers and a user connector with access to its markers (#2975)
-  - description: revision2026c step RG7.5 (docs/dev/design/pythonUserItems.md 5.3, 5.4): user markers (position, orientation, coordinates; on a node or a body); a user connector whose user function gets the functions of its markers as Python objects per call and returns the forces; example 5: a sphere rolling on a flexible cable.
   - date raised: 2026-10-12
 - `EXTENSION` `raised by: Claude-JG` exudyn.cUtilities: the time derivatives of the Euler parameter functions (#2965)
   - description: Decision D7 of revision2026c step RG11.10.1 (tmp/compareRBU.md, maintainer 2026-10-11: not now, an issue): RigidBodyMath has EP2RotationMatrix\_t, EP\_t2G\_t and EP\_t2Glocal\_t, which neither rigidBodyUtilities nor exudyn.cUtilities offers; when wanted, add them to definitions/pybindCUtilities.py and PyCUtilities.h, with a check in cUtilitiesTest.py.
@@ -9477,6 +9477,9 @@ The following list contains the issues which have been **RESOLVED** in the accor
 
 ## Known bugs
 
+- <span class="textred">`BUG`</span> `LOW EFF` `raised by: Claude-JG` testRunnerTools.PrintToLog recurses without end when a model sets exudyn.config.printToConsole=True in a quiet run (#3066)
+  - description: In a quiet run, ExecModel redirects sys.stdout to PrintToLog, whose write calls exu.Print; a model that sets exu.config.printToConsole = True makes exu.Print print to sys.stdout, i.e. to PrintToLog again: a stack overflow that ends the test suite process without a message (found 2026-10-23 with a draft of userConnectorTest.py, which toggled printToConsole). PrintToLog should write to the console stream it replaced, or guard against re-entry.
+  - date raised: 2026-10-23
 - <span class="textred">`BUG`</span> `LOW EFF` `raised by: Claude-JG` InverseKinematicsNumerical fails for a robot whose links have no PDcontrol (#2993)
   - description: revision2026c step RG11.8.20: InverseKinematicsNumerical.\_\_init\_\_ reads self.robot.links\[i\].PDcontrol to store it, but RobotLink sets the attribute only when PDcontrol is given, so a robot built without control raises AttributeError ('RobotLink' object has no attribute 'PDcontrol'); it also leaves the joint stiffness of the inverse kinematics and robot.gravity = \[0,0,0\] in the robot it is given. Found with the test model of \#2259.
   - date raised: 2026-10-14

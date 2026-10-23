@@ -73,6 +73,7 @@
         "src/ImplObjects/CObjectConnectorRollingDiscPenalty.cpp",
         "src/ImplObjects/CObjectConnectorSpringDamper.cpp",
         "src/ImplObjects/CObjectConnectorTorsionalSpringDamper.cpp",
+        "src/ImplObjects/CObjectConnectorUser.cpp",
         "src/ImplObjects/CObjectContactCircleCable2D.cpp",
         "src/ImplObjects/CObjectContactConvexRoll.cpp",
         "src/ImplObjects/CObjectContactCoordinate.cpp",

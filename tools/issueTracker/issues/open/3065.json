@@ -1,0 +1,12 @@
+{
+  "number": 3065,
+  "title": "User markers: decide what they provide beyond ObjectConnectorUser and ObjectUserBody, then add them",
+  "author": "Claude-JG",
+  "status": "RAISED",
+  "type": "EXTENSION",
+  "effort": "MEDIUM",
+  "description": "revision2026c step RG7.5 (pythonUserItems.md 5.3), split from #2975: a user marker (position, orientation, coordinates; on a node, several nodes or a body) whose value and Jacobian are user functions. ObjectConnectorUser reaches any point of a body through its markers (GetBodyPosition, ApplyBodyForce) and ObjectUserBody defines what a local position means, so a user marker on one body adds little; what remains is a marker on several nodes or bodies (an average, a point between two bodies), which needs a marker with the coordinates of several items in the system's LTG. To decide with the maintainer before it is built.",
+  "dateRaised": "2026-10-23",
+  "deadline": "2027-04-21",
+  "file": "definitions/itemDefsMarkers.py"
+}

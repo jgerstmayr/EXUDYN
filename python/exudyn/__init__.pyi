@@ -943,6 +943,78 @@ class HT:
         ...
 
 
+class ConnectorMarker:
+    """A ConnectorMarker is one marker of ObjectConnectorUser in its forceUserFunction, which gets one per marker: it reads the marker in the configuration of the call - its position, velocity, rotation and coordinates, and for a body marker positions and velocities anywhere on its body - and applies forces and torques through the Jacobians of the marker.
+
+    A force and a torque act on the marker as a load does, in global coordinates; the functions applied in one call add up
+    A function that the marker does not provide raises a ValueError; a ConnectorMarker is valid during the call it was passed to only.
+    """
+    @overload
+    def GetMarkerNumber(self) -> int: 
+        """The number of the marker in mbs."""
+        ...
+    @overload
+    def GetObjectNumber(self) -> int: 
+        """The number of the object of the marker, -1 for a marker without an object."""
+        ...
+    @overload
+    def GetNodeNumber(self) -> int: 
+        """The number of the node of the marker, -1 for a marker without a node."""
+        ...
+    @overload
+    def GetPosition(self) -> ArrayLike: 
+        """The global position of a Position marker, as numpy array."""
+        ...
+    @overload
+    def GetVelocity(self) -> ArrayLike: 
+        """The global velocity of a Position marker, as numpy array."""
+        ...
+    @overload
+    def GetRotationMatrix(self) -> ArrayLike: 
+        """The rotation matrix of an Orientation marker, 3x3 numpy array, from the marker to the global frame."""
+        ...
+    @overload
+    def GetAngularVelocity(self) -> ArrayLike: 
+        """The global angular velocity of an Orientation marker, as numpy array."""
+        ...
+    @overload
+    def GetAngularVelocityLocal(self) -> ArrayLike: 
+        """The angular velocity of an Orientation marker in the frame of the marker, as numpy array."""
+        ...
+    @overload
+    def GetCoordinates(self) -> ArrayLike: 
+        """The coordinates of a Coordinate or Coordinates marker, as numpy array."""
+        ...
+    @overload
+    def GetCoordinates_t(self) -> ArrayLike: 
+        """The velocities of the coordinates of a Coordinate or Coordinates marker, as numpy array."""
+        ...
+    @overload
+    def GetBodyPosition(self, localPosition: ArrayLike) -> ArrayLike: 
+        """The global position of the point at localPosition of the body of a body marker, as numpy array; localPosition is in the coordinates of the body, not of the marker."""
+        ...
+    @overload
+    def GetBodyVelocity(self, localPosition: ArrayLike) -> ArrayLike: 
+        """The global velocity of the point at localPosition of the body of a body marker, as numpy array."""
+        ...
+    @overload
+    def ApplyForce(self, force: ArrayLike) -> None: 
+        """Apply the global force (3 components) at a Position marker: the generalized force is the transposed position Jacobian of the marker times the force."""
+        ...
+    @overload
+    def ApplyTorque(self, torque: ArrayLike) -> None: 
+        """Apply the global torque (3 components) to an Orientation marker: the generalized force is the transposed rotation Jacobian of the marker times the torque."""
+        ...
+    @overload
+    def ApplyBodyForce(self, force: ArrayLike, localPosition: ArrayLike) -> None: 
+        """Apply the global force (3 components) at the point localPosition of the body of a body marker, e.g. at a contact point searched along a flexible body; localPosition is in the coordinates of the body."""
+        ...
+    @overload
+    def ApplyCoordinateForces(self, forces: ArrayLike) -> None: 
+        """Apply forces to the coordinates of a Coordinate or Coordinates marker, one per coordinate of the marker."""
+        ...
+
+
 class GraphicsMaterialList:
     """The GraphicsMaterialList contains the list of materials (material properties) for visualization; currently, only the raytracer uses materials.
 

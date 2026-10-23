@@ -39,7 +39,8 @@ __all__ = [
     'ObjectConnectorTorsionalSpringDamperSpringTorqueUserFunction',
     'ObjectConnectorCoordinateSpringDamperSpringForceUserFunction',
     'ObjectConnectorCoordinateSpringDamperExtSpringForceUserFunction',
-    'ObjectConnectorCoordinateOffsetUserFunction', 'ObjectConnectorCoordinateOffsetUserFunction_t',
+    'ObjectConnectorUserForceUserFunction', 'ObjectConnectorCoordinateOffsetUserFunction',
+    'ObjectConnectorCoordinateOffsetUserFunction_t',
     'ObjectConnectorCoordinateVectorConstraintUserFunction',
     'ObjectConnectorCoordinateVectorJacobianUserFunction', 'ObjectJointGenericOffsetUserFunction',
     'ObjectJointGenericOffsetUserFunction_t', 'LoadForceVectorLoadVectorUserFunction',
@@ -82,7 +83,8 @@ __all__ = [
     'CoordinateSpringDamperExt', 'VCoordinateSpringDamperExt', 'VObjectConnectorGravity',
     'ObjectConnectorGravity', 'ConnectorGravity', 'VConnectorGravity',
     'VObjectConnectorHydraulicActuatorSimple', 'ObjectConnectorHydraulicActuatorSimple',
-    'HydraulicActuatorSimple', 'VHydraulicActuatorSimple', 'VObjectConnectorReevingSystemSprings',
+    'HydraulicActuatorSimple', 'VHydraulicActuatorSimple', 'VObjectConnectorUser',
+    'ObjectConnectorUser', 'VObjectConnectorReevingSystemSprings',
     'ObjectConnectorReevingSystemSprings', 'ReevingSystemSprings', 'VReevingSystemSprings',
     'VObjectConnectorDistance', 'ObjectConnectorDistance', 'DistanceConstraint',
     'VDistanceConstraint', 'VObjectConnectorCoordinate', 'ObjectConnectorCoordinate',
@@ -232,6 +234,7 @@ userFunctionArgsDict = {'MainSystem,preStepUserFunction': [['MainSystem', 'Real'
         'ObjectConnectorTorsionalSpringDamper,springTorqueUserFunction': [['MainSystem', 'Real', 'Index', 'Real', 'Real', 'Real', 'Real', 'Real'], ['mbs', 't', 'itemNumber', 'rotation', 'angularVelocity', 'stiffness', 'damping', 'offset'], ['Real'], ['ObjectConnectorTorsionalSpringDamperSpringTorqueUserFunction']],
         'ObjectConnectorCoordinateSpringDamper,springForceUserFunction': [['MainSystem', 'Real', 'Index', 'Real', 'Real', 'Real', 'Real', 'Real'], ['mbs', 't', 'itemNumber', 'displacement', 'velocity', 'stiffness', 'damping', 'offset'], ['Real'], ['ObjectConnectorCoordinateSpringDamperSpringForceUserFunction']],
         'ObjectConnectorCoordinateSpringDamperExt,springForceUserFunction': [['MainSystem', 'Real', 'Index', 'Real', 'Real', 'Real', 'Real', 'Real', 'Real', 'Real', 'Real', 'Real', 'Real', 'Real'], ['mbs', 't', 'itemNumber', 'displacement', 'velocity', 'stiffness', 'damping', 'offset', 'velocityOffset', 'dynamicFrictionForce', 'staticFrictionOffsetForce', 'exponentialDecayStatic', 'viscousFrictionFactor', 'frictionProportionalZone'], ['Real'], ['ObjectConnectorCoordinateSpringDamperExtSpringForceUserFunction']],
+        'ObjectConnectorUser,forceUserFunction': [['MainSystem', 'Real', 'Index', 'py::object', 'StdVector'], ['mbs', 't', 'itemNumber', 'markers', 'parameters'], ['void'], ['ObjectConnectorUserForceUserFunction']],
         'ObjectConnectorCoordinate,offsetUserFunction': [['MainSystem', 'Real', 'Index', 'Real'], ['mbs', 't', 'itemNumber', 'lOffset'], ['Real'], ['ObjectConnectorCoordinateOffsetUserFunction']],
         'ObjectConnectorCoordinate,offsetUserFunction_t': [['MainSystem', 'Real', 'Index', 'Real'], ['mbs', 't', 'itemNumber', 'lOffset'], ['Real'], ['ObjectConnectorCoordinateOffsetUserFunction_t']],
         'ObjectConnectorCoordinateVector,constraintUserFunction': [['MainSystem', 'Real', 'Index', 'StdVector', 'StdVector', 'bool'], ['mbs', 't', 'itemNumber', 'q', 'q_t', 'velocityLevel'], ['StdVector'], ['ObjectConnectorCoordinateVectorConstraintUserFunction']],
@@ -1186,6 +1189,25 @@ class ObjectConnectorCoordinateSpringDamperExtSpringForceUserFunction(Protocol):
         float: scalar value of computed force
     """
     def __call__(self, mbs: exudyn.MainSystem, t: float, itemNumber: int, displacement: float, velocity: float, stiffness: float, damping: float, offset: float, velocityOffset: float, dynamicFrictionForce: float, staticFrictionOffsetForce: float, exponentialDecayStatic: float, viscousFrictionFactor: float, frictionProportionalZone: float) -> float: ...
+
+class ObjectConnectorUserForceUserFunction(Protocol):
+    """A user function, which computes the forces of the connector and applies them through its markers.
+    
+    Args:
+        mbs (exudyn.MainSystem): provides MainSystem mbs to which the connector belongs
+
+        t (float): current time in mbs
+
+        itemNumber (int): integer number of the connector in mbs
+
+        markers (list): one exudyn.ConnectorMarker per marker of markerNumbers, in their order: it reads the marker - position, velocity, rotation, coordinates, and for a body marker positions and velocities anywhere on its body - and applies forces and torques to it; valid during the call only
+
+        parameters (np.ndarray): the parameters of the connector, see parameters; empty if not given
+
+    Returns:
+        None: nothing; the forces are applied with the ApplyForce, ApplyTorque, ApplyBodyForce and ApplyCoordinateForces functions of the markers
+    """
+    def __call__(self, mbs: exudyn.MainSystem, t: float, itemNumber: int, markers: list, parameters: np.ndarray) -> None: ...
 
 class ObjectConnectorCoordinateOffsetUserFunction(Protocol):
     r"""A user function, which computes scalar offset for the coordinate constraint, e.g., in order to move a node on a prescribed trajectory.
@@ -5511,6 +5533,66 @@ class ObjectConnectorHydraulicActuatorSimple:
 #add typedef for short usage:
 HydraulicActuatorSimple = ObjectConnectorHydraulicActuatorSimple
 VHydraulicActuatorSimple = VObjectConnectorHydraulicActuatorSimple
+
+class VObjectConnectorUser:
+    """Visualization data for ObjectConnectorUser.
+    
+    Args:
+        show: set true, if item is shown in visualization and false if it is not shown; type: bool
+
+    """
+    def __init__(self, show = True):
+        self.show = show
+
+    def __iter__(self):
+        yield 'show', self.show
+
+    def __repr__(self):
+        return str(dict(self))
+
+class ObjectConnectorUser:
+    """A connector whose forces are computed by a Python user function with access to its markers: for each marker it reads the position, velocity, rotation and coordinates of the marker, and for a body marker the positions and velocities anywhere on the body, and it applies forces and torques through the marker - at the marker or at any local position of the marker's body.
+    
+    So a contact can search the closest point on a flexible body and act there. It links any number of markers of any type; its Jacobian is computed numerically.
+    
+    Args:
+        name: connector's unique name; type: str
+
+        markerNumbers: list of markers of any type, at least one; the user function gets them in this order; type: ArrayMarkerIndex
+
+        parameters: the parameters of the connector, of any length, passed to the user function; see exudyn.advancedUtilities.ParameterLayout; type: array_like
+
+        activeConnector: flag, which determines, if the connector is active; used to deactivate (temporarily) a connector; type: bool
+
+        forceUserFunction: A Python user function which computes the forces of the connector and applies them through its markers; without it, the connector applies no forces; type: ObjectConnectorUserForceUserFunction
+
+        visualization: visualization data, see VObjectConnectorUser
+
+    Notes:
+        Object has/provides the following types: ``Connector``
+
+        Requested Marker type: ``_None``
+
+    """
+    def __init__(self, name = '', markerNumbers = [], parameters = [], activeConnector = True, forceUserFunction: Union[ObjectConnectorUserForceUserFunction, int] = 0, visualization = {'show': True}):
+        self.name = name
+        self.markerNumbers = copy.copy(markerNumbers)
+        self.parameters = CheckForValidNumpyArray(parameters)
+        self.activeConnector = activeConnector
+        self.forceUserFunction = forceUserFunction
+        self.visualization = CopyDictLevel1(visualization)
+
+    def __iter__(self):
+        yield 'objectType', 'ConnectorUser'
+        yield 'name', self.name
+        yield 'markerNumbers', self.markerNumbers
+        yield 'parameters', self.parameters
+        yield 'activeConnector', self.activeConnector
+        yield 'forceUserFunction', self.forceUserFunction
+        yield 'Vshow', dict(self.visualization)["show"]
+
+    def __repr__(self):
+        return str(dict(self))
 
 class VObjectConnectorReevingSystemSprings:
     """Visualization data for ObjectConnectorReevingSystemSprings.

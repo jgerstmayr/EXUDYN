@@ -198,6 +198,8 @@ annotationToPython = {'MainSystem': 'exudyn.MainSystem',
                       'MatrixContainer': 'exudyn.MatrixContainer',
                       'ConfigurationType': 'exudyn.ConfigurationType',
                       'OutputVariableType': 'exudyn.OutputVariableType',
+                      'ConnectorMarkerList': 'list',
+                      'None': 'None',
                       }
 
 

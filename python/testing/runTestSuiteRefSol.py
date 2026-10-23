@@ -153,6 +153,7 @@ def TestExamplesReferenceSolution():
         'systemContainerComputeOnlyTest.py':4.0, #new 2026-10-14: SystemContainer(attachToRenderer=False), the renderer stays with the container of the model, also for InverseKinematicsNumerical (#2259)
         'ANCFBeamGeometricallyExactComparisonTest.py':5.999501744103005, #2026-10-14: the strains of ObjectANCFBeam in the symmetric basis (#2992); before 5.9995017472560175; new 2026-10-13: ObjectANCFBeam against ObjectBeamGeometricallyExact, tip torque on node and element (#2228)
         'ANCFThinPlateRotationTest.py':0.009394817004517305, #new 2026-10-13: the frame of ObjectANCFThinPlate and NodePointSlope12, torque on element and node (#2228)
+        'userConnectorTest.py':0.3942810318186798, #new 2026-10-23: ObjectConnectorUser with ConnectorMarkers: a spring-damper, a rigid body, a ball on an ANCF cable, the refusals (#2975)
         'userGraphicsDataTest.py':5.65312, #new 2026-10-23: graphicsData of ObjectUserBody in local coordinates, mapped by the positionUserFunction, against ObjectRigidBody and on a bent user cable, Python and symbolic (#3064)
         'userMassIntegralTest.py':-5.686955690889934, #new 2026-10-23: MarkerBodyMass and LoadMassProportional on ObjectUserBody by its massIntegralUserFunction, a user ANCF cable and a mass point (#3063)
         'userOutputVariablesTest.py':2.0832023621123557, #new 2026-10-22: strain, potential energy and acceleration of ObjectUserBody by its outputVariableUserFunction, Python and symbolic (#3057)
@@ -510,6 +511,7 @@ def MiniExamplesReferenceSolution():
         'ObjectJointSliding2D.py':1.0999999999999979,
         'ObjectJointSliding.py':1.0999999999999979,
         'ObjectConnectorReevingSystemSprings.py':-0.9999999999998965,
+        'ObjectConnectorUser.py':0.07074575611653322, #new 2026-10-23 (#2975)
         'ObjectConnectorHydraulicActuatorSimple.py':1.0,
         #the markers, loads and sensors (#2732)
         'MarkerBodyMass.py':-4.904999999999998,

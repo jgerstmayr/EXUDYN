@@ -9346,6 +9346,156 @@ definitions.append(ItemDefinition(
     ))
 
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#++++++++++++++++   ObjectConnectorUser   ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+def ObjectConnectorUser_forceUserFunction(mbs: MainSystem, t: Real, itemNumber: Index, markers: ConnectorMarkerList,
+                                          parameters: Vector) -> None:
+    r"""A user function, which computes the forces of the connector and applies them through its markers.
+
+    Args:
+        mbs: provides MainSystem mbs to which the connector belongs
+        t: current time in mbs
+        itemNumber: integer number of the connector in mbs
+        markers: one exudyn.ConnectorMarker per marker of markerNumbers, in their order: it reads the marker - position, velocity, rotation, coordinates, and for a body marker positions and velocities anywhere on its body - and applies forces and torques to it; valid during the call only
+        parameters: $\in \Rcal^{n_p}$ the parameters of the connector, see parameters; empty if not given
+    Returns:
+        nothing; the forces are applied with the ApplyForce, ApplyTorque, ApplyBodyForce and ApplyCoordinateForces functions of the markers
+    """
+
+definitions.append(ItemDefinition(
+    className='ObjectConnectorUser',
+    drawing=r'Nothing; the number with `connectors.showNumbers`, at the first marker.',
+    addIncludesC=r"""class MainSystem; //AUTO; for std::function / userFunction; avoid including MainSystem.h
+""",
+    cParentClass=ParentClassCObjectConnector,
+    overallDescription=r"""A connector whose forces are computed by a Python user function with access to its markers: for each marker it reads the position, velocity, rotation and coordinates of the marker, and for a body marker the positions and velocities anywhere on the body, and it applies forces and torques through the marker - at the marker or at any local position of the marker's body. So a contact can search the closest point on a flexible body and act there. It links any number of markers of any type; its Jacobian is computed numerically.""",
+    classType=ClassTypeObject,
+    detailedDescription=r"""    #### The markers in the user function
+
+    `forceUserFunction(mbs, t, itemNumber, markers, parameters)` gets `markers`, a list with one `exudyn.ConnectorMarker`
+    per entry of `markerNumbers`, in their order, for the configuration of the call (#2975). A ConnectorMarker gives what
+    its marker provides:
+
+    | function | gives | marker |
+    |---|---|---|
+    | `GetPosition()`, `GetVelocity()` | $\LU{0}{\pv}_m$, $\LU{0}{\vv}_m$ | Position |
+    | `GetRotationMatrix()`, `GetAngularVelocity()`, `GetAngularVelocityLocal()` | $\LU{0m}{\Rot}$, $\LU{0}{\tomega}_m$, $\LU{m}{\tomega}_m$ | Orientation |
+    | `GetCoordinates()`, `GetCoordinates_t()` | the coordinates of the marker and their velocities | Coordinate(s) |
+    | `GetBodyPosition(localPosition)`, `GetBodyVelocity(localPosition)` | position and velocity of the point at `localPosition` of the marker's body | Body |
+    | `GetMarkerNumber()`, `GetObjectNumber()`, `GetNodeNumber()` | the numbers, -1 where the marker has none | all |
+
+    and applies forces, each added to what the function applied before in the same call:
+
+    | function | generalized force | marker |
+    |---|---|---|
+    | `ApplyForce(force)` | $\Jm_{pos}\tp \fv$, the force acting at the marker | Position |
+    | `ApplyTorque(torque)` | $\Jm_{rot}\tp \mv$, the torque acting on the marker | Orientation |
+    | `ApplyBodyForce(force, localPosition)` | $\Jm_{pos}(\pLocB)\tp \fv$ of the marker's body at `localPosition` | Body |
+    | `ApplyCoordinateForces(forces)` | $\Jm\tp \fv$ with the Jacobian of the coordinates of the marker | Coordinate(s) |
+
+    A force and a torque act as a load does: on the marker, in global coordinates. A function that the marker does not
+    provide raises a ValueError naming the marker. The ConnectorMarker is valid during the call only; kept and used
+    later, it raises.
+
+    #### Jacobian and evaluation
+
+    The connector couples the coordinates of all its markers; its Jacobian is computed numerically, by calling the user
+    function for each perturbed coordinate. The user function is called serially, in the main thread. With
+    `activeConnector=False` the connector applies no forces.
+    """,
+    miniExample=r"""    #a spring of stiffness k between the ground and a mass point, written as user connector
+    k = 100
+    node = mbs.AddNode(NodePoint(referenceCoordinates=[1,0,0], initialCoordinates=[0.1,0,0]))
+    mass = mbs.AddObject(MassPoint(nodeNumber=node, mass=2))
+    def UFforce(mbs, t, itemNumber, markers, parameters):
+        (ground, point) = markers
+        force = k*(point.GetPosition() - ground.GetPosition() - np.array([1,0,0]))
+        point.ApplyForce(-force)
+        ground.ApplyForce(force)
+    groundMarker = mbs.AddMarker(MarkerBodyPosition(bodyNumber=mbs.AddObject(ObjectGround())))
+    mbs.AddObject(ObjectConnectorUser(markerNumbers=[groundMarker, mbs.AddMarker(MarkerNodePosition(nodeNumber=node))],
+                                      forceUserFunction=UFforce))
+
+    mbs.Assemble()
+    mbs.SolveDynamic()
+
+    #the displacement at t=1, as of a linear oscillator: 0.1*cos(sqrt(k/m)*t)
+    exu.sys['testResult'] = mbs.GetNodeOutput(node, exu.OutputVariableType.Displacement)[0]
+    """,
+    miniExamplePerformanceTest={'numberOfSteps': 1000},
+    mainParentClass=MainParentClassMainObjectConnector,
+    objectType=ObjectTypeConnector,
+    outputVariables=[],
+    visuParentClass=VisuParentClassVisualizationObject,
+    members=[
+        ItemParameter(type=TString, destination=DestMain, fromParent=True,
+            pythonName='name',
+            defaultValue=NoDefaultValue,
+            description=r"connector's unique name"),
+        ItemParameter(type=TArrayIndex(ItemMarker), destination=DestComp+DestParam,
+            pythonName='markerNumbers',
+            defaultValue='ArrayIndex()',
+            description=r"""$[m_0,\,m_1,\,\ldots]\tp$list of markers of any type, at least one; the user function gets them in this order"""),
+        ItemParameter(type=TNumpyVector, destination=DestComp+DestParam,
+            pythonName='parameters',
+            defaultValue='Vector()',
+            description=r"""$\pv_{par} \in \Rcal^{n_p}$the parameters of the connector, of any length, passed to the user function; see exudyn.advancedUtilities.ParameterLayout"""),
+        ItemParameter(type=TBool, destination=DestComp+DestParam,
+            pythonName='activeConnector',
+            defaultValue=True,
+            description=r'flag, which determines, if the connector is active; used to deactivate (temporarily) a connector'),
+        ItemParameter(destination=DestComp+DestParam,
+            pythonName='forceUserFunction',
+            defaultValue=0,
+            description=r"""A Python user function which computes the forces of the connector and applies them through its markers; without it, the connector applies no forces""",
+            userFunction=ObjectConnectorUser_forceUserFunction),
+        ItemFunctionDef('GetMarkerNumbers',
+            cFlags=CFConst,
+            implementation='return parameters.markerNumbers;'),
+        ItemFunctionDef('GetMarkerNumbers',
+            cFlags='',
+            implementation='return parameters.markerNumbers;'),
+        ItemFunctionDef('RequestedNumberOfMarkers',
+            implementation='return 0;'),
+        ItemFunctionDef('HasUserFunction',
+            implementation='return true;'),
+        ItemFunctionDef('IsPenaltyConnector',
+            implementation='return true;'),
+        ItemFunctionDef('ComputeODE2LHS'),
+        ItemFunctionDef('GetAvailableJacobians',
+            implementation='return (JacobianType::Type)(JacobianType::ODE2_ODE2 + JacobianType::ODE2_ODE2_t);'),
+        ItemRequestedTypes('Marker', []),
+        ItemFunction(type=TCObjectType, destination=DestComp, cFlags=CFConst,
+            pythonName='GetType',
+            implementation='return CObjectType::Connector;',
+            description=r'Get type of object, e.g. to decide for loads, markers, ... which type of computation is needed'),
+        ItemFunction(type='const char*', destination=DestMain, cFlags=CFConst,
+            pythonName='GetTypeName',
+            implementation='return "ConnectorUser";',
+            description=r'Get type name of object; could also be realized via a string -> type conversion?'),
+        ItemFunctionDef('CheckPreAssembleConsistency'),
+        ItemFunctionDef('IsActive',
+            implementation='return parameters.activeConnector;'),
+        ItemFunction(type='OutputVariableType', destination=DestComp, cFlags=CFConst,
+            pythonName='GetOutputVariableTypes',
+            implementation='return OutputVariableType::_None;',
+            description=r'no output variables: what the connector computes is in its user function'),
+        ItemFunction(type=Tvoid, destination=DestComp, cFlags=CFConst, isVirtual=False,
+            pythonName='EvaluateUserFunctionForce',
+            args='Vector& ode2Lhs, const MarkerDataStructure& markerData, const ArrayIndex& blockSizes',
+            description=r'call of forceUserFunction with the ConnectorMarkers of the markers, each writing into its block of ode2Lhs (#2975); implemented in evaluateUserFunctions.cpp'),
+        ItemFunctionDef('UpdateGraphics'),
+        ItemFunctionDef('IsConnector',
+            implementation='return true;'),
+        ItemParameter(type=TBool, destination=DestVisu, fromParent=True,
+            pythonName='show',
+            defaultValue=True,
+            description=r'set true, if item is shown in visualization and false if it is not shown'),
+        ],
+    ))
+
+#++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #++++++++++++++++   ObjectConnectorReevingSystemSprings   +++++++++++++++++++++++++++++++++++++++++
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 definitions.append(ItemDefinition(

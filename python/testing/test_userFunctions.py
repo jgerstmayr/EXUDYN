@@ -146,7 +146,8 @@ def test_theTypesAreOnesTheInterfaceKnows(key):
     documented as something the core cannot pass."""
     known = set(['MainSystem', 'Real', 'Index', 'bool', 'StdVector', 'StdVector2D', 'StdVector3D',
                  'StdVector6D', 'StdMatrix3D', 'StdMatrix6D', 'NumpyMatrix', 'StdArrayIndex',
-                 'ConfigurationType', 'OutputVariableType', 'py::object'])
+                 'ConfigurationType', 'OutputVariableType', 'py::object',
+                 'void']) #the result of a function that applies what it computes, ObjectConnectorUser (#2975)
     entry = userFunctionArgsDict[key]
     unknown = [name for name in entry[0] + entry[2] if name not in known]
     assert unknown == [], key + ': types the interface does not know: ' + str(unknown)
