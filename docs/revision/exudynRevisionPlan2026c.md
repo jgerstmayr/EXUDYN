@@ -866,6 +866,11 @@ CLOSED 2026-10-23 (#3064; maintainer: the graphics data list drawn using the tra
 with a show flag): `graphicsData` of VObjectUserBody, every point mapped, normals from the mapped triangles, switched
 by `show`; userGraphicsDataTest.py. [log](exudynRevisionLog2026c.md#rg7-14)
 
+#### **CLOSED_RG7.14.1** Draw the bodies of the user body test models with graphicsData, and show them when a model runs alone
+
+CLOSED 2026-10-23 (#3067; maintainer: add useful graphics to the existing user body examples, run with graphics and the
+SolutionViewer when not in test mode): seven test models, results unchanged. [log](exudynRevisionLog2026c.md#rg7-14-1)
+
 ## **OPEN_RG8** Compiled C++ user items
 
 Plugins: user items compiled against the shipped headers. A plugin author builds Exudyn from source once and the

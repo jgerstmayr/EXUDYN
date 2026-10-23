@@ -18,6 +18,7 @@ You can view and download this file on Github: [userANCFBeam3DTest.py](https://g
 #           its first node, under a tip force on MarkerNodePosition converges to the deflection of a Timoshenko beam;
 #           under a tip torque on MarkerNodeRigid, whose orientation is the one of the user node, its tip cross section
 #           rotates by M L / (E I) - the torque acts on the gradients of the cross section as the stress of pure bending.
+#           Run alone, it draws the user bodies with their graphicsData and opens the SolutionViewer.
 #
 # Author:   Johannes Gerstmayr
 # Date:     2026-10-19
@@ -29,7 +30,9 @@ You can view and download this file on Github: [userANCFBeam3DTest.py](https://g
 import exudyn as exu
 from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
 import exudyn.cMath as cMath
+import exudyn.graphics as graphics
 import numpy as np
+testIsActive = exu.sys.get('testIsActive', False) #run alone: the renderer, the solution file and the SolutionViewer
 
 length = 1.         #beam length
 a = 0.1             #side of the square cross section
@@ -117,15 +120,19 @@ def Element(Le):
     return dict(massMatrixUserFunction=UFmass, forceUserFunction=UFforce, positionUserFunction=UFposition,
                 positionJacobianUserFunction=UFpositionJacobian)
 
-def Cantilever(nElements, tipForce=[0, 0, 0], tipTorque=[0, 0, 0]):
-    """a cantilever of nElements, clamped at its first node, static; returns the tip position and rotation"""
+def Cantilever(nElements, tipForce=[0, 0, 0], tipTorque=[0, 0, 0], show=False):
+    """a cantilever of nElements, clamped at its first node, static; returns the tip position and rotation; show: drawn
+    when the model runs alone"""
     SC = exu.SystemContainer()
     mbs = SC.AddSystem()
     Le = length/nElements
     nodes = [mbs.AddNode(Node(i*Le)) for i in range(nElements + 1)]
     functions = Element(Le)
+    #the element as four bricks of the cross section, every corner mapped onto the deformed beam
+    elementGraphics = [graphics.Brick(centerPoint=[(j + 0.5)*Le/4, 0, 0], size=[Le/4, a, a], color=graphics.color.orange,
+                                      addEdges=True) for j in range(4)]
     for i in range(nElements):
-        mbs.AddObject(ObjectUserBody(nodeNumbers=nodes[i:i+2], **functions))
+        mbs.AddObject(ObjectUserBody(nodeNumbers=nodes[i:i+2], **functions, visualization=VObjectUserBody(graphicsData=elementGraphics)))
     mGround = mbs.AddMarker(MarkerNodeCoordinate(nodeNumber=mbs.AddNode(NodePointGround()), coordinate=0))
     for coordinate in range(12): #clamped: position and gradients of the first node
         mbs.AddObject(CoordinateConstraint(markerNumbers=[mGround, mbs.AddMarker(MarkerNodeCoordinate(nodeNumber=nodes[0],
@@ -137,7 +144,14 @@ def Cantilever(nElements, tipForce=[0, 0, 0], tipTorque=[0, 0, 0]):
     simulationSettings.staticSolver.verboseMode = 0
     simulationSettings.staticSolver.newton.relativeTolerance = 1e-10
     simulationSettings.solution.file.write = False
+    if show and not testIsActive:
+        simulationSettings.solution.file.write = True
+        SC.renderer.Start()
     mbs.SolveStatic(simulationSettings)
+    if show and not testIsActive:
+        SC.renderer.Stop()
+        simulationSettings.solution.file.write = False
+        mbs.SolutionViewer()
     return (np.array(mbs.GetNodeOutput(nodes[-1], exu.OutputVariableType.Position)),
             np.array(mbs.GetNodeOutput(nodes[-1], exu.OutputVariableType.RotationMatrix)).reshape((3, 3)))
 
@@ -154,7 +168,7 @@ deflectionTimoshenko = force*length**3/(3*EI) + force*length/(5/6*GA)
 errors = []
 u = 0
 for nElements in [2, 4, 8]:
-    (position, rotation) = Cantilever(nElements, tipForce=[0, 0, force])
+    (position, rotation) = Cantilever(nElements, tipForce=[0, 0, force], show=(nElements == 8))
     errors += [abs(position[2]/deflectionTimoshenko - 1)]
     exu.Print(nElements, 'elements: tip deflection', position[2], ', Timoshenko', deflectionTimoshenko, ', relative error', errors[-1])
     u += position[2]

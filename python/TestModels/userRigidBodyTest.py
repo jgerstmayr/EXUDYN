@@ -11,6 +11,7 @@
 #           The three bodies are solved one after the other, each alone, with the computation time shown.
 #           A new position user function, set with SetObjectParameter, is used at once.
 #           A rigid marker on a user body without rotationMatrixUserFunction is refused when it is evaluated.
+#           Run alone, it draws the user bodies with their graphicsData and opens the SolutionViewer.
 #
 # Author:   Johannes Gerstmayr
 # Date:     2026-10-12
@@ -24,8 +25,10 @@ from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
 import exudyn.cUtilities as cu
 import exudyn.cMath as cMath
 from exudyn.advancedUtilities import CreateSymbolicUserFunction
+import exudyn.graphics as graphics
 import numpy as np
 esym = exu.symbolic
+testIsActive = exu.sys.get('testIsActive', False) #run alone: the renderer, the solution file and the SolutionViewer
 
 SC = exu.SystemContainer()
 
@@ -171,9 +174,12 @@ simulationSettings.solution.file.write = False
 outputs = [exu.OutputVariableType.Position, exu.OutputVariableType.Displacement, exu.OutputVariableType.Velocity,
            exu.OutputVariableType.RotationMatrix, exu.OutputVariableType.AngularVelocity, exu.OutputVariableType.AngularVelocityLocal]
 
-def Solve(kind):
+bodyGraphics = [graphics.Brick(size=[0.4, 0.2, 0.1], color=graphics.color.steelblue, addEdges=True), graphics.Basis(length=0.15)]
+
+def Solve(kind, show=False):
     """the body under gravity, a Cartesian spring-damper and a torque, as ObjectRigidBody ('standard'), as
-    ObjectUserBody with Python user functions ('python') or with symbolic user functions ('symbolic'), solved alone"""
+    ObjectUserBody with Python user functions ('python') or with symbolic user functions ('symbolic'), solved alone;
+    show: drawn when the model runs alone"""
     exu.Print('+++ the body with ' + {'standard': 'ObjectRigidBody', 'python': 'Python user functions',
                                        'symbolic': 'symbolic user functions'}[kind] + ' +++')
     mbs = SC.AddSystem()
@@ -188,7 +194,8 @@ def Solve(kind):
         body = mbs.AddObject(ObjectUserBody(nodeNumbers=[node], massMatrixUserFunction=UFmass, forceUserFunction=UFforce,
                                             positionUserFunction=UFposition, positionJacobianUserFunction=UFpositionJacobian,
                                             rotationMatrixUserFunction=UFrotationMatrix,
-                                            rotationJacobianUserFunction=UFrotationJacobian))
+                                            rotationJacobianUserFunction=UFrotationJacobian,
+                                            visualization=VObjectUserBody(graphicsData=bodyGraphics)))
         if kind == 'symbolic': #every user function of the body symbolic, the matrices too (#3020)
             for name, function in [('forceUserFunction', UFforceSymbolic), ('positionUserFunction', UFpositionSymbolic),
                                    ('massMatrixUserFunction', UFmassSymbolic),
@@ -203,12 +210,19 @@ def Solve(kind):
                                         stiffness=[200, 200, 200], damping=[2, 2, 2]))
     mbs.AddLoad(LoadTorqueVector(markerNumber=mbs.AddMarker(MarkerBodyRigid(bodyNumber=body)), loadVector=torque))
     mbs.Assemble()
+    if show and not testIsActive:
+        simulationSettings.solution.file.write = True
+        SC.renderer.Start()
     mbs.SolveDynamic(simulationSettings)
+    if show and not testIsActive:
+        SC.renderer.Stop()
+        simulationSettings.solution.file.write = False
+        mbs.SolutionViewer()
     values = [np.array(mbs.GetObjectOutputBody(body, output, localPosition=pSpring)) for output in outputs]
     energy = mbs.GetObjectOutputBody(body, exu.OutputVariableType.KineticEnergy, localPosition=[0, 0, 0])
     return values, energy
 
-results = [Solve(kind) for kind in ['standard', 'python', 'symbolic']]
+results = [Solve(kind, show=(kind == 'symbolic')) for kind in ['standard', 'python', 'symbolic']]
 
 difference = 0
 differenceSymbolic = 0  #between the Python and the symbolic user body

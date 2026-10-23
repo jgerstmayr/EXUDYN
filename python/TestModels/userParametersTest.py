@@ -8,6 +8,7 @@
 #           with SetObjectParameter acts without recording again. The solutions agree with the Python user functions
 #           and with x0 cos(sqrt(k/m) t). With constantMassMatrix, the mass matrix user function is called once per
 #           body and the solution is the same (#3058). A body on a node with one coordinate is recorded as well (#3061).
+#           Run alone, it draws the user bodies with their graphicsData and opens the SolutionViewer.
 #
 # Author:   Johannes Gerstmayr
 # Date:     2026-10-22
@@ -20,8 +21,11 @@ import exudyn as exu
 from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
 from exudyn.advancedUtilities import CreateSymbolicUserFunction, ParameterLayout
 import exudyn.cMath as cMath
+import exudyn.graphics as graphics
 import numpy as np
 esym = exu.symbolic
+testIsActive = exu.sys.get('testIsActive', False) #run alone: the renderer, the solution file and the SolutionViewer
+pointGraphics = graphics.Sphere(radius=0.1, color=graphics.color.red, nTiles=16) #the mass point, moved by the positionUserFunction
 
 #the layout of the parameters of this kind of user body
 layout = ParameterLayout([('mass', 1), ('stiffness', 1)])
@@ -53,7 +57,7 @@ simulationSettings.timeIntegration.endTime = endTime
 simulationSettings.timeIntegration.verboseMode = 0
 simulationSettings.solution.file.write = False
 
-def Solve(kind, changedStiffness=None, constantMassMatrix=False):
+def Solve(kind, changedStiffness=None, constantMassMatrix=False, show=False):
     """the two oscillators with Python ('python') or one recording of symbolic ('symbolic') user functions; the
     displacement of each at endTime"""
     SC = exu.SystemContainer()
@@ -64,7 +68,8 @@ def Solve(kind, changedStiffness=None, constantMassMatrix=False):
         bodies.append(mbs.AddObject(ObjectUserBody(nodeNumbers=[node], parameters=layout.ToVector(value), constantMassMatrix=constantMassMatrix,
                                                    massMatrixUserFunction=UFmass, forceUserFunction=UFforce,
                                                    positionUserFunction=UFposition,
-                                                   positionJacobianUserFunction=UFpositionJacobian)))
+                                                   positionJacobianUserFunction=UFpositionJacobian,
+                                                   visualization=VObjectUserBody(graphicsData=[pointGraphics]))))
     if kind == 'symbolic': #recorded once, for the first body, and given to both
         keep = [CreateSymbolicUserFunction(mbs, UFforce, 'forceUserFunction', bodies[0]),
                 CreateSymbolicUserFunction(mbs, UFmassSymbolic, 'massMatrixUserFunction', bodies[0])]
@@ -75,11 +80,18 @@ def Solve(kind, changedStiffness=None, constantMassMatrix=False):
     if changedStiffness is not None: #after the recording: no new recording needed
         mbs.SetObjectParameter(bodies[1], 'parameters', layout.ToVector({'mass': values[1]['mass'], 'stiffness': changedStiffness}))
     mbs.Assemble()
+    if show and not testIsActive:
+        simulationSettings.solution.file.write = True
+        SC.renderer.Start()
     mbs.SolveDynamic(simulationSettings)
+    if show and not testIsActive:
+        SC.renderer.Stop()
+        simulationSettings.solution.file.write = False
+        mbs.SolutionViewer()
     return [mbs.GetObjectOutputBody(body, exu.OutputVariableType.Displacement, localPosition=[0, 0, 0])[0] for body in bodies]
 
 python = Solve('python')
-symbolic = Solve('symbolic')
+symbolic = Solve('symbolic', show=True)
 exact = [x0*cMath.cos(cMath.sqrt(value['stiffness']/value['mass'])*endTime) for value in values]
 exu.Print('displacements, Python:', python, ', symbolic:', symbolic, ', exact:', exact)
 

@@ -2788,3 +2788,19 @@ positionUserFunction.)*
   used after the call are refused. The ball above a node touched both elements first and was counted twice - the
   contact takes the closest element only.
 - Not done: the user markers - split off as #3065 (RG7.5.2), with the question what they add.
+
+<a id="rg7-14-1"></a>
+### RG7.14.1 — graphics of the user body test models (2026-10-23, #3067)
+*(Maintainer 2026-10-23: when you added the graphics data that is mapped with the positionUserFunction, also add some
+useful graphics to the existing user object body examples (beams, rigid body, ...) and adapt the test such that it runs
+with the graphics in case it is not executed in test mode, and also writing the solution file in that case, so the
+solution viewer will open afterwards to check the graphics.)*
+- graphicsData in local coordinates, mapped by the positionUserFunction: userRigidBodyTest a brick of the inertia
+  cuboid with its frame (shown for the symbolic body, so it draws without Python); userANCFBeam3DTest each element as
+  four bricks of the cross section (shown for 8 elements, static); userTetrahedronTest the four faces of each
+  tetrahedron, shrunk to 90 % about its center so that the six are seen; userANCFCable2DTest and userMassIntegralTest
+  the axis of each element as 8 line segments (the positionUserFunction of the 2D cable gives the axis only);
+  userParametersTest and userOutputVariablesTest the mass points as spheres.
+- Run alone (`exu.sys['testIsActive']` not set), the solve that is shown writes the solution file, runs with the
+  renderer and then opens the SolutionViewer, as the other test models do; in a test run nothing changes - all seven
+  results are the same, also run alone with the windows suppressed.

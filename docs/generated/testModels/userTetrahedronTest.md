@@ -15,6 +15,7 @@ You can view and download this file on Github: [userTetrahedronTest.py](https://
 #           cube of six tetrahedra in uniaxial tension (the patch test) has the exact homogeneous solution
 #           F = diag(a, b, b) of the nonlinear material, which the static solution reproduces; a cube moving with a
 #           uniform velocity has the kinetic energy of a rigid body.
+#           Run alone, it draws the user bodies with their graphicsData and opens the SolutionViewer.
 #
 # Author:   Johannes Gerstmayr
 # Date:     2026-10-12
@@ -26,8 +27,10 @@ You can view and download this file on Github: [userTetrahedronTest.py](https://
 import exudyn as exu
 from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
 from exudyn.cMath import sqrt
+import exudyn.graphics as graphics
 import numpy as np
 from itertools import permutations
+testIsActive = exu.sys.get('testIsActive', False) #run alone: the renderer, the solution file and the SolutionViewer
 
 SC = exu.SystemContainer()
 
@@ -66,6 +69,13 @@ def UFpositionJacobian(mbs, t, itemNumber, localPosition, qRef, qTotal, q_t, par
     return np.kron(N(localPosition), np.eye(3))
 
 #a unit cube of six tetrahedra on its diagonal from node 0 to node 7; node i is at (i%2, (i//2)%2, i//4)
+#the four faces of the unit tetrahedron, outward, shrunk to 90 % about its center; mapped onto each element
+tetCorners = [np.array(p) for p in [[0, 0, 0], [1, 0, 0], [0, 1, 0], [0, 0, 1]]]
+tetGraphics = {'type': 'TriangleList',
+               'points': [c for p in tetCorners for c in list(0.25 + 0.9*(p - 0.25))],
+               'colors': list(graphics.color.lightgreen)*4,
+               'triangles': [0, 2, 1, 0, 1, 3, 0, 3, 2, 1, 2, 3]}
+
 def AddCube(mbs, initialVelocity=[0, 0, 0]):
     points = [np.array([i % 2, (i//2) % 2, i//4], dtype=float) for i in range(8)]
     nodes = [mbs.AddNode(NodePoint(referenceCoordinates=list(p), initialVelocities=initialVelocity)) for p in points]
@@ -82,7 +92,8 @@ def AddCube(mbs, initialVelocity=[0, 0, 0]):
         gradN[0] = -np.sum(gradN[1:], axis=0)
         tet = mbs.AddObject(ObjectUserBody(nodeNumbers=[nodes[i] for i in corners], massMatrixUserFunction=UFmass,
                                            forceUserFunction=UFforce, positionUserFunction=UFposition,
-                                           positionJacobianUserFunction=UFpositionJacobian))
+                                           positionJacobianUserFunction=UFpositionJacobian,
+                                           visualization=VObjectUserBody(graphicsData=[tetGraphics])))
         tetData[int(tet)] = (gradN, np.linalg.det(D)/6)
         tets += [(tet, X)]
     return (nodes, points, tets)
@@ -105,7 +116,14 @@ simulationSettings = exu.SimulationSettings()
 simulationSettings.staticSolver.newton.relativeTolerance = 1e-12
 simulationSettings.staticSolver.verboseMode = 0
 simulationSettings.solution.file.write = False
+if not testIsActive:
+    simulationSettings.solution.file.write = True
+    SC.renderer.Start()
 mbs.SolveStatic(simulationSettings)
+if not testIsActive:
+    SC.renderer.Stop()
+    simulationSettings.solution.file.write = False
+    mbs.SolutionViewer()
 
 #the exact solution: a*E*(a^2-1)/2 = force for the stretch a, and the lateral stretch b from S22 = 0
 a = 1

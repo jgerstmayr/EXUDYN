@@ -16,6 +16,7 @@ You can view and download this file on Github: [userMassIntegralTest.py](https:/
 #           gravity against ObjectANCFCable2D; the mass integral is the integral of the shape functions times rhoA.
 #           (2) A mass point as a user body against MassPoint, with a Python and a symbolic mass integral. (3) A
 #           mass-proportional load on a user body without the function is refused.
+#           Run alone, it draws the user bodies with their graphicsData and opens the SolutionViewer.
 #
 # Author:   Johannes Gerstmayr
 # Date:     2026-10-23
@@ -28,8 +29,10 @@ import exudyn as exu
 from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
 from exudyn.advancedUtilities import CreateSymbolicUserFunction
 from exudyn.cMath import sqrt
+import exudyn.graphics as graphics
 import numpy as np
 esym = exu.symbolic
+testIsActive = exu.sys.get('testIsActive', False) #run alone: the renderer, the solution file and the SolutionViewer
 
 gravity = [0, -9.81, 0]
 simulationSettings = exu.SimulationSettings()
@@ -98,6 +101,9 @@ def UFposition(mbs, t, itemNumber, localPosition, qRef, qTotal, q_t, parameters)
 def UFpositionJacobian(mbs, t, itemNumber, localPosition, qRef, qTotal, q_t, parameters):
     return np.vstack([S(localPosition[0]), np.zeros(8)])
 
+#the axis of the element, mapped by the positionUserFunction onto the deformed cable
+axisGraphics = graphics.Lines([[x, 0, 0] for x in np.linspace(0, Le, 9)], color=graphics.color.red)
+
 SC = exu.SystemContainer()
 mbs = SC.AddSystem()
 nGround = mbs.AddNode(NodePointGround())
@@ -110,7 +116,8 @@ for isUser in [False, True]:
             element = mbs.AddObject(ObjectUserBody(nodeNumbers=nodes[i:i+2], massMatrixUserFunction=UFmass,
                                                    massIntegralUserFunction=UFmassIntegral, centerOfMass=[0.5*Le, 0, 0],
                                                    forceUserFunction=UFforce, positionUserFunction=UFposition,
-                                                   positionJacobianUserFunction=UFpositionJacobian))
+                                                   positionJacobianUserFunction=UFpositionJacobian,
+                                                   visualization=VObjectUserBody(graphicsData=[axisGraphics])))
         else:
             element = mbs.AddObject(ObjectANCFCable2D(nodeNumbers=nodes[i:i+2], length=Le, massPerLength=rhoA,
                                                       bendingStiffness=EI, axialStiffness=EA))
@@ -122,7 +129,14 @@ for isUser in [False, True]:
     cables += [elements]
 
 mbs.Assemble()
+if not testIsActive:
+    simulationSettings.solution.file.write = True
+    SC.renderer.Start()
 mbs.SolveDynamic(simulationSettings)
+if not testIsActive:
+    SC.renderer.Stop()
+    simulationSettings.solution.file.write = False
+    mbs.SolutionViewer()
 
 differenceCable = 0
 u = 0

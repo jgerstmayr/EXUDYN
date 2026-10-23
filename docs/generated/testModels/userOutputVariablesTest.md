@@ -16,6 +16,7 @@ You can view and download this file on Github: [userOutputVariablesTest.py](http
 #           compute itself. The symbolic function distinguishes them with IfThenElse on outputVariableType; Python and
 #           symbolic functions agree, the values agree with the exact solution x0 cos(omega t), and a type the function
 #           does not provide is refused.
+#           Run alone, it draws the user bodies with their graphicsData and opens the SolutionViewer.
 #
 # Author:   Johannes Gerstmayr
 # Date:     2026-10-22
@@ -28,8 +29,11 @@ import exudyn as exu
 from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
 from exudyn.advancedUtilities import CreateSymbolicUserFunction, ParameterLayout
 import exudyn.cMath as cMath
+import exudyn.graphics as graphics
 import numpy as np
 esym = exu.symbolic
+testIsActive = exu.sys.get('testIsActive', False) #run alone: the renderer, the solution file and the SolutionViewer
+pointGraphics = graphics.Sphere(radius=0.1, color=graphics.color.red, nTiles=16) #the mass point, moved by the positionUserFunction
 OVT = exu.OutputVariableType
 
 layout = ParameterLayout([('mass', 1), ('stiffness', 1)])
@@ -76,7 +80,7 @@ simulationSettings.timeIntegration.endTime = endTime
 simulationSettings.timeIntegration.verboseMode = 0
 simulationSettings.solution.file.write = False
 
-def Solve(kind):
+def Solve(kind, show=False):
     """the oscillator with the Python or the symbolic outputVariableUserFunction; the outputs at endTime"""
     SC = exu.SystemContainer()
     mbs = SC.AddSystem()
@@ -84,14 +88,22 @@ def Solve(kind):
     body = mbs.AddObject(ObjectUserBody(nodeNumbers=[node], parameters=layout.ToVector({'mass': m, 'stiffness': k}),
                                         massMatrixUserFunction=UFmass, forceUserFunction=UFforce,
                                         positionUserFunction=UFposition, positionJacobianUserFunction=UFpositionJacobian,
-                                        outputVariableUserFunction=UFoutput))
+                                        outputVariableUserFunction=UFoutput,
+                                        visualization=VObjectUserBody(graphicsData=[pointGraphics])))
     if kind == 'symbolic':
         symbolic = CreateSymbolicUserFunction(mbs, UFoutputSymbolic, 'outputVariableUserFunction', body)
         mbs.SetObjectParameter(body, 'outputVariableUserFunction', symbolic)
         mbs.variables['keep'] = symbolic
     sensor = mbs.AddSensor(SensorBody(bodyNumber=body, outputVariableType=OVT.PotentialEnergy, storeInternal=True))
     mbs.Assemble()
+    if show and not testIsActive:
+        simulationSettings.solution.file.write = True
+        SC.renderer.Start()
     mbs.SolveDynamic(simulationSettings)
+    if show and not testIsActive:
+        SC.renderer.Stop()
+        simulationSettings.solution.file.write = False
+        mbs.SolutionViewer()
     #a single value comes as float, the symbolic function gives three values for every type
     outputs = [np.atleast_1d(mbs.GetObjectOutputBody(body, variable, localPosition=[0, 0, 0]))
                for variable in [OVT.StrainLocal, OVT.PotentialEnergy, OVT.AccelerationLocal]]
@@ -104,7 +116,7 @@ def Solve(kind):
     return outputs, mbs.GetSensorStoredData(sensor)[-1, 1], refused
 
 python = Solve('python')
-symbolic = Solve('symbolic')
+symbolic = Solve('symbolic', show=True)
 omega = cMath.sqrt(k/m)
 u = x0*cMath.cos(omega*endTime)
 exact = [u/L, 0.5*k*u**2, -omega**2*u]

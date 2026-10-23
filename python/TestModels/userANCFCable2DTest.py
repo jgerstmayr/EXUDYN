@@ -5,6 +5,7 @@
 #           minimal - mass matrix, axial strain and curvature with the integration rules of ObjectANCFCable2D, the
 #           position and its Jacobian; a cantilever of four such elements under a tip force swings side by side with
 #           a cantilever of ObjectANCFCable2D, and both must agree.
+#           Run alone, it draws the user bodies with their graphicsData and opens the SolutionViewer.
 #
 # Author:   Johannes Gerstmayr
 # Date:     2026-10-12
@@ -16,7 +17,9 @@
 import exudyn as exu
 from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
 from exudyn.cMath import sqrt
+import exudyn.graphics as graphics
 import numpy as np
+testIsActive = exu.sys.get('testIsActive', False) #run alone: the renderer, the solution file and the SolutionViewer
 
 SC = exu.SystemContainer()
 mbs = SC.AddSystem()
@@ -77,6 +80,9 @@ def UFposition(mbs, t, itemNumber, localPosition, qRef, qTotal, q_t, parameters)
 def UFpositionJacobian(mbs, t, itemNumber, localPosition, qRef, qTotal, q_t, parameters):
     return np.vstack([S(localPosition[0]), np.zeros(8)])
 
+#the axis of the element, mapped by the positionUserFunction onto the deformed cable
+axisGraphics = graphics.Lines([[x, 0, 0] for x in np.linspace(0, Le, 9)], color=graphics.color.red)
+
 nGround = mbs.AddNode(NodePointGround())
 cables = []
 for isUser in [False, True]:
@@ -86,7 +92,8 @@ for isUser in [False, True]:
         if isUser:
             elements += [mbs.AddObject(ObjectUserBody(nodeNumbers=nodes[i:i+2], massMatrixUserFunction=UFmass,
                                                       forceUserFunction=UFforce, positionUserFunction=UFposition,
-                                                      positionJacobianUserFunction=UFpositionJacobian))]
+                                                      positionJacobianUserFunction=UFpositionJacobian,
+                                                      visualization=VObjectUserBody(graphicsData=[axisGraphics])))]
         else:
             elements += [mbs.AddObject(ObjectANCFCable2D(nodeNumbers=nodes[i:i+2], length=Le, massPerLength=rhoA,
                                                          bendingStiffness=EI, axialStiffness=EA))]
@@ -105,7 +112,14 @@ simulationSettings.timeIntegration.endTime = 0.2
 simulationSettings.timeIntegration.verboseMode = 0
 simulationSettings.timeIntegration.newton.relativeTolerance = 1e-10
 simulationSettings.solution.file.write = False
+if not testIsActive:
+    simulationSettings.solution.file.write = True
+    SC.renderer.Start()
 mbs.SolveDynamic(simulationSettings)
+if not testIsActive:
+    SC.renderer.Stop()
+    simulationSettings.solution.file.write = False
+    mbs.SolutionViewer()
 
 #positions and velocities along both cantilevers
 difference = 0

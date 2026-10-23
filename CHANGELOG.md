@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.13 | Newborn | 168 | 1.13.171 |
+| 1.13 | Newborn | 169 | 1.13.172 |
 | 1.12 | Metheney | 367 | 1.12.462 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
@@ -30,6 +30,10 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.13 - Newborn (current)
 
+- **1.13.172** `TESTING` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` The user body test models draw their bodies with graphicsData and, run alone, show the simulation and open the SolutionViewer (#3067)
+  - description: Maintainer 2026-10-23 (with \#3064): the existing user body test models get graphics drawn by the positionUserFunction - a brick with its frame for the rigid body, bricks of the cross section for the 3D ANCF beam, the faces of the tetrahedra, the axis of the 2D cables, spheres for the mass points; run alone (not exu.sys\['testIsActive'\]) they start the renderer, write the solution file and open the SolutionViewer to check the graphics; in a test run nothing changes.
+  - **notes:** The user body test models draw their bodies with graphicsData mapped by the positionUserFunction; run alone, they show the simulation, write the solution file and open the SolutionViewer
+  - date resolved: **2026-10-23 08:30**, date raised: 2026-10-23
 - **1.13.171** `EXTENSION` `raised by: Claude-JG` `resolved by: Claude-JG` User markers and a user connector with access to its markers (#2975)
   - description: revision2026c step RG7.5 (docs/dev/design/pythonUserItems.md 5.3, 5.4): user markers (position, orientation, coordinates; on a node or a body); a user connector whose user function gets the functions of its markers as Python objects per call and returns the forces; example 5: a sphere rolling on a flexible cable.
   - **notes:** ObjectConnectorUser: a connector whose Python user function gets its markers as exudyn.ConnectorMarker objects - it reads them, also any point of a marker's body, and applies forces and torques through them; the user markers continue in \#3065
